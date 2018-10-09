@@ -1,48 +1,48 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 1/2] Driver core: add bus_find_device_by_fwnode
-Date: Tue, 9 Oct 2018 16:15:33 +0100
-Message-ID: <20181009151533.GC20774@sirena.org.uk>
-References: <1539080245-25818-1-git-send-email-svellattu@mvista.com>
- <20181009110210.i6xphyuy5jkcfaug@katana>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kfjH4zxOES6UT95V"
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181009110210.i6xphyuy5jkcfaug@katana>
-Sender: netdev-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Silesh C V <svellattu@mvista.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, linux-rdma@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Mathieu Poirier <mathieu.poirier@linaro.org>, Lijun Ou <oulijun@huawei.com>, "Wei Hu(Xavier)" <xavier.huwei@huawei.com>, Yisen Zhuang <yisen.zhuang@huawei.com>, Salil Mehta <salil.mehta@huawei.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "David S. Miller" <davem@davemloft.n>
+From: Marcel Ziswiler <marcel@ziswiler.com>
+Subject: [PATCH v1 0/8] ARM: dts: tegra: last minute fixes
+Date: Tue,  9 Oct 2018 17:25:15 +0200
+Message-ID: <20181009152523.3771-1-marcel@ziswiler.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Marcel Ziswiler <marcel@ziswiler.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+This series comes with some last minutes fixes and further clean-up.
 
---kfjH4zxOES6UT95V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Marcel Ziswiler (8):
+  ARM: tegra: fix simple-panel compatibles
+  ARM: tegra: apalis-tk1/colibri_t20/t30: eval/iris: fix regulator gpio
+    enable
+  ARM: tegra: apalis/colibri_t30: fix hdmi regulator
+  ARM: tegra: colibri_t20: reorder pmic properties
+  ARM: tegra: apalis-tk1: further regulator clean-up
+  ARM: tegra: apalis_t30/tk1: annotate power I2C being on-module
+  ARM: tegra: colibri_t30: further regulator clean-up
+  ARM: tegra: apalis_t30: further regulator clean-up
 
-On Tue, Oct 09, 2018 at 01:02:10PM +0200, Wolfram Sang wrote:
+ arch/arm/boot/dts/tegra114-dalmore.dts          |  3 +-
+ arch/arm/boot/dts/tegra124-apalis-eval.dts      |  4 +-
+ arch/arm/boot/dts/tegra124-apalis-v1.2-eval.dts |  4 +-
+ arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi     | 17 +++--
+ arch/arm/boot/dts/tegra124-apalis.dtsi          | 17 +++--
+ arch/arm/boot/dts/tegra124-venice2.dts          |  2 +-
+ arch/arm/boot/dts/tegra20-colibri-eval-v3.dts   |  4 +-
+ arch/arm/boot/dts/tegra20-colibri-iris.dts      |  4 +-
+ arch/arm/boot/dts/tegra20-colibri.dtsi          |  4 +-
+ arch/arm/boot/dts/tegra20-harmony.dts           |  2 +-
+ arch/arm/boot/dts/tegra20-medcom-wide.dts       |  2 +-
+ arch/arm/boot/dts/tegra20-paz00.dts             |  2 +-
+ arch/arm/boot/dts/tegra20-seaboard.dts          |  2 +-
+ arch/arm/boot/dts/tegra20-ventana.dts           |  2 +-
+ arch/arm/boot/dts/tegra30-apalis-eval.dts       |  2 +-
+ arch/arm/boot/dts/tegra30-apalis-v1.1-eval.dts  |  4 +-
+ arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi      | 88 ++++++++++++-------------
+ arch/arm/boot/dts/tegra30-apalis.dtsi           | 86 ++++++++++++------------
+ arch/arm/boot/dts/tegra30-cardhu.dtsi           |  2 +-
+ arch/arm/boot/dts/tegra30-colibri-eval-v3.dts   |  4 +-
+ arch/arm/boot/dts/tegra30-colibri.dtsi          | 61 +++++++++--------
+ 21 files changed, 159 insertions(+), 157 deletions(-)
 
-> We recently had this discussion in I2C world about using the parent if
-> the (logical) device has a NULL fw_node [1]. I don't know if the other
-> subsystems you modify use logical devices as well? If no, it seems we
-> need an additional check for the parent in the I2C core only. If yes,
-> this might be considered in your patchset?
-
-SPI has a logical controller device as well.
-
---kfjH4zxOES6UT95V
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlu8xhQACgkQJNaLcl1U
-h9AH2gf8C9kz4kG030ID6648vQo9YUHUoHqyzVjXg2u/cPM6H4/AVpiOaeJqSMij
-Pl2KZbqPFisjnybJq3lPJaDx3f53TRfGL8/P5Q2AjVPvWMXWDO98JuQ0AA2MhHl2
-i7FcqD3mn8QkQu5wbJZOrYj//rnaWXcrVWyDotQXWSKwzHaZp6tBHdfVoUMWgo6w
-c45J4E19sRqtAlqFq2/GAR6Mo8Q0nRM410agaluau0zmBIZeTbL1SEDZO0DoVM2p
-XgspSOm1lWaSBoRA9wc/+gVG5V/g+5IdLqm+UmOdWasBd4loPAr6Bl9f/CNrlVig
-BBjsiPDh9yO9eGKeBQ/CMU7nXOlYqQ==
-=Jk+F
------END PGP SIGNATURE-----
-
---kfjH4zxOES6UT95V--
+-- 
+2.14.4
