@@ -1,87 +1,100 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH V10 1/8] irqchip: add C-SKY SMP interrupt controller
-Date: Tue, 9 Oct 2018 09:15:17 +0100
-Message-ID: <a8654ba4-fe46-6842-64f6-d4141bbf8793@arm.com>
-References: <cover.1538672812.git.ren_guo@c-sky.com>
- <e06484474231375248e3e7a6ab47cf8ff8893129.1538672812.git.ren_guo@c-sky.com>
- <404fb433-020e-28f9-2434-a22c6db36a15@arm.com> <20181009022357.GA826@guoren>
+From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: Re: [PATCH v3 3/7] dt-bindings: stm32-mdma: Add DMA/MDMA chaining
+ support bindings
+Date: Tue, 9 Oct 2018 10:17:39 +0200
+Message-ID: <31f5a087-6a83-76ff-dc5c-29e8ecc95744@st.com>
+References: <1538139715-24406-1-git-send-email-pierre-yves.mordret@st.com>
+ <1538139715-24406-4-git-send-email-pierre-yves.mordret@st.com>
+ <20181007145930.GA2372@vkoul-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181009022357.GA826@guoren>
-Content-Language: en-GB
+In-Reply-To: <20181007145930.GA2372@vkoul-mobl>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, anurup.m@huawei.com, Jonathan.Cameron@huawei.com, will.deacon@arm.com, zhangshaokun@hisilicon.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Vinod <vkoul@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/18 03:24, Guo Ren wrote:
-> Hi Marc,
-> 
-> On Mon, Oct 08, 2018 at 05:35:19PM +0100, Marc Zyngier wrote:
->> Hi Guo,
+
+
+On 10/07/2018 04:59 PM, Vinod wrote:
+> On 28-09-18, 15:01, Pierre-Yves MORDRET wrote:
+>> From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 >>
->> On 04/10/18 18:22, Guo Ren wrote:
->>>   - Irq-csky-mpintc is C-SKY smp system interrupt controller and it
->>>     could support 16 soft irqs, 16 private irqs, and 992 max common
->>>     irqs.
->>>
->>> Changelog:
->>>   - pass checkpatch.pl
->>>   - Move IPI_IRQ into the driver
->>>   - Remove irq_set_default_host() and use set_ipi_irq_mapping()
-> 
->   [...]
-> 
->>> +#ifdef CONFIG_SMP
->>> +static void csky_mpintc_send_ipi(const unsigned long *mask)
->>> +{
+>> This patch adds the description of the 2 properties needed to support M2M
+>> transfer triggered by STM32 DMA when his transfer is complete.
 >>
->> Why isn't this a cpumask? It should be this driver's job to convert the
->> cpumask to an interrupt-controller specific representation, and not the SMP
->> code's.
-> Ok, use cpumask.
-> 
->   [...]
-> 
->>> +#ifdef CONFIG_SMP
->>> +	set_send_ipi(&csky_mpintc_send_ipi);
->>> +
->>> +	set_ipi_irq_mapping(&csky_mpintc_ipi_irq_mapping);
+>> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+>> ---
+>>   Version history:
+>>     v3:
+>>     v2:
+>>        * rework content
+>>     v1:
+>>        * Initial
+>> ---
+>> ---
+>>  Documentation/devicetree/bindings/dma/stm32-mdma.txt | 12 ++++++++----
+>>  1 file changed, 8 insertions(+), 4 deletions(-)
 >>
->> Since you seem to be inventing a new set_send_ipi callback, why don't you
->> define it as:
->>
->> void set_send_ipi(void (*func)(const struct cpumask *),
->> 		  unsigned int ipi_irq);
->> after having created the mapping for the IPI interrupt? It would avoid this
->> rather pointless mapping callback.
+>> diff --git a/Documentation/devicetree/bindings/dma/stm32-mdma.txt b/Documentation/devicetree/bindings/dma/stm32-mdma.txt
+>> index d18772d..27c2812 100644
+>> --- a/Documentation/devicetree/bindings/dma/stm32-mdma.txt
+>> +++ b/Documentation/devicetree/bindings/dma/stm32-mdma.txt
+>> @@ -10,7 +10,7 @@ Required properties:
+>>  - interrupts: Should contain the MDMA interrupt.
+>>  - clocks: Should contain the input clock of the DMA instance.
+>>  - resets: Reference to a reset controller asserting the DMA controller.
+>> -- #dma-cells : Must be <5>. See DMA client paragraph for more details.
+>> +- #dma-cells : Must be <6>. See DMA client paragraph for more details.
 > 
-> I'll define it to:
-> 
-> void set_send_ipi(void (*func)(const struct cpumask *));
-> 
-> IPI_IRQ only use software-irq-15 in mpintc driver, so arch needn't care
-> about irq-num.
+> can you update the example for 6 cells?
 
-Except that your SMP code does a request_irq on the result of 
-create_mapping. Who is going to do that if you don't pass the Linux irq 
-around?
+of course.
 
 > 
-> 	/*
-> 	 * INTCL_SIGR[3:0] INTID
-> 	 * INTCL_SIGR[8:15] CPUMASK
-> 	 */
-> 	writel_relaxed((*mask) << 8 | IPI_IRQ, reg_base + INTCL_SIGR);
+> Also what happens to dts using 5 cells..
+
+They are not managed, but it should. I will update this flaw. Thanks for
+pointing this out.
+
 > 
-> We direct put IPI_IRQ to the hw-reg for the target core.
-
-I can see that, but that doesn't solve the issue outlined above.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+>>  
+>>  Optional properties:
+>>  - dma-channels: Number of DMA channels supported by the controller.
+>> @@ -26,7 +26,7 @@ Example:
+>>  		interrupts = <122>;
+>>  		clocks = <&timer_clk>;
+>>  		resets = <&rcc 992>;
+>> -		#dma-cells = <5>;
+>> +		#dma-cells = <6>;
+>>  		dma-channels = <16>;
+>>  		dma-requests = <32>;
+>>  		st,ahb-addr-masks = <0x20000000>, <0x00000000>;
+>> @@ -35,8 +35,8 @@ Example:
+>>  * DMA client
+>>  
+>>  DMA clients connected to the STM32 MDMA controller must use the format
+>> -described in the dma.txt file, using a five-cell specifier for each channel:
+>> -a phandle to the MDMA controller plus the following five integer cells:
+>> +described in the dma.txt file, using a six-cell specifier for each channel:
+>> +a phandle to the MDMA controller plus the following six integer cells:
+>>  
+>>  1. The request line number
+>>  2. The priority level
+>> @@ -76,6 +76,10 @@ a phandle to the MDMA controller plus the following five integer cells:
+>>     if no HW ack signal is used by the MDMA client
+>>  5. A 32bit mask specifying the value to be written to acknowledge the request
+>>     if no HW ack signal is used by the MDMA client
+>> +6. A bitfield value specifying if the MDMA client wants to generate M2M
+>> +   transfer with HW trigger (1) or not (0). This bitfield should be only
+>> +   enabled for M2M transfer triggered by STM32 DMA client. The memory devices
+>> +   involved in this kind of transfer are SRAM and DDR.
+>>  
+>>  Example:
+>>  
+>> -- 
+>> 2.7.4
+> 
