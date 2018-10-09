@@ -1,104 +1,110 @@
-From: Marcel Ziswiler <marcel@ziswiler.com>
-Subject: [PATCH v1 2/8] ARM: tegra: apalis-tk1/colibri_t20/t30: eval/iris: fix regulator gpio enable
-Date: Tue,  9 Oct 2018 17:25:17 +0200
-Message-ID: <20181009152523.3771-3-marcel@ziswiler.com>
-References: <20181009152523.3771-1-marcel@ziswiler.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181009152523.3771-1-marcel@ziswiler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 10/29] drm/sun4i: Rename DE2 registers
+ related macros
+Date: Tue, 9 Oct 2018 17:53:48 +0200
+Message-ID: <20181009155348.exmeyvvelxwnv3b5@flea>
+References: <20181007093905.11253-1-jernej.skrabec@siol.net>
+ <20181007093905.11253-11-jernej.skrabec@siol.net>
+ <20181008101828.hb4xtppbexwalbkk@flea>
+ <11072788.dZi9MDiihb@jernej-laptop>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="qlwprrpwi56itdhx"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBF466POQKGQEUKX7DMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <11072788.dZi9MDiihb@jernej-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-Anything other than the default active-low would require the separate
-property enable-active-high to be set. This gets rid of the following
-warning during boot:
+--qlwprrpwi56itdhx
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- regulator-usbh-vbus GPIO handle specifies active low - ignored
+On Mon, Oct 08, 2018 at 04:28:41PM +0200, Jernej =C5=A0krabec wrote:
+> Dne ponedeljek, 08. oktober 2018 ob 12:18:28 CEST je Maxime Ripard napisa=
+l(a):
+> > Hi,
+> >=20
+> > On Sun, Oct 07, 2018 at 11:38:46AM +0200, Jernej Skrabec wrote:
+> > > In preparation to introduce DE3 support, change prefix from "SUN8I_" =
+to
+> > > "DE2_". Current prefix suggest that it's valid only for one family,
+> > > whereas in reality, DE2 unit is used also on sun50i family.
+> > > Additionally, it will be easier to distinguish DE3 specific macros by
+> > > using "DE3_" prefix.
+> > >=20
+> > > No functional change in this commit.
+> >=20
+> > I'm not too sure about this one. There's basically two ways to look at
+> > this: you described the first one, and the second one would be to
+> > treat it as we do for the compatibles: the IP was introduced on one
+> > SoC family, and then got used on some other ones.
+> >=20
+> > Trying to always match the one you have however have a quite big
+> > maintainance cost, as can be shown by your patch: you always have to
+> > adapt comments, function names, defines, etc. This creates a lot of
+> > useless churns (ie, non-functional changes) in the drivers, that need
+> > to be written in the first place, and then reviewed.
+> >=20
+> > It's just not worth it.
+>=20
+> Well, using family neutral way would mean that there is no need
+> anymore for adaptation in the future, but as you wish.
 
-resp.:
+If you consider only the DE case, where it has been numbered by
+design, yes. If you consider all the other controllers that haven't
+been (like, SPI, or the USB PHY, for example), then you end up with
+two drivers that are using the same names, with no easy way to tell
+which is which
 
- regulator-1v05-avdd-hdmi-pll GPIO handle specifies active low - ignored
+> What prefix should I use for DE3 specific registers?
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+We should just follow the same pattern, and use the first family where
+it was introduced. So sun50i, I guess?
 
----
+Maxime
 
-Changes in v1: None
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
- arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi   | 2 +-
- arch/arm/boot/dts/tegra124-apalis.dtsi        | 2 +-
- arch/arm/boot/dts/tegra20-colibri-eval-v3.dts | 2 +-
- arch/arm/boot/dts/tegra20-colibri-iris.dts    | 2 +-
- arch/arm/boot/dts/tegra30-colibri-eval-v3.dts | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
 
-diff --git a/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi b/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-index 367eb8c86098..73a8e117a9b9 100644
---- a/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-+++ b/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-@@ -1948,7 +1948,7 @@
- 		regulator-name = "+V1.05_AVDD_HDMI_PLL";
- 		regulator-min-microvolt = <1050000>;
- 		regulator-max-microvolt = <1050000>;
--		gpio = <&gpio TEGRA_GPIO(H, 7) GPIO_ACTIVE_LOW>;
-+		gpio = <&gpio TEGRA_GPIO(H, 7) GPIO_ACTIVE_HIGH>;
- 		vin-supply = <&reg_1v05_vdd>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra124-apalis.dtsi b/arch/arm/boot/dts/tegra124-apalis.dtsi
-index 13c93cd507d8..3e3b347afe56 100644
---- a/arch/arm/boot/dts/tegra124-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra124-apalis.dtsi
-@@ -1978,7 +1978,7 @@
- 		regulator-name = "+V1.05_AVDD_HDMI_PLL";
- 		regulator-min-microvolt = <1050000>;
- 		regulator-max-microvolt = <1050000>;
--		gpio = <&gpio TEGRA_GPIO(H, 7) GPIO_ACTIVE_LOW>;
-+		gpio = <&gpio TEGRA_GPIO(H, 7) GPIO_ACTIVE_HIGH>;
- 		vin-supply = <&reg_1v05_vdd>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra20-colibri-eval-v3.dts b/arch/arm/boot/dts/tegra20-colibri-eval-v3.dts
-index 37ad508b61d9..f1a85d930e61 100644
---- a/arch/arm/boot/dts/tegra20-colibri-eval-v3.dts
-+++ b/arch/arm/boot/dts/tegra20-colibri-eval-v3.dts
-@@ -256,7 +256,7 @@
- 		regulator-name = "VCC_USB[1-4]";
- 		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
--		gpio = <&gpio TEGRA_GPIO(W, 2) GPIO_ACTIVE_LOW>;
-+		gpio = <&gpio TEGRA_GPIO(W, 2) GPIO_ACTIVE_HIGH>;
- 		vin-supply = <&reg_5v0>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/tegra20-colibri-iris.dts b/arch/arm/boot/dts/tegra20-colibri-iris.dts
-index af4740847769..e1e5ec5253fd 100644
---- a/arch/arm/boot/dts/tegra20-colibri-iris.dts
-+++ b/arch/arm/boot/dts/tegra20-colibri-iris.dts
-@@ -238,7 +238,7 @@
- 		regulator-name = "VCC_USB1";
- 		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
--		gpio = <&gpio TEGRA_GPIO(W, 2) GPIO_ACTIVE_LOW>;
-+		gpio = <&gpio TEGRA_GPIO(W, 2) GPIO_ACTIVE_HIGH>;
- 		vin-supply = <&reg_5v0>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts b/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
-index 8e106e784dce..7e6bf4cdf322 100644
---- a/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
-+++ b/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
-@@ -192,7 +192,7 @@
- 		regulator-name = "VCC_USB[1-4]";
- 		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
--		gpio = <&gpio TEGRA_GPIO(W, 2) GPIO_ACTIVE_LOW>;
-+		gpio = <&gpio TEGRA_GPIO(W, 2) GPIO_ACTIVE_HIGH>;
- 		vin-supply = <&reg_5v0>;
- 	};
- };
--- 
-2.14.4
+--qlwprrpwi56itdhx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlu8zwsACgkQ0rTAlCFN
+r3QqwQ/+IoZy8t7aGMla11oE/6yNeaFJ34IxjnNbHLImveD7Ovr9f5ba3XSoQpxX
+AX83BsNpV0Y3c42ZOIAE5O1sJ9dO0P9YAQXsWIhtglWpt6PByfJ6fP6oHmV2Oacn
+4THjYt00r1vGtrjU9RpTVQ5deR1dLTLobPc1pB0gTCzRn3W7mnqdMs2p/yT2SMyT
+sPqwmVvK7flMM1B/h6yG9nzTsWzj4Xh64+Y7w+eviUUVqS7PpL5yG+y2zFeag3rH
+3KYKqWzaewOisFJZhHv9T/Q3NC1XXdNn8Dv4fg3i6zcPJFxi1oWFp44PXEMHEJsd
+3FtTxLSbk8IvYSRWkd+qVKLKngstpA97wJ84MTpRaEeIVk39vwBYRuvQwwG6aior
++1juz0zdqLmDihnNfo/JhyEd8z32CPOxSAJBaWz9AspFynHtS17vM0qzFupQfiSK
+w7iCl8cplcfoFRJj+qFexAzPeL6Q3HSNRu0nQJ/hRnXQs3QbXFNWalHJ8R9slzH2
+S4hsP7X9xGx55xZEQM23CtHve1zMQ6uZPdJ8ncRmkFsAA6OL2YGCVTEauSxa8bge
+dXD7ZMm3+ucSJ6c4jRFJb9VL13FVFxgYYn9u1HcY9B7DK97Y1UldMP4jHs+SQFGy
+SI1gafvdOxtaIaATXp2SbPmAoh3PjKgVLr//lAjul9m822mnxLU=
+=VJae
+-----END PGP SIGNATURE-----
+
+--qlwprrpwi56itdhx--
