@@ -1,52 +1,57 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
+From: Marek Vasut <marek.vasut@gmail.com>
 Subject: Re: [PATCH 1/7] dt-bindings: mfd: ds90ux9xx: add description of TI
  DS90Ux9xx ICs
-Date: Tue, 9 Oct 2018 23:55:39 +0300
-Message-ID: <d7536af1-d78f-6d20-81a0-288be1d67f25@mleia.com>
+Date: Tue, 9 Oct 2018 23:03:49 +0200
+Message-ID: <c843687c-2897-464a-5ec8-a4f070b8e627@gmail.com>
 References: <20181008211205.2900-1-vz@mleia.com>
  <20181008211205.2900-2-vz@mleia.com>
  <5631ac17-a1c1-af12-8b30-314880af42df@gmail.com>
  <4569f3e3-3812-f423-eda9-51e7a4d56a58@mleia.com>
+ <d7536af1-d78f-6d20-81a0-288be1d67f25@mleia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4569f3e3-3812-f423-eda9-51e7a4d56a58@mleia.com>
+In-Reply-To: <d7536af1-d78f-6d20-81a0-288be1d67f25@mleia.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>
+To: Vladimir Zapolskiy <vz@mleia.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>
 Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Sandeep Jain <Sandeep_Jain@mentor.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2018 02:11 PM, Vladimir Zapolskiy wrote:
-> Hi Marek,
-> 
-> On 10/09/2018 03:13 AM, Marek Vasut wrote:
->> On 10/08/2018 11:11 PM, Vladimir Zapolskiy wrote:
->>> From: Sandeep Jain <Sandeep_Jain@mentor.com>
->>>
->>> The change adds device tree binding description of TI DS90Ux9xx
->>> series of serializer and deserializer controllers which support video,
->>> audio and control data transmission over FPD-III Link connection.
->>>
-
-[snip]
-
->>> +Optional properties:
->>> +- reg : Specifies the I2C slave address of a local de-/serializer.
->>> +- power-gpios : GPIO line to control supplied power to the device.
+On 10/09/2018 10:55 PM, Vladimir Zapolskiy wrote:
+> On 10/09/2018 02:11 PM, Vladimir Zapolskiy wrote:
+>> Hi Marek,
 >>
->> Shouldn't this be regulator phandle ?
+>> On 10/09/2018 03:13 AM, Marek Vasut wrote:
+>>> On 10/08/2018 11:11 PM, Vladimir Zapolskiy wrote:
+>>>> From: Sandeep Jain <Sandeep_Jain@mentor.com>
+>>>>
+>>>> The change adds device tree binding description of TI DS90Ux9xx
+>>>> series of serializer and deserializer controllers which support video,
+>>>> audio and control data transmission over FPD-III Link connection.
+>>>>
 > 
-> It could be, right. I'll ponder upon it.
+> [snip]
 > 
+>>>> +Optional properties:
+>>>> +- reg : Specifies the I2C slave address of a local de-/serializer.
+>>>> +- power-gpios : GPIO line to control supplied power to the device.
+>>>
+>>> Shouldn't this be regulator phandle ?
+>>
+>> It could be, right. I'll ponder upon it.
+>>
+> 
+> No, it can not.
+> 
+> The property describes PDB "Power-down Mode Input Pin", it is a control
+> pin with the predefined voltage, so regulator phandle is not applicable
+> here.
 
-No, it can not.
+Then the DT binding document needs updating, because this is completely
+unclear and confusing.
 
-The property describes PDB "Power-down Mode Input Pin", it is a control
-pin with the predefined voltage, so regulator phandle is not applicable
-here.
-
---
-Best wishes,
-Vladimir
+-- 
+Best regards,
+Marek Vasut
