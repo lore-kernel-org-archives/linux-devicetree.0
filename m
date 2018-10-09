@@ -1,231 +1,111 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH v3 1/5] drivers: pinctrl: qcom: add wakeup capability to
- GPIO
-Date: Tue, 9 Oct 2018 11:07:01 -0600
-Message-ID: <20181009170701.GS11144@codeaurora.org>
-References: <20180904211810.5506-1-ilina@codeaurora.org>
- <20180904211810.5506-2-ilina@codeaurora.org>
- <20181002170622.GK11144@codeaurora.org>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v3 1/2] Driver core: add bus_find_device_by_fwnode
+Date: Tue, 9 Oct 2018 11:27:26 -0600
+Message-ID: <20181009172726.GA2182@xps15>
+References: <1539080245-25818-1-git-send-email-svellattu@mvista.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181002170622.GK11144@codeaurora.org>
+In-Reply-To: <1539080245-25818-1-git-send-email-svellattu@mvista.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: marc.zyngier@arm.com, bjorn.andersson@linaro.org, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org
-Cc: rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
+To: Silesh C V <svellattu@mvista.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, linux-rdma@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Lijun Ou <oulijun@huawei.com>, "Wei Hu(Xavier)" <xavier.huwei@huawei.com>, Yisen Zhuang <yisen.zhuang@huawei.com>, Salil Mehta <salil.mehta@huawei.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Brown <broonie@kernel.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 02 2018 at 11:06 -0600, Lina Iyer wrote:
->Marc,
->
->I am exploring an option where we don't do this enable/disable every
->suspend/resume and in that process, I was able to just use the PDC
->interrupt instead of the TLMM for triggering the GPIO. The PDC interrupt
->(which takes over for the GPIO) has an handler like this -
->
->On Tue, Sep 04 2018 at 15:18 -0600, Lina Iyer wrote:
->>QCOM SoC's that have Power Domain Controller (PDC) chip in the always-on
->>domain can wakeup the SoC, when interrupts and GPIOs are routed to its
->>interrupt controller. Only select GPIOs that are deemed wakeup capable
->>are routed to specific PDC pins. During low power state, the pinmux
->>interrupt controller may be non-functional but the PDC would be. The PDC
->>can detect the wakeup GPIO is triggered and bring the TLMM to an
->>operational state.
->>
->>Interrupts that are level triggered will be detected at the TLMM when
->>the controller becomes operational. Edge interrupts however need to be
->>replayed again.
->>
->>Request the corresponding PDC IRQ, when the GPIO is requested as an IRQ,
->>but keep it disabled. During suspend, we can enable the PDC IRQ instead
->>of the GPIO IRQ, which may or not be detected.
->>
->>Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->>---
->>Changes in v3:
->>	- free action->name
->>Changes in v2:
->>	- Remove IRQF_NO_SUSPEND and IRQF_ONE_SHOT from PDC IRQ
->>Changes in v1:
->>	- Trigger GPIO in h/w from PDC IRQ handler
->>	- Avoid big tables for GPIO-PDC map, pick from DT instead
->>	- Use handler_data
->>---
->>drivers/pinctrl/qcom/pinctrl-msm.c | 98 ++++++++++++++++++++++++++++++
->>1 file changed, 98 insertions(+)
->>
->>diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
->>index 0e22f52b2a19..6527a0a9edd1 100644
->>--- a/drivers/pinctrl/qcom/pinctrl-msm.c
->>+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
->>@@ -687,11 +687,15 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->>	const struct msm_pingroup *g;
->>	unsigned long flags;
->>	u32 val;
->>+	struct irq_data *pdc_irqd = irq_get_handler_data(d->irq);
->>
->>	g = &pctrl->soc->groups[d->hwirq];
->>
->>	raw_spin_lock_irqsave(&pctrl->lock, flags);
->>
->>+	if (pdc_irqd)
->>+		irq_set_irq_type(pdc_irqd->irq, type);
->>+
->I skip over the TLMM configuration for the GPIO interrupt and just set
->the IRQ handler for the GPIO interrupt here..
->
->>	/*
->>	 * For hw without possibility of detecting both edges
->>	 */
->>@@ -779,9 +783,13 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
->>	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->>	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
->>	unsigned long flags;
->>+	struct irq_data *pdc_irqd = irq_get_handler_data(d->irq);
->>
->>	raw_spin_lock_irqsave(&pctrl->lock, flags);
->>
->>+	if (pdc_irqd)
->>+		irq_set_irq_wake(pdc_irqd->irq, on);
->>+
->>	irq_set_irq_wake(pctrl->irq, on);
->>
->>	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
->>@@ -863,6 +871,94 @@ static bool msm_gpio_needs_valid_mask(struct msm_pinctrl *pctrl)
->>	return device_property_read_u16_array(pctrl->dev, "gpios", NULL, 0) > 0;
->>}
->>
->>+static irqreturn_t wake_irq_gpio_handler(int irq, void *data)
->>+{
->>+	struct irq_data *irqd = data;
->>+	struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
->>+	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
->>+	const struct msm_pingroup *g;
->>+	unsigned long flags;
->>+	u32 val;
->>+
->>+	if (!irqd_is_level_type(irqd)) {
->>+		g = &pctrl->soc->groups[irqd->hwirq];
->>+		raw_spin_lock_irqsave(&pctrl->lock, flags);
->>+		val = BIT(g->intr_status_bit);
->>+		writel(val, pctrl->regs + g->intr_status_reg);
->>+		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
->>+	}
->>+
->>+	return IRQ_HANDLED;
->>+}
->>+
->
->Then ...
->
->static irqreturn_t wake_irq_gpio_handler(int irq, void *data)
->{
->      struct irq_data *irqd = data;
->      struct irq_desc *desc = irq_to_desc(irqd->irq);
->
->      desc->handle_irq(desc);
->
->      return IRQ_HANDLED;
->}
->
->I am following check_irq_resend() but I need to call the handler for
->both level and edge interrupts. Firstly, is it okay to call the
->handler_irq() directly?
->
->My other question is check_irq_resend() indicates that it should be
->called with desc->lock held. Since we are invoking the handler directly
->and not modifying any core state of the irq_desc, is it safe here? (Also
->the locking API are not exposed, I am sure there must be a reason for it).
->
->Thoughts?
->
-Would it help if I submit a RFC patch based on this idea?
+Hi Silesh,
 
->Thanks,
->Lina
->
->>+static int msm_gpio_pdc_pin_request(struct irq_data *d)
->>+{
->>+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->>+	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
->>+	struct platform_device *pdev = to_platform_device(pctrl->dev);
->>+	const char *pin_name;
->>+	int irq;
->>+	int ret;
->>+
->>+	pin_name = kasprintf(GFP_KERNEL, "gpio%lu", d->hwirq);
->>+	if (!pin_name)
->>+		return -ENOMEM;
->>+
->>+	irq = platform_get_irq_byname(pdev, pin_name);
->>+	if (irq < 0) {
->>+		kfree(pin_name);
->>+		return 0;
->>+	}
->>+
->>+	ret = request_irq(irq, wake_irq_gpio_handler, irqd_get_trigger_type(d),
->>+			  pin_name, d);
->>+	if (ret) {
->>+		pr_warn("GPIO-%lu could not be set up as wakeup", d->hwirq);
->>+		kfree(pin_name);
->>+		return ret;
->>+	}
->>+
->>+	irq_set_handler_data(d->irq, irq_get_irq_data(irq));
->>+	disable_irq(irq);
->>+
->>+	return 0;
->>+}
->>+
->>+static int msm_gpio_pdc_pin_release(struct irq_data *d)
->>+{
->>+	struct irq_data *pdc_irqd = irq_get_handler_data(d->irq);
->>+	const void *name;
->>+
->>+	if (pdc_irqd) {
->>+		irq_set_handler_data(d->irq, NULL);
->>+		name = free_irq(pdc_irqd->irq, d);
->>+		kfree(name);
->>+	}
->>+
->>+	return 0;
->>+}
->>+
->>+static int msm_gpio_irq_reqres(struct irq_data *d)
->>+{
->>+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->>+
->>+	if (gpiochip_lock_as_irq(gc, irqd_to_hwirq(d))) {
->>+		dev_err(gc->parent, "unable to lock HW IRQ %lu for IRQ\n",
->>+			irqd_to_hwirq(d));
->>+		return -EINVAL;
->>+	}
->>+
->>+	return msm_gpio_pdc_pin_request(d);
->>+}
->>+
->>+static void msm_gpio_irq_relres(struct irq_data *d)
->>+{
->>+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->>+
->>+	msm_gpio_pdc_pin_release(d);
->>+	gpiochip_unlock_as_irq(gc, irqd_to_hwirq(d));
->>+}
->>+
->>static int msm_gpio_init(struct msm_pinctrl *pctrl)
->>{
->>	struct gpio_chip *chip;
->>@@ -887,6 +983,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
->>	pctrl->irq_chip.irq_ack = msm_gpio_irq_ack;
->>	pctrl->irq_chip.irq_set_type = msm_gpio_irq_set_type;
->>	pctrl->irq_chip.irq_set_wake = msm_gpio_irq_set_wake;
->>+	pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
->>+	pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
->>
->>	ret = gpiochip_add_data(&pctrl->chip, pctrl);
->>	if (ret) {
->>--
->>The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->>a Linux Foundation Collaborative Project
->>
+On Tue, Oct 09, 2018 at 03:47:24PM +0530, Silesh C V wrote:
+> Some drivers need to find the device on a bus having a specific firmware
+> node. Currently, such drivers have their own implementations to do this.
+> Provide a helper similar to bus_find_device_by_name so that each driver
+> does not have to reinvent this.
+> 
+> Signed-off-by: Silesh C V <svellattu@mvista.com>
+> ---
+> Changes since v2: 
+> 	- make use of dev_fwnode in match_fwnode.
+> 
+>  drivers/base/bus.c     | 20 ++++++++++++++++++++
+>  include/linux/device.h |  3 +++
+>  2 files changed, 23 insertions(+)
+> 
+> diff --git a/drivers/base/bus.c b/drivers/base/bus.c
+> index 8bfd27e..a2f39db 100644
+> --- a/drivers/base/bus.c
+> +++ b/drivers/base/bus.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/string.h>
+>  #include <linux/mutex.h>
+>  #include <linux/sysfs.h>
+> +#include <linux/property.h>
+>  #include "base.h"
+>  #include "power/power.h"
+>  
+> @@ -373,6 +374,25 @@ struct device *bus_find_device_by_name(struct bus_type *bus,
+>  }
+>  EXPORT_SYMBOL_GPL(bus_find_device_by_name);
+>  
+> +static int match_fwnode(struct device *dev, void *fwnode)
+> +{
+> +	return dev_fwnode(dev) == fwnode;
+> +}
+> +
+> +/**
+> + * bus_find_device_by_fwnode - device iterator for locating a particular device
+> + * having a specific firmware node
+> + * @bus: bus type
+> + * @start: Device to begin with
+> + * @fwnode: firmware node of the device to match
+> + */
+> +struct device *bus_find_device_by_fwnode(struct bus_type *bus, struct device *start,
+> +					struct fwnode_handle *fwnode)
+
+I get the following when running checkpatch on your set:
+
+mpoirier@xps15:~/work/linaro/coresight/kernel-maint$ ./scripts/checkpatch.pl
+0001-Driver-core-add-bus_find_device_by_fwnode.patch
+WARNING: line over 80 characters
+#45: FILE: drivers/base/bus.c:389:
++struct device *bus_find_device_by_fwnode(struct bus_type *bus, struct device
+*start,
+
+total: 0 errors, 1 warnings, 41 lines checked
+
+NOTE: For some of the reported defects, checkpatch may be able to
+      mechanically convert to the typical style using --fix or --fix-inplace.
+
+0001-Driver-core-add-bus_find_device_by_fwnode.patch has style problems, please
+review.
+
+NOTE: If any of the errors are false positives, please report
+      them to the maintainer, see CHECKPATCH in MAINTAINERS.
+
+Regards,
+Mathieu
+
+> +{
+> +	return bus_find_device(bus, start, (void *)fwnode, match_fwnode);
+> +}
+> +EXPORT_SYMBOL_GPL(bus_find_device_by_fwnode);
+> +
+>  /**
+>   * subsys_find_device_by_id - find a device with a specific enumeration number
+>   * @subsys: subsystem
+> diff --git a/include/linux/device.h b/include/linux/device.h
+> index 8f88254..09384f6 100644
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -171,6 +171,9 @@ struct device *bus_find_device(struct bus_type *bus, struct device *start,
+>  struct device *bus_find_device_by_name(struct bus_type *bus,
+>  				       struct device *start,
+>  				       const char *name);
+> +struct device *bus_find_device_by_fwnode(struct bus_type *bus,
+> +				       struct device *start,
+> +				       struct fwnode_handle *fwnode);
+>  struct device *subsys_find_device_by_id(struct bus_type *bus, unsigned int id,
+>  					struct device *hint);
+>  int bus_for_each_drv(struct bus_type *bus, struct device_driver *start,
+> -- 
+> 1.9.1
+> 
