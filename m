@@ -1,113 +1,48 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH V11 1/8] irqchip: add C-SKY SMP interrupt controller
-Date: Tue, 9 Oct 2018 16:11:05 +0100
-Message-ID: <8772c090-a139-04e4-a55f-820afe1bb5bd@arm.com>
-References: <cover.1539095311.git.ren_guo@c-sky.com>
- <83d216b3fed039037ebe8b8513f3c51a36934e74.1539095312.git.ren_guo@c-sky.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 1/2] Driver core: add bus_find_device_by_fwnode
+Date: Tue, 9 Oct 2018 16:15:33 +0100
+Message-ID: <20181009151533.GC20774@sirena.org.uk>
+References: <1539080245-25818-1-git-send-email-svellattu@mvista.com>
+ <20181009110210.i6xphyuy5jkcfaug@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <83d216b3fed039037ebe8b8513f3c51a36934e74.1539095312.git.ren_guo@c-sky.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, will.deacon@arm.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kfjH4zxOES6UT95V"
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181009110210.i6xphyuy5jkcfaug@katana>
+Sender: netdev-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Silesh C V <svellattu@mvista.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, linux-rdma@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Mathieu Poirier <mathieu.poirier@linaro.org>, Lijun Ou <oulijun@huawei.com>, "Wei Hu(Xavier)" <xavier.huwei@huawei.com>, Yisen Zhuang <yisen.zhuang@huawei.com>, Salil Mehta <salil.mehta@huawei.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "David S. Miller" <davem@davemloft.n>
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/18 15:41, Guo Ren wrote:
->   - Irq-csky-mpintc is C-SKY smp system interrupt controller and it
->     could support 16 soft irqs, 16 private irqs, and 992 max common
->     irqs.
-> 
-> Changelog:
->   - Convert the cpumask to an interrupt-controller specific representation
->     in driver's code, and not the SMP code's.
->   - pass checkpatch.pl
->   - Move IPI_IRQ into the driver
->   - Remove irq_set_default_host() and use set_ipi_irq_mapping()
->   - Change name with upstream feed-back
->   - Change irq map, reserve soft_irq & private_irq space
->   - Add License and Copyright
->   - Support set_affinity for irq balance in SMP
-> 
-> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> Cc: Marc Zyngier <marc.zyngier@arm.com>
 
-[...]
+--kfjH4zxOES6UT95V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +/* C-SKY multi processor interrupt controller */
-> +static int __init
-> +csky_mpintc_init(struct device_node *node, struct device_node *parent)
-> +{
-> +	unsigned int cpu, nr_irq;
-> +	int ret;
-> +
-> +	if (parent)
-> +		return 0;
-> +
-> +	ret = of_property_read_u32(node, "csky,num-irqs", &nr_irq);
-> +	if (ret < 0)
-> +		nr_irq = INTC_IRQS;
-> +
-> +	if (INTCG_base == NULL) {
-> +		INTCG_base = ioremap(mfcr("cr<31, 14>"),
-> +				     INTCL_SIZE*nr_cpu_ids + INTCG_SIZE);
-> +		if (INTCG_base == NULL)
-> +			return -EIO;
-> +
-> +		INTCL_base = INTCG_base + INTCG_SIZE;
-> +
-> +		writel_relaxed(BIT(0), INTCG_base + INTCG_ICTLR);
-> +	}
-> +
-> +	root_domain = irq_domain_add_linear(node, nr_irq, &csky_irqdomain_ops,
-> +					    NULL);
-> +	if (!root_domain)
-> +		return -ENXIO;
-> +
-> +	/* for every cpu */
-> +	for_each_present_cpu(cpu) {
-> +		per_cpu(intcl_reg, cpu) = INTCL_base + (INTCL_SIZE * cpu);
-> +		writel_relaxed(BIT(0), per_cpu(intcl_reg, cpu) + INTCL_PICTLR);
-> +	}
-> +
-> +	set_handle_irq(&csky_mpintc_handler);
-> +
-> +#ifdef CONFIG_SMP
-> +	set_send_ipi(&csky_mpintc_send_ipi);
-> +
-> +	set_ipi_irq_mapping(&csky_mpintc_ipi_irq_mapping);
+On Tue, Oct 09, 2018 at 01:02:10PM +0200, Wolfram Sang wrote:
 
-Same remark as before.
+> We recently had this discussion in I2C world about using the parent if
+> the (logical) device has a NULL fw_node [1]. I don't know if the other
+> subsystems you modify use logical devices as well? If no, it seems we
+> need an additional check for the parent in the I2C core only. If yes,
+> this might be considered in your patchset?
 
-You do not need this second callback, and you should redefine 
-set_send_ipi to take an irq number:
+SPI has a logical controller device as well.
 
-	ipi_irq = irq_create_mapping(root_domain, IPI_IRQ);
-	if (!ipi_irq)
-		[handle error]
+--kfjH4zxOES6UT95V
+Content-Type: application/pgp-signature; name="signature.asc"
 
-	set_send_ipi(csky_mpintc_send_ipi, ipi_irq);
+-----BEGIN PGP SIGNATURE-----
 
-and you can then delete both set_ipi_irq_mapping and 
-csky_mpintc_handler, none of which serve any purpose.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlu8xhQACgkQJNaLcl1U
+h9AH2gf8C9kz4kG030ID6648vQo9YUHUoHqyzVjXg2u/cPM6H4/AVpiOaeJqSMij
+Pl2KZbqPFisjnybJq3lPJaDx3f53TRfGL8/P5Q2AjVPvWMXWDO98JuQ0AA2MhHl2
+i7FcqD3mn8QkQu5wbJZOrYj//rnaWXcrVWyDotQXWSKwzHaZp6tBHdfVoUMWgo6w
+c45J4E19sRqtAlqFq2/GAR6Mo8Q0nRM410agaluau0zmBIZeTbL1SEDZO0DoVM2p
+XgspSOm1lWaSBoRA9wc/+gVG5V/g+5IdLqm+UmOdWasBd4loPAr6Bl9f/CNrlVig
+BBjsiPDh9yO9eGKeBQ/CMU7nXOlYqQ==
+=Jk+F
+-----END PGP SIGNATURE-----
 
-In your SMP code:
-
-void __init set_send_ipi(void (*func)(const struct cpumask *), int irq)
-{
-	if (send_arch_ipi)
-		return;
-
-	send_arch_ipi = func;
-	ipi_irq = irq;
-}
-
-and simplify setup_smp_ipi.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+--kfjH4zxOES6UT95V--
