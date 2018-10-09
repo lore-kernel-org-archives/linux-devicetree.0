@@ -1,50 +1,87 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [RESEND PATCH v3 0/3] sh: make early_platform code SuperH-specific
-Date: Tue, 9 Oct 2018 09:58:52 +0200
-Message-ID: <CAMRc=Mc44cw__ZQ=Pv77BaEngbS6WETX8Xi-wB8epDeRwzx7LA@mail.gmail.com>
-References: <20180827090651.25062-1-brgl@bgdev.pl> <CAMRc=McWre+5PRuozF69YKONvzy4X31=MzZim-QjhaAZ9iAVTw@mail.gmail.com>
- <9963d3f3-ba14-0d18-d669-53fc79b783c2@linaro.org> <CAMRc=MeC8gwEpjNf5AEX4oocHYv8c_CJXkCDMM9CQvaqxrbdXQ@mail.gmail.com>
- <0622b4da-20d3-5f05-5774-85c1dbabe00e@linaro.org>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH V10 1/8] irqchip: add C-SKY SMP interrupt controller
+Date: Tue, 9 Oct 2018 09:15:17 +0100
+Message-ID: <a8654ba4-fe46-6842-64f6-d4141bbf8793@arm.com>
+References: <cover.1538672812.git.ren_guo@c-sky.com>
+ <e06484474231375248e3e7a6ab47cf8ff8893129.1538672812.git.ren_guo@c-sky.com>
+ <404fb433-020e-28f9-2434-a22c6db36a15@arm.com> <20181009022357.GA826@guoren>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0622b4da-20d3-5f05-5774-85c1dbabe00e@linaro.org>
+In-Reply-To: <20181009022357.GA826@guoren>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Peter Rosin <peda@axentia.se>, Jiri Slaby <jslaby@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank
+To: Guo Ren <ren_guo@c-sky.com>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, anurup.m@huawei.com, Jonathan.Cameron@huawei.com, will.deacon@arm.com, zhangshaokun@hisilicon.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-czw., 20 wrz 2018 o 18:48 Daniel Lezcano <daniel.lezcano@linaro.org> napisa=
-=C5=82(a):
->
-> On 20/09/2018 18:19, Bartosz Golaszewski wrote:
-> > 2018-09-20 18:09 GMT+02:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
-> >> On 20/09/2018 15:00, Bartosz Golaszewski wrote:
-> >>
-> >> [ ... ]
-> >>
-> >>> Ping for 4.20. This is the third release cycle I'm trying to get this
-> >>> merged and there never were any objections.
-> >>
-> >> Thanks for the heads up, it is in the pipe.
-> >>
-> >
-> > I guess you mean only the clocksource patch?
->
->
-> I meant it is in the pipe of things to review :)
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
+On 09/10/18 03:24, Guo Ren wrote:
+> Hi Marc,
+> 
+> On Mon, Oct 08, 2018 at 05:35:19PM +0100, Marc Zyngier wrote:
+>> Hi Guo,
+>>
+>> On 04/10/18 18:22, Guo Ren wrote:
+>>>   - Irq-csky-mpintc is C-SKY smp system interrupt controller and it
+>>>     could support 16 soft irqs, 16 private irqs, and 992 max common
+>>>     irqs.
+>>>
+>>> Changelog:
+>>>   - pass checkpatch.pl
+>>>   - Move IPI_IRQ into the driver
+>>>   - Remove irq_set_default_host() and use set_ipi_irq_mapping()
+> 
+>   [...]
+> 
+>>> +#ifdef CONFIG_SMP
+>>> +static void csky_mpintc_send_ipi(const unsigned long *mask)
+>>> +{
+>>
+>> Why isn't this a cpumask? It should be this driver's job to convert the
+>> cpumask to an interrupt-controller specific representation, and not the SMP
+>> code's.
+> Ok, use cpumask.
+> 
+>   [...]
+> 
+>>> +#ifdef CONFIG_SMP
+>>> +	set_send_ipi(&csky_mpintc_send_ipi);
+>>> +
+>>> +	set_ipi_irq_mapping(&csky_mpintc_ipi_irq_mapping);
+>>
+>> Since you seem to be inventing a new set_send_ipi callback, why don't you
+>> define it as:
+>>
+>> void set_send_ipi(void (*func)(const struct cpumask *),
+>> 		  unsigned int ipi_irq);
+>> after having created the mapping for the IPI interrupt? It would avoid this
+>> rather pointless mapping callback.
+> 
+> I'll define it to:
+> 
+> void set_send_ipi(void (*func)(const struct cpumask *));
+> 
+> IPI_IRQ only use software-irq-15 in mpintc driver, so arch needn't care
+> about irq-num.
 
-Last hopefull ping for v4.20...
+Except that your SMP code does a request_irq on the result of 
+create_mapping. Who is going to do that if you don't pass the Linux irq 
+around?
 
-Bart
+> 
+> 	/*
+> 	 * INTCL_SIGR[3:0] INTID
+> 	 * INTCL_SIGR[8:15] CPUMASK
+> 	 */
+> 	writel_relaxed((*mask) << 8 | IPI_IRQ, reg_base + INTCL_SIGR);
+> 
+> We direct put IPI_IRQ to the hw-reg for the target core.
+
+I can see that, but that doesn't solve the issue outlined above.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
