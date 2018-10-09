@@ -1,38 +1,131 @@
-Return-Path: <SRS0=XwHs=MQ=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH] media: dt-bindings: media: rcar_vin: add device tree support for r8a7744
-Date: Thu,  4 Oct 2018 16:58:11 +0100
-Message-Id: <1538668691-1780-1-git-send-email-biju.das@bp.renesas.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=6MUZ=MV=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp.codeaurora.org ([198.145.29.96]:32984 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbeJIUXU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Oct 2018 16:23:20 -0400
+From: Govind Singh <govinds@codeaurora.org>
+Subject: [PATCH 5/6] remoteproc: qcom: wcss: populate hardcoded param using driver data
+Date: Tue,  9 Oct 2018 18:35:56 +0530
+Message-Id: <1539090357-20853-6-git-send-email-govinds@codeaurora.org>
+In-Reply-To: <1539090357-20853-1-git-send-email-govinds@codeaurora.org>
+References: <1539090357-20853-1-git-send-email-govinds@codeaurora.org>
+Sender: devicetree-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Govind Singh <govinds@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add compatible strings for r8a7744. No driver change is needed as
-"renesas,rcar-gen2-vin" will activate the right code.However, it is good
-practice to document compatible strings for the specific SoC as this
-allows SoC specific changes to the driver if needed, in addition to
-document SoC support and therefore allow checkpatch.pl to validate
-compatible string values.
+Q6 based WiFi fw loading is supported across
+different targets, ex: IPQ8074/QCS404. In order to
+support different fw names/pas id etc, populate
+hardcoded param using driver data.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+Signed-off-by: Govind Singh <govinds@codeaurora.org>
 ---
-This patch is tested against linux-next next next-20181004 & media_tree
----
- Documentation/devicetree/bindings/media/rcar_vin.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/remoteproc/qcom_q6v5_wcss.c | 36 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 32 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
-index 2f42005..d329a4e 100644
---- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-+++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-@@ -11,6 +11,7 @@ on Gen3 platforms to a CSI-2 receiver.
+diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
+index f93e1e4..24e276d 100644
+--- a/drivers/remoteproc/qcom_q6v5_wcss.c
++++ b/drivers/remoteproc/qcom_q6v5_wcss.c
+@@ -8,6 +8,7 @@
+ #include <linux/kernel.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/module.h>
++#include <linux/of_device.h>
+ #include <linux/of_reserved_mem.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+@@ -16,7 +17,6 @@
+ #include "qcom_common.h"
+ #include "qcom_q6v5.h"
  
-  - compatible: Must be one or more of the following
-    - "renesas,vin-r8a7743" for the R8A7743 device
-+   - "renesas,vin-r8a7744" for the R8A7744 device
-    - "renesas,vin-r8a7745" for the R8A7745 device
-    - "renesas,vin-r8a7778" for the R8A7778 device
-    - "renesas,vin-r8a7779" for the R8A7779 device
+-#define WCSS_CRASH_REASON		421
+ 
+ /* Q6SS Register Offsets */
+ #define Q6SS_RESET_REG		0x014
+@@ -70,6 +70,14 @@
+ #define TCSR_WCSS_CLK_MASK	0x1F
+ #define TCSR_WCSS_CLK_ENABLE	0x14
+ 
++struct wcss_data {
++	void (*pas_handover)(struct qcom_q6v5 *q6v5);
++	const char *firmware_name;
++	int crash_reason_smem;
++	int version;
++	int pas_id;
++};
++
+ struct q6v5_wcss {
+ 	struct device *dev;
+ 
+@@ -91,6 +99,10 @@ struct q6v5_wcss {
+ 	phys_addr_t mem_reloc;
+ 	void *mem_region;
+ 	size_t mem_size;
++
++	int crash_reason_smem;
++	int pas_id;
++	int version;
+ };
+ 
+ static int q6v5_wcss_reset(struct q6v5_wcss *wcss)
+@@ -527,12 +539,17 @@ static int q6v5_alloc_memory_region(struct q6v5_wcss *wcss)
+ 
+ static int q6v5_wcss_probe(struct platform_device *pdev)
+ {
++	const struct wcss_data *desc;
+ 	struct q6v5_wcss *wcss;
+ 	struct rproc *rproc;
+ 	int ret;
+ 
++	desc = of_device_get_match_data(&pdev->dev);
++	if (!desc)
++		return -EINVAL;
++
+ 	rproc = rproc_alloc(&pdev->dev, pdev->name, &q6v5_wcss_ops,
+-			    "IPQ8074/q6_fw.mdt", sizeof(*wcss));
++			    desc->firmware_name, sizeof(*wcss));
+ 	if (!rproc) {
+ 		dev_err(&pdev->dev, "failed to allocate rproc\n");
+ 		return -ENOMEM;
+@@ -540,6 +557,9 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
+ 
+ 	wcss = rproc->priv;
+ 	wcss->dev = &pdev->dev;
++	wcss->pas_id = desc->pas_id;
++	wcss->version = desc->version;
++	wcss->crash_reason_smem = desc->crash_reason_smem;
+ 
+ 	ret = q6v5_wcss_init_mmio(wcss, pdev);
+ 	if (ret)
+@@ -553,7 +573,8 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto free_rproc;
+ 
+-	ret = qcom_q6v5_init(&wcss->q6v5, pdev, rproc, WCSS_CRASH_REASON, NULL);
++	ret = qcom_q6v5_init(&wcss->q6v5, pdev, rproc, desc->crash_reason_smem,
++			     desc->pas_handover);
+ 	if (ret)
+ 		goto free_rproc;
+ 
+@@ -581,8 +602,15 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct wcss_data wcss_ipq8074_res_init = {
++	.firmware_name = "IPQ8074/q6_fw.mdt",
++	.crash_reason_smem = 421,
++	.pas_handover = NULL,
++};
++
+ static const struct of_device_id q6v5_wcss_of_match[] = {
+-	{ .compatible = "qcom,ipq8074-wcss-pil" },
++	{ .compatible = "qcom,ipq8074-wcss-pil", .data = &wcss_ipq8074_res_init },
++
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, q6v5_wcss_of_match);
 -- 
-2.7.4
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
