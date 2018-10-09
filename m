@@ -1,107 +1,58 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [RESEND PATCH v2 3/3] ARM: dts: imx28-cfa10036: Fix the reset
- gpio signal polarity
-Date: Tue, 9 Oct 2018 15:30:34 +0200
-Message-ID: <20181009133036eucas1p1d83ef6809a5696d6e2de1f3406afeeba~b897iNlSV1315713157eucas1p1e@eucas1p1.samsung.com>
-References: <1538040281-21319-1-git-send-email-michal.vokac@ysoft.com>
-        <1538040281-21319-3-git-send-email-michal.vokac@ysoft.com>
-        <68f4da21-6f0d-5bf9-b352-cdc423269080@ysoft.com>
-        <CGME20181009002056epcas5p24207204c9e65e8f34382de6672adb993@epcas5p2.samsung.com>
-        <20181009002031.GU3587@dragon>
-        <20181009075145eucas1p2691c7d04aa8328080af7cbc4ab5e03b9~b4WFAVFkx0235802358eucas1p2c@eucas1p2.samsung.com>
-        <bfbfd490-3872-2fd9-e088-3add596b987c@ysoft.com>
-        <CAOMZO5DdV9Sm9z6wX8e4LTvbokjnOMqtgOJQOvVvysVvzaBKGw@mail.gmail.com>
-        <221a185c-19fc-cc89-49b1-aa77fb1f0e41@ysoft.com>
+From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: Re: [PATCH v3 1/7] dt-bindings: stm32-dma: Add DMA/MDMA chaining
+ support bindings
+Date: Tue, 9 Oct 2018 15:46:06 +0200
+Message-ID: <b6079edc-66df-90eb-7da1-74af4e2dcdd5@st.com>
+References: <1538139715-24406-1-git-send-email-pierre-yves.mordret@st.com>
+ <1538139715-24406-2-git-send-email-pierre-yves.mordret@st.com>
+ <20181007145722.GY2372@vkoul-mobl>
+ <5d7a218c-9e96-3931-88ab-0b4dcb3ec4e5@st.com>
+ <20181009085757.GI2372@vkoul-mobl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <221a185c-19fc-cc89-49b1-aa77fb1f0e41@ysoft.com>
+In-Reply-To: <20181009085757.GI2372@vkoul-mobl>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
-Cc: Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
+To: Vinod <vkoul@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 10/09/2018 03:18 PM, Vokáč Michal wrote:
-> On 9.10.2018 14:36, Fabio Estevam wrote:
->> Hi Michal,
->>
->> On Tue, Oct 9, 2018 at 5:30 AM Vokáč Michal <Michal.Vokac@ysoft.com> wrote:
->>
->>> Sorry for the inconvenience :( Lesson learned..
+
+On 10/09/2018 10:57 AM, Vinod wrote:
+> Hi Pierre,
+> 
+> On 09-10-18, 09:18, Pierre Yves MORDRET wrote:
+> 
+>>>>  * DMA client
+>>>> @@ -68,7 +84,16 @@ channel: a phandle to the DMA controller plus the following four integer cells:
+>>>>  	0x1: 1/2 full FIFO
+>>>>  	0x2: 3/4 full FIFO
+>>>>  	0x3: full FIFO
+>>>> -
+>>>> + -bit 2: Intermediate M2M transfer from/to DDR to/from SRAM throughout MDMA
+>>>> +	0: MDMA not used to generate an intermediate M2M transfer
+>>>> +	1: MDMA used to generate an intermediate M2M transfer.
+>>>> + -bit 3-4: indicated SRAM Buffer size in (2^order)*PAGE_SIZE.
+>>>> +	PAGE_SIZE is given by Linux at 4KiB: include/asm-generic/page.h.
+>>>> +	Order is given by those 2 bits starting at 0.
+>>>> +	Valid only whether Intermediate M2M transfer is set.
 >>>
->>> So in other words (no offense): broken drivers need to stay broken because
->>> users may already get used to the broken behavior?
+>>> why do we need this as a property?
 >>
->> In order to keep the old dtb's working you could introduce a new
->> property (like reset-gpio-active-low, for example).
->>
->> Then the driver behavior can be made untouched for the old dtb's and
->> only new dtb's with this new property would have the correct GPIO
->> reset behavior.
+>> In some UC, we need more than 4KiB in case of chaining for better performances.
+>> Chaining has to be enabled by client if performance is at sacks.
 > 
-> Thank you very much Fabio!
-> I saw these xxx-active-low/high properties in many device tree
-> sources wondering why the heck people use them when they could
-> use GPIO_ACTIVE_LOW/HIGH. And this is the explanation.
+> Okay if that is the case why is the user not taking care of this?
+> Creating DMA txn and chaining them up and starting the chain? Why would
+> dmaengine driver need to do that?
 > 
-> And I feel like an idiot once again: git grep -l "reset-active-low"
-> first hit is:
-> 
->   Documentation/devicetree/bindings/display/ssd1307fb.txt
-> 
-> Oooops.
-> The weird thing is that usage of reset-active-low is documented
-> in the example but it is not implemented.
-> 
-> So the patch no.2 should be reverted and patch no.3 not applied at all.
 
-OK, I've applied the patch below to fbdev-for-next tree.
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
-
->From 64f83a816b27c7b5e026a74ecb5c61dbabfae997 Mon Sep 17 00:00:00 2001
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Date: Tue, 9 Oct 2018 15:18:42 +0200
-Subject: [PATCH] Revert "video: ssd1307fb: Do not hard code active-low reset
- sequence"
-
-This reverts commit 9827f26374fb85e1811f2adbcc25c8a3992dbe7f.
-
-On 10/09/2018 02:20 AM, Shawn Guo wrote:
-
-> Well, it means the change breaks the ABI between kernel and device tree,
-> e.g. the new kernel will not work with existing/installed DTBs.
-
-Revert the change until DTB compatibility issue is resolved.
-
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
----
- drivers/video/fbdev/ssd1307fb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
-index 3b361bc..4061a20 100644
---- a/drivers/video/fbdev/ssd1307fb.c
-+++ b/drivers/video/fbdev/ssd1307fb.c
-@@ -667,10 +667,10 @@ static int ssd1307fb_probe(struct i2c_client *client,
- 
- 	if (par->reset) {
- 		/* Reset the screen */
--		gpiod_set_value_cansleep(par->reset, 1);
--		udelay(4);
- 		gpiod_set_value_cansleep(par->reset, 0);
- 		udelay(4);
-+		gpiod_set_value_cansleep(par->reset, 1);
-+		udelay(4);
- 	}
- 
- 	if (par->vbat_reg) {
--- 
-1.9.1
+User is using standard DMA API (single, sg or cyclic) and is agnostic on what is
+behind the scene(almost). As driver I just fulfill the request to transfer what
+he wants. My driver scatters transfer into SDRAM chunks defined by user.
+Unfortunately all transfer are not % the SDRAM size given in DT. This very last
+txn is to flush the last expected bytes.
+Whatever user set for chaining(bit 2) the DMA API remains the same at its side.
