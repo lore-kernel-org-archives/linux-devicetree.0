@@ -1,97 +1,167 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V6 00/23] mmc: mmci: add sdmmc variant for stm32
-Date: Tue, 9 Oct 2018 09:30:41 +0200
-Message-ID: <CAPDyKFp0oHHS=bkXj_AbiLmbNxW07pFnk-4m9kwQtYkh_ogKgw@mail.gmail.com>
-References: <1539000535-13261-1-git-send-email-ludovic.Barre@st.com>
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Subject: Re: [PATCH 06/14] mtd: maps: physmap: Remove the MAX_RESOURCES
+ limitation
+Date: Tue, 9 Oct 2018 09:31:44 +0200
+Message-ID: <CAPybu_3ROm1HpX7nqS5w3pZ3RuWnAwL8aTPWBH8t+Q4-UX0ZiQ@mail.gmail.com>
+References: <20181008201027.17952-1-boris.brezillon@bootlin.com>
+ <20181008201027.17952-7-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539000535-13261-1-git-send-email-ludovic.Barre@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20181008201027.17952-7-boris.brezillon@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8 October 2018 at 14:08, Ludovic Barre <ludovic.Barre@st.com> wrote:
-> From: Ludovic Barre <ludovic.barre@st.com>
+Hi Boris
+On Mon, Oct 8, 2018 at 10:10 PM Boris Brezillon
+<boris.brezillon@bootlin.com> wrote:
 >
-> The goal of this serie is to add support of sdmmc for stm32.
-> Be to able to add this new variant it is needed to do some changes in
-> mmci core:
-> -Internalize specific needs of legacy dmaengine.
-> -Create and setup dma_priv pointer.
-> -Create generic callbacks which share some features (like cookie...)
->  and call specific needs.
+> Remove the MAX_RESOURCES limitation by dynamically allocating the
+> ->mtds[] and ->maps[] at probe time based on the number of iomem
+> resources attached to the platform device.
 >
-> change v6:
-> -move mmci_variant_init in mmci.c
-> -dma_setup/release: let the variants clean up themselves.
+> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+> ---
+>  drivers/mtd/maps/physmap.c | 44 +++++++++++++++++++++++++++-----------------
+>  1 file changed, 27 insertions(+), 17 deletions(-)
 >
-> change v5:
-> -error management in mmci_dmae_setup and qcom_dma_setup
->  mmci_dmae_setup: fail when tx & rx are not defined.
->  qcom_dma_setup: faill if one of channels is not defined.
-> -define mmci_variant_init following CONFIG_DMA_ENGINE state.
-> -squash dma_setup/dma_release callback.
+> diff --git a/drivers/mtd/maps/physmap.c b/drivers/mtd/maps/physmap.c
+> index cbc50b53ec9d..86679d149a49 100644
+> --- a/drivers/mtd/maps/physmap.c
+> +++ b/drivers/mtd/maps/physmap.c
+> @@ -22,12 +22,11 @@
+>  #include <linux/mtd/concat.h>
+>  #include <linux/io.h>
 >
-> change v4:
-> -checkpatch fix bool to u8
-> -add use_dma variable to fallback to pio mode
-> -move to optional reset with dt binding note for sdmmc
-> -separate patch for DT doc
+> -#define MAX_RESOURCES          4
+> -
+>  struct physmap_flash_info {
+> -       struct mtd_info         *mtds[MAX_RESOURCES];
+> +       unsigned int            nmaps;
+> +       struct mtd_info         **mtds;
+>         struct mtd_info         *cmtd;
+> -       struct map_info         maps[MAX_RESOURCES];
+> +       struct map_info         *maps;
+>         spinlock_t              vpp_lock;
+>         int                     vpp_refcnt;
+>  };
+> @@ -50,7 +49,7 @@ static int physmap_flash_remove(struct platform_device *dev)
+>                         mtd_concat_destroy(info->cmtd);
+>         }
 >
-> change v3:
-> -remove __dma_inprogress rename
-> -remove bad space at end of "st,use-ckin"
+> -       for (i = 0; i < MAX_RESOURCES; i++) {
+> +       for (i = 0; i < info->nmaps; i++) {
+>                 if (info->mtds[i] != NULL)
+>                         map_destroy(info->mtds[i]);
+>         }
+> @@ -101,7 +100,6 @@ static int physmap_flash_probe(struct platform_device *dev)
+>         const char * const *part_types;
+>         int err = 0;
+>         int i;
+> -       int devices_found = 0;
 >
-> change v2:
-> -rename to mmci_prep/unprep_data
-> -rename specific dma engine structure to mmci_dmae_next/priv
-> -follow "_" recommandation
-> -remove dma prefixe of mmci_dmae_priv fields
+>         physmap_data = dev_get_platdata(&dev->dev);
+>         if (physmap_data == NULL)
+> @@ -114,6 +112,24 @@ static int physmap_flash_probe(struct platform_device *dev)
+>                 goto err_out;
+>         }
 >
-> Ludovic Barre (23):
->   mmc: mmci: create common mmci_dma_setup/release
->   mmc: mmci: introduce dma_priv pointer to mmci_host
->   mmc: mmci: merge prepare data functions
->   mmc: mmci: add prepare/unprepare_data callbacks
->   mmc: mmci: add get_next_data callback
->   mmc: mmci: add dma_start callback
->   mmc: mmci: add dma_finalize callback
->   mmc: mmci: add dma_error callback
->   mmc: mmci: add validate_data callback
->   mmc: mmci: add set_clk/pwrreg callbacks
->   mmc: mmci: add datactrl block size variant property
->   mmc: mmci: expand startbiterr to irqmask and error check
->   mmc: mmci: add variant properties to define cpsm & cmdresp bits
->   mmc: mmci: add variant property to define dpsm bit
->   mmc: mmci: add variant property to define irq pio mask
->   mmc: mmci: add variant property to write datactrl before command
->   mmc: mmci: add variant property to not read datacnt
->   dt-bindings: mmci: add optional reset property
->   mmc: mmci: add optional reset property
->   mmc: mmci: add clock divider for stm32 sdmmc
->   mmc: mmci: add stm32 sdmmc registers
->   dt-bindings: mmci: add stm32 sdmmc variant
->   mmc: mmci: add stm32 sdmmc variant
+> +       while (platform_get_resource(dev, IORESOURCE_MEM, info->nmaps))
+> +               info->nmaps++;
+
+Maybe you prefer:
+for (info->nmaps = 0; platform_get_resource(dev, IORESOURCE_MEM,
+info->nmaps) ; info->nmaps++);
+
+(your choice, they are probably compiled into the same assembly)
+
+> +
+> +       if (!info->nmaps)
+> +               return -ENODEV;
+> +
+> +       info->maps = devm_kzalloc(&dev->dev,
+> +                                 sizeof(*info->maps) * info->nmaps,
+> +                                 GFP_KERNEL);
+> +       if (!info->maps)
+> +               return -ENOMEM;
+> +
+> +       info->mtds = devm_kzalloc(&dev->dev,
+> +                                 sizeof(*info->mtds) * info->nmaps,
+> +                                 GFP_KERNEL);
+> +       if (!info->mtds)
+> +               return -ENOMEM;
+> +
+>         if (physmap_data->init) {
+>                 err = physmap_data->init(dev);
+>                 if (err)
+> @@ -122,13 +138,10 @@ static int physmap_flash_probe(struct platform_device *dev)
 >
->  Documentation/devicetree/bindings/mmc/mmci.txt |  11 +
->  drivers/mmc/host/Kconfig                       |  10 +
->  drivers/mmc/host/Makefile                      |   1 +
->  drivers/mmc/host/mmci.c                        | 628 ++++++++++++++++++-------
->  drivers/mmc/host/mmci.h                        | 140 +++++-
->  drivers/mmc/host/mmci_qcom_dml.c               |  17 +-
->  drivers/mmc/host/mmci_stm32_sdmmc.c            | 282 +++++++++++
->  7 files changed, 886 insertions(+), 203 deletions(-)
->  create mode 100644 drivers/mmc/host/mmci_stm32_sdmmc.c
+>         platform_set_drvdata(dev, info);
 >
+> -       for (i = 0; i < MAX_RESOURCES; i++) {
+> +       for (i = 0; i < info->nmaps; i++) {
+>                 struct resource *res;
+>
+>                 res = platform_get_resource(dev, IORESOURCE_MEM, i);
+> -               if (res)
+> -                       break;
+> -
+>                 info->maps[i].virt = devm_ioremap_resource(&dev->dev, res);
+>                 if (IS_ERR(info->maps[i].virt)) {
+>                         err = PTR_ERR(info->maps[i].virt);
+> @@ -159,21 +172,18 @@ static int physmap_flash_probe(struct platform_device *dev)
+>                         dev_err(&dev->dev, "map_probe failed\n");
+>                         err = -ENXIO;
+>                         goto err_out;
+> -               } else {
+> -                       devices_found++;
+>                 }
+>                 info->mtds[i]->dev.parent = &dev->dev;
+>         }
+>
+> -       if (!devices_found) {
+> -               err = -ENODEV;
+> -       } else if (devices_found == 1) {
+> +       if (info->nmaps == 1) {
+>                 info->cmtd = info->mtds[0];
+>         } else {
+>                 /*
+>                  * We detected multiple devices. Concatenate them together.
+>                  */
+> -               info->cmtd = mtd_concat_create(info->mtds, devices_found, dev_name(&dev->dev));
+> +               info->cmtd = mtd_concat_create(info->mtds, info->nmaps,
+> +                                              dev_name(&dev->dev));
+>                 if (info->cmtd == NULL)
+>                         err = -ENXIO;
+>         }
+> @@ -199,7 +209,7 @@ static void physmap_flash_shutdown(struct platform_device *dev)
+>         struct physmap_flash_info *info = platform_get_drvdata(dev);
+>         int i;
+>
+> -       for (i = 0; i < MAX_RESOURCES && info->mtds[i]; i++)
+> +       for (i = 0; i < info->nmaps && info->mtds[i]; i++)
+>                 if (mtd_suspend(info->mtds[i]) == 0)
+>                         mtd_resume(info->mtds[i]);
+>  }
 > --
-> 2.7.4
+> 2.14.1
 >
 
-Applied for next, thanks!
 
-FYI, I made little fixup of the help text in the Kconfig for the last patch.
+-- 
+Ricardo Ribalda
 
-Kind regards
-Uffe
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
