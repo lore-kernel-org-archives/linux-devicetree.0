@@ -1,58 +1,73 @@
-From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: Re: [PATCH v3 1/7] dt-bindings: stm32-dma: Add DMA/MDMA chaining
- support bindings
-Date: Tue, 9 Oct 2018 15:46:06 +0200
-Message-ID: <b6079edc-66df-90eb-7da1-74af4e2dcdd5@st.com>
-References: <1538139715-24406-1-git-send-email-pierre-yves.mordret@st.com>
- <1538139715-24406-2-git-send-email-pierre-yves.mordret@st.com>
- <20181007145722.GY2372@vkoul-mobl>
- <5d7a218c-9e96-3931-88ab-0b4dcb3ec4e5@st.com>
- <20181009085757.GI2372@vkoul-mobl>
+From: Pascal PAILLET-LME <p.paillet@st.com>
+Subject: Re: [PATCH v3 5/8] dt-bindings: input: document stpmic1 pmic onkey
+Date: Tue, 9 Oct 2018 13:52:52 +0000
+Message-ID: <5BBCB2B4.4070104@st.com>
+References: <1539016176-4072-1-git-send-email-p.paillet@st.com>
+ <1539016176-4072-6-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181009085757.GI2372@vkoul-mobl>
+In-Reply-To: <1539016176-4072-6-git-send-email-p.paillet@st.com>
 Content-Language: en-US
+Content-ID: <0E93B6F714354E4691589622724375B9@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Le 10/08/2018 06:29 PM, Pascal PAILLET-LME a écrit :
+> From: pascal paillet <p.paillet@st.com>
+>
+> The stpmic1 pmic is able to manage an onkey button. It can be configured
+> to shut-down the power supplies on a long key-press with an adjustable
+> duration.
+>
+> Signed-off-by: pascal paillet <p.paillet@st.com>
+> ---
+> changes in v3:
+> * Replace st,onkey-long-press-seconds and st,onkey-pwroff-enabled by
+> power-off-time-sec.
+>
+>   .../devicetree/bindings/input/st,stpmic1-onkey.txt | 30 ++++++++++++++++++++++
+>   1 file changed, 30 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
+>
+> diff --git a/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt b/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
+> new file mode 100644
+> index 0000000..8c58186
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
+> @@ -0,0 +1,30 @@
+> +STMicroelectronics STPMIC1 Onkey
+> +
+> +Required properties:
+> +
+> +- compatible = "st,stpmic1-onkey";
+> +- interrupt-parent: phandle to the parent interrupt controller
+> +- interrupts: interrupt line to use
+> +- interrupt-names = "onkey-falling", "onkey-rising"
+> +	onkey-falling: happens when onkey is pressed; IT_PONKEY_F of pmic
+> +	onkey-rising: happens when onkey is released; IT_PONKEY_R of pmic
+> +
+> +Optional properties:
+> +
+> +- st,onkey-clear-cc-flag: onkey is able power on after an
+> +  over-current shutdown event.
+> +- st,onkey-pu-inactive: onkey pull up is not active
+> +- power-off-time-sec: Duration in seconds which the key should be kept
+> +        pressed for device to power off automatically (from 1 to 16 seconds).
+> +        see See Documentation/devicetree/bindings/input/keys.txt
+> +
+> +Example:
+> +
+> +onkey {
+> +	compatible = "st,stpmic1-onkey";
+> +	interrupt-parent = <&pmic>;
+> +	interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
+> +	interrupt-names = "onkey-falling", "onkey-rising";
+> +	st,onkey-pwroff-enabled;
+> +	st,onkey-long-press-seconds = <10>;
+st,onkey-pwroff-enabled and st,onkey-long-press-seconds to be replaced 
+by power-off-time-sec
 
-
-On 10/09/2018 10:57 AM, Vinod wrote:
-> Hi Pierre,
-> 
-> On 09-10-18, 09:18, Pierre Yves MORDRET wrote:
-> 
->>>>  * DMA client
->>>> @@ -68,7 +84,16 @@ channel: a phandle to the DMA controller plus the following four integer cells:
->>>>  	0x1: 1/2 full FIFO
->>>>  	0x2: 3/4 full FIFO
->>>>  	0x3: full FIFO
->>>> -
->>>> + -bit 2: Intermediate M2M transfer from/to DDR to/from SRAM throughout MDMA
->>>> +	0: MDMA not used to generate an intermediate M2M transfer
->>>> +	1: MDMA used to generate an intermediate M2M transfer.
->>>> + -bit 3-4: indicated SRAM Buffer size in (2^order)*PAGE_SIZE.
->>>> +	PAGE_SIZE is given by Linux at 4KiB: include/asm-generic/page.h.
->>>> +	Order is given by those 2 bits starting at 0.
->>>> +	Valid only whether Intermediate M2M transfer is set.
->>>
->>> why do we need this as a property?
->>
->> In some UC, we need more than 4KiB in case of chaining for better performances.
->> Chaining has to be enabled by client if performance is at sacks.
-> 
-> Okay if that is the case why is the user not taking care of this?
-> Creating DMA txn and chaining them up and starting the chain? Why would
-> dmaengine driver need to do that?
-> 
-
-User is using standard DMA API (single, sg or cyclic) and is agnostic on what is
-behind the scene(almost). As driver I just fulfill the request to transfer what
-he wants. My driver scatters transfer into SDRAM chunks defined by user.
-Unfortunately all transfer are not % the SDRAM size given in DT. This very last
-txn is to flush the last expected bytes.
-Whatever user set for chaining(bit 2) the DMA API remains the same at its side.
+> +};
