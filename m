@@ -1,100 +1,46 @@
-From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: Re: [PATCH v3 3/7] dt-bindings: stm32-mdma: Add DMA/MDMA chaining
- support bindings
-Date: Tue, 9 Oct 2018 10:17:39 +0200
-Message-ID: <31f5a087-6a83-76ff-dc5c-29e8ecc95744@st.com>
-References: <1538139715-24406-1-git-send-email-pierre-yves.mordret@st.com>
- <1538139715-24406-4-git-send-email-pierre-yves.mordret@st.com>
- <20181007145930.GA2372@vkoul-mobl>
+From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
+Subject: Re: [RESEND PATCH v2 3/3] ARM: dts: imx28-cfa10036: Fix the reset
+ gpio signal polarity
+Date: Tue, 9 Oct 2018 08:29:08 +0000
+Message-ID: <bfbfd490-3872-2fd9-e088-3add596b987c@ysoft.com>
+References: <1538040281-21319-1-git-send-email-michal.vokac@ysoft.com>
+ <1538040281-21319-3-git-send-email-michal.vokac@ysoft.com>
+ <68f4da21-6f0d-5bf9-b352-cdc423269080@ysoft.com>
+ <CGME20181009002056epcas5p24207204c9e65e8f34382de6672adb993@epcas5p2.samsung.com>
+ <20181009002031.GU3587@dragon>
+ <20181009075145eucas1p2691c7d04aa8328080af7cbc4ab5e03b9~b4WFAVFkx0235802358eucas1p2c@eucas1p2.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181007145930.GA2372@vkoul-mobl>
+In-Reply-To: <20181009075145eucas1p2691c7d04aa8328080af7cbc4ab5e03b9~b4WFAVFkx0235802358eucas1p2c@eucas1p2.samsung.com>
 Content-Language: en-US
+Content-ID: <EAAA63CA2E856D41B4452063ADEF946E@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/07/2018 04:59 PM, Vinod wrote:
-> On 28-09-18, 15:01, Pierre-Yves MORDRET wrote:
->> From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
->>
->> This patch adds the description of the 2 properties needed to support M2M
->> transfer triggered by STM32 DMA when his transfer is complete.
->>
->> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
->> ---
->>   Version history:
->>     v3:
->>     v2:
->>        * rework content
->>     v1:
->>        * Initial
->> ---
->> ---
->>  Documentation/devicetree/bindings/dma/stm32-mdma.txt | 12 ++++++++----
->>  1 file changed, 8 insertions(+), 4 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/dma/stm32-mdma.txt b/Documentation/devicetree/bindings/dma/stm32-mdma.txt
->> index d18772d..27c2812 100644
->> --- a/Documentation/devicetree/bindings/dma/stm32-mdma.txt
->> +++ b/Documentation/devicetree/bindings/dma/stm32-mdma.txt
->> @@ -10,7 +10,7 @@ Required properties:
->>  - interrupts: Should contain the MDMA interrupt.
->>  - clocks: Should contain the input clock of the DMA instance.
->>  - resets: Reference to a reset controller asserting the DMA controller.
->> -- #dma-cells : Must be <5>. See DMA client paragraph for more details.
->> +- #dma-cells : Must be <6>. See DMA client paragraph for more details.
-> 
-> can you update the example for 6 cells?
-
-of course.
-
-> 
-> Also what happens to dts using 5 cells..
-
-They are not managed, but it should. I will update this flaw. Thanks for
-pointing this out.
-
-> 
->>  
->>  Optional properties:
->>  - dma-channels: Number of DMA channels supported by the controller.
->> @@ -26,7 +26,7 @@ Example:
->>  		interrupts = <122>;
->>  		clocks = <&timer_clk>;
->>  		resets = <&rcc 992>;
->> -		#dma-cells = <5>;
->> +		#dma-cells = <6>;
->>  		dma-channels = <16>;
->>  		dma-requests = <32>;
->>  		st,ahb-addr-masks = <0x20000000>, <0x00000000>;
->> @@ -35,8 +35,8 @@ Example:
->>  * DMA client
->>  
->>  DMA clients connected to the STM32 MDMA controller must use the format
->> -described in the dma.txt file, using a five-cell specifier for each channel:
->> -a phandle to the MDMA controller plus the following five integer cells:
->> +described in the dma.txt file, using a six-cell specifier for each channel:
->> +a phandle to the MDMA controller plus the following six integer cells:
->>  
->>  1. The request line number
->>  2. The priority level
->> @@ -76,6 +76,10 @@ a phandle to the MDMA controller plus the following five integer cells:
->>     if no HW ack signal is used by the MDMA client
->>  5. A 32bit mask specifying the value to be written to acknowledge the request
->>     if no HW ack signal is used by the MDMA client
->> +6. A bitfield value specifying if the MDMA client wants to generate M2M
->> +   transfer with HW trigger (1) or not (0). This bitfield should be only
->> +   enabled for M2M transfer triggered by STM32 DMA client. The memory devices
->> +   involved in this kind of transfer are SRAM and DDR.
->>  
->>  Example:
->>  
->> -- 
->> 2.7.4
-> 
+T24gOS4xMC4yMDE4IDA5OjUxLCBCYXJ0bG9taWVqIFpvbG5pZXJraWV3aWN6IHdyb3RlOg0KPiAN
+Cj4gT24gMTAvMDkvMjAxOCAwMjoyMCBBTSwgU2hhd24gR3VvIHdyb3RlOg0KPj4gT24gTW9uLCBP
+Y3QgMDgsIDIwMTggYXQgMTE6NDU6MzZBTSArMDAwMCwgVm9rw6HEjSBNaWNoYWwgd3JvdGU6DQo+
+Pj4gT24gMjcuOS4yMDE4IDExOjI0LCBNaWNoYWwgVm9rw6HEjSB3cm90ZToNCj4+Pj4gVGhlIHJl
+c2V0IHNpZ25hbCBvZiB0aGUgU1NEMTMwNiBPTEVEIGRpc3BsYXkgaXMgYWN0dWFsbHkgYWN0aXZl
+LWxvdy4NCj4+Pj4gQWRhcHQgdGhlIERUIHRvIHJlZmxlY3QgdGhlIHJlYWwgd29ybGQuDQo+Pj4+
+DQo+Pj4+IFNpZ25lZC1vZmYtYnk6IE1pY2hhbCBWb2vDocSNIDxtaWNoYWwudm9rYWNAeXNvZnQu
+Y29tPg0KPj4+PiAtLS0NCj4+Pj4gdjIgY2hhbmdlczogTmV3IHBhdGNoIGluIHRoZSBzZXJpZXMN
+Cj4+Pg0KPj4+IEJhcnRsb21pZWoganVzdCBxdWV1ZWQgdGhlIGZpcnN0IHR3byBwYXRjaGVzIGZv
+ciB2NC4yMC4NCj4+PiBXaWxsIHNvbWVib2R5IHRha2UgdGhpcyBvbmU/IE90aGVyd2lzZSB0aGlz
+IFNvTSB3aWxsIGVuZCB1cCB3aXRoDQo+Pj4gYnJva2VuIE9MRUQgZGlzcGxheSByZXNldC4NCj4+
+DQo+PiBXZWxsLCBpdCBtZWFucyB0aGUgY2hhbmdlIGJyZWFrcyB0aGUgQUJJIGJldHdlZW4ga2Vy
+bmVsIGFuZCBkZXZpY2UgdHJlZSwNCj4+IGUuZy4gdGhlIG5ldyBrZXJuZWwgd2lsbCBub3Qgd29y
+ayB3aXRoIGV4aXN0aW5nL2luc3RhbGxlZCBEVEJzLg0KPiANCj4gU2hvdWxkIEkgcmV2ZXJ0IHRo
+aXMgc2RkMTAzMDdmYiBwYXRjaCB0aGVuPw0KDQpTb3JyeSBmb3IgdGhlIGluY29udmVuaWVuY2Ug
+OiggTGVzc29uIGxlYXJuZWQuLg0KDQpTbyBpbiBvdGhlciB3b3JkcyAobm8gb2ZmZW5zZSk6IGJy
+b2tlbiBkcml2ZXJzIG5lZWQgdG8gc3RheSBicm9rZW4gYmVjYXVzZQ0KdXNlcnMgbWF5IGFscmVh
+ZHkgZ2V0IHVzZWQgdG8gdGhlIGJyb2tlbiBiZWhhdmlvcj8NCg0KUGVyc29uYWxseSBJIHdvdWxk
+IG5vdCBkZXNjcmliZSB0aGlzIGNoYW5nZSBhcyBhIGRldmljZSB0cmVlIEFCSSBjaGFuZ2UuDQpJ
+dCBpcyBub3QgYSBjaGFuZ2UgaW4gdGhlIERUIGJpbmRpbmcuIE9yIGFyZSAic3RhYmxlIGRldmlj
+ZSB0cmVlIEFQSSIgYW5kDQoiZGV2aWNlIHRyZWUgQUJJIiByZWFsbHkgdHdvIGRpZmZlcmVudCB0
+aGluZ3M/DQoNClRoZSBmaXJzdCBwYXRjaCBzaG91bGQgYmUgT0sgdGhvdWdoLg0KDQpNaWNoYWwN
+Cg==
