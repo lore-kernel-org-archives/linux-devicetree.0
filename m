@@ -1,120 +1,62 @@
-From: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v15 06/16] of/fdt: add helper functions for handling
- properties
-Date: Tue, 9 Oct 2018 09:37:37 +0900
-Message-ID: <20181009003733.GN32578@linaro.org>
-References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
- <20180928064841.14117-7-takahiro.akashi@linaro.org>
- <CAL_JsqKwmcdQ+2eK3LGHhcQ2Wb+Yz1-Atz0-3K6WKNZQt_woVw@mail.gmail.com>
- <20181005030849.GK32578@linaro.org>
- <CAL_Jsq+wXU8PCyJhaTKE7ezZhiD0KARUFXVzQBk0ZptEEK7ubQ@mail.gmail.com>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v5 0/6] *** Add support for wifi QMI client handshakes ***
+Date: Mon, 8 Oct 2018 17:36:30 -0700
+Message-ID: <20181009003628.GA253926@ban.mtv.corp.google.com>
+References: <20180815092637.11455-1-govinds@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+wXU8PCyJhaTKE7ezZhiD0KARUFXVzQBk0ZptEEK7ubQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: David Gibson <david@gibson.dropbear.id.au>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowan>
+In-Reply-To: <20180815092637.11455-1-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 05, 2018 at 08:23:57AM -0500, Rob Herring wrote:
-> On Thu, Oct 4, 2018 at 10:07 PM AKASHI, Takahiro
-> <takahiro.akashi@linaro.org> wrote:
-> >
-> > Rob,
-> >
-> > # I haven't replied to this comment yet.
-> >
-> > On Fri, Sep 28, 2018 at 08:44:42AM -0500, Rob Herring wrote:
-> > > +David Gibson
-> > >
-> > > On Fri, Sep 28, 2018 at 1:48 AM AKASHI Takahiro
-> > > <takahiro.akashi@linaro.org> wrote:
-> > > >
-> > > > These functions will be used later to handle kexec-specific properties
-> > > > in arm64's kexec_file implementation.
-> > > >
-> > > > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > Cc: Frank Rowand <frowand.list@gmail.com>
-> > > > Cc: devicetree@vger.kernel.org
-> > > > ---
-> > > >  drivers/of/fdt.c       | 56 ++++++++++++++++++++++++++++++++++++++++++
-> > > >  include/linux/of_fdt.h |  4 +++
-> > > >  2 files changed, 60 insertions(+)
-> > > >
-> > > > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> > > > index 800ad252cf9c..c65c31562ccb 100644
-> > > > --- a/drivers/of/fdt.c
-> > > > +++ b/drivers/of/fdt.c
-> > > > @@ -25,6 +25,7 @@
-> > > >  #include <linux/debugfs.h>
-> > > >  #include <linux/serial_core.h>
-> > > >  #include <linux/sysfs.h>
-> > > > +#include <linux/types.h>
-> > > >
-> > > >  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
-> > > >  #include <asm/page.h>
-> > > > @@ -1323,3 +1324,58 @@ late_initcall(of_fdt_raw_init);
-> > > >  #endif
-> > > >
-> > > >  #endif /* CONFIG_OF_EARLY_FLATTREE */
-> > > > +
-> > > > +#define FDT_ALIGN(x, a)        (((x) + (a) - 1) & ~((a) - 1))
-> > > > +#define FDT_TAGALIGN(x)        (FDT_ALIGN((x), FDT_TAGSIZE))
-> > > > +
-> > > > +int fdt_prop_len(const char *prop_name, int len)
-> > > > +{
-> > > > +       return (strlen(prop_name) + 1) +
-> > > > +               sizeof(struct fdt_property) +
-> > > > +               FDT_TAGALIGN(len);
-> > >
-> > > Looks like you are using this to calculate how much space you need to
-> > > allocate in addition to the current DTB for a couple of new or
-> > > replaced properties. I'm not sure that this calculation is completely
-> > > accurate. And it is strange there doesn't seem to be any libfdt
-> > > function for this already. It would be simpler to just add some fixed
-> > > additional amount.
-> > >
-> > > Maybe David G has comments on this?
-> > >
-> > > > +}
-> > > > +
-> > >
-> > > The rest of this should go in drivers/of/fdt_address.c. Ultimately, it
-> > > should go into libfdt, but I'm fine with having it in the kernel for
-> > > now.
-> >
-> > I'd like to have this function in the kernel for now.
-> >
-> > > > +static void fill_property(void *buf, u64 val64, int cells)
-> > > > +{
-> > > > +       __be32 val32;
-> > > > +
-> > > > +       while (cells) {
-> > > > +               val32 = cpu_to_fdt32((val64 >> (32 * (--cells))) & U32_MAX);
-> > > > +               memcpy(buf, &val32, sizeof(val32));
-> > > > +               buf += sizeof(val32);
-> > >
-> > > This is kind of hard to read. I would copy u-boot's fdt_pack_reg function.
-> >
-> > Are you sure?
-> > I originally implemented this function in a similar way that fdt_pack_reg()
-> > was, but, you suggested, in your past comment[1], that we'd be better to
-> > have of_read_number()-like implementation.
-> >
-> > [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-May/579118.html
-> 
-> Yeah, you're right. Plus, I'm not sure the u-boot one would work for
-> unaligned accesses with armv5 and earlier h/w.
-> 
-> My only comment then is I think you can drop the U32_MAX masking.
++ linux-msm
 
-Okay, then I will leave this function, yet renaming it to
-cpu64_to_fdt_cells() after Frank's comment.
+Hi Govind, Kalle,
 
-Thanks,
--Takahiro Akashi
-> 
-> Rob
+On Wed, Aug 15, 2018 at 02:56:31PM +0530, Govind Singh wrote:
+> Add QMI client handshakes for Q6 integrated WLAN connectivity subsystem.
+> This module is responsible for communicating WLAN control messages to FW
+> over QMI interface. This patch series enables the qmi handshakes required for
+> WCN3990 chipset.
+[...]
+
+What's the status of this patchset? It has seen various stages of
+review, and except for the fact that Govind seems to have dropped
+various Reviewed-by/Acked-by tags (which Rob noticed), I don't see any
+relevant feedback that should be blocking it.
+
+I previously had concerns about the firmware boot sequence -- that it
+required a Qualcomm-specific TFTP service over QRTR, which had no open
+source implementations. There is now a published daemon that worked for
+me [1], as well as firmware releases that loaded modem and Wifi firmware
+together, such that this TFTP service is not needed at all. So my
+concerns there are no longer blocking.
+
+And I think Rob already reviewed the relevant DT bindings (but again,
+Govind missed collecting that tag for this series).
+
+So the only outstanding request I see is to collect the appropriate
+tags. Should Govind resend the whole series just for that?
+
+FWIW, I've been using this series for a while now, and I reviewed
+earlier versions. I can provide this for the whole series:
+
+Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+If nothing else, I think it's important to get someone to merge the DT
+bindings from this series, because Govind is now trying to extend the DT
+binding and to enable the WCN3990 device node in the SDM845 device tree
+nodes.
+
+Regards,
+Brian
+
+[1] https://github.com/andersson/tqftpserv
+[2] See this series:
+    https://patchwork.kernel.org/cover/10621863/
+    Govind didn't send it to the right mailing lists yet, but we're
+    close...
