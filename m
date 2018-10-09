@@ -1,62 +1,97 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 0/6] *** Add support for wifi QMI client handshakes ***
-Date: Mon, 8 Oct 2018 17:36:30 -0700
-Message-ID: <20181009003628.GA253926@ban.mtv.corp.google.com>
-References: <20180815092637.11455-1-govinds@codeaurora.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [RFC PATCH 03/11] phy: ti: introduce phy-gmii-sel driver
+Date: Tue, 9 Oct 2018 02:39:35 +0200
+Message-ID: <20181009003935.GA23588@lunn.ch>
+References: <20181008234949.15416-1-grygorii.strashko@ti.com>
+ <20181008234949.15416-4-grygorii.strashko@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180815092637.11455-1-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20181008234949.15416-4-grygorii.strashko@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-+ linux-msm
+On Mon, Oct 08, 2018 at 06:49:41PM -0500, Grygorii Strashko wrote:
+> +static int phy_gmii_sel_mode(struct phy *phy, phy_interface_t intf_mode)
+> +{
+> +	struct phy_gmii_sel_phy_priv *if_phy = phy_get_drvdata(phy);
+> +	const struct phy_gmii_sel_soc_data *soc_data = if_phy->priv->soc_data;
+> +	struct device *dev = if_phy->priv->dev;
+> +	struct regmap_field *regfield;
+> +	int ret, rgmii_id = 0;
+> +	u32 mode = 0;
+> +
+> +	if_phy->phy_if_mode = intf_mode;
+> +
+> +	switch (if_phy->phy_if_mode) {
+> +	case PHY_INTERFACE_MODE_RMII:
+> +		mode = AM33XX_GMII_SEL_MODE_RMII;
+> +		break;
+> +
+> +	case PHY_INTERFACE_MODE_RGMII:
+> +		mode = AM33XX_GMII_SEL_MODE_RGMII;
+> +		break;
+> +
+> +	case PHY_INTERFACE_MODE_RGMII_ID:
+> +	case PHY_INTERFACE_MODE_RGMII_RXID:
+> +	case PHY_INTERFACE_MODE_RGMII_TXID:
+> +		mode = AM33XX_GMII_SEL_MODE_RGMII;
+> +		rgmii_id = 1;
+> +		break;
 
-Hi Govind, Kalle,
+Hi Grygorii
 
-On Wed, Aug 15, 2018 at 02:56:31PM +0530, Govind Singh wrote:
-> Add QMI client handshakes for Q6 integrated WLAN connectivity subsystem.
-> This module is responsible for communicating WLAN control messages to FW
-> over QMI interface. This patch series enables the qmi handshakes required for
-> WCN3990 chipset.
-[...]
+It looks like the MAC can do AM33XX_GMII_SEL_MODE_RGMII and
+AM33XX_GMII_SEL_MODE_RGMII_ID. I don't think it can do
+AM33XX_GMII_SEL_MODE_RGMII_RXID or AM33XX_GMII_SEL_MODE_RGMII_TXID?  I
+would prefer it return -EINVAL when asked to do something it cannot
+do.
 
-What's the status of this patchset? It has seen various stages of
-review, and except for the fact that Govind seems to have dropped
-various Reviewed-by/Acked-by tags (which Rob noticed), I don't see any
-relevant feedback that should be blocking it.
+> +
+> +	default:
+> +		dev_warn(dev,
+> +			 "port%u: unsupported mode: \"%s\". Defaulting to MII.\n",
+> +			 if_phy->id, phy_modes(rgmii_id));
+> +		/* fall through */
 
-I previously had concerns about the firmware boot sequence -- that it
-required a Qualcomm-specific TFTP service over QRTR, which had no open
-source implementations. There is now a published daemon that worked for
-me [1], as well as firmware releases that loaded modem and Wifi firmware
-together, such that this TFTP service is not needed at all. So my
-concerns there are no longer blocking.
+Returning -EINVAL would be better. Otherwise the DT might never get
+fixed.
 
-And I think Rob already reviewed the relevant DT bindings (but again,
-Govind missed collecting that tag for this series).
+> +	case PHY_INTERFACE_MODE_MII:
+> +		mode = AM33XX_GMII_SEL_MODE_MII;
+> +		break;
+> +	};
+> +
+> +	dev_dbg(dev, "%s id:%u mode:%u rgmii_id:%d rmii_clk_ext:%d\n",
+> +		__func__, if_phy->id, mode, rgmii_id,
+> +		if_phy->rmii_clock_external);
+> +
+> +	regfield = if_phy->fields[PHY_GMII_SEL_PORT_MODE];
+> +	ret = regmap_field_write(regfield, mode);
+> +
+> +	if (soc_data->features & BIT(PHY_GMII_SEL_RGMII_ID_MODE) &&
+> +	    if_phy->fields[PHY_GMII_SEL_RGMII_ID_MODE]) {
+> +		regfield = if_phy->fields[PHY_GMII_SEL_RGMII_ID_MODE];
+> +		ret |= regmap_field_write(regfield, rgmii_id);
+> +	}
+> +
+> +	if (soc_data->features & BIT(PHY_GMII_SEL_RMII_IO_CLK_EN) &&
+> +	    if_phy->fields[PHY_GMII_SEL_RMII_IO_CLK_EN]) {
+> +		regfield = if_phy->fields[PHY_GMII_SEL_RMII_IO_CLK_EN];
+> +		ret |= regmap_field_write(regfield,
+> +					  if_phy->rmii_clock_external);
+> +	}
+> +
+> +	if (ret) {
+> +		dev_err(dev, "port%u: set mode fail %d", if_phy->id, ret);
+> +		return -EIO;
+> +	}
 
-So the only outstanding request I see is to collect the appropriate
-tags. Should Govind resend the whole series just for that?
+I would prefer each write had its own error check. The fact you don't
+return ret means you know ret could be -EINVAL|-EOIO, making
+-EMORECOFFEE.
 
-FWIW, I've been using this series for a while now, and I reviewed
-earlier versions. I can provide this for the whole series:
-
-Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-
-If nothing else, I think it's important to get someone to merge the DT
-bindings from this series, because Govind is now trying to extend the DT
-binding and to enable the WCN3990 device node in the SDM845 device tree
-nodes.
-
-Regards,
-Brian
-
-[1] https://github.com/andersson/tqftpserv
-[2] See this series:
-    https://patchwork.kernel.org/cover/10621863/
-    Govind didn't send it to the right mailing lists yet, but we're
-    close...
+	Andrew
