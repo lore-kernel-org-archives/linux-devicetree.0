@@ -1,123 +1,36 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH 1/7] dt-bindings: mfd: ds90ux9xx: add description of TI
- DS90Ux9xx ICs
-Date: Tue, 9 Oct 2018 02:13:38 +0200
-Message-ID: <5631ac17-a1c1-af12-8b30-314880af42df@gmail.com>
-References: <20181008211205.2900-1-vz@mleia.com>
- <20181008211205.2900-2-vz@mleia.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [RESEND PATCH v2 3/3] ARM: dts: imx28-cfa10036: Fix the reset
+ gpio signal polarity
+Date: Tue, 9 Oct 2018 08:20:33 +0800
+Message-ID: <20181009002031.GU3587@dragon>
+References: <1538040281-21319-1-git-send-email-michal.vokac@ysoft.com>
+ <1538040281-21319-3-git-send-email-michal.vokac@ysoft.com>
+ <68f4da21-6f0d-5bf9-b352-cdc423269080@ysoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181008211205.2900-2-vz@mleia.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <68f4da21-6f0d-5bf9-b352-cdc423269080@ysoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Sandeep Jain <Sandeep_Jain@mentor.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/08/2018 11:11 PM, Vladimir Zapolskiy wrote:
-> From: Sandeep Jain <Sandeep_Jain@mentor.com>
+On Mon, Oct 08, 2018 at 11:45:36AM +0000, Vokáč Michal wrote:
+> On 27.9.2018 11:24, Michal Vokáč wrote:
+> > The reset signal of the SSD1306 OLED display is actually active-low.
+> > Adapt the DT to reflect the real world.
+> > 
+> > Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+> > ---
+> > v2 changes: New patch in the series
 > 
-> The change adds device tree binding description of TI DS90Ux9xx
-> series of serializer and deserializer controllers which support video,
-> audio and control data transmission over FPD-III Link connection.
-> 
-> Signed-off-by: Sandeep Jain <Sandeep_Jain@mentor.com>
-> [vzapolskiy: various updates and corrections of secondary importance]
-> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-> ---
->  .../devicetree/bindings/mfd/ti,ds90ux9xx.txt  | 66 +++++++++++++++++++
->  1 file changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/ti,ds90ux9xx.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/ti,ds90ux9xx.txt b/Documentation/devicetree/bindings/mfd/ti,ds90ux9xx.txt
-> new file mode 100644
-> index 000000000000..0733da88f7ef
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/ti,ds90ux9xx.txt
-> @@ -0,0 +1,66 @@
-> +Texas Instruments DS90Ux9xx de-/serializer controllers
-> +
-> +Required properties:
-> +- compatible: Must contain a generic "ti,ds90ux9xx" value and
-> +	may contain one more specific value from the list:
-> +	"ti,ds90ub925q",
-> +	"ti,ds90uh925q",
-> +	"ti,ds90ub927q",
-> +	"ti,ds90uh927q",
-> +	"ti,ds90ub926q",
-> +	"ti,ds90uh926q",
+> Bartlomiej just queued the first two patches for v4.20.
+> Will somebody take this one? Otherwise this SoM will end up with
+> broken OLED display reset.
 
-Keep the list sorted.
+Well, it means the change breaks the ABI between kernel and device tree,
+e.g. the new kernel will not work with existing/installed DTBs.
 
-> +	"ti,ds90ub928q",
-> +	"ti,ds90uh928q",
-> +	"ti,ds90ub940q",
-> +	"ti,ds90uh940q".
-> +
-> +Optional properties:
-> +- reg : Specifies the I2C slave address of a local de-/serializer.
-> +- power-gpios : GPIO line to control supplied power to the device.
-
-Shouldn't this be regulator phandle ?
-
-> +- ti,backward-compatible-mode : Overrides backward compatibility mode.
-> +	Possible values are "<1>" or "<0>".
-
-Make this bool , ie. present or not.
-
-> +	If "ti,backward-compatible-mode" is not mentioned, the backward
-> +	compatibility mode is not touched and given by hardware pin strapping.
-> +- ti,low-frequency-mode : Overrides low frequency mode.
-> +	Possible values are "<1>" or "<0>".
-> +	If "ti,low-frequency-mode" is not mentioned, the low frequency mode
-> +	is not touched and given by hardware pin strapping.
-> +- ti,video-map-select-msb: Sets video bridge pins to MSB mode, if it is set
-> +	MAPSEL pin value is ignored.
-> +- ti,video-map-select-lsb: Sets video bridge pins to LSB mode, if it is set
-> +	MAPSEL pin value is ignored.
-
-This needs some additional explanation, what's this about ?
-
-> +- ti,pixel-clock-edge : Selects Pixel Clock Edge.
-> +	Possible values are "<1>" or "<0>".
-> +	If "ti,pixel-clock-edge" is High <1>, output data is strobed on the
-> +	Rising edge of the PCLK. If ti,pixel-clock-edge is Low <0>, data is
-> +	strobed on the Falling edge of the PCLK.
-> +	If "ti,pixel-clock-edge" is not mentioned, the pixel clock edge
-> +	value is not touched and given by hardware pin strapping.
-> +- ti,spread-spectrum-clock-generation : Spread Sprectrum Clock Generation.
-> +	Possible values are from "<0>" to "<7>". The same value will be
-> +	written to SSC register. If "ti,spread-spectrum-clock-gen" is not
-> +	found, then SSCG will be disabled.
-> +
-> +TI DS90Ux9xx serializers and deserializer device nodes may contain a number
-> +of children device nodes to describe and enable particular subcomponents
-> +found on ICs.
-> +
-> +Example:
-> +
-> +serializer: serializer@c {
-> +	compatible = "ti,ds90ub927q", "ti,ds90ux9xx";
-> +	reg = <0xc>;
-> +	power-gpios = <&gpio5 12 GPIO_ACTIVE_HIGH>;
-> +	ti,backward-compatible-mode = <0>;
-> +	ti,low-frequency-mode = <0>;
-> +	ti,pixel-clock-edge = <0>;
-> +	...
-> +}
-> +
-> +deserializer: deserializer@3c {
-> +	compatible = "ti,ds90ub940q", "ti,ds90ux9xx";
-> +	reg = <0x3c>;
-> +	power-gpios = <&gpio6 31 GPIO_ACTIVE_HIGH>;
-> +	...
-> +}
-> +
-> 
-
-
--- 
-Best regards,
-Marek Vasut
+Shawn
