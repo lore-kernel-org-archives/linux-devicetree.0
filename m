@@ -1,63 +1,50 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH 14/14] dt-binding: mtd: physmap: Document the addr-gpios
- property
-Date: Tue, 9 Oct 2018 09:56:47 +0200
-Message-ID: <20181009095647.36b4c3a3@bbrezillon>
-References: <20181008201027.17952-1-boris.brezillon@bootlin.com>
- <20181008201027.17952-15-boris.brezillon@bootlin.com>
- <CAPybu_0LYnWzgUX=HvY3HZUw8pLWTWR5ppG3TVG7S9dt_XitRw@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [RESEND PATCH v3 0/3] sh: make early_platform code SuperH-specific
+Date: Tue, 9 Oct 2018 09:58:52 +0200
+Message-ID: <CAMRc=Mc44cw__ZQ=Pv77BaEngbS6WETX8Xi-wB8epDeRwzx7LA@mail.gmail.com>
+References: <20180827090651.25062-1-brgl@bgdev.pl> <CAMRc=McWre+5PRuozF69YKONvzy4X31=MzZim-QjhaAZ9iAVTw@mail.gmail.com>
+ <9963d3f3-ba14-0d18-d669-53fc79b783c2@linaro.org> <CAMRc=MeC8gwEpjNf5AEX4oocHYv8c_CJXkCDMM9CQvaqxrbdXQ@mail.gmail.com>
+ <0622b4da-20d3-5f05-5774-85c1dbabe00e@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <CAPybu_0LYnWzgUX=HvY3HZUw8pLWTWR5ppG3TVG7S9dt_XitRw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0622b4da-20d3-5f05-5774-85c1dbabe00e@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Peter Rosin <peda@axentia.se>, Jiri Slaby <jslaby@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank
 List-Id: devicetree@vger.kernel.org
 
-Hi Ricardo,
+czw., 20 wrz 2018 o 18:48 Daniel Lezcano <daniel.lezcano@linaro.org> napisa=
+=C5=82(a):
+>
+> On 20/09/2018 18:19, Bartosz Golaszewski wrote:
+> > 2018-09-20 18:09 GMT+02:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
+> >> On 20/09/2018 15:00, Bartosz Golaszewski wrote:
+> >>
+> >> [ ... ]
+> >>
+> >>> Ping for 4.20. This is the third release cycle I'm trying to get this
+> >>> merged and there never were any objections.
+> >>
+> >> Thanks for the heads up, it is in the pipe.
+> >>
+> >
+> > I guess you mean only the clocksource patch?
+>
+>
+> I meant it is in the pipe of things to review :)
+>
+>
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
+RM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
 
-On Tue, 9 Oct 2018 09:43:16 +0200
-Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com> wrote:
+Last hopefull ping for v4.20...
 
-> HI Boris
-> 
-> Usually they want the bindings to be sent before the changes. You
-> might want to swap the order of 13 and 14
-
-Sure.
-
->  And I think the version
-> reviewed by Rob is too different to this version, maybe we want to
-> ping him to be 100% sure that his review is still valid.
-
-I'll drop his R-b then.
-
-> 
-> FWIW: To the whose serie, after you send the fixed version, you can
-> add to all the patches my:
-> Reviewed-by:   Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-> 
-> and to the last one:
-> Tested-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-> 
-> Thanks a lot for the serie!
-
-And thanks for testing+reviewing it.
-
-Regards,
-
-Boris
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Bart
