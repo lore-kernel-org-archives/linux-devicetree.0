@@ -1,60 +1,34 @@
-From: Ilia Mirkin <imirkin@alum.mit.edu>
-Subject: Re: [PATCH v2 15/29] drm/bridge/synopsys: dw-hdmi: Enable workaround
- for v2.12a
-Date: Tue, 9 Oct 2018 13:56:04 -0400
-Message-ID: <CAKb7Uvgmv4-t0g=b-Xsimn9AiRL1L4sQ51vu5xMTFKNdDC9bLw@mail.gmail.com>
-References: <20181007093905.11253-1-jernej.skrabec@siol.net>
- <20181007093905.11253-16-jernej.skrabec@siol.net> <3616158.EzHeIcd69b@avalon>
+From: Paul Burton <paul.burton@mips.com>
+Subject: Re: [RESEND PATCH v2 0/5] net: phy: mscc: add support for VSC8584 and
+ VSC8574 Microsemi quad-port PHYs
+Date: Tue, 9 Oct 2018 17:59:56 +0000
+Message-ID: <20181009175952.sobaj4xedkpkjaqw@pburton-laptop>
+References: <20181008101445.25946-1-quentin.schulz@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <3616158.EzHeIcd69b@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree <devicetree@vger.kernel.org>, jernej.skrabec@siol.net, maxime.ripard@bootlin.com, David Airlie <airlied@linux.ie>, linux-sunxi@googlegroups.com, dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, sboyd@kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181008101445.25946-1-quentin.schulz@bootlin.com>
+Content-Language: en-US
+Content-ID: <4599D8FCF11813488A788AE19D1C3179@namprd22.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Quentin Schulz <quentin.schulz@bootlin.com>
+Cc: "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "jhogan@kernel.org" <jhogan@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "davem@davemloft.net" <davem@davemloft.net>, "andrew@lunn.ch" <andrew@lunn.ch>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>, "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBPY3QgOSwgMjAxOCBhdCAxOjQwIFBNIExhdXJlbnQgUGluY2hhcnQKPGxhdXJlbnQu
-cGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4gd3JvdGU6Cj4KPiBIaSBKZXJuZWosCj4KPiBUaGFu
-ayB5b3UgZm9yIHRoZSBwYXRjaC4KPgo+IE9uIFN1bmRheSwgNyBPY3RvYmVyIDIwMTggMTI6Mzg6
-NTEgRUVTVCBKZXJuZWogU2tyYWJlYyB3cm90ZToKPiA+IEl0IHR1cm5zIG91dCB0aGF0IGV2ZW4g
-bmV3IERXIEhETUkgY29udHJvbGxlcnMgZXhoaWJpdHMgc2FtZSBtYWdlbnRhCj4gPiBsaW5lIGlz
-c3VlcyBhcyBvbGRlciB2ZXJzaW9ucy4KPiA+Cj4gPiBFbmFibGUgd29ya2Fyb3VuZCBmb3IgdjIu
-MTJhLgo+Cj4gVGhpcyBkb2Vzbid0IGFmZmVjdCB0aGUgcGxhdGZvcm1zIEkgbWFpbnRhaW4sIHNv
-IEkgY2FuJ3QgcmVhbGx5IHRlc3QgdGhpcywgYnV0Cj4gSSdtIHdvbmRlcmluZyB3aGV0aGVyIHRo
-ZXJlIGNvdWxkIGJlIG90aGVyIHBsYXRmb3JtcyB1c2luZyBhIHYyLjEyYSBEVyBIRE1JCj4gdGhh
-dCB3b3VsZG4ndCBuZWVkIHRoZSB3b3JrYXJvdW5kLgo+Cj4gTXkgcGxhdGZvcm1zIHVzZSBhIHBy
-ZXZpb3VzIHZlcnNpb24sIG5hbWVseSB2Mi4wMWEuIFRoZSB3b3JrYXJvdW5kIGZvciB0aGF0Cj4g
-dmVyc2lvbiBoYXMgYmVlbiBlbmFibGVkIGJ5Cj4KPiBjb21taXQgOWMzMDVlYjQ0MmYzYjM3MWZj
-NzIyYWRlODI3YmJmNjczNTE0MTIzZQo+IEF1dGhvcjogTmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJv
-bmdAYmF5bGlicmUuY29tPgo+IERhdGU6ICAgRnJpIEZlYiAyMyAxMjo0NDozNyAyMDE4ICswMTAw
-Cj4KPiAgICAgZHJtOiBicmlkZ2U6IGR3LWhkbWk6IEZpeCBvdmVyZmxvdyB3b3JrYXJvdW5kIGZv
-ciBBbWxvZ2ljIE1lc29uIEdYIFNvQ3MKPgo+IEkgaGF2ZW4ndCBwYWlkIHRvbyBtdWNoIGF0dGVu
-dGlvbiB0byB0aGUgcGF0Y2ggYmFjayB0aGVuLCBhbmQgaGF2ZSBub3cgZG91YmxlLQo+IGNoZWNr
-ZWQgdGhlIEhETUkgb3V0cHV0IG9uIFItQ2FyIEdlbjMuIEVuYWJsaW5nIHRoZSB3b3JrYXJvdW5k
-IGRvZXNuJ3QgY2F1c2UKPiBhbnkgcmVncmVzc2lvbiwgYW5kIHJldmVydGluZyB0aGUgY29tbWl0
-IGRvZXNuJ3QgY2F1c2UgYW55IGlzc3VlIGVpdGhlci4gSQo+IHRodXMgd29uZGVyIHdoZXRoZXIg
-d2Ugc2hvdWxkbid0IGVuYWJsZSB0aGUgd29ya2Fyb3VuZCB3aXRoIGNvdW50ID0gMSBpbiB0aGUK
-PiBkZWZhdWx0IGNhc2UgaW5zdGVhZCBvZiBhZGRpbmcgbmV3IElQIGNvcmUgdmVyc2lvbnMgdG8g
-dGhlIGxpc3QuIEl0IHdvdWxkIGJlCj4gbmljZSBpZiBzb21lb25lIGZyb20gU3lub3BzeXMgY291
-bGQgY29tbWVudCBvbiB0aGlzLgoKSSBob3BlIHRoaXMgY29tbWVudCBpc24ndCAqaW5jcmVkaWJs
-eSogb2ZmLXRvcGljLCBidXQgd2UgZW5jb3VudGVyZWQgYQpzaW1pbGFyIGlzc3VlIHdpdGggTlZJ
-RElBIChhbmQgSSBiZWxpZXZlIEFNRCkgaGFyZHdhcmUgYSB3aGlsZSBiYWNrLApyZWxhdGVkIHRv
-IEhETUkuIFRoaXMgd2FzIGR1ZSB0byBpbmZvZnJhbWVzIG5vdCBiZWluZyBzZW50LCBidXQKKHBl
-cmhhcHMpIEhETUkgQXVkaW8gYmVpbmcgZW5hYmxlZC4KClRoaXMgd2FzIGEgc2luZ2xlIHZlcnRp
-Y2FsKCEpIGxpbmUuIEl0IHdhcyBkZXNjcmliZWQgYXMgInB1cnBsZSIsIGJ1dApub3Qgc3VyZSB0
-aGF0J3MgZGlzdGluZ3Vpc2hhYmxlIGZyb20gIm1hZ2VudGEiIGJ5IG1vc3QgcGVvcGxlLiBbIEZp
-eGVkCmJ5IGE1MjI5NDYxNzQgb24gbm91dmVhdSwgc2FtcGxlIGJ1ZyByZXBvcnQKaHR0cHM6Ly9i
-dWdzLmZyZWVkZXNrdG9wLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9Nzk5MTIgXQoKQ2hlZXJzLAoKICAt
-aWxpYQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Quentin,
+
+On Mon, Oct 08, 2018 at 12:14:40PM +0200, Quentin Schulz wrote:
+> RESEND: rebased on top of latest net-next and on top of latest version of
+> "net: phy: mscc: various improvements to Microsemi PHY driver" patch
+> series.
+>=20
+>%
+>=20
+> I suggest patches 1 to 3 go through net tree and patches 4 and 5 go
+> through MIPS tree. Patches going through net tree and those going through
+> MIPS tree do not depend on one another.
+
+Patches 4 & 5 applied to mips-next for 4.20, thanks!
+
+Paul
