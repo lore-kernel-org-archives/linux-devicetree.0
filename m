@@ -1,13 +1,13 @@
 Return-Path: <SRS0=6MUZ=MV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr70073.outbound.protection.outlook.com ([40.107.7.73]:24672
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+Received: from mail-eopbgr20052.outbound.protection.outlook.com ([40.107.2.52]:21984
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725783AbeJIKmi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 9 Oct 2018 06:42:38 -0400
+        id S1726391AbeJIKKZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Oct 2018 06:10:25 -0400
 From: "A.s. Dong" <aisheng.dong@nxp.com>
 Subject: RE: Can't set MX6UL_PAD_LCD_DATA10 register with devicetree
-Date: Tue, 9 Oct 2018 03:27:47 +0000
-Message-ID: <AM0PR04MB42116046ADF97D5A0E05C63980E70@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Date: Tue, 9 Oct 2018 02:55:40 +0000
+Message-ID: <AM0PR04MB4211F1D4B97ABF9033CD91FF80E70@AM0PR04MB4211.eurprd04.prod.outlook.com>
 References: <20181005124519.GA7699@graute-opti> <20181008062102.GJ3587@dragon>
 In-Reply-To: <20181008062102.GJ3587@dragon>
 Content-Language: en-US
@@ -56,23 +56,7 @@ List-ID: <devicetree@vger.kernel.org>
 > > ideas what I'm doing wrong here?
 > >
 
-I tested imx6ul evk with Shawn's for next tree by manual change LCD_DATA10
-Pad set to 0x100b0, but did not reproduced your issue.
-
-As I don't have devme2 tool in my rootfs, so I tried memtool in NXP release=
-d rootfs.
-root@imx6ul7d:~# /unit_tests/memtool -32 0x20e03cc 1
-E
-Reading 0x1 count starting at address 0x020E03CC
-
-0x020E03CC:  000100B0
-
-I guess you can debug the issue with below approaches:
-1) use below cmd to dump pad setting via pinctrl sysfs
-cat /sys/kernel/debug/pinctrl/20e0000.iomuxc/pinconf-pins | grep LCD_DATA10
-2) Enable CONFIG_DEBUG_PINCTRL will make the booting dump all pad settings
-in register value. Then you may find some clue on it.=20
-(May need add 'debug' in kernel boot param)
+I will check it.
 
 Regards
 Dong Aisheng
