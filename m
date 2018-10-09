@@ -1,44 +1,34 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH 4/7] mfd: ds90ux9xx: add TI DS90Ux9xx de-/serializer MFD
- driver
-Date: Tue, 9 Oct 2018 14:14:12 +0300
-Message-ID: <69f6121a-7d9b-b85c-ddc3-9d88986e0433@mleia.com>
-References: <20181008211205.2900-5-vz@mleia.com>
- <201810091225.bXf3OJJ8%fengguang.wu@intel.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V6 00/23] mmc: mmci: add sdmmc variant for stm32
+Date: Tue, 9 Oct 2018 13:18:27 +0200
+Message-ID: <CAPDyKFp4DEtavAqDg-ymaCcus+Hddv0OrgfS54HsTX+aWdzN+w@mail.gmail.com>
+References: <1539000535-13261-1-git-send-email-ludovic.Barre@st.com>
+ <CAPDyKFp0oHHS=bkXj_AbiLmbNxW07pFnk-4m9kwQtYkh_ogKgw@mail.gmail.com> <cb919bf8-caa2-b2fe-fee4-ae2f0f4c04b5@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201810091225.bXf3OJJ8%fengguang.wu@intel.com>
-Content-Language: en-US
+In-Reply-To: <cb919bf8-caa2-b2fe-fee4-ae2f0f4c04b5@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: kbuild-all@01.org, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Ludovic BARRE <ludovic.barre@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2018 07:08 AM, kbuild test robot wrote:
-> Hi Vladimir,
-> 
-> I love your patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on ljones-mfd/for-mfd-next]
-> [also build test WARNING on v4.19-rc7 next-20181008]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Vladimir-Zapolskiy/mfd-pinctrl-add-initial-support-of-TI-DS90Ux9xx-ICs/20181009-090135
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
-> config: i386-allyesconfig (attached as .config)
-> compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=i386 
-> 
-> Note: it may well be a FALSE warning. FWIW you are at least aware of it now.
-> http://gcc.gnu.org/wiki/Better_Uninitialized_Warnings
-> 
+On 9 October 2018 at 09:54, Ludovic BARRE <ludovic.barre@st.com> wrote:
+> hi Ulf
+>
+> On 10/09/2018 09:30 AM, Ulf Hansson wrote:
+>>
+>> Applied for next, thanks!
+>>
+>> FYI, I made little fixup of the help text in the Kconfig for the last
+>> patch.
+>
+>
+> Thanks for your review.
+> Did you had a feedback on Qcom platform tests?
 
-And it is a false positive.
+Nope. I am leaving the tests for Qcom platforms to be done by
+kernelci, let's see what the reports are.
 
---
-Best wishes,
-Vladimir
+Kind regards
+Uffe
