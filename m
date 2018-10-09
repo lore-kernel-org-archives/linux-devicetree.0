@@ -1,85 +1,113 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: add backlight regulator for
- Pinebook
-Date: Tue, 9 Oct 2018 17:10:19 +0200
-Message-ID: <20181009151019.b6eb6o664twnts7g@flea>
-References: <20181009034609.24892-1-anarsoul@gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH V11 1/8] irqchip: add C-SKY SMP interrupt controller
+Date: Tue, 9 Oct 2018 16:11:05 +0100
+Message-ID: <8772c090-a139-04e4-a55f-820afe1bb5bd@arm.com>
+References: <cover.1539095311.git.ren_guo@c-sky.com>
+ <83d216b3fed039037ebe8b8513f3c51a36934e74.1539095312.git.ren_guo@c-sky.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5752030694300331586=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181009034609.24892-1-anarsoul@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <83d216b3fed039037ebe8b8513f3c51a36934e74.1539095312.git.ren_guo@c-sky.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guo Ren <ren_guo@c-sky.com>, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, will.deacon@arm.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 09/10/18 15:41, Guo Ren wrote:
+>   - Irq-csky-mpintc is C-SKY smp system interrupt controller and it
+>     could support 16 soft irqs, 16 private irqs, and 992 max common
+>     irqs.
+> 
+> Changelog:
+>   - Convert the cpumask to an interrupt-controller specific representation
+>     in driver's code, and not the SMP code's.
+>   - pass checkpatch.pl
+>   - Move IPI_IRQ into the driver
+>   - Remove irq_set_default_host() and use set_ipi_irq_mapping()
+>   - Change name with upstream feed-back
+>   - Change irq map, reserve soft_irq & private_irq space
+>   - Add License and Copyright
+>   - Support set_affinity for irq balance in SMP
+> 
+> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
 
---===============5752030694300331586==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vsyytmyxitmchppe"
-Content-Disposition: inline
+[...]
 
+> +/* C-SKY multi processor interrupt controller */
+> +static int __init
+> +csky_mpintc_init(struct device_node *node, struct device_node *parent)
+> +{
+> +	unsigned int cpu, nr_irq;
+> +	int ret;
+> +
+> +	if (parent)
+> +		return 0;
+> +
+> +	ret = of_property_read_u32(node, "csky,num-irqs", &nr_irq);
+> +	if (ret < 0)
+> +		nr_irq = INTC_IRQS;
+> +
+> +	if (INTCG_base == NULL) {
+> +		INTCG_base = ioremap(mfcr("cr<31, 14>"),
+> +				     INTCL_SIZE*nr_cpu_ids + INTCG_SIZE);
+> +		if (INTCG_base == NULL)
+> +			return -EIO;
+> +
+> +		INTCL_base = INTCG_base + INTCG_SIZE;
+> +
+> +		writel_relaxed(BIT(0), INTCG_base + INTCG_ICTLR);
+> +	}
+> +
+> +	root_domain = irq_domain_add_linear(node, nr_irq, &csky_irqdomain_ops,
+> +					    NULL);
+> +	if (!root_domain)
+> +		return -ENXIO;
+> +
+> +	/* for every cpu */
+> +	for_each_present_cpu(cpu) {
+> +		per_cpu(intcl_reg, cpu) = INTCL_base + (INTCL_SIZE * cpu);
+> +		writel_relaxed(BIT(0), per_cpu(intcl_reg, cpu) + INTCL_PICTLR);
+> +	}
+> +
+> +	set_handle_irq(&csky_mpintc_handler);
+> +
+> +#ifdef CONFIG_SMP
+> +	set_send_ipi(&csky_mpintc_send_ipi);
+> +
+> +	set_ipi_irq_mapping(&csky_mpintc_ipi_irq_mapping);
 
---vsyytmyxitmchppe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Same remark as before.
 
-On Mon, Oct 08, 2018 at 08:46:09PM -0700, Vasily Khoruzhick wrote:
-> Backlight power is controlled by PH6 GPIO, so add corresponding
-> regulator-fixed node for it. Otherwise backlight won't light up
-> if bootloader doesn't enable it.
->=20
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+You do not need this second callback, and you should redefine 
+set_send_ipi to take an irq number:
 
-Queued for 4.21, thanks!
-Maxime
+	ipi_irq = irq_create_mapping(root_domain, IPI_IRQ);
+	if (!ipi_irq)
+		[handle error]
 
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+	set_send_ipi(csky_mpintc_send_ipi, ipi_irq);
 
---vsyytmyxitmchppe
-Content-Type: application/pgp-signature; name="signature.asc"
+and you can then delete both set_ipi_irq_mapping and 
+csky_mpintc_handler, none of which serve any purpose.
 
------BEGIN PGP SIGNATURE-----
+In your SMP code:
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlu8xNoACgkQ0rTAlCFN
-r3RIWw//dfwBwW+rVVjOT4T3ND3PwCUB06kttEtcAggnvtcbf5f+h8uFnsFlj+Rq
-Gw87IzJVjDIYT39U5EY4X+N4odPXTsJDB4ufNrbhGB6WfJW1maUrC3YI9ctt/+mQ
-ynGF9o4dmH9I+yOWhNcVgB2XgWhUC6p0cf06pAvymUsFHHWYTYFsXTYLbN9B46Oa
-q00mXjNtpTHnSDHnBXoK+ElyD4MAYjEG1rRyMvY9WidGtAuNfQJxVFEg2dDP82YI
-B6fX+IL0AUvQxnQi30vwhTrSC/AmF8+pWf93kr21MLiQXtMH0jCX5rhXTZTyWvVW
-PtueB3FUclgrjv4IqRZEBrn9U8CFBOLYDYQFDl/zrzpbTyRNdK1273toNmZDsPd2
-lbAyGB3nYlE/vC0RHjxzFkW46x0xKqiWlfNwvxVs7QzD485ibepG9svNlmW7eo2m
-D8OxDhOYu96nxJM6ttHjKBWw2sLba7/bp65xC8W+IjC8BwamdvblJ7qGro8w6Ac2
-S2Xy7dLsAHCV9kFKZ3eZe3H34o9bBkpxP15itRFgkh43j+wsgVXvWH1YhJpwcbvF
-LKHOSOVcopiJKqv3XQsZbB/aAPKlMObCqDrWZTyVn8FBk+UF184b5yLutPT1llsA
-av8Z1H0CTQeDvEZkKECM2lARKR+HTn7mUX+e+94+WGENyiCD3W8=
-=hR7T
------END PGP SIGNATURE-----
+void __init set_send_ipi(void (*func)(const struct cpumask *), int irq)
+{
+	if (send_arch_ipi)
+		return;
 
---vsyytmyxitmchppe--
+	send_arch_ipi = func;
+	ipi_irq = irq;
+}
 
+and simplify setup_smp_ipi.
 
---===============5752030694300331586==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Thanks,
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5752030694300331586==--
+	M.
+-- 
+Jazz is not dead. It just smells funny...
