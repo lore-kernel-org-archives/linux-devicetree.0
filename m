@@ -1,86 +1,60 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v3 1/2] Driver core: add bus_find_device_by_fwnode
-Date: Tue, 9 Oct 2018 11:48:19 -0600
-Message-ID: <CANLsYkxcUvBBFRFD9Vco559Y5LFw=X0H3Lyzm=nFat6z5yH44g@mail.gmail.com>
-References: <1539080245-25818-1-git-send-email-svellattu@mvista.com>
- <20181009172726.GA2182@xps15> <CAJZ5v0gckkg0jyTc7=JYPpUruQQXL_FhEjm03-0mrFcxH60cHA@mail.gmail.com>
+From: Ilia Mirkin <imirkin@alum.mit.edu>
+Subject: Re: [PATCH v2 15/29] drm/bridge/synopsys: dw-hdmi: Enable workaround
+ for v2.12a
+Date: Tue, 9 Oct 2018 13:56:04 -0400
+Message-ID: <CAKb7Uvgmv4-t0g=b-Xsimn9AiRL1L4sQ51vu5xMTFKNdDC9bLw@mail.gmail.com>
+References: <20181007093905.11253-1-jernej.skrabec@siol.net>
+ <20181007093905.11253-16-jernej.skrabec@siol.net> <3616158.EzHeIcd69b@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJZ5v0gckkg0jyTc7=JYPpUruQQXL_FhEjm03-0mrFcxH60cHA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Silesh C V <svellattu@mvista.com>, Greg KH <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-i2c@vger.kernel.org, linux-rdma@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Lijun Ou <oulijun@huawei.com>, "Wei Hu(Xavier)" <xavier.huwei@huawei.com>, Yisen Zhuang <yisen.zhuang@huawei.com>, Salil Mehta <salil.mehta@huawei.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Brown <broonie@kernel.org>, David Miller <davem@>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <3616158.EzHeIcd69b@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree <devicetree@vger.kernel.org>, jernej.skrabec@siol.net, maxime.ripard@bootlin.com, David Airlie <airlied@linux.ie>, linux-sunxi@googlegroups.com, dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, sboyd@kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 9 Oct 2018 at 11:39, Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Tue, Oct 9, 2018 at 7:27 PM Mathieu Poirier
-> <mathieu.poirier@linaro.org> wrote:
-> >
-> > Hi Silesh,
-> >
-> > On Tue, Oct 09, 2018 at 03:47:24PM +0530, Silesh C V wrote:
-> > > Some drivers need to find the device on a bus having a specific firmware
-> > > node. Currently, such drivers have their own implementations to do this.
-> > > Provide a helper similar to bus_find_device_by_name so that each driver
-> > > does not have to reinvent this.
-> > >
-> > > Signed-off-by: Silesh C V <svellattu@mvista.com>
-> > > ---
-> > > Changes since v2:
-> > >       - make use of dev_fwnode in match_fwnode.
-> > >
-> > >  drivers/base/bus.c     | 20 ++++++++++++++++++++
-> > >  include/linux/device.h |  3 +++
-> > >  2 files changed, 23 insertions(+)
-> > >
-> > > diff --git a/drivers/base/bus.c b/drivers/base/bus.c
-> > > index 8bfd27e..a2f39db 100644
-> > > --- a/drivers/base/bus.c
-> > > +++ b/drivers/base/bus.c
-> > > @@ -17,6 +17,7 @@
-> > >  #include <linux/string.h>
-> > >  #include <linux/mutex.h>
-> > >  #include <linux/sysfs.h>
-> > > +#include <linux/property.h>
-> > >  #include "base.h"
-> > >  #include "power/power.h"
-> > >
-> > > @@ -373,6 +374,25 @@ struct device *bus_find_device_by_name(struct bus_type *bus,
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(bus_find_device_by_name);
-> > >
-> > > +static int match_fwnode(struct device *dev, void *fwnode)
-> > > +{
-> > > +     return dev_fwnode(dev) == fwnode;
-> > > +}
-> > > +
-> > > +/**
-> > > + * bus_find_device_by_fwnode - device iterator for locating a particular device
-> > > + * having a specific firmware node
-> > > + * @bus: bus type
-> > > + * @start: Device to begin with
-> > > + * @fwnode: firmware node of the device to match
-> > > + */
-> > > +struct device *bus_find_device_by_fwnode(struct bus_type *bus, struct device *start,
-> > > +                                     struct fwnode_handle *fwnode)
-> >
-> > I get the following when running checkpatch on your set:
-> >
-> > mpoirier@xps15:~/work/linaro/coresight/kernel-maint$ ./scripts/checkpatch.pl
-> > 0001-Driver-core-add-bus_find_device_by_fwnode.patch
-> > WARNING: line over 80 characters
->
-> Lines longer than 80 chars often are legitimate.  No need to send
-> extra reports about those cases in general.
-
-In this case I don't see a reason not to abide to the guideline.
-Wrapping the function declaration to 80 characters would be easy
-without effecting code readability.
-
-Mathieu
-
->
-> Thanks,
-> Rafael
+T24gVHVlLCBPY3QgOSwgMjAxOCBhdCAxOjQwIFBNIExhdXJlbnQgUGluY2hhcnQKPGxhdXJlbnQu
+cGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4gd3JvdGU6Cj4KPiBIaSBKZXJuZWosCj4KPiBUaGFu
+ayB5b3UgZm9yIHRoZSBwYXRjaC4KPgo+IE9uIFN1bmRheSwgNyBPY3RvYmVyIDIwMTggMTI6Mzg6
+NTEgRUVTVCBKZXJuZWogU2tyYWJlYyB3cm90ZToKPiA+IEl0IHR1cm5zIG91dCB0aGF0IGV2ZW4g
+bmV3IERXIEhETUkgY29udHJvbGxlcnMgZXhoaWJpdHMgc2FtZSBtYWdlbnRhCj4gPiBsaW5lIGlz
+c3VlcyBhcyBvbGRlciB2ZXJzaW9ucy4KPiA+Cj4gPiBFbmFibGUgd29ya2Fyb3VuZCBmb3IgdjIu
+MTJhLgo+Cj4gVGhpcyBkb2Vzbid0IGFmZmVjdCB0aGUgcGxhdGZvcm1zIEkgbWFpbnRhaW4sIHNv
+IEkgY2FuJ3QgcmVhbGx5IHRlc3QgdGhpcywgYnV0Cj4gSSdtIHdvbmRlcmluZyB3aGV0aGVyIHRo
+ZXJlIGNvdWxkIGJlIG90aGVyIHBsYXRmb3JtcyB1c2luZyBhIHYyLjEyYSBEVyBIRE1JCj4gdGhh
+dCB3b3VsZG4ndCBuZWVkIHRoZSB3b3JrYXJvdW5kLgo+Cj4gTXkgcGxhdGZvcm1zIHVzZSBhIHBy
+ZXZpb3VzIHZlcnNpb24sIG5hbWVseSB2Mi4wMWEuIFRoZSB3b3JrYXJvdW5kIGZvciB0aGF0Cj4g
+dmVyc2lvbiBoYXMgYmVlbiBlbmFibGVkIGJ5Cj4KPiBjb21taXQgOWMzMDVlYjQ0MmYzYjM3MWZj
+NzIyYWRlODI3YmJmNjczNTE0MTIzZQo+IEF1dGhvcjogTmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJv
+bmdAYmF5bGlicmUuY29tPgo+IERhdGU6ICAgRnJpIEZlYiAyMyAxMjo0NDozNyAyMDE4ICswMTAw
+Cj4KPiAgICAgZHJtOiBicmlkZ2U6IGR3LWhkbWk6IEZpeCBvdmVyZmxvdyB3b3JrYXJvdW5kIGZv
+ciBBbWxvZ2ljIE1lc29uIEdYIFNvQ3MKPgo+IEkgaGF2ZW4ndCBwYWlkIHRvbyBtdWNoIGF0dGVu
+dGlvbiB0byB0aGUgcGF0Y2ggYmFjayB0aGVuLCBhbmQgaGF2ZSBub3cgZG91YmxlLQo+IGNoZWNr
+ZWQgdGhlIEhETUkgb3V0cHV0IG9uIFItQ2FyIEdlbjMuIEVuYWJsaW5nIHRoZSB3b3JrYXJvdW5k
+IGRvZXNuJ3QgY2F1c2UKPiBhbnkgcmVncmVzc2lvbiwgYW5kIHJldmVydGluZyB0aGUgY29tbWl0
+IGRvZXNuJ3QgY2F1c2UgYW55IGlzc3VlIGVpdGhlci4gSQo+IHRodXMgd29uZGVyIHdoZXRoZXIg
+d2Ugc2hvdWxkbid0IGVuYWJsZSB0aGUgd29ya2Fyb3VuZCB3aXRoIGNvdW50ID0gMSBpbiB0aGUK
+PiBkZWZhdWx0IGNhc2UgaW5zdGVhZCBvZiBhZGRpbmcgbmV3IElQIGNvcmUgdmVyc2lvbnMgdG8g
+dGhlIGxpc3QuIEl0IHdvdWxkIGJlCj4gbmljZSBpZiBzb21lb25lIGZyb20gU3lub3BzeXMgY291
+bGQgY29tbWVudCBvbiB0aGlzLgoKSSBob3BlIHRoaXMgY29tbWVudCBpc24ndCAqaW5jcmVkaWJs
+eSogb2ZmLXRvcGljLCBidXQgd2UgZW5jb3VudGVyZWQgYQpzaW1pbGFyIGlzc3VlIHdpdGggTlZJ
+RElBIChhbmQgSSBiZWxpZXZlIEFNRCkgaGFyZHdhcmUgYSB3aGlsZSBiYWNrLApyZWxhdGVkIHRv
+IEhETUkuIFRoaXMgd2FzIGR1ZSB0byBpbmZvZnJhbWVzIG5vdCBiZWluZyBzZW50LCBidXQKKHBl
+cmhhcHMpIEhETUkgQXVkaW8gYmVpbmcgZW5hYmxlZC4KClRoaXMgd2FzIGEgc2luZ2xlIHZlcnRp
+Y2FsKCEpIGxpbmUuIEl0IHdhcyBkZXNjcmliZWQgYXMgInB1cnBsZSIsIGJ1dApub3Qgc3VyZSB0
+aGF0J3MgZGlzdGluZ3Vpc2hhYmxlIGZyb20gIm1hZ2VudGEiIGJ5IG1vc3QgcGVvcGxlLiBbIEZp
+eGVkCmJ5IGE1MjI5NDYxNzQgb24gbm91dmVhdSwgc2FtcGxlIGJ1ZyByZXBvcnQKaHR0cHM6Ly9i
+dWdzLmZyZWVkZXNrdG9wLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9Nzk5MTIgXQoKQ2hlZXJzLAoKICAt
+aWxpYQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
