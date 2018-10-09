@@ -1,58 +1,82 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v2 15/29] drm/bridge/synopsys: dw-hdmi: Enable workaround
- for v2.12a
-Date: Tue, 9 Oct 2018 22:23:37 +0100
-Message-ID: <20181009212337.GL30658@n2100.armlinux.org.uk>
-References: <20181007093905.11253-1-jernej.skrabec@siol.net>
- <20181007093905.11253-16-jernej.skrabec@siol.net>
- <3616158.EzHeIcd69b@avalon>
- <CAKb7Uvgmv4-t0g=b-Xsimn9AiRL1L4sQ51vu5xMTFKNdDC9bLw@mail.gmail.com>
+From: Otavio Salvador <otavio@ossystems.com.br>
+Subject: [PATCH] ARM: dts: rv1108-evb: enable eMMC support
+Date: Tue,  9 Oct 2018 18:36:56 -0300
+Message-ID: <20181009213656.27719-1-otavio@ossystems.com.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKb7Uvgmv4-t0g=b-Xsimn9AiRL1L4sQ51vu5xMTFKNdDC9bLw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ilia Mirkin <imirkin@alum.mit.edu>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree <devicetree@vger.kernel.org>, jernej.skrabec@siol.net, Andrzej Hajda <a.hajda@samsung.com>, maxime.ripard@bootlin.com, David Airlie <airlied@linux.ie>, linux-sunxi@googlegroups.com, Archit Taneja <architt@codeaurora.org>, dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, sboyd@kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Otavio Salvador <otavio@ossystems.com.br>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 09, 2018 at 01:56:04PM -0400, Ilia Mirkin wrote:
-> On Tue, Oct 9, 2018 at 1:40 PM Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
-> > commit 9c305eb442f3b371fc722ade827bbf673514123e
-> > Author: Neil Armstrong <narmstrong@baylibre.com>
-> > Date:   Fri Feb 23 12:44:37 2018 +0100
-> >
-> >     drm: bridge: dw-hdmi: Fix overflow workaround for Amlogic Meson GX SoCs
-> >
-> > I haven't paid too much attention to the patch back then, and have now double-
-> > checked the HDMI output on R-Car Gen3. Enabling the workaround doesn't cause
-> > any regression, and reverting the commit doesn't cause any issue either. I
-> > thus wonder whether we shouldn't enable the workaround with count = 1 in the
-> > default case instead of adding new IP core versions to the list. It would be
-> > nice if someone from Synopsys could comment on this.
-> 
-> I hope this comment isn't *incredibly* off-topic, but we encountered a
-> similar issue with NVIDIA (and I believe AMD) hardware a while back,
-> related to HDMI. This was due to infoframes not being sent, but
-> (perhaps) HDMI Audio being enabled.
+Enable eMMC support for rv1108 evaluation board.
 
-You're probably right about the infoframes.  The errata documentation
-for this workaround on iMX6 states:
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+---
 
- Each time one writes to some FC registers, and depending on the clock relation of sfr clk and tmds
- clk, some of these train of pulses (when these registers are configured in sequence), may not be
- caught by the arithmetic unit while it is busy processing/updating the first ones, so, it gets wrong
- video timing values, although the registers FC_* hold correct values. Even a soft reset will not
- make the arithmetic unit update correctly. Video will still pass correctly to the HDMI, but packets
- would not because the frame composer is holding internally incorrect video timing and this will
- quickly build up and overflow the packet FIFOs.
+ arch/arm/boot/dts/rv1108-evb.dts |  8 ++++++++
+ arch/arm/boot/dts/rv1108.dtsi    | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+)
 
-So, the workaround is about kicking the frame composer so that the
-packets (iow, non-video data) are passed through correctly.
-
+diff --git a/arch/arm/boot/dts/rv1108-evb.dts b/arch/arm/boot/dts/rv1108-evb.dts
+index 70f0106d1252..f3c6f52c49e6 100644
+--- a/arch/arm/boot/dts/rv1108-evb.dts
++++ b/arch/arm/boot/dts/rv1108-evb.dts
+@@ -226,6 +226,14 @@
+ 	status = "okay";
+ };
+ 
++&emmc {
++	cap-mmc-highspeed;
++	supports-emmc;
++	non-removable;
++	num-slots = <1>;
++	status = "okay";
++};
++
+ &u2phy {
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
+index 76ea24636feb..f14a733d85f6 100644
+--- a/arch/arm/boot/dts/rv1108.dtsi
++++ b/arch/arm/boot/dts/rv1108.dtsi
+@@ -772,6 +772,35 @@
+ 			};
+ 		};
+ 
++		emmc {
++			emmc_clk: emmc-clk {
++				rockchip,pins = <2 RK_PB6 RK_FUNC_1 &pcfg_pull_none_drv_8ma>;
++			};
++
++			emmc_cmd: emmc-cmd {
++				rockchip,pins = <2 RK_PB4 RK_FUNC_2 &pcfg_pull_up_drv_8ma>;
++			};
++
++			emmc_pwren: emmc-pwren {
++				rockchip,pins = <2 RK_PC2 RK_FUNC_2 &pcfg_pull_none>;
++			};
++
++			emmc_bus1: emmc-bus1 {
++				rockchip,pins = <2 RK_PA0 RK_FUNC_2 &pcfg_pull_up_drv_8ma>;
++			};
++
++			emmc_bus8: emmc-bus8 {
++				rockchip,pins = <2 RK_PA0 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
++						<2 RK_PA1 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
++						<2 RK_PA2 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
++						<2 RK_PA3 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
++						<2 RK_PA4 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
++						<2 RK_PA5 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
++						<2 RK_PA6 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
++						<2 RK_PA7 RK_FUNC_2 &pcfg_pull_up_drv_8ma>;
++			};
++		};
++
+ 		sdmmc {
+ 			sdmmc_clk: sdmmc-clk {
+ 				rockchip,pins = <3 RK_PC4 RK_FUNC_1 &pcfg_pull_none_drv_4ma>;
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.19.0
