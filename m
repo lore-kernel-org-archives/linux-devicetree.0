@@ -1,75 +1,29 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 6/6] arm64: dts: xilinx: ultra96: Standardize LED labels and triggers
-Date: Tue,  9 Oct 2018 19:35:22 +0530
-Message-ID: <20181009140522.6492-7-manivannan.sadhasivam@linaro.org>
-References: <20181009140522.6492-1-manivannan.sadhasivam@linaro.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC PATCH 00/11] net: ethernet: ti: cpsw: replace cpsw-phy-sel
+ with phy driver
+Date: Tue, 9 Oct 2018 07:36:31 -0700
+Message-ID: <20181009143631.GK5662@atomide.com>
+References: <20181008234949.15416-1-grygorii.strashko@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181009140522.6492-1-manivannan.sadhasivam@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20181008234949.15416-1-grygorii.strashko@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, heiko@sntech.de, ezequiel@collabora.com, xuwei5@hisilicon.com, michal.simek@xilinx.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, koen.kooi@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-For all 96Boards, the following standard is used for onboard LEDs.
+* Grygorii Strashko <grygorii.strashko@ti.com> [181008 23:54]:
+> 2) introduce new PHY API for network interface mode selection which will use
+> already defined set of modes from phy_interface_t.
+> 
+> Option 2 was selected for this series.
 
-device-name:green:user1  default-trigger: heartbeat
-device-name:green:user2  default-trigger: mmc0/disk-activity
-                                          (onboard-storage)
-device-name:green:user3  default-trigger: mmc1 (SD-card)
-device-name:green:user4  default-trigger: none, panic-indicator
-device-name:yellow:wlan  default-trigger: phy0tx
-device-name:blue:bt      default-trigger: hci0-power
+Looks good to me :) The dts files will cause merge conflicts with
+what I have pending for the ti-sysc changes so please send the dts
+changes in a separate series when posting without RFC.
 
-So lets adopt the same for Ultra96, which is one of the 96Boards
-CE and AI platform. Since the WLAN and BT LEDs are hardwired onboard,
-consolidate only User LEDs.
+Thanks,
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-index eb5e8bddb610..565ceb390f99 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-@@ -57,29 +57,30 @@
- 	leds {
- 		compatible = "gpio-leds";
- 		ds2 {
--			label = "ds2";
-+			label = "zynqmp-zcu100-revC:green:user1";
- 			gpios = <&gpio 20 GPIO_ACTIVE_HIGH>;
- 			linux,default-trigger = "heartbeat";
- 		};
- 
- 		ds3 {
--			label = "ds3";
-+			label = "zynqmp-zcu100-revC:green:user2";
- 			gpios = <&gpio 19 GPIO_ACTIVE_HIGH>;
--			linux,default-trigger = "phy0tx"; /* WLAN tx */
-+			linux,default-trigger = "mmc0";
- 			default-state = "off";
- 		};
- 
- 		ds4 {
--			label = "ds4";
-+			label = "zynqmp-zcu100-revC:green:user3";
- 			gpios = <&gpio 18 GPIO_ACTIVE_HIGH>;
--			linux,default-trigger = "phy0rx"; /* WLAN rx */
-+			linux,default-trigger = "mmc1";
- 			default-state = "off";
- 		};
- 
- 		ds5 {
--			label = "ds5";
-+			label = "zynqmp-zcu100-revC:green:user4";
- 			gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;
--			linux,default-trigger = "bluetooth-power";
-+			linux,default-trigger = "none";
-+			panic-indicator;
- 		};
- 
- 		vbus_det { /* U5 USB5744 VBUS detection via MIO25 */
--- 
-2.17.1
+Tony
