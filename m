@@ -1,125 +1,375 @@
-From: skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [PATCH 2/3] drm/msm/dpu: Integrate interconnect API
- in MDSS
-Date: Tue, 09 Oct 2018 10:07:43 +0530
-Message-ID: <4ab32aa36c54f35568ce48a07cf7b22e@codeaurora.org>
-References: <20181008092730.1199-1-skolluku@codeaurora.org>
- <20181008092730.1199-3-skolluku@codeaurora.org>
- <20181008143954.GN31641@jcrouse-lnx.qualcomm.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 2/6] phy: am654-mmc-phy: Add Support for MMC PHY on AM654
+ Devices
+Date: Tue, 9 Oct 2018 10:48:19 +0530
+Message-ID: <dfd6f0ee-bfd9-b951-c296-61442a458a24@ti.com>
+References: <20181004111451.9539-1-faiz_abbas@ti.com>
+ <20181004111451.9539-3-faiz_abbas@ti.com>
+ <CAPDyKFpgUqHy4ihN-NZd8Qiat8K3U7xzofj_yjpDqGiFLd3JGg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181008143954.GN31641-9PYrDHPZ2Orvke4nUoYGnHL1okKdlPRT@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFpgUqHy4ihN-NZd8Qiat8K3U7xzofj_yjpDqGiFLd3JGg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Faiz Abbas <faiz_abbas@ti.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0xMC0wOCAyMDowOSwgSm9yZGFuIENyb3VzZSB3cm90ZToKPiBPbiBNb24sIE9jdCAw
-OCwgMjAxOCBhdCAwMjo1NzoyOVBNICswNTMwLCBTcmF2YW50aGkgS29sbHVrdWR1cnUgd3JvdGU6
-Cj4+IFRoZSBpbnRlcmNvbm5lY3QgZnJhbWV3b3JrIGlzIGRlc2lnbmVkIHRvIHByb3ZpZGUgYQo+
-PiBzdGFuZGFyZCBrZXJuZWwgaW50ZXJmYWNlIHRvIGNvbnRyb2wgdGhlIHNldHRpbmdzIG9mCj4+
-IHRoZSBpbnRlcmNvbm5lY3RzIG9uIGEgU29DLgo+PiAKPj4gVGhlIGludGVyY29ubmVjdCBBUEkg
-dXNlcyBhIGNvbnN1bWVyL3Byb3ZpZGVyLWJhc2VkIG1vZGVsLAo+PiB3aGVyZSB0aGUgcHJvdmlk
-ZXJzIGFyZSB0aGUgaW50ZXJjb25uZWN0IGJ1c2VzIGFuZCB0aGUKPj4gY29uc3VtZXJzIGNvdWxk
-IGJlIHZhcmlvdXMgZHJpdmVycy4KPj4gCj4+IE1EU1MgaXMgb25lIG9mIHRoZSBpbnRlcmNvbm5l
-Y3QgY29uc3VtZXJzIHdoaWNoIHVzZXMgdGhlCj4+IGludGVyY29ubmVjdCBBUElzIHRvIGdldCB0
-aGUgcGF0aCBiZXR3ZWVuIGVuZHBvaW50cyBhbmQKPj4gc2V0IGl0cyBiYW5kd2lkdGgvbGF0ZW5j
-eS9Rb1MgcmVxdWlyZW1lbnRzIGZvciB0aGUgZ2l2ZW4KPj4gaW50ZXJjb25uZWN0ZWQgcGF0aC4K
-Pj4gCj4+IFNpZ25lZC1vZmYtYnk6IFNyYXZhbnRoaSBLb2xsdWt1ZHVydSA8c2tvbGx1a3VAY29k
-ZWF1cm9yYS5vcmc+Cj4+IC0tLQo+PiAgZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1
-X21kc3MuYyB8IDU2IAo+PiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLQo+PiAgMSBm
-aWxlIGNoYW5nZWQsIDUyIGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCj4+IAo+PiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3MuYyAKPj4gYi9k
-cml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jCj4+IGluZGV4IDIyMzVlZjgx
-MjlmNC4uODM5MWU1YzFlNTU5IDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rp
-c3AvZHB1MS9kcHVfbWRzcy5jCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUx
-L2RwdV9tZHNzLmMKPj4gQEAgLTQsMTAgKzQsMTIgQEAKPj4gICAqLwo+PiAKPj4gICNpbmNsdWRl
-ICJkcHVfa21zLmgiCj4+ICsjaW5jbHVkZSA8bGludXgvaW50ZXJjb25uZWN0Lmg+Cj4+IAo+PiAg
-I2RlZmluZSB0b19kcHVfbWRzcyh4KSBjb250YWluZXJfb2YoeCwgc3RydWN0IGRwdV9tZHNzLCBi
-YXNlKQo+PiAKPj4gICNkZWZpbmUgSFdfSU5UUl9TVEFUVVMJCQkweDAwMTAKPj4gKyNkZWZpbmUg
-TUFYX0FYSV9QT1JUX0NPVU5UIDMKPj4gCj4+ICBzdHJ1Y3QgZHB1X21kc3Mgewo+PiAgCXN0cnVj
-dCBtc21fbWRzcyBiYXNlOwo+PiBAQCAtMTYsOCArMTgsMzYgQEAgc3RydWN0IGRwdV9tZHNzIHsK
-Pj4gIAl1MzIgaHd2ZXJzaW9uOwo+PiAgCXN0cnVjdCBkc3NfbW9kdWxlX3Bvd2VyIG1wOwo+PiAg
-CXN0cnVjdCBkcHVfaXJxX2NvbnRyb2xsZXIgaXJxX2NvbnRyb2xsZXI7Cj4+ICsJc3RydWN0IGlj
-Y19wYXRoICpwYXRoW01BWF9BWElfUE9SVF9DT1VOVF07Cj4+ICsJdTMyIG51bV9wYXRoczsKPj4g
-IH07Cj4+IAo+PiArc3RhdGljIGludCBkcHVfbWRzc19wYXJzZV9kYXRhX2J1c19pY2NfcGF0aCgK
-Pj4gKwkJc3RydWN0IGRybV9kZXZpY2UgKmRldiwgc3RydWN0IGRwdV9tZHNzICpkcHVfbWRzcykK
-Pj4gK3sKPj4gKwlzdHJ1Y3QgaWNjX3BhdGggKnBhdGgwID0gb2ZfaWNjX2dldChkZXYtPmRldiwg
-InBvcnQwIik7Cj4+ICsJc3RydWN0IGljY19wYXRoICpwYXRoMSA9IG9mX2ljY19nZXQoZGV2LT5k
-ZXYsICJwb3J0MSIpOwo+PiArCWludCB0b3RhbF9udW1fcGF0aHMgID0gMDsKPj4gKwo+PiArCWlm
-IChJU19FUlIocGF0aDApKQo+PiArCQlyZXR1cm4gUFRSX0VSUihwYXRoMCk7Cj4+ICsKPj4gKwlk
-cHVfbWRzcy0+cGF0aFswXSA9IHBhdGgwOwo+PiArCXRvdGFsX251bV9wYXRocyA9IDE7Cj4+ICsK
-Pj4gKwlpZiAoIUlTX0VSUihwYXRoMSkpIHsKPj4gKwkJZHB1X21kc3MtPnBhdGhbMV0gPSBwYXRo
-MTsKPj4gKwkJdG90YWxfbnVtX3BhdGhzKys7Cj4+ICsJfQo+PiArCj4+ICsJaWYgKHRvdGFsX251
-bV9wYXRocyAgPiBNQVhfQVhJX1BPUlRfQ09VTlQpCj4+ICsJCXJldHVybiAtRUlOVkFMOwo+IAo+
-IFNpbmNlIHlvdSBhcmUgdXNpbmcgZml4ZWQgbmFtZXMgeW91IGtub3cgdGhhdCBieSBkZXNpZ24g
-dGhpcyBpc24ndCAKPiBwb3NzaWJsZS4KPiAKT2ssIHdpbGwgcmVtb3ZlIHRoZSBjaGVjayBhbmQg
-dGhlIG1hY3JvLgoKPj4gKwlkcHVfbWRzcy0+bnVtX3BhdGhzID0gdG90YWxfbnVtX3BhdGhzOwo+
-PiArCj4+ICsJcmV0dXJuIDA7Cj4+ICt9Cj4+ICsKPj4gIHN0YXRpYyBpcnFyZXR1cm5fdCBkcHVf
-bWRzc19pcnEoaW50IGlycSwgdm9pZCAqYXJnKQo+PiAgewo+PiAgCXN0cnVjdCBkcHVfbWRzcyAq
-ZHB1X21kc3MgPSBhcmc7Cj4+IEBAIC0xMjcsNyArMTU3LDEyIEBAIHN0YXRpYyBpbnQgZHB1X21k
-c3NfZW5hYmxlKHN0cnVjdCBtc21fbWRzcyAqbWRzcykKPj4gIHsKPj4gIAlzdHJ1Y3QgZHB1X21k
-c3MgKmRwdV9tZHNzID0gdG9fZHB1X21kc3MobWRzcyk7Cj4+ICAJc3RydWN0IGRzc19tb2R1bGVf
-cG93ZXIgKm1wID0gJmRwdV9tZHNzLT5tcDsKPj4gLQlpbnQgcmV0Owo+PiArCWludCByZXQsIGk7
-Cj4+ICsJdTY0IGFiID0gKGRwdV9tZHNzLT5udW1fcGF0aHMpID8gNjgwMDAwMDAwMC9kcHVfbWRz
-cy0+bnVtX3BhdGhzIDogMDsKPj4gKwl1NjQgaWIgPSA2ODAwMDAwMDAwOwo+PiArCj4+ICsJZm9y
-IChpID0gMDsgaSA8IGRwdV9tZHNzLT5udW1fcGF0aHM7IGkrKykKPj4gKwkJaWNjX3NldChkcHVf
-bWRzcy0+cGF0aFtpXSwgYWIsIGliKTsKPj4gCj4+ICAJcmV0ID0gbXNtX2Rzc19lbmFibGVfY2xr
-KG1wLT5jbGtfY29uZmlnLCBtcC0+bnVtX2NsaywgdHJ1ZSk7Cj4+ICAJaWYgKHJldCkKPj4gQEAg
-LTE0MCwxMiArMTc1LDE1IEBAIHN0YXRpYyBpbnQgZHB1X21kc3NfZGlzYWJsZShzdHJ1Y3QgbXNt
-X21kc3MgCj4+ICptZHNzKQo+PiAgewo+PiAgCXN0cnVjdCBkcHVfbWRzcyAqZHB1X21kc3MgPSB0
-b19kcHVfbWRzcyhtZHNzKTsKPj4gIAlzdHJ1Y3QgZHNzX21vZHVsZV9wb3dlciAqbXAgPSAmZHB1
-X21kc3MtPm1wOwo+PiAtCWludCByZXQ7Cj4+ICsJaW50IHJldCwgaTsKPj4gCj4+ICAJcmV0ID0g
-bXNtX2Rzc19lbmFibGVfY2xrKG1wLT5jbGtfY29uZmlnLCBtcC0+bnVtX2NsaywgZmFsc2UpOwo+
-PiAgCWlmIChyZXQpCj4+ICAJCURQVV9FUlJPUigiY2xvY2sgZGlzYWJsZSBmYWlsZWQsIHJldDol
-ZFxuIiwgcmV0KTsKPj4gCj4+ICsJZm9yIChpID0gMDsgaSA8IGRwdV9tZHNzLT5udW1fcGF0aHM7
-IGkrKykKPj4gKwkJaWNjX3NldChkcHVfbWRzcy0+cGF0aFtpXSwgMCwgMCk7Cj4+ICsKPj4gIAly
-ZXR1cm4gcmV0Owo+PiAgfQo+PiAKPj4gQEAgLTE1NSw2ICsxOTMsNyBAQCBzdGF0aWMgdm9pZCBk
-cHVfbWRzc19kZXN0cm95KHN0cnVjdCBkcm1fZGV2aWNlIAo+PiAqZGV2KQo+PiAgCXN0cnVjdCBt
-c21fZHJtX3ByaXZhdGUgKnByaXYgPSBkZXYtPmRldl9wcml2YXRlOwo+PiAgCXN0cnVjdCBkcHVf
-bWRzcyAqZHB1X21kc3MgPSB0b19kcHVfbWRzcyhwcml2LT5tZHNzKTsKPj4gIAlzdHJ1Y3QgZHNz
-X21vZHVsZV9wb3dlciAqbXAgPSAmZHB1X21kc3MtPm1wOwo+PiArCWludCBpOwo+PiAKPj4gIAlf
-ZHB1X21kc3NfaXJxX2RvbWFpbl9maW5pKGRwdV9tZHNzKTsKPj4gCj4+IEBAIC0xNjMsNiArMjAy
-LDkgQEAgc3RhdGljIHZvaWQgZHB1X21kc3NfZGVzdHJveShzdHJ1Y3QgZHJtX2RldmljZSAKPj4g
-KmRldikKPj4gIAltc21fZHNzX3B1dF9jbGsobXAtPmNsa19jb25maWcsIG1wLT5udW1fY2xrKTsK
-Pj4gIAlkZXZtX2tmcmVlKCZwZGV2LT5kZXYsIG1wLT5jbGtfY29uZmlnKTsKPj4gCj4+ICsJZm9y
-IChpID0gMDsgaSA8IGRwdV9tZHNzLT5udW1fcGF0aHM7IGkrKykKPj4gKwkJaWNjX3B1dChkcHVf
-bWRzcy0+cGF0aFtpXSk7Cj4+ICsKPj4gIAlpZiAoZHB1X21kc3MtPm1taW8pCj4+ICAJCWRldm1f
-aW91bm1hcCgmcGRldi0+ZGV2LCBkcHVfbWRzcy0+bW1pbyk7Cj4+ICAJZHB1X21kc3MtPm1taW8g
-PSBOVUxMOwo+PiBAQCAtMjAzLDYgKzI0NSwxMiBAQCBpbnQgZHB1X21kc3NfaW5pdChzdHJ1Y3Qg
-ZHJtX2RldmljZSAqZGV2KQo+PiAgCX0KPj4gIAlkcHVfbWRzcy0+bW1pb19sZW4gPSByZXNvdXJj
-ZV9zaXplKHJlcyk7Cj4+IAo+PiArCXJldCA9IGRwdV9tZHNzX3BhcnNlX2RhdGFfYnVzX2ljY19w
-YXRoKGRldiwgZHB1X21kc3MpOwo+PiArCWlmIChyZXQpIHsKPj4gKwkJRFBVX0VSUk9SKCJmYWls
-ZWQgdG8gcGFyc2UgaWNjIHBhdGgsIHJldD0lZFxuIiwgcmV0KTsKPiAKPiBEZXBlbmRpbmcgb24g
-dGhlIG9yZGVyaW5nIGJldHdlZW4gRFBVIGFuZCBpbnRlcmNvbm5lY3QsIHRoaXMgbWlnaHQgCj4g
-cmV0dXJuCj4gLUVQUk9CRV9ERUZFUiBmb3IgYSBmZXcgdGltZXMgYmVmb3JlIHdvcmtpbmcuIFlv
-dSBzaG91bGQgc2tpcCBwcmludGluZwo+IGFuIGVycm9yIG1lc3NhZ2Ugb24gLUVQUk9CRV9ERUZF
-UiBzbyBpdCBkb2Vzbid0IHNwYW0gdGhlIGxvZy4KPiAKT2ssIHdpbGwgcmVtb3ZlIGl0Lgo+PiAr
-CQlyZXR1cm4gcmV0Owo+PiArCX0KPj4gKwo+PiAgCW1wID0gJmRwdV9tZHNzLT5tcDsKPj4gIAly
-ZXQgPSBtc21fZHNzX3BhcnNlX2Nsb2NrKHBkZXYsIG1wKTsKPj4gIAlpZiAocmV0KSB7Cj4+IEBA
-IC0yMjQsMTQgKzI3MiwxNCBAQCBpbnQgZHB1X21kc3NfaW5pdChzdHJ1Y3QgZHJtX2RldmljZSAq
-ZGV2KQo+PiAgCQlnb3RvIGlycV9lcnJvcjsKPj4gIAl9Cj4+IAo+PiArCXByaXYtPm1kc3MgPSAm
-ZHB1X21kc3MtPmJhc2U7Cj4+ICsKPiAKPiBUaGlzIHNlZW1zIGxpa2UgaXQgbWlnaHQgaGF2ZSBz
-bnVjayBpbiBmcm9tIGEgZGlmZmVyZW50IHBhdGNoPwpObywgdGhpcyB3YXMgaW5jbHVkZWQgYXMg
-cGFydCBvZiB0aGlzIHBhdGNoIHRvIGVuc3VyZSB0aGUgbWRzcyBzdHJ1Y3R1cmUgCmlzCmludGlh
-bGl6ZWQgYmVmb3JlIHRoZSBmaXJzdCBwbSBydW50aW1lIHJlc3VtZSBjYWxsLiBJZiBub3QsIHRo
-ZSAKZHB1X21kc3NfZW5hYmxlCndpbGwgbm90IGJlIGNhbGxlZCB3aGljaCBoYXMgdGhlIGxvZ2lj
-IHRvIHZvdGUgZm9yIGJ3IGFuZCBzdWJzZXF1ZW50bHksIAplbmFibGUKdGhlIGNsb2Nrcy4KPiAK
-Pj4gIAlwbV9ydW50aW1lX2VuYWJsZShkZXYtPmRldik7Cj4+IAo+PiAgCXBtX3J1bnRpbWVfZ2V0
-X3N5bmMoZGV2LT5kZXYpOwo+PiAgCWRwdV9tZHNzLT5od3ZlcnNpb24gPSByZWFkbF9yZWxheGVk
-KGRwdV9tZHNzLT5tbWlvKTsKPj4gIAlwbV9ydW50aW1lX3B1dF9zeW5jKGRldi0+ZGV2KTsKPj4g
-Cj4+IC0JcHJpdi0+bWRzcyA9ICZkcHVfbWRzcy0+YmFzZTsKPj4gLQo+PiAgCXJldHVybiByZXQ7
-Cj4+IAo+PiAgaXJxX2Vycm9yOgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9m
-cmVlZHJlbm8K
+Hi Uffe,
+
+On Monday 08 October 2018 05:02 PM, Ulf Hansson wrote:
+> On 4 October 2018 at 13:14, Faiz Abbas <faiz_abbas@ti.com> wrote:
+>> Add driver support for the MMC physical layer present
+>> on TI's AM654 devices.
+>>
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+> 
+> I assume Kishon would like to pick up this through his tree? If not,
+> please tell and I can do it, with his ack.
+
+yes, I'll pick this in my tree.
+
+> 
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+Thanks
+Kishon
+
+> 
+> Kind regards
+> Uffe
+> 
+>> ---
+>>  drivers/phy/ti/Kconfig         |   7 +
+>>  drivers/phy/ti/Makefile        |   1 +
+>>  drivers/phy/ti/phy-am654-mmc.c | 291 +++++++++++++++++++++++++++++++++
+>>  3 files changed, 299 insertions(+)
+>>  create mode 100644 drivers/phy/ti/phy-am654-mmc.c
+>>
+>> diff --git a/drivers/phy/ti/Kconfig b/drivers/phy/ti/Kconfig
+>> index 20503562666c..ea5fe4db01c8 100644
+>> --- a/drivers/phy/ti/Kconfig
+>> +++ b/drivers/phy/ti/Kconfig
+>> @@ -76,3 +76,10 @@ config TWL4030_USB
+>>           family chips (including the TWL5030 and TPS659x0 devices).
+>>           This transceiver supports high and full speed devices plus,
+>>           in host mode, low speed.
+>> +
+>> +config PHY_AM654_MMC
+>> +       bool "TI AM654 MMC PHY Support"
+>> +       select GENERIC_PHY
+>> +       help
+>> +         This option enables support for the Physical layer for MMC host
+>> +         controllers present on TI AM654 SOCs.
+>> diff --git a/drivers/phy/ti/Makefile b/drivers/phy/ti/Makefile
+>> index 9f361756eaf2..5b2db2d164a5 100644
+>> --- a/drivers/phy/ti/Makefile
+>> +++ b/drivers/phy/ti/Makefile
+>> @@ -6,3 +6,4 @@ obj-$(CONFIG_OMAP_USB2)                 += phy-omap-usb2.o
+>>  obj-$(CONFIG_TI_PIPE3)                 += phy-ti-pipe3.o
+>>  obj-$(CONFIG_PHY_TUSB1210)             += phy-tusb1210.o
+>>  obj-$(CONFIG_TWL4030_USB)              += phy-twl4030-usb.o
+>> +obj-$(CONFIG_PHY_AM654_MMC)            += phy-am654-mmc.o
+>> diff --git a/drivers/phy/ti/phy-am654-mmc.c b/drivers/phy/ti/phy-am654-mmc.c
+>> new file mode 100644
+>> index 000000000000..91255947fb67
+>> --- /dev/null
+>> +++ b/drivers/phy/ti/phy-am654-mmc.c
+>> @@ -0,0 +1,291 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * phy-am654-mmc.c - MMC PHY driver for TI's AM654 SOCs
+>> + *
+>> + * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com
+>> + *
+>> + */
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/phy/phy.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/printk.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +/* MMC PHY Registers */
+>> +#define PHYCTRL_CTRL1_REG      0x00
+>> +#define PHYCTRL_CTRL2_REG      0x04
+>> +#define PHYCTRL_CTRL3_REG      0x08
+>> +#define PHYCTRL_CTRL4_REG      0x0C
+>> +#define PHYCTRL_CTRL5_REG      0x10
+>> +#define PHYCTRL_CTRL6_REG      0x14
+>> +#define PHYCTRL_STAT1_REG      0x30
+>> +#define PHYCTRL_STAT2_REG      0x34
+>> +
+>> +#define IOMUX_ENABLE_SHIFT     31
+>> +#define IOMUX_ENABLE_MASK      BIT(IOMUX_ENABLE_SHIFT)
+>> +#define OTAPDLYENA_SHIFT       20
+>> +#define OTAPDLYENA_MASK        BIT(OTAPDLYENA_SHIFT)
+>> +#define OTAPDLYSEL_SHIFT       12
+>> +#define OTAPDLYSEL_MASK        GENMASK(15, 12)
+>> +#define STRBSEL_SHIFT          24
+>> +#define STRBSEL_MASK           GENMASK(27, 24)
+>> +#define SEL50_SHIFT            8
+>> +#define SEL50_MASK             BIT(SEL50_SHIFT)
+>> +#define SEL100_SHIFT           9
+>> +#define SEL100_MASK            BIT(SEL100_SHIFT)
+>> +#define DLL_TRIM_ICP_SHIFT     4
+>> +#define DLL_TRIM_ICP_MASK      GENMASK(7, 4)
+>> +#define DR_TY_SHIFT            20
+>> +#define DR_TY_MASK             GENMASK(22, 20)
+>> +#define ENDLL_SHIFT            1
+>> +#define ENDLL_MASK             BIT(ENDLL_SHIFT)
+>> +#define DLLRDY_SHIFT           0
+>> +#define DLLRDY_MASK            BIT(DLLRDY_SHIFT)
+>> +#define PDB_SHIFT              0
+>> +#define PDB_MASK               BIT(PDB_SHIFT)
+>> +#define CALDONE_SHIFT          1
+>> +#define CALDONE_MASK           BIT(CALDONE_SHIFT)
+>> +
+>> +#define DRIVER_STRENGTH_50_OHM 0x0
+>> +#define DRIVER_STRENGTH_33_OHM 0x1
+>> +#define DRIVER_STRENGTH_66_OHM 0x2
+>> +#define DRIVER_STRENGTH_100_OHM        0x3
+>> +#define DRIVER_STRENGTH_40_OHM 0x4
+>> +
+>> +static struct regmap_config am654_mmc_phy_regmap_config = {
+>> +       .reg_bits = 32,
+>> +       .val_bits = 32,
+>> +       .reg_stride = 4,
+>> +       .fast_io = true,
+>> +};
+>> +
+>> +struct am654_mmc_phy {
+>> +       struct regmap *reg_base;
+>> +       struct clk *mmcclk;
+>> +       int otap_del_sel;
+>> +       int trm_icp;
+>> +       int drv_strength;
+>> +};
+>> +
+>> +static int am654_mmc_phy_init(struct phy *phy)
+>> +{
+>> +       struct am654_mmc_phy *mmc_phy = phy_get_drvdata(phy);
+>> +       int ret;
+>> +       u32 val;
+>> +
+>> +       /* Reset registers to default value */
+>> +       regmap_write(mmc_phy->reg_base, PHYCTRL_CTRL1_REG, 0x10000);
+>> +       regmap_write(mmc_phy->reg_base, PHYCTRL_CTRL4_REG, 0x0);
+>> +       regmap_write(mmc_phy->reg_base, PHYCTRL_CTRL5_REG, 0x0);
+>> +
+>> +       /* Calibrate IO lines */
+>> +       regmap_update_bits(mmc_phy->reg_base, PHYCTRL_CTRL1_REG,
+>> +                          PDB_MASK, PDB_MASK);
+>> +       ret = regmap_read_poll_timeout(mmc_phy->reg_base, PHYCTRL_STAT1_REG,
+>> +                                      val, val & CALDONE_MASK, 1, 20);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       /* Enable pins by setting the IO mux to 0 */
+>> +       regmap_update_bits(mmc_phy->reg_base, PHYCTRL_CTRL1_REG,
+>> +                          IOMUX_ENABLE_MASK, 0);
+>> +
+>> +       mmc_phy->mmcclk = clk_get(&phy->dev, "mmcclk");
+>> +       if (IS_ERR(mmc_phy->mmcclk)) {
+>> +               dev_err(&phy->dev, "Error getting mmcclk");
+>> +               return PTR_ERR(mmc_phy->mmcclk);
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int am654_mmc_phy_exit(struct phy *phy)
+>> +{
+>> +       struct am654_mmc_phy *mmc_phy = phy_get_drvdata(phy);
+>> +
+>> +       clk_put(mmc_phy->mmcclk);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int am654_mmc_phy_power_on(struct phy *phy)
+>> +{
+>> +       struct am654_mmc_phy *mmc_phy = phy_get_drvdata(phy);
+>> +       u32 mask, val;
+>> +       int sel50, sel100;
+>> +       int rate;
+>> +
+>> +       /* Setup DLL Output TAP delay */
+>> +       mask = OTAPDLYENA_MASK | OTAPDLYSEL_MASK;
+>> +       val = (1 << OTAPDLYENA_SHIFT) |
+>> +             (mmc_phy->otap_del_sel << OTAPDLYSEL_SHIFT);
+>> +       regmap_update_bits(mmc_phy->reg_base, PHYCTRL_CTRL4_REG,
+>> +                          mask, val);
+>> +
+>> +       rate = clk_get_rate(mmc_phy->mmcclk);
+>> +       switch (rate) {
+>> +       case 200000000:
+>> +               sel50 = 0;
+>> +               sel100 = 0;
+>> +               break;
+>> +       case 100000000:
+>> +               sel50 = 0;
+>> +               sel100 = 1;
+>> +               break;
+>> +       default:
+>> +               sel50 = 1;
+>> +               sel100 = 0;
+>> +       }
+>> +
+>> +       /* Configure PHY DLL frequency */
+>> +       mask = SEL50_MASK | SEL100_MASK;
+>> +       val = (sel50 << SEL50_SHIFT) | (sel100 << SEL100_SHIFT);
+>> +       regmap_update_bits(mmc_phy->reg_base, PHYCTRL_CTRL5_REG,
+>> +                          mask, val);
+>> +
+>> +       /* Configure DLL TRIM */
+>> +       mask = DLL_TRIM_ICP_MASK;
+>> +       val = mmc_phy->trm_icp << DLL_TRIM_ICP_SHIFT;
+>> +
+>> +       /* Configure DLL driver strength */
+>> +       mask |= DR_TY_MASK;
+>> +       val |= mmc_phy->drv_strength << DR_TY_SHIFT;
+>> +       regmap_update_bits(mmc_phy->reg_base, PHYCTRL_CTRL1_REG, mask, val);
+>> +
+>> +       /* Enable DLL */
+>> +       regmap_update_bits(mmc_phy->reg_base, PHYCTRL_CTRL1_REG,
+>> +                          ENDLL_MASK, 0x1 << ENDLL_SHIFT);
+>> +
+>> +       /*
+>> +        * Poll for DLL ready. Use a one second timeout.
+>> +        * Works in all experiments done so far
+>> +        */
+>> +       return regmap_read_poll_timeout(mmc_phy->reg_base, PHYCTRL_STAT1_REG,
+>> +                                       val, val & DLLRDY_MASK, 1000, 1000000);
+>> +
+>> +}
+>> +
+>> +static int am654_mmc_phy_power_off(struct phy *phy)
+>> +{
+>> +       struct am654_mmc_phy *mmc_phy = phy_get_drvdata(phy);
+>> +
+>> +       /* Disable DLL */
+>> +       regmap_update_bits(mmc_phy->reg_base, PHYCTRL_CTRL1_REG,
+>> +                          ENDLL_MASK, 0);
+>> +
+>> +       /* Reset registers to default value except PDB */
+>> +       regmap_write(mmc_phy->reg_base, PHYCTRL_CTRL1_REG,
+>> +                    0x10000 | PDB_MASK);
+>> +       regmap_write(mmc_phy->reg_base, PHYCTRL_CTRL4_REG, 0x0);
+>> +       regmap_write(mmc_phy->reg_base, PHYCTRL_CTRL5_REG, 0x0);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static const struct phy_ops ops = {
+>> +       .init           = am654_mmc_phy_init,
+>> +       .exit           = am654_mmc_phy_exit,
+>> +       .power_on       = am654_mmc_phy_power_on,
+>> +       .power_off      = am654_mmc_phy_power_off,
+>> +       .owner          = THIS_MODULE,
+>> +};
+>> +
+>> +static int am654_mmc_phy_probe(struct platform_device *pdev)
+>> +{
+>> +       struct phy_provider *phy_provider;
+>> +       struct device *dev = &pdev->dev;
+>> +       struct device_node *np = dev->of_node;
+>> +       struct am654_mmc_phy *mmc_phy;
+>> +       struct phy *generic_phy;
+>> +       struct resource *res;
+>> +       void __iomem *base;
+>> +       struct regmap *map;
+>> +       int drv_strength;
+>> +       int err;
+>> +
+>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +       base = devm_ioremap_resource(&pdev->dev, res);
+>> +       if (IS_ERR(base))
+>> +               return PTR_ERR(base);
+>> +
+>> +       map = devm_regmap_init_mmio(dev, base, &am654_mmc_phy_regmap_config);
+>> +       if (IS_ERR(map)) {
+>> +               dev_err(dev, "could not initialize regmap\n");
+>> +               return PTR_ERR(map);
+>> +       }
+>> +
+>> +       mmc_phy = devm_kzalloc(dev, sizeof(struct am654_mmc_phy), GFP_KERNEL);
+>> +       if (!mmc_phy)
+>> +               return -ENOMEM;
+>> +
+>> +       mmc_phy->reg_base = map;
+>> +       err = of_property_read_u32(np, "ti,otap-del-sel",
+>> +                                  &mmc_phy->otap_del_sel);
+>> +       if (err)
+>> +               return err;
+>> +
+>> +       err = of_property_read_u32(np, "ti,trm-icp",
+>> +                                  &mmc_phy->trm_icp);
+>> +       if (err)
+>> +               return err;
+>> +
+>> +       err = of_property_read_u32(np, "ti,driver-strength-ohm", &drv_strength);
+>> +       if (err)
+>> +               return err;
+>> +
+>> +       switch (drv_strength) {
+>> +       case 50:
+>> +               mmc_phy->drv_strength = DRIVER_STRENGTH_50_OHM;
+>> +               break;
+>> +       case 33:
+>> +               mmc_phy->drv_strength = DRIVER_STRENGTH_33_OHM;
+>> +               break;
+>> +       case 66:
+>> +               mmc_phy->drv_strength = DRIVER_STRENGTH_66_OHM;
+>> +               break;
+>> +       case 100:
+>> +               mmc_phy->drv_strength = DRIVER_STRENGTH_100_OHM;
+>> +               break;
+>> +       case 40:
+>> +               mmc_phy->drv_strength = DRIVER_STRENGTH_40_OHM;
+>> +               break;
+>> +       default:
+>> +               dev_err(dev, "Invalid driver strength\n");
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       generic_phy = devm_phy_create(dev, dev->of_node, &ops);
+>> +       if (IS_ERR(generic_phy)) {
+>> +               dev_err(dev, "failed to create PHY\n");
+>> +               return PTR_ERR(generic_phy);
+>> +       }
+>> +
+>> +       phy_set_drvdata(generic_phy, mmc_phy);
+>> +       phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+>> +
+>> +       return PTR_ERR_OR_ZERO(phy_provider);
+>> +}
+>> +
+>> +static const struct of_device_id am654_mmc_phy_dt_ids[] = {
+>> +       { .compatible = "ti,am654-mmc-phy" },
+>> +       {}
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(of, am654_mmc_phy_dt_ids);
+>> +
+>> +static struct platform_driver am654_mmc_phy_driver = {
+>> +       .probe          = am654_mmc_phy_probe,
+>> +       .driver         = {
+>> +               .name   = "am654-mmc-phy",
+>> +               .of_match_table = am654_mmc_phy_dt_ids,
+>> +       },
+>> +};
+>> +
+>> +module_platform_driver(am654_mmc_phy_driver);
+>> +
+>> +MODULE_AUTHOR("Faiz Abbas <faiz_abbas@ti.com>");
+>> +MODULE_DESCRIPTION("TI AM654 MMC PHY driver");
+>> +MODULE_LICENSE("GPL v2");
+>> --
+>> 2.18.0
+>>
