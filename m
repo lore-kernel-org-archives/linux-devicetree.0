@@ -1,51 +1,127 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 0/6] Standardize onboard LED support for 96Boards
-Date: Tue,  9 Oct 2018 19:35:16 +0530
-Message-ID: <20181009140522.6492-1-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 2/6] arm64: dts: rockchip: rock960: Add on-board LED support
+Date: Tue,  9 Oct 2018 19:35:18 +0530
+Message-ID: <20181009140522.6492-3-manivannan.sadhasivam@linaro.org>
+References: <20181009140522.6492-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181009140522.6492-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, heiko@sntech.de, ezequiel@collabora.com, xuwei5@hisilicon.com, michal.simek@xilinx.com
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, koen.kooi@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset standardizes the onboard LEDs on 96Boards by maintaining
-common labels and triggers as below:
+Add on-board LED support for Rock960 board based on the following
+standard used by rest of the 96Boards:
 
 device-name:green:user1  default-trigger: heartbeat
-device-name:green:user2  default-trigger: mmc0/disk-activity (onboard-storage)
-device-name:green:user3  default-trigger: mmc1 (SD card)
+device-name:green:user2  default-trigger: mmc0/disk-activity
+                                          (onboard-storage)
+device-name:green:user3  default-trigger: mmc1 (SD-card)
 device-name:green:user4  default-trigger: none, panic-indicator
 device-name:yellow:wlan  default-trigger: phy0tx
 device-name:blue:bt      default-trigger: hci0-power
 
-This standardization is required to provide a common behaviour of LEDs
-across all mainline supported 96Boards and also making it easier to
-control it using an userspace library like MRAA.
-
-For Rock960 and Ficus boards, the LED support is added in this patchset.
-Rest of the boards are converted to adopt the standard.
-
-Note: Since there is no UFS trigger available for now, user2 LED trigger
-is set to none on HiKey960.
-
-Thanks,
-Mani
-
-Manivannan Sadhasivam (6):
-  arm64: dts: rockchip: ficus: Add on-board LED support
-  arm64: dts: rockchip: rock960: Add on-board LED support
-  arm64: dts: hisilicon: hikey: Standardize LED labels and triggers
-  arm64: dts: hisilicon: hikey960: Standardize LED labels and triggers
-  arm64: dts: hisilicon: poplar: Standardize LED labels and triggers
-  arm64: dts: xilinx: ultra96: Standardize LED labels and triggers
-
- .../boot/dts/hisilicon/hi3660-hikey960.dts    | 18 ++---
- .../boot/dts/hisilicon/hi3798cv200-poplar.dts | 13 +--
- .../arm64/boot/dts/hisilicon/hi6220-hikey.dts | 17 ++--
- arch/arm64/boot/dts/rockchip/rk3399-ficus.dts | 78 ++++++++++++++++++
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
  .../boot/dts/rockchip/rk3399-rock960.dts      | 79 +++++++++++++++++++
- .../boot/dts/xilinx/zynqmp-zcu100-revC.dts    | 15 ++--
- 6 files changed, 190 insertions(+), 30 deletions(-)
+ 1 file changed, 79 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
+index 3c3308daec98..7d0d1c69c3a8 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
+@@ -13,6 +13,53 @@
+ 	chosen {
+ 		stdout-path = "serial2:1500000n8";
+ 	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&user_led1>, <&user_led2>, <&user_led3>,
++			    <&user_led4>, <&wlan_led>, <&bt_led>;
++
++		user_led1 {
++			label = "rk3399-rock960:green:user1";
++			gpios = <&gpio4 RK_PC2 0>;
++			linux,default-trigger = "heartbeat";
++		};
++
++		user_led2 {
++			label = "rk3399-rock960:green:user2";
++			gpios = <&gpio4 RK_PC6 0>;
++			linux,default-trigger = "mmc0";
++		};
++
++		user_led3 {
++			label = "rk3399-rock960:green:user3";
++			gpios = <&gpio4 RK_PD0 0>;
++			linux,default-trigger = "mmc1";
++	};
++
++		user_led4 {
++			label = "rk3399-rock960:green:user4";
++			gpios = <&gpio4 RK_PD4 0>;
++			panic-indicator;
++			linux,default-trigger = "none";
++		};
++
++		wlan_active_led {
++			label = "rk3399-rock960:yellow:wlan";
++			gpios = <&gpio4 RK_PD5 0>;
++			linux,default-trigger = "phy0tx";
++			default-state = "off";
++		};
++
++		bt_active_led {
++			label = "rk3399-rock960:blue:bt";
++			gpios = <&gpio4 RK_PD6 0>;
++			linux,default-trigger = "hci0-power";
++			default-state = "off";
++		};
++	};
++
+ };
+ 
+ &pcie0 {
+@@ -20,6 +67,38 @@
+ };
+ 
+ &pinctrl {
++	leds {
++		user_led1: user_led1 {
++			rockchip,pins =
++				<4 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		user_led2: user_led2 {
++			rockchip,pins =
++				<4 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		user_led3: user_led3 {
++			rockchip,pins =
++				<4 RK_PD0 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		user_led4: user_led4 {
++			rockchip,pins =
++				<4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		wlan_led: wlan_led {
++			rockchip,pins =
++				<4 RK_PD5 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		bt_led: bt_led {
++			rockchip,pins =
++				<4 RK_PD6 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
+ 	pcie {
+ 		pcie_drv: pcie-drv {
+ 			rockchip,pins =
 -- 
 2.17.1
