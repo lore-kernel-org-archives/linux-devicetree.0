@@ -1,7 +1,7 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 3/6] arm64: dts: hisilicon: hikey: Standardize LED labels and triggers
-Date: Tue,  9 Oct 2018 19:35:19 +0530
-Message-ID: <20181009140522.6492-4-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 5/6] arm64: dts: hisilicon: poplar: Standardize LED labels and triggers
+Date: Tue,  9 Oct 2018 19:35:21 +0530
+Message-ID: <20181009140522.6492-6-manivannan.sadhasivam@linaro.org>
 References: <20181009140522.6492-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181009140522.6492-1-manivannan.sadhasivam@linaro.org>
@@ -20,67 +20,56 @@ device-name:green:user4  default-trigger: none, panic-indicator
 device-name:yellow:wlan  default-trigger: phy0tx
 device-name:blue:bt      default-trigger: hci0-power
 
-So lets adopt the same for HiKey, which is one of the 96Boards
-CE platform.
+So lets adopt the same for Poplar, which is one of the 96Boards
+Enterprise edition platform.
+
+Due to absence of WLAN and BT support, corresponding LED nodes are not
+considered.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ .../arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index f4964bee6a1a..3dd9543da0b6 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -340,42 +340,43 @@
- 
- 	leds {
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
+index d30f6eb8a5ee..f6f3e928a54e 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
+@@ -35,30 +35,31 @@
  		compatible = "gpio-leds";
-+
- 		user_led4 {
--			label = "user_led4";
-+			label = "hi6220-hikey:green:user1";
- 			gpios = <&gpio4 0 0>; /* <&gpio_user_led_1>; */
+ 
+ 		user-led0 {
+-			label = "USER-LED0";
++			label = "hi3798cv200-poplar:green:user1";
+ 			gpios = <&gpio6 3 GPIO_ACTIVE_LOW>;
  			linux,default-trigger = "heartbeat";
- 		};
- 
- 		user_led3 {
--			label = "user_led3";
-+			label = "hi6220-hikey:green:user2";
- 			gpios = <&gpio4 1 0>; /* <&gpio_user_led_2>; */
- 			linux,default-trigger = "mmc0";
- 		};
- 
- 		user_led2 {
--			label = "user_led2";
-+			label = "hi6220-hikey:green:user3";
- 			gpios = <&gpio4 2 0>; /* <&gpio_user_led_3>; */
- 			linux,default-trigger = "mmc1";
- 		};
- 
- 		user_led1 {
--			label = "user_led1";
-+			label = "hi6220-hikey:green:user4";
- 			gpios = <&gpio4 3 0>; /* <&gpio_user_led_4>; */
- 			panic-indicator;
--			linux,default-trigger = "cpu0";
-+			linux,default-trigger = "none";
- 		};
- 
- 		wlan_active_led {
--			label = "wifi_active";
-+			label = "hi6220-hikey:yellow:wlan";
- 			gpios = <&gpio3 5 0>; /* <&gpio_wlan_active_led>; */
- 			linux,default-trigger = "phy0tx";
  			default-state = "off";
  		};
  
- 		bt_active_led {
--			label = "bt_active";
-+			label = "hi6220-hikey:blue:bt";
- 			gpios = <&gpio4 7 0>; /* <&gpio_bt_active_led>; */
--			linux,default-trigger = "hci0rx";
-+			linux,default-trigger = "hci0-power";
+ 		user-led1 {
+-			label = "USER-LED1";
++			label = "hi3798cv200-poplar:green:user2";
+ 			gpios = <&gpio5 1 GPIO_ACTIVE_LOW>;
+ 			linux,default-trigger = "mmc0";
+ 			default-state = "off";
+ 		};
+ 
+ 		user-led2 {
+-			label = "USER-LED2";
++			label = "hi3798cv200-poplar:green:user3";
+ 			gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
+-			linux,default-trigger = "none";
++			linux,default-trigger = "mmc1";
+ 			default-state = "off";
+ 		};
+ 
+ 		user-led3 {
+-			label = "USER-LED3";
++			label = "hi3798cv200-poplar:green:user4";
+ 			gpios = <&gpio10 6 GPIO_ACTIVE_LOW>;
+-			linux,default-trigger = "cpu0";
++			linux,default-trigger = "none";
++			panic-indicator;
  			default-state = "off";
  		};
  	};
