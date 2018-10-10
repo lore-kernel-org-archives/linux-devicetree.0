@@ -1,93 +1,99 @@
-From: laurentiu.tudor@nxp.com
-Subject: [PATCH v3 00/22] SMMU enablement for NXP LS1043A and LS1046A
-Date: Wed, 10 Oct 2018 15:07:18 +0300
-Message-ID: <20181010120737.30300-1-laurentiu.tudor@nxp.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [Question] directory for SoC-related DT binding
+Date: Wed, 10 Oct 2018 14:16:53 +0200
+Message-ID: <af9eec6f-cb31-f23e-61b4-da1364ea7ba5@i2se.com>
+References: <CAK7LNATaD=G8BW316fkBWM2A+YXgP5tabaySR2Fs49Za_0p=3Q@mail.gmail.com>
+ <CABGGisx-iLr+CQ=JjmHEe5J_Qqpf0yrgOmSOHa74GnfwE_RKsA@mail.gmail.com>
+ <93cd9c43-6fe3-c691-005b-e27cf101c7d6@i2se.com>
+ <20181010120955.GQ30658@n2100.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181010120955.GQ30658@n2100.armlinux.org.uk>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org
-Cc: roy.pledge@nxp.com, madalin.bucur@nxp.com, davem@davemloft.net, shawnguo@kernel.org, leoyang.li@nxp.com, robin.murphy@arm.com, bharat.bhushan@nxp.com, arnd@arndb.de, Laurentiu Tudor <laurentiu.tudor@nxp.com>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Rob Herring <robh@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Am 10.10.2018 um 14:09 schrieb Russell King - ARM Linux:
+> On Wed, Oct 10, 2018 at 02:04:14PM +0200, Stefan Wahren wrote:
+>> Hi,
+>>
+>> Am 10.10.2018 um 13:19 schrieb Rob Herring:
+>>> On Wed, Oct 10, 2018 at 6:08 AM Masahiro Yamada
+>>> <yamada.masahiro@socionext.com> wrote:
+>>>> Hi,
+>>>>
+>>>>
+>>>> I see a bunch of vendor (or SoC) names in
+>>>> Documentation/device/bindings/arm/
+>>>>
+>>>> ./Documentation/devicetree/bindings/arm/altera
+>>>> ./Documentation/devicetree/bindings/arm/amlogic
+>>> Yeah, it's kind of a mixture of board/soc bindings mostly with some
+>>> ARM architecture, ARM, Ltd. IP, and SoC system reg bindings.
+>>>
+>>> Eventually, I'd like to not split board bindings by arch and maybe we
+>>> should move all the system/misc reg bindings out.
+>>>
+>>> [,,,]
+>>>
+>>>> I also see some vendor names in
+>>>> Documentation/device/bindings/soc/
+>>>>
+>>>> ./Documentation/devicetree/bindings/soc/bcm
+>>>> ./Documentation/devicetree/bindings/soc/dove
+>>>> ./Documentation/devicetree/bindings/soc/fsl
+>>>> ./Documentation/devicetree/bindings/soc/mediatek
+>>>> ./Documentation/devicetree/bindings/soc/qcom
+>>>> ./Documentation/devicetree/bindings/soc/rockchip
+>>>> ./Documentation/devicetree/bindings/soc/ti
+>>>> ./Documentation/devicetree/bindings/soc/xilinx
+>>>> ./Documentation/devicetree/bindings/soc/zte
+>>> This I believe is mostly SoC system reg bindings though there's
+>>> probably a few other things.
+>>>
+>>>> Confusingly, I see bcm, mediatek, rockchip
+>>>> in both locations.
+>>>>
+>>>> Is there any rule to choose one than the other?
+>>> Top-level SoC/board bindings in arm/ and anything else elsewhere ideally.
+>> in case of Documentation/devicetree/bindings/soc/bcm the directory
+>> contains SoC / board bindings, cpu-enable and a firmware binding.
+> I think you're confused there...
+>
+> $ ls -1 Documentation/devicetree/bindings/soc/bcm/
+> brcm,bcm2835-vchiq.txt
+> raspberrypi,bcm2835-power.txt
+>
+> Doesn't look like SoC/board bindings to me...
+>
+> whereas:
+>
+> $ ls -1 Documentation/devicetree/bindings/arm/bcm/
+> brcm,bcm11351-cpu-method.txt
+> brcm,bcm11351.txt
+> brcm,bcm21664.txt
+> brcm,bcm23550-cpu-method.txt
+> brcm,bcm23550.txt
+> brcm,bcm2835.txt
+> brcm,bcm4708.txt
+> brcm,bcm63138.txt
+> brcm,brcmstb.txt
+> brcm,cygnus.txt
+> brcm,hr2.txt
+> brcm,ns2.txt
+> brcm,nsp-cpu-method.txt
+> brcm,nsp.txt
+> brcm,stingray.txt
+> brcm,vulcan-soc.txt
+> raspberrypi,bcm2835-firmware.txt
+>
+> does fit with your description, except for the directory path...
 
-This patch series adds SMMU support for NXP LS1043A and LS1046A chips
-and consists mostly in important driver fixes and the required device
-tree updates. It touches several subsystems and consists of three main
-parts:
- - changes in soc/drivers/fsl/qbman drivers adding iommu mapping of
-   reserved memory areas, fixes and defered probe support
- - changes in drivers/net/ethernet/freescale/dpaa_eth drivers
-   consisting in misc dma mapping related fixes and probe ordering
- - addition of the actual arm smmu device tree node together with
-   various adjustments to the device trees
+sorry, my fault i copied the wrong path. I actually thought of
+Documentation/devicetree/bindings/arm/bcm/
 
-Performance impact
-
-    Running iperf benchmarks in a back-to-back setup (both sides
-    having smmu enabled) on a 10GBps port show an important
-    networking performance degradation of around 40% (9.48Gbps
-    linerate vs 5.45Gbps) and around 30%-35% with iommu.strict=1.
-    If you need performance but without SMMU support you can use
-    "iommu.passthrough=1" to disable SMMU.
-
-The patch set is based on net-next so, if generally agreed, I'd suggest
-to get the patches through the netdev tree after getting all the Acks.
-
-Changes in v3:
- - redesigned the badly broken logic behind qbman portal probe
-   checking APIs. Updated commit message with details
- - dropped few patches that were picked through arm-soc tree [2]
- - added Madalin's Ack [1] for fsl/fman and dpaa_eth
-
-[1] https://lkml.org/lkml/2018/9/27/831
-[2] [PATCH 05/23] soc/fsl/qbman: add APIs to retrieve the probing status
-    [PATCH 06/23] soc/fsl/qman_portals: defer probe after qman's probe
-    [PATCH 07/23] soc/fsl/bman_portals: defer probe after bman's probe
-
-Changes in v2:
- - dropped confusing comments in smmu interrupt property (Robin)
- - add an intermediate usb simple-bus to fix dma size issue (Robin)
- - use defines instead of numbers in smmu interrupt definition
- - drop double iommu_get_domain_for_dev() call in few qbman patches
-
-Laurentiu Tudor (22):
-  soc/fsl/qman: fixup liodns only on ppc targets
-  soc/fsl/bman: map FBPR area in the iommu
-  soc/fsl/qman: map FQD and PFDR areas in the iommu
-  soc/fsl/qman-portal: map CENA area in the iommu
-  soc/fsl/qbman: add APIs to retrieve the probing status
-  soc/fsl/qman_portals: defer probe after qman's probe
-  soc/fsl/bman_portals: defer probe after bman's probe
-  soc/fsl/qbman_portals: add APIs to retrieve the probing status
-  fsl/fman: backup and restore ICID registers
-  fsl/fman: add API to get the device behind a fman port
-  dpaa_eth: defer probing after qbman
-  dpaa_eth: base dma mappings on the fman rx port
-  dpaa_eth: fix iova handling for contiguous frames
-  dpaa_eth: fix iova handling for sg frames
-  dpaa_eth: fix SG frame cleanup
-  arm64: dts: ls1046a: add smmu node
-  arm64: dts: ls1043a: add smmu node
-  arm64: dts: ls104xa: set mask to drop TBU ID from StreamID
-  arm64: dts: ls104x: add missing dma ranges property
-  arm64: dts: ls104x: add iommu-map to pci controllers
-  arm64: dts: ls104x: make dma-coherent global to the SoC
-  arm64: dts: ls104x: use a pseudo-bus to constrain usb dma size
-
- .../arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 106 ++++++++++----
- .../arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 102 ++++++++++---
- .../net/ethernet/freescale/dpaa/dpaa_eth.c    | 136 ++++++++++++------
- drivers/net/ethernet/freescale/fman/fman.c    |  35 ++++-
- drivers/net/ethernet/freescale/fman/fman.h    |   4 +
- .../net/ethernet/freescale/fman/fman_port.c   |  14 ++
- .../net/ethernet/freescale/fman/fman_port.h   |   2 +
- drivers/soc/fsl/qbman/bman_ccsr.c             |  22 +++
- drivers/soc/fsl/qbman/bman_portal.c           |  32 ++++-
- drivers/soc/fsl/qbman/qman_ccsr.c             |  28 ++++
- drivers/soc/fsl/qbman/qman_portal.c           |  48 ++++++-
- include/soc/fsl/bman.h                        |  16 +++
- include/soc/fsl/qman.h                        |  17 +++
- 13 files changed, 455 insertions(+), 107 deletions(-)
-
--- 
-2.17.1
+Thanks for pointing out
