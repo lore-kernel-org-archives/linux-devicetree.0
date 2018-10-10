@@ -1,99 +1,82 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [Question] directory for SoC-related DT binding
-Date: Wed, 10 Oct 2018 14:16:53 +0200
-Message-ID: <af9eec6f-cb31-f23e-61b4-da1364ea7ba5@i2se.com>
-References: <CAK7LNATaD=G8BW316fkBWM2A+YXgP5tabaySR2Fs49Za_0p=3Q@mail.gmail.com>
- <CABGGisx-iLr+CQ=JjmHEe5J_Qqpf0yrgOmSOHa74GnfwE_RKsA@mail.gmail.com>
- <93cd9c43-6fe3-c691-005b-e27cf101c7d6@i2se.com>
- <20181010120955.GQ30658@n2100.armlinux.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: dw: add cs-override property
+Date: Wed, 10 Oct 2018 13:27:10 +0100
+Message-ID: <20181010122710.GE6294@sirena.org.uk>
+References: <1539155293-21750-1-git-send-email-talel@amazon.com>
+ <20181010101825.GA6294@sirena.org.uk>
+ <dbac7f00-e9cc-ddac-5734-9763b5985ead@amazon.com>
+ <20181010112753.GC6294@sirena.org.uk>
+ <ba83a08073614d9244c01218da28fe3e23f3bbc2.camel@amazon.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lkTb+7nhmha7W+c3"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181010120955.GQ30658@n2100.armlinux.org.uk>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <ba83a08073614d9244c01218da28fe3e23f3bbc2.camel@amazon.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Rob Herring <robh@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>Florian Fainelli <f.fainelli@gmail.com>
+To: "Woodhouse, David" <dwmw@amazon.co.uk>
+Cc: "Shenhar, Talel" <talel@amazon.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Krupnik, Ronen" <ronenk@amazon.com>, "Wasserstrom, Barak" <barakw@amazon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 10.10.2018 um 14:09 schrieb Russell King - ARM Linux:
-> On Wed, Oct 10, 2018 at 02:04:14PM +0200, Stefan Wahren wrote:
->> Hi,
->>
->> Am 10.10.2018 um 13:19 schrieb Rob Herring:
->>> On Wed, Oct 10, 2018 at 6:08 AM Masahiro Yamada
->>> <yamada.masahiro@socionext.com> wrote:
->>>> Hi,
->>>>
->>>>
->>>> I see a bunch of vendor (or SoC) names in
->>>> Documentation/device/bindings/arm/
->>>>
->>>> ./Documentation/devicetree/bindings/arm/altera
->>>> ./Documentation/devicetree/bindings/arm/amlogic
->>> Yeah, it's kind of a mixture of board/soc bindings mostly with some
->>> ARM architecture, ARM, Ltd. IP, and SoC system reg bindings.
->>>
->>> Eventually, I'd like to not split board bindings by arch and maybe we
->>> should move all the system/misc reg bindings out.
->>>
->>> [,,,]
->>>
->>>> I also see some vendor names in
->>>> Documentation/device/bindings/soc/
->>>>
->>>> ./Documentation/devicetree/bindings/soc/bcm
->>>> ./Documentation/devicetree/bindings/soc/dove
->>>> ./Documentation/devicetree/bindings/soc/fsl
->>>> ./Documentation/devicetree/bindings/soc/mediatek
->>>> ./Documentation/devicetree/bindings/soc/qcom
->>>> ./Documentation/devicetree/bindings/soc/rockchip
->>>> ./Documentation/devicetree/bindings/soc/ti
->>>> ./Documentation/devicetree/bindings/soc/xilinx
->>>> ./Documentation/devicetree/bindings/soc/zte
->>> This I believe is mostly SoC system reg bindings though there's
->>> probably a few other things.
->>>
->>>> Confusingly, I see bcm, mediatek, rockchip
->>>> in both locations.
->>>>
->>>> Is there any rule to choose one than the other?
->>> Top-level SoC/board bindings in arm/ and anything else elsewhere ideally.
->> in case of Documentation/devicetree/bindings/soc/bcm the directory
->> contains SoC / board bindings, cpu-enable and a firmware binding.
-> I think you're confused there...
->
-> $ ls -1 Documentation/devicetree/bindings/soc/bcm/
-> brcm,bcm2835-vchiq.txt
-> raspberrypi,bcm2835-power.txt
->
-> Doesn't look like SoC/board bindings to me...
->
-> whereas:
->
-> $ ls -1 Documentation/devicetree/bindings/arm/bcm/
-> brcm,bcm11351-cpu-method.txt
-> brcm,bcm11351.txt
-> brcm,bcm21664.txt
-> brcm,bcm23550-cpu-method.txt
-> brcm,bcm23550.txt
-> brcm,bcm2835.txt
-> brcm,bcm4708.txt
-> brcm,bcm63138.txt
-> brcm,brcmstb.txt
-> brcm,cygnus.txt
-> brcm,hr2.txt
-> brcm,ns2.txt
-> brcm,nsp-cpu-method.txt
-> brcm,nsp.txt
-> brcm,stingray.txt
-> brcm,vulcan-soc.txt
-> raspberrypi,bcm2835-firmware.txt
->
-> does fit with your description, except for the directory path...
 
-sorry, my fault i copied the wrong path. I actually thought of
-Documentation/devicetree/bindings/arm/bcm/
+--lkTb+7nhmha7W+c3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks for pointing out
+On Wed, Oct 10, 2018 at 11:58:40AM +0000, Woodhouse, David wrote:
+> On Wed, 2018-10-10 at 12:27 +0100, Mark Brown wrote:
+
+> > If this is a modified IP with additional features then it should be
+> > given a new compatible string rather than having a property - it's not
+> > just configuration of the existing IP, it's a new thing and we may find
+> > there are other quirks that have to be taken care of for it.
+
+> No.
+
+> It's an extension of the existing IP which is explicitly designed to be
+> compatible with existing drivers via an opt-in feature.
+
+That's totally normal and something that there's already infrastructure
+to handle, plenty of other IPs have new versions with new features - you
+can just add a new compatible string and use that to decide which
+features to enable, and if it's backwards compatible with old versions
+of the driver supporting older hardware then you can list multiple
+compatibles.  As we just discussed on IRC this is partly a policy thing
+now I've been told that it's a modified version of the hardware rather
+than a configuration or integration option, it's easier than having
+implementations of new features trickle out from the vendor and needing
+to enable them all one by one in device trees (which does happen).
+
+> Which is exactly what we've spent the last decade or two trying to beat
+> hardware designers into doing, instead of randomly breaking
+> compatibility for no good reason.
+
+That's great and we get to reuse all the driver code with a quirk (a
+quirk which fixes the hardware to be more compatible with devices, this
+is a really good hardware change).  Ideally we'd be able to enumerate
+things like IP versions and options from hardware but that's a more
+entertaining problem.
+
+Having said all this if there are production systems using this
+property, especially production systems where people other than the
+system integrator can realistically deploy their own kernel separate to
+the device tree, then supporting those existing DTs even if they're not
+doing the ideal thing might be the best thing.  You mentioned that this
+might be the case, can you check what the status is there please?
+
+--lkTb+7nhmha7W+c3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlu98B0ACgkQJNaLcl1U
+h9CPmgf/QMp2J8iPAnRVpTDGziEgyOEXdplvLf6fW0m4v5MSMSHJwgyrloZCVcVf
+xnb5GsQaR89mnaqqd8FRJJ+VR13+4JWkqZTe5W4ha9MrpovU3EttyeQUSa0LDpEL
+CuOHEvsG5lUy9szgAc2MRlf0Vf1gnCF0JtCGLWnoVC9qCHDQxQPyruhomrFdGdI3
+3rXFbStZd6RmWtlfgu7f2V66oOc2FZwcMw/4ElO5IIUM1msI5PPgR1wCzO5SOkgy
+fIQeVsMPs8mD3tq25/SkrxXv+rzNthkLTCHIod3jgmorCo9X2MvdZyoL9PN4s71w
+o+xEojB7gcFcnud/EsHARj/OvSnXGQ==
+=vsxh
+-----END PGP SIGNATURE-----
+
+--lkTb+7nhmha7W+c3--
