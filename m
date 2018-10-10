@@ -1,14 +1,14 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V3 1/2] dt-bindings: pinctrl: document Broadcom Northstar
- pin mux controller
-Date: Wed, 10 Oct 2018 09:16:26 +0200
-Message-ID: <CACRpkdb8MRQN4z=7ZMs8Y3nbUTjDSLqdFNK_AUozut726JwogA@mail.gmail.com>
+Subject: Re: [PATCH V3 2/2] pinctrl: bcm: add Northstar driver
+Date: Wed, 10 Oct 2018 09:17:19 +0200
+Message-ID: <CACRpkdYpfunUSZSoiMTBoO3yQyas6g0s2uxbxovqXy9MRYiOLQ@mail.gmail.com>
 References: <20180926193103.21241-1-zajec5@gmail.com>
+ <20180926193103.21241-2-zajec5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180926193103.21241-1-zajec5@gmail.com>
+In-Reply-To: <20180926193103.21241-2-zajec5@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,18 +24,15 @@ List-Id: devicetree@vger.kernel.org
 
 T24gV2VkLCBTZXAgMjYsIDIwMTggYXQgOTozMSBQTSBSYWZhxYIgTWnFgmVja2kgPHphamVjNUBn
 bWFpbC5jb20+IHdyb3RlOgoKPiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2ku
-cGw+Cj4KPiBOb3J0aHN0YXIgaGFzIG11eCBjb250cm9sbGVyIGp1c3QgbGlrZSBOb3J0aHN0YXIg
-UGx1cyBhbmQgTm9ydGhzdGFyMi4KPiBJdCdzIGEgYml0IGRpZmZlcmVudCB0aG91Z2ggKGRpZmZl
-cmVudCByZWdpc3RlcnMgJiBwaW5zKSBzbyBpdCByZXF1aXJlcwo+IGl0cyBvd24gYmluZGluZy4K
-Pgo+IEl0J3MgbmVlZGVkIHRvIGFsbG93IG90aGVyIGJsb2NrIGJpbmRpbmdzIHNwZWNpZnkgcmVx
-dWlyZWQgbXV4IHNldHVwLgo+Cj4gU2lnbmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZh
-bEBtaWxlY2tpLnBsPgo+IFJldmlld2VkLWJ5OiBGbG9yaWFuIEZhaW5lbGxpIDxmLmZhaW5lbGxp
-QGdtYWlsLmNvbT4KPiAtLS0KPiBWMjogVXNlICJjcnVfZ3Bpb19jb250cm9sIgo+ICAgICBBZGQg
-bW9yZSBmdW5jdGlvbnMgJiBncm91cHMKPiAgICAgSW5jbHVkZSBGbG9yaWFuJ3MgUmV2aWV3ZWQt
-YnkKPiBWMzogVXNlIDMgZGlmZmVyZW50IGJpbmRpbmdzIGFzIGF2YWlsYWJsZSBwaW5zIGRlcGVu
-ZCBvbiB0aGUgY2hpcHNldC4KPiAgICAgU3RyaW5ncyBtYXRjaCBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvYXJtL2JjbS9icmNtLGJjbTQ3MDgudHh0CgpQYXRjaCBhcHBsaWVkLgoK
-WW91cnMsCkxpbnVzIFdhbGxlaWoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+cGw+Cj4KPiBUaGlzIGRyaXZlciBwcm92aWRlcyBzdXBwb3J0IGZvciBOb3J0aHN0YXIgbXV4IGNv
+bnRyb2xsZXIuIEl0IGRpZmZlcnMKPiBmcm9tIE5vcnRoc3RhciBQbHVzIG9uZSBzbyBhIG5ldyBi
+aW5kaW5nIGFuZCBkcml2ZXIgd2VyZSBuZWVkZWQuCj4KPiBTaWduZWQtb2ZmLWJ5OiBSYWZhxYIg
+TWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4gLS0tCj4gVjI6IERlZmluZSBtb3JlIHBpbnMs
+IGdyb3VwcywgZnVuY3Rpb25zCj4gICAgIFNpbXBsaWZ5IG5zX3BpbmN0cmxfc2V0X211eCgpIGFz
+IE5vcnRoc3RhciB1c2VzIDE6MSBtYXBwaW5nCj4gVjM6IFN1cHBvcnQgMyBkaWZmZXJlbnQgYmlu
+ZGluZ3MgYW5kIGRpZmZlcmVudCBzZXRzIG9mIHBpbnMsIGdyb3Vwcwo+ICAgICBhbmQgZnVuY3Rp
+b25zLiBUaGlzIHJlcXVpcmVzIGJ1aWxkaW5nIGFycmF5cyBkeW5hbWljYWxseSBvbiBpbml0LgoK
+UGF0Y2ggYXBwbGllZC4KCllvdXJzLApMaW51cyBXYWxsZWlqCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
+dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
