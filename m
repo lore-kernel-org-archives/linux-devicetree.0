@@ -1,76 +1,60 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [Question] directory for SoC-related DT binding
-Date: Wed, 10 Oct 2018 14:04:14 +0200
-Message-ID: <93cd9c43-6fe3-c691-005b-e27cf101c7d6@i2se.com>
-References: <CAK7LNATaD=G8BW316fkBWM2A+YXgP5tabaySR2Fs49Za_0p=3Q@mail.gmail.com>
- <CABGGisx-iLr+CQ=JjmHEe5J_Qqpf0yrgOmSOHa74GnfwE_RKsA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: laurentiu.tudor@nxp.com
+Subject: [PATCH v3 02/22] soc/fsl/bman: map FBPR area in the iommu
+Date: Wed, 10 Oct 2018 15:07:20 +0300
+Message-ID: <20181010120737.30300-3-laurentiu.tudor@nxp.com>
+References: <20181010120737.30300-1-laurentiu.tudor@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABGGisx-iLr+CQ=JjmHEe5J_Qqpf0yrgOmSOHa74GnfwE_RKsA@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181010120737.30300-1-laurentiu.tudor@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Florian Fainelli <f.fainelli@gmail.com>
+To: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org
+Cc: roy.pledge@nxp.com, madalin.bucur@nxp.com, davem@davemloft.net, shawnguo@kernel.org, leoyang.li@nxp.com, robin.murphy@arm.com, bharat.bhushan@nxp.com, arnd@arndb.de, Laurentiu Tudor <laurentiu.tudor@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-Am 10.10.2018 um 13:19 schrieb Rob Herring:
-> On Wed, Oct 10, 2018 at 6:08 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
->> Hi,
->>
->>
->> I see a bunch of vendor (or SoC) names in
->> Documentation/device/bindings/arm/
->>
->> ./Documentation/devicetree/bindings/arm/altera
->> ./Documentation/devicetree/bindings/arm/amlogic
-> Yeah, it's kind of a mixture of board/soc bindings mostly with some
-> ARM architecture, ARM, Ltd. IP, and SoC system reg bindings.
->
-> Eventually, I'd like to not split board bindings by arch and maybe we
-> should move all the system/misc reg bindings out.
->
-> [,,,]
->
->> I also see some vendor names in
->> Documentation/device/bindings/soc/
->>
->> ./Documentation/devicetree/bindings/soc/bcm
->> ./Documentation/devicetree/bindings/soc/dove
->> ./Documentation/devicetree/bindings/soc/fsl
->> ./Documentation/devicetree/bindings/soc/mediatek
->> ./Documentation/devicetree/bindings/soc/qcom
->> ./Documentation/devicetree/bindings/soc/rockchip
->> ./Documentation/devicetree/bindings/soc/ti
->> ./Documentation/devicetree/bindings/soc/xilinx
->> ./Documentation/devicetree/bindings/soc/zte
-> This I believe is mostly SoC system reg bindings though there's
-> probably a few other things.
->
->> Confusingly, I see bcm, mediatek, rockchip
->> in both locations.
->>
->> Is there any rule to choose one than the other?
-> Top-level SoC/board bindings in arm/ and anything else elsewhere ideally.
+Add a one-to-one iommu mapping for bman private data memory (FBPR).
+This is required for BMAN to work without faults behind an iommu.
 
-in case of Documentation/devicetree/bindings/soc/bcm the directory
-contains SoC / board bindings, cpu-enable and a firmware binding.
+Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+---
+ drivers/soc/fsl/qbman/bman_ccsr.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Is there any action required?
-
-Btw the Broadcom SoC / boards from this directory has been left out for
-the yaml conversion [1] was this intended?
-
-[1] - https://lwn.net/Articles/767723/
-
->
-> Rob
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/drivers/soc/fsl/qbman/bman_ccsr.c b/drivers/soc/fsl/qbman/bman_ccsr.c
+index 05c42235dd41..d180da003e4a 100644
+--- a/drivers/soc/fsl/qbman/bman_ccsr.c
++++ b/drivers/soc/fsl/qbman/bman_ccsr.c
+@@ -29,6 +29,7 @@
+  */
+ 
+ #include "bman_priv.h"
++#include <linux/iommu.h>
+ 
+ u16 bman_ip_rev;
+ EXPORT_SYMBOL(bman_ip_rev);
+@@ -171,6 +172,7 @@ static int fsl_bman_probe(struct platform_device *pdev)
+ 	int ret, err_irq;
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *node = dev->of_node;
++	struct iommu_domain *domain;
+ 	struct resource *res;
+ 	u16 id, bm_pool_cnt;
+ 	u8 major, minor;
+@@ -216,6 +218,15 @@ static int fsl_bman_probe(struct platform_device *pdev)
+ 
+ 	dev_dbg(dev, "Allocated FBPR 0x%llx 0x%zx\n", fbpr_a, fbpr_sz);
+ 
++	/* Create an 1-to-1 iommu mapping for FBPR area */
++	domain = iommu_get_domain_for_dev(dev);
++	if (domain) {
++		ret = iommu_map(domain, fbpr_a, fbpr_a, fbpr_sz,
++				IOMMU_READ | IOMMU_WRITE | IOMMU_CACHE);
++		if (ret)
++			dev_warn(dev, "failed to iommu_map() %d\n", ret);
++	}
++
+ 	bm_set_memory(fbpr_a, fbpr_sz);
+ 
+ 	err_irq = platform_get_irq(pdev, 0);
+-- 
+2.17.1
