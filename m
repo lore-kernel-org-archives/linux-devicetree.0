@@ -1,87 +1,60 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v9 05/11] of: base: Add of_get_cpu_state_node() to get
- idle states for a CPU node
-Date: Wed, 10 Oct 2018 16:03:31 +0100
-Message-ID: <20181010150331.GB4844@e107155-lin>
-References: <20181003143824.13059-1-ulf.hansson@linaro.org>
- <20181003143824.13059-6-ulf.hansson@linaro.org>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 5/9] arm64: dts: sdm845: Add gpu and gmu
+ device nodes
+Date: Wed, 10 Oct 2018 09:10:06 -0600
+Message-ID: <20181010151006.GD9977@jcrouse-lnx.qualcomm.com>
+References: <20180827151112.25211-1-jcrouse@codeaurora.org>
+ <20180827151112.25211-6-jcrouse@codeaurora.org>
+ <20181010094628.wejfgmvcv6stzoco@vireshk-i7>
+ <20181010142905.GB9977@jcrouse-lnx.qualcomm.com>
+ <20181010143149.4e3ct3efkuwxa2hw@vireshk-i7>
+ <20181010144856.GC9977@jcrouse-lnx.qualcomm.com>
+ <20181010145139.nvalsr2ij2lj53dh@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20181003143824.13059-6-ulf.hansson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-pm@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@kernel.org>, Lina Iyer <ilina@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
+In-Reply-To: <20181010145139.nvalsr2ij2lj53dh@vireshk-i7>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 03, 2018 at 04:38:18PM +0200, Ulf Hansson wrote:
-> The CPU's idle state nodes are currently parsed at the common cpuidle DT
-> library, but also when initializing back-end data for the arch specific CPU
-> operations, as in the PSCI driver case.
-> 
-> To avoid open-coding, let's introduce of_get_cpu_state_node(), which takes
-> the device node for the CPU and the index to the requested idle state node,
-> as in-parameters. In case a corresponding idle state node is found, it
-> returns the node with the refcount incremented for it, else it returns
-> NULL.
-> 
-> Moreover, for ARM, there are two generic methods, to describe the CPU's
-> idle states, either via the flattened description through the
-> "cpu-idle-states" binding [1] or via the hierarchical layout, using the
-> "power-domains" and the "domain-idle-states" bindings [2]. Hence, let's
-> take both options into account.
-> 
-> [1]
-> Documentation/devicetree/bindings/arm/idle-states.txt
-> [2]
-> Documentation/devicetree/bindings/arm/psci.txt
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: Lina Iyer <ilina@codeaurora.org>
-> Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
-> Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  drivers/of/base.c  | 35 +++++++++++++++++++++++++++++++++++
->  include/linux/of.h |  8 ++++++++
->  2 files changed, 43 insertions(+)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 74eaedd5b860..bf1d5fa34899 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -424,6 +424,41 @@ int of_cpu_node_to_id(struct device_node *cpu_node)
->  }
->  EXPORT_SYMBOL(of_cpu_node_to_id);
->  
-> +/**
-> + * of_get_cpu_state_node - Get CPU's idle state node at the given index
-> + *
-> + * @cpu_node: The device node for the CPU
-> + * @index: The index in the list of the idle states
-> + *
-> + * Two generic methods can be used to describe a CPU's idle states, either via
-> + * a flattened description through the "cpu-idle-states" binding or via the
-> + * hierarchical layout, using the "power-domains" and the "domain-idle-states"
-> + * bindings. This function check for both and returns the idle state node for
-> + * the requested index.
-> + *
-> + * In case and idle state node is found at index, the refcount incremented for
-> + * it, so call of_node_put() on it when done. Returns NULL if not found.
-> + */
-> +struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
-
-No strong opinion but I am wondering if it makes sense to get cpu
-logical index and fetch the cpu of_node here to contain the refcount on
-it within this function while we are trying to consolidate. I do see
-that may not be so useful in psci.c but keeping refcount for cpu of_node
-here keeps the user free from that.
-
-I am fine as it is if there are reasons not to do that.
-
---
-Regards,
-Sudeep
+T24gV2VkLCBPY3QgMTAsIDIwMTggYXQgMDg6MjE6MzlQTSArMDUzMCwgVmlyZXNoIEt1bWFyIHdy
+b3RlOgo+IE9uIDEwLTEwLTE4LCAwODo0OCwgSm9yZGFuIENyb3VzZSB3cm90ZToKPiA+IHFjb20s
+bGV2ZWwgY29tZXMgc3RyYWlnaHQgZnJvbToKPiA+IAo+ID4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5v
+cmcvbGttbC8yMDE4MDYyNzA0NTIzNC4yNzQwMy0yLXJuYXlha0Bjb2RlYXVyb3JhLm9yZy8KPiA+
+IAo+ID4gQnV0IGluIHRoaXMgY2FzZSBpbnN0ZWFkIG9mIHVzaW5nIHRoZSBDUFUgdG8gcHJvZ3Jh
+bSB0aGUgUlBNaCB3ZSBhcmUgcGFzc2luZwo+ID4gdGhlIHZhbHVlIHRvIGEgbWljcm9wcm9jZXNz
+b3IgKHRoZSBHTVUpIGFuZCB0aGF0IHdpbGwgZG8gdGhlIHZvdGUgb24gb3VyIGJlaGFsZgo+ID4g
+KFRlY2huaWNhbGx5IHdlIHVzZSB0aGUgdmFsdWUgdG8gbG9vayB1cCB0aGUgdm90ZSBpbiB0aGUg
+Y21kLWRiIGRhdGFiYXNlIGFuZAo+ID4gcGFzcyB0aGF0IHRvIHRoZSBHTVUpCj4gPiAKPiA+IFRo
+aXMgaXMgd2h5IHRoZSBxY29tLGxldmVsIHdhcyBhZGRlZCBpbiB0aGUgZmlyc3QgcGxhY2Ugc28g
+d2UgY291bGQgYXQgbGVhc3QKPiA+IHNoYXJlIHRoZSBub21lbmNsYXR1cmUgd2l0aCB0aGUgcnBt
+aGQgaWYgbm90IHRoZSBpbXBsZW1lbnRhdGlvbi4KPiAKPiBIb3cgeW91IGFjdHVhbGx5IHBhc3Mg
+dGhlIHZvdGUgdG8gdGhlIHVuZGVybHlpbmcgaGFyZHdhcmUsIFJQTWggb3IKPiBHTVUsIGlzIGly
+cmVsZXZhbnQgdG8gdGhlIHdob2xlIHRoaW5nLiBXaGF0IGlzIGltcG9ydGFudCBpcyBob3cgd2UK
+PiBkZXNjcmliZSB0aGF0IGluIERUIGFuZCBob3cgd2UgcmVwcmVzZW50IHRoZSB3aG9sZSB0aGlu
+Zy4KPiAKPiBXZSBoYXZlIGNob3NlbiBnZW5wZCArIE9QUCB0byBkbyB0aGlzIGFuZCBzYW1lIHNo
+b3VsZCBiZSB1c2VkIGJ5IHlvdQo+IGFzIHdlbGwuIEFub3RoZXIgYmVuZWZpdCBpcyB0aGF0IHRo
+ZSBnZW5wZCBjb3JlIHdpbGwgZG8gdm90ZQo+IGFnZ3JlZ2F0aW9uIGZvciB5b3UgaGVyZS4KCkkn
+bSBub3Qgc3VyZSB3aGF0IHlvdSBhcmUgc3VnZ2VzdGluZz8gVGhlIHZvdGUgaXMgcmVwcmVzZW50
+ZWQgaW4gRFQgZXhhY3RseSBhcwpkZXNjcmliZWQgaW4gdGhlIGJpbmRpbmdzLiAKCkpvcmRhbgoK
+PiAtLSAKPiB2aXJlc2gKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwo+IEZyZWVkcmVubyBtYWlsaW5nIGxpc3QKPiBGcmVlZHJlbm9AbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9mcmVlZHJlbm8KCi0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMg
+YSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJv
+cmF0aXZlIFByb2plY3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRy
+ZW5vCg==
