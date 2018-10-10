@@ -1,63 +1,137 @@
 From: laurentiu.tudor@nxp.com
-Subject: [PATCH v3 10/22] fsl/fman: add API to get the device behind a fman port
-Date: Wed, 10 Oct 2018 15:07:25 +0300
-Message-ID: <20181010120737.30300-8-laurentiu.tudor@nxp.com>
+Subject: [PATCH v3 14/22] dpaa_eth: fix iova handling for sg frames
+Date: Wed, 10 Oct 2018 15:07:29 +0300
+Message-ID: <20181010120737.30300-12-laurentiu.tudor@nxp.com>
 References: <20181010120737.30300-1-laurentiu.tudor@nxp.com>
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181010120737.30300-1-laurentiu.tudor@nxp.com>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org
 Cc: roy.pledge@nxp.com, madalin.bucur@nxp.com, davem@davemloft.net, shawnguo@kernel.org, leoyang.li@nxp.com, robin.murphy@arm.com, bharat.bhushan@nxp.com, arnd@arndb.de, Laurentiu Tudor <laurentiu.tudor@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-Add an API that retrieves the 'struct device' that the specified fman
-port probed against. The new API will be used in a subsequent iommu
-enablement related patch.
+The driver relies on the no longer valid assumption that dma addresses
+(iovas) are identical to physical addressees and uses phys_to_virt() to
+make iova -> vaddr conversions. Fix this also for scatter-gather frames
+using the iova -> phys conversion function added in the previous patch.
+While at it, clean-up a redundant dpaa_bpid2pool() and pass the bp
+as parameter.
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 Acked-by: Madalin Bucur <madalin.bucur@nxp.com>
 ---
- drivers/net/ethernet/freescale/fman/fman_port.c | 14 ++++++++++++++
- drivers/net/ethernet/freescale/fman/fman_port.h |  2 ++
- 2 files changed, 16 insertions(+)
+ .../net/ethernet/freescale/dpaa/dpaa_eth.c    | 41 +++++++++++--------
+ 1 file changed, 24 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/fman/fman_port.c b/drivers/net/ethernet/freescale/fman/fman_port.c
-index ee82ee1384eb..bd76c9730692 100644
---- a/drivers/net/ethernet/freescale/fman/fman_port.c
-+++ b/drivers/net/ethernet/freescale/fman/fman_port.c
-@@ -1728,6 +1728,20 @@ u32 fman_port_get_qman_channel_id(struct fman_port *port)
- }
- EXPORT_SYMBOL(fman_port_get_qman_channel_id);
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+index a9227456f67e..ea814feb4666 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -1646,14 +1646,17 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
  
-+/**
-+ * fman_port_get_device
-+ * port:	Pointer to the FMan port device
-+ *
-+ * Get the 'struct device' associated to the specified FMan port device
-+ *
-+ * Return: pointer to associated 'struct device'
-+ */
-+struct device *fman_port_get_device(struct fman_port *port)
-+{
-+	return port->dev;
-+}
-+EXPORT_SYMBOL(fman_port_get_device);
+ 	if (unlikely(qm_fd_get_format(fd) == qm_fd_sg)) {
+ 		nr_frags = skb_shinfo(skb)->nr_frags;
+-		dma_unmap_single(dev, addr,
+-				 qm_fd_get_offset(fd) + DPAA_SGT_SIZE,
+-				 dma_dir);
+ 
+ 		/* The sgt buffer has been allocated with netdev_alloc_frag(),
+ 		 * it's from lowmem.
+ 		 */
+-		sgt = phys_to_virt(addr + qm_fd_get_offset(fd));
++		sgt = phys_to_virt(dpaa_iova_to_phys(dev,
++						     addr +
++						     qm_fd_get_offset(fd)));
 +
- int fman_port_get_hash_result_offset(struct fman_port *port, u32 *offset)
++		dma_unmap_single(dev, addr,
++				 qm_fd_get_offset(fd) + DPAA_SGT_SIZE,
++				 dma_dir);
+ 
+ 		/* sgt[0] is from lowmem, was dma_map_single()-ed */
+ 		dma_unmap_single(dev, qm_sg_addr(&sgt[0]),
+@@ -1668,7 +1671,7 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
+ 		}
+ 
+ 		/* Free the page frag that we allocated on Tx */
+-		skb_free_frag(phys_to_virt(addr));
++		skb_free_frag(skbh);
+ 	} else {
+ 		dma_unmap_single(dev, addr,
+ 				 skb_tail_pointer(skb) - (u8 *)skbh, dma_dir);
+@@ -1729,14 +1732,14 @@ static struct sk_buff *contig_fd_to_skb(const struct dpaa_priv *priv,
+  * The page fragment holding the S/G Table is recycled here.
+  */
+ static struct sk_buff *sg_fd_to_skb(const struct dpaa_priv *priv,
+-				    const struct qm_fd *fd)
++				    const struct qm_fd *fd,
++				    struct dpaa_bp *dpaa_bp,
++				    void *vaddr)
  {
- 	if (port->buffer_offsets.hash_result_offset == ILLEGAL_BASE)
-diff --git a/drivers/net/ethernet/freescale/fman/fman_port.h b/drivers/net/ethernet/freescale/fman/fman_port.h
-index 9dbb69f40121..82f12661a46d 100644
---- a/drivers/net/ethernet/freescale/fman/fman_port.h
-+++ b/drivers/net/ethernet/freescale/fman/fman_port.h
-@@ -157,4 +157,6 @@ int fman_port_get_tstamp(struct fman_port *port, const void *data, u64 *tstamp);
+ 	ssize_t fd_off = qm_fd_get_offset(fd);
+-	dma_addr_t addr = qm_fd_addr(fd);
+ 	const struct qm_sg_entry *sgt;
+ 	struct page *page, *head_page;
+-	struct dpaa_bp *dpaa_bp;
+-	void *vaddr, *sg_vaddr;
++	void *sg_vaddr;
+ 	int frag_off, frag_len;
+ 	struct sk_buff *skb;
+ 	dma_addr_t sg_addr;
+@@ -1745,7 +1748,6 @@ static struct sk_buff *sg_fd_to_skb(const struct dpaa_priv *priv,
+ 	int *count_ptr;
+ 	int i;
  
- struct fman_port *fman_port_bind(struct device *dev);
+-	vaddr = phys_to_virt(addr);
+ 	WARN_ON(!IS_ALIGNED((unsigned long)vaddr, SMP_CACHE_BYTES));
  
-+struct device *fman_port_get_device(struct fman_port *port);
-+
- #endif /* __FMAN_PORT_H */
+ 	/* Iterate through the SGT entries and add data buffers to the skb */
+@@ -1756,14 +1758,18 @@ static struct sk_buff *sg_fd_to_skb(const struct dpaa_priv *priv,
+ 		WARN_ON(qm_sg_entry_is_ext(&sgt[i]));
+ 
+ 		sg_addr = qm_sg_addr(&sgt[i]);
+-		sg_vaddr = phys_to_virt(sg_addr);
+-		WARN_ON(!IS_ALIGNED((unsigned long)sg_vaddr,
+-				    SMP_CACHE_BYTES));
+ 
+ 		/* We may use multiple Rx pools */
+ 		dpaa_bp = dpaa_bpid2pool(sgt[i].bpid);
+-		if (!dpaa_bp)
++		if (!dpaa_bp) {
++			pr_info("%s: fail to get dpaa_bp for sg bpid %d\n",
++				__func__, sgt[i].bpid);
+ 			goto free_buffers;
++		}
++		sg_vaddr = phys_to_virt(dpaa_iova_to_phys(dpaa_bp->dev,
++							  sg_addr));
++		WARN_ON(!IS_ALIGNED((unsigned long)sg_vaddr,
++				    SMP_CACHE_BYTES));
+ 
+ 		count_ptr = this_cpu_ptr(dpaa_bp->percpu_count);
+ 		dma_unmap_single(dpaa_bp->dev, sg_addr, dpaa_bp->size,
+@@ -1835,10 +1841,11 @@ static struct sk_buff *sg_fd_to_skb(const struct dpaa_priv *priv,
+ 	/* free all the SG entries */
+ 	for (i = 0; i < DPAA_SGT_MAX_ENTRIES ; i++) {
+ 		sg_addr = qm_sg_addr(&sgt[i]);
+-		sg_vaddr = phys_to_virt(sg_addr);
+-		skb_free_frag(sg_vaddr);
+ 		dpaa_bp = dpaa_bpid2pool(sgt[i].bpid);
+ 		if (dpaa_bp) {
++			sg_addr = dpaa_iova_to_phys(dpaa_bp->dev, sg_addr);
++			sg_vaddr = phys_to_virt(sg_addr);
++			skb_free_frag(sg_vaddr);
+ 			count_ptr = this_cpu_ptr(dpaa_bp->percpu_count);
+ 			(*count_ptr)--;
+ 		}
+@@ -2325,7 +2332,7 @@ static enum qman_cb_dqrr_result rx_default_dqrr(struct qman_portal *portal,
+ 	if (likely(fd_format == qm_fd_contig))
+ 		skb = contig_fd_to_skb(priv, fd, dpaa_bp, vaddr);
+ 	else
+-		skb = sg_fd_to_skb(priv, fd);
++		skb = sg_fd_to_skb(priv, fd, dpaa_bp, vaddr);
+ 	if (!skb)
+ 		return qman_cb_dqrr_consume;
+ 
 -- 
 2.17.1
