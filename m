@@ -1,48 +1,76 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [GIT PULL] Devicetree fix for 4.19-rc8
-Date: Wed, 10 Oct 2018 06:59:13 -0500
-Message-ID: <CAL_JsqL4xQXoQubUEb9p2r5AEV+n1OAW=ss-DVQm4dmWU=n2hw@mail.gmail.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [Question] directory for SoC-related DT binding
+Date: Wed, 10 Oct 2018 14:04:14 +0200
+Message-ID: <93cd9c43-6fe3-c691-005b-e27cf101c7d6@i2se.com>
+References: <CAK7LNATaD=G8BW316fkBWM2A+YXgP5tabaySR2Fs49Za_0p=3Q@mail.gmail.com>
+ <CABGGisx-iLr+CQ=JjmHEe5J_Qqpf0yrgOmSOHa74GnfwE_RKsA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABGGisx-iLr+CQ=JjmHEe5J_Qqpf0yrgOmSOHa74GnfwE_RKsA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg,
+Hi,
 
-Please pull this one DT fix for 4.19.
+Am 10.10.2018 um 13:19 schrieb Rob Herring:
+> On Wed, Oct 10, 2018 at 6:08 AM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+>> Hi,
+>>
+>>
+>> I see a bunch of vendor (or SoC) names in
+>> Documentation/device/bindings/arm/
+>>
+>> ./Documentation/devicetree/bindings/arm/altera
+>> ./Documentation/devicetree/bindings/arm/amlogic
+> Yeah, it's kind of a mixture of board/soc bindings mostly with some
+> ARM architecture, ARM, Ltd. IP, and SoC system reg bindings.
+>
+> Eventually, I'd like to not split board bindings by arch and maybe we
+> should move all the system/misc reg bindings out.
+>
+> [,,,]
+>
+>> I also see some vendor names in
+>> Documentation/device/bindings/soc/
+>>
+>> ./Documentation/devicetree/bindings/soc/bcm
+>> ./Documentation/devicetree/bindings/soc/dove
+>> ./Documentation/devicetree/bindings/soc/fsl
+>> ./Documentation/devicetree/bindings/soc/mediatek
+>> ./Documentation/devicetree/bindings/soc/qcom
+>> ./Documentation/devicetree/bindings/soc/rockchip
+>> ./Documentation/devicetree/bindings/soc/ti
+>> ./Documentation/devicetree/bindings/soc/xilinx
+>> ./Documentation/devicetree/bindings/soc/zte
+> This I believe is mostly SoC system reg bindings though there's
+> probably a few other things.
+>
+>> Confusingly, I see bcm, mediatek, rockchip
+>> in both locations.
+>>
+>> Is there any rule to choose one than the other?
+> Top-level SoC/board bindings in arm/ and anything else elsewhere ideally.
 
-Note I didn't tag this for stable as I cherry-picked it from my 4.20
-branch and wanted to not touch the commit msg at all. Maybe that
-doesn't matter.
+in case of Documentation/devicetree/bindings/soc/bcm the directory
+contains SoC / board bindings, cpu-enable and a firmware binding.
 
-Rob
+Is there any action required?
 
-The following changes since commit e54192b48da75f025ae4b277925eaf6aca1d13bd:
+Btw the Broadcom SoC / boards from this directory has been left out for
+the yaml conversion [1] was this intended?
 
-  of: fix phandle cache creation for DTs with no phandles (2018-09-11
-11:28:40 -0500)
+[1] - https://lwn.net/Articles/767723/
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-fixes-for-4.19-3
-
-for you to fetch changes up to 8894891446c9380709451b99ab45c5c53adfd2fc:
-
-  of: unittest: Disable interrupt node tests for old world MAC systems
-(2018-10-10 06:43:37 -0500)
-
-----------------------------------------------------------------
-Devicetree fixes for 4.19, part 3:
-
-- Fix DT unittest on Oldworld MAC systems
-
-----------------------------------------------------------------
-Guenter Roeck (1):
-      of: unittest: Disable interrupt node tests for old world MAC systems
-
- drivers/of/unittest.c | 26 ++++++++++++++++++--------
- 1 file changed, 18 insertions(+), 8 deletions(-)
+>
+> Rob
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
