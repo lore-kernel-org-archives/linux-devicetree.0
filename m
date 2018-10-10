@@ -1,45 +1,48 @@
-From: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v3 3/3] dt: bindings: add bindings for wifi iommu node
-Date: Wed, 10 Oct 2018 17:22:56 +0530
-Message-ID: <1539172376-19269-4-git-send-email-govinds@codeaurora.org>
-References: <1539172376-19269-1-git-send-email-govinds@codeaurora.org>
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1539172376-19269-1-git-send-email-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: [GIT PULL] Devicetree fix for 4.19-rc8
+Date: Wed, 10 Oct 2018 06:59:13 -0500
+Message-ID: <CAL_JsqL4xQXoQubUEb9p2r5AEV+n1OAW=ss-DVQm4dmWU=n2hw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-WCN3990 wifi module can optionally make use of the IOMMU.
-Add binding documentation for phandle to the IOMMU and
-the stream id of wifi iommu block.
+Hi Greg,
 
-Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+Please pull this one DT fix for 4.19.
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-index f831bb1..3118d99 100644
---- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-@@ -65,6 +65,10 @@ Optional properties:
- - <supply-name>-supply: handle to the regulator device tree node
- 			   optional "supply-name" are "vdd-0.8-cx-mx",
- 			   "vdd-1.8-xo", "vdd-1.3-rfa" and "vdd-3.3-ch0".
-+- iommus:
-+	Usage: optional
-+	Value type: <prop-encoded-array>
-+	Definition: A list of phandle and IOMMU specifier pairs.
- 
- Example (to supply the calibration data alone):
- 
-@@ -163,4 +167,5 @@ wifi@18000000 {
- 		vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
- 		vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
- 		vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
-+		iommus = <&apps_smmu 0x0040 0x1>;
- };
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Note I didn't tag this for stable as I cherry-picked it from my 4.20
+branch and wanted to not touch the commit msg at all. Maybe that
+doesn't matter.
+
+Rob
+
+The following changes since commit e54192b48da75f025ae4b277925eaf6aca1d13bd:
+
+  of: fix phandle cache creation for DTs with no phandles (2018-09-11
+11:28:40 -0500)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+tags/devicetree-fixes-for-4.19-3
+
+for you to fetch changes up to 8894891446c9380709451b99ab45c5c53adfd2fc:
+
+  of: unittest: Disable interrupt node tests for old world MAC systems
+(2018-10-10 06:43:37 -0500)
+
+----------------------------------------------------------------
+Devicetree fixes for 4.19, part 3:
+
+- Fix DT unittest on Oldworld MAC systems
+
+----------------------------------------------------------------
+Guenter Roeck (1):
+      of: unittest: Disable interrupt node tests for old world MAC systems
+
+ drivers/of/unittest.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
