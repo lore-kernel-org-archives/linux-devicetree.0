@@ -1,80 +1,88 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH 13/36] dt-bindings: arm: Convert PMU binding to
- json-schema
-Date: Wed, 10 Oct 2018 17:50:49 +0100
-Message-ID: <20181010165048.GB16512@arm.com>
-References: <20181005165848.3474-1-robh@kernel.org>
- <20181005165848.3474-14-robh@kernel.org>
- <20181009115713.GE6248@arm.com>
- <CAL_JsqLeG3WUa2peOWFGUoMuonWaWJoU-7A6d8cqXp-_e3B3XA@mail.gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 7/8] Input: olpc_apsp: enable the SP clock
+Date: Wed, 10 Oct 2018 10:09:01 -0700
+Message-ID: <20181010170901.GC47260@dtor-ws>
+References: <20181010142504.233467-1-lkundrak@v3.sk>
+ <20181010142504.233467-8-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqLeG3WUa2peOWFGUoMuonWaWJoU-7A6d8cqXp-_e3B3XA@mail.gmail.com>
+In-Reply-To: <20181010142504.233467-8-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, James Cameron <quozl@laptop.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 09, 2018 at 01:14:02PM -0500, Rob Herring wrote:
-> On Tue, Oct 9, 2018 at 6:57 AM Will Deacon <will.deacon@arm.com> wrote:
-> >
-> > Hi Rob,
-> >
-> > On Fri, Oct 05, 2018 at 11:58:25AM -0500, Rob Herring wrote:
-> > > Convert ARM PMU binding to DT schema format using json-schema.
-> > >
-> > > Cc: Will Deacon <will.deacon@arm.com>
-> > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > Cc: linux-arm-kernel@lists.infradead.org
-> > > Cc: devicetree@vger.kernel.org
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/arm/pmu.txt | 70 --------------
-> > >  .../devicetree/bindings/arm/pmu.yaml          | 96 +++++++++++++++++++
-> > >  2 files changed, 96 insertions(+), 70 deletions(-)
-> > >  delete mode 100644 Documentation/devicetree/bindings/arm/pmu.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/arm/pmu.yaml
-> >
-> > [...]
-> >
-> > > -- interrupts : 1 combined interrupt or 1 per core. If the interrupt is a per-cpu
-> > > -               interrupt (PPI) then 1 interrupt should be specified.
-> >
-> > [...]
-> >
-> > > +  interrupts:
-> > > +    oneOf:
-> > > +      - maxItems: 1
-> > > +      - minItems: 2
-> > > +        maxItems: 8
-> > > +        description: 1 interrupt per core.
-> > > +
-> > > +  interrupts-extended:
-> > > +    $ref: '#/properties/interrupts'
-> >
-> > This seems like a semantic different between the two representations, or am
-> > I missing something here? Specifically, both the introduction of
-> > interrupts-extended and also dropping any mention of using a single per-cpu
-> > interrupt (the single combined case is no longer support by Linux; not sure
-> > if you want to keep it in the binding).
+On Wed, Oct 10, 2018 at 04:25:03PM +0200, Lubomir Rintel wrote:
+> Without the clock, the keyboard controller won't operate.
+> Tested on an OLPC XO 1.75.
 > 
-> 'interrupts-extended' was implied before as it is always supported and
-> outside the scope of the binding. But now it is needed to validate
-> bindings. There must be some use of it and that's why I added it.
-> However, thinking some more about this, I think it may be better to
-> have the tools add this in automatically whenever we have an
-> interrupts property.
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  drivers/input/serio/olpc_apsp.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/input/serio/olpc_apsp.c b/drivers/input/serio/olpc_apsp.c
+> index 8b19a47dfa46..fe9e19014e70 100644
+> --- a/drivers/input/serio/olpc_apsp.c
+> +++ b/drivers/input/serio/olpc_apsp.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/of.h>
+>  #include <linux/slab.h>
+>  #include <linux/delay.h>
+> +#include <linux/clk.h>
+>  
+>  /*
+>   * The OLPC XO-1.75 and XO-4 laptops do not have a hardware PS/2 controller.
+> @@ -74,6 +75,7 @@ struct olpc_apsp {
+>  	struct serio *kbio;
+>  	struct serio *padio;
+>  	void __iomem *base;
+> +	struct clk *clk;
+>  	int open_count;
+>  	int irq;
+>  };
+> @@ -146,8 +148,13 @@ static int olpc_apsp_open(struct serio *port)
+>  	struct olpc_apsp *priv = port->port_data;
+>  	unsigned int tmp;
+>  	unsigned long l;
+> +	int error;
+>  
+>  	if (priv->open_count++ == 0) {
+> +		error = clk_prepare_enable(priv->clk);
+> +		if (error)
+> +			return error;
+> +
+>  		l = readl(priv->base + COMMAND_FIFO_STATUS);
+>  		if (!(l & CMD_STS_MASK)) {
+>  			dev_err(priv->dev, "SP cannot accept commands.\n");
 
-To be honest, if you'd included that in the commit message I'd have been
-happy :)
+I think you need to disable clock here.
 
-> I guess the single interrupt case is less obvious now with no
-> description (it's the first list item of 'oneOf'). The schema If the
-> single interrupt is not supported, then we can drop it here.
+> @@ -171,6 +178,8 @@ static void olpc_apsp_close(struct serio *port)
+>  		/* Disable interrupt 0 */
+>  		tmp = readl(priv->base + PJ_INTERRUPT_MASK);
+>  		writel(tmp | INT_0, priv->base + PJ_INTERRUPT_MASK);
+> +
+> +		clk_disable_unprepare(priv->clk);
+>  	}
+>  }
+>  
+> @@ -198,6 +207,10 @@ static int olpc_apsp_probe(struct platform_device *pdev)
+>  	if (priv->irq < 0)
+>  		return priv->irq;
+>  
+> +	priv->clk = devm_clk_get(&pdev->dev, "sp");
+> +	if (IS_ERR(priv->clk))
+> +		return PTR_ERR(priv->clk);
+> +
+>  	/* KEYBOARD */
+>  	kb_serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
+>  	if (!kb_serio)
+> -- 
+> 2.19.0
+> 
 
-Well the description says "1 interrupt per core" which is incorrect. I also
-don't understand why maxItems is 8.
-
-Will
+-- 
+Dmitry
