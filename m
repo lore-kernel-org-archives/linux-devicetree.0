@@ -1,76 +1,45 @@
-Return-Path: <SRS0=Swgw=MR=ozlabs.org=dgibson@kernel.org>
-Date: Fri, 5 Oct 2018 15:09:59 +1000
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH v15 06/16] of/fdt: add helper functions for handling
- properties
-Message-ID: <20181005050959.GP7004@umbus.fritz.box>
-References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
- <20180928064841.14117-7-takahiro.akashi@linaro.org>
- <CAL_JsqKwmcdQ+2eK3LGHhcQ2Wb+Yz1-Atz0-3K6WKNZQt_woVw@mail.gmail.com>
- <6a8d3ddb-c3bc-c044-4d6c-55e110d89e72@gmail.com>
- <20181005050627.GL32578@linaro.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="movZSYdJ761vCHaE"
-Content-Disposition: inline
-In-Reply-To: <20181005050627.GL32578@linaro.org>
-To: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Return-Path: <SRS0=+qJk=MW=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v3 3/3] dt-bindings: mmc: tmio_mmc: Document Renesas R7S9210
+Date: Wed, 10 Oct 2018 10:06:42 -0500
+Message-Id: <20181010150642.73890-4-chris.brandt@renesas.com>
+In-Reply-To: <20181010150642.73890-1-chris.brandt@renesas.com>
+References: <20181010150642.73890-1-chris.brandt@renesas.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-clk@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
+Document support for the RZ/A2 (R7S9210) SoC.
 
---movZSYdJ761vCHaE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+ * Documented that R7S9210 has 2 clocks
+---
+ Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-On Fri, Oct 05, 2018 at 02:06:29PM +0900, AKASHI, Takahiro wrote:
-[snip]
-> > >> +{
-> > >> +       return (strlen(prop_name) + 1) +
-> > >> +               sizeof(struct fdt_property) +
-> > >> +               FDT_TAGALIGN(len);
-> > >=20
-> > > Looks like you are using this to calculate how much space you need to
-> > > allocate in addition to the current DTB for a couple of new or
-> > > replaced properties. I'm not sure that this calculation is completely
-> > > accurate. And it is strange there doesn't seem to be any libfdt
-> > > function for this already. It would be simpler to just add some fixed
-> > > additional amount.
-> > >=20
-> > > Maybe David G has comments on this?
->=20
-> I'm not quit sure why it's not that accurate, but as I said in a reply to
-> David's comment, I will take your suggestion.
-
-I think it is accurate, but it is not robust.  It might not be
-accurate if we ever make further tweaks to the libfdt format.  libfdt
-is supposed to abstract those changes away, but if you make
-assumptions like this, you break that abstraction.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---movZSYdJ761vCHaE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlu28iUACgkQbDjKyiDZ
-s5LH/xAAh/vDxj2xanbrQLZ61bxAfKiW22OR2z7VIuRvPfYqjJaXsEal1uX1BNYW
-qYhYO6/VqBHvI56fs0EDNQT5PSc5NWK4v2xHgm+SfJACkNhMvHHLaWxFPw3pTSHT
-+X4HjyiFV4FLw3lgP8AyuL/1ZHUkEEJyLvfUtwEcZLQ7gyO7KXJYk8tvZaZTbnNy
-U3vbrwlrJ8FDXtuV1udW4nMAOV5uWC3QjjERbz/tIllajFNV4JwUAsIpIN79VDRn
-eSMoKFQwzlLUjQ0sqSEb0fLu8EDz06hS2jJ6E33qIiUsZmvK3tJuriKbRAXaKZ4C
-ZZ7o1x8g0Sgwjzv1Thm4fVB/eG/b4aMzpNzcEPoiT8n3cMUEsA/2Ukxfl1DtcJC/
-+H1X/hnQcJlltualZ5AjRlslJ4BA15w2GGTOlVCk9V9EYsp49f8oItATVoR+EUOj
-pau5CqQyT6CwRDqvAajsRNOr9+zIAfNS8WZo75Twhj7iqBGxodFqaCNayvJtX93U
-oASIp61DcVaSohRqOaaBoQUS0ye+xMEbDGr1gOLZGDoQI9sS0mElWOHsN967Ua/q
-xAxyB3jrNbQPp/qFqRWcq6F+Dsnbp11wONiao1wDEQCx4z1EKnRZdIPyari72B65
-vUKObiGBU+XRUE6tkzN/YWTGbtzVIbjdKKc5P53oM4lVh0PnZzU=
-=MPmg
------END PGP SIGNATURE-----
-
---movZSYdJ761vCHaE--
+diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+index d39d5e46f7d2..cdfbcce34b97 100644
+--- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+@@ -13,6 +13,7 @@ Required properties:
+ - compatible: should contain one or more of the following:
+ 		"renesas,sdhi-sh73a0" - SDHI IP on SH73A0 SoC
+ 		"renesas,sdhi-r7s72100" - SDHI IP on R7S72100 SoC
++		"renesas,sdhi-r7s9210" - SDHI IP on R7S9210 SoC
+ 		"renesas,sdhi-r8a73a4" - SDHI IP on R8A73A4 SoC
+ 		"renesas,sdhi-r8a7740" - SDHI IP on R8A7740 SoC
+ 		"renesas,sdhi-r8a7743" - SDHI IP on R8A7743 SoC
+@@ -54,7 +55,7 @@ Required properties:
+ 	  "core" and "cd". If the controller only has 1 clock, naming is not
+ 	  required.
+ 	  Devices which have more than 1 clock are listed below:
+-	  2: R7S72100
++	  2: R7S72100, R7S9210
+ 
+ Optional properties:
+ - pinctrl-names: should be "default", "state_uhs"
+-- 
+2.16.1
