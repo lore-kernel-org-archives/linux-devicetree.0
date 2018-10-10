@@ -1,33 +1,34 @@
-MIME-Version: 1.0
-Date: Wed, 10 Oct 2018 07:30:35 -0500
-References: <CAL_Jsq+Mab+6fwGMyC+aBiGQ3+EtYL2XxSqb-pSP1-BDhTbEBg@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+Mab+6fwGMyC+aBiGQ3+EtYL2XxSqb-pSP1-BDhTbEBg@mail.gmail.com>
-Message-ID: <CAL_Jsq++N9RXU5VjdQpjCB7ijrbfBe5KKy-hYjuE-75ApUQROg@mail.gmail.com>
+Return-Path: <SRS0=yLIv=MW=arm.com=james.morse@kernel.org>
 Subject: Re: re-licensing of bindings/chosen.txt
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-To: Kees Cook <keescook@chromium.org>, Leif Lindholm <leif.lindholm@linaro.org>, James Morse <james.morse@arm.com>, =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Scott Wood <oss@buserror.net>
-Cc: devicetree@vger.kernel.org
+References: <CAL_Jsq+Mab+6fwGMyC+aBiGQ3+EtYL2XxSqb-pSP1-BDhTbEBg@mail.gmail.com>
+From: James Morse <james.morse@arm.com>
+Message-ID: <66ed8fdb-2605-b373-d659-13977aecd7ff@arm.com>
+Date: Wed, 10 Oct 2018 12:11:46 +0100
+MIME-Version: 1.0
+In-Reply-To: <CAL_Jsq+Mab+6fwGMyC+aBiGQ3+EtYL2XxSqb-pSP1-BDhTbEBg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Rob Herring <robh@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>, Leif Lindholm <leif.lindholm@linaro.org>, =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>, Scott Wood <scott.wood@nxp.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Fixing Scott's email.
+Hi Rob,
 
-On Tue, Oct 9, 2018 at 2:02 PM Rob Herring <robh@kernel.org> wrote:
->
-> Hi,
->
+On 09/10/2018 20:02, Rob Herring wrote:
 > The To list is all the authors of chosen.txt. I'm converting it to
 > json-schema and including in the schema repository[1]. As part of
 > that, I'd like to re-license as dual GPL-2 and BSD-2-clause.
->
+> 
 > Can you please give me your okay (or objection) as well as an explicit
 > copyright text to include.
->
-> I probably don't actually need Leif's as Linaro should be the copyright owner.
->
-> Rob
->
-> P.S. No, I don't plan to write 3000 more emails for the rest of the
-> binding files. Only core ones I wish to include.
->
-> [1] https://github.com/robherring/yaml-bindings
+
+Arm's ip-review folk okayed this.
+
+Copyright text:
+| Copyright ARM Ltd 2017
+
+
+Thanks,
+
+James
