@@ -1,82 +1,86 @@
-From: laurentiu.tudor@nxp.com
-Subject: [PATCH v3 21/22] arm64: dts: ls104x: make dma-coherent global to the SoC
-Date: Wed, 10 Oct 2018 15:07:36 +0300
-Message-ID: <20181010120737.30300-19-laurentiu.tudor@nxp.com>
-References: <20181010120737.30300-1-laurentiu.tudor@nxp.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [Question] directory for SoC-related DT binding
+Date: Wed, 10 Oct 2018 13:07:51 +0100
+Message-ID: <20181010120751.GP30658@n2100.armlinux.org.uk>
+References: <CAK7LNATaD=G8BW316fkBWM2A+YXgP5tabaySR2Fs49Za_0p=3Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181010120737.30300-1-laurentiu.tudor@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <CAK7LNATaD=G8BW316fkBWM2A+YXgP5tabaySR2Fs49Za_0p=3Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org
-Cc: roy.pledge@nxp.com, madalin.bucur@nxp.com, davem@davemloft.net, shawnguo@kernel.org, leoyang.li@nxp.com, robin.murphy@arm.com, bharat.bhushan@nxp.com, arnd@arndb.de, Laurentiu Tudor <laurentiu.tudor@nxp.com>
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: DTML <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+On Wed, Oct 10, 2018 at 08:07:52PM +0900, Masahiro Yamada wrote:
+> Hi,
+> 
+> 
+> I see a bunch of vendor (or SoC) names in
+> Documentation/device/bindings/arm/
+> 
+> ./Documentation/devicetree/bindings/arm/altera
+> ./Documentation/devicetree/bindings/arm/amlogic
+> ./Documentation/devicetree/bindings/arm/apm
+> ./Documentation/devicetree/bindings/arm/bcm
+> ./Documentation/devicetree/bindings/arm/calxeda
+> ./Documentation/devicetree/bindings/arm/freescale
+> ./Documentation/devicetree/bindings/arm/hisilicon
+> ./Documentation/devicetree/bindings/arm/keystone
+> ./Documentation/devicetree/bindings/arm/marvell
+> ./Documentation/devicetree/bindings/arm/mediatek
+> ./Documentation/devicetree/bindings/arm/mrvl
+> ./Documentation/devicetree/bindings/arm/msm
+> ./Documentation/devicetree/bindings/arm/npcm
+> ./Documentation/devicetree/bindings/arm/nxp
+> ./Documentation/devicetree/bindings/arm/omap
+> ./Documentation/devicetree/bindings/arm/rockchip
+> ./Documentation/devicetree/bindings/arm/samsung
+> ./Documentation/devicetree/bindings/arm/stm32
+> ./Documentation/devicetree/bindings/arm/sunxi
+> ./Documentation/devicetree/bindings/arm/tegra
+> ./Documentation/devicetree/bindings/arm/ti
+> ./Documentation/devicetree/bindings/arm/uniphier
+> ./Documentation/devicetree/bindings/arm/ux500
+> ./Documentation/devicetree/bindings/arm/vt8500
 
-These SoCs are really completely dma coherent in their entirety so add
-the dma-coherent property at the soc level in the device tree and drop
-the instances where it's specifically added to a few select devices.
+These are for arch/arm/mach-* and are the DT root descriptions for the
+various boards and SoCs.
 
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 5 +----
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 1 +
- 2 files changed, 2 insertions(+), 4 deletions(-)
+> I also see some vendor names in
+> Documentation/device/bindings/soc/
+> 
+> ./Documentation/devicetree/bindings/soc/bcm
+> ./Documentation/devicetree/bindings/soc/dove
+> ./Documentation/devicetree/bindings/soc/fsl
+> ./Documentation/devicetree/bindings/soc/mediatek
+> ./Documentation/devicetree/bindings/soc/qcom
+> ./Documentation/devicetree/bindings/soc/rockchip
+> ./Documentation/devicetree/bindings/soc/ti
+> ./Documentation/devicetree/bindings/soc/xilinx
+> ./Documentation/devicetree/bindings/soc/zte
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index ccadc40a36f4..9fb3ac0fa87c 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -215,6 +215,7 @@
- 		#size-cells = <2>;
- 		ranges;
- 		dma-ranges = <0x0 0x0 0x0 0x0 0x10000 0x00000000>;
-+		dma-coherent;
- 
- 		clockgen: clocking@1ee1000 {
- 			compatible = "fsl,ls1043a-clockgen";
-@@ -680,7 +681,6 @@
- 			reg-names = "ahci", "sata-ecc";
- 			interrupts = <0 69 0x4>;
- 			clocks = <&clockgen 4 0>;
--			dma-coherent;
- 		};
- 
- 		msi1: msi-controller1@1571000 {
-@@ -715,7 +715,6 @@
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
--			dma-coherent;
- 			iommu-map = <0 &mmu 0 1>;
- 			num-lanes = <4>;
- 			bus-range = <0x0 0xff>;
-@@ -741,7 +740,6 @@
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
--			dma-coherent;
- 			iommu-map = <0 &mmu 0 1>;
- 			num-lanes = <2>;
- 			bus-range = <0x0 0xff>;
-@@ -767,7 +765,6 @@
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
--			dma-coherent;
- 			iommu-map = <0 &mmu 0 1>;
- 			num-lanes = <2>;
- 			bus-range = <0x0 0xff>;
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index a12d33362554..f19cf6087235 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -188,6 +188,7 @@
- 		#size-cells = <2>;
- 		ranges;
- 		dma-ranges = <0x0 0x0 0x0 0x0 0x10000 0x00000000>;
-+		dma-coherent;
- 
- 		ddr: memory-controller@1080000 {
- 			compatible = "fsl,qoriq-memory-controller";
+These are for individual drivers in drivers/soc/
+
+> Confusingly, I see bcm, mediatek, rockchip
+> in both locations.
+
+Correct, because one is for the SoC and board as a whole, the other is
+for some subset of the SoC handled via drivers/soc - for example, with
+Broadcom, there's a Raspberry PI power domain driver in drivers/soc,
+which is described by
+
+ Documentation/devicetree/bindings/soc/bcm/raspberrypi,bcm2835-power.txt
+
+whereas
+
+ Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
+
+describes the bindings for the root DT node BCM2835 as used on the
+Raspberry Pi amongst other boards.
+
 -- 
-2.17.1
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
