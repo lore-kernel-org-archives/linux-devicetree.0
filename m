@@ -1,18 +1,31 @@
-Return-Path: <SRS0=aHhJ=M3=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.mailland.xyz ([184.164.139.249]:63026 "EHLO
-        mail.mailland.xyz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbeJOXxW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Oct 2018 19:53:22 -0400
-From: "=?utf-8?Q?David=20Lin?=" <info@mailland.xyz>
-Reply-To: dave@royalptb.com
-Date: Mon, 15 Oct 2018 08:52:07 -0700
-Subject: =?utf-8?Q?Urgent=20Response=20?=
+Return-Path: <SRS0=Of4m=MW=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Message-ID: <MAIL.MAILLAND.XYZ3bfd23b08c1b493bbb40056320f1de55@mail.mailland.xyz>
-Sender: devicetree-owner@vger.kernel.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+References: <20181008162349.42957-1-chris.brandt@renesas.com> <20181008162349.42957-2-chris.brandt@renesas.com>
+In-Reply-To: <20181008162349.42957-2-chris.brandt@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 10 Oct 2018 10:36:12 +0200
+Message-ID: <CAMuHMdUaG_cEc+EuzDJ2+s97O0CRKEGiD8zgN-zvBUREXYuBiw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] clk: renesas: r7s9210: Add SDHI clocks
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-clk <linux-clk@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Urgent business proposal involving the use of your last name for inheritance claim of funds left by a late benefactor of my bank  . Contact David Lin on dave@royalptb.com
+On Mon, Oct 8, 2018 at 6:24 PM Chris Brandt <chris.brandt@renesas.com> wrote:
+> Add SDHI clocks for RZ/A2
+>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in clk-renesas-for-v4.21.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
