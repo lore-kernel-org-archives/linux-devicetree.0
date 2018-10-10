@@ -1,59 +1,48 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH v3 4/7] dmaengine: stm32-dma: Add DMA/MDMA chaining
- support
-Date: Wed, 10 Oct 2018 09:33:43 +0530
-Message-ID: <20181010040343.GO2372@vkoul-mobl>
-References: <1538139715-24406-1-git-send-email-pierre-yves.mordret@st.com>
- <1538139715-24406-5-git-send-email-pierre-yves.mordret@st.com>
- <20181007160030.GB2372@vkoul-mobl>
- <e9cedfdd-ad90-9123-03bb-34a2e84059c5@st.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v10 4/5] clk: imx: add imx composite clock
+Date: Wed, 10 Oct 2018 07:37:44 +0200
+Message-ID: <20181010053744.5pxrlcdxmmyisu62@pengutronix.de>
+References: <1539074230-27277-1-git-send-email-abel.vesa@nxp.com>
+ <1539074230-27277-5-git-send-email-abel.vesa@nxp.com>
+ <5c0cc4de8403fca17431a9382f7e34e8003f497b.camel@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <e9cedfdd-ad90-9123-03bb-34a2e84059c5@st.com>
+In-Reply-To: <5c0cc4de8403fca17431a9382f7e34e8003f497b.camel@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "A.s. Dong" <aisheng.dong@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "abelvesa@linux.com" <abelvesa@linux.com>, dl-linux-imx <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09-10-18, 10:40, Pierre Yves MORDRET wrote:
+On Tue, Oct 09, 2018 at 10:56:14PM +0000, Leonard Crestez wrote:
+> On Tue, 2018-10-09 at 08:37 +0000, Abel Vesa wrote:
+> > +struct clk *imx_clk_composite_8m_flags(const char *name,
+> > +					const char **parent_names,
+> > +					int num_parents, void __iomem *reg,
+> > +					unsigned long flags);
+> > +
+> > +#define __imx_clk_composite_8m(name, parent_names, reg, flags) \
+> > +	imx_clk_composite_8m_flags(name, parent_names, \
+> > +		ARRAY_SIZE(parent_names), reg, \
+> > +		flags | CLK_SET_RATE_NO_REPARENT | CLK_OPS_PARENT_ENABLE)
+> > +
+> > +#define imx_clk_composite_8m(name, parent_names, reg) \
+> > +	__imx_clk_composite_8m(name, parent_names, reg, 0)
+> > +
+> > +#define imx_clk_composite_8m_critical(name, parent_names, reg) \
+> > +	__imx_clk_composite_8m(name, parent_names, reg, CLK_IS_CRITICAL)
 > 
-> 
-> On 10/07/2018 06:00 PM, Vinod wrote:
-> > On 28-09-18, 15:01, Pierre-Yves MORDRET wrote:
-> >> This patch adds support of DMA/MDMA chaining support.
-> >> It introduces an intermediate transfer between peripherals and STM32 DMA.
-> >> This intermediate transfer is triggered by SW for single M2D transfer and
-> >> by STM32 DMA IP for all other modes (sg, cyclic) and direction (D2M).
-> >>
-> >> A generic SRAM allocator is used for this intermediate buffer
-> >> Each DMA channel will be able to define its SRAM needs to achieve chaining
-> >> feature : (2 ^ order) * PAGE_SIZE.
-> >> For cyclic, SRAM buffer is derived from period length (rounded on
-> >> PAGE_SIZE).
-> > 
-> > So IIUC, you chain two dma txns together and transfer data via an SRAM?
-> 
-> Correct. one DMA is DMAv2 (stm32-dma) and the other is MDMA(stm32-mdma).
-> Intermediate transfer is between device and memory.
-> This intermediate transfer is using SDRAM.
+> Does anyone else think that the "8m" would be prettier next to imx
+> rather than as a suffix? Using imx8m_clk_composite* and
+> imx7ulp_clk_composite* makes more sense to me.
 
-Ah so you use dma calls to setup mdma xtfers? I dont think that is a
-good idea. How do you know you should use mdma for subsequent transfer?
++1
 
-
-> >>  drivers/dma/stm32-dma.c | 879 ++++++++++++++++++++++++++++++++++++++++++------
-> > 
-> > that is a lot of change for a driver, consider splitting it up
-> > logically in smaller changes...
-> > 
-> 
-> This feature is rather monolithic. Difficult to split up.
-> All the code is required at once.
-
-It can be enabled at last but split up logically. Intrusive changes to a
-driver make it hard to review..
+Sascha
 
 -- 
-~Vinod
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
