@@ -1,58 +1,75 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 05/11] DT: marvell,mmp2: Add SSP1 and SSP3
-Date: Wed, 10 Oct 2018 19:09:30 +0200
-Message-ID: <20181010170936.316862-6-lkundrak@v3.sk>
-References: <20181010170936.316862-1-lkundrak@v3.sk>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 8/8] Input: olpc_apsp: allocate the GPIOs used
+Date: Wed, 10 Oct 2018 10:10:13 -0700
+Message-ID: <20181010171013.GD47260@dtor-ws>
+References: <20181010142504.233467-1-lkundrak@v3.sk>
+ <20181010142504.233467-9-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181010170936.316862-1-lkundrak@v3.sk>
+Content-Disposition: inline
+In-Reply-To: <20181010142504.233467-9-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: James Cameron <quozl@laptop.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lubomir Rintel <lkundrak@v3.sk>
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, James Cameron <quozl@laptop.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-There seem to be SSP2, SSP4 and perhaps SSP5 too, but Marvel keeps their
-base addresses secret.
+On Wed, Oct 10, 2018 at 04:25:04PM +0200, Lubomir Rintel wrote:
+> Take the GPIO lines are used by the SP. The driver doesn't touch the
+> lines -- this is done to disallow anything else from fiddling with
+> them because that would confuse the SP firmware.
+> 
+> Also, the lines are now nicely visible in /sys/kernel/debug/gpio.
 
-The SSP1 and SSP3 addresses were taken from OLPC 1.75, OpenFirmware and
-kernel respectively.
+Linus, is this something that should be handled by GPIO "hogs"?
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  drivers/input/serio/olpc_apsp.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/input/serio/olpc_apsp.c b/drivers/input/serio/olpc_apsp.c
+> index fe9e19014e70..287759c5f36d 100644
+> --- a/drivers/input/serio/olpc_apsp.c
+> +++ b/drivers/input/serio/olpc_apsp.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/delay.h>
+>  #include <linux/clk.h>
+> +#include <linux/gpio/consumer.h>
+>  
+>  /*
+>   * The OLPC XO-1.75 and XO-4 laptops do not have a hardware PS/2 controller.
+> @@ -76,6 +77,8 @@ struct olpc_apsp {
+>  	struct serio *padio;
+>  	void __iomem *base;
+>  	struct clk *clk;
+> +	struct gpio_desc *clk_gpio;
+> +	struct gpio_desc *data_gpio;
+>  	int open_count;
+>  	int irq;
+>  };
+> @@ -211,6 +214,16 @@ static int olpc_apsp_probe(struct platform_device *pdev)
+>  	if (IS_ERR(priv->clk))
+>  		return PTR_ERR(priv->clk);
+>  
+> +	priv->clk_gpio = devm_gpiod_get_optional(&pdev->dev, "clk",
+> +							GPIOD_ASIS);
+> +	if (IS_ERR(priv->clk_gpio))
+> +		return PTR_ERR(priv->clk_gpio);
+> +
+> +	priv->data_gpio = devm_gpiod_get_optional(&pdev->dev, "data",
+> +							GPIOD_ASIS);
+> +	if (IS_ERR(priv->data_gpio))
+> +		return PTR_ERR(priv->data_gpio);
+> +
+>  	/* KEYBOARD */
+>  	kb_serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
+>  	if (!kb_serio)
+> -- 
+> 2.19.0
+> 
 
----
-Changes since v1:
-- Dropped the aliases
-
- arch/arm/boot/dts/mmp2.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
-index 766bbb8495b6..c16531f4d4c7 100644
---- a/arch/arm/boot/dts/mmp2.dtsi
-+++ b/arch/arm/boot/dts/mmp2.dtsi
-@@ -239,6 +239,22 @@
- 				resets =3D <&soc_clocks MMP2_CLK_RTC>;
- 				status =3D "disabled";
- 			};
-+
-+			ssp1: ssp@d4035000 {
-+				compatible =3D "marvell,mmp2-ssp";
-+				reg =3D <0xd4035000 0x1000>;
-+				clocks =3D <&soc_clocks MMP2_CLK_SSP0>;
-+				interrupts =3D <0>;
-+				status =3D "disabled";
-+			};
-+
-+			ssp3: ssp@d4037000 {
-+				compatible =3D "marvell,mmp2-ssp";
-+				reg =3D <0xd4037000 0x1000>;
-+				clocks =3D <&soc_clocks MMP2_CLK_SSP2>;
-+				interrupts =3D <20>;
-+				status =3D "disabled";
-+			};
- 		};
-=20
- 		soc_clocks: clocks{
---=20
-2.19.0
+-- 
+Dmitry
