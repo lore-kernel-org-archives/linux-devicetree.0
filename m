@@ -1,87 +1,46 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/9] PM / OPP: dt-bindings: Add
- opp-interconnect-bw
-Date: Wed, 10 Oct 2018 15:29:51 +0530
-Message-ID: <20181010095951.hgeiy7yxsqi6behd@vireshk-i7>
-References: <20180827151112.25211-1-jcrouse@codeaurora.org>
- <20180827151112.25211-7-jcrouse@codeaurora.org>
- <0998a374-6cb0-9218-d2e3-92f8ee9861ed@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: dw: add cs-override property
+Date: Wed, 10 Oct 2018 11:18:25 +0100
+Message-ID: <20181010101825.GA6294@sirena.org.uk>
+References: <1539155293-21750-1-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <0998a374-6cb0-9218-d2e3-92f8ee9861ed-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1539155293-21750-1-git-send-email-talel@amazon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Talel Shenhar <talel@amazon.com>
+Cc: linux-spi@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ronenk@amazon.com, barakw@amazon.com, David Woodhouse <dwmw@amazon.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjctMDktMTgsIDExOjIzLCBHZW9yZ2kgRGpha292IHdyb3RlOgo+IE9uIDA4LzI3LzIwMTgg
-MDY6MTEgUE0sIEpvcmRhbiBDcm91c2Ugd3JvdGU6Cj4gPiBBZGQgdGhlICJvcHAtaW50ZXJjb25u
-ZWN0LWJ3IiBwcm9wZXJ0eSB0byBzcGVjaWZ5IHRoZQo+ID4gYXZlcmFnZSBhbmQgcGVhayBiYW5k
-d2lkdGggZm9yIGFuIGludGVyY29ubmVjdCBwYXRoIGZvcgo+ID4gYSBzcGVjaWZpYyBvcGVyYXRp
-bmcgcG93ZXIgcG9pbnQuIEEgc2VwYXJhdGUgYmFuZHdpZHRoCj4gPiBwYWlyIGNhbiBiZSBzcGVj
-aWZpZWQgZm9yIGVhY2ggb2YgdGhlIGludGVyY29ubmVjdHMKPiA+IGRlZmluZWQgZm9yIHRoZSBk
-ZXZpY2UgYnkgYXBwZW5kaW5nIHRoZSBpbnRlcmNvbm5lY3QKPiA+IG5hbWUgdG8gdGhlIHByb3Bl
-cnR5Lgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBKb3JkYW4gQ3JvdXNlIDxqY3JvdXNlQGNvZGVh
-dXJvcmEub3JnPgo+ID4gLS0tCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L29wcC9vcHAudHh0IHwgMzYgKysrKysrKysrKysrKysrKysrKwo+ID4gIDEgZmlsZSBjaGFuZ2Vk
-LCAzNiBpbnNlcnRpb25zKCspCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3Mvb3BwL29wcC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3Mvb3BwL29wcC50eHQKPiA+IGluZGV4IGMzOTZjNGMwYWY5Mi4uZDcxNGMwODRmMzZk
-IDEwMDY0NAo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL29wcC9v
-cHAudHh0Cj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvb3BwL29w
-cC50eHQKPiA+IEBAIC0xNzAsNiArMTcwLDExIEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gPiAg
-ICBmdW5jdGlvbmluZyBvZiB0aGUgY3VycmVudCBkZXZpY2UgYXQgdGhlIGN1cnJlbnQgT1BQICh3
-aGVyZSB0aGlzIHByb3BlcnR5IGlzCj4gPiAgICBwcmVzZW50KS4KPiA+ICAKPiA+ICstIG9wcC1p
-bnRlcmNvbm5lY3QtYnctPG5hbWU+OiBUaGlzIGlzIGFuIGFycmF5IG9mIHBhaXJzIHNwZWNpZnlp
-bmcgdGhlIGF2ZXJhZ2UKPiA+ICsgIGFuZCBwZWFrIGJhbmR3aWR0aCBpbiBieXRlcyBwZXIgc2Vj
-b25kIGZvciB0aGUgaW50ZXJjb25uZWN0IHBhdGgga25vd24gYnkKPiA+ICsgICduYW1lJy4gIFRo
-aXMgc2hvdWxkIG1hdGNoIHRoZSBuYW1lKHMpIHNwZWNpZmllZCBieSBpbnRlcmNvbm5lY3QtbmFt
-ZXMgaW4gdGhlCj4gPiArICBkZXZpY2UgZGVmaW5pdGlvbi4KPiA+ICsKPiA+ICBFeGFtcGxlIDE6
-IFNpbmdsZSBjbHVzdGVyIER1YWwtY29yZSBBUk0gY29ydGV4IEE5LCBzd2l0Y2ggRFZGUyBzdGF0
-ZXMgdG9nZXRoZXIuCj4gPiAgCj4gPiAgLyB7Cj4gPiBAQCAtNTQzLDMgKzU0OCwzNCBAQCBFeGFt
-cGxlIDY6IG9wcC1taWNyb3ZvbHQtPG5hbWU+LCBvcHAtbWljcm9hbXAtPG5hbWU+Ogo+ID4gIAkJ
-fTsKPiA+ICAJfTsKPiA+ICB9Owo+ID4gKwo+ID4gK0V4YW1wbGUgNzogb3BwLWludGVyY29ubmVj
-dC1idzoKPiA+ICsoZXhhbXBsZTogbGVhZiBkZXZpY2Ugd2l0aCBmcmVxdWVuY3kgYW5kIEJXIHF1
-b3RhcykKPiA+ICsKPiA+ICsvIHsKPiA+ICsJc29jIHsKPiA+ICsJCWdwdUA1MDAwMDAwIHsKPiA+
-ICsJCQkuLi4KPiA+ICsJCQlpbnRlcmNvbm5lY3RzID0gPCZxbm9jIDI2ICZxbm9jIDUxMj47Cj4g
-PiArCQkJaW50ZXJjb25uZWN0LW5hbWVzID0gInBvcnQwIjsKPiA+ICsJCQkuLi4KPiA+ICsJCQlv
-cGVyYXRpbmctcG9pbnRzLXYyID0gPCZncHVfb3BwX3RhYmxlPjsKPiA+ICsJCX07Cj4gPiArCX07
-Cj4gPiArCj4gPiArCWdwdV9vcHBfdGFibGU6IG9wcF90YWJsZTAgewo+ID4gKwkJY29tcGF0aWJs
-ZSA9ICJvcGVyYXRpbmctcG9pbnRzLXYyIjsKPiA+ICsKPiA+ICsJCW9wcC03MTAwMDAwMDAgewo+
-ID4gKwkJCW9wLWh6ID0gL2JpdHMvIDY0IDw3MTAwMDAwMDA+Owo+ID4gKwkJCS8qIFNldCBwZWFr
-IGJhbmR3aWR0aCBAIDcyMTYwMDAgS0IvcyAqLwo+ID4gKwkJCW9wcC1pbnRlcmNvbm5lY3QtYnct
-cG9ydDAgPSAvYml0cy8gNjQgPDAgNzIxNjAwMDAwMD47Cj4gCj4gVGhpcyBzZWVtcyBhIGJpdCBs
-b25nLiBJIHdvdWxkIHN1Z2dlc3QgdGhlIGZvbGxvd2luZyBpbnN0ZWFkLgo+IElmIHRoZXJlIGlz
-IG9ubHkgb25lIHBhdGg6Cj4gCS8qIGF2ZXJhZ2UgYmFuZHdpZHRoID0gMCBLQi9zLCAgcGVhayBi
-YW5kd2lkdGggPSA3MjE2MDAwIEtCL3MgKi8KPiAJb3BwLWJ3LUtCcHMgPSA8MCA3MjE2MDAwPjsK
-PiBvciAJCj4gCW9wcC1idy1NQnBzID0gPDAgNzIxNj47Cj4gCj4gSWYgdGhlcmUgYXJlIG11bHRp
-cGxlIHBhdGhzOgo+IAlvcHAtYnctS0Jwcy1wb3J0MCA9IDwwIDcyMTYwMDA+Owo+IAlvcHAtYnct
-S0Jwcy1wb3J0MSA9IDwwIDEwMDAwMDA+Owo+IAo+IFRoZSBhYm92ZSBmb2xsb3dzIGEgY29udmVu
-dGlvbiBzaW1pbGFyIHRvIG9wcC1taWNyb3ZvbHQsIHdoZXJlIGF0Cj4gcnVudGltZSB0aGUgcGxh
-dGZvcm0gY2FuIHBpY2sgYSA8bmFtZT4gYW5kIGEgbWF0Y2hpbmcgb3BwLWJ3LUtCcHMtPG5hbWU+
-Cj4gcHJvcGVydHkuIElmIHRoZSBwbGF0Zm9ybSBkb2Vzbid0IHBpY2sgYSBzcGVjaWZpYyA8bmFt
-ZT4gb3IgPG5hbWU+IGRvZXMKPiBub3QgbWF0Y2ggd2l0aCBhbnkgb2YgdGhlIG9wcC1idy1LQnBz
-LTxuYW1lPiBwcm9wZXJ0aWVzLCB0aGVuCj4gb3BwLWJ3LUtCcHMgc2hhbGwgYmUgdXNlZCBpZiBw
-cmVzZW50Lgo+IEZvciBub3cgc3VwcG9ydGluZyBvbmx5IEtCcHMgdmFsdWVzIHNlZW1zIGVub3Vn
-aCB0byBjb3ZlciBhbGwgcHJlc2VudAo+IHBsYXRmb3Jtcywgc28gd2UgY2FuIHN0YXJ0IHdpdGgg
-dGhpcyBhbmQgYmFzZWQgb24gdGhlIHJlcXVpcmVtZW50cyBvZgo+IGZ1dHVyZSBwbGF0Zm9ybXMg
-d2UgY2FuIGFkZCBNQnBzIGV0Yy4KCisxCgpBbmQgeWVzIEkgYW0gZmluZSB3aXRoIHN1Y2ggYmlu
-ZGluZ3MgZ2V0dGluZyBpbnRyb2R1Y2VkIHRvIHRoZSBPUFAKY29yZS4KCkkgYW0gbm90IHN1cmUg
-aWYgdGhpcyB3b3VsZCBmaXQgd2VsbCwgYnV0IGhhdmUgYSBsb29rIGF0CiJyZXF1aXJlZC1vcHBz
-IiBwcm9wZXJ0eSBpbiBPUFAgYmluZGluZ3MgYW5kIHNlZSBpZiB0aGF0IGNhbiBiZSB1c2VkCmlu
-c3RlYWQgb2YgYWRkaW5nIG5ldyBiaW5kaW5ncyBoZXJlLiBBZ2FpbiwgSSBhbSBub3Qgc3VyZSBp
-ZiB0aGF0CnNob3VsZCBiZSBkb25lIDopCgotLSAKdmlyZXNoCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRy
-ZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+
+--J2SCkAp4GZ/dPZZf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Oct 10, 2018 at 10:08:12AM +0300, Talel Shenhar wrote:
+
+> The dw spi controller has an auto-deselect of Chip-Select, in case there is
+> no data inside the Tx FIFO. While working on platforms with Alpine chips,
+
+Why would we ever want to use this behaviour?  It will be broken for any
+non-trivial SPI message such as those made with multiple transfers
+anyway.  Why not just unconditionally control it manually?
+
+--J2SCkAp4GZ/dPZZf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlu90e4ACgkQJNaLcl1U
+h9Bw6gf/QW1tmWlXcmNLTdpo0qIz7z7c3z3/ydzStF3ZHJLeoS6YHY0bu8R5MtlQ
+FkYVdvvF7/Zfqlr8tkOHFjnBh+fiT2+6EKvDu8zyPMZJNxDWBkllWxkdVhHUc75u
+4/l5n9vgzCiedfz1SXfqDmBeBoKZBLl+vmu1w2a3InRcLhKqsDGsnENKdrfGEttO
+0Vc946hptVhHjOKQ3I/XBotjOhqogZ4cr8QwOwLEJK7iBcQq6qhq2zP4EaBf0irD
+aTew8Rff3BJJjASRVpP9EUULMUuhlt93Zea9cFfp8ildUt2sYXVaupf5HTpv+azb
+BNuY0SoMbROx7VARMhHTEfgL1qmK4w==
+=VGYE
+-----END PGP SIGNATURE-----
+
+--J2SCkAp4GZ/dPZZf--
