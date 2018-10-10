@@ -1,7 +1,7 @@
 From: laurentiu.tudor@nxp.com
-Subject: [PATCH v3 19/22] arm64: dts: ls104x: add missing dma ranges property
-Date: Wed, 10 Oct 2018 15:07:34 +0300
-Message-ID: <20181010120737.30300-17-laurentiu.tudor@nxp.com>
+Subject: [PATCH v3 21/22] arm64: dts: ls104x: make dma-coherent global to the SoC
+Date: Wed, 10 Oct 2018 15:07:36 +0300
+Message-ID: <20181010120737.30300-19-laurentiu.tudor@nxp.com>
 References: <20181010120737.30300-1-laurentiu.tudor@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181010120737.30300-1-laurentiu.tudor@nxp.com>
@@ -12,37 +12,69 @@ List-Id: devicetree@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-These chips have a 48-bit address size so make sure that the dma-ranges
-reflects this. Otherwise the linux kernel's dma sub-system will set
-the default dma masks to full 64-bit, badly breaking dmas.
+These SoCs are really completely dma coherent in their entirety so add
+the dma-coherent property at the soc level in the device tree and drop
+the instances where it's specifically added to a few select devices.
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 5 +----
  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 1 +
- 2 files changed, 2 insertions(+)
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 1f9b385007a8..0e8fc8f29997 100644
+index ccadc40a36f4..9fb3ac0fa87c 100644
 --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
 +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -214,6 +214,7 @@
- 		#address-cells = <2>;
+@@ -215,6 +215,7 @@
  		#size-cells = <2>;
  		ranges;
-+		dma-ranges = <0x0 0x0 0x0 0x0 0x10000 0x00000000>;
+ 		dma-ranges = <0x0 0x0 0x0 0x0 0x10000 0x00000000>;
++		dma-coherent;
  
  		clockgen: clocking@1ee1000 {
  			compatible = "fsl,ls1043a-clockgen";
+@@ -680,7 +681,6 @@
+ 			reg-names = "ahci", "sata-ecc";
+ 			interrupts = <0 69 0x4>;
+ 			clocks = <&clockgen 4 0>;
+-			dma-coherent;
+ 		};
+ 
+ 		msi1: msi-controller1@1571000 {
+@@ -715,7 +715,6 @@
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
+-			dma-coherent;
+ 			iommu-map = <0 &mmu 0 1>;
+ 			num-lanes = <4>;
+ 			bus-range = <0x0 0xff>;
+@@ -741,7 +740,6 @@
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
+-			dma-coherent;
+ 			iommu-map = <0 &mmu 0 1>;
+ 			num-lanes = <2>;
+ 			bus-range = <0x0 0xff>;
+@@ -767,7 +765,6 @@
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
+-			dma-coherent;
+ 			iommu-map = <0 &mmu 0 1>;
+ 			num-lanes = <2>;
+ 			bus-range = <0x0 0xff>;
 diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 22bf3975492a..29b07bdd4207 100644
+index a12d33362554..f19cf6087235 100644
 --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
 +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -187,6 +187,7 @@
- 		#address-cells = <2>;
+@@ -188,6 +188,7 @@
  		#size-cells = <2>;
  		ranges;
-+		dma-ranges = <0x0 0x0 0x0 0x0 0x10000 0x00000000>;
+ 		dma-ranges = <0x0 0x0 0x0 0x0 0x10000 0x00000000>;
++		dma-coherent;
  
  		ddr: memory-controller@1080000 {
  			compatible = "fsl,qoriq-memory-controller";
