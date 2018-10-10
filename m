@@ -1,84 +1,67 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 6/7] pinctrl: ds90ux9xx: add TI DS90Ux9xx pinmux and GPIO
- controller driver
-Date: Wed, 10 Oct 2018 11:04:41 +0200
-Message-ID: <CACRpkdbMMnXzA_j_p=nGgT1SyECrhCNRC6wWQ-+COMEkSQdPAA@mail.gmail.com>
-References: <20181008211205.2900-1-vz@mleia.com> <20181008211205.2900-7-vz@mleia.com>
+From: Patrice CHOTARD <patrice.chotard@st.com>
+Subject: Re: [PATCH 32/36] dt-bindings: arm: Convert ST STi board/soc bindings
+ to json-schema
+Date: Wed, 10 Oct 2018 09:19:14 +0000
+Message-ID: <34e8ddcb-4b33-9082-b242-9ab2dee8eb7c@st.com>
+References: <20181005165848.3474-1-robh@kernel.org>
+ <20181005165848.3474-33-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181008211205.2900-7-vz@mleia.com>
+In-Reply-To: <20181005165848.3474-33-robh@kernel.org>
+Content-Language: en-US
+Content-ID: <8FC3997611AF2B40B01C81BF1D93C36E@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Vasut <marek.vasut@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-media@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+To: Rob Herring <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Cc: Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
-
-thanks for your patch! Some review comments:
-
-On Mon, Oct 8, 2018 at 11:12 PM Vladimir Zapolskiy <vz@mleia.com> wrote:
-
-> From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
->
-> The change adds an MFD cell driver for managing pin functions on
-> TI DS90Ux9xx de-/serializers.
->
-> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-
-Please mention in the commit that you are also adding a GPIO
-chip driver.
-
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-
-I prefer the simple "GPL-2.0+" here.
-
-> +#include <linux/of_gpio.h>
-
-You should not need this include. If you do, something is wrong.
-
-> +#define SER_REG_PIN_CTRL               0x12
-> +#define PIN_CTRL_RGB18                 BIT(2)
-> +#define PIN_CTRL_I2S_DATA_ISLAND       BIT(1)
-> +#define PIN_CTRL_I2S_CHANNEL_B         (BIT(0) | BIT(3))
-> +
-> +#define SER_REG_I2S_SURROUND           0x1A
-> +#define PIN_CTRL_I2S_SURR_BIT          BIT(0)
-> +
-> +#define DES_REG_INDIRECT_PASS          0x16
-> +
-> +#define OUTPUT_HIGH                    BIT(3)
-> +#define REMOTE_CONTROL                 BIT(2)
-> +#define DIR_INPUT                      BIT(1)
-> +#define ENABLE_GPIO                    BIT(0)
-> +
-> +#define GPIO_AS_INPUT                  (ENABLE_GPIO | DIR_INPUT)
-> +#define GPIO_AS_OUTPUT                 ENABLE_GPIO
-> +#define GPIO_OUTPUT_HIGH               (GPIO_AS_OUTPUT | OUTPUT_HIGH)
-> +#define GPIO_OUTPUT_LOW                        GPIO_AS_OUTPUT
-> +#define GPIO_OUTPUT_REMOTE             (GPIO_AS_OUTPUT | REMOTE_CONTROL)
-
-These have a creepily generic look, like they hit the global GPIO
-namespace without really clashing. It gets confusing when reading
-the code.
-
-Do you think you could prefix them with DS90_* or something
-so it is clear that these defines belong in this driver?
-
-> +static const struct gpio_chip ds90ux9xx_gpio_chip = {
-> +       .owner                  = THIS_MODULE,
-> +       .get                    = ds90ux9xx_gpio_get,
-> +       .set                    = ds90ux9xx_gpio_set,
-> +       .get_direction          = ds90ux9xx_gpio_get_direction,
-> +       .direction_input        = ds90ux9xx_gpio_direction_input,
-> +       .direction_output       = ds90ux9xx_gpio_direction_output,
-> +       .base                   = -1,
-> +       .can_sleep              = 1,
-
-This is bool so set it = true;
-
-Overall it's a very nice driver. It is pretty complex but pin control
-is complex so that's a fact of life.
-
-Yours,
-Linus Walleij
+SGkgUm9iDQoNCk9uIDEwLzA1LzIwMTggMDY6NTggUE0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBD
+b252ZXJ0IFNUIFNUaSBTb0MgYmluZGluZ3MgdG8gRFQgc2NoZW1hIGZvcm1hdCB1c2luZyBqc29u
+LXNjaGVtYS4NCj4gDQo+IENjOiBQYXRyaWNlIENob3RhcmQgPHBhdHJpY2UuY2hvdGFyZEBzdC5j
+b20+DQo+IENjOiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPg0KPiBDYzogZGV2
+aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU2lnbmVkLW9mZi1ieTogUm9iIEhlcnJpbmcgPHJv
+YmhAa2VybmVsLm9yZz4NCj4gLS0tDQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvYXJtL3N0aS50eHQgfCAyMyAtLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICAuLi4vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9hcm0vc3RpLnlhbWwgICAgICAgICAgfCAyMyArKysrKysrKysrKysrKysrKysr
+DQo+ICAyIGZpbGVzIGNoYW5nZWQsIDIzIGluc2VydGlvbnMoKyksIDIzIGRlbGV0aW9ucygtKQ0K
+PiAgZGVsZXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9h
+cm0vc3RpLnR4dA0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9hcm0vc3RpLnlhbWwNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3N0aS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvYXJtL3N0aS50eHQNCj4gZGVsZXRlZCBmaWxlIG1vZGUgMTAwNjQ0DQo+IGlu
+ZGV4IDhkMjdmNmIwODRjNy4uMDAwMDAwMDAwMDAwDQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9hcm0vc3RpLnR4dA0KPiArKysgL2Rldi9udWxsDQo+IEBAIC0xLDIz
+ICswLDAgQEANCj4gLVNUIFNUaSBQbGF0Zm9ybXMgRGV2aWNlIFRyZWUgQmluZGluZ3MNCj4gLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAtDQo+IC1Cb2FyZHMgd2l0
+aCB0aGUgU1QgU1RpSDQxNSBTb0Mgc2hhbGwgaGF2ZSB0aGUgZm9sbG93aW5nIHByb3BlcnRpZXM6
+DQo+IC1SZXF1aXJlZCByb290IG5vZGUgcHJvcGVydHk6DQo+IC1jb21wYXRpYmxlID0gInN0LHN0
+aWg0MTUiOw0KPiAtDQo+IC1Cb2FyZHMgd2l0aCB0aGUgU1QgU1RpSDQxNiBTb0Mgc2hhbGwgaGF2
+ZSB0aGUgZm9sbG93aW5nIHByb3BlcnRpZXM6DQo+IC1SZXF1aXJlZCByb290IG5vZGUgcHJvcGVy
+dHk6DQo+IC1jb21wYXRpYmxlID0gInN0LHN0aWg0MTYiOw0KPiAtDQo+IC1Cb2FyZHMgd2l0aCB0
+aGUgU1QgU1RpSDQwNyBTb0Mgc2hhbGwgaGF2ZSB0aGUgZm9sbG93aW5nIHByb3BlcnRpZXM6DQo+
+IC1SZXF1aXJlZCByb290IG5vZGUgcHJvcGVydHk6DQo+IC1jb21wYXRpYmxlID0gInN0LHN0aWg0
+MDciOw0KPiAtDQo+IC1Cb2FyZHMgd2l0aCB0aGUgU1QgU1RpSDQxMCBTb0Mgc2hhbGwgaGF2ZSB0
+aGUgZm9sbG93aW5nIHByb3BlcnRpZXM6DQo+IC1SZXF1aXJlZCByb290IG5vZGUgcHJvcGVydHk6
+DQo+IC1jb21wYXRpYmxlID0gInN0LHN0aWg0MTAiOw0KPiAtDQo+IC1Cb2FyZHMgd2l0aCB0aGUg
+U1QgU1RpSDQxOCBTb0Mgc2hhbGwgaGF2ZSB0aGUgZm9sbG93aW5nIHByb3BlcnRpZXM6DQo+IC1S
+ZXF1aXJlZCByb290IG5vZGUgcHJvcGVydHk6DQo+IC1jb21wYXRpYmxlID0gInN0LHN0aWg0MTgi
+Ow0KPiAtDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+YXJtL3N0aS55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9zdGku
+eWFtbA0KPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAwMDAwMDAwMDAwMDAuLjEwODE0
+MzM0Y2ZjOQ0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9hcm0vc3RpLnlhbWwNCj4gQEAgLTAsMCArMSwyMyBAQA0KPiArIyBTUERYLUxp
+Y2Vuc2UtSWRlbnRpZmllcjogTm9uZQ0KPiArJVlBTUwgMS4yDQo+ICstLS0NCj4gKyRpZDogaHR0
+cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvYmluZGluZ3MvYXJtL3N0aS55YW1sIw0KPiArJHNj
+aGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjDQo+ICsN
+Cj4gK3RpdGxlOiBTVCBTVGkgUGxhdGZvcm1zIERldmljZSBUcmVlIEJpbmRpbmdzDQo+ICsNCj4g
+K21haW50YWluZXJzOg0KPiArICAtIE1heGltZSBDb3F1ZWxpbiA8bWF4aW1lLmNvcXVlbGluQHN0
+LmNvbT4NCg0KTWF4aW1lIGhhcyBsZWZ0IFNUTWljcm9lbGVjdHJvbmljcywgeW91IGNhbiByZXBs
+YWNlIGl0cyBlbWFpbCBieSBtaW5lDQpQYXRyaWNlIENob3RhcmQgPHBhdHJpY2UuY2hvdGFyZEBz
+dC5jb20+DQoNCg0KVGhhbmtzDQoNClBhdHJpY2UNCg0KPiArDQo+ICtwcm9wZXJ0aWVzOg0KPiAr
+ICAkbm9kZW5hbWU6DQo+ICsgICAgY29uc3Q6ICcvJw0KPiArICBjb21wYXRpYmxlOg0KPiArICAg
+IGl0ZW1zOg0KPiArICAgICAgLSBlbnVtOg0KPiArICAgICAgICAgIC0gc3Qsc3RpaDQxNQ0KPiAr
+ICAgICAgICAgIC0gc3Qsc3RpaDQxNg0KPiArICAgICAgICAgIC0gc3Qsc3RpaDQwNw0KPiArICAg
+ICAgICAgIC0gc3Qsc3RpaDQxMA0KPiArICAgICAgICAgIC0gc3Qsc3RpaDQxOA0KPiArLi4uDQo+
+IA==
