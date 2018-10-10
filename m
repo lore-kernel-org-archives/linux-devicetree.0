@@ -1,117 +1,141 @@
-Return-Path: <SRS0=24SN=MU=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 2/3] mmc: renesas_sdhi_internal_dmac: Add R7S9210 support
-Date: Mon,  8 Oct 2018 11:23:48 -0500
-Message-Id: <20181008162349.42957-3-chris.brandt@renesas.com>
-In-Reply-To: <20181008162349.42957-1-chris.brandt@renesas.com>
-References: <20181008162349.42957-1-chris.brandt@renesas.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-clk@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=+6fA=MW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp.codeaurora.org ([198.145.29.96]:45268 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbeJJOyE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Oct 2018 10:54:04 -0400
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date: Wed, 10 Oct 2018 13:03:10 +0530
+From: Govind Singh <govinds@codeaurora.org>
+Subject: Re: [PATCH 2/6] clk: qcom: Add WCSS gcc clock control for QCS404
+In-Reply-To: <36e54245-090c-0756-0d40-0f8aa944a49c@codeaurora.org>
+References: <1539090357-20853-1-git-send-email-govinds@codeaurora.org>
+ <1539090357-20853-3-git-send-email-govinds@codeaurora.org>
+ <36e54245-090c-0756-0d40-0f8aa944a49c@codeaurora.org>
+Message-ID: <0b581a3fa5b4b3087648d945350f8c1b@codeaurora.org>
+Sender: devicetree-owner@vger.kernel.org
+To: Taniya Das <tdas@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The SDHI/MMC controller in the RZ/A2 is almost the same as R-Car gen3, but
-with some minor differences.
+Thanks Taniya for the review.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- drivers/mmc/host/Kconfig                      |  5 +++--
- drivers/mmc/host/renesas_sdhi_internal_dmac.c | 28 +++++++++++++++++++++++++--
- 2 files changed, 29 insertions(+), 4 deletions(-)
+On 2018-10-09 23:25, Taniya Das wrote:
+> On 10/9/2018 6:35 PM, Govind Singh wrote:
+>> Add support for the WCSS QDSP gcc clock control used on qcs404 based 
+>> devices.
+>> This would allow wcss remoteproc driver to control the required gcc 
+>> clocks to
+>> bring the subsystem out of reset.
+>> 
+>> Signed-off-by: Govind Singh <govinds@codeaurora.org>
+>> ---
+>>   drivers/clk/qcom/gcc-qcs404.c | 39 
+>> ++++++++++++++++++++++++++++++++++++++-
+>>   1 file changed, 38 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/clk/qcom/gcc-qcs404.c 
+>> b/drivers/clk/qcom/gcc-qcs404.c
+>> index 6d1387e..bcbfe19 100644
+>> --- a/drivers/clk/qcom/gcc-qcs404.c
+>> +++ b/drivers/clk/qcom/gcc-qcs404.c
+>> @@ -2505,6 +2505,34 @@ enum {
+>>   	},
+>>   };
+>>   +static struct clk_branch gcc_ahbs_cbcr_clk = {
+> 
+> There is no such clock, the clock names should match exactly as they
+> are represented in hardware plans.
+> 
 
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index cf984f0f0246..33840ce2221d 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -636,13 +636,14 @@ config MMC_SDHI_SYS_DMAC
- 
- config MMC_SDHI_INTERNAL_DMAC
- 	tristate "DMA for SDHI SD/SDIO controllers using on-chip bus mastering"
--	depends on ARM64 || COMPILE_TEST
-+	depends on ARM64 ||  ARCH_R7S9210 || COMPILE_TEST
- 	depends on MMC_SDHI
- 	default MMC_SDHI if ARM64
- 	help
- 	  This provides DMA support for SDHI SD/SDIO controllers
- 	  using on-chip bus mastering. This supports the controllers
--	  found in arm64 based SoCs.
-+	  found in arm64 based SoCs. This controller is also found in
-+	  RZ/A2 series SoCs.
- 
- config MMC_UNIPHIER
- 	tristate "UniPhier SD/eMMC Host Controller support"
-diff --git a/drivers/mmc/host/renesas_sdhi_internal_dmac.c b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-index e5e5015ca680..19c32ea237dd 100644
---- a/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-+++ b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-@@ -34,7 +34,7 @@
- #define DTRAN_MODE_CH_NUM_CH0	0	/* "downstream" = for write commands */
- #define DTRAN_MODE_CH_NUM_CH1	BIT(16)	/* "upstream" = for read commands */
- #define DTRAN_MODE_BUS_WIDTH	(BIT(5) | BIT(4))
--#define DTRAN_MODE_ADDR_MODE	BIT(0)	/* 1 = Increment address */
-+#define DTRAN_MODE_ADDR_MODE	BIT(0)	/* 1 = Increment address, 0 = Fixed */
- 
- /* DM_CM_DTRAN_CTRL */
- #define DTRAN_CTRL_DM_START	BIT(0)
-@@ -73,6 +73,9 @@ static unsigned long global_flags;
- #define SDHI_INTERNAL_DMAC_ONE_RX_ONLY	0
- #define SDHI_INTERNAL_DMAC_RX_IN_USE	1
- 
-+/* RZ/A2 does not have this bit (not safe to set it) */
-+#define SDHI_INTERNAL_DMAC_ADRR_MODE_FIXED 2
-+
- /* Definitions for sampling clocks */
- static struct renesas_sdhi_scc rcar_gen3_scc_taps[] = {
- 	{
-@@ -81,6 +84,21 @@ static struct renesas_sdhi_scc rcar_gen3_scc_taps[] = {
- 	},
- };
- 
-+static const struct renesas_sdhi_of_data of_rza2_compatible = {
-+	.tmio_flags	= TMIO_MMC_HAS_IDLE_WAIT | TMIO_MMC_CLK_ACTUAL |
-+			  TMIO_MMC_HAVE_CBSY,
-+	.tmio_ocr_mask	= MMC_VDD_32_33,
-+	.capabilities	= MMC_CAP_SD_HIGHSPEED | MMC_CAP_SDIO_IRQ |
-+			  MMC_CAP_CMD23,
-+	.bus_shift	= 2,
-+	.scc_offset	= (0 - 0x1000),
-+	.taps		= rcar_gen3_scc_taps,
-+	.taps_num	= ARRAY_SIZE(rcar_gen3_scc_taps),
-+	/* DMAC can handle 0xffffffff blk count but only 1 segment */
-+	.max_blk_count	= 0xffffffff,
-+	.max_segs	= 1,
-+};
-+
- static const struct renesas_sdhi_of_data of_rcar_r8a7795_compatible = {
- 	.tmio_flags	= TMIO_MMC_HAS_IDLE_WAIT | TMIO_MMC_CLK_ACTUAL |
- 			  TMIO_MMC_HAVE_CBSY | TMIO_MMC_MIN_RCAR2 |
-@@ -113,6 +131,7 @@ static const struct renesas_sdhi_of_data of_rcar_gen3_compatible = {
- };
- 
- static const struct of_device_id renesas_sdhi_internal_dmac_of_match[] = {
-+	{ .compatible = "renesas,sdhi-r7s9210", .data = &of_rza2_compatible, },
- 	{ .compatible = "renesas,sdhi-r8a7795", .data = &of_rcar_r8a7795_compatible, },
- 	{ .compatible = "renesas,sdhi-r8a7796", .data = &of_rcar_r8a7795_compatible, },
- 	{ .compatible = "renesas,rcar-gen3-sdhi", .data = &of_rcar_gen3_compatible, },
-@@ -171,7 +190,10 @@ renesas_sdhi_internal_dmac_start_dma(struct tmio_mmc_host *host,
- 				     struct mmc_data *data)
- {
- 	struct scatterlist *sg = host->sg_ptr;
--	u32 dtran_mode = DTRAN_MODE_BUS_WIDTH | DTRAN_MODE_ADDR_MODE;
-+	u32 dtran_mode = DTRAN_MODE_BUS_WIDTH;
-+
-+	if (!test_bit(SDHI_INTERNAL_DMAC_ADRR_MODE_FIXED, &global_flags))
-+		dtran_mode |= DTRAN_MODE_ADDR_MODE;
- 
- 	if (!dma_map_sg(&host->pdev->dev, sg, host->sg_len,
- 			mmc_get_dma_dir(data)))
-@@ -290,6 +312,8 @@ static const struct tmio_mmc_dma_ops renesas_sdhi_internal_dmac_dma_ops = {
-  */
- static const struct soc_device_attribute gen3_soc_whitelist[] = {
- 	/* specific ones */
-+	{ .soc_id = "r7s9210",
-+	  .data = (void *)BIT(SDHI_INTERNAL_DMAC_ADRR_MODE_FIXED) },
- 	{ .soc_id = "r8a7795", .revision = "ES1.*",
- 	  .data = (void *)BIT(SDHI_INTERNAL_DMAC_ONE_RX_ONLY) },
- 	{ .soc_id = "r8a7796", .revision = "ES1.0",
--- 
-2.16.1
+I will change the names in next patch-set. Below are the names in hw 
+plans.
+gcc_wdsp_q6ss_axim_clk
+gcc_wdsp_q6ss_ahbs_clk
+
+>> +	.halt_reg = 0x1e004,
+>> +	.halt_check = BRANCH_HALT,
+>> +	.clkr = {
+>> +		.enable_reg = 0x1e004,
+>> +		.enable_mask = BIT(0),
+>> +		.hw.init = &(struct clk_init_data){
+>> +			.name = "gcc_ahb_cbcr_clk",
+>> +			.ops = &clk_branch2_ops,
+>> +			.flags = CLK_IGNORE_UNUSED,
+> 
+> Do we need this flag?
+
+This is not required in gcc controls, i will clean up this in next 
+patch-set.
+
+>> +		},
+>> +	},
+>> +};
+>> +
+>> +static struct clk_branch gcc_axim_cbcr_clk = {
+>> +	.halt_reg = 0x1e008,
+>> +	.halt_check = BRANCH_HALT,
+>> +	.clkr = {
+>> +		.enable_reg = 0x1e008,
+>> +		.enable_mask = BIT(0),
+>> +		.hw.init = &(struct clk_init_data){
+>> +			.name = "gcc_axim_cbcr_clk",
+>> +			.ops = &clk_branch2_ops,
+>> +			.flags = CLK_IGNORE_UNUSED,
+>> +		},
+>> +	},
+>> +};
+>> +
+>>   static struct clk_regmap *gcc_qcs404_clocks[] = {
+>>   	[APSS_AHB_CLK_SRC] = &apss_ahb_clk_src.clkr,
+>>   	[BLSP1_QUP0_I2C_APPS_CLK_SRC] = &blsp1_qup0_i2c_apps_clk_src.clkr,
+>> @@ -2642,6 +2670,9 @@ enum {
+>>   	[GCC_QDSS_DAP_CLK] = &gcc_qdss_dap_clk.clkr,
+>>   	[GCC_DCC_CLK] = &gcc_dcc_clk.clkr,
+>>   	[GCC_DCC_XO_CLK] = &gcc_dcc_xo_clk.clkr,
+>> +	[GCC_WCSS_Q6_AHB_CBCR_CLK] = NULL,
+>> +	[GCC_WCSS_Q6_AXIM_CBCR_CLK] =  NULL,
+>> +
+>>   };
+>>     static const struct qcom_reset_map gcc_qcs404_resets[] = {
+>> @@ -2659,6 +2690,7 @@ enum {
+>>   	[GCC_PCIE_0_LINK_DOWN_BCR] = {0x3E038},
+>>   	[GCC_PCIEPHY_0_PHY_BCR] = {0x3E03C},
+>>   	[GCC_EMAC_BCR] = {0x4E000},
+>> +	[GCC_WDSP_RESTART] = {0x19000},
+> 
+> s/RESTART/BCR
+> 
+
+This reset control is listed as WDSP_RESTART in register spec.
+
+>>   };
+>>     static const struct regmap_config gcc_qcs404_regmap_config = {
+>> @@ -2669,7 +2701,7 @@ enum {
+>>   	.fast_io	= true,
+>>   };
+>>   -static const struct qcom_cc_desc gcc_qcs404_desc = {
+>> +static struct qcom_cc_desc gcc_qcs404_desc = {
+>>   	.config = &gcc_qcs404_regmap_config,
+>>   	.clks = gcc_qcs404_clocks,
+>>   	.num_clks = ARRAY_SIZE(gcc_qcs404_clocks),
+>> @@ -2702,6 +2734,11 @@ static int gcc_qcs404_probe(struct 
+>> platform_device *pdev)
+>>   	clk_prepare_enable(apss_ahb_clk_src.clkr.hw.clk);
+>>   	clk_prepare_enable(gpll0_ao_out_main.clkr.hw.clk);
+>>   +	if (of_property_read_bool(pdev->dev.of_node, 
+>> "qcom,wcss-protected")) {
+>> +		gcc_qcs404_clocks[GCC_WCSS_Q6_AHB_CBCR_CLK] = 
+>> &gcc_ahbs_cbcr_clk.clkr;
+>> +		gcc_qcs404_clocks[GCC_WCSS_Q6_AXIM_CBCR_CLK] = 
+>> &gcc_axim_cbcr_clk.clkr;
+>> +	}
+>> +
+>>   	return qcom_cc_really_probe(pdev, &gcc_qcs404_desc, regmap);
+>>   }
+>> 
+
+BR,
+Govind
