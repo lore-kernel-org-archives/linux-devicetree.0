@@ -1,47 +1,43 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/9] arm64: dts: sdm845: Add gpu and gmu
- device nodes
-Date: Wed, 10 Oct 2018 15:16:28 +0530
-Message-ID: <20181010094628.wejfgmvcv6stzoco@vireshk-i7>
-References: <20180827151112.25211-1-jcrouse@codeaurora.org>
- <20180827151112.25211-6-jcrouse@codeaurora.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v4 2/2] dt-bindings: mailbox: Add Xilinx IPI Mailbox
+Date: Wed, 10 Oct 2018 10:57:41 +0100
+Message-ID: <20181010095741.GA14472@e107155-lin>
+References: <1539155912-29760-1-git-send-email-wendy.liang@xilinx.com>
+ <1539155912-29760-3-git-send-email-wendy.liang@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180827151112.25211-6-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1539155912-29760-3-git-send-email-wendy.liang@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wendy Liang <wendy.liang@xilinx.com>
+Cc: jassisinghbrar@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjctMDgtMTgsIDA5OjExLCBKb3JkYW4gQ3JvdXNlIHdyb3RlOgo+IEFkZCB0aGUgbm9kZXMg
-dG8gZGVzY3JpYmUgdGhlIEFkcmVubyBHUFUgYW5kIEdNVSBkZXZpY2VzLgo+IAo+IFNpZ25lZC1v
-ZmYtYnk6IEpvcmRhbiBDcm91c2UgPGpjcm91c2VAY29kZWF1cm9yYS5vcmc+Cj4gLS0tCj4gIGFy
-Y2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaSB8IDEyMSArKysrKysrKysrKysrKysr
-KysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDEyMSBpbnNlcnRpb25zKCspCj4gCj4gZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaSBiL2FyY2gvYXJt
-NjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQo+IGluZGV4IGNkYWFiZWIzYzk5NS4uMTBkYjBj
-ZWIzNjk5IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRz
-aQo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQo+IEBAIC0xOTIs
-NiArMTkyLDU5IEBACj4gIAkJbWV0aG9kID0gInNtYyI7Cj4gIAl9Owo+ICAKPiArZ3B1X29wcF90
-YWJsZTogYWRyZW5vLW9wcC10YWJsZSB7Cj4gKwkJY29tcGF0aWJsZSA9ICJvcGVyYXRpbmctcG9p
-bnRzLXYyLXFjb20tbGV2ZWwiOwo+ICsKPiArCQlvcHAtNzEwMDAwMDAwIHsKPiArCQkJb3BwLWh6
-ID0gL2JpdHMvIDY0IDw3MTAwMDAwMDA+Owo+ICsJCQlxY29tLGxldmVsID0gPDQxNj47CgpXaGF0
-IGlzIHFjb20sbGV2ZWwgaGVyZSA/IElzIGl0IGRpZmZlcmVudCB0aGFuIHRoZSBSUE0gdm90aW5n
-IHRoaW5nID8KCklmIG5vdCB0aGVuIHlvdSBuZWVkIHRvIGZvbGxvdyB3aGF0IFJhamVuZHJhLCBO
-aWtsYXMgYXJlIGRvaW5nIGFzCndlbGwuIFRoZXJlIG5lZWRzIHRvIGJlIGEgZ2VucGQgd2hpY2gg
-bmVlZHMgdG8gY2FycnkgdGhpcyB2YWx1ZSBhbmQKdGhlIGdwdSdzIHRhYmxlIHdpbGwgaGF2ZSBy
-ZXF1aXJlZC1vcHBzIGVudHJ5IHRvIHBvaW50IHRvIGl0LgoKLS0gCnZpcmVzaApfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBs
-aXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+On Wed, Oct 10, 2018 at 12:18:32AM -0700, Wendy Liang wrote:
+> Xilinx ZynqMP IPI(Inter Processor Interrupt) is a hardware block
+> in ZynqMP SoC used for the communication between various processor
+> systems.
+> 
+> Signed-off-by: Wendy Liang <wendy.liang@xilinx.com>
+
+[...]
+
+> +Optional properties:
+> +--------------------
+> +- method:              The method of accessing the IPI agent registers.
+> +                       Permitted values are: "smc" and "hvc". Default is
+> +                       "smc".
+
+You are mixing the hardware messaging based mailbox and the software
+"smc/hvc" based mailbox together here. Please keep them separated.
+IIUC smc/hvc based mailcox is used for "tx" or too keep it simple in
+one direction and hardware based is used for "rx" or the other direction
+for communication.
+
+You *should not* mix them as single unit. Also lots of other vendor need
+SMC/HVC based mailbox. So make it generic and keep it separate.
+
+--
+Regards,
+Sudeep
