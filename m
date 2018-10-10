@@ -1,95 +1,84 @@
-From: Emil Renner Berthing <kernel@esmil.dk>
-Subject: [PATCH 7/7] spi: rockchip: simplify spi enable logic
-Date: Wed, 10 Oct 2018 11:00:38 +0200
-Message-ID: <20181010090038.20834-8-kernel@esmil.dk>
-References: <20181010090038.20834-1-kernel@esmil.dk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 6/7] pinctrl: ds90ux9xx: add TI DS90Ux9xx pinmux and GPIO
+ controller driver
+Date: Wed, 10 Oct 2018 11:04:41 +0200
+Message-ID: <CACRpkdbMMnXzA_j_p=nGgT1SyECrhCNRC6wWQ-+COMEkSQdPAA@mail.gmail.com>
+References: <20181008211205.2900-1-vz@mleia.com> <20181008211205.2900-7-vz@mleia.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181010090038.20834-1-kernel@esmil.dk>
+In-Reply-To: <20181008211205.2900-7-vz@mleia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Mark Brown <broonie@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Shunqian Zheng <zhengsq@rock-chips.com>, Nickey Yang <nickey.yang@rock-chips.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Randy Li <ayaka@soulik.info>, Chris Zhong <zyw@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Vasut <marek.vasut@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-media@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-Let the dma/non-dma code paths handle the spi enable
-flag themselves. This removes some logic to determine
-if the flag should be turned on before or after dma
-and also don't leave the spi enabled if the dma path
-fails.
+Hi Vladimir,
 
-Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
----
- drivers/spi/spi-rockchip.c | 28 +++++++++-------------------
- 1 file changed, 9 insertions(+), 19 deletions(-)
+thanks for your patch! Some review comments:
 
-diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
-index 1044849a352d..51ef632bca52 100644
---- a/drivers/spi/spi-rockchip.c
-+++ b/drivers/spi/spi-rockchip.c
-@@ -379,6 +379,8 @@ static int rockchip_spi_pio_transfer(struct rockchip_spi *rs)
- {
- 	int remain = 0;
- 
-+	spi_enable_chip(rs, 1);
-+
- 	do {
- 		if (rs->tx) {
- 			remain = rs->tx_end - rs->tx;
-@@ -501,6 +503,8 @@ static int rockchip_spi_prepare_dma(struct rockchip_spi *rs)
- 		dma_async_issue_pending(rs->dma_rx.ch);
- 	}
- 
-+	spi_enable_chip(rs, 1);
-+
- 	if (txdesc) {
- 		spin_lock_irqsave(&rs->lock, flags);
- 		rs->state |= TXBUSY;
-@@ -509,7 +513,8 @@ static int rockchip_spi_prepare_dma(struct rockchip_spi *rs)
- 		dma_async_issue_pending(rs->dma_tx.ch);
- 	}
- 
--	return 0;
-+	/* 1 means the transfer is in progress */
-+	return 1;
- }
- 
- static void rockchip_spi_config(struct rockchip_spi *rs)
-@@ -592,7 +597,6 @@ static int rockchip_spi_transfer_one(
- 		struct spi_device *spi,
- 		struct spi_transfer *xfer)
- {
--	int ret = 0;
- 	struct rockchip_spi *rs = spi_master_get_devdata(master);
- 
- 	WARN_ON(readl_relaxed(rs->regs + ROCKCHIP_SPI_SSIENR) &&
-@@ -636,24 +640,10 @@ static int rockchip_spi_transfer_one(
- 
- 	rockchip_spi_config(rs);
- 
--	if (rs->use_dma) {
--		if (rs->tmode == CR0_XFM_RO) {
--			/* rx: dma must be prepared first */
--			ret = rockchip_spi_prepare_dma(rs);
--			spi_enable_chip(rs, 1);
--		} else {
--			/* tx or tr: spi must be enabled first */
--			spi_enable_chip(rs, 1);
--			ret = rockchip_spi_prepare_dma(rs);
--		}
--		/* successful DMA prepare means the transfer is in progress */
--		ret = ret ? ret : 1;
--	} else {
--		spi_enable_chip(rs, 1);
--		ret = rockchip_spi_pio_transfer(rs);
--	}
-+	if (rs->use_dma)
-+		return rockchip_spi_prepare_dma(rs);
- 
--	return ret;
-+	return rockchip_spi_pio_transfer(rs);
- }
- 
- static bool rockchip_spi_can_dma(struct spi_master *master,
--- 
-2.19.1
+On Mon, Oct 8, 2018 at 11:12 PM Vladimir Zapolskiy <vz@mleia.com> wrote:
+
+> From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+>
+> The change adds an MFD cell driver for managing pin functions on
+> TI DS90Ux9xx de-/serializers.
+>
+> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+
+Please mention in the commit that you are also adding a GPIO
+chip driver.
+
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+
+I prefer the simple "GPL-2.0+" here.
+
+> +#include <linux/of_gpio.h>
+
+You should not need this include. If you do, something is wrong.
+
+> +#define SER_REG_PIN_CTRL               0x12
+> +#define PIN_CTRL_RGB18                 BIT(2)
+> +#define PIN_CTRL_I2S_DATA_ISLAND       BIT(1)
+> +#define PIN_CTRL_I2S_CHANNEL_B         (BIT(0) | BIT(3))
+> +
+> +#define SER_REG_I2S_SURROUND           0x1A
+> +#define PIN_CTRL_I2S_SURR_BIT          BIT(0)
+> +
+> +#define DES_REG_INDIRECT_PASS          0x16
+> +
+> +#define OUTPUT_HIGH                    BIT(3)
+> +#define REMOTE_CONTROL                 BIT(2)
+> +#define DIR_INPUT                      BIT(1)
+> +#define ENABLE_GPIO                    BIT(0)
+> +
+> +#define GPIO_AS_INPUT                  (ENABLE_GPIO | DIR_INPUT)
+> +#define GPIO_AS_OUTPUT                 ENABLE_GPIO
+> +#define GPIO_OUTPUT_HIGH               (GPIO_AS_OUTPUT | OUTPUT_HIGH)
+> +#define GPIO_OUTPUT_LOW                        GPIO_AS_OUTPUT
+> +#define GPIO_OUTPUT_REMOTE             (GPIO_AS_OUTPUT | REMOTE_CONTROL)
+
+These have a creepily generic look, like they hit the global GPIO
+namespace without really clashing. It gets confusing when reading
+the code.
+
+Do you think you could prefix them with DS90_* or something
+so it is clear that these defines belong in this driver?
+
+> +static const struct gpio_chip ds90ux9xx_gpio_chip = {
+> +       .owner                  = THIS_MODULE,
+> +       .get                    = ds90ux9xx_gpio_get,
+> +       .set                    = ds90ux9xx_gpio_set,
+> +       .get_direction          = ds90ux9xx_gpio_get_direction,
+> +       .direction_input        = ds90ux9xx_gpio_direction_input,
+> +       .direction_output       = ds90ux9xx_gpio_direction_output,
+> +       .base                   = -1,
+> +       .can_sleep              = 1,
+
+This is bool so set it = true;
+
+Overall it's a very nice driver. It is pretty complex but pin control
+is complex so that's a fact of life.
+
+Yours,
+Linus Walleij
