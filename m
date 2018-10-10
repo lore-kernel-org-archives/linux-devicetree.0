@@ -1,171 +1,36 @@
-From: Wendy Liang <wendy.liang@xilinx.com>
-Subject: [PATCH v4 2/2] dt-bindings: mailbox: Add Xilinx IPI Mailbox
-Date: Wed, 10 Oct 2018 00:18:32 -0700
-Message-ID: <1539155912-29760-3-git-send-email-wendy.liang@xilinx.com>
-References: <1539155912-29760-1-git-send-email-wendy.liang@xilinx.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 1/2] GPIO: add single-register GPIO via CREG driver
+Date: Wed, 10 Oct 2018 09:21:41 +0200
+Message-ID: <CACRpkdbgOqXdKMnhMVHPsM-YzL5A4R03C+SPRxE4s5zEKW3aKA@mail.gmail.com>
+References: <20180928131531.4598-1-Eugeniy.Paltsev@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1539155912-29760-1-git-send-email-wendy.liang@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jassisinghbrar@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, Wendy Liang <wendy.liang@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180928131531.4598-1-Eugeniy.Paltsev@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eugeniy.Paltsev@synopsys.com
+Cc: "open list:SYNOPSYS ARC ARCHITECTURE" <linux-snps-arc@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vineet Gupta <vineet.gupta1@synopsys.com>, Alexey Brodkin <alexey.brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Xilinx ZynqMP IPI(Inter Processor Interrupt) is a hardware block
-in ZynqMP SoC used for the communication between various processor
-systems.
+On Fri, Sep 28, 2018 at 3:15 PM Eugeniy Paltsev
+<Eugeniy.Paltsev@synopsys.com> wrote:
 
-Signed-off-by: Wendy Liang <wendy.liang@xilinx.com>
----
-Not put "Reviewed-by" as bindings have been updated since last review.
----
- .../bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt   | 128 +++++++++++++++++++++
- 1 file changed, 128 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
+> Add single-register MMIO GPIO driver for complex cases where
+> only several fields in register belong to GPIO lines and each GPIO
+> line owns a field with different length and on/off value.
+>
+> Such CREG GPIOs are used in Synopsys AXS10x and HSDK boards.
+>
+> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> ---
+> Changes v3->v4:
+>  * Cleanup 'include' section.
+>  * Get rid of 'of_mm_gpio_chip' using.
+>  * Get rid of custom 'creg_gpio_xlate' function.
+>  * Get rid of dummy 'creg_gpio_get_direction' function.
+>  * Small fixies.
 
-diff --git a/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
-new file mode 100644
-index 0000000..146f2fb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
-@@ -0,0 +1,128 @@
-+Xilinx IPI Mailbox Controller
-+========================================
-+
-+The Xilinx IPI(Inter Processor Interrupt) mailbox controller is to manage
-+messaging between two Xilinx Zynq UltraScale+ MPSoC IPI agents. Each IPI
-+agent owns registers used for notification and buffers for message.
-+
-+               +-------------------------------------+
-+               | Xilinx ZynqMP IPI Controller        |
-+               +-------------------------------------+
-+    +--------------------------------------------------+
-+ATF                    |                     |
-+                       |                     |
-+                       |                     |
-+    +--------------------------+             |
-+                       |                     |
-+                       |                     |
-+    +--------------------------------------------------+
-+            +------------------------------------------+
-+            |  +----------------+   +----------------+ |
-+Hardware    |  |  IPI Agent     |   |  IPI Buffers   | |
-+            |  |  Registers     |   |                | |
-+            |  |                |   |                | |
-+            |  +----------------+   +----------------+ |
-+            |                                          |
-+            | Xilinx IPI Agent Block                   |
-+            +------------------------------------------+
-+
-+
-+Controller Device Node:
-+===========================
-+Required properties:
-+--------------------
-+IPI agent node:
-+- compatible:		Shall be: "xlnx,zynqmp-ipi-mailbox"
-+- interrupt-parent:	Phandle for the interrupt controller
-+- interrupts:		Interrupt information corresponding to the
-+			interrupt-names property.
-+- xlnx,ipi-id:		local Xilinx IPI agent ID
-+- #address-cells:	number of address cells of internal IPI mailbox nodes
-+- #size-cells:		number of size cells of internal IPI mailbox nodes
-+
-+Internal IPI mailbox node:
-+- reg:			IPI buffers address ranges
-+- reg-names:		Names of the reg resources. It should have:
-+			* local_request_region
-+			  - IPI request msg buffer written by local and read
-+			    by remote
-+			* local_response_region
-+			  - IPI response msg buffer written by local and read
-+			    by remote
-+			* remote_request_region
-+			  - IPI request msg buffer written by remote and read
-+			    by local
-+			* remote_response_region
-+			  - IPI response msg buffer written by remote and read
-+			    by local
-+- #mbox-cells:		Shall be 1. It contains:
-+			* tx(0) or rx(1) channel
-+- xlnx,ipi-id:		remote Xilinx IPI agent ID of which the mailbox is
-+			connected to.
-+
-+Optional properties:
-+--------------------
-+- method:              The method of accessing the IPI agent registers.
-+                       Permitted values are: "smc" and "hvc". Default is
-+                       "smc".
-+
-+Client Device Node:
-+===========================
-+Required properties:
-+--------------------
-+- mboxes:		Standard property to specify a mailbox
-+			(See ./mailbox.txt)
-+- mbox-names:		List of identifier  strings for each mailbox
-+			channel.
-+
-+Example:
-+===========================
-+	zynqmp_ipi {
-+		compatible = "xlnx,zynqmp-ipi-mailbox";
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 29 4>;
-+		xlnx,ipi-id = <0>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		/* APU<->RPU0 IPI mailbox controller */
-+		ipi_mailbox_rpu0: mailbox@ff90400 {
-+			compatible = "xlnx,zynqmp-ipi-mailbox";
-+			reg = <0xff990400 0x20>,
-+			      <0xff990420 0x20>,
-+			      <0xff990080 0x20>,
-+			      <0xff9900a0 0x20>;
-+			reg-names = "local_request_region",
-+				    "local_response_region",
-+				    "remote_request_region",
-+				    "remote_response_region";
-+			#mbox-cells = <1>;
-+			xlnx-ipi-id = <1>;
-+		};
-+		/* APU<->RPU1 IPI mailbox controller */
-+		ipi_mailbox_rpu1: mailbox@ff990440 {
-+			compatible = "xlnx,zynqmp-ipi-mailbox";
-+			reg = <0xff990440 0x20>,
-+			      <0xff990460 0x20>,
-+			      <0xff990280 0x20>,
-+			      <0xff9902a0 0x20>;
-+			reg-names = "local_request_region",
-+				    "local_response_region",
-+				    "remote_request_region",
-+				    "remote_response_region";
-+			#mbox-cells = <1>;
-+			xlnx-ipi-ids = <2>;
-+		};
-+	};
-+	rpu0 {
-+		...
-+		mboxes = <&ipi_mailbox_rpu0 0>,
-+			 <&ipi_mailbox_rpu0 1>;
-+		mbox-names = "tx", "rx";
-+	};
-+	rpu1 {
-+		...
-+		mboxes = <&ipi_mailbox_rpu1 0>,
-+			 <&ipi_mailbox_rpu1 1>;
-+		mbox-names = "tx", "rx";
-+	};
--- 
-2.7.4
+Patch applied.
+
+Yours,
+Linus Walleij
