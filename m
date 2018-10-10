@@ -1,7 +1,7 @@
 From: laurentiu.tudor@nxp.com
-Subject: [PATCH v3 16/22] arm64: dts: ls1046a: add smmu node
-Date: Wed, 10 Oct 2018 15:07:31 +0300
-Message-ID: <20181010120737.30300-14-laurentiu.tudor@nxp.com>
+Subject: [PATCH v3 18/22] arm64: dts: ls104xa: set mask to drop TBU ID from StreamID
+Date: Wed, 10 Oct 2018 15:07:33 +0300
+Message-ID: <20181010120737.30300-16-laurentiu.tudor@nxp.com>
 References: <20181010120737.30300-1-laurentiu.tudor@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181010120737.30300-1-laurentiu.tudor@nxp.com>
@@ -12,65 +12,42 @@ List-Id: devicetree@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-This allows for the SMMU device to be probed by the SMMU kernel driver.
+The StreamID entering the SMMU is actually a concatenation of the
+SMMU TBU ID and the ICID configured in software.
+Since the TBU ID is internal to the SoC and since we want that the
+actual the ICID configured in software to enter the SMMU witout any
+additional set bits, mask out the TBU ID bits and leave only the
+relevant ICID bits to enter SMMU.
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
- .../arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 42 +++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 1 +
+ 2 files changed, 2 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 7eea2bace171..1f9b385007a8 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -226,6 +226,7 @@
+ 			compatible = "arm,mmu-500";
+ 			reg = <0 0x9000000 0 0x400000>;
+ 			dma-coherent;
++			stream-match-mask = <0x7f00>;
+ 			#global-interrupts = <2>;
+ 			#iommu-cells = <1>;
+ 			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
 diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index ef83786b8b90..07a853a0aeaa 100644
+index 07a853a0aeaa..22bf3975492a 100644
 --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
 +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -228,6 +228,48 @@
- 			bus-width = <4>;
- 		};
- 
-+		mmu: iommu@9000000 {
-+			compatible = "arm,mmu-500";
-+			reg = <0 0x9000000 0 0x400000>;
-+			dma-coherent;
-+			#global-interrupts = <2>;
-+			#iommu-cells = <1>;
-+			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
- 		scfg: scfg@1570000 {
- 			compatible = "fsl,ls1046a-scfg", "syscon";
- 			reg = <0x0 0x1570000 0x0 0x10000>;
+@@ -232,6 +232,7 @@
+ 			compatible = "arm,mmu-500";
+ 			reg = <0 0x9000000 0 0x400000>;
+ 			dma-coherent;
++			stream-match-mask = <0x7f00>;
+ 			#global-interrupts = <2>;
+ 			#iommu-cells = <1>;
+ 			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
 -- 
 2.17.1
