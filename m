@@ -1,46 +1,29 @@
-From: Mark Brown <broonie@kernel.org>
+From: Talel Shenhar <talel@amazon.com>
 Subject: Re: [PATCH 1/2] dt-bindings: spi: dw: add cs-override property
-Date: Wed, 10 Oct 2018 11:18:25 +0100
-Message-ID: <20181010101825.GA6294@sirena.org.uk>
+Date: Wed, 10 Oct 2018 13:34:17 +0300
+Message-ID: <e4c91e84-34f6-2c3f-4e26-62e6bd25a96f@amazon.com>
 References: <1539155293-21750-1-git-send-email-talel@amazon.com>
+ <20181010101825.GA6294@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1539155293-21750-1-git-send-email-talel@amazon.com>
+In-Reply-To: <20181010101825.GA6294@sirena.org.uk>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Talel Shenhar <talel@amazon.com>
-Cc: linux-spi@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ronenk@amazon.com, barakw@amazon.com, David Woodhouse <dwmw@amazon.co.uk>
+To: "ronenk@amazon.com; jonnyc"@amazon.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ronenk@amazon.com, barakw@amazon.com, David Woodhouse <dwmw@amazon.co.uk>
 List-Id: devicetree@vger.kernel.org
 
+> On Wed, Oct 10, 2018 at 10:08:12AM +0300, Talel Shenhar wrote:
+>
+>> The dw spi controller has an auto-deselect of Chip-Select, in case there is
+>> no data inside the Tx FIFO. While working on platforms with Alpine chips,
+> Why would we ever want to use this behaviour?  It will be broken for any
+> non-trivial SPI message such as those made with multiple transfers
+> anyway.  Why not just unconditionally control it manually?
+Thank you for your prompt response.
 
---J2SCkAp4GZ/dPZZf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Oct 10, 2018 at 10:08:12AM +0300, Talel Shenhar wrote:
-
-> The dw spi controller has an auto-deselect of Chip-Select, in case there is
-> no data inside the Tx FIFO. While working on platforms with Alpine chips,
-
-Why would we ever want to use this behaviour?  It will be broken for any
-non-trivial SPI message such as those made with multiple transfers
-anyway.  Why not just unconditionally control it manually?
-
---J2SCkAp4GZ/dPZZf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlu90e4ACgkQJNaLcl1U
-h9Bw6gf/QW1tmWlXcmNLTdpo0qIz7z7c3z3/ydzStF3ZHJLeoS6YHY0bu8R5MtlQ
-FkYVdvvF7/Zfqlr8tkOHFjnBh+fiT2+6EKvDu8zyPMZJNxDWBkllWxkdVhHUc75u
-4/l5n9vgzCiedfz1SXfqDmBeBoKZBLl+vmu1w2a3InRcLhKqsDGsnENKdrfGEttO
-0Vc946hptVhHjOKQ3I/XBotjOhqogZ4cr8QwOwLEJK7iBcQq6qhq2zP4EaBf0irD
-aTew8Rff3BJJjASRVpP9EUULMUuhlt93Zea9cFfp8ildUt2sYXVaupf5HTpv+azb
-BNuY0SoMbROx7VARMhHTEfgL1qmK4w==
-=VGYE
------END PGP SIGNATURE-----
-
---J2SCkAp4GZ/dPZZf--
+This behavior (auto-deselect of Chip-Select) is the default behavior of dw spi controller hw.
+On Alpine chip there is additional behavior added to the dw spi controller hw that allows the sw to disable this behavior.
+This patch allows the dw driver to enable this hw workaround and add the needed sw manual control for it.
