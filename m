@@ -1,153 +1,59 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: [PATCH NOT FOR MERGE 4/4] ARM: dts: sun7i-a20-bananapi:
- Add bindings for the BL035 3.5" LCD
-Date: Wed, 10 Oct 2018 13:41:34 +0200
-Message-ID: <20181010114134.8211-4-contact@paulk.fr>
-References: <20181010114134.8211-1-contact@paulk.fr>
-Reply-To: contact-W9ppeneeCTY@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: dw: add cs-override property
+Date: Wed, 10 Oct 2018 12:27:53 +0100
+Message-ID: <20181010112753.GC6294@sirena.org.uk>
+References: <1539155293-21750-1-git-send-email-talel@amazon.com>
+ <20181010101825.GA6294@sirena.org.uk>
+ <dbac7f00-e9cc-ddac-5734-9763b5985ead@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBC75HK6WUAEBBSOL67OQKGQESTY5NPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181010114134.8211-1-contact-W9ppeneeCTY@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mark Van den Borre <mark-8Ycg9RsmSNMdnm+yROfE0A@public.gmane.org>, Gerry Demaret <gerry-8Ycg9RsmSNMdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="XWOWbaMNXpFDWE00"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <dbac7f00-e9cc-ddac-5734-9763b5985ead@amazon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Talel Shenhar <talel@amazon.com>
+Cc: linux-spi@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ronenk@amazon.com, barakw@amazon.com, David Woodhouse <dwmw@amazon.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-This adds the backlight panel, power, pwm and tcon0 device-tree bindings
-required for supporting the 3.5" LCD from Lemaker on the BananaPi M1.
 
-Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20-bananapi.dts | 89 ++++++++++++++++++++++++
- 1 file changed, 89 insertions(+)
+--XWOWbaMNXpFDWE00
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-index 70dfc4ac0bb5..dd2f8bc41fae 100644
---- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-@@ -48,6 +48,7 @@
- 
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/pwm/pwm.h>
- 
- / {
- 	model = "LeMaker Banana Pi";
-@@ -63,6 +64,75 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 50000 0>;
-+		brightness-levels = <  0   1   1   1   1   2   2   2
-+				       2   3   3   3   3   4   4   4
-+				       5   5   5   6   6   6   7   7
-+				       8   8   8   9   9   9  10  10
-+				      10  11  11  12  12  12  13  13
-+				      14  14  14  15  15  16  16  17
-+				      17  17  18  18  19  19  20  20
-+				      21  21  21  22  22  23  23  24
-+				      24  25  25  26  26  27  27  28
-+				      28  29  30  30  31  31  32  32
-+				      33  33  34  35  35  36  36  37
-+				      38  38  39  39  40  41  41  42
-+				      43  43  44  44  45  46  47  47
-+				      48  49  49  50  51  51  52  53
-+				      54  54  55  56  57  57  58  59
-+				      60  61  61  62  63  64  65  65
-+				      66  67  68  69  70  71  71  72
-+				      73  74  75  76  77  78  79  80
-+				      81  82  83  84  85  86  87  88
-+				      89  90  91  92  93  94  95  96
-+				      97  98  99 101 102 103 104 105
-+				     106 108 109 110 111 112 114 115
-+				     116 117 119 120 121 123 124 125
-+				     127 128 129 131 132 133 135 136
-+				     138 139 141 142 144 145 147 148
-+				     150 151 153 154 156 157 159 161
-+				     162 164 166 167 169 171 173 174
-+				     176 178 180 181 183 185 187 189
-+				     191 192 194 196 198 200 202 204
-+				     206 208 210 212 214 216 219 221
-+				     223 225 227 229 232 234 236 238
-+				     241 242 244 246 248 250 253 255>;
-+		default-brightness-level = <128>;
-+		enable-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
-+	};
-+
-+	panel: panel {
-+		compatible = "lemaker,bl035";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		power-supply = <&panel_power>;
-+		backlight = <&backlight>;
-+
-+		port@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			panel_input: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&tcon0_out_panel>;
-+			};
-+		};
-+	};
-+
-+	panel_power: panel_power {
-+		compatible = "regulator-fixed";
-+		regulator-name = "panel-power";
-+		regulator-min-microvolt = <10400000>;
-+		regulator-max-microvolt = <10400000>;
-+		gpio = <&pio 7 12 GPIO_ACTIVE_HIGH>; /* PH12 */
-+		enable-active-high;
-+		regulator-boot-on;
-+	};
-+
- 	hdmi-connector {
- 		compatible = "hdmi-connector";
- 		type = "a";
-@@ -275,6 +345,12 @@
- 	};
- };
- 
-+&pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm0_pins_a>;
-+	status = "okay";
-+};
-+
- #include "axp209.dtsi"
- 
- &reg_dcdc2 {
-@@ -322,6 +398,19 @@
- 	status = "okay";
- };
- 
-+&tcon0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd0_rgb888_pins>;
-+	status = "okay";
-+};
-+
-+&tcon0_out {
-+	tcon0_out_panel: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&panel_input>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
--- 
-2.19.0
+On Wed, Oct 10, 2018 at 02:23:40PM +0300, Talel Shenhar wrote:
+> On 10/10/2018 01:18 PM, Mark Brown wrote:
+> > On Wed, Oct 10, 2018 at 10:08:12AM +0300, Talel Shenhar wrote:
+
+> >> The dw spi controller has an auto-deselect of Chip-Select, in case there is
+> >> no data inside the Tx FIFO. While working on platforms with Alpine chips,
+
+> > Why would we ever want to use this behaviour?  It will be broken for any
+> > non-trivial SPI message such as those made with multiple transfers
+> > anyway.  Why not just unconditionally control it manually?
+
+> This behavior (auto-deselect of Chip-Select) is the default behavior of dw spi controller hw.
+> On Alpine chip there is additional behavior added to the dw spi controller hw that allows the sw to disable this behavior.
+> This patch allows the dw driver to enable this hw workaround and add the needed sw manual control for it.
+
+If this is a modified IP with additional features then it should be
+given a new compatible string rather than having a property - it's not
+just configuration of the existing IP, it's a new thing and we may find
+there are other quirks that have to be taken care of for it.
+
+--XWOWbaMNXpFDWE00
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlu94jgACgkQJNaLcl1U
+h9ApoQf/bZoqz6AzEschlNCke1wLPI98oWSDZLffCSfz9cw1bkrYYqkHInTWRcH6
+kDWI4TUt7/y/Vfe2KZOB5B14B05XJh5y4NB21zLNc7BQCbmY1TPNHKb4Q/ums5qp
+cPnz+jyFf2wUrRBsu9MZ6G5LbwameBAjy0aw1YlIzvtMHovsT1TCoAcazwCWrZoD
+5oe0ZTvJ5L8ht6ML7RQl2nRBVLlTlVmmxqlZwmomnhQ+meM9TkYORREI4AmfM5V1
+CUMMwpg8BB7WA5SYhvgtdd4mZIw3uVrY66Xh1gIOq+zrIOxMDwzvva0pHoWYiuPn
+oiwyTZEzTYPdn4p3yum2O4EvASuj7g==
+=hB4N
+-----END PGP SIGNATURE-----
+
+--XWOWbaMNXpFDWE00--
