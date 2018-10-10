@@ -1,60 +1,55 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 5/9] arm64: dts: sdm845: Add gpu and gmu
- device nodes
-Date: Wed, 10 Oct 2018 09:10:06 -0600
-Message-ID: <20181010151006.GD9977@jcrouse-lnx.qualcomm.com>
-References: <20180827151112.25211-1-jcrouse@codeaurora.org>
- <20180827151112.25211-6-jcrouse@codeaurora.org>
- <20181010094628.wejfgmvcv6stzoco@vireshk-i7>
- <20181010142905.GB9977@jcrouse-lnx.qualcomm.com>
- <20181010143149.4e3ct3efkuwxa2hw@vireshk-i7>
- <20181010144856.GC9977@jcrouse-lnx.qualcomm.com>
- <20181010145139.nvalsr2ij2lj53dh@vireshk-i7>
+From: Talel Shenhar <talel@amazon.com>
+Subject: [PATCH 1/2] dt-bindings: spi: dw: add compatible for Alpine spi controller
+Date: Wed, 10 Oct 2018 18:15:15 +0300
+Message-ID: <1539184516-8200-1-git-send-email-talel@amazon.com>
+References: <1539155293-21750-1-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20181010145139.nvalsr2ij2lj53dh@vireshk-i7>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1539155293-21750-1-git-send-email-talel@amazon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, linux-spi@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: talel@amazon.com, jonnyc@amazon.com, ronenk@amazon.com, barakw@amazon.com, David Woodhouse <dwmw@amazon.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBPY3QgMTAsIDIwMTggYXQgMDg6MjE6MzlQTSArMDUzMCwgVmlyZXNoIEt1bWFyIHdy
-b3RlOgo+IE9uIDEwLTEwLTE4LCAwODo0OCwgSm9yZGFuIENyb3VzZSB3cm90ZToKPiA+IHFjb20s
-bGV2ZWwgY29tZXMgc3RyYWlnaHQgZnJvbToKPiA+IAo+ID4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5v
-cmcvbGttbC8yMDE4MDYyNzA0NTIzNC4yNzQwMy0yLXJuYXlha0Bjb2RlYXVyb3JhLm9yZy8KPiA+
-IAo+ID4gQnV0IGluIHRoaXMgY2FzZSBpbnN0ZWFkIG9mIHVzaW5nIHRoZSBDUFUgdG8gcHJvZ3Jh
-bSB0aGUgUlBNaCB3ZSBhcmUgcGFzc2luZwo+ID4gdGhlIHZhbHVlIHRvIGEgbWljcm9wcm9jZXNz
-b3IgKHRoZSBHTVUpIGFuZCB0aGF0IHdpbGwgZG8gdGhlIHZvdGUgb24gb3VyIGJlaGFsZgo+ID4g
-KFRlY2huaWNhbGx5IHdlIHVzZSB0aGUgdmFsdWUgdG8gbG9vayB1cCB0aGUgdm90ZSBpbiB0aGUg
-Y21kLWRiIGRhdGFiYXNlIGFuZAo+ID4gcGFzcyB0aGF0IHRvIHRoZSBHTVUpCj4gPiAKPiA+IFRo
-aXMgaXMgd2h5IHRoZSBxY29tLGxldmVsIHdhcyBhZGRlZCBpbiB0aGUgZmlyc3QgcGxhY2Ugc28g
-d2UgY291bGQgYXQgbGVhc3QKPiA+IHNoYXJlIHRoZSBub21lbmNsYXR1cmUgd2l0aCB0aGUgcnBt
-aGQgaWYgbm90IHRoZSBpbXBsZW1lbnRhdGlvbi4KPiAKPiBIb3cgeW91IGFjdHVhbGx5IHBhc3Mg
-dGhlIHZvdGUgdG8gdGhlIHVuZGVybHlpbmcgaGFyZHdhcmUsIFJQTWggb3IKPiBHTVUsIGlzIGly
-cmVsZXZhbnQgdG8gdGhlIHdob2xlIHRoaW5nLiBXaGF0IGlzIGltcG9ydGFudCBpcyBob3cgd2UK
-PiBkZXNjcmliZSB0aGF0IGluIERUIGFuZCBob3cgd2UgcmVwcmVzZW50IHRoZSB3aG9sZSB0aGlu
-Zy4KPiAKPiBXZSBoYXZlIGNob3NlbiBnZW5wZCArIE9QUCB0byBkbyB0aGlzIGFuZCBzYW1lIHNo
-b3VsZCBiZSB1c2VkIGJ5IHlvdQo+IGFzIHdlbGwuIEFub3RoZXIgYmVuZWZpdCBpcyB0aGF0IHRo
-ZSBnZW5wZCBjb3JlIHdpbGwgZG8gdm90ZQo+IGFnZ3JlZ2F0aW9uIGZvciB5b3UgaGVyZS4KCkkn
-bSBub3Qgc3VyZSB3aGF0IHlvdSBhcmUgc3VnZ2VzdGluZz8gVGhlIHZvdGUgaXMgcmVwcmVzZW50
-ZWQgaW4gRFQgZXhhY3RseSBhcwpkZXNjcmliZWQgaW4gdGhlIGJpbmRpbmdzLiAKCkpvcmRhbgoK
-PiAtLSAKPiB2aXJlc2gKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwo+IEZyZWVkcmVubyBtYWlsaW5nIGxpc3QKPiBGcmVlZHJlbm9AbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9mcmVlZHJlbm8KCi0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMg
-YSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJv
-cmF0aXZlIFByb2plY3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRy
-ZW5vCg==
+This compatible adds the ability for dw spi controller driver to work with
+the dw spi controller found on Alpine chips.
+
+The dw spi controller has an auto-deselect of Chip-Select, in case there is
+no data inside the Tx FIFO. While working on platforms with Alpine chips,
+auto-deselect mode causes an issue for some spi devices that can't handle
+the Chip-Select deselect in the middle of a transaction. It is a normal
+behavior for a Tx FIFO to be empty in the middle of a transaction, due to
+busy cpu. In the Alpine chip family an option to change the default
+behavior was added to the original dw spi controller to prevent this issue
+of de-asserting Chip-Select once TX FIFO is empty. The change was to allow
+SW manual control of the Chip-Select. With this change, as long as the
+Slave Enable Register is asserted, the Chip-Select will be asserted. As a
+result, it is necessary to deselect the Slave Select Register once the
+transaction is done. This feature is enabled via a new device compatible
+string called 'al,alpine-dw-apb-ssi'.  Once the driver identifies the new
+compatible string, it enables the hw fixup logic, by writing to a dedicated
+register found in the IP reserved area and will start manual deselecting
+the Slave Select Register when the transfer ends.
+
+Signed-off-by: Talel Shenhar <talel@amazon.com>
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+---
+ Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+index 642d3fb..d25b1f8 100644
+--- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
++++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+@@ -2,7 +2,7 @@ Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface.
+ 
+ Required properties:
+ - compatible : "snps,dw-apb-ssi" or "mscc,<soc>-spi", where soc is "ocelot" or
+-  "jaguar2"
++  "jaguar2", or "al,alpine-dw-apb-ssi"
+ - reg : The register base for the controller. For "mscc,<soc>-spi", a second
+   register set is required (named ICPU_CFG:SPI_MST)
+ - interrupts : One interrupt, used by the controller.
+-- 
+2.7.4
