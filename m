@@ -1,87 +1,96 @@
-From: Jolly Shah <JOLLYS@xilinx.com>
-Subject: RE: [PATCH v3 0/4] drivers: soc: xilinx: Add support for ZynqMP power
- domain driver
-Date: Wed, 10 Oct 2018 18:41:44 +0000
-Message-ID: <BL2PR02MB2130719D4A82F429745DDBEEB8E00@BL2PR02MB2130.namprd02.prod.outlook.com>
-References: <1538688221-9823-1-git-send-email-jollys@xilinx.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 13/36] dt-bindings: arm: Convert PMU binding to json-schema
+Date: Wed, 10 Oct 2018 13:51:24 -0500
+Message-ID: <CAL_Jsq+NExxsksmhA6z5_eTutVkm_NFthayvHz-vvq1gkSeXNA@mail.gmail.com>
+References: <20181005165848.3474-1-robh@kernel.org> <20181005165848.3474-14-robh@kernel.org>
+ <20181009115713.GE6248@arm.com> <CAL_JsqLeG3WUa2peOWFGUoMuonWaWJoU-7A6d8cqXp-_e3B3XA@mail.gmail.com>
+ <20181010165048.GB16512@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1538688221-9823-1-git-send-email-jollys@xilinx.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jolly Shah <JOLLYS@xilinx.com>, "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "andy.gross@linaro.org" <andy.gross@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "sean.wang@mediatek.com" <sean.wang@mediatek.com>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, Michal Simek <michals@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rajan Vaja <RAJANV@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181010165048.GB16512@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Ping for comments
+On Wed, Oct 10, 2018 at 11:50 AM Will Deacon <will.deacon@arm.com> wrote:
+>
+> On Tue, Oct 09, 2018 at 01:14:02PM -0500, Rob Herring wrote:
+> > On Tue, Oct 9, 2018 at 6:57 AM Will Deacon <will.deacon@arm.com> wrote:
+> > >
+> > > Hi Rob,
+> > >
+> > > On Fri, Oct 05, 2018 at 11:58:25AM -0500, Rob Herring wrote:
+> > > > Convert ARM PMU binding to DT schema format using json-schema.
+> > > >
+> > > > Cc: Will Deacon <will.deacon@arm.com>
+> > > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > > Cc: linux-arm-kernel@lists.infradead.org
+> > > > Cc: devicetree@vger.kernel.org
+> > > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/arm/pmu.txt | 70 --------------
+> > > >  .../devicetree/bindings/arm/pmu.yaml          | 96 +++++++++++++++++++
+> > > >  2 files changed, 96 insertions(+), 70 deletions(-)
+> > > >  delete mode 100644 Documentation/devicetree/bindings/arm/pmu.txt
+> > > >  create mode 100644 Documentation/devicetree/bindings/arm/pmu.yaml
+> > >
+> > > [...]
+> > >
+> > > > -- interrupts : 1 combined interrupt or 1 per core. If the interrupt is a per-cpu
+> > > > -               interrupt (PPI) then 1 interrupt should be specified.
+> > >
+> > > [...]
+> > >
+> > > > +  interrupts:
+> > > > +    oneOf:
+> > > > +      - maxItems: 1
+> > > > +      - minItems: 2
+> > > > +        maxItems: 8
+> > > > +        description: 1 interrupt per core.
+> > > > +
+> > > > +  interrupts-extended:
+> > > > +    $ref: '#/properties/interrupts'
+> > >
+> > > This seems like a semantic different between the two representations, or am
+> > > I missing something here? Specifically, both the introduction of
+> > > interrupts-extended and also dropping any mention of using a single per-cpu
+> > > interrupt (the single combined case is no longer support by Linux; not sure
+> > > if you want to keep it in the binding).
+> >
+> > 'interrupts-extended' was implied before as it is always supported and
+> > outside the scope of the binding. But now it is needed to validate
+> > bindings. There must be some use of it and that's why I added it.
+> > However, thinking some more about this, I think it may be better to
+> > have the tools add this in automatically whenever we have an
+> > interrupts property.
+>
+> To be honest, if you'd included that in the commit message I'd have been
+> happy :)
+>
+> > I guess the single interrupt case is less obvious now with no
+> > description (it's the first list item of 'oneOf'). The schema If the
+> > single interrupt is not supported, then we can drop it here.
+>
+> Well the description says "1 interrupt per core" which is incorrect.
 
-Thanks,
-Jolly Shah
+You are reading the schema wrong. There are 2 cases supported as
+defined by each '-'. The 2nd case is all the keywords until the
+indentation decreases. So 'description' is just description of the 2nd
+case. The first case is just "maxItems: 1". I probably didn't put a
+description because why write in free form text what the schema says
+(other than of course no one knows json-schema...).
 
-> -----Original Message-----
-> From: Jolly Shah [mailto:jolly.shah@xilinx.com]
-> Sent: Thursday, October 04, 2018 2:24 PM
-> To: matthias.bgg@gmail.com; andy.gross@linaro.org; shawnguo@kernel.org;
-> geert+renesas@glider.be; bjorn.andersson@linaro.org;
-> sean.wang@mediatek.com; m.szyprowski@samsung.com; Michal Simek
-> <michals@xilinx.com>; robh+dt@kernel.org; mark.rutland@arm.com
-> Cc: Rajan Vaja <RAJANV@xilinx.com>; devicetree@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Jolly Shah
-> <JOLLYS@xilinx.com>
-> Subject: [PATCH v3 0/4] drivers: soc: xilinx: Add support for ZynqMP power
-> domain driver
-> 
-> The zynqmp power domain driver communicates the usage requirements for
-> logical power domains / devices to the platform FW.
-> FW is responsible for choosing appropriate power states, taking Linux' usage
-> information into account.
-> 
-> This patch series is based on top of Xilinx firmware patch set:
-> https://patchwork.kernel.org/cover/10555405/
-> 
-> v3:
->  - Changed binding to have FW node as a power controller as suggested by Rob
->  - Updated FW driver to register it as mfd child devices from firmware probe
->  - Move bindings location as suggested
-> 
-> v2:
->  - Rebased on top of latest firmware driver patch series
->  - Updated driver name from zynqmp-genpd to zynqmp-power-controller
->  - Updated device tree bindings to move power controller node under firmware
-> node
-> 
-> Jolly Shah (1):
->   drivers: soc: xilinx: Add ZynqMP power domain driver
-> 
-> Rajan Vaja (3):
->   dt-bindings: power: Add ZynqMP power domain bindings
->   firmware: xilinx: Add APIs to control node status/power
->   firmware: xilinx: Add node IDs for zynqmp firmware
-> 
->  .../bindings/power/xlnx,zynqmp-genpd.txt           |  34 ++
->  drivers/firmware/xilinx/Kconfig                    |   1 +
->  drivers/firmware/xilinx/zynqmp.c                   |  73 ++++
->  drivers/soc/xilinx/Kconfig                         |   9 +
->  drivers/soc/xilinx/Makefile                        |   2 +
->  drivers/soc/xilinx/zynqmp_pm_domains.c             | 403
-> +++++++++++++++++++++
->  include/dt-bindings/power/xlnx-zynqmp-power.h      |  39 ++
->  include/linux/firmware/xlnx-zynqmp.h               |  98 +++++
->  8 files changed, 659 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/xlnx,zynqmp-
-> genpd.txt
->  create mode 100644 drivers/soc/xilinx/zynqmp_pm_domains.c
->  create mode 100644 include/dt-bindings/power/xlnx-zynqmp-power.h
-> 
-> --
-> 2.7.4
+YAML combines the best of Makefiles and python. You can't have tabs
+and Indentation is significant. :)
+
+> I also
+> don't understand why maxItems is 8.
+
+Humm, I probably just made that up based on GICv2 limitations. What
+should it be? If there's not any inherit maximum, can we put something
+reasonable? There's not really any way to express that it should match
+the number of cores in the system.
+
+Rob
