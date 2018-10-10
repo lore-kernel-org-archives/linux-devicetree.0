@@ -1,79 +1,387 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 5/9] arm64: dts: sdm845: Add gpu and gmu
- device nodes
-Date: Wed, 10 Oct 2018 08:48:56 -0600
-Message-ID: <20181010144856.GC9977@jcrouse-lnx.qualcomm.com>
-References: <20180827151112.25211-1-jcrouse@codeaurora.org>
- <20180827151112.25211-6-jcrouse@codeaurora.org>
- <20181010094628.wejfgmvcv6stzoco@vireshk-i7>
- <20181010142905.GB9977@jcrouse-lnx.qualcomm.com>
- <20181010143149.4e3ct3efkuwxa2hw@vireshk-i7>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v3] arm64: new board - Emlid Neutis N5
+Date: Wed, 10 Oct 2018 16:49:57 +0200
+Message-ID: <20181010144957.exrlupoph7ovsmdw@flea>
+References: <1538745949-13188-2-git-send-email-aleksandr.aleksandrov@emlid.com>
+ <1539012044-29998-1-git-send-email-aleksandr.aleksandrov@emlid.com>
+ <1539012044-29998-2-git-send-email-aleksandr.aleksandrov@emlid.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181010143149.4e3ct3efkuwxa2hw@vireshk-i7>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1539012044-29998-2-git-send-email-aleksandr.aleksandrov@emlid.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, David Lechner <david@lechnology.com>, Thierry Reding <treding@nvidia.com>, Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBPY3QgMTAsIDIwMTggYXQgMDg6MDE6NDlQTSArMDUzMCwgVmlyZXNoIEt1bWFyIHdy
-b3RlOgo+IE9uIDEwLTEwLTE4LCAwODoyOSwgSm9yZGFuIENyb3VzZSB3cm90ZToKPiA+IE9uIFdl
-ZCwgT2N0IDEwLCAyMDE4IGF0IDAzOjE2OjI4UE0gKzA1MzAsIFZpcmVzaCBLdW1hciB3cm90ZToK
-PiA+ID4gT24gMjctMDgtMTgsIDA5OjExLCBKb3JkYW4gQ3JvdXNlIHdyb3RlOgo+ID4gPiA+IEFk
-ZCB0aGUgbm9kZXMgdG8gZGVzY3JpYmUgdGhlIEFkcmVubyBHUFUgYW5kIEdNVSBkZXZpY2VzLgo+
-ID4gPiA+IAo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEpvcmRhbiBDcm91c2UgPGpjcm91c2VAY29k
-ZWF1cm9yYS5vcmc+Cj4gPiA+ID4gLS0tCj4gPiA+ID4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvcWNv
-bS9zZG04NDUuZHRzaSB8IDEyMSArKysrKysrKysrKysrKysrKysrKysrKysrKysKPiA+ID4gPiAg
-MSBmaWxlIGNoYW5nZWQsIDEyMSBpbnNlcnRpb25zKCspCj4gPiA+ID4gCj4gPiA+ID4gZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaSBiL2FyY2gvYXJtNjQv
-Ym9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQo+ID4gPiA+IGluZGV4IGNkYWFiZWIzYzk5NS4uMTBk
-YjBjZWIzNjk5IDEwMDY0NAo+ID4gPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9z
-ZG04NDUuZHRzaQo+ID4gPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUu
-ZHRzaQo+ID4gPiA+IEBAIC0xOTIsNiArMTkyLDU5IEBACj4gPiA+ID4gIAkJbWV0aG9kID0gInNt
-YyI7Cj4gPiA+ID4gIAl9Owo+ID4gPiA+ICAKPiA+ID4gPiArZ3B1X29wcF90YWJsZTogYWRyZW5v
-LW9wcC10YWJsZSB7Cj4gPiA+ID4gKwkJY29tcGF0aWJsZSA9ICJvcGVyYXRpbmctcG9pbnRzLXYy
-LXFjb20tbGV2ZWwiOwo+ID4gPiA+ICsKPiA+ID4gPiArCQlvcHAtNzEwMDAwMDAwIHsKPiA+ID4g
-PiArCQkJb3BwLWh6ID0gL2JpdHMvIDY0IDw3MTAwMDAwMDA+Owo+ID4gPiA+ICsJCQlxY29tLGxl
-dmVsID0gPDQxNj47Cj4gPiA+IAo+ID4gPiBXaGF0IGlzIHFjb20sbGV2ZWwgaGVyZSA/IElzIGl0
-IGRpZmZlcmVudCB0aGFuIHRoZSBSUE0gdm90aW5nIHRoaW5nID8KPiA+ID4gCj4gPiA+IElmIG5v
-dCB0aGVuIHlvdSBuZWVkIHRvIGZvbGxvdyB3aGF0IFJhamVuZHJhLCBOaWtsYXMgYXJlIGRvaW5n
-IGFzCj4gPiA+IHdlbGwuIFRoZXJlIG5lZWRzIHRvIGJlIGEgZ2VucGQgd2hpY2ggbmVlZHMgdG8g
-Y2FycnkgdGhpcyB2YWx1ZSBhbmQKPiA+ID4gdGhlIGdwdSdzIHRhYmxlIHdpbGwgaGF2ZSByZXF1
-aXJlZC1vcHBzIGVudHJ5IHRvIHBvaW50IHRvIGl0Lgo+ID4gCj4gPiBJIGRvbid0IHRoaW5rIGl0
-IGlzIHRoZSBzYW1lICh3ZSBoYXZlIHNvbWUgc3BlY2lhbCBjb25zaWRlcmF0aW9ucyBoZXJlKQo+
-ID4gYnV0IEkgbWlzc2VkIHRoZSBuZXcgd29yayBmcm9tIHRoZSBvdGhlciBmb2xrcyBhbmQgSSB3
-YW50IHRvIHJldmlldyBpdAo+ID4gYmVmb3JlIEkgY29uY2x1ZGUgb25lIHdheSBvciB0aGUgb3Ro
-ZXIuIElzIHRoZXJlIGEgbGluayB0byB0aGUgbGF0ZXN0Cj4gPiBhbmQgZ3JlYXRlc3QgdGhhdCBJ
-IGNhbiB1c2UgdG8gZ2V0IGNhdWdodCB1cD8KPiAKPiBsa21sLmtlcm5lbC5vcmcvci8yMDE4MDYy
-NzA0NTIzNC4yNzQwMy0xLXJuYXlha0Bjb2RlYXVyb3JhLm9yZwo+IAo+ICtSYWplbmRyYS9OaWts
-YXMsIHBsZWFzZSByZXZpZXcgSm9yZGFuJ3Mgd29yayBhcyB3ZWxsIHRvIHNlZSBpZiB0aGUKPiBx
-Y29tLGxldmVsIHRoaW5nIGlzIHNpbWlsYXIgdG8gd2hhdCB5b3UgZ3V5cyBhcmUgdXNpbmcuCgpx
-Y29tLGxldmVsIGNvbWVzIHN0cmFpZ2h0IGZyb206CgpodHRwczovL2xvcmUua2VybmVsLm9yZy9s
-a21sLzIwMTgwNjI3MDQ1MjM0LjI3NDAzLTItcm5heWFrQGNvZGVhdXJvcmEub3JnLwoKQnV0IGlu
-IHRoaXMgY2FzZSBpbnN0ZWFkIG9mIHVzaW5nIHRoZSBDUFUgdG8gcHJvZ3JhbSB0aGUgUlBNaCB3
-ZSBhcmUgcGFzc2luZwp0aGUgdmFsdWUgdG8gYSBtaWNyb3Byb2Nlc3NvciAodGhlIEdNVSkgYW5k
-IHRoYXQgd2lsbCBkbyB0aGUgdm90ZSBvbiBvdXIgYmVoYWxmCihUZWNobmljYWxseSB3ZSB1c2Ug
-dGhlIHZhbHVlIHRvIGxvb2sgdXAgdGhlIHZvdGUgaW4gdGhlIGNtZC1kYiBkYXRhYmFzZSBhbmQK
-cGFzcyB0aGF0IHRvIHRoZSBHTVUpCgpUaGlzIGlzIHdoeSB0aGUgcWNvbSxsZXZlbCB3YXMgYWRk
-ZWQgaW4gdGhlIGZpcnN0IHBsYWNlIHNvIHdlIGNvdWxkIGF0IGxlYXN0CnNoYXJlIHRoZSBub21l
-bmNsYXR1cmUgd2l0aCB0aGUgcnBtaGQgaWYgbm90IHRoZSBpbXBsZW1lbnRhdGlvbi4KCkpvcmRh
-bgoKPiAtLSAKPiB2aXJlc2gKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwo+IEZyZWVkcmVubyBtYWlsaW5nIGxpc3QKPiBGcmVlZHJlbm9AbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9mcmVlZHJlbm8KCi0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4g
-aXMgYSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xs
-YWJvcmF0aXZlIFByb2plY3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJl
-ZWRyZW5vCg==
+Hi,
+
+On Mon, Oct 08, 2018 at 06:20:42PM +0300, Aleksandr Aleksandrov wrote:
+> Emlid Neutis N5 is a SoM based on Allwinner H5, has a WiFi & BT
+> module, DDR3 RAM and eMMC.
+> 
+> - add neutis n5 dtsi file for SoM needs
+> - add neutis devboard dts file
+> - add neutis devboard target to dtb makefile
+> - new vendor prefix - emlid
+> 
+> Signed-off-by: Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
+
+Your commit prefix is wrong, it should be arm64: dts: allwinner: 
+
+> ---
+>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+>  arch/arm64/boot/dts/allwinner/Makefile             |   1 +
+>  .../sun50i-h5-emlid-neutis-n5-devboard.dts         | 184 +++++++++++++++++++++
+>  .../dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi   |  96 +++++++++++
+>  4 files changed, 282 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 2c3fc51..2336e44 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -112,6 +112,7 @@ edt	Emerging Display Technologies
+>  eeti	eGalax_eMPIA Technology Inc
+>  elan	Elan Microelectronic Corp.
+>  embest	Shenzhen Embest Technology Co., Ltd.
+> +emlid	Emlid, Ltd.
+>  emmicro	EM Microelectronic
+>  emtrion	emtrion GmbH
+>  energymicro	Silicon Laboratories (formerly Energy Micro AS)
+
+This should be in a separate patch.
+
+> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+> index 9ffa7a0..eefe74c 100644
+> --- a/arch/arm64/boot/dts/allwinner/Makefile
+> +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinebook.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-teres-i.dtb
+> +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-emlid-neutis-n5-devboard.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-libretech-all-h3-cc.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-neo2.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-neo-plus2.dtb
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts
+> new file mode 100644
+> index 0000000..493947c
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts
+> @@ -0,0 +1,184 @@
+> +/*
+> + * Copyright (C) 2018 Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+
+You should use an SPDX header instead of the full license text.
+
+> +
+> +/dts-v1/;
+> +
+> +#include "sun50i-h5-emlid-neutis-n5.dtsi"
+> +
+> +/ {
+> +	model = "Emlid Neutis N5 Developer board";
+> +	compatible = "emlid,emlid-neutis-n5-devboard",
+> +		"emlid,emlid-neutis-n5",
+
+Do you need the two emlid there? What comes before the comma is the
+vendor, while what is after is the model.
+
+Also, please align those strings
+
+> +		"allwinner,sun50i-h5";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	connector {
+> +		compatible = "hdmi-connector";
+> +		type = "a";
+> +
+> +		port {
+> +			hdmi_con_in: endpoint {
+> +				remote-endpoint = <&hdmi_out_con>;
+> +			};
+> +		};
+> +	};
+> +
+> +	reg_usb0_vbus: usb0-vbus {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "usb0-vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		enable-active-high;
+> +		gpio = <&r_pio 0 9 GPIO_ACTIVE_HIGH>;   /* PL9 */
+> +		status = "okay";
+> +	};
+> +
+> +	vdd_cpux: gpio-regulator {
+> +		compatible = "regulator-gpio";
+> +		pinctrl-names = "default";
+> +		regulator-name = "vdd-cpux";
+> +		regulator-type = "voltage";
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +		regulator-min-microvolt = <1100000>;
+> +		regulator-max-microvolt = <1300000>;
+> +		regulator-ramp-delay = <50>; /* 4ms */
+> +		gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
+> +		gpios-states = <0x1>;
+> +		states = <1100000 0x0
+> +			  1300000 0x1>;
+> +	};
+> +};
+> +
+> +&codec {
+> +	allwinner,audio-routing =
+> +		"Line Out", "LINEOUT",
+> +		"LINEIN", "Line In",
+> +		"MIC1", "Mic",
+> +		"MIC2", "Mic",
+> +		"Mic",  "MBIAS";
+> +	status = "okay";
+> +};
+> +
+> +&de {
+> +	status = "okay";
+> +};
+> +
+> +&ehci0 {
+> +	status = "okay";
+> +};
+> +
+> +&ehci1 {
+> +	status = "okay";
+> +};
+> +
+> +&ehci2 {
+> +	status = "okay";
+> +};
+> +
+> +&ehci3 {
+> +	status = "okay";
+> +};
+> +
+> +&ohci0 {
+> +	status = "okay";
+> +};
+> +
+> +&ohci1 {
+> +	status = "okay";
+> +};
+> +
+> +&ohci2 {
+> +	status = "okay";
+> +};
+> +
+> +&ohci3 {
+> +	status = "okay";
+> +};
+> +
+> +&emac {
+> +	phy-handle = <&int_mii_phy>;
+> +	phy-mode = "mii";
+> +	allwinner,leds-active-low;
+> +	status = "okay";
+> +};
+> +
+> +&hdmi {
+> +	status = "okay";
+> +};
+> +
+> +&hdmi_out {
+> +	hdmi_out_con: endpoint {
+> +		remote-endpoint = <&hdmi_con_in>;
+> +	};
+> +};
+> +
+> +&mmc0 {
+> +	vmmc-supply = <&reg_vcc3v3>;
+> +	bus-width = <4>;
+> +	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
+> +	status = "okay";
+> +};
+> +
+> +&uart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart0_pins_a>;
+> +	status = "okay";
+> +};
+> +
+> +&usb_otg {
+> +	dr_mode = "otg";
+> +	status = "okay";
+> +};
+> +
+> +&usbphy {
+> +	usb0_id_det-gpios = <&r_pio 0 8 GPIO_ACTIVE_HIGH>; /* PL8 */
+> +	usb0_vbus-supply = <&reg_usb0_vbus>;
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi
+> new file mode 100644
+> index 0000000..8e1e37d
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi
+> @@ -0,0 +1,96 @@
+> +/*
+> + * Copyright (C) 2018 Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "sun50i-h5.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +	reg_vcc3v3: vcc3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc3v3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+> +	wifi_pwrseq: wifi_pwrseq {
+> +		compatible = "mmc-pwrseq-simple";
+> +		pinctrl-names = "default";
+> +		reset-gpios = <&pio 2 7 GPIO_ACTIVE_LOW>; /* PC7 */
+> +		post-power-on-delay-ms = <200>;
+> +	};
+> +};
+> +
+> +&mmc1 {
+> +	vmmc-supply = <&reg_vcc3v3>;
+> +	vqmmc-supply = <&reg_vcc3v3>;
+> +	mmc-pwrseq = <&wifi_pwrseq>;
+> +	bus-width = <4>;
+> +	non-removable;
+> +	status = "okay";
+> +
+> +	brcmf: wifi@1 {
+> +		reg = <1>;
+> +		compatible = "brcm,bcm4329-fmac";
+> +		interrupt-parent = <&r_pio>;
+> +		interrupts = <0 5 IRQ_TYPE_LEVEL_LOW>;	/* PL5 */
+> +		interrupt-names = "host-wake";
+> +	};
+> +};
+> +
+> +&mmc2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc2_8bit_pins>;
+> +	vmmc-supply = <&reg_vcc3v3>;
+> +	bus-width = <8>;
+> +	non-removable;
+> +	cap-mmc-hw-reset;
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
+> +	status = "okay";
+> +};
+
+I guess this is for bluetooth? Have you tested serdev drivers?
+
+Also, I have a general comments, and it really depends on what your
+intention about the board ecosystem is. Do you expect the SOM to be
+swappable in multiple boards, or do you expect to send it as something
+that is just fixed into a daughter board?
+
+In the former case, you probably want to use overlays instead. In the
+latter, you're fine.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
