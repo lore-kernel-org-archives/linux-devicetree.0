@@ -1,102 +1,25 @@
-From: Talel Shenhar <talel@amazon.com>
-Subject: [PATCH 2/2] dw: spi: add support for Alpine spi controller
-Date: Wed, 10 Oct 2018 18:15:16 +0300
-Message-ID: <1539184516-8200-2-git-send-email-talel@amazon.com>
-References: <1539155293-21750-1-git-send-email-talel@amazon.com>
- <1539184516-8200-1-git-send-email-talel@amazon.com>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH i2c-next v7 5/5] i2c: aspeed: Add bus idle waiting logic
+ for multi-master use cases
+Date: Wed, 10 Oct 2018 08:33:43 -0700
+Message-ID: <1d8957c4-fed7-ae74-ca19-b9560512cea4@linux.intel.com>
+References: <20181005214507.26315-1-jae.hyun.yoo@linux.intel.com>
+ <20181005214507.26315-6-jae.hyun.yoo@linux.intel.com>
+ <CAFd5g45JkK4BnGR7yOA3eCazTZ86FyUaNdi81Ew6VBbKxS3EZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539184516-8200-1-git-send-email-talel@amazon.com>
+In-Reply-To: <CAFd5g45JkK4BnGR7yOA3eCazTZ86FyUaNdi81Ew6VBbKxS3EZA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, linux-spi@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: talel@amazon.com, jonnyc@amazon.com, ronenk@amazon.com, barakw@amazon.com, David Woodhouse <dwmw@amazon.co.uk>
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, jarkko.nikula@linux.intel.com, james.feist@linux.intel.com, vernon.mauery@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-Add support for a new devicetree compatible string called
-'al,alpine-apb-ssi', which is necessary for the Amazon Alpine spi
-controller. 'al,alpine-dw-apb-ssi' is used in the dw spi driver if
-specified in the devicetree.  Otherwise, fall back to driver default
-behavior, i.e. original dw IP hw driver behavior.
+On 10/9/2018 5:08 PM, Brendan Higgins wrote:
+> 
+> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> 
 
-Signed-off-by: Talel Shenhar <talel@amazon.com>
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
----
- drivers/spi/spi-dw-mmio.c | 9 +++++++++
- drivers/spi/spi-dw.c      | 6 ++++++
- drivers/spi/spi-dw.h      | 2 ++
- 3 files changed, 17 insertions(+)
-
-diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-index a768461..88b04d2 100644
---- a/drivers/spi/spi-dw-mmio.c
-+++ b/drivers/spi/spi-dw-mmio.c
-@@ -126,6 +126,14 @@ static int dw_spi_mscc_jaguar2_init(struct platform_device *pdev,
- 				JAGUAR2_IF_SI_OWNER_OFFSET);
- }
- 
-+static int dw_spi_alpine_init(struct platform_device *pdev,
-+			      struct dw_spi_mmio *dwsmmio)
-+{
-+	dwsmmio->dws.cs_override = 1;
-+
-+	return 0;
-+}
-+
- static int dw_spi_mmio_probe(struct platform_device *pdev)
- {
- 	int (*init_func)(struct platform_device *pdev,
-@@ -230,6 +238,7 @@ static const struct of_device_id dw_spi_mmio_of_match[] = {
- 	{ .compatible = "snps,dw-apb-ssi", },
- 	{ .compatible = "mscc,ocelot-spi", .data = dw_spi_mscc_ocelot_init},
- 	{ .compatible = "mscc,jaguar2-spi", .data = dw_spi_mscc_jaguar2_init},
-+	{ .compatible = "al,alpine-dw-apb-ssi", .data = dw_spi_alpine_init},
- 	{ /* end of table */}
- };
- MODULE_DEVICE_TABLE(of, dw_spi_mmio_of_match);
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index 3e205ab..b705f2b 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -144,6 +144,8 @@ void dw_spi_set_cs(struct spi_device *spi, bool enable)
- 
- 	if (!enable)
- 		dw_writel(dws, DW_SPI_SER, BIT(spi->chip_select));
-+	else if (dws->cs_override)
-+		dw_writel(dws, DW_SPI_SER, 0);
- }
- EXPORT_SYMBOL_GPL(dw_spi_set_cs);
- 
-@@ -463,6 +465,10 @@ static void spi_hw_init(struct device *dev, struct dw_spi *dws)
- 		dws->fifo_len = (fifo == 1) ? 0 : fifo;
- 		dev_dbg(dev, "Detected FIFO size: %u bytes\n", dws->fifo_len);
- 	}
-+
-+	/* enable HW fixup for explicit CS deselect for Amazon's alpine chip */
-+	if (dws->cs_override)
-+		dw_writel(dws, DW_SPI_CS_OVERRIDE, 0xF);
- }
- 
- int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
-diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
-index 0168b08..c9c1588 100644
---- a/drivers/spi/spi-dw.h
-+++ b/drivers/spi/spi-dw.h
-@@ -32,6 +32,7 @@
- #define DW_SPI_IDR			0x58
- #define DW_SPI_VERSION			0x5c
- #define DW_SPI_DR			0x60
-+#define DW_SPI_CS_OVERRIDE		0xf4
- 
- /* Bit fields in CTRLR0 */
- #define SPI_DFS_OFFSET			0
-@@ -109,6 +110,7 @@ struct dw_spi {
- 	u32			fifo_len;	/* depth of the FIFO buffer */
- 	u32			max_freq;	/* max bus freq supported */
- 
-+	int			cs_override;
- 	u32			reg_io_width;	/* DR I/O width in bytes */
- 	u16			bus_num;
- 	u16			num_cs;		/* supported slave numbers */
--- 
-2.7.4
+Thanks for the review, Brendan!
