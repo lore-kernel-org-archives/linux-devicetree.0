@@ -1,73 +1,56 @@
-From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: Re: [PATCH v3 4/7] dmaengine: stm32-dma: Add DMA/MDMA chaining
- support
-Date: Wed, 10 Oct 2018 09:02:36 +0200
-Message-ID: <d64da587-a680-20c4-7139-f59fd1f299bc@st.com>
-References: <1538139715-24406-1-git-send-email-pierre-yves.mordret@st.com>
- <1538139715-24406-5-git-send-email-pierre-yves.mordret@st.com>
- <20181007160030.GB2372@vkoul-mobl>
- <e9cedfdd-ad90-9123-03bb-34a2e84059c5@st.com>
- <20181010040343.GO2372@vkoul-mobl>
+From: Talel Shenhar <talel@amazon.com>
+Subject: [PATCH 1/2] dt-bindings: spi: dw: add cs-override property
+Date: Wed, 10 Oct 2018 10:08:12 +0300
+Message-ID: <1539155293-21750-1-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181010040343.GO2372@vkoul-mobl>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: broonie@kernel.org, linux-spi@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: talel@amazon.com, ronenk@amazon.com, barakw@amazon.com, David Woodhouse <dwmw@amazon.co.uk>
 List-Id: devicetree@vger.kernel.org
 
+Update the dw-apb-ssi binding document, to add an optional 'cs-override'
+devicetree property.
 
+This property adds the ability for dw spi controller driver to work with
+the dw spi controller found on Alpine chips.
 
-On 10/10/2018 06:03 AM, Vinod wrote:
-> On 09-10-18, 10:40, Pierre Yves MORDRET wrote:
->>
->>
->> On 10/07/2018 06:00 PM, Vinod wrote:
->>> On 28-09-18, 15:01, Pierre-Yves MORDRET wrote:
->>>> This patch adds support of DMA/MDMA chaining support.
->>>> It introduces an intermediate transfer between peripherals and STM32 DMA.
->>>> This intermediate transfer is triggered by SW for single M2D transfer and
->>>> by STM32 DMA IP for all other modes (sg, cyclic) and direction (D2M).
->>>>
->>>> A generic SRAM allocator is used for this intermediate buffer
->>>> Each DMA channel will be able to define its SRAM needs to achieve chaining
->>>> feature : (2 ^ order) * PAGE_SIZE.
->>>> For cyclic, SRAM buffer is derived from period length (rounded on
->>>> PAGE_SIZE).
->>>
->>> So IIUC, you chain two dma txns together and transfer data via an SRAM?
->>
->> Correct. one DMA is DMAv2 (stm32-dma) and the other is MDMA(stm32-mdma).
->> Intermediate transfer is between device and memory.
->> This intermediate transfer is using SDRAM.
-> 
-> Ah so you use dma calls to setup mdma xtfers? I dont think that is a
-> good idea. How do you know you should use mdma for subsequent transfer?
-> 
+The dw spi controller has an auto-deselect of Chip-Select, in case there is
+no data inside the Tx FIFO. While working on platforms with Alpine chips,
+auto-deselect mode causes an issue for some spi devices that can't handle
+the Chip-Select deselect in the middle of a transaction. It is a normal
+behavior for a Tx FIFO to be empty in the middle of a transaction, due to
+busy cpu. In the Alpine chip family an option to change the default
+behavior was added to the original dw spi controller to prevent this issue
+of de-asserting Chip-Select once TX FIFO is empty. The change was to allow
+SW to force the Chip-Select. With this change, as long as the Slave Enable
+Register is asserted, the Chip-Select will be asserted. As a result, it is
+necessary to deselect the Slave Select Register once the transaction is
+done. This feature is enabled via a device property called 'cs-override'.
+Once the driver identifies the 'cs-override' property, it enables the hw
+fixup logic, by writing to a dedicated register found in the IP reserved
+area and will starts deselecting the Slave Select Register when the
+transfer ends.
 
-When user bindings told to setup chaining intermediate MDMA transfers are always
-triggers.
-For instance if a user requests a Dev2Mem transfer with chaining. From client
-pov this is still a prep_slave_sg. Internally DMAv2 is setup in cyclic mode (in
-double buffer mode indeed => 2 buffer of PAGE_SIZE/2) and destination is SDRAM.
-DMAv2 will flip/flop on those 2 buffers.
-At the same time DMAv2 driver prepares a MDMA SG that will fetch data from those
-2 buffers in SDRAM and fills final destination memory.
+Signed-off-by: Talel Shenhar <talel@amazon.com>
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+---
+ Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> 
->>>>  drivers/dma/stm32-dma.c | 879 ++++++++++++++++++++++++++++++++++++++++++------
->>>
->>> that is a lot of change for a driver, consider splitting it up
->>> logically in smaller changes...
->>>
->>
->> This feature is rather monolithic. Difficult to split up.
->> All the code is required at once.
-> 
-> It can be enabled at last but split up logically. Intrusive changes to a
-> driver make it hard to review..
-> 
-Ok. I will to think about it how to proceed.
+diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+index 642d3fb..dd366f5 100644
+--- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
++++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+@@ -14,6 +14,8 @@ Optional properties:
+ - num-cs : The number of chipselects. If omitted, this will default to 4.
+ - reg-io-width : The I/O register width (in bytes) implemented by this
+   device.  Supported values are 2 or 4 (the default).
++- cs-override: Enable explicit Chip-Select deselect during transfer instead of
++  default auto-deselect upon tx FIFO becoming empty.
+ 
+ Child nodes as per the generic SPI binding.
+ 
+-- 
+2.7.4
