@@ -1,65 +1,63 @@
 From: laurentiu.tudor@nxp.com
-Subject: [PATCH v3 03/22] soc/fsl/qman: map FQD and PFDR areas in the iommu
-Date: Wed, 10 Oct 2018 15:07:21 +0300
-Message-ID: <20181010120737.30300-4-laurentiu.tudor@nxp.com>
+Subject: [PATCH v3 10/22] fsl/fman: add API to get the device behind a fman port
+Date: Wed, 10 Oct 2018 15:07:25 +0300
+Message-ID: <20181010120737.30300-8-laurentiu.tudor@nxp.com>
 References: <20181010120737.30300-1-laurentiu.tudor@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20181010120737.30300-1-laurentiu.tudor@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: netdev-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org
 Cc: roy.pledge@nxp.com, madalin.bucur@nxp.com, davem@davemloft.net, shawnguo@kernel.org, leoyang.li@nxp.com, robin.murphy@arm.com, bharat.bhushan@nxp.com, arnd@arndb.de, Laurentiu Tudor <laurentiu.tudor@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-Add a one-to-one iommu mapping for qman private data memory areas
-(FQD and PFDR). This is required for QMAN to work without faults
-behind an iommu.
+Add an API that retrieves the 'struct device' that the specified fman
+port probed against. The new API will be used in a subsequent iommu
+enablement related patch.
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Acked-by: Madalin Bucur <madalin.bucur@nxp.com>
 ---
- drivers/soc/fsl/qbman/qman_ccsr.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/net/ethernet/freescale/fman/fman_port.c | 14 ++++++++++++++
+ drivers/net/ethernet/freescale/fman/fman_port.h |  2 ++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/drivers/soc/fsl/qbman/qman_ccsr.c b/drivers/soc/fsl/qbman/qman_ccsr.c
-index 619e22030460..0cfe79f85a66 100644
---- a/drivers/soc/fsl/qbman/qman_ccsr.c
-+++ b/drivers/soc/fsl/qbman/qman_ccsr.c
-@@ -29,6 +29,7 @@
-  */
+diff --git a/drivers/net/ethernet/freescale/fman/fman_port.c b/drivers/net/ethernet/freescale/fman/fman_port.c
+index ee82ee1384eb..bd76c9730692 100644
+--- a/drivers/net/ethernet/freescale/fman/fman_port.c
++++ b/drivers/net/ethernet/freescale/fman/fman_port.c
+@@ -1728,6 +1728,20 @@ u32 fman_port_get_qman_channel_id(struct fman_port *port)
+ }
+ EXPORT_SYMBOL(fman_port_get_qman_channel_id);
  
- #include "qman_priv.h"
-+#include <linux/iommu.h>
- 
- u16 qman_ip_rev;
- EXPORT_SYMBOL(qman_ip_rev);
-@@ -692,6 +693,7 @@ static int fsl_qman_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct device_node *node = dev->of_node;
-+	struct iommu_domain *domain;
- 	struct resource *res;
- 	int ret, err_irq;
- 	u16 id;
-@@ -769,6 +771,19 @@ static int fsl_qman_probe(struct platform_device *pdev)
- 	}
- 	dev_dbg(dev, "Allocated PFDR 0x%llx 0x%zx\n", pfdr_a, pfdr_sz);
- 
-+	/* Create an 1-to-1 iommu mapping for fqd and pfdr areas */
-+	domain = iommu_get_domain_for_dev(dev);
-+	if (domain) {
-+		ret = iommu_map(domain, fqd_a, fqd_a, fqd_sz,
-+				IOMMU_READ | IOMMU_WRITE | IOMMU_CACHE);
-+		if (ret)
-+			dev_warn(dev, "iommu_map(fqd) failed %d\n", ret);
-+		ret = iommu_map(domain, pfdr_a, pfdr_a, pfdr_sz,
-+				IOMMU_READ | IOMMU_WRITE | IOMMU_CACHE);
-+		if (ret)
-+			dev_warn(dev, "iommu_map(pfdr) failed %d\n", ret);
-+	}
++/**
++ * fman_port_get_device
++ * port:	Pointer to the FMan port device
++ *
++ * Get the 'struct device' associated to the specified FMan port device
++ *
++ * Return: pointer to associated 'struct device'
++ */
++struct device *fman_port_get_device(struct fman_port *port)
++{
++	return port->dev;
++}
++EXPORT_SYMBOL(fman_port_get_device);
 +
- 	ret = qman_init_ccsr(dev);
- 	if (ret) {
- 		dev_err(dev, "CCSR setup failed\n");
+ int fman_port_get_hash_result_offset(struct fman_port *port, u32 *offset)
+ {
+ 	if (port->buffer_offsets.hash_result_offset == ILLEGAL_BASE)
+diff --git a/drivers/net/ethernet/freescale/fman/fman_port.h b/drivers/net/ethernet/freescale/fman/fman_port.h
+index 9dbb69f40121..82f12661a46d 100644
+--- a/drivers/net/ethernet/freescale/fman/fman_port.h
++++ b/drivers/net/ethernet/freescale/fman/fman_port.h
+@@ -157,4 +157,6 @@ int fman_port_get_tstamp(struct fman_port *port, const void *data, u64 *tstamp);
+ 
+ struct fman_port *fman_port_bind(struct device *dev);
+ 
++struct device *fman_port_get_device(struct fman_port *port);
++
+ #endif /* __FMAN_PORT_H */
 -- 
 2.17.1
