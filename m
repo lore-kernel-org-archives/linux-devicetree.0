@@ -1,73 +1,42 @@
-From: Markus Kueffner <kueffner.markus@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-udoo: Add Pincfgs for UART4
-Date: Wed, 10 Oct 2018 10:19:04 +0200
-Message-ID: <20181010081904.GA23397@armhf-buildhost.asgard.net>
-References: <1538663639-3427-1-git-send-email-kueffner.markus@gmail.com>
- <CAOMZO5BqL5Tfd0+KmN2DiJdoWLSYWSWyppw8qdrb-G_by_68Tw@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/7] dt-bindings: mfd: ds90ux9xx: add description of TI
+ DS90Ux9xx ICs
+Date: Wed, 10 Oct 2018 10:41:38 +0200
+Message-ID: <CACRpkdb9Lwshpt+haJur_7ESOD50t=8PE-ct-UO5yJFRfrM6Lw@mail.gmail.com>
+References: <20181008211205.2900-1-vz@mleia.com>
+ <20181008211205.2900-2-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5BqL5Tfd0+KmN2DiJdoWLSYWSWyppw8qdrb-G_by_68Tw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20181008211205.2900-2-vz@mleia.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Wolfram Sang <wsa@the-dreams.de>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sandeep_Jain@mentor.com, Mark Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Lee Jones <lee.jones@linaro.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
->From b25738867245688e0a1eafeb78379efc6a73b66e Mon Sep 17 00:00:00 2001
-From: Markus Kueffner <kueffner.markus@gmail.com>
-Date: Wed, 10 Oct 2018 08:32:09 +0200
-Subject: [PATCH v2] ARM: dts: imx6qdl-udoo: Add Pincfgs for UART4
-
-Add Pincfgs for UART4 to enable Communication with the onboard SAM3X
-
-Signed-off-by: Markus Kueffner <kueffner.markus@gmail.com>
----
-Changes in v2:
-  - Removed // style Comment.
-
- arch/arm/boot/dts/imx6qdl-udoo.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-index 4f27861..40d1b0d 100644
---- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-@@ -195,6 +195,13 @@
- 			>;
- 		};
- 
-+		pinctrl_uart4: uart4grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_KEY_COL0__UART4_TX_DATA	0x1b0b1
-+				MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA	0x1b0b1
-+			>;
-+		};
-+
- 		pinctrl_usbh: usbhgrp {
- 			fsl,pins = <
- 				MX6QDL_PAD_GPIO_17__GPIO7_IO12 0x80000000
-@@ -265,6 +272,12 @@
- 	status = "okay";
- };
- 
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4>;
-+	status = "okay";
-+};
-+
- &usbh1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usbh>;
--- 
-2.1.4
+IE9uIE1vbiwgT2N0IDgsIDIwMTggYXQgMTE6MTIgUE0gVmxhZGltaXIgWmFwb2xza2l5IDx2ekBt
+bGVpYS5jb20+IHdyb3RlOgo+IEZyb206IFNhbmRlZXAgSmFpbiA8U2FuZGVlcF9KYWluQG1lbnRv
+ci5jb20+CiguLi4pCj4gKy0gdGkscGl4ZWwtY2xvY2stZWRnZSA6IFNlbGVjdHMgUGl4ZWwgQ2xv
+Y2sgRWRnZS4KPiArICAgICAgIFBvc3NpYmxlIHZhbHVlcyBhcmUgIjwxPiIgb3IgIjwwPiIuCj4g
+KyAgICAgICBJZiAidGkscGl4ZWwtY2xvY2stZWRnZSIgaXMgSGlnaCA8MT4sIG91dHB1dCBkYXRh
+IGlzIHN0cm9iZWQgb24gdGhlCj4gKyAgICAgICBSaXNpbmcgZWRnZSBvZiB0aGUgUENMSy4gSWYg
+dGkscGl4ZWwtY2xvY2stZWRnZSBpcyBMb3cgPDA+LCBkYXRhIGlzCj4gKyAgICAgICBzdHJvYmVk
+IG9uIHRoZSBGYWxsaW5nIGVkZ2Ugb2YgdGhlIFBDTEsuCj4gKyAgICAgICBJZiAidGkscGl4ZWwt
+Y2xvY2stZWRnZSIgaXMgbm90IG1lbnRpb25lZCwgdGhlIHBpeGVsIGNsb2NrIGVkZ2UKPiArICAg
+ICAgIHZhbHVlIGlzIG5vdCB0b3VjaGVkIGFuZCBnaXZlbiBieSBoYXJkd2FyZSBwaW4gc3RyYXBw
+aW5nLgoKUGxlYXNlIHVzZSB0aGUgZXhpc3RpbmcgYmluZGluZyBpbgpEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9kaXNwbGF5LXRpbWluZy50eHQKZm9yIHRo
+aXM6IHBpeGVsY2xrLWFjdGl2ZSA9IFs8MD58PDE+XTsKClBsZWFzZSByZWZlcmVuY2UgdGhlIGFi
+b3ZlIGRvY3VtZW50IGluIHlvdXIgYmluZGluZy4KCllvdXJzLApMaW51cyBXYWxsZWlqCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
