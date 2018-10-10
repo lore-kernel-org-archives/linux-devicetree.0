@@ -1,68 +1,103 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 8/8] Input: olpc_apsp: allocate the GPIOs used
-Date: Wed, 10 Oct 2018 16:25:04 +0200
-Message-ID: <20181010142504.233467-9-lkundrak@v3.sk>
-References: <20181010142504.233467-1-lkundrak@v3.sk>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 6/9] PM / OPP: dt-bindings: Add
+ opp-interconnect-bw
+Date: Wed, 10 Oct 2018 08:27:23 -0600
+Message-ID: <20181010142723.GA9977@jcrouse-lnx.qualcomm.com>
+References: <20180827151112.25211-1-jcrouse@codeaurora.org>
+ <20180827151112.25211-7-jcrouse@codeaurora.org>
+ <0998a374-6cb0-9218-d2e3-92f8ee9861ed@linaro.org>
+ <20181010095951.hgeiy7yxsqi6behd@vireshk-i7>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181010142504.233467-1-lkundrak@v3.sk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, James Cameron <quozl@laptop.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20181010095951.hgeiy7yxsqi6behd@vireshk-i7>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: nm-l0cyMroinI0@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Take the GPIO lines are used by the SP. The driver doesn't touch the
-lines -- this is done to disallow anything else from fiddling with
-them because that would confuse the SP firmware.
-
-Also, the lines are now nicely visible in /sys/kernel/debug/gpio.
-
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- drivers/input/serio/olpc_apsp.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/drivers/input/serio/olpc_apsp.c b/drivers/input/serio/olpc_a=
-psp.c
-index fe9e19014e70..287759c5f36d 100644
---- a/drivers/input/serio/olpc_apsp.c
-+++ b/drivers/input/serio/olpc_apsp.c
-@@ -24,6 +24,7 @@
- #include <linux/slab.h>
- #include <linux/delay.h>
- #include <linux/clk.h>
-+#include <linux/gpio/consumer.h>
-=20
- /*
-  * The OLPC XO-1.75 and XO-4 laptops do not have a hardware PS/2 control=
-ler.
-@@ -76,6 +77,8 @@ struct olpc_apsp {
- 	struct serio *padio;
- 	void __iomem *base;
- 	struct clk *clk;
-+	struct gpio_desc *clk_gpio;
-+	struct gpio_desc *data_gpio;
- 	int open_count;
- 	int irq;
- };
-@@ -211,6 +214,16 @@ static int olpc_apsp_probe(struct platform_device *p=
-dev)
- 	if (IS_ERR(priv->clk))
- 		return PTR_ERR(priv->clk);
-=20
-+	priv->clk_gpio =3D devm_gpiod_get_optional(&pdev->dev, "clk",
-+							GPIOD_ASIS);
-+	if (IS_ERR(priv->clk_gpio))
-+		return PTR_ERR(priv->clk_gpio);
-+
-+	priv->data_gpio =3D devm_gpiod_get_optional(&pdev->dev, "data",
-+							GPIOD_ASIS);
-+	if (IS_ERR(priv->data_gpio))
-+		return PTR_ERR(priv->data_gpio);
-+
- 	/* KEYBOARD */
- 	kb_serio =3D kzalloc(sizeof(struct serio), GFP_KERNEL);
- 	if (!kb_serio)
---=20
-2.19.0
+T24gV2VkLCBPY3QgMTAsIDIwMTggYXQgMDM6Mjk6NTFQTSArMDUzMCwgVmlyZXNoIEt1bWFyIHdy
+b3RlOgo+IE9uIDI3LTA5LTE4LCAxMToyMywgR2VvcmdpIERqYWtvdiB3cm90ZToKPiA+IE9uIDA4
+LzI3LzIwMTggMDY6MTEgUE0sIEpvcmRhbiBDcm91c2Ugd3JvdGU6Cj4gPiA+IEFkZCB0aGUgIm9w
+cC1pbnRlcmNvbm5lY3QtYnciIHByb3BlcnR5IHRvIHNwZWNpZnkgdGhlCj4gPiA+IGF2ZXJhZ2Ug
+YW5kIHBlYWsgYmFuZHdpZHRoIGZvciBhbiBpbnRlcmNvbm5lY3QgcGF0aCBmb3IKPiA+ID4gYSBz
+cGVjaWZpYyBvcGVyYXRpbmcgcG93ZXIgcG9pbnQuIEEgc2VwYXJhdGUgYmFuZHdpZHRoCj4gPiA+
+IHBhaXIgY2FuIGJlIHNwZWNpZmllZCBmb3IgZWFjaCBvZiB0aGUgaW50ZXJjb25uZWN0cwo+ID4g
+PiBkZWZpbmVkIGZvciB0aGUgZGV2aWNlIGJ5IGFwcGVuZGluZyB0aGUgaW50ZXJjb25uZWN0Cj4g
+PiA+IG5hbWUgdG8gdGhlIHByb3BlcnR5Lgo+ID4gPiAKPiA+ID4gU2lnbmVkLW9mZi1ieTogSm9y
+ZGFuIENyb3VzZSA8amNyb3VzZUBjb2RlYXVyb3JhLm9yZz4KPiA+ID4gLS0tCj4gPiA+ICBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvb3BwL29wcC50eHQgfCAzNiArKysrKysrKysr
+KysrKysrKysrCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKQo+ID4gPiAK
+PiA+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9vcHAv
+b3BwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9vcHAvb3BwLnR4dAo+
+ID4gPiBpbmRleCBjMzk2YzRjMGFmOTIuLmQ3MTRjMDg0ZjM2ZCAxMDA2NDQKPiA+ID4gLS0tIGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL29wcC9vcHAudHh0Cj4gPiA+ICsrKyBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9vcHAvb3BwLnR4dAo+ID4gPiBAQCAt
+MTcwLDYgKzE3MCwxMSBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ID4gPiAgICBmdW5jdGlvbmlu
+ZyBvZiB0aGUgY3VycmVudCBkZXZpY2UgYXQgdGhlIGN1cnJlbnQgT1BQICh3aGVyZSB0aGlzIHBy
+b3BlcnR5IGlzCj4gPiA+ICAgIHByZXNlbnQpLgo+ID4gPiAgCj4gPiA+ICstIG9wcC1pbnRlcmNv
+bm5lY3QtYnctPG5hbWU+OiBUaGlzIGlzIGFuIGFycmF5IG9mIHBhaXJzIHNwZWNpZnlpbmcgdGhl
+IGF2ZXJhZ2UKPiA+ID4gKyAgYW5kIHBlYWsgYmFuZHdpZHRoIGluIGJ5dGVzIHBlciBzZWNvbmQg
+Zm9yIHRoZSBpbnRlcmNvbm5lY3QgcGF0aCBrbm93biBieQo+ID4gPiArICAnbmFtZScuICBUaGlz
+IHNob3VsZCBtYXRjaCB0aGUgbmFtZShzKSBzcGVjaWZpZWQgYnkgaW50ZXJjb25uZWN0LW5hbWVz
+IGluIHRoZQo+ID4gPiArICBkZXZpY2UgZGVmaW5pdGlvbi4KPiA+ID4gKwo+ID4gPiAgRXhhbXBs
+ZSAxOiBTaW5nbGUgY2x1c3RlciBEdWFsLWNvcmUgQVJNIGNvcnRleCBBOSwgc3dpdGNoIERWRlMg
+c3RhdGVzIHRvZ2V0aGVyLgo+ID4gPiAgCj4gPiA+ICAvIHsKPiA+ID4gQEAgLTU0MywzICs1NDgs
+MzQgQEAgRXhhbXBsZSA2OiBvcHAtbWljcm92b2x0LTxuYW1lPiwgb3BwLW1pY3JvYW1wLTxuYW1l
+PjoKPiA+ID4gIAkJfTsKPiA+ID4gIAl9Owo+ID4gPiAgfTsKPiA+ID4gKwo+ID4gPiArRXhhbXBs
+ZSA3OiBvcHAtaW50ZXJjb25uZWN0LWJ3Ogo+ID4gPiArKGV4YW1wbGU6IGxlYWYgZGV2aWNlIHdp
+dGggZnJlcXVlbmN5IGFuZCBCVyBxdW90YXMpCj4gPiA+ICsKPiA+ID4gKy8gewo+ID4gPiArCXNv
+YyB7Cj4gPiA+ICsJCWdwdUA1MDAwMDAwIHsKPiA+ID4gKwkJCS4uLgo+ID4gPiArCQkJaW50ZXJj
+b25uZWN0cyA9IDwmcW5vYyAyNiAmcW5vYyA1MTI+Owo+ID4gPiArCQkJaW50ZXJjb25uZWN0LW5h
+bWVzID0gInBvcnQwIjsKPiA+ID4gKwkJCS4uLgo+ID4gPiArCQkJb3BlcmF0aW5nLXBvaW50cy12
+MiA9IDwmZ3B1X29wcF90YWJsZT47Cj4gPiA+ICsJCX07Cj4gPiA+ICsJfTsKPiA+ID4gKwo+ID4g
+PiArCWdwdV9vcHBfdGFibGU6IG9wcF90YWJsZTAgewo+ID4gPiArCQljb21wYXRpYmxlID0gIm9w
+ZXJhdGluZy1wb2ludHMtdjIiOwo+ID4gPiArCj4gPiA+ICsJCW9wcC03MTAwMDAwMDAgewo+ID4g
+PiArCQkJb3AtaHogPSAvYml0cy8gNjQgPDcxMDAwMDAwMD47Cj4gPiA+ICsJCQkvKiBTZXQgcGVh
+ayBiYW5kd2lkdGggQCA3MjE2MDAwIEtCL3MgKi8KPiA+ID4gKwkJCW9wcC1pbnRlcmNvbm5lY3Qt
+YnctcG9ydDAgPSAvYml0cy8gNjQgPDAgNzIxNjAwMDAwMD47Cj4gPiAKPiA+IFRoaXMgc2VlbXMg
+YSBiaXQgbG9uZy4gSSB3b3VsZCBzdWdnZXN0IHRoZSBmb2xsb3dpbmcgaW5zdGVhZC4KPiA+IElm
+IHRoZXJlIGlzIG9ubHkgb25lIHBhdGg6Cj4gPiAJLyogYXZlcmFnZSBiYW5kd2lkdGggPSAwIEtC
+L3MsICBwZWFrIGJhbmR3aWR0aCA9IDcyMTYwMDAgS0IvcyAqLwo+ID4gCW9wcC1idy1LQnBzID0g
+PDAgNzIxNjAwMD47Cj4gPiBvciAJCj4gPiAJb3BwLWJ3LU1CcHMgPSA8MCA3MjE2PjsKPiA+IAo+
+ID4gSWYgdGhlcmUgYXJlIG11bHRpcGxlIHBhdGhzOgo+ID4gCW9wcC1idy1LQnBzLXBvcnQwID0g
+PDAgNzIxNjAwMD47Cj4gPiAJb3BwLWJ3LUtCcHMtcG9ydDEgPSA8MCAxMDAwMDAwPjsKPiA+IAo+
+ID4gVGhlIGFib3ZlIGZvbGxvd3MgYSBjb252ZW50aW9uIHNpbWlsYXIgdG8gb3BwLW1pY3Jvdm9s
+dCwgd2hlcmUgYXQKPiA+IHJ1bnRpbWUgdGhlIHBsYXRmb3JtIGNhbiBwaWNrIGEgPG5hbWU+IGFu
+ZCBhIG1hdGNoaW5nIG9wcC1idy1LQnBzLTxuYW1lPgo+ID4gcHJvcGVydHkuIElmIHRoZSBwbGF0
+Zm9ybSBkb2Vzbid0IHBpY2sgYSBzcGVjaWZpYyA8bmFtZT4gb3IgPG5hbWU+IGRvZXMKPiA+IG5v
+dCBtYXRjaCB3aXRoIGFueSBvZiB0aGUgb3BwLWJ3LUtCcHMtPG5hbWU+IHByb3BlcnRpZXMsIHRo
+ZW4KPiA+IG9wcC1idy1LQnBzIHNoYWxsIGJlIHVzZWQgaWYgcHJlc2VudC4KPiA+IEZvciBub3cg
+c3VwcG9ydGluZyBvbmx5IEtCcHMgdmFsdWVzIHNlZW1zIGVub3VnaCB0byBjb3ZlciBhbGwgcHJl
+c2VudAo+ID4gcGxhdGZvcm1zLCBzbyB3ZSBjYW4gc3RhcnQgd2l0aCB0aGlzIGFuZCBiYXNlZCBv
+biB0aGUgcmVxdWlyZW1lbnRzIG9mCj4gPiBmdXR1cmUgcGxhdGZvcm1zIHdlIGNhbiBhZGQgTUJw
+cyBldGMuCj4gCj4gKzEKPiAKPiBBbmQgeWVzIEkgYW0gZmluZSB3aXRoIHN1Y2ggYmluZGluZ3Mg
+Z2V0dGluZyBpbnRyb2R1Y2VkIHRvIHRoZSBPUFAKPiBjb3JlLgo+IAo+IEkgYW0gbm90IHN1cmUg
+aWYgdGhpcyB3b3VsZCBmaXQgd2VsbCwgYnV0IGhhdmUgYSBsb29rIGF0Cj4gInJlcXVpcmVkLW9w
+cHMiIHByb3BlcnR5IGluIE9QUCBiaW5kaW5ncyBhbmQgc2VlIGlmIHRoYXQgY2FuIGJlIHVzZWQK
+PiBpbnN0ZWFkIG9mIGFkZGluZyBuZXcgYmluZGluZ3MgaGVyZS4gQWdhaW4sIEkgYW0gbm90IHN1
+cmUgaWYgdGhhdAo+IHNob3VsZCBiZSBkb25lIDopCgpJJ20gbm90IGNvbnZpbmNlZCB0aGF0IHJl
+cXVpcmVkLW9wcHMgd291bGQgd29yay4gSSdtIHdvcnJpZWQgdGhhdCB0aGUKZm9ybWF0IGlzIHRv
+byB2YWd1ZSBpZiB3ZSBuZWVkIHRvIHVzZSBpdCBmb3IgbXVsdGlwbGUgcGF0aHMgYW5kIHBvc3Np
+Ymx5Cm90aGVyIHVzZXMgdG9vLCBjb25zaWRlciB0aGlzOgoKcmVxdWlyZWQtb3BwID0gPCZtZHBf
+cGF0aDBfb3BwMywgJm1kcF9wYXRoMV9vcHA1LCAmbWRwX3JwbWhfb3BwMT47CgpUaGlzIGhhcyBv
+cmRlcmluZyBwcm9ibGVtcyBhbmQgSU1PIHBvbGx1dGVzIHRoZSBEVCBuYW1lc3BhY2UgZm9yIG5v
+CmdyZWF0IHRlY2huaWNhbCBhZHZhbnRhZ2UuIEkgYXBwcmVjaWF0ZSB0aGUgaGVzaXRhdGlvbiBm
+b3Igb3BlbmluZyB1cAp0aGUgZmxvb2QgZ2F0ZXMgZm9yIG5ldyBPUFAgYmluZGluZ3MgYnV0IHdl
+IGFyZSBlbnRlcmluZyBhIG5ldyBlcmEKb2YgaHlwZXIgcG93ZXIgYXdhcmUgZGV2aWNlcyBhbmQg
+c29tZSBjb25jZXNzaW9ucyB3aWxsIG5lZWQgdG8gYmUgbWFkZS4KCkpvcmRhbgotLSAKVGhlIFF1
+YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIENvZGUgQXVyb3Jh
+IEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5n
+IGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
