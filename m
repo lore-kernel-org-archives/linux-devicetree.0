@@ -1,38 +1,45 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V3 2/2] pinctrl: bcm: add Northstar driver
-Date: Wed, 10 Oct 2018 09:17:19 +0200
-Message-ID: <CACRpkdYpfunUSZSoiMTBoO3yQyas6g0s2uxbxovqXy9MRYiOLQ@mail.gmail.com>
-References: <20180926193103.21241-1-zajec5@gmail.com>
- <20180926193103.21241-2-zajec5@gmail.com>
+From: Wendy Liang <wendy.liang@xilinx.com>
+Subject: [PATCH v4 0/2] Xilinx ZynqMP IPI Mailbox Controller Driver
+Date: Wed, 10 Oct 2018 00:18:30 -0700
+Message-ID: <1539155912-29760-1-git-send-email-wendy.liang@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180926193103.21241-2-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, rafal@milecki.pl, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jassisinghbrar@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Wendy Liang <wendy.liang@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBTZXAgMjYsIDIwMTggYXQgOTozMSBQTSBSYWZhxYIgTWnFgmVja2kgPHphamVjNUBn
-bWFpbC5jb20+IHdyb3RlOgoKPiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2ku
-cGw+Cj4KPiBUaGlzIGRyaXZlciBwcm92aWRlcyBzdXBwb3J0IGZvciBOb3J0aHN0YXIgbXV4IGNv
-bnRyb2xsZXIuIEl0IGRpZmZlcnMKPiBmcm9tIE5vcnRoc3RhciBQbHVzIG9uZSBzbyBhIG5ldyBi
-aW5kaW5nIGFuZCBkcml2ZXIgd2VyZSBuZWVkZWQuCj4KPiBTaWduZWQtb2ZmLWJ5OiBSYWZhxYIg
-TWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4gLS0tCj4gVjI6IERlZmluZSBtb3JlIHBpbnMs
-IGdyb3VwcywgZnVuY3Rpb25zCj4gICAgIFNpbXBsaWZ5IG5zX3BpbmN0cmxfc2V0X211eCgpIGFz
-IE5vcnRoc3RhciB1c2VzIDE6MSBtYXBwaW5nCj4gVjM6IFN1cHBvcnQgMyBkaWZmZXJlbnQgYmlu
-ZGluZ3MgYW5kIGRpZmZlcmVudCBzZXRzIG9mIHBpbnMsIGdyb3Vwcwo+ICAgICBhbmQgZnVuY3Rp
-b25zLiBUaGlzIHJlcXVpcmVzIGJ1aWxkaW5nIGFycmF5cyBkeW5hbWljYWxseSBvbiBpbml0LgoK
-UGF0Y2ggYXBwbGllZC4KCllvdXJzLApMaW51cyBXYWxsZWlqCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
-dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Introduce mailbox controller driver for ZynqMP IPI(Inter-processor
+interrupt) IP core.
+
+As the device tree bindings have been updated. Do not have "Reviewed-by"
+nor "Acked-by" in the dt-bindings commit.
+
+v4:
+ - make IPI mailboxes as subnodes to the IPI agent device node to properly
+   describe the hardware.
+
+v3:
+ - add NULL entry to of_device_id of IPI controller
+
+v2:
+ - change SPDX-License-Identifier license text style in .c file
+ - replace xlnx-ipi-ids with xlnx,ipi-ids
+
+Wendy Liang (2):
+  mailbox: ZynqMP IPI mailbox controller
+  dt-bindings: mailbox: Add Xilinx IPI Mailbox
+
+ .../bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt   | 128 ++++
+ drivers/mailbox/Kconfig                            |   8 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/zynqmp-ipi-mailbox.c               | 762 +++++++++++++++++++++
+ include/linux/mailbox/zynqmp-ipi-message.h         |  24 +
+ 5 files changed, 924 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
+ create mode 100644 drivers/mailbox/zynqmp-ipi-mailbox.c
+ create mode 100644 include/linux/mailbox/zynqmp-ipi-message.h
+
+-- 
+2.7.4
