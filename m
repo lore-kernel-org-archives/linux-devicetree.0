@@ -1,37 +1,35 @@
-From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-udoo: Add Pincfgs for UART4
-Date: Wed, 10 Oct 2018 23:57:14 +0200
-Message-ID: <b032e50b-c189-8f9f-739e-30afb6ddfb33@maciej.szmigiero.name>
-References: <1538663639-3427-1-git-send-email-kueffner.markus@gmail.com>
- <20181008060500.GI3587@dragon>
+From: Trent Piepho <tpiepho@impinj.com>
+Subject: Re: [PATCH 2/2] dw: spi: add support for Alpine spi controller
+Date: Wed, 10 Oct 2018 22:08:59 +0000
+Message-ID: <1539209339.1944.23.camel@impinj.com>
+References: <1539155293-21750-1-git-send-email-talel@amazon.com>
+         <1539184516-8200-1-git-send-email-talel@amazon.com>
+         <1539184516-8200-2-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181008060500.GI3587@dragon>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1539184516-8200-2-git-send-email-talel@amazon.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Markus Kueffner <kueffner.markus@gmail.com>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Robert Nelson <robertcnelson@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-ID: <9AD18A7C81131C4095171349CF82D59C@namprd06.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "talel@amazon.com" <talel@amazon.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "broonie@kernel.org" <broonie@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>, "jonnyc@amazon.com" <jonnyc@amazon.com>, "ronenk@amazon.com" <ronenk@amazon.com>, "barakw@amazon.com" <barakw@amazon.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08.10.2018 08:05, Shawn Guo wrote:
-> Add a few udoo board users for comment.
-> 
-> On Thu, Oct 04, 2018 at 04:33:59PM +0200, Markus Kueffner wrote:
->> From: Markus Kueffner <kueffner.markus@gmail.com>
->>
->> Add Pincfgs for UART4 to enable Communication with the onboard SAM3X
-
-Although I can't test this patch on a real board, verifying it with
-UDOO schematic and docs suggests that this change does make sense.
-
-Maciej
+T24gV2VkLCAyMDE4LTEwLTEwIGF0IDE4OjE1ICswMzAwLCBUYWxlbCBTaGVuaGFyIHdyb3RlOg0K
+PiBBZGQgc3VwcG9ydCBmb3IgYSBuZXcgZGV2aWNldHJlZSBjb21wYXRpYmxlIHN0cmluZyBjYWxs
+ZWQNCj4gJ2FsLGFscGluZS1hcGItc3NpJywgd2hpY2ggaXMgbmVjZXNzYXJ5IGZvciB0aGUgQW1h
+em9uIEFscGluZSBzcGkNCj4gY29udHJvbGxlci4gJ2FsLGFscGluZS1kdy1hcGItc3NpJyBpcyB1
+c2VkIGluIHRoZSBkdyBzcGkgZHJpdmVyIGlmDQo+IHNwZWNpZmllZCBpbiB0aGUgZGV2aWNldHJl
+ZS4gIE90aGVyd2lzZSwgZmFsbCBiYWNrIHRvIGRyaXZlciBkZWZhdWx0DQo+IGJlaGF2aW9yLCBp
+LmUuIG9yaWdpbmFsIGR3IElQIGh3IGRyaXZlciBiZWhhdmlvci4NCj4gDQo+IFNpZ25lZC1vZmYt
+Ynk6IFRhbGVsIFNoZW5oYXIgPHRhbGVsQGFtYXpvbi5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IERh
+dmlkIFdvb2Rob3VzZSA8ZHdtd0BhbWF6b24uY28udWs+DQoNClNob3VsZG4ndCB0aGlzIGJlICJh
+bXpuLGFscGluZS1hcGItc3NpIj8gIFRoZSBjb252ZW50aW9uLCBhbmQgdGhpcyBJUw0KZG9jdW1l
+bnRlZCwgaXMgdG8gdGhlIHVzZSBjb21wYW55J3Mgc3RvY2sgdGlja2VyIHN5bWJvbCBhcyB0aGUg
+cHJlZml4LA0Kc28gYXMgdG8gaGF2ZSBzb21ldGhpbmcgZ3JvdW5kZWQgaW4gdGhlIHJlYWwgd29y
+bGQuICBJIGRvbid0IGtub3cgb2YNCmFueW9uZSBlbHNlIHVzaW5nIGEgcHJvZHVjdCBsaW5lIG5h
+bWUgYXMgdGhlIGNvbXBhbnkgbmFtZSBpbiB0aGVpciBkdA0KYmluZGluZ3MuICBFeGFtcGxlLCAi
+c25wcyxkdy1hcGItc3NpIiwgaXMgbmFtZWQgZm9yIFN5bm9wc2lzLCBub3QgdGhlDQpEZXNpZ253
+YXJlIGxpbmUuDQoNCg==
