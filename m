@@ -1,45 +1,37 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 5/8] Input: olpc_apsp: depend on CONFIG_OF
-Date: Wed, 10 Oct 2018 10:18:08 -0700
-Message-ID: <20181010171808.GF47260@dtor-ws>
-References: <20181010142504.233467-1-lkundrak@v3.sk>
- <20181010142504.233467-6-lkundrak@v3.sk>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH 0/15] Add support for OLPC XO 1.75 Embedded Controller
+Date: Wed, 10 Oct 2018 19:22:45 +0200
+Message-ID: <20181010172300.317643-1-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181010142504.233467-6-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, James Cameron <quozl@laptop.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Cameron <quozl@laptop.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 10, 2018 at 04:25:01PM +0200, Lubomir Rintel wrote:
-> This is a device-tree enabled driver. Moreover CONFIG_OLPC is specific
-> to the x86 platform code, while the driver is for an ARM-based laptop.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
->  drivers/input/serio/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/input/serio/Kconfig b/drivers/input/serio/Kconfig
-> index d90d9f1098ff..a4f70021b53e 100644
-> --- a/drivers/input/serio/Kconfig
-> +++ b/drivers/input/serio/Kconfig
-> @@ -254,7 +254,7 @@ config SERIO_APBPS2
->  
->  config SERIO_OLPC_APSP
->  	tristate "OLPC AP-SP input support"
-> -	depends on OLPC || COMPILE_TEST
-> +	depends on OF
+Hi.
 
-I do not see anything in the driver that depends on OF. If OLPC is not
-right dependency, then let's drop the whole depends.
+This patchset adds support for the Embedded Controller on an OLPC XO
+1.75 machine. OLPC XO 1.75 is a MMP2 based ARM laptop. It plugs into
+the existing OLPC platform infrastructure, currently used by the x86
+based models.
 
-Are you going to be submitting DTS files for the platform?
+The EC operates in SPI master mode, meaning the SOC is the SPI slave. It
+uses extra handshake signal to signal readiness of SOC to accept data
+from EC and to initiate a transaction if SOC wishes to submit data.
 
-Thanks.
+The SPI slave support for MMP2 was submitted separately:
+https://lore.kernel.org/lkml/20181010170936.316862-1-lkundrak@v3.sk/T/#t
 
--- 
-Dmitry
+THe "power: supply: olpc_battery: correct the temperature" patch was
+already sent out separately, but I'm including it because the last
+commit of the set depends on it.
+
+Tested to work on an OLPC XO 1.75 and also tested not to break x86
+support with an OLPC XO 1 machine. I don't have a XO 1.5, but it's
+unlikely this breaks it when XO 1 works.
+
+Thanks in advance for reviews and feedback of any kind.
+
+Lubo
