@@ -1,67 +1,98 @@
-From: laurentiu.tudor@nxp.com
-Subject: [PATCH v3 04/22] soc/fsl/qman-portal: map CENA area in the iommu
-Date: Wed, 10 Oct 2018 15:07:22 +0300
-Message-ID: <20181010120737.30300-5-laurentiu.tudor@nxp.com>
-References: <20181010120737.30300-1-laurentiu.tudor@nxp.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20181010120737.30300-1-laurentiu.tudor@nxp.com>
-Sender: netdev-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org
-Cc: roy.pledge@nxp.com, madalin.bucur@nxp.com, davem@davemloft.net, shawnguo@kernel.org, leoyang.li@nxp.com, robin.murphy@arm.com, bharat.bhushan@nxp.com, arnd@arndb.de, Laurentiu Tudor <laurentiu.tudor@nxp.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [Question] directory for SoC-related DT binding
+Date: Wed, 10 Oct 2018 13:09:55 +0100
+Message-ID: <20181010120955.GQ30658@n2100.armlinux.org.uk>
+References: <CAK7LNATaD=G8BW316fkBWM2A+YXgP5tabaySR2Fs49Za_0p=3Q@mail.gmail.com>
+ <CABGGisx-iLr+CQ=JjmHEe5J_Qqpf0yrgOmSOHa74GnfwE_RKsA@mail.gmail.com>
+ <93cd9c43-6fe3-c691-005b-e27cf101c7d6@i2se.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <93cd9c43-6fe3-c691-005b-e27cf101c7d6@i2se.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Rob Herring <robh@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+On Wed, Oct 10, 2018 at 02:04:14PM +0200, Stefan Wahren wrote:
+> Hi,
+> 
+> Am 10.10.2018 um 13:19 schrieb Rob Herring:
+> > On Wed, Oct 10, 2018 at 6:08 AM Masahiro Yamada
+> > <yamada.masahiro@socionext.com> wrote:
+> >> Hi,
+> >>
+> >>
+> >> I see a bunch of vendor (or SoC) names in
+> >> Documentation/device/bindings/arm/
+> >>
+> >> ./Documentation/devicetree/bindings/arm/altera
+> >> ./Documentation/devicetree/bindings/arm/amlogic
+> > Yeah, it's kind of a mixture of board/soc bindings mostly with some
+> > ARM architecture, ARM, Ltd. IP, and SoC system reg bindings.
+> >
+> > Eventually, I'd like to not split board bindings by arch and maybe we
+> > should move all the system/misc reg bindings out.
+> >
+> > [,,,]
+> >
+> >> I also see some vendor names in
+> >> Documentation/device/bindings/soc/
+> >>
+> >> ./Documentation/devicetree/bindings/soc/bcm
+> >> ./Documentation/devicetree/bindings/soc/dove
+> >> ./Documentation/devicetree/bindings/soc/fsl
+> >> ./Documentation/devicetree/bindings/soc/mediatek
+> >> ./Documentation/devicetree/bindings/soc/qcom
+> >> ./Documentation/devicetree/bindings/soc/rockchip
+> >> ./Documentation/devicetree/bindings/soc/ti
+> >> ./Documentation/devicetree/bindings/soc/xilinx
+> >> ./Documentation/devicetree/bindings/soc/zte
+> > This I believe is mostly SoC system reg bindings though there's
+> > probably a few other things.
+> >
+> >> Confusingly, I see bcm, mediatek, rockchip
+> >> in both locations.
+> >>
+> >> Is there any rule to choose one than the other?
+> > Top-level SoC/board bindings in arm/ and anything else elsewhere ideally.
+> 
+> in case of Documentation/devicetree/bindings/soc/bcm the directory
+> contains SoC / board bindings, cpu-enable and a firmware binding.
 
-Add a one-to-one iommu mapping for qman portal CENA register area.
-This is required for QMAN stashing to work without faults behind
-an iommu.
+I think you're confused there...
 
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
----
- drivers/soc/fsl/qbman/qman_portal.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+$ ls -1 Documentation/devicetree/bindings/soc/bcm/
+brcm,bcm2835-vchiq.txt
+raspberrypi,bcm2835-power.txt
 
-diff --git a/drivers/soc/fsl/qbman/qman_portal.c b/drivers/soc/fsl/qbman/qman_portal.c
-index a120002b630e..6d9da3b1b5ad 100644
---- a/drivers/soc/fsl/qbman/qman_portal.c
-+++ b/drivers/soc/fsl/qbman/qman_portal.c
-@@ -29,6 +29,7 @@
-  */
- 
- #include "qman_priv.h"
-+#include <linux/iommu.h>
- 
- struct qman_portal *qman_dma_portal;
- EXPORT_SYMBOL(qman_dma_portal);
-@@ -222,6 +223,7 @@ static int qman_portal_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct device_node *node = dev->of_node;
-+	struct iommu_domain *domain;
- 	struct qm_portal_config *pcfg;
- 	struct resource *addr_phys[2];
- 	int irq, cpu, err;
-@@ -276,6 +278,21 @@ static int qman_portal_probe(struct platform_device *pdev)
- 		goto err_ioremap2;
- 	}
- 
-+	/* Create an 1-to-1 iommu mapping for cena portal area */
-+	domain = iommu_get_domain_for_dev(dev);
-+	if (domain) {
-+		/*
-+		 * Note: not mapping this as cacheable triggers the infamous
-+		 * QMan CIDE error.
-+		 */
-+		err = iommu_map(domain,
-+				addr_phys[0]->start, addr_phys[0]->start,
-+				resource_size(addr_phys[0]),
-+				IOMMU_READ | IOMMU_WRITE | IOMMU_CACHE);
-+		if (err)
-+			dev_warn(dev, "failed to iommu_map() %d\n", err);
-+	}
-+
- 	pcfg->pools = qm_get_pools_sdqcr();
- 
- 	spin_lock(&qman_lock);
+Doesn't look like SoC/board bindings to me...
+
+whereas:
+
+$ ls -1 Documentation/devicetree/bindings/arm/bcm/
+brcm,bcm11351-cpu-method.txt
+brcm,bcm11351.txt
+brcm,bcm21664.txt
+brcm,bcm23550-cpu-method.txt
+brcm,bcm23550.txt
+brcm,bcm2835.txt
+brcm,bcm4708.txt
+brcm,bcm63138.txt
+brcm,brcmstb.txt
+brcm,cygnus.txt
+brcm,hr2.txt
+brcm,ns2.txt
+brcm,nsp-cpu-method.txt
+brcm,nsp.txt
+brcm,stingray.txt
+brcm,vulcan-soc.txt
+raspberrypi,bcm2835-firmware.txt
+
+does fit with your description, except for the directory path...
+
 -- 
-2.17.1
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
