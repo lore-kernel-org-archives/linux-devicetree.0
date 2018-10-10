@@ -1,86 +1,41 @@
-From: Talel Shenhar <talel@amazon.com>
-Subject: [PATCH 2/2] dw: spi: add 'cs-override' DT property support
-Date: Wed, 10 Oct 2018 10:08:13 +0300
-Message-ID: <1539155293-21750-2-git-send-email-talel@amazon.com>
-References: <1539155293-21750-1-git-send-email-talel@amazon.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH V3 1/2] dt-bindings: pinctrl: document Broadcom Northstar
+ pin mux controller
+Date: Wed, 10 Oct 2018 09:16:26 +0200
+Message-ID: <CACRpkdb8MRQN4z=7ZMs8Y3nbUTjDSLqdFNK_AUozut726JwogA@mail.gmail.com>
+References: <20180926193103.21241-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539155293-21750-1-git-send-email-talel@amazon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, linux-spi@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: talel@amazon.com, ronenk@amazon.com, barakw@amazon.com, David Woodhouse <dwmw@amazon.co.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180926193103.21241-1-zajec5@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, rafal@milecki.pl, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for an optional devicetree property called 'cs-override', which
-is necessary for the Amazon Alpine spi controller. 'cs-override' is used in
-the dw spi driver if specified in the devicetree.  Otherwise, fall back to
-driver default behavior, i.e., original dw IP hw driver behavior.
-
-Signed-off-by: Talel Shenhar <talel@amazon.com>
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
----
- drivers/spi/spi-dw-mmio.c | 2 ++
- drivers/spi/spi-dw.c      | 6 ++++++
- drivers/spi/spi-dw.h      | 2 ++
- 3 files changed, 10 insertions(+)
-
-diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-index a768461..a2f7359 100644
---- a/drivers/spi/spi-dw-mmio.c
-+++ b/drivers/spi/spi-dw-mmio.c
-@@ -195,6 +195,8 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
- 					goto out;
- 			}
- 		}
-+		dws->cs_override = of_property_read_bool(pdev->dev.of_node,
-+							 "cs-override");
- 	}
- 
- 	init_func = device_get_match_data(&pdev->dev);
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index 3e205ab..eb4c3d1 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -144,6 +144,8 @@ void dw_spi_set_cs(struct spi_device *spi, bool enable)
- 
- 	if (!enable)
- 		dw_writel(dws, DW_SPI_SER, BIT(spi->chip_select));
-+	else
-+		dw_writel(dws, DW_SPI_SER, 0);
- }
- EXPORT_SYMBOL_GPL(dw_spi_set_cs);
- 
-@@ -463,6 +465,10 @@ static void spi_hw_init(struct device *dev, struct dw_spi *dws)
- 		dws->fifo_len = (fifo == 1) ? 0 : fifo;
- 		dev_dbg(dev, "Detected FIFO size: %u bytes\n", dws->fifo_len);
- 	}
-+
-+	/* enable HW fixup for explicit CS deselect for Amazon's alpine chip */
-+	if (dws->cs_override)
-+		dw_writel(dws, DW_SPI_CS_OVERRIDE, 0xF);
- }
- 
- int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
-diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
-index 0168b08..c9c1588 100644
---- a/drivers/spi/spi-dw.h
-+++ b/drivers/spi/spi-dw.h
-@@ -32,6 +32,7 @@
- #define DW_SPI_IDR			0x58
- #define DW_SPI_VERSION			0x5c
- #define DW_SPI_DR			0x60
-+#define DW_SPI_CS_OVERRIDE		0xf4
- 
- /* Bit fields in CTRLR0 */
- #define SPI_DFS_OFFSET			0
-@@ -109,6 +110,7 @@ struct dw_spi {
- 	u32			fifo_len;	/* depth of the FIFO buffer */
- 	u32			max_freq;	/* max bus freq supported */
- 
-+	int			cs_override;
- 	u32			reg_io_width;	/* DR I/O width in bytes */
- 	u16			bus_num;
- 	u16			num_cs;		/* supported slave numbers */
--- 
-2.7.4
+T24gV2VkLCBTZXAgMjYsIDIwMTggYXQgOTozMSBQTSBSYWZhxYIgTWnFgmVja2kgPHphamVjNUBn
+bWFpbC5jb20+IHdyb3RlOgoKPiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2ku
+cGw+Cj4KPiBOb3J0aHN0YXIgaGFzIG11eCBjb250cm9sbGVyIGp1c3QgbGlrZSBOb3J0aHN0YXIg
+UGx1cyBhbmQgTm9ydGhzdGFyMi4KPiBJdCdzIGEgYml0IGRpZmZlcmVudCB0aG91Z2ggKGRpZmZl
+cmVudCByZWdpc3RlcnMgJiBwaW5zKSBzbyBpdCByZXF1aXJlcwo+IGl0cyBvd24gYmluZGluZy4K
+Pgo+IEl0J3MgbmVlZGVkIHRvIGFsbG93IG90aGVyIGJsb2NrIGJpbmRpbmdzIHNwZWNpZnkgcmVx
+dWlyZWQgbXV4IHNldHVwLgo+Cj4gU2lnbmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZh
+bEBtaWxlY2tpLnBsPgo+IFJldmlld2VkLWJ5OiBGbG9yaWFuIEZhaW5lbGxpIDxmLmZhaW5lbGxp
+QGdtYWlsLmNvbT4KPiAtLS0KPiBWMjogVXNlICJjcnVfZ3Bpb19jb250cm9sIgo+ICAgICBBZGQg
+bW9yZSBmdW5jdGlvbnMgJiBncm91cHMKPiAgICAgSW5jbHVkZSBGbG9yaWFuJ3MgUmV2aWV3ZWQt
+YnkKPiBWMzogVXNlIDMgZGlmZmVyZW50IGJpbmRpbmdzIGFzIGF2YWlsYWJsZSBwaW5zIGRlcGVu
+ZCBvbiB0aGUgY2hpcHNldC4KPiAgICAgU3RyaW5ncyBtYXRjaCBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvYXJtL2JjbS9icmNtLGJjbTQ3MDgudHh0CgpQYXRjaCBhcHBsaWVkLgoK
+WW91cnMsCkxpbnVzIFdhbGxlaWoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
