@@ -1,58 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [Question] directory for SoC-related DT binding
-Date: Wed, 10 Oct 2018 06:19:30 -0500
-Message-ID: <CABGGisx-iLr+CQ=JjmHEe5J_Qqpf0yrgOmSOHa74GnfwE_RKsA@mail.gmail.com>
-References: <CAK7LNATaD=G8BW316fkBWM2A+YXgP5tabaySR2Fs49Za_0p=3Q@mail.gmail.com>
+From: Talel Shenhar <talel@amazon.com>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: dw: add cs-override property
+Date: Wed, 10 Oct 2018 14:23:40 +0300
+Message-ID: <dbac7f00-e9cc-ddac-5734-9763b5985ead@amazon.com>
+References: <1539155293-21750-1-git-send-email-talel@amazon.com>
+ <20181010101825.GA6294@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNATaD=G8BW316fkBWM2A+YXgP5tabaySR2Fs49Za_0p=3Q@mail.gmail.com>
+In-Reply-To: <20181010101825.GA6294@sirena.org.uk>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ronenk@amazon.com, barakw@amazon.com, David Woodhouse <dwmw@amazon.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 10, 2018 at 6:08 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+
+
+On 10/10/2018 01:18 PM, Mark Brown wrote:
+> On Wed, Oct 10, 2018 at 10:08:12AM +0300, Talel Shenhar wrote:
 >
-> Hi,
->
->
-> I see a bunch of vendor (or SoC) names in
-> Documentation/device/bindings/arm/
->
-> ./Documentation/devicetree/bindings/arm/altera
-> ./Documentation/devicetree/bindings/arm/amlogic
+>> The dw spi controller has an auto-deselect of Chip-Select, in case there is
+>> no data inside the Tx FIFO. While working on platforms with Alpine chips,
+> Why would we ever want to use this behaviour?  It will be broken for any
+> non-trivial SPI message such as those made with multiple transfers
+> anyway.  Why not just unconditionally control it manually?
 
-Yeah, it's kind of a mixture of board/soc bindings mostly with some
-ARM architecture, ARM, Ltd. IP, and SoC system reg bindings.
-
-Eventually, I'd like to not split board bindings by arch and maybe we
-should move all the system/misc reg bindings out.
-
-[,,,]
-
-> I also see some vendor names in
-> Documentation/device/bindings/soc/
->
-> ./Documentation/devicetree/bindings/soc/bcm
-> ./Documentation/devicetree/bindings/soc/dove
-> ./Documentation/devicetree/bindings/soc/fsl
-> ./Documentation/devicetree/bindings/soc/mediatek
-> ./Documentation/devicetree/bindings/soc/qcom
-> ./Documentation/devicetree/bindings/soc/rockchip
-> ./Documentation/devicetree/bindings/soc/ti
-> ./Documentation/devicetree/bindings/soc/xilinx
-> ./Documentation/devicetree/bindings/soc/zte
-
-This I believe is mostly SoC system reg bindings though there's
-probably a few other things.
-
-> Confusingly, I see bcm, mediatek, rockchip
-> in both locations.
->
-> Is there any rule to choose one than the other?
-
-Top-level SoC/board bindings in arm/ and anything else elsewhere ideally.
-
-Rob
+This behavior (auto-deselect of Chip-Select) is the default behavior of dw spi controller hw.
+On Alpine chip there is additional behavior added to the dw spi controller hw that allows the sw to disable this behavior.
+This patch allows the dw driver to enable this hw workaround and add the needed sw manual control for it.
