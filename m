@@ -1,187 +1,73 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH 05.1/16] of:overlay: missing name, phandle, linux,phandle
- in new nodes
-Date: Tue, 9 Oct 2018 23:49:20 -0700
-Message-ID: <f20d06c3-5db7-3547-7b8b-d43d474683f1@gmail.com>
-References: <CANk1AXQScT_b1_UOiVuWNcB=LiA3gvvZrw53H1XVSCNqsGPqtA@mail.gmail.com>
- <1539151495-8110-1-git-send-email-frowand.list@gmail.com>
+From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: Re: [PATCH v3 4/7] dmaengine: stm32-dma: Add DMA/MDMA chaining
+ support
+Date: Wed, 10 Oct 2018 09:02:36 +0200
+Message-ID: <d64da587-a680-20c4-7139-f59fd1f299bc@st.com>
+References: <1538139715-24406-1-git-send-email-pierre-yves.mordret@st.com>
+ <1538139715-24406-5-git-send-email-pierre-yves.mordret@st.com>
+ <20181007160030.GB2372@vkoul-mobl>
+ <e9cedfdd-ad90-9123-03bb-34a2e84059c5@st.com>
+ <20181010040343.GO2372@vkoul-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539151495-8110-1-git-send-email-frowand.list@gmail.com>
+In-Reply-To: <20181010040343.GO2372@vkoul-mobl>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
+To: Vinod <vkoul@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/18 23:04, frowand.list@gmail.com wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
-> 
-> 
-> "of: overlay: use prop add changeset entry for property in new nodes"
-> fixed a problem where an 'update property' changeset entry was
-> created for properties contained in nodes added by a changeset.
-> The fix was to use an 'add property' changeset entry.
-> 
-> This exposed more bugs in the apply overlay code.  The properties
-> 'name', 'phandle', and 'linux,phandle' were filtered out by
-> add_changeset_property() as special properties.  Change the filter
-> to be only for existing nodes, not newly added nodes.
-> 
-> The second bug is that the 'name' property does not exist in the
-> newest FDT version, and has to be constructed from the node's
-> full_name.  Construct an 'add property' changeset entry for
-> newly added nodes.
-> 
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
-> 
-> 
-> Hi Alan,
-> 
-> Thanks for reporting the problem with missing node names.
-> 
-> I was able to replicate the problem, and have created this preliminary
-> version of a patch to fix the problem.
-> 
-> I have not extensively reviewed the patch yet, but would appreciate
-> if you can confirm this fixes your problem.
-> 
-> I created this patch as patch 17 of the series, but have also
-> applied it as patch 05.1, immediately after patch 05/16, and
-> built the kernel, booted, and verified name and phandle for
-> one of the nodes in a unittest overlay for both cases.  So
-> minimal testing so far on my part.
-> 
-> I have not verified whether the series builds and boots after
-> each of patches 06..16 if this patch is applied as patch 05.1.
-> 
-> There is definitely more work needed for me to complete this
-> patch because it allocates some more memory, but does not yet
-> free it when the overlay is released.
-> 
-> -Frank
-> 
-> 
->  drivers/of/overlay.c | 72 ++++++++++++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 67 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index 0b0904f44bc7..9746cea2aa91 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -301,10 +301,11 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
->  	struct property *new_prop = NULL, *prop;
->  	int ret = 0;
->  
-> -	if (!of_prop_cmp(overlay_prop->name, "name") ||
-> -	    !of_prop_cmp(overlay_prop->name, "phandle") ||
-> -	    !of_prop_cmp(overlay_prop->name, "linux,phandle"))
-> -		return 0;
-> +	if (target->in_livetree)
-> +		if (!of_prop_cmp(overlay_prop->name, "name") ||
-> +		    !of_prop_cmp(overlay_prop->name, "phandle") ||
-> +		    !of_prop_cmp(overlay_prop->name, "linux,phandle"))
-> +			return 0;
 
-This is a big hammer patch.
 
-Nobody should waste time reviewing this patch.
-
-The following part should not be needed (though the above section might have
-to become _slightly_ more complex).
-
--Frank
->  
->  	if (target->in_livetree)
->  		prop = of_find_property(target->np, overlay_prop->name, NULL);
-> @@ -443,10 +444,13 @@ static int build_changeset_next_level(struct overlay_changeset *ovcs,
->  		struct target *target, const struct device_node *overlay_node)
->  {
->  	struct device_node *child;
-> -	struct property *prop;
-> +	struct property *prop, *name_prop;
-> +	bool has_name = false;
->  	int ret;
->  
->  	for_each_property_of_node(overlay_node, prop) {
-> +		if (!strcmp(prop->name, "name"))
-> +			has_name = true;
->  		ret = add_changeset_property(ovcs, target, prop, 0);
->  		if (ret) {
->  			pr_debug("Failed to apply prop @%pOF/%s, err=%d\n",
-> @@ -455,6 +459,57 @@ static int build_changeset_next_level(struct overlay_changeset *ovcs,
->  		}
->  	}
->  
-> +	/*
-> +	 * With FDT version 0x10 we may not have the name property,
-> +	 * recreate it here from the unit name if absent
-> +	 */
-> +
-> +	if (!has_name) {
-> +		const char *p = target->np->full_name, *ps = p, *pa = NULL;
-> +		int len;
-> +
-> +		/*
-> +		 * zzz
-> +		 * TODO: stash name_prop on a list in ovcs, to be freed
-> +		 * after overlay removed
-> +		 */
-> +
-> +		while (*p) {
-> +			if ((*p) == '@')
-> +				pa = p;
-> +			else if ((*p) == '/')
-> +				ps = p + 1;
-> +			p++;
-> +		}
-> +
-> +		if (pa < ps)
-> +			pa = p;
-> +		len = (pa - ps) + 1;
-> +
-> +		name_prop = kmalloc(sizeof(*name_prop), GFP_KERNEL);
-> +		if (!name_prop)
-> +			return -ENOMEM;
-> +
-> +		name_prop->name = kstrdup("name", GFP_KERNEL);
-> +		name_prop->value = kmalloc(len, GFP_KERNEL);
-> +		if (!name_prop->name || !name_prop->value) {
-> +			ret = -ENOMEM;
-> +			goto err_free_name_prop;
-> +		}
-> +
-> +		memcpy(name_prop->value, ps, len - 1);
-> +		((char *)name_prop->value)[len - 1] = 0;
-> +
-> +		name_prop->length = strlen(name_prop->value) + 1;
-> +
-> +		ret = add_changeset_property(ovcs, target, name_prop, 0);
-> +		if (ret) {
-> +			pr_debug("Failed to apply name_prop @%pOF/%s, err=%d\n",
-> +				 target->np, name_prop->name, ret);
-> +			goto err_free_name_prop;
-> +		}
-> +	}
-> +
->  	for_each_child_of_node(overlay_node, child) {
->  		ret = add_changeset_node(ovcs, target, child);
->  		if (ret) {
-> @@ -466,6 +521,13 @@ static int build_changeset_next_level(struct overlay_changeset *ovcs,
->  	}
->  
->  	return 0;
-> +
-> +err_free_name_prop:
-> +	kfree(name_prop->name);
-> +	kfree(name_prop->value);
-> +	kfree(name_prop);
-> +	return ret;
-> +
->  }
->  
->  /*
+On 10/10/2018 06:03 AM, Vinod wrote:
+> On 09-10-18, 10:40, Pierre Yves MORDRET wrote:
+>>
+>>
+>> On 10/07/2018 06:00 PM, Vinod wrote:
+>>> On 28-09-18, 15:01, Pierre-Yves MORDRET wrote:
+>>>> This patch adds support of DMA/MDMA chaining support.
+>>>> It introduces an intermediate transfer between peripherals and STM32 DMA.
+>>>> This intermediate transfer is triggered by SW for single M2D transfer and
+>>>> by STM32 DMA IP for all other modes (sg, cyclic) and direction (D2M).
+>>>>
+>>>> A generic SRAM allocator is used for this intermediate buffer
+>>>> Each DMA channel will be able to define its SRAM needs to achieve chaining
+>>>> feature : (2 ^ order) * PAGE_SIZE.
+>>>> For cyclic, SRAM buffer is derived from period length (rounded on
+>>>> PAGE_SIZE).
+>>>
+>>> So IIUC, you chain two dma txns together and transfer data via an SRAM?
+>>
+>> Correct. one DMA is DMAv2 (stm32-dma) and the other is MDMA(stm32-mdma).
+>> Intermediate transfer is between device and memory.
+>> This intermediate transfer is using SDRAM.
 > 
+> Ah so you use dma calls to setup mdma xtfers? I dont think that is a
+> good idea. How do you know you should use mdma for subsequent transfer?
+> 
+
+When user bindings told to setup chaining intermediate MDMA transfers are always
+triggers.
+For instance if a user requests a Dev2Mem transfer with chaining. From client
+pov this is still a prep_slave_sg. Internally DMAv2 is setup in cyclic mode (in
+double buffer mode indeed => 2 buffer of PAGE_SIZE/2) and destination is SDRAM.
+DMAv2 will flip/flop on those 2 buffers.
+At the same time DMAv2 driver prepares a MDMA SG that will fetch data from those
+2 buffers in SDRAM and fills final destination memory.
+
+> 
+>>>>  drivers/dma/stm32-dma.c | 879 ++++++++++++++++++++++++++++++++++++++++++------
+>>>
+>>> that is a lot of change for a driver, consider splitting it up
+>>> logically in smaller changes...
+>>>
+>>
+>> This feature is rather monolithic. Difficult to split up.
+>> All the code is required at once.
+> 
+> It can be enabled at last but split up logically. Intrusive changes to a
+> driver make it hard to review..
+> 
+Ok. I will to think about it how to proceed.
