@@ -1,64 +1,42 @@
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 3/6] tracing: Add tp_pstore cmdline to have tracepoints
- go to pstore
-Date: Wed, 10 Oct 2018 15:37:12 -0400
-Message-ID: <20181010153712.4e3a16d7@gandalf.local.home>
-References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
-        <f65e9fa6e047b9b14d4f64362f9fe1f89b306050.1536430404.git.saiprakash.ranjan@codeaurora.org>
-        <CAEXW_YRQtJb=3V0RKHSAejfQXKssh5qBp7nmD1OUC-wTyqGDEQ@mail.gmail.com>
-        <1f546234-bd7b-448a-3666-3f8baa249608@codeaurora.org>
-        <08f1fadc-3ce7-4bef-ba17-e038b8450fc8@codeaurora.org>
-        <20181008103659.5bc14b28@gandalf.local.home>
-        <20181008224056.GA213420@joelaf.mtv.corp.google.com>
-        <174a465d-aedd-6561-e4e5-1f97ca4d0b0a@codeaurora.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [GIT PULL] Devicetree fix for 4.19-rc8
+Date: Wed, 10 Oct 2018 22:34:44 +0200
+Message-ID: <20181010203444.GA6979@kroah.com>
+References: <CAL_JsqL4xQXoQubUEb9p2r5AEV+n1OAW=ss-DVQm4dmWU=n2hw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <174a465d-aedd-6561-e4e5-1f97ca4d0b0a@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqL4xQXoQubUEb9p2r5AEV+n1OAW=ss-DVQm4dmWU=n2hw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc: Joel Fernandes <joel@joelfernandes.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Prasad Sodagudi <psodagud@codeaurora.org>, Ingo Molnar <mingo@kernel.org>, tsoni@codeaurora.org, Anton Vorontsov <anton@enomsg.org>, Ingo Molnar <mingo@redhat.com>, Sibi Sankar <sibis@codeaurora.org>, Laura Abbott <labbott@redhat.com>, devicetree@vger.kernel.org, Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, Jason Baron <jbaron@akamai.com>, Rob Herring <robh+dt@kernel.org>, Tingwei Zhang <tingwei@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Tony Luck <tony.luck@intel.com>, Rajendr
+To: Rob Herring <robh@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 9 Oct 2018 23:52:14 +0530
-Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org> wrote:
+On Wed, Oct 10, 2018 at 06:59:13AM -0500, Rob Herring wrote:
+> Hi Greg,
+> 
+> Please pull this one DT fix for 4.19.
+> 
+> Note I didn't tag this for stable as I cherry-picked it from my 4.20
+> branch and wanted to not touch the commit msg at all. Maybe that
+> doesn't matter.
 
-> >>> Also regarding the warning on "event_call->event.funcs->trace()" call,
-> >>> I see it everytime without spinlock. Also we see output_printk using
-> >>> spinlock when making this call. I could not find a way to pass event
-> >>> buffer size and allocate in pstore. Steven can give some hints with this
-> >>> I guess.  
-> > 
-> > The spinlock warning you're talking about is this one correct?
-> > 
-> > [    1.389382] WARNING: CPU: 2 PID: 2 at kernel/trace/trace_output.c:289 trace_raw_output_prep+0x18/0xa0
-> > [    1.389416] Modules linked in:
-> > which you reported here:
-> > https://lkml.org/lkml/2018/9/22/319
-> > 
-> > This warning happens I think because you're trying to format the events while
-> > the trace events are being generated. You said you got this warning when you
-> > didn't use the spinlock. I believe the spinlocking prevents such races, but
-> > if you didn't need to format the events into text into text in the first
-> > place, then you wouldn't need such locking at all.
-> > 
-> > I believe ftrace doesn't have such issues because such locking is taken care
-> > off when the trace events are formatted from the trace buffer and displayed,
-> > but I could be wrong about that.. I'll let Steven provide more inputs about
-> > how this warning can occur.  
-> Yes Steven would have more insight on this warning.
+I'll pick it up manually, no worries.
 
-Correct. Formatting should not be done at the location of recording
-(it's way too much overhead). Even trace_printk() doesn't format string
-at the execution path, but does so at the presentation path (reading
-the buffer, via reads of the trace file, or in trace-cmd post
-processing of the trace.dat file).
+> 
+> Rob
+> 
+> The following changes since commit e54192b48da75f025ae4b277925eaf6aca1d13bd:
+> 
+>   of: fix phandle cache creation for DTs with no phandles (2018-09-11
+> 11:28:40 -0500)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+> tags/devicetree-fixes-for-4.19-3
 
-trace_printk() uses vbin_printf() which doesn't do printf()
-conversions, but instead only saves the format string and the raw
-values into the buffer. Then in uses bstr_printf() that takes the
-format string and raw values to produce the "printf()" output you know
-and love.
+Now merged, thanks.
 
--- Steve
+greg k-h
