@@ -1,82 +1,152 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: dw: add cs-override property
-Date: Wed, 10 Oct 2018 13:27:10 +0100
-Message-ID: <20181010122710.GE6294@sirena.org.uk>
-References: <1539155293-21750-1-git-send-email-talel@amazon.com>
- <20181010101825.GA6294@sirena.org.uk>
- <dbac7f00-e9cc-ddac-5734-9763b5985ead@amazon.com>
- <20181010112753.GC6294@sirena.org.uk>
- <ba83a08073614d9244c01218da28fe3e23f3bbc2.camel@amazon.co.uk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC 4/4] gpio: sifive: Add GPIO driver for SiFive SoCs
+Date: Wed, 10 Oct 2018 14:35:19 +0200
+Message-ID: <CACRpkdaoBwqQ4V5Hm9f_G5_jrdkvjT5anhBK1_HoFTj6=cba-Q@mail.gmail.com>
+References: <1539111085-25502-1-git-send-email-atish.patra@wdc.com> <1539111085-25502-5-git-send-email-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lkTb+7nhmha7W+c3"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ba83a08073614d9244c01218da28fe3e23f3bbc2.camel@amazon.co.uk>
+In-Reply-To: <1539111085-25502-5-git-send-email-atish.patra@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Woodhouse, David" <dwmw@amazon.co.uk>
-Cc: "Shenhar, Talel" <talel@amazon.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Krupnik, Ronen" <ronenk@amazon.com>, "Wasserstrom, Barak" <barakw@amazon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: atish.patra@wdc.com, "thierry.reding@gmail.com" <thierry.reding@gmail.com>
+Cc: Palmer Dabbelt <palmer@sifive.com>, linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Christoph Hellwig <hch@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Atish,
 
---lkTb+7nhmha7W+c3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+thanks for your patch!
 
-On Wed, Oct 10, 2018 at 11:58:40AM +0000, Woodhouse, David wrote:
-> On Wed, 2018-10-10 at 12:27 +0100, Mark Brown wrote:
+On Tue, Oct 9, 2018 at 8:51 PM Atish Patra <atish.patra@wdc.com> wrote:
 
-> > If this is a modified IP with additional features then it should be
-> > given a new compatible string rather than having a property - it's not
-> > just configuration of the existing IP, it's a new thing and we may find
-> > there are other quirks that have to be taken care of for it.
+> From: "Wesley W. Terpstra" <wesley@sifive.com>
+>
+> Adds the GPIO driver for SiFive RISC-V SoCs.
+>
+> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> [Atish: Various fixes and code cleanup]
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
 
-> No.
+(...)
 
-> It's an extension of the existing IP which is explicitly designed to be
-> compatible with existing drivers via an opt-in feature.
+> +config GPIO_SIFIVE
+> +       bool "SiFive GPIO support"
+> +       depends on OF_GPIO
+> +       select GPIOLIB_IRQCHIP
 
-That's totally normal and something that there's already infrastructure
-to handle, plenty of other IPs have new versions with new features - you
-can just add a new compatible string and use that to decide which
-features to enable, and if it's backwards compatible with old versions
-of the driver supporting older hardware then you can list multiple
-compatibles.  As we just discussed on IRC this is partly a policy thing
-now I've been told that it's a modified version of the hardware rather
-than a configuration or integration option, it's easier than having
-implementations of new features trickle out from the vendor and needing
-to enable them all one by one in device trees (which does happen).
+I suggest to add
+select GPIO_GENERIC as per below.
 
-> Which is exactly what we've spent the last decade or two trying to beat
-> hardware designers into doing, instead of randomly breaking
-> compatibility for no good reason.
+Maybe select REGMAP_MMIO as well.
 
-That's great and we get to reuse all the driver code with a quirk (a
-quirk which fixes the hardware to be more compatible with devices, this
-is a really good hardware change).  Ideally we'd be able to enumerate
-things like IP versions and options from hardware but that's a more
-entertaining problem.
+> +       help
+> +         Say yes here to support the GPIO device on SiFive SoCs.
+> +
 
-Having said all this if there are production systems using this
-property, especially production systems where people other than the
-system integrator can realistically deploy their own kernel separate to
-the device tree, then supporting those existing DTs even if they're not
-doing the ideal thing might be the best thing.  You mentioned that this
-might be the case, can you check what the status is there please?
+> +#include <linux/of_irq.h>
+> +#include <linux/irqchip/chained_irq.h>
 
---lkTb+7nhmha7W+c3
-Content-Type: application/pgp-signature; name="signature.asc"
+Do you need these two? I think <linux/gpio/driver.h>
+will bring them in for you.
 
------BEGIN PGP SIGNATURE-----
+> +#include <linux/pinctrl/consumer.h>
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlu98B0ACgkQJNaLcl1U
-h9CPmgf/QMp2J8iPAnRVpTDGziEgyOEXdplvLf6fW0m4v5MSMSHJwgyrloZCVcVf
-xnb5GsQaR89mnaqqd8FRJJ+VR13+4JWkqZTe5W4ha9MrpovU3EttyeQUSa0LDpEL
-CuOHEvsG5lUy9szgAc2MRlf0Vf1gnCF0JtCGLWnoVC9qCHDQxQPyruhomrFdGdI3
-3rXFbStZd6RmWtlfgu7f2V66oOc2FZwcMw/4ElO5IIUM1msI5PPgR1wCzO5SOkgy
-fIQeVsMPs8mD3tq25/SkrxXv+rzNthkLTCHIod3jgmorCo9X2MvdZyoL9PN4s71w
-o+xEojB7gcFcnud/EsHARj/OvSnXGQ==
-=vsxh
------END PGP SIGNATURE-----
+Are you using this?
 
---lkTb+7nhmha7W+c3--
+> +struct sifive_gpio {
+> +       raw_spinlock_t          lock;
+> +       void __iomem            *base;
+> +       struct gpio_chip        gc;
+> +       unsigned long           enabled;
+
+Since max GPIO is 32 why not use an u32 for this?
+
+> +       unsigned int            trigger[MAX_GPIO];
+> +       unsigned int            irq_parent[MAX_GPIO];
+> +       struct sifive_gpio      *self_ptr[MAX_GPIO];
+> +};
+> +
+> +static void sifive_assign_bit(void __iomem *ptr, unsigned int offset, int value)
+> +{
+> +       /*
+> +        * It's frustrating that we are not allowed to use the device atomics
+> +        * which are GUARANTEED to be supported by this device on RISC-V
+> +        */
+> +       u32 bit = BIT(offset), old = ioread32(ptr);
+> +
+> +       if (value)
+> +               iowrite32(old | bit, ptr);
+> +       else
+> +               iowrite32(old & ~bit, ptr);
+> +}
+
+This looks like a mask and set implementation, you are
+essentially reinventing regmap MMIO and the
+regmap_update_bits() call. Could you look into
+just using regmap MMIO in that case?
+
+If you need examples, look at gpio-mvebu.c that calls
+devm_regmap_init_mmio() for example.
+
+> +static int sifive_direction_input(struct gpio_chip *gc, unsigned int offset)
+> +static int sifive_direction_output(struct gpio_chip *gc, unsigned int offset,
+> +static int sifive_get_direction(struct gpio_chip *gc, unsigned int offset)
+> +static int sifive_get_value(struct gpio_chip *gc, unsigned int offset)
+> +static void sifive_set_value(struct gpio_chip *gc, unsigned int offset,
+
+These functions look like a typical hardware that can use
+
+GPIOLIB_GENERIC and bgpio_init() to set up the accessors.
+
+See gpio-ftgpio010.c for an example.
+
+As a bonus you will get .get/.set_multiple implemented by
+the generic GPIO.
+
+> +static void sifive_irq_enable(struct irq_data *d)
+> +static void sifive_irq_disable(struct irq_data *d)
+(...)
+> +static struct irq_chip sifive_irqchip = {
+> +       .name           = "sifive-gpio",
+> +       .irq_set_type   = sifive_irq_set_type,
+> +       .irq_mask       = sifive_irq_mask,
+> +       .irq_unmask     = sifive_irq_unmask,
+> +       .irq_enable     = sifive_irq_enable,
+> +       .irq_disable    = sifive_irq_disable,
+
+The handling of .irq_enable and .irq_disable has
+changed upstream. Please align with the new codebase
+as changed by Hans Verkuil:
+
+commit 461c1a7d4733d1dfd5c47b040cf32a5e7eefbc6c
+"gpiolib: override irq_enable/disable"
+commit 4e9439ddacea06f35acce4d374bf6bd0acf99bc8
+"gpiolib: add flag to indicate if the irq is disabled"
+
+You will need to rebase your work on the v4.20-rc1 once it is
+out. Right now the changes are on linux-next or my devel
+branch.
+
+> +       ngpio = of_irq_count(node);
+> +       if (ngpio >= MAX_GPIO) {
+> +               dev_err(dev, "Too many GPIO interrupts (max=%d)\n", MAX_GPIO);
+> +               return -ENXIO;
+> +       }
+(...)
+> +       for (gpio = 0; gpio < ngpio; ++gpio) {
+> +               irq = platform_get_irq(pdev, gpio);
+> +               if (irq < 0) {
+> +                       dev_err(dev, "invalid IRQ\n");
+> +                       gpiochip_remove(&chip->gc);
+> +                       return -ENODEV;
+> +               }
+
+This is an hierarchical IRQ so it should use an hierarchical
+irqdomain.
+
+I am discussing with Thierry to make more generic irq domains
+for hierarchical IRQ GPIOs, until then you have to look at
+gpio-thunderx.c, gpio-uniphier.c or gpio-xgene-sb.c that all
+use hierarchical IRQs.
+
+Yours,
+Linus Walleij
