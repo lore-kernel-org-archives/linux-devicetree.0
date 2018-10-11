@@ -1,56 +1,36 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH v8 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
- driver
-Date: Thu, 11 Oct 2018 14:43:33 +0200
-Message-ID: <20181011124333.GA10790@centauri.lan>
-References: <1537698793-15285-1-git-send-email-tdas@codeaurora.org>
- <1537698793-15285-3-git-send-email-tdas@codeaurora.org>
- <20181004210407.GB7926@centauri.lan>
- <40719973-21a0-120d-7193-8e6287cbbd18@codeaurora.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-udoo: Add Pincfgs for UART4
+Date: Thu, 11 Oct 2018 21:12:01 +0800
+Message-ID: <20181011131159.GA3587@dragon>
+References: <1538663639-3427-1-git-send-email-kueffner.markus@gmail.com>
+ <CAOMZO5BqL5Tfd0+KmN2DiJdoWLSYWSWyppw8qdrb-G_by_68Tw@mail.gmail.com>
+ <20181010081904.GA23397@armhf-buildhost.asgard.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <40719973-21a0-120d-7193-8e6287cbbd18@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
+In-Reply-To: <20181010081904.GA23397@armhf-buildhost.asgard.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Markus Kueffner <kueffner.markus@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 11, 2018 at 04:45:25PM +0530, Taniya Das wrote:
+On Wed, Oct 10, 2018 at 10:19:04AM +0200, Markus Kueffner wrote:
+> From: Markus Kueffner <kueffner.markus@gmail.com>
+> Date: Wed, 10 Oct 2018 08:32:09 +0200
+> Subject: [PATCH v2] ARM: dts: imx6qdl-udoo: Add Pincfgs for UART4
+> 
+> Add Pincfgs for UART4 to enable Communication with the onboard SAM3X
+> 
+> Signed-off-by: Markus Kueffner <kueffner.markus@gmail.com>
 
-> > WARNING: Duplicate signature
-> > #370:
-> > Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> >
-> > If you are more than one author, you can use the Co-Developed-by tag.
-> >
->
-> Hmm, I do see multiple SOBs being used and merged.
->
-
->From Documentation/process/submitting-patches.rst:
-
-"""
-A Co-Developed-by: states that the patch was also created by another developer
-along with the original author.  This is useful at times when multiple people
-work on a single patch.  Note, this person also needs to have a Signed-off-by:
-line in the patch as well.
-"""
-
-So it is not wrong to have two Signed-off-bys, just that
-having the Co-Developed-by tag clearly shows that there
-was more than one author.
-
-Without the Co-Developed-by tag, the second Signed-off-by tag
-is ambiguous, since the seconds Signed-off-by tag might just
-have meant that that person was in the delivery chain of the
-patch.
-
-I think that the Co-Developed-by tag is optional, so if the
-co-developer doesn't care about taking credit, it can probably
-be skipped.
-
-
-Kind regards,
-Niklas
+Applied, thanks.
