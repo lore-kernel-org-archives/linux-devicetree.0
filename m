@@ -1,36 +1,84 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-udoo: Add Pincfgs for UART4
-Date: Thu, 11 Oct 2018 21:12:01 +0800
-Message-ID: <20181011131159.GA3587@dragon>
-References: <1538663639-3427-1-git-send-email-kueffner.markus@gmail.com>
- <CAOMZO5BqL5Tfd0+KmN2DiJdoWLSYWSWyppw8qdrb-G_by_68Tw@mail.gmail.com>
- <20181010081904.GA23397@armhf-buildhost.asgard.net>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v3] arm64: new board - Emlid Neutis N5
+Date: Thu, 11 Oct 2018 15:20:11 +0200
+Message-ID: <2d09d6c0-0404-589d-2c34-da846cff4fb8@suse.de>
+References: <1538745949-13188-2-git-send-email-aleksandr.aleksandrov@emlid.com>
+ <1539012044-29998-1-git-send-email-aleksandr.aleksandrov@emlid.com>
+ <1539012044-29998-2-git-send-email-aleksandr.aleksandrov@emlid.com>
+ <20181010144957.exrlupoph7ovsmdw@flea>
+ <9398571539259289@myt4-929fb874f3f2.qloud-c.yandex.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20181010081904.GA23397@armhf-buildhost.asgard.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Markus Kueffner <kueffner.markus@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9398571539259289@myt4-929fb874f3f2.qloud-c.yandex.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: aleksandr.aleksandrov@emlid.com, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, David Lechner <david@lechnology.com>, Thierry Reding <treding@nvidia.com>, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, Johan Hovold <johan@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 10, 2018 at 10:19:04AM +0200, Markus Kueffner wrote:
-> From: Markus Kueffner <kueffner.markus@gmail.com>
-> Date: Wed, 10 Oct 2018 08:32:09 +0200
-> Subject: [PATCH v2] ARM: dts: imx6qdl-udoo: Add Pincfgs for UART4
-> 
-> Add Pincfgs for UART4 to enable Communication with the onboard SAM3X
-> 
-> Signed-off-by: Markus Kueffner <kueffner.markus@gmail.com>
+Hi Aleksandr,
 
-Applied, thanks.
+Please keep your replies in text-only format, not HTML.
+
+Am 11.10.18 um 14:01 schrieb aleksandr.aleksandrov@emlid.com:
+>>      +/ {
+>>      + model = "Emlid Neutis N5 Developer board";
+>>      + compatible = "emlid,emlid-neutis-n5-devboard",
+>>      + "emlid,emlid-neutis-n5",
+>>
+>> Do you need the two emlid there? What comes before the comma is the
+>> vendor, while what is after is the model.
+>  
+> I think emlid-neutis-n5 module could be useful in the future, no need
+> this now.
+
+You misunderstand: The point would be to use, e.g., "emlid,neutis-n5"
+instead of "emlid,emlid-neutis-n5" with duplicate "emlid,emlid-". It is
+orthogonal to having multiple compatible strings.
+
+>>  +&uart1 {
+>>  + pinctrl-names = "default";
+>>  + pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
+>>  + status = "okay";
+>>  +};
+>>
+>> I guess this is for bluetooth? Have you tested serdev drivers?
+>>
+> Yes, bluetooth is connected over uart1.
+> You mean if I have tested bluetooth stack via serial device?
+
+Not quite, we're missing a child node within uart1 for a serdev driver.
+Is there no such driver yet for your Bluetooth chipset, or did you not
+yet check?
+
+> Bluez works stably with bcm43xx over uart 1500000 baud rate.
+>  
+>>
+>> Also, I have a general comments, and it really depends on what your
+>> intention about the board ecosystem is. Do you expect the SOM to be
+>> swappable in multiple boards, or do you expect to send it as something
+>> that is just fixed into a daughter board?
+>>
+>> In the former case, you probably want to use overlays instead. In the
+>> latter, you're fine.
+>>
+> Right, we expect the SoM to be swappable. I agree, to use overlays is
+> more convenient, but
+> the devboard DT file will be a reference for the overlays and the future
+> boards based on Neutis.
+
+What about just keeping the common nodes enabled in a SoM .dts, so that
+the average board doesn't need an Overlay for booting?
+
+@Maxime/Rob, is it possible to merge .dtso files these days? If not,
+could that be considered in the big dts Makefile refactoring? :)
+
+Cheers,
+Andreas
+
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
