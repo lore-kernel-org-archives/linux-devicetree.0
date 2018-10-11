@@ -1,70 +1,56 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v3 7/7] mfd: axp20x: Add supported cells for AXP803
-Date: Thu, 11 Oct 2018 16:10:12 +0800
-Message-ID: <CAGb2v64i4a_yBkJE5pTmx_tKOVGKJNGvqAY0Hnw=Wr17VDSTfQ@mail.gmail.com>
-References: <20181008181908.9456-1-oskari@lemmela.net> <20181008181908.9456-8-oskari@lemmela.net>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 8/8] Input: olpc_apsp: allocate the GPIOs used
+Date: Thu, 11 Oct 2018 10:38:20 +0200
+Message-ID: <CACRpkdZK3=u-E3KgVQT_Wx8tZBqO3Own_+ASLeq03vaP8q+s7A@mail.gmail.com>
+References: <20181010142504.233467-1-lkundrak@v3.sk> <20181010142504.233467-9-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181008181908.9456-8-oskari@lemmela.net>
+In-Reply-To: <20181010142504.233467-9-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: oskari@lemmela.net
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Lee Jones <lee.jones@linaro.org>, Quentin Schulz <quentin.schulz@free-electrons.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: lkundrak@v3.sk, Stephen Boyd <swboyd@chromium.org>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, quozl@laptop.org, Linux Input <linux-input@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 9, 2018 at 2:20 AM Oskari Lemmela <oskari@lemmela.net> wrote:
+Hi Lubomir,
+
+thanks for your patch!
+
+On Wed, Oct 10, 2018 at 4:26 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
+
+> Take the GPIO lines are used by the SP. The driver doesn't touch the
+> lines -- this is done to disallow anything else from fiddling with
+> them because that would confuse the SP firmware.
 >
-> AXP803 is compatible with AXP813.
-> Adding cells for GPIO, ADC, AC and battery power supplies.
+> Also, the lines are now nicely visible in /sys/kernel/debug/gpio.
 >
-> Signed-off-by: Oskari Lemmela <oskari@lemmela.net>
-> ---
->  drivers/mfd/axp20x.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index 1508d9113126..4befe474b165 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -731,8 +731,23 @@ static const struct mfd_cell axp803_cells[] = {
->                 .name                   = "axp221-pek",
->                 .num_resources          = ARRAY_SIZE(axp803_pek_resources),
->                 .resources              = axp803_pek_resources,
-> +       }, {
-> +               .name                   = "axp20x-regulator",
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-Please keep this as one line as before. This was requested by the MFD
-maintainer.
+Sadly I do not think this is the right way to do this these days.
+In the past I would have agreed.
 
-> +       }, {
-> +               .name                   = "axp20x-gpio",
-> +               .of_compatible          = "x-powers,axp813-gpio",
+A few months back, Qualcomm engineers working on ACPI
+support ran into similar issues: there were GPIO lines that
+could not be touched by the kernel because they were used
+by firmware (BIOS).
 
-You might want to put the GPIO cell near the top of the list, so any other
-users, such as the ADC and regulator cells, will probe after it.
+The solution we devised can be seen in
+commit 726cb3ba49692bdae6caff457755e7cdb432efa4
+"gpiolib: Support 'gpio-reserved-ranges' property"
+which adds a "valid mask" to struct gpio_chip.
 
-> +       }, {
-> +               .name                   = "axp813-adc",
-> +               .of_compatible          = "x-powers,axp813-adc",
-> +       }, {
-> +               .name           = "axp20x-battery-power-supply",
-> +               .of_compatible  = "x-powers,axp813-battery-power-supply",
-> +       }, {
-> +               .name           = "axp20x-ac-power-supply",
-> +               .of_compatible  = "x-powers,axp813-ac-power-supply",
-> +               .num_resources  = ARRAY_SIZE(axp20x_ac_power_supply_resources),
-> +               .resources      = axp20x_ac_power_supply_resources,
+It is further refined in the lates working kernel code to make
+it easy for users to set up a custom valid_mask.
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?h=devel&id=f8ec92a9f63b3b11e399409141b7868bb405e6b5
 
-Please use the same indentation.
+So what you should do is modify the platform set-up for
+the OLPC to mask off these GPIO lines as invalid since
+they are used by the firmware and Linux should not touch
+them.
 
-Regards
-ChenYu
+Sadly I don't know which GPIO driver the XO1 is using,
+but if you tell us I bet me or Andy will be able to help you
+out in finding the right spot to patch.
 
->         },
-> -       {       .name                   = "axp20x-regulator" },
->  };
->
->  static const struct mfd_cell axp806_self_working_cells[] = {
-> --
-> 2.17.1
->
+Yours,
+Linus Walleij
