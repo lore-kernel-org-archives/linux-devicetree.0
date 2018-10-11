@@ -1,30 +1,33 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH i2c-next v7 3/5] dt-bindings: i2c: aspeed: Add
- 'bus-timeout-ms' property as an optional property
-Date: Thu, 11 Oct 2018 17:12:19 -0500
-Message-ID: <20181011221219.GA31991@bogus>
-References: <20181005214507.26315-1-jae.hyun.yoo@linux.intel.com>
- <20181005214507.26315-4-jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: arm-smmu: Add binding doc for Qcom
+ smmu-500
+Date: Thu, 11 Oct 2018 17:16:30 -0500
+Message-ID: <20181011221630.GA5841@bogus>
+References: <20181011094930.17010-1-vivek.gautam@codeaurora.org>
+ <20181011094930.17010-2-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181005214507.26315-4-jae.hyun.yoo@linux.intel.com>
+In-Reply-To: <20181011094930.17010-2-vivek.gautam@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Brendan Higgins <brendanhiggins@google.com>, Wolfram Sang <wsa@the-dreams.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: joro@8bytes.org, robh+dt@kernel.org, andy.gross@linaro.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, mark.rutland@arm.com, david.brown@linaro.org, linux-kernel@vger.kernel.org, robin.murphy@arm.com, will.deacon@arm.com, dianders@chromium.org, Vivek Gautam <vivek.gautam@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  5 Oct 2018 14:45:05 -0700, Jae Hyun Yoo wrote:
-> This commit adds 'bus-timeout-ms' property as an optional property
-> which can be used for setting the bus timeout value of an adapter.
-> With this patch, the bus timeout value can be set through this
-> property at the probing time of this module. Still the bus timeout
-> value can be set by an I2C_TIMEOUT ioctl on cdev at runtime too.
+On Thu, 11 Oct 2018 15:19:29 +0530, Vivek Gautam wrote:
+> Qcom's implementation of arm,mmu-500 works well with current
+> arm-smmu driver implementation. Adding a soc specific compatible
+> along with arm,mmu-500 makes the bindings future safe.
 > 
-> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/i2c/i2c-aspeed.txt | 3 +++
->  1 file changed, 3 insertions(+)
+> 
+> Changes since v3:
+>  - Refined language more to state things directly for the bindings
+>    description.
+> 
+>  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
