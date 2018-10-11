@@ -1,44 +1,41 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v9 05/11] of: base: Add of_get_cpu_state_node() to get
- idle states for a CPU node
-Date: Thu, 11 Oct 2018 17:01:22 +0100
-Message-ID: <20181011160122.GB28583@e107155-lin>
-References: <20181003143824.13059-1-ulf.hansson@linaro.org>
- <20181003143824.13059-6-ulf.hansson@linaro.org>
- <20181010150331.GB4844@e107155-lin>
- <CAPDyKFq7bNJM5Y4y78tnOEvg7ntmYFtJoDvFH8uR2yUUK9o4HA@mail.gmail.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH 10/11] spi: pxa2xx: Add ready signal
+Date: Thu, 11 Oct 2018 18:13:26 +0200
+Message-ID: <a13569d534e4393abff2ac704cee45df2bcd9656.camel@v3.sk>
+References: <20181010170936.316862-1-lkundrak@v3.sk>
+         <20181010170936.316862-11-lkundrak@v3.sk>
+         <CAMuHMdXmsw3jjp8wFuuK_Vz8kwCP4=L59sc4kZafXzrb=hKv7g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFq7bNJM5Y4y78tnOEvg7ntmYFtJoDvFH8uR2yUUK9o4HA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXmsw3jjp8wFuuK_Vz8kwCP4=L59sc4kZafXzrb=hKv7g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Linux PM <linux-pm@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@kernel.org>, Lina Iyer <ilina@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, quozl@laptop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi <linux-spi@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 11, 2018 at 05:05:07PM +0200, Ulf Hansson wrote:
-> On 10 October 2018 at 17:03, Sudeep Holla <sudeep.holla@arm.com> wrote:
-[...]
-> >
-> > No strong opinion but I am wondering if it makes sense to get cpu
-> > logical index and fetch the cpu of_node here to contain the refcount on
-> > it within this function while we are trying to consolidate. I do see
-> > that may not be so useful in psci.c but keeping refcount for cpu of_node
-> > here keeps the user free from that.
+On Thu, 2018-10-11 at 09:28 +0200, Geert Uytterhoeven wrote:
+> Hi Lubomir,
 > 
-> I see your point.
+> On Wed, Oct 10, 2018 at 7:10 PM Lubomir Rintel <lkundrak@v3.sk>
+> wrote:
+> > Strobe a GPIO line when the slave TX FIFO is filled. This is how
+> > the
+> > Embedded Controller on an OLPC XO-1.75 machine, that happens to be
+> > a SPI
+> > master, learns that it can initiate a transaction.
+> > 
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 > 
-> However, I am hesitating doing that change, as it would be a waste for
-> the psci case, but I also think that it may becomes a bit less
-> straight forward to use this helper function.
+> Thanks for your patch!
 > 
-> Although, no strong opinions from my side either, but since Rob is
-> happy with this, there is no need to change it, I think.
->
+> I'm repeating my comments on the RFC below:
 
-Sure, no problem.
+Ah, sorry for not addressing those; it somehow slipped through my
+fingers. I'll wait a while to collect more feedback before sending v2
+and then I'll include fixes for those.
 
---
-Regards,
-Sudeep
+Thanks for the review.
+
+Lubo
