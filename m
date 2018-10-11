@@ -1,37 +1,110 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] ARM: dts: BCM53573: Relicense SoC file to the GPL 2.0+ /
- MIT
-Date: Thu, 11 Oct 2018 11:17:31 -0700
-Message-ID: <20181011181731.4296-1-f.fainelli@gmail.com>
-References: <20180920113928.27048-1-zajec5@gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 2/9] dt-bindings: ti-lmu: Remove LM3697
+Date: Thu, 11 Oct 2018 20:27:34 +0200
+Message-ID: <20181011182734.GA7973@amd>
+References: <20181011165123.32198-1-dmurphy@ti.com>
+ <20181011165123.32198-3-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180920113928.27048-1-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: bcm-kernel-feedback-list@broadcom.com, =?iso-8859-2?q?Rafa=B3_Mi=B3ecki?= <zajec5@gmail.com>, Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, =?iso-8859-2?q?Rafa=B3_Mi=B3ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181011165123.32198-3-dmurphy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, lee.jones@linaro.org, tony@atomide.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMCBTZXAgMjAxOCAxMzozOToyOCArMDIwMCwgUmFmYcWCIE1pxYJlY2tpIDx6YWpl
-YzVAZ21haWwuY29tPiB3cm90ZToKPiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVj
-a2kucGw+Cj4gCj4gVGhpcyBtYXRjaGVzIGxpY2Vuc2luZyB1c2VkIGJ5IG1vc3Qgb2YgQkNNNTMw
-MVggZmlsZXMgYW5kIGlzIHByZWZlcnJlZCBhczoKPiAxKSBHUEwgMi4wKyBtYWtlcyBpdCBjbGVh
-cmx5IGNvbXBhdGlibGUgd2l0aCBMaW51eCBrZXJuZWwKPiAyKSBNSVQgaXMgYWxzbyBwZXJtaXNz
-aXZlIGJ1dCBwcmVmZXJyZWQgb3ZlciBJU0MKPiAKPiBUaGlzIGZpbGUgaGFzIGJlZW4gZGV2ZWxv
-cGVkIGJ5IG1lICYgb25jZSBtb2RpZmllZCBieSBSb2IgZHJvcHBpbmcgYQo+IHNpbmdsZSBsZWFk
-aW5nIHplcm8gaW4gYW4gVUFSVCBhZGRyZXNzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFJhZmHFgiBN
-acWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPiAtLS0KCkFwcGxpZWQgdG8gZGV2aWNldHJlZS9u
-ZXh0LCB0aGFua3MhCi0tCkZsb3JpYW4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+--Dxnq1zWXvFF0Q93v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu 2018-10-11 11:51:16, Dan Murphy wrote:
+> Remove support for the LM3697 LED device
+> from the ti-lmu.  The LM3697 will be supported
+> via a stand alone LED driver.
+>=20
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+
+NAK.
+
+								Pavel
+							=09
+> index c885cf89b8ce..920f910be4e9 100644
+> --- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> +++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> @@ -9,7 +9,6 @@ TI LMU driver supports lighting devices below.
+>    LM3632       Backlight and regulator
+>    LM3633       Backlight, LED and fault monitor
+>    LM3695       Backlight
+> -  LM3697       Backlight and fault monitor
+> =20
+>  Required properties:
+>    - compatible: Should be one of:
+> @@ -18,11 +17,10 @@ Required properties:
+>                  "ti,lm3632"
+>                  "ti,lm3633"
+>                  "ti,lm3695"
+> -                "ti,lm3697"
+>    - reg: I2C slave address.
+>           0x11 for LM3632
+>           0x29 for LM3631
+> -         0x36 for LM3633, LM3697
+> +         0x36 for LM3633
+>           0x38 for LM3532
+>           0x63 for LM3695
+> =20
+> @@ -38,7 +36,6 @@ Optional nodes:
+>      Required properties:
+>        - compatible: Should be one of:
+>                      "ti,lm3633-fault-monitor"
+> -                    "ti,lm3697-fault-monitor"
+>    - leds: LED properties for LM3633. Please refer to [2].
+>    - regulators: Regulator properties for LM3631 and LM3632.
+>                  Please refer to [3].
+> @@ -220,24 +217,3 @@ lm3695@63 {
+>  		};
+>  	};
+>  };
+> -
+> -lm3697@36 {
+> -	compatible =3D "ti,lm3697";
+> -	reg =3D <0x36>;
+> -
+> -	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
+> -
+> -	backlight {
+> -		compatible =3D "ti,lm3697-backlight";
+> -
+> -		lcd {
+> -			led-sources =3D <0 1 2>;
+> -			ramp-up-msec =3D <200>;
+> -			ramp-down-msec =3D <200>;
+> -		};
+> -	};
+> -
+> -	fault-monitor {
+> -		compatible =3D "ti,lm3697-fault-monitor";
+> -	};
+> -};
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--Dxnq1zWXvFF0Q93v
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlu/lhYACgkQMOfwapXb+vJpdwCfRd0M4a51nIyFV5LOnxj3sTUd
+Zh0AoIA/ilzbBdbCwCyTbTD3Vtflvi36
+=nxW4
+-----END PGP SIGNATURE-----
+
+--Dxnq1zWXvFF0Q93v--
