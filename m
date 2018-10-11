@@ -1,46 +1,70 @@
-From: Talel Shenhar <talel@amazon.com>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: dw: add cs-override property
-Date: Thu, 11 Oct 2018 10:39:22 +0300
-Message-ID: <3ad7fac8-2f13-690b-9e4b-c6b2373756b0@amazon.com>
-References: <1539155293-21750-1-git-send-email-talel@amazon.com>
- <1539210111.1944.31.camel@impinj.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v3 7/7] mfd: axp20x: Add supported cells for AXP803
+Date: Thu, 11 Oct 2018 16:10:12 +0800
+Message-ID: <CAGb2v64i4a_yBkJE5pTmx_tKOVGKJNGvqAY0Hnw=Wr17VDSTfQ@mail.gmail.com>
+References: <20181008181908.9456-1-oskari@lemmela.net> <20181008181908.9456-8-oskari@lemmela.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539210111.1944.31.camel@impinj.com>
-Content-Language: en-US
+In-Reply-To: <20181008181908.9456-8-oskari@lemmela.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Trent Piepho <tpiepho@impinj.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "broonie@kernel.org" <broonie@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "barakw@amazon.com" <barakw@amazon.com>, "ronenk@amazon.com" <ronenk@amazon.com>, "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>, jonnyc@amazon.com
+To: oskari@lemmela.net
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Lee Jones <lee.jones@linaro.org>, Quentin Schulz <quentin.schulz@free-electrons.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/11/2018 01:21 AM, Trent Piepho wrote:
-> On Wed, 2018-10-10 at 10:08 +0300, Talel Shenhar wrote:
->> The dw spi controller has an auto-deselect of Chip-Select, in case there is
->> no data inside the Tx FIFO. While working on platforms with Alpine chips,
->> auto-deselect mode causes an issue for some spi devices that can't handle
->> the Chip-Select deselect in the middle of a transaction. It is a normal
->> behavior for a Tx FIFO to be empty in the middle of a transaction, due to
->>
-> So that's the problem!  I, like everyone else I suspect, switched to
-> using GPIO chip selects with this driver because of this.  I narrowed
-> it down to a CS de-assert when the bus switched from TX to RX, which of
-> course makes a SPI register read fail on most devices.  The TX FIFO
-> would empty at this point, so that would explain it.
+On Tue, Oct 9, 2018 at 2:20 AM Oskari Lemmela <oskari@lemmela.net> wrote:
 >
-> Did the designers of this IP ever read a SPI device datasheet???
+> AXP803 is compatible with AXP813.
+> Adding cells for GPIO, ADC, AC and battery power supplies.
 >
-> Got to agree with Mark Brown, why would anyone ever want to NOT have it
-> work properly?  The previous behavior is not "alternate correct", it's
-> Broken.
-This patch allow the Amazon changed hw to work in a correct way.
-Unfortunately, the original hw doesn't support auto-deselect disable.
-auto-deselect disable is a hw fixup Amazon hw engineers added on top
-of the original dw IP.
-The fix was to disable the auto-deselect and to allow sw
-to manually control the chip-select.
-This patch enables the above described Amazon hw fixup and
-adds manual control over chip-select.
+> Signed-off-by: Oskari Lemmela <oskari@lemmela.net>
+> ---
+>  drivers/mfd/axp20x.c | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> index 1508d9113126..4befe474b165 100644
+> --- a/drivers/mfd/axp20x.c
+> +++ b/drivers/mfd/axp20x.c
+> @@ -731,8 +731,23 @@ static const struct mfd_cell axp803_cells[] = {
+>                 .name                   = "axp221-pek",
+>                 .num_resources          = ARRAY_SIZE(axp803_pek_resources),
+>                 .resources              = axp803_pek_resources,
+> +       }, {
+> +               .name                   = "axp20x-regulator",
+
+Please keep this as one line as before. This was requested by the MFD
+maintainer.
+
+> +       }, {
+> +               .name                   = "axp20x-gpio",
+> +               .of_compatible          = "x-powers,axp813-gpio",
+
+You might want to put the GPIO cell near the top of the list, so any other
+users, such as the ADC and regulator cells, will probe after it.
+
+> +       }, {
+> +               .name                   = "axp813-adc",
+> +               .of_compatible          = "x-powers,axp813-adc",
+> +       }, {
+> +               .name           = "axp20x-battery-power-supply",
+> +               .of_compatible  = "x-powers,axp813-battery-power-supply",
+> +       }, {
+> +               .name           = "axp20x-ac-power-supply",
+> +               .of_compatible  = "x-powers,axp813-ac-power-supply",
+> +               .num_resources  = ARRAY_SIZE(axp20x_ac_power_supply_resources),
+> +               .resources      = axp20x_ac_power_supply_resources,
+
+Please use the same indentation.
+
+Regards
+ChenYu
+
+>         },
+> -       {       .name                   = "axp20x-regulator" },
+>  };
+>
+>  static const struct mfd_cell axp806_self_working_cells[] = {
+> --
+> 2.17.1
+>
