@@ -1,56 +1,45 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 8/8] Input: olpc_apsp: allocate the GPIOs used
-Date: Thu, 11 Oct 2018 10:38:20 +0200
-Message-ID: <CACRpkdZK3=u-E3KgVQT_Wx8tZBqO3Own_+ASLeq03vaP8q+s7A@mail.gmail.com>
-References: <20181010142504.233467-1-lkundrak@v3.sk> <20181010142504.233467-9-lkundrak@v3.sk>
+Subject: Re: [PATCH 1/2] drm/panel: Add DT bindings for Samsung S6D16D0
+Date: Thu, 11 Oct 2018 10:48:39 +0200
+Message-ID: <CACRpkdYjNkgWEA1xOCKoQU89qBpE7-SJm4Mvf-0bM=EkgeQ1dg@mail.gmail.com>
+References: <20181008110006.24561-1-linus.walleij@linaro.org>
+ <20181009192633.GA13448@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181010142504.233467-9-lkundrak@v3.sk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lkundrak@v3.sk, Stephen Boyd <swboyd@chromium.org>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, quozl@laptop.org, Linux Input <linux-input@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20181009192633.GA13448@ravnborg.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: sam@ravnborg.org
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lubomir,
-
-thanks for your patch!
-
-On Wed, Oct 10, 2018 at 4:26 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
-
-> Take the GPIO lines are used by the SP. The driver doesn't touch the
-> lines -- this is done to disallow anything else from fiddling with
-> them because that would confuse the SP firmware.
->
-> Also, the lines are now nicely visible in /sys/kernel/debug/gpio.
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-
-Sadly I do not think this is the right way to do this these days.
-In the past I would have agreed.
-
-A few months back, Qualcomm engineers working on ACPI
-support ran into similar issues: there were GPIO lines that
-could not be touched by the kernel because they were used
-by firmware (BIOS).
-
-The solution we devised can be seen in
-commit 726cb3ba49692bdae6caff457755e7cdb432efa4
-"gpiolib: Support 'gpio-reserved-ranges' property"
-which adds a "valid mask" to struct gpio_chip.
-
-It is further refined in the lates working kernel code to make
-it easy for users to set up a custom valid_mask.
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?h=devel&id=f8ec92a9f63b3b11e399409141b7868bb405e6b5
-
-So what you should do is modify the platform set-up for
-the OLPC to mask off these GPIO lines as invalid since
-they are used by the firmware and Linux should not touch
-them.
-
-Sadly I don't know which GPIO driver the XO1 is using,
-but if you tell us I bet me or Andy will be able to help you
-out in finding the right spot to patch.
-
-Yours,
-Linus Walleij
+T24gVHVlLCBPY3QgOSwgMjAxOCBhdCA5OjI2IFBNIFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3Jn
+Lm9yZz4gd3JvdGU6Cj4gT24gTW9uLCBPY3QgMDgsIDIwMTggYXQgMDE6MDA6MDVQTSArMDIwMCwg
+TGludXMgV2FsbGVpaiB3cm90ZToKCj4gPiArICAtIHJlc2V0LWdwaW9zOiBhIEdQSU8gc3BlYyBm
+b3IgdGhlIHJlc2V0IHBpbiAoYWN0aXZlIGxvdykKPgo+IFRoYXQgaXQgaXMgYWN0aXZlIGxvdyBp
+cyBwYXJ0IG9mIHRoZSBHUElPIHBhcnQgYW5kIHNob3VsZCBub3QKPiBiZSBtYW5kYXRlZCBhcyBw
+YXJ0IG9mIHRoZSBiaW5kaW5nPwoKVGhlIGZhY3QgdGhhdCB0aGUgY29uc3VtZXIgcmVxdWlyZXMg
+dGhlIGxpbmUgdG8gYmUgYXNzZXJ0ZWQKbG93IGlzIGFuIGVsZWN0cm9uaWMgcHJvcGVydHkgb2Yg
+dGhlIGNvbXBvbmVudCwgaS5lLiB0aGUgcGFuZWwsCmFuZCBpdCBpcyBqdXN0IHRoZXJlIGV4cGxh
+aW5pbmcgdGhhdCBpZiB5b3Ugc2V0IGl0IHRvIGFueXRoaW5nIGVsc2UgdGhhbgphY3RpdmUgbG93
+LCB5b3UgYXJlIHByb2JhYmx5IGRvaW5nIHNvbWV0aGluZyB3cm9uZy4KClNob3VsZCBJIHNwZWNp
+ZnkgIm11c3QgYmUgc2V0IGFzIGFjdGl2ZSBsb3ciIGluc3RlYWQgdG8gbWFrZQppdCBjbGVhcj8K
+Cj4gPiArICAgICAgICAgICAgIHJlc2V0LWdwaW9zID0gPCZmb29fZ3BpbyAwIEdQSU9fQUNUSVZF
+X0xPVz47Cj4KPiBUaGlzIGxpbmUgc3BlY2lmaWVzIGlmIEFDVElWRSBISUdIIG9yIExPVy4KClll
+cCB3ZSBhbHdheXMgc3BlY2lmeSB0aGF0IG9uIHRoZSBjb25zdW1lciBzaWRlLiBPciB3ZSBzaG91
+bGQKYWx3YXlzIGRvIHRoYXQgLi4uIGJ1dCBzaW5jZSB0aGlzIHBhbmVsIGlzIGJ5IGRlZmludGlv
+biBleHBlY3RpbmcKYW4gYWN0aXZlIGxvdyBzaWduYWwsIGFueXRoaW5nIGVsc2Ugd291bGQgYmUg
+YW4gZXJyb3IgYW5kIHRoYXQKaXMgd2hhdCBJIGFtIHRyeWluZyB0byBzYXkgaW4gdGhlIGRlc2Ny
+aXB0aW9uLgoKWW91cnMsCkxpbnVzIFdhbGxlaWoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVsCg==
