@@ -1,104 +1,146 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v6 2/9] PCI: mediatek: Fixup class ID for MT7622 as
- PCI_CLASS_BRIDGE_PCI
-Date: Thu, 11 Oct 2018 12:38:00 +0100
-Message-ID: <20181011113748.GA3574@e107981-ln.cambridge.arm.com>
-References: <1538969088-7136-1-git-send-email-honghui.zhang@mediatek.com>
- <1538969088-7136-3-git-send-email-honghui.zhang@mediatek.com>
- <20181008172337.GA13538@e107981-ln.cambridge.arm.com>
- <1539054495.6246.31.camel@mhfsdcap03>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [RFC] mmc: host: sdhci-msm: Use the interconnect API
+Date: Thu, 11 Oct 2018 15:03:36 +0300
+Message-ID: <20181011120336.9129-1-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1539054495.6246.31.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Honghui Zhang <honghui.zhang@mediatek.com>
-Cc: bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com, ulf.hansson@linaro.org, marc.zyngier@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, youlin.pei@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com
+To: linux-pm@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, rjw@rjwysocki.net, robh+dt@kernel.org, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, ulf.hansson@linaro.org, adrian.hunter@intel.com, linux-mmc@vger.kernel.org, georgi.djakov@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 09, 2018 at 11:08:15AM +0800, Honghui Zhang wrote:
-> On Mon, 2018-10-08 at 18:23 +0100, Lorenzo Pieralisi wrote:
-> > On Mon, Oct 08, 2018 at 11:24:41AM +0800, honghui.zhang@mediatek.com wrote:
-> > > From: Honghui Zhang <honghui.zhang@mediatek.com>
-> > > 
-> > > The PCIe controller of MT7622 has TYPE 1 configuration space type, but
-> > > the HW default class type values is invalid.
-> > > 
-> > > The commit 101c92dc80c8 ("PCI: mediatek: Set up vendor ID and class
-> > > type for MT7622") have set the class ID for MT7622 as
-> > > PCI_CLASS_BRIDGE_HOSTe, but it's not workable for MT7622:
-> > > 
-> > > In __pci_bus_assign_resources, the framework only setup bridge's
-> > > resource window only if class type is PCI_CLASS_BRIDGE_PCI. Or it
-> > > will leave the subordinary PCIe device's MMIO window un-touched.
+The interconnect API provides an interface for consumer drivers to express
+their bandwidth needs in the SoC. This data is aggregated and the on-chip
+interconnect hardware is configured to the appropriate power/performance
+profile.
 
-Can you please provide me with a full log of the issue ?
+Use the interconnect API to get() the path between the endpoints used for
+data transfers by the SD host controller and report the needed bandwidth
+based on the clock rate, bus width and mode.
 
-What is the bug this patch is actually fixing ?
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
 
-> > > Fixup the class type to PCI_CLASS_BRIDGE_PCI as most of the controller
-> > > driver do.
-> > 
-> > I think that this patch is correct but the commit log fails to pin point
-> > the problem. The IP you are programming is a root port, that's why you
-> > have to have the proper class code, the patch looks fine but I would
-> > like to peek Bjorn's brain on this since it is a fundamental concept.
-> > 
-> 
-> I'm a bit confused with the concepts of PCI_CLASS_BRIDGE_HOST and
-> PCI_CLASS_BRIDGE_PCI, from PCI express spec,
-> 4.0r1.0(PCI_Express_Base_4.0r1.0_September-27-2017-c), Host Bridge is
-> "part of a Root Complex that connects a host CPU or CPUs to a
-> Hierarchy". While Root Complex defines as "A defined System Element that
-> includes at least one Host Bridge, Root port, or Root complex Integrated
-> Endpoint".
-> 
-> But according to my understanding, most of the root port IPs integrated
-> with a "PCI_CLASS_BRIDGE_PCI", which has type 1 configuration space and
-> could be saw as a pci device when using lspci.
-> 
-> And for MT7622, it integrated with block of internal control registers,
-> type 1 configuration space, and is considered as a root complex.
+This depends on the interconnect API: https://lkml.org/lkml/2018/8/31/444
 
-I assume you mean a type 1 config header here. I do not think it
-is mandatory for a host bridge to have a type 1 config header
-(and related bridge windows + primary/secondary/subordinate bus
-numbers) but I do not know how the IP you are programming is
-designed.
+TODO: Use macros for converting and rounding to icc units instead of
+converting between kilobits and kilobytes in the consumer drivers.
 
-If the host bridge needs its memory window to be configured you can
-easily do that in the driver (with driver specific code) without
-requiring the generic PCI resource core to do that for you, the host
-bridge is the root of the bus I do not see any reason why it should
-be up to core PCI code to assign it, it is preprogrammed.
+ drivers/mmc/host/sdhci-msm.c | 46 ++++++++++++++++++++++++++++++++++--
+ 1 file changed, 44 insertions(+), 2 deletions(-)
 
-> I'm not sure which CLASS type it should have:
-> From PCI_Code-ID_r_1_10__v8-Nov_2017, class type of
-> 0x0604(PCI_CLASS_BRIDGE_PCI) is defined as a PCI-to-PCI bridge, not
-> literally suitable for MT7622(which is a root complex)(In my personal
-> opinion). But it is the only workable CLASS type for MT7622 in current
-> kernel.
-> 
-> > If the kernel does not assign resources unless it detects a
-> > PCI_CLASS_BRIDGE_PCI this means that for components that are
-> > actually PCI_CLASS_BRIDGE_HOST their register set must come
-> > preprogrammed unless I am missing something.
-> > 
-> 
-> In the function pci_request_resource_alignment, it will by pass the
-> resource assignment for PCI_CLASS_BRIDGE_HOST, though I'm not figured
-> out why.
-> 
-> > I would like to get to the bottom of this since it is a fundamental
-> > enumeration concept.
-> > 
-> 
-> Do you like me to re-write the commit message for this patch and put the
-> above information in? Or just not mention the PCI_CLASS_BRIDGE_HOST
-> assign resource routine?
-
-I want to understand where the problem is and whether it is right to
-define the component as a PCI bridge rather than a host bridge.
-
-Lorenzo
+diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+index 3cc8bfee6c18..8ca99ccdb035 100644
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -20,6 +20,7 @@
+ #include <linux/mmc/mmc.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/slab.h>
++#include <linux/interconnect.h>
+ #include <linux/iopoll.h>
+ #include <linux/regulator/consumer.h>
+ 
+@@ -258,6 +259,7 @@ struct sdhci_msm_host {
+ 	bool mci_removed;
+ 	const struct sdhci_msm_variant_ops *var_ops;
+ 	const struct sdhci_msm_offset *offset;
++	struct icc_path *path;
+ };
+ 
+ static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
+@@ -1627,6 +1629,30 @@ static const struct sdhci_msm_variant_info sdhci_msm_v5_var = {
+ 	.offset = &sdhci_msm_v5_offset,
+ };
+ 
++static int sdhci_msm_icc_update(struct sdhci_msm_host *msm_host)
++{
++	struct sdhci_host *host = dev_get_drvdata(&msm_host->pdev->dev);
++	struct mmc_host *mmc = host->mmc;
++	struct mmc_ios *ios = &mmc->ios;
++	unsigned char bus_width = 1 << ios->bus_width;
++	u32 bw;
++
++	/* calculate the needed bandwidth */
++	bw = host->clock;
++
++	if (host->timing == MMC_TIMING_UHS_DDR50 ||
++	    host->timing == MMC_TIMING_MMC_DDR52) {
++		bw *= 2;
++	}
++
++	if (bus_width == 4)
++		bw /= 2;
++	else if (bus_width == 1)
++		bw /= 8;
++
++	return icc_set(msm_host->path, 0, bw / 1000);
++}
++
+ static const struct of_device_id sdhci_msm_dt_match[] = {
+ 	{.compatible = "qcom,sdhci-msm-v4", .data = &sdhci_msm_mci_var},
+ 	{.compatible = "qcom,sdhci-msm-v5", .data = &sdhci_msm_v5_var},
+@@ -1698,16 +1724,27 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+ 
+ 	msm_host->saved_tuning_phase = INVALID_TUNING_PHASE;
+ 
++	msm_host->path = of_icc_get(&pdev->dev, "sdhc-mem");
++	if (IS_ERR(msm_host->path)) {
++		ret = PTR_ERR(msm_host->path);
++		goto pltfm_free;
++	}
++	ret = sdhci_msm_icc_update(msm_host);
++	if (ret) {
++		dev_warn(&pdev->dev, "Interconnect setup failed (%d)\n", ret);
++		goto icc_disable;
++	}
++
+ 	/* Setup SDCC bus voter clock. */
+ 	msm_host->bus_clk = devm_clk_get(&pdev->dev, "bus");
+ 	if (!IS_ERR(msm_host->bus_clk)) {
+ 		/* Vote for max. clk rate for max. performance */
+ 		ret = clk_set_rate(msm_host->bus_clk, INT_MAX);
+ 		if (ret)
+-			goto pltfm_free;
++			goto icc_disable;
+ 		ret = clk_prepare_enable(msm_host->bus_clk);
+ 		if (ret)
+-			goto pltfm_free;
++			goto icc_disable;
+ 	}
+ 
+ 	/* Setup main peripheral bus clock */
+@@ -1883,6 +1920,8 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+ bus_clk_disable:
+ 	if (!IS_ERR(msm_host->bus_clk))
+ 		clk_disable_unprepare(msm_host->bus_clk);
++icc_disable:
++	icc_put(msm_host->path);
+ pltfm_free:
+ 	sdhci_pltfm_free(pdev);
+ 	return ret;
+@@ -1902,6 +1941,7 @@ static int sdhci_msm_remove(struct platform_device *pdev)
+ 	pm_runtime_disable(&pdev->dev);
+ 	pm_runtime_put_noidle(&pdev->dev);
+ 
++	icc_put(msm_host->path);
+ 	clk_bulk_disable_unprepare(ARRAY_SIZE(msm_host->bulk_clks),
+ 				   msm_host->bulk_clks);
+ 	if (!IS_ERR(msm_host->bus_clk))
+@@ -1917,6 +1957,7 @@ static int sdhci_msm_runtime_suspend(struct device *dev)
+ 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+ 	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+ 
++	icc_set(msm_host->path, 0, 0);
+ 	clk_bulk_disable_unprepare(ARRAY_SIZE(msm_host->bulk_clks),
+ 				   msm_host->bulk_clks);
+ 
+@@ -1929,6 +1970,7 @@ static int sdhci_msm_runtime_resume(struct device *dev)
+ 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+ 	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+ 
++	sdhci_msm_icc_update(msm_host);
+ 	return clk_bulk_prepare_enable(ARRAY_SIZE(msm_host->bulk_clks),
+ 				       msm_host->bulk_clks);
+ }
