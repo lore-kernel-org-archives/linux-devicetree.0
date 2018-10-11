@@ -1,72 +1,91 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: iio: vadc: Update example to include
- unit address for node 'usb-id-nopull'
-Date: Thu, 11 Oct 2018 13:52:58 -0700
-Message-ID: <20181011205258.GN22824@google.com>
-References: <20181004001432.21218-1-mka@chromium.org>
- <20181004001432.21218-2-mka@chromium.org>
- <20181005204743.GA17135@bogus>
- <20181011191134.GM22824@google.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH RFC v1 2/8] kernel/cpu_pm: Manage runtime PM in the idle path for CPUs
+Date: Thu, 11 Oct 2018 22:52:51 +0200
+Message-ID: <8161939.SRDo8Qx48D@aspire.rjw.lan>
+References: <1539206455-29342-1-git-send-email-rplsssn@codeaurora.org> <1539206455-29342-3-git-send-email-rplsssn@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181011191134.GM22824@google.com>
+In-Reply-To: <1539206455-29342-3-git-send-email-rplsssn@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+To: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, ulf.hansson@linaro.org, khilman@kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, ilina@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 11, 2018 at 12:11:34PM -0700, Matthias Kaehlcke wrote:
-> Hi Rob,
+On Wednesday, October 10, 2018 11:20:49 PM CEST Raju P.L.S.S.S.N wrote:
+> From: Ulf Hansson <ulf.hansson@linaro.org>
 > 
-> On Fri, Oct 05, 2018 at 03:47:43PM -0500, Rob Herring wrote:
-> > On Wed, Oct 03, 2018 at 05:14:31PM -0700, Matthias Kaehlcke wrote:
-> > > The node has a reg property, therefore its name should include a unit
-> > > address.
-> > > 
-> > > Also change the name from 'usb_id_nopull' to 'usb-id-nopull' to follow
-> > > DT conventions.
-> > 
-> > This is ADC channels?
+> To allow CPUs being power managed by PM domains, let's deploy support for
+> runtime PM for the CPU's corresponding struct device.
 > 
-> yes
+> More precisely, at the point when the CPU is about to enter an idle state,
+> decrease the runtime PM usage count for its corresponding struct device,
+> via calling pm_runtime_put_sync_suspend(). Then, at the point when the CPU
+> resumes from idle, let's increase the runtime PM usage count, via calling
+> pm_runtime_get_sync().
 > 
-> > If so, then DT convention would really be "adc@...". 
+> Cc: Lina Iyer <ilina@codeaurora.org>
+> Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
+> (am from https://patchwork.kernel.org/patch/10478153/)
+> ---
+>  kernel/cpu_pm.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
-> ok, will update
-> 
-> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > ---
-> > > Changes in v4:
-> > > - patch added to the series
-> > > ---
-> > >  Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> > > index d0c188e5c922..ff7aa5038ba6 100644
-> > > --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> > > +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> > > @@ -112,7 +112,7 @@ Example:
-> > >  		io-channel-ranges;
-> > >  
-> > >  		/* Channel node */
-> > > -		usb_id_nopull {
-> > > +		usb-id-nopull@VADC_LR_MUX10_USB_ID {
-> > >  			reg = <VADC_LR_MUX10_USB_ID>;
-> > 
-> > Defines are generally used when there's not well defined numbering such 
-> > as clock ids. Interrupts and addresses are generally well defined and 
-> > don't need defines.
-> 
-> ok, I'll update this to use literals
+> diff --git a/kernel/cpu_pm.c b/kernel/cpu_pm.c
+> index 67b02e1..492d4a8 100644
+> --- a/kernel/cpu_pm.c
+> +++ b/kernel/cpu_pm.c
+> @@ -16,9 +16,11 @@
+>   */
+>  
+>  #include <linux/kernel.h>
+> +#include <linux/cpu.h>
+>  #include <linux/cpu_pm.h>
+>  #include <linux/module.h>
+>  #include <linux/notifier.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/syscore_ops.h>
+>  
+> @@ -91,6 +93,7 @@ int cpu_pm_enter(void)
+>  {
+>  	int nr_calls;
+>  	int ret = 0;
+> +	struct device *dev = get_cpu_device(smp_processor_id());
+>  
+>  	ret = cpu_pm_notify(CPU_PM_ENTER, -1, &nr_calls);
+>  	if (ret)
+> @@ -100,6 +103,9 @@ int cpu_pm_enter(void)
+>  		 */
+>  		cpu_pm_notify(CPU_PM_ENTER_FAILED, nr_calls - 1, NULL);
+>  
+> +	if (!ret && dev && dev->pm_domain)
+> +		pm_runtime_put_sync_suspend(dev);
 
-Actually I'm not convinced literals are the right answer here. It
-makes perfect sense for a standard ADC, with a 1:1 mapping of channel
-number and physical input. However in case of the VADC/ADC5 there
-can be multiple channel numbers per input pin, the different values
-are used to select a certain 'configuration' (eg. ADC5_BAT_THERM,
-ADC5_BAT_THERM_30K_PU, ADC5_BAT_THERM_100K_PU,
-ADC5_BAT_THERM_400K_PU). IMO using integer channel numbers here would
-be more error prone and obfuscating than using the defines.
+This may cause a power domain to go off, but if it goes off, then the idle
+governor has already selected idle states for all of the CPUs in that domain.
+
+Is there any way to ensure that turning the domain off (and later on) will
+no cause the target residency and exit latency expectations for those idle
+states to be exceeded?
+
+> +
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(cpu_pm_enter);
+> @@ -118,6 +124,11 @@ int cpu_pm_enter(void)
+>   */
+>  int cpu_pm_exit(void)
+>  {
+> +	struct device *dev = get_cpu_device(smp_processor_id());
+> +
+> +	if (dev && dev->pm_domain)
+> +		pm_runtime_get_sync(dev);
+> +
+>  	return cpu_pm_notify(CPU_PM_EXIT, -1, NULL);
+>  }
+>  EXPORT_SYMBOL_GPL(cpu_pm_exit);
+> 
