@@ -1,80 +1,25 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 1/2] dt-bindings: pinctrl: document Broadcom Northstar
- pin mux controller
-Date: Thu, 11 Oct 2018 17:22:29 -0500
-Message-ID: <20181011222229.GA7470@bogus>
-References: <20180926193103.21241-1-zajec5@gmail.com>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH i2c-next v7 1/5] dt-bindings: i2c: Add 'bus-timeout-ms'
+ and '#retries' properties as common optional
+Date: Thu, 11 Oct 2018 15:46:10 -0700
+Message-ID: <3a8ee259-d219-aeea-a4c8-98bb379433fc@linux.intel.com>
+References: <20181005214507.26315-1-jae.hyun.yoo@linux.intel.com>
+ <20181005214507.26315-2-jae.hyun.yoo@linux.intel.com>
+ <20181011221148.GA31195@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180926193103.21241-1-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181011221148.GA31195@bogus>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Brendan Higgins <brendanhiggins@google.com>, Wolfram Sang <wsa@the-dreams.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBTZXAgMjYsIDIwMTggYXQgMDk6MzE6MDJQTSArMDIwMCwgUmFmYcWCIE1pxYJlY2tp
-IHdyb3RlOgo+IEZyb206IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPiAKPiBO
-b3J0aHN0YXIgaGFzIG11eCBjb250cm9sbGVyIGp1c3QgbGlrZSBOb3J0aHN0YXIgUGx1cyBhbmQg
-Tm9ydGhzdGFyMi4KPiBJdCdzIGEgYml0IGRpZmZlcmVudCB0aG91Z2ggKGRpZmZlcmVudCByZWdp
-c3RlcnMgJiBwaW5zKSBzbyBpdCByZXF1aXJlcwo+IGl0cyBvd24gYmluZGluZy4KPiAKPiBJdCdz
-IG5lZWRlZCB0byBhbGxvdyBvdGhlciBibG9jayBiaW5kaW5ncyBzcGVjaWZ5IHJlcXVpcmVkIG11
-eCBzZXR1cC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVj
-a2kucGw+Cj4gUmV2aWV3ZWQtYnk6IEZsb3JpYW4gRmFpbmVsbGkgPGYuZmFpbmVsbGlAZ21haWwu
-Y29tPgo+IC0tLQo+IFYyOiBVc2UgImNydV9ncGlvX2NvbnRyb2wiCj4gICAgIEFkZCBtb3JlIGZ1
-bmN0aW9ucyAmIGdyb3Vwcwo+ICAgICBJbmNsdWRlIEZsb3JpYW4ncyBSZXZpZXdlZC1ieQo+IFYz
-OiBVc2UgMyBkaWZmZXJlbnQgYmluZGluZ3MgYXMgYXZhaWxhYmxlIHBpbnMgZGVwZW5kIG9uIHRo
-ZSBjaGlwc2V0Lgo+ICAgICBTdHJpbmdzIG1hdGNoIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9hcm0vYmNtL2JyY20sYmNtNDcwOC50eHQKPiAtLS0KPiAgLi4uL2JpbmRpbmdzL3Bp
-bmN0cmwvYnJjbSxiY200NzA4LXBpbm11eC50eHQgICAgICAgfCA0MiArKysrKysrKysrKysrKysr
-KysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA0MiBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9icmNtLGJj
-bTQ3MDgtcGlubXV4LnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvcGluY3RybC9icmNtLGJjbTQ3MDgtcGlubXV4LnR4dCBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL2JyY20sYmNtNDcwOC1waW5tdXgudHh0Cj4g
-bmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLmFmOTA2ZjE5NmU4Ywo+
-IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cGluY3RybC9icmNtLGJjbTQ3MDgtcGlubXV4LnR4dAo+IEBAIC0wLDAgKzEsNDIgQEAKPiArQnJv
-YWRjb20gTm9ydGhzdGFyIHBpbnMgbXV4IGNvbnRyb2xsZXIKPiArCj4gK1NvbWUgb2YgTm9ydGhz
-dGFyIFNvQ3MncyBwaW5zIGNhbiBiZSB1c2VkIGZvciB2YXJpb3VzIHB1cnBvc2VzIHRoYW5rcyB0
-byB0aGUgbXV4Cj4gK2NvbnRyb2xsZXIuIFRoaXMgYmluZGluZyBhbGxvd3MgZGVzY3JpYmluZyBt
-dXggY29udHJvbGxlciBhbmQgbGlzdGluZyBhdmFpbGFibGUKPiArZnVuY3Rpb25zLiBUaGV5IGNh
-biBiZSByZWZlcmVuY2VkIGxhdGVyIGJ5IG90aGVyIGJpbmRpbmdzIHRvIGxldCBzeXN0ZW0KPiAr
-Y29uZmlndXJlIGNvbnRyb2xsZXIgY29ycmVjdGx5Lgo+ICsKPiArQSBsaXN0IG9mIHBpbnMgdmFy
-aWVzIGFjcm9zcyBjaGlwc2V0cyBzbyBmZXcgYmluZGluZ3MgYXJlIGF2YWlsYWJsZS4KPiArCj4g
-K1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogbXVzdCBiZSBvbmUgb2Y6Cj4g
-KwkiYnJjbSxiY200NzA4LXBpbm11eCIKPiArCSJicmNtLGJjbTQ3MDktcGlubXV4Igo+ICsJImJy
-Y20sYmNtNTMwMTItcGlubXV4Igo+ICstIHJlZzogaW9tZW0gYWRkcmVzcyByYW5nZSBvZiBDUlUg
-KENlbnRyYWwgUmVzb3VyY2UgVW5pdCkgcGluIHJlZ2lzdGVycwoKUGVyaGFwcyAnY3J1JyBpbiB0
-aGUgY29tcGF0aWJsZSBpZiB0aGF0J3Mgd2hhdCB0aGUgaC93IGlzIGNhbGxlZD8KCkFsc28sIGlm
-IHRoaXMgaXMgYSBzdWItYmxvY2ssIHRoZW4gaXQgc2hvdWxkIGJlIGEgY2hpbGQgb2YgdGhlIGJs
-b2NrIAp3aGljaCBzaG91bGQgYmUgZGVmaW5lZCBoZXJlLgoKPiArLSByZWctbmFtZXM6ICJjcnVf
-Z3Bpb19jb250cm9sIiAtIHRoZSBvbmx5IG5lZWRlZCAmIHN1cHBvcnRlZCByZWcgcmlnaHQgbm93
-Cj4gKwo+ICtGdW5jdGlvbnMgYW5kIHRoZWlyIGdyb3VwcyBhdmFpbGFibGUgZm9yIGFsbCBjaGlw
-c2V0czoKPiArLSAic3BpIjogInNwaV9ncnAiCj4gKy0gImkyYyI6ICJpMmNfZ3JwIgo+ICstICJw
-d20iOiAicHdtMF9ncnAiLCAicHdtMV9ncnAiLCAicHdtMl9ncnAiLCAicHdtM19ncnAiCj4gKy0g
-InVhcnQxIjogInVhcnQxX2dycCIKPiArCj4gK0FkZGl0aW9uYWxseSBhdmFpbGFibGUgb24gQkNN
-NDcwOSBhbmQgQkNNNTMwMTI6Cj4gKy0gIm1kaW8iOiAibWRpb19ncnAiCj4gKy0gInVhcnQyIjog
-InVhcnQyX2dycCIKPiArLSAic2RpbyI6ICJzZGlvX3B3cl9ncnAiLCAic2Rpb18xcDh2X2dycCIK
-PiArCj4gK0ZvciBkb2N1bWVudGF0aW9uIG9mIHN1Ym5vZGVzIHNlZToKPiArRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvcGluY3RybC1iaW5kaW5ncy50eHQKPiArCj4g
-K0V4YW1wbGU6Cj4gKwlwaW5jdHJsQDE4MDBjMWMwIHsKPiArCQljb21wYXRpYmxlID0gImJyY20s
-YmNtNDcwOC1waW5tdXgiOwo+ICsJCXJlZyA9IDwweDE4MDBjMWMwIDB4MjQ+Owo+ICsJCXJlZy1u
-YW1lcyA9ICJjcnVfZ3Bpb19jb250cm9sIjsKPiArCj4gKwkJc3BpIHsKCllvdSdsbCBmaW5kIHRo
-aXMgbm93IGNhdXNlcyBkdGMgd2FybmluZ3MuICdzcGknIGlzIHJlc2VydmVkIGZvciBTUEkgCmNv
-bnRyb2xsZXIgbm9kZXMuIFNvICdzcGktcGlucycgcGVyaGFwcy4KCj4gKwkJCWZ1bmN0aW9uID0g
-InNwaSI7Cj4gKwkJCWdyb3VwcyA9ICJzcGlfZ3JwIjsKPiArCQl9Owo+ICsJfTsKPiAtLSAKPiAy
-LjEzLjcKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
-bnV4LWFybS1rZXJuZWwK
+On 10/11/2018 3:11 PM, Rob Herring wrote:
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+
+Thanks for the review, Rob!
