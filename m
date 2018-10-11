@@ -1,60 +1,81 @@
-Return-Path: <SRS0=FQf3=MY=gmail.com=thierry.reding@kernel.org>
-Date: Fri, 12 Oct 2018 13:21:01 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] dt-bindings: pwm: renesas: tpu: document R8A779{7|8}0
- bindings
-Message-ID: <20181012112101.GD30261@ulmo>
-References: <ea104bc7-ee9a-b638-36da-6c6af1e622be@cogentembedded.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="veXX9dWIonWZEC6h"
-Content-Disposition: inline
-In-Reply-To: <ea104bc7-ee9a-b638-36da-6c6af1e622be@cogentembedded.com>
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=Kjxg=MX=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40624 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbeJLDEJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Oct 2018 23:04:09 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r83-v6so9291966ljr.7
+        for <devicetree@vger.kernel.org>; Thu, 11 Oct 2018 12:35:28 -0700 (PDT)
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v2] usb: host: add DT bindings for faraday fotg2
+Date: Thu, 11 Oct 2018 21:35:20 +0200
+Message-Id: <20181011193520.3844-1-linus.walleij@linaro.org>
+Sender: devicetree-owner@vger.kernel.org
+To: Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-usb@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
+From: Hans Ulli Kroll <ulli.kroll@googlemail.com>
 
---veXX9dWIonWZEC6h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This adds device tree bindings for the Faraday FOTG2
+dual-mode host controller.
 
-On Sat, Sep 22, 2018 at 10:57:29PM +0300, Sergei Shtylyov wrote:
-> Document the R-Car V3{M|H} (R8A779{7|8}0) SoC in the Renesas TPU bindings;
-> the TPU hardware in those is the Renesas standard 4-channel timer pulse
-> unit.
->=20
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->=20
-> ---
-> This patch is against Linus' repo plus the bindings fix just reposted...
->=20
->  Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt |    4 ++++
->  1 file changed, 4 insertions(+)
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v1->v2:
+- Changed "OTH" to "OTG"
+- Collected Rob's ACK.
+- I don't see any problem with these bindings, but IIRC Hans
+  had some reservations for the OTG mode, maybe we can strip
+  some properties like the mini-usb thing and use as a starter
+  so we can add host mode at least?
+---
+ .../bindings/usb/faraday,fotg210.txt          | 35 +++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/faraday,fotg210.txt
 
-Applied, thanks.
-
-Thierry
-
---veXX9dWIonWZEC6h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlvAg50ACgkQ3SOs138+
-s6FHUA//e6N5juO43+gd8+wMUnppTelT59lGPlabiVlDrr7hrlQzolj9Dw3skdvl
-22EeGrG1ZlioUutXapb8JYbgf6OMFE+2FW9EQ9EXGdoKz/d1tCTvtGOvkHWURHsU
-xnGvxznogRVmqR4uS9lp4OaSQSkq5dDw+qxBFCEyfZR0caWtZXT9zBUSlx2LyP+4
-hyskqJPX1/B+9+uM8BcfI6P/EroNkYyYSmL81O+pR4M0OkL6pW3XPWky9YXLCNdE
-tWxtR5HcTJdVuoYC+LfNWeHkgj4LSTVjDv+oxM3/Y76hcLa130+LDZdaaG00km1T
-rBVIHM7cJLJDhrwykk694QxO2AyBlV1vKPbYYVyFxxPf1Pb/hbMgonlaJnd8rVO2
-muNGS2HQcx+lB3/xPp8bHH/KWu2uWxKZzcCTHoHyToyMsz+g3THD5SMydQ/Xphnk
-RRjRma3/ngbfmfuEz4OMG1vQNmQFgoYX0voto+USl7VPlm2gFl8IJjgB1EfVm8gm
-mKxlzIyZgpkbBgI6zOa0bF+hhgP5tg65ITru6ycQAaWieTOJNZnnOD/JmGObv1uK
-bsfWJ1v1p3pO9V0Uoi8qiT9Y+cXt5FR8a7bBkvWnF7b/ih+jMBuxTorMJMUzkKTL
-UKuQah6cvocbEfE5mfffIm7AcokESVGdJRPiAGqFKRevLkU4xxc=
-=bDLK
------END PGP SIGNATURE-----
-
---veXX9dWIonWZEC6h--
+diff --git a/Documentation/devicetree/bindings/usb/faraday,fotg210.txt b/Documentation/devicetree/bindings/usb/faraday,fotg210.txt
+new file mode 100644
+index 000000000000..06a2286e2054
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/faraday,fotg210.txt
+@@ -0,0 +1,35 @@
++Faraday FOTG Host controller
++
++This OTG-capable USB host controller is found in Cortina Systems
++Gemini and other SoC products.
++
++Required properties:
++- compatible: should be one of:
++  "faraday,fotg210"
++  "cortina,gemini-usb", "faraday,fotg210"
++- reg: should contain one register range i.e. start and length
++- interrupts: description of the interrupt line
++
++Optional properties:
++- clocks: should contain the IP block clock
++- clock-names: should be "PCLK" for the IP block clock
++
++Required properties for "cortina,gemini-usb" compatible:
++- syscon: a phandle to the system controller to access PHY registers
++
++Optional properties for "cortina,gemini-usb" compatible:
++- cortina,gemini-mini-b: boolean property that indicates that a Mini-B
++  OTG connector is in use
++- wakeup-source: see power/wakeup-source.txt
++
++Example for Gemini:
++
++usb@68000000 {
++	compatible = "cortina,gemini-usb", "faraday,fotg210";
++	reg = <0x68000000 0x1000>;
++	interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&cc 12>;
++	clock-names = "PCLK";
++	syscon = <&syscon>;
++	wakeup-source;
++};
+-- 
+2.17.1
