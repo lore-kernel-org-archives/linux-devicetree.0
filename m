@@ -1,84 +1,200 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v3] arm64: new board - Emlid Neutis N5
-Date: Thu, 11 Oct 2018 15:20:11 +0200
-Message-ID: <2d09d6c0-0404-589d-2c34-da846cff4fb8@suse.de>
-References: <1538745949-13188-2-git-send-email-aleksandr.aleksandrov@emlid.com>
- <1539012044-29998-1-git-send-email-aleksandr.aleksandrov@emlid.com>
- <1539012044-29998-2-git-send-email-aleksandr.aleksandrov@emlid.com>
- <20181010144957.exrlupoph7ovsmdw@flea>
- <9398571539259289@myt4-929fb874f3f2.qloud-c.yandex.net>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH v2 3/5] clk: lochnagar: Add support for the Cirrus Logic
+ Lochnagar
+Date: Thu, 11 Oct 2018 14:26:02 +0100
+Message-ID: <20181011132602.GD1653@imbe.wolfsonmicro.main>
+References: <20181008132542.19775-1-ckeepax@opensource.cirrus.com>
+ <20181008132542.19775-3-ckeepax@opensource.cirrus.com>
+ <153924124658.207691.10370075148426001371@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9398571539259289@myt4-929fb874f3f2.qloud-c.yandex.net>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <153924124658.207691.10370075148426001371@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: aleksandr.aleksandrov@emlid.com, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, David Lechner <david@lechnology.com>, Thierry Reding <treding@nvidia.com>, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, Johan Hovold <johan@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Aleksandr,
+On Thu, Oct 11, 2018 at 12:00:46AM -0700, Stephen Boyd wrote:
+> Quoting Charles Keepax (2018-10-08 06:25:40)
+> > +#include <linux/clk.h>
+> 
+> Is this used?
+> 
+> > +#include <linux/clk-provider.h>
+> > +#include <linux/delay.h>
+> 
+> Is this used?
+> 
+> > +#include <linux/device.h>
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/pm_runtime.h>
+> 
+> Used?
 
-Please keep your replies in text-only format, not HTML.
+Apparently not, will remove the three of them.
 
-Am 11.10.18 um 14:01 schrieb aleksandr.aleksandrov@emlid.com:
->>      +/ {
->>      + model = "Emlid Neutis N5 Developer board";
->>      + compatible = "emlid,emlid-neutis-n5-devboard",
->>      + "emlid,emlid-neutis-n5",
->>
->> Do you need the two emlid there? What comes before the comma is the
->> vendor, while what is after is the model.
->  
-> I think emlid-neutis-n5 module could be useful in the future, no need
-> this now.
+> > +struct lochnagar_regmap_clk {
+> > +       unsigned int cfg_reg;
+> > +       unsigned int ena_mask;
+> > +       unsigned int dir_mask;
+> > +
+> > +       unsigned int src_reg;
+> > +       unsigned int src_mask;
+> 
+> Are these 32 bits or 16 bits or 8 bits? Please use a u32/u16/u8 so we
+> know the register width.
+> 
 
-You misunderstand: The point would be to use, e.g., "emlid,neutis-n5"
-instead of "emlid,emlid-neutis-n5" with duplicate "emlid,emlid-". It is
-orthogonal to having multiple compatible strings.
+Can do.
 
->>  +&uart1 {
->>  + pinctrl-names = "default";
->>  + pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
->>  + status = "okay";
->>  +};
->>
->> I guess this is for bluetooth? Have you tested serdev drivers?
->>
-> Yes, bluetooth is connected over uart1.
-> You mean if I have tested bluetooth stack via serial device?
+> > +struct lochnagar_clk_priv {
+> > +       struct device *dev;
+> > +       struct lochnagar *lochnagar;
+> 
+> Is this used for anything besides getting the regmap? Can you get the
+> pointer to the parent in probe and use that to get the regmap pointer
+> from dev_get_remap() and also use the of_node of the parent to register
+> a clk provider? It would be nice to avoid including the mfd header file
+> unless it's providing something useful.
+> 
 
-Not quite, we're missing a child node within uart1 for a serdev driver.
-Is there no such driver yet for your Bluetooth chipset, or did you not
-yet check?
+It is also used to find out which type of Lochnagar we have
+connected, which determines which clocks we should register. I
+could perhaps pass that using another mechanism but we would
+still want to include the MFD stuff to get the register
+definitions. So this approach seems simplest.
 
-> Bluez works stably with bcm43xx over uart 1500000 baud rate.
->  
->>
->> Also, I have a general comments, and it really depends on what your
->> intention about the board ecosystem is. Do you expect the SOM to be
->> swappable in multiple boards, or do you expect to send it as something
->> that is just fixed into a daughter board?
->>
->> In the former case, you probably want to use overlays instead. In the
->> latter, you're fine.
->>
-> Right, we expect the SoM to be swappable. I agree, to use overlays is
-> more convenient, but
-> the devboard DT file will be a reference for the overlays and the future
-> boards based on Neutis.
+> > +#define LN_CLK_FIXED(ID, NAME, RATE) \
+> > +       [LOCHNAGAR_##ID] = { \
+> > +               .name = NAME, .type = LOCHNAGAR_CLK_TYPE_FIXED, \
+> > +               { .fixed.rate = RATE, }, \
+> > +       }
+> 
+> Can all these fixed clks come from DT instead of being populated by this
+> driver? Unless they're being generated by this hardware block and not
+> actually a crystal or some other on-board clock that goes into this
+> hardware block and then right out of it?
+> 
 
-What about just keeping the common nodes enabled in a SoM .dts, so that
-the average board doesn't need an Overlay for booting?
+Technically they are supplied by a clock generator chip (bunch of
+PLLs) which is controlled by the board controller chip. That said
+I don't really ever see them changing so will move them in DT.
 
-@Maxime/Rob, is it possible to merge .dtso files these days? If not,
-could that be considered in the big dts Makefile refactoring? :)
+> > +static int lochnagar_regmap_prepare(struct clk_hw *hw)
+> > +{
+> > +       struct lochnagar_clk *lclk = lochnagar_hw_to_lclk(hw);
+> > +       struct lochnagar_clk_priv *priv = lclk->priv;
+> > +       struct regmap *regmap = priv->lochnagar->regmap;
+> > +       int ret;
+> > +
+> > +       dev_dbg(priv->dev, "Prepare %s\n", lclk->name);
+> 
+> Nitpick: Can you just rely on the clk tracepoints?
+> 
 
-Cheers,
-Andreas
+Can do they are hardly essential.
 
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+> > +
+> > +       if (!lclk->regmap.ena_mask)
+> 
+> Why did we assign the ops to the clk if it can't be enabled? Please make
+> different ops for different types of clks so we don't have to check
+> something else and bail out early when the op is called.
+> 
+
+This is a bit of a leak from earlier versions of the code I
+can just remove them.
+
+> > +static int lochnagar_regmap_set_parent(struct clk_hw *hw, u8 index)
+> > +{
+> > +       struct lochnagar_clk *lclk = lochnagar_hw_to_lclk(hw);
+> > +       struct lochnagar_clk_priv *priv = lclk->priv;
+> > +       struct regmap *regmap = priv->lochnagar->regmap;
+> > +       int ret;
+> > +
+> > +       dev_dbg(priv->dev, "Reparent %s to %s\n",
+> > +               lclk->name, priv->parents[index]);
+> > +
+> > +       if (lclk->regmap.dir_mask) {
+> > +               ret = regmap_update_bits(regmap, lclk->regmap.cfg_reg,
+> > +                                        lclk->regmap.dir_mask,
+> > +                                        lclk->regmap.dir_mask);
+> > +               if (ret < 0) {
+> > +                       dev_err(priv->dev, "Failed to set %s direction: %d\n",
+> 
+> What does direction mean?
+> 
+
+Some of the clocks can both generate and receive a clock. For
+example the PSIA (external audio interface) MCLKs, the attached
+device could be expecting or providing a master audio clock. If
+the user assigns a parent to the clock we assume the attached
+device is providing a clock to us, otherwise we assume we are
+providing the clock.
+
+> > +       ret = regmap_read(regmap, lclk->regmap.src_reg, &val);
+> > +       if (ret < 0) {
+> > +               dev_err(priv->dev, "Failed to read parent of %s: %d\n",
+> > +                       lclk->name, ret);
+> > +               return 0;
+> 
+> Return a number greater than all possible parents of this clk?
+> 
+
+Can do.
+
+> > +       for (i = 0; i < ARRAY_SIZE(priv->lclks); i++) {
+> > +               lclk = &priv->lclks[i];
+> > +
+> > +               lclk->priv = priv;
+> > +
+> > +               switch (lclk->type) {
+> > +               case LOCHNAGAR_CLK_TYPE_FIXED:
+> > +                       clk = clk_register_fixed_rate(priv->dev, lclk->name,
+> > +                                                     NULL, 0,
+> > +                                                     lclk->fixed.rate);
+> > +                       break;
+> > +               case LOCHNAGAR_CLK_TYPE_REGMAP:
+> > +                       clk_init.name = lclk->name;
+> > +                       lclk->hw.init = &clk_init;
+> > +
+> > +                       clk = devm_clk_register(priv->dev, &lclk->hw);
+> 
+> Please use the clk_hw based registration APIs.
+> 
+
+Can do.
+
+> > +static int lochnagar_clk_remove(struct platform_device *pdev)
+> > +{
+> > +       struct lochnagar_clk_priv *priv = platform_get_drvdata(pdev);
+> > +       int i;
+> > +
+> > +       of_clk_del_provider(priv->lochnagar->dev->of_node);
+> 
+> Use devm variant of clk provider registration?
+> 
+
+This isn't using the devm version as it makes the assumption
+that the device that contains the DT is the same one we want
+to devm against which isn't the case here.
+
+I could update probe to copy the of_node over from the parent, if
+you prefer? I think that would also work.
+
+> > +static struct platform_driver lochnagar_clk_driver = {
+> > +       .driver = {
+> > +               .name = "lochnagar-clk",
+> > +       },
+> 
+> Any id_table?
+> 
+
+Doesn't really need one since the driver will only ever be bound
+in by the MFD, so matching on the driver name is fine.
+
+Thanks,
+Charles
