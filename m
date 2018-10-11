@@ -1,111 +1,64 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: [PATCH 1/2] can: xilinx: add can 2.0 support
-Date: Thu, 11 Oct 2018 21:56:10 +0530
-Message-ID: <1539275171-13252-1-git-send-email-shubhrajyoti.datta@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: robh+dt@kernel.org, michal.simek@xilinx.com, davem@davemloft.net, mkl@pengutronix.de, wg@grandegger.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v4 1/2] dt-bindings: dmaengine: add DT binding for UniPhier MIO DMAC
+Date: Fri, 12 Oct 2018 01:41:02 +0900
+Message-ID: <1539276063-5103-2-git-send-email-yamada.masahiro@socionext.com>
+References: <1539276063-5103-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1539276063-5103-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for can 2.0.
+The MIO DMAC (Media IO DMA Controller) is used in UniPhier LD4,
+Pro4, and sLD8 SoCs.
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/net/can/xilinx_can.c | 34 +++++++++++++++++++++++++++++++++-
- 1 file changed, 33 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c
-index 045f084..7c4f5ad 100644
---- a/drivers/net/can/xilinx_can.c
-+++ b/drivers/net/can/xilinx_can.c
-@@ -63,6 +63,7 @@ enum xcan_reg {
-        XCAN_FSR_OFFSET         =3D 0x00E8, /* RX FIFO Status */
-        XCAN_TXMSG_BASE_OFFSET  =3D 0x0100, /* TX Message Space */
-        XCAN_RXMSG_BASE_OFFSET  =3D 0x1100, /* RX Message Space */
-+       XCAN_RXMSG_2_BASE_OFFSET        =3D 0x2100, /* RX Message Space */
- };
+Changes in v4: None
+Changes in v3:
+ - Add Rob's Reviewed-by
 
- #define XCAN_FRAME_ID_OFFSET(frame_base)       ((frame_base) + 0x00)
-@@ -75,6 +76,8 @@ enum xcan_reg {
-                                         XCAN_CANFD_FRAME_SIZE * (n))
- #define XCAN_RXMSG_FRAME_OFFSET(n)     (XCAN_RXMSG_BASE_OFFSET + \
-                                         XCAN_CANFD_FRAME_SIZE * (n))
-+#define XCAN_RXMSG_2_FRAME_OFFSET(n)   (XCAN_RXMSG_2_BASE_OFFSET + \
-+                                        XCAN_CANFD_FRAME_SIZE * (n))
+Changes in v2:
+ - Rename the node "dmac" to "dma-controller"
+ - Remove dma-channels property
 
- /* the single TX mailbox used by this driver on CAN FD HW */
- #define XCAN_TX_MAILBOX_IDX            0
-@@ -152,6 +155,7 @@ enum xcan_reg {
-  * instead of the regular FIFO at 0x50
-  */
- #define XCAN_FLAG_RX_FIFO_MULTI        0x0010
-+#define XCAN_FLAG_CANFD_2      0x0020
+ .../devicetree/bindings/dma/uniphier-mio-dmac.txt  | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
 
- struct xcan_devtype_data {
-        unsigned int flags;
-@@ -221,6 +225,18 @@ static const struct can_bittiming_const xcan_bittiming=
-_const_canfd =3D {
-        .brp_inc =3D 1,
- };
-
-+static const struct can_bittiming_const xcan_bittiming_const_canfd2 =3D {
-+       .name =3D DRIVER_NAME,
-+       .tseg1_min =3D 1,
-+       .tseg1_max =3D 256,
-+       .tseg2_min =3D 1,
-+       .tseg2_max =3D 128,
-+       .sjw_max =3D 128,
-+       .brp_min =3D 1,
-+       .brp_max =3D 256,
-+       .brp_inc =3D 1,
-+};
+diff --git a/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt b/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
+new file mode 100644
+index 0000000..b12388d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
+@@ -0,0 +1,25 @@
++UniPhier Media IO DMA controller
 +
- /**
-  * xcan_write_reg_le - Write a value to the device register little endian
-  * @priv:      Driver private data structure
-@@ -973,7 +989,10 @@ static int xcan_rx_fifo_get_next_frame(struct xcan_pri=
-v *priv)
-                if (!(fsr & XCAN_FSR_FL_MASK))
-                        return -ENOENT;
-
--               offset =3D XCAN_RXMSG_FRAME_OFFSET(fsr & XCAN_FSR_RI_MASK);
-+               if (priv->devtype.flags & XCAN_FLAG_CANFD_2)
-+                       offset =3D XCAN_RXMSG_2_FRAME_OFFSET(fsr & XCAN_FSR=
-_RI_MASK);
-+               else
-+                       offset =3D XCAN_RXMSG_FRAME_OFFSET(fsr & XCAN_FSR_R=
-I_MASK);
-
-        } else {
-                /* check if RX FIFO is empty */
-@@ -1430,11 +1449,24 @@ static const struct xcan_devtype_data xcan_canfd_da=
-ta =3D {
-        .bus_clk_name =3D "s_axi_aclk",
- };
-
-+static const struct xcan_devtype_data xcan_canfd2_data =3D {
-+       .flags =3D XCAN_FLAG_EXT_FILTERS |
-+                XCAN_FLAG_RXMNF |
-+                XCAN_FLAG_TX_MAILBOXES |
-+                XCAN_FLAG_CANFD_2 |
-+                XCAN_FLAG_RX_FIFO_MULTI,
-+       .bittiming_const =3D &xcan_bittiming_const_canfd2,
-+       .btr_ts2_shift =3D XCAN_BTR_TS2_SHIFT_CANFD,
-+       .btr_sjw_shift =3D XCAN_BTR_SJW_SHIFT_CANFD,
-+       .bus_clk_name =3D "s_axi_aclk",
-+};
++This works as an external DMA engine for SD/eMMC controllers etc.
++found in UniPhier LD4, Pro4, sLD8 SoCs.
 +
- /* Match table for OF platform binding */
- static const struct of_device_id xcan_of_match[] =3D {
-        { .compatible =3D "xlnx,zynq-can-1.0", .data =3D &xcan_zynq_data },
-        { .compatible =3D "xlnx,axi-can-1.00.a", .data =3D &xcan_axi_data }=
-,
-        { .compatible =3D "xlnx,canfd-1.0", .data =3D &xcan_canfd_data },
-+       { .compatible =3D "xlnx,canfd-2.0", .data =3D &xcan_canfd2_data },
-        { /* end of list */ },
- };
- MODULE_DEVICE_TABLE(of, xcan_of_match);
++Required properties:
++- compatible: should be "socionext,uniphier-mio-dmac".
++- reg: offset and length of the register set for the device.
++- interrupts: a list of interrupt specifiers associated with the DMA channels.
++- clocks: a single clock specifier.
++- #dma-cells: should be <1>. The single cell represents the channel index.
++
++Example:
++	dmac: dma-controller@5a000000 {
++		compatible = "socionext,uniphier-mio-dmac";
++		reg = <0x5a000000 0x1000>;
++		interrupts = <0 68 4>, <0 68 4>, <0 69 4>, <0 70 4>,
++			     <0 71 4>, <0 72 4>, <0 73 4>, <0 74 4>;
++		clocks = <&mio_clk 7>;
++		#dma-cells = <1>;
++	};
++
++Note:
++In the example above, "interrupts = <0 68 4>, <0 68 4>, ..." is not a typo.
++The first two channels share a single interrupt line.
+-- 
+2.7.4
