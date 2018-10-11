@@ -1,101 +1,65 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v3 2/9] dt-bindings: ti-lmu: Remove LM3697
-Date: Thu, 11 Oct 2018 13:34:51 -0500
-Message-ID: <4fcb91c7-b2b2-798d-8a41-fa1b475086e0@ti.com>
-References: <20181011165123.32198-1-dmurphy@ti.com>
- <20181011165123.32198-3-dmurphy@ti.com> <20181011182734.GA7973@amd>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: iio: vadc: Update example to include
+ unit address for node 'usb-id-nopull'
+Date: Thu, 11 Oct 2018 12:11:34 -0700
+Message-ID: <20181011191134.GM22824@google.com>
+References: <20181004001432.21218-1-mka@chromium.org>
+ <20181004001432.21218-2-mka@chromium.org>
+ <20181005204743.GA17135@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181011182734.GA7973@amd>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181005204743.GA17135@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, lee.jones@linaro.org, tony@atomide.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Pavel
+Hi Rob,
 
-On 10/11/2018 01:27 PM, Pavel Machek wrote:
-> On Thu 2018-10-11 11:51:16, Dan Murphy wrote:
->> Remove support for the LM3697 LED device
->> from the ti-lmu.  The LM3697 will be supported
->> via a stand alone LED driver.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+On Fri, Oct 05, 2018 at 03:47:43PM -0500, Rob Herring wrote:
+> On Wed, Oct 03, 2018 at 05:14:31PM -0700, Matthias Kaehlcke wrote:
+> > The node has a reg property, therefore its name should include a unit
+> > address.
+> > 
+> > Also change the name from 'usb_id_nopull' to 'usb-id-nopull' to follow
+> > DT conventions.
 > 
-> NAK.
+> This is ADC channels?
 
-Thanks for the NAK.
+yes
 
-This NAK was NAK'd by other maintainer in the V2 RFC patchset
+> If so, then DT convention would really be "adc@...". 
 
-https://lore.kernel.org/patchwork/patch/993171/
+ok, will update
 
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> > Changes in v4:
+> > - patch added to the series
+> > ---
+> >  Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+> > index d0c188e5c922..ff7aa5038ba6 100644
+> > --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+> > +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+> > @@ -112,7 +112,7 @@ Example:
+> >  		io-channel-ranges;
+> >  
+> >  		/* Channel node */
+> > -		usb_id_nopull {
+> > +		usb-id-nopull@VADC_LR_MUX10_USB_ID {
+> >  			reg = <VADC_LR_MUX10_USB_ID>;
 > 
-> 								Pavel
-> 								
->> index c885cf89b8ce..920f910be4e9 100644
->> --- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
->> +++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
->> @@ -9,7 +9,6 @@ TI LMU driver supports lighting devices below.
->>    LM3632       Backlight and regulator
->>    LM3633       Backlight, LED and fault monitor
->>    LM3695       Backlight
->> -  LM3697       Backlight and fault monitor
->>  
->>  Required properties:
->>    - compatible: Should be one of:
->> @@ -18,11 +17,10 @@ Required properties:
->>                  "ti,lm3632"
->>                  "ti,lm3633"
->>                  "ti,lm3695"
->> -                "ti,lm3697"
->>    - reg: I2C slave address.
->>           0x11 for LM3632
->>           0x29 for LM3631
->> -         0x36 for LM3633, LM3697
->> +         0x36 for LM3633
->>           0x38 for LM3532
->>           0x63 for LM3695
->>  
->> @@ -38,7 +36,6 @@ Optional nodes:
->>      Required properties:
->>        - compatible: Should be one of:
->>                      "ti,lm3633-fault-monitor"
->> -                    "ti,lm3697-fault-monitor"
->>    - leds: LED properties for LM3633. Please refer to [2].
->>    - regulators: Regulator properties for LM3631 and LM3632.
->>                  Please refer to [3].
->> @@ -220,24 +217,3 @@ lm3695@63 {
->>  		};
->>  	};
->>  };
->> -
->> -lm3697@36 {
->> -	compatible = "ti,lm3697";
->> -	reg = <0x36>;
->> -
->> -	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
->> -
->> -	backlight {
->> -		compatible = "ti,lm3697-backlight";
->> -
->> -		lcd {
->> -			led-sources = <0 1 2>;
->> -			ramp-up-msec = <200>;
->> -			ramp-down-msec = <200>;
->> -		};
->> -	};
->> -
->> -	fault-monitor {
->> -		compatible = "ti,lm3697-fault-monitor";
->> -	};
->> -};
-> 
+> Defines are generally used when there's not well defined numbering such 
+> as clock ids. Interrupts and addresses are generally well defined and 
+> don't need defines.
 
+ok, I'll update this to use literals
 
--- 
-------------------
-Dan Murphy
+Thanks for the review!
+
+Matthias
