@@ -1,82 +1,81 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 5/9] arm64: dts: sdm845: Add gpu and gmu
- device nodes
-Date: Thu, 11 Oct 2018 08:54:56 -0600
-Message-ID: <20181011145456.GG9977@jcrouse-lnx.qualcomm.com>
-References: <20180827151112.25211-1-jcrouse@codeaurora.org>
- <20180827151112.25211-6-jcrouse@codeaurora.org>
- <20181010094628.wejfgmvcv6stzoco@vireshk-i7>
- <20181010142905.GB9977@jcrouse-lnx.qualcomm.com>
- <20181010143149.4e3ct3efkuwxa2hw@vireshk-i7>
- <20181010144856.GC9977@jcrouse-lnx.qualcomm.com>
- <20181010145139.nvalsr2ij2lj53dh@vireshk-i7>
- <20181010151006.GD9977@jcrouse-lnx.qualcomm.com>
- <20181011050216.4ba5i3ghh5rbvjbl@vireshk-i7>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20181011050216.4ba5i3ghh5rbvjbl@vireshk-i7>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: rockchip: mark use_dma as bool" to the spi tree
+Date: Thu, 11 Oct 2018 15:56:00 +0100 (BST)
+Message-ID: <20181011145600.9F3DC11223ED@debutante.sirena.org.uk>
+References: <20181010090038.20834-6-kernel@esmil.dk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181010090038.20834-6-kernel@esmil.dk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Emil Renner Berthing <kernel@esmil.dk>
+Cc: Mark Brown <broonie@kernel.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>Mark Brown <broonie@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Shunqian Zheng <zhengsq@rock-chips.com>, Nickey Yang <nickey.yang@rock-chips.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Randy Li <ayaka@soulik.info>, Chris Zhong <zyw@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.orglinux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBPY3QgMTEsIDIwMTggYXQgMTA6MzI6MTZBTSArMDUzMCwgVmlyZXNoIEt1bWFyIHdy
-b3RlOgo+IE9uIDEwLTEwLTE4LCAwOToxMCwgSm9yZGFuIENyb3VzZSB3cm90ZToKPiA+IE9uIFdl
-ZCwgT2N0IDEwLCAyMDE4IGF0IDA4OjIxOjM5UE0gKzA1MzAsIFZpcmVzaCBLdW1hciB3cm90ZToK
-PiA+ID4gT24gMTAtMTAtMTgsIDA4OjQ4LCBKb3JkYW4gQ3JvdXNlIHdyb3RlOgo+ID4gPiA+IHFj
-b20sbGV2ZWwgY29tZXMgc3RyYWlnaHQgZnJvbToKPiA+ID4gPiAKPiA+ID4gPiBodHRwczovL2xv
-cmUua2VybmVsLm9yZy9sa21sLzIwMTgwNjI3MDQ1MjM0LjI3NDAzLTItcm5heWFrQGNvZGVhdXJv
-cmEub3JnLwo+ID4gPiA+IAo+ID4gPiA+IEJ1dCBpbiB0aGlzIGNhc2UgaW5zdGVhZCBvZiB1c2lu
-ZyB0aGUgQ1BVIHRvIHByb2dyYW0gdGhlIFJQTWggd2UgYXJlIHBhc3NpbmcKPiA+ID4gPiB0aGUg
-dmFsdWUgdG8gYSBtaWNyb3Byb2Nlc3NvciAodGhlIEdNVSkgYW5kIHRoYXQgd2lsbCBkbyB0aGUg
-dm90ZSBvbiBvdXIgYmVoYWxmCj4gPiA+ID4gKFRlY2huaWNhbGx5IHdlIHVzZSB0aGUgdmFsdWUg
-dG8gbG9vayB1cCB0aGUgdm90ZSBpbiB0aGUgY21kLWRiIGRhdGFiYXNlIGFuZAo+ID4gPiA+IHBh
-c3MgdGhhdCB0byB0aGUgR01VKQo+ID4gPiA+IAo+ID4gPiA+IFRoaXMgaXMgd2h5IHRoZSBxY29t
-LGxldmVsIHdhcyBhZGRlZCBpbiB0aGUgZmlyc3QgcGxhY2Ugc28gd2UgY291bGQgYXQgbGVhc3QK
-PiA+ID4gPiBzaGFyZSB0aGUgbm9tZW5jbGF0dXJlIHdpdGggdGhlIHJwbWhkIGlmIG5vdCB0aGUg
-aW1wbGVtZW50YXRpb24uCj4gPiA+IAo+ID4gPiBIb3cgeW91IGFjdHVhbGx5IHBhc3MgdGhlIHZv
-dGUgdG8gdGhlIHVuZGVybHlpbmcgaGFyZHdhcmUsIFJQTWggb3IKPiA+ID4gR01VLCBpcyBpcnJl
-bGV2YW50IHRvIHRoZSB3aG9sZSB0aGluZy4gV2hhdCBpcyBpbXBvcnRhbnQgaXMgaG93IHdlCj4g
-PiA+IGRlc2NyaWJlIHRoYXQgaW4gRFQgYW5kIGhvdyB3ZSByZXByZXNlbnQgdGhlIHdob2xlIHRo
-aW5nLgo+ID4gPiAKPiA+ID4gV2UgaGF2ZSBjaG9zZW4gZ2VucGQgKyBPUFAgdG8gZG8gdGhpcyBh
-bmQgc2FtZSBzaG91bGQgYmUgdXNlZCBieSB5b3UKPiA+ID4gYXMgd2VsbC4gQW5vdGhlciBiZW5l
-Zml0IGlzIHRoYXQgdGhlIGdlbnBkIGNvcmUgd2lsbCBkbyB2b3RlCj4gPiA+IGFnZ3JlZ2F0aW9u
-IGZvciB5b3UgaGVyZS4KPiA+IAo+ID4gSSdtIG5vdCBzdXJlIHdoYXQgeW91IGFyZSBzdWdnZXN0
-aW5nPyBUaGUgdm90ZSBpcyByZXByZXNlbnRlZCBpbiBEVCBleGFjdGx5IGFzCj4gPiBkZXNjcmli
-ZWQgaW4gdGhlIGJpbmRpbmdzLiAKPiAKPiBMb29rIGF0IGhvdyBSYWplbmRyYSBoYXMgZG9uZSBp
-dCB0byBzZWUgdGhlIGRpZmZlcmVuY2UuCj4gCj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGtt
-bC8yMDE4MDYyNzA0NTIzNC4yNzQwMy0zLXJuYXlha0Bjb2RlYXVyb3JhLm9yZy8KClRoZSBHUFUg
-ZG9tYWluIGlzIGNvbXBsZXRlbHkgY29udHJvbGxlZCBieSB0aGUgR01VIGhhcmR3YXJlIGFuZCBp
-cyBwb3dlcmVkCmluZGVwZW5kZW50bHkgb2YgdGhlIENQVS4gRm9yIHZhcmlvdXMgcmVhc29ucyB0
-aGUgR01VIGNhbid0IGNvbWUgdXAgd2l0aAp0aGUgdm90ZSBpdHNlbGYgc28gd2UgbmVlZCB0byBj
-b25zdHJ1Y3QgYSB2b3RlIGFuZCBzZW5kIGl0IGR1cmluZwppbml0aWFsaXphdGlvbi4gRm9yIHRo
-aXMgd2UgZHVwbGljYXRlIHRoZSBjb2RlIHRoYXQgcm1waGQgZG9lcyB0byBxdWVyeSB0aGUKY21k
-LWRiIGFuZCBidWlsZCB0aGUgdmFsdWVzIHVzaW5nIHFjb20sbGV2ZWwgYXMgYSBndWlkZS4gVGhp
-cyBpcyBuZWNlc3NhcnkKY29weXBhc3RhIGFzIHRoZSBhbHRlcm5hdGl2ZSB3b3VsZCBiZSB0byBh
-ZGQgdGhlIGhvb2tzIGludG8gZ2VucGQgb3IgYWRkIGEKc2lkZSBob29rIGludG8gdGhlIHJwbWhk
-IHRvIGdldCB0aGUgdmFsdWVzIHdlIG5lZWQgYW5kIG5vbmUgb2YgdGhhdCBpcyB3b3J0aAppdCBm
-b3IgYSBmZXcgbGluZXMgb2Ygd2Fsa2luZyBhbiBhcnJheS4KCnFjb20sbGV2ZWwgc2VydmVzIHRo
-ZSBwdXJwb3NlIGZvciB1cyBpbiB0aGlzIGNhc2UgYmVjYXVzZSB3ZSBjYW4gZ2V0IHRoZSB2YWx1
-ZQp3ZSBuZWVkIGFuZCBjb25zdHJ1Y3QgdGhlIHZvdGUuIElmIHdlIG1vdmUgdG8gdXNpbmcgcmVx
-dWlyZWQtb3BwLCB0aGF0cyBqdXN0CmFub3RoZXIgc3RlcCBvZiBwYXJzaW5nIGZvciB0aGUgZHJp
-dmVyIGFuZCBpdCBlc3RhYmxpc2hlcyBhIHJlbGF0aW9uc2hpcCB3aXRoCnJtcGhkIG9uIHRoZSBD
-UFUgdGhhdCBzaG91bGRuJ3QgZXhpc3QuCgpJIGRvIHNlZSBhIGdvb2QgYXJndW1lbnQgZm9yIHVz
-aW5nIHRoZSBzeW1ib2xpYyBiaW5kaW5ncyAoaS5lLgpSUE1IX1JFR1VMQVRPUl9MRVZFTF9UVVJC
-T19MMSkgYW5kIHdlIGNhbiBkbyB0aGF0IGVhc2lseSBidXQgYmV5b25kIHRoYXQgSQpkb24ndCB0
-aGluayB0aGF0IHdlIG5lZWQgdGhlIGV4dHJhIHBhcnNpbmcgc3RlcC4KClRoYW5rcywKSm9yZGFu
-CgotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9m
-IENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9q
-ZWN0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVk
-cmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+The patch
+
+   spi: rockchip: mark use_dma as bool
+
+has been applied to the spi tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From f340b920511a666b02d371e88801d3817ea7a880 Mon Sep 17 00:00:00 2001
+From: Emil Renner Berthing <kernel@esmil.dk>
+Date: Wed, 10 Oct 2018 11:00:36 +0200
+Subject: [PATCH] spi: rockchip: mark use_dma as bool
+
+The driver data has a u32 field use_dma which is
+only ever used as a boolean, so change its type
+to reflect that.
+
+Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/spi-rockchip.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
+index 6a53b940f2f5..99943aa71bc1 100644
+--- a/drivers/spi/spi-rockchip.c
++++ b/drivers/spi/spi-rockchip.c
+@@ -202,7 +202,7 @@ struct rockchip_spi {
+ 
+ 	bool cs_asserted[ROCKCHIP_SPI_MAX_CS_NUM];
+ 
+-	u32 use_dma;
++	bool use_dma;
+ 	struct sg_table tx_sg;
+ 	struct sg_table rx_sg;
+ 	struct rockchip_spi_dma_data dma_rx;
+@@ -628,9 +628,9 @@ static int rockchip_spi_transfer_one(
+ 
+ 	/* we need prepare dma before spi was enabled */
+ 	if (master->can_dma && master->can_dma(master, spi, xfer))
+-		rs->use_dma = 1;
++		rs->use_dma = true;
+ 	else
+-		rs->use_dma = 0;
++		rs->use_dma = false;
+ 
+ 	rockchip_spi_config(rs);
+ 
+-- 
+2.19.0.rc2
