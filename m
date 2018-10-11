@@ -1,54 +1,87 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH 05.1/16] of:overlay: missing name, phandle, linux,phandle
- in new nodes
-Date: Thu, 11 Oct 2018 16:38:26 -0700
-Message-ID: <3f36468b-676a-558d-4180-7129d2bf2c6c@gmail.com>
-References: <CANk1AXQScT_b1_UOiVuWNcB=LiA3gvvZrw53H1XVSCNqsGPqtA@mail.gmail.com>
- <1539151495-8110-1-git-send-email-frowand.list@gmail.com>
- <f20d06c3-5db7-3547-7b8b-d43d474683f1@gmail.com>
- <CANk1AXQ+-X51unT_ZHw+wxHG3tyGUKUihVsdzOZZ2NJ2zfS3Rg@mail.gmail.com>
- <e32a99a2-1db5-80e6-5022-83cd8fd07180@gmail.com>
- <bcbba4ca-0656-aa27-c058-064fb7175d38@gmail.com>
- <CANk1AXSRifmwu1FQRY_hsuqDESEzcMET_hpLNZOeW4QLrUwsdw@mail.gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH] dt-bindings: Add bindings for aliases node
+Date: Thu, 11 Oct 2018 16:50:15 -0700
+Message-ID: <20181011235015.GO22824@google.com>
+References: <20180925210255.172734-1-mka@chromium.org>
+ <153906464468.119890.12038987094612660933@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANk1AXSRifmwu1FQRY_hsuqDESEzcMET_hpLNZOeW4QLrUwsdw@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <153906464468.119890.12038987094612660933@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Moritz Fischer <mdf@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/11/18 12:33, Alan Tull wrote:
-> On Thu, Oct 11, 2018 at 12:39 AM Frank Rowand <frowand.list@gmail.com> wrote:
+On Mon, Oct 08, 2018 at 10:57:24PM -0700, Stephen Boyd wrote:
+> Quoting Matthias Kaehlcke (2018-09-25 14:02:55)
+> > Add a global binding for the 'aliases' node. This includes an initial list
+> > of standardized alias names for some hardware components that are commonly
+> > found in 'aliases'.
+> > 
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> >  Documentation/devicetree/bindings/aliases.txt | 47 +++++++++++++++++++
 > 
-> [resend of my messed up rejected email of a minute ago, sorry]
+> Any chance we can get a documentation update for the devicetree spec as
+> well?
+
+I'm not involved in the DT spec process, but I'd certainly welcome an
+update ;-)
+
+> >  1 file changed, 47 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/aliases.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/aliases.txt b/Documentation/devicetree/bindings/aliases.txt
+> > new file mode 100644
+> > index 000000000000..d64ed1c7eb34
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/aliases.txt
+> > @@ -0,0 +1,47 @@
+> > +The aliases node
+> > +----------------
+> > +
+> > +The aliases node contains properties that represent aliases to device tree
+> > +nodes. The name of the property is the alias name, the value is the path of
+> > +a the device tree node that corresponds to the alias. The path may be
 > 
->>
->> On 10/10/18 14:03, Frank Rowand wrote:
+> s/a //
 
-< snip >
+ack
 
-> I understand you're quite busy with all this, but I'm wondering
-> whether it might be worth it go ahead and make the properties be
-> kernel objects also at this point.  That would be an improvement for
-> the case of overlay properties added to non-overlay nodes, so the
-> lifespan of the overlay property memory can be coupled with the
-> properties kobj's instead of the node kobj's.
+> > +specified as a string or a phandle.
+> > +
+> > +Alias names are often suffixed with a numeric ID, especially when there may
+> > +be multiple instances of the same type. The ID typically corresponds to the
+> > +hardware layout, it may also be used by drivers for a stable mapping of
+> > +device names and hardware entities.
 > 
-> Alan
+> Indicate the numeric ID is a u32 or something like that?
+
+ok
+
+> > +
+> > +Alias names
+> > +-----------
+> > +
+> > +The devicetree specification doesn't require the use of specific alias
+> > +names to refer to hardware entities of a given type, however the Linux
+> > +kernel aims for a certain level of consistency.
+> > +
+> > +The following standardized alias names shall be used for their
+> > +corresponding hardware components:
+> > +
+> > +  bluetoothN           Bluetooth controller
 > 
+> Can we use syntax like:
+> 
+> 	bluetooth<N>
+> 
+> to indicate that <N> is an unsigned integer?
 
-That is one of the approaches that I am thinking about to handle
-the potential memory leaks from those properties.
+sounds good
 
-I'd like to make these changes in a step wise fashion, to let each
-major change get some exposure and use before moving on to the
-next step.  Making properties into kernel objects would impact
-a lot of code.
+Thanks for the review!
 
-So not in this series.  But thanks for thinking about it.
-
--Frank
+Matthias
