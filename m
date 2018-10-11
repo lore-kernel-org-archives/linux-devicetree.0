@@ -1,29 +1,69 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v4 0/2] dmaengine: add UniPhier MIO DMAC driver
-Date: Fri, 12 Oct 2018 01:41:01 +0900
-Message-ID: <1539276063-5103-1-git-send-email-yamada.masahiro@socionext.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V2 3/5] usb: xhci: tegra: Add genpd support
+Date: Thu, 11 Oct 2018 18:47:53 +0200
+Message-ID: <20181011164753.GA7393@ulmo>
+References: <1538143910-24400-1-git-send-email-jonathanh@nvidia.com>
+ <1538143910-24400-4-git-send-email-jonathanh@nvidia.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1538143910-24400-4-git-send-email-jonathanh@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-1/2: DT-binding
-2/2: driver
 
+--ew6BAiZeqk4r7MaW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Masahiro Yamada (2):
-  dt-bindings: dmaengine: add DT binding for UniPhier MIO DMAC
-  dmaengine: uniphier-mdmac: add UniPhier MIO DMAC driver
+On Fri, Sep 28, 2018 at 03:11:48PM +0100, Jon Hunter wrote:
+> The generic power-domain framework has been updated to allow devices
+> that require more than one power-domain to create a new device for
+> each power-domain required and then link these new power-domain
+> devices to the consumer device.
+>=20
+> Update the Tegra xHCI driver to use the new APIs provided by the
+> generic power-domain framework so we can use the generic power-domain
+> framework for managing the xHCI controllers power-domains. Please
+> note that to maintain backward compatibility with older device-tree
+> blobs these new generic power-domain APIs are only used if the
+> 'power-domains' property is present and otherwise we fall back to
+> using the legacy Tegra APIs for managing the power-domains.
+>=20
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>  drivers/usb/host/xhci-tegra.c | 89 +++++++++++++++++++++++++++++++++++++=
+------
+>  1 file changed, 77 insertions(+), 12 deletions(-)
 
- .../devicetree/bindings/dma/uniphier-mio-dmac.txt  |  25 +
- MAINTAINERS                                        |   1 +
- drivers/dma/Kconfig                                |  11 +
- drivers/dma/Makefile                               |   1 +
- drivers/dma/uniphier-mdmac.c                       | 506 +++++++++++++++++++++
- 5 files changed, 544 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
- create mode 100644 drivers/dma/uniphier-mdmac.c
+It'd be nice if we could eventually get rid of the legacy Tegra APIs,
+but that's a separate issue, and this patch looks fine as-is:
 
--- 
-2.7.4
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--ew6BAiZeqk4r7MaW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlu/frYACgkQ3SOs138+
+s6FKUw//UiZXqBWAdR5Ot6XX321n53Ig86IZzDMLB7iDWbzi+BtsKGGDqs+AwnY3
+ETXJdwG7YI0WfdiPhh3gjE6uOx6/l0fvwLz82oFIxetwbsxb7QqbQWZJoVxm3Hcp
+RhaB+mgN8PmFdd8TgaL6K0wmLyE1qA+XcBJPYqRHhQoFVp4K6bn2Rl0Gl5XshnS+
+tUfyLMiJy15Zr25NIkhWBu+BfqmDHjqf6jdyp94p1vbXUlw4ApGcYlED82eLVn91
+1yTKuOCG4xGKDpL7fQs2HF9KdPCgbKu8LvawLSkRVbNXBavLmWblOuPBWPa4Sm0a
+g6eAJOssYStmznwNWT88+DvC2xfmi4eKlNhJt7fxykOsPKsQ2cOOw6yfco1R2GPf
+B1Sfulqbx3/w3jBpzrwUn8dLmTP6Dxb8fhQqL/EkaB+bPL5qQWFjADAgRsDDLFZY
+sbb7tvjx9OBSQ93LyzkbsYDavdUiAFjDjtRj6XPk3KEY2FSfbsXF8zmOk3OrTwJ9
+eCfQw0en8RKpBdQgd81Utq0y24guei8lYbVho5pO+ehNXEyA2x1WrLVhkM4TH+ZP
+kXdmamgVhc+MmKGpOaYkAQakA6f2UWd9VErCWoRNnLDzMlks/BFvYcZeyutuKJOe
+NLf9Vb+t5qwQgl3Qj0LFYoTdG7LsQ3G9Eygl/QeIFL0p1Jzp71g=
+=pzTh
+-----END PGP SIGNATURE-----
+
+--ew6BAiZeqk4r7MaW--
