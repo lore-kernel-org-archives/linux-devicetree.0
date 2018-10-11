@@ -1,7 +1,7 @@
 From: Peng Ma <peng.ma@nxp.com>
-Subject: [PATCH 6/7] arm64: dts: ls1046a: add qdma device tree nodes
-Date: Thu, 11 Oct 2018 17:46:54 +0800
-Message-ID: <20181011094655.45707-6-peng.ma@nxp.com>
+Subject: [PATCH 5/7] arm64: dts: ls1043a: add qdma device tree nodes
+Date: Thu, 11 Oct 2018 17:46:53 +0800
+Message-ID: <20181011094655.45707-5-peng.ma@nxp.com>
 References: <20181011094655.45707-1-peng.ma@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181011094655.45707-1-peng.ma@nxp.com>
@@ -10,23 +10,24 @@ To: vkoul@kernel.org, leoyang.li@nxp.com
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, dan.j.williams@intel.com, zw@zh-kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Peng Ma <peng.ma@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-add the qDMA device tree nodes for LS1046A devices.
+add the qDMA device tree nodes for LS1043A devices.
 
 Signed-off-by: Peng Ma <peng.ma@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |   21 +++++++++++++++++++++
- 1 files changed, 21 insertions(+), 0 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |   22 ++++++++++++++++++++++
+ 1 files changed, 22 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index ef83786..9f36293 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -704,6 +704,27 @@
- 					<0000 0 0 4 &gic GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 7881e3d..49c6655 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -734,6 +734,28 @@
+ 					<0000 0 0 3 &gic 0 156 0x4>,
+ 					<0000 0 0 4 &gic 0 157 0x4>;
  		};
- 
++
 +		qdma: qdma@8380000 {
-+			compatible = "fsl,ls1046a-qdma", "fsl,ls1021a-qdma";
++			compatible = "fsl,ls1021a-qdma", "fsl,ls1043a-qdma";
 +			reg = <0x0 0x8380000 0x0 0x1000>, /* Controller regs */
 +			      <0x0 0x8390000 0x0 0x10000>, /* Status regs */
 +			      <0x0 0x83a0000 0x0 0x40000>; /* Block regs */
@@ -48,6 +49,6 @@ index ef83786..9f36293 100644
 +
  	};
  
- 	reserved-memory {
+ 	firmware {
 -- 
 1.7.1
