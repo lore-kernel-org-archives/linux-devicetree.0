@@ -1,35 +1,55 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH RFC v1 7/8] drivers: qcom: cpu_pd: Handle cpu hotplug in
- the domain
-Date: Thu, 11 Oct 2018 12:20:13 +0100
-Message-ID: <20181011112013.GC32752@e107155-lin>
-References: <1539206455-29342-1-git-send-email-rplsssn@codeaurora.org>
- <1539206455-29342-8-git-send-email-rplsssn@codeaurora.org>
+From: Talel Shenhar <talel@amazon.com>
+Subject: [PATCH 1/2] dt-bindings: spi: dw: add compatible for Amazon's Alpine spi controller
+Date: Thu, 11 Oct 2018 14:20:06 +0300
+Message-ID: <1539256807-25676-1-git-send-email-talel@amazon.com>
+References: <1539209339.1944.23.camel@impinj.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1539206455-29342-8-git-send-email-rplsssn@codeaurora.org>
+In-Reply-To: <1539209339.1944.23.camel@impinj.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, ulf.hansson@linaro.org, khilman@kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, ilina@codeaurora.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sudeep Holla <sudeep.holla@arm.com>
+To: broonie@kernel.org, linux-spi@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: talel@amazon.com, jonnyc@amazon.com, ronenk@amazon.com, barakw@amazon.com, David Woodhouse <dwmw@amazon.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 11, 2018 at 02:50:54AM +0530, Raju P.L.S.S.S.N wrote:
-> Use cpu hotplug callback mechanism to attach/dettach the cpu in
-> the cpu power domain. During cpu hotplug callback registration,
-> the starting callback is invoked on all online cpus. So there is
-> no need to attach from device probe.
->
+This compatible adds the ability for dw spi controller driver to work with
+the dw spi controller found on Alpine chips.
 
-To be more explicit, NACK to this series(patches 4-8 to be more specific)
-unless you provide details on:
+The dw spi controller has an auto-deselect of Chip-Select, in case there is
+no data inside the Tx FIFO. While working on platforms with Alpine chips,
+auto-deselect mode causes an issue for some spi devices that can't handle
+the Chip-Select deselect in the middle of a transaction. It is a normal
+behavior for a Tx FIFO to be empty in the middle of a transaction, due to
+busy cpu. In the Alpine chip family an option to change the default
+behavior was added to the original dw spi controller to prevent this issue
+of de-asserting Chip-Select once TX FIFO is empty. The change was to allow
+SW manual control of the Chip-Select. With this change, as long as the
+Slave Enable Register is asserted, the Chip-Select will be asserted. As a
+result, it is necessary to deselect the Slave Select Register once the
+transaction is done. This feature is enabled via a new device compatible
+string called 'amazon,alpine-dw-apb-ssi'.  Once the driver identifies the
+new compatible string, it enables the hw fixup logic, by writing to a
+dedicated register found in the IP reserved area and will start manual
+deselecting the Slave Select Register when the transfer ends.
 
-1. Why this is not in PSCI implementation ?
-2. If PSCI is used on this platform, how does it work/co-exist ?
-3. Is this a shortcut approached taken to bypass the CPU genpd attempts
-   from Lina/Ulf ?
+Signed-off-by: Talel Shenhar <talel@amazon.com>
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+---
+ Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---
-Regards,
-Sudeep
+diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+index 642d3fb..2864bc6 100644
+--- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
++++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+@@ -2,7 +2,7 @@ Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface.
+ 
+ Required properties:
+ - compatible : "snps,dw-apb-ssi" or "mscc,<soc>-spi", where soc is "ocelot" or
+-  "jaguar2"
++  "jaguar2", or "amazon,alpine-dw-apb-ssi"
+ - reg : The register base for the controller. For "mscc,<soc>-spi", a second
+   register set is required (named ICPU_CFG:SPI_MST)
+ - interrupts : One interrupt, used by the controller.
+-- 
+2.7.4
