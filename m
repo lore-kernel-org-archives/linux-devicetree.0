@@ -1,99 +1,135 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/2] clk: qcom: gcc: Add global clock controller driver for QCS404
-Date: Thu, 11 Oct 2018 00:19:28 -0700
-Message-ID: <153924236897.5275.4858274509208170603@swboyd.mtv.corp.google.com>
-References: <20180921185936.9590-1-vkoul@kernel.org>
- <20180921185936.9590-2-vkoul@kernel.org>
- <153841434099.119890.3912925112860077471@swboyd.mtv.corp.google.com>
- <20181003062103.GN19792@vkoul-mobl>
- <153896630923.119890.17169150168947487135@swboyd.mtv.corp.google.com>
- <20181008035144.GD2372@vkoul-mobl>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 07/11] spi: Deal with slaves that return from
+ transfer_one() unfinished
+Date: Thu, 11 Oct 2018 09:23:49 +0200
+Message-ID: <CAMuHMdXht0icaRCaJWy2GcVny=EVZ2FOfXW7s=hKFizi6sE-8g@mail.gmail.com>
+References: <20181010170936.316862-1-lkundrak@v3.sk> <20181010170936.316862-8-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181008035144.GD2372@vkoul-mobl>
+In-Reply-To: <20181010170936.316862-8-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Shefali Jain <shefjain@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Anu Ramanathan <anur@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, quozl@laptop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi <linux-spi@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Vinod (2018-10-07 20:51:44)
-> On 07-10-18, 19:38, Stephen Boyd wrote:
-> > Quoting Vinod (2018-10-02 23:21:03)
-> > > Hi Stephen,
-> > > =
+Hi Lubomir,
 
-> > > Thanks for the comments,
-> > > =
+On Wed, Oct 10, 2018 at 7:10 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
+> Some drivers, such as spi-pxa2xx return from the transfer_one callback
+> immediately, idicating that the transfer will be finished asynchronously.
+>
+> Normally, spi_transfer_one_message() synchronously waits for the
+> transfer to finish with wait_for_completion_timeout(). For slaves, we
+> don't want the transaction to time out as it can complete in a long time
+> in future. Use wait_for_completion_interruptible() instead.
+>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-> > > On 01-10-18, 10:19, Stephen Boyd wrote:
-> > > > Quoting Vinod Koul (2018-09-21 11:59:36)
-> > > > > From: Shefali Jain <shefjain@codeaurora.org>
-> > > > > =
+Thanks for your patch!
 
-> > > > > Add the clocks supported in global clock controller which clock t=
-he
-> > > > > peripherals like BLSPs, SDCC, USB, MDSS etc. Register all the clo=
-cks
-> > > > > to the clock framework for the clients to be able to request for =
-them.
-> > > > > =
+> --- a/drivers/spi/spi.c
+> +++ b/drivers/spi/spi.c
+> @@ -993,6 +993,44 @@ static int spi_map_msg(struct spi_controller *ctlr, struct spi_message *msg)
+>         return __spi_map_msg(ctlr, msg);
+>  }
+>
+> +static int spi_transfer_wait(struct spi_controller *ctlr,
+> +                            struct spi_message *msg,
+> +                            struct spi_transfer *xfer)
+> +{
+> +       struct spi_statistics *statm = &ctlr->statistics;
+> +       struct spi_statistics *stats = &msg->spi->statistics;
+> +       unsigned long long ms = 1;
+> +
+> +       if (spi_controller_is_slave(ctlr)) {
+> +               if (wait_for_completion_interruptible(&ctlr->xfer_completion)) {
+> +                       dev_dbg(&msg->spi->dev, "SPI transfer interrupted\n");
+> +                       return -EINTR;
 
-> > > > > Signed-off-by: Shefali Jain <shefjain@codeaurora.org>
-> > > > > Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> > > > > Co-developed-by: Taniya Das <tdas@codeaurora.org>
-> > > > > Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
-> > > > > [rebase and tidyup for upstream]
-> > > > =
+Why not setting msg->status = -EINTR here, but returning an error? ...
 
-> > > > Who did the tidying?
-> > > =
+> +               }
+> +       } else {
+> +               ms = 8LL * 1000LL * xfer->len;
+> +               do_div(ms, xfer->speed_hz);
+> +               ms += ms + 200; /* some tolerance */
+> +
+> +               if (ms > UINT_MAX)
+> +                       ms = UINT_MAX;
+> +
+> +               ms = wait_for_completion_timeout(&ctlr->xfer_completion,
+> +                                                msecs_to_jiffies(ms));
+> +
+> +               if (ms == 0) {
+> +                       SPI_STATISTICS_INCREMENT_FIELD(statm,
+> +                                                      timedout);
+> +                       SPI_STATISTICS_INCREMENT_FIELD(stats,
+> +                                                      timedout);
+> +                       dev_err(&msg->spi->dev,
+> +                               "SPI transfer timed out\n");
+> +                       msg->status = -ETIMEDOUT;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  /*
+>   * spi_transfer_one_message - Default implementation of transfer_one_message()
+>   *
+> @@ -1006,7 +1044,6 @@ static int spi_transfer_one_message(struct spi_controller *ctlr,
+>         struct spi_transfer *xfer;
+>         bool keep_cs = false;
+>         int ret = 0;
+> -       unsigned long long ms = 1;
+>         struct spi_statistics *statm = &ctlr->statistics;
+>         struct spi_statistics *stats = &msg->spi->statistics;
+>
+> @@ -1035,28 +1072,11 @@ static int spi_transfer_one_message(struct spi_controller *ctlr,
+>                                 goto out;
+>                         }
+>
+> -                       if (ret > 0) {
+> -                               ret = 0;
+> -                               ms = 8LL * 1000LL * xfer->len;
+> -                               do_div(ms, xfer->speed_hz);
+> -                               ms += ms + 200; /* some tolerance */
+> -
+> -                               if (ms > UINT_MAX)
+> -                                       ms = UINT_MAX;
+> +                       if (ret > 0)
+> +                               ret = spi_transfer_wait(ctlr, msg, xfer);
+>
+> -                               ms = wait_for_completion_timeout(&ctlr->xfer_completion,
+> -                                                                msecs_to_jiffies(ms));
+> -                       }
+> -
+> -                       if (ms == 0) {
+> -                               SPI_STATISTICS_INCREMENT_FIELD(statm,
+> -                                                              timedout);
+> -                               SPI_STATISTICS_INCREMENT_FIELD(stats,
+> -                                                              timedout);
+> -                               dev_err(&msg->spi->dev,
+> -                                       "SPI transfer timed out\n");
+> -                               msg->status = -ETIMEDOUT;
+> -                       }
+> +                       if (ret < 0)
+> +                               return ret;
 
-> > > both of us :)
-> > =
+... which will return here, skipping all finalization and cleanup below?
 
-> > OK, please add the username of both people per the kernel sign off
-> > standards.
-> > =
+>                 } else {
+>                         if (xfer->len)
+>                                 dev_err(&msg->spi->dev,
 
-> > > > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> =
+Gr{oetje,eeting}s,
 
-> Sorry not sure I understand, Bjorn and me did cleanup and we signed-off
-> per process, did I miss something?
+                        Geert
 
-I mean doing something like:
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-[bjorn.andersson@linaro.org: Clean and tidy]
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-[vkoul@kernel.org: Clean and tidy even more]
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-
-Would be the kernel standard for maintainer tags.
-
-> =
-
-> > > > > +       [GCC_USB_HS_PHY_CFG_AHB_CLK] =3D &gcc_usb_hs_phy_cfg_ahb_=
-clk.clkr,
-> > > > > +       [GCC_USB_HS_SYSTEM_CLK] =3D &gcc_usb_hs_system_clk.clkr,
-> > > > > +       [GFX3D_CLK_SRC] =3D &gfx3d_clk_src.clkr,
-> > > > > +       [GP1_CLK_SRC] =3D &gp1_clk_src.clkr,
-> > > > =
-
-> > > > Why are some of these missing GCC_ prefix?
-> > > =
-
-> > > will add..
-> > =
-
-> > Thanks!
-> =
-
-> Btw Taniya also commented on this, do you want this as GCC_ or as per hw
-> documentation?
-> =
-
-
-I don't care. Either way is fine with me.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
