@@ -1,53 +1,95 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH 1/2] drm/panel: Add DT bindings for Samsung S6D16D0
-Date: Thu, 11 Oct 2018 10:59:31 +0200
-Message-ID: <20181011085933eucas1p119a192f43fb7093f0f87a8ad505c8091~cgj2eu4gO1322813228eucas1p1h@eucas1p1.samsung.com>
-References: <20181008110006.24561-1-linus.walleij@linaro.org>
- <20181009192633.GA13448@ravnborg.org>
- <CGME20181011084856epcas1p1fccf5ea90028841d5667ef9ba1496afb@epcas1p1.samsung.com>
- <CACRpkdYjNkgWEA1xOCKoQU89qBpE7-SJm4Mvf-0bM=EkgeQ1dg@mail.gmail.com>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH 2/2] clk: qcom: gcc: Add global clock controller driver
+ for QCS404
+Date: Thu, 11 Oct 2018 15:02:34 +0530
+Message-ID: <20181011093234.GA2400@vkoul-mobl>
+References: <20180921185936.9590-1-vkoul@kernel.org>
+ <20180921185936.9590-2-vkoul@kernel.org>
+ <153841434099.119890.3912925112860077471@swboyd.mtv.corp.google.com>
+ <20181003062103.GN19792@vkoul-mobl>
+ <153896630923.119890.17169150168947487135@swboyd.mtv.corp.google.com>
+ <20181008035144.GD2372@vkoul-mobl>
+ <153924236897.5275.4858274509208170603@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CACRpkdYjNkgWEA1xOCKoQU89qBpE7-SJm4Mvf-0bM=EkgeQ1dg@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Linus Walleij <linus.walleij@linaro.org>, sam@ravnborg.org
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <153924236897.5275.4858274509208170603@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Shefali Jain <shefjain@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Anu Ramanathan <anur@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTEuMTAuMjAxOCAxMDo0OCwgTGludXMgV2FsbGVpaiB3cm90ZToKPiBPbiBUdWUsIE9jdCA5
-LCAyMDE4IGF0IDk6MjYgUE0gU2FtIFJhdm5ib3JnIDxzYW1AcmF2bmJvcmcub3JnPiB3cm90ZToK
-Pj4gT24gTW9uLCBPY3QgMDgsIDIwMTggYXQgMDE6MDA6MDVQTSArMDIwMCwgTGludXMgV2FsbGVp
-aiB3cm90ZToKPj4+ICsgIC0gcmVzZXQtZ3Bpb3M6IGEgR1BJTyBzcGVjIGZvciB0aGUgcmVzZXQg
-cGluIChhY3RpdmUgbG93KQo+PiBUaGF0IGl0IGlzIGFjdGl2ZSBsb3cgaXMgcGFydCBvZiB0aGUg
-R1BJTyBwYXJ0IGFuZCBzaG91bGQgbm90Cj4+IGJlIG1hbmRhdGVkIGFzIHBhcnQgb2YgdGhlIGJp
-bmRpbmc/Cj4gVGhlIGZhY3QgdGhhdCB0aGUgY29uc3VtZXIgcmVxdWlyZXMgdGhlIGxpbmUgdG8g
-YmUgYXNzZXJ0ZWQKPiBsb3cgaXMgYW4gZWxlY3Ryb25pYyBwcm9wZXJ0eSBvZiB0aGUgY29tcG9u
-ZW50LCBpLmUuIHRoZSBwYW5lbCwKPiBhbmQgaXQgaXMganVzdCB0aGVyZSBleHBsYWluaW5nIHRo
-YXQgaWYgeW91IHNldCBpdCB0byBhbnl0aGluZyBlbHNlIHRoYW4KPiBhY3RpdmUgbG93LCB5b3Ug
-YXJlIHByb2JhYmx5IGRvaW5nIHNvbWV0aGluZyB3cm9uZy4KPgo+IFNob3VsZCBJIHNwZWNpZnkg
-Im11c3QgYmUgc2V0IGFzIGFjdGl2ZSBsb3ciIGluc3RlYWQgdG8gbWFrZQo+IGl0IGNsZWFyPwoK
-Q29tbW9uIHByYWN0aWNlIGlzIGFzIHlvdSB3cm90ZSwgSSB0aGluayBpdCBpcyBPSy4KClJlZ2Fy
-ZHMKQW5kcnplagoKPgo+Pj4gKyAgICAgICAgICAgICByZXNldC1ncGlvcyA9IDwmZm9vX2dwaW8g
-MCBHUElPX0FDVElWRV9MT1c+Owo+PiBUaGlzIGxpbmUgc3BlY2lmaWVzIGlmIEFDVElWRSBISUdI
-IG9yIExPVy4KPiBZZXAgd2UgYWx3YXlzIHNwZWNpZnkgdGhhdCBvbiB0aGUgY29uc3VtZXIgc2lk
-ZS4gT3Igd2Ugc2hvdWxkCj4gYWx3YXlzIGRvIHRoYXQgLi4uIGJ1dCBzaW5jZSB0aGlzIHBhbmVs
-IGlzIGJ5IGRlZmludGlvbiBleHBlY3RpbmcKPiBhbiBhY3RpdmUgbG93IHNpZ25hbCwgYW55dGhp
-bmcgZWxzZSB3b3VsZCBiZSBhbiBlcnJvciBhbmQgdGhhdAo+IGlzIHdoYXQgSSBhbSB0cnlpbmcg
-dG8gc2F5IGluIHRoZSBkZXNjcmlwdGlvbi4KPgo+IFlvdXJzLAo+IExpbnVzIFdhbGxlaWoKPiBf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKPiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4gaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 11-10-18, 00:19, Stephen Boyd wrote:
+> Quoting Vinod (2018-10-07 20:51:44)
+> > On 07-10-18, 19:38, Stephen Boyd wrote:
+> > > Quoting Vinod (2018-10-02 23:21:03)
+> > > > Hi Stephen,
+> > > > 
+> > > > Thanks for the comments,
+> > > > 
+> > > > On 01-10-18, 10:19, Stephen Boyd wrote:
+> > > > > Quoting Vinod Koul (2018-09-21 11:59:36)
+> > > > > > From: Shefali Jain <shefjain@codeaurora.org>
+> > > > > > 
+> > > > > > Add the clocks supported in global clock controller which clock the
+> > > > > > peripherals like BLSPs, SDCC, USB, MDSS etc. Register all the clocks
+> > > > > > to the clock framework for the clients to be able to request for them.
+> > > > > > 
+> > > > > > Signed-off-by: Shefali Jain <shefjain@codeaurora.org>
+> > > > > > Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> > > > > > Co-developed-by: Taniya Das <tdas@codeaurora.org>
+> > > > > > Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
+> > > > > > [rebase and tidyup for upstream]
+> > > > > 
+> > > > > Who did the tidying?
+> > > > 
+> > > > both of us :)
+> > > 
+> > > OK, please add the username of both people per the kernel sign off
+> > > standards.
+> > > 
+> > > > > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > 
+> > Sorry not sure I understand, Bjorn and me did cleanup and we signed-off
+> > per process, did I miss something?
+> 
+> I mean doing something like:
+> 
+> [bjorn.andersson@linaro.org: Clean and tidy]
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> [vkoul@kernel.org: Clean and tidy even more]
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> 
+> Would be the kernel standard for maintainer tags.
+
+Ah I did:
+
+[bamse, vkoul: rebase and tidyup for upstream]
+
+I can wait for comments if you have for v2 and update and send v3
+then?
+
+> 
+> > 
+> > > > > > +       [GCC_USB_HS_PHY_CFG_AHB_CLK] = &gcc_usb_hs_phy_cfg_ahb_clk.clkr,
+> > > > > > +       [GCC_USB_HS_SYSTEM_CLK] = &gcc_usb_hs_system_clk.clkr,
+> > > > > > +       [GFX3D_CLK_SRC] = &gfx3d_clk_src.clkr,
+> > > > > > +       [GP1_CLK_SRC] = &gp1_clk_src.clkr,
+> > > > > 
+> > > > > Why are some of these missing GCC_ prefix?
+> > > > 
+> > > > will add..
+> > > 
+> > > Thanks!
+> > 
+> > Btw Taniya also commented on this, do you want this as GCC_ or as per hw
+> > documentation?
+> 
+> I don't care. Either way is fine with me.
+
+I have used GCC_ :)
+
+-- 
+~Vinod
