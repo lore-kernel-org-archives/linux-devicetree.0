@@ -1,63 +1,129 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V2 4/5] soc/tegra: pmc: Don't power-up XUSB power-domains
-Date: Thu, 11 Oct 2018 18:50:47 +0200
-Message-ID: <20181011165047.GD7393@ulmo>
-References: <1538143910-24400-1-git-send-email-jonathanh@nvidia.com>
- <1538143910-24400-5-git-send-email-jonathanh@nvidia.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v3 4/9] dt-bindings: leds: Add bindings for lm3697 driver
+Date: Thu, 11 Oct 2018 11:51:18 -0500
+Message-ID: <20181011165123.32198-5-dmurphy@ti.com>
+References: <20181011165123.32198-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="LTeJQqWS0MN7I/qa"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1538143910-24400-5-git-send-email-jonathanh@nvidia.com>
+In-Reply-To: <20181011165123.32198-1-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+To: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz
+Cc: lee.jones@linaro.org, tony@atomide.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Add the device tree bindings for the lm3697
+LED driver for backlighting and display.
 
---LTeJQqWS0MN7I/qa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ .../devicetree/bindings/leds/leds-lm3697.txt  | 98 +++++++++++++++++++
+ 1 file changed, 98 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
 
-On Fri, Sep 28, 2018 at 03:11:49PM +0100, Jon Hunter wrote:
-> Now that the Tegra xHCI driver manages the XUSB power-domains itself,
-> remove the code to power-up the power-domains used by the xHCI device
-> from the PMC driver on boot.
->=20
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
->  drivers/soc/tegra/pmc.c | 16 ----------------
->  1 file changed, 16 deletions(-)
-
-In case somebody wants to pick this up along with the earlier patches:
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
-If not, I'll pick this up into the Tegra tree after patches 1-3 have
-been merged.
-
-Thierry
-
---LTeJQqWS0MN7I/qa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlu/f2cACgkQ3SOs138+
-s6Eh0BAAqM6Pa4vYLJq0XAt3XNAIbuE2qQ/S7MI8bkzjlmHeql5oGCVJo2TiDpdG
-O8vOwggmJ3K0XxYP6LtQq9rLtigC8e1QEQiYLRYygTVElYl+VyE6c4qyu2ZwStdJ
-dcgO5kCh3ouG8oJOdUNMWowSNUenw/cLdAGxAMqHEjnRRE2GbVh1Wnxc/ZrkfXDt
-ZkEDjoHTMWpD+/Px0gd14F/viPjYbyQnBneAzm70fYCHAhwM/Q+UCQLU0wd0EPj4
-aYs1Mp00Gx10yoI/x97BJQkuTPg+Q3xaUtWz/MlO/E3XYiA54fEiacPiM/IhL21a
-w7UXSdkgucoifEXB8gfLh1IXdKmMDiHqESWpBxhYi9GuEZRs4QY15JynonaQDlG9
-Lb1hqJnxJBQ+1wocWsSs0SuhMoxlCH3MkeTIYeqC08a9ayb8DPap6QyAM/9W8wZg
-TT7m6PvDACz0O+ef52xnd29CLyKPtBF8YDSUR0c4Ymzfi9Uow/wpAkveprWoq/OB
-HX8rnGw1ncXcp9WIwlkEZMUB/4TNksDu8tE4W0yx8y09tZVRFI4Qkfz7NtkaqS1w
-Bgl3DLfoEoDcjB9qdnfNYQJ3JaHirqCMNhfnB7BT0KnMbLzNIqeVpSgM9LrW+thn
-0Y9GiKC7wYLhTGPiCZ7sD1dFSguoYQzeqd97kMo66jPvjRw4N6g=
-=woEy
------END PGP SIGNATURE-----
-
---LTeJQqWS0MN7I/qa--
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm3697.txt b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
+new file mode 100644
+index 000000000000..4bb2ed51025b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
+@@ -0,0 +1,98 @@
++* Texas Instruments - LM3697 Highly Efficient White LED Driver
++
++The LM3697 11-bit LED driver provides high-
++performance backlight dimming for 1, 2, or 3 series
++LED strings while delivering up to 90% efficiency.
++
++This device is suitable for display and keypad Lighting
++
++Required properties:
++	- compatible:
++		"ti,lm3697"
++	- reg :  I2C slave address
++	- #address-cells : 1
++	- #size-cells : 0
++
++Optional properties:
++	- enable-gpios : GPIO pin to enable/disable the device
++	- vled-supply : LED supply
++
++Required child properties:
++	- reg : 0 - LED is Controlled by bank A
++		1 - LED is Controlled by bank B
++	- led-sources : Indicates which HVLED string is associated to which
++			control bank.  Each element in the array is associated
++			with a specific HVLED string.  Element 0 is HVLED1,
++			element 1 is HVLED2 and element 2 HVLED3.
++			Additional information is contained
++			in Documentation/devicetree/bindings/leds/common.txt
++			0 - HVLED is not active in this control bank
++			1 - HVLED string is controlled by this control bank
++
++Optional child properties:
++	- runtime-ramp-up-msec: Current ramping from one brightness level to
++				the a higher brightness level.
++				Range from 2048 us - 117.44 s
++	- runtime-ramp-down-msec: Current ramping from one brightness level to
++				  the a lower brightness level.
++				  Range from 2048 us - 117.44 s
++	- label : see Documentation/devicetree/bindings/leds/common.txt
++	- linux,default-trigger :
++	   see Documentation/devicetree/bindings/leds/common.txt
++
++Example:
++
++HVLED string 1 and 3 are controlled by control bank A and HVLED 2 string is
++controlled by control bank B.
++
++led-controller@36 {
++	compatible = "ti,lm3697";
++	reg = <0x36>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
++	vled-supply = <&vbatt>;
++
++	led@0 {
++		reg = <0>;
++		led-sources = <1 0 1>;
++		runtime-ramp-up-msec = <5000>;
++		runtime-ramp-down-msec = <1000>;
++		label = "white:first_backlight_cluster";
++		linux,default-trigger = "backlight";
++	};
++
++	led@1 {
++		reg = <1>;
++		led-sources = <0 1 0>;
++		runtime-ramp-up-msec = <500>;
++		runtime-ramp-down-msec = <1000>;
++		label = "white:second_backlight_cluster";
++		linux,default-trigger = "backlight";
++	};
++}
++
++All HVLED strings controlled by control bank A
++
++led-controller@36 {
++	compatible = "ti,lm3697";
++	reg = <0x36>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
++	vled-supply = <&vbatt>;
++
++	led@0 {
++		reg = <0>;
++		led-sources = <1 1 1>;
++		runtime-ramp-up-msec = <500>;
++		runtime-ramp-down-msec = <1000>;
++		label = "white:backlight_cluster";
++		linux,default-trigger = "backlight";
++	};
++}
++
++For more product information please see the link below:
++http://www.ti.com/lit/ds/symlink/lm3697.pdf
+-- 
+2.19.0
