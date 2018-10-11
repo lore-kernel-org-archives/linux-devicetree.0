@@ -1,95 +1,49 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH 2/2] clk: qcom: gcc: Add global clock controller driver
- for QCS404
-Date: Thu, 11 Oct 2018 15:02:34 +0530
-Message-ID: <20181011093234.GA2400@vkoul-mobl>
-References: <20180921185936.9590-1-vkoul@kernel.org>
- <20180921185936.9590-2-vkoul@kernel.org>
- <153841434099.119890.3912925112860077471@swboyd.mtv.corp.google.com>
- <20181003062103.GN19792@vkoul-mobl>
- <153896630923.119890.17169150168947487135@swboyd.mtv.corp.google.com>
- <20181008035144.GD2372@vkoul-mobl>
- <153924236897.5275.4858274509208170603@swboyd.mtv.corp.google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: [PATCH v4 0/2] Enable smmu support on sdm845
+Date: Thu, 11 Oct 2018 15:12:43 +0530
+Message-ID: <20181011094245.7943-1-vivek.gautam@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <153924236897.5275.4858274509208170603@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Shefali Jain <shefjain@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Anu Ramanathan <anur@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
+To: joro@8bytes.org, robh+dt@kernel.org, andy.gross@linaro.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Cc: mark.rutland@arm.com, david.brown@linaro.org, linux-kernel@vger.kernel.org, robin.murphy@arm.com, will.deacon@arm.com, dianders@chromium.org, Vivek Gautam <vivek.gautam@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11-10-18, 00:19, Stephen Boyd wrote:
-> Quoting Vinod (2018-10-07 20:51:44)
-> > On 07-10-18, 19:38, Stephen Boyd wrote:
-> > > Quoting Vinod (2018-10-02 23:21:03)
-> > > > Hi Stephen,
-> > > > 
-> > > > Thanks for the comments,
-> > > > 
-> > > > On 01-10-18, 10:19, Stephen Boyd wrote:
-> > > > > Quoting Vinod Koul (2018-09-21 11:59:36)
-> > > > > > From: Shefali Jain <shefjain@codeaurora.org>
-> > > > > > 
-> > > > > > Add the clocks supported in global clock controller which clock the
-> > > > > > peripherals like BLSPs, SDCC, USB, MDSS etc. Register all the clocks
-> > > > > > to the clock framework for the clients to be able to request for them.
-> > > > > > 
-> > > > > > Signed-off-by: Shefali Jain <shefjain@codeaurora.org>
-> > > > > > Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> > > > > > Co-developed-by: Taniya Das <tdas@codeaurora.org>
-> > > > > > Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
-> > > > > > [rebase and tidyup for upstream]
-> > > > > 
-> > > > > Who did the tidying?
-> > > > 
-> > > > both of us :)
-> > > 
-> > > OK, please add the username of both people per the kernel sign off
-> > > standards.
-> > > 
-> > > > > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > 
-> > Sorry not sure I understand, Bjorn and me did cleanup and we signed-off
-> > per process, did I miss something?
-> 
-> I mean doing something like:
-> 
-> [bjorn.andersson@linaro.org: Clean and tidy]
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> [vkoul@kernel.org: Clean and tidy even more]
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> 
-> Would be the kernel standard for maintainer tags.
+This series enables apps-smmu, the "arm,mmu-500" instance
+on sdm845.
 
-Ah I did:
+Changes since v3:
+ - Refined the dt binding documentation more to align with
+   Rob's comments for qcom,smmu-v2 binding documentation [1]
+   on SoC specific compatibles and state things similar
+   to qcom,smmu-v2 [2].
 
-[bamse, vkoul: rebase and tidyup for upstream]
+Changes since v2:
+ - Dropped patch for gpu-smmu [3] as the same has been pushed by
+   Jordan [4] after incorporating the dt binding update.
+ - Updated binding doc to include valid value for '<soc>'
+   in "qcom,<soc>-smmu-500" compatible string.
 
-I can wait for comments if you have for v2 and update and send v3
-then?
+Changes since v1:
+ - Addressed Rob's review comments by adding a SoC specific compatible.
+   Have added a new dt-bindings patch for this.
+ - Updated node name to 'iommu'.
+ - Addressed Doug's review comment about removing status property from
+   smmu's nodes, as smmu is either present on the soc or not. Enabling
+   it is not a board-level decision.
 
-> 
-> > 
-> > > > > > +       [GCC_USB_HS_PHY_CFG_AHB_CLK] = &gcc_usb_hs_phy_cfg_ahb_clk.clkr,
-> > > > > > +       [GCC_USB_HS_SYSTEM_CLK] = &gcc_usb_hs_system_clk.clkr,
-> > > > > > +       [GFX3D_CLK_SRC] = &gfx3d_clk_src.clkr,
-> > > > > > +       [GP1_CLK_SRC] = &gp1_clk_src.clkr,
-> > > > > 
-> > > > > Why are some of these missing GCC_ prefix?
-> > > > 
-> > > > will add..
-> > > 
-> > > Thanks!
-> > 
-> > Btw Taniya also commented on this, do you want this as GCC_ or as per hw
-> > documentation?
-> 
-> I don't care. Either way is fine with me.
+[1] https://patchwork.kernel.org/patch/10576937/
+[1] https://patchwork.kernel.org/patch/10581911/
+[3] https://patchwork.kernel.org/patch/10565295/
+[4] https://patchwork.kernel.org/patch/10577297/
 
-I have used GCC_ :)
+Vivek Gautam (2):
+  dt-bindings: arm-smmu: Add binding doc for Qcom smmu-500
+  dts: arm64/sdm845: Add node for arm,mmu-500
+
+ .../devicetree/bindings/iommu/arm,smmu.txt         |  4 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               | 72 ++++++++++++++++++++++
+ 2 files changed, 76 insertions(+)
 
 -- 
-~Vinod
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
