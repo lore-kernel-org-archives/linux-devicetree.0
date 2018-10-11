@@ -1,33 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: arm-smmu: Add binding doc for Qcom
- smmu-500
-Date: Thu, 11 Oct 2018 17:16:30 -0500
-Message-ID: <20181011221630.GA5841@bogus>
-References: <20181011094930.17010-1-vivek.gautam@codeaurora.org>
- <20181011094930.17010-2-vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v4 2/5] dt-bindings: spi: add binding file for NXP
+ FlexSPI  controller
+Date: Thu, 11 Oct 2018 17:17:30 -0500
+Message-ID: <20181011221730.GA7293@bogus>
+References: <1539255519-1408-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <1539255519-1408-3-git-send-email-yogeshnarayan.gaur@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181011094930.17010-2-vivek.gautam@codeaurora.org>
+In-Reply-To: <1539255519-1408-3-git-send-email-yogeshnarayan.gaur@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: joro@8bytes.org, robh+dt@kernel.org, andy.gross@linaro.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, mark.rutland@arm.com, david.brown@linaro.org, linux-kernel@vger.kernel.org, robin.murphy@arm.com, will.deacon@arm.com, dianders@chromium.org, Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 11 Oct 2018 15:19:29 +0530, Vivek Gautam wrote:
-> Qcom's implementation of arm,mmu-500 works well with current
-> arm-smmu driver implementation. Adding a soc specific compatible
-> along with arm,mmu-500 makes the bindings future safe.
+On Thu, 11 Oct 2018 11:00:38 +0000, Yogesh Narayan Gaur wrote:
+> Add binding file for NXP FlexSPI controller
 > 
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
 > ---
+> Changes for v4:
+> - Incorporated Rob review comments.
+> Changes for v3:
+> - Removed node property 'big-endian'.
+> Changes for v2:
+> - Incorporated Rob review comments.
 > 
-> Changes since v3:
->  - Refined language more to state things directly for the bindings
->    description.
-> 
->  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+>  .../devicetree/bindings/spi/spi-nxp-fspi.txt       | 39 ++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
