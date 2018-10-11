@@ -1,27 +1,56 @@
-Return-Path: <SRS0=+qJk=MW=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 0/3] mmc: tmio_mmc: Add support for RZ/A2
-Date: Wed, 10 Oct 2018 07:37:10 -0500
-Message-Id: <20181010123713.67541-1-chris.brandt@renesas.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-clk@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=tjNF=MX=emlid.com=aleksandr.aleksandrov@kernel.org>
+From: aleksandr.aleksandrov@emlid.com
+In-Reply-To: <20181010144957.exrlupoph7ovsmdw@flea>
+References: <1538745949-13188-2-git-send-email-aleksandr.aleksandrov@emlid.com>
+	 <1539012044-29998-1-git-send-email-aleksandr.aleksandrov@emlid.com>
+	 <1539012044-29998-2-git-send-email-aleksandr.aleksandrov@emlid.com> <20181010144957.exrlupoph7ovsmdw@flea>
+Subject: Re: [PATCH v3] arm64: new board - Emlid Neutis N5
+MIME-Version: 1.0
+Date: Thu, 11 Oct 2018 15:01:29 +0300
+Message-Id: <9398571539259289@myt4-929fb874f3f2.qloud-c.yandex.net>
+Content-Transfer-Encoding: base64
+Content-Type: text/html; charset=utf-8
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, David Lechner <david@lechnology.com>, Thierry Reding <treding@nvidia.com>, =?utf-8?B?Tm9yYWxmIFRyw7hubmVz?= <noralf@tronnes.org>, Johan Hovold <johan@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Basically the same HW block that was used in R-Car Gen 3 is used in
-RZ/A2 (with only a couple small differences).
-
-Not sure if you're going to like the Kconfig change or not.
-
-Chris Brandt (3):
-  clk: renesas: r7s9210: Add SDHI clocks
-  mmc: renesas_sdhi_internal_dmac: Add R7S9210 support
-  dt-bindings: mmc: tmio_mmc: Document Renesas R7S9210
-
- Documentation/devicetree/bindings/mmc/tmio_mmc.txt |  3 ++-
- drivers/clk/renesas/r7s9210-cpg-mssr.c             |  5 ++++
- drivers/mmc/host/Kconfig                           |  5 ++--
- drivers/mmc/host/renesas_sdhi_internal_dmac.c      | 28 ++++++++++++++++++++--
- 4 files changed, 36 insertions(+), 5 deletions(-)
-
--- 
-2.16.1
+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCI+SGksPGJyIC8+wqA8L2Rp
+dj48YmxvY2txdW90ZSB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCIgdHlwZT0i
+Y2l0ZSI+PGJsb2NrcXVvdGU+wqArPGJyIC8+wqArL2R0cy12MS87PGJyIC8+wqArPGJyIC8+wqAr
+I2luY2x1ZGUgInN1bjUwaS1oNS1lbWxpZC1uZXV0aXMtbjUuZHRzaSI8YnIgLz7CoCs8YnIgLz7C
+oCsvIHs8YnIgLz7CoCsgbW9kZWwgPSAiRW1saWQgTmV1dGlzIE41IERldmVsb3BlciBib2FyZCI7
+PGJyIC8+wqArIGNvbXBhdGlibGUgPSAiZW1saWQsZW1saWQtbmV1dGlzLW41LWRldmJvYXJkIiw8
+YnIgLz7CoCsgImVtbGlkLGVtbGlkLW5ldXRpcy1uNSIsPC9ibG9ja3F1b3RlPjxwPjxiciAvPkRv
+IHlvdSBuZWVkIHRoZSB0d28gZW1saWQgdGhlcmU/IFdoYXQgY29tZXMgYmVmb3JlIHRoZSBjb21t
+YSBpcyB0aGU8YnIgLz52ZW5kb3IsIHdoaWxlIHdoYXQgaXMgYWZ0ZXIgaXMgdGhlIG1vZGVsLjxi
+ciAvPsKgPC9wPjwvYmxvY2txdW90ZT48ZGl2IHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5
+L3hodG1sIj7CoDwvZGl2PjxkaXYgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGh0bWwi
+PkkgdGhpbmsgZW1saWQtbmV1dGlzLW41IG1vZHVsZSBjb3VsZCBiZSB1c2VmdWwgaW4gdGhlIGZ1
+dHVyZSwgbm8gbmVlZCB0aGlzIG5vdy48L2Rpdj48ZGl2IHhtbG5zPSJodHRwOi8vd3d3LnczLm9y
+Zy8xOTk5L3hodG1sIj7CoDwvZGl2PjxibG9ja3F1b3RlIHhtbG5zPSJodHRwOi8vd3d3LnczLm9y
+Zy8xOTk5L3hodG1sIiB0eXBlPSJjaXRlIj48cD7CoCsmYW1wO3VhcnQxIHs8YnIgLz7CoCsgcGlu
+Y3RybC1uYW1lcyA9ICJkZWZhdWx0Ijs8YnIgLz7CoCsgcGluY3RybC0wID0gJmx0OyZhbXA7dWFy
+dDFfcGlucyZndDssICZsdDsmYW1wO3VhcnQxX3J0c19jdHNfcGlucyZndDs7PGJyIC8+wqArIHN0
+YXR1cyA9ICJva2F5Ijs8YnIgLz7CoCt9OzwvcD48cD48YnIgLz5JIGd1ZXNzIHRoaXMgaXMgZm9y
+IGJsdWV0b290aD8gSGF2ZSB5b3UgdGVzdGVkIHNlcmRldiBkcml2ZXJzPzwvcD48L2Jsb2NrcXVv
+dGU+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCI+WWVzLCBibHVldG9v
+dGggaXMgY29ubmVjdGVkIG92ZXIgdWFydDEuPC9kaXY+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53
+My5vcmcvMTk5OS94aHRtbCI+WW91IG1lYW4gaWYgSSBoYXZlIHRlc3RlZCBibHVldG9vdGggc3Rh
+Y2sgdmlhIHNlcmlhbCBkZXZpY2U/PC9kaXY+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+MTk5OS94aHRtbCI+Qmx1ZXogd29ya3Mgc3RhYmx5IHdpdGggYmNtNDN4eCBvdmVyIHVhcnQgMTUw
+MDAwMCBiYXVkIHJhdGUuPC9kaXY+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94
+aHRtbCI+wqA8L2Rpdj48YmxvY2txdW90ZSB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94
+aHRtbCIgdHlwZT0iY2l0ZSI+PHA+QWxzbywgSSBoYXZlIGEgZ2VuZXJhbCBjb21tZW50cywgYW5k
+IGl0IHJlYWxseSBkZXBlbmRzIG9uIHdoYXQgeW91cjxiciAvPmludGVudGlvbiBhYm91dCB0aGUg
+Ym9hcmQgZWNvc3lzdGVtIGlzLiBEbyB5b3UgZXhwZWN0IHRoZSBTT00gdG8gYmU8YnIgLz5zd2Fw
+cGFibGUgaW4gbXVsdGlwbGUgYm9hcmRzLCBvciBkbyB5b3UgZXhwZWN0IHRvIHNlbmQgaXQgYXMg
+c29tZXRoaW5nPGJyIC8+dGhhdCBpcyBqdXN0IGZpeGVkIGludG8gYSBkYXVnaHRlciBib2FyZD88
+YnIgLz48YnIgLz5JbiB0aGUgZm9ybWVyIGNhc2UsIHlvdSBwcm9iYWJseSB3YW50IHRvIHVzZSBv
+dmVybGF5cyBpbnN0ZWFkLiBJbiB0aGU8YnIgLz5sYXR0ZXIsIHlvdSdyZSBmaW5lLjwvcD48L2Js
+b2NrcXVvdGU+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCI+UmlnaHQs
+IHdlIGV4cGVjdCB0aGUgU29NIHRvIGJlIHN3YXBwYWJsZS4gSSBhZ3JlZSwgdG8gdXNlIG92ZXJs
+YXlzIGlzIG1vcmUgY29udmVuaWVudCwgYnV0PC9kaXY+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53
+My5vcmcvMTk5OS94aHRtbCI+dGhlIGRldmJvYXJkIERUIGZpbGUgd2lsbCBiZSBhIHJlZmVyZW5j
+ZSBmb3IgdGhlIG92ZXJsYXlzIGFuZCB0aGUgZnV0dXJlIGJvYXJkcyBiYXNlZCBvbiBOZXV0aXMu
+PC9kaXY+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCI+wqA8L2Rpdj48
+ZGl2IHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hodG1sIj7CoDwvZGl2Pg==
