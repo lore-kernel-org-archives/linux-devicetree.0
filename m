@@ -1,85 +1,99 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: dw: add compatible for Amazon's Alpine spi controller" to the spi tree
-Date: Thu, 11 Oct 2018 15:58:24 +0100 (BST)
-Message-ID: <20181011145825.00CC011223ED@debutante.sirena.org.uk>
-References: <1539256807-25676-1-git-send-email-talel@amazon.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v9 05/11] of: base: Add of_get_cpu_state_node() to get
+ idle states for a CPU node
+Date: Thu, 11 Oct 2018 17:05:07 +0200
+Message-ID: <CAPDyKFq7bNJM5Y4y78tnOEvg7ntmYFtJoDvFH8uR2yUUK9o4HA@mail.gmail.com>
+References: <20181003143824.13059-1-ulf.hansson@linaro.org>
+ <20181003143824.13059-6-ulf.hansson@linaro.org> <20181010150331.GB4844@e107155-lin>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539256807-25676-1-git-send-email-talel@amazon.com>
+In-Reply-To: <20181010150331.GB4844@e107155-lin>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: David Woodhouse <dwmw@amazon.co.uk>, Mark Brown <broonie@kernel.org>broonie@kernel.org, linux-spi@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, talel@amazon.com, jonnyc@amazon.com, ronenk@amazon.com, barakw@amazon.comDavid Woodhouse <dwmw@amazon.co.uk>linux-spi@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Linux PM <linux-pm@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@kernel.org>, Lina Iyer <ilina@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On 10 October 2018 at 17:03, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> On Wed, Oct 03, 2018 at 04:38:18PM +0200, Ulf Hansson wrote:
+>> The CPU's idle state nodes are currently parsed at the common cpuidle DT
+>> library, but also when initializing back-end data for the arch specific CPU
+>> operations, as in the PSCI driver case.
+>>
+>> To avoid open-coding, let's introduce of_get_cpu_state_node(), which takes
+>> the device node for the CPU and the index to the requested idle state node,
+>> as in-parameters. In case a corresponding idle state node is found, it
+>> returns the node with the refcount incremented for it, else it returns
+>> NULL.
+>>
+>> Moreover, for ARM, there are two generic methods, to describe the CPU's
+>> idle states, either via the flattened description through the
+>> "cpu-idle-states" binding [1] or via the hierarchical layout, using the
+>> "power-domains" and the "domain-idle-states" bindings [2]. Hence, let's
+>> take both options into account.
+>>
+>> [1]
+>> Documentation/devicetree/bindings/arm/idle-states.txt
+>> [2]
+>> Documentation/devicetree/bindings/arm/psci.txt
+>>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: devicetree@vger.kernel.org
+>> Cc: Lina Iyer <ilina@codeaurora.org>
+>> Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
+>> Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
+>> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> ---
+>>  drivers/of/base.c  | 35 +++++++++++++++++++++++++++++++++++
+>>  include/linux/of.h |  8 ++++++++
+>>  2 files changed, 43 insertions(+)
+>>
+>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>> index 74eaedd5b860..bf1d5fa34899 100644
+>> --- a/drivers/of/base.c
+>> +++ b/drivers/of/base.c
+>> @@ -424,6 +424,41 @@ int of_cpu_node_to_id(struct device_node *cpu_node)
+>>  }
+>>  EXPORT_SYMBOL(of_cpu_node_to_id);
+>>
+>> +/**
+>> + * of_get_cpu_state_node - Get CPU's idle state node at the given index
+>> + *
+>> + * @cpu_node: The device node for the CPU
+>> + * @index: The index in the list of the idle states
+>> + *
+>> + * Two generic methods can be used to describe a CPU's idle states, either via
+>> + * a flattened description through the "cpu-idle-states" binding or via the
+>> + * hierarchical layout, using the "power-domains" and the "domain-idle-states"
+>> + * bindings. This function check for both and returns the idle state node for
+>> + * the requested index.
+>> + *
+>> + * In case and idle state node is found at index, the refcount incremented for
+>> + * it, so call of_node_put() on it when done. Returns NULL if not found.
+>> + */
+>> +struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
+>
+> No strong opinion but I am wondering if it makes sense to get cpu
+> logical index and fetch the cpu of_node here to contain the refcount on
+> it within this function while we are trying to consolidate. I do see
+> that may not be so useful in psci.c but keeping refcount for cpu of_node
+> here keeps the user free from that.
 
-   spi: dw: add compatible for Amazon's Alpine spi controller
+I see your point.
 
-has been applied to the spi tree at
+However, I am hesitating doing that change, as it would be a waste for
+the psci case, but I also think that it may becomes a bit less
+straight forward to use this helper function.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+Although, no strong opinions from my side either, but since Rob is
+happy with this, there is no need to change it, I think.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+>
+> I am fine as it is if there are reasons not to do that.
+>
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Right.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From d49a30366793210cd64759edcdf7099a2e32efd6 Mon Sep 17 00:00:00 2001
-From: Talel Shenhar <talel@amazon.com>
-Date: Thu, 11 Oct 2018 14:20:06 +0300
-Subject: [PATCH] spi: dw: add compatible for Amazon's Alpine spi controller
-
-This compatible adds the ability for dw spi controller driver to work with
-the dw spi controller found on Alpine chips.
-
-The dw spi controller has an auto-deselect of Chip-Select, in case there is
-no data inside the Tx FIFO. While working on platforms with Alpine chips,
-auto-deselect mode causes an issue for some spi devices that can't handle
-the Chip-Select deselect in the middle of a transaction. It is a normal
-behavior for a Tx FIFO to be empty in the middle of a transaction, due to
-busy cpu. In the Alpine chip family an option to change the default
-behavior was added to the original dw spi controller to prevent this issue
-of de-asserting Chip-Select once TX FIFO is empty. The change was to allow
-SW manual control of the Chip-Select. With this change, as long as the
-Slave Enable Register is asserted, the Chip-Select will be asserted. As a
-result, it is necessary to deselect the Slave Select Register once the
-transaction is done. This feature is enabled via a new device compatible
-string called 'amazon,alpine-dw-apb-ssi'.  Once the driver identifies the
-new compatible string, it enables the hw fixup logic, by writing to a
-dedicated register found in the IP reserved area and will start manual
-deselecting the Slave Select Register when the transfer ends.
-
-Signed-off-by: Talel Shenhar <talel@amazon.com>
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-index 642d3fb1ef85..2864bc6b659c 100644
---- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-+++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-@@ -2,7 +2,7 @@ Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface.
- 
- Required properties:
- - compatible : "snps,dw-apb-ssi" or "mscc,<soc>-spi", where soc is "ocelot" or
--  "jaguar2"
-+  "jaguar2", or "amazon,alpine-dw-apb-ssi"
- - reg : The register base for the controller. For "mscc,<soc>-spi", a second
-   register set is required (named ICPU_CFG:SPI_MST)
- - interrupts : One interrupt, used by the controller.
--- 
-2.19.0.rc2
+Kind regards
+Uffe
