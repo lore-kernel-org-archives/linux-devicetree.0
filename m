@@ -1,54 +1,77 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v5 05/10] hwmon: Add On-Chip Controller (OCC) hwmon driver
-Date: Fri, 12 Oct 2018 05:46:58 -0700
-Message-ID: <20181012124658.GB11386@roeck-us.net>
-References: <1535664761-86018-6-git-send-email-eajames@linux.vnet.ibm.com>
- <201809011808.kL7L1gpv%fengguang.wu@intel.com>
+From: Himanshu Jha <himanshujha199640@gmail.com>
+Subject: Re: [PATCH v4 3/3] iio: magnetometer: Add driver support for PNI
+ RM3100
+Date: Fri, 12 Oct 2018 18:23:16 +0530
+Message-ID: <20181012125316.GA6480@himanshu-Vostro-3559>
+References: <20181002143812.3661-1-songqiang1304521@gmail.com>
+ <20181012073536.20339-1-songqiang1304521@gmail.com>
+ <20181012073536.20339-4-songqiang1304521@gmail.com>
+ <436097c6-b32b-42e4-e704-a15280e13cb0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201809011808.kL7L1gpv%fengguang.wu@intel.com>
+In-Reply-To: <436097c6-b32b-42e4-e704-a15280e13cb0@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.vnet.ibm.com>
-Cc: kbuild-all@01.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, linux-doc@vger.kernel.org, openbmc@lists.ozlabs.org, robh+dt@kernel.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, joel@jms.id.au, benh@kernel.crashing.org
+To: Song Qiang <songqiang1304521@gmail.com>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, preid@electromag.com.au, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 01, 2018 at 08:06:16PM +0800, kbuild test robot wrote:
-> Hi Eddie,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on hwmon/hwmon-next]
-> [also build test ERROR on v4.19-rc1 next-20180831]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Eddie-James/hwmon-and-fsi-Add-On-Chip-Controller-Driver/20180831-165247
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
-> config: arm64-allmodconfig (attached as .config)
-> compiler: aarch64-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.2.0 make.cross ARCH=arm64 
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers/hwmon/occ/p8_i2c.o: In function `init_module':
-> >> p8_i2c.c:(.init.text+0x0): multiple definition of `init_module'
->    drivers/hwmon/occ/p9_sbe.o:p9_sbe.c:(.init.text+0x0): first defined here
->    drivers/hwmon/occ/p8_i2c.o: In function `cleanup_module':
-> >> p8_i2c.c:(.exit.text+0x0): multiple definition of `cleanup_module'
->    drivers/hwmon/occ/p9_sbe.o:p9_sbe.c:(.exit.text+0x0): first defined here
-> 
+Hi Qiang,
 
-This will need to be fixed before I can pick up the series.
-Each module must have only one set of module initialization
-functions.
+On Fri, Oct 12, 2018 at 04:36:01PM +0800, Song Qiang wrote:
+> 
+> 
+> On 2018年10月12日 15:35, Song Qiang wrote:
+> > PNI RM3100 is a high resolution, large signal immunity magnetometer,
+> > composed of 3 single sensors and a processing chip with a MagI2C
+> > interface.
+> > 
+> ...
+> > +static irqreturn_t rm3100_trigger_handler(int irq, void *p)
+> > +{
+> > +	struct iio_poll_func *pf = p;
+> > +	struct iio_dev *indio_dev = pf->indio_dev;
+> > +	unsigned long scan_mask = *indio_dev->active_scan_mask;
+> > +	unsigned int mask_len = indio_dev->masklength;
+> > +	struct rm3100_data *data = iio_priv(indio_dev);
+> > +	struct regmap *regmap = data->regmap;
+> > +	int ret, i, bit;
+> > +
+> > +	mutex_lock(&data->lock);
+> > +	switch (scan_mask) {
+> > +	case BIT(0) | BIT(1) | BIT(2):
+> > +		ret = regmap_bulk_read(regmap, RM3100_REG_MX2, data->buffer, 9);
+> > +		mutex_unlock(&data->lock);
+> > +		if (ret < 0)
+> > +			goto done;
+> > +	break;
+> > +	case BIT(0) | BIT(1):
+> > +		ret = regmap_bulk_read(regmap, RM3100_REG_MX2, data->buffer, 6);
+> > +		mutex_unlock(&data->lock);
+> > +		if (ret < 0)
+> > +			goto done;
+> > +	break;
+> > +	case BIT(1) | BIT(2):
+> > +		ret = regmap_bulk_read(regmap, RM3100_REG_MY2, data->buffer, 6);
+> > +		mutex_unlock(&data->lock);
+> > +		if (ret < 0)
+> > +			goto done;
+> > +	break;
+> Hi Jonathan,
+> 
+> I just noticed that these three breaks are not proper aligned.
 
-Guenter
+Please send the new version of a patch as a *new* thread and don't
+use `--in-reply-to` flag(if you're using) to chain into older versions
+as whole thread of older discussion comes up and is often not required.
 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+The changelog gives enough info of what's new in the revised series.
+
+
+-- 
+Himanshu Jha
+Undergraduate Student
+Department of Electronics & Communication
+Guru Tegh Bahadur Institute of Technology
