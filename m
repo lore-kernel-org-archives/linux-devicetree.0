@@ -1,67 +1,53 @@
-Return-Path: <SRS0=sbd0=MY=renesas.com=Chris.Brandt@kernel.org>
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v3 2/3] mmc: renesas_sdhi_internal_dmac: Add R7S9210
- support
-Date: Fri, 12 Oct 2018 11:41:13 +0000
-Message-ID: 
- <TY1PR01MB1562B5DCB7298E72C96B92998AE20@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-References: <20181010150642.73890-1-chris.brandt@renesas.com>
- <20181010150642.73890-3-chris.brandt@renesas.com>
- <20181012110755.qdnevfoyq5qymf42@ninjato>
-In-Reply-To: <20181012110755.qdnevfoyq5qymf42@ninjato>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=J+7f=MY=the-dreams.de=wsa@kernel.org>
+Date: Fri, 12 Oct 2018 13:09:07 +0200
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 2/3] mmc: renesas_sdhi_internal_dmac: Add R7S9210 support
+Message-ID: <20181012110907.oy7vw5w5yo7jj7na@ninjato>
+References: <20181008162349.42957-1-chris.brandt@renesas.com>
+ <20181008162349.42957-3-chris.brandt@renesas.com>
+ <CAMuHMdWNe2Z=q1tHO5_YLX1Q6+ef5BiQU=feBdcJfzcNvzo8HQ@mail.gmail.com>
+ <TY1PR01MB15625FE2255DB4877C4F27068AE00@TY1PR01MB1562.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="nefruxzpi24xec4t"
+Content-Disposition: inline
+In-Reply-To: <TY1PR01MB15625FE2255DB4877C4F27068AE00@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-clk <linux-clk@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Wolfram,
 
-On Friday, October 12, 2018, Wolfram Sang wrote:
-> > +/* RZ/A2 does not have the ADRR_MODE bit */
-> > +#define SDHI_INTERNAL_DMAC_ADRR_MODE_FIXED 2
->=20
-> First, there is a typo: s/ADRR/ADDR/g
-
-Thanks!
-
-Even after you pointed that out...I had to stare real hard to see it. I=20
-guess the brain corrects what you see.
+--nefruxzpi24xec4t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
-> Also, I think it would make the code much more comprehensible if this
-> macro was named SDHI_INTERNAL_DMAC_ADDR_MODE_BROKEN. Or maybe
-> SDHI_INTERNAL_DMAC_FIXED_ADDR_MODE_BROKEN. Currently, on first read I
-> thought this mode was fixed on this SoC and broken on all the others and
-> was confused.
+> As you can imagine, it does have this bit. And it worked fine from me.=20
+> But the chip guys said they found something not right with it, so they=20
+> removed it from the v1.0 Hardware Manual.
 
-To be honest, I was not able to fully understand the issue in detail. I was=
- getting information through someone that was not in the design team. So to=
- be fair to the chip design guys, I want to avoid the word "broken".
-They took the bit out of the hardware manual, and since the HW was designed=
- to work either way (and the default register setting is for fixed), I cons=
-ider it an 'unsupported feature'.
-
-So, how about a compromise of:
-
-#define SDHI_INTERNAL_DMAC_ADDR_MODE_FIXED_ONLY 2
+Do you happen to know if this applies for Gen3 SDHI as well?
 
 
->From your other email:
-> > As you can imagine, it does have this bit. And it worked fine from me.
-> > But the chip guys said they found something not right with it, so they
-> > removed it from the v1.0 Hardware Manual.
->=20
-> Do you happen to know if this applies for Gen3 SDHI as well?
+--nefruxzpi24xec4t
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I don't think this applies to Gen3. This is just a RZ/A2 thing.
+-----BEGIN PGP SIGNATURE-----
 
-With that said, there are some Gen3 HW bugs that are in RZ/A2 HW, like the =
-QSPI read bug. Since the RZ/A2 has the exact same HW as Gen3, it has the sa=
-me HW bug. Now that one is a "bug", and I don't mind calling that one broke=
-n.
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlvAgNMACgkQFA3kzBSg
+KbYrCg/+P8ScT/mGtmdUSggRSTMSO38kY1xe8wfE7hF5XH4grYk5y6krRBbIFRcZ
+3HLZ+1oBMOYmjIfBvDARYVlCA/J3vDiQx9SrwKipvCISIzHdddM2zKr1Sjed6eHG
+oXb1++8iGU9oRib9udkBkoH/nv+9W6Dsv4f8kfFU2FOsVwt6ox8P/8OGPd08Q3zS
+1r2wRZ6NaMVll1yHzJwS+6GnoeT3D0Co44fs79aNmeAUrJaZnslp/8OGu9Xo5KIx
+7rQW9r/cgB5h7yr7sbZMTfo2uyon7wxzp7t8RmL4EaxmfyN/mw5XUQ2oiuMSKEnt
+DOglgVqkyExa+aHn4hmy3Q7YtFWuHAzVtRodaOamTNo+6qZ01Bcrnsc3jsb+qKQR
+k6j9EtARHIQgRXjOX3KoEleRNqfJH6EvVDVNKfYz9ew8Ngfg3cg83DAWE6Py+11q
+s2YQCb7NlqHX60rRGsgs3U0KwPZTcZmvZqyl/2NrhvYfZ+OqXKj7pd3BcW0yg46s
+ejMVYaWWBx+FpfLGSCw7pJ4/ItFV6rKEmlHTxNO72D9bQCjoqFPgj6GXmhAxJ/Z/
+qggXjqpd9MyIDcxxF8PB/zBqZMU+u6fxiKSE80mzVJC1TOn9BOr+lCfaspDDvr2d
+7lrz5PMEnpzm1Uk6OQnJ9OsHCSaegfwMYJPY9dVxI6Zkw2l0XHI=
+=9Hk6
+-----END PGP SIGNATURE-----
 
-
-Chris
+--nefruxzpi24xec4t--
