@@ -1,30 +1,66 @@
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: Re: [PATCH v1 3/8] ARM: tegra: apalis/colibri_t30: fix hdmi regulator
-Date: Fri, 12 Oct 2018 13:16:54 +0000
-Message-ID: <1539350212.30485.48.camel@toradex.com>
-References: <20181009152523.3771-1-marcel@ziswiler.com>
-         <20181009152523.3771-4-marcel@ziswiler.com>
-         <521e8eb0-ce63-851a-0637-a0207bec6a32@nvidia.com>
+From: Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
+Subject: Re: [PATCH v4 1/2] arm64: dts: allwinner: new board - Emlid Neutis N5
+Date: Fri, 12 Oct 2018 16:39:14 +0300
+Message-ID: <20181012133914.GA32670@imagebutcher>
+References: <1539012044-29998-2-git-send-email-aleksandr.aleksandrov@emlid.com>
+ <1539339841-22235-1-git-send-email-aleksandr.aleksandrov@emlid.com>
+ <1539339841-22235-2-git-send-email-aleksandr.aleksandrov@emlid.com>
+ <b47c5458-683e-3e96-0bbe-f9db84579c77@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <521e8eb0-ce63-851a-0637-a0207bec6a32@nvidia.com>
-Content-Language: en-US
-Content-ID: <6D5AD75123D9E340927C7A55A49DA621@eurprd05.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <b47c5458-683e-3e96-0bbe-f9db84579c77@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, David Lechner <david@lechnology.com>, Thierry Reding <treding@nvidia.com>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE4LTEwLTEyIGF0IDExOjQ0ICswMTAwLCBKb24gSHVudGVyIHdyb3RlOg0KPiBP
-biAwOS8xMC8xOCAxNjoyNSwgTWFyY2VsIFppc3dpbGVyIHdyb3RlOg0KPiA+IEZyb206IE1hcmNl
-bCBaaXN3aWxlciA8bWFyY2VsLnppc3dpbGVyQHRvcmFkZXguY29tPg0KPiA+IC4uLg0KPiA+IA0K
-PiBHaXZlbiBMaW51cyBXJ3MgZml4IGZvciB0aGUgZ3Bpb2xpYiBbMF0sIEkgYW0gbm90IGNvbnZp
-bmNlZCB0aGF0IHRoaXMNCj4gaXMNCj4gcmVhbGx5IGJldHRlci9uZWVkZWQuDQoNCkxvb2tzIGxp
-a2Ugbm9ib2R5IGVsc2UgZmF2b3VycyB0aGlzIChyYXRoZXIgdGhlIG9wcG9zaXRlIGlzIHRoZSBj
-YXNlIGl0DQpzZWVtcyBbMV0pIHNvIEkgd2lsbCBkcm9wIGl0IGluIGEgdjIuIFRoYW5rcyENCg0K
-QW55IGZlZWRiYWNrIGFib3V0IGFueSBvZiB0aGUgb3RoZXIgcGF0Y2hlcz8NCg0KPiBDaGVlcnMN
-Cj4gSm9uDQo+IA0KPiBbMF0gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvcGF0Y2h3b3JrL3BhdGNo
-Lzk5ODM1NC8NCg0KWzFdIA0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC8yMDE4MTAxMjEy
-NTkxMS5HVDMwNjU4QG4yMTAwLmFybWxpbnV4Lm9yZy4NCnVrLw==
+Hi Andreas,
+
+Thanks for your feedback!
+
+> > + *
+> > + * Copyright (C) 2018 Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "sun50i-h5-emlid-neutis-n5.dtsi"
+> > +
+> > +/ {
+> > +	model = "Emlid Neutis N5 Developer board";
+> > +	compatible = "emlid,neutis-n5-devboard",
+> > +		     "emlid,neutis-n5",
+> 
+> You are lacking bindings definitions for these new identifiers. The
+> vendor prefix should be patch 1/3, the SoM/board compatibles 2/3 and
+> this .dts[i] patch 3/3, so that only vendor prefixes and compatibles
+> that are defined and don't result in checkpatch.pl warnings get used.
+
+Patch 2/3:
+
+commit 46dcb8632b36644cb20e6b35ede12ff0088a60eb
+Author: Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
+Date:   Fri Oct 12 16:22:28 2018 +0300
+
+    dt-bindings: arm: sunxi: emlid,neutis-n5(-devboard)
+    
+    sunxi: add new compatibles for Emlid Neutis Dev board and SoM module
+    
+    Signed-off-by: Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
+
+diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
+index e4beec3..a907e52 100644
+--- a/Documentation/devicetree/bindings/arm/sunxi.txt
++++ b/Documentation/devicetree/bindings/arm/sunxi.txt
+@@ -19,3 +19,5 @@ using one of the following compatible strings:
+   allwinner,sun9i-a80
+   allwinner,sun50i-a64
+   nextthing,gr8
++  emlid,neutis-n5
++  emlid,neutis-n5-devboard
+
+Is this right place for the neutis compatibles?
+
+Aleksandr
