@@ -1,53 +1,45 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 0/4] Add clock support for Hi3670 SoC
-Date: Fri, 12 Oct 2018 09:08:58 +0530
-Message-ID: <20181012033857.GA5438@Mani-XPS-13-9360>
-References: <20180921060103.21370-1-manivannan.sadhasivam@linaro.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v2 2/2] dt-bindings: uniphier: move cache-uniphier.txt to
+ vendor directory
+Date: Fri, 12 Oct 2018 13:25:24 +0900
+Message-ID: <1539318324-4938-2-git-send-email-yamada.masahiro@socionext.com>
+References: <1539318324-4938-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180921060103.21370-1-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, xuwei5@hisilicon.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1539318324-4938-1-git-send-email-yamada.masahiro@socionext.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <mhiramat@kernel.org>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 20, 2018 at 11:00:59PM -0700, Manivannan Sadhasivam wrote:
-> This patchset adds clock support for Hi3670 SoC from HiSilicon utilizing
-> the HiSi common clock code. While adding clock support, let's remove the
-> fixed clock for UART and source SoC clock on HiKey970 board.
-> 
-> This patchset has been verified on HiKey970 board.
->
+Now, the Socionext vendor directory is available at
+Documentation/devicetree/bindings/arm/socionext/
 
-Hi,
+Move cache-uniphier.txt over to it.
 
-Any update on this series?
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Thanks,
-Mani
+Changes in v2:
+  - New patch
 
-> Thanks,
-> Mani
-> 
-> Manivannan Sadhasivam (4):
->   dt-bindings: clk: hisilicon: Add bindings for Hi3670 clk
->   arm64: dts: hisilicon: Add clock nodes for Hi3670 SoC
->   arm64: dts: hisilicon: Source SoC clock for UART6
->   clk: hisilicon: Add clock driver for Hi3670 SoC
-> 
->  .../bindings/clock/hi3670-clock.txt           |   43 +
->  arch/arm64/boot/dts/hisilicon/hi3670.dtsi     |   48 +-
->  drivers/clk/hisilicon/Kconfig                 |    7 +
->  drivers/clk/hisilicon/Makefile                |    1 +
->  drivers/clk/hisilicon/clk-hi3670.c            | 1016 +++++++++++++++++
->  include/dt-bindings/clock/hi3670-clock.h      |  348 ++++++
->  6 files changed, 1458 insertions(+), 5 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/hi3670-clock.txt
->  create mode 100644 drivers/clk/hisilicon/clk-hi3670.c
->  create mode 100644 include/dt-bindings/clock/hi3670-clock.h
-> 
-> -- 
-> 2.17.1
-> 
+ .../devicetree/bindings/arm/{uniphier => socionext}/cache-uniphier.txt    | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename Documentation/devicetree/bindings/arm/{uniphier => socionext}/cache-uniphier.txt (100%)
+
+diff --git a/Documentation/devicetree/bindings/arm/uniphier/cache-uniphier.txt b/Documentation/devicetree/bindings/arm/socionext/cache-uniphier.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arm/uniphier/cache-uniphier.txt
+rename to Documentation/devicetree/bindings/arm/socionext/cache-uniphier.txt
+-- 
+2.7.4
