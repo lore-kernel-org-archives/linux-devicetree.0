@@ -1,100 +1,38 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH 5/7] mfd: ds90ux9xx: add I2C bridge/alias and link
- connection driver
-Date: Fri, 12 Oct 2018 17:36:39 +0300
-Message-ID: <0be75b0d-eb61-02e5-a086-be6a9d32841a@mleia.com>
-References: <20181008211205.2900-1-vz@mleia.com> <20181012060455.GV4939@dell>
- <c8f01b88-c14f-867d-d796-7464b2e8ccfb@mentor.com> <1584081.CVFmJobd6K@avalon>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 3/4] dt-bindings: power: Add Spreadtrum SC27XX fuel
+ gauge unit documentation
+Date: Fri, 12 Oct 2018 09:36:42 -0500
+Message-ID: <20181012143642.GA9323@bogus>
+References: <2787f18a0366576959557d05112a069dca982269.1538033078.git.baolin.wang@linaro.org>
+ <f87afb701f33f46928c682361235083db8d3d2fc.1538033078.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1584081.CVFmJobd6K@avalon>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <f87afb701f33f46928c682361235083db8d3d2fc.1538033078.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, baolin.wang@linaro.org, broonie@kernel.org, ctatlor97@gmail.com, linus.walleij@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent
-
-On 10/12/2018 04:12 PM, Laurent Pinchart wrote:
-> Hi Vladimir,
+On Thu, 27 Sep 2018 15:26:56 +0800, Baolin Wang wrote:
+> This patch adds the binding documentation for Spreadtrum SC27XX series PMICs
+> fuel gauge unit device, which is used to calculate the battery capacity.
 > 
-> (CC'ing Wolfram)
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Changes from v2:
+>  - Add reviewed tag from Linus.
 > 
-> On Friday, 12 October 2018 10:32:32 EEST Vladimir Zapolskiy wrote:
->> On 10/12/2018 09:04 AM, Lee Jones wrote:
->>> On Tue, 09 Oct 2018, Vladimir Zapolskiy wrote:
->>>> From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
->>>>
->>>> The change adds TI DS90Ux9xx I2C bridge/alias subdevice driver and
->>>> FPD Link connection handling mechanism.
->>>>
->>>> Access to I2C devices connected to a remote de-/serializer is done in
->>>> a transparent way, on established link detection event such devices
->>>> are registered on an I2C bus, which serves a local de-/serializer IC.
->>>>
->>>> The development of the driver was a collaborative work, the
->>>> contribution done by Balasubramani Vivekanandan includes:
->>>> * original simplistic implementation of the driver,
->>>> * support of implicitly specified devices in device tree,
->>>> * support of multiple FPD links for TI DS90Ux9xx,
->>>> * other kind of valuable review comments, clean-ups and fixes.
->>>>
->>>> Also Steve Longerbeam made the following changes:
->>>> * clear address maps after linked device removal,
->>>> * disable pass-through in disconnection,
->>>> * qualify locked status with non-zero remote address.
->>>>
->>>> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
->>>> ---
->>>>
->>>>  drivers/mfd/Kconfig                |   8 +
->>>>  drivers/mfd/Makefile               |   1 +
->>>>  drivers/mfd/ds90ux9xx-i2c-bridge.c | 764 +++++++++++++++++++++++++++++
->>>>  3 files changed, 773 insertions(+)
->>>>  create mode 100644 drivers/mfd/ds90ux9xx-i2c-bridge.c
->>>
->>> Shouldn't this live in drivers/i2c?
->>
->> no, the driver is not for an I2C controller of any kind, and the driver does
->> not register itself in the I2C subsystem by calling i2c_add_adapter() or
->> i2c_add_numbered_adapter() or i2c_mux_add_adapter() etc, this topic was
->> discussed with Wolfram also.
-> 
-> (Who is now on CC)
+> Changes from v1:
+>  - Renamed GPIO property.
+>  - Use standand battery properties instead of 'sprd,inner-resist' and
+>    'sprd,ocv-cap-table'.
+>  - Remove battery node's description.
+> ---
+>  .../devicetree/bindings/power/supply/sc27xx-fg.txt |   52 ++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
 > 
 
-Wolfram has copies of the drivers and discussion right from the beginning,
-hopefully he won't get two copies ;)
-
->> Formally the driver converts the managed IC into a multi-address I2C
->> slave device, I understand that it does not sound like a well suited driver
->> for MFD, but ds90ux9xx-core.c and ds90ux9xx-i2c-bridge.c drivers are quite
->> tightly coupled.
-> 
-> As mentioned in other e-mails in this thread I don't think this should be 
-> split out to a separate driver,> I would move the functionality to the 
-> ds90ux9xx driver.
-
-The proposal may have the grounds, but the I2C bridging functionality of ICs
-is quite detached from all other ones, thus it found its place in the cell
-driver per se.
-
-> You may want to register an I2C mux, but as you have a single port, that
-> could be overkill. I haven't studied in details how to best support this
-> chip using the existing I2C subsystems APIs (which we may want to extend
-> if it needed), but I believe that (in your use cases) the deserializer
-> should be a child of the serializer, and modeled as an I2C device.
-> 
-
-Formally in OF terms to define a link between devices by a phandle should
-be sufficient, panels are not the children of LVDS controllers under OF graph
-constraints in DT representation, the panels become secondary in runtime
-only, I'd like to reuse the concept. Also it adds a better sense of symmetry
-of deserializer <-> serializer connections relatively to a SoC/data source.
-
---
-Best wishes,
-Vladimir
+Reviewed-by: Rob Herring <robh@kernel.org>
