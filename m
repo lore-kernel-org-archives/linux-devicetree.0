@@ -1,78 +1,94 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/7] PCI: OF: Initialize dev->fwnode appropriately
-Date: Fri, 12 Oct 2018 14:44:01 -0500
-Message-ID: <20181012194401.GY5906@bhelgaas-glaptop.roam.corp.google.com>
-References: <20181012145917.6840-1-jean-philippe.brucker@arm.com>
-	<20181012145917.6840-5-jean-philippe.brucker@arm.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 00/16] clk: at91: Rework DT bindings
+Date: Fri, 12 Oct 2018 12:50:43 -0700
+Message-ID: <153937384305.5275.9319960324791639711@swboyd.mtv.corp.google.com>
+References: <20180717222757.10253-1-alexandre.belloni@bootlin.com>
+ <153271100280.48062.2538655794734424353@swboyd.mtv.corp.google.com>
+ <20180816114755.GH21707@piout.net>
+ <153573753043.93865.2420370848457480370@swboyd.mtv.corp.google.com>
+ <153936888640.5275.18223880548754104359@swboyd.mtv.corp.google.com>
+ <20181012184017.GH2843@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20181012145917.6840-5-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, tnowicki-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181012184017.GH2843@piout.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 12, 2018 at 03:59:14PM +0100, Jean-Philippe Brucker wrote:
-> For PCI devices that have an OF node, set the fwnode as well. This way
-> drivers that rely on fwnode don't need the special case described by
-> commit f94277af03ea ("of/platform: Initialise dev->fwnode appropriately").
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Quoting Alexandre Belloni (2018-10-12 11:40:17)
+> On 12/10/2018 11:28:06-0700, Stephen Boyd wrote:
+> > Quoting Stephen Boyd (2018-08-31 10:45:30)
+> > > Quoting Alexandre Belloni (2018-08-16 04:47:55)
+> > > > On 27/07/2018 10:03:22-0700, Stephen Boyd wrote:
+> > > > > Quoting Alexandre Belloni (2018-07-17 15:27:41)
+> > > > > > This is the promised rework of the at91 PMC clocks driver. It i=
+s mainly
+> > > > > > necessary to remove the DTC warnings but it also complies with =
+the CCF
+> > > > > > rule that there should be one node per controller instead of on=
+e node
+> > > > > > per clock.
+> > > > > > =
 
-Acked-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> > > > > > This only handles the PMC, I'm planning to also rework the SCKC=
+ bindings
+> > > > > > later (without breaking the DT ABI).
+> > > > > > =
 
-> ---
->  drivers/pci/of.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index 2f5015bdb256..8026417fab38 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -21,12 +21,15 @@ void pci_set_of_node(struct pci_dev *dev)
->  		return;
->  	dev->dev.of_node = of_pci_find_child_device(dev->bus->dev.of_node,
->  						    dev->devfn);
-> +	if (dev->dev.of_node)
-> +		dev->dev.fwnode = &dev->dev.of_node->fwnode;
->  }
->  
->  void pci_release_of_node(struct pci_dev *dev)
->  {
->  	of_node_put(dev->dev.of_node);
->  	dev->dev.of_node = NULL;
-> +	dev->dev.fwnode = NULL;
->  }
->  
->  void pci_set_bus_of_node(struct pci_bus *bus)
-> @@ -35,12 +38,16 @@ void pci_set_bus_of_node(struct pci_bus *bus)
->  		bus->dev.of_node = pcibios_get_phb_of_node(bus);
->  	else
->  		bus->dev.of_node = of_node_get(bus->self->dev.of_node);
-> +
-> +	if (bus->dev.of_node)
-> +		bus->dev.fwnode = &bus->dev.of_node->fwnode;
->  }
->  
->  void pci_release_bus_of_node(struct pci_bus *bus)
->  {
->  	of_node_put(bus->dev.of_node);
->  	bus->dev.of_node = NULL;
-> +	bus->dev.fwnode = NULL;
->  }
->  
->  struct device_node * __weak pcibios_get_phb_of_node(struct pci_bus *bus)
-> -- 
-> 2.19.1
-> 
+> > > > > > The series is based on top of clk-next plus at91-dt so I don't =
+think it
+> > > > > > is convenient to have it this cycle. However, I would really li=
+ke to
+> > > > > > ensure we agree on the new bindings this cycle before convertin=
+g all the
+> > > > > > other platforms as this is a bit tedious.
+> > > > > > =
+
+> > > > > > The first two patches are actually fixes and may be considered =
+for this
+> > > > > > cycle.
+> > > > > > =
+
+> > > > > > One nice note:
+> > > > > > at91-sama5d2_xplained.dtb goes from 29351 bytes to 22082 bytes
+> > > > > =
+
+> > > > > Patches look mostly good. Rob is happy with the bindings and so a=
+m I.
+> > > > > =
+
+> > > > > One general question is why the drivers can't be moved to real pl=
+atform
+> > > > > drivers instead of using OF_CLK_DECLARE?
+> > > > > =
+
+> > > > =
+
+> > > > I tried, this makes the clocksource drivers fail with -EPROBE_DEFER=
+ and
+> > > > so the kernel just stops there.
+> > > > =
+
+> > > =
+
+> > > Ok. We have CLK_OF_DECLARE_DRIVER for that. Can you use that?
+> > > =
+
+> > =
+
+> > I assume this will be resent. I haven't seen anything yet though.
+> > =
+
+> =
+
+> It will, would you be willing to take it for this cycle if I manage to
+> send it on Monday? (it seems that we will have an -rc8).
+> =
+
+
+Well there are fixes to be made, so go at your own pace and don't stress
+yourself to deliver it on Monday. I plan to stop picking most things
+early next week.
