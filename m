@@ -1,221 +1,83 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH V12 7/8] clocksource: add gx6605s SOC system timer
-Date: Fri, 12 Oct 2018 20:12:20 +0800
-Message-ID: <cad9e97fd355617a205ee18bf0719f392af73f52.1539315341.git.ren_guo@c-sky.com>
-References: <d6a649276d1b5641f2b8518e55016501d69e6128.1539315341.git.ren_guo@c-sky.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [RESEND PATCH v5 8/9] pwm: add documentation for pwm push-pull
+ mode
+Date: Fri, 12 Oct 2018 14:15:52 +0200
+Message-ID: <20181012121552.GE31561@ulmo>
+References: <1535461286-12308-1-git-send-email-claudiu.beznea@microchip.com>
+ <1535461286-12308-9-git-send-email-claudiu.beznea@microchip.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="//IivP0gvsAy3Can"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d6a649276d1b5641f2b8518e55016501d69e6128.1539315341.git.ren_guo@c-sky.com>
-In-Reply-To: <cover.1539315341.git.ren_guo@c-sky.com>
-References: <cover.1539315341.git.ren_guo@c-sky.com>
+Content-Disposition: inline
+In-Reply-To: <1535461286-12308-9-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, will.deacon@arm.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
+To: Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: shc_work@mail.ru, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Changelog:
- - pass checkpatch.pl
- - Add COMIPLE_TEST in Kconfig
- - no cast is needed for "struct clock_event_device *ce = dev"
- - remove: extra space after (u64)
- - Add License and Copyright
- - Use timer-of framework
- - Change name with upstream feedback
- - Use clksource_mmio framework
 
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- drivers/clocksource/Kconfig         |   8 ++
- drivers/clocksource/Makefile        |   1 +
- drivers/clocksource/timer-gx6605s.c | 154 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 163 insertions(+)
- create mode 100644 drivers/clocksource/timer-gx6605s.c
+--//IivP0gvsAy3Can
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 591c9a8..55c77e4 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -630,4 +630,12 @@ config CSKY_MP_TIMER
- 	  csky,mptimer is not only used in SMP system, it also could be used
- 	  single core system. It's not a mmio reg and it use mtcr/mfcr instruction.
- 
-+config GX6605S_TIMER
-+	bool "Gx6605s SOC system timer driver" if COMPILE_TEST
-+	depends on CSKY
-+	select CLKSRC_MMIO
-+	select TIMER_OF
-+	help
-+	  This option enables support for gx6605s SOC's timer.
-+
- endmenu
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index 5ce82d3..9196331 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -80,3 +80,4 @@ obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
- obj-$(CONFIG_ATCPIT100_TIMER)		+= timer-atcpit100.o
- obj-$(CONFIG_RISCV_TIMER)		+= riscv_timer.o
- obj-$(CONFIG_CSKY_MP_TIMER)		+= timer-mp-csky.o
-+obj-$(CONFIG_GX6605S_TIMER)		+= timer-gx6605s.o
-diff --git a/drivers/clocksource/timer-gx6605s.c b/drivers/clocksource/timer-gx6605s.c
-new file mode 100644
-index 0000000..80d0939
---- /dev/null
-+++ b/drivers/clocksource/timer-gx6605s.c
-@@ -0,0 +1,154 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
-+
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/sched_clock.h>
-+
-+#include "timer-of.h"
-+
-+#define CLKSRC_OFFSET	0x40
-+
-+#define TIMER_STATUS	0x00
-+#define TIMER_VALUE	0x04
-+#define TIMER_CONTRL	0x10
-+#define TIMER_CONFIG	0x20
-+#define TIMER_DIV	0x24
-+#define TIMER_INI	0x28
-+
-+#define GX6605S_STATUS_CLR	BIT(0)
-+#define GX6605S_CONTRL_RST	BIT(0)
-+#define GX6605S_CONTRL_START	BIT(1)
-+#define GX6605S_CONFIG_EN	BIT(0)
-+#define GX6605S_CONFIG_IRQ_EN	BIT(1)
-+
-+static irqreturn_t gx6605s_timer_interrupt(int irq, void *dev)
-+{
-+	struct clock_event_device *ce = dev;
-+	void __iomem *base = timer_of_base(to_timer_of(ce));
-+
-+	writel_relaxed(GX6605S_STATUS_CLR, base + TIMER_STATUS);
-+
-+	ce->event_handler(ce);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int gx6605s_timer_set_oneshot(struct clock_event_device *ce)
-+{
-+	void __iomem *base = timer_of_base(to_timer_of(ce));
-+
-+	/* reset and stop counter */
-+	writel_relaxed(GX6605S_CONTRL_RST, base + TIMER_CONTRL);
-+
-+	/* enable with irq and start */
-+	writel_relaxed(GX6605S_CONFIG_EN | GX6605S_CONFIG_IRQ_EN,
-+		       base + TIMER_CONFIG);
-+
-+	return 0;
-+}
-+
-+static int gx6605s_timer_set_next_event(unsigned long delta,
-+					struct clock_event_device *ce)
-+{
-+	void __iomem *base = timer_of_base(to_timer_of(ce));
-+
-+	/* use reset to pause timer */
-+	writel_relaxed(GX6605S_CONTRL_RST, base + TIMER_CONTRL);
-+
-+	/* config next timeout value */
-+	writel_relaxed(ULONG_MAX - delta, base + TIMER_INI);
-+	writel_relaxed(GX6605S_CONTRL_START, base + TIMER_CONTRL);
-+
-+	return 0;
-+}
-+
-+static int gx6605s_timer_shutdown(struct clock_event_device *ce)
-+{
-+	void __iomem *base = timer_of_base(to_timer_of(ce));
-+
-+	writel_relaxed(0, base + TIMER_CONTRL);
-+	writel_relaxed(0, base + TIMER_CONFIG);
-+
-+	return 0;
-+}
-+
-+static struct timer_of to = {
-+	.flags = TIMER_OF_IRQ | TIMER_OF_BASE | TIMER_OF_CLOCK,
-+	.clkevt = {
-+		.rating			= 300,
-+		.features		= CLOCK_EVT_FEAT_DYNIRQ |
-+					  CLOCK_EVT_FEAT_ONESHOT,
-+		.set_state_shutdown	= gx6605s_timer_shutdown,
-+		.set_state_oneshot	= gx6605s_timer_set_oneshot,
-+		.set_next_event		= gx6605s_timer_set_next_event,
-+		.cpumask		= cpu_possible_mask,
-+	},
-+	.of_irq = {
-+		.handler		= gx6605s_timer_interrupt,
-+		.flags			= IRQF_TIMER | IRQF_IRQPOLL,
-+	},
-+};
-+
-+static u64 notrace gx6605s_sched_clock_read(void)
-+{
-+	void __iomem *base;
-+
-+	base = timer_of_base(&to) + CLKSRC_OFFSET;
-+
-+	return (u64)readl_relaxed(base + TIMER_VALUE);
-+}
-+
-+static void gx6605s_clkevt_init(void __iomem *base)
-+{
-+	writel_relaxed(0, base + TIMER_DIV);
-+	writel_relaxed(0, base + TIMER_CONFIG);
-+
-+	clockevents_config_and_register(&to.clkevt, timer_of_rate(&to), 2,
-+					ULONG_MAX);
-+}
-+
-+static int gx6605s_clksrc_init(void __iomem *base)
-+{
-+	writel_relaxed(0, base + TIMER_DIV);
-+	writel_relaxed(0, base + TIMER_INI);
-+
-+	writel_relaxed(GX6605S_CONTRL_RST, base + TIMER_CONTRL);
-+
-+	writel_relaxed(GX6605S_CONFIG_EN, base + TIMER_CONFIG);
-+
-+	writel_relaxed(GX6605S_CONTRL_START, base + TIMER_CONTRL);
-+
-+	sched_clock_register(gx6605s_sched_clock_read, 32, timer_of_rate(&to));
-+
-+	return clocksource_mmio_init(base + TIMER_VALUE, "gx6605s",
-+			timer_of_rate(&to), 200, 32, clocksource_mmio_readl_up);
-+}
-+
-+static int __init gx6605s_timer_init(struct device_node *np)
-+{
-+	int ret;
-+
-+	/*
-+	 * The timer driver is for nationalchip gx6605s SOC and there are two
-+	 * same timer in gx6605s. We use one for clkevt and another for clksrc.
-+	 *
-+	 * The timer is mmio map to access, so we need give mmio address in dts.
-+	 *
-+	 * It provides a 32bit countup timer and interrupt will be caused by
-+	 * count-overflow.
-+	 * So we need set-next-event by ULONG_MAX - delta in TIMER_INI reg.
-+	 *
-+	 * The counter at 0x0  offset is clock event.
-+	 * The counter at 0x40 offset is clock source.
-+	 * They are the same in hardware, just different used by driver.
-+	 */
-+	ret = timer_of_init(np, &to);
-+	if (ret)
-+		return ret;
-+
-+	gx6605s_clkevt_init(timer_of_base(&to));
-+
-+	return gx6605s_clksrc_init(timer_of_base(&to) + CLKSRC_OFFSET);
-+}
-+TIMER_OF_DECLARE(csky_gx6605s_timer, "csky,gx6605s-timer", gx6605s_timer_init);
--- 
-2.7.4
+On Tue, Aug 28, 2018 at 04:01:25PM +0300, Claudiu Beznea wrote:
+> Add documentation for PWM push-pull mode.
+>=20
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm.txt |  2 ++
+>  Documentation/pwm.txt                         | 16 ++++++++++++++++
+>  include/dt-bindings/pwm/pwm.h                 |  1 +
+>  3 files changed, 19 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Documentatio=
+n/devicetree/bindings/pwm/pwm.txt
+> index 7c8aaac43f92..6a60c0fca112 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm.txt
+> @@ -49,6 +49,8 @@ Optionally, the pwm-specifier can encode a number of fl=
+ags (defined in
+>  - PWM_MODE_COMPLEMENTARY: PWM complementary working mode (for PWM channe=
+ls
+>  with two outputs); if not specified, the default for PWM channel will be
+>  used
+> +- PWM_MODE_PUSH_PULL: PWM push-pull working modes (for PWM channels with
+> +two outputs); if not specified the default for PWM channel will be used
+
+What if somebody has this in the DT:
+
+	PWM_MODE_COMPLEMENTARY | PWM_MODE_PUSH_PULL
+
+which one takes precedence, or do we reject it?
+
+Wouldn't it be preferable to either move the modes into an extra field
+within the flags field, or perhaps even add another field?
+
+I guess since Rob's already acked this, that concern may be unfounded.
+
+Thierry
+
+--//IivP0gvsAy3Can
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlvAkHUACgkQ3SOs138+
+s6GvYA//VhYSRVNBzW3PbPthk9TMJ5k2nfLZjUjH7vwAEhSSE9MAEdP+M/ScAfpE
+b++6J3rnvfzUciUZRJtlHRC6AO7GyV2/oiju6Qlfn3Sg+mg5B+e2TH1eTRZuy25a
+8iUBaCGO4awJbTNFiYwO7NtgWRcdCvQijcvt1VM2iPI38t4a8GCPVSqbFmpu5y3B
+NvCP1oEyRxa91JDgIUaLgewiYf9Bmeld6hNVhEUx8IlA3WTX1zoj+Jnpdbnwps8l
+BHl6TuMdUWHzWPy31YVZp5US/1nuuIaFc0byl8UHzZ30TNdVOTxmHKzwUo2b5XPq
+GyDqZHuy0e8GacggIDY6YTOG4sgd15HBp8pFlNZwYm8rJaJzRDYWBWdMFlwaqxzx
+N6y42buFEaXUbOuXZFH675HylfhL8FCdiO/xfSAHsPWt032wfFrYoVBcIyNyRAAQ
+Dj8o8gMKXGJtmeNK/CKrFFuO7ZqfvhSPa6we2iCQdxvM78XRutmpsxu4sr06FT6B
+HnOIq1Lm7cqQqc4rZ9fQkWrj7FTDHr0zjGZUqIClune7X6gRi00wXZV+8MaSjbpl
+ghDRISv3+5V7Bz4AXREQxZNL2xpLxiNFAfuhGIuSj+T4i4aqc1AvNDzwoXy9vSxS
+8NVtXk20MV4CxF14GkSITHo1y8d6sDUDbo2xhINzWcbMxAFiBM4=
+=Vkfu
+-----END PGP SIGNATURE-----
+
+--//IivP0gvsAy3Can--
