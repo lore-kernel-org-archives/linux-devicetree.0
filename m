@@ -1,228 +1,161 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 4/7] mfd: ds90ux9xx: add TI DS90Ux9xx de-/serializer MFD
- driver
-Date: Fri, 12 Oct 2018 15:25:18 +0100
-Message-ID: <20181012142518.GB4939@dell>
-References: <20181008211205.2900-1-vz@mleia.com>
- <20181008211205.2900-5-vz@mleia.com>
- <20181012060314.GU4939@dell>
- <63733d2e-f95e-8894-f2b0-0b551b5cfeeb@mentor.com>
- <20181012083924.GW4939@dell>
- <eef99526-9232-8cd4-9a7c-c30114d58806@ideasonboard.com>
- <506c03d7-7986-44dd-3290-92d16a8106ad@mentor.com>
- <20181012113415.GZ4939@dell>
- <d7bfd5d8-2c85-1f82-a673-4e8d159a15d8@mleia.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH RFC v1 4/8] drivers: qcom: cpu_pd: add cpu power domain
+ support using genpd
+Date: Fri, 12 Oct 2018 15:33:50 +0100
+Message-ID: <20181012143350.GG3401@e107155-lin>
+References: <1539206455-29342-1-git-send-email-rplsssn@codeaurora.org>
+ <1539206455-29342-5-git-send-email-rplsssn@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <d7bfd5d8-2c85-1f82-a673-4e8d159a15d8@mleia.com>
+In-Reply-To: <1539206455-29342-5-git-send-email-rplsssn@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, kieran.bingham@ideasonboard.com, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, ulf.hansson@linaro.org, khilman@kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, ilina@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 12 Oct 2018, Vladimir Zapolskiy wrote:
+On Thu, Oct 11, 2018 at 02:50:51AM +0530, Raju P.L.S.S.S.N wrote:
+> RPMH based targets require that the sleep and wake state request votes
+> be sent during system low power mode entry. The votes help reduce the
+> power consumption when the AP is not using them. The votes sent by the
+> clients are cached in RPMH controller and needs to be flushed when the
+> last cpu enters low power mode. So add cpu power domain using Linux
+> generic power domain infrastructure to perform necessary tasks as part
+> of domain power down.
+>
+> Suggested-by: Lina Iyer <ilina@codeaurora.org>
+> Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
+> ---
+>  drivers/soc/qcom/Kconfig  |   9 ++++
+>  drivers/soc/qcom/Makefile |   1 +
+>  drivers/soc/qcom/cpu_pd.c | 104 ++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 114 insertions(+)
+>  create mode 100644 drivers/soc/qcom/cpu_pd.c
+>
+> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+> index ba79b60..91e8b3b 100644
+> --- a/drivers/soc/qcom/Kconfig
+> +++ b/drivers/soc/qcom/Kconfig
+> @@ -95,6 +95,7 @@ config QCOM_RMTFS_MEM
+>  config QCOM_RPMH
+>  	bool "Qualcomm RPM-Hardened (RPMH) Communication"
+>  	depends on ARCH_QCOM && ARM64 && OF || COMPILE_TEST
+> +	select QCOM_CPU_PD
+>  	help
+>  	  Support for communication with the hardened-RPM blocks in
+>  	  Qualcomm Technologies Inc (QTI) SoCs. RPMH communication uses an
+> @@ -102,6 +103,14 @@ config QCOM_RPMH
+>  	  of hardware components aggregate requests for these resources and
+>  	  help apply the aggregated state on the resource.
+>
+> +config QCOM_CPU_PD
+> +    bool "Qualcomm cpu power domain driver"
+> +    depends on QCOM_RPMH && PM_GENERIC_DOMAINS || COMPILE_TEST
+> +    help
+> +	  Support for QCOM platform cpu power management to perform tasks
+> +	  necessary while application processor votes for deeper modes so that
+> +	  the firmware can enter SoC level low power modes to save power.
+> +
+>  config QCOM_SMEM
+>  	tristate "Qualcomm Shared Memory Manager (SMEM)"
+>  	depends on ARCH_QCOM
+> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+> index f25b54c..57a1b0e 100644
+> --- a/drivers/soc/qcom/Makefile
+> +++ b/drivers/soc/qcom/Makefile
+> @@ -12,6 +12,7 @@ obj-$(CONFIG_QCOM_RMTFS_MEM)	+= rmtfs_mem.o
+>  obj-$(CONFIG_QCOM_RPMH)		+= qcom_rpmh.o
+>  qcom_rpmh-y			+= rpmh-rsc.o
+>  qcom_rpmh-y			+= rpmh.o
+> +obj-$(CONFIG_QCOM_CPU_PD) += cpu_pd.o
+>  obj-$(CONFIG_QCOM_SMD_RPM)	+= smd-rpm.o
+>  obj-$(CONFIG_QCOM_SMEM) +=	smem.o
+>  obj-$(CONFIG_QCOM_SMEM_STATE) += smem_state.o
+> diff --git a/drivers/soc/qcom/cpu_pd.c b/drivers/soc/qcom/cpu_pd.c
+> new file mode 100644
+> index 0000000..565c510
+> --- /dev/null
+> +++ b/drivers/soc/qcom/cpu_pd.c
+> @@ -0,0 +1,104 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/of_platform.h>
+> +#include <linux/pm_domain.h>
+> +#include <linux/slab.h>
+> +
+> +#include <soc/qcom/rpmh.h>
+> +
+> +static struct device *cpu_pd_dev;
+> +
 
-> Hi Lee,
-> 
-> On 10/12/2018 02:34 PM, Lee Jones wrote:
-> > On Fri, 12 Oct 2018, Vladimir Zapolskiy wrote:
-> >> On 10/12/2018 12:20 PM, Kieran Bingham wrote:
-> >>> Hi Vladimir,
-> >>> On 12/10/18 09:39, Lee Jones wrote:
-> >>>> On Fri, 12 Oct 2018, Vladimir Zapolskiy wrote:
-> >>>>> On 10/12/2018 09:03 AM, Lee Jones wrote:
-> >>>>>> On Tue, 09 Oct 2018, Vladimir Zapolskiy wrote:
-> >>>>>>
-> >>>>>>> From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-> >>>>>>>
-> >>>>>>> The change adds I2C device driver for TI DS90Ux9xx de-/serializers,
-> >>>>>>> support of subdevice controllers is done in separate drivers, because
-> >>>>>>> not all IC functionality may be needed in particular situations, and
-> >>>>>>> this can be fine grained controlled in device tree.
-> >>>>>>>
-> >>>>>>> The development of the driver was a collaborative work, the
-> >>>>>>> contribution done by Balasubramani Vivekanandan includes:
-> >>>>>>> * original implementation of the driver based on a reference driver,
-> >>>>>>> * regmap powered interrupt controller support on serializers,
-> >>>>>>> * support of implicitly or improperly specified in device tree ICs,
-> >>>>>>> * support of device properties and attributes: backward compatible
-> >>>>>>>   mode, low frequency operation mode, spread spectrum clock generator.
-> >>>>>>>
-> >>>>>>> Contribution by Steve Longerbeam:
-> >>>>>>> * added ds90ux9xx_read_indirect() function,
-> >>>>>>> * moved number of links property and added ds90ux9xx_num_fpd_links(),
-> >>>>>>> * moved and updated ds90ux9xx_get_link_status() function to core driver,
-> >>>>>>> * added fpd_link_show device attribute.
-> >>>>>>>
-> >>>>>>> Sandeep Jain added support of pixel clock edge configuration.
-> >>>>>>>
-> >>>>>>> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-> >>>>>>> ---
-> >>>>>>>  drivers/mfd/Kconfig           |  14 +
-> >>>>>>>  drivers/mfd/Makefile          |   1 +
-> >>>>>>>  drivers/mfd/ds90ux9xx-core.c  | 879 ++++++++++++++++++++++++++++++++++
-> >>>>>>>  include/linux/mfd/ds90ux9xx.h |  42 ++
-> >>>>>>>  4 files changed, 936 insertions(+)
-> >>>>>>>  create mode 100644 drivers/mfd/ds90ux9xx-core.c
-> >>>>>>>  create mode 100644 include/linux/mfd/ds90ux9xx.h
-> >>>>>>>
-> >>>>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> >>>>>>> index 8c5dfdce4326..a969fa123f64 100644
-> >>>>>>> --- a/drivers/mfd/Kconfig
-> >>>>>>> +++ b/drivers/mfd/Kconfig
-> >>>>>>> @@ -1280,6 +1280,20 @@ config MFD_DM355EVM_MSP
-> >>>>>>>  	  boards.  MSP430 firmware manages resets and power sequencing,
-> >>>>>>>  	  inputs from buttons and the IR remote, LEDs, an RTC, and more.
-> >>>>>>>  
-> >>>>>>> +config MFD_DS90UX9XX
-> >>>>>>> +	tristate "TI DS90Ux9xx FPD-Link de-/serializer driver"
-> >>>>>>> +	depends on I2C && OF
-> >>>>>>> +	select MFD_CORE
-> >>>>>>> +	select REGMAP_I2C
-> >>>>>>> +	help
-> >>>>>>> +	  Say yes here to enable support for TI DS90UX9XX de-/serializer ICs.
-> >>>>>>> +
-> >>>>>>> +	  This driver provides basic support for setting up the de-/serializer
-> >>>>>>> +	  chips. Additional functionalities like connection handling to
-> >>>>>>> +	  remote de-/serializers, I2C bridging, pin multiplexing, GPIO
-> >>>>>>> +	  controller and so on are provided by separate drivers and should
-> >>>>>>> +	  enabled individually.
-> >>>>>>
-> >>>>>> This is not an MFD driver.
-> >>>>>
-> >>>>> Why do you think so? The representation of the ICs into device tree format
-> >>>>> of hardware description shows that this is a truly MFD driver with multiple
-> >>>>> IP subcomponents naturally mapped into MFD cells.
-> >>>>
-> >>>> This driver does too much real work ('stuff') to be an MFD driver.
-> >>>> MFD drivers should not need to care of; links, gates, modes, pixels,
-> >>>> frequencies maps or properties.  Nor should they contain elaborate
-> >>>> sysfs structures to control the aforementioned 'stuff'.
-> >>>>
-> >>>> Granted, there may be some code in there which could be appropriate
-> >>>> for an MFD driver.  However most of it needs moving out into a
-> >>>> function driver (or two).
-> >>>>
-> >>>>> Basically it is possible to replace explicit of_platform_populate() by
-> >>>>> adding a "simple-mfd" compatible, if it is desired.
-> >>>>>
-> >>>>>> After a 30 second Google of what this device actually does, perhaps
-> >>>>>> drivers/media might be a better fit?
-> >>>>>
-> >>>>> I assume it would be quite unusual to add a driver with NO media functions
-> >>>>> and controls into drivers/media.
-> >>>>
-> >>>> drivers/media may very well not be the correct place for this.  In my
-> >>>> 30 second Google, I saw that this device has a lot to do with cameras,
-> >>>> hence my media association.
-> >>>>
-> >>>> If *all* else fails, there is always drivers/misc, but this should be
-> >>>> avoided if at all possible.
-> >>>
-> >>> The device as a whole is FPD Link for camera devices I believe, but it
-> >>
-> >> I still don't understand (I could be biased though) why there is such
-> >> a strong emphasis on cameras and media stuff in the discussion.
-> >>
-> >> No, "the device as a whole is FPD Link for camera devices" is a wrong
-> >> statement. On hand I have a number of boards with serializers/deserializers
-> >> from the TI DS90Ux9xx IC series and sensors are NOT connected to them.
-> >>
-> >>> certainly has different functions which are broken out in this
-> >>> implementation.
-> >>
-> >> No, there is absolutely nothing broken out from the presented MFD drivers,
-> >> the drivers are completely integral and basically I don't expect any.
-> >>
-> >> If you are concerned about media functionality, the correspondent MFD
-> >> *cell* drivers will be added into drivers/media, drivers/gpu/drm or
-> >> whatever is to be a proper place.
-> >>
-> >>> I think it might be quite awkward having the i2c components in
-> >>> drivers/i2c and the media components in drivers/media/i2c, so what about
-> >>> creating drivers/media/i2c/fpd-link (or such) as a container?
-> >>
-> >> I open drivers/media/i2c/Kconfig and all entries with no exception are
-> >> under from 'if VIDEO_V4L2'. The MFD drivers do NOT require on depend on
-> >> VIDEO_V4L2 or any other multimedia frameworks, nor the MFD drivers export
-> >> any multimedia controls.
-> >>
-> >>> Our GMSL implementation is also a complex camera(s) device - but does
-> >>> not yet use the MFD framework, perhaps that's something to add to my
-> >>> todo list.
-> >>>
-> >>
-> >> Okay, but the TI DS90Ux9xx is NOT a camera device, and it is NOT a multimedia
-> >> device, but it is a pure MFD device so the argument is not applicable.
-> > 
-> > You keep saying that "this is an MFD device" without any obvious
-> > comprehension of what an MFD is.  Just saying that it is one
-> > over-and-over does not make it so.
-> > An MFD should be little more than parent to other functional devices.
-> > Their role is to register children which in turn conduct operations
-> > on the hardware in a useful way.  Some MFDs also house common functions
-> > to save repetition of code in each of the child devices.  They do not
-> > tend to offer any useful functionality (stuff) in their own right. 
-> 
-> This describes the presented MFD driver quite closely, if I remove
-> a few OF controls from ds90ux9xx-core.c:
-> * ti,video-map-select-*,
-> * ti,pixel-clock-edge,
-> * ti,spread-spectrum-clock-generation
-> 
-> Then the MFD device driver will not have any useful functionality
-> apart of what you've listed above, please feel free to recheck.
-> 
-> Should I just go ahead and do the change with the assumption that
-> the modified MFD driver suits MFD framework?
+This doesn't scale if you have 2 instances.
 
-Since this device seems to be truly multi-function, I have no qualms
-with it being represented by a parent MFD driver.  Providing any
-useful functionality (code that actually does stuff) is removed and
-placed in a more suitable location, it sounds like a reasonably good
-fit for MFD.
+> +static int cpu_pd_power_off(struct generic_pm_domain *domain)
+> +{
+> +	if (rpmh_ctrlr_idle(cpu_pd_dev)) {
 
-> > As I already mentioned, you need to figure out what this device is
-> > and move all of the functionality into the appropriate subsystem.
-> 
-> By definition as I comprehend it only MFD cell device drivers should
-> be relocated into the correspondent subsystems, but ds90ux9xx-core
-> remains in drivers/mfd, no?
+How is this expected to compile ? I couldn't find any instance of this.
 
-Sounds about right.
+> +		/* Flush the sleep/wake sets */
+> +		rpmh_flush(cpu_pd_dev);
 
-> Probably ds90ux9xx-i2c-bridge cell driver could enter drivers/misc.
+So it's just flushing the pending requests on the controller. The function
+implementation carries a note that it's assumed to be called only from
+system PM and we may call it in cpu idle path here. Is that fine ?
+If so, may be the comment needs to be dropped.
 
-Let's see what Wolfram has to say WRT Laurent's suggestion.
+Also, where exactly this voting for CPU is happening in this path ?
 
-> > Since an MFD isn't a real thing/device (it's a Linuxy-shim which 
-> > only serves to register sub-devices and (sometimes) provide a space
-> > for common functionality to be located), drivers/mfd is not the
-> > subsystem which you seek. 
-> 
-> Oh, that's exactly the case with DS90Ux9xx driver 'ds90ux9xx-core.c',
-> it's just a common place to store the shared boilerplate code
-> snippets for all cell device drivers and various flavours of ICs
-> from the series.
+> +	} else {
+> +		pr_debug("rpmh controller is busy\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int cpu_pm_domain_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct generic_pm_domain *cpu_pd;
+> +	int ret = -EINVAL, cpu;
+> +
+> +	if (!np) {
+> +		dev_err(dev, "device tree node not found\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (!of_find_property(np, "#power-domain-cells", NULL)) {
+> +		pr_err("power-domain-cells not found\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	cpu_pd_dev = &pdev->dev;
+> +	if (IS_ERR_OR_NULL(cpu_pd_dev))
 
-What you're using it for now is out-of-scope of an MFD driver.  Which
-if the functions are called from more than 1 call-site?  Those have a
-chance of residing - we'll discuss those on an ad-hoc basis.  Anything
-else needs relocating to the relevant subsystem.
+Isn't this too late to check ? You would have crashed on dev->of_node.
+So sounds pretty useless
 
-We should also speak to Mark Brown about the indirect Regmap stuff.
-Perhaps this would better suit a header file.
+> +		return PTR_ERR(cpu_pd_dev);
+> +
+> +	cpu_pd = devm_kzalloc(dev, sizeof(*cpu_pd), GFP_KERNEL);
+> +	if (!cpu_pd)
+> +		return -ENOMEM;
+> +
+> +	cpu_pd->name = kasprintf(GFP_KERNEL, "%s", np->name);
+> +	if (!cpu_pd->name)
+> +		goto free_cpu_pd;
+> +	cpu_pd->name = kbasename(cpu_pd->name);
+> +	cpu_pd->power_off = cpu_pd_power_off;
 
-> >>> We currently keep all of the complexity within the max9286.c driver, but
-> >>> I could foresee that being split further if more devices add to the
-> >>> complexity of managing the bus. At which point we might want an
-> >>> equivalent drivers/media/i2c/gmsl/ perhaps?
+If some kind of voting is done in off, why is there nothing to take care
+of that in pd_power_on  if it's per EL(linux/hyp/secure).
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--
+Regards,
+Sudeep
