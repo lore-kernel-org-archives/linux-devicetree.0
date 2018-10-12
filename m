@@ -1,111 +1,112 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 0/7] mfd/pinctrl: add initial support of TI DS90Ux9xx ICs
-Date: Fri, 12 Oct 2018 14:34:53 +0300
-Message-ID: <1799007.AefaWafTOB@avalon>
-References: <20181008211205.2900-1-vz@mleia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V8 18/21] dt-bindings: csky CPU Bindings
+Date: Fri, 12 Oct 2018 06:35:51 -0500
+Message-ID: <20181012113551.GA17917@bogus>
+References: <cover.1539315390.git.ren_guo@c-sky.com>
+ <1c77e479a1dc0119912ac146b1038963b3653381.1539315391.git.ren_guo@c-sky.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181008211205.2900-1-vz@mleia.com>
+Content-Disposition: inline
+In-Reply-To: <1c77e479a1dc0119912ac146b1038963b3653381.1539315391.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Guo Ren <ren_guo@c-sky.com>
+Cc: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, hch@infradead.org, marc.zyngier@arm.com, mark.rutland@arm.com, peterz@infradead.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, c-sky_gcc_upstream@c-sky.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
-
-Thank you for the patches.
-
-On Tuesday, 9 October 2018 00:11:58 EEST Vladimir Zapolskiy wrote:
-> The published drivers describe the essential and generic parts of
-> TI DS90Ux9xx series of ICs, which allow to transfer video, audio and
-> control signals between FPD-Link III serializers and deserializers.
+On Fri, Oct 12, 2018 at 12:42:53PM +0800, Guo Ren wrote:
+> This patch adds the documentation to describe that how to add cpu nodes in
+> dts for SMP.
 > 
-> The placement of TI DS90Ux9xx I2C client driver was selected to be
-> drivers/mfd as the most natural location of a true MFD driver,
-
-Why does this have to be an MFD driver ? It's not uncommon for random devices 
-to expose a few GPIOs or clocks to the outside world, to support their main 
-feature (video transmission in this case). HDMI cables transport I2C on the 
-DDC pins, and HDMI encoders usually have an I2C master controller to read 
-EDID, and a GPIO pin to connect to the HPD signal. We don't model them as MFD 
-drivers. You can register an I2C adapter and a GPIO controller from within any 
-driver without a need to involve the MFD framework. I think it's completely 
-overkill in this case.
-
-> apparently drivers/media/i2c is for another type of device drivers,
-> also DS90Ux9xx I2C bridge subcontroller driver is placed nearby,
-> because drivers/i2c for it would be an inappropriate destination
-> as well. Informally the TI DS90Ux9xx ICs serve a similar function
-> to SMSC/Microchip MOST, and its drivers are in drivers/staging/most,
-> the final destination is unknown to me. Please feel free to advise
-> a better location for the published drivers, at the moment the core
-> drivers are in drivers/mfd, but I select linux-media as a mailing list.
+> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> Cc: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/csky/cpus.txt | 70 +++++++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/csky/cpus.txt
 > 
-> The published drivers instantly give a chance to test video bridge
-> functionality to a TI DS90Ux9xx deserializer equipped display panel
-> with the aide of Laurent's "lvds-encoder" driver by misusing it
-> as a generic and transparent drm bridge with no particular LVDS
-> specifics in it, for that it should be sufficient just to add the
-> corresponding device node and input/output ports as children of
-> a serializer connected to an application controller.
-> 
-> While the selected scheme of IC description by a list of subdevices,
-> where each one described in its own device node, works pretty well,
-> it might lead to unnecessary overcomplicated description of connections
-> between subdevices on serializer and deserializer sides, i.e. for
-> proper description of links/connections video serializer should
-> be linked to video deserializer, audio serializer should be linked
-> to audio deserializer and so on, however formally there is just one
-> FPD-III Link connection between two ICs.
+> diff --git a/Documentation/devicetree/bindings/csky/cpus.txt b/Documentation/devicetree/bindings/csky/cpus.txt
+> new file mode 100644
+> index 0000000..ee3901d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/csky/cpus.txt
+> @@ -0,0 +1,70 @@
+> +==================
+> +C-SKY CPU Bindings
+> +==================
+> +
+> +The device tree allows to describe the layout of CPUs in a system through
+> +the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
+> +defining properties for every cpu.
+> +
+> +Only SMP system need to care about the cpus node and single processor
+> +needn't define cpus node at all.
+> +
+> +=====================================
+> +cpus and cpu node bindings definition
+> +=====================================
+> +
+> +- cpus node
+> +
+> +        Description: Container of cpu nodes
+> +
+> +        The node name must be "cpus".
+> +
+> +        A cpus node must define the following properties:
+> +
+> +        - #address-cells
+> +                Usage: required
+> +                Value type: <u32>
+> +                Definition: must be set to 1
+> +        - #size-cells
+> +                Usage: required
+> +                Value type: <u32>
+> +                Definition: must be set to 0
+> +
+> +- cpu node
+> +
+> +        Description: Describes one of SMP cores
+> +
+> +        PROPERTIES
+> +
 
-Could you please provide a complete DT example ? The series is titled "initial 
-support", but it's hard to ascertain that it's taking the right direction 
-without seeing where you want to go. In particular, I want to see how devices 
-on both sides of the serializer and deserializer will be modeled.
+What happened to compatible?
 
-> The series of patches is rebased on top of linux-next, and there are
-> more changes in the queue to provide better support of TI DS90Ux9xx ICs.
-> 
-> The introduction to the ICs and drivers can be found in my presentation
-> https://schd.ws/hosted_files/ossalsjp18/8a/vzapolskiy_als2018.pdf
-> 
-> Sandeep Jain (1):
->   dt-bindings: mfd: ds90ux9xx: add description of TI DS90Ux9xx ICs
-> 
-> Vladimir Zapolskiy (6):
->   dt-bindings: mfd: ds90ux9xx: add description of TI DS90Ux9xx I2C bridge
->   dt-bindings: pinctrl: ds90ux9xx: add description of TI DS90Ux9xx pinmux
->   mfd: ds90ux9xx: add TI DS90Ux9xx de-/serializer MFD driver
->   mfd: ds90ux9xx: add I2C bridge/alias and link connection driver
->   pinctrl: ds90ux9xx: add TI DS90Ux9xx pinmux and GPIO controller driver
->   MAINTAINERS: add entry for TI DS90Ux9xx FPD-Link III drivers
-> 
->  .../bindings/mfd/ti,ds90ux9xx-i2c-bridge.txt  |  61 ++
->  .../devicetree/bindings/mfd/ti,ds90ux9xx.txt  |  66 ++
->  .../bindings/pinctrl/ti,ds90ux9xx-pinctrl.txt |  83 ++
->  MAINTAINERS                                   |  10 +
->  drivers/mfd/Kconfig                           |  22 +
->  drivers/mfd/Makefile                          |   2 +
->  drivers/mfd/ds90ux9xx-core.c                  | 879 ++++++++++++++++
->  drivers/mfd/ds90ux9xx-i2c-bridge.c            | 764 ++++++++++++++
->  drivers/pinctrl/Kconfig                       |  11 +
->  drivers/pinctrl/Makefile                      |   1 +
->  drivers/pinctrl/pinctrl-ds90ux9xx.c           | 970 ++++++++++++++++++
->  include/linux/mfd/ds90ux9xx.h                 |  42 +
->  12 files changed, 2911 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/mfd/ti,ds90ux9xx-i2c-bridge.txt create
-> mode 100644 Documentation/devicetree/bindings/mfd/ti,ds90ux9xx.txt create
-> mode 100644
-> Documentation/devicetree/bindings/pinctrl/ti,ds90ux9xx-pinctrl.txt create
-> mode 100644 drivers/mfd/ds90ux9xx-core.c
->  create mode 100644 drivers/mfd/ds90ux9xx-i2c-bridge.c
->  create mode 100644 drivers/pinctrl/pinctrl-ds90ux9xx.c
->  create mode 100644 include/linux/mfd/ds90ux9xx.h
+> +        - device_type
+> +                Usage: required
+> +                Value type: <string>
+> +                Definition: must be "cpu"
+> +        - reg
+> +                Usage: required
+> +                Value type: <u32>
+> +                Definition: CPU index
+> +        - status:
 
--- 
-Regards,
+Drop this. It is implied.
 
-Laurent Pinchart
+> +                Usage: required
+> +                Value type: <string>
+> +                Definition: "ok"       means enable  the cpu-core
+> +                            "disabled" means disable the cpu-core
+> +
+> +Example:
+> +--------
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		cpu@0 {
+> +			device_type = "cpu";
+> +			reg = <0>;
+> +			status = "ok";
+> +		};
+> +
+> +		cpu@1 {
+> +			device_type = "cpu";
+> +			reg = <1>;
+> +			status = "ok";
+> +		};
+> +	};
+> -- 
+> 2.7.4
+> 
