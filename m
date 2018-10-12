@@ -1,113 +1,91 @@
-From: Niklas Cassel <niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 0/6] *** Add support for wifi QMI client handshakes ***
-Date: Fri, 12 Oct 2018 14:09:24 +0200
-Message-ID: <20181012120924.GA1030@centauri.lan>
-References: <20180815092637.11455-1-govinds@codeaurora.org>
- <20181009003628.GA253926@ban.mtv.corp.google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20181009003628.GA253926-1WoqFLEneaORBCj4nEdE8WJtCfot02Oa@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: [PATCH V12 4/8] dt-bindings: interrupt-controller: C-SKY APB intc
+Date: Fri, 12 Oct 2018 20:12:17 +0800
+Message-ID: <d6a649276d1b5641f2b8518e55016501d69e6128.1539315341.git.ren_guo@c-sky.com>
+References: <cover.1539315341.git.ren_guo@c-sky.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1539315341.git.ren_guo@c-sky.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, will.deacon@arm.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 08, 2018 at 05:36:30PM -0700, Brian Norris wrote:
-> + linux-msm
-> 
-> Hi Govind, Kalle,
-> 
-> On Wed, Aug 15, 2018 at 02:56:31PM +0530, Govind Singh wrote:
-> > Add QMI client handshakes for Q6 integrated WLAN connectivity subsystem.
-> > This module is responsible for communicating WLAN control messages to FW
-> > over QMI interface. This patch series enables the qmi handshakes required for
-> > WCN3990 chipset.
-> [...]
-> 
-> What's the status of this patchset? It has seen various stages of
-> review, and except for the fact that Govind seems to have dropped
-> various Reviewed-by/Acked-by tags (which Rob noticed), I don't see any
-> relevant feedback that should be blocking it.
-> 
-> I previously had concerns about the firmware boot sequence -- that it
-> required a Qualcomm-specific TFTP service over QRTR, which had no open
-> source implementations. There is now a published daemon that worked for
-> me [1], as well as firmware releases that loaded modem and Wifi firmware
-> together, such that this TFTP service is not needed at all. So my
-> concerns there are no longer blocking.
-> 
-> And I think Rob already reviewed the relevant DT bindings (but again,
-> Govind missed collecting that tag for this series).
-> 
-> So the only outstanding request I see is to collect the appropriate
-> tags. Should Govind resend the whole series just for that?
-> 
-> FWIW, I've been using this series for a while now, and I reviewed
-> earlier versions. I can provide this for the whole series:
-> 
-> Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+ - Dt-bindings doc about C-SKY apb bus interrupt controller.
 
-Hello Kalle,
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../interrupt-controller/csky,apb-intc.txt         | 62 ++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt
 
-I see that this patch series has been added to your master-pending branch.
-
-It seems to be lacking Brians Reviewed-by tags (from above).
-
-
-The diff between v4 and v5 is just:
-
-+++ b/drivers/net/wireless/ath/ath10k/qmi.c
-@@ -1010,10 +1010,10 @@ int ath10k_qmi_deinit(struct ath10k *ar)
-        struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
-        struct ath10k_qmi *qmi = ar_snoc->qmi;
- 
-+       qmi_handle_release(&qmi->qmi_hdl);
-        cancel_work_sync(&qmi->event_work);
-        destroy_workqueue(qmi->event_wq);
--       qmi_handle_release(&qmi->qmi_hdl);
--       qmi = NULL;
-+       ar_snoc->qmi = NULL;
- 
-        return 0;
- }
-
-I've given my Acked-by on v4:
-https://patchwork.kernel.org/cover/10540111/
-The change between v4 and v5 does not warrant the removal of those tags,
-so please re-add them.
-
-Rob has given his Reviewed-by on the dt-binding on v4:
-https://patchwork.kernel.org/patch/10540115/
-The dt-binding hasn't changed between v4 and v5, so please re-add it.
-
-
-I also noted that kbuild test robot complain about this series on x86:
-http://lists.infradead.org/pipermail/ath10k/2018-October/012268.html
-Are test errors still valid?
-
-My patch series that makes QMI_HELPERS selectable for compile test
-(e.g. x86), is queued up for 4.20~5.0:
-https://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git/log/?h=qcom-drivers-for-4.20
-
-Does this patch series make the errors go away, or are they unrelated?
-
-
-Kind regards,
-Niklas
-
-> 
-> If nothing else, I think it's important to get someone to merge the DT
-> bindings from this series, because Govind is now trying to extend the DT
-> binding and to enable the WCN3990 device node in the SDM845 device tree
-> nodes.
-> 
-> Regards,
-> Brian
-> 
-> [1] https://github.com/andersson/tqftpserv
-> [2] See this series:
->     https://patchwork.kernel.org/cover/10621863/
->     Govind didn't send it to the right mailing lists yet, but we're
->     close...
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt
+new file mode 100644
+index 0000000..44286dc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt
+@@ -0,0 +1,62 @@
++==============================
++C-SKY APB Interrupt Controller
++==============================
++
++C-SKY APB Interrupt Controller is a simple soc interrupt controller
++on the apb bus and we only use it as root irq controller.
++
++ - csky,apb-intc is used in a lot of csky fpgas and socs, it support 64 irq nums.
++ - csky,dual-apb-intc consists of 2 apb-intc and 128 irq nums supported.
++ - csky,gx6605s-intc is gx6605s soc internal irq interrupt controller, 64 irq nums.
++
++=============================
++intc node bindings definition
++=============================
++
++	Description: Describes APB interrupt controller
++
++	PROPERTIES
++
++	- compatible
++		Usage: required
++		Value type: <string>
++		Definition: must be "csky,apb-intc"
++				    "csky,dual-apb-intc"
++				    "csky,gx6605s-intc"
++	- #interrupt-cells
++		Usage: required
++		Value type: <u32>
++		Definition: must be <1>
++	- reg
++		Usage: required
++		Value type: <u32 u32>
++		Definition: <phyaddr size> in soc from cpu view
++	- interrupt-controller:
++		Usage: required
++	- csky,support-pulse-signal:
++		Usage: select
++		Description: to support pulse signal flag
++
++Examples:
++---------
++
++	intc: interrupt-controller@500000 {
++		compatible = "csky,apb-intc";
++		#interrupt-cells = <1>;
++		reg = <0x00500000 0x400>;
++		interrupt-controller;
++	};
++
++	intc: interrupt-controller@500000 {
++		compatible = "csky,dual-apb-intc";
++		#interrupt-cells = <1>;
++		reg = <0x00500000 0x400>;
++		interrupt-controller;
++	};
++
++	intc: interrupt-controller@500000 {
++		compatible = "csky,gx6605s-intc";
++		#interrupt-cells = <1>;
++		reg = <0x00500000 0x400>;
++		interrupt-controller;
++	};
+-- 
+2.7.4
