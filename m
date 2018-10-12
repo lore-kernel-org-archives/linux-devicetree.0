@@ -1,97 +1,194 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: =?utf-8?B?W1JDRsKgUEFUQ0gsdjIsMi8y?= =?utf-8?Q?=5D?= pwm: imx:
- Configure output to GPIO in disabled state
-Date: Fri, 12 Oct 2018 17:54:59 +0200
-Message-ID: <20181012155459.GG31561@ulmo>
-References: <1539163920-9442-3-git-send-email-michal.vokac@ysoft.com>
- <20181012085720.GA9451@taurus.defre.kleine-koenig.org>
- <fa96ae2a-c2cc-b47a-1198-5daffa7c865f@ysoft.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 3/5] clk: lochnagar: Add support for the Cirrus Logic Lochnagar
+Date: Fri, 12 Oct 2018 08:59:56 -0700
+Message-ID: <153935999691.5275.1587207165396958375@swboyd.mtv.corp.google.com>
+References: <20181008132542.19775-1-ckeepax@opensource.cirrus.com>
+ <20181008132542.19775-3-ckeepax@opensource.cirrus.com>
+ <153924124658.207691.10370075148426001371@swboyd.mtv.corp.google.com>
+ <20181011132602.GD1653@imbe.wolfsonmicro.main>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Cgrdyab2wu3Akvjd"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <fa96ae2a-c2cc-b47a-1198-5daffa7c865f@ysoft.com>
+In-Reply-To: <20181011132602.GD1653@imbe.wolfsonmicro.main>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
-Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, Fabio Estevam <fabio.estevam@nxp.com>, Lothar =?utf-8?Q?Wa=C3=9Fmann?= <LW@karo-electronics.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Quoting Charles Keepax (2018-10-11 06:26:02)
+> On Thu, Oct 11, 2018 at 12:00:46AM -0700, Stephen Boyd wrote:
+> > Quoting Charles Keepax (2018-10-08 06:25:40)
+> =
 
---Cgrdyab2wu3Akvjd
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > > +struct lochnagar_regmap_clk {
+> > > +       unsigned int cfg_reg;
+> > > +       unsigned int ena_mask;
+> > > +       unsigned int dir_mask;
+> > > +
+> > > +       unsigned int src_reg;
+> > > +       unsigned int src_mask;
+> > =
 
-On Fri, Oct 12, 2018 at 03:04:48PM +0000, Vok=C3=A1=C4=8D Michal wrote:
-> On 12.10.2018 10:57, Uwe Kleine-K=C3=B6nig wrote:
-> > On Wed, Oct 10, 2018 at 09:33:26AM +0000, Vok=C3=A1=C4=8D Michal wrote:
-[...]
-> >> +static int imx_pwm_init_pinctrl_info(struct imx_chip *imx_chip,
-> >> +		struct platform_device *pdev)
-> >> +{
-> >> +	imx_chip->pinctrl =3D devm_pinctrl_get(&pdev->dev);
-> >> +	if (!imx_chip->pinctrl || IS_ERR(imx_chip->pinctrl)) {
-> >> +		dev_info(&pdev->dev, "can not get pinctrl\n");
-> >> +		return PTR_ERR(imx_chip->pinctrl);
-> >> +	}
-> >> +
-> >> +	imx_chip->pinctrl_pins_pwm =3D pinctrl_lookup_state(imx_chip->pinctr=
-l,
-> >> +			"pwm");
-> >> +	imx_chip->pinctrl_pins_gpio =3D pinctrl_lookup_state(imx_chip->pinct=
-rl,
-> >> +			"gpio");
-> >> +	imx_chip->pwm_gpiod =3D devm_gpiod_get_optional(&pdev->dev, "pwm",
-> >> +			GPIOD_IN);
-> >> +
-> >> +	if (PTR_ERR(imx_chip->pwm_gpiod) =3D=3D -EPROBE_DEFER) {
-> >=20
-> > You must not use PTR_ERR on a value that might not contain an error
-> > pointer.
->=20
-> OK, thank you for valuable info.
-> So it seems like the I2C folks are in troubles as well:
->=20
-> 	https://elixir.bootlin.com/linux/latest/source/drivers/i2c/busses/i2c-im=
-x.c#L996
+> > Are these 32 bits or 16 bits or 8 bits? Please use a u32/u16/u8 so we
+> > know the register width.
+> > =
 
-There's nothing inherently wrong with doing it like the above, just
-maybe slightly unusual. PTR_ERR() is really just casting from a pointer
-to an integer, so if the pointer happens to contain the value
--EPROBE_DEFER, then the above will be true. If it contains a valid
-pointer, the above will be false, so it does exactly what you want.
+> =
 
-Perhaps a more idiomatic way to write this would be:
+> Can do.
 
-	if (IS_ERR(imx_chip->pwm_gpiod)) {
-		if (PTR_ERR(imx_chip->pwm_gpiod) =3D=3D -EPROBE_DEFER)
-			return -EPROBE_DEFER;
-	}
+Well Mark may be opposed so it doesn't really matter to me. Just
+would be nice to have some more code documentation on the expected
+register width.
 
-But that's not much clearer than what you have, so feel free to keep it
-that way.
+> =
 
-Thierry
+> > > +struct lochnagar_clk_priv {
+> > > +       struct device *dev;
+> > > +       struct lochnagar *lochnagar;
+> > =
 
---Cgrdyab2wu3Akvjd
-Content-Type: application/pgp-signature; name="signature.asc"
+> > Is this used for anything besides getting the regmap? Can you get the
+> > pointer to the parent in probe and use that to get the regmap pointer
+> > from dev_get_remap() and also use the of_node of the parent to register
+> > a clk provider? It would be nice to avoid including the mfd header file
+> > unless it's providing something useful.
+> > =
 
------BEGIN PGP SIGNATURE-----
+> =
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlvAw88ACgkQ3SOs138+
-s6GXsw//ZQtbpCz6HK0hGZvNAC+fn9QWEcg3hHDpDjDkDXJSvkbmcb0DicppwFE7
-DRJcqK6M1bMI3JwZBUlrg2V3o3365DBXr+ojnTt7v1nKNhzG7+FIvL4ke6mxaiC9
-NlpCqTZcD8rHxkRmT+fv5x38dIUOZJt85himbtGtO4F7uetHe5qrSRCxtbPjaeb/
-Wv2lsGsaPtfTUTjO+XuoBnfpsmNrfm/iM2hJaw/YJgPk0u/roCvS2sIWcy2ldYUd
-loTNjQAvPMYmQNyraEs+6cfiz0NuukN2Z16KBppbInxtLmyWqUmDMdegVzOliAWd
-m0KGiSBykCkv0HeTEtvFcQwVYpvnY2NJATu06o3NvlsAabLK5O6ZEBUHu81DCo5w
-NWY85+kFu+99prTYD9zJGUOaGFAPHI6jTN3bIvKG2yL7vKugqkvlAdt8+7CnalRS
-7+HP+3wP22ejckc36PbT0Uiit3IiNWb+E5tkZ/CgfT+V6bCSRnG6J/IGexi7QKbi
-RNIIBqrjaremE9vWtJ3jjwJIMTSwHndoOM56GoYyCNk2URoUkjuZWt47NmI78R7f
-/7KtZrxYH63wQOqdstOW6WMDRJefG5XHnpubPTXplNEYSaByTkeMJJwK/SBazcDS
-a2bnidG/OjnWqy8ayJkgsacoN32FNNJAf9s9PMAHLQwt/wyIFY4=
-=A30V
------END PGP SIGNATURE-----
+> It is also used to find out which type of Lochnagar we have
+> connected, which determines which clocks we should register. I
 
---Cgrdyab2wu3Akvjd--
+Can that be done through some device ID? So the driver can be untangled
+from the MFD part.
+
+> could perhaps pass that using another mechanism but we would
+> still want to include the MFD stuff to get the register
+> definitions. So this approach seems simplest.
+
+Can the register definitions be moved to this clk driver?
+
+Maybe you now get the hint, but I'd really like to be able to merge and
+compile the clk driver all by itself without relying on the parent MFD
+device to provide anything at compile time.
+
+> =
+
+> > > +#define LN_CLK_FIXED(ID, NAME, RATE) \
+> > > +       [LOCHNAGAR_##ID] =3D { \
+> > > +               .name =3D NAME, .type =3D LOCHNAGAR_CLK_TYPE_FIXED, \
+> > > +               { .fixed.rate =3D RATE, }, \
+> > > +       }
+> > =
+
+> > Can all these fixed clks come from DT instead of being populated by this
+> > driver? Unless they're being generated by this hardware block and not
+> > actually a crystal or some other on-board clock that goes into this
+> > hardware block and then right out of it?
+> > =
+
+> =
+
+> Technically they are supplied by a clock generator chip (bunch of
+> PLLs) which is controlled by the board controller chip. That said
+> I don't really ever see them changing so will move them in DT.
+> =
+
+> > > +static int lochnagar_regmap_prepare(struct clk_hw *hw)
+> > > +{
+> > > +       struct lochnagar_clk *lclk =3D lochnagar_hw_to_lclk(hw);
+> > > +       struct lochnagar_clk_priv *priv =3D lclk->priv;
+> > > +       struct regmap *regmap =3D priv->lochnagar->regmap;
+> > > +       int ret;
+> > > +
+> > > +       dev_dbg(priv->dev, "Prepare %s\n", lclk->name);
+> > =
+
+> > Nitpick: Can you just rely on the clk tracepoints?
+> > =
+
+> =
+
+> Can do they are hardly essential.
+> =
+
+> > > +
+> > > +       if (!lclk->regmap.ena_mask)
+> > =
+
+> > Why did we assign the ops to the clk if it can't be enabled? Please make
+> > different ops for different types of clks so we don't have to check
+> > something else and bail out early when the op is called.
+> > =
+
+> =
+
+> This is a bit of a leak from earlier versions of the code I
+> can just remove them.
+> =
+
+> > > +static int lochnagar_regmap_set_parent(struct clk_hw *hw, u8 index)
+> > > +{
+> > > +       struct lochnagar_clk *lclk =3D lochnagar_hw_to_lclk(hw);
+> > > +       struct lochnagar_clk_priv *priv =3D lclk->priv;
+> > > +       struct regmap *regmap =3D priv->lochnagar->regmap;
+> > > +       int ret;
+> > > +
+> > > +       dev_dbg(priv->dev, "Reparent %s to %s\n",
+> > > +               lclk->name, priv->parents[index]);
+> > > +
+> > > +       if (lclk->regmap.dir_mask) {
+> > > +               ret =3D regmap_update_bits(regmap, lclk->regmap.cfg_r=
+eg,
+> > > +                                        lclk->regmap.dir_mask,
+> > > +                                        lclk->regmap.dir_mask);
+> > > +               if (ret < 0) {
+> > > +                       dev_err(priv->dev, "Failed to set %s directio=
+n: %d\n",
+> > =
+
+> > What does direction mean?
+> > =
+
+> =
+
+> Some of the clocks can both generate and receive a clock. For
+> example the PSIA (external audio interface) MCLKs, the attached
+> device could be expecting or providing a master audio clock. If
+> the user assigns a parent to the clock we assume the attached
+> device is providing a clock to us, otherwise we assume we are
+> providing the clock.
+
+And this directionality is determined by dir_mask? It would be great if
+this sort of information was in the commit text or in a comment in the
+driver so we know what's going on here.
+
+> =
+
+> > > +static int lochnagar_clk_remove(struct platform_device *pdev)
+> > > +{
+> > > +       struct lochnagar_clk_priv *priv =3D platform_get_drvdata(pdev=
+);
+> > > +       int i;
+> > > +
+> > > +       of_clk_del_provider(priv->lochnagar->dev->of_node);
+> > =
+
+> > Use devm variant of clk provider registration?
+> > =
+
+> =
+
+> This isn't using the devm version as it makes the assumption
+> that the device that contains the DT is the same one we want
+> to devm against which isn't the case here.
+> =
+
+> I could update probe to copy the of_node over from the parent, if
+> you prefer? I think that would also work.
+
+I don't really mind either way. When we get these subdevice drivers of a
+larger OF node for the whole MFD it becomes sort of awkward to make devm
+work.
