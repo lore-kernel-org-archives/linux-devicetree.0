@@ -1,65 +1,27 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] dt-bindings: msm/disp: Introduce
- interconnect bindings for MDSS on SDM845
-Date: Fri, 12 Oct 2018 17:12:51 -0500
-Message-ID: <20181012221251.GA13934@bogus>
-References: <20181010092434.853-1-skolluku@codeaurora.org>
- <20181010092434.853-4-skolluku@codeaurora.org>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 0/3] Enable ath10k wcn3990 wifi driver support on
+ sdm845
+Date: Fri, 12 Oct 2018 16:02:50 -0700
+Message-ID: <20181012230249.GA189259@rodete-desktop-imager.corp.google.com>
+References: <1539172376-19269-1-git-send-email-govinds@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20181010092434.853-4-skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+In-Reply-To: <1539172376-19269-1-git-send-email-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBPY3QgMTAsIDIwMTggYXQgMDI6NTQ6MzRQTSArMDUzMCwgU3JhdmFudGhpIEtvbGx1
-a3VkdXJ1IHdyb3RlOgo+IEFkZCBpbnRlcmNvbm5lY3QgcHJvcGVydGllcyBzdWNoIGFzIGludGVy
-Y29ubmVjdCBwcm92aWRlciBzcGVjaWZpZXIKPiAsIHRoZSBlZGdlIHNvdXJjZSBhbmQgZGVzdGlu
-YXRpb24gcG9ydHMgd2hpY2ggYXJlIHJlcXVpcmVkIGJ5IHRoZQo+IGludGVyY29ubmVjdCBBUEkg
-dG8gY29uZmlndXJlIGludGVyY29ubmVjdCBwYXRoIGZvciBNRFNTLgo+IAo+IENoYW5nZXMgaW4g
-djI6Cj4gCS1ub25lCj4gCj4gU2lnbmVkLW9mZi1ieTogU3JhdmFudGhpIEtvbGx1a3VkdXJ1IDxz
-a29sbHVrdUBjb2RlYXVyb3JhLm9yZz4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RwdS50eHQgfCA4ICsrKysrKysrCj4gIDEgZmlsZSBjaGFu
-Z2VkLCA4IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RwdS50eHQgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZHB1LnR4dAo+IGluZGV4IGFkMmU4ODMwMzI0ZS4u
-YWJkNGQ5OWI1MDMwIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L21zbS9kcHUudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RwdS50eHQKPiBAQCAtMjgsNiArMjgsMTEgQEAgUmVxdWly
-ZWQgcHJvcGVydGllczoKPiAgLSAjYWRkcmVzcy1jZWxsczogbnVtYmVyIG9mIGFkZHJlc3MgY2Vs
-bHMgZm9yIHRoZSBNRFNTIGNoaWxkcmVuLiBTaG91bGQgYmUgMS4KPiAgLSAjc2l6ZS1jZWxsczog
-U2hvdWxkIGJlIDEuCj4gIC0gcmFuZ2VzOiBwYXJlbnQgYnVzIGFkZHJlc3Mgc3BhY2UgaXMgdGhl
-IHNhbWUgYXMgdGhlIGNoaWxkIGJ1cyBhZGRyZXNzIHNwYWNlLgo+ICstIGludGVyY29ubmVjdHMg
-OiBwYWlycyBvZiBwaGFuZGxlcyBhbmQgaW50ZXJjb25uZWN0IHByb3ZpZGVyIHNwZWNpZmllciB0
-bwo+ICsgIGRlbm90ZSB0aGUgZWRnZSBzb3VyY2UgYW5kIGRlc3RpbmF0aW9uIHBvcnRzIG9mIHRo
-ZSBpbnRlcmNvbm5lY3QgcGF0aC4KPiArLSBpbnRlcmNvbm5lY3QtbmFtZXMgOiBsaXN0IG9mIGlu
-dGVyY29ubmVjdCBwYXRoIG5hbWUgc3RyaW5ncyBzb3J0ZWQgaW4gdGhlCj4gKyAgc2FtZSBvcmRl
-ciBhcyB0aGUgaW50ZXJjb25uZWN0cyBwcm9wZXJ0eS4gQ29uc3VtZXJzIGRyaXZlcnMgd2lsbCB1
-c2UKPiArICBpbnRlcmNvbm5lY3QtbmFtZXMgdG8gbWF0Y2ggaW50ZXJjb25uZWN0IHBhdGhzIHdp
-dGggaW50ZXJjb25uZWN0IHNwZWNpZmllcnMuCgpEb24ndCBuZWVkIHRvIGRlZmluZSBjb21tb24g
-cHJvcGVydGllcy4gSnVzdCBsaXN0IHRoZWlyIGNvbnN0cmFpbnRzIHN1Y2ggCmFzIGhvdyBtYW55
-LgoKPiAgCj4gIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gIC0gYXNzaWduZWQtY2xvY2tzOiBsaXN0
-IG9mIGNsb2NrIHNwZWNpZmllcnMgZm9yIGNsb2NrcyBuZWVkaW5nIHJhdGUgYXNzaWdubWVudAo+
-IEBAIC04Niw2ICs5MSw5IEBAIEV4YW1wbGU6Cj4gIAkJaW50ZXJydXB0LWNvbnRyb2xsZXI7Cj4g
-IAkJI2ludGVycnVwdC1jZWxscyA9IDwxPjsKPiAgCj4gKwkJaW50ZXJjb25uZWN0cyA9IDwmcW5v
-YyAzOCAmcW5vYyA1MTI+Owo+ICsJCWludGVyY29ubmVjdC1uYW1lcyA9ICJwb3J0MCI7CgotbmFt
-ZXMgaXMga2luZCBvZiBwb2ludGxlc3MgaGVyZS4gSU1PLCBpbnRlcmNvbm5lY3QtbmFtZXMgc2hv
-dWxkIApkZXNjcmliZSB0aGUgcGF0aC4KCj4gKwo+ICAJCWlvbW11cyA9IDwmYXBwc19pb21tdSAw
-PjsKPiAgCj4gIAkJI2FkZHJlc3MtY2VsbHMgPSA8Mj47Cj4gLS0gCj4gVGhlIFF1YWxjb21tIElu
-bm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1
-bSwKPiBhIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cj4gCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5n
-IGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+On Wed, Oct 10, 2018 at 05:22:53PM +0530, Govind Singh wrote:
+> This series enables ath10k wifi driver support for WCN3990 target
+> on sdm845 SOC. This series also updates the missing dt binding documentation
+> and adds optional iommu property.
+
+For the series:
+
+Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Tested-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+Thanks!
