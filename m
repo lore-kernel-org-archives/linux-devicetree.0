@@ -1,131 +1,125 @@
-Return-Path: <SRS0=ZRjc=MY=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:50808 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728027AbeJLRNU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Oct 2018 13:13:20 -0400
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH v2 5/6] remoteproc: qcom: wcss: populate hardcoded param using driver data
-Date: Fri, 12 Oct 2018 15:10:43 +0530
-Message-Id: <1539337244-9505-6-git-send-email-govinds@codeaurora.org>
-In-Reply-To: <1539337244-9505-1-git-send-email-govinds@codeaurora.org>
-References: <1539337244-9505-1-git-send-email-govinds@codeaurora.org>
-Sender: devicetree-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Govind Singh <govinds@codeaurora.org>
+Return-Path: <SRS0=sbd0=MY=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v4 2/3] mmc: renesas_sdhi_internal_dmac: Add R7S9210 support
+Date: Fri, 12 Oct 2018 07:29:23 -0500
+Message-Id: <20181012122924.5543-3-chris.brandt@renesas.com>
+In-Reply-To: <20181012122924.5543-1-chris.brandt@renesas.com>
+References: <20181012122924.5543-1-chris.brandt@renesas.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-clk@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Q6 based WiFi fw loading is supported across
-different targets, ex: IPQ8074/QCS404. In order to
-support different fw names/pas id etc, populate
-hardcoded param using driver data.
+The SDHI/MMC controller in the RZ/A2 is almost the same as R-Car gen3, but
+with some minor differences.
 
-Signed-off-by: Govind Singh <govinds@codeaurora.org>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 ---
- drivers/remoteproc/qcom_q6v5_wcss.c | 36 ++++++++++++++++++++++++++++++++----
- 1 file changed, 32 insertions(+), 4 deletions(-)
+v4:
+ * Fixed spelling in #define
+v3:
+ * Removed extra space in Kconfig
+ * Removed unneeded parentheses
+v2:
+ * Made comment clearer
+---
+ drivers/mmc/host/Kconfig                      |  5 +++--
+ drivers/mmc/host/renesas_sdhi_internal_dmac.c | 28 +++++++++++++++++++++++++--
+ 2 files changed, 29 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-index f93e1e4..24e276d 100644
---- a/drivers/remoteproc/qcom_q6v5_wcss.c
-+++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-@@ -8,6 +8,7 @@
- #include <linux/kernel.h>
- #include <linux/mfd/syscon.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
- #include <linux/of_reserved_mem.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
-@@ -16,7 +17,6 @@
- #include "qcom_common.h"
- #include "qcom_q6v5.h"
+diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+index cf984f0f0246..b69d5cd45d0f 100644
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@ -636,13 +636,14 @@ config MMC_SDHI_SYS_DMAC
  
--#define WCSS_CRASH_REASON		421
+ config MMC_SDHI_INTERNAL_DMAC
+ 	tristate "DMA for SDHI SD/SDIO controllers using on-chip bus mastering"
+-	depends on ARM64 || COMPILE_TEST
++	depends on ARM64 || ARCH_R7S9210 || COMPILE_TEST
+ 	depends on MMC_SDHI
+ 	default MMC_SDHI if ARM64
+ 	help
+ 	  This provides DMA support for SDHI SD/SDIO controllers
+ 	  using on-chip bus mastering. This supports the controllers
+-	  found in arm64 based SoCs.
++	  found in arm64 based SoCs. This controller is also found in
++	  RZ/A2 series SoCs.
  
- /* Q6SS Register Offsets */
- #define Q6SS_RESET_REG		0x014
-@@ -70,6 +70,14 @@
- #define TCSR_WCSS_CLK_MASK	0x1F
- #define TCSR_WCSS_CLK_ENABLE	0x14
+ config MMC_UNIPHIER
+ 	tristate "UniPhier SD/eMMC Host Controller support"
+diff --git a/drivers/mmc/host/renesas_sdhi_internal_dmac.c b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
+index e5e5015ca680..065dc527291c 100644
+--- a/drivers/mmc/host/renesas_sdhi_internal_dmac.c
++++ b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
+@@ -34,7 +34,7 @@
+ #define DTRAN_MODE_CH_NUM_CH0	0	/* "downstream" = for write commands */
+ #define DTRAN_MODE_CH_NUM_CH1	BIT(16)	/* "upstream" = for read commands */
+ #define DTRAN_MODE_BUS_WIDTH	(BIT(5) | BIT(4))
+-#define DTRAN_MODE_ADDR_MODE	BIT(0)	/* 1 = Increment address */
++#define DTRAN_MODE_ADDR_MODE	BIT(0)	/* 1 = Increment address, 0 = Fixed */
  
-+struct wcss_data {
-+	void (*pas_handover)(struct qcom_q6v5 *q6v5);
-+	const char *firmware_name;
-+	int crash_reason_smem;
-+	int version;
-+	int pas_id;
-+};
+ /* DM_CM_DTRAN_CTRL */
+ #define DTRAN_CTRL_DM_START	BIT(0)
+@@ -73,6 +73,9 @@ static unsigned long global_flags;
+ #define SDHI_INTERNAL_DMAC_ONE_RX_ONLY	0
+ #define SDHI_INTERNAL_DMAC_RX_IN_USE	1
+ 
++/* RZ/A2 does not have the ADRR_MODE bit */
++#define SDHI_INTERNAL_DMAC_ADDR_MODE_FIXED_ONLY 2
 +
- struct q6v5_wcss {
- 	struct device *dev;
- 
-@@ -91,6 +99,10 @@ struct q6v5_wcss {
- 	phys_addr_t mem_reloc;
- 	void *mem_region;
- 	size_t mem_size;
-+
-+	int crash_reason_smem;
-+	int pas_id;
-+	int version;
+ /* Definitions for sampling clocks */
+ static struct renesas_sdhi_scc rcar_gen3_scc_taps[] = {
+ 	{
+@@ -81,6 +84,21 @@ static struct renesas_sdhi_scc rcar_gen3_scc_taps[] = {
+ 	},
  };
  
- static int q6v5_wcss_reset(struct q6v5_wcss *wcss)
-@@ -527,12 +539,17 @@ static int q6v5_alloc_memory_region(struct q6v5_wcss *wcss)
++static const struct renesas_sdhi_of_data of_rza2_compatible = {
++	.tmio_flags	= TMIO_MMC_HAS_IDLE_WAIT | TMIO_MMC_CLK_ACTUAL |
++			  TMIO_MMC_HAVE_CBSY,
++	.tmio_ocr_mask	= MMC_VDD_32_33,
++	.capabilities	= MMC_CAP_SD_HIGHSPEED | MMC_CAP_SDIO_IRQ |
++			  MMC_CAP_CMD23,
++	.bus_shift	= 2,
++	.scc_offset	= 0 - 0x1000,
++	.taps		= rcar_gen3_scc_taps,
++	.taps_num	= ARRAY_SIZE(rcar_gen3_scc_taps),
++	/* DMAC can handle 0xffffffff blk count but only 1 segment */
++	.max_blk_count	= 0xffffffff,
++	.max_segs	= 1,
++};
++
+ static const struct renesas_sdhi_of_data of_rcar_r8a7795_compatible = {
+ 	.tmio_flags	= TMIO_MMC_HAS_IDLE_WAIT | TMIO_MMC_CLK_ACTUAL |
+ 			  TMIO_MMC_HAVE_CBSY | TMIO_MMC_MIN_RCAR2 |
+@@ -113,6 +131,7 @@ static const struct renesas_sdhi_of_data of_rcar_gen3_compatible = {
+ };
  
- static int q6v5_wcss_probe(struct platform_device *pdev)
+ static const struct of_device_id renesas_sdhi_internal_dmac_of_match[] = {
++	{ .compatible = "renesas,sdhi-r7s9210", .data = &of_rza2_compatible, },
+ 	{ .compatible = "renesas,sdhi-r8a7795", .data = &of_rcar_r8a7795_compatible, },
+ 	{ .compatible = "renesas,sdhi-r8a7796", .data = &of_rcar_r8a7795_compatible, },
+ 	{ .compatible = "renesas,rcar-gen3-sdhi", .data = &of_rcar_gen3_compatible, },
+@@ -171,7 +190,10 @@ renesas_sdhi_internal_dmac_start_dma(struct tmio_mmc_host *host,
+ 				     struct mmc_data *data)
  {
-+	const struct wcss_data *desc;
- 	struct q6v5_wcss *wcss;
- 	struct rproc *rproc;
- 	int ret;
- 
-+	desc = of_device_get_match_data(&pdev->dev);
-+	if (!desc)
-+		return -EINVAL;
+ 	struct scatterlist *sg = host->sg_ptr;
+-	u32 dtran_mode = DTRAN_MODE_BUS_WIDTH | DTRAN_MODE_ADDR_MODE;
++	u32 dtran_mode = DTRAN_MODE_BUS_WIDTH;
 +
- 	rproc = rproc_alloc(&pdev->dev, pdev->name, &q6v5_wcss_ops,
--			    "IPQ8074/q6_fw.mdt", sizeof(*wcss));
-+			    desc->firmware_name, sizeof(*wcss));
- 	if (!rproc) {
- 		dev_err(&pdev->dev, "failed to allocate rproc\n");
- 		return -ENOMEM;
-@@ -540,6 +557,9 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
++	if (!test_bit(SDHI_INTERNAL_DMAC_ADDR_MODE_FIXED_ONLY, &global_flags))
++		dtran_mode |= DTRAN_MODE_ADDR_MODE;
  
- 	wcss = rproc->priv;
- 	wcss->dev = &pdev->dev;
-+	wcss->pas_id = desc->pas_id;
-+	wcss->version = desc->version;
-+	wcss->crash_reason_smem = desc->crash_reason_smem;
- 
- 	ret = q6v5_wcss_init_mmio(wcss, pdev);
- 	if (ret)
-@@ -553,7 +573,8 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free_rproc;
- 
--	ret = qcom_q6v5_init(&wcss->q6v5, pdev, rproc, WCSS_CRASH_REASON, NULL);
-+	ret = qcom_q6v5_init(&wcss->q6v5, pdev, rproc, desc->crash_reason_smem,
-+			     desc->pas_handover);
- 	if (ret)
- 		goto free_rproc;
- 
-@@ -581,8 +602,15 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct wcss_data wcss_ipq8074_res_init = {
-+	.firmware_name = "IPQ8074/q6_fw.mdt",
-+	.crash_reason_smem = 421,
-+	.pas_handover = NULL,
-+};
-+
- static const struct of_device_id q6v5_wcss_of_match[] = {
--	{ .compatible = "qcom,ipq8074-wcss-pil" },
-+	{ .compatible = "qcom,ipq8074-wcss-pil", .data = &wcss_ipq8074_res_init },
-+
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, q6v5_wcss_of_match);
+ 	if (!dma_map_sg(&host->pdev->dev, sg, host->sg_len,
+ 			mmc_get_dma_dir(data)))
+@@ -290,6 +312,8 @@ static const struct tmio_mmc_dma_ops renesas_sdhi_internal_dmac_dma_ops = {
+  */
+ static const struct soc_device_attribute gen3_soc_whitelist[] = {
+ 	/* specific ones */
++	{ .soc_id = "r7s9210",
++	  .data = (void *)BIT(SDHI_INTERNAL_DMAC_ADDR_MODE_FIXED_ONLY) },
+ 	{ .soc_id = "r8a7795", .revision = "ES1.*",
+ 	  .data = (void *)BIT(SDHI_INTERNAL_DMAC_ONE_RX_ONLY) },
+ 	{ .soc_id = "r8a7796", .revision = "ES1.0",
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.16.1
