@@ -1,49 +1,53 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] Documentation: dt: Add binding for
- /secure-chosen/stdout-path
-Date: Fri, 12 Oct 2018 15:45:13 -0500
-Message-ID: <20181012204513.GA29769@bogus>
-References: <20181008101642.8040-1-jerome.forissier@linaro.org>
+Subject: Re: [PATCH V2 1/2] dt-bindings: mmc: sdhci-msm: Add new compatible
+ string for sdcdc10 DLL
+Date: Fri, 12 Oct 2018 15:48:48 -0500
+Message-ID: <20181012204848.GA30953@bogus>
+References: <1539005138-32560-1-git-send-email-vbadigan@codeaurora.org>
+ <1539005138-32560-2-git-send-email-vbadigan@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181008101642.8040-1-jerome.forissier@linaro.org>
+In-Reply-To: <1539005138-32560-2-git-send-email-vbadigan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Forissier <jerome.forissier@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Peter Maydell <peter.maydell@linaro.org>, Etienne Carriere <etienne.carriere@linaro.org>, tee-dev@lists.linaro.org
+To: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, evgreen@chromium.org, dianders@google.com, asutoshd@codeaurora.org, riteshh@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 08, 2018 at 06:16:42PM +0800, Jerome Forissier wrote:
-> Some platforms may use a single device tree to describe two address
-> spaces, as described in d9f43babb998 ("Documentation: dt: Add bindings
-> for Secure-only devices"). For these platforms it makes sense to define
-> a secure counterpart of /chosen, namely: /secure-chosen. This new node
-> is meant to be used by the secure firmware to pass data to the secure
-> OS. Only the stdout-path property is supported for now.
+On Mon, Oct 08, 2018 at 06:55:37PM +0530, Veerabhadrarao Badiganti wrote:
+> On the SDHC-MSM controllers which makes use of sdcdc10 variant DLLs,
+> the DLL configuration needs to be restored whenever controller clocks
+> are gated. This new compatible string denotes the sdhc-msm controller
+> variant which uses sdcdc10 DLL.
+
+What is sdcdc10 DLL? 
+
+Seems like a work-around to not having SoC specific compatible strings.
+
 > 
-> Signed-off-by: Jerome Forissier <jerome.forissier@linaro.org>
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 > ---
+>  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> Notes:
->     Sending this again, slightly modified. Previous submission was in March
->     2017 [1]. Since then, OP-TEE has implemented this binding for platforms
->     that use DT [2] (fallback to /chosen/stdout-path to be implemented in
->     [3]). A patch for QEMU has been proposed [4], to which the maintainer
->     responded "Are the DT bindings upstream yet?" ;-)
->     
->     [1] https://patchwork.kernel.org/patch/9602401/
->     [2] https://github.com/OP-TEE/optee_os/commit/4dc31c52544a
->     [3] https://github.com/OP-TEE/optee_os/pull/2569
->     [4] https://patchwork.ozlabs.org/patch/979345/
->     
->     Changes since v1:
->     - Use "should" instead of "may" ("...the Secure OS should use the value
->     of /chosen/stdout-path...").
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> index 3720385..49b0a43 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> @@ -6,7 +6,11 @@ and the properties used by the sdhci-msm driver.
+>  Required properties:
+>  - compatible: Should contain:
+>  		"qcom,sdhci-msm-v4" for sdcc versions less than 5.0
+> +		"qcom,sdhci-msm-v4-sdcdc10" for sdcc versions < 5.0 and
+> +		which makes use of sdcdc10 variant DLLs.
+>  		"qcom,sdhci-msm-v5" for sdcc versions >= 5.0
+> +		"qcom,sdhci-msm-v5-sdcdc10" for sdcc versions >= 5.0 and
+> +		which makes use of sdcdc10 variant DLLs.
+>  		For SDCC version 5.0.0, MCI registers are removed from SDCC
+>  		interface and some registers are moved to HC. New compatible
+>  		string is added to support this change - "qcom,sdhci-msm-v5".
+> -- 
+> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 > 
->  Documentation/devicetree/bindings/arm/secure.txt | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
-
-Applied.
-
-Rob
