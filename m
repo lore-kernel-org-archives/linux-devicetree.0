@@ -1,84 +1,157 @@
-Return-Path: <SRS0=3Ka7=MV=cogentembedded.com=sergei.shtylyov@kernel.org>
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] arm64: dts: renesas: r8a77980: add thermal support
-References: <fb4eb097-40aa-82df-68c7-9b727c858a8b@cogentembedded.com>
-Message-ID: <90451643-6beb-e61f-912c-3adff4c943cb@cogentembedded.com>
-Date: Tue, 9 Oct 2018 22:37:47 +0300
+Return-Path: <SRS0=xo8P=MY=redhat.com=hdegoede@kernel.org>
+Subject: Re: [PATCH resend v2 1/2] Input: touchscreen DT binding - add
+ touchscreen-min-x and -min-y properties
+References: <20180731111958.20043-1-hdegoede@redhat.com>
+ <20180731111958.20043-2-hdegoede@redhat.com>
+ <20180803003101.GA118981@dtor-ws>
+ <6f1b0575-87e7-3443-9080-5abfd8e6c726@redhat.com>
+ <20181011005243.GC173303@dtor-ws>
+ <4abed8d4-9d23-bf9c-3cca-a5c521062ea1@redhat.com>
+ <20181012001131.GB68467@dtor-ws>
+From: Hans de Goede <hdegoede@redhat.com>
+Message-ID: <45507f2f-0b99-7c8b-614b-6901cacd0a55@redhat.com>
+Date: Fri, 12 Oct 2018 12:21:15 +0200
 MIME-Version: 1.0
-In-Reply-To: <fb4eb097-40aa-82df-68c7-9b727c858a8b@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
+In-Reply-To: <20181012001131.GB68467@dtor-ws>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>, robh@kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Describe THS/CIVM in the R8A77980 device trees.
+Hi,
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+On 12-10-18 02:11, Dmitry Torokhov wrote:
+> On Thu, Oct 11, 2018 at 11:09:49AM +0200, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 11-10-18 02:52, Dmitry Torokhov wrote:
+>>> Hi Hans,
+>>>
+>>> Sorry, now I was being slow as well.
+>>
+>> No problem.
+>>
+>>> On Thu, Sep 20, 2018 at 07:31:43PM +0200, Hans de Goede wrote:
+>>>> Hi,
+>>>>
+>>>> I completely missed this mail earlier, sorry.
+>>>>
+>>>> Thank you Benjamin for pointing this out to me.
+>>>>
+>>>> On 03-08-18 02:31, Dmitry Torokhov wrote:
+>>>>> Hi Hans,
+>>>>>
+>>>>> On Tue, Jul 31, 2018 at 01:19:57PM +0200, Hans de Goede wrote:
+>>>>>> Some touchscreens, depending on the firmware and/or the digitizer report
+>>>>>> coordinates which never reach 0 along one or both of their axis.
+>>>>>>
+>>>>>> This has been seen for example on the Silead touchscreens on a Onda V891w
+>>>>>> and a Point of View mobii TAB-P800w(v2.0).
+>>>>>>
+>>>>>> This commits documents 2 new touchscreen properties for communicating
+>>>>>> the minimum reported values to the OS: touchscreen-min-x and -min-y.
+>>>>>>
+>>>>>> This commit also drop the (in pixels) comment from the documentation
+>>>>>> of the touchscreen-size-x and touchscreen-size-y properties. This comment
+>>>>>> suggests that there is a relation between the range of reported
+>>>>>> coordinates and the display resolution, which is only true for some
+>>>>>> devices. The (in pixels) comment is replaced with "(maximum x coordinate
+>>>>>> reported + 1)" to mirror the language describing the new touchscreen-min-x
+>>>>>> and -min-y properties.
+>>>>>
+>>>>> I am concerned that people will not read the documentation carefully and
+>>>>> will treat it as true size, since it is what in the name. Maybe we
+>>>>> should say that it is size of usable area, in device units, and that
+>>>>> maximum reported coordinate is "touchscreen-min-x + touchscreen-size-x -
+>>>>> 1"?
+>>>>
+>>>> Not sure what you mean with "true size" but in the implementation
+>>>> from this series, the maximum coordinated reported is (touchscreen-size-x - 1)
+>>>> not (touchscreen-min-x + touchscreen-size-x - 1) as you suggest.
+>>>>
+>>>> Basically what this series does is set:
+>>>>
+>>>> input_absinfo.minimum to the new touchscreen-min-x value (or 0 if not specified)
+>>>> input_absinfo.maximum to touchscreen-size-x - 1 as we've always done.
+>>>>
+>>>> So the usable range / the range mapping from one screen edge to the other is:
+>>>>
+>>>> touchscreen-min-x - (touchscreen-size-x - 1)
+>>>>
+>>>> Which matches with the dt bindings doc after this patch, which
+>>>> reads after this patch:
+>>>>
+>>>>    - touchscreen-min-x		: minimum x coordinate reported (0 if not set)
+>>>>    - touchscreen-min-y		: minimum y coordinate reported (0 if not set)
+>>>>    - touchscreen-size-x		: horizontal resolution of touchscreen
+>>>> 				  (maximum x coordinate reported + 1)
+>>>>    - touchscreen-size-y		: vertical resolution of touchscreen
+>>>> 				  (maximum y coordinate reported + 1)
+>>>>
+>>>> I hope this clarifies things and if you want to change anything let
+>>>> me know.
+>>>
+>>> Right, except that my concern is that people do not read documentation,
+>>> and therefore will not realize that touchscreen-size-x is not the "true"
+>>> what I called it, or what you call usable range, but rather maximum
+>>> coordinate (-1).  IOW I am concerned that if we have a device with
+>>> 640x480 screen for example, and touch controller reporting coordinates
+>>> with offset of 20, someone will specify:
+>>>
+>>> touchscreen-min-x = 20
+>>> touchscreen-size-x = 640 (because that's their screen size)
+>>>
+>>> and will not notice for some reason and later quirk it in their
+>>> software.
+>>
+>> Ah I see.
+>>
+>>> So I was asking if we should accommodate this, and actually set up max
+>>> on axis as "touchscreen-min-x + touchscreen-size-x - 1". It will still
+>>> be compatible with current bindings (having effectively min of 0), but
+>>> to me better reflects the name of the parameter - size of the screen.
+>>>
+>>> Please let me know if this makes any sense to you.
+>>
+>> I understand what you want now and why you want it.
+>>
+>> But I'm not sure I agree with you. Some pre-cursor to this patch series
+>> actually had something like touchscreen-offset-x (or some-such I don't
+>> remember) which actually subtracted the specified value from the coordinates
+>> reported to userspace (clamping to 0).
+>>
+>> In that setup I think setting:
+>>
+>> touchscreen-size-x = (maximum x coordinate reported + 1) -
+>>                       (minimum x coordinate reported.
+>>
+>> Makes sense, but since now we are not doing that and just copying the
+>> values over to input_absinfo.minimum/maximum I think a 1:1 mapping
+>> (with the - 1 adjustment for size) makes more sense.
+>>
+>> The way I'm currently using this is with touchscreens where we cannot
+>> read this info from the hardware, so I repeatedly move my finger over
+>> each edge noting down the min / max value for e.g. the left/right
+>> edge and then directly putting these into the properties.
+>>
+>> IMHO not having to do some math here to calculate the right value
+>> for touchscreen-size-x shows that treating touchscreen-size-x as
+>> (touchscreen-max-x + 1) is the right thing to do.
+>>
+>> I'm actually worried that if we follow your suggestion people will
+>> indeed not read the docs and thus not do the math. I think they will
+>> just copy over the min / max readings and we and up with an
+>> input_absinfo.maximum value which is input_absinfo.minimum
+>> units too big.
+> 
+> I see. OK, let's keep it your way. Applied.
 
----
-This patch is against the 'renesas-devel-20181008-v4.19-rc7' tag of Simon
-Horman's 'renesas.git' repo.
+Thank you.
 
-The thermal driver/bindings patches have been just posted...
+It seems you've not yet pushed your branch with these though ?
 
- arch/arm64/boot/dts/renesas/r8a77980.dtsi |   38 ++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+Regards,
 
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-@@ -330,6 +330,19 @@
- 			#power-domain-cells = <1>;
- 		};
- 
-+		thermal: thermal@e6198000 {
-+			compatible = "renesas,r8a77980-thermal";
-+			reg = <0 0xe6198000 0 0x100>,
-+			      <0 0xe61a0000 0 0x100>;
-+			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 522>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-+			resets = <&cpg 522>;
-+			#thermal-sensor-cells = <1>;
-+		};
-+
- 		intc_ex: interrupt-controller@e61c0000 {
- 			compatible = "renesas,intc-ex-r8a77980", "renesas,irqc";
- 			#interrupt-cells = <2>;
-@@ -1404,6 +1417,31 @@
- 		};
- 	};
- 
-+	thermal-zones {
-+		cpu-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+			thermal-sensors = <&thermal 0>;
-+
-+			trips {
-+				cpu-crit {
-+					temperature = <120000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+			};
-+		};
-+
-+		sensor2-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+			thermal-sensors = <&thermal 1>;
-+		};
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
+Hans
