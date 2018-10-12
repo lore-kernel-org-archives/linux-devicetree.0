@@ -1,56 +1,51 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 5/7] mfd: ds90ux9xx: add I2C bridge/alias and link
- connection driver
-Date: Fri, 12 Oct 2018 07:04:55 +0100
-Message-ID: <20181012060455.GV4939@dell>
-References: <20181008211205.2900-1-vz@mleia.com>
- <20181008211205.2900-6-vz@mleia.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: arm-smmu: Add binding doc for Qcom
+	smmu-500
+Date: Fri, 12 Oct 2018 11:37:33 +0530
+Message-ID: <9ca4bb4f-3e6e-21cc-819e-80b979b934d0@codeaurora.org>
+References: <20181011094930.17010-1-vivek.gautam@codeaurora.org>
+	<20181011094930.17010-2-vivek.gautam@codeaurora.org>
+	<20181011221630.GA5841@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181008211205.2900-6-vz@mleia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20181011221630.GA5841@bogus>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 09 Oct 2018, Vladimir Zapolskiy wrote:
 
-> From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-> 
-> The change adds TI DS90Ux9xx I2C bridge/alias subdevice driver and
-> FPD Link connection handling mechanism.
-> 
-> Access to I2C devices connected to a remote de-/serializer is done in
-> a transparent way, on established link detection event such devices
-> are registered on an I2C bus, which serves a local de-/serializer IC.
-> 
-> The development of the driver was a collaborative work, the
-> contribution done by Balasubramani Vivekanandan includes:
-> * original simplistic implementation of the driver,
-> * support of implicitly specified devices in device tree,
-> * support of multiple FPD links for TI DS90Ux9xx,
-> * other kind of valuable review comments, clean-ups and fixes.
-> 
-> Also Steve Longerbeam made the following changes:
-> * clear address maps after linked device removal,
-> * disable pass-through in disconnection,
-> * qualify locked status with non-zero remote address.
-> 
-> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-> ---
->  drivers/mfd/Kconfig                |   8 +
->  drivers/mfd/Makefile               |   1 +
->  drivers/mfd/ds90ux9xx-i2c-bridge.c | 764 +++++++++++++++++++++++++++++
->  3 files changed, 773 insertions(+)
->  create mode 100644 drivers/mfd/ds90ux9xx-i2c-bridge.c
 
-Shouldn't this live in drivers/i2c?
+On 10/12/2018 3:46 AM, Rob Herring wrote:
+> On Thu, 11 Oct 2018 15:19:29 +0530, Vivek Gautam wrote:
+>> Qcom's implementation of arm,mmu-500 works well with current
+>> arm-smmu driver implementation. Adding a soc specific compatible
+>> along with arm,mmu-500 makes the bindings future safe.
+>>
+>> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>>
+>> Changes since v3:
+>>   - Refined language more to state things directly for the bindings
+>>     description.
+>>
+>>   Documentation/devicetree/bindings/iommu/arm,smmu.txt | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thank you Rob.
+
+Best regards
+Vivek
