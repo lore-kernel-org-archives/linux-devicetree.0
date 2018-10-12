@@ -1,34 +1,47 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 1/2] dt-bindings: usb: renesas_usb3: add bindings for r8a77990
-Date: Tue,  2 Oct 2018 20:58:26 +0900
-Message-Id: <1538481507-24821-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1538481507-24821-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1538481507-24821-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=ZRjc=MY=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp.codeaurora.org ([198.145.29.96]:49986 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728104AbeJLRM6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Oct 2018 13:12:58 -0400
+From: Govind Singh <govinds@codeaurora.org>
+Subject: [PATCH v2 0/6] Add non PAS wcss Q6 support for QCS404
+Date: Fri, 12 Oct 2018 15:10:38 +0530
+Message-Id: <1539337244-9505-1-git-send-email-govinds@codeaurora.org>
+Sender: devicetree-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Govind Singh <govinds@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds bindings for r8a77990 (R-Car E3).
+Add non PAS(Peripheral Authentication System) WCSS remoteproc
+driver support and wcss clock/reset controls for QCS404 SOC.
+Add WCSS q6 bootup and shutdown sequence handled from
+Application Processor SubSystem(APSS).
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- Documentation/devicetree/bindings/usb/renesas_usb3.txt | 1 +
- 1 file changed, 1 insertion(+)
+Govind Singh (6):
+  dt-bindings: clock: qcom: Add QCOM WCSS GCC clock bindings
+  clk: qcom: Add WCSS gcc clock control for QCS404
+  dt-bindings: clock: qcom: Introduce QCOM WCSS Q6DSP clock bindings
+  clk: qcom: Add WCSS Q6DSP clock controller for QCS404
+  remoteproc: qcom: wcss: populate hardcoded param using driver data
+  remoteproc: qcom: wcss: Add non pas wcss Q6 support for QCS404
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usb3.txt b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-index b22f0a5..d366555 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-@@ -6,6 +6,7 @@ Required properties:
- 	- "renesas,r8a7795-usb3-peri"
- 	- "renesas,r8a7796-usb3-peri"
- 	- "renesas,r8a77965-usb3-peri"
-+	- "renesas,r8a77990-usb3-peri"
- 	- "renesas,rcar-gen3-usb3-peri" for a generic R-Car Gen3 or RZ/G2
- 	  compatible device
- 
+Changes since v1:
+  Corrected clock names as per comments in v1 patch.
+
+ .../devicetree/bindings/clock/qcom,wcsscc.txt      |  26 +
+ .../devicetree/bindings/remoteproc/qcom,q6v5.txt   |   1 +
+ drivers/clk/qcom/Kconfig                           |   9 +
+ drivers/clk/qcom/Makefile                          |   1 +
+ drivers/clk/qcom/gcc-qcs404.c                      |  37 +-
+ drivers/clk/qcom/wcsscc-qcs404.c                   | 290 +++++++++
+ drivers/remoteproc/qcom_q6v5_wcss.c                | 666 +++++++++++++++++++--
+ include/dt-bindings/clock/qcom,gcc-qcs404.h        |   3 +
+ include/dt-bindings/clock/qcom,wcss-qcs404.h       |  24 +
+ 9 files changed, 1018 insertions(+), 39 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,wcsscc.txt
+ create mode 100644 drivers/clk/qcom/wcsscc-qcs404.c
+ create mode 100644 include/dt-bindings/clock/qcom,wcss-qcs404.h
+
 -- 
-1.9.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
