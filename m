@@ -1,164 +1,340 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH 4/7] mfd: ds90ux9xx: add TI DS90Ux9xx de-/serializer MFD
- driver
-Date: Fri, 12 Oct 2018 13:58:15 +0300
-Message-ID: <506c03d7-7986-44dd-3290-92d16a8106ad@mentor.com>
-References: <20181008211205.2900-1-vz@mleia.com>
- <20181008211205.2900-5-vz@mleia.com> <20181012060314.GU4939@dell>
- <63733d2e-f95e-8894-f2b0-0b551b5cfeeb@mentor.com>
- <20181012083924.GW4939@dell>
- <eef99526-9232-8cd4-9a7c-c30114d58806@ideasonboard.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH V8 16/21] csky: SMP support
+Date: Fri, 12 Oct 2018 12:09:52 +0100
+Message-ID: <50781e74-e19b-e0e0-8ce5-d906878e249d@arm.com>
+References: <cover.1539315390.git.ren_guo@c-sky.com>
+ <608ece7942caa7c4b677b3cedd699e1a85b39d0f.1539315391.git.ren_guo@c-sky.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <eef99526-9232-8cd4-9a7c-c30114d58806@ideasonboard.com>
+In-Reply-To: <608ece7942caa7c4b677b3cedd699e1a85b39d0f.1539315391.git.ren_guo@c-sky.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: kieran.bingham@ideasonboard.com, Lee Jones <lee.jones@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Vladimir Zapolskiy <vz@mleia.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Guo Ren <ren_guo@c-sky.com>, akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, hch@infradead.org, mark.rutland@arm.com, peterz@infradead.org, robh@kernel.org, tglx@linutronix.de
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, c-sky_gcc_upstream@c-sky.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Kieran,
-
-On 10/12/2018 12:20 PM, Kieran Bingham wrote:
-> Hi Vladimir,
+On 12/10/18 05:42, Guo Ren wrote:
+> This patch adds boot, ipi, hotplug code for SMP.
 > 
-> On 12/10/18 09:39, Lee Jones wrote:
->> On Fri, 12 Oct 2018, Vladimir Zapolskiy wrote:
->>> On 10/12/2018 09:03 AM, Lee Jones wrote:
->>>> On Tue, 09 Oct 2018, Vladimir Zapolskiy wrote:
->>>>
->>>>> From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
->>>>>
->>>>> The change adds I2C device driver for TI DS90Ux9xx de-/serializers,
->>>>> support of subdevice controllers is done in separate drivers, because
->>>>> not all IC functionality may be needed in particular situations, and
->>>>> this can be fine grained controlled in device tree.
->>>>>
->>>>> The development of the driver was a collaborative work, the
->>>>> contribution done by Balasubramani Vivekanandan includes:
->>>>> * original implementation of the driver based on a reference driver,
->>>>> * regmap powered interrupt controller support on serializers,
->>>>> * support of implicitly or improperly specified in device tree ICs,
->>>>> * support of device properties and attributes: backward compatible
->>>>>   mode, low frequency operation mode, spread spectrum clock generator.
->>>>>
->>>>> Contribution by Steve Longerbeam:
->>>>> * added ds90ux9xx_read_indirect() function,
->>>>> * moved number of links property and added ds90ux9xx_num_fpd_links(),
->>>>> * moved and updated ds90ux9xx_get_link_status() function to core driver,
->>>>> * added fpd_link_show device attribute.
->>>>>
->>>>> Sandeep Jain added support of pixel clock edge configuration.
->>>>>
->>>>> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
->>>>> ---
->>>>>  drivers/mfd/Kconfig           |  14 +
->>>>>  drivers/mfd/Makefile          |   1 +
->>>>>  drivers/mfd/ds90ux9xx-core.c  | 879 ++++++++++++++++++++++++++++++++++
->>>>>  include/linux/mfd/ds90ux9xx.h |  42 ++
->>>>>  4 files changed, 936 insertions(+)
->>>>>  create mode 100644 drivers/mfd/ds90ux9xx-core.c
->>>>>  create mode 100644 include/linux/mfd/ds90ux9xx.h
->>>>>
->>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->>>>> index 8c5dfdce4326..a969fa123f64 100644
->>>>> --- a/drivers/mfd/Kconfig
->>>>> +++ b/drivers/mfd/Kconfig
->>>>> @@ -1280,6 +1280,20 @@ config MFD_DM355EVM_MSP
->>>>>  	  boards.  MSP430 firmware manages resets and power sequencing,
->>>>>  	  inputs from buttons and the IR remote, LEDs, an RTC, and more.
->>>>>  
->>>>> +config MFD_DS90UX9XX
->>>>> +	tristate "TI DS90Ux9xx FPD-Link de-/serializer driver"
->>>>> +	depends on I2C && OF
->>>>> +	select MFD_CORE
->>>>> +	select REGMAP_I2C
->>>>> +	help
->>>>> +	  Say yes here to enable support for TI DS90UX9XX de-/serializer ICs.
->>>>> +
->>>>> +	  This driver provides basic support for setting up the de-/serializer
->>>>> +	  chips. Additional functionalities like connection handling to
->>>>> +	  remote de-/serializers, I2C bridging, pin multiplexing, GPIO
->>>>> +	  controller and so on are provided by separate drivers and should
->>>>> +	  enabled individually.
->>>>
->>>> This is not an MFD driver.
->>>
->>> Why do you think so? The representation of the ICs into device tree format
->>> of hardware description shows that this is a truly MFD driver with multiple
->>> IP subcomponents naturally mapped into MFD cells.
->>
->> This driver does too much real work ('stuff') to be an MFD driver.
->> MFD drivers should not need to care of; links, gates, modes, pixels,
->> frequencies maps or properties.  Nor should they contain elaborate
->> sysfs structures to control the aforementioned 'stuff'.
->>
->> Granted, there may be some code in there which could be appropriate
->> for an MFD driver.  However most of it needs moving out into a
->> function driver (or two).
->>
->>> Basically it is possible to replace explicit of_platform_populate() by
->>> adding a "simple-mfd" compatible, if it is desired.
->>>
->>>> After a 30 second Google of what this device actually does, perhaps
->>>> drivers/media might be a better fit?
->>>
->>> I assume it would be quite unusual to add a driver with NO media functions
->>> and controls into drivers/media.
->>
->> drivers/media may very well not be the correct place for this.  In my
->> 30 second Google, I saw that this device has a lot to do with cameras,
->> hence my media association.
->>
->> If *all* else fails, there is always drivers/misc, but this should be
->> avoided if at all possible.
+> Changelog:
+>  - remove set_ipi_irq_mapping callback.
+>  - Convert the cpumask to an interrupt-controller specific representation
+>    in driver's code, and not the SMP code's.
+>  - csky: remove irq_mapping from smp.c
+>    There are some feedbacks from irqchip, and we need to adjust
+>    "smp.c & smp.h" to match the csky_mp_intc modification.
+>  - Move IPI_IRQ define into drivers/irqchip/csky_mpintc.c, because it's a
+>    interrupt controller specific.
+>  - Bugfix request_irq with IPI_IRQ, we must use irq_mapping return value
+>    not directly use IPI_IRQ. The modification also involves csky_mp_intc.
 > 
-> The device as a whole is FPD Link for camera devices I believe, but it
+> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> ---
+>  arch/csky/include/asm/smp.h |  28 ++++++
+>  arch/csky/kernel/smp.c      | 237 ++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 265 insertions(+)
+>  create mode 100644 arch/csky/include/asm/smp.h
+>  create mode 100644 arch/csky/kernel/smp.c
+> 
+> diff --git a/arch/csky/include/asm/smp.h b/arch/csky/include/asm/smp.h
+> new file mode 100644
+> index 0000000..31f7b94
+> --- /dev/null
+> +++ b/arch/csky/include/asm/smp.h
+> @@ -0,0 +1,28 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#ifndef __ASM_CSKY_SMP_H
+> +#define __ASM_CSKY_SMP_H
+> +
+> +#include <linux/cpumask.h>
+> +#include <linux/irqreturn.h>
+> +#include <linux/threads.h>
+> +
+> +#ifdef CONFIG_SMP
+> +
+> +void __init setup_smp(void);
+> +
+> +void __init setup_smp_ipi(void);
+> +
+> +void __init enable_smp_ipi(void);
+> +
+> +void arch_send_call_function_ipi_mask(struct cpumask *mask);
+> +
+> +void arch_send_call_function_single_ipi(int cpu);
+> +
+> +void __init set_send_ipi(void (*func)(const struct cpumask *mask), int irq);
+> +
+> +#define raw_smp_processor_id()	(current_thread_info()->cpu)
+> +
+> +#endif /* CONFIG_SMP */
+> +
+> +#endif /* __ASM_CSKY_SMP_H */
+> diff --git a/arch/csky/kernel/smp.c b/arch/csky/kernel/smp.c
+> new file mode 100644
+> index 0000000..5ea9516
+> --- /dev/null
+> +++ b/arch/csky/kernel/smp.c
+> @@ -0,0 +1,237 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mm.h>
+> +#include <linux/sched.h>
+> +#include <linux/kernel_stat.h>
+> +#include <linux/notifier.h>
+> +#include <linux/cpu.h>
+> +#include <linux/percpu.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/of.h>
+> +#include <linux/sched/task_stack.h>
+> +#include <linux/sched/mm.h>
+> +#include <asm/irq.h>
+> +#include <asm/traps.h>
+> +#include <asm/sections.h>
+> +#include <asm/mmu_context.h>
+> +#include <asm/pgalloc.h>
+> +
+> +static struct {
+> +	unsigned long bits ____cacheline_aligned;
+> +} ipi_data[NR_CPUS] __cacheline_aligned;
 
-I still don't understand (I could be biased though) why there is such
-a strong emphasis on cameras and media stuff in the discussion.
+Why isn't this a per-cpu variable?
 
-No, "the device as a whole is FPD Link for camera devices" is a wrong
-statement. On hand I have a number of boards with serializers/deserializers
-from the TI DS90Ux9xx IC series and sensors are NOT connected to them.
+> +
+> +enum ipi_message_type {
+> +	IPI_EMPTY,
+> +	IPI_RESCHEDULE,
+> +	IPI_CALL_FUNC,
+> +	IPI_MAX
+> +};
+> +
+> +static irqreturn_t handle_ipi(int irq, void *dev)
+> +{
+> +	unsigned long *pending_ipis = &ipi_data[smp_processor_id()].bits;
+> +
+> +	while (true) {
+> +		unsigned long ops;
+> +
+> +		ops = xchg(pending_ipis, 0);
+> +		if (ops == 0)
+> +			return IRQ_HANDLED;
+> +
+> +		if (ops & (1 << IPI_RESCHEDULE))
+> +			scheduler_ipi();
+> +
+> +		if (ops & (1 << IPI_CALL_FUNC))
+> +			generic_smp_call_function_interrupt();
+> +
+> +		BUG_ON((ops >> IPI_MAX) != 0);
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static void (*send_arch_ipi)(const struct cpumask *mask);
+> +
+> +static int ipi_irq;
+> +void __init set_send_ipi(void (*func)(const struct cpumask *mask), int irq)
+> +{
+> +	if (send_arch_ipi)
+> +		return;
+> +
+> +	send_arch_ipi = func;
+> +	ipi_irq = irq;
+> +}
+> +
+> +static void
+> +send_ipi_message(const struct cpumask *to_whom, enum ipi_message_type operation)
+> +{
+> +	int i;
+> +
+> +	for_each_cpu(i, to_whom)
+> +		set_bit(operation, &ipi_data[i].bits);
+> +
+> +	smp_mb();
+> +	send_arch_ipi(to_whom);
+> +}
+> +
+> +void arch_send_call_function_ipi_mask(struct cpumask *mask)
+> +{
+> +	send_ipi_message(mask, IPI_CALL_FUNC);
+> +}
+> +
+> +void arch_send_call_function_single_ipi(int cpu)
+> +{
+> +	send_ipi_message(cpumask_of(cpu), IPI_CALL_FUNC);
+> +}
+> +
+> +static void ipi_stop(void *unused)
+> +{
+> +	while (1);
+> +}
+> +
+> +void smp_send_stop(void)
+> +{
+> +	on_each_cpu(ipi_stop, NULL, 1);
+> +}
+> +
+> +void smp_send_reschedule(int cpu)
+> +{
+> +	send_ipi_message(cpumask_of(cpu), IPI_RESCHEDULE);
+> +}
+> +
+> +void *__cpu_up_stack_pointer[NR_CPUS];
+> +void *__cpu_up_task_pointer[NR_CPUS];
 
-> certainly has different functions which are broken out in this
-> implementation.
+Why aren't these per-cpu variables? More importantly, what are they used
+for? None of the patches in this series are using them.
 
-No, there is absolutely nothing broken out from the presented MFD drivers,
-the drivers are completely integral and basically I don't expect any.
+> +
+> +void __init smp_prepare_boot_cpu(void)
+> +{
+> +}
+> +
+> +void __init smp_prepare_cpus(unsigned int max_cpus)
+> +{
+> +}
+> +
+> +void __init enable_smp_ipi(void)
+> +{
+> +	enable_percpu_irq(ipi_irq, 0);
+> +}
 
-If you are concerned about media functionality, the correspondent MFD
-*cell* drivers will be added into drivers/media, drivers/gpu/drm or
-whatever is to be a proper place.
+Why isn't this function static?
 
-> I think it might be quite awkward having the i2c components in
-> drivers/i2c and the media components in drivers/media/i2c, so what about
-> creating drivers/media/i2c/fpd-link (or such) as a container?
+> +
+> +static int ipi_dummy_dev;
+> +void __init setup_smp_ipi(void)
+> +{
+> +	int rc;
+> +
+> +	if (ipi_irq == 0)
+> +		panic("%s IRQ mapping failed\n", __func__);
+> +
+> +	rc = request_percpu_irq(ipi_irq, handle_ipi, "IPI Interrupt",
+> +				&ipi_dummy_dev);
+> +	if (rc)
+> +		panic("%s IRQ request failed\n", __func__);
+> +
+> +	enable_smp_ipi();
+> +}
+> +
+> +void __init setup_smp(void)
+> +{
+> +	struct device_node *node = NULL;
+> +	int cpu;
+> +
+> +	while ((node = of_find_node_by_type(node, "cpu"))) {
+> +		if (!of_device_is_available(node))
+> +			continue;
+> +
+> +		if (of_property_read_u32(node, "reg", &cpu))
+> +			continue;
+> +
+> +		if (cpu >= NR_CPUS)
+> +			continue;
+> +
+> +		set_cpu_possible(cpu, true);
+> +		set_cpu_present(cpu, true);
+> +	}
+> +}
+> +
+> +extern void _start_smp_secondary(void);
+> +
+> +volatile unsigned int secondary_hint;
+> +volatile unsigned int secondary_ccr;
+> +volatile unsigned int secondary_stack;
 
-I open drivers/media/i2c/Kconfig and all entries with no exception are
-under from 'if VIDEO_V4L2'. The MFD drivers do NOT require on depend on
-VIDEO_V4L2 or any other multimedia frameworks, nor the MFD drivers export
-any multimedia controls.
+This looks pretty dodgy. Shouldn't you be using READ_ONCE/WRITE_ONCE
+instead?
 
-> Our GMSL implementation is also a complex camera(s) device - but does
-> not yet use the MFD framework, perhaps that's something to add to my
-> todo list.
+> +
+> +int __cpu_up(unsigned int cpu, struct task_struct *tidle)
+> +{
+> +	unsigned int tmp;
+> +
+> +	secondary_stack = (unsigned int)tidle->stack + THREAD_SIZE;
+> +
+> +	secondary_hint = mfcr("cr31");
+> +
+> +	secondary_ccr  = mfcr("cr18");> +
+> +	/* Flush dcache */
+> +	mtcr("cr17", 0x22);
+> +
+> +	/* Enable cpu in SMP reset ctrl reg */
+> +	tmp = mfcr("cr<29, 0>");
+> +	tmp |= 1 << cpu;
+> +	mtcr("cr<29, 0>", tmp);
+> +
+> +	/* Wait for the cpu online */
+> +	while (!cpu_online(cpu));
+> +
+> +	secondary_stack = 0;
+> +
+> +	return 0;
+> +}
+> +
+> +void __init smp_cpus_done(unsigned int max_cpus)
+> +{
+> +}
+> +
+> +int setup_profiling_timer(unsigned int multiplier)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +void csky_start_secondary(void)
+> +{
+> +	struct mm_struct *mm = &init_mm;
+> +	unsigned int cpu = smp_processor_id();
+> +
+> +	mtcr("cr31", secondary_hint);
+> +	mtcr("cr18", secondary_ccr);
+> +
+> +	mtcr("vbr", vec_base);
+> +
+> +	flush_tlb_all();
+> +	write_mmu_pagemask(0);
+> +	TLBMISS_HANDLER_SETUP_PGD(swapper_pg_dir);
+> +	TLBMISS_HANDLER_SETUP_PGD_KERNEL(swapper_pg_dir);
+> +
+> +	asid_cache(smp_processor_id()) = ASID_FIRST_VERSION;
+> +
+> +#ifdef CONFIG_CPU_HAS_FPU
+> +	init_fpu();
+> +#endif
+> +
+> +	enable_smp_ipi();
+> +
+> +	mmget(mm);
+> +	mmgrab(mm);
+> +	current->active_mm = mm;
+> +	cpumask_set_cpu(cpu, mm_cpumask(mm));
+> +
+> +	notify_cpu_starting(cpu);
+> +	set_cpu_online(cpu, true);
+> +
+> +	pr_info("CPU%u Online: %s...\n", cpu, __func__);
+> +
+> +	local_irq_enable();
+> +	preempt_disable();
+> +	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
+> +}
 > 
 
-Okay, but the TI DS90Ux9xx is NOT a camera device, and it is NOT a multimedia
-device, but it is a pure MFD device so the argument is not applicable.
+Thanks,
 
-> We currently keep all of the complexity within the max9286.c driver, but
-> I could foresee that being split further if more devices add to the
-> complexity of managing the bus. At which point we might want an
-> equivalent drivers/media/i2c/gmsl/ perhaps?
-> 
-
---
-Best wishes,
-Vladimir
-
->>> Laurent, can you please share your opinion?
-> 
+	M.
+-- 
+Jazz is not dead. It just smells funny...
