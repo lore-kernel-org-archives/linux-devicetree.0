@@ -1,277 +1,103 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: =?iso-8859-1?B?W1JDRqBQQVRDSCx2Miwy?= =?iso-8859-1?B?LzJd?= pwm:
- imx: Configure output to GPIO in disabled state
-Date: Fri, 12 Oct 2018 18:08:54 +0200
-Message-ID: <20181012160854.hmgpokxgsrqdzobx@pengutronix.de>
-References: <1539163920-9442-3-git-send-email-michal.vokac@ysoft.com>
- <20181012085720.GA9451@taurus.defre.kleine-koenig.org>
- <fa96ae2a-c2cc-b47a-1198-5daffa7c865f@ysoft.com>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH RFC v1 7/8] drivers: qcom: cpu_pd: Handle cpu hotplug in
+ the domain
+Date: Fri, 12 Oct 2018 10:16:53 -0600
+Message-ID: <20181012161653.GH2371@codeaurora.org>
+References: <1539206455-29342-1-git-send-email-rplsssn@codeaurora.org>
+ <1539206455-29342-8-git-send-email-rplsssn@codeaurora.org>
+ <20181011112013.GC32752@e107155-lin>
+ <20181011160053.GA2371@codeaurora.org>
+ <20181011161927.GC28583@e107155-lin>
+ <20181011165822.GB2371@codeaurora.org>
+ <20181011173733.GA26447@e107155-lin>
+ <20181011210609.GD2371@codeaurora.org>
+ <20181012150429.GH3401@e107155-lin>
+ <CAPDyKFpNuTMav__wTvuMbxU65QpiQPftH_OXkEwztcPAG9FbTw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <fa96ae2a-c2cc-b47a-1198-5daffa7c865f@ysoft.com>
+In-Reply-To: <CAPDyKFpNuTMav__wTvuMbxU65QpiQPftH_OXkEwztcPAG9FbTw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, Fabio Estevam <fabio.estevam@nxp.com>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@karo-electronics.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Evan Green <evgreen@chromium.org>, Doug Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Fri, Oct 12 2018 at 09:46 -0600, Ulf Hansson wrote:
+>On 12 October 2018 at 17:04, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>> On Thu, Oct 11, 2018 at 03:06:09PM -0600, Lina Iyer wrote:
+>>> On Thu, Oct 11 2018 at 11:37 -0600, Sudeep Holla wrote:
+>> [...]
+>>
+>>> >
+>>> > Is DDR managed by Linux ? I assumed it was handled by higher exception
+>>> > levels. Can you give examples of resources used by CPU in this context.
+>>> > When CPU can be powered on or woken up without Linux intervention, the
+>>> > same holds true for CPU power down or sleep states. I still see no reason
+>>> > other than the firmware has no support to talk to RPMH.
+>>> >
+>>> DDR, shared clocks, regulators etc. Imagine you are running something on
+>>> the screen and CPUs enter low power mode, while the CPUs were active,
+>>> there was a need for bunch of display resources, and things the app may
+>>> have requested resources, while the CPU powered down the requests may
+>>> not be needed the full extent as when the CPU was running, so they can
+>>> voted down to a lower state of in some cases turn off the resources
+>>> completely. What the driver voted for is dependent on the runtime state
+>>> and the usecase currently active. The 'sleep' state value is also
+>>> determined by the driver/framework.
+>>>
+>>
+>> Why does CPU going down says that another (screen - supposedly shared)
+>> resource needs to be relinquished ? Shouldn't display decide that on it's
+>> own ? I have no idea why screen/display is brought into this discussion.
+>> CPU can just say: hey I am going down and I don't need my resource.
+>> How can it say: hey I am going down and display or screen also doesn't
+>> need the resource. On a multi-cluster, how will the last CPU on one know
+>> that it needs to act on behalf of the shared resource instead of another
+>> cluster.
+>
+>Apologize for sidetracking the discussion, just want to fold in a few comments.
+>
+No, this is perfect to warp the whole thing around. Thanks Ulf.
 
-On Fri, Oct 12, 2018 at 03:04:48PM +0000, Vokáč Michal wrote:
-> On 12.10.2018 10:57, Uwe Kleine-König wrote:
-> > On Wed, Oct 10, 2018 at 09:33:26AM +0000, Vokáč Michal wrote:
-> >> Normally the PWM output is held LOW when PWM is disabled. This can cause
-> >> problems when inverted PWM signal polarity is needed. With this behavior
-> >> the connected circuit is fed by 100% duty cycle instead of being shut-off.
-> >>
-> >> Allow users to define a "gpio" and a "pwm" pinctrl states. The pwm pinctrl
-> >> state is then selected when PWM is enabled and the gpio pinctrl state is
-> >> selected when PWM is disabled. Also add a new pwm-gpios GPIO that is used
-> >> to drive the output in the gpio state.
-> >>
-> >> If all the pinctrl states and the pwm-gpios are not correctly specified
-> >> in DT the logic will work as before.
-> >>
-> >> As an example, with this patch a PWM controlled backlight with inversed
-> >> signal polarity can be used in full brightness range. Without this patch
-> >> the backlight can not be turned off as brightness = 0 disables the PWM
-> >> and that in turn set PWM output LOW, that is full brightness.
-> >>
-> >> Output of the PWM with "default" pinctrl and with "pwm"+"gpio" pinctrl:
-> >>
-> >> +--------------+------------+---------------+---------------------------+
-> >> | After reset  | Bootloader | Linux pinctrl | User (sysfs, backlight..) |
-> >> | 100k pull-up | (not used) |               |   enable    |   disable   |
-> >> +--------------+------------+---------------+---------------------------+
-> >>   ___________________________    default        _   _   _
-> >>                              |_________________| |_| |_| |_|_____________
-> >>
-> >>                                 pwm + gpio
-> >>   ___________________________________________   _   _   _   _____________
-> >>                                              |_| |_| |_| |_|
-> > 
-> > I was made aware of this patch by Thierry while discussion about a patch
-> > opportunity. I already pointed out some stuff I don't like about this
-> > patch in the repective thread, but I repeat it here to have it at the
-> > right place.
-> 
-> Thank you for taking time to comment on this one as well Uwe.
-> 
-> >> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-> >> ---
-> >> Changes in v2:
-> >>   - Utilize the "pwm" and "gpio" pinctrl states.
-> >>   - Use the pwm-gpios signal to drive the output in "gpio" pinctrl state.
-> >>   - Select the right pinctrl state in probe.
-> >>
-> >>   drivers/pwm/pwm-imx.c | 86 +++++++++++++++++++++++++++++++++++++++++++++++++++
-> >>   1 file changed, 86 insertions(+)
-> >>
-> >> diff --git a/drivers/pwm/pwm-imx.c b/drivers/pwm/pwm-imx.c
-> >> index 6cd3b72..3502123 100644
-> >> --- a/drivers/pwm/pwm-imx.c
-> >> +++ b/drivers/pwm/pwm-imx.c
-> >> @@ -10,11 +10,13 @@
-> >>   #include <linux/clk.h>
-> >>   #include <linux/delay.h>
-> >>   #include <linux/err.h>
-> >> +#include <linux/gpio/consumer.h>
-> >>   #include <linux/io.h>
-> >>   #include <linux/kernel.h>
-> >>   #include <linux/module.h>
-> >>   #include <linux/of.h>
-> >>   #include <linux/of_device.h>
-> >> +#include <linux/pinctrl/consumer.h>
-> >>   #include <linux/platform_device.h>
-> >>   #include <linux/pwm.h>
-> >>   #include <linux/slab.h>
-> >> @@ -92,10 +94,45 @@ struct imx_chip {
-> >>   	void __iomem	*mmio_base;
-> >>   
-> >>   	struct pwm_chip	chip;
-> >> +
-> >> +	struct pinctrl *pinctrl;
-> >> +	struct pinctrl_state *pinctrl_pins_gpio;
-> >> +	struct pinctrl_state *pinctrl_pins_pwm;
-> >> +	struct gpio_desc *pwm_gpiod;
-> > 
-> > The pinctrl framework already knows about "init" and "default". These
-> > should be enough. i.e. "init" configures as gpio and "default" als pwm.
-> 
-> That is totally new information for me. I've never seen any usage of
-> "init" pinctrl state before. The total number of users is 6 (rockchip)
-> so that explains a lot.
-> 
-> I think that it would not work though. The basic idea behind my
-> solution is that the pinctrl driver does not know what is the correct
-> pin configuration at probe whereas the pwm-imx driver does.
-> 
-> With the "init" and "default" states the pinctrl driver will always
-> select the "default" if it find the pins in "init" state.
-> 
-> 	https://elixir.bootlin.com/linux/latest/source/drivers/pinctrl/core.c#L1469
-> 
-> But we want the pins to stay in the "init" GPIO state unless a client
-> enables the PWM.
+>This is becoming a complicated story. May I suggest we pick the GIC as
+>an example instead?
+>
+>Let's assume the simple case, we have one cluster and when the cluster
+>becomes powered off, the GIC needs to be re-configured and wakeups
+>must be routed through some "always on" external logic.
+>
+>The PSCI spec mentions nothing about how to manage this and not the
+>rest of the SoC topology for that matter. Hence if the GIC is managed
+>by Linux - then Linux also needs to take actions before cluster power
+>down and after cluster power up. So, if PSCI FW can't deal with GIC,
+>how would manage it?
+>
+>>
+>> I think we are mixing the system sleep states with CPU idle here.
+>> If it's system sleeps states, the we need to deal it in some system ops
+>> when it's the last CPU in the system and not the cluster/power domain.
+>
+>What is really a system sleep state? One could consider it just being
+>another idles state, having heaver residency targets and greater
+>enter/exit latency values, couldn't you?
+>
+While I explained the driver's side of the story, for the CPUs, system
+sleep is a deeper low power mode that ties in with OSI.
 
-Note I don't know this very well either. What should work then is to
-have "init" as GPIO and "active" as PWM. Well, though this breaks if you
-intend to probe a running pwm without stopping it.
- 
-> >>   };
-> >>   
-> >> +
-> >>   #define to_imx_chip(chip)	container_of(chip, struct imx_chip, chip)
-> >>   
-> >> +static int imx_pwm_init_pinctrl_info(struct imx_chip *imx_chip,
-> >> +		struct platform_device *pdev)
-> >> +{
-> >> +	imx_chip->pinctrl = devm_pinctrl_get(&pdev->dev);
-> >> +	if (!imx_chip->pinctrl || IS_ERR(imx_chip->pinctrl)) {
-> >> +		dev_info(&pdev->dev, "can not get pinctrl\n");
-> >> +		return PTR_ERR(imx_chip->pinctrl);
-> >> +	}
-> >> +
-> >> +	imx_chip->pinctrl_pins_pwm = pinctrl_lookup_state(imx_chip->pinctrl,
-> >> +			"pwm");
-> >> +	imx_chip->pinctrl_pins_gpio = pinctrl_lookup_state(imx_chip->pinctrl,
-> >> +			"gpio");
-> >> +	imx_chip->pwm_gpiod = devm_gpiod_get_optional(&pdev->dev, "pwm",
-> >> +			GPIOD_IN);
-> >> +
-> >> +	if (PTR_ERR(imx_chip->pwm_gpiod) == -EPROBE_DEFER) {
-> > 
-> > You must not use PTR_ERR on a value that might not contain an error
-> > pointer.
-> 
-> OK, thank you for valuable info.
-> So it seems like the I2C folks are in troubles as well:
-> 
-> 	https://elixir.bootlin.com/linux/latest/source/drivers/i2c/busses/i2c-imx.c#L996
+Thanks,
+Lina
 
-correct. I cannot find this documented though.
-
-> >> +		 * pinctrl to switch the output pin to GPIO functon and keep
-> >> +		 * the output at the same level as for duty-cycle = 0.
-> > 
-> > Is it obvious that using a GPIO is more efficient/better/worth the
-> > complexity than just enabling the PWM with duty-cycle 0 and the right
-> > polarity?
-> 
-> To me, it does more than just setting duty-cycle = 0. I think that the
-> user expect to find the PWM chip in disabled state after this. So that
-> when you read the HW registers you see the chip is disabled.
-
-The PWM API user doesn't (have to) care how the lowlevel driver
-implements the .disable() callback.
-
-I personally would prefer to keep the driver simple (without pinctrl and
-gpio stuff which also simplifies matters for dts authors) and spend that
-little energy keeping the HW on.
- 
-> > There might be mechanisms in pincontrol that automatically mux the pin
-> > if it's configured as gpio, I didn't follow the details though.
-> > 
-> > Also it should be possible to configure the GPIO as output immediatly.
-> > If the pinmuxing is set to the PWM function this doesn't have a visible
-> > side effect.
-> 
-> This could be the first time that we want to disable the PWM as you
-> might start with PWM enabled from probe. And hence the GPIO is still
-> configured as input.
-
-I fail to follow your case. Do you mean the pwm is already running when
-the driver probes? Then it is save to set the gpio to output as this has
-no effect as long as the pin is muxed in its pwm function.
-
-> >> +			pinctrl_select_state(imx->pinctrl,
-> >> +					imx->pinctrl_pins_gpio);
-> > 
-> > Usually align function arguments to the opening (.
-> 
-> Oops, I will fix those. There is more than this one..
->   
-> >> +		}
-> >> +
-> >>   		writel(0, imx->mmio_base + MX3_PWMCR);
-> >>   
-> >>   		clk_disable_unprepare(imx->clk_per);
-> >> @@ -354,6 +415,7 @@ static int imx_pwm_probe(struct platform_device *pdev)
-> >>   	const struct of_device_id *of_id =
-> >>   			of_match_device(imx_pwm_dt_ids, &pdev->dev);
-> >>   	const struct imx_pwm_data *data;
-> >> +	struct pwm_state cstate;
-> >>   	struct imx_chip *imx;
-> >>   	struct resource *r;
-> >>   	int ret = 0;
-> >> @@ -385,6 +447,10 @@ static int imx_pwm_probe(struct platform_device *pdev)
-> >>   		imx->chip.of_pwm_n_cells = 3;
-> >>   	}
-> >>   
-> >> +	ret = imx_pwm_init_pinctrl_info(imx, pdev);
-> >> +	if (ret)
-> >> +		return ret;
-> >> +
-> >>   	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >>   	imx->mmio_base = devm_ioremap_resource(&pdev->dev, r);
-> >>   	if (IS_ERR(imx->mmio_base))
-> >> @@ -394,6 +460,26 @@ static int imx_pwm_probe(struct platform_device *pdev)
-> >>   	if (ret < 0)
-> >>   		return ret;
-> >>   
-> >> +	if (imx->pinctrl) {
-> >> +		/*
-> >> +		 * Update cstate after pwmchip_add() call as the core might
-> >> +		 * call the get_state() function to read the PWM registers
-> >> +		 * to get the actual HW state.
-> >> +		 */
-> >> +		pwm_get_state(imx->chip.pwms, &cstate);
-> >> +		if (cstate.enabled) {
-> >> +			dev_dbg(&pdev->dev,
-> >> +				"PWM entered probe in enabled state\n");
-> >> +			pinctrl_select_state(imx->pinctrl,
-> >> +					imx->pinctrl_pins_pwm);
-> >> +		} else {
-> >> +			gpiod_set_value_cansleep(imx->pwm_gpiod, 0);
-> >> +			pinctrl_select_state(imx->pinctrl,
-> >> +					imx->pinctrl_pins_gpio);
-> >> +
-> >> +		}
-> >> +	}
-> >> +
-> >>   	platform_set_drvdata(pdev, imx);
-> >>   	return 0;
-> >>   }
-> > 
-> > There is nothing in this patch that would prevent this code to live in a
-> > place where other drivers could reuse this. (But attention, there are
-> > dragons: Thierry already replied on my topic that his view is different
-> > in this aspect compared to other maintainers though. His POV is that as
-> > long as there is only a single driver known that has a problem this
-> > should be handled in driver specific code.)
-> 
-> When I tripped over that issue I also thought it is i.MX specific.
-> It never came to my mind that something like that should be done in
-> higher layer.
-> 
-> But I have to admit that my current understanding of the overall
-> architecture is at such level that I will just do it how the maintainer
-> wants me to do it. Given that the solution improves the situation and
-> solves my original problem. And the pinctrl solution was already
-> suggested by Fabio Estevam a year ago [1] so I went that way.
-> 
-> [1] https://patchwork.ozlabs.org/patch/839834/#1819865
-
-In message 15 both Lothar and Fabio agree that they would prefer a
-solution without messing with pin configs. But also note that they
-discussed about suspend, too, not only pwm_disable().
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+>In the end, there is no reason to keep things powered on, unless they
+>are being in used (or soon to be used), that is main point.
+>
+>We are also working on S2I at Linaro. We strive towards being able to
+>show the same power numbers as for S2R, but then we need to get these
+>cluster-idle things right.
+>
+>[...]
+>
+>Have a nice weekend!
+>
+>Kind regards
+>Uffe
