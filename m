@@ -1,62 +1,49 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/7] dt-bindings: stm32-dmamux: Add one cell to
- support DMA/MDMA chain
-Date: Fri, 12 Oct 2018 09:46:58 -0500
-Message-ID: <20181012144658.GA30093@bogus>
-References: <1538139715-24406-1-git-send-email-pierre-yves.mordret@st.com>
- <1538139715-24406-3-git-send-email-pierre-yves.mordret@st.com>
+Subject: Re: [PATCH v3 3/3] usb: typec: tcpm: charge current handling for
+ sink  during hard reset
+Date: Fri, 12 Oct 2018 09:48:56 -0500
+Message-ID: <20181012144856.GA3720@bogus>
+References: <20181001194501.58338-1-badhri@google.com>
+ <20181001194501.58338-3-badhri@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1538139715-24406-3-git-send-email-pierre-yves.mordret@st.com>
+In-Reply-To: <20181001194501.58338-3-badhri@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Chanwoo Choi <cw00.choi@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Li Jun <jun.li@nxp.com>, linux@roeck-us.net, jackp@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, Badhri Jagan Sridharan <badhri@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 28, 2018 at 03:01:50PM +0200, Pierre-Yves MORDRET wrote:
-> From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+On Mon,  1 Oct 2018 12:45:01 -0700, Badhri Jagan Sridharan wrote:
+> During the initial connect to a non-pd port, sink would hard reset
+> twice before deeming that the port partner is non-pd. TCPM sets the
+> the charge path to false during the hard reset. This causes unnecessary
+> connects/disconnects of charge path and makes port take longer to
+> charge from the non-pd ports. Avoid this by not setting the charge path
+> to false unless the partner has already identified to be pd capable.
 > 
-> Add one cell to support DMA/MDMA chaining.
-
-You aren't adding a cell. Is the change compatible with existing users 
-(if you mask bits)?
-
+> When partner is a pd port, set the charge path to false in
+> SNK_HARD_RESET_SINK_OFF. Set the current limits to default value based
+> of CC pull up and resume the charge path when port enters
+> SNK_HARD_RESET_SINK_ON.
 > 
-> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-
-Author S-o-b missing.
-
+> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
+> 
+> --------
+> Changes in V3:
+> Rebase on top of usb-next
+> 
+> Changes in V2:
+> Based on feedback of jackp@codeaurora.org
+> - vsafe_5v_hard_reset flag from tcpc_config is removed
+> - Patch only differentiates between pd port partner and non-pd port
+> partner
+> 
+> V1 version of the patch is here:
+> https://lkml.org/lkml/2018/9/14/11
 > ---
->   Version history:
->     v3:
->     v2:
->        * rework content
->     v1:
->        * Initial
-> ---
-> ---
->  Documentation/devicetree/bindings/dma/stm32-dmamux.txt | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  drivers/usb/typec/tcpm/tcpm.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/stm32-dmamux.txt b/Documentation/devicetree/bindings/dma/stm32-dmamux.txt
-> index 1b893b2..5e92b59 100644
-> --- a/Documentation/devicetree/bindings/dma/stm32-dmamux.txt
-> +++ b/Documentation/devicetree/bindings/dma/stm32-dmamux.txt
-> @@ -4,9 +4,9 @@ Required properties:
->  - compatible:	"st,stm32h7-dmamux"
->  - reg:		Memory map for accessing module
->  - #dma-cells:	Should be set to <3>.
-> -		First parameter is request line number.
-> -		Second is DMA channel configuration
-> -		Third is Fifo threshold
-> +-		First parameter is request line number.
-> +-		Second is DMA channel configuration
-> +-		Third is a 32bit bitfield
->  		For more details about the three cells, please see
->  		stm32-dma.txt documentation binding file
->  - dma-masters:	Phandle pointing to the DMA controllers.
-> -- 
-> 2.7.4
-> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
