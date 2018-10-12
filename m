@@ -1,124 +1,131 @@
-Return-Path: <SRS0=Uwhs=M4=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-ve1eur01on0074.outbound.protection.outlook.com ([104.47.1.74]:41568
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727178AbeJPMui (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Oct 2018 08:50:38 -0400
-From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 3/4] usb: chipidea: host: override ehci->hub_control
-Date: Tue, 16 Oct 2018 05:01:25 +0000
-Message-ID: <20181016045846.2345-4-peter.chen@nxp.com>
-References: <20181016045846.2345-1-peter.chen@nxp.com>
-In-Reply-To: <20181016045846.2345-1-peter.chen@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
+Return-Path: <SRS0=ZRjc=MY=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp.codeaurora.org ([198.145.29.96]:50808 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728027AbeJLRNU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Oct 2018 13:13:20 -0400
+From: Govind Singh <govinds@codeaurora.org>
+Subject: [PATCH v2 5/6] remoteproc: qcom: wcss: populate hardcoded param using driver data
+Date: Fri, 12 Oct 2018 15:10:43 +0530
+Message-Id: <1539337244-9505-6-git-send-email-govinds@codeaurora.org>
+In-Reply-To: <1539337244-9505-1-git-send-email-govinds@codeaurora.org>
+References: <1539337244-9505-1-git-send-email-govinds@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
-To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>
+To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Govind Singh <govinds@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The chipidea controller has some special requirements during
-suspend/resume, override common ehci->hub_control to implement
-it.
+Q6 based WiFi fw loading is supported across
+different targets, ex: IPQ8074/QCS404. In order to
+support different fw names/pas id etc, populate
+hardcoded param using driver data.
 
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Govind Singh <govinds@codeaurora.org>
 ---
- drivers/usb/chipidea/host.c | 74 +++++++++++++++++++++++++++++++++++++++++=
-++++
- 1 file changed, 74 insertions(+)
+ drivers/remoteproc/qcom_q6v5_wcss.c | 36 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 32 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
-index d74a13d7c21c..b8e7d7fe3d53 100644
---- a/drivers/usb/chipidea/host.c
-+++ b/drivers/usb/chipidea/host.c
-@@ -234,6 +234,79 @@ void ci_hdrc_host_destroy(struct ci_hdrc *ci)
- 		host_stop(ci);
- }
-=20
-+/* The below code is based on tegra ehci driver */
-+static int ci_ehci_hub_control(
-+	struct usb_hcd	*hcd,
-+	u16		typeReq,
-+	u16		wValue,
-+	u16		wIndex,
-+	char		*buf,
-+	u16		wLength
-+)
-+{
-+	struct ehci_hcd	*ehci =3D hcd_to_ehci(hcd);
-+	u32 __iomem	*status_reg;
-+	u32		temp;
-+	unsigned long	flags;
-+	int		retval =3D 0;
-+	struct device *dev =3D hcd->self.controller;
-+	struct ci_hdrc *ci =3D dev_get_drvdata(dev);
+diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
+index f93e1e4..24e276d 100644
+--- a/drivers/remoteproc/qcom_q6v5_wcss.c
++++ b/drivers/remoteproc/qcom_q6v5_wcss.c
+@@ -8,6 +8,7 @@
+ #include <linux/kernel.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/module.h>
++#include <linux/of_device.h>
+ #include <linux/of_reserved_mem.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+@@ -16,7 +17,6 @@
+ #include "qcom_common.h"
+ #include "qcom_q6v5.h"
+ 
+-#define WCSS_CRASH_REASON		421
+ 
+ /* Q6SS Register Offsets */
+ #define Q6SS_RESET_REG		0x014
+@@ -70,6 +70,14 @@
+ #define TCSR_WCSS_CLK_MASK	0x1F
+ #define TCSR_WCSS_CLK_ENABLE	0x14
+ 
++struct wcss_data {
++	void (*pas_handover)(struct qcom_q6v5 *q6v5);
++	const char *firmware_name;
++	int crash_reason_smem;
++	int version;
++	int pas_id;
++};
 +
-+	status_reg =3D &ehci->regs->port_status[(wIndex & 0xff) - 1];
+ struct q6v5_wcss {
+ 	struct device *dev;
+ 
+@@ -91,6 +99,10 @@ struct q6v5_wcss {
+ 	phys_addr_t mem_reloc;
+ 	void *mem_region;
+ 	size_t mem_size;
 +
-+	spin_lock_irqsave(&ehci->lock, flags);
-+
-+	if (typeReq =3D=3D SetPortFeature && wValue =3D=3D USB_PORT_FEAT_SUSPEND)=
++	int crash_reason_smem;
++	int pas_id;
++	int version;
+ };
+ 
+ static int q6v5_wcss_reset(struct q6v5_wcss *wcss)
+@@ -527,12 +539,17 @@ static int q6v5_alloc_memory_region(struct q6v5_wcss *wcss)
+ 
+ static int q6v5_wcss_probe(struct platform_device *pdev)
  {
-+		temp =3D ehci_readl(ehci, status_reg);
-+		if ((temp & PORT_PE) =3D=3D 0 || (temp & PORT_RESET) !=3D 0) {
-+			retval =3D -EPIPE;
-+			goto done;
-+		}
++	const struct wcss_data *desc;
+ 	struct q6v5_wcss *wcss;
+ 	struct rproc *rproc;
+ 	int ret;
+ 
++	desc = of_device_get_match_data(&pdev->dev);
++	if (!desc)
++		return -EINVAL;
 +
-+		temp &=3D ~(PORT_RWC_BITS | PORT_WKCONN_E);
-+		temp |=3D PORT_WKDISC_E | PORT_WKOC_E;
-+		ehci_writel(ehci, temp | PORT_SUSPEND, status_reg);
-+
-+		/*
-+		 * If a transaction is in progress, there may be a delay in
-+		 * suspending the port. Poll until the port is suspended.
-+		 */
-+		if (ehci_handshake(ehci, status_reg, PORT_SUSPEND,
-+						PORT_SUSPEND, 5000))
-+			ehci_err(ehci, "timeout waiting for SUSPEND\n");
-+
-+		if (ci->platdata->flags & CI_HDRC_IMX_IS_HSIC) {
-+			if (ci->platdata->notify_event)
-+				ci->platdata->notify_event
-+					(ci, CI_HDRC_IMX_HSIC_SUSPEND_EVENT);
-+			ci_ehci_override_wakeup_flag(ehci, status_reg,
-+				PORT_WKDISC_E | PORT_WKCONN_E, false);
-+		}
-+
-+		set_bit((wIndex & 0xff) - 1, &ehci->suspended_ports);
-+		goto done;
-+	}
-+
-+	/*
-+	 * After resume has finished, it needs do some post resume
-+	 * operation for some SoCs.
-+	 */
-+	else if (typeReq =3D=3D ClearPortFeature &&
-+					wValue =3D=3D USB_PORT_FEAT_C_SUSPEND) {
-+
-+		/* Make sure the resume has finished, it should be finished */
-+		if (ehci_handshake(ehci, status_reg, PORT_RESUME, 0, 25000))
-+			ehci_err(ehci, "timeout waiting for resume\n");
-+	}
-+
-+	spin_unlock_irqrestore(&ehci->lock, flags);
-+
-+	/* Handle the hub control events here */
-+	return ehci_hub_control(hcd, typeReq, wValue, wIndex, buf, wLength);
-+done:
-+	spin_unlock_irqrestore(&ehci->lock, flags);
-+	return retval;
-+}
- static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
- {
- 	struct ehci_hcd *ehci =3D hcd_to_ehci(hcd);
-@@ -305,4 +378,5 @@ void ci_hdrc_host_driver_init(void)
- 	ehci_init_driver(&ci_ehci_hc_driver, &ehci_ci_overrides);
- 	orig_bus_suspend =3D ci_ehci_hc_driver.bus_suspend;
- 	ci_ehci_hc_driver.bus_suspend =3D ci_ehci_bus_suspend;
-+	ci_ehci_hc_driver.hub_control =3D ci_ehci_hub_control;
+ 	rproc = rproc_alloc(&pdev->dev, pdev->name, &q6v5_wcss_ops,
+-			    "IPQ8074/q6_fw.mdt", sizeof(*wcss));
++			    desc->firmware_name, sizeof(*wcss));
+ 	if (!rproc) {
+ 		dev_err(&pdev->dev, "failed to allocate rproc\n");
+ 		return -ENOMEM;
+@@ -540,6 +557,9 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
+ 
+ 	wcss = rproc->priv;
+ 	wcss->dev = &pdev->dev;
++	wcss->pas_id = desc->pas_id;
++	wcss->version = desc->version;
++	wcss->crash_reason_smem = desc->crash_reason_smem;
+ 
+ 	ret = q6v5_wcss_init_mmio(wcss, pdev);
+ 	if (ret)
+@@ -553,7 +573,8 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto free_rproc;
+ 
+-	ret = qcom_q6v5_init(&wcss->q6v5, pdev, rproc, WCSS_CRASH_REASON, NULL);
++	ret = qcom_q6v5_init(&wcss->q6v5, pdev, rproc, desc->crash_reason_smem,
++			     desc->pas_handover);
+ 	if (ret)
+ 		goto free_rproc;
+ 
+@@ -581,8 +602,15 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
+ 	return 0;
  }
---=20
-2.14.1
+ 
++static const struct wcss_data wcss_ipq8074_res_init = {
++	.firmware_name = "IPQ8074/q6_fw.mdt",
++	.crash_reason_smem = 421,
++	.pas_handover = NULL,
++};
++
+ static const struct of_device_id q6v5_wcss_of_match[] = {
+-	{ .compatible = "qcom,ipq8074-wcss-pil" },
++	{ .compatible = "qcom,ipq8074-wcss-pil", .data = &wcss_ipq8074_res_init },
++
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, q6v5_wcss_of_match);
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
