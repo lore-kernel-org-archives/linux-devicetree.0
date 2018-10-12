@@ -1,106 +1,61 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH RFC v1 4/8] drivers: qcom: cpu_pd: add cpu power domain
- support using genpd
-Date: Fri, 12 Oct 2018 11:23:10 +0200
-Message-ID: <CAPDyKFoVv99HN080p_pV_Qbmrk9Jeq3kgYBrpTToP6jwuaUo5A@mail.gmail.com>
-References: <1539206455-29342-1-git-send-email-rplsssn@codeaurora.org>
- <1539206455-29342-5-git-send-email-rplsssn@codeaurora.org>
- <20181011111306.GB32752@e107155-lin> <CAPDyKFpXJ4MbqFOmDboBuR_1sziyuDi3qgKVvhokaAnQQ+kzjA@mail.gmail.com>
- <20181011155956.GA28583@e107155-lin>
+From: Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
+Subject: Re: [PATCH v3] arm64: new board - Emlid Neutis N5
+Date: Fri, 12 Oct 2018 12:35:23 +0300
+Message-ID: <20181012093523.GA29014@imagebutcher>
+References: <1538745949-13188-2-git-send-email-aleksandr.aleksandrov@emlid.com>
+ <1539012044-29998-1-git-send-email-aleksandr.aleksandrov@emlid.com>
+ <1539012044-29998-2-git-send-email-aleksandr.aleksandrov@emlid.com>
+ <20181010144957.exrlupoph7ovsmdw@flea>
+ <9398571539259289@myt4-929fb874f3f2.qloud-c.yandex.net>
+ <2d09d6c0-0404-589d-2c34-da846cff4fb8@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181011155956.GA28583@e107155-lin>
+Content-Disposition: inline
+In-Reply-To: <2d09d6c0-0404-589d-2c34-da846cff4fb8@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Evan Green <evgreen@chromium.org>, Doug Anderson <dianders@chromium.org>, mka@chromium.org, Lina Iyer <ilina@codeaurora.org>
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, David Lechner <david@lechnology.com>, Thierry Reding <treding@nvidia.com>, Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>, Johan Hovold <johan@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11 October 2018 at 17:59, Sudeep Holla <sudeep.holla@arm.com> wrote:
-> On Thu, Oct 11, 2018 at 05:27:59PM +0200, Ulf Hansson wrote:
->> On 11 October 2018 at 13:13, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> > On Thu, Oct 11, 2018 at 02:50:51AM +0530, Raju P.L.S.S.S.N wrote:
->> >> RPMH based targets require that the sleep and wake state request votes
->> >> be sent during system low power mode entry. The votes help reduce the
->> >> power consumption when the AP is not using them. The votes sent by the
->> >> clients are cached in RPMH controller and needs to be flushed when the
->> >> last cpu enters low power mode. So add cpu power domain using Linux
->> >> generic power domain infrastructure to perform necessary tasks as part
->> >> of domain power down.
->> >>
->> >
->> > You seem to have either randomly chosen just 3 patches from Lina/Ulf's
->> > CPU genpd series or this series doesn't entirely depend on it ?
->>
->> Yep, it not easy to follow. But I do understand what you are trying to do here.
->>
->> >
->> > If latter, how does this work with PSCI CPU_SUSPEND operations ?
->> >
->> > And why this can be part of PSCI firmware implementation. Only PSCI
->> > firmware needs if RPMH votes need to be flushed or not. So, honestly
->> > I don't see the need for this in Linux.
->>
->> I do think there is clear need for this in Linux. More precisely,
->> since the PSCI firmware have knowledge solely about CPUs (and clusters
->> of CPUs), but not about other shared resources/devices present on the
->> SoC.
->>
->
-> I disagree. Even with OSI, you indicate the cluster power off though
-> PSCI CPU_SUSPEND call. If for any async wakeup reasons, firmware decides
-> not to enter cluster OFF, then it may skip flushing RPMH vote. So doing
-> it in PSCI is more correct and elegant to avoid such corner cases.
->
->> What Raju is trying to do here, is to manage those resources which
->> needs special treatment, before and after the CPU (likely cluster) is
->> going idle and returns from idle.
->>
->
-> OK I get that, but why is Linux better than PSCI. I have my reasoning
-> above.
+Hi,
 
-I assume Lina, in the other thread from Raju, have provided you the
-details why PSCI is not the place to do this and why Linux need to be
-involved. In any case, let's continue that discussion in that thread
-rather than here.
+> >>      +/ {
+> >>      + model = "Emlid Neutis N5 Developer board";
+> >>      + compatible = "emlid,emlid-neutis-n5-devboard",
+> >>      + "emlid,emlid-neutis-n5",
+> >>
+> >> Do you need the two emlid there? What comes before the comma is the
+> >> vendor, while what is after is the model.
+> >  
+> > I think emlid-neutis-n5 module could be useful in the future, no need
+> > this now.
+> 
+> You misunderstand: The point would be to use, e.g., "emlid,neutis-n5"
+> instead of "emlid,emlid-neutis-n5" with duplicate "emlid,emlid-". It is
+> orthogonal to having multiple compatible strings.
 
->
->> One question here though, what particular idle state is relevant for
->> the QCOM SoC to take last-man-actions for? I assume it's only cluster
->> idle states, and not about cpu idle states, no? Raju, can you please
->> clarify?
->>
->
-> I assume so. I did see some comment or commit message to indicate the
-> same.
->
->> Historically, the typical solution have been to use the
->> cpu_cluster_pm_enter|exit() notifiers. Those could potentially be
->> replaced by instead building a hierarchical topology, using
->> master/subdomain of genpd/"power-domains", along the lines of what
->> Raju is doing. However, I am not sure if that is the correct approach,
->> at least we need to make sure it models the HW in DT correctly.
->>
->
-> Indeed. I am not sure how to represent both PSCI and this power domains ?
-> Though I believe the latter is not required at all.
+Oh, I agree. No need to duplicate "emlid". Thank you!
 
-After my re-work of the PSCI power domain series, I believe the
-power-domain that Raju is adding, should then be modeled as the master
-power-domain of the PSCI *cluster* power domain. But, as stated, I am
-not sure if it's the correct way to model the HW/topology. Maybe it
-is.
+> >>  +&uart1 {
+> >>  + pinctrl-names = "default";
+> >>  + pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
+> >>  + status = "okay";
+> >>  +};
+> >>
+> >> I guess this is for bluetooth? Have you tested serdev drivers?
+> >>
+> > Yes, bluetooth is connected over uart1.
+> > You mean if I have tested bluetooth stack via serial device?
+> 
+> Not quite, we're missing a child node within uart1 for a serdev driver.
+> Is there no such driver yet for your Bluetooth chipset, or did you not
+> yet check?
 
-The other option is to explore the cpu_cluster_pm_enter|exit(), which
-today is the only viable solution in the kernel. In principle we then
-need to call cpu_cluster_pm_enter() from the PSCI's cluster PM domain
-genpd ->power_off() callback, and cpu_cluster_pm_exit() from the
-->power_on() callback.
+Got it. I haven't checked a serdev driver.
 
-Or maybe we simply need something entirely new, like genpd PM
-domain-on/off notifiers, which may scale better. It has even been
-suggested on the mailing list, long time ago.
+Maxim, the SoM can't be run without a motherboard. According to your last message
+I don't change dts files, right?
 
-Kind regards
-Uffe
+Aleksandr 
