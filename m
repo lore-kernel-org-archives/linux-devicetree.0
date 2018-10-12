@@ -1,146 +1,169 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH RFC v1 2/8] kernel/cpu_pm: Manage runtime PM in the idle
- path for CPUs
-Date: Fri, 12 Oct 2018 12:20:08 +0200
-Message-ID: <CAPDyKFr7+_-t9d+8YMGWW8CURnfD0dHeBHSB_D8rFTMXXDem2g@mail.gmail.com>
-References: <1539206455-29342-1-git-send-email-rplsssn@codeaurora.org>
- <1539206455-29342-3-git-send-email-rplsssn@codeaurora.org>
- <8161939.SRDo8Qx48D@aspire.rjw.lan> <20181011220842.GE2371@codeaurora.org> <CAJZ5v0hXM9krdacL09kJSn30AL_5kN+4U3d02rZX7-V2DWg_VQ@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v6 2/9] PCI: mediatek: Fixup class ID for MT7622 as
+ PCI_CLASS_BRIDGE_PCI
+Date: Fri, 12 Oct 2018 11:22:30 +0100
+Message-ID: <20181012102230.GA23257@e107981-ln.cambridge.arm.com>
+References: <1538969088-7136-1-git-send-email-honghui.zhang@mediatek.com>
+ <1538969088-7136-3-git-send-email-honghui.zhang@mediatek.com>
+ <20181008172337.GA13538@e107981-ln.cambridge.arm.com>
+ <1539054495.6246.31.camel@mhfsdcap03>
+ <20181011113748.GA3574@e107981-ln.cambridge.arm.com>
+ <1539331289.6246.61.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJZ5v0hXM9krdacL09kJSn30AL_5kN+4U3d02rZX7-V2DWg_VQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1539331289.6246.61.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Lina Iyer <ilina@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Kevin Hilman <khilman@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, "Nayak, Rajendra" <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Evan Green <evgreen@chromium.org>, Doug Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
+To: Honghui Zhang <honghui.zhang@mediatek.com>
+Cc: bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com, ulf.hansson@linaro.org, marc.zyngier@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, youlin.pei@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 12 October 2018 at 09:43, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> On Fri, Oct 12, 2018 at 12:08 AM Lina Iyer <ilina@codeaurora.org> wrote:
->>
->> On Thu, Oct 11 2018 at 14:56 -0600, Rafael J. Wysocki wrote:
->> >On Wednesday, October 10, 2018 11:20:49 PM CEST Raju P.L.S.S.S.N wrote:
->> >> From: Ulf Hansson <ulf.hansson@linaro.org>
->> >>
->> >> To allow CPUs being power managed by PM domains, let's deploy support for
->> >> runtime PM for the CPU's corresponding struct device.
->> >>
->> >> More precisely, at the point when the CPU is about to enter an idle state,
->> >> decrease the runtime PM usage count for its corresponding struct device,
->> >> via calling pm_runtime_put_sync_suspend(). Then, at the point when the CPU
->> >> resumes from idle, let's increase the runtime PM usage count, via calling
->> >> pm_runtime_get_sync().
->> >>
->> >> Cc: Lina Iyer <ilina@codeaurora.org>
->> >> Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
->> >> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
->> >> Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
->> >> (am from https://patchwork.kernel.org/patch/10478153/)
->> >> ---
->> >>  kernel/cpu_pm.c | 11 +++++++++++
->> >>  1 file changed, 11 insertions(+)
->> >>
->> >> diff --git a/kernel/cpu_pm.c b/kernel/cpu_pm.c
->> >> index 67b02e1..492d4a8 100644
->> >> --- a/kernel/cpu_pm.c
->> >> +++ b/kernel/cpu_pm.c
->> >> @@ -16,9 +16,11 @@
->> >>   */
->> >>
->> >>  #include <linux/kernel.h>
->> >> +#include <linux/cpu.h>
->> >>  #include <linux/cpu_pm.h>
->> >>  #include <linux/module.h>
->> >>  #include <linux/notifier.h>
->> >> +#include <linux/pm_runtime.h>
->> >>  #include <linux/spinlock.h>
->> >>  #include <linux/syscore_ops.h>
->> >>
->> >> @@ -91,6 +93,7 @@ int cpu_pm_enter(void)
->> >>  {
->> >>      int nr_calls;
->> >>      int ret = 0;
->> >> +    struct device *dev = get_cpu_device(smp_processor_id());
->> >>
->> >>      ret = cpu_pm_notify(CPU_PM_ENTER, -1, &nr_calls);
->> >>      if (ret)
->> >> @@ -100,6 +103,9 @@ int cpu_pm_enter(void)
->> >>               */
->> >>              cpu_pm_notify(CPU_PM_ENTER_FAILED, nr_calls - 1, NULL);
->> >>
->> >> +    if (!ret && dev && dev->pm_domain)
->> >> +            pm_runtime_put_sync_suspend(dev);
->> >
->> >This may cause a power domain to go off, but if it goes off, then the idle
->> >governor has already selected idle states for all of the CPUs in that domain.
->> >
->> >Is there any way to ensure that turning the domain off (and later on) will
->> >no cause the target residency and exit latency expectations for those idle
->> >states to be exceeded?
->> >
->> Good point.
->>
->> The cluster states should account for that additional latency.
->
-> But even then, you need to be sure that the idle governor selected
-> "cluster" states for all of the CPUs in the cluster.  It might select
-> WFI for one of them for reasons unrelated to the distance to the next
-> timer (so to speak), for example.
+On Fri, Oct 12, 2018 at 04:01:29PM +0800, Honghui Zhang wrote:
+> On Thu, 2018-10-11 at 12:38 +0100, Lorenzo Pieralisi wrote:
+> > On Tue, Oct 09, 2018 at 11:08:15AM +0800, Honghui Zhang wrote:
+> > > On Mon, 2018-10-08 at 18:23 +0100, Lorenzo Pieralisi wrote:
+> > > > On Mon, Oct 08, 2018 at 11:24:41AM +0800, honghui.zhang@mediatek.com wrote:
+> > > > > From: Honghui Zhang <honghui.zhang@mediatek.com>
+> > > > > 
+> > > > > The PCIe controller of MT7622 has TYPE 1 configuration space type, but
+> > > > > the HW default class type values is invalid.
+> > > > > 
+> > > > > The commit 101c92dc80c8 ("PCI: mediatek: Set up vendor ID and class
+> > > > > type for MT7622") have set the class ID for MT7622 as
+> > > > > PCI_CLASS_BRIDGE_HOSTe, but it's not workable for MT7622:
+> > > > > 
+> > > > > In __pci_bus_assign_resources, the framework only setup bridge's
+> > > > > resource window only if class type is PCI_CLASS_BRIDGE_PCI. Or it
+> > > > > will leave the subordinary PCIe device's MMIO window un-touched.
+> > 
+> > Can you please provide me with a full log of the issue ?
+> > 
+> > What is the bug this patch is actually fixing ?
+> > 
+> > > > > Fixup the class type to PCI_CLASS_BRIDGE_PCI as most of the controller
+> > > > > driver do.
+> > > > 
+> > > > I think that this patch is correct but the commit log fails to pin point
+> > > > the problem. The IP you are programming is a root port, that's why you
+> > > > have to have the proper class code, the patch looks fine but I would
+> > > > like to peek Bjorn's brain on this since it is a fundamental concept.
+> > > > 
+> > > 
+> > > I'm a bit confused with the concepts of PCI_CLASS_BRIDGE_HOST and
+> > > PCI_CLASS_BRIDGE_PCI, from PCI express spec,
+> > > 4.0r1.0(PCI_Express_Base_4.0r1.0_September-27-2017-c), Host Bridge is
+> > > "part of a Root Complex that connects a host CPU or CPUs to a
+> > > Hierarchy". While Root Complex defines as "A defined System Element that
+> > > includes at least one Host Bridge, Root port, or Root complex Integrated
+> > > Endpoint".
+> > > 
+> > > But according to my understanding, most of the root port IPs integrated
+> > > with a "PCI_CLASS_BRIDGE_PCI", which has type 1 configuration space and
+> > > could be saw as a pci device when using lspci.
+> > > 
+> > > And for MT7622, it integrated with block of internal control registers,
+> > > type 1 configuration space, and is considered as a root complex.
+> > 
+> > I assume you mean a type 1 config header here. I do not think it
+> > is mandatory for a host bridge to have a type 1 config header
+> > (and related bridge windows + primary/secondary/subordinate bus
+> > numbers) but I do not know how the IP you are programming is
+> > designed.
+> 
+> Yes, MT7622 has the type 1 config header and related bridge windows and
+> primary/secondary/subordinate bus numbers.
+> 
+> > 
+> > If the host bridge needs its memory window to be configured you can
+> > easily do that in the driver (with driver specific code) without
+> > requiring the generic PCI resource core to do that for you, the host
+> > bridge is the root of the bus I do not see any reason why it should
+> > be up to core PCI code to assign it, it is preprogrammed.
+> > 
+> Thanks for explain this.
+> Yes, the MT7622 bridge needs its memory window to be configured but I
+> prefer the PCI resource core to do this for the following reasons:
+> 1. MTK have MT7622 and MT2712, they pretty much using the same IP, but
+> have different memory window base. Currently we using device tree to
+> pass the memory window base. Take using of PCI resource core code to
+> parse and assign those resource will release the burden of driver.
+> 2. I do not want to re-implement the resource parse code to get the
+> memory base from device node. And hard code the memory base in driver is
+> not quite elegant.
+> 3. Most of the host driver which I referenced are using the PCI resource
+> core to help with it's memory window configure, I guess following the
+> majority way maybe better even they may have slit different of the IP
+> design from MTK.
+> 4. Passing the memory base in device node make it more flexible to
+> change the memory window base (in the HW acceptable range) in case of
+> some special EP device required some special PCI address range.
+> 5. MT7622 and MT2712 have the pretty much same IP only MT7622's HW has
+> set the class type to an un-proper class type. Set it to the same values
+> as MT2712 is an easy way to fix.
 
-The approach here is that cpu_pm_enter isn't called for WFI, hence
-there is no pm_runtime_get|put() done for a CPU going to WFI. In other
-words, the cluster will never be powered off/on if there is any CPU in
-the cluster in WFI.
+We do what needs to be done. From what you are saying, your IP
+implements a config 1 type header and that defines it as a PCI-to-PCI
+bridge (eg a root port, of sorts).
 
->
->> Just the CPU's power down states need not care about that.
->
-> The meaning of this sentence isn't particularly clear to me. :-)
->
->> But, it would be nice if the PM domain governor could be cognizant of
->> the idle state chosen for each CPU, that way we dont configure the
->> domain to be powered off when the CPUs have just chosen to power down
->> (not chosen a cluster state). I think that is a whole different topic to
->> discuss.
->
-> This needs to be sorted out before the approach becomes viable, though.
->
-> Basically, the domain governor needs to track what the idle governor
-> did for all of the CPUs in the domain and only let the domain go off
-> if the latency matches all of the states selected by the idle
-> governor.  Otherwise the idle governor's assumptions would be violated
-> and it would become essentially useless overhead.
+The points you are making above are software, I understand them but
+that's not what we are discussing here.
 
-That is correct!
+I want you to define the class of your IP according to what your IP
+is and it seems _reasonable_ to me to define the IP as a PCI-to-PCI
+bridge class from the information you are providing.
 
-The reason why it works in the current approach, is because there is
-only one additional CPU idle state besides WFI. Hence
-pm_runtime_get|put() is correctly called, as it's done only when the
-cpuidle-governor has picked the deepest idle state for the CPU.
+I would like you to:
 
-To solve this in the long run (where CPUs have > 1 idle state besides
-WFI), I think there are two options.
+1) Rewrite the commit log and explain why your IP needs class
+   reprogramming. I do not care about driver software complexity,
+   I want you to describe how HW works. I do not want you to define
+   a class for your IP because that makes the driver simpler, I want
+   you to define a class for your IP to describe to the kernel what
+   that IP really is, which is different things.
+2) Define and report the bug you are fixing in the commit log
+3) Provide a Fixes: tag pointing at the faulty commit
 
-1)
-We either have to select the idle state of the CPU (and not only the
-cluster) as part of the genpd and the genpd governors. This makes
-genpd in charge and can thus decide internally what idle state that
-should be selected, even hierarchically. Then it becomes a matter of
-how to share code and interact between cpuidle/cpuidle-governors and
-genpd.
+Thanks for your time providing information.
 
-2)
-Leave genpd and the genpd governor to deal with cluster idle states,
-but not the CPU idle states, as is the suggested approach. Then, to
-solve the problem you pointed out, we need to provide the cpuidle
-driver with information about which of the available idle state(s) it
-should call pm_runtime_get|put() for, as to allow cluster idle
-management through genpd.
+Lorenzo
 
-I am currently looking at option 2), as I think it requires less
-changes and I guess it's better to move slowly forward.
-
-Does it make sense?
-
-Kind regards
-Uffe
+> thanks.
+> > > I'm not sure which CLASS type it should have:
+> > > From PCI_Code-ID_r_1_10__v8-Nov_2017, class type of
+> > > 0x0604(PCI_CLASS_BRIDGE_PCI) is defined as a PCI-to-PCI bridge, not
+> > > literally suitable for MT7622(which is a root complex)(In my personal
+> > > opinion). But it is the only workable CLASS type for MT7622 in current
+> > > kernel.
+> > > 
+> > > > If the kernel does not assign resources unless it detects a
+> > > > PCI_CLASS_BRIDGE_PCI this means that for components that are
+> > > > actually PCI_CLASS_BRIDGE_HOST their register set must come
+> > > > preprogrammed unless I am missing something.
+> > > > 
+> > > 
+> > > In the function pci_request_resource_alignment, it will by pass the
+> > > resource assignment for PCI_CLASS_BRIDGE_HOST, though I'm not figured
+> > > out why.
+> > > 
+> > > > I would like to get to the bottom of this since it is a fundamental
+> > > > enumeration concept.
+> > > > 
+> > > 
+> > > Do you like me to re-write the commit message for this patch and put the
+> > > above information in? Or just not mention the PCI_CLASS_BRIDGE_HOST
+> > > assign resource routine?
+> > 
+> > I want to understand where the problem is and whether it is right to
+> > define the component as a PCI bridge rather than a host bridge.
+> > 
+> 
+> I will update the commit message (put some of the above reasons in the
+> commit message) and send a new version of this patch if it's acceptable
+> for you.
+> 
+> Thanks
+> > Lorenzo
+> 
+> 
+> 
