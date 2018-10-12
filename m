@@ -1,115 +1,140 @@
-From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 0/7] Add virtio-iommu driver
-Date: Fri, 12 Oct 2018 13:00:34 -0400
-Message-ID: <20181012125443-mutt-send-email-mst@kernel.org>
-References: <20181012145917.6840-1-jean-philippe.brucker@arm.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH RFC v1 7/8] drivers: qcom: cpu_pd: Handle cpu hotplug in
+ the domain
+Date: Fri, 12 Oct 2018 18:00:40 +0100
+Message-ID: <20181012170040.GA21057@e107155-lin>
+References: <1539206455-29342-1-git-send-email-rplsssn@codeaurora.org>
+ <1539206455-29342-8-git-send-email-rplsssn@codeaurora.org>
+ <20181011112013.GC32752@e107155-lin>
+ <20181011160053.GA2371@codeaurora.org>
+ <20181011161927.GC28583@e107155-lin>
+ <20181011165822.GB2371@codeaurora.org>
+ <20181011173733.GA26447@e107155-lin>
+ <20181011210609.GD2371@codeaurora.org>
+ <20181012150429.GH3401@e107155-lin>
+ <20181012160427.GG2371@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181012145917.6840-1-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, tnowicki-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org
+In-Reply-To: <20181012160427.GG2371@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, ulf.hansson@linaro.org, khilman@kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 12, 2018 at 03:59:10PM +0100, Jean-Philippe Brucker wrote:
-> Implement the virtio-iommu driver, following specification v0.8 [1].
-> Changes since v2 [2]:
-> 
-> * Patches 2-4 allow virtio-iommu to use the PCI transport, since QEMU
->   would like to phase out the MMIO transport. This produces a complex
->   topology where the programming interface of the IOMMU could appear
->   lower than the endpoints that it translates. It's not unheard of (e.g.
->   AMD IOMMU), and the guest easily copes with this.
->   
->   The "Firmware description" section of the specification has been
->   updated with all combinations of PCI, MMIO and DT, ACPI.
-> 
-> * Fix structures layout, they don't need the "packed" attribute anymore.
-> 
-> * While we're at it, add domain parameter to DETACH request, and leave
->   some padding. This way the next version, that adds PASID support,
->   won't have to introduce a "DETACH2" request to stay backward
->   compatible.
-> 
-> * Require virtio device 1.0+. Remove legacy transport notes from the
->   specification.
-> 
-> * Request timeout is now only enabled with DEBUG.
-> 
-> * The patch for VFIO Kconfig (previously patch 5/5) is in next.
-> 
-> You can find Linux driver and kvmtool device on branches
-> virtio-iommu/v0.8 [3] (currently based on 4.19-rc7 but rebasing onto
-> next only produced a trivial conflict). Branch virtio-iommu/devel
-> contains a few patches that I'd like to send once the base is upstream:
-> 
-> * virtio-iommu as a module. It got *much* nicer after Rob's probe
->   deferral rework, but I still have a bug to fix when re-loading the
->   virtio-iommu module.
-> 
-> * ACPI support requires a minor IORT spec update (reservation of node
->   ID). I think it should be easier to obtain once the device and drivers
->   are upstream.
-> 
-> [1] Virtio-iommu specification v0.8, diff from v0.7, and sources
->     git://linux-arm.org/virtio-iommu.git virtio-iommu/v0.8
->     http://jpbrucker.net/virtio-iommu/spec/v0.8/virtio-iommu-v0.8.pdf
->     http://jpbrucker.net/virtio-iommu/spec/diffs/virtio-iommu-pdf-diff-v0.7-v0.8.pdf
-> 
-> [2] [PATCH v2 0/5] Add virtio-iommu driver
->     https://www.spinics.net/lists/kvm/msg170655.html
-> 
-> [3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.8
->     git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.8
-> 
-> Jean-Philippe Brucker (7):
->   dt-bindings: virtio-mmio: Add IOMMU description
->   dt-bindings: virtio: Add virtio-pci-iommu node
->   PCI: OF: allow endpoints to bypass the iommu
->   PCI: OF: Initialize dev->fwnode appropriately
->   iommu: Add virtio-iommu driver
->   iommu/virtio: Add probe request
->   iommu/virtio: Add event queue
-> 
->  .../devicetree/bindings/virtio/iommu.txt      |   66 +
->  .../devicetree/bindings/virtio/mmio.txt       |   30 +
->  MAINTAINERS                                   |    7 +
->  drivers/iommu/Kconfig                         |   11 +
->  drivers/iommu/Makefile                        |    1 +
->  drivers/iommu/virtio-iommu.c                  | 1171 +++++++++++++++++
->  drivers/pci/of.c                              |   14 +-
->  include/uapi/linux/virtio_ids.h               |    1 +
->  include/uapi/linux/virtio_iommu.h             |  159 +++
->  9 files changed, 1457 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
->  create mode 100644 drivers/iommu/virtio-iommu.c
->  create mode 100644 include/uapi/linux/virtio_iommu.h
+On Fri, Oct 12, 2018 at 10:04:27AM -0600, Lina Iyer wrote:
+> On Fri, Oct 12 2018 at 09:04 -0600, Sudeep Holla wrote:
 
-This all looks good to me. Minor nits:
-- I think DEBUG mode is best just removed for now
-- Slightly wrong patch splitup causing a misaligned structure
-  in uapi until all patches are applied.
+[...]
 
-You should Cc Bjorn on the pci change - I'd like to see his ack on it
-being merged through my tree.
+> > Why does CPU going down says that another (screen - supposedly shared)
+> > resource needs to be relinquished ? Shouldn't display decide that on it's
+> > own ? I have no idea why screen/display is brought into this discussion.
+>
+> > CPU can just say: hey I am going down and I don't need my resource.
+> > How can it say: hey I am going down and display or screen also doesn't
+> > need the resource. On a multi-cluster, how will the last CPU on one know
+> > that it needs to act on behalf of the shared resource instead of another
+> > cluster.
+> >
+> Fair questions. Now how would the driver know that the CPUs have powered
+> down, to say, if you are not active, then you can put these resources in
+> low power state?
+> Well they don't, because sending out CPU power down notifications for
+> all CPUs and the cluster are expensive and can lead to lot of latency.
+> Instead, the drivers let the RPMH driver know that if and when the CPUs
+> power down, then you could request these resources to be in that low
+> power state. The CPU PD power off callbacks trigger the RPMH driver to
+> flush and request a low power state on behalf of all the drivers.
+>
+> Drivers let know what their active state request for the resource is as
+> well as their CPU powered down state request is, in advance. The
+> 'active' request is made immediately, while the 'sleep' request is
+> staged in. When the CPUs are to be powered off, this request is written
+> into a hardware registers. The CPU PM domain controller, after powering
+> down, will make these state requests in hardware thereby lowering the
+> standby power. The resource state is brought back into the 'active'
+> value before powering on the first CPU.
+>
 
-And pls Cc the virtio-dev list on any virtio uapi changes.
+My understanding was in sync with most of the above except the staging
+part in advance. So thanks for the detailed explanation.
 
-At a feature level I have some ideas for more features we
-could add, but for now I think I'll put this version in -next
-while you iron out the above wrinkles. Hope you can make the
-merge window.
+Yes all these are fine but with multiple power-domains/cluster, it's
+hard to determine the first CPU. You may be able to identify it within
+the power domain but not system wide. So this doesn't scale with large
+systems(e.g. 4 - 8 clusters with 16 CPUs).
 
-> -- 
-> 2.19.1
+> > I think we are mixing the system sleep states with CPU idle here.
+> > If it's system sleeps states, the we need to deal it in some system ops
+> > when it's the last CPU in the system and not the cluster/power domain.
+> >
+> I think the confusion for you is system sleep vs suspend. System sleep
+> here (probably more of a QC terminology), refers to powering down the
+> entire SoC for very small durations, while not actually suspended. The
+> drivers are unaware that this is happening. No hotplug happens and the
+> interrupts are not migrated during system sleep. When all the CPUs go
+> into cpuidle, the system sleep state is activated and the resource
+> requirements are lowered. The resources are brought back to their
+> previous active values before we exit cpuidle on any CPU. The drivers
+> have no idea that this happened. We have been doing this on QCOM SoCs
+> for a decade, so this is not something new for this SoC. Every QCOM SoC
+> has been doing this, albeit differently because of their architecture.
+> The newer ones do most of these transitions in hardware as opposed to an
+> remote CPU. But this is the first time, we are upstreaming this :)
+>
+
+Indeed, I know mobile platforms do such optimisations and I agree it may
+save power. As I mentioned above it doesn't scale well with large systems
+and also even with single power domains having multiple idle states where
+only one state can do this system level idle but not all. As I mentioned
+in the other email to Ulf, it's had to generalise this even with DT.
+So it's better to have this dealt transparently in the firmware.
+
+> Suspend is an altogether another idle state where drivers are notified
+> and relinquish their resources before the CPU powers down. Similar
+> things happen there as well, but at a much deeper level. Resources may
+> be turned off completely instead of just lowering to a low power state.
+>
+
+Yes I understand the difference.
+
+> For example, suspend happens when the screen times out on a phone.
+> System sleep happens few hundred times when you are actively reading
+> something on the phone.
+>
+
+Sure
+
+> > > > Having to adapt DT to the firmware though the feature is fully discoverable
+> > > > is not at all good IMO. So the DT in this series *should work* with OSI
+> > > > mode if the firmware has the support for it, it's as simple as that.
+> > > >
+> > > The firmware is ATF and does not support OSI.
+> > >
+> >
+> > OK, to keep it simple: If a platform with PC mode only replaces the firmware
+> > with one that has OSI mode, we *shouldn't need* to change DT to suite it.
+> > I think I asked Ulf to add something similar in DT bindings.
+> >
+> Fair point and that is what this RFC intends to bring. That PM domains
+> are useful not just for PSCI, but also for Linux PM drivers such as this
+> one. We will discuss more how we can fold in platform specific
+> activities along with PSCI OSI state determination when the
+> domain->power_off is called. I have some ideas on that. Was hoping to
+> get to that after the inital idea is conveyed.
+>
+
+Got it. This is not a new discussion, I am sure this has been discussed
+several times in the past. We have so much platform dependent code that
+coming up with generic solution with DT is challenging. I have mentioned
+just few of those. I am sure the list is much bigger. Hence the suggestion
+is always to got with firmware based solution which is bested suited for
+upstream and proven to work(e.g. on x86).
+
+Have a nice weekend!
+
+--
+Regards,
+Sudeep
