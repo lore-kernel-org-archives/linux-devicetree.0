@@ -1,154 +1,69 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/7] dt-bindings: mfd: ds90ux9xx: add description of TI DS90Ux9xx ICs
-Date: Fri, 12 Oct 2018 14:44:23 +0300
-Message-ID: <1884479.fINZhmP2Mi@avalon>
-References: <20181008211205.2900-1-vz@mleia.com> <20181008211205.2900-2-vz@mleia.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 0/3] treewide: add vibrator support for various MSM
+ SOCs
+Date: Fri, 12 Oct 2018 13:47:49 +0200
+Message-ID: <20181012114749.GC31561@ulmo>
+References: <20180926235112.25710-1-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wxDdMuZNg1r63Hyj"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181008211205.2900-2-vz@mleia.com>
+Content-Disposition: inline
+In-Reply-To: <20180926235112.25710-1-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Sandeep Jain <Sandeep_Jain@mentor.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+To: Brian Masney <masneyb@onstation.org>
+Cc: linux-pwm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, jonathan@marek.ca, ctatlor97@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
 
-Thank you for the patch.
+--wxDdMuZNg1r63Hyj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tuesday, 9 October 2018 00:11:59 EEST Vladimir Zapolskiy wrote:
-> From: Sandeep Jain <Sandeep_Jain@mentor.com>
-> 
-> The change adds device tree binding description of TI DS90Ux9xx
-> series of serializer and deserializer controllers which support video,
-> audio and control data transmission over FPD-III Link connection.
-> 
-> Signed-off-by: Sandeep Jain <Sandeep_Jain@mentor.com>
-> [vzapolskiy: various updates and corrections of secondary importance]
-> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-> ---
->  .../devicetree/bindings/mfd/ti,ds90ux9xx.txt  | 66 +++++++++++++++++++
->  1 file changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/ti,ds90ux9xx.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/ti,ds90ux9xx.txt
-> b/Documentation/devicetree/bindings/mfd/ti,ds90ux9xx.txt new file mode
-> 100644
-> index 000000000000..0733da88f7ef
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/ti,ds90ux9xx.txt
-> @@ -0,0 +1,66 @@
-> +Texas Instruments DS90Ux9xx de-/serializer controllers
-> +
-> +Required properties:
-> +- compatible: Must contain a generic "ti,ds90ux9xx" value and
-> +	may contain one more specific value from the list:
+On Wed, Sep 26, 2018 at 07:51:09PM -0400, Brian Masney wrote:
+> This patch set adds support for the vibrator found on various Qualcomm
+> MSM SOCs. This is based on work from:
+>=20
+> Jonathan Marek from qcom,pwm-vibrator.c in the PostmarketOS repo:
+> https://gitlab.com/postmarketOS/linux-postmarketos/commit/7647fb36cb1cbd0=
+60f8b52087a68ab93583292b5
+>=20
+> Jongrak Kwon and Devin Kim from msm_pwm_vibrator.c in the downstream
+> Android 3.4.0 sources:
+> https://android.googlesource.com/kernel/msm/+/android-msm-lenok-3.10-loll=
+ipop-wear-release/drivers/misc/msm_pwm_vibrator.c
+>=20
+> Driver was tested on a LG Nexus 5 (hammerhead) phone using rumble-test:
+> https://git.collabora.com/cgit/user/sre/rumble-test.git/plain/rumble-test=
+=2Ec
 
-If it "may" contain one more specific value, when should that value be 
-present, and when can it be absent ?
+Looking at all of this it seems like this would be more appropriately
+implemented as a force-feedback input device directly. The only reason
+you seem to be making this a PWM driver is so that it can be used in
+conjunction with pwm-vibrator. The device itself doesn't seem to be a
+generic PWM in the way that the PWM framework expects it.
 
-> +	"ti,ds90ub925q",
-> +	"ti,ds90uh925q",
-> +	"ti,ds90ub927q",
-> +	"ti,ds90uh927q",
-> +	"ti,ds90ub926q",
-> +	"ti,ds90uh926q",
-> +	"ti,ds90ub928q",
-> +	"ti,ds90uh928q",
-> +	"ti,ds90ub940q",
-> +	"ti,ds90uh940q".
-> +
-> +Optional properties:
-> +- reg : Specifies the I2C slave address of a local de-/serializer.
+Thierry
 
-You should explain when the reg property is required and when it isn't. This 
-will in my opinion require a more detailed explanation of the DT model for 
-this device.
+--wxDdMuZNg1r63Hyj
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +- power-gpios : GPIO line to control supplied power to the device.
+-----BEGIN PGP SIGNATURE-----
 
-As Marek mentioned, a regulator would be better. I would make it a mandatory 
-property, as the device always needs to be powered.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlvAieUACgkQ3SOs138+
+s6Edag//XmsTS/HXwJuq0xpBLVXaiqwnPyZAd64I2AhPdhysIBxVktH/+Bj8+Rt4
+XnRe3nksdvLciKBE2k88d4ZSVr2V3tyOHStXpQ9PS/7PhT7dzSfgXrlx4TtAiw86
+lCttOns77DoI6aDMEHWaLHl5nfof0OUasE37zxC8TsJlDmZZF2YevVlkNIqZNaV/
+htDNlMXOuldwpc6eqjRdQFgPF4jHpQBavFuUFy0rCxTzzwOoFxowWamA32BEUNT2
+pNB6SrKjiZkhboGXNCOcWqTDfzPxUJayBWTMFswU73+HzVphpbSVylei7SS7qdcd
+Uy7fM96A83eOQpwY1DKJUXoO8CA41ZRmtv5Ltu5WPwU6FeqzpnfFy/VWI2kIjhKP
+5x/6Mtumh6AIRkIwUDPfiLhalGDvfkuV8MbduXyZrZptmLF4svWUgSxkhC6SClsx
+rdwzj5PhVh9yLjhWHQYH95+dfaKOuw5/5CbON3VOl69msNCcaTP9asyL/MRDzGWe
+G8RekvDWHgfqW07Ichp3BPK6tYpbmAgE5fn5zOGCU9kkz+6Soe43ajhJWK1tXuPZ
+OGZEDdsOr60b+EKZg8Yi0+BYBbIjDEPBO47EC9SOs7shsLN6CreIJefm9o4FHyEY
+IkLiNPsbeGCifxgl4Zk6835MabDBHaiQ6cu+javUoFzCqIRGVWU=
+=yKT2
+-----END PGP SIGNATURE-----
 
-> +- ti,backward-compatible-mode : Overrides backward compatibility mode.
-> +	Possible values are "<1>" or "<0>".
-> +	If "ti,backward-compatible-mode" is not mentioned, the backward
-> +	compatibility mode is not touched and given by hardware pin strapping.
-
-This doesn't seem to be a device description to me, it's a software 
-configuration. You should handle it in drivers.
-
-> +- ti,low-frequency-mode : Overrides low frequency mode.
-> +	Possible values are "<1>" or "<0>".
-> +	If "ti,low-frequency-mode" is not mentioned, the low frequency mode
-> +	is not touched and given by hardware pin strapping.
-
-This sounds the same. How about giving a real life example of a case where you 
-need to set these two properties to override the pin strapping, for the 
-purpose of discussing the DT bindings ?
-
-> +- ti,video-map-select-msb: Sets video bridge pins to MSB mode, if it is set
-> +	MAPSEL pin value is ignored.
-> +- ti,video-map-select-lsb: Sets video bridge pins to LSB mode, if it is set
-> +	MAPSEL pin value is ignored.
-
-I assume those two are mutually exclusive, this should be documented, or you 
-could merge the two properties into one. Same comment as above though, why do 
-you need an override in DT ?
-
-> +- ti,pixel-clock-edge : Selects Pixel Clock Edge.
-> +	Possible values are "<1>" or "<0>".
-> +	If "ti,pixel-clock-edge" is High <1>, output data is strobed on the
-> +	Rising edge of the PCLK. If ti,pixel-clock-edge is Low <0>, data is
-> +	strobed on the Falling edge of the PCLK.
-> +	If "ti,pixel-clock-edge" is not mentioned, the pixel clock edge
-> +	value is not touched and given by hardware pin strapping.
-
-We have a standard property in Documentation/devicetree/bindings/media/video-
-interfaces.txt for this, please use it.
-
-> +- ti,spread-spectrum-clock-generation : Spread Sprectrum Clock Generation.
-> +	Possible values are from "<0>" to "<7>". The same value will be
-> +	written to SSC register. If "ti,spread-spectrum-clock-gen" is not
-> +	found, then SSCG will be disabled.
-
-This makes sense in DT in my opinion, as EMC is a system property. I wonder 
-however if exposing the hardware register directly is the best option. Could 
-you elaborate on how a system designer will select which value to use, in 
-order to find the best DT description ?
-
-> +TI DS90Ux9xx serializers and deserializer device nodes may contain a number
-> +of children device nodes to describe and enable particular subcomponents
-> +found on ICs.
-
-As mentioned in my review of the cover letter I don't think this is necessary. 
-You can make the serializer and deserializer I2C controllers without subnodes. 
-Same goes for GPIO control.
-
-> +Example:
-> +
-> +serializer: serializer@c {
-> +	compatible = "ti,ds90ub927q", "ti,ds90ux9xx";
-> +	reg = <0xc>;
-> +	power-gpios = <&gpio5 12 GPIO_ACTIVE_HIGH>;
-> +	ti,backward-compatible-mode = <0>;
-> +	ti,low-frequency-mode = <0>;
-> +	ti,pixel-clock-edge = <0>;
-> +	...
-> +}
-> +
-> +deserializer: deserializer@3c {
-> +	compatible = "ti,ds90ub940q", "ti,ds90ux9xx";
-> +	reg = <0x3c>;
-> +	power-gpios = <&gpio6 31 GPIO_ACTIVE_HIGH>;
-> +	...
-> +}
-> +
-
-Extra blank line ?
-
--- 
-Regards,
-
-Laurent Pinchart
+--wxDdMuZNg1r63Hyj--
