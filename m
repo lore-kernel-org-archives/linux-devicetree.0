@@ -1,348 +1,113 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH V12 3/8] irqchip: add C-SKY APB bus interrupt controller
-Date: Fri, 12 Oct 2018 20:02:04 +0800
-Message-ID: <02662db882dfdc5033aff79cd58f17728fd9eb44.1539315341.git.ren_guo@c-sky.com>
-References: <cover.1539315341.git.ren_guo@c-sky.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1539315341.git.ren_guo@c-sky.com>
-In-Reply-To: <cover.1539315341.git.ren_guo@c-sky.com>
-References: <cover.1539315341.git.ren_guo@c-sky.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, will.deacon@arm.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
+From: Niklas Cassel <niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 0/6] *** Add support for wifi QMI client handshakes ***
+Date: Fri, 12 Oct 2018 14:09:24 +0200
+Message-ID: <20181012120924.GA1030@centauri.lan>
+References: <20180815092637.11455-1-govinds@codeaurora.org>
+ <20181009003628.GA253926@ban.mtv.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20181009003628.GA253926-1WoqFLEneaORBCj4nEdE8WJtCfot02Oa@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
- - irq-csky-apb-intc is a simple SOC interrupt controller which is
-   used in a lot of C-SKY CPU SOC products.
+On Mon, Oct 08, 2018 at 05:36:30PM -0700, Brian Norris wrote:
+> + linux-msm
+> 
+> Hi Govind, Kalle,
+> 
+> On Wed, Aug 15, 2018 at 02:56:31PM +0530, Govind Singh wrote:
+> > Add QMI client handshakes for Q6 integrated WLAN connectivity subsystem.
+> > This module is responsible for communicating WLAN control messages to FW
+> > over QMI interface. This patch series enables the qmi handshakes required for
+> > WCN3990 chipset.
+> [...]
+> 
+> What's the status of this patchset? It has seen various stages of
+> review, and except for the fact that Govind seems to have dropped
+> various Reviewed-by/Acked-by tags (which Rob noticed), I don't see any
+> relevant feedback that should be blocking it.
+> 
+> I previously had concerns about the firmware boot sequence -- that it
+> required a Qualcomm-specific TFTP service over QRTR, which had no open
+> source implementations. There is now a published daemon that worked for
+> me [1], as well as firmware releases that loaded modem and Wifi firmware
+> together, such that this TFTP service is not needed at all. So my
+> concerns there are no longer blocking.
+> 
+> And I think Rob already reviewed the relevant DT bindings (but again,
+> Govind missed collecting that tag for this series).
+> 
+> So the only outstanding request I see is to collect the appropriate
+> tags. Should Govind resend the whole series just for that?
+> 
+> FWIW, I've been using this series for a while now, and I reviewed
+> earlier versions. I can provide this for the whole series:
+> 
+> Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-Changelog:
- - pass checkpatch.pl.
- - use "bool ret" instead of "int ret"
- - add support-pulse-signal in irq-csky-apb-intc.c
- - change name with upstream feed-back
- - add INTC_IFR to clear irq-pending
- - remove CSKY_VECIRQ_LEGENCY
- - change to generic irq chip framework
- - add License and Copyright
- - use irq_domain_add_linear instead of leagcy
+Hello Kalle,
 
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
----
- drivers/irqchip/Kconfig             |   8 ++
- drivers/irqchip/Makefile            |   1 +
- drivers/irqchip/irq-csky-apb-intc.c | 274 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 283 insertions(+)
- create mode 100644 drivers/irqchip/irq-csky-apb-intc.c
+I see that this patch series has been added to your master-pending branch.
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 8103f6f..41cdca0 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -380,6 +380,14 @@ config CSKY_MPINTC
- 	  In fact it's not mmio map in hw and it use ld/st to visit the
- 	  controller's register inside CPU.
+It seems to be lacking Brians Reviewed-by tags (from above).
+
+
+The diff between v4 and v5 is just:
+
++++ b/drivers/net/wireless/ath/ath10k/qmi.c
+@@ -1010,10 +1010,10 @@ int ath10k_qmi_deinit(struct ath10k *ar)
+        struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
+        struct ath10k_qmi *qmi = ar_snoc->qmi;
  
-+config CSKY_APB_INTC
-+	bool "C-SKY APB Interrupt Controller"
-+	depends on CSKY
-+	help
-+	  Say yes here to enable C-SKY APB interrupt controller driver used
-+	  by C-SKY single core SOC system. It use mmio map apb-bus to visit
-+	  the controller's register.
-+
- endmenu
++       qmi_handle_release(&qmi->qmi_hdl);
+        cancel_work_sync(&qmi->event_work);
+        destroy_workqueue(qmi->event_wq);
+-       qmi_handle_release(&qmi->qmi_hdl);
+-       qmi = NULL;
++       ar_snoc->qmi = NULL;
  
- config SIFIVE_PLIC
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 6b739ea..72eaf53 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -88,4 +88,5 @@ obj-$(CONFIG_GOLDFISH_PIC) 		+= irq-goldfish-pic.o
- obj-$(CONFIG_NDS32)			+= irq-ativic32.o
- obj-$(CONFIG_QCOM_PDC)			+= qcom-pdc.o
- obj-$(CONFIG_CSKY_MPINTC)		+= irq-csky-mpintc.o
-+obj-$(CONFIG_CSKY_APB_INTC)		+= irq-csky-apb-intc.o
- obj-$(CONFIG_SIFIVE_PLIC)		+= irq-sifive-plic.o
-diff --git a/drivers/irqchip/irq-csky-apb-intc.c b/drivers/irqchip/irq-csky-apb-intc.c
-new file mode 100644
-index 0000000..2543bab
---- /dev/null
-+++ b/drivers/irqchip/irq-csky-apb-intc.c
-@@ -0,0 +1,274 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
-+
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/module.h>
-+#include <linux/irqdomain.h>
-+#include <linux/irqchip.h>
-+#include <linux/irq.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <asm/irq.h>
-+
-+#define INTC_IRQS		64
-+
-+#define CK_INTC_ICR		0x00
-+#define CK_INTC_PEN31_00	0x14
-+#define CK_INTC_PEN63_32	0x2c
-+#define CK_INTC_NEN31_00	0x10
-+#define CK_INTC_NEN63_32	0x28
-+#define CK_INTC_SOURCE		0x40
-+#define CK_INTC_DUAL_BASE	0x100
-+
-+#define GX_INTC_PEN31_00	0x00
-+#define GX_INTC_PEN63_32	0x04
-+#define GX_INTC_NEN31_00	0x40
-+#define GX_INTC_NEN63_32	0x44
-+#define GX_INTC_NMASK31_00	0x50
-+#define GX_INTC_NMASK63_32	0x54
-+#define GX_INTC_SOURCE		0x60
-+
-+static void __iomem *reg_base;
-+static struct irq_domain *root_domain;
-+
-+static int nr_irq = INTC_IRQS;
-+
-+/*
-+ * When controller support pulse signal, the PEN_reg will hold on signal
-+ * without software trigger.
-+ *
-+ * So, to support pulse signal we need to clear IFR_reg and the address of
-+ * IFR_offset is NEN_offset - 8.
-+ */
-+static void irq_ck_mask_set_bit(struct irq_data *d)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	struct irq_chip_type *ct = irq_data_get_chip_type(d);
-+	unsigned long ifr = ct->regs.mask - 8;
-+	u32 mask = d->mask;
-+
-+	irq_gc_lock(gc);
-+	*ct->mask_cache |= mask;
-+	irq_reg_writel(gc, *ct->mask_cache, ct->regs.mask);
-+	irq_reg_writel(gc, irq_reg_readl(gc, ifr) & ~mask, ifr);
-+	irq_gc_unlock(gc);
-+}
-+
-+static void __init ck_set_gc(struct device_node *node, void __iomem *reg_base,
-+			     u32 mask_reg, u32 irq_base)
-+{
-+	struct irq_chip_generic *gc;
-+
-+	gc = irq_get_domain_generic_chip(root_domain, irq_base);
-+	gc->reg_base = reg_base;
-+	gc->chip_types[0].regs.mask = mask_reg;
-+	gc->chip_types[0].chip.irq_mask = irq_gc_mask_clr_bit;
-+	gc->chip_types[0].chip.irq_unmask = irq_gc_mask_set_bit;
-+
-+	if (of_find_property(node, "csky,support-pulse-signal", NULL))
-+		gc->chip_types[0].chip.irq_unmask = irq_ck_mask_set_bit;
-+}
-+
-+static inline u32 build_channel_val(u32 idx, u32 magic)
-+{
-+	u32 res;
-+
-+	/*
-+	 * Set the same index for each channel
-+	 */
-+	res = idx | (idx << 8) | (idx << 16) | (idx << 24);
-+
-+	/*
-+	 * Set the channel magic number in descending order.
-+	 * The magic is 0x00010203 for ck-intc
-+	 * The magic is 0x03020100 for gx6605s-intc
-+	 */
-+	return res | magic;
-+}
-+
-+static inline void setup_irq_channel(u32 magic, void __iomem *reg_addr)
-+{
-+	u32 i;
-+
-+	/* Setup 64 channel slots */
-+	for (i = 0; i < INTC_IRQS; i += 4)
-+		writel_relaxed(build_channel_val(i, magic), reg_addr + i);
-+}
-+
-+static int __init
-+ck_intc_init_comm(struct device_node *node, struct device_node *parent)
-+{
-+	int ret;
-+
-+	if (parent) {
-+		pr_err("C-SKY Intc not a root irq controller\n");
-+		return -EINVAL;
-+	}
-+
-+	reg_base = of_iomap(node, 0);
-+	if (!reg_base) {
-+		pr_err("C-SKY Intc unable to map: %p.\n", node);
-+		return -EINVAL;
-+	}
-+
-+	root_domain = irq_domain_add_linear(node, nr_irq,
-+					    &irq_generic_chip_ops, NULL);
-+	if (!root_domain) {
-+		pr_err("C-SKY Intc irq_domain_add failed.\n");
-+		return -ENOMEM;
-+	}
-+
-+	ret = irq_alloc_domain_generic_chips(root_domain, 32, 1,
-+			"csky_intc", handle_level_irq,
-+			IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN, 0, 0);
-+	if (ret) {
-+		pr_err("C-SKY Intc irq_alloc_gc failed.\n");
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static inline bool handle_irq_perbit(struct pt_regs *regs, u32 hwirq,
-+				     u32 irq_base)
-+{
-+	u32 irq;
-+
-+	if (hwirq == 0)
-+		return 0;
-+
-+	while (hwirq) {
-+		irq = __ffs(hwirq);
-+		hwirq &= ~BIT(irq);
-+		handle_domain_irq(root_domain, irq_base + irq, regs);
-+	}
-+
-+	return 1;
-+}
-+
-+/* gx6605s 64 irqs interrupt controller */
-+static void gx_irq_handler(struct pt_regs *regs)
-+{
-+	bool ret;
-+
-+	do {
-+		ret  = handle_irq_perbit(regs,
-+				readl_relaxed(reg_base + GX_INTC_PEN31_00), 0);
-+		ret |= handle_irq_perbit(regs,
-+				readl_relaxed(reg_base + GX_INTC_PEN63_32), 32);
-+	} while (ret);
-+}
-+
-+static int __init
-+gx_intc_init(struct device_node *node, struct device_node *parent)
-+{
-+	int ret;
-+
-+	ret = ck_intc_init_comm(node, parent);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Initial enable reg to disable all interrupts
-+	 */
-+	writel_relaxed(0x0, reg_base + GX_INTC_NEN31_00);
-+	writel_relaxed(0x0, reg_base + GX_INTC_NEN63_32);
-+
-+	/*
-+	 * Initial mask reg with all unmasked, because we only use enalbe reg
-+	 */
-+	writel_relaxed(0x0, reg_base + GX_INTC_NMASK31_00);
-+	writel_relaxed(0x0, reg_base + GX_INTC_NMASK63_32);
-+
-+	setup_irq_channel(0x03020100, reg_base + GX_INTC_SOURCE);
-+
-+	ck_set_gc(node, reg_base, GX_INTC_NEN31_00, 0);
-+	ck_set_gc(node, reg_base, GX_INTC_NEN63_32, 32);
-+
-+	set_handle_irq(gx_irq_handler);
-+
-+	return 0;
-+}
-+IRQCHIP_DECLARE(csky_gx6605s_intc, "csky,gx6605s-intc", gx_intc_init);
-+
-+/*
-+ * C-SKY simple 64 irqs interrupt controller, dual-together could support 128
-+ * irqs.
-+ */
-+static void ck_irq_handler(struct pt_regs *regs)
-+{
-+	bool ret;
-+	void __iomem *reg_pen_lo = reg_base + CK_INTC_PEN31_00;
-+	void __iomem *reg_pen_hi = reg_base + CK_INTC_PEN63_32;
-+
-+	do {
-+		/* handle 0 - 31 irqs */
-+		ret  = handle_irq_perbit(regs, readl_relaxed(reg_pen_lo), 0);
-+		ret |= handle_irq_perbit(regs, readl_relaxed(reg_pen_hi), 32);
-+
-+		if (nr_irq == INTC_IRQS)
-+			continue;
-+
-+		/* handle 64 - 127 irqs */
-+		ret |= handle_irq_perbit(regs,
-+			readl_relaxed(reg_pen_lo + CK_INTC_DUAL_BASE), 64);
-+		ret |= handle_irq_perbit(regs,
-+			readl_relaxed(reg_pen_hi + CK_INTC_DUAL_BASE), 96);
-+	} while (ret);
-+}
-+
-+static int __init
-+ck_intc_init(struct device_node *node, struct device_node *parent)
-+{
-+	int ret;
-+
-+	ret = ck_intc_init_comm(node, parent);
-+	if (ret)
-+		return ret;
-+
-+	/* Initial enable reg to disable all interrupts */
-+	writel_relaxed(0, reg_base + CK_INTC_NEN31_00);
-+	writel_relaxed(0, reg_base + CK_INTC_NEN63_32);
-+
-+	/* Enable irq intc */
-+	writel_relaxed(BIT(31), reg_base + CK_INTC_ICR);
-+
-+	ck_set_gc(node, reg_base, CK_INTC_NEN31_00, 0);
-+	ck_set_gc(node, reg_base, CK_INTC_NEN63_32, 32);
-+
-+	setup_irq_channel(0x00010203, reg_base + CK_INTC_SOURCE);
-+
-+	set_handle_irq(ck_irq_handler);
-+
-+	return 0;
-+}
-+IRQCHIP_DECLARE(ck_intc, "csky,apb-intc", ck_intc_init);
-+
-+static int __init
-+ck_dual_intc_init(struct device_node *node, struct device_node *parent)
-+{
-+	int ret;
-+
-+	/* dual-apb-intc up to 128 irq sources*/
-+	nr_irq = INTC_IRQS * 2;
-+
-+	ret = ck_intc_init(node, parent);
-+	if (ret)
-+		return ret;
-+
-+	/* Initial enable reg to disable all interrupts */
-+	writel_relaxed(0, reg_base + CK_INTC_NEN31_00 + CK_INTC_DUAL_BASE);
-+	writel_relaxed(0, reg_base + CK_INTC_NEN63_32 + CK_INTC_DUAL_BASE);
-+
-+	ck_set_gc(node, reg_base + CK_INTC_DUAL_BASE, CK_INTC_NEN31_00, 64);
-+	ck_set_gc(node, reg_base + CK_INTC_DUAL_BASE, CK_INTC_NEN63_32, 96);
-+
-+	setup_irq_channel(0x00010203,
-+			  reg_base + CK_INTC_SOURCE + CK_INTC_DUAL_BASE);
-+
-+	return 0;
-+}
-+IRQCHIP_DECLARE(ck_dual_intc, "csky,dual-apb-intc", ck_dual_intc_init);
--- 
-2.7.4
+        return 0;
+ }
+
+I've given my Acked-by on v4:
+https://patchwork.kernel.org/cover/10540111/
+The change between v4 and v5 does not warrant the removal of those tags,
+so please re-add them.
+
+Rob has given his Reviewed-by on the dt-binding on v4:
+https://patchwork.kernel.org/patch/10540115/
+The dt-binding hasn't changed between v4 and v5, so please re-add it.
+
+
+I also noted that kbuild test robot complain about this series on x86:
+http://lists.infradead.org/pipermail/ath10k/2018-October/012268.html
+Are test errors still valid?
+
+My patch series that makes QMI_HELPERS selectable for compile test
+(e.g. x86), is queued up for 4.20~5.0:
+https://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git/log/?h=qcom-drivers-for-4.20
+
+Does this patch series make the errors go away, or are they unrelated?
+
+
+Kind regards,
+Niklas
+
+> 
+> If nothing else, I think it's important to get someone to merge the DT
+> bindings from this series, because Govind is now trying to extend the DT
+> binding and to enable the WCN3990 device node in the SDM845 device tree
+> nodes.
+> 
+> Regards,
+> Brian
+> 
+> [1] https://github.com/andersson/tqftpserv
+> [2] See this series:
+>     https://patchwork.kernel.org/cover/10621863/
+>     Govind didn't send it to the right mailing lists yet, but we're
+>     close...
