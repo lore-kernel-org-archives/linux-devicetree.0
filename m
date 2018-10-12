@@ -1,35 +1,37 @@
-Return-Path: <SRS0=XwHs=MQ=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH] dt-bindings: pwm: renesas-tpu: Document r8a7744 support
-Date: Thu,  4 Oct 2018 17:21:34 +0100
-Message-Id: <1538670094-40946-1-git-send-email-biju.das@bp.renesas.com>
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=sbd0=MY=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v4 1/3] clk: renesas: r7s9210: Add SDHI clocks
+Date: Fri, 12 Oct 2018 07:29:22 -0500
+Message-Id: <20181012122924.5543-2-chris.brandt@renesas.com>
+In-Reply-To: <20181012122924.5543-1-chris.brandt@renesas.com>
+References: <20181012122924.5543-1-chris.brandt@renesas.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-clk@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document r8a7744 specific compatible strings. No driver change is
-needed as the fallback compatible string "renesas,tpu" activates the
-right code in the driver.
+Add SDHI clocks for RZ/A2
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-This patch is tested against next-20181004
----
- Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/renesas/r7s9210-cpg-mssr.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
-index d53a167..6d6f680 100644
---- a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
-+++ b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
-@@ -6,6 +6,7 @@ Required Properties:
-     - "renesas,tpu-r8a73a4": for R8A73A4 (R-Mobile APE6) compatible PWM controller.
-     - "renesas,tpu-r8a7740": for R8A7740 (R-Mobile A1) compatible PWM controller.
-     - "renesas,tpu-r8a7743": for R8A7743 (RZ/G1M) compatible PWM controller.
-+    - "renesas,tpu-r8a7744": for R8A7744 (RZ/G1N) compatible PWM controller.
-     - "renesas,tpu-r8a7745": for R8A7745 (RZ/G1E) compatible PWM controller.
-     - "renesas,tpu-r8a7790": for R8A7790 (R-Car H2) compatible PWM controller.
-     - "renesas,tpu": for generic R-Car and RZ/G1 TPU PWM controller.
+diff --git a/drivers/clk/renesas/r7s9210-cpg-mssr.c b/drivers/clk/renesas/r7s9210-cpg-mssr.c
+index 5135f13ec628..9056da15dc72 100644
+--- a/drivers/clk/renesas/r7s9210-cpg-mssr.c
++++ b/drivers/clk/renesas/r7s9210-cpg-mssr.c
+@@ -98,6 +98,11 @@ static const struct mssr_mod_clk r7s9210_mod_clks[] __initconst = {
+ 	DEF_MOD_STB("spi2",	 95,	R7S9210_CLK_P1),
+ 	DEF_MOD_STB("spi1",	 96,	R7S9210_CLK_P1),
+ 	DEF_MOD_STB("spi0",	 97,	R7S9210_CLK_P1),
++
++	DEF_MOD_STB("sdhi11",	100,	R7S9210_CLK_B),
++	DEF_MOD_STB("sdhi10",	101,	R7S9210_CLK_B),
++	DEF_MOD_STB("sdhi01",	102,	R7S9210_CLK_B),
++	DEF_MOD_STB("sdhi00",	103,	R7S9210_CLK_B),
+ };
+ 
+ /* The clock dividers in the table vary based on DT and register settings */
 -- 
-2.7.4
+2.16.1
