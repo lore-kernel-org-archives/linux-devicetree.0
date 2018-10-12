@@ -1,82 +1,99 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V2 3/5] usb: xhci: tegra: Add genpd support
-Date: Fri, 12 Oct 2018 12:27:32 +0200
-Message-ID: <20181012102732.GD9162@ulmo>
-References: <1538143910-24400-1-git-send-email-jonathanh@nvidia.com>
- <1538143910-24400-4-git-send-email-jonathanh@nvidia.com>
- <20181011164753.GA7393@ulmo>
- <248afd79-1a7d-7342-5939-6fa998d04d5b@nvidia.com>
+Subject: Re: [PATCH v7 12/24] pwm: jz4740: Use regmap and clocks from TCU
+ driver
+Date: Fri, 12 Oct 2018 12:39:57 +0200
+Message-ID: <20181012103957.GF9162@ulmo>
+References: <20180821171635.22740-1-paul@crapouillou.net>
+ <20180821171635.22740-13-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="VV4b6MQE+OnNyhkM"
+        protocol="application/pgp-signature"; boundary="H4SyuGOnfnj3aJqJ"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <248afd79-1a7d-7342-5939-6fa998d04d5b@nvidia.com>
+In-Reply-To: <20180821171635.22740-13-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, Jonathan Corbet <corbet@lwn.net>, od@zcrc.me, Mathieu Malaterre <malat@debian.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---VV4b6MQE+OnNyhkM
+--H4SyuGOnfnj3aJqJ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 12, 2018 at 09:41:35AM +0100, Jon Hunter wrote:
+On Tue, Aug 21, 2018 at 07:16:23PM +0200, Paul Cercueil wrote:
+> The ingenic-timer "TCU" driver provides us with a regmap, that we can
+> use to safely access the TCU registers.
 >=20
-> On 11/10/18 17:47, Thierry Reding wrote:
-> > On Fri, Sep 28, 2018 at 03:11:48PM +0100, Jon Hunter wrote:
-> >> The generic power-domain framework has been updated to allow devices
-> >> that require more than one power-domain to create a new device for
-> >> each power-domain required and then link these new power-domain
-> >> devices to the consumer device.
-> >>
-> >> Update the Tegra xHCI driver to use the new APIs provided by the
-> >> generic power-domain framework so we can use the generic power-domain
-> >> framework for managing the xHCI controllers power-domains. Please
-> >> note that to maintain backward compatibility with older device-tree
-> >> blobs these new generic power-domain APIs are only used if the
-> >> 'power-domains' property is present and otherwise we fall back to
-> >> using the legacy Tegra APIs for managing the power-domains.
-> >>
-> >> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> >> ---
-> >>  drivers/usb/host/xhci-tegra.c | 89 ++++++++++++++++++++++++++++++++++=
-+++------
-> >>  1 file changed, 77 insertions(+), 12 deletions(-)
-> >=20
-> > It'd be nice if we could eventually get rid of the legacy Tegra APIs,
-> > but that's a separate issue, and this patch looks fine as-is:
+> It also provides us with clocks, that can be (un)gated, reparented or
+> reclocked from devicetree, instead of having these settings hardcoded in
+> this driver.
 >=20
-> Unfortunately, I don't think it is possible as it will break DT backward
-> compatibility. However, one way to do it would be to force on all power
-> domains on boot if PM is not supported.
+> While this driver is devicetree-compatible, it is never (as of now)
+> probed from devicetree, so this change does not introduce a ABI problem
+> with current devicetree files.
+>=20
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>=20
+> Notes:
+>      v5: New patch
+>    =20
+>      v6: Drop requirement of probing from devicetree
+>    =20
+>      v7: No change
+>=20
+>  drivers/pwm/Kconfig      |   2 +
+>  drivers/pwm/pwm-jz4740.c | 124 +++++++++++++++++++++++++++++++----------=
+------
+>  2 files changed, 83 insertions(+), 43 deletions(-)
+>=20
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index a4d262db9945..58359bf22b96 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -202,6 +202,8 @@ config PWM_IMX
+>  config PWM_JZ4740
+>  	tristate "Ingenic JZ47xx PWM support"
+>  	depends on MACH_INGENIC
+> +	depends on COMMON_CLK
+> +	select INGENIC_TIMER
+>  	help
+>  	  Generic PWM framework driver for Ingenic JZ47xx based
+>  	  machines.
+> diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+> index a7b134af5e04..1bda8d8e9865 100644
+> --- a/drivers/pwm/pwm-jz4740.c
+> +++ b/drivers/pwm/pwm-jz4740.c
+> @@ -14,21 +14,21 @@
+>   */
+> =20
+>  #include <linux/clk.h>
+> +#include <linux/clk-provider.h>
 
-Yeah, that sounds like a good option. If we don't support PM the I
-imagine there's little use in keeping some of the partitions disabled.
-But let's investigate that at a later time.
+Why do you need this?
 
 Thierry
 
---VV4b6MQE+OnNyhkM
+--H4SyuGOnfnj3aJqJ
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlvAdxEACgkQ3SOs138+
-s6HEeQ/8DVIf2eg1G5hJC72lJiV/i9fJdcLKgaiS8Q9mFu44m1Ut0QETHgeNfyV9
-yg1sfy5+FB+4PTNoaHZb3X2sWVvXXxjsgi+56tu4P1Hji4S1yeuJ9KAc3Bgn9bth
-4RDwwBGdKiI6gZmkJnI4AM+m7Scb3rmb64TH6uwaET/hl/V1cKT7hnzYSk86Ku+X
-syjjSFMAlTNkZrcLFVgobrIV67HGre8CKaP4AtAITM+OzcWSggBpragg09gRVfSm
-D/sLVkoCVtlFTgpE0LUYKltYAn+hEig8Rk82i/IUiEuG3L5tpM7+nsYOmtIKhAR8
-ApSFvk2PIIsGpOwCom4s/lIK/ONR/j8lauaMLQrWF96jQ4WCzRpZwxV+U80L/8YN
-JMG3y3800jpORx/IAp0lfDIznT1KcClfGMQu1zA//DoBnxo4ek8m0He3H0E4Jr6l
-WwjJXYpvbswHEosxWUp3NYJEedVoqzU+IXLyOA7O9OVFXFgcIX/RQbItZ+RcEr/S
-WW56sNVzbWuO54M3F35hAVP0Ue56hFxEfvPT/MBvT0x/YrdJOt7tTmD9ndYksg79
-5I3Cy7SwDeoX+incSMXifhJqUmalsxF/gB5Rb91bXfcB7igZzjS8imvKyeH3tT44
-XTS+Erd2PeU8QDWL9h9iLVv+RDXwXXQeSActlHKzbKiAGubeSWw=
-=hVM5
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlvAef0ACgkQ3SOs138+
+s6Etkw/8CDqjDhw3dT5o3iLxU8WHHcL1syZVxtoMp8myKzUL83S+RIRFfWhrXYrg
+0GoMLZCuuq5YQAFmH2IyOrcyQNP8za88WJmW6ahO5rUj2dToorEqD2kijC8Z1YY4
+gJBm2OpTKROOUoZdP3fUkcLsJradOzua+wrzHeKkIOwleWWIRC4yXnfkPSlvYdAH
+0ul5Nhteg6ulN25WE8uPEFGqWPgMAA0+tU64/COQ4V9Yg7P5YJbERNax72Dm7v0N
+eIppDnmtbVtt+SvJ+QAM8NgZogMhJnkdf8T7Ax8UPGMG6JSxmVsSz0hCMB5IVenF
+Lfp5u68cXO6hxyhku3ss4nthU8QMprEsM55chBEHvXyH7+4IsB6U+WEfc5tGxxN+
+AJcQgan0mRO179DjdCYtxcELpJVRLglzhpjTIJisip+Kp0WtxJPd7wYtovMVlEHl
+VyqEXCearUquqFdJ3R20ZN5sUanv5miTaK9QpNYdQrkCv9t3/KK5KdutUZDpyDD7
+3kubTcLr4W3cSqwrq2GJF6KV+9b6VdLUeZgmPHvAj/81pfHFb3j7Q9gmjJLgGgBr
+tVNXoCLSOaWWya9qrLPeKoZmm90zG3NpEoyExycPdai8qDGLIuhOspNZ7SG/ixFw
+eKm2sG95UCmCkGVSaIUVTZRgslDEv63kjKKG6qoza9kEMRjmqCg=
+=TBBW
 -----END PGP SIGNATURE-----
 
---VV4b6MQE+OnNyhkM--
+--H4SyuGOnfnj3aJqJ--
