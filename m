@@ -1,25 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/3] iio: magnetometer: Add DT support for PNI RM3100
-Date: Fri, 12 Oct 2018 06:37:55 -0500
-Message-ID: <20181012113755.GA24893@bogus>
-References: <20181002143812.3661-1-songqiang1304521@gmail.com>
- <20181012073536.20339-1-songqiang1304521@gmail.com>
- <20181012073536.20339-3-songqiang1304521@gmail.com>
+Subject: Re: [PATCH v4 2/2] doc: devicetree: vendor-prefixes: new vendor -
+ Emlid
+Date: Fri, 12 Oct 2018 06:39:55 -0500
+Message-ID: <20181012113955.GA25152@bogus>
+References: <1539012044-29998-2-git-send-email-aleksandr.aleksandrov@emlid.com>
+ <1539339841-22235-1-git-send-email-aleksandr.aleksandrov@emlid.com>
+ <1539339841-22235-3-git-send-email-aleksandr.aleksandrov@emlid.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181012073536.20339-3-songqiang1304521@gmail.com>
+In-Reply-To: <1539339841-22235-3-git-send-email-aleksandr.aleksandrov@emlid.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, preid@electromag.com.au, himanshujha199640@gmail.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Song Qiang <songqiang1304521@gmail.com>
+To: Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 12 Oct 2018 15:35:35 +0800, Song Qiang wrote:
-> Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
-> ---
->  .../bindings/iio/magnetometer/pni,rm3100.txt  | 20 +++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt
-> 
+On Fri, Oct 12, 2018 at 01:23:59PM +0300, Aleksandr Aleksandrov wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Commit message?
+
+"dt-bindings: vendor-prefix: ..." is the preferred subject prefix.
+
+> Signed-off-by: Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+
+With that,
+
+Acked-by: Rob Herring <robh@kernel.org>
