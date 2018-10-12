@@ -1,79 +1,252 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH RFC v1 2/8] kernel/cpu_pm: Manage runtime PM in the idle
- path for CPUs
-Date: Fri, 12 Oct 2018 09:20:19 -0600
-Message-ID: <20181012152019.GF2371@codeaurora.org>
-References: <1539206455-29342-1-git-send-email-rplsssn@codeaurora.org>
- <1539206455-29342-3-git-send-email-rplsssn@codeaurora.org>
- <8161939.SRDo8Qx48D@aspire.rjw.lan>
- <20181011220842.GE2371@codeaurora.org>
- <CAJZ5v0hXM9krdacL09kJSn30AL_5kN+4U3d02rZX7-V2DWg_VQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/8] dt-bindings: mfd: document stpmic1
+Date: Fri, 12 Oct 2018 10:28:48 -0500
+Message-ID: <20181012152848.GA13024@bogus>
+References: <1539016176-4072-1-git-send-email-p.paillet@st.com>
+ <1539016176-4072-2-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0hXM9krdacL09kJSn30AL_5kN+4U3d02rZX7-V2DWg_VQ@mail.gmail.com>
+In-Reply-To: <1539016176-4072-2-git-send-email-p.paillet@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, rplsssn@codeaurora.org, Andy Gross <andy.gross@linaro.org>, david.brown@linaro.org, Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, "Nayak, Rajendra" <rnayak@codeaurora.org>, bjorn.andersson@linaro.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, evgreen@chromium.org, Doug Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
+To: Pascal PAILLET-LME <p.paillet@st.com>
+Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 12 2018 at 01:43 -0600, Rafael J. Wysocki wrote:
->On Fri, Oct 12, 2018 at 12:08 AM Lina Iyer <ilina@codeaurora.org> wrote:
->> On Thu, Oct 11 2018 at 14:56 -0600, Rafael J. Wysocki wrote:
->> >On Wednesday, October 10, 2018 11:20:49 PM CEST Raju P.L.S.S.S.N wrote:
->> >> From: Ulf Hansson <ulf.hansson@linaro.org>
+On Mon, Oct 08, 2018 at 04:29:39PM +0000, Pascal PAILLET-LME wrote:
+> From: pascal paillet <p.paillet@st.com>
+> 
+> stpmic1 is a pmic from STMicroelectronics. The STPMIC1 integrates 10
+> regulators ,3 switches, a watchdog and an input for a power on key.
 
->> The cluster states should account for that additional latency.
->
->But even then, you need to be sure that the idle governor selected
->"cluster" states for all of the CPUs in the cluster.  It might select
->WFI for one of them for reasons unrelated to the distance to the next
->timer (so to speak), for example.
->
-Well, if cpuidle chooses WFI, cpu_pm_enter() will not be called. So for
-that case we are okay with this approach.
+regulators, 3 switches, ...
 
->> Just the CPU's power down states need not care about that.
->
->The meaning of this sentence isn't particularly clear to me. :-)
->
-What I meant to say is that if cpuidle chooses a CPU only power down
-state, then, atleast in ARM architecture, we would not choose to power
-down the cluster in the firmware. To power down the cluster in the
-firmware, all CPUs need to choose a cluster state, which would account
-the additional latency of powering off and on the domain.
+> 
+> Signed-off-by: pascal paillet <p.paillet@st.com>
+> ---
+> changes in v3:
+> * Replace st,onkey-long-press-seconds by power-off-time-sec.
+> * Replace interrupts-extended by  interrupts.
+> * Remove wakeup interrupt.
+> * Cosmetics.
+> 
+>  .../devicetree/bindings/mfd/st,stpmic1.txt         | 133 +++++++++++++++++++++
+>  include/dt-bindings/mfd/st,stpmic1.h               |  46 +++++++
+>  2 files changed, 179 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+>  create mode 100644 include/dt-bindings/mfd/st,stpmic1.h
 
-How I ever thought that I could convey this point in that line is beyond
-me now. Sorry!
+A few nits, otherwise:
 
->> But, it would be nice if the PM domain governor could be cognizant of
->> the idle state chosen for each CPU, that way we dont configure the
->> domain to be powered off when the CPUs have just chosen to power down
->> (not chosen a cluster state). I think that is a whole different topic to
->> discuss.
->
->This needs to be sorted out before the approach becomes viable, though.
->
-We embarked on that discussion a few years ago, but realized that there
-is a lot more complexity involved in specifying that especially with DT.
-I believe ACPI has a way to specify this. But DT and driver code
-currently don't have a nice way to propagate this requirement to the
-domain governor. So we shelved it for the future.
+Reviewed-by: Rob Herring <robh@kernel.org>
 
->Basically, the domain governor needs to track what the idle governor
->did for all of the CPUs in the domain and only let the domain go off
->if the latency matches all of the states selected by the idle
->governor.  Otherwise the idle governor's assumptions would be violated
->and it would become essentially useless overhead.
->
-Well, we kinda do that in the CPU PM domain governor. By looking at the
-next wakeup and the latency/QoS requirement of each CPU in the domain,
-we determine if the domain can be powered off. But, if we were to do
-this by correlating domain idle states to that of the required CPU idle
-state, then a lot needs to plumbed in to the cpuidle and driver model.
-The current approach is rather simple while meeting most of the
-requirement.
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/st,stpmic1.txt b/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+> new file mode 100644
+> index 0000000..989bd58
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+> @@ -0,0 +1,133 @@
+> +* STMicroelectronics STPMIC1 Power Management IC
+> +
+> +Required parent device properties:
+> +- compatible: 		"st,stpmic1"
+> +- reg: 			The I2C slave address for the STPMIC1 chip.
 
-Thanks,
-Lina
+space before tabs
+
+> +- interrupt-parent	Phandle to the parent interrupt controller.
+
+Drop this. It could be in the parent.
+
+> +- interrupts: 		The interrupt line the device is connected to.
+> +- #interrupt-cells: 	Should be 1.
+
+more space before tabs.
+
+> +- interrupt-controller: Describes the STPMIC1 as an interrupt
+> +  controller (has its own domain). Interrupt number are the following:
+> +	/* Interrupt Register 1 (0x50 for latch) */
+> +	IT_SWOUT_R=0
+> +	IT_SWOUT_F=1
+> +	IT_VBUS_OTG_R=2
+> +	IT_VBUS_OTG_F=3
+> +	IT_WAKEUP_R=4
+> +	IT_WAKEUP_F=5
+> +	IT_PONKEY_R=6
+> +	IT_PONKEY_F=7
+> +	/* Interrupt Register 2 (0x51 for latch) */
+> +	IT_OVP_BOOST=8
+> +	IT_OCP_BOOST=9
+> +	IT_OCP_SWOUT=10
+> +	IT_OCP_OTG=11
+> +	IT_CURLIM_BUCK4=12
+> +	IT_CURLIM_BUCK3=13
+> +	IT_CURLIM_BUCK2=14
+> +	IT_CURLIM_BUCK1=15
+> +	/* Interrupt Register 3 (0x52 for latch) */
+> +	IT_SHORT_SWOUT=16
+> +	IT_SHORT_SWOTG=17
+> +	IT_CURLIM_LDO6=18
+> +	IT_CURLIM_LDO5=19
+> +	IT_CURLIM_LDO4=20
+> +	IT_CURLIM_LDO3=21
+> +	IT_CURLIM_LDO2=22
+> +	IT_CURLIM_LDO1=23
+> +	/* Interrupt Register 3 (0x52 for latch) */
+> +	IT_SWIN_R=24
+> +	IT_SWIN_F=25
+> +	IT_RESERVED_1=26
+> +	IT_RESERVED_2=27
+> +	IT_VINLOW_R=28
+> +	IT_VINLOW_F=29
+> +	IT_TWARN_R=30
+> +	IT_TWARN_F=31
+> +
+> +Optional parent device properties:
+> +- st,main-control-register:
+> +	-bit 1: Power cycling will be performed on turn OFF condition
+> +	-bit 2: PWRCTRL is functional
+> +	-bit 3: PWRCTRL active high
+> +- st,pads-pull-register:
+> +	-bit 1: WAKEUP pull down is not active
+> +	-bit 2: PWRCTRL pull up is active
+> +	-bit 3: PWRCTRL pull down is active
+> +	-bit 4: WAKEUP detector is disabled
+> +- st,vin-control-register:
+> +	-bit 0: VINLOW monitoring is enabled
+> +	-bit [1...3]: VINLOW rising threshold
+> +		000 VINOK_f + 50mV
+> +		001 VINOK_f + 100mV
+> +		010 VINOK_f + 150mV
+> +		011 VINOK_f + 200mV
+> +		100 VINOK_f + 250mV
+> +		101 VINOK_f + 300mV
+> +		110 VINOK_f + 350mV
+> +		111 VINOK_f + 400mV
+> +	-bit [4...5]: VINLOW hyst
+> +		00 100mV
+> +		01 200mV
+> +		10 300mV
+> +		11 400mV
+> +	-bit 6: SW_OUT detector is disabled
+> +	-bit 7: SW_IN detector is enabled.
+> +- st,usb-control-register:
+> +	-bit 3: SW_OUT current limit
+> +		0: 600mA
+> +		1: 1.1A
+> +	-bit 4: VBUS_OTG discharge is enabled
+> +	-bit 5: SW_OUT discharge is enabled
+> +	-bit 6: VBUS_OTG detection is enabled
+> +	-bit 7: BOOST_OVP is disabled
+> +
+> +STPMIC1 consists in a varied group of sub-devices.
+> +Each sub-device binding is be described in own documentation file.
+> +
+> +Device			 Description
+> +------			------------
+> +st,stpmic1-onkey	: Power on key, see ../input/st,stpmic1-onkey.txt
+> +st,stpmic1-regulators	: Regulators, see ../regulator/st,stpmic1-regulator.txt
+> +st,stpmic1-wdt		: Watchdog, see ../watchdog/st,stpmic1-wdt.txt
+> +
+> +Example:
+> +
+> +pmic: pmic1@33 {
+
+pmic@33
+
+> +	compatible = "st,stpmic1";
+> +	reg = <0x33>;
+> +	interrupt-parent = <&gpioa>;
+> +	interrupts = <0 2>;
+> +	st,main-control-register=<0x0c>;
+> +	interrupt-controller;
+> +	#interrupt-cells = <2>;
+> +
+> +	onkey {
+> +		compatible = "st,stpmic1-onkey";
+> +		interrupt-parent = <&pmic>;
+
+Not needed because the parent is the interrupt controller.
+
+> +		interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
+> +		interrupt-names = "onkey-falling", "onkey-rising";
+> +		power-off-time-sec = <10>;
+> +	};
+> +
+> +	watchdog {
+> +		compatible = "st,stpmic1-wdt";
+> +	};
+> +
+> +	regulators {
+> +		compatible = "st,stpmic1-regulators";
+> +
+> +		vdd_core: buck1 {
+> +			regulator-name = "vdd_core";
+> +			regulator-boot-on;
+> +			regulator-min-microvolt = <700000>;
+> +			regulator-max-microvolt = <1200000>;
+> +		};
+> +		vdd: buck3 {
+> +			regulator-name = "vdd";
+> +			regulator-min-microvolt = <3300000>;
+> +			regulator-max-microvolt = <3300000>;
+> +			regulator-boot-on;
+> +			regulator-pull-down;
+> +		};
+> +	};
+> diff --git a/include/dt-bindings/mfd/st,stpmic1.h b/include/dt-bindings/mfd/st,stpmic1.h
+> new file mode 100644
+> index 0000000..b2d6c83
+> --- /dev/null
+> +++ b/include/dt-bindings/mfd/st,stpmic1.h
+> @@ -0,0 +1,46 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) STMicroelectronics 2018 - All Rights Reserved
+> + * Author: Philippe Peurichard <philippe.peurichard@st.com>,
+> + * Pascal Paillet <p.paillet@st.com> for STMicroelectronics.
+> + */
+> +
+> +#ifndef __DT_BINDINGS_STPMIC1_H__
+> +#define __DT_BINDINGS_STPMIC1_H__
+> +
+> +/* IRQ definitions */
+> +#define IT_PONKEY_F	0
+> +#define IT_PONKEY_R	1
+> +#define IT_WAKEUP_F	2
+> +#define IT_WAKEUP_R	3
+> +#define IT_VBUS_OTG_F	4
+> +#define IT_VBUS_OTG_R	5
+> +#define IT_SWOUT_F	6
+> +#define IT_SWOUT_R	7
+> +
+> +#define IT_CURLIM_BUCK1	8
+> +#define IT_CURLIM_BUCK2	9
+> +#define IT_CURLIM_BUCK3	10
+> +#define IT_CURLIM_BUCK4	11
+> +#define IT_OCP_OTG	12
+> +#define IT_OCP_SWOUT	13
+> +#define IT_OCP_BOOST	14
+> +#define IT_OVP_BOOST	15
+> +
+> +#define IT_CURLIM_LDO1	16
+> +#define IT_CURLIM_LDO2	17
+> +#define IT_CURLIM_LDO3	18
+> +#define IT_CURLIM_LDO4	19
+> +#define IT_CURLIM_LDO5	20
+> +#define IT_CURLIM_LDO6	21
+> +#define IT_SHORT_SWOTG	22
+> +#define IT_SHORT_SWOUT	23
+> +
+> +#define IT_TWARN_F	24
+> +#define IT_TWARN_R	25
+> +#define IT_VINLOW_F	26
+> +#define IT_VINLOW_R	27
+> +#define IT_SWIN_F	30
+> +#define IT_SWIN_R	31
+> +
+> +#endif /* __DT_BINDINGS_STPMIC1_H__ */
+> -- 
+> 1.9.1
