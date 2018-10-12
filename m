@@ -1,36 +1,75 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC v2 6/7] dt-binding: mips: Document Realtek SoC DT bindings
-Date: Fri, 12 Oct 2018 15:15:06 -0500
-Message-ID: <20181012201506.GA22059@bogus>
-References: <20181001102952.7913-1-yasha.che3@gmail.com>
- <20181001102952.7913-7-yasha.che3@gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v4 1/2] arm64: dts: allwinner: new board - Emlid Neutis N5
+Date: Fri, 12 Oct 2018 22:23:30 +0200
+Message-ID: <20181012202330.tdwedsof2bsnxkxn@flea>
+References: <1539012044-29998-2-git-send-email-aleksandr.aleksandrov@emlid.com>
+ <1539339841-22235-1-git-send-email-aleksandr.aleksandrov@emlid.com>
+ <1539339841-22235-2-git-send-email-aleksandr.aleksandrov@emlid.com>
+ <b47c5458-683e-3e96-0bbe-f9db84579c77@suse.de>
+ <20181012133914.GA32670@imagebutcher>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181001102952.7913-7-yasha.che3@gmail.com>
+In-Reply-To: <20181012133914.GA32670@imagebutcher>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, Yasha Cherikovsky <yasha.che3@gmail.com>, linux-kernel@vger.kernel.org
+To: Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
+Cc: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, David Lechner <david@lechnology.com>, Thierry Reding <treding@nvidia.com>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon,  1 Oct 2018 13:29:51 +0300, Yasha Cherikovsky wrote:
-> This patch adds device tree binding doc for Realtek MIPS SoCs.
+On Fri, Oct 12, 2018 at 04:39:14PM +0300, Aleksandr Aleksandrov wrote:
+> Hi Andreas,
 > 
-> It includes a compatible string for the Realtek RTL8186 SoC.
+> Thanks for your feedback!
 > 
-> Signed-off-by: Yasha Cherikovsky <yasha.che3@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Paul Burton <paul.burton@mips.com>
-> Cc: James Hogan <jhogan@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-mips@linux-mips.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/mips/realtek.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/realtek.txt
+> > > + *
+> > > + * Copyright (C) 2018 Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
+> > > + */
+> > > +
+> > > +/dts-v1/;
+> > > +
+> > > +#include "sun50i-h5-emlid-neutis-n5.dtsi"
+> > > +
+> > > +/ {
+> > > +	model = "Emlid Neutis N5 Developer board";
+> > > +	compatible = "emlid,neutis-n5-devboard",
+> > > +		     "emlid,neutis-n5",
+> > 
+> > You are lacking bindings definitions for these new identifiers. The
+> > vendor prefix should be patch 1/3, the SoM/board compatibles 2/3 and
+> > this .dts[i] patch 3/3, so that only vendor prefixes and compatibles
+> > that are defined and don't result in checkpatch.pl warnings get used.
 > 
+> Patch 2/3:
+> 
+> commit 46dcb8632b36644cb20e6b35ede12ff0088a60eb
+> Author: Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
+> Date:   Fri Oct 12 16:22:28 2018 +0300
+> 
+>     dt-bindings: arm: sunxi: emlid,neutis-n5(-devboard)
+>     
+>     sunxi: add new compatibles for Emlid Neutis Dev board and SoM module
+>     
+>     Signed-off-by: Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
+> index e4beec3..a907e52 100644
+> --- a/Documentation/devicetree/bindings/arm/sunxi.txt
+> +++ b/Documentation/devicetree/bindings/arm/sunxi.txt
+> @@ -19,3 +19,5 @@ using one of the following compatible strings:
+>    allwinner,sun9i-a80
+>    allwinner,sun50i-a64
+>    nextthing,gr8
+> +  emlid,neutis-n5
+> +  emlid,neutis-n5-devboard
+> 
+> Is this right place for the neutis compatibles?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+No, those are for SoCs compatible. I'm not sure we ever created a
+board compatible files.
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
