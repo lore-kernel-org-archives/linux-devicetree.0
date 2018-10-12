@@ -1,71 +1,51 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH v2 1/4] dt: bindings: Add SD tap value properties
- details for 'xlnx,zynqmp-8.9a'
-Date: Fri, 12 Oct 2018 11:29:56 -0500
-Message-ID: <20181012162956.GA7339@bogus>
-References: <1537435845-6682-1-git-send-email-manish.narani@xilinx.com>
- <1537435845-6682-2-git-send-email-manish.narani@xilinx.com>
+From: Christian Lamparter <chunkeey@gmail.com>
+Subject: Re: [PATCH] dt-bindings: Add bindings for aliases node
+Date: Fri, 12 Oct 2018 18:31:11 +0200
+Message-ID: <1626442.UsWqDEgn3j@debian64>
+References: <20180925210255.172734-1-mka@chromium.org> <20181009183141.GA126050@ban.mtv.corp.google.com> <20181012000837.GP22824@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1537435845-6682-2-git-send-email-manish.narani@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manish Narani <manish.narani@xilinx.com>
-Cc: ulf.hansson@linaro.org, mark.rutland@arm.com, michal.simek@xilinx.com, adrian.hunter@intel.com, amit.kucheria@linaro.org, sudeep.holla@arm.com, leoyang.li@nxp.com, jollys@xilinx.com, rajanv@xilinx.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20181012000837.GP22824@google.com>
+Sender: netdev-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Brian Norris <briannorris@chromium.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-wireless <linux-wireless@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, netdev <netdev@vger.kernel.org>, swboyd@chromium.org, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 20, 2018 at 03:00:42PM +0530, Manish Narani wrote:
-> Add documentation for MIO bank required property and Tap Delays optional
-> properties in devicetree bindings.
-> 
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> ---
->  .../devicetree/bindings/mmc/arasan,sdhci.txt          | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> index 72769e0..6cc95fa 100644
-> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> @@ -27,6 +27,7 @@ Required Properties for "arasan,sdhci-5.1":
->  
->  Required Properties for "xlnx,zynqmp-8.9a":
->    - xlnx,device_id: SD controller device ID. Must be either <0> or <1>.
-> +  - xlnx,mio-bank: The value will be 0/1/2 depending on MIO bank selection.
->  
->  Optional Properties:
->    - arasan,soc-ctl-syscon: A phandle to a syscon device (see ../mfd/syscon.txt)
-> @@ -44,6 +45,24 @@ Optional Properties:
->    - xlnx,int-clock-stable-broken: when present, the controller always reports
->      that the internal clock is stable even when it is not.
->  
-> +Optional Properties for "xlnx,zynqmp-8.9a":
-> + - xlnx,itap-delay-sd-hsd: Input Tap Delay for SD HS.
-> + - xlnx,itap-delay-sdr25: Input Tap Delay for SDR25.
-> + - xlnx,itap-delay-sdr50: Input Tap Delay for SDR50.
-> + - xlnx,itap-delay-sdr104: Input Tap Delay for SDR104.
-> + - xlnx,itap-delay-sd-ddr50: Input Tap Delay for SD DDR50.
-> + - xlnx,itap-delay-mmc-hsd: Input Tap Delay for MMC HS.
-> + - xlnx,itap-delay-mmc-ddr52: Input Tap Delay for MMC DDR52.
-> + - xlnx,itap-delay-mmc-hs200: Input Tap Delay for MMC HS200.
-> + - xlnx,otap-delay-sd-hsd: Output Tap Delay for SD HS.
-> + - xlnx,otap-delay-sdr25: Output Tap Delay for SDR25.
-> + - xlnx,otap-delay-sdr50: Output Tap Delay for SDR50.
-> + - xlnx,otap-delay-sdr104: Output Tap Delay for SDR104.
-> + - xlnx,otap-delay-sd-ddr50: Output Tap Delay for DDR50.
-> + - xlnx,otap-delay-mmc-hsd: Output Tap Delay for MMC HS.
-> + - xlnx,otap-delay-mmc-ddr52: Output Tap Delay for MMC DDR52.
-> + - xlnx,otap-delay-mmc-hs200: Output Tap Delay for MMC HS200.
+On Friday, October 12, 2018 2:08:37 AM CEST Matthias Kaehlcke wrote:
+> Maybe the doc should include a recommendation to use aliases
+> sparingly? I'm open to input on that from folks who have a better
+> understanding of the potential pitfalls 
 
-type, values, units for all of these?
+I had a similar discussion with the OpenWrt devs over the
+use of "led-$function" aliases in a DTS. I did a bit of digging and
+found this wonderful emails from Mark Rutland regarding the general
+use and abuse of aliases in a reply to a patch by Christer Weinigel 
+"devicetree - document using aliases to set spi bus number."
 
-Perhaps combine to pairs of values for input and output delays?
+<https://patchwork.kernel.org/patch/9133903/#19207021>
 
-> +
->  Example:
->  	sdhci@e0100000 {
->  		compatible = "arasan,sdhci-8.9a";
-> -- 
-> 2.1.1
-> 
+|"If those ports are physically organised and labelled the same, then
+|using aliases could make sense, to describe the well-defined physical
+|labels. If you've assigned the numbers artificially, or if the physical
+|organisation differs across boards, then aliases are not the right tool
+|for the job.
+|
+|In the latter cases we're altering the hardware description to suit an
+|application, rather than providing the necessary abstraction, which is
+|the kind of (ab)use of aliases which we want to avoid."
+
+And he followed it up with a summary:
+<https://patchwork.kernel.org/comment/19207071/>
+
+|Typically, serial ports are much more user-accessible (physically), and
+|much more directly useful to a user in a generic fashion. They're often
+|labelled (physically or in a manual) with a number, and we use aliases
+|to describe those labels to the kernel. The fact that the kernel may use
+|that to drive its own internal numbering is immaterial to the binding.
+
+So the gist of this is that aliases are meant for user-accessible /
+physically devices/ports/etc... that are labeled as such. And this of
+course works perfectly for power/status LEDs and such because they
+usually have little "power" symbols/pictograms/lables near them. 
