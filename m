@@ -1,27 +1,53 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] dt: bindings: add bindings for wifi iommu node
-Date: Fri, 12 Oct 2018 11:19:23 -0500
-Message-ID: <20181012161923.GA28389@bogus>
-References: <1539172376-19269-1-git-send-email-govinds@codeaurora.org>
- <1539172376-19269-4-git-send-email-govinds@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/9] dt-bindings: ti-lmu: Remove LM3697
+Date: Fri, 12 Oct 2018 11:26:19 -0500
+Message-ID: <20181012162619.GA28573@bogus>
+References: <20181011165123.32198-1-dmurphy@ti.com>
+ <20181011165123.32198-3-dmurphy@ti.com>
+ <20181011182734.GA7973@amd>
+ <4fcb91c7-b2b2-798d-8a41-fa1b475086e0@ti.com>
+ <8c1559e1-b703-4c98-8bd9-7c9993bd59f5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1539172376-19269-4-git-send-email-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <8c1559e1-b703-4c98-8bd9-7c9993bd59f5@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>, lee.jones@linaro.org, tony@atomide.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 10 Oct 2018 17:22:56 +0530, Govind Singh wrote:
-> WCN3990 wifi module can optionally make use of the IOMMU.
-> Add binding documentation for phandle to the IOMMU and
-> the stream id of wifi iommu block.
+On Thu, Oct 11, 2018 at 09:38:53PM +0200, Jacek Anaszewski wrote:
+> On 10/11/2018 08:34 PM, Dan Murphy wrote:
+> > Pavel
+> > 
+> > On 10/11/2018 01:27 PM, Pavel Machek wrote:
+> >> On Thu 2018-10-11 11:51:16, Dan Murphy wrote:
+> >>> Remove support for the LM3697 LED device
+> >>> from the ti-lmu.  The LM3697 will be supported
+> >>> via a stand alone LED driver.
+> >>>
+> >>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> >>
+> >> NAK.
+> > 
+> > Thanks for the NAK.
+> > 
+> > This NAK was NAK'd by other maintainer in the V2 RFC patchset
+> > 
+> > https://lore.kernel.org/patchwork/patch/993171/
 > 
-> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+> I confirm. LM3697 is a standalone device and not a cell of any
+> MFD device.
 > 
+> Waiting for DT maintainer's ack.
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+You all sort out what you want... I can't follow it all, and I'm not 
+going to spend the time trying to figure out what is going on here.
+
+As this is worded, changing the driver is a Linux problem and irrelevant 
+to the binding. Now if you want to move documentation to a location that 
+makes more sense, then fine. But structure patches that way and make it 
+clear that from an binding ABI perspective, nothing is changing.
+
+Rob
