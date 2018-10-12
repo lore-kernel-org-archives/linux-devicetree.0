@@ -1,136 +1,71 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 4/9] dt-bindings: leds: Add bindings for lm3697 driver
-Date: Fri, 12 Oct 2018 11:27:02 -0500
-Message-ID: <20181012162702.GA5672@bogus>
-References: <20181011165123.32198-1-dmurphy@ti.com>
- <20181011165123.32198-5-dmurphy@ti.com>
+Subject: Re: [RFC PATCH v2 1/4] dt: bindings: Add SD tap value properties
+ details for 'xlnx,zynqmp-8.9a'
+Date: Fri, 12 Oct 2018 11:29:56 -0500
+Message-ID: <20181012162956.GA7339@bogus>
+References: <1537435845-6682-1-git-send-email-manish.narani@xilinx.com>
+ <1537435845-6682-2-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181011165123.32198-5-dmurphy@ti.com>
+In-Reply-To: <1537435845-6682-2-git-send-email-manish.narani@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, lee.jones@linaro.org, tony@atomide.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Manish Narani <manish.narani@xilinx.com>
+Cc: ulf.hansson@linaro.org, mark.rutland@arm.com, michal.simek@xilinx.com, adrian.hunter@intel.com, amit.kucheria@linaro.org, sudeep.holla@arm.com, leoyang.li@nxp.com, jollys@xilinx.com, rajanv@xilinx.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 11, 2018 at 11:51:18AM -0500, Dan Murphy wrote:
-> Add the device tree bindings for the lm3697
-> LED driver for backlighting and display.
-
-Bindings are for h/w, not drivers...
-
+On Thu, Sep 20, 2018 at 03:00:42PM +0530, Manish Narani wrote:
+> Add documentation for MIO bank required property and Tap Delays optional
+> properties in devicetree bindings.
 > 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
 > ---
->  .../devicetree/bindings/leds/leds-lm3697.txt  | 98 +++++++++++++++++++
->  1 file changed, 98 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
+>  .../devicetree/bindings/mmc/arasan,sdhci.txt          | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3697.txt b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
-> new file mode 100644
-> index 000000000000..4bb2ed51025b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
-> @@ -0,0 +1,98 @@
-> +* Texas Instruments - LM3697 Highly Efficient White LED Driver
+> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> index 72769e0..6cc95fa 100644
+> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> @@ -27,6 +27,7 @@ Required Properties for "arasan,sdhci-5.1":
+>  
+>  Required Properties for "xlnx,zynqmp-8.9a":
+>    - xlnx,device_id: SD controller device ID. Must be either <0> or <1>.
+> +  - xlnx,mio-bank: The value will be 0/1/2 depending on MIO bank selection.
+>  
+>  Optional Properties:
+>    - arasan,soc-ctl-syscon: A phandle to a syscon device (see ../mfd/syscon.txt)
+> @@ -44,6 +45,24 @@ Optional Properties:
+>    - xlnx,int-clock-stable-broken: when present, the controller always reports
+>      that the internal clock is stable even when it is not.
+>  
+> +Optional Properties for "xlnx,zynqmp-8.9a":
+> + - xlnx,itap-delay-sd-hsd: Input Tap Delay for SD HS.
+> + - xlnx,itap-delay-sdr25: Input Tap Delay for SDR25.
+> + - xlnx,itap-delay-sdr50: Input Tap Delay for SDR50.
+> + - xlnx,itap-delay-sdr104: Input Tap Delay for SDR104.
+> + - xlnx,itap-delay-sd-ddr50: Input Tap Delay for SD DDR50.
+> + - xlnx,itap-delay-mmc-hsd: Input Tap Delay for MMC HS.
+> + - xlnx,itap-delay-mmc-ddr52: Input Tap Delay for MMC DDR52.
+> + - xlnx,itap-delay-mmc-hs200: Input Tap Delay for MMC HS200.
+> + - xlnx,otap-delay-sd-hsd: Output Tap Delay for SD HS.
+> + - xlnx,otap-delay-sdr25: Output Tap Delay for SDR25.
+> + - xlnx,otap-delay-sdr50: Output Tap Delay for SDR50.
+> + - xlnx,otap-delay-sdr104: Output Tap Delay for SDR104.
+> + - xlnx,otap-delay-sd-ddr50: Output Tap Delay for DDR50.
+> + - xlnx,otap-delay-mmc-hsd: Output Tap Delay for MMC HS.
+> + - xlnx,otap-delay-mmc-ddr52: Output Tap Delay for MMC DDR52.
+> + - xlnx,otap-delay-mmc-hs200: Output Tap Delay for MMC HS200.
+
+type, values, units for all of these?
+
+Perhaps combine to pairs of values for input and output delays?
+
 > +
-> +The LM3697 11-bit LED driver provides high-
-> +performance backlight dimming for 1, 2, or 3 series
-> +LED strings while delivering up to 90% efficiency.
-> +
-> +This device is suitable for display and keypad Lighting
-> +
-> +Required properties:
-> +	- compatible:
-> +		"ti,lm3697"
-> +	- reg :  I2C slave address
-> +	- #address-cells : 1
-> +	- #size-cells : 0
-> +
-> +Optional properties:
-> +	- enable-gpios : GPIO pin to enable/disable the device
-> +	- vled-supply : LED supply
-> +
-> +Required child properties:
-> +	- reg : 0 - LED is Controlled by bank A
-> +		1 - LED is Controlled by bank B
-> +	- led-sources : Indicates which HVLED string is associated to which
-> +			control bank.  Each element in the array is associated
-> +			with a specific HVLED string.  Element 0 is HVLED1,
-> +			element 1 is HVLED2 and element 2 HVLED3.
-> +			Additional information is contained
-> +			in Documentation/devicetree/bindings/leds/common.txt
-> +			0 - HVLED is not active in this control bank
-> +			1 - HVLED string is controlled by this control bank
-> +
-> +Optional child properties:
-> +	- runtime-ramp-up-msec: Current ramping from one brightness level to
-> +				the a higher brightness level.
-> +				Range from 2048 us - 117.44 s
-> +	- runtime-ramp-down-msec: Current ramping from one brightness level to
-> +				  the a lower brightness level.
-> +				  Range from 2048 us - 117.44 s
-> +	- label : see Documentation/devicetree/bindings/leds/common.txt
-> +	- linux,default-trigger :
-> +	   see Documentation/devicetree/bindings/leds/common.txt
-> +
-> +Example:
-> +
-> +HVLED string 1 and 3 are controlled by control bank A and HVLED 2 string is
-> +controlled by control bank B.
-> +
-> +led-controller@36 {
-> +	compatible = "ti,lm3697";
-> +	reg = <0x36>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
-> +	vled-supply = <&vbatt>;
-> +
-> +	led@0 {
-> +		reg = <0>;
-> +		led-sources = <1 0 1>;
-> +		runtime-ramp-up-msec = <5000>;
-> +		runtime-ramp-down-msec = <1000>;
-> +		label = "white:first_backlight_cluster";
-> +		linux,default-trigger = "backlight";
-> +	};
-> +
-> +	led@1 {
-> +		reg = <1>;
-> +		led-sources = <0 1 0>;
-> +		runtime-ramp-up-msec = <500>;
-> +		runtime-ramp-down-msec = <1000>;
-> +		label = "white:second_backlight_cluster";
-> +		linux,default-trigger = "backlight";
-> +	};
-> +}
-> +
-> +All HVLED strings controlled by control bank A
-> +
-> +led-controller@36 {
-> +	compatible = "ti,lm3697";
-> +	reg = <0x36>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
-> +	vled-supply = <&vbatt>;
-> +
-> +	led@0 {
-> +		reg = <0>;
-> +		led-sources = <1 1 1>;
-> +		runtime-ramp-up-msec = <500>;
-> +		runtime-ramp-down-msec = <1000>;
-> +		label = "white:backlight_cluster";
-> +		linux,default-trigger = "backlight";
-> +	};
-> +}
-> +
-> +For more product information please see the link below:
-> +http://www.ti.com/lit/ds/symlink/lm3697.pdf
+>  Example:
+>  	sdhci@e0100000 {
+>  		compatible = "arasan,sdhci-8.9a";
 > -- 
-> 2.19.0
+> 2.1.1
 > 
