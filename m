@@ -1,85 +1,100 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/4] power: supply: core: Introduce properties to
- present the battery OCV capacity table
-Date: Fri, 12 Oct 2018 09:35:30 -0500
-Message-ID: <20181012143530.GA28145@bogus>
-References: <2787f18a0366576959557d05112a069dca982269.1538033078.git.baolin.wang@linaro.org>
- <7dccec1694a05a524710e59a63859974b4cdae89.1538033078.git.baolin.wang@linaro.org>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH 5/7] mfd: ds90ux9xx: add I2C bridge/alias and link
+ connection driver
+Date: Fri, 12 Oct 2018 17:36:39 +0300
+Message-ID: <0be75b0d-eb61-02e5-a086-be6a9d32841a@mleia.com>
+References: <20181008211205.2900-1-vz@mleia.com> <20181012060455.GV4939@dell>
+ <c8f01b88-c14f-867d-d796-7464b2e8ccfb@mentor.com> <1584081.CVFmJobd6K@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7dccec1694a05a524710e59a63859974b4cdae89.1538033078.git.baolin.wang@linaro.org>
+In-Reply-To: <1584081.CVFmJobd6K@avalon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: sre@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, broonie@kernel.org, ctatlor97@gmail.com, linus.walleij@linaro.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2018 at 03:26:55PM +0800, Baolin Wang wrote:
-> Some battery driver will use the open circuit voltage (OCV) value to look
-> up the corresponding battery capacity percent in one certain degree Celsius.
-> Thus this patch provides some battery properties to present the OCV table
-> temperatures and OCV capacity table values. Moreover it also provides some
-> helper functions to use the OCV capacity table for users.
+Hi Laurent
+
+On 10/12/2018 04:12 PM, Laurent Pinchart wrote:
+> Hi Vladimir,
 > 
-> Suggested-by: Sebastian Reichel <sre@kernel.org>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Changes from v2:
->  - Use type __be32 to calculate the table length.
->  - Update error messages.
->  - Add some helper functions.
+> (CC'ing Wolfram)
 > 
-> Changes from v1:
->  - New patch in v2.
-> ---
->  .../devicetree/bindings/power/supply/battery.txt   |   14 +++
-
-Please split binding patches.
-
->  drivers/power/supply/power_supply_core.c           |  125 +++++++++++++++++++-
->  include/linux/power_supply.h                       |   19 +++
->  3 files changed, 157 insertions(+), 1 deletion(-)
+> On Friday, 12 October 2018 10:32:32 EEST Vladimir Zapolskiy wrote:
+>> On 10/12/2018 09:04 AM, Lee Jones wrote:
+>>> On Tue, 09 Oct 2018, Vladimir Zapolskiy wrote:
+>>>> From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+>>>>
+>>>> The change adds TI DS90Ux9xx I2C bridge/alias subdevice driver and
+>>>> FPD Link connection handling mechanism.
+>>>>
+>>>> Access to I2C devices connected to a remote de-/serializer is done in
+>>>> a transparent way, on established link detection event such devices
+>>>> are registered on an I2C bus, which serves a local de-/serializer IC.
+>>>>
+>>>> The development of the driver was a collaborative work, the
+>>>> contribution done by Balasubramani Vivekanandan includes:
+>>>> * original simplistic implementation of the driver,
+>>>> * support of implicitly specified devices in device tree,
+>>>> * support of multiple FPD links for TI DS90Ux9xx,
+>>>> * other kind of valuable review comments, clean-ups and fixes.
+>>>>
+>>>> Also Steve Longerbeam made the following changes:
+>>>> * clear address maps after linked device removal,
+>>>> * disable pass-through in disconnection,
+>>>> * qualify locked status with non-zero remote address.
+>>>>
+>>>> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+>>>> ---
+>>>>
+>>>>  drivers/mfd/Kconfig                |   8 +
+>>>>  drivers/mfd/Makefile               |   1 +
+>>>>  drivers/mfd/ds90ux9xx-i2c-bridge.c | 764 +++++++++++++++++++++++++++++
+>>>>  3 files changed, 773 insertions(+)
+>>>>  create mode 100644 drivers/mfd/ds90ux9xx-i2c-bridge.c
+>>>
+>>> Shouldn't this live in drivers/i2c?
+>>
+>> no, the driver is not for an I2C controller of any kind, and the driver does
+>> not register itself in the I2C subsystem by calling i2c_add_adapter() or
+>> i2c_add_numbered_adapter() or i2c_mux_add_adapter() etc, this topic was
+>> discussed with Wolfram also.
 > 
-> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
-> index 938d027..cad38df 100644
-> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-> @@ -23,6 +23,16 @@ Optional Properties:
->   - constant-charge-current-max-microamp: maximum constant input current
->   - constant-charge-voltage-max-microvolt: maximum constant input voltage
->   - factory-internal-resistance-micro-ohms: battery factory internal resistance
-> + - ocv-capacity-table-0: An array providing the battery capacity percent
-> +   with corresponding open circuit voltage (OCV) of the battery, which
-> +   is used to look up battery capacity according to current OCV value.
-> + - ocv-capacity-table-1: Same as ocv-capacity-table-0
-> + ......
-> + - ocv-capacity-table-n: Same as ocv-capacity-table-0
+> (Who is now on CC)
+> 
 
-So it is tubles of (percent, voltage)? What's the units for voltage?
+Wolfram has copies of the drivers and discussion right from the beginning,
+hopefully he won't get two copies ;)
 
-What determines the # of entries for each table? Do all tables have the 
-same number of entries?
+>> Formally the driver converts the managed IC into a multi-address I2C
+>> slave device, I understand that it does not sound like a well suited driver
+>> for MFD, but ds90ux9xx-core.c and ds90ux9xx-i2c-bridge.c drivers are quite
+>> tightly coupled.
+> 
+> As mentioned in other e-mails in this thread I don't think this should be 
+> split out to a separate driver,> I would move the functionality to the 
+> ds90ux9xx driver.
 
-> + - ocv-capacity-table-temperatures: An array containing the temperature
-> +   in degree Celsius, for each of the battery capacity lookup table.
-> +   The first temperature value specifies the OCV table 0, and the second
-> +   temperature value specifies the OCV table 1, and so on.
+The proposal may have the grounds, but the I2C bridging functionality of ICs
+is quite detached from all other ones, thus it found its place in the cell
+driver per se.
 
-This should have unit suffix. Perhaps just "ocv-capacity-celsius" to 
-avoid being too long.
+> You may want to register an I2C mux, but as you have a single port, that
+> could be overkill. I haven't studied in details how to best support this
+> chip using the existing I2C subsystems APIs (which we may want to extend
+> if it needed), but I believe that (in your use cases) the deserializer
+> should be a child of the serializer, and modeled as an I2C device.
+> 
 
->  Battery properties are named, where possible, for the corresponding
->  elements in enum power_supply_property, defined in
-> @@ -44,6 +54,10 @@ Example:
->  		constant-charge-current-max-microamp = <900000>;
->  		constant-charge-voltage-max-microvolt = <4200000>;
->  		factory-internal-resistance-micro-ohms = <250000>;
-> +		ocv-capacity-table-temperatures = <(-10) 0 10>;
-> +		ocv-capacity-table-0 = <4185000 100>, <4113000 95>, <4066000 90>, ...;
-> +		ocv-capacity-table-1 = <4200000 100>, <4185000 95>, <4113000 90>, ...;
-> +		ocv-capacity-table-2 = <4250000 100>, <4200000 95>, <4185000 90>, ...;
->  	};
->  
->  	charger: charger@11 {
+Formally in OF terms to define a link between devices by a phandle should
+be sufficient, panels are not the children of LVDS controllers under OF graph
+constraints in DT representation, the panels become secondary in runtime
+only, I'd like to reuse the concept. Also it adds a better sense of symmetry
+of deserializer <-> serializer connections relatively to a SoC/data source.
+
+--
+Best wishes,
+Vladimir
