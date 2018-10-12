@@ -1,49 +1,92 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 3/3] usb: typec: tcpm: charge current handling for
- sink  during hard reset
-Date: Fri, 12 Oct 2018 09:48:56 -0500
-Message-ID: <20181012144856.GA3720@bogus>
-References: <20181001194501.58338-1-badhri@google.com>
- <20181001194501.58338-3-badhri@google.com>
+Subject: Re: [PATCH v3 0/4] drivers: soc: xilinx: Add support for ZynqMP
+ power domain driver
+Date: Fri, 12 Oct 2018 09:52:51 -0500
+Message-ID: <20181012145251.GA6489@bogus>
+References: <1538688221-9823-1-git-send-email-jollys@xilinx.com>
+ <BL2PR02MB2130719D4A82F429745DDBEEB8E00@BL2PR02MB2130.namprd02.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181001194501.58338-3-badhri@google.com>
+In-Reply-To: <BL2PR02MB2130719D4A82F429745DDBEEB8E00@BL2PR02MB2130.namprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Chanwoo Choi <cw00.choi@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Li Jun <jun.li@nxp.com>, linux@roeck-us.net, jackp@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, Badhri Jagan Sridharan <badhri@google.com>
+To: Jolly Shah <JOLLYS@xilinx.com>
+Cc: "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "andy.gross@linaro.org" <andy.gross@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "sean.wang@mediatek.com" <sean.wang@mediatek.com>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, Michal Simek <michals@xilinx.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rajan Vaja <RAJANV@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon,  1 Oct 2018 12:45:01 -0700, Badhri Jagan Sridharan wrote:
-> During the initial connect to a non-pd port, sink would hard reset
-> twice before deeming that the port partner is non-pd. TCPM sets the
-> the charge path to false during the hard reset. This causes unnecessary
-> connects/disconnects of charge path and makes port take longer to
-> charge from the non-pd ports. Avoid this by not setting the charge path
-> to false unless the partner has already identified to be pd capable.
-> 
-> When partner is a pd port, set the charge path to false in
-> SNK_HARD_RESET_SINK_OFF. Set the current limits to default value based
-> of CC pull up and resume the charge path when port enters
-> SNK_HARD_RESET_SINK_ON.
-> 
-> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
-> 
-> --------
-> Changes in V3:
-> Rebase on top of usb-next
-> 
-> Changes in V2:
-> Based on feedback of jackp@codeaurora.org
-> - vsafe_5v_hard_reset flag from tcpc_config is removed
-> - Patch only differentiates between pd port partner and non-pd port
-> partner
-> 
-> V1 version of the patch is here:
-> https://lkml.org/lkml/2018/9/14/11
-> ---
->  drivers/usb/typec/tcpm/tcpm.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
+On Wed, Oct 10, 2018 at 06:41:44PM +0000, Jolly Shah wrote:
+> Ping for comments
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Please see my comments on other ZynqMP firmware patches. In summary, I 
+need to see a complete binding, not piecemeal additions.
+
+Rob
+
+> 
+> Thanks,
+> Jolly Shah
+> 
+> > -----Original Message-----
+> > From: Jolly Shah [mailto:jolly.shah@xilinx.com]
+> > Sent: Thursday, October 04, 2018 2:24 PM
+> > To: matthias.bgg@gmail.com; andy.gross@linaro.org; shawnguo@kernel.org;
+> > geert+renesas@glider.be; bjorn.andersson@linaro.org;
+> > sean.wang@mediatek.com; m.szyprowski@samsung.com; Michal Simek
+> > <michals@xilinx.com>; robh+dt@kernel.org; mark.rutland@arm.com
+> > Cc: Rajan Vaja <RAJANV@xilinx.com>; devicetree@vger.kernel.org; linux-arm-
+> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Jolly Shah
+> > <JOLLYS@xilinx.com>
+> > Subject: [PATCH v3 0/4] drivers: soc: xilinx: Add support for ZynqMP power
+> > domain driver
+> > 
+> > The zynqmp power domain driver communicates the usage requirements for
+> > logical power domains / devices to the platform FW.
+> > FW is responsible for choosing appropriate power states, taking Linux' usage
+> > information into account.
+> > 
+> > This patch series is based on top of Xilinx firmware patch set:
+> > https://patchwork.kernel.org/cover/10555405/
+> > 
+> > v3:
+> >  - Changed binding to have FW node as a power controller as suggested by Rob
+> >  - Updated FW driver to register it as mfd child devices from firmware probe
+> >  - Move bindings location as suggested
+> > 
+> > v2:
+> >  - Rebased on top of latest firmware driver patch series
+> >  - Updated driver name from zynqmp-genpd to zynqmp-power-controller
+> >  - Updated device tree bindings to move power controller node under firmware
+> > node
+> > 
+> > Jolly Shah (1):
+> >   drivers: soc: xilinx: Add ZynqMP power domain driver
+> > 
+> > Rajan Vaja (3):
+> >   dt-bindings: power: Add ZynqMP power domain bindings
+> >   firmware: xilinx: Add APIs to control node status/power
+> >   firmware: xilinx: Add node IDs for zynqmp firmware
+> > 
+> >  .../bindings/power/xlnx,zynqmp-genpd.txt           |  34 ++
+> >  drivers/firmware/xilinx/Kconfig                    |   1 +
+> >  drivers/firmware/xilinx/zynqmp.c                   |  73 ++++
+> >  drivers/soc/xilinx/Kconfig                         |   9 +
+> >  drivers/soc/xilinx/Makefile                        |   2 +
+> >  drivers/soc/xilinx/zynqmp_pm_domains.c             | 403
+> > +++++++++++++++++++++
+> >  include/dt-bindings/power/xlnx-zynqmp-power.h      |  39 ++
+> >  include/linux/firmware/xlnx-zynqmp.h               |  98 +++++
+> >  8 files changed, 659 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/power/xlnx,zynqmp-
+> > genpd.txt
+> >  create mode 100644 drivers/soc/xilinx/zynqmp_pm_domains.c
+> >  create mode 100644 include/dt-bindings/power/xlnx-zynqmp-power.h
+> > 
+> > --
+> > 2.7.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
