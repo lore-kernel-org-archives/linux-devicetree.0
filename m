@@ -1,92 +1,49 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 net-next 5/5] ptp: Add a driver for InES time stamping
- IP core.
-Date: Fri, 12 Oct 2018 15:42:57 -0500
-Message-ID: <20181012204256.GA16019@bogus>
-References: <20181007173823.21590-6-richardcochran@gmail.com>
+Subject: Re: [PATCH v2] Documentation: dt: Add binding for
+ /secure-chosen/stdout-path
+Date: Fri, 12 Oct 2018 15:45:13 -0500
+Message-ID: <20181012204513.GA29769@bogus>
+References: <20181008101642.8040-1-jerome.forissier@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181007173823.21590-6-richardcochran@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Jacob Keller <jacob.e.keller@intel.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Willem de Bruijn <willemb@google.com>
+In-Reply-To: <20181008101642.8040-1-jerome.forissier@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Forissier <jerome.forissier@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Peter Maydell <peter.maydell@linaro.org>, Etienne Carriere <etienne.carriere@linaro.org>, tee-dev@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 07, 2018 at 10:38:23AM -0700, Richard Cochran wrote:
-> The InES at the ZHAW offers a PTP time stamping IP core.  The FPGA
-> logic recognizes and time stamps PTP frames on the MII bus.  This
-> patch adds a driver for the core along with a device tree binding to
-> allow hooking the driver to MII buses.
+On Mon, Oct 08, 2018 at 06:16:42PM +0800, Jerome Forissier wrote:
+> Some platforms may use a single device tree to describe two address
+> spaces, as described in d9f43babb998 ("Documentation: dt: Add bindings
+> for Secure-only devices"). For these platforms it makes sense to define
+> a secure counterpart of /chosen, namely: /secure-chosen. This new node
+> is meant to be used by the secure firmware to pass data to the secure
+> OS. Only the stdout-path property is supported for now.
 > 
-> Signed-off-by: Richard Cochran <richardcochran@gmail.com>
+> Signed-off-by: Jerome Forissier <jerome.forissier@linaro.org>
 > ---
->  Documentation/devicetree/bindings/ptp/ptp-ines.txt |  37 +
-
-Bindings should be separate patch.
-
->  drivers/ptp/Kconfig                                |  10 +
->  drivers/ptp/Makefile                               |   1 +
->  drivers/ptp/ptp_ines.c                             | 870 +++++++++++++++++++++
->  4 files changed, 918 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ptp/ptp-ines.txt
->  create mode 100644 drivers/ptp/ptp_ines.c
 > 
-> diff --git a/Documentation/devicetree/bindings/ptp/ptp-ines.txt b/Documentation/devicetree/bindings/ptp/ptp-ines.txt
-> new file mode 100644
-> index 000000000000..1484b62802c7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ptp/ptp-ines.txt
-> @@ -0,0 +1,37 @@
-> +ZHAW InES PTP time stamping IP core
-> +
-> +The IP core needs two different kinds of nodes.  The control node
-> +lives somewhere in the memory map and specifies the address of the
-> +control registers.  There can be up to three port handles placed as
-> +attributes of PHY nodes.  These associate a particular MII bus with a
-> +port index within the IP core.
-> +
-> +Required properties of the control node:
-> +
-> +- compatible:		"ines,ptp-ctrl"
+> Notes:
+>     Sending this again, slightly modified. Previous submission was in March
+>     2017 [1]. Since then, OP-TEE has implemented this binding for platforms
+>     that use DT [2] (fallback to /chosen/stdout-path to be implemented in
+>     [3]). A patch for QEMU has been proposed [4], to which the maintainer
+>     responded "Are the DT bindings upstream yet?" ;-)
+>     
+>     [1] https://patchwork.kernel.org/patch/9602401/
+>     [2] https://github.com/OP-TEE/optee_os/commit/4dc31c52544a
+>     [3] https://github.com/OP-TEE/optee_os/pull/2569
+>     [4] https://patchwork.ozlabs.org/patch/979345/
+>     
+>     Changes since v1:
+>     - Use "should" instead of "may" ("...the Secure OS should use the value
+>     of /chosen/stdout-path...").
+> 
+>  Documentation/devicetree/bindings/arm/secure.txt | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
 
-ines is not registered vendor prefix. Should it be 'zhaw' instead?
+Applied.
 
-> +- reg:			physical address and size of the register bank
-> +- #phandle-cells:	must be one (1)
-
-#timestamper-cells
-
-Or if it is always 1, you could omit it.
-
-> +
-> +Required format of the port handle within the PHY node:
-> +
-> +- timestamper:		provides control node reference and
-> +			the port channel within the IP core
-
-This and #timestamper-cells need to be in a common binding doc.
-
-And bonus points if you add a check in dtc for this. Should be a 
-one-liner.
-
-> +
-> +Example:
-> +
-> +	tstamper: timestamper@60000000 {
-> +		compatible = "ines,ptp-ctrl";
-> +		reg = <0x60000000 0x80>;
-> +		#phandle-cells = <1>;
-> +	};
-> +
-> +	ethernet@80000000 {
-> +		...
-> +		mdio {
-> +			...
-> +			phy@3 {
-> +				...
-> +				timestamper = <&tstamper 0>;
-> +			};
-> +		};
-> +	};
+Rob
