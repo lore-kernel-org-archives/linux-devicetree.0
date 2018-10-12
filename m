@@ -1,59 +1,70 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 3/5] clk: lochnagar: Add support for the Cirrus Logic
- Lochnagar
-Date: Fri, 12 Oct 2018 18:52:41 +0200
-Message-ID: <20181012165241.GH2340@sirena.org.uk>
-References: <20181008132542.19775-1-ckeepax@opensource.cirrus.com>
- <20181008132542.19775-3-ckeepax@opensource.cirrus.com>
- <153924124658.207691.10370075148426001371@swboyd.mtv.corp.google.com>
- <20181011145422.GG25351@sirena.org.uk>
- <153928658292.5275.11321177725702156165@swboyd.mtv.corp.google.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/7] dt-bindings: add power-domain header for RK3188
+ SoCs
+Date: Fri, 12 Oct 2018 11:57:46 -0500
+Message-ID: <20181012165746.GA14990@bogus>
+References: <20180923152356.30154-1-heiko@sntech.de>
+ <20180923152356.30154-2-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="YrlhzR9YrZtruaFS"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <153928658292.5275.11321177725702156165@swboyd.mtv.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, lee.jones@linaro.org, linus.walleij@linaro.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+In-Reply-To: <20180923152356.30154-2-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Sep 23, 2018 at 05:23:50PM +0200, Heiko Stuebner wrote:
+> Add rk3188 power-domains as described by the TRM.
+> 
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> ---
+>  include/dt-bindings/power/rk3188-power.h | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 include/dt-bindings/power/rk3188-power.h
+> 
+> diff --git a/include/dt-bindings/power/rk3188-power.h b/include/dt-bindings/power/rk3188-power.h
+> new file mode 100644
+> index 000000000000..820db55fc4b7
+> --- /dev/null
+> +++ b/include/dt-bindings/power/rk3188-power.h
+> @@ -0,0 +1,23 @@
 
---YrlhzR9YrZtruaFS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Missing license
 
-On Thu, Oct 11, 2018 at 12:36:22PM -0700, Stephen Boyd wrote:
-> Quoting Mark Brown (2018-10-11 07:54:22)
-> > On Thu, Oct 11, 2018 at 12:00:46AM -0700, Stephen Boyd wrote:
-
-> > > Is this used for anything besides getting the regmap? Can you get the
-> > > pointer to the parent in probe and use that to get the regmap pointer
-> > > from dev_get_remap() and also use the of_node of the parent to register
-
-> > dev_get_regmap() is pretty expensive, I'd not advise using it in
-> > anything that might approximate a fast path.  It's kind of debatable
-> > when I2C gets involved but still feels wrong.
-
-> I'm suggesting the regmap is acquired in probe and a pointer is stored
-> here in this structure. That is not a fastpath as far as I know.
-
-Ah, great - that's the intended usage.
-
---YrlhzR9YrZtruaFS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlvA0VgACgkQJNaLcl1U
-h9AWSAf/bRb9XA4nmyIZXZ01LsvCh9qzzhBcZK8rnMdHUgpTfEHzByErkofBCbu9
-pkNZlcYzcBiyf4P+0zMHXJMzEXhX8OZzz4TQOZvTojgfo/UzhJFOJ3wFiuzJbqZK
-FTbHUNcVPEOPE+kWkHhM40+ZxGG9ETD9sRWlnQjcMLlwoQLPIIv7vhmgljUJ+BM/
-ZibZx7kvxYVEc11sPvkJ6WmMWJninFFRG9obj/R/Hsy/9OqNMVM1IUvSxFIWWPAu
-0joXz/xBHyvhGx1U79Fcb5f+hMc5Yuvr3YzEaQjX+cxf1KZkS2qhnGc4v9EnCRkW
-l14g4c+0bp32wQ57TsgcDZs0aDXKdw==
-=zUtC
------END PGP SIGNATURE-----
-
---YrlhzR9YrZtruaFS--
+> +#ifndef __DT_BINDINGS_POWER_RK3188_POWER_H__
+> +#define __DT_BINDINGS_POWER_RK3188_POWER_H__
+> +
+> +/* VD_CORE */
+> +#define RK3188_PD_A9_0		0
+> +#define RK3188_PD_A9_1		1
+> +#define RK3188_PD_A9_2		2
+> +#define RK3188_PD_A9_3		3
+> +#define RK3188_PD_DBG		4
+> +#define RK3188_PD_SCU		5
+> +
+> +/* VD_LOGIC */
+> +#define RK3188_PD_VIDEO		6
+> +#define RK3188_PD_VIO		7
+> +#define RK3188_PD_GPU		8
+> +#define RK3188_PD_PERI		9
+> +#define RK3188_PD_CPU		10
+> +#define RK3188_PD_ALIVE		11
+> +
+> +/* VD_PMU */
+> +#define RK3188_PD_RTC		12
+> +
+> +#endif
+> -- 
+> 2.18.0
+> 
