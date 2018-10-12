@@ -1,72 +1,175 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v7 13/24] pwm: jz4740: Allow selection of PWM channels 0
- and 1
-Date: Fri, 12 Oct 2018 12:43:58 +0200
-Message-ID: <20181012104358.GK9162@ulmo>
-References: <20180821171635.22740-1-paul@crapouillou.net>
- <20180821171635.22740-14-paul@crapouillou.net>
- <20181012104053.GG9162@ulmo>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v1 3/8] ARM: tegra: apalis/colibri_t30: fix hdmi regulator
+Date: Fri, 12 Oct 2018 11:44:03 +0100
+Message-ID: <521e8eb0-ce63-851a-0637-a0207bec6a32@nvidia.com>
+References: <20181009152523.3771-1-marcel@ziswiler.com>
+ <20181009152523.3771-4-marcel@ziswiler.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="+HmK7y6O+lKZIGkr"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181012104053.GG9162@ulmo>
+In-Reply-To: <20181009152523.3771-4-marcel@ziswiler.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, Jonathan Corbet <corbet@lwn.net>, od@zcrc.me, Mathieu Malaterre <malat@debian.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
+To: Marcel Ziswiler <marcel@ziswiler.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 
---+HmK7y6O+lKZIGkr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 09/10/18 16:25, Marcel Ziswiler wrote:
+> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> Fix HDMI requiring two regulators being enabled by a single GPIO. Model
+> this using an intermediate reg_en_vdd_hdmi regulator being the
+> vin-supply of them other two. This fixes the display subsystem and gets
+> rid of the following error during boot:
+> 
+>  reg-fixed-voltage: probe of regulator-3v3-avdd-hdmi failed with error -16
+>  tegra-hdmi 54280000.hdmi: failed to get VDD regulator
+> 
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> ---
+> 
+> Changes in v1: None
+> 
+>  arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi | 16 ++++++++++++----
+>  arch/arm/boot/dts/tegra30-apalis.dtsi      | 16 ++++++++++++----
+>  arch/arm/boot/dts/tegra30-colibri.dtsi     | 16 ++++++++++++----
+>  3 files changed, 36 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi b/arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi
+> index 02f8126481a2..065a24ac1052 100644
+> --- a/arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi
+> +++ b/arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi
+> @@ -1133,8 +1133,7 @@
+>  		regulator-min-microvolt = <1800000>;
+>  		regulator-max-microvolt = <1800000>;
+>  		enable-active-high;
+> -		gpio = <&pmic 6 GPIO_ACTIVE_HIGH>;
+> -		vin-supply = <&reg_1v8_vio>;
+> +		vin-supply = <&reg_en_vdd_hdmi>;
+>  	};
+>  
+>  	reg_3v3_avdd_hdmi: regulator-3v3-avdd-hdmi {
+> @@ -1143,8 +1142,7 @@
+>  		regulator-min-microvolt = <3300000>;
+>  		regulator-max-microvolt = <3300000>;
+>  		enable-active-high;
+> -		gpio = <&pmic 6 GPIO_ACTIVE_HIGH>;
+> -		vin-supply = <&reg_module_3v3>;
+> +		vin-supply = <&reg_en_vdd_hdmi>;
+>  	};
+>  
+>  	reg_5v0_charge_pump: regulator-5v0-charge-pump {
+> @@ -1171,6 +1169,16 @@
+>  		regulator-always-on;
+>  	};
+>  
+> +	reg_en_vdd_hdmi: regulator-en-vdd-hdmi {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "EN_VDD_HDMI";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		enable-active-high;
+> +		gpio = <&pmic 6 GPIO_ACTIVE_HIGH>;
+> +		vin-supply = <&reg_module_3v3>;
+> +	};
+> +
+>  	sound {
+>  		compatible = "toradex,tegra-audio-sgtl5000-apalis_t30",
+>  			     "nvidia,tegra-audio-sgtl5000";
+> diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
+> index 7f112f192fe9..6727c5868425 100644
+> --- a/arch/arm/boot/dts/tegra30-apalis.dtsi
+> +++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
+> @@ -1115,8 +1115,7 @@
+>  		regulator-min-microvolt = <1800000>;
+>  		regulator-max-microvolt = <1800000>;
+>  		enable-active-high;
+> -		gpio = <&pmic 6 GPIO_ACTIVE_HIGH>;
+> -		vin-supply = <&reg_1v8_vio>;
+> +		vin-supply = <&reg_en_vdd_hdmi>;
+>  	};
+>  
+>  	reg_3v3_avdd_hdmi: regulator-3v3-avdd-hdmi {
+> @@ -1125,8 +1124,7 @@
+>  		regulator-min-microvolt = <3300000>;
+>  		regulator-max-microvolt = <3300000>;
+>  		enable-active-high;
+> -		gpio = <&pmic 6 GPIO_ACTIVE_HIGH>;
+> -		vin-supply = <&reg_module_3v3>;
+> +		vin-supply = <&reg_en_vdd_hdmi>;
+>  	};
+>  
+>  	reg_5v0_charge_pump: regulator-5v0-charge-pump {
+> @@ -1153,6 +1151,16 @@
+>  		regulator-always-on;
+>  	};
+>  
+> +	reg_en_vdd_hdmi: regulator-en-vdd-hdmi {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "EN_VDD_HDMI";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		enable-active-high;
+> +		gpio = <&pmic 6 GPIO_ACTIVE_HIGH>;
+> +		vin-supply = <&reg_module_3v3>;
+> +	};
+> +
+>  	sound {
+>  		compatible = "toradex,tegra-audio-sgtl5000-apalis_t30",
+>  			     "nvidia,tegra-audio-sgtl5000";
+> diff --git a/arch/arm/boot/dts/tegra30-colibri.dtsi b/arch/arm/boot/dts/tegra30-colibri.dtsi
+> index 35af03ca9e90..963f26071415 100644
+> --- a/arch/arm/boot/dts/tegra30-colibri.dtsi
+> +++ b/arch/arm/boot/dts/tegra30-colibri.dtsi
+> @@ -965,8 +965,7 @@
+>  		regulator-min-microvolt = <1800000>;
+>  		regulator-max-microvolt = <1800000>;
+>  		enable-active-high;
+> -		gpio = <&pmic 6 GPIO_ACTIVE_HIGH>;
+> -		vin-supply = <&reg_1v8_vio>;
+> +		vin-supply = <&reg_en_vdd_hdmi>;
+>  	};
+>  
+>  	reg_3v3_avdd_hdmi: regulator-3v3-avdd-hdmi {
+> @@ -975,8 +974,7 @@
+>  		regulator-min-microvolt = <3300000>;
+>  		regulator-max-microvolt = <3300000>;
+>  		enable-active-high;
+> -		gpio = <&pmic 6 GPIO_ACTIVE_HIGH>;
+> -		vin-supply = <&reg_module_3v3>;
+> +		vin-supply = <&reg_en_vdd_hdmi>;
+>  	};
+>  
+>  	reg_5v0_charge_pump: regulator-5v0-charge-pump {
+> @@ -1012,6 +1010,16 @@
+>  		regulator-always-on;
+>  	};
+>  
+> +	reg_en_vdd_hdmi: regulator-en-vdd-hdmi {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "EN_VDD_HDMI";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		enable-active-high;
+> +		gpio = <&pmic 6 GPIO_ACTIVE_HIGH>;
+> +		vin-supply = <&reg_module_3v3>;
+> +	};
+> +
+>  	sound {
+>  		compatible = "toradex,tegra-audio-sgtl5000-colibri_t30",
+>  			     "nvidia,tegra-audio-sgtl5000";
+> 
 
-On Fri, Oct 12, 2018 at 12:40:53PM +0200, Thierry Reding wrote:
-> On Tue, Aug 21, 2018 at 07:16:24PM +0200, Paul Cercueil wrote:
-> > The TCU channels 0 and 1 were previously reserved for system tasks, and
-> > thus unavailable for PWM.
-> >=20
-> > This commit uses the newly introduced API functions of the ingenic-timer
-> > driver to request/release the TCU channels that should be used as PWM.
-> > This allows all the TCU channels to be used as PWM.
-> >=20
-> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > ---
-> >=20
-> > Notes:
-> >      v6: New patch
-> >    =20
-> >      v7: No change
-> >=20
-> >  drivers/pwm/pwm-jz4740.c | 28 ++++++++++++++++------------
-> >  1 file changed, 16 insertions(+), 12 deletions(-)
->=20
-> Acked-by: Thierry Reding <treding@nvidia.com>
+Given Linus W's fix for the gpiolib [0], I am not convinced that this is
+really better/needed.
 
-Technically this should be:
+Cheers
+Jon
 
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
+[0] https://lore.kernel.org/patchwork/patch/998354/
 
---+HmK7y6O+lKZIGkr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlvAeu4ACgkQ3SOs138+
-s6HsGA/+OJEoG7dAfVGZx3RgpI7szDdd/ub5tyj8iEnxQJesIILP6jDs17mjzQ6g
-jaDfYBESKsbVTJiOo/hpgekRsRFVmzZcDXwDAHM0w47OzDNNGT4NNBMNbg94ioki
-hycEzI0w8Ty/K/uUBBpHfeswoBNAVrNn/xEE0Wp5ULvcak8AjfWj8gjkdSRgioB/
-ghl5zGM0uVZzYjKKNCaQXEcCIO+aTPdvC/fHq5L6yBpfqwFh80OoxJlieK31uGMf
-m59ZIkKQsPGvQSRZzuDZtwE6f9iQCBT+2BDebWwJjpUt4nC1oJS8biIEVC2UMEPX
-94ltWiddkrj4DPpxZE8fqPhMFegd2cN1CmdB8WIkF6d+/K3LlvktsXmRULqWLI6z
-7kF7mufd/s4KzIm35NkD+66+avzFcJYqGCvJMuk/aHAigqOXV8MVQo5zuHHLHl7/
-C4KZaAQpXcuwfIt9blMHY+LxILA+vcWewhbIpE6397ICD1o8P//gKCBbQ2nQHAZE
-+MtBHieUJMl6zjzsdT3PkifebmJxD0xXz9HdTH6xVR7l5tYrbaenGJwT1TsNYVnp
-a+mpz7TXQozQTpXx0DoRrEgYa5Fx+arEMqsBctx9slWENPxwZWC2zyKCeHKYhrA1
-vNUzJSXwmQozneec9SaJ6NKSqb/O9n1LOBC0rVV07OwrcuC5/cI=
-=DqPs
------END PGP SIGNATURE-----
-
---+HmK7y6O+lKZIGkr--
+-- 
+nvpublic
