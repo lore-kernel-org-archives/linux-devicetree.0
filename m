@@ -1,110 +1,155 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: Re: [RESEND PATCH v5 8/9] pwm: add documentation for pwm push-pull
- mode
-Date: Fri, 12 Oct 2018 13:05:50 +0000
-Message-ID: <f4a1f9e3-b3a8-2847-f13e-bb07dab400e6@microchip.com>
-References: <1535461286-12308-1-git-send-email-claudiu.beznea@microchip.com>
- <1535461286-12308-9-git-send-email-claudiu.beznea@microchip.com>
- <20181012121552.GE31561@ulmo>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 4/7] mfd: ds90ux9xx: add TI DS90Ux9xx de-/serializer MFD driver
+Date: Fri, 12 Oct 2018 16:07:16 +0300
+Message-ID: <2403149.qmrOGLNKPu@avalon>
+References: <20181008211205.2900-1-vz@mleia.com> <20181012083924.GW4939@dell> <3b22c550-0cba-60d7-a8ed-400265c8a9f6@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181012121552.GE31561@ulmo>
-Content-Language: en-US
-Content-ID: <2122BCBB722E1A45B16B7E23800C80D3@namprd11.prod.outlook.com>
+In-Reply-To: <3b22c550-0cba-60d7-a8ed-400265c8a9f6@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com
-Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, alexandre.belloni@bootlin.com, shc_work@mail.ru, corbet@lwn.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Vladimir Zapolskiy <vz@mleia.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Vladimir,
 
+On Friday, 12 October 2018 14:24:08 EEST Vladimir Zapolskiy wrote:
+> On 10/12/2018 11:39 AM, Lee Jones wrote:
+> > On Fri, 12 Oct 2018, Vladimir Zapolskiy wrote:
+> >> On 10/12/2018 09:03 AM, Lee Jones wrote:
+> >>> On Tue, 09 Oct 2018, Vladimir Zapolskiy wrote:
+> >>>> From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+> >>>> 
+> >>>> The change adds I2C device driver for TI DS90Ux9xx de-/serializers,
+> >>>> support of subdevice controllers is done in separate drivers, because
+> >>>> not all IC functionality may be needed in particular situations, and
+> >>>> this can be fine grained controlled in device tree.
+> >>>> 
+> >>>> The development of the driver was a collaborative work, the
+> >>>> contribution done by Balasubramani Vivekanandan includes:
+> >>>> * original implementation of the driver based on a reference driver,
+> >>>> * regmap powered interrupt controller support on serializers,
+> >>>> * support of implicitly or improperly specified in device tree ICs,
+> >>>> * support of device properties and attributes: backward compatible
+> >>>> 
+> >>>>   mode, low frequency operation mode, spread spectrum clock generator.
+> >>>> 
+> >>>> Contribution by Steve Longerbeam:
+> >>>> * added ds90ux9xx_read_indirect() function,
+> >>>> * moved number of links property and added ds90ux9xx_num_fpd_links(),
+> >>>> * moved and updated ds90ux9xx_get_link_status() function to core
+> >>>> driver,
+> >>>> * added fpd_link_show device attribute.
+> >>>> 
+> >>>> Sandeep Jain added support of pixel clock edge configuration.
+> >>>> 
+> >>>> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+> >>>> ---
+> >>>> 
+> >>>>  drivers/mfd/Kconfig           |  14 +
+> >>>>  drivers/mfd/Makefile          |   1 +
+> >>>>  drivers/mfd/ds90ux9xx-core.c  | 879 ++++++++++++++++++++++++++++++++++
+> >>>>  include/linux/mfd/ds90ux9xx.h |  42 ++
+> >>>>  4 files changed, 936 insertions(+)
+> >>>>  create mode 100644 drivers/mfd/ds90ux9xx-core.c
+> >>>>  create mode 100644 include/linux/mfd/ds90ux9xx.h
+> >>>> 
+> >>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> >>>> index 8c5dfdce4326..a969fa123f64 100644
+> >>>> --- a/drivers/mfd/Kconfig
+> >>>> +++ b/drivers/mfd/Kconfig
+> >>>> @@ -1280,6 +1280,20 @@ config MFD_DM355EVM_MSP
+> >>>> 
+> >>>>  	  boards.  MSP430 firmware manages resets and power sequencing,
+> >>>>  	  inputs from buttons and the IR remote, LEDs, an RTC, and more.
+> >>>> 
+> >>>> +config MFD_DS90UX9XX
+> >>>> +	tristate "TI DS90Ux9xx FPD-Link de-/serializer driver"
+> >>>> +	depends on I2C && OF
+> >>>> +	select MFD_CORE
+> >>>> +	select REGMAP_I2C
+> >>>> +	help
+> >>>> +	  Say yes here to enable support for TI DS90UX9XX de-/serializer 
+ICs.
+> >>>> +
+> >>>> +	  This driver provides basic support for setting up the
+> >>>> de-/serializer
+> >>>> +	  chips. Additional functionalities like connection handling to
+> >>>> +	  remote de-/serializers, I2C bridging, pin multiplexing, GPIO
+> >>>> +	  controller and so on are provided by separate drivers and should
+> >>>> +	  enabled individually.
+> >>> 
+> >>> This is not an MFD driver.
+> >> 
+> >> Why do you think so? The representation of the ICs into device tree
+> >> format of hardware description shows that this is a truly MFD driver with
+> >> multiple IP subcomponents naturally mapped into MFD cells.
+> > 
+> > This driver does too much real work ('stuff') to be an MFD driver.
+> > MFD drivers should not need to care of; links, gates, modes, pixels,
+> > frequencies maps or properties.  Nor should they contain elaborate
+> > sysfs structures to control the aforementioned 'stuff'.
+> 
+> What is the reason why device drivers for sort of multimedia ICs like
+> WL1273, WM8994 and other numerous codecs are found in drivers/mfd?
 
-On 12.10.2018 15:15, Thierry Reding wrote:
-> On Tue, Aug 28, 2018 at 04:01:25PM +0300, Claudiu Beznea wrote:
->> Add documentation for PWM push-pull mode.
->>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> ---
->>  Documentation/devicetree/bindings/pwm/pwm.txt |  2 ++
->>  Documentation/pwm.txt                         | 16 ++++++++++++++++
->>  include/dt-bindings/pwm/pwm.h                 |  1 +
->>  3 files changed, 19 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Documentati=
-on/devicetree/bindings/pwm/pwm.txt
->> index 7c8aaac43f92..6a60c0fca112 100644
->> --- a/Documentation/devicetree/bindings/pwm/pwm.txt
->> +++ b/Documentation/devicetree/bindings/pwm/pwm.txt
->> @@ -49,6 +49,8 @@ Optionally, the pwm-specifier can encode a number of f=
-lags (defined in
->>  - PWM_MODE_COMPLEMENTARY: PWM complementary working mode (for PWM chann=
-els
->>  with two outputs); if not specified, the default for PWM channel will b=
-e
->>  used
->> +- PWM_MODE_PUSH_PULL: PWM push-pull working modes (for PWM channels wit=
-h
->> +two outputs); if not specified the default for PWM channel will be used
->=20
-> What if somebody has this in the DT:
->=20
-> 	PWM_MODE_COMPLEMENTARY | PWM_MODE_PUSH_PULL
->=20
-> which one takes precedence, or do we reject it?
+I won't comment on those because I don't know them (Lee might have a better 
+knowledge in this area), but let's not rule out historical mistakes, that we 
+may not want to repeat.
 
-The first valid one will be selected.
+> If the same reason can not be applied to this DS90Ux9xx driver, why?
+> 
+> > Granted, there may be some code in there which could be appropriate
+> > for an MFD driver.  However most of it needs moving out into a
+> > function driver (or two).
+> > 
+> >> Basically it is possible to replace explicit of_platform_populate() by
+> >> adding a "simple-mfd" compatible, if it is desired.
+> >> 
+> >>> After a 30 second Google of what this device actually does, perhaps
+> >>> drivers/media might be a better fit?
+> >> 
+> >> I assume it would be quite unusual to add a driver with NO media
+> >> functions and controls into drivers/media.
+> > 
+> > drivers/media may very well not be the correct place for this.  In my
+> > 30 second Google, I saw that this device has a lot to do with cameras,
+> > hence my media association.
+> 
+> Well, the argument is similar to the statement that Google says that
+> camera sensors *can* be connected to NXP i.MX6 SoC, thus arch/arm/mach-imx
+> contents should be placed into drivers/media
 
-In patch 1/1 from this series, changes added to of_pwm_xlate_with_flags()
-function, there is this code:
+If there are any camera drivers in arch/arm/mach-imx, they should certainly be 
+moved.
 
-+		for (modebit =3D PWMC_MODE_COMPLEMENTARY_BIT;
-+		     modebit < PWMC_MODE_CNT; modebit++) {
-+			unsigned long mode =3D BIT(modebit);
-+
-+			if ((args->args[2] & mode) &&
-+			    pwm_mode_valid(pwm, mode)) {
-+				pwm->args.mode =3D mode;
-+				break;
-+			}
-+		}
+> A few TI DS90Ux9xx *cell* drivers may be added to drivers/media, but it is
+> out of the scope of the current series, which is completely integral per se,
+> and actually the cover letter says that the series of drivers immediately
+> allows to output video over DRM to panels, but the discussion is around
+> sensors by some reason.
 
-And since the modes bits are defined as follows:
+Possibly because a quick search for more information about the device returned 
+camera use cases. Let's not focus on that.
 
-enum {
-	PWMC_MODE_NORMAL_BIT,
-	PWMC_MODE_COMPLEMENTARY_BIT,
-	PWMC_MODE_PUSH_PULL_BIT,
-	PWMC_MODE_CNT,
-};
+> But I hope it won't be seen as a misleading reason to consider to add the
+> MFD driver into drivers/gpu/drm
 
-in your proposed scenario: PWM_MODE_COMPLEMENTARY | PWM_MODE_PUSH_PULL
-the PWM_MODE_COMPLEMENTARY mode will be selected since it is the first
-valid one.
+Not a misleading one, a very good one :-) This should go in drivers/gpu/drm/
+bridge/.
 
->=20
-> Wouldn't it be preferable to either move the modes into an extra field
-> within the flags field, or perhaps even add another field?
+> > If *all* else fails, there is always drivers/misc, but this should be
+> > avoided if at all possible.
+> 
+> drivers/misc does not sound like a proper place for the MFD driver...
 
-This approach was proposed in version 2 of this series and based on the
-discussions I had with Rob Herring [1] I decided to use the remaining space
-from cell specific to PWM flags.
+drivers/misc/ isn't right either.
 
-Thank you,
-Claudiu Beznea
+> >> Laurent, can you please share your opinion?
 
-[1] https://lkml.org/lkml/2018/1/22/655
+-- 
+Regards,
 
->=20
-> I guess since Rob's already acked this, that concern may be unfounded.
->=20
-> Thierry
->=20
->=20
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->=20
+Laurent Pinchart
