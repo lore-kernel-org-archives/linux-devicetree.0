@@ -1,56 +1,39 @@
-Return-Path: <SRS0=bbVD=MQ=cogentembedded.com=sergei.shtylyov@kernel.org>
-Subject: [PATCH 1/2] dt-bindings: thermal: rcar-thermal: document R8A77970
- bindings
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-References: <366d8e06-6164-94ff-823f-6b0d1e2d8d53@cogentembedded.com>
-Message-ID: <42fe460f-0c2e-ec8c-ecca-15ec5a5a4117@cogentembedded.com>
-Date: Fri, 5 Oct 2018 00:01:38 +0300
+Return-Path: <robherring2@gmail.com>
+Date: Fri, 12 Oct 2018 15:11:28 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] hwmon: (adm1275): Add device tree param for shunt
+ resistor
+Message-ID: <20181012201128.GA13628@bogus>
+References: <20180928195800.153914-1-kunyi@google.com>
 MIME-Version: 1.0
-In-Reply-To: <366d8e06-6164-94ff-823f-6b0d1e2d8d53@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180928195800.153914-1-kunyi@google.com>
+To: Kun Yi <kunyi@google.com>
+Cc: linux@roeck-us.net, linux-hwmon@vger.kernel.org, jdelvare@suse.com, mark.rutland@arm.com, devicetree@vger.kernel.org, rlippert@google.com, benjaminfair@google.com, openbmc@lists.ozlabs.org
 List-ID: <devicetree@vger.kernel.org>
 
-Document  the R-Car V3M (R8A77970) SoC in the Renesas R-Car gen2 thermal
-bindings. The hardware is the same as  in the R-Car D3 (R8A77995) plus an
-extra status register.
+On Fri, Sep 28, 2018 at 12:58:00PM -0700, Kun Yi wrote:
+> The ADM series of hotswap controllers support extending
+> the current measurement range by using a sensing resistor
+> value other than the typical 1 mOhm. For example, using a 0.5 mOhm
+> sensing resistor doubles the maximal current can be measured.
+> 
+> Current driver assumes a shunt resistor value of 1 mOhm in calculation,
+> meaning for other resistor values, hwmon will report scaled
+> current/power measurements. This patch adds a device tree parameter so
+> that individual boards can configure its shunt resistor value.
+> 
+> Signed-off-by: Kun Yi <kunyi@google.com>
+> ---
+>  .../devicetree/bindings/hwmon/adm1275.txt     | 25 +++++++++++++++++++
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+This should be a separate patch. In particular, the subject doesn't 
+really reflect that you are adding a new binding.
 
----
- Documentation/devicetree/bindings/thermal/rcar-thermal.txt |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Otherwise, the binding looks fine.
 
-Index: linux-soc-thermal/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-===================================================================
---- linux-soc-thermal.orig/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-+++ linux-soc-thermal/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-@@ -4,7 +4,7 @@ Required properties:
- - compatible		: "renesas,thermal-<soctype>",
- 			   "renesas,rcar-gen2-thermal" (with thermal-zone) or
- 			   "renesas,rcar-thermal" (without thermal-zone) as
--                           fallback except R-Car D3.
-+                           fallback except R-Car V3M/D3.
- 			  Examples with soctypes are:
- 			    - "renesas,thermal-r8a73a4" (R-Mobile APE6)
- 			    - "renesas,thermal-r8a7743" (RZ/G1M)
-@@ -13,6 +13,7 @@ Required properties:
- 			    - "renesas,thermal-r8a7791" (R-Car M2-W)
- 			    - "renesas,thermal-r8a7792" (R-Car V2H)
- 			    - "renesas,thermal-r8a7793" (R-Car M2-N)
-+			    - "renesas,thermal-r8a77970" (R-Car V3M)
- 			    - "renesas,thermal-r8a77995" (R-Car D3)
- - reg			: Address range of the thermal registers.
- 			  The 1st reg will be recognized as common register
-@@ -21,7 +22,7 @@ Required properties:
- Option properties:
- 
- - interrupts		: If present should contain 3 interrupts for
--                          R-Car D3 or 1 interrupt otherwise.
-+                          R-Car V3M/D3 or 1 interrupt otherwise.
- 
- Example (non interrupt support):
- 
+>  Documentation/hwmon/adm1275                   |  3 +++
+>  drivers/hwmon/pmbus/adm1275.c                 | 15 +++++++++--
+>  3 files changed, 41 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/adm1275.txt
