@@ -1,75 +1,46 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v4 1/2] arm64: dts: allwinner: new board - Emlid Neutis N5
-Date: Fri, 12 Oct 2018 22:23:30 +0200
-Message-ID: <20181012202330.tdwedsof2bsnxkxn@flea>
-References: <1539012044-29998-2-git-send-email-aleksandr.aleksandrov@emlid.com>
- <1539339841-22235-1-git-send-email-aleksandr.aleksandrov@emlid.com>
- <1539339841-22235-2-git-send-email-aleksandr.aleksandrov@emlid.com>
- <b47c5458-683e-3e96-0bbe-f9db84579c77@suse.de>
- <20181012133914.GA32670@imagebutcher>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/5] ASoC: dt-bindings: add max98088
+	audio codec
+Date: Fri, 12 Oct 2018 15:29:48 -0500
+Message-ID: <20181012202948.GA9394@bogus>
+References: <20181005075812.13986-1-m.felsch@pengutronix.de>
+ <20181005075812.13986-2-m.felsch@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <20181012133914.GA32670@imagebutcher>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
-Cc: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, David Lechner <david@lechnology.com>, Thierry Reding <treding@nvidia.com>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20181005075812.13986-2-m.felsch@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, kernel@pengutronix.de, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 12, 2018 at 04:39:14PM +0300, Aleksandr Aleksandrov wrote:
-> Hi Andreas,
-> 
-> Thanks for your feedback!
-> 
-> > > + *
-> > > + * Copyright (C) 2018 Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
-> > > + */
-> > > +
-> > > +/dts-v1/;
-> > > +
-> > > +#include "sun50i-h5-emlid-neutis-n5.dtsi"
-> > > +
-> > > +/ {
-> > > +	model = "Emlid Neutis N5 Developer board";
-> > > +	compatible = "emlid,neutis-n5-devboard",
-> > > +		     "emlid,neutis-n5",
-> > 
-> > You are lacking bindings definitions for these new identifiers. The
-> > vendor prefix should be patch 1/3, the SoM/board compatibles 2/3 and
-> > this .dts[i] patch 3/3, so that only vendor prefixes and compatibles
-> > that are defined and don't result in checkpatch.pl warnings get used.
-> 
-> Patch 2/3:
-> 
-> commit 46dcb8632b36644cb20e6b35ede12ff0088a60eb
-> Author: Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
-> Date:   Fri Oct 12 16:22:28 2018 +0300
-> 
->     dt-bindings: arm: sunxi: emlid,neutis-n5(-devboard)
->     
->     sunxi: add new compatibles for Emlid Neutis Dev board and SoM module
->     
->     Signed-off-by: Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
-> index e4beec3..a907e52 100644
-> --- a/Documentation/devicetree/bindings/arm/sunxi.txt
-> +++ b/Documentation/devicetree/bindings/arm/sunxi.txt
-> @@ -19,3 +19,5 @@ using one of the following compatible strings:
->    allwinner,sun9i-a80
->    allwinner,sun50i-a64
->    nextthing,gr8
-> +  emlid,neutis-n5
-> +  emlid,neutis-n5-devboard
-> 
-> Is this right place for the neutis compatibles?
+On Fri,  5 Oct 2018 09:58:08 +0200, Marco Felsch wrote:
+> From: Andreas F=E4rber <afaerber@suse.de>
+> =
 
-No, those are for SoCs compatible. I'm not sure we ever created a
-board compatible files.
+> This patch adds the bindings for maxim max98088/9 audio codec.
+> =
 
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> Signed-off-by: Andreas F=E4rber <afaerber@suse.de>
+> [m.felsch@pengutronix.de: adapt commit message]
+> [m.felsch@pengutronix.de: adapt formatting]
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+>  .../devicetree/bindings/sound/maxim,max98088.txt  | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/maxim,max9808=
+8.txt
+> =
+
+
+Reviewed-by: Rob Herring <robh@kernel.org>
