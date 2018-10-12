@@ -1,53 +1,125 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH V2 3/5] usb: xhci: tegra: Add genpd support
-Date: Fri, 12 Oct 2018 09:41:35 +0100
-Message-ID: <248afd79-1a7d-7342-5939-6fa998d04d5b@nvidia.com>
-References: <1538143910-24400-1-git-send-email-jonathanh@nvidia.com>
- <1538143910-24400-4-git-send-email-jonathanh@nvidia.com>
- <20181011164753.GA7393@ulmo>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH 0/3] spi-nor: Add Octal SPI support
+Date: Fri, 12 Oct 2018 10:52:42 +0200
+Message-ID: <20181012105242.519a70b9@bbrezillon>
+References: <20181003165603.2579-1-vigneshr@ti.com>
+        <20181003212017.653e739f@bbrezillon>
+        <1074d503-71ef-2998-7096-de6135bb965d@ti.com>
+        <20181004131732.4c9e2ae9@bbrezillon>
+        <e4af1014-2008-440c-a017-bb8e7e960d3b@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181011164753.GA7393@ulmo>
-Content-Language: en-US
+In-Reply-To: <e4af1014-2008-440c-a017-bb8e7e960d3b@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+To: Vignesh R <vigneshr@ti.com>
+Cc: Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Brian Norris <computersforpeace@gmail.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Tudor Ambarus <tudor.ambarus@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Vignesh,
 
-On 11/10/18 17:47, Thierry Reding wrote:
-> On Fri, Sep 28, 2018 at 03:11:48PM +0100, Jon Hunter wrote:
->> The generic power-domain framework has been updated to allow devices
->> that require more than one power-domain to create a new device for
->> each power-domain required and then link these new power-domain
->> devices to the consumer device.
->>
->> Update the Tegra xHCI driver to use the new APIs provided by the
->> generic power-domain framework so we can use the generic power-domain
->> framework for managing the xHCI controllers power-domains. Please
->> note that to maintain backward compatibility with older device-tree
->> blobs these new generic power-domain APIs are only used if the
->> 'power-domains' property is present and otherwise we fall back to
->> using the legacy Tegra APIs for managing the power-domains.
->>
->> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
->> ---
->>  drivers/usb/host/xhci-tegra.c | 89 +++++++++++++++++++++++++++++++++++++------
->>  1 file changed, 77 insertions(+), 12 deletions(-)
+On Mon, 8 Oct 2018 21:06:02 +0530
+Vignesh R <vigneshr@ti.com> wrote:
+
+> Hi Boris,
 > 
-> It'd be nice if we could eventually get rid of the legacy Tegra APIs,
-> but that's a separate issue, and this patch looks fine as-is:
+> Sorry I missed this mail.
+> 
+> On Thursday 04 October 2018 04:47 PM, Boris Brezillon wrote:
+> > On Thu, 4 Oct 2018 16:05:36 +0530
+> > Vignesh R <vigneshr@ti.com> wrote:
+> >   
+> >>>>
+> >>>>  .../devicetree/bindings/mtd/cadence-quadspi.txt       |  1 +
+> >>>>  drivers/mtd/spi-nor/cadence-quadspi.c                 |  9 +++++++++    
+> >>>
+> >>> On a slightly different topic, do you plan to convert the Cadence
+> >>> driver to spi-mem? And if you don't, is it because you don't have time
+> >>> or because some features are missing in spi-mem (I remember you
+> >>> mentioned a few things back when you were reviewing the spi-mem series)?
+> >>>     
+> >>
+> >> I do not have plans to convert cadence QSPI driver to spi-mem yet,
+> >> mainly due to lack of time. Also, not sure if original author Marek and
+> >> other altera people are okay with that.
+> >>
+> >> I see couple of issues in the way of conversion:
+> >> 1. I would wait to know what direction would direct mapping APIs[1] go
+> >> before starting spi-mem conversion for Cadence QSPI driver. Else, we
+> >> have may to re write again if direct mapping APIs are merged.  
+> > 
+> > I'd suggest reviewing the proposal I posted so that you can influence
+> > the design of this new API ;-).
+> >   
+> 
+> I did take a look and proposal seems fine. Will try to prototype and
+> test cadence QSPI driver with these. Thanks for the patches!
 
-Unfortunately, I don't think it is possible as it will break DT backward
-compatibility. However, one way to do it would be to force on all power
-domains on boot if PM is not supported.
+That's great news! Let me know how it goes, and don't hesitate to ask
+if you have any questions.
 
-> Acked-by: Thierry Reding <treding@nvidia.com>
+> 
+> 
+> >> 2. New Cadence OSPI IP has an integrated PHY to support high throughput
+> >> OSPI flashes operating up 200MHz in Octal DDR mode. In order to work
+> >> with such flashes, PHY DLLs need to be calibrated. Highly simplified
+> >> calibration sequence is as below(See [2] for actual sequence):
+> >> -Read flash ID at low speed and store it.
+> >> -Enable PHY and set DLLs to a defined initial value
+> >> -Increment RX DLL value
+> >> -Read flash ID and check for correctness of data read
+> >> -repeat above two steps until a band of passing values is obtained for
+> >> RX DLL where flash ID is correctly read.
+> >> -DLL needs to set to middle of the passing band.  
+> > 
+> > Is the Read ID operation hardcoded or do you just use it as a way to
+> > trigger predictable transfers on the IO bus?
+> >   
+> 
+> Just a way to trigger predictable data reads.
 
-Thanks!
-Jon
+Good.
 
--- 
-nvpublic
+
+> 
+> >>
+> >> I am trying to figure out how to fit this into the spi-mem framework as
+> >> controller would to need to store READ ID opcode and expected JEDEC ID
+> >> before starting calibration sequence.  
+> > 
+> > I think this should be split in 2:
+> > 
+> > - the SPI NOR framework passing the operation to use to do the
+> >   calibration (here a READ ID)
+> > - the SPI controller framework replaying the same operation with
+> >   different DLL configs until it finds the best match
+> > 
+> > So, it would basically be added as a new hook:
+> > 
+> > 	int (*calibrate)(struct spi_mem *mem,
+> > 			 const struct spi_mem_op *tmpl);
+> > 
+> > and a new function provided by the spi-mem API
+> > 
+> > int spi_mem_calibrate(struct spi_mem *mem,
+> > 		      const struct spi_mem_op *tmpl);
+> > 
+> > and calibration outcome would be somehow attached to the spi_mem
+> > object.
+> > 
+> > This way we stay memory agnostic but still provide the necessary blocks
+> > at the spi-mem level to do such callibrations.
+> > 
+> > Would that work?
+> >   
+> 
+> That would work and hopefully is not intrusive to spi-mem framework.
+> 
+
+Okay. Don't hesitate to post a proposal along those lines and I'll try
+to review it.
+
+Thanks,
+
+Boris
