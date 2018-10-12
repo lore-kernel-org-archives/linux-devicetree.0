@@ -1,71 +1,56 @@
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH 5/5] Input: elantech/SMBus - export all capabilities from the PS/2 node
-Date: Fri, 12 Oct 2018 16:24:13 +0200
-Message-ID: <20181012142413.26107-6-benjamin.tissoires@redhat.com>
-References: <20181012142413.26107-1-benjamin.tissoires@redhat.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH RFC v1 7/8] drivers: qcom: cpu_pd: Handle cpu hotplug in
+ the domain
+Date: Fri, 12 Oct 2018 15:25:04 +0100
+Message-ID: <20181012142503.GF3401@e107155-lin>
+References: <1539206455-29342-1-git-send-email-rplsssn@codeaurora.org>
+ <1539206455-29342-8-git-send-email-rplsssn@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181012142413.26107-1-benjamin.tissoires@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <1539206455-29342-8-git-send-email-rplsssn@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: KT Liao <kt.liao@emc.com.tw>, Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, ulf.hansson@linaro.org, khilman@kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, ilina@codeaurora.org, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The recent touchpads might not have all the information regarding the
-characteristics through the I2C port.
-On some Lenovo t480s, this results in the touchpad not being detected
-as a clickpad, and on the Lenovo P52, this results in a failure while
-fetching the resolution through I2C.
+On Thu, Oct 11, 2018 at 02:50:54AM +0530, Raju P.L.S.S.S.N wrote:
+> Use cpu hotplug callback mechanism to attach/dettach the cpu in
+> the cpu power domain. During cpu hotplug callback registration,
+> the starting callback is invoked on all online cpus. So there is
+> no need to attach from device probe.
+> 
+> Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
+> ---
+>  drivers/soc/qcom/cpu_pd.c  | 33 +++++++++++++++++++++++++--------
+>  include/linux/cpuhotplug.h |  1 +
+>  2 files changed, 26 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/soc/qcom/cpu_pd.c b/drivers/soc/qcom/cpu_pd.c
+> index 242eced..bf2d95d 100644
+> --- a/drivers/soc/qcom/cpu_pd.c
+> +++ b/drivers/soc/qcom/cpu_pd.c
+> @@ -3,6 +3,7 @@
+>   * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+>   */
+>  
+> +#include <linux/cpuhotplug.h>
+>  #include <linux/ktime.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/pm_domain.h>
+> @@ -85,12 +86,26 @@ static int cpu_pd_power_off(struct generic_pm_domain *domain)
+>  	return 0;
+>  }
+>  
+> +static int cpu_pd_starting(unsigned int cpu)
+> +{
+> +	if (!suspend && of_genpd_attach_cpu(cpu))
+> +		pr_err("%s: genpd_attach_cpu fail\n", __func__);
 
-We need to imitate the Windows behavior: fetch the data under PS/2, and
-limit the querries under I2C.
+If it's that serious, return proper error code and drop the message which
+could be annoying if you are running some hotplug test loop.
 
-This patch exports the needed info from PS/2.
-
-Link: https://bugzilla.redhat.com/show_bug.cgi?id=1628715
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
----
- drivers/input/mouse/elantech.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
-index 78ac732e8188..f597b5d14de8 100644
---- a/drivers/input/mouse/elantech.c
-+++ b/drivers/input/mouse/elantech.c
-@@ -1764,17 +1764,30 @@ static int elantech_create_smbus(struct psmouse *psmouse,
- 				 struct elantech_device_info *info,
- 				 bool leave_breadcrumbs)
- {
--	const struct property_entry i2c_properties[] = {
--		PROPERTY_ENTRY_BOOL("elan,trackpoint"),
--		{ },
--	};
-+	struct property_entry i2c_props[10] = {};
- 	struct i2c_board_info smbus_board = {
- 		I2C_BOARD_INFO("elan_i2c", 0x15),
- 		.flags = I2C_CLIENT_HOST_NOTIFY,
- 	};
-+	unsigned int prop_idx = 0;
-+
-+	smbus_board.properties = i2c_props;
-+
-+	i2c_props[prop_idx++] = PROPERTY_ENTRY_U32("elan,max_x", info->x_max);
-+	i2c_props[prop_idx++] = PROPERTY_ENTRY_U32("elan,max_y", info->y_max);
-+	i2c_props[prop_idx++] = PROPERTY_ENTRY_U32("elan,min_x", info->x_min);
-+	i2c_props[prop_idx++] = PROPERTY_ENTRY_U32("elan,min_y", info->y_min);
-+	i2c_props[prop_idx++] = PROPERTY_ENTRY_U32("elan,x_res", info->x_res);
-+	i2c_props[prop_idx++] = PROPERTY_ENTRY_U32("elan,y_res", info->y_res);
- 
- 	if (info->has_trackpoint)
--		smbus_board.properties = i2c_properties;
-+		i2c_props[prop_idx++] = PROPERTY_ENTRY_BOOL("elan,trackpoint");
-+
-+	if (info->width)
-+		i2c_props[prop_idx++] = PROPERTY_ENTRY_U32("elan,width", info->width);
-+
-+	if (elantech_is_buttonpad(info))
-+		i2c_props[prop_idx++] = PROPERTY_ENTRY_BOOL("elan,clickpad");
- 
- 	return psmouse_smbus_init(psmouse, &smbus_board, NULL, 0, false,
- 				  leave_breadcrumbs);
--- 
-2.14.3
+--
+Regards,
+Sudeep
