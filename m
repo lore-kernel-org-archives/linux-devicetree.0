@@ -1,106 +1,60 @@
-Return-Path: <SRS0=EJCs=MX=gmail.com=dmitry.torokhov@kernel.org>
-Date: Wed, 10 Oct 2018 17:52:43 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH resend v2 1/2] Input: touchscreen DT binding - add
- touchscreen-min-x and -min-y properties
-Message-ID: <20181011005243.GC173303@dtor-ws>
-References: <20180731111958.20043-1-hdegoede@redhat.com>
- <20180731111958.20043-2-hdegoede@redhat.com>
- <20180803003101.GA118981@dtor-ws>
- <6f1b0575-87e7-3443-9080-5abfd8e6c726@redhat.com>
+Return-Path: <SRS0=FQf3=MY=gmail.com=thierry.reding@kernel.org>
+Date: Fri, 12 Oct 2018 13:21:01 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] dt-bindings: pwm: renesas: tpu: document R8A779{7|8}0
+ bindings
+Message-ID: <20181012112101.GD30261@ulmo>
+References: <ea104bc7-ee9a-b638-36da-6c6af1e622be@cogentembedded.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="veXX9dWIonWZEC6h"
 Content-Disposition: inline
-In-Reply-To: <6f1b0575-87e7-3443-9080-5abfd8e6c726@redhat.com>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>, robh@kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org
+In-Reply-To: <ea104bc7-ee9a-b638-36da-6c6af1e622be@cogentembedded.com>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Hans,
 
-Sorry, now I was being slow as well.
+--veXX9dWIonWZEC6h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 20, 2018 at 07:31:43PM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> I completely missed this mail earlier, sorry.
-> 
-> Thank you Benjamin for pointing this out to me.
-> 
-> On 03-08-18 02:31, Dmitry Torokhov wrote:
-> > Hi Hans,
-> > 
-> > On Tue, Jul 31, 2018 at 01:19:57PM +0200, Hans de Goede wrote:
-> > > Some touchscreens, depending on the firmware and/or the digitizer report
-> > > coordinates which never reach 0 along one or both of their axis.
-> > > 
-> > > This has been seen for example on the Silead touchscreens on a Onda V891w
-> > > and a Point of View mobii TAB-P800w(v2.0).
-> > > 
-> > > This commits documents 2 new touchscreen properties for communicating
-> > > the minimum reported values to the OS: touchscreen-min-x and -min-y.
-> > > 
-> > > This commit also drop the (in pixels) comment from the documentation
-> > > of the touchscreen-size-x and touchscreen-size-y properties. This comment
-> > > suggests that there is a relation between the range of reported
-> > > coordinates and the display resolution, which is only true for some
-> > > devices. The (in pixels) comment is replaced with "(maximum x coordinate
-> > > reported + 1)" to mirror the language describing the new touchscreen-min-x
-> > > and -min-y properties.
-> > 
-> > I am concerned that people will not read the documentation carefully and
-> > will treat it as true size, since it is what in the name. Maybe we
-> > should say that it is size of usable area, in device units, and that
-> > maximum reported coordinate is "touchscreen-min-x + touchscreen-size-x -
-> > 1"?
-> 
-> Not sure what you mean with "true size" but in the implementation
-> from this series, the maximum coordinated reported is (touchscreen-size-x - 1)
-> not (touchscreen-min-x + touchscreen-size-x - 1) as you suggest.
-> 
-> Basically what this series does is set:
-> 
-> input_absinfo.minimum to the new touchscreen-min-x value (or 0 if not specified)
-> input_absinfo.maximum to touchscreen-size-x - 1 as we've always done.
-> 
-> So the usable range / the range mapping from one screen edge to the other is:
-> 
-> touchscreen-min-x - (touchscreen-size-x - 1)
-> 
-> Which matches with the dt bindings doc after this patch, which
-> reads after this patch:
-> 
->  - touchscreen-min-x		: minimum x coordinate reported (0 if not set)
->  - touchscreen-min-y		: minimum y coordinate reported (0 if not set)
->  - touchscreen-size-x		: horizontal resolution of touchscreen
-> 				  (maximum x coordinate reported + 1)
->  - touchscreen-size-y		: vertical resolution of touchscreen
-> 				  (maximum y coordinate reported + 1)
-> 
-> I hope this clarifies things and if you want to change anything let
-> me know.
+On Sat, Sep 22, 2018 at 10:57:29PM +0300, Sergei Shtylyov wrote:
+> Document the R-Car V3{M|H} (R8A779{7|8}0) SoC in the Renesas TPU bindings;
+> the TPU hardware in those is the Renesas standard 4-channel timer pulse
+> unit.
+>=20
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>=20
+> ---
+> This patch is against Linus' repo plus the bindings fix just reposted...
+>=20
+>  Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt |    4 ++++
+>  1 file changed, 4 insertions(+)
 
-Right, except that my concern is that people do not read documentation,
-and therefore will not realize that touchscreen-size-x is not the "true"
-what I called it, or what you call usable range, but rather maximum
-coordinate (-1).  IOW I am concerned that if we have a device with
-640x480 screen for example, and touch controller reporting coordinates
-with offset of 20, someone will specify:
+Applied, thanks.
 
-touchscreen-min-x = 20
-touchscreen-size-x = 640 (because that's their screen size)
+Thierry
 
-and will not notice for some reason and later quirk it in their
-software.
+--veXX9dWIonWZEC6h
+Content-Type: application/pgp-signature; name="signature.asc"
 
-So I was asking if we should accommodate this, and actually set up max
-on axis as "touchscreen-min-x + touchscreen-size-x - 1". It will still
-be compatible with current bindings (having effectively min of 0), but
-to me better reflects the name of the parameter - size of the screen.
+-----BEGIN PGP SIGNATURE-----
 
-Please let me know if this makes any sense to you.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlvAg50ACgkQ3SOs138+
+s6FHUA//e6N5juO43+gd8+wMUnppTelT59lGPlabiVlDrr7hrlQzolj9Dw3skdvl
+22EeGrG1ZlioUutXapb8JYbgf6OMFE+2FW9EQ9EXGdoKz/d1tCTvtGOvkHWURHsU
+xnGvxznogRVmqR4uS9lp4OaSQSkq5dDw+qxBFCEyfZR0caWtZXT9zBUSlx2LyP+4
+hyskqJPX1/B+9+uM8BcfI6P/EroNkYyYSmL81O+pR4M0OkL6pW3XPWky9YXLCNdE
+tWxtR5HcTJdVuoYC+LfNWeHkgj4LSTVjDv+oxM3/Y76hcLa130+LDZdaaG00km1T
+rBVIHM7cJLJDhrwykk694QxO2AyBlV1vKPbYYVyFxxPf1Pb/hbMgonlaJnd8rVO2
+muNGS2HQcx+lB3/xPp8bHH/KWu2uWxKZzcCTHoHyToyMsz+g3THD5SMydQ/Xphnk
+RRjRma3/ngbfmfuEz4OMG1vQNmQFgoYX0voto+USl7VPlm2gFl8IJjgB1EfVm8gm
+mKxlzIyZgpkbBgI6zOa0bF+hhgP5tg65ITru6ycQAaWieTOJNZnnOD/JmGObv1uK
+bsfWJ1v1p3pO9V0Uoi8qiT9Y+cXt5FR8a7bBkvWnF7b/ih+jMBuxTorMJMUzkKTL
+UKuQah6cvocbEfE5mfffIm7AcokESVGdJRPiAGqFKRevLkU4xxc=
+=bDLK
+-----END PGP SIGNATURE-----
 
-Thanks.
-
--- 
-Dmitry
+--veXX9dWIonWZEC6h--
