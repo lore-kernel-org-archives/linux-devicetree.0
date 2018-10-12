@@ -1,40 +1,63 @@
-From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 04/29] clk: sunxi-ng: h6: Set video PLLs limits
-Date: Fri, 12 Oct 2018 13:43:32 +0530
-Message-ID: <a303145c-b123-d912-91d7-9830dec3244e@openedev.com>
-References: <20181007093905.11253-1-jernej.skrabec@siol.net>
- <20181007093905.11253-5-jernej.skrabec@siol.net>
-Reply-To: jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org
+From: Song Qiang <songqiang1304521@gmail.com>
+Subject: Re: [PATCH v4 3/3] iio: magnetometer: Add driver support for PNI
+ RM3100
+Date: Fri, 12 Oct 2018 16:36:01 +0800
+Message-ID: <436097c6-b32b-42e4-e704-a15280e13cb0@gmail.com>
+References: <20181002143812.3661-1-songqiang1304521@gmail.com>
+ <20181012073536.20339-1-songqiang1304521@gmail.com>
+ <20181012073536.20339-4-songqiang1304521@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Return-path: <linux-sunxi+bncBDH5TZWAZAFBBRNPQHPAKGQETVYR2OA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181007093905.11253-5-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181012073536.20339-4-songqiang1304521@gmail.com>
 Content-Language: en-US
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, preid@electromag.com.au, himanshujha199640@gmail.com
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 07 October 2018 03:08 PM, Jernej Skrabec wrote:
-> Video PLL factors can be set in a way that final PLL rate is outside
-> stable range. H6 user manual specifically says that N factor should not
-> be below 12. While it doesn't says anything about maximum stable rate, it
 
-Manual says "In application, PLL_FACTOR_N should be more than or equal 
-to 11" can't it be 11?
 
-> is clear that PLL doesn't work at 6.096 GHz (254 * 24 MHz).
-> 
-> Set minimum allowed PLL video rate to 288 MHz (12 * 24 MHz) and maximum
-> to 2.4 GHz, which is maximum in BSP driver.
+On 2018年10月12日 15:35, Song Qiang wrote:
+> PNI RM3100 is a high resolution, large signal immunity magnetometer,
+> composed of 3 single sensors and a processing chip with a MagI2C
+> interface.
+>
+...
+> +static irqreturn_t rm3100_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf = p;
+> +	struct iio_dev *indio_dev = pf->indio_dev;
+> +	unsigned long scan_mask = *indio_dev->active_scan_mask;
+> +	unsigned int mask_len = indio_dev->masklength;
+> +	struct rm3100_data *data = iio_priv(indio_dev);
+> +	struct regmap *regmap = data->regmap;
+> +	int ret, i, bit;
+> +
+> +	mutex_lock(&data->lock);
+> +	switch (scan_mask) {
+> +	case BIT(0) | BIT(1) | BIT(2):
+> +		ret = regmap_bulk_read(regmap, RM3100_REG_MX2, data->buffer, 9);
+> +		mutex_unlock(&data->lock);
+> +		if (ret < 0)
+> +			goto done;
+> +	break;
+> +	case BIT(0) | BIT(1):
+> +		ret = regmap_bulk_read(regmap, RM3100_REG_MX2, data->buffer, 6);
+> +		mutex_unlock(&data->lock);
+> +		if (ret < 0)
+> +			goto done;
+> +	break;
+> +	case BIT(1) | BIT(2):
+> +		ret = regmap_bulk_read(regmap, RM3100_REG_MY2, data->buffer, 6);
+> +		mutex_unlock(&data->lock);
+> +		if (ret < 0)
+> +			goto done;
+> +	break;
+Hi Jonathan,
 
-Is this max freq from here [1]
+I just noticed that these three breaks are not proper aligned.
 
-[1] 
-https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/drivers/clk/sunxi/clk-sun50iw6.c#L164
+yours,
+Song Qiang
