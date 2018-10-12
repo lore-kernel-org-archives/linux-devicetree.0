@@ -1,125 +1,76 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH 0/3] spi-nor: Add Octal SPI support
-Date: Fri, 12 Oct 2018 10:52:42 +0200
-Message-ID: <20181012105242.519a70b9@bbrezillon>
-References: <20181003165603.2579-1-vigneshr@ti.com>
-        <20181003212017.653e739f@bbrezillon>
-        <1074d503-71ef-2998-7096-de6135bb965d@ti.com>
-        <20181004131732.4c9e2ae9@bbrezillon>
-        <e4af1014-2008-440c-a017-bb8e7e960d3b@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 5/7] mfd: ds90ux9xx: add I2C bridge/alias and link
+ connection driver
+Date: Fri, 12 Oct 2018 10:03:29 +0100
+Message-ID: <20181012090329.GX4939@dell>
+References: <20181008211205.2900-1-vz@mleia.com>
+ <20181008211205.2900-6-vz@mleia.com>
+ <20181012060455.GV4939@dell>
+ <c8f01b88-c14f-867d-d796-7464b2e8ccfb@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e4af1014-2008-440c-a017-bb8e7e960d3b@ti.com>
+Content-Disposition: inline
+In-Reply-To: <c8f01b88-c14f-867d-d796-7464b2e8ccfb@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Brian Norris <computersforpeace@gmail.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Tudor Ambarus <tudor.ambarus@microchip.com>
+To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Cc: Vladimir Zapolskiy <vz@mleia.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vignesh,
-
-On Mon, 8 Oct 2018 21:06:02 +0530
-Vignesh R <vigneshr@ti.com> wrote:
-
-> Hi Boris,
-> 
-> Sorry I missed this mail.
-> 
-> On Thursday 04 October 2018 04:47 PM, Boris Brezillon wrote:
-> > On Thu, 4 Oct 2018 16:05:36 +0530
-> > Vignesh R <vigneshr@ti.com> wrote:
-> >   
-> >>>>
-> >>>>  .../devicetree/bindings/mtd/cadence-quadspi.txt       |  1 +
-> >>>>  drivers/mtd/spi-nor/cadence-quadspi.c                 |  9 +++++++++    
-> >>>
-> >>> On a slightly different topic, do you plan to convert the Cadence
-> >>> driver to spi-mem? And if you don't, is it because you don't have time
-> >>> or because some features are missing in spi-mem (I remember you
-> >>> mentioned a few things back when you were reviewing the spi-mem series)?
-> >>>     
+On Fri, 12 Oct 2018, Vladimir Zapolskiy wrote:
+> On 10/12/2018 09:04 AM, Lee Jones wrote:
+> > On Tue, 09 Oct 2018, Vladimir Zapolskiy wrote:
+> > 
+> >> From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 > >>
-> >> I do not have plans to convert cadence QSPI driver to spi-mem yet,
-> >> mainly due to lack of time. Also, not sure if original author Marek and
-> >> other altera people are okay with that.
+> >> The change adds TI DS90Ux9xx I2C bridge/alias subdevice driver and
+> >> FPD Link connection handling mechanism.
 > >>
-> >> I see couple of issues in the way of conversion:
-> >> 1. I would wait to know what direction would direct mapping APIs[1] go
-> >> before starting spi-mem conversion for Cadence QSPI driver. Else, we
-> >> have may to re write again if direct mapping APIs are merged.  
-> > 
-> > I'd suggest reviewing the proposal I posted so that you can influence
-> > the design of this new API ;-).
-> >   
-> 
-> I did take a look and proposal seems fine. Will try to prototype and
-> test cadence QSPI driver with these. Thanks for the patches!
-
-That's great news! Let me know how it goes, and don't hesitate to ask
-if you have any questions.
-
-> 
-> 
-> >> 2. New Cadence OSPI IP has an integrated PHY to support high throughput
-> >> OSPI flashes operating up 200MHz in Octal DDR mode. In order to work
-> >> with such flashes, PHY DLLs need to be calibrated. Highly simplified
-> >> calibration sequence is as below(See [2] for actual sequence):
-> >> -Read flash ID at low speed and store it.
-> >> -Enable PHY and set DLLs to a defined initial value
-> >> -Increment RX DLL value
-> >> -Read flash ID and check for correctness of data read
-> >> -repeat above two steps until a band of passing values is obtained for
-> >> RX DLL where flash ID is correctly read.
-> >> -DLL needs to set to middle of the passing band.  
-> > 
-> > Is the Read ID operation hardcoded or do you just use it as a way to
-> > trigger predictable transfers on the IO bus?
-> >   
-> 
-> Just a way to trigger predictable data reads.
-
-Good.
-
-
-> 
+> >> Access to I2C devices connected to a remote de-/serializer is done in
+> >> a transparent way, on established link detection event such devices
+> >> are registered on an I2C bus, which serves a local de-/serializer IC.
 > >>
-> >> I am trying to figure out how to fit this into the spi-mem framework as
-> >> controller would to need to store READ ID opcode and expected JEDEC ID
-> >> before starting calibration sequence.  
+> >> The development of the driver was a collaborative work, the
+> >> contribution done by Balasubramani Vivekanandan includes:
+> >> * original simplistic implementation of the driver,
+> >> * support of implicitly specified devices in device tree,
+> >> * support of multiple FPD links for TI DS90Ux9xx,
+> >> * other kind of valuable review comments, clean-ups and fixes.
+> >>
+> >> Also Steve Longerbeam made the following changes:
+> >> * clear address maps after linked device removal,
+> >> * disable pass-through in disconnection,
+> >> * qualify locked status with non-zero remote address.
+> >>
+> >> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+> >> ---
+> >>  drivers/mfd/Kconfig                |   8 +
+> >>  drivers/mfd/Makefile               |   1 +
+> >>  drivers/mfd/ds90ux9xx-i2c-bridge.c | 764 +++++++++++++++++++++++++++++
+> >>  3 files changed, 773 insertions(+)
+> >>  create mode 100644 drivers/mfd/ds90ux9xx-i2c-bridge.c
 > > 
-> > I think this should be split in 2:
-> > 
-> > - the SPI NOR framework passing the operation to use to do the
-> >   calibration (here a READ ID)
-> > - the SPI controller framework replaying the same operation with
-> >   different DLL configs until it finds the best match
-> > 
-> > So, it would basically be added as a new hook:
-> > 
-> > 	int (*calibrate)(struct spi_mem *mem,
-> > 			 const struct spi_mem_op *tmpl);
-> > 
-> > and a new function provided by the spi-mem API
-> > 
-> > int spi_mem_calibrate(struct spi_mem *mem,
-> > 		      const struct spi_mem_op *tmpl);
-> > 
-> > and calibration outcome would be somehow attached to the spi_mem
-> > object.
-> > 
-> > This way we stay memory agnostic but still provide the necessary blocks
-> > at the spi-mem level to do such callibrations.
-> > 
-> > Would that work?
-> >   
+> > Shouldn't this live in drivers/i2c?
 > 
-> That would work and hopefully is not intrusive to spi-mem framework.
+> no, the driver is not for an I2C controller of any kind, and the driver does
+> not register itself in the I2C subsystem by calling i2c_add_adapter() or
+> i2c_add_numbered_adapter() or i2c_mux_add_adapter() etc, this topic was
+> discussed with Wolfram also.
 > 
+> Formally the driver converts the managed IC into a multi-address I2C
+> slave device, I understand that it does not sound like a well suited driver
+> for MFD, but ds90ux9xx-core.c and ds90ux9xx-i2c-bridge.c drivers are quite
+> tightly coupled.
 
-Okay. Don't hesitate to post a proposal along those lines and I'll try
-to review it.
+Using MFD as the default dumping ground for anything which does more
+than one thing has also been discussed before. :)
 
-Thanks,
+You need to figure out what function this device provides and
+re-locate it into the subsystem which it best fits.
 
-Boris
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
