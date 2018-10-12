@@ -1,35 +1,74 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: iio: vadc: Update example to include
- unit address for node 'usb-id-nopull'
-Date: Fri, 12 Oct 2018 10:15:23 -0700
-Message-ID: <20181012171523.GQ22824@google.com>
-References: <20181004001432.21218-1-mka@chromium.org>
- <20181004001432.21218-2-mka@chromium.org>
- <20181005204743.GA17135@bogus>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH RFC v1 7/8] drivers: qcom: cpu_pd: Handle cpu hotplug in
+ the domain
+Date: Fri, 12 Oct 2018 11:19:10 -0600
+Message-ID: <20181012171910.GI2371@codeaurora.org>
+References: <1539206455-29342-8-git-send-email-rplsssn@codeaurora.org>
+ <20181011112013.GC32752@e107155-lin>
+ <20181011160053.GA2371@codeaurora.org>
+ <20181011161927.GC28583@e107155-lin>
+ <20181011165822.GB2371@codeaurora.org>
+ <20181011173733.GA26447@e107155-lin>
+ <20181011210609.GD2371@codeaurora.org>
+ <20181012150429.GH3401@e107155-lin>
+ <20181012160427.GG2371@codeaurora.org>
+ <20181012170040.GA21057@e107155-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181005204743.GA17135@bogus>
+In-Reply-To: <20181012170040.GA21057@e107155-lin>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, ulf.hansson@linaro.org, khilman@kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 05, 2018 at 03:47:43PM -0500, Rob Herring wrote:
-> On Wed, Oct 03, 2018 at 05:14:31PM -0700, Matthias Kaehlcke wrote:
-> > The node has a reg property, therefore its name should include a unit
-> > address.
-> > 
-> > Also change the name from 'usb_id_nopull' to 'usb-id-nopull' to follow
-> > DT conventions.
-> 
-> This is ADC channels? If so, then DT convention would really be 
-> "adc@...". 
+On Fri, Oct 12 2018 at 11:01 -0600, Sudeep Holla wrote:
+>On Fri, Oct 12, 2018 at 10:04:27AM -0600, Lina Iyer wrote:
+>> On Fri, Oct 12 2018 at 09:04 -0600, Sudeep Holla wrote:
+>
+>[...]
+>
+>Yes all these are fine but with multiple power-domains/cluster, it's
+>hard to determine the first CPU. You may be able to identify it within
+>the power domain but not system wide. So this doesn't scale with large
+>systems(e.g. 4 - 8 clusters with 16 CPUs).
+>
+We would probably not worry too much about power savings in a msec
+scale, if we have that big a system. The driver is a platform specific
+driver, primarily intended for a mobile class CPU and usage. In fact, we
+haven't done this for QC's server class CPUs.
 
-Is it really? A grep for 'adc@' in arch/${ARCH}/boot/dts yields
-mostly ADC controller not channel nodes.
+>> > I think we are mixing the system sleep states with CPU idle here.
+>> > If it's system sleeps states, the we need to deal it in some system ops
+>> > when it's the last CPU in the system and not the cluster/power domain.
+>> >
+>> I think the confusion for you is system sleep vs suspend. System sleep
+>> here (probably more of a QC terminology), refers to powering down the
+>> entire SoC for very small durations, while not actually suspended. The
+>> drivers are unaware that this is happening. No hotplug happens and the
+>> interrupts are not migrated during system sleep. When all the CPUs go
+>> into cpuidle, the system sleep state is activated and the resource
+>> requirements are lowered. The resources are brought back to their
+>> previous active values before we exit cpuidle on any CPU. The drivers
+>> have no idea that this happened. We have been doing this on QCOM SoCs
+>> for a decade, so this is not something new for this SoC. Every QCOM SoC
+>> has been doing this, albeit differently because of their architecture.
+>> The newer ones do most of these transitions in hardware as opposed to an
+>> remote CPU. But this is the first time, we are upstreaming this :)
+>>
+>
+>Indeed, I know mobile platforms do such optimisations and I agree it may
+>save power. As I mentioned above it doesn't scale well with large systems
+>and also even with single power domains having multiple idle states where
+>only one state can do this system level idle but not all. As I mentioned
+>in the other email to Ulf, it's had to generalise this even with DT.
+>So it's better to have this dealt transparently in the firmware.
+>
+Good, then we are on agreement here.
+But this is how this platform is. It cannot be done in firmware and what
+we doing here is a Linux platform driver that cleans up nicely without
+having to piggy back on an external dependency.
 
-I'm totally fine with changing the name to 'adc@...' if that's the
-preference/convention, just want to reconfirm since the actual use is
-a bit ambiguous.
+Thanks,
+Lina
