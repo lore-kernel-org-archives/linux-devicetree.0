@@ -1,120 +1,124 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v5 0/6] *** Add support for wifi QMI client handshakes ***
-Date: Fri, 12 Oct 2018 19:03:42 +0300
-Message-ID: <87in272lup.fsf@kamboji.qca.qualcomm.com>
-References: <20180815092637.11455-1-govinds@codeaurora.org>
-        <20181009003628.GA253926@ban.mtv.corp.google.com>
-        <20181012120924.GA1030@centauri.lan>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH RFC v1 7/8] drivers: qcom: cpu_pd: Handle cpu hotplug in
+ the domain
+Date: Fri, 12 Oct 2018 10:04:27 -0600
+Message-ID: <20181012160427.GG2371@codeaurora.org>
+References: <1539206455-29342-1-git-send-email-rplsssn@codeaurora.org>
+ <1539206455-29342-8-git-send-email-rplsssn@codeaurora.org>
+ <20181011112013.GC32752@e107155-lin>
+ <20181011160053.GA2371@codeaurora.org>
+ <20181011161927.GC28583@e107155-lin>
+ <20181011165822.GB2371@codeaurora.org>
+ <20181011173733.GA26447@e107155-lin>
+ <20181011210609.GD2371@codeaurora.org>
+ <20181012150429.GH3401@e107155-lin>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20181012120924.GA1030-hzNJjYwkUoT+AlalS6MPSg@public.gmane.org> (Niklas Cassel's message of
-        "Fri, 12 Oct 2018 14:09:24 +0200")
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Niklas Cassel <niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181012150429.GH3401@e107155-lin>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, ulf.hansson@linaro.org, khilman@kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Niklas Cassel <niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
-
-> On Mon, Oct 08, 2018 at 05:36:30PM -0700, Brian Norris wrote:
->> + linux-msm
->> 
->> Hi Govind, Kalle,
->> 
->> On Wed, Aug 15, 2018 at 02:56:31PM +0530, Govind Singh wrote:
->> > Add QMI client handshakes for Q6 integrated WLAN connectivity subsystem.
->> > This module is responsible for communicating WLAN control messages to FW
->> > over QMI interface. This patch series enables the qmi handshakes required for
->> > WCN3990 chipset.
->> [...]
->> 
->> What's the status of this patchset? It has seen various stages of
->> review, and except for the fact that Govind seems to have dropped
->> various Reviewed-by/Acked-by tags (which Rob noticed), I don't see any
->> relevant feedback that should be blocking it.
->> 
->> I previously had concerns about the firmware boot sequence -- that it
->> required a Qualcomm-specific TFTP service over QRTR, which had no open
->> source implementations. There is now a published daemon that worked for
->> me [1], as well as firmware releases that loaded modem and Wifi firmware
->> together, such that this TFTP service is not needed at all. So my
->> concerns there are no longer blocking.
->> 
->> And I think Rob already reviewed the relevant DT bindings (but again,
->> Govind missed collecting that tag for this series).
->> 
->> So the only outstanding request I see is to collect the appropriate
->> tags. Should Govind resend the whole series just for that?
->> 
->> FWIW, I've been using this series for a while now, and I reviewed
->> earlier versions. I can provide this for the whole series:
->> 
->> Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+On Fri, Oct 12 2018 at 09:04 -0600, Sudeep Holla wrote:
+>On Thu, Oct 11, 2018 at 03:06:09PM -0600, Lina Iyer wrote:
+>> On Thu, Oct 11 2018 at 11:37 -0600, Sudeep Holla wrote:
+>[...]
 >
-> Hello Kalle,
+>> >
+>> > Is DDR managed by Linux ? I assumed it was handled by higher exception
+>> > levels. Can you give examples of resources used by CPU in this context.
+>> > When CPU can be powered on or woken up without Linux intervention, the
+>> > same holds true for CPU power down or sleep states. I still see no reason
+>> > other than the firmware has no support to talk to RPMH.
+>> >
+>> DDR, shared clocks, regulators etc. Imagine you are running something on
+>> the screen and CPUs enter low power mode, while the CPUs were active,
+>> there was a need for bunch of display resources, and things the app may
+>> have requested resources, while the CPU powered down the requests may
+>> not be needed the full extent as when the CPU was running, so they can
+>> voted down to a lower state of in some cases turn off the resources
+>> completely. What the driver voted for is dependent on the runtime state
+>> and the usecase currently active. The 'sleep' state value is also
+>> determined by the driver/framework.
+>>
 >
-> I see that this patch series has been added to your master-pending branch.
+>Why does CPU going down says that another (screen - supposedly shared)
+>resource needs to be relinquished ? Shouldn't display decide that on it's
+>own ? I have no idea why screen/display is brought into this discussion.
 
-Yes, I'm very close to applying these patches now.
-
-> It seems to be lacking Brians Reviewed-by tags (from above).
-
-Added in the pending branch.
-
-> The diff between v4 and v5 is just:
+>CPU can just say: hey I am going down and I don't need my resource.
+>How can it say: hey I am going down and display or screen also doesn't
+>need the resource. On a multi-cluster, how will the last CPU on one know
+>that it needs to act on behalf of the shared resource instead of another
+>cluster.
 >
-> +++ b/drivers/net/wireless/ath/ath10k/qmi.c
-> @@ -1010,10 +1010,10 @@ int ath10k_qmi_deinit(struct ath10k *ar)
->         struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
->         struct ath10k_qmi *qmi = ar_snoc->qmi;
->  
-> +       qmi_handle_release(&qmi->qmi_hdl);
->         cancel_work_sync(&qmi->event_work);
->         destroy_workqueue(qmi->event_wq);
-> -       qmi_handle_release(&qmi->qmi_hdl);
-> -       qmi = NULL;
-> +       ar_snoc->qmi = NULL;
->  
->         return 0;
->  }
+Fair questions. Now how would the driver know that the CPUs have powered
+down, to say, if you are not active, then you can put these resources in
+low power state?
+Well they don't, because sending out CPU power down notifications for
+all CPUs and the cluster are expensive and can lead to lot of latency.
+Instead, the drivers let the RPMH driver know that if and when the CPUs
+power down, then you could request these resources to be in that low
+power state. The CPU PD power off callbacks trigger the RPMH driver to
+flush and request a low power state on behalf of all the drivers.
+
+Drivers let know what their active state request for the resource is as
+well as their CPU powered down state request is, in advance. The
+'active' request is made immediately, while the 'sleep' request is
+staged in. When the CPUs are to be powered off, this request is written
+into a hardware registers. The CPU PM domain controller, after powering
+down, will make these state requests in hardware thereby lowering the
+standby power. The resource state is brought back into the 'active'
+value before powering on the first CPU.
+
+>I think we are mixing the system sleep states with CPU idle here.
+>If it's system sleeps states, the we need to deal it in some system ops
+>when it's the last CPU in the system and not the cluster/power domain.
 >
-> I've given my Acked-by on v4:
-> https://patchwork.kernel.org/cover/10540111/
-> The change between v4 and v5 does not warrant the removal of those tags,
-> so please re-add them.
+I think the confusion for you is system sleep vs suspend. System sleep
+here (probably more of a QC terminology), refers to powering down the
+entire SoC for very small durations, while not actually suspended. The
+drivers are unaware that this is happening. No hotplug happens and the
+interrupts are not migrated during system sleep. When all the CPUs go
+into cpuidle, the system sleep state is activated and the resource
+requirements are lowered. The resources are brought back to their
+previous active values before we exit cpuidle on any CPU. The drivers
+have no idea that this happened. We have been doing this on QCOM SoCs
+for a decade, so this is not something new for this SoC. Every QCOM SoC
+has been doing this, albeit differently because of their architecture.
+The newer ones do most of these transitions in hardware as opposed to an
+remote CPU. But this is the first time, we are upstreaming this :)
 
-Added these as well.
+Suspend is an altogether another idle state where drivers are notified
+and relinquish their resources before the CPU powers down. Similar
+things happen there as well, but at a much deeper level. Resources may
+be turned off completely instead of just lowering to a low power state.
 
-> Rob has given his Reviewed-by on the dt-binding on v4:
-> https://patchwork.kernel.org/patch/10540115/
-> The dt-binding hasn't changed between v4 and v5, so please re-add it.
+For example, suspend happens when the screen times out on a phone.
+System sleep happens few hundred times when you are actively reading
+something on the phone.
 
-And this also. Please check that everything is ok in the pending branch
-I just pushed:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/log/?h=pending
-
-> I also noted that kbuild test robot complain about this series on x86:
-> http://lists.infradead.org/pipermail/ath10k/2018-October/012268.html
-> Are test errors still valid?
-
-These errors are because of my mistakes in the conflict resolutions I
-did yesterday. They should be fixed now.
-
-> My patch series that makes QMI_HELPERS selectable for compile test
-> (e.g. x86), is queued up for 4.20~5.0:
-> https://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git/log/?h=qcom-drivers-for-4.20
+>> > Having to adapt DT to the firmware though the feature is fully discoverable
+>> > is not at all good IMO. So the DT in this series *should work* with OSI
+>> > mode if the firmware has the support for it, it's as simple as that.
+>> >
+>> The firmware is ATF and does not support OSI.
+>>
 >
-> Does this patch series make the errors go away, or are they unrelated?
+>OK, to keep it simple: If a platform with PC mode only replaces the firmware
+>with one that has OSI mode, we *shouldn't need* to change DT to suite it.
+>I think I asked Ulf to add something similar in DT bindings.
+>
+Fair point and that is what this RFC intends to bring. That PM domains
+are useful not just for PSCI, but also for Linux PM drivers such as this
+one. We will discuss more how we can fold in platform specific
+activities along with PSCI OSI state determination when the
+domain->power_off is called. I have some ideas on that. Was hoping to
+get to that after the inital idea is conveyed.
 
-Yeah, the errors reported by kbuild bot were unrelated.
+Thanks for your time.
 
-BTW, I can already use COMPILE_TEST to for compiling snoc.c on x86. I do
-get some warnings about QMI_HELPERS which I guess your patches fix once
-they land my tree.
-
-Thanks for all the help!
-
--- 
-Kalle Valo
+Lina
