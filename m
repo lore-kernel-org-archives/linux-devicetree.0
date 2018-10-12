@@ -1,181 +1,146 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 2/2] ASoC: max98927: Add reset-gpio support
-Date: Fri, 12 Oct 2018 12:05:16 +0200
-Message-ID: <1539338716.6204.2.camel@pengutronix.de>
-References: <20180912121955.33048-1-cychiang@chromium.org>
-         <20180912121955.33048-2-cychiang@chromium.org>
-         <20180920161905.GM2471@sirena.org.uk>
-         <CAFv8NwLpS9r=jD2wyBsVgJJofkS1xJNo6YssgYXuVHDmGDLogg@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH RFC v1 2/8] kernel/cpu_pm: Manage runtime PM in the idle
+ path for CPUs
+Date: Fri, 12 Oct 2018 12:20:08 +0200
+Message-ID: <CAPDyKFr7+_-t9d+8YMGWW8CURnfD0dHeBHSB_D8rFTMXXDem2g@mail.gmail.com>
+References: <1539206455-29342-1-git-send-email-rplsssn@codeaurora.org>
+ <1539206455-29342-3-git-send-email-rplsssn@codeaurora.org>
+ <8161939.SRDo8Qx48D@aspire.rjw.lan> <20181011220842.GE2371@codeaurora.org> <CAJZ5v0hXM9krdacL09kJSn30AL_5kN+4U3d02rZX7-V2DWg_VQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFv8NwLpS9r=jD2wyBsVgJJofkS1xJNo6YssgYXuVHDmGDLogg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hXM9krdacL09kJSn30AL_5kN+4U3d02rZX7-V2DWg_VQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Cheng-yi Chiang <cychiang@chromium.org>, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Ryan Lee <ryans.lee@maximintegrated.com>, alsa-devel@alsa-project.org, Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Lina Iyer <ilina@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Kevin Hilman <khilman@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, "Nayak, Rajendra" <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Evan Green <evgreen@chromium.org>, Doug Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Cheng-yi,
-
-[adding Maxime, devicetree to Cc:, the old discussion about GPIO resets
-in [4] has never been resolved]
-
-On Tue, 2018-10-09 at 21:46 +0800, Cheng-yi Chiang wrote:
-> +reset controller maintainer Philipp
-> 
-> Hi Mark,
->   Sorry for the late reply. It took me a while to investigate reset
-> controller and its possible usage. I would like to figure out the
-> proper way of reset handling because it is common to have a shared
-> reset line for two max98927 codecs for left and right channels.
-> Without supporting this usage, a simple reset-gpios change for single
-> codec would not be useful, and perhaps will be duplicated if reset
-> controller is a better way.
-> 
-> Hi Philipp,
->   I would like to seek your advice about whether we can use reset
-> controller to support the use case where multiple devices share the
-> same reset line.
+On 12 October 2018 at 09:43, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> On Fri, Oct 12, 2018 at 12:08 AM Lina Iyer <ilina@codeaurora.org> wrote:
+>>
+>> On Thu, Oct 11 2018 at 14:56 -0600, Rafael J. Wysocki wrote:
+>> >On Wednesday, October 10, 2018 11:20:49 PM CEST Raju P.L.S.S.S.N wrote:
+>> >> From: Ulf Hansson <ulf.hansson@linaro.org>
+>> >>
+>> >> To allow CPUs being power managed by PM domains, let's deploy support for
+>> >> runtime PM for the CPU's corresponding struct device.
+>> >>
+>> >> More precisely, at the point when the CPU is about to enter an idle state,
+>> >> decrease the runtime PM usage count for its corresponding struct device,
+>> >> via calling pm_runtime_put_sync_suspend(). Then, at the point when the CPU
+>> >> resumes from idle, let's increase the runtime PM usage count, via calling
+>> >> pm_runtime_get_sync().
+>> >>
+>> >> Cc: Lina Iyer <ilina@codeaurora.org>
+>> >> Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
+>> >> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+>> >> Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
+>> >> (am from https://patchwork.kernel.org/patch/10478153/)
+>> >> ---
+>> >>  kernel/cpu_pm.c | 11 +++++++++++
+>> >>  1 file changed, 11 insertions(+)
+>> >>
+>> >> diff --git a/kernel/cpu_pm.c b/kernel/cpu_pm.c
+>> >> index 67b02e1..492d4a8 100644
+>> >> --- a/kernel/cpu_pm.c
+>> >> +++ b/kernel/cpu_pm.c
+>> >> @@ -16,9 +16,11 @@
+>> >>   */
+>> >>
+>> >>  #include <linux/kernel.h>
+>> >> +#include <linux/cpu.h>
+>> >>  #include <linux/cpu_pm.h>
+>> >>  #include <linux/module.h>
+>> >>  #include <linux/notifier.h>
+>> >> +#include <linux/pm_runtime.h>
+>> >>  #include <linux/spinlock.h>
+>> >>  #include <linux/syscore_ops.h>
+>> >>
+>> >> @@ -91,6 +93,7 @@ int cpu_pm_enter(void)
+>> >>  {
+>> >>      int nr_calls;
+>> >>      int ret = 0;
+>> >> +    struct device *dev = get_cpu_device(smp_processor_id());
+>> >>
+>> >>      ret = cpu_pm_notify(CPU_PM_ENTER, -1, &nr_calls);
+>> >>      if (ret)
+>> >> @@ -100,6 +103,9 @@ int cpu_pm_enter(void)
+>> >>               */
+>> >>              cpu_pm_notify(CPU_PM_ENTER_FAILED, nr_calls - 1, NULL);
+>> >>
+>> >> +    if (!ret && dev && dev->pm_domain)
+>> >> +            pm_runtime_put_sync_suspend(dev);
+>> >
+>> >This may cause a power domain to go off, but if it goes off, then the idle
+>> >governor has already selected idle states for all of the CPUs in that domain.
+>> >
+>> >Is there any way to ensure that turning the domain off (and later on) will
+>> >no cause the target residency and exit latency expectations for those idle
+>> >states to be exceeded?
+>> >
+>> Good point.
+>>
+>> The cluster states should account for that additional latency.
 >
-> Let me summarize the use case:
-> There are two max98927 codecs sharing the same reset line.
-> The reset line is controlled by a GPIO.
-> The goal is to toggle reset line once and only once.
-> 
-> There was a similar scenario in tlv320aic3x codec driver [1].
-> A static list is used in the codec driver so probe function can know
-> whether it is needed to toggle reset line.
-> Mark pointed out that it is not suitable to handle the shared reset
-> line inside codec driver.
-> A point is that this only works for multiple devices using the same
-> device driver.
-> He suggested to look into reset controller so I searched through the
-> usage for common reset line.
+> But even then, you need to be sure that the idle governor selected
+> "cluster" states for all of the CPUs in the cluster.  It might select
+> WFI for one of them for reasons unrelated to the distance to the next
+> timer (so to speak), for example.
+
+The approach here is that cpu_pm_enter isn't called for WFI, hence
+there is no pm_runtime_get|put() done for a CPU going to WFI. In other
+words, the cluster will never be powered off/on if there is any CPU in
+the cluster in WFI.
+
 >
-> Here I found a shared reset line use case [2].
-> With the patch [2], reset_control_reset can support this “reset once
-> and for all” use case.
+>> Just the CPU's power down states need not care about that.
+>
+> The meaning of this sentence isn't particularly clear to me. :-)
+>
+>> But, it would be nice if the PM domain governor could be cognizant of
+>> the idle state chosen for each CPU, that way we dont configure the
+>> domain to be powered off when the CPUs have just chosen to power down
+>> (not chosen a cluster state). I think that is a whole different topic to
+>> discuss.
+>
+> This needs to be sorted out before the approach becomes viable, though.
+>
+> Basically, the domain governor needs to track what the idle governor
+> did for all of the CPUs in the domain and only let the domain go off
+> if the latency matches all of the states selected by the idle
+> governor.  Otherwise the idle governor's assumptions would be violated
+> and it would become essentially useless overhead.
 
-This patch was applied as 7da33a37b48f. So the reset framework has
-support for shared reset controls where only the first reset request
-actually causes a reset pulse, and all others are no-ops.
+That is correct!
 
-> However, I found that there are some missing pieces:
-> 
-> Let’s assume there are two codecs c1 and c2 sharing a reset line
-> controlled by GPIO.
-> 
-> c1’s spec:
-> Hold time: The minimum time to assert the reset line is t_a1.
-> Release time: The minimum time to access the chip after deassert of
-> the reset line is t_d1.
-> 
-> c2’s spec:
-> Hold time: The minimum time to assert the reset line is t_a2.
-> Release time: The minimum time to access the chip after deassert of
-> the reset line is t_d2.
-> 
-> For both c1 and c2 to work properly, we need a reset controller that
-> can assert the reset line for
-> T = max(t_a1, t_a2).
-> 
-> 1. We need reset controller to support GPIO.
+The reason why it works in the current approach, is because there is
+only one additional CPU idle state besides WFI. Hence
+pm_runtime_get|put() is correctly called, as it's done only when the
+cpuidle-governor has picked the deepest idle state for the CPU.
 
-I still don't like the idea of describing a separate gpio reset
-controller "device" in DT very much, as this is really just a software
-abstraction, not actual hardware. For example:
+To solve this in the long run (where CPUs have > 1 idle state besides
+WFI), I think there are two options.
 
-	gpio_reset: reset-controller {
-		compatible = "gpio-reset";
-		reset-gpios = <&gpio0 15 GPIO_ACTIVE_LOW>,
-			      <&gpio1
-16 GPIO_ACTIVE_HIGH>;
-		reset-delays-us = <10000>, <500>;
-	};
+1)
+We either have to select the idle state of the CPU (and not only the
+cluster) as part of the genpd and the genpd governors. This makes
+genpd in charge and can thus decide internally what idle state that
+should be selected, even hierarchically. Then it becomes a matter of
+how to share code and interact between cpuidle/cpuidle-governors and
+genpd.
 
-	c1 {
-		resets = <&gpio_reset 0>; /* maps to <&gpio0 15 ...> */
-	};
+2)
+Leave genpd and the genpd governor to deal with cluster idle states,
+but not the CPU idle states, as is the suggested approach. Then, to
+solve the problem you pointed out, we need to provide the cpuidle
+driver with information about which of the available idle state(s) it
+should call pm_runtime_get|put() for, as to allow cluster idle
+management through genpd.
 
-	c2 {
-		resets = <&gpio_reset 0>;
-	};
+I am currently looking at option 2), as I think it requires less
+changes and I guess it's better to move slowly forward.
 
-What I would like better would be to let the consumers keep their reset-
-gpios bindings, but add an optional hold time override in the DT:
+Does it make sense?
 
-	c1 {
-		reset-gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
-		reset-delays-us = <10000>;
-	};
-
-	c2 {
-		reset-gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
-		re
-set-delays-us = <10000>;
-	};
-
-The reset framework could create a reset_control backed by a gpio
-instead of a rcdev. I have an unfinished patch for this, but without the
-sharing requirement adding the reset framework abstraction between gpiod
-and drivers never seemed really worth it.
-
-> 2. We need to specify hold time T to reset controller in device tree
-> so it knows that it needs hold reset line for that long in its
-> implementation of reset_control_reset.
-
-Agreed. Ideally, I'd like to make this optional, and have the drivers
-continue to provide the hold time if they think they know it.
-
-> 3. Assuming we have 1 and 2 in place. In codec driver of c1, it can
-> call reset_control_reset and wait for t_a1 + t_d1. In codec driver of
-> c2, it can call reset_control_reset and wait for t_a2 + t_d2.
-
-The reset framework should wait for the configured assertion time,
-max(t_a1, t_a2). The drivers only should only have to wait for
-t_d1 / t_d2 after reset_control_reset returns.
-
->     We need to wait for hold time + release time because
-> triggered_count is increased before reset ops is called. When the
-> second driver finds that triggered_count is 1 and skip the real reset
-> operation, reset ops might just begin doing its work a short time ago.
-
-That is a good point. Maybe the reset framework should just wait for the
-hold time even for the second reset. Another possibility would be to
-serialize them with a mutex.
-
->     I am not sure whether we would need a flag in reset controller to
-> mark that "reset is done". When driver sees this flag is done, it can
-> just wait for release time instead of hold time + release time.
-
-Let's not complicate the drivers with this too much. I think
-reset_control_reset should guarantee that the reset line is not asserted
-anymore upon return.
-
-> And I found that you already solved 1 and mentioned the
-> possible usage of 2 in [3].
-> There were discussion about letting device driver to deal with
-> reset-gpios by itself in [4], but it seems that reset controller can
-> better deal with the shared reset line situation.
-> Maybe we could revive the patch of GPIO support for reset controller ?
-
-The discussion with Maxime in [4] hasn't really been resolved. I still
-think the reset-gpios property should be kept, and the reset framework
-could adapt to it. This is something the device tree maintainers' input
-would be welcome on.
-
-> Please let me know what direction I should look into.
-> Thanks a lot!
-> 
-> [1] http://mailman.alsa-project.org/pipermail/alsa-devel/2010-November/033246.html
-> https://patchwork.kernel.org/patch/9424123/
-> 
-> [2] https://patchwork.kernel.org/patch/9424123/
-> 
-> [3] https://lore.kernel.org/patchwork/patch/455839/
-> 
-> [4] https://patchwork.kernel.org/patch/3978121/
-
-regards
-Philipp
+Kind regards
+Uffe
