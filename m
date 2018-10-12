@@ -1,51 +1,62 @@
-Return-Path: <SRS0=7a8h=NC=essensium.com=charles-antoine.couret@kernel.org>
-From: Charles-Antoine Couret <charles-antoine.couret@essensium.com>
-Subject: [PATCH V3 2/2] doc:devicetree: Add AD7949 device tree bindings in documentation
-Date: Mon, 22 Oct 2018 23:02:43 +0200
-Message-Id: <20181022210243.837-2-charles-antoine.couret@essensium.com>
-In-Reply-To: <20181022210243.837-1-charles-antoine.couret@essensium.com>
-References: <20181022210243.837-1-charles-antoine.couret@essensium.com>
+Return-Path: <SRS0=RFiD=MY=verge.net.au=horms@kernel.org>
+Date: Fri, 12 Oct 2018 13:23:58 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] arm64: dts: renesas: r8a77980: add thermal support
+Message-ID: <20181012112357.5hh5kpczrb5sm2ra@verge.net.au>
+References: <fb4eb097-40aa-82df-68c7-9b727c858a8b@cogentembedded.com>
+ <90934111-8cc5-482d-8a78-5ccc1113e42d@cogentembedded.com>
+ <20181010221142.GG24305@bigcity.dyn.berto.se>
+ <CAMuHMdU5=CQPopwBspBgngLnMxTSJ3f=DsUOGT94q9fMx55HLA@mail.gmail.com>
+ <20181011073002.GH24305@bigcity.dyn.berto.se>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-To: linux-iio@vger.kernel.org
-Cc: Charles-Antoine Couret <charles-antoine.couret@essensium.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+In-Reply-To: <20181011073002.GH24305@bigcity.dyn.berto.se>
+To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Description how to invoke ad7949 driver from device tree file.
+On Thu, Oct 11, 2018 at 09:30:02AM +0200, Niklas Söderlund wrote:
+> Hi Geert,
+> 
+> On 2018-10-11 09:02:22 +0200, Geert Uytterhoeven wrote:
+> > Hi Niklas,
+> > 
+> > On Thu, Oct 11, 2018 at 12:11 AM Niklas Söderlund
+> > <niklas.soderlund@ragnatech.se> wrote:
+> > > On 2018-10-10 22:18:11 +0300, Sergei Shtylyov wrote:
+> > > > Describe THS/CIVM in the R8A77980 device trees.
+> > > >
+> > > > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> > 
+> > > > --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> > > > +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> > > > @@ -330,6 +330,19 @@
+> > > >                       #power-domain-cells = <1>;
+> > > >               };
+> > > >
+> > > > +             tsc: thermal@e6198000 {
+> > > > +                     compatible = "renesas,r8a77980-thermal";
+> > > > +                     reg = <0 0xe6198000 0 0x100>,
+> > > > +                           <0 0xe61a0000 0 0x100>;
+> > > > +                     interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
+> > > > +                                  <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
+> > > > +                                  <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
+> > > > +                     clocks = <&cpg CPG_MOD 522>;
+> > > > +                     power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> > > > +                     resets = <&cpg 522>;
+> > > > +                     #thermal-sensor-cells = <1>;
+> > >
+> > > The status property is missing but as you told me in v1 it should not
+> > > matter. I will leave it for Simon to decide if he wants it to keep it
+> > > consistent with other SoC or if we should remove it from the other dtsi
+> > > files. In any case with or without the status property.
+> > 
+> > Forgot to review commit c79661eb5060e2bf ("arm64: dts: renesas: Remove
+> > unneeded status from thermal nodes")? ;-)
+> 
+> Not only that also reviewing using the context from v4.19-rc1 which of 
+> course is not correct for dtsi patches, thanks for enlightening me :-)
 
-Signed-off-by: Charles-Antoine Couret <charles-antoine.couret@essensium.com>
----
-V1 to V3:
-* Add prefix vendor
-* Improve patch description
-
- .../devicetree/bindings/iio/adc/ad7949.txt     | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/ad7949.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/ad7949.txt b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
-new file mode 100644
-index 000000000000..f1c3af53f5cc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
-@@ -0,0 +1,18 @@
-+* Analog Devices AD7949/AD7682/AD7689
-+
-+Required properties:
-+ - compatible: Should be one of
-+	* "adi,ad7949"
-+	* "adi,ad7682"
-+	* "adi,ad7689"
-+ - reg: spi chip select number for the device
-+ - vref-supply: The regulator supply for ADC reference voltage
-+ - spi-max-frequency: Max SPI frequency to use (< 33000000)
-+
-+Example:
-+adc@0 {
-+	compatible = "adi,ad7949";
-+	reg = <0>;
-+	vref-supply = <&vdd_supply>;
-+	spi-max-frequency = <200000>;
-+};
--- 
-2.19.1
+Thanks everyone, applied or v4.21.
