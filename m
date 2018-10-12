@@ -1,114 +1,53 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V11 1/8] irqchip: add C-SKY SMP interrupt controller
-Date: Fri, 12 Oct 2018 11:21:23 +0800
-Message-ID: <20181012032122.GA20643@guoren-Inspiron-7460>
-References: <cover.1539095311.git.ren_guo@c-sky.com>
- <83d216b3fed039037ebe8b8513f3c51a36934e74.1539095312.git.ren_guo@c-sky.com>
- <8772c090-a139-04e4-a55f-820afe1bb5bd@arm.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 0/4] Add clock support for Hi3670 SoC
+Date: Fri, 12 Oct 2018 09:08:58 +0530
+Message-ID: <20181012033857.GA5438@Mani-XPS-13-9360>
+References: <20180921060103.21370-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8772c090-a139-04e4-a55f-820afe1bb5bd@arm.com>
+In-Reply-To: <20180921060103.21370-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, will.deacon@arm.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, xuwei5@hisilicon.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
+On Thu, Sep 20, 2018 at 11:00:59PM -0700, Manivannan Sadhasivam wrote:
+> This patchset adds clock support for Hi3670 SoC from HiSilicon utilizing
+> the HiSi common clock code. While adding clock support, let's remove the
+> fixed clock for UART and source SoC clock on HiKey970 board.
+> 
+> This patchset has been verified on HiKey970 board.
+>
 
-On Tue, Oct 09, 2018 at 04:11:05PM +0100, Marc Zyngier wrote:
-> On 09/10/18 15:41, Guo Ren wrote:
-> >  - Irq-csky-mpintc is C-SKY smp system interrupt controller and it
-> >    could support 16 soft irqs, 16 private irqs, and 992 max common
-> >    irqs.
-> >
-> >Changelog:
-> >  - Convert the cpumask to an interrupt-controller specific representation
-> >    in driver's code, and not the SMP code's.
-> >  - pass checkpatch.pl
-> >  - Move IPI_IRQ into the driver
-> >  - Remove irq_set_default_host() and use set_ipi_irq_mapping()
-> >  - Change name with upstream feed-back
-> >  - Change irq map, reserve soft_irq & private_irq space
-> >  - Add License and Copyright
-> >  - Support set_affinity for irq balance in SMP
-> >
-> >Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> >Cc: Marc Zyngier <marc.zyngier@arm.com>
-> 
-> [...]
-> 
-> >+/* C-SKY multi processor interrupt controller */
-> >+static int __init
-> >+csky_mpintc_init(struct device_node *node, struct device_node *parent)
-> >+{
-> >+	unsigned int cpu, nr_irq;
-> >+	int ret;
-> >+
-> >+	if (parent)
-> >+		return 0;
-> >+
-> >+	ret = of_property_read_u32(node, "csky,num-irqs", &nr_irq);
-> >+	if (ret < 0)
-> >+		nr_irq = INTC_IRQS;
-> >+
-> >+	if (INTCG_base == NULL) {
-> >+		INTCG_base = ioremap(mfcr("cr<31, 14>"),
-> >+				     INTCL_SIZE*nr_cpu_ids + INTCG_SIZE);
-> >+		if (INTCG_base == NULL)
-> >+			return -EIO;
-> >+
-> >+		INTCL_base = INTCG_base + INTCG_SIZE;
-> >+
-> >+		writel_relaxed(BIT(0), INTCG_base + INTCG_ICTLR);
-> >+	}
-> >+
-> >+	root_domain = irq_domain_add_linear(node, nr_irq, &csky_irqdomain_ops,
-> >+					    NULL);
-> >+	if (!root_domain)
-> >+		return -ENXIO;
-> >+
-> >+	/* for every cpu */
-> >+	for_each_present_cpu(cpu) {
-> >+		per_cpu(intcl_reg, cpu) = INTCL_base + (INTCL_SIZE * cpu);
-> >+		writel_relaxed(BIT(0), per_cpu(intcl_reg, cpu) + INTCL_PICTLR);
-> >+	}
-> >+
-> >+	set_handle_irq(&csky_mpintc_handler);
-> >+
-> >+#ifdef CONFIG_SMP
-> >+	set_send_ipi(&csky_mpintc_send_ipi);
-> >+
-> >+	set_ipi_irq_mapping(&csky_mpintc_ipi_irq_mapping);
-> 
-> Same remark as before.
-> 
-> You do not need this second callback, and you should redefine set_send_ipi
-> to take an irq number:
-> 
-> 	ipi_irq = irq_create_mapping(root_domain, IPI_IRQ);
-> 	if (!ipi_irq)
-> 		[handle error]
-> 
-> 	set_send_ipi(csky_mpintc_send_ipi, ipi_irq);
-> 
-> and you can then delete both set_ipi_irq_mapping and csky_mpintc_handler,
-> none of which serve any purpose.
-> 
-> In your SMP code:
-> 
-> void __init set_send_ipi(void (*func)(const struct cpumask *), int irq)
-> {
-> 	if (send_arch_ipi)
-> 		return;
-> 
-> 	send_arch_ipi = func;
-> 	ipi_irq = irq;
-> }
-> 
-> and simplify setup_smp_ipi.
-Ok, remove the set_ipi_irq_mapping. See my next version patch.
+Hi,
 
-Best Regards
- Guo Ren
+Any update on this series?
+
+Thanks,
+Mani
+
+> Thanks,
+> Mani
+> 
+> Manivannan Sadhasivam (4):
+>   dt-bindings: clk: hisilicon: Add bindings for Hi3670 clk
+>   arm64: dts: hisilicon: Add clock nodes for Hi3670 SoC
+>   arm64: dts: hisilicon: Source SoC clock for UART6
+>   clk: hisilicon: Add clock driver for Hi3670 SoC
+> 
+>  .../bindings/clock/hi3670-clock.txt           |   43 +
+>  arch/arm64/boot/dts/hisilicon/hi3670.dtsi     |   48 +-
+>  drivers/clk/hisilicon/Kconfig                 |    7 +
+>  drivers/clk/hisilicon/Makefile                |    1 +
+>  drivers/clk/hisilicon/clk-hi3670.c            | 1016 +++++++++++++++++
+>  include/dt-bindings/clock/hi3670-clock.h      |  348 ++++++
+>  6 files changed, 1458 insertions(+), 5 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/hi3670-clock.txt
+>  create mode 100644 drivers/clk/hisilicon/clk-hi3670.c
+>  create mode 100644 include/dt-bindings/clock/hi3670-clock.h
+> 
+> -- 
+> 2.17.1
+> 
