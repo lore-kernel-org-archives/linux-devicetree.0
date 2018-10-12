@@ -1,96 +1,38 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v2 1/2] dt-bindings: uniphier: add bindings for UniPhier SoC family
-Date: Fri, 12 Oct 2018 13:25:23 +0900
-Message-ID: <1539318324-4938-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+From: <shubhrajyoti.datta@gmail.com>
+Subject: [PATCHv2 2/2] dt-bindings: can: xilinx_can: add Xilinx CAN FD 2.0  bindings
+Date: Fri, 12 Oct 2018 09:55:09 +0530
+Message-ID: <1539318309-13715-2-git-send-email-shubhrajyoti.datta@gmail.com>
+References: <1539318309-13715-1-git-send-email-shubhrajyoti.datta@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1539318309-13715-1-git-send-email-shubhrajyoti.datta@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org, michal.simek@xilinx.com, davem@davemloft.net, mkl@pengutronix.de, wg@grandegger.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Document the list of SoCs and boards of UniPhier platform.
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Add compatible string and new attributes to support the Xilinx CAN
+FD 2.0.
+
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 ---
+ Documentation/devicetree/bindings/net/can/xilinx_can.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes in v2:
-  Changes suggested by Rob.
-  - Move the file to
-    Documentation/devicetree/bindings/arm/socionext/uniphier.txt
-  - Group boards by each SoC
-
-Previous posts:
-  v1: https://patchwork.ozlabs.org/patch/842010/
-
- .../devicetree/bindings/arm/socionext/uniphier.txt | 47 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/socionext/uniphier.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/socionext/uniphier.txt b/Documentation/devicetree/bindings/arm/socionext/uniphier.txt
-new file mode 100644
-index 0000000..dafc466
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/socionext/uniphier.txt
-@@ -0,0 +1,47 @@
-+Socionext UniPhier SoC family
-+-----------------------------
-+
-+Required properties in the root node:
-+  - compatible: should contain board and SoC compatible strings
-+
-+SoC and board compatible strings:
-+  (sorted chronologically)
-+
-+  - LD4 SoC:  "socionext,uniphier-ld4"
-+      - Reference board: "socionext,uniphier-ld4-ref"
-+
-+  - Pro4 SoC: "socionext,uniphier-pro4"
-+      - Reference Board: "socionext,uniphier-pro4-ref"
-+      - Ace Board:       "socionext,uniphier-pro4-ace"
-+      - Sanji Board:     "socionext,uniphier-pro4-sanji"
-+
-+  - sLD8 SoC: "socionext,uniphier-sld8"
-+      - Reference Board: "socionext,uniphier-sld8-ref"
-+
-+  - PXs2 SoC: "socionext,uniphier-pxs2"
-+      - Gentil Board:    "socionext,uniphier-pxs2-gentil"
-+      - Vodka Board:     "socionext,uniphier-pxs2-vodka"
-+
-+  - LD6b SoC: "socionext,uniphier-ld6b"
-+      - Reference Board: "socionext,uniphier-ld6b-ref"
-+
-+  - LD11 SoC: "socionext,uniphier-ld11"
-+      - Reference Board: "socionext,uniphier-ld11-ref"
-+      - Global Board:    "socionext,uniphier-ld11-global"
-+
-+  - LD20 SoC: "socionext,uniphier-ld20"
-+      - Reference Board: "socionext,uniphier-ld20-ref"
-+      - Global Board:    "socionext,uniphier-ld20-global"
-+
-+  - PXs3 SoC: "socionext,uniphier-pxs3"
-+      - Reference Board: "socionext,uniphier-pxs3-ref"
-+
-+Example:
-+
-+/dts-v1/;
-+
-+/ {
-+	compatible = "socionext,uniphier-ld20-ref", "socionext,uniphier-ld20";
-+
-+	...
-+};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a5c951c..c0c2abb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2183,6 +2183,7 @@ M:	Masahiro Yamada <yamada.masahiro@socionext.com>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
- S:	Maintained
-+F:	Documentation/devicetree/bindings/arm/socionext/uniphier.txt
- F:	Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
- F:	Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
- F:	arch/arm/boot/dts/uniphier*
+diff --git a/Documentation/devicetree/bindings/net/can/xilinx_can.txt b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
+index 060e2d4..100cc40b 100644
+--- a/Documentation/devicetree/bindings/net/can/xilinx_can.txt
++++ b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
+@@ -6,6 +6,7 @@ Required properties:
+ 			  - "xlnx,zynq-can-1.0" for Zynq CAN controllers
+ 			  - "xlnx,axi-can-1.00.a" for Axi CAN controllers
+ 			  - "xlnx,canfd-1.0" for CAN FD controllers
++			  - "xlnx,canfd-2.0" for CAN FD 2.0 controllers
+ - reg			: Physical base address and size of the controller
+ 			  registers map.
+ - interrupts		: Property with a value describing the interrupt
 -- 
-2.7.4
+2.1.1
