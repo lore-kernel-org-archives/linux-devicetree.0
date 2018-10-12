@@ -1,83 +1,79 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v3 2/9] dt-bindings: ti-lmu: Remove LM3697
-Date: Fri, 12 Oct 2018 20:03:12 +0200
-Message-ID: <20181012180312.GB5565@amd>
-References: <20181011165123.32198-1-dmurphy@ti.com>
- <20181011165123.32198-3-dmurphy@ti.com>
- <20181011182734.GA7973@amd>
- <4fcb91c7-b2b2-798d-8a41-fa1b475086e0@ti.com>
- <8c1559e1-b703-4c98-8bd9-7c9993bd59f5@gmail.com>
- <20181012162619.GA28573@bogus>
+From: Raju P L S S S N <rplsssn@codeaurora.org>
+Subject: Re: [PATCH RFC v1 5/8] dt-bindings: introduce cpu power domain
+ bindings for Qualcomm SoCs
+Date: Fri, 12 Oct 2018 23:38:11 +0530
+Message-ID: <d023628d-d130-d353-db5d-4c8a8e7be34e@codeaurora.org>
+References: <1539206455-29342-1-git-send-email-rplsssn@codeaurora.org>
+ <1539206455-29342-6-git-send-email-rplsssn@codeaurora.org>
+ <20181011110849.GA32752@e107155-lin>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="jq0ap7NbKX2Kqbes"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181012162619.GA28573@bogus>
+In-Reply-To: <20181011110849.GA32752@e107155-lin>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Dan Murphy <dmurphy@ti.com>, lee.jones@linaro.org, tony@atomide.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, ulf.hansson@linaro.org, khilman@kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, ilina@codeaurora.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 
---jq0ap7NbKX2Kqbes
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On 10/11/2018 4:38 PM, Sudeep Holla wrote:
+> On Thu, Oct 11, 2018 at 02:50:52AM +0530, Raju P.L.S.S.S.N wrote:
+>> Add device binding documentation for Qualcomm Technology Inc's cpu
+>> domain driver. The driver is used for managing system sleep activities
+>> that are required when application processor is going to deepest low
+>> power mode.
+>>
+> 
+> So either we are not using PSCI or the binding is not so clear on
+> how this co-exist with PSCI power domains. Could you provide details ?
+> 
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
+>> ---
+>>   .../bindings/soc/qcom/cpu_power_domain.txt         | 39 ++++++++++++++++++++++
+>>   1 file changed, 39 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/soc/qcom/cpu_power_domain.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/qcom/cpu_power_domain.txt b/Documentation/devicetree/bindings/soc/qcom/cpu_power_domain.txt
+>> new file mode 100644
+>> index 0000000..1c8fe69
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/qcom/cpu_power_domain.txt
+>> @@ -0,0 +1,39 @@
+>> +Qualcomm Technologies cpu power domain
+>> +-----------------------------------------
+>> +
+>> +CPU power domain handles the tasks that need to be performed during
+>> +application processor deeper low power mode entry for QCOM SoCs which
+>> +have hardened IP blocks combinedly called as RPMH (Resource Power Manager
+>> +Hardened) for shared resource management. Flushing the buffered requests
+>> +to TCS (Triggered Command Set) in RSC (Resource State Coordinator) and
+>> +programming the wakeup timer in PDC (Power Domain Controller) for timer
+>> +based wakeup are handled as part of domain power down.
+>> +
+> 
+> And which is this not hidden as part of PSCI CPU_SUSPEND ?
+> 
+>> +The bindings for cpu power domain is specified in the RSC section in
+>> +devicetree.
+>> +
+>> +Properties:
+>> +- compatible:
+>> +	Usage: required
+>> +	Value type: <string>
+>> +	Definition: must be "qcom,cpu-pm-domain".
+>> +
+> 
+> NACK until details on how this can co-exist with PSCI is provided.
 
-> > >>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> > >>
-> > >> NAK.
-> > >=20
-> > > Thanks for the NAK.
-> > >=20
-> > > This NAK was NAK'd by other maintainer in the V2 RFC patchset
-> > >=20
-> > > https://lore.kernel.org/patchwork/patch/993171/
-> >=20
-> > I confirm. LM3697 is a standalone device and not a cell of any
-> > MFD device.
-> >=20
-> > Waiting for DT maintainer's ack.
->=20
-> You all sort out what you want... I can't follow it all, and I'm not=20
-> going to spend the time trying to figure out what is going on here.
+Platform coordinated mode is used on this SoC. So they both can 
+co-exist. I hope with the discussion on other thread, the details are clear.
 
-This is what I want:
-
-> As this is worded, changing the driver is a Linux problem and irrelevant=
-=20
-> to the binding. Now if you want to move documentation to a location that=
-=20
-> makes more sense, then fine. But structure patches that way and make it=
-=20
-> clear that from an binding ABI perspective, nothing is changing.
-
-=2E..but apparently I did not have enough authority to get it.
-
-(I'm ok with move, and it is possible that binding does need some
-fixups besides the move; still it should be done as fixup not as a new
-binding).
-
-Thanks,
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---jq0ap7NbKX2Kqbes
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvA4eAACgkQMOfwapXb+vKgBQCfUIZ/eXRCOTCJUVJpsOGMC5nR
-58oAn37DSu7PFR32erjNbDh23QXc4GIz
-=qPga
------END PGP SIGNATURE-----
-
---jq0ap7NbKX2Kqbes--
+> 
+> --
+> Regards,
+> Sudeep
+> 
