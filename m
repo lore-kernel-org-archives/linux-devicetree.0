@@ -1,101 +1,92 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: mtd: stm32_fmc2: add STM32 FMC2 NAND
- controller documentation
-Date: Fri, 12 Oct 2018 15:32:29 -0500
-Message-ID: <20181012203229.GA9657@bogus>
-References: <1538732520-2800-1-git-send-email-christophe.kerello@st.com>
- <1538732520-2800-2-git-send-email-christophe.kerello@st.com>
+Subject: Re: [PATCH V2 net-next 5/5] ptp: Add a driver for InES time stamping
+ IP core.
+Date: Fri, 12 Oct 2018 15:42:57 -0500
+Message-ID: <20181012204256.GA16019@bogus>
+References: <20181007173823.21590-6-richardcochran@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1538732520-2800-2-git-send-email-christophe.kerello@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: christophe.kerello@st.com
-Cc: boris.brezillon@bootlin.com, miquel.raynal@bootlin.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, mark.rutland@arm.com, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+In-Reply-To: <20181007173823.21590-6-richardcochran@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Jacob Keller <jacob.e.keller@intel.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Willem de Bruijn <willemb@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 05, 2018 at 11:41:58AM +0200, christophe.kerello@st.com wrote:
-> From: Christophe Kerello <christophe.kerello@st.com>
+On Sun, Oct 07, 2018 at 10:38:23AM -0700, Richard Cochran wrote:
+> The InES at the ZHAW offers a PTP time stamping IP core.  The FPGA
+> logic recognizes and time stamps PTP frames on the MII bus.  This
+> patch adds a driver for the core along with a device tree binding to
+> allow hooking the driver to MII buses.
 > 
-> This patch adds the documentation of the device tree bindings for the STM32
-> FMC2 NAND controller.
-> 
-> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> Signed-off-by: Richard Cochran <richardcochran@gmail.com>
 > ---
->  .../devicetree/bindings/mtd/stm32-fmc2-nand.txt    | 59 ++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
+>  Documentation/devicetree/bindings/ptp/ptp-ines.txt |  37 +
+
+Bindings should be separate patch.
+
+>  drivers/ptp/Kconfig                                |  10 +
+>  drivers/ptp/Makefile                               |   1 +
+>  drivers/ptp/ptp_ines.c                             | 870 +++++++++++++++++++++
+>  4 files changed, 918 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ptp/ptp-ines.txt
+>  create mode 100644 drivers/ptp/ptp_ines.c
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt b/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
+> diff --git a/Documentation/devicetree/bindings/ptp/ptp-ines.txt b/Documentation/devicetree/bindings/ptp/ptp-ines.txt
 > new file mode 100644
-> index 0000000..b620176
+> index 000000000000..1484b62802c7
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
-> @@ -0,0 +1,59 @@
-> +STMicroelectronics Flexible Memory Controller 2 (FMC2)
-> +NAND Interface
+> +++ b/Documentation/devicetree/bindings/ptp/ptp-ines.txt
+> @@ -0,0 +1,37 @@
+> +ZHAW InES PTP time stamping IP core
 > +
-> +Required properties:
-> +- compatible: Should be one of:
-> +              * st,stm32mp15-fmc2
-> +- reg: NAND flash controller memory areas.
-> +       First region contains the register location.
-> +       Regions 2 to 4 respectively contain the data, command,
-> +       and address space for CS0.
-> +       Regions 5 to 7 contain the same areas for CS1.
-> +- interrupts: The interrupt number
-> +- pinctrl-0: Standard Pinctrl phandle (see: pinctrl/pinctrl-bindings.txt)
-> +- clocks: Use common clock framework
+> +The IP core needs two different kinds of nodes.  The control node
+> +lives somewhere in the memory map and specifies the address of the
+> +control registers.  There can be up to three port handles placed as
+> +attributes of PHY nodes.  These associate a particular MII bus with a
+> +port index within the IP core.
+> +
+> +Required properties of the control node:
+> +
+> +- compatible:		"ines,ptp-ctrl"
 
-How many? 'common clock framework' is a Linux thing, not part of 
-bindings.
+ines is not registered vendor prefix. Should it be 'zhaw' instead?
+
+> +- reg:			physical address and size of the register bank
+> +- #phandle-cells:	must be one (1)
+
+#timestamper-cells
+
+Or if it is always 1, you could omit it.
 
 > +
-> +Optional properties:
-> +- resets: Reference to a reset controller asserting the FMC controller
-> +- dmas: DMA specifiers (see: dma/stm32-mdma.txt)
-> +- dma-names: Must be "tx", "rx" and "ecc"
+> +Required format of the port handle within the PHY node:
 > +
-> +Optional children nodes:
-> +Children nodes represent the available NAND chips.
-> +
-> +Optional properties:
-> +- nand-on-flash-bbt: see nand.txt
-> +- nand-ecc-strength: see nand.txt
-> +- nand-ecc-step-size: see nand.txt
-> +
-> +The following ECC strength and step size are currently supported:
-> + - nand-ecc-strength = <1>, nand-ecc-step-size = <512> (Hamming)
-> + - nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
-> + - nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8) (default)
+> +- timestamper:		provides control node reference and
+> +			the port channel within the IP core
+
+This and #timestamper-cells need to be in a common binding doc.
+
+And bonus points if you add a check in dtc for this. Should be a 
+one-liner.
+
 > +
 > +Example:
 > +
-> +	fmc: nand-controller@58002000 {
-> +		compatible = "st,stm32mp15-fmc2";
-> +		reg = <0x58002000 0x1000>,
-> +		      <0x80000000 0x1000>,
-> +		      <0x88010000 0x1000>,
-> +		      <0x88020000 0x1000>,
-> +		      <0x81000000 0x1000>,
-> +		      <0x89010000 0x1000>,
-> +		      <0x89020000 0x1000>;
-> +		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&rcc FMC_K>;
-> +		resets = <&rcc FMC_R>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&fmc_pins_a>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
+> +	tstamper: timestamper@60000000 {
+> +		compatible = "ines,ptp-ctrl";
+> +		reg = <0x60000000 0x80>;
+> +		#phandle-cells = <1>;
+> +	};
 > +
-> +		nand@0 {
-> +			reg = <0>;
-> +			nand-on-flash-bbt;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
+> +	ethernet@80000000 {
+> +		...
+> +		mdio {
+> +			...
+> +			phy@3 {
+> +				...
+> +				timestamper = <&tstamper 0>;
+> +			};
 > +		};
 > +	};
-> -- 
-> 1.9.1
-> 
