@@ -1,66 +1,161 @@
-From: Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
-Subject: Re: [PATCH v4 1/2] arm64: dts: allwinner: new board - Emlid Neutis N5
-Date: Fri, 12 Oct 2018 16:39:14 +0300
-Message-ID: <20181012133914.GA32670@imagebutcher>
-References: <1539012044-29998-2-git-send-email-aleksandr.aleksandrov@emlid.com>
- <1539339841-22235-1-git-send-email-aleksandr.aleksandrov@emlid.com>
- <1539339841-22235-2-git-send-email-aleksandr.aleksandrov@emlid.com>
- <b47c5458-683e-3e96-0bbe-f9db84579c77@suse.de>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 2/2] ASoC: max98927: Add reset-gpio support
+Date: Fri, 12 Oct 2018 15:46:20 +0200
+Message-ID: <20181012134620.fhhkyvvdgoq4sxqi@flea>
+References: <20180912121955.33048-1-cychiang@chromium.org>
+ <20180912121955.33048-2-cychiang@chromium.org>
+ <20180920161905.GM2471@sirena.org.uk>
+ <CAFv8NwLpS9r=jD2wyBsVgJJofkS1xJNo6YssgYXuVHDmGDLogg@mail.gmail.com>
+ <1539338716.6204.2.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <b47c5458-683e-3e96-0bbe-f9db84579c77@suse.de>
+In-Reply-To: <1539338716.6204.2.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, David Lechner <david@lechnology.com>, Thierry Reding <treding@nvidia.com>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Cheng-yi Chiang <cychiang@chromium.org>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ryan Lee <ryans.lee@maximintegrated.com>, alsa-devel@alsa-project.org, Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
-
-Thanks for your feedback!
-
-> > + *
-> > + * Copyright (C) 2018 Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "sun50i-h5-emlid-neutis-n5.dtsi"
-> > +
-> > +/ {
-> > +	model = "Emlid Neutis N5 Developer board";
-> > +	compatible = "emlid,neutis-n5-devboard",
-> > +		     "emlid,neutis-n5",
+On Fri, Oct 12, 2018 at 12:05:16PM +0200, Philipp Zabel wrote:
+> Hi Cheng-yi,
 > 
-> You are lacking bindings definitions for these new identifiers. The
-> vendor prefix should be patch 1/3, the SoM/board compatibles 2/3 and
-> this .dts[i] patch 3/3, so that only vendor prefixes and compatibles
-> that are defined and don't result in checkpatch.pl warnings get used.
+> [adding Maxime, devicetree to Cc:, the old discussion about GPIO resets
+> in [4] has never been resolved]
+> 
+> On Tue, 2018-10-09 at 21:46 +0800, Cheng-yi Chiang wrote:
+> > +reset controller maintainer Philipp
+> > 
+> > Hi Mark,
+> >   Sorry for the late reply. It took me a while to investigate reset
+> > controller and its possible usage. I would like to figure out the
+> > proper way of reset handling because it is common to have a shared
+> > reset line for two max98927 codecs for left and right channels.
+> > Without supporting this usage, a simple reset-gpios change for single
+> > codec would not be useful, and perhaps will be duplicated if reset
+> > controller is a better way.
+> > 
+> > Hi Philipp,
+> >   I would like to seek your advice about whether we can use reset
+> > controller to support the use case where multiple devices share the
+> > same reset line.
+> >
+> > Let me summarize the use case:
+> > There are two max98927 codecs sharing the same reset line.
+> > The reset line is controlled by a GPIO.
+> > The goal is to toggle reset line once and only once.
+> > 
+> > There was a similar scenario in tlv320aic3x codec driver [1].
+> > A static list is used in the codec driver so probe function can know
+> > whether it is needed to toggle reset line.
+> > Mark pointed out that it is not suitable to handle the shared reset
+> > line inside codec driver.
+> > A point is that this only works for multiple devices using the same
+> > device driver.
+> > He suggested to look into reset controller so I searched through the
+> > usage for common reset line.
+> >
+> > Here I found a shared reset line use case [2].
+> > With the patch [2], reset_control_reset can support this “reset once
+> > and for all” use case.
+> 
+> This patch was applied as 7da33a37b48f. So the reset framework has
+> support for shared reset controls where only the first reset request
+> actually causes a reset pulse, and all others are no-ops.
+> 
+> > However, I found that there are some missing pieces:
+> > 
+> > Let’s assume there are two codecs c1 and c2 sharing a reset line
+> > controlled by GPIO.
+> > 
+> > c1’s spec:
+> > Hold time: The minimum time to assert the reset line is t_a1.
+> > Release time: The minimum time to access the chip after deassert of
+> > the reset line is t_d1.
+> > 
+> > c2’s spec:
+> > Hold time: The minimum time to assert the reset line is t_a2.
+> > Release time: The minimum time to access the chip after deassert of
+> > the reset line is t_d2.
+> > 
+> > For both c1 and c2 to work properly, we need a reset controller that
+> > can assert the reset line for
+> > T = max(t_a1, t_a2).
+> > 
+> > 1. We need reset controller to support GPIO.
+> 
+> I still don't like the idea of describing a separate gpio reset
+> controller "device" in DT very much, as this is really just a software
+> abstraction, not actual hardware. For example:
+> 
+> 	gpio_reset: reset-controller {
+> 		compatible = "gpio-reset";
+> 		reset-gpios = <&gpio0 15 GPIO_ACTIVE_LOW>,
+> 			      <&gpio1
+> 16 GPIO_ACTIVE_HIGH>;
+> 		reset-delays-us = <10000>, <500>;
+> 	};
+> 
+> 	c1 {
+> 		resets = <&gpio_reset 0>; /* maps to <&gpio0 15 ...> */
+> 	};
+> 
+> 	c2 {
+> 		resets = <&gpio_reset 0>;
+> 	};
+> 
+> What I would like better would be to let the consumers keep their reset-
+> gpios bindings, but add an optional hold time override in the DT:
+> 
+> 	c1 {
+> 		reset-gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
+> 		reset-delays-us = <10000>;
+> 	};
+> 
+> 	c2 {
+> 		reset-gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
+> 		reset-delays-us = <10000>;
+> 	};
+> 
+> The reset framework could create a reset_control backed by a gpio
+> instead of a rcdev. I have an unfinished patch for this, but without the
+> sharing requirement adding the reset framework abstraction between gpiod
+> and drivers never seemed really worth it.
 
-Patch 2/3:
+I don't remember the exact details of our past discussion, but I
+(still) don't really think that this would work well. I see two main
+shortcomings with that approach:
 
-commit 46dcb8632b36644cb20e6b35ede12ff0088a60eb
-Author: Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
-Date:   Fri Oct 12 16:22:28 2018 +0300
+  - I guess that the main reason you want to do that would be to have
+    easy DT backward compatibility. Yet, the addition of the
+    reset-delay-us would break that compatibility, since drivers that
+    would have been converted now need to have it somehow, but older
+    DTs wouldn't have it
 
-    dt-bindings: arm: sunxi: emlid,neutis-n5(-devboard)
-    
-    sunxi: add new compatibles for Emlid Neutis Dev board and SoM module
-    
-    Signed-off-by: Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
+  - There's so many variations of the reset-gpios property name that
+    you wouldn't be able to cover all the cases anyhow, at least
+    without breaking the compatibility (again).
 
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
-index e4beec3..a907e52 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.txt
-+++ b/Documentation/devicetree/bindings/arm/sunxi.txt
-@@ -19,3 +19,5 @@ using one of the following compatible strings:
-   allwinner,sun9i-a80
-   allwinner,sun50i-a64
-   nextthing,gr8
-+  emlid,neutis-n5
-+  emlid,neutis-n5-devboard
+But I also see your point, and you're right that converting everyone
+to a gpio-reset node will not happen (even though I'd still really
+like to have that binding).
 
-Is this right place for the neutis compatibles?
+What about having a function that would be called by the consumer to
+instantiate that reset controller from a GPIO for us, instead of
+trying to do it automatically? That function could take the property
+name that holds the GPIO, which would cover the second drawback, and
+the delay, which would cover the first.
 
-Aleksandr
+And in order to cover shared GPIO reset lines, we could just look at
+the one already created by other drivers, and if one has been created,
+we just give the reference to that one instead of creating it.
+
+Does that make sense?
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
