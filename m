@@ -1,198 +1,234 @@
 From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH 3/7] dt-bindings: pinctrl: ds90ux9xx: add description of
- TI DS90Ux9xx pinmux
-Date: Sat, 13 Oct 2018 16:47:48 +0300
-Message-ID: <9bd129b4-ce18-b036-9376-2cb1cb76aaf2@mentor.com>
+Subject: Re: [PATCH 1/7] dt-bindings: mfd: ds90ux9xx: add description of TI
+ DS90Ux9xx ICs
+Date: Sat, 13 Oct 2018 17:28:30 +0300
+Message-ID: <55fe6c51-20e0-a10b-97fd-23c6f030acac@mentor.com>
 References: <20181008211205.2900-1-vz@mleia.com>
- <20181008211205.2900-4-vz@mleia.com> <8675619.KiXOS7fxCj@avalon>
+ <20181008211205.2900-2-vz@mleia.com> <1884479.fINZhmP2Mi@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8675619.KiXOS7fxCj@avalon>
+In-Reply-To: <1884479.fINZhmP2Mi@avalon>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Vladimir Zapolskiy <vz@mleia.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Vladimir Zapolskiy <vz@mleia.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Sandeep Jain <Sandeep_Jain@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi Laurent,
 
 thank you for review, please find my comments below.
 
-On 10/12/2018 03:01 PM, Laurent Pinchart wrote:
+On 10/12/2018 02:44 PM, Laurent Pinchart wrote:
 > Hi Vladimir,
 > 
 > Thank you for the patch.
 > 
-> On Tuesday, 9 October 2018 00:12:01 EEST Vladimir Zapolskiy wrote:
->> From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+> On Tuesday, 9 October 2018 00:11:59 EEST Vladimir Zapolskiy wrote:
+>> From: Sandeep Jain <Sandeep_Jain@mentor.com>
 >>
->> TI DS90Ux9xx de-/serializers have a capability to multiplex pin functions,
->> in particular a pin may have selectable functions of GPIO, GPIO line
->> transmitter, one of I2S lines, one of RGB24 video signal lines and so on.
+>> The change adds device tree binding description of TI DS90Ux9xx
+>> series of serializer and deserializer controllers which support video,
+>> audio and control data transmission over FPD-III Link connection.
 >>
->> The change adds a description of DS90Ux9xx pin multiplexers and GPIO
->> controllers.
->>
+>> Signed-off-by: Sandeep Jain <Sandeep_Jain@mentor.com>
+>> [vzapolskiy: various updates and corrections of secondary importance]
 >> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 >> ---
->>  .../bindings/pinctrl/ti,ds90ux9xx-pinctrl.txt | 83 +++++++++++++++++++
->>  1 file changed, 83 insertions(+)
->>  create mode 100644
->> Documentation/devicetree/bindings/pinctrl/ti,ds90ux9xx-pinctrl.txt
+>>  .../devicetree/bindings/mfd/ti,ds90ux9xx.txt  | 66 +++++++++++++++++++
+>>  1 file changed, 66 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mfd/ti,ds90ux9xx.txt
 >>
->> diff --git
->> a/Documentation/devicetree/bindings/pinctrl/ti,ds90ux9xx-pinctrl.txt
->> b/Documentation/devicetree/bindings/pinctrl/ti,ds90ux9xx-pinctrl.txt new
->> file mode 100644
->> index 000000000000..fbfa1a3cdf9f
+>> diff --git a/Documentation/devicetree/bindings/mfd/ti,ds90ux9xx.txt
+>> b/Documentation/devicetree/bindings/mfd/ti,ds90ux9xx.txt new file mode
+>> 100644
+>> index 000000000000..0733da88f7ef
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/ti,ds90ux9xx-pinctrl.txt
->> @@ -0,0 +1,83 @@
->> +TI DS90Ux9xx de-/serializer pinmux and GPIO subcontroller
+>> +++ b/Documentation/devicetree/bindings/mfd/ti,ds90ux9xx.txt
+>> @@ -0,0 +1,66 @@
+>> +Texas Instruments DS90Ux9xx de-/serializer controllers
 >> +
 >> +Required properties:
->> +- compatible: Must contain a generic "ti,ds90ux9xx-pinctrl" value and
+>> +- compatible: Must contain a generic "ti,ds90ux9xx" value and
 >> +	may contain one more specific value from the list:
->> +	"ti,ds90ux925-pinctrl",
->> +	"ti,ds90ux926-pinctrl",
->> +	"ti,ds90ux927-pinctrl",
->> +	"ti,ds90ux928-pinctrl",
->> +	"ti,ds90ux940-pinctrl".
 > 
-> No need for a subnode, you can mark the main DT node with gpio-controller 
-> directly.
+> If it "may" contain one more specific value, when should that value be 
+> present, and when can it be absent ?
 
-If the IC is seen as an MFD, and you guess I highly prefer it and I object
-the "overkill" argument, then the subnode is requred.
+Practically you can always omit a specific compatible, because (with a number
+of minor exceptions like DS90UH925Q case, see a quirk in the code) it is
+possible to read out the IC type in runtime.
 
-Also the more complicated part of the subcontroller and its device driver
-is to provide pinmuxing function to consumers rather than to allow GPIO
-line configuration.
+Nevertheless I prefer to have a complete list of all specific compatibles
+to avoid problems with maintenance in future, recently I had a long discussion
+with Jassi Brar about iMX* mailbox compatibles on the DT mailing list,
+the arguments remain the same, but I don't feel enough internal power to start
+another such an exhaustive discussion right at the moment.
 
-The pinctrl/GPIO driver can not be alloyed with the base driver's code
-to sustain maintainability, so it will reside in drivers/pinctrl as
-a separate cell driver, and by the way that is the reason why it earns
-its own very non-trivial DT binding description documentation.
-
->> +- gpio-controller: Marks the device node as a GPIO controller.
->> +
->> +- #gpio-cells: Must be set to 2,
->> +	- the first cell is the GPIO offset number within the controller,
->> +	- the second cell is used to specify the GPIO line polarity.
->> +
->> +- gpio-ranges: Mapping to pin controller pins (as described in
->> +	Documentation/devicetree/bindings/gpio/gpio.txt)
+>> +	"ti,ds90ub925q",
+>> +	"ti,ds90uh925q",
+>> +	"ti,ds90ub927q",
+>> +	"ti,ds90uh927q",
+>> +	"ti,ds90ub926q",
+>> +	"ti,ds90uh926q",
+>> +	"ti,ds90ub928q",
+>> +	"ti,ds90uh928q",
+>> +	"ti,ds90ub940q",
+>> +	"ti,ds90uh940q".
 >> +
 >> +Optional properties:
->> +- ti,video-depth-18bit: Sets video bridge pins to RGB 18-bit mode.
+>> +- reg : Specifies the I2C slave address of a local de-/serializer.
 > 
-> Please use standard properties to configure bus width. There is one defined in 
-> Documentation/devicetree/bindings/media/video-interfaces.txt.
+> You should explain when the reg property is required and when it isn't. This
 
-Here it is not a bus width description or property, but rather it is a custom
-pinmux control.
+Talking about TI DS90Ux9xx IC series, ideally I'd like to shift from
+serializer/deserializer concept and promote "remote" and "local" IC, by the
+way, and if I'm not mistaken, MOST ICs are truly identical on both ends.
 
-It could make sense to reduce the scope of the property to "parallel" pin
-function only though, like in
+So, here "reg" property is need only if the IC (serializer or deserializer,
+it does not matter) is on the "local" side, i.e. it is a slave I2C device
+discovered on an I2C bus, which is under control by an application processor.
 
-	ds90ux927_0_pins: pinmux {
-		parallel {
-			groups = "parallel";
-			function = "parallel";
-			ti,video-depth-18bit;
-		};
-	};
+If IC is on the "remote" side, in other words separated by the serial link
+from the "local" IC, then "reg" property is not needed.
 
-Alternatively the removal of the property would be almost loseless, it is
-needed just in one very specific case, please reference to the driver code
-for details, there you'll find a comment in ds90ux9xx_parse_dt_properties()
-function.
-
->> +Available pins, groups and functions (reference to device datasheets):
->> +
->> +function: "gpio" ("gpio4" is on DS90Ux925 and DS90Ux926 only,
->> +		  "gpio9" is on DS90Ux940 only)
->> + - pins: "gpio0", "gpio1", "gpio2", "gpio3", "gpio4", "gpio5", "gpio6",
->> +	 "gpio7", "gpio8", "gpio9"
->> +
->> +function: "gpio-remote"
->> + - pins: "gpio0", "gpio1", "gpio2", "gpio3"
->> +
->> +function: "pass" (DS90Ux940 specific only)
->> + - pins: "gpio0", "gpio3"
+> will in my opinion require a more detailed explanation of the DT model for 
+> this device.
 > 
-> What do those functions mean ?
+>> +- power-gpios : GPIO line to control supplied power to the device.
+> 
+> As Marek mentioned, a regulator would be better. I would make it a mandatory 
+> property, as the device always needs to be powered.
 > 
 
-"gpio" function should be already familiar to you.
+I get a memory flashback. Did we discuss recently a right property name to
+control panel power by a GPIO or was it something else?
 
-"gpio-remote" function is the pin function for a GPIO line bridging.
+There are quite many properties of exactly the same functionality:
+* powerdown-gpios
+* pd-gpios
+* pdn-gpios
+* power-gpios
+* powerdn-gpio
+* power-down-gpios
+* ...
 
-"pass" function sets a pin to a status pin function for detecting
-display timing issues, namely DE or Vsync length value mismatch.
+Probably device tree maintainers should unify the names, but my point is that
+your argument should be applicable to all such device tree nodes / property
+descriptions and usages. Do I understand you correctly?
 
->> +function: "i2s-1"
->> + - group: "i2s-1"
->> +
->> +function: "i2s-2"
->> + - group: "i2s-2"
->> +
->> +function: "i2s-3" (DS90Ux927, DS90Ux928 and DS90Ux940 specific only)
->> + - group: "i2s-3"
->> +
->> +function: "i2s-4" (DS90Ux927, DS90Ux928 and DS90Ux940 specific only)
->> + - group: "i2s-4"
->> +
->> +function: "i2s-m" (DS90Ux928 and DS90Ux940 specific only)
->> + - group: "i2s-m"
+I would prefer to reference to a regulator while dealing with the power
+rails, and reference to a GPIO in case of power control only like in the
+case above.
+
+>> +- ti,backward-compatible-mode : Overrides backward compatibility mode.
+>> +	Possible values are "<1>" or "<0>".
+>> +	If "ti,backward-compatible-mode" is not mentioned, the backward
+>> +	compatibility mode is not touched and given by hardware pin strapping.
 > 
-> Do we really need all this ? I think a better model would be to describe the 
-> audio interfaces explicitly, and configure pinmuxing automatically based on 
-> which audio interfaces are in use.
-
-Yes, all the pin functions are needed, because they are transparent pinmux
-controls.
-
-I really don't want to copy a part of gpio and pinctrl frameworks to
-the driver to hunt out why a user configured audio bridging and a GPIO
-line, and then something goes funny due to a pin conflict. To forget
-about such very possible pin and pin function conflicts I'm happy to
-shift the task to the neat Linus' frameworks.
-
->> +function: "parallel" (DS90Ux925 and DS90Ux926 specific only)
->> + - group: "parallel"
->> +
->> +Example (deserializer with pins GPIO[3:0] set to bridged output
->> +	 function and pin GPIO4 in standard hogged GPIO function):
->> +
->> +deserializer {
->> +	compatible = "ti,ds90ub928q", "ti,ds90ux9xx";
->> +
->> +	ds90ux928_pctrl: pin-controller {
->> +		compatible = "ti,ds90ux928-pinctrl", "ti,ds90ux9xx-pinctrl";
->> +		gpio-controller;
->> +		#gpio-cells = <2>;
->> +		gpio-ranges = <&ds90ux928_pctrl 0 0 8>;
->> +
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&ds90ux928_pins>;
->> +
->> +		ds90ux928_pins: pinmux {
->> +			gpio-remote {
->> +				pins = "gpio0", "gpio1", "gpio2", "gpio3";
->> +				function = "gpio-remote";
->> +			};
->> +		};
->> +
->> +		rst {
->> +			gpio-hog;
->> +			gpios = <4 GPIO_ACTIVE_HIGH>;
->> +			output-high;
->> +		};
->> +	};
->> +};
+> This doesn't seem to be a device description to me, it's a software 
+> configuration. You should handle it in drivers.
 > 
+
+No, it is a hardware description which allows to connect/discover ICs of
+different series, please reference to the datasheet for examples of its
+usage.
+
+>> +- ti,low-frequency-mode : Overrides low frequency mode.
+>> +	Possible values are "<1>" or "<0>".
+>> +	If "ti,low-frequency-mode" is not mentioned, the low frequency mode
+>> +	is not touched and given by hardware pin strapping.
+> 
+> This sounds the same. How about giving a real life example of a case where you 
+> need to set these two properties to override the pin strapping, for the 
+> purpose of discussing the DT bindings ?
+
+I have to ask, what do you mean by "a software configuration"?
+
+Both properties are IC controls (= hardware configuration in my language),
+and these hardware properties shall be set (if needed of course) on a "local" IC
+*before* a discovery of some "remote" IC, thus the property are in the DT.
+
+>> +- ti,video-map-select-msb: Sets video bridge pins to MSB mode, if it is set
+>> +	MAPSEL pin value is ignored.
+>> +- ti,video-map-select-lsb: Sets video bridge pins to LSB mode, if it is set
+>> +	MAPSEL pin value is ignored.
+> 
+> I assume those two are mutually exclusive, this should be documented, or you 
+> could merge the two properties into one. Same comment as above though, why do 
+> you need an override in DT ?
+> 
+
+The property are mutually exclusive, but it is a tristate property, please
+see my answer to a similar question from Marek.
+
+>> +- ti,pixel-clock-edge : Selects Pixel Clock Edge.
+>> +	Possible values are "<1>" or "<0>".
+>> +	If "ti,pixel-clock-edge" is High <1>, output data is strobed on the
+>> +	Rising edge of the PCLK. If ti,pixel-clock-edge is Low <0>, data is
+>> +	strobed on the Falling edge of the PCLK.
+>> +	If "ti,pixel-clock-edge" is not mentioned, the pixel clock edge
+>> +	value is not touched and given by hardware pin strapping.
+> 
+> We have a standard property in Documentation/devicetree/bindings/media/video-
+> interfaces.txt for this, please use it.
+> 
+
+Okay, thank you for the link.
+
+>> +- ti,spread-spectrum-clock-generation : Spread Sprectrum Clock Generation.
+>> +	Possible values are from "<0>" to "<7>". The same value will be
+>> +	written to SSC register. If "ti,spread-spectrum-clock-gen" is not
+>> +	found, then SSCG will be disabled.
+> 
+> This makes sense in DT in my opinion, as EMC is a system property. I wonder 
+> however if exposing the hardware register directly is the best option. Could 
+> you elaborate on how a system designer will select which value to use, in 
+> order to find the best DT description ?
+> 
+
+Hm, I suppose IC datasheets should serve as a better source of information.
+
+>> +TI DS90Ux9xx serializers and deserializer device nodes may contain a number
+>> +of children device nodes to describe and enable particular subcomponents
+>> +found on ICs.
+> 
+> As mentioned in my review of the cover letter I don't think this is necessary. 
+
+It is, in my humble opinion if an IC can be described as "a _pinmux_ + loads
+of other functions" it makes it an MFD.
+
+> You can make the serializer and deserializer I2C controllers without subnodes. 
+> Same goes for GPIO control.
+> 
+
+I have to define pinmuxes, one of the complicated and essential parts of IC
+configuration is unfairly excluded from the consideration.
+
+>> +Example:
+>> +
+>> +serializer: serializer@c {
+>> +	compatible = "ti,ds90ub927q", "ti,ds90ux9xx";
+>> +	reg = <0xc>;
+>> +	power-gpios = <&gpio5 12 GPIO_ACTIVE_HIGH>;
+>> +	ti,backward-compatible-mode = <0>;
+>> +	ti,low-frequency-mode = <0>;
+>> +	ti,pixel-clock-edge = <0>;
+>> +	...
+>> +}
+>> +
+>> +deserializer: deserializer@3c {
+>> +	compatible = "ti,ds90ub940q", "ti,ds90ux9xx";
+>> +	reg = <0x3c>;
+>> +	power-gpios = <&gpio6 31 GPIO_ACTIVE_HIGH>;
+>> +	...
+>> +}
+>> +
+> 
+> Extra blank line ?
+> 
+
+Right, thank you for comments.
 
 --
 Best wishes,
