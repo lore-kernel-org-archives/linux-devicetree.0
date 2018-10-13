@@ -1,84 +1,77 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH 4/7] mfd: ds90ux9xx: add TI DS90Ux9xx de-/serializer MFD
- driver
-Date: Sat, 13 Oct 2018 18:10:25 +0300
-Message-ID: <369ef3ac-6f68-c450-713f-762b1c5cd5c9@mentor.com>
-References: <20181008211205.2900-1-vz@mleia.com>
- <506c03d7-7986-44dd-3290-92d16a8106ad@mentor.com>
- <4a807a53-1592-a895-f140-54e7acc473b3@ideasonboard.com>
- <3599186.afdMBtdL0k@avalon>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: [PATCH v2 0/9] Add support for audiocodec in Allwinner
+	A64
+Date: Sat, 13 Oct 2018 09:53:20 -0700
+Message-ID: <20181013165329.13363-1-anarsoul@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3599186.afdMBtdL0k@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: kieran.bingham@ideasonboard.com, Lee Jones <lee.jones@linaro.org>, Vladimir Zapolskiy <vz@mleia.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Marcus Cooper <codekipper@gmail.com>, Mylene JOSSERAND <mylene.josserand@free-electrons.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+Cc: Vasily Khoruzhick <anarsoul@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+This series adds Allwinner A64 audiocodec support into sun4i-i2s,
+sun8i-codec drivers, introduces new sun50i-codec-analog driver and enables
+sound on Pine64, SoPine boards and Pinebook.
 
-On 10/12/2018 04:01 PM, Laurent Pinchart wrote:
-> Hello Vladimir,
-> 
-> On Friday, 12 October 2018 14:47:52 EEST Kieran Bingham wrote:
->> On 12/10/18 11:58, Vladimir Zapolskiy wrote:
+I2S for audiocodec in A64 is different from other 3 I2S modules but
+similar to one in A10, digital part of codec is compatible with A33 and
+analog controls part is completely different from other SoCs - it shares
+only few bits in few registers, so adding support for it into existing
+sun8i-codec-analog would mean duplicating all the widgets, controls and
+some routes and making it hard to read. Therefore it makes sense to
+introduce new driver.
 
-[snip]
+v2: - Use simple-amplifier for speaker amp on Pinebook
+    - Rename sun50i-a64-i2s to sun50i-a64-codec-i2s to preserve compatible
+      string for other 3 I2S modules in A64 in case if there's any
+      incompatibility with H3
 
->> Essentially they are multi purpose buses - which do not yet have a home.
->> We have used media as a home because of our use case.
->>
->> The use case whether they transfer frames from a camera or to a display
->> are of course closely related, but ultimately covered by two separate
->> subsystems at the pixel level (DRM vs V4L, or other for other data)
->>
->> Perhaps as they are buses - on a level with USB or I2C (except they can
->> of course carry I2C or Serial as well as 'bi-directional video' etc ),
->> they are looking for their own subsystem.
->>
->> Except I don't think we don't want to add a new subsystem for just one
->> (or two) devices...
-> 
-> I'm not sure a new subsystem is needed. As you've noted there's an overlap 
-> between drivers/media/ and drivers/gpu/drm/ in terms of supported hardware.
-> We even have a devices supported by two drivers, one in drivers/media/ and
-> one in drivers/gpu/drm/ (I'm thinking about the adv7511 in particular).
-> This is a well known issue, and so far nothing has been done in mainline
-> to try and solve it.
+Marcus Cooper (1):
+  ASoC: sun4i-i2s: Add compatibility with A64 codec I2S
 
-I agree that there's an overlap between drivers/media/ and drivers/gpu/drm/,
-formally a hypothetical (sic!) DS90Ux9xx video bridge cell driver should be
-added into both subsystems also, and the actual driver of two should be
-selected in runtime. I call such a driver 'hypothetical', because in fact
-I don't have it, and I'm not so sure that its existence is justified, but
-that's only because DS90Ux9xx video bridge functionality is _transparent_,
-it does not have any controls literally, but it is a pure luck eventually.
+Vasily Khoruzhick (8):
+  ASoC: sun8i-codec: Don't hardcode BCLK / LRCK ratio
+  ASoC: sun8i-codec-analog: split regmap code into separate driver
+  ASoC: dt-binding: Add bindings for Allwinner A64 codec's analog path
+    controls
+  ASoC: sunxi: Add new driver for Allwinner A64 codec's analog path
+    controls
+  ASoC: sunxi: allow the sun8i-codec driver to be built on ARM64
+  arm64: dts: allwinner: a64: add nodes necessary for analog sound
+    support
+  arm64: dts: allwinner: a64: enable sound on Pine64 and SoPine
+  arm64: dts: allwinner: a64: enable sound on Pinebook
 
-So, as I've stated in my cover letter, I can misuse yours 'lvds-encoder'
-driver only for the purpose of establishing a mediated link between 
-an LVDS controller and a panel over a serializer-deserializer pair.
+ .../devicetree/bindings/sound/sun4i-i2s.txt   |   2 +
+ .../bindings/sound/sun50i-codec-analog.txt    |  12 +
+ .../boot/dts/allwinner/sun50i-a64-pine64.dts  |  30 ++
+ .../dts/allwinner/sun50i-a64-pinebook.dts     |  42 ++
+ .../allwinner/sun50i-a64-sopine-baseboard.dts |  30 ++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  58 +++
+ sound/soc/sunxi/Kconfig                       |  17 +-
+ sound/soc/sunxi/Makefile                      |   2 +
+ sound/soc/sunxi/sun4i-i2s.c                   |  21 +
+ sound/soc/sunxi/sun50i-codec-analog.c         | 444 ++++++++++++++++++
+ sound/soc/sunxi/sun8i-codec-analog.c          |  79 +---
+ sound/soc/sunxi/sun8i-codec.c                 |  35 +-
+ sound/soc/sunxi/sunxi-adda-pr-regmap.c        | 102 ++++
+ sound/soc/sunxi/sunxi-adda-pr-regmap.h        |   7 +
+ 14 files changed, 798 insertions(+), 83 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/sun50i-codec-analog.txt
+ create mode 100644 sound/soc/sunxi/sun50i-codec-analog.c
+ create mode 100644 sound/soc/sunxi/sunxi-adda-pr-regmap.c
+ create mode 100644 sound/soc/sunxi/sunxi-adda-pr-regmap.h
 
-> Trying to find another home in drivers/mfd/ to escape from the problem isn't a 
-> good solution in my opinion. The best option from a Linux point of view would 
-> be to unify V4L2 and DRM/KMS when it comes to bridge support, but that's a 
-> long way down the road (I won't complain if you want to give it a go though 
-> :-)).
-
-I return you a wider smile :)
-
-> As your use cases are display, focused, I would propose to start with 
-> drivers/gpu/drm/bridge/, and leave the problem of camera support for first 
-> person who will have such a use case.
-
-Frankly speaking I would like to start from copy-pasting your 'lvds-encoder'
-driver into an 'absolutely-transparent-video-bridge' driver with no LVDS
-or 'encoder' specifics, adding just a new compatible may suffice, if the
-driver is renamed/redefined.
-
-PS, I remember I owe you a reference OF snippet of data path to a panel.
-
---
-Best wishes,
-Vladimir
+-- 
+2.19.0
