@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v2 16/18] of: unittest: allow base devicetree to have symbol metadata
-Date: Fri, 12 Oct 2018 21:53:36 -0700
-Message-ID: <1539406418-18162-17-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v2 14/18] of: unittest: remove unused of_unittest_apply_overlay() argument
+Date: Fri, 12 Oct 2018 21:53:34 -0700
+Message-ID: <1539406418-18162-15-git-send-email-frowand.list@gmail.com>
 References: <1539406418-18162-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1539406418-18162-1-git-send-email-frowand.list@gmail.com>
@@ -12,108 +12,45 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-The overlay metadata nodes in the FDT created from testcases.dts
-are not handled properly.
-
-The __fixups__ and __local_fixups__ node were added to the live
-devicetree, but should not be.
-
-Only the first property in the /__symbols__ node was added to the
-live devicetree if the live devicetree already contained a
-/__symbols node.  All of the node's properties must be added.
+Argument unittest_nr is not used in of_unittest_apply_overlay(),
+remove it.
 
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/unittest.c | 43 +++++++++++++++++++++++++++++++++++--------
- 1 file changed, 35 insertions(+), 8 deletions(-)
+ drivers/of/unittest.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 6d80f474c8f2..1c2bd8503095 100644
+index efd9c947f192..6d80f474c8f2 100644
 --- a/drivers/of/unittest.c
 +++ b/drivers/of/unittest.c
-@@ -1057,20 +1057,44 @@ static void __init of_unittest_platform_populate(void)
-  *	of np into dup node (present in live tree) and
-  *	updates parent of children of np to dup.
-  *
-- *	@np:	node already present in live tree
-+ *	@np:	node whose properties are being added to the live tree
-  *	@dup:	node present in live tree to be updated
-  */
- static void update_node_properties(struct device_node *np,
- 					struct device_node *dup)
- {
- 	struct property *prop;
-+	struct property *save_next;
- 	struct device_node *child;
--
--	for_each_property_of_node(np, prop)
--		of_add_property(dup, prop);
-+	int ret;
- 
- 	for_each_child_of_node(np, child)
- 		child->parent = dup;
-+
-+	/*
-+	 * "unittest internal error: unable to add testdata property"
-+	 *
-+	 *    If this message reports a property in node '/__symbols__' then
-+	 *    the respective unittest overlay contains a label that has the
-+	 *    same name as a label in the live devicetree.  The label will
-+	 *    be in the live devicetree only if the devicetree source was
-+	 *    compiled with the '-@' option.  If you encounter this error,
-+	 *    please consider renaming __all__ of the labels in the unittest
-+	 *    overlay dts files with an odd prefix that is unlikely to be
-+	 *    used in a real devicetree.
-+	 */
-+
-+	/*
-+	 * open code for_each_property_of_node() because of_add_property()
-+	 * sets prop->next to NULL
-+	 */
-+	for (prop = np->properties; prop != NULL; prop = save_next) {
-+		save_next = prop->next;
-+		ret = of_add_property(dup, prop);
-+		if (ret)
-+			pr_err("unittest internal error: unable to add testdata property %pOF/%s",
-+			       np, prop->name);
-+	}
+@@ -1419,8 +1419,7 @@ static void of_unittest_destroy_tracked_overlays(void)
+ 	} while (defers > 0);
  }
  
- /**
-@@ -1079,18 +1103,23 @@ static void update_node_properties(struct device_node *np,
-  *
-  *	@np:	Node to attach to live tree
-  */
--static int attach_node_and_children(struct device_node *np)
-+static void attach_node_and_children(struct device_node *np)
+-static int __init of_unittest_apply_overlay(int overlay_nr, int unittest_nr,
+-		int *overlay_id)
++static int __init of_unittest_apply_overlay(int overlay_nr, int *overlay_id)
  {
- 	struct device_node *next, *dup, *child;
- 	unsigned long flags;
- 	const char *full_name;
+ 	const char *overlay_name;
  
- 	full_name = kasprintf(GFP_KERNEL, "%pOF", np);
-+
-+	if (!strcmp(full_name, "/__local_fixups__") ||
-+	    !strcmp(full_name, "/__fixups__"))
-+		return;
-+
- 	dup = of_find_node_by_path(full_name);
- 	kfree(full_name);
- 	if (dup) {
- 		update_node_properties(np, dup);
--		return 0;
-+		return;
+@@ -1453,7 +1452,7 @@ static int __init of_unittest_apply_overlay_check(int overlay_nr,
  	}
  
- 	child = np->child;
-@@ -1111,8 +1140,6 @@ static int attach_node_and_children(struct device_node *np)
- 		attach_node_and_children(child);
- 		child = next;
- 	}
--
--	return 0;
- }
+ 	ovcs_id = 0;
+-	ret = of_unittest_apply_overlay(overlay_nr, unittest_nr, &ovcs_id);
++	ret = of_unittest_apply_overlay(overlay_nr, &ovcs_id);
+ 	if (ret != 0) {
+ 		/* of_unittest_apply_overlay already called unittest() */
+ 		return ret;
+@@ -1489,7 +1488,7 @@ static int __init of_unittest_apply_revert_overlay_check(int overlay_nr,
  
- /**
+ 	/* apply the overlay */
+ 	ovcs_id = 0;
+-	ret = of_unittest_apply_overlay(overlay_nr, unittest_nr, &ovcs_id);
++	ret = of_unittest_apply_overlay(overlay_nr, &ovcs_id);
+ 	if (ret != 0) {
+ 		/* of_unittest_apply_overlay already called unittest() */
+ 		return ret;
 -- 
 Frank Rowand <frank.rowand@sony.com>
