@@ -1,125 +1,95 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: Re: [PATCH 01/10] ASoC: sun4i-i2s: Add compatibility
- with A64 codec I2S
-Date: Fri, 12 Oct 2018 21:36:07 -0700
-Message-ID: <CA+E=qVfLr9Qh-7Tp9AOaw8K85TLrRfb687Mzoqa6BCEbfsugGA@mail.gmail.com>
-References: <20181013033230.6506-1-anarsoul@gmail.com>
- <20181013033230.6506-2-anarsoul@gmail.com>
- <CAGb2v64jNCz2Qh74UU0NxqE_PipXePLNbpE4vwFQ9BSVQCd5tQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CAGb2v64jNCz2Qh74UU0NxqE_PipXePLNbpE4vwFQ9BSVQCd5tQ@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Marcus Cooper <codekipper@gmail.com>, Mark Brown <broonie@kernel.org>, =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@free-electrons.com>, arm-linux <linux-arm-kernel@lists.infradead.org>
+From: frowand.list@gmail.com
+Subject: [PATCH v2 00/18] of: overlay: validation checks, subsequent fixes
+Date: Fri, 12 Oct 2018 21:53:20 -0700
+Message-ID: <1539406418-18162-1-git-send-email-frowand.list@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 12, 2018 at 9:32 PM Chen-Yu Tsai <wens@csie.org> wrote:
->
-> On Sat, Oct 13, 2018 at 11:33 AM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
-> >
-> > From: Marcus Cooper <codekipper@gmail.com>
-> >
-> > The I2S block used for the audio codec in the A64 differs from other 3
-> > I2S modules in A64 and isn't compatible with H3. But it is very similar
-> > to what is found in A10(sun4i). However, its TX FIFO is
-> > located at a different address.
-> >
-> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> > ---
-> >  .../devicetree/bindings/sound/sun4i-i2s.txt   |  2 ++
-> >  sound/soc/sunxi/sun4i-i2s.c                   | 21 +++++++++++++++++++
-> >  2 files changed, 23 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/sound/sun4i-i2s.txt b/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
-> > index b9d50d6cdef3..9d81f965f666 100644
-> > --- a/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
-> > +++ b/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
-> > @@ -10,6 +10,7 @@ Required properties:
-> >     - "allwinner,sun6i-a31-i2s"
-> >     - "allwinner,sun8i-a83t-i2s"
-> >     - "allwinner,sun8i-h3-i2s"
-> > +   - "allwinner,sun50i-a64-i2s"
->
-> This compatible is already used as the SoC-specific compatible (in case we have
-> unforeseen differences between A64 and H3 I2S).
->
-> Since this is tied to the codec, I think it deserves a special
-> compatible anyway.
-> How about "allwinner,sun50i-a64-codec-i2s" ?
+From: Frank Rowand <frank.rowand@sony.com>
 
-That's what I proposed a ~year ago and I was asked to change it to
-allwinner,sun50i-a64-i2c.
+Add checks to (1) overlay apply process and (2) memory freeing
+triggered by overlay release.  The checks are intended to detect
+possible memory leaks and invalid overlays.
 
->
-> The rest looks good, so once the compatible is changed,
->
-> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
->
-> >  - reg: physical base address of the controller and length of memory mapped
-> >    region.
-> >  - interrupts: should contain the I2S interrupt.
-> > @@ -26,6 +27,7 @@ Required properties for the following compatibles:
-> >         - "allwinner,sun6i-a31-i2s"
-> >         - "allwinner,sun8i-a83t-i2s"
-> >         - "allwinner,sun8i-h3-i2s"
-> > +       - "allwinner,sun50i-a64-i2s"
-> >  - resets: phandle to the reset line for this codec
-> >
-> >  Example:
-> > diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-> > index ed30d30ac720..787b67c4f845 100644
-> > --- a/sound/soc/sunxi/sun4i-i2s.c
-> > +++ b/sound/soc/sunxi/sun4i-i2s.c
-> > @@ -967,6 +967,23 @@ static const struct sun4i_i2s_quirks sun8i_h3_i2s_quirks = {
-> >         .field_rxchansel        = REG_FIELD(SUN8I_I2S_RX_CHAN_SEL_REG, 0, 2),
-> >  };
-> >
-> > +static const struct sun4i_i2s_quirks sun50i_a64_i2s_quirks = {
-> > +       .has_reset              = true,
-> > +       .reg_offset_txdata      = SUN8I_I2S_FIFO_TX_REG,
-> > +       .sun4i_i2s_regmap       = &sun4i_i2s_regmap_config,
-> > +       .has_slave_select_bit   = true,
-> > +       .field_clkdiv_mclk_en   = REG_FIELD(SUN4I_I2S_CLK_DIV_REG, 7, 7),
-> > +       .field_fmt_wss          = REG_FIELD(SUN4I_I2S_FMT0_REG, 2, 3),
-> > +       .field_fmt_sr           = REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 5),
-> > +       .field_fmt_bclk         = REG_FIELD(SUN4I_I2S_FMT0_REG, 6, 6),
-> > +       .field_fmt_lrclk        = REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
-> > +       .field_fmt_mode         = REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 1),
-> > +       .field_txchanmap        = REG_FIELD(SUN4I_I2S_TX_CHAN_MAP_REG, 0, 31),
-> > +       .field_rxchanmap        = REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
-> > +       .field_txchansel        = REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
-> > +       .field_rxchansel        = REG_FIELD(SUN4I_I2S_RX_CHAN_SEL_REG, 0, 2),
-> > +};
-> > +
-> >  static int sun4i_i2s_init_regmap_fields(struct device *dev,
-> >                                         struct sun4i_i2s *i2s)
-> >  {
-> > @@ -1175,6 +1192,10 @@ static const struct of_device_id sun4i_i2s_match[] = {
-> >                 .compatible = "allwinner,sun8i-h3-i2s",
-> >                 .data = &sun8i_h3_i2s_quirks,
-> >         },
-> > +       {
-> > +               .compatible = "allwinner,sun50i-a64-i2s",
-> > +               .data = &sun50i_a64_i2s_quirks,
-> > +       },
-> >         {}
-> >  };
-> >  MODULE_DEVICE_TABLE(of, sun4i_i2s_match);
-> > --
-> > 2.19.0
-> >
-> > _______________________________________________
-> > Alsa-devel mailing list
-> > Alsa-devel@alsa-project.org
-> > http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+The checks revealed bugs in existing code.  Fixed the bugs.
+
+While fixing bugs, noted other issues, which are fixed in
+separate patches.
+
+*****  Powerpc folks: I was not able to test the patches that
+*****  directly impact Powerpc systems that use dynamic
+*****  devicetree.  Please review that code carefully and
+*****  test.  The specific patches are: 03/16, 04/16, 07/16
+
+FPGA folks:
+
+  I made the validation checks that should result in an
+  invalid live devicetree report "ERROR" and cause the overlay apply
+  to fail.
+
+  I made the memory leak validation tests report "WARNING" and allow
+  the overlay apply to complete successfully.  Please let me know
+  if you encounter the warnings.  There are at least two paths
+  forward to deal with the cases that trigger the warning: (1) change
+  the warning to an error and fail the overlay apply, or (2) find a
+  way to detect the potential memory leaks and free the memory
+  appropriately.
+
+ALL people:
+
+  The validations do _not_ address another major concern I have with
+  releasing overlays, which is use after free errors.
+
+Changes since v1:
+
+  - move patch 16/16 to 17/18
+  - move patch 15/16 to 18/18
+  - new patch 15/18
+  - new patch 16/18
+
+  - 05/18: add_changeset_node() header comment: incorrect comment for @target
+
+  - 18/18: add same fix for of_parse_phandle_with_args()
+  - 18/18: add same fix for of_parse_phandle_with_args_map()
+
+Frank Rowand (18):
+  of: overlay: add tests to validate kfrees from overlay removal
+  of: overlay: add missing of_node_put() after add new node to changeset
+  of: overlay: add missing of_node_get() in __of_attach_node_sysfs
+  powerpc/pseries: add of_node_put() in dlpar_detach_node()
+  of: overlay: use prop add changeset entry for property in new nodes
+  of: overlay: do not duplicate properties from overlay for new nodes
+  of: dynamic: change type of of_{at,de}tach_node() to void
+  of: overlay: reorder fields in struct fragment
+  of: overlay: validate overlay properties #address-cells and
+    #size-cells
+  of: overlay: make all pr_debug() and pr_err() messages unique
+  of: overlay: test case of two fragments adding same node
+  of: overlay: check prevents multiple fragments add or delete same node
+  of: overlay: check prevents multiple fragments touching same property
+  of: unittest: remove unused of_unittest_apply_overlay() argument
+  of: overlay: set node fields from properties when add new overlay node
+  of: unittest: allow base devicetree to have symbol metadata
+  of: unittest: find overlays[] entry by name instead of index
+  of: unittest: initialize args before calling of_*parse_*()
+
+ arch/powerpc/platforms/pseries/dlpar.c             |  15 +-
+ arch/powerpc/platforms/pseries/reconfig.c          |   6 +-
+ drivers/of/dynamic.c                               |  68 +++--
+ drivers/of/kobj.c                                  |   4 +-
+ drivers/of/overlay.c                               | 298 ++++++++++++++++-----
+ drivers/of/unittest-data/Makefile                  |   2 +
+ .../of/unittest-data/overlay_bad_add_dup_node.dts  |  28 ++
+ .../of/unittest-data/overlay_bad_add_dup_prop.dts  |  24 ++
+ drivers/of/unittest-data/overlay_base.dts          |   1 +
+ drivers/of/unittest.c                              |  96 +++++--
+ include/linux/of.h                                 |  19 +-
+ 11 files changed, 439 insertions(+), 122 deletions(-)
+ create mode 100644 drivers/of/unittest-data/overlay_bad_add_dup_node.dts
+ create mode 100644 drivers/of/unittest-data/overlay_bad_add_dup_prop.dts
+
+-- 
+Frank Rowand <frank.rowand@sony.com>
