@@ -1,8 +1,10 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v2 00/18] of: overlay: validation checks, subsequent fixes
-Date: Fri, 12 Oct 2018 21:53:20 -0700
-Message-ID: <1539406418-18162-1-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v2 03/18] of: overlay: add missing of_node_get() in __of_attach_node_sysfs
+Date: Fri, 12 Oct 2018 21:53:23 -0700
+Message-ID: <1539406418-18162-4-git-send-email-frowand.list@gmail.com>
+References: <1539406418-18162-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1539406418-18162-1-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
@@ -10,86 +12,62 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-Add checks to (1) overlay apply process and (2) memory freeing
-triggered by overlay release.  The checks are intended to detect
-possible memory leaks and invalid overlays.
+There is a matching of_node_put() in __of_detach_node_sysfs()
 
-The checks revealed bugs in existing code.  Fixed the bugs.
+Remove misleading comment from function header comment for
+of_detach_node().
 
-While fixing bugs, noted other issues, which are fixed in
-separate patches.
+This patch may result in memory leaks from code that directly calls
+the dynamic node add and delete functions directly instead of
+using changesets.
 
-*****  Powerpc folks: I was not able to test the patches that
-*****  directly impact Powerpc systems that use dynamic
-*****  devicetree.  Please review that code carefully and
-*****  test.  The specific patches are: 03/16, 04/16, 07/16
+Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+---
 
-FPGA folks:
+This patch should result in powerpc systems that dynamically
+allocate a node, then later deallocate the node to have a
+memory leak when the node is deallocated.
 
-  I made the validation checks that should result in an
-  invalid live devicetree report "ERROR" and cause the overlay apply
-  to fail.
+The next patch in the series will fix the leak.
 
-  I made the memory leak validation tests report "WARNING" and allow
-  the overlay apply to complete successfully.  Please let me know
-  if you encounter the warnings.  There are at least two paths
-  forward to deal with the cases that trigger the warning: (1) change
-  the warning to an error and fail the overlay apply, or (2) find a
-  way to detect the potential memory leaks and free the memory
-  appropriately.
+ drivers/of/dynamic.c | 3 ---
+ drivers/of/kobj.c    | 4 +++-
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
-ALL people:
-
-  The validations do _not_ address another major concern I have with
-  releasing overlays, which is use after free errors.
-
-Changes since v1:
-
-  - move patch 16/16 to 17/18
-  - move patch 15/16 to 18/18
-  - new patch 15/18
-  - new patch 16/18
-
-  - 05/18: add_changeset_node() header comment: incorrect comment for @target
-
-  - 18/18: add same fix for of_parse_phandle_with_args()
-  - 18/18: add same fix for of_parse_phandle_with_args_map()
-
-Frank Rowand (18):
-  of: overlay: add tests to validate kfrees from overlay removal
-  of: overlay: add missing of_node_put() after add new node to changeset
-  of: overlay: add missing of_node_get() in __of_attach_node_sysfs
-  powerpc/pseries: add of_node_put() in dlpar_detach_node()
-  of: overlay: use prop add changeset entry for property in new nodes
-  of: overlay: do not duplicate properties from overlay for new nodes
-  of: dynamic: change type of of_{at,de}tach_node() to void
-  of: overlay: reorder fields in struct fragment
-  of: overlay: validate overlay properties #address-cells and
-    #size-cells
-  of: overlay: make all pr_debug() and pr_err() messages unique
-  of: overlay: test case of two fragments adding same node
-  of: overlay: check prevents multiple fragments add or delete same node
-  of: overlay: check prevents multiple fragments touching same property
-  of: unittest: remove unused of_unittest_apply_overlay() argument
-  of: overlay: set node fields from properties when add new overlay node
-  of: unittest: allow base devicetree to have symbol metadata
-  of: unittest: find overlays[] entry by name instead of index
-  of: unittest: initialize args before calling of_*parse_*()
-
- arch/powerpc/platforms/pseries/dlpar.c             |  15 +-
- arch/powerpc/platforms/pseries/reconfig.c          |   6 +-
- drivers/of/dynamic.c                               |  68 +++--
- drivers/of/kobj.c                                  |   4 +-
- drivers/of/overlay.c                               | 298 ++++++++++++++++-----
- drivers/of/unittest-data/Makefile                  |   2 +
- .../of/unittest-data/overlay_bad_add_dup_node.dts  |  28 ++
- .../of/unittest-data/overlay_bad_add_dup_prop.dts  |  24 ++
- drivers/of/unittest-data/overlay_base.dts          |   1 +
- drivers/of/unittest.c                              |  96 +++++--
- include/linux/of.h                                 |  19 +-
- 11 files changed, 439 insertions(+), 122 deletions(-)
- create mode 100644 drivers/of/unittest-data/overlay_bad_add_dup_node.dts
- create mode 100644 drivers/of/unittest-data/overlay_bad_add_dup_prop.dts
-
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index b04ee021a891..275c0d7e2268 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -272,9 +272,6 @@ void __of_detach_node(struct device_node *np)
+ 
+ /**
+  * of_detach_node() - "Unplug" a node from the device tree.
+- *
+- * The caller must hold a reference to the node.  The memory associated with
+- * the node is not freed until its refcount goes to zero.
+  */
+ int of_detach_node(struct device_node *np)
+ {
+diff --git a/drivers/of/kobj.c b/drivers/of/kobj.c
+index 7a0a18980b98..c72eef988041 100644
+--- a/drivers/of/kobj.c
++++ b/drivers/of/kobj.c
+@@ -133,6 +133,9 @@ int __of_attach_node_sysfs(struct device_node *np)
+ 	}
+ 	if (!name)
+ 		return -ENOMEM;
++
++	of_node_get(np);
++
+ 	rc = kobject_add(&np->kobj, parent, "%s", name);
+ 	kfree(name);
+ 	if (rc)
+@@ -159,6 +162,5 @@ void __of_detach_node_sysfs(struct device_node *np)
+ 		kobject_del(&np->kobj);
+ 	}
+ 
+-	/* finally remove the kobj_init ref */
+ 	of_node_put(np);
+ }
 -- 
 Frank Rowand <frank.rowand@sony.com>
