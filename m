@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v2 12/18] of: overlay: check prevents multiple fragments add or delete same node
-Date: Fri, 12 Oct 2018 21:53:32 -0700
-Message-ID: <1539406418-18162-13-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v2 17/18] of: unittest: find overlays[] entry by name instead of index
+Date: Fri, 12 Oct 2018 21:53:37 -0700
+Message-ID: <1539406418-18162-18-git-send-email-frowand.list@gmail.com>
 References: <1539406418-18162-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1539406418-18162-1-git-send-email-frowand.list@gmail.com>
@@ -12,122 +12,70 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-Multiple overlay fragments adding or deleting the same node is not
-supported.  Replace code comment of such, with check to detect the
-attempt and fail the overlay apply.
-
-Devicetree unittest where multiple fragments added the same node was
-added in the previous patch in the series.  After applying this patch
-the unittest messages will no longer include:
-
-   Duplicate name in motor-1, renamed to "controller#1"
-   OF: overlay: of_overlay_apply() err=0
-   ### dt-test ### of_overlay_fdt_apply() expected -22, ret=0, overlay_bad_add_dup_node
-   ### dt-test ### FAIL of_unittest_overlay_high_level():2419 Adding overlay 'overlay_bad_add_dup_node' failed
-
-   ...
-
-   ### dt-test ### end of unittest - 210 passed, 1 failed
-
-but will instead include:
-
-   OF: overlay: ERROR: multiple overlay fragments add and/or delete node /testcase-data-2/substation@100/motor-1/controller
-
-   ...
-
-   ### dt-test ### end of unittest - 211 passed, 0 failed
+One accessor of overlays[] was using a hard coded index value to
+find the correct array entry instead of searching for the entry
+containing the correct name.
 
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
+ drivers/of/unittest.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-checkpatch errors "line over 80 characters" are ok, they will be
-fixed two patches later in this series
-
- drivers/of/overlay.c | 58 ++++++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 49 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index a3990c20e210..b0a0dafb6a13 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -398,14 +398,6 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
-  *       a live devicetree created from Open Firmware.
-  *
-  * NOTE_2: Multiple mods of created nodes not supported.
-- *       If more than one fragment contains a node that does not already exist
-- *       in the live tree, then for each fragment of_changeset_attach_node()
-- *       will add a changeset entry to add the node.  When the changeset is
-- *       applied, __of_attach_node() will attach the node twice (once for
-- *       each fragment).  At this point the device tree will be corrupted.
-- *
-- *       TODO: add integrity check to ensure that multiple fragments do not
-- *             create the same node.
-  *
-  * Returns 0 on success, -ENOMEM if memory allocation failure, or -EINVAL if
-  * invalid @overlay.
-@@ -523,6 +515,54 @@ static int build_changeset_symbols_node(struct overlay_changeset *ovcs,
- }
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 1c2bd8503095..785985bdbfa6 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -2178,7 +2178,7 @@ struct overlay_info {
+ OVERLAY_INFO_EXTERN(overlay_bad_phandle);
+ OVERLAY_INFO_EXTERN(overlay_bad_symbol);
  
- /**
-+ * check_changeset_dup_add_node() - changeset validation: duplicate add node
-+ * @ovcs:	Overlay changeset
-+ *
-+ * Check changeset @ovcs->cset for multiple add node entries for the same
-+ * node.
-+ *
-+ * Returns 0 on success, -ENOMEM if memory allocation failure, or -EINVAL if
-+ * invalid overlay in @ovcs->fragments[].
-+ */
-+static int check_changeset_dup_add_node(struct overlay_changeset *ovcs)
-+{
-+	struct of_changeset_entry *ce_1, *ce_2;
-+	char *fn_1, *fn_2;
-+	int name_match;
+-/* order of entries is hard-coded into users of overlays[] */
++/* entries found by name */
+ static struct overlay_info overlays[] = {
+ 	OVERLAY_INFO(overlay_base, -9999),
+ 	OVERLAY_INFO(overlay, 0),
+@@ -2201,7 +2201,8 @@ struct overlay_info {
+ 	OVERLAY_INFO(overlay_bad_add_dup_prop, -EINVAL),
+ 	OVERLAY_INFO(overlay_bad_phandle, -EINVAL),
+ 	OVERLAY_INFO(overlay_bad_symbol, -EINVAL),
+-	{}
++	/* end marker */
++	{.dtb_begin = NULL, .dtb_end = NULL, .expected_result = 0, .name = NULL}
+ };
+ 
+ static struct device_node *overlay_base_root;
+@@ -2231,6 +2232,19 @@ void __init unittest_unflatten_overlay_base(void)
+ 	u32 data_size;
+ 	void *new_fdt;
+ 	u32 size;
++	int found = 0;
++	const char *overlay_name = "overlay_base";
 +
-+	list_for_each_entry(ce_1, &ovcs->cset.entries, node) {
-+
-+		if (ce_1->action == OF_RECONFIG_ATTACH_NODE ||
-+		    ce_1->action == OF_RECONFIG_DETACH_NODE) {
-+
-+			ce_2 = ce_1;
-+			list_for_each_entry_continue(ce_2, &ovcs->cset.entries, node) {
-+				if (ce_2->action == OF_RECONFIG_ATTACH_NODE ||
-+				    ce_2->action == OF_RECONFIG_DETACH_NODE) {
-+					/* inexpensive name compare */
-+					if (!of_node_cmp(ce_1->np->full_name,
-+					    ce_2->np->full_name)) {
-+						/* expensive full path name compare */
-+						fn_1 = kasprintf(GFP_KERNEL, "%pOF", ce_1->np);
-+						fn_2 = kasprintf(GFP_KERNEL, "%pOF", ce_2->np);
-+						name_match = !strcmp(fn_1, fn_2);
-+						kfree(fn_1);
-+						kfree(fn_2);
-+						if (name_match) {
-+							pr_err("ERROR: multiple overlay fragments add and/or delete node %pOF\n",
-+							       ce_1->np);
-+							return -EINVAL;
-+						}
-+					}
-+				}
-+			}
++	for (info = overlays; info && info->name; info++) {
++		if (!strcmp(overlay_name, info->name)) {
++			found = 1;
++			break;
 +		}
 +	}
-+
-+	return 0;
-+}
-+
-+/**
-  * build_changeset() - populate overlay changeset in @ovcs from @ovcs->fragments
-  * @ovcs:	Overlay changeset
-  *
-@@ -577,7 +617,7 @@ static int build_changeset(struct overlay_changeset *ovcs)
- 		}
- 	}
++	if (!found) {
++		pr_err("no overlay data for %s\n", overlay_name);
++		return;
++	}
  
--	return 0;
-+	return check_changeset_dup_add_node(ovcs);
- }
+ 	info = &overlays[0];
  
- /*
+@@ -2278,11 +2292,10 @@ static int __init overlay_data_apply(const char *overlay_name, int *overlay_id)
+ {
+ 	struct overlay_info *info;
+ 	int found = 0;
+-	int k;
+ 	int ret;
+ 	u32 size;
+ 
+-	for (k = 0, info = overlays; info && info->name; info++, k++) {
++	for (info = overlays; info && info->name; info++) {
+ 		if (!strcmp(overlay_name, info->name)) {
+ 			found = 1;
+ 			break;
 -- 
 Frank Rowand <frank.rowand@sony.com>
