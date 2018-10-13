@@ -1,94 +1,40 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH v2 9/9] arm64: dts: allwinner: a64: enable
-	sound on Pinebook
-Date: Sat, 13 Oct 2018 09:53:29 -0700
-Message-ID: <20181013165329.13363-10-anarsoul@gmail.com>
-References: <20181013165329.13363-1-anarsoul@gmail.com>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v5 1/6] ath10k: Add qmi service helpers for wcn3990 qmi
+ client
+Date: Sat, 13 Oct 2018 17:33:20 +0000 (UTC)
+Message-ID: <20181013173320.A37E960C60@smtp.codeaurora.org>
+References: <20180815092637.11455-2-govinds@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181013165329.13363-1-anarsoul@gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Marcus Cooper <codekipper@gmail.com>, Mylene JOSSERAND <mylene.josserand@free-electrons.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
-Cc: Vasily Khoruzhick <anarsoul@gmail.com>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180815092637.11455-2-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit enables I2S, digital and analog parts of audiocodec on
-Pinebook
+Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
 
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
----
- .../dts/allwinner/sun50i-a64-pinebook.dts     | 42 +++++++++++++++++++
- 1 file changed, 42 insertions(+)
+> WLAN qmi server running in Q6 exposes host to target
+> cold boot qmi handshakes. Add WLAN QMI service helpers
+> for ath10k wcn3990 qmi client.
+> 
+> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Acked-by: Niklas Cassel <niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-index e2e426334cfe..8a3a24a09d4c 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-@@ -74,6 +74,23 @@
- 		compatible = "mmc-pwrseq-simple";
- 		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
- 	};
-+
-+	speaker_amp: speaker_amp {
-+		compatible = "simple-audio-amplifier";
-+		enable-gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&codec {
-+	status = "okay";
-+};
-+
-+&codec_analog {
-+	status = "okay";
-+};
-+
-+&dai {
-+	status = "okay";
- };
- 
- &ehci0 {
-@@ -278,6 +295,31 @@
- 	vcc-hdmi-supply = <&reg_dldo1>;
- };
- 
-+&sound {
-+	status = "okay";
-+	simple-audio-card,widgets = "Microphone", "Microphone Jack",
-+				    "Headphone", "Headphone Jack",
-+				    "Speaker", "Internal Speaker";
-+	simple-audio-card,aux-devs = <&codec_analog>, <&speaker_amp>;
-+	simple-audio-card,routing =
-+			"Left DAC", "AIF1 Slot 0 Left",
-+			"Right DAC", "AIF1 Slot 0 Right",
-+			"INL", "LINEOUT",
-+			"INR", "LINEOUT",
-+			"Internal Speaker", "OUTL",
-+			"Internal Speaker", "OUTR",
-+			"Headphone Jack", "HP",
-+			"AIF1 Slot 0 Left ADC", "Left ADC",
-+			"AIF1 Slot 0 Right ADC", "Right ADC",
-+			"Left ADC", "ADC",
-+			"Right ADC", "ADC",
-+			"Mic", "MBIAS",
-+			"MIC1", "Mic",
-+			"Headset Mic", "Microphone Jack",
-+			"Microphone Jack", "HBIAS",
-+			"MIC2", "Headset Mic";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
+6 patches applied to ath-next branch of ath.git, thanks.
+
+bc17d4b90cdd ath10k: add qmi service helpers for wcn3990 qmi client
+22e8a4602738 ath10k: add support to create boardname for non-bmi target
+2b741a8aaa34 dt: bindings: add bindings for msa memory region
+cc53aabcc283 firmware: qcom: scm: Add WLAN VMID for Qualcomm SCM interface
+35a665766737 ath10k: add debug mask for QMI layer
+ba94c753ccb4 ath10k: add QMI message handshake for wcn3990 client
+
 -- 
-2.19.0
+https://patchwork.kernel.org/patch/10566407/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
