@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v2 07/18] of: dynamic: change type of of_{at,de}tach_node() to void
-Date: Fri, 12 Oct 2018 21:53:27 -0700
-Message-ID: <1539406418-18162-8-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v2 16/18] of: unittest: allow base devicetree to have symbol metadata
+Date: Fri, 12 Oct 2018 21:53:36 -0700
+Message-ID: <1539406418-18162-17-git-send-email-frowand.list@gmail.com>
 References: <1539406418-18162-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1539406418-18162-1-git-send-email-frowand.list@gmail.com>
@@ -12,133 +12,108 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-of_attach_node() and of_detach_node() always return zero, so
-their return value is meaningless.  Change their type to void
-and fix all callers to ignore return value.
+The overlay metadata nodes in the FDT created from testcases.dts
+are not handled properly.
+
+The __fixups__ and __local_fixups__ node were added to the live
+devicetree, but should not be.
+
+Only the first property in the /__symbols__ node was added to the
+live devicetree if the live devicetree already contained a
+/__symbols node.  All of the node's properties must be added.
 
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- arch/powerpc/platforms/pseries/dlpar.c    | 13 ++-----------
- arch/powerpc/platforms/pseries/reconfig.c |  6 +-----
- drivers/of/dynamic.c                      |  9 ++-------
- include/linux/of.h                        |  4 ++--
- 4 files changed, 7 insertions(+), 25 deletions(-)
+ drivers/of/unittest.c | 43 +++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 35 insertions(+), 8 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
-index e3010b14aea5..0027eea94a8b 100644
---- a/arch/powerpc/platforms/pseries/dlpar.c
-+++ b/arch/powerpc/platforms/pseries/dlpar.c
-@@ -244,15 +244,9 @@ struct device_node *dlpar_configure_connector(__be32 drc_index,
- 
- int dlpar_attach_node(struct device_node *dn, struct device_node *parent)
- {
--	int rc;
--
- 	dn->parent = parent;
- 
--	rc = of_attach_node(dn);
--	if (rc) {
--		printk(KERN_ERR "Failed to add device node %pOF\n", dn);
--		return rc;
--	}
-+	of_attach_node(dn);
- 
- 	return 0;
- }
-@@ -260,7 +254,6 @@ int dlpar_attach_node(struct device_node *dn, struct device_node *parent)
- int dlpar_detach_node(struct device_node *dn)
- {
- 	struct device_node *child;
--	int rc;
- 
- 	child = of_get_next_child(dn, NULL);
- 	while (child) {
-@@ -268,9 +261,7 @@ int dlpar_detach_node(struct device_node *dn)
- 		child = of_get_next_child(dn, child);
- 	}
- 
--	rc = of_detach_node(dn);
--	if (rc)
--		return rc;
-+	of_detach_node(dn);
- 
- 	of_node_put(dn);
- 
-diff --git a/arch/powerpc/platforms/pseries/reconfig.c b/arch/powerpc/platforms/pseries/reconfig.c
-index 0e0208117e77..0b72098da454 100644
---- a/arch/powerpc/platforms/pseries/reconfig.c
-+++ b/arch/powerpc/platforms/pseries/reconfig.c
-@@ -47,11 +47,7 @@ static int pSeries_reconfig_add_node(const char *path, struct property *proplist
- 		goto out_err;
- 	}
- 
--	err = of_attach_node(np);
--	if (err) {
--		printk(KERN_ERR "Failed to add device node %s\n", path);
--		goto out_err;
--	}
-+	of_attach_node(np);
- 
- 	of_node_put(np->parent);
- 
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 275c0d7e2268..5f7c99b9de0d 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -224,7 +224,7 @@ static void __of_attach_node(struct device_node *np)
- /**
-  * of_attach_node() - Plug a device node into the tree and global list.
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 6d80f474c8f2..1c2bd8503095 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -1057,20 +1057,44 @@ static void __init of_unittest_platform_populate(void)
+  *	of np into dup node (present in live tree) and
+  *	updates parent of children of np to dup.
+  *
+- *	@np:	node already present in live tree
++ *	@np:	node whose properties are being added to the live tree
+  *	@dup:	node present in live tree to be updated
   */
--int of_attach_node(struct device_node *np)
-+void of_attach_node(struct device_node *np)
+ static void update_node_properties(struct device_node *np,
+ 					struct device_node *dup)
  {
- 	struct of_reconfig_data rd;
- 	unsigned long flags;
-@@ -241,8 +241,6 @@ int of_attach_node(struct device_node *np)
- 	mutex_unlock(&of_mutex);
+ 	struct property *prop;
++	struct property *save_next;
+ 	struct device_node *child;
+-
+-	for_each_property_of_node(np, prop)
+-		of_add_property(dup, prop);
++	int ret;
  
- 	of_reconfig_notify(OF_RECONFIG_ATTACH_NODE, &rd);
+ 	for_each_child_of_node(np, child)
+ 		child->parent = dup;
++
++	/*
++	 * "unittest internal error: unable to add testdata property"
++	 *
++	 *    If this message reports a property in node '/__symbols__' then
++	 *    the respective unittest overlay contains a label that has the
++	 *    same name as a label in the live devicetree.  The label will
++	 *    be in the live devicetree only if the devicetree source was
++	 *    compiled with the '-@' option.  If you encounter this error,
++	 *    please consider renaming __all__ of the labels in the unittest
++	 *    overlay dts files with an odd prefix that is unlikely to be
++	 *    used in a real devicetree.
++	 */
++
++	/*
++	 * open code for_each_property_of_node() because of_add_property()
++	 * sets prop->next to NULL
++	 */
++	for (prop = np->properties; prop != NULL; prop = save_next) {
++		save_next = prop->next;
++		ret = of_add_property(dup, prop);
++		if (ret)
++			pr_err("unittest internal error: unable to add testdata property %pOF/%s",
++			       np, prop->name);
++	}
+ }
+ 
+ /**
+@@ -1079,18 +1103,23 @@ static void update_node_properties(struct device_node *np,
+  *
+  *	@np:	Node to attach to live tree
+  */
+-static int attach_node_and_children(struct device_node *np)
++static void attach_node_and_children(struct device_node *np)
+ {
+ 	struct device_node *next, *dup, *child;
+ 	unsigned long flags;
+ 	const char *full_name;
+ 
+ 	full_name = kasprintf(GFP_KERNEL, "%pOF", np);
++
++	if (!strcmp(full_name, "/__local_fixups__") ||
++	    !strcmp(full_name, "/__fixups__"))
++		return;
++
+ 	dup = of_find_node_by_path(full_name);
+ 	kfree(full_name);
+ 	if (dup) {
+ 		update_node_properties(np, dup);
+-		return 0;
++		return;
+ 	}
+ 
+ 	child = np->child;
+@@ -1111,8 +1140,6 @@ static int attach_node_and_children(struct device_node *np)
+ 		attach_node_and_children(child);
+ 		child = next;
+ 	}
 -
 -	return 0;
  }
  
- void __of_detach_node(struct device_node *np)
-@@ -273,11 +271,10 @@ void __of_detach_node(struct device_node *np)
  /**
-  * of_detach_node() - "Unplug" a node from the device tree.
-  */
--int of_detach_node(struct device_node *np)
-+void of_detach_node(struct device_node *np)
- {
- 	struct of_reconfig_data rd;
- 	unsigned long flags;
--	int rc = 0;
- 
- 	memset(&rd, 0, sizeof(rd));
- 	rd.dn = np;
-@@ -291,8 +288,6 @@ int of_detach_node(struct device_node *np)
- 	mutex_unlock(&of_mutex);
- 
- 	of_reconfig_notify(OF_RECONFIG_DETACH_NODE, &rd);
--
--	return rc;
- }
- EXPORT_SYMBOL_GPL(of_detach_node);
- 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index aa1dafaec6ae..72c593455019 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -406,8 +406,8 @@ extern int of_phandle_iterator_args(struct of_phandle_iterator *it,
- #define OF_RECONFIG_REMOVE_PROPERTY	0x0004
- #define OF_RECONFIG_UPDATE_PROPERTY	0x0005
- 
--extern int of_attach_node(struct device_node *);
--extern int of_detach_node(struct device_node *);
-+extern void of_attach_node(struct device_node *np);
-+extern void of_detach_node(struct device_node *np);
- 
- #define of_match_ptr(_ptr)	(_ptr)
- 
 -- 
 Frank Rowand <frank.rowand@sony.com>
