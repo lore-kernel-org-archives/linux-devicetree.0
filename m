@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v2 06/18] of: overlay: do not duplicate properties from overlay for new nodes
-Date: Fri, 12 Oct 2018 21:53:26 -0700
-Message-ID: <1539406418-18162-7-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v2 04/18] powerpc/pseries: add of_node_put() in dlpar_detach_node()
+Date: Fri, 12 Oct 2018 21:53:24 -0700
+Message-ID: <1539406418-18162-5-git-send-email-frowand.list@gmail.com>
 References: <1539406418-18162-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1539406418-18162-1-git-send-email-frowand.list@gmail.com>
@@ -12,42 +12,38 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-When allocating a new node, add_changeset_node() was duplicating the
-properties from the respective node in the overlay instead of
-allocating a node with no properties.
+"of: overlay: add missing of_node_get() in __of_attach_node_sysfs"
+added a missing of_node_get() to __of_attach_node_sysfs().  This
+results in a refcount imbalance for nodes attached with
+dlpar_attach_node().  The calling sequence from dlpar_attach_node()
+to __of_attach_node_sysfs() is:
 
-When this patch is applied the errors reported by the devictree
-unittest from patch "of: overlay: add tests to validate kfrees from
-overlay removal" will no longer occur.  These error messages are of
-the form:
-
-   "OF: ERROR: ..."
-
-and the unittest results will change from:
-
-   ### dt-test ### end of unittest - 203 passed, 7 failed
-
-to
-
-   ### dt-test ### end of unittest - 210 passed, 0 failed
+   dlpar_attach_node()
+      of_attach_node()
+         __of_attach_node_sysfs()
 
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/overlay.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 94740f4ee34c..7fcf4a812d06 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -393,7 +393,7 @@ static int add_changeset_node(struct overlay_changeset *ovcs,
- 			break;
+***** UNTESTED.  I need people with the affected PowerPC systems
+*****            (systems that dynamically allocate and deallocate
+*****            devicetree nodes) to test this patch.
+
+ arch/powerpc/platforms/pseries/dlpar.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
+index a0b20c03f078..e3010b14aea5 100644
+--- a/arch/powerpc/platforms/pseries/dlpar.c
++++ b/arch/powerpc/platforms/pseries/dlpar.c
+@@ -272,6 +272,8 @@ int dlpar_detach_node(struct device_node *dn)
+ 	if (rc)
+ 		return rc;
  
- 	if (!tchild) {
--		tchild = __of_node_dup(node, node_kbasename);
-+		tchild = __of_node_dup(NULL, node_kbasename);
- 		if (!tchild)
- 			return -ENOMEM;
++	of_node_put(dn);
++
+ 	return 0;
+ }
  
 -- 
 Frank Rowand <frank.rowand@sony.com>
