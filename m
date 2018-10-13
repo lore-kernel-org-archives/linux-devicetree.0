@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v2 01/18] of: overlay: add tests to validate kfrees from overlay removal
-Date: Fri, 12 Oct 2018 21:53:21 -0700
-Message-ID: <1539406418-18162-2-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v2 09/18] of: overlay: validate overlay properties #address-cells and #size-cells
+Date: Fri, 12 Oct 2018 21:53:29 -0700
+Message-ID: <1539406418-18162-10-git-send-email-frowand.list@gmail.com>
 References: <1539406418-18162-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1539406418-18162-1-git-send-email-frowand.list@gmail.com>
@@ -12,111 +12,89 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-Add checks:
-  - attempted kfree due to refcount reaching zero before overlay
-    is removed
-  - properties linked to an overlay node when the node is removed
-  - node refcount > one during node removal in a changeset destroy,
-    if the node was created by the changeset
+If overlay properties #address-cells or #size-cells are already in
+the live devicetree for any given node, then the values in the
+overlay must match the values in the live tree.
 
-After applying this patch, several validation warnings will be
-reported from the devicetree unittest during boot due to
-pre-existing devicetree bugs. The warnings will be similar to:
-
-  OF: ERROR: of_node_release() overlay node /testcase-data/overlay-node/test-bus/test-unittest11/test-unittest111 contains unexpected properties
-  OF: ERROR: memory leak - destroy cset entry: attach overlay node /testcase-data-2/substation@100/hvac-medium-2 with refcount 2
+If the properties are already in the live tree then there is no
+need to create a changeset entry to add them since they must
+have the same value.  This reduces the memory used by the
+changeset and eliminates a possible memory leak.  This is
+verified by 12 fewer warnings during the devicetree unittest,
+as the possible memory leak warnings about #address-cells and
 
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/dynamic.c | 29 +++++++++++++++++++++++++++++
- drivers/of/overlay.c |  1 +
- include/linux/of.h   | 15 ++++++++++-----
- 3 files changed, 40 insertions(+), 5 deletions(-)
+ drivers/of/overlay.c | 38 +++++++++++++++++++++++++++++++++++---
+ 1 file changed, 35 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index f4f8ed9b5454..b04ee021a891 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -330,6 +330,25 @@ void of_node_release(struct kobject *kobj)
- 	if (!of_node_check_flag(node, OF_DYNAMIC))
- 		return;
- 
-+	if (of_node_check_flag(node, OF_OVERLAY)) {
-+
-+		if (!of_node_check_flag(node, OF_OVERLAY_FREE_CSET)) {
-+			/* premature refcount of zero, do not free memory */
-+			pr_err("ERROR: memory leak %s() overlay node %pOF before free overlay changeset\n",
-+			       __func__, node);
-+			return;
-+		}
-+
-+		/*
-+		 * If node->properties non-empty then properties were added
-+		 * to this node either by different overlay that has not
-+		 * yet been removed, or by a non-overlay mechanism.
-+		 */
-+		if (node->properties)
-+			pr_err("ERROR: %s() overlay node %pOF contains unexpected properties\n",
-+			       __func__, node);
-+	}
-+
- 	property_list_free(node->properties);
- 	property_list_free(node->deadprops);
- 
-@@ -434,6 +453,16 @@ struct device_node *__of_node_dup(const struct device_node *np,
- 
- static void __of_changeset_entry_destroy(struct of_changeset_entry *ce)
- {
-+	if (ce->action == OF_RECONFIG_ATTACH_NODE &&
-+	    of_node_check_flag(ce->np, OF_OVERLAY)) {
-+		if (kref_read(&ce->np->kobj.kref) > 1) {
-+			pr_err("ERROR: memory leak - destroy cset entry: attach overlay node %pOF with refcount %d\n",
-+			       ce->np, kref_read(&ce->np->kobj.kref));
-+		} else {
-+			of_node_set_flag(ce->np, OF_OVERLAY_FREE_CSET);
-+		}
-+	}
-+
- 	of_node_put(ce->np);
- 	list_del(&ce->node);
- 	kfree(ce);
 diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index eda57ef12fd0..1176cb4b6e4e 100644
+index 272a0d1a5e18..ee66651db553 100644
 --- a/drivers/of/overlay.c
 +++ b/drivers/of/overlay.c
-@@ -373,6 +373,7 @@ static int add_changeset_node(struct overlay_changeset *ovcs,
- 			return -ENOMEM;
+@@ -287,7 +287,12 @@ static struct property *dup_and_fixup_symbol_prop(
+  * @target may be either in the live devicetree or in a new subtree that
+  * is contained in the changeset.
+  *
+- * Some special properties are not updated (no error returned).
++ * Some special properties are not added or updated (no error returned):
++ * "name", "phandle", "linux,phandle".
++ *
++ * Properties "#address-cells" and "#size-cells" are not updated if they
++ * are already in the live tree, but if present in the live tree, the values
++ * in the overlay must match the values in the live tree.
+  *
+  * Update of property in symbols node is not allowed.
+  *
+@@ -300,6 +305,7 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
+ {
+ 	struct property *new_prop = NULL, *prop;
+ 	int ret = 0;
++	bool check_for_non_overlay_node = false;
  
- 		tchild->parent = target_node;
-+		of_node_set_flag(tchild, OF_OVERLAY);
+ 	if (!of_prop_cmp(overlay_prop->name, "name") ||
+ 	    !of_prop_cmp(overlay_prop->name, "phandle") ||
+@@ -322,13 +328,39 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
+ 	if (!new_prop)
+ 		return -ENOMEM;
  
- 		ret = of_changeset_attach_node(&ovcs->cset, tchild);
- 		if (ret)
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 4d25e4f952d9..aa1dafaec6ae 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -138,11 +138,16 @@ static inline void of_node_put(struct device_node *node) { }
- extern struct device_node *of_stdout;
- extern raw_spinlock_t devtree_lock;
+-	if (!prop)
++	if (!prop) {
++
++		check_for_non_overlay_node = true;
+ 		ret = of_changeset_add_property(&ovcs->cset, target->np,
+ 						new_prop);
+-	else
++
++	} else if (!of_prop_cmp(prop->name, "#address-cells")) {
++
++		if (prop->length != 4 || new_prop->length != 4 ||
++		    *(u32 *)prop->value != *(u32 *)new_prop->value)
++			pr_err("ERROR: overlay and/or live tree #address-cells invalid in node %pOF\n",
++			       target->np);
++
++	} else if (!of_prop_cmp(prop->name, "#size-cells")) {
++
++		if (prop->length != 4 || new_prop->length != 4 ||
++		    *(u32 *)prop->value != *(u32 *)new_prop->value)
++			pr_err("ERROR: overlay and/or live tree #size-cells invalid in node %pOF\n",
++			       target->np);
++
++	} else {
++
++		check_for_non_overlay_node = true;
+ 		ret = of_changeset_update_property(&ovcs->cset, target->np,
+ 						   new_prop);
  
--/* flag descriptions (need to be visible even when !CONFIG_OF) */
--#define OF_DYNAMIC	1 /* node and properties were allocated via kmalloc */
--#define OF_DETACHED	2 /* node has been detached from the device tree */
--#define OF_POPULATED	3 /* device already created for the node */
--#define OF_POPULATED_BUS	4 /* of_platform_populate recursed to children of this node */
-+/*
-+ * struct device_node flag descriptions
-+ * (need to be visible even when !CONFIG_OF)
-+ */
-+#define OF_DYNAMIC		1 /* (and properties) allocated via kmalloc */
-+#define OF_DETACHED		2 /* detached from the device tree */
-+#define OF_POPULATED		3 /* device already created */
-+#define OF_POPULATED_BUS	4 /* platform bus created for children */
-+#define OF_OVERLAY		5 /* allocated for an overlay */
-+#define OF_OVERLAY_FREE_CSET	6 /* in overlay cset being freed */
- 
- #define OF_BAD_ADDR	((u64)-1)
- 
++	}
++
++	if (check_for_non_overlay_node &&
++	    !of_node_check_flag(target->np, OF_OVERLAY))
++		pr_err("WARNING: %s(), memory leak will occur if overlay removed.  Property: %pOF/%s\n",
++		       __func__, target->np, new_prop->name);
++
+ 	if (ret) {
+ 		kfree(new_prop->name);
+ 		kfree(new_prop->value);
 -- 
 Frank Rowand <frank.rowand@sony.com>
