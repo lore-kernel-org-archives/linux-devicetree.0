@@ -1,48 +1,150 @@
-From: Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [PATCH v5 1/6] ath10k: Add qmi service helpers for wcn3990 qmi
- client
-Date: Sat, 13 Oct 2018 17:33:20 +0000 (UTC)
-Message-ID: <20181013173320.C72EF60A98@smtp.codeaurora.org>
-References: <20180815092637.11455-2-govinds@codeaurora.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v2 12/18] of: overlay: check prevents multiple fragments
+ add or delete same node
+Date: Sat, 13 Oct 2018 11:21:46 -0700
+Message-ID: <651a8488-caec-b153-43c7-1fb81f641f1a@gmail.com>
+References: <1539406418-18162-1-git-send-email-frowand.list@gmail.com>
+ <1539406418-18162-13-git-send-email-frowand.list@gmail.com>
+ <97b26203e6792795bdc0a66ce4cdb47571ff16c1.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180815092637.11455-2-govinds@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/ath10k>,
- <mailto:ath10k-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/ath10k/>
-List-Post: <mailto:ath10k@lists.infradead.org>
-List-Help: <mailto:ath10k-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/ath10k>,
- <mailto:ath10k-request@lists.infradead.org?subject=subscribe>
-Sender: "ath10k" <ath10k-bounces@lists.infradead.org>
-Errors-To: ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Govind Singh <govinds@codeaurora.org>, briannorris@chromium.org, linux-wireless@vger.kernel.org, ath10k@lists.infradead.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, niklas.cassel@linaro.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <97b26203e6792795bdc0a66ce4cdb47571ff16c1.camel@perches.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Govind Singh <govinds@codeaurora.org> wrote:
-
-> WLAN qmi server running in Q6 exposes host to target
-> cold boot qmi handshakes. Add WLAN QMI service helpers
-> for ath10k wcn3990 qmi client.
+On 10/13/18 05:51, Joe Perches wrote:
+> On Fri, 2018-10-12 at 21:53 -0700, frowand.list@gmail.com wrote:
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> Multiple overlay fragments adding or deleting the same node is not
+>> supported.  Replace code comment of such, with check to detect the
+>> attempt and fail the overlay apply.
+>>
+>> Devicetree unittest where multiple fragments added the same node was
+>> added in the previous patch in the series.  After applying this patch
+>> the unittest messages will no longer include:
+>>
+>>    Duplicate name in motor-1, renamed to "controller#1"
+>>    OF: overlay: of_overlay_apply() err=0
+>>    ### dt-test ### of_overlay_fdt_apply() expected -22, ret=0, overlay_bad_add_dup_node
+>>    ### dt-test ### FAIL of_unittest_overlay_high_level():2419 Adding overlay 'overlay_bad_add_dup_node' failed
+>>
+>>    ...
+>>
+>>    ### dt-test ### end of unittest - 210 passed, 1 failed
+>>
+>> but will instead include:
+>>
+>>    OF: overlay: ERROR: multiple overlay fragments add and/or delete node /testcase-data-2/substation@100/motor-1/controller
+>>
+>>    ...
+>>
+>>    ### dt-test ### end of unittest - 211 passed, 0 failed
+> []
+>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> []
+>> @@ -523,6 +515,54 @@ static int build_changeset_symbols_node(struct overlay_changeset *ovcs,
+>>  }
+>>  
+>>  /**
+>> + * check_changeset_dup_add_node() - changeset validation: duplicate add node
+>> + * @ovcs:	Overlay changeset
+>> + *
+>> + * Check changeset @ovcs->cset for multiple add node entries for the same
+>> + * node.
+>> + *
+>> + * Returns 0 on success, -ENOMEM if memory allocation failure, or -EINVAL if
+>> + * invalid overlay in @ovcs->fragments[].
+>> + */
+>> +static int check_changeset_dup_add_node(struct overlay_changeset *ovcs)
+>> +{
+>> +	struct of_changeset_entry *ce_1, *ce_2;
+>> +	char *fn_1, *fn_2;
+>> +	int name_match;
+>> +
+>> +	list_for_each_entry(ce_1, &ovcs->cset.entries, node) {
+>> +
+>> +		if (ce_1->action == OF_RECONFIG_ATTACH_NODE ||
+>> +		    ce_1->action == OF_RECONFIG_DETACH_NODE) {
+>> +
+>> +			ce_2 = ce_1;
+>> +			list_for_each_entry_continue(ce_2, &ovcs->cset.entries, node) {
+>> +				if (ce_2->action == OF_RECONFIG_ATTACH_NODE ||
+>> +				    ce_2->action == OF_RECONFIG_DETACH_NODE) {
+>> +					/* inexpensive name compare */
+>> +					if (!of_node_cmp(ce_1->np->full_name,
+>> +					    ce_2->np->full_name)) {
 > 
-> Signed-off-by: Govind Singh <govinds@codeaurora.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Acked-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> A bit of odd indentation here.
+> This line is normally aligned to the second ( on the line above.
 
-6 patches applied to ath-next branch of ath.git, thanks.
+Yes, thanks.
 
-bc17d4b90cdd ath10k: add qmi service helpers for wcn3990 qmi client
-22e8a4602738 ath10k: add support to create boardname for non-bmi target
-2b741a8aaa34 dt: bindings: add bindings for msa memory region
-cc53aabcc283 firmware: qcom: scm: Add WLAN VMID for Qualcomm SCM interface
-35a665766737 ath10k: add debug mask for QMI layer
-ba94c753ccb4 ath10k: add QMI message handshake for wcn3990 client
 
--- 
-https://patchwork.kernel.org/patch/10566407/
+> 
+>> +						/* expensive full path name compare */
+>> +						fn_1 = kasprintf(GFP_KERNEL, "%pOF", ce_1->np);
+>> +						fn_2 = kasprintf(GFP_KERNEL, "%pOF", ce_2->np);
+>> +						name_match = !strcmp(fn_1, fn_2);
+>> +						kfree(fn_1);
+>> +						kfree(fn_2);
+>> +						if (name_match) {
+>> +							pr_err("ERROR: multiple overlay fragments add and/or delete node %pOF\n",
+>> +							       ce_1->np);
+>> +							return -EINVAL;
+>> +						}
+>> +					}
+>> +				}
+>> +			}
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+> 
+> Style trivia:
+> 
+> Using inverted tests and continue would reduce indentation.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Yes, thanks.
+
+-Frank
+
+
+> 
+> 	list_for_each_entry(ce_1, &ovcs->cset.entries, node) {
+> 		if (ce_1->action != OF_RECONFIG_ATTACH_NODE &&
+> 		    ce_1->action != OF_RECONFIG_DETACH_NODE)
+> 			continue;
+> 
+> 		ce_2 = ce_1;
+> 		list_for_each_entry_continue(ce_2, &ovcs->cset.entries, node) {
+> 			if (ce_2->action != OF_RECONFIG_ATTACH_NODE &&
+> 			    ce_2->action != OF_RECONFIG_DETACH_NODE)
+> 				continue;
+> 
+> 			/* inexpensive name compare */
+> 			if (of_node_cmp(ce_1->np->full_name, ce_2->np->full_name))
+> 				continue;
+> 
+> 			/* expensive full path name compare */
+> 			fn_1 = kasprintf(GFP_KERNEL, "%pOF", ce_1->np);
+> 			fn_2 = kasprintf(GFP_KERNEL, "%pOF", ce_2->np);
+> 			name_match = !strcmp(fn_1, fn_2);
+> 			kfree(fn_1);
+> 			kfree(fn_2);
+> 			if (name_match) {
+> 				pr_err("ERROR: multiple overlay fragments add and/or delete node %pOF\n",
+> 				       ce_1->np);
+> 				return -EINVAL;
+> 			}
+> 		}
+> 	}
+> 
+> 
+> 
