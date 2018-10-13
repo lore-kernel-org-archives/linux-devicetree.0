@@ -1,53 +1,134 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH 4/7] mfd: ds90ux9xx: add TI DS90Ux9xx de-/serializer MFD
- driver
-Date: Sat, 13 Oct 2018 15:33:21 +0300
-Message-ID: <646af723-b78b-4481-50d9-e1b8f57abd79@mentor.com>
-References: <20181008211205.2900-1-vz@mleia.com>
- <20181008211205.2900-5-vz@mleia.com> <20181012060314.GU4939@dell>
- <63733d2e-f95e-8894-f2b0-0b551b5cfeeb@mentor.com>
- <20181012083924.GW4939@dell>
- <eef99526-9232-8cd4-9a7c-c30114d58806@ideasonboard.com>
- <506c03d7-7986-44dd-3290-92d16a8106ad@mentor.com>
- <4a807a53-1592-a895-f140-54e7acc473b3@ideasonboard.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v2 12/18] of: overlay: check prevents multiple fragments
+ add or delete same node
+Date: Sat, 13 Oct 2018 05:51:46 -0700
+Message-ID: <97b26203e6792795bdc0a66ce4cdb47571ff16c1.camel@perches.com>
+References: <1539406418-18162-1-git-send-email-frowand.list@gmail.com>
+         <1539406418-18162-13-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4a807a53-1592-a895-f140-54e7acc473b3@ideasonboard.com>
+In-Reply-To: <1539406418-18162-13-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kieran.bingham@ideasonboard.com, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Vladimir Zapolskiy <vz@mleia.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+To: frowand.list@gmail.com, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kieran,
+On Fri, 2018-10-12 at 21:53 -0700, frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
+> 
+> Multiple overlay fragments adding or deleting the same node is not
+> supported.  Replace code comment of such, with check to detect the
+> attempt and fail the overlay apply.
+> 
+> Devicetree unittest where multiple fragments added the same node was
+> added in the previous patch in the series.  After applying this patch
+> the unittest messages will no longer include:
+> 
+>    Duplicate name in motor-1, renamed to "controller#1"
+>    OF: overlay: of_overlay_apply() err=0
+>    ### dt-test ### of_overlay_fdt_apply() expected -22, ret=0, overlay_bad_add_dup_node
+>    ### dt-test ### FAIL of_unittest_overlay_high_level():2419 Adding overlay 'overlay_bad_add_dup_node' failed
+> 
+>    ...
+> 
+>    ### dt-test ### end of unittest - 210 passed, 1 failed
+> 
+> but will instead include:
+> 
+>    OF: overlay: ERROR: multiple overlay fragments add and/or delete node /testcase-data-2/substation@100/motor-1/controller
+> 
+>    ...
+> 
+>    ### dt-test ### end of unittest - 211 passed, 0 failed
+[]
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+[]
+> @@ -523,6 +515,54 @@ static int build_changeset_symbols_node(struct overlay_changeset *ovcs,
+>  }
+>  
+>  /**
+> + * check_changeset_dup_add_node() - changeset validation: duplicate add node
+> + * @ovcs:	Overlay changeset
+> + *
+> + * Check changeset @ovcs->cset for multiple add node entries for the same
+> + * node.
+> + *
+> + * Returns 0 on success, -ENOMEM if memory allocation failure, or -EINVAL if
+> + * invalid overlay in @ovcs->fragments[].
+> + */
+> +static int check_changeset_dup_add_node(struct overlay_changeset *ovcs)
+> +{
+> +	struct of_changeset_entry *ce_1, *ce_2;
+> +	char *fn_1, *fn_2;
+> +	int name_match;
+> +
+> +	list_for_each_entry(ce_1, &ovcs->cset.entries, node) {
+> +
+> +		if (ce_1->action == OF_RECONFIG_ATTACH_NODE ||
+> +		    ce_1->action == OF_RECONFIG_DETACH_NODE) {
+> +
+> +			ce_2 = ce_1;
+> +			list_for_each_entry_continue(ce_2, &ovcs->cset.entries, node) {
+> +				if (ce_2->action == OF_RECONFIG_ATTACH_NODE ||
+> +				    ce_2->action == OF_RECONFIG_DETACH_NODE) {
+> +					/* inexpensive name compare */
+> +					if (!of_node_cmp(ce_1->np->full_name,
+> +					    ce_2->np->full_name)) {
 
-On 10/12/2018 02:47 PM, Kieran Bingham wrote:
-> Hi Vladimir,
-> 
+A bit of odd indentation here.
+This line is normally aligned to the second ( on the line above.
 
-[snip]
+> +						/* expensive full path name compare */
+> +						fn_1 = kasprintf(GFP_KERNEL, "%pOF", ce_1->np);
+> +						fn_2 = kasprintf(GFP_KERNEL, "%pOF", ce_2->np);
+> +						name_match = !strcmp(fn_1, fn_2);
+> +						kfree(fn_1);
+> +						kfree(fn_2);
+> +						if (name_match) {
+> +							pr_err("ERROR: multiple overlay fragments add and/or delete node %pOF\n",
+> +							       ce_1->np);
+> +							return -EINVAL;
+> +						}
+> +					}
+> +				}
+> +			}
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
 
-> 
-> Essentially they are multi purpose buses - which do not yet have a home.
-> We have used media as a home because of our use case.
-> 
-> The use case whether they transfer frames from a camera or to a display
-> are of course closely related, but ultimately covered by two separate
-> subsystems at the pixel level (DRM vs V4L, or other for other data)
-> 
-> Perhaps as they are buses - on a level with USB or I2C (except they can
-> of course carry I2C or Serial as well as 'bi-directional video' etc ),
-> they are looking for their own subsystem.
-> 
-> Except I don't think we don't want to add a new subsystem for just one
-> (or two) devices...
-> 
+Style trivia:
 
-I suppose that the incomplete list includes Maxim GMSL, TI FPD-Link III,
-SMSC/Microchip MOST (drivers/staging/most -- what's the destination after
-exiting staging?) an Inova APIX.
+Using inverted tests and continue would reduce indentation.
 
---
-Best wishes,
-Vladimir
+	list_for_each_entry(ce_1, &ovcs->cset.entries, node) {
+		if (ce_1->action != OF_RECONFIG_ATTACH_NODE &&
+		    ce_1->action != OF_RECONFIG_DETACH_NODE)
+			continue;
+
+		ce_2 = ce_1;
+		list_for_each_entry_continue(ce_2, &ovcs->cset.entries, node) {
+			if (ce_2->action != OF_RECONFIG_ATTACH_NODE &&
+			    ce_2->action != OF_RECONFIG_DETACH_NODE)
+				continue;
+
+			/* inexpensive name compare */
+			if (of_node_cmp(ce_1->np->full_name, ce_2->np->full_name))
+				continue;
+
+			/* expensive full path name compare */
+			fn_1 = kasprintf(GFP_KERNEL, "%pOF", ce_1->np);
+			fn_2 = kasprintf(GFP_KERNEL, "%pOF", ce_2->np);
+			name_match = !strcmp(fn_1, fn_2);
+			kfree(fn_1);
+			kfree(fn_2);
+			if (name_match) {
+				pr_err("ERROR: multiple overlay fragments add and/or delete node %pOF\n",
+				       ce_1->np);
+				return -EINVAL;
+			}
+		}
+	}
