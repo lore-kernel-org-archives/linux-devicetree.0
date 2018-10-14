@@ -1,113 +1,91 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v4 07/10] dt-bindings: phy: add binding for
- Allwinner USB3 PHY
-Date: Sun, 14 Oct 2018 10:41:29 +0800
-Message-ID: <92e92f817d4df753d654124514e89c62f40d52eb.camel@aosc.io>
-References: <20181004122855.22981-1-icenowy@aosc.io>
-	 <20181004122855.22981-8-icenowy@aosc.io> <20181005205855.GA2458@bogus>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v3 2/4] power: supply: core: Introduce properties to
+ present the battery OCV capacity table
+Date: Sun, 14 Oct 2018 14:53:19 +0800
+Message-ID: <CAMz4kuKo0jZ8YS7zx-t8hESedTYb094VLzdzNOpQd04M3kE4Dw@mail.gmail.com>
+References: <2787f18a0366576959557d05112a069dca982269.1538033078.git.baolin.wang@linaro.org>
+ <7dccec1694a05a524710e59a63859974b4cdae89.1538033078.git.baolin.wang@linaro.org>
+ <20181012143530.GA28145@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBCO2RLPAKGQETRIKY4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181005205855.GA2458@bogus>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181012143530.GA28145@bogus>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>, Craig Tatlor <ctatlor97@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2018-10-05=E4=BA=94=E7=9A=84 15:58 -0500=EF=BC=8CRob Herring=E5=
-=86=99=E9=81=93=EF=BC=9A
-> On Thu, Oct 04, 2018 at 08:28:52PM +0800, Icenowy Zheng wrote:
-> > The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
-> > external USB3 pins of the SoC.
-> >=20
-> > Add a device tree binding for the PHY.
-> >=20
-> > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> > Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> > ---
-> > Changes in v4:
-> > - Changed Vbus regulator property to vbus-supply.
-> >=20
-> > Changes in v3:
-> > - Added Chen-Yu's Review tag.
-> >=20
-> > No changes in v2, v1.
-> >=20
-> >  .../bindings/phy/sun50i-usb3-phy.txt          | 23
-> > +++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/sun50i-
-> > usb3-phy.txt
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/phy/sun50i-usb3-
-> > phy.txt b/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
-> > new file mode 100644
-> > index 000000000000..9f49c6b8c7e7
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
-> > @@ -0,0 +1,23 @@
-> > +Allwinner sun50i USB3 PHY
-> > +-----------------------
-> > +
-> > +Required properties:
-> > +- compatible : should be one of
-> > +  * allwinner,sun60i-h6-usb3-phy
-> > +- reg : a list of offset + length pairs
-> > +- #phy-cells : from the generic phy bindings, must be 0
-> > +- clocks : phandle + clock specifier for the phy clock
-> > +- resets : phandle + reset specifier for the phy reset
-> > +
-> > +Optional Properties:
-> > +- vbus-supply : a phandle to a regulator that provides power to
-> > VBUS.
->=20
-> This belongs in a connector node as it is part of the connector
-> unless=20
-> the phy physically needs Vbus for power.
->=20
-> But others have done this, so all the phys can just be wrong...
+Hi Rob,
 
-How should we reference the connector?
+On 12 October 2018 at 22:35, Rob Herring <robh@kernel.org> wrote:
+> On Thu, Sep 27, 2018 at 03:26:55PM +0800, Baolin Wang wrote:
+>> Some battery driver will use the open circuit voltage (OCV) value to look
+>> up the corresponding battery capacity percent in one certain degree Celsius.
+>> Thus this patch provides some battery properties to present the OCV table
+>> temperatures and OCV capacity table values. Moreover it also provides some
+>> helper functions to use the OCV capacity table for users.
+>>
+>> Suggested-by: Sebastian Reichel <sre@kernel.org>
+>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>> ---
+>> Changes from v2:
+>>  - Use type __be32 to calculate the table length.
+>>  - Update error messages.
+>>  - Add some helper functions.
+>>
+>> Changes from v1:
+>>  - New patch in v2.
+>> ---
+>>  .../devicetree/bindings/power/supply/battery.txt   |   14 +++
+>
+> Please split binding patches.
 
-Via OF graph or simply a property in PHY node?
+Sure.
 
->=20
-> > +
-> > +Example:
-> > +	usb3phy: phy@5210000 {
->=20
-> usb-phy@
->=20
-> > +		compatible =3D "allwinner,sun50i-h6-usb3-phy";
-> > +		reg =3D <0x5210000 0x10000>;
-> > +		clocks =3D <&ccu CLK_USB_PHY1>;
-> > +		resets =3D <&ccu RST_USB_PHY1>;
-> > +		#phy-cells =3D <0>;
-> > +		status =3D "disabled";
->=20
-> Don't show status in examples.
->=20
-> > +	};
-> > --=20
-> > 2.18.0
-> >=20
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+>>  drivers/power/supply/power_supply_core.c           |  125 +++++++++++++++++++-
+>>  include/linux/power_supply.h                       |   19 +++
+>>  3 files changed, 157 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+>> index 938d027..cad38df 100644
+>> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
+>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+>> @@ -23,6 +23,16 @@ Optional Properties:
+>>   - constant-charge-current-max-microamp: maximum constant input current
+>>   - constant-charge-voltage-max-microvolt: maximum constant input voltage
+>>   - factory-internal-resistance-micro-ohms: battery factory internal resistance
+>> + - ocv-capacity-table-0: An array providing the battery capacity percent
+>> +   with corresponding open circuit voltage (OCV) of the battery, which
+>> +   is used to look up battery capacity according to current OCV value.
+>> + - ocv-capacity-table-1: Same as ocv-capacity-table-0
+>> + ......
+>> + - ocv-capacity-table-n: Same as ocv-capacity-table-0
+>
+> So it is tubles of (percent, voltage)? What's the units for voltage?
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Yes. The units for voltage is microvolt, and I will add some words to
+make it clear in next version.
+
+>
+> What determines the # of entries for each table? Do all tables have the
+> same number of entries?
+
+Not same, that depends on the battery drivers' requirement.
+
+>> + - ocv-capacity-table-temperatures: An array containing the temperature
+>> +   in degree Celsius, for each of the battery capacity lookup table.
+>> +   The first temperature value specifies the OCV table 0, and the second
+>> +   temperature value specifies the OCV table 1, and so on.
+>
+> This should have unit suffix. Perhaps just "ocv-capacity-celsius" to
+> avoid being too long.
+
+I am fine with this. Thanks for your comments.
+
+Sebastian and Linusw, what do you think about Rob's suggestion? Thanks.
+
+-- 
+Baolin Wang
+Best Regards
