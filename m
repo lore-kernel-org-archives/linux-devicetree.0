@@ -1,88 +1,68 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH V12 0/8] C-SKY(csky) Linux Kernel Driver
-Date: Sun, 14 Oct 2018 22:38:36 +0200
-Message-ID: <36e2cb6d-6d9e-4764-a6dd-a5f74cab5a09@linaro.org>
-References: <cover.1539315341.git.ren_guo@c-sky.com>
- <dfe56d38-cfa5-2be1-114e-c6721d6c92a3@linaro.org>
- <20181014162631.GA13374@guoren-Inspiron-7460>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
+Date: Sun, 14 Oct 2018 20:13:32 -0300
+Message-ID: <CAOMZO5BEwNQy0HA80qOzm_w-c63tFK1eL+cOHNCxKYq9PHGsqw@mail.gmail.com>
+References: <1539527419-23613-1-git-send-email-aisheng.dong@nxp.com>
+ <1539527419-23613-3-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181014162631.GA13374@guoren-Inspiron-7460>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, will.deacon@arm.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1539527419-23613-3-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Dong Aisheng <dongas86@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14/10/2018 18:26, Guo Ren wrote:
-> Hi Daniel,
-> 
-> Thx for reply and review.
-> 
-> On Sat, Oct 13, 2018 at 10:50:34PM +0200, Daniel Lezcano wrote:
->> On 12/10/2018 14:02, Guo Ren wrote:
->>> This is about 12th patchset for C-SKY linux drivers and it should pair
->>> with 8th kernel patchset.
->>
->> Guo,
->>
->> I'm willing to take your timer related patches but you have to put a
->> proper description.
-> 
-> Ok, I've improved all my comment for the drivers. Here is my modification:
+Hi Dong,
 
-Thanks Guo,
+On Sun, Oct 14, 2018 at 11:35 AM A.s. Dong <aisheng.dong@nxp.com> wrote:
+>
+> Add imx8qxp support
 
-the descriptions look ok for the timer part. Can you resend the DT
-bindings + timers patches separately with the commit log updated ?
+You could probably expand the commit log by explaining a bit of what
+im8qxp means.
 
-When you add the Changelog you have to insert it *after* the first
-'---', so when the patch is git applied, the change log will be
-discarded and won't appear in git.
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> new file mode 100644
+> index 0000000..e1d2578
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -0,0 +1,861 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2016 Freescale Semiconductor, Inc.
+> + * Copyright 2017~2018 NXP
 
-eg.
+I guess you meant "-" instead of "~".
 
-commit 6b465856936cb8f7eda31b20eb59fb5c8a19d468
-Author: Guo Ren <ren_guo@c-sky.com>
-Date:   Tue Oct 2 16:43:18 2018 +0800
+> +       memory@80000000 {
+> +               device_type = "memory";
+> +               reg = <0x00000000 0x80000000 0 0x40000000>;
+> +       };
 
-clocksource: add gx6605s SOC system timer
+This should go to the board dts file instead as the memory size may
+vary from board to board.
 
-The driver is for gx6605s SOC system timer and there are two
-same timers in gx6605s. We use one for clkevt and another one for
-clksrc.
+> +               imx8qx-pm {
+> +                       compatible = "fsl,scu-pd";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       pd_lsio: lsio-power-domain {
+> +                               #power-domain-cells = <0>;
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               pd_lsio_pwm0: lsio-pwm0@191 {
+> +                                       reg = <191>;
 
-The timer is mmio map to access, so we need give mmio address in dts.
-The counter at 0x0  offset is clock event. The counter at 0x40 offset is
-clock source.
-
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
----
-Changelog:
-     - pass checkpatch.pl
-     - Add COMIPLE_TEST in Kconfig
-     - no cast is needed for "struct clock_event_device *ce = dev"
-     - remove: extra space after (u64)
-     - Add License and Copyright
-     - Use timer-of framework
-     - Change name with upstream feedback
-     - Use clksource_mmio framework
----
-
-
-Thanks
-
-  -- Daniel
-
-
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+The number after @ is in hex, so the reg property should be 0x191.
