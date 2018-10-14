@@ -1,144 +1,70 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V12 0/8] C-SKY(csky) Linux Kernel Driver
-Date: Mon, 15 Oct 2018 00:26:31 +0800
-Message-ID: <20181014162631.GA13374@guoren-Inspiron-7460>
-References: <cover.1539315341.git.ren_guo@c-sky.com>
- <dfe56d38-cfa5-2be1-114e-c6721d6c92a3@linaro.org>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH v13 3/8] clk: Use devm_ in the register fixed factor clock
+Date: Sun, 14 Oct 2018 22:21:22 +0200
+Message-ID: <20181014202122.GA13473@centauri.lan>
+References: <20180614215358.11264-1-ilia.lin@gmail.com>
+ <20180614215358.11264-4-ilia.lin@gmail.com>
+ <CAHYQr0rR=mcV-SxZFW+5M4CTUaTv_f_bruyq91HiGP6sqUZ3Yw@mail.gmail.com>
+ <153938209728.5275.8811599608746761178@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <dfe56d38-cfa5-2be1-114e-c6721d6c92a3@linaro.org>
+In-Reply-To: <153938209728.5275.8811599608746761178@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, will.deacon@arm.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, ilia.lin@gmail.com, bjorn.andersson@linaro.org
+Cc: Ricardo Salveti <rsalveti@rsalveti.net>, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, will.deacon@arm.com, Amit Kucheria <amit.kucheria@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
-
-Thx for reply and review.
-
-On Sat, Oct 13, 2018 at 10:50:34PM +0200, Daniel Lezcano wrote:
-> On 12/10/2018 14:02, Guo Ren wrote:
-> > This is about 12th patchset for C-SKY linux drivers and it should pair
-> > with 8th kernel patchset.
+On Fri, Oct 12, 2018 at 03:08:17PM -0700, Stephen Boyd wrote:
+> Quoting Ricardo Salveti (2018-09-14 11:53:02)
+> > On Thu, Jun 14, 2018 at 6:55 PM <ilia.lin@gmail.com> wrote:
+> > >
+> > > From: Ilia Lin <ilialin@codeaurora.org>
+> > >
+> > > Use devm_clk_hw_register instead of clk_hw_register
+> > > to simplify the usage of this API. This way drivers that call
+> > > the clk_hw_register_fixed_factor won't need to maintain
+> > > a data structure for further cleanup.
+> > >
+> > > Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
+> > > Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > ---
+> > >  drivers/clk/clk-fixed-factor.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
+> > > index a5d402de5584..8e39bda8e596 100644
+> > > --- a/drivers/clk/clk-fixed-factor.c
+> > > +++ b/drivers/clk/clk-fixed-factor.c
+> > > @@ -94,7 +94,7 @@ struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
+> > >         init.num_parents = 1;
+> > >
+> > >         hw = &fix->hw;
+> > > -       ret = clk_hw_register(dev, hw);
+> > > +       ret = devm_clk_hw_register(dev, hw);
+> > 
+> > Not sure what is the current state of this patch-set, but this change
+> > breaks drivers calling clk_hw_register_fixed_factor with a NULL dev
+> > (e.g. imx_clk_fixed_factor), as devm_clk_hw_register needs a valid dev
+> > for devres_add to work.
+> > 
 > 
-> Guo,
+> Yep. Probably better to just have a driver register the clk_hw structure
+> itself with the clk framework vs. trying to get it right here in the
+> generic type registration function.
 > 
-> I'm willing to take your timer related patches but you have to put a
-> proper description.
 
-Ok, I've improved all my comment for the drivers. Here is my modification:
+Hello Ilia, Stephen,
 
-commit 6b465856936cb8f7eda31b20eb59fb5c8a19d468
-Author: Guo Ren <ren_guo@c-sky.com>
-Date:   Tue Oct 2 16:43:18 2018 +0800
+As you know this patch series is needed to get DVFS working on msm8996.
 
-    clocksource: add gx6605s SOC system timer
-    
-    The driver is for gx6605s SOC system timer and there are two
-    same timers in gx6605s. We use one for clkevt and another one for
-    clksrc.
-    
-    The timer is mmio map to access, so we need give mmio address in dts.
-    
-    The counter at 0x0  offset is clock event.
-    The counter at 0x40 offset is clock source.
-    
-    Changelog:
-     - pass checkpatch.pl
-     - Add COMIPLE_TEST in Kconfig
-     - no cast is needed for "struct clock_event_device *ce = dev"
-     - remove: extra space after (u64)
-     - Add License and Copyright
-     - Use timer-of framework
-     - Change name with upstream feedback
-     - Use clksource_mmio framework
-    
-    Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-    Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Ilia, are you planning on submitting a new patch set for this, or would
+you prefer if we submitted a new patch version for you?
 
-commit d89522b23ff8f2d5b6f33200db110c758d28ecc1
-Author: Guo Ren <ren_guo@c-sky.com>
-Date:   Wed Sep 5 14:25:24 2018 +0800
+Looking at this patch series, this appears to be the only outstanding
+review comment. Stephen, do you have any review comments on this series?
 
-    clocksource: add C-SKY SMP timer
-    
-    The driver is for C-SKY SMP timer. It only support oneshot event
-    and 32bit overflow for clocksource. Per cpu core has one timer and
-    all timers share one clock-counter-input the same clocksource.
-    
-    This use mfcr&mtcr instructions to access the regs.
-    
-    Changelog:
-     - Add COMPILE_TEST
-     - Fixup smp boot error, cpuhp_setup_state must after timer_of_init()
-     - Add rollback for timer_of_cleanup.
-     - Use request_percpu_irq separate from time_of.
-     - Remove #define CPUHP_AP_CSKY_TIMER_STARTING.
-     - Add CPUHP_AP_CSKY_TIMER_STARTING in cpuhotplug.h.
-     - Support csky mp timer alpha version.
-     - Just use low-counter with 32bit width as clocksource.
-     - Coding convention with upstream feed-back.
-    
-    Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-    Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-===> It's interrupt controller comment, perhaps you won't care. <===
-
-commit 65f4acd1df08c1c5ad1b0e8f46822b114c539f11
-Author: Guo Ren <ren_guo@c-sky.com>
-Date:   Sun Sep 16 15:57:14 2018 +0800
-
-    irqchip: add C-SKY APB bus interrupt controller
-    
-    The driver is for C-SKY APB bus interrupt controller. It's a simple
-    interrupt controller which use pending reg to detect the irq and use
-    enable/disable reg to mask/unmask interrupt sources.
-    
-    A lot of SOCs based on C-SKY CPU use the interrupt controller as root
-    controller.
-    
-    Changelog:
-     - pass checkpatch.pl.
-     - use "bool ret" instead of "int ret"
-     - add support-pulse-signal in irq-csky-apb-intc.c
-     - change name with upstream feed-back
-     - add INTC_IFR to clear irq-pending
-     - remove CSKY_VECIRQ_LEGENCY
-     - change to generic irq chip framework
-     - add License and Copyright
-     - use irq_domain_add_linear instead of leagcy
-    
-    Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-    Cc: Mark Rutland <mark.rutland@arm.com>
-
-commit ef790431a885d37766200c7968d47370ed8be251
-Author: Guo Ren <ren_guo@c-sky.com>
-Date:   Sun Sep 16 15:57:14 2018 +0800
-
-    irqchip: add C-SKY SMP interrupt controller
-    
-    The driver is for C-SKY SMP interrupt controller. It support 16
-    soft-irqs, 16 private-irqs, and 992 max external-irqs, a total of
-    1024 interrupts.
-    
-    C-SKY CPU 807/810/860 SMP/non-SMP could use it.
-    
-    Changelog:
-     - Remove set_ipi_irq_mapping.
-     - Convert the cpumask to an interrupt-controller specific representation
-       in driver's code, and not the SMP code's.
-     - pass checkpatch.pl
-     - Move IPI_IRQ into the driver
-     - Remove irq_set_default_host() and use set_ipi_irq_mapping()
-     - Change name with upstream feed-back
-     - Change irq map, reserve soft_irq & private_irq space
-     - Add License and Copyright
-     - Support set_affinity for irq balance in SMP
-    
-    Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-    Cc: Marc Zyngier <marc.zyngier@arm.com>
-
-Best Regards
- Guo Ren
+Kind regards,
+Niklas
