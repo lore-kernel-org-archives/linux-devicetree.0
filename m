@@ -1,57 +1,88 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: =?iso-8859-1?B?W1JDRqBQQVRDSCx2Miwy?= =?iso-8859-1?B?LzJd?= pwm:
- imx: Configure output to GPIO in disabled state
-Date: Sun, 14 Oct 2018 22:24:57 +0200
-Message-ID: <20181014202457.dohwgz3frgcpdpy6@pengutronix.de>
-References: <1539163920-9442-3-git-send-email-michal.vokac@ysoft.com>
- <20181012085720.GA9451@taurus.defre.kleine-koenig.org>
- <fa96ae2a-c2cc-b47a-1198-5daffa7c865f@ysoft.com>
- <20181012160854.hmgpokxgsrqdzobx@pengutronix.de>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH V12 0/8] C-SKY(csky) Linux Kernel Driver
+Date: Sun, 14 Oct 2018 22:38:36 +0200
+Message-ID: <36e2cb6d-6d9e-4764-a6dd-a5f74cab5a09@linaro.org>
+References: <cover.1539315341.git.ren_guo@c-sky.com>
+ <dfe56d38-cfa5-2be1-114e-c6721d6c92a3@linaro.org>
+ <20181014162631.GA13374@guoren-Inspiron-7460>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181012160854.hmgpokxgsrqdzobx@pengutronix.de>
+In-Reply-To: <20181014162631.GA13374@guoren-Inspiron-7460>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@karo-electronics.de>
+To: Guo Ren <ren_guo@c-sky.com>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, will.deacon@arm.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Fri, Oct 12, 2018 at 06:08:54PM +0200, Uwe Kleine-König wrote:
-> > >> +	if (PTR_ERR(imx_chip->pwm_gpiod) == -EPROBE_DEFER) {
-> > > 
-> > > You must not use PTR_ERR on a value that might not contain an error
-> > > pointer.
-> > 
-> > OK, thank you for valuable info.
-> > So it seems like the I2C folks are in troubles as well:
-> > 
-> > 	https://elixir.bootlin.com/linux/latest/source/drivers/i2c/busses/i2c-imx.c#L996
+On 14/10/2018 18:26, Guo Ren wrote:
+> Hi Daniel,
 > 
-> correct. I cannot find this documented though.
+> Thx for reply and review.
+> 
+> On Sat, Oct 13, 2018 at 10:50:34PM +0200, Daniel Lezcano wrote:
+>> On 12/10/2018 14:02, Guo Ren wrote:
+>>> This is about 12th patchset for C-SKY linux drivers and it should pair
+>>> with 8th kernel patchset.
+>>
+>> Guo,
+>>
+>> I'm willing to take your timer related patches but you have to put a
+>> proper description.
+> 
+> Ok, I've improved all my comment for the drivers. Here is my modification:
 
-I found in LDD3[1], chapter 11 on page 295:
+Thanks Guo,
 
-	If you need the actual error code, it can be extracted with:
+the descriptions look ok for the timer part. Can you resend the DT
+bindings + timers patches separately with the commit log updated ?
 
-		long PTR_ERR(const void *ptr);
+When you add the Changelog you have to insert it *after* the first
+'---', so when the patch is git applied, the change log will be
+discarded and won't appear in git.
 
-	You should use PTR_ERR only on a value for which IS_ERR returns a true
-	value; any other value is a valid pointer.
+eg.
 
-That is probably where I have my claim from. There is no further
-explanation though, so I'll post a patch adding a comment to the
-definition of PTR_ERR to find out if there is a relevant reason.
+commit 6b465856936cb8f7eda31b20eb59fb5c8a19d468
+Author: Guo Ren <ren_guo@c-sky.com>
+Date:   Tue Oct 2 16:43:18 2018 +0800
 
-Best regards
-Uwe
+clocksource: add gx6605s SOC system timer
 
-[1] https://lwn.net/Kernel/LDD3/
+The driver is for gx6605s SOC system timer and there are two
+same timers in gx6605s. We use one for clkevt and another one for
+clksrc.
+
+The timer is mmio map to access, so we need give mmio address in dts.
+The counter at 0x0  offset is clock event. The counter at 0x40 offset is
+clock source.
+
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+Changelog:
+     - pass checkpatch.pl
+     - Add COMIPLE_TEST in Kconfig
+     - no cast is needed for "struct clock_event_device *ce = dev"
+     - remove: extra space after (u64)
+     - Add License and Copyright
+     - Use timer-of framework
+     - Change name with upstream feedback
+     - Use clksource_mmio framework
+---
+
+
+Thanks
+
+  -- Daniel
+
+
+
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+ <http://www.linaro.org/> Linaro.org â”‚ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
