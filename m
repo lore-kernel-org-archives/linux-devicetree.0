@@ -1,70 +1,57 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH v13 3/8] clk: Use devm_ in the register fixed factor clock
-Date: Sun, 14 Oct 2018 22:21:22 +0200
-Message-ID: <20181014202122.GA13473@centauri.lan>
-References: <20180614215358.11264-1-ilia.lin@gmail.com>
- <20180614215358.11264-4-ilia.lin@gmail.com>
- <CAHYQr0rR=mcV-SxZFW+5M4CTUaTv_f_bruyq91HiGP6sqUZ3Yw@mail.gmail.com>
- <153938209728.5275.8811599608746761178@swboyd.mtv.corp.google.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: =?iso-8859-1?B?W1JDRqBQQVRDSCx2Miwy?= =?iso-8859-1?B?LzJd?= pwm:
+ imx: Configure output to GPIO in disabled state
+Date: Sun, 14 Oct 2018 22:24:57 +0200
+Message-ID: <20181014202457.dohwgz3frgcpdpy6@pengutronix.de>
+References: <1539163920-9442-3-git-send-email-michal.vokac@ysoft.com>
+ <20181012085720.GA9451@taurus.defre.kleine-koenig.org>
+ <fa96ae2a-c2cc-b47a-1198-5daffa7c865f@ysoft.com>
+ <20181012160854.hmgpokxgsrqdzobx@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <153938209728.5275.8811599608746761178@swboyd.mtv.corp.google.com>
+In-Reply-To: <20181012160854.hmgpokxgsrqdzobx@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, ilia.lin@gmail.com, bjorn.andersson@linaro.org
-Cc: Ricardo Salveti <rsalveti@rsalveti.net>, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, will.deacon@arm.com, Amit Kucheria <amit.kucheria@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@karo-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 12, 2018 at 03:08:17PM -0700, Stephen Boyd wrote:
-> Quoting Ricardo Salveti (2018-09-14 11:53:02)
-> > On Thu, Jun 14, 2018 at 6:55 PM <ilia.lin@gmail.com> wrote:
-> > >
-> > > From: Ilia Lin <ilialin@codeaurora.org>
-> > >
-> > > Use devm_clk_hw_register instead of clk_hw_register
-> > > to simplify the usage of this API. This way drivers that call
-> > > the clk_hw_register_fixed_factor won't need to maintain
-> > > a data structure for further cleanup.
-> > >
-> > > Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-> > > Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > > ---
-> > >  drivers/clk/clk-fixed-factor.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
-> > > index a5d402de5584..8e39bda8e596 100644
-> > > --- a/drivers/clk/clk-fixed-factor.c
-> > > +++ b/drivers/clk/clk-fixed-factor.c
-> > > @@ -94,7 +94,7 @@ struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
-> > >         init.num_parents = 1;
-> > >
-> > >         hw = &fix->hw;
-> > > -       ret = clk_hw_register(dev, hw);
-> > > +       ret = devm_clk_hw_register(dev, hw);
+Hello,
+
+On Fri, Oct 12, 2018 at 06:08:54PM +0200, Uwe Kleine-König wrote:
+> > >> +	if (PTR_ERR(imx_chip->pwm_gpiod) == -EPROBE_DEFER) {
+> > > 
+> > > You must not use PTR_ERR on a value that might not contain an error
+> > > pointer.
 > > 
-> > Not sure what is the current state of this patch-set, but this change
-> > breaks drivers calling clk_hw_register_fixed_factor with a NULL dev
-> > (e.g. imx_clk_fixed_factor), as devm_clk_hw_register needs a valid dev
-> > for devres_add to work.
+> > OK, thank you for valuable info.
+> > So it seems like the I2C folks are in troubles as well:
 > > 
+> > 	https://elixir.bootlin.com/linux/latest/source/drivers/i2c/busses/i2c-imx.c#L996
 > 
-> Yep. Probably better to just have a driver register the clk_hw structure
-> itself with the clk framework vs. trying to get it right here in the
-> generic type registration function.
-> 
+> correct. I cannot find this documented though.
 
-Hello Ilia, Stephen,
+I found in LDD3[1], chapter 11 on page 295:
 
-As you know this patch series is needed to get DVFS working on msm8996.
+	If you need the actual error code, it can be extracted with:
 
-Ilia, are you planning on submitting a new patch set for this, or would
-you prefer if we submitted a new patch version for you?
+		long PTR_ERR(const void *ptr);
 
-Looking at this patch series, this appears to be the only outstanding
-review comment. Stephen, do you have any review comments on this series?
+	You should use PTR_ERR only on a value for which IS_ERR returns a true
+	value; any other value is a valid pointer.
 
+That is probably where I have my claim from. There is no further
+explanation though, so I'll post a patch adding a comment to the
+definition of PTR_ERR to find out if there is a relevant reason.
 
-Kind regards,
-Niklas
+Best regards
+Uwe
+
+[1] https://lwn.net/Kernel/LDD3/
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
