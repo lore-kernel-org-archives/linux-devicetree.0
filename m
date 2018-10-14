@@ -1,80 +1,113 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH V12 0/8] C-SKY(csky) Linux Kernel Driver
-Date: Sat, 13 Oct 2018 22:50:34 +0200
-Message-ID: <dfe56d38-cfa5-2be1-114e-c6721d6c92a3@linaro.org>
-References: <cover.1539315341.git.ren_guo@c-sky.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH v4 07/10] dt-bindings: phy: add binding for
+ Allwinner USB3 PHY
+Date: Sun, 14 Oct 2018 10:41:29 +0800
+Message-ID: <92e92f817d4df753d654124514e89c62f40d52eb.camel@aosc.io>
+References: <20181004122855.22981-1-icenowy@aosc.io>
+	 <20181004122855.22981-8-icenowy@aosc.io> <20181005205855.GA2458@bogus>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1539315341.git.ren_guo@c-sky.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, will.deacon@arm.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBCO2RLPAKGQETRIKY4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181005205855.GA2458@bogus>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/10/2018 14:02, Guo Ren wrote:
-> This is about 12th patchset for C-SKY linux drivers and it should pair
-> with 8th kernel patchset.
+=E5=9C=A8 2018-10-05=E4=BA=94=E7=9A=84 15:58 -0500=EF=BC=8CRob Herring=E5=
+=86=99=E9=81=93=EF=BC=9A
+> On Thu, Oct 04, 2018 at 08:28:52PM +0800, Icenowy Zheng wrote:
+> > The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
+> > external USB3 pins of the SoC.
+> >=20
+> > Add a device tree binding for the PHY.
+> >=20
+> > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> > Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> > ---
+> > Changes in v4:
+> > - Changed Vbus regulator property to vbus-supply.
+> >=20
+> > Changes in v3:
+> > - Added Chen-Yu's Review tag.
+> >=20
+> > No changes in v2, v1.
+> >=20
+> >  .../bindings/phy/sun50i-usb3-phy.txt          | 23
+> > +++++++++++++++++++
+> >  1 file changed, 23 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/sun50i-
+> > usb3-phy.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/phy/sun50i-usb3-
+> > phy.txt b/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
+> > new file mode 100644
+> > index 000000000000..9f49c6b8c7e7
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
+> > @@ -0,0 +1,23 @@
+> > +Allwinner sun50i USB3 PHY
+> > +-----------------------
+> > +
+> > +Required properties:
+> > +- compatible : should be one of
+> > +  * allwinner,sun60i-h6-usb3-phy
+> > +- reg : a list of offset + length pairs
+> > +- #phy-cells : from the generic phy bindings, must be 0
+> > +- clocks : phandle + clock specifier for the phy clock
+> > +- resets : phandle + reset specifier for the phy reset
+> > +
+> > +Optional Properties:
+> > +- vbus-supply : a phandle to a regulator that provides power to
+> > VBUS.
+>=20
+> This belongs in a connector node as it is part of the connector
+> unless=20
+> the phy physically needs Vbus for power.
+>=20
+> But others have done this, so all the phys can just be wrong...
 
-Guo,
+How should we reference the connector?
 
-I'm willing to take your timer related patches but you have to put a
-proper description.
+Via OF graph or simply a property in PHY node?
 
-  -- Daniel
+>=20
+> > +
+> > +Example:
+> > +	usb3phy: phy@5210000 {
+>=20
+> usb-phy@
+>=20
+> > +		compatible =3D "allwinner,sun50i-h6-usb3-phy";
+> > +		reg =3D <0x5210000 0x10000>;
+> > +		clocks =3D <&ccu CLK_USB_PHY1>;
+> > +		resets =3D <&ccu RST_USB_PHY1>;
+> > +		#phy-cells =3D <0>;
+> > +		status =3D "disabled";
+>=20
+> Don't show status in examples.
+>=20
+> > +	};
+> > --=20
+> > 2.18.0
+> >=20
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-
-> Changelog:
->  - Remove the set_irq_createmapping call back in csky-mp-intc.c.
->  - Convert the cpumask to an interrupt-controller specific representation
->    in driver's code, and not the SMP code's, and also modify the related
->    codes in csky kernel patchset.
->  - Add COMPILE_TEST for csky_mp_timer.
->  - Fixup smp boot error, cpuhp_setup_state must after timer_of_init()
->    for csky_mp_timer.
-> 
-> Any feedback is welcome, thx for all people review my patchset.
-> 
-> Guo Ren (8):
->   irqchip: add C-SKY SMP interrupt controller
->   dt-bindings: interrupt-controller: C-SKY SMP intc
->   irqchip: add C-SKY APB bus interrupt controller
->   dt-bindings: interrupt-controller: C-SKY APB intc
->   clocksource: add C-SKY SMP timer
->   dt-bindings: timer: C-SKY Multi-processor timer
->   clocksource: add gx6605s SOC system timer
->   dt-bindings: timer: gx6605s SOC timer
-> 
->  .../interrupt-controller/csky,apb-intc.txt         |  62 +++++
->  .../bindings/interrupt-controller/csky,mpintc.txt  |  40 +++
->  .../bindings/timer/csky,gx6605s-timer.txt          |  42 ++++
->  .../devicetree/bindings/timer/csky,mptimer.txt     |  42 ++++
->  drivers/clocksource/Kconfig                        |  18 ++
->  drivers/clocksource/Makefile                       |   2 +
->  drivers/clocksource/timer-gx6605s.c                | 154 ++++++++++++
->  drivers/clocksource/timer-mp-csky.c                | 173 +++++++++++++
->  drivers/irqchip/Kconfig                            |  17 ++
->  drivers/irqchip/Makefile                           |   2 +
->  drivers/irqchip/irq-csky-apb-intc.c                | 274 +++++++++++++++++++++
->  drivers/irqchip/irq-csky-mpintc.c                  | 198 +++++++++++++++
->  include/linux/cpuhotplug.h                         |   1 +
->  13 files changed, 1025 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/csky,gx6605s-timer.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/csky,mptimer.txt
->  create mode 100644 drivers/clocksource/timer-gx6605s.c
->  create mode 100644 drivers/clocksource/timer-mp-csky.c
->  create mode 100644 drivers/irqchip/irq-csky-apb-intc.c
->  create mode 100644 drivers/irqchip/irq-csky-mpintc.c
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
