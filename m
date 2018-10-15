@@ -1,157 +1,132 @@
-From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Subject: RE: [PATCH v2 0/7] spi: add support for octal mode
-Date: Mon, 15 Oct 2018 11:58:43 +0000
-Message-ID: <VI1PR04MB1038DA393DB625463800956699FD0@VI1PR04MB1038.eurprd04.prod.outlook.com>
-References: <1539603969-21076-1-git-send-email-yogeshnarayan.gaur@nxp.com>
- <20181015135408.49142c88@bbrezillon>
+From: <hannah@marvell.com>
+Subject: [PATCH 1/4] iommu/arm-smmu: introduce wrapper for writeq/readq
+Date: Mon, 15 Oct 2018 15:00:43 +0300
+Message-ID: <1539604846-21151-2-git-send-email-hannah@marvell.com>
+References: <1539604846-21151-1-git-send-email-hannah@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181015135408.49142c88@bbrezillon>
-Content-Language: en-US
+In-Reply-To: <1539604846-21151-1-git-send-email-hannah@marvell.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: catalin.marinas@arm.com, will.deacon@arm.com, corbet@lwn.net, joro@8bytes.org, robh+dt@kernel.org, gregory.clement@bootlin.com, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, robin.murphy@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, thomas.petazzoni@bootlin.com, nadavh@marvell.com, omrii@marvell.com, Hanna Hawa <hannah@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+From: Hanna Hawa <hannah@marvell.com>
 
-> -----Original Message-----
-> From: Boris Brezillon [mailto:boris.brezillon@bootlin.com]
-> Sent: Monday, October 15, 2018 5:24 PM
-> To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-> Cc: linux-mtd@lists.infradead.org; marek.vasut@gmail.com; vigneshr@ti.com=
-;
-> linux-spi@vger.kernel.org; devicetree@vger.kernel.org; robh@kernel.org;
-> mark.rutland@arm.com; shawnguo@kernel.org; linux-arm-
-> kernel@lists.infradead.org; computersforpeace@gmail.com;
-> frieder.schrempf@exceet.de; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v2 0/7] spi: add support for octal mode
->=20
-> Hi Yogesh,
->=20
-> On Mon, 15 Oct 2018 11:47:55 +0000
-> Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
->=20
-> > Add support for octal mode IO data transfer.
-> > Micron flash, mt35xu512aba, supports octal mode data transfer and NXP
-> > FlexSPI controller supports 8 data lines for data transfer (Rx/Tx).
-> >
-> > Patch series
-> > * Add support for octal mode flags and parsing of same in spi driver.
-> > * Add opcodes for octal I/O commands in spi-nor framework, Read and Wri=
-te
-> proto for (1-1-8/1-8-8) mode.
-> >   Opcodes are added as per octal data IO commands required for
-> mt35xu512aba [1] flash.
-> > * Add parsing logic for spi-mem framework and m25p80.c device file.
-> > * Add mode bit required for octal mode in nxp-fspi driver [2].
-> > * Define binding property 'spi-rx/tx-bus-width' for LX2160ARDB target [=
-2].
-> >
-> > Cherry pick below 2 patches (from:
-> https://emea01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit.=
-ker
-> nel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fbroonie%2Fspi.git&amp;da
-> ta=3D02%7C01%7Cyogeshnarayan.gaur%40nxp.com%7C9af69996cae344b6e7b70
-> 8d63294eaf5%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C6367520
-> 12521352025&amp;sdata=3DeuwK9X2tael3Q69QO%2BirRznB%2BHKazDbumdAOp
-> eZvxCc%3D&amp;reserved=3D0):
-> >     c639f871febe6667d9afce28108c634e5636c735 spi: spi-mem: Fix inverted
-> logic in op sanity check
-> >     db122eb8a749a1eff038f9a282c620ab16c4be1d spi: spi-mem: Add extra
-> > sanity checks on the op param
-> >
-> > Tested on LX2160ARDB target with nxp-fspi driver, below are Read
-> > performance number of 1-1-1 and 1-1-8 read protocol.
-> >
-> >  root@lxxx:~# cat /proc/mtd
-> >  dev:    size   erasesize  name
-> >  mtd0: 04000000 00001000 "spi0.0"
-> >  mtd1: 04000000 00001000 "spi0.1"
-> >  root@lxxx:~# time mtd_debug read /dev/mtd0 0x0 0x1000000 0read
-> > Copied 16777216 bytes from address 0x00000000 in flash to 0read
-> >
-> >  real    0m2.792s
-> >  user    0m0.000s
-> >  sys     0m2.790s
-> >  root@lxxx:~# time mtd_debug read /dev/mtd1 0x0 0x1000000 0read
-> > Copied 16777216 bytes from address 0x00000000 in flash to 0read
-> >
-> >  real    0m0.441s
-> >  user    0m0.000s
-> >  sys     0m0.440s
-> >  root@ls1012ardb:~#
-> >
-> >  Flash device MTD0 configured in 1-1-1 protocol.
-> >  Flash device MTD1 configured in 1-1-8 protocol.
-> >
-> > [1]
-> > https://emea01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpa=
-t
-> > chwork.ozlabs.org%2Fproject%2Flinux-
-> mtd%2Flist%2F%3Fseries%3D70384&amp
-> > ;data=3D02%7C01%7Cyogeshnarayan.gaur%40nxp.com%7C9af69996cae344b6e
-> 7b708d
-> >
-> 63294eaf5%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C636752012
-> 521352
-> >
-> 025&amp;sdata=3Dldk0ny8vksO%2FayIsYX26M4akFUojtaP1YyOtpMEGJZA%3D&a
-> mp;res
-> > erved=3D0 [2]
-> > https://emea01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpa=
-t
-> > chwork.ozlabs.org%2Fproject%2Flinux-
-> mtd%2Flist%2F%3Fseries%3D70210&amp
-> > ;data=3D02%7C01%7Cyogeshnarayan.gaur%40nxp.com%7C9af69996cae344b6e
-> 7b708d
-> >
-> 63294eaf5%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C636752012
-> 521352
-> >
-> 025&amp;sdata=3Dwq%2BCnrk4Ovx4itHrZfv%2FGH5raStF91hfjHBQmO9Sjq0%3D&
-> amp;r
-> > eserved=3D0
-> >
-> > Yogesh Gaur (7):
-> >   spi: add support for octal I/O data transfer
-> >   mtd: spi-nor: add opcodes for octal Read/Write commands
-> >   mtd: spi-nor: add octal read flag for flash mt35xu512aba
-> >   mtd: m25p80: add support of octal I/O transfer
-> >   spi: spi-mem: add support for octal I/O data transfer
->=20
-> Patch 5 should be moved before patch 4 (ideally in 2nd position) if you w=
-ant this
-> series to be bisectable.
->=20
+This patch introduce the smmu_writeq_relaxed/smmu_readq_relaxed
+helpers, as preparation to add specific Marvell work-around for
+accessing 64bit width registers of ARM SMMU.
 
-Ok.
-For now, order which I have selected is as per the comments from Vignesh. W=
-ould resend again with the suggested order.
+Signed-off-by: Hanna Hawa <hannah@marvell.com>
+---
+ drivers/iommu/arm-smmu.c | 36 +++++++++++++++++++++++++++---------
+ 1 file changed, 27 insertions(+), 9 deletions(-)
 
---
-Regards
-Yogesh Gaur
-
-> Regards,
->=20
-> Boris
->=20
-> >   spi: nxp-fspi: add mode flag bit for octal support
-> >   arm64: dts: lx2160a: update fspi node
-> >
-> > Changes for v2:
-> >  Incorporated review comments of Boris and Vignesh.
-> >
-> >  arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts |  4 ++++
-> >  drivers/mtd/devices/m25p80.c                      |  9 ++++++++-
-> >  drivers/mtd/spi-nor/spi-nor.c                     | 15 ++++++++++++++-
-> >  drivers/spi/spi-mem.c                             |  9 ++++++++-
-> >  drivers/spi/spi-nxp-fspi.c                        |  4 ++--
-> >  drivers/spi/spi.c                                 |  6 ++++++
-> >  include/linux/mtd/spi-nor.h                       |  8 ++++++++
-> >  include/linux/spi/spi.h                           |  2 ++
-> >  8 files changed, 52 insertions(+), 5 deletions(-)
-> >
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index fd1b80e..fccb1d4 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -88,9 +88,11 @@
+  * therefore this actually makes more sense than it might first appear.
+  */
+ #ifdef CONFIG_64BIT
+-#define smmu_write_atomic_lq		writeq_relaxed
++#define smmu_write_atomic_lq(smmu, val, reg)	\
++					smmu_writeq_relaxed(smmu, val, reg)
+ #else
+-#define smmu_write_atomic_lq		writel_relaxed
++#define smmu_write_atomic_lq(smmu, val, reg)	\
++					writel_relaxed(val, reg)
+ #endif
+ 
+ /* Translation context bank */
+@@ -270,6 +272,19 @@ static struct arm_smmu_domain *to_smmu_domain(struct iommu_domain *dom)
+ 	return container_of(dom, struct arm_smmu_domain, domain);
+ }
+ 
++static inline void smmu_writeq_relaxed(struct arm_smmu_device *smmu,
++				       u64 val,
++				       void __iomem *addr)
++{
++	writeq_relaxed(val, addr);
++}
++
++static inline u64 smmu_readq_relaxed(struct arm_smmu_device *smmu,
++				     void __iomem *addr)
++{
++	return readq_relaxed(addr);
++}
++
+ static void parse_driver_options(struct arm_smmu_device *smmu)
+ {
+ 	int i = 0;
+@@ -465,6 +480,7 @@ static void arm_smmu_tlb_inv_range_nosync(unsigned long iova, size_t size,
+ 					  size_t granule, bool leaf, void *cookie)
+ {
+ 	struct arm_smmu_domain *smmu_domain = cookie;
++	struct arm_smmu_device *smmu = smmu_domain->smmu;
+ 	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
+ 	bool stage1 = cfg->cbar != CBAR_TYPE_S2_TRANS;
+ 	void __iomem *reg = ARM_SMMU_CB(smmu_domain->smmu, cfg->cbndx);
+@@ -483,7 +499,7 @@ static void arm_smmu_tlb_inv_range_nosync(unsigned long iova, size_t size,
+ 			iova >>= 12;
+ 			iova |= (u64)cfg->asid << 48;
+ 			do {
+-				writeq_relaxed(iova, reg);
++				smmu_writeq_relaxed(smmu, iova, reg);
+ 				iova += granule >> 12;
+ 			} while (size -= granule);
+ 		}
+@@ -492,7 +508,7 @@ static void arm_smmu_tlb_inv_range_nosync(unsigned long iova, size_t size,
+ 			      ARM_SMMU_CB_S2_TLBIIPAS2;
+ 		iova >>= 12;
+ 		do {
+-			smmu_write_atomic_lq(iova, reg);
++			smmu_write_atomic_lq(smmu, iova, reg);
+ 			iova += granule >> 12;
+ 		} while (size -= granule);
+ 	}
+@@ -548,7 +564,7 @@ static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
+ 		return IRQ_NONE;
+ 
+ 	fsynr = readl_relaxed(cb_base + ARM_SMMU_CB_FSYNR0);
+-	iova = readq_relaxed(cb_base + ARM_SMMU_CB_FAR);
++	iova = smmu_readq_relaxed(smmu, cb_base + ARM_SMMU_CB_FAR);
+ 
+ 	dev_err_ratelimited(smmu->dev,
+ 	"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cb=%d\n",
+@@ -698,9 +714,11 @@ static void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
+ 		writel_relaxed(cb->ttbr[0], cb_base + ARM_SMMU_CB_TTBR0);
+ 		writel_relaxed(cb->ttbr[1], cb_base + ARM_SMMU_CB_TTBR1);
+ 	} else {
+-		writeq_relaxed(cb->ttbr[0], cb_base + ARM_SMMU_CB_TTBR0);
++		smmu_writeq_relaxed(smmu, cb->ttbr[0],
++				    cb_base + ARM_SMMU_CB_TTBR0);
+ 		if (stage1)
+-			writeq_relaxed(cb->ttbr[1], cb_base + ARM_SMMU_CB_TTBR1);
++			smmu_writeq_relaxed(smmu, cb->ttbr[1],
++					    cb_base + ARM_SMMU_CB_TTBR1);
+ 	}
+ 
+ 	/* MAIRs (stage-1 only) */
+@@ -1279,7 +1297,7 @@ static phys_addr_t arm_smmu_iova_to_phys_hard(struct iommu_domain *domain,
+ 	/* ATS1 registers can only be written atomically */
+ 	va = iova & ~0xfffUL;
+ 	if (smmu->version == ARM_SMMU_V2)
+-		smmu_write_atomic_lq(va, cb_base + ARM_SMMU_CB_ATS1PR);
++		smmu_write_atomic_lq(smmu, va, cb_base + ARM_SMMU_CB_ATS1PR);
+ 	else /* Register is only 32-bit in v1 */
+ 		writel_relaxed(va, cb_base + ARM_SMMU_CB_ATS1PR);
+ 
+@@ -1292,7 +1310,7 @@ static phys_addr_t arm_smmu_iova_to_phys_hard(struct iommu_domain *domain,
+ 		return ops->iova_to_phys(ops, iova);
+ 	}
+ 
+-	phys = readq_relaxed(cb_base + ARM_SMMU_CB_PAR);
++	phys = smmu_readq_relaxed(smmu, cb_base + ARM_SMMU_CB_PAR);
+ 	spin_unlock_irqrestore(&smmu_domain->cb_lock, flags);
+ 	if (phys & CB_PAR_F) {
+ 		dev_err(dev, "translation fault!\n");
+-- 
+1.9.1
