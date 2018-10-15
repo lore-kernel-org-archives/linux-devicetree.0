@@ -1,72 +1,39 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v3 2/9] dt-bindings: ti-lmu: Remove LM3697
-Date: Mon, 15 Oct 2018 23:45:12 +0200
-Message-ID: <20181015214512.GA2001@amd>
-References: <20181011165123.32198-3-dmurphy@ti.com>
- <20181011182734.GA7973@amd>
- <4fcb91c7-b2b2-798d-8a41-fa1b475086e0@ti.com>
- <8c1559e1-b703-4c98-8bd9-7c9993bd59f5@gmail.com>
- <20181012162619.GA28573@bogus>
- <20181012180312.GB5565@amd>
- <60cc9238-aba2-aa6a-64a4-2b5e20835549@gmail.com>
- <CAL_Jsq+Yspr_iNP1eYanvtmiuMf-xNEZ0suDH3tQayV=V5r5=g@mail.gmail.com>
- <73647af4-0258-49a9-d9b6-eeef7e7813dc@gmail.com>
- <5c7f03cc-4d45-6010-523d-46721c218731@ti.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 3/5] clk: lochnagar: Add support for the Cirrus Logic Lochnagar
+Date: Mon, 15 Oct 2018 14:53:56 -0700
+Message-ID: <153964043651.5275.8596868422770600346@swboyd.mtv.corp.google.com>
+References: <20181008132542.19775-1-ckeepax@opensource.cirrus.com>
+ <20181008132542.19775-3-ckeepax@opensource.cirrus.com>
+ <153924124658.207691.10370075148426001371@swboyd.mtv.corp.google.com>
+ <20181011132602.GD1653@imbe.wolfsonmicro.main>
+ <153935999691.5275.1587207165396958375@swboyd.mtv.corp.google.com>
+ <20181015104905.GF1653@imbe.wolfsonmicro.main>
+ <153962159992.5275.9275448716859702011@swboyd.mtv.corp.google.com>
+ <20181015165528.GD12949@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5c7f03cc-4d45-6010-523d-46721c218731@ti.com>
+In-Reply-To: <20181015165528.GD12949@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh@kernel.org>, Lee Jones <lee.jones@linaro.org>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, lee.jones@linaro.org, linus.walleij@linaro.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Quoting Mark Brown (2018-10-15 09:55:28)
+> On Mon, Oct 15, 2018 at 09:39:59AM -0700, Stephen Boyd wrote:
+> =
 
---a8Wt8u1KmwUX3Y2C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > Ok if there's going to be read/volatile regs and defaults then it makes
+> > sense to leave the defines in some shared header file, which is
+> > unfortunate for the independent merge of driver bits. Either way, I
+> =
 
-Hi!
+> Kconfig dependencies take care of that pretty well - if there's a
+> dependency on the MFD then the function driver just won't get built
+> until the MFD gets merged.  =
 
-> >> Given this one seems to have not really been finished, it's probably
-> >> okay to make changes in this case. Still, it would be good to see
-> >> patches structured so that it's obvious we're breaking things. But how
-> >> the patches are structured doesn't matter until there's some agreement
-> >> on the end result.
-> >=20
-> > OK, so if I'm getting it right, the correct patch structure in this case
-> > means that changes removing bindings from MFD and moving them along
-> > with the modifications to the LED subsystem should be placed in a single
-> > patch.
-> >=20
-> > Dan, could you please arrange the next patch set version accordingly?
->=20
-> Yes I can squash the DT bindings patches and call it a "move and modify"
 
-You can do move without problems. But if you plan to modify them,
-please try to change as little as possible, make it separate patch and
-explain why new version is better than old one.
-
-Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---a8Wt8u1KmwUX3Y2C
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvFCmgACgkQMOfwapXb+vLlCACdE9/pTkDCsUOQs5V3SQPhXgeN
-rnEAn2i3kGhzClVvDPKYX6+2Tw2FyH83
-=UNmj
------END PGP SIGNATURE-----
-
---a8Wt8u1KmwUX3Y2C--
+Yep. I'm just saying that I can't merge the clk driver part by itself
+when there's a shared header dependency, unless someone provides a
+stable tree with the header file patch applied to it.
