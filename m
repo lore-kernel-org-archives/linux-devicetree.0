@@ -1,123 +1,86 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
-Date: Mon, 15 Oct 2018 11:40:53 +0200
-Message-ID: <20181015094053.7bpydkdhyds25n3u@pengutronix.de>
-References: <1539527419-23613-1-git-send-email-aisheng.dong@nxp.com>
- <1539527419-23613-3-git-send-email-aisheng.dong@nxp.com>
- <20181015065859.lxevjroly435hlaq@pengutronix.de>
- <AM0PR04MB42117867A50BB18D8127BE8080FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <20181015082751.ytuleg67p5pgtnov@pengutronix.de>
- <AM0PR04MB421179CEB214D46BCDE6ACF280FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/9] arm64: dts: sdm845: Add gpu and gmu
+ device nodes
+Date: Mon, 15 Oct 2018 15:33:27 +0530
+Message-ID: <20181015100327.qoojonf46lh6g3sh@vireshk-i7>
+References: <20180827151112.25211-1-jcrouse@codeaurora.org>
+ <20180827151112.25211-6-jcrouse@codeaurora.org>
+ <20181010094628.wejfgmvcv6stzoco@vireshk-i7>
+ <20181010142905.GB9977@jcrouse-lnx.qualcomm.com>
+ <20181010143149.4e3ct3efkuwxa2hw@vireshk-i7>
+ <20181010144856.GC9977@jcrouse-lnx.qualcomm.com>
+ <20181010145139.nvalsr2ij2lj53dh@vireshk-i7>
+ <20181010151006.GD9977@jcrouse-lnx.qualcomm.com>
+ <20181011050216.4ba5i3ghh5rbvjbl@vireshk-i7>
+ <20181011145456.GG9977@jcrouse-lnx.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <AM0PR04MB421179CEB214D46BCDE6ACF280FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20181011145456.GG9977-9PYrDHPZ2Orvke4nUoYGnHL1okKdlPRT@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 15, 2018 at 09:03:04AM +0000, A.s. Dong wrote:
-> > -----Original Message-----
-> > From: Sascha Hauer [mailto:s.hauer@pengutronix.de]
-> > Sent: Monday, October 15, 2018 4:28 PM
-> > To: A.s. Dong <aisheng.dong@nxp.com>
-> > Cc: linux-arm-kernel@lists.infradead.org; Mark Rutland
-> > <mark.rutland@arm.com>; dongas86@gmail.com; devicetree@vger.kernel.org;
-> > catalin.marinas@arm.com; will.deacon@arm.com; robh+dt@kernel.org;
-> > dl-linux-imx <linux-imx@nxp.com>; kernel@pengutronix.de; Fabio Estevam
-> > <fabio.estevam@nxp.com>; shawnguo@kernel.org
-> > Subject: Re: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
-> > 
-> > On Mon, Oct 15, 2018 at 08:08:31AM +0000, A.s. Dong wrote:
-> > > > > +		imx8qx-pm {
-> > > > > +			compatible = "fsl,scu-pd";
-> > > >
-> > > > I missed this earlier, but there should be a i.MX8qp specific
-> > > > compatible as the SCU API might change for future SoCs.
-> > > >
-> > >
-> > > We still do not see that requirement up till now. Not sure if it would
-> > > be possible in the future. I see low possibilities.
-> > > SCU IPC is designed to be generic to all MX8 SCU firmwares.
-> > 
-> > And i.MX9? i.MX10?
-> > 
-> 
-> MX8DM MX8DXP
-
-I was not talking about existing SoCs, I was talking about future SoCs.
-
-> 
-> > > Even it changes, SCU firmware version control may helps.
-> > 
-> > It's not the first time that the position of the version field changes with a
-> > newer version.
-> > 
-> 
-> I understand your worry. 
-> Up till now all SCU firmware based SoCs are all using one generic IPC driver internally.
-> And I have not heard a possible changing in the future.
-> I double checked the SCU firmware implementation that the IPC
-> Is deigned to be platform independent. So it's less to be changed.
-> So I wonder if this could be over worried.
-> Even it is changed, (quite less probility), we still can user version
-> To distinguish them, just like arm,scpi , arm,scmi. Right?
-
-You can still add and use a generic compatible, but does it hurt when
-you add a SoC specific one that you *can* use should you have to?
-
-> 
-> > >
-> > > > > +			compatible = "fsl,imx7ulp-lpuart";
-> > > > > +			compatible = "fsl,imx7ulp-lpi2c";
-> > > > > +			compatible = "fsl,imx7d-usdhc";
-> > > >
-> > > > All these lack the most specific imx8qp compatible.
-> > > >
-> > >
-> > > Adding them requires binding doc update as well.
-> > > S I suppose they could be added later when the QXP specific features
-> > > are really supported by the drivers.
-> > > Do you think it's okay?
-> > 
-> > Newer Kernels should work with older device trees, so once you roll out these
-> > compatibles it's too late already.
-> > 
-> 
-> The backwards compatible string is used to guarantee a basic function.
-> Even we add qxp specific compatible string later, it still can work with
-> backwards function. So I'm not quite get what the real problem is.
-> And this is the initial support that we don't expect the full features
-> with such an early device tree, right?
-
-By not adding a SoC compatible you lose the possibility to add a SoC
-specific fixup without changing the device tree or you have to work with
-quirks like:
-
-https://elixir.bootlin.com/linux/latest/source/drivers/clocksource/timer-imx-gpt.c#L521
-
-or
-
-https://elixir.bootlin.com/linux/latest/source/drivers/spi/spi-imx.c#L1182
-
-So far we have added new compatibles with each new SoC type for good
-reasons, so why should we change this?
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+T24gMTEtMTAtMTgsIDA4OjU0LCBKb3JkYW4gQ3JvdXNlIHdyb3RlOgoKSSB1bmRlcnN0YW5kIHdo
+YXQgeW91IGFyZSB0cnlpbmcgdG8gc2F5IEpvcmRhbiBhbmQgSSBhZ3JlZSB3aXRoIHRob3NlCmV4
+cGVjdGF0aW9ucy4gQnV0IHdoYXQgSSBhbSBsb29raW5nIGZvciBpcyBjb25zaXN0ZW5jeSBhY3Jv
+c3MgUWNvbQpjb2RlIHVzaW5nIHRoZSBzYW1lIGZlYXR1cmUuIFdoaWNoIGVuYWJsZXMgYmV0dGVy
+IHN1cHBvcnQgZm9yIHRoZSBjb2RlCmdvaW5nIGZvcndhcmQsIGV0Yy4gQW5kIGlmIHdlIGFyZSBn
+b2luZyB0byBnbyBhIGRpZmZlcmVudCB3YXksIHRoZXJlCm11c3QgYmUgYSB2ZXJ5IGdvb2QgcmVh
+c29uIHRvIGRvIHRoYXQuCgpCdXQgbGV0IG1lIHRyeSB0byB1bmRlcnN0YW5kIHRoZSBoYXJkd2Fy
+ZSBhIGJpdCBmaXJzdC4uCgo+IFRoZSBHUFUgZG9tYWluIGlzIGNvbXBsZXRlbHkgY29udHJvbGxl
+ZCBieSB0aGUgR01VIGhhcmR3YXJlIGFuZCBpcyBwb3dlcmVkCj4gaW5kZXBlbmRlbnRseSBvZiB0
+aGUgQ1BVLiBGb3IgdmFyaW91cyByZWFzb25zIHRoZSBHTVUgY2FuJ3QgY29tZSB1cCB3aXRoCj4g
+dGhlIHZvdGUgaXRzZWxmIHNvIHdlIG5lZWQgdG8gY29uc3RydWN0IGEgdm90ZSBhbmQgc2VuZCBp
+dCBkdXJpbmcKPiBpbml0aWFsaXphdGlvbi4KClNvIGl0IGlzIHRoZSBrZXJuZWwgd2hpY2ggbmVl
+ZHMgdG8gc2VuZCB0aGlzIHZvdGUgb24gYmVoYWxmIG9mIHRoZSBHTVUKdG8gUlBNID8gV2hvIGRv
+ZXMgdGhlIHZvdGUgYWdncmVnYXRpb24gaW4gdGhpcyBjYXNlID8gSSB0aG91Z2h0IHRoZXJlCmhh
+cyB0byBiZSBhIHNpbmdsZSB2b3RlIGdvaW5nIGZyb20gQ1BVIHNpZGUgdG8gdGhlIFJQTS4gSXNu
+J3QgdGhlIEdNVQp2b3RlIHBhcnQgb2YgdGhhdCA/Cgo+IEZvciB0aGlzIHdlIGR1cGxpY2F0ZSB0
+aGUgY29kZSB0aGF0IHJtcGhkIGRvZXMgdG8gcXVlcnkgdGhlCj4gY21kLWRiIGFuZCBidWlsZCB0
+aGUgdmFsdWVzIHVzaW5nIHFjb20sbGV2ZWwgYXMgYSBndWlkZS4gVGhpcyBpcyBuZWNlc3NhcnkK
+PiBjb3B5cGFzdGEgYXMgdGhlIGFsdGVybmF0aXZlIHdvdWxkIGJlIHRvIGFkZCB0aGUgaG9va3Mg
+aW50byBnZW5wZCBvciBhZGQgYQo+IHNpZGUgaG9vayBpbnRvIHRoZSBycG1oZCB0byBnZXQgdGhl
+IHZhbHVlcyB3ZSBuZWVkIGFuZCBub25lIG9mIHRoYXQgaXMgd29ydGgKPiBpdCBmb3IgYSBmZXcg
+bGluZXMgb2Ygd2Fsa2luZyBhbiBhcnJheS4KCkluaXRpYWxseSB3aGVuIEkgd2FzIGRlc2lnbmlu
+ZyB0aGlzIHFjb20sbGV2ZWwgb3IgZ2VuZXJpY2FsbHkgY2FsbGVkCiJwZXJmb3JtYW5jZS1zdGF0
+ZSIgdGhpbmd5LCBJIGtlcHQgdGhlIHZhbHVlcyBkaXJlY3RseSBpbiB0aGUgT1BQIG5vZGUKb2Yg
+dGhlIGNvbnN1bWVyICh0aGUgd2F5IHlvdSBoYXZlIGRvbmUgaXQpLCBidXQgdGhlbiB0aGVyZSB3
+ZXJlCmRpc2N1c3Npb25zIHdoaWNoIGZvcmNlZCB1cyB0byBtb3ZlIHRoaXMgdG8gdGhlIGdlbnBk
+IGxldmVsLiBGb3IKZXhhbXBsZSwgd2hhdCB3aWxsIHlvdSBkbyBpZiB5b3UgYWxzbyBuZWVkIHRv
+IHBhc3Mgdm9sdGFnZS9jdXJyZW50IGluCmFkZGl0aW9uIHRvIHBlcmZvcm1hbmNlLXN0YXRlIHRv
+IHRoZSBSUE0/IFN0ZXBoZW5CIGFjdHVhbGx5IHNhaWQgd2UKbWF5IG9yIG1heSBub3Qga25vdyB0
+aGVzZSB2YWx1ZXMgYW5kIHdlIG11c3Qgc3VwcG9ydCBib3RoIHRoZSBjYXNlcy4KClRoZSBvcHAt
+bWljcm92b2x0IHByb3BlcnRpZXMgb2YgdGhlIGNvbnN1bWVyIGRldmljZSAoR1BVIGhlcmUpIHNo
+b3VsZApiZSB1c2VkIHRvIGhhbmRsZSB0aGUgcmVndWxhdG9ycyB3aGljaCBhcmUgY29udHJvbGxl
+ZCBieSBrZXJuZWwgaXRzZWxmCmFuZCBzbyB0aGV5IGNhbid0IGFkZGl0aW9uYWxseSBoYW5kbGUg
+dGhlIFJQTXMgZGF0YS4gQW5kIHNvIHdlIGNyZWF0ZWQKc2VwYXJhdGUgT1BQIHRhYmxlIGZvciB0
+aGUgUlBNIGFuZCByZXByZXNlbnRlZCB0aGF0IGFzIGEgZ2VucGQgYW5kIHdlCm5vdyBoYW5kbGUg
+dGhlIGFnZ3JlZ2F0aW9uIGluIGdlbnBkIGNvcmUgaXRzZWxmIG9uIGJlaGFsZiBvZiBhbGwgdGhl
+CmNvbnN1bWVycy4KCj4gcWNvbSxsZXZlbCBzZXJ2ZXMgdGhlIHB1cnBvc2UgZm9yIHVzIGluIHRo
+aXMgY2FzZSBiZWNhdXNlIHdlIGNhbiBnZXQgdGhlIHZhbHVlCj4gd2UgbmVlZCBhbmQgY29uc3Ry
+dWN0IHRoZSB2b3RlLiBJZiB3ZSBtb3ZlIHRvIHVzaW5nIHJlcXVpcmVkLW9wcCwgdGhhdHMganVz
+dAo+IGFub3RoZXIgc3RlcCBvZiBwYXJzaW5nIGZvciB0aGUgZHJpdmVyIGFuZAoKVGhlIE9QUCBj
+b3JlIHNoYWxsIGhhdmUgYWxsIHRoZSBpbmZyYXN0cnVjdHVyZSB0byBwYXJzZSB0aGVzZSB0aGlu
+Z3MKYW5kIHdlIHNob3VsZCBrZWVwIGFsbCBzdWNoIGNvZGUgdGhlcmUgdG8gYXZvaWQgZHVwbGlj
+YXRpb24uCgo+IGl0IGVzdGFibGlzaGVzIGEgcmVsYXRpb25zaGlwIHdpdGgKPiBybXBoZCBvbiB0
+aGUgQ1BVIHRoYXQgc2hvdWxkbid0IGV4aXN0LgoKU3VyZS4gSSBhbSBub3Qgc3VnZ2VzdGluZyB0
+aGF0IHRoZSByZXByZXNlbnRhdGlvbiBpbiBzb2Z0d2FyZSBzaG91bGQKYmUgZGlmZmVyZW50IGZy
+b20gd2hhdCB0aGUgaGFyZHdhcmUgaXMsIG1heWJlIEkgZGlkbid0IHVuZGVyc3Rvb2QgdGhlCmhh
+cmR3YXJlIGRlc2lnbiB3ZWxsLgoKPiBJIGRvIHNlZSBhIGdvb2QgYXJndW1lbnQgZm9yIHVzaW5n
+IHRoZSBzeW1ib2xpYyBiaW5kaW5ncyAoaS5lLgo+IFJQTUhfUkVHVUxBVE9SX0xFVkVMX1RVUkJP
+X0wxKSBhbmQgd2UgY2FuIGRvIHRoYXQgZWFzaWx5IGJ1dCBiZXlvbmQgdGhhdCBJCj4gZG9uJ3Qg
+dGhpbmsgdGhhdCB3ZSBuZWVkIHRoZSBleHRyYSBwYXJzaW5nIHN0ZXAuCgotLSAKdmlyZXNoCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBt
+YWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
