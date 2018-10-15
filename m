@@ -1,86 +1,58 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt: bindings: add new dt entry to indentify external
- FEM
-Date: Mon, 15 Oct 2018 14:24:25 -0500
-Message-ID: <20181015192425.GA19699@bogus>
-References: <1538653364-1239-1-git-send-email-bperumal@codeaurora.org>
- <1538653364-1239-2-git-send-email-bperumal@codeaurora.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v3 13/18] of: overlay: check prevents multiple fragments
+ touching same property
+Date: Mon, 15 Oct 2018 12:30:11 -0700
+Message-ID: <f7797d5b-7b9c-5279-b388-31c7a01f48d1@gmail.com>
+References: <1539563070-12969-1-git-send-email-frowand.list@gmail.com>
+ <1539563070-12969-14-git-send-email-frowand.list@gmail.com>
+ <b6ee53f7e02cc3ea52713ae82402e97d7050cb3e.camel@perches.com>
+ <850f0866-1189-5a49-01c5-79caf270abbd@gmail.com>
+ <16f48648393366d91e43cd66b3d0a346b1ed29ab.camel@perches.com>
+ <e045d69a-7896-3ff1-8472-2f51c2468d7f@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1538653364-1239-2-git-send-email-bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e045d69a-7896-3ff1-8472-2f51c2468d7f@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 04, 2018 at 05:12:43PM +0530, Bhagavathi Perumal S wrote:
-> This adds new dt entry ext-fem-name, it is used by ath10k driver
-> to select correct timing parameters and configure it in target wifi hardware.
-> The Front End Module(FEM) normally includes tx power amplifier(PA) and
-> rx low noise amplifier(LNA). The default timing parameters like tx end to
-> PA off timing values were fine tuned for internal FEM used in reference
-> design. And these timing values can not be same if ODM modifies hardware
-> design with different external FEM. This DT entry helps to choose correct
-> timing values in driver if different external FEM hardware used.
-
-'dt-bindings: net: ath10k: ...' for the subject please.
-
+On 10/14/18 20:21, Frank Rowand wrote:
+> On 10/14/18 18:55, Joe Perches wrote:
+>> On Sun, 2018-10-14 at 18:52 -0700, Frank Rowand wrote:
+>>> On 10/14/18 18:06, Joe Perches wrote:
+>>>> On Sun, 2018-10-14 at 17:24 -0700, frowand.list@gmail.com wrote:
+>>>>> From: Frank Rowand <frank.rowand@sony.com>
+>>>>>
+>>>>> Add test case of two fragments updating the same property.  After
+>>>>> adding the test case, the system hangs at end of boot, after
+>>>>> after slub stack dumps from kfree() in crypto modprobe code.
+>> []
+>>>> I think this is worse performance than before.
+>>>>
+>>>> This now walks all entries when before it would
+>>>> return -EINVAL directly when it found a match.
+>>>
+>>> Yes, it is worse performance, but that is OK.
+>>>
+>>> This is a check that is done when a devicetree overlay is applied.
+>>> If an error occurs then that means that the overlay was incorrectly
+>>> specified.  The file drivers/of/unittest-data/overlay_bad_add_dup_prop.dts
+>>> in this patch provides an example of how a bad overlay can be created.
+>>>
+>>> Once an error was detected, the check could return immediately, or it
+>>> could continue to give a complete list of detected errors.  I chose to
+>>> give the complete list of detected errors.
+>>
+>> Swell.  Please describe that in the commit message.
 > 
-> Signed-off-by: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  .../bindings/net/wireless/qcom,ath10k.txt          | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> index 7fd4e8c..fbaf309 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> @@ -56,6 +56,7 @@ Optional properties:
->  				     the length can vary between hw versions.
->  - <supply-name>-supply: handle to the regulator device tree node
->  			   optional "supply-name" is "vdd-0.8-cx-mx".
-> +- ext-fem-name: name of external front end module used.
+> If a version 4 of the series is created I will update the commit
+> message.  As a stand alone item I do not think it is worth a
+> new version.
 
-What are valid names? What if the OS doesn't recognize the name? Perhaps 
-this should be a compatible string for the particular module instead? 
-Then it could cover any differences, not just the FEM.
+And there will be a version 4, so I will update the commit message.
 
->  
->  Example (to supply the calibration data alone):
->  
-> @@ -150,3 +151,24 @@ wifi@18000000 {
->  			   <0 141 0 /* CE11 */ >;
->  		vdd-0.8-cx-mx-supply = <&pm8998_l5>;
->  };
-> +
-> +Example (to supply the external front end module name):
-> +
-> +In this example, the front end module is defined as a property of the ath10k
-> +device node.
-
-Really need a whole new example for 1 property?
-
-> +
-> +pci {
-> +	pcie@0 {
-> +		reg = <0 0 0 0 0>;
-> +		#interrupt-cells = <1>;
-> +		#size-cells = <2>;
-> +		#address-cells = <3>;
-> +		device_type = "pci";
-> +
-> +		ath10k@0,0 {
-
-wifi@0,0
-
-> +			reg = <0 0 0 0 0>;
-> +			device_type = "pci";
-> +			ext-fem-name = "microsemi-lx5586";
-> +		};
-> +	};
-> +};
-> -- 
-> 1.9.1
-> 
+-Frank
