@@ -1,81 +1,136 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v3 17/18] of: unittest: find overlays[] entry by name instead of index
-Date: Sun, 14 Oct 2018 17:24:29 -0700
-Message-ID: <1539563070-12969-18-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v3 18/18] of: unittest: initialize args before calling of_*parse_*()
+Date: Sun, 14 Oct 2018 17:24:30 -0700
+Message-ID: <1539563070-12969-19-git-send-email-frowand.list@gmail.com>
 References: <1539563070-12969-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1539563070-12969-1-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, Guenter Roeck <linux@roeck-us.net>
 Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-One accessor of overlays[] was using a hard coded index value to
-find the correct array entry instead of searching for the entry
-containing the correct name.
+Callers of of_irq_parse_one() blindly use the pointer args.np
+without checking whether of_irq_parse_one() had an error and
+thus did not set the value of args.np.  Initialize args to
+zero so that using the format "%pOF" to show the value of
+args.np will show "(null)" when of_irq_parse_one() has an
+error.  This prevents the dereference of a random value.
 
+Make the same fix for callers of of_parse_phandle_with_args()
+and of_parse_phandle_with_args_map().
+
+Reported-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/unittest.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ drivers/of/unittest.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 1c2bd8503095..785985bdbfa6 100644
+index 785985bdbfa6..5f4db23e4752 100644
 --- a/drivers/of/unittest.c
 +++ b/drivers/of/unittest.c
-@@ -2178,7 +2178,7 @@ struct overlay_info {
- OVERLAY_INFO_EXTERN(overlay_bad_phandle);
- OVERLAY_INFO_EXTERN(overlay_bad_symbol);
+@@ -375,6 +375,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
+ 	for (i = 0; i < 8; i++) {
+ 		bool passed = true;
  
--/* order of entries is hard-coded into users of overlays[] */
-+/* entries found by name */
- static struct overlay_info overlays[] = {
- 	OVERLAY_INFO(overlay_base, -9999),
- 	OVERLAY_INFO(overlay, 0),
-@@ -2201,7 +2201,8 @@ struct overlay_info {
- 	OVERLAY_INFO(overlay_bad_add_dup_prop, -EINVAL),
- 	OVERLAY_INFO(overlay_bad_phandle, -EINVAL),
- 	OVERLAY_INFO(overlay_bad_symbol, -EINVAL),
--	{}
-+	/* end marker */
-+	{.dtb_begin = NULL, .dtb_end = NULL, .expected_result = 0, .name = NULL}
- };
++		memset(&args, 0, sizeof(args));
+ 		rc = of_parse_phandle_with_args(np, "phandle-list",
+ 						"#phandle-cells", i, &args);
  
- static struct device_node *overlay_base_root;
-@@ -2231,6 +2232,19 @@ void __init unittest_unflatten_overlay_base(void)
- 	u32 data_size;
- 	void *new_fdt;
- 	u32 size;
-+	int found = 0;
-+	const char *overlay_name = "overlay_base";
-+
-+	for (info = overlays; info && info->name; info++) {
-+		if (!strcmp(overlay_name, info->name)) {
-+			found = 1;
-+			break;
-+		}
-+	}
-+	if (!found) {
-+		pr_err("no overlay data for %s\n", overlay_name);
-+		return;
-+	}
+@@ -428,6 +429,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
+ 	}
  
- 	info = &overlays[0];
+ 	/* Check for missing list property */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args(np, "phandle-list-missing",
+ 					"#phandle-cells", 0, &args);
+ 	unittest(rc == -ENOENT, "expected:%i got:%i\n", -ENOENT, rc);
+@@ -436,6 +438,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
+ 	unittest(rc == -ENOENT, "expected:%i got:%i\n", -ENOENT, rc);
  
-@@ -2278,11 +2292,10 @@ static int __init overlay_data_apply(const char *overlay_name, int *overlay_id)
- {
- 	struct overlay_info *info;
- 	int found = 0;
--	int k;
- 	int ret;
- 	u32 size;
+ 	/* Check for missing cells property */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args(np, "phandle-list",
+ 					"#phandle-cells-missing", 0, &args);
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+@@ -444,6 +447,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
  
--	for (k = 0, info = overlays; info && info->name; info++, k++) {
-+	for (info = overlays; info && info->name; info++) {
- 		if (!strcmp(overlay_name, info->name)) {
- 			found = 1;
- 			break;
+ 	/* Check for bad phandle in list */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args(np, "phandle-list-bad-phandle",
+ 					"#phandle-cells", 0, &args);
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+@@ -452,6 +456,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+ 
+ 	/* Check for incorrectly formed argument list */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args(np, "phandle-list-bad-args",
+ 					"#phandle-cells", 1, &args);
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+@@ -502,6 +507,7 @@ static void __init of_unittest_parse_phandle_with_args_map(void)
+ 	for (i = 0; i < 8; i++) {
+ 		bool passed = true;
+ 
++		memset(&args, 0, sizeof(args));
+ 		rc = of_parse_phandle_with_args_map(np, "phandle-list",
+ 						    "phandle", i, &args);
+ 
+@@ -559,21 +565,25 @@ static void __init of_unittest_parse_phandle_with_args_map(void)
+ 	}
+ 
+ 	/* Check for missing list property */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args_map(np, "phandle-list-missing",
+ 					    "phandle", 0, &args);
+ 	unittest(rc == -ENOENT, "expected:%i got:%i\n", -ENOENT, rc);
+ 
+ 	/* Check for missing cells,map,mask property */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args_map(np, "phandle-list",
+ 					    "phandle-missing", 0, &args);
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+ 
+ 	/* Check for bad phandle in list */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args_map(np, "phandle-list-bad-phandle",
+ 					    "phandle", 0, &args);
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+ 
+ 	/* Check for incorrectly formed argument list */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args_map(np, "phandle-list-bad-args",
+ 					    "phandle", 1, &args);
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+@@ -780,7 +790,7 @@ static void __init of_unittest_parse_interrupts(void)
+ 	for (i = 0; i < 4; i++) {
+ 		bool passed = true;
+ 
+-		args.args_count = 0;
++		memset(&args, 0, sizeof(args));
+ 		rc = of_irq_parse_one(np, i, &args);
+ 
+ 		passed &= !rc;
+@@ -801,7 +811,7 @@ static void __init of_unittest_parse_interrupts(void)
+ 	for (i = 0; i < 4; i++) {
+ 		bool passed = true;
+ 
+-		args.args_count = 0;
++		memset(&args, 0, sizeof(args));
+ 		rc = of_irq_parse_one(np, i, &args);
+ 
+ 		/* Test the values from tests-phandle.dtsi */
+@@ -854,6 +864,7 @@ static void __init of_unittest_parse_interrupts_extended(void)
+ 	for (i = 0; i < 7; i++) {
+ 		bool passed = true;
+ 
++		memset(&args, 0, sizeof(args));
+ 		rc = of_irq_parse_one(np, i, &args);
+ 
+ 		/* Test the values from tests-phandle.dtsi */
 -- 
 Frank Rowand <frank.rowand@sony.com>
