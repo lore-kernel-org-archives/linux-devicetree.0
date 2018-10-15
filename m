@@ -1,113 +1,55 @@
-From: David Summers <beagleboard@davidjohnsummers.uk>
-Subject: Re: [PATCH 1/3] Add the tinker board S to the device tree - just an
- outline
-Date: Mon, 15 Oct 2018 17:49:41 +0100
-Message-ID: <93fc3eda-19b2-2b90-ccc8-4743200bf1b1@davidjohnsummers.uk>
-References: <20180922170236.8690-1-beagleboard@davidjohnsummers.uk>
- <20180922170236.8690-2-beagleboard@davidjohnsummers.uk>
- <20181015161214.GA13740@bogus>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 3/5] clk: lochnagar: Add support for the Cirrus Logic
+ Lochnagar
+Date: Mon, 15 Oct 2018 17:55:28 +0100
+Message-ID: <20181015165528.GD12949@sirena.org.uk>
+References: <20181008132542.19775-1-ckeepax@opensource.cirrus.com>
+ <20181008132542.19775-3-ckeepax@opensource.cirrus.com>
+ <153924124658.207691.10370075148426001371@swboyd.mtv.corp.google.com>
+ <20181011132602.GD1653@imbe.wolfsonmicro.main>
+ <153935999691.5275.1587207165396958375@swboyd.mtv.corp.google.com>
+ <20181015104905.GF1653@imbe.wolfsonmicro.main>
+ <153962159992.5275.9275448716859702011@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181015161214.GA13740@bogus>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, David Summers <beagleboard@davidjohnsummers.uk>
-Cc: mark.rutland@arm.com, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qGV0fN9tzfkG3CxV"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <153962159992.5275.9275448716859702011@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, lee.jones@linaro.org, linus.walleij@linaro.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 15/10/2018 17:12, Rob Herring wrote:
-> On Sat, Sep 22, 2018 at 06:02:34PM +0100, David Summers wrote:
->
-> Commit message needed.
->
-> Use subject prefixes that match the subsystem. 'dt-bindings: ...' for
-> binding docs. 'ARM: dts: ...' for ARM dts files.
->
->> Signed-off-by: David Summers <beagleboard@davidjohnsummers.uk>
->> ---
->>   .../devicetree/bindings/arm/rockchip.txt      |   4 +
-> Bindings should be a separate patch.
->
->>   arch/arm/boot/dts/Makefile                    |   1 +
->>   arch/arm/boot/dts/rk3288-tinker-s.dts         |  13 +
->>   arch/arm/boot/dts/rk3288-tinker.dts           | 498 +----------------
->>   arch/arm/boot/dts/rk3288-tinker.dtsi          | 504 ++++++++++++++++++
->>   5 files changed, 524 insertions(+), 496 deletions(-)
->>   create mode 100644 arch/arm/boot/dts/rk3288-tinker-s.dts
->>   create mode 100644 arch/arm/boot/dts/rk3288-tinker.dtsi
-> Would be better to split the dts changes into 2 patches: restructuring
-> and add Tinker S board. Then we're not re-reviewing the existing stuff.
->
->> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
->> index acfd3c773dd0..037ce94c3a73 100644
->> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
->> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
->> @@ -13,6 +13,10 @@ Rockchip platforms device tree bindings
->>       Required root node properties:
->>         - compatible = "asus,rk3288-tinker", "rockchip,rk3288";
->>   
->> +- Asus Tinker board S
->> +    Required root node properties:
->> +      - compatible = "asus,rk3288-tinker-s", "rockchip,rk3288";
->> +
->>   - Kylin RK3036 board:
->>       Required root node properties:
->>         - compatible = "rockchip,kylin-rk3036", "rockchip,rk3036";
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index b5bd3de87c33..65c75265adfa 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -864,6 +864,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
->>   	rk3288-r89.dtb \
->>   	rk3288-rock2-square.dtb \
->>   	rk3288-tinker.dtb \
->> +	rk3288-tinker-s.dtb \	
->>   	rk3288-veyron-brain.dtb \
->>   	rk3288-veyron-jaq.dtb \
->>   	rk3288-veyron-jerry.dtb \
->> diff --git a/arch/arm/boot/dts/rk3288-tinker-s.dts b/arch/arm/boot/dts/rk3288-tinker-s.dts
->> new file mode 100644
->> index 000000000000..5e1078c6a784
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/rk3288-tinker-s.dts
->> @@ -0,0 +1,13 @@
->> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> +/*
->> + * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include "rk3288-tinker.dtsi"
->> +
->> +/ {
->> +	model = "Rockchip RK3288 Asus Tinker Board S";
->> +	compatible = "asus,rk3288-tinker-s", "rockchip,rk3288";
-> Perhaps you should have 'asus,rk3288-tinker' as a fallback?
->
->> +};
 
-Hi Rob,
+--qGV0fN9tzfkG3CxV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Heiko already had many of the same thoughts, he respan the patch here:
+On Mon, Oct 15, 2018 at 09:39:59AM -0700, Stephen Boyd wrote:
 
-http://lists.infradead.org/pipermail/linux-rockchip/2018-September/021766.html
+> Ok if there's going to be read/volatile regs and defaults then it makes
+> sense to leave the defines in some shared header file, which is
+> unfortunate for the independent merge of driver bits. Either way, I
 
-Which you already reviewed ;)
+Kconfig dependencies take care of that pretty well - if there's a
+dependency on the MFD then the function driver just won't get built
+until the MFD gets merged. =20
 
-This was my first attempt at a kernel patch, so your thoughts are 
-appreciated.
+--qGV0fN9tzfkG3CxV
+Content-Type: application/pgp-signature; name="signature.asc"
 
-David.
+-----BEGIN PGP SIGNATURE-----
 
-P.S. Heiko revised patch accepted into 4.20.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlvExn8ACgkQJNaLcl1U
+h9Cm3wgAg68zzKd/x3cvsnLK+nLQu7ZH+s4qIBqCK+IZxuyQrrt22j+bCIyr1g7X
++oydMFZWxBkys3SvNyBAl+NF61lUhSsrrrmf6qc1RWdsIYAH7O9YFwKWQB6KiJnX
+rroyNjAogqw/6vlI/VaOQ7nbWz9qjnyQDAgfgcxkNKL+EeLu2viJwiyCiU6Ybi0F
+GUSIWcK9m/ha8HitOmrc0OX/TMykmiKPsWS3F3XgdLI0Spv91QOwd98dK+EAjhS7
+nXdtijJMvFVIxFUngCmxPLOAJhkuj2fburxVSH/rgGlRx3eRYLPYjsKn4UO9WU+Z
+0ZkKYkYeqinWW970tKk/qicJ+FCEGQ==
+=kjjT
+-----END PGP SIGNATURE-----
+
+--qGV0fN9tzfkG3CxV--
