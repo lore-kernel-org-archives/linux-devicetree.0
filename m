@@ -1,36 +1,35 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v1 0/4] thermal: tsens: Add support for QCS404 platform
-Date: Tue, 16 Oct 2018 00:10:39 +0530
-Message-ID: <cover.1539627762.git.amit.kucheria@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: misc: bk4: Add device tree binding for
+ Liebherr's BK4 SPI bus
+Date: Mon, 15 Oct 2018 13:46:27 -0500
+Message-ID: <20181015184627.GA23207@bogus>
+References: <20180927222655.24482-1-lukma@denx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180927222655.24482-1-lukma@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, vkoul@kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-soc@vger.kernel.org
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for the Qualcomm QCS404 platform that contains v1 of the TSENS
-IP. Introduce a fallback binding to handle "v1" functionality.
+On Fri, Sep 28, 2018 at 12:26:55AM +0200, Lukasz Majewski wrote:
+> Add Device Tree binding document for Liebherr's BK4 external SPI bus.
+> 
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> ---
+>  Documentation/devicetree/bindings/misc/lwn-bk4.txt | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/lwn-bk4.txt
 
-These patches apply on top of previous tsens-related patches sent to the
-list pending merge along with various qcs404 patches under review
-(available in this branch[1] for convenience).
+Applied.
 
-[1] https://git.linaro.org/landing-teams/working/qualcomm/kernel.git/log/?h=integration-linux-qcomlt
+To add to Mark's comments, the status of binding patches can be checked 
+on patchwork[1]. There's no reason for pings to me. If it is in the 
+"New" state, I will get to it and you can see where you are in the 
+queue. ATM, I'm rather backed up.
 
-Amit Kucheria (4):
-  dt: thermal: tsens: Add bindings for qcs404
-  drivers: thermal: tsens: Add generic support for TSENS v1 IP
-  arm64: dts: qcom: qcs404: Add tsens controller
-  arm64: dts: qcom: qcs404: Add thermal zones for each sensor
+Rob
 
- .../bindings/thermal/qcom-tsens.txt           |   3 +
- arch/arm64/boot/dts/qcom/qcs404.dtsi          | 226 ++++++++++++++++++
- drivers/thermal/qcom/Makefile                 |   2 +-
- drivers/thermal/qcom/tsens-v1.c               | 196 +++++++++++++++
- drivers/thermal/qcom/tsens.c                  |   3 +
- drivers/thermal/qcom/tsens.h                  |   2 +-
- 6 files changed, 430 insertions(+), 2 deletions(-)
- create mode 100644 drivers/thermal/qcom/tsens-v1.c
-
--- 
-2.17.1
+[1] https://patchwork.ozlabs.org/project/devicetree-bindings/list/
