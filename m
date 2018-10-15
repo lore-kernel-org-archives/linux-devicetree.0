@@ -1,54 +1,46 @@
-From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Subject: [PATCH v2 7/7] arm64: dts: lx2160a: update fspi node
-Date: Mon, 15 Oct 2018 11:48:37 +0000
-Message-ID: <1539603969-21076-8-git-send-email-yogeshnarayan.gaur@nxp.com>
-References: <1539603969-21076-1-git-send-email-yogeshnarayan.gaur@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+From: Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
+Subject: [PATCH v5 0/2] Neutis N5 support
+Date: Mon, 15 Oct 2018 14:49:48 +0300
+Message-ID: <1539604192-17561-1-git-send-email-aleksandr.aleksandrov@emlid.com>
+References: <1539339841-22235-2-git-send-email-aleksandr.aleksandrov@emlid.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539603969-21076-1-git-send-email-yogeshnarayan.gaur@nxp.com>
-Content-Language: en-US
+In-Reply-To: <1539339841-22235-2-git-send-email-aleksandr.aleksandrov@emlid.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Cc: Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, David Lechner <david@lechnology.com>, Thierry Reding <treding@nvidia.com>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Flash mt35xu512aba connected to FlexSPI controller supports
-1-1-8/1-8-8 protocol.
-Added flag spi-rx-bus-width and spi-tx-bus-width with values as
-8 and 8 respectively for both flashes connected at CS0 and CS1.
+This patch addes Neutis N5 support.
+Emlid Neutis N5 is a SoM based on Allwinner H5.
+The patch includes device tree file for Dev board
+and dtsi file for SoM needs.
 
-Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
----
-Changes for v2:
- None
+Changes from v1: separate dts file: dtsi for SoM
+and motherboard dts file that inlcudes dtsi file.
 
- arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Changes from v2 (5 oct 2018):
+- makefile: dtb-$(CONFIG_ARCH_SUNXI) - ordered alphabetically
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64=
-/boot/dts/freescale/fsl-lx2160a-rdb.dts
-index 3b20c97..24cc41c 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-@@ -45,6 +45,8 @@
- 		m25p,fast-read;
- 		spi-max-frequency =3D <20000000>;
- 		reg =3D <0>;
-+		spi-rx-bus-width =3D <8>;
-+		spi-tx-bus-width =3D <8>;
- 	};
-=20
- 	mt35xu512aba1: flash@1 {
-@@ -54,6 +56,8 @@
- 		m25p,fast-read;
- 		spi-max-frequency =3D <20000000>;
- 		reg =3D <1>;
-+		spi-rx-bus-width =3D <8>;
-+		spi-tx-bus-width =3D <8>;
- 	};
- };
-=20
---=20
+Changes from v3 (12 oct 2018):
+- fix commit prefix for 1/2 patch
+- use an SPDX header instead of the full license text
+- compatible: "emlid,neutis-n5" instead of "emlid,emlid-neutis-n5"
+
+Changes from v4 (15 oct 2018):
+- fix dt-bindings commit prefix
+- update license header for dts files
+- make interfaces be alphabetically in devboard dts file
+
+Aleksandr Aleksandrov (2):
+  dt-bindings: vendor-prefix: new vendor - Emlid
+  arm64: dts: allwinner: new board - Emlid Neutis N5
+
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm64/boot/dts/allwinner/Makefile             |   1 +
+ .../sun50i-h5-emlid-neutis-n5-devboard.dts         | 149 +++++++++++++++++++++
+ .../dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi   |  61 +++++++++
+ 4 files changed, 212 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi
+
+-- 
 2.7.4
