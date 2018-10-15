@@ -1,94 +1,89 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 6/9] PM / OPP: dt-bindings: Add
- opp-interconnect-bw
-Date: Mon, 15 Oct 2018 09:12:28 -0600
-Message-ID: <20181015151228.GB4751@jcrouse-lnx.qualcomm.com>
-References: <20180827151112.25211-1-jcrouse@codeaurora.org>
- <20180827151112.25211-7-jcrouse@codeaurora.org>
- <20181015143420.GA16932@bogus>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH v2 2/9] ASoC: sun8i-codec: Don't hardcode
+	BCLK / LRCK ratio
+Date: Mon, 15 Oct 2018 08:14:25 -0700
+Message-ID: <8376208.BHej6axeOA@anarsoul-thinkpad>
+References: <20181013165329.13363-1-anarsoul@gmail.com>
+ <20181013165329.13363-3-anarsoul@gmail.com>
+ <20181015070714.tglgw5dym6hraejz@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20181015143420.GA16932@bogus>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20181015070714.tglgw5dym6hraejz@flea>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Mylene JOSSERAND <mylene.josserand@free-electrons.com>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Marcus Cooper <codekipper@gmail.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBPY3QgMTUsIDIwMTggYXQgMDk6MzQ6MjBBTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3Jv
-dGU6Cj4gT24gTW9uLCBBdWcgMjcsIDIwMTggYXQgMDk6MTE6MDlBTSAtMDYwMCwgSm9yZGFuIENy
-b3VzZSB3cm90ZToKPiA+IEFkZCB0aGUgIm9wcC1pbnRlcmNvbm5lY3QtYnciIHByb3BlcnR5IHRv
-IHNwZWNpZnkgdGhlCj4gPiBhdmVyYWdlIGFuZCBwZWFrIGJhbmR3aWR0aCBmb3IgYW4gaW50ZXJj
-b25uZWN0IHBhdGggZm9yCj4gPiBhIHNwZWNpZmljIG9wZXJhdGluZyBwb3dlciBwb2ludC4gQSBz
-ZXBhcmF0ZSBiYW5kd2lkdGgKPiA+IHBhaXIgY2FuIGJlIHNwZWNpZmllZCBmb3IgZWFjaCBvZiB0
-aGUgaW50ZXJjb25uZWN0cwo+ID4gZGVmaW5lZCBmb3IgdGhlIGRldmljZSBieSBhcHBlbmRpbmcg
-dGhlIGludGVyY29ubmVjdAo+ID4gbmFtZSB0byB0aGUgcHJvcGVydHkuCj4gPiAKPiA+IFNpZ25l
-ZC1vZmYtYnk6IEpvcmRhbiBDcm91c2UgPGpjcm91c2VAY29kZWF1cm9yYS5vcmc+Cj4gPiAtLS0K
-PiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvb3BwL29wcC50eHQgfCAzNiAr
-KysrKysrKysrKysrKysrKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDM2IGluc2VydGlvbnMoKykK
-PiA+IAo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9v
-cHAvb3BwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9vcHAvb3BwLnR4
-dAo+ID4gaW5kZXggYzM5NmM0YzBhZjkyLi5kNzE0YzA4NGYzNmQgMTAwNjQ0Cj4gPiAtLS0gYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvb3BwL29wcC50eHQKPiA+ICsrKyBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9vcHAvb3BwLnR4dAo+ID4gQEAgLTE3MCw2
-ICsxNzAsMTEgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKPiA+ICAgIGZ1bmN0aW9uaW5nIG9mIHRo
-ZSBjdXJyZW50IGRldmljZSBhdCB0aGUgY3VycmVudCBPUFAgKHdoZXJlIHRoaXMgcHJvcGVydHkg
-aXMKPiA+ICAgIHByZXNlbnQpLgo+ID4gIAo+ID4gKy0gb3BwLWludGVyY29ubmVjdC1idy08bmFt
-ZT46IFRoaXMgaXMgYW4gYXJyYXkgb2YgcGFpcnMgc3BlY2lmeWluZyB0aGUgYXZlcmFnZQo+ID4g
-KyAgYW5kIHBlYWsgYmFuZHdpZHRoIGluIGJ5dGVzIHBlciBzZWNvbmQgZm9yIHRoZSBpbnRlcmNv
-bm5lY3QgcGF0aCBrbm93biBieQo+ID4gKyAgJ25hbWUnLiAgVGhpcyBzaG91bGQgbWF0Y2ggdGhl
-IG5hbWUocykgc3BlY2lmaWVkIGJ5IGludGVyY29ubmVjdC1uYW1lcyBpbiB0aGUKPiA+ICsgIGRl
-dmljZSBkZWZpbml0aW9uLgo+ID4gKwo+IAo+IEkgZG9uJ3QgdGhpbmsgdGhpcyBpcyBnb29kIGRl
-c2lnbiB3aXRoIHRoZSBuYW1lIGRlZmluZWQgaW4gb25lIG5vZGUgYW5kIAo+IHRoZW4gdXNlZCBp
-biB0aGUgT1BQIHRhYmxlLiBGaXJzdCwgJyotbmFtZXMnIGlzIHR5cGljYWxseSB0aGUgYSBuYW1l
-IAo+IGxvY2FsIHRvIHRoYXQgbm9kZS9kZXZpY2UuIElmIHlvdSBoYWQgMiBpbnN0YW5jZXMgb2Yg
-YSBkZXZpY2Ugd2l0aCBhIAo+IHNoYXJlZCBPUFAgdGFibGUgZm9yIHRoZSAyIGluc3RhbmNlcywg
-dGhlbiB5b3UgYXJlIGdvaW5nIHRvIGhhdmUgdG8gCj4gbWFrZSB0aGUgbmFtZXMgdW5pcXVlLiBT
-ZWNvbmQsIGhvdyBleGFjdGx5IHdvdWxkIGhhdmluZyBtdWx0aXBsZSBiL3cgCj4gZW50cmllcyB3
-b3JrPyBBIGdpdmVuIE9QUCBmcmVxdWVuY3kgc3VwcG9ydHMgdGhlIHN1bSBvZiB0aGUgYi93IGVu
-dHJpZXM/IAo+IFdoYXQgaWYgc29tZSBkZXZpY2VzIGZvciBiL3cgZW50cmllcyBhcmVuJ3QgY3Vy
-cmVudGx5IGFjdGl2ZT8KCkZvciBkZXZpY2UgdGhhdCBpcyBmdWxseSBzY2FsYWJsZSBhIGdpdmVu
-IE9QUCBmcmVxdWVuY3kgY291bGQgbmVlZCBhCmRpZmZlcmVudCBxdW90YSBmb3IgbXVsdGlwbGUg
-aW50ZXJjb25uZWN0IGVudHJpZXMgLSBlYWNoIG9uZSB3b3VsZCBiZQpwcm9ncmFtbWVkIGluZGl2
-aWR1YWxseSwgc29tZXRoaW5nIGxpa2UgdGhpczoKCnNldF9vcHAoKSB7CiAgICBzZXRfZGV2aWNl
-X2ZyZXF1ZW5jeShvcHApOwogICAgZm9yIGVhY2ggaW50ZXJjb25uZWN0IG5hbWUgewogICAgICAg
-IGdldF9kZXZpY2VfYncob3BwLCBuYW1lKTsKCWljY19zZXQobmFtZSwgYncpOwogICAgfQp9CgpB
-bmQgdGhlIG5hbWluZyBzY2hlbWUgZ2l2ZXMgeW91IHRoZSBmbGV4aWJpbGl0eSB0byBjaG9vc2Ug
-dGhlIGljYyBuYW1lcwp5b3UgbmVlZC4gIEZvciBleGFtcGxlIGlmIHBvcnQwIHdhcyBhbHdheXMg
-Zml4ZWQgYW5kIHBvcnQxIHNjYWxlZCB5b3UgY291bGQKc3BlY2lmeSB0aGUgYi93IGZvciBwb3J0
-MSB3aXRob3V0IGhhdmluZyB0byBhbHNvIGhhdmUgYSBkdW1teSB2b3RlIGZvciBwb3J0MC4KClRo
-ZSBtYWluIHJlYXNvbiBJIGluY2x1ZGVkIHRoZSBuYW1lcyB3YXMgdGhhdCBJIGZlbHQgaXQgaGFk
-IGEgcG90ZW50aWFsIHRvCmJlIGNvbmZ1c2luZyBpZiB3ZSB1c2VkIGFic29sdXRlIGluZGV4ZXMg
-b3Igc29tZSBvdGhlciBpbXBsaWVkIHNjaGVtZSAtIGF0CmxlYXN0IGZvciB0aGUgZHJpdmVyIGRl
-dmVsb3BlciBpdCBtYWtlcyBzbGlnaHRseSBtb3JlIHNlbnNlIHRvIGxvb2sgdXAgdGhlCmJhbmR3
-aWR0aCBmb3IgInBvcnQwIiB3aXRoIHRoZSBzYW1lIG5hbWUgeW91IHVzZWQgdG8gcmVnaXN0ZXIg
-dGhlIGludGVyY29ubmVjdC4KCj4gVGhpcyBhbHNvIHNlZW1zIGxpa2UgYSBtaXh0dXJlIG9mIHVz
-aW5nIE9QUCB0YWJsZSBmb3Igc2V0dGluZyBHUFUncyAKPiBiYW5kd2lkdGgvZnJlcSBhbmQgdGhl
-biB0aGUgaW50ZXJjb25uZWN0IGJpbmRpbmcgdG8gc2V0IHRoZSAKPiBpbnRlcmNvbm5lY3QncyBi
-YW5kd2lkdGguIFBlcmhhcHMgd2UgbmVlZCBhIG1vcmUgdW5pZmllZCBhcHByb2FjaC4gTm90IAo+
-IHN1cmUgd2hhdCB0aGF0IHdvdWxkIGxvb2sgbGlrZSB0aG91Z2guCgpJbiBhIHBlcmZlY3Qgd29y
-bGQgdGhlIGludGVyY29ubmVjdChzKSB3b3VsZCBiZSBsZWZ0IHRvIHNjYWxlIG9uIHRoZWlyIG93
-bgphbmQgdGhleSB3b3VsZG4ndCBiZSB0aWVkIHRvIGFuIGluZGl2aWR1YWwgZGV2aWNlIGZyZXF1
-ZW5jeS4gQnV0IHRoYXQgd291bGQKaW52b2x2ZSBzaWduaWZpY2FudGx5IG1vcmUgaW5mcmFzdHJ1
-Y3R1cmUgZm9yIGEgZ2l2ZW4gZGV2aWNlLgoKQWxzbyBpbiBSRSB0byBvdXIgb3RoZXIgZGlzY3Vz
-c2lvbiB3aXRoIFZpcmVzaCBvbiB0aGUgcWNvbSxsZXZlbCBmb3IgdGhlCkdQVTsgdGhlIEdQVSBm
-cmVxdWVuY3kgdm90ZSBpcyBkb25lIGJ5IHRoZSBtaWNyb2NvbnRyb2xsZXIgYnV0IHRoZQppbnRl
-cmNvbm5lY3QgYmFuZHdpZHRoIGlzIHNldCBieSB0aGUgQ1BVIG9uIHRoZSBzZG04NDUgc28gd2Un
-cmUgYWxyZWFkeQpub3QgdW5pZmllZCBieSBkZXNpZ24uIFRoZXJlIGNvdWxkIGJlIHNvbWV0aGlu
-ZyBvdXQgdGhlcmUgdGhhdCB1c2VzCm1hZ2ljIGFuZCBjYWxsYmFja3MgYnV0IEkgYWxzbyBkb24n
-dCBrbm93IHdoYXQgdGhhdCBsb29rcyBsaWtlLgoKSm9yZGFuCgotLSAKVGhlIFF1YWxjb21tIElu
-bm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIENvZGUgQXVyb3JhIEZvcnVtLAph
-IExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJl
-ZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+On Monday, October 15, 2018 12:07:14 AM PDT Maxime Ripard wrote:
+> On Sat, Oct 13, 2018 at 09:53:22AM -0700, Vasily Khoruzhick wrote:
+> > BCLK / LRCK ratio should be sample size * channels, but it was
+> > hardcoded to 32 (0x1 is 32 as per A33 and A64 datasheets).
+> > 
+> > Calculate it basing on sample size and number of channels.
+> > 
+> > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> > ---
+> > 
+> >  sound/soc/sunxi/sun8i-codec.c | 35 ++++++++++++++++++++++++++++++-----
+> >  1 file changed, 30 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
+> > index fb37dd927e33..e681e194ad4c 100644
+> > --- a/sound/soc/sunxi/sun8i-codec.c
+> > +++ b/sound/soc/sunxi/sun8i-codec.c
+> > @@ -52,7 +52,6 @@
+> > 
+> >  #define SUN8I_AIF1CLK_CTRL_AIF1_LRCK_INV		13
+> >  #define SUN8I_AIF1CLK_CTRL_AIF1_BCLK_DIV		9
+> >  #define SUN8I_AIF1CLK_CTRL_AIF1_LRCK_DIV		6
+> > 
+> > -#define SUN8I_AIF1CLK_CTRL_AIF1_LRCK_DIV_16		(1 << 6)
+> > 
+> >  #define SUN8I_AIF1CLK_CTRL_AIF1_WORD_SIZ		4
+> >  #define SUN8I_AIF1CLK_CTRL_AIF1_WORD_SIZ_16		(1 << 4)
+> >  #define SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT		2
+> > 
+> > @@ -257,8 +256,8 @@ static int sun8i_set_fmt(struct snd_soc_dai *dai,
+> > unsigned int fmt)> 
+> >  }
+> >  
+> >  struct sun8i_codec_clk_div {
+> > 
+> > -	u8	div;
+> > -	u8	val;
+> > +	unsigned int	div;
+> > +	u8		val;
+> > 
+> >  };
+> >  
+> >  static const struct sun8i_codec_clk_div sun8i_codec_bclk_div[] = {
+> > 
+> > @@ -300,12 +299,33 @@ static u8 sun8i_codec_get_bclk_div(struct
+> > sun8i_codec *scodec,> 
+> >  	return best_val;
+> >  
+> >  }
+> > 
+> > +static const struct sun8i_codec_clk_div sun8i_codec_lrck_div[] = {
+> > +	{ .div = 16,	.val = 0 },
+> > +	{ .div = 32,	.val = 1 },
+> > +	{ .div = 64,	.val = 2 },
+> > +	{ .div = 128,	.val = 3 },
+> > +	{ .div = 256,	.val = 4 },
+> > +};
+> 
+> That's log2(div) - 4, right? There's no need to store the table if so.
+
+OK, will fix in v3
+ 
+> Maxime
