@@ -1,145 +1,121 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH v3 09/18] of: overlay: validate overlay properties
- #address-cells and #size-cells
-Date: Mon, 15 Oct 2018 14:01:15 -0500
-Message-ID: <CANk1AXQNkYDA9hRCMR_MkOJiobPjmYoJN8Gv+3YN9ReV+q5XEw@mail.gmail.com>
-References: <1539563070-12969-1-git-send-email-frowand.list@gmail.com> <1539563070-12969-10-git-send-email-frowand.list@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: phy: Document cadence Sierra PHY
+ bindings
+Date: Mon, 15 Oct 2018 14:09:29 -0500
+Message-ID: <20181015190929.GA22554@bogus>
+References: <1538582545-22041-1-git-send-email-adouglas@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539563070-12969-10-git-send-email-frowand.list@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1538582545-22041-1-git-send-email-adouglas@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Moritz Fischer <mdf@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org
+To: Alan Douglas <adouglas@cadence.com>
+Cc: kishon@ti.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 14, 2018 at 7:26 PM <frowand.list@gmail.com> wrote:
->
-> From: Frank Rowand <frank.rowand@sony.com>
->
-> If overlay properties #address-cells or #size-cells are already in
-> the live devicetree for any given node, then the values in the
-> overlay must match the values in the live tree.
->
-> If the properties are already in the live tree then there is no
-> need to create a changeset entry to add them since they must
-> have the same value.  This reduces the memory used by the
-> changeset and eliminates a possible memory leak.  This is
-> verified by 12 fewer warnings during the devicetree unittest,
-> as the possible memory leak warnings about #address-cells and
->
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+On Wed, Oct 03, 2018 at 05:02:25PM +0100, Alan Douglas wrote:
+> Add DT binding documentation for Sierra PHY.  The PHY supports
+> a number of different protocols, including PCIe and USB.
+> 
+> The PHY lanes may be configured as single or multi-lane links.
+> Each link is treated as a separate sub-node.  For example, if
+> there are 4 lanes in total the first 2 might be configured as
+> a multi-lane PCIe link while the other two are single lane
+> USB links, and in this case there would be 3 sub-nodes.
+> 
+> There are two resets for the PHY block (one for APB register
+> access, one for the PHY link) and separate resets for each
+> link.  For multi-lane links, the reset corresponds to the
+> reset line on the master lane, the resets on other lanes
+> have no effect.
+> 
+> Signed-off-by: Alan Douglas <adouglas@cadence.com>
 > ---
->  drivers/of/overlay.c | 38 +++++++++++++++++++++++++++++++++++---
->  1 file changed, 35 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index 272a0d1a5e18..ee66651db553 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -287,7 +287,12 @@ static struct property *dup_and_fixup_symbol_prop(
->   * @target may be either in the live devicetree or in a new subtree that
->   * is contained in the changeset.
->   *
-> - * Some special properties are not updated (no error returned).
-> + * Some special properties are not added or updated (no error returned):
-> + * "name", "phandle", "linux,phandle".
-> + *
-> + * Properties "#address-cells" and "#size-cells" are not updated if they
-> + * are already in the live tree, but if present in the live tree, the values
-> + * in the overlay must match the values in the live tree.
->   *
->   * Update of property in symbols node is not allowed.
->   *
-> @@ -300,6 +305,7 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
->  {
->         struct property *new_prop = NULL, *prop;
->         int ret = 0;
-> +       bool check_for_non_overlay_node = false;
->
->         if (!of_prop_cmp(overlay_prop->name, "name") ||
->             !of_prop_cmp(overlay_prop->name, "phandle") ||
-> @@ -322,13 +328,39 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
->         if (!new_prop)
->                 return -ENOMEM;
->
-> -       if (!prop)
-> +       if (!prop) {
+>  .../devicetree/bindings/phy/cdns-sierra-phy.txt    | 68 ++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/cdns-sierra-phy.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/cdns-sierra-phy.txt b/Documentation/devicetree/bindings/phy/cdns-sierra-phy.txt
+> new file mode 100644
+> index 0000000..0e2f3e3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/cdns-sierra-phy.txt
+> @@ -0,0 +1,68 @@
+> +Cadence Sierra PHY
+> +-----------------------
 > +
-> +               check_for_non_overlay_node = true;
->                 ret = of_changeset_add_property(&ovcs->cset, target->np,
->                                                 new_prop);
-> -       else
+> +Required properties:
+> +- compatible:	cdns,sierra-phy-t0
+> +- clocks:	Must contain an entry in clock-names.
+> +		See ../clocks/clock-bindings.txt for details.
+> +- clock-names:	Must be "phy_clk"
+> +- resets:	Must contain an entry for each in reset-names.
+> +		See ../reset/reset.txt for details.
+> +- reset-names:	Must include "sierra_reset" and "sierra_apb" and one for each
+> +		sub-node.
+> +		"sierra_reset" must control the reset line to the PHY.
+> +		"sierra_apb" must control the reset line to the APB PHY
+> +		interface.
+> +		The name of the reset for each sub-node should match the full
+> +		name of the sub-node.  The sub-node resets must control the
+> +		reset line for the master lane of the sub-node.
+
+Add a resets property to the sub-nodes instead.
+
+> +- reg:		register range for the PHY.
+> +- #address-cells: Must be 1
+> +- #size-cells:	Must be 0
 > +
-> +       } else if (!of_prop_cmp(prop->name, "#address-cells")) {
+> +Optional properties:
+> +- cdns,autoconf:	A boolean property whose presence indicates that the
+> +			PHY registers will be configured by hardware. If not
+> +			present, all sub-node optional properties must be
+> +			provided.
 > +
-
-Hi Frank,
-
-If we get these ERROR messages, I suggest that this function should
-return an error so the overlay will be rejected.
-
-> +               if (prop->length != 4 || new_prop->length != 4 ||
-> +                   *(u32 *)prop->value != *(u32 *)new_prop->value)
-
-                        *(u32 *)prop->value != *(u32 *)new_prop->value) {
-
-> +                       pr_err("ERROR: overlay and/or live tree #address-cells invalid in node %pOF\n",
-> +                              target->np);
-
-                       ret = -EINVAL;
-                }
-
-Otherwise there is an ERROR message, but it continues trying to apply
-the invalid overlay anyway and I get an oops.  By adding the ret =
--EINVAL, the overlay gets rejected and the oops is avoided.
-
+> +Sub-nodes:
+> +  Each group of PHY lanes with a single master lane should be represented as
+> +  a sub-node. Note that the actual configuration of each lane is determined by
+> +  hardware strapping, and must match the configuration specified here.
 > +
-> +       } else if (!of_prop_cmp(prop->name, "#size-cells")) {
+> +Sub-node required properties:
+> +- #phy-cells:	Generic PHY binding; must be 0.
 > +
-> +               if (prop->length != 4 || new_prop->length != 4 ||
-> +                   *(u32 *)prop->value != *(u32 *)new_prop->value)
-> +                       pr_err("ERROR: overlay and/or live tree #size-cells invalid in node %pOF\n",
-> +                              target->np);
+> +Sub-node optional properties:
+> +- reg:			The master lane number.  This is the lowest numbered
+> +			lane in the lane group.
 
-Add the ret = -EINVAL here also.  This give me the following (if my
-overlay changes #address-cells):
+How do you name the nodes if this is optional?
 
-[   21.167551] OF: overlay: ERROR: overlay and/or live tree
-#address-cells invalid in node /soc/base_fpga_region
-[   21.177442] OF: overlay: add_changeset_property ret=-22
-[   21.182656] create_overlay: Failed to create overlay (err=-22)
-
-Also, I wonder if the ERROR message could be more direct.  Currently
-it says the #address-cells property is invalid but that doesn't say
-anything about why it's invalid.  How about something like:
-
- OF: overlay: ERROR: changing #address-cells not allowed (/soc/base_fpga_region)
-
-The 'OF: overlay' part still makes it clear it's overlay related.  The
-rest of it makes it clear *why* it's invalid.  This ERROR will be a
-surprise for people who have been using overlays, so that could be
-helpful to light the way a bit.
-
-Alan
-
+> +- cdns,num-lanes:	Number of lanes in this group.  From 1 to 4.  The
+> +			group is made up of consecutive lanes.
+> +- cdns,phy-type:	Can be PHY_TYPE_PCIE or PHY_TYPE_USB3, depending on
+> +			configuration of lanes.
 > +
-> +       } else {
+> +Example:
+> +	pcie_phy4: pcie-phy@fd240000 {
+> +		compatible = "cdns,sierra-phy-t0";
+> +		reg = <0x0 0xfd240000 0x0 0x40000>;
+> +		resets = <&phyrst 0>, <&phyrst 1>, <&phyrst 2>, <&phyrst 4>;
+> +		reset-names = "sierra_reset", "sierra_apb",
+> +				"pcie_phy@0", "pcie_phy@2";
+> +		clocks = <&phyclock>;
+> +		clock-names = "phy_clk";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		pcie0_phy0: pcie-phy@0 {
+> +				reg = <0>;
+> +				cdns,num-lanes = <2>;
+> +				#phy-cells = <0>;
+> +				cdns,phy-type = <PHY_TYPE_PCIE>;
+> +		};
+> +		pcie0_phy1: pcie-phy@2 {
+> +				reg = <2>;
+> +				cdns,num-lanes = <1>;
+> +				#phy-cells = <0>;
+> +				cdns,phy-type = <PHY_TYPE_PCIE>;
+> +		};
 > +
-> +               check_for_non_overlay_node = true;
->                 ret = of_changeset_update_property(&ovcs->cset, target->np,
->                                                    new_prop);
->
-> +       }
-> +
-> +       if (check_for_non_overlay_node &&
-> +           !of_node_check_flag(target->np, OF_OVERLAY))
-> +               pr_err("WARNING: %s(), memory leak will occur if overlay removed.  Property: %pOF/%s\n",
-> +                      __func__, target->np, new_prop->name);
-> +
->         if (ret) {
->                 kfree(new_prop->name);
->                 kfree(new_prop->value);
-> --
-> Frank Rowand <frank.rowand@sony.com>
->
+> -- 
+> 1.9.0
+> 
