@@ -1,30 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/9] dt-bindings: tegra186-pmc: Add interrupt controller
- properties
-Date: Mon, 15 Oct 2018 09:47:13 -0500
-Message-ID: <20181015144713.GA7327@bogus>
-References: <20180921102546.12745-1-thierry.reding@gmail.com>
- <20180921102546.12745-2-thierry.reding@gmail.com>
+Subject: Re: [PATCH 1/8] dt-bindings: rcar-gen3-phy-usb2: add no-otg-pins
+ property
+Date: Mon, 15 Oct 2018 09:49:02 -0500
+Message-ID: <20181015144902.GA9982@bogus>
+References: <1537530804-19399-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1537530804-19399-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180921102546.12745-2-thierry.reding@gmail.com>
+In-Reply-To: <1537530804-19399-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 21 Sep 2018 12:25:38 +0200, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
+On Fri, 21 Sep 2018 20:53:17 +0900, Yoshihiro Shimoda wrote:
+> This patch adds a new optional property "renesas,no-otg-pins" which
+> a board does not provide proper otg pins.
 > 
-> The PMC can be a top-level interrupt controller that provides the top-
-> level controls for wake events. Add optional properties to mark the PMC
-> as interrupt controller.
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 > ---
->  .../devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt      | 3 +++
->  1 file changed, 3 insertions(+)
+>  Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
