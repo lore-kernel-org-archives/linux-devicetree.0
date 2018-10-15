@@ -1,36 +1,65 @@
 From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH 1/7] dmaengine: fsldma: Replace DMA_IN/OUT by
- FSL_DMA_IN/OUT
-Date: Mon, 15 Oct 2018 22:37:11 +0530
-Message-ID: <20181015170711.GK2400@vkoul-mobl>
-References: <20181011094655.45707-1-peng.ma@nxp.com>
+Subject: Re: [PATCH v3 4/7] dmaengine: stm32-dma: Add DMA/MDMA chaining
+ support
+Date: Mon, 15 Oct 2018 22:44:03 +0530
+Message-ID: <20181015171403.GM2400@vkoul-mobl>
+References: <1538139715-24406-1-git-send-email-pierre-yves.mordret@st.com>
+ <1538139715-24406-5-git-send-email-pierre-yves.mordret@st.com>
+ <20181007160030.GB2372@vkoul-mobl>
+ <e9cedfdd-ad90-9123-03bb-34a2e84059c5@st.com>
+ <20181010040343.GO2372@vkoul-mobl>
+ <d64da587-a680-20c4-7139-f59fd1f299bc@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181011094655.45707-1-peng.ma@nxp.com>
+In-Reply-To: <d64da587-a680-20c4-7139-f59fd1f299bc@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Ma <peng.ma@nxp.com>
-Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, dan.j.williams@intel.com, zw@zh-kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Wen He <wen.he_1@nxp.com>
+To: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11-10-18, 17:46, Peng Ma wrote:
-> From: Wen He <wen.he_1@nxp.com>
+On 10-10-18, 09:02, Pierre Yves MORDRET wrote:
 > 
-> This patch implement a standard macro call functions is
-> used to NXP dma drivers.
 > 
-> Signed-off-by: Wen He <wen.he_1@nxp.com>
+> On 10/10/2018 06:03 AM, Vinod wrote:
+> > On 09-10-18, 10:40, Pierre Yves MORDRET wrote:
+> >>
+> >>
+> >> On 10/07/2018 06:00 PM, Vinod wrote:
+> >>> On 28-09-18, 15:01, Pierre-Yves MORDRET wrote:
+> >>>> This patch adds support of DMA/MDMA chaining support.
+> >>>> It introduces an intermediate transfer between peripherals and STM32 DMA.
+> >>>> This intermediate transfer is triggered by SW for single M2D transfer and
+> >>>> by STM32 DMA IP for all other modes (sg, cyclic) and direction (D2M).
+> >>>>
+> >>>> A generic SRAM allocator is used for this intermediate buffer
+> >>>> Each DMA channel will be able to define its SRAM needs to achieve chaining
+> >>>> feature : (2 ^ order) * PAGE_SIZE.
+> >>>> For cyclic, SRAM buffer is derived from period length (rounded on
+> >>>> PAGE_SIZE).
+> >>>
+> >>> So IIUC, you chain two dma txns together and transfer data via an SRAM?
+> >>
+> >> Correct. one DMA is DMAv2 (stm32-dma) and the other is MDMA(stm32-mdma).
+> >> Intermediate transfer is between device and memory.
+> >> This intermediate transfer is using SDRAM.
+> > 
+> > Ah so you use dma calls to setup mdma xtfers? I dont think that is a
+> > good idea. How do you know you should use mdma for subsequent transfer?
+> > 
+> 
+> When user bindings told to setup chaining intermediate MDMA transfers are always
+> triggers.
+> For instance if a user requests a Dev2Mem transfer with chaining. From client
+> pov this is still a prep_slave_sg. Internally DMAv2 is setup in cyclic mode (in
+> double buffer mode indeed => 2 buffer of PAGE_SIZE/2) and destination is SDRAM.
+> DMAv2 will flip/flop on those 2 buffers.
+> At the same time DMAv2 driver prepares a MDMA SG that will fetch data from those
+> 2 buffers in SDRAM and fills final destination memory.
 
-Please read Documentation/process/submitting-patches.rst, we expect each
-patch you send to have your signed off and signed off from orignal
-authors
-
-Also as Rob pointed out this patch series should be v8 or so as this is
-following the previous work submitted to the list
-
-Please also indicated changes from last rev which help in the review.
-
+I am not able to follow is why does it need to be internal, why should
+the client not set the two transfers and trigger them?
 
 -- 
 ~Vinod
