@@ -1,88 +1,84 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH] dt-bindings: ufs: Fix the compatible string definition
-Date: Mon, 15 Oct 2018 20:53:12 +0530
-Message-ID: <CAFp+6iFy8V34cs6pEOie_tBX5wJqM7teUnH_XLLZ7cioPrX_hA@mail.gmail.com>
-References: <20181012213926.253765-1-dianders@chromium.org>
+From: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH v5 5/6] media: Add controls for JPEG quantization tables
+Date: Mon, 15 Oct 2018 13:07:35 -0300
+Message-ID: <1579e9b6bcce59ae43cf92c34e2114ebad45b0e9.camel@collabora.com>
+References: <20180905220011.16612-1-ezequiel@collabora.com>
+ <20180905220011.16612-6-ezequiel@collabora.com>
+ <e7126e89d8984eb93216ec75c83ce1fc5afc437d.camel@paulk.fr>
+ <CAAFQd5Bir0uMsaJPHdgQDvcYHpxZ4sUSn10OPpRXcnn-THUx2A@mail.gmail.com>
+ <2878c8fa36f6e775079f53ba79518a53e1ea6bc5.camel@paulk.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181012213926.253765-1-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: robh+dt <robh+dt@kernel.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, Can Guo <cang@codeaurora.org>, evgreen@chromium.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, sayalil@codeaurora.org, asutoshd@codeaurora.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, liwei213@huawei.com, open list <linux-kernel@vger.kernel.org>, malat@debian.org, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <2878c8fa36f6e775079f53ba79518a53e1ea6bc5.camel-W9ppeneeCTY@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Doug,
-
-On Sat, Oct 13, 2018 at 3:09 AM Douglas Anderson <dianders@chromium.org> wrote:
->
-> If you look at the bindings for the UFS Host Controller it says:
->
-> - compatible: must contain "jedec,ufs-1.1" or "jedec,ufs-2.0", may
->               also list one or more of the following:
->                  "qcom,msm8994-ufshc"
->                  "qcom,msm8996-ufshc"
->                  "qcom,ufshc"
->
-> My reading of that is that it's fine to just have either of these:
-> 1. "qcom,msm8996-ufshc", "jedec,ufs-2.0"
-> 2. "qcom,ufshc", "jedec,ufs-2.0"
->
-> As far as I can tell neither of the above is actually a good idea.
->
-> For #1 it turns out that the driver currently only keys off the
-> compatible string "qcom,ufshc" so it won't actually probe.
->
-> For #2 the driver won't probe but it's not a good idea to keep the SoC
-> name out of the compatible string.
->
-> Let's update the compatible string to make it really explicit.  We'll
-> include a nod to the existing driver and the old binding and say that
-> we should always include the "qcom,ufshc" string in addition to the
-> SoC compatible string.
->
-> While we're at it we'll also include another example SoC known to have
-> UFS: sdm845.
->
-> Fixes: 47555a5c8a11 ("scsi: ufs: make the UFS variant a platform device")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->
->  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt       | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> index 2df00524bd21..69a06a1b732e 100644
-> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> @@ -4,11 +4,14 @@ UFSHC nodes are defined to describe on-chip UFS host controllers.
->  Each UFS controller instance should have its own node.
->
->  Required properties:
-> -- compatible           : must contain "jedec,ufs-1.1" or "jedec,ufs-2.0", may
-> -                         also list one or more of the following:
-> -                                         "qcom,msm8994-ufshc"
-> -                                         "qcom,msm8996-ufshc"
-> -                                         "qcom,ufshc"
-> +- compatible           : must contain "jedec,ufs-1.1" or "jedec,ufs-2.0"
-> +
-> +                         For Qualcomm SoCs must contain, as below, an
-> +                         SoC-specific compatible along with "qcom,ufshc" and
-> +                         the appropriate jedec string:
-> +                           "qcom,msm8994-ufshc", "qcom,ufshc", "jedec,ufs-2.0"
-> +                           "qcom,msm8996-ufshc", "qcom,ufshc", "jedec,ufs-2.0"
-> +                           "qcom,sdm845-ufshc", "qcom,ufshc", "jedec,ufs-2.0"
-
-Thanks for the patch. It looks good to me.
-Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-
-P.S.: While you are at it, can you please move 'ufs-qcom.txt'
-to Documentation/devicetree/bindings/phy/qcom,ufs-phy.txt.
-The current name and file location is misleading.
-
-Thanks & Regards
-Vivek
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+T24gRnJpLCAyMDE4LTEwLTEyIGF0IDIyOjAwICswMjAwLCBQYXVsIEtvY2lhbGtvd3NraSB3cm90
+ZToKPiBIaSwKPiAKPiBMZSBtZXJjcmVkaSAxOSBzZXB0ZW1icmUgMjAxOCDDoCAxMzoyOCArMDkw
+MCwgVG9tYXN6IEZpZ2EgYSDDqWNyaXQgOgo+ID4gT24gVGh1LCBTZXAgMTMsIDIwMTggYXQgOTox
+NSBQTSBQYXVsIEtvY2lhbGtvd3NraSA8Y29udGFjdEBwYXVsay5mcj4gd3JvdGU6Cj4gPiA+IEhp
+LAo+ID4gPiAKPiA+ID4gT24gV2VkLCAyMDE4LTA5LTA1IGF0IDE5OjAwIC0wMzAwLCBFemVxdWll
+bCBHYXJjaWEgd3JvdGU6Cj4gPiA+ID4gRnJvbTogU2h1bnFpYW4gWmhlbmcgPHpoZW5nc3FAcm9j
+ay1jaGlwcy5jb20+Cj4gPiA+ID4gCj4gPiA+ID4gQWRkIFY0TDJfQ0lEX0pQRUdfUVVBTlRJWkFU
+SU9OIGNvbXBvdW5kIGNvbnRyb2wgdG8gYWxsb3cgdXNlcnNwYWNlCj4gPiA+ID4gY29uZmlndXJl
+IHRoZSBKUEVHIHF1YW50aXphdGlvbiB0YWJsZXMuCj4gPiA+ID4gCj4gPiA+ID4gU2lnbmVkLW9m
+Zi1ieTogU2h1bnFpYW4gWmhlbmcgPHpoZW5nc3FAcm9jay1jaGlwcy5jb20+Cj4gPiA+ID4gU2ln
+bmVkLW9mZi1ieTogRXplcXVpZWwgR2FyY2lhIDxlemVxdWllbEBjb2xsYWJvcmEuY29tPgo+ID4g
+PiA+IC0tLQo+ID4gPiA+ICAuLi4vbWVkaWEvdWFwaS92NGwvZXh0ZW5kZWQtY29udHJvbHMucnN0
+ICAgICAgfCAzMSArKysrKysrKysrKysrKysrKysrCj4gPiA+ID4gIC4uLi9tZWRpYS92aWRlb2Rl
+djIuaC5yc3QuZXhjZXB0aW9ucyAgICAgICAgICB8ICAxICsKPiA+ID4gPiAgZHJpdmVycy9tZWRp
+YS92NGwyLWNvcmUvdjRsMi1jdHJscy5jICAgICAgICAgIHwgMTAgKysrKysrCj4gPiA+ID4gIGlu
+Y2x1ZGUvdWFwaS9saW51eC92NGwyLWNvbnRyb2xzLmggICAgICAgICAgICB8IDEyICsrKysrKysK
+PiA+ID4gPiAgaW5jbHVkZS91YXBpL2xpbnV4L3ZpZGVvZGV2Mi5oICAgICAgICAgICAgICAgIHwg
+IDEgKwo+ID4gPiA+ICA1IGZpbGVzIGNoYW5nZWQsIDU1IGluc2VydGlvbnMoKykKPiA+ID4gPiAK
+PiA+ID4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9tZWRpYS91YXBpL3Y0bC9leHRlbmRl
+ZC1jb250cm9scy5yc3QgYi9Eb2N1bWVudGF0aW9uL21lZGlhL3VhcGkvdjRsL2V4dGVuZGVkLWNv
+bnRyb2xzLnJzdAo+ID4gPiA+IGluZGV4IDlmNzMxMmJmMzM2NS4uMTMzNWQyN2QzMGYzIDEwMDY0
+NAo+ID4gPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vbWVkaWEvdWFwaS92NGwvZXh0ZW5kZWQtY29u
+dHJvbHMucnN0Cj4gPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9tZWRpYS91YXBpL3Y0bC9leHRl
+bmRlZC1jb250cm9scy5yc3QKPiA+ID4gPiBAQCAtMzM1NCw3ICszMzU0LDM4IEBAIEpQRUcgQ29u
+dHJvbCBJRHMKPiA+ID4gPiAgICAgIFNwZWNpZnkgd2hpY2ggSlBFRyBtYXJrZXJzIGFyZSBpbmNs
+dWRlZCBpbiBjb21wcmVzc2VkIHN0cmVhbS4gVGhpcwo+ID4gPiA+ICAgICAgY29udHJvbCBpcyB2
+YWxpZCBvbmx5IGZvciBlbmNvZGVycy4KPiA+ID4gPiAKPiA+ID4gPiArLi4gX2pwZWctcXVhbnQt
+dGFibGVzLWNvbnRyb2w6Cj4gPiA+IAo+ID4gPiBJIGp1c3QgaGFkIGEgbG9vayBhdCBob3cgdGhl
+IEFsbHdpbm5lciBWUFUgaGFuZGxlcyBKUEVHIGRlY29kaW5nIGFuZCBpdAo+ID4gPiBzZWVtcyB0
+byByZXF1aXJlIHRoZSBmb2xsb3dpbmcgaW5mb3JtYXRpb24gKGluIGFkZGl0aW9uIHRvCj4gPiA+
+IHF1YW50aXphdGlvbik6Cj4gPiAKPiA+IEkgYXNzdW1lIHRoZSBoYXJkd2FyZSBkb2Vzbid0IGhh
+dmUgdGhlIGFiaWxpdHkgdG8gcGFyc2UgdGhvc2UgZnJvbSB0aGUKPiA+IHN0cmVhbSBhbmQgc28g
+dGhleSBuZWVkIHRvIGJlIHBhcnNlZCBieSB1c2VyIHNwYWNlIGFuZCBnaXZlbiB0byB0aGUKPiA+
+IGRyaXZlcj8KPiAKPiBUaGF0J3MgY29ycmVjdCwgd2UgYXJlIGFsc28gZGVhbGluZyB3aXRoIGEg
+c3RhdGVsZXNzIGRlY29kZXIgaGVyZS4gSXQncwo+IGFjdHVhbGx5IHRoZSBzYW1lIGhhcmR3YXJl
+IGVuZ2luZSB0aGF0J3MgdXNlZCBmb3IgTVBFRzIgZGVjb2RpbmcsIG9ubHkKPiBjb25maWd1cmVk
+IGRpZmZlcmVudGx5Lgo+IAo+IFNvIHdlIHdpbGwgbmVlZCB0byBpbnRyb2R1Y2UgYSBwaXhmbXQg
+Zm9yIGNvbXByZXNzZWQgSlBFRyBkYXRhIHdpdGhvdXQKPiBoZWFkZXJzLCByZXVzZSBKUEVHIGNv
+bnRyb2xzIHRoYXQgYXBwbHkgYW5kIHBlcmhhcHMgaW50cm9kdWNlIG5ldyBvbmVzCj4gdG9vIGlm
+IG5lZWRlZC4KPiAKPiBJIGFtIGFsc28gd29uZGVyaW5nIGFib3V0IGhvdyBNSlBFRyBzdXBwb3J0
+IHNob3VsZCBmaXQgaW50byB0aGlzLiBBcwo+IGZhciBhcyBJIHVuZGVyc3Rvb2QsIGl0IHNob3Vs
+ZG4ndCBiZSB2ZXJ5IGRpZmZlcmVudCBmcm9tIEpQRUcgc28gd2UKPiBtaWdodCB3YW50IHRvIGhh
+dmUgY29tbW9uIGNvbnRyb2xzIGZvciBib3RoLgo+IAoKV2UndmUgcmVjZW50bHkgZGlzY3Vzc2Vk
+IHRoaXMgYW5kIHdlIHdlcmUgcHJvcG9zaW5nIHRvIGp1c3QgZHJvcApNSlBFRyBhbmQgc3RpY2sg
+dG8gSlBFRy4gVGhlIHJlYXNvbiBpcyB0aGF0IE1KUEVHIGlzIG5vdCBjbGVhcmx5CmRlZmluZWQu
+IE5vdGUgdGhhdCBvdGhlcnMgdHJlYXQgTUpQRUcgYW5kIEpQRUcgYXMgYWxpYXNlcy4KClNlZSAi
+UmU6IFtSRkNdIFY0TDJfUElYX0ZNVF9NSlBFRyB2cyBWNEwyX1BJWF9GTVRfSlBFRyIuCgpBbHNv
+LCBJJ2xsIGJlIGFkZGluZyBzdXBwb3J0IGZvciBzcGVjLWNvbXBsaWFudCBKUEVHIGZyYW1lcwpp
+biByb2NrY2hpcCBKUEVHIGVuY29kZXIuIFRoaXMgd2lsbCBhbGxvdyB0byB1c2UgdGhlIGRyaXZl
+cgp3aXRoIGFscmVhZHkgYXZhaWxhYmxlIHVzZXJzcGFjZS4gSU9XLCB3ZSBkb24ndCBhYnNvbHV0
+ZWx5Cm5lZWQgYSBuZXcgcGl4ZWxmb3JtYXQgZm9yIGVuY29kZXJzLgoKRGVjb2RlcnMsIG9uIHRo
+ZSBvdGhlciBzaWRlLCB3b3VsZCBiZSBhIGRpZmZlcmVudCBzdG9yeSwKYXMgcGFyc2luZyBoZWFk
+ZXJzIGluIHRoZSBrZXJuZWwgY2FuIHJhaXNlIHNvbWUgc2FmZXR5CmNvbmNlcm5zLgoKUmVnYXJk
+cywKRXplcXVpZWwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCkxpbnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdApMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtcm9ja2NoaXAK
