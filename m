@@ -1,32 +1,28 @@
-Return-Path: <SRS0=SDjf=NF=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 1/2] dt-bindings: dmaengine: usb-dmac: Add binding for r8a77470
-Date: Thu, 25 Oct 2018 15:53:37 +0100
-Message-Id: <1540479218-4954-1-git-send-email-biju.das@bp.renesas.com>
-To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 15 Oct 2018 11:55:27 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: watchdog: renesas-wdt: Document r8a7744
+ support
+Message-ID: <20181015165527.GA14954@bogus>
+References: <1537895241-7686-1-git-send-email-biju.das@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1537895241-7686-1-git-send-email-biju.das@bp.renesas.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds usb high-speed dmac binding for r8a77470 (RZ/G1C) SoC.
+On Tue, Sep 25, 2018 at 06:07:21PM +0100, Biju Das wrote:
+> RZ/G1N (R8A7744) watchdog implementation is compatible with R-Car
+> Gen2, therefore add relevant documentation.
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> ---
+>  Documentation/devicetree/bindings/watchdog/renesas-wdt.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-This patch tested against linux-next.
----
- Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt | 1 +
- 1 file changed, 1 insertion(+)
+Applied.
 
-diff --git a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-index 1743017..a1e7b814 100644
---- a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-+++ b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-@@ -6,6 +6,7 @@ Required Properties:
- 	  - "renesas,r8a7743-usb-dmac" (RZ/G1M)
- 	  - "renesas,r8a7744-usb-dmac" (RZ/G1N)
- 	  - "renesas,r8a7745-usb-dmac" (RZ/G1E)
-+	  - "renesas,r8a77470-usb-dmac" (RZ/G1C)
- 	  - "renesas,r8a7790-usb-dmac" (R-Car H2)
- 	  - "renesas,r8a7791-usb-dmac" (R-Car M2-W)
- 	  - "renesas,r8a7793-usb-dmac" (R-Car M2-N)
--- 
-2.7.4
+Rob
