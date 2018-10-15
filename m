@@ -1,109 +1,86 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 3/7] PCI: OF: Allow endpoints to bypass the iommu
-Date: Mon, 15 Oct 2018 12:32:51 +0100
-Message-ID: <33bd48e9-a061-e97d-ff00-daf5097b8e1f@arm.com>
-References: <20181012145917.6840-1-jean-philippe.brucker@arm.com>
-	<20181012145917.6840-4-jean-philippe.brucker@arm.com>
-	<20181012194158.GX5906@bhelgaas-glaptop.roam.corp.google.com>
+From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: [PATCH v2 0/7] spi: add support for octal mode
+Date: Mon, 15 Oct 2018 11:47:55 +0000
+Message-ID: <1539603969-21076-1-git-send-email-yogeshnarayan.gaur@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20181012194158.GX5906-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, tnowicki-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.orgnd-5wv7dgnIgG8@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/10/18 20:41, Bjorn Helgaas wrote:
-> s/iommu/IOMMU/ in subject
-> 
-> On Fri, Oct 12, 2018 at 03:59:13PM +0100, Jean-Philippe Brucker wrote:
->> Using the iommu-map binding, endpoints in a given PCI domain can be
->> managed by different IOMMUs. Some virtual machines may allow a subset of
->> endpoints to bypass the IOMMU. In some case the IOMMU itself is presented
-> 
-> s/case/cases/
-> 
->> as a PCI endpoint (e.g. AMD IOMMU and virtio-iommu). Currently, when a
->> PCI root complex has an iommu-map property, the driver requires all
->> endpoints to be described by the property. Allow the iommu-map property to
->> have gaps.
-> 
-> I'm not an IOMMU or virtio expert, so it's not obvious to me why it is
-> safe to allow devices to bypass the IOMMU.  Does this mean a typo in
-> iommu-map could inadvertently allow devices to bypass it?  Should we
-> indicate something in dmesg (and/or sysfs) about devices that bypass
-> it?
+Add support for octal mode IO data transfer.
+Micron flash, mt35xu512aba, supports octal mode data transfer and
+NXP FlexSPI controller supports 8 data lines for data transfer (Rx/Tx).
 
-It's not really "allow devices to bypass the IOMMU" so much as "allow DT 
-to describe devices which the IOMMU doesn't translate". It's a bit of an 
-edge case for not-really-PCI devices, but FWIW I can certainly think of 
-several ways to build real hardware like that. As for inadvertent errors 
-leaving out IDs which *should* be in the map, that really depends on the 
-IOMMU/driver implementation - e.g. SMMUv2 with arm-smmu.disable_bypass=0 
-would treat the device as untranslated, whereas SMMUv3 would always 
-generate a fault upon any transaction due to no valid stream table entry 
-being programmed (not even a bypass one).
+Patch series
+* Add support for octal mode flags and parsing of same in spi driver.
+* Add opcodes for octal I/O commands in spi-nor framework, Read and Write p=
+roto for (1-1-8/1-8-8) mode.
+  Opcodes are added as per octal data IO commands required for mt35xu512aba=
+ [1] flash.
+* Add parsing logic for spi-mem framework and m25p80.c device file.
+* Add mode bit required for octal mode in nxp-fspi driver [2].
+* Define binding property 'spi-rx/tx-bus-width' for LX2160ARDB target [2].
 
-I reckon it's a sufficiently unusual case that keeping some sort of 
-message probably is worthwhile (at pr_info rather than pr_err) in case 
-someone does hit it by mistake.
+Cherry pick below 2 patches (from: https://git.kernel.org/pub/scm/linux/ker=
+nel/git/broonie/spi.git):
+    c639f871febe6667d9afce28108c634e5636c735 spi: spi-mem: Fix inverted log=
+ic in op sanity check
+    db122eb8a749a1eff038f9a282c620ab16c4be1d spi: spi-mem: Add extra sanity=
+ checks on the op param
 
->> Relaxing of_pci_map_rid also allows the msi-map property to have gaps,
+Tested on LX2160ARDB target with nxp-fspi driver, below are
+Read performance number of 1-1-1 and 1-1-8 read protocol.
 
-At worst, I suppose we could always add yet another parameter for each 
-caller to choose whether a missing entry is considered an error or not.
+ root@lxxx:~# cat /proc/mtd
+ dev:    size   erasesize  name
+ mtd0: 04000000 00001000 "spi0.0"
+ mtd1: 04000000 00001000 "spi0.1"
+ root@lxxx:~# time mtd_debug read /dev/mtd0 0x0 0x1000000 0read
+ Copied 16777216 bytes from address 0x00000000 in flash to 0read
 
-Robin.
+ real    0m2.792s
+ user    0m0.000s
+ sys     0m2.790s
+ root@lxxx:~# time mtd_debug read /dev/mtd1 0x0 0x1000000 0read
+ Copied 16777216 bytes from address 0x00000000 in flash to 0read
 
-> s/of_pci_map_rid/of_pci_map_rid()/
-> 
->> which is invalid since MSIs always reach an MSI controller. Thankfully
->> Linux will error out later, when attempting to find an MSI domain for the
->> device.
-> 
-> Not clear to me what "error out" means here.  In a userspace program,
-> I would infer that the program exits with an error message, but I
-> doubt you mean that Linux exits.
-> 
->> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
->> ---
->>   drivers/pci/of.c | 7 ++++---
->>   1 file changed, 4 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
->> index 1836b8ddf292..2f5015bdb256 100644
->> --- a/drivers/pci/of.c
->> +++ b/drivers/pci/of.c
->> @@ -451,9 +451,10 @@ int of_pci_map_rid(struct device_node *np, u32 rid,
->>   		return 0;
->>   	}
->>   
->> -	pr_err("%pOF: Invalid %s translation - no match for rid 0x%x on %pOF\n",
->> -		np, map_name, rid, target && *target ? *target : NULL);
->> -	return -EFAULT;
->> +	/* Bypasses translation */
->> +	if (id_out)
->> +		*id_out = rid;
->> +	return 0;
->>   }
->>   
->>   #if IS_ENABLED(CONFIG_OF_IRQ)
->> -- 
->> 2.19.1
->>
-> _______________________________________________
-> iommu mailing list
-> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
-> 
+ real    0m0.441s
+ user    0m0.000s
+ sys     0m0.440s
+ root@ls1012ardb:~#
+
+ Flash device MTD0 configured in 1-1-1 protocol.
+ Flash device MTD1 configured in 1-1-8 protocol.
+
+[1] https://patchwork.ozlabs.org/project/linux-mtd/list/?series=3D70384
+[2] https://patchwork.ozlabs.org/project/linux-mtd/list/?series=3D70210
+
+Yogesh Gaur (7):
+  spi: add support for octal I/O data transfer
+  mtd: spi-nor: add opcodes for octal Read/Write commands
+  mtd: spi-nor: add octal read flag for flash mt35xu512aba
+  mtd: m25p80: add support of octal I/O transfer
+  spi: spi-mem: add support for octal I/O data transfer
+  spi: nxp-fspi: add mode flag bit for octal support
+  arm64: dts: lx2160a: update fspi node
+
+Changes for v2:
+ Incorporated review comments of Boris and Vignesh.
+
+ arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts |  4 ++++
+ drivers/mtd/devices/m25p80.c                      |  9 ++++++++-
+ drivers/mtd/spi-nor/spi-nor.c                     | 15 ++++++++++++++-
+ drivers/spi/spi-mem.c                             |  9 ++++++++-
+ drivers/spi/spi-nxp-fspi.c                        |  4 ++--
+ drivers/spi/spi.c                                 |  6 ++++++
+ include/linux/mtd/spi-nor.h                       |  8 ++++++++
+ include/linux/spi/spi.h                           |  2 ++
+ 8 files changed, 52 insertions(+), 5 deletions(-)
+
+--=20
+2.7.4
