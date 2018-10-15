@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v3 01/18] of: overlay: add tests to validate kfrees from overlay removal
-Date: Sun, 14 Oct 2018 17:24:13 -0700
-Message-ID: <1539563070-12969-2-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v3 04/18] powerpc/pseries: add of_node_put() in dlpar_detach_node()
+Date: Sun, 14 Oct 2018 17:24:16 -0700
+Message-ID: <1539563070-12969-5-git-send-email-frowand.list@gmail.com>
 References: <1539563070-12969-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1539563070-12969-1-git-send-email-frowand.list@gmail.com>
@@ -12,111 +12,33 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-Add checks:
-  - attempted kfree due to refcount reaching zero before overlay
-    is removed
-  - properties linked to an overlay node when the node is removed
-  - node refcount > one during node removal in a changeset destroy,
-    if the node was created by the changeset
+"of: overlay: add missing of_node_get() in __of_attach_node_sysfs"
+added a missing of_node_get() to __of_attach_node_sysfs().  This
+results in a refcount imbalance for nodes attached with
+dlpar_attach_node().  The calling sequence from dlpar_attach_node()
+to __of_attach_node_sysfs() is:
 
-After applying this patch, several validation warnings will be
-reported from the devicetree unittest during boot due to
-pre-existing devicetree bugs. The warnings will be similar to:
-
-  OF: ERROR: of_node_release() overlay node /testcase-data/overlay-node/test-bus/test-unittest11/test-unittest111 contains unexpected properties
-  OF: ERROR: memory leak - destroy cset entry: attach overlay node /testcase-data-2/substation@100/hvac-medium-2 with refcount 2
+   dlpar_attach_node()
+      of_attach_node()
+         __of_attach_node_sysfs()
 
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/dynamic.c | 29 +++++++++++++++++++++++++++++
- drivers/of/overlay.c |  1 +
- include/linux/of.h   | 15 ++++++++++-----
- 3 files changed, 40 insertions(+), 5 deletions(-)
+ arch/powerpc/platforms/pseries/dlpar.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index f4f8ed9b5454..b04ee021a891 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -330,6 +330,25 @@ void of_node_release(struct kobject *kobj)
- 	if (!of_node_check_flag(node, OF_DYNAMIC))
- 		return;
+diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
+index a0b20c03f078..e3010b14aea5 100644
+--- a/arch/powerpc/platforms/pseries/dlpar.c
++++ b/arch/powerpc/platforms/pseries/dlpar.c
+@@ -272,6 +272,8 @@ int dlpar_detach_node(struct device_node *dn)
+ 	if (rc)
+ 		return rc;
  
-+	if (of_node_check_flag(node, OF_OVERLAY)) {
++	of_node_put(dn);
 +
-+		if (!of_node_check_flag(node, OF_OVERLAY_FREE_CSET)) {
-+			/* premature refcount of zero, do not free memory */
-+			pr_err("ERROR: memory leak %s() overlay node %pOF before free overlay changeset\n",
-+			       __func__, node);
-+			return;
-+		}
-+
-+		/*
-+		 * If node->properties non-empty then properties were added
-+		 * to this node either by different overlay that has not
-+		 * yet been removed, or by a non-overlay mechanism.
-+		 */
-+		if (node->properties)
-+			pr_err("ERROR: %s() overlay node %pOF contains unexpected properties\n",
-+			       __func__, node);
-+	}
-+
- 	property_list_free(node->properties);
- 	property_list_free(node->deadprops);
- 
-@@ -434,6 +453,16 @@ struct device_node *__of_node_dup(const struct device_node *np,
- 
- static void __of_changeset_entry_destroy(struct of_changeset_entry *ce)
- {
-+	if (ce->action == OF_RECONFIG_ATTACH_NODE &&
-+	    of_node_check_flag(ce->np, OF_OVERLAY)) {
-+		if (kref_read(&ce->np->kobj.kref) > 1) {
-+			pr_err("ERROR: memory leak - destroy cset entry: attach overlay node %pOF with refcount %d\n",
-+			       ce->np, kref_read(&ce->np->kobj.kref));
-+		} else {
-+			of_node_set_flag(ce->np, OF_OVERLAY_FREE_CSET);
-+		}
-+	}
-+
- 	of_node_put(ce->np);
- 	list_del(&ce->node);
- 	kfree(ce);
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index eda57ef12fd0..1176cb4b6e4e 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -373,6 +373,7 @@ static int add_changeset_node(struct overlay_changeset *ovcs,
- 			return -ENOMEM;
- 
- 		tchild->parent = target_node;
-+		of_node_set_flag(tchild, OF_OVERLAY);
- 
- 		ret = of_changeset_attach_node(&ovcs->cset, tchild);
- 		if (ret)
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 4d25e4f952d9..aa1dafaec6ae 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -138,11 +138,16 @@ static inline void of_node_put(struct device_node *node) { }
- extern struct device_node *of_stdout;
- extern raw_spinlock_t devtree_lock;
- 
--/* flag descriptions (need to be visible even when !CONFIG_OF) */
--#define OF_DYNAMIC	1 /* node and properties were allocated via kmalloc */
--#define OF_DETACHED	2 /* node has been detached from the device tree */
--#define OF_POPULATED	3 /* device already created for the node */
--#define OF_POPULATED_BUS	4 /* of_platform_populate recursed to children of this node */
-+/*
-+ * struct device_node flag descriptions
-+ * (need to be visible even when !CONFIG_OF)
-+ */
-+#define OF_DYNAMIC		1 /* (and properties) allocated via kmalloc */
-+#define OF_DETACHED		2 /* detached from the device tree */
-+#define OF_POPULATED		3 /* device already created */
-+#define OF_POPULATED_BUS	4 /* platform bus created for children */
-+#define OF_OVERLAY		5 /* allocated for an overlay */
-+#define OF_OVERLAY_FREE_CSET	6 /* in overlay cset being freed */
- 
- #define OF_BAD_ADDR	((u64)-1)
+ 	return 0;
+ }
  
 -- 
 Frank Rowand <frank.rowand@sony.com>
