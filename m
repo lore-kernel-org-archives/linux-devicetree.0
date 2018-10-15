@@ -1,280 +1,95 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
-Date: Mon, 15 Oct 2018 08:08:31 +0000
-Message-ID: <AM0PR04MB42117867A50BB18D8127BE8080FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1539527419-23613-1-git-send-email-aisheng.dong@nxp.com>
- <1539527419-23613-3-git-send-email-aisheng.dong@nxp.com>
- <20181015065859.lxevjroly435hlaq@pengutronix.de>
+From: <honghui.zhang@mediatek.com>
+Subject: [PATCH v8 0/9] PCI: mediatek: fixup find_port, enable_msi and add PM, module support
+Date: Mon, 15 Oct 2018 16:08:51 +0800
+Message-ID: <1539590940-13355-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181015065859.lxevjroly435hlaq@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com
+Cc: ulf.hansson@linaro.org, marc.zyngier@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, honghui.zhang@mediatek.com, youlin.pei@mediatek.com, yt.shen@mediatek.com, jianjun.wang@mediatek.com, yong.wu@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Sascha Hauer [mailto:s.hauer@pengutronix.de]
-> Sent: Monday, October 15, 2018 2:59 PM
-> To: A.s. Dong <aisheng.dong@nxp.com>
-> Cc: linux-arm-kernel@lists.infradead.org; Mark Rutland
-> <mark.rutland@arm.com>; dongas86@gmail.com; devicetree@vger.kernel.org;
-> catalin.marinas@arm.com; will.deacon@arm.com; robh+dt@kernel.org;
-> dl-linux-imx <linux-imx@nxp.com>; kernel@pengutronix.de; Fabio Estevam
-> <fabio.estevam@nxp.com>; shawnguo@kernel.org
-> Subject: Re: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
-> 
-> On Sun, Oct 14, 2018 at 02:34:52PM +0000, A.s. Dong wrote:
-> > Add imx8qxp support
-> >
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: Shawn Guo <shawnguo@kernel.org>
-> > Cc: Sascha Hauer <kernel@pengutronix.de>
-> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> > ---
-> > v1->v2:
-> >  * mu binding usage update
-> >  * no define for node address
-> >  * do not use '_' for node name
-> >  * drop 'fsl-' prefix for imx dtsi
-> >  * no defines for unit address
-> >  * generic node names
-> >  * range map for 32bit register
-> >  * separate board dts
-> > ---
-> >  Documentation/devicetree/bindings/arm/fsl.txt |   4 +
-> >  arch/arm64/boot/dts/freescale/imx8-ca35.dtsi  |  61 ++
-> >  arch/arm64/boot/dts/freescale/imx8qxp.dtsi    | 861
-> ++++++++++++++++++++++++++
-> >  3 files changed, 926 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8-ca35.dtsi
-> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/fsl.txt
-> > b/Documentation/devicetree/bindings/arm/fsl.txt
-> > index 968f238..baeb1fc 100644
-> > --- a/Documentation/devicetree/bindings/arm/fsl.txt
-> > +++ b/Documentation/devicetree/bindings/arm/fsl.txt
-> > @@ -119,6 +119,10 @@ i.MX6q generic board  Required root node
-> > properties:
-> >      - compatible = "fsl,imx6q";
-> >
-> > +i.MX8QXP generic board
-> > +Required root node properties:
-> > +    - compatible = "fsl,imx8qxp";
-> > +
-> >  Freescale Vybrid Platform Device Tree Bindings
-> >  ----------------------------------------------
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8-ca35.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8-ca35.dtsi
-> > new file mode 100644
-> > index 0000000..c79e97a
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/freescale/imx8-ca35.dtsi
-> > @@ -0,0 +1,61 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Copyright (C) 2016 Freescale Semiconductor, Inc.
-> > + * Copyright 2017~2018 NXP
-> > + */
-> > +
-> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +
-> > +/{
-> > +	cpus {
-> > +		#address-cells = <2>;
-> > +		#size-cells = <0>;
-> > +
-> > +		/* We have 1 clusters with 4 Cortex-A35 cores */
-> > +		A35_0: cpu@0 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a35";
-> > +			reg = <0x0 0x0>;
-> > +			enable-method = "psci";
-> > +			next-level-cache = <&A35_L2>;
-> > +		};
-> > +
-> > +		A35_1: cpu@1 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a35";
-> > +			reg = <0x0 0x1>;
-> > +			enable-method = "psci";
-> > +			next-level-cache = <&A35_L2>;
-> > +		};
-> > +
-> > +		A35_2: cpu@2 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a35";
-> > +			reg = <0x0 0x2>;
-> > +			enable-method = "psci";
-> > +			next-level-cache = <&A35_L2>;
-> > +		};
-> > +
-> > +		A35_3: cpu@3 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a35";
-> > +			reg = <0x0 0x3>;
-> > +			enable-method = "psci";
-> > +			next-level-cache = <&A35_L2>;
-> > +		};
-> > +
-> > +		A35_L2: l2-cache0 {
-> > +			compatible = "cache";
-> > +		};
-> > +	};
-> > +
-> > +	pmu {
-> > +		compatible = "arm,armv8-pmuv3";
-> > +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> > +	};
-> > +
-> > +	psci {
-> > +		compatible = "arm,psci-1.0";
-> > +		method = "smc";
-> > +	};
-> > +};
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > new file mode 100644
-> > index 0000000..e1d2578
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > @@ -0,0 +1,861 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Copyright (C) 2016 Freescale Semiconductor, Inc.
-> > + * Copyright 2017~2018 NXP
-> > + *	Dong Aisheng <aisheng.dong@nxp.com>
-> > + */
-> > +
-> > +#include <dt-bindings/clock/imx8qxp-clock.h>
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +#include <dt-bindings/pinctrl/pads-imx8qxp.h>
-> > +
-> > +#include "imx8-ca35.dtsi"
-> > +
-> > +/ {
-> > +	interrupt-parent = <&gic>;
-> > +	#address-cells = <2>;
-> > +	#size-cells = <2>;
-> > +
-> > +	aliases {
-> > +		serial0 = &dma_lpuart0;
-> > +		mmc0 = &usdhc1;
-> > +		mmc1 = &usdhc2;
-> > +		mmc2 = &usdhc3;
-> > +	};
-> > +
-> > +	memory@80000000 {
-> > +		device_type = "memory";
-> > +		reg = <0x00000000 0x80000000 0 0x40000000>;
-> > +	};
-> > +
-> > +	gic: interrupt-controller@51a00000 {
-> > +		compatible = "arm,gic-v3";
-> > +		reg = <0x0 0x51a00000 0 0x10000>, /* GIC Dist */
-> > +		      <0x0 0x51b00000 0 0xc0000>; /* GICR (RD_base + SGI_base)
-> */
-> > +		#interrupt-cells = <3>;
-> > +		interrupt-controller;
-> > +		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> > +	};
-> > +
-> > +	timer {
-> > +		compatible = "arm,armv8-timer";
-> > +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>, /* Physical Secure
-> */
-> > +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>, /* Physical
-> Non-Secure */
-> > +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>, /* Virtual */
-> > +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>; /* Hypervisor */
-> > +	};
-> > +
-> > +	scu {
-> > +		compatible = "fsl,imx-scu";
-> > +		mbox-names = "tx0", "tx1", "tx2", "tx3",
-> > +			     "rx0", "rx1", "rx2", "rx3";
-> > +		mboxes = <&lsio_mu1 0 0
-> > +			  &lsio_mu1 0 1
-> > +			  &lsio_mu1 0 2
-> > +			  &lsio_mu1 0 3
-> > +			  &lsio_mu1 1 0
-> > +			  &lsio_mu1 1 1
-> > +			  &lsio_mu1 1 2
-> > +			  &lsio_mu1 1 3>;
-> > +
-> > +		clk: clock-controller {
-> > +			compatible = "fsl,imx8qxp-clk";
-> > +			#clock-cells = <1>;
-> > +		};
-> > +
-> > +		iomuxc: pinctrl {
-> > +			compatible = "fsl,imx8qxp-iomuxc";
-> > +		};
-> > +
-> > +		imx8qx-pm {
-> > +			compatible = "fsl,scu-pd";
-> 
-> I missed this earlier, but there should be a i.MX8qp specific compatible as the
-> SCU API might change for future SoCs.
-> 
+From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-We still do not see that requirement up till now. Not sure if it would be
-possible in the future. I see low possibilities.
-SCU IPC is designed to be generic to all MX8 SCU firmwares.
-Even it changes, SCU firmware version control may helps.
+This patchset includes misc patchs:
 
-> > +			compatible = "fsl,imx7ulp-lpuart";
-> > +			compatible = "fsl,imx7ulp-lpi2c";
-> > +			compatible = "fsl,imx7d-usdhc";
-> 
-> All these lack the most specific imx8qp compatible.
-> 
+The patch 1 fixup the mtk_pcie_find_port logic which will cause system
+could not touch the EP's configuration space that connected to PCIe slot 1.
 
-Adding them requires binding doc update as well.
-S I suppose they could be added later when the QXP specific features are
-really supported by the drivers.
-Do you think it's okay?
+The patch 2 fixup the class type for MT7622.
+The patch 6 fixup the enable msi logic, the operation to enable MSI
+should be after system clock is enabled. Call mtk_pcie_enable_msi in
+mtk_pcie_startup_port_v2 since the clock was all enabled at that time.
 
-> > +			compatible = "fsl,imx6sx-fec";
-> > +			compatible = "fsl,imx8qxp-fec";
-> 
-> BTW are there really two different FECs on the i.MX8qp?
+The patch 7 was rebased and refactor of the v4 patch[1], changes are:
+ -Add PM support for MT7622.
+ -Using mtk_pcie_enable_port to re-establish the link when resumed.
+ -Rebased on this patchset.
 
-Good catch, will alignment them all to fsl,imx6sx-fec.
+The patch 9 add loadable kernel module support.
 
-Regards
-Dong Aisheng
+[1] https://patchwork.kernel.org/patch/10479079
 
-> 
-> 
-> Sascha
-> 
-> --
-> Pengutronix e.K.                           |
-> |
-> Industrial Linux Solutions                 |
-> https://emea01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fwww.
-> pengutronix.de%2F&amp;data=02%7C01%7Caisheng.dong%40nxp.com%7Cf1
-> 897d4035174ffda74808d6326bb448%7C686ea1d3bc2b4c6fa92cd99c5c3016
-> 35%7C0%7C0%7C636751835496320764&amp;sdata=J0MO38TWN91LWL3W
-> 5SZk3y1v3PLyHzhNHl0L8jS1xcE%3D&amp;reserved=0  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0
-> |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:
-> +49-5121-206917-5555 |
+Change since v7:
+ - Add Acked-by tags from Ryder Lee.
+ - Add Fix tags for patch 2(Fix calss type for MT7622 as PCI_CLASS_BRIDGE_PCI)
+   and patch 6(Fixup enable MSI logic by enable MSI after clock enabled)
+
+Change since v6:
+ - Remove the pci_unmap_iospace when remove the device since the
+   devm_pci_remap_iospace is an devm_ version.
+ - Commit message changed for patch 2(Fix class type for MT7622 as PCI_CLASS_BRIDGE_PCI).
+ - Capitilizing "MSI" and "PM" in the patch title.
+
+Change since v5:
+ - A bit improvement of mtk_pcie_find_port suggest by Lorenzo.
+   MSI after clock enabled).
+ - Add Acked-by tags from Ryder.
+
+Change since v4:
+ - Add patch 2 to fixup class type for MT7622.
+ - Add patch 3 to remove the redundant dev->pm_domain check
+ - Add patch 4 to covert to use pci_host_probe
+ - Add patch 5 to re-arrange the function define, this is a prepare patch for
+   fixup the enable_msi logic, no functional changed have been made by this one.
+ - Add patch 8 to save the GIC IRQ in mtk_pcie_port as a prepare patch for tear
+   down the irq when remove the kernel module.
+ - Re-arrange the find_port flow suggest by Lorenzo to make the code parse easier
+   for the patch 1.
+ - Remove the .pm_support in mtk_pcie_soc in patch 7 since if system pm was not
+   supported, then those pm callbacks will never be executed for MT7622. So the
+   .pm_support is not needed.
+
+Change since v3:
+ - Remove pm_runtime_XXX ops in suspend and resume callbacks in the third patch.
+ - Rebase to 4.19-rc1.
+
+Change since v2:
+ - Fix the list_for_each_entry_safe parameter error.
+ - Add Ryder's Acked-by flag.
+
+Change since v1:
+ - A bit of code refact of the first patch suggested by Andy Shevchenko, and
+   commit message updated.
+
+Honghui Zhang (9):
+  PCI: mediatek: Using slot's devfn for compare to fix
+    mtk_pcie_find_port logic
+  PCI: mediatek: Fix class type for MT7622 as PCI_CLASS_BRIDGE_PCI
+  PCI: mediatek: Remove the redundant dev->pm_domain check
+  PCI: mediatek: Convert to use pci_host_probe()
+  PCI: mediatek: Move the mtk_pcie_startup_port_v2 function's define
+    after mtk_pcie_setup_irq
+  PCI: mediatek: Fixup enable MSI logic by enable MSI after clock
+    enabled
+  PCI: mediatek: Add system PM support for MT2712 and MT7622
+  PCI: mediatek: Save the GIC IRQ in mtk_pcie_port
+  PCI: mediatek: Add loadable kernel module support
+
+ drivers/pci/controller/Kconfig         |   2 +-
+ drivers/pci/controller/pcie-mediatek.c | 319 +++++++++++++++++++++------------
+ 2 files changed, 204 insertions(+), 117 deletions(-)
+
+-- 
+2.6.4
