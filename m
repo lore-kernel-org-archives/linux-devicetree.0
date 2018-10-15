@@ -1,78 +1,72 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH] dt-bindings: misc: bk4: Add device tree binding for
- Liebherr's BK4 SPI bus
-Date: Mon, 15 Oct 2018 23:23:36 +0200
-Message-ID: <20181015232336.643bc335@jawa>
-References: <20180927222655.24482-1-lukma@denx.de>
-        <20181015184627.GA23207@bogus>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 2/9] dt-bindings: ti-lmu: Remove LM3697
+Date: Mon, 15 Oct 2018 23:45:12 +0200
+Message-ID: <20181015214512.GA2001@amd>
+References: <20181011165123.32198-3-dmurphy@ti.com>
+ <20181011182734.GA7973@amd>
+ <4fcb91c7-b2b2-798d-8a41-fa1b475086e0@ti.com>
+ <8c1559e1-b703-4c98-8bd9-7c9993bd59f5@gmail.com>
+ <20181012162619.GA28573@bogus>
+ <20181012180312.GB5565@amd>
+ <60cc9238-aba2-aa6a-64a4-2b5e20835549@gmail.com>
+ <CAL_Jsq+Yspr_iNP1eYanvtmiuMf-xNEZ0suDH3tQayV=V5r5=g@mail.gmail.com>
+ <73647af4-0258-49a9-d9b6-eeef7e7813dc@gmail.com>
+ <5c7f03cc-4d45-6010-523d-46721c218731@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/ZDwnx6VQnqDQV5rlWtg4MGN"; protocol="application/pgp-signature"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181015184627.GA23207@bogus>
+Content-Disposition: inline
+In-Reply-To: <5c7f03cc-4d45-6010-523d-46721c218731@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh@kernel.org>, Lee Jones <lee.jones@linaro.org>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/ZDwnx6VQnqDQV5rlWtg4MGN
-Content-Type: text/plain; charset=US-ASCII
+
+--a8Wt8u1KmwUX3Y2C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi All,
+Hi!
 
-> On Fri, Sep 28, 2018 at 12:26:55AM +0200, Lukasz Majewski wrote:
-> > Add Device Tree binding document for Liebherr's BK4 external SPI
-> > bus.
+> >> Given this one seems to have not really been finished, it's probably
+> >> okay to make changes in this case. Still, it would be good to see
+> >> patches structured so that it's obvious we're breaking things. But how
+> >> the patches are structured doesn't matter until there's some agreement
+> >> on the end result.
 > >=20
-> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> > ---
-> >  Documentation/devicetree/bindings/misc/lwn-bk4.txt | 26
-> > ++++++++++++++++++++++ 1 file changed, 26 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/misc/lwn-bk4.txt =20
+> > OK, so if I'm getting it right, the correct patch structure in this case
+> > means that changes removing bindings from MFD and moving them along
+> > with the modifications to the LED subsystem should be placed in a single
+> > patch.
+> >=20
+> > Dan, could you please arrange the next patch set version accordingly?
 >=20
-> Applied.
->=20
-> To add to Mark's comments, the status of binding patches can be
-> checked on patchwork[1]. There's no reason for pings to me. If it is
-> in the "New" state, I will get to it and you can see where you are in
-> the queue. ATM, I'm rather backed up.
+> Yes I can squash the DT bindings patches and call it a "move and modify"
 
-Thanks for explanation and the hint regarding patchwork usage.
+You can do move without problems. But if you plan to modify them,
+please try to change as little as possible, make it separate patch and
+explain why new version is better than old one.
 
->=20
-> Rob
->=20
-> [1] https://patchwork.ozlabs.org/project/devicetree-bindings/list/
+Thanks,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-
---Sig_/ZDwnx6VQnqDQV5rlWtg4MGN
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--a8Wt8u1KmwUX3Y2C
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlvFBVkACgkQAR8vZIA0
-zr3FtAf/Zqj1ranCIlnjxXEXUDqaRNK14K20ruEPU9okXaFrg4JPq9Gfc9Tzh6py
-15c+xzytkaxgwyQb3kYvIrzpzA/seA1k1m7ZaAlRxUf8OAbCpoJbql8efROpdToa
-BZbKONSY9tRw6GIVJbUk+LbCEtp3NVOFacBh7EecZNR3iFtISaBRbJQu7+6d/Q7H
-rX6GZoGSuimYyeldIb4AXxBytvoU+SNP74tlsB0/RuVEYNKMQBSSAG6ElxIeahVK
-RJT3tkmIx0qVK+rR0321M0IxvPAKxLgZhTRk9Y0JSBmffKD/mnoCmTQ8p4w5yNd4
-p321VOatU0Qsj+lUnZ/cqHc6FLIdjg==
-=/EYV
+iEYEARECAAYFAlvFCmgACgkQMOfwapXb+vLlCACdE9/pTkDCsUOQs5V3SQPhXgeN
+rnEAn2i3kGhzClVvDPKYX6+2Tw2FyH83
+=UNmj
 -----END PGP SIGNATURE-----
 
---Sig_/ZDwnx6VQnqDQV5rlWtg4MGN--
+--a8Wt8u1KmwUX3Y2C--
