@@ -1,77 +1,49 @@
-From: Manish Narani <manish.narani@xilinx.com>
-Subject: [PATCH v9 2/6] dt: bindings: Document ZynqMP DDRC in Synopsys
- documentation
-Date: Mon, 15 Oct 2018 10:59:44 +0530
-Message-ID: <1539581388-23963-3-git-send-email-manish.narani@xilinx.com>
-References: <1539581388-23963-1-git-send-email-manish.narani@xilinx.com>
+From: <honghui.zhang@mediatek.com>
+Subject: [PATCH v7 2/9] PCI: mediatek: Fix class type for MT7622 as PCI_CLASS_BRIDGE_PCI
+Date: Mon, 15 Oct 2018 13:44:40 +0800
+Message-ID: <1539582287-9171-3-git-send-email-honghui.zhang@mediatek.com>
+References: <1539582287-9171-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1539581388-23963-1-git-send-email-manish.narani@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, bp@alien8.de, mchehab@kernel.org, manish.narani@xilinx.com, amit.kucheria@linaro.org, sudeep.holla@arm.com, olof@lixom.net
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1539582287-9171-1-git-send-email-honghui.zhang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com
+Cc: ulf.hansson@linaro.org, marc.zyngier@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, honghui.zhang@mediatek.com, youlin.pei@mediatek.com, yt.shen@mediatek.com, jianjun.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Add information of ZynqMP DDRC which reports the single bit errors that
-are corrected and the double bit errors that are detected.
+From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+The commit 101c92dc80c8 ("PCI: mediatek: Set up vendor ID and class
+type for MT7622") have set the class type for MT7622 as un-properly
+value of PCI_CLASS_BRIDGE_HOST.
+
+The PCIe controller of MT7622 is complexed with Root Port and PCI-to-PCI
+bridge, the bridge has type 1 configuration space header and related bridge
+windows. The HW default value of this bridge's class type is invalid. Fix
+its class type as PCI_CLASS_BRIDGE_PCI since it is HW defines.
+
+Making the bridge visiable to PCI framework by setting its class type
+properly will get its bridge windows configurated during PCI device
+enumerate.
+
+Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
 ---
- .../bindings/memory-controllers/synopsys.txt       | 27 ++++++++++++++++++----
- 1 file changed, 22 insertions(+), 5 deletions(-)
+ drivers/pci/controller/pcie-mediatek.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/synopsys.txt b/Documentation/devicetree/bindings/memory-controllers/synopsys.txt
-index a43d26d..9d32762 100644
---- a/Documentation/devicetree/bindings/memory-controllers/synopsys.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/synopsys.txt
-@@ -1,15 +1,32 @@
- Binding for Synopsys IntelliDDR Multi Protocol Memory Controller
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index 288b8e2..bcdac9b 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -432,7 +432,7 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+ 		val = PCI_VENDOR_ID_MEDIATEK;
+ 		writew(val, port->base + PCIE_CONF_VEND_ID);
  
--This controller has an optional ECC support in half-bus width (16-bit)
--configuration. The ECC controller corrects one bit error and detects
--two bit errors.
-+The ZynqMP DDR ECC controller has an optional ECC support in 64-bit and 32-bit
-+bus width configurations.
-+
-+The Zynq DDR ECC controller has an optional ECC support in half-bus width
-+(16-bit) configuration.
-+
-+These both ECC controllers correct single bit ECC errors and detect double bit
-+ECC errors.
+-		val = PCI_CLASS_BRIDGE_HOST;
++		val = PCI_CLASS_BRIDGE_PCI;
+ 		writew(val, port->base + PCIE_CONF_CLASS_ID);
+ 	}
  
- Required properties:
-- - compatible: Should be 'xlnx,zynq-ddrc-a05'
-- - reg: Base address and size of the controllers memory area
-+ - compatible: One of:
-+	- 'xlnx,zynq-ddrc-a05' : Zynq DDR ECC controller
-+	- 'xlnx,zynqmp-ddrc-2.40a' : ZynqMP DDR ECC controller
-+ - reg: Should contain DDR controller registers location and length.
-+
-+Required properties for "xlnx,zynqmp-ddrc-2.40a":
-+ - interrupts: Property with a value describing the interrupt number.
- 
- Example:
- 	memory-controller@f8006000 {
- 		compatible = "xlnx,zynq-ddrc-a05";
- 		reg = <0xf8006000 0x1000>;
- 	};
-+
-+	mc: memory-controller@fd070000 {
-+		compatible = "xlnx,zynqmp-ddrc-2.40a";
-+		reg = <0x0 0xfd070000 0x0 0x30000>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 112 4>;
-+	};
 -- 
-2.1.1
+2.6.4
