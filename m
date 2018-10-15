@@ -1,54 +1,49 @@
-From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Subject: [PATCH v2 7/7] arm64: dts: lx2160a: update fspi node
-Date: Mon, 15 Oct 2018 12:14:39 +0000
-Message-ID: <1539605534-22302-8-git-send-email-yogeshnarayan.gaur@nxp.com>
-References: <1539605534-22302-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH V2 0/5] Tegra xHCI genpd support
+Date: Mon, 15 Oct 2018 13:40:03 +0100
+Message-ID: <6a7cda6b-2f2f-43ee-7a53-8b226fdcc88d@nvidia.com>
+References: <1538143910-24400-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539605534-22302-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+In-Reply-To: <1538143910-24400-1-git-send-email-jonathanh@nvidia.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+To: Mathias Nyman <mathias.nyman@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Flash mt35xu512aba connected to FlexSPI controller supports
-1-1-8/1-8-8 protocol.
-Added flag spi-rx-bus-width and spi-tx-bus-width with values as
-8 and 8 respectively for both flashes connected at CS0 and CS1.
+Hi Mathias,
 
-Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
----
-Changes for v2:
- Make spi-tx-bus-width as 8.
+On 28/09/18 15:11, Jon Hunter wrote:
+> This series add genpd support for the Tegra xHCI device that requires
+> more than one power-domain to operate.
+> 
+> This series is making changes to more than one subsystem and at first
+> glance may look like a maintainers nightmare. However, my proposal is
+> this, once reviewed and people are happy ...
+> 1. Patches 1-3 should be merged first. Patches 1 can go via the Tegra
+>    tree and 2-3 via the USB tree.
+> 2. Once patches 1-3 are accepted, then 4 and 5 can be merged via the
+>    Tegra tree.
+> 
+> Changes since V1:
+> - Dropped unneeded patch to export symbol for genpd API
+> - Added patch to power-off XUSB domains
+> - Slight re-work to Tegra xHCI driver changes to simplify clean-up path.
+> 
+> Jon Hunter (5):
+>   dt-bindings: usb: xhci-tegra: Add power-domain details
+>   usb: xhci: tegra: Power-off power-domains on removal
+>   usb: xhci: tegra: Add genpd support
+>   soc/tegra: pmc: Don't power-up XUSB power-domains
+>   arm64: dts: tegra210: Add power-domains for xHCI
 
- arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Let me know you are ok to pick up patches 2 and 3 for v4.20.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64=
-/boot/dts/freescale/fsl-lx2160a-rdb.dts
-index 3b20c97..24cc41c 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-@@ -45,6 +45,8 @@
- 		m25p,fast-read;
- 		spi-max-frequency =3D <20000000>;
- 		reg =3D <0>;
-+		spi-rx-bus-width =3D <8>;
-+		spi-tx-bus-width =3D <8>;
- 	};
-=20
- 	mt35xu512aba1: flash@1 {
-@@ -54,6 +56,8 @@
- 		m25p,fast-read;
- 		spi-max-frequency =3D <20000000>;
- 		reg =3D <1>;
-+		spi-rx-bus-width =3D <8>;
-+		spi-tx-bus-width =3D <8>;
- 	};
- };
-=20
---=20
-2.7.4
+Cheers
+Jon
+
+-- 
+nvpublic
