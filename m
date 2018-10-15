@@ -1,39 +1,53 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 3/5] clk: lochnagar: Add support for the Cirrus Logic Lochnagar
-Date: Mon, 15 Oct 2018 14:53:56 -0700
-Message-ID: <153964043651.5275.8596868422770600346@swboyd.mtv.corp.google.com>
-References: <20181008132542.19775-1-ckeepax@opensource.cirrus.com>
- <20181008132542.19775-3-ckeepax@opensource.cirrus.com>
- <153924124658.207691.10370075148426001371@swboyd.mtv.corp.google.com>
- <20181011132602.GD1653@imbe.wolfsonmicro.main>
- <153935999691.5275.1587207165396958375@swboyd.mtv.corp.google.com>
- <20181015104905.GF1653@imbe.wolfsonmicro.main>
- <153962159992.5275.9275448716859702011@swboyd.mtv.corp.google.com>
- <20181015165528.GD12949@sirena.org.uk>
+From: Paul Burton <paul.burton@mips.com>
+Subject: Re: [PATCH 00/14] serial: langtiq: Add CCF suppport
+Date: Mon, 15 Oct 2018 21:58:47 +0000
+Message-ID: <20181015215845.5t7bkyks6hsxqwsb@pburton-laptop>
+References: <20180924102803.30263-1-songjun.wu@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181015165528.GD12949@sirena.org.uk>
+In-Reply-To: <20180924102803.30263-1-songjun.wu@linux.intel.com>
+Content-Language: en-US
+Content-ID: <65EBC5B044F99A4EA8A4F4D65B6EADD1@namprd22.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, lee.jones@linaro.org, linus.walleij@linaro.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+To: Songjun Wu <songjun.wu@linux.intel.com>
+Cc: "yixin.zhu@linux.intel.com" <yixin.zhu@linux.intel.com>, "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>, "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, James Hogan <jhogan@kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, Jiri Slaby <jslaby@suse.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, Rob Herring <robh+dt@kernel.org>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Mark Brown (2018-10-15 09:55:28)
-> On Mon, Oct 15, 2018 at 09:39:59AM -0700, Stephen Boyd wrote:
-> =
+Hi Songjun,
 
-> > Ok if there's going to be read/volatile regs and defaults then it makes
-> > sense to leave the defines in some shared header file, which is
-> > unfortunate for the independent merge of driver bits. Either way, I
-> =
+On Mon, Sep 24, 2018 at 06:27:49PM +0800, Songjun Wu wrote:
+> This patch series is for adding common clock framework support
+> for langtiq serial driver, mainly includes:
 
-> Kconfig dependencies take care of that pretty well - if there's a
-> dependency on the MFD then the function driver just won't get built
-> until the MFD gets merged.  =
+s/langtiq/lantiq/ ...
 
+> 1) Add common clock framework support.
+> 2) Modify the dts file according to the DT conventions.
+> 3) Replace the platform dependent functions with kernel functions
+>=20
+> Songjun Wu (14):
+>   MIPS: dts: Change upper case to lower case
+>   MIPS: dts: Add aliases node for lantiq danube serial
+>   serial: lantiq: Get serial id from dts
+>   serial: lantiq: Change ltq_w32_mask to asc_update_bits
+>   MIPS: lantiq: Unselect SWAP_IO_SPACE when LANTIQ is selected
+>   serial: lantiq: Use readl/writel instead of ltq_r32/ltq_w32
+>   serial: lantiq: Rename fpiclk to freqclk
+>   serial: lantiq: Replace clk_enable/clk_disable with clk generic API
+>   serial: lantiq: Add CCF support
+>   serial: lantiq: Reorder the head files
+>   include: Add lantiq.h in include/linux/
+>   serial: lantiq: Replace lantiq_soc.h with lantiq.h
+>   serial: lantiq: Change init_lqasc to static declaration
+>   dt-bindings: serial: lantiq: Add optional properties for CCF
 
-Yep. I'm just saying that I can't merge the clk driver part by itself
-when there's a shared header dependency, unless someone provides a
-stable tree with the header file patch applied to it.
+It appears that you only copied me on patches 1, 2 & 5. I've applied
+patch 1 to mips-next for 4.20, but I have no clue whether your other
+patches were deemed acceptable by serial or DT maintainers & I have no
+context for the changes being made, so I can neither apply nor ack
+patches 2 & 5. Please copy me on the whole series next time.
+
+Thanks,
+    Paul
