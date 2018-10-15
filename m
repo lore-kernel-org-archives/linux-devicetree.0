@@ -1,86 +1,69 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 5/9] ASoC: sunxi: Add new driver for
- Allwinner A64 codec's analog path controls
-Date: Mon, 15 Oct 2018 10:24:50 +0200
-Message-ID: <20181015082450.i56n5cppwgiu44ko@flea>
-References: <20181013165329.13363-1-anarsoul@gmail.com>
- <20181013165329.13363-6-anarsoul@gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
+Date: Mon, 15 Oct 2018 10:27:51 +0200
+Message-ID: <20181015082751.ytuleg67p5pgtnov@pengutronix.de>
+References: <1539527419-23613-1-git-send-email-aisheng.dong@nxp.com>
+ <1539527419-23613-3-git-send-email-aisheng.dong@nxp.com>
+ <20181015065859.lxevjroly435hlaq@pengutronix.de>
+ <AM0PR04MB42117867A50BB18D8127BE8080FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8375792516944468966=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181013165329.13363-6-anarsoul@gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Mylene JOSSERAND <mylene.josserand@free-electrons.com>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Marcus Cooper <codekipper@gmail.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB42117867A50BB18D8127BE8080FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Oct 15, 2018 at 08:08:31AM +0000, A.s. Dong wrote:
+> > > +		imx8qx-pm {
+> > > +			compatible = "fsl,scu-pd";
+> > 
+> > I missed this earlier, but there should be a i.MX8qp specific compatible as the
+> > SCU API might change for future SoCs.
+> > 
+> 
+> We still do not see that requirement up till now. Not sure if it would be
+> possible in the future. I see low possibilities.
+> SCU IPC is designed to be generic to all MX8 SCU firmwares.
 
---===============8375792516944468966==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rmvcilg4tpucomcb"
-Content-Disposition: inline
+And i.MX9? i.MX10?
 
+> Even it changes, SCU firmware version control may helps.
 
---rmvcilg4tpucomcb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It's not the first time that the position of the version field changes with
+a newer version.
 
-On Sat, Oct 13, 2018 at 09:53:25AM -0700, Vasily Khoruzhick wrote:
-> The internal codec on A64 is split into 2 parts. The analog path controls
-> are routed through an embedded custom register bus accessed through
-> the PRCM block.
->=20
-> Add an ASoC component driver for it. This should be tied to the codec
-> audio card as an auxiliary device.
->=20
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> 
+> > > +			compatible = "fsl,imx7ulp-lpuart";
+> > > +			compatible = "fsl,imx7ulp-lpi2c";
+> > > +			compatible = "fsl,imx7d-usdhc";
+> > 
+> > All these lack the most specific imx8qp compatible.
+> > 
+> 
+> Adding them requires binding doc update as well.
+> S I suppose they could be added later when the QXP specific features are
+> really supported by the drivers.
+> Do you think it's okay?
 
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Newer Kernels should work with older device trees, so once you roll out
+these compatibles it's too late already.
 
-Thanks!
-Maxime
+Sascha
 
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---rmvcilg4tpucomcb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlvETtEACgkQ0rTAlCFN
-r3S25g/+OusRZ37+XCqkgBo64KzWBdwXpwkkk8AoLtnxnjI2uBDLL9KtNowpQ2Vo
-U2iOw8dMywyBqyZ6zo4+qKXk22rZ59hPBElSaHEQYNLeAjr4OHzA08FLsymymM5a
-KXX4pM1CSV9+3l/var2vk/uaxFyCW1VmAvz0OCIIvpU0zSAIIBeXbOE+UQbOdsAg
-FbS96VipW5mw+IOWCokh0EHo986y5fIziWxSS/jslKHdHPSv28QR5c7brNEm/Tqu
-U7HUcu6hlKp7xWo8ClKQTka+UpY/XM00nT5NJ5dKHLLddYUJEe8aug+Hn+yMQwoF
-UJdNjzywWPx/WRE52Dcwe9+rVFaafLMe60TfutyZBInQjKJG5pZom+jTIRHjQE/t
-MgwdR8yDjQKbG/GhPPkh9ogET6SI43RocEPloSvjObVkEcGqLKI1q0sRQarR7ppw
-wFoBIsWvikbfeKlGewIVB/A4IRJV0w7Zbtj4ANFiOjW8XrKA6WY/ZCpywnlFhBup
-MWOfquNhLKuvSkFmaAJynuDMEN7+iagDJAVN0dAukivb5CKeo6yY4XH/dWs1yMLj
-WuZ+YpAgHF+aY9bRSHkxBi/UA0IyaZqKywLUyafUV4JTWGDmvjvEwCqZ1Bjfho6Z
-/AYzvxYpM9cWIO1ZcTfTe7vE326CVUoW6L5zcUb903aU9NOHN4A=
-=57nO
------END PGP SIGNATURE-----
-
---rmvcilg4tpucomcb--
-
---===============8375792516944468966==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============8375792516944468966==--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
