@@ -1,83 +1,67 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/9] dt-bindings: ti-lmu: Remove LM3697
-Date: Sun, 14 Oct 2018 19:56:16 -0500
-Message-ID: <CAL_Jsq+Yspr_iNP1eYanvtmiuMf-xNEZ0suDH3tQayV=V5r5=g@mail.gmail.com>
-References: <20181011165123.32198-1-dmurphy@ti.com> <20181011165123.32198-3-dmurphy@ti.com>
- <20181011182734.GA7973@amd> <4fcb91c7-b2b2-798d-8a41-fa1b475086e0@ti.com>
- <8c1559e1-b703-4c98-8bd9-7c9993bd59f5@gmail.com> <20181012162619.GA28573@bogus>
- <20181012180312.GB5565@amd> <60cc9238-aba2-aa6a-64a4-2b5e20835549@gmail.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v3 13/18] of: overlay: check prevents multiple fragments
+ touching same property
+Date: Sun, 14 Oct 2018 18:06:40 -0700
+Message-ID: <b6ee53f7e02cc3ea52713ae82402e97d7050cb3e.camel@perches.com>
+References: <1539563070-12969-1-git-send-email-frowand.list@gmail.com>
+         <1539563070-12969-14-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <60cc9238-aba2-aa6a-64a4-2b5e20835549@gmail.com>
+In-Reply-To: <1539563070-12969-14-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>, Lee Jones <lee.jones@linaro.org>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
+To: frowand.list@gmail.com, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 13, 2018 at 1:46 PM Jacek Anaszewski
-<jacek.anaszewski@gmail.com> wrote:
->
-> On 10/12/2018 08:03 PM, Pavel Machek wrote:
-> > Hi!
-> >
-> >>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> >>>>>
-> >>>>> NAK.
-> >>>>
-> >>>> Thanks for the NAK.
-> >>>>
-> >>>> This NAK was NAK'd by other maintainer in the V2 RFC patchset
-> >>>>
-> >>>> https://lore.kernel.org/patchwork/patch/993171/
-> >>>
-> >>> I confirm. LM3697 is a standalone device and not a cell of any
-> >>> MFD device.
-> >>>
-> >>> Waiting for DT maintainer's ack.
-> >>
-> >> You all sort out what you want... I can't follow it all, and I'm not
-> >> going to spend the time trying to figure out what is going on here.
-> >
-> > This is what I want:
-> >
-> >> As this is worded, changing the driver is a Linux problem and irrelevant
-> >> to the binding. Now if you want to move documentation to a location that
-> >> makes more sense, then fine. But structure patches that way and make it
-> >> clear that from an binding ABI perspective, nothing is changing.
-> >
-> > ...but apparently I did not have enough authority to get it.
-> >
-> > (I'm ok with move, and it is possible that binding does need some
-> > fixups besides the move; still it should be done as fixup not as a new
-> > binding).
->
-> There is a fundamental question - should the bindings be considered
-> an ABI, even though there is no mainline "*.dts" implementation basing
-> on these bindings?
+On Sun, 2018-10-14 at 17:24 -0700, frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
+> 
+> Add test case of two fragments updating the same property.  After
+> adding the test case, the system hangs at end of boot, after
+> after slub stack dumps from kfree() in crypto modprobe code.
+[]
+> -static int check_changeset_dup_add_node(struct overlay_changeset *ovcs)
+> +static int changeset_dup_entry_check(struct overlay_changeset *ovcs)
+>  {
+> -	struct of_changeset_entry *ce_1, *ce_2;
+> -	char *fn_1, *fn_2;
+> -	int name_match;
+> +	struct of_changeset_entry *ce_1;
+> +	int dup_entry = 0;
+>  
+>  	list_for_each_entry(ce_1, &ovcs->cset.entries, node) {
+> -
+> -		if (ce_1->action == OF_RECONFIG_ATTACH_NODE ||
+> -		    ce_1->action == OF_RECONFIG_DETACH_NODE) {
+> -
+> -			ce_2 = ce_1;
+> -			list_for_each_entry_continue(ce_2, &ovcs->cset.entries, node) {
+> -				if (ce_2->action == OF_RECONFIG_ATTACH_NODE ||
+> -				    ce_2->action == OF_RECONFIG_DETACH_NODE) {
+> -					/* inexpensive name compare */
+> -					if (!of_node_cmp(ce_1->np->full_name,
+> -					    ce_2->np->full_name)) {
+> -						/* expensive full path name compare */
+> -						fn_1 = kasprintf(GFP_KERNEL, "%pOF", ce_1->np);
+> -						fn_2 = kasprintf(GFP_KERNEL, "%pOF", ce_2->np);
+> -						name_match = !strcmp(fn_1, fn_2);
+> -						kfree(fn_1);
+> -						kfree(fn_2);
+> -						if (name_match) {
+> -							pr_err("ERROR: multiple overlay fragments add and/or delete node %pOF\n",
+> -							       ce_1->np);
+> -							return -EINVAL;
+> -						}
+> -					}
+> -				}
+> -			}
+> -		}
+> +		dup_entry |= find_dup_cset_node_entry(ovcs, ce_1);
+> +		dup_entry |= find_dup_cset_prop(ovcs, ce_1);
 
-In theory there could be out of tree users. Having a dts file using it
-in tree shouldn't be a requirement to maintain the ABI IMO. However, a
-lack of dts is one piece of determining whether this is in use or not.
+I think this is worse performance than before.
 
-> This patch fixes the issues of bindings in a way that would change
-> the ABI, if only it existed. But it apparently doesn't exist in
-> mainline. Unless a DT documentation itself constitutes an ABI.
->
-> I'd like to have it clarified at this occasion, and that's why
-> I kindly ask for DT maintainer's ack or NACK for this modification
-> of bindings.
->
-> For a reference we have a nice summary of the MFD driver and related
-> bindings' flaws in [0] and [1].
->
-> [0] https://lkml.org/lkml/2018/9/7/774
-> [1] https://lkml.org/lkml/2018/9/11/984
-
-Given this one seems to have not really been finished, it's probably
-okay to make changes in this case. Still, it would be good to see
-patches structured so that it's obvious we're breaking things. But how
-the patches are structured doesn't matter until there's some agreement
-on the end result.
-
-Rob
+This now walks all entries when before it would
+return -EINVAL directly when it found a match.
