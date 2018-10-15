@@ -1,59 +1,44 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 3/4] dt-bindings: iommu/arm, smmu: add compatible string
- for Marvell
-Date: Mon, 15 Oct 2018 14:11:52 +0100
-Message-ID: <3ce1d67a-4e3c-e8d8-f7fc-79649f1def68@arm.com>
-References: <1539604846-21151-1-git-send-email-hannah@marvell.com>
- <1539604846-21151-4-git-send-email-hannah@marvell.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: mmc: mediatek: add MT8183 MMC driver support
+Date: Mon, 15 Oct 2018 15:15:55 +0200
+Message-ID: <CAPDyKFp3Wn9Wz8bmaSXFmNe0HOKCMcy7Pue3C7+9w5kq2AO0Sw@mail.gmail.com>
+References: <1539415250-32337-1-git-send-email-chaotian.jing@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539604846-21151-4-git-send-email-hannah@marvell.com>
-Content-Language: en-GB
+In-Reply-To: <1539415250-32337-1-git-send-email-chaotian.jing@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: hannah@marvell.com, catalin.marinas@arm.com, will.deacon@arm.com, corbet@lwn.net, joro@8bytes.org, robh+dt@kernel.org, gregory.clement@bootlin.com, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, omrii@marvell.com, linux-kernel@vger.kernel.org, nadavh@marvell.com, iommu@lists.linux-foundation.org, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, nd@arm.com
+To: Chaotian Jing <chaotian.jing@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Sean Wang <sean.wang@mediatek.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, jjian.zhou@mediatek.com, wenbin.mei@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 15/10/18 13:00, hannah@marvell.com wrote:
-> From: Hanna Hawa <hannah@marvell.com>
-> 
-> Add specific compatible string for Marvell usage due errata of
-> accessing 64bit registers of ARM SMMU, in AP806.
-> 
-> AP806 SOC use the generic ARM-MMU500, and there's no specific
-> implementation of Marvell, this compatible is used for errata only.
+On 13 October 2018 at 09:20, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
+> this series of patch include below changes:
+> 1. Add MT8183 SoC support in Mediatek MMC DT bindings
+> 2. Fill mmc->actual_clock
+> 3. Fix cannot receive new request issue
+> 4. Tune CMD/DATA together to save tuning time
+> 5. Add MT8183 MMC driver support
+> 6. Refine the tuning method to drop too much redundant code
+>
+> Chaotian Jing (6):
+>   mmc: dt-bindings: add support for MT8183 SoC
+>   mmc: mediatek: fill the actual clock for mmc debugfs
+>   mmc: mediatek: fix cannot receive new request when msdc_cmd_is_ready
+>     fail
+>   mmc: mediatek: tune CMD/DATA together
+>   mmc: mediatek: add MT8183 MMC driver support
+>   mmc: mediatek: drop too much code of tuning method
+>
+>  Documentation/devicetree/bindings/mmc/mtk-sd.txt |   1 +
+>  drivers/mmc/host/mtk-sd.c                        | 292 ++++++++++++++++++++---
+>  2 files changed, 254 insertions(+), 39 deletions(-)
+>
+> --
+> 1.8.1.1.dirty
+>
 
-Given that, I think something more specific like:
+Applied for next, thanks!
 
-	"marvell,ap806-smmu", "arm,mmu-500";
-
-would be most appropriate. Otherwise, if some future Marvell SoC were to 
-ever come out with a *different* MMU-500 integration problem, you'd 
-already have painted yourself into a corner.
-
-Alternatively (or additionally), we could perhaps consider a separate 
-property like "marvell,32bit-config-access", to mirror the existing 
-handling of the secure integration bug.
-
-Robin.
-
-> Signed-off-by: Hanna Hawa <hannah@marvell.com>
-> ---
->   Documentation/devicetree/bindings/iommu/arm,smmu.txt | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> index 8a6ffce..92d7263 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> @@ -16,6 +16,7 @@ conditions.
->                           "arm,mmu-400"
->                           "arm,mmu-401"
->                           "arm,mmu-500"
-> +                        "marvell,mmu-500"
->                           "cavium,smmu-v2"
->   
->                     depending on the particular implementation and/or the
-> 
+Kind regards
+Uffe
