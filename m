@@ -1,11 +1,19 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH] dt-bindings: pinctrl: bcm4708-pinmux: improve example binding
-Date: Mon, 15 Oct 2018 11:30:13 +0200
-Message-ID: <20181015093013.31651-1-zajec5@gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
+Date: Mon, 15 Oct 2018 11:40:53 +0200
+Message-ID: <20181015094053.7bpydkdhyds25n3u@pengutronix.de>
+References: <1539527419-23613-1-git-send-email-aisheng.dong@nxp.com>
+ <1539527419-23613-3-git-send-email-aisheng.dong@nxp.com>
+ <20181015065859.lxevjroly435hlaq@pengutronix.de>
+ <AM0PR04MB42117867A50BB18D8127BE8080FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <20181015082751.ytuleg67p5pgtnov@pengutronix.de>
+ <AM0PR04MB421179CEB214D46BCDE6ACF280FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB421179CEB214D46BCDE6ACF280FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,40 +23,101 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
+To: "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKQnJvYWRjb20gU29DIHBp
-bnMgYXJlIGNvbnRyb2xsZWQgdXNpbmcgQ1JVICgiQ2xvY2sgYW5kIFJlc2V0IFVuaXQiIG9yCiJD
-ZW50cmFsIFJlc291cmNlIFVuaXQiKSByZWdpc3RlcnMuIFRoZXJlIGFyZSBtb3JlIENSVSByZWdp
-c3RlcnMgYW5kCmZ1bmN0aW9ucyBzbyBDUlUgc2hvdWxkIGJlIHJlcHJlc2VudGVkIGFzIGEgc2Vw
-YXJhdGVkIGJsb2NrIGluIERULgoKTW9yZW92ZXIgQ1JVIGlzIGEgc3ViLWJsb2NrIG9mIERNVSAo
-IkRldmljZSBNYW5hZ2VtZW50IFVuaXQiKSBzbyB0aGF0Cm9uZSBzaG91bGQgYWxzbyBnZXQgaXRz
-IG93biBub2RlLgoKU2lnbmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tp
-LnBsPgotLS0KIC4uLi9iaW5kaW5ncy9waW5jdHJsL2JyY20sYmNtNDcwOC1waW5tdXgudHh0ICAg
-ICAgIHwgMzEgKysrKysrKysrKysrKysrKy0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDIzIGluc2Vy
-dGlvbnMoKyksIDggZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvYnJjbSxiY200NzA4LXBpbm11eC50eHQgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9icmNtLGJjbTQ3MDgtcGlubXV4LnR4
-dAppbmRleCBhZjkwNmYxOTZlOGMuLjBjZTEzMmM3ZTA0YyAxMDA2NDQKLS0tIGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvYnJjbSxiY200NzA4LXBpbm11eC50eHQK
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvYnJjbSxiY200
-NzA4LXBpbm11eC50eHQKQEAgLTMwLDEzICszMCwyOCBAQCBGb3IgZG9jdW1lbnRhdGlvbiBvZiBz
-dWJub2RlcyBzZWU6CiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9w
-aW5jdHJsLWJpbmRpbmdzLnR4dAogCiBFeGFtcGxlOgotCXBpbmN0cmxAMTgwMGMxYzAgewotCQlj
-b21wYXRpYmxlID0gImJyY20sYmNtNDcwOC1waW5tdXgiOwotCQlyZWcgPSA8MHgxODAwYzFjMCAw
-eDI0PjsKLQkJcmVnLW5hbWVzID0gImNydV9ncGlvX2NvbnRyb2wiOwotCi0JCXNwaSB7Ci0JCQlm
-dW5jdGlvbiA9ICJzcGkiOwotCQkJZ3JvdXBzID0gInNwaV9ncnAiOworCWRtdUAxODAwYzAwMCB7
-CisJCWNvbXBhdGlibGUgPSAic2ltcGxlLWJ1cyI7CisJCXJhbmdlcyA9IDwwIDB4MTgwMGMwMDAg
-MHgxMDAwPjsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0gPDE+Owor
-CisJCWNydUAxMDAgeworCQkJY29tcGF0aWJsZSA9ICJzaW1wbGUtYnVzIjsKKwkJCXJlZyA9IDww
-eDEwMCAweDFhND47CisJCQlyYW5nZXM7CisJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCSNz
-aXplLWNlbGxzID0gPDE+OworCisgCQkJcGluLWNvbnRyb2xsZXJAMWMwIHsKKwkJCQljb21wYXRp
-YmxlID0gImJyY20sYmNtNDcwOC1waW5tdXgiOworCQkJCXJlZyA9IDwweDFjMCAweDI0PjsKKwkJ
-CQlyZWctbmFtZXMgPSAiY3J1X2dwaW9fY29udHJvbCI7CisKKwkJCQlzcGktcGlucyB7CisJCQkJ
-CWZ1bmN0aW9uID0gInNwaSI7CisJCQkJCWdyb3VwcyA9ICJzcGlfZ3JwIjsKKwkJCQl9OworCQkJ
-fTsKIAkJfTsKIAl9OwotLSAKMi4xMy43CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Mon, Oct 15, 2018 at 09:03:04AM +0000, A.s. Dong wrote:
+> > -----Original Message-----
+> > From: Sascha Hauer [mailto:s.hauer@pengutronix.de]
+> > Sent: Monday, October 15, 2018 4:28 PM
+> > To: A.s. Dong <aisheng.dong@nxp.com>
+> > Cc: linux-arm-kernel@lists.infradead.org; Mark Rutland
+> > <mark.rutland@arm.com>; dongas86@gmail.com; devicetree@vger.kernel.org;
+> > catalin.marinas@arm.com; will.deacon@arm.com; robh+dt@kernel.org;
+> > dl-linux-imx <linux-imx@nxp.com>; kernel@pengutronix.de; Fabio Estevam
+> > <fabio.estevam@nxp.com>; shawnguo@kernel.org
+> > Subject: Re: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
+> > 
+> > On Mon, Oct 15, 2018 at 08:08:31AM +0000, A.s. Dong wrote:
+> > > > > +		imx8qx-pm {
+> > > > > +			compatible = "fsl,scu-pd";
+> > > >
+> > > > I missed this earlier, but there should be a i.MX8qp specific
+> > > > compatible as the SCU API might change for future SoCs.
+> > > >
+> > >
+> > > We still do not see that requirement up till now. Not sure if it would
+> > > be possible in the future. I see low possibilities.
+> > > SCU IPC is designed to be generic to all MX8 SCU firmwares.
+> > 
+> > And i.MX9? i.MX10?
+> > 
+> 
+> MX8DM MX8DXP
+
+I was not talking about existing SoCs, I was talking about future SoCs.
+
+> 
+> > > Even it changes, SCU firmware version control may helps.
+> > 
+> > It's not the first time that the position of the version field changes with a
+> > newer version.
+> > 
+> 
+> I understand your worry. 
+> Up till now all SCU firmware based SoCs are all using one generic IPC driver internally.
+> And I have not heard a possible changing in the future.
+> I double checked the SCU firmware implementation that the IPC
+> Is deigned to be platform independent. So it's less to be changed.
+> So I wonder if this could be over worried.
+> Even it is changed, (quite less probility), we still can user version
+> To distinguish them, just like arm,scpi , arm,scmi. Right?
+
+You can still add and use a generic compatible, but does it hurt when
+you add a SoC specific one that you *can* use should you have to?
+
+> 
+> > >
+> > > > > +			compatible = "fsl,imx7ulp-lpuart";
+> > > > > +			compatible = "fsl,imx7ulp-lpi2c";
+> > > > > +			compatible = "fsl,imx7d-usdhc";
+> > > >
+> > > > All these lack the most specific imx8qp compatible.
+> > > >
+> > >
+> > > Adding them requires binding doc update as well.
+> > > S I suppose they could be added later when the QXP specific features
+> > > are really supported by the drivers.
+> > > Do you think it's okay?
+> > 
+> > Newer Kernels should work with older device trees, so once you roll out these
+> > compatibles it's too late already.
+> > 
+> 
+> The backwards compatible string is used to guarantee a basic function.
+> Even we add qxp specific compatible string later, it still can work with
+> backwards function. So I'm not quite get what the real problem is.
+> And this is the initial support that we don't expect the full features
+> with such an early device tree, right?
+
+By not adding a SoC compatible you lose the possibility to add a SoC
+specific fixup without changing the device tree or you have to work with
+quirks like:
+
+https://elixir.bootlin.com/linux/latest/source/drivers/clocksource/timer-imx-gpt.c#L521
+
+or
+
+https://elixir.bootlin.com/linux/latest/source/drivers/spi/spi-imx.c#L1182
+
+So far we have added new compatibles with each new SoC type for good
+reasons, so why should we change this?
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
