@@ -1,63 +1,23 @@
-From: Olivier Moysan <olivier.moysan@st.com>
-Subject: [PATCH 0/4] ASoC: stm32: sai: add mclk clock provider
-Date: Mon, 15 Oct 2018 16:03:32 +0200
-Message-ID: <1539612216-12602-1-git-send-email-olivier.moysan@st.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v2 4/4] ARM: imx_v6_v7_defconfig: Enable CRYPTO_DEV_MXS_DCP
+Date: Mon, 15 Oct 2018 11:04:05 -0300
+Message-ID: <CAOMZO5Br5fXGKQAUJ3jPJWzwmXNtb-9NCZEdfhrayYJ1iXZVuA@mail.gmail.com>
+References: <cover.1539609921.git.leonard.crestez@nxp.com> <275ca8850bd5863f79bcafdb11cf9544318a691f.1539609921.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org, olivier.moysan@st.com, arnaud.pouliquen@st.com, benjamin.gaignard@st.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <275ca8850bd5863f79bcafdb11cf9544318a691f.1539609921.git.leonard.crestez@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Herbert Xu <herbert@gondor.apana.org.au>, Horia Geanta Neag <horia.geanta@nxp.com>, Franck LENORMAND <franck.lenormand@nxp.com>, Aymen Sghaier <aymen.sghaier@nxp.com>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>linux-kernel <l>
 List-Id: devicetree@vger.kernel.org
 
-This patch set allows to use STM32 SAI interface as a master clock provider.
-The Cirrus cs42l51 codec patch gives the example of the source code required on codec side,
-to use SAI mclk provider.
+On Mon, Oct 15, 2018 at 10:28 AM Leonard Crestez
+<leonard.crestez@nxp.com> wrote:
+>
+> This block is present in 6sl, 6sll and 6ull so it should be enabled in
+> the default imx kernel config.
+>
+> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 
-These patches allow to cover the following use cases:
-	- SAI is master or slave and is master clock provider
-	- SAI is master or slave and is not master clock provider (another sai provides the mclk clock)
-
-Implementation overview:
-- mclk configuration
-	SAI is registered in clock framework:
-		- either as a mclk provider (optional in DT). SAI generates mclk when requested by DAPM
-		- or as a mclk consumer (optional in DT).
-	cs42l51 codec is configured as a mclk consumer (optional in DT)
-
-- mclk power
-	A DAPM is registered in codec to handle mclk enable/disable (DAPM route is set in soundcard node)
-
-- mclk rate:
-	mclk rate is computed at runtime from stream rate and mclk-fs ratio provided in DT
-	mclk rate is propagated through sysclk callback to the SAI which is mclk consumer.
-	The mclk rate is set exclusively to avoid concurrent rate requests on SAI master.
-
-Regards
-Olivier
-
-Olivier Moysan (4):
-  ASoC: dt-bindings: add mclk provider support to stm32 sai
-  ASoC: dt-bindings: add mclk support to cs42l51
-  ASoC: stm32: sai: set sai as mclk clock provider
-  ASoC: cs42l51: add mclk support
-
- .../devicetree/bindings/sound/cs42l51.txt          |  17 ++
- .../devicetree/bindings/sound/st,stm32-sai.txt     |   7 +
- .../devicetree/bindings/trivial-devices.txt        |   1 -
- sound/soc/codecs/cs42l51.c                         |   8 +
- sound/soc/stm/stm32_sai.h                          |   3 +
- sound/soc/stm/stm32_sai_sub.c                      | 275 ++++++++++++++++++---
- 6 files changed, 274 insertions(+), 37 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/cs42l51.txt
-
--- 
-2.7.4
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
