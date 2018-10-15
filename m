@@ -1,160 +1,183 @@
 From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v3 09/18] of: overlay: validate overlay properties
- #address-cells and #size-cells
-Date: Mon, 15 Oct 2018 13:16:50 -0700
-Message-ID: <87525c4a-6c7d-5c1d-1f99-6784f315b89c@gmail.com>
+Subject: Re: [PATCH v3 00/18] of: overlay: validation checks, subsequent fixes
+Date: Mon, 15 Oct 2018 13:23:57 -0700
+Message-ID: <34775737-d82b-b766-16d7-ac2de3231948@gmail.com>
 References: <1539563070-12969-1-git-send-email-frowand.list@gmail.com>
- <1539563070-12969-10-git-send-email-frowand.list@gmail.com>
- <CANk1AXQNkYDA9hRCMR_MkOJiobPjmYoJN8Gv+3YN9ReV+q5XEw@mail.gmail.com>
+ <CANk1AXTmY7v03m7NNZHVtzyU1Mwm0GYtOJQzmObFLASs=PEfLA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANk1AXQNkYDA9hRCMR_MkOJiobPjmYoJN8Gv+3YN9ReV+q5XEw@mail.gmail.com>
+In-Reply-To: <CANk1AXTmY7v03m7NNZHVtzyU1Mwm0GYtOJQzmObFLASs=PEfLA@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Alan Tull <atull@kernel.org>
 Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Moritz Fischer <mdf@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/15/18 12:01, Alan Tull wrote:
+On 10/15/18 12:21, Alan Tull wrote:
 > On Sun, Oct 14, 2018 at 7:26 PM <frowand.list@gmail.com> wrote:
 >>
 >> From: Frank Rowand <frank.rowand@sony.com>
 >>
->> If overlay properties #address-cells or #size-cells are already in
->> the live devicetree for any given node, then the values in the
->> overlay must match the values in the live tree.
+>> Add checks to (1) overlay apply process and (2) memory freeing
+>> triggered by overlay release.  The checks are intended to detect
+>> possible memory leaks and invalid overlays.
 >>
->> If the properties are already in the live tree then there is no
->> need to create a changeset entry to add them since they must
->> have the same value.  This reduces the memory used by the
->> changeset and eliminates a possible memory leak.  This is
->> verified by 12 fewer warnings during the devicetree unittest,
->> as the possible memory leak warnings about #address-cells and
+>> The checks revealed bugs in existing code.  Fixed the bugs.
 >>
->> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
->> ---
->>  drivers/of/overlay.c | 38 +++++++++++++++++++++++++++++++++++---
->>  1 file changed, 35 insertions(+), 3 deletions(-)
+>> While fixing bugs, noted other issues, which are fixed in
+>> separate patches.
 >>
->> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
->> index 272a0d1a5e18..ee66651db553 100644
->> --- a/drivers/of/overlay.c
->> +++ b/drivers/of/overlay.c
->> @@ -287,7 +287,12 @@ static struct property *dup_and_fixup_symbol_prop(
->>   * @target may be either in the live devicetree or in a new subtree that
->>   * is contained in the changeset.
->>   *
->> - * Some special properties are not updated (no error returned).
->> + * Some special properties are not added or updated (no error returned):
->> + * "name", "phandle", "linux,phandle".
->> + *
->> + * Properties "#address-cells" and "#size-cells" are not updated if they
->> + * are already in the live tree, but if present in the live tree, the values
->> + * in the overlay must match the values in the live tree.
->>   *
->>   * Update of property in symbols node is not allowed.
->>   *
->> @@ -300,6 +305,7 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
->>  {
->>         struct property *new_prop = NULL, *prop;
->>         int ret = 0;
->> +       bool check_for_non_overlay_node = false;
+>> *****  Powerpc folks: I was not able to test the patches that
+>> *****  directly impact Powerpc systems that use dynamic
+>> *****  devicetree.  Please review that code carefully and
+>> *****  test.  The specific patches are: 03/16, 04/16, 07/16
 >>
->>         if (!of_prop_cmp(overlay_prop->name, "name") ||
->>             !of_prop_cmp(overlay_prop->name, "phandle") ||
->> @@ -322,13 +328,39 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
->>         if (!new_prop)
->>                 return -ENOMEM;
+>> FPGA folks:
 >>
->> -       if (!prop)
->> +       if (!prop) {
->> +
->> +               check_for_non_overlay_node = true;
->>                 ret = of_changeset_add_property(&ovcs->cset, target->np,
->>                                                 new_prop);
->> -       else
->> +
->> +       } else if (!of_prop_cmp(prop->name, "#address-cells")) {
->> +
+>>   I made the validation checks that should result in an
+>>   invalid live devicetree report "ERROR" and cause the overlay apply
+>>   to fail.
+>>
+>>   I made the memory leak validation tests report "WARNING" and allow
+>>   the overlay apply to complete successfully.  Please let me know
+>>   if you encounter the warnings.  There are at least two paths
+>>   forward to deal with the cases that trigger the warning: (1) change
+>>   the warning to an error and fail the overlay apply, or (2) find a
+>>   way to detect the potential memory leaks and free the memory
+>>   appropriately.
 > 
-> Hi Frank,
-> 
-> If we get these ERROR messages, I suggest that this function should
-> return an error so the overlay will be rejected.
-> 
->> +               if (prop->length != 4 || new_prop->length != 4 ||
->> +                   *(u32 *)prop->value != *(u32 *)new_prop->value)
-> 
->                         *(u32 *)prop->value != *(u32 *)new_prop->value) {
-> 
->> +                       pr_err("ERROR: overlay and/or live tree #address-cells invalid in node %pOF\n",
->> +                              target->np);
-> 
->                        ret = -EINVAL;
->                 }
-> 
-> Otherwise there is an ERROR message, but it continues trying to apply
-> the invalid overlay anyway and I get an oops.  By adding the ret =
-> -EINVAL, the overlay gets rejected and the oops is avoided.
+> I reran my FPGA testing.  The strings are fixed, no longer NULL.  I
 
-Yes, that sounds good.
+Thanks for the further testing!
 
 
->> +
->> +       } else if (!of_prop_cmp(prop->name, "#size-cells")) {
->> +
->> +               if (prop->length != 4 || new_prop->length != 4 ||
->> +                   *(u32 *)prop->value != *(u32 *)new_prop->value)
->> +                       pr_err("ERROR: overlay and/or live tree #size-cells invalid in node %pOF\n",
->> +                              target->np);
+> have functionality back, my test passes now.  I'm seeing the intended
+> warnings about any properties added to existing nodes.  That includes
+> warnings about added symbols.  Below is a simplified part to show some
+> of what I'm seeing.
 > 
-> Add the ret = -EINVAL here also.  This give me the following (if my
-> overlay changes #address-cells):
-
-Yes.
-
-
-> [   21.167551] OF: overlay: ERROR: overlay and/or live tree
-> #address-cells invalid in node /soc/base_fpga_region
-> [   21.177442] OF: overlay: add_changeset_property ret=-22
-> [   21.182656] create_overlay: Failed to create overlay (err=-22)
+> By the way my testing is all using Pantelis' DT overlay configfs interface.
 > 
-> Also, I wonder if the ERROR message could be more direct.  Currently
-> it says the #address-cells property is invalid but that doesn't say
-> anything about why it's invalid.  How about something like:
+> root@arria10:~# ./apply-static-region.sh
 > 
->  OF: overlay: ERROR: changing #address-cells not allowed (/soc/base_fpga_region)
+> Applying dtbo: socfpga_arria10_socdk_sdmmc_ghrd_ovl_ext_cfg.dtb
+> 
+> [ 1821.088640] OF: overlay: WARNING: add_changeset_property(), memory
+> leak will occur if overlay removed.  Property:
+> /soc/base_fpga_region/ranges
+> [ 1821.103307] OF: overlay: WARNING: add_changeset_property(), memory
+> leak will occur if overlay removed.  Property:
+> /soc/base_fpga_region/external-fpga-config
+> [ 1821.117359] OF: overlay: WARNING: add_changeset_property(), memory
+> leak will occur if overlay removed.  Property:
+> /soc/base_fpga_region/clocks
+> [ 1821.130130] OF: overlay: WARNING: add_changeset_property(), memory
+> leak will occur if overlay removed.  Property:
+> /soc/base_fpga_region/clock-names
+> [ 1821.143449] OF: overlay: WARNING: add_changeset_property(), memory
+> leak will occur if overlay removed.  Property: /__symbols__/clk_0
+> [ 1821.155357] OF: overlay: WARNING: add_changeset_property(), memory
+> leak will occur if overlay removed.  Property: /__symbols__/ILC
+> [ 1821.167074] OF: overlay: WARNING: add_changeset_property(), memory
+> leak will occur if overlay removed.  Property:
+> /__symbols__/freeze_controller_0
+> [ 1821.180171] OF: overlay: WARNING: add_changeset_property(), memory
+> leak will occur if overlay removed.  Property:
+> /__symbols__/sysid_qsys_0
+> [ 1821.192662] OF: overlay: WARNING: add_changeset_property(), memory
+> leak will occur if overlay removed.  Property: /__symbols__/led_pio
+> [ 1821.204720] OF: overlay: WARNING: add_changeset_property(), memory
+> leak will occur if overlay removed.  Property: /__symbols__/button_pio
+> [ 1821.217034] OF: overlay: WARNING: add_changeset_property(), memory
+> leak will occur if overlay removed.  Property: /__symbols__/dipsw_pio
+> [ 1821.231977] of-fpga-region soc:base_fpga_region:fpga_pr_region0:
+> FPGA Region probed
+> [ 1821.240144] altera_freeze_br ff200450.freeze_controller: fpga
+> bridge [freeze] registered
+> 
+> root@arria10:~# ./apply-static-region.sh root@arria10:~# rmdir
+> /sys/kernel/config/device-tree/overlays/1-socfpga_arria10_socdk_sdmmc_ghrd_ovl_ext_cfg.dtb
+> 
 
-That sounds like a more useful message, maybe a slight change
-s/changing #address-cells/changing value of #address-cells/
 
+> [ 1823.805564] OF: ERROR: memory leak - destroy cset entry: attach
+> overlay node /soc/base_fpga_region/clk_0 with refcount 2
 
-> The 'OF: overlay' part still makes it clear it's overlay related.  The
-> rest of it makes it clear *why* it's invalid.  This ERROR will be a
-> surprise for people who have been using overlays, so that could be
-> helpful to light the way a bit.
+That is indicating that an unbalanced of_node_get() / of_node_put()
+exists for that node.  I'll have to update that message to be more
+explicit about that.
+
+-Frank
+
 > 
 > Alan
 > 
->> +
->> +       } else {
->> +
->> +               check_for_non_overlay_node = true;
->>                 ret = of_changeset_update_property(&ovcs->cset, target->np,
->>                                                    new_prop);
+> 
+> Alan
+> 
+> 
+> 
 >>
->> +       }
->> +
->> +       if (check_for_non_overlay_node &&
->> +           !of_node_check_flag(target->np, OF_OVERLAY))
->> +               pr_err("WARNING: %s(), memory leak will occur if overlay removed.  Property: %pOF/%s\n",
->> +                      __func__, target->np, new_prop->name);
->> +
->>         if (ret) {
->>                 kfree(new_prop->name);
->>                 kfree(new_prop->value);
+>> ALL people:
+>>
+>>   The validations do _not_ address another major concern I have with
+>>   releasing overlays, which is use after free errors.
+>>
+>> Changes since v2:
+>>
+>>   - 13/18: Use continue to reduce indentation in find_dup_cset_node_entry()
+>>     and find_dup_cset_prop()
+>>
+>> Changes since v1:
+>>
+>>   - move patch 16/16 to 17/18
+>>   - move patch 15/16 to 18/18
+>>   - new patch 15/18
+>>   - new patch 16/18
+>>
+>>   - 05/18: add_changeset_node() header comment: incorrect comment for @target
+>>
+>>   - 18/18: add same fix for of_parse_phandle_with_args()
+>>   - 18/18: add same fix for of_parse_phandle_with_args_map()
+>>
+>> Frank Rowand (18):
+>>   of: overlay: add tests to validate kfrees from overlay removal
+>>   of: overlay: add missing of_node_put() after add new node to changeset
+>>   of: overlay: add missing of_node_get() in __of_attach_node_sysfs
+>>   powerpc/pseries: add of_node_put() in dlpar_detach_node()
+>>   of: overlay: use prop add changeset entry for property in new nodes
+>>   of: overlay: do not duplicate properties from overlay for new nodes
+>>   of: dynamic: change type of of_{at,de}tach_node() to void
+>>   of: overlay: reorder fields in struct fragment
+>>   of: overlay: validate overlay properties #address-cells and
+>>     #size-cells
+>>   of: overlay: make all pr_debug() and pr_err() messages unique
+>>   of: overlay: test case of two fragments adding same node
+>>   of: overlay: check prevents multiple fragments add or delete same node
+>>   of: overlay: check prevents multiple fragments touching same property
+>>   of: unittest: remove unused of_unittest_apply_overlay() argument
+>>   of: overlay: set node fields from properties when add new overlay node
+>>   of: unittest: allow base devicetree to have symbol metadata
+>>   of: unittest: find overlays[] entry by name instead of index
+>>   of: unittest: initialize args before calling of_*parse_*()
+>>
+>>  arch/powerpc/platforms/pseries/dlpar.c             |  15 +-
+>>  arch/powerpc/platforms/pseries/reconfig.c          |   6 +-
+>>  drivers/of/dynamic.c                               |  68 +++--
+>>  drivers/of/kobj.c                                  |   4 +-
+>>  drivers/of/overlay.c                               | 298 ++++++++++++++++-----
+>>  drivers/of/unittest-data/Makefile                  |   2 +
+>>  .../of/unittest-data/overlay_bad_add_dup_node.dts  |  28 ++
+>>  .../of/unittest-data/overlay_bad_add_dup_prop.dts  |  24 ++
+>>  drivers/of/unittest-data/overlay_base.dts          |   1 +
+>>  drivers/of/unittest.c                              |  96 +++++--
+>>  include/linux/of.h                                 |  19 +-
+>>  11 files changed, 439 insertions(+), 122 deletions(-)
+>>  create mode 100644 drivers/of/unittest-data/overlay_bad_add_dup_node.dts
+>>  create mode 100644 drivers/of/unittest-data/overlay_bad_add_dup_prop.dts
+>>
 >> --
 >> Frank Rowand <frank.rowand@sony.com>
 >>
