@@ -1,36 +1,88 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/5] dt-bindings: display: renesas: du: Document the
- r8a7744 bindings
-Date: Mon, 15 Oct 2018 10:17:10 -0500
-Message-ID: <20181015151710.GA23648@bogus>
-References: <1537553311-8831-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1537553311-8831-3-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH] dt-bindings: ufs: Fix the compatible string definition
+Date: Mon, 15 Oct 2018 20:53:12 +0530
+Message-ID: <CAFp+6iFy8V34cs6pEOie_tBX5wJqM7teUnH_XLLZ7cioPrX_hA@mail.gmail.com>
+References: <20181012213926.253765-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1537553311-8831-3-git-send-email-fabrizio.castro@bp.renesas.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, David Airlie <airlied@linux.ie>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181012213926.253765-1-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: robh+dt <robh+dt@kernel.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, Can Guo <cang@codeaurora.org>, evgreen@chromium.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, sayalil@codeaurora.org, asutoshd@codeaurora.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, liwei213@huawei.com, open list <linux-kernel@vger.kernel.org>, malat@debian.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMSBTZXAgMjAxOCAxOTowODoyOCArMDEwMCwgRmFicml6aW8gQ2FzdHJvIHdyb3Rl
-Ogo+IEZyb206IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4KPiAKPiBEb2N1bWVu
-dCB0aGUgUlovRzFOIChSOEE3NzQ0KSBTb0MgaW4gdGhlIFItQ2FyIERVIGJpbmRpbmdzLgo+IAo+
-IFNpZ25lZC1vZmYtYnk6IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4KPiBSZXZp
-ZXdlZC1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+
-Cj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JlbmVz
-YXMsZHUudHh0IHwgMiArKwo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCj4gCgpS
-ZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Doug,
+
+On Sat, Oct 13, 2018 at 3:09 AM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> If you look at the bindings for the UFS Host Controller it says:
+>
+> - compatible: must contain "jedec,ufs-1.1" or "jedec,ufs-2.0", may
+>               also list one or more of the following:
+>                  "qcom,msm8994-ufshc"
+>                  "qcom,msm8996-ufshc"
+>                  "qcom,ufshc"
+>
+> My reading of that is that it's fine to just have either of these:
+> 1. "qcom,msm8996-ufshc", "jedec,ufs-2.0"
+> 2. "qcom,ufshc", "jedec,ufs-2.0"
+>
+> As far as I can tell neither of the above is actually a good idea.
+>
+> For #1 it turns out that the driver currently only keys off the
+> compatible string "qcom,ufshc" so it won't actually probe.
+>
+> For #2 the driver won't probe but it's not a good idea to keep the SoC
+> name out of the compatible string.
+>
+> Let's update the compatible string to make it really explicit.  We'll
+> include a nod to the existing driver and the old binding and say that
+> we should always include the "qcom,ufshc" string in addition to the
+> SoC compatible string.
+>
+> While we're at it we'll also include another example SoC known to have
+> UFS: sdm845.
+>
+> Fixes: 47555a5c8a11 ("scsi: ufs: make the UFS variant a platform device")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt       | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> index 2df00524bd21..69a06a1b732e 100644
+> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> @@ -4,11 +4,14 @@ UFSHC nodes are defined to describe on-chip UFS host controllers.
+>  Each UFS controller instance should have its own node.
+>
+>  Required properties:
+> -- compatible           : must contain "jedec,ufs-1.1" or "jedec,ufs-2.0", may
+> -                         also list one or more of the following:
+> -                                         "qcom,msm8994-ufshc"
+> -                                         "qcom,msm8996-ufshc"
+> -                                         "qcom,ufshc"
+> +- compatible           : must contain "jedec,ufs-1.1" or "jedec,ufs-2.0"
+> +
+> +                         For Qualcomm SoCs must contain, as below, an
+> +                         SoC-specific compatible along with "qcom,ufshc" and
+> +                         the appropriate jedec string:
+> +                           "qcom,msm8994-ufshc", "qcom,ufshc", "jedec,ufs-2.0"
+> +                           "qcom,msm8996-ufshc", "qcom,ufshc", "jedec,ufs-2.0"
+> +                           "qcom,sdm845-ufshc", "qcom,ufshc", "jedec,ufs-2.0"
+
+Thanks for the patch. It looks good to me.
+Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+
+P.S.: While you are at it, can you please move 'ufs-qcom.txt'
+to Documentation/devicetree/bindings/phy/qcom,ufs-phy.txt.
+The current name and file location is misleading.
+
+Thanks & Regards
+Vivek
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
