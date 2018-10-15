@@ -1,108 +1,235 @@
-From: Honghui Zhang <honghui.zhang@mediatek.com>
-Subject: Re: [PATCH v7 0/9] PCI: mediatek: fixup find_port, enable_msi and
- add PM, module support
-Date: Mon, 15 Oct 2018 14:49:39 +0800
-Message-ID: <1539586179.10857.1.camel@mhfsdcap03>
-References: <1539582287-9171-1-git-send-email-honghui.zhang@mediatek.com>
-         <1539583554.20626.2.camel@mtkswgap22>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
+Date: Mon, 15 Oct 2018 08:58:59 +0200
+Message-ID: <20181015065859.lxevjroly435hlaq@pengutronix.de>
+References: <1539527419-23613-1-git-send-email-aisheng.dong@nxp.com>
+ <1539527419-23613-3-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539583554.20626.2.camel@mtkswgap22>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ulf.hansson@linaro.org, marc.zyngier@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, youlin.pei@mediatek.com, yt.shen@mediatek.com, jianjun.wang@mediatek.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1539527419-23613-3-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-10-15 at 14:05 +0800, Ryder Lee wrote:
-> On Mon, 2018-10-15 at 13:44 +0800, honghui.zhang@mediatek.com wrote:
-> > From: Honghui Zhang <honghui.zhang@mediatek.com>
-> > 
-> > This patchset includes misc patchs:
-> > 
-> > The patch 1 fixup the mtk_pcie_find_port logic which will cause system
-> > could not touch the EP's configuration space that connected to PCIe slot 1.
-> > 
-> > The patch 2 fixup the class type for MT7622.
-> > The patch 6 fixup the enable msi logic, the operation to enable MSI
-> > should be after system clock is enabled. Call mtk_pcie_enable_msi in
-> > mtk_pcie_startup_port_v2 since the clock was all enabled at that time.
-> > 
-> > The patch 7 was rebased and refactor of the v4 patch[1], changes are:
-> >  -Add PM support for MT7622.
-> >  -Using mtk_pcie_enable_port to re-establish the link when resumed.
-> >  -Rebased on this patchset.
-> > 
-> > The patch 9 add loadable kernel module support.
-> > 
-> > [1] https://patchwork.kernel.org/patch/10479079
-> > 
-> > Change since v6:
-> >  - Remove the pci_unmap_iospace when remove the device since the
-> >    devm_pci_remap_iospace is an devm_ version.
-> >  - Commit message changed for patch 2(Fix class type for MT7622 as PCI_CLASS_BRIDGE_PCI).
-> >  - Capitilizing "MSI" and "PM" in the patch title.
-> > 
-> > Change since v5:
-> >  - A bit improvement of mtk_pcie_find_port suggest by Lorenzo.
-> >  - Add fixup tags of fix enable MSI logic in patch 6.
-> >  - Add Acked-by tags from Ryder.
-> > 
-> > Change since v4:
-> >  - Add patch 2 to fixup class type for MT7622.
-> >  - Add patch 3 to remove the redundant dev->pm_domain check
-> >  - Add patch 4 to covert to use pci_host_probe
-> >  - Add patch 5 to re-arrange the function define, this is a prepare patch for
-> >    fixup the enable_msi logic, no functional changed have been made by this one.
-> >  - Add patch 8 to save the GIC IRQ in mtk_pcie_port as a prepare patch for tear
-> >    down the irq when remove the kernel module.
-> >  - Re-arrange the find_port flow suggest by Lorenzo to make the code parse easier
-> >    for the patch 1.
-> >  - Remove the .pm_support in mtk_pcie_soc in patch 7 since if system pm was not
-> >    supported, then those pm callbacks will never be executed for MT7622. So the
-> >    .pm_support is not needed.
-> > 
-> > Change since v3:
-> >  - Remove pm_runtime_XXX ops in suspend and resume callbacks in the third patch.
-> >  - Rebase to 4.19-rc1.
-> > 
-> > Change since v2:
-> >  - Fix the list_for_each_entry_safe parameter error.
-> >  - Add Ryder's Acked-by flag.
-> > 
-> > Change since v1:
-> >  - A bit of code refact of the first patch suggested by Andy Shevchenko, and
-> >    commit message updated.
-> > 
-> > Honghui Zhang (9):
-> >   PCI: mediatek: Using slot's devfn for compare to fix
-> >     mtk_pcie_find_port logic
-> >   PCI: mediatek: Fix class type for MT7622 as PCI_CLASS_BRIDGE_PCI
-> >   PCI: mediatek: Remove the redundant dev->pm_domain check
-> >   PCI: mediatek: Convert to use pci_host_probe()
-> >   PCI: mediatek: Move the mtk_pcie_startup_port_v2 function's define
-> >     after mtk_pcie_setup_irq
-> >   PCI: mediatek: Fixup enable MSI logic by enable MSI after clock
-> >     enabled
-> >   PCI: mediatek: Add system PM support for MT2712 and MT7622
-> >   PCI: mediatek: Save the GIC IRQ in mtk_pcie_port
-> >   PCI: mediatek: Add loadable kernel module support
-> > 
-> >  drivers/pci/controller/Kconfig         |   2 +-
-> >  drivers/pci/controller/pcie-mediatek.c | 319 +++++++++++++++++++++------------
-> >  2 files changed, 204 insertions(+), 117 deletions(-)
+On Sun, Oct 14, 2018 at 02:34:52PM +0000, A.s. Dong wrote:
+> Add imx8qxp support
 > 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> ---
+> v1->v2:
+>  * mu binding usage update
+>  * no define for node address
+>  * do not use '_' for node name
+>  * drop 'fsl-' prefix for imx dtsi
+>  * no defines for unit address
+>  * generic node names
+>  * range map for 32bit register
+>  * separate board dts
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.txt |   4 +
+>  arch/arm64/boot/dts/freescale/imx8-ca35.dtsi  |  61 ++
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi    | 861 ++++++++++++++++++++++++++
+>  3 files changed, 926 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8-ca35.dtsi
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp.dtsi
 > 
-> You forgot to add my Acked-by tags in v7.
-> 
-> Acked-by: Ryder Lee <ryder.lee@mediatek.com> for the series.
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+> index 968f238..baeb1fc 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.txt
+> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
+> @@ -119,6 +119,10 @@ i.MX6q generic board
+>  Required root node properties:
+>      - compatible = "fsl,imx6q";
+>  
+> +i.MX8QXP generic board
+> +Required root node properties:
+> +    - compatible = "fsl,imx8qxp";
+> +
+>  Freescale Vybrid Platform Device Tree Bindings
+>  ----------------------------------------------
+>  
+> diff --git a/arch/arm64/boot/dts/freescale/imx8-ca35.dtsi b/arch/arm64/boot/dts/freescale/imx8-ca35.dtsi
+> new file mode 100644
+> index 0000000..c79e97a
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8-ca35.dtsi
+> @@ -0,0 +1,61 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2016 Freescale Semiconductor, Inc.
+> + * Copyright 2017~2018 NXP
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/{
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		/* We have 1 clusters with 4 Cortex-A35 cores */
+> +		A35_0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a35";
+> +			reg = <0x0 0x0>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&A35_L2>;
+> +		};
+> +
+> +		A35_1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a35";
+> +			reg = <0x0 0x1>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&A35_L2>;
+> +		};
+> +
+> +		A35_2: cpu@2 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a35";
+> +			reg = <0x0 0x2>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&A35_L2>;
+> +		};
+> +
+> +		A35_3: cpu@3 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a35";
+> +			reg = <0x0 0x3>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&A35_L2>;
+> +		};
+> +
+> +		A35_L2: l2-cache0 {
+> +			compatible = "cache";
+> +		};
+> +	};
+> +
+> +	pmu {
+> +		compatible = "arm,armv8-pmuv3";
+> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-1.0";
+> +		method = "smc";
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> new file mode 100644
+> index 0000000..e1d2578
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -0,0 +1,861 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2016 Freescale Semiconductor, Inc.
+> + * Copyright 2017~2018 NXP
+> + *	Dong Aisheng <aisheng.dong@nxp.com>
+> + */
+> +
+> +#include <dt-bindings/clock/imx8qxp-clock.h>
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/pinctrl/pads-imx8qxp.h>
+> +
+> +#include "imx8-ca35.dtsi"
+> +
+> +/ {
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	aliases {
+> +		serial0 = &dma_lpuart0;
+> +		mmc0 = &usdhc1;
+> +		mmc1 = &usdhc2;
+> +		mmc2 = &usdhc3;
+> +	};
+> +
+> +	memory@80000000 {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x80000000 0 0x40000000>;
+> +	};
+> +
+> +	gic: interrupt-controller@51a00000 {
+> +		compatible = "arm,gic-v3";
+> +		reg = <0x0 0x51a00000 0 0x10000>, /* GIC Dist */
+> +		      <0x0 0x51b00000 0 0xc0000>; /* GICR (RD_base + SGI_base) */
+> +		#interrupt-cells = <3>;
+> +		interrupt-controller;
+> +		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>, /* Physical Secure */
+> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>, /* Physical Non-Secure */
+> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>, /* Virtual */
+> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>; /* Hypervisor */
+> +	};
+> +
+> +	scu {
+> +		compatible = "fsl,imx-scu";
+> +		mbox-names = "tx0", "tx1", "tx2", "tx3",
+> +			     "rx0", "rx1", "rx2", "rx3";
+> +		mboxes = <&lsio_mu1 0 0
+> +			  &lsio_mu1 0 1
+> +			  &lsio_mu1 0 2
+> +			  &lsio_mu1 0 3
+> +			  &lsio_mu1 1 0
+> +			  &lsio_mu1 1 1
+> +			  &lsio_mu1 1 2
+> +			  &lsio_mu1 1 3>;
+> +
+> +		clk: clock-controller {
+> +			compatible = "fsl,imx8qxp-clk";
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		iomuxc: pinctrl {
+> +			compatible = "fsl,imx8qxp-iomuxc";
+> +		};
+> +
+> +		imx8qx-pm {
+> +			compatible = "fsl,scu-pd";
 
-Sorry about that,
+I missed this earlier, but there should be a i.MX8qp specific compatible
+as the SCU API might change for future SoCs.
 
-Lorenzo, do I need to re-send this series with Ryder's Acked-by tags?
+> +			compatible = "fsl,imx7ulp-lpuart";
+> +			compatible = "fsl,imx7ulp-lpi2c";
+> +			compatible = "fsl,imx7d-usdhc";
 
-Thanks.
-> 
-> Thanks.
-> 
+All these lack the most specific imx8qp compatible.
+
+> +			compatible = "fsl,imx6sx-fec";
+> +			compatible = "fsl,imx8qxp-fec";
+
+BTW are there really two different FECs on the i.MX8qp?
+
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
