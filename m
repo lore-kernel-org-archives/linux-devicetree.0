@@ -1,104 +1,86 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] of: overlay: user space synchronization
-Date: Mon, 15 Oct 2018 10:24:20 +0200
-Message-ID: <CAMuHMdXad2g5zEZ8=XzzVgfijcatKYj5AjwVQg=W-by_rHfcAQ@mail.gmail.com>
-References: <1539567282-1326-1-git-send-email-frowand.list@gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 5/9] ASoC: sunxi: Add new driver for
+ Allwinner A64 codec's analog path controls
+Date: Mon, 15 Oct 2018 10:24:50 +0200
+Message-ID: <20181015082450.i56n5cppwgiu44ko@flea>
+References: <20181013165329.13363-1-anarsoul@gmail.com>
+ <20181013165329.13363-6-anarsoul@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539567282-1326-1-git-send-email-frowand.list@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Alan Tull <atull@kernel.org>
+Content-Type: multipart/mixed; boundary="===============8375792516944468966=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20181013165329.13363-6-anarsoul@gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Mylene JOSSERAND <mylene.josserand@free-electrons.com>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Marcus Cooper <codekipper@gmail.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
 
-On Mon, Oct 15, 2018 at 3:36 AM <frowand.list@gmail.com> wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
->
-> When an overlay is applied or removed, the live devicetree visible in
-> /proc/device-tree/, aka /sys/firmware/devicetree/base/, reflects the
-> changes.  There is no method for user space to determine whether the
-> live devicetree was modified by overlay actions.
->
-> Provide a sysfs file, /sys/firmware/devicetree/tree_version,  to allow
-> user space to determine if the live devicetree has remained unchanged
-> while a series of one or more accesses of /proc/device-tree/ occur.
+--===============8375792516944468966==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="rmvcilg4tpucomcb"
+Content-Disposition: inline
 
-Thanks for your patch!
 
-> The use of both dynamic devicetree modifications and overlay apply and
-> removal are not supported during the same boot cycle.  Thus non-overlay
-> dynamic modifications are not reflected in the value of tree_version.
+--rmvcilg4tpucomcb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-What does this mean exactly, for users?
-I am used to applying and removing overlays at run time (still
-carrying Pantelis'
-overlay configfs patches), but when would I use non-overlay dynamic
-modifications?
+On Sat, Oct 13, 2018 at 09:53:25AM -0700, Vasily Khoruzhick wrote:
+> The internal codec on A64 is split into 2 parts. The analog path controls
+> are routed through an embedded custom register bus accessed through
+> the PRCM block.
+>=20
+> Add an ASoC component driver for it. This should be tied to the codec
+> audio card as an auxiliary device.
+>=20
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
 
-> --- a/Documentation/ABI/testing/sysfs-firmware-ofw
-> +++ b/Documentation/ABI/testing/sysfs-firmware-ofw
->
-> +What:          /sys/firmware/devicetree/tree_version
-> +Date:          October 2018
-> +KernelVersion: 4.20
-> +Contact:       Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
-> +Description:
-> +               When an overlay is applied or removed, the live devicetree
-> +               visible in /proc/device-tree/, aka
-> +               /sys/firmware/devicetree/base/, reflects the changes.
-> +
-> +               tree_version provides a way for user space to determine if the
-> +               live devicetree has remained unchanged while a series of one
-> +               or more accesses of /proc/device-tree/ occur.
-> +
-> +               The use of both dynamic devicetree modifications and overlay
-> +               apply and removal are not supported during the same boot
-> +               cycle.  Thus non-overlay dynamic modifications are not
-> +               reflected in the value of tree_version.
-> +
-> +               Example shell use of tree_version:
-> +
-> +               done=1
-> +
-> +               while [ $done = 1 ] ; do
-> +
-> +                  pre_version=$(cat /sys/firmware/devicetree/tree_version)
-> +                  version=$pre_version
-> +                  while [ $(( ${version} & 1 )) != 0 ] ; do
-> +                     # echo is optional, sleep value can be tuned
-> +                     echo "${version}  sleeping"
-> +                     sleep 2;
-> +                     pre_version=$(cat /sys/firmware/devicetree/tree_version)
-> +                     version=${pre_version}
-> +                  done
-> +
-> +                  # 'critical region'
-> +                  # access /proc/device-tree/ one or more times
-> +
-> +                  post_version=$(cat /sys/firmware/devicetree/tree_version)
-> +
-> +                  if [ ${post_version} = ${pre_version} ] ; then
-> +                     done=0
-> +                  fi
-> +
-> +               done
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-Please say explicitly that tree_version contains a 32-bit unsigned
-decimal number, which is incremented before and after every change.
-I had to deduce that from the code.
+Thanks!
+Maxime
 
-IMHO that is more important than having the sample script here.
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Gr{oetje,eeting}s,
+--rmvcilg4tpucomcb
+Content-Type: application/pgp-signature; name="signature.asc"
 
-                        Geert
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlvETtEACgkQ0rTAlCFN
+r3S25g/+OusRZ37+XCqkgBo64KzWBdwXpwkkk8AoLtnxnjI2uBDLL9KtNowpQ2Vo
+U2iOw8dMywyBqyZ6zo4+qKXk22rZ59hPBElSaHEQYNLeAjr4OHzA08FLsymymM5a
+KXX4pM1CSV9+3l/var2vk/uaxFyCW1VmAvz0OCIIvpU0zSAIIBeXbOE+UQbOdsAg
+FbS96VipW5mw+IOWCokh0EHo986y5fIziWxSS/jslKHdHPSv28QR5c7brNEm/Tqu
+U7HUcu6hlKp7xWo8ClKQTka+UpY/XM00nT5NJ5dKHLLddYUJEe8aug+Hn+yMQwoF
+UJdNjzywWPx/WRE52Dcwe9+rVFaafLMe60TfutyZBInQjKJG5pZom+jTIRHjQE/t
+MgwdR8yDjQKbG/GhPPkh9ogET6SI43RocEPloSvjObVkEcGqLKI1q0sRQarR7ppw
+wFoBIsWvikbfeKlGewIVB/A4IRJV0w7Zbtj4ANFiOjW8XrKA6WY/ZCpywnlFhBup
+MWOfquNhLKuvSkFmaAJynuDMEN7+iagDJAVN0dAukivb5CKeo6yY4XH/dWs1yMLj
+WuZ+YpAgHF+aY9bRSHkxBi/UA0IyaZqKywLUyafUV4JTWGDmvjvEwCqZ1Bjfho6Z
+/AYzvxYpM9cWIO1ZcTfTe7vE326CVUoW6L5zcUb903aU9NOHN4A=
+=57nO
+-----END PGP SIGNATURE-----
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--rmvcilg4tpucomcb--
+
+--===============8375792516944468966==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============8375792516944468966==--
