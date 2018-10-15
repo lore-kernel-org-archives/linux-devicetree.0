@@ -1,53 +1,61 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH 00/14] serial: langtiq: Add CCF suppport
-Date: Mon, 15 Oct 2018 21:58:47 +0000
-Message-ID: <20181015215845.5t7bkyks6hsxqwsb@pburton-laptop>
-References: <20180924102803.30263-1-songjun.wu@linux.intel.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/5] dt-bindings: display: renesas: du: Document the
+ r8a77470 bindings
+Date: Tue, 16 Oct 2018 01:16:42 +0300
+Message-ID: <21387491.YtWCBA7EHF@avalon>
+References: <1537553311-8831-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1537553311-8831-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180924102803.30263-1-songjun.wu@linux.intel.com>
-Content-Language: en-US
-Content-ID: <65EBC5B044F99A4EA8A4F4D65B6EADD1@namprd22.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Songjun Wu <songjun.wu@linux.intel.com>
-Cc: "yixin.zhu@linux.intel.com" <yixin.zhu@linux.intel.com>, "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>, "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, James Hogan <jhogan@kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, Jiri Slaby <jslaby@suse.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, Rob Herring <robh+dt@kernel.org>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1537553311-8831-2-git-send-email-fabrizio.castro@bp.renesas.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Songjun,
-
-On Mon, Sep 24, 2018 at 06:27:49PM +0800, Songjun Wu wrote:
-> This patch series is for adding common clock framework support
-> for langtiq serial driver, mainly includes:
-
-s/langtiq/lantiq/ ...
-
-> 1) Add common clock framework support.
-> 2) Modify the dts file according to the DT conventions.
-> 3) Replace the platform dependent functions with kernel functions
->=20
-> Songjun Wu (14):
->   MIPS: dts: Change upper case to lower case
->   MIPS: dts: Add aliases node for lantiq danube serial
->   serial: lantiq: Get serial id from dts
->   serial: lantiq: Change ltq_w32_mask to asc_update_bits
->   MIPS: lantiq: Unselect SWAP_IO_SPACE when LANTIQ is selected
->   serial: lantiq: Use readl/writel instead of ltq_r32/ltq_w32
->   serial: lantiq: Rename fpiclk to freqclk
->   serial: lantiq: Replace clk_enable/clk_disable with clk generic API
->   serial: lantiq: Add CCF support
->   serial: lantiq: Reorder the head files
->   include: Add lantiq.h in include/linux/
->   serial: lantiq: Replace lantiq_soc.h with lantiq.h
->   serial: lantiq: Change init_lqasc to static declaration
->   dt-bindings: serial: lantiq: Add optional properties for CCF
-
-It appears that you only copied me on patches 1, 2 & 5. I've applied
-patch 1 to mips-next for 4.20, but I have no clue whether your other
-patches were deemed acceptable by serial or DT maintainers & I have no
-context for the changes being made, so I can neither apply nor ack
-patches 2 & 5. Please copy me on the whole series next time.
-
-Thanks,
-    Paul
+SGkgRmFicml6aW8sCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIEZyaWRheSwgMjEgU2Vw
+dGVtYmVyIDIwMTggMjE6MDg6MjcgRUVTVCBGYWJyaXppbyBDYXN0cm8gd3JvdGU6Cj4gRG9jdW1l
+bnQgdGhlIFJaL0cxQyAocjhhNzc0NzApIFNvQyBpbiBSLUNhciBEVSBiaW5kaW5ncy4KPiAKPiBT
+aWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2Fz
+LmNvbT4KPiBSZXZpZXdlZC1ieTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPgoK
+UmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJv
+YXJkLmNvbT4KCmFuZCB0YWtlbiBpbiBteSB0cmVlLgoKPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgfCAyICsrCj4gIDEgZmls
+ZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQKPiBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JlbmVzYXMsZHUudHh0IGluZGV4Cj4g
+ZWM5ZDM0YmUuLjJiMjhhZTIgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAo+IEBAIC01LDYgKzUsNyBA
+QCBSZXF1aXJlZCBQcm9wZXJ0aWVzOgo+ICAgIC0gY29tcGF0aWJsZTogbXVzdCBiZSBvbmUgb2Yg
+dGhlIGZvbGxvd2luZy4KPiAgICAgIC0gInJlbmVzYXMsZHUtcjhhNzc0MyIgZm9yIFI4QTc3NDMg
+KFJaL0cxTSkgY29tcGF0aWJsZSBEVQo+ICAgICAgLSAicmVuZXNhcyxkdS1yOGE3NzQ1IiBmb3Ig
+UjhBNzc0NSAoUlovRzFFKSBjb21wYXRpYmxlIERVCj4gKyAgICAtICJyZW5lc2FzLGR1LXI4YTc3
+NDcwIiBmb3IgUjhBNzc0NzAgKFJaL0cxQykgY29tcGF0aWJsZSBEVQo+ICAgICAgLSAicmVuZXNh
+cyxkdS1yOGE3Nzc5IiBmb3IgUjhBNzc3OSAoUi1DYXIgSDEpIGNvbXBhdGlibGUgRFUKPiAgICAg
+IC0gInJlbmVzYXMsZHUtcjhhNzc5MCIgZm9yIFI4QTc3OTAgKFItQ2FyIEgyKSBjb21wYXRpYmxl
+IERVCj4gICAgICAtICJyZW5lc2FzLGR1LXI4YTc3OTEiIGZvciBSOEE3NzkxIChSLUNhciBNMi1X
+KSBjb21wYXRpYmxlIERVCj4gQEAgLTUxLDYgKzUyLDcgQEAgY29ycmVzcG9uZGluZyB0byBlYWNo
+IERVIG91dHB1dC4KPiAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gLS0gUjhBNzc0MyAoUlovRzFNKSAg
+ICAgICBEUEFEIDAgICAgICAgICBMVkRTIDAgICAgICAgICAtICAgICAgICAgICAgICAtCj4gUjhB
+Nzc0NSAoUlovRzFFKSAgICAgICBEUEFEIDAgICAgICAgICBEUEFEIDEgICAgICAgICAtICAgICAg
+ICAgICAgICAtICsKPiBSOEE3NzQ3MCAoUlovRzFDKSAgICAgIERQQUQgMCAgICAgICAgIERQQUQg
+MSAgICAgICAgIExWRFMgMCAgICAgICAgIC0KPiBSOEE3Nzc5IChSLUNhciBIMSkgICAgIERQQUQg
+MCAgICAgICAgIERQQUQgMSAgICAgICAgIC0gICAgICAgICAgICAgIC0KPiBSOEE3NzkwIChSLUNh
+ciBIMikgICAgIERQQUQgMCAgICAgICAgIExWRFMgMCAgICAgICAgIExWRFMgMSAgICAgICAgIC0K
+PiBSOEE3NzkxIChSLUNhciBNMi1XKSAgIERQQUQgMCAgICAgICAgIExWRFMgMCAgICAgICAgIC0g
+ICAgICAgICAgICAgIC0KCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
