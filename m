@@ -1,65 +1,69 @@
-From: Christophe Kerello <christophe.kerello@st.com>
-Subject: Re: [PATCH v2 2/3] mtd: rawnand: stm32_fmc2: add STM32 FMC2 NAND
- flash controller driver
-Date: Mon, 15 Oct 2018 10:09:49 +0200
-Message-ID: <b10a3919-7b86-c177-2254-30d32ac6f25e@st.com>
-References: <1538732520-2800-1-git-send-email-christophe.kerello@st.com>
- <1538732520-2800-3-git-send-email-christophe.kerello@st.com>
- <20181005115809.55356782@bbrezillon>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH v3] ARM: dts: Add support for Liebherr's BK4 device
+ (vf610 based)
+Date: Mon, 15 Oct 2018 10:14:04 +0200
+Message-ID: <20181015101404.52643184@jawa>
+References: <20180921152726.31742-1-lukma@denx.de>
+        <20181009105028.17971-1-lukma@denx.de>
+        <20181012004027.GB3587@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/fbOpQnBhotqXKQP4ozRLJAw"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181005115809.55356782@bbrezillon>
-Content-Language: en-US
+In-Reply-To: <20181012004027.GB3587@dragon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: miquel.raynal@bootlin.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Pengutronix Kernel Team <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Fabio Estevam <festevam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+--Sig_/fbOpQnBhotqXKQP4ozRLJAw
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi Shawn,
+
+> On Tue, Oct 09, 2018 at 12:50:28PM +0200, Lukasz Majewski wrote:
+> > This commit adds DTS support for BK4 device from Liebherr. It
+> > uses vf610 SoC from NXP.
+> >=20
+> > Signed-off-by: Lukasz Majewski <lukma@denx.de> =20
+>=20
+> As v3 just incorporates a few minor improvements over v2, Stefan's
+> review tag should really be carried.  I applied the patch with Stefan
+> and Fabio's review tag added.=20
+
+Thanks :-).
+
+>=20
+> Shawn
 
 
-On 10/05/2018 11:58 AM, Boris Brezillon wrote:
-> On Fri, 5 Oct 2018 11:41:59 +0200
-> <christophe.kerello@st.com> wrote:
-> 
->> +struct stm32_fmc2 {
-> 
-> You should inherit from nand_controller even if the nand_chip already
-> embeds a dummy nand controller object.
-> 
-> 	struct nand_controller base;
-> 
 
-Hi Boris,
 
-Ok, i will add and handle the nand controller structure.
+Best regards,
 
-Regards,
-Christophe Kerello.
+Lukasz Majewski
 
->> +	struct stm32_fmc2_nand nand;
->> +	struct device *dev;
->> +	void __iomem *io_base;
->> +	void __iomem *data_base[FMC2_MAX_CE];
->> +	void __iomem *cmd_base[FMC2_MAX_CE];
->> +	void __iomem *addr_base[FMC2_MAX_CE];
->> +	phys_addr_t io_phys_addr;
->> +	phys_addr_t data_phys_addr[FMC2_MAX_CE];
->> +	struct clk *clk;
->> +
->> +	struct dma_chan *dma_tx_ch;
->> +	struct dma_chan *dma_rx_ch;
->> +	struct dma_chan *dma_ecc_ch;
->> +	struct sg_table dma_data_sg;
->> +	struct sg_table dma_ecc_sg;
->> +	u8 *ecc_buf;
->> +	int dma_ecc_len;
->> +
->> +	struct completion complete;
->> +	struct completion dma_data_complete;
->> +	struct completion dma_ecc_complete;
->> +
->> +	u8 cs_assigned;
->> +	int cs_sel;
->> +};
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+
+--Sig_/fbOpQnBhotqXKQP4ozRLJAw
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlvETEwACgkQAR8vZIA0
+zr0FCQgArh85P/37Uas5kQp4FPL8TmaEbbP0HxlTZtRXJvugcPKbsTGNp5oPXTIJ
+NPCMBGrxmQqF8d8h9tkgEtbSMjQAHBQRhKoACYz9vszQc8YlVPCpN+xcrur+Wa9G
+XwIp29SRz5KI5UrUsk561+BCSjchwOeWVcElMntgu/kGTbeWpugxyOKYs5NmexyN
+KozEL5iV5NDg8yjtCtsKJHUjMgML8zpz4pNEuGk+xxWlPjAxRgDb3Y8RyrufjT1T
+TYH8a7WD4zqWpbXYP6Qr3elFPQyzS9g0vPGd9XtK27AGN5KlZwice6ffEjP8nBpA
+JCAjNmd7ZZs473EAzsc6sRaRlP9mNg==
+=4/wT
+-----END PGP SIGNATURE-----
+
+--Sig_/fbOpQnBhotqXKQP4ozRLJAw--
