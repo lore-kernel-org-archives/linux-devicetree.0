@@ -1,115 +1,86 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] dt-bindings: ufs: Fix the compatible string definition
-Date: Mon, 15 Oct 2018 10:23:19 -0700
-Message-ID: <CAD=FV=WYM5OOigy+81cVzPtAJXhvrhB1znr9zHzMf3q5iFOtFw@mail.gmail.com>
-References: <20181012213926.253765-1-dianders@chromium.org> <CAFp+6iFy8V34cs6pEOie_tBX5wJqM7teUnH_XLLZ7cioPrX_hA@mail.gmail.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: Re: [PATCH v2 15/29] drm/bridge/synopsys: dw-hdmi:
+ Enable workaround for v2.12a
+Date: Mon, 15 Oct 2018 19:43:44 +0200
+Message-ID: <1599508.L0GctDr0rS@jernej-laptop>
+References: <20181007093905.11253-1-jernej.skrabec@siol.net> <20181007093905.11253-16-jernej.skrabec@siol.net> <3616158.EzHeIcd69b@avalon>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iFy8V34cs6pEOie_tBX5wJqM7teUnH_XLLZ7cioPrX_hA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, cang@codeaurora.org, Evan Green <evgreen@chromium.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, sayalil@codeaurora.org, Asutosh Das <asutoshd@codeaurora.org>, devicetree@vger.kernel.org, liwei213@huawei.com, LKML <linux-kernel@vger.kernel.org>, Mathieu Malaterre <malat@debian.org>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBWFDSPPAKGQELQKMVPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <3616158.EzHeIcd69b@avalon>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
+Cc: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Vivek,
+Hi,
 
-On Mon, Oct 15, 2018 at 8:23 AM Vivek Gautam
-<vivek.gautam@codeaurora.org> wrote:
->
-> Hi Doug,
->
-> On Sat, Oct 13, 2018 at 3:09 AM Douglas Anderson <dianders@chromium.org> wrote:
-> >
-> > If you look at the bindings for the UFS Host Controller it says:
-> >
-> > - compatible: must contain "jedec,ufs-1.1" or "jedec,ufs-2.0", may
-> >               also list one or more of the following:
-> >                  "qcom,msm8994-ufshc"
-> >                  "qcom,msm8996-ufshc"
-> >                  "qcom,ufshc"
-> >
-> > My reading of that is that it's fine to just have either of these:
-> > 1. "qcom,msm8996-ufshc", "jedec,ufs-2.0"
-> > 2. "qcom,ufshc", "jedec,ufs-2.0"
-> >
-> > As far as I can tell neither of the above is actually a good idea.
-> >
-> > For #1 it turns out that the driver currently only keys off the
-> > compatible string "qcom,ufshc" so it won't actually probe.
-> >
-> > For #2 the driver won't probe but it's not a good idea to keep the SoC
-> > name out of the compatible string.
-> >
-> > Let's update the compatible string to make it really explicit.  We'll
-> > include a nod to the existing driver and the old binding and say that
-> > we should always include the "qcom,ufshc" string in addition to the
-> > SoC compatible string.
-> >
-> > While we're at it we'll also include another example SoC known to have
-> > UFS: sdm845.
-> >
-> > Fixes: 47555a5c8a11 ("scsi: ufs: make the UFS variant a platform device")
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Dne torek, 09. oktober 2018 ob 19:40:44 CEST je Laurent Pinchart napisal(a):
+> Hi Jernej,
+> 
+> Thank you for the patch.
+> 
+> On Sunday, 7 October 2018 12:38:51 EEST Jernej Skrabec wrote:
+> > It turns out that even new DW HDMI controllers exhibits same magenta
+> > line issues as older versions.
+> > 
+> > Enable workaround for v2.12a.
+> 
+> This doesn't affect the platforms I maintain, so I can't really test this,
+> but I'm wondering whether there could be other platforms using a v2.12a DW
+> HDMI that wouldn't need the workaround.
+> 
+> My platforms use a previous version, namely v2.01a. The workaround for that
+> version has been enabled by
+> 
+> commit 9c305eb442f3b371fc722ade827bbf673514123e
+> Author: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Date:   Fri Feb 23 12:44:37 2018 +0100
+> 
+>     drm: bridge: dw-hdmi: Fix overflow workaround for Amlogic Meson GX SoCs
+> 
+> I haven't paid too much attention to the patch back then, and have now
+> double- checked the HDMI output on R-Car Gen3. Enabling the workaround
+> doesn't cause any regression, and reverting the commit doesn't cause any
+> issue either. I thus wonder whether we shouldn't enable the workaround with
+> count = 1 in the default case instead of adding new IP core versions to the
+> list. It would be nice if someone from Synopsys could comment on this.
+
+I was thinking about that too, or even having parameter in dw_hdmi_plat_data 
+which would tell how many times to repeat workaround procedure for a specific 
+platform. But this might be an overkill.
+
+Best regards,
+Jernej
+
+> 
+> > Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 > > ---
-> >
-> >  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt       | 13 ++++++++-----
-> >  1 file changed, 8 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> > index 2df00524bd21..69a06a1b732e 100644
-> > --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> > +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> > @@ -4,11 +4,14 @@ UFSHC nodes are defined to describe on-chip UFS host controllers.
-> >  Each UFS controller instance should have its own node.
-> >
-> >  Required properties:
-> > -- compatible           : must contain "jedec,ufs-1.1" or "jedec,ufs-2.0", may
-> > -                         also list one or more of the following:
-> > -                                         "qcom,msm8994-ufshc"
-> > -                                         "qcom,msm8996-ufshc"
-> > -                                         "qcom,ufshc"
-> > +- compatible           : must contain "jedec,ufs-1.1" or "jedec,ufs-2.0"
-> > +
-> > +                         For Qualcomm SoCs must contain, as below, an
-> > +                         SoC-specific compatible along with "qcom,ufshc" and
-> > +                         the appropriate jedec string:
-> > +                           "qcom,msm8994-ufshc", "qcom,ufshc", "jedec,ufs-2.0"
-> > +                           "qcom,msm8996-ufshc", "qcom,ufshc", "jedec,ufs-2.0"
-> > +                           "qcom,sdm845-ufshc", "qcom,ufshc", "jedec,ufs-2.0"
->
-> Thanks for the patch. It looks good to me.
-> Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-
-Thanks for the review!
-
-
-> P.S.: While you are at it, can you please move 'ufs-qcom.txt'
-> to Documentation/devicetree/bindings/phy/qcom,ufs-phy.txt.
-> The current name and file location is misleading.
-
-I'd rather someone at Qualcomm do this.  Do you have a suggested
-person?  The reason I feel that Qualcomm needs to get involved is that
-I see that when I look at the file you refer to says it's for:
-
-  "qcom,ufs-phy-qmp-20nm" for 20nm ufs phy,
-  "qcom,ufs-phy-qmp-14nm" for legacy 14nm ufs phy,
-  "qcom,msm8996-ufs-phy-qmp-14nm" for 14nm ufs phy
-  present on MSM8996 chipset.
-
-...but there's another Qualcomm file, 'qcom-qmp-phy.txt'.  That
-handles the compatible string:
-
-       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
-
-So I'm a little confused.  Should the SDM845 UFS PHY been handled by
-the older UFS PHY driver?  ...or should all the older UFS PHYs be
-moved to be handled by the newer QMP PHY driver?  ...or are they
-really different hardware blocks, in which case how would you describe
-the difference (both are described as UFS QMP PHYs I think).
-
-BTW: I have a patch attempting to fixup the QMP PHY bindings at
-<https://lkml.kernel.org/r/20181012213632.252346-1-dianders@chromium.org>.
-
-
--Doug
+> > 
+> >  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
+> > 5971976284bf..df1c7a2d6961 100644
+> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > @@ -1664,6 +1664,7 @@ static void dw_hdmi_clear_overflow(struct dw_hdmi
+> > 
+> > *hdmi) case 0x131a:
+> >  	case 0x132a:
+> > 
+> >  	case 0x201a:
+> > +	case 0x212a:
+> >  		count = 1;
+> >  		break;
+> >  	
+> >  	default:
