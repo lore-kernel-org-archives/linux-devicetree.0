@@ -1,15 +1,18 @@
-From: =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: Re: [PATCH V3 1/2] dt-bindings: pinctrl: document Broadcom Northstar
- pin mux controller
-Date: Mon, 15 Oct 2018 10:56:41 +0200
-Message-ID: <7f08ed7bf11a22163bdfd56ff96a9262@milecki.pl>
-References: <20180926193103.21241-1-zajec5@gmail.com>
- <20181011222229.GA7470@bogus>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
+Date: Mon, 15 Oct 2018 09:03:04 +0000
+Message-ID: <AM0PR04MB421179CEB214D46BCDE6ACF280FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1539527419-23613-1-git-send-email-aisheng.dong@nxp.com>
+ <1539527419-23613-3-git-send-email-aisheng.dong@nxp.com>
+ <20181015065859.lxevjroly435hlaq@pengutronix.de>
+ <AM0PR04MB42117867A50BB18D8127BE8080FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <20181015082751.ytuleg67p5pgtnov@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181011222229.GA7470@bogus>
+In-Reply-To: <20181015082751.ytuleg67p5pgtnov@pengutronix.de>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,66 +22,91 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0xMC0xMiAwMDoyMiwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gV2VkLCBTZXAgMjYs
-IDIwMTggYXQgMDk6MzE6MDJQTSArMDIwMCwgUmFmYcWCIE1pxYJlY2tpIHdyb3RlOgo+PiBGcm9t
-OiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4+IAo+PiBOb3J0aHN0YXIgaGFz
-IG11eCBjb250cm9sbGVyIGp1c3QgbGlrZSBOb3J0aHN0YXIgUGx1cyBhbmQgTm9ydGhzdGFyMi4K
-Pj4gSXQncyBhIGJpdCBkaWZmZXJlbnQgdGhvdWdoIChkaWZmZXJlbnQgcmVnaXN0ZXJzICYgcGlu
-cykgc28gaXQgCj4+IHJlcXVpcmVzCj4+IGl0cyBvd24gYmluZGluZy4KPj4gCj4+IEl0J3MgbmVl
-ZGVkIHRvIGFsbG93IG90aGVyIGJsb2NrIGJpbmRpbmdzIHNwZWNpZnkgcmVxdWlyZWQgbXV4IHNl
-dHVwLgo+PiAKPj4gU2lnbmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tp
-LnBsPgo+PiBSZXZpZXdlZC1ieTogRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5j
-b20+Cj4+IC0tLQo+PiBWMjogVXNlICJjcnVfZ3Bpb19jb250cm9sIgo+PiAgICAgQWRkIG1vcmUg
-ZnVuY3Rpb25zICYgZ3JvdXBzCj4+ICAgICBJbmNsdWRlIEZsb3JpYW4ncyBSZXZpZXdlZC1ieQo+
-PiBWMzogVXNlIDMgZGlmZmVyZW50IGJpbmRpbmdzIGFzIGF2YWlsYWJsZSBwaW5zIGRlcGVuZCBv
-biB0aGUgY2hpcHNldC4KPj4gICAgIFN0cmluZ3MgbWF0Y2ggCj4+IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9hcm0vYmNtL2JyY20sYmNtNDcwOC50eHQKPj4gLS0tCj4+ICAuLi4v
-YmluZGluZ3MvcGluY3RybC9icmNtLGJjbTQ3MDgtcGlubXV4LnR4dCAgICAgICB8IDQyIAo+PiAr
-KysrKysrKysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgNDIgaW5zZXJ0aW9ucygr
-KQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IAo+PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvcGluY3RybC9icmNtLGJjbTQ3MDgtcGlubXV4LnR4dAo+PiAKPj4gZGlmZiAtLWdpdCAK
-Pj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9icmNtLGJjbTQ3
-MDgtcGlubXV4LnR4dCAKPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGlu
-Y3RybC9icmNtLGJjbTQ3MDgtcGlubXV4LnR4dAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBp
-bmRleCAwMDAwMDAwMDAwMDAuLmFmOTA2ZjE5NmU4Ywo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyAK
-Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9icmNtLGJjbTQ3
-MDgtcGlubXV4LnR4dAo+PiBAQCAtMCwwICsxLDQyIEBACj4+ICtCcm9hZGNvbSBOb3J0aHN0YXIg
-cGlucyBtdXggY29udHJvbGxlcgo+PiArCj4+ICtTb21lIG9mIE5vcnRoc3RhciBTb0NzJ3MgcGlu
-cyBjYW4gYmUgdXNlZCBmb3IgdmFyaW91cyBwdXJwb3NlcyB0aGFua3MgCj4+IHRvIHRoZSBtdXgK
-Pj4gK2NvbnRyb2xsZXIuIFRoaXMgYmluZGluZyBhbGxvd3MgZGVzY3JpYmluZyBtdXggY29udHJv
-bGxlciBhbmQgbGlzdGluZyAKPj4gYXZhaWxhYmxlCj4+ICtmdW5jdGlvbnMuIFRoZXkgY2FuIGJl
-IHJlZmVyZW5jZWQgbGF0ZXIgYnkgb3RoZXIgYmluZGluZ3MgdG8gbGV0IAo+PiBzeXN0ZW0KPj4g
-K2NvbmZpZ3VyZSBjb250cm9sbGVyIGNvcnJlY3RseS4KPj4gKwo+PiArQSBsaXN0IG9mIHBpbnMg
-dmFyaWVzIGFjcm9zcyBjaGlwc2V0cyBzbyBmZXcgYmluZGluZ3MgYXJlIGF2YWlsYWJsZS4KPj4g
-Kwo+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4gKy0gY29tcGF0aWJsZTogbXVzdCBiZSBvbmUg
-b2Y6Cj4+ICsJImJyY20sYmNtNDcwOC1waW5tdXgiCj4+ICsJImJyY20sYmNtNDcwOS1waW5tdXgi
-Cj4+ICsJImJyY20sYmNtNTMwMTItcGlubXV4Igo+PiArLSByZWc6IGlvbWVtIGFkZHJlc3MgcmFu
-Z2Ugb2YgQ1JVIChDZW50cmFsIFJlc291cmNlIFVuaXQpIHBpbiAKPj4gcmVnaXN0ZXJzCj4gCj4g
-UGVyaGFwcyAnY3J1JyBpbiB0aGUgY29tcGF0aWJsZSBpZiB0aGF0J3Mgd2hhdCB0aGUgaC93IGlz
-IGNhbGxlZD8KPiAKPiBBbHNvLCBpZiB0aGlzIGlzIGEgc3ViLWJsb2NrLCB0aGVuIGl0IHNob3Vs
-ZCBiZSBhIGNoaWxkIG9mIHRoZSBibG9jawo+IHdoaWNoIHNob3VsZCBiZSBkZWZpbmVkIGhlcmUu
-CgpJdCB0b29rIG1lIHNvbWUgdGltZSB0byBkbyBzb21lIGV4dHJhIHJlc2VhcmNoIG9uIHRoZSB3
-aG9sZSBDUlUgdGhpbmcuCgpWYWx1YWJsZSByZXNvdXJjZXM6ClsxXSBiY201MzAxeF9kbXUuYyAo
-ZnJvbSB0aGUgU0RLKQpbMl0gYmNtNTMwMXhfcGNpZS5jIChmcm9tIHRoZSBTREspClszXSBodHRw
-czovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzc4ODg2NTEvCls0XSBodHRwczovL3BhdGNo
-d29yay5rZXJuZWwub3JnL3BhdGNoLzUwNTE0NzEvCgpGaXJzdCBvZiBhbGwgQ1JVIHNlZW1zIHRv
-IGJlIGEgc3ViLWJsb2NrIG9mIHRoZSBETVUgKHdoaWNoIHN0YW5kcyBmb3IKIkRldmljZSBNYW5h
-Z2VtZW50IFVuaXQiIGFjY29yZGluZyB0byB0aGUgWzFdKS4gRE1VIHNlZW1zIHRvIGJlCmluZGVw
-ZW5kZW50IGJsb2NrIGF0IDB4MTgwMGMwMDAgd2l0aCBhIHNpemUgb2YgMHgxMDAwLgoKSXQgaXNu
-J3QgYWN0dWFsbHkgY2xlYXIgd2hhdCB0aGUgQ1JVIHN0YW5kcyBmb3IuIEluIEJyb2FkY29tJ3Mg
-Y2FzZToKMS4gQWNjb3JkaW5nIHRvIHRoZSBbM10gaXQncyAiQ2xvY2sgYW5kIFJlc2V0IFVuaXQi
-CjIuIEFjY29yZGluZyB0byB0aGUgWzRdIGl0J3MgYSAiY2VudHJhbCByZXNvdXJjZSB1bml0IgpP
-dGhlciB2ZW5kb3JzIHNlZW0gdG8gdXNlIENSVSBuYW1lIGZvciAiQ2xvY2sgYW5kIFJlc2V0IFVu
-aXQiLgoKSW4gYW55IGNhc2UsIHlvdSdyZSByaWdodCBSb2IsIGl0J3MgYSBzdWItYmxvY2ssIGEg
-c2V0IG9mIHJhbmRvbQpyZWdpc3RlcnMgdGhhdCBjb250cm9sIFNvQy4KClNvIEkgdGhpbmsgdGhh
-dDoKMSkgV2Ugc2hvdWxkIGhhdmUgYSBub2RlIGZvciBETVUgYW5kIENSVQoyKSBXZSBzaG91bGQg
-bm90IGluY2x1ZGUgImNydSIgaW4gYmluZGluZ3MgYXMgcGlubXV4aW5nIHNlZW1zIHRvIGJlIHBh
-cnQKICAgIG9mIFNvQyB0aGF0IGp1c3QgaGFwcGVucyB0byBiZSBjb250cm9sbGVkIHVzaW5nIENS
-VSByZWdpc3RlcnMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LWFybS1rZXJuZWwK
+> -----Original Message-----
+> From: Sascha Hauer [mailto:s.hauer@pengutronix.de]
+> Sent: Monday, October 15, 2018 4:28 PM
+> To: A.s. Dong <aisheng.dong@nxp.com>
+> Cc: linux-arm-kernel@lists.infradead.org; Mark Rutland
+> <mark.rutland@arm.com>; dongas86@gmail.com; devicetree@vger.kernel.org;
+> catalin.marinas@arm.com; will.deacon@arm.com; robh+dt@kernel.org;
+> dl-linux-imx <linux-imx@nxp.com>; kernel@pengutronix.de; Fabio Estevam
+> <fabio.estevam@nxp.com>; shawnguo@kernel.org
+> Subject: Re: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
+> 
+> On Mon, Oct 15, 2018 at 08:08:31AM +0000, A.s. Dong wrote:
+> > > > +		imx8qx-pm {
+> > > > +			compatible = "fsl,scu-pd";
+> > >
+> > > I missed this earlier, but there should be a i.MX8qp specific
+> > > compatible as the SCU API might change for future SoCs.
+> > >
+> >
+> > We still do not see that requirement up till now. Not sure if it would
+> > be possible in the future. I see low possibilities.
+> > SCU IPC is designed to be generic to all MX8 SCU firmwares.
+> 
+> And i.MX9? i.MX10?
+> 
+
+MX8DM MX8DXP
+
+> > Even it changes, SCU firmware version control may helps.
+> 
+> It's not the first time that the position of the version field changes with a
+> newer version.
+> 
+
+I understand your worry. 
+Up till now all SCU firmware based SoCs are all using one generic IPC driver internally.
+And I have not heard a possible changing in the future.
+I double checked the SCU firmware implementation that the IPC
+Is deigned to be platform independent. So it's less to be changed.
+So I wonder if this could be over worried.
+Even it is changed, (quite less probility), we still can user version
+To distinguish them, just like arm,scpi , arm,scmi. Right?
+
+> >
+> > > > +			compatible = "fsl,imx7ulp-lpuart";
+> > > > +			compatible = "fsl,imx7ulp-lpi2c";
+> > > > +			compatible = "fsl,imx7d-usdhc";
+> > >
+> > > All these lack the most specific imx8qp compatible.
+> > >
+> >
+> > Adding them requires binding doc update as well.
+> > S I suppose they could be added later when the QXP specific features
+> > are really supported by the drivers.
+> > Do you think it's okay?
+> 
+> Newer Kernels should work with older device trees, so once you roll out these
+> compatibles it's too late already.
+> 
+
+The backwards compatible string is used to guarantee a basic function.
+Even we add qxp specific compatible string later, it still can work with
+backwards function. So I'm not quite get what the real problem is.
+And this is the initial support that we don't expect the full features
+with such an early device tree, right?
+
+Regards
+Dong Aisheng
+
+> Sascha
+> 
+> --
+> Pengutronix e.K.                           |
+> |
+> Industrial Linux Solutions                 |
+> https://emea01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fwww.
+> pengutronix.de%2F&amp;data=02%7C01%7Caisheng.dong%40nxp.com%7C33
+> 7b52b64a9d4b1f2c5c08d632781dcf%7C686ea1d3bc2b4c6fa92cd99c5c30163
+> 5%7C0%7C0%7C636751888819600237&amp;sdata=rPKmWjR87ig5Q%2FFfTP
+> ZvXtPvLbqt6pZYkINKdhgVwE8%3D&amp;reserved=0  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0
+> |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:
+> +49-5121-206917-5555 |
