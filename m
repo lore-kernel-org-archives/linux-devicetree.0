@@ -1,98 +1,68 @@
-From: Luis Oliveira <luis.oliveira@synopsys.com>
-Subject: Re: [V2, 2/5] Documentation: dt-bindings: Document the Synopsys MIPI
- DPHY Rx bindings
-Date: Mon, 15 Oct 2018 17:21:03 +0100
-Message-ID: <5f3b530b-1869-2749-ef05-60fb272d56f8@synopsys.com>
-References: <20180920111648.27000-1-lolivei@synopsys.com>
- <20180920111648.27000-3-lolivei@synopsys.com> <20181012164548.GA11873@bogus>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 08/14] ARM64: dts: hisilicon: Add tsensor interrupt name
+Date: Mon, 15 Oct 2018 11:28:35 -0500
+Message-ID: <20181015162835.GA20955@bogus>
+References: <1537866192-12320-1-git-send-email-daniel.lezcano@linaro.org>
+ <1537866192-12320-9-git-send-email-daniel.lezcano@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181012164548.GA11873@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1537866192-12320-9-git-send-email-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Luis Oliveira <Luis.Oliveira@synopsys.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Joao.Pinto@synopsys.com, festevam@gmail.com, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Arnd Bergmann <arnd@arndb.de>, Jacob Chen <jacob-chen@iotwrt.com>, Neil Armstrong <narmstrong@baylibre.com>, Keiichi Watanabe <keiichiw@chromium.org>, Kate Stewart <kstewart@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Todor Tomov <todor.tomov@linaro.org>, devicetree@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: edubezval@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, leo.yan@linaro.org, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/HISILICON SOC SUPPORT" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 12-Oct-18 17:45, Rob Herring wrote:
-> On Thu, Sep 20, 2018 at 01:16:40PM +0200, Luis Oliveira wrote:
->> Add device-tree bindings documentation for SNPS DesignWare MIPI D-PHY in
->> RX mode.
+On Tue, Sep 25, 2018 at 11:03:06AM +0200, Daniel Lezcano wrote:
+> Add the interrupt names for the sensors, so the code can rely on them
+> instead of dealing with index which are prone to error.
 > 
-> "dt-bindings: phy: ..." for the subject.
+> The name comes from the Hisilicon documentation found on internet.
 > 
-Yes, you are right.
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
+>  .../bindings/thermal/hisilicon-thermal.txt         |  3 ++
+>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi          | 63 +++++++++++-----------
+>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |  1 +
+>  3 files changed, 36 insertions(+), 31 deletions(-)
 
->>
->> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
->> ---
->> Changelog
->> v2:
->> - no changes
->>
->>  .../devicetree/bindings/phy/snps,dphy-rx.txt       | 36 ++++++++++++++++++++++
->>  1 file changed, 36 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
->>
->> diff --git a/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt b/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
->> new file mode 100644
->> index 0000000..9079f4a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
->> @@ -0,0 +1,36 @@
->> +Synopsys DesignWare MIPI Rx D-PHY block details
->> +
->> +Description
->> +-----------
->> +
->> +The Synopsys MIPI D-PHY controller supports MIPI-DPHY in receiver mode.
->> +Please refer to phy-bindings.txt for more information.
->> +
->> +Required properties:
->> +- compatible		: Shall be "snps,dphy-rx".
->> +- #phy-cells		: Must be 1.
->> +- snps,dphy-frequency	: Output frequency of the D-PHY.
->> +- snps,dphy-te-len	: Size of the communication interface (8 bits->8 or 12bits->12).
->> +- reg			: Physical base address and size of the device memory mapped
->> +		 	  registers;
->> +
->> +Optional properties:
->> +- snps,compat-mode	: Compatibility mode control
+Lots of whitespace errors reported by checkpatch.pl.
+
 > 
-> type? values?
-> 
+> diff --git a/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt b/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+> index cef716a..3edfae3 100644
+> --- a/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+> @@ -7,6 +7,7 @@
+>    region.
+>  - interrupt: The interrupt number to the cpu. Defines the interrupt used
+>    by /SOCTHERM/tsensor.
+> +- interrupt-names: The interrupt names for the different sensors
 
-I will remove this in V3.
+Need to define what the names are.
 
->> +
->> +The per-board settings:
->> +- gpios 		: Synopsys testchip used as reference uses this to change setup
->> +		  	  configurations.
-> 
-> Preferred to be named (e.g. foo-gpios). How many? What are their 
-> functions?
-> 
+>  - clock-names: Input clock name, should be 'thermal_clk'.
+>  - clocks: phandles for clock specified in "clock-names" property.
+>  - #thermal-sensor-cells: Should be 1. See ./thermal.txt for a description.
+> @@ -18,6 +19,7 @@ for Hi6220:
+>  		compatible = "hisilicon,tsensor";
+>  		reg = <0x0 0xf7030700 0x0 0x1000>;
+>  		interrupts = <0 7 0x4>;
+> +		interrupt-names = "tsensor_intr";
 
-Ok, thanks for reviewing this.
+That name seems pretty pointless.
 
->> +
->> +Example:
->> +
->> +	mipi_dphy_rx1: dphy@3040 {
->> +		compatible = "snps,dphy-rx";
->> +		#phy-cells = <1>;
->> +		snps,dphy-frequency = <300000>;
->> +		snps,dphy-te-len = <12>;
->> +		snps,compat-mode = <1>;
->> +		reg = < 0x03040 0x20
->> +			0x08000 0x100
->> +			0x09000 0x100>;
->> +	};
->> +
->> -- 
->> 2.9.3
->>
+>  		clocks = <&sys_ctrl HI6220_TSENSOR_CLK>;
+>  		clock-names = "thermal_clk";
+>  		#thermal-sensor-cells = <1>;
+> @@ -28,5 +30,6 @@ for Hi3660:
+>  		compatible = "hisilicon,hi3660-tsensor";
+>  		reg = <0x0 0xfff30000 0x0 0x1000>;
+>  		interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "tsensor_a73";
+
+Just 'a73' is sufficient.
+
+>  		#thermal-sensor-cells = <1>;
+>  	};
