@@ -1,116 +1,62 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 3/5] clk: lochnagar: Add support for the Cirrus Logic Lochnagar
-Date: Mon, 15 Oct 2018 09:39:59 -0700
-Message-ID: <153962159992.5275.9275448716859702011@swboyd.mtv.corp.google.com>
-References: <20181008132542.19775-1-ckeepax@opensource.cirrus.com>
- <20181008132542.19775-3-ckeepax@opensource.cirrus.com>
- <153924124658.207691.10370075148426001371@swboyd.mtv.corp.google.com>
- <20181011132602.GD1653@imbe.wolfsonmicro.main>
- <153935999691.5275.1587207165396958375@swboyd.mtv.corp.google.com>
- <20181015104905.GF1653@imbe.wolfsonmicro.main>
+Subject: RE: [PATCH v4 5/6] arm64: dts: add QorIQ LX2160A SoC support
+Date: Mon, 15 Oct 2018 09:48:33 -0700
+Message-ID: <153962211360.5275.18031876744546062419@swboyd.mtv.corp.google.com>
+References: <1538615031-7507-1-git-send-email-vabhav.sharma@nxp.com>
+ <1538615031-7507-6-git-send-email-vabhav.sharma@nxp.com>
+ <20181008054510.GG3587@dragon>
+ <VI1PR04MB4800C0AB214B258793AF9ABAF3FD0@VI1PR04MB4800.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181015104905.GF1653@imbe.wolfsonmicro.main>
+In-Reply-To: <VI1PR04MB4800C0AB214B258793AF9ABAF3FD0@VI1PR04MB4800.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Vabhav Sharma <vabhav.sharma@nxp.com>
+Cc: "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "oss@buserror.net" <oss@buserror.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel-owner@vger.kernel.org" <linux-kernel-owner@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Charles Keepax (2018-10-15 03:49:05)
-> On Fri, Oct 12, 2018 at 08:59:56AM -0700, Stephen Boyd wrote:
-> > Quoting Charles Keepax (2018-10-11 06:26:02)
-> > > On Thu, Oct 11, 2018 at 12:00:46AM -0700, Stephen Boyd wrote:
-> > > > Quoting Charles Keepax (2018-10-08 06:25:40)
-> > > > > +struct lochnagar_clk_priv {
-> > > > > +       struct device *dev;
-> > > > > +       struct lochnagar *lochnagar;
-> > > > =
-
-> > > > Is this used for anything besides getting the regmap? Can you get t=
-he
-> > > > pointer to the parent in probe and use that to get the regmap point=
-er
-> > > > from dev_get_remap() and also use the of_node of the parent to regi=
-ster
-> > > > a clk provider? It would be nice to avoid including the mfd header =
-file
-> > > > unless it's providing something useful.
-> > > > =
-
-> > > =
-
-> > > It is also used to find out which type of Lochnagar we have
-> > > connected, which determines which clocks we should register. I
+Quoting Vabhav Sharma (2018-10-14 19:58:15)
+> > > +
+> > > +   pmu {
+> > > +           compatible =3D "arm,cortex-a72-pmu";
+> > > +           interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+> > > +   };
+> > > +
+> > > +   psci {
+> > > +           compatible =3D "arm,psci-0.2";
+> > > +           method =3D "smc";
+> > > +   };
+> > > +
+> > > +   memory@80000000 {
+> > > +           // DRAM space - 1, size : 2 GB DRAM
+> > > +           device_type =3D "memory";
+> > > +           reg =3D <0x00000000 0x80000000 0 0x80000000>;
+> > > +   };
+> > > +
+> > > +   ddr1: memory-controller@1080000 {
+> > > +           compatible =3D "fsl,qoriq-memory-controller";
+> > > +           reg =3D <0x0 0x1080000 0x0 0x1000>;
+> > > +           interrupts =3D <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+> > > +           little-endian;
+> > > +   };
+> > > +
+> > > +   ddr2: memory-controller@1090000 {
+> > > +           compatible =3D "fsl,qoriq-memory-controller";
+> > > +           reg =3D <0x0 0x1090000 0x0 0x1000>;
+> > > +           interrupts =3D <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+> > > +           little-endian;
+> > > +   };
+> > > +
+> > > +   sysclk: sysclk {
 > > =
 
-> > Can that be done through some device ID? So the driver can be untangled
-> > from the MFD part.
-> > =
+> > Name the node a bit generic like clock-xxx.
+> There is only one clock-unit, Bootloader(U-boot) require sysclk node duri=
+ng device tree fix-up as different platform support varied platform frequen=
+cy as per reset configuration word used.
+> Referred other ARM based platform with one clock using name as x: x
 
-> > > could perhaps pass that using another mechanism but we would
-> > > still want to include the MFD stuff to get the register
-> > > definitions. So this approach seems simplest.
-> > =
-
-> > Can the register definitions be moved to this clk driver?
-> > =
-
-> > Maybe you now get the hint, but I'd really like to be able to merge and
-> > compile the clk driver all by itself without relying on the parent MFD
-> > device to provide anything at compile time.
-> > =
-
-> =
-
-> If you feel strongly but since the MFD needs to hold the regmap
-> (which needs to define the read/volatile regs and defaults)
-> these will need to be duplicate defines and personally i would
-> rather only have one copy as it makes updating things much less
-> error prone.
-
-Ok if there's going to be read/volatile regs and defaults then it makes
-sense to leave the defines in some shared header file, which is
-unfortunate for the independent merge of driver bits. Either way, I
-would prefer we don't use struct lochnagar in this driver and move to
-more generic structures like struct regmap and express the type of MFD
-to this device driver some other way.
-
-> =
-
-> > > > > +       if (lclk->regmap.dir_mask) {
-> > > > > +               ret =3D regmap_update_bits(regmap, lclk->regmap.c=
-fg_reg,
-> > > > > +                                        lclk->regmap.dir_mask,
-> > > > > +                                        lclk->regmap.dir_mask);
-> > > > > +               if (ret < 0) {
-> > > > > +                       dev_err(priv->dev, "Failed to set %s dire=
-ction: %d\n",
-> > > > =
-
-> > > > What does direction mean?
-> > > > =
-
-> > > =
-
-> > > Some of the clocks can both generate and receive a clock. For
-> > > example the PSIA (external audio interface) MCLKs, the attached
-> > > device could be expecting or providing a master audio clock. If
-> > > the user assigns a parent to the clock we assume the attached
-> > > device is providing a clock to us, otherwise we assume we are
-> > > providing the clock.
-> > =
-
-> > And this directionality is determined by dir_mask? It would be great if
-> > this sort of information was in the commit text or in a comment in the
-> > driver so we know what's going on here.
-> > =
-
-> =
-
-> No problem will make this more clear.
-> =
-
-
-Thanks!
+Please add a comment above this node with this information. Newcomers
+reading this DTS file won't have any idea why this node is specially
+named and a comment will help tremendously here.
