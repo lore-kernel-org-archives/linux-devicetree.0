@@ -1,7 +1,7 @@
 From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v7 8/9] PCI: mediatek: Save the GIC IRQ in mtk_pcie_port
-Date: Mon, 15 Oct 2018 13:44:46 +0800
-Message-ID: <1539582287-9171-9-git-send-email-honghui.zhang@mediatek.com>
+Subject: [PATCH v7 4/9] PCI: mediatek: Convert to use pci_host_probe()
+Date: Mon, 15 Oct 2018 13:44:42 +0800
+Message-ID: <1539582287-9171-5-git-send-email-honghui.zhang@mediatek.com>
 References: <1539582287-9171-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,55 +14,69 @@ List-Id: devicetree@vger.kernel.org
 
 From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-Need to save the PCIe's GIC IRQ for dispose_irq, this is a prepare
-patch for add mediatek PCIe module support to tear down the IRQ, no
-functional changed.
+Part of mtk_pcie_register_host is an open-coded version of
+pci_host_probe(). So instead of duplicating this code, use
+pci_host_probe() directly and remove mtk_pcie_register_host.
 
 Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
 ---
- drivers/pci/controller/pcie-mediatek.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pcie-mediatek.c | 37 ++++++++--------------------------
+ 1 file changed, 8 insertions(+), 29 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 42cf2a4..daba78f 100644
+index 59fdb60..ead6005 100644
 --- a/drivers/pci/controller/pcie-mediatek.c
 +++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -162,6 +162,7 @@ struct mtk_pcie_soc {
-  * @phy: pointer to PHY control block
-  * @lane: lane count
-  * @slot: port slot
-+ * @irq: GIC irq
-  * @irq_domain: legacy INTx IRQ domain
-  * @inner_domain: inner IRQ domain
-  * @msi_domain: MSI IRQ domain
-@@ -182,6 +183,7 @@ struct mtk_pcie_port {
- 	struct phy *phy;
- 	u32 lane;
- 	u32 slot;
-+	int irq;
- 	struct irq_domain *irq_domain;
- 	struct irq_domain *inner_domain;
- 	struct irq_domain *msi_domain;
-@@ -620,7 +622,7 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
- 	struct mtk_pcie *pcie = port->pcie;
- 	struct device *dev = pcie->dev;
- 	struct platform_device *pdev = to_platform_device(dev);
--	int err, irq;
-+	int err;
- 
- 	err = mtk_pcie_init_irq_domain(port, node);
- 	if (err) {
-@@ -628,8 +630,9 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
- 		return err;
- 	}
- 
--	irq = platform_get_irq(pdev, port->slot);
--	irq_set_chained_handler_and_data(irq, mtk_pcie_intr_handler, port);
-+	port->irq = platform_get_irq(pdev, port->slot);
-+	irq_set_chained_handler_and_data(port->irq,
-+					 mtk_pcie_intr_handler, port);
- 
+@@ -1121,34 +1121,6 @@ static int mtk_pcie_request_resources(struct mtk_pcie *pcie)
  	return 0;
  }
+ 
+-static int mtk_pcie_register_host(struct pci_host_bridge *host)
+-{
+-	struct mtk_pcie *pcie = pci_host_bridge_priv(host);
+-	struct pci_bus *child;
+-	int err;
+-
+-	host->busnr = pcie->busn.start;
+-	host->dev.parent = pcie->dev;
+-	host->ops = pcie->soc->ops;
+-	host->map_irq = of_irq_parse_and_map_pci;
+-	host->swizzle_irq = pci_common_swizzle;
+-	host->sysdata = pcie;
+-
+-	err = pci_scan_root_bus_bridge(host);
+-	if (err < 0)
+-		return err;
+-
+-	pci_bus_size_bridges(host->bus);
+-	pci_bus_assign_resources(host->bus);
+-
+-	list_for_each_entry(child, &host->bus->children, node)
+-		pcie_bus_configure_settings(child);
+-
+-	pci_bus_add_devices(host->bus);
+-
+-	return 0;
+-}
+-
+ static int mtk_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -1175,7 +1147,14 @@ static int mtk_pcie_probe(struct platform_device *pdev)
+ 	if (err)
+ 		goto put_resources;
+ 
+-	err = mtk_pcie_register_host(host);
++	host->busnr = pcie->busn.start;
++	host->dev.parent = pcie->dev;
++	host->ops = pcie->soc->ops;
++	host->map_irq = of_irq_parse_and_map_pci;
++	host->swizzle_irq = pci_common_swizzle;
++	host->sysdata = pcie;
++
++	err = pci_host_probe(host);
+ 	if (err)
+ 		goto put_resources;
+ 
 -- 
 2.6.4
