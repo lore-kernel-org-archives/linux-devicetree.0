@@ -1,136 +1,60 @@
-From: Lukasz Majewski <lukma@denx.de>
+From: Mark Brown <broonie@kernel.org>
 Subject: Re: [PATCH] dt-bindings: misc: bk4: Add device tree binding for
  Liebherr's BK4 SPI bus
-Date: Mon, 15 Oct 2018 12:17:16 +0200
-Message-ID: <20181015121716.2362d286@jawa>
+Date: Mon, 15 Oct 2018 11:24:34 +0100
+Message-ID: <20181015102434.GC6277@sirena.org.uk>
 References: <20180927222655.24482-1-lukma@denx.de>
-        <20181008144350.GS3587@dragon>
-        <20181009122114.39ff3553@jawa>
+ <20181008144350.GS3587@dragon>
+ <20181009122114.39ff3553@jawa>
+ <20181015121716.2362d286@jawa>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/gmOy39BeIOY7=oX=WTjekxF"; protocol="application/pgp-signature"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4jXrM3lyYWu4nBt5"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181009122114.39ff3553@jawa>
+Content-Disposition: inline
+In-Reply-To: <20181015121716.2362d286@jawa>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/gmOy39BeIOY7=oX=WTjekxF
-Content-Type: text/plain; charset=US-ASCII
+
+--4jXrM3lyYWu4nBt5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Dear All,
+On Mon, Oct 15, 2018 at 12:17:16PM +0200, Lukasz Majewski wrote:
 
-> Hi Shawn,
->=20
-> > On Fri, Sep 28, 2018 at 12:26:55AM +0200, Lukasz Majewski wrote: =20
-> > > Add Device Tree binding document for Liebherr's BK4 external SPI
-> > > bus.
-> > >=20
-> > > Signed-off-by: Lukasz Majewski <lukma@denx.de>   =20
-> >=20
-> > There should really be a patch series consisting of this one and
-> > spidev change [1].
-> >=20
-> > Since spidev has already been picked up, having a series including
-> > this and dts change would be the second option.  With DT folks' ACK,
-> > I can send bindings change together with DTS using it. =20
->=20
-> Any option will work for me :-).
+> Gentle ping on this patch (as corresponding DTS file has been already
+> pulled by Shawn).
 
-Gentle ping on this patch (as corresponding DTS file has been already
-pulled by Shawn).
+Please don't send content free pings and please allow a reasonable time
+for review.  People get busy, go on holiday, attend conferences and so=20
+on so unless there is some reason for urgency (like critical bug fixes)
+please allow at least a couple of weeks for review.  If there have been
+review comments then people may be waiting for those to be addressed.
 
-Thanks in advance,
+Sending content free pings adds to the mail volume (if they are seen at
+all) which is often the problem and since they can't be reviewed
+directly if something has gone wrong you'll have to resend the patches
+anyway, so sending again is generally a better approach though there are
+some other maintainers who like them - if in doubt look at how patches
+for the subsystem are normally handled.
 
->=20
-> >=20
-> > Shawn
-> >=20
-> > [1] https://lkml.org/lkml/2018/9/28/48
-> >  =20
-> > > ---
-> > >  Documentation/devicetree/bindings/misc/lwn-bk4.txt | 26
-> > > ++++++++++++++++++++++ 1 file changed, 26 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/misc/lwn-bk4.txt
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/misc/lwn-bk4.txt
-> > > b/Documentation/devicetree/bindings/misc/lwn-bk4.txt new file mode
-> > > 100644 index 000000000000..d6a8c188c087
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/misc/lwn-bk4.txt
-> > > @@ -0,0 +1,26 @@
-> > > +* Liebherr's BK4 controller external SPI
-> > > +
-> > > +A device which handles data acquisition from compatible
-> > > industrial +peripherals.
-> > > +The SPI is used for data and management purposes in both master
-> > > and +slave modes.
-> > > +
-> > > +Required properties:
-> > > +
-> > > +- compatible : Should be "lwn,bk4"
-> > > +
-> > > +Required SPI properties:
-> > > +
-> > > +- reg : Should be address of the device chip select within
-> > > +  the controller.
-> > > +
-> > > +- spi-max-frequency : Maximum SPI clocking speed of device in Hz,
-> > > should be
-> > > +  30MHz at most for the Liebherr's BK4 external bus.
-> > > +
-> > > +Example:
-> > > +
-> > > +spidev0: spi@0 {
-> > > +	compatible =3D "lwn,bk4";
-> > > +	spi-max-frequency =3D <30000000>;
-> > > +	reg =3D <0>;
-> > > +};
-> > > --=20
-> > > 2.11.0
-> > >    =20
->=20
->=20
-> Best regards,
->=20
-> Lukasz Majewski
->=20
-> --
->=20
-> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-> Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-
-
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-
---Sig_/gmOy39BeIOY7=oX=WTjekxF
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--4jXrM3lyYWu4nBt5
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlvEaSwACgkQAR8vZIA0
-zr1OmwgAzD4ijGq9uMdxpcXGsjzFAeB3t8frizxNHNT/4YEUKndRf3KEq7qIIqsW
-MRDUzD22oWDL59FLWsq7ap9siVLODxB3ITC6u4nrcVHehWNN1LDaEdcbFm1X2QZD
-lgfSIpLg0wa5ryf8Ghm5u1GBi+5FHIUV7yhP6rQ2IuUMRI5LRprkxNO/6/S+oFoR
-ixr2aC0N19rGINzoRpuCj0jyWtSGXG21+eqq3yk5Mjp58zjIkGsbPiGu1Xzwohu+
-nf6taKD33t3brDmYYy2o4zNZt8IsOcKHqcivc51ma4TDJVTDnLK3agdUxSVOwNy8
-LIy0d1KPVJ8pCpkCvTo1B0SjHGJXtg==
-=/1td
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlvEauEACgkQJNaLcl1U
+h9B2xQf9Gd/mUcN0Qee3PMMvp0q31F78mAEZGVZwkDuKstj5VgRZ6Cx9f48jjArX
+ZvbPnHfdkfTmgmGvCzLDBZ6hzI/cR/cqWbaKCgLJyTKOv8TD79psM+UQZKwjiIGq
+LncZ97JhomURxaHrskcG8nms1bl/bOJhoD0GwpO2zwM75L3crOZuMZN8vVJzQedb
+GShEh7Q0uPWq1Ix9dHjYhYz8jjYxPp8za1Yoxq2dBClrSzU/9F77Flm+8hzxLs8C
+tizlPjpPWydJ7kVxd67D6POPrEed6uw6SD0JopF2/llWsVMtmkb+bXkWRNmExivj
+80ji5VB9pfrB5rn+YdPNzkeYpINPiw==
+=uwsY
 -----END PGP SIGNATURE-----
 
---Sig_/gmOy39BeIOY7=oX=WTjekxF--
+--4jXrM3lyYWu4nBt5--
