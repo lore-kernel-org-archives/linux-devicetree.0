@@ -1,86 +1,82 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: Re: [PATCH v2 15/29] drm/bridge/synopsys: dw-hdmi:
- Enable workaround for v2.12a
-Date: Mon, 15 Oct 2018 19:43:44 +0200
-Message-ID: <1599508.L0GctDr0rS@jernej-laptop>
-References: <20181007093905.11253-1-jernej.skrabec@siol.net> <20181007093905.11253-16-jernej.skrabec@siol.net> <3616158.EzHeIcd69b@avalon>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: [RESEND PATCH v8 01/12] dt-bindings: Add a document of PECI subsystem
+Date: Mon, 15 Oct 2018 10:57:01 -0700
+Message-ID: <20181015175712.1500-2-jae.hyun.yoo@linux.intel.com>
+References: <20181015175712.1500-1-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBWFDSPPAKGQELQKMVPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <3616158.EzHeIcd69b@avalon>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
-Cc: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181015175712.1500-1-jae.hyun.yoo@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Darrick J . Wong" <darrick.wong@oracle.com>, Eric Sandeen <sandeen@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, Tomohiro Kusumi <kusumi.tomohiro@gmail.com>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, "David S . Miller" <dav>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, openbmc@lists.ozlabs.org, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This commit adds a document of generic PECI bus, adapter and client
+driver.
 
-Dne torek, 09. oktober 2018 ob 19:40:44 CEST je Laurent Pinchart napisal(a):
-> Hi Jernej,
-> 
-> Thank you for the patch.
-> 
-> On Sunday, 7 October 2018 12:38:51 EEST Jernej Skrabec wrote:
-> > It turns out that even new DW HDMI controllers exhibits same magenta
-> > line issues as older versions.
-> > 
-> > Enable workaround for v2.12a.
-> 
-> This doesn't affect the platforms I maintain, so I can't really test this,
-> but I'm wondering whether there could be other platforms using a v2.12a DW
-> HDMI that wouldn't need the workaround.
-> 
-> My platforms use a previous version, namely v2.01a. The workaround for that
-> version has been enabled by
-> 
-> commit 9c305eb442f3b371fc722ade827bbf673514123e
-> Author: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Date:   Fri Feb 23 12:44:37 2018 +0100
-> 
->     drm: bridge: dw-hdmi: Fix overflow workaround for Amlogic Meson GX SoCs
-> 
-> I haven't paid too much attention to the patch back then, and have now
-> double- checked the HDMI output on R-Car Gen3. Enabling the workaround
-> doesn't cause any regression, and reverting the commit doesn't cause any
-> issue either. I thus wonder whether we shouldn't enable the workaround with
-> count = 1 in the default case instead of adding new IP core versions to the
-> list. It would be nice if someone from Synopsys could comment on this.
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Andrew Jeffery <andrew@aj.id.au>
+Cc: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
+Reviewed-by: James Feist <james.feist@linux.intel.com>
+Reviewed-by: Vernon Mauery <vernon.mauery@linux.intel.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/peci/peci.txt         | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/peci/peci.txt
 
-I was thinking about that too, or even having parameter in dw_hdmi_plat_data 
-which would tell how many times to repeat workaround procedure for a specific 
-platform. But this might be an overkill.
-
-Best regards,
-Jernej
-
-> 
-> > Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> > ---
-> > 
-> >  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
-> > 5971976284bf..df1c7a2d6961 100644
-> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > @@ -1664,6 +1664,7 @@ static void dw_hdmi_clear_overflow(struct dw_hdmi
-> > 
-> > *hdmi) case 0x131a:
-> >  	case 0x132a:
-> > 
-> >  	case 0x201a:
-> > +	case 0x212a:
-> >  		count = 1;
-> >  		break;
-> >  	
-> >  	default:
+diff --git a/Documentation/devicetree/bindings/peci/peci.txt b/Documentation/devicetree/bindings/peci/peci.txt
+new file mode 100644
+index 000000000000..864b7ab4e9fa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/peci/peci.txt
+@@ -0,0 +1,43 @@
++Generic device tree configuration for PECI adapters
++===================================================
++
++Required properties:
++- #address-cells : Should be <1>. Read more about client addresses below.
++- #size-cells    : Should be <0>. Read more about client addresses below.
++
++The cells properties above define that an address of CPU clients of a PECI bus
++are described by a single value.
++
++Example:
++	peci0: peci-bus@0 {
++		compatible = "vendor,soc-peci";
++		reg = <0x0 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++Generic device tree configuration for PECI clients
++==================================================
++
++Required properties:
++- compatible : Should contain name of PECI client.
++- reg        : Should contain address of a client CPU. Address range of CPU
++	       clients starts from 0x30 based on PECI specification.
++
++Example:
++	peci-bus@0 {
++		compatible = "vendor,soc-peci";
++		reg = <0x0 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		peci-client@30 {
++			compatible = "intel,peci-client";
++			reg = <0x30>;
++		};
++
++		peci-client@31 {
++			compatible = "intel,peci-client";
++			reg = <0x31>;
++		};
++	};
+-- 
+2.19.1
