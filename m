@@ -1,129 +1,64 @@
-From: Nick Kossifidis <mick@ics.forth.gr>
-Subject: [PATCH v2] OF: Handle CMDLINE when /chosen node is not present
-Date: Mon, 15 Oct 2018 17:20:10 +0300
-Message-ID: <20181015142010.13401-1-mick@ics.forth.gr>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 6/9] PM / OPP: dt-bindings: Add
+ opp-interconnect-bw
+Date: Mon, 15 Oct 2018 09:34:20 -0500
+Message-ID: <20181015143420.GA16932@bogus>
+References: <20180827151112.25211-1-jcrouse@codeaurora.org>
+ <20180827151112.25211-7-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: Nick Kossifidis <mick@ics.forth.gr>, linux-riscv@lists.infradead.org, robh+dt@kernel.org, frowand.list@gmail.com, palmer@sifive.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180827151112.25211-7-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The /chosen node is optional so we should handle CMDLINE regardless
-the presence of /chosen/bootargs. Move handling of CMDLINE in
-early_init_dt_scan() instead.
-
-v2: Fix typo on comments section
-
-Signed-off-by: Nick Kossifidis <mick@ics.forth.gr>
----
- drivers/of/fdt.c | 69 +++++++++++++++++++++++++++++++++++++++-----------------
- 1 file changed, 48 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 800ad252c..868464b0b 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -31,6 +31,14 @@
- 
- #include "of_private.h"
- 
-+#ifdef CONFIG_CMDLINE
-+#ifdef CONFIG_CMDLINE_FORCE
-+static const char fixed_cmdline[] __initconst = CONFIG_CMDLINE;
-+#else
-+static char builtin_cmdline[] __initdata = CONFIG_CMDLINE;
-+#endif
-+#endif
-+
- /*
-  * of_fdt_limit_memory - limit the number of regions in the /memory node
-  * @limit: maximum entries
-@@ -1088,28 +1096,10 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 
- 	/* Retrieve command line */
- 	p = of_get_flat_dt_prop(node, "bootargs", &l);
--	if (p != NULL && l > 0)
-+	if (p != NULL && l > 0) {
- 		strlcpy(data, p, min((int)l, COMMAND_LINE_SIZE));
--
--	/*
--	 * CONFIG_CMDLINE is meant to be a default in case nothing else
--	 * managed to set the command line, unless CONFIG_CMDLINE_FORCE
--	 * is set in which case we override whatever was found earlier.
--	 */
--#ifdef CONFIG_CMDLINE
--#if defined(CONFIG_CMDLINE_EXTEND)
--	strlcat(data, " ", COMMAND_LINE_SIZE);
--	strlcat(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
--#elif defined(CONFIG_CMDLINE_FORCE)
--	strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
--#else
--	/* No arguments from boot loader, use kernel's  cmdl*/
--	if (!((char *)data)[0])
--		strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
--#endif
--#endif /* CONFIG_CMDLINE */
--
--	pr_debug("Command line is: %s\n", (char*)data);
-+		pr_debug("Got bootargs: %s\n", (char *) data);
-+	}
- 
- 	/* break now */
- 	return 1;
-@@ -1240,6 +1230,43 @@ bool __init early_init_dt_scan(void *params)
- 		return false;
- 
- 	early_init_dt_scan_nodes();
-+
-+	/*
-+	 * The /chosen node normally contains the bootargs element
-+	 * that includes the kernel's command line parameters.
-+	 * However the presence of /chosen is not mandatory so
-+	 * in case we didn't get a command line when scanning
-+	 * nodes above, we need to provide one here before we
-+	 * return if possible.
-+	 *
-+	 * The built-in command line can be used as a default
-+	 * command line in case we received nothing from the
-+	 * device tree/bootloader. It can also be used for
-+	 * extending or replacing the received command line.
-+	 */
-+#ifdef CONFIG_CMDLINE
-+#if defined(CONFIG_CMDLINE_EXTEND)
-+	/*
-+	 * Order of parameters shouldn't matter for most cases,
-+	 * so prepending or appending the built-in command line
-+	 * shouldn't make a difference. In cases where it does
-+	 * it's up to the user to configure the kernel and/or
-+	 * the bootloader properly.
-+	 */
-+	if (builtin_cmdline[0]) {
-+		strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
-+		strlcat(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
-+	}
-+#elif defined(CONFIG_CMDLINE_FORCE)
-+	if (fixed_cmdline[0])
-+		strlcpy(boot_command_line, fixed_cmdline, COMMAND_LINE_SIZE);
-+#else
-+	/* No arguments from boot loader, use kernel's cmdline */
-+	if (!boot_command_line[0] && builtin_cmdline[0])
-+		strlcpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
-+#endif
-+#endif /* CONFIG_CMDLINE */
-+
- 	return true;
- }
- 
--- 
-2.16.4
+T24gTW9uLCBBdWcgMjcsIDIwMTggYXQgMDk6MTE6MDlBTSAtMDYwMCwgSm9yZGFuIENyb3VzZSB3
+cm90ZToKPiBBZGQgdGhlICJvcHAtaW50ZXJjb25uZWN0LWJ3IiBwcm9wZXJ0eSB0byBzcGVjaWZ5
+IHRoZQo+IGF2ZXJhZ2UgYW5kIHBlYWsgYmFuZHdpZHRoIGZvciBhbiBpbnRlcmNvbm5lY3QgcGF0
+aCBmb3IKPiBhIHNwZWNpZmljIG9wZXJhdGluZyBwb3dlciBwb2ludC4gQSBzZXBhcmF0ZSBiYW5k
+d2lkdGgKPiBwYWlyIGNhbiBiZSBzcGVjaWZpZWQgZm9yIGVhY2ggb2YgdGhlIGludGVyY29ubmVj
+dHMKPiBkZWZpbmVkIGZvciB0aGUgZGV2aWNlIGJ5IGFwcGVuZGluZyB0aGUgaW50ZXJjb25uZWN0
+Cj4gbmFtZSB0byB0aGUgcHJvcGVydHkuCj4gCj4gU2lnbmVkLW9mZi1ieTogSm9yZGFuIENyb3Vz
+ZSA8amNyb3VzZUBjb2RlYXVyb3JhLm9yZz4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL29wcC9vcHAudHh0IHwgMzYgKysrKysrKysrKysrKysrKysrKwo+ICAxIGZp
+bGUgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvb3BwL29wcC50eHQgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3Mvb3BwL29wcC50eHQKPiBpbmRleCBjMzk2YzRjMGFmOTIuLmQ3MTRjMDg0
+ZjM2ZCAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvb3Bw
+L29wcC50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvb3BwL29w
+cC50eHQKPiBAQCAtMTcwLDYgKzE3MCwxMSBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICAgIGZ1
+bmN0aW9uaW5nIG9mIHRoZSBjdXJyZW50IGRldmljZSBhdCB0aGUgY3VycmVudCBPUFAgKHdoZXJl
+IHRoaXMgcHJvcGVydHkgaXMKPiAgICBwcmVzZW50KS4KPiAgCj4gKy0gb3BwLWludGVyY29ubmVj
+dC1idy08bmFtZT46IFRoaXMgaXMgYW4gYXJyYXkgb2YgcGFpcnMgc3BlY2lmeWluZyB0aGUgYXZl
+cmFnZQo+ICsgIGFuZCBwZWFrIGJhbmR3aWR0aCBpbiBieXRlcyBwZXIgc2Vjb25kIGZvciB0aGUg
+aW50ZXJjb25uZWN0IHBhdGgga25vd24gYnkKPiArICAnbmFtZScuICBUaGlzIHNob3VsZCBtYXRj
+aCB0aGUgbmFtZShzKSBzcGVjaWZpZWQgYnkgaW50ZXJjb25uZWN0LW5hbWVzIGluIHRoZQo+ICsg
+IGRldmljZSBkZWZpbml0aW9uLgo+ICsKCkkgZG9uJ3QgdGhpbmsgdGhpcyBpcyBnb29kIGRlc2ln
+biB3aXRoIHRoZSBuYW1lIGRlZmluZWQgaW4gb25lIG5vZGUgYW5kIAp0aGVuIHVzZWQgaW4gdGhl
+IE9QUCB0YWJsZS4gRmlyc3QsICcqLW5hbWVzJyBpcyB0eXBpY2FsbHkgdGhlIGEgbmFtZSAKbG9j
+YWwgdG8gdGhhdCBub2RlL2RldmljZS4gSWYgeW91IGhhZCAyIGluc3RhbmNlcyBvZiBhIGRldmlj
+ZSB3aXRoIGEgCnNoYXJlZCBPUFAgdGFibGUgZm9yIHRoZSAyIGluc3RhbmNlcywgdGhlbiB5b3Ug
+YXJlIGdvaW5nIHRvIGhhdmUgdG8gCm1ha2UgdGhlIG5hbWVzIHVuaXF1ZS4gU2Vjb25kLCBob3cg
+ZXhhY3RseSB3b3VsZCBoYXZpbmcgbXVsdGlwbGUgYi93IAplbnRyaWVzIHdvcms/IEEgZ2l2ZW4g
+T1BQIGZyZXF1ZW5jeSBzdXBwb3J0cyB0aGUgc3VtIG9mIHRoZSBiL3cgZW50cmllcz8gCldoYXQg
+aWYgc29tZSBkZXZpY2VzIGZvciBiL3cgZW50cmllcyBhcmVuJ3QgY3VycmVudGx5IGFjdGl2ZT8K
+ClRoaXMgYWxzbyBzZWVtcyBsaWtlIGEgbWl4dHVyZSBvZiB1c2luZyBPUFAgdGFibGUgZm9yIHNl
+dHRpbmcgR1BVJ3MgCmJhbmR3aWR0aC9mcmVxIGFuZCB0aGVuIHRoZSBpbnRlcmNvbm5lY3QgYmlu
+ZGluZyB0byBzZXQgdGhlIAppbnRlcmNvbm5lY3QncyBiYW5kd2lkdGguIFBlcmhhcHMgd2UgbmVl
+ZCBhIG1vcmUgdW5pZmllZCBhcHByb2FjaC4gTm90IApzdXJlIHdoYXQgdGhhdCB3b3VsZCBsb29r
+IGxpa2UgdGhvdWdoLgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Zy
+ZWVkcmVubwo=
