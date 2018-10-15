@@ -1,94 +1,68 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH v3 9/9] arm64: dts: allwinner: a64: enable
-	sound on Pinebook
-Date: Mon, 15 Oct 2018 09:09:34 -0700
-Message-ID: <20181015160934.20948-10-anarsoul@gmail.com>
-References: <20181015160934.20948-1-anarsoul@gmail.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v2 0/4] Port mxs-dcp to imx6ull and imx6sll
+Date: Mon, 15 Oct 2018 16:11:54 +0000
+Message-ID: <AM0PR04MB42113CBC474C64ADE3B3D01780FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <cover.1539609921.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181015160934.20948-1-anarsoul@gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Marcus Cooper <codekipper@gmail.com>, Mylene JOSSERAND <mylene.josserand@free-electrons.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
-Cc: Vasily Khoruzhick <anarsoul@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1539609921.git.leonard.crestez@nxp.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leonard Crestez <leonard.crestez@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Herbert Xu <herbert@gondor.apana.org.au>, Horia Geanta <horia.geanta@nxp.com>, Franck Lenormand <franck.lenormand@nxp.com>, Aymen Sghaier <aymen.sghaier@nxp.com>, "David S . Miller " <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit enables I2S, digital and analog parts of audiocodec on
-Pinebook
+Hi Leonard,
 
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
----
- .../dts/allwinner/sun50i-a64-pinebook.dts     | 42 +++++++++++++++++++
- 1 file changed, 42 insertions(+)
+> -----Original Message-----
+> From: Leonard Crestez
+> Sent: Monday, October 15, 2018 9:28 PM
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-index e2e426334cfe..8a3a24a09d4c 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-@@ -74,6 +74,23 @@
- 		compatible = "mmc-pwrseq-simple";
- 		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
- 	};
-+
-+	speaker_amp: speaker_amp {
-+		compatible = "simple-audio-amplifier";
-+		enable-gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&codec {
-+	status = "okay";
-+};
-+
-+&codec_analog {
-+	status = "okay";
-+};
-+
-+&dai {
-+	status = "okay";
- };
- 
- &ehci0 {
-@@ -278,6 +295,31 @@
- 	vcc-hdmi-supply = <&reg_dldo1>;
- };
- 
-+&sound {
-+	status = "okay";
-+	simple-audio-card,widgets = "Microphone", "Microphone Jack",
-+				    "Headphone", "Headphone Jack",
-+				    "Speaker", "Internal Speaker";
-+	simple-audio-card,aux-devs = <&codec_analog>, <&speaker_amp>;
-+	simple-audio-card,routing =
-+			"Left DAC", "AIF1 Slot 0 Left",
-+			"Right DAC", "AIF1 Slot 0 Right",
-+			"INL", "LINEOUT",
-+			"INR", "LINEOUT",
-+			"Internal Speaker", "OUTL",
-+			"Internal Speaker", "OUTR",
-+			"Headphone Jack", "HP",
-+			"AIF1 Slot 0 Left ADC", "Left ADC",
-+			"AIF1 Slot 0 Right ADC", "Right ADC",
-+			"Left ADC", "ADC",
-+			"Right ADC", "ADC",
-+			"Mic", "MBIAS",
-+			"MIC1", "Mic",
-+			"Headset Mic", "Microphone Jack",
-+			"Microphone Jack", "HBIAS",
-+			"MIC2", "Headset Mic";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
--- 
-2.19.0
+
+[...]
+
+> Subject: [PATCH v2 0/4] Port mxs-dcp to imx6ull and imx6sll
+>=20
+> The DCP block is present on 6sll and 6ull but not enabled. The hardware i=
+s
+> mostly compatible with 6sl, the only important difference is that explici=
+t clock
+> enabling is required.
+>=20
+> There were several issues with the functionality of this driver (it didn'=
+t even
+> probe properly) but they are fixed in cryptodev/master by this series:
+>     https://lore.kernel.org/patchwork/cover/994874/
+>=20
+
+Thanks for the work.
+I will be glad to help the test if you provide some test guides. :-)
+
+Regards
+Dong Aisheng
+
+> ---
+> Changes since v1:
+>  * Add devicetree maintainers for dt-bindings
+>  * Add a patch enabling in imx_v6_v7_defconfig. Since tcrypt now passes t=
+his
+> shouldn't cause any issues
+>  * Link to v1: https://lore.kernel.org/patchwork/cover/994893/
+>=20
+> Leonard Crestez (4):
+>   dt-bindings: crypto: Mention clocks for mxs-dcp
+>   crypto: mxs-dcp - Add support for dcp clk
+>   ARM: dts: imx6ull: Add dcp node
+>   ARM: imx_v6_v7_defconfig: Enable CRYPTO_DEV_MXS_DCP
+>=20
+>  .../devicetree/bindings/crypto/fsl-dcp.txt     |  2 ++
+>  arch/arm/boot/dts/imx6ull.dtsi                 | 10 ++++++++++
+>  arch/arm/configs/imx_v6_v7_defconfig           |  1 +
+>  drivers/crypto/mxs-dcp.c                       | 18
+> ++++++++++++++++++
+>  4 files changed, 31 insertions(+)
+>=20
+> --
+> 2.17.1
