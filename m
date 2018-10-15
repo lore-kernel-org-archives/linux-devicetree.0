@@ -1,7 +1,7 @@
 From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v8 2/9] PCI: mediatek: Fix class type for MT7622 as PCI_CLASS_BRIDGE_PCI
-Date: Mon, 15 Oct 2018 16:08:53 +0800
-Message-ID: <1539590940-13355-3-git-send-email-honghui.zhang@mediatek.com>
+Subject: [PATCH v8 8/9] PCI: mediatek: Save the GIC IRQ in mtk_pcie_port
+Date: Mon, 15 Oct 2018 16:08:59 +0800
+Message-ID: <1539590940-13355-9-git-send-email-honghui.zhang@mediatek.com>
 References: <1539590940-13355-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,38 +14,56 @@ List-Id: devicetree@vger.kernel.org
 
 From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-The commit 101c92dc80c8 ("PCI: mediatek: Set up vendor ID and class
-type for MT7622") have set the class type for MT7622 as un-properly
-value of PCI_CLASS_BRIDGE_HOST.
+Need to save the PCIe's GIC IRQ for dispose_irq, this is a prepare
+patch for add mediatek PCIe module support to tear down the IRQ, no
+functional changed.
 
-The PCIe controller of MT7622 is complexed with Root Port and PCI-to-PCI
-bridge, the bridge has type 1 configuration space header and related bridge
-windows. The HW default value of this bridge's class type is invalid. Fix
-its class type as PCI_CLASS_BRIDGE_PCI since it is HW defines.
-
-Making the bridge visiable to PCI framework by setting its class type
-properly will get its bridge windows configurated during PCI device
-enumerate.
-
-Fixes: 101c92dc80c8 ("PCI: mediatek: Set up vendor ID and class type for MT7622")
 Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
 Acked-by: Ryder Lee <ryder.lee@mediatek.com>
 ---
- drivers/pci/controller/pcie-mediatek.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/pcie-mediatek.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 288b8e2..bcdac9b 100644
+index 42cf2a4..daba78f 100644
 --- a/drivers/pci/controller/pcie-mediatek.c
 +++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -432,7 +432,7 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
- 		val = PCI_VENDOR_ID_MEDIATEK;
- 		writew(val, port->base + PCIE_CONF_VEND_ID);
+@@ -162,6 +162,7 @@ struct mtk_pcie_soc {
+  * @phy: pointer to PHY control block
+  * @lane: lane count
+  * @slot: port slot
++ * @irq: GIC irq
+  * @irq_domain: legacy INTx IRQ domain
+  * @inner_domain: inner IRQ domain
+  * @msi_domain: MSI IRQ domain
+@@ -182,6 +183,7 @@ struct mtk_pcie_port {
+ 	struct phy *phy;
+ 	u32 lane;
+ 	u32 slot;
++	int irq;
+ 	struct irq_domain *irq_domain;
+ 	struct irq_domain *inner_domain;
+ 	struct irq_domain *msi_domain;
+@@ -620,7 +622,7 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
+ 	struct mtk_pcie *pcie = port->pcie;
+ 	struct device *dev = pcie->dev;
+ 	struct platform_device *pdev = to_platform_device(dev);
+-	int err, irq;
++	int err;
  
--		val = PCI_CLASS_BRIDGE_HOST;
-+		val = PCI_CLASS_BRIDGE_PCI;
- 		writew(val, port->base + PCIE_CONF_CLASS_ID);
+ 	err = mtk_pcie_init_irq_domain(port, node);
+ 	if (err) {
+@@ -628,8 +630,9 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
+ 		return err;
  	}
  
+-	irq = platform_get_irq(pdev, port->slot);
+-	irq_set_chained_handler_and_data(irq, mtk_pcie_intr_handler, port);
++	port->irq = platform_get_irq(pdev, port->slot);
++	irq_set_chained_handler_and_data(port->irq,
++					 mtk_pcie_intr_handler, port);
+ 
+ 	return 0;
+ }
 -- 
 2.6.4
