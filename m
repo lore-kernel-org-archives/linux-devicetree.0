@@ -1,171 +1,75 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/4] iommu/arm-smmu: Workaround for Marvell Armada-AP806
-	SoC erratum #582743
-Date: Mon, 15 Oct 2018 14:00:16 +0100
-Message-ID: <8a7eefcf-6a77-8dc1-2ce9-9bb7395a3bb7@arm.com>
-References: <1539604846-21151-1-git-send-email-hannah@marvell.com>
-	<1539604846-21151-3-git-send-email-hannah@marvell.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 00/19] PCI: Cleanup pci-keystone driver
+Date: Mon, 15 Oct 2018 18:37:02 +0530
+Message-ID: <20181015130721.5535-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1539604846-21151-3-git-send-email-hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, nd-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hanna,
+This series was sent as part of RFC series [1]
 
-On 15/10/18 13:00, hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org wrote:
-> From: Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> 
-> Due to erratum #582743, the Marvell Armada-AP806 can't access 64bit
-> to ARM SMMUv2 registers.
-> This patch split the writeq/readq to two accesses of writel/readl.
-> 
-> Note that separate writes/reads to 2 is not problem regards to atomicity,
-> because the driver use the readq/writeq while initialize the SMMU, report
-> for SMMU fault, and use spinlock in one case (iova_to_phys).
+The PCIe controller in AM654 uses Synopsys core revision 4.90a and uses
+the same TI wrapper as used in keystone2 with certain modification.
+Hence AM654 will use the same pci wrapper driver pci-keystone.c
 
-In general, this doesn't work. Here's what the SMMU spec says about 
-SMMU_CBn_TLBIVA, but others are similar:
+In preparation for adding AM654 support, cleanup pci-keystone driver
+here.
 
-"If SMMU_CBA2Rn.VA64 is one, then AArch64 format is selected. The 
-programmer should use 64 bit accesses to this register. If 32-bit 
-accesses are used then writes to the top 32 bits are ignored and writes 
-to the lower 32 bits are zero extended."
+Most of the cleanups here are trivial with major modification being
+merging pci-keystone-dw.c and pci-keystone.c
 
-If your interconnect won't let 64-bit transactions through, then you 
-can't use AArch64 format at stage 1 at all, since there's no way to 
-invalidate entries with the correct ASID, and you'll have to restrict 
-stage 2 formats to at most 44-bit IOVAs in order for TLBIIPAS2{L} not to 
-invalidate the wrong thing.
+Cleaning-up irq handling in the RFC series is dropped here as it has
+few comments to be addressed.
 
-> Signed-off-by: Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> ---
->   Documentation/arm64/silicon-errata.txt |  2 ++
->   drivers/iommu/arm-smmu.c               | 33 +++++++++++++++++++++++++++++----
->   2 files changed, 31 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/arm64/silicon-errata.txt b/Documentation/arm64/silicon-errata.txt
-> index 3b2f2dd..fc3f2a0 100644
-> --- a/Documentation/arm64/silicon-errata.txt
-> +++ b/Documentation/arm64/silicon-errata.txt
-> @@ -67,6 +67,8 @@ stable kernels.
->   | Cavium         | ThunderX2 SMMUv3| #74             | N/A                         |
->   | Cavium         | ThunderX2 SMMUv3| #126            | N/A                         |
->   |                |                 |                 |                             |
-> +| Marvell        | ARM-MMU-500     | #582743         | N/A                         |
-> +|                |                 |                 |                             |
+Other patches which are part of the RFC series will be sent separately.
 
-Nit: the convention here seems to be at least alphabetically sorted by 
-Implementer.
+[1] -> https://lore.kernel.org/patchwork/cover/989487/
 
->   | Freescale/NXP  | LS2080A/LS1043A | A-008585        | FSL_ERRATUM_A008585         |
->   |                |                 |                 |                             |
->   | Hisilicon      | Hip0{5,6,7}     | #161010101      | HISILICON_ERRATUM_161010101 |
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index fccb1d4..d64f892 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -119,6 +119,7 @@ enum arm_smmu_arch_version {
->   enum arm_smmu_implementation {
->   	GENERIC_SMMU,
->   	ARM_MMU500,
-> +	MRVL_MMU500,
+Kishon Vijay Abraham I (19):
+  PCI: keystone: Use quirk to limit MRRS for K2G
+  PCI: keystone: Use quirk to set MRRS for PCI host bridge
+  PCI: keystone: Move dw_pcie_setup_rc out of ks_pcie_establish_link()
+  PCI: keystone: Do not initiate link training multiple times
+  PCI: keystone: Remove unused argument from ks_dw_pcie_host_init()
+  PCI: keystone: Merge pci-keystone-dw.c and pci-keystone.c
+  PCI: keystone: Remove redundant platform_set_drvdata
+  PCI: keystone: Use uniform function naming convention
+  dt-bindings: PCI: keystone: Add bindings to get device control module
+  PCI: keystone: Use syscon APIs to get device id from control module
+  PCI: keystone: Cleanup PHY handling
+  PCI: keystone: Invoke pm_runtime APIs to enable clock
+  PCI: keystone: Cleanup configuration space access
+  PCI: keystone: Get number of OB windows from DT and cleanup MEM space
+    configuration
+  PCI: keystone: Cleanup set_dbi_mode and get_dbi_mode
+  PCI: keystone: Cleanup ks_pcie_link_up()
+  PCI: keystone: Add debug error message for all errors
+  PCI: keystone: Reorder header file in alphabetical order
+  PCI: keystone: Cleanup macros defined in pci-keystone.c
 
-Is there any actually modification to the MMU-500 RTL itself here, or is 
-the problem just in the interconnect in front of the SMMU programming 
-interface? I would normally assume the latter, in which case treating it 
-as a separate implementation isn't really accurate, and I'd much rather 
-handle any workaround via smmu->options, just like the secure access 
-workaround (which is a similar integration issue).
+ .../devicetree/bindings/pci/pci-keystone.txt  |   3 +
+ MAINTAINERS                                   |   2 +-
+ drivers/pci/controller/dwc/Makefile           |   2 +-
+ drivers/pci/controller/dwc/pci-keystone-dw.c  | 484 -----------
+ drivers/pci/controller/dwc/pci-keystone.c     | 794 +++++++++++++++---
+ drivers/pci/controller/dwc/pci-keystone.h     |  57 --
+ drivers/pci/controller/dwc/pcie-designware.h  |   4 +
+ 7 files changed, 692 insertions(+), 654 deletions(-)
+ delete mode 100644 drivers/pci/controller/dwc/pci-keystone-dw.c
+ delete mode 100644 drivers/pci/controller/dwc/pci-keystone.h
 
-Robin.
-
->   	CAVIUM_SMMUV2,
->   };
->   
-> @@ -276,13 +277,35 @@ static inline void smmu_writeq_relaxed(struct arm_smmu_device *smmu,
->   				       u64 val,
->   				       void __iomem *addr)
->   {
-> -	writeq_relaxed(val, addr);
-> +	/*
-> +	 * Marvell Armada-AP806 erratum #582743.
-> +	 * Split all the writeq to double writel
-> +	 */
-> +	if (smmu->model != MRVL_MMU500) {
-> +		writeq_relaxed(val, addr);
-> +		return;
-> +	}
-> +
-> +	writel_relaxed(upper_32_bits(val), addr + 4);
-> +	writel_relaxed(lower_32_bits(val), addr);
->   }
->   
->   static inline u64 smmu_readq_relaxed(struct arm_smmu_device *smmu,
->   				     void __iomem *addr)
->   {
-> -	return readq_relaxed(addr);
-> +	u64 val;
-> +
-> +	/*
-> +	 * Marvell Armada-AP806 erratum #582743.
-> +	 * Split all the readq to double readl
-> +	 */
-> +	if (smmu->model != MRVL_MMU500)
-> +		return readq_relaxed(addr);
-> +
-> +	val = (u64)readl_relaxed(addr + 4) << 32;
-> +	val |= readl_relaxed(addr);
-> +
-> +	return val;
->   }
->   
->   static void parse_driver_options(struct arm_smmu_device *smmu)
-> @@ -1611,7 +1634,7 @@ static void arm_smmu_device_reset(struct arm_smmu_device *smmu)
->   	for (i = 0; i < smmu->num_mapping_groups; ++i)
->   		arm_smmu_write_sme(smmu, i);
->   
-> -	if (smmu->model == ARM_MMU500) {
-> +	if (smmu->model == ARM_MMU500 || smmu->model == MRVL_MMU500) {
->   		/*
->   		 * Before clearing ARM_MMU500_ACTLR_CPRE, need to
->   		 * clear CACHE_LOCK bit of ACR first. And, CACHE_LOCK
-> @@ -1640,7 +1663,7 @@ static void arm_smmu_device_reset(struct arm_smmu_device *smmu)
->   		 * Disable MMU-500's not-particularly-beneficial next-page
->   		 * prefetcher for the sake of errata #841119 and #826419.
->   		 */
-> -		if (smmu->model == ARM_MMU500) {
-> +		if (smmu->model == ARM_MMU500 || smmu->model == MRVL_MMU500) {
->   			reg = readl_relaxed(cb_base + ARM_SMMU_CB_ACTLR);
->   			reg &= ~ARM_MMU500_ACTLR_CPRE;
->   			writel_relaxed(reg, cb_base + ARM_SMMU_CB_ACTLR);
-> @@ -1923,6 +1946,7 @@ struct arm_smmu_match_data {
->   ARM_SMMU_MATCH_DATA(smmu_generic_v2, ARM_SMMU_V2, GENERIC_SMMU);
->   ARM_SMMU_MATCH_DATA(arm_mmu401, ARM_SMMU_V1_64K, GENERIC_SMMU);
->   ARM_SMMU_MATCH_DATA(arm_mmu500, ARM_SMMU_V2, ARM_MMU500);
-> +ARM_SMMU_MATCH_DATA(mrvl_mmu500, ARM_SMMU_V2, MRVL_MMU500);
->   ARM_SMMU_MATCH_DATA(cavium_smmuv2, ARM_SMMU_V2, CAVIUM_SMMUV2);
->   
->   static const struct of_device_id arm_smmu_of_match[] = {
-> @@ -1931,6 +1955,7 @@ struct arm_smmu_match_data {
->   	{ .compatible = "arm,mmu-400", .data = &smmu_generic_v1 },
->   	{ .compatible = "arm,mmu-401", .data = &arm_mmu401 },
->   	{ .compatible = "arm,mmu-500", .data = &arm_mmu500 },
-> +	{ .compatible = "marvell,mmu-500", .data = &mrvl_mmu500 },
->   	{ .compatible = "cavium,smmu-v2", .data = &cavium_smmuv2 },
->   	{ },
->   };
-> 
+-- 
+2.17.1
