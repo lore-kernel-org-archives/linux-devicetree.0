@@ -1,71 +1,81 @@
-From: Jean-philippe Brucker <jphilippe.brucker-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 3/7] PCI: OF: Allow endpoints to bypass the iommu
-Date: Mon, 15 Oct 2018 20:46:41 +0100
-Message-ID: <482d0eb9-8c4c-9d64-7b32-25d5d11a8b8f@gmail.com>
-References: <20181012145917.6840-1-jean-philippe.brucker@arm.com>
-	<20181012145917.6840-4-jean-philippe.brucker@arm.com>
-	<20181012194158.GX5906@bhelgaas-glaptop.roam.corp.google.com>
-	<20181015065024-mutt-send-email-mst@kernel.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 6/6] arm64: dts: xilinx: ultra96: Standardize LED labels
+ and triggers
+Date: Mon, 15 Oct 2018 21:56:01 +0200
+Message-ID: <20181015185147.GA29649@amd>
+References: <20181009140522.6492-1-manivannan.sadhasivam@linaro.org>
+ <20181009140522.6492-7-manivannan.sadhasivam@linaro.org>
+ <7b94c09d-ecbd-e48e-6583-127566715a76@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20181015065024-mutt-send-email-mst-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, tnowicki-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="L6iaP+gRLNZHKoI4"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <7b94c09d-ecbd-e48e-6583-127566715a76@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, robh+dt@kernel.org, heiko@sntech.de, ezequiel@collabora.com, xuwei5@hisilicon.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, koen.kooi@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-[Replying with my personal address because we're having SMTP issues]
 
-On 15/10/2018 11:52, Michael S. Tsirkin wrote:
-> On Fri, Oct 12, 2018 at 02:41:59PM -0500, Bjorn Helgaas wrote:
->> s/iommu/IOMMU/ in subject
->>
->> On Fri, Oct 12, 2018 at 03:59:13PM +0100, Jean-Philippe Brucker wrote:
->>> Using the iommu-map binding, endpoints in a given PCI domain can be
->>> managed by different IOMMUs. Some virtual machines may allow a subset of
->>> endpoints to bypass the IOMMU. In some case the IOMMU itself is presented
->>
->> s/case/cases/
->>
->>> as a PCI endpoint (e.g. AMD IOMMU and virtio-iommu). Currently, when a
->>> PCI root complex has an iommu-map property, the driver requires all
->>> endpoints to be described by the property. Allow the iommu-map property to
->>> have gaps.
->>
->> I'm not an IOMMU or virtio expert, so it's not obvious to me why it is
->> safe to allow devices to bypass the IOMMU.  Does this mean a typo in
->> iommu-map could inadvertently allow devices to bypass it?
-> 
-> 
-> Thinking about this comment, I would like to ask: can't the
-> virtio device indicate the ranges in a portable way?
-> This would minimize the dependency on dt bindings and ACPI,
-> enabling support for systems that have neither but do
-> have virtio e.g. through pci.
+--L6iaP+gRLNZHKoI4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I thought about adding a PROBE request for this in virtio-iommu, but it
-wouldn't be usable by a Linux guest because of a bootstrapping problem.
+On Wed 2018-10-10 09:25:24, Michal Simek wrote:
+> On 9.10.2018 16:05, Manivannan Sadhasivam wrote:
+> > For all 96Boards, the following standard is used for onboard LEDs.
+> >=20
+> > device-name:green:user1  default-trigger: heartbeat
+> > device-name:green:user2  default-trigger: mmc0/disk-activity
+> >                                           (onboard-storage)
+> > device-name:green:user3  default-trigger: mmc1 (SD-card)
+> > device-name:green:user4  default-trigger: none, panic-indicator
 
-Early on, Linux needs a description of device dependencies, to determine
-in which order to probe them. If the device dependency was described by
-virtio-iommu itself, the guest could for example initialize a NIC,
-allocate buffers and start DMA on the physical address space (which aborts
-if the IOMMU implementation disallows DMA by default), only to find out
-once the virtio-iommu module is loaded that it needs to cancel all DMA and
-reconfigure the NIC. With a static description such as iommu-map in DT or
-ACPI remapping tables, the guest can defer probing of the NIC until the
-IOMMU is initialized.
+Actually, having one LED as heartbeat and second as panic indicator
+only... Could those be merged and remaining LED used to something
+useful?
 
-Thanks,
-Jean
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+
+> > index eb5e8bddb610..565ceb390f99 100644
+> > --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+> > +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+> > @@ -57,29 +57,30 @@
+> >  	leds {
+> >  		compatible =3D "gpio-leds";
+> >  		ds2 {
+> > -			label =3D "ds2";
+> > +			label =3D "zynqmp-zcu100-revC:green:user1";
+>=20
+> The purpose of this series should be standardize Led labels that's why I
+> would expect that leds will be called in the same way on all these
+> boards that's why I am not getting why there is board name.
+>=20
+> green:user1 or just user1 should be enough.
+
+green:user1 is better. Also... I guess this should go to the LEDs
+list... and if you want to make names standard, maybe there's better
+naming than user1..user4?
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--L6iaP+gRLNZHKoI4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlvE8NEACgkQMOfwapXb+vJHYACgg4mhvWXArstGIqpZD5bClCm2
+Wq8AoKo0xwMF3vYNemfu1pJwqXBbKS8n
+=qjFQ
+-----END PGP SIGNATURE-----
+
+--L6iaP+gRLNZHKoI4--
