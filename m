@@ -1,17 +1,11 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
-Date: Mon, 15 Oct 2018 09:29:37 +0000
-Message-ID: <AM0PR04MB421145E95CE4F229A21999D180FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1539527419-23613-1-git-send-email-aisheng.dong@nxp.com>
- <1539527419-23613-3-git-send-email-aisheng.dong@nxp.com>
- <CAOMZO5BEwNQy0HA80qOzm_w-c63tFK1eL+cOHNCxKYq9PHGsqw@mail.gmail.com>
- <52eaa4ac563ad5114ebd99b286cdbe0495dba7ec.camel@nxp.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH] dt-bindings: pinctrl: bcm4708-pinmux: improve example binding
+Date: Mon, 15 Oct 2018 11:30:13 +0200
+Message-ID: <20181015093013.31651-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52eaa4ac563ad5114ebd99b286cdbe0495dba7ec.camel@nxp.com>
-Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,46 +15,40 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leonard Crestez <leonard.crestez@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Leonard Crestez
-> Sent: Monday, October 15, 2018 3:30 PM
-
-> On Sun, 2018-10-14 at 20:13 -0300, Fabio Estevam wrote:
-> > > +               imx8qx-pm {
-> > > +                       compatible = "fsl,scu-pd";
-> > > +                       #address-cells = <1>;
-> > > +                       #size-cells = <0>;
-> > > +
-> > > +                       pd_lsio: lsio-power-domain {
-> > > +                               #power-domain-cells = <0>;
-> > > +                               #address-cells = <1>;
-> > > +                               #size-cells = <0>;
-> > > +
-> > > +                               pd_lsio_pwm0: lsio-pwm0@191 {
-> > > +                                       reg = <191>;
-> >
-> > The number after @ is in hex, so the reg property should be 0x191.
-> 
-> These are SC_R_* resource ids from include/linux/firmware/imx/types.h
-> and they are almost everywhere referenced as decimals.
-> 
-> Is this really not acceptable for DT?
-> 
-
-I think the problem is mismatch as DT binding request the reg property value
-must be equal to the unit-address. 
-See:
-https://github.com/devicetree-org/devicetree-specification/releases
-
-It seems like a common issue in the kernel as I see many similar users.
-
-Regards
-Dong Aisheng
-
-> --
-> Regards,
-> Leonard
+RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKQnJvYWRjb20gU29DIHBp
+bnMgYXJlIGNvbnRyb2xsZWQgdXNpbmcgQ1JVICgiQ2xvY2sgYW5kIFJlc2V0IFVuaXQiIG9yCiJD
+ZW50cmFsIFJlc291cmNlIFVuaXQiKSByZWdpc3RlcnMuIFRoZXJlIGFyZSBtb3JlIENSVSByZWdp
+c3RlcnMgYW5kCmZ1bmN0aW9ucyBzbyBDUlUgc2hvdWxkIGJlIHJlcHJlc2VudGVkIGFzIGEgc2Vw
+YXJhdGVkIGJsb2NrIGluIERULgoKTW9yZW92ZXIgQ1JVIGlzIGEgc3ViLWJsb2NrIG9mIERNVSAo
+IkRldmljZSBNYW5hZ2VtZW50IFVuaXQiKSBzbyB0aGF0Cm9uZSBzaG91bGQgYWxzbyBnZXQgaXRz
+IG93biBub2RlLgoKU2lnbmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tp
+LnBsPgotLS0KIC4uLi9iaW5kaW5ncy9waW5jdHJsL2JyY20sYmNtNDcwOC1waW5tdXgudHh0ICAg
+ICAgIHwgMzEgKysrKysrKysrKysrKysrKy0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDIzIGluc2Vy
+dGlvbnMoKyksIDggZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvYnJjbSxiY200NzA4LXBpbm11eC50eHQgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9icmNtLGJjbTQ3MDgtcGlubXV4LnR4
+dAppbmRleCBhZjkwNmYxOTZlOGMuLjBjZTEzMmM3ZTA0YyAxMDA2NDQKLS0tIGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvYnJjbSxiY200NzA4LXBpbm11eC50eHQK
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvYnJjbSxiY200
+NzA4LXBpbm11eC50eHQKQEAgLTMwLDEzICszMCwyOCBAQCBGb3IgZG9jdW1lbnRhdGlvbiBvZiBz
+dWJub2RlcyBzZWU6CiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9w
+aW5jdHJsLWJpbmRpbmdzLnR4dAogCiBFeGFtcGxlOgotCXBpbmN0cmxAMTgwMGMxYzAgewotCQlj
+b21wYXRpYmxlID0gImJyY20sYmNtNDcwOC1waW5tdXgiOwotCQlyZWcgPSA8MHgxODAwYzFjMCAw
+eDI0PjsKLQkJcmVnLW5hbWVzID0gImNydV9ncGlvX2NvbnRyb2wiOwotCi0JCXNwaSB7Ci0JCQlm
+dW5jdGlvbiA9ICJzcGkiOwotCQkJZ3JvdXBzID0gInNwaV9ncnAiOworCWRtdUAxODAwYzAwMCB7
+CisJCWNvbXBhdGlibGUgPSAic2ltcGxlLWJ1cyI7CisJCXJhbmdlcyA9IDwwIDB4MTgwMGMwMDAg
+MHgxMDAwPjsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0gPDE+Owor
+CisJCWNydUAxMDAgeworCQkJY29tcGF0aWJsZSA9ICJzaW1wbGUtYnVzIjsKKwkJCXJlZyA9IDww
+eDEwMCAweDFhND47CisJCQlyYW5nZXM7CisJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCSNz
+aXplLWNlbGxzID0gPDE+OworCisgCQkJcGluLWNvbnRyb2xsZXJAMWMwIHsKKwkJCQljb21wYXRp
+YmxlID0gImJyY20sYmNtNDcwOC1waW5tdXgiOworCQkJCXJlZyA9IDwweDFjMCAweDI0PjsKKwkJ
+CQlyZWctbmFtZXMgPSAiY3J1X2dwaW9fY29udHJvbCI7CisKKwkJCQlzcGktcGlucyB7CisJCQkJ
+CWZ1bmN0aW9uID0gInNwaSI7CisJCQkJCWdyb3VwcyA9ICJzcGlfZ3JwIjsKKwkJCQl9OworCQkJ
+fTsKIAkJfTsKIAl9OwotLSAKMi4xMy43CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
