@@ -1,62 +1,113 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: RE: [PATCH v4 5/6] arm64: dts: add QorIQ LX2160A SoC support
-Date: Mon, 15 Oct 2018 09:48:33 -0700
-Message-ID: <153962211360.5275.18031876744546062419@swboyd.mtv.corp.google.com>
-References: <1538615031-7507-1-git-send-email-vabhav.sharma@nxp.com>
- <1538615031-7507-6-git-send-email-vabhav.sharma@nxp.com>
- <20181008054510.GG3587@dragon>
- <VI1PR04MB4800C0AB214B258793AF9ABAF3FD0@VI1PR04MB4800.eurprd04.prod.outlook.com>
+From: David Summers <beagleboard@davidjohnsummers.uk>
+Subject: Re: [PATCH 1/3] Add the tinker board S to the device tree - just an
+ outline
+Date: Mon, 15 Oct 2018 17:49:41 +0100
+Message-ID: <93fc3eda-19b2-2b90-ccc8-4743200bf1b1@davidjohnsummers.uk>
+References: <20180922170236.8690-1-beagleboard@davidjohnsummers.uk>
+ <20180922170236.8690-2-beagleboard@davidjohnsummers.uk>
+ <20181015161214.GA13740@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB4800C0AB214B258793AF9ABAF3FD0@VI1PR04MB4800.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Vabhav Sharma <vabhav.sharma@nxp.com>
-Cc: "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "oss@buserror.net" <oss@buserror.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel-owner@vger.kernel.org" <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181015161214.GA13740@bogus>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, David Summers <beagleboard@davidjohnsummers.uk>
+Cc: mark.rutland@arm.com, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Vabhav Sharma (2018-10-14 19:58:15)
-> > > +
-> > > +   pmu {
-> > > +           compatible =3D "arm,cortex-a72-pmu";
-> > > +           interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
-> > > +   };
-> > > +
-> > > +   psci {
-> > > +           compatible =3D "arm,psci-0.2";
-> > > +           method =3D "smc";
-> > > +   };
-> > > +
-> > > +   memory@80000000 {
-> > > +           // DRAM space - 1, size : 2 GB DRAM
-> > > +           device_type =3D "memory";
-> > > +           reg =3D <0x00000000 0x80000000 0 0x80000000>;
-> > > +   };
-> > > +
-> > > +   ddr1: memory-controller@1080000 {
-> > > +           compatible =3D "fsl,qoriq-memory-controller";
-> > > +           reg =3D <0x0 0x1080000 0x0 0x1000>;
-> > > +           interrupts =3D <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-> > > +           little-endian;
-> > > +   };
-> > > +
-> > > +   ddr2: memory-controller@1090000 {
-> > > +           compatible =3D "fsl,qoriq-memory-controller";
-> > > +           reg =3D <0x0 0x1090000 0x0 0x1000>;
-> > > +           interrupts =3D <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-> > > +           little-endian;
-> > > +   };
-> > > +
-> > > +   sysclk: sysclk {
-> > =
+On 15/10/2018 17:12, Rob Herring wrote:
+> On Sat, Sep 22, 2018 at 06:02:34PM +0100, David Summers wrote:
+>
+> Commit message needed.
+>
+> Use subject prefixes that match the subsystem. 'dt-bindings: ...' for
+> binding docs. 'ARM: dts: ...' for ARM dts files.
+>
+>> Signed-off-by: David Summers <beagleboard@davidjohnsummers.uk>
+>> ---
+>>   .../devicetree/bindings/arm/rockchip.txt      |   4 +
+> Bindings should be a separate patch.
+>
+>>   arch/arm/boot/dts/Makefile                    |   1 +
+>>   arch/arm/boot/dts/rk3288-tinker-s.dts         |  13 +
+>>   arch/arm/boot/dts/rk3288-tinker.dts           | 498 +----------------
+>>   arch/arm/boot/dts/rk3288-tinker.dtsi          | 504 ++++++++++++++++++
+>>   5 files changed, 524 insertions(+), 496 deletions(-)
+>>   create mode 100644 arch/arm/boot/dts/rk3288-tinker-s.dts
+>>   create mode 100644 arch/arm/boot/dts/rk3288-tinker.dtsi
+> Would be better to split the dts changes into 2 patches: restructuring
+> and add Tinker S board. Then we're not re-reviewing the existing stuff.
+>
+>> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+>> index acfd3c773dd0..037ce94c3a73 100644
+>> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
+>> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+>> @@ -13,6 +13,10 @@ Rockchip platforms device tree bindings
+>>       Required root node properties:
+>>         - compatible = "asus,rk3288-tinker", "rockchip,rk3288";
+>>   
+>> +- Asus Tinker board S
+>> +    Required root node properties:
+>> +      - compatible = "asus,rk3288-tinker-s", "rockchip,rk3288";
+>> +
+>>   - Kylin RK3036 board:
+>>       Required root node properties:
+>>         - compatible = "rockchip,kylin-rk3036", "rockchip,rk3036";
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index b5bd3de87c33..65c75265adfa 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -864,6 +864,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+>>   	rk3288-r89.dtb \
+>>   	rk3288-rock2-square.dtb \
+>>   	rk3288-tinker.dtb \
+>> +	rk3288-tinker-s.dtb \	
+>>   	rk3288-veyron-brain.dtb \
+>>   	rk3288-veyron-jaq.dtb \
+>>   	rk3288-veyron-jerry.dtb \
+>> diff --git a/arch/arm/boot/dts/rk3288-tinker-s.dts b/arch/arm/boot/dts/rk3288-tinker-s.dts
+>> new file mode 100644
+>> index 000000000000..5e1078c6a784
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/rk3288-tinker-s.dts
+>> @@ -0,0 +1,13 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include "rk3288-tinker.dtsi"
+>> +
+>> +/ {
+>> +	model = "Rockchip RK3288 Asus Tinker Board S";
+>> +	compatible = "asus,rk3288-tinker-s", "rockchip,rk3288";
+> Perhaps you should have 'asus,rk3288-tinker' as a fallback?
+>
+>> +};
 
-> > Name the node a bit generic like clock-xxx.
-> There is only one clock-unit, Bootloader(U-boot) require sysclk node duri=
-ng device tree fix-up as different platform support varied platform frequen=
-cy as per reset configuration word used.
-> Referred other ARM based platform with one clock using name as x: x
+Hi Rob,
 
-Please add a comment above this node with this information. Newcomers
-reading this DTS file won't have any idea why this node is specially
-named and a comment will help tremendously here.
+Heiko already had many of the same thoughts, he respan the patch here:
+
+http://lists.infradead.org/pipermail/linux-rockchip/2018-September/021766.html
+
+Which you already reviewed ;)
+
+This was my first attempt at a kernel patch, so your thoughts are 
+appreciated.
+
+David.
+
+P.S. Heiko revised patch accepted into 4.20.
