@@ -1,136 +1,119 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v3 18/18] of: unittest: initialize args before calling of_*parse_*()
-Date: Sun, 14 Oct 2018 17:24:30 -0700
-Message-ID: <1539563070-12969-19-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v3 16/18] of: unittest: allow base devicetree to have symbol metadata
+Date: Sun, 14 Oct 2018 17:24:28 -0700
+Message-ID: <1539563070-12969-17-git-send-email-frowand.list@gmail.com>
 References: <1539563070-12969-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1539563070-12969-1-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, Guenter Roeck <linux@roeck-us.net>
+To: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-Callers of of_irq_parse_one() blindly use the pointer args.np
-without checking whether of_irq_parse_one() had an error and
-thus did not set the value of args.np.  Initialize args to
-zero so that using the format "%pOF" to show the value of
-args.np will show "(null)" when of_irq_parse_one() has an
-error.  This prevents the dereference of a random value.
+The overlay metadata nodes in the FDT created from testcases.dts
+are not handled properly.
 
-Make the same fix for callers of of_parse_phandle_with_args()
-and of_parse_phandle_with_args_map().
+The __fixups__ and __local_fixups__ node were added to the live
+devicetree, but should not be.
 
-Reported-by: Guenter Roeck <linux@roeck-us.net>
+Only the first property in the /__symbols__ node was added to the
+live devicetree if the live devicetree already contained a
+/__symbols node.  All of the node's properties must be added.
+
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/unittest.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/of/unittest.c | 43 +++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 35 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 785985bdbfa6..5f4db23e4752 100644
+index 6d80f474c8f2..1c2bd8503095 100644
 --- a/drivers/of/unittest.c
 +++ b/drivers/of/unittest.c
-@@ -375,6 +375,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
- 	for (i = 0; i < 8; i++) {
- 		bool passed = true;
+@@ -1057,20 +1057,44 @@ static void __init of_unittest_platform_populate(void)
+  *	of np into dup node (present in live tree) and
+  *	updates parent of children of np to dup.
+  *
+- *	@np:	node already present in live tree
++ *	@np:	node whose properties are being added to the live tree
+  *	@dup:	node present in live tree to be updated
+  */
+ static void update_node_properties(struct device_node *np,
+ 					struct device_node *dup)
+ {
+ 	struct property *prop;
++	struct property *save_next;
+ 	struct device_node *child;
+-
+-	for_each_property_of_node(np, prop)
+-		of_add_property(dup, prop);
++	int ret;
  
-+		memset(&args, 0, sizeof(args));
- 		rc = of_parse_phandle_with_args(np, "phandle-list",
- 						"#phandle-cells", i, &args);
+ 	for_each_child_of_node(np, child)
+ 		child->parent = dup;
++
++	/*
++	 * "unittest internal error: unable to add testdata property"
++	 *
++	 *    If this message reports a property in node '/__symbols__' then
++	 *    the respective unittest overlay contains a label that has the
++	 *    same name as a label in the live devicetree.  The label will
++	 *    be in the live devicetree only if the devicetree source was
++	 *    compiled with the '-@' option.  If you encounter this error,
++	 *    please consider renaming __all__ of the labels in the unittest
++	 *    overlay dts files with an odd prefix that is unlikely to be
++	 *    used in a real devicetree.
++	 */
++
++	/*
++	 * open code for_each_property_of_node() because of_add_property()
++	 * sets prop->next to NULL
++	 */
++	for (prop = np->properties; prop != NULL; prop = save_next) {
++		save_next = prop->next;
++		ret = of_add_property(dup, prop);
++		if (ret)
++			pr_err("unittest internal error: unable to add testdata property %pOF/%s",
++			       np, prop->name);
++	}
+ }
  
-@@ -428,6 +429,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
+ /**
+@@ -1079,18 +1103,23 @@ static void update_node_properties(struct device_node *np,
+  *
+  *	@np:	Node to attach to live tree
+  */
+-static int attach_node_and_children(struct device_node *np)
++static void attach_node_and_children(struct device_node *np)
+ {
+ 	struct device_node *next, *dup, *child;
+ 	unsigned long flags;
+ 	const char *full_name;
+ 
+ 	full_name = kasprintf(GFP_KERNEL, "%pOF", np);
++
++	if (!strcmp(full_name, "/__local_fixups__") ||
++	    !strcmp(full_name, "/__fixups__"))
++		return;
++
+ 	dup = of_find_node_by_path(full_name);
+ 	kfree(full_name);
+ 	if (dup) {
+ 		update_node_properties(np, dup);
+-		return 0;
++		return;
  	}
  
- 	/* Check for missing list property */
-+	memset(&args, 0, sizeof(args));
- 	rc = of_parse_phandle_with_args(np, "phandle-list-missing",
- 					"#phandle-cells", 0, &args);
- 	unittest(rc == -ENOENT, "expected:%i got:%i\n", -ENOENT, rc);
-@@ -436,6 +438,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
- 	unittest(rc == -ENOENT, "expected:%i got:%i\n", -ENOENT, rc);
- 
- 	/* Check for missing cells property */
-+	memset(&args, 0, sizeof(args));
- 	rc = of_parse_phandle_with_args(np, "phandle-list",
- 					"#phandle-cells-missing", 0, &args);
- 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
-@@ -444,6 +447,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
- 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
- 
- 	/* Check for bad phandle in list */
-+	memset(&args, 0, sizeof(args));
- 	rc = of_parse_phandle_with_args(np, "phandle-list-bad-phandle",
- 					"#phandle-cells", 0, &args);
- 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
-@@ -452,6 +456,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
- 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
- 
- 	/* Check for incorrectly formed argument list */
-+	memset(&args, 0, sizeof(args));
- 	rc = of_parse_phandle_with_args(np, "phandle-list-bad-args",
- 					"#phandle-cells", 1, &args);
- 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
-@@ -502,6 +507,7 @@ static void __init of_unittest_parse_phandle_with_args_map(void)
- 	for (i = 0; i < 8; i++) {
- 		bool passed = true;
- 
-+		memset(&args, 0, sizeof(args));
- 		rc = of_parse_phandle_with_args_map(np, "phandle-list",
- 						    "phandle", i, &args);
- 
-@@ -559,21 +565,25 @@ static void __init of_unittest_parse_phandle_with_args_map(void)
+ 	child = np->child;
+@@ -1111,8 +1140,6 @@ static int attach_node_and_children(struct device_node *np)
+ 		attach_node_and_children(child);
+ 		child = next;
  	}
+-
+-	return 0;
+ }
  
- 	/* Check for missing list property */
-+	memset(&args, 0, sizeof(args));
- 	rc = of_parse_phandle_with_args_map(np, "phandle-list-missing",
- 					    "phandle", 0, &args);
- 	unittest(rc == -ENOENT, "expected:%i got:%i\n", -ENOENT, rc);
- 
- 	/* Check for missing cells,map,mask property */
-+	memset(&args, 0, sizeof(args));
- 	rc = of_parse_phandle_with_args_map(np, "phandle-list",
- 					    "phandle-missing", 0, &args);
- 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
- 
- 	/* Check for bad phandle in list */
-+	memset(&args, 0, sizeof(args));
- 	rc = of_parse_phandle_with_args_map(np, "phandle-list-bad-phandle",
- 					    "phandle", 0, &args);
- 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
- 
- 	/* Check for incorrectly formed argument list */
-+	memset(&args, 0, sizeof(args));
- 	rc = of_parse_phandle_with_args_map(np, "phandle-list-bad-args",
- 					    "phandle", 1, &args);
- 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
-@@ -780,7 +790,7 @@ static void __init of_unittest_parse_interrupts(void)
- 	for (i = 0; i < 4; i++) {
- 		bool passed = true;
- 
--		args.args_count = 0;
-+		memset(&args, 0, sizeof(args));
- 		rc = of_irq_parse_one(np, i, &args);
- 
- 		passed &= !rc;
-@@ -801,7 +811,7 @@ static void __init of_unittest_parse_interrupts(void)
- 	for (i = 0; i < 4; i++) {
- 		bool passed = true;
- 
--		args.args_count = 0;
-+		memset(&args, 0, sizeof(args));
- 		rc = of_irq_parse_one(np, i, &args);
- 
- 		/* Test the values from tests-phandle.dtsi */
-@@ -854,6 +864,7 @@ static void __init of_unittest_parse_interrupts_extended(void)
- 	for (i = 0; i < 7; i++) {
- 		bool passed = true;
- 
-+		memset(&args, 0, sizeof(args));
- 		rc = of_irq_parse_one(np, i, &args);
- 
- 		/* Test the values from tests-phandle.dtsi */
+ /**
 -- 
 Frank Rowand <frank.rowand@sony.com>
