@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v3 03/18] of: overlay: add missing of_node_get() in __of_attach_node_sysfs
-Date: Sun, 14 Oct 2018 17:24:15 -0700
-Message-ID: <1539563070-12969-4-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v3 06/18] of: overlay: do not duplicate properties from overlay for new nodes
+Date: Sun, 14 Oct 2018 17:24:18 -0700
+Message-ID: <1539563070-12969-7-git-send-email-frowand.list@gmail.com>
 References: <1539563070-12969-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1539563070-12969-1-git-send-email-frowand.list@gmail.com>
@@ -12,55 +12,42 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-There is a matching of_node_put() in __of_detach_node_sysfs()
+When allocating a new node, add_changeset_node() was duplicating the
+properties from the respective node in the overlay instead of
+allocating a node with no properties.
 
-Remove misleading comment from function header comment for
-of_detach_node().
+When this patch is applied the errors reported by the devictree
+unittest from patch "of: overlay: add tests to validate kfrees from
+overlay removal" will no longer occur.  These error messages are of
+the form:
 
-This patch may result in memory leaks from code that directly calls
-the dynamic node add and delete functions directly instead of
-using changesets.
+   "OF: ERROR: ..."
+
+and the unittest results will change from:
+
+   ### dt-test ### end of unittest - 203 passed, 7 failed
+
+to
+
+   ### dt-test ### end of unittest - 210 passed, 0 failed
 
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/dynamic.c | 3 ---
- drivers/of/kobj.c    | 4 +++-
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ drivers/of/overlay.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index b04ee021a891..275c0d7e2268 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -272,9 +272,6 @@ void __of_detach_node(struct device_node *np)
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index 94740f4ee34c..7fcf4a812d06 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -393,7 +393,7 @@ static int add_changeset_node(struct overlay_changeset *ovcs,
+ 			break;
  
- /**
-  * of_detach_node() - "Unplug" a node from the device tree.
-- *
-- * The caller must hold a reference to the node.  The memory associated with
-- * the node is not freed until its refcount goes to zero.
-  */
- int of_detach_node(struct device_node *np)
- {
-diff --git a/drivers/of/kobj.c b/drivers/of/kobj.c
-index 7a0a18980b98..c72eef988041 100644
---- a/drivers/of/kobj.c
-+++ b/drivers/of/kobj.c
-@@ -133,6 +133,9 @@ int __of_attach_node_sysfs(struct device_node *np)
- 	}
- 	if (!name)
- 		return -ENOMEM;
-+
-+	of_node_get(np);
-+
- 	rc = kobject_add(&np->kobj, parent, "%s", name);
- 	kfree(name);
- 	if (rc)
-@@ -159,6 +162,5 @@ void __of_detach_node_sysfs(struct device_node *np)
- 		kobject_del(&np->kobj);
- 	}
+ 	if (!tchild) {
+-		tchild = __of_node_dup(node, node_kbasename);
++		tchild = __of_node_dup(NULL, node_kbasename);
+ 		if (!tchild)
+ 			return -ENOMEM;
  
--	/* finally remove the kobj_init ref */
- 	of_node_put(np);
- }
 -- 
 Frank Rowand <frank.rowand@sony.com>
