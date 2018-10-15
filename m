@@ -1,90 +1,102 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: Add bindings for aliases node
-Date: Mon, 15 Oct 2018 13:00:46 -0500
-Message-ID: <20181015180046.GA18294@bogus>
-References: <20180925210255.172734-1-mka@chromium.org>
- <20181009010711.GA1577@ban.mtv.corp.google.com>
- <CAMuHMdWe5JYp5eC2PvuG4xEud908Crhm+BhrtxPJ4Uo1-LCc4g@mail.gmail.com>
- <20181009183141.GA126050@ban.mtv.corp.google.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 08/14] ARM64: dts: hisilicon: Add tsensor interrupt name
+Date: Mon, 15 Oct 2018 20:01:38 +0200
+Message-ID: <d2cb2fa0-b579-205c-1777-308da075b3fd@linaro.org>
+References: <1537866192-12320-1-git-send-email-daniel.lezcano@linaro.org>
+ <1537866192-12320-9-git-send-email-daniel.lezcano@linaro.org>
+ <20181015162835.GA20955@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181009183141.GA126050@ban.mtv.corp.google.com>
+In-Reply-To: <20181015162835.GA20955@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Matthias Kaehlcke <mka@chromium.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-wireless <linux-wireless@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, netdev <netdev@vger.kernel.org>, swboyd@chromium.org, Florian Fainelli <f.fainelli@gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: edubezval@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, leo.yan@linaro.org, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/HISILICON SOC SUPPORT" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 09, 2018 at 11:31:42AM -0700, Brian Norris wrote:
-> On Tue, Oct 09, 2018 at 09:22:07AM +0200, Geert Uytterhoeven wrote:
-> > Please note these aliases become cumbersome once you start considering
-> > (dynamic) DT overlays.  That's why I made them optional in the sh-sci
-> > serial driver, cfr. commit 7678f4c20fa7670f ("serial: sh-sci: Add support
-> > for dynamic instances").
-> 
-> Note that as I understand it, the entire point of documenting this sort
-> of thing is to help solidify the interface between a DT aware boot
-> program (e.g., bootloader) and a device tree which is provided
-> separately, to avoid memorizing node/path hierarchy. It doesn't need to
-> (and doesn't, as I read it) enforce an OS's device naming policy.
 
-I'm all for documenting this primarily to prevent folks from just adding 
-whatever they wish in /aliases. Some platforms seem to want to have 
-aliases for everything.
+Hi Rob,
 
-> > Relevant parts of the commit description are:
-> > 
-> >     On DT platforms, the sh-sci driver requires the presence of "serialN"
-> >     aliases in DT, from which instance IDs are derived.  If a DT alias is
-> >     missing, the drivers fails to probe the corresponding serial port.
-> > 
-> >     This becomes cumbersome when considering DT overlays, as currently
-> >     there is no upstream support for dynamically updating the /aliases node
-> >     in DT.
-> 
-> That part is not a DT spec problem :)
-> 
-> >     Furthermore, even in the presence of such support, hardcoded
-> >     instance IDs in independent overlays are prone to conflicts.
-> > 
-> >     Hence add support for dynamic instance IDs, to be used in the absence of
-> >     a DT alias.  This makes serial ports behave similar to I2C and SPI
-> >     buses, which already support dynamic instances.
-> 
-> This seems to be a much different sort of problem. People always love
-> having predictable IDs given by the OS (myself included), but that's
-> just plain hard to do and impossible in some cases. I don't think that's
-> what this document is about though.
-> 
-> IOW, this document seems pretty consistent with the above: it doesn't
-> require the usage of aliases (and it seems silly to have a driver
-> *require* an alias) -- it just documents how one should name such an
-> alias if you expect multiple independent software components to
-> understand it.
-> 
-> > To clarify my point: R-Car M2-W has 4 different types of serial ports, for a
-> > total of 18 ports, and the two ports on a board labeled 0 and 1 may not
-> > correspond to the physical first two ports (what's "first" in a collection of
-> > 4 different types?).
-> > 
-> > Aliases may be fine for referring to the main serial console (labeled
-> > port 0 on the device, too), and the primary Ethernet interface (so U-Boot
-> > knows where to add the "local-mac-address" property), but beyond that,
-> > I think they should be avoided.
+thanks for the review.
 
-This basically matches my opinion on aliases.
- 
-I'd decouple it from board labels a bit. Sometimes the numbering may 
-match, but others not. What if a board serial port is labeled "DBG" for 
-example? I think 'label' is the right way to handle human identifible 
-ports (and then we should have something like /dev/serial/by-label/...).
+On 15/10/2018 18:28, Rob Herring wrote:
+> On Tue, Sep 25, 2018 at 11:03:06AM +0200, Daniel Lezcano wrote:
+>> Add the interrupt names for the sensors, so the code can rely on them
+>> instead of dealing with index which are prone to error.
+>>
+>> The name comes from the Hisilicon documentation found on internet.
+>>
+>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> ---
+>>  .../bindings/thermal/hisilicon-thermal.txt         |  3 ++
+>>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi          | 63 +++++++++++-----------
+>>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |  1 +
+>>  3 files changed, 36 insertions(+), 31 deletions(-)
+> 
+> Lots of whitespace errors reported by checkpatch.pl.
 
-> That's fair enough. Just because the solution isn't an all-purpose tool
-> doesn't mean it shouldn't be documented. The general concept is already
-> in ePAPR, but it's just not very specific about property names.
+Yeah, I don't know why but I have something bad with my emacs
+configuration when changing DT files. Will look at this.
 
-Agreed. I guess the question is what to do on used, but not recommended 
-aliases. I would put SPI and I2C into that category BTW.
+>> diff --git a/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt b/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+>> index cef716a..3edfae3 100644
+>> --- a/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+>> +++ b/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+>> @@ -7,6 +7,7 @@
+>>    region.
+>>  - interrupt: The interrupt number to the cpu. Defines the interrupt used
+>>    by /SOCTHERM/tsensor.
+>> +- interrupt-names: The interrupt names for the different sensors
+> 
+> Need to define what the names are.
+> 
+>>  - clock-names: Input clock name, should be 'thermal_clk'.
+>>  - clocks: phandles for clock specified in "clock-names" property.
+>>  - #thermal-sensor-cells: Should be 1. See ./thermal.txt for a description.
+>> @@ -18,6 +19,7 @@ for Hi6220:
+>>  		compatible = "hisilicon,tsensor";
+>>  		reg = <0x0 0xf7030700 0x0 0x1000>;
+>>  		interrupts = <0 7 0x4>;
+>> +		interrupt-names = "tsensor_intr";
+> 
+> That name seems pretty pointless.
+> 
+>>  		clocks = <&sys_ctrl HI6220_TSENSOR_CLK>;
+>>  		clock-names = "thermal_clk";
+>>  		#thermal-sensor-cells = <1>;
+>> @@ -28,5 +30,6 @@ for Hi3660:
+>>  		compatible = "hisilicon,hi3660-tsensor";
+>>  		reg = <0x0 0xfff30000 0x0 0x1000>;
+>>  		interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
+>> +		interrupt-names = "tsensor_a73";
+> 
+> Just 'a73' is sufficient.
 
-Rob
+This is the name defined in the board documentation to give a name to
+the interrupt when requesting it. This one appears in /proc/interrupts.
+
+I can replace the 'tsensor_intr' by 'tsensor', but if 'tsensor_a73' is
+replaced by 'a73' that may looks odd in /proc/interrupts to see an
+interrupts line with the 'a73' name.
+
+However this is the preparation for the multiple sensors support so we
+will have more interrupt names.
+
+Is it possible to keep these names ?
+
+ - tsensor
+ - tsensor_a73
+ - tsensor_a57
+ - tsensor_gpu
+
+
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
