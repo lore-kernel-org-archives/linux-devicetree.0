@@ -1,168 +1,80 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
-Date: Mon, 15 Oct 2018 16:09:01 +0000
-Message-ID: <AM0PR04MB421179F1C5B93209D398B4F380FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1539527419-23613-1-git-send-email-aisheng.dong@nxp.com>
- <1539527419-23613-3-git-send-email-aisheng.dong@nxp.com>
- <20181015065859.lxevjroly435hlaq@pengutronix.de>
- <AM0PR04MB42117867A50BB18D8127BE8080FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <20181015082751.ytuleg67p5pgtnov@pengutronix.de>
- <AM0PR04MB421179CEB214D46BCDE6ACF280FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <20181015094053.7bpydkdhyds25n3u@pengutronix.de>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: [PATCH v3 0/9] Add support for audiocodec in Allwinner
+	A64
+Date: Mon, 15 Oct 2018 09:09:25 -0700
+Message-ID: <20181015160934.20948-1-anarsoul@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181015094053.7bpydkdhyds25n3u@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Marcus Cooper <codekipper@gmail.com>, Mylene JOSSERAND <mylene.josserand@free-electrons.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+Cc: Vasily Khoruzhick <anarsoul@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Sascha Hauer [mailto:s.hauer@pengutronix.de]
-> Sent: Monday, October 15, 2018 5:41 PM
-> To: A.s. Dong <aisheng.dong@nxp.com>
-> Cc: linux-arm-kernel@lists.infradead.org; Mark Rutland
-> <mark.rutland@arm.com>; dongas86@gmail.com; devicetree@vger.kernel.org;
-> catalin.marinas@arm.com; will.deacon@arm.com; robh+dt@kernel.org;
-> dl-linux-imx <linux-imx@nxp.com>; kernel@pengutronix.de; Fabio Estevam
-> <fabio.estevam@nxp.com>; shawnguo@kernel.org
-> Subject: Re: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
-> 
-> On Mon, Oct 15, 2018 at 09:03:04AM +0000, A.s. Dong wrote:
-> > > -----Original Message-----
-> > > From: Sascha Hauer [mailto:s.hauer@pengutronix.de]
-> > > Sent: Monday, October 15, 2018 4:28 PM
-> > > To: A.s. Dong <aisheng.dong@nxp.com>
-> > > Cc: linux-arm-kernel@lists.infradead.org; Mark Rutland
-> > > <mark.rutland@arm.com>; dongas86@gmail.com;
-> > > devicetree@vger.kernel.org; catalin.marinas@arm.com;
-> > > will.deacon@arm.com; robh+dt@kernel.org; dl-linux-imx
-> > > <linux-imx@nxp.com>; kernel@pengutronix.de; Fabio Estevam
-> > > <fabio.estevam@nxp.com>; shawnguo@kernel.org
-> > > Subject: Re: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
-> > >
-> > > On Mon, Oct 15, 2018 at 08:08:31AM +0000, A.s. Dong wrote:
-> > > > > > +		imx8qx-pm {
-> > > > > > +			compatible = "fsl,scu-pd";
-> > > > >
-> > > > > I missed this earlier, but there should be a i.MX8qp specific
-> > > > > compatible as the SCU API might change for future SoCs.
-> > > > >
-> > > >
-> > > > We still do not see that requirement up till now. Not sure if it
-> > > > would be possible in the future. I see low possibilities.
-> > > > SCU IPC is designed to be generic to all MX8 SCU firmwares.
-> > >
-> > > And i.MX9? i.MX10?
-> > >
-> >
-> > MX8DM MX8DXP
-> 
-> I was not talking about existing SoCs, I was talking about future SoCs.
-> 
-> >
-> > > > Even it changes, SCU firmware version control may helps.
-> > >
-> > > It's not the first time that the position of the version field
-> > > changes with a newer version.
-> > >
-> >
-> > I understand your worry.
-> > Up till now all SCU firmware based SoCs are all using one generic IPC driver
-> internally.
-> > And I have not heard a possible changing in the future.
-> > I double checked the SCU firmware implementation that the IPC Is
-> > deigned to be platform independent. So it's less to be changed.
-> > So I wonder if this could be over worried.
-> > Even it is changed, (quite less probility), we still can user version
-> > To distinguish them, just like arm,scpi , arm,scmi. Right?
-> 
-> You can still add and use a generic compatible, but does it hurt when you add
-> a SoC specific one that you *can* use should you have to?
-> 
+This series adds Allwinner A64 audiocodec support into sun4i-i2s,
+sun8i-codec drivers, introduces new sun50i-codec-analog driver and enables
+sound on Pine64, SoPine boards and Pinebook.
 
-Do you mean only change "fsl,scu-pd" to "fsl,imx8qxp-scu-pd"?
-And keep the "fsl,imx-scu" as it is, right?
-I guess I may be over-anxious, sorry for that if it's true.
+I2S for audiocodec in A64 is different from other 3 I2S modules but
+similar to one in A10, digital part of codec is compatible with A33 and
+analog controls part is completely different from other SoCs - it shares
+only few bits in few registers, so adding support for it into existing
+sun8i-codec-analog would mean duplicating all the widgets, controls and
+some routes and making it hard to read. Therefore it makes sense to
+introduce new driver.
 
-> >
-> > > >
-> > > > > > +			compatible = "fsl,imx7ulp-lpuart";
-> > > > > > +			compatible = "fsl,imx7ulp-lpi2c";
-> > > > > > +			compatible = "fsl,imx7d-usdhc";
-> > > > >
-> > > > > All these lack the most specific imx8qp compatible.
-> > > > >
-> > > >
-> > > > Adding them requires binding doc update as well.
-> > > > S I suppose they could be added later when the QXP specific
-> > > > features are really supported by the drivers.
-> > > > Do you think it's okay?
-> > >
-> > > Newer Kernels should work with older device trees, so once you roll
-> > > out these compatibles it's too late already.
-> > >
-> >
-> > The backwards compatible string is used to guarantee a basic function.
-> > Even we add qxp specific compatible string later, it still can work
-> > with backwards function. So I'm not quite get what the real problem is.
-> > And this is the initial support that we don't expect the full features
-> > with such an early device tree, right?
-> 
-> By not adding a SoC compatible you lose the possibility to add a SoC specific
-> fixup without changing the device tree or you have to work with quirks like:
-> 
-> https://emea01.safelinks.protection.outlook.com/?url=https%3A%2F%2Felixir.
-> bootlin.com%2Flinux%2Flatest%2Fsource%2Fdrivers%2Fclocksource%2Ftimer-i
-> mx-gpt.c%23L521&amp;data=02%7C01%7Caisheng.dong%40nxp.com%7Ce0a
-> 58f79a6b24fd248c308d6328251f0%7C686ea1d3bc2b4c6fa92cd99c5c301635
-> %7C0%7C0%7C636751932632219124&amp;sdata=P9ncjvrhubRASh%2BOu7X
-> %2FNbAtch3aSqvqqSVLSdb%2BQ2c%3D&amp;reserved=0
-> 
-> or
-> 
-> https://emea01.safelinks.protection.outlook.com/?url=https%3A%2F%2Felixir.
-> bootlin.com%2Flinux%2Flatest%2Fsource%2Fdrivers%2Fspi%2Fspi-imx.c%23L1
-> 182&amp;data=02%7C01%7Caisheng.dong%40nxp.com%7Ce0a58f79a6b24fd
-> 248c308d6328251f0%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7
-> C636751932632219124&amp;sdata=blvN1%2FBbm7hZr7ddA7MAkIuqM5wk
-> 0%2Bv3DvifalAWV0w%3D&amp;reserved=0
-> 
-> So far we have added new compatibles with each new SoC type for good
-> reasons, so why should we change this?
-> 
+v2: - Use simple-amplifier for speaker amp on Pinebook
+    - Rename sun50i-a64-i2s to sun50i-a64-codec-i2s to preserve compatible
+      string for other 3 I2S modules in A64 in case if there's any
+      incompatibility with H3
+v3: - renamed sunxi-adda-pr-regmap to sun8i-adda-pr-regmap
+    - use ilog2() to calculate reg value for LRCK div instead of using a
+      table
 
-Yes, I fully understand. Just was wondering whether it can be done later.
-But I think there's no bad to do it right now.
-So I agree with it.
-Thanks for the suggestion.
+Marcus Cooper (1):
+  ASoC: sun4i-i2s: Add compatibility with A64 codec I2S
 
-Regards
-Dong Aisheng
+Vasily Khoruzhick (8):
+  ASoC: sun8i-codec: Don't hardcode BCLK / LRCK ratio
+  ASoC: sun8i-codec-analog: split regmap code into separate driver
+  ASoC: dt-binding: Add bindings for Allwinner A64 codec's analog path
+    controls
+  ASoC: sunxi: Add new driver for Allwinner A64 codec's analog path
+    controls
+  ASoC: sunxi: allow the sun8i-codec driver to be built on ARM64
+  arm64: dts: allwinner: a64: add nodes necessary for analog sound
+    support
+  arm64: dts: allwinner: a64: enable sound on Pine64 and SoPine
+  arm64: dts: allwinner: a64: enable sound on Pinebook
 
-> Sascha
-> 
-> --
-> Pengutronix e.K.                           |
-> |
-> Industrial Linux Solutions                 |
-> https://emea01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fwww.
-> pengutronix.de%2F&amp;data=02%7C01%7Caisheng.dong%40nxp.com%7Ce0
-> a58f79a6b24fd248c308d6328251f0%7C686ea1d3bc2b4c6fa92cd99c5c30163
-> 5%7C0%7C0%7C636751932632219124&amp;sdata=Qd1KhPokzveWzr%2BBo
-> HX%2F9jZSx3oiEkR47w4ABA1Deqg%3D&amp;reserved=0  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0
-> |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:
-> +49-5121-206917-5555 |
+ .../devicetree/bindings/sound/sun4i-i2s.txt   |   2 +
+ .../bindings/sound/sun50i-codec-analog.txt    |  12 +
+ .../boot/dts/allwinner/sun50i-a64-pine64.dts  |  30 ++
+ .../dts/allwinner/sun50i-a64-pinebook.dts     |  42 ++
+ .../allwinner/sun50i-a64-sopine-baseboard.dts |  30 ++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  58 +++
+ sound/soc/sunxi/Kconfig                       |  17 +-
+ sound/soc/sunxi/Makefile                      |   2 +
+ sound/soc/sunxi/sun4i-i2s.c                   |  21 +
+ sound/soc/sunxi/sun50i-codec-analog.c         | 444 ++++++++++++++++++
+ sound/soc/sunxi/sun8i-adda-pr-regmap.c        | 102 ++++
+ sound/soc/sunxi/sun8i-adda-pr-regmap.h        |   7 +
+ sound/soc/sunxi/sun8i-codec-analog.c          |  79 +---
+ sound/soc/sunxi/sun8i-codec.c                 |  26 +-
+ 14 files changed, 789 insertions(+), 83 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/sun50i-codec-analog.txt
+ create mode 100644 sound/soc/sunxi/sun50i-codec-analog.c
+ create mode 100644 sound/soc/sunxi/sun8i-adda-pr-regmap.c
+ create mode 100644 sound/soc/sunxi/sun8i-adda-pr-regmap.h
+
+-- 
+2.19.0
