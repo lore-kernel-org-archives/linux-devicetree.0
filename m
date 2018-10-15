@@ -1,54 +1,40 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v3 13/18] of: overlay: check prevents multiple fragments
- touching same property
-Date: Sun, 14 Oct 2018 20:21:01 -0700
-Message-ID: <e045d69a-7896-3ff1-8472-2f51c2468d7f@gmail.com>
-References: <1539563070-12969-1-git-send-email-frowand.list@gmail.com>
- <1539563070-12969-14-git-send-email-frowand.list@gmail.com>
- <b6ee53f7e02cc3ea52713ae82402e97d7050cb3e.camel@perches.com>
- <850f0866-1189-5a49-01c5-79caf270abbd@gmail.com>
- <16f48648393366d91e43cd66b3d0a346b1ed29ab.camel@perches.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: frowand.list@gmail.com
+Subject: [PATCH] of: Documentation: remove unmaintained todo file
+Date: Sun, 14 Oct 2018 20:22:19 -0700
+Message-ID: <1539573739-2108-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <16f48648393366d91e43cd66b3d0a346b1ed29ab.camel@perches.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/14/18 18:55, Joe Perches wrote:
-> On Sun, 2018-10-14 at 18:52 -0700, Frank Rowand wrote:
->> On 10/14/18 18:06, Joe Perches wrote:
->>> On Sun, 2018-10-14 at 17:24 -0700, frowand.list@gmail.com wrote:
->>>> From: Frank Rowand <frank.rowand@sony.com>
->>>>
->>>> Add test case of two fragments updating the same property.  After
->>>> adding the test case, the system hangs at end of boot, after
->>>> after slub stack dumps from kfree() in crypto modprobe code.
-> []
->>> I think this is worse performance than before.
->>>
->>> This now walks all entries when before it would
->>> return -EINVAL directly when it found a match.
->>
->> Yes, it is worse performance, but that is OK.
->>
->> This is a check that is done when a devicetree overlay is applied.
->> If an error occurs then that means that the overlay was incorrectly
->> specified.  The file drivers/of/unittest-data/overlay_bad_add_dup_prop.dts
->> in this patch provides an example of how a bad overlay can be created.
->>
->> Once an error was detected, the check could return immediately, or it
->> could continue to give a complete list of detected errors.  I chose to
->> give the complete list of detected errors.
-> 
-> Swell.  Please describe that in the commit message.
+From: Frank Rowand <frank.rowand@sony.com>
 
-If a version 4 of the series is created I will update the commit
-message.  As a stand alone item I do not think it is worth a
-new version.
+The todo.txt file was created by a previous maintainer and has
+never been updated by the current OPEN FIRMWARE AND FLATTENED
+DEVICE TREE maintainers.  Remove the out of date file.
 
--Frank
+Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+---
+ Documentation/devicetree/todo.txt | 10 ----------
+ 1 file changed, 10 deletions(-)
+ delete mode 100644 Documentation/devicetree/todo.txt
+
+diff --git a/Documentation/devicetree/todo.txt b/Documentation/devicetree/todo.txt
+deleted file mode 100644
+index b5139d1de811..000000000000
+--- a/Documentation/devicetree/todo.txt
++++ /dev/null
+@@ -1,10 +0,0 @@
+-Todo list for devicetree:
+-
+-=== General structure ===
+-- Switch from custom lists to (h)list_head for nodes and properties structure
+-
+-=== CONFIG_OF_DYNAMIC ===
+-- Switch to RCU for tree updates and get rid of global spinlock
+-- Document node lifecycle for CONFIG_OF_DYNAMIC
+-- Always set ->full_name at of_attach_node() time
+-- pseries: Get rid of open-coded tree modification from arch/powerpc/platforms/pseries/dlpar.c
+-- 
+Frank Rowand <frank.rowand@sony.com>
