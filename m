@@ -1,116 +1,105 @@
-From: Christophe Kerello <christophe.kerello@st.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: mtd: stm32_fmc2: add STM32 FMC2 NAND
- controller documentation
-Date: Mon, 15 Oct 2018 09:39:15 +0200
-Message-ID: <823a5f95-631f-ebe6-9ffb-87de7962b4ff@st.com>
-References: <1538732520-2800-1-git-send-email-christophe.kerello@st.com>
- <1538732520-2800-2-git-send-email-christophe.kerello@st.com>
- <20181012203229.GA9657@bogus>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
+Date: Mon, 15 Oct 2018 07:57:07 +0000
+Message-ID: <AM0PR04MB4211ECC04FD48918E9DFBAB880FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1539527419-23613-1-git-send-email-aisheng.dong@nxp.com>
+ <1539527419-23613-3-git-send-email-aisheng.dong@nxp.com>
+ <CAOMZO5BEwNQy0HA80qOzm_w-c63tFK1eL+cOHNCxKYq9PHGsqw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181012203229.GA9657@bogus>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAOMZO5BEwNQy0HA80qOzm_w-c63tFK1eL+cOHNCxKYq9PHGsqw@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: boris.brezillon@bootlin.com, miquel.raynal@bootlin.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, mark.rutland@arm.com, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open
+ list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Dong Aisheng <dongas86@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/12/2018 10:32 PM, Rob Herring wrote:
-> On Fri, Oct 05, 2018 at 11:41:58AM +0200, christophe.kerello@st.com wrote:
->> From: Christophe Kerello <christophe.kerello@st.com>
->>
->> This patch adds the documentation of the device tree bindings for the STM32
->> FMC2 NAND controller.
->>
->> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
->> ---
->>   .../devicetree/bindings/mtd/stm32-fmc2-nand.txt    | 59 ++++++++++++++++++++++
->>   1 file changed, 59 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt b/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
->> new file mode 100644
->> index 0000000..b620176
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
->> @@ -0,0 +1,59 @@
->> +STMicroelectronics Flexible Memory Controller 2 (FMC2)
->> +NAND Interface
->> +
->> +Required properties:
->> +- compatible: Should be one of:
->> +              * st,stm32mp15-fmc2
->> +- reg: NAND flash controller memory areas.
->> +       First region contains the register location.
->> +       Regions 2 to 4 respectively contain the data, command,
->> +       and address space for CS0.
->> +       Regions 5 to 7 contain the same areas for CS1.
->> +- interrupts: The interrupt number
->> +- pinctrl-0: Standard Pinctrl phandle (see: pinctrl/pinctrl-bindings.txt)
->> +- clocks: Use common clock framework
+> -----Original Message-----
+> From: Fabio Estevam [mailto:festevam@gmail.com]
+> Sent: Monday, October 15, 2018 7:14 AM
+> To: A.s. Dong <aisheng.dong@nxp.com>
+> Cc: moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE
+> <linux-arm-kernel@lists.infradead.org>; Dong Aisheng <dongas86@gmail.com>;
+> Sascha Hauer <kernel@pengutronix.de>; Shawn Guo <shawnguo@kernel.org>;
+> Fabio Estevam <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>;
+> Catalin Marinas <catalin.marinas@arm.com>; Will Deacon
+> <will.deacon@arm.com>; dl-linux-imx <linux-imx@nxp.com>; Mark Rutland
+> <mark.rutland@arm.com>; open list:OPEN FIRMWARE AND FLATTENED
+> DEVICE TREE BINDINGS <devicetree@vger.kernel.org>
+> Subject: Re: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
 > 
-> How many? 'common clock framework' is a Linux thing, not part of
-> bindings.
+> Hi Dong,
+> 
+> On Sun, Oct 14, 2018 at 11:35 AM A.s. Dong <aisheng.dong@nxp.com> wrote:
+> >
+> > Add imx8qxp support
+> 
+> You could probably expand the commit log by explaining a bit of what im8qxp
+> means.
 > 
 
-Hi Rob,
+Got it, thanks for the suggestion.
 
-Only one clock is needed.
-I will replace this comment by:
-  - clocks: the clock needed by the NAND flash controller.
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > new file mode 100644
+> > index 0000000..e1d2578
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > @@ -0,0 +1,861 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Copyright (C) 2016 Freescale Semiconductor, Inc.
+> > + * Copyright 2017~2018 NXP
+> 
+> I guess you meant "-" instead of "~".
+> 
+> > +       memory@80000000 {
+> > +               device_type = "memory";
+> > +               reg = <0x00000000 0x80000000 0 0x40000000>;
+> > +       };
+> 
+> This should go to the board dts file instead as the memory size may vary from
+> board to board.
+> 
 
-Regards,
-Christophe Kerello.
+That's right. Will change it.
 
->> +
->> +Optional properties:
->> +- resets: Reference to a reset controller asserting the FMC controller
->> +- dmas: DMA specifiers (see: dma/stm32-mdma.txt)
->> +- dma-names: Must be "tx", "rx" and "ecc"
->> +
->> +Optional children nodes:
->> +Children nodes represent the available NAND chips.
->> +
->> +Optional properties:
->> +- nand-on-flash-bbt: see nand.txt
->> +- nand-ecc-strength: see nand.txt
->> +- nand-ecc-step-size: see nand.txt
->> +
->> +The following ECC strength and step size are currently supported:
->> + - nand-ecc-strength = <1>, nand-ecc-step-size = <512> (Hamming)
->> + - nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
->> + - nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8) (default)
->> +
->> +Example:
->> +
->> +	fmc: nand-controller@58002000 {
->> +		compatible = "st,stm32mp15-fmc2";
->> +		reg = <0x58002000 0x1000>,
->> +		      <0x80000000 0x1000>,
->> +		      <0x88010000 0x1000>,
->> +		      <0x88020000 0x1000>,
->> +		      <0x81000000 0x1000>,
->> +		      <0x89010000 0x1000>,
->> +		      <0x89020000 0x1000>;
->> +		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
->> +		clocks = <&rcc FMC_K>;
->> +		resets = <&rcc FMC_R>;
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&fmc_pins_a>;
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		nand@0 {
->> +			reg = <0>;
->> +			nand-on-flash-bbt;
->> +			#address-cells = <1>;
->> +			#size-cells = <1>;
->> +		};
->> +	};
->> -- 
->> 1.9.1
->>
+> > +               imx8qx-pm {
+> > +                       compatible = "fsl,scu-pd";
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+> > +
+> > +                       pd_lsio: lsio-power-domain {
+> > +                               #power-domain-cells = <0>;
+> > +                               #address-cells = <1>;
+> > +                               #size-cells = <0>;
+> > +
+> > +                               pd_lsio_pwm0: lsio-pwm0@191 {
+> > +                                       reg = <191>;
+> 
+> The number after @ is in hex, so the reg property should be 0x191.
+
+Thanks for the reminder.
+The PD ID is defined in DEC. So I will change them all into HEX later manually.
+
+BTW, this seems like error prone and checkpatch can't report it.
+And I notice many similar users in kernel with the same issue:
+arch/arm/boot/dts/tps65910.dtsi
+arch/arm/boot/dts/tegra124-nyan.dtsi
+arch/arm/boot/dts/rk3288.dtsi
+...
+
+Regards
+Dong Aisheng
