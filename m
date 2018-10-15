@@ -1,76 +1,148 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: RE: [PATCH 2/3] clk: imx6q: optionally get CCM inputs via standard
- clock handles
-Date: Mon, 15 Oct 2018 10:01:01 -0700
-Message-ID: <153962286120.5275.13550019093922282541@swboyd.mtv.corp.google.com>
-References: <20180731102009.6710-1-l.stach@pengutronix.de>
- <20180731102009.6710-2-l.stach@pengutronix.de>
- <AM0PR04MB4211DE29E5644C8C9A33278780310@AM0PR04MB4211.eurprd04.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM0PR04MB4211DE29E5644C8C9A33278780310@AM0PR04MB4211.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+Subject: [PATCH] arm64: dts: sdm845: Add PSCI cpuidle low power states
+Date: Mon, 15 Oct 2018 22:32:33 +0530
+Message-ID: <1539622953-4188-1-git-send-email-rplsssn@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, ilina@codeaurora.org, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting A.s. Dong (2018-08-21 01:56:09)
-> Hi Lucas,
-> 
-> > -----Original Message-----
-> > From: Lucas Stach <l.stach@pengutronix.de>
-> > Sent: Tuesday, July 31, 2018 6:20 PM
-> 
-> [...]
-> 
-> > When specifying external clock inputs to the CCM the current code requires
-> > the clocks to be in a "clocks" child node of the DT root.
-> > This is not really conformant with DT best practices.
-> > 
-> > To avoid the need to deviate from those best practices, allow the clock inputs
-> > to be specifies via standard clock handles. This is in line with how drivers of
-> > the later CCM driver revisions on newer i.MX SoCs handle this.
-> > 
-> > As we can't retroactively change the DT binding, allow this as an option with a
-> > fallback to the old way of how this has been handled.
-> > 
-> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> > ---
-> >  .../devicetree/bindings/clock/imx6q-clock.txt |  5 +++++
-> >  drivers/clk/imx/clk-imx6q.c                   | 22 ++++++++++++++-----
-> >  2 files changed, 22 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-> > b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-> > index a45ca67a9d5f..ce6aa9920c05 100644
-> > --- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-> > +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-> > @@ -6,6 +6,11 @@ Required properties:
-> >  - interrupts: Should contain CCM interrupt
-> >  - #clock-cells: Should be <1>
-> > 
-> > +Optional properties:
-> > +- clocks: list of clock specifiers, must contain an entry for each entry
-> > +          in clock-names
-> > +- clock-names: valid names are "osc", "ckil", "ckil", "anaclk1" and "anaclk2"
-> 
-> A minor issue: 
-> The third name should be "ckih1".
-> 
-> Otherwise:
-> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-> 
+Add device bindings for cpuidle states for cpu devices.
 
-Is this going to be resent? I don't see anything new and there are
-review comments on this patch series so I'm dropping it from the clk
-review queue. Please resend.
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 62 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 0c9a2aa..32262b0 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -96,6 +96,7 @@
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_0>;
++			cpu-idle-states = <&C0_CPU_SPC &C0_CPU_PC &CLUSTER_PC>;
+ 			L2_0: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -111,6 +112,7 @@
+ 			reg = <0x0 0x100>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_100>;
++			cpu-idle-states = <&C0_CPU_SPC &C0_CPU_PC &CLUSTER_PC>;
+ 			L2_100: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -123,6 +125,7 @@
+ 			reg = <0x0 0x200>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_200>;
++			cpu-idle-states = <&C0_CPU_SPC &C0_CPU_PC &CLUSTER_PC>;
+ 			L2_200: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -135,6 +138,7 @@
+ 			reg = <0x0 0x300>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_300>;
++			cpu-idle-states = <&C0_CPU_SPC &C0_CPU_PC &CLUSTER_PC>;
+ 			L2_300: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -147,6 +151,7 @@
+ 			reg = <0x0 0x400>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_400>;
++			cpu-idle-states = <&C4_CPU_SPC &C4_CPU_PC &CLUSTER_PC>;
+ 			L2_400: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -159,6 +164,7 @@
+ 			reg = <0x0 0x500>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_500>;
++			cpu-idle-states = <&C4_CPU_SPC &C4_CPU_PC &CLUSTER_PC>;
+ 			L2_500: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -171,6 +177,7 @@
+ 			reg = <0x0 0x600>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_600>;
++			cpu-idle-states = <&C4_CPU_SPC &C4_CPU_PC &CLUSTER_PC>;
+ 			L2_600: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -183,11 +190,66 @@
+ 			reg = <0x0 0x700>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_700>;
++			cpu-idle-states = <&C4_CPU_SPC &C4_CPU_PC &CLUSTER_PC>;
+ 			L2_700: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+ 			};
+ 		};
++
++		idle-states {
++			entry-method = "psci";
++
++			C0_CPU_SPC: c0_spc {
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x40000003>;
++				entry-latency-us = <350>;
++				exit-latency-us = <461>;
++				min-residency-us = <1890>;
++				local-timer-stop;
++				idle-state-name = "pc";
++			};
++
++			C0_CPU_PC: c0_pc {
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x40000004>;
++				entry-latency-us = <360>;
++				exit-latency-us = <531>;
++				min-residency-us = <3934>;
++				local-timer-stop;
++				idle-state-name = "rail pc";
++			};
++
++			C4_CPU_SPC: c4_spc {
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x40000003>;
++				entry-latency-us = <264>;
++				exit-latency-us = <621>;
++				min-residency-us = <952>;
++				local-timer-stop;
++				idle-state-name = "pc";
++			};
++
++			C4_CPU_PC: c4_pc {
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x40000004>;
++				entry-latency-us = <702>;
++				exit-latency-us = <1061>;
++				min-residency-us = <4488>;
++				local-timer-stop;
++				idle-state-name = "rail pc";
++			};
++
++			CLUSTER_PC: cluster_pc {
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x400000F4>;
++				entry-latency-us = <3263>;
++				exit-latency-us = <6562>;
++				min-residency-us = <9987>;
++				local-timer-stop;
++				idle-state-name = "cluster pc";
++			};
++		};
+ 	};
+ 
+ 	pmu {
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of the Code Aurora Forum, hosted by The Linux Foundation.
