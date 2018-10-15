@@ -1,44 +1,44 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: mmc: mediatek: add MT8183 MMC driver support
-Date: Mon, 15 Oct 2018 15:15:55 +0200
-Message-ID: <CAPDyKFp3Wn9Wz8bmaSXFmNe0HOKCMcy7Pue3C7+9w5kq2AO0Sw@mail.gmail.com>
-References: <1539415250-32337-1-git-send-email-chaotian.jing@mediatek.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/2] clk: qcom: gcc: Add global clock controller
+ driver for QCS404
+Date: Mon, 15 Oct 2018 08:27:27 -0500
+Message-ID: <20181015132727.GA19377@bogus>
+References: <20181010145138.17185-1-vkoul@kernel.org>
+ <20181010145138.17185-3-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539415250-32337-1-git-send-email-chaotian.jing@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <20181010145138.17185-3-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chaotian Jing <chaotian.jing@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Sean Wang <sean.wang@mediatek.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, jjian.zhou@mediatek.com, wenbin.mei@mediatek.com
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Shefali Jain <shefjain@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Anu Ramanathan <anur@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13 October 2018 at 09:20, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
-> this series of patch include below changes:
-> 1. Add MT8183 SoC support in Mediatek MMC DT bindings
-> 2. Fill mmc->actual_clock
-> 3. Fix cannot receive new request issue
-> 4. Tune CMD/DATA together to save tuning time
-> 5. Add MT8183 MMC driver support
-> 6. Refine the tuning method to drop too much redundant code
->
-> Chaotian Jing (6):
->   mmc: dt-bindings: add support for MT8183 SoC
->   mmc: mediatek: fill the actual clock for mmc debugfs
->   mmc: mediatek: fix cannot receive new request when msdc_cmd_is_ready
->     fail
->   mmc: mediatek: tune CMD/DATA together
->   mmc: mediatek: add MT8183 MMC driver support
->   mmc: mediatek: drop too much code of tuning method
->
->  Documentation/devicetree/bindings/mmc/mtk-sd.txt |   1 +
->  drivers/mmc/host/mtk-sd.c                        | 292 ++++++++++++++++++++---
->  2 files changed, 254 insertions(+), 39 deletions(-)
->
-> --
-> 1.8.1.1.dirty
->
+On Wed, Oct 10, 2018 at 08:21:38PM +0530, Vinod Koul wrote:
+> From: Shefali Jain <shefjain@codeaurora.org>
+> 
+> Add the clocks supported in global clock controller which clock the
+> peripherals like BLSPs, SDCC, USB, MDSS etc. Register all the clocks
+> to the clock framework for the clients to be able to request for them.
+> 
+> Signed-off-by: Shefali Jain <shefjain@codeaurora.org>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> Co-developed-by: Taniya Das <tdas@codeaurora.org>
+> Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
+> [bamse, vkoul: rebase and tidyup for upstream]
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,gcc.txt         |    1 +
+>  drivers/clk/qcom/Kconfig                           |    8 +
+>  drivers/clk/qcom/Makefile                          |    1 +
+>  drivers/clk/qcom/gcc-qcs404.c                      | 2744 ++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,gcc-qcs404.h        |  165 ++
+>  5 files changed, 2919 insertions(+)
+>  create mode 100644 drivers/clk/qcom/gcc-qcs404.c
+>  create mode 100644 include/dt-bindings/clock/qcom,gcc-qcs404.h
 
-Applied for next, thanks!
+For the DT bits,
 
-Kind regards
-Uffe
+Acked-by: Rob Herring <robh@kernel.org>
