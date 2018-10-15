@@ -1,100 +1,55 @@
-From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v8 7/9] PCI: mediatek: Add system PM support for MT2712 and MT7622
-Date: Mon, 15 Oct 2018 16:08:58 +0800
-Message-ID: <1539590940-13355-8-git-send-email-honghui.zhang@mediatek.com>
-References: <1539590940-13355-1-git-send-email-honghui.zhang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH v4 1/6] dt-bindings: power: Introduce one property to present the battery internal resistance
+Date: Mon, 15 Oct 2018 16:09:20 +0800
+Message-ID: <e7c061535f2dcca54d6498405fdd5ed7098b19f9.1539587217.git.baolin.wang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539590940-13355-1-git-send-email-honghui.zhang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com
-Cc: ulf.hansson@linaro.org, marc.zyngier@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, honghui.zhang@mediatek.com, youlin.pei@mediatek.com, yt.shen@mediatek.com, jianjun.wang@mediatek.com, yong.wu@mediatek.com
+To: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, baolin.wang@linaro.org, broonie@kernel.org, ctatlor97@gmail.com, linus.walleij@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-From: Honghui Zhang <honghui.zhang@mediatek.com>
+The internal resistance of a battery is not a constant in its life cycle,
+this varies over the age of the battery or temperature and so on. But we
+just want use one constant battery internal resistance to estimate the
+battery capacity. Thus this patch introduces one property to present
+the battery factory internal resistance for battery information.
 
-In order to reduce the PCIe power consuming while system suspend,
-the physical layer should be gated. And the PCIe link should be
-re-established and the related control register values should be
-re-initialized after system resume.
-
-Register suspend_noirq & resume_noirq callback functions to allow
-PCIe to come up after resume from RAM.
-
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/pci/controller/pcie-mediatek.c | 50 ++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+Changes from v3:
+ - Split binding into one separate patch.
+ - Add LinusW reviewed tag.
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index d3f4694..42cf2a4 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -1168,6 +1168,55 @@ static int mtk_pcie_probe(struct platform_device *pdev)
- 	return err;
- }
+Changes from v2:
+ - Rename the property.
+ - Improve the commit message.
+
+Changes from v1:
+ - New patch in v2.
+---
+ .../devicetree/bindings/power/supply/battery.txt   |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+index f4d3b4a..938d027 100644
+--- a/Documentation/devicetree/bindings/power/supply/battery.txt
++++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+@@ -22,6 +22,7 @@ Optional Properties:
+  - charge-term-current-microamp: current for charge termination phase
+  - constant-charge-current-max-microamp: maximum constant input current
+  - constant-charge-voltage-max-microvolt: maximum constant input voltage
++ - factory-internal-resistance-micro-ohms: battery factory internal resistance
  
-+static int __maybe_unused mtk_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct mtk_pcie *pcie = dev_get_drvdata(dev);
-+	struct mtk_pcie_port *port;
-+
-+	if (list_empty(&pcie->ports))
-+		return 0;
-+
-+	list_for_each_entry(port, &pcie->ports, list) {
-+		clk_disable_unprepare(port->pipe_ck);
-+		clk_disable_unprepare(port->obff_ck);
-+		clk_disable_unprepare(port->axi_ck);
-+		clk_disable_unprepare(port->aux_ck);
-+		clk_disable_unprepare(port->ahb_ck);
-+		clk_disable_unprepare(port->sys_ck);
-+		phy_power_off(port->phy);
-+		phy_exit(port->phy);
-+	}
-+
-+	clk_disable_unprepare(pcie->free_ck);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused mtk_pcie_resume_noirq(struct device *dev)
-+{
-+	struct mtk_pcie *pcie = dev_get_drvdata(dev);
-+	struct mtk_pcie_port *port, *tmp;
-+
-+	if (list_empty(&pcie->ports))
-+		return 0;
-+
-+	clk_prepare_enable(pcie->free_ck);
-+
-+	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
-+		mtk_pcie_enable_port(port);
-+
-+	/* In case of EP was removed while system suspend. */
-+	if (list_empty(&pcie->ports))
-+		clk_disable_unprepare(pcie->free_ck);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops mtk_pcie_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_pcie_suspend_noirq,
-+				      mtk_pcie_resume_noirq)
-+};
-+
- static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
- 	.ops = &mtk_pcie_ops,
- 	.startup = mtk_pcie_startup_port,
-@@ -1200,6 +1249,7 @@ static struct platform_driver mtk_pcie_driver = {
- 		.name = "mtk-pcie",
- 		.of_match_table = mtk_pcie_ids,
- 		.suppress_bind_attrs = true,
-+		.pm = &mtk_pcie_pm_ops,
- 	},
- };
- builtin_platform_driver(mtk_pcie_driver);
+ Battery properties are named, where possible, for the corresponding
+ elements in enum power_supply_property, defined in
+@@ -42,6 +43,7 @@ Example:
+ 		charge-term-current-microamp = <128000>;
+ 		constant-charge-current-max-microamp = <900000>;
+ 		constant-charge-voltage-max-microvolt = <4200000>;
++		factory-internal-resistance-micro-ohms = <250000>;
+ 	};
+ 
+ 	charger: charger@11 {
 -- 
-2.6.4
+1.7.9.5
