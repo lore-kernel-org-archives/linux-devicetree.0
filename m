@@ -1,32 +1,70 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2 3/4] ARM: dts: imx6ull: Add dcp node
-Date: Mon, 15 Oct 2018 11:03:33 -0300
-Message-ID: <CAOMZO5AMwGakygMT=O9CjN8jyL-FAox3-452C1vpGc9sPCXBHw@mail.gmail.com>
-References: <cover.1539609921.git.leonard.crestez@nxp.com> <9365e24504896e58294fd8786acb3c3d4a1a264d.1539609921.git.leonard.crestez@nxp.com>
+From: Olivier Moysan <olivier.moysan@st.com>
+Subject: [PATCH 2/4] ASoC: dt-bindings: add mclk support to
+	cs42l51
+Date: Mon, 15 Oct 2018 16:03:34 +0200
+Message-ID: <1539612216-12602-3-git-send-email-olivier.moysan@st.com>
+References: <1539612216-12602-1-git-send-email-olivier.moysan@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9365e24504896e58294fd8786acb3c3d4a1a264d.1539609921.git.leonard.crestez@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Herbert Xu <herbert@gondor.apana.org.au>, Horia Geanta Neag <horia.geanta@nxp.com>, Franck LENORMAND <franck.lenormand@nxp.com>, Aymen Sghaier <aymen.sghaier@nxp.com>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>linux-kernel <l>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1539612216-12602-1-git-send-email-olivier.moysan@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org, olivier.moysan@st.com, arnaud.pouliquen@st.com, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 15, 2018 at 10:28 AM Leonard Crestez
-<leonard.crestez@nxp.com> wrote:
+Add clocks properties to cs42l51 Cirrus codec,
+to support master clock provider.
 
-> diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
-> index 796ed35d4ac9..be610339e933 100644
-> --- a/arch/arm/boot/dts/imx6ull.dtsi
-> +++ b/arch/arm/boot/dts/imx6ull.dtsi
-> @@ -37,10 +37,20 @@
->                         #address-cells = <1>;
->                         #size-cells = <1>;
->                         reg = <0x02200000 0x100000>;
->                         ranges;
->
-> +                       dcp: dcp@2280000 {
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+---
+ Documentation/devicetree/bindings/sound/cs42l51.txt   | 17 +++++++++++++++++
+ Documentation/devicetree/bindings/trivial-devices.txt |  1 -
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/cs42l51.txt
 
-Node names should be generic, so it would be better to use:
-
-dcp: crypto@2280000 {
+diff --git a/Documentation/devicetree/bindings/sound/cs42l51.txt b/Documentation/devicetree/bindings/sound/cs42l51.txt
+new file mode 100644
+index 000000000000..4b5de33ce377
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cs42l51.txt
+@@ -0,0 +1,17 @@
++CS42L51 audio CODEC
++
++Optional properties:
++
++  - clocks : a list of phandles + clock-specifiers, one for each entry in
++    clock-names
++
++  - clock-names : must contain "MCLK"
++
++Example:
++
++cs42l51: cs42l51@4a {
++	compatible = "cirrus,cs42l51";
++	reg = <0x4a>;
++	clocks = <&mclk_prov>;
++	clock-names = "MCLK";
++};
+diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
+index 763a2808a95c..69c934aec13b 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/trivial-devices.txt
+@@ -35,7 +35,6 @@ at,24c08		i2c serial eeprom  (24cxx)
+ atmel,at97sc3204t	i2c trusted platform module (TPM)
+ capella,cm32181		CM32181: Ambient Light Sensor
+ capella,cm3232		CM3232: Ambient Light Sensor
+-cirrus,cs42l51		Cirrus Logic CS42L51 audio codec
+ dallas,ds1374		I2C, 32-Bit Binary Counter Watchdog RTC with Trickle Charger and Reset Input/Output
+ dallas,ds1631		High-Precision Digital Thermometer
+ dallas,ds1672		Dallas DS1672 Real-time Clock
+-- 
+2.7.4
