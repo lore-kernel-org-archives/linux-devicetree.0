@@ -1,122 +1,109 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH 1/2] dt-bindings: irqchip: Introduce TISCI Interrupt
- router bindings
-Date: Mon, 15 Oct 2018 16:35:25 +0530
-Message-ID: <c3dada07-d04f-a4c8-b8e3-bece678aea15@ti.com>
-References: <20181006072812.15814-1-lokeshvutla@ti.com>
- <20181006072812.15814-2-lokeshvutla@ti.com>
- <20181006162929.u6uh4ffn6gm3incf@akan>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 3/7] PCI: OF: Allow endpoints to bypass the iommu
+Date: Mon, 15 Oct 2018 12:32:51 +0100
+Message-ID: <33bd48e9-a061-e97d-ff00-daf5097b8e1f@arm.com>
+References: <20181012145917.6840-1-jean-philippe.brucker@arm.com>
+	<20181012145917.6840-4-jean-philippe.brucker@arm.com>
+	<20181012194158.GX5906@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181006162929.u6uh4ffn6gm3incf@akan>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Device Tree Mailing List <devicetree@vger.kernel.org>
-Cc: Tero Kristo <t-kristo@ti.com>, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, Santosh Shilimkar <ssantosh@kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20181012194158.GX5906-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, tnowicki-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.orgnd-5wv7dgnIgG8@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob, DT maintainers,
+On 12/10/18 20:41, Bjorn Helgaas wrote:
+> s/iommu/IOMMU/ in subject
+> 
+> On Fri, Oct 12, 2018 at 03:59:13PM +0100, Jean-Philippe Brucker wrote:
+>> Using the iommu-map binding, endpoints in a given PCI domain can be
+>> managed by different IOMMUs. Some virtual machines may allow a subset of
+>> endpoints to bypass the IOMMU. In some case the IOMMU itself is presented
+> 
+> s/case/cases/
+> 
+>> as a PCI endpoint (e.g. AMD IOMMU and virtio-iommu). Currently, when a
+>> PCI root complex has an iommu-map property, the driver requires all
+>> endpoints to be described by the property. Allow the iommu-map property to
+>> have gaps.
+> 
+> I'm not an IOMMU or virtio expert, so it's not obvious to me why it is
+> safe to allow devices to bypass the IOMMU.  Does this mean a typo in
+> iommu-map could inadvertently allow devices to bypass it?  Should we
+> indicate something in dmesg (and/or sysfs) about devices that bypass
+> it?
 
-On Saturday 06 October 2018 09:59 PM, Nishanth Menon wrote:
-> On 12:58-20181006, Lokesh Vutla wrote:
->> Add the DT binding documentation for Interrupt router driver.
->>
->> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+It's not really "allow devices to bypass the IOMMU" so much as "allow DT 
+to describe devices which the IOMMU doesn't translate". It's a bit of an 
+edge case for not-really-PCI devices, but FWIW I can certainly think of 
+several ways to build real hardware like that. As for inadvertent errors 
+leaving out IDs which *should* be in the map, that really depends on the 
+IOMMU/driver implementation - e.g. SMMUv2 with arm-smmu.disable_bypass=0 
+would treat the device as untranslated, whereas SMMUv3 would always 
+generate a fault upon any transaction due to no valid stream table entry 
+being programmed (not even a bypass one).
+
+I reckon it's a sufficiently unusual case that keeping some sort of 
+message probably is worthwhile (at pr_info rather than pr_err) in case 
+someone does hit it by mistake.
+
+>> Relaxing of_pci_map_rid also allows the msi-map property to have gaps,
+
+At worst, I suppose we could always add yet another parameter for each 
+caller to choose whether a missing entry is considered an error or not.
+
+Robin.
+
+> s/of_pci_map_rid/of_pci_map_rid()/
+> 
+>> which is invalid since MSIs always reach an MSI controller. Thankfully
+>> Linux will error out later, when attempting to find an MSI domain for the
+>> device.
+> 
+> Not clear to me what "error out" means here.  In a userspace program,
+> I would infer that the program exits with an error message, but I
+> doubt you mean that Linux exits.
+> 
+>> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
 >> ---
->>   .../interrupt-controller/ti,sci-intr.txt      | 83 +++++++++++++++++++
->>   MAINTAINERS                                   |  1 +
->>   2 files changed, 84 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+>>   drivers/pci/of.c | 7 ++++---
+>>   1 file changed, 4 insertions(+), 3 deletions(-)
 >>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
->> new file mode 100644
->> index 000000000000..681ca53cc5fb
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
->> @@ -0,0 +1,83 @@
->> +Texas Instruments K3 Interrupt Router
->> +=====================================
->> +
->> +The Interrupt Router (INTR) module provides a mechanism to mux M
->> +interrupt inputs to N interrupt outputs, where all M inputs are selectable
->> +to be driven per N output. There is one register per output (MUXCNTL_N) that
->> +controls the selection.
->> +
->> +
->> +                                 Interrupt Router
->> +                             +----------------------+
->> +                             |  Inputs     Outputs  |
->> +        +-------+            | +------+             |
->> +        | GPIO  |----------->| | irq0 |             |       Host IRQ
->> +        +-------+            | +------+             |      controller
->> +                             |    .        +-----+  |      +-------+
->> +        +-------+            |    .        |  0  |  |----->|  GIC  |
->> +        | INTA  |----------->|    .        +-----+  |      +-------+
->> +        +-------+            |    .          .      |
->> +                             | +------+      .      |
->> +                             | | irqM |    +-----+  |
->> +                             | +------+    |  N  |  |
->> +                             |             +-----+  |
->> +                             +----------------------+
->> +
->> +Configuration of these MUXCNTL_N registers is done by a system controller
->> +(like the Device Memory and Security Controller on K3 AM654 SoC). System
->> +controller will keep track of the used and unused registers within the Router.
->> +Driver should request the system controller to get the range of GIC IRQs
->> +assigned to the requesting hosts. It is the drivers responsibility to keep
->> +track of GIC IRQs.
->> +
->> +Communication between the host processor running an OS and the system
->> +controller happens through a protocol called TI System Control Interface
->> +(TISCI protocol). For more details refer:
->> +Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
->> +
->> +TISCI Interrupt Router Node:
->> +----------------------------
->> +- compatible:		Must be "ti,sci-intr".
->> +- interrupt-controller:	Identifies the node as an interrupt controller
->> +- #interrupt-cells:	Specifies the number of cells needed to encode an
->> +			interrupt source. The value should be 3.
->> +			First cell should contain the TISCI device ID of source
->> +			Second cell should contain the interrupt source offset
->> +			within the device
->> +			Third cell specifies the trigger type as defined
->> +			in interrupts.txt in this directory.
->> +- interrupt-parent:	phandle of irq parent for TISCI intr. The parent must
->> +			use the same interrupt-cells format as GIC.
->> +- ti,sci:		Phandle to TI-SCI compatible System controller node.
->> +- ti,sci-dst-id:	TISCI device ID of the destination IRQ controller.
->> +- ti,sci-rm-range-girq:	Tuple corresponding to unique TISCI resource type that
->> +			defines the dst host irq ranges assigned to this
->> +			interrupt router from this host context.
->> +			Tuple should be of format <type subtype>.
->> +
-> 
-> Rob, DT maintainers,
-> 
-> I'd like a feedback from DT maintainers on this 'range' topic.
-> 
-> TISCI Firmware [1] currently seems to define a type corresponding to a
-> device ID[2]. in AM6 device, for example, this is different, however
-> have a 1 to 1 correspondence. However, there is expectation that type will
-> end up as device ID in a future SoC.
-> 
-> While this is subject to much debate internally, I'd like some feedback if this
-> is OK from Device tree representation - it is true that Firmware does
-> look at it as type, however in some future SoC, it could be that the
-> values themselves may correspond one to one with a device id -> The
-> original wish was that types might be something reusable across SoCs,
-> but that is turning out to be more of a theoretical wish than any thing
-> practical.
-> 
-> [1]http://software-dl.ti.com/tisci/esd/latest/5_soc_doc/am6x/resasg_types.html
-> [2]http://software-dl.ti.com/tisci/esd/latest/5_soc_doc/am6x/devices.html
-
-Any help on this topic?
-
-Thanks and regards,
-Lokesh
-
+>> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+>> index 1836b8ddf292..2f5015bdb256 100644
+>> --- a/drivers/pci/of.c
+>> +++ b/drivers/pci/of.c
+>> @@ -451,9 +451,10 @@ int of_pci_map_rid(struct device_node *np, u32 rid,
+>>   		return 0;
+>>   	}
+>>   
+>> -	pr_err("%pOF: Invalid %s translation - no match for rid 0x%x on %pOF\n",
+>> -		np, map_name, rid, target && *target ? *target : NULL);
+>> -	return -EFAULT;
+>> +	/* Bypasses translation */
+>> +	if (id_out)
+>> +		*id_out = rid;
+>> +	return 0;
+>>   }
+>>   
+>>   #if IS_ENABLED(CONFIG_OF_IRQ)
+>> -- 
+>> 2.19.1
+>>
+> _______________________________________________
+> iommu mailing list
+> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
 > 
