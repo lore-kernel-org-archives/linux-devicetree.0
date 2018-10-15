@@ -1,84 +1,94 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH v2 3/5] clk: lochnagar: Add support for the Cirrus Logic
- Lochnagar
-Date: Mon, 15 Oct 2018 11:49:05 +0100
-Message-ID: <20181015104905.GF1653@imbe.wolfsonmicro.main>
-References: <20181008132542.19775-1-ckeepax@opensource.cirrus.com>
- <20181008132542.19775-3-ckeepax@opensource.cirrus.com>
- <153924124658.207691.10370075148426001371@swboyd.mtv.corp.google.com>
- <20181011132602.GD1653@imbe.wolfsonmicro.main>
- <153935999691.5275.1587207165396958375@swboyd.mtv.corp.google.com>
+From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 3/7] PCI: OF: Allow endpoints to bypass the iommu
+Date: Mon, 15 Oct 2018 06:52:10 -0400
+Message-ID: <20181015065024-mutt-send-email-mst@kernel.org>
+References: <20181012145917.6840-1-jean-philippe.brucker@arm.com>
+	<20181012145917.6840-4-jean-philippe.brucker@arm.com>
+	<20181012194158.GX5906@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <153935999691.5275.1587207165396958375@swboyd.mtv.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+In-Reply-To: <20181012194158.GX5906-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, tnowicki-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 12, 2018 at 08:59:56AM -0700, Stephen Boyd wrote:
-> Quoting Charles Keepax (2018-10-11 06:26:02)
-> > On Thu, Oct 11, 2018 at 12:00:46AM -0700, Stephen Boyd wrote:
-> > > Quoting Charles Keepax (2018-10-08 06:25:40)
-> > > > +struct lochnagar_clk_priv {
-> > > > +       struct device *dev;
-> > > > +       struct lochnagar *lochnagar;
-> > > 
-> > > Is this used for anything besides getting the regmap? Can you get the
-> > > pointer to the parent in probe and use that to get the regmap pointer
-> > > from dev_get_remap() and also use the of_node of the parent to register
-> > > a clk provider? It would be nice to avoid including the mfd header file
-> > > unless it's providing something useful.
-> > > 
+On Fri, Oct 12, 2018 at 02:41:59PM -0500, Bjorn Helgaas wrote:
+> s/iommu/IOMMU/ in subject
+> 
+> On Fri, Oct 12, 2018 at 03:59:13PM +0100, Jean-Philippe Brucker wrote:
+> > Using the iommu-map binding, endpoints in a given PCI domain can be
+> > managed by different IOMMUs. Some virtual machines may allow a subset of
+> > endpoints to bypass the IOMMU. In some case the IOMMU itself is presented
+> 
+> s/case/cases/
+> 
+> > as a PCI endpoint (e.g. AMD IOMMU and virtio-iommu). Currently, when a
+> > PCI root complex has an iommu-map property, the driver requires all
+> > endpoints to be described by the property. Allow the iommu-map property to
+> > have gaps.
+> 
+> I'm not an IOMMU or virtio expert, so it's not obvious to me why it is
+> safe to allow devices to bypass the IOMMU.  Does this mean a typo in
+> iommu-map could inadvertently allow devices to bypass it?
+
+
+Thinking about this comment, I would like to ask: can't the
+virtio device indicate the ranges in a portable way?
+This would minimize the dependency on dt bindings and ACPI,
+enabling support for systems that have neither but do
+have virtio e.g. through pci.
+
+>  Should we
+> indicate something in dmesg (and/or sysfs) about devices that bypass
+> it?
+> 
+> > Relaxing of_pci_map_rid also allows the msi-map property to have gaps,
+> 
+> s/of_pci_map_rid/of_pci_map_rid()/
+> 
+> > which is invalid since MSIs always reach an MSI controller. Thankfully
+> > Linux will error out later, when attempting to find an MSI domain for the
+> > device.
+> 
+> Not clear to me what "error out" means here.  In a userspace program,
+> I would infer that the program exits with an error message, but I
+> doubt you mean that Linux exits.
+> 
+> > Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+> > ---
+> >  drivers/pci/of.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
 > > 
-> > It is also used to find out which type of Lochnagar we have
-> > connected, which determines which clocks we should register. I
-> 
-> Can that be done through some device ID? So the driver can be untangled
-> from the MFD part.
-> 
-> > could perhaps pass that using another mechanism but we would
-> > still want to include the MFD stuff to get the register
-> > definitions. So this approach seems simplest.
-> 
-> Can the register definitions be moved to this clk driver?
-> 
-> Maybe you now get the hint, but I'd really like to be able to merge and
-> compile the clk driver all by itself without relying on the parent MFD
-> device to provide anything at compile time.
-> 
-
-If you feel strongly but since the MFD needs to hold the regmap
-(which needs to define the read/volatile regs and defaults)
-these will need to be duplicate defines and personally i would
-rather only have one copy as it makes updating things much less
-error prone.
-
-> > > > +       if (lclk->regmap.dir_mask) {
-> > > > +               ret = regmap_update_bits(regmap, lclk->regmap.cfg_reg,
-> > > > +                                        lclk->regmap.dir_mask,
-> > > > +                                        lclk->regmap.dir_mask);
-> > > > +               if (ret < 0) {
-> > > > +                       dev_err(priv->dev, "Failed to set %s direction: %d\n",
-> > > 
-> > > What does direction mean?
-> > > 
+> > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > index 1836b8ddf292..2f5015bdb256 100644
+> > --- a/drivers/pci/of.c
+> > +++ b/drivers/pci/of.c
+> > @@ -451,9 +451,10 @@ int of_pci_map_rid(struct device_node *np, u32 rid,
+> >  		return 0;
+> >  	}
+> >  
+> > -	pr_err("%pOF: Invalid %s translation - no match for rid 0x%x on %pOF\n",
+> > -		np, map_name, rid, target && *target ? *target : NULL);
+> > -	return -EFAULT;
+> > +	/* Bypasses translation */
+> > +	if (id_out)
+> > +		*id_out = rid;
+> > +	return 0;
+> >  }
+> >  
+> >  #if IS_ENABLED(CONFIG_OF_IRQ)
+> > -- 
+> > 2.19.1
 > > 
-> > Some of the clocks can both generate and receive a clock. For
-> > example the PSIA (external audio interface) MCLKs, the attached
-> > device could be expecting or providing a master audio clock. If
-> > the user assigns a parent to the clock we assume the attached
-> > device is providing a clock to us, otherwise we assume we are
-> > providing the clock.
-> 
-> And this directionality is determined by dir_mask? It would be great if
-> this sort of information was in the commit text or in a comment in the
-> driver so we know what's going on here.
-> 
-
-No problem will make this more clear.
-
-Thanks,
-Charles
