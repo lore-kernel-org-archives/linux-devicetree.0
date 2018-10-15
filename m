@@ -1,51 +1,41 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
-Date: Mon, 15 Oct 2018 07:30:09 +0000
-Message-ID: <52eaa4ac563ad5114ebd99b286cdbe0495dba7ec.camel@nxp.com>
-References: <1539527419-23613-1-git-send-email-aisheng.dong@nxp.com>
- <1539527419-23613-3-git-send-email-aisheng.dong@nxp.com>
- <CAOMZO5BEwNQy0HA80qOzm_w-c63tFK1eL+cOHNCxKYq9PHGsqw@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 6/9] ASoC: sunxi: allow the sun8i-codec
+ driver to be built on ARM64
+Date: Mon, 15 Oct 2018 09:31:19 +0200
+Message-ID: <20181015073119.fgsixra3nw3aannd@flea>
+References: <20181013165329.13363-1-anarsoul@gmail.com>
+ <20181013165329.13363-7-anarsoul@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOMZO5BEwNQy0HA80qOzm_w-c63tFK1eL+cOHNCxKYq9PHGsqw@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <15F0858A3D152A47AB4D327CBB63A897@eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "festevam@gmail.com" <festevam@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "A.s. Dong" <aisheng.dong@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20181013165329.13363-7-anarsoul@gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Mylene JOSSERAND <mylene.josserand@free-electrons.com>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Marcus Cooper <codekipper@gmail.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2018-10-14 at 20:13 -0300, Fabio Estevam wrote:
-> > +               imx8qx-pm {
-> > +                       compatible = "fsl,scu-pd";
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <0>;
-> > +
-> > +                       pd_lsio: lsio-power-domain {
-> > +                               #power-domain-cells = <0>;
-> > +                               #address-cells = <1>;
-> > +                               #size-cells = <0>;
-> > +
-> > +                               pd_lsio_pwm0: lsio-pwm0@191 {
-> > +                                       reg = <191>;
+On Sat, Oct 13, 2018 at 09:53:26AM -0700, Vasily Khoruzhick wrote:
+> Allwinner A64 uses the same digital codec part as in A33, so we need
+> to build this driver on ARM64 as well.
 > 
-> The number after @ is in hex, so the reg property should be 0x191.
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
 
-These are SC_R_* resource ids from include/linux/firmware/imx/types.h
-and they are almost everywhere referenced as decimals.
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-Is this really not acceptable for DT?
+Thanks!
+Maxime
 
---
-Regards,
-Leonard
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
