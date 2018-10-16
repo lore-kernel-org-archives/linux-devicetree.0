@@ -1,83 +1,230 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] dt-bindings: ufs: Fix the compatible string definition
-Date: Tue, 16 Oct 2018 09:59:56 -0700
-Message-ID: <CAD=FV=XWC8q4Cx4GF0yXCgj2APwd5ZfccVBC_ORwnJg0vRsS7A@mail.gmail.com>
-References: <20181012213926.253765-1-dianders@chromium.org>
- <CAFp+6iFy8V34cs6pEOie_tBX5wJqM7teUnH_XLLZ7cioPrX_hA@mail.gmail.com>
- <CAD=FV=WYM5OOigy+81cVzPtAJXhvrhB1znr9zHzMf3q5iFOtFw@mail.gmail.com> <CAFp+6iGxvDoptnjM18ggnHqX6MV0+HFqsnCMi61b8gquBxaYmw@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 11/19] PCI: keystone: Cleanup PHY handling
+Date: Tue, 16 Oct 2018 18:06:56 +0100
+Message-ID: <20181016170656.GD16390@e107981-ln.cambridge.arm.com>
+References: <20181015130721.5535-1-kishon@ti.com>
+ <20181015130721.5535-12-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iGxvDoptnjM18ggnHqX6MV0+HFqsnCMi61b8gquBxaYmw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20181015130721.5535-12-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, cang@codeaurora.org, Evan Green <evgreen@chromium.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, sayalil@codeaurora.org, Asutosh Das <asutoshd@codeaurora.org>, devicetree@vger.kernel.org, liwei213@huawei.com, LKML <linux-kernel@vger.kernel.org>, Mathieu Malaterre <malat@debian.org>, Mark Rutland <mark.rutland@arm.com>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Oct 15, 2018 at 06:37:13PM +0530, Kishon Vijay Abraham I wrote:
+> Cleanup PHY handling by using devm_phy_optional_get to get PHYs if
+> the PHYs are optional, creating a device link between the PHY device
+> and the controller device and disable PHY on error cases here.
+> Also invoke phy_reset() as part of initializing PHY.
 
-On Mon, Oct 15, 2018 at 10:51 PM Vivek Gautam
-<vivek.gautam@codeaurora.org> wrote:
-> > > P.S.: While you are at it, can you please move 'ufs-qcom.txt'
-> > > to Documentation/devicetree/bindings/phy/qcom,ufs-phy.txt.
-> > > The current name and file location is misleading.
-> >
-> > I'd rather someone at Qualcomm do this.  Do you have a suggested
-> > person?  The reason I feel that Qualcomm needs to get involved is that
-> > I see that when I look at the file you refer to says it's for:
-> >
-> >   "qcom,ufs-phy-qmp-20nm" for 20nm ufs phy,
-> >   "qcom,ufs-phy-qmp-14nm" for legacy 14nm ufs phy,
-> >   "qcom,msm8996-ufs-phy-qmp-14nm" for 14nm ufs phy
-> >   present on MSM8996 chipset.
-> >
-> > ...but there's another Qualcomm file, 'qcom-qmp-phy.txt'.  That
-> > handles the compatible string:
-> >
-> >        "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
-> >
-> > So I'm a little confused.  Should the SDM845 UFS PHY been handled by
-> > the older UFS PHY driver?  ...or should all the older UFS PHYs be
-> > moved to be handled by the newer QMP PHY driver?  ...or are they
-> > really different hardware blocks, in which case how would you describe
-> > the difference (both are described as UFS QMP PHYs I think).
->
-> As you rightly said "ufs/ufs-qcom.txt" describes the bindings for
-> 14nm, and 20nm ufs phy. These phys are however handled by the older
-> ufs phy driver present at:
-> drivers/phy/qualcomm/phy-qcom-ufs-qmp-{14nm,20nm}.c
-> The sdm845 UFS phy driver is handled by the new consolidated qmp phy
-> driver: drivers/phy/qualcomm/phy-qcom-qmp.c whose bindings are
-> described by 'qcom-qmp-phy.txt'.
-> We didn't attempt to move the 14nm phy to new driver as we already had
-> 8996 using the bindings.
->
-> So, really these are two separate drivers with different bindings. I
-> believe it should be okay to move the file. If you are fine, I can
-> attempt to post a small patch to do that.
+Hi Kishon,
 
-I guess what I should have said was that the new name you're proposing
-"qcom,ufs-phy.txt" is confusing and opening the file doesn't help
-clarify things.  The name and the binding make it sound like this is
-_the_ file to look at for Qualcomm UFS PHYs.  ...and then you look in
-the examples in the file and it seems that this even includes Qualcomm
-QMP PHYs for UFS.
+it is a bit of nitpicking, I know it is annoying but when I read "Also"
+in commit logs there is almost certainly a reason to split the patch
+into logical standalone entities, this one looks like one.
 
-...so while I agree that the file "ufs-qcom.txt" needs to be moved to
-the "PHY" directory, I think at the same time we need to change the
-name of the file and maybe the contents to disambiguate which things
-belong in this file vs. the "qcom-qmp-phy.txt".  ...and I feel like
-someone at Qualcomm will have the most information to properly do
-that.
+Every patch must be a self-contained change that, in case we have to
+revert it, must not affect other patches.
 
-For instance, you could call the older bindings
-"qcom-qmp-phy-14nm-20nm.txt" or something like that.
+There are some more patches in the series that would benefit from
+splitting so I kindly ask you to go through them and repost, we
+should still be able to hit v4.20.
 
-One point of clarification I'd like to know is if there's really a
-good reason to have two drivers here.  Certainly if the hardware is
-really different then a new driver can make sense, but if there are
-two drivers for arbitrary reasons then maybe they should be combined
-into one eventually?
+Thanks,
+Lorenzo
 
-
--Doug
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/controller/dwc/pci-keystone.c | 126 +++++++++++++++++++---
+>  1 file changed, 110 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> index e22328f89c84..bf37609ad75b 100644
+> --- a/drivers/pci/controller/dwc/pci-keystone.c
+> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> @@ -105,6 +105,9 @@ struct keystone_pcie {
+>  
+>  	int			num_msi_host_irqs;
+>  	int			msi_host_irqs[MAX_MSI_HOST_IRQS];
+> +	int			num_lanes;
+> +	struct phy		**phy;
+> +	struct device_link	**link;
+>  	struct			device_node *msi_intc_np;
+>  	struct irq_domain	*legacy_irq_domain;
+>  	struct device_node	*np;
+> @@ -880,22 +883,61 @@ static const struct dw_pcie_ops ks_pcie_dw_pcie_ops = {
+>  	.link_up = ks_pcie_link_up,
+>  };
+>  
+> -static int __exit ks_pcie_remove(struct platform_device *pdev)
+> +static void ks_pcie_disable_phy(struct keystone_pcie *ks_pcie)
+>  {
+> -	struct keystone_pcie *ks_pcie = platform_get_drvdata(pdev);
+> +	int num_lanes = ks_pcie->num_lanes;
+>  
+> -	clk_disable_unprepare(ks_pcie->clk);
+> +	while (num_lanes--) {
+> +		phy_power_off(ks_pcie->phy[num_lanes]);
+> +		phy_exit(ks_pcie->phy[num_lanes]);
+> +	}
+> +}
+> +
+> +static int ks_pcie_enable_phy(struct keystone_pcie *ks_pcie)
+> +{
+> +	int i;
+> +	int ret;
+> +	int num_lanes = ks_pcie->num_lanes;
+> +
+> +	for (i = 0; i < num_lanes; i++) {
+> +		ret = phy_reset(ks_pcie->phy[i]);
+> +		if (ret < 0)
+> +			goto err_phy;
+> +
+> +		ret = phy_init(ks_pcie->phy[i]);
+> +		if (ret < 0)
+> +			goto err_phy;
+> +
+> +		ret = phy_power_on(ks_pcie->phy[i]);
+> +		if (ret < 0) {
+> +			phy_exit(ks_pcie->phy[i]);
+> +			goto err_phy;
+> +		}
+> +	}
+>  
+>  	return 0;
+> +
+> +err_phy:
+> +	while (--i >= 0) {
+> +		phy_power_off(ks_pcie->phy[i]);
+> +		phy_exit(ks_pcie->phy[i]);
+> +	}
+> +
+> +	return ret;
+>  }
+>  
+>  static int __init ks_pcie_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+>  	struct dw_pcie *pci;
+>  	struct keystone_pcie *ks_pcie;
+> -	struct phy *phy;
+> +	struct device_link **link;
+> +	struct phy **phy;
+> +	u32 num_lanes;
+> +	char name[10];
+>  	int ret;
+> +	int i;
+>  
+>  	ks_pcie = devm_kzalloc(dev, sizeof(*ks_pcie), GFP_KERNEL);
+>  	if (!ks_pcie)
+> @@ -908,29 +950,59 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+>  	pci->dev = dev;
+>  	pci->ops = &ks_pcie_dw_pcie_ops;
+>  
+> -	ks_pcie->pci = pci;
+> +	ret = of_property_read_u32(np, "num-lanes", &num_lanes);
+> +	if (ret)
+> +		num_lanes = 1;
+>  
+> -	/* initialize SerDes Phy if present */
+> -	phy = devm_phy_get(dev, "pcie-phy");
+> -	if (PTR_ERR_OR_ZERO(phy) == -EPROBE_DEFER)
+> -		return PTR_ERR(phy);
+> +	phy = devm_kzalloc(dev, sizeof(*phy) * num_lanes, GFP_KERNEL);
+> +	if (!phy)
+> +		return -ENOMEM;
+>  
+> -	if (!IS_ERR_OR_NULL(phy)) {
+> -		ret = phy_init(phy);
+> -		if (ret < 0)
+> -			return ret;
+> +	link = devm_kzalloc(dev, sizeof(*link) * num_lanes, GFP_KERNEL);
+> +	if (!link)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < num_lanes; i++) {
+> +		snprintf(name, sizeof(name), "pcie-phy%d", i);
+> +		phy[i] = devm_phy_optional_get(dev, name);
+> +		if (IS_ERR(phy[i])) {
+> +			ret = PTR_ERR(phy[i]);
+> +			goto err_link;
+> +		}
+> +
+> +		if (!phy[i])
+> +			continue;
+> +
+> +		link[i] = device_link_add(dev, &phy[i]->dev, DL_FLAG_STATELESS);
+> +		if (!link[i]) {
+> +			ret = -EINVAL;
+> +			goto err_link;
+> +		}
+> +	}
+> +
+> +	ks_pcie->np = np;
+> +	ks_pcie->pci = pci;
+> +	ks_pcie->link = link;
+> +	ks_pcie->num_lanes = num_lanes;
+> +	ks_pcie->phy = phy;
+> +
+> +	ret = ks_pcie_enable_phy(ks_pcie);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable phy\n");
+> +		goto err_link;
+>  	}
+>  
+> -	ks_pcie->np = dev->of_node;
+>  	platform_set_drvdata(pdev, ks_pcie);
+>  	ks_pcie->clk = devm_clk_get(dev, "pcie");
+>  	if (IS_ERR(ks_pcie->clk)) {
+>  		dev_err(dev, "Failed to get pcie rc clock\n");
+> -		return PTR_ERR(ks_pcie->clk);
+> +		ret = PTR_ERR(ks_pcie->clk);
+> +		goto err_phy;
+>  	}
+> +
+>  	ret = clk_prepare_enable(ks_pcie->clk);
+>  	if (ret)
+> -		return ret;
+> +		goto err_phy;
+>  
+>  	ret = ks_pcie_add_pcie_port(ks_pcie, pdev);
+>  	if (ret < 0)
+> @@ -940,9 +1012,31 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+>  fail_clk:
+>  	clk_disable_unprepare(ks_pcie->clk);
+>  
+> +err_phy:
+> +	ks_pcie_disable_phy(ks_pcie);
+> +
+> +err_link:
+> +	while (--i >= 0 && link[i])
+> +		device_link_del(link[i]);
+> +
+>  	return ret;
+>  }
+>  
+> +static int __exit ks_pcie_remove(struct platform_device *pdev)
+> +{
+> +	struct keystone_pcie *ks_pcie = platform_get_drvdata(pdev);
+> +	struct device_link **link = ks_pcie->link;
+> +	int num_lanes = ks_pcie->num_lanes;
+> +
+> +	clk_disable_unprepare(ks_pcie->clk);
+> +	ks_pcie_disable_phy(ks_pcie);
+> +
+> +	while (num_lanes--)
+> +		device_link_del(link[num_lanes]);
+> +
+> +	return 0;
+> +}
+> +
+>  static struct platform_driver ks_pcie_driver __refdata = {
+>  	.probe  = ks_pcie_probe,
+>  	.remove = __exit_p(ks_pcie_remove),
+> -- 
+> 2.17.1
+> 
