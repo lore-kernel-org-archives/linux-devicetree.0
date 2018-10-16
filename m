@@ -1,48 +1,83 @@
-From: Richard Leitner <richard.leitner@skidata.com>
-Subject: [PATCH 4/7] Input: sx8654 - add sx8655 and sx8656 to compatibles
-Date: Tue, 16 Oct 2018 11:16:50 +0200
-Message-ID: <20181016091653.26896-5-richard.leitner@skidata.com>
-References: <20181016091653.26896-1-richard.leitner@skidata.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] drm/bridge: Add virtual display DT bindings
+Date: Tue, 16 Oct 2018 11:33:28 +0200
+Message-ID: <CACRpkdYx240t5eVCBzCAdNPn1C1SfneLUGtud-0eCoALVQSdmg@mail.gmail.com>
+References: <CGME20180824122324epcas3p2922f3e5415dacf4c89cfb136fa5c77b2@epcas3p2.samsung.com>
+ <20180824122308.3092-1-linus.walleij@linaro.org>
+ <20180827115302eucas1p24d36cfaf9835ccb217ac81e508484aa1~Ou5eTkYW-3006130061eucas1p2Z@eucas1p2.samsung.com>
+ <CACRpkdaGNhxY-xAAEL1Bu4EMr8x7qTGoM9s-At2v7Ev8PwOTDw@mail.gmail.com>
+ <20180829095822eucas1p1fe4336ca7944765c01fc6ad1e941b8b0~PUn7YujBw3056130561eucas1p1_@eucas1p1.samsung.com>
+ <20180829100152.GL907@e110455-lin.cambridge.arm.com>
+ <20180829102320eucas1p28f05f1c765eb85195a06199bb68b87ce~PU9ukgvXA1734817348eucas1p2L@eucas1p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181016091653.26896-1-richard.leitner@skidata.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Richard Leitner <richard.leitner@skidata.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180829102320eucas1p28f05f1c765eb85195a06199bb68b87ce~PU9ukgvXA1734817348eucas1p2L@eucas1p2.samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sudeep Holla <sudeep.holla@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-As the sx865[456] share the same datasheet and differ only in the
-presence of a "capacitive proximity detection circuit" and a "haptics
-motor driver for LRA/ERM" add them to the compatbiles. As the driver
-doesn't implement these features it should be no problem.
-
-Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
----
- drivers/input/touchscreen/sx8654.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/input/touchscreen/sx8654.c b/drivers/input/touchscreen/sx8654.c
-index 059127490c8d..622283b49d7c 100644
---- a/drivers/input/touchscreen/sx8654.c
-+++ b/drivers/input/touchscreen/sx8654.c
-@@ -222,6 +222,8 @@ static int sx8654_get_ofdata(struct sx8654 *ts)
- 
- static const struct of_device_id sx8654_of_match[] = {
- 	{ .compatible = "semtech,sx8654", },
-+	{ .compatible = "semtech,sx8655", },
-+	{ .compatible = "semtech,sx8656", },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, sx8654_of_match);
-@@ -326,6 +328,8 @@ static int sx8654_probe(struct i2c_client *client,
- 
- static const struct i2c_device_id sx8654_id_table[] = {
- 	{ "semtech_sx8654", 0 },
-+	{ "semtech_sx8655", 0 },
-+	{ "semtech_sx8656", 0 },
- 	{ },
- };
- MODULE_DEVICE_TABLE(i2c, sx8654_id_table);
--- 
-2.11.0
+T24gV2VkLCBBdWcgMjksIDIwMTggYXQgMTI6MjMgUE0gQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBz
+YW1zdW5nLmNvbT4gd3JvdGU6Cj4gT24gMjkuMDguMjAxOCAxMjowMSwgTGl2aXUgRHVkYXUgd3Jv
+dGU6Cj4gPiBPbiBXZWQsIEF1ZyAyOSwgMjAxOCBhdCAxMTo1ODoyMEFNICswMjAwLCBBbmRyemVq
+IEhhamRhIHdyb3RlOgo+ID4+IE9uIDI4LjA4LjIwMTggMTU6NDUsIExpbnVzIFdhbGxlaWogd3Jv
+dGU6Cj4gPj4+IE9uIE1vbiwgQXVnIDI3LCAyMDE4IGF0IDE6NTMgUE0gQW5kcnplaiBIYWpkYSA8
+YS5oYWpkYUBzYW1zdW5nLmNvbT4gd3JvdGU6Cgo+ID4+PiBJJ20gc29ycnkgUlRTTSBpcyBoYWxm
+L2hhbGYuIE5vdCBteSBmYXVsdC4gSSBjYW4ndCBmaXguLi4KPiA+PiBJIGRvIG5vdCBrbm93IHRo
+ZSBwbGF0Zm9ybSwgc28gSSAgSSBoYXZlIGR1ZyBsaXR0bGUgYml0LCBidXQgSSB3YW4ndAo+ID4+
+IGNhbGwgaXQgIHRob3JvdWdoIHJlc2VhcmNoLiBKdXN0IHBsZWFzZSBiZSBraW5kIGlmIEkgd3Jv
+dGUgc3RoIHN0dXBpZC4KPiA+PiBXaGF0IEkgaGF2ZSBmb3VuZDoKPiA+PiAxLiBEVFMgc2hvd3Mg
+Q0xDRCBpcyBwbDExMS4KPiA+PiAyLiBwbDExMSBkb2N1bWVudGF0aW9uIHNheXMgaXQncyBvdXRw
+dXQgaW50ZXJmYWNlIHN1cHBvcnRzIFNUTiBhbmQgVEZUCj4gPj4gdXAgdG8gMjQtYml0IGJ1cy4g
+SSBkbyBub3Qga25vdyBTVE4sIGJ1dCBURlQgc2VlbXMgdG8gYmUgY29tcGF0aWJsZSB3aXRoCj4g
+Pj4gRFBJLgo+ID4+Cj4gPj4gSWYgaXQgaXMgY29ycmVjdCwgZHBpIHBhbmVsIHNlZW1zIHRvIGJl
+IE9LLiBBbmQgSSB0aGluayBpdCBpcyBsZXNzCj4gPj4gaW1wb3J0YW50IGhvdyB0aGUgZW11bGF0
+b3Igd29ya3MsIG1vcmUgaW1wb3J0YW50IGlzIHRoYXQgaXQgc2hvdWxkCj4gPj4gZW11bGF0ZSBw
+bDExMSwgaW5jbHVkaW5nIGl0J3Mgb3V0cHV0IGludGVyZmFjZXMuCj4gPgo+ID4gWWVhaCwgdW5m
+b3J0dW5hdGVseSB0aGF0IHNoaXAgaGFzIHNhaWxlZCBhIGxvbmcgdGltZSBhZ28uIFRoZSBlbXVs
+YXRvcgo+ID4gcGVvcGxlIHRob3VnaHQgZW11bGF0aW5nIHRoZSByZWdpc3RlciBpbnRlcmZhY2Ug
+aXMgZ29vZCBlbm91Z2ggYW5kIHRvb2sKPiA+IGxpYmVydGllcyBvbiBob3cgdGhlIGJlaGF2aW91
+ciB3YXMgImVtdWxhdGVkIi4gRW5kIHJlc3VsdDogb3V0cHV0Cj4gPiBpbnRlcmZhY2VzIGFyZSBu
+b3QgdGhlIHNhbWUuCj4KPiBTbyB3aGF0IGlzIHdyb25nL21pc3Npbmcgd2l0aCBkcGkgcGFuZWw/
+CgpJIHN1cHBvc2UgeW91IGFyZSByZWZlcnJpbmcgdG86CkRvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWRwaS50eHQKCkluIHNob3J0LCB0aGUgZm9s
+bG93aW5nIGlzIHdoYXQgaXMgd3Jvbmcgd2l0aCAiZHBpLXBhbmVsIjoKCmNkIGRyaXZlcnMvZ3B1
+L2RybS9wYW5lbApncmVwICdwYW5lbC1kcGknCjxlbXB0eSBzdHJpbmc+CgpUaGlzIGlzIGJlY2F1
+c2UgdGhlIERSTSBzdWJzeXN0ZW0gZG9lcyBub3Qgc2VlbSB0byBzdXBwb3J0CmFueSAiZ2VuZXJp
+YyBEUEkgcGFuZWwiIChjb21wYXRpYmxlID0gImRwaS1wYW5lbCIpIGxpa2UgZmJkZXYgZG9lcy4K
+CkkgZ3Vlc3MgSSAqY291bGQqIGFkZCBzdXBwb3J0IGZvciBpdCB0byBwYW5lbC1zaW1wbGUuYywg
+YnV0IGlzIHRoYXQKd2hhdCB3ZSB3YW50PwoKVGhlIHByb2JsZW0gSSB3b3VsZCBwZXJzb25hbGx5
+IGhhdmUgd2l0aCBpdCBpcyB0aGF0ICJwYW5lbC1kcGkiIGlzCmEgYnVzIGZvcm1hdCBvciB0cmFu
+c3BvcnQgbWVjaGFuaXNtLCBub3QgYSByZWFsIHBhbmVsLgoKRXZlcnl0aGluZyBlbHNlIGluIHBh
+bmVsLXNpbXBsZSBoYXMgYSBwcm9wZXIgY29tcGF0aWJsZSBzdHJpbmcKdG8gdGhlIGFjdHVhbCBk
+aXNwbGF5IGZvbGxvd2luZyB0aGUgInZlbmRvcixwcm9kdWN0IiBjb252ZW50aW9uLgoKRXNzZW50
+aWFsbHkgKElNTykgInBhbmVsLWRwaSIgYXMgY29tcGF0aWJsZSBzdHJpbmcgaXMgbm8gYmV0dGVy
+CnRoYW4gInZpcnR1YWwtZGlzcGxheS1icmlkZ2UiIGFzIHN1Z2dlc3RlZCBpbiB0aGlzIHBhdGNo
+LiBJdCBpcyBldmVuCmEgd29yc2UgZml0IHNpbmNlIGFsbCB0aGUgc3R1ZmYgdGhhdCBEUEkgaW5j
+bHVkZXMgKGxpa2UgZWxlY3Ryb25pYwpzaWduYWxzIGEsIGIsIGMuLi4pIGNlcnRhaW5seSBkb2Vz
+IG5vdCBleGlzdCBpbiB0aGUgUlRTTXY4IGVtdWxhdG9yLgpXaGF0IGl0IGRvZXMgKGFzIEkgZXhw
+bGFpbmVkKSBpcyBqdXN0IHJlYWQgd2hhdCB3YXMgd3JpdHRlbiBpbnRvCnRoZSB4L3kgYW5kIGNv
+bG9yIGRlcHRoIHJlc29sdXRpb24gcmVnaXN0ZXJzIGFuZCBzbGFwIHNvbWV0aGluZwppbnRvIHRo
+ZSBlbXVsYXRvciB3aW5kb3cgYmFzZWQgb24gdGhhdC4gSXQgZG9lc24ndCBnZW5lcmF0ZQpvciBl
+dmVuIGF0dGVtcHQgdG8gZW11bGF0ZSBhbnkgZWxlY3Ryb25pYyBzaWduYWxzLiBBbmQgdGhpcwpl
+bXVsYXRvciBpcyB3aGF0IEkgYW0gdHJ5aW5nIHRvIHN1cHBvcnQgaW4gdGhlIGZpcnN0IHBsYWNl
+LgoKU28gSSB3b3VsZCByZWFsbHkgbGlrZSB0byBoZWFyIHdoYXQgVGhpZXJyeSBoYXMgdG8gc2F5
+IGFib3V0IHVzaW5nCiJwYW5lbC1kcGkiIGZvciB0aGF0IGJlZm9yZSB0cnlpbmcgdGhhdCBhcHBy
+b2FjaC4KCkkgZmVlbCBpdCB3b3VsZCBiZSBlcXVpdmFsZW50IHRvIGp1c3QgYWRkIGEgcGFuZWwg
+d2l0aCB0aGUgbmFtZQoiYXJtLHJ0c212OCIgaW50byBwYW5lbC1zaW1wbGUgYW5kIHN0b3AgdHJ5
+aW5nIHRvIGJlIGdlbmVyaWMsCmlzIHRoaXMgd2hhdCB3ZSB3YW50PyBJJ20gZmluZSB3aXRoIGl0
+LCBJIGp1c3Qgd2FudCB0byBwcm9ncmVzcwp0aGUgcGF0Y2ggc2VyaWVzIGluIHNvbWUgd2F5LgoK
+WW91cnMsCkxpbnVzIFdhbGxlaWoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVsCg==
