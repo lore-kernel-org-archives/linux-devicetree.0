@@ -1,7 +1,7 @@
 From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v9 2/9] PCI: Using PCI configuration space header type instead of class type to assign resource
-Date: Tue, 16 Oct 2018 18:44:43 +0800
-Message-ID: <1539686690-24068-3-git-send-email-honghui.zhang@mediatek.com>
+Subject: [PATCH v9 5/9] PCI: mediatek: Move the mtk_pcie_startup_port_v2 function's define after mtk_pcie_setup_irq
+Date: Tue, 16 Oct 2018 18:44:46 +0800
+Message-ID: <1539686690-24068-6-git-send-email-honghui.zhang@mediatek.com>
 References: <1539686690-24068-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,109 +14,171 @@ List-Id: devicetree@vger.kernel.org
 
 From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-The PCI configuration space header type defines the layout of the rest
-of the header (PCI r3.0 sec 6.1, PCIe r4.0 sec 7.5.1.1.9) while the
-resource assignment is based on the configuration space layout instead
-of its class type. Using configuration space header type instead of
-class type for the resource assignment.
+This is a prepare patch to fix enable MSI logic, move the function's
+define later to avoid forward declaration of mtk_pcie_enable_msi in
+the future. No functional changed.
 
-Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+Acked-by: Ryder Lee <ryder.lee@mediatek.com>
 ---
- drivers/pci/pci.c       |  3 +--
- drivers/pci/probe.c     |  3 ---
- drivers/pci/setup-bus.c | 20 ++++++++++----------
- 3 files changed, 11 insertions(+), 15 deletions(-)
+ drivers/pci/controller/pcie-mediatek.c | 138 ++++++++++++++++-----------------
+ 1 file changed, 69 insertions(+), 69 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 29ff961..7d379ca 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5908,8 +5908,7 @@ void pci_reassigndev_resource_alignment(struct pci_dev *dev)
- 	 * to enable the kernel to reassign new resource
- 	 * window later on.
- 	 */
--	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE &&
--	    (dev->class >> 8) == PCI_CLASS_BRIDGE_PCI) {
-+	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE) {
- 		for (i = PCI_BRIDGE_RESOURCES; i < PCI_NUM_RESOURCES; i++) {
- 			r = &dev->resource[i];
- 			if (!(r->flags & IORESOURCE_MEM))
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index ec78400..29a35c1 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1695,9 +1695,6 @@ int pci_setup_device(struct pci_dev *dev)
- 		break;
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index 9f12b17..6967bb7 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -392,75 +392,6 @@ static struct pci_ops mtk_pcie_ops_v2 = {
+ 	.write = mtk_pcie_config_write,
+ };
  
- 	case PCI_HEADER_TYPE_BRIDGE:		    /* bridge header */
--		if (class != PCI_CLASS_BRIDGE_PCI)
--			goto bad;
+-static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+-{
+-	struct mtk_pcie *pcie = port->pcie;
+-	struct resource *mem = &pcie->mem;
+-	const struct mtk_pcie_soc *soc = port->pcie->soc;
+-	u32 val;
+-	size_t size;
+-	int err;
 -
- 		/*
- 		 * The PCI-to-PCI bridge spec requires that subtractive
- 		 * decoding (i.e. transparent) bridge must have programming
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 79b1824..69f90f4 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -182,7 +182,7 @@ static void __dev_sort_resources(struct pci_dev *dev,
- 	u16 class = dev->class >> 8;
+-	/* MT7622 platforms need to enable LTSSM and ASPM from PCIe subsys */
+-	if (pcie->base) {
+-		val = readl(pcie->base + PCIE_SYS_CFG_V2);
+-		val |= PCIE_CSR_LTSSM_EN(port->slot) |
+-		       PCIE_CSR_ASPM_L1_EN(port->slot);
+-		writel(val, pcie->base + PCIE_SYS_CFG_V2);
+-	}
+-
+-	/* Assert all reset signals */
+-	writel(0, port->base + PCIE_RST_CTRL);
+-
+-	/*
+-	 * Enable PCIe link down reset, if link status changed from link up to
+-	 * link down, this will reset MAC control registers and configuration
+-	 * space.
+-	 */
+-	writel(PCIE_LINKDOWN_RST_EN, port->base + PCIE_RST_CTRL);
+-
+-	/* De-assert PHY, PE, PIPE, MAC and configuration reset	*/
+-	val = readl(port->base + PCIE_RST_CTRL);
+-	val |= PCIE_PHY_RSTB | PCIE_PERSTB | PCIE_PIPE_SRSTB |
+-	       PCIE_MAC_SRSTB | PCIE_CRSTB;
+-	writel(val, port->base + PCIE_RST_CTRL);
+-
+-	/* Set up vendor ID and class code */
+-	if (soc->need_fix_class_id) {
+-		val = PCI_VENDOR_ID_MEDIATEK;
+-		writew(val, port->base + PCIE_CONF_VEND_ID);
+-
+-		val = PCI_CLASS_BRIDGE_HOST;
+-		writew(val, port->base + PCIE_CONF_CLASS_ID);
+-	}
+-
+-	/* 100ms timeout value should be enough for Gen1/2 training */
+-	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
+-				 !!(val & PCIE_PORT_LINKUP_V2), 20,
+-				 100 * USEC_PER_MSEC);
+-	if (err)
+-		return -ETIMEDOUT;
+-
+-	/* Set INTx mask */
+-	val = readl(port->base + PCIE_INT_MASK);
+-	val &= ~INTX_MASK;
+-	writel(val, port->base + PCIE_INT_MASK);
+-
+-	/* Set AHB to PCIe translation windows */
+-	size = mem->end - mem->start;
+-	val = lower_32_bits(mem->start) | AHB2PCIE_SIZE(fls(size));
+-	writel(val, port->base + PCIE_AHB_TRANS_BASE0_L);
+-
+-	val = upper_32_bits(mem->start);
+-	writel(val, port->base + PCIE_AHB_TRANS_BASE0_H);
+-
+-	/* Set PCIe to AXI translation memory space.*/
+-	val = fls(0xffffffff) | WIN_ENABLE;
+-	writel(val, port->base + PCIE_AXI_WINDOW0);
+-
+-	return 0;
+-}
+-
+ static void mtk_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ {
+ 	struct mtk_pcie_port *port = irq_data_get_irq_chip_data(data);
+@@ -705,6 +636,75 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
+ 	return 0;
+ }
  
- 	/* Don't touch classless devices or host bridges or ioapics.  */
--	if (class == PCI_CLASS_NOT_DEFINED || class == PCI_CLASS_BRIDGE_HOST)
-+	if (class == PCI_CLASS_NOT_DEFINED)
- 		return;
- 
- 	/* Don't touch ioapic devices already enabled by firmware */
-@@ -1221,12 +1221,12 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 		if (!b)
- 			continue;
- 
--		switch (dev->class >> 8) {
--		case PCI_CLASS_BRIDGE_CARDBUS:
-+		switch (dev->hdr_type) {
-+		case PCI_HEADER_TYPE_CARDBUS:
- 			pci_bus_size_cardbus(b, realloc_head);
- 			break;
- 
--		case PCI_CLASS_BRIDGE_PCI:
-+		case PCI_HEADER_TYPE_BRIDGE:
- 		default:
- 			__pci_bus_size_bridges(b, realloc_head);
- 			break;
-@@ -1237,12 +1237,12 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 	if (pci_is_root_bus(bus))
- 		return;
- 
--	switch (bus->self->class >> 8) {
--	case PCI_CLASS_BRIDGE_CARDBUS:
-+	switch (bus->self->hdr_type) {
-+	case PCI_HEADER_TYPE_CARDBUS:
- 		/* don't size cardbuses yet. */
- 		break;
- 
--	case PCI_CLASS_BRIDGE_PCI:
-+	case PCI_HEADER_TYPE_BRIDGE:
- 		pci_bridge_check_ranges(bus);
- 		if (bus->self->is_hotplug_bridge) {
- 			additional_io_size  = pci_hotplug_io_size;
-@@ -1391,13 +1391,13 @@ void __pci_bus_assign_resources(const struct pci_bus *bus,
- 
- 		__pci_bus_assign_resources(b, realloc_head, fail_head);
- 
--		switch (dev->class >> 8) {
--		case PCI_CLASS_BRIDGE_PCI:
-+		switch (dev->hdr_type) {
-+		case PCI_HEADER_TYPE_BRIDGE:
- 			if (!pci_is_enabled(dev))
- 				pci_setup_bridge(b);
- 			break;
- 
--		case PCI_CLASS_BRIDGE_CARDBUS:
-+		case PCI_HEADER_TYPE_CARDBUS:
- 			pci_setup_cardbus(b);
- 			break;
- 
++static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
++{
++	struct mtk_pcie *pcie = port->pcie;
++	struct resource *mem = &pcie->mem;
++	const struct mtk_pcie_soc *soc = port->pcie->soc;
++	u32 val;
++	size_t size;
++	int err;
++
++	/* MT7622 platforms need to enable LTSSM and ASPM from PCIe subsys */
++	if (pcie->base) {
++		val = readl(pcie->base + PCIE_SYS_CFG_V2);
++		val |= PCIE_CSR_LTSSM_EN(port->slot) |
++		       PCIE_CSR_ASPM_L1_EN(port->slot);
++		writel(val, pcie->base + PCIE_SYS_CFG_V2);
++	}
++
++	/* Assert all reset signals */
++	writel(0, port->base + PCIE_RST_CTRL);
++
++	/*
++	 * Enable PCIe link down reset, if link status changed from link up to
++	 * link down, this will reset MAC control registers and configuration
++	 * space.
++	 */
++	writel(PCIE_LINKDOWN_RST_EN, port->base + PCIE_RST_CTRL);
++
++	/* De-assert PHY, PE, PIPE, MAC and configuration reset	*/
++	val = readl(port->base + PCIE_RST_CTRL);
++	val |= PCIE_PHY_RSTB | PCIE_PERSTB | PCIE_PIPE_SRSTB |
++	       PCIE_MAC_SRSTB | PCIE_CRSTB;
++	writel(val, port->base + PCIE_RST_CTRL);
++
++	/* Set up vendor ID and class code */
++	if (soc->need_fix_class_id) {
++		val = PCI_VENDOR_ID_MEDIATEK;
++		writew(val, port->base + PCIE_CONF_VEND_ID);
++
++		val = PCI_CLASS_BRIDGE_HOST;
++		writew(val, port->base + PCIE_CONF_CLASS_ID);
++	}
++
++	/* 100ms timeout value should be enough for Gen1/2 training */
++	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
++				 !!(val & PCIE_PORT_LINKUP_V2), 20,
++				 100 * USEC_PER_MSEC);
++	if (err)
++		return -ETIMEDOUT;
++
++	/* Set INTx mask */
++	val = readl(port->base + PCIE_INT_MASK);
++	val &= ~INTX_MASK;
++	writel(val, port->base + PCIE_INT_MASK);
++
++	/* Set AHB to PCIe translation windows */
++	size = mem->end - mem->start;
++	val = lower_32_bits(mem->start) | AHB2PCIE_SIZE(fls(size));
++	writel(val, port->base + PCIE_AHB_TRANS_BASE0_L);
++
++	val = upper_32_bits(mem->start);
++	writel(val, port->base + PCIE_AHB_TRANS_BASE0_H);
++
++	/* Set PCIe to AXI translation memory space.*/
++	val = fls(0xffffffff) | WIN_ENABLE;
++	writel(val, port->base + PCIE_AXI_WINDOW0);
++
++	return 0;
++}
++
+ static void __iomem *mtk_pcie_map_bus(struct pci_bus *bus,
+ 				      unsigned int devfn, int where)
+ {
 -- 
 2.6.4
