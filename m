@@ -1,84 +1,65 @@
-From: Auger Eric <eric.auger@redhat.com>
-Subject: Re: [PATCH v3 0/7] Add virtio-iommu driver
-Date: Tue, 16 Oct 2018 22:31:18 +0200
-Message-ID: <c7167c51-d864-08f5-c128-f4b3257840ce@redhat.com>
-References: <20181012145917.6840-1-jean-philippe.brucker@arm.com>
-	<7874471b-3711-ca44-d220-5e756ac7db8c@redhat.com>
-	<b2f929c3-b0df-acdc-c5e8-0d7ddf7ed964@arm.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 1/6] dt-bindings: ap806: add the cluster clock node in the syscon
+ file
+Date: Tue, 16 Oct 2018 13:56:09 -0700
+Message-ID: <153972336963.5275.5425208133793471350@swboyd.mtv.corp.google.com>
+References: <20180922181709.13007-1-gregory.clement@bootlin.com>
+ <20180922181709.13007-2-gregory.clement@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <virtualization-bounces@lists.linux-foundation.org>
-In-Reply-To: <b2f929c3-b0df-acdc-c5e8-0d7ddf7ed964@arm.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
-List-Post: <mailto:virtualization@lists.linux-foundation.org>
-List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
-Sender: virtualization-bounces@lists.linux-foundation.org
-Errors-To: virtualization-bounces@lists.linux-foundation.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "peter.maydell@linaro.org" <peter.maydell@linaro.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "tnowicki@caviumnetworks.com" <tnowicki@caviumnetworks.com>, "mst@redhat.com" <mst@redhat.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Robin Murphy <Robin.Murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180922181709.13007-2-gregory.clement@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, =?utf-8?q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmVhbiwKCk9uIDEwLzE2LzE4IDg6NDQgUE0sIEplYW4tUGhpbGlwcGUgQnJ1Y2tlciB3cm90
-ZToKPiBPbiAxNi8xMC8yMDE4IDEwOjI1LCBBdWdlciBFcmljIHdyb3RlOgo+PiBIaSBKZWFuLAo+
-Pgo+PiBPbiAxMC8xMi8xOCA0OjU5IFBNLCBKZWFuLVBoaWxpcHBlIEJydWNrZXIgd3JvdGU6Cj4+
-PiBJbXBsZW1lbnQgdGhlIHZpcnRpby1pb21tdSBkcml2ZXIsIGZvbGxvd2luZyBzcGVjaWZpY2F0
-aW9uIHYwLjggWzFdLgo+Pj4gQ2hhbmdlcyBzaW5jZSB2MiBbMl06Cj4+Pgo+Pj4gKiBQYXRjaGVz
-IDItNCBhbGxvdyB2aXJ0aW8taW9tbXUgdG8gdXNlIHRoZSBQQ0kgdHJhbnNwb3J0LCBzaW5jZSBR
-RU1VCj4+PiDCoMKgIHdvdWxkIGxpa2UgdG8gcGhhc2Ugb3V0IHRoZSBNTUlPIHRyYW5zcG9ydC4g
-VGhpcyBwcm9kdWNlcyBhIGNvbXBsZXgKPj4+IMKgwqAgdG9wb2xvZ3kgd2hlcmUgdGhlIHByb2dy
-YW1taW5nIGludGVyZmFjZSBvZiB0aGUgSU9NTVUgY291bGQgYXBwZWFyCj4+PiDCoMKgIGxvd2Vy
-IHRoYW4gdGhlIGVuZHBvaW50cyB0aGF0IGl0IHRyYW5zbGF0ZXMuIEl0J3Mgbm90IHVuaGVhcmQg
-b2YgKGUuZy4KPj4+IMKgwqAgQU1EIElPTU1VKSwgYW5kIHRoZSBndWVzdCBlYXNpbHkgY29wZXMg
-d2l0aCB0aGlzLgo+Pj4gwqDCoCAKPj4+IMKgwqAgVGhlICJGaXJtd2FyZSBkZXNjcmlwdGlvbiIg
-c2VjdGlvbiBvZiB0aGUgc3BlY2lmaWNhdGlvbiBoYXMgYmVlbgo+Pj4gwqDCoCB1cGRhdGVkIHdp
-dGggYWxsIGNvbWJpbmF0aW9ucyBvZiBQQ0ksIE1NSU8gYW5kIERULCBBQ1BJLgo+Pgo+PiBJIGhh
-dmUgYSBxdWVzdGlvbiB3cnQgdGhlIEZXIHNwZWNpZmljYXRpb24uIFRoZSBJT01NVSBjb25zdW1l
-cyAxIHNsb3QgaW4KPj4gdGhlIFBDSSBkb21haW4gYW5kIG9uZSBuZWVkcyB0byBsZWF2ZSBhIFJJ
-RCBob2xlIGluIHRoZSBpb21tdS1tYXAuwqAgSXQKPj4gaXMgbm90IG9idmlvdXMgdG8gbWUgdGhh
-dCB0aGlzIFJJRCBhbHdheXMgaXMgcHJlZGljdGFibGUgZ2l2ZW4gdGhlIHBjaWUKPj4gZW51bWVy
-YXRpb24gbWVjaGFuaXNtLiBHZW5lcmFsbHkgd2UgaGF2ZSBhIGNvYXJzZSBncmFpbiBtYXBwaW5n
-IG9mIFJJRAo+PiBvbnRvIGlvbW11IHBoYW5kbGVzL1NUUkVBTUlEcy4gSGVyZSwgaWYgSSB1bmRl
-cnN0YW5kIGNvcnJlY3RseSB3ZSBuZWVkCj4+IHRvIHByZWNpc2VseSBpZGVudGlmeSB0aGUgUklE
-IGdyYW50ZWQgdG8gdGhlIGlvbW11LiBPbiBRRU1VIHRoaXMgbWF5Cj4+IGRlcGVuZCBvbiB0aGUg
-aW5zdGFudGlhdGlvbiBvcmRlciBvZiB0aGUgdmlydGlvLXBjaSBkZXZpY2UgcmlnaHQ/Cj4gCj4g
-WWVzLCBhbHRob3VnaCBpdCBzaG91bGQgYWxsIGhhcHBlbiBiZWZvcmUgeW91IGJvb3QgdGhlIGd1
-ZXN0LCBzaW5jZQo+IHRoZXJlIGlzIG5vIGhvdHBsdWdnaW5nIGFuIElPTU1VLiBDb3VsZCB5b3Ug
-cmVzZXJ2ZSBhIFBDSSBzbG90IHVwZnJvbnQKPiBhbmQgdXNlIGl0IGZvciB2aXJ0aW8taW9tbXUg
-bGF0ZXI/IE9yIGdlbmVyYXRlIHRoZSBpb21tdS1tYXAgYXQgdGhlIHNhbWUKPiB0aW1lIGFzIGdl
-bmVyYXRpbmcgdGhlIGNoaWxkIG5vZGUgb2YgdGhlIFBDSSBSQz8KCkV2ZW4gd2hlbiBjb2xkLXBs
-dWdnaW5nIHRoZSBQQ0llIGRldmljZXMgdGhyb3VnaCBxZW11IENMSSwgdGhpcyBkZXBlbmRzCm9u
-IHRoZSBvcmRlciBvZiB0aGUgcGNpZSBkZXZpY2VzIGluIHRoZSBsaXN0IEkgZ3Vlc3MuIEkgbmVl
-ZCB0byBmdXJ0aGVyCmV4cGVyaW1lbnQuCj4gCj4+IFNvCj4+IHRoaXMgZG9lcyBub3QgbG9vayB0
-cml2aWFsIHRvIGJ1aWxkIHRoaXMgaW5mby4gSXNuJ3QgaXQgcG9zc2libGUgdG8gZG8KPj4gdGhp
-cyBleGNsdXNpb24gYXQga2VybmVsIGxldmVsIGluc3RlYWQ/Cj4gCj4gU28gaW4gdGhlb3J5IFZJ
-UlRJT19GX0lPTU1VX1BMQVRGT1JNIGFscmVhZHkgZG9lcyB0aGF0Ogo+IAo+IFZJUlRJT19GX0lP
-TU1VX1BMQVRGT1JNKDMzKQo+ICAgICBUaGlzIGZlYXR1cmUgaW5kaWNhdGVzIHRoYXQgdGhlIGRl
-dmljZSBpcyBiZWhpbmQgYW4gSU9NTVUgdGhhdAo+ICAgICB0cmFuc2xhdGVzIGJ1cyBhZGRyZXNz
-ZXMgZnJvbSB0aGUgZGV2aWNlIGludG8gcGh5c2ljYWwgYWRkcmVzc2VzIGluCj4gICAgIG1lbW9y
-eS4gSWYgdGhpcyBmZWF0dXJlIGJpdCBpcyBzZXQgdG8gMCwgdGhlbiB0aGUgZGV2aWNlIGVtaXRz
-Cj4gICAgIHBoeXNpY2FsIGFkZHJlc3NlcyB3aGljaCBhcmUgbm90IHRyYW5zbGF0ZWQgZnVydGhl
-ciwgZXZlbiB0aG91Z2ggYW4KPiAgICAgSU9NTVUgbWF5IGJlIHByZXNlbnQuCgpUaGlzIHRlbGxz
-IHRoZSBkcml2ZXIgdG8gdXNlIHRoZSBkbWEgYXBpLCByaWdodD8gRWZmZWN0aXZlbHkgdGhpcwpl
-eHBsaWNpdGx5IHNheXMgd2hldGhlciB0aGUgZGV2aWNlIGlzIHN1cHBvc2VkIHRvIGJlIHVwZnJv
-bnQgYW4gSU9NTVUuCj4gCj4gRm9yIGJldHRlciBvciBmb3Igd29yc2UsIHRoZSBndWVzdCBoYXMg
-dG8gaW1wbGVtZW50IGl0LiBJZiB0aGlzIGZlYXR1cmUKPiBiaXQgaXMgdW5zZXQgZm9yIHZpcnRp
-by1pb21tdSwgaXQgZG9lcyBETUEgb24gdGhlIHBoeXNpY2FsIGFkZHJlc3MKPiBzcGFjZSwgcmVn
-YXJkbGVzcyBvZiB3aGF0IHRoZSBzdGF0aWMgdG9wb2xvZ3kgZGVzY3JpcHRpb24gc2F5cy4KPiAK
-PiBJbiBwcmFjdGljZSBpdCBkb2Vzbid0IHF1aXRlIHdvcmsuIElmIHlvdXIgaW9tbXUtbWFwIGRl
-c2NyaWJlcyB0aGUgSU9NTVUKPiBhcyB0cmFuc2xhdGluZyBpdHNlbGYsIExpbnV4JyBPRiBjb2Rl
-IHdpbGwgd2FpdCBmb3IgdGhlIElPTU1VIHRvIGJlCj4gcHJvYmVkIGJlZm9yZSBwcm9iaW5nIHRo
-ZSBJT01NVS4gV29ya2luZyBhcm91bmQgdGhpcyB3aXRoIGhhY2tzIGlzCj4gcG9zc2libGUsIGJ1
-dCBJIGRvbid0IHdhbnQgdG8gaW50cm9kdWNlIG1vcmUgcXVlc3Rpb25hYmxlIGNvZGUgdG8gT0Yg
-YW5kCj4gZGV2aWNlIHRyZWUgYmluZGluZ3MgaWYgdGhlcmUgaXMgYW55IG90aGVyIHdheS4KSHVt
-IG9rLiBJIGNhbm5vdCByZWFsbHkgY29tbWVudCBvbiB0aGlzLgoKSSBqdXN0IHdhbnRlZCB0byBy
-YWlzZSB0aGlzIGNvbmNlcm4gYWJvdXQgUklEIGlkZW50ZmljYXRpb24uCgpUaGFua3MKCkVyaWMK
-PiAKPiBUaGFua3MsCj4gSmVhbgo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpWaXJ0dWFsaXphdGlvbiBtYWlsaW5nIGxpc3QKVmlydHVhbGl6YXRpb25A
-bGlzdHMubGludXgtZm91bmRhdGlvbi5vcmcKaHR0cHM6Ly9saXN0cy5saW51eGZvdW5kYXRpb24u
-b3JnL21haWxtYW4vbGlzdGluZm8vdmlydHVhbGl6YXRpb24=
+Quoting Gregory CLEMENT (2018-09-22 11:17:04)
+> Document the device tree binding for the cluster clock controllers found
+> in the Armada 7K/8K SoCs.
+> =
+
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> ---
+
+Please Cc relevant DT maintainers and lists when submitting binding patches.
+
+>  .../arm/marvell/ap806-system-controller.txt   | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> =
+
+> diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-c=
+ontroller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-=
+controller.txt
+> index 3fd21bb7cb37..8f281816a6b8 100644
+> --- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controll=
+er.txt
+> +++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controll=
+er.txt
+> @@ -136,3 +136,25 @@ ap_syscon1: system-controller@6f8000 {
+>                 #thermal-sensor-cells =3D <1>;
+>         };
+>  };
+> +
+> +Cluster clocks:
+> +---------------
+> +
+> +Device Tree Clock bindings for cluster clock of AP806 Marvell. Each
+> +cluster contain up to 2 CPUs running at the same frequency.
+> +
+> +Required properties:
+> +- compatible: must be  "marvell,ap806-cpu-clock";
+> +- #clock-cells : should be set to 1.
+> +- clocks : shall be the input parents clock phandle for the clock.
+> +
+> +ap_syscon1: system-controller@6f8000 {
+> +       compatible =3D "syscon", "simple-mfd";
+> +       reg =3D <0x6f8000 0x1000>;
+> +
+> +       cpu_clk: clock-cpu {
+> +               compatible =3D "marvell,ap806-cpu-clock";
+> +               clocks =3D <&ap_clk 0>, <&ap_clk 1>;
+> +               #clock-cells =3D <1>;
+> +       };
+> +};
