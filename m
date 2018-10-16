@@ -1,25 +1,53 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 3/7] arm64: dts: rockchip: add rk3399 SPI DMAs
-Date: Tue, 16 Oct 2018 14:32:34 +0200
-Message-ID: <2907390.NKaBHyzm1c@phil>
-References: <20181010090038.20834-1-kernel@esmil.dk> <20181010090038.20834-4-kernel@esmil.dk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/2 v2] drm/panel: Add DT bindings for Samsung S6D16D0
+Date: Tue, 16 Oct 2018 14:34:08 +0200
+Message-ID: <20181016123409.13275-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181010090038.20834-4-kernel@esmil.dk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Emil Renner Berthing <kernel@esmil.dk>
-Cc: linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Shunqian Zheng <zhengsq@rock-chips.com>, Nickey Yang <nickey.yang@rock-chips.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Randy Li <ayaka@soulik.info>, Chris Zhong <zyw@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 10. Oktober 2018, 11:00:34 CEST schrieb Emil Renner Berthing:
-> Add spi dma channels as specified by the rk3399 TRM.
-> 
-> Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-
-applied for 4.21 with Enric's test-tag
-
-
-Thanks
-Heiko
+VGhpcyBhZGRzIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5ncyBmb3IgdGhlIFNhbXN1bmcgUzZEMTZE
+MApwYW5lbC4gVGhpcyBpcyBhIGNvbW1hbmQgbW9kZSBvbmx5IHBhbmVsIHVzaW5nIERTSS4KCkNj
+OiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwpDYzogU2FtIFJhdm5ib3JnIDxzYW1AcmF2bmJv
+cmcub3JnPgpDYzogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KU2lnbmVkLW9m
+Zi1ieTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPgotLS0KQ2hhbmdl
+TG9nIHYxLT52MjoKLSBOb25lLCBpZiB5b3UncmUgT0sgd2l0aCBpdCBwbGVhc2UgQUNLIHNvIEkg
+Y2FuIHF1ZXVlCiAgdGhlIHBhdGNoLgotLS0KIC4uLi9kaXNwbGF5L3BhbmVsL3NhbXN1bmcsczZk
+MTZkMC50eHQgICAgICAgICB8IDMwICsrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2Vk
+LCAzMCBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmQxNmQwLnR4dAoKZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Nh
+bXN1bmcsczZkMTZkMC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9wYW5lbC9zYW1zdW5nLHM2ZDE2ZDAudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4
+IDAwMDAwMDAwMDAwMC4uYjk0ZTM2NmY0NTFiCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmQxNmQwLnR4
+dApAQCAtMCwwICsxLDMwIEBACitTYW1zdW5nIFM2RDE2RDAgNCIgODY0eDQ4MCBBTU9MRUQgcGFu
+ZWwKKworUmVxdWlyZWQgcHJvcGVydGllczoKKyAgLSBjb21wYXRpYmxlOiBzaG91bGQgYmU6Cisg
+ICAgInNhbXN1bmcsczZkMTZkMCIsCisgIC0gcmVnOiB0aGUgdmlydHVhbCBjaGFubmVsIG51bWJl
+ciBvZiBhIERTSSBwZXJpcGhlcmFsCisgIC0gdmRkMS1zdXBwbHk6IEkvTyB2b2x0YWdlIHN1cHBs
+eQorICAtIHJlc2V0LWdwaW9zOiBhIEdQSU8gc3BlYyBmb3IgdGhlIHJlc2V0IHBpbiAoYWN0aXZl
+IGxvdykKKworVGhlIGRldmljZSBub2RlIGNhbiBjb250YWluIG9uZSAncG9ydCcgY2hpbGQgbm9k
+ZSB3aXRoIG9uZSBjaGlsZAorJ2VuZHBvaW50JyBub2RlLCBhY2NvcmRpbmcgdG8gdGhlIGJpbmRp
+bmdzIGRlZmluZWQgaW4KK21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0LiBUaGlzIG5vZGUgc2hv
+dWxkIGRlc2NyaWJlIHBhbmVsJ3MgdmlkZW8gYnVzLgorCitFeGFtcGxlOgorJmRzaSB7CisJLi4u
+CisKKwlwYW5lbEAwIHsKKwkJY29tcGF0aWJsZSA9ICJzYW1zdW5nLHM2ZDE2ZDAiOworCQlyZWcg
+PSA8MD47CisJCXZkZDEtc3VwcGx5ID0gPCZmb28+OworCQlyZXNldC1ncGlvcyA9IDwmZm9vX2dw
+aW8gMCBHUElPX0FDVElWRV9MT1c+OworCisJCXBvcnQgeworCQkJcGFuZWxfaW46IGVuZHBvaW50
+IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaV9vdXQ+OworCQkJfTsKKwkJfTsKKwl9Owor
+fTsKLS0gCjIuMTcuMgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
