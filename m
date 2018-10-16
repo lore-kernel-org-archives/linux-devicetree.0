@@ -1,140 +1,40 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.18 113/135] MIPS: Fix CONFIG_CMDLINE handling
-Date: Tue, 16 Oct 2018 19:05:43 +0200
-Message-ID: <20181016170523.124003229@linuxfoundation.org>
-References: <20181016170515.447235311@linuxfoundation.org>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH v3 2/4] crypto: mxs-dcp - Add support for dcp clk
+Date: Tue, 16 Oct 2018 17:23:11 +0000
+Message-ID: <f88233e6a76e99f95f6611bccdf234681e84f7ce.camel@nxp.com>
+References: <cover.1539705285.git.leonard.crestez@nxp.com>
+         <dcbcaf888bbd0a35dcf34228df2d9eb4fd762ea7.1539705286.git.leonard.crestez@nxp.com>
+         <CAOMZO5Ck846zd_Xo=9sVK0EAxNLsUsWiC59H2Ms6x8xoD8iwWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181016170515.447235311@linuxfoundation.org>
+In-Reply-To: <CAOMZO5Ck846zd_Xo=9sVK0EAxNLsUsWiC59H2Ms6x8xoD8iwWw@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <55D657036B547E4D91B7FD5CB5FEA6B4@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>, Frank Rowand <frowand.list@gmail.com>, Jaedon Shin <jaedon.shin@gmail.com>, Mathieu Malaterre <malat@debian.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-mips@linux-mips.org
+To: "festevam@gmail.com" <festevam@gmail.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Aymen Sghaier <aymen.sghaier@nxp.com>, Franck Lenormand <franck.lenormand@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "davem@davemloft.net" <davem@davemloft.net>, Horia Geanta <horia.geanta@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>"linux-crypto@vger.kernel.org" <l>
 List-Id: devicetree@vger.kernel.org
 
-4.18-stable review patch.  If anyone has any objections, please let me know.
-
-------------------
-
-From: Paul Burton <paul.burton@mips.com>
-
-commit 951d223c6c16ed5d2a71a4d1f13c1e65d6882156 upstream.
-
-Commit 8ce355cf2e38 ("MIPS: Setup boot_command_line before
-plat_mem_setup") fixed a problem for systems which have
-CONFIG_CMDLINE_BOOL=y & use a DT with a chosen node that has either no
-bootargs property or an empty one. In this configuration
-early_init_dt_scan_chosen() copies CONFIG_CMDLINE into
-boot_command_line, but the MIPS code doesn't know this so it appends
-CONFIG_CMDLINE (via builtin_cmdline) to boot_command_line again. The
-result is that boot_command_line contains the arguments from
-CONFIG_CMDLINE twice.
-
-That commit took the approach of simply setting up boot_command_line
-from the MIPS code before early_init_dt_scan_chosen() runs, causing it
-not to copy CONFIG_CMDLINE to boot_command_line if a chosen node with no
-bootargs property is found.
-
-Unfortunately this is problematic for systems which do have a non-empty
-bootargs property & CONFIG_CMDLINE_BOOL=y. There
-early_init_dt_scan_chosen() will overwrite boot_command_line with the
-arguments from DT, which means we lose those from CONFIG_CMDLINE
-entirely. This breaks CONFIG_MIPS_CMDLINE_DTB_EXTEND. If we have
-CONFIG_MIPS_CMDLINE_FROM_BOOTLOADER or
-CONFIG_MIPS_CMDLINE_BUILTIN_EXTEND selected and the DT has a bootargs
-property which we should ignore, it will instead be honoured breaking
-those configurations too.
-
-Fix this by reverting commit 8ce355cf2e38 ("MIPS: Setup
-boot_command_line before plat_mem_setup") to restore the former
-behaviour, and fixing the CONFIG_CMDLINE duplication issue by
-initializing boot_command_line to a non-empty string that
-early_init_dt_scan_chosen() will not overwrite with CONFIG_CMDLINE.
-
-This is a little ugly, but cleanup in this area is on its way. In the
-meantime this is at least easy to backport & contains the ugliness
-within arch/mips/.
-
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Fixes: 8ce355cf2e38 ("MIPS: Setup boot_command_line before plat_mem_setup")
-References: https://patchwork.linux-mips.org/patch/18804/
-Patchwork: https://patchwork.linux-mips.org/patch/20813/
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Jaedon Shin <jaedon.shin@gmail.com>
-Cc: Mathieu Malaterre <malat@debian.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mips@linux-mips.org
-Cc: stable@vger.kernel.org # v4.16+
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/mips/kernel/setup.c |   48 +++++++++++++++++++++++++++--------------------
- 1 file changed, 28 insertions(+), 20 deletions(-)
-
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -835,6 +835,34 @@ static void __init arch_mem_init(char **
- 	struct memblock_region *reg;
- 	extern void plat_mem_setup(void);
- 
-+	/*
-+	 * Initialize boot_command_line to an innocuous but non-empty string in
-+	 * order to prevent early_init_dt_scan_chosen() from copying
-+	 * CONFIG_CMDLINE into it without our knowledge. We handle
-+	 * CONFIG_CMDLINE ourselves below & don't want to duplicate its
-+	 * content because repeating arguments can be problematic.
-+	 */
-+	strlcpy(boot_command_line, " ", COMMAND_LINE_SIZE);
-+
-+	/* call board setup routine */
-+	plat_mem_setup();
-+
-+	/*
-+	 * Make sure all kernel memory is in the maps.  The "UP" and
-+	 * "DOWN" are opposite for initdata since if it crosses over
-+	 * into another memory section you don't want that to be
-+	 * freed when the initdata is freed.
-+	 */
-+	arch_mem_addpart(PFN_DOWN(__pa_symbol(&_text)) << PAGE_SHIFT,
-+			 PFN_UP(__pa_symbol(&_edata)) << PAGE_SHIFT,
-+			 BOOT_MEM_RAM);
-+	arch_mem_addpart(PFN_UP(__pa_symbol(&__init_begin)) << PAGE_SHIFT,
-+			 PFN_DOWN(__pa_symbol(&__init_end)) << PAGE_SHIFT,
-+			 BOOT_MEM_INIT_RAM);
-+
-+	pr_info("Determined physical RAM map:\n");
-+	print_memory_map();
-+
- #if defined(CONFIG_CMDLINE_BOOL) && defined(CONFIG_CMDLINE_OVERRIDE)
- 	strlcpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
- #else
-@@ -862,26 +890,6 @@ static void __init arch_mem_init(char **
- 	}
- #endif
- #endif
--
--	/* call board setup routine */
--	plat_mem_setup();
--
--	/*
--	 * Make sure all kernel memory is in the maps.  The "UP" and
--	 * "DOWN" are opposite for initdata since if it crosses over
--	 * into another memory section you don't want that to be
--	 * freed when the initdata is freed.
--	 */
--	arch_mem_addpart(PFN_DOWN(__pa_symbol(&_text)) << PAGE_SHIFT,
--			 PFN_UP(__pa_symbol(&_edata)) << PAGE_SHIFT,
--			 BOOT_MEM_RAM);
--	arch_mem_addpart(PFN_UP(__pa_symbol(&__init_begin)) << PAGE_SHIFT,
--			 PFN_DOWN(__pa_symbol(&__init_end)) << PAGE_SHIFT,
--			 BOOT_MEM_INIT_RAM);
--
--	pr_info("Determined physical RAM map:\n");
--	print_memory_map();
--
- 	strlcpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
- 
- 	*cmdline_p = command_line;
+T24gVHVlLCAyMDE4LTEwLTE2IGF0IDEzOjAzIC0wMzAwLCBGYWJpbyBFc3RldmFtIHdyb3RlOg0K
+PiA+ICsgICAgICAgLyogRENQIGNsb2NrIGlzIG9wdGlvbmFsLCBvbmx5IHVzZWQgb24gc29tZSBT
+T0NzICovDQo+ID4gKyAgICAgICBzZGNwLT5kY3BfY2xrID0gZGV2bV9jbGtfZ2V0KGRldiwgImRj
+cCIpOw0KPiA+ICsgICAgICAgaWYgKElTX0VSUihzZGNwLT5kY3BfY2xrKSkgew0KPiA+ICsgICAg
+ICAgICAgICAgICBpZiAoc2RjcC0+ZGNwX2NsayAhPSBFUlJfUFRSKC1FTk9FTlQpKQ0KPiA+ICsg
+ICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBQVFJfRVJSKHNkY3AtPmRjcF9jbGspOw0KPiA+
+ICsgICAgICAgICAgICAgICBzZGNwLT5kY3BfY2xrID0gTlVMTDsNCj4gDQo+IFRoaXMgZGNwX2Ns
+ayBhc3NpZ25tZW50IHRvIE5VTEwgZG9lcyBub3Qgc2VlbSB0byBiZSBuZWNlc3NhcnkuDQoNClRo
+ZSBjbGsgQVBJIGlnbm9yZXMgYWxsIGNhbGxzIGlmIGNsayA9PSBOVUxMICh3aGljaCBpcyB2ZXJ5
+IG5pY2UpIGJ1dA0Kbm90IGlmIElTX0VSUihjbGspLiBTZXR0aW5nIGRjcF9jbGsgdG8gTlVMTCBh
+dm9pZHMgc3ByaW5rbGluZyBvdGhlcg0KY2hlY2tzLg0KDQo+ID4gKyAgICAgICByZXQgPSBjbGtf
+cHJlcGFyZV9lbmFibGUoc2RjcC0+ZGNwX2Nsayk7DQo+ID4gKyAgICAgICBpZiAocmV0KQ0KPiA+
+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+IA0KPiA+ICAgICAgICAgcmV0ID0gZGV2
+bV9yZXF1ZXN0X2lycShkZXYsIGRjcF92bWlfaXJxLCBteHNfZGNwX2lycSwgMCwNCj4gPiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgImRjcC12bWktaXJxIiwgc2RjcCk7DQo+ID4gICAg
+ICAgICBpZiAocmV0KSB7DQo+ID4gICAgICAgICAgICAgICAgIGRldl9lcnIoZGV2LCAiRmFpbGVk
+IHRvIGNsYWltIERDUCBWTUkgSVJRIVxuIik7DQo+IA0KPiBJbiBjYXNlIG9mIHN1YnNlcXVlbnQg
+ZXJyb3JzIHlvdSBzaG91bGQgY2FsbA0KPiBjbGtfZGlzYWJsZV91bnByZXBhcmUoc2RjcC0+ZGNw
+X2NsaykuDQoNClllcywgd2lsbCByZXNlbmQuIE1heWJlIHNvbWUgZGF5IGNsayBjb25zdW1lciB3
+aWxsIGF1dG9tYXRpY2FsbHkgdW5kbw0KcGVuZGluZyBwcmVwYXJlL2VuYWJsZXMgb24gcmVsZWFz
+ZT8NCg==
