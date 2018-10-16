@@ -1,74 +1,105 @@
-From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v9 1/9] PCI: mediatek: Using slot's devfn for compare to fix mtk_pcie_find_port logic
-Date: Tue, 16 Oct 2018 18:44:42 +0800
-Message-ID: <1539686690-24068-2-git-send-email-honghui.zhang@mediatek.com>
-References: <1539686690-24068-1-git-send-email-honghui.zhang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Marcel Ziswiler <marcel@ziswiler.com>
+Subject: [PATCH v2 2/9] ARM: tegra: apalis-tk1/colibri_t20/t30: eval/iris: fix regulator gpio enable
+Date: Tue, 16 Oct 2018 12:47:23 +0200
+Message-ID: <20181016104730.4598-3-marcel@ziswiler.com>
+References: <20181016104730.4598-1-marcel@ziswiler.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539686690-24068-1-git-send-email-honghui.zhang@mediatek.com>
+In-Reply-To: <20181016104730.4598-1-marcel@ziswiler.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com
-Cc: ulf.hansson@linaro.org, marc.zyngier@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, honghui.zhang@mediatek.com, youlin.pei@mediatek.com, yt.shen@mediatek.com, jianjun.wang@mediatek.com
+To: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, Mark Brown <broonie@kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Honghui Zhang <honghui.zhang@mediatek.com>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-The Mediatek's host controller has two slots, each with it's own control
-registers. The host driver need to identify which slot was connected
-in order to access the device's configuration space. There's problem
-for current host driver to find out which slot was connected to for
-a given EP device.
+Anything other than the default active-low would require the separate
+property enable-active-high to be set. This gets rid of the following
+warning during boot:
 
-Assuming each slot have connect with one EP device as below:
+ regulator-usbh-vbus GPIO handle specifies active low - ignored
 
-                host bridge
-  bus 0 --> __________|_______
-           |                  |
-           |                  |
-         slot 0             slot 1
-  bus 1 -->|        bus 2 --> |
-           |                  |
-         EP 0               EP 1
+resp.:
 
-During PCI enumeration, system software will scan all the PCI device
-starting from devfn 0. So it will get the proper port for slot0 and
-slot1 device when using PCI_SLOT(devfn) for match. But it will get
-the wrong slot for EP1: The devfn will be start from 0 when scanning
-EP1 behind slot1, it will get port0 since the PCI_SLOT(EP1) is match
-for port0's slot value. So the host driver should not using EP's devfn
-but the slot's devfn(the slot which EP was connected to) for match.
+ regulator-1v05-avdd-hdmi-pll GPIO handle specifies active low - ignored
 
-This patch fix the mtk_pcie_find_port's logic by using the slot's
-devfn for match if finding device connected to the subordinate bus.
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-Acked-by: Ryder Lee <ryder.lee@mediatek.com>
 ---
- drivers/pci/controller/pcie-mediatek.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 9999dae..288b8e2 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -337,6 +337,17 @@ static struct mtk_pcie_port *mtk_pcie_find_port(struct pci_bus *bus,
- {
- 	struct mtk_pcie *pcie = bus->sysdata;
- 	struct mtk_pcie_port *port;
-+	struct pci_dev *dev = NULL;
-+
-+	/*
-+	 * Walk the bus hierarchy to get the devfn value
-+	 * of the port in the root bus.
-+	 */
-+	while (bus && bus->number) {
-+		dev = bus->self;
-+		bus = dev->bus;
-+		devfn = dev->devfn;
-+	}
+Changes in v2: None
+Changes in v1: None
+
+ arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi   | 2 +-
+ arch/arm/boot/dts/tegra124-apalis.dtsi        | 2 +-
+ arch/arm/boot/dts/tegra20-colibri-eval-v3.dts | 2 +-
+ arch/arm/boot/dts/tegra20-colibri-iris.dts    | 2 +-
+ arch/arm/boot/dts/tegra30-colibri-eval-v3.dts | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi b/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
+index 367eb8c86098..73a8e117a9b9 100644
+--- a/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
++++ b/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
+@@ -1948,7 +1948,7 @@
+ 		regulator-name = "+V1.05_AVDD_HDMI_PLL";
+ 		regulator-min-microvolt = <1050000>;
+ 		regulator-max-microvolt = <1050000>;
+-		gpio = <&gpio TEGRA_GPIO(H, 7) GPIO_ACTIVE_LOW>;
++		gpio = <&gpio TEGRA_GPIO(H, 7) GPIO_ACTIVE_HIGH>;
+ 		vin-supply = <&reg_1v05_vdd>;
+ 	};
  
- 	list_for_each_entry(port, &pcie->ports, list)
- 		if (port->slot == PCI_SLOT(devfn))
+diff --git a/arch/arm/boot/dts/tegra124-apalis.dtsi b/arch/arm/boot/dts/tegra124-apalis.dtsi
+index 13c93cd507d8..3e3b347afe56 100644
+--- a/arch/arm/boot/dts/tegra124-apalis.dtsi
++++ b/arch/arm/boot/dts/tegra124-apalis.dtsi
+@@ -1978,7 +1978,7 @@
+ 		regulator-name = "+V1.05_AVDD_HDMI_PLL";
+ 		regulator-min-microvolt = <1050000>;
+ 		regulator-max-microvolt = <1050000>;
+-		gpio = <&gpio TEGRA_GPIO(H, 7) GPIO_ACTIVE_LOW>;
++		gpio = <&gpio TEGRA_GPIO(H, 7) GPIO_ACTIVE_HIGH>;
+ 		vin-supply = <&reg_1v05_vdd>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/tegra20-colibri-eval-v3.dts b/arch/arm/boot/dts/tegra20-colibri-eval-v3.dts
+index 37ad508b61d9..f1a85d930e61 100644
+--- a/arch/arm/boot/dts/tegra20-colibri-eval-v3.dts
++++ b/arch/arm/boot/dts/tegra20-colibri-eval-v3.dts
+@@ -256,7 +256,7 @@
+ 		regulator-name = "VCC_USB[1-4]";
+ 		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
+-		gpio = <&gpio TEGRA_GPIO(W, 2) GPIO_ACTIVE_LOW>;
++		gpio = <&gpio TEGRA_GPIO(W, 2) GPIO_ACTIVE_HIGH>;
+ 		vin-supply = <&reg_5v0>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/tegra20-colibri-iris.dts b/arch/arm/boot/dts/tegra20-colibri-iris.dts
+index af4740847769..e1e5ec5253fd 100644
+--- a/arch/arm/boot/dts/tegra20-colibri-iris.dts
++++ b/arch/arm/boot/dts/tegra20-colibri-iris.dts
+@@ -238,7 +238,7 @@
+ 		regulator-name = "VCC_USB1";
+ 		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
+-		gpio = <&gpio TEGRA_GPIO(W, 2) GPIO_ACTIVE_LOW>;
++		gpio = <&gpio TEGRA_GPIO(W, 2) GPIO_ACTIVE_HIGH>;
+ 		vin-supply = <&reg_5v0>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts b/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
+index 8e106e784dce..7e6bf4cdf322 100644
+--- a/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
++++ b/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
+@@ -192,7 +192,7 @@
+ 		regulator-name = "VCC_USB[1-4]";
+ 		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
+-		gpio = <&gpio TEGRA_GPIO(W, 2) GPIO_ACTIVE_LOW>;
++		gpio = <&gpio TEGRA_GPIO(W, 2) GPIO_ACTIVE_HIGH>;
+ 		vin-supply = <&reg_5v0>;
+ 	};
+ };
 -- 
-2.6.4
+2.14.4
