@@ -1,396 +1,213 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 2/2] irqchip: add driver for imx-irqsteer controller
-Date: Tue, 16 Oct 2018 18:38:54 +0100
-Message-ID: <d3aa8a2e-7b98-2f7c-ffa6-dbbc4d336752@arm.com>
-References: <20181016164218.3736-1-l.stach@pengutronix.de>
- <20181016164218.3736-2-l.stach@pengutronix.de>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 2/7] Input: sx8654 - add reset-gpio support
+Date: Tue, 16 Oct 2018 10:39:31 -0700
+Message-ID: <20181016173931.GC230131@dtor-ws>
+References: <20181016091653.26896-1-richard.leitner@skidata.com>
+ <20181016091653.26896-3-richard.leitner@skidata.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181016164218.3736-2-l.stach@pengutronix.de>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <20181016091653.26896-3-richard.leitner@skidata.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, patchwork-lst@pengutronix.de
+To: Richard Leitner <richard.leitner@skidata.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lucas,
+Hi Richard,
 
-On 16/10/18 17:42, Lucas Stach wrote:
-> The irqsteer block is a interrupt multiplexer/remapper found on the
-> i.MX8 line of SoCs.
+On Tue, Oct 16, 2018 at 11:16:48AM +0200, Richard Leitner wrote:
+> The sx8654 features a NRST input which may be connected to a GPIO.
+> Therefore add support for hard-resetting the sx8654 via this NRST.
 > 
-> Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> ---
-> This submission is a heavily cleaned up version of the downstream driver.
-> ---
->  drivers/irqchip/Kconfig            |   8 +
->  drivers/irqchip/Makefile           |   1 +
->  drivers/irqchip/irq-imx-irqsteer.c | 281 +++++++++++++++++++++++++++++
->  3 files changed, 290 insertions(+)
->  create mode 100644 drivers/irqchip/irq-imx-irqsteer.c
+> If the reset-gpio property is provided the sx8654 is resetted via NRST
+> instead of the soft-reset via I2C.
 > 
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index 383e7b70221d..07290b30abd2 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -371,6 +371,14 @@ config QCOM_PDC
->  	  Power Domain Controller driver to manage and configure wakeup
->  	  IRQs for Qualcomm Technologies Inc (QTI) mobile chips.
+> Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
+> ---
+>  drivers/input/touchscreen/sx8654.c | 88 ++++++++++++++++++++++++++++++++------
+>  1 file changed, 74 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/sx8654.c b/drivers/input/touchscreen/sx8654.c
+> index ed29db3ec731..059127490c8d 100644
+> --- a/drivers/input/touchscreen/sx8654.c
+> +++ b/drivers/input/touchscreen/sx8654.c
+> @@ -33,6 +33,8 @@
+>  #include <linux/i2c.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/irq.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/delay.h>
 >  
-> +config IMX_IRQSTEER
-> +	bool "i.MX IRQSTEER support"
-> +	depends on ARCH_MXC || COMPILE_TEST
-> +	default ARCH_MXC
-> +	select IRQ_DOMAIN
-> +	help
-> +	  Support for the i.MX IRQSTEER interrupt multiplexer/remapper.
-> +
->  endmenu
+>  /* register addresses */
+>  #define I2C_REG_TOUCH0			0x00
+> @@ -74,6 +76,7 @@
+>  struct sx8654 {
+>  	struct input_dev *input;
+>  	struct i2c_client *client;
+> +	struct gpio_desc *gpio_reset;
+>  };
 >  
->  config SIFIVE_PLIC
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index fbd1ec8070ef..2c77ba4cc3cc 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -88,3 +88,4 @@ obj-$(CONFIG_GOLDFISH_PIC) 		+= irq-goldfish-pic.o
->  obj-$(CONFIG_NDS32)			+= irq-ativic32.o
->  obj-$(CONFIG_QCOM_PDC)			+= qcom-pdc.o
->  obj-$(CONFIG_SIFIVE_PLIC)		+= irq-sifive-plic.o
-> +obj-$(CONFIG_IMX_IRQSTEER)		+= irq-imx-irqsteer.o
-> diff --git a/drivers/irqchip/irq-imx-irqsteer.c b/drivers/irqchip/irq-imx-irqsteer.c
-> new file mode 100644
-> index 000000000000..3ff0698ea7bd
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-imx-irqsteer.c
-> @@ -0,0 +1,281 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright 2017 NXP
-> + * Copyright (C) 2018 Pengutronix, Lucas Stach <kernel@pengutronix.de>
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/clk.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqchip/chained_irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/spinlock.h>
-> +
-> +#define CHANREG_OFF(_t)	(_t * 4)
-> +#define CHANCTRL		0x0
-> +#define CHANMASK(n, t)		(0x4 + (0x4 * (n)) + (CHANREG_OFF(t) * 0))
-> +#define CHANSET(n, t)		(0x4 + (0x4 * (n)) + (CHANREG_OFF(t) * 1))
-> +#define CHANSTATUS(n, t)	(0x4 + (0x4 * (n)) + (CHANREG_OFF(t) * 2))
-> +#define CHAN_MINTDIS(t)		(0x4 + (CHANREG_OFF(t) * 3))
-> +#define CHAN_MASTRSTAT(t)	(0x8 + (CHANREG_OFF(t) * 3))
-> +
-> +struct irqsteer_irqchip_data {
-> +	spinlock_t lock;
-
-raw_spinlock_t, please.
-
-> +	struct platform_device *pdev;
-> +	void __iomem *regs;
-> +	struct clk *ipg_clk;
-> +	int irq;
-> +	int channum;
-> +	int big_endian;
-
-bool?
-
-> +	struct irq_domain *domain;
-> +	int *saved_reg;
-> +};
-> +
-> +static int imx_irqsteer_get_reg_index(struct irqsteer_irqchip_data *data,
-> +				      unsigned long irqnum)
+>  static irqreturn_t sx8654_irq(int irq, void *handle)
+> @@ -124,6 +127,27 @@ static irqreturn_t sx8654_irq(int irq, void *handle)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static int sx8654_reset(struct sx8654 *ts)
 > +{
-> +	if (data->big_endian)
-> +		return (data->channum - irqnum / 32 - 1);
-> +	else
-> +		return irqnum / 32;
-> +}
+> +	int err;
 > +
-> +static void imx_irqsteer_irq_unmask(struct irq_data *d)
-> +{
-> +	struct irqsteer_irqchip_data *data = d->chip_data;
-> +	int idx = imx_irqsteer_get_reg_index(data, d->hwirq);
-> +	u32 val;
+> +	if (ts->gpio_reset) {
+> +		gpiod_set_value_cansleep(ts->gpio_reset, 1);
+> +		udelay(2); /* Tpulse > 1µs */
+> +		gpiod_set_value_cansleep(ts->gpio_reset, 0);
 > +
-> +	spin_lock(&data->lock);
-> +	val = readl_relaxed(data->regs + CHANMASK(idx, data->channum));
-> +	val |= 1 << (d->hwirq % 32);
-> +	writel_relaxed(val, data->regs + CHANMASK(idx, data->channum));
-> +	spin_unlock(&data->lock);
-
-If you take an interrupt within this sequence (because a driver is
-calling enable_irq/disable_irq, for example), and that you try to mask
-or unmask (which your flow handler will do), you're in for a nice
-deadlock. Consider using the irqsave/irqrestore variants.
-
-> +}
-> +
-> +static void imx_irqsteer_irq_mask(struct irq_data *d)
-> +{
-> +	struct irqsteer_irqchip_data *data = d->chip_data;
-> +	int idx = imx_irqsteer_get_reg_index(data, d->hwirq);
-> +	u32 val;
-> +
-> +	spin_lock(&data->lock);
-> +	val = readl_relaxed(data->regs + CHANMASK(idx, data->channum));
-> +	val &= ~(1 << (d->hwirq % 32));
-> +	writel_relaxed(val, data->regs + CHANMASK(idx, data->channum));
-> +	spin_unlock(&data->lock);
-> +}
-> +
-> +static int imx_irqsteer_set_type(struct irq_data *data, unsigned int flow_type)
-> +{
-> +	if ((flow_type & IRQ_TYPE_SENSE_MASK) == IRQ_TYPE_LEVEL_HIGH)
 > +		return 0;
+> +	}
 > +
-> +	return -EINVAL;
-> +}
-> +
-> +static struct irq_chip imx_irqsteer_irq_chip = {
-> +	.name		= "irqsteer",
-> +	.irq_eoi	= irq_chip_eoi_parent,
+> +	dev_dbg(&ts->client->dev, "NRST unavailable, try softreset\n");
+> +	err = i2c_smbus_write_byte_data(ts->client, I2C_REG_SOFTRESET,
+> +					SOFTRESET_VALUE);
+> +	if (err)
+> +		return err;
 
-What does it mean to call into the parent while this is a chained
-interrupt controller which, by definition, doesn't have any parent?
+Have this in an "else" branch?
 
-> +	.irq_mask	= imx_irqsteer_irq_mask,
-> +	.irq_unmask	= imx_irqsteer_irq_unmask,
-> +	.irq_set_type	= imx_irqsteer_set_type,
-> +};
-> +
-> +static int imx_irqsteer_irq_map(struct irq_domain *h, unsigned int irq,
-> +				irq_hw_number_t hwirq)
-> +{
-> +	irq_set_chip_data(irq, h->host_data);
-> +	irq_set_chip_and_handler(irq, &imx_irqsteer_irq_chip, handle_level_irq);
 > +
 > +	return 0;
 > +}
 > +
-> +static const struct irq_domain_ops imx_irqsteer_domain_ops = {
-> +	.map		= imx_irqsteer_irq_map,
-> +	.xlate		= irq_domain_xlate_twocell,
-> +};
-> +
-> +static void imx_irqsteer_irq_handler(struct irq_desc *desc)
+>  static int sx8654_open(struct input_dev *dev)
+>  {
+>  	struct sx8654 *sx8654 = input_get_drvdata(dev);
+> @@ -171,6 +195,44 @@ static void sx8654_close(struct input_dev *dev)
+>  	}
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +static int sx8654_get_ofdata(struct sx8654 *ts)
 > +{
-> +	struct irqsteer_irqchip_data *data = irq_desc_get_handler_data(desc);
-> +	u32 val;
-> +	int i;
+> +	struct device *dev = &ts->client->dev;
+> +	struct device_node *node = dev->of_node;
+> +	int err;
 > +
-> +	chained_irq_enter(irq_desc_get_chip(desc), desc);
-> +
-> +	val = readl_relaxed(data->regs + CHAN_MASTRSTAT(data->channum));
-> +	if (!val)
-> +		goto out;
-> +
-> +	for (i = 0; i < data->channum; i++) {
-> +		int idx = data->big_endian ? (data->channum - i - 1) : i;
-
-How about reusing your imx_irqsteer_get_reg_index helper here?
-
-Also what is the use of val? Shouldn't you only read the status register
-for channels that have interrupts pending (assuming I understand how
-this thing works)?
-
-> +		unsigned long irqmap;
-> +		int pos, virq;
-> +
-> +		irqmap = readl_relaxed(data->regs +
-> +				       CHANSTATUS(idx, data->channum));
-> +
-> +		for_each_set_bit(pos, &irqmap, 32) {
-> +			virq = irq_find_mapping(data->domain, pos);
-> +			if (virq)
-> +				generic_handle_irq(virq);
-> +		}
+> +	if (!node) {
+> +		ts->gpio_reset = NULL;
+> +		return 0;
 > +	}
-> +
-> +out:
-> +	chained_irq_exit(irq_desc_get_chip(desc), desc);
 
-I guess you can have a local variable caching this irq_desc_get_chip().
+There is no need to wrap this into CONFIG_OF or test "node". Just use
+devm_gpiod_get_optional() and it will work equally well on DT, ACPI, and
+static board systems.
 
-> +}
 > +
-> +static int imx_irqsteer_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct irqsteer_irqchip_data *data;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	data->regs = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(data->regs)) {
-> +		dev_err(&pdev->dev, "failed to initialize reg\n");
-> +		return PTR_ERR(data->regs);
+> +	ts->gpio_reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
+> +	if (PTR_ERR(ts->gpio_reset) == -EPROBE_DEFER) {
+> +		return -EPROBE_DEFER;
+> +	} else if (IS_ERR(ts->gpio_reset)) {
+> +		err = PTR_ERR(ts->gpio_reset);
+
+I'd do:
+
+		if (err != -EPROBE_DEFER)
+			dev_err(...)
+
+here instead of separate branch.
+
+> +		dev_err(dev, "unable to request GPIO reset pin (%d)\n", err);
+> +		return err;
 > +	}
-> +
-> +	data->irq = platform_get_irq(pdev, 0);
-> +	if (data->irq <= 0) {
-> +		dev_err(&pdev->dev, "failed to get irq\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	data->ipg_clk = devm_clk_get(&pdev->dev, "ipg");
-> +	if (IS_ERR(data->ipg_clk)) {
-> +		ret = PTR_ERR(data->ipg_clk);
-> +		dev_err(&pdev->dev, "failed to get ipg clk: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	/* default to 1 channel and little endian */
-> +	data->channum = 1;
-> +	data->big_endian  = 0;
+> +	dev_dbg(dev, "got GPIO reset pin\n");
 
-s/0/false/
+Also, I'd move all this code directly into probe() since all this
+#ifdefery is not needed.
 
-> +	data->pdev = pdev;
-> +	spin_lock_init(&data->lock);
-> +
-> +	of_property_read_u32(np, "fsl,channel", &data->channum);
-> +	of_property_read_u32(np, "fsl,endian", &data->big_endian);
-
-If you're reading a u32, please use the same type in the data structure.
-
-> +
-> +	if (IS_ENABLED(CONFIG_PM_SLEEP)) {
-> +		data->saved_reg = devm_kzalloc(&pdev->dev,
-> +					       sizeof(u32) * data->channum + 1,
-> +					       GFP_KERNEL);
-
-Use the appropriate type for saved_reg.
-
-> +		if (!data->saved_reg)
-> +			return -ENOMEM;
-> +	}
-> +
-> +	ret = clk_prepare_enable(data->ipg_clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to enable ipg clk: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	/* enable channel 1 by default */
-> +	writel_relaxed(1, data->regs + CHANCTRL);
-
-Is that channel 1? or channel 0? Also, who enables the other channels? I
-have the feeling that this driver is unable to service more than the
-first 32 interrupts... But again, I'm guessing how the HW works here.
-
-> +
-> +	data->domain = irq_domain_add_linear(np, data->channum * 32,
-> +					     &imx_irqsteer_domain_ops, data);
-> +	if (!data->domain) {
-> +		dev_err(&data->pdev->dev, "failed to create IRQ domain\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	irq_set_chained_handler_and_data(data->irq, imx_irqsteer_irq_handler,
-> +					 data);
-> +
-> +	platform_set_drvdata(pdev, data);
 > +
 > +	return 0;
 > +}
 > +
-> +static int imx_irqsteer_remove(struct platform_device *pdev)
+> +static const struct of_device_id sx8654_of_match[] = {
+> +	{ .compatible = "semtech,sx8654", },
+> +	{ },
+> +};
+
+Please keep the device table wehere it was.
+
+> +MODULE_DEVICE_TABLE(of, sx8654_of_match);
+> +#else /* CONFIG_OF */
+> +static int sx8654_get_ofdata(struct sx8654 *ts)
 > +{
-> +	struct irqsteer_irqchip_data *irqsteer_data = platform_get_drvdata(pdev);
-> +
-> +	irq_set_chained_handler_and_data(irqsteer_data->irq, NULL, NULL);
-> +	irq_domain_remove(irqsteer_data->domain);
-> +
-> +	clk_disable_unprepare(irqsteer_data->ipg_clk);
-> +
+> +	ts->gpio_reset = NULL;
 > +	return 0;
 > +}
+> +#endif /* CONFIG_OF */
 > +
-> +#ifdef CONFIG_PM_SLEEP
-> +static void imx_irqsteer_save_regs(struct irqsteer_irqchip_data *data)
-> +{
-> +	int num;
+>  static int sx8654_probe(struct i2c_client *client,
+>  			const struct i2c_device_id *id)
+>  {
+> @@ -186,10 +248,20 @@ static int sx8654_probe(struct i2c_client *client,
+>  	if (!sx8654)
+>  		return -ENOMEM;
+>  
+> +	sx8654->client = client;
 > +
-> +	data->saved_reg[0] = readl_relaxed(data->regs + CHANCTRL);
-> +	for (num = 0; num < data->channum; num++)
-> +		data->saved_reg[num + 1] = readl_relaxed(data->regs +
-> +						CHANMASK(num, data->channum));
-> +}
-> +
-> +static void imx_irqsteer_restore_regs(struct irqsteer_irqchip_data *data)
-> +{
-> +	int num;
-> +
-> +	writel_relaxed(data->saved_reg[0], data->regs + CHANCTRL);
-> +	for (num = 0; num < data->channum; num++)
-> +		writel_relaxed(data->saved_reg[num + 1],
-> +			       data->regs + CHANMASK(num, data->channum));
-> +}
-> +
-> +static int imx_irqsteer_suspend(struct device *dev)
-> +{
-> +	struct irqsteer_irqchip_data *irqsteer_data = dev_get_drvdata(dev);
-> +
-> +	imx_irqsteer_save_regs(irqsteer_data);
-> +	clk_disable_unprepare(irqsteer_data->ipg_clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx_irqsteer_resume(struct device *dev)
-> +{
-> +	struct irqsteer_irqchip_data *irqsteer_data = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(irqsteer_data->ipg_clk);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable ipg clk: %d\n", ret);
-> +		return ret;
+> +	error = sx8654_get_ofdata(sx8654);
+> +	if (error) {
+> +		dev_err(&client->dev, "get_ofdata failed: %d\n", error);
+> +		return error;
 > +	}
-> +	imx_irqsteer_restore_regs(irqsteer_data);
 > +
-> +	return 0;
-> +}
-> +#endif
+>  	input = devm_input_allocate_device(&client->dev);
+>  	if (!input)
+>  		return -ENOMEM;
+>  
+> +	sx8654->input = input;
 > +
-> +static const struct dev_pm_ops imx_irqsteer_pm_ops = {
-> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(imx_irqsteer_suspend, imx_irqsteer_resume)
-> +};
-> +
-> +static const struct of_device_id imx_irqsteer_dt_ids[] = {
-> +	{ .compatible = "fsl,imx-irqsteer", },
-> +	{},
-> +};
-> +
-> +static struct platform_driver imx_irqsteer_driver = {
-> +	.driver = {
-> +		.name = "imx-irqsteer",
-> +		.of_match_table = imx_irqsteer_dt_ids,
-> +		.pm = &imx_irqsteer_pm_ops,
-> +	},
-> +	.probe = imx_irqsteer_probe,
-> +	.remove = imx_irqsteer_remove,
-> +};
-> +builtin_platform_driver(imx_irqsteer_driver);
+>  	input->name = "SX8654 I2C Touchscreen";
+>  	input->id.bustype = BUS_I2C;
+>  	input->dev.parent = &client->dev;
+> @@ -201,15 +273,11 @@ static int sx8654_probe(struct i2c_client *client,
+>  	input_set_abs_params(input, ABS_X, 0, MAX_12BIT, 0, 0);
+>  	input_set_abs_params(input, ABS_Y, 0, MAX_12BIT, 0, 0);
+>  
+> -	sx8654->client = client;
+> -	sx8654->input = input;
+> -
+
+Why do we need to move this?
+
+>  	input_set_drvdata(sx8654->input, sx8654);
+>  
+> -	error = i2c_smbus_write_byte_data(client, I2C_REG_SOFTRESET,
+> -					  SOFTRESET_VALUE);
+> +	error = sx8654_reset(sx8654);
+>  	if (error) {
+> -		dev_err(&client->dev, "writing softreset value failed");
+> +		dev_err(&client->dev, "reset failed");
+>  		return error;
+>  	}
+>  
+> @@ -256,14 +324,6 @@ static int sx8654_probe(struct i2c_client *client,
+>  	return 0;
+>  }
+>  
+> -#ifdef CONFIG_OF
+> -static const struct of_device_id sx8654_of_match[] = {
+> -	{ .compatible = "semtech,sx8654", },
+> -	{ },
+> -};
+> -MODULE_DEVICE_TABLE(of, sx8654_of_match);
+> -#endif
+> -
+>  static const struct i2c_device_id sx8654_id_table[] = {
+>  	{ "semtech_sx8654", 0 },
+>  	{ },
+> -- 
+> 2.11.0
 > 
 
-Thanks,
+Thanks.
 
-	M.
 -- 
-Jazz is not dead. It just smells funny...
+Dmitry
