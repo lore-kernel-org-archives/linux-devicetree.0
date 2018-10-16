@@ -1,211 +1,332 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 3/7] dt-bindings: pinctrl: ds90ux9xx: add description of TI DS90Ux9xx pinmux
-Date: Tue, 16 Oct 2018 15:48:06 +0300
-Message-ID: <2595665.eknevzee7a@avalon>
-References: <20181008211205.2900-1-vz@mleia.com> <8675619.KiXOS7fxCj@avalon> <9bd129b4-ce18-b036-9376-2cb1cb76aaf2@mentor.com>
+Subject: Re: [PATCH 4/7] mfd: ds90ux9xx: add TI DS90Ux9xx de-/serializer MFD driver
+Date: Tue, 16 Oct 2018 16:08:49 +0300
+Message-ID: <2613241.lUsdUIHyZO@avalon>
+References: <20181008211205.2900-1-vz@mleia.com> <3599186.afdMBtdL0k@avalon> <735126c6-9780-a9ef-4fd0-699d6876ed37@mleia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9bd129b4-ce18-b036-9376-2cb1cb76aaf2@mentor.com>
+In-Reply-To: <735126c6-9780-a9ef-4fd0-699d6876ed37@mleia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Cc: Vladimir Zapolskiy <vz@mleia.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, kieran.bingham@ideasonboard.com, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Vladimir,
 
-On Saturday, 13 October 2018 16:47:48 EEST Vladimir Zapolskiy wrote:
-> On 10/12/2018 03:01 PM, Laurent Pinchart wrote:
-> > On Tuesday, 9 October 2018 00:12:01 EEST Vladimir Zapolskiy wrote:
-> >> From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-> >> 
-> >> TI DS90Ux9xx de-/serializers have a capability to multiplex pin
-> >> functions, in particular a pin may have selectable functions of GPIO,
-> >> GPIO line transmitter, one of I2S lines, one of RGB24 video signal lines
-> >> and so on.
-> >> 
-> >> The change adds a description of DS90Ux9xx pin multiplexers and GPIO
-> >> controllers.
-> >> 
-> >> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-> >> ---
-> >> 
-> >>  .../bindings/pinctrl/ti,ds90ux9xx-pinctrl.txt | 83 +++++++++++++++++++
-> >>  1 file changed, 83 insertions(+)
-> >>  create mode 100644
-> >> 
-> >> Documentation/devicetree/bindings/pinctrl/ti,ds90ux9xx-pinctrl.txt
-> >> 
-> >> diff --git
-> >> a/Documentation/devicetree/bindings/pinctrl/ti,ds90ux9xx-pinctrl.txt
-> >> b/Documentation/devicetree/bindings/pinctrl/ti,ds90ux9xx-pinctrl.txt new
-> >> file mode 100644
-> >> index 000000000000..fbfa1a3cdf9f
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/pinctrl/ti,ds90ux9xx-pinctrl.txt
-> >> @@ -0,0 +1,83 @@
-> >> +TI DS90Ux9xx de-/serializer pinmux and GPIO subcontroller
-> >> +
-> >> +Required properties:
-> >> +- compatible: Must contain a generic "ti,ds90ux9xx-pinctrl" value and
-> >> +	may contain one more specific value from the list:
-> >> +	"ti,ds90ux925-pinctrl",
-> >> +	"ti,ds90ux926-pinctrl",
-> >> +	"ti,ds90ux927-pinctrl",
-> >> +	"ti,ds90ux928-pinctrl",
-> >> +	"ti,ds90ux940-pinctrl".
+On Friday, 12 October 2018 16:59:27 EEST Vladimir Zapolskiy wrote:
+> On 10/12/2018 04:01 PM, Laurent Pinchart wrote:
+> > On Friday, 12 October 2018 14:47:52 EEST Kieran Bingham wrote:
+> >> On 12/10/18 11:58, Vladimir Zapolskiy wrote:
+> >>> On 10/12/2018 12:20 PM, Kieran Bingham wrote:
+> >>>> On 12/10/18 09:39, Lee Jones wrote:
+> >>>>> On Fri, 12 Oct 2018, Vladimir Zapolskiy wrote:
+> >>>>>> On 10/12/2018 09:03 AM, Lee Jones wrote:
+> >>>>>>> On Tue, 09 Oct 2018, Vladimir Zapolskiy wrote:
+> >>>>>>>> From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+> >>>>>>>> 
+> >>>>>>>> The change adds I2C device driver for TI DS90Ux9xx de-/serializers,
+> >>>>>>>> support of subdevice controllers is done in separate drivers,
+> >>>>>>>> because not all IC functionality may be needed in particular
+> >>>>>>>> situations, and this can be fine grained controlled in device tree.
+> >>>>>>>> 
+> >>>>>>>> The development of the driver was a collaborative work, the
+> >>>>>>>> contribution done by Balasubramani Vivekanandan includes:
+> >>>>>>>> * original implementation of the driver based on a reference
+> >>>>>>>> driver,
+> >>>>>>>> * regmap powered interrupt controller support on serializers,
+> >>>>>>>> * support of implicitly or improperly specified in device tree ICs,
+> >>>>>>>> * support of device properties and attributes: backward compatible
+> >>>>>>>>   mode, low frequency operation mode, spread spectrum clock
+> >>>>>>>>   generator.
+> >>>>>>>> 
+> >>>>>>>> Contribution by Steve Longerbeam:
+> >>>>>>>> * added ds90ux9xx_read_indirect() function,
+> >>>>>>>> * moved number of links property and added
+> >>>>>>>> ds90ux9xx_num_fpd_links(),
+> >>>>>>>> * moved and updated ds90ux9xx_get_link_status() function to core
+> >>>>>>>> driver,
+> >>>>>>>> * added fpd_link_show device attribute.
+> >>>>>>>> 
+> >>>>>>>> Sandeep Jain added support of pixel clock edge configuration.
+> >>>>>>>> 
+> >>>>>>>> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+> >>>>>>>> ---
+> >>>>>>>> 
+> >>>>>>>>  drivers/mfd/Kconfig           |  14 +
+> >>>>>>>>  drivers/mfd/Makefile          |   1 +
+> >>>>>>>>  drivers/mfd/ds90ux9xx-core.c  | 879
+> >>>>>>>>  ++++++++++++++++++++++++++++++++
+> >>>>>>>>  include/linux/mfd/ds90ux9xx.h |  42 ++
+> >>>>>>>>  4 files changed, 936 insertions(+)
+> >>>>>>>>  create mode 100644 drivers/mfd/ds90ux9xx-core.c
+> >>>>>>>>  create mode 100644 include/linux/mfd/ds90ux9xx.h
+> >>>>>>>> 
+> >>>>>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> >>>>>>>> index 8c5dfdce4326..a969fa123f64 100644
+> >>>>>>>> --- a/drivers/mfd/Kconfig
+> >>>>>>>> +++ b/drivers/mfd/Kconfig
+> >>>>>>>> @@ -1280,6 +1280,20 @@ config MFD_DM355EVM_MSP
+> >>>>>>>> 
+> >>>>>>>>  	  boards.  MSP430 firmware manages resets and power sequencing,
+> >>>>>>>>  	  inputs from buttons and the IR remote, LEDs, an RTC, and more.
+> >>>>>>>> 
+> >>>>>>>> +config MFD_DS90UX9XX
+> >>>>>>>> +	tristate "TI DS90Ux9xx FPD-Link de-/serializer driver"
+> >>>>>>>> +	depends on I2C && OF
+> >>>>>>>> +	select MFD_CORE
+> >>>>>>>> +	select REGMAP_I2C
+> >>>>>>>> +	help
+> >>>>>>>> +	  Say yes here to enable support for TI DS90UX9XX de-/serializer
+> >>>>>>>> ICs.
+> >>>>>>>> +
+> >>>>>>>> +	  This driver provides basic support for setting up the
+> >>>>>>>> de-/serializer
+> >>>>>>>> +	  chips. Additional functionalities like connection handling to
+> >>>>>>>> +	  remote de-/serializers, I2C bridging, pin multiplexing, GPIO
+> >>>>>>>> +	  controller and so on are provided by separate drivers and
+> >>>>>>>> should
+> >>>>>>>> +	  enabled individually.
+> >>>>>>> 
+> >>>>>>> This is not an MFD driver.
+> >>>>>> 
+> >>>>>> Why do you think so? The representation of the ICs into device tree
+> >>>>>> format of hardware description shows that this is a truly MFD driver
+> >>>>>> with multiple IP subcomponents naturally mapped into MFD cells.
+> >>>>> 
+> >>>>> This driver does too much real work ('stuff') to be an MFD driver.
+> >>>>> MFD drivers should not need to care of; links, gates, modes, pixels,
+> >>>>> frequencies maps or properties.  Nor should they contain elaborate
+> >>>>> sysfs structures to control the aforementioned 'stuff'.
+> >>>>> 
+> >>>>> Granted, there may be some code in there which could be appropriate
+> >>>>> for an MFD driver.  However most of it needs moving out into a
+> >>>>> function driver (or two).
+> >>>>> 
+> >>>>>> Basically it is possible to replace explicit of_platform_populate()
+> >>>>>> by adding a "simple-mfd" compatible, if it is desired.
+> >>>>>> 
+> >>>>>>> After a 30 second Google of what this device actually does, perhaps
+> >>>>>>> drivers/media might be a better fit?
+> >>>>>> 
+> >>>>>> I assume it would be quite unusual to add a driver with NO media
+> >>>>>> functions and controls into drivers/media.
+> >>>>> 
+> >>>>> drivers/media may very well not be the correct place for this.  In my
+> >>>>> 30 second Google, I saw that this device has a lot to do with cameras,
+> >>>>> hence my media association.
+> >>>>> 
+> >>>>> If *all* else fails, there is always drivers/misc, but this should be
+> >>>>> avoided if at all possible.
+> >>>> 
+> >>>> The device as a whole is FPD Link for camera devices I believe, but it
+> >>> 
+> >>> I still don't understand (I could be biased though) why there is such
+> >>> a strong emphasis on cameras and media stuff in the discussion.
+> >>> 
+> >>> No, "the device as a whole is FPD Link for camera devices" is a wrong
+> >>> statement. On hand I have a number of boards with
+> >>> serializers/deserializers from the TI DS90Ux9xx IC series and sensors
+> >>> are NOT connected to them.
 > > 
-> > No need for a subnode, you can mark the main DT node with gpio-controller
-> > directly.
+> > I understand what is not connected to them, but could you tell us what is
+> > connected then ? :-)
 > 
-> If the IC is seen as an MFD, and you guess I highly prefer it and I object
-> the "overkill" argument, then the subnode is requred.
+> You got it right, the most two common ways of using the ICs:
 > 
-> Also the more complicated part of the subcontroller and its device driver
-> is to provide pinmuxing function to consumers rather than to allow GPIO
-> line configuration.
+> 1) SoC -> serializer ("local") -> deserializer ("remote") -> panel,
+> 2) sensor -> serializer ("remote") -> deserializer ("local") -> SoC.
 > 
-> The pinctrl/GPIO driver can not be alloyed with the base driver's code
-> to sustain maintainability, so it will reside in drivers/pinctrl as
-> a separate cell driver, and by the way that is the reason why it earns
-> its own very non-trivial DT binding description documentation.
-> 
-> >> +- gpio-controller: Marks the device node as a GPIO controller.
-> >> +
-> >> +- #gpio-cells: Must be set to 2,
-> >> +	- the first cell is the GPIO offset number within the controller,
-> >> +	- the second cell is used to specify the GPIO line polarity.
-> >> +
-> >> +- gpio-ranges: Mapping to pin controller pins (as described in
-> >> +	Documentation/devicetree/bindings/gpio/gpio.txt)
-> >> +
-> >> +Optional properties:
-> >> +- ti,video-depth-18bit: Sets video bridge pins to RGB 18-bit mode.
+> The point is that the published drivers naturally support both data chains
+> and even more of them, e.g. transferring audio data only or just setting
+> GPIO line signals on a "remote" PCB.
+
+At the cost of code being added where it doesn't belong (as pointed out by 
+Lee) and DT bindings not following the standard models (data connections 
+described by OF graph and control buses described by parent-child 
+relationships). Let's focus on fixing the DT bindings first, and we'll then 
+see how we can handle the driver side.
+
+> >> Yes - My apologies, this is a good point.
+> >> 
+> >> Especially as the clue is in the name "Flat Panel Display".
+> >> I have been stuck with my GMSL hat on for too long.
+> >> 
+> >> Even GMSL is in the same boat. It's just that 'we' are using GMSL for
+> >> cameras, but it can be used equally for displays and data.
+> >> 
+> >> These devices are serialiser-deserialiser pairs with power and control
+> >> paths.
 > > 
-> > Please use standard properties to configure bus width. There is one
-> > defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > And data paths, that are designed to transport video (and audio in this
+> > case). The devices are thus media-focussed, although in a broader sense
+> > than drivers/ media/
 > 
-> Here it is not a bus width description or property, but rather it is a
-> custom pinmux control.
-> 
-> It could make sense to reduce the scope of the property to "parallel" pin
-> function only though, like in
-> 
-> 	ds90ux927_0_pins: pinmux {
-> 		parallel {
-> 			groups = "parallel";
-> 			function = "parallel";
-> 			ti,video-depth-18bit;
-> 		};
-> 	};
-> 
-> Alternatively the removal of the property would be almost loseless, it is
-> needed just in one very specific case, please reference to the driver code
-> for details, there you'll find a comment in ds90ux9xx_parse_dt_properties()
-> function.
+> The devices are media-focused only in the sense that media functionality
+> casts a shadow onto inalienable GPIO or I2C bridging functionality.
 
-Based on the information I gathered from the DS90UH92[567] datasheets, the 
-restriction on GPIO usage related to 18-bit mode is due to the signals being 
-multiplexed on the same pins on DS90UH925. It could also be that the FPD-Link 
-protocol itself can't carry both GPIO and the extra 6 colour bits.
+Seriously, do you really expect that they will be used for the sole purpose of 
+transporting a few GPIOs ?
 
-In any case, I don't think the property belongs here. The bus width should be 
-specified in the DT bindings for the video ports, and the drivers should then 
-use that information to configure other parameters, possibly GPIO-specific, if 
-needed.
+> Anyway MFD driver representation of the ICs allows to keep pinmuxing, V4L2,
+> DRM, audio bridging, interrupt controller and all other subcontroller
+> functions separately, configure them separately, store under separate
+> driver frameworks etc. That's a perfect flexibility on drivers level
+> as I can see it.
 
-> >> +Available pins, groups and functions (reference to device datasheets):
-> >> +
-> >> +function: "gpio" ("gpio4" is on DS90Ux925 and DS90Ux926 only,
-> >> +		  "gpio9" is on DS90Ux940 only)
-> >> + - pins: "gpio0", "gpio1", "gpio2", "gpio3", "gpio4", "gpio5", "gpio6",
-> >> +	 "gpio7", "gpio8", "gpio9"
-> >> +
-> >> +function: "gpio-remote"
-> >> + - pins: "gpio0", "gpio1", "gpio2", "gpio3"
-> >> +
-> >> +function: "pass" (DS90Ux940 specific only)
-> >> + - pins: "gpio0", "gpio3"
+The resulting complexity is still overkill. As mentioned above, let's focus on 
+the DT bindings first.
+
+> >> Essentially they are multi purpose buses - which do not yet have a home.
+> >> We have used media as a home because of our use case.
+> >> 
+> >> The use case whether they transfer frames from a camera or to a display
+> >> are of course closely related, but ultimately covered by two separate
+> >> subsystems at the pixel level (DRM vs V4L, or other for other data)
+> >> 
+> >> Perhaps as they are buses - on a level with USB or I2C (except they can
+> >> of course carry I2C or Serial as well as 'bi-directional video' etc ),
+> >> they are looking for their own subsystem.
+> >> 
+> >> Except I don't think we don't want to add a new subsystem for just one
+> >> (or two) devices...
 > > 
-> > What do those functions mean ?
+> > I'm not sure a new subsystem is needed. As you've noted there's an overlap
+> > between drivers/media/ and drivers/gpu/drm/ in terms of supported
+> > hardware. We even have a devices supported by two drivers, one in
+> > drivers/media/ and one in drivers/gpu/drm/ (I'm thinking about the
+> > adv7511 in particular). This is a well known issue, and so far nothing
+> > has been done in mainline to try and solve it.
 > 
-> "gpio" function should be already familiar to you.
+> Right, presumably this IC series would have *cell* drivers in both
+> drivers/media and drivers/gpu/drm/ and other folders like drivers/pinctrl/
+> or sound/.
 
-I assume this function is only available for the local device, not the remote 
-one ?
+Even with cell drivers you'll have the problem of DRM vs. V4L2. My advice is 
+to go for DRM only for now.
 
-> "gpio-remote" function is the pin function for a GPIO line bridging.
+> The interesting thing is that the published drivers do NOT require any new
+> cell drivers (at least non-trivial ones with >200 LoC) in drivers/media/
+> or drivers/gpu/drm/ to get the expected operation of DS90Ux925/926/927/928
+> ICs (any ser-des connection combination), and we have a DS90Ux940 cell
+> driver targeted to drivers/media/
+
+That's because you abuse the rest of the APIs to cover up for what's lacking 
+in media/ and gpu/drm/ :-)
+
+> > Trying to find another home in drivers/mfd/ to escape from the problem
+> > isn't a good solution in my opinion. The best option from a Linux point
+> > of view would be to unify V4L2 and DRM/KMS when it comes to bridge
+> > support, but that's a long way down the road (I won't complain if you
+> > want to give it a go though :-)). As your use cases are display, focused,
+> > I would propose to start with drivers/gpu/drm/bridge/, and leave the
+> > problem of camera support for first person who will have such a use case.
 > 
-> "pass" function sets a pin to a status pin function for detecting
-> display timing issues, namely DE or Vsync length value mismatch.
+> Well, what should I do with pinctrl or audio bridging device drivers?
 
-All this is not clear at all from the proposed DT bindings, it should be 
-properly documented.
+I'll defer the audio problems to people more knowledgeable about audio. For 
+pinctrl I believe you're making it way more complicated than it should be. 
+Again, DT bindings first, drivers second. And please provide DT examples for 
+real use cases, I think that will be key to proper DT bindings design.
 
-> >> +function: "i2s-1"
-> >> + - group: "i2s-1"
-> >> +
-> >> +function: "i2s-2"
-> >> + - group: "i2s-2"
-> >> +
-> >> +function: "i2s-3" (DS90Ux927, DS90Ux928 and DS90Ux940 specific only)
-> >> + - group: "i2s-3"
-> >> +
-> >> +function: "i2s-4" (DS90Ux927, DS90Ux928 and DS90Ux940 specific only)
-> >> + - group: "i2s-4"
-> >> +
-> >> +function: "i2s-m" (DS90Ux928 and DS90Ux940 specific only)
-> >> + - group: "i2s-m"
+> Stick all drivers together into an unmaintainable clod of tangled code?
+
+You know this isn't what I proposed, let's stay fair in this discussion. Your 
+proposal is too complex in my opinion, I want to simplify it, which will 
+result in easier to maintain code.
+
+> Let's better exploit the excellent opportunity for code modularity given
+> by the MFD framework.
+> 
+> >>>> certainly has different functions which are broken out in this
+> >>>> implementation.
+> >>> 
+> >>> No, there is absolutely nothing broken out from the presented MFD
+> >>> drivers, the drivers are completely integral and basically I don't
+> >>> expect any.
+> >>> 
+> >>> If you are concerned about media functionality, the correspondent MFD
+> >>> *cell* drivers will be added into drivers/media, drivers/gpu/drm or
+> >>> whatever is to be a proper place.
+> >>> 
+> >>>> I think it might be quite awkward having the i2c components in
+> >>>> drivers/i2c and the media components in drivers/media/i2c, so what
+> >>>> about creating drivers/media/i2c/fpd-link (or such) as a container?
+> >>> 
+> >>> I open drivers/media/i2c/Kconfig and all entries with no exception are
+> >>> under from 'if VIDEO_V4L2'. The MFD drivers do NOT require on depend on
+> >>> VIDEO_V4L2 or any other multimedia frameworks, nor the MFD drivers
+> >>> export any multimedia controls.
+> >>> 
+> >>>> Our GMSL implementation is also a complex camera(s) device - but does
+> >>>> not yet use the MFD framework, perhaps that's something to add to my
+> >>>> todo list.
 > > 
-> > Do we really need all this ? I think a better model would be to describe
-> > the audio interfaces explicitly, and configure pinmuxing automatically
-> > based on which audio interfaces are in use.
+> > Nope, please don't :-) The GMSL (de)serializers are no MFD devices either.
+> > 
+> >>> Okay, but the TI DS90Ux9xx is NOT a camera device, and it is NOT a
+> >>> multimedia device, but it is a pure MFD device so the argument is not
+> >>> applicable.
+> > 
+> > For the reasons pointed out in the review of other patches, and also
+> > pointed out by Lee in his review of this patch, I disagree with that.
+> > This isn't an MFD device.
 > 
-> Yes, all the pin functions are needed, because they are transparent pinmux
-> controls.
+> Eh, it is an MFD device. Just probably drivers/mfd is really not the best
+> place to store this particular MFD device driver...
+
+We still disagree. Those chips are video serializers and deserializers with a 
+few additional features to support those use cases. The fact that additional 
+support features are available don't automatically make them a true MFD. To 
+give you another example, my camera ISP that happens to be able to output a 
+clock for the camera sensor is also not an MFD, and I can still support clock 
+control through CCF without requiring the MFD framework.
+
+> >>>> We currently keep all of the complexity within the max9286.c driver,
+> >>>> but I could foresee that being split further if more devices add to the
+> >>>> complexity of managing the bus. At which point we might want an
+> >>>> equivalent drivers/media/i2c/gmsl/ perhaps?
+> >>>> 
+> >>>>>> Laurent, can you please share your opinion?
+> > 
+> > Done :-)
+> > 
+> > I'd like to mention that I would prefer focusing on the DT bindings first,
+> > and
 > 
-> I really don't want to copy a part of gpio and pinctrl frameworks to
-> the driver to hunt out why a user configured audio bridging and a GPIO
-> line, and then something goes funny due to a pin conflict. To forget
-> about such very possible pin and pin function conflicts I'm happy to
-> shift the task to the neat Linus' frameworks.
+> Sure, thank you for your comments :)
+> 
+> > then move to the driver side. In that area I would like to have a full
+> > example of a system using these chips, as the "initial support" is too
+> > limited for a proper review. This won't come as a surprise, but I will
+> > expect the OF graph bindings to be used to model data connections.
+> 
+> The leverage of "the initial support" to "the complete support" requires:
+> * audio bridge cell driver -- trivial, just one mute/unmute control,
+> * interrupt controller cell driver -- trivial, but for sake of perfection
+>   it requires some minimal changes in drivers/base/regmap/regmap-irq.c
 
-And I still believe this is overkill and confusing, and disagrees that this is 
-an MFD device.
+This is a topic we haven't discussed yet, don't jump to conclusions and 
+consider that an interrupt controller driver is needed. Could you please 
+explain the use cases and point to the right documentation ?
 
-> >> +function: "parallel" (DS90Ux925 and DS90Ux926 specific only)
-> >> + - group: "parallel"
-> >> +
-> >> +Example (deserializer with pins GPIO[3:0] set to bridged output
-> >> +	 function and pin GPIO4 in standard hogged GPIO function):
-> >> +
-> >> +deserializer {
-> >> +	compatible = "ti,ds90ub928q", "ti,ds90ux9xx";
-> >> +
-> >> +	ds90ux928_pctrl: pin-controller {
-> >> +		compatible = "ti,ds90ux928-pinctrl", "ti,ds90ux9xx-pinctrl";
-> >> +		gpio-controller;
-> >> +		#gpio-cells = <2>;
-> >> +		gpio-ranges = <&ds90ux928_pctrl 0 0 8>;
-> >> +
-> >> +		pinctrl-names = "default";
-> >> +		pinctrl-0 = <&ds90ux928_pins>;
-> >> +
-> >> +		ds90ux928_pins: pinmux {
-> >> +			gpio-remote {
-> >> +				pins = "gpio0", "gpio1", "gpio2", "gpio3";
-> >> +				function = "gpio-remote";
-> >> +			};
-> >> +		};
-> >> +
-> >> +		rst {
-> >> +			gpio-hog;
-> >> +			gpios = <4 GPIO_ACTIVE_HIGH>;
-> >> +			output-high;
-> >> +		};
-> >> +	};
-> >> +};
+> * DS90Ux940 MIPI CSI-2 -- non-trivial one, but we have it ready, I just
+>   don't want to add it to the pile at the moment, otherwise we'll continue
+>   discussing cameras, and I'd like to postpone it :)
+
+I think it plays a crucial role in the architecture design. I don't want to 
+reach an agreement on an architecture that wouldn't include CSI-2 support and 
+then find out that it was the wrong path to add CSI-2 support.
+
+> No more than that is needed to get absolutely complete support of 5 claimed
+> DS90UB9xx ICs, really. 5 other DS90UH9xx will require HDCP support in
+> addition.
+
+I'm not too concern by HDCP, as long as you have a DRM bridge driver, it 
+shouldn't be a big issue.
+
+> I'll try to roll out an example of DTS snippet soon.
 
 -- 
 Regards,
