@@ -1,84 +1,74 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH 4/7] mfd: ds90ux9xx: add TI DS90Ux9xx de-/serializer MFD
- driver
-Date: Tue, 16 Oct 2018 21:32:34 +0300
-Message-ID: <cc0100c8-1874-1d4c-6815-e4d448ab4f73@mleia.com>
-References: <20181008211205.2900-1-vz@mleia.com> <3599186.afdMBtdL0k@avalon>
- <369ef3ac-6f68-c450-713f-762b1c5cd5c9@mentor.com> <6392366.NPbusjoGUK@avalon>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [PATCH v3 0/7] Add virtio-iommu driver
+Date: Tue, 16 Oct 2018 19:44:09 +0100
+Message-ID: <b2f929c3-b0df-acdc-c5e8-0d7ddf7ed964@arm.com>
+References: <20181012145917.6840-1-jean-philippe.brucker@arm.com>
+ <7874471b-3711-ca44-d220-5e756ac7db8c@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6392366.NPbusjoGUK@avalon>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
+Content-Disposition: inline
+In-Reply-To: <7874471b-3711-ca44-d220-5e756ac7db8c@redhat.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, kieran.bingham@ideasonboard.com, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
+List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
+List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
+List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
+List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
+Errors-To: kvmarm-bounces@lists.cs.columbia.edu
+Sender: kvmarm-bounces@lists.cs.columbia.edu
+To: Auger Eric <eric.auger@redhat.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "kevin.tian@intel.com" <kevin.tian@intel.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "tnowicki@caviumnetworks.com" <tnowicki@caviumnetworks.com>, "mst@redhat.com" <mst@redhat.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "jasowang@redhat.com" <jasowang@redhat.com>, Will Deacon <Will.Deacon@arm.com>, "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Robin Murphy <Robin.Murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
-
-On 10/16/2018 04:12 PM, Laurent Pinchart wrote:
-> Hi Vladimir,
-> 
-> On Saturday, 13 October 2018 18:10:25 EEST Vladimir Zapolskiy wrote:
->> On 10/12/2018 04:01 PM, Laurent Pinchart wrote:
->>> On Friday, 12 October 2018 14:47:52 EEST Kieran Bingham wrote:
->>>> On 12/10/18 11:58, Vladimir Zapolskiy wrote:
->> [snip]
->>
->>>> Essentially they are multi purpose buses - which do not yet have a home.
->>>> We have used media as a home because of our use case.
->>>>
->>>> The use case whether they transfer frames from a camera or to a display
->>>> are of course closely related, but ultimately covered by two separate
->>>> subsystems at the pixel level (DRM vs V4L, or other for other data)
->>>>
->>>> Perhaps as they are buses - on a level with USB or I2C (except they can
->>>> of course carry I2C or Serial as well as 'bi-directional video' etc ),
->>>> they are looking for their own subsystem.
->>>>
->>>> Except I don't think we don't want to add a new subsystem for just one
->>>> (or two) devices...
->>>
->>> I'm not sure a new subsystem is needed. As you've noted there's an overlap
->>> between drivers/media/ and drivers/gpu/drm/ in terms of supported
->>> hardware. We even have a devices supported by two drivers, one in drivers/
->>> media/ and one in drivers/gpu/drm/ (I'm thinking about the adv7511 in
->>> particular). This is a well known issue, and so far nothing has been done
->>> in mainline to try and solve it.
->>
->> I agree that there's an overlap between drivers/media/ and drivers/gpu/drm/,
->> formally a hypothetical (sic!) DS90Ux9xx video bridge cell driver should be
->> added into both subsystems also, and the actual driver of two should be
->> selected in runtime. I call such a driver 'hypothetical', because in fact I
->> don't have it, and I'm not so sure that its existence is justified, but
->> that's only because DS90Ux9xx video bridge functionality is _transparent_,
->> it does not have any controls literally, but it is a pure luck eventually.
-> 
-> I don't think that's entirely correct, there's at least the video bus width 
-> (18-bit/24-bit) that needs to be selected. You currently do so through a 
-> pinctrl property, but that's not right.
-
-if you deal with a complex IC/IP which supports parallel video output routed
-over multiplexed pins, you have to specify a pinmux configuration, it is
-unavoidable (for reference see arch/arm/boot/dts/imx6qdl-sabrelite.dtsi and
-&pinctrl_j15 pin group, why does pinctrl setting exist?), so the property
-will remain as a pinmux/pinctrl property in one or another form independently
-on a probable video bus width selection of a DS90Ux9xx video bridge cell.
-
-In this particular case the pinmux/pinctrl driver shall be aware of
-'ti,video-depth-18bit' property of 'parallel' pin function to resolve pin
-resource conflicts with GPIO and audio bridging functions of IC, this is
-a clear hardware pinmux (or pinctrl of "parallel" function) property.
-
-Please don't neglect the complexity and necessity of pinmuxing and other
-IC functions, if all provided functions of DS90Ux9xx ICs are put aside and
-just video bridging is left, only then you justify the device as a media
-device, but the IC and its configuration is simply more complex than
-you describe it. And, as I've said before, the video bridging function is
-extremely trivial and it has no real controls, but other functions have.
-
---
-Best wishes,
-Vladimir
+T24gMTYvMTAvMjAxOCAxMDoyNSwgQXVnZXIgRXJpYyB3cm90ZToKPiBIaSBKZWFuLAo+IAo+IE9u
+IDEwLzEyLzE4IDQ6NTkgUE0sIEplYW4tUGhpbGlwcGUgQnJ1Y2tlciB3cm90ZToKPj4gSW1wbGVt
+ZW50IHRoZSB2aXJ0aW8taW9tbXUgZHJpdmVyLCBmb2xsb3dpbmcgc3BlY2lmaWNhdGlvbiB2MC44
+IFsxXS4KPj4gQ2hhbmdlcyBzaW5jZSB2MiBbMl06Cj4+IAo+PiAqIFBhdGNoZXMgMi00IGFsbG93
+IHZpcnRpby1pb21tdSB0byB1c2UgdGhlIFBDSSB0cmFuc3BvcnQsIHNpbmNlIFFFTVUKPj7CoMKg
+IHdvdWxkIGxpa2UgdG8gcGhhc2Ugb3V0IHRoZSBNTUlPIHRyYW5zcG9ydC4gVGhpcyBwcm9kdWNl
+cyBhIGNvbXBsZXgKPj7CoMKgIHRvcG9sb2d5IHdoZXJlIHRoZSBwcm9ncmFtbWluZyBpbnRlcmZh
+Y2Ugb2YgdGhlIElPTU1VIGNvdWxkIGFwcGVhcgo+PsKgwqAgbG93ZXIgdGhhbiB0aGUgZW5kcG9p
+bnRzIHRoYXQgaXQgdHJhbnNsYXRlcy4gSXQncyBub3QgdW5oZWFyZCBvZiAoZS5nLgo+PsKgwqAg
+QU1EIElPTU1VKSwgYW5kIHRoZSBndWVzdCBlYXNpbHkgY29wZXMgd2l0aCB0aGlzLgo+PsKgwqAg
+Cj4+wqDCoCBUaGUgIkZpcm13YXJlIGRlc2NyaXB0aW9uIiBzZWN0aW9uIG9mIHRoZSBzcGVjaWZp
+Y2F0aW9uIGhhcyBiZWVuCj4+wqDCoCB1cGRhdGVkIHdpdGggYWxsIGNvbWJpbmF0aW9ucyBvZiBQ
+Q0ksIE1NSU8gYW5kIERULCBBQ1BJLgo+IAo+IEkgaGF2ZSBhIHF1ZXN0aW9uIHdydCB0aGUgRlcg
+c3BlY2lmaWNhdGlvbi4gVGhlIElPTU1VIGNvbnN1bWVzIDEgc2xvdCBpbgo+IHRoZSBQQ0kgZG9t
+YWluIGFuZCBvbmUgbmVlZHMgdG8gbGVhdmUgYSBSSUQgaG9sZSBpbiB0aGUgaW9tbXUtbWFwLsKg
+IEl0Cj4gaXMgbm90IG9idmlvdXMgdG8gbWUgdGhhdCB0aGlzIFJJRCBhbHdheXMgaXMgcHJlZGlj
+dGFibGUgZ2l2ZW4gdGhlIHBjaWUKPiBlbnVtZXJhdGlvbiBtZWNoYW5pc20uIEdlbmVyYWxseSB3
+ZSBoYXZlIGEgY29hcnNlIGdyYWluIG1hcHBpbmcgb2YgUklECj4gb250byBpb21tdSBwaGFuZGxl
+cy9TVFJFQU1JRHMuIEhlcmUsIGlmIEkgdW5kZXJzdGFuZCBjb3JyZWN0bHkgd2UgbmVlZAo+IHRv
+IHByZWNpc2VseSBpZGVudGlmeSB0aGUgUklEIGdyYW50ZWQgdG8gdGhlIGlvbW11LiBPbiBRRU1V
+IHRoaXMgbWF5Cj4gZGVwZW5kIG9uIHRoZSBpbnN0YW50aWF0aW9uIG9yZGVyIG9mIHRoZSB2aXJ0
+aW8tcGNpIGRldmljZSByaWdodD8KClllcywgYWx0aG91Z2ggaXQgc2hvdWxkIGFsbCBoYXBwZW4g
+YmVmb3JlIHlvdSBib290IHRoZSBndWVzdCwgc2luY2UKdGhlcmUgaXMgbm8gaG90cGx1Z2dpbmcg
+YW4gSU9NTVUuIENvdWxkIHlvdSByZXNlcnZlIGEgUENJIHNsb3QgdXBmcm9udAphbmQgdXNlIGl0
+IGZvciB2aXJ0aW8taW9tbXUgbGF0ZXI/IE9yIGdlbmVyYXRlIHRoZSBpb21tdS1tYXAgYXQgdGhl
+IHNhbWUKdGltZSBhcyBnZW5lcmF0aW5nIHRoZSBjaGlsZCBub2RlIG9mIHRoZSBQQ0kgUkM/Cgo+
+IFNvCj4gdGhpcyBkb2VzIG5vdCBsb29rIHRyaXZpYWwgdG8gYnVpbGQgdGhpcyBpbmZvLiBJc24n
+dCBpdCBwb3NzaWJsZSB0byBkbwo+IHRoaXMgZXhjbHVzaW9uIGF0IGtlcm5lbCBsZXZlbCBpbnN0
+ZWFkPwoKU28gaW4gdGhlb3J5IFZJUlRJT19GX0lPTU1VX1BMQVRGT1JNIGFscmVhZHkgZG9lcyB0
+aGF0OgoKVklSVElPX0ZfSU9NTVVfUExBVEZPUk0oMzMpCiAgICBUaGlzIGZlYXR1cmUgaW5kaWNh
+dGVzIHRoYXQgdGhlIGRldmljZSBpcyBiZWhpbmQgYW4gSU9NTVUgdGhhdAogICAgdHJhbnNsYXRl
+cyBidXMgYWRkcmVzc2VzIGZyb20gdGhlIGRldmljZSBpbnRvIHBoeXNpY2FsIGFkZHJlc3NlcyBp
+bgogICAgbWVtb3J5LiBJZiB0aGlzIGZlYXR1cmUgYml0IGlzIHNldCB0byAwLCB0aGVuIHRoZSBk
+ZXZpY2UgZW1pdHMKICAgIHBoeXNpY2FsIGFkZHJlc3NlcyB3aGljaCBhcmUgbm90IHRyYW5zbGF0
+ZWQgZnVydGhlciwgZXZlbiB0aG91Z2ggYW4KICAgIElPTU1VIG1heSBiZSBwcmVzZW50LgoKRm9y
+IGJldHRlciBvciBmb3Igd29yc2UsIHRoZSBndWVzdCBoYXMgdG8gaW1wbGVtZW50IGl0LiBJZiB0
+aGlzIGZlYXR1cmUKYml0IGlzIHVuc2V0IGZvciB2aXJ0aW8taW9tbXUsIGl0IGRvZXMgRE1BIG9u
+IHRoZSBwaHlzaWNhbCBhZGRyZXNzCnNwYWNlLCByZWdhcmRsZXNzIG9mIHdoYXQgdGhlIHN0YXRp
+YyB0b3BvbG9neSBkZXNjcmlwdGlvbiBzYXlzLgoKSW4gcHJhY3RpY2UgaXQgZG9lc24ndCBxdWl0
+ZSB3b3JrLiBJZiB5b3VyIGlvbW11LW1hcCBkZXNjcmliZXMgdGhlIElPTU1VCmFzIHRyYW5zbGF0
+aW5nIGl0c2VsZiwgTGludXgnIE9GIGNvZGUgd2lsbCB3YWl0IGZvciB0aGUgSU9NTVUgdG8gYmUK
+cHJvYmVkIGJlZm9yZSBwcm9iaW5nIHRoZSBJT01NVS4gV29ya2luZyBhcm91bmQgdGhpcyB3aXRo
+IGhhY2tzIGlzCnBvc3NpYmxlLCBidXQgSSBkb24ndCB3YW50IHRvIGludHJvZHVjZSBtb3JlIHF1
+ZXN0aW9uYWJsZSBjb2RlIHRvIE9GIGFuZApkZXZpY2UgdHJlZSBiaW5kaW5ncyBpZiB0aGVyZSBp
+cyBhbnkgb3RoZXIgd2F5LgoKVGhhbmtzLApKZWFuCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmt2bWFybSBtYWlsaW5nIGxpc3QKa3ZtYXJtQGxpc3RzLmNz
+LmNvbHVtYmlhLmVkdQpodHRwczovL2xpc3RzLmNzLmNvbHVtYmlhLmVkdS9tYWlsbWFuL2xpc3Rp
+bmZvL2t2bWFybQo=
