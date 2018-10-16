@@ -1,58 +1,40 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH v2 0/8] OLPC 1.75 Keyboard/Touchpad fixes
-Date: Tue, 16 Oct 2018 11:44:34 +0200
-Message-ID: <c4edf9b09e88cd265a0829644aa962c28cbc3d51.camel@v3.sk>
-References: <20181010142504.233467-1-lkundrak@v3.sk>
-         <20181015195612.GB29649@amd>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v4 00/18] of: overlay: validation checks, subsequent fixes
+Date: Tue, 16 Oct 2018 20:47:27 +1100
+Message-ID: <87murekyts.fsf@concordia.ellerman.id.au>
+References: <1539657458-24401-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181015195612.GB29649@amd>
+In-Reply-To: <1539657458-24401-1-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, James Cameron <quozl@laptop.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: frowand.list@gmail.com, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Pavel,
+frowand.list@gmail.com writes:
 
-On Mon, 2018-10-15 at 21:56 +0200, Pavel Machek wrote:
-> Hi!
-> 
-> > This makes keyboard/touchpad work on a DT MMP2 platform.
-> > 
-> > I believe that it would be a good idea if this, once reviewed, went
-> > in
-> > via the input tree. The DT and CLK parts got reviews/acks.
-> > 
-> > Changes from v1:
-> > - Basically none, just re-send, including Ack and Review tags in
-> > patches
-> >   that received them. Plus an extra Cc.
-> >   I'd be very thankful for reviews.
-> 
-> Ok, I believe I have OLPC 1.75, and it is actually a nice
-> machine. Can I get recent kernel working there in useful fashion? (Is
-> there docs somewhere)?
+> From: Frank Rowand <frank.rowand@sony.com>
+>
+> Add checks to (1) overlay apply process and (2) memory freeing
+> triggered by overlay release.  The checks are intended to detect
+> possible memory leaks and invalid overlays.
+>
+> The checks revealed bugs in existing code.  Fixed the bugs.
+>
+> While fixing bugs, noted other issues, which are fixed in
+> separate patches.
+>
+> *****  Powerpc folks: I was not able to test the patches that
+> *****  directly impact Powerpc systems that use dynamic
+> *****  devicetree.  Please review that code carefully and
+> *****  test.  The specific patches are: 03/16, 04/16, 07/16
 
-A lovely machine indeed. I've written this now:
+Hi Frank,
 
-https://github.com/hackerspace/olpc-xo175-linux/wiki/How-to-run-an-up-to-date-Linux-on-a-XO-1.75
+Do you have this series in a git tree somewhere?
 
-I didn't test it yet -- will do when I get home in the evening. But
-chances are it's good enough and I guess you'd be able to get it
-working even if I messed up some details.
+I tried applying it on top of linux-next but hit some conflicts which I
+couldn't easily resolve.
 
-Please let me know if it works for you -- I'm having trouble getting
-reviews/acks/tested-bys for the XO-1.75 patch sets [1] and will be
-super thankful if I get some feedback from you.
-
-[1] https://lore.kernel.org/patchwork/bundle/lkundrak/OLPC%20XO%201.75/
-
-> 
-> Thanks,
-> 									
-> Pavel
-
-Cheers,
-Lubo
+cheers
