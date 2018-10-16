@@ -1,74 +1,54 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH V13 2/4] dt-bindings: interrupt-controller: C-SKY SMP intc
-Date: Tue, 16 Oct 2018 22:08:20 +0800
-Message-ID: <eb8d777ae893b06e38282e6c9f620b9eeb295d25.1539696960.git.ren_guo@c-sky.com>
-References: <cover.1539696960.git.ren_guo@c-sky.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH] arm64: dts: rockchip: Use default brightness table for gru.
+Date: Tue, 16 Oct 2018 16:13:04 +0200
+Message-ID: <20181016141304.21984-1-enric.balletbo@collabora.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1539696960.git.ren_guo@c-sky.com>
-In-Reply-To: <cover.1539696960.git.ren_guo@c-sky.com>
-References: <cover.1539696960.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, will.deacon@arm.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
+To: linux-kernel@vger.kernel.org
+Cc: kernel@collabora.com, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Dt-bindings doc about C-SKY Multi-processors interrupt controller.
+After commit 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED
+linearly to human eye") the pwm_bl driver is able to calculate a default
+brightness table. The calculated table for this PWM will have more
+granularity and will be adjusted to change the brightness linearly to
+the human eye. Use that table instead of have a DT-defined table with
+less granularity.
 
-Changelog:
- - Should be: '#interrupt-cells' not 'interrupt-cells'
-
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
- .../bindings/interrupt-controller/csky,mpintc.txt  | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+Hi Heiko,
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-new file mode 100644
-index 0000000..ab921f1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-@@ -0,0 +1,40 @@
-+===========================================
-+C-SKY Multi-processors Interrupt Controller
-+===========================================
-+
-+C-SKY Multi-processors Interrupt Controller is designed for ck807/ck810/ck860
-+SMP soc, and it also could be used in non-SMP system.
-+
-+Interrupt number definition:
-+
-+  0-15  : software irq, and we use 15 as our IPI_IRQ.
-+ 16-31  : private  irq, and we use 16 as the co-processor timer.
-+ 31-1024: common irq for soc ip.
-+
-+=============================
-+intc node bindings definition
-+=============================
-+
-+	Description: Describes SMP interrupt controller
-+
-+	PROPERTIES
-+
-+	- compatible
-+		Usage: required
-+		Value type: <string>
-+		Definition: must be "csky,mpintc"
-+	- #interrupt-cells
-+		Usage: required
-+		Value type: <u32>
-+		Definition: must be <1>
-+	- interrupt-controller:
-+		Usage: required
-+
-+Examples:
-+---------
-+
-+	intc: interrupt-controller {
-+		compatible = "csky,mpintc";
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+	};
+Note that the patch was only tested on a Samsung Chromebook Plus
+(kevin), will be very interesting if someone can test on other gru-based
+devices, like Bob, before apply this patch.
+
+Best regards,
+ Enric
+
+ arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
+index ae8bb721005e..8dbe2c58b3ce 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
+@@ -194,14 +194,6 @@
+ 
+ 	backlight: backlight {
+ 		compatible = "pwm-backlight";
+-		brightness-levels = <0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+-				     17 18 19 20 21 22 23 24 25 26 27 28 29 30
+-				     31 32 33 34 35 36 37 38 39 40 41 42 43 44
+-				     45 46 47 48 49 50 51 52 53 54 55 56 57 58
+-				     59 60 61 62 63 64 65 66 67 68 69 70 71 72
+-				     73 74 75 76 77 78 79 80 81 82 83 84 85 86
+-				     87 88 89 90 91 92 93 94 95 96 97 98 99 100>;
+-		default-brightness-level = <51>;
+ 		enable-gpios = <&gpio1 17 GPIO_ACTIVE_HIGH>;
+ 		power-supply = <&pp3300_disp>;
+ 		pinctrl-names = "default";
 -- 
-2.7.4
+2.19.1
