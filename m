@@ -1,131 +1,84 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 7/7] Input: sx8654 - use common of_touchscreen functions
-Date: Tue, 16 Oct 2018 10:52:00 -0700
-Message-ID: <20181016175200.GE230131@dtor-ws>
-References: <20181016091653.26896-1-richard.leitner@skidata.com>
- <20181016092310.27346-1-richard.leitner@skidata.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH 4/7] mfd: ds90ux9xx: add TI DS90Ux9xx de-/serializer MFD
+ driver
+Date: Tue, 16 Oct 2018 21:32:34 +0300
+Message-ID: <cc0100c8-1874-1d4c-6815-e4d448ab4f73@mleia.com>
+References: <20181008211205.2900-1-vz@mleia.com> <3599186.afdMBtdL0k@avalon>
+ <369ef3ac-6f68-c450-713f-762b1c5cd5c9@mentor.com> <6392366.NPbusjoGUK@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181016092310.27346-1-richard.leitner@skidata.com>
+In-Reply-To: <6392366.NPbusjoGUK@avalon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Leitner <richard.leitner@skidata.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, kieran.bingham@ideasonboard.com, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 16, 2018 at 11:23:10AM +0200, Richard Leitner wrote:
-> of_touchscreen.c provides a common interface for a axis invertion and
-> swapping of touchscreens. Therefore use it in the sx8654 driver.
-> 
-> Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
-> ---
->  drivers/input/touchscreen/sx8654.c | 37 +++++++++++++++++++------------------
->  1 file changed, 19 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/sx8654.c b/drivers/input/touchscreen/sx8654.c
-> index 33f7a0be4ef8..08b064f96b4e 100644
-> --- a/drivers/input/touchscreen/sx8654.c
-> +++ b/drivers/input/touchscreen/sx8654.c
-> @@ -36,6 +36,7 @@
->  #include <linux/gpio/consumer.h>
->  #include <linux/delay.h>
->  #include <linux/hrtimer.h>
-> +#include <linux/input/touchscreen.h>
->  
->  /* register addresses */
->  #define I2C_REG_TOUCH0			0x00
-> @@ -100,6 +101,7 @@ struct sx8654 {
->  	struct i2c_client *client;
->  	struct gpio_desc *gpio_reset;
->  	struct hrtimer timer;
-> +	struct touchscreen_properties props;
->  
->  	const struct sx865x_data *data;
->  };
-> @@ -168,8 +170,7 @@ static irqreturn_t sx8650_irq(int irq, void *handle)
->  				 chdata);
->  	}
->  
-> -	input_report_abs(ts->input, ABS_X, x);
-> -	input_report_abs(ts->input, ABS_Y, y);
-> +	touchscreen_report_pos(ts->input, &ts->props, x, y, false);
->  	input_report_key(ts->input, BTN_TOUCH, 1);
->  	input_sync(ts->input);
->  	dev_dbg(dev, "point(%4d,%4d)\n", x, y);
-> @@ -215,8 +216,8 @@ static irqreturn_t sx8654_irq(int irq, void *handle)
->  		x = ((data[0] & 0xf) << 8) | (data[1]);
->  		y = ((data[2] & 0xf) << 8) | (data[3]);
->  
-> -		input_report_abs(sx8654->input, ABS_X, x);
-> -		input_report_abs(sx8654->input, ABS_Y, y);
-> +		touchscreen_report_pos(sx8654->input, &sx8654->props, x, y,
-> +				       false);
->  		input_report_key(sx8654->input, BTN_TOUCH, 1);
->  		input_sync(sx8654->input);
->  
-> @@ -355,6 +356,8 @@ static int sx8654_get_ofdata(struct sx8654 *ts)
->  	}
->  	dev_dbg(dev, "got GPIO reset pin\n");
->  
+Hi Laurent,
 
-You need to mark axes used by the device before calling
-touchscreen_parse_properties(), otherwise you'll get warnings if
-corresponding property is present in DT.
-
-> +	touchscreen_parse_properties(ts->input, false, &ts->props);
-> +
->  	return 0;
->  }
->  #else /* CONFIG_OF */
-> @@ -380,25 +383,11 @@ static int sx8654_probe(struct i2c_client *client,
->  	sx8654 = devm_kzalloc(&client->dev, sizeof(*sx8654), GFP_KERNEL);
->  	if (!sx8654)
->  		return -ENOMEM;
-> -
->  	sx8654->client = client;
->  
-> -	error = sx8654_get_ofdata(sx8654);
-> -	if (error) {
-> -		dev_err(&client->dev, "get_ofdata failed: %d\n", error);
-> -		return error;
-> -	}
-> -
-> -	if (!sx8654->data->has_irq_penrelease) {
-> -		dev_dbg(&client->dev, "use timer for penrelease\n");
-> -		hrtimer_init(&sx8654->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-> -		sx8654->timer.function = sx865x_penrelease_timer_handler;
-> -	}
-> -
->  	input = devm_input_allocate_device(&client->dev);
->  	if (!input)
->  		return -ENOMEM;
-> -
->  	sx8654->input = input;
->  
->  	input->name = "SX8654 I2C Touchscreen";
-> @@ -414,6 +403,18 @@ static int sx8654_probe(struct i2c_client *client,
->  
->  	input_set_drvdata(sx8654->input, sx8654);
->  
-> +	error = sx8654_get_ofdata(sx8654);
-> +	if (error) {
-> +		dev_err(&client->dev, "get_ofdata failed: %d\n", error);
-> +		return error;
-> +	}
-> +
-> +	if (!sx8654->data->has_irq_penrelease) {
-> +		dev_dbg(&client->dev, "use timer for penrelease\n");
-> +		hrtimer_init(&sx8654->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-> +		sx8654->timer.function = sx865x_penrelease_timer_handler;
-> +	}
-> +
->  	error = sx8654_reset(sx8654);
->  	if (error) {
->  		dev_err(&client->dev, "reset failed");
-> -- 
-> 2.11.0
+On 10/16/2018 04:12 PM, Laurent Pinchart wrote:
+> Hi Vladimir,
 > 
+> On Saturday, 13 October 2018 18:10:25 EEST Vladimir Zapolskiy wrote:
+>> On 10/12/2018 04:01 PM, Laurent Pinchart wrote:
+>>> On Friday, 12 October 2018 14:47:52 EEST Kieran Bingham wrote:
+>>>> On 12/10/18 11:58, Vladimir Zapolskiy wrote:
+>> [snip]
+>>
+>>>> Essentially they are multi purpose buses - which do not yet have a home.
+>>>> We have used media as a home because of our use case.
+>>>>
+>>>> The use case whether they transfer frames from a camera or to a display
+>>>> are of course closely related, but ultimately covered by two separate
+>>>> subsystems at the pixel level (DRM vs V4L, or other for other data)
+>>>>
+>>>> Perhaps as they are buses - on a level with USB or I2C (except they can
+>>>> of course carry I2C or Serial as well as 'bi-directional video' etc ),
+>>>> they are looking for their own subsystem.
+>>>>
+>>>> Except I don't think we don't want to add a new subsystem for just one
+>>>> (or two) devices...
+>>>
+>>> I'm not sure a new subsystem is needed. As you've noted there's an overlap
+>>> between drivers/media/ and drivers/gpu/drm/ in terms of supported
+>>> hardware. We even have a devices supported by two drivers, one in drivers/
+>>> media/ and one in drivers/gpu/drm/ (I'm thinking about the adv7511 in
+>>> particular). This is a well known issue, and so far nothing has been done
+>>> in mainline to try and solve it.
+>>
+>> I agree that there's an overlap between drivers/media/ and drivers/gpu/drm/,
+>> formally a hypothetical (sic!) DS90Ux9xx video bridge cell driver should be
+>> added into both subsystems also, and the actual driver of two should be
+>> selected in runtime. I call such a driver 'hypothetical', because in fact I
+>> don't have it, and I'm not so sure that its existence is justified, but
+>> that's only because DS90Ux9xx video bridge functionality is _transparent_,
+>> it does not have any controls literally, but it is a pure luck eventually.
+> 
+> I don't think that's entirely correct, there's at least the video bus width 
+> (18-bit/24-bit) that needs to be selected. You currently do so through a 
+> pinctrl property, but that's not right.
 
--- 
-Dmitry
+if you deal with a complex IC/IP which supports parallel video output routed
+over multiplexed pins, you have to specify a pinmux configuration, it is
+unavoidable (for reference see arch/arm/boot/dts/imx6qdl-sabrelite.dtsi and
+&pinctrl_j15 pin group, why does pinctrl setting exist?), so the property
+will remain as a pinmux/pinctrl property in one or another form independently
+on a probable video bus width selection of a DS90Ux9xx video bridge cell.
+
+In this particular case the pinmux/pinctrl driver shall be aware of
+'ti,video-depth-18bit' property of 'parallel' pin function to resolve pin
+resource conflicts with GPIO and audio bridging functions of IC, this is
+a clear hardware pinmux (or pinctrl of "parallel" function) property.
+
+Please don't neglect the complexity and necessity of pinmuxing and other
+IC functions, if all provided functions of DS90Ux9xx ICs are put aside and
+just video bridging is left, only then you justify the device as a media
+device, but the IC and its configuration is simply more complex than
+you describe it. And, as I've said before, the video bridging function is
+extremely trivial and it has no real controls, but other functions have.
+
+--
+Best wishes,
+Vladimir
