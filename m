@@ -1,117 +1,162 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 6/9] ASoC: dt-bindings: bcm2835-rpi: add onboard audio
- bindings
-Date: Tue, 16 Oct 2018 21:26:58 +0200 (CEST)
-Message-ID: <181642350.143349.1539718018593@email.1und1.de>
-References: <20181016150228.16994-1-nsaenzjulienne@suse.de>
- <20181016150228.16994-7-nsaenzjulienne@suse.de>
- <4039d99c-5e57-c9d3-3af5-bc160e1adb57@i2se.com>
- <0611161a74bf9f91471bb13bf93cd1e8cc36c7d0.camel@suse.de>
+From: Richard Leitner <richard.leitner@skidata.com>
+Subject: Re: [PATCH 2/7] Input: sx8654 - add reset-gpio support
+Date: Tue, 16 Oct 2018 21:32:41 +0200
+Message-ID: <8d5ea869-0d92-aef0-1d27-bb5ecf5ba0af@skidata.com>
+References: <20181016091653.26896-1-richard.leitner@skidata.com>
+ <20181016091653.26896-3-richard.leitner@skidata.com>
+ <20181016173931.GC230131@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0611161a74bf9f91471bb13bf93cd1e8cc36c7d0.camel@suse.de>
+In-Reply-To: <20181016173931.GC230131@dtor-ws>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, gregkh@linuxfoundation.org
-Cc: eric@anholt.net, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, tiwai@suse.de
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Richard Leitner <richard.leitner@skidata.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicolas,
+Hi Dimitry,
+thanks for the quick reply!
 
-> Nicolas Saenz Julienne <nsaenzjulienne@suse.de> hat am 16. Oktober 2018 um 18:48 geschrieben:
+On 10/16/18 7:39 PM, Dmitry Torokhov wrote:
+> Hi Richard,
 > 
-> 
-> Hi Stefan, thanks for the review,
-> 
-> On Tue, 2018-10-16 at 17:56 +0200, Stefan Wahren wrote:
-> > Hi Nicolas,
-> > 
-> > Am 16.10.2018 um 17:02 schrieb Nicolas Saenz Julienne:
-> > > Adds a device tree binding file for Raspberry pi's Headphones and
-> > > HDMI
-> > > audio output devices.
-> > > 
-> > > Based on raspberry's downstream kernel implementation:
-> > > 
-> 
-> https://github.com/raspberrypi/linux/blob/rpi-4.14.y/arch/arm/boot/dts/bcm2708-rpi.dtsi
-> > > 
-> > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > > ---
-> > >  .../bindings/sound/brcm,bcm2835-audio.txt         | 15
-> > > +++++++++++++++
-> > >  1 file changed, 15 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/sound/brcm,bcm2835-audio.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/sound/brcm,bcm2835-
-> > > audio.txt b/Documentation/devicetree/bindings/sound/brcm,bcm2835-
-> > > audio.txt
-> > > new file mode 100644
-> > > index 000000000000..ee6fa085aaa9
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/sound/brcm,bcm2835-
-> > > audio.txt
-> > > @@ -0,0 +1,15 @@
-> > > +Broadcom BCM283x audio device
-> > > +
-> > > +Required properties:
-> > > +
-> > > +- compatible: Should be "brcm,bcm2835-audio"
-> > > +- brcm,pwm-channels: number of PWM channels, they are behind RPi's
-> > > Video Core
-> > > +		     IV, not actual Linux PWM devices.
-> > > +
-> > > +Example:
-> > > +
-> > > +audio: audio {
-> > > +	compatible = "brcm,bcm2835-audio";
-> > > +	brcm,pwm-channels = <8>;
-> > > +};
-> > > +
-> > 
-> > i apologize but it seems to me that the TODO mentioned in the cover
-> > letter isn't update to date anymore.
-> > 
-> > Phil Elwell posted an important bugfix for vchiq before [1], but only
-> > the driver part has been applied yet. After applying the DT changes
-> > i'm
-> > not sure if it still works.
-> > 
-> > AFAIK the audio driver uses VCHIQ as a software interface and the
-> > binding doesn't describe the real hardware.
-> > 
-> > Since the camera driver will be registered as a platform device [2],
-> > i
-> > prefer this way for the audio driver, too.
-> > 
-> > I'm actually working on this here [3] (currently only compile
-> > tested).
-> > 
-> 
-> Fair enough. I wasn't feeling too good about the bindings myself. I
-> only went with them because I saw something similar was happening
-> between "raspberrypi,bcm2835-power" and "raspberrypi,bcm2835-firmware". 
-> I'll be glad to review & test your patches whenever they are ready.
+> On Tue, Oct 16, 2018 at 11:16:48AM +0200, Richard Leitner wrote:
+>> The sx8654 features a NRST input which may be connected to a GPIO.
+>> Therefore add support for hard-resetting the sx8654 via this NRST.
+>>
+>> If the reset-gpio property is provided the sx8654 is resetted via NRST
+>> instead of the soft-reset via I2C.
+>>
 
-i will inform you.
+...
+
+>> +
+>> +	dev_dbg(&ts->client->dev, "NRST unavailable, try softreset\n");
+>> +	err = i2c_smbus_write_byte_data(ts->client, I2C_REG_SOFTRESET,
+>> +					SOFTRESET_VALUE);
+>> +	if (err)
+>> +		return err;
+> 
+> Have this in an "else" branch?
+
+If that's the preferred way... of course.
 
 > 
-> This makes commits 6 to 9 useless. Do you want me to send a v2? I can
-> throw in an extra change Takashi suggested and update the TODO file.
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static int sx8654_open(struct input_dev *dev)
+>>   {
+>>   	struct sx8654 *sx8654 = input_get_drvdata(dev);
+>> @@ -171,6 +195,44 @@ static void sx8654_close(struct input_dev *dev)
+>>   	}
+>>   }
+>>   
+>> +#ifdef CONFIG_OF
+>> +static int sx8654_get_ofdata(struct sx8654 *ts)
+>> +{
+>> +	struct device *dev = &ts->client->dev;
+>> +	struct device_node *node = dev->of_node;
+>> +	int err;
+>> +
+>> +	if (!node) {
+>> +		ts->gpio_reset = NULL;
+>> +		return 0;
+>> +	}
+> 
+> There is no need to wrap this into CONFIG_OF or test "node". Just use
+> devm_gpiod_get_optional() and it will work equally well on DT, ACPI, and
+> static board systems.
 
-You can add my
-
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
-
-to patches 1 to 5. Please drop 6 to 9 from the series and add the other suggestions.
-
-Btw please add devel@driverdev.osuosl.org to CC for V2
-
-Thanks
-Stefan
+Ok. Thank you for that information!
+I haven't been aware of this before :-)
 
 > 
-> Regards,
-> Nicolas
+>> +
+>> +	ts->gpio_reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
+>> +	if (PTR_ERR(ts->gpio_reset) == -EPROBE_DEFER) {
+>> +		return -EPROBE_DEFER;
+>> +	} else if (IS_ERR(ts->gpio_reset)) {
+>> +		err = PTR_ERR(ts->gpio_reset);
+> 
+> I'd do:
+> 
+> 		if (err != -EPROBE_DEFER)
+> 			dev_err(...)
+> 
+> here instead of separate branch.
+
+Indeed... Looks like a more sexy solution. Thanks.
+
+> 
+>> +		dev_err(dev, "unable to request GPIO reset pin (%d)\n", err);
+>> +		return err;
+>> +	}
+>> +	dev_dbg(dev, "got GPIO reset pin\n");
+> 
+> Also, I'd move all this code directly into probe() since all this
+> #ifdefery is not needed.
+
+Without the #ifdef'ery and node checking this sounds reasonable.
+
+> 
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id sx8654_of_match[] = {
+>> +	{ .compatible = "semtech,sx8654", },
+>> +	{ },
+>> +};
+> 
+> Please keep the device table wehere it was.
+
+OK.
+
+>> @@ -186,10 +248,20 @@ static int sx8654_probe(struct i2c_client *client,
+>>   	if (!sx8654)
+>>   		return -ENOMEM;
+>>   
+>> +	sx8654->client = client;
+>> +
+>> +	error = sx8654_get_ofdata(sx8654);
+>> +	if (error) {
+>> +		dev_err(&client->dev, "get_ofdata failed: %d\n", error);
+>> +		return error;
+>> +	}
+>> +
+>>   	input = devm_input_allocate_device(&client->dev);
+>>   	if (!input)
+>>   		return -ENOMEM;
+>>   
+>> +	sx8654->input = input;
+>> +
+>>   	input->name = "SX8654 I2C Touchscreen";
+>>   	input->id.bustype = BUS_I2C;
+>>   	input->dev.parent = &client->dev;
+>> @@ -201,15 +273,11 @@ static int sx8654_probe(struct i2c_client *client,
+>>   	input_set_abs_params(input, ABS_X, 0, MAX_12BIT, 0, 0);
+>>   	input_set_abs_params(input, ABS_Y, 0, MAX_12BIT, 0, 0);
+>>   
+>> -	sx8654->client = client;
+>> -	sx8654->input = input;
+>> -
+> 
+> Why do we need to move this?
+
+This was because sx8654_get_ofdata needed ts->client->dev.
+But as I will integrate the reset gpio getting in the probe function 
+I'll move it back.
+
+...
+
+> 
+> Thanks.
+> 
+
+I'll send a v2 of the series as soon as I have fixed the other patches.
+
+regards;Richard.L
