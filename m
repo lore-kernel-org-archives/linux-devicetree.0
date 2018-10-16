@@ -1,38 +1,81 @@
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH 2/9] staging: bcm2835-audio: don't initialize memory twice
-Date: Tue, 16 Oct 2018 17:02:21 +0200
-Message-ID: <20181016150228.16994-3-nsaenzjulienne@suse.de>
-References: <20181016150228.16994-1-nsaenzjulienne@suse.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 06/11] DT: arm64: exynos: add support for thermal trip irq-mode
+Date: Tue, 16 Oct 2018 17:09:14 +0200
+Message-ID: <CAJKOXPe4Jf3QVbQ6BFPFptkgvmmpNu+QCmDoD3JqhyYOidJ7vA@mail.gmail.com>
+References: <CGME20181016145647eucas1p206c068806214535da339588d77cbdfa5@eucas1p2.samsung.com>
+ <1539701782-26852-1-git-send-email-l.luba@partner.samsung.com> <20181016145647eucas1p206c068806214535da339588d77cbdfa5~eHqLYh2dR2135021350eucas1p2K@eucas1p2.samsung.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181016150228.16994-1-nsaenzjulienne@suse.de>
+In-Reply-To: <20181016145647eucas1p206c068806214535da339588d77cbdfa5~eHqLYh2dR2135021350eucas1p2K@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org
-Cc: eric@anholt.net, stefan.wahren@i2se.com, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, tiwai@suse.de, nsaenzjulienne@suse.de
+To: l.luba@partner.samsung.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, kgene@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The memory is being allocated with devres_alloc(), wich ultimately uses
-__GFP_ZERO to call kmalloc. We don't need to zero the memory area again
-in bcm2835-audio.
+On Tue, 16 Oct 2018 at 16:56, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- drivers/staging/vc04_services/bcm2835-audio/bcm2835.c | 2 --
- 1 file changed, 2 deletions(-)
+Hi Lukasz,
 
-diff --git a/drivers/staging/vc04_services/bcm2835-audio/bcm2835.c b/drivers/staging/vc04_services/bcm2835-audio/bcm2835.c
-index 87d56ab1ffa0..0efae7068fef 100644
---- a/drivers/staging/vc04_services/bcm2835-audio/bcm2835.c
-+++ b/drivers/staging/vc04_services/bcm2835-audio/bcm2835.c
-@@ -39,8 +39,6 @@ static int bcm2835_devm_add_vchi_ctx(struct device *dev)
- 	if (!vchi_ctx)
- 		return -ENOMEM;
- 
--	memset(vchi_ctx, 0, sizeof(*vchi_ctx));
--
- 	ret = bcm2835_new_vchi_ctx(dev, vchi_ctx);
- 	if (ret) {
- 		devres_free(vchi_ctx);
--- 
-2.19.1
+Thanks for patches.
+
+I did not receive the first patches in the series. It is okay (depends
+on the context) but in such case sending cover letter to all people is
+quite useful. It helps to understand the entire patchset. Since I did
+not get them, I really do not know:
+1. Whether DTS patches are independent?
+2. How this fits in the big picture of Exynos thermal?
+
+
+> This patch adds support for new flash which indicates
+
+What is "flash"?
+
+Please wrap your lines accordingly (75 characters like in
+submitting-patches.rst). Current wrapping makes it more difficult to
+read.
+
+> that trip point triggers irq when temperature is met.
+> Exynos5433 supports 8 trip point which will trigger irq.
+
+"Exynos5433 supports 8 trip points which trigger interrupt."
+(or IRQ but not irq)
+
+> Above that number other trip points should be registered
+> without 'irq-mode' flag.
+
+Why they should be registered without irq-mode?
+
+> That will force the thermal framework to start polling
+> the temperature sensor under configured conditions and
+> handle the trip point.
+
+How does it fit into existing polling mode?
+
+>
+> Cc: Kukjin Kim <kgene@kernel.org>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi | 105 ++++++++++++++++---------
+>  1 file changed, 70 insertions(+), 35 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi
+> index fe3a0b1..c4330f6 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi
+> @@ -17,37 +17,44 @@ thermal-zones {
+>                         atlas0_alert_0: atlas0-alert-0 {
+>                                 temperature = <65000>;  /* millicelsius */
+>                                 hysteresis = <1000>;    /* millicelsius */
+> -                               type = "active";
+> +                               type = "passive";
+
+Change of active->passive looks irrelevant to this topic. Here and
+everywhere else.
+
+Best regards,
+Krzysztof
