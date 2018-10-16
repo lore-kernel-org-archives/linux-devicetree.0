@@ -1,22 +1,112 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 0/3] treewide: add vibrator support for various MSM SOCs
-Date: Mon, 15 Oct 2018 17:52:49 -0700
-Message-ID: <153965116919.5275.18169434559839796065@swboyd.mtv.corp.google.com>
-References: <20180926235112.25710-1-masneyb@onstation.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v3 1/2] dt-bindings: PCI: Add UniPhier PCIe host controller description
+Date: Tue, 16 Oct 2018 10:26:07 +0900
+Message-ID: <1539653168-22862-2-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1539653168-22862-1-git-send-email-hayashi.kunihiko@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926235112.25710-1-masneyb@onstation.org>
+In-Reply-To: <1539653168-22862-1-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-soc@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, thierry.reding@gmail.com
-Cc: masneyb@onstation.org, jonathan@marek.ca, ctatlor97@gmail.com
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Brian Masney (2018-09-26 16:51:09)
-> This patch set adds support for the vibrator found on various Qualcomm
-> MSM SOCs. This is based on work from:
+Add DT bindings for PCIe controller implemented in UniPhier SoCs when
+configured in Root Complex (host) mode. This controller is based on
+the DesignWare PCIe core.
 
-Can you please stop adding 'treewide:' to your cover letters? It is very
-confusing while reading over subject summaries to see something that
-isn't actually treewide end up being qcom specific.
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/pci/uniphier-pcie.txt      | 81 ++++++++++++++++++++++
+ 1 file changed, 81 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+
+diff --git a/Documentation/devicetree/bindings/pci/uniphier-pcie.txt b/Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+new file mode 100644
+index 0000000..46a2754
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+@@ -0,0 +1,81 @@
++Socionext UniPhier PCIe host controller bindings
++
++This describes the devicetree bindings for PCIe host controller implemented
++on Socionext UniPhier SoCs.
++
++UniPhier PCIe host controller is based on the Synopsys DesignWare PCI core.
++It shares common functions with the PCIe DesignWare core driver and inherits
++common properties defined in
++Documentation/devicetree/bindings/pci/designware-pcie.txt.
++
++Required properties:
++- compatible: Should be "socionext,uniphier-pcie".
++- reg: Specifies offset and length of the register set for the device.
++	According to the reg-names, appropriate register sets are required.
++- reg-names: Must include the following entries:
++    "dbi"    - controller configuration registers
++    "link"   - SoC-specific glue layer registers
++    "config" - PCIe configuration space
++- clocks: A phandle to the clock gate for PCIe glue layer including
++	the host controller.
++- resets: A phandle to the reset line for PCIe glue layer including
++	the host controller.
++- interrupts: A list of interrupt specifiers. According to the
++	interrupt-names, appropriate interrupts are required.
++- interrupt-names: Must include the following entries:
++    "dma" - DMA interrupt
++    "msi" - MSI interrupt
++
++Optional properties:
++- phys: A phandle to generic PCIe PHY. According to the phy-names, appropriate
++	phys are required.
++- phy-names: Must be "pcie-phy".
++
++Required sub-node:
++- legacy-interrupt-controller: Specifies interrupt controller for legacy PCI
++	interrupts.
++
++Required properties for legacy-interrupt-controller:
++- interrupt-controller: identifies the node as an interrupt controller.
++- #interrupt-cells: specifies the number of cells needed to encode an
++	interrupt source. The value must be 1.
++- interrupt-parent: Phandle to the parent interrupt controller.
++- interrupts: An interrupt specifier for legacy interrupt.
++
++Example:
++
++	pcie: pcie@66000000 {
++		compatible = "socionext,uniphier-pcie", "snps,dw-pcie";
++		status = "disabled";
++		reg-names = "dbi", "link", "config";
++		reg = <0x66000000 0x1000>, <0x66010000 0x10000>,
++		      <0x2fff0000 0x10000>;
++		#address-cells = <3>;
++		#size-cells = <2>;
++		clocks = <&sys_clk 24>;
++		resets = <&sys_rst 24>;
++		num-lanes = <1>;
++		num-viewport = <1>;
++		bus-range = <0x0 0xff>;
++		device_type = "pci";
++		ranges =
++		/* downstream I/O */
++			<0x81000000 0 0x00000000  0x2ffe0000  0 0x00010000
++		/* non-prefetchable memory */
++			 0x82000000 0 0x00000000  0x20000000  0 0x0ffe0000>;
++		#interrupt-cells = <1>;
++		interrupt-names = "dma", "msi";
++		interrupts = <0 224 4>, <0 225 4>;
++		interrupt-map-mask = <0 0 0  7>;
++		interrupt-map = <0 0 0  1  &pcie_intc 1>,	/* INTA */
++				<0 0 0  2  &pcie_intc 2>,	/* INTB */
++				<0 0 0  3  &pcie_intc 3>,	/* INTC */
++				<0 0 0  4  &pcie_intc 4>;	/* INTD */
++
++		pcie_intc: legacy-interrupt-controller {
++			interrupt-controller;
++			#interrupt-cells = <1>;
++			interrupt-parent = <&gic>;
++			interrupts = <0 226 4>;
++		};
++	};
+-- 
+2.7.4
