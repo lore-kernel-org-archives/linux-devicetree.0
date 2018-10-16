@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v4 03/18] of: overlay: add missing of_node_get() in __of_attach_node_sysfs
-Date: Mon, 15 Oct 2018 19:37:23 -0700
-Message-ID: <1539657458-24401-4-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v4 04/18] powerpc/pseries: add of_node_put() in dlpar_detach_node()
+Date: Mon, 15 Oct 2018 19:37:24 -0700
+Message-ID: <1539657458-24401-5-git-send-email-frowand.list@gmail.com>
 References: <1539657458-24401-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1539657458-24401-1-git-send-email-frowand.list@gmail.com>
@@ -12,62 +12,38 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-There is a matching of_node_put() in __of_detach_node_sysfs()
+"of: overlay: add missing of_node_get() in __of_attach_node_sysfs"
+added a missing of_node_get() to __of_attach_node_sysfs().  This
+results in a refcount imbalance for nodes attached with
+dlpar_attach_node().  The calling sequence from dlpar_attach_node()
+to __of_attach_node_sysfs() is:
 
-Remove misleading comment from function header comment for
-of_detach_node().
-
-This patch may result in memory leaks from code that directly calls
-the dynamic node add and delete functions directly instead of
-using changesets.
+   dlpar_attach_node()
+      of_attach_node()
+         __of_attach_node_sysfs()
 
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
 
-This patch should result in powerpc systems that dynamically
-allocate a node, then later deallocate the node to have a
-memory leak when the node is deallocated.
+***** UNTESTED.  I need people with the affected PowerPC systems
+*****            (systems that dynamically allocate and deallocate
+*****            devicetree nodes) to test this patch.
 
-The next patch in the series will fix the leak.
+ arch/powerpc/platforms/pseries/dlpar.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
- drivers/of/dynamic.c | 3 ---
- drivers/of/kobj.c    | 4 +++-
- 2 files changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 24c97b7a050f..fe8816cca99b 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -272,9 +272,6 @@ void __of_detach_node(struct device_node *np)
- 
- /**
-  * of_detach_node() - "Unplug" a node from the device tree.
-- *
-- * The caller must hold a reference to the node.  The memory associated with
-- * the node is not freed until its refcount goes to zero.
-  */
- int of_detach_node(struct device_node *np)
- {
-diff --git a/drivers/of/kobj.c b/drivers/of/kobj.c
-index 7a0a18980b98..c72eef988041 100644
---- a/drivers/of/kobj.c
-+++ b/drivers/of/kobj.c
-@@ -133,6 +133,9 @@ int __of_attach_node_sysfs(struct device_node *np)
- 	}
- 	if (!name)
- 		return -ENOMEM;
-+
-+	of_node_get(np);
-+
- 	rc = kobject_add(&np->kobj, parent, "%s", name);
- 	kfree(name);
+diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
+index a0b20c03f078..e3010b14aea5 100644
+--- a/arch/powerpc/platforms/pseries/dlpar.c
++++ b/arch/powerpc/platforms/pseries/dlpar.c
+@@ -272,6 +272,8 @@ int dlpar_detach_node(struct device_node *dn)
  	if (rc)
-@@ -159,6 +162,5 @@ void __of_detach_node_sysfs(struct device_node *np)
- 		kobject_del(&np->kobj);
- 	}
+ 		return rc;
  
--	/* finally remove the kobj_init ref */
- 	of_node_put(np);
++	of_node_put(dn);
++
+ 	return 0;
  }
+ 
 -- 
 Frank Rowand <frank.rowand@sony.com>
