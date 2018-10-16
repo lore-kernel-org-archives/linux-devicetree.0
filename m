@@ -1,43 +1,22 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH V9 20/21] MAINTAINERS: Add csky
-Date: Tue, 16 Oct 2018 10:58:39 +0800
-Message-ID: <139bb600da725b1e251f0b465b24a865622a6f57.1539655732.git.ren_guo@c-sky.com>
-References: <cover.1539655731.git.ren_guo@c-sky.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v4 2/7] ARM: dts: axp81x: add AC power supply subnode
+Date: Tue, 16 Oct 2018 12:08:28 +0800
+Message-ID: <CAGb2v66WEx049805p65+4xaTnfeCQqT6EOCKmx=KD8dU=ogAbA@mail.gmail.com>
+References: <20181013080848.29894-1-oskari@lemmela.net> <20181013080848.29894-3-oskari@lemmela.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1539655731.git.ren_guo@c-sky.com>
-In-Reply-To: <cover.1539655731.git.ren_guo@c-sky.com>
-References: <cover.1539655731.git.ren_guo@c-sky.com>
+In-Reply-To: <20181013080848.29894-3-oskari@lemmela.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, hch@infradead.org, marc.zyngier@arm.com, mark.rutland@arm.com, peterz@infradead.org, robh@kernel.org, tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, c-sky_gcc_upstream@c-sky.com, Guo Ren <ren_guo@c-sky.com>
+To: oskari@lemmela.net
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Lee Jones <lee.jones@linaro.org>, Quentin Schulz <quentin.schulz@free-electrons.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a maintainer information for the csky(C-SKY) architecture.
+On Sat, Oct 13, 2018 at 4:09 PM Oskari Lemmela <oskari@lemmela.net> wrote:
+>
+> Add AC power supply subnode for AXP81X PMIC.
+>
+> Signed-off-by: Oskari Lemmela <oskari@lemmela.net>
+> Reviewed-by: Quentin Schulz <quentin.schulz@bootlin.com>
 
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d870cb5..9dac20e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3211,6 +3211,15 @@ T:	git git://git.alsa-project.org/alsa-kernel.git
- S:	Maintained
- F:	sound/pci/oxygen/
- 
-+C-SKY ARCHITECTURE
-+M:	Guo Ren <ren_guo@c-sky.com>
-+T:	git https://github.com/c-sky/csky-linux.git
-+S:	Supported
-+F:	arch/csky/
-+F:	Documentation/devicetree/bindings/csky/
-+K:	csky
-+N:	csky
-+
- C6X ARCHITECTURE
- M:	Mark Salter <msalter@redhat.com>
- M:	Aurelien Jacquiot <jacquiot.aurelien@gmail.com>
--- 
-2.7.4
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
