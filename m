@@ -1,52 +1,40 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: [PATCH v3 3/4] ARM: dts: imx6ull: Add dcp node
-Date: Tue, 16 Oct 2018 15:57:44 +0000
-Message-ID: <ef03e230d0bb76d830c123bc47e6bd6e7bf17826.1539705286.git.leonard.crestez@nxp.com>
-References: <cover.1539705285.git.leonard.crestez@nxp.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v3 2/4] crypto: mxs-dcp - Add support for dcp clk
+Date: Tue, 16 Oct 2018 13:03:47 -0300
+Message-ID: <CAOMZO5Ck846zd_Xo=9sVK0EAxNLsUsWiC59H2Ms6x8xoD8iwWw@mail.gmail.com>
+References: <cover.1539705285.git.leonard.crestez@nxp.com> <dcbcaf888bbd0a35dcf34228df2d9eb4fd762ea7.1539705286.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1539705285.git.leonard.crestez@nxp.com>
-Content-Language: en-US
+In-Reply-To: <dcbcaf888bbd0a35dcf34228df2d9eb4fd762ea7.1539705286.git.leonard.crestez@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Herbert Xu <herbert@gondor.apana.org.au>, Horia Geanta <horia.geanta@nxp.com>, Franck Lenormand <franck.lenormand@nxp.com>, Aymen Sghaier <aymen.sghaier@nxp.com>, "David S . Miller " <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Herbert Xu <herbert@gondor.apana.org.au>, Horia Geanta Neag <horia.geanta@nxp.com>, Franck LENORMAND <franck.lenormand@nxp.com>, Aymen Sghaier <aymen.sghaier@nxp.com>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>linux-kernel <l>
 List-Id: devicetree@vger.kernel.org
 
-The DCP block on 6ull has no major differences other than requiring
-explicit clock enabling.
+Hi Leonard,
 
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
----
- arch/arm/boot/dts/imx6ull.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+On Tue, Oct 16, 2018 at 12:58 PM Leonard Crestez
+<leonard.crestez@nxp.com> wrote:
 
-diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dts=
-i
-index 796ed35d4ac9..f3668fe69eac 100644
---- a/arch/arm/boot/dts/imx6ull.dtsi
-+++ b/arch/arm/boot/dts/imx6ull.dtsi
-@@ -37,10 +37,20 @@
- 			#address-cells =3D <1>;
- 			#size-cells =3D <1>;
- 			reg =3D <0x02200000 0x100000>;
- 			ranges;
-=20
-+			dcp: crypto@2280000 {
-+				compatible =3D "fsl,imx6ull-dcp", "fsl,imx28-dcp";
-+				reg =3D <0x02280000 0x4000>;
-+				interrupts =3D <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clks IMX6ULL_CLK_DCP_CLK>;
-+				clock-names =3D "dcp";
-+			};
-+
- 			iomuxc_snvs: iomuxc-snvs@2290000 {
- 				compatible =3D "fsl,imx6ull-iomuxc-snvs";
- 				reg =3D <0x02290000 0x4000>;
- 			};
-=20
---=20
-2.17.1
+> +       /* DCP clock is optional, only used on some SOCs */
+> +       sdcp->dcp_clk = devm_clk_get(dev, "dcp");
+> +       if (IS_ERR(sdcp->dcp_clk)) {
+> +               if (sdcp->dcp_clk != ERR_PTR(-ENOENT))
+> +                       return PTR_ERR(sdcp->dcp_clk);
+> +               sdcp->dcp_clk = NULL;
+
+This dcp_clk assignment to NULL does not seem to be necessary.
+
+> +
+> +       ret = clk_prepare_enable(sdcp->dcp_clk);
+> +       if (ret)
+> +               return ret;
+>
+>         ret = devm_request_irq(dev, dcp_vmi_irq, mxs_dcp_irq, 0,
+>                                "dcp-vmi-irq", sdcp);
+>         if (ret) {
+>                 dev_err(dev, "Failed to claim DCP VMI IRQ!\n");
+
+In case of subsequent errors you should call
+clk_disable_unprepare(sdcp->dcp_clk).
