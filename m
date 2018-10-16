@@ -1,27 +1,52 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 08/11] DT: arm: exynos4: add support for thermal trip irq-mode
-Date: Tue, 16 Oct 2018 17:10:44 +0200
-Message-ID: <CAJKOXPews4f8Js89AJ7Zz4GUT7ama9LKu1xP-OcV-0Kq28p-bw@mail.gmail.com>
-References: <CGME20181016145650eucas1p2330e8d680b70acffaea223a5a8c51ca0@eucas1p2.samsung.com>
- <1539701782-26852-1-git-send-email-l.luba@partner.samsung.com> <20181016145650eucas1p2330e8d680b70acffaea223a5a8c51ca0~eHqOSKKqJ2135421354eucas1p2J@eucas1p2.samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH v5 0/3] Stingray thermal driver support
+Date: Tue, 16 Oct 2018 20:41:17 +0530
+Message-ID: <1539702680-3746-1-git-send-email-srinath.mannam@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181016145650eucas1p2330e8d680b70acffaea223a5a8c51ca0~eHqOSKKqJ2135421354eucas1p2J@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: l.luba@partner.samsung.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, kgene@kernel.org
+To: daniel.lezcano@linaro.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Srinath Mannam <srinath.mannam@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 16 Oct 2018 at 16:56, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> This patch adds support for new flash which indicates
-> that trip point triggers irq when temperature is met.
-> Exynos5433 supports 8 trip point which will trigger irq.
+These patches adds the stingray thermal driver and its
+corresponding DT nodes with documentation.
 
-Exynos4? 4 trip points?
+Changes from v4
+  - Addressed Rob Herring comments on DT parameters and
+    thermal driver architecture.
+  - Removed brcm,max-crit-temp DT parameter
+  - Changed driver to thermal sensor registration model.
+  - Added trip DT properties.
 
-Beside that other comments apply as well.
+Changes from v3
+  - Addressed Daniel lezcano comments.
+  - Elaborated commit description of thermal driver patch.
+  - Added brcm,max-crit-temp DT parameter.
 
-Best regards,
-Krzysztof
+Changes from v2:
+  - All stingray TMON DT nodes are combine together into single.
+    Temperature registers are combined into one mem resource.
+    brcm,tmon-mask parameter has available TMONs mask value.
+  - All available TMONs are initialized together in single
+    instance of driver probe call.
+
+Changes from v1:
+  - Fixed auto build sparce warning.
+
+Pramod Kumar (3):
+  dt-bindings: thermal: Add binding document for SR thermal
+  thermal: broadcom: Add Stingray thermal driver
+  arm64: dts: stingray: Add Stingray Thermal DT support.
+
+ .../bindings/thermal/brcm,sr-thermal.txt           | 105 ++++++++++++++++
+ .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  89 +++++++++++++
+ drivers/thermal/Kconfig                            |   3 +-
+ drivers/thermal/broadcom/Kconfig                   |   9 ++
+ drivers/thermal/broadcom/Makefile                  |   1 +
+ drivers/thermal/broadcom/sr-thermal.c              | 138 +++++++++++++++++++++
+ 6 files changed, 344 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+ create mode 100644 drivers/thermal/broadcom/sr-thermal.c
+
+-- 
+2.7.4
