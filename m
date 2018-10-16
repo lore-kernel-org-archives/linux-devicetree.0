@@ -1,55 +1,77 @@
-From: Songjun Wu <songjun.wu@linux.intel.com>
-Subject: [RESEND PATCH 02/14] MIPS: dts: Add aliases node for lantiq danube serial
-Date: Tue, 16 Oct 2018 17:19:03 +0800
-Message-ID: <20181016091915.19909-3-songjun.wu@linux.intel.com>
-References: <20181016091915.19909-1-songjun.wu@linux.intel.com>
+From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: Re: [PATCH v3 4/7] dmaengine: stm32-dma: Add DMA/MDMA chaining
+ support
+Date: Tue, 16 Oct 2018 11:19:20 +0200
+Message-ID: <9a375fd3-964f-3d57-9d18-b010e20a4d42@st.com>
+References: <1538139715-24406-1-git-send-email-pierre-yves.mordret@st.com>
+ <1538139715-24406-5-git-send-email-pierre-yves.mordret@st.com>
+ <20181007160030.GB2372@vkoul-mobl>
+ <e9cedfdd-ad90-9123-03bb-34a2e84059c5@st.com>
+ <20181010040343.GO2372@vkoul-mobl>
+ <d64da587-a680-20c4-7139-f59fd1f299bc@st.com>
+ <20181015171403.GM2400@vkoul-mobl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181016091915.19909-1-songjun.wu@linux.intel.com>
+In-Reply-To: <20181015171403.GM2400@vkoul-mobl>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: yixin.zhu@linux.intel.com, chuanhua.lei@linux.intel.com, hauke.mehrtens@intel.com
-Cc: gregkh@linuxfoundation.org, paul.burton@mips.com, jslaby@suse.com, Songjun Wu <songjun.wu@linux.intel.com>, devicetree@vger.kernel.org, James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, Rob Herring <robh+dt@kernel.org>, Kate Stewart <kstewart@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>
+To: Vinod <vkoul@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Previous implementation uses a hard-coded register value to check
-if the current serial entity is the console entity.
-Now the lantiq serial driver uses the aliases for the index of the
-serial port.
-The lantiq danube serial dts are updated with aliases to support this.
 
-Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
----
 
- arch/mips/boot/dts/lantiq/danube.dtsi   | 2 +-
- arch/mips/boot/dts/lantiq/easy50712.dts | 4 ++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+On 10/15/18 7:14 PM, Vinod wrote:
+> On 10-10-18, 09:02, Pierre Yves MORDRET wrote:
+>>
+>>
+>> On 10/10/2018 06:03 AM, Vinod wrote:
+>>> On 09-10-18, 10:40, Pierre Yves MORDRET wrote:
+>>>>
+>>>>
+>>>> On 10/07/2018 06:00 PM, Vinod wrote:
+>>>>> On 28-09-18, 15:01, Pierre-Yves MORDRET wrote:
+>>>>>> This patch adds support of DMA/MDMA chaining support.
+>>>>>> It introduces an intermediate transfer between peripherals and STM32 DMA.
+>>>>>> This intermediate transfer is triggered by SW for single M2D transfer and
+>>>>>> by STM32 DMA IP for all other modes (sg, cyclic) and direction (D2M).
+>>>>>>
+>>>>>> A generic SRAM allocator is used for this intermediate buffer
+>>>>>> Each DMA channel will be able to define its SRAM needs to achieve chaining
+>>>>>> feature : (2 ^ order) * PAGE_SIZE.
+>>>>>> For cyclic, SRAM buffer is derived from period length (rounded on
+>>>>>> PAGE_SIZE).
+>>>>>
+>>>>> So IIUC, you chain two dma txns together and transfer data via an SRAM?
+>>>>
+>>>> Correct. one DMA is DMAv2 (stm32-dma) and the other is MDMA(stm32-mdma).
+>>>> Intermediate transfer is between device and memory.
+>>>> This intermediate transfer is using SDRAM.
+>>>
+>>> Ah so you use dma calls to setup mdma xtfers? I dont think that is a
+>>> good idea. How do you know you should use mdma for subsequent transfer?
+>>>
+>>
+>> When user bindings told to setup chaining intermediate MDMA transfers are always
+>> triggers.
+>> For instance if a user requests a Dev2Mem transfer with chaining. From client
+>> pov this is still a prep_slave_sg. Internally DMAv2 is setup in cyclic mode (in
+>> double buffer mode indeed => 2 buffer of PAGE_SIZE/2) and destination is SDRAM.
+>> DMAv2 will flip/flop on those 2 buffers.
+>> At the same time DMAv2 driver prepares a MDMA SG that will fetch data from those
+>> 2 buffers in SDRAM and fills final destination memory.
+> 
+> I am not able to follow is why does it need to be internal, why should
+> the client not set the two transfers and trigger them?
+> 
 
-diff --git a/arch/mips/boot/dts/lantiq/danube.dtsi b/arch/mips/boot/dts/lantiq/danube.dtsi
-index 510be63c8bdf..73746d7577d7 100644
---- a/arch/mips/boot/dts/lantiq/danube.dtsi
-+++ b/arch/mips/boot/dts/lantiq/danube.dtsi
-@@ -74,7 +74,7 @@
- 			reg = <0xe100a00 0x100>;
- 		};
- 
--		serial@e100c00 {
-+		asc1: serial@e100c00 {
- 			compatible = "lantiq,asc";
- 			reg = <0xe100c00 0x400>;
- 			interrupt-parent = <&icu0>;
-diff --git a/arch/mips/boot/dts/lantiq/easy50712.dts b/arch/mips/boot/dts/lantiq/easy50712.dts
-index 1ce20b7d05cb..452860ca1868 100644
---- a/arch/mips/boot/dts/lantiq/easy50712.dts
-+++ b/arch/mips/boot/dts/lantiq/easy50712.dts
-@@ -4,6 +4,10 @@
- /include/ "danube.dtsi"
- 
- / {
-+	aliases {
-+		serial0 = &asc1;
-+	};
-+
- 	chosen {
- 		bootargs = "console=ttyLTQ0,115200 init=/etc/preinit";
- 	};
--- 
-2.11.0
+Client may use or not chaining: defined within DT. API and dynamic are same at
+driver client level. Moreover driver exposes only DMAv2 and not both DMAv2 and
+MDMA. This is totally hidden for client. If client sets both this would imply
+changing all drivers that may want use chaining. Even more to deal with DMAv2
+and MDMA at its level.
+Since DMAv2 deals with MDMA, all drivers are same as before. no changes required.
+
+Regards
