@@ -1,94 +1,138 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH v3 4/7] dmaengine: stm32-dma: Add DMA/MDMA chaining
- support
-Date: Tue, 16 Oct 2018 20:14:32 +0530
-Message-ID: <20181016144432.GR2400@vkoul-mobl>
-References: <1538139715-24406-1-git-send-email-pierre-yves.mordret@st.com>
- <1538139715-24406-5-git-send-email-pierre-yves.mordret@st.com>
- <20181007160030.GB2372@vkoul-mobl>
- <e9cedfdd-ad90-9123-03bb-34a2e84059c5@st.com>
- <20181010040343.GO2372@vkoul-mobl>
- <d64da587-a680-20c4-7139-f59fd1f299bc@st.com>
- <20181015171403.GM2400@vkoul-mobl>
- <9a375fd3-964f-3d57-9d18-b010e20a4d42@st.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v9 2/9] PCI: Using PCI configuration space header type
+ instead of class type to assign resource
+Date: Tue, 16 Oct 2018 15:53:55 +0100
+Message-ID: <20181016145355.GB16390@e107981-ln.cambridge.arm.com>
+References: <1539686690-24068-1-git-send-email-honghui.zhang@mediatek.com>
+ <1539686690-24068-3-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <9a375fd3-964f-3d57-9d18-b010e20a4d42@st.com>
+In-Reply-To: <1539686690-24068-3-git-send-email-honghui.zhang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: honghui.zhang@mediatek.com
+Cc: bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com, ulf.hansson@linaro.org, marc.zyngier@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, youlin.pei@mediatek.com, yt.shen@mediatek.com, jianjun.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 16-10-18, 11:19, Pierre Yves MORDRET wrote:
+On Tue, Oct 16, 2018 at 06:44:43PM +0800, honghui.zhang@mediatek.com wrote:
+> From: Honghui Zhang <honghui.zhang@mediatek.com>
 > 
+> The PCI configuration space header type defines the layout of the rest
+> of the header (PCI r3.0 sec 6.1, PCIe r4.0 sec 7.5.1.1.9) while the
+> resource assignment is based on the configuration space layout instead
+> of its class type. Using configuration space header type instead of
+> class type for the resource assignment.
 > 
-> On 10/15/18 7:14 PM, Vinod wrote:
-> > On 10-10-18, 09:02, Pierre Yves MORDRET wrote:
-> >>
-> >>
-> >> On 10/10/2018 06:03 AM, Vinod wrote:
-> >>> On 09-10-18, 10:40, Pierre Yves MORDRET wrote:
-> >>>>
-> >>>>
-> >>>> On 10/07/2018 06:00 PM, Vinod wrote:
-> >>>>> On 28-09-18, 15:01, Pierre-Yves MORDRET wrote:
-> >>>>>> This patch adds support of DMA/MDMA chaining support.
-> >>>>>> It introduces an intermediate transfer between peripherals and STM32 DMA.
-> >>>>>> This intermediate transfer is triggered by SW for single M2D transfer and
-> >>>>>> by STM32 DMA IP for all other modes (sg, cyclic) and direction (D2M).
-> >>>>>>
-> >>>>>> A generic SRAM allocator is used for this intermediate buffer
-> >>>>>> Each DMA channel will be able to define its SRAM needs to achieve chaining
-> >>>>>> feature : (2 ^ order) * PAGE_SIZE.
-> >>>>>> For cyclic, SRAM buffer is derived from period length (rounded on
-> >>>>>> PAGE_SIZE).
-> >>>>>
-> >>>>> So IIUC, you chain two dma txns together and transfer data via an SRAM?
-> >>>>
-> >>>> Correct. one DMA is DMAv2 (stm32-dma) and the other is MDMA(stm32-mdma).
-> >>>> Intermediate transfer is between device and memory.
-> >>>> This intermediate transfer is using SDRAM.
-> >>>
-> >>> Ah so you use dma calls to setup mdma xtfers? I dont think that is a
-> >>> good idea. How do you know you should use mdma for subsequent transfer?
-> >>>
-> >>
-> >> When user bindings told to setup chaining intermediate MDMA transfers are always
-> >> triggers.
-> >> For instance if a user requests a Dev2Mem transfer with chaining. From client
-> >> pov this is still a prep_slave_sg. Internally DMAv2 is setup in cyclic mode (in
-> >> double buffer mode indeed => 2 buffer of PAGE_SIZE/2) and destination is SDRAM.
-> >> DMAv2 will flip/flop on those 2 buffers.
-> >> At the same time DMAv2 driver prepares a MDMA SG that will fetch data from those
-> >> 2 buffers in SDRAM and fills final destination memory.
-> > 
-> > I am not able to follow is why does it need to be internal, why should
-> > the client not set the two transfers and trigger them?
-> > 
+> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+> ---
+>  drivers/pci/pci.c       |  3 +--
+>  drivers/pci/probe.c     |  3 ---
+>  drivers/pci/setup-bus.c | 20 ++++++++++----------
+>  3 files changed, 11 insertions(+), 15 deletions(-)
 > 
-> Client may use or not chaining: defined within DT. API and dynamic are same at
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 29ff961..7d379ca 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5908,8 +5908,7 @@ void pci_reassigndev_resource_alignment(struct pci_dev *dev)
+>  	 * to enable the kernel to reassign new resource
+>  	 * window later on.
+>  	 */
+> -	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE &&
+> -	    (dev->class >> 8) == PCI_CLASS_BRIDGE_PCI) {
+> +	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE) {
+>  		for (i = PCI_BRIDGE_RESOURCES; i < PCI_NUM_RESOURCES; i++) {
+>  			r = &dev->resource[i];
+>  			if (!(r->flags & IORESOURCE_MEM))
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index ec78400..29a35c1 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1695,9 +1695,6 @@ int pci_setup_device(struct pci_dev *dev)
+>  		break;
+>  
+>  	case PCI_HEADER_TYPE_BRIDGE:		    /* bridge header */
+> -		if (class != PCI_CLASS_BRIDGE_PCI)
+> -			goto bad;
+> -
+>  		/*
+>  		 * The PCI-to-PCI bridge spec requires that subtractive
+>  		 * decoding (i.e. transparent) bridge must have programming
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index 79b1824..69f90f4 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -182,7 +182,7 @@ static void __dev_sort_resources(struct pci_dev *dev,
+>  	u16 class = dev->class >> 8;
+>  
+>  	/* Don't touch classless devices or host bridges or ioapics.  */
+> -	if (class == PCI_CLASS_NOT_DEFINED || class == PCI_CLASS_BRIDGE_HOST)
+> +	if (class == PCI_CLASS_NOT_DEFINED)
 
-That should be upto client... As a dmaengine driver you should enable
-data transfer from src to dstn.
+I think this check has been there since the first initial git commit,
+whether that's _really_ needed or not in the current kernel it is very
+hard to say.
 
-> driver client level. Moreover driver exposes only DMAv2 and not both DMAv2 and
-> MDMA. This is totally hidden for client. If client sets both this would imply
+I am not that sure it is safe to remove it, especially given that we are at
+-rc8 and close to a release, it would be good if this patch could sit in
+next to give it some exposure to testing before merging it upstream.
 
-Why should a controller be hidden from user, I dont see why that would
-be a good thing
+Lorenzo
 
-> changing all drivers that may want use chaining. Even more to deal with DMAv2
-> and MDMA at its level.
-> Since DMAv2 deals with MDMA, all drivers are same as before. no changes required.
-
-It is not about changes, it is about the SW model you want to have.
-
-The intermediate SRAM transfers should not be made within DMAengine
-driver, client can chose to have two transfers and couple or not, it is
-upto them to choose. Sorry I do not like this abstraction and would like
-to see a cleaner approach
-
--- 
-~Vinod
+>  		return;
+>  
+>  	/* Don't touch ioapic devices already enabled by firmware */
+> @@ -1221,12 +1221,12 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
+>  		if (!b)
+>  			continue;
+>  
+> -		switch (dev->class >> 8) {
+> -		case PCI_CLASS_BRIDGE_CARDBUS:
+> +		switch (dev->hdr_type) {
+> +		case PCI_HEADER_TYPE_CARDBUS:
+>  			pci_bus_size_cardbus(b, realloc_head);
+>  			break;
+>  
+> -		case PCI_CLASS_BRIDGE_PCI:
+> +		case PCI_HEADER_TYPE_BRIDGE:
+>  		default:
+>  			__pci_bus_size_bridges(b, realloc_head);
+>  			break;
+> @@ -1237,12 +1237,12 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
+>  	if (pci_is_root_bus(bus))
+>  		return;
+>  
+> -	switch (bus->self->class >> 8) {
+> -	case PCI_CLASS_BRIDGE_CARDBUS:
+> +	switch (bus->self->hdr_type) {
+> +	case PCI_HEADER_TYPE_CARDBUS:
+>  		/* don't size cardbuses yet. */
+>  		break;
+>  
+> -	case PCI_CLASS_BRIDGE_PCI:
+> +	case PCI_HEADER_TYPE_BRIDGE:
+>  		pci_bridge_check_ranges(bus);
+>  		if (bus->self->is_hotplug_bridge) {
+>  			additional_io_size  = pci_hotplug_io_size;
+> @@ -1391,13 +1391,13 @@ void __pci_bus_assign_resources(const struct pci_bus *bus,
+>  
+>  		__pci_bus_assign_resources(b, realloc_head, fail_head);
+>  
+> -		switch (dev->class >> 8) {
+> -		case PCI_CLASS_BRIDGE_PCI:
+> +		switch (dev->hdr_type) {
+> +		case PCI_HEADER_TYPE_BRIDGE:
+>  			if (!pci_is_enabled(dev))
+>  				pci_setup_bridge(b);
+>  			break;
+>  
+> -		case PCI_CLASS_BRIDGE_CARDBUS:
+> +		case PCI_HEADER_TYPE_CARDBUS:
+>  			pci_setup_cardbus(b);
+>  			break;
+>  
+> -- 
+> 2.6.4
+> 
