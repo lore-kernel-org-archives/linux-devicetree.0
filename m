@@ -1,64 +1,102 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH] DT: rockchip: Fix stability issues with the 'performance' governor on rock960
-Date: Tue, 16 Oct 2018 16:00:20 +0200
-Message-ID: <1539698431-12616-1-git-send-email-daniel.lezcano@linaro.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 5/7] mfd: ds90ux9xx: add I2C bridge/alias and link connection driver
+Date: Tue, 16 Oct 2018 17:06:06 +0300
+Message-ID: <2291401.VxyBGcGQdW@avalon>
+References: <20181008211205.2900-1-vz@mleia.com> <1584081.CVFmJobd6K@avalon> <0be75b0d-eb61-02e5-a086-be6a9d32841a@mleia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0be75b0d-eb61-02e5-a086-be6a9d32841a@mleia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vicente Bergas <vicencb@gmail.com>, Shawn Lin <shawn.lin@rock-chips.com>, Ezequiel Garcia <ezequiel@collabora.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Rockchip SoC
-        support" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When the performance governor is set as default, the rock960 hangs
-around one minute after booting, whatever the activity is (idle, key
-pressed, loaded, ...).
+Hi Vladimir,
 
-Based on the commit log found at https://patchwork.kernel.org/patch/10092377/
+On Friday, 12 October 2018 17:36:39 EEST Vladimir Zapolskiy wrote:
+> On 10/12/2018 04:12 PM, Laurent Pinchart wrote:
+> > On Friday, 12 October 2018 10:32:32 EEST Vladimir Zapolskiy wrote:
+> >> On 10/12/2018 09:04 AM, Lee Jones wrote:
+> >>> On Tue, 09 Oct 2018, Vladimir Zapolskiy wrote:
+> >>>> From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+> >>>> 
+> >>>> The change adds TI DS90Ux9xx I2C bridge/alias subdevice driver and
+> >>>> FPD Link connection handling mechanism.
+> >>>> 
+> >>>> Access to I2C devices connected to a remote de-/serializer is done in
+> >>>> a transparent way, on established link detection event such devices
+> >>>> are registered on an I2C bus, which serves a local de-/serializer IC.
+> >>>> 
+> >>>> The development of the driver was a collaborative work, the
+> >>>> contribution done by Balasubramani Vivekanandan includes:
+> >>>> * original simplistic implementation of the driver,
+> >>>> * support of implicitly specified devices in device tree,
+> >>>> * support of multiple FPD links for TI DS90Ux9xx,
+> >>>> * other kind of valuable review comments, clean-ups and fixes.
+> >>>> 
+> >>>> Also Steve Longerbeam made the following changes:
+> >>>> * clear address maps after linked device removal,
+> >>>> * disable pass-through in disconnection,
+> >>>> * qualify locked status with non-zero remote address.
+> >>>> 
+> >>>> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+> >>>> ---
+> >>>> 
+> >>>>  drivers/mfd/Kconfig                |   8 +
+> >>>>  drivers/mfd/Makefile               |   1 +
+> >>>>  drivers/mfd/ds90ux9xx-i2c-bridge.c | 764 +++++++++++++++++++++++++++++
+> >>>>  3 files changed, 773 insertions(+)
+> >>>>  create mode 100644 drivers/mfd/ds90ux9xx-i2c-bridge.c
+> >>> 
+> >>> Shouldn't this live in drivers/i2c?
+> >> 
+> >> no, the driver is not for an I2C controller of any kind, and the driver
+> >> does not register itself in the I2C subsystem by calling
+> >> i2c_add_adapter() or i2c_add_numbered_adapter() or i2c_mux_add_adapter()
+> >> etc, this topic was discussed with Wolfram also.
+> > 
+> > (Who is now on CC)
+> 
+> Wolfram has copies of the drivers and discussion right from the beginning,
+> hopefully he won't get two copies ;)
+> 
+> >> Formally the driver converts the managed IC into a multi-address I2C
+> >> slave device, I understand that it does not sound like a well suited
+> >> driver for MFD, but ds90ux9xx-core.c and ds90ux9xx-i2c-bridge.c drivers
+> >> are quite tightly coupled.
+> > 
+> > As mentioned in other e-mails in this thread I don't think this should be
+> > split out to a separate driver,> I would move the functionality to the
+> > ds90ux9xx driver.
+> 
+> The proposal may have the grounds, but the I2C bridging functionality of ICs
+> is quite detached from all other ones, thus it found its place in the cell
+> driver per se.
+> 
+> > You may want to register an I2C mux, but as you have a single port, that
+> > could be overkill. I haven't studied in details how to best support this
+> > chip using the existing I2C subsystems APIs (which we may want to extend
+> > if it needed), but I believe that (in your use cases) the deserializer
+> > should be a child of the serializer, and modeled as an I2C device.
+> 
+> Formally in OF terms to define a link between devices by a phandle should
+> be sufficient, panels are not the children of LVDS controllers under OF
+> graph constraints in DT representation, the panels become secondary in
+> runtime only, I'd like to reuse the concept. Also it adds a better sense of
+> symmetry of deserializer <-> serializer connections relatively to a
+> SoC/data source.
 
-"vdd_log has no consumer and therefore will not be set to a specific
-voltage. Still the PWM output pin gets configured and thence the vdd_log
-output voltage will changed from it's default. Depending on the idle
-state of the PWM this will slightly over or undervoltage the logic supply
-of the RK3399 and cause instability with GbE (undervoltage) and PCIe
-(overvoltage). Since the default value set by a voltage divider is the
-correct supply voltage and we don't need to change it during runtime we
-remove the rail from the devicetree completely so the PWM pin will not
-be configured."
+As I explained, DT models control buses through parent/child relationships. 
+That's why I2C slaves are children of their I2C master. OF graph adds a second 
+topology to describe data connections, which are orthogonal to the control bus 
+relationship. In your case the device at the remote side of the link is 
+controlled over the link, and that control flow goes from the SoC to the 
+device on the local side of the link. That's why the remote device should be a 
+child of the local device.
 
-After removing the vdd-log from the rock960's specific DT, the board
-does no longer hang and shows a stable behavior.
-
-Apply the same change for the rock960 by removing the vdd-log from the
-DT.
-
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 12 ------------
- 1 file changed, 12 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-index 6c8c4ab..56abbb0 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-@@ -57,18 +57,6 @@
- 		regulator-always-on;
- 		vin-supply = <&vcc_sys>;
- 	};
--
--	vdd_log: vdd-log {
--		compatible = "pwm-regulator";
--		pwms = <&pwm2 0 25000 0>;
--		regulator-name = "vdd_log";
--		regulator-min-microvolt = <800000>;
--		regulator-max-microvolt = <1400000>;
--		regulator-always-on;
--		regulator-boot-on;
--		vin-supply = <&vcc_sys>;
--	};
--
- };
- 
- &cpu_l0 {
 -- 
-2.7.4
+Regards,
+
+Laurent Pinchart
