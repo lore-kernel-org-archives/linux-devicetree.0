@@ -1,377 +1,166 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH v2] of: overlay: user space synchronization
-Date: Tue, 16 Oct 2018 15:04:11 -0500
-Message-ID: <CANk1AXR1CRtons4RYtN3y=8EY0+31vUufei4O_EAr2mNaunLJA@mail.gmail.com>
-References: <1539649621-5518-1-git-send-email-frowand.list@gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 6/7] Input: sx8654 - add sx8650 support
+Date: Tue, 16 Oct 2018 13:18:53 -0700
+Message-ID: <20181016201853.GF230131@dtor-ws>
+References: <20181016091653.26896-1-richard.leitner@skidata.com>
+ <20181016092248.27288-1-richard.leitner@skidata.com>
+ <20181016174838.GD230131@dtor-ws>
+ <575f935b-e082-7d19-30c1-4db36ed6114d@skidata.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539649621-5518-1-git-send-email-frowand.list@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <575f935b-e082-7d19-30c1-4db36ed6114d@skidata.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
+To: Richard Leitner <richard.leitner@skidata.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 15, 2018 at 7:28 PM <frowand.list@gmail.com> wrote:
+On Tue, Oct 16, 2018 at 09:34:26PM +0200, Richard Leitner wrote:
+> 
+> On 10/16/18 7:48 PM, Dmitry Torokhov wrote:
+> > On Tue, Oct 16, 2018 at 11:22:48AM +0200, Richard Leitner wrote:
+> > > The sx8654 and sx8650 are quite similar, therefore add support for the
+> > > sx8650 within the sx8654 driver.
+> > > 
+> 
+> ...
+> 
+> > >   /* bits for I2C_REG_CHANMASK */
+> > > -#define CONV_X				0x80
+> > > -#define CONV_Y				0x40
+> > > +#define CONV_X				BIT(7)
+> > > +#define CONV_Y				BIT(6)
+> > 
+> > If you are using BIT() you need to include include/linux/bitops.h
+> > 
+> > I also would prefer conversion to using BIT() as a separate patch.
+> 
+> OK. I'll take it out of this patch.
+> 
+> Should I convert them (and the other #defines where it makes sense) to BIT()
+> at all?
 
-Hi Frank,
+Sure as it documents the intent better, I just asked it to be split out
+since each patch should solve one particular problem.
 
-Thanks for all your work on this!
+> 
+> > 
+> > >   /* coordinates rate: higher nibble of CTRL0 register */
+> > >   #define RATE_MANUAL			0x00
+> > > @@ -71,14 +75,110 @@
+> > >   /* power delay: lower nibble of CTRL0 register */
+> > >   #define POWDLY_1_1MS			0x0b
+> > > +/* for sx8650, as we have no pen release IRQ there: timeout in ns following the
+> > > + * last PENIRQ after which we assume the pen is lifted.
+> > > + */
+> > > +#define SX8650_PENIRQ_TIMEOUT		(80 * 1100 * 1000)
+> > > +
+> > >   #define MAX_12BIT			((1 << 12) - 1)
+> > > +#define MAX_I2C_READ_LEN		10 /* see datasheet section 5.1.5 */
+> > > +
+> > > +/* channel definition */
+> > > +#define CH_X				0x00
+> > > +#define CH_Y				0x01
+> > > +
+> > > +struct sx865x_data {
+> > > +	u8 cmd_manual;
+> > > +	u8 chan_mask;
+> > > +	u8 has_irq_penrelease;
+> > > +	u8 has_reg_irqmask;
+> > > +	irq_handler_t irqh;
+> > > +};
+> > >   struct sx8654 {
+> > >   	struct input_dev *input;
+> > >   	struct i2c_client *client;
+> > >   	struct gpio_desc *gpio_reset;
+> > > +	struct hrtimer timer;
+> > 
+> > Does this have to be hrtimer? Can regular timer be used?
+> 
+> I'll check again if it's feasible to reduce the timer delay to something
+> below the "normal" jiffy. If not I'll replace the hrtimer with a timer.
 
-> From: Frank Rowand <frank.rowand@sony.com>
->
-> When an overlay is applied or removed, the live devicetree visible in
-> /proc/device-tree/, aka /sys/firmware/devicetree/base/, reflects the
-> changes.  There is no method for user space to determine whether the
-> live devicetree was modified by overlay actions.
->
-> Provide a sysfs file, /sys/firmware/devicetree/tree_version,  to allow
-> user space to determine if the live devicetree has remained unchanged
-> while a series of one or more accesses of /proc/device-tree/ occur.
->
-> The use of both dynamic devicetree modifications and overlay apply and
-> removal are not supported during the same boot cycle.  Thus non-overlay
-> dynamic modifications are not reflected in the value of tree_version.
->
-> Example shell use:
->
->         done=1
->
+That means polling faster than 200HZ in the best case. I think it is too
+much.
 
-Suggest a few comments, such as:
+> 
+> > 
+> > > +
+> > > +	const struct sx865x_data *data;
+> > >   };
+> > > +static enum hrtimer_restart sx865x_penrelease_timer_handler(struct hrtimer *h)
+> > > +{
+> > > +	struct sx8654 *ts = container_of(h, struct sx8654, timer);
+> > > +
+> > > +	input_report_key(ts->input, BTN_TOUCH, 0);
+> > > +	input_sync(ts->input);
+> > > +	dev_dbg(&ts->client->dev, "penrelease by timer\n");
+> > > +
+> > > +	return HRTIMER_NORESTART;
+> > > +}
+> > > +
+> 
+> ...
+> 
+> > > @@ -196,10 +312,30 @@ static void sx8654_close(struct input_dev *dev)
+> > >   }
+> > >   #ifdef CONFIG_OF
+> > > +static const struct of_device_id sx8654_of_match[] = {
+> > > +	{
+> > > +		.compatible = "semtech,sx8650",
+> > > +		.data = &sx8650_data,
+> > > +	}, {
+> > > +		.compatible = "semtech,sx8654",
+> > > +		.data = &sx8654_data,
+> > > +	}, {
+> > > +		.compatible = "semtech,sx8655",
+> > > +		.data = &sx8654_data,
+> > > +	}, {
+> > > +		.compatible = "semtech,sx8656",
+> > > +		.data = &sx8654_data,
+> > > +	}, {},
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, sx8654_of_match);
+> > > +
+> > >   static int sx8654_get_ofdata(struct sx8654 *ts)
+> > >   {
+> > >   	struct device *dev = &ts->client->dev;
+> > >   	struct device_node *node = dev->of_node;
+> > > +	const struct of_device_id *of_id = of_match_device(sx8654_of_match,
+> > > +							   dev);
+> > 
+> > If you use of_device_get_match_data() you do not need to move device
+> > table around.
+> 
+> Thanks for that hint. I haven't known there's something like this ;-)
+> 
+> > 
+> > > +	const struct sx865x_data *data = (struct sx865x_data *)of_id->data;
+> > >   	int err;
+> > >   	if (!node) {
+> 
+> ...
+> 
+> > > @@ -327,6 +466,7 @@ static int sx8654_probe(struct i2c_client *client,
+> > >   }
+> > >   static const struct i2c_device_id sx8654_id_table[] = {
+> > > +	{ "semtech_sx8650", 0 },
+> > 
+> > Can we add the data here as well?
+> 
+> Does it generate any benefit if we add it? Who should be using it?
 
-+ # Keep trying until we can make it through the loop without live
-tree being changed
-+ # by an overlay during the 'critical region'
+If someone decides to use driver in non-DT environment.
 
->         while [ $done = 1 ] ; do
+> 
+> I found in other drivers that it's used as a fallback when
+> of_device_get_match_data() returns NULL... Should I also implement it that
+> way?
 
-Nit: doesn't $done mean 'not done' in this script (assuming True is 1)?
+Yes, that would be good.
 
->
->                 pre_version=$(cat /sys/firmware/devicetree/tree_version)
+Thanks.
 
-Suggest:
-+ # loop while live tree is locked for overlay changes
-
->                 while [ $(( ${pre_version} & 1 )) != 0 ] ; do
->                         # echo is optional, sleep value can be tuned
->                         echo "${pre_version}  locked, sleeping 2 seconds"
->                         sleep 2;
->                         pre_version=$(cat /sys/firmware/devicetree/tree_version)
->                         version=${pre_version}
-
-Unused 'version' variable
-
->                 done
->
->                 # 'critical region'
->                 # access /proc/device-tree/ one or more times
->
->                 post_version=$(cat /sys/firmware/devicetree/tree_version)
->
-
-+ # Final check that DT wasn't possibly overlaid during the critical region
-
->                 if [ ${post_version} = ${pre_version} ] ; then
->                         done=0
-
-This threw me off for a moment as I was figuring at first that setting
-done = 0 meant that we weren't done, so keep looping.
-
->                 fi
->
->         done
->
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
->
-> updates since v1:
->   - removed unneeded variable "version" from shell script
->   - explicitly state that an odd value of tree_version means the
->     devicetree is locked for an overlay update not just in the
->     source, but also in Documentation/ABI/testing/sysfs-firmware-ofw
->   - document that tree_version is reported as an ascii number, the
->     internal representation, and the resultant wrap around behavior
->
->  Documentation/ABI/testing/sysfs-firmware-ofw | 67 +++++++++++++++++++++++++---
->  drivers/of/base.c                            | 66 +++++++++++++++++++++++++++
->  drivers/of/of_private.h                      |  2 +
->  drivers/of/overlay.c                         | 12 +++++
->  4 files changed, 140 insertions(+), 7 deletions(-)
->
-> diff --git a/Documentation/ABI/testing/sysfs-firmware-ofw b/Documentation/ABI/testing/sysfs-firmware-ofw
-> index edcab3ccfcc0..d2346eb61924 100644
-> --- a/Documentation/ABI/testing/sysfs-firmware-ofw
-> +++ b/Documentation/ABI/testing/sysfs-firmware-ofw
-> @@ -1,4 +1,10 @@
-> -What:          /sys/firmware/devicetree/*
-> +What:          /sys/firmware/devicetree/
-> +Date:          November 2013
-> +Contact:       Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
-> +Description:
-> +               Top level Open Firmware, aka devicetree, sysfs directory.
-> +
-> +What:          /sys/firmware/devicetree/base
->  Date:          November 2013
->  Contact:       Grant Likely <grant.likely@arm.com>, devicetree@vger.kernel.org
->  Description:
-> @@ -6,11 +12,6 @@ Description:
->                 hardware, the device tree structure will be exposed in this
->                 directory.
->
-> -               It is possible for multiple device-tree directories to exist.
-> -               Some device drivers use a separate detached device tree which
-> -               have no attachment to the system tree and will appear in a
-> -               different subdirectory under /sys/firmware/devicetree.
-> -
->                 Userspace must not use the /sys/firmware/devicetree/base
->                 path directly, but instead should follow /proc/device-tree
->                 symlink. It is possible that the absolute path will change
-> @@ -20,13 +21,65 @@ Description:
->                 filesystem support, and has largely the same semantics and
->                 should be compatible with existing userspace.
->
-> -               The contents of /sys/firmware/devicetree/ is a
-> +               The /sys/firmware/devicetree/base directory is the root
-> +               node of the devicetree.
-> +
-> +               The contents of /sys/firmware/devicetree/base is a
->                 hierarchy of directories, one per device tree node. The
->                 directory name is the resolved path component name (node
->                 name plus address). Properties are represented as files
->                 in the directory. The contents of each file is the exact
->                 binary data from the device tree.
->
-> +What:          /sys/firmware/devicetree/tree_version
-> +Date:          October 2018
-> +KernelVersion: 4.20
-> +Contact:       Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
-> +Description:
-> +               When an overlay is applied or removed, the live devicetree
-> +               visible in /proc/device-tree/, aka
-> +               /sys/firmware/devicetree/base/, reflects the changes.
-> +
-> +               tree_version provides a way for user space to determine if the
-> +               live devicetree has remained unchanged while a series of one
-> +               or more accesses of /proc/device-tree/ occur.  If tree_version
-> +               is odd then the devicetree is locked for an overlay update.
-
-This explains the intention very clearly and directly.
-
-I think it would help to give more of an idea of its behavior.  I
-initially had to look at the code to understand what kind of values to
-expect and whether the tree_version somehow actually reflected some
-version # that I hadn't known about, hidden in DT somewhere.  It would
-be helpful to have it spelled out what granularity this counter has
-and some other things about its behavior, somehow explaining that
-* tree_version is a counter that is incremented and never decremented
-* tree_version is incremented twice per change
-* that the granularity is an overlay, tree_version is not counting
-changeset changes or something else
-* tree_version is updated (incremented) for both applied and for
-removed overlays
-
-Such as:
-
-tree_version is incremented twice for each overlay that is applied or
-removed (and never decremented).  When the tree is locked for
-processing an overlay, tree_version is incremented once and its value
-becomes odd.  Then when the overlay is done being applied or removed,
-the tree is unlocked and tree_version is incremented again, becoming
-an even value.
-
-> +
-> +               The contents of tree_version is the ascii representation of
-> +               a kernel unsigned 32 bit int variable, thus when incremented
-> +               from 4294967295 it will wrap around to 0.
-> +
-> +               The use of both dynamic devicetree modifications and overlay
-> +               apply and removal are not supported during the same boot
-> +               cycle.  Thus non-overlay dynamic modifications are not
-> +               reflected in the value of tree_version.
-> +
-> +               Example shell use of tree_version:
-> +
-
-Same comments as in the header about adding some comments and possibly
-reconsidering the 'done' variable.
-
-> +               done=1
-> +
-> +               while [ $done = 1 ] ; do
-> +
-> +                  pre_version=$(cat /sys/firmware/devicetree/tree_version)
-> +                  while [ $(( ${pre_version} & 1 )) != 0 ] ; do
-> +                     # echo is optional, sleep value can be tuned
-> +                     echo "${pre_version}  tree locked, sleeping 2 seconds"
-> +                     sleep 2;
-> +                     pre_version=$(cat /sys/firmware/devicetree/tree_version)
-> +                  done
-> +
-> +                  # 'critical region'
-> +                  # access /proc/device-tree/ one or more times
-> +
-> +                  post_version=$(cat /sys/firmware/devicetree/tree_version)
-> +
-> +                  if [ ${post_version} = ${pre_version} ] ; then
-> +                     done=0
-> +                  fi
-> +
-> +               done
-> +
-> +
->  What:          /sys/firmware/fdt
->  Date:          February 2015
->  KernelVersion: 3.19
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 466e3c8582f0..ec0428e47577 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -151,9 +151,71 @@ int of_free_phandle_cache(void)
->  late_initcall_sync(of_free_phandle_cache);
->  #endif
->
-> +#define show_one(object)                                               \
-> +       static ssize_t show_##object                                    \
-> +       (struct kobject *kobj, struct attribute *attr, char *buf)       \
-> +       {                                                               \
-> +               return sprintf(buf, "%u\n", object);                    \
-> +       }
-> +
-> +struct global_attr {
-> +       struct attribute attr;
-> +       ssize_t (*show)(struct kobject *kobj,
-> +                       struct attribute *attr, char *buf);
-> +       ssize_t (*store)(struct kobject *a, struct attribute *b,
-> +                        const char *c, size_t count);
-> +};
-> +
-> +#define define_one_global_ro(_name)            \
-> +static struct global_attr attr_##_name =       \
-> +__ATTR(_name, 0444, show_##_name, NULL)
-> +
-> +/*
-> + * tree_version must be unsigned so that at maximum value it wraps
-> + * from an odd value (4294967295) to an even value (0).
-> + */
-> +static u32 tree_version;
-> +
-> +show_one(tree_version);
-> +
-> +define_one_global_ro(tree_version);
-> +
-> +static struct attribute *of_attributes[] = {
-> +       &attr_tree_version.attr,
-> +       NULL
-> +};
-> +
-> +static const struct attribute_group of_attr_group = {
-> +       .attrs = of_attributes,
-> +};
-> +
-> +/*
-> + * internal documentation
-> + * tree_version_increment() - increment base version
-> + *
-> + * Before starting overlay apply or overlay remove, call this function.
-> + * After completing overlay apply or overlay remove, call this function.
-> + *
-> + * caller must hold of_mutex
-> + *
-> + * Userspace can use the value of this variable to determine whether the
-> + * devicetree has changed while accessing the devicetree.  An odd value
-> + * means a modification is underway.  An even value means no modification
-> + * is underway.
-> + *
-> + * The use of both (1) dynamic devicetree modifications and (2) overlay apply
-> + * and removal are not supported during the same boot cycle.  Thus non-overlay
-> + * dynamic modifications are not reflected in the value of tree_version.
-> + */
-> +void tree_version_increment(void)
-> +{
-> +       tree_version++;
-> +}
-> +
->  void __init of_core_init(void)
->  {
->         struct device_node *np;
-> +       int ret;
->
->         of_populate_phandle_cache();
->
-> @@ -172,6 +234,10 @@ void __init of_core_init(void)
->         /* Symlink in /proc as required by userspace ABI */
->         if (of_root)
->                 proc_symlink("device-tree", NULL, "/sys/firmware/devicetree/base");
-> +
-> +       ret = sysfs_create_group(&of_kset->kobj, &of_attr_group);
-> +       if (ret)
-> +               pr_err("sysfs_create_group of_attr_group failed: %d\n", ret);
->  }
->
->  static struct property *__of_find_property(const struct device_node *np,
-> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-> index 216175d11d3d..adf89f6bad81 100644
-> --- a/drivers/of/of_private.h
-> +++ b/drivers/of/of_private.h
-> @@ -31,6 +31,8 @@ struct alias_prop {
->  extern struct list_head aliases_lookup;
->  extern struct kset *of_kset;
->
-> +void tree_version_increment(void);
-> +
->  #if defined(CONFIG_OF_DYNAMIC)
->  extern int of_property_notify(int action, struct device_node *np,
->                               struct property *prop, struct property *old_prop);
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index eda57ef12fd0..53b1810b1e03 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -770,6 +770,9 @@ static int of_overlay_apply(const void *fdt, struct device_node *tree,
->         of_overlay_mutex_lock();
->         mutex_lock(&of_mutex);
->
-> +       /* live tree may change after this point, user space synchronization */
-> +       tree_version_increment();
-> +
->         ret = of_resolve_phandles(tree);
->         if (ret)
->                 goto err_free_tree;
-> @@ -832,6 +835,9 @@ static int of_overlay_apply(const void *fdt, struct device_node *tree,
->         free_overlay_changeset(ovcs);
->
->  out_unlock:
-> +       /* live tree change complete, user space synchronization */
-> +       tree_version_increment();
-> +
->         mutex_unlock(&of_mutex);
->         of_overlay_mutex_unlock();
->
-> @@ -1028,6 +1034,9 @@ int of_overlay_remove(int *ovcs_id)
->
->         mutex_lock(&of_mutex);
->
-> +       /* live tree may change after this point, user space synchronization */
-> +       tree_version_increment();
-> +
->         ovcs = idr_find(&ovcs_idr, *ovcs_id);
->         if (!ovcs) {
->                 ret = -ENODEV;
-> @@ -1083,6 +1092,9 @@ int of_overlay_remove(int *ovcs_id)
->         free_overlay_changeset(ovcs);
->
->  out_unlock:
-> +       /* live tree change complete, user space synchronization */
-> +       tree_version_increment();
-> +
->         mutex_unlock(&of_mutex);
->
->  out:
-> --
-
-Thanks!
-Alan
-
-> Frank Rowand <frank.rowand@sony.com>
->
+-- 
+Dmitry
