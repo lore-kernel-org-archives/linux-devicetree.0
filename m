@@ -1,54 +1,80 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH] arm64: dts: rockchip: Use default brightness table for gru.
-Date: Tue, 16 Oct 2018 16:13:04 +0200
-Message-ID: <20181016141304.21984-1-enric.balletbo@collabora.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH] DT: rockchip: Fix stability issues with the
+ 'performance' governor on rock960
+Date: Tue, 16 Oct 2018 19:51:38 +0530
+Message-ID: <20181016142138.GA24727@mani>
+References: <1539698431-12616-1-git-send-email-daniel.lezcano@linaro.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1539698431-12616-1-git-send-email-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: kernel@collabora.com, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: heiko@sntech.de, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vicente Bergas <vicencb@gmail.com>, Shawn Lin <shawn.lin@rock-chips.com>, Ezequiel Garcia <ezequiel@collabora.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-After commit 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED
-linearly to human eye") the pwm_bl driver is able to calculate a default
-brightness table. The calculated table for this PWM will have more
-granularity and will be adjusted to change the brightness linearly to
-the human eye. Use that table instead of have a DT-defined table with
-less granularity.
+On Tue, Oct 16, 2018 at 04:00:20PM +0200, Daniel Lezcano wrote:
+> When the performance governor is set as default, the rock960 hangs
+> around one minute after booting, whatever the activity is (idle, key
+> pressed, loaded, ...).
+> 
+> Based on the commit log found at https://patchwork.kernel.org/patch/10092377/
+> 
+> "vdd_log has no consumer and therefore will not be set to a specific
+> voltage. Still the PWM output pin gets configured and thence the vdd_log
+> output voltage will changed from it's default. Depending on the idle
+> state of the PWM this will slightly over or undervoltage the logic supply
+> of the RK3399 and cause instability with GbE (undervoltage) and PCIe
+> (overvoltage). Since the default value set by a voltage divider is the
+> correct supply voltage and we don't need to change it during runtime we
+> remove the rail from the devicetree completely so the PWM pin will not
+> be configured."
+> 
+> After removing the vdd-log from the rock960's specific DT, the board
+> does no longer hang and shows a stable behavior.
+> 
+> Apply the same change for the rock960 by removing the vdd-log from the
+> DT.
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
-Hi Heiko,
+Tested on Rock960 v1.2 board, hence
 
-Note that the patch was only tested on a Samsung Chromebook Plus
-(kevin), will be very interesting if someone can test on other gru-based
-devices, like Bob, before apply this patch.
+Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Best regards,
- Enric
+Thanks a ton!
 
- arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi | 8 --------
- 1 file changed, 8 deletions(-)
+Regards,
+Mani
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
-index ae8bb721005e..8dbe2c58b3ce 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
-@@ -194,14 +194,6 @@
- 
- 	backlight: backlight {
- 		compatible = "pwm-backlight";
--		brightness-levels = <0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
--				     17 18 19 20 21 22 23 24 25 26 27 28 29 30
--				     31 32 33 34 35 36 37 38 39 40 41 42 43 44
--				     45 46 47 48 49 50 51 52 53 54 55 56 57 58
--				     59 60 61 62 63 64 65 66 67 68 69 70 71 72
--				     73 74 75 76 77 78 79 80 81 82 83 84 85 86
--				     87 88 89 90 91 92 93 94 95 96 97 98 99 100>;
--		default-brightness-level = <51>;
- 		enable-gpios = <&gpio1 17 GPIO_ACTIVE_HIGH>;
- 		power-supply = <&pp3300_disp>;
- 		pinctrl-names = "default";
--- 
-2.19.1
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 12 ------------
+>  1 file changed, 12 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+> index 6c8c4ab..56abbb0 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+> @@ -57,18 +57,6 @@
+>  		regulator-always-on;
+>  		vin-supply = <&vcc_sys>;
+>  	};
+> -
+> -	vdd_log: vdd-log {
+> -		compatible = "pwm-regulator";
+> -		pwms = <&pwm2 0 25000 0>;
+> -		regulator-name = "vdd_log";
+> -		regulator-min-microvolt = <800000>;
+> -		regulator-max-microvolt = <1400000>;
+> -		regulator-always-on;
+> -		regulator-boot-on;
+> -		vin-supply = <&vcc_sys>;
+> -	};
+> -
+>  };
+>  
+>  &cpu_l0 {
+> -- 
+> 2.7.4
+> 
