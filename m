@@ -1,76 +1,118 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 0/9] ARM: dts: tegra: last minute fixes
-Date: Tue, 16 Oct 2018 12:58:52 +0100
-Message-ID: <20181016115852.GE7449@sirena.org.uk>
-References: <20181016104730.4598-1-marcel@ziswiler.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [RESEND PATCH v5 0/9] extend PWM framework to support PWM modes
+Date: Tue, 16 Oct 2018 14:03:21 +0200
+Message-ID: <20181016120321.GG8852@ulmo>
+References: <1535461286-12308-1-git-send-email-claudiu.beznea@microchip.com>
+ <b95d0de2-1a97-36f0-03ad-3b5e52b1fa5d@microchip.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7756129264029270759=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181016104730.4598-1-marcel@ziswiler.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Marcel Ziswiler <marcel@ziswiler.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Liam Girdwood <lgirdwood@gmail.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, Jonathan Hunter <jonathanh@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hTiIB9CRvBOLTyqY"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <b95d0de2-1a97-36f0-03ad-3b5e52b1fa5d@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Claudiu Beznea <claudiu.beznea@microchip.com>, alexandre.belloni@bootlin.com, linux-pwm@vger.kernel.org, treding@nvidia.com, shc_work@mail.ru, mark.rutland@arm.com, corbet@lwn.net, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
 
---===============7756129264029270759==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="a1QUDc0q7S3U7/Jg"
-Content-Disposition: inline
-
-
---a1QUDc0q7S3U7/Jg
+--hTiIB9CRvBOLTyqY
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 16, 2018 at 12:47:21PM +0200, Marcel Ziswiler wrote:
+On Fri, Sep 14, 2018 at 06:20:48PM +0200, Nicolas Ferre wrote:
+> Thierry,
+>=20
+> On 28/08/2018 at 15:01, Claudiu Beznea wrote:
+> > Hi,
+> >=20
+> > Please give feedback on these patches which extends the PWM framework in
+> > order to support multiple PWM modes of operations. This series is a rew=
+ork
+> > of [1] and [2].
+>=20
+> This series started with a RFC back on 5 April 2017 "extend PWM framework=
+ to
+> support PWM modes". The continuous work starting with v2 of this series on
+> January 12, 2018.
+>=20
+> Then Claudiu tried to address all comments up to v4 which didn't have any
+> more reviews. He posted a v5 without comments since May 22, 2018. This
+> series is basically a resent of the v5 (as said in the $subject).
+>=20
+> We would like to know what is preventing this series to be included in the
+> PWM sub-system. Note that if some issue still remain with it, we are ready
+> to help to solve them.
+>=20
+> Without feedback from you side, we fear that we would miss a merge window
+> again for no obvious reason (DT part is Acked by Rob: patch 5/9).
 
-> Marcel Ziswiler (9):
->   ARM: tegra: fix simple-panel compatibles
->   ARM: tegra: apalis-tk1/colibri_t20/t30: eval/iris: fix regulator gpio
->     enable
->   ARM: tegra: colibri_t20: reorder pmic properties
->   ARM: tegra: apalis-tk1: further regulator clean-up
->   ARM: tegra: apalis_t30/tk1: annotate power I2C being on-module
->   ARM: tegra: colibri_t30: further regulator clean-up
->   ARM: tegra: apalis_t30: further regulator clean-up
->   ASoC: tegra_sgtl5000: fix device_node refcounting
->   ASoC: tegra_sgtl5000: fix platform name vs. of_node assignement
+First off, apologies for not getting around to this earlier.
 
-These ASoC patches appear to have absolutely no relationship with the
-rest of the series.  Is that the case or is there some dependency I'm
-missing?
+I think this series is mostly fine, but I still have doubts about the DT
+aspects of this. In particular, Rob raised a concern about this here:
 
---a1QUDc0q7S3U7/Jg
+	https://lkml.org/lkml/2018/1/22/655
+
+and it seems like that particular question was never fully resolved as
+the discussion veered off that particular topic. I know that Rob acked
+the DT parts of this, but I suspect that this might have been glossed
+over.
+
+To restate the concern: these extended modes have special uses and none
+of the users in the kernel, other than sysfs, can use anything other
+than the normal mode. They may work fine with other modes, but only if
+they ignore the extras that come with them. Therefore I think it's safe
+to say that anyone who would want to use these modes would want to
+explicitly say so. For example the sysfs interface already does that by
+changing the mode only after the "mode" attribute is written. Any users
+for special use-cases would want to do the same thing, that is, drive a
+PWM in a specific mode, on purpose. You wouldn't have a "generic" user
+such as pwm-backlight or leds-pwm request anything other than the normal
+mode.
+
+So my question is, do we really need to represent these modes in DT? The
+series currently doesn't contain any patches that add users of these new
+modes. Are such patches available somewhere, or is the only user of this
+supposed to be sysfs?
+
+I'm hesitant to move forward with this as-is without seeing how it will
+be used. The PWM specifier flags are somewhat abused by adding modes to
+them. I think this hasn't been completely thought through, because the
+only reason to specify a mode is to actually set that mode. But then the
+DT ABI allows a bitmask of modes to be requested via DT. I know that
+only the first of those modes will end up being used, but then why even
+allow it in the first place?
+
+And again, even if we allow the mode to be specified in DT, how do the
+consumer drivers know that the correct mode was being set in DT. Let's
+say we have a consumer that requires the PWM to be driven in
+complementary mode. Should it rely on the DT to contain the correct
+specification for the mode? And if it knows that it needs complementary
+mode, why not just set that mode itself? That way there's no margin for
+error.
+
+Thierry
+
+--hTiIB9CRvBOLTyqY
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlvF0nwACgkQJNaLcl1U
-h9AFzgf+ITBvjGNS4tK/XQ0Cfn4GUpc11kkK5bQd4bUf3W3bwEnCpTsd6+NfAygz
-7wOdbPJcJIbtlUgf2fMQav9od6IEuC4v/1nM9+hCXP0tQo9rQwylSO4WeEmhcrHc
-dT9kvMIzzvt3Z4961v7Lrn/1/8YHbC/KV1/2lGnvzY0XiJPbKT3c5HggvDkeeE7W
-kwStdeuWl2S1SR2nSqhz1jpQEvu4PZGSNaVHkC8s4wHNFMXZFgjvTTC1vp2TXX2o
-HpmqazjTHdg1bptQOJChifkzj6F5RBn9gdKsqdz+T/ThSzOtnq2gY0+wKXwahYvM
-g7zfc+XcHzP3Jtg7uEW+WZVaAYXwUA==
-=OQtb
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlvF04cACgkQ3SOs138+
+s6GG0hAAlC2Z3aJHAYoeHw4ddR2xifXrA2kY8m2t9zCD2M+xV2MKYEfTrCDdcFwE
+SqIcFv/5rxHCpuxRCe2iaAOEHmg8BbJzmmil00WJ09J+rRCmkQDuaIoiFZTbHfxg
+6LJY+qofpaNOXT5VwIM38ZD3Qgp8/+kyxTKZ6bWe5dvBq/36v21A/3rTA2Xm4BEv
+SzaaCcIkULGvRAEpqkolMXok/QoE4R7tf+9N9xD76YRYAfLl73tqoZFf4JUubFuN
+r3KtjmYX5GuAB8l/41tMidbC91zlFs9H2pd/bz4oyzwb5f2A+gHoGuZMxBQfy0kh
+z9vqS/PPnAzDoCZ6RsB3kU/P82ZcHydcfvtOIfwpZjJybiwiSD3eXQdbTgVrx/nO
+FmKZ7quScUQS0PyY9j4h/XJ0Tml8+9/TAsdlOORMjIU2kpQLhXWYlWDG1RAMlpMJ
+PI+z4ATJGZv0XDDXaDGFxlQ2z4v/+1kANLgd2V5sBUwcQIxRHGD+lDGyL0+8WJXc
+C+X9YVxYwut6rfm0dr+f9YBeq+ffT2RoDejHL6bmYB7KOh8HRbJaeNF3uqbYP0UN
+2K4c+P0+1xFk/fQqi+NsFYJp0QCBcaWQigrfPNR88BxHh+R6MoGu14aDWnxTohsO
+/TJGLriOaUGybg4pyRCA3kW0iODH2U9xSwGh195PYpUM/DC0oCc=
+=c3h/
 -----END PGP SIGNATURE-----
 
---a1QUDc0q7S3U7/Jg--
-
---===============7756129264029270759==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============7756129264029270759==--
+--hTiIB9CRvBOLTyqY--
