@@ -1,7 +1,7 @@
 From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v9 4/9] PCI: mediatek: Convert to use pci_host_probe()
-Date: Tue, 16 Oct 2018 18:44:45 +0800
-Message-ID: <1539686690-24068-5-git-send-email-honghui.zhang@mediatek.com>
+Subject: [PATCH v9 7/9] PCI: mediatek: Add system PM support for MT2712 and MT7622
+Date: Tue, 16 Oct 2018 18:44:48 +0800
+Message-ID: <1539686690-24068-8-git-send-email-honghui.zhang@mediatek.com>
 References: <1539686690-24068-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,70 +14,87 @@ List-Id: devicetree@vger.kernel.org
 
 From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-Part of mtk_pcie_register_host is an open-coded version of
-pci_host_probe(). So instead of duplicating this code, use
-pci_host_probe() directly and remove mtk_pcie_register_host.
+In order to reduce the PCIe power consuming while system suspend,
+the physical layer should be gated. And the PCIe link should be
+re-established and the related control register values should be
+re-initialized after system resume.
+
+Register suspend_noirq & resume_noirq callback functions to allow
+PCIe to come up after resume from RAM.
 
 Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
 Acked-by: Ryder Lee <ryder.lee@mediatek.com>
 ---
- drivers/pci/controller/pcie-mediatek.c | 37 ++++++++--------------------------
- 1 file changed, 8 insertions(+), 29 deletions(-)
+ drivers/pci/controller/pcie-mediatek.c | 50 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
 diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 6080b29..9f12b17 100644
+index 82d3d85..cf7e357 100644
 --- a/drivers/pci/controller/pcie-mediatek.c
 +++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -1121,34 +1121,6 @@ static int mtk_pcie_request_resources(struct mtk_pcie *pcie)
- 	return 0;
+@@ -1168,6 +1168,55 @@ static int mtk_pcie_probe(struct platform_device *pdev)
+ 	return err;
  }
  
--static int mtk_pcie_register_host(struct pci_host_bridge *host)
--{
--	struct mtk_pcie *pcie = pci_host_bridge_priv(host);
--	struct pci_bus *child;
--	int err;
--
--	host->busnr = pcie->busn.start;
--	host->dev.parent = pcie->dev;
--	host->ops = pcie->soc->ops;
--	host->map_irq = of_irq_parse_and_map_pci;
--	host->swizzle_irq = pci_common_swizzle;
--	host->sysdata = pcie;
--
--	err = pci_scan_root_bus_bridge(host);
--	if (err < 0)
--		return err;
--
--	pci_bus_size_bridges(host->bus);
--	pci_bus_assign_resources(host->bus);
--
--	list_for_each_entry(child, &host->bus->children, node)
--		pcie_bus_configure_settings(child);
--
--	pci_bus_add_devices(host->bus);
--
--	return 0;
--}
--
- static int mtk_pcie_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -1175,7 +1147,14 @@ static int mtk_pcie_probe(struct platform_device *pdev)
- 	if (err)
- 		goto put_resources;
- 
--	err = mtk_pcie_register_host(host);
-+	host->busnr = pcie->busn.start;
-+	host->dev.parent = pcie->dev;
-+	host->ops = pcie->soc->ops;
-+	host->map_irq = of_irq_parse_and_map_pci;
-+	host->swizzle_irq = pci_common_swizzle;
-+	host->sysdata = pcie;
++static int __maybe_unused mtk_pcie_suspend_noirq(struct device *dev)
++{
++	struct mtk_pcie *pcie = dev_get_drvdata(dev);
++	struct mtk_pcie_port *port;
 +
-+	err = pci_host_probe(host);
- 	if (err)
- 		goto put_resources;
- 
++	if (list_empty(&pcie->ports))
++		return 0;
++
++	list_for_each_entry(port, &pcie->ports, list) {
++		clk_disable_unprepare(port->pipe_ck);
++		clk_disable_unprepare(port->obff_ck);
++		clk_disable_unprepare(port->axi_ck);
++		clk_disable_unprepare(port->aux_ck);
++		clk_disable_unprepare(port->ahb_ck);
++		clk_disable_unprepare(port->sys_ck);
++		phy_power_off(port->phy);
++		phy_exit(port->phy);
++	}
++
++	clk_disable_unprepare(pcie->free_ck);
++
++	return 0;
++}
++
++static int __maybe_unused mtk_pcie_resume_noirq(struct device *dev)
++{
++	struct mtk_pcie *pcie = dev_get_drvdata(dev);
++	struct mtk_pcie_port *port, *tmp;
++
++	if (list_empty(&pcie->ports))
++		return 0;
++
++	clk_prepare_enable(pcie->free_ck);
++
++	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
++		mtk_pcie_enable_port(port);
++
++	/* In case of EP was removed while system suspend. */
++	if (list_empty(&pcie->ports))
++		clk_disable_unprepare(pcie->free_ck);
++
++	return 0;
++}
++
++static const struct dev_pm_ops mtk_pcie_pm_ops = {
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_pcie_suspend_noirq,
++				      mtk_pcie_resume_noirq)
++};
++
+ static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
+ 	.ops = &mtk_pcie_ops,
+ 	.startup = mtk_pcie_startup_port,
+@@ -1200,6 +1249,7 @@ static struct platform_driver mtk_pcie_driver = {
+ 		.name = "mtk-pcie",
+ 		.of_match_table = mtk_pcie_ids,
+ 		.suppress_bind_attrs = true,
++		.pm = &mtk_pcie_pm_ops,
+ 	},
+ };
+ builtin_platform_driver(mtk_pcie_driver);
 -- 
 2.6.4
