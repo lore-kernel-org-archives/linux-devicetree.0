@@ -1,137 +1,62 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH 03/11] thermal: add new sysfs file for irq-mode
-Date: Tue, 16 Oct 2018 16:56:14 +0200
-Message-ID: <20181016145644eucas1p2755acef5196e01799d5704fac9766547~eHqIWySvH0770707707eucas1p2z@eucas1p2.samsung.com>
-References: <1539701782-26852-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20181016145644eucas1p2755acef5196e01799d5704fac9766547@eucas1p2.samsung.com>
-Content-Type: text/plain; charset="utf-8"
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH 0/9] staging: bcm2835-audio: Cleanups and upgrades
+Date: Tue, 16 Oct 2018 17:02:19 +0200
+Message-ID: <20181016150228.16994-1-nsaenzjulienne@suse.de>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539701782-26852-1-git-send-email-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, b.zolnierkie@samsung.com, Lukasz Luba <l.luba@partner.samsung.com>
+To: gregkh@linuxfoundation.org
+Cc: eric@anholt.net, stefan.wahren@i2se.com, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, tiwai@suse.de, nsaenzjulienne@suse.de
 List-Id: devicetree@vger.kernel.org
 
-Patch adds show functions for irq-mode feature.
-It allocates new attributes and extends the old list.
+Hi,
 
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
----
- drivers/thermal/thermal_sysfs.c | 53 +++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 51 insertions(+), 2 deletions(-)
+I just received a RPi3B+ and decided to have a go at fixing stuff in
+the audio driver:
 
-diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
-index 2241cea..372b439 100644
---- a/drivers/thermal/thermal_sysfs.c
-+++ b/drivers/thermal/thermal_sysfs.c
-@@ -21,6 +21,8 @@
- 
- #include "thermal_core.h"
- 
-+#define TRIP_ATTR_NUM 4
-+
- /* sys I/F for thermal zone */
- 
- static ssize_t
-@@ -167,6 +169,28 @@ trip_point_temp_show(struct device *dev, struct device_attribute *attr,
- }
- 
- static ssize_t
-+trip_point_irq_mode_show(struct device *dev, struct device_attribute *attr,
-+			 char *buf)
-+{
-+	struct thermal_zone_device *tz = to_thermal_zone(dev);
-+	int trip, ret;
-+	bool mode;
-+
-+	if (!tz->ops->get_trip_irq_mode)
-+		return -EPERM;
-+
-+	if (sscanf(attr->attr.name, "trip_point_%d_irq", &trip) != 1)
-+		return -EINVAL;
-+
-+	ret = tz->ops->get_trip_irq_mode(tz, trip, &mode);
-+
-+	if (ret)
-+		return ret;
-+
-+	return sprintf(buf, "%d\n", mode);
-+}
-+
-+static ssize_t
- trip_point_hyst_store(struct device *dev, struct device_attribute *attr,
- 		      const char *buf, size_t count)
- {
-@@ -520,10 +544,19 @@ static int create_trip_attrs(struct thermal_zone_device *tz, int mask)
- 	if (!tz->trip_type_attrs)
- 		return -ENOMEM;
- 
-+	tz->trip_irq_mode_attrs = kcalloc(tz->trips,
-+					  sizeof(*tz->trip_irq_mode_attrs),
-+					  GFP_KERNEL);
-+	if (!tz->trip_irq_mode_attrs) {
-+		kfree(tz->trip_type_attrs);
-+		return -ENOMEM;
-+	}
-+
- 	tz->trip_temp_attrs = kcalloc(tz->trips, sizeof(*tz->trip_temp_attrs),
- 				      GFP_KERNEL);
- 	if (!tz->trip_temp_attrs) {
- 		kfree(tz->trip_type_attrs);
-+		kfree(tz->trip_irq_mode_attrs);
- 		return -ENOMEM;
- 	}
- 
-@@ -533,14 +566,17 @@ static int create_trip_attrs(struct thermal_zone_device *tz, int mask)
- 					      GFP_KERNEL);
- 		if (!tz->trip_hyst_attrs) {
- 			kfree(tz->trip_type_attrs);
-+			kfree(tz->trip_irq_mode_attrs);
- 			kfree(tz->trip_temp_attrs);
- 			return -ENOMEM;
- 		}
- 	}
- 
--	attrs = kcalloc(tz->trips * 3 + 1, sizeof(*attrs), GFP_KERNEL);
-+	attrs = kcalloc(tz->trips * TRIP_ATTR_NUM + 1, sizeof(*attrs),
-+			GFP_KERNEL);
- 	if (!attrs) {
- 		kfree(tz->trip_type_attrs);
-+		kfree(tz->trip_irq_mode_attrs);
- 		kfree(tz->trip_temp_attrs);
- 		if (tz->ops->get_trip_hyst)
- 			kfree(tz->trip_hyst_attrs);
-@@ -559,6 +595,19 @@ static int create_trip_attrs(struct thermal_zone_device *tz, int mask)
- 		tz->trip_type_attrs[indx].attr.show = trip_point_type_show;
- 		attrs[indx] = &tz->trip_type_attrs[indx].attr.attr;
- 
-+		/* create trip irq_mode attribute */
-+		snprintf(tz->trip_irq_mode_attrs[indx].name,
-+			 THERMAL_NAME_LENGTH, "trip_point_%d_irq", indx);
-+
-+		sysfs_attr_init(&tz->trip_irq_mode_attrs[indx].attr.attr);
-+		tz->trip_irq_mode_attrs[indx].attr.attr.name =
-+			tz->trip_irq_mode_attrs[indx].name;
-+		tz->trip_irq_mode_attrs[indx].attr.attr.mode = S_IRUGO;
-+		tz->trip_irq_mode_attrs[indx].attr.show =
-+			trip_point_irq_mode_show;
-+		attrs[indx + tz->trips * 3] =
-+			&tz->trip_irq_mode_attrs[indx].attr.attr;
-+
- 		/* create trip temp attribute */
- 		snprintf(tz->trip_temp_attrs[indx].name, THERMAL_NAME_LENGTH,
- 			 "trip_point_%d_temp", indx);
-@@ -595,7 +644,7 @@ static int create_trip_attrs(struct thermal_zone_device *tz, int mask)
- 		attrs[indx + tz->trips * 2] =
- 					&tz->trip_hyst_attrs[indx].attr.attr;
- 	}
--	attrs[tz->trips * 3] = NULL;
-+	attrs[tz->trips * TRIP_ATTR_NUM] = NULL;
- 
- 	tz->trips_attribute_group.attrs = attrs;
- 
+The first half of the patchset are just random fixes found while reading
+the code.
+
+The second half provides devicetree bindings for bcm2835-audio and fixes
+the probe sequence so it fails gracefully if VCHIQ isn't there (as per
+TODO).
+
+The series was developed on top of linux-next and tested on a RPi2B and
+RPi3B+. Sadly I don't have an HDMI monitor with sound so I only tested
+the mini jack output.
+
+Thanks,
+Nicolas
+
+===
+
+Nicolas Saenz Julienne (9):
+  staging: bcm2835-audio: unify FOURCC command definitions
+  staging: bcm2835-audio: don't initialize memory twice
+  staging: bcm2835-audio: reorder variable declarations & remove trivial
+    comments
+  staging: bcm2835-audio: use anonymous union in struct vc_audio_msg
+  staging: bcm2835-audio: more generic probe function name
+  ASoC: dt-bindings: bcm2835-rpi: add onboard audio bindings
+  ARM: dts: bcm2835-rpi: add onboard audio device
+  staging: vchiq_arm: add function to check if probe was successful
+  staging: bcm2835-audio: check for VCHIQ during probe
+
+ .../bindings/sound/brcm,bcm2835-audio.txt     | 15 +++++++
+ arch/arm/boot/dts/bcm2835-rpi.dtsi            |  5 +++
+ .../vc04_services/bcm2835-audio/bcm2835-pcm.c | 10 +----
+ .../bcm2835-audio/bcm2835-vchiq.c             | 39 ++++++++-----------
+ .../vc04_services/bcm2835-audio/bcm2835.c     | 30 ++++++++------
+ .../bcm2835-audio/vc_vchi_audioserv_defs.h    |  6 ++-
+ .../vc04_services/interface/vchi/vchi.h       |  3 ++
+ .../interface/vchiq_arm/vchiq_2835_arm.c      |  2 +
+ .../interface/vchiq_arm/vchiq_arm.c           | 16 ++++++++
+ .../interface/vchiq_arm/vchiq_arm.h           |  1 +
+ .../interface/vchiq_arm/vchiq_if.h            |  4 ++
+ .../interface/vchiq_arm/vchiq_shim.c          |  7 ++++
+ 12 files changed, 95 insertions(+), 43 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/brcm,bcm2835-audio.txt
+
 -- 
-2.7.4
+2.19.1
