@@ -1,48 +1,92 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v2] of: overlay: user space synchronization
-Date: Mon, 15 Oct 2018 19:47:16 -0700
-Message-ID: <294737e8-f94e-5d53-acaf-ecb9a4ef42af@gmail.com>
-References: <1539649621-5518-1-git-send-email-frowand.list@gmail.com>
- <5408.1539650158@turing-police.cc.vt.edu>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: [PATCH V9 02/21] csky: defconfig
+Date: Tue, 16 Oct 2018 10:58:21 +0800
+Message-ID: <9ae20a094ce79774f2a1c84468221ad73a38e90a.1539655731.git.ren_guo@c-sky.com>
+References: <cover.1539655731.git.ren_guo@c-sky.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5408.1539650158@turing-police.cc.vt.edu>
-Content-Language: en-US
+In-Reply-To: <cover.1539655731.git.ren_guo@c-sky.com>
+In-Reply-To: <cover.1539655731.git.ren_guo@c-sky.com>
+References: <cover.1539655731.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: valdis.kletnieks@vt.edu
-Cc: Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, Alan Tull <atull@kernel.org>
+To: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, hch@infradead.org, marc.zyngier@arm.com, mark.rutland@arm.com, peterz@infradead.org, robh@kernel.org, tglx@linutronix.de
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, c-sky_gcc_upstream@c-sky.com, Guo Ren <ren_guo@c-sky.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/15/18 17:35, valdis.kletnieks@vt.edu wrote:
-> On Mon, 15 Oct 2018 17:27:01 -0700, frowand.list@gmail.com said:
->> From: Frank Rowand <frank.rowand@sony.com>
->>
->> When an overlay is applied or removed, the live devicetree visible in
->> /proc/device-tree/, aka /sys/firmware/devicetree/base/, reflects the
->> changes.  There is no method for user space to determine whether the
->> live devicetree was modified by overlay actions.
->>
->> Provide a sysfs file, /sys/firmware/devicetree/tree_version,  to allow
->> user space to determine if the live devicetree has remained unchanged
->> while a series of one or more accesses of /proc/device-tree/ occur.
->>
->> The use of both dynamic devicetree modifications and overlay apply and
->> removal are not supported during the same boot cycle.  Thus non-overlay
->> dynamic modifications are not reflected in the value of tree_version.
-> 
-> Is there an easy way from userspace to detect "yes/no dynamic modifications
-> have been done since boot"?
-> 
+This patch adds csky defconfig.
 
-Unfortunately not.
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/csky/configs/defconfig | 61 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100644 arch/csky/configs/defconfig
 
-I considered adding detecting dynamic modifications in another patch, making
-this a two patch series, but that feature will be much more intrusive than
-detecting modifications made by overlays.  I may add that feature in the
-future, but not anytime soon.
-
-If you want to understand a little bit about why dynamic modifications
-occur, please see my reply to Geert in the thread about version 1 of
-this patch.
+diff --git a/arch/csky/configs/defconfig b/arch/csky/configs/defconfig
+new file mode 100644
+index 0000000..7ef4289
+--- /dev/null
++++ b/arch/csky/configs/defconfig
+@@ -0,0 +1,61 @@
++# CONFIG_LOCALVERSION_AUTO is not set
++CONFIG_DEFAULT_HOSTNAME="csky"
++# CONFIG_SWAP is not set
++CONFIG_SYSVIPC=y
++CONFIG_POSIX_MQUEUE=y
++CONFIG_AUDIT=y
++CONFIG_NO_HZ_IDLE=y
++CONFIG_HIGH_RES_TIMERS=y
++CONFIG_BSD_PROCESS_ACCT=y
++CONFIG_BSD_PROCESS_ACCT_V3=y
++CONFIG_MODULES=y
++CONFIG_MODULE_UNLOAD=y
++CONFIG_DEFAULT_DEADLINE=y
++CONFIG_CPU_CK807=y
++CONFIG_CPU_HAS_FPU=y
++CONFIG_NET=y
++CONFIG_PACKET=y
++CONFIG_UNIX=y
++CONFIG_INET=y
++CONFIG_DEVTMPFS=y
++CONFIG_DEVTMPFS_MOUNT=y
++CONFIG_BLK_DEV_LOOP=y
++CONFIG_BLK_DEV_RAM=y
++CONFIG_BLK_DEV_RAM_SIZE=65536
++CONFIG_VT_HW_CONSOLE_BINDING=y
++CONFIG_SERIAL_NONSTANDARD=y
++CONFIG_SERIAL_8250=y
++CONFIG_SERIAL_8250_CONSOLE=y
++CONFIG_SERIAL_OF_PLATFORM=y
++CONFIG_TTY_PRINTK=y
++# CONFIG_VGA_CONSOLE is not set
++CONFIG_CSKY_MPTIMER=y
++CONFIG_GX6605S_TIMER=y
++CONFIG_PM_DEVFREQ=y
++CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND=y
++CONFIG_DEVFREQ_GOV_PERFORMANCE=y
++CONFIG_DEVFREQ_GOV_POWERSAVE=y
++CONFIG_DEVFREQ_GOV_USERSPACE=y
++CONFIG_GENERIC_PHY=y
++CONFIG_EXT4_FS=y
++CONFIG_FANOTIFY=y
++CONFIG_QUOTA=y
++CONFIG_FSCACHE=m
++CONFIG_FSCACHE_STATS=y
++CONFIG_CACHEFILES=m
++CONFIG_MSDOS_FS=y
++CONFIG_VFAT_FS=y
++CONFIG_FAT_DEFAULT_UTF8=y
++CONFIG_NTFS_FS=y
++CONFIG_PROC_KCORE=y
++CONFIG_PROC_CHILDREN=y
++CONFIG_TMPFS=y
++CONFIG_TMPFS_POSIX_ACL=y
++CONFIG_CONFIGFS_FS=y
++CONFIG_CRAMFS=y
++CONFIG_ROMFS_FS=y
++CONFIG_NFS_FS=y
++CONFIG_PRINTK_TIME=y
++CONFIG_DEBUG_INFO=y
++CONFIG_DEBUG_FS=y
++CONFIG_MAGIC_SYSRQ=y
+-- 
+2.7.4
