@@ -1,29 +1,54 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v4 7/7] mfd: axp20x: Add supported cells for AXP803
-Date: Tue, 16 Oct 2018 12:17:37 +0800
-Message-ID: <CAGb2v66aJUYOkZL=b5TfnvLsbLk_mU8AQtR3BSBRM-49rh2yOA@mail.gmail.com>
-References: <20181013080848.29894-1-oskari@lemmela.net> <20181013080848.29894-8-oskari@lemmela.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [RESEND PATCH v3 0/2] add new UniPhier PCIe host driver
+Date: Tue, 16 Oct 2018 14:27:19 +0900
+Message-ID: <1539667641-26024-1-git-send-email-hayashi.kunihiko@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181013080848.29894-8-oskari@lemmela.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: oskari@lemmela.net
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Lee Jones <lee.jones@linaro.org>, Quentin Schulz <quentin.schulz@free-electrons.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 13, 2018 at 4:09 PM Oskari Lemmela <oskari@lemmela.net> wrote:
->
-> AXP803 is compatible with AXP813.
-> Adding cells for GPIO, ADC, AC and battery power supplies.
+This series adds PCIe host controller driver for Socionext UniPhier SoCs.
+This controller is based on the DesignWare PCIe core. This driver
+supports LD20 and PXs3 SoCs.
 
-They are not _completely_ compatible. A better way to phrase this would be:
+v2: https://www.spinics.net/lists/linux-pci/msg75930.html
 
-Parts of the AXP803 are compatible with their counterparts on the AXP813.
-These include the GPIO, ADC, AC and battery power supplies.
+About legacy IRQ, it might be necessary to share common view from
+keystone driver that have been cleaned up[1].
 
-> Signed-off-by: Oskari Lemmela <oskari@lemmela.net>
+[1] https://lore.kernel.org/patchwork/patch/989541/
 
-Otherwise,
+Changes since v2:
+- dt-bindings: remove a comment that the node name isn't important
+- dt-bindings: remove "intx" interrupt
+- dt-bindings: define 'legacy-interrupt-controller' node and its properties
+- return an error value when link up fails
+- remove devm_request_irq() and a handler for MSI IRQ
+- use chained interrupt instead of devm_request_irq() for legacy IRQ
+- add unipher_pcie_config_legacy_irq() to get legacy IRQ from
+  'legacy-interrupt controller' node
+- replace 4 statments to handle INTX with for_each_set_bit()
+- remove initialization of pp->root_bus_nr
+- remove indivisual interrupt enable bit definitions
+- rename 'irq_domain' member to 'legacy_irq_domain' in private structure
+- use pci_irqd_intx_xlate() for irq_domain_ops.xlate function
 
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Changes since v1:
+- follow capitalization conventions in the descriptions
+- use C style comments except for the SPDX line
+
+Kunihiko Hayashi (2):
+  dt-bindings: PCI: Add UniPhier PCIe host controller description
+  PCI: uniphier: Add UniPhier PCIe host controller support
+
+ .../devicetree/bindings/pci/uniphier-pcie.txt      |  81 ++++
+ drivers/pci/controller/dwc/Kconfig                 |   9 +
+ drivers/pci/controller/dwc/Makefile                |   1 +
+ drivers/pci/controller/dwc/pcie-uniphier.c         | 433 +++++++++++++++++++++
+ 4 files changed, 524 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+ create mode 100644 drivers/pci/controller/dwc/pcie-uniphier.c
+
+-- 
+2.7.4
