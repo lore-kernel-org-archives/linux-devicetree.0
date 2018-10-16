@@ -1,344 +1,263 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [RESEND PATCH v5 1/9] pwm: extend PWM framework with PWM modes
-Date: Tue, 16 Oct 2018 14:25:08 +0200
-Message-ID: <20181016122508.GH8852@ulmo>
-References: <1535461286-12308-1-git-send-email-claudiu.beznea@microchip.com>
- <1535461286-12308-2-git-send-email-claudiu.beznea@microchip.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/7] dt-bindings: mfd: ds90ux9xx: add description of TI DS90Ux9xx ICs
+Date: Tue, 16 Oct 2018 15:30:44 +0300
+Message-ID: <1569908.lXeeGn9YFn@avalon>
+References: <20181008211205.2900-1-vz@mleia.com> <1884479.fINZhmP2Mi@avalon> <55fe6c51-20e0-a10b-97fd-23c6f030acac@mentor.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jRdC2OsRnuV8iIl8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1535461286-12308-2-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <55fe6c51-20e0-a10b-97fd-23c6f030acac@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc: shc_work@mail.ru, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Cc: Vladimir Zapolskiy <vz@mleia.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Sandeep Jain <Sandeep_Jain@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Vladimir,
 
---jRdC2OsRnuV8iIl8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Saturday, 13 October 2018 17:28:30 EEST Vladimir Zapolskiy wrote:
+> On 10/12/2018 02:44 PM, Laurent Pinchart wrote:
+> > On Tuesday, 9 October 2018 00:11:59 EEST Vladimir Zapolskiy wrote:
+> >> From: Sandeep Jain <Sandeep_Jain@mentor.com>
+> >> 
+> >> The change adds device tree binding description of TI DS90Ux9xx
+> >> series of serializer and deserializer controllers which support video,
+> >> audio and control data transmission over FPD-III Link connection.
+> >> 
+> >> Signed-off-by: Sandeep Jain <Sandeep_Jain@mentor.com>
+> >> [vzapolskiy: various updates and corrections of secondary importance]
+> >> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+> >> ---
+> >> 
+> >>  .../devicetree/bindings/mfd/ti,ds90ux9xx.txt  | 66 +++++++++++++++++++
+> >>  1 file changed, 66 insertions(+)
+> >>  create mode 100644
+> >>  Documentation/devicetree/bindings/mfd/ti,ds90ux9xx.txt
+> >> 
+> >> diff --git a/Documentation/devicetree/bindings/mfd/ti,ds90ux9xx.txt
+> >> b/Documentation/devicetree/bindings/mfd/ti,ds90ux9xx.txt new file mode
+> >> 100644
+> >> index 000000000000..0733da88f7ef
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/mfd/ti,ds90ux9xx.txt
+> >> @@ -0,0 +1,66 @@
+> >> +Texas Instruments DS90Ux9xx de-/serializer controllers
+> >> +
+> >> +Required properties:
+> >> +- compatible: Must contain a generic "ti,ds90ux9xx" value and
+> > 
+> >> +	may contain one more specific value from the list:
+> > If it "may" contain one more specific value, when should that value be
+> > present, and when can it be absent ?
+> 
+> Practically you can always omit a specific compatible, because (with a
+> number of minor exceptions like DS90UH925Q case, see a quirk in the code)
+> it is possible to read out the IC type in runtime.
+> 
+> Nevertheless I prefer to have a complete list of all specific compatibles
+> to avoid problems with maintenance in future,
 
-On Tue, Aug 28, 2018 at 04:01:18PM +0300, Claudiu Beznea wrote:
-> Add basic PWM modes: normal and complementary. These modes should
-> differentiate the single output PWM channels from two outputs PWM
-> channels. These modes could be set as follow:
-> 1. PWM channels with one output per channel:
-> - normal mode
-> 2. PWM channels with two outputs per channel:
-> - normal mode
-> - complementary mode
-> Since users could use a PWM channel with two output as one output PWM
-> channel, the PWM normal mode is allowed to be set for PWM channels with
-> two outputs; in fact PWM normal mode should be supported by all PWMs.
->=20
-> The PWM capabilities were implemented per PWM channel. Every PWM controll=
-er
-> will register a function to get PWM capabilities. If this is not explicit=
-ly
-> set by the driver a default function will be used to retrieve the PWM
-> capabilities (in this case the PWM capabilities will contain only PWM
-> normal mode). This function is set in pwmchip_add_with_polarity() as a
-> member of "struct pwm_chip". To retrieve capabilities the pwm_get_caps()
-> function could be used.
->=20
-> Every PWM channel have associated a mode in the PWM state. Proper
-> support was added to get/set PWM mode. The mode could also be set
-> from DT via flag cells. The valid DT modes are located in
-> include/dt-bindings/pwm/pwm.h. Only modes supported by PWM channel could =
-be
-> set. If nothing is specified for a PWM channel, via DT, the first availab=
-le
-> mode will be used (normally, this will be PWM normal mode).
->=20
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  drivers/pwm/core.c  | 124 ++++++++++++++++++++++++++++++++++++++++++++++=
-++++--
->  drivers/pwm/sysfs.c |  61 ++++++++++++++++++++++++++
->  include/linux/pwm.h |  39 +++++++++++++++++
->  3 files changed, 221 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> index 1581f6ab1b1f..59a9df9120de 100644
-> --- a/drivers/pwm/core.c
-> +++ b/drivers/pwm/core.c
-> @@ -136,6 +136,7 @@ struct pwm_device *
->  of_pwm_xlate_with_flags(struct pwm_chip *pc, const struct of_phandle_arg=
-s *args)
->  {
->  	struct pwm_device *pwm;
-> +	int modebit;
-> =20
->  	/* check, whether the driver supports a third cell for flags */
->  	if (pc->of_pwm_n_cells < 3)
-> @@ -154,9 +155,23 @@ of_pwm_xlate_with_flags(struct pwm_chip *pc, const s=
-truct of_phandle_args *args)
-> =20
->  	pwm->args.period =3D args->args[1];
->  	pwm->args.polarity =3D PWM_POLARITY_NORMAL;
-> +	pwm->args.mode =3D pwm_mode_get_valid(pc, pwm);
-> =20
-> -	if (args->args_count > 2 && args->args[2] & PWM_POLARITY_INVERTED)
-> -		pwm->args.polarity =3D PWM_POLARITY_INVERSED;
-> +	if (args->args_count > 2) {
-> +		if (args->args[2] & PWM_POLARITY_INVERTED)
-> +			pwm->args.polarity =3D PWM_POLARITY_INVERSED;
-> +
-> +		for (modebit =3D PWMC_MODE_COMPLEMENTARY_BIT;
-> +		     modebit < PWMC_MODE_CNT; modebit++) {
-> +			unsigned long mode =3D BIT(modebit);
-> +
-> +			if ((args->args[2] & mode) &&
-> +			    pwm_mode_valid(pwm, mode)) {
-> +				pwm->args.mode =3D mode;
-> +				break;
-> +			}
-> +		}
-> +	}
-> =20
->  	return pwm;
->  }
-> @@ -183,6 +198,7 @@ of_pwm_simple_xlate(struct pwm_chip *pc, const struct=
- of_phandle_args *args)
->  		return pwm;
-> =20
->  	pwm->args.period =3D args->args[1];
-> +	pwm->args.mode =3D pwm_mode_get_valid(pc, pwm);
-> =20
->  	return pwm;
->  }
-> @@ -250,6 +266,97 @@ static bool pwm_ops_check(const struct pwm_ops *ops)
->  }
-> =20
->  /**
-> + * pwm_get_caps() - get PWM capabilities of a PWM device
-> + * @chip: PWM chip
-> + * @pwm: PWM device to get the capabilities for
-> + * @caps: returned capabilities
-> + *
-> + * Returns: 0 on success or a negative error code on failure
-> + */
-> +int pwm_get_caps(struct pwm_chip *chip, struct pwm_device *pwm,
-> +		 struct pwm_caps *caps)
-> +{
-> +	if (!chip || !pwm || !caps)
-> +		return -EINVAL;
-> +
-> +	if (chip->ops && chip->ops->get_caps)
-> +		pwm->chip->ops->get_caps(chip, pwm, caps);
-> +	else if (chip->get_default_caps)
-> +		chip->get_default_caps(caps);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(pwm_get_caps);
+I agree with you. Let's thus word this as
 
-I'm confused by the way ->get_default_caps() is used here. This always
-points at pwmchip_get_default_caps() if I understand correctly, so why
-bother with the indirection?
+Shall contain exactly one value from the list below, and the generic 
+"ti,ds90ux9xx" value, in that order.
 
-I think it would be better to either export pwmchip_get_default_caps()
-as a default implementation of ->get_caps(), something like:
+> recently I had a long
+> discussion with Jassi Brar about iMX* mailbox compatibles on the DT mailing
+> list, the arguments remain the same, but I don't feel enough internal power
+> to start another such an exhaustive discussion right at the moment.
+> 
+> >> +	"ti,ds90ub925q",
+> >> +	"ti,ds90uh925q",
+> >> +	"ti,ds90ub927q",
+> >> +	"ti,ds90uh927q",
+> >> +	"ti,ds90ub926q",
+> >> +	"ti,ds90uh926q",
+> >> +	"ti,ds90ub928q",
+> >> +	"ti,ds90uh928q",
+> >> +	"ti,ds90ub940q",
+> >> +	"ti,ds90uh940q".
+> >> +
+> >> +Optional properties:
+> >> +- reg : Specifies the I2C slave address of a local de-/serializer.
+> > 
+> > You should explain when the reg property is required and when it isn't.
+> > This
+> 
+> Talking about TI DS90Ux9xx IC series, ideally I'd like to shift from
+> serializer/deserializer concept and promote "remote" and "local" IC, by the
+> way, and if I'm not mistaken, MOST ICs are truly identical on both ends.
+> 
+> So, here "reg" property is need only if the IC (serializer or deserializer,
+> it does not matter) is on the "local" side, i.e. it is a slave I2C device
+> discovered on an I2C bus, which is under control by an application
+> processor.
+> 
+> If IC is on the "remote" side, in other words separated by the serial link
+> from the "local" IC, then "reg" property is not needed.
 
-	void pwm_get_default_caps(struct pwm_chip *chip, struct pwm_device *pwm,
-				  struct pwm_caps *caps)
-	{
-		...
-	}
-	EXPORT_SYMBOL_GPL(pwm_get_default_caps);
+Let's document this then. Please make sure to document the local and remote 
+concepts in the introduction first.
 
-This could be used by the individual drivers as the implementation if
-they don't support any modes.
+> > will in my opinion require a more detailed explanation of the DT model for
+> > this device.
+> > 
+> >> +- power-gpios : GPIO line to control supplied power to the device.
+> > 
+> > As Marek mentioned, a regulator would be better. I would make it a
+> > mandatory property, as the device always needs to be powered.
+> 
+> I get a memory flashback. Did we discuss recently a right property name to
+> control panel power by a GPIO or was it something else?
+> 
+> There are quite many properties of exactly the same functionality:
+> * powerdown-gpios
+> * pd-gpios
+> * pdn-gpios
+> * power-gpios
+> * powerdn-gpio
+> * power-down-gpios
+> * ...
+> 
+> Probably device tree maintainers should unify the names, but my point is
+> that your argument should be applicable to all such device tree nodes /
+> property descriptions and usages. Do I understand you correctly?
 
-Another, probably simpler approach would be to just get rid of the
-chip->get_default_caps() pointer and directly call
-pwmchip_get_default_caps() from pwm_get_caps():
+The general agreement is that we should try to standardize the naming of 
+GPIOs. As powerdown is the inverse of enable, it has been proposed to use 
+enable-gpios instead.
 
-	int pwm_get_caps(...)
-	{
-		/*
-		 * Note that you don't need the check for chip->ops because
-		 * the core checks for that upon registration of the chip.
-		 */
-		if (chip->ops->get_caps)
-			return chip->ops->get_caps(...);
+> I would prefer to reference to a regulator while dealing with the power
+> rails, and reference to a GPIO in case of power control only like in the
+> case above.
 
-		return pwm_get_default_caps(...);
-	}
+The patch made me think that the GPIO controls a regulator, which is why I 
+advised using regulators. If that's not the case, if the GPIO is connected to 
+a pin of the device, you should document which pin, and rephrase the 
+description to remove the ambiguity.
 
-And if we do that, might as well fold pwm_get_default_caps() into
-pwm_get_caps().
+> >> +- ti,backward-compatible-mode : Overrides backward compatibility mode.
+> >> +	Possible values are "<1>" or "<0>".
+> >> +	If "ti,backward-compatible-mode" is not mentioned, the backward
+> >> +	compatibility mode is not touched and given by hardware pin strapping.
+> > 
+> > This doesn't seem to be a device description to me, it's a software
+> > configuration. You should handle it in drivers.
+> 
+> No, it is a hardware description which allows to connect/discover ICs of
+> different series, please reference to the datasheet for examples of its
+> usage.
 
-> +/**
-> + * pwm_mode_get_valid() - get the first available valid mode for PWM
-> + * @chip: PWM chip
-> + * @pwm: PWM device to get the valid mode for
-> + *
-> + * Returns: first valid mode for PWM device
-> + */
-> +unsigned long pwm_mode_get_valid(struct pwm_chip *chip, struct pwm_devic=
-e *pwm)
+Could you please point us to the right section of the right document ?
 
-This is a little ambiguous. Perhaps pwm_get_default_mode()?
+> >> +- ti,low-frequency-mode : Overrides low frequency mode.
+> >> +	Possible values are "<1>" or "<0>".
+> >> +	If "ti,low-frequency-mode" is not mentioned, the low frequency mode
+> >> +	is not touched and given by hardware pin strapping.
+> > 
+> > This sounds the same. How about giving a real life example of a case where
+> > you need to set these two properties to override the pin strapping, for
+> > the purpose of discussing the DT bindings ?
+> 
+> I have to ask, what do you mean by "a software configuration"?
+> 
+> Both properties are IC controls (= hardware configuration in my language),
+> and these hardware properties shall be set (if needed of course) on a
+> "local" IC *before* a discovery of some "remote" IC, thus the property are
+> in the DT.
 
-> +/**
-> + * pwm_mode_valid() - check if mode is valid for PWM device
-> + * @pwm: PWM device
-> + * @mode: PWM mode to check if valid
-> + *
-> + * Returns: true if mode is valid and false otherwise
-> + */
-> +bool pwm_mode_valid(struct pwm_device *pwm, unsigned long mode)
+Software configuration refers to configuration parameters that are modified in 
+software based on a policy that can be established by the software. If you can 
+provide real examples that show why and how pin strapping needs to be 
+overridden, that would help discussing the DT bindings.
 
-Again, this is slightly ambiguous because the name suggests that it
-merely tests a mode for validity, not that it is really supported by the
-given device. Perhaps something like pwm_supports_mode()?
+> >> +- ti,video-map-select-msb: Sets video bridge pins to MSB mode, if it is
+> >> set +	MAPSEL pin value is ignored.
+> >> +- ti,video-map-select-lsb: Sets video bridge pins to LSB mode, if it is
+> >> set +	MAPSEL pin value is ignored.
+> > 
+> > I assume those two are mutually exclusive, this should be documented, or
+> > you could merge the two properties into one. Same comment as above
+> > though, why do you need an override in DT ?
+> 
+> The property are mutually exclusive, but it is a tristate property, please
+> see my answer to a similar question from Marek.
 
-> +const char *pwm_mode_desc(struct pwm_device *pwm, unsigned long mode)
-> +{
-> +	static const char * const modes[] =3D {
-> +		"invalid",
-> +		"normal",
-> +		"complementary",
-> +	};
-> +
-> +	if (!pwm_mode_valid(pwm, mode))
-> +		return modes[0];
-> +
-> +	return modes[ffs(mode)];
-> +}
+You can implement a tristate property with 0, 1 and absent (or "lsb", "msb" or 
+absent, or something similar), you don't need two properties.
 
-Do we really need to be able to get the name of the mode in the context
-of a given PWM channel? Couldn't we drop the pwm parameter and simply
-return the name (pwm_get_mode_name()?) and at the same time remove the
-extra "invalid" mode in there? I'm not sure what the use-case here is,
-but it seems to me like the code should always check for supported modes
-first before reporting their names in any way.
+> >> +- ti,pixel-clock-edge : Selects Pixel Clock Edge.
+> >> +	Possible values are "<1>" or "<0>".
+> >> +	If "ti,pixel-clock-edge" is High <1>, output data is strobed on the
+> >> +	Rising edge of the PCLK. If ti,pixel-clock-edge is Low <0>, data is
+> >> +	strobed on the Falling edge of the PCLK.
+> >> +	If "ti,pixel-clock-edge" is not mentioned, the pixel clock edge
+> >> +	value is not touched and given by hardware pin strapping.
+> > 
+> > We have a standard property in
+> > Documentation/devicetree/bindings/media/video-interfaces.txt for this,
+> > please use it.
+> 
+> Okay, thank you for the link.
+> 
+> >> +- ti,spread-spectrum-clock-generation : Spread Sprectrum Clock
+> >> Generation.
+> >> +	Possible values are from "<0>" to "<7>". The same value will be
+> >> +	written to SSC register. If "ti,spread-spectrum-clock-gen" is not
+> >> +	found, then SSCG will be disabled.
+> > 
+> > This makes sense in DT in my opinion, as EMC is a system property. I
+> > wonder however if exposing the hardware register directly is the best
+> > option. Could you elaborate on how a system designer will select which
+> > value to use, in order to find the best DT description ?
+> 
+> Hm, I suppose IC datasheets should serve as a better source of information.
 
-> +/**
->   * pwmchip_add_with_polarity() - register a new PWM chip
->   * @chip: the PWM chip to add
->   * @polarity: initial polarity of PWM channels
-> @@ -275,6 +382,8 @@ int pwmchip_add_with_polarity(struct pwm_chip *chip,
-> =20
->  	mutex_lock(&pwm_lock);
-> =20
-> +	chip->get_default_caps =3D pwmchip_get_default_caps;
-> +
->  	ret =3D alloc_pwms(chip->base, chip->npwm);
->  	if (ret < 0)
->  		goto out;
-> @@ -294,6 +403,7 @@ int pwmchip_add_with_polarity(struct pwm_chip *chip,
->  		pwm->pwm =3D chip->base + i;
->  		pwm->hwpwm =3D i;
->  		pwm->state.polarity =3D polarity;
-> +		pwm->state.mode =3D pwm_mode_get_valid(chip, pwm);
-> =20
->  		if (chip->ops->get_state)
->  			chip->ops->get_state(chip, pwm, &pwm->state);
-> @@ -469,7 +579,8 @@ int pwm_apply_state(struct pwm_device *pwm, struct pw=
-m_state *state)
->  	int err;
-> =20
->  	if (!pwm || !state || !state->period ||
-> -	    state->duty_cycle > state->period)
-> +	    state->duty_cycle > state->period ||
-> +	    !pwm_mode_valid(pwm, state->mode))
->  		return -EINVAL;
-> =20
->  	if (!memcmp(state, &pwm->state, sizeof(*state)))
-> @@ -530,6 +641,9 @@ int pwm_apply_state(struct pwm_device *pwm, struct pw=
-m_state *state)
-> =20
->  			pwm->state.enabled =3D state->enabled;
->  		}
-> +
-> +		/* No mode support for non-atomic PWM. */
-> +		pwm->state.mode =3D state->mode;
+Could you please point us to the right section(s) of the right datasheet(s) ?
 
-That comment seems misplaced. This is actually part of atomic PWM, so
-maybe just reverse the logic and say "mode support only for atomic PWM"
-or something. I would personally just leave it away. The legacy API has
-no way of setting the mode, which is indication enough that we don't
-support it.
+> >> +TI DS90Ux9xx serializers and deserializer device nodes may contain a
+> >> number +of children device nodes to describe and enable particular
+> >> subcomponents +found on ICs.
+> > 
+> > As mentioned in my review of the cover letter I don't think this is
+> > necessary.
+> 
+> It is, in my humble opinion if an IC can be described as "a _pinmux_ + loads
+> of other functions" it makes it an MFD.
 
-> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-> index 56518adc31dd..a4ce4ad7edf0 100644
-> --- a/include/linux/pwm.h
-> +++ b/include/linux/pwm.h
-> @@ -26,9 +26,32 @@ enum pwm_polarity {
->  };
-> =20
->  /**
-> + * PWM modes capabilities
-> + * @PWMC_MODE_NORMAL_BIT: PWM has one output
-> + * @PWMC_MODE_COMPLEMENTARY_BIT: PWM has 2 outputs with opposite polarit=
-ies
-> + * @PWMC_MODE_CNT: PWM modes count
-> + */
-> +enum {
-> +	PWMC_MODE_NORMAL_BIT,
-> +	PWMC_MODE_COMPLEMENTARY_BIT,
-> +	PWMC_MODE_CNT,
-> +};
-> +
-> +#define PWMC_MODE(name)		BIT(PWMC_MODE_##name##_BIT)
+We do disagree :-)
 
-Why the C in the prefix? Why not just PWM_MODE_* for all of the above?
+> > You can make the serializer and deserializer I2C controllers without
+> > subnodes. Same goes for GPIO control.
+> 
+> I have to define pinmuxes, one of the complicated and essential parts of IC
+> configuration is unfairly excluded from the consideration.
+> 
+> >> +Example:
+> >> +
+> >> +serializer: serializer@c {
+> >> +	compatible = "ti,ds90ub927q", "ti,ds90ux9xx";
+> >> +	reg = <0xc>;
+> >> +	power-gpios = <&gpio5 12 GPIO_ACTIVE_HIGH>;
+> >> +	ti,backward-compatible-mode = <0>;
+> >> +	ti,low-frequency-mode = <0>;
+> >> +	ti,pixel-clock-edge = <0>;
+> >> +	...
+> >> +}
+> >> +
+> >> +deserializer: deserializer@3c {
+> >> +	compatible = "ti,ds90ub940q", "ti,ds90ux9xx";
+> >> +	reg = <0x3c>;
+> >> +	power-gpios = <&gpio6 31 GPIO_ACTIVE_HIGH>;
+> >> +	...
+> >> +}
+> >> +
+> > 
+> > Extra blank line ?
+> 
+> Right, thank you for comments.
 
-> +
-> +/**
-> + * struct pwm_caps - PWM capabilities
-> + * @modes: PWM modes
+-- 
+Regards,
 
-This should probably say that it's a bitmask of PWM_MODE_*.
-
-> +struct pwm_caps {
-> +	unsigned long modes;
-> +};
-> +
-> +/**
->   * struct pwm_args - board-dependent PWM arguments
->   * @period: reference period
->   * @polarity: reference polarity
-> + * @mode: reference mode
-
-As discussed in my reply to the cover letter, what is the use for the
-reference mode? Drivers want to use either normal or some other mode.
-What good is it to get this from board-dependent arguments if the
-driver already knows which one it wants or needs?
-
-> @@ -300,6 +331,7 @@ struct pwm_chip {
-> =20
->  	struct pwm_device * (*of_xlate)(struct pwm_chip *pc,
->  					const struct of_phandle_args *args);
-> +	void (*get_default_caps)(struct pwm_caps *caps);
-
-As mentioned above, I don't think we need this.
-
-Thierry
-
---jRdC2OsRnuV8iIl8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlvF2KEACgkQ3SOs138+
-s6FInQ//dCrrajHRK2UhdVBR9LxxWy0fdBPpQngnitnBEiuIUj5b8ZpshFeuFUqX
-4r6v1M/z34agLbm4sn8rdGOxNrjqdigtNt9l/ig0BvqhC5TWgSRALC+fTdIihIkx
-t/N0utliojPi/tLBgxR6w1lg39wEMCI4wfr9UxOb73JY9CDrI7IpbPciund1wn9b
-CLoMiGDzHE+1RiES+1SfRlnyXXq57Ow9s6aBB/SQyviI/+qtl0gRrv3lNorpqIsc
-EFUwJ0uOTBCa1uQA/KR5rAIBBt8iYATrmhyv+UyOhNERrpV83pdj54BH5uPqqREa
-8kYyOo5Fw5GMRZwqF3FhcUNkzHKmNG9ghZLMt8gZFUucZg/hFfps3OL6+d6Pb+G9
-GPAzE7rO4Ss/GkaoPWlLHxLGzycJwUeQbZV4M6ah2ixRHePSXKzoCQsVvEpWJZja
-i40AxqcO0PmQZK7iVIZAb43tABtKxowbA/D4hpmYX2/7zZil8vEEfFsRtvn113Zi
-OrFn8w/aGU0WwFzX5v1aZqRTi6VGykAl0JIEvYCQCrMuHQQnCzV5jJnIjCFA6KbH
-ZzpwFyRA1/g1KQShgOYtLkasYmRpRed9pmWDwDR+wDZz1DRvqeTsetyYHBT2ezKU
-odNVBYVW0DGZdl/HI+8rzMQl+4ZpAyk0NTs/FAX+jc/EFAhgr2U=
-=gGpY
------END PGP SIGNATURE-----
-
---jRdC2OsRnuV8iIl8--
+Laurent Pinchart
