@@ -1,36 +1,28 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 2/2] clk: qcom: gcc: Add global clock controller driver for
- QCS404
-Date: Tue, 16 Oct 2018 15:17:57 -0700
-Message-ID: <153972827704.5275.5606344004932442164@swboyd.mtv.corp.google.com>
-References: <20181010145138.17185-1-vkoul@kernel.org>
- <20181010145138.17185-3-vkoul@kernel.org>
+Subject: Re: [PATCH v2 1/4] clk: ingenic: Add proper Kconfig entries
+Date: Tue, 16 Oct 2018 15:19:59 -0700
+Message-ID: <153972839968.5275.2414421944664071492@swboyd.mtv.corp.google.com>
+References: <20180823131744.744-1-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181010145138.17185-3-vkoul@kernel.org>
+In-Reply-To: <20180823131744.744-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: Shefali Jain <shefjain@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Vinod Koul <vkoul@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Anu Ramanathan <anur@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>
+Cc: od@zcrc.me, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Vinod Koul (2018-10-10 07:51:38)
-> From: Shefali Jain <shefjain@codeaurora.org>
+Quoting Paul Cercueil (2018-08-23 06:17:41)
+> Previously, the CGU code corresponding to the SoC for which we're
+> compiling the kernel was the only one enabled, which made it impossible
+> to build one kernel that supports them all.
 > =
 
-> Add the clocks supported in global clock controller which clock the
-> peripherals like BLSPs, SDCC, USB, MDSS etc. Register all the clocks
-> to the clock framework for the clients to be able to request for them.
+> Now, it is possible to select more than one SoC to support.
 > =
 
-> Signed-off-by: Shefali Jain <shefjain@codeaurora.org>
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> Co-developed-by: Taniya Das <tdas@codeaurora.org>
-> Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
-> [bamse, vkoul: rebase and tidyup for upstream]
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
 
-Applied to clk-next with some minor cosmetic touches.
+Applied to clk-next
