@@ -1,230 +1,140 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 11/19] PCI: keystone: Cleanup PHY handling
-Date: Tue, 16 Oct 2018 18:06:56 +0100
-Message-ID: <20181016170656.GD16390@e107981-ln.cambridge.arm.com>
-References: <20181015130721.5535-1-kishon@ti.com>
- <20181015130721.5535-12-kishon@ti.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.18 113/135] MIPS: Fix CONFIG_CMDLINE handling
+Date: Tue, 16 Oct 2018 19:05:43 +0200
+Message-ID: <20181016170523.124003229@linuxfoundation.org>
+References: <20181016170515.447235311@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181015130721.5535-12-kishon@ti.com>
+In-Reply-To: <20181016170515.447235311@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>, Frank Rowand <frowand.list@gmail.com>, Jaedon Shin <jaedon.shin@gmail.com>, Mathieu Malaterre <malat@debian.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 15, 2018 at 06:37:13PM +0530, Kishon Vijay Abraham I wrote:
-> Cleanup PHY handling by using devm_phy_optional_get to get PHYs if
-> the PHYs are optional, creating a device link between the PHY device
-> and the controller device and disable PHY on error cases here.
-> Also invoke phy_reset() as part of initializing PHY.
+4.18-stable review patch.  If anyone has any objections, please let me know.
 
-Hi Kishon,
+------------------
 
-it is a bit of nitpicking, I know it is annoying but when I read "Also"
-in commit logs there is almost certainly a reason to split the patch
-into logical standalone entities, this one looks like one.
+From: Paul Burton <paul.burton@mips.com>
 
-Every patch must be a self-contained change that, in case we have to
-revert it, must not affect other patches.
+commit 951d223c6c16ed5d2a71a4d1f13c1e65d6882156 upstream.
 
-There are some more patches in the series that would benefit from
-splitting so I kindly ask you to go through them and repost, we
-should still be able to hit v4.20.
+Commit 8ce355cf2e38 ("MIPS: Setup boot_command_line before
+plat_mem_setup") fixed a problem for systems which have
+CONFIG_CMDLINE_BOOL=y & use a DT with a chosen node that has either no
+bootargs property or an empty one. In this configuration
+early_init_dt_scan_chosen() copies CONFIG_CMDLINE into
+boot_command_line, but the MIPS code doesn't know this so it appends
+CONFIG_CMDLINE (via builtin_cmdline) to boot_command_line again. The
+result is that boot_command_line contains the arguments from
+CONFIG_CMDLINE twice.
 
-Thanks,
-Lorenzo
+That commit took the approach of simply setting up boot_command_line
+from the MIPS code before early_init_dt_scan_chosen() runs, causing it
+not to copy CONFIG_CMDLINE to boot_command_line if a chosen node with no
+bootargs property is found.
 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/dwc/pci-keystone.c | 126 +++++++++++++++++++---
->  1 file changed, 110 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> index e22328f89c84..bf37609ad75b 100644
-> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> @@ -105,6 +105,9 @@ struct keystone_pcie {
->  
->  	int			num_msi_host_irqs;
->  	int			msi_host_irqs[MAX_MSI_HOST_IRQS];
-> +	int			num_lanes;
-> +	struct phy		**phy;
-> +	struct device_link	**link;
->  	struct			device_node *msi_intc_np;
->  	struct irq_domain	*legacy_irq_domain;
->  	struct device_node	*np;
-> @@ -880,22 +883,61 @@ static const struct dw_pcie_ops ks_pcie_dw_pcie_ops = {
->  	.link_up = ks_pcie_link_up,
->  };
->  
-> -static int __exit ks_pcie_remove(struct platform_device *pdev)
-> +static void ks_pcie_disable_phy(struct keystone_pcie *ks_pcie)
->  {
-> -	struct keystone_pcie *ks_pcie = platform_get_drvdata(pdev);
-> +	int num_lanes = ks_pcie->num_lanes;
->  
-> -	clk_disable_unprepare(ks_pcie->clk);
-> +	while (num_lanes--) {
-> +		phy_power_off(ks_pcie->phy[num_lanes]);
-> +		phy_exit(ks_pcie->phy[num_lanes]);
-> +	}
-> +}
-> +
-> +static int ks_pcie_enable_phy(struct keystone_pcie *ks_pcie)
-> +{
-> +	int i;
-> +	int ret;
-> +	int num_lanes = ks_pcie->num_lanes;
-> +
-> +	for (i = 0; i < num_lanes; i++) {
-> +		ret = phy_reset(ks_pcie->phy[i]);
-> +		if (ret < 0)
-> +			goto err_phy;
-> +
-> +		ret = phy_init(ks_pcie->phy[i]);
-> +		if (ret < 0)
-> +			goto err_phy;
-> +
-> +		ret = phy_power_on(ks_pcie->phy[i]);
-> +		if (ret < 0) {
-> +			phy_exit(ks_pcie->phy[i]);
-> +			goto err_phy;
-> +		}
-> +	}
->  
->  	return 0;
-> +
-> +err_phy:
-> +	while (--i >= 0) {
-> +		phy_power_off(ks_pcie->phy[i]);
-> +		phy_exit(ks_pcie->phy[i]);
-> +	}
-> +
-> +	return ret;
->  }
->  
->  static int __init ks_pcie_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> +	struct device_node *np = dev->of_node;
->  	struct dw_pcie *pci;
->  	struct keystone_pcie *ks_pcie;
-> -	struct phy *phy;
-> +	struct device_link **link;
-> +	struct phy **phy;
-> +	u32 num_lanes;
-> +	char name[10];
->  	int ret;
-> +	int i;
->  
->  	ks_pcie = devm_kzalloc(dev, sizeof(*ks_pcie), GFP_KERNEL);
->  	if (!ks_pcie)
-> @@ -908,29 +950,59 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
->  	pci->dev = dev;
->  	pci->ops = &ks_pcie_dw_pcie_ops;
->  
-> -	ks_pcie->pci = pci;
-> +	ret = of_property_read_u32(np, "num-lanes", &num_lanes);
-> +	if (ret)
-> +		num_lanes = 1;
->  
-> -	/* initialize SerDes Phy if present */
-> -	phy = devm_phy_get(dev, "pcie-phy");
-> -	if (PTR_ERR_OR_ZERO(phy) == -EPROBE_DEFER)
-> -		return PTR_ERR(phy);
-> +	phy = devm_kzalloc(dev, sizeof(*phy) * num_lanes, GFP_KERNEL);
-> +	if (!phy)
-> +		return -ENOMEM;
->  
-> -	if (!IS_ERR_OR_NULL(phy)) {
-> -		ret = phy_init(phy);
-> -		if (ret < 0)
-> -			return ret;
-> +	link = devm_kzalloc(dev, sizeof(*link) * num_lanes, GFP_KERNEL);
-> +	if (!link)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < num_lanes; i++) {
-> +		snprintf(name, sizeof(name), "pcie-phy%d", i);
-> +		phy[i] = devm_phy_optional_get(dev, name);
-> +		if (IS_ERR(phy[i])) {
-> +			ret = PTR_ERR(phy[i]);
-> +			goto err_link;
-> +		}
-> +
-> +		if (!phy[i])
-> +			continue;
-> +
-> +		link[i] = device_link_add(dev, &phy[i]->dev, DL_FLAG_STATELESS);
-> +		if (!link[i]) {
-> +			ret = -EINVAL;
-> +			goto err_link;
-> +		}
-> +	}
-> +
-> +	ks_pcie->np = np;
-> +	ks_pcie->pci = pci;
-> +	ks_pcie->link = link;
-> +	ks_pcie->num_lanes = num_lanes;
-> +	ks_pcie->phy = phy;
-> +
-> +	ret = ks_pcie_enable_phy(ks_pcie);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable phy\n");
-> +		goto err_link;
->  	}
->  
-> -	ks_pcie->np = dev->of_node;
->  	platform_set_drvdata(pdev, ks_pcie);
->  	ks_pcie->clk = devm_clk_get(dev, "pcie");
->  	if (IS_ERR(ks_pcie->clk)) {
->  		dev_err(dev, "Failed to get pcie rc clock\n");
-> -		return PTR_ERR(ks_pcie->clk);
-> +		ret = PTR_ERR(ks_pcie->clk);
-> +		goto err_phy;
->  	}
-> +
->  	ret = clk_prepare_enable(ks_pcie->clk);
->  	if (ret)
-> -		return ret;
-> +		goto err_phy;
->  
->  	ret = ks_pcie_add_pcie_port(ks_pcie, pdev);
->  	if (ret < 0)
-> @@ -940,9 +1012,31 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
->  fail_clk:
->  	clk_disable_unprepare(ks_pcie->clk);
->  
-> +err_phy:
-> +	ks_pcie_disable_phy(ks_pcie);
-> +
-> +err_link:
-> +	while (--i >= 0 && link[i])
-> +		device_link_del(link[i]);
-> +
->  	return ret;
->  }
->  
-> +static int __exit ks_pcie_remove(struct platform_device *pdev)
-> +{
-> +	struct keystone_pcie *ks_pcie = platform_get_drvdata(pdev);
-> +	struct device_link **link = ks_pcie->link;
-> +	int num_lanes = ks_pcie->num_lanes;
-> +
-> +	clk_disable_unprepare(ks_pcie->clk);
-> +	ks_pcie_disable_phy(ks_pcie);
-> +
-> +	while (num_lanes--)
-> +		device_link_del(link[num_lanes]);
-> +
-> +	return 0;
-> +}
-> +
->  static struct platform_driver ks_pcie_driver __refdata = {
->  	.probe  = ks_pcie_probe,
->  	.remove = __exit_p(ks_pcie_remove),
-> -- 
-> 2.17.1
-> 
+Unfortunately this is problematic for systems which do have a non-empty
+bootargs property & CONFIG_CMDLINE_BOOL=y. There
+early_init_dt_scan_chosen() will overwrite boot_command_line with the
+arguments from DT, which means we lose those from CONFIG_CMDLINE
+entirely. This breaks CONFIG_MIPS_CMDLINE_DTB_EXTEND. If we have
+CONFIG_MIPS_CMDLINE_FROM_BOOTLOADER or
+CONFIG_MIPS_CMDLINE_BUILTIN_EXTEND selected and the DT has a bootargs
+property which we should ignore, it will instead be honoured breaking
+those configurations too.
+
+Fix this by reverting commit 8ce355cf2e38 ("MIPS: Setup
+boot_command_line before plat_mem_setup") to restore the former
+behaviour, and fixing the CONFIG_CMDLINE duplication issue by
+initializing boot_command_line to a non-empty string that
+early_init_dt_scan_chosen() will not overwrite with CONFIG_CMDLINE.
+
+This is a little ugly, but cleanup in this area is on its way. In the
+meantime this is at least easy to backport & contains the ugliness
+within arch/mips/.
+
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Fixes: 8ce355cf2e38 ("MIPS: Setup boot_command_line before plat_mem_setup")
+References: https://patchwork.linux-mips.org/patch/18804/
+Patchwork: https://patchwork.linux-mips.org/patch/20813/
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Jaedon Shin <jaedon.shin@gmail.com>
+Cc: Mathieu Malaterre <malat@debian.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mips@linux-mips.org
+Cc: stable@vger.kernel.org # v4.16+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/mips/kernel/setup.c |   48 +++++++++++++++++++++++++++--------------------
+ 1 file changed, 28 insertions(+), 20 deletions(-)
+
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -835,6 +835,34 @@ static void __init arch_mem_init(char **
+ 	struct memblock_region *reg;
+ 	extern void plat_mem_setup(void);
+ 
++	/*
++	 * Initialize boot_command_line to an innocuous but non-empty string in
++	 * order to prevent early_init_dt_scan_chosen() from copying
++	 * CONFIG_CMDLINE into it without our knowledge. We handle
++	 * CONFIG_CMDLINE ourselves below & don't want to duplicate its
++	 * content because repeating arguments can be problematic.
++	 */
++	strlcpy(boot_command_line, " ", COMMAND_LINE_SIZE);
++
++	/* call board setup routine */
++	plat_mem_setup();
++
++	/*
++	 * Make sure all kernel memory is in the maps.  The "UP" and
++	 * "DOWN" are opposite for initdata since if it crosses over
++	 * into another memory section you don't want that to be
++	 * freed when the initdata is freed.
++	 */
++	arch_mem_addpart(PFN_DOWN(__pa_symbol(&_text)) << PAGE_SHIFT,
++			 PFN_UP(__pa_symbol(&_edata)) << PAGE_SHIFT,
++			 BOOT_MEM_RAM);
++	arch_mem_addpart(PFN_UP(__pa_symbol(&__init_begin)) << PAGE_SHIFT,
++			 PFN_DOWN(__pa_symbol(&__init_end)) << PAGE_SHIFT,
++			 BOOT_MEM_INIT_RAM);
++
++	pr_info("Determined physical RAM map:\n");
++	print_memory_map();
++
+ #if defined(CONFIG_CMDLINE_BOOL) && defined(CONFIG_CMDLINE_OVERRIDE)
+ 	strlcpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
+ #else
+@@ -862,26 +890,6 @@ static void __init arch_mem_init(char **
+ 	}
+ #endif
+ #endif
+-
+-	/* call board setup routine */
+-	plat_mem_setup();
+-
+-	/*
+-	 * Make sure all kernel memory is in the maps.  The "UP" and
+-	 * "DOWN" are opposite for initdata since if it crosses over
+-	 * into another memory section you don't want that to be
+-	 * freed when the initdata is freed.
+-	 */
+-	arch_mem_addpart(PFN_DOWN(__pa_symbol(&_text)) << PAGE_SHIFT,
+-			 PFN_UP(__pa_symbol(&_edata)) << PAGE_SHIFT,
+-			 BOOT_MEM_RAM);
+-	arch_mem_addpart(PFN_UP(__pa_symbol(&__init_begin)) << PAGE_SHIFT,
+-			 PFN_DOWN(__pa_symbol(&__init_end)) << PAGE_SHIFT,
+-			 BOOT_MEM_INIT_RAM);
+-
+-	pr_info("Determined physical RAM map:\n");
+-	print_memory_map();
+-
+ 	strlcpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
+ 
+ 	*cmdline_p = command_line;
