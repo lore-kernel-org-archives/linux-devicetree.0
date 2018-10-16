@@ -1,40 +1,61 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH v3 2/4] crypto: mxs-dcp - Add support for dcp clk
-Date: Tue, 16 Oct 2018 17:23:11 +0000
-Message-ID: <f88233e6a76e99f95f6611bccdf234681e84f7ce.camel@nxp.com>
-References: <cover.1539705285.git.leonard.crestez@nxp.com>
-         <dcbcaf888bbd0a35dcf34228df2d9eb4fd762ea7.1539705286.git.leonard.crestez@nxp.com>
-         <CAOMZO5Ck846zd_Xo=9sVK0EAxNLsUsWiC59H2Ms6x8xoD8iwWw@mail.gmail.com>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [RFC 1/4] pwm: sifive: Add DT documentation for SiFive PWM
+ Controller.
+Date: Tue, 16 Oct 2018 10:31:42 -0700
+Message-ID: <6e108e3c-15c1-b13b-ac3e-60c5eb209c7b@sifive.com>
+References: <1539111085-25502-1-git-send-email-atish.patra@wdc.com>
+ <1539111085-25502-2-git-send-email-atish.patra@wdc.com>
+ <20181010134926.GD21134@ulmo> <25758ab9-eb36-741b-6264-42412b3ddd8e@wdc.com>
+ <20181016110142.GC8852@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5Ck846zd_Xo=9sVK0EAxNLsUsWiC59H2Ms6x8xoD8iwWw@mail.gmail.com>
+In-Reply-To: <20181016110142.GC8852@ulmo>
 Content-Language: en-US
-Content-ID: <55D657036B547E4D91B7FD5CB5FEA6B4@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "festevam@gmail.com" <festevam@gmail.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Aymen Sghaier <aymen.sghaier@nxp.com>, Franck Lenormand <franck.lenormand@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "davem@davemloft.net" <davem@davemloft.net>, Horia Geanta <horia.geanta@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>"linux-crypto@vger.kernel.org" <l>
+To: Thierry Reding <thierry.reding@gmail.com>, Atish Patra <atish.patra@wdc.com>, Rob Herring <robh+dt@kernel.org>
+Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Wesley Terpstra <wesley@sifive.com>, linus.walleij@linaro.org, palmer@sifive.com, linux-kernel@vger.kernel.org, hch@infradead.org, linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE4LTEwLTE2IGF0IDEzOjAzIC0wMzAwLCBGYWJpbyBFc3RldmFtIHdyb3RlOg0K
-PiA+ICsgICAgICAgLyogRENQIGNsb2NrIGlzIG9wdGlvbmFsLCBvbmx5IHVzZWQgb24gc29tZSBT
-T0NzICovDQo+ID4gKyAgICAgICBzZGNwLT5kY3BfY2xrID0gZGV2bV9jbGtfZ2V0KGRldiwgImRj
-cCIpOw0KPiA+ICsgICAgICAgaWYgKElTX0VSUihzZGNwLT5kY3BfY2xrKSkgew0KPiA+ICsgICAg
-ICAgICAgICAgICBpZiAoc2RjcC0+ZGNwX2NsayAhPSBFUlJfUFRSKC1FTk9FTlQpKQ0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBQVFJfRVJSKHNkY3AtPmRjcF9jbGspOw0KPiA+
-ICsgICAgICAgICAgICAgICBzZGNwLT5kY3BfY2xrID0gTlVMTDsNCj4gDQo+IFRoaXMgZGNwX2Ns
-ayBhc3NpZ25tZW50IHRvIE5VTEwgZG9lcyBub3Qgc2VlbSB0byBiZSBuZWNlc3NhcnkuDQoNClRo
-ZSBjbGsgQVBJIGlnbm9yZXMgYWxsIGNhbGxzIGlmIGNsayA9PSBOVUxMICh3aGljaCBpcyB2ZXJ5
-IG5pY2UpIGJ1dA0Kbm90IGlmIElTX0VSUihjbGspLiBTZXR0aW5nIGRjcF9jbGsgdG8gTlVMTCBh
-dm9pZHMgc3ByaW5rbGluZyBvdGhlcg0KY2hlY2tzLg0KDQo+ID4gKyAgICAgICByZXQgPSBjbGtf
-cHJlcGFyZV9lbmFibGUoc2RjcC0+ZGNwX2Nsayk7DQo+ID4gKyAgICAgICBpZiAocmV0KQ0KPiA+
-ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+IA0KPiA+ICAgICAgICAgcmV0ID0gZGV2
-bV9yZXF1ZXN0X2lycShkZXYsIGRjcF92bWlfaXJxLCBteHNfZGNwX2lycSwgMCwNCj4gPiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgImRjcC12bWktaXJxIiwgc2RjcCk7DQo+ID4gICAg
-ICAgICBpZiAocmV0KSB7DQo+ID4gICAgICAgICAgICAgICAgIGRldl9lcnIoZGV2LCAiRmFpbGVk
-IHRvIGNsYWltIERDUCBWTUkgSVJRIVxuIik7DQo+IA0KPiBJbiBjYXNlIG9mIHN1YnNlcXVlbnQg
-ZXJyb3JzIHlvdSBzaG91bGQgY2FsbA0KPiBjbGtfZGlzYWJsZV91bnByZXBhcmUoc2RjcC0+ZGNw
-X2NsaykuDQoNClllcywgd2lsbCByZXNlbmQuIE1heWJlIHNvbWUgZGF5IGNsayBjb25zdW1lciB3
-aWxsIGF1dG9tYXRpY2FsbHkgdW5kbw0KcGVuZGluZyBwcmVwYXJlL2VuYWJsZXMgb24gcmVsZWFz
-ZT8NCg==
+
+On 10/16/18 4:01 AM, Thierry Reding wrote:
+> On Mon, Oct 15, 2018 at 03:57:35PM -0700, Atish Patra wrote:
+>> On 10/10/18 6:49 AM, Thierry Reding wrote:
+>>> On Tue, Oct 09, 2018 at 11:51:22AM -0700, Atish Patra wrote:
+>>>> +Required properties:
+>>>> +- compatible: should be one of
+>>>> +	"sifive,fu540-c000-pwm0","sifive,pwm0".
+>>> What's the '0' in here? A version number?
+>>>
+>> I think yes. Since fu540 is the first Linux capable RISC-V core, SiFive Guys
+>> decided mark it as version 0.
+>>
+>> @Wesly: Please correct me if I am wrong.
+> It seems fairly superfluous to me to have a version number in additon to
+> the fu540-c000, which already seems to be the core plus some sort of
+> part number. Do you really expect there to be any changes in the SoC
+> that would require a different compatible string at this point? If the
+> SoC has taped out, how will you ever get a different version of the PWM
+> IP in it?
+>
+> I would expect any improvements or changes to the PWM IP to show up in a
+> different SoC generation, at which point it would be something like
+> "sifive,fu640-c000" maybe, or perhaps "sifive,fu540-d000", or whatever
+> the numbering is.
+
+
+The "0" suffix refers to a revision number for the underlying PWM IP block.
+
+It's certainly important to keep that version number on the 
+"sifive,pwm0" compatible string that doesn't have the chip name 
+associated with it.
+
+As to whether there could ever be a FU540-C000 part with different IP 
+block versions on it: FU540-C000 is ultimately a marketing name.  While 
+theoretically we shouldn't have another "FU540-C000" chip with different 
+peripheral IP block versions on it, I don't think any engineer can 
+guarantee that it won't happen.
+
+
+- Paul
