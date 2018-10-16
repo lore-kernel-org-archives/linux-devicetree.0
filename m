@@ -1,87 +1,94 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 08/14] ARM64: dts: hisilicon: Add tsensor interrupt name
-Date: Tue, 16 Oct 2018 09:44:25 -0500
-Message-ID: <CAL_JsqJCJbOxP_ODJ_JTRCvrFpSCSxa-X1LCr+1-pY_ApTz_1Q@mail.gmail.com>
-References: <1537866192-12320-1-git-send-email-daniel.lezcano@linaro.org>
- <1537866192-12320-9-git-send-email-daniel.lezcano@linaro.org>
- <20181015162835.GA20955@bogus> <d2cb2fa0-b579-205c-1777-308da075b3fd@linaro.org>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH v3 4/7] dmaengine: stm32-dma: Add DMA/MDMA chaining
+ support
+Date: Tue, 16 Oct 2018 20:14:32 +0530
+Message-ID: <20181016144432.GR2400@vkoul-mobl>
+References: <1538139715-24406-1-git-send-email-pierre-yves.mordret@st.com>
+ <1538139715-24406-5-git-send-email-pierre-yves.mordret@st.com>
+ <20181007160030.GB2372@vkoul-mobl>
+ <e9cedfdd-ad90-9123-03bb-34a2e84059c5@st.com>
+ <20181010040343.GO2372@vkoul-mobl>
+ <d64da587-a680-20c4-7139-f59fd1f299bc@st.com>
+ <20181015171403.GM2400@vkoul-mobl>
+ <9a375fd3-964f-3d57-9d18-b010e20a4d42@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d2cb2fa0-b579-205c-1777-308da075b3fd@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <9a375fd3-964f-3d57-9d18-b010e20a4d42@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Eduardo Valentin <edubezval@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, Leo Yan <leo.yan@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 15, 2018 at 1:01 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
->
-> Hi Rob,
->
-> thanks for the review.
->
-> On 15/10/2018 18:28, Rob Herring wrote:
-> > On Tue, Sep 25, 2018 at 11:03:06AM +0200, Daniel Lezcano wrote:
-> >> Add the interrupt names for the sensors, so the code can rely on them
-> >> instead of dealing with index which are prone to error.
+On 16-10-18, 11:19, Pierre Yves MORDRET wrote:
+> 
+> 
+> On 10/15/18 7:14 PM, Vinod wrote:
+> > On 10-10-18, 09:02, Pierre Yves MORDRET wrote:
+> >>
+> >>
+> >> On 10/10/2018 06:03 AM, Vinod wrote:
+> >>> On 09-10-18, 10:40, Pierre Yves MORDRET wrote:
+> >>>>
+> >>>>
+> >>>> On 10/07/2018 06:00 PM, Vinod wrote:
+> >>>>> On 28-09-18, 15:01, Pierre-Yves MORDRET wrote:
+> >>>>>> This patch adds support of DMA/MDMA chaining support.
+> >>>>>> It introduces an intermediate transfer between peripherals and STM32 DMA.
+> >>>>>> This intermediate transfer is triggered by SW for single M2D transfer and
+> >>>>>> by STM32 DMA IP for all other modes (sg, cyclic) and direction (D2M).
+> >>>>>>
+> >>>>>> A generic SRAM allocator is used for this intermediate buffer
+> >>>>>> Each DMA channel will be able to define its SRAM needs to achieve chaining
+> >>>>>> feature : (2 ^ order) * PAGE_SIZE.
+> >>>>>> For cyclic, SRAM buffer is derived from period length (rounded on
+> >>>>>> PAGE_SIZE).
+> >>>>>
+> >>>>> So IIUC, you chain two dma txns together and transfer data via an SRAM?
+> >>>>
+> >>>> Correct. one DMA is DMAv2 (stm32-dma) and the other is MDMA(stm32-mdma).
+> >>>> Intermediate transfer is between device and memory.
+> >>>> This intermediate transfer is using SDRAM.
+> >>>
+> >>> Ah so you use dma calls to setup mdma xtfers? I dont think that is a
+> >>> good idea. How do you know you should use mdma for subsequent transfer?
+> >>>
+> >>
+> >> When user bindings told to setup chaining intermediate MDMA transfers are always
+> >> triggers.
+> >> For instance if a user requests a Dev2Mem transfer with chaining. From client
+> >> pov this is still a prep_slave_sg. Internally DMAv2 is setup in cyclic mode (in
+> >> double buffer mode indeed => 2 buffer of PAGE_SIZE/2) and destination is SDRAM.
+> >> DMAv2 will flip/flop on those 2 buffers.
+> >> At the same time DMAv2 driver prepares a MDMA SG that will fetch data from those
+> >> 2 buffers in SDRAM and fills final destination memory.
+> > 
+> > I am not able to follow is why does it need to be internal, why should
+> > the client not set the two transfers and trigger them?
+> > 
+> 
+> Client may use or not chaining: defined within DT. API and dynamic are same at
 
-[...]
+That should be upto client... As a dmaengine driver you should enable
+data transfer from src to dstn.
 
-> >> +            interrupt-names =3D "tsensor_intr";
-> >
-> > That name seems pretty pointless.
-> >
-> >>              clocks =3D <&sys_ctrl HI6220_TSENSOR_CLK>;
-> >>              clock-names =3D "thermal_clk";
-> >>              #thermal-sensor-cells =3D <1>;
-> >> @@ -28,5 +30,6 @@ for Hi3660:
-> >>              compatible =3D "hisilicon,hi3660-tsensor";
-> >>              reg =3D <0x0 0xfff30000 0x0 0x1000>;
-> >>              interrupts =3D <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
-> >> +            interrupt-names =3D "tsensor_a73";
-> >
-> > Just 'a73' is sufficient.
->
-> This is the name defined in the board documentation to give a name to
-> the interrupt when requesting it. This one appears in /proc/interrupts.
->
-> I can replace the 'tsensor_intr' by 'tsensor', but if 'tsensor_a73' is
-> replaced by 'a73' that may looks odd in /proc/interrupts to see an
-> interrupts line with the 'a73' name.
+> driver client level. Moreover driver exposes only DMAv2 and not both DMAv2 and
+> MDMA. This is totally hidden for client. If client sets both this would imply
 
-Sounds like a Linux problem, not DT...
+Why should a controller be hidden from user, I dont see why that would
+be a good thing
 
-The thing is that any *-names property is supposed to be a local to
-block name. For example, a UART may have a TX irq. It's local name is
-just "TX IRQ", but then upstream at the interrupt controller it may be
-"UART1 TX IRQ". If you have multiple instances, the local names are
-the same.
+> changing all drivers that may want use chaining. Even more to deal with DMAv2
+> and MDMA at its level.
+> Since DMAv2 deals with MDMA, all drivers are same as before. no changes required.
 
-If we lose the node name from /proc/interrupts when interrupt-names is
-used, then we should fix that.
+It is not about changes, it is about the SW model you want to have.
 
->
-> However this is the preparation for the multiple sensors support so we
-> will have more interrupt names.
->
-> Is it possible to keep these names ?
->
->  - tsensor
->  - tsensor_a73
->  - tsensor_a57
->  - tsensor_gpu
->
->
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
+The intermediate SRAM transfers should not be made within DMAengine
+driver, client can chose to have two transfers and couple or not, it is
+upto them to choose. Sorry I do not like this abstraction and would like
+to see a cleaner approach
+
+-- 
+~Vinod
