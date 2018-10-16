@@ -1,94 +1,121 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] dt: bindings: add missing dt properties for
- WCN3990 wifi node
-Date: Tue, 16 Oct 2018 15:53:39 -0700
-Message-ID: <CAD=FV=WP-Xx+xeCGTxSFcSrmhAv-6F3zm-0hnLxhHi84u-fUkQ@mail.gmail.com>
-References: <1539172376-19269-1-git-send-email-govinds@codeaurora.org> <1539172376-19269-2-git-send-email-govinds@codeaurora.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v13 8/8] clk: qcom: Add ACD path to CPU clock driver for msm8996
+Date: Tue, 16 Oct 2018 16:56:48 -0700
+Message-ID: <153973420806.5275.356235896596182005@swboyd.mtv.corp.google.com>
+References: <20180614215358.11264-1-ilia.lin@gmail.com>
+ <20180614215358.11264-9-ilia.lin@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1539172376-19269-2-git-send-email-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180614215358.11264-9-ilia.lin@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ilia.lin@gmail.com
+Cc: Ilia Lin <ilialin@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Quoting ilia.lin@gmail.com (2018-06-14 14:53:55)
+> @@ -176,6 +183,9 @@ static struct clk_alpha_pll pwrcl_alt_pll =3D {
+>         },
+>  };
+>  =
 
-On Wed, Oct 10, 2018 at 4:53 AM Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->
-> Add missing optional properties in WCN3990 wifi node.
->
-> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  .../bindings/net/wireless/qcom,ath10k.txt          | 28 ++++++++++++++++------
->  1 file changed, 21 insertions(+), 7 deletions(-)
+> +void __iomem *base;
+> +static void qcom_cpu_clk_msm8996_acd_init(void __iomem *base);
+> +
 
-Point of order: please CC LKML on _all_ your patches.  Yes, it's a
-firehose.  CCing LKML allows your patches to be found on
-lore.kernel.org's patchwork and also allows people to find your
-patches via <https://lkml.kernel.org/r/MSG_ID> links.
+Why are we doing this?
 
+> @@ -393,6 +404,10 @@ qcom_cpu_clk_msm8996_register_clks(struct device *de=
+v, struct regmap *regmap)
+>         clk_alpha_pll_configure(&perfcl_alt_pll, regmap, &altpll_config);
+>         clk_alpha_pll_configure(&pwrcl_alt_pll, regmap, &altpll_config);
+>  =
 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> index 7fd4e8c..f831bb1 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> @@ -37,12 +37,20 @@ Optional properties:
->  - clocks: List of clock specifiers, must contain an entry for each required
->            entry in clock-names.
->  - clock-names: Should contain the clock names "wifi_wcss_cmd", "wifi_wcss_ref",
-> -               "wifi_wcss_rtc".
-> -- interrupts: List of interrupt lines. Must contain an entry
-> -             for each entry in the interrupt-names property.
-> +              "wifi_wcss_rtc" for "qcom,ipq4019-wifi" compatible target and
-> +              "cxo_ref_clk_pin", "smmu_aggre2_noc_clk" for "qcom,wcn3990-wifi"
-> +              compatible target.
+> +       /* Enable alt PLLs */
+> +       clk_prepare_enable(pwrcl_alt_pll.clkr.hw.clk);
+> +       clk_prepare_enable(perfcl_alt_pll.clkr.hw.clk);
 
-I always get confused with these big bindings patches that hide
-everything under a big "Optional properties" section to avoid
-specifying which properties are actually optional and which ones are
-required.
+Are the alt PLLs CLK_IS_CRITICAL?
 
-After your patch and thinking about "qcom,wcn3990-wifi" in particular,
-it's unclear to me which of the following is true (or maybe something
-totally different I didn't think of)
+> +
+>         ret =3D clk_notifier_register(pwrcl_pmux.clkr.hw.clk, &pwrcl_pmux=
+.nb);
+>         if (ret)
+>                 return ret;
+> @@ -402,10 +417,48 @@ qcom_cpu_clk_msm8996_register_clks(struct device *d=
+ev, struct regmap *regmap)
+>         return ret;
+>  }
+>  =
 
-A) On wcn3990-wifi these clocks should be a required property but it's
-only listed under "Optional" because it's not used for some of the
-different WiFi drivers using this same bindings.
+> +#define CPU_AFINITY_MASK 0xFFF
+> +#define PWRCL_CPU_REG_MASK 0x3
+> +#define PERFCL_CPU_REG_MASK 0x103
+> +
+> +#define L2ACDCR_REG 0x580ULL
+> +#define L2ACDTD_REG 0x581ULL
+> +#define L2ACDDVMRC_REG 0x584ULL
+> +#define L2ACDSSCR_REG 0x589ULL
+> +
+> +static DEFINE_SPINLOCK(acd_lock);
+> +
+> +static void qcom_cpu_clk_msm8996_acd_init(void __iomem *base)
+> +{
+> +       u64 hwid;
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&acd_lock, flags);
+> +
+> +       hwid =3D read_cpuid_mpidr() & CPU_AFINITY_MASK;
+> +
+> +       kryo_l2_set_indirect_reg(L2ACDTD_REG, 0x00006A11);
+> +       kryo_l2_set_indirect_reg(L2ACDDVMRC_REG, 0x000E0F0F);
+> +       kryo_l2_set_indirect_reg(L2ACDSSCR_REG, 0x00000601);
+> +
+> +       if (PWRCL_CPU_REG_MASK =3D=3D (hwid | PWRCL_CPU_REG_MASK)) {
+> +               writel(0xF, base + PWRCL_REG_OFFSET + SSSCTL_OFFSET);
+> +               wmb();
+> +               kryo_l2_set_indirect_reg(L2ACDCR_REG, 0x002C5FFD);
+> +       }
+> +
+> +       if (PERFCL_CPU_REG_MASK =3D=3D (hwid | PERFCL_CPU_REG_MASK)) {
+> +               kryo_l2_set_indirect_reg(L2ACDCR_REG, 0x002C5FFD);
+> +               writel(0xF, base + PERFCL_REG_OFFSET + SSSCTL_OFFSET);
+> +               wmb();
 
-B) On wcn3990-wifi these clocks should either both be there or neither.
+Please add comments to the barriers here so we know what they're doing.
+I guess the first one is ordering writel with the indirect register
+access, but the other one I don't know what it's doing.
 
-C) On wcm3990-wifi you can specify zero, either, or both of these
-clocks.  AKA they are independently optional.
+> +       }
+> +
+> +       spin_unlock_irqrestore(&acd_lock, flags);
+> +}
+> +
+>  static int qcom_cpu_clk_msm8996_driver_probe(struct platform_device *pde=
+v)
+>  {
+>         int ret;
+> -       void __iomem *base;
 
-It might make sense to reorganize this bindings to make this clearer?
-...not just for clock but for interrupts / regulators as well.  Maybe
-you need to break this down into sections per class of compatible
-string, or add a list per compatible string down below?
+Ok but still, why?
 
-Also: even stranger is that even though you list two clocks here the
-current driver I see in linuxnext only has "cxo_ref_clk_pin".
+>         struct resource *res;
+>         struct regmap *regmap;
+>         struct clk_hw_onecell_data *data;
+> @@ -429,6 +482,8 @@ static int qcom_cpu_clk_msm8996_driver_probe(struct p=
+latform_device *pdev)
+>         if (ret)
+>                 return ret;
+>  =
 
+> +       qcom_cpu_clk_msm8996_acd_init(base);
+> +
+>         data->hws[0] =3D &pwrcl_pmux.clkr.hw;
+>         data->hws[1] =3D &perfcl_pmux.clkr.hw;
+>         data->num =3D 2;
+> -- =
 
-> +- interrupts: reference to the list of 17 interrupt no's for "qcom,ipq4019-wifi"
-> +             compatible target.
-> +             reference to the list of 12 interrupt no's for "qcom,wcn3990-wifi"
-> +             compatible target.
-> +             Must contain interrupt-names property per entry for
-> +             "qcom,ath10k", "qcom,ipq4019-wifi" compatible targets.
-
-...and just to add some credence to my concerns above, "interrupts"
-are currently listed under "Optional" properties but I don't think
-that the wcn3990 driver will actually work if you don't specify any of
-the interrupts, right?  AKA for wcn3990 they are _not_ optional and
-you must have exactly 12 interrupts.
-
-
-One separate issue I have is with your example, which you didn't
-change in this patch.  You should fix the example with the same
-feedback that I had to your patch ("dts: arm64/sdm845: Add WCN3990
-WLAN module device node").
-
--Doug
+> 2.11.0
+>=20
