@@ -1,46 +1,139 @@
-From: Wesley Terpstra <wesley@sifive.com>
-Subject: Re: [RFC 1/4] pwm: sifive: Add DT documentation for SiFive PWM Controller.
-Date: Mon, 15 Oct 2018 16:19:20 -0700
-Message-ID: <CAMgXwTieXNa13_xGp2mkw99+VJm-R1xrxMHSmRLZV-hG5oSdzA@mail.gmail.com>
-References: <1539111085-25502-1-git-send-email-atish.patra@wdc.com>
- <1539111085-25502-2-git-send-email-atish.patra@wdc.com> <20181010134926.GD21134@ulmo>
- <25758ab9-eb36-741b-6264-42412b3ddd8e@wdc.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of: overlay: user space synchronization
+Date: Mon, 15 Oct 2018 17:04:22 -0700
+Message-ID: <3635be33-7301-ecd5-5966-24b0494771ef@gmail.com>
+References: <1539567282-1326-1-git-send-email-frowand.list@gmail.com>
+ <CAMuHMdXad2g5zEZ8=XzzVgfijcatKYj5AjwVQg=W-by_rHfcAQ@mail.gmail.com>
+ <e69685d5-e09f-5f7d-2ff0-7ead12500371@gmail.com>
+ <CANk1AXQU=3Ap=wbO5b8c2pMq61hzuRkeWYNv2Esq+c9d+0e_BA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <25758ab9-eb36-741b-6264-42412b3ddd8e@wdc.com>
+In-Reply-To: <CANk1AXQU=3Ap=wbO5b8c2pMq61hzuRkeWYNv2Esq+c9d+0e_BA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Palmer Dabbelt <palmer@sifive.com>, linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org, linus.walleij@linaro.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Christoph Hellwig <hch@infradead.org>
+To: Alan Tull <atull@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 15, 2018 at 3:57 PM Atish Patra <atish.patra@wdc.com> wrote:
-> >> +SiFive PWM controller
-> >> +
-> >> +Unlike most other PWM controllers, the SiFive PWM controller currently only
-> >> +supports one period for all channels in the PWM. This is set globally in DTS.
-> >> +The period also has significant restrictions on the values it can achieve,
-> >> +which the driver rounds to the nearest achievable frequency.
-> >
-> > What restrictions are these? If "nearest achievable" is too far off the
-> > target period it might be preferable to error out.
-> >
->
-> @Wes: Any comments?
+On 10/15/18 13:38, Alan Tull wrote:
+> On Mon, Oct 15, 2018 at 1:09 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>>
+>> On 10/15/18 01:24, Geert Uytterhoeven wrote:
+>>>
+>>> Please say explicitly that tree_version contains a 32-bit unsigned
+>>> decimal number, which is incremented before and after every change.
+>>> I had to deduce that from the code.
+>>
+>> Good point.  I'll add that.
+> 
+> Looking at the code, tree_version being odd or even means something.
+> tree_version is incremented every time the of_mutex is locked or
+> unlocked, such that:
+>  * tree_version is odd  == of_mutex is locked and the tree is
+> currently be in the process of being changed
+>  * tree_version is even == of_version is unlocked again and the
+> changes are finished.
+> 
+> How about making this explicit in the interface by breaking it up into
+> two attributes:
+> 
+> /sys/firmware/devicetree/tree_lock == "locked" or "unlocked".  If the
+> tree is locked, you know that the tree may still be changing and the
+> sysfs can't be trusted to be stable yet.  Or maybe even more
+> specifically tree_overlay_lock?
+> 
+> /sys/firmware/devicetree/tree_version = a u32 that is incremented once
+> for every overlay added or removed.
 
-When I last looked at this driver and hardware, I briefly considered
-throwing up my hands and pretending that this PWM device had no period
-control at all, only duty-cycle. There are several examples of PWM
-controllers in linux already that behave that way.
+I like the extra clarity of purpose that having two attributes provides,
+but it makes the user space dance more difficult.
 
-Most of the uses of this PWM are only going to care about the
-duty-cycle, not the period. So failing when the period is unachievable
-seems worse to me than just completely eliminating access to period
-control.
+With a single attribute, the shell code is (updated from the patch
+to remove the variable "version"):
 
-> I think yes. Since fu540 is the first Linux capable RISC-V core, SiFive
-> Guys decided mark it as version 0.
->
-> @Wesly: Please correct me if I am wrong.
+	done=1
 
-Correct.
+	while [ $done = 1 ] ; do
+
+		pre_version=$(cat /sys/firmware/devicetree/tree_version)
+		while [ $(( ${pre_version} & 1 )) != 0 ] ; do
+			# echo is optional, sleep value can be tuned
+ 			echo "${pre_version}  tree locked, sleeping"
+ 			sleep 2;
+ 			pre_version=$(cat /sys/firmware/devicetree/tree_version)
+		done
+
+		# 'critical region'
+		# access /proc/device-tree/ one or more times
+
+		post_version=$(cat /sys/firmware/devicetree/tree_version)
+
+		if [ ${post_version} = ${pre_version} ] ; then
+			done=0
+		fi
+
+	done
+
+With two attributes, the shell code is:
+
+
+        done=1
+
+        while [ $done = 1 ] ; do
+
+                # the order of the next three lines must not change
+                version=$(cat /sys/firmware/devicetree/tree_version)
+                pre_version=${version}
+                tree_lock=$(cat /sys/firmware/devicetree/tree_lock)
+                while [ tree_lock != "unlocked" ] ||
+                      [ ${version} != ${pre_version} ] ; do
+                        # echo is optional, sleep value can be tuned
+                        echo "locked, sleeping"
+                        sleep 2;
+                        # the order of the next two lines must not change
+                        pre_version=${version}
+                        tree_lock=$(cat /sys/firmware/devicetree/tree_lock)
+                        version=$(cat /sys/firmware/devicetree/tree_version)
+                done
+
+                # 'critical region'
+                # access /proc/device-tree/ one or more times
+
+                # the order of the next two lines must not change
+                post_version=$(cat /sys/firmware/devicetree/tree_version)
+                tree_lock=$(cat /sys/firmware/devicetree/tree_lock)
+
+                if [ ${tree_lock} = "unlocked" ] &&
+                   [ ${post_version} = ${pre_version} ] ; then
+                        done=0
+                fi
+
+        done
+
+
+The two attribute example is untested, could have syntax errors, etc.
+I'm also not sure that the logic is correct.
+
+My opinion is that the extra shell complexity makes the two attribute
+solution worse.
+
+-Frank
+
+
+> 
+> Alan
+> 
+> 
+>>
+>>
+>>>
+>>> IMHO that is more important than having the sample script here.
+>>>
+>>> Gr{oetje,eeting}s,
+>>>
+>>>                         Geert
+>>>
+>>
+> 
