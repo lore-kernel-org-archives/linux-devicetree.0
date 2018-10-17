@@ -1,71 +1,248 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v4 00/18] of: overlay: validation checks, subsequent fixes
-Date: Tue, 16 Oct 2018 20:08:56 -0700
-Message-ID: <bbbbe52c-8415-e22a-48d7-95f919942c68@gmail.com>
-References: <1539657458-24401-1-git-send-email-frowand.list@gmail.com>
- <87murekyts.fsf@concordia.ellerman.id.au>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 11/19] PCI: keystone: Cleanup PHY handling
+Date: Wed, 17 Oct 2018 08:51:39 +0530
+Message-ID: <647103e4-1a38-d3f8-9779-3429530e2f31@ti.com>
+References: <20181015130721.5535-1-kishon@ti.com>
+ <20181015130721.5535-12-kishon@ti.com>
+ <20181016170656.GD16390@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87murekyts.fsf@concordia.ellerman.id.au>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181016170656.GD16390@e107981-ln.cambridge.arm.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: devicetree@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Murali Karicheri <m-karicheri2@ti.com>, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/16/18 02:47, Michael Ellerman wrote:
-> frowand.list@gmail.com writes:
+Lorenzo,
+
+On Tuesday 16 October 2018 10:36 PM, Lorenzo Pieralisi wrote:
+> On Mon, Oct 15, 2018 at 06:37:13PM +0530, Kishon Vijay Abraham I wrote:
+>> Cleanup PHY handling by using devm_phy_optional_get to get PHYs if
+>> the PHYs are optional, creating a device link between the PHY device
+>> and the controller device and disable PHY on error cases here.
+>> Also invoke phy_reset() as part of initializing PHY.
 > 
->> From: Frank Rowand <frank.rowand@sony.com>
+> Hi Kishon,
+> 
+> it is a bit of nitpicking, I know it is annoying but when I read "Also"
+> in commit logs there is almost certainly a reason to split the patch
+> into logical standalone entities, this one looks like one.
+> 
+> Every patch must be a self-contained change that, in case we have to
+> revert it, must not affect other patches.
+> 
+> There are some more patches in the series that would benefit from
+> splitting so I kindly ask you to go through them and repost, we
+> should still be able to hit v4.20.
+
+Sure, I'll repost them.
+
+Thanks
+Kishon
+> 
+> Thanks,
+> Lorenzo
+> 
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  drivers/pci/controller/dwc/pci-keystone.c | 126 +++++++++++++++++++---
+>>  1 file changed, 110 insertions(+), 16 deletions(-)
 >>
->> Add checks to (1) overlay apply process and (2) memory freeing
->> triggered by overlay release.  The checks are intended to detect
->> possible memory leaks and invalid overlays.
+>> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+>> index e22328f89c84..bf37609ad75b 100644
+>> --- a/drivers/pci/controller/dwc/pci-keystone.c
+>> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+>> @@ -105,6 +105,9 @@ struct keystone_pcie {
+>>  
+>>  	int			num_msi_host_irqs;
+>>  	int			msi_host_irqs[MAX_MSI_HOST_IRQS];
+>> +	int			num_lanes;
+>> +	struct phy		**phy;
+>> +	struct device_link	**link;
+>>  	struct			device_node *msi_intc_np;
+>>  	struct irq_domain	*legacy_irq_domain;
+>>  	struct device_node	*np;
+>> @@ -880,22 +883,61 @@ static const struct dw_pcie_ops ks_pcie_dw_pcie_ops = {
+>>  	.link_up = ks_pcie_link_up,
+>>  };
+>>  
+>> -static int __exit ks_pcie_remove(struct platform_device *pdev)
+>> +static void ks_pcie_disable_phy(struct keystone_pcie *ks_pcie)
+>>  {
+>> -	struct keystone_pcie *ks_pcie = platform_get_drvdata(pdev);
+>> +	int num_lanes = ks_pcie->num_lanes;
+>>  
+>> -	clk_disable_unprepare(ks_pcie->clk);
+>> +	while (num_lanes--) {
+>> +		phy_power_off(ks_pcie->phy[num_lanes]);
+>> +		phy_exit(ks_pcie->phy[num_lanes]);
+>> +	}
+>> +}
+>> +
+>> +static int ks_pcie_enable_phy(struct keystone_pcie *ks_pcie)
+>> +{
+>> +	int i;
+>> +	int ret;
+>> +	int num_lanes = ks_pcie->num_lanes;
+>> +
+>> +	for (i = 0; i < num_lanes; i++) {
+>> +		ret = phy_reset(ks_pcie->phy[i]);
+>> +		if (ret < 0)
+>> +			goto err_phy;
+>> +
+>> +		ret = phy_init(ks_pcie->phy[i]);
+>> +		if (ret < 0)
+>> +			goto err_phy;
+>> +
+>> +		ret = phy_power_on(ks_pcie->phy[i]);
+>> +		if (ret < 0) {
+>> +			phy_exit(ks_pcie->phy[i]);
+>> +			goto err_phy;
+>> +		}
+>> +	}
+>>  
+>>  	return 0;
+>> +
+>> +err_phy:
+>> +	while (--i >= 0) {
+>> +		phy_power_off(ks_pcie->phy[i]);
+>> +		phy_exit(ks_pcie->phy[i]);
+>> +	}
+>> +
+>> +	return ret;
+>>  }
+>>  
+>>  static int __init ks_pcie_probe(struct platform_device *pdev)
+>>  {
+>>  	struct device *dev = &pdev->dev;
+>> +	struct device_node *np = dev->of_node;
+>>  	struct dw_pcie *pci;
+>>  	struct keystone_pcie *ks_pcie;
+>> -	struct phy *phy;
+>> +	struct device_link **link;
+>> +	struct phy **phy;
+>> +	u32 num_lanes;
+>> +	char name[10];
+>>  	int ret;
+>> +	int i;
+>>  
+>>  	ks_pcie = devm_kzalloc(dev, sizeof(*ks_pcie), GFP_KERNEL);
+>>  	if (!ks_pcie)
+>> @@ -908,29 +950,59 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+>>  	pci->dev = dev;
+>>  	pci->ops = &ks_pcie_dw_pcie_ops;
+>>  
+>> -	ks_pcie->pci = pci;
+>> +	ret = of_property_read_u32(np, "num-lanes", &num_lanes);
+>> +	if (ret)
+>> +		num_lanes = 1;
+>>  
+>> -	/* initialize SerDes Phy if present */
+>> -	phy = devm_phy_get(dev, "pcie-phy");
+>> -	if (PTR_ERR_OR_ZERO(phy) == -EPROBE_DEFER)
+>> -		return PTR_ERR(phy);
+>> +	phy = devm_kzalloc(dev, sizeof(*phy) * num_lanes, GFP_KERNEL);
+>> +	if (!phy)
+>> +		return -ENOMEM;
+>>  
+>> -	if (!IS_ERR_OR_NULL(phy)) {
+>> -		ret = phy_init(phy);
+>> -		if (ret < 0)
+>> -			return ret;
+>> +	link = devm_kzalloc(dev, sizeof(*link) * num_lanes, GFP_KERNEL);
+>> +	if (!link)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < num_lanes; i++) {
+>> +		snprintf(name, sizeof(name), "pcie-phy%d", i);
+>> +		phy[i] = devm_phy_optional_get(dev, name);
+>> +		if (IS_ERR(phy[i])) {
+>> +			ret = PTR_ERR(phy[i]);
+>> +			goto err_link;
+>> +		}
+>> +
+>> +		if (!phy[i])
+>> +			continue;
+>> +
+>> +		link[i] = device_link_add(dev, &phy[i]->dev, DL_FLAG_STATELESS);
+>> +		if (!link[i]) {
+>> +			ret = -EINVAL;
+>> +			goto err_link;
+>> +		}
+>> +	}
+>> +
+>> +	ks_pcie->np = np;
+>> +	ks_pcie->pci = pci;
+>> +	ks_pcie->link = link;
+>> +	ks_pcie->num_lanes = num_lanes;
+>> +	ks_pcie->phy = phy;
+>> +
+>> +	ret = ks_pcie_enable_phy(ks_pcie);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to enable phy\n");
+>> +		goto err_link;
+>>  	}
+>>  
+>> -	ks_pcie->np = dev->of_node;
+>>  	platform_set_drvdata(pdev, ks_pcie);
+>>  	ks_pcie->clk = devm_clk_get(dev, "pcie");
+>>  	if (IS_ERR(ks_pcie->clk)) {
+>>  		dev_err(dev, "Failed to get pcie rc clock\n");
+>> -		return PTR_ERR(ks_pcie->clk);
+>> +		ret = PTR_ERR(ks_pcie->clk);
+>> +		goto err_phy;
+>>  	}
+>> +
+>>  	ret = clk_prepare_enable(ks_pcie->clk);
+>>  	if (ret)
+>> -		return ret;
+>> +		goto err_phy;
+>>  
+>>  	ret = ks_pcie_add_pcie_port(ks_pcie, pdev);
+>>  	if (ret < 0)
+>> @@ -940,9 +1012,31 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+>>  fail_clk:
+>>  	clk_disable_unprepare(ks_pcie->clk);
+>>  
+>> +err_phy:
+>> +	ks_pcie_disable_phy(ks_pcie);
+>> +
+>> +err_link:
+>> +	while (--i >= 0 && link[i])
+>> +		device_link_del(link[i]);
+>> +
+>>  	return ret;
+>>  }
+>>  
+>> +static int __exit ks_pcie_remove(struct platform_device *pdev)
+>> +{
+>> +	struct keystone_pcie *ks_pcie = platform_get_drvdata(pdev);
+>> +	struct device_link **link = ks_pcie->link;
+>> +	int num_lanes = ks_pcie->num_lanes;
+>> +
+>> +	clk_disable_unprepare(ks_pcie->clk);
+>> +	ks_pcie_disable_phy(ks_pcie);
+>> +
+>> +	while (num_lanes--)
+>> +		device_link_del(link[num_lanes]);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static struct platform_driver ks_pcie_driver __refdata = {
+>>  	.probe  = ks_pcie_probe,
+>>  	.remove = __exit_p(ks_pcie_remove),
+>> -- 
+>> 2.17.1
 >>
->> The checks revealed bugs in existing code.  Fixed the bugs.
->>
->> While fixing bugs, noted other issues, which are fixed in
->> separate patches.
->>
->> *****  Powerpc folks: I was not able to test the patches that
->> *****  directly impact Powerpc systems that use dynamic
->> *****  devicetree.  Please review that code carefully and
->> *****  test.  The specific patches are: 03/16, 04/16, 07/16
-> 
-> Hi Frank,
-> 
-> Do you have this series in a git tree somewhere?
-> 
-> I tried applying it on top of linux-next but hit some conflicts which I
-> couldn't easily resolve.
-> 
-> cheers
-> 
-
-
-
-git://git.kernel.org/pub/scm/linux/kernel/git/frowand/linux.git
-
-$ git checkout v4.19-rc1--kfree_validate--v4
-
-$ git log --oneline v4.19-rc1..
-2ba1b7d353dd of: unittest: initialize args before calling of_*parse_*()
-4f9108209f79 of: unittest: find overlays[] entry by name instead of index
-353403c76ff8 of: unittest: allow base devicetree to have symbol metadata
-8fc37e04a01b of: overlay: set node fields from properties when add new overlay n
-05d5df0e5151 of: unittest: remove unused of_unittest_apply_overlay() argument
-8c021cba757a of: overlay: check prevents multiple fragments touching same proper
-797a6f66e039 of: overlay: check prevents multiple fragments add or delete same n
-c385e25a040d of: overlay: test case of two fragments adding same node
-c88fd240f0e0 of: overlay: make all pr_debug() and pr_err() messages unique
-1028a215d32a of: overlay: validate overlay properties #address-cells and #size-c
-f1a97ef74ce4 of: overlay: reorder fields in struct fragment
-ffe78cf7a1fb of: dynamic: change type of of_{at,de}tach_node() to void
-5f5ff8ec0c0c of: overlay: do not duplicate properties from overlay for new nodes
-06e72dcb2bb0 of: overlay: use prop add changeset entry for property in new nodes
-a02f8d326a08 powerpc/pseries: add of_node_put() in dlpar_detach_node()
-e203be664330 of: overlay: add missing of_node_get() in __of_attach_node_sysfs
-8eb46208e7c8 of: overlay: add missing of_node_put() after add new node to change
-b22067db7cf9 of: overlay: add tests to validate kfrees from overlay removal
