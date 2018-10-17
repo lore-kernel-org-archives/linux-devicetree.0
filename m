@@ -1,63 +1,87 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v13 2/8] clk: qcom: Make clk_alpha_pll_configure available to
- modules
-Date: Wed, 17 Oct 2018 08:39:26 -0700
-Message-ID: <153979076609.5275.11289929616133786271@swboyd.mtv.corp.google.com>
-References: <20180614215358.11264-1-ilia.lin@gmail.com>
- <20180614215358.11264-3-ilia.lin@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH 04/11] dt-bindings: net: ti: cpsw: switch to use
+ phy-gmii-sel phy
+Date: Wed, 17 Oct 2018 10:41:12 -0500
+Message-ID: <20181017154112.GA18218@bogus>
+References: <20181008234949.15416-1-grygorii.strashko@ti.com>
+ <20181008234949.15416-5-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180614215358.11264-3-ilia.lin@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20181008234949.15416-5-grygorii.strashko@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ilia.lin@gmail.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Amit Kucheria <amit.kucheria@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Ilia Lin <ilialin@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Kishon Vijay Abraham I <kishon@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting ilia.lin@gmail.com (2018-06-14 14:53:49)
-> From: Rajendra Nayak <rnayak@codeaurora.org>
-> =
-
-> Allow clk_alpha_pll_configure to be called from loadable
-> kernel modules.
-> =
-
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-> Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
+On Mon, Oct 08, 2018 at 06:49:42PM -0500, Grygorii Strashko wrote:
+> The cpsw-phy-sel driver was replaced with new PHY driver phy-gmii-sel, so
+> deprecate cpsw-phy-sel bindings and update CPSW binding to use phy-gmii-sel
+> PHY bindings.
+> 
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 > ---
+>  Documentation/devicetree/bindings/net/cpsw.txt | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
+> index b3acebe..69d7ef8 100644
+> --- a/Documentation/devicetree/bindings/net/cpsw.txt
+> +++ b/Documentation/devicetree/bindings/net/cpsw.txt
+> @@ -22,7 +22,8 @@ Required properties:
+>  - cpsw-phy-sel		: Specifies the phandle to the CPSW phy mode selection
+>  			  device. See also cpsw-phy-sel.txt for it's binding.
+>  			  Note that in legacy cases cpsw-phy-sel may be
+> -			  a child device instead of a phandle.
+> +			  a child device instead of a phandle
+> +			  (DEPRECATED, use phy-gmii-sel PHY phandle).
 
-Oh I think this one came via another patch series. Either way, keep
-resending this along with everything else to make kbuild happy.
+phy-gmii-sel is outside the scope of this binding. Just say use 'phys' 
+property instead.
 
->  drivers/clk/qcom/clk-alpha-pll.c | 1 +
->  1 file changed, 1 insertion(+)
-> =
-
-> diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alph=
-a-pll.c
-> index 3c49a60072f1..a43f80ac94a4 100644
-> --- a/drivers/clk/qcom/clk-alpha-pll.c
-> +++ b/drivers/clk/qcom/clk-alpha-pll.c
-> @@ -228,6 +228,7 @@ void clk_alpha_pll_configure(struct clk_alpha_pll *pl=
-l, struct regmap *regmap,
->         if (pll->flags & SUPPORTS_FSM_MODE)
->                 qcom_pll_set_fsm_mode(regmap, PLL_MODE(pll), 6, 0);
->  }
-> +EXPORT_SYMBOL_GPL(clk_alpha_pll_configure);
->  =
-
->  static int clk_alpha_pll_hwfsm_enable(struct clk_hw *hw)
->  {
-> -- =
-
-> 2.11.0
-> =
-
-> =
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>  
+>  Optional properties:
+>  - ti,hwmods		: Must be "cpgmac0"
+> @@ -44,6 +45,7 @@ Optional properties:
+>  Slave Properties:
+>  Required properties:
+>  - phy-mode		: See ethernet.txt file in the same directory
+> +- phys			: phandle on phy-gmii-sel PHY (see phy/ti-phy-gmii-sel.txt)
+>  
+>  Optional properties:
+>  - dual_emac_res_vlan	: Specifies VID to be used to segregate the ports
+> @@ -85,12 +87,14 @@ Examples:
+>  			phy-mode = "rgmii-txid";
+>  			/* Filled in by U-Boot */
+>  			mac-address = [ 00 00 00 00 00 00 ];
+> +			phys = <&phy_gmii_sel 1 0>;
+>  		};
+>  		cpsw_emac1: slave@1 {
+>  			phy_id = <&davinci_mdio>, <1>;
+>  			phy-mode = "rgmii-txid";
+>  			/* Filled in by U-Boot */
+>  			mac-address = [ 00 00 00 00 00 00 ];
+> +			phys = <&phy_gmii_sel 2 0>;
+>  		};
+>  	};
+>  
+> @@ -114,11 +118,13 @@ Examples:
+>  			phy-mode = "rgmii-txid";
+>  			/* Filled in by U-Boot */
+>  			mac-address = [ 00 00 00 00 00 00 ];
+> +			phys = <&phy_gmii_sel 1 0>;
+>  		};
+>  		cpsw_emac1: slave@1 {
+>  			phy_id = <&davinci_mdio>, <1>;
+>  			phy-mode = "rgmii-txid";
+>  			/* Filled in by U-Boot */
+>  			mac-address = [ 00 00 00 00 00 00 ];
+> +			phys = <&phy_gmii_sel 2 0>;
+>  		};
+>  	};
+> -- 
+> 2.10.5
+> 
