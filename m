@@ -1,79 +1,121 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v1 1/5] dt-bindings: cpufreq: Add binding for NVIDIA
- Tegra20/30
-Date: Wed, 17 Oct 2018 16:46:44 +0300
-Message-ID: <c6249de9-bcaa-ab3e-8546-40f8c2c17599@gmail.com>
-References: <20180830194356.14059-1-digetx@gmail.com>
- <20180830194356.14059-2-digetx@gmail.com>
- <f38b38f1-0a60-d6fa-9047-23c619494b23@nvidia.com>
- <1448e619-35c9-0195-c68a-604d10f4dc8b@gmail.com>
- <a9b6e683-3802-896c-27ad-9c49853c231f@nvidia.com>
- <a0dd5d75-6683-f938-c5e5-a95a5c2b86e4@gmail.com>
- <3c72f573-d109-b607-b7b7-d70aea3e03df@nvidia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: irqchip: Introduce TISCI Interrupt
+ router bindings
+Date: Wed, 17 Oct 2018 08:49:25 -0500
+Message-ID: <20181017134925.GA7084@bogus>
+References: <20181006072812.15814-1-lokeshvutla@ti.com>
+ <20181006072812.15814-2-lokeshvutla@ti.com>
+ <20181006162929.u6uh4ffn6gm3incf@akan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3c72f573-d109-b607-b7b7-d70aea3e03df@nvidia.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181006162929.u6uh4ffn6gm3incf@akan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Lokesh Vutla <lokeshvutla@ti.com>, Tero Kristo <t-kristo@ti.com>, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, Santosh Shilimkar <ssantosh@kernel.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/17/18 4:34 PM, Jon Hunter wrote:
+On Sat, Oct 06, 2018 at 11:29:29AM -0500, Nishanth Menon wrote:
+> On 12:58-20181006, Lokesh Vutla wrote:
+> > Add the DT binding documentation for Interrupt router driver.
+> > 
+> > Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> > ---
+> >  .../interrupt-controller/ti,sci-intr.txt      | 83 +++++++++++++++++++
+> >  MAINTAINERS                                   |  1 +
+> >  2 files changed, 84 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+> > new file mode 100644
+> > index 000000000000..681ca53cc5fb
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+> > @@ -0,0 +1,83 @@
+> > +Texas Instruments K3 Interrupt Router
+> > +=====================================
+> > +
+> > +The Interrupt Router (INTR) module provides a mechanism to mux M
+> > +interrupt inputs to N interrupt outputs, where all M inputs are selectable
+> > +to be driven per N output. There is one register per output (MUXCNTL_N) that
+> > +controls the selection.
+> > +
+> > +
+> > +                                 Interrupt Router
+> > +                             +----------------------+
+> > +                             |  Inputs     Outputs  |
+> > +        +-------+            | +------+             |
+> > +        | GPIO  |----------->| | irq0 |             |       Host IRQ
+> > +        +-------+            | +------+             |      controller
+> > +                             |    .        +-----+  |      +-------+
+> > +        +-------+            |    .        |  0  |  |----->|  GIC  |
+> > +        | INTA  |----------->|    .        +-----+  |      +-------+
+> > +        +-------+            |    .          .      |
+> > +                             | +------+      .      |
+> > +                             | | irqM |    +-----+  |
+> > +                             | +------+    |  N  |  |
+> > +                             |             +-----+  |
+> > +                             +----------------------+
+> > +
+> > +Configuration of these MUXCNTL_N registers is done by a system controller
+> > +(like the Device Memory and Security Controller on K3 AM654 SoC). System
+> > +controller will keep track of the used and unused registers within the Router.
+> > +Driver should request the system controller to get the range of GIC IRQs
+> > +assigned to the requesting hosts. It is the drivers responsibility to keep
+> > +track of GIC IRQs.
+> > +
+> > +Communication between the host processor running an OS and the system
+> > +controller happens through a protocol called TI System Control Interface
+> > +(TISCI protocol). For more details refer:
+> > +Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+> > +
+> > +TISCI Interrupt Router Node:
+> > +----------------------------
+> > +- compatible:		Must be "ti,sci-intr".
+> > +- interrupt-controller:	Identifies the node as an interrupt controller
+> > +- #interrupt-cells:	Specifies the number of cells needed to encode an
+> > +			interrupt source. The value should be 3.
+> > +			First cell should contain the TISCI device ID of source
+> > +			Second cell should contain the interrupt source offset
+> > +			within the device
+> > +			Third cell specifies the trigger type as defined
+> > +			in interrupts.txt in this directory.
+> > +- interrupt-parent:	phandle of irq parent for TISCI intr. The parent must
+> > +			use the same interrupt-cells format as GIC.
+> > +- ti,sci:		Phandle to TI-SCI compatible System controller node.
+> > +- ti,sci-dst-id:	TISCI device ID of the destination IRQ controller.
+> > +- ti,sci-rm-range-girq:	Tuple corresponding to unique TISCI resource type that
+> > +			defines the dst host irq ranges assigned to this
+> > +			interrupt router from this host context.
+> > +			Tuple should be of format <type subtype>.
+> > +
 > 
-> On 17/10/2018 14:07, Dmitry Osipenko wrote:
->> On 10/17/18 3:59 PM, Jon Hunter wrote:
->>>
->>> On 17/10/2018 13:37, Dmitry Osipenko wrote:
->>>> On 10/17/18 11:40 AM, Jon Hunter wrote:
->>>>>
->>>>> On 30/08/2018 20:43, Dmitry Osipenko wrote:
->>>>>> Add device-tree binding that describes CPU frequency-scaling hardware
->>>>>> found on NVIDIA Tegra20/30 SoC's.
->>>>>>
->>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>>>> ---
->>>>>>  .../cpufreq/nvidia,tegra20-cpufreq.txt        | 38 +++++++++++++++++++
->>>>>>  1 file changed, 38 insertions(+)
->>>>>>  create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
->>>>>> new file mode 100644
->>>>>> index 000000000000..2c51f676e958
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
->>>>>> @@ -0,0 +1,38 @@
->>>>>> +Binding for NVIDIA Tegra20 CPUFreq
->>>>>> +==================================
->>>>>> +
->>>>>> +Required properties:
->>>>>> +- clocks: Must contain an entry for each entry in clock-names.
->>>>>> +  See ../clocks/clock-bindings.txt for details.
->>>>>> +- clock-names: Must include the following entries:
->>>>>> +  - pll_x: main-parent for CPU clock, must be the first entry
->>>>>> +  - backup: intermediate-parent for CPU clock
->>>>>> +  - cpu: the CPU clock
->>>>>
->>>>> Is it likely that 'backup' will be anything other that pll_p? If not why
->>>>> not just call it pll_p? Personally, I don't 'backup' to descriptive even
->>>>> though I can see what you mean.
->>>>>
->>>>> I can see that you want to make this flexible, but if the likelihood is
->>>>> that we will just use pll_p then I am not sure it is warranted at this
->>>>> point.
->>>>
->>>> That won't describe HW, but software. And device tree should describe HW.
->>>
->>> Hmm ... well that's my point exactly. So why call it 'backup'? Sounds
->>> like a software description to me.
->>
->> Because HW is designed the way that CPU parent need to be switched to the backup clock source while main clock changes its rate. HW also allow to select among different parents, pll_p is one of those parents.
+> Rob, DT maintainers,
 > 
-> Yes that part is understood. I am just splitting hairs over the actual
-> name. We do the same for tegra124 but we just call it 'pll_p'. See ...
+> I'd like a feedback from DT maintainers on this 'range' topic.
 > 
-> Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
+> TISCI Firmware [1] currently seems to define a type corresponding to a
+> device ID[2]. in AM6 device, for example, this is different, however
+> have a 1 to 1 correspondence. However, there is expectation that type will
+> end up as device ID in a future SoC.
+> 
+> While this is subject to much debate internally, I'd like some feedback if this
+> is OK from Device tree representation - it is true that Firmware does
+> look at it as type, however in some future SoC, it could be that the
+> values themselves may correspond one to one with a device id -> The
+> original wish was that types might be something reusable across SoCs,
+> but that is turning out to be more of a theoretical wish than any thing
+> practical.
 
-tegra124-cpufreq choose to hardwire to the pll_p, but it could be other clocks. Technically abstracting backup clock should be more correct, but result is the same in the end.
+I'm not sure I follow all the terminology here of type, subtype, "dst 
+host irq", etc. It looks to me like you should be using interrupt-map property.
+
+Rob
+
+> 
+> [1]http://software-dl.ti.com/tisci/esd/latest/5_soc_doc/am6x/resasg_types.html
+> [2]http://software-dl.ti.com/tisci/esd/latest/5_soc_doc/am6x/devices.html
+> -- 
+> Regards,
+> Nishanth Menon
