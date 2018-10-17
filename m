@@ -1,7 +1,7 @@
 From: Peng Ma <peng.ma@nxp.com>
-Subject: [v9 7/7] dt-bindings: fsl-qdma: Add NXP Layerscpae qDMA controller bindings
-Date: Wed, 17 Oct 2018 13:59:57 +0800
-Message-ID: <20181017055957.542-7-peng.ma@nxp.com>
+Subject: [v9 5/7] arm64: dts: ls1043a: add qdma device tree nodes
+Date: Wed, 17 Oct 2018 13:59:55 +0800
+Message-ID: <20181017055957.542-5-peng.ma@nxp.com>
 References: <20181017055957.542-1-peng.ma@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181017055957.542-1-peng.ma@nxp.com>
@@ -10,83 +10,51 @@ To: vkoul@kernel.org
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, dan.j.williams@intel.com, zw@zh-kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Peng Ma <peng.ma@nxp.com>, Wen He <wen.he_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Document the devicetree bindings for NXP Layerscape qDMA controller
-which could be found on NXP QorIQ Layerscape SoCs.
+add the qDMA device tree nodes for LS1043A devices.
 
 Signed-off-by: Wen He <wen.he_1@nxp.com>
 Signed-off-by: Peng Ma <peng.ma@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 change in v9:
-	- add required properties such as interrupts,block-number,block-offset
-	etc.
+	- add interrupts for each virtual block 
+	- add block-number
+	- add block-offset
 
- Documentation/devicetree/bindings/dma/fsl-qdma.txt |   57 ++++++++++++++++++++
- 1 files changed, 57 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/fsl-qdma.txt
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |   22 ++++++++++++++++++++++
+ 1 files changed, 22 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl-qdma.txt b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
-new file mode 100644
-index 0000000..283372a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
-@@ -0,0 +1,57 @@
-+NXP Layerscape SoC qDMA Controller
-+==================================
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 7881e3d..e798c4c 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -734,6 +734,28 @@
+ 					<0000 0 0 3 &gic 0 156 0x4>,
+ 					<0000 0 0 4 &gic 0 157 0x4>;
+ 		};
 +
-+This device follows the generic DMA bindings defined in dma/dma.txt.
-+
-+Required properties:
-+
-+- compatible:		Must be one of
-+			 "fsl,ls1021a-qdma": for LS1021A Board
-+			 "fsl,ls1043a-qdma": for ls1043A Board
-+			 "fsl,ls1046a-qdma": for ls1046A Board
-+- reg:			Should contain the register's base address and length.
-+- interrupts:		Should contain a reference to the interrupt used by this
-+			device.
-+- interrupt-names:	Should contain interrupt names:
-+			 "qdma-queue0": the block0 interrupt
-+			 "qdma-queue1": the block1 interrupt
-+			 "qdma-queue2": the block2 interrupt
-+			 "qdma-queue3": the block3 interrupt
-+			 "qdma-error":  the error interrupt
-+- fsl,dma-queues:	Should contain number of queues supported.
-+- dma-channels:	Number of DMA channels supported
-+- block-number:	the virtual block number
-+- block-offset:	the offset of different virtual block
-+- status-sizes:	status queue size of per virtual block
-+- queue-sizes:		command queue size of per virtual block, the size number
-+			based on queues
-+
-+Optional properties:
-+
-+- dma-channels:		Number of DMA channels supported by the controller.
-+- big-endian:		If present registers and hardware scatter/gather descriptors
-+			of the qDMA are implemented in big endian mode, otherwise in little
-+			mode.
-+
-+Examples:
-+
-+	qdma: dma-controller@8390000 {
-+			compatible = "fsl,ls1021a-qdma";
-+			reg = <0x0 0x8388000 0x0 0x1000>, /* Controller regs */
-+			      <0x0 0x8389000 0x0 0x1000>, /* Status regs */
-+			      <0x0 0x838a000 0x0 0x2000>; /* Block regs */
-+			interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "qdma-error",
-+				"qdma-queue0", "qdma-queue1";
++		qdma: dma-controller@8380000 {
++			compatible = "fsl,ls1021a-qdma", "fsl,ls1043a-qdma";
++			reg = <0x0 0x8380000 0x0 0x1000>, /* Controller regs */
++			      <0x0 0x8390000 0x0 0x10000>, /* Status regs */
++			      <0x0 0x83a0000 0x0 0x40000>; /* Block regs */
++			interrupts = <0 153 0x4>,
++				     <0 39 0x4>,
++				     <0 40 0x4>,
++				     <0 41 0x4>,
++				     <0 42 0x4>;
++			interrupt-names = "qdma-error", "qdma-queue0",
++				"qdma-queue1", "qdma-queue2", "qdma-queue3";
 +			dma-channels = <8>;
-+			block-number = <2>;
-+			block-offset = <0x1000>;
++			block-number = <1>;
++			block-offset = <0x10000>;
 +			fsl,dma-queues = <2>;
 +			status-sizes = <64>;
 +			queue-sizes = <64 64>;
 +			big-endian;
 +		};
 +
-+DMA clients must use the format described in dma/dma.txt file.
+ 	};
+ 
+ 	firmware {
 -- 
 1.7.1
