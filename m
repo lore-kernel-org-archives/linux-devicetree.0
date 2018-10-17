@@ -1,35 +1,53 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 10/15] dt-bindings: olpc_battery: Add XO-1.5 battery
-Date: Wed, 17 Oct 2018 14:38:44 -0500
-Message-ID: <20181017193844.GA17316@bogus>
-References: <20181010172300.317643-1-lkundrak@v3.sk>
- <20181010172300.317643-11-lkundrak@v3.sk>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v2 9/9] ASoC: tegra_sgtl5000: fix platform name vs.
+ of_node assignement
+Date: Wed, 17 Oct 2018 20:50:34 +0100
+Message-ID: <ca23a9fd-2578-c4ae-7bc4-5e2d487fb1ca@nvidia.com>
+References: <20181016104730.4598-1-marcel@ziswiler.com>
+ <20181016104730.4598-10-marcel@ziswiler.com>
+ <35848cb7-36ee-6698-ff17-7f0e73567914@nvidia.com>
+ <1539786500.6233.58.camel@toradex.com> <20181017191633.GL24097@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <20181010172300.317643-11-lkundrak@v3.sk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, devel@driverdev.osuosl.org, Eric Miao <eric.y.miao@gmail.com>, James Cameron <quozl@laptop.org>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-pm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-spi@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, Mark Brown <broonie@kernel.org>, Daniel Mack <daniel@zonque.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>, Andy Shevchenko <andy@infradead.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181017191633.GL24097@sirena.org.uk>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "perex@perex.cz" <perex@perex.cz>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 10 Oct 2018 19:22:55 +0200, Lubomir Rintel wrote:
-> The XO-1 and XO-1.5 batteries apparently differ in an ability to report
-> ambient temperature.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
->  Documentation/devicetree/bindings/power/supply/olpc_battery.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On 17/10/2018 20:16, Mark Brown wrote:
+> On Wed, Oct 17, 2018 at 02:28:22PM +0000, Marcel Ziswiler wrote:
+> 
+>> Some questions:
+> 
+>> - How exactly are devm allocations supposed to work concerning probe
+>> deferrals?
+> 
+> Probe deferrals are just normal probe errors, any devm_ allocated stuff
+> gets unwound.
+> 
+>> - Does or should the platform get cleared during a probe deferral
+>> cycle?
+> 
+>> - If so, why does that not work?
+> 
+> Is something writing to static data when it should be writing to
+> dynamically allocated data?  That's what this sounds like, we shouldn't
+> be modifying any static data and any data dynamically allocated during
+> probe ought to be being discarded.
+
+Marcel, it maybe worth looking at what happens in the 2nd call to
+snd_soc_init_platform() following the probe deferral. Also pay attention
+to the value of 'dai_link->platform_name' in snd_soc_init_platform() on
+both 1st and 2nd call. Seems that on the 2nd time the function is called
+the value is not NULL???
+
+Cheers
+Jon
+
+-- 
+nvpublic
