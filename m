@@ -1,102 +1,71 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v2 15/21] PCI: keystone: Cleanup outbound window configuration
-Date: Wed, 17 Oct 2018 13:11:08 +0530
-Message-ID: <20181017074114.28239-16-kishon@ti.com>
-References: <20181017074114.28239-1-kishon@ti.com>
+Subject: [PATCH v2 00/21] PCI: Cleanup pci-keystone driver
+Date: Wed, 17 Oct 2018 13:10:53 +0530
+Message-ID: <20181017074114.28239-1-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181017074114.28239-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Cc: Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Outbound translation window is configured in order to access the
-PCIe card's MEM space. Cleanup outbound translation configuration
-here by using BIT() macros, adding a macro for window size and
-using lower_32_bits/upper_32_bits macros for configuring the 64 bit
-offset in the outbound translation region.
+The PCIe controller in AM654 uses Synopsys core revision 4.90a and uses
+the same TI wrapper as used in keystone2 with certain modification.
+Hence AM654 will use the same pci wrapper driver pci-keystone.c
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/controller/dwc/pci-keystone.c | 32 ++++++++++++-----------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+In preparation for adding AM654 support, cleanup pci-keystone driver
+here.
 
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index 608e40c4b991..3576a184b9eb 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -41,7 +41,7 @@
- #define LTSSM_STATE_MASK		0x1f
- #define LTSSM_STATE_L0			0x11
- #define DBI_CS2_EN_VAL			0x20
--#define OB_XLAT_EN_VAL		        2
-+#define OB_XLAT_EN_VAL		        BIT(1)
- 
- /* Application registers */
- #define CMD_STATUS			0x004
-@@ -53,10 +53,11 @@
- #define CFG_TYPE1			BIT(24)
- 
- #define OB_SIZE				0x030
--#define CFG_PCIM_WIN_SZ_IDX		3
- #define SPACE0_REMOTE_CFG_OFFSET	0x1000
- #define OB_OFFSET_INDEX(n)		(0x200 + (8 * (n)))
- #define OB_OFFSET_HI(n)			(0x204 + (8 * (n)))
-+#define OB_ENABLEN			BIT(0)
-+#define OB_WIN_SIZE			8	/* 8MB */
- 
- /* IRQ register defines */
- #define IRQ_EOI				0x050
-@@ -341,12 +342,13 @@ static void ks_pcie_clear_dbi_mode(struct keystone_pcie *ks_pcie)
- 
- static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
- {
-+	u32 val;
- 	u32 num_viewport = ks_pcie->num_viewport;
- 	struct dw_pcie *pci = ks_pcie->pci;
- 	struct pcie_port *pp = &pci->pp;
--	u32 start = pp->mem->start, end = pp->mem->end;
--	int i, tr_size;
--	u32 val;
-+	u64 start = pp->mem->start;
-+	u64 end = pp->mem->end;
-+	int i;
- 
- 	/* Disable BARs for inbound access */
- 	ks_pcie_set_dbi_mode(ks_pcie);
-@@ -354,21 +356,21 @@ static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
- 	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0);
- 	ks_pcie_clear_dbi_mode(ks_pcie);
- 
--	/* Set outbound translation size per window division */
--	ks_pcie_app_writel(ks_pcie, OB_SIZE, CFG_PCIM_WIN_SZ_IDX & 0x7);
--
--	tr_size = (1 << (CFG_PCIM_WIN_SZ_IDX & 0x7)) * SZ_1M;
-+	val = ilog2(OB_WIN_SIZE);
-+	ks_pcie_app_writel(ks_pcie, OB_SIZE, val);
- 
- 	/* Using Direct 1:1 mapping of RC <-> PCI memory space */
--	for (i = 0; (i < num_viewport) && (start < end); i++) {
--		ks_pcie_app_writel(ks_pcie, OB_OFFSET_INDEX(i), start | 1);
--		ks_pcie_app_writel(ks_pcie, OB_OFFSET_HI(i), 0);
--		start += tr_size;
-+	for (i = 0; i < num_viewport && (start < end); i++) {
-+		ks_pcie_app_writel(ks_pcie, OB_OFFSET_INDEX(i),
-+				   lower_32_bits(start) | OB_ENABLEN);
-+		ks_pcie_app_writel(ks_pcie, OB_OFFSET_HI(i),
-+				   upper_32_bits(start));
-+		start += OB_WIN_SIZE;
- 	}
- 
--	/* Enable OB translation */
- 	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
--	ks_pcie_app_writel(ks_pcie, CMD_STATUS, OB_XLAT_EN_VAL | val);
-+	val |= OB_XLAT_EN_VAL;
-+	ks_pcie_app_writel(ks_pcie, CMD_STATUS, val);
- }
- 
- static int ks_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+Most of the cleanups here are trivial with major modification being
+merging pci-keystone-dw.c and pci-keystone.c
+
+Cleaning-up irq handling in the RFC series is dropped here as it has
+few comments to be addressed.
+
+Changes from v1:
+*) remove phy_reset in the cleanup PHY handling patch. It will be sent
+   while adding AM654 support
+*) Add a separate patch for using ERR_IRQ_STATUS instead of
+   ERR_IRQ_STATUS_RAW
+*) Split outbound window configuration into two patches. One which
+   gets the number of outbound windows from DT and the other cleansup
+   outbound window configuration.
+
+Kishon Vijay Abraham I (21):
+  PCI: keystone: Use quirk to limit MRRS for K2G
+  PCI: keystone: Use quirk to set MRRS for PCI host bridge
+  PCI: keystone: Move dw_pcie_setup_rc out of ks_pcie_establish_link()
+  PCI: keystone: Do not initiate link training multiple times
+  PCI: keystone: Remove unused argument from ks_dw_pcie_host_init()
+  PCI: keystone: Merge pci-keystone-dw.c and pci-keystone.c
+  PCI: keystone: Remove redundant platform_set_drvdata
+  PCI: keystone: Use uniform function naming convention
+  dt-bindings: PCI: keystone: Add bindings to get device control module
+  PCI: keystone: Use syscon APIs to get device id from control module
+  PCI: keystone: Cleanup PHY handling
+  PCI: keystone: Invoke pm_runtime APIs to enable clock
+  PCI: keystone: Cleanup configuration space access
+  PCI: keystone: Get number of outbound windows from DT
+  PCI: keystone: Cleanup outbound window configuration
+  PCI: keystone: Cleanup set_dbi_mode and get_dbi_mode
+  PCI: keystone: Cleanup ks_pcie_link_up()
+  PCI: keystone: Use ERR_IRQ_STATUS instead of ERR_IRQ_STATUS_RAW to get
+    interrupt status
+  PCI: keystone: Add debug error message for all errors
+  PCI: keystone: Reorder header file in alphabetical order
+  PCI: keystone: Cleanup macros defined in pci-keystone.c
+
+ .../devicetree/bindings/pci/pci-keystone.txt  |   3 +
+ MAINTAINERS                                   |   2 +-
+ drivers/pci/controller/dwc/Makefile           |   2 +-
+ drivers/pci/controller/dwc/pci-keystone-dw.c  | 484 -----------
+ drivers/pci/controller/dwc/pci-keystone.c     | 788 +++++++++++++++---
+ drivers/pci/controller/dwc/pci-keystone.h     |  57 --
+ drivers/pci/controller/dwc/pcie-designware.h  |   4 +
+ 7 files changed, 686 insertions(+), 654 deletions(-)
+ delete mode 100644 drivers/pci/controller/dwc/pci-keystone-dw.c
+ delete mode 100644 drivers/pci/controller/dwc/pci-keystone.h
+
 -- 
 2.17.1
