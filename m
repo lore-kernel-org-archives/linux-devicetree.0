@@ -1,54 +1,55 @@
-From: Kun Yi <kunyi@google.com>
-Subject: [PATCH v3 2/2] dt-bindings: hwmon: Add adm127x documentation
-Date: Wed, 17 Oct 2018 15:27:09 -0700
-Message-ID: <20181017222710.254994-1-kunyi@google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Al Cooper <alcooperx@gmail.com>
+Subject: [PATCH V2 0/6] Add XHCI, EHCI and OHCI support for Broadcom STB SoS's
+Date: Wed, 17 Oct 2018 18:29:03 -0400
+Message-ID: <1539815349-24126-1-git-send-email-alcooperx@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: openbmc@lists.ozlabs.org, kunyi@google.com, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Al Cooper <alcooperx@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>, linux-usb@
 List-Id: devicetree@vger.kernel.org
 
-adm127x are hot-swap controllers that allow a circuit board to be removed from
-or inserted into a live backplane. This patch adds the device tree
-bindings documentation.
+V2 - Based on feedback, the functionality for XHCI and OHCI was
+     moved from Broadcom platform drivers into the standard XHCI
+     and OHCI platform drivers. The EHCI functionality still uses
+     a Broadcom EHCI driver because of the workarounds needed for
+     bugs in the EHCI controller.
 
-Signed-off-by: Kun Yi <kunyi@google.com>
----
- .../devicetree/bindings/hwmon/adm1275.txt     | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/adm1275.txt
+This adds support for the XHCI, EHCI and OHCI host controllers found
+in Broadcom STB SoC's. These drivers depend on getting access to the
+new Broadcom STB USB PHY driver through a device-tree phandle and
+will fail if the driver is not available.
 
-diff --git a/Documentation/devicetree/bindings/hwmon/adm1275.txt b/Documentation/devicetree/bindings/hwmon/adm1275.txt
-new file mode 100644
-index 000000000000..1ecd03f3da4d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/adm1275.txt
-@@ -0,0 +1,25 @@
-+adm1275 properties
-+
-+Required properties:
-+- compatible: Must be one of the supported compatible strings:
-+	- "adi,adm1075" for adm1075
-+	- "adi,adm1272" for adm1272
-+	- "adi,adm1275" for adm1275
-+	- "adi,adm1276" for adm1276
-+	- "adi,adm1278" for adm1278
-+	- "adi,adm1293" for adm1293
-+	- "adi,adm1294" for adm1294
-+- reg: I2C address
-+
-+Optional properties:
-+
-+- shunt-resistor-micro-ohms
-+	Shunt resistor value in micro-Ohm
-+
-+Example:
-+
-+adm1272@10 {
-+	compatible = "adi,adm1272";
-+	reg = <0x10>;
-+	shunt-resistor-micro-ohms = <500>;
-+};
+Al Cooper (6):
+  dt-bindings: Add Broadcom STB OHCI, EHCI and XHCI binding document
+  usb: core: Add ability to skip phy exit on suspend and init on resume
+  usb: xhci: xhci-plat: Add support for Broadcom STB SoC's
+  usb: ohci-platform: Add support for Broadcom STB SoC's
+  usb: ehci: Add new EHCI driver for Broadcom STB SoC's
+  usb: host: Add ability to build new Broadcom STB USB drivers
+
+ .../devicetree/bindings/usb/brcm,bcm7445-ehci.txt  |  22 ++
+ .../devicetree/bindings/usb/brcm,bcm7445-ohci.txt  |  22 ++
+ .../devicetree/bindings/usb/brcm,bcm7445-xhci.txt  |  23 ++
+ MAINTAINERS                                        |   9 +
+ drivers/usb/core/hcd.c                             |   8 +-
+ drivers/usb/core/phy.c                             |  18 +-
+ drivers/usb/core/phy.h                             |   9 +-
+ drivers/usb/host/Kconfig                           |  29 ++
+ drivers/usb/host/Makefile                          |  18 +-
+ drivers/usb/host/ehci-brcm.c                       | 291 +++++++++++++++++++++
+ drivers/usb/host/ohci-platform.c                   |  35 ++-
+ drivers/usb/host/xhci-brcm.c                       |  17 ++
+ drivers/usb/host/xhci-brcm.h                       |  16 ++
+ drivers/usb/host/xhci-plat.c                       |   8 +
+ include/linux/usb/hcd.h                            |   3 +
+ include/linux/usb/ohci_pdriver.h                   |   1 +
+ 16 files changed, 504 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ohci.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-xhci.txt
+ create mode 100644 drivers/usb/host/ehci-brcm.c
+ create mode 100644 drivers/usb/host/xhci-brcm.c
+ create mode 100644 drivers/usb/host/xhci-brcm.h
+
 -- 
-2.19.1.331.ge82ca0e54c-goog
+1.9.0.138.g2de3478
