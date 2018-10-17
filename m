@@ -1,31 +1,69 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v4 2/4] crypto: mxs-dcp - Add support for dcp clk
-Date: Wed, 17 Oct 2018 10:02:41 -0300
-Message-ID: <CAOMZO5DCzM_NnqD4tHTAn4pAaUdQGo38Ami1h3pu9SzgyQ7GnQ@mail.gmail.com>
-References: <cover.1539779579.git.leonard.crestez@nxp.com> <95dce7010676581691b1ac9906e9298470e0aa1a.1539779579.git.leonard.crestez@nxp.com>
- <CAOMZO5BMeHjsyZWhUb5RmEBRCYViUN-Vx8KyLBWtDJGKBHHpCg@mail.gmail.com> <a97517bf72f649915bccf555ab7d3c8c4551298d.camel@nxp.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v1 1/5] dt-bindings: cpufreq: Add binding for NVIDIA
+ Tegra20/30
+Date: Wed, 17 Oct 2018 16:07:10 +0300
+Message-ID: <a0dd5d75-6683-f938-c5e5-a95a5c2b86e4@gmail.com>
+References: <20180830194356.14059-1-digetx@gmail.com>
+ <20180830194356.14059-2-digetx@gmail.com>
+ <f38b38f1-0a60-d6fa-9047-23c619494b23@nvidia.com>
+ <1448e619-35c9-0195-c68a-604d10f4dc8b@gmail.com>
+ <a9b6e683-3802-896c-27ad-9c49853c231f@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a97517bf72f649915bccf555ab7d3c8c4551298d.camel@nxp.com>
+In-Reply-To: <a9b6e683-3802-896c-27ad-9c49853c231f@nvidia.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Aymen Sghaier <aymen.sghaier@nxp.com>, Franck LENORMAND <franck.lenormand@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "David S. Miller" <davem@davemloft.net>, Horia Geanta Neag <horia.geanta@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Herbert Xu <herbert@gondor.apana.org.au>, Marek Vasut <marek.vasut@gmail.com>"open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <l>
+To: Jon Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 17, 2018 at 9:59 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
+On 10/17/18 3:59 PM, Jon Hunter wrote:
+> 
+> On 17/10/2018 13:37, Dmitry Osipenko wrote:
+>> On 10/17/18 11:40 AM, Jon Hunter wrote:
+>>>
+>>> On 30/08/2018 20:43, Dmitry Osipenko wrote:
+>>>> Add device-tree binding that describes CPU frequency-scaling hardware
+>>>> found on NVIDIA Tegra20/30 SoC's.
+>>>>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  .../cpufreq/nvidia,tegra20-cpufreq.txt        | 38 +++++++++++++++++++
+>>>>  1 file changed, 38 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+>>>> new file mode 100644
+>>>> index 000000000000..2c51f676e958
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+>>>> @@ -0,0 +1,38 @@
+>>>> +Binding for NVIDIA Tegra20 CPUFreq
+>>>> +==================================
+>>>> +
+>>>> +Required properties:
+>>>> +- clocks: Must contain an entry for each entry in clock-names.
+>>>> +  See ../clocks/clock-bindings.txt for details.
+>>>> +- clock-names: Must include the following entries:
+>>>> +  - pll_x: main-parent for CPU clock, must be the first entry
+>>>> +  - backup: intermediate-parent for CPU clock
+>>>> +  - cpu: the CPU clock
+>>>
+>>> Is it likely that 'backup' will be anything other that pll_p? If not why
+>>> not just call it pll_p? Personally, I don't 'backup' to descriptive even
+>>> though I can see what you mean.
+>>>
+>>> I can see that you want to make this flexible, but if the likelihood is
+>>> that we will just use pll_p then I am not sure it is warranted at this
+>>> point.
+>>
+>> That won't describe HW, but software. And device tree should describe HW.
+> 
+> Hmm ... well that's my point exactly. So why call it 'backup'? Sounds
+> like a software description to me.
 
-> There is a changelog in the cover letter.
+Because HW is designed the way that CPU parent need to be switched to the backup clock source while main clock changes its rate. HW also allow to select among different parents, pll_p is one of those parents.
 
-It did not show up:
-https://lkml.org/lkml/2018/10/17/673
-
-> This only looks slightly odd in git diff but it's not unrelated.
->
-> I placed clk get/prepare/enable just before stmp_reset_block and made
-> stmp_reset_block print a message and goto err_disable_unprepare_clk on
-> failure instead of just "if (ret) return ret;"
-
-Got it! Then it looks fine, thanks:
-
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+I think cpufreq-mediatek has a similar description, see Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
