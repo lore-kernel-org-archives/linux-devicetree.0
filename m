@@ -1,30 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv2 2/2] dt-bindings: can: xilinx_can: add Xilinx CAN FD
- 2.0  bindings
-Date: Wed, 17 Oct 2018 14:58:26 -0500
-Message-ID: <20181017195826.GA12025@bogus>
-References: <1539318309-13715-1-git-send-email-shubhrajyoti.datta@gmail.com>
- <1539318309-13715-2-git-send-email-shubhrajyoti.datta@gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: uniphier: move cache-uniphier.txt to
+ vendor directory
+Date: Wed, 17 Oct 2018 14:59:09 -0500
+Message-ID: <20181017195909.GA13070@bogus>
+References: <1539318324-4938-1-git-send-email-yamada.masahiro@socionext.com>
+ <1539318324-4938-2-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1539318309-13715-2-git-send-email-shubhrajyoti.datta@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: shubhrajyoti.datta@gmail.com
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, michal.simek@xilinx.com, davem@davemloft.net, mkl@pengutronix.de, wg@grandegger.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+In-Reply-To: <1539318324-4938-2-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 12 Oct 2018 09:55:09 +0530, <shubhrajyoti.datta@gmail.com> wrote:
-> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+On Fri, 12 Oct 2018 13:25:24 +0900, Masahiro Yamada wrote:
+> Now, the Socionext vendor directory is available at
+> Documentation/devicetree/bindings/arm/socionext/
 > 
-> Add compatible string and new attributes to support the Xilinx CAN
-> FD 2.0.
+> Move cache-uniphier.txt over to it.
 > 
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
->  Documentation/devicetree/bindings/net/can/xilinx_can.txt | 1 +
->  1 file changed, 1 insertion(+)
+> 
+> Changes in v2:
+>   - New patch
+> 
+>  .../devicetree/bindings/arm/{uniphier => socionext}/cache-uniphier.txt    | 0
+>  1 file changed, 0 insertions(+), 0 deletions(-)
+>  rename Documentation/devicetree/bindings/arm/{uniphier => socionext}/cache-uniphier.txt (100%)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
