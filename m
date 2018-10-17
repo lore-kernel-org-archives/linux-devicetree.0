@@ -1,49 +1,54 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v13 6/8] clk: qcom: cpu-8996: Add support to switch to alternate
- PLL
-Date: Wed, 17 Oct 2018 08:32:05 -0700
-Message-ID: <153979032539.5275.12064078400966025600@swboyd.mtv.corp.google.com>
-References: <20180614215358.11264-1-ilia.lin@gmail.com>
- <20180614215358.11264-7-ilia.lin@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] devicetree, xen: add xen,
+ shared-memory binding
+Date: Wed, 17 Oct 2018 10:35:27 -0500
+Message-ID: <20181017153527.GA9130@bogus>
+References: <alpine.DEB.2.10.1810081600350.28877@sstabellini-ThinkPad-X260>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180614215358.11264-7-ilia.lin@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ilia.lin@gmail.com
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, Ilia Lin <ilialin@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xenproject.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.10.1810081600350.28877@sstabellini-ThinkPad-X260>
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
+To: Stefano Stabellini <sstabellini@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, julien.grall@arm.com, xen-devel@lists.xen.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting ilia.lin@gmail.com (2018-06-14 14:53:53)
-> @@ -227,6 +232,26 @@ clk_cpu_8996_mux_determine_rate(struct clk_hw *hw, s=
-truct clk_rate_request *req)
->         return 0;
->  }
->  =
-
-> +int cpu_clk_notifier_cb(struct notifier_block *nb, unsigned long event,
-
-static? And name it something like clk_cpu_8996_notifier?
-
-> +                       void *data)
-> +{
-> +       int ret;
-> +       struct clk_cpu_8996_mux *cpuclk =3D to_clk_cpu_8996_mux_nb(nb);
-> +
-> +       switch (event) {
-> +       case PRE_RATE_CHANGE:
-> +               ret =3D clk_cpu_8996_mux_set_parent(&cpuclk->clkr.hw, ALT=
-_INDEX);
-> +               break;
-> +       case POST_RATE_CHANGE:
-> +               ret =3D clk_cpu_8996_mux_set_parent(&cpuclk->clkr.hw, PLL=
-_INDEX);
-> +               break;
-> +       default:
-> +               ret =3D 0;
-> +               break;
-> +       }
-> +
-> +       return notifier_from_errno(ret);
-> +};
+T24gTW9uLCBPY3QgMDgsIDIwMTggYXQgMDQ6MDM6NTRQTSAtMDcwMCwgU3RlZmFubyBTdGFiZWxs
+aW5pIHdyb3RlOgo+IEludHJvZHVjZSBhIGRldmljZSB0cmVlIGJpbmRpbmcgZm9yIFhlbiByZXNl
+cnZlZC1tZW1vcnkgcmVnaW9ucy4gVGhleQo+IGFyZSB1c2VkIHRvIHNoYXJlIG1lbW9yeSBhY3Jv
+c3MgVk1zIGZyb20gdGhlIFZNIGNvbmZpZyBmaWxlcy4gKFNlZQo+IHN0YXRpY19zaG0gY29uZmln
+IG9wdGlvbi4pCj4gIAo+IFNpZ25lZC1vZmYtYnk6IFN0ZWZhbm8gU3RhYmVsbGluaSA8c3RlZmFu
+b3NAeGlsaW54LmNvbT4KCmNoZWNrcGF0Y2gucGwgY29tcGxhaW5zIHRoYXQgdGhlIGF1dGhvciBh
+bmQgUy1vLWIgZG9uJ3QgbWF0Y2guCgo+IENjOiBqdWxpZW4uZ3JhbGxAYXJtLmNvbQo+IAo+IGRp
+ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVt
+b3J5L3hlbixzaGFyZWQtbWVtb3J5LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9yZXNlcnZlZC1tZW1vcnkveGVuLHNoYXJlZC1tZW1vcnkudHh0Cj4gbmV3IGZpbGUgbW9k
+ZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi5hOTI3YTk0Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkveGVuLHNo
+YXJlZC1tZW1vcnkudHh0Cj4gQEAgLTAsMCArMSwyMCBAQAo+ICsqIFhlbiBoeXBlcnZpc29yIHJl
+c2VydmVkLW1lbW9yeSBiaW5kaW5nCj4gKwo+ICtFeHBvc2Ugb25lIG9yIG1vcmUgbWVtb3J5IHJl
+Z2lvbnMgYXMgcmVzZXJ2ZWQtbWVtb3J5IHRvIHRoZSBndWVzdAo+ICt2aXJ0dWFsIG1hY2hpbmUu
+IFR5cGljYWxseSwgYSByZWdpb24gaXMgY29uZmlndXJlZCBhdCBWTSBjcmVhdGlvbiB0aW1lCj4g
+K3RvIGJlIGEgc2hhcmVkIG1lbW9yeSBhcmVhIGFjcm9zcyBtdWx0aXBsZSB2aXJ0dWFsIG1hY2hp
+bmVzIGZvcgo+ICtjb21tdW5pY2F0aW9uIGFtb25nIHRoZW0uCj4gKwo+ICtGb3IgZWFjaCBvZiB0
+aGVzZSBwcmUtc2hhcmVkIG1lbW9yeSByZWdpb25zLCBhIHJhbmdlIGlzIGV4cG9zZWQgdW5kZXIK
+PiArdGhlIC9yZXNlcnZlZC1tZW1vcnkgbm9kZSBhcyBhIGNoaWxkIG5vZGUuIEVhY2ggcmFuZ2Ug
+c3ViLW5vZGUgaXMgbmFtZWQKPiAreGVuLXNobWVtQDxhZGRyZXNzPiBhbmQgaGFzIHRoZSBmb2xs
+b3dpbmcgcHJvcGVydGllczoKPiArCj4gKy0gY29tcGF0aWJsZToKPiArCWNvbXBhdGlibGUgPSB4
+ZW4sc2hhcmVkLW1lbW9yeSIKCkFueSBuZWVkIGZvciB2ZXJzaW9uaW5nPwoKPiArCj4gKy0gcmVn
+Ogo+ICsJdGhlIGJhc2UgZ3Vlc3QgcGh5c2ljYWwgYWRkcmVzcyBhbmQgc2l6ZSBvZiB0aGUgc2hh
+cmVkIG1lbW9yeSByZWdpb24KPiArCj4gKy0gaWQ6Cgp4ZW4saWQKCj4gKwlhIHN0cmluZyB0aGF0
+IGlkZW50aWZpZXMgdGhlIHNoYXJlZCBtZW1vcnkgcmVnaW9uIGFzIHNwZWNpZmllZCBpbgo+ICsJ
+dGhlIFZNIGNvbmZpZyBmaWxlCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpYZW4tZGV2ZWwgbWFpbGluZyBsaXN0Clhlbi1kZXZlbEBsaXN0cy54ZW5wcm9q
+ZWN0Lm9yZwpodHRwczovL2xpc3RzLnhlbnByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8veGVu
+LWRldmVs
