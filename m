@@ -1,85 +1,160 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v8 00/10] Add the I3C subsystem
-Date: Wed, 17 Oct 2018 15:18:29 +0200
-Message-ID: <20181017151829.470930a7@bbrezillon>
-References: <20181003132212.12619-1-boris.brezillon@bootlin.com>
-        <CAK8P3a2C+FHiPnHKEAanhD=RpqDG1VywTEGhpdBvvKQ8zmwdUA@mail.gmail.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v9 2/9] PCI: Using PCI configuration space header type
+ instead of class type to assign resource
+Date: Wed, 17 Oct 2018 08:22:51 -0500
+Message-ID: <20181017132251.GG5906@bhelgaas-glaptop.roam.corp.google.com>
+References: <1539686690-24068-1-git-send-email-honghui.zhang@mediatek.com>
+ <1539686690-24068-3-git-send-email-honghui.zhang@mediatek.com>
+ <20181016145355.GB16390@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a2C+FHiPnHKEAanhD=RpqDG1VywTEGhpdBvvKQ8zmwdUA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20181016145355.GB16390@e107981-ln.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh <gregkh@linuxfoundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: honghui.zhang@mediatek.com, youlin.pei@mediatek.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, ryder.lee@mediatek.com, marc.zyngier@arm.com, linux-pci@vger.kernel.org, jianjun.wang@mediatek.com, linux-kernel@vger.kernel.org, yt.shen@mediatek.com, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, bhelgaas@google.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg,
+On Tue, Oct 16, 2018 at 03:53:55PM +0100, Lorenzo Pieralisi wrote:
+> On Tue, Oct 16, 2018 at 06:44:43PM +0800, honghui.zhang@mediatek.com wrote:
+> > From: Honghui Zhang <honghui.zhang@mediatek.com>
+> > 
+> > The PCI configuration space header type defines the layout of the rest
+> > of the header (PCI r3.0 sec 6.1, PCIe r4.0 sec 7.5.1.1.9) while the
+> > resource assignment is based on the configuration space layout instead
+> > of its class type. Using configuration space header type instead of
+> > class type for the resource assignment.
+> > 
+> > Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+> > ---
+> >  drivers/pci/pci.c       |  3 +--
+> >  drivers/pci/probe.c     |  3 ---
+> >  drivers/pci/setup-bus.c | 20 ++++++++++----------
+> >  3 files changed, 11 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 29ff961..7d379ca 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -5908,8 +5908,7 @@ void pci_reassigndev_resource_alignment(struct pci_dev *dev)
+> >  	 * to enable the kernel to reassign new resource
+> >  	 * window later on.
+> >  	 */
+> > -	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE &&
+> > -	    (dev->class >> 8) == PCI_CLASS_BRIDGE_PCI) {
+> > +	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE) {
+> >  		for (i = PCI_BRIDGE_RESOURCES; i < PCI_NUM_RESOURCES; i++) {
+> >  			r = &dev->resource[i];
+> >  			if (!(r->flags & IORESOURCE_MEM))
+> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > index ec78400..29a35c1 100644
+> > --- a/drivers/pci/probe.c
+> > +++ b/drivers/pci/probe.c
+> > @@ -1695,9 +1695,6 @@ int pci_setup_device(struct pci_dev *dev)
+> >  		break;
+> >  
+> >  	case PCI_HEADER_TYPE_BRIDGE:		    /* bridge header */
+> > -		if (class != PCI_CLASS_BRIDGE_PCI)
+> > -			goto bad;
+> > -
+> >  		/*
+> >  		 * The PCI-to-PCI bridge spec requires that subtractive
+> >  		 * decoding (i.e. transparent) bridge must have programming
+> > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> > index 79b1824..69f90f4 100644
+> > --- a/drivers/pci/setup-bus.c
+> > +++ b/drivers/pci/setup-bus.c
+> > @@ -182,7 +182,7 @@ static void __dev_sort_resources(struct pci_dev *dev,
+> >  	u16 class = dev->class >> 8;
+> >  
+> >  	/* Don't touch classless devices or host bridges or ioapics.  */
+> > -	if (class == PCI_CLASS_NOT_DEFINED || class == PCI_CLASS_BRIDGE_HOST)
+> > +	if (class == PCI_CLASS_NOT_DEFINED)
+> 
+> I think this check has been there since the first initial git commit,
+> whether that's _really_ needed or not in the current kernel it is very
+> hard to say.
+> 
+> I am not that sure it is safe to remove it, especially given that we are at
+> -rc8 and close to a release, it would be good if this patch could sit in
+> next to give it some exposure to testing before merging it upstream.
 
-On Mon, 8 Oct 2018 12:47:21 +0200
-Arnd Bergmann <arnd@arndb.de> wrote:
+Yes, you're right; I think I think this is a little too risky at this
+point.  I'll pull this patch out and queue it up for the next cycle
+(v4.21).
 
-> On Wed, Oct 3, 2018 at 3:22 PM Boris Brezillon
-> <boris.brezillon@bootlin.com> wrote:
-> >
-> > Sorry for the huge delay between v7 and v8 despite the small amount of
-> > things I was asked to fix/rework.
-> >
-> > This patch series is adding a new subsystem to support I3C devices.
-> >
-> > This is just adding support for basic features. Extra features will
-> > be added afterwards.
-> >
-> > There are a few design choices that are worth mentioning because they
-> > impact the way I3C device drivers can interact with their devices:
-> >
-> > - all functions used to send I3C/I2C frames must be called in
-> >   non-atomic context. Mainly done this way to ease implementation, but
-> >   this is still open to discussion. Please let me know if you think it's
-> >   worth considering an asynchronous model here
-> > - the I3C bus and I3C master controller are now tightly coupled even
-> >   though they're still allocated separately. There's now a 1:1
-> >   relationship between these objects, and the I3C master is no longer
-> >   represented under the I3C bus object.
-> >   Arnd, let me know if you had something different in mind, and I'll
-> >   rework the implementation accordingly.  
-> 
-> I looked at the entire series again and I'm rather happy with how
-> it turned out. I've commented on a tiny issue about the readsl()
-> that should be easy to resolve one way or another, with that
-> you can add my
-> 
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> 
-> There is one additional issue that we've talked about previously
-> and that I'd like to hear about from GregKH or maybe other
-> subsystem maintainers: In the current version, you have a single
-> 'bus_type' object, and this is used to represent both a 'host' and
-> a 'device'. I think we concluded that this is done in other
-> subsystems as well, and that this is fitting here because a
-> host (master device) can hand over being a master to another
-> device (slave), which then becomes the host and sees this
-> one as a slave. Also a lot of the sysfs attributes are the same
-> because of this relationship.
-> 
-> It also means that you get a mix of things in sysfs:
-> 
-> /sys/devices/i3c/<bus>
-> /sys/devices/i3c/<device>
-> /sys/devices/i3c/<bus>/<device>
-> 
-> which is a bit like what we have on USB where we can have hub
-> devices that are again parents of other USB devices, but I don't
-> think we can have i3c hubs or multiplexers in the same way, so
-> it's only a single level.
-> 
-> I'm ok with this model after our previous discussion and couldn't
-> come up with a better one. If anyone else still sees it as
-> problematic and has a better idea, please let us know now.
+For v4.20, I think you should resurrect the class code patch [1].  That
+should be enough to make things work in v4.20, even without this hdr_type
+patch.  It will also improve the lspci output, because I think it uses the
+class code to look up the generic description, e.g., in this output:
 
-I know you're quite busy with the 4.19 release, but if you find a bit
-of time, that'd be great to have your feedback on this.
+  00:1c.0 PCI bridge: Intel Corporation Sunrise Point-LP PCI Express Root Port (rev f1)
 
-Thanks,
+I think the "PCI bridge" part is based on the class code.
 
-Boris
+Bjorn
+
+[1] https://lore.kernel.org/linux-pci/1539590940-13355-3-git-send-email-honghui.zhang@mediatek.com
+
+> >  		return;
+> >  
+> >  	/* Don't touch ioapic devices already enabled by firmware */
+> > @@ -1221,12 +1221,12 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
+> >  		if (!b)
+> >  			continue;
+> >  
+> > -		switch (dev->class >> 8) {
+> > -		case PCI_CLASS_BRIDGE_CARDBUS:
+> > +		switch (dev->hdr_type) {
+> > +		case PCI_HEADER_TYPE_CARDBUS:
+> >  			pci_bus_size_cardbus(b, realloc_head);
+> >  			break;
+> >  
+> > -		case PCI_CLASS_BRIDGE_PCI:
+> > +		case PCI_HEADER_TYPE_BRIDGE:
+> >  		default:
+> >  			__pci_bus_size_bridges(b, realloc_head);
+> >  			break;
+> > @@ -1237,12 +1237,12 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
+> >  	if (pci_is_root_bus(bus))
+> >  		return;
+> >  
+> > -	switch (bus->self->class >> 8) {
+> > -	case PCI_CLASS_BRIDGE_CARDBUS:
+> > +	switch (bus->self->hdr_type) {
+> > +	case PCI_HEADER_TYPE_CARDBUS:
+> >  		/* don't size cardbuses yet. */
+> >  		break;
+> >  
+> > -	case PCI_CLASS_BRIDGE_PCI:
+> > +	case PCI_HEADER_TYPE_BRIDGE:
+> >  		pci_bridge_check_ranges(bus);
+> >  		if (bus->self->is_hotplug_bridge) {
+> >  			additional_io_size  = pci_hotplug_io_size;
+> > @@ -1391,13 +1391,13 @@ void __pci_bus_assign_resources(const struct pci_bus *bus,
+> >  
+> >  		__pci_bus_assign_resources(b, realloc_head, fail_head);
+> >  
+> > -		switch (dev->class >> 8) {
+> > -		case PCI_CLASS_BRIDGE_PCI:
+> > +		switch (dev->hdr_type) {
+> > +		case PCI_HEADER_TYPE_BRIDGE:
+> >  			if (!pci_is_enabled(dev))
+> >  				pci_setup_bridge(b);
+> >  			break;
+> >  
+> > -		case PCI_CLASS_BRIDGE_CARDBUS:
+> > +		case PCI_HEADER_TYPE_CARDBUS:
+> >  			pci_setup_cardbus(b);
+> >  			break;
+> >  
+> > -- 
+> > 2.6.4
+> > 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
