@@ -1,104 +1,45 @@
-Return-Path: <SRS0=ZRjc=MY=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:50314 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728027AbeJLRNF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Oct 2018 13:13:05 -0400
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH v2 2/6] clk: qcom: Add WCSS gcc clock control for QCS404
-Date: Fri, 12 Oct 2018 15:10:40 +0530
-Message-Id: <1539337244-9505-3-git-send-email-govinds@codeaurora.org>
-In-Reply-To: <1539337244-9505-1-git-send-email-govinds@codeaurora.org>
-References: <1539337244-9505-1-git-send-email-govinds@codeaurora.org>
-Sender: devicetree-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Govind Singh <govinds@codeaurora.org>
+Return-Path: <SRS0=PFBs=M5=verge.net.au=horms@kernel.org>
+Date: Wed, 17 Oct 2018 11:53:20 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH/RFT 0/2] thermal: add suport for R8A77990
+Message-ID: <20181017095315.lqgcxjjrzr3qck2i@verge.net.au>
+References: <1539612719-9650-1-git-send-email-ykaneko0929@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1539612719-9650-1-git-send-email-ykaneko0929@gmail.com>
+To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for the WCSS QDSP gcc clock control used on qcs404 based devices.
-This would allow wcss remoteproc driver to control the required gcc clocks to
-bring the subsystem out of reset.
+On Mon, Oct 15, 2018 at 11:11:57PM +0900, Yoshihiro Kaneko wrote:
+> This series adds thermal support for R-Car E3 (R8A77990).
+> 
+> This series is based on the next branch of Eduardo Valentin's linux-soc-thermal
+> tree.
+> 
+> Yoshihiro Kaneko (2):
+>   dt-bindings: thermal: rcar-thermal: add R8A77990 support
+>   thermal: rcar_thermal: add R8A77990 support
 
-Signed-off-by: Govind Singh <govinds@codeaurora.org>
----
- drivers/clk/qcom/gcc-qcs404.c | 37 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 36 insertions(+), 1 deletion(-)
+Tested in conjunction with "[PATCH/RFT] arm64: dts: renesas: r8a77990: add
+thermal device support".
 
-diff --git a/drivers/clk/qcom/gcc-qcs404.c b/drivers/clk/qcom/gcc-qcs404.c
-index 6d1387e..1b38b4e 100644
---- a/drivers/clk/qcom/gcc-qcs404.c
-+++ b/drivers/clk/qcom/gcc-qcs404.c
-@@ -2505,6 +2505,32 @@ enum {
- 	},
- };
- 
-+static struct clk_branch gcc_wdsp_q6ss_ahbs_clk = {
-+	.halt_reg = 0x1e004,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x1e004,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_wdsp_q6ss_ahbs_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_wdsp_q6ss_axim_clk = {
-+	.halt_reg = 0x1e008,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x1e008,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_wdsp_q6ss_axim_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_regmap *gcc_qcs404_clocks[] = {
- 	[APSS_AHB_CLK_SRC] = &apss_ahb_clk_src.clkr,
- 	[BLSP1_QUP0_I2C_APPS_CLK_SRC] = &blsp1_qup0_i2c_apps_clk_src.clkr,
-@@ -2642,6 +2668,9 @@ enum {
- 	[GCC_QDSS_DAP_CLK] = &gcc_qdss_dap_clk.clkr,
- 	[GCC_DCC_CLK] = &gcc_dcc_clk.clkr,
- 	[GCC_DCC_XO_CLK] = &gcc_dcc_xo_clk.clkr,
-+	[GCC_WCSS_Q6_AHB_CBCR_CLK] = NULL,
-+	[GCC_WCSS_Q6_AXIM_CBCR_CLK] =  NULL,
-+
- };
- 
- static const struct qcom_reset_map gcc_qcs404_resets[] = {
-@@ -2659,6 +2688,7 @@ enum {
- 	[GCC_PCIE_0_LINK_DOWN_BCR] = {0x3E038},
- 	[GCC_PCIEPHY_0_PHY_BCR] = {0x3E03C},
- 	[GCC_EMAC_BCR] = {0x4E000},
-+	[GCC_WDSP_RESTART] = {0x19000},
- };
- 
- static const struct regmap_config gcc_qcs404_regmap_config = {
-@@ -2669,7 +2699,7 @@ enum {
- 	.fast_io	= true,
- };
- 
--static const struct qcom_cc_desc gcc_qcs404_desc = {
-+static struct qcom_cc_desc gcc_qcs404_desc = {
- 	.config = &gcc_qcs404_regmap_config,
- 	.clks = gcc_qcs404_clocks,
- 	.num_clks = ARRAY_SIZE(gcc_qcs404_clocks),
-@@ -2702,6 +2732,11 @@ static int gcc_qcs404_probe(struct platform_device *pdev)
- 	clk_prepare_enable(apss_ahb_clk_src.clkr.hw.clk);
- 	clk_prepare_enable(gpll0_ao_out_main.clkr.hw.clk);
- 
-+	if (of_property_read_bool(pdev->dev.of_node, "qcom,wcss-protected")) {
-+		gcc_qcs404_clocks[GCC_WCSS_Q6_AHB_CBCR_CLK] = &gcc_wdsp_q6ss_ahbs_clk.clkr;
-+		gcc_qcs404_clocks[GCC_WCSS_Q6_AXIM_CBCR_CLK] = &gcc_wdsp_q6ss_axim_clk.clkr;
-+	}
-+
- 	return qcom_cc_really_probe(pdev, &gcc_qcs404_desc, regmap);
- }
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+# X=1000000; while [ "$X" -gt 0 ]; do X=$(($X -1 )); done; cat
+# /sys/devices/virtual/thermal/thermal_zone0/temp; sleep 1; cat
+# /sys/devices/virtual/thermal/thermal_zone0/temp
+30000
+25000
+
+
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Tested-by: Simon Horman <horms+renesas@verge.net.au>
+
+> 
+>  Documentation/devicetree/bindings/thermal/rcar-thermal.txt | 5 +++--
+>  drivers/thermal/rcar_thermal.c                             | 4 ++++
+>  2 files changed, 7 insertions(+), 2 deletions(-)
+> 
+> -- 
+> 1.9.1
+> 
