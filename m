@@ -1,66 +1,46 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [linux-sunxi] [PATCH v11 1/2] dt-bindings: media: Add Allwinner
- V3s Camera Sensor Interface (CSI)
-Date: Wed, 17 Oct 2018 13:03:03 +0530
-Message-ID: <CAMty3ZD3TDOC_PSvbEtopT12pCmXCDqZQdPVB9GNC7wOrj_LYQ@mail.gmail.com>
-References: <1537951204-24672-1-git-send-email-yong.deng@magewell.com>
+From: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] dts: arm64/sdm845: Add WCN3990 WLAN module device node
+Date: Wed, 17 Oct 2018 00:33:48 -0700
+Message-ID: <153976162862.5275.4810472671573539341@swboyd.mtv.corp.google.com>
+References: <1539172376-19269-1-git-send-email-govinds@codeaurora.org>
+ <1539172376-19269-3-git-send-email-govinds@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537951204-24672-1-git-send-email-yong.deng@magewell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Deng <yong.deng@magewell.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, davem@davemloft.net, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, akpm@linux-foundation.org, arnd@arndb.de, Hans Verkuil <hans.verkuil@cisco.com>, laurent.pinchart@ideasonboard.com, geert@linux-m68k.org, jacob-chen@iotwrt.com, Neil Armstrong <narmstrong@baylibre.com>, treding@nvidia.com, Philipp Zabel <p.zabel@pengutronix.de>, todor.tomov@linaro.org, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media <linux-media@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kerne>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1539172376-19269-3-git-send-email-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 26, 2018 at 2:11 PM Yong Deng <yong.deng@magewell.com> wrote:
->
-> Add binding documentation for Allwinner V3s CSI.
->
-> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Yong Deng <yong.deng@magewell.com>
-> ---
->  .../devicetree/bindings/media/sun6i-csi.txt        | 59 ++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
->
-> diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> new file mode 100644
-> index 000000000000..2ff47a9507a6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> @@ -0,0 +1,59 @@
-> +Allwinner V3s Camera Sensor Interface
-> +-------------------------------------
+Quoting Govind Singh (2018-10-10 04:52:55)
+> @@ -1403,5 +1408,26 @@
+>                                 status =3D "disabled";
+>                         };
+>                 };
 > +
-> +Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
-> +interface and CSI1 is used for parallel interface.
-> +
-> +Required properties:
-> +  - compatible: value must be "allwinner,sun8i-v3s-csi"
-> +  - reg: base address and size of the memory-mapped region.
-> +  - interrupts: interrupt associated to this IP
-> +  - clocks: phandles to the clocks feeding the CSI
-> +    * bus: the CSI interface clock
-> +    * mod: the CSI module clock
-> +    * ram: the CSI DRAM clock
-> +  - clock-names: the clock names mentioned above
-> +  - resets: phandles to the reset line driving the CSI
-> +
-> +Each CSI node should contain one 'port' child node with one child 'endpoint'
-> +node, according to the bindings defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt. As mentioned
-> +above, the endpoint's bus type should be MIPI CSI-2 for CSI0 and parallel or
-> +Bt656 for CSI1.
+> +               wifi: wifi@18800000 {
+> +                       compatible =3D "qcom,wcn3990-wifi";
+> +                       status =3D "disabled";
+> +                       reg =3D <0x18800000 0x800000>;
+> +                       reg-names =3D "membase";
+> +                       memory-region =3D <&wlan_msa_mem>;
+> +                       interrupts =3D
+> +                               <0 413 0 /* CE0 */ >,
 
-But A64 manual claimed that CSI0 is parallel (ofcourse it has only one
-controller). On the other-side the register space seems similar. and
-also is Bt656 and CCIR656 are same types?
+Please specify these as GIC_SPI and give trigger types (level high I
+guess?). I'd also drop the comment and add interrupt-names to match the
+comment. It's self documenting that way.
 
--- 
-Jagan Teki
-Senior Linux Kernel Engineer | Amarula Solutions
-U-Boot, Linux | Upstream Maintainer
-Hyderabad, India.
+> +                               <0 414 0 /* CE1 */ >,
+> +                               <0 415 0 /* CE2 */ >,
+> +                               <0 416 0 /* CE3 */ >,
+> +                               <0 417 0 /* CE4 */ >,
+> +                               <0 418 0 /* CE5 */ >,
+> +                               <0 420 0 /* CE6 */ >,
+> +                               <0 421 0 /* CE7 */ >,
+> +                               <0 422 0 /* CE8 */ >,
+> +                               <0 423 0 /* CE9 */ >,
+> +                               <0 424 0 /* CE10 */ >,
+> +                               <0 425 0 /* CE11 */ >;
