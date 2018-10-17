@@ -1,38 +1,31 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V9 05/21] csky: System Call
-Date: Wed, 17 Oct 2018 17:02:33 +0200
-Message-ID: <CAK8P3a3bNST+ZuPjLG0_sHjC=Ac0ir1omhHvMn9tz4zs+Kg9yw@mail.gmail.com>
-References: <cover.1539655731.git.ren_guo@c-sky.com> <d83762614122402ba4b55524e35b418c9f6baf53.1539655731.git.ren_guo@c-sky.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/7] dt-bindings: pinctrl: ds90ux9xx: add description of
+ TI DS90Ux9xx pinmux
+Date: Wed, 17 Oct 2018 10:02:52 -0500
+Message-ID: <20181017150252.GA11075@bogus>
+References: <20181008211205.2900-1-vz@mleia.com>
+ <20181008211205.2900-4-vz@mleia.com>
+ <CACRpkdZJMPYWHBUXohjxo12XZpLdz7OzcWRBrrkcB8YLLd5StA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d83762614122402ba4b55524e35b418c9f6baf53.1539655731.git.ren_guo@c-sky.com>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZJMPYWHBUXohjxo12XZpLdz7OzcWRBrrkcB8YLLd5StA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Christoph Hellwig <hch@infradead.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, c-sky_gcc_upstream@c-sky.com
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Vladimir Zapolskiy <vz@mleia.com>, Lee Jones <lee.jones@linaro.org>, Mark Vasut <marek.vasut@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-media@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 16, 2018 at 5:01 AM Guo Ren <ren_guo@c-sky.com> wrote:
->
-> This patch adds files related to syscall.
->
-> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
+On Wed, Oct 10, 2018 at 10:45:43AM +0200, Linus Walleij wrote:
+> Hi Vladimir,
+> 
+> thanks for your patch!
+> 
+> Can we change the subject to something like "add DT bindings" rather than
+> "add description" as it is more specific and makes it easier for me as
+> maintainer.
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+To add to the nitpicking, The subject already says DT and bindings, so 
+no need to repeat it. I'd just drop "description of" if anything.
 
-I had a detailed look at this one and provided lots of comments, however
-one tiny thing escaped me:
-
-> +#define __NR_set_thread_area   (__NR_arch_specific_syscall + 0)
-> +__SYSCALL(__NR_set_thread_area, sys_set_thread_area)
-> +#define __NR_cacheflush                (__NR_arch_specific_syscall + 4)
-> +__SYSCALL(__NR_cacheflush, sys_cacheflush)
-
-It's odd that the second one uses __NR_arch_specific_syscall + 4 rather
-than +1. If you can still change that changing too much other stuff,
-that might avoid some head-scratching later. If it causes problems,
-just leave it and maybe add a comment saying that the numbers
-inbetween are still available.
-
-      Arnd
+Rob
