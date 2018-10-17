@@ -1,75 +1,181 @@
 From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH v4 00/18] of: overlay: validation checks, subsequent fixes
-Date: Wed, 17 Oct 2018 16:16:47 -0500
-Message-ID: <CANk1AXSa1bMHxp7-PiTtfniDukDO51M=4P5u98Xc=rRo06zP7Q@mail.gmail.com>
-References: <1539657458-24401-1-git-send-email-frowand.list@gmail.com>
- <87murekyts.fsf@concordia.ellerman.id.au> <bbbbe52c-8415-e22a-48d7-95f919942c68@gmail.com>
+Subject: Re: [PATCH v4 01/18] of: overlay: add tests to validate kfrees from
+ overlay removal
+Date: Wed, 17 Oct 2018 16:30:13 -0500
+Message-ID: <CANk1AXS-DMhA3=8v9N28K_V6K18HcgN_Esuo=-ddmeBLO46-Rw@mail.gmail.com>
+References: <1539657458-24401-1-git-send-email-frowand.list@gmail.com> <1539657458-24401-2-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bbbbe52c-8415-e22a-48d7-95f919942c68@gmail.com>
+In-Reply-To: <1539657458-24401-2-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Frank Rowand <frowand.list@gmail.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Moritz Fischer <mdf@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Moritz Fischer <mdf@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 16, 2018 at 10:08 PM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> On 10/16/18 02:47, Michael Ellerman wrote:
-> > frowand.list@gmail.com writes:
-> >
-> >> From: Frank Rowand <frank.rowand@sony.com>
-> >>
-> >> Add checks to (1) overlay apply process and (2) memory freeing
-> >> triggered by overlay release.  The checks are intended to detect
-> >> possible memory leaks and invalid overlays.
-> >>
-> >> The checks revealed bugs in existing code.  Fixed the bugs.
-> >>
-> >> While fixing bugs, noted other issues, which are fixed in
-> >> separate patches.
-> >>
-> >> *****  Powerpc folks: I was not able to test the patches that
-> >> *****  directly impact Powerpc systems that use dynamic
-> >> *****  devicetree.  Please review that code carefully and
-> >> *****  test.  The specific patches are: 03/16, 04/16, 07/16
-> >
-> > Hi Frank,
-> >
-> > Do you have this series in a git tree somewhere?
-> >
-> > I tried applying it on top of linux-next but hit some conflicts which I
-> > couldn't easily resolve.
-> >
-> > cheers
-> >
->
->
->
-> git://git.kernel.org/pub/scm/linux/kernel/git/frowand/linux.git
->
-> $ git checkout v4.19-rc1--kfree_validate--v4
->
-> $ git log --oneline v4.19-rc1..
-> 2ba1b7d353dd of: unittest: initialize args before calling of_*parse_*()
-> 4f9108209f79 of: unittest: find overlays[] entry by name instead of index
-> 353403c76ff8 of: unittest: allow base devicetree to have symbol metadata
-> 8fc37e04a01b of: overlay: set node fields from properties when add new overlay n
-> 05d5df0e5151 of: unittest: remove unused of_unittest_apply_overlay() argument
-> 8c021cba757a of: overlay: check prevents multiple fragments touching same proper
-> 797a6f66e039 of: overlay: check prevents multiple fragments add or delete same n
-> c385e25a040d of: overlay: test case of two fragments adding same node
-> c88fd240f0e0 of: overlay: make all pr_debug() and pr_err() messages unique
-> 1028a215d32a of: overlay: validate overlay properties #address-cells and #size-c
-> f1a97ef74ce4 of: overlay: reorder fields in struct fragment
-> ffe78cf7a1fb of: dynamic: change type of of_{at,de}tach_node() to void
-> 5f5ff8ec0c0c of: overlay: do not duplicate properties from overlay for new nodes
-> 06e72dcb2bb0 of: overlay: use prop add changeset entry for property in new nodes
-> a02f8d326a08 powerpc/pseries: add of_node_put() in dlpar_detach_node()
-> e203be664330 of: overlay: add missing of_node_get() in __of_attach_node_sysfs
-> 8eb46208e7c8 of: overlay: add missing of_node_put() after add new node to change
-> b22067db7cf9 of: overlay: add tests to validate kfrees from overlay removal
+On Mon, Oct 15, 2018 at 9:39 PM <frowand.list@gmail.com> wrote:
 
-That branch is a real time saver, thanks!
+Hi Frank,
 
-ALan
+>
+> From: Frank Rowand <frank.rowand@sony.com>
+>
+> Add checks:
+>   - attempted kfree due to refcount reaching zero before overlay
+>     is removed
+>   - properties linked to an overlay node when the node is removed
+>   - node refcount > one during node removal in a changeset destroy,
+>     if the node was created by the changeset
+>
+> After applying this patch, several validation warnings will be
+> reported from the devicetree unittest during boot due to
+> pre-existing devicetree bugs. The warnings will be similar to:
+>
+>   OF: ERROR: of_node_release() overlay node /testcase-data/overlay-node/test-bus/test-unittest11/test-unittest111 contains unexpected properties
+>   OF: ERROR: memory leak - destroy cset entry: attach overlay node /testcase-data-2/substation@100/hvac-medium-2 expected refcount 1 instead of 2.  of_node_get() / of_node_put() are unbalanced for this node.
+>
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> ---
+> Changes since v3:
+>   - Add expected value of refcount for destroy cset entry error.  Also
+>     explain the cause of the error.
+>
+>  drivers/of/dynamic.c | 29 +++++++++++++++++++++++++++++
+>  drivers/of/overlay.c |  1 +
+>  include/linux/of.h   | 15 ++++++++++-----
+>  3 files changed, 40 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+> index f4f8ed9b5454..24c97b7a050f 100644
+> --- a/drivers/of/dynamic.c
+> +++ b/drivers/of/dynamic.c
+> @@ -330,6 +330,25 @@ void of_node_release(struct kobject *kobj)
+>         if (!of_node_check_flag(node, OF_DYNAMIC))
+>                 return;
+>
+> +       if (of_node_check_flag(node, OF_OVERLAY)) {
+> +
+> +               if (!of_node_check_flag(node, OF_OVERLAY_FREE_CSET)) {
+> +                       /* premature refcount of zero, do not free memory */
+> +                       pr_err("ERROR: memory leak %s() overlay node %pOF before free overlay changeset\n",
+> +                              __func__, node);
+> +                       return;
+> +               }
+> +
+> +               /*
+> +                * If node->properties non-empty then properties were added
+> +                * to this node either by different overlay that has not
+> +                * yet been removed, or by a non-overlay mechanism.
+> +                */
+> +               if (node->properties)
+> +                       pr_err("ERROR: %s() overlay node %pOF contains unexpected properties\n",
+> +                              __func__, node);
+> +       }
+> +
+>         property_list_free(node->properties);
+>         property_list_free(node->deadprops);
+>
+> @@ -434,6 +453,16 @@ struct device_node *__of_node_dup(const struct device_node *np,
+>
+>  static void __of_changeset_entry_destroy(struct of_changeset_entry *ce)
+>  {
+> +       if (ce->action == OF_RECONFIG_ATTACH_NODE &&
+> +           of_node_check_flag(ce->np, OF_OVERLAY)) {
+> +               if (kref_read(&ce->np->kobj.kref) > 1) {
+> +                       pr_err("ERROR: memory leak - destroy cset entry: attach overlay node %pOF expected refcount 1 instead of %d.  of_node_get() / of_node_put() are unbalanced for this node.\n",
+> +                              ce->np, kref_read(&ce->np->kobj.kref));
+
+Still testing as much as I have time to do.
+
+I'm hitting this error message once when removing an overlay that adds
+several child nodes.  The only node I get the message for was a node
+that added a fixed-clock (the other nodes didn't trigger the error).
+Then even if I edited all the rest of the overlay DTS and removed all
+other child nodes and all references to the clock from other nodes, I
+still got the error.
+
+Removing dtbo: 1-socfpga_arria10_socdk_sdmmc_ghrd_ovl_ext_cfg.dtb
+[   72.032270] OF: ERROR: memory leak - destroy cset entry: attach
+overlay node /soc/base_fpga_region/clk_0 expected refcount 1 instead
+of 2.  of_node_get() / of_node_put() are unbalanced for this node.
+
+Here's the very stripped down overlay:
+
+/dts-v1/;
+/plugin/;
+/ {
+        fragment@0 {
+                target-path = "/soc/base_fpga_region";
+                #address-cells = <1>;
+                #size-cells = <1>;
+
+                __overlay__ {
+                        external-fpga-config;
+
+                        #address-cells = <1>;
+                        #size-cells = <1>;
+
+                        clk_0: clk_0 {
+                                compatible = "fixed-clock";
+                                #clock-cells = <0>;
+                                clock-frequency = <100000000>;  /* 100.00 MHz */
+                                clock-output-names = "clk_0-clk";
+                        };
+                };
+        };
+};
+
+I'll look at it some more tomorrow and try to figure out what's
+special about this node.
+
+Alan
+
+> +               } else {
+> +                       of_node_set_flag(ce->np, OF_OVERLAY_FREE_CSET);
+> +               }
+> +       }
+> +
+>         of_node_put(ce->np);
+>         list_del(&ce->node);
+>         kfree(ce);
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index eda57ef12fd0..1176cb4b6e4e 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -373,6 +373,7 @@ static int add_changeset_node(struct overlay_changeset *ovcs,
+>                         return -ENOMEM;
+>
+>                 tchild->parent = target_node;
+> +               of_node_set_flag(tchild, OF_OVERLAY);
+>
+>                 ret = of_changeset_attach_node(&ovcs->cset, tchild);
+>                 if (ret)
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 4d25e4f952d9..aa1dafaec6ae 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -138,11 +138,16 @@ static inline void of_node_put(struct device_node *node) { }
+>  extern struct device_node *of_stdout;
+>  extern raw_spinlock_t devtree_lock;
+>
+> -/* flag descriptions (need to be visible even when !CONFIG_OF) */
+> -#define OF_DYNAMIC     1 /* node and properties were allocated via kmalloc */
+> -#define OF_DETACHED    2 /* node has been detached from the device tree */
+> -#define OF_POPULATED   3 /* device already created for the node */
+> -#define OF_POPULATED_BUS       4 /* of_platform_populate recursed to children of this node */
+> +/*
+> + * struct device_node flag descriptions
+> + * (need to be visible even when !CONFIG_OF)
+> + */
+> +#define OF_DYNAMIC             1 /* (and properties) allocated via kmalloc */
+> +#define OF_DETACHED            2 /* detached from the device tree */
+> +#define OF_POPULATED           3 /* device already created */
+> +#define OF_POPULATED_BUS       4 /* platform bus created for children */
+> +#define OF_OVERLAY             5 /* allocated for an overlay */
+> +#define OF_OVERLAY_FREE_CSET   6 /* in overlay cset being freed */
+>
+>  #define OF_BAD_ADDR    ((u64)-1)
+>
+> --
+> Frank Rowand <frank.rowand@sony.com>
+>
