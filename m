@@ -1,187 +1,43 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: Re: [RFC 4/4] gpio: sifive: Add GPIO driver for SiFive SoCs
-Date: Tue, 16 Oct 2018 18:01:13 -0700
-Message-ID: <d8fe9a17-283c-e2ad-9e01-2754b35699b4@wdc.com>
-References: <1539111085-25502-1-git-send-email-atish.patra@wdc.com>
- <1539111085-25502-5-git-send-email-atish.patra@wdc.com>
- <CACRpkdaoBwqQ4V5Hm9f_G5_jrdkvjT5anhBK1_HoFTj6=cba-Q@mail.gmail.com>
+From: Roy Im <roy.im.opensource@diasemi.com>
+Subject: [RESEND PATCH V7 0/3]  da7280: haptic driver submission
+Date: Wed, 17 Oct 2018 09:57:57 +0900
+Message-ID: <cover.1539737877.git.Roy.Im@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaoBwqQ4V5Hm9f_G5_jrdkvjT5anhBK1_HoFTj6=cba-Q@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Christoph Hellwig <hch@infradead.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Support Opensource <support.opensource@diasemi.com>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/10/18 5:35 AM, Linus Walleij wrote:
-> Hi Atish,
-> 
-> thanks for your patch!
-> 
-> On Tue, Oct 9, 2018 at 8:51 PM Atish Patra <atish.patra@wdc.com> wrote:
-> 
->> From: "Wesley W. Terpstra" <wesley@sifive.com>
->>
->> Adds the GPIO driver for SiFive RISC-V SoCs.
->>
->> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
->> [Atish: Various fixes and code cleanup]
->> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> 
-> (...)
-> 
->> +config GPIO_SIFIVE
->> +       bool "SiFive GPIO support"
->> +       depends on OF_GPIO
->> +       select GPIOLIB_IRQCHIP
-> 
-> I suggest to add
-> select GPIO_GENERIC as per below.
-> 
-> Maybe select REGMAP_MMIO as well.
+This patch adds support for the Dialog DA7280 Haptic driver IC.
 
-ok.
+In this patch set the following is provided:
 
-> 
->> +       help
->> +         Say yes here to support the GPIO device on SiFive SoCs.
->> +
-> 
->> +#include <linux/of_irq.h>
->> +#include <linux/irqchip/chained_irq.h>
-> 
-> Do you need these two? I think <linux/gpio/driver.h>
-> will bring them in for you.
-> 
+[PATCH V7 1/3] MAINTAINERS file update for DA7280
+[PATCH V7 2/3] DA7280 DT Binding
+[PATCH V7 3/3] DA7280 Driver
 
-driver.h only brings chained_irq.h. of_irq.h is still required. Right ?
+This patch applies against linux-next and v4.19-rc6
 
->> +#include <linux/pinctrl/consumer.h>
-> 
-> Are you using this?
+Thank you,
+Roy Im, Dialog Semiconductor Ltd.
 
-My bad. Left over from the old code. I will remove it.
+Roy Im (3):
+  MAINTAINERS: da7280 updates to the Dialog Semiconductor search terms
+  dt-bindings: input: Add document bindings for DA7280
+  Input: new da7280 haptic driver
 
-> 
->> +struct sifive_gpio {
->> +       raw_spinlock_t          lock;
->> +       void __iomem            *base;
->> +       struct gpio_chip        gc;
->> +       unsigned long           enabled;
-> 
-> Since max GPIO is 32 why not use an u32 for this?
-> 
+ .../devicetree/bindings/input/dlg,da7280.txt       |  105 ++
+ MAINTAINERS                                        |    2 +
+ drivers/input/misc/Kconfig                         |   13 +
+ drivers/input/misc/Makefile                        |    1 +
+ drivers/input/misc/da7280.c                        | 1409 ++++++++++++++++++++
+ drivers/input/misc/da7280.h                        |  412 ++++++
+ 6 files changed, 1942 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
+ create mode 100644 drivers/input/misc/da7280.c
+ create mode 100644 drivers/input/misc/da7280.h
 
-Sure.
-
->> +       unsigned int            trigger[MAX_GPIO];
->> +       unsigned int            irq_parent[MAX_GPIO];
->> +       struct sifive_gpio      *self_ptr[MAX_GPIO];
->> +};
->> +
->> +static void sifive_assign_bit(void __iomem *ptr, unsigned int offset, int value)
->> +{
->> +       /*
->> +        * It's frustrating that we are not allowed to use the device atomics
->> +        * which are GUARANTEED to be supported by this device on RISC-V
->> +        */
->> +       u32 bit = BIT(offset), old = ioread32(ptr);
->> +
->> +       if (value)
->> +               iowrite32(old | bit, ptr);
->> +       else
->> +               iowrite32(old & ~bit, ptr);
->> +}
-> 
-> This looks like a mask and set implementation, you are
-> essentially reinventing regmap MMIO and the
-> regmap_update_bits() call. Could you look into
-> just using regmap MMIO in that case?
-> 
-> If you need examples, look at gpio-mvebu.c that calls
-> devm_regmap_init_mmio() for example.
-> 
-
-That's really cool. Sorry, for not checking that earlier.
-I am pretty new to this.
-
->> +static int sifive_direction_input(struct gpio_chip *gc, unsigned int offset)
->> +static int sifive_direction_output(struct gpio_chip *gc, unsigned int offset,
->> +static int sifive_get_direction(struct gpio_chip *gc, unsigned int offset)
->> +static int sifive_get_value(struct gpio_chip *gc, unsigned int offset)
->> +static void sifive_set_value(struct gpio_chip *gc, unsigned int offset,
-> 
-> These functions look like a typical hardware that can use
-> 
-> GPIOLIB_GENERIC and bgpio_init() to set up the accessors.
-> 
-> See gpio-ftgpio010.c for an example.
-> 
-> As a bonus you will get .get/.set_multiple implemented by
-> the generic GPIO.
-> 
-
-Great. This will reduce the driver a code by a big factor.
-Thanks for the pointer.
-
-
->> +static void sifive_irq_enable(struct irq_data *d)
->> +static void sifive_irq_disable(struct irq_data *d)
-> (...)
->> +static struct irq_chip sifive_irqchip = {
->> +       .name           = "sifive-gpio",
->> +       .irq_set_type   = sifive_irq_set_type,
->> +       .irq_mask       = sifive_irq_mask,
->> +       .irq_unmask     = sifive_irq_unmask,
->> +       .irq_enable     = sifive_irq_enable,
->> +       .irq_disable    = sifive_irq_disable,
-> 
-> The handling of .irq_enable and .irq_disable has
-> changed upstream. Please align with the new codebase
-> as changed by Hans Verkuil:
-> 
-> commit 461c1a7d4733d1dfd5c47b040cf32a5e7eefbc6c
-> "gpiolib: override irq_enable/disable"
-> commit 4e9439ddacea06f35acce4d374bf6bd0acf99bc8
-> "gpiolib: add flag to indicate if the irq is disabled"
-> 
-> You will need to rebase your work on the v4.20-rc1 once it is
-> out. Right now the changes are on linux-next or my devel
-> branch.
-
-Will do.
-
-> 
->> +       ngpio = of_irq_count(node);
->> +       if (ngpio >= MAX_GPIO) {
->> +               dev_err(dev, "Too many GPIO interrupts (max=%d)\n", MAX_GPIO);
->> +               return -ENXIO;
->> +       }
-> (...)
->> +       for (gpio = 0; gpio < ngpio; ++gpio) {
->> +               irq = platform_get_irq(pdev, gpio);
->> +               if (irq < 0) {
->> +                       dev_err(dev, "invalid IRQ\n");
->> +                       gpiochip_remove(&chip->gc);
->> +                       return -ENODEV;
->> +               }
-> 
-> This is an hierarchical IRQ so it should use an hierarchical
-> irqdomain.
-> 
-> I am discussing with Thierry to make more generic irq domains
-> for hierarchical IRQ GPIOs, until then you have to look at
-> gpio-thunderx.c, gpio-uniphier.c or gpio-xgene-sb.c that all
-> use hierarchical IRQs.
-> 
-
-Thanks. I will convert them to hierarchical IRQ.
-
-Regards,
-Atish
-> Yours,
-> Linus Walleij
-> 
+-- 
+end-of-patch for RESEND PATCH V7
