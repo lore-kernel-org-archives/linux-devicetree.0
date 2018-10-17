@@ -1,51 +1,63 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 02/11] dt-bindings: phy: add cpsw port interface mode
- selection phy bindings
-Date: Wed, 17 Oct 2018 10:39:13 -0500
-Message-ID: <20181017153913.GA13333@bogus>
-References: <20181008234949.15416-1-grygorii.strashko@ti.com>
- <20181008234949.15416-3-grygorii.strashko@ti.com>
- <20181009144000.GL5662@atomide.com>
- <3fa09831-0f70-dfcc-3fd9-f877215a4631@ti.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v13 2/8] clk: qcom: Make clk_alpha_pll_configure available to
+ modules
+Date: Wed, 17 Oct 2018 08:39:26 -0700
+Message-ID: <153979076609.5275.11289929616133786271@swboyd.mtv.corp.google.com>
+References: <20180614215358.11264-1-ilia.lin@gmail.com>
+ <20180614215358.11264-3-ilia.lin@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3fa09831-0f70-dfcc-3fd9-f877215a4631@ti.com>
+In-Reply-To: <20180614215358.11264-3-ilia.lin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+To: ilia.lin@gmail.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Amit Kucheria <amit.kucheria@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Ilia Lin <ilialin@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 09, 2018 at 03:10:34PM -0500, Grygorii Strashko wrote:
-> 
-> 
-> On 10/09/2018 09:40 AM, Tony Lindgren wrote:
-> > * Grygorii Strashko <grygorii.strashko@ti.com> [181008 23:54]:
-> >> +Examples:
-> >> +	phy_gmii_sel: phy-gmii-sel {
-> >> +		compatible = "ti,am3352-phy-gmii-sel";
-> >> +		syscon-scm = <&scm_conf>;
-> >> +		#phy-cells = <2>;
-> >> +	};
-> > 
-> > Now that this driver can live in it's proper place in the
-> 
-> right
-> 
-> > dts, you may want to consider just using standard reg
-> > property for it instead of the syscon-scm. And also get
-> > rid of the syscon reads and writes.
-> 
-> Could you help clarify how to get syscon in this case?
-> syscon_node_to_regmap(dev->parent->of_node)?
-> 
-> Also, there are could be more then one gmii_sel registers in SCM in the future,
-> so I hidden offsets in of_match data. 
-> As result, "reg" not needed at all now.
+Quoting ilia.lin@gmail.com (2018-06-14 14:53:49)
+> From: Rajendra Nayak <rnayak@codeaurora.org>
+> =
 
-If there's a defined register range which doesn't overlap with other 
-things (other than the parent), then use reg whether you currently need 
-it or not.
+> Allow clk_alpha_pll_configure to be called from loadable
+> kernel modules.
+> =
 
-Rob
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
+> Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+
+Oh I think this one came via another patch series. Either way, keep
+resending this along with everything else to make kbuild happy.
+
+>  drivers/clk/qcom/clk-alpha-pll.c | 1 +
+>  1 file changed, 1 insertion(+)
+> =
+
+> diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alph=
+a-pll.c
+> index 3c49a60072f1..a43f80ac94a4 100644
+> --- a/drivers/clk/qcom/clk-alpha-pll.c
+> +++ b/drivers/clk/qcom/clk-alpha-pll.c
+> @@ -228,6 +228,7 @@ void clk_alpha_pll_configure(struct clk_alpha_pll *pl=
+l, struct regmap *regmap,
+>         if (pll->flags & SUPPORTS_FSM_MODE)
+>                 qcom_pll_set_fsm_mode(regmap, PLL_MODE(pll), 6, 0);
+>  }
+> +EXPORT_SYMBOL_GPL(clk_alpha_pll_configure);
+>  =
+
+>  static int clk_alpha_pll_hwfsm_enable(struct clk_hw *hw)
+>  {
+> -- =
+
+> 2.11.0
+> =
+
+> =
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
