@@ -1,55 +1,49 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V9 13/21] csky: Library functions
-Date: Wed, 17 Oct 2018 17:24:36 +0200
-Message-ID: <CAK8P3a3hJ+Xt2xfTg=bkDBfahk7Z-3+Unt1MqmMQrRnCeJhVtg@mail.gmail.com>
-References: <cover.1539655731.git.ren_guo@c-sky.com> <f884af8fffa1645c2650292a3001a2fbfc4cc390.1539655732.git.ren_guo@c-sky.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v13 6/8] clk: qcom: cpu-8996: Add support to switch to alternate
+ PLL
+Date: Wed, 17 Oct 2018 08:32:05 -0700
+Message-ID: <153979032539.5275.12064078400966025600@swboyd.mtv.corp.google.com>
+References: <20180614215358.11264-1-ilia.lin@gmail.com>
+ <20180614215358.11264-7-ilia.lin@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f884af8fffa1645c2650292a3001a2fbfc4cc390.1539655732.git.ren_guo@c-sky.com>
+In-Reply-To: <20180614215358.11264-7-ilia.lin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Christoph Hellwig <hch@infradead.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, c-sky_gcc_upstream@c-sky.com, linfei_chen@c-sky.com, Mao Han <han_mao@c-sky.com>
+To: ilia.lin@gmail.com
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, Ilia Lin <ilialin@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 16, 2018 at 5:02 AM Guo Ren <ren_guo@c-sky.com> wrote:
+Quoting ilia.lin@gmail.com (2018-06-14 14:53:53)
+> @@ -227,6 +232,26 @@ clk_cpu_8996_mux_determine_rate(struct clk_hw *hw, s=
+truct clk_rate_request *req)
+>         return 0;
+>  }
+>  =
 
-> +++ b/arch/csky/lib/delay.c
-> @@ -0,0 +1,39 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/delay.h>
-> +
-> +void __delay(unsigned long loops)
+> +int cpu_clk_notifier_cb(struct notifier_block *nb, unsigned long event,
+
+static? And name it something like clk_cpu_8996_notifier?
+
+> +                       void *data)
 > +{
-> +       asm volatile (
-> +               "mov r0, r0\n"
-> +               "1:declt %0\n"
-> +               "bf     1b"
-> +               : "=r"(loops)
-> +               : "0"(loops));
-> +}
-> +EXPORT_SYMBOL(__delay);
+> +       int ret;
+> +       struct clk_cpu_8996_mux *cpuclk =3D to_clk_cpu_8996_mux_nb(nb);
 > +
-> +void __const_udelay(unsigned long xloops)
-> +{
-> +       unsigned long long loops;
+> +       switch (event) {
+> +       case PRE_RATE_CHANGE:
+> +               ret =3D clk_cpu_8996_mux_set_parent(&cpuclk->clkr.hw, ALT=
+_INDEX);
+> +               break;
+> +       case POST_RATE_CHANGE:
+> +               ret =3D clk_cpu_8996_mux_set_parent(&cpuclk->clkr.hw, PLL=
+_INDEX);
+> +               break;
+> +       default:
+> +               ret =3D 0;
+> +               break;
+> +       }
 > +
-> +       loops = (unsigned long long)xloops * loops_per_jiffy * HZ;
-> +
-> +       __delay(loops >> 32);
-> +}
-> +EXPORT_SYMBOL(__const_udelay);
-
-I can't find any indication we discussed this part before. Can you
-explain (in the
-changelog and in a reply) if there is a reliable high-resolution clocksource
-available in the architecture? If you can read the elapsed time here instead of
-using the loops_per_jiffy estimate, that would make this more robust, as
-well as speed up the boot.
-
-If you can't do that in general, that's fine, and you can add my
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> +       return notifier_from_errno(ret);
+> +};
