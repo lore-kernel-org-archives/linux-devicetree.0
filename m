@@ -1,101 +1,100 @@
-Return-Path: <SRS0=y20N=MR=gmail.com=wojciech.slenska@kernel.org>
-From: Wojciech Slenska <wojciech.slenska@gmail.com>
-Subject: [PATCH v2] hwmon: (sht3x) add devicetree support
-Date: Fri,  5 Oct 2018 07:38:35 +0200
-Message-Id: <1538717915-22294-1-git-send-email-wojciech.slenska@gmail.com>
-To: linux@roeck-us.net
-Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Wojciech Slenska <wojciech.slenska@gmail.com>
+Return-Path: <robherring2@gmail.com>
+Date: Wed, 17 Oct 2018 15:05:54 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/6] dt-bindings: clock: qcom: Introduce QCOM WCSS
+ Q6DSP clock bindings
+Message-ID: <20181017200554.GA17601@bogus>
+References: <1539337244-9505-1-git-send-email-govinds@codeaurora.org>
+ <1539337244-9505-4-git-send-email-govinds@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1539337244-9505-4-git-send-email-govinds@codeaurora.org>
+To: Govind Singh <govinds@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Wojciech Slenska <wojciech.slenska@gmail.com>
----
- Documentation/devicetree/bindings/hwmon/sht3x.txt | 16 +++++++++++++
- drivers/hwmon/sht3x.c                             | 28 ++++++++++++++++++++---
- 2 files changed, 41 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/hwmon/sht3x.txt
+On Fri, Oct 12, 2018 at 03:10:41PM +0530, Govind Singh wrote:
+> Add device tree bindings for WiFi QDSP subsystem clock controls
+> found in OCS405 soc.
+> 
+> Signed-off-by: Govind Singh <govinds@codeaurora.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,wcsscc.txt      | 26 ++++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,wcss-qcs404.h       | 24 ++++++++++++++++++++
+>  2 files changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,wcsscc.txt
+>  create mode 100644 include/dt-bindings/clock/qcom,wcss-qcs404.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,wcsscc.txt b/Documentation/devicetree/bindings/clock/qcom,wcsscc.txt
+> new file mode 100644
+> index 0000000..2b19ef0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,wcsscc.txt
+> @@ -0,0 +1,26 @@
+> +Qualcomm WCSS Clock Controller Binding
+> +-----------------------------------------------
+> +
+> +Required properties :
+> +- compatible		: shall contain "qcom,qcs404-wcsscc"
+> +- #clock-cells		: from common clock binding, shall contain 1.
+> +- reg			: shall contain base register address and size,
+> +			  in the order
+> +			Index-0 maps to WCSS_Q6SSTOP clocks register region
+> +			Index-1 maps to WCSS_TCSR register region
+> +			Index-2 maps to WCSS_QDSP6SS register region
+> +
+> +Optional properties :
+> +- reg-names	: register names of WCSS domain
+> +		 "wcss_q6sstop", "wcnss_tcsr", "wcss_qdsp6ss".
+> +
+> +Example:
+> +The below node has to be defined in the cases where the WCSS peripheral loader
+> +would bring the subsystem out of reset.
+> +
+> +	clock_wcsscc: qcom,wcsscc@7000000 {
 
-diff --git a/Documentation/devicetree/bindings/hwmon/sht3x.txt b/Documentation/devicetree/bindings/hwmon/sht3x.txt
-new file mode 100644
-index 0000000..80b117e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/sht3x.txt
-@@ -0,0 +1,16 @@
-+Sensirion SHT3x Humidity and Temperature Sensor
-+
-+Required node properties:
-+- compatible: "sensirion,sht3x" or "sensirion,sts3x"
-+- reg: I2C bus address of the device
-+
-+Optional properties:
-+- sensirion,blocking-io: enable blocking mode on i2c
-+- sensirion,no-high-precision: disable high accuracy
-+
-+Example sht3x node:
-+
-+sensor {
-+	compatible = "sensirion,sht3x";
-+	reg = <0x4a>;
-+}
-diff --git a/drivers/hwmon/sht3x.c b/drivers/hwmon/sht3x.c
-index 370b57d..1f8b7e7 100644
---- a/drivers/hwmon/sht3x.c
-+++ b/drivers/hwmon/sht3x.c
-@@ -31,6 +31,7 @@
- #include <linux/slab.h>
- #include <linux/jiffies.h>
- #include <linux/platform_data/sht3x.h>
-+#include <linux/of.h>
+clock-controller@7500000
 
- /* commands (high precision mode) */
- static const unsigned char sht3x_cmd_measure_blocking_hpm[]    = { 0x2c, 0x06 };
-@@ -699,6 +700,7 @@ static int sht3x_probe(struct i2c_client *client,
- 	struct i2c_adapter *adap = client->adapter;
- 	struct device *dev = &client->dev;
- 	const struct attribute_group **attribute_groups;
-+	struct device_node *np = client->dev.of_node;
+> +		compatible = "qcom,qcs404-wcsscc";
+> +		reg = <0x07500000 0x4e000>, <0x07550000 0x8012>, <0x07400000 0x104>;
+> +		reg-names = "wcss_q6sstop", "wcnss_tcsr", "wcss_qdsp6ss";
+> +		#clock-cells = <1>;
+> +	};
+> diff --git a/include/dt-bindings/clock/qcom,wcss-qcs404.h b/include/dt-bindings/clock/qcom,wcss-qcs404.h
+> new file mode 100644
+> index 0000000..45dd659
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/qcom,wcss-qcs404.h
+> @@ -0,0 +1,24 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_CLK_WCSS_QCS404_H
+> +#define _DT_BINDINGS_CLK_WCSS_QCS404_H
+> +
+> +#define WCSS_AHBFABRIC_CBCR_CLK			0
+> +#define WCSS_AHBS_CBCR_CLK			1
+> +#define WCSS_TCM_CBCR_CLK			2
+> +#define WCSS_AHBM_CBCR_CLK			3
+> +#define WCSS_AXIM_CBCR_CLK			4
+> +#define WCSS_BCR_CBCR_CLK			5
+> +#define WCSS_LCC_CBCR_CLK			6
+> +#define WCSS_QDSP6SS_XO_CBCR_CLK		7
+> +#define WCSS_QDSP6SS_SLEEP_CBCR_CLK		8
+> +#define WCSS_QDSP6SS_GFMMUX_CLK			9
+> +
+> +#define Q6SSTOP_QDSP6SS_RESET			0
+> +#define Q6SSTOP_QDSP6SS_CORE_RESET		1
+> +#define Q6SSTOP_QDSP6SS_BUS_RESET		2
+> +#define Q6SSTOP_BCR_RESET			3
 
- 	/*
- 	 * we require full i2c support since the sht3x uses multi-byte read and
-@@ -724,8 +726,16 @@ static int sht3x_probe(struct i2c_client *client,
- 	data->client = client;
- 	crc8_populate_msb(sht3x_crc8_table, SHT3X_CRC8_POLYNOMIAL);
+Resets too? Then you need to define #reset-cells.
 
--	if (client->dev.platform_data)
--		data->setup = *(struct sht3x_platform_data *)dev->platform_data;
-+	if (np) {
-+		if (of_property_read_bool(np, "sensirion,blocking-io"))
-+			data->setup.blocking_io = true;
-+		if (of_property_read_bool(np, "sensirion,no-high-precision"))
-+			data->setup.high_precision = false;
-+	} else {
-+		if (client->dev.platform_data)
-+			data->setup = *(struct sht3x_platform_data *)
-+				dev->platform_data;
-+	}
-
- 	sht3x_select_command(data);
-
-@@ -768,8 +778,20 @@ static const struct i2c_device_id sht3x_ids[] = {
-
- MODULE_DEVICE_TABLE(i2c, sht3x_ids);
-
-+#ifdef CONFIG_OF
-+static const struct of_device_id sht3x_dt_match[] = {
-+	{ .compatible = "sensirion,sht3x" },
-+	{ .compatible = "sensirion,sts3x" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, sht3x_dt_match);
-+#endif
-+
- static struct i2c_driver sht3x_i2c_driver = {
--	.driver.name = "sht3x",
-+	.driver = {
-+		.name = "sht3x",
-+		.of_match_table = of_match_ptr(sht3x_dt_match),
-+	},
- 	.probe       = sht3x_probe,
- 	.id_table    = sht3x_ids,
- };
---
-2.7.4
+> +#endif
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
