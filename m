@@ -1,46 +1,62 @@
-From: Krishna Reddy <vdumpa@nvidia.com>
-Subject: [PATCH 1/2] arm64: dts: tegra186: Add dma-ranges to avoid using bounce buffers
-Date: Tue, 16 Oct 2018 19:06:47 -0700
-Message-ID: <1539742008-16595-1-git-send-email-vdumpa@nvidia.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v3 6/9] arm64: dts: actions: Add Reset Controller support
+ for S900 SoC
+Date: Wed, 17 Oct 2018 08:26:55 +0530
+Message-ID: <20181017025655.GA2888@Mani-XPS-13-9360>
+References: <20180810095113.25292-1-manivannan.sadhasivam@linaro.org>
+ <20180810095113.25292-7-manivannan.sadhasivam@linaro.org>
+ <153972613980.5275.10581925529054373344@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <153972613980.5275.10581925529054373344@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, mperttunen@nvidia.com, avienamo@nvidia.com
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Krishna Reddy <vdumpa@nvidia.com>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: afaerber@suse.de, mturquette@baylibre.com, p.zabel@pengutronix.de, robh+dt@kernel.org, linux-clk@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br, sravanhome@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add dma-ranges to avoid using DMA bounce buffers unnecessarily for
-the devices that can address the physcial memory and don't
-have SMMU enabled.
+On Tue, Oct 16, 2018 at 02:42:19PM -0700, Stephen Boyd wrote:
+> Quoting Manivannan Sadhasivam (2018-08-10 02:51:10)
+> > Add reset controller property and bindings header for the
+> > Actions Semi S900 SoC DTS.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> 
+> Are these DT patches necessary for me to apply the clk patches? I'd like
+> to apply the clk patches without these dts bits.
+>
 
-This also resolves the failures in attaching devices to IOMMU.
-The following error is caused by the check in io-pgtable-arm.c, where
-the dma address is expected to match the physical address for the IOMMU
-devices that don't support coherent page table walking. Bounce buffer
-usage is causing the mismatch and device add failure.
+Not necessary, you can just apply the clk and bindings patches. DTS patches
+will go through Actions tree.
 
-[    7.000461] arm-smmu 12000000.iommu: Cannot accommodate DMA
-translation for IOMMU page tables
-[    7.010513] iommu: Failed to add device 15200000.display to group 0:
--12
+Thanks,
+Mani
 
-Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra186.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-index 2f3c8e2..230c0c8 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-@@ -14,6 +14,7 @@
- 	interrupt-parent = <&gic>;
- 	#address-cells = <2>;
- 	#size-cells = <2>;
-+	dma-ranges = <0x0 0x0 0x0 0x0 0x4 0x0>;
- 
- 	misc@100000 {
- 		compatible = "nvidia,tegra186-misc";
--- 
-2.1.4
+> >  arch/arm64/boot/dts/actions/s900.dtsi | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/actions/s900.dtsi b/arch/arm64/boot/dts/actions/s900.dtsi
+> > index aa3a49b0d646..4fbb39fd7971 100644
+> > --- a/arch/arm64/boot/dts/actions/s900.dtsi
+> > +++ b/arch/arm64/boot/dts/actions/s900.dtsi
+> > @@ -6,6 +6,7 @@
+> >  
+> >  #include <dt-bindings/clock/actions,s900-cmu.h>
+> >  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +#include <dt-bindings/reset/actions,s900-reset.h>
+> >  
+> >  / {
+> >         compatible = "actions,s900";
+> > @@ -172,6 +173,7 @@
+> >                         reg = <0x0 0xe0160000 0x0 0x1000>;
+> >                         clocks = <&hosc>, <&losc>;
+> >                         #clock-cells = <1>;
+> > +                       #reset-cells = <1>;
+> >                 };
+> >  
+> >                 pinctrl: pinctrl@e01b0000 {
+> > -- 
+> > 2.17.1
+> > 
