@@ -1,160 +1,62 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v9 2/9] PCI: Using PCI configuration space header type
- instead of class type to assign resource
-Date: Wed, 17 Oct 2018 08:22:51 -0500
-Message-ID: <20181017132251.GG5906@bhelgaas-glaptop.roam.corp.google.com>
-References: <1539686690-24068-1-git-send-email-honghui.zhang@mediatek.com>
- <1539686690-24068-3-git-send-email-honghui.zhang@mediatek.com>
- <20181016145355.GB16390@e107981-ln.cambridge.arm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 05/11] dt-bindings: regulator: Change
+ regulator-coupled-max-spread property
+Date: Wed, 17 Oct 2018 08:25:01 -0500
+Message-ID: <20181017132501.GA19385@bogus>
+References: <20181005153638.1886-1-digetx@gmail.com>
+ <20181005153638.1886-6-digetx@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181016145355.GB16390@e107981-ln.cambridge.arm.com>
+In-Reply-To: <20181005153638.1886-6-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: honghui.zhang@mediatek.com, youlin.pei@mediatek.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, ryder.lee@mediatek.com, marc.zyngier@arm.com, linux-pci@vger.kernel.org, jianjun.wang@mediatek.com, linux-kernel@vger.kernel.org, yt.shen@mediatek.com, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, bhelgaas@google.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Maciej Purski <m.purski@samsung.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Lucas Stach <l.stach@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 16, 2018 at 03:53:55PM +0100, Lorenzo Pieralisi wrote:
-> On Tue, Oct 16, 2018 at 06:44:43PM +0800, honghui.zhang@mediatek.com wrote:
-> > From: Honghui Zhang <honghui.zhang@mediatek.com>
-> > 
-> > The PCI configuration space header type defines the layout of the rest
-> > of the header (PCI r3.0 sec 6.1, PCIe r4.0 sec 7.5.1.1.9) while the
-> > resource assignment is based on the configuration space layout instead
-> > of its class type. Using configuration space header type instead of
-> > class type for the resource assignment.
-> > 
-> > Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-> > ---
-> >  drivers/pci/pci.c       |  3 +--
-> >  drivers/pci/probe.c     |  3 ---
-> >  drivers/pci/setup-bus.c | 20 ++++++++++----------
-> >  3 files changed, 11 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 29ff961..7d379ca 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -5908,8 +5908,7 @@ void pci_reassigndev_resource_alignment(struct pci_dev *dev)
-> >  	 * to enable the kernel to reassign new resource
-> >  	 * window later on.
-> >  	 */
-> > -	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE &&
-> > -	    (dev->class >> 8) == PCI_CLASS_BRIDGE_PCI) {
-> > +	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE) {
-> >  		for (i = PCI_BRIDGE_RESOURCES; i < PCI_NUM_RESOURCES; i++) {
-> >  			r = &dev->resource[i];
-> >  			if (!(r->flags & IORESOURCE_MEM))
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index ec78400..29a35c1 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -1695,9 +1695,6 @@ int pci_setup_device(struct pci_dev *dev)
-> >  		break;
-> >  
-> >  	case PCI_HEADER_TYPE_BRIDGE:		    /* bridge header */
-> > -		if (class != PCI_CLASS_BRIDGE_PCI)
-> > -			goto bad;
-> > -
-> >  		/*
-> >  		 * The PCI-to-PCI bridge spec requires that subtractive
-> >  		 * decoding (i.e. transparent) bridge must have programming
-> > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> > index 79b1824..69f90f4 100644
-> > --- a/drivers/pci/setup-bus.c
-> > +++ b/drivers/pci/setup-bus.c
-> > @@ -182,7 +182,7 @@ static void __dev_sort_resources(struct pci_dev *dev,
-> >  	u16 class = dev->class >> 8;
-> >  
-> >  	/* Don't touch classless devices or host bridges or ioapics.  */
-> > -	if (class == PCI_CLASS_NOT_DEFINED || class == PCI_CLASS_BRIDGE_HOST)
-> > +	if (class == PCI_CLASS_NOT_DEFINED)
+On Fri, Oct 05, 2018 at 06:36:32PM +0300, Dmitry Osipenko wrote:
+> Redefine binding for regulator-coupled-max-spread property in a way that
+> max-spread values are defined per regulator couple instead of defining
+> single max-spread for the whole group of coupled regulators.
 > 
-> I think this check has been there since the first initial git commit,
-> whether that's _really_ needed or not in the current kernel it is very
-> hard to say.
+> With that change the following regulators coupling configuration will be
+> possible:
 > 
-> I am not that sure it is safe to remove it, especially given that we are at
-> -rc8 and close to a release, it would be good if this patch could sit in
-> next to give it some exposure to testing before merging it upstream.
-
-Yes, you're right; I think I think this is a little too risky at this
-point.  I'll pull this patch out and queue it up for the next cycle
-(v4.21).
-
-For v4.20, I think you should resurrect the class code patch [1].  That
-should be enough to make things work in v4.20, even without this hdr_type
-patch.  It will also improve the lspci output, because I think it uses the
-class code to look up the generic description, e.g., in this output:
-
-  00:1c.0 PCI bridge: Intel Corporation Sunrise Point-LP PCI Express Root Port (rev f1)
-
-I think the "PCI bridge" part is based on the class code.
-
-Bjorn
-
-[1] https://lore.kernel.org/linux-pci/1539590940-13355-3-git-send-email-honghui.zhang@mediatek.com
-
-> >  		return;
-> >  
-> >  	/* Don't touch ioapic devices already enabled by firmware */
-> > @@ -1221,12 +1221,12 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
-> >  		if (!b)
-> >  			continue;
-> >  
-> > -		switch (dev->class >> 8) {
-> > -		case PCI_CLASS_BRIDGE_CARDBUS:
-> > +		switch (dev->hdr_type) {
-> > +		case PCI_HEADER_TYPE_CARDBUS:
-> >  			pci_bus_size_cardbus(b, realloc_head);
-> >  			break;
-> >  
-> > -		case PCI_CLASS_BRIDGE_PCI:
-> > +		case PCI_HEADER_TYPE_BRIDGE:
-> >  		default:
-> >  			__pci_bus_size_bridges(b, realloc_head);
-> >  			break;
-> > @@ -1237,12 +1237,12 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
-> >  	if (pci_is_root_bus(bus))
-> >  		return;
-> >  
-> > -	switch (bus->self->class >> 8) {
-> > -	case PCI_CLASS_BRIDGE_CARDBUS:
-> > +	switch (bus->self->hdr_type) {
-> > +	case PCI_HEADER_TYPE_CARDBUS:
-> >  		/* don't size cardbuses yet. */
-> >  		break;
-> >  
-> > -	case PCI_CLASS_BRIDGE_PCI:
-> > +	case PCI_HEADER_TYPE_BRIDGE:
-> >  		pci_bridge_check_ranges(bus);
-> >  		if (bus->self->is_hotplug_bridge) {
-> >  			additional_io_size  = pci_hotplug_io_size;
-> > @@ -1391,13 +1391,13 @@ void __pci_bus_assign_resources(const struct pci_bus *bus,
-> >  
-> >  		__pci_bus_assign_resources(b, realloc_head, fail_head);
-> >  
-> > -		switch (dev->class >> 8) {
-> > -		case PCI_CLASS_BRIDGE_PCI:
-> > +		switch (dev->hdr_type) {
-> > +		case PCI_HEADER_TYPE_BRIDGE:
-> >  			if (!pci_is_enabled(dev))
-> >  				pci_setup_bridge(b);
-> >  			break;
-> >  
-> > -		case PCI_CLASS_BRIDGE_CARDBUS:
-> > +		case PCI_HEADER_TYPE_CARDBUS:
-> >  			pci_setup_cardbus(b);
-> >  			break;
-> >  
-> > -- 
-> > 2.6.4
-> > 
+> regA: regulatorA {
+> 	regulator-coupled-with = <&regB &regC>;
+> 	regulator-coupled-max-spread = <100000 300000>;
+> };
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> regB: regulatorB {
+> 	regulator-coupled-with = <&regA &regC>;
+> 	regulator-coupled-max-spread = <100000 200000>;
+> };
+> 
+> regC: regulatorC {
+> 	regulator-coupled-with = <&regA &regB>;
+> 	regulator-coupled-max-spread = <300000 200000>;
+> };
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/regulator/regulator.txt | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
+> index a7cd36877bfe..9b525b657fca 100644
+> --- a/Documentation/devicetree/bindings/regulator/regulator.txt
+> +++ b/Documentation/devicetree/bindings/regulator/regulator.txt
+> @@ -76,8 +76,9 @@ Optional properties:
+>  - regulator-coupled-with: Regulators with which the regulator
+>    is coupled. The linkage is 2-way - all coupled regulators should be linked
+>    with each other. A regulator should not be coupled with its supplier.
+> -- regulator-coupled-max-spread: Max spread between voltages of coupled regulators
+> -  in microvolts.
+> +- regulator-coupled-max-spread: Array of maximum spread between voltages of
+> +  coupled regulators in microvolts, each value in the array relates to the
+> +  corresponding couple specified by the regulator-coupled-with property.
+
+Is this in use already? How is a single entry handled?
+
+Rob
