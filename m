@@ -1,31 +1,43 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V9 12/21] csky: ELF and module probe
-Date: Wed, 17 Oct 2018 17:18:49 +0200
-Message-ID: <CAK8P3a2vwe=4SqKfyGruKEJ1yd7txbdBqw6kD_3pN47F8u7OAA@mail.gmail.com>
-References: <cover.1539655731.git.ren_guo@c-sky.com> <27589f69f513177892d39868050dccb5f21023aa.1539655732.git.ren_guo@c-sky.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH 1/2] dt-bindings: phy: Update SERDES_MAX to be SERDES_MAX
+ + 1
+Date: Wed, 17 Oct 2018 17:19:26 +0200
+Message-ID: <a8955203-81cb-6e59-d5c0-76269b96215f@embeddedor.com>
+References: <cover.1539036280.git.gustavo@embeddedor.com>
+ <3a1a95a4832af33dcd1842b0298d257bbcf1f5ab.1539036280.git.gustavo@embeddedor.com>
+ <20181009072723.mshyvplpo2xmkyfl@qschulz>
+ <dab86dfb-d56b-b7c3-8e2a-6955803a2842@embeddedor.com>
+ <20181017150931.GA385@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <27589f69f513177892d39868050dccb5f21023aa.1539655732.git.ren_guo@c-sky.com>
+In-Reply-To: <20181017150931.GA385@bogus>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Christoph Hellwig <hch@infradead.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, c-sky_gcc_upstream@c-sky.com
+To: Rob Herring <robh@kernel.org>
+Cc: Quentin Schulz <quentin.schulz@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 16, 2018 at 5:02 AM Guo Ren <ren_guo@c-sky.com> wrote:
->
-> This patch adds ELF definition and module relocate codes.
->
-> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
 
-> +#ifdef __cskyBE__
-> +#define ELF_DATA       ELFDATA2MSB
-> +#else
-> +#define ELF_DATA       ELFDATA2LSB
-> +#endif
 
-You removed support for big-endian, right? I guess the #ifdef can also
-get removed here then. Aside from that,
+On 10/17/18 5:09 PM, Rob Herring wrote:
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+>>
+>> Friendly ping. Who can you take this?
+> 
+> Applied. No need (nor benefit) to ping me. You can check the status of 
+> DT patches on patchwork[1]. If it is there and in the "New" state, it is 
+> in my queue.
+> 
+
+OK. I've got it. I just didn't know who usually takes these dt-bindings patches.
+
+> Rob
+> 
+> [1] https://patchwork.ozlabs.org/project/devicetree-bindings/list/
+> 
+
+Thanks, Rob.
+--
+Gustavo
