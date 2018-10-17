@@ -1,43 +1,28 @@
-Return-Path: <SRS0=Uwhs=M4=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr40074.outbound.protection.outlook.com ([40.107.4.74]:16160
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726990AbeJPMt4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Oct 2018 08:49:56 -0400
-From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 0/4] usb: chipidea: imx: add HSIC support 
-Date: Tue, 16 Oct 2018 05:01:16 +0000
-Message-ID: <20181016045846.2345-1-peter.chen@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <robherring2@gmail.com>
+Date: Wed, 17 Oct 2018 11:00:34 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: thermal: rcar-gen3-thermal: document
+  R8A77980 bindings
+Message-ID: <20181017160034.GA14615@bogus>
+References: <3c96d51e-fc36-2ff9-03a8-176c4c0ed365@cogentembedded.com>
+ <e53d379f-bb72-51f7-9216-b3eb1bbe04b5@cogentembedded.com>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e53d379f-bb72-51f7-9216-b3eb1bbe04b5@cogentembedded.com>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Most of NXP (Freescale) i.mx USB part has HSIC support, in this series,
-we add support for them, it should cover all imx6 and imx7d. I have
-no HSIC interface board which is supported by upstream kernel, so this
-patches are only compiled ok, Frieder Schrempf, would you please
-help me test it on your board? Thanks.
+On Tue, 9 Oct 2018 22:10:14 +0300, Sergei Shtylyov wrote:
+> Document the R-Car V3H (R8A77980) SoC in the Renesas R-Car gen3 thermal
+> bindings.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+>  Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt |    4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
 
-Peter Chen (4):
-  usb: chipidea: add flag for imx hsic implementation
-  usb: chipidea: imx: add HSIC support
-  usb: chipidea: host: override ehci->hub_control
-  doc: usb: ci-hdrc-usb2: Add pinctrl properties for HSIC pin groups
-
- .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |   1 +
- drivers/usb/chipidea/ci_hdrc_imx.c                 | 153 +++++++++++++++++=
-+---
- drivers/usb/chipidea/ci_hdrc_imx.h                 |   9 +-
- drivers/usb/chipidea/host.c                        |  98 +++++++++++++
- drivers/usb/chipidea/usbmisc_imx.c                 | 131 +++++++++++++++++=
-+
- include/linux/usb/chipidea.h                       |   3 +
- 6 files changed, 376 insertions(+), 19 deletions(-)
-
---=20
-2.14.1
+Reviewed-by: Rob Herring <robh@kernel.org>
