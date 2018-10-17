@@ -1,91 +1,42 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC 1/4] pwm: sifive: Add DT documentation for SiFive PWM
- Controller.
-Date: Wed, 17 Oct 2018 10:58:18 -0500
-Message-ID: <20181017155818.GA21971@bogus>
-References: <1539111085-25502-1-git-send-email-atish.patra@wdc.com>
- <1539111085-25502-2-git-send-email-atish.patra@wdc.com>
- <20181010134926.GD21134@ulmo>
- <25758ab9-eb36-741b-6264-42412b3ddd8e@wdc.com>
- <20181016110142.GC8852@ulmo>
- <6e108e3c-15c1-b13b-ac3e-60c5eb209c7b@sifive.com>
- <20181016220437.GB31973@mithrandir>
- <7fc1168d-a840-032a-c0a9-2a610127c484@wdc.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V9 00/21] C-SKY(csky) Linux Kernel Port
+Date: Wed, 17 Oct 2018 17:58:46 +0200
+Message-ID: <CAK8P3a25W5rE093QsmC539d+s038Wv9PmV8Xa76LQzDLk3E8Wg@mail.gmail.com>
+References: <cover.1539655731.git.ren_guo@c-sky.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7fc1168d-a840-032a-c0a9-2a610127c484@wdc.com>
+In-Reply-To: <cover.1539655731.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Wesley Terpstra <wesley@sifive.com>, linus.walleij@linaro.org, palmer@sifive.com, linux-kernel@vger.kernel.org, hch@infradead.org, linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org
+To: Guo Ren <ren_guo@c-sky.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Christoph Hellwig <hch@infradead.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, c-sky_gcc_upstream@c-sky.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 16, 2018 at 03:20:34PM -0700, Atish Patra wrote:
-> On 10/16/18 3:04 PM, Thierry Reding wrote:
-> > On Tue, Oct 16, 2018 at 10:31:42AM -0700, Paul Walmsley wrote:
-> > > 
-> > > On 10/16/18 4:01 AM, Thierry Reding wrote:
-> > > > On Mon, Oct 15, 2018 at 03:57:35PM -0700, Atish Patra wrote:
-> > > > > On 10/10/18 6:49 AM, Thierry Reding wrote:
-> > > > > > On Tue, Oct 09, 2018 at 11:51:22AM -0700, Atish Patra wrote:
-> > > > > > > +Required properties:
-> > > > > > > +- compatible: should be one of
-> > > > > > > +	"sifive,fu540-c000-pwm0","sifive,pwm0".
-> > > > > > What's the '0' in here? A version number?
-> > > > > > 
-> > > > > I think yes. Since fu540 is the first Linux capable RISC-V core, SiFive Guys
-> > > > > decided mark it as version 0.
-> > > > > 
-> > > > > @Wesly: Please correct me if I am wrong.
-> > > > It seems fairly superfluous to me to have a version number in additon to
-> > > > the fu540-c000, which already seems to be the core plus some sort of
-> > > > part number. Do you really expect there to be any changes in the SoC
-> > > > that would require a different compatible string at this point? If the
-> > > > SoC has taped out, how will you ever get a different version of the PWM
-> > > > IP in it?
-> > > > 
-> > > > I would expect any improvements or changes to the PWM IP to show up in a
-> > > > different SoC generation, at which point it would be something like
-> > > > "sifive,fu640-c000" maybe, or perhaps "sifive,fu540-d000", or whatever
-> > > > the numbering is.
-> > > 
-> > > 
-> > > The "0" suffix refers to a revision number for the underlying PWM IP block.
-> > > 
-> > > It's certainly important to keep that version number on the "sifive,pwm0"
-> > > compatible string that doesn't have the chip name associated with it.
-> > 
-> > Isn't the hardware identified by "sifive,pwm0" and "sifive,fu540-c000"
-> > effectively identical?
-> 
-> Yes.
-> 
-> Is there a need to have two compatible strings
-> > that refer to the exact same hardware?
-> > 
-> 
-> The DT in the hardware has only sifive,pwm0. I have added
-> "sifive,fu540-c000" as that was concluded as the correct compatible string
-> from platform level interrupt controller patch(PLIC) discussion.
-> 
-> (http://lists.infradead.org/pipermail/linux-riscv/2018-August/001135.html)
-> 
-> "sifive,pwm0" is required to until all the Unleashed SoC gets an updated
-> firmware with correct compatible string "sifive,fu540-c000". I agree this is
-> a mess. But we have to carry it until all every DT(corresponding to each
-> driver) is finalized. I guess SiFive will release a firmware update that
-> contains all the updated DT once that is done. We can get rid of all the
-> redundant compatible strings at that time.
+On Tue, Oct 16, 2018 at 4:58 AM Guo Ren <ren_guo@c-sky.com> wrote:
+>
+> This is the 9th version patchset to add the Linux kernel port for
+> C-SKY(csky) based on linux-4.19-rc3.
+>
+> There are only a few changes between V8 patchset. Hope it could be
+> merged into linux-4.20 and I'm very grateful for any help.
 
-I don't want to repeat compatible string discussions on each and every 
-IP block. I already have to do this with some vendors.
+I've gone through the entire series once more and saw no show-stoppers.
+The last patch looked like it introduced a bug, but with that one dropped,
+I'm happy for the architecture to get merged, unless anyone else
+has any last-minute concerns. (Alternatively, explain why I'm wrong
+and the code works correctly, of course).
 
-The RiscV vendors' needs and design flow are a bit different from 
-traditional SoC vendors AIUI for the last discussion. If you need to do 
-something that doesn't follow normal conventions, that's fine. Just 
-please document a convention that works for you. This should explain 
-where the '0' above comes from for example. And I'm not a fan of s/w 
-folks making up version numbers.
+I'd appreciate having someone else take another look at the signal
+handling code, the atomics, and the DT bindings and provide another
+Ack for those.
 
-Rob
+The remaining open question is about the 32-bit time_t interfaces.
+With 4.20, I did not manage to get the required system calls in place
+for using 64-bit time_t in a new architecture, so you will at least
+start out using 32-bit time_t and likely have to keep supporting
+that going forward, unless we decide to break the ABI here later
+on .This is something we normally don't do, but we might make
+an exception here, under the assumption that there are no
+existing users with the ABI. We can debate that once we get there.
+
+       Arnd
