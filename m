@@ -1,112 +1,57 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v8 0/9] PCI: mediatek: fixup find_port, enable_msi and
- add PM, module support
-Date: Wed, 17 Oct 2018 16:19:54 +0100
-Message-ID: <20181017151954.GA9374@e107981-ln.cambridge.arm.com>
-References: <1539590940-13355-1-git-send-email-honghui.zhang@mediatek.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: phy: Update SERDES_MAX to be SERDES_MAX
+ + 1
+Date: Wed, 17 Oct 2018 10:23:54 -0500
+Message-ID: <20181017152354.GA9268@bogus>
+References: <cover.1539036280.git.gustavo@embeddedor.com>
+ <3a1a95a4832af33dcd1842b0298d257bbcf1f5ab.1539036280.git.gustavo@embeddedor.com>
+ <20181009072723.mshyvplpo2xmkyfl@qschulz>
+ <dab86dfb-d56b-b7c3-8e2a-6955803a2842@embeddedor.com>
+ <20181017150931.GA385@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1539590940-13355-1-git-send-email-honghui.zhang@mediatek.com>
+In-Reply-To: <20181017150931.GA385@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: honghui.zhang@mediatek.com
-Cc: bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com, ulf.hansson@linaro.org, marc.zyngier@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, youlin.pei@mediatek.com, yt.shen@mediatek.com, jianjun.wang@mediatek.com, yong.wu@mediatek.com
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: Quentin Schulz <quentin.schulz@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 15, 2018 at 04:08:51PM +0800, honghui.zhang@mediatek.com wrote:
-> From: Honghui Zhang <honghui.zhang@mediatek.com>
+On Wed, Oct 17, 2018 at 10:09:31AM -0500, Rob Herring wrote:
+> On Tue, Oct 16, 2018 at 10:44:52AM +0200, Gustavo A. R. Silva wrote:
+> > Hi,
+> > 
+> > On 10/9/18 9:27 AM, Quentin Schulz wrote:
+> > > Hi Gustavo,
+> > > 
+> > > On Tue, Oct 09, 2018 at 12:21:36AM +0200, Gustavo A. R. Silva wrote:
+> > >> SERDES_MAX is a valid value to index ctrl->phys in
+> > >> drivers/phy/mscc/phy-ocelot-serdes.c. But, currently,
+> > >> there is an out-of-bounds bug in the mentioned driver
+> > >> when reading from ctrl->phys, because the size of
+> > >> array ctrl->phys is SERDES_MAX.
+> > >>
+> > >> Partially fix this by updating SERDES_MAX to be SERDES6G_MAX + 1.
+> > >>
+> > >> Notice that this is the first part of the solution to
+> > >> the out-of-bounds bug mentioned above. Although this
+> > >> change is not dependent on any other one.
+> > >>
+> > > 
+> > > Reviewed-by: Quentin Schulz <quentin.schulz@bootlin.com>
+> > > 
+> > 
+> > Friendly ping. Who can you take this?
 > 
-> This patchset includes misc patchs:
-> 
-> The patch 1 fixup the mtk_pcie_find_port logic which will cause system
-> could not touch the EP's configuration space that connected to PCIe slot 1.
-> 
-> The patch 2 fixup the class type for MT7622.
-> The patch 6 fixup the enable msi logic, the operation to enable MSI
-> should be after system clock is enabled. Call mtk_pcie_enable_msi in
-> mtk_pcie_startup_port_v2 since the clock was all enabled at that time.
-> 
-> The patch 7 was rebased and refactor of the v4 patch[1], changes are:
->  -Add PM support for MT7622.
->  -Using mtk_pcie_enable_port to re-establish the link when resumed.
->  -Rebased on this patchset.
-> 
-> The patch 9 add loadable kernel module support.
-> 
-> [1] https://patchwork.kernel.org/patch/10479079
+> Applied. No need (nor benefit) to ping me. You can check the status of 
+> DT patches on patchwork[1]. If it is there and in the "New" state, it is 
+> in my queue.
 
-I have pushed out (after basically rewriting all commit logs and
-squashing two patches) this version of the patchset to my pci/mediatek
-branch for v4.20, keeping in mind that you must follow-up with Bjorn on
-this patch:
+Actually, this doesn't apply to my tree as the file doesn't exist. It 
+needs to go thru the phy tree. You didn't Cc the maintainer nor list, so 
+resend.
 
-https://patchwork.ozlabs.org/patch/984668/
+Acked-by: Rob Herring <robh@kernel.org>
 
-that we shall still consider for v4.21.
-
-Lorenzo
-
-> Change since v7:
->  - Add Acked-by tags from Ryder Lee.
->  - Add Fix tags for patch 2(Fix calss type for MT7622 as PCI_CLASS_BRIDGE_PCI)
->    and patch 6(Fixup enable MSI logic by enable MSI after clock enabled)
-> 
-> Change since v6:
->  - Remove the pci_unmap_iospace when remove the device since the
->    devm_pci_remap_iospace is an devm_ version.
->  - Commit message changed for patch 2(Fix class type for MT7622 as PCI_CLASS_BRIDGE_PCI).
->  - Capitilizing "MSI" and "PM" in the patch title.
-> 
-> Change since v5:
->  - A bit improvement of mtk_pcie_find_port suggest by Lorenzo.
->    MSI after clock enabled).
->  - Add Acked-by tags from Ryder.
-> 
-> Change since v4:
->  - Add patch 2 to fixup class type for MT7622.
->  - Add patch 3 to remove the redundant dev->pm_domain check
->  - Add patch 4 to covert to use pci_host_probe
->  - Add patch 5 to re-arrange the function define, this is a prepare patch for
->    fixup the enable_msi logic, no functional changed have been made by this one.
->  - Add patch 8 to save the GIC IRQ in mtk_pcie_port as a prepare patch for tear
->    down the irq when remove the kernel module.
->  - Re-arrange the find_port flow suggest by Lorenzo to make the code parse easier
->    for the patch 1.
->  - Remove the .pm_support in mtk_pcie_soc in patch 7 since if system pm was not
->    supported, then those pm callbacks will never be executed for MT7622. So the
->    .pm_support is not needed.
-> 
-> Change since v3:
->  - Remove pm_runtime_XXX ops in suspend and resume callbacks in the third patch.
->  - Rebase to 4.19-rc1.
-> 
-> Change since v2:
->  - Fix the list_for_each_entry_safe parameter error.
->  - Add Ryder's Acked-by flag.
-> 
-> Change since v1:
->  - A bit of code refact of the first patch suggested by Andy Shevchenko, and
->    commit message updated.
-> 
-> Honghui Zhang (9):
->   PCI: mediatek: Using slot's devfn for compare to fix
->     mtk_pcie_find_port logic
->   PCI: mediatek: Fix class type for MT7622 as PCI_CLASS_BRIDGE_PCI
->   PCI: mediatek: Remove the redundant dev->pm_domain check
->   PCI: mediatek: Convert to use pci_host_probe()
->   PCI: mediatek: Move the mtk_pcie_startup_port_v2 function's define
->     after mtk_pcie_setup_irq
->   PCI: mediatek: Fixup enable MSI logic by enable MSI after clock
->     enabled
->   PCI: mediatek: Add system PM support for MT2712 and MT7622
->   PCI: mediatek: Save the GIC IRQ in mtk_pcie_port
->   PCI: mediatek: Add loadable kernel module support
-> 
->  drivers/pci/controller/Kconfig         |   2 +-
->  drivers/pci/controller/pcie-mediatek.c | 319 +++++++++++++++++++++------------
->  2 files changed, 204 insertions(+), 117 deletions(-)
-> 
-> -- 
-> 2.6.4
-> 
+Rob
