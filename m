@@ -1,55 +1,47 @@
-From: Roy Im <roy.im.opensource@diasemi.com>
-Subject: [RESEND PATCH V7 1/3] MAINTAINERS: da7280 updates to the Dialog
- Semiconductor search terms
-Date: Wed, 17 Oct 2018 09:57:56 +0900
-Message-ID: <28bb25a8b7df07b845eed1a5dd5524a4b6f7b9e8.1539737877.git.Roy.Im@diasemi.com>
-References: <cover.1539737877.git.Roy.Im@diasemi.com>
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V13 0/4] C-SKY(csky) Linux Intc Driver
+Date: Wed, 17 Oct 2018 09:55:12 +0800
+Message-ID: <20181017015511.GA21519@guoren-Inspiron-7460>
+References: <cover.1539696960.git.ren_guo@c-sky.com>
+ <3fff53d8-fca0-fee4-ae3b-c8b08dc29a37@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1539737877.git.Roy.Im@diasemi.com>
+Content-Disposition: inline
+In-Reply-To: <3fff53d8-fca0-fee4-ae3b-c8b08dc29a37@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Support Opensource <support.opensource@diasemi.com>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, will.deacon@arm.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Marc,
 
-This patch adds the da7280 bindings doc and driver to the Dialog
-Semiconductor support list.
+On Tue, Oct 16, 2018 at 03:41:05PM +0100, Marc Zyngier wrote:
+> Guo,
+> 
+> On 16/10/18 15:08, Guo Ren wrote:
+> > This is about 13th patchset for C-SKY linux intc drivers and it should pair
+> > with 9th kernel patchset. Timer drivers are seperated according to
+> > requirements.
+> > 
+> > This version patch improve the comment in commit-msg and move the
+> > changelog to the end with "---", so git am will ignore the changelog.
+> > 
+> > Hope it could be merged into linux-4.20 and I'm very grateful to any help.
+> 
+> I can't really see that happening, in all honesty. On its own, this code
+> is not very useful (it cannot compile standalone), and I haven't seen a
+> clear indication that the rest of the architecture code is going to be
+> merged for 4.20.
+Thank you very much for your frankness.
 
-Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
+> If the arch code is actually being merged for 4.20, then please add my:
+> 
+> 	Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+> 
+> to these 4 patches, and get the whole thing merged in one go.
+> 
+Got it, thx for the conditional Reviewed-by.
 
----
-v7: No changes.
-v6: No changes.
-v5: No changes.
-v4: No changes.
-v3: No changes.
-v2: No changes.
-
-
- MAINTAINERS |    2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b22e7fd..1af587f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4313,6 +4313,7 @@ S:	Supported
- F:	Documentation/hwmon/da90??
- F:	Documentation/devicetree/bindings/mfd/da90*.txt
- F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
-+F:	Documentation/devicetree/bindings/input/dlg,da72??.txt
- F:	Documentation/devicetree/bindings/thermal/da90??-thermal.txt
- F:	Documentation/devicetree/bindings/regulator/da92*.txt
- F:	Documentation/devicetree/bindings/watchdog/da90??-wdt.txt
-@@ -4321,6 +4322,7 @@ F:	drivers/gpio/gpio-da90??.c
- F:	drivers/hwmon/da90??-hwmon.c
- F:	drivers/iio/adc/da91??-*.c
- F:	drivers/input/misc/da90??_onkey.c
-+F:	drivers/input/misc/da72??.[ch]
- F:	drivers/input/touchscreen/da9052_tsi.c
- F:	drivers/leds/leds-da90??.c
- F:	drivers/mfd/da903x.c
--- 
-end-of-patch for RESEND PATCH V7
+Best Regards
+ Guo Ren
