@@ -1,51 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: phy: Update SERDES_MAX to be SERDES_MAX
- + 1
-Date: Wed, 17 Oct 2018 10:09:31 -0500
-Message-ID: <20181017150931.GA385@bogus>
-References: <cover.1539036280.git.gustavo@embeddedor.com>
- <3a1a95a4832af33dcd1842b0298d257bbcf1f5ab.1539036280.git.gustavo@embeddedor.com>
- <20181009072723.mshyvplpo2xmkyfl@qschulz>
- <dab86dfb-d56b-b7c3-8e2a-6955803a2842@embeddedor.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V9 08/21] csky: Process management and Signal
+Date: Wed, 17 Oct 2018 17:11:00 +0200
+Message-ID: <CAK8P3a31sVAMCPXLqyqMpvj-gsxOmuf2qL0bT5crDQo0Wcg__g@mail.gmail.com>
+References: <cover.1539655731.git.ren_guo@c-sky.com> <9ae1d1609a49d976ae7659157507018b0c846423.1539655732.git.ren_guo@c-sky.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <dab86dfb-d56b-b7c3-8e2a-6955803a2842@embeddedor.com>
+In-Reply-To: <9ae1d1609a49d976ae7659157507018b0c846423.1539655732.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Quentin Schulz <quentin.schulz@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Guo Ren <ren_guo@c-sky.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Christoph Hellwig <hch@infradead.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, c-sky_gcc_upstream@c-sky.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 16, 2018 at 10:44:52AM +0200, Gustavo A. R. Silva wrote:
-> Hi,
-> 
-> On 10/9/18 9:27 AM, Quentin Schulz wrote:
-> > Hi Gustavo,
-> > 
-> > On Tue, Oct 09, 2018 at 12:21:36AM +0200, Gustavo A. R. Silva wrote:
-> >> SERDES_MAX is a valid value to index ctrl->phys in
-> >> drivers/phy/mscc/phy-ocelot-serdes.c. But, currently,
-> >> there is an out-of-bounds bug in the mentioned driver
-> >> when reading from ctrl->phys, because the size of
-> >> array ctrl->phys is SERDES_MAX.
-> >>
-> >> Partially fix this by updating SERDES_MAX to be SERDES6G_MAX + 1.
-> >>
-> >> Notice that this is the first part of the solution to
-> >> the out-of-bounds bug mentioned above. Although this
-> >> change is not dependent on any other one.
-> >>
-> > 
-> > Reviewed-by: Quentin Schulz <quentin.schulz@bootlin.com>
-> > 
-> 
-> Friendly ping. Who can you take this?
+On Tue, Oct 16, 2018 at 5:01 AM Guo Ren <ren_guo@c-sky.com> wrote:
+>
+> This patch adds files related to task_switch, sigcontext, signal,
+> fpu context switch.
+>
+> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> ---
+> Changelog:
+>  - abiv2/fpu.c: Userspace should never be sent NSIGXXX as a si_code.
+>    Use FPE_FLTUNK instead.
+>  - abiv2/fpu.c: Use force_sig_fault instead.
 
-Applied. No need (nor benefit) to ping me. You can check the status of 
-DT patches on patchwork[1]. If it is there and in the "New" state, it is 
-in my queue.
+I'm hesitant to provide a Reviewed-by: tag for this one, as I don't
+understand the signal handling enough myself, and it's something
+that should be reviewed properly because of the ABI implications.
 
-Rob
+Maybe someone else can have a closer look at this?
 
-[1] https://patchwork.ozlabs.org/project/devicetree-bindings/list/
+       Arnd
