@@ -1,161 +1,55 @@
-From: "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH v3 0/7] Add virtio-iommu driver
-Date: Wed, 17 Oct 2018 11:23:50 -0400
-Message-ID: <20181017111509-mutt-send-email-mst@kernel.org>
-References: <20181012145917.6840-1-jean-philippe.brucker@arm.com>
- <7874471b-3711-ca44-d220-5e756ac7db8c@redhat.com>
- <b2f929c3-b0df-acdc-c5e8-0d7ddf7ed964@arm.com>
- <c7167c51-d864-08f5-c128-f4b3257840ce@redhat.com>
- <40dddb20-6248-5bb0-e0ed-48bacd1867a1@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V9 13/21] csky: Library functions
+Date: Wed, 17 Oct 2018 17:24:36 +0200
+Message-ID: <CAK8P3a3hJ+Xt2xfTg=bkDBfahk7Z-3+Unt1MqmMQrRnCeJhVtg@mail.gmail.com>
+References: <cover.1539655731.git.ren_guo@c-sky.com> <f884af8fffa1645c2650292a3001a2fbfc4cc390.1539655732.git.ren_guo@c-sky.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
-Content-Disposition: inline
-In-Reply-To: <40dddb20-6248-5bb0-e0ed-48bacd1867a1@arm.com>
-List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
-List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
-List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
-List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
-List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
-Errors-To: kvmarm-bounces@lists.cs.columbia.edu
-Sender: kvmarm-bounces@lists.cs.columbia.edu
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kevin.tian@intel.com" <kevin.tian@intel.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "tnowicki@caviumnetworks.com" <tnowicki@caviumnetworks.com>, "jasowang@redhat.com" <jasowang@redhat.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "joro@8bytes.org" <joro@8bytes.org>, Will Deacon <Will.Deacon@arm.com>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Robin Murphy <Robin.Murphy@arm.com>, "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f884af8fffa1645c2650292a3001a2fbfc4cc390.1539655732.git.ren_guo@c-sky.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guo Ren <ren_guo@c-sky.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Christoph Hellwig <hch@infradead.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, c-sky_gcc_upstream@c-sky.com, linfei_chen@c-sky.com, Mao Han <han_mao@c-sky.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 17, 2018 at 12:54:28PM +0100, Jean-Philippe Brucker wrote:
-> On 16/10/2018 21:31, Auger Eric wrote:
-> > Hi Jean,
-> > =
+On Tue, Oct 16, 2018 at 5:02 AM Guo Ren <ren_guo@c-sky.com> wrote:
 
-> > On 10/16/18 8:44 PM, Jean-Philippe Brucker wrote:
-> >> On 16/10/2018 10:25, Auger Eric wrote:
-> >>> Hi Jean,
-> >>>
-> >>> On 10/12/18 4:59 PM, Jean-Philippe Brucker wrote:
-> >>>> Implement the virtio-iommu driver, following specification v0.8 [1].
-> >>>> Changes since v2 [2]:
-> >>>>
-> >>>> * Patches 2-4 allow virtio-iommu to use the PCI transport, since QEMU
-> >>>> =A0=A0 would like to phase out the MMIO transport. This produces a c=
-omplex
-> >>>> =A0=A0 topology where the programming interface of the IOMMU could a=
-ppear
-> >>>> =A0=A0 lower than the endpoints that it translates. It's not unheard=
- of (e.g.
-> >>>> =A0=A0 AMD IOMMU), and the guest easily copes with this.
-> >>>> =A0=A0 =
+> +++ b/arch/csky/lib/delay.c
+> @@ -0,0 +1,39 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/delay.h>
+> +
+> +void __delay(unsigned long loops)
+> +{
+> +       asm volatile (
+> +               "mov r0, r0\n"
+> +               "1:declt %0\n"
+> +               "bf     1b"
+> +               : "=r"(loops)
+> +               : "0"(loops));
+> +}
+> +EXPORT_SYMBOL(__delay);
+> +
+> +void __const_udelay(unsigned long xloops)
+> +{
+> +       unsigned long long loops;
+> +
+> +       loops = (unsigned long long)xloops * loops_per_jiffy * HZ;
+> +
+> +       __delay(loops >> 32);
+> +}
+> +EXPORT_SYMBOL(__const_udelay);
 
-> >>>> =A0=A0 The "Firmware description" section of the specification has b=
-een
-> >>>> =A0=A0 updated with all combinations of PCI, MMIO and DT, ACPI.
-> >>>
-> >>> I have a question wrt the FW specification. The IOMMU consumes 1 slot=
- in
-> >>> the PCI domain and one needs to leave a RID hole in the iommu-map.=A0=
- It
-> >>> is not obvious to me that this RID always is predictable given the pc=
-ie
-> >>> enumeration mechanism. Generally we have a coarse grain mapping of RID
-> >>> onto iommu phandles/STREAMIDs. Here, if I understand correctly we need
-> >>> to precisely identify the RID granted to the iommu. On QEMU this may
-> >>> depend on the instantiation order of the virtio-pci device right?
-> >> =
+I can't find any indication we discussed this part before. Can you
+explain (in the
+changelog and in a reply) if there is a reliable high-resolution clocksource
+available in the architecture? If you can read the elapsed time here instead of
+using the loops_per_jiffy estimate, that would make this more robust, as
+well as speed up the boot.
 
-> >> Yes, although it should all happen before you boot the guest, since
-> >> there is no hotplugging an IOMMU. Could you reserve a PCI slot upfront
-> >> and use it for virtio-iommu later? Or generate the iommu-map at the sa=
-me
-> >> time as generating the child node of the PCI RC?
-> > =
-
-> > Even when cold-plugging the PCIe devices through qemu CLI, this depends
-> > on the order of the pcie devices in the list I guess. I need to further
-> > experiment.
-> =
-
-> Please let me know how it goes. I guess the problem will be the same for
-> building IORT tables? You're also going to need a hole in the ID
-> mappings of the PCI root complex node.
-> =
-
-> >>> So
-> >>> this does not look trivial to build this info. Isn't it possible to do
-> >>> this exclusion at kernel level instead?
-> >> =
-
-> >> So in theory VIRTIO_F_IOMMU_PLATFORM already does that:
-> >> =
-
-> >> VIRTIO_F_IOMMU_PLATFORM(33)
-> >>=A0=A0=A0=A0 This feature indicates that the device is behind an IOMMU =
-that
-> >>=A0=A0=A0=A0 translates bus addresses from the device into physical add=
-resses in
-> >>=A0=A0=A0=A0 memory. If this feature bit is set to 0, then the device e=
-mits
-> >>=A0=A0=A0=A0 physical addresses which are not translated further, even =
-though an
-> >>=A0=A0=A0=A0 IOMMU may be present.
-> > =
-
-> > This tells the driver to use the dma api, right? =
-
-> =
-
-> That's how Linux implements the bit, install custom DMA ops when the bit
-> is absent. But it doesn't work for everyone and has caused a lot of
-> debate (https://patchwork.ozlabs.org/cover/946708/)
-> =
-
-> > Effectively this
-> > explicitly says whether the device is supposed to be upfront an IOMMU.
-> =
-
-> Yes. It's quite strange if you consider hotpluggable hardware, since
-> those devices shouldn't get to choose whether they are managed by an
-> IOMMU. For the IOMMU itself, it should be fine
-> =
-
-> >> For better or for worse, the guest has to implement it. If this feature
-> >> bit is unset for virtio-iommu, it does DMA on the physical address
-> >> space, regardless of what the static topology description says.
-> >> =
-
-> >> In practice it doesn't quite work. If your iommu-map describes the IOM=
-MU
-> >> as translating itself, Linux' OF code will wait for the IOMMU to be
-> >> probed before probing the IOMMU. Working around this with hacks is
-> >> possible, but I don't want to introduce more questionable code to OF a=
-nd
-> >> device tree bindings if there is any other way.
-> > Hum ok. I cannot really comment on this.
-> > =
-
-> > I just wanted to raise this concern about RID identfication.
-> =
-
-> We can always try. Relaxing iommu-map further would be one additional
-> patch to Documentation/devicetree/bindings/pci/pci-iommu.txt, and one to
-> drivers/iommu/of-iommu.c. I'd rather make it a separate RFC.
-> =
-
-> Since we need acks from an OF maintainer and I'd also like Joerg's
-> approval for adding a new driver to the IOMMU tree, I think it's too
-> late for this iteration. I wasn't intending for this to go into 4.20,
-> just have something to discuss at KVM forum next week.
-> =
-
-> Thanks,
-> Jean
-
-OK then. I'd appreciate it if you mark patches that aren't
-intended to be merged as RFC in subject line.
-Thanks!
-
--- =
-
-MST
+If you can't do that in general, that's fine, and you can add my
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
