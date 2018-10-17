@@ -1,51 +1,45 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/5] dt-bindings: add more optional properties for
- elan_i2c touchpads
-Date: Wed, 17 Oct 2018 15:15:22 -0500
-Message-ID: <20181017201522.GA26525@bogus>
-References: <20181012142413.26107-1-benjamin.tissoires@redhat.com>
- <20181012142413.26107-4-benjamin.tissoires@redhat.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH V12 00/14] Krait clocks + Krait CPUfreq
+Date: Wed, 17 Oct 2018 13:16:53 -0700
+Message-ID: <153980741313.5275.10376918222904341760@swboyd.mtv.corp.google.com>
+References: <1534248753-2440-1-git-send-email-sricharan@codeaurora.org>
+ <2ae96741-94c0-ba4c-fc19-05d33179683c@codeaurora.org>
+ <d682580d-5070-0271-197f-29d988172937@codeaurora.org>
+ <D8FC68C0-2572-4A86-81D9-D0099D314A45@gmail.com>
+ <F5A89365-C613-4FE2-AD32-DC0AC6DF380B@gmail.com>
+ <fb81b8d5-3d24-b413-8d59-33cb70e46f8b@codeaurora.org>
+ <153979105280.5275.841088095583550635@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181012142413.26107-4-benjamin.tissoires@redhat.com>
+In-Reply-To: <153979105280.5275.841088095583550635@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, KT Liao <kt.liao@emc.com.tw>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Craig <ctatlor97@gmail.com>, Sricharan R <sricharan@codeaurora.org>, andy.gross@linaro.org, david.brown@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-soc@vger.kernel.org, linux@arm.linux.org.uk, linux@armlinux.org.uk, mark.rutland@arm.com, mturquette@baylibre.com, niklas.cassel@linaro.org, rjw@rjwysocki.net, robh@kernel.org, sboyd@codeaurora.org, sudeep.holla@arm.com, thierry.escande@linaro.org, viresh.kumar@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 12, 2018 at 04:24:11PM +0200, Benjamin Tissoires wrote:
-> Some new touchpads IC are connected through PS/2 and I2C. On some of these
-> new IC, the I2C part doesn't have all of the information available.
-> We need to be able to forward the touchpad parameters from PS/2 and
-> thus, we need those new optional properties.
-> 
-> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1628715
-> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> ---
->  Documentation/devicetree/bindings/input/elan_i2c.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/elan_i2c.txt b/Documentation/devicetree/bindings/input/elan_i2c.txt
-> index 797607460735..ace6bcb0b4eb 100644
-> --- a/Documentation/devicetree/bindings/input/elan_i2c.txt
-> +++ b/Documentation/devicetree/bindings/input/elan_i2c.txt
-> @@ -13,6 +13,14 @@ Optional properties:
->    pinctrl binding [1]).
->  - vcc-supply: a phandle for the regulator supplying 3.3V power.
->  - elan,trackpoint: touchpad can support a trackpoint (boolean)
-> +- elan,clickpad: touchpad is a clickpad (the entire surface is a button)
+Quoting Stephen Boyd (2018-10-17 08:44:12)
+> Quoting Sricharan R (2018-09-20 06:03:31)
+> > =
 
-> +- elan,max_x: the maximum reported value on the X axis
-> +- elan,max_y: the maximum reported value on the Y axis
-> +- elan,min_x: the minimum reported value on the X axis
-> +- elan,min_y: the minimum reported value on the Y axis
-> +- elan,x_res: the resolution of the X axis (in units per mm)
-> +- elan,y_res: the resolution of the Y axis (in units per mm)
-> +- elan,width: max reported width of a blob
+> > =
 
-Can't we use standard touchscreen properties here? (Yes, I get this is a 
-touchpad, not touchscreen).
+> > On 9/20/2018 1:54 AM, Craig wrote:
+> > > Yup, this patch seems to have fixed the higher frequencies from the q=
+uick test I did.
+> > >
+> >       Thanks !!. Can i take that as =
 
-Rob
+> >           Tested-by: Craig Tatlor <ctatlor97@gmail.com>  ?
+> > =
+
+> =
+
+> Is this patch series going to be resent?
+> =
+
+
+Nevermind. Looking at it I think I can apply all the clk ones and we're
+good to go. If you can send a followup patch series to change the
+registration and provider APIs to be clk_hw instead of clk based I would
+appreciate it.
