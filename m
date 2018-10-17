@@ -1,29 +1,25 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v11 1/5] dt-bindings: add binding for i.MX8MQ CCM
-Date: Wed, 17 Oct 2018 11:02:42 -0700
-Message-ID: <153979936233.5275.16984530832638476058@swboyd.mtv.corp.google.com>
-References: <1539157520-25081-1-git-send-email-abel.vesa@nxp.com>
- <1539157520-25081-2-git-send-email-abel.vesa@nxp.com>
+Subject: Re: [PATCH 2/7] clk: imx6ul: add mmdc1 ipg clock
+Date: Wed, 17 Oct 2018 11:16:41 -0700
+Message-ID: <153980020125.5275.8353288870810048258@swboyd.mtv.corp.google.com>
+References: <1535701998-20443-1-git-send-email-Anson.Huang@nxp.com>
+ <1535701998-20443-3-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539157520-25081-2-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <1535701998-20443-3-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <aisheng.dong@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-imx@nxp.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>
+To: Anson Huang <Anson.Huang@nxp.com>, aisheng.dong@nxp.com, clement.peron@devialet.com, colin.didier@devialet.com, devicetree@vger.kernel.org, fabio.estevam@nxp.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, matteo.lisi@engicam.com, michael@amarulasolutions.com, mturquette@baylibre.com, ping.bai@nxp.com, robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org, shengjiu.wang@nxp.com
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Abel Vesa (2018-10-10 00:45:16)
-> From: Lucas Stach <l.stach@pengutronix.de>
+Quoting Anson Huang (2018-08-31 00:53:13)
+> i.MX6UL has MMDC1 ipg clock in CCM CCGR, add it into
+> clock tree for clock management.
 > =
 
-> This adds the binding for the i.MX8MQ Clock Controller Module.
-> =
-
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
 
-Looks ok, but I'll wait for the resend.
+Applied to clk-next
