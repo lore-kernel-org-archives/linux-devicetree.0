@@ -1,168 +1,376 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v2 00/22] clk: at91: Rework DT bindings
-Date: Wed, 17 Oct 2018 19:27:19 +0200
-Message-ID: <20181017172719.GV17341@piout.net>
-References: <20181016142200.19741-1-alexandre.belloni@bootlin.com>
- <153979502020.5275.12406468543355327223@swboyd.mtv.corp.google.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH 3/3] crypto: qce: ice: Add support for Inline Crypto
+ Engine
+Date: Wed, 17 Oct 2018 10:39:07 -0700
+Message-ID: <48c7da0d-4e57-bc36-a683-94088b3b8319@infradead.org>
+References: <1539789476-6098-1-git-send-email-anilc@codeaurora.org>
+ <1539789476-6098-4-git-send-email-anilc@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <153979502020.5275.12406468543355327223@swboyd.mtv.corp.google.com>
+In-Reply-To: <1539789476-6098-4-git-send-email-anilc@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Michael Turquette <mturquette@baylibre.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: AnilKumar Chimata <anilc@codeaurora.org>, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, herbert@gondor.apana.org.au, davem@davemloft.net
+Cc: linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/10/2018 09:50:20-0700, Stephen Boyd wrote:
-> Quoting Alexandre Belloni (2018-10-16 07:21:38)
-> > This is the promised rework of the at91 PMC clocks driver. It is mainly
-> > necessary to remove the DTC warnings but it also complies with the CCF
-> > rule that there should be one node per controller instead of one node
-> > per clock.
-> > 
-> > This only handles the PMC, I'm planning to also rework the SCKC bindings
-> > later (without breaking the DT ABI).
-> > 
-> > The series is based on top of v4.19-rc1.
-> > 
-> > The first two patches are actually fixes and may be considered for this
-> > cycle.
-> > 
-> > I'll take the device tree changes through the at91 tree as DT backward
-> > compatibility is working.
-> > 
+On 10/17/18 8:17 AM, AnilKumar Chimata wrote:
+> This patch adds support for Inline Crypto Engine (ICE), which
+> is embedded into storage device/controller such as UFS/eMMC.
+> ICE is intended for high throughput cryptographic encryption
+> or decryption of storage data.
 > 
-> I get the following warnings and errors from my auto checker script:
+> Signed-off-by: AnilKumar Chimata <anilc@codeaurora.org>
+> ---
+>  Documentation/crypto/msm/ice.txt |  235 ++++++
+>  drivers/crypto/Kconfig           |   10 +
+>  drivers/crypto/qce/Makefile      |    1 +
+>  drivers/crypto/qce/ice.c         | 1613 ++++++++++++++++++++++++++++++++++++++
+>  drivers/crypto/qce/iceregs.h     |  159 ++++
+>  include/crypto/ice.h             |   80 ++
+>  6 files changed, 2098 insertions(+)
+>  create mode 100644 Documentation/crypto/msm/ice.txt
+>  create mode 100644 drivers/crypto/qce/ice.c
+>  create mode 100644 drivers/crypto/qce/iceregs.h
+>  create mode 100644 include/crypto/ice.h
 > 
-> ERROR: need consistent spacing around '+' (ctx:WxV)
-> #167: FILE: drivers/clk/at91/sama5d4.c:137:
-> +       sama5d4_pmc = pmc_data_allocate(PMC_MCK2 +1,
->                                                  ^
-> 
-> drivers/clk/at91/clk-i2s-mux.c:49:15: warning: symbol 'at91_clk_i2s_mux_register' was not declared. Should it be static?
-> drivers/clk/at91/clk-audio-pll.c:447:15: warning: symbol 'at91_clk_register_audio_pll_frac' was not declared. Should it be static?
-> drivers/clk/at91/clk-audio-pll.c:477:15: warning: symbol 'at91_clk_register_audio_pll_pad' was not declared. Should it be static?
-> drivers/clk/at91/clk-audio-pll.c:508:15: warning: symbol 'at91_clk_register_audio_pll_pmc' was not declared. Should it be static?
-> drivers/clk/at91/sama5d4.c:123 sama5d4_pmc_setup() warn: unsigned 'i' is never less than zero.
-> drivers/clk/at91/sama5d4.c:129 sama5d4_pmc_setup() warn: unsigned 'i' is never less than zero.
-> drivers/clk/at91/sama5d2.c:140 sama5d2_pmc_setup() warn: unsigned 'i' is never less than zero.
-> drivers/clk/at91/sama5d2.c:146 sama5d2_pmc_setup() warn: unsigned 'i' is never less than zero.
-> drivers/clk/at91/at91sam9x5.c:132 at91sam9x5_pmc_setup() warn: unsigned 'i' is never less than zero.
-> drivers/clk/at91/at91sam9x5.c:138 at91sam9x5_pmc_setup() warn: unsigned 'i' is never less than zero.
-> drivers/clk/at91/at91sam9rl.c:76 at91sam9rl_pmc_setup() warn: unsigned 'i' is never less than zero.
-> drivers/clk/at91/at91sam9rl.c:82 at91sam9rl_pmc_setup() warn: unsigned 'i' is never less than zero.
-> drivers/clk/at91/at91sam9260.c:341 at91sam926x_pmc_setup() warn: unsigned 'i' is never less than zero.
-> drivers/clk/at91/at91sam9260.c:347 at91sam926x_pmc_setup() warn: unsigned 'i' is never less than zero.
-> 
-> I fixed them with the below patch, that I'll squash into the right
-> place. Things look good!
-> 
+> diff --git a/Documentation/crypto/msm/ice.txt b/Documentation/crypto/msm/ice.txt
+> new file mode 100644
+> index 0000000..58f7081
+> --- /dev/null
+> +++ b/Documentation/crypto/msm/ice.txt
+> @@ -0,0 +1,235 @@
+> +Introduction:
+> +=============
+> +Storage encryption has been one of the most required feature from security
 
-The patch seems good to me.
+                                                        features
 
-> diff --git a/drivers/clk/at91/at91sam9260.c b/drivers/clk/at91/at91sam9260.c
-> index 49aeee6c31a6..b1af5a395423 100644
-> --- a/drivers/clk/at91/at91sam9260.c
-> +++ b/drivers/clk/at91/at91sam9260.c
-> @@ -334,7 +334,7 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
->  	const char *slck_name;
->  	struct regmap *regmap;
->  	struct clk_hw *hw;
-> -	unsigned int i;
-> +	int i;
->  	bool bypass;
->  
->  	i = of_property_match_string(np, "clock-names", "slow_xtal");
-> diff --git a/drivers/clk/at91/at91sam9rl.c b/drivers/clk/at91/at91sam9rl.c
-> index 5532fba5825b..5aeef68b4bdd 100644
-> --- a/drivers/clk/at91/at91sam9rl.c
-> +++ b/drivers/clk/at91/at91sam9rl.c
-> @@ -70,7 +70,7 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
->  	const char *parent_names[6];
->  	struct regmap *regmap;
->  	struct clk_hw *hw;
-> -	unsigned int i;
-> +	int i;
->  
->  	i = of_property_match_string(np, "clock-names", "slow_clk");
->  	if (i < 0)
-> diff --git a/drivers/clk/at91/at91sam9x5.c b/drivers/clk/at91/at91sam9x5.c
-> index 3cdf227ce159..2fe225a697df 100644
-> --- a/drivers/clk/at91/at91sam9x5.c
-> +++ b/drivers/clk/at91/at91sam9x5.c
-> @@ -125,7 +125,7 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
->  	const char *parent_names[6];
->  	struct regmap *regmap;
->  	struct clk_hw *hw;
-> -	unsigned int i;
-> +	int i;
->  	bool bypass;
->  
->  	i = of_property_match_string(np, "clock-names", "slow_clk");
-> diff --git a/drivers/clk/at91/clk-audio-pll.c b/drivers/clk/at91/clk-audio-pll.c
-> index 96e3c6405351..36d77146a3bd 100644
-> --- a/drivers/clk/at91/clk-audio-pll.c
-> +++ b/drivers/clk/at91/clk-audio-pll.c
-> @@ -43,6 +43,8 @@
->  #include <linux/regmap.h>
->  #include <linux/slab.h>
->  
-> +#include "pmc.h"
+> +point of view. QTI based storage encryption solution uses general purpose
+> +crypto engine. While this kind of solution provide a decent amount of
+
+                                              provides
+
+> +performance, it falls short as storage speed is improving significantly
+> +continuously. To overcome performance degradation, newer chips are going to
+> +have Inline Crypto Engine (ICE) embedded into storage device. ICE is supposed
+> +to meet the line speed of storage devices.
 > +
->  #define AUDIO_PLL_DIV_FRAC	BIT(22)
->  #define AUDIO_PLL_ND_MAX	(AT91_PMC_AUDIO_PLL_ND_MASK >> \
->  					AT91_PMC_AUDIO_PLL_ND_OFFSET)
-> diff --git a/drivers/clk/at91/clk-i2s-mux.c b/drivers/clk/at91/clk-i2s-mux.c
-> index dfdffa5409e6..fe6ce172b8b0 100644
-> --- a/drivers/clk/at91/clk-i2s-mux.c
-> +++ b/drivers/clk/at91/clk-i2s-mux.c
-> @@ -14,6 +14,8 @@
->  
->  #include <soc/at91/atmel-sfr.h>
->  
-> +#include "pmc.h"
+> +Hardware Description
+> +====================
+> +ICE is a HW block that is embedded into storage device such as UFS/eMMC. By
+
+s/HW/hardware/                                     devices
+
+> +default, ICE works in bypass mode i.e. ICE HW does not perform any crypto
+> +operation on data to be processed by storage device. If required, ICE can be
+> +configured to perform crypto operation in one direction (i.e. either encryption
+> +or decryption) or in both direction(both encryption & decryption).
+
+                             directions (both ...
+
 > +
->  struct clk_i2s_mux {
->  	struct clk_hw hw;
->  	struct regmap *regmap;
-> diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
-> index 07f1f1d613ff..d69ad96fe988 100644
-> --- a/drivers/clk/at91/sama5d2.c
-> +++ b/drivers/clk/at91/sama5d2.c
-> @@ -133,7 +133,7 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
->  	const char *parent_names[6];
->  	struct regmap *regmap, *regmap_sfr;
->  	struct clk_hw *hw;
-> -	unsigned int i;
-> +	int i;
->  	bool bypass;
+> +When a switch between the operation modes(plain to crypto or crypto to plain)
+
+                                       modes (plain ...
+
+> +is desired for a particular partition, SW must complete all transactions for
+
+s/SW/software/
+
+> +that particular partition before switching the crypto mode i.e. no crypto, one
+
+                                                  crypto mode;
+
+> +direction crypto or both direction crypto operation. Requests for other
+
+                            directions
+
+> +partitions are not impacted due to crypto mode switch.
+> +
+> +ICE HW currently supports AES128/256 bit ECB & XTS mode encryption algorithms.
+> +
+> +Keys for crypto operations are loaded from SW. Keys are stored in a lookup
+> +table(LUT) located inside ICE HW. Maximum of 32 keys can be loaded in ICE key
+> +LUT. A Key inside the LUT can be referred using a key index.
+
+                                    referred to using
+
+> +
+> +SW Description
+> +==============
+> +ICE HW has categorized ICE registers in 2 groups: those which can be accessed by
+> +only secure side i.e. TZ and those which can be accessed by non-secure side such
+
+at least tell the reader what TZ and HLOS mean...
+
+> +as HLOS as well. This requires that ICE driver to be split in two pieces: one
+
+                                  that the ICE driver be split into two pieces: one
+
+> +running from TZ space and another from HLOS space.
+> +
+> +ICE driver from TZ would configure keys as requested by HLOS side.
+> +
+> +ICE driver on HLOS side is responsible for initialization of ICE HW.
+> +
+> +SW Architecture Diagram
+> +=======================
+> +Following are all the components involved in the ICE driver for control path:
+> +
+> ++++++++++++++++++++++++++++++++++++++++++
+> ++               App layer               +
+> ++++++++++++++++++++++++++++++++++++++++++
+> ++             System layer              +
+> ++   ++++++++         +++++++            +
+> ++   + VOLD +         + PFM +            +
+> ++   ++++++++         +++++++            +
+> ++         ||         ||                 +
+> ++         ||         ||                 +
+> ++         \/         \/                 +
+> ++     +++++++++++++++++++++++++++       +
+> ++     + LibQSEECom / cryptfs_hw +       +
+> ++     +++++++++++++++++++++++++++       +
+> ++++++++++++++++++++++++++++++++++++++++++
+> ++             Kernel                    +       +++++++++++++++++
+> ++                                       +       +     KMS       +
+> ++  +++++++  +++++++++++  +++++++++++    +       +++++++++++++++++
+> ++  + ICE +  + Storage +  + QSEECom +    +       +   ICE Driver  +
+> ++++++++++++++++++++++++++++++++++++++++++ <===> +++++++++++++++++
+> +               ||                                    ||
+> +               ||                                    ||
+> +               \/                                    \/
+> ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> ++                      Storage Device                           +
+> ++                      ++++++++++++++                           +
+> ++                      +   ICE HW   +                           +
+> ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> +
+> +Use Cases:
+> +----------
+> +a) Device bootup
+> +ICE HW is detected during bootup time and corresponding probe function is
+> +called. ICE driver parses its data from device tree node. ICE HW and storage
+> +HW are tightly coupled. Storage device probing is dependent upon ICE device
+> +probing. ICE driver configures all the required registers to put the ICE HW
+> +in bypass mode.
+> +
+> +b) Configuring keys
+> +Currently, there are couple of use cases to configure the keys.
+> +
+> +1) Full Disk Encryption(FDE)
+> +System layer(VOLD) at invocation of apps layer would call libqseecom to create
+> +the encryption key. Libqseecom calls qseecom driver to communicate with KMS
+> +module on the secure side i.e. TZ. KMS would call ICE driver on the TZ side to
+> +create and set the keys in ICE HW. At the end of transaction, VOLD would have
+> +key index of key LUT where encryption key is present.
+> +
+> +2) Per File Encryption (PFE)
+> +Per File Manager(PFM) calls QSEECom api to create the key. PFM has a peer comp-
+
+Preferably don't split (hyphenate) "component."  But if you must, it should be com-
+ponent.
+
+> +onent(PFT) at kernel layer which gets the corresponding key index from PFM.
+> +
+> +Following are all the components involved in the ICE driver for data path:
+> +
+> +       +++++++++++++++++++++++++++++++++++++++++
+> +       +               App layer               +
+> +       +++++++++++++++++++++++++++++++++++++++++
+> +       +              VFS                      +
+> +       +---------------------------------------+
+> +       +         File System (EXT4)            +
+> +       +---------------------------------------+
+> +       +             Block Layer               +
+> +       + --------------------------------------+
+> +       +                              +++++++  +
+> +       +              dm-req-crypt => + PFT +  +
+> +       +                              +++++++  +
+> +       +                                       +
+> +       +---------------------------------------+
+> +       +    +++++++++++           +++++++      +
+> +       +    + Storage +           + ICE +      +
+> +       +++++++++++++++++++++++++++++++++++++++++
+> +       +                  ||                   +
+> +       +                  || (Storage Req with +
+> +       +                  \/  ICE parameters ) +
+> +       +++++++++++++++++++++++++++++++++++++++++
+> +       +          Storage Device               +
+> +       +          ++++++++++++++               +
+> +       +          +   ICE HW   +               +
+> +       +++++++++++++++++++++++++++++++++++++++++
+> +
+> +c) Data transaction
+> +Once the crypto key has been configured, VOLD/PFM creates device mapping for
+> +data partition. As part of device mapping VOLD passes key index, crypto
+> +algorithm, mode and key length to dm layer. In case of PFE, keys are provided
+> +by PFT as and when request is processed by dm-req-crypt. When any application
+> +needs to read/write data, it would go through DM layer which would add crypto
+> +information, provided by VOLD/PFT, to Request. For each Request, Storage driver
+> +would ask ICE driver to configure crypto part of request. ICE driver extracts
+> +crypto data from Request structure and provide it to storage driver which would
+
+                                          provides
+
+> +finally dispatch request to storage device.
+> +
+> +d) Error Handling
+> +Due to issue # 1 mentioned in "Known Issues", ICE driver does not register for
+> +any interrupt. However, it enables sources of interrupt for ICE HW. After each
+> +data transaction, Storage driver receives transaction completion event. As part
+> +of event handling, storage driver calls  ICE driver to check if any of ICE
+> +interrupt status is set. If yes, storage driver returns error to upper layer.
+> +
+> +Error handling would be changed in future chips.
+> +
+> +Interfaces
+> +==========
+> +ICE driver exposes interfaces for storage driver to :
+
+                                                    to:
+
+> +1. Get the global instance of ICE driver
+> +2. Get the implemented interfaces of the particular ice instance
+> +3. Initialize the ICE HW
+> +4. Reset the ICE HW
+> +5. Resume/Suspend the ICE HW
+> +6. Get the Crypto configuration for the data request for storage
+> +7. Check if current data transaction has generated any interrupt
+> +
+> +Driver Parameters
+> +=================
+> +This driver is built and statically linked into the kernel; therefore,
+> +there are no module parameters supported by this driver.
+> +
+> +There are no kernel command line parameters supported by this driver.
+> +
+> +Power Management
+> +================
+> +ICE driver does not do power management on its own as it is part of storage
+> +hardware. Whenever storage driver receives request for power collapse/suspend
+> +resume, it would call ICE driver which exposes APIs for Storage HW. ICE HW
+> +during power collapse or reset, wipes crypto configuration data. When ICE
+
+                                 ^no comma
+
+> +driver receives request to resume, it would ask ICE driver on TZ side to
+> +restore the configuration. ICE driver does not do anything as part of power
+> +collapse or suspend event.
+> +
+> +Interface:
+> +==========
+> +ICE driver exposes following APIs for storage driver to use:
+> +
+> +int (*init)(struct platform_device *, void *, ice_success_cb, ice_error_cb);
+> +	-- This function is invoked by storage controller during initialization of
+> +	storage controller. Storage controller would provide success and error call
+> +	backs which would be invoked asynchronously once ICE HW init is done.
+> +
+> +int (*reset)(struct platform_device *);
+> +	-- ICE HW reset as part of storage controller reset. When storage controller
+> +	received reset command, it would call reset on ICE HW. As of now, ICE HW
+> +	does not need to do anything as part of reset.
+> +
+> +int (*resume)(struct platform_device *);
+> +	-- ICE HW while going to reset, wipes all crypto keys and other data from ICE
+
+                                      ^no comma
+
+> +	HW. ICE driver would reconfigure those data as part of resume operation.
+> +
+> +int (*suspend)(struct platform_device *);
+> +	-- This API would be called by storage driver when storage device is going to
+> +	suspend mode. As of today, ICE driver does not do anything to handle suspend.
+> +
+> +int (*config)(struct platform_device *, struct request* , struct ice_data_setting*);
+> +	-- Storage driver would call this interface to get all crypto data required to
+> +	perform crypto operation.
+> +
+> +int (*status)(struct platform_device *);
+> +	-- Storage driver would call this interface to check if previous data transfer
+> +	generated any error.
+> +
+> +Config options
+> +==============
+> +This driver is enabled by the kernel config option CONFIG_CRYPTO_DEV_MSM_ICE.
+> +
+> +Dependencies
+> +============
+> +ICE driver depends upon corresponding ICE driver on TZ side to function
+> +appropriately.
+> +
+> +Known Issues
+> +============
+> +1. ICE HW emits 0s even if it has generated an interrupt
+
+That statement is unclear.  Emits where?  in a data stream?  in interrupt status?
+
+> +This issue has significant impact on how ICE interrupts are handled. Currently,
+> +ICE driver does not register for any of the ICE interrupts but enables the
+> +sources of interrupt. Once storage driver asks to check the status of interrupt,
+> +it reads and clears the clear status and provide read status to storage driver.
+
+               "clears the clear status"???         s/provide/provides/
+
+> +This mechanism though not optimal but prevents file-system corruption.
+
+mangled sentence above.
+
+> +This issue has been fixed in newer chips.
+> +
+> +2. ICE HW wipes all crypto data during power collapse
+> +This issue necessitate that ICE driver on TZ side store the crypto material
+
+              necessitates
+
+> +which is not required in the case of general purpose crypto engine.
+> +This issue has been fixed in newer chips.
+> +
+> +Further Improvements
+> +====================
+> +Currently, Due to PFE use case, ICE driver is dependent upon dm-req-crypt to
+
+              due
+
+> +provide the keys as part of request structure. This couples ICE driver with
+> +dm-req-crypt based solution. It is under discussion to expose an IOCTL based
+
+                                                       to expose IOCTL based
+
+> +and registration based interface APIs from ICE driver. ICE driver would use
+> +these two interfaces to find out if any key exists for current request. If
+> +yes, choose the right key index received from IOCTL or registration based
+> +APIs. If not, dont set any crypto parameter in the request.
+
+                 don't
+
+> diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+> index a8c4ce0..e40750e 100644
+> --- a/drivers/crypto/Kconfig
+> +++ b/drivers/crypto/Kconfig
+> @@ -596,6 +596,16 @@ config CRYPTO_DEV_QCOM_RNG
+>  	  To compile this driver as a module, choose M here. The
+>            module will be called qcom-rng. If unsure, say N.
 >  
->  	i = of_property_match_string(np, "clock-names", "slow_clk");
-> diff --git a/drivers/clk/at91/sama5d4.c b/drivers/clk/at91/sama5d4.c
-> index 64b9f438f73b..e358be7f6c8d 100644
-> --- a/drivers/clk/at91/sama5d4.c
-> +++ b/drivers/clk/at91/sama5d4.c
-> @@ -116,7 +116,7 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
->  	const char *parent_names[5];
->  	struct regmap *regmap;
->  	struct clk_hw *hw;
-> -	unsigned int i;
-> +	int i;
->  	bool bypass;
->  
->  	i = of_property_match_string(np, "clock-names", "slow_clk");
-> @@ -134,7 +134,7 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
->  	if (IS_ERR(regmap))
->  		return;
->  
-> -	sama5d4_pmc = pmc_data_allocate(PMC_MCK2 +1,
-> +	sama5d4_pmc = pmc_data_allocate(PMC_MCK2 + 1,
->  					nck(sama5d4_systemck),
->  					nck(sama5d4_periph32ck), 0);
->  	if (!sama5d4_pmc)
+> +config CRYPTO_DEV_QTI_ICE
+> +	tristate "Qualcomm inline crypto engine accelerator"
+> +	default n
+
+Please drop the redundant "default n" since n is already the default.
+
+> +	depends on (ARCH_QCOM || COMPILE_TEST) && BLK_DEV_DM
+> +	help
+> +	  This driver supports Inline Crypto Engine for QTI chipsets, MSM8994
+> +	  and later, to accelerate crypto operations for storage needs.
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called ice.
+> +
+>  config CRYPTO_DEV_VMX
+>  	bool "Support for VMX cryptographic acceleration instructions"
+>  	depends on PPC64 && VSX
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+~Randy
