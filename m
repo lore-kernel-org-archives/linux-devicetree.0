@@ -1,29 +1,34 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v9 1/5] dt-bindings: add binding for i.MX8MQ CCM
-Date: Wed, 17 Oct 2018 13:00:09 -0700
-Message-ID: <153980640984.5275.2887987626386202064@swboyd.mtv.corp.google.com>
-References: <1537785597-26499-1-git-send-email-abel.vesa@nxp.com>
- <1537785597-26499-2-git-send-email-abel.vesa@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: uniphier: move cache-uniphier.txt to
+ vendor directory
+Date: Wed, 17 Oct 2018 15:00:22 -0500
+Message-ID: <20181017200022.GA14782@bogus>
+References: <1539318324-4938-1-git-send-email-yamada.masahiro@socionext.com>
+ <1539318324-4938-2-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537785597-26499-2-git-send-email-abel.vesa@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <1539318324-4938-2-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>, Anson Huang <anson.huang@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
-Cc: linux-imx@nxp.com, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Abel Vesa (2018-09-24 03:39:53)
-> From: Lucas Stach <l.stach@pengutronix.de>
-> =
-
-> This adds the binding for the i.MX8MQ Clock Controller Module.
-> =
-
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Fri, 12 Oct 2018 13:25:24 +0900, Masahiro Yamada wrote:
+> Now, the Socionext vendor directory is available at
+> Documentation/devicetree/bindings/arm/socionext/
+> 
+> Move cache-uniphier.txt over to it.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
+> 
+> Changes in v2:
+>   - New patch
+> 
+>  .../devicetree/bindings/arm/{uniphier => socionext}/cache-uniphier.txt    | 0
+>  1 file changed, 0 insertions(+), 0 deletions(-)
+>  rename Documentation/devicetree/bindings/arm/{uniphier => socionext}/cache-uniphier.txt (100%)
+> 
 
-I'll wait for the resend.
+Reviewed-by: Rob Herring <robh@kernel.org>
