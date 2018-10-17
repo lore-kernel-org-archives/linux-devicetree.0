@@ -1,192 +1,53 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 00/22] clk: at91: Rework DT bindings
-Date: Wed, 17 Oct 2018 09:50:20 -0700
-Message-ID: <153979502020.5275.12406468543355327223@swboyd.mtv.corp.google.com>
-References: <20181016142200.19741-1-alexandre.belloni@bootlin.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v9 5/6] arm64: zynqmp: Add DDRC node
+Date: Wed, 17 Oct 2018 18:52:52 +0200
+Message-ID: <20181017165252.GG22535@zn.tnic>
+References: <1539581388-23963-1-git-send-email-manish.narani@xilinx.com>
+ <1539581388-23963-6-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181016142200.19741-1-alexandre.belloni@bootlin.com>
+Content-Disposition: inline
+In-Reply-To: <1539581388-23963-6-git-send-email-manish.narani@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Michael Turquette <mturquette@baylibre.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Manish Narani <manish.narani@xilinx.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, mchehab@kernel.org, amit.kucheria@linaro.org, sudeep.holla@arm.com, olof@lixom.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Alexandre Belloni (2018-10-16 07:21:38)
-> This is the promised rework of the at91 PMC clocks driver. It is mainly
-> necessary to remove the DTC warnings but it also complies with the CCF
-> rule that there should be one node per controller instead of one node
-> per clock.
-> =
+On Mon, Oct 15, 2018 at 10:59:47AM +0530, Manish Narani wrote:
+> Add ddrc memory controller node in dts. The size mentioned in dts is
+> 0x30000, because we need to access DDR_QOS INTR registers located at
+> 0xFD090208 from this driver.
+> 
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> ---
+>  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> index 29ce234..a81d3b16 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> @@ -355,6 +355,13 @@
+>  			xlnx,bus-width = <64>;
+>  		};
+>  
+> +		mc: memory-controller@fd070000 {
+> +			compatible = "xlnx,zynqmp-ddrc-2.40a";
+> +			reg = <0x0 0xfd070000 0x0 0x30000>;
+> +			interrupt-parent = <&gic>;
+> +			interrupts = <0 112 4>;
+> +		};
+> +
+>  		gem0: ethernet@ff0b0000 {
+>  			compatible = "cdns,zynqmp-gem", "cdns,gem";
+>  			status = "disabled";
+> -- 
 
-> This only handles the PMC, I'm planning to also rework the SCKC bindings
-> later (without breaking the DT ABI).
-> =
+Still needs DT folks ACK.
 
-> The series is based on top of v4.19-rc1.
-> =
+-- 
+Regards/Gruss,
+    Boris.
 
-> The first two patches are actually fixes and may be considered for this
-> cycle.
-> =
-
-> I'll take the device tree changes through the at91 tree as DT backward
-> compatibility is working.
-> =
-
-
-I get the following warnings and errors from my auto checker script:
-
-ERROR: need consistent spacing around '+' (ctx:WxV)
-#167: FILE: drivers/clk/at91/sama5d4.c:137:
-+       sama5d4_pmc =3D pmc_data_allocate(PMC_MCK2 +1,
-                                                 ^
-
-drivers/clk/at91/clk-i2s-mux.c:49:15: warning: symbol 'at91_clk_i2s_mux_reg=
-ister' was not declared. Should it be static?
-drivers/clk/at91/clk-audio-pll.c:447:15: warning: symbol 'at91_clk_register=
-_audio_pll_frac' was not declared. Should it be static?
-drivers/clk/at91/clk-audio-pll.c:477:15: warning: symbol 'at91_clk_register=
-_audio_pll_pad' was not declared. Should it be static?
-drivers/clk/at91/clk-audio-pll.c:508:15: warning: symbol 'at91_clk_register=
-_audio_pll_pmc' was not declared. Should it be static?
-drivers/clk/at91/sama5d4.c:123 sama5d4_pmc_setup() warn: unsigned 'i' is ne=
-ver less than zero.
-drivers/clk/at91/sama5d4.c:129 sama5d4_pmc_setup() warn: unsigned 'i' is ne=
-ver less than zero.
-drivers/clk/at91/sama5d2.c:140 sama5d2_pmc_setup() warn: unsigned 'i' is ne=
-ver less than zero.
-drivers/clk/at91/sama5d2.c:146 sama5d2_pmc_setup() warn: unsigned 'i' is ne=
-ver less than zero.
-drivers/clk/at91/at91sam9x5.c:132 at91sam9x5_pmc_setup() warn: unsigned 'i'=
- is never less than zero.
-drivers/clk/at91/at91sam9x5.c:138 at91sam9x5_pmc_setup() warn: unsigned 'i'=
- is never less than zero.
-drivers/clk/at91/at91sam9rl.c:76 at91sam9rl_pmc_setup() warn: unsigned 'i' =
-is never less than zero.
-drivers/clk/at91/at91sam9rl.c:82 at91sam9rl_pmc_setup() warn: unsigned 'i' =
-is never less than zero.
-drivers/clk/at91/at91sam9260.c:341 at91sam926x_pmc_setup() warn: unsigned '=
-i' is never less than zero.
-drivers/clk/at91/at91sam9260.c:347 at91sam926x_pmc_setup() warn: unsigned '=
-i' is never less than zero.
-
-I fixed them with the below patch, that I'll squash into the right
-place. Things look good!
-
-diff --git a/drivers/clk/at91/at91sam9260.c b/drivers/clk/at91/at91sam9260.c
-index 49aeee6c31a6..b1af5a395423 100644
---- a/drivers/clk/at91/at91sam9260.c
-+++ b/drivers/clk/at91/at91sam9260.c
-@@ -334,7 +334,7 @@ static void __init at91sam926x_pmc_setup(struct device_=
-node *np,
- 	const char *slck_name;
- 	struct regmap *regmap;
- 	struct clk_hw *hw;
--	unsigned int i;
-+	int i;
- 	bool bypass;
- =
-
- 	i =3D of_property_match_string(np, "clock-names", "slow_xtal");
-diff --git a/drivers/clk/at91/at91sam9rl.c b/drivers/clk/at91/at91sam9rl.c
-index 5532fba5825b..5aeef68b4bdd 100644
---- a/drivers/clk/at91/at91sam9rl.c
-+++ b/drivers/clk/at91/at91sam9rl.c
-@@ -70,7 +70,7 @@ static void __init at91sam9rl_pmc_setup(struct device_nod=
-e *np)
- 	const char *parent_names[6];
- 	struct regmap *regmap;
- 	struct clk_hw *hw;
--	unsigned int i;
-+	int i;
- =
-
- 	i =3D of_property_match_string(np, "clock-names", "slow_clk");
- 	if (i < 0)
-diff --git a/drivers/clk/at91/at91sam9x5.c b/drivers/clk/at91/at91sam9x5.c
-index 3cdf227ce159..2fe225a697df 100644
---- a/drivers/clk/at91/at91sam9x5.c
-+++ b/drivers/clk/at91/at91sam9x5.c
-@@ -125,7 +125,7 @@ static void __init at91sam9x5_pmc_setup(struct device_n=
-ode *np,
- 	const char *parent_names[6];
- 	struct regmap *regmap;
- 	struct clk_hw *hw;
--	unsigned int i;
-+	int i;
- 	bool bypass;
- =
-
- 	i =3D of_property_match_string(np, "clock-names", "slow_clk");
-diff --git a/drivers/clk/at91/clk-audio-pll.c b/drivers/clk/at91/clk-audio-=
-pll.c
-index 96e3c6405351..36d77146a3bd 100644
---- a/drivers/clk/at91/clk-audio-pll.c
-+++ b/drivers/clk/at91/clk-audio-pll.c
-@@ -43,6 +43,8 @@
- #include <linux/regmap.h>
- #include <linux/slab.h>
- =
-
-+#include "pmc.h"
-+
- #define AUDIO_PLL_DIV_FRAC	BIT(22)
- #define AUDIO_PLL_ND_MAX	(AT91_PMC_AUDIO_PLL_ND_MASK >> \
- 					AT91_PMC_AUDIO_PLL_ND_OFFSET)
-diff --git a/drivers/clk/at91/clk-i2s-mux.c b/drivers/clk/at91/clk-i2s-mux.c
-index dfdffa5409e6..fe6ce172b8b0 100644
---- a/drivers/clk/at91/clk-i2s-mux.c
-+++ b/drivers/clk/at91/clk-i2s-mux.c
-@@ -14,6 +14,8 @@
- =
-
- #include <soc/at91/atmel-sfr.h>
- =
-
-+#include "pmc.h"
-+
- struct clk_i2s_mux {
- 	struct clk_hw hw;
- 	struct regmap *regmap;
-diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
-index 07f1f1d613ff..d69ad96fe988 100644
---- a/drivers/clk/at91/sama5d2.c
-+++ b/drivers/clk/at91/sama5d2.c
-@@ -133,7 +133,7 @@ static void __init sama5d2_pmc_setup(struct device_node=
- *np)
- 	const char *parent_names[6];
- 	struct regmap *regmap, *regmap_sfr;
- 	struct clk_hw *hw;
--	unsigned int i;
-+	int i;
- 	bool bypass;
- =
-
- 	i =3D of_property_match_string(np, "clock-names", "slow_clk");
-diff --git a/drivers/clk/at91/sama5d4.c b/drivers/clk/at91/sama5d4.c
-index 64b9f438f73b..e358be7f6c8d 100644
---- a/drivers/clk/at91/sama5d4.c
-+++ b/drivers/clk/at91/sama5d4.c
-@@ -116,7 +116,7 @@ static void __init sama5d4_pmc_setup(struct device_node=
- *np)
- 	const char *parent_names[5];
- 	struct regmap *regmap;
- 	struct clk_hw *hw;
--	unsigned int i;
-+	int i;
- 	bool bypass;
- =
-
- 	i =3D of_property_match_string(np, "clock-names", "slow_clk");
-@@ -134,7 +134,7 @@ static void __init sama5d4_pmc_setup(struct device_node=
- *np)
- 	if (IS_ERR(regmap))
- 		return;
- =
-
--	sama5d4_pmc =3D pmc_data_allocate(PMC_MCK2 +1,
-+	sama5d4_pmc =3D pmc_data_allocate(PMC_MCK2 + 1,
- 					nck(sama5d4_systemck),
- 					nck(sama5d4_periph32ck), 0);
- 	if (!sama5d4_pmc)
+Good mailing practices for 400: avoid top-posting and trim the reply.
