@@ -1,35 +1,37 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH V12 00/14] Krait clocks + Krait CPUfreq
-Date: Wed, 17 Oct 2018 08:44:12 -0700
-Message-ID: <153979105280.5275.841088095583550635@swboyd.mtv.corp.google.com>
-References: <1534248753-2440-1-git-send-email-sricharan@codeaurora.org>
- <2ae96741-94c0-ba4c-fc19-05d33179683c@codeaurora.org>
- <d682580d-5070-0271-197f-29d988172937@codeaurora.org>
- <D8FC68C0-2572-4A86-81D9-D0099D314A45@gmail.com>
- <F5A89365-C613-4FE2-AD32-DC0AC6DF380B@gmail.com>
- <fb81b8d5-3d24-b413-8d59-33cb70e46f8b@codeaurora.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V9 21/21] csky: support dword access for get_user_size()
+Date: Wed, 17 Oct 2018 17:44:17 +0200
+Message-ID: <CAK8P3a1wfeWboHvU1o_kooMc2hML8iWcNrz=mp6tYT52iGwfjw@mail.gmail.com>
+References: <cover.1539655731.git.ren_guo@c-sky.com> <4bc11ff0cff5960892a464189605f9bc808383fc.1539655732.git.ren_guo@c-sky.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fb81b8d5-3d24-b413-8d59-33cb70e46f8b@codeaurora.org>
+In-Reply-To: <4bc11ff0cff5960892a464189605f9bc808383fc.1539655732.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Craig <ctatlor97@gmail.com>, Sricharan R <sricharan@codeaurora.org>, andy.gross@linaro.org, david.brown@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-soc@vger.kernel.org, linux@arm.linux.org.uk, linux@armlinux.org.uk, mark.rutland@arm.com, mturquette@baylibre.com, niklas.cassel@linaro.org, rjw@rjwysocki.net, robh@kernel.org, sboyd@codeaurora.org, sudeep.holla@arm.com, thierry.escande@linaro.org, viresh.kumar@linaro.org
+To: Guo Ren <ren_guo@c-sky.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Christoph Hellwig <hch@infradead.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, c-sky_gcc_upstream@c-sky.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Sricharan R (2018-09-20 06:03:31)
-> =
+On Tue, Oct 16, 2018 at 5:33 AM Guo Ren <ren_guo@c-sky.com> wrote:
+>
+> Support dword access for get_user_size and redesign put_user_size with
+> the same style of get_user_size. It's Ok to use xxx_user_asm_common for
+> all size of variable with ldb, ldh, ldw, ld.d
+>
+> ld.d rx, (addr, 0) could "rx <= addr" "and r(x+1) <= addr+4" and this also
+> follow abiv2 gcc ABI for dword access.
 
-> =
+Are you sure this is correct for this?
 
-> On 9/20/2018 1:54 AM, Craig wrote:
-> > Yup, this patch seems to have fixed the higher frequencies from the qui=
-ck test I did.
-> >
->       Thanks !!. Can i take that as =
+static inline u32 get_64_to_32(__u64 __user *p)
+{
+      u32 ret;
+      get_user(ret, p);
+      return ret;
+}
 
->           Tested-by: Craig Tatlor <ctatlor97@gmail.com>  ?
-> =
+If I read __get_user_asm_common() right, the ld.d would overwrite
+two registers, but the caller only expects one, so it clobbers one
+that might be in use.
 
-
-Is this patch series going to be resent?
+     Arnd
