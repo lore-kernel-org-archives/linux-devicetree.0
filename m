@@ -1,205 +1,169 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v2 11/21] PCI: keystone: Cleanup PHY handling
-Date: Wed, 17 Oct 2018 13:11:04 +0530
-Message-ID: <20181017074114.28239-12-kishon@ti.com>
-References: <20181017074114.28239-1-kishon@ti.com>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH 00/11] thermal: add new flag irq-mode for trip point
+Date: Wed, 17 Oct 2018 09:42:41 +0200
+Message-ID: <20181017074244eucas1p2487ff3bccf50d6f4fd7a99cd7d8d2bb4~eVYe84jXW0904509045eucas1p2q@eucas1p2.samsung.com>
+References: <CGME20181016145637eucas1p2dfa78042b9fd4fd27af7cc8537b7f485@eucas1p2.samsung.com>
+        <20181016145637eucas1p2dfa78042b9fd4fd27af7cc8537b7f485~eHqCoEO-42133821338eucas1p2F@eucas1p2.samsung.com>
+        <CAJKOXPei6b7TnOnG7DUMNm+xEUsMxqcMOfbG10cJbrNROXLN2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181017074114.28239-1-kishon@ti.com>
+In-Reply-To: <CAJKOXPei6b7TnOnG7DUMNm+xEUsMxqcMOfbG10cJbrNROXLN2w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>
+To: =?UTF-8?Q?Krzysztof_Koz=c5=82owski?= <k.kozlowski.k+lkml@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Cleanup PHY handling by using devm_phy_optional_get to get PHYs if
-the PHYs are optional, creating a device link between the PHY device
-and the controller device and disable PHY on error cases here.
+Hi Krzysztof,
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/controller/dwc/pci-keystone.c | 122 +++++++++++++++++++---
- 1 file changed, 106 insertions(+), 16 deletions(-)
+On 10/17/2018 09:03 AM, Krzysztof Kozłowski wrote:
+> On Tue, 16 Oct 2018 at 16:56, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>> Hi all,
+>>
+>> This patch set adds new flag and mechanism in thermal trip point in DT.
+>> The current situation with 'passive' (passive cooling - DVFS)
+>> trip point is that it enables polling mode in thermal framework.
+> 
+> For DT platform, I checked it some months ago... and that time I was
+> pretty sure - passive mode does not enable polling (unless you tell it
+> explicitly with "polling-delay-passive"). Maybe something changed...
+> but quick look at the code tell me that not. Passive does not indicate
+> polling mode.
+> 
+> Why do you think that passive enables polling?
+Please check dt file which implements 2 more trip points that HW
+supports:
+arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
 
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index e22328f89c84..5ae73c185c99 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -105,6 +105,9 @@ struct keystone_pcie {
- 
- 	int			num_msi_host_irqs;
- 	int			msi_host_irqs[MAX_MSI_HOST_IRQS];
-+	int			num_lanes;
-+	struct phy		**phy;
-+	struct device_link	**link;
- 	struct			device_node *msi_intc_np;
- 	struct irq_domain	*legacy_irq_domain;
- 	struct device_node	*np;
-@@ -880,22 +883,57 @@ static const struct dw_pcie_ops ks_pcie_dw_pcie_ops = {
- 	.link_up = ks_pcie_link_up,
- };
- 
--static int __exit ks_pcie_remove(struct platform_device *pdev)
-+static void ks_pcie_disable_phy(struct keystone_pcie *ks_pcie)
- {
--	struct keystone_pcie *ks_pcie = platform_get_drvdata(pdev);
-+	int num_lanes = ks_pcie->num_lanes;
- 
--	clk_disable_unprepare(ks_pcie->clk);
-+	while (num_lanes--) {
-+		phy_power_off(ks_pcie->phy[num_lanes]);
-+		phy_exit(ks_pcie->phy[num_lanes]);
-+	}
-+}
-+
-+static int ks_pcie_enable_phy(struct keystone_pcie *ks_pcie)
-+{
-+	int i;
-+	int ret;
-+	int num_lanes = ks_pcie->num_lanes;
-+
-+	for (i = 0; i < num_lanes; i++) {
-+		ret = phy_init(ks_pcie->phy[i]);
-+		if (ret < 0)
-+			goto err_phy;
-+
-+		ret = phy_power_on(ks_pcie->phy[i]);
-+		if (ret < 0) {
-+			phy_exit(ks_pcie->phy[i]);
-+			goto err_phy;
-+		}
-+	}
- 
- 	return 0;
-+
-+err_phy:
-+	while (--i >= 0) {
-+		phy_power_off(ks_pcie->phy[i]);
-+		phy_exit(ks_pcie->phy[i]);
-+	}
-+
-+	return ret;
- }
- 
- static int __init ks_pcie_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
- 	struct dw_pcie *pci;
- 	struct keystone_pcie *ks_pcie;
--	struct phy *phy;
-+	struct device_link **link;
-+	struct phy **phy;
-+	u32 num_lanes;
-+	char name[10];
- 	int ret;
-+	int i;
- 
- 	ks_pcie = devm_kzalloc(dev, sizeof(*ks_pcie), GFP_KERNEL);
- 	if (!ks_pcie)
-@@ -908,29 +946,59 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
- 	pci->dev = dev;
- 	pci->ops = &ks_pcie_dw_pcie_ops;
- 
--	ks_pcie->pci = pci;
-+	ret = of_property_read_u32(np, "num-lanes", &num_lanes);
-+	if (ret)
-+		num_lanes = 1;
- 
--	/* initialize SerDes Phy if present */
--	phy = devm_phy_get(dev, "pcie-phy");
--	if (PTR_ERR_OR_ZERO(phy) == -EPROBE_DEFER)
--		return PTR_ERR(phy);
-+	phy = devm_kzalloc(dev, sizeof(*phy) * num_lanes, GFP_KERNEL);
-+	if (!phy)
-+		return -ENOMEM;
- 
--	if (!IS_ERR_OR_NULL(phy)) {
--		ret = phy_init(phy);
--		if (ret < 0)
--			return ret;
-+	link = devm_kzalloc(dev, sizeof(*link) * num_lanes, GFP_KERNEL);
-+	if (!link)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < num_lanes; i++) {
-+		snprintf(name, sizeof(name), "pcie-phy%d", i);
-+		phy[i] = devm_phy_optional_get(dev, name);
-+		if (IS_ERR(phy[i])) {
-+			ret = PTR_ERR(phy[i]);
-+			goto err_link;
-+		}
-+
-+		if (!phy[i])
-+			continue;
-+
-+		link[i] = device_link_add(dev, &phy[i]->dev, DL_FLAG_STATELESS);
-+		if (!link[i]) {
-+			ret = -EINVAL;
-+			goto err_link;
-+		}
-+	}
-+
-+	ks_pcie->np = np;
-+	ks_pcie->pci = pci;
-+	ks_pcie->link = link;
-+	ks_pcie->num_lanes = num_lanes;
-+	ks_pcie->phy = phy;
-+
-+	ret = ks_pcie_enable_phy(ks_pcie);
-+	if (ret) {
-+		dev_err(dev, "failed to enable phy\n");
-+		goto err_link;
- 	}
- 
--	ks_pcie->np = dev->of_node;
- 	platform_set_drvdata(pdev, ks_pcie);
- 	ks_pcie->clk = devm_clk_get(dev, "pcie");
- 	if (IS_ERR(ks_pcie->clk)) {
- 		dev_err(dev, "Failed to get pcie rc clock\n");
--		return PTR_ERR(ks_pcie->clk);
-+		ret = PTR_ERR(ks_pcie->clk);
-+		goto err_phy;
- 	}
-+
- 	ret = clk_prepare_enable(ks_pcie->clk);
- 	if (ret)
--		return ret;
-+		goto err_phy;
- 
- 	ret = ks_pcie_add_pcie_port(ks_pcie, pdev);
- 	if (ret < 0)
-@@ -940,9 +1008,31 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
- fail_clk:
- 	clk_disable_unprepare(ks_pcie->clk);
- 
-+err_phy:
-+	ks_pcie_disable_phy(ks_pcie);
-+
-+err_link:
-+	while (--i >= 0 && link[i])
-+		device_link_del(link[i]);
-+
- 	return ret;
- }
- 
-+static int __exit ks_pcie_remove(struct platform_device *pdev)
-+{
-+	struct keystone_pcie *ks_pcie = platform_get_drvdata(pdev);
-+	struct device_link **link = ks_pcie->link;
-+	int num_lanes = ks_pcie->num_lanes;
-+
-+	clk_disable_unprepare(ks_pcie->clk);
-+	ks_pcie_disable_phy(ks_pcie);
-+
-+	while (num_lanes--)
-+		device_link_del(link[num_lanes]);
-+
-+	return 0;
-+}
-+
- static struct platform_driver ks_pcie_driver __refdata = {
- 	.probe  = ks_pcie_probe,
- 	.remove = __exit_p(ks_pcie_remove),
--- 
-2.17.1
+In that file we have this trick with 'active' present.
+Yes, you are right, 'polling-delay-passive' enables it in
+the thermal code (for whole thermal zone).
+Unfortunately, if you change the bellow 'active' to 'passive'
+in that file, they will start polling, which is not what we want.
+--------8<-------------------------
+         thermal-zones {
+                 cpu0_thermal: cpu0-thermal {
+                         thermal-sensors = <&tmu_cpu0 0>;
+                         polling-delay-passive = <250>;
+                         polling-delay = <0>;
+                         trips {
+                                 cpu0_alert0: cpu-alert-0 {
+                                         temperature = <50000>; /* 
+millicelsius */
+                                         hysteresis = <5000>; /* 
+millicelsius */
+                                         type = "active";
+                                 };
+                                 cpu0_alert1: cpu-alert-1 {
+                                         temperature = <60000>; /* 
+millicelsius */
+                                         hysteresis = <5000>; /* 
+millicelsius */
+                                         type = "active";
+                                 };
+                                 cpu0_alert2: cpu-alert-2 {
+                                         temperature = <70000>; /* 
+millicelsius */
+                                         hysteresis = <5000>; /* 
+millicelsius */
+                                         type = "active";
+                                 };
+                                 cpu0_crit0: cpu-crit-0 {
+                                         temperature = <120000>; /* 
+millicelsius */
+                                         hysteresis = <0>; /* 
+millicelsius */
+                                         type = "critical";
+                                 };
+                                 /*
+                                  * Exynos542x supports only 4 trip-points
+                                  * so for these polling mode is required.
+                                  * Start polling at temperature level 
+of last
+                                  * interrupt-driven trip: cpu0_alert2
+                                  */
+                                 cpu0_alert3: cpu-alert-3 {
+                                         temperature = <70000>; /* 
+millicelsius */
+                                         hysteresis = <10000>; /* 
+millicelsius */
+                                         type = "passive";
+                                 };
+                                 cpu0_alert4: cpu-alert-4 {
+                                         temperature = <85000>; /* 
+millicelsius */
+                                         hysteresis = <10000>; /* 
+millicelsius */
+                                         type = "passive";
+                                 };
+                         };
+---------------->8-----------------------------
+
+If you have some other ideas how to handle this case,
+I am happy to discuss.
+
+Regards,
+Lukasz
+> 
+> Best regards
+> 
+> 
+>> If the device supports irqs fired when the desired temerature is met,
+>> thermal framwork should be notifed from driver's irq routine.
+>> This is sufficent and there is no need of polling.
+>> As a workaround, people declare trip point as 'active'
+>> (active cooling, i.e. fan) to bypass polling mode setup in thermal
+>> framework.
+>>
+>> With this patch set trip point 'passive' declared in DT with explicit flag:
+>> 'irq-mode;' will not register itself as polling mode.
+>>
+>> A good example is Exynos4 SoC family, where there is 4 HW supported
+>> trip points and there is a need of 6. The rest 2 are declared as 'passive'
+>> without 'irq-mode;' flag, thus polling needed.
+>>
+>> It does not break existing design for trip points which do not have 'irq-mode'
+>> flag - they will use polling.
+>>
+>> For consistency this flag should be added to all trip point types('active',
+>> 'passive', 'hot', 'critical') when need (meaning, when irq will notify thermal
+>> framework).
+>>
+>> Regards,
+>> Lukasz Luba
+>>
+>> Lukasz Luba (11):
+>>    thermal: remove unused function parameter
+>>    thermal: add irq-mode configuration for trip point
+>>    thermal: add new sysfs file for irq-mode
+>>    Doc: thermal: new irq-mode for trip point
+>>    Doc: DT: thermal: new irq-mode for trip point
+>>    DT: arm64: exynos: add support for thermal trip irq-mode
+>>    DT: arm64: exynos7: add support for thermal trip irq-mode
+>>    DT: arm: exynos4: add support for thermal trip irq-mode
+>>    DT: arm: exynos: add support for thermal trip irq-mode
+>>    DT: arm: exynos: add support for thermal trip irq-mode
+>>    DT: arm: exynos: add support for thermal trip irq-mode
+>>
+>>   .../devicetree/bindings/thermal/thermal.txt        |   7 ++
+>>   Documentation/thermal/sysfs-api.txt                |   9 ++
+>>   arch/arm/boot/dts/exynos4-cpu-thermal.dtsi         |  10 +-
+>>   arch/arm/boot/dts/exynos5410-odroidxu.dts          |  10 +-
+>>   arch/arm/boot/dts/exynos5420-trip-points.dtsi      |  10 +-
+>>   arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |  40 +++++---
+>>   arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi     | 105 ++++++++++++++-------
+>>   .../arm64/boot/dts/exynos/exynos7-trip-points.dtsi |   8 ++
+>>   drivers/thermal/of-thermal.c                       |  17 ++++
+>>   drivers/thermal/thermal_core.c                     |  16 ++--
+>>   drivers/thermal/thermal_sysfs.c                    |  53 ++++++++++-
+>>   include/linux/thermal.h                            |   5 +
+>>   12 files changed, 226 insertions(+), 64 deletions(-)
+>>
+>> --
+>> 2.7.4
+>>
+> 
+> 
