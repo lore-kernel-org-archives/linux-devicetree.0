@@ -1,253 +1,192 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v9 4/6] edac: synopsys: Add EDAC ECC support for ZynqMP
- DDRC
-Date: Wed, 17 Oct 2018 18:30:26 +0200
-Message-ID: <20181017163026.GF22535@zn.tnic>
-References: <1539581388-23963-1-git-send-email-manish.narani@xilinx.com>
- <1539581388-23963-5-git-send-email-manish.narani@xilinx.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 00/22] clk: at91: Rework DT bindings
+Date: Wed, 17 Oct 2018 09:50:20 -0700
+Message-ID: <153979502020.5275.12406468543355327223@swboyd.mtv.corp.google.com>
+References: <20181016142200.19741-1-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1539581388-23963-5-git-send-email-manish.narani@xilinx.com>
+In-Reply-To: <20181016142200.19741-1-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manish Narani <manish.narani@xilinx.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, mchehab@kernel.org, amit.kucheria@linaro.org, sudeep.holla@arm.com, olof@lixom.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Michael Turquette <mturquette@baylibre.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 15, 2018 at 10:59:46AM +0530, Manish Narani wrote:
-> Add EDAC ECC support for ZynqMP DDRC IP. The IP supports interrupts for
-> corrected and uncorrected errors. Add interrupt handlers for the same.
-> 
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> ---
->  drivers/edac/Kconfig         |   2 +-
->  drivers/edac/synopsys_edac.c | 324 ++++++++++++++++++++++++++++++++++++++++---
->  2 files changed, 308 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-> index 57304b2..7c40eb2 100644
-> --- a/drivers/edac/Kconfig
-> +++ b/drivers/edac/Kconfig
-> @@ -441,7 +441,7 @@ config EDAC_ALTERA_SDMMC
->  
->  config EDAC_SYNOPSYS
->  	tristate "Synopsys DDR Memory Controller"
-> -	depends on ARCH_ZYNQ
-> +	depends on ARCH_ZYNQ || ARCH_ZYNQMP
->  	help
->  	  Support for error detection and correction on the Synopsys DDR
->  	  memory controller.
-> diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-> index d1999e0..603c4bd 100644
-> --- a/drivers/edac/synopsys_edac.c
-> +++ b/drivers/edac/synopsys_edac.c
-> @@ -22,6 +22,7 @@
->  #include <linux/edac.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> +#include <linux/interrupt.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
->  
-> @@ -272,6 +273,8 @@
->   * @bank:	Bank number.
->   * @bitpos:	Bit position.
->   * @data:	Data causing the error.
-> + * @bankgrpnr:	Bank group number.
-> + * @blknr:	Block number.
->   */
->  struct ecc_error_info {
->  	u32 row;
-> @@ -279,6 +282,8 @@ struct ecc_error_info {
->  	u32 bank;
->  	u32 bitpos;
->  	u32 data;
-> +	u32 bankgrpnr;
-> +	u32 blknr;
->  };
->  
->  /**
-> @@ -385,6 +390,66 @@ static int zynq_get_error_info(struct synps_edac_priv *priv)
->  }
->  
->  /**
-> + * zynqmp_get_error_info - Get the current ECC error info.
-> + * @priv:	DDR memory controller private instance data.
-> + *
-> + * Return: one if there is no error otherwise returns zero.
-> + */
-> +static int zynqmp_get_error_info(struct synps_edac_priv *priv)
-> +{
-> +	struct synps_ecc_status *p;
-> +	u32 regval, clearval = 0;
-> +	void __iomem *base;
-> +
-> +	base = priv->baseaddr;
-> +	p = &priv->stat;
-> +
-> +	regval = readl(base + ECC_STAT_OFST);
-> +	if (!regval)
-> +		return 1;
-> +
-> +	p->ce_cnt = (regval & ECC_STAT_CECNT_MASK) >> ECC_STAT_CECNT_SHIFT;
-> +	p->ue_cnt = (regval & ECC_STAT_UECNT_MASK) >> ECC_STAT_UECNT_SHIFT;
-> +	p->ceinfo.bitpos = (regval & ECC_STAT_BITNUM_MASK);
-> +
-> +	regval = readl(base + ECC_CEADDR0_OFST);
-> +	if (!p->ce_cnt)
-> +		goto ue_err;
+Quoting Alexandre Belloni (2018-10-16 07:21:38)
+> This is the promised rework of the at91 PMC clocks driver. It is mainly
+> necessary to remove the DTC warnings but it also complies with the CCF
+> rule that there should be one node per controller instead of one node
+> per clock.
+> =
 
-This check should happen right under the p->ce_cnt assignment a couple
-of lines above it. Otherwise the readl() is useless if you jump to the
-ue_err label.
+> This only handles the PMC, I'm planning to also rework the SCKC bindings
+> later (without breaking the DT ABI).
+> =
 
-IOW, those two readl()'s should happen *after* the ce/ue_cnt checks.
+> The series is based on top of v4.19-rc1.
+> =
 
-> +
-> +	p->ceinfo.row = (regval & ECC_CEADDR0_RW_MASK);
-> +	regval = readl(base + ECC_CEADDR1_OFST);
-> +	p->ceinfo.bank = (regval & ECC_CEADDR1_BNKNR_MASK) >>
-> +					ECC_CEADDR1_BNKNR_SHIFT;
-> +	p->ceinfo.bankgrpnr = (regval &	ECC_CEADDR1_BNKGRP_MASK) >>
-> +					ECC_CEADDR1_BNKGRP_SHIFT;
-> +	p->ceinfo.blknr = (regval & ECC_CEADDR1_BLKNR_MASK);
-> +	p->ceinfo.data = readl(base + ECC_CSYND0_OFST);
-> +	edac_dbg(2, "ECCCSYN0: 0x%08X ECCCSYN1: 0x%08X ECCCSYN2: 0x%08X\n",
-> +		 readl(base + ECC_CSYND0_OFST), readl(base + ECC_CSYND1_OFST),
-> +		 readl(base + ECC_CSYND2_OFST));
-> +ue_err:
-> +	regval = readl(base + ECC_UEADDR0_OFST);
-> +	if (!p->ue_cnt)
-> +		goto out;
-> +
-> +	p->ueinfo.row = (regval & ECC_CEADDR0_RW_MASK);
-> +	regval = readl(base + ECC_UEADDR1_OFST);
-> +	p->ueinfo.bankgrpnr = (regval & ECC_CEADDR1_BNKGRP_MASK) >>
-> +					ECC_CEADDR1_BNKGRP_SHIFT;
-> +	p->ueinfo.bank = (regval & ECC_CEADDR1_BNKNR_MASK) >>
-> +					ECC_CEADDR1_BNKNR_SHIFT;
-> +	p->ueinfo.blknr = (regval & ECC_CEADDR1_BLKNR_MASK);
-> +	p->ueinfo.data = readl(base + ECC_UESYND0_OFST);
-> +out:
-> +	clearval = ECC_CTRL_CLR_CE_ERR | ECC_CTRL_CLR_CE_ERRCNT;
-> +	clearval |= ECC_CTRL_CLR_UE_ERR | ECC_CTRL_CLR_UE_ERRCNT;
-> +	writel(clearval, base + ECC_CLR_OFST);
-> +	writel(0x0, base + ECC_CLR_OFST);
-> +
-> +	return 0;
-> +}
-> +
+> The first two patches are actually fixes and may be considered for this
+> cycle.
+> =
 
-...
+> I'll take the device tree changes through the at91 tree as DT backward
+> compatibility is working.
+> =
 
-> +static int setup_irq(struct mem_ctl_info *mci,
-> +			  struct platform_device *pdev)
 
-Align arguments on the opening brace.
+I get the following warnings and errors from my auto checker script:
 
-> +{
-> +	struct synps_edac_priv *priv = mci->pvt_info;
-> +	int ret, irq;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		edac_printk(KERN_ERR, EDAC_MC,
-> +			    "No IRQ %d in DT\n", irq);
-> +		return irq;
-> +	}
-> +
-> +	ret = devm_request_irq(&pdev->dev, irq, intr_handler,
-> +			       0, dev_name(&pdev->dev), mci);
-> +	if (ret < 0) {
-> +		edac_printk(KERN_ERR, EDAC_MC, "Failed to request IRQ\n");
-> +		return ret;
-> +	}
-> +
-> +	enable_intr(priv);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct synps_platform_data zynq_edac_def = {
->  	.get_error_info	= zynq_get_error_info,
->  	.get_mtype	= zynq_get_mtype,
-> @@ -613,9 +872,26 @@ static const struct synps_platform_data zynq_edac_def = {
->  	.quirks		= 0,
->  };
->  
-> +static const struct synps_platform_data zynqmp_edac_def = {
-> +	.get_error_info	= zynqmp_get_error_info,
-> +	.get_mtype	= zynqmp_get_mtype,
-> +	.get_dtype	= zynqmp_get_dtype,
-> +	.get_ecc_state	= zynqmp_get_ecc_state,
-> +	.quirks		= DDR_ECC_INTR_SUPPORT,
-> +};
-> +
->  static const struct of_device_id synps_edac_match[] = {
-> -	{ .compatible = "xlnx,zynq-ddrc-a05", .data = (void *)&zynq_edac_def },
-> -	{ /* end of table */ }
-> +	{
-> +		.compatible = "xlnx,zynq-ddrc-a05",
-> +		.data = (void *)&zynq_edac_def
-> +	},
-> +	{
-> +		.compatible = "xlnx,zynqmp-ddrc-2.40a",
-> +		.data = (void *)&zynqmp_edac_def
-> +	},
-> +	{
-> +		/* end of table */
-> +	}
->  };
->  
->  MODULE_DEVICE_TABLE(of, synps_edac_match);
-> @@ -674,6 +950,12 @@ static int mc_probe(struct platform_device *pdev)
->  
->  	mc_init(mci, pdev);
->  
-> +	if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT) {
-> +		rc = setup_irq(mci, pdev);
-> +		if (rc)
-> +			goto free_edac_mc;
-> +	}
-> +
->  	rc = edac_mc_add_mc(mci);
->  	if (rc) {
->  		edac_printk(KERN_ERR, EDAC_MC,
-> @@ -685,7 +967,9 @@ static int mc_probe(struct platform_device *pdev)
->  	 * Start capturing the correctable and uncorrectable errors. A write of
->  	 * 0 starts the counters.
->  	 */
-> -	writel(0x0, baseaddr + ECC_CTRL_OFST);
-> +	if (!(priv->p_data->quirks & DDR_ECC_INTR_SUPPORT))
-> +		writel(0x0, baseaddr + ECC_CTRL_OFST);
-> +
->  	return rc;
->  
->  free_edac_mc:
-> @@ -703,6 +987,12 @@ static int mc_probe(struct platform_device *pdev)
->  static int mc_remove(struct platform_device *pdev)
->  {
->  	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
-> +	struct synps_edac_priv *priv;
-> +
-> +	priv = mci->pvt_info;
+ERROR: need consistent spacing around '+' (ctx:WxV)
+#167: FILE: drivers/clk/at91/sama5d4.c:137:
++       sama5d4_pmc =3D pmc_data_allocate(PMC_MCK2 +1,
+                                                 ^
 
-Or simply:
+drivers/clk/at91/clk-i2s-mux.c:49:15: warning: symbol 'at91_clk_i2s_mux_reg=
+ister' was not declared. Should it be static?
+drivers/clk/at91/clk-audio-pll.c:447:15: warning: symbol 'at91_clk_register=
+_audio_pll_frac' was not declared. Should it be static?
+drivers/clk/at91/clk-audio-pll.c:477:15: warning: symbol 'at91_clk_register=
+_audio_pll_pad' was not declared. Should it be static?
+drivers/clk/at91/clk-audio-pll.c:508:15: warning: symbol 'at91_clk_register=
+_audio_pll_pmc' was not declared. Should it be static?
+drivers/clk/at91/sama5d4.c:123 sama5d4_pmc_setup() warn: unsigned 'i' is ne=
+ver less than zero.
+drivers/clk/at91/sama5d4.c:129 sama5d4_pmc_setup() warn: unsigned 'i' is ne=
+ver less than zero.
+drivers/clk/at91/sama5d2.c:140 sama5d2_pmc_setup() warn: unsigned 'i' is ne=
+ver less than zero.
+drivers/clk/at91/sama5d2.c:146 sama5d2_pmc_setup() warn: unsigned 'i' is ne=
+ver less than zero.
+drivers/clk/at91/at91sam9x5.c:132 at91sam9x5_pmc_setup() warn: unsigned 'i'=
+ is never less than zero.
+drivers/clk/at91/at91sam9x5.c:138 at91sam9x5_pmc_setup() warn: unsigned 'i'=
+ is never less than zero.
+drivers/clk/at91/at91sam9rl.c:76 at91sam9rl_pmc_setup() warn: unsigned 'i' =
+is never less than zero.
+drivers/clk/at91/at91sam9rl.c:82 at91sam9rl_pmc_setup() warn: unsigned 'i' =
+is never less than zero.
+drivers/clk/at91/at91sam9260.c:341 at91sam926x_pmc_setup() warn: unsigned '=
+i' is never less than zero.
+drivers/clk/at91/at91sam9260.c:347 at91sam926x_pmc_setup() warn: unsigned '=
+i' is never less than zero.
 
-	struct synps_edac_priv *priv = mci->pvt_info;
+I fixed them with the below patch, that I'll squash into the right
+place. Things look good!
 
-> +	if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT)
-> +		disable_intr(priv);
->  
->  	edac_mc_del_mc(&pdev->dev);
->  	edac_mc_free(mci);
-> -- 
-> 2.1.1
-> 
+diff --git a/drivers/clk/at91/at91sam9260.c b/drivers/clk/at91/at91sam9260.c
+index 49aeee6c31a6..b1af5a395423 100644
+--- a/drivers/clk/at91/at91sam9260.c
++++ b/drivers/clk/at91/at91sam9260.c
+@@ -334,7 +334,7 @@ static void __init at91sam926x_pmc_setup(struct device_=
+node *np,
+ 	const char *slck_name;
+ 	struct regmap *regmap;
+ 	struct clk_hw *hw;
+-	unsigned int i;
++	int i;
+ 	bool bypass;
+ =
 
--- 
-Regards/Gruss,
-    Boris.
+ 	i =3D of_property_match_string(np, "clock-names", "slow_xtal");
+diff --git a/drivers/clk/at91/at91sam9rl.c b/drivers/clk/at91/at91sam9rl.c
+index 5532fba5825b..5aeef68b4bdd 100644
+--- a/drivers/clk/at91/at91sam9rl.c
++++ b/drivers/clk/at91/at91sam9rl.c
+@@ -70,7 +70,7 @@ static void __init at91sam9rl_pmc_setup(struct device_nod=
+e *np)
+ 	const char *parent_names[6];
+ 	struct regmap *regmap;
+ 	struct clk_hw *hw;
+-	unsigned int i;
++	int i;
+ =
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+ 	i =3D of_property_match_string(np, "clock-names", "slow_clk");
+ 	if (i < 0)
+diff --git a/drivers/clk/at91/at91sam9x5.c b/drivers/clk/at91/at91sam9x5.c
+index 3cdf227ce159..2fe225a697df 100644
+--- a/drivers/clk/at91/at91sam9x5.c
++++ b/drivers/clk/at91/at91sam9x5.c
+@@ -125,7 +125,7 @@ static void __init at91sam9x5_pmc_setup(struct device_n=
+ode *np,
+ 	const char *parent_names[6];
+ 	struct regmap *regmap;
+ 	struct clk_hw *hw;
+-	unsigned int i;
++	int i;
+ 	bool bypass;
+ =
+
+ 	i =3D of_property_match_string(np, "clock-names", "slow_clk");
+diff --git a/drivers/clk/at91/clk-audio-pll.c b/drivers/clk/at91/clk-audio-=
+pll.c
+index 96e3c6405351..36d77146a3bd 100644
+--- a/drivers/clk/at91/clk-audio-pll.c
++++ b/drivers/clk/at91/clk-audio-pll.c
+@@ -43,6 +43,8 @@
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+ =
+
++#include "pmc.h"
++
+ #define AUDIO_PLL_DIV_FRAC	BIT(22)
+ #define AUDIO_PLL_ND_MAX	(AT91_PMC_AUDIO_PLL_ND_MASK >> \
+ 					AT91_PMC_AUDIO_PLL_ND_OFFSET)
+diff --git a/drivers/clk/at91/clk-i2s-mux.c b/drivers/clk/at91/clk-i2s-mux.c
+index dfdffa5409e6..fe6ce172b8b0 100644
+--- a/drivers/clk/at91/clk-i2s-mux.c
++++ b/drivers/clk/at91/clk-i2s-mux.c
+@@ -14,6 +14,8 @@
+ =
+
+ #include <soc/at91/atmel-sfr.h>
+ =
+
++#include "pmc.h"
++
+ struct clk_i2s_mux {
+ 	struct clk_hw hw;
+ 	struct regmap *regmap;
+diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
+index 07f1f1d613ff..d69ad96fe988 100644
+--- a/drivers/clk/at91/sama5d2.c
++++ b/drivers/clk/at91/sama5d2.c
+@@ -133,7 +133,7 @@ static void __init sama5d2_pmc_setup(struct device_node=
+ *np)
+ 	const char *parent_names[6];
+ 	struct regmap *regmap, *regmap_sfr;
+ 	struct clk_hw *hw;
+-	unsigned int i;
++	int i;
+ 	bool bypass;
+ =
+
+ 	i =3D of_property_match_string(np, "clock-names", "slow_clk");
+diff --git a/drivers/clk/at91/sama5d4.c b/drivers/clk/at91/sama5d4.c
+index 64b9f438f73b..e358be7f6c8d 100644
+--- a/drivers/clk/at91/sama5d4.c
++++ b/drivers/clk/at91/sama5d4.c
+@@ -116,7 +116,7 @@ static void __init sama5d4_pmc_setup(struct device_node=
+ *np)
+ 	const char *parent_names[5];
+ 	struct regmap *regmap;
+ 	struct clk_hw *hw;
+-	unsigned int i;
++	int i;
+ 	bool bypass;
+ =
+
+ 	i =3D of_property_match_string(np, "clock-names", "slow_clk");
+@@ -134,7 +134,7 @@ static void __init sama5d4_pmc_setup(struct device_node=
+ *np)
+ 	if (IS_ERR(regmap))
+ 		return;
+ =
+
+-	sama5d4_pmc =3D pmc_data_allocate(PMC_MCK2 +1,
++	sama5d4_pmc =3D pmc_data_allocate(PMC_MCK2 + 1,
+ 					nck(sama5d4_systemck),
+ 					nck(sama5d4_periph32ck), 0);
+ 	if (!sama5d4_pmc)
