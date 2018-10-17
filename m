@@ -1,55 +1,43 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 0/4] Add clock support for Hi3670 SoC
-Date: Wed, 17 Oct 2018 08:57:46 +0530
-Message-ID: <20181017032746.GB2888@Mani-XPS-13-9360>
-References: <20180921060103.21370-1-manivannan.sadhasivam@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: "sudheer.v" <open.sudheer@gmail.com>
+Subject: [[PATCH] 0/9] *** DMA support for UART in ASPEED's AST2500  ***
+Date: Wed, 17 Oct 2018 09:40:57 +0530
+Message-ID: <1539749466-3912-1-git-send-email-open.sudheer@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180921060103.21370-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: xuwei5@hisilicon.com
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, linux-clk@vger.kernel.org
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, Jiri Slaby <jslaby@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@de.ibm.com>, Michael Moese <mmoese@suse.de>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Kate Stewart <kstewart@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.orglinux
+Cc: "sudheer.v" <open.sudheer@gmail.com>, Sudheer V <sudheer.veliseti@aspeedtech.com>, ShivahShankar Shakarnarayan rao <shivahshankar.shankarnarayanrao@aspeedtech.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 20, 2018 at 11:00:59PM -0700, Manivannan Sadhasivam wrote:
-> This patchset adds clock support for Hi3670 SoC from HiSilicon utilizing
-> the HiSi common clock code. While adding clock support, let's remove the
-> fixed clock for UART and source SoC clock on HiKey970 board.
-> 
-> This patchset has been verified on HiKey970 board.
-> 
-> Thanks,
-> Mani
-> 
-> Manivannan Sadhasivam (4):
->   dt-bindings: clk: hisilicon: Add bindings for Hi3670 clk
->   arm64: dts: hisilicon: Add clock nodes for Hi3670 SoC
->   arm64: dts: hisilicon: Source SoC clock for UART6
+DMA controller driver  and UART dma client driver for aspeed's AST2500
 
-Hi Wei,
+sudheer.v (9):
+  DT-changes-for-DMA-UART-of-AST2500
+  Defconfig-changes-for-DMA-UART-of-AST2500
+  configuration-for-DMA-of-AST2500
+  Documentation-DTbindings-DMA-controller-of-AST2500
+  DMA-driver-for-AST2500
+  configuration-for-DMA-UART-of-AST2500
+  Documentation-DTbindings-DMA-UART-of-AST2500
+  DMA-UART-Driver-for-AST2500
+  updating MAINTAINERS for DMA and DMA-UART drivers of AST2500
 
-Since the clk patches are merged, can you please take the DTS patches
-through HiSi tree? I will post the pinctrl/gpio patches soon which will
-depend on clk bits.
+ .../devicetree/bindings/dma/ast-uart-sdma.txt      |   23 +
+ .../devicetree/bindings/serial/ast-sdma-uart.txt   |   34 +
+ MAINTAINERS                                        |   26 +
+ arch/arm/boot/dts/aspeed-ast2500-evb.dts           |   20 +
+ arch/arm/boot/dts/aspeed-g5.dtsi                   |   85 ++
+ arch/arm/configs/aspeed_g5_defconfig               |    6 +-
+ drivers/dma/Kconfig                                |    9 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/aspeed_uart_sdma.c                     |  810 ++++++++++
+ drivers/tty/serial/8250/8250_aspeed_uart_dma.c     | 1594 ++++++++++++++++++++
+ drivers/tty/serial/8250/Kconfig                    |   34 +
+ drivers/tty/serial/8250/Makefile                   |    1 +
+ 12 files changed, 2641 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/ast-uart-sdma.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/ast-sdma-uart.txt
+ create mode 100644 drivers/dma/aspeed_uart_sdma.c
+ create mode 100644 drivers/tty/serial/8250/8250_aspeed_uart_dma.c
 
-Thanks,
-Mani
-
->   clk: hisilicon: Add clock driver for Hi3670 SoC
-> 
->  .../bindings/clock/hi3670-clock.txt           |   43 +
->  arch/arm64/boot/dts/hisilicon/hi3670.dtsi     |   48 +-
->  drivers/clk/hisilicon/Kconfig                 |    7 +
->  drivers/clk/hisilicon/Makefile                |    1 +
->  drivers/clk/hisilicon/clk-hi3670.c            | 1016 +++++++++++++++++
->  include/dt-bindings/clock/hi3670-clock.h      |  348 ++++++
->  6 files changed, 1458 insertions(+), 5 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/hi3670-clock.txt
->  create mode 100644 drivers/clk/hisilicon/clk-hi3670.c
->  create mode 100644 include/dt-bindings/clock/hi3670-clock.h
-> 
-> -- 
-> 2.17.1
-> 
+-- 
+1.9.1
