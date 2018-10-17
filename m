@@ -1,58 +1,70 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v1 3/5] ARM: tegra: Create tegra20-cpufreq device on
- Tegra30
-Date: Wed, 17 Oct 2018 15:02:25 +0300
-Message-ID: <45b53cd5-c1e2-d733-38ed-b04531bce65e@gmail.com>
-References: <20180830194356.14059-1-digetx@gmail.com>
- <20180830194356.14059-4-digetx@gmail.com>
- <9ec51c2d-02f6-0988-0940-0ec31d22f697@nvidia.com>
- <65532de7-2768-0d99-33a9-5b43cfbf510c@nvidia.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v2 9/9] ASoC: tegra_sgtl5000: fix platform name vs.
+ of_node assignement
+Date: Wed, 17 Oct 2018 13:32:37 +0100
+Message-ID: <35848cb7-36ee-6698-ff17-7f0e73567914@nvidia.com>
+References: <20181016104730.4598-1-marcel@ziswiler.com>
+ <20181016104730.4598-10-marcel@ziswiler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <65532de7-2768-0d99-33a9-5b43cfbf510c@nvidia.com>
+In-Reply-To: <20181016104730.4598-10-marcel@ziswiler.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Marcel Ziswiler <marcel@ziswiler.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, Mark Brown <broonie@kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org, Thierry Reding <thierry.reding@gmail.com>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/17/18 12:54 PM, Jon Hunter wrote:
-> 
-> On 17/10/2018 09:49, Jon Hunter wrote:
->>
->> On 30/08/2018 20:43, Dmitry Osipenko wrote:
->>> Tegra20-cpufreq driver require a platform device in order to be loaded,
->>> instantiate a simple platform device for the driver during of the machines
->>> late initialization. Driver now supports Tegra30 SoC's, hence create the
->>> device on Tegra30 machines.
->>>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  arch/arm/mach-tegra/tegra.c | 4 ++++
->>>  1 file changed, 4 insertions(+)
->>>
->>> diff --git a/arch/arm/mach-tegra/tegra.c b/arch/arm/mach-tegra/tegra.c
->>> index 67d8ae60ac67..b559e22eab76 100644
->>> --- a/arch/arm/mach-tegra/tegra.c
->>> +++ b/arch/arm/mach-tegra/tegra.c
->>> @@ -111,6 +111,10 @@ static void __init tegra_dt_init_late(void)
->>>  	if (IS_ENABLED(CONFIG_ARCH_TEGRA_2x_SOC) &&
->>>  	    of_machine_is_compatible("nvidia,tegra20"))
->>>  		platform_device_register_simple("tegra20-cpufreq", -1, NULL, 0);
->>> +
->>> +	if (IS_ENABLED(CONFIG_ARCH_TEGRA_3x_SOC) &&
->>> +	    of_machine_is_compatible("nvidia,tegra30"))
->>> +		platform_device_register_simple("tegra20-cpufreq", -1, NULL, 0);
->>>  }
->>>  
->>>  static const char * const tegra_dt_board_compat[] = {
->>
->> Not sure why you would do this if now the driver only works with DT. Am
->> I missing something?
-> 
-> Actually, not sure why we just don't move this into the actual driver
-> itself like we have for tegra124.
 
-Tegra124 has specific HW for the CPUFreq, T20/30 do not. Hence on T20/30 CPUFreq control is implemented purely in software and there is no real HW device for the driver.
+On 16/10/2018 11:47, Marcel Ziswiler wrote:
+> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> This fixes the following error as seen post commit daecf46ee0e5
+> ("ASoC: soc-core: use snd_soc_dai_link_component for platform"):
+> 
+> tegra-snd-sgtl5000 sound: ASoC: Both platform name/of_node are set for
+>  sgtl5000
+> tegra-snd-sgtl5000 sound: ASoC: failed to init link sgtl5000
+> tegra-snd-sgtl5000 sound: snd_soc_register_card failed (-22)
+> tegra-snd-sgtl5000: probe of sound failed with error -22
+> 
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> ---
+> 
+> Changes in v2: New patch
+> 
+>  sound/soc/tegra/tegra_sgtl5000.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/sound/soc/tegra/tegra_sgtl5000.c b/sound/soc/tegra/tegra_sgtl5000.c
+> index 901457da25ec..eb702925cac3 100644
+> --- a/sound/soc/tegra/tegra_sgtl5000.c
+> +++ b/sound/soc/tegra/tegra_sgtl5000.c
+> @@ -168,6 +168,11 @@ static int tegra_sgtl5000_driver_probe(struct platform_device *pdev)
+>  	return 0;
+>  
+>  err_fini_utils:
+> +	if (tegra_sgtl5000_dai.platform) {
+> +		devm_kfree(&pdev->dev, tegra_sgtl5000_dai.platform);
+> +		tegra_sgtl5000_dai.platform = NULL;
+> +	}
+> +
+>  	tegra_asoc_utils_fini(&machine->util_data);
+>  err_put_cpu_of_node:
+>  	of_node_put(tegra_sgtl5000_dai.cpu_of_node);
+>
+
+Where is the above allocated? I don't see it allocated in this driver
+AFAICT. If it is not then it does not seem right to free something that
+we have not allocated in this driver. I would have assumed it was
+allocated by snd_soc_init_platform() in which case it should not be
+necessary to free because that function uses devm_kzalloc(). What am I
+missing here?
+
+Cheers
+Jon
+
+-- 
+nvpublic
