@@ -1,133 +1,231 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: [PATCH v4 2/4] crypto: mxs-dcp - Add support for dcp clk
-Date: Wed, 17 Oct 2018 12:37:53 +0000
-Message-ID: <95dce7010676581691b1ac9906e9298470e0aa1a.1539779579.git.leonard.crestez@nxp.com>
-References: <cover.1539779579.git.leonard.crestez@nxp.com>
+From: <Claudiu.Beznea@microchip.com>
+Subject: Re: [RESEND PATCH v5 0/9] extend PWM framework to support PWM modes
+Date: Wed, 17 Oct 2018 12:41:53 +0000
+Message-ID: <fca49cff-f883-baf4-4bd3-80f45635bb5a@microchip.com>
+References: <1535461286-12308-1-git-send-email-claudiu.beznea@microchip.com>
+ <b95d0de2-1a97-36f0-03ad-3b5e52b1fa5d@microchip.com>
+ <20181016120321.GG8852@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="Windows-1252"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1539779579.git.leonard.crestez@nxp.com>
+In-Reply-To: <20181016120321.GG8852@ulmo>
 Content-Language: en-US
+Content-ID: <92A636DC92C2E84789D1F075F388771E@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Herbert Xu <herbert@gondor.apana.org.au>, Horia Geanta <horia.geanta@nxp.com>, Franck Lenormand <franck.lenormand@nxp.com>, Aymen Sghaier <aymen.sghaier@nxp.com>, "David S . Miller " <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: thierry.reding@gmail.com, Nicolas.Ferre@microchip.com, robh+dt@kernel.org
+Cc: alexandre.belloni@bootlin.com, linux-pwm@vger.kernel.org, treding@nvidia.com, shc_work@mail.ru, mark.rutland@arm.com, corbet@lwn.net, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, thomas.petazzoni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-On 6ull and 6sll the DCP block has a clock which needs to be explicitly
-enabled.
 
-Add minimal handling for this at probe/remove time.
 
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
----
- drivers/crypto/mxs-dcp.c | 28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
+On 16.10.2018 15:03, Thierry Reding wrote:
+> On Fri, Sep 14, 2018 at 06:20:48PM +0200, Nicolas Ferre wrote:
+>> Thierry,
+>>
+>> On 28/08/2018 at 15:01, Claudiu Beznea wrote:
+>>> Hi,
+>>>
+>>> Please give feedback on these patches which extends the PWM framework i=
+n
+>>> order to support multiple PWM modes of operations. This series is a rew=
+ork
+>>> of [1] and [2].
+>>
+>> This series started with a RFC back on 5 April 2017 "extend PWM framewor=
+k to
+>> support PWM modes". The continuous work starting with v2 of this series =
+on
+>> January 12, 2018.
+>>
+>> Then Claudiu tried to address all comments up to v4 which didn't have an=
+y
+>> more reviews. He posted a v5 without comments since May 22, 2018. This
+>> series is basically a resent of the v5 (as said in the $subject).
+>>
+>> We would like to know what is preventing this series to be included in t=
+he
+>> PWM sub-system. Note that if some issue still remain with it, we are rea=
+dy
+>> to help to solve them.
+>>
+>> Without feedback from you side, we fear that we would miss a merge windo=
+w
+>> again for no obvious reason (DT part is Acked by Rob: patch 5/9).
+>=20
+> First off, apologies for not getting around to this earlier.
+>=20
+> I think this series is mostly fine, but I still have doubts about the DT
+> aspects of this. In particular, Rob raised a concern about this here:
+>=20
+> 	https://lkml.org/lkml/2018/1/22/655
+>=20
+> and it seems like that particular question was never fully resolved as
+> the discussion veered off that particular topic.
 
-diff --git a/drivers/crypto/mxs-dcp.c b/drivers/crypto/mxs-dcp.c
-index 4e6ff32f8a7e..a2105cf33abb 100644
---- a/drivers/crypto/mxs-dcp.c
-+++ b/drivers/crypto/mxs-dcp.c
-@@ -18,10 +18,11 @@
- #include <linux/kthread.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/stmp_device.h>
-+#include <linux/clk.h>
-=20
- #include <crypto/aes.h>
- #include <crypto/sha.h>
- #include <crypto/internal/hash.h>
- #include <crypto/internal/skcipher.h>
-@@ -80,10 +81,11 @@ struct dcp {
-=20
- 	struct completion		completion[DCP_MAX_CHANS];
- 	spinlock_t			lock[DCP_MAX_CHANS];
- 	struct task_struct		*thread[DCP_MAX_CHANS];
- 	struct crypto_queue		queue[DCP_MAX_CHANS];
-+	struct clk			*dcp_clk;
- };
-=20
- enum dcp_chan {
- 	DCP_CHAN_HASH_SHA	=3D 0,
- 	DCP_CHAN_CRYPTO		=3D 2,
-@@ -1051,15 +1053,28 @@ static int mxs_dcp_probe(struct platform_device *pd=
-ev)
- 		return -ENOMEM;
-=20
- 	/* Re-align the structure so it fits the DCP constraints. */
- 	sdcp->coh =3D PTR_ALIGN(sdcp->coh, DCP_ALIGNMENT);
-=20
--	/* Restart the DCP block. */
--	ret =3D stmp_reset_block(sdcp->base);
-+	/* DCP clock is optional, only used on some SOCs */
-+	sdcp->dcp_clk =3D devm_clk_get(dev, "dcp");
-+	if (IS_ERR(sdcp->dcp_clk)) {
-+		if (sdcp->dcp_clk !=3D ERR_PTR(-ENOENT))
-+			return PTR_ERR(sdcp->dcp_clk);
-+		sdcp->dcp_clk =3D NULL;
+1/ If you are talking about this sentence:
+"Yes, but you have to make "normal" be no bit set to be compatible with
+everything already out there."
+
+The current implementation consider that if no mode is provided then, the
+old approach is considered, meaning the normal mode will be used by every
+PWM in-kernel clients.
+
+In of_pwm_xlate_with_flags() the pmw->args.mode is initialized with what
+pwm_mode_get_valid() returns. In case of controllers which does not
+implement something special for PWM modes the PWM normal mode will be
+returned (pwmchip_get_default_caps() function has to be called in the end).
+Otherwise the pwm->args.mode will be populated with what user provided as
+input from DT, if what was provided from DT is valid for PWM channel.
+Please see that pwm_mode_valid() is used to validate user input, otherwise
+PWM normal mode will be used.
+
++	pwm->args.mode =3D pwm_mode_get_valid(pc, pwm);
+
+-	if (args->args_count > 2 && args->args[2] & PWM_POLARITY_INVERTED)
+-		pwm->args.polarity =3D PWM_POLARITY_INVERSED;
++	if (args->args_count > 2) {
++		if (args->args[2] & PWM_POLARITY_INVERTED)
++			pwm->args.polarity =3D PWM_POLARITY_INVERSED;
++
++		for (modebit =3D PWMC_MODE_COMPLEMENTARY_BIT;
++		     modebit < PWMC_MODE_CNT; modebit++) {
++			unsigned long mode =3D BIT(modebit);
++
++			if ((args->args[2] & mode) &&
++			    pwm_mode_valid(pwm, mode)) {
++				pwm->args.mode =3D mode;
++				break;
++			}
++		}
 +	}
-+	ret =3D clk_prepare_enable(sdcp->dcp_clk);
- 	if (ret)
- 		return ret;
-=20
-+	/* Restart the DCP block. */
-+	ret =3D stmp_reset_block(sdcp->base);
-+	if (ret) {
-+		dev_err(dev, "Failed reset\n");
-+		goto err_disable_unprepare_clk;
-+	}
-+
- 	/* Initialize control register. */
- 	writel(MXS_DCP_CTRL_GATHER_RESIDUAL_WRITES |
- 	       MXS_DCP_CTRL_ENABLE_CONTEXT_CACHING | 0xf,
- 	       sdcp->base + MXS_DCP_CTRL);
-=20
-@@ -1092,11 +1107,12 @@ static int mxs_dcp_probe(struct platform_device *pd=
-ev)
- 	/* Create the SHA and AES handler threads. */
- 	sdcp->thread[DCP_CHAN_HASH_SHA] =3D kthread_run(dcp_chan_thread_sha,
- 						      NULL, "mxs_dcp_chan/sha");
- 	if (IS_ERR(sdcp->thread[DCP_CHAN_HASH_SHA])) {
- 		dev_err(dev, "Error starting SHA thread!\n");
--		return PTR_ERR(sdcp->thread[DCP_CHAN_HASH_SHA]);
-+		ret =3D PTR_ERR(sdcp->thread[DCP_CHAN_HASH_SHA]);
-+		goto err_disable_unprepare_clk;
- 	}
-=20
- 	sdcp->thread[DCP_CHAN_CRYPTO] =3D kthread_run(dcp_chan_thread_aes,
- 						    NULL, "mxs_dcp_chan/aes");
- 	if (IS_ERR(sdcp->thread[DCP_CHAN_CRYPTO])) {
-@@ -1149,10 +1165,14 @@ static int mxs_dcp_probe(struct platform_device *pd=
-ev)
- err_destroy_aes_thread:
- 	kthread_stop(sdcp->thread[DCP_CHAN_CRYPTO]);
-=20
- err_destroy_sha_thread:
- 	kthread_stop(sdcp->thread[DCP_CHAN_HASH_SHA]);
-+
-+err_disable_unprepare_clk:
-+	clk_disable_unprepare(sdcp->dcp_clk);
-+
- 	return ret;
- }
-=20
- static int mxs_dcp_remove(struct platform_device *pdev)
- {
-@@ -1168,10 +1188,12 @@ static int mxs_dcp_remove(struct platform_device *p=
-dev)
- 		crypto_unregister_algs(dcp_aes_algs, ARRAY_SIZE(dcp_aes_algs));
-=20
- 	kthread_stop(sdcp->thread[DCP_CHAN_HASH_SHA]);
- 	kthread_stop(sdcp->thread[DCP_CHAN_CRYPTO]);
-=20
-+	clk_disable_unprepare(sdcp->dcp_clk);
-+
- 	platform_set_drvdata(pdev, NULL);
-=20
- 	global_sdcp =3D NULL;
-=20
- 	return 0;
---=20
-2.17.1
+
+
+2/ If you are talking about this sentence:
+"Thinking about this some more, shouldn't the new modes just be
+implied? A client is going to require one of these modes or it won't
+work right."
+
+As explained at point 1, if there is no mode requested from DT the default
+mode for channel will be used, which, in case of PWM controller which are
+not implementing the new modes, will be PWM normal mode.
+
+3/ If you are talking about:
+"Also complementary mode could be accomplished with a single pwm output
+and a board level inverter, right? How would that be handled when the
+PWM driver doesn't support that mode?"
+This complicates the things and I think it requires extra device tree
+bindings to describe extra per-pwm channel capabilities. For the moment,
+with this series I've stopped to only have the capabilities registered from
+driver. My understanding is that this could be accomplished with extra
+device tree bindings in PWM controller to describe PWM channels
+capabilities. If you also want me to look into this direction please let me
+know. And also, suggestions would be appreciated.
+
+I know that Rob acked
+> the DT parts of this, but I suspect that this might have been glossed
+> over.
+
+If this is about point 3 I've emphasize above I would like to have some
+inputs from your side, if you agree with a behavior like having extra DT
+bindings. The intention wasn't to left this over but to have a better
+understanding of the subject. I'm thinking if it is ok to have modules
+outside of the SoC that model a behavior that could not be controlled from
+software (it could be only hardware) but to behave in a single way. Take
+for instance this scenario:
+
+- new DT bindings are implemented to specify this behavior per channel
+- hardware modules are soldered outside of a PWM channel with one output
+- the new DT bindings are not specified for the soldered PWM channel
+- user enables this channel, it will have only normal mode available for it
+to configure (because the new DT bindings were not provided)
+- but the real output the user will see would be in complementary or even
+push-pull mode.
+
+>=20
+> To restate the concern: these extended modes have special uses and none
+> of the users in the kernel, other than sysfs, can use anything other
+> than the normal mode. They may work fine with other modes, but only if
+> they ignore the extras that come with them. Therefore I think it's safe
+> to say that anyone who would want to use these modes would want to
+> explicitly say so. For example the sysfs interface already does that by
+> changing the mode only after the "mode" attribute is written. Any users
+> for special use-cases would want to do the same thing, that is, drive a
+> PWM in a specific mode, on purpose. You wouldn't have a "generic" user
+> such as pwm-backlight or leds-pwm request anything other than the normal
+> mode.
+>=20
+> So my question is, do we really need to represent these modes in DT? The
+> series currently doesn't contain any patches that add users of these new
+> modes. Are such patches available somewhere, or is the only user of this
+> supposed to be sysfs?
+
+For the moment, no, there is no in-kernel user for this, only sysfs. I had
+in mind to adapt the use of these new mode for PWM regulator for scenarios
+described in [1] page 2126. Anyway, since these patches doesn't introduce
+any user other that sysfs it will not disturbed me to drop the changes. By
+the time I or someone else will do some other changes that requires this,
+the DT part should also be introduced.
+
+[1] http://ww1.microchip.com/downloads/en/DeviceDoc/DS60001476B.pdf
+
+>=20
+> I'm hesitant to move forward with this as-is without seeing how it will
+> be used.
+
+For the moment only sysfs is supposed to use this.
+
+The PWM specifier flags are somewhat abused by adding modes to
+> them.=20
+
+I see.
+
+I think this hasn't been completely thought through, because the
+> only reason to specify a mode is to actually set that mode.
+
+Maybe it wasn't clear understand, with the current implementation if no
+mode will be specified the default mode will be used. There is no impose to
+specify a mode.
+
+ But then the
+> DT ABI allows a bitmask of modes to be requested via DT. I know that
+> only the first of those modes will end up being used, but then why even
+> allow it in the first place?
+
+I had in mind that I will change the PWM regulator driver to work in
+scenarios like the one specified in the link above.
+
+>=20
+> And again, even if we allow the mode to be specified in DT, how do the
+> consumer drivers know that the correct mode was being set in DT.=20
+
+PWM user will call at some point devm_pwm_get() which, in turn, will call
+of_pwm_get() which in turn will initialize PWM args with inputs from DT.
+After that PWM user will, at some point, apply a PWM state; if it is
+initialized with PWM args initialized when devm_pwm_get() was called then
+pwm_apply_state() would fail if no good mode is provided as input via DT.
+
+Same thing happens if a bad period is provided via DT.
+
+Let's
+> say we have a consumer that requires the PWM to be driven in
+> complementary mode. Should it rely on the DT to contain the correct
+> specification for the mode? And if it knows that it needs complementary
+> mode, why not just set that mode itself?
+
+I'm thinking it's the same way as is with PWM period which could also be
+provided from DT. In the end a bad period value could be provided from
+device tree. E.g. Atmel PWM controller could generate PWM signals who's
+periods could not be higher than ~0.6 seconds. If a bad value is provided
+the pwm_apply_state() will fail.
+
+Thank you,
+Claudiu Beznea
+
+That way there's no margin for
+> error.
+
+
+>=20
+> Thierry
+>=20
