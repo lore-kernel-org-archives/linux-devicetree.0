@@ -1,60 +1,61 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v1 3/5] ARM: tegra: Create tegra20-cpufreq device on
- Tegra30
-Date: Wed, 17 Oct 2018 10:54:30 +0100
-Message-ID: <65532de7-2768-0d99-33a9-5b43cfbf510c@nvidia.com>
-References: <20180830194356.14059-1-digetx@gmail.com>
- <20180830194356.14059-4-digetx@gmail.com>
- <9ec51c2d-02f6-0988-0940-0ec31d22f697@nvidia.com>
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V13 0/4] C-SKY(csky) Linux Intc Driver
+Date: Wed, 17 Oct 2018 17:59:45 +0800
+Message-ID: <20181017095945.GA3383@guoren-Inspiron-7460>
+References: <cover.1539696960.git.ren_guo@c-sky.com>
+ <3fff53d8-fca0-fee4-ae3b-c8b08dc29a37@arm.com>
+ <20181017015511.GA21519@guoren-Inspiron-7460>
+ <3043b2ca-cfa2-db70-b24a-fc473139991c@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9ec51c2d-02f6-0988-0940-0ec31d22f697@nvidia.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <3043b2ca-cfa2-db70-b24a-fc473139991c@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, will.deacon@arm.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Marc,
 
-On 17/10/2018 09:49, Jon Hunter wrote:
+On Wed, Oct 17, 2018 at 09:29:45AM +0100, Marc Zyngier wrote:
+> Hi Guo,
 > 
-> On 30/08/2018 20:43, Dmitry Osipenko wrote:
->> Tegra20-cpufreq driver require a platform device in order to be loaded,
->> instantiate a simple platform device for the driver during of the machines
->> late initialization. Driver now supports Tegra30 SoC's, hence create the
->> device on Tegra30 machines.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  arch/arm/mach-tegra/tegra.c | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/arch/arm/mach-tegra/tegra.c b/arch/arm/mach-tegra/tegra.c
->> index 67d8ae60ac67..b559e22eab76 100644
->> --- a/arch/arm/mach-tegra/tegra.c
->> +++ b/arch/arm/mach-tegra/tegra.c
->> @@ -111,6 +111,10 @@ static void __init tegra_dt_init_late(void)
->>  	if (IS_ENABLED(CONFIG_ARCH_TEGRA_2x_SOC) &&
->>  	    of_machine_is_compatible("nvidia,tegra20"))
->>  		platform_device_register_simple("tegra20-cpufreq", -1, NULL, 0);
->> +
->> +	if (IS_ENABLED(CONFIG_ARCH_TEGRA_3x_SOC) &&
->> +	    of_machine_is_compatible("nvidia,tegra30"))
->> +		platform_device_register_simple("tegra20-cpufreq", -1, NULL, 0);
->>  }
->>  
->>  static const char * const tegra_dt_board_compat[] = {
+> On 17/10/18 02:55, Guo Ren wrote:
+> > Hi Marc,
+> > 
+> > On Tue, Oct 16, 2018 at 03:41:05PM +0100, Marc Zyngier wrote:
+> >> Guo,
+> >>
+> >> On 16/10/18 15:08, Guo Ren wrote:
+> >>> This is about 13th patchset for C-SKY linux intc drivers and it should pair
+> >>> with 9th kernel patchset. Timer drivers are seperated according to
+> >>> requirements.
+> >>>
+> >>> This version patch improve the comment in commit-msg and move the
+> >>> changelog to the end with "---", so git am will ignore the changelog.
+> >>>
+> >>> Hope it could be merged into linux-4.20 and I'm very grateful to any help.
+> >>
+> >> I can't really see that happening, in all honesty. On its own, this code
+> >> is not very useful (it cannot compile standalone), and I haven't seen a
+> >> clear indication that the rest of the architecture code is going to be
+> >> merged for 4.20.
+> > Thank you very much for your frankness.
+> > 
+> >> If the arch code is actually being merged for 4.20, then please add my:
+> >>
+> >> 	Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+> >>
+> >> to these 4 patches, and get the whole thing merged in one go.
+> >>
+> > Got it, thx for the conditional Reviewed-by.
 > 
-> Not sure why you would do this if now the driver only works with DT. Am
-> I missing something?
+> The Reviewed-by is not conditional, and you can apply it right now. What
+> I meant is that I'm happy for you to get these irqchip patches merged
+> with the rest of the architecture code.
+Thank you and I agree that these patches should be merged with arch code
+together.
 
-Actually, not sure why we just don't move this into the actual driver
-itself like we have for tegra124.
-
-Cheers
-Jon
-
--- 
-nvpublic
+Best Regards
+ Guo Ren
