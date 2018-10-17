@@ -1,32 +1,27 @@
-Return-Path: <SRS0=AkGh=M7=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 0/2] pinctrl: Add RZ/A2 pin and gpio driver
-Date: Fri, 19 Oct 2018 08:40:28 -0500
-Message-Id: <20181019134030.10472-1-chris.brandt@renesas.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: jacopo mondi <jacopo@jmondi.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <robherring2@gmail.com>
+Date: Wed, 17 Oct 2018 15:02:11 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/6] dt-bindings: clock: qcom: Add QCOM WCSS GCC clock
+ bindings
+Message-ID: <20181017200211.GA17394@bogus>
+References: <1539337244-9505-1-git-send-email-govinds@codeaurora.org>
+ <1539337244-9505-2-git-send-email-govinds@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1539337244-9505-2-git-send-email-govinds@codeaurora.org>
+To: Govind Singh <govinds@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The pin controller in the RZ/A2 is nothing like the pin controller in
-the RZ/A1. That's a good thing! This pin controller is much more simple
-and easier to configure.
+On Fri, 12 Oct 2018 15:10:39 +0530, Govind Singh wrote:
+> Add device tree bindings for WiFi QDSP gcc clock controls found in
+> QCS404 soc.
+> 
+> Signed-off-by: Govind Singh <govinds@codeaurora.org>
+> ---
+>  include/dt-bindings/clock/qcom,gcc-qcs404.h | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
 
-So, this driver is faily simple (I hope).
-
-
-Chris Brandt (2):
-  pinctrl: Add RZ/A2 pin and gpio controller
-  dt-bindings: pinctrl: Add RZ/A2 pinctrl and GPIO
-
- .../bindings/pinctrl/renesas,rza2-pinctrl.txt      |  88 ++++
- drivers/pinctrl/Kconfig                            |  11 +
- drivers/pinctrl/Makefile                           |   1 +
- drivers/pinctrl/pinctrl-rza2.c                     | 529 +++++++++++++++++++++
- include/dt-bindings/pinctrl/r7s9210-pinctrl.h      |  47 ++
- 5 files changed, 676 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
- create mode 100644 drivers/pinctrl/pinctrl-rza2.c
- create mode 100644 include/dt-bindings/pinctrl/r7s9210-pinctrl.h
-
--- 
-2.16.1
+Reviewed-by: Rob Herring <robh@kernel.org>
