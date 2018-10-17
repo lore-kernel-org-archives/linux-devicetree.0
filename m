@@ -1,87 +1,88 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 04/11] dt-bindings: net: ti: cpsw: switch to use
- phy-gmii-sel phy
-Date: Wed, 17 Oct 2018 10:41:12 -0500
-Message-ID: <20181017154112.GA18218@bogus>
-References: <20181008234949.15416-1-grygorii.strashko@ti.com>
- <20181008234949.15416-5-grygorii.strashko@ti.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v13 3/8] clk: Use devm_ in the register fixed factor clock
+Date: Wed, 17 Oct 2018 08:41:18 -0700
+Message-ID: <153979087829.5275.6249138489771592939@swboyd.mtv.corp.google.com>
+References: <20180614215358.11264-1-ilia.lin@gmail.com>
+ <20180614215358.11264-4-ilia.lin@gmail.com>
+ <CAHYQr0rR=mcV-SxZFW+5M4CTUaTv_f_bruyq91HiGP6sqUZ3Yw@mail.gmail.com>
+ <153938209728.5275.8811599608746761178@swboyd.mtv.corp.google.com>
+ <20181014202122.GA13473@centauri.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181008234949.15416-5-grygorii.strashko@ti.com>
+In-Reply-To: <20181014202122.GA13473@centauri.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Kishon Vijay Abraham I <kishon@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+To: Niklas Cassel <niklas.cassel@linaro.org>, bjorn.andersson@linaro.org, ilia.lin@gmail.com
+Cc: Ricardo Salveti <rsalveti@rsalveti.net>, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, will.deacon@arm.com, Amit Kucheria <amit.kucheria@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 08, 2018 at 06:49:42PM -0500, Grygorii Strashko wrote:
-> The cpsw-phy-sel driver was replaced with new PHY driver phy-gmii-sel, so
-> deprecate cpsw-phy-sel bindings and update CPSW binding to use phy-gmii-sel
-> PHY bindings.
-> 
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: Tony Lindgren <tony@atomide.com>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> ---
->  Documentation/devicetree/bindings/net/cpsw.txt | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
-> index b3acebe..69d7ef8 100644
-> --- a/Documentation/devicetree/bindings/net/cpsw.txt
-> +++ b/Documentation/devicetree/bindings/net/cpsw.txt
-> @@ -22,7 +22,8 @@ Required properties:
->  - cpsw-phy-sel		: Specifies the phandle to the CPSW phy mode selection
->  			  device. See also cpsw-phy-sel.txt for it's binding.
->  			  Note that in legacy cases cpsw-phy-sel may be
-> -			  a child device instead of a phandle.
-> +			  a child device instead of a phandle
-> +			  (DEPRECATED, use phy-gmii-sel PHY phandle).
+Quoting Niklas Cassel (2018-10-14 13:21:22)
+> On Fri, Oct 12, 2018 at 03:08:17PM -0700, Stephen Boyd wrote:
+> > Quoting Ricardo Salveti (2018-09-14 11:53:02)
+> > > On Thu, Jun 14, 2018 at 6:55 PM <ilia.lin@gmail.com> wrote:
+> > > >
+> > > > From: Ilia Lin <ilialin@codeaurora.org>
+> > > >
+> > > > Use devm_clk_hw_register instead of clk_hw_register
+> > > > to simplify the usage of this API. This way drivers that call
+> > > > the clk_hw_register_fixed_factor won't need to maintain
+> > > > a data structure for further cleanup.
+> > > >
+> > > > Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
+> > > > Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > > ---
+> > > >  drivers/clk/clk-fixed-factor.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed=
+-factor.c
+> > > > index a5d402de5584..8e39bda8e596 100644
+> > > > --- a/drivers/clk/clk-fixed-factor.c
+> > > > +++ b/drivers/clk/clk-fixed-factor.c
+> > > > @@ -94,7 +94,7 @@ struct clk_hw *clk_hw_register_fixed_factor(struc=
+t device *dev,
+> > > >         init.num_parents =3D 1;
+> > > >
+> > > >         hw =3D &fix->hw;
+> > > > -       ret =3D clk_hw_register(dev, hw);
+> > > > +       ret =3D devm_clk_hw_register(dev, hw);
+> > > =
 
-phy-gmii-sel is outside the scope of this binding. Just say use 'phys' 
-property instead.
+> > > Not sure what is the current state of this patch-set, but this change
+> > > breaks drivers calling clk_hw_register_fixed_factor with a NULL dev
+> > > (e.g. imx_clk_fixed_factor), as devm_clk_hw_register needs a valid dev
+> > > for devres_add to work.
+> > > =
 
->  
->  Optional properties:
->  - ti,hwmods		: Must be "cpgmac0"
-> @@ -44,6 +45,7 @@ Optional properties:
->  Slave Properties:
->  Required properties:
->  - phy-mode		: See ethernet.txt file in the same directory
-> +- phys			: phandle on phy-gmii-sel PHY (see phy/ti-phy-gmii-sel.txt)
->  
->  Optional properties:
->  - dual_emac_res_vlan	: Specifies VID to be used to segregate the ports
-> @@ -85,12 +87,14 @@ Examples:
->  			phy-mode = "rgmii-txid";
->  			/* Filled in by U-Boot */
->  			mac-address = [ 00 00 00 00 00 00 ];
-> +			phys = <&phy_gmii_sel 1 0>;
->  		};
->  		cpsw_emac1: slave@1 {
->  			phy_id = <&davinci_mdio>, <1>;
->  			phy-mode = "rgmii-txid";
->  			/* Filled in by U-Boot */
->  			mac-address = [ 00 00 00 00 00 00 ];
-> +			phys = <&phy_gmii_sel 2 0>;
->  		};
->  	};
->  
-> @@ -114,11 +118,13 @@ Examples:
->  			phy-mode = "rgmii-txid";
->  			/* Filled in by U-Boot */
->  			mac-address = [ 00 00 00 00 00 00 ];
-> +			phys = <&phy_gmii_sel 1 0>;
->  		};
->  		cpsw_emac1: slave@1 {
->  			phy_id = <&davinci_mdio>, <1>;
->  			phy-mode = "rgmii-txid";
->  			/* Filled in by U-Boot */
->  			mac-address = [ 00 00 00 00 00 00 ];
-> +			phys = <&phy_gmii_sel 2 0>;
->  		};
->  	};
-> -- 
-> 2.10.5
-> 
+> > =
+
+> > Yep. Probably better to just have a driver register the clk_hw structure
+> > itself with the clk framework vs. trying to get it right here in the
+> > generic type registration function.
+> > =
+
+> =
+
+> Hello Ilia, Stephen,
+> =
+
+> As you know this patch series is needed to get DVFS working on msm8996.
+> =
+
+> Ilia, are you planning on submitting a new patch set for this, or would
+> you prefer if we submitted a new patch version for you?
+> =
+
+> Looking at this patch series, this appears to be the only outstanding
+> review comment.
+
+Sorry, you were too hopeful :/
+
+> Stephen, do you have any review comments on this series?
+> =
+
+
+Yes, my nitpick should be easy to resolve and then it's just a few open
+questions after that. Otherwise things seem fine and the CPU can run
+really fast without bumping up the voltages?
