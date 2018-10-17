@@ -1,25 +1,54 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 6/7] clk: imx6q: add mmdc0 ipg clock
-Date: Wed, 17 Oct 2018 11:16:57 -0700
-Message-ID: <153980021754.5275.12236034739532021121@swboyd.mtv.corp.google.com>
-References: <1535701998-20443-1-git-send-email-Anson.Huang@nxp.com>
- <1535701998-20443-7-git-send-email-Anson.Huang@nxp.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 5/9] arm64: dts: sdm845: Add gpu and gmu
+ device nodes
+Date: Wed, 17 Oct 2018 11:28:38 -0700
+Message-ID: <CAD=FV=WzkRtcdy_=eatp=AEkJ54d=qvNGzNYCMCMnVAWtrXAQg@mail.gmail.com>
+References: <20180827151112.25211-1-jcrouse@codeaurora.org>
+ <20180827151112.25211-6-jcrouse@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535701998-20443-7-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>, aisheng.dong@nxp.com, clement.peron@devialet.com, colin.didier@devialet.com, devicetree@vger.kernel.org, fabio.estevam@nxp.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, matteo.lisi@engicam.com, michael@amarulasolutions.com, mturquette@baylibre.com, ping.bai@nxp.com, robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org, shengjiu.wang@nxp.com
-Cc: Linux-imx@nxp.com
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180827151112.25211-6-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Anson Huang (2018-08-31 00:53:17)
-> i.MX6Q has MMDC0 ipg clock in CCM CCGR, add it into
-> clock tree for clock management.
-> =
-
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-
-Applied to clk-next
+SGksCgpPbiBNb24sIEF1ZyAyNywgMjAxOCBhdCA4OjExIEFNIEpvcmRhbiBDcm91c2UgPGpjcm91
+c2VAY29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+ICsgICAgICAgICAgICAgICBncHVANTAwMDAwMCB7
+Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJxY29tLGFkcmVuby02MzAu
+MiIsICJxY29tLGFkcmVubyI7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgI3N0cmVhbS1pZC1j
+ZWxscyA9IDwxNj47Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDUwMDAw
+MDAgMHg0MDAwMD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnLW5hbWVzID0gImtnc2xf
+M2QwX3JlZ19tZW1vcnkiOwo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICAvKgo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAqIExvb2sgbWEsIG5vIGNsb2NrcyEgVGhlIEdQVSBjbG9ja3Mg
+YW5kIHBvd2VyIGFyZQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAqIGNvbnRyb2xsZWQgZW50
+aXJlbHkgYnkgdGhlIEdNVQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAqLwo+ICsKPiArICAg
+ICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPDAgMzAwIDA+Owo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIGludGVycnVwdC1uYW1lcyA9ICJrZ3NsXzNkMF9pcnEiOwoKRHJpdmUtYnkg
+ZmVlZGJhY2sgaGVyZS4gIFRoZSAiaW50ZXJydXB0cyIgYWJvdmUgc2hvdWxkIGJlOgoKaW50ZXJy
+dXB0cyA9IDxHSUNfU1BJIDMwMCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKCiogR0lDX1NQSSBpcyAw
+LCBidXQgR0lDX1NQSSBpcyBtb3JlIGRvY3VtZW50aW5nLgoKKiBoYXZpbmcgMCBmb3IgdGhlIGZp
+bmFsIGVsZW1lbnQgbWVhbnMgJ0lSUV9UWVBFX05PTkUnLiAgT24gbmV3ZXIKa2VybmVscyBjb21t
+aXQgNmVmNjM4NmVmN2MxICgiaXJxY2hpcC9naWMtdjM6IExvdWRseSBjb21wbGFpbiBhYm91dAp0
+aGUgdXNlIG9mIElSUV9UWVBFX05PTkUiKSB3aWxsIGNhdXNlIGxvdWQgeWVsbHMgaWYgeW91IGRv
+IHRoaXMuICBUaGlzCnR1cm5zIG91dCB0byBiZSBhIGJpdCBzaWxseSBiZWNhdXNlIChJSVVDKSB0
+aGUgZmxhZ3MgaW4gdGhlIGRldmljZQp0cmVlIGFyZSB0b3RhbGx5IGlnbm9yZWQgaWYgdGhlIGRy
+aXZlciBwYXNzZXMgaW4gZmxhZ3MgaXRzZWxmIFsxXS4KLi4uYnV0IEkgZ3Vlc3Mgd2Ugc2hvdWxk
+IGRvIGl0IHJpZ2h0LiAgSSBiZWxpZXZlIHRoZSBjb2RlIHJlcXVlc3RpbmcKdGhpcyBpcnEgaXMg
+YTZ4eF9nbXVfZ2V0X2lycSgpIHdoaWNoIHJlcXVlc3RzIGEgbGV2ZWwgaGlnaCBpbnRlcnJ1cHQs
+CnNvIHdlIHNob3VsZCBsaXN0IGxldmVsIGhpZ2ggaGVyZS4KCgpbMV0gaHR0cHM6Ly9sb3JlLmtl
+cm5lbC5vcmcvbGttbC9DQUQ9RlY9WG1pT2gwTWcwZjRhPVcwTkNIOGViLS1PUWhQMmpOQXYyWk1w
+VUJPbjluNlFAbWFpbC5nbWFpbC5jb20vVC8jdQoKCi1Eb3VnCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRy
+ZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
