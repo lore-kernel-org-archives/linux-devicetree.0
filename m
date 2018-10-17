@@ -1,91 +1,78 @@
-From: Song Qiang <songqiang1304521@gmail.com>
-Subject: Re: [PATCH v4 3/3] iio: magnetometer: Add driver support for PNI
- RM3100
-Date: Wed, 17 Oct 2018 16:00:02 +0800
-Message-ID: <ce65b203-2a44-08e4-bdd0-f3c8df48e2f1@gmail.com>
-References: <20181002143812.3661-1-songqiang1304521@gmail.com>
- <20181012073536.20339-1-songqiang1304521@gmail.com>
- <20181012073536.20339-4-songqiang1304521@gmail.com>
- <436097c6-b32b-42e4-e704-a15280e13cb0@gmail.com>
- <20181012125316.GA6480@himanshu-Vostro-3559>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH 00/11] thermal: add new flag irq-mode for trip point
+Date: Wed, 17 Oct 2018 10:24:00 +0200
+Message-ID: <20181017082402eucas1p1088cde8bb32592e96decd0075ecc055a~eV8jZImjv1752717527eucas1p1K@eucas1p1.samsung.com>
+References: <CGME20181016145637eucas1p2dfa78042b9fd4fd27af7cc8537b7f485@eucas1p2.samsung.com>
+        <20181016145637eucas1p2dfa78042b9fd4fd27af7cc8537b7f485~eHqCoEO-42133821338eucas1p2F@eucas1p2.samsung.com>
+        <CAJKOXPei6b7TnOnG7DUMNm+xEUsMxqcMOfbG10cJbrNROXLN2w@mail.gmail.com>
+        <20181017074244eucas1p2487ff3bccf50d6f4fd7a99cd7d8d2bb4~eVYe84jXW0904509045eucas1p2q@eucas1p2.samsung.com>
+        <CAJKOXPd4=hvowfkEJbfX_BXf_PEjxuKxn7dxy7cb=G59a8+GOw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181012125316.GA6480@himanshu-Vostro-3559>
+In-Reply-To: <CAJKOXPd4=hvowfkEJbfX_BXf_PEjxuKxn7dxy7cb=G59a8+GOw@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Himanshu Jha <himanshujha199640@gmail.com>
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, preid@electromag.com.au, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
 
-On 2018/10/12 下午8:53, Himanshu Jha wrote:
-> Hi Qiang,
->
-> On Fri, Oct 12, 2018 at 04:36:01PM +0800, Song Qiang wrote:
+
+On 10/17/2018 09:52 AM, Krzysztof Kozlowski wrote:
+> On Wed, 17 Oct 2018 at 09:42, Lukasz Luba <l.luba@partner.samsung.com> wrote:
 >>
->> On 2018年10月12日 15:35, Song Qiang wrote:
->>> PNI RM3100 is a high resolution, large signal immunity magnetometer,
->>> composed of 3 single sensors and a processing chip with a MagI2C
->>> interface.
+>> Hi Krzysztof,
+>>
+>> On 10/17/2018 09:03 AM, Krzysztof Kozłowski wrote:
+>>> On Tue, 16 Oct 2018 at 16:56, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>>>
+>>>> Hi all,
+>>>>
+>>>> This patch set adds new flag and mechanism in thermal trip point in DT.
+>>>> The current situation with 'passive' (passive cooling - DVFS)
+>>>> trip point is that it enables polling mode in thermal framework.
 >>>
->> ...
->>> +static irqreturn_t rm3100_trigger_handler(int irq, void *p)
->>> +{
->>> +	struct iio_poll_func *pf = p;
->>> +	struct iio_dev *indio_dev = pf->indio_dev;
->>> +	unsigned long scan_mask = *indio_dev->active_scan_mask;
->>> +	unsigned int mask_len = indio_dev->masklength;
->>> +	struct rm3100_data *data = iio_priv(indio_dev);
->>> +	struct regmap *regmap = data->regmap;
->>> +	int ret, i, bit;
->>> +
->>> +	mutex_lock(&data->lock);
->>> +	switch (scan_mask) {
->>> +	case BIT(0) | BIT(1) | BIT(2):
->>> +		ret = regmap_bulk_read(regmap, RM3100_REG_MX2, data->buffer, 9);
->>> +		mutex_unlock(&data->lock);
->>> +		if (ret < 0)
->>> +			goto done;
->>> +	break;
->>> +	case BIT(0) | BIT(1):
->>> +		ret = regmap_bulk_read(regmap, RM3100_REG_MX2, data->buffer, 6);
->>> +		mutex_unlock(&data->lock);
->>> +		if (ret < 0)
->>> +			goto done;
->>> +	break;
->>> +	case BIT(1) | BIT(2):
->>> +		ret = regmap_bulk_read(regmap, RM3100_REG_MY2, data->buffer, 6);
->>> +		mutex_unlock(&data->lock);
->>> +		if (ret < 0)
->>> +			goto done;
->>> +	break;
->> Hi Jonathan,
+>>> For DT platform, I checked it some months ago... and that time I was
+>>> pretty sure - passive mode does not enable polling (unless you tell it
+>>> explicitly with "polling-delay-passive"). Maybe something changed...
+>>> but quick look at the code tell me that not. Passive does not indicate
+>>> polling mode.
+>>>
+>>> Why do you think that passive enables polling?
+>> Please check dt file which implements 2 more trip points that HW
+>> supports:
+>> arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
 >>
->> I just noticed that these three breaks are not proper aligned.
-> Please send the new version of a patch as a *new* thread and don't
-> use `--in-reply-to` flag(if you're using) to chain into older versions
-> as whole thread of older discussion comes up and is often not required.
->
-> The changelog gives enough info of what's new in the revised series.
->
->
-Hi Himanshu,
+>> In that file we have this trick with 'active' present.
+>> Yes, you are right, 'polling-delay-passive' enables it in
+>> the thermal code (for whole thermal zone).
+>> Unfortunately, if you change the bellow 'active' to 'passive'
+>> in that file, they will start polling, which is not what we want.
+> 
+> Yes but this looks different than what you explained at the beginning.
+> You said that passive enables polling mode... which is not true. You
+> can have active with or without polling. You can have passive with or
+> without polling. But the real problem you described now is that given
+> polling/IRQ mode applies to entire thermal zone, not to a specific
+> trip point.
+> 
+> I agree with this problem but you need to clearly mark it in cover
+> letter and description of other commits because really from existing
+> explanation I understood something completely different. You simply
+> want to configure IRQ or polling per trip-point, not per thermal zone.
+Thank you for your feedback, I will rewrite the cover letter and
+descriptions.
+I will add that the thermal zone polling settings are for all it's trip
+points, which has some implications. Therefore, trying to work around,
+might cause confusion due to misalignment with trip point documentation
+and old assumptions.
 
+Regards,
+Lukasz
 
-Thanks for your advise.
-
-I did it because the following instruction tells me to, and I think it's 
-also a very quick way of gathering
-
-all scattered messages. Both ways have their own advantages and 
-disadvantages I think. :)
-
-<https://kernelnewbies.org/PatchPhilosophy> Section "Updating and 
-resending patches".
-
-
-yours,
-
-Song Qiang
+> 
+> Best regards,
+> Krzysztof
+> 
