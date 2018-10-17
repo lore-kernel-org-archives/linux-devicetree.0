@@ -1,179 +1,87 @@
-Return-Path: <SRS0=t11G=M5=exceet.de=frieder.schrempf@kernel.org>
-Subject: Re: [PATCH 0/4] usb: chipidea: imx: add HSIC support
+Return-Path: <SRS0=5gq4=M5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr60073.outbound.protection.outlook.com ([40.107.6.73]:27280
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726622AbeJQPRa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Oct 2018 11:17:30 -0400
+From: Peter Chen <peter.chen@nxp.com>
+Subject: RE: [PATCH 0/4] usb: chipidea: imx: add HSIC support
+Date: Wed, 17 Oct 2018 07:23:05 +0000
+Message-ID: <VI1PR04MB53271CABB291EECC73C86C518BFF0@VI1PR04MB5327.eurprd04.prod.outlook.com>
 References: <20181016045846.2345-1-peter.chen@nxp.com>
  <82a99c3c-20c6-4972-fc6d-1fca8d5d684d@exceet.de>
- <VI1PR04MB53271CABB291EECC73C86C518BFF0@VI1PR04MB5327.eurprd04.prod.outlook.com>
-From: Frieder Schrempf <frieder.schrempf@exceet.de>
-Message-ID: <796469f2-ea5d-d428-6088-32d8eedb3160@exceet.de>
-Date: Wed, 17 Oct 2018 11:56:15 +0200
-MIME-Version: 1.0
-In-Reply-To: <VI1PR04MB53271CABB291EECC73C86C518BFF0@VI1PR04MB5327.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <82a99c3c-20c6-4972-fc6d-1fca8d5d684d@exceet.de>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Peter Chen <peter.chen@nxp.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Frieder Schrempf <frieder.schrempf@exceet.de>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Peter,
-
-On 17.10.18 09:23, Peter Chen wrote:
->   
->> On 16.10.18 07:01, Peter Chen wrote:
->>> Most of NXP (Freescale) i.mx USB part has HSIC support, in this
->>> series, we add support for them, it should cover all imx6 and imx7d. I
->>> have no HSIC interface board which is supported by upstream kernel, so
->>> this patches are only compiled ok, Frieder Schrempf, would you please
->>> help me test it on your board? Thanks.
->>
->> Thank you for providing the patch!
->> I applied it to v4.19-rc8 and tested and the LAN9730 comes up and works just fine.
->>
->> Here is how my devicetree looks like:
->>
->> usbphy_dummy: usbphy_dummy@1 {
->> 	compatible = "usb-nop-xceiv";
->> };
->>
->> [...]
->>
->> &usbh2 {
->> 	vbus-supply = <&reg_usb_h2_vbus>;
->> 	pinctrl-names = "idle", "active";
->> 	pinctrl-0 = <&pinctrl_usbh2_idle>;
->> 	pinctrl-1 = <&pinctrl_usbh2_active>;
->> 	fsl,usbphy = <&usbphy_dummy>;
->> 	phy_type = "hsic";
->> 	status = "okay";
->> 	#address-cells = <1>;
->> 	#size-cells = <0>;
->>
->> 	usbnet: smsc@1 {
->> 		compatible = "usb424,9730";
->> 		/* Filled in by U-Boot */
->> 		mac-address = [00 00 00 00 00 00];
->> 		reg = <1>;
->> 	};
->> };
->>
->> [...]
->>
->> pinctrl_usbh2_idle: usbh2grp-idle {
->>     fsl,pins = <
->>       MX6QDL_PAD_RGMII_TXC__USB_H2_DATA       0x40013030
->>       MX6QDL_PAD_RGMII_TX_CTL__USB_H2_STROBE  0x40013030
->>     >;
->> };
->>
->> pinctrl_usbh2_active: usbh2grp-active {
->>     fsl,pins = <
->>       MX6QDL_PAD_RGMII_TXC__USB_H2_DATA       0x40013030
->>       MX6QDL_PAD_RGMII_TX_CTL__USB_H2_STROBE  0x40017030
->>     >;
->> };
->>
->>
->> Are there any test cases I should try?
->> How can I test suspend/resume?
->>
-> 
-> - System suspend/resume
-> 1. Enable USB wakeup
-> for i in $(find /sys -name wakeup | grep usb);do echo enabled  > $i;echo "echo enabled > $i";done;
-> 2. Let the system enter suspend using below command
-> echo mem > /sys/power/state
-> 3. And see if there is a wakeup block system entering suspend, and check if USB HSIC works ok
-> after system resume
-
-System suspend/resume seems to work fine. After resume the ethernet 
-controller works.
-
-root@imxceet-solo-s-43:~# echo mem > /sys/power/state
-PM: suspend entry (deep)
-PM: Syncing filesystems ... done.
-Freezing user space processes ... (elapsed 0.001 seconds) done.
-OOM killer disabled.
-Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
-smsc95xx 3-1:1.0 eth1: entering SUSPEND2 mode
-PM: suspend devices took 0.050 seconds
-Disabling non-boot CPUs ...
-usb 3-1: reset high-speed USB device number 2 using ci_hdrc
-PM: resume devices took 0.590 seconds
-OOM killer enabled.
-Restarting tasks ... done.
-PM: suspend exit
-smsc95xx 3-1:1.0 eth1: link up, 100Mbps, full-duplex, lpa 0x4DE1
-fec 2188000.ethernet eth0: Link is Up - 100Mbps/Full - flow control rx/tx
-
-> 
-> - Runtime suspend
-> 1. Enable auto suspend for all USB devices, and check if USBOH3 clock is closed,
-> make sure do not plug any ethernet cable on the RJ45 port.
-> 
-> /* Enable auto suspend */
-> for i in $(find /sys -name control | grep usb);do echo auto  > $i;echo "echo auto > $i";done;
-
-This doesn't work. When the port is suspended it gets into a loop of 
-suspending/resuming endlessly. If i put two logs in 
-ci_hdrc_imx_runtime_suspend() and ci_hdrc_imx_runtime_resume(), I get this:
-
-[...]
-ci_hdrc_imx_runtime_resume:603
-ci_hdrc_imx_runtime_suspend:574
-ci_hdrc_imx_runtime_resume:603
-ci_hdrc_imx_runtime_suspend:574
-ci_hdrc_imx_runtime_resume:603
-ci_hdrc_imx_runtime_suspend:574
-ci_hdrc_imx_runtime_resume:603
-ci_hdrc_imx_runtime_suspend:574
-[...]
-
-Any ideas how to debug?
-
-Thanks,
-Frieder
-
-> 
-> /* Scripts to see USB clock */
-> root@imx8qxpmek:~# cat uclk.sh
-> /home/root/dump-clocks.sh | grep usb
-> root@imx8qxpmek:~# cat /home/root/dump-clocks.sh
-> #!/bin/bash
-> 
-> if ! mount|grep -sq '/sys/kernel/debug'; then
->          mount -t debugfs none /sys/kernel/debug
-> fi
-> 
-> cat /sys/kernel/debug/clk/clk_summary
-> 
-> 2. If USB OH3 clock can close successfully, it means USB HSIC can enter suspend successfully.
-> 
-> 3. Plug ethernet cable to see if the link can be on.
-> 
-> The purpose of above two tests is to see if USB HSIC can be suspended.
-> 
-> Thanks.
-> 
-> Peter
-> 
-> 
->> I also have some suggestions for your patch. Please see the separate email.
->>
->> Thanks,
->> Frieder
->>
->>>
->>> Peter Chen (4):
->>>     usb: chipidea: add flag for imx hsic implementation
->>>     usb: chipidea: imx: add HSIC support
->>>     usb: chipidea: host: override ehci->hub_control
->>>     doc: usb: ci-hdrc-usb2: Add pinctrl properties for HSIC pin groups
->>>
->>>    .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |   1 +
->>>    drivers/usb/chipidea/ci_hdrc_imx.c                 | 153 ++++++++++++++++++---
->>>    drivers/usb/chipidea/ci_hdrc_imx.h                 |   9 +-
->>>    drivers/usb/chipidea/host.c                        |  98 +++++++++++++
->>>    drivers/usb/chipidea/usbmisc_imx.c                 | 131 ++++++++++++++++++
->>>    include/linux/usb/chipidea.h                       |   3 +
->>>    6 files changed, 376 insertions(+), 19 deletions(-)
->>>
+IA0KPiBPbiAxNi4xMC4xOCAwNzowMSwgUGV0ZXIgQ2hlbiB3cm90ZToNCj4gPiBNb3N0IG9mIE5Y
+UCAoRnJlZXNjYWxlKSBpLm14IFVTQiBwYXJ0IGhhcyBIU0lDIHN1cHBvcnQsIGluIHRoaXMNCj4g
+PiBzZXJpZXMsIHdlIGFkZCBzdXBwb3J0IGZvciB0aGVtLCBpdCBzaG91bGQgY292ZXIgYWxsIGlt
+eDYgYW5kIGlteDdkLiBJDQo+ID4gaGF2ZSBubyBIU0lDIGludGVyZmFjZSBib2FyZCB3aGljaCBp
+cyBzdXBwb3J0ZWQgYnkgdXBzdHJlYW0ga2VybmVsLCBzbw0KPiA+IHRoaXMgcGF0Y2hlcyBhcmUg
+b25seSBjb21waWxlZCBvaywgRnJpZWRlciBTY2hyZW1wZiwgd291bGQgeW91IHBsZWFzZQ0KPiA+
+IGhlbHAgbWUgdGVzdCBpdCBvbiB5b3VyIGJvYXJkPyBUaGFua3MuDQo+IA0KPiBUaGFuayB5b3Ug
+Zm9yIHByb3ZpZGluZyB0aGUgcGF0Y2ghDQo+IEkgYXBwbGllZCBpdCB0byB2NC4xOS1yYzggYW5k
+IHRlc3RlZCBhbmQgdGhlIExBTjk3MzAgY29tZXMgdXAgYW5kIHdvcmtzIGp1c3QgZmluZS4NCj4g
+DQo+IEhlcmUgaXMgaG93IG15IGRldmljZXRyZWUgbG9va3MgbGlrZToNCj4gDQo+IHVzYnBoeV9k
+dW1teTogdXNicGh5X2R1bW15QDEgew0KPiAJY29tcGF0aWJsZSA9ICJ1c2Itbm9wLXhjZWl2IjsN
+Cj4gfTsNCj4gDQo+IFsuLi5dDQo+IA0KPiAmdXNiaDIgew0KPiAJdmJ1cy1zdXBwbHkgPSA8JnJl
+Z191c2JfaDJfdmJ1cz47DQo+IAlwaW5jdHJsLW5hbWVzID0gImlkbGUiLCAiYWN0aXZlIjsNCj4g
+CXBpbmN0cmwtMCA9IDwmcGluY3RybF91c2JoMl9pZGxlPjsNCj4gCXBpbmN0cmwtMSA9IDwmcGlu
+Y3RybF91c2JoMl9hY3RpdmU+Ow0KPiAJZnNsLHVzYnBoeSA9IDwmdXNicGh5X2R1bW15PjsNCj4g
+CXBoeV90eXBlID0gImhzaWMiOw0KPiAJc3RhdHVzID0gIm9rYXkiOw0KPiAJI2FkZHJlc3MtY2Vs
+bHMgPSA8MT47DQo+IAkjc2l6ZS1jZWxscyA9IDwwPjsNCj4gDQo+IAl1c2JuZXQ6IHNtc2NAMSB7
+DQo+IAkJY29tcGF0aWJsZSA9ICJ1c2I0MjQsOTczMCI7DQo+IAkJLyogRmlsbGVkIGluIGJ5IFUt
+Qm9vdCAqLw0KPiAJCW1hYy1hZGRyZXNzID0gWzAwIDAwIDAwIDAwIDAwIDAwXTsNCj4gCQlyZWcg
+PSA8MT47DQo+IAl9Ow0KPiB9Ow0KPiANCj4gWy4uLl0NCj4gDQo+IHBpbmN0cmxfdXNiaDJfaWRs
+ZTogdXNiaDJncnAtaWRsZSB7DQo+ICAgIGZzbCxwaW5zID0gPA0KPiAgICAgIE1YNlFETF9QQURf
+UkdNSUlfVFhDX19VU0JfSDJfREFUQSAgICAgICAweDQwMDEzMDMwDQo+ICAgICAgTVg2UURMX1BB
+RF9SR01JSV9UWF9DVExfX1VTQl9IMl9TVFJPQkUgIDB4NDAwMTMwMzANCj4gICAgPjsNCj4gfTsN
+Cj4gDQo+IHBpbmN0cmxfdXNiaDJfYWN0aXZlOiB1c2JoMmdycC1hY3RpdmUgew0KPiAgICBmc2ws
+cGlucyA9IDwNCj4gICAgICBNWDZRRExfUEFEX1JHTUlJX1RYQ19fVVNCX0gyX0RBVEEgICAgICAg
+MHg0MDAxMzAzMA0KPiAgICAgIE1YNlFETF9QQURfUkdNSUlfVFhfQ1RMX19VU0JfSDJfU1RST0JF
+ICAweDQwMDE3MDMwDQo+ICAgID47DQo+IH07DQo+IA0KPiANCj4gQXJlIHRoZXJlIGFueSB0ZXN0
+IGNhc2VzIEkgc2hvdWxkIHRyeT8NCj4gSG93IGNhbiBJIHRlc3Qgc3VzcGVuZC9yZXN1bWU/DQo+
+IA0KDQotIFN5c3RlbSBzdXNwZW5kL3Jlc3VtZQ0KMS4gRW5hYmxlIFVTQiB3YWtldXANCmZvciBp
+IGluICQoZmluZCAvc3lzIC1uYW1lIHdha2V1cCB8IGdyZXAgdXNiKTtkbyBlY2hvIGVuYWJsZWQg
+ID4gJGk7ZWNobyAiZWNobyBlbmFibGVkID4gJGkiO2RvbmU7DQoyLiBMZXQgdGhlIHN5c3RlbSBl
+bnRlciBzdXNwZW5kIHVzaW5nIGJlbG93IGNvbW1hbmQgDQplY2hvIG1lbSA+IC9zeXMvcG93ZXIv
+c3RhdGUNCjMuIEFuZCBzZWUgaWYgdGhlcmUgaXMgYSB3YWtldXAgYmxvY2sgc3lzdGVtIGVudGVy
+aW5nIHN1c3BlbmQsIGFuZCBjaGVjayBpZiBVU0IgSFNJQyB3b3JrcyBvaw0KYWZ0ZXIgc3lzdGVt
+IHJlc3VtZQ0KDQotIFJ1bnRpbWUgc3VzcGVuZA0KMS4gRW5hYmxlIGF1dG8gc3VzcGVuZCBmb3Ig
+YWxsIFVTQiBkZXZpY2VzLCBhbmQgY2hlY2sgaWYgVVNCT0gzIGNsb2NrIGlzIGNsb3NlZCwNCm1h
+a2Ugc3VyZSBkbyBub3QgcGx1ZyBhbnkgZXRoZXJuZXQgY2FibGUgb24gdGhlIFJKNDUgcG9ydC4N
+Cg0KLyogRW5hYmxlIGF1dG8gc3VzcGVuZCAqLw0KZm9yIGkgaW4gJChmaW5kIC9zeXMgLW5hbWUg
+Y29udHJvbCB8IGdyZXAgdXNiKTtkbyBlY2hvIGF1dG8gID4gJGk7ZWNobyAiZWNobyBhdXRvID4g
+JGkiO2RvbmU7DQoNCi8qIFNjcmlwdHMgdG8gc2VlIFVTQiBjbG9jayAqLw0Kcm9vdEBpbXg4cXhw
+bWVrOn4jIGNhdCB1Y2xrLnNoIA0KL2hvbWUvcm9vdC9kdW1wLWNsb2Nrcy5zaCB8IGdyZXAgdXNi
+DQpyb290QGlteDhxeHBtZWs6fiMgY2F0IC9ob21lL3Jvb3QvZHVtcC1jbG9ja3Muc2ggDQojIS9i
+aW4vYmFzaA0KDQppZiAhIG1vdW50fGdyZXAgLXNxICcvc3lzL2tlcm5lbC9kZWJ1Zyc7IHRoZW4N
+CiAgICAgICAgbW91bnQgLXQgZGVidWdmcyBub25lIC9zeXMva2VybmVsL2RlYnVnDQpmaQ0KDQpj
+YXQgL3N5cy9rZXJuZWwvZGVidWcvY2xrL2Nsa19zdW1tYXJ5DQoNCjIuIElmIFVTQiBPSDMgY2xv
+Y2sgY2FuIGNsb3NlIHN1Y2Nlc3NmdWxseSwgaXQgbWVhbnMgVVNCIEhTSUMgY2FuIGVudGVyIHN1
+c3BlbmQgc3VjY2Vzc2Z1bGx5Lg0KDQozLiBQbHVnIGV0aGVybmV0IGNhYmxlIHRvIHNlZSBpZiB0
+aGUgbGluayBjYW4gYmUgb24uDQoNClRoZSBwdXJwb3NlIG9mIGFib3ZlIHR3byB0ZXN0cyBpcyB0
+byBzZWUgaWYgVVNCIEhTSUMgY2FuIGJlIHN1c3BlbmRlZC4NCg0KVGhhbmtzLg0KDQpQZXRlcg0K
+DQoNCj4gSSBhbHNvIGhhdmUgc29tZSBzdWdnZXN0aW9ucyBmb3IgeW91ciBwYXRjaC4gUGxlYXNl
+IHNlZSB0aGUgc2VwYXJhdGUgZW1haWwuDQo+IA0KPiBUaGFua3MsDQo+IEZyaWVkZXINCj4gDQo+
+ID4NCj4gPiBQZXRlciBDaGVuICg0KToNCj4gPiAgICB1c2I6IGNoaXBpZGVhOiBhZGQgZmxhZyBm
+b3IgaW14IGhzaWMgaW1wbGVtZW50YXRpb24NCj4gPiAgICB1c2I6IGNoaXBpZGVhOiBpbXg6IGFk
+ZCBIU0lDIHN1cHBvcnQNCj4gPiAgICB1c2I6IGNoaXBpZGVhOiBob3N0OiBvdmVycmlkZSBlaGNp
+LT5odWJfY29udHJvbA0KPiA+ICAgIGRvYzogdXNiOiBjaS1oZHJjLXVzYjI6IEFkZCBwaW5jdHJs
+IHByb3BlcnRpZXMgZm9yIEhTSUMgcGluIGdyb3Vwcw0KPiA+DQo+ID4gICAuLi4vZGV2aWNldHJl
+ZS9iaW5kaW5ncy91c2IvY2ktaGRyYy11c2IyLnR4dCAgICAgICB8ICAgMSArDQo+ID4gICBkcml2
+ZXJzL3VzYi9jaGlwaWRlYS9jaV9oZHJjX2lteC5jICAgICAgICAgICAgICAgICB8IDE1MyArKysr
+KysrKysrKysrKysrKystLS0NCj4gPiAgIGRyaXZlcnMvdXNiL2NoaXBpZGVhL2NpX2hkcmNfaW14
+LmggICAgICAgICAgICAgICAgIHwgICA5ICstDQo+ID4gICBkcml2ZXJzL3VzYi9jaGlwaWRlYS9o
+b3N0LmMgICAgICAgICAgICAgICAgICAgICAgICB8ICA5OCArKysrKysrKysrKysrDQo+ID4gICBk
+cml2ZXJzL3VzYi9jaGlwaWRlYS91c2JtaXNjX2lteC5jICAgICAgICAgICAgICAgICB8IDEzMSAr
+KysrKysrKysrKysrKysrKysNCj4gPiAgIGluY2x1ZGUvbGludXgvdXNiL2NoaXBpZGVhLmggICAg
+ICAgICAgICAgICAgICAgICAgIHwgICAzICsNCj4gPiAgIDYgZmlsZXMgY2hhbmdlZCwgMzc2IGlu
+c2VydGlvbnMoKyksIDE5IGRlbGV0aW9ucygtKQ0KPiA+DQo=
