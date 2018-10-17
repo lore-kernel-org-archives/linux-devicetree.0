@@ -1,26 +1,58 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V9 11/21] csky: Atomic operations
-Date: Wed, 17 Oct 2018 17:17:05 +0200
-Message-ID: <CAK8P3a2x_ECC0bjYGUHm5mO9KrWviyWg8xVWNqXkSeNmpjdDxA@mail.gmail.com>
-References: <cover.1539655731.git.ren_guo@c-sky.com> <efb6c9bb87f68c6f579ef497096086413effa5c2.1539655732.git.ren_guo@c-sky.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: AnilKumar Chimata <anilc@codeaurora.org>
+Subject: [PATCH 0/3] Add Inline Crypto Engine (ICE) driver
+Date: Wed, 17 Oct 2018 20:47:53 +0530
+Message-ID: <1539789476-6098-1-git-send-email-anilc@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <efb6c9bb87f68c6f579ef497096086413effa5c2.1539655732.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Christoph Hellwig <hch@infradead.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, c-sky_gcc_upstream@c-sky.com, andrea.parri@amarulasolutions.com
+To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, herbert@gondor.apana.org.au, davem@davemloft.net
+Cc: linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, AnilKumar Chimata <anilc@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 16, 2018 at 5:02 AM Guo Ren <ren_guo@c-sky.com> wrote:
->
-> This patch adds atomic, cmpxchg, spinlock files.
->
-> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Andrea Parri <andrea.parri@amarulasolutions.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
+This patch series adds support for QualComm ICE driver which
+is embedded in storage device such as UFS/eMMC.
 
-I'd wait for Peter to give his final Ack here.
+ICE HW provides high throughputs, which meets the line speed
+of storage devices. ICE works in bypass or non-bypass mode,
+during bypass mode ICE does not perform any crypto operations
+but in non-bypass mode ICE will perform encryption/decryption
+based on the configuration.
 
-     Arnd
+ICE HW supports AES128/256 bit ECB & XTS mode algorithms, which
+is used on many SoCs like msm8916, msm8996, msm8953, sdm845 and
+many more MTPs from QualComm.
+
+Also adds new functions to firmware driver which are needed to
+request secure OS to restore ICE key config when device reset.
+
+These patches have been tested on sdm845 MTP using some additional
+patches (a) interconnect changes (b) ufs-ice interface driver
+(c) dtsi changes for device init (d) kernel config changes. Once
+these patches are accepted rest will be posted.
+
+AnilKumar Chimata (3):
+  firmware: qcom: scm: Update qcom_scm_call signature
+  dt-bindings: Add ICE device specific parameters
+  crypto: qce: ice: Add support for Inline Crypto Engine
+
+ Documentation/crypto/msm/ice.txt                   |  235 +++
+ .../devicetree/bindings/crypto/msm/ice.txt         |   34 +
+ drivers/crypto/Kconfig                             |   10 +
+ drivers/crypto/qce/Makefile                        |    1 +
+ drivers/crypto/qce/ice.c                           | 1613 ++++++++++++++++++++
+ drivers/crypto/qce/iceregs.h                       |  159 ++
+ drivers/firmware/qcom_scm-32.c                     |   30 +-
+ drivers/firmware/qcom_scm-64.c                     |   77 +-
+ drivers/firmware/qcom_scm.c                        |    8 +-
+ drivers/firmware/qcom_scm.h                        |    5 +-
+ include/crypto/ice.h                               |   80 +
+ include/linux/qcom_scm.h                           |    5 +
+ 12 files changed, 2213 insertions(+), 44 deletions(-)
+ create mode 100644 Documentation/crypto/msm/ice.txt
+ create mode 100644 Documentation/devicetree/bindings/crypto/msm/ice.txt
+ create mode 100644 drivers/crypto/qce/ice.c
+ create mode 100644 drivers/crypto/qce/iceregs.h
+ create mode 100644 include/crypto/ice.h
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
