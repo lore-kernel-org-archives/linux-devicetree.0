@@ -1,113 +1,253 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] dt-bindings: ufs: Fix the compatible string definition
-Date: Wed, 17 Oct 2018 09:11:43 -0700
-Message-ID: <CAD=FV=XSjfRSHP6B6GtiTqrQuUZaoA=hZNW_L1=71MU9fEXpDQ@mail.gmail.com>
-References: <20181012213926.253765-1-dianders@chromium.org>
- <CAFp+6iFy8V34cs6pEOie_tBX5wJqM7teUnH_XLLZ7cioPrX_hA@mail.gmail.com>
- <CAD=FV=WYM5OOigy+81cVzPtAJXhvrhB1znr9zHzMf3q5iFOtFw@mail.gmail.com>
- <CAFp+6iGxvDoptnjM18ggnHqX6MV0+HFqsnCMi61b8gquBxaYmw@mail.gmail.com>
- <CAD=FV=XWC8q4Cx4GF0yXCgj2APwd5ZfccVBC_ORwnJg0vRsS7A@mail.gmail.com> <1ce7b24c-b154-4ce6-2b4c-9eb0fd0d71cb@codeaurora.org>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v9 4/6] edac: synopsys: Add EDAC ECC support for ZynqMP
+ DDRC
+Date: Wed, 17 Oct 2018 18:30:26 +0200
+Message-ID: <20181017163026.GF22535@zn.tnic>
+References: <1539581388-23963-1-git-send-email-manish.narani@xilinx.com>
+ <1539581388-23963-5-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1ce7b24c-b154-4ce6-2b4c-9eb0fd0d71cb@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <1539581388-23963-5-git-send-email-manish.narani@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, cang@codeaurora.org, Evan Green <evgreen@chromium.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, sayalil@codeaurora.org, Asutosh Das <asutoshd@codeaurora.org>, devicetree@vger.kernel.org, liwei213@huawei.com, LKML <linux-kernel@vger.kernel.org>, Mathieu Malaterre <malat@debian.org>, Mark Rutland <mark.rutland@arm.com>
+To: Manish Narani <manish.narani@xilinx.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, mchehab@kernel.org, amit.kucheria@linaro.org, sudeep.holla@arm.com, olof@lixom.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Oct 15, 2018 at 10:59:46AM +0530, Manish Narani wrote:
+> Add EDAC ECC support for ZynqMP DDRC IP. The IP supports interrupts for
+> corrected and uncorrected errors. Add interrupt handlers for the same.
+> 
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> ---
+>  drivers/edac/Kconfig         |   2 +-
+>  drivers/edac/synopsys_edac.c | 324 ++++++++++++++++++++++++++++++++++++++++---
+>  2 files changed, 308 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+> index 57304b2..7c40eb2 100644
+> --- a/drivers/edac/Kconfig
+> +++ b/drivers/edac/Kconfig
+> @@ -441,7 +441,7 @@ config EDAC_ALTERA_SDMMC
+>  
+>  config EDAC_SYNOPSYS
+>  	tristate "Synopsys DDR Memory Controller"
+> -	depends on ARCH_ZYNQ
+> +	depends on ARCH_ZYNQ || ARCH_ZYNQMP
+>  	help
+>  	  Support for error detection and correction on the Synopsys DDR
+>  	  memory controller.
+> diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
+> index d1999e0..603c4bd 100644
+> --- a/drivers/edac/synopsys_edac.c
+> +++ b/drivers/edac/synopsys_edac.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/edac.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/interrupt.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+>  
+> @@ -272,6 +273,8 @@
+>   * @bank:	Bank number.
+>   * @bitpos:	Bit position.
+>   * @data:	Data causing the error.
+> + * @bankgrpnr:	Bank group number.
+> + * @blknr:	Block number.
+>   */
+>  struct ecc_error_info {
+>  	u32 row;
+> @@ -279,6 +282,8 @@ struct ecc_error_info {
+>  	u32 bank;
+>  	u32 bitpos;
+>  	u32 data;
+> +	u32 bankgrpnr;
+> +	u32 blknr;
+>  };
+>  
+>  /**
+> @@ -385,6 +390,66 @@ static int zynq_get_error_info(struct synps_edac_priv *priv)
+>  }
+>  
+>  /**
+> + * zynqmp_get_error_info - Get the current ECC error info.
+> + * @priv:	DDR memory controller private instance data.
+> + *
+> + * Return: one if there is no error otherwise returns zero.
+> + */
+> +static int zynqmp_get_error_info(struct synps_edac_priv *priv)
+> +{
+> +	struct synps_ecc_status *p;
+> +	u32 regval, clearval = 0;
+> +	void __iomem *base;
+> +
+> +	base = priv->baseaddr;
+> +	p = &priv->stat;
+> +
+> +	regval = readl(base + ECC_STAT_OFST);
+> +	if (!regval)
+> +		return 1;
+> +
+> +	p->ce_cnt = (regval & ECC_STAT_CECNT_MASK) >> ECC_STAT_CECNT_SHIFT;
+> +	p->ue_cnt = (regval & ECC_STAT_UECNT_MASK) >> ECC_STAT_UECNT_SHIFT;
+> +	p->ceinfo.bitpos = (regval & ECC_STAT_BITNUM_MASK);
+> +
+> +	regval = readl(base + ECC_CEADDR0_OFST);
+> +	if (!p->ce_cnt)
+> +		goto ue_err;
 
-On Tue, Oct 16, 2018 at 11:28 PM Vivek Gautam
-<vivek.gautam@codeaurora.org> wrote:
->
-> Hi Doug,
->
->
-> On 10/16/2018 10:29 PM, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Mon, Oct 15, 2018 at 10:51 PM Vivek Gautam
-> > <vivek.gautam@codeaurora.org> wrote:
-> >>>> P.S.: While you are at it, can you please move 'ufs-qcom.txt'
-> >>>> to Documentation/devicetree/bindings/phy/qcom,ufs-phy.txt.
-> >>>> The current name and file location is misleading.
-> >>> I'd rather someone at Qualcomm do this.  Do you have a suggested
-> >>> person?  The reason I feel that Qualcomm needs to get involved is that
-> >>> I see that when I look at the file you refer to says it's for:
-> >>>
-> >>>    "qcom,ufs-phy-qmp-20nm" for 20nm ufs phy,
-> >>>    "qcom,ufs-phy-qmp-14nm" for legacy 14nm ufs phy,
-> >>>    "qcom,msm8996-ufs-phy-qmp-14nm" for 14nm ufs phy
-> >>>    present on MSM8996 chipset.
-> >>>
-> >>> ...but there's another Qualcomm file, 'qcom-qmp-phy.txt'.  That
-> >>> handles the compatible string:
-> >>>
-> >>>         "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
-> >>>
-> >>> So I'm a little confused.  Should the SDM845 UFS PHY been handled by
-> >>> the older UFS PHY driver?  ...or should all the older UFS PHYs be
-> >>> moved to be handled by the newer QMP PHY driver?  ...or are they
-> >>> really different hardware blocks, in which case how would you describe
-> >>> the difference (both are described as UFS QMP PHYs I think).
-> >> As you rightly said "ufs/ufs-qcom.txt" describes the bindings for
-> >> 14nm, and 20nm ufs phy. These phys are however handled by the older
-> >> ufs phy driver present at:
-> >> drivers/phy/qualcomm/phy-qcom-ufs-qmp-{14nm,20nm}.c
-> >> The sdm845 UFS phy driver is handled by the new consolidated qmp phy
-> >> driver: drivers/phy/qualcomm/phy-qcom-qmp.c whose bindings are
-> >> described by 'qcom-qmp-phy.txt'.
-> >> We didn't attempt to move the 14nm phy to new driver as we already had
-> >> 8996 using the bindings.
-> >>
-> >> So, really these are two separate drivers with different bindings. I
-> >> believe it should be okay to move the file. If you are fine, I can
-> >> attempt to post a small patch to do that.
-> > I guess what I should have said was that the new name you're proposing
-> > "qcom,ufs-phy.txt" is confusing and opening the file doesn't help
-> > clarify things.  The name and the binding make it sound like this is
-> > _the_ file to look at for Qualcomm UFS PHYs.  ...and then you look in
-> > the examples in the file and it seems that this even includes Qualcomm
-> > QMP PHYs for UFS.
-> >
-> > ...so while I agree that the file "ufs-qcom.txt" needs to be moved to
-> > the "PHY" directory, I think at the same time we need to change the
-> > name of the file and maybe the contents to disambiguate which things
-> > belong in this file vs. the "qcom-qmp-phy.txt".  ...and I feel like
-> > someone at Qualcomm will have the most information to properly do
-> > that.
-> >
-> > For instance, you could call the older bindings
-> > "qcom-qmp-phy-14nm-20nm.txt" or something like that.
->
-> Sure, I get your point. I will propose something that removes the confusion.
->
-> >
-> > One point of clarification I'd like to know is if there's really a
-> > good reason to have two drivers here.  Certainly if the hardware is
-> > really different then a new driver can make sense, but if there are
-> > two drivers for arbitrary reasons then maybe they should be combined
-> > into one eventually?
->
-> Right, the 14nm phy driver can be happily merged into the new qmp-phy
-> driver.
-> But we should take care of older bindings. Removing the driver will break
-> things on targets with older bindings, precisely 8996.
->
-> 20nm is bit tricky as it exported few APIs directly to ufs host
-> controller, and
-> that's the reason we have declared that as BROKEN after the ufs cleanup.
-> So, until we are really in a kill mode, the old ufs-phy driver will have
-> to live.
+This check should happen right under the p->ce_cnt assignment a couple
+of lines above it. Otherwise the readl() is useless if you jump to the
+ue_err label.
 
-OK, sounds like a plan.  I'll assume you're posting the patch to move
-the old PHY bindings and add some of the above information to them so
-people aren't confused.
+IOW, those two readl()'s should happen *after* the ce/ue_cnt checks.
 
-...all this is sort off the original subject, though.  ;-)  Just a
-quick summary here is that nothing suggests ${SUBJECT} patch shouldn't
-land and all the additional discussion has been about making further
-improvements to the bindings situation for UFS on Qualcomm.
+> +
+> +	p->ceinfo.row = (regval & ECC_CEADDR0_RW_MASK);
+> +	regval = readl(base + ECC_CEADDR1_OFST);
+> +	p->ceinfo.bank = (regval & ECC_CEADDR1_BNKNR_MASK) >>
+> +					ECC_CEADDR1_BNKNR_SHIFT;
+> +	p->ceinfo.bankgrpnr = (regval &	ECC_CEADDR1_BNKGRP_MASK) >>
+> +					ECC_CEADDR1_BNKGRP_SHIFT;
+> +	p->ceinfo.blknr = (regval & ECC_CEADDR1_BLKNR_MASK);
+> +	p->ceinfo.data = readl(base + ECC_CSYND0_OFST);
+> +	edac_dbg(2, "ECCCSYN0: 0x%08X ECCCSYN1: 0x%08X ECCCSYN2: 0x%08X\n",
+> +		 readl(base + ECC_CSYND0_OFST), readl(base + ECC_CSYND1_OFST),
+> +		 readl(base + ECC_CSYND2_OFST));
+> +ue_err:
+> +	regval = readl(base + ECC_UEADDR0_OFST);
+> +	if (!p->ue_cnt)
+> +		goto out;
+> +
+> +	p->ueinfo.row = (regval & ECC_CEADDR0_RW_MASK);
+> +	regval = readl(base + ECC_UEADDR1_OFST);
+> +	p->ueinfo.bankgrpnr = (regval & ECC_CEADDR1_BNKGRP_MASK) >>
+> +					ECC_CEADDR1_BNKGRP_SHIFT;
+> +	p->ueinfo.bank = (regval & ECC_CEADDR1_BNKNR_MASK) >>
+> +					ECC_CEADDR1_BNKNR_SHIFT;
+> +	p->ueinfo.blknr = (regval & ECC_CEADDR1_BLKNR_MASK);
+> +	p->ueinfo.data = readl(base + ECC_UESYND0_OFST);
+> +out:
+> +	clearval = ECC_CTRL_CLR_CE_ERR | ECC_CTRL_CLR_CE_ERRCNT;
+> +	clearval |= ECC_CTRL_CLR_UE_ERR | ECC_CTRL_CLR_UE_ERRCNT;
+> +	writel(clearval, base + ECC_CLR_OFST);
+> +	writel(0x0, base + ECC_CLR_OFST);
+> +
+> +	return 0;
+> +}
+> +
 
--Doug
+...
+
+> +static int setup_irq(struct mem_ctl_info *mci,
+> +			  struct platform_device *pdev)
+
+Align arguments on the opening brace.
+
+> +{
+> +	struct synps_edac_priv *priv = mci->pvt_info;
+> +	int ret, irq;
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0) {
+> +		edac_printk(KERN_ERR, EDAC_MC,
+> +			    "No IRQ %d in DT\n", irq);
+> +		return irq;
+> +	}
+> +
+> +	ret = devm_request_irq(&pdev->dev, irq, intr_handler,
+> +			       0, dev_name(&pdev->dev), mci);
+> +	if (ret < 0) {
+> +		edac_printk(KERN_ERR, EDAC_MC, "Failed to request IRQ\n");
+> +		return ret;
+> +	}
+> +
+> +	enable_intr(priv);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct synps_platform_data zynq_edac_def = {
+>  	.get_error_info	= zynq_get_error_info,
+>  	.get_mtype	= zynq_get_mtype,
+> @@ -613,9 +872,26 @@ static const struct synps_platform_data zynq_edac_def = {
+>  	.quirks		= 0,
+>  };
+>  
+> +static const struct synps_platform_data zynqmp_edac_def = {
+> +	.get_error_info	= zynqmp_get_error_info,
+> +	.get_mtype	= zynqmp_get_mtype,
+> +	.get_dtype	= zynqmp_get_dtype,
+> +	.get_ecc_state	= zynqmp_get_ecc_state,
+> +	.quirks		= DDR_ECC_INTR_SUPPORT,
+> +};
+> +
+>  static const struct of_device_id synps_edac_match[] = {
+> -	{ .compatible = "xlnx,zynq-ddrc-a05", .data = (void *)&zynq_edac_def },
+> -	{ /* end of table */ }
+> +	{
+> +		.compatible = "xlnx,zynq-ddrc-a05",
+> +		.data = (void *)&zynq_edac_def
+> +	},
+> +	{
+> +		.compatible = "xlnx,zynqmp-ddrc-2.40a",
+> +		.data = (void *)&zynqmp_edac_def
+> +	},
+> +	{
+> +		/* end of table */
+> +	}
+>  };
+>  
+>  MODULE_DEVICE_TABLE(of, synps_edac_match);
+> @@ -674,6 +950,12 @@ static int mc_probe(struct platform_device *pdev)
+>  
+>  	mc_init(mci, pdev);
+>  
+> +	if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT) {
+> +		rc = setup_irq(mci, pdev);
+> +		if (rc)
+> +			goto free_edac_mc;
+> +	}
+> +
+>  	rc = edac_mc_add_mc(mci);
+>  	if (rc) {
+>  		edac_printk(KERN_ERR, EDAC_MC,
+> @@ -685,7 +967,9 @@ static int mc_probe(struct platform_device *pdev)
+>  	 * Start capturing the correctable and uncorrectable errors. A write of
+>  	 * 0 starts the counters.
+>  	 */
+> -	writel(0x0, baseaddr + ECC_CTRL_OFST);
+> +	if (!(priv->p_data->quirks & DDR_ECC_INTR_SUPPORT))
+> +		writel(0x0, baseaddr + ECC_CTRL_OFST);
+> +
+>  	return rc;
+>  
+>  free_edac_mc:
+> @@ -703,6 +987,12 @@ static int mc_probe(struct platform_device *pdev)
+>  static int mc_remove(struct platform_device *pdev)
+>  {
+>  	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
+> +	struct synps_edac_priv *priv;
+> +
+> +	priv = mci->pvt_info;
+
+Or simply:
+
+	struct synps_edac_priv *priv = mci->pvt_info;
+
+> +	if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT)
+> +		disable_intr(priv);
+>  
+>  	edac_mc_del_mc(&pdev->dev);
+>  	edac_mc_free(mci);
+> -- 
+> 2.1.1
+> 
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
