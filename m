@@ -1,7 +1,7 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v2 13/21] PCI: keystone: Cleanup configuration space access
-Date: Wed, 17 Oct 2018 13:11:06 +0530
-Message-ID: <20181017074114.28239-14-kishon@ti.com>
+Subject: [PATCH v2 11/21] PCI: keystone: Cleanup PHY handling
+Date: Wed, 17 Oct 2018 13:11:04 +0530
+Message-ID: <20181017074114.28239-12-kishon@ti.com>
 References: <20181017074114.28239-1-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,121 +12,194 @@ To: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@ar
 Cc: Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Cleanup configuration space access by removing ks_pcie_cfg_setup
-which has an unncessary check of "if (bus == 0)" which will never be the
-case of *_other_conf() and adding macros for configuring the CFG_SETUP
-register required for accessing the configuration space of the device.
+Cleanup PHY handling by using devm_phy_optional_get to get PHYs if
+the PHYs are optional, creating a device link between the PHY device
+and the controller device and disable PHY on error cases here.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/pci/controller/dwc/pci-keystone.c | 70 +++++++----------------
- 1 file changed, 20 insertions(+), 50 deletions(-)
+ drivers/pci/controller/dwc/pci-keystone.c | 122 +++++++++++++++++++---
+ 1 file changed, 106 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index 4f764ec49a4c..1f14de0ef27f 100644
+index e22328f89c84..5ae73c185c99 100644
 --- a/drivers/pci/controller/dwc/pci-keystone.c
 +++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -45,7 +45,13 @@
+@@ -105,6 +105,9 @@ struct keystone_pcie {
  
- /* Application registers */
- #define CMD_STATUS			0x004
-+
- #define CFG_SETUP			0x008
-+#define CFG_BUS(x)			(((x) & 0xff) << 16)
-+#define CFG_DEVICE(x)			(((x) & 0x1f) << 8)
-+#define CFG_FUNC(x)			((x) & 0x7)
-+#define CFG_TYPE1			BIT(24)
-+
- #define OB_SIZE				0x030
- #define CFG_PCIM_WIN_SZ_IDX		3
- #define CFG_PCIM_WIN_CNT		32
-@@ -364,60 +370,21 @@ static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
- 	ks_pcie_app_writel(ks_pcie, CMD_STATUS, OB_XLAT_EN_VAL | val);
- }
+ 	int			num_msi_host_irqs;
+ 	int			msi_host_irqs[MAX_MSI_HOST_IRQS];
++	int			num_lanes;
++	struct phy		**phy;
++	struct device_link	**link;
+ 	struct			device_node *msi_intc_np;
+ 	struct irq_domain	*legacy_irq_domain;
+ 	struct device_node	*np;
+@@ -880,22 +883,57 @@ static const struct dw_pcie_ops ks_pcie_dw_pcie_ops = {
+ 	.link_up = ks_pcie_link_up,
+ };
  
--/**
-- * ks_pcie_cfg_setup() - Set up configuration space address for a device
-- *
-- * @ks_pcie: ptr to keystone_pcie structure
-- * @bus: Bus number the device is residing on
-- * @devfn: device, function number info
-- *
-- * Forms and returns the address of configuration space mapped in PCIESS
-- * address space 0.  Also configures CFG_SETUP for remote configuration space
-- * access.
-- *
-- * The address space has two regions to access configuration - local and remote.
-- * We access local region for bus 0 (as RC is attached on bus 0) and remote
-- * region for others with TYPE 1 access when bus > 1.  As for device on bus = 1,
-- * we will do TYPE 0 access as it will be on our secondary bus (logical).
-- * CFG_SETUP is needed only for remote configuration access.
-- */
--static void __iomem *ks_pcie_cfg_setup(struct keystone_pcie *ks_pcie, u8 bus,
--				       unsigned int devfn)
--{
--	u8 device = PCI_SLOT(devfn), function = PCI_FUNC(devfn);
--	struct dw_pcie *pci = ks_pcie->pci;
--	struct pcie_port *pp = &pci->pp;
--	u32 regval;
--
--	if (bus == 0)
--		return pci->dbi_base;
--
--	regval = (bus << 16) | (device << 8) | function;
--
--	/*
--	 * Since Bus#1 will be a virtual bus, we need to have TYPE0
--	 * access only.
--	 * TYPE 1
--	 */
--	if (bus != 1)
--		regval |= BIT(24);
--
--	ks_pcie_app_writel(ks_pcie, CFG_SETUP, regval);
--	return pp->va_cfg0_base;
--}
--
- static int ks_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
- 				 unsigned int devfn, int where, int size,
- 				 u32 *val)
+-static int __exit ks_pcie_remove(struct platform_device *pdev)
++static void ks_pcie_disable_phy(struct keystone_pcie *ks_pcie)
  {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
--	u8 bus_num = bus->number;
--	void __iomem *addr;
-+	u32 reg;
+-	struct keystone_pcie *ks_pcie = platform_get_drvdata(pdev);
++	int num_lanes = ks_pcie->num_lanes;
  
--	addr = ks_pcie_cfg_setup(ks_pcie, bus_num, devfn);
-+	reg = CFG_BUS(bus->number) | CFG_DEVICE(PCI_SLOT(devfn)) |
-+		CFG_FUNC(PCI_FUNC(devfn));
-+	if (bus->parent->number != pp->root_bus_nr)
-+		reg |= CFG_TYPE1;
-+	ks_pcie_app_writel(ks_pcie, CFG_SETUP, reg);
+-	clk_disable_unprepare(ks_pcie->clk);
++	while (num_lanes--) {
++		phy_power_off(ks_pcie->phy[num_lanes]);
++		phy_exit(ks_pcie->phy[num_lanes]);
++	}
++}
++
++static int ks_pcie_enable_phy(struct keystone_pcie *ks_pcie)
++{
++	int i;
++	int ret;
++	int num_lanes = ks_pcie->num_lanes;
++
++	for (i = 0; i < num_lanes; i++) {
++		ret = phy_init(ks_pcie->phy[i]);
++		if (ret < 0)
++			goto err_phy;
++
++		ret = phy_power_on(ks_pcie->phy[i]);
++		if (ret < 0) {
++			phy_exit(ks_pcie->phy[i]);
++			goto err_phy;
++		}
++	}
  
--	return dw_pcie_read(addr + where, size, val);
-+	return dw_pcie_read(pp->va_cfg0_base + where, size, val);
+ 	return 0;
++
++err_phy:
++	while (--i >= 0) {
++		phy_power_off(ks_pcie->phy[i]);
++		phy_exit(ks_pcie->phy[i]);
++	}
++
++	return ret;
  }
  
- static int ks_pcie_wr_other_conf(struct pcie_port *pp, struct pci_bus *bus,
-@@ -426,12 +393,15 @@ static int ks_pcie_wr_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+ static int __init ks_pcie_probe(struct platform_device *pdev)
  {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
--	u8 bus_num = bus->number;
--	void __iomem *addr;
-+	u32 reg;
+ 	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
+ 	struct dw_pcie *pci;
+ 	struct keystone_pcie *ks_pcie;
+-	struct phy *phy;
++	struct device_link **link;
++	struct phy **phy;
++	u32 num_lanes;
++	char name[10];
+ 	int ret;
++	int i;
  
--	addr = ks_pcie_cfg_setup(ks_pcie, bus_num, devfn);
-+	reg = CFG_BUS(bus->number) | CFG_DEVICE(PCI_SLOT(devfn)) |
-+		CFG_FUNC(PCI_FUNC(devfn));
-+	if (bus->parent->number != pp->root_bus_nr)
-+		reg |= CFG_TYPE1;
-+	ks_pcie_app_writel(ks_pcie, CFG_SETUP, reg);
+ 	ks_pcie = devm_kzalloc(dev, sizeof(*ks_pcie), GFP_KERNEL);
+ 	if (!ks_pcie)
+@@ -908,29 +946,59 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 	pci->dev = dev;
+ 	pci->ops = &ks_pcie_dw_pcie_ops;
  
--	return dw_pcie_write(addr + where, size, val);
-+	return dw_pcie_write(pp->va_cfg0_base + where, size, val);
+-	ks_pcie->pci = pci;
++	ret = of_property_read_u32(np, "num-lanes", &num_lanes);
++	if (ret)
++		num_lanes = 1;
+ 
+-	/* initialize SerDes Phy if present */
+-	phy = devm_phy_get(dev, "pcie-phy");
+-	if (PTR_ERR_OR_ZERO(phy) == -EPROBE_DEFER)
+-		return PTR_ERR(phy);
++	phy = devm_kzalloc(dev, sizeof(*phy) * num_lanes, GFP_KERNEL);
++	if (!phy)
++		return -ENOMEM;
+ 
+-	if (!IS_ERR_OR_NULL(phy)) {
+-		ret = phy_init(phy);
+-		if (ret < 0)
+-			return ret;
++	link = devm_kzalloc(dev, sizeof(*link) * num_lanes, GFP_KERNEL);
++	if (!link)
++		return -ENOMEM;
++
++	for (i = 0; i < num_lanes; i++) {
++		snprintf(name, sizeof(name), "pcie-phy%d", i);
++		phy[i] = devm_phy_optional_get(dev, name);
++		if (IS_ERR(phy[i])) {
++			ret = PTR_ERR(phy[i]);
++			goto err_link;
++		}
++
++		if (!phy[i])
++			continue;
++
++		link[i] = device_link_add(dev, &phy[i]->dev, DL_FLAG_STATELESS);
++		if (!link[i]) {
++			ret = -EINVAL;
++			goto err_link;
++		}
++	}
++
++	ks_pcie->np = np;
++	ks_pcie->pci = pci;
++	ks_pcie->link = link;
++	ks_pcie->num_lanes = num_lanes;
++	ks_pcie->phy = phy;
++
++	ret = ks_pcie_enable_phy(ks_pcie);
++	if (ret) {
++		dev_err(dev, "failed to enable phy\n");
++		goto err_link;
+ 	}
+ 
+-	ks_pcie->np = dev->of_node;
+ 	platform_set_drvdata(pdev, ks_pcie);
+ 	ks_pcie->clk = devm_clk_get(dev, "pcie");
+ 	if (IS_ERR(ks_pcie->clk)) {
+ 		dev_err(dev, "Failed to get pcie rc clock\n");
+-		return PTR_ERR(ks_pcie->clk);
++		ret = PTR_ERR(ks_pcie->clk);
++		goto err_phy;
+ 	}
++
+ 	ret = clk_prepare_enable(ks_pcie->clk);
+ 	if (ret)
+-		return ret;
++		goto err_phy;
+ 
+ 	ret = ks_pcie_add_pcie_port(ks_pcie, pdev);
+ 	if (ret < 0)
+@@ -940,9 +1008,31 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ fail_clk:
+ 	clk_disable_unprepare(ks_pcie->clk);
+ 
++err_phy:
++	ks_pcie_disable_phy(ks_pcie);
++
++err_link:
++	while (--i >= 0 && link[i])
++		device_link_del(link[i]);
++
+ 	return ret;
  }
  
- /**
++static int __exit ks_pcie_remove(struct platform_device *pdev)
++{
++	struct keystone_pcie *ks_pcie = platform_get_drvdata(pdev);
++	struct device_link **link = ks_pcie->link;
++	int num_lanes = ks_pcie->num_lanes;
++
++	clk_disable_unprepare(ks_pcie->clk);
++	ks_pcie_disable_phy(ks_pcie);
++
++	while (num_lanes--)
++		device_link_del(link[num_lanes]);
++
++	return 0;
++}
++
+ static struct platform_driver ks_pcie_driver __refdata = {
+ 	.probe  = ks_pcie_probe,
+ 	.remove = __exit_p(ks_pcie_remove),
 -- 
 2.17.1
