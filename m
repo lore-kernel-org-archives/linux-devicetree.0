@@ -1,106 +1,75 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v1 1/5] dt-bindings: cpufreq: Add binding for NVIDIA
- Tegra20/30
-Date: Wed, 17 Oct 2018 23:57:02 +0300
-Message-ID: <0b88ce49-dfe4-63c3-dcf8-67dbb98c8be6@gmail.com>
-References: <20180830194356.14059-1-digetx@gmail.com>
- <20180830194356.14059-2-digetx@gmail.com>
- <f38b38f1-0a60-d6fa-9047-23c619494b23@nvidia.com>
- <1448e619-35c9-0195-c68a-604d10f4dc8b@gmail.com>
- <a9b6e683-3802-896c-27ad-9c49853c231f@nvidia.com>
- <a0dd5d75-6683-f938-c5e5-a95a5c2b86e4@gmail.com>
- <3c72f573-d109-b607-b7b7-d70aea3e03df@nvidia.com>
- <c6249de9-bcaa-ab3e-8546-40f8c2c17599@gmail.com>
- <4db9c51c-0c1d-c9a2-b781-250c053e6e24@nvidia.com>
- <e4f63df9-d92a-4e57-05ba-c999bdda9cc0@gmail.com>
- <821c13a9-ff9c-c9bd-83f6-7566f7bb4477@nvidia.com>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH v4 00/18] of: overlay: validation checks, subsequent fixes
+Date: Wed, 17 Oct 2018 16:16:47 -0500
+Message-ID: <CANk1AXSa1bMHxp7-PiTtfniDukDO51M=4P5u98Xc=rRo06zP7Q@mail.gmail.com>
+References: <1539657458-24401-1-git-send-email-frowand.list@gmail.com>
+ <87murekyts.fsf@concordia.ellerman.id.au> <bbbbe52c-8415-e22a-48d7-95f919942c68@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <821c13a9-ff9c-c9bd-83f6-7566f7bb4477@nvidia.com>
-Content-Language: en-US
+In-Reply-To: <bbbbe52c-8415-e22a-48d7-95f919942c68@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Moritz Fischer <mdf@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/17/18 10:29 PM, Jon Hunter wrote:
-> 
-> On 17/10/2018 15:43, Dmitry Osipenko wrote:
->> On 10/17/18 5:14 PM, Jon Hunter wrote:
->>>
->>> On 17/10/2018 14:46, Dmitry Osipenko wrote:
->>>> On 10/17/18 4:34 PM, Jon Hunter wrote:
->>>>>
->>>>> On 17/10/2018 14:07, Dmitry Osipenko wrote:
->>>>>> On 10/17/18 3:59 PM, Jon Hunter wrote:
->>>>>>>
->>>>>>> On 17/10/2018 13:37, Dmitry Osipenko wrote:
->>>>>>>> On 10/17/18 11:40 AM, Jon Hunter wrote:
->>>>>>>>>
->>>>>>>>> On 30/08/2018 20:43, Dmitry Osipenko wrote:
->>>>>>>>>> Add device-tree binding that describes CPU frequency-scaling hardware
->>>>>>>>>> found on NVIDIA Tegra20/30 SoC's.
->>>>>>>>>>
->>>>>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>>>>>>>> ---
->>>>>>>>>>  .../cpufreq/nvidia,tegra20-cpufreq.txt        | 38 +++++++++++++++++++
->>>>>>>>>>  1 file changed, 38 insertions(+)
->>>>>>>>>>  create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
->>>>>>>>>>
->>>>>>>>>> diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
->>>>>>>>>> new file mode 100644
->>>>>>>>>> index 000000000000..2c51f676e958
->>>>>>>>>> --- /dev/null
->>>>>>>>>> +++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
->>>>>>>>>> @@ -0,0 +1,38 @@
->>>>>>>>>> +Binding for NVIDIA Tegra20 CPUFreq
->>>>>>>>>> +==================================
->>>>>>>>>> +
->>>>>>>>>> +Required properties:
->>>>>>>>>> +- clocks: Must contain an entry for each entry in clock-names.
->>>>>>>>>> +  See ../clocks/clock-bindings.txt for details.
->>>>>>>>>> +- clock-names: Must include the following entries:
->>>>>>>>>> +  - pll_x: main-parent for CPU clock, must be the first entry
->>>>>>>>>> +  - backup: intermediate-parent for CPU clock
->>>>>>>>>> +  - cpu: the CPU clock
->>>>>>>>>
->>>>>>>>> Is it likely that 'backup' will be anything other that pll_p? If not why
->>>>>>>>> not just call it pll_p? Personally, I don't 'backup' to descriptive even
->>>>>>>>> though I can see what you mean.
->>>>>>>>>
->>>>>>>>> I can see that you want to make this flexible, but if the likelihood is
->>>>>>>>> that we will just use pll_p then I am not sure it is warranted at this
->>>>>>>>> point.
->>>>>>>>
->>>>>>>> That won't describe HW, but software. And device tree should describe HW.
->>>>>>>
->>>>>>> Hmm ... well that's my point exactly. So why call it 'backup'? Sounds
->>>>>>> like a software description to me.
->>>>>>
->>>>>> Because HW is designed the way that CPU parent need to be switched to the backup clock source while main clock changes its rate. HW also allow to select among different parents, pll_p is one of those parents.
->>>>>
->>>>> Yes that part is understood. I am just splitting hairs over the actual
->>>>> name. We do the same for tegra124 but we just call it 'pll_p'. See ...
->>>>>
->>>>> Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
->>>>
->>>> tegra124-cpufreq choose to hardwire to the pll_p, but it could be other clocks. Technically abstracting backup clock should be more correct, but result is the same in the end.
->>>
->>> Yes and that is probably intentional as that is the configuration that
->>> has been validated. So unless we are planning to test and verify every
->>> possibility, my preference is to keep it simple. But yes the result is
->>> the same.
->>>
->>> I was simply curious of your intention here because of the other series
->>> you posted with regard to the cpu clocks.
->>
->> Actually I tried other parents on T30 and they worked with no problems. The intention of having 'backup' is to describe HW properly in the device tree, that's it. We'll have backup set to pll_p by default. ACK?
-> 
-> Yes but I don't find the name 'backup' very descriptive because like you
-> say it is an intermediate clock for switching frequency. But at the same
-> time I don't have a good suggestion. Anyway it is more of a
-> bike-shedding comment.
+On Tue, Oct 16, 2018 at 10:08 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> On 10/16/18 02:47, Michael Ellerman wrote:
+> > frowand.list@gmail.com writes:
+> >
+> >> From: Frank Rowand <frank.rowand@sony.com>
+> >>
+> >> Add checks to (1) overlay apply process and (2) memory freeing
+> >> triggered by overlay release.  The checks are intended to detect
+> >> possible memory leaks and invalid overlays.
+> >>
+> >> The checks revealed bugs in existing code.  Fixed the bugs.
+> >>
+> >> While fixing bugs, noted other issues, which are fixed in
+> >> separate patches.
+> >>
+> >> *****  Powerpc folks: I was not able to test the patches that
+> >> *****  directly impact Powerpc systems that use dynamic
+> >> *****  devicetree.  Please review that code carefully and
+> >> *****  test.  The specific patches are: 03/16, 04/16, 07/16
+> >
+> > Hi Frank,
+> >
+> > Do you have this series in a git tree somewhere?
+> >
+> > I tried applying it on top of linux-next but hit some conflicts which I
+> > couldn't easily resolve.
+> >
+> > cheers
+> >
+>
+>
+>
+> git://git.kernel.org/pub/scm/linux/kernel/git/frowand/linux.git
+>
+> $ git checkout v4.19-rc1--kfree_validate--v4
+>
+> $ git log --oneline v4.19-rc1..
+> 2ba1b7d353dd of: unittest: initialize args before calling of_*parse_*()
+> 4f9108209f79 of: unittest: find overlays[] entry by name instead of index
+> 353403c76ff8 of: unittest: allow base devicetree to have symbol metadata
+> 8fc37e04a01b of: overlay: set node fields from properties when add new overlay n
+> 05d5df0e5151 of: unittest: remove unused of_unittest_apply_overlay() argument
+> 8c021cba757a of: overlay: check prevents multiple fragments touching same proper
+> 797a6f66e039 of: overlay: check prevents multiple fragments add or delete same n
+> c385e25a040d of: overlay: test case of two fragments adding same node
+> c88fd240f0e0 of: overlay: make all pr_debug() and pr_err() messages unique
+> 1028a215d32a of: overlay: validate overlay properties #address-cells and #size-c
+> f1a97ef74ce4 of: overlay: reorder fields in struct fragment
+> ffe78cf7a1fb of: dynamic: change type of of_{at,de}tach_node() to void
+> 5f5ff8ec0c0c of: overlay: do not duplicate properties from overlay for new nodes
+> 06e72dcb2bb0 of: overlay: use prop add changeset entry for property in new nodes
+> a02f8d326a08 powerpc/pseries: add of_node_put() in dlpar_detach_node()
+> e203be664330 of: overlay: add missing of_node_get() in __of_attach_node_sysfs
+> 8eb46208e7c8 of: overlay: add missing of_node_put() after add new node to change
+> b22067db7cf9 of: overlay: add tests to validate kfrees from overlay removal
 
-I'll consider renaming 'backup' to 'intermediate' in the v2 which I'll probably manage to send out tomorrow as RFC (CPUFreq now depends on yet-not-reviewed coupled-regulators patches).
+That branch is a real time saver, thanks!
+
+ALan
