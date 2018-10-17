@@ -1,93 +1,77 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v2 8/9] ASoC: tegra_sgtl5000: fix device_node refcounting
-Date: Wed, 17 Oct 2018 11:57:53 +0100
-Message-ID: <af707410-9954-b1a1-6d9b-5ad085604446@nvidia.com>
-References: <20181016104730.4598-1-marcel@ziswiler.com>
- <20181016104730.4598-9-marcel@ziswiler.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v2 00/21] PCI: Cleanup pci-keystone driver
+Date: Wed, 17 Oct 2018 12:12:58 +0100
+Message-ID: <20181017111258.GA5692@e107981-ln.cambridge.arm.com>
+References: <20181017074114.28239-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181016104730.4598-9-marcel@ziswiler.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181017074114.28239-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel@ziswiler.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, Mark Brown <broonie@kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org, Thierry Reding <thierry.reding@gmail.com>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Oct 17, 2018 at 01:10:53PM +0530, Kishon Vijay Abraham I wrote:
+> The PCIe controller in AM654 uses Synopsys core revision 4.90a and uses
+> the same TI wrapper as used in keystone2 with certain modification.
+> Hence AM654 will use the same pci wrapper driver pci-keystone.c
+> 
+> In preparation for adding AM654 support, cleanup pci-keystone driver
+> here.
+> 
+> Most of the cleanups here are trivial with major modification being
+> merging pci-keystone-dw.c and pci-keystone.c
+> 
+> Cleaning-up irq handling in the RFC series is dropped here as it has
+> few comments to be addressed.
+> 
+> Changes from v1:
+> *) remove phy_reset in the cleanup PHY handling patch. It will be sent
+>    while adding AM654 support
+> *) Add a separate patch for using ERR_IRQ_STATUS instead of
+>    ERR_IRQ_STATUS_RAW
+> *) Split outbound window configuration into two patches. One which
+>    gets the number of outbound windows from DT and the other cleansup
+>    outbound window configuration.
+> 
+> Kishon Vijay Abraham I (21):
+>   PCI: keystone: Use quirk to limit MRRS for K2G
+>   PCI: keystone: Use quirk to set MRRS for PCI host bridge
+>   PCI: keystone: Move dw_pcie_setup_rc out of ks_pcie_establish_link()
+>   PCI: keystone: Do not initiate link training multiple times
+>   PCI: keystone: Remove unused argument from ks_dw_pcie_host_init()
+>   PCI: keystone: Merge pci-keystone-dw.c and pci-keystone.c
+>   PCI: keystone: Remove redundant platform_set_drvdata
+>   PCI: keystone: Use uniform function naming convention
+>   dt-bindings: PCI: keystone: Add bindings to get device control module
+>   PCI: keystone: Use syscon APIs to get device id from control module
+>   PCI: keystone: Cleanup PHY handling
+>   PCI: keystone: Invoke pm_runtime APIs to enable clock
+>   PCI: keystone: Cleanup configuration space access
+>   PCI: keystone: Get number of outbound windows from DT
+>   PCI: keystone: Cleanup outbound window configuration
+>   PCI: keystone: Cleanup set_dbi_mode and get_dbi_mode
+>   PCI: keystone: Cleanup ks_pcie_link_up()
+>   PCI: keystone: Use ERR_IRQ_STATUS instead of ERR_IRQ_STATUS_RAW to get
+>     interrupt status
+>   PCI: keystone: Add debug error message for all errors
+>   PCI: keystone: Reorder header file in alphabetical order
+>   PCI: keystone: Cleanup macros defined in pci-keystone.c
+> 
+>  .../devicetree/bindings/pci/pci-keystone.txt  |   3 +
+>  MAINTAINERS                                   |   2 +-
+>  drivers/pci/controller/dwc/Makefile           |   2 +-
+>  drivers/pci/controller/dwc/pci-keystone-dw.c  | 484 -----------
+>  drivers/pci/controller/dwc/pci-keystone.c     | 788 +++++++++++++++---
+>  drivers/pci/controller/dwc/pci-keystone.h     |  57 --
+>  drivers/pci/controller/dwc/pcie-designware.h  |   4 +
+>  7 files changed, 686 insertions(+), 654 deletions(-)
+>  delete mode 100644 drivers/pci/controller/dwc/pci-keystone-dw.c
+>  delete mode 100644 drivers/pci/controller/dwc/pci-keystone.h
 
+I have applied the series to pci/keystone, tentatively for v4.20.
 
-On 16/10/2018 11:47, Marcel Ziswiler wrote:
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
-> Similar to the following:
-> 
-> commit 4321723648b0 ("ASoC: tegra_alc5632: fix device_node refcounting")
-> 
-> commit 7c5dfd549617 ("ASoC: tegra: fix device_node refcounting")
-> 
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
-> ---
-> 
-> Changes in v2: New patch
-> 
->  sound/soc/tegra/tegra_sgtl5000.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/sound/soc/tegra/tegra_sgtl5000.c b/sound/soc/tegra/tegra_sgtl5000.c
-> index 45a4aa9d2a47..901457da25ec 100644
-> --- a/sound/soc/tegra/tegra_sgtl5000.c
-> +++ b/sound/soc/tegra/tegra_sgtl5000.c
-> @@ -149,14 +149,14 @@ static int tegra_sgtl5000_driver_probe(struct platform_device *pdev)
->  		dev_err(&pdev->dev,
->  			"Property 'nvidia,i2s-controller' missing/invalid\n");
->  		ret = -EINVAL;
-> -		goto err;
-> +		goto err_put_codec_of_node;
->  	}
->  
->  	tegra_sgtl5000_dai.platform_of_node = tegra_sgtl5000_dai.cpu_of_node;
->  
->  	ret = tegra_asoc_utils_init(&machine->util_data, &pdev->dev);
->  	if (ret)
-> -		goto err;
-> +		goto err_put_cpu_of_node;
->  
->  	ret = snd_soc_register_card(card);
->  	if (ret) {
-> @@ -169,6 +169,13 @@ static int tegra_sgtl5000_driver_probe(struct platform_device *pdev)
->  
->  err_fini_utils:
->  	tegra_asoc_utils_fini(&machine->util_data);
-> +err_put_cpu_of_node:
-> +	of_node_put(tegra_sgtl5000_dai.cpu_of_node);
-> +	tegra_sgtl5000_dai.cpu_of_node = NULL;
-> +	tegra_sgtl5000_dai.platform_of_node = NULL;
-> +err_put_codec_of_node:
-> +	of_node_put(tegra_sgtl5000_dai.codec_of_node);
-> +	tegra_sgtl5000_dai.codec_of_node = NULL;
->  err:
->  	return ret;
->  }
-> @@ -183,6 +190,12 @@ static int tegra_sgtl5000_driver_remove(struct platform_device *pdev)
->  
->  	tegra_asoc_utils_fini(&machine->util_data);
->  
-> +	of_node_put(tegra_sgtl5000_dai.cpu_of_node);
-> +	tegra_sgtl5000_dai.cpu_of_node = NULL;
-> +	tegra_sgtl5000_dai.platform_of_node = NULL;
-> +	of_node_put(tegra_sgtl5000_dai.codec_of_node);
-> +	tegra_sgtl5000_dai.codec_of_node = NULL;
-> +
->  	return ret;
->  }
->  
-
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-
-Cheers
-Jon
-
--- 
-nvpublic
+Thanks,
+Lorenzo
