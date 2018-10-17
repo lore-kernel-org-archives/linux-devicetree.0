@@ -1,345 +1,187 @@
-From: frowand.list@gmail.com
-Subject: [PATCH v3] of: overlay: user space synchronization
-Date: Tue, 16 Oct 2018 17:34:26 -0700
-Message-ID: <1539736466-28638-1-git-send-email-frowand.list@gmail.com>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [RFC 4/4] gpio: sifive: Add GPIO driver for SiFive SoCs
+Date: Tue, 16 Oct 2018 18:01:13 -0700
+Message-ID: <d8fe9a17-283c-e2ad-9e01-2754b35699b4@wdc.com>
+References: <1539111085-25502-1-git-send-email-atish.patra@wdc.com>
+ <1539111085-25502-5-git-send-email-atish.patra@wdc.com>
+ <CACRpkdaoBwqQ4V5Hm9f_G5_jrdkvjT5anhBK1_HoFTj6=cba-Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdaoBwqQ4V5Hm9f_G5_jrdkvjT5anhBK1_HoFTj6=cba-Q@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, Alan Tull <atull@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>
+Cc: Palmer Dabbelt <palmer@sifive.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Christoph Hellwig <hch@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+On 10/10/18 5:35 AM, Linus Walleij wrote:
+> Hi Atish,
+> 
+> thanks for your patch!
+> 
+> On Tue, Oct 9, 2018 at 8:51 PM Atish Patra <atish.patra@wdc.com> wrote:
+> 
+>> From: "Wesley W. Terpstra" <wesley@sifive.com>
+>>
+>> Adds the GPIO driver for SiFive RISC-V SoCs.
+>>
+>> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+>> [Atish: Various fixes and code cleanup]
+>> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> 
+> (...)
+> 
+>> +config GPIO_SIFIVE
+>> +       bool "SiFive GPIO support"
+>> +       depends on OF_GPIO
+>> +       select GPIOLIB_IRQCHIP
+> 
+> I suggest to add
+> select GPIO_GENERIC as per below.
+> 
+> Maybe select REGMAP_MMIO as well.
 
-When an overlay is applied or removed, the live devicetree visible in
-/proc/device-tree/, aka /sys/firmware/devicetree/base/, reflects the
-changes.  There is no method for user space to determine whether the
-live devicetree was modified by overlay actions.
+ok.
 
-Provide a sysfs file, /sys/firmware/devicetree/tree_version,  to allow
-user space to determine if the live devicetree has remained unchanged
-while a series of one or more accesses of /proc/device-tree/ occur.
+> 
+>> +       help
+>> +         Say yes here to support the GPIO device on SiFive SoCs.
+>> +
+> 
+>> +#include <linux/of_irq.h>
+>> +#include <linux/irqchip/chained_irq.h>
+> 
+> Do you need these two? I think <linux/gpio/driver.h>
+> will bring them in for you.
+> 
 
-The use of both (1) dynamic devicetree modifications and (2) overlay
-apply and removal are not supported during the same boot cycle.  Thus
-non-overlay dynamic modifications are not reflected in the value of
-tree_version.
+driver.h only brings chained_irq.h. of_irq.h is still required. Right ?
 
-Example shell use:
+>> +#include <linux/pinctrl/consumer.h>
+> 
+> Are you using this?
 
-	# set done false (1)
-	done=1
+My bad. Left over from the old code. I will remove it.
 
-	# keep trying until we can make it through the loop without
-	# live tree being changed by an overlay changeset during the
-	# 'critical region'
-	while [ $done = 1 ] ; do
+> 
+>> +struct sifive_gpio {
+>> +       raw_spinlock_t          lock;
+>> +       void __iomem            *base;
+>> +       struct gpio_chip        gc;
+>> +       unsigned long           enabled;
+> 
+> Since max GPIO is 32 why not use an u32 for this?
+> 
 
-	   # loop while live tree is locked for overlay changes
-	   pre_version=$(cat /sys/firmware/devicetree/tree_version)
-	   while [ $(( ${pre_version} & 1 )) != 0 ] ; do
-	      # echo is optional, sleep value can be tuned
-	      echo "${pre_version}  tree locked, sleeping 2 seconds"
-	      sleep 2;
-	      pre_version=$(cat /sys/firmware/devicetree/tree_version)
-	   done
+Sure.
 
-	   # 'critical region'
-	   # access /proc/device-tree/ one or more times
+>> +       unsigned int            trigger[MAX_GPIO];
+>> +       unsigned int            irq_parent[MAX_GPIO];
+>> +       struct sifive_gpio      *self_ptr[MAX_GPIO];
+>> +};
+>> +
+>> +static void sifive_assign_bit(void __iomem *ptr, unsigned int offset, int value)
+>> +{
+>> +       /*
+>> +        * It's frustrating that we are not allowed to use the device atomics
+>> +        * which are GUARANTEED to be supported by this device on RISC-V
+>> +        */
+>> +       u32 bit = BIT(offset), old = ioread32(ptr);
+>> +
+>> +       if (value)
+>> +               iowrite32(old | bit, ptr);
+>> +       else
+>> +               iowrite32(old & ~bit, ptr);
+>> +}
+> 
+> This looks like a mask and set implementation, you are
+> essentially reinventing regmap MMIO and the
+> regmap_update_bits() call. Could you look into
+> just using regmap MMIO in that case?
+> 
+> If you need examples, look at gpio-mvebu.c that calls
+> devm_regmap_init_mmio() for example.
+> 
 
-	   # check that overlay did not change DT during critical region
-	   post_version=$(cat /sys/firmware/devicetree/tree_version)
-	   if [ ${post_version} = ${pre_version} ] ; then
-	      # set done true (0)
-	      done=0
-	   fi
+That's really cool. Sorry, for not checking that earlier.
+I am pretty new to this.
 
-	done
+>> +static int sifive_direction_input(struct gpio_chip *gc, unsigned int offset)
+>> +static int sifive_direction_output(struct gpio_chip *gc, unsigned int offset,
+>> +static int sifive_get_direction(struct gpio_chip *gc, unsigned int offset)
+>> +static int sifive_get_value(struct gpio_chip *gc, unsigned int offset)
+>> +static void sifive_set_value(struct gpio_chip *gc, unsigned int offset,
+> 
+> These functions look like a typical hardware that can use
+> 
+> GPIOLIB_GENERIC and bgpio_init() to set up the accessors.
+> 
+> See gpio-ftgpio010.c for an example.
+> 
+> As a bonus you will get .get/.set_multiple implemented by
+> the generic GPIO.
+> 
 
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
----
+Great. This will reduce the driver a code by a big factor.
+Thanks for the pointer.
 
-Changes since version 2:
-  - sysfs-firmware-ofw: add comments to shell script example
-  - sysfs-firmware-ofw: add more information about the behavior of
-    tree_version and how its value changes
-  - correct error in patch comment shell script by copying the shell
-    script from the patch body
 
- Documentation/ABI/testing/sysfs-firmware-ofw | 98 ++++++++++++++++++++++++++--
- drivers/of/base.c                            | 66 +++++++++++++++++++
- drivers/of/of_private.h                      |  2 +
- drivers/of/overlay.c                         | 12 ++++
- 4 files changed, 171 insertions(+), 7 deletions(-)
+>> +static void sifive_irq_enable(struct irq_data *d)
+>> +static void sifive_irq_disable(struct irq_data *d)
+> (...)
+>> +static struct irq_chip sifive_irqchip = {
+>> +       .name           = "sifive-gpio",
+>> +       .irq_set_type   = sifive_irq_set_type,
+>> +       .irq_mask       = sifive_irq_mask,
+>> +       .irq_unmask     = sifive_irq_unmask,
+>> +       .irq_enable     = sifive_irq_enable,
+>> +       .irq_disable    = sifive_irq_disable,
+> 
+> The handling of .irq_enable and .irq_disable has
+> changed upstream. Please align with the new codebase
+> as changed by Hans Verkuil:
+> 
+> commit 461c1a7d4733d1dfd5c47b040cf32a5e7eefbc6c
+> "gpiolib: override irq_enable/disable"
+> commit 4e9439ddacea06f35acce4d374bf6bd0acf99bc8
+> "gpiolib: add flag to indicate if the irq is disabled"
+> 
+> You will need to rebase your work on the v4.20-rc1 once it is
+> out. Right now the changes are on linux-next or my devel
+> branch.
 
-diff --git a/Documentation/ABI/testing/sysfs-firmware-ofw b/Documentation/ABI/testing/sysfs-firmware-ofw
-index edcab3ccfcc0..20860de3ca4c 100644
---- a/Documentation/ABI/testing/sysfs-firmware-ofw
-+++ b/Documentation/ABI/testing/sysfs-firmware-ofw
-@@ -1,4 +1,10 @@
--What:		/sys/firmware/devicetree/*
-+What:		/sys/firmware/devicetree/
-+Date:		November 2013
-+Contact:	Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
-+Description:
-+		Top level Open Firmware, aka devicetree, sysfs directory.
-+
-+What:		/sys/firmware/devicetree/base
- Date:		November 2013
- Contact:	Grant Likely <grant.likely@arm.com>, devicetree@vger.kernel.org
- Description:
-@@ -6,11 +12,6 @@ Description:
- 		hardware, the device tree structure will be exposed in this
- 		directory.
- 
--		It is possible for multiple device-tree directories to exist.
--		Some device drivers use a separate detached device tree which
--		have no attachment to the system tree and will appear in a
--		different subdirectory under /sys/firmware/devicetree.
--
- 		Userspace must not use the /sys/firmware/devicetree/base
- 		path directly, but instead should follow /proc/device-tree
- 		symlink. It is possible that the absolute path will change
-@@ -20,13 +21,96 @@ Description:
- 		filesystem support, and has largely the same semantics and
- 		should be compatible with existing userspace.
- 
--		The contents of /sys/firmware/devicetree/ is a
-+		The /sys/firmware/devicetree/base directory is the root
-+		node of the devicetree.
-+
-+		The contents of /sys/firmware/devicetree/base is a
- 		hierarchy of directories, one per device tree node. The
- 		directory name is the resolved path component name (node
- 		name plus address). Properties are represented as files
- 		in the directory. The contents of each file is the exact
- 		binary data from the device tree.
- 
-+What:		/sys/firmware/devicetree/tree_version
-+Date:		October 2018
-+KernelVersion:	4.20
-+Contact:	Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
-+Description:
-+		When an overlay is applied or removed, the live devicetree
-+		visible in /proc/device-tree/, aka
-+		/sys/firmware/devicetree/base/, reflects the changes.
-+
-+		tree_version provides a way for user space to determine if the
-+		live devicetree has remained unchanged while a series of one
-+		or more accesses of /proc/device-tree/ occur.  If tree_version
-+		is odd then the devicetree is locked for an overlay update.
-+
-+		Details about the value of tree_version:
-+
-+		   - tree_version is never decremented
-+
-+		   - tree_version is incremented twice for each overlay
-+		     changeset that is applied or removed
-+
-+		   - When the tree is locked to apply or remove an overlay
-+		     changeset, tree_version is incremented once and its
-+		     value becomes odd
-+
-+		   - When the overlay changeset apply or remove is completed
-+		     (or an error aborts the overlay changeset apply or
-+		     remove), the tree is unlocked and tree_version is
-+		     incremented a second time, and its value becomes even
-+
-+		   - the granularity of tree_version is based on overlay
-+		     changesets; it will never be smaller than a changeset,
-+		     but may in the future be extended to cover apply and
-+		     remove of non-overlay changesets
-+
-+		   - the value of tree_version is initially 0 at the start
-+		     of kernel boot, but may increase during the boot process,
-+		     for example due to devicetree unittest activity
-+
-+		   - tree_version is the ascii representation of a kernel
-+		     unsigned 32 bit int variable, thus when incremented
-+		     from 4294967295 it wraps around to 0
-+
-+		The use of both dynamic devicetree modifications and overlay
-+		apply and removal are not supported during the same boot
-+		cycle.  Thus non-overlay dynamic modifications are not
-+		reflected in the value of tree_version.
-+
-+		Example shell use of tree_version:
-+
-+		# set done false (1)
-+		done=1
-+
-+		# keep trying until we can make it through the loop without
-+		# live tree being changed by an overlay changeset during the
-+		# 'critical region'
-+		while [ $done = 1 ] ; do
-+
-+		   # loop while live tree is locked for overlay changes
-+		   pre_version=$(cat /sys/firmware/devicetree/tree_version)
-+		   while [ $(( ${pre_version} & 1 )) != 0 ] ; do
-+		      # echo is optional, sleep value can be tuned
-+		      echo "${pre_version}  tree locked, sleeping 2 seconds"
-+		      sleep 2;
-+		      pre_version=$(cat /sys/firmware/devicetree/tree_version)
-+		   done
-+
-+		   # 'critical region'
-+		   # access /proc/device-tree/ one or more times
-+
-+		   # check that overlay did not change DT during critical region
-+		   post_version=$(cat /sys/firmware/devicetree/tree_version)
-+		   if [ ${post_version} = ${pre_version} ] ; then
-+		      # set done true (0)
-+		      done=0
-+		   fi
-+
-+		done
-+
-+
- What:		/sys/firmware/fdt
- Date:		February 2015
- KernelVersion:	3.19
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 466e3c8582f0..ec0428e47577 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -151,9 +151,71 @@ int of_free_phandle_cache(void)
- late_initcall_sync(of_free_phandle_cache);
- #endif
- 
-+#define show_one(object)						\
-+	static ssize_t show_##object					\
-+	(struct kobject *kobj, struct attribute *attr, char *buf)	\
-+	{								\
-+		return sprintf(buf, "%u\n", object);			\
-+	}
-+
-+struct global_attr {
-+	struct attribute attr;
-+	ssize_t (*show)(struct kobject *kobj,
-+			struct attribute *attr, char *buf);
-+	ssize_t (*store)(struct kobject *a, struct attribute *b,
-+			 const char *c, size_t count);
-+};
-+
-+#define define_one_global_ro(_name)		\
-+static struct global_attr attr_##_name =	\
-+__ATTR(_name, 0444, show_##_name, NULL)
-+
-+/*
-+ * tree_version must be unsigned so that at maximum value it wraps
-+ * from an odd value (4294967295) to an even value (0).
-+ */
-+static u32 tree_version;
-+
-+show_one(tree_version);
-+
-+define_one_global_ro(tree_version);
-+
-+static struct attribute *of_attributes[] = {
-+	&attr_tree_version.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group of_attr_group = {
-+	.attrs = of_attributes,
-+};
-+
-+/*
-+ * internal documentation
-+ * tree_version_increment() - increment base version
-+ *
-+ * Before starting overlay apply or overlay remove, call this function.
-+ * After completing overlay apply or overlay remove, call this function.
-+ *
-+ * caller must hold of_mutex
-+ *
-+ * Userspace can use the value of this variable to determine whether the
-+ * devicetree has changed while accessing the devicetree.  An odd value
-+ * means a modification is underway.  An even value means no modification
-+ * is underway.
-+ *
-+ * The use of both (1) dynamic devicetree modifications and (2) overlay apply
-+ * and removal are not supported during the same boot cycle.  Thus non-overlay
-+ * dynamic modifications are not reflected in the value of tree_version.
-+ */
-+void tree_version_increment(void)
-+{
-+	tree_version++;
-+}
-+
- void __init of_core_init(void)
- {
- 	struct device_node *np;
-+	int ret;
- 
- 	of_populate_phandle_cache();
- 
-@@ -172,6 +234,10 @@ void __init of_core_init(void)
- 	/* Symlink in /proc as required by userspace ABI */
- 	if (of_root)
- 		proc_symlink("device-tree", NULL, "/sys/firmware/devicetree/base");
-+
-+	ret = sysfs_create_group(&of_kset->kobj, &of_attr_group);
-+	if (ret)
-+		pr_err("sysfs_create_group of_attr_group failed: %d\n", ret);
- }
- 
- static struct property *__of_find_property(const struct device_node *np,
-diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index 216175d11d3d..adf89f6bad81 100644
---- a/drivers/of/of_private.h
-+++ b/drivers/of/of_private.h
-@@ -31,6 +31,8 @@ struct alias_prop {
- extern struct list_head aliases_lookup;
- extern struct kset *of_kset;
- 
-+void tree_version_increment(void);
-+
- #if defined(CONFIG_OF_DYNAMIC)
- extern int of_property_notify(int action, struct device_node *np,
- 			      struct property *prop, struct property *old_prop);
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index eda57ef12fd0..53b1810b1e03 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -770,6 +770,9 @@ static int of_overlay_apply(const void *fdt, struct device_node *tree,
- 	of_overlay_mutex_lock();
- 	mutex_lock(&of_mutex);
- 
-+	/* live tree may change after this point, user space synchronization */
-+	tree_version_increment();
-+
- 	ret = of_resolve_phandles(tree);
- 	if (ret)
- 		goto err_free_tree;
-@@ -832,6 +835,9 @@ static int of_overlay_apply(const void *fdt, struct device_node *tree,
- 	free_overlay_changeset(ovcs);
- 
- out_unlock:
-+	/* live tree change complete, user space synchronization */
-+	tree_version_increment();
-+
- 	mutex_unlock(&of_mutex);
- 	of_overlay_mutex_unlock();
- 
-@@ -1028,6 +1034,9 @@ int of_overlay_remove(int *ovcs_id)
- 
- 	mutex_lock(&of_mutex);
- 
-+	/* live tree may change after this point, user space synchronization */
-+	tree_version_increment();
-+
- 	ovcs = idr_find(&ovcs_idr, *ovcs_id);
- 	if (!ovcs) {
- 		ret = -ENODEV;
-@@ -1083,6 +1092,9 @@ int of_overlay_remove(int *ovcs_id)
- 	free_overlay_changeset(ovcs);
- 
- out_unlock:
-+	/* live tree change complete, user space synchronization */
-+	tree_version_increment();
-+
- 	mutex_unlock(&of_mutex);
- 
- out:
--- 
-Frank Rowand <frank.rowand@sony.com>
+Will do.
+
+> 
+>> +       ngpio = of_irq_count(node);
+>> +       if (ngpio >= MAX_GPIO) {
+>> +               dev_err(dev, "Too many GPIO interrupts (max=%d)\n", MAX_GPIO);
+>> +               return -ENXIO;
+>> +       }
+> (...)
+>> +       for (gpio = 0; gpio < ngpio; ++gpio) {
+>> +               irq = platform_get_irq(pdev, gpio);
+>> +               if (irq < 0) {
+>> +                       dev_err(dev, "invalid IRQ\n");
+>> +                       gpiochip_remove(&chip->gc);
+>> +                       return -ENODEV;
+>> +               }
+> 
+> This is an hierarchical IRQ so it should use an hierarchical
+> irqdomain.
+> 
+> I am discussing with Thierry to make more generic irq domains
+> for hierarchical IRQ GPIOs, until then you have to look at
+> gpio-thunderx.c, gpio-uniphier.c or gpio-xgene-sb.c that all
+> use hierarchical IRQs.
+> 
+
+Thanks. I will convert them to hierarchical IRQ.
+
+Regards,
+Atish
+> Yours,
+> Linus Walleij
+> 
