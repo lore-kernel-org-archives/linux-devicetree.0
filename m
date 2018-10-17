@@ -1,168 +1,109 @@
-Return-Path: <SRS0=MYDa=M6=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr50070.outbound.protection.outlook.com ([40.107.5.70]:17586
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726673AbeJRJQb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 18 Oct 2018 05:16:31 -0400
-From: Peter Chen <peter.chen@nxp.com>
-Subject: RE: [PATCH 2/4] usb: chipidea: imx: add HSIC support
-Date: Thu, 18 Oct 2018 01:18:01 +0000
-Message-ID: <VI1PR04MB532730FB8B3EE930C8BB996A8BF80@VI1PR04MB5327.eurprd04.prod.outlook.com>
+Return-Path: <SRS0=t11G=M5=exceet.de=frieder.schrempf@kernel.org>
+Subject: Re: [PATCH 0/4] usb: chipidea: imx: add HSIC support
+From: Frieder Schrempf <frieder.schrempf@exceet.de>
 References: <20181016045846.2345-1-peter.chen@nxp.com>
- <20181016045846.2345-3-peter.chen@nxp.com>
- <db49fb5f-404f-6b9d-0fe9-c64526c1fef0@exceet.de>
-In-Reply-To: <db49fb5f-404f-6b9d-0fe9-c64526c1fef0@exceet.de>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ <82a99c3c-20c6-4972-fc6d-1fca8d5d684d@exceet.de>
+ <VI1PR04MB53271CABB291EECC73C86C518BFF0@VI1PR04MB5327.eurprd04.prod.outlook.com>
+ <796469f2-ea5d-d428-6088-32d8eedb3160@exceet.de>
+ <70259e7d-2b2a-ddf6-4f10-3c53c065133c@exceet.de>
+Message-ID: <9efff07e-deb6-5740-6326-bd2f11f9fed4@exceet.de>
+Date: Wed, 17 Oct 2018 16:59:19 +0200
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Frieder Schrempf <frieder.schrempf@exceet.de>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+In-Reply-To: <70259e7d-2b2a-ddf6-4f10-3c53c065133c@exceet.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+To: Peter Chen <peter.chen@nxp.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-IA0KIA0KPiA+ICtzdGF0aWMgaW50IGNpX2hkcmNfaW14X25vdGlmeV9ldmVudChzdHJ1Y3QgY2lf
-aGRyYyAqY2ksIHVuc2lnbmVkIGludA0KPiA+ICtldmVudCkgew0KPiA+ICsJc3RydWN0IGRldmlj
-ZSAqZGV2ID0gY2ktPmRldi0+cGFyZW50Ow0KPiA+ICsJc3RydWN0IGNpX2hkcmNfaW14X2RhdGEg
-KmRhdGEgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCj4gPiArCWludCByZXQgPSAwOw0KPiA+ICsN
-Cj4gPiArCXN3aXRjaCAoZXZlbnQpIHsNCj4gPiArCWNhc2UgQ0lfSERSQ19JTVhfSFNJQ19BQ1RJ
-VkVfRVZFTlQ6DQo+ID4gKwkJaWYgKCFJU19FUlIoZGF0YS0+cGluY3RybCkgJiYNCj4gPiArCQkJ
-IUlTX0VSUihkYXRhLT5waW5jdHJsX2hzaWNfYWN0aXZlKSkgew0KPiANCj4gSWYgd2UgbWFrZSB0
-aGUgcGluY3RybCBtYW5kYXRvcnkgaW4gY2FzZSBvZiBIU0lDIGFzIHByb3Bvc2VkIGJlbG93LCB3
-ZSBkb24ndCBuZWVkDQo+IHRoZSBjaGVja3MgaGVyZS4NCj4gDQoNCldpbGwgZGVsZXRlIHRoZW0N
-Cg0KIA0KPiA+ICsNCj4gPiArCQlkYXRhLT5waW5jdHJsX2hzaWNfYWN0aXZlID0gcGluY3RybF9s
-b29rdXBfc3RhdGUoZGF0YS0+cGluY3RybCwNCj4gPiArCQkJCQkJCQkiYWN0aXZlIik7DQo+ID4g
-KwkJaWYgKElTX0VSUihkYXRhLT5waW5jdHJsX2hzaWNfYWN0aXZlKSkNCj4gPiArCQkJZGV2X2Ri
-ZyhkZXYsDQo+ID4gKwkJCQkicGluY3RybF9oc2ljX2FjdGl2ZSBsb29rdXAgZmFpbGVkLCBlcnI9
-JWxkXG4iLA0KPiA+ICsJCQkJCVBUUl9FUlIoZGF0YS0+cGluY3RybF9oc2ljX2FjdGl2ZSkpOw0K
-PiA+ICsJfQ0KPiANCj4gSW4gdGhlIHBhcmFncmFwaCBhYm92ZSwgSSB0aGluayB3ZSBzaG91bGQg
-bWFrZSB0aGUgcGluY3RybCBzZXR0aW5ncyBtYW5kYXRvcnkgaW4NCj4gY2FzZSBvZiBIU0lDIGFu
-ZCBlcnJvciBvdXQgaWYgb25lIG9mIHRoZW0gaXMgbWlzc2luZy4NCj4gDQo+IEFsc28gSSB0aGlu
-ayB3ZSBjb3VsZCBtYWtlIHRoZSBjb2RlIG1vcmUgcmVhZGFibGUgYnkgcmVtb3ZpbmcgdGhlIG5l
-c3RlZA0KPiBjb25kaXRpb25zLg0KPiANCj4gTWF5YmUgc29tZXRoaW5nIGxpa2UgdGhpcyB3b3Vs
-ZCBiZSBiZXR0ZXI/DQo+IA0KPiBpZiAob2ZfdXNiX2dldF9waHlfbW9kZShkZXYtPm9mX25vZGUp
-ID09IFVTQlBIWV9JTlRFUkZBQ0VfTU9ERV9IU0lDKQ0KPiB7DQo+IAlkYXRhLT5waW5jdHJsID0g
-ZGV2bV9waW5jdHJsX2dldChkZXYpOw0KPiAJaWYgKElTX0VSUihkYXRhLT5waW5jdHJsKSkgew0K
-PiAJCWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIGdldCBIU0lDIHBpbmN0cmwsIGVycj0lbGRcbiIs
-DQo+IAkJCVBUUl9FUlIoZGF0YS0+cGluY3RybCkpOw0KPiAJCXJldHVybiBQVFJfRVJSKGRhdGEt
-PnBpbmN0cmwpOw0KPiAJfQ0KPiANCj4gCXBpbmN0cmxfaHNpY19pZGxlID0gcGluY3RybF9sb29r
-dXBfc3RhdGUoZGF0YS0+cGluY3RybCwgImlkbGUiKTsNCj4gCWlmIChJU19FUlIocGluY3RybF9o
-c2ljX2lkbGUpKSB7DQo+IAkJZGV2X2VycihkZXYsICJmYWlsZWQgdG8gZ2V0IEhTSUMgaWRsZSBw
-aW5jdHJsLCINCj4gCQkJICAgICAiZXJyPSVsZFxuIiwgUFRSX0VSUihwaW5jdHJsX2hzaWNfaWRs
-ZSkpOw0KPiAJCXJldHVybiBQVFJfRVJSKHBpbmN0cmxfaHNpY19pZGxlKTsNCj4gCX0NCj4gDQo+
-IAlyZXQgPSBwaW5jdHJsX3NlbGVjdF9zdGF0ZShkYXRhLT5waW5jdHJsLCBwaW5jdHJsX2hzaWNf
-aWRsZSk7DQo+IAlpZiAocmV0KSB7DQo+IAkJZGV2X2VycihkZXYsICJmYWlsZWQgdG8gc2VsZWN0
-IEhTSUMgaWRsZSBwaW5jdHJsLCINCj4gCQkJICAgICAiZXJyPSVkXG4iLCByZXQpOw0KPiAJCXJl
-dHVybiByZXQ7DQo+IAl9DQo+IA0KPiAJZGF0YS0+cGluY3RybF9oc2ljX2FjdGl2ZSA9IHBpbmN0
-cmxfbG9va3VwX3N0YXRlKGRhdGEtPnBpbmN0cmwsDQo+IAkJCQkJCQkgImFjdGl2ZSIpOw0KPiAJ
-aWYgKElTX0VSUihkYXRhLT5waW5jdHJsX2hzaWNfYWN0aXZlKSkgew0KPiAJCWRldl9lcnIoZGV2
-LCAiZmFpbGVkIHRvIGdldCBIU0lDIGFjdGl2ZSBwaW5jdHJsLCINCj4gCQkJICAgICAiZXJyPSVs
-ZFxuIiwNCj4gCQkJICAgICBQVFJfRVJSKGRhdGEtPnBpbmN0cmxfaHNpY19hY3RpdmUpKTsNCj4g
-CQlyZXR1cm4gUFRSX0VSUihkYXRhLT5waW5jdHJsX2hzaWNfYWN0aXZlKTsNCj4gCX0NCj4gfQ0K
-PiANCg0KR29vZCBpZGVhLg0KDQogDQo+ID4gICB9DQo+ID4gQEAgLTM2Nyw5ICs0NzAsMTkgQEAg
-c3RhdGljIHZvaWQgY2lfaGRyY19pbXhfc2h1dGRvd24oc3RydWN0DQo+IHBsYXRmb3JtX2Rldmlj
-ZSAqcGRldikNCj4gPiAgIHN0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgaW14X2NvbnRyb2xsZXJf
-c3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4gICB7DQo+ID4gICAJc3RydWN0IGNpX2hk
-cmNfaW14X2RhdGEgKmRhdGEgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCj4gPiArCWludCByZXQg
-PSAwOw0KPiA+DQo+ID4gICAJZGV2X2RiZyhkZXYsICJhdCAlc1xuIiwgX19mdW5jX18pOw0KPiA+
-DQo+ID4gKwlpZiAoZGF0YS0+dXNibWlzY19kYXRhKSB7DQo+IA0KPiBXaHkgZG8gd2UgaGF2ZSB0
-aGlzIGNoZWNrIGhlcmUsIGJ1dCBub3QgaW4gaW14X2NvbnRyb2xsZXJfcmVzdW1lKCk/DQo+IA0K
-DQpJIHdpbGwgZGVsZXRlIGNoZWNrIGhlcmUgc2luY2UgdGhlcmUgaXMgTlVMTCBwb2ludCBjaGVj
-ayBhdCBpbXhfdXNibWlzY19oc2ljX3NldF9jbGsgdG9vLg0KDQo+ID4gKwkJcmV0ID0gaW14X3Vz
-Ym1pc2NfaHNpY19zZXRfY2xrKGRhdGEtPnVzYm1pc2NfZGF0YSwgZmFsc2UpOw0KPiA+ICsJCWlm
-IChyZXQpIHsNCj4gPiArCQkJZGV2X2VycihkZXYsDQo+ID4gKwkJCQkidXNibWlzYyBoc2ljX3Nl
-dF9jbGsgZmFpbGVkLCByZXQ9JWRcbiIsIHJldCk7DQo+ID4gKwkJCXJldHVybiByZXQ7DQo+ID4g
-KwkJfQ0KPiA+ICsJfQ0KPiA+ICsNCj4gPiAgIAlpbXhfZGlzYWJsZV91bnByZXBhcmVfY2xrcyhk
-ZXYpOw0KPiA+ICAgCWRhdGEtPmluX2xwbSA9IHRydWU7DQo+ID4NCj4gPiBAQCAtNDAwLDggKzUx
-MywxNiBAQCBzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkDQo+IGlteF9jb250cm9sbGVyX3Jlc3Vt
-ZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4gICAJCWdvdG8gY2xrX2Rpc2FibGU7DQo+ID4gICAJ
-fQ0KPiA+DQo+IA0KPiBXaHkgZG9uJ3Qgd2UgaGF2ZSBhIGNoZWNrIGZvciBkYXRhLT51c2JtaXNj
-X2RhdGEgaGVyZSwgYnV0IGluDQo+IGlteF9jb250cm9sbGVyX3N1c3BlbmQoKSB3ZSBoYXZlIG9u
-ZT8NCj4gDQoNClllcywgbm90IG5lZWQuDQoNCj4gPiArCXJldCA9IGlteF91c2JtaXNjX2hzaWNf
-c2V0X2NsayhkYXRhLT51c2JtaXNjX2RhdGEsIHRydWUpOw0KPiA+ICsJaWYgKHJldCkgew0KPiA+
-ICsJCWRldl9lcnIoZGV2LCAidXNibWlzYyBoc2ljX3NldF9jbGsgZmFpbGVkLCByZXQ9JWRcbiIs
-IHJldCk7DQo+ID4gKwkJZ290byBoc2ljX3NldF9jbGtfZmFpbDsNCj4gPiArCX0NCj4gPiArDQo+
-ID4gICAJcmV0dXJuIDA7DQo+ID4NCj4gPiAraHNpY19zZXRfY2xrX2ZhaWw6DQo+ID4gKwlpbXhf
-dXNibWlzY19zZXRfd2FrZXVwKGRhdGEtPnVzYm1pc2NfZGF0YSwgdHJ1ZSk7DQo+ID4gICBjbGtf
-ZGlzYWJsZToNCj4gPiAgIAlpbXhfZGlzYWJsZV91bnByZXBhcmVfY2xrcyhkZXYpOw0KPiA+ICAg
-CXJldHVybiByZXQ7DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2NoaXBpZGVhL2NpX2hk
-cmNfaW14LmgNCj4gPiBiL2RyaXZlcnMvdXNiL2NoaXBpZGVhL2NpX2hkcmNfaW14LmgNCj4gPiBp
-bmRleCAyMDQyNzVmNDc1NzMuLmZjZWNhYjQ3ODkzNCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJz
-L3VzYi9jaGlwaWRlYS9jaV9oZHJjX2lteC5oDQo+ID4gKysrIGIvZHJpdmVycy91c2IvY2hpcGlk
-ZWEvY2lfaGRyY19pbXguaA0KPiA+IEBAIC0xNCwxMCArMTQsMTMgQEAgc3RydWN0IGlteF91c2Jt
-aXNjX2RhdGEgew0KPiA+ICAgCXVuc2lnbmVkIGludCBvY19wb2xhcml0eToxOyAvKiBvdmVyIGN1
-cnJlbnQgcG9sYXJpdHkgaWYgb2MgZW5hYmxlZCAqLw0KPiA+ICAgCXVuc2lnbmVkIGludCBldmRv
-OjE7IC8qIHNldCBleHRlcm5hbCB2YnVzIGRpdmlkZXIgb3B0aW9uICovDQo+ID4gICAJdW5zaWdu
-ZWQgaW50IHVscGk6MTsgLyogY29ubmVjdGVkIHRvIGFuIFVMUEkgcGh5ICovDQo+ID4gKwl1bnNp
-Z25lZCBpbnQgaHNpYzoxOyAvKiBIU0lDIGNvbnRyb2xsbGVyICovDQo+ID4gICB9Ow0KPiA+DQo+
-ID4gLWludCBpbXhfdXNibWlzY19pbml0KHN0cnVjdCBpbXhfdXNibWlzY19kYXRhICopOyAtaW50
-DQo+ID4gaW14X3VzYm1pc2NfaW5pdF9wb3N0KHN0cnVjdCBpbXhfdXNibWlzY19kYXRhICopOyAt
-aW50DQo+ID4gaW14X3VzYm1pc2Nfc2V0X3dha2V1cChzdHJ1Y3QgaW14X3VzYm1pc2NfZGF0YSAq
-LCBib29sKTsNCj4gPiAraW50IGlteF91c2JtaXNjX2luaXQoc3RydWN0IGlteF91c2JtaXNjX2Rh
-dGEgKmRhdGEpOyBpbnQNCj4gPiAraW14X3VzYm1pc2NfaW5pdF9wb3N0KHN0cnVjdCBpbXhfdXNi
-bWlzY19kYXRhICpkYXRhKTsgaW50DQo+ID4gK2lteF91c2JtaXNjX3NldF93YWtldXAoc3RydWN0
-IGlteF91c2JtaXNjX2RhdGEgKmRhdGEsIGJvb2wgZW5hYmxlZCk7DQo+ID4gK2ludCBpbXhfdXNi
-bWlzY19oc2ljX3NldF9jb25uZWN0KHN0cnVjdCBpbXhfdXNibWlzY19kYXRhICpkYXRhKTsgaW50
-DQo+ID4gK2lteF91c2JtaXNjX2hzaWNfc2V0X2NsayhzdHJ1Y3QgaW14X3VzYm1pc2NfZGF0YSAq
-ZGF0YSwgYm9vbCBvbik7DQo+ID4NCj4gPiAgICNlbmRpZiAvKiBfX0RSSVZFUl9VU0JfQ0hJUElE
-RUFfQ0lfSERSQ19JTVhfSCAqLyBkaWZmIC0tZ2l0DQo+ID4gYS9kcml2ZXJzL3VzYi9jaGlwaWRl
-YS91c2JtaXNjX2lteC5jDQo+ID4gYi9kcml2ZXJzL3VzYi9jaGlwaWRlYS91c2JtaXNjX2lteC5j
-DQo+ID4gaW5kZXggZGVmODBmZjU0N2U0Li5hNjZhMTUwNzUyMDAgMTAwNjQ0DQo+ID4gLS0tIGEv
-ZHJpdmVycy91c2IvY2hpcGlkZWEvdXNibWlzY19pbXguYw0KPiA+ICsrKyBiL2RyaXZlcnMvdXNi
-L2NoaXBpZGVhL3VzYm1pc2NfaW14LmMNCj4gPiBAQCAtNjQsMTAgKzY0LDIyIEBADQo+ID4gICAj
-ZGVmaW5lIE1YNl9CTV9PVkVSX0NVUl9ESVMJCUJJVCg3KQ0KPiA+ICAgI2RlZmluZSBNWDZfQk1f
-T1ZFUl9DVVJfUE9MQVJJVFkJQklUKDgpDQo+ID4gICAjZGVmaW5lIE1YNl9CTV9XQUtFVVBfRU5B
-QkxFCQlCSVQoMTApDQo+ID4gKyNkZWZpbmUgTVg2X0JNX1VUTUlfT05fQ0xPQ0sJCUJJVCgxMykN
-Cj4gPiAgICNkZWZpbmUgTVg2X0JNX0lEX1dBS0VVUAkJQklUKDE2KQ0KPiA+ICAgI2RlZmluZSBN
-WDZfQk1fVkJVU19XQUtFVVAJCUJJVCgxNykNCj4gPiAgICNkZWZpbmUgTVg2U1hfQk1fRFBETV9X
-QUtFVVBfRU4JCUJJVCgyOSkNCj4gPiAgICNkZWZpbmUgTVg2X0JNX1dBS0VVUF9JTlRSCQlCSVQo
-MzEpDQo+ID4gKw0KPiA+ICsjZGVmaW5lIE1YNl9VU0JfSFNJQ19DVFJMX09GRlNFVAkweDEwDQo+
-ID4gKy8qIFNlbmQgcmVzdW1lIHNpZ25hbCB3aXRob3V0IDQ4ME1oeiBQSFkgY2xvY2sgKi8NCj4g
-PiArI2RlZmluZSBNWDZTWF9CTV9IU0lDX0FVVE9fUkVTVU1FCUJJVCgyMykNCj4gPiArLyogc2V0
-IGJlZm9yZSBwb3J0c2Muc3VzcGVuZE0gPSAxICovDQo+ID4gKyNkZWZpbmUgTVg2X0JNX0hTSUNf
-REVWX0NPTk4JCUJJVCgyMSkNCj4gPiArLyogSFNJQyBlbmFibGUgKi8NCj4gPiArI2RlZmluZSBN
-WDZfQk1fSFNJQ19FTgkJCUJJVCgxMikNCj4gPiArLyogRm9yY2UgSFNJQyBtb2R1bGUgNDgwTSBj
-bG9jayBvbiwgZXZlbiB3aGVuIGluIEhvc3QgaXMgaW4gc3VzcGVuZCBtb2RlICovDQo+ID4gKyNk
-ZWZpbmUgTVg2X0JNX0hTSUNfQ0xLX09OCQlCSVQoMTEpDQo+ID4gKw0KPiA+ICAgI2RlZmluZSBN
-WDZfVVNCX09URzFfUEhZX0NUUkwJCTB4MTgNCj4gPiAgIC8qIEZvciBpbXg2ZHFsLCBpdCBpcyBo
-b3N0LW9ubHkgY29udHJvbGxlciwgZm9yIGxhdGVyIGlteDYsIGl0IGlzIG90ZydzICovDQo+ID4g
-ICAjZGVmaW5lIE1YNl9VU0JfT1RHMl9QSFlfQ1RSTAkJMHgxYw0KPiA+IEBAIC05NCw2ICsxMDYs
-MTAgQEAgc3RydWN0IHVzYm1pc2Nfb3BzIHsNCj4gPiAgIAlpbnQgKCpwb3N0KShzdHJ1Y3QgaW14
-X3VzYm1pc2NfZGF0YSAqZGF0YSk7DQo+ID4gICAJLyogSXQncyBjYWxsZWQgd2hlbiB3ZSBuZWVk
-IHRvIGVuYWJsZS9kaXNhYmxlIHVzYiB3YWtldXAgKi8NCj4gPiAgIAlpbnQgKCpzZXRfd2FrZXVw
-KShzdHJ1Y3QgaW14X3VzYm1pc2NfZGF0YSAqZGF0YSwgYm9vbCBlbmFibGVkKTsNCj4gPiArCS8q
-IEl0J3MgY2FsbGVkIGJlZm9yZSBzZXR0aW5nIHBvcnRzYy5zdXNwZW5kTSAqLw0KPiA+ICsJaW50
-ICgqaHNpY19zZXRfY29ubmVjdCkoc3RydWN0IGlteF91c2JtaXNjX2RhdGEgKmRhdGEpOw0KPiA+
-ICsJLyogSXQncyBjYWxsZWQgZHVyaW5nIHN1c3BlbmQvcmVzdW1lICovDQo+ID4gKwlpbnQgKCpo
-c2ljX3NldF9jbGspKHN0cnVjdCBpbXhfdXNibWlzY19kYXRhICpkYXRhLCBib29sIGVuYWJsZWQp
-Ow0KPiA+ICAgfTsNCj4gPg0KPiA+ICAgc3RydWN0IGlteF91c2JtaXNjIHsNCj4gPiBAQCAtMzUz
-LDYgKzM2OSwxOCBAQCBzdGF0aWMgaW50IHVzYm1pc2NfaW14NnFfaW5pdChzdHJ1Y3QgaW14X3Vz
-Ym1pc2NfZGF0YQ0KPiAqZGF0YSkNCj4gPiAgIAl3cml0ZWwocmVnIHwgTVg2X0JNX05PTl9CVVJT
-VF9TRVRUSU5HLA0KPiA+ICAgCQkJdXNibWlzYy0+YmFzZSArIGRhdGEtPmluZGV4ICogNCk7DQo+
-ID4NCj4gPiArCS8qIEZvciBIU0lDIGNvbnRyb2xsZXIgKi8NCj4gPiArCWlmIChkYXRhLT5oc2lj
-KSB7DQo+ID4gKwkJcmVnID0gcmVhZGwodXNibWlzYy0+YmFzZSArIGRhdGEtPmluZGV4ICogNCk7
-DQo+ID4gKwkJd3JpdGVsKHJlZyB8IE1YNl9CTV9VVE1JX09OX0NMT0NLLA0KPiA+ICsJCQl1c2Jt
-aXNjLT5iYXNlICsgZGF0YS0+aW5kZXggKiA0KTsNCj4gPiArCQlyZWcgPSByZWFkbCh1c2JtaXNj
-LT5iYXNlICsgTVg2X1VTQl9IU0lDX0NUUkxfT0ZGU0VUDQo+ID4gKwkJCSsgKGRhdGEtPmluZGV4
-IC0gMikgKiA0KTsNCj4gPiArCQlyZWcgfD0gTVg2X0JNX0hTSUNfRU4gfCBNWDZfQk1fSFNJQ19D
-TEtfT047DQo+ID4gKwkJd3JpdGVsKHJlZywgdXNibWlzYy0+YmFzZSArIE1YNl9VU0JfSFNJQ19D
-VFJMX09GRlNFVA0KPiA+ICsJCQkrIChkYXRhLT5pbmRleCAtIDIpICogNCk7DQo+ID4gKwl9DQo+
-ID4gKw0KPiA+ICAgCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJnVzYm1pc2MtPmxvY2ssIGZsYWdz
-KTsNCj4gPg0KPiA+ICAgCXVzYm1pc2NfaW14NnFfc2V0X3dha2V1cChkYXRhLCBmYWxzZSk7IEBA
-IC0zNjAsNiArMzg4LDcwIEBAIHN0YXRpYw0KPiA+IGludCB1c2JtaXNjX2lteDZxX2luaXQoc3Ry
-dWN0IGlteF91c2JtaXNjX2RhdGEgKmRhdGEpDQo+ID4gICAJcmV0dXJuIDA7DQo+ID4gICB9DQo+
-ID4NCj4gPiArc3RhdGljIGludCB1c2JtaXNjX2lteDZfaHNpY19zZXRfY29ubmVjdChzdHJ1Y3Qg
-aW14X3VzYm1pc2NfZGF0YQ0KPiA+ICsqZGF0YSkgew0KPiA+ICsJdW5zaWduZWQgbG9uZyBmbGFn
-czsNCj4gPiArCXUzMiB2YWwsIG9mZnNldDsNCj4gPiArCXN0cnVjdCBpbXhfdXNibWlzYyAqdXNi
-bWlzYyA9IGRldl9nZXRfZHJ2ZGF0YShkYXRhLT5kZXYpOw0KPiA+ICsJaW50IHJldCA9IDA7DQo+
-ID4gKw0KPiA+ICsJc3Bpbl9sb2NrX2lycXNhdmUoJnVzYm1pc2MtPmxvY2ssIGZsYWdzKTsNCj4g
-PiArCWlmIChkYXRhLT5pbmRleCA9PSAyIHx8IGRhdGEtPmluZGV4ID09IDMpIHsNCj4gPiArCQlv
-ZmZzZXQgPSAoZGF0YS0+aW5kZXggLSAyKSAqIDQ7DQo+ID4gKwl9IGVsc2UgaWYgKGRhdGEtPmlu
-ZGV4ID09IDApIHsNCj4gPiArCQkvKg0KPiA+ICsJCSAqIEZvciBjb250cm9sbGVycyBsYXRlciB0
-aGFuIGlteDdkIChpbXg3ZCBpcyBpbmNsdWRlZCksDQo+IA0KPiAiRm9yIFNPQ3MgbGlrZSBpLk1Y
-N0QgYW5kIGxhdGVyLCAuLi4iDQo+IA0KPiA+ICsJCSAqIGVhY2ggY29udHJvbGxlciBoYXMgaXRz
-IG93biBub24gY29yZSByZWdpc3RlciByZWdpb24uDQo+ID4gKwkJICogQW5kIHRoZSBjb250cm9s
-bGVycyBiZWZvcmUgdGhhbiBpbXg3ZCwgdGhlIDFzdCBjb250cm9sbGVyDQo+ID4gKwkJICogaXMg
-bm90IEhTSUMgY29udHJvbGxlci4NCj4gDQo+ICJGb3IgU09DcyBiZWZvcmUgaS5NWDdELCB0aGUg
-Zmlyc3QgVVNCIGNvbnRyb2xsZXIgaXMgbm9uLUhTSUMuIg0KPiANCg0KDQpJIHdpbGwgY2hhbmdl
-IGJvdGguDQoNClRoYW5rcy4NCg0KUGV0ZXINCg0K
+On 17.10.18 13:04, Frieder Schrempf wrote:
+> On 17.10.18 11:56, Frieder Schrempf wrote:
+[...]
+>>> - System suspend/resume
+>>> 1. Enable USB wakeup
+>>> for i in $(find /sys -name wakeup | grep usb);do echo enabled  > 
+>>> $i;echo "echo enabled > $i";done;
+>>> 2. Let the system enter suspend using below command
+>>> echo mem > /sys/power/state
+>>> 3. And see if there is a wakeup block system entering suspend, and 
+>>> check if USB HSIC works ok
+>>> after system resume
+>>
+>> System suspend/resume seems to work fine. After resume the ethernet 
+>> controller works.
+>>
+>> root@imxceet-solo-s-43:~# echo mem > /sys/power/state
+>> PM: suspend entry (deep)
+>> PM: Syncing filesystems ... done.
+>> Freezing user space processes ... (elapsed 0.001 seconds) done.
+>> OOM killer disabled.
+>> Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
+>> smsc95xx 3-1:1.0 eth1: entering SUSPEND2 mode
+>> PM: suspend devices took 0.050 seconds
+>> Disabling non-boot CPUs ...
+>> usb 3-1: reset high-speed USB device number 2 using ci_hdrc
+>> PM: resume devices took 0.590 seconds
+>> OOM killer enabled.
+>> Restarting tasks ... done.
+>> PM: suspend exit
+>> smsc95xx 3-1:1.0 eth1: link up, 100Mbps, full-duplex, lpa 0x4DE1
+>> fec 2188000.ethernet eth0: Link is Up - 100Mbps/Full - flow control rx/tx
+>>
+>>>
+>>> - Runtime suspend
+>>> 1. Enable auto suspend for all USB devices, and check if USBOH3 clock 
+>>> is closed,
+>>> make sure do not plug any ethernet cable on the RJ45 port.
+>>>
+>>> /* Enable auto suspend */
+>>> for i in $(find /sys -name control | grep usb);do echo auto  > 
+>>> $i;echo "echo auto > $i";done;
+>>
+>> This doesn't work. When the port is suspended it gets into a loop of 
+>> suspending/resuming endlessly. If i put two logs in 
+>> ci_hdrc_imx_runtime_suspend() and ci_hdrc_imx_runtime_resume(), I get 
+>> this:
+>>
+>> [...]
+>> ci_hdrc_imx_runtime_resume:603
+>> ci_hdrc_imx_runtime_suspend:574
+>> ci_hdrc_imx_runtime_resume:603
+>> ci_hdrc_imx_runtime_suspend:574
+>> ci_hdrc_imx_runtime_resume:603
+>> ci_hdrc_imx_runtime_suspend:574
+>> ci_hdrc_imx_runtime_resume:603
+>> ci_hdrc_imx_runtime_suspend:574
+>> [...]
+> 
+> Ok, forget about the loop, this was caused by one of the other ports, 
+> that had issues with overcurrent detection.
+> 
+> But still it doesn't work for the HSIC port.
+> 
+> The HSIC device is stuck in status "suspending" (note: "suspending" and 
+> not "suspended"):
+> 
+> ~# cat /sys/bus/usb/devices/usb1/power/runtime_status
+> suspended
+> ~# cat /sys/bus/usb/devices/usb2/power/runtime_status
+> suspended
+> ~# cat /sys/bus/usb/devices/usb3/power/runtime_status
+> active
+> ~# cat /sys/bus/usb/devices/usb3/3-1/power/runtime_status
+> suspending
+
+It seems like this is a problem with the smsc95xx driver. I fixed this 
+and now the device is suspending properly, when the network interface is 
+down and resumes when it comes up.
+
+I also checked the USBOH3 clock and its properly switched on and off.
+
+What didn't work is auto suspend and resume on ethernet link down/up, 
+but this seems to be a restriction of the smsc95xx/usbnet driver.
+
+So all in all this looks good to me. Please let me know if you need any 
+more information or tests.
+
+Thanks,
+Frieder
