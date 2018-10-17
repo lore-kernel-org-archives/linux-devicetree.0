@@ -1,54 +1,68 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v1 3/5] ARM: tegra: Create tegra20-cpufreq device on
- Tegra30
-Date: Wed, 17 Oct 2018 09:49:40 +0100
-Message-ID: <9ec51c2d-02f6-0988-0940-0ec31d22f697@nvidia.com>
-References: <20180830194356.14059-1-digetx@gmail.com>
- <20180830194356.14059-4-digetx@gmail.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [[PATCH] 8/9] DMA-UART-Driver-for-AST2500
+Date: Wed, 17 Oct 2018 19:56:25 +1100
+Message-ID: <351eecd5b1b21893e94f76b34c058c6257b7f837.camel@kernel.crashing.org>
+References: <1539749466-3912-1-git-send-email-open.sudheer@gmail.com>
+         <1539749466-3912-9-git-send-email-open.sudheer@gmail.com>
+         <20181017060531.GU2400@vkoul-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180830194356.14059-4-digetx@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181017060531.GU2400@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Vinod <vkoul@kernel.org>, "sudheer.v" <open.sudheer@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, Jiri Slaby <jslaby@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Michael Moese <mmoese@suse.de>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Kate Stewart <kstewart@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspee
 List-Id: devicetree@vger.kernel.org
 
-
-On 30/08/2018 20:43, Dmitry Osipenko wrote:
-> Tegra20-cpufreq driver require a platform device in order to be loaded,
-> instantiate a simple platform device for the driver during of the machines
-> late initialization. Driver now supports Tegra30 SoC's, hence create the
-> device on Tegra30 machines.
+On Wed, 2018-10-17 at 11:35 +0530, Vinod wrote:
+> On 17-10-18, 09:41, sudheer.v wrote:
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  arch/arm/mach-tegra/tegra.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> Please add the change log describing the driver and its features
 > 
-> diff --git a/arch/arm/mach-tegra/tegra.c b/arch/arm/mach-tegra/tegra.c
-> index 67d8ae60ac67..b559e22eab76 100644
-> --- a/arch/arm/mach-tegra/tegra.c
-> +++ b/arch/arm/mach-tegra/tegra.c
-> @@ -111,6 +111,10 @@ static void __init tegra_dt_init_late(void)
->  	if (IS_ENABLED(CONFIG_ARCH_TEGRA_2x_SOC) &&
->  	    of_machine_is_compatible("nvidia,tegra20"))
->  		platform_device_register_simple("tegra20-cpufreq", -1, NULL, 0);
-> +
-> +	if (IS_ENABLED(CONFIG_ARCH_TEGRA_3x_SOC) &&
-> +	    of_machine_is_compatible("nvidia,tegra30"))
-> +		platform_device_register_simple("tegra20-cpufreq", -1, NULL, 0);
->  }
->  
->  static const char * const tegra_dt_board_compat[] = {
+> > Signed-off-by: sudheer.v <open.sudheer@gmail.com>
+> 
+> 
+> > ---
+> >  drivers/tty/serial/8250/8250_aspeed_uart_dma.c | 1594 ++++++++++++++++++++++++
+> >  1 file changed, 1594 insertions(+)
+> >  create mode 100644 drivers/tty/serial/8250/8250_aspeed_uart_dma.c
+> > 
+> > diff --git a/drivers/tty/serial/8250/8250_aspeed_uart_dma.c b/drivers/tty/serial/8250/8250_aspeed_uart_dma.c
+> > new file mode 100644
+> > index 0000000..e1019a8
+> > --- /dev/null
+> > +++ b/drivers/tty/serial/8250/8250_aspeed_uart_dma.c
+> 
+> why is this in serial. It is dmaengine driver so belongs to drivers/dma/
+> like other controllers. Please move it out and resubmit.
+ 
+It's not a dmaengine driver. It's a serial UART driver that happens to
+use a dedicated DMA engine.
 
-Not sure why you would do this if now the driver only works with DT. Am
-I missing something?
+It's unclear whether it should be split into two drivers, or just have
+the serial driver directly use the dma engine since that engine is
+dedicated in HW to only work on those UARTs and nothing else...
 
-Cheers
-Jon
+Cheers,
+Ben.
 
--- 
-nvpublic
+
+> While doing resubmission please take some time to understand subsystem
+> tags to use. (hint git log <subsystem> will tell you)
+> 
+> Also series has [[PATCH] 8/9] whereas it should be [PATCH 8/9] please
+> let git generate that for you (hint git format-patch start..end does a
+> good job)
+> 
+> > @@ -0,0 +1,1594 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + *   drivers/tty/serial/8250/8250_aspeed_uart_dma.c
+> > + *    1. 2018/07/01 Shivah Shankar created
+> > + *    2. 2018/08/25 sudheer.veliseti<open.sudheer@gmail.com> modified
+> 
+> we dont use this log in kernel. I do not see s-o-b by Shivah, that
+> should be added. I think he should be author and you need to list
+> changes you did..
+> 
