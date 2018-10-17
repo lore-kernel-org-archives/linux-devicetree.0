@@ -1,21 +1,21 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 3/7] clk: imx6sx: add mmdc1 ipg clock
-Date: Wed, 17 Oct 2018 11:16:47 -0700
-Message-ID: <153980020713.5275.16972024278738728927@swboyd.mtv.corp.google.com>
+Subject: Re: [PATCH 4/7] clk: imx6sll: add mmdc1 ipg clock
+Date: Wed, 17 Oct 2018 11:16:50 -0700
+Message-ID: <153980021082.5275.12972318452731232112@swboyd.mtv.corp.google.com>
 References: <1535701998-20443-1-git-send-email-Anson.Huang@nxp.com>
- <1535701998-20443-4-git-send-email-Anson.Huang@nxp.com>
+ <1535701998-20443-5-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535701998-20443-4-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1535701998-20443-5-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Anson Huang <Anson.Huang@nxp.com>, aisheng.dong@nxp.com, clement.peron@devialet.com, colin.didier@devialet.com, devicetree@vger.kernel.org, fabio.estevam@nxp.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, matteo.lisi@engicam.com, michael@amarulasolutions.com, mturquette@baylibre.com, ping.bai@nxp.com, robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org, shengjiu.wang@nxp.com
 Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Anson Huang (2018-08-31 00:53:14)
-> i.MX6SX has MMDC1 ipg clock in CCM CCGR, add it into
+Quoting Anson Huang (2018-08-31 00:53:15)
+> i.MX6SLL has MMDC1 ipg clock in CCM CCGR, add it into
 > clock tree for clock management.
 > =
 
