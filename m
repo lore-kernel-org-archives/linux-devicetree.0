@@ -1,68 +1,67 @@
-From: Richard Leitner <richard.leitner@skidata.com>
-Subject: [PATCH v2 8/8] Input: sx8654 - convert #defined flags to BIT(x)
-Date: Wed, 17 Oct 2018 14:51:16 +0200
-Message-ID: <20181017125116.20077-9-richard.leitner@skidata.com>
-References: <20181017125116.20077-1-richard.leitner@skidata.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: clock: add description of 74aup1g157gw
+Date: Wed, 17 Oct 2018 11:05:56 -0500
+Message-ID: <20181017160556.GA14935@bogus>
+References: <87efcy1rm4.wl-kuninori.morimoto.gx@renesas.com>
+ <87d0si1rkt.wl-kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181017125116.20077-1-richard.leitner@skidata.com>
+Content-Disposition: inline
+In-Reply-To: <87d0si1rkt.wl-kuninori.morimoto.gx@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Richard Leitner <richard.leitner@skidata.com>
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some of the #defined register values are one-bit flags. Convert them to
-use the BIT(x) macro instead of 1 byte hexadecimal values. This improves
-readability and clarifies the intent.
+On Wed, Oct 10, 2018 at 02:16:35AM +0000, Kuninori Morimoto wrote:
+> 
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> 
+> 74aup1g157gw needs i0 and i1 pin as input, select and output it by
+> sel gpio pin. This patch adds description for 74aup1g157gw as clock
+> multiplexer.
+> "nxp,74aup1g157gw-clk" will select most closest input as output,
+> "nxp,74aup1g157gw-audio-clk" will select 48kHz/44.1kHz categorized
+> input as output.
+> 
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> ---
+>  .../devicetree/bindings/clock/nxp,74aup1g157gw.txt    | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/nxp,74aup1g157gw.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/nxp,74aup1g157gw.txt b/Documentation/devicetree/bindings/clock/nxp,74aup1g157gw.txt
+> new file mode 100644
+> index 0000000..d07bc04
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/nxp,74aup1g157gw.txt
+> @@ -0,0 +1,19 @@
+> +NXP 74AUP1G157GW Low-power 2-input multiplexer for clock
+> +
+> +Required properties:
+> +- compatible:	"nxp,74aup1g157gw-clk"      (select closest input as output)
+> +		"nxp,74aup1g157gw-audio-clk (select 48kHz / 44.1kHz as output)
 
-Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
----
- drivers/input/touchscreen/sx8654.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+I don't understand why you need the second one.
 
-diff --git a/drivers/input/touchscreen/sx8654.c b/drivers/input/touchscreen/sx8654.c
-index b7b263ed52af..3746ea855f94 100644
---- a/drivers/input/touchscreen/sx8654.c
-+++ b/drivers/input/touchscreen/sx8654.c
-@@ -36,6 +36,7 @@
- #include <linux/gpio/consumer.h>
- #include <linux/delay.h>
- #include <linux/input/touchscreen.h>
-+#include <linux/bitops.h>
- 
- /* register addresses */
- #define I2C_REG_TOUCH0			0x00
-@@ -46,7 +47,7 @@
- #define I2C_REG_SOFTRESET		0x3f
- 
- #define I2C_REG_SX8650_STAT		0x05
--#define SX8650_STAT_CONVIRQ		0x80
-+#define SX8650_STAT_CONVIRQ		BIT(7)
- 
- /* commands */
- #define CMD_READ_REGISTER		0x40
-@@ -56,8 +57,8 @@
- #define SOFTRESET_VALUE			0xde
- 
- /* bits for I2C_REG_IRQSRC */
--#define IRQ_PENTOUCH_TOUCHCONVDONE	0x08
--#define IRQ_PENRELEASE			0x04
-+#define IRQ_PENTOUCH_TOUCHCONVDONE	BIT(7)
-+#define IRQ_PENRELEASE			BIT(6)
- 
- /* bits for RegTouch1 */
- #define CONDIRQ				0x20
-@@ -65,8 +66,8 @@
- #define FILT_7SA			0x03
- 
- /* bits for I2C_REG_CHANMASK */
--#define CONV_X				0x80
--#define CONV_Y				0x40
-+#define CONV_X				BIT(7)
-+#define CONV_Y				BIT(6)
- 
- /* coordinates rate: higher nibble of CTRL0 register */
- #define RATE_MANUAL			0x00
--- 
-2.11.0
+
+What's wrong with the existing gpio-mux-clock binding?
+
+> +- clocks:	select input clock as i0, i1
+> +- clock-names:	"i0" and "i1"
+> +- sel-gpios:	selector pin
+> +
+> +Examples:
+> +
+> +	clk {
+> +		#clock-cells = <0>;
+> +		compatible = "nxp,74aup1g157gw-audio-clk";
+> +		clocks = <&clk8snd>, <&clksnd>;
+> +		clock-names = "i0", "i1";
+> +		sel-gpios = <&gpio_exp_75 13 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> -- 
+> 2.7.4
+> 
