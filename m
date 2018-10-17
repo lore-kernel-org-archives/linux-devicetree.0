@@ -1,7 +1,7 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v2 05/21] PCI: keystone: Remove unused argument from ks_dw_pcie_host_init()
-Date: Wed, 17 Oct 2018 13:10:58 +0530
-Message-ID: <20181017074114.28239-6-kishon@ti.com>
+Subject: [PATCH v2 09/21] dt-bindings: PCI: keystone: Add bindings to get device control module
+Date: Wed, 17 Oct 2018 13:11:02 +0530
+Message-ID: <20181017074114.28239-10-kishon@ti.com>
 References: <20181017074114.28239-1-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,56 +12,28 @@ To: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@ar
 Cc: Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-No functional change. Remove unused "msi_intc_np" argument from
-ks_dw_pcie_host_init().
+Add bindings to get device control module which has the device id and
+vendor id to be configured in the keystone PCIe controller.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/dwc/pci-keystone-dw.c | 3 +--
- drivers/pci/controller/dwc/pci-keystone.c    | 2 +-
- drivers/pci/controller/dwc/pci-keystone.h    | 3 +--
- 3 files changed, 3 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/pci/pci-keystone.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pci-keystone-dw.c b/drivers/pci/controller/dwc/pci-keystone-dw.c
-index 0682213328e9..4bd6c6e2b177 100644
---- a/drivers/pci/controller/dwc/pci-keystone-dw.c
-+++ b/drivers/pci/controller/dwc/pci-keystone-dw.c
-@@ -439,8 +439,7 @@ void ks_dw_pcie_initiate_link_train(struct keystone_pcie *ks_pcie)
-  * and call dw_pcie_v3_65_host_init() API to initialize the Keystone
-  * PCI host controller.
-  */
--int __init ks_dw_pcie_host_init(struct keystone_pcie *ks_pcie,
--				struct device_node *msi_intc_np)
-+int __init ks_dw_pcie_host_init(struct keystone_pcie *ks_pcie)
- {
- 	struct dw_pcie *pci = ks_pcie->pci;
- 	struct pcie_port *pp = &pci->pp;
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index aa7e706fc37d..f87ade2de711 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -341,7 +341,7 @@ static int __init ks_add_pcie_port(struct keystone_pcie *ks_pcie,
- 	}
+diff --git a/Documentation/devicetree/bindings/pci/pci-keystone.txt b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+index 4dd17de549a7..2030ee0dc4f9 100644
+--- a/Documentation/devicetree/bindings/pci/pci-keystone.txt
++++ b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+@@ -19,6 +19,9 @@ pcie_msi_intc : Interrupt controller device node for MSI IRQ chip
+ 	interrupt-cells: should be set to 1
+ 	interrupts: GIC interrupt lines connected to PCI MSI interrupt lines
  
- 	pp->ops = &keystone_pcie_host_ops;
--	ret = ks_dw_pcie_host_init(ks_pcie, ks_pcie->msi_intc_np);
-+	ret = ks_dw_pcie_host_init(ks_pcie);
- 	if (ret) {
- 		dev_err(dev, "failed to initialize host\n");
- 		return ret;
-diff --git a/drivers/pci/controller/dwc/pci-keystone.h b/drivers/pci/controller/dwc/pci-keystone.h
-index 8a13da391543..4eacc263f157 100644
---- a/drivers/pci/controller/dwc/pci-keystone.h
-+++ b/drivers/pci/controller/dwc/pci-keystone.h
-@@ -41,8 +41,7 @@ void ks_dw_pcie_enable_legacy_irqs(struct keystone_pcie *ks_pcie);
- void ks_dw_pcie_handle_legacy_irq(struct keystone_pcie *ks_pcie, int offset);
- void ks_dw_pcie_enable_error_irq(struct keystone_pcie *ks_pcie);
- irqreturn_t ks_dw_pcie_handle_error_irq(struct keystone_pcie *ks_pcie);
--int  ks_dw_pcie_host_init(struct keystone_pcie *ks_pcie,
--			struct device_node *msi_intc_np);
-+int  ks_dw_pcie_host_init(struct keystone_pcie *ks_pcie);
- int ks_dw_pcie_wr_other_conf(struct pcie_port *pp, struct pci_bus *bus,
- 		unsigned int devfn, int where, int size, u32 val);
- int ks_dw_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
++ti,syscon-pcie-id : phandle to the device control module required to set device
++		    id and vendor id.
++
+  Example:
+ 	pcie_msi_intc: msi-interrupt-controller {
+ 			interrupt-controller;
 -- 
 2.17.1
