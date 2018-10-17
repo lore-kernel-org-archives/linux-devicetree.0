@@ -1,47 +1,105 @@
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: Re: [PATCH v2 9/9] ASoC: tegra_sgtl5000: fix platform name vs.
- of_node assignement
-Date: Wed, 17 Oct 2018 21:33:00 +0000
-Message-ID: <1539811978.6233.63.camel@toradex.com>
-References: <20181016104730.4598-1-marcel@ziswiler.com>
-         <20181016104730.4598-10-marcel@ziswiler.com>
-         <35848cb7-36ee-6698-ff17-7f0e73567914@nvidia.com>
-         <1539786500.6233.58.camel@toradex.com>
-         <20181017191633.GL24097@sirena.org.uk>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [RFC 1/4] pwm: sifive: Add DT documentation for SiFive PWM
+ Controller.
+Date: Wed, 17 Oct 2018 14:45:56 -0700
+Message-ID: <40c50c06-7a89-47db-1a5c-07c58b6c253b@wdc.com>
+References: <1539111085-25502-1-git-send-email-atish.patra@wdc.com>
+ <1539111085-25502-2-git-send-email-atish.patra@wdc.com>
+ <20181010134926.GD21134@ulmo> <25758ab9-eb36-741b-6264-42412b3ddd8e@wdc.com>
+ <20181016110142.GC8852@ulmo>
+ <6e108e3c-15c1-b13b-ac3e-60c5eb209c7b@sifive.com>
+ <20181016220437.GB31973@mithrandir>
+ <7fc1168d-a840-032a-c0a9-2a610127c484@wdc.com> <20181017155818.GA21971@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181017191633.GL24097@sirena.org.uk>
+In-Reply-To: <20181017155818.GA21971@bogus>
 Content-Language: en-US
-Content-ID: <06250A4EB448944599C40A443B9B117D@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "broonie@kernel.org" <broonie@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "perex@perex.cz" <perex@perex.cz>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Wesley Terpstra <wesley@sifive.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "palmer@sifive.com" <palmer@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "hch@infradead.org" <hch@infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE4LTEwLTE3IGF0IDIwOjE2ICswMTAwLCBNYXJrIEJyb3duIHdyb3RlOg0KPiBP
-biBXZWQsIE9jdCAxNywgMjAxOCBhdCAwMjoyODoyMlBNICswMDAwLCBNYXJjZWwgWmlzd2lsZXIg
-d3JvdGU6DQo+IA0KPiA+IFNvbWUgcXVlc3Rpb25zOg0KPiA+IC0gSG93IGV4YWN0bHkgYXJlIGRl
-dm0gYWxsb2NhdGlvbnMgc3VwcG9zZWQgdG8gd29yayBjb25jZXJuaW5nDQo+ID4gcHJvYmUNCj4g
-PiBkZWZlcnJhbHM/DQo+IA0KPiBQcm9iZSBkZWZlcnJhbHMgYXJlIGp1c3Qgbm9ybWFsIHByb2Jl
-IGVycm9ycywgYW55IGRldm1fIGFsbG9jYXRlZA0KPiBzdHVmZg0KPiBnZXRzIHVud291bmQuDQoN
-Ck9LLCB0aGF0IGlzIHdoZXJlIG15IHVuZGVyc3RhbmRpbmcgd2FzIHdlYXJ5LiBTbyB5b3UgYXJl
-IHNheWluZw0KYW55dGhpbmcgc2hvdWxkIHJlYWxseSBnZXQgYWxsb2NhdGVkIGFnYWluIHVwb24g
-dGhlIHNlY29uZCB0aW1lLg0KDQo+ID4gLSBEb2VzIG9yIHNob3VsZCB0aGUgcGxhdGZvcm0gZ2V0
-IGNsZWFyZWQgZHVyaW5nIGEgcHJvYmUgZGVmZXJyYWwNCj4gPiBjeWNsZT8NCj4gPiAtIElmIHNv
-LCB3aHkgZG9lcyB0aGF0IG5vdCB3b3JrPw0KPiANCj4gSXMgc29tZXRoaW5nIHdyaXRpbmcgdG8g
-c3RhdGljIGRhdGEgd2hlbiBpdCBzaG91bGQgYmUgd3JpdGluZyB0bw0KPiBkeW5hbWljYWxseSBh
-bGxvY2F0ZWQgZGF0YT8gIFRoYXQncyB3aGF0IHRoaXMgc291bmRzIGxpa2UsIHdlDQo+IHNob3Vs
-ZG4ndA0KPiBiZSBtb2RpZnlpbmcgYW55IHN0YXRpYyBkYXRhIGFuZCBhbnkgZGF0YSBkeW5hbWlj
-YWxseSBhbGxvY2F0ZWQNCj4gZHVyaW5nDQo+IHByb2JlIG91Z2h0IHRvIGJlIGJlaW5nIGRpc2Nh
-cmRlZC4NCg0KT0ssIEkgYmVsaWV2ZSBJIHN0YXJ0IHRvIHNlZSB3aGF0IHlvdSBhcmUgc2F5aW5n
-LiBJIGd1ZXNzIHRoZSBidWcgbGF5cw0KaW4gc29jLWNvcmUgdGhlbiBub3QgcHJvcGVybHkgZGlz
-Y2FyZGluZyB0aGUgcGxhdGZvcm0gYW5kIHRoZSBzZWNvbmQNCnRpbWUgYXJvdW5kIGl0IGlzIHVz
-aW5nIGEgc3RhbGUgcG9pbnRlciB0byB0aGF0IHdoaWNoIG5vdyBvZiBjb3Vyc2UNCnBvaW50cyB0
-byB3aGF0ZXZlciBoYXBwZW5zIHRvIGJlIHRoZXJlISBMZXQgbWUgdHJ5IGEgZmV3IG1vcmUgdGhp
-bmdzDQphbmQgSSB3aWxsIGNvb2sgdXAgYSBwcm9wZXIgcGF0Y2ggdG8gZml4IHRoYXQuLi4NCg0K
-PiA+IC0gT3IgaXMgc29tZSBzcGVjaWFsIGltcGxpY2l0IHByb2JlIGRlZmVycmFsIGhhbmRsaW5n
-IG1pc3NpbmcgaW4NCj4gPiBzb2MtDQo+ID4gY29yZT8NCj4gDQo+IExpa2UgSSBzYXkgYSBwcm9i
-ZSBkZWZlcnJhbCBpcyBqdXN0IGEgbm9ybWFsIGVycm9yLg0KDQpZZWFoLCByaWdodC4gVGhhbmtz
-IQ==
+On 10/17/18 8:58 AM, Rob Herring wrote:
+> On Tue, Oct 16, 2018 at 03:20:34PM -0700, Atish Patra wrote:
+>> On 10/16/18 3:04 PM, Thierry Reding wrote:
+>>> On Tue, Oct 16, 2018 at 10:31:42AM -0700, Paul Walmsley wrote:
+>>>>
+>>>> On 10/16/18 4:01 AM, Thierry Reding wrote:
+>>>>> On Mon, Oct 15, 2018 at 03:57:35PM -0700, Atish Patra wrote:
+>>>>>> On 10/10/18 6:49 AM, Thierry Reding wrote:
+>>>>>>> On Tue, Oct 09, 2018 at 11:51:22AM -0700, Atish Patra wrote:
+>>>>>>>> +Required properties:
+>>>>>>>> +- compatible: should be one of
+>>>>>>>> +	"sifive,fu540-c000-pwm0","sifive,pwm0".
+>>>>>>> What's the '0' in here? A version number?
+>>>>>>>
+>>>>>> I think yes. Since fu540 is the first Linux capable RISC-V core, SiFive Guys
+>>>>>> decided mark it as version 0.
+>>>>>>
+>>>>>> @Wesly: Please correct me if I am wrong.
+>>>>> It seems fairly superfluous to me to have a version number in additon to
+>>>>> the fu540-c000, which already seems to be the core plus some sort of
+>>>>> part number. Do you really expect there to be any changes in the SoC
+>>>>> that would require a different compatible string at this point? If the
+>>>>> SoC has taped out, how will you ever get a different version of the PWM
+>>>>> IP in it?
+>>>>>
+>>>>> I would expect any improvements or changes to the PWM IP to show up in a
+>>>>> different SoC generation, at which point it would be something like
+>>>>> "sifive,fu640-c000" maybe, or perhaps "sifive,fu540-d000", or whatever
+>>>>> the numbering is.
+>>>>
+>>>>
+>>>> The "0" suffix refers to a revision number for the underlying PWM IP block.
+>>>>
+>>>> It's certainly important to keep that version number on the "sifive,pwm0"
+>>>> compatible string that doesn't have the chip name associated with it.
+>>>
+>>> Isn't the hardware identified by "sifive,pwm0" and "sifive,fu540-c000"
+>>> effectively identical?
+>>
+>> Yes.
+>>
+>> Is there a need to have two compatible strings
+>>> that refer to the exact same hardware?
+>>>
+>>
+>> The DT in the hardware has only sifive,pwm0. I have added
+>> "sifive,fu540-c000" as that was concluded as the correct compatible string
+>> from platform level interrupt controller patch(PLIC) discussion.
+>>
+>> (http://lists.infradead.org/pipermail/linux-riscv/2018-August/001135.html)
+>>
+>> "sifive,pwm0" is required to until all the Unleashed SoC gets an updated
+>> firmware with correct compatible string "sifive,fu540-c000". I agree this is
+>> a mess. But we have to carry it until all every DT(corresponding to each
+>> driver) is finalized. I guess SiFive will release a firmware update that
+>> contains all the updated DT once that is done. We can get rid of all the
+>> redundant compatible strings at that time.
+> 
+> I don't want to repeat compatible string discussions on each and every
+> IP block. I already have to do this with some vendors.
+> 
+
+
+
+> The RiscV vendors' needs and design flow are a bit different from
+> traditional SoC vendors AIUI for the last discussion. If you need to do
+> something that doesn't follow normal conventions, that's fine. Just
+> please document a convention that works for you. This should explain
+> where the '0' above comes from for example. And I'm not a fan of s/w
+> folks making up version numbers.
+> Sorry for bringing up the same discussion. My aim was just to reiterate 
+the suggestion you made on the other other thread (i.e. PLIC compatible 
+strings) and use the same format used in PLIC block. As these IP 
+blocks(pwm & gpio) are also from SiFive for the same Soc (HiFive 
+Unleashed board), I was just trying to clarify that this driver also 
+follows the exact same convention adopted for PLIC IP block.
+
+Regards,
+Atish
+
+> Rob
+> 
