@@ -1,37 +1,44 @@
-Return-Path: <SRS0=sbd0=MY=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v4 1/3] clk: renesas: r7s9210: Add SDHI clocks
-Date: Fri, 12 Oct 2018 07:29:22 -0500
-Message-Id: <20181012122924.5543-2-chris.brandt@renesas.com>
-In-Reply-To: <20181012122924.5543-1-chris.brandt@renesas.com>
-References: <20181012122924.5543-1-chris.brandt@renesas.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-clk@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=PFBs=M5=verge.net.au=horms@kernel.org>
+Date: Wed, 17 Oct 2018 10:12:23 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] dt-bindings: spi: sh-msiof: document R8A779{7|8}0
+ bindings
+Message-ID: <20181017081223.7fp7zffs3dij4qup@verge.net.au>
+References: <62919a6e-4206-0caa-deb0-6bf67b77eff1@cogentembedded.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <62919a6e-4206-0caa-deb0-6bf67b77eff1@cogentembedded.com>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add SDHI clocks for RZ/A2
+On Tue, Oct 16, 2018 at 10:22:05PM +0300, Sergei Shtylyov wrote:
+> Document the R-Car V3{M|H} (R8A779{7|8}0) SoCs in the Renesas MSIOF
+> bindings.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/clk/renesas/r7s9210-cpg-mssr.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-diff --git a/drivers/clk/renesas/r7s9210-cpg-mssr.c b/drivers/clk/renesas/r7s9210-cpg-mssr.c
-index 5135f13ec628..9056da15dc72 100644
---- a/drivers/clk/renesas/r7s9210-cpg-mssr.c
-+++ b/drivers/clk/renesas/r7s9210-cpg-mssr.c
-@@ -98,6 +98,11 @@ static const struct mssr_mod_clk r7s9210_mod_clks[] __initconst = {
- 	DEF_MOD_STB("spi2",	 95,	R7S9210_CLK_P1),
- 	DEF_MOD_STB("spi1",	 96,	R7S9210_CLK_P1),
- 	DEF_MOD_STB("spi0",	 97,	R7S9210_CLK_P1),
-+
-+	DEF_MOD_STB("sdhi11",	100,	R7S9210_CLK_B),
-+	DEF_MOD_STB("sdhi10",	101,	R7S9210_CLK_B),
-+	DEF_MOD_STB("sdhi01",	102,	R7S9210_CLK_B),
-+	DEF_MOD_STB("sdhi00",	103,	R7S9210_CLK_B),
- };
- 
- /* The clock dividers in the table vary based on DT and register settings */
--- 
-2.16.1
+> 
+> ---
+> The patch is against the 'for-next' branch of Mark Brown's 'spi.git' repo.
+> 
+>  Documentation/devicetree/bindings/spi/sh-msiof.txt |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> Index: spi/Documentation/devicetree/bindings/spi/sh-msiof.txt
+> ===================================================================
+> --- spi.orig/Documentation/devicetree/bindings/spi/sh-msiof.txt
+> +++ spi/Documentation/devicetree/bindings/spi/sh-msiof.txt
+> @@ -13,6 +13,8 @@ Required properties:
+>  			 "renesas,msiof-r8a7795" (R-Car H3)
+>  			 "renesas,msiof-r8a7796" (R-Car M3-W)
+>  			 "renesas,msiof-r8a77965" (R-Car M3-N)
+> +			 "renesas,msiof-r8a77970" (R-Car V3M)
+> +			 "renesas,msiof-r8a77980" (R-Car V3H)
+>  			 "renesas,msiof-r8a77990" (R-Car E3)
+>  			 "renesas,msiof-r8a77995" (R-Car D3)
+>  			 "renesas,msiof-sh73a0" (SH-Mobile AG5)
+> 
