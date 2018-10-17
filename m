@@ -1,7 +1,7 @@
 From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: [PATCH v4 3/4] ARM: dts: imx6ull: Add dcp node
-Date: Wed, 17 Oct 2018 12:37:54 +0000
-Message-ID: <f503eea6c702aeff091f4c03d4059b67ec17b2b4.1539779579.git.leonard.crestez@nxp.com>
+Subject: [PATCH v4 1/4] dt-bindings: crypto: Mention clocks for mxs-dcp
+Date: Wed, 17 Oct 2018 12:37:51 +0000
+Message-ID: <4536b5b5b101ab6a4197fb4891f775ddeb519847.1539779579.git.leonard.crestez@nxp.com>
 References: <cover.1539779579.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -14,40 +14,33 @@ To: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Herbert Xu <herbert@gondor.apana.org.au>, Horia Geanta <horia.geanta@nxp.com>, Franck Lenormand <franck.lenormand@nxp.com>, Aymen Sghaier <aymen.sghaier@nxp.com>, "David S . Miller " <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The DCP block on 6ull has no major differences other than requiring
-explicit clock enabling.
+Explicit clock enabling is required on 6sll and 6ull so mention that
+standard clock bindings are used.
 
 Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 Reviewed-by: Fabio Estevam <festevam@gmail.com>
 ---
- arch/arm/boot/dts/imx6ull.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ Documentation/devicetree/bindings/crypto/fsl-dcp.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dts=
-i
-index 796ed35d4ac9..f3668fe69eac 100644
---- a/arch/arm/boot/dts/imx6ull.dtsi
-+++ b/arch/arm/boot/dts/imx6ull.dtsi
-@@ -37,10 +37,20 @@
- 			#address-cells =3D <1>;
- 			#size-cells =3D <1>;
- 			reg =3D <0x02200000 0x100000>;
- 			ranges;
+diff --git a/Documentation/devicetree/bindings/crypto/fsl-dcp.txt b/Documen=
+tation/devicetree/bindings/crypto/fsl-dcp.txt
+index 76a0b4e80e83..4e4d387e38a5 100644
+--- a/Documentation/devicetree/bindings/crypto/fsl-dcp.txt
++++ b/Documentation/devicetree/bindings/crypto/fsl-dcp.txt
+@@ -4,10 +4,12 @@ Required properties:
+ - compatible : Should be "fsl,<soc>-dcp"
+ - reg : Should contain MXS DCP registers location and length
+ - interrupts : Should contain MXS DCP interrupt numbers, VMI IRQ and DCP I=
+RQ
+                must be supplied, optionally Secure IRQ can be present, but
+ 	       is currently not implemented and not used.
++- clocks : Clock reference (only required on some SOCs: 6ull and 6sll).
++- clock-names : Must be "dcp".
 =20
-+			dcp: crypto@2280000 {
-+				compatible =3D "fsl,imx6ull-dcp", "fsl,imx28-dcp";
-+				reg =3D <0x02280000 0x4000>;
-+				interrupts =3D <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clks IMX6ULL_CLK_DCP_CLK>;
-+				clock-names =3D "dcp";
-+			};
-+
- 			iomuxc_snvs: iomuxc-snvs@2290000 {
- 				compatible =3D "fsl,imx6ull-iomuxc-snvs";
- 				reg =3D <0x02290000 0x4000>;
- 			};
+ Example:
 =20
+ dcp@80028000 {
+ 	compatible =3D "fsl,imx28-dcp", "fsl,imx23-dcp";
 --=20
 2.17.1
