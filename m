@@ -1,70 +1,38 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH V2] DT: rockchip: Fix stability issues with the 'performance' governor on rock960
-Date: Wed, 17 Oct 2018 11:18:30 +0200
-Message-ID: <1539767918-26587-1-git-send-email-daniel.lezcano@linaro.org>
+From: <shun-chih.yu@mediatek.com>
+Subject: [PATCH v2] add support for Mediatek Command-Queue DMA controller on MT6765 SoC
+Date: Wed, 17 Oct 2018 17:36:57 +0800
+Message-ID: <1539769019-32107-1-git-send-email-shun-chih.yu@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: linux-kernel@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vicente Bergas <vicencb@gmail.com>, Ezequiel Garcia <ezequiel@collabora.com>, Shawn Lin <shawn.lin@rock-chips.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Rockchip SoC
-        support" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>
+To: Sean Wang <sean.wang@mediatek.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>
+Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, srv_wsdupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-When the performance governor is set as default, the rock960 hangs
-around one minute after booting, whatever the activity is (idle, key
-pressed, loaded, ...).
 
-Based on the commit log found at https://patchwork.kernel.org/patch/10092377/
+Changes since v1:
+- remove unused macros, typos
+- leverage ASYNC_TX_ENABLE_CHANNEL_SWITCH to maintain DMA descriptor list
 
-"vdd_log has no consumer and therefore will not be set to a specific
-voltage. Still the PWM output pin gets configured and thence the vdd_log
-output voltage will changed from it's default. Depending on the idle
-state of the PWM this will slightly over or undervoltage the logic supply
-of the RK3399 and cause instability with GbE (undervoltage) and PCIe
-(overvoltage). Since the default value set by a voltage divider is the
-correct supply voltage and we don't need to change it during runtime we
-remove the rail from the devicetree completely so the PWM pin will not
-be configured."
 
-After removing the vdd-log from the rock960's specific DT, the board
-does no longer hang and shows a stable behavior.
+This patchset introduces support for MediaTek Command-Queue DMA controller.
 
-Apply the same change for the rock960 by removing the vdd-log from the
-DT.
+MediaTek Command-Queue DMA controller (CQDMA) on MT6765 SoC is dedicated to memory-to-memory transfer through queue-based descriptor management.
 
-Fixes: 874846f1fccd ("arm64: dts: rockchip: add 96boards RK3399 Ficus board")
-Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
-Changelog
-  - V2
-     * Added Tested and Fixes tags
----
- arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 12 ------------
- 1 file changed, 12 deletions(-)
+There are only 3 physical channels inside CQDMA, while the driver is extended to support 32 virtual channels for multiple dma users to issue dma requests onto the CQDMA simultaneously.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-index 6c8c4ab..56abbb0 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-@@ -57,18 +57,6 @@
- 		regulator-always-on;
- 		vin-supply = <&vcc_sys>;
- 	};
--
--	vdd_log: vdd-log {
--		compatible = "pwm-regulator";
--		pwms = <&pwm2 0 25000 0>;
--		regulator-name = "vdd_log";
--		regulator-min-microvolt = <800000>;
--		regulator-max-microvolt = <1400000>;
--		regulator-always-on;
--		regulator-boot-on;
--		vin-supply = <&vcc_sys>;
--	};
--
- };
- 
- &cpu_l0 {
--- 
-2.7.4
+
+Shun-Chih Yu (2):
+  dt-bindings: dmaengine: Add MediaTek Command-Queue DMA controller
+    bindings
+  dmaengine: mediatek: Add MediaTek Command-Queue DMA controller for
+    MT6765 SoC
+
+ .../devicetree/bindings/dma/mtk-cqdma.txt          |   31 +
+ drivers/dma/mediatek/Kconfig                       |   13 +
+ drivers/dma/mediatek/Makefile                      |    1 +
+ drivers/dma/mediatek/mtk-cqdma.c                   |  943 ++++++++++++++++++++
+ 4 files changed, 988 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/mtk-cqdma.txt
+ create mode 100644 drivers/dma/mediatek/mtk-cqdma.c
