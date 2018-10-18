@@ -1,84 +1,141 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 3/6] dt-bindings: power: Introduce properties to
- present the battery OCV capacity table
-Date: Thu, 18 Oct 2018 11:51:01 -0500
-Message-ID: <20181018165101.GA11562@bogus>
-References: <e7c061535f2dcca54d6498405fdd5ed7098b19f9.1539587217.git.baolin.wang@linaro.org>
- <eb56baf2e2d127067e459b6014516071ba9005c0.1539587217.git.baolin.wang@linaro.org>
+Subject: Re: [PATCH v4 01/18] of: overlay: add tests to validate kfrees from
+ overlay removal
+Date: Thu, 18 Oct 2018 12:03:03 -0500
+Message-ID: <20181018170303.GA15557@bogus>
+References: <1539657458-24401-1-git-send-email-frowand.list@gmail.com>
+ <1539657458-24401-2-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <eb56baf2e2d127067e459b6014516071ba9005c0.1539587217.git.baolin.wang@linaro.org>
+In-Reply-To: <1539657458-24401-2-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: sre@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, broonie@kernel.org, ctatlor97@gmail.com, linus.walleij@linaro.org
+To: frowand.list@gmail.com
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 15, 2018 at 04:09:22PM +0800, Baolin Wang wrote:
-> Some battery driver will use the open circuit voltage (OCV) value to look
-> up the corresponding battery capacity percent in one certain degree Celsius.
-> Thus this patch provides some battery properties to present the OCV table
-> temperatures and OCV capacity table values.
+On Mon, Oct 15, 2018 at 07:37:21PM -0700, frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
 > 
-> Suggested-by: Sebastian Reichel <sre@kernel.org>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Changes from v3:
->  - Split binding into one separate patch.
->  - Rename ocv-capacity-table-temperatures to ocv-capacity-celsius.
->  - Add some words to specify the OCV's unit.
+> Add checks:
+>   - attempted kfree due to refcount reaching zero before overlay
+>     is removed
+>   - properties linked to an overlay node when the node is removed
+>   - node refcount > one during node removal in a changeset destroy,
+>     if the node was created by the changeset
 > 
-> Changes from v2:
->  - Use type __be32 to calculate the table length.
->  - Update error messages.
->  - Add some helper functions.
+> After applying this patch, several validation warnings will be
+> reported from the devicetree unittest during boot due to
+> pre-existing devicetree bugs. The warnings will be similar to:
 > 
-> Changes from v1:
->  - New patch in v2.
-> ---
->  .../devicetree/bindings/power/supply/battery.txt   |   15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
-> index 938d027..1f70e5d 100644
-> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-> @@ -23,6 +23,17 @@ Optional Properties:
->   - constant-charge-current-max-microamp: maximum constant input current
->   - constant-charge-voltage-max-microvolt: maximum constant input voltage
->   - factory-internal-resistance-micro-ohms: battery factory internal resistance
-> + - ocv-capacity-table-0: An array providing the battery capacity percent
-> +   with corresponding open circuit voltage (OCV) of the battery, which
-> +   is used to look up battery capacity according to current OCV value.
-> +   And the open circuit voltage unit is microvolt.
+>   OF: ERROR: of_node_release() overlay node /testcase-data/overlay-node/test-bus/test-unittest11/test-unittest111 contains unexpected properties
+>   OF: ERROR: memory leak - destroy cset entry: attach overlay node /testcase-data-2/substation@100/hvac-medium-2 expected refcount 1 instead of 2.  of_node_get() / of_node_put() are unbalanced for this node.
 
-The order percent and voltage is still not clear. I'd guess one way 
-based on the text here, but the example is the opposite. The description 
-here must stand on its own.
+These messages could be formatted more consistently. Put the path either 
+at the beginning (after any prefix) or end. Beginning is more like a 
+compiler error. End puts what the problem is before it's off the edge of 
+the screen. 
 
-> + - ocv-capacity-table-1: Same as ocv-capacity-table-0
-> + ......
-> + - ocv-capacity-table-n: Same as ocv-capacity-table-0
-> + - ocv-capacity-celsius: An array containing the temperature in degree Celsius,
-> +   for each of the battery capacity lookup table. The first temperature value
-> +   specifies the OCV table 0, and the second temperature value specifies the
-> +   OCV table 1, and so on.
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> ---
+> Changes since v3:
+>   - Add expected value of refcount for destroy cset entry error.  Also
+>     explain the cause of the error.
+> 
+>  drivers/of/dynamic.c | 29 +++++++++++++++++++++++++++++
+>  drivers/of/overlay.c |  1 +
+>  include/linux/of.h   | 15 ++++++++++-----
+>  3 files changed, 40 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+> index f4f8ed9b5454..24c97b7a050f 100644
+> --- a/drivers/of/dynamic.c
+> +++ b/drivers/of/dynamic.c
+> @@ -330,6 +330,25 @@ void of_node_release(struct kobject *kobj)
+>  	if (!of_node_check_flag(node, OF_DYNAMIC))
+>  		return;
 >  
->  Battery properties are named, where possible, for the corresponding
->  elements in enum power_supply_property, defined in
-> @@ -44,6 +55,10 @@ Example:
->  		constant-charge-current-max-microamp = <900000>;
->  		constant-charge-voltage-max-microvolt = <4200000>;
->  		factory-internal-resistance-micro-ohms = <250000>;
-> +		ocv-capacity-celsius = <(-10) 0 10>;
-> +		ocv-capacity-table-0 = <4185000 100>, <4113000 95>, <4066000 90>, ...;
-> +		ocv-capacity-table-1 = <4200000 100>, <4185000 95>, <4113000 90>, ...;
-> +		ocv-capacity-table-2 = <4250000 100>, <4200000 95>, <4185000 90>, ...;
->  	};
+> +	if (of_node_check_flag(node, OF_OVERLAY)) {
+> +
+> +		if (!of_node_check_flag(node, OF_OVERLAY_FREE_CSET)) {
+
+I worry the flags are getting unwieldy.
+
+> +			/* premature refcount of zero, do not free memory */
+> +			pr_err("ERROR: memory leak %s() overlay node %pOF before free overlay changeset\n",
+> +			       __func__, node);
+> +			return;
+> +		}
+> +
+> +		/*
+> +		 * If node->properties non-empty then properties were added
+> +		 * to this node either by different overlay that has not
+> +		 * yet been removed, or by a non-overlay mechanism.
+> +		 */
+> +		if (node->properties)
+> +			pr_err("ERROR: %s() overlay node %pOF contains unexpected properties\n",
+> +			       __func__, node);
+> +	}
+> +
+>  	property_list_free(node->properties);
+>  	property_list_free(node->deadprops);
 >  
->  	charger: charger@11 {
+> @@ -434,6 +453,16 @@ struct device_node *__of_node_dup(const struct device_node *np,
+>  
+>  static void __of_changeset_entry_destroy(struct of_changeset_entry *ce)
+>  {
+> +	if (ce->action == OF_RECONFIG_ATTACH_NODE &&
+> +	    of_node_check_flag(ce->np, OF_OVERLAY)) {
+> +		if (kref_read(&ce->np->kobj.kref) > 1) {
+> +			pr_err("ERROR: memory leak - destroy cset entry: attach overlay node %pOF expected refcount 1 instead of %d.  of_node_get() / of_node_put() are unbalanced for this node.\n",
+> +			       ce->np, kref_read(&ce->np->kobj.kref));
+> +		} else {
+> +			of_node_set_flag(ce->np, OF_OVERLAY_FREE_CSET);
+> +		}
+> +	}
+> +
+>  	of_node_put(ce->np);
+>  	list_del(&ce->node);
+>  	kfree(ce);
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index eda57ef12fd0..1176cb4b6e4e 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -373,6 +373,7 @@ static int add_changeset_node(struct overlay_changeset *ovcs,
+>  			return -ENOMEM;
+>  
+>  		tchild->parent = target_node;
+> +		of_node_set_flag(tchild, OF_OVERLAY);
+>  
+>  		ret = of_changeset_attach_node(&ovcs->cset, tchild);
+>  		if (ret)
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 4d25e4f952d9..aa1dafaec6ae 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -138,11 +138,16 @@ static inline void of_node_put(struct device_node *node) { }
+>  extern struct device_node *of_stdout;
+>  extern raw_spinlock_t devtree_lock;
+>  
+> -/* flag descriptions (need to be visible even when !CONFIG_OF) */
+> -#define OF_DYNAMIC	1 /* node and properties were allocated via kmalloc */
+> -#define OF_DETACHED	2 /* node has been detached from the device tree */
+> -#define OF_POPULATED	3 /* device already created for the node */
+> -#define OF_POPULATED_BUS	4 /* of_platform_populate recursed to children of this node */
+> +/*
+> + * struct device_node flag descriptions
+> + * (need to be visible even when !CONFIG_OF)
+> + */
+> +#define OF_DYNAMIC		1 /* (and properties) allocated via kmalloc */
+> +#define OF_DETACHED		2 /* detached from the device tree */
+> +#define OF_POPULATED		3 /* device already created */
+> +#define OF_POPULATED_BUS	4 /* platform bus created for children */
+> +#define OF_OVERLAY		5 /* allocated for an overlay */
+> +#define OF_OVERLAY_FREE_CSET	6 /* in overlay cset being freed */
+>  
+>  #define OF_BAD_ADDR	((u64)-1)
+>  
 > -- 
-> 1.7.9.5
+> Frank Rowand <frank.rowand@sony.com>
 > 
