@@ -1,64 +1,83 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V9 00/21] C-SKY(csky) Linux Kernel Port
-Date: Thu, 18 Oct 2018 10:36:45 +0200
-Message-ID: <CAK8P3a0wRPfXm3wupQd6RdN6L8CvjD0HX_Bk61VBxOYeNCh+FA@mail.gmail.com>
-References: <cover.1539655731.git.ren_guo@c-sky.com> <CAK8P3a25W5rE093QsmC539d+s038Wv9PmV8Xa76LQzDLk3E8Wg@mail.gmail.com>
- <20181018041038.GB17276@guoren-Inspiron-7460>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 3/5] dt-bindings: add more optional properties for
+ elan_i2c touchpads
+Date: Thu, 18 Oct 2018 10:39:39 +0200
+Message-ID: <1fb98946-a518-d7d7-3bec-8944be95b91c@redhat.com>
+References: <20181012142413.26107-1-benjamin.tissoires@redhat.com>
+ <20181012142413.26107-4-benjamin.tissoires@redhat.com>
+ <20181017201522.GA26525@bogus>
+ <CAO-hwJ+z6YdnLdbzeh-7f99cBBjHfbLKLzKo-fQQaC_W8bt_Uw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181018041038.GB17276@guoren-Inspiron-7460>
+In-Reply-To: <CAO-hwJ+z6YdnLdbzeh-7f99cBBjHfbLKLzKo-fQQaC_W8bt_Uw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Christoph Hellwig <hch@infradead.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, c-sky_gcc_upstream@c-sky.com
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>, robh@kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 18, 2018 at 6:11 AM Guo Ren <ren_guo@c-sky.com> wrote:
->
-> On Wed, Oct 17, 2018 at 05:58:46PM +0200, Arnd Bergmann wrote:
-> > On Tue, Oct 16, 2018 at 4:58 AM Guo Ren <ren_guo@c-sky.com> wrote:
-> > >
-> > > This is the 9th version patchset to add the Linux kernel port for
-> > > C-SKY(csky) based on linux-4.19-rc3.
-> > >
-> > > There are only a few changes between V8 patchset. Hope it could be
-> > > merged into linux-4.20 and I'm very grateful for any help.
-> >
-> > I've gone through the entire series once more and saw no show-stoppers.
-> > The last patch looked like it introduced a bug, but with that one dropped,
-> > I'm happy for the architecture to get merged, unless anyone else
-> > has any last-minute concerns. (Alternatively, explain why I'm wrong
-> > and the code works correctly, of course).
-> Ok and thx for the job of csky subsystem.
->
-> >
-> > I'd appreciate having someone else take another look at the signal
-> > handling code, the atomics, and the DT bindings and provide another
-> > Ack for those.
-> >
-> > The remaining open question is about the 32-bit time_t interfaces.
-> > With 4.20, I did not manage to get the required system calls in place
-> > for using 64-bit time_t in a new architecture, so you will at least
-> > start out using 32-bit time_t and likely have to keep supporting
-> > that going forward, unless we decide to break the ABI here later
-> > on .This is something we normally don't do, but we might make
-> > an exception here, under the assumption that there are no
-> > existing users with the ABI. We can debate that once we get there.
-> We support uclibc-ng and glibc.
->
-> 1. For uclibc-ng, linux-4.20 could run with it.
->
-> 2. For glibc, Maybe we could support 32-bit + 64-bit time_t with
-> KERNEL_VERSION, or just only 64-bit then linux-4.20 couldn't work with
-> the csky first glibc release.
+Hi,
 
-Yes, it is always an option to make glibc more restrictive than the kernel.
-We could also just make it a configuration option in the kernel whether
-the system calls are provided, so they don't use memory for the
-implementation.
+On 18-10-18 10:10, Benjamin Tissoires wrote:
+> On Wed, Oct 17, 2018 at 10:15 PM Rob Herring <robh@kernel.org> wrote:
+>>
+>> On Fri, Oct 12, 2018 at 04:24:11PM +0200, Benjamin Tissoires wrote:
+>>> Some new touchpads IC are connected through PS/2 and I2C. On some of these
+>>> new IC, the I2C part doesn't have all of the information available.
+>>> We need to be able to forward the touchpad parameters from PS/2 and
+>>> thus, we need those new optional properties.
+>>>
+>>> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1628715
+>>> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/input/elan_i2c.txt | 8 ++++++++
+>>>   1 file changed, 8 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/input/elan_i2c.txt b/Documentation/devicetree/bindings/input/elan_i2c.txt
+>>> index 797607460735..ace6bcb0b4eb 100644
+>>> --- a/Documentation/devicetree/bindings/input/elan_i2c.txt
+>>> +++ b/Documentation/devicetree/bindings/input/elan_i2c.txt
+>>> @@ -13,6 +13,14 @@ Optional properties:
+>>>     pinctrl binding [1]).
+>>>   - vcc-supply: a phandle for the regulator supplying 3.3V power.
+>>>   - elan,trackpoint: touchpad can support a trackpoint (boolean)
+>>> +- elan,clickpad: touchpad is a clickpad (the entire surface is a button)
+>>
+>>> +- elan,max_x: the maximum reported value on the X axis
+>>> +- elan,max_y: the maximum reported value on the Y axis
+>>> +- elan,min_x: the minimum reported value on the X axis
+>>> +- elan,min_y: the minimum reported value on the Y axis
+>>> +- elan,x_res: the resolution of the X axis (in units per mm)
+>>> +- elan,y_res: the resolution of the Y axis (in units per mm)
+>>> +- elan,width: max reported width of a blob
+>>
+>> Can't we use standard touchscreen properties here? (Yes, I get this is a
+>> touchpad, not touchscreen).
+> 
+> Hey Rob,
+> 
+> Well, there is that (it's a touchpad driver) and we can't also really
+> use the of_touchscreen.c implementation.
+> If both concerns are not an issue, we can then move the [min/max/res]
+> properties to the touchscreen ones.
+> 
+> Regarding 'elan,width', this is something missing from the standard ts
+> properties, and AFAICT, this controls the maximum reported
+> width/height of a touch.
+> I should probably rename them to max_width, max_height.
+> 
+> Hans, do you think we should add such properties to of_touchscreen.c
+> too? (the width/height ones)
 
-You will probably want musl support at some point. musl-1.x always
-uses 32-bit time_t today, but musl-2.x will use the 64-bit interfaces,
-so just waiting a bit will probably make it work out for you.
+Are there touchscreens which report finger/touch width / height ? if so
+then it probably does make sense. Note that for historical reasons
+Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
 
-        Arnd
+Also the touchscreen bindings have: touchscreen-x-mm and touchscreen-y-mm
+rather then res, which can then be used to calculate the resolution.
+
+Regards,
+
+Hans
