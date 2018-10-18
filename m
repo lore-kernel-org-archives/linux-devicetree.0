@@ -1,59 +1,102 @@
-From: Stefano Stabellini <sstabellini@kernel.org>
-Subject: Re: [PATCH] devicetree, xen: add xen,
- shared-memory binding
-Date: Thu, 18 Oct 2018 14:30:57 -0700 (PDT)
-Message-ID: <alpine.DEB.2.10.1810181421030.3835@sstabellini-ThinkPad-X260>
-References: <alpine.DEB.2.10.1810081600350.28877@sstabellini-ThinkPad-X260>
- <20181017153527.GA9130@bogus>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 2/9] dt-bindings: ti-lmu: Remove LM3697
+Date: Fri, 19 Oct 2018 00:10:48 +0200
+Message-ID: <20181018221048.GA6364@amd>
+References: <4fcb91c7-b2b2-798d-8a41-fa1b475086e0@ti.com>
+ <8c1559e1-b703-4c98-8bd9-7c9993bd59f5@gmail.com>
+ <20181012162619.GA28573@bogus>
+ <20181012180312.GB5565@amd>
+ <60cc9238-aba2-aa6a-64a4-2b5e20835549@gmail.com>
+ <CAL_Jsq+Yspr_iNP1eYanvtmiuMf-xNEZ0suDH3tQayV=V5r5=g@mail.gmail.com>
+ <73647af4-0258-49a9-d9b6-eeef7e7813dc@gmail.com>
+ <5c7f03cc-4d45-6010-523d-46721c218731@ti.com>
+ <20181015214512.GA2001@amd>
+ <aa401333-9650-c925-2085-6e6d17b576bd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <xen-devel-bounces@lists.xenproject.org>
-In-Reply-To: <20181017153527.GA9130@bogus>
-List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
-List-Post: <mailto:xen-devel@lists.xenproject.org>
-List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
-List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
-Errors-To: xen-devel-bounces@lists.xenproject.org
-Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, julien.grall@arm.com, Stefano Stabellini <sstabellini@kernel.org>, xen-devel@lists.xen.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="Kj7319i9nmIyA2yE"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <aa401333-9650-c925-2085-6e6d17b576bd@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh@kernel.org>, Lee Jones <lee.jones@linaro.org>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAxNyBPY3QgMjAxOCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gTW9uLCBPY3QgMDgs
-IDIwMTggYXQgMDQ6MDM6NTRQTSAtMDcwMCwgU3RlZmFubyBTdGFiZWxsaW5pIHdyb3RlOgo+ID4g
-SW50cm9kdWNlIGEgZGV2aWNlIHRyZWUgYmluZGluZyBmb3IgWGVuIHJlc2VydmVkLW1lbW9yeSBy
-ZWdpb25zLiBUaGV5Cj4gPiBhcmUgdXNlZCB0byBzaGFyZSBtZW1vcnkgYWNyb3NzIFZNcyBmcm9t
-IHRoZSBWTSBjb25maWcgZmlsZXMuIChTZWUKPiA+IHN0YXRpY19zaG0gY29uZmlnIG9wdGlvbi4p
-Cj4gPiAgCj4gPiBTaWduZWQtb2ZmLWJ5OiBTdGVmYW5vIFN0YWJlbGxpbmkgPHN0ZWZhbm9zQHhp
-bGlueC5jb20+Cj4gCj4gY2hlY2twYXRjaC5wbCBjb21wbGFpbnMgdGhhdCB0aGUgYXV0aG9yIGFu
-ZCBTLW8tYiBkb24ndCBtYXRjaC4KCkkgZGlkbid0IGtub3cgaXQgd2Fzbid0IGFsbG93ZWQuIEkn
-bGwgZml4IGl0LgoKCj4gPiBDYzoganVsaWVuLmdyYWxsQGFybS5jb20KPiA+IAo+ID4gZGlmZiAt
-LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkv
-eGVuLHNoYXJlZC1tZW1vcnkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50eHQKPiA+IG5ldyBmaWxlIG1vZGUg
-MTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAwLi5hOTI3YTk0Cj4gPiAtLS0gL2Rldi9udWxsCj4gPiAr
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hl
-bixzaGFyZWQtbWVtb3J5LnR4dAo+ID4gQEAgLTAsMCArMSwyMCBAQAo+ID4gKyogWGVuIGh5cGVy
-dmlzb3IgcmVzZXJ2ZWQtbWVtb3J5IGJpbmRpbmcKPiA+ICsKPiA+ICtFeHBvc2Ugb25lIG9yIG1v
-cmUgbWVtb3J5IHJlZ2lvbnMgYXMgcmVzZXJ2ZWQtbWVtb3J5IHRvIHRoZSBndWVzdAo+ID4gK3Zp
-cnR1YWwgbWFjaGluZS4gVHlwaWNhbGx5LCBhIHJlZ2lvbiBpcyBjb25maWd1cmVkIGF0IFZNIGNy
-ZWF0aW9uIHRpbWUKPiA+ICt0byBiZSBhIHNoYXJlZCBtZW1vcnkgYXJlYSBhY3Jvc3MgbXVsdGlw
-bGUgdmlydHVhbCBtYWNoaW5lcyBmb3IKPiA+ICtjb21tdW5pY2F0aW9uIGFtb25nIHRoZW0uCj4g
-PiArCj4gPiArRm9yIGVhY2ggb2YgdGhlc2UgcHJlLXNoYXJlZCBtZW1vcnkgcmVnaW9ucywgYSBy
-YW5nZSBpcyBleHBvc2VkIHVuZGVyCj4gPiArdGhlIC9yZXNlcnZlZC1tZW1vcnkgbm9kZSBhcyBh
-IGNoaWxkIG5vZGUuIEVhY2ggcmFuZ2Ugc3ViLW5vZGUgaXMgbmFtZWQKPiA+ICt4ZW4tc2htZW1A
-PGFkZHJlc3M+IGFuZCBoYXMgdGhlIGZvbGxvd2luZyBwcm9wZXJ0aWVzOgo+ID4gKwo+ID4gKy0g
-Y29tcGF0aWJsZToKPiA+ICsJY29tcGF0aWJsZSA9IHhlbixzaGFyZWQtbWVtb3J5Igo+IAo+IEFu
-eSBuZWVkIGZvciB2ZXJzaW9uaW5nPwoKVGhlcmUgaXMgYWx3YXlzIG5lZWQgZm9yIHZlcnNpb25p
-bmcgOi0pCkknbGwgc2VuZCBuZXcgcGF0Y2ggd2l0aCB0aGUgZm9sbG93aW5nOgoKICBjb21wYXRp
-YmxlID0gInhlbixzaGFyZWQtbWVtb3J5LXYxIiwgInhlbixzaGFyZWQtbWVtb3J5IgoKPiA+ICsK
-PiA+ICstIHJlZzoKPiA+ICsJdGhlIGJhc2UgZ3Vlc3QgcGh5c2ljYWwgYWRkcmVzcyBhbmQgc2l6
-ZSBvZiB0aGUgc2hhcmVkIG1lbW9yeSByZWdpb24KPiA+ICsKPiA+ICstIGlkOgo+IAo+IHhlbixp
-ZAoKT0sKCgo+ID4gKwlhIHN0cmluZyB0aGF0IGlkZW50aWZpZXMgdGhlIHNoYXJlZCBtZW1vcnkg
-cmVnaW9uIGFzIHNwZWNpZmllZCBpbgo+ID4gKwl0aGUgVk0gY29uZmlnIGZpbGUKPiAKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fClhlbi1kZXZlbCBtYWls
-aW5nIGxpc3QKWGVuLWRldmVsQGxpc3RzLnhlbnByb2plY3Qub3JnCmh0dHBzOi8vbGlzdHMueGVu
-cHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby94ZW4tZGV2ZWw=
+
+--Kj7319i9nmIyA2yE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> >>>> Given this one seems to have not really been finished, it's probably
+> >>>> okay to make changes in this case. Still, it would be good to see
+> >>>> patches structured so that it's obvious we're breaking things. But h=
+ow
+> >>>> the patches are structured doesn't matter until there's some agreeme=
+nt
+> >>>> on the end result.
+> >>>
+> >>> OK, so if I'm getting it right, the correct patch structure in this c=
+ase
+> >>> means that changes removing bindings from MFD and moving them along
+> >>> with the modifications to the LED subsystem should be placed in a sin=
+gle
+> >>> patch.
+> >>>
+> >>> Dan, could you please arrange the next patch set version accordingly?
+> >>
+> >> Yes I can squash the DT bindings patches and call it a "move and modif=
+y"
+> >=20
+> > You can do move without problems. But if you plan to modify them,
+> > please try to change as little as possible, make it separate patch and
+> > explain why new version is better than old one.
+> >=20
+>=20
+> I have been thinking of how to do this.  Since the 2 devices are part of =
+the current
+> binding there really is not a way to move them.  Since there are still MF=
+D capable
+> devices available.
+>=20
+> I would still need to remove the current active binding and create a new =
+binding in the LED
+> bindings directory.
+>=20
+> I would have to remove and create in the same patch.
+
+Yeah, and this all is a sign that you should just keep the current
+binding, and make your code use it, see?
+
+You are free to use Sebastian's updated binding. It has "suggested by:
+Rob" or something like that on it, so it should be fine.
+
+You can add note to bindings/leds pointing to mfd binding.
+
+Now... this is what I've suggested before. If you don't agree, you may
+want to contact Tony Lindgren, IIRC he works for TI, too, and might be
+willing to help.
+
+Thank you,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--Kj7319i9nmIyA2yE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlvJBOgACgkQMOfwapXb+vK14QCgtVl9pa/1OxjqylTQJZ5qJ0bm
+ihgAnRt5xkqAWZuKzr385+l6umkgYMS4
+=0x8R
+-----END PGP SIGNATURE-----
+
+--Kj7319i9nmIyA2yE--
