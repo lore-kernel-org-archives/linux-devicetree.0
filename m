@@ -1,47 +1,67 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] of: overlay: user space synchronization
-Date: Thu, 18 Oct 2018 14:32:16 -0500
-Message-ID: <20181018193216.GA9971@bogus>
-References: <1539736466-28638-1-git-send-email-frowand.list@gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: iio: vadc: Update example to include
+ unit address for node 'usb-id-nopull'
+Date: Thu, 18 Oct 2018 12:40:10 -0700
+Message-ID: <20181018194010.GV22824@google.com>
+References: <20181004001432.21218-1-mka@chromium.org>
+ <20181004001432.21218-2-mka@chromium.org>
+ <20181005204743.GA17135@bogus>
+ <20181012171523.GQ22824@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1539736466-28638-1-git-send-email-frowand.list@gmail.com>
+In-Reply-To: <20181012171523.GQ22824@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com
-Cc: pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, Alan Tull <atull@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 16, 2018 at 05:34:26PM -0700, frowand.list@gmail.com wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
+On Fri, Oct 12, 2018 at 10:15:23AM -0700, Matthias Kaehlcke wrote:
+> On Fri, Oct 05, 2018 at 03:47:43PM -0500, Rob Herring wrote:
+> > On Wed, Oct 03, 2018 at 05:14:31PM -0700, Matthias Kaehlcke wrote:
+> > > The node has a reg property, therefore its name should include a unit
+> > > address.
+> > > 
+> > > Also change the name from 'usb_id_nopull' to 'usb-id-nopull' to follow
+> > > DT conventions.
+> > 
+> > This is ADC channels? If so, then DT convention would really be 
+> > "adc@...". 
 > 
-> When an overlay is applied or removed, the live devicetree visible in
-> /proc/device-tree/, aka /sys/firmware/devicetree/base/, reflects the
-> changes.  There is no method for user space to determine whether the
-> live devicetree was modified by overlay actions.
-
-Because userspace has no way to modify the DT and the ways the kernel 
-can do modifications is limited.
-
-Do you have an actually need for this outside of testing/development?
-
-> Provide a sysfs file, /sys/firmware/devicetree/tree_version,  to allow
-> user space to determine if the live devicetree has remained unchanged
-> while a series of one or more accesses of /proc/device-tree/ occur.
+> Is it really? A grep for 'adc@' in arch/${ARCH}/boot/dts yields
+> mostly ADC controller not channel nodes.
 > 
-> The use of both (1) dynamic devicetree modifications and (2) overlay
-> apply and removal are not supported during the same boot cycle.  Thus
-> non-overlay dynamic modifications are not reflected in the value of
-> tree_version.
+> I'm totally fine with changing the name to 'adc@...' if that's the
+> preference/convention, just want to reconfirm since the actual use is
+> a bit ambiguous.
 
-I'd prefer to see some sort of information on overlays exported and user 
-space can check if that changed. IIRC, Pantelis had a series to do that 
-along with a kill switch to prevent further modifications. At least some 
-of that series only had minor issues to fix.
+Could we please reach a conclusion on this?
 
-Also, shouldn't we get uevents if the tree changes? Maybe that's not 
-guaranteed, but I'd bet we can't handle cases where we don't get events. 
-A property added to an existing node comes to mind.
+Summarizing the options on the table so far are:
 
-Rob
+1. usb-id-nopull@VADC_LR_MUX10_USB_ID
+2. usb-id-nopull@57
+3. adc@VADC_LR_MUX10_USB_ID
+4. adc@57
+
+My personal preference goes to something <node name>@<define>
+since the unit address doesn't just resolve to an ADC channel number
+but also includes configuation information. A literal like '57'
+conveys less information than the define, it's easier to introduce
+errors and these errors are harder to spot.
+
+If 'adc@...' really was the convention (or should be) I'd be clearly
+in favor of following it. As mentioned above, in practice the use of
+the 'adc@...' node name seems to be more prevalent for ADC controllers
+than channels, so I'm more inclined towards 'usb-id-nopull@...' or
+similar.
+
+All that said, these are just my preferences for the reasons outlined
+above, if DT maintainers really want it to be 'adc@57' or some
+variation of that, I'm fine with that too. Please let me know and we
+can move forward with this trivial series.
+
+Thanks
+
+Matthias
