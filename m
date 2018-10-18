@@ -1,43 +1,57 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 05/36] dt-bindings: arm: renesas: Move 'renesas,prr'
- binding to its own doc
-Date: Thu, 18 Oct 2018 15:04:11 +0200
-Message-ID: <20181018130411.vbammbqqiyvmmcxo@verge.net.au>
-References: <20181005165848.3474-1-robh@kernel.org>
- <20181005165848.3474-6-robh@kernel.org>
- <CAMuHMdV=HaVhGf-7-21OHb05dCc0q9MDUNknAcybEiGSxATeEA@mail.gmail.com>
- <CAL_JsqJGGRfoEb_TjZy2X9QwjfAdoxs_EB+cLNmszHOE8-OtHw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: uniphier: move cache-uniphier.txt to
+ vendor directory
+Date: Thu, 18 Oct 2018 08:06:26 -0500
+Message-ID: <CAL_JsqJHYbkTYnDHwFDRx8NrwBrMqFD_inN-ZRb9sYnq=F=+rw@mail.gmail.com>
+References: <1539318324-4938-1-git-send-email-yamada.masahiro@socionext.com>
+ <1539318324-4938-2-git-send-email-yamada.masahiro@socionext.com>
+ <20181017200022.GA14782@bogus> <CAK7LNAQ+j4pRxCorfyf23L8ZRXV_mF-uQd3ab7rwP9vKktsE+Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJGGRfoEb_TjZy2X9QwjfAdoxs_EB+cLNmszHOE8-OtHw@mail.gmail.com>
+In-Reply-To: <CAK7LNAQ+j4pRxCorfyf23L8ZRXV_mF-uQd3ab7rwP9vKktsE+Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Magnus Damm <magnus.damm@gmail.com>
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 08, 2018 at 09:59:19AM -0500, Rob Herring wrote:
-> On Mon, Oct 8, 2018 at 2:05 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Wed, Oct 17, 2018 at 10:12 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Hi Rob,
+>
+>
+> On Thu, Oct 18, 2018 at 5:01 AM Rob Herring <robh@kernel.org> wrote:
 > >
-> > Hi Rob,
-> >
-> > On Fri, Oct 5, 2018 at 6:58 PM Rob Herring <robh@kernel.org> wrote:
-> > > In preparation to convert board-level bindings to json-schema, move
-> > > various misc SoC bindings out to their own file.
+> > On Fri, 12 Oct 2018 13:25:24 +0900, Masahiro Yamada wrote:
+> > > Now, the Socionext vendor directory is available at
+> > > Documentation/devicetree/bindings/arm/socionext/
 > > >
-> > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > Cc: Simon Horman <horms@verge.net.au>
-> > > Cc: Magnus Damm <magnus.damm@gmail.com>
-> > > Cc: devicetree@vger.kernel.org
-> > > Cc: linux-renesas-soc@vger.kernel.org
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > Move cache-uniphier.txt over to it.
+> > >
+> > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > ---
+> > >
+> > > Changes in v2:
+> > >   - New patch
+> > >
+> > >  .../devicetree/bindings/arm/{uniphier => socionext}/cache-uniphier.txt    | 0
+> > >  1 file changed, 0 insertions(+), 0 deletions(-)
+> > >  rename Documentation/devicetree/bindings/arm/{uniphier => socionext}/cache-uniphier.txt (100%)
+> > >
 > >
-> > Looks good to me, but needs a rebase, as the PRR section has been extended
-> > in -next.
-> 
-> Is this something you all can apply still for 4.20?
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+>
+>
+> Thanks for your review!
+>
+> You gave your Reviewed-by twice to 2/2,
+> but nothing to 1/2.
+>
+> Is the first patch under review?
+> Or, did you accidentally do that
+> instead of replying to each of the two?
 
-Sorry, missing this until now. It was too late.
+Humm, some sort of scripting fail. Yes, you can add my R-by to 1/2 also.
 
-Shall I take it for v4.21?
+Rob
