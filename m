@@ -1,52 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: ufs: Fix the compatible string definition
-Date: Wed, 17 Oct 2018 19:42:14 -0500
-Message-ID: <20181018004214.GA5937@bogus>
-References: <20181012213926.253765-1-dianders@chromium.org>
+From: Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] ARM: dts: omap3-gta04: Fix comment block
+Date: Wed, 17 Oct 2018 17:48:16 -0700
+Message-ID: <20181018004816.6627-1-natechancellor@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181012213926.253765-1-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>, Can Guo <cang@codeaurora.org>, evgreen@chromium.org, Vivek Gautam <vivek.gautam@codeaurora.org>, linux-arm-msm@vger.kernel.org, sayalil@codeaurora.org, asutoshd@codeaurora.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, liwei <liwei213@huawei.com>, linux-kernel@vger.kernel.org, Mathieu Malaterre <malat@debian.org>, Mark Rutland <mark.rutland@arm.com>
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nathan Chancellor <natechancellor@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 12 Oct 2018 14:39:26 -0700, Douglas Anderson wrote:
-> If you look at the bindings for the UFS Host Controller it says:
-> 
-> - compatible: must contain "jedec,ufs-1.1" or "jedec,ufs-2.0", may
->               also list one or more of the following:
->                  "qcom,msm8994-ufshc"
->                  "qcom,msm8996-ufshc"
->                  "qcom,ufshc"
-> 
-> My reading of that is that it's fine to just have either of these:
-> 1. "qcom,msm8996-ufshc", "jedec,ufs-2.0"
-> 2. "qcom,ufshc", "jedec,ufs-2.0"
-> 
-> As far as I can tell neither of the above is actually a good idea.
-> 
-> For #1 it turns out that the driver currently only keys off the
-> compatible string "qcom,ufshc" so it won't actually probe.
-> 
-> For #2 the driver won't probe but it's not a good idea to keep the SoC
-> name out of the compatible string.
-> 
-> Let's update the compatible string to make it really explicit.  We'll
-> include a nod to the existing driver and the old binding and say that
-> we should always include the "qcom,ufshc" string in addition to the
-> SoC compatible string.
-> 
-> While we're at it we'll also include another example SoC known to have
-> UFS: sdm845.
-> 
-> Fixes: 47555a5c8a11 ("scsi: ufs: make the UFS variant a platform device")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt       | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
+When compiling the kernel with Clang, the following warning appears:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+arch/arm/boot/dts/omap3-gta04.dtsi:385:56: warning: '/*' within block comment [-Wcomment]
+                        /* OMAP3_CORE1_IOPAD(0x2194, PIN_INPUT | MUX_MODE0)     /* mcbsp_clks.mcbsp_clks */
+                                                                                ^
+1 warning generated.
+
+Fixes: 3c10507a39e8 ("ARM: dts: omap3-gta04: add mcbsp (audio subsystem) pinmux")
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ arch/arm/boot/dts/omap3-gta04.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index d5fe55392230..e53d32691308 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -382,7 +382,7 @@
+ 			OMAP3_CORE1_IOPAD(0x2190, PIN_OUTPUT | MUX_MODE0)	/* mcbsp1_dx.mcbsp1_dx */
+ 			OMAP3_CORE1_IOPAD(0x2192, PIN_INPUT | MUX_MODE0)	/* mcbsp1_dx.mcbsp1_dr */
+ 			/* mcbsp_clks is used as PENIRQ */
+-			/* OMAP3_CORE1_IOPAD(0x2194, PIN_INPUT | MUX_MODE0)	/* mcbsp_clks.mcbsp_clks */
++			/* OMAP3_CORE1_IOPAD(0x2194, PIN_INPUT | MUX_MODE0)	   mcbsp_clks.mcbsp_clks */
+ 			OMAP3_CORE1_IOPAD(0x2196, PIN_INPUT | MUX_MODE0)	/* mcbsp_clks.mcbsp1_fsx */
+ 			OMAP3_CORE1_IOPAD(0x2198, PIN_INPUT | MUX_MODE0)	/* mcbsp1_clkx.mcbsp1_clkx */
+ 		>;
+-- 
+2.19.1
