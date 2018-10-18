@@ -1,83 +1,102 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V6 1/3] dt-bindings: fsl: scu: make power domain
- compatible string SoC specific
-Date: Thu, 18 Oct 2018 09:33:42 -0500
-Message-ID: <20181018143342.GA22874@bogus>
-References: <1539760797-12991-1-git-send-email-aisheng.dong@nxp.com>
- <1539760797-12991-2-git-send-email-aisheng.dong@nxp.com>
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH V2 6/6] usb: host: Add ability to build new Broadcom STB
+ USB drivers
+Date: Thu, 18 Oct 2018 10:35:47 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1810181032460.1521-100000@iolanthe.rowland.org>
+References: <1539815349-24126-7-git-send-email-alcooperx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1539760797-12991-2-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "khilman@kernel.org" <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1539815349-24126-7-git-send-email-alcooperx@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Al Cooper <alcooperx@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>, linux-usb@vger.kernel.org, Lu Baolu <baolu.lu@l>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 17, 2018 at 07:24:40AM +0000, A.s. Dong wrote:
-> As the power domain API might change in the future for new SoCs, although
-> in a very low possibility, it's still better to make the compatible string
-> more SoC specific to avoid the possible version change for new SoCs.
+On Wed, 17 Oct 2018, Al Cooper wrote:
+
+> Add the build system changes needed to get the Broadcom STB XHCI,
+> EHCI and OHCI functionality working. The link order for XHCI was
+> changed in the Makefile because of the way STB XHCI, EHCI and OHCI
+> controllers share a port which requires that the XHCI driver be
+> initialized first. Also update MAINTAINERS.
 > 
-> Due to there're still no users in kernel, it's safe to update it without
-> breaking anything.
-> 
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Suggested-by: Sascha Hauer <s.hauer@pengutronix.de>
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-
-checkpatch says:
-
-WARNING: Missing Signed-off-by: line by nominal patch author 'A.s. Dong <aisheng.dong@nxp.com>'
-
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
 > ---
-> ChangeLog:
-> v5->v6:
->  * new patch
-> ---
->  Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  MAINTAINERS               |  9 +++++++++
+>  drivers/usb/host/Kconfig  | 29 +++++++++++++++++++++++++++++
+>  drivers/usb/host/Makefile | 18 ++++++++++++------
+>  3 files changed, 50 insertions(+), 6 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> index 46d0af1..87fc4b4 100644
-> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> @@ -58,7 +58,7 @@ This binding for the SCU power domain providers uses the generic power
->  domain binding[2].
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 6ac000cc006d..7e062dcbe173 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3006,6 +3006,15 @@ S:	Supported
+>  F:	drivers/gpio/gpio-brcmstb.c
+>  F:	Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
 >  
->  Required properties:
-> -- compatible:		Should be "fsl,scu-pd".
-> +- compatible:		Should be "fsl,imx8qxp-scu-pd".
+> +BROADCOM BRCMSTB USB XHCI, EHCI and OHCI DRIVERS
 
-You can keep both if you think future SoCs will be compatible.
+This should say "XHCI and EHCI".  There is no Broadcom OHCI driver any 
+more.
 
->  - #address-cells:	Should be 1.
->  - #size-cells:		Should be 0.
+> +M:	Al Cooper <alcooperx@gmail.com>
+> +L:	linux-usb@vger.kernel.org
+> +L:	bcm-kernel-feedback-list@broadcom.com
+> +S:	Maintained
+> +F:	drivers/usb/host/xhci-brcm.*
+> +F:	drivers/usb/host/ohci-brcm.c
+
+This should say "ehci-brcm.c".
+
+> +F:	Documentation/devicetree/bindings/usb/brcm,bcm7445-*.txt
+> +
+>  BROADCOM BRCMSTB USB2 and USB3 PHY DRIVER
+>  M:	Al Cooper <alcooperx@gmail.com>
+>  L:	linux-kernel@vger.kernel.org
+> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+> index 1a4ea98cac2a..112de3334389 100644
+> --- a/drivers/usb/host/Kconfig
+> +++ b/drivers/usb/host/Kconfig
+> @@ -94,6 +94,35 @@ config USB_XHCI_TEGRA
+>  	  Say 'Y' to enable the support for the xHCI host controller
+>  	  found in NVIDIA Tegra124 and later SoCs.
 >  
-> @@ -153,7 +153,7 @@ firmware {
->  		};
+> +config USB_OHCI_BRCM
+> +       tristate
+
+This symbol is not used any more.
+
+> +
+> +config USB_EHCI_BRCM
+> +       tristate
+> +
+> +config USB_XHCI_BRCM
+> +       tristate
+> +
+> +config BRCM_USB_PHY
+> +       tristate
+> +
+> +config USB_BRCM
+> +	tristate "Broadcom STB USB support"
+> +	depends on ARCH_BRCMSTB
+> +	select USB_OHCI_HCD_PLATFORM if USB_OHCI_HCD
+> +	select USB_EHCI_BRCM if USB_EHCI_HCD
+> +	select USB_XHCI_BRCM if USB_XHCI_HCD
+> +	select USB_XHCI_PLATFORM if USB_XHCI_HCD
+> +	select BRCM_USB_PHY if USB_OHCI_HCD || USB_EHCI_HCD || USB_XHCI_HCD
+> +	select GENERIC_PHY if BRCM_USB_PHY
+> +	default ARCH_BRCMSTB
+> +	help
+> +	  Say Y to enable support for XHCI, EHCI and OHCI host controllers
+> +	  found in Broadcom STB SoC's.
+> +
+> +	  Disabling this will keep the controllers and corresponding
+> +	  PHYs powered down.
+> +
+>  endif # USB_XHCI_HCD
 >  
->  		imx8qx-pm {
-> -			compatible = "fsl,scu-pd";
-> +			compatible = "fsl,imx8qxp-scu-pd";
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  
-> -- 
-> 2.7.4
-> 
+>  config USB_EHCI_HCD
+
+Alan Stern
