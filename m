@@ -1,44 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] dt-bindings: iommu/arm, smmu: add compatible string
- for Marvell
-Date: Thu, 18 Oct 2018 15:48:01 -0500
-Message-ID: <20181018204801.GA2009@bogus>
-References: <1539604846-21151-1-git-send-email-hannah@marvell.com>
- <1539604846-21151-4-git-send-email-hannah@marvell.com>
- <3ce1d67a-4e3c-e8d8-f7fc-79649f1def68@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Evan Green <evgreen@chromium.org>
+Subject: [PATCH v2 0/5] arm64: dts: qcom: sdm845: Add UFS DT nodes
+Date: Thu, 18 Oct 2018 14:09:28 -0700
+Message-ID: <20181018210933.113592-1-evgreen@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3ce1d67a-4e3c-e8d8-f7fc-79649f1def68@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: hannah@marvell.com, catalin.marinas@arm.com, will.deacon@arm.com, corbet@lwn.net, joro@8bytes.org, gregory.clement@bootlin.com, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, omrii@marvell.com, linux-kernel@vger.kernel.org, nadavh@marvell.com, iommu@lists.linux-foundation.org, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.orgnd@arm.com
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Douglas Anderson <dianders@chromium.org>, Manu Gautam <mgautam@codeaurora.org>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, swboyd@chromium.org
+Cc: Evan Green <evgreen@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 15, 2018 at 02:11:52PM +0100, Robin Murphy wrote:
-> On 15/10/18 13:00, hannah@marvell.com wrote:
-> > From: Hanna Hawa <hannah@marvell.com>
-> > 
-> > Add specific compatible string for Marvell usage due errata of
-> > accessing 64bit registers of ARM SMMU, in AP806.
-> > 
-> > AP806 SOC use the generic ARM-MMU500, and there's no specific
-> > implementation of Marvell, this compatible is used for errata only.
-> 
-> Given that, I think something more specific like:
-> 
-> 	"marvell,ap806-smmu", "arm,mmu-500";
-> 
-> would be most appropriate. Otherwise, if some future Marvell SoC were to
-> ever come out with a *different* MMU-500 integration problem, you'd already
-> have painted yourself into a corner.
-> 
-> Alternatively (or additionally), we could perhaps consider a separate
-> property like "marvell,32bit-config-access", to mirror the existing handling
-> of the secure integration bug.
+This series updates the device tree bindings for the QMP PHY to
+properly specify the registers for dual-lane PHYs. It then updates
+the driver to use those new registers. Then it adds the DT nodes for
+UFS on SDM845, and activates them on the MTP platform. Finally, it
+fixes up the USB3 PHY on SDM845, which is also a dual lane PHY.
 
-The former please. We have learned our lesson there (though for some 
-reason, that was the *only* SMMU problem in Calxeda Midway ;) ).
+The DT binding change is needed because it was discovered that the UFS PHY
+driver was reaching beyond its register region, which only happened to work by
+virtue of the page size granularity.
 
-Rob
+Changes since v1:
+ - Added dt bindings change, corresponding driver fixup, and USB PHY fixup
+ - Renamed ufsphy to phy (Vivek).
+ - Removed #clock-cells (Vivek).
+
+This applies atop linux-next 20181018 with the addition of Doug's
+changes [1] and [2].
+
+[1] https://lore.kernel.org/lkml/20181012213632.252346-1-dianders@chromium.org/
+[2] https://lore.kernel.org/lkml/20181012213926.253765-1-dianders@chromium.org/
+
+Can Guo (1):
+  arm64: dts: qcom: sdm845: Add UFS nodes for sdm845-mtp
+
+Evan Green (4):
+  dt-bindings: phy-qcom-qmp: Fix register underspecification
+  phy: qcom-qmp: Utilize fully-specified DT registers
+  arm64: dts: qcom: sdm845: add UFS controller
+  arm64: dts: qcom: sdm845: Add USB PHY lane two
+
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 73 ++++++++++++++++++---
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts            | 14 ++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               | 75 +++++++++++++++++++++-
+ drivers/phy/qualcomm/phy-qcom-qmp.c                | 51 +++++++++++----
+ 4 files changed, 190 insertions(+), 23 deletions(-)
+
+-- 
+2.16.4
