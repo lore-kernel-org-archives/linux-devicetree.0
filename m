@@ -1,133 +1,39 @@
-From: Song Qiang <songqiang1304521@gmail.com>
-Subject: Re: [PATCH v4 3/3] iio: magnetometer: Add driver support for PNI
- RM3100
-Date: Thu, 18 Oct 2018 16:24:15 +0800
-Message-ID: <e1715942-8fd8-152f-49c8-2a9e081d8a2a@gmail.com>
-References: <20181002143812.3661-1-songqiang1304521@gmail.com>
- <20181012073536.20339-1-songqiang1304521@gmail.com>
- <20181012073536.20339-4-songqiang1304521@gmail.com>
- <20181013111935.00a2e1af@archlinux>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V9 12/21] csky: ELF and module probe
+Date: Thu, 18 Oct 2018 10:31:48 +0200
+Message-ID: <CAK8P3a1Mg3X-hwQ0DS7NB6t++2OO3SfKQj5V==Fp3tZZDdKzrA@mail.gmail.com>
+References: <cover.1539655731.git.ren_guo@c-sky.com> <27589f69f513177892d39868050dccb5f21023aa.1539655732.git.ren_guo@c-sky.com>
+ <CAK8P3a2vwe=4SqKfyGruKEJ1yd7txbdBqw6kD_3pN47F8u7OAA@mail.gmail.com> <20181018024929.GC13314@guoren-Inspiron-7460>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181013111935.00a2e1af@archlinux>
-Content-Language: en-US
+In-Reply-To: <20181018024929.GC13314@guoren-Inspiron-7460>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, preid@electromag.com.au, himanshujha199640@gmail.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Guo Ren <ren_guo@c-sky.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Christoph Hellwig <hch@infradead.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, c-sky_gcc_upstream@c-sky.com
 List-Id: devicetree@vger.kernel.org
 
-
-On 2018/10/13 下午6:19, Jonathan Cameron wrote:
-> On Fri, 12 Oct 2018 15:35:36 +0800
-> Song Qiang<songqiang1304521@gmail.com>  wrote:
+On Thu, Oct 18, 2018 at 4:49 AM Guo Ren <ren_guo@c-sky.com> wrote:
 >
->> PNI RM3100 is a high resolution, large signal immunity magnetometer,
->> composed of 3 single sensors and a processing chip with a MagI2C
->> interface.
->>
->> Following functions are available:
->>   - Single-shot measurement from
->>     /sys/bus/iio/devices/iio:deviceX/in_magn_{axis}_raw
->>   - Triggerd buffer measurement.
->>   - DRDY pin for data ready trigger.
->>   - Both i2c and spi interface are supported.
->>   - Both interrupt and polling measurement is supported, depends on if
->>     the 'interrupts' in DT is declared.
->>
->> Signed-off-by: Song Qiang<songqiang1304521@gmail.com>
-> A few questions for you (getting very close to being good to go btw!)
->
-> Why do we have the 3second additional wait for conversions?  I know we
-> rarely wait that long, but still seems excessive.
->
-> Few more comments inline.
->
-> Thanks,
->
-> Jonathan
+> On Wed, Oct 17, 2018 at 05:18:49PM +0200, Arnd Bergmann wrote:
+> > On Tue, Oct 16, 2018 at 5:02 AM Guo Ren <ren_guo@c-sky.com> wrote:
+> > >
+> > > This patch adds ELF definition and module relocate codes.
+> > >
+> > > Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> > > Cc: Arnd Bergmann <arnd@arndb.de>
+> >
+> > > +#ifdef __cskyBE__
+> > > +#define ELF_DATA       ELFDATA2MSB
+> > > +#else
+> > > +#define ELF_DATA       ELFDATA2LSB
+> > > +#endif
+> >
+> > You removed support for big-endian, right? I guess the #ifdef can also
+> > get removed here then. Aside from that,
+> Now, we only support little-endian and it could be removed. But maybe we
+> need support big-endian in future, so I keep it here.
 
-Hi Jonathan,
+Ok, just made sure it was intentional.
 
-
-The measurement time of this device varies from 1.7ms to 13 seconds, 3 seconds 
-is just a number in the middle between them. This may be worth discussing, 
-hoping to get a better solution from the community.
-
-
->> ---
->>   MAINTAINERS                            |   7 +
->>   drivers/iio/magnetometer/Kconfig       |  29 ++
->>   drivers/iio/magnetometer/Makefile      |   4 +
->>   drivers/iio/magnetometer/rm3100-core.c | 627 +++++++++++++++++++++++++
->>   drivers/iio/magnetometer/rm3100-i2c.c  |  58 +++
->>   drivers/iio/magnetometer/rm3100-spi.c  |  64 +++
->>   drivers/iio/magnetometer/rm3100.h      |  17 +
->>   7 files changed, 806 insertions(+)
->>   create mode 100644 drivers/iio/magnetometer/rm3100-core.c
->>   create mode 100644 drivers/iio/magnetometer/rm3100-i2c.c
->>   create mode 100644 drivers/iio/magnetometer/rm3100-spi.c
->>   create mode 100644 drivers/iio/magnetometer/rm3100.h
->>
-
-...
-
->
->> +static irqreturn_t rm3100_trigger_handler(int irq, void *p)
->> +{
->> +	struct iio_poll_func *pf = p;
->> +	struct iio_dev *indio_dev = pf->indio_dev;
->> +	unsigned long scan_mask = *indio_dev->active_scan_mask;
->> +	unsigned int mask_len = indio_dev->masklength;
->> +	struct rm3100_data *data = iio_priv(indio_dev);
->> +	struct regmap *regmap = data->regmap;
->> +	int ret, i, bit;
->> +
->> +	mutex_lock(&data->lock);
->> +	switch (scan_mask) {
->> +	case BIT(0) | BIT(1) | BIT(2):
->> +		ret = regmap_bulk_read(regmap, RM3100_REG_MX2, data->buffer, 9);
->> +		mutex_unlock(&data->lock);
->> +		if (ret < 0)
->> +			goto done;
->> +	break;
->> +	case BIT(0) | BIT(1):
->> +		ret = regmap_bulk_read(regmap, RM3100_REG_MX2, data->buffer, 6);
->> +		mutex_unlock(&data->lock);
->> +		if (ret < 0)
->> +			goto done;
->> +	break;
->> +	case BIT(1) | BIT(2):
->> +		ret = regmap_bulk_read(regmap, RM3100_REG_MY2, data->buffer, 6);
->> +		mutex_unlock(&data->lock);
->> +		if (ret < 0)
->> +			goto done;
->> +	break;
-> What about BIT(0) | BIT(2)?
->
-> Now you can do it like you have here and on that one corner case let the iio core
-> demux code take care of it, but then you will need to provide available_scan_masks
-> so the core knows it needs to handle this case.
->
-
-This confused me a little. The available_scan_masks I was using is {BIT(0) | 
-BIT(1) | BIT(2), 0x0}. Apparently in this version of patch I would like it to 
-handle every circumstances like BIT(0), BIT(0) | BIT(2), BIT(1) | BIT(2), etc. 
-Since Phil mentioned he would like this to reduce bus usage as much as we can 
-and I want it, too, I think these three circumstances can be read consecutively 
-while others can be read one axis at a time. So I plan to let  BIT(0) | BIT(2) 
-fall into the 'default' section, which reads axis one by one.
-
-My question is, since this handles every possible combination, do I still need 
-to list every available scan masks in available_scan_masks?
-
-
-All other problems will be fixed in the next patch.
-
-yours,
-
-Song Qiang
-
-
-...
+       Arnd
