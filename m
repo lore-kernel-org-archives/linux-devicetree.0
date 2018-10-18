@@ -1,140 +1,136 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH v4 01/18] of: overlay: add tests to validate kfrees from
- overlay removal
-Date: Thu, 18 Oct 2018 15:24:53 -0500
-Message-ID: <CANk1AXT38UJ0gZze87b3jDiGfXoVEW7izhohsGRdZ5P20wfeEw@mail.gmail.com>
-References: <1539657458-24401-1-git-send-email-frowand.list@gmail.com>
- <1539657458-24401-2-git-send-email-frowand.list@gmail.com> <CANk1AXS-DMhA3=8v9N28K_V6K18HcgN_Esuo=-ddmeBLO46-Rw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V3 7/8] arm64: dts: imx: add imx8qxp mek support
+Date: Thu, 18 Oct 2018 15:27:40 -0500
+Message-ID: <20181018202740.GA7262@bogus>
+References: <1539886483-15775-1-git-send-email-aisheng.dong@nxp.com>
+ <1539886483-15775-8-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANk1AXS-DMhA3=8v9N28K_V6K18HcgN_Esuo=-ddmeBLO46-Rw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Moritz Fischer <mdf@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1539886483-15775-8-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 17, 2018 at 4:30 PM Alan Tull <atull@kernel.org> wrote:
->
-> On Mon, Oct 15, 2018 at 9:39 PM <frowand.list@gmail.com> wrote:
->
-> Hi Frank,
->
-> >
-> > From: Frank Rowand <frank.rowand@sony.com>
-> >
-> > Add checks:
-> >   - attempted kfree due to refcount reaching zero before overlay
-> >     is removed
-> >   - properties linked to an overlay node when the node is removed
-> >   - node refcount > one during node removal in a changeset destroy,
-> >     if the node was created by the changeset
-> >
-> > After applying this patch, several validation warnings will be
-> > reported from the devicetree unittest during boot due to
-> > pre-existing devicetree bugs. The warnings will be similar to:
-> >
-> >   OF: ERROR: of_node_release() overlay node /testcase-data/overlay-node/test-bus/test-unittest11/test-unittest111 contains unexpected properties
-> >   OF: ERROR: memory leak - destroy cset entry: attach overlay node /testcase-data-2/substation@100/hvac-medium-2 expected refcount 1 instead of 2.  of_node_get() / of_node_put() are unbalanced for this node.
-> >
-> > Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> > ---
-> > Changes since v3:
-> >   - Add expected value of refcount for destroy cset entry error.  Also
-> >     explain the cause of the error.
-> >
-> >  drivers/of/dynamic.c | 29 +++++++++++++++++++++++++++++
-> >  drivers/of/overlay.c |  1 +
-> >  include/linux/of.h   | 15 ++++++++++-----
-> >  3 files changed, 40 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> > index f4f8ed9b5454..24c97b7a050f 100644
-> > --- a/drivers/of/dynamic.c
-> > +++ b/drivers/of/dynamic.c
-> > @@ -330,6 +330,25 @@ void of_node_release(struct kobject *kobj)
-> >         if (!of_node_check_flag(node, OF_DYNAMIC))
-> >                 return;
-> >
-> > +       if (of_node_check_flag(node, OF_OVERLAY)) {
-> > +
-> > +               if (!of_node_check_flag(node, OF_OVERLAY_FREE_CSET)) {
-> > +                       /* premature refcount of zero, do not free memory */
-> > +                       pr_err("ERROR: memory leak %s() overlay node %pOF before free overlay changeset\n",
-> > +                              __func__, node);
-> > +                       return;
-> > +               }
-> > +
-> > +               /*
-> > +                * If node->properties non-empty then properties were added
-> > +                * to this node either by different overlay that has not
-> > +                * yet been removed, or by a non-overlay mechanism.
-> > +                */
-> > +               if (node->properties)
-> > +                       pr_err("ERROR: %s() overlay node %pOF contains unexpected properties\n",
-> > +                              __func__, node);
-> > +       }
-> > +
-> >         property_list_free(node->properties);
-> >         property_list_free(node->deadprops);
-> >
-> > @@ -434,6 +453,16 @@ struct device_node *__of_node_dup(const struct device_node *np,
-> >
-> >  static void __of_changeset_entry_destroy(struct of_changeset_entry *ce)
-> >  {
-> > +       if (ce->action == OF_RECONFIG_ATTACH_NODE &&
-> > +           of_node_check_flag(ce->np, OF_OVERLAY)) {
-> > +               if (kref_read(&ce->np->kobj.kref) > 1) {
-> > +                       pr_err("ERROR: memory leak - destroy cset entry: attach overlay node %pOF expected refcount 1 instead of %d.  of_node_get() / of_node_put() are unbalanced for this node.\n",
-> > +                              ce->np, kref_read(&ce->np->kobj.kref));
->
-> Still testing as much as I have time to do.
->
-> I'm hitting this error message once when removing an overlay that adds
-> several child nodes.  The only node I get the message for was a node
-> that added a fixed-clock (the other nodes didn't trigger the error).
-> Then even if I edited all the rest of the overlay DTS and removed all
-> other child nodes and all references to the clock from other nodes, I
-> still got the error.
->
-> Removing dtbo: 1-socfpga_arria10_socdk_sdmmc_ghrd_ovl_ext_cfg.dtb
-> [   72.032270] OF: ERROR: memory leak - destroy cset entry: attach
-> overlay node /soc/base_fpga_region/clk_0 expected refcount 1 instead
-> of 2.  of_node_get() / of_node_put() are unbalanced for this node.
+On Thu, Oct 18, 2018 at 06:19:43PM +0000, A.s. Dong wrote:
+> i.MX 8QuadXPlus is a quad (4x) Cortex-A35 proccessor with powerful
+> graphic and multimedia features. This patch adds imx8qxp mek board
+> support.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> ---
+> v2->v3:
+>  * Pad names update
+>  * move memory node to here
+>  * add no-sd and no-sdio under emmc node
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.txt |   4 +
+>  arch/arm64/boot/dts/freescale/Makefile        |   1 +
+>  arch/arm64/boot/dts/freescale/imx8qxp-mek.dts | 141 ++++++++++++++++++++++++++
+>  3 files changed, 146 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+> index baeb1fc..704472b 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.txt
+> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
+> @@ -97,6 +97,10 @@ i.MX7 SabreSD Board
+>  Required root node properties:
+>      - compatible = "fsl,imx7d-sdb", "fsl,imx7d";
+>  
+> +i.MX8QXP MEK Board
+> +Required root node properties:
+> +    - compatible = "fsl,imx8qxp-mek", "fsl,imx8qxp";
+> +
+>  Generic i.MX boards
+>  -------------------
+>  
+> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> index 86e18ad..cff87f3 100644
+> --- a/arch/arm64/boot/dts/freescale/Makefile
+> +++ b/arch/arm64/boot/dts/freescale/Makefile
+> @@ -13,3 +13,4 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-rdb.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-simu.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-qds.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-rdb.dtb
+> +dtb-$(CONFIG_SOC_IMX8QXP) += imx8qxp-mek.dtb
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+> new file mode 100644
+> index 0000000..6087ead
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+> @@ -0,0 +1,141 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright 2017~2018 NXP
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "imx8qxp.dtsi"
+> +
+> +/ {
+> +	model = "Freescale i.MX8QXP MEK";
+> +	compatible = "fsl,imx8qxp-mek", "fsl,imx8qxp";
+> +
+> +	chosen {
+> +		stdout-path = &dma_lpuart0;
+> +	};
+> +
+> +	memory@80000000 {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x80000000 0 0x40000000>;
+> +	};
+> +
+> +	reg_usdhc2_vmmc: usdhc2-vmmc {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "SD1_SPWR";
+> +		regulator-min-microvolt = <3000000>;
+> +		regulator-max-microvolt = <3000000>;
+> +		gpio = <&lsio_gpio4 19 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +};
+> +
+> +&dma_lpuart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_lpuart0>;
+> +	status = "okay";
+> +};
+> +
+> +&fec1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_fec1>;
+> +	phy-mode = "rgmii-id";
+> +	phy-handle = <&ethphy0>;
+> +	fsl,magic-packet;
+> +	status = "okay";
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ethphy0: ethernet-phy@0 {
+> +			compatible = "ethernet-phy-ieee802.3-c22";
 
-Update: with some helpful offline debug patches from Frank, I was able
-to find the source of the of_node_get/put unbalance.  The fixed-rate
-clock driver calls of_clk_add_provider() when probed but never calls
-of_clk_del_provider()
+> +			at803x,eee-disabled;
+> +			at803x,vddio-1p8v;
 
-This patchset quite likely will uncover other of_node_get/put
-unbalances around the kernel.
-
-Alan
-
->
-> Here's the very stripped down overlay:
->
-> /dts-v1/;
-> /plugin/;
-> / {
->         fragment@0 {
->                 target-path = "/soc/base_fpga_region";
->                 #address-cells = <1>;
->                 #size-cells = <1>;
->
->                 __overlay__ {
->                         external-fpga-config;
->
->                         #address-cells = <1>;
->                         #size-cells = <1>;
->
->                         clk_0: clk_0 {
->                                 compatible = "fixed-clock";
->                                 #clock-cells = <0>;
->                                 clock-frequency = <100000000>;  /* 100.00 MHz */
->                                 clock-output-names = "clk_0-clk";
->                         };
->                 };
->         };
-> };
+These 2 are Not documented.
