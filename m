@@ -1,7 +1,7 @@
 From: Shyam Saini <shyam.saini@amarulasolutions.com>
-Subject: [PATCH V2] ARM: dts: imx6qdl-icore: Add missing stdout-path property
-Date: Thu, 18 Oct 2018 20:33:05 +0530
-Message-ID: <20181018150305.21408-1-shyam.saini@amarulasolutions.com>
+Subject: [PATCH] ARM: dts: imx: Add missing stdout-path property
+Date: Thu, 18 Oct 2018 20:21:28 +0530
+Message-ID: <20181018145128.21117-1-shyam.saini@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -26,7 +26,6 @@ Further, by adding this we don't have to depend on complex earlyprintk
 configs for early boot logs.
 
 Signed-off-by: Shyam Saini <shyam.saini@amarulasolutions.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
 ---
  arch/arm/boot/dts/imx6qdl-icore.dtsi | 4 ++++
  1 file changed, 4 insertions(+)
