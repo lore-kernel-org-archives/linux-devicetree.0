@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v5 14/18] of: unittest: remove unused of_unittest_apply_overlay() argument
-Date: Thu, 18 Oct 2018 15:46:32 -0700
-Message-ID: <1539902796-8382-15-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v5 10/18] of: overlay: make all pr_debug() and pr_err() messages unique
+Date: Thu, 18 Oct 2018 15:46:28 -0700
+Message-ID: <1539902796-8382-11-git-send-email-frowand.list@gmail.com>
 References: <1539902796-8382-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1539902796-8382-1-git-send-email-frowand.list@gmail.com>
@@ -12,45 +12,64 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-Argument unittest_nr is not used in of_unittest_apply_overlay(),
-remove it.
+Make overlay.c debug and error messages unique so that they can be
+unambiguously found by grep.
 
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/unittest.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/of/overlay.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index efd9c947f192..6d80f474c8f2 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -1419,8 +1419,7 @@ static void of_unittest_destroy_tracked_overlays(void)
- 	} while (defers > 0);
- }
- 
--static int __init of_unittest_apply_overlay(int overlay_nr, int unittest_nr,
--		int *overlay_id)
-+static int __init of_unittest_apply_overlay(int overlay_nr, int *overlay_id)
- {
- 	const char *overlay_name;
- 
-@@ -1453,7 +1452,7 @@ static int __init of_unittest_apply_overlay_check(int overlay_nr,
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index e20d8923f475..88e346234ae7 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -507,7 +507,7 @@ static int build_changeset_symbols_node(struct overlay_changeset *ovcs,
+ 	for_each_property_of_node(overlay_symbols_node, prop) {
+ 		ret = add_changeset_property(ovcs, target, prop, 1);
+ 		if (ret) {
+-			pr_debug("Failed to apply prop @%pOF/%s, err=%d\n",
++			pr_debug("Failed to apply symbols prop @%pOF/%s, err=%d\n",
+ 				 target->np, prop->name, ret);
+ 			return ret;
+ 		}
+@@ -551,7 +551,8 @@ static int build_changeset(struct overlay_changeset *ovcs)
+ 		ret = build_changeset_next_level(ovcs, &target,
+ 						 fragment->overlay);
+ 		if (ret) {
+-			pr_debug("apply failed '%pOF'\n", fragment->target);
++			pr_debug("fragment apply failed '%pOF'\n",
++				 fragment->target);
+ 			return ret;
+ 		}
  	}
+@@ -564,7 +565,8 @@ static int build_changeset(struct overlay_changeset *ovcs)
+ 		ret = build_changeset_symbols_node(ovcs, &target,
+ 						   fragment->overlay);
+ 		if (ret) {
+-			pr_debug("apply failed '%pOF'\n", fragment->target);
++			pr_debug("symbols fragment apply failed '%pOF'\n",
++				 fragment->target);
+ 			return ret;
+ 		}
+ 	}
+@@ -873,7 +875,7 @@ static int of_overlay_apply(const void *fdt, struct device_node *tree,
  
- 	ovcs_id = 0;
--	ret = of_unittest_apply_overlay(overlay_nr, unittest_nr, &ovcs_id);
-+	ret = of_unittest_apply_overlay(overlay_nr, &ovcs_id);
- 	if (ret != 0) {
- 		/* of_unittest_apply_overlay already called unittest() */
- 		return ret;
-@@ -1489,7 +1488,7 @@ static int __init of_unittest_apply_revert_overlay_check(int overlay_nr,
+ 	ret = __of_changeset_apply_notify(&ovcs->cset);
+ 	if (ret)
+-		pr_err("overlay changeset entry notify error %d\n", ret);
++		pr_err("overlay apply changeset entry notify error %d\n", ret);
+ 	/* notify failure is not fatal, continue */
  
- 	/* apply the overlay */
- 	ovcs_id = 0;
--	ret = of_unittest_apply_overlay(overlay_nr, unittest_nr, &ovcs_id);
-+	ret = of_unittest_apply_overlay(overlay_nr, &ovcs_id);
- 	if (ret != 0) {
- 		/* of_unittest_apply_overlay already called unittest() */
- 		return ret;
+ 	list_add_tail(&ovcs->ovcs_list, &ovcs_list);
+@@ -1132,7 +1134,7 @@ int of_overlay_remove(int *ovcs_id)
+ 
+ 	ret = __of_changeset_revert_notify(&ovcs->cset);
+ 	if (ret)
+-		pr_err("overlay changeset entry notify error %d\n", ret);
++		pr_err("overlay remove changeset entry notify error %d\n", ret);
+ 	/* notify failure is not fatal, continue */
+ 
+ 	*ovcs_id = 0;
 -- 
 Frank Rowand <frank.rowand@sony.com>
