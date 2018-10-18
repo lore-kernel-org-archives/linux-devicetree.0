@@ -1,78 +1,225 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V9 21/21] csky: support dword access for get_user_size()
-Date: Thu, 18 Oct 2018 16:57:52 +0800
-Message-ID: <20181018085751.GA21934@guoren-Inspiron-7460>
-References: <cover.1539655731.git.ren_guo@c-sky.com>
- <4bc11ff0cff5960892a464189605f9bc808383fc.1539655732.git.ren_guo@c-sky.com>
- <CAK8P3a1wfeWboHvU1o_kooMc2hML8iWcNrz=mp6tYT52iGwfjw@mail.gmail.com>
- <20181018034117.GD15088@guoren-Inspiron-7460>
- <CAK8P3a0cFhBE1tX0xisP__MYiBfaAUQHsW6ZhkmTPocRf1Zb6w@mail.gmail.com>
+From: Pascal PAILLET-LME <p.paillet@st.com>
+Subject: [PATCH v4 1/8] dt-bindings: mfd: document stpmic1
+Date: Thu, 18 Oct 2018 09:02:11 +0000
+Message-ID: <1539853324-29051-2-git-send-email-p.paillet@st.com>
+References: <1539853324-29051-1-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a0cFhBE1tX0xisP__MYiBfaAUQHsW6ZhkmTPocRf1Zb6w@mail.gmail.com>
+In-Reply-To: <1539853324-29051-1-git-send-email-p.paillet@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Christoph Hellwig <hch@infradead.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, c-sky_gcc_upstream@c-sky.com
+To: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
+Cc: Pascal PAILLET-LME <p.paillet@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 18, 2018 at 10:34:00AM +0200, Arnd Bergmann wrote:
-> On Thu, Oct 18, 2018 at 5:41 AM Guo Ren <ren_guo@c-sky.com> wrote:
-> >
-> > On Wed, Oct 17, 2018 at 05:44:17PM +0200, Arnd Bergmann wrote:
-> > > On Tue, Oct 16, 2018 at 5:33 AM Guo Ren <ren_guo@c-sky.com> wrote:
-> > > >
-> > > > Support dword access for get_user_size and redesign put_user_size with
-> > > > the same style of get_user_size. It's Ok to use xxx_user_asm_common for
-> > > > all size of variable with ldb, ldh, ldw, ld.d
-> > > >
-> > > > ld.d rx, (addr, 0) could "rx <= addr" "and r(x+1) <= addr+4" and this also
-> > > > follow abiv2 gcc ABI for dword access.
-> > >
-> > > Are you sure this is correct for this?
-> > >
-> > > static inline u32 get_64_to_32(__u64 __user *p)
-> > > {
-> > >       u32 ret;
-> > >       get_user(ret, p);
-> > >       return ret;
-> > > }
-> > >
-> > > If I read __get_user_asm_common() right, the ld.d would overwrite
-> > > two registers, but the caller only expects one, so it clobbers one
-> > > that might be in use.
-> > Ah... BUG! I only consider the get_user(u64, u64 *) :P
-> >
-> > Change to:
-> > case 8:                                                 \
-> > __get_user_asm_dword((x), ptr, "ld.d", retval);         \
-> > break;
-> >
-> > #define __get_user_asm_dword(x, ptr, err)               \
-> > do {                                                    \
-> >         u64 tmp;                                        \
-> >         __get_user_asm_common(tmp, ptr, "ld.d", err);   \
-> >         x = typeof(x) tmp;                              \
-> > } while(0)
-> >
-> > #define __put_user_asm_dword(x, ptr, err)               \
-> > do {                                                    \
-> >         u64 tmp = (u64) x;                              \
-> >         __put_user_asm_common(tmp, ptr, "st.d", err);   \
-> > } while(0)
-> >
-> 
-> I think this will cause warnings for code that passes a pointer.
-> 
-> The 64-bit __get_user() is really hard, and most 32-bit architectures don't
-> implement it at all. If you really want to add it, have a look at what
-> x86 and arm do. IIRC they both use __builtin_choose_expr(),
-Thx for the tips and I'll drop the patch first for the upstream. 
+From: pascal paillet <p.paillet@st.com>
 
-I want to implement it because of make allmodconfig and
-drivers/android/binder.c need it. I'll learn __builtin_choose_expr()
-and prepare patch next.
+stpmic1 is a pmic from STMicroelectronics. The STPMIC1 integrates 10
+regulators , 3 switches, a watchdog and an input for a power on key.
 
-Best Regards
- Guo Ren
+Signed-off-by: pascal paillet <p.paillet@st.com>
+---
+changes in v4:
+* remove interrupt-parent description
+* pmic1@33 renamed to pmic@33
+* fix indentation
+
+ .../devicetree/bindings/mfd/st,stpmic1.txt         | 131 +++++++++++++++++++++
+ include/dt-bindings/mfd/st,stpmic1.h               |  46 ++++++++
+ 2 files changed, 177 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+ create mode 100644 include/dt-bindings/mfd/st,stpmic1.h
+
+diff --git a/Documentation/devicetree/bindings/mfd/st,stpmic1.txt b/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+new file mode 100644
+index 0000000..bb19cc8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+@@ -0,0 +1,131 @@
++* STMicroelectronics STPMIC1 Power Management IC
++
++Required parent device properties:
++- compatible:			"st,stpmic1"
++- reg:				The I2C slave address for the STPMIC1 chip.
++- interrupts:			The interrupt line the device is connected to.
++- #interrupt-cells:		Should be 1.
++- interrupt-controller: 	Describes the STPMIC1 as an interrupt
++  controller (has its own domain). Interrupt number are the following:
++	/* Interrupt Register 1 (0x50 for latch) */
++	IT_SWOUT_R=0
++	IT_SWOUT_F=1
++	IT_VBUS_OTG_R=2
++	IT_VBUS_OTG_F=3
++	IT_WAKEUP_R=4
++	IT_WAKEUP_F=5
++	IT_PONKEY_R=6
++	IT_PONKEY_F=7
++	/* Interrupt Register 2 (0x51 for latch) */
++	IT_OVP_BOOST=8
++	IT_OCP_BOOST=9
++	IT_OCP_SWOUT=10
++	IT_OCP_OTG=11
++	IT_CURLIM_BUCK4=12
++	IT_CURLIM_BUCK3=13
++	IT_CURLIM_BUCK2=14
++	IT_CURLIM_BUCK1=15
++	/* Interrupt Register 3 (0x52 for latch) */
++	IT_SHORT_SWOUT=16
++	IT_SHORT_SWOTG=17
++	IT_CURLIM_LDO6=18
++	IT_CURLIM_LDO5=19
++	IT_CURLIM_LDO4=20
++	IT_CURLIM_LDO3=21
++	IT_CURLIM_LDO2=22
++	IT_CURLIM_LDO1=23
++	/* Interrupt Register 3 (0x52 for latch) */
++	IT_SWIN_R=24
++	IT_SWIN_F=25
++	IT_RESERVED_1=26
++	IT_RESERVED_2=27
++	IT_VINLOW_R=28
++	IT_VINLOW_F=29
++	IT_TWARN_R=30
++	IT_TWARN_F=31
++
++Optional parent device properties:
++- st,main-control-register:
++	-bit 1: Power cycling will be performed on turn OFF condition
++	-bit 2: PWRCTRL is functional
++	-bit 3: PWRCTRL active high
++- st,pads-pull-register:
++	-bit 1: WAKEUP pull down is not active
++	-bit 2: PWRCTRL pull up is active
++	-bit 3: PWRCTRL pull down is active
++	-bit 4: WAKEUP detector is disabled
++- st,vin-control-register:
++	-bit 0: VINLOW monitoring is enabled
++	-bit [1...3]: VINLOW rising threshold
++		000 VINOK_f + 50mV
++		001 VINOK_f + 100mV
++		010 VINOK_f + 150mV
++		011 VINOK_f + 200mV
++		100 VINOK_f + 250mV
++		101 VINOK_f + 300mV
++		110 VINOK_f + 350mV
++		111 VINOK_f + 400mV
++	-bit [4...5]: VINLOW hyst
++		00 100mV
++		01 200mV
++		10 300mV
++		11 400mV
++	-bit 6: SW_OUT detector is disabled
++	-bit 7: SW_IN detector is enabled.
++- st,usb-control-register:
++	-bit 3: SW_OUT current limit
++		0: 600mA
++		1: 1.1A
++	-bit 4: VBUS_OTG discharge is enabled
++	-bit 5: SW_OUT discharge is enabled
++	-bit 6: VBUS_OTG detection is enabled
++	-bit 7: BOOST_OVP is disabled
++
++STPMIC1 consists in a varied group of sub-devices.
++Each sub-device binding is be described in own documentation file.
++
++Device			 Description
++------			------------
++st,stpmic1-onkey	: Power on key, see ../input/st,stpmic1-onkey.txt
++st,stpmic1-regulators	: Regulators, see ../regulator/st,stpmic1-regulator.txt
++st,stpmic1-wdt		: Watchdog, see ../watchdog/st,stpmic1-wdt.txt
++
++Example:
++
++pmic: pmic@33 {
++	compatible = "st,stpmic1";
++	reg = <0x33>;
++	interrupt-parent = <&gpioa>;
++	interrupts = <0 2>;
++	st,main-control-register=<0x0c>;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++
++	onkey {
++		compatible = "st,stpmic1-onkey";
++		interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
++		interrupt-names = "onkey-falling", "onkey-rising";
++		power-off-time-sec = <10>;
++	};
++
++	watchdog {
++		compatible = "st,stpmic1-wdt";
++	};
++
++	regulators {
++		compatible = "st,stpmic1-regulators";
++
++		vdd_core: buck1 {
++			regulator-name = "vdd_core";
++			regulator-boot-on;
++			regulator-min-microvolt = <700000>;
++			regulator-max-microvolt = <1200000>;
++		};
++		vdd: buck3 {
++			regulator-name = "vdd";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-boot-on;
++			regulator-pull-down;
++		};
++	};
+diff --git a/include/dt-bindings/mfd/st,stpmic1.h b/include/dt-bindings/mfd/st,stpmic1.h
+new file mode 100644
+index 0000000..b2d6c83
+--- /dev/null
++++ b/include/dt-bindings/mfd/st,stpmic1.h
+@@ -0,0 +1,46 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) STMicroelectronics 2018 - All Rights Reserved
++ * Author: Philippe Peurichard <philippe.peurichard@st.com>,
++ * Pascal Paillet <p.paillet@st.com> for STMicroelectronics.
++ */
++
++#ifndef __DT_BINDINGS_STPMIC1_H__
++#define __DT_BINDINGS_STPMIC1_H__
++
++/* IRQ definitions */
++#define IT_PONKEY_F	0
++#define IT_PONKEY_R	1
++#define IT_WAKEUP_F	2
++#define IT_WAKEUP_R	3
++#define IT_VBUS_OTG_F	4
++#define IT_VBUS_OTG_R	5
++#define IT_SWOUT_F	6
++#define IT_SWOUT_R	7
++
++#define IT_CURLIM_BUCK1	8
++#define IT_CURLIM_BUCK2	9
++#define IT_CURLIM_BUCK3	10
++#define IT_CURLIM_BUCK4	11
++#define IT_OCP_OTG	12
++#define IT_OCP_SWOUT	13
++#define IT_OCP_BOOST	14
++#define IT_OVP_BOOST	15
++
++#define IT_CURLIM_LDO1	16
++#define IT_CURLIM_LDO2	17
++#define IT_CURLIM_LDO3	18
++#define IT_CURLIM_LDO4	19
++#define IT_CURLIM_LDO5	20
++#define IT_CURLIM_LDO6	21
++#define IT_SHORT_SWOTG	22
++#define IT_SHORT_SWOUT	23
++
++#define IT_TWARN_F	24
++#define IT_TWARN_R	25
++#define IT_VINLOW_F	26
++#define IT_VINLOW_R	27
++#define IT_SWIN_F	30
++#define IT_SWIN_R	31
++
++#endif /* __DT_BINDINGS_STPMIC1_H__ */
+-- 
+1.9.1
