@@ -1,50 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 09/18] of: overlay: validate overlay properties
- #address-cells and #size-cells
-Date: Thu, 18 Oct 2018 13:13:38 -0500
-Message-ID: <20181018181338.GD15557@bogus>
-References: <1539657458-24401-1-git-send-email-frowand.list@gmail.com>
- <1539657458-24401-10-git-send-email-frowand.list@gmail.com>
+From: Yuiko Oshino <yuiko.oshino@microchip.com>
+Subject: [PATCH v3 net-next 0/2] Add support for Microchip Technology KSZ9131 10/100/1000 Ethernet PHY
+Date: Thu, 18 Oct 2018 15:06:00 -0400
+Message-ID: <1539889562-21458-1-git-send-email-yuiko.oshino@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1539657458-24401-10-git-send-email-frowand.list@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, andrew@lunn.ch
+Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, m.felsch@pengutronix.de, Markus.Niebel@tqs.de, netdev@vger.kernel.org, UNGLinuxDriver@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 15, 2018 at 07:37:29PM -0700, frowand.list@gmail.com wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
-> 
-> If overlay properties #address-cells or #size-cells are already in
-> the live devicetree for any given node, then the values in the
-> overlay must match the values in the live tree.
-> 
-> If the properties are already in the live tree then there is no
-> need to create a changeset entry to add them since they must
-> have the same value.  This reduces the memory used by the
-> changeset and eliminates a possible memory leak.  This is
-> verified by 12 fewer warnings during the devicetree unittest,
-> as the possible memory leak warnings about #address-cells and
 
-Still missing the rest...
+This is the initial driver for Microchip KSZ9131 10/100/1000 Ethernet PHY
 
-And what about my other comments too?
+v3:
+- KSZ9131 uses picosecond units for values of devicetree properties.
+- rewrite micrel.c and micrel-ksz90x1.txt to use the picosecond values.
+v2:
+- Creating a series from two related patches.
 
-> 
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
-> Changes since v3:
->   - for errors of an overlay changing the value of #size-cells or
->     #address-cells, return -EINVAL so that overlay apply will fail
->   - for errors of an overlay changing the value of #size-cells or
->     #address-cells, make the message more direct.
->     Old message:
->       OF: overlay: ERROR: overlay and/or live tree #size-cells invalid in node /soc/base_fpga_region
->     New message:
->       OF: overlay: ERROR: changing value of /soc/base_fpga_region/#size-cells not allowed
-> 
->  drivers/of/overlay.c | 42 +++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 39 insertions(+), 3 deletions(-)
+Yuiko Oshino (2):
+  net: phy: micrel: add Microchip KSZ9131 initial driver
+  dt-bindings: net: add support for Microchip KSZ9131
+
+ .../devicetree/bindings/net/micrel-ksz90x1.txt     |  28 ++++-
+ drivers/net/phy/micrel.c                           | 130 ++++++++++++++++++++-
+ include/linux/micrel_phy.h                         |   1 +
+ 3 files changed, 157 insertions(+), 2 deletions(-)
+
+-- 
+2.7.4
