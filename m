@@ -1,45 +1,61 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/7] dt-bindings: virtio: Add virtio-pci-iommu node
-Date: Wed, 17 Oct 2018 19:35:02 -0500
-Message-ID: <20181018003502.GA28260@bogus>
-References: <20181012145917.6840-1-jean-philippe.brucker@arm.com>
- <20181012145917.6840-3-jean-philippe.brucker@arm.com>
+Subject: Re: [PATCH] dt-bindings: phy-qcom-qmp: Fix several mistakes from
+ prior commits
+Date: Wed, 17 Oct 2018 19:38:33 -0500
+Message-ID: <20181018003833.GA573@bogus>
+References: <20181012213632.252346-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181012145917.6840-3-jean-philippe.brucker@arm.com>
-List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
-List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
-List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
-List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
-List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
-Errors-To: kvmarm-bounces@lists.cs.columbia.edu
-Sender: kvmarm-bounces@lists.cs.columbia.edu
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: kevin.tian@intel.com, lorenzo.pieralisi@arm.com, tnowicki@caviumnetworks.com, devicetree@vger.kernel.org, jasowang@redhat.com, linux-pci@vger.kernel.org, joro@8bytes.org, mst@redhat.com, will.deacon@arm.com, virtualization@lists.linux-foundation.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, marc.zyngier@arm.com, robin.murphy@arm.com, kvmarm@lists.cs.columbia.edu
+In-Reply-To: <20181012213632.252346-1-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Can Guo <cang@codeaurora.org>, evgreen@chromium.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Manu Gautam <mgautam@codeaurora.org>, linux-arm-msm@vger.kernel.org, sayalil@codeaurora.org, Varadarajan Narayanan <varada@codeaurora.org>, asutoshd@codeaurora.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 12 Oct 2018 15:59:12 +0100, Jean-Philippe Brucker wrote:
-> Some systems implement virtio-iommu as a PCI endpoint. The operating
-> systems needs to discover the relationship between IOMMU and masters long
-> before the PCI endpoint gets probed. Add a PCI child node to describe the
-> virtio-iommu device.
+On Fri, 12 Oct 2018 14:36:32 -0700, Douglas Anderson wrote:
+> Digging through the "phy-qcom-qmp" showed me many inconsistencies
+> between the bindings and the reality of the driver.  Let's fix them
+> all.
 > 
-> The virtio-pci-iommu is conceptually split between a PCI programming
-> interface and a translation component on the parent bus. The latter
-> doesn't have a node in the device tree. The virtio-pci-iommu node
-> describes both, by linking the PCI endpoint to "iommus" property of DMA
-> master nodes and to "iommu-map" properties of bus nodes.
+> * In commit 2d66eab18375 ("dt-bindings: phy: qmp: Add support for QMP
+>   phy in IPQ8074") we probably should have explicitly listed that
+>   there are no clocks for this PHY and also added the reset names in
+>   alphabetical order.  You can see that there are no clocks in the
+>   driver where "clk_list" is NULL.
 > 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> * In commit 8587b220f05e ("dt-bindings: phy-qcom-qmp: Update bindings
+>   for QMP V3 USB PHY") we probably should have listed the resets for
+>   this new PHY and also removed the "(Optional)" marking for the "cfg"
+>   reset since PHYs that need "cfg" really do need it.  It's just that
+>   not all PHYs need it.
+> 
+> * In commit 7f0802074120 ("dt-bindings: phy-qcom-qmp: Update bindings
+>   for sdm845") we forgot to update one instance of the string
+>   "qcom,qmp-v3-usb3-phy" to be "qcom,sdm845-qmp-usb3-phy".  Let's fix
+>   that.  We should also have added "qcom,sdm845-qmp-usb3-uni-phy" to
+>   the clock-names and reset-names lists.
+> 
+> * In commit 99c7c7364b71 ("dt-bindings: phy-qcom-qmp: Add UFS phy
+>   compatible string for sdm845") we should have added the set of
+>   clocks and resets for "qcom,sdm845-qmp-ufs-phy".  These were taken
+>   from the driver.
+> 
+> * Cleanup the wording for what properties child nodes have to make it
+>   more obvious which types of PHYs need clocks and resets.  This was
+>   sorta implicit in the "-names" description but I found myself
+>   confused.
+> 
+> * As per the code not all "pcie qmp phys" have resets.  Specifically
+>   note that the "has_lane_rst" property in the driver is false for
+>   "ipq8074-qmp-pcie-phy".  Thus make it clear exactly which PHYs need
+>   child nodes with resets.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
->  .../devicetree/bindings/virtio/iommu.txt      | 66 +++++++++++++++++++
->  1 file changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
+> 
+>  .../devicetree/bindings/phy/qcom-qmp-phy.txt  | 31 ++++++++++++++-----
+>  1 file changed, 23 insertions(+), 8 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
