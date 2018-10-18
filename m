@@ -1,115 +1,87 @@
-Return-Path: <SRS0=4ndd=M6=exceet.de=frieder.schrempf@kernel.org>
-Subject: Re: [PATCH 0/4] usb: chipidea: imx: add HSIC support
+Return-Path: <SRS0=MYDa=M6=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr60062.outbound.protection.outlook.com ([40.107.6.62]:51003
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726706AbeJRJVC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 18 Oct 2018 05:21:02 -0400
+From: Peter Chen <peter.chen@nxp.com>
+Subject: RE: [PATCH 0/4] usb: chipidea: imx: add HSIC support
+Date: Thu, 18 Oct 2018 01:22:30 +0000
+Message-ID: <VI1PR04MB5327FF408B0FFE0FEA8935338BF80@VI1PR04MB5327.eurprd04.prod.outlook.com>
 References: <20181016045846.2345-1-peter.chen@nxp.com>
  <82a99c3c-20c6-4972-fc6d-1fca8d5d684d@exceet.de>
  <VI1PR04MB53271CABB291EECC73C86C518BFF0@VI1PR04MB5327.eurprd04.prod.outlook.com>
  <796469f2-ea5d-d428-6088-32d8eedb3160@exceet.de>
  <70259e7d-2b2a-ddf6-4f10-3c53c065133c@exceet.de>
  <9efff07e-deb6-5740-6326-bd2f11f9fed4@exceet.de>
- <VI1PR04MB5327FF408B0FFE0FEA8935338BF80@VI1PR04MB5327.eurprd04.prod.outlook.com>
-From: Frieder Schrempf <frieder.schrempf@exceet.de>
-Message-ID: <b127d005-3407-4c00-99a1-2a92809b7148@exceet.de>
-Date: Thu, 18 Oct 2018 09:46:56 +0200
-MIME-Version: 1.0
-In-Reply-To: <VI1PR04MB5327FF408B0FFE0FEA8935338BF80@VI1PR04MB5327.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <9efff07e-deb6-5740-6326-bd2f11f9fed4@exceet.de>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-To: Peter Chen <peter.chen@nxp.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Frieder Schrempf <frieder.schrempf@exceet.de>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 18.10.18 03:22, Peter Chen wrote:
->   
->>>>> - System suspend/resume
->>>>> 1. Enable USB wakeup
->>>>> for i in $(find /sys -name wakeup | grep usb);do echo enabled  >
->>>>> $i;echo "echo enabled > $i";done; 2. Let the system enter suspend
->>>>> using below command echo mem > /sys/power/state 3. And see if there
->>>>> is a wakeup block system entering suspend, and check if USB HSIC
->>>>> works ok after system resume
->>>>
->>>> System suspend/resume seems to work fine. After resume the ethernet
->>>> controller works.
->>>>
->>>> root@imxceet-solo-s-43:~# echo mem > /sys/power/state
->>>> PM: suspend entry (deep)
->>>> PM: Syncing filesystems ... done.
->>>> Freezing user space processes ... (elapsed 0.001 seconds) done.
->>>> OOM killer disabled.
->>>> Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
->>>> smsc95xx 3-1:1.0 eth1: entering SUSPEND2 mode
->>>> PM: suspend devices took 0.050 seconds Disabling non-boot CPUs ...
->>>> usb 3-1: reset high-speed USB device number 2 using ci_hdrc
->>>> PM: resume devices took 0.590 seconds OOM killer enabled.
->>>> Restarting tasks ... done.
->>>> PM: suspend exit
->>>> smsc95xx 3-1:1.0 eth1: link up, 100Mbps, full-duplex, lpa 0x4DE1 fec
->>>> 2188000.ethernet eth0: Link is Up - 100Mbps/Full - flow control rx/tx
->>>>
->>>>>
->>>>> - Runtime suspend
->>>>> 1. Enable auto suspend for all USB devices, and check if USBOH3
->>>>> clock is closed, make sure do not plug any ethernet cable on the
->>>>> RJ45 port.
->>>>>
->>>>> /* Enable auto suspend */
->>>>> for i in $(find /sys -name control | grep usb);do echo auto  >
->>>>> $i;echo "echo auto > $i";done;
->>>>
->>>> This doesn't work. When the port is suspended it gets into a loop of
->>>> suspending/resuming endlessly. If i put two logs in
->>>> ci_hdrc_imx_runtime_suspend() and ci_hdrc_imx_runtime_resume(), I get
->>>> this:
->>>>
->>>> [...]
->>>> ci_hdrc_imx_runtime_resume:603
->>>> ci_hdrc_imx_runtime_suspend:574
->>>> ci_hdrc_imx_runtime_resume:603
->>>> ci_hdrc_imx_runtime_suspend:574
->>>> ci_hdrc_imx_runtime_resume:603
->>>> ci_hdrc_imx_runtime_suspend:574
->>>> ci_hdrc_imx_runtime_resume:603
->>>> ci_hdrc_imx_runtime_suspend:574
->>>> [...]
->>>
->>> Ok, forget about the loop, this was caused by one of the other ports,
->>> that had issues with overcurrent detection.
->>>
->>> But still it doesn't work for the HSIC port.
->>>
->>> The HSIC device is stuck in status "suspending" (note: "suspending"
->>> and not "suspended"):
->>>
->>> ~# cat /sys/bus/usb/devices/usb1/power/runtime_status
->>> suspended
->>> ~# cat /sys/bus/usb/devices/usb2/power/runtime_status
->>> suspended
->>> ~# cat /sys/bus/usb/devices/usb3/power/runtime_status
->>> active
->>> ~# cat /sys/bus/usb/devices/usb3/3-1/power/runtime_status
->>> suspending
->>
->> It seems like this is a problem with the smsc95xx driver. I fixed this and now the
->> device is suspending properly, when the network interface is down and resumes
->> when it comes up.
->>
->> I also checked the USBOH3 clock and its properly switched on and off.
->>
->> What didn't work is auto suspend and resume on ethernet link down/up, but this
->> seems to be a restriction of the smsc95xx/usbnet driver.
->>
->> So all in all this looks good to me. Please let me know if you need any more
->> information or tests.
->>
-> 
-> Thanks, Frieder, no more tests are needed.
-> You could send me your dts changes as patches, I will append it at my v2 patch series.
-
-My board is currently off-tree so I can't send any patch for the pinmux 
-settings in devicetree. But I will send a patch with the changes that 
-should go to imx6qdl.dtsi, imx6sl.dtsi and imx6sx.dtsi. Though I only 
-tested on i.MX6S.
-
-Thanks,
-Frieder
+IA0KPiA+Pj4gLSBTeXN0ZW0gc3VzcGVuZC9yZXN1bWUNCj4gPj4+IDEuIEVuYWJsZSBVU0Igd2Fr
+ZXVwDQo+ID4+PiBmb3IgaSBpbiAkKGZpbmQgL3N5cyAtbmFtZSB3YWtldXAgfCBncmVwIHVzYik7
+ZG8gZWNobyBlbmFibGVkwqAgPg0KPiA+Pj4gJGk7ZWNobyAiZWNobyBlbmFibGVkID4gJGkiO2Rv
+bmU7IDIuIExldCB0aGUgc3lzdGVtIGVudGVyIHN1c3BlbmQNCj4gPj4+IHVzaW5nIGJlbG93IGNv
+bW1hbmQgZWNobyBtZW0gPiAvc3lzL3Bvd2VyL3N0YXRlIDMuIEFuZCBzZWUgaWYgdGhlcmUNCj4g
+Pj4+IGlzIGEgd2FrZXVwIGJsb2NrIHN5c3RlbSBlbnRlcmluZyBzdXNwZW5kLCBhbmQgY2hlY2sg
+aWYgVVNCIEhTSUMNCj4gPj4+IHdvcmtzIG9rIGFmdGVyIHN5c3RlbSByZXN1bWUNCj4gPj4NCj4g
+Pj4gU3lzdGVtIHN1c3BlbmQvcmVzdW1lIHNlZW1zIHRvIHdvcmsgZmluZS4gQWZ0ZXIgcmVzdW1l
+IHRoZSBldGhlcm5ldA0KPiA+PiBjb250cm9sbGVyIHdvcmtzLg0KPiA+Pg0KPiA+PiByb290QGlt
+eGNlZXQtc29sby1zLTQzOn4jIGVjaG8gbWVtID4gL3N5cy9wb3dlci9zdGF0ZQ0KPiA+PiBQTTog
+c3VzcGVuZCBlbnRyeSAoZGVlcCkNCj4gPj4gUE06IFN5bmNpbmcgZmlsZXN5c3RlbXMgLi4uIGRv
+bmUuDQo+ID4+IEZyZWV6aW5nIHVzZXIgc3BhY2UgcHJvY2Vzc2VzIC4uLiAoZWxhcHNlZCAwLjAw
+MSBzZWNvbmRzKSBkb25lLg0KPiA+PiBPT00ga2lsbGVyIGRpc2FibGVkLg0KPiA+PiBGcmVlemlu
+ZyByZW1haW5pbmcgZnJlZXphYmxlIHRhc2tzIC4uLiAoZWxhcHNlZCAwLjAwMSBzZWNvbmRzKSBk
+b25lLg0KPiA+PiBzbXNjOTV4eCAzLTE6MS4wIGV0aDE6IGVudGVyaW5nIFNVU1BFTkQyIG1vZGUN
+Cj4gPj4gUE06IHN1c3BlbmQgZGV2aWNlcyB0b29rIDAuMDUwIHNlY29uZHMgRGlzYWJsaW5nIG5v
+bi1ib290IENQVXMgLi4uDQo+ID4+IHVzYiAzLTE6IHJlc2V0IGhpZ2gtc3BlZWQgVVNCIGRldmlj
+ZSBudW1iZXIgMiB1c2luZyBjaV9oZHJjDQo+ID4+IFBNOiByZXN1bWUgZGV2aWNlcyB0b29rIDAu
+NTkwIHNlY29uZHMgT09NIGtpbGxlciBlbmFibGVkLg0KPiA+PiBSZXN0YXJ0aW5nIHRhc2tzIC4u
+LiBkb25lLg0KPiA+PiBQTTogc3VzcGVuZCBleGl0DQo+ID4+IHNtc2M5NXh4IDMtMToxLjAgZXRo
+MTogbGluayB1cCwgMTAwTWJwcywgZnVsbC1kdXBsZXgsIGxwYSAweDRERTEgZmVjDQo+ID4+IDIx
+ODgwMDAuZXRoZXJuZXQgZXRoMDogTGluayBpcyBVcCAtIDEwME1icHMvRnVsbCAtIGZsb3cgY29u
+dHJvbCByeC90eA0KPiA+Pg0KPiA+Pj4NCj4gPj4+IC0gUnVudGltZSBzdXNwZW5kDQo+ID4+PiAx
+LiBFbmFibGUgYXV0byBzdXNwZW5kIGZvciBhbGwgVVNCIGRldmljZXMsIGFuZCBjaGVjayBpZiBV
+U0JPSDMNCj4gPj4+IGNsb2NrIGlzIGNsb3NlZCwgbWFrZSBzdXJlIGRvIG5vdCBwbHVnIGFueSBl
+dGhlcm5ldCBjYWJsZSBvbiB0aGUNCj4gPj4+IFJKNDUgcG9ydC4NCj4gPj4+DQo+ID4+PiAvKiBF
+bmFibGUgYXV0byBzdXNwZW5kICovDQo+ID4+PiBmb3IgaSBpbiAkKGZpbmQgL3N5cyAtbmFtZSBj
+b250cm9sIHwgZ3JlcCB1c2IpO2RvIGVjaG8gYXV0b8KgID4NCj4gPj4+ICRpO2VjaG8gImVjaG8g
+YXV0byA+ICRpIjtkb25lOw0KPiA+Pg0KPiA+PiBUaGlzIGRvZXNuJ3Qgd29yay4gV2hlbiB0aGUg
+cG9ydCBpcyBzdXNwZW5kZWQgaXQgZ2V0cyBpbnRvIGEgbG9vcCBvZg0KPiA+PiBzdXNwZW5kaW5n
+L3Jlc3VtaW5nIGVuZGxlc3NseS4gSWYgaSBwdXQgdHdvIGxvZ3MgaW4NCj4gPj4gY2lfaGRyY19p
+bXhfcnVudGltZV9zdXNwZW5kKCkgYW5kIGNpX2hkcmNfaW14X3J1bnRpbWVfcmVzdW1lKCksIEkg
+Z2V0DQo+ID4+IHRoaXM6DQo+ID4+DQo+ID4+IFsuLi5dDQo+ID4+IGNpX2hkcmNfaW14X3J1bnRp
+bWVfcmVzdW1lOjYwMw0KPiA+PiBjaV9oZHJjX2lteF9ydW50aW1lX3N1c3BlbmQ6NTc0DQo+ID4+
+IGNpX2hkcmNfaW14X3J1bnRpbWVfcmVzdW1lOjYwMw0KPiA+PiBjaV9oZHJjX2lteF9ydW50aW1l
+X3N1c3BlbmQ6NTc0DQo+ID4+IGNpX2hkcmNfaW14X3J1bnRpbWVfcmVzdW1lOjYwMw0KPiA+PiBj
+aV9oZHJjX2lteF9ydW50aW1lX3N1c3BlbmQ6NTc0DQo+ID4+IGNpX2hkcmNfaW14X3J1bnRpbWVf
+cmVzdW1lOjYwMw0KPiA+PiBjaV9oZHJjX2lteF9ydW50aW1lX3N1c3BlbmQ6NTc0DQo+ID4+IFsu
+Li5dDQo+ID4NCj4gPiBPaywgZm9yZ2V0IGFib3V0IHRoZSBsb29wLCB0aGlzIHdhcyBjYXVzZWQg
+Ynkgb25lIG9mIHRoZSBvdGhlciBwb3J0cywNCj4gPiB0aGF0IGhhZCBpc3N1ZXMgd2l0aCBvdmVy
+Y3VycmVudCBkZXRlY3Rpb24uDQo+ID4NCj4gPiBCdXQgc3RpbGwgaXQgZG9lc24ndCB3b3JrIGZv
+ciB0aGUgSFNJQyBwb3J0Lg0KPiA+DQo+ID4gVGhlIEhTSUMgZGV2aWNlIGlzIHN0dWNrIGluIHN0
+YXR1cyAic3VzcGVuZGluZyIgKG5vdGU6ICJzdXNwZW5kaW5nIg0KPiA+IGFuZCBub3QgInN1c3Bl
+bmRlZCIpOg0KPiA+DQo+ID4gfiMgY2F0IC9zeXMvYnVzL3VzYi9kZXZpY2VzL3VzYjEvcG93ZXIv
+cnVudGltZV9zdGF0dXMNCj4gPiBzdXNwZW5kZWQNCj4gPiB+IyBjYXQgL3N5cy9idXMvdXNiL2Rl
+dmljZXMvdXNiMi9wb3dlci9ydW50aW1lX3N0YXR1cw0KPiA+IHN1c3BlbmRlZA0KPiA+IH4jIGNh
+dCAvc3lzL2J1cy91c2IvZGV2aWNlcy91c2IzL3Bvd2VyL3J1bnRpbWVfc3RhdHVzDQo+ID4gYWN0
+aXZlDQo+ID4gfiMgY2F0IC9zeXMvYnVzL3VzYi9kZXZpY2VzL3VzYjMvMy0xL3Bvd2VyL3J1bnRp
+bWVfc3RhdHVzDQo+ID4gc3VzcGVuZGluZw0KPiANCj4gSXQgc2VlbXMgbGlrZSB0aGlzIGlzIGEg
+cHJvYmxlbSB3aXRoIHRoZSBzbXNjOTV4eCBkcml2ZXIuIEkgZml4ZWQgdGhpcyBhbmQgbm93IHRo
+ZQ0KPiBkZXZpY2UgaXMgc3VzcGVuZGluZyBwcm9wZXJseSwgd2hlbiB0aGUgbmV0d29yayBpbnRl
+cmZhY2UgaXMgZG93biBhbmQgcmVzdW1lcw0KPiB3aGVuIGl0IGNvbWVzIHVwLg0KPiANCj4gSSBh
+bHNvIGNoZWNrZWQgdGhlIFVTQk9IMyBjbG9jayBhbmQgaXRzIHByb3Blcmx5IHN3aXRjaGVkIG9u
+IGFuZCBvZmYuDQo+IA0KPiBXaGF0IGRpZG4ndCB3b3JrIGlzIGF1dG8gc3VzcGVuZCBhbmQgcmVz
+dW1lIG9uIGV0aGVybmV0IGxpbmsgZG93bi91cCwgYnV0IHRoaXMNCj4gc2VlbXMgdG8gYmUgYSBy
+ZXN0cmljdGlvbiBvZiB0aGUgc21zYzk1eHgvdXNibmV0IGRyaXZlci4NCj4gDQo+IFNvIGFsbCBp
+biBhbGwgdGhpcyBsb29rcyBnb29kIHRvIG1lLiBQbGVhc2UgbGV0IG1lIGtub3cgaWYgeW91IG5l
+ZWQgYW55IG1vcmUNCj4gaW5mb3JtYXRpb24gb3IgdGVzdHMuDQo+IA0KDQpUaGFua3MsIEZyaWVk
+ZXIsIG5vIG1vcmUgdGVzdHMgYXJlIG5lZWRlZC4NCllvdSBjb3VsZCBzZW5kIG1lIHlvdXIgZHRz
+IGNoYW5nZXMgYXMgcGF0Y2hlcywgSSB3aWxsIGFwcGVuZCBpdCBhdCBteSB2MiBwYXRjaCBzZXJp
+ZXMuDQoNClBldGVyDQo=
