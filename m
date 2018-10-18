@@ -1,93 +1,106 @@
-From: Stefan Popa <stefan.popa@analog.com>
-Subject: [PATCH 2/2] dt-bindings: iio: adc: Add docs for AD7606 ADC
-Date: Thu, 18 Oct 2018 12:12:36 +0300
-Message-ID: <1539853956-26644-1-git-send-email-stefan.popa@analog.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 9/9] [DO NOT MERGE] drm/sun4i: rgb: Add 5% tolerance to
+ dot clock frequency check
+Date: Thu, 18 Oct 2018 11:18:06 +0200
+Message-ID: <CAKMK7uFp2c=wqzPi096MTRB6Cdfacerkp6dM=fEqCAr99PQG9w@mail.gmail.com>
+References: <20181018073327.64942-1-icenowy@aosc.io> <20181018073327.64942-10-icenowy@aosc.io>
+ <4168274.Gmp9JTCfJR@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4168274.Gmp9JTCfJR@avalon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Icenowy Zheng <icenowy@aosc.io>, devicetree@vger.kernel.org, Dave Airlie <airlied@linux.ie>, linux-sunxi <linux-sunxi@googlegroups.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Document support for AD7606 Analog to Digital Converter.
+On Thu, Oct 18, 2018 at 10:55 AM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Icenowy,
+>
+> Thank you for the patch.
+>
+> On Thursday, 18 October 2018 10:33:27 EEST Icenowy Zheng wrote:
+> > From: Chen-Yu Tsai <wens@csie.org>
+> >
+> > The panels shipped with Allwinner devices are very "generic", i.e.
+> > they do not have model numbers or reliable sources of information
+> > for the timings (that we know of) other than the fex files shipped
+> > on them. The dot clock frequency provided in the fex files have all
+> > been rounded to the nearest MHz, as that is the unit used in them.
+> >
+> > We were using the simple panel "urt,umsh-8596md-t" as a substitute
+> > for the A13 Q8 tablets in the absence of a specific model for what
+> > may be many different but otherwise timing compatible panels. This
+> > was usable without any visual artifacts or side effects, until the
+> > dot clock rate check was added in commit bb43d40d7c83 ("drm/sun4i:
+> > rgb: Validate the clock rate").
+> >
+> > The reason this check fails is because the dotclock frequency for
+> > this model is 33.26 MHz, which is not achievable with our dot clock
+> > hardware, and the rate returned by clk_round_rate deviates slightly,
+> > causing the driver to reject the display mode.
+> >
+> > The LCD panels have some tolerance on the dot clock frequency, even
+> > if it's not specified in their datasheets.
+> >
+> > This patch adds a 5% tolerence to the dot clock check.
+>
+> Why do you think this shouldn't be merged ?
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
----
- .../devicetree/bindings/iio/adc/adi,ad7606.txt     | 51 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+It pisses of a lot of people who really insist upon accurate timing. I
+think a better fix would be to have a dotclock range in drm_panel, and
+some magic to figure out which one of these we can actually do. Then
+tell userspace that this is the mode is should request. That way
+userspace knows what the actual dotclock/refresh rate is, and the
+panel still works.
+-Daniel
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
-new file mode 100644
-index 0000000..dede581
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
-@@ -0,0 +1,51 @@
-+Analog Devices AD7606 Simultaneous Sampling ADC
-+
-+Required properties for the AD7606:
-+
-+ - compatible: Must be one of "adi,ad7605-4", "adi,ad7606-8", "adi,ad7606-6" or
-+ 	       "adi,ad7606-4".
-+ - reg: SPI chip select number for the device
-+ - spi-max-frequency: Max SPI frequency to use
-+ 	see: Documentation/devicetree/bindings/spi/spi-bus.txt
-+ - spi-cpha: See Documentation/devicetree/bindings/spi/spi-bus.txt
-+ - avcc-supply: phandle to the Avcc power supply
-+ - interrupts: IRQ line for the ADC
-+ 	see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+ - conversion-start-gpio: must be the device tree identifier of the CONVST pin.
-+			  This logic input is used to initiate conversions on
-+			  the analog input channels.
-+
-+Optional properties:
-+
-+ - reset-gpio: must be the device tree identifier of the RESET pin. If specified,
-+ 	       it will be asserted during driver probe.
-+ - first-data-gpio: must be the device tree identifier of the FRSTDATA pin.
-+ 		    The FRSTDATA output indicates when the first channel, V1, is
-+		    being read back on either the parallel, byte or serial interface.
-+- standby-gpio: must be the device tree identifier of the STBY pin. This pin is used
-+		to place the AD7606 into one of two power-down modes, Standby mode or
-+		Shutdown mode.
-+- range-gpio: must be the device tree identifier of the RANGE pin. The polarity on
-+	      this pin determines the input range of the analog input channels. If
-+	      this pin is tied to a logic high, the analog input range is ±10V for
-+	      allchannels. If this pin is tied to a logic low, the analog input range
-+	      is ±5V for all channels.
-+
-+Example:
-+
-+	adc@0 {
-+		compatible = "adi,ad7606-8";
-+		reg = <0>;
-+		spi-max-frequency = <1000000>;
-+		spi-cpol;
-+
-+		avcc-supply = <&adc_vref>;
-+
-+		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-parent = <&gpio>;
-+
-+		conversion-start-gpio = <&gpio 17 0>;
-+		reset-gpio = <&gpio 27 0>;
-+		first-data-gpio = <&gpio 22 0>;
-+		standby-gpio = <&gpio 24 0>;
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 843545d..6d63db4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -845,6 +845,7 @@ L:	linux-iio@vger.kernel.org
- W:	http://ez.analog.com/community/linux-device-drivers
- S:	Supported
- F:	drivers/iio/adc/ad7606.c
-+F:	Documentation/devicetree/bindings/iio/adc/ad7606.txt
- 
- ANALOG DEVICES INC AD9389B DRIVER
- M:	Hans Verkuil <hans.verkuil@cisco.com>
+>
+> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > ---
+> >  drivers/gpu/drm/sun4i/sun4i_rgb.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/sun4i/sun4i_rgb.c
+> > b/drivers/gpu/drm/sun4i/sun4i_rgb.c index bf068da6b12e..23bdc449eacc 100644
+> > --- a/drivers/gpu/drm/sun4i/sun4i_rgb.c
+> > +++ b/drivers/gpu/drm/sun4i/sun4i_rgb.c
+> > @@ -92,13 +92,14 @@ static enum drm_mode_status sun4i_rgb_mode_valid(struct
+> > drm_encoder *crtc,
+> >
+> >       DRM_DEBUG_DRIVER("Vertical parameters OK\n");
+> >
+> > +     /* Check against a 5% tolerance for the dot clock */
+> >       tcon->dclk_min_div = 6;
+> >       tcon->dclk_max_div = 127;
+> >       rounded_rate = clk_round_rate(tcon->dclk, rate);
+> > -     if (rounded_rate < rate)
+> > +     if (rounded_rate < rate * 19 / 20 )
+> >               return MODE_CLOCK_LOW;
+> >
+> > -     if (rounded_rate > rate)
+> > +     if (rounded_rate > rate * 21 / 20)
+> >               return MODE_CLOCK_HIGH;
+> >
+> >       DRM_DEBUG_DRIVER("Clock rate OK\n");
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
+>
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+
+
 -- 
-2.7.4
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
