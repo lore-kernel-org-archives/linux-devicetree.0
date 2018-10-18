@@ -1,106 +1,47 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 9/9] [DO NOT MERGE] drm/sun4i: rgb: Add 5% tolerance to
- dot clock frequency check
-Date: Thu, 18 Oct 2018 15:07:49 +0200
-Message-ID: <20181018130749.jkcda4epfb3xshvi@flea>
-References: <20181018073327.64942-1-icenowy@aosc.io>
- <CAKMK7uFp2c=wqzPi096MTRB6Cdfacerkp6dM=fEqCAr99PQG9w@mail.gmail.com>
- <20181018094258.oahlopafvm2udvoe@flea> <1585874.9P5eR8PMbl@avalon>
- <20181018121819.gmup3jd7ukj52rvx@flea>
- <0c8e2417ec79b44d88a3054d0526bfc5abb364d6.camel@aosc.io>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 5/5] ARM: shmobile: defconfig: Enable SII902X
+Date: Thu, 18 Oct 2018 15:10:31 +0200
+Message-ID: <20181018131031.lfjfy46zxkbdjvfa@verge.net.au>
+References: <1537553311-8831-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1537553311-8831-6-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20180924090850.krd2cjzf6cyfdfh6@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <0c8e2417ec79b44d88a3054d0526bfc5abb364d6.camel@aosc.io>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: devicetree@vger.kernel.org, Dave Airlie <airlied@linux.ie>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chen-Yu Tsai <wens@csie.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20180924090850.krd2cjzf6cyfdfh6@verge.net.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, David Airlie <airlied@linux.ie>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBPY3QgMTgsIDIwMTggYXQgMDg6NTA6MTVQTSArMDgwMCwgSWNlbm93eSBaaGVuZyB3
-cm90ZToKPiDlnKggMjAxOC0xMC0xOOWbm+eahCAxNDoxOCArMDIwMO+8jE1heGltZSBSaXBhcmTl
-hpnpgZPvvJoKPiA+IE9uIFRodSwgT2N0IDE4LCAyMDE4IGF0IDAyOjMxOjAxUE0gKzAzMDAsIExh
-dXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gPiA+IEhlbGxvLAo+ID4gPiAKPiA+ID4gT24gVGh1cnNk
-YXksIDE4IE9jdG9iZXIgMjAxOCAxMjo0Mjo1OCBFRVNUIE1heGltZSBSaXBhcmQgd3JvdGU6Cj4g
-PiA+ID4gT24gVGh1LCBPY3QgMTgsIDIwMTggYXQgMTE6MTg6MDZBTSArMDIwMCwgRGFuaWVsIFZl
-dHRlciB3cm90ZToKPiA+ID4gPiA+IE9uIFRodSwgT2N0IDE4LCAyMDE4IGF0IDEwOjU1IEFNIExh
-dXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gPiA+ID4gPiA+IE9uIFRodXJzZGF5LCAxOCBPY3RvYmVy
-IDIwMTggMTA6MzM6MjcgRUVTVCBJY2Vub3d5IFpoZW5nCj4gPiA+ID4gPiA+IHdyb3RlOgo+ID4g
-PiA+ID4gPiA+IEZyb206IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9yZz4KPiA+ID4gPiA+ID4g
-PiAKPiA+ID4gPiA+ID4gPiBUaGUgcGFuZWxzIHNoaXBwZWQgd2l0aCBBbGx3aW5uZXIgZGV2aWNl
-cyBhcmUgdmVyeQo+ID4gPiA+ID4gPiA+ICJnZW5lcmljIiwgaS5lLgo+ID4gPiA+ID4gPiA+IHRo
-ZXkgZG8gbm90IGhhdmUgbW9kZWwgbnVtYmVycyBvciByZWxpYWJsZSBzb3VyY2VzIG9mCj4gPiA+
-ID4gPiA+ID4gaW5mb3JtYXRpb24KPiA+ID4gPiA+ID4gPiBmb3IgdGhlIHRpbWluZ3MgKHRoYXQg
-d2Uga25vdyBvZikgb3RoZXIgdGhhbiB0aGUgZmV4IGZpbGVzCj4gPiA+ID4gPiA+ID4gc2hpcHBl
-ZAo+ID4gPiA+ID4gPiA+IG9uIHRoZW0uIFRoZSBkb3QgY2xvY2sgZnJlcXVlbmN5IHByb3ZpZGVk
-IGluIHRoZSBmZXggZmlsZXMKPiA+ID4gPiA+ID4gPiBoYXZlIGFsbAo+ID4gPiA+ID4gPiA+IGJl
-ZW4gcm91bmRlZCB0byB0aGUgbmVhcmVzdCBNSHosIGFzIHRoYXQgaXMgdGhlIHVuaXQgdXNlZAo+
-ID4gPiA+ID4gPiA+IGluIHRoZW0uCj4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gV2Ugd2Vy
-ZSB1c2luZyB0aGUgc2ltcGxlIHBhbmVsICJ1cnQsdW1zaC04NTk2bWQtdCIgYXMgYQo+ID4gPiA+
-ID4gPiA+IHN1YnN0aXR1dGUKPiA+ID4gPiA+ID4gPiBmb3IgdGhlIEExMyBROCB0YWJsZXRzIGlu
-IHRoZSBhYnNlbmNlIG9mIGEgc3BlY2lmaWMgbW9kZWwKPiA+ID4gPiA+ID4gPiBmb3Igd2hhdAo+
-ID4gPiA+ID4gPiA+IG1heSBiZSBtYW55IGRpZmZlcmVudCBidXQgb3RoZXJ3aXNlIHRpbWluZyBj
-b21wYXRpYmxlCj4gPiA+ID4gPiA+ID4gcGFuZWxzLiBUaGlzCj4gPiA+ID4gPiA+ID4gd2FzIHVz
-YWJsZSB3aXRob3V0IGFueSB2aXN1YWwgYXJ0aWZhY3RzIG9yIHNpZGUgZWZmZWN0cywKPiA+ID4g
-PiA+ID4gPiB1bnRpbCB0aGUKPiA+ID4gPiA+ID4gPiBkb3QgY2xvY2sgcmF0ZSBjaGVjayB3YXMg
-YWRkZWQgaW4gY29tbWl0IGJiNDNkNDBkN2M4Mwo+ID4gPiA+ID4gPiA+ICgiZHJtL3N1bjRpOgo+
-ID4gPiA+ID4gPiA+IHJnYjogVmFsaWRhdGUgdGhlIGNsb2NrIHJhdGUiKS4KPiA+ID4gPiA+ID4g
-PiAKPiA+ID4gPiA+ID4gPiBUaGUgcmVhc29uIHRoaXMgY2hlY2sgZmFpbHMgaXMgYmVjYXVzZSB0
-aGUgZG90Y2xvY2sKPiA+ID4gPiA+ID4gPiBmcmVxdWVuY3kgZm9yCj4gPiA+ID4gPiA+ID4gdGhp
-cyBtb2RlbCBpcyAzMy4yNiBNSHosIHdoaWNoIGlzIG5vdCBhY2hpZXZhYmxlIHdpdGggb3VyCj4g
-PiA+ID4gPiA+ID4gZG90IGNsb2NrCj4gPiA+ID4gPiA+ID4gaGFyZHdhcmUsIGFuZCB0aGUgcmF0
-ZSByZXR1cm5lZCBieSBjbGtfcm91bmRfcmF0ZSBkZXZpYXRlcwo+ID4gPiA+ID4gPiA+IHNsaWdo
-dGx5LAo+ID4gPiA+ID4gPiA+IGNhdXNpbmcgdGhlIGRyaXZlciB0byByZWplY3QgdGhlIGRpc3Bs
-YXkgbW9kZS4KPiA+ID4gPiA+ID4gPiAKPiA+ID4gPiA+ID4gPiBUaGUgTENEIHBhbmVscyBoYXZl
-IHNvbWUgdG9sZXJhbmNlIG9uIHRoZSBkb3QgY2xvY2sKPiA+ID4gPiA+ID4gPiBmcmVxdWVuY3ks
-IGV2ZW4KPiA+ID4gPiA+ID4gPiBpZiBpdCdzIG5vdCBzcGVjaWZpZWQgaW4gdGhlaXIgZGF0YXNo
-ZWV0cy4KPiA+ID4gPiA+ID4gPiAKPiA+ID4gPiA+ID4gPiBUaGlzIHBhdGNoIGFkZHMgYSA1JSB0
-b2xlcmVuY2UgdG8gdGhlIGRvdCBjbG9jayBjaGVjay4KPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+
-IFdoeSBkbyB5b3UgdGhpbmsgdGhpcyBzaG91bGRuJ3QgYmUgbWVyZ2VkID8KPiA+ID4gPiA+IAo+
-ID4gPiA+ID4gSXQgcGlzc2VzIG9mIGEgbG90IG9mIHBlb3BsZSB3aG8gcmVhbGx5IGluc2lzdCB1
-cG9uIGFjY3VyYXRlCj4gPiA+ID4gPiB0aW1pbmcuCj4gPiA+ID4gCj4gPiA+ID4gSXQncyBub3Qg
-anVzdCBhYm91dCBhY2N1cmF0ZSB0aW1pbmdzLiBUaGF0IDUlIGlzIGEgbWFkZS11cCBsaW1pdCwK
-PiA+ID4gPiB0aGF0Cj4gPiA+ID4gbmV2ZXIgaGF2ZSByZWFsbHkgYmVlbiBjb25maXJtZWQgYnkg
-bG9va2luZyBhdCB0aGUgdHlwaWNhbAo+ID4gPiA+IHRvbGVyYW5jaWVzCj4gPiA+ID4gb2YgcGFu
-ZWxzLgo+ID4gPiA+IAo+ID4gPiA+IEFuZCB3aGlsZSBiZWluZyB0byByZWxheGVkIG1pZ2h0IG1h
-a2Ugc29tZSBwYW5lbHMgd29yayB0aGF0IGFyZQo+ID4gPiA+IG5vdAo+ID4gPiA+IHdvcmtpbmcg
-Y3VycmVudGx5LCBpdCBtaWdodCBhbHNvIGJyZWFrIHNvbWUgcGFuZWxzIHRoYXQgY3VycmVudGx5
-Cj4gPiA+ID4gd29yawo+ID4gPiA+IGFuZCB3b24ndCBub3csIGFuZCBpZGVhbGx5LCB3ZSBzaG91
-bGQgcmVhbGx5IGJlIGFibGUgdG8gbGV0IHRob3NlCj4gPiA+ID4gcGFuZWxzIHdvcmsgaWYgdGhl
-eSBjYW4sIGFuZCBmaWx0ZXIgb3V0IHJlc29sdXRpb25zIGlmIHRoZXkKPiA+ID4gPiBjYW4ndC4K
-PiA+ID4gPiAKPiA+ID4gPiA+IEkgdGhpbmsgYSBiZXR0ZXIgZml4IHdvdWxkIGJlIHRvIGhhdmUg
-YSBkb3RjbG9jayByYW5nZSBpbgo+ID4gPiA+ID4gZHJtX3BhbmVsLAo+ID4gPiA+ID4gYW5kIHNv
-bWUgbWFnaWMgdG8gZmlndXJlIG91dCB3aGljaCBvbmUgb2YgdGhlc2Ugd2UgY2FuIGFjdHVhbGx5
-Cj4gPiA+ID4gPiBkby4gVGhlbiB0ZWxsIHVzZXJzcGFjZSB0aGF0IHRoaXMgaXMgdGhlIG1vZGUg
-aXMgc2hvdWxkCj4gPiA+ID4gPiByZXF1ZXN0LiBUaGF0IHdheSB1c2Vyc3BhY2Uga25vd3Mgd2hh
-dCB0aGUgYWN0dWFsCj4gPiA+ID4gPiBkb3RjbG9jay9yZWZyZXNoCj4gPiA+ID4gPiByYXRlIGlz
-LCBhbmQgdGhlIHBhbmVsIHN0aWxsIHdvcmtzLgo+ID4gPiA+IAo+ID4gPiA+IEl0J3Mgbm90IGp1
-c3QgYWJvdXQgcGFuZWxzLCBidXQgYWxzbyBicmlkZ2VzIHdpdGggRURJRCB3aGVyZSB0aGUKPiA+
-ID4gPiB0b2xlcmFuY3kgaXMgbm90IGV4cG9zZWQuCj4gPiA+IAo+ID4gPiBHaXZlbiB0aGF0IHRo
-ZSB0b2xlcmFuY2UgaXMgYSBwcm9wZXJ0eSBvZiB0aGUgcGFuZWwgb3IgYnJpZGdlLCBJCj4gPiA+
-IGFncmVlIHdpdGggCj4gPiA+IERhbmllbCB0aGF0IGl0IHNob3VsZCBiZSBpbXBsZW1lbnRlZCB0
-aGVyZSwgb3IgYXQgbGVhc3QgaW4KPiA+ID4gY29vcGVyYXRpb24gd2l0aCAKPiA+ID4gZHJtX3Bh
-bmVsIGFuZCBkcm1fYnJpZGdlLgo+ID4gCj4gPiBIb3cgYXJlIHdlIHN1cHBvc2VkIHRvIGRlYWwg
-d2l0aCBwYW5lbHMgd2l0aG91dCBhbnkgZG9jdW1lbnRhdGlvbgo+ID4gdGhlbj8KPiA+IAo+ID4g
-PiBTZW1pLXJlbGF0ZWQgaW5mb3JtYXRpb24sIEkgdGhpbmsgdGhlIENFQSBhbmQgVkVTQSBzdGFu
-ZGFyZHMgYWxsb3cKPiA+ID4gYSAwLjUlIAo+ID4gPiBjbG9jayB0b2xlcmFuY2UuIFdoYXQgaXMg
-dGhlIG1heGltdW0gY2xvY2sgZnJlcXVlbmN5IGRldmlhdGlvbgo+ID4gPiByZXF1aXJlZCBmb3Ig
-Cj4gPiA+IHRoaXMgcGxhdGZvcm0gPwo+ID4gCj4gPiBMb29rcyBsaWtlIGl0IGRvZXMgaW5kZWVk
-LiBUaGF0J3MgZGVmaW5ldGVseSBnb29kIHRvIGtub3cuCj4gCj4gVGhlbiBtYXliZSB3ZSBjYW4g
-Y2hvb3NlIHRvIGFsbG93IDAuNSUgZXJyb3Igd2hlbiBhIGJyaWRnZSBpcyBhdHRhY2hlZD8KCkl0
-IGRvZXNuJ3QgZml4IHRoZSBwYW5lbCBjYXNlLCBidXQgdGhhdCBzb3VuZHMgcmVhc29uYWJsZSB5
-ZXMKCk1heGltZQoKLS0gCk1heGltZSBSaXBhcmQsIEJvb3RsaW4KRW1iZWRkZWQgTGludXggYW5k
-IEtlcm5lbCBlbmdpbmVlcmluZwpodHRwczovL2Jvb3RsaW4uY29tCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Mon, Sep 24, 2018 at 11:08:51AM +0200, Simon Horman wrote:
+> On Fri, Sep 21, 2018 at 07:08:31PM +0100, Fabrizio Castro wrote:
+> > The iwg23s board comes with the SiI9022ACNU HDMI transmitter,
+> > this patch makes sure the corresponding driver gets built.
+> > 
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> > ---
+> > 
+> > Hello Simon,
+> > 
+> > a patch for the multi_v7_defconfig will be sent at a later stage.
+> 
+> Thanks Fabrizio,
+> 
+> This looks fine to me but I will wait to see if there are other reviews
+> before applying.
+
+Sorry for letting this slip.
+
+I have applied it for v4.21.
