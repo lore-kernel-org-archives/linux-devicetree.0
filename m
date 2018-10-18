@@ -1,78 +1,47 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: pinctrl: bcm4708-pinmux: improve example
- binding
-Date: Thu, 18 Oct 2018 14:15:32 -0500
-Message-ID: <CAL_Jsq+LLudweNdte_g9D_29ak3ErCxxrmHBu5HJ7tc4Ymx4OA@mail.gmail.com>
-References: <20181015093013.31651-1-zajec5@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3] of: overlay: user space synchronization
+Date: Thu, 18 Oct 2018 14:32:16 -0500
+Message-ID: <20181018193216.GA9971@bogus>
+References: <1539736466-28638-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181015093013.31651-1-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Linus Walleij <linus.walleij@linaro.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1539736466-28638-1-git-send-email-frowand.list@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: frowand.list@gmail.com
+Cc: pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, Alan Tull <atull@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBPY3QgMTUsIDIwMTggYXQgNDozMCBBTSBSYWZhxYIgTWnFgmVja2kgPHphamVjNUBn
-bWFpbC5jb20+IHdyb3RlOgo+Cj4gRnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tp
-LnBsPgo+Cj4gQnJvYWRjb20gU29DIHBpbnMgYXJlIGNvbnRyb2xsZWQgdXNpbmcgQ1JVICgiQ2xv
-Y2sgYW5kIFJlc2V0IFVuaXQiIG9yCj4gIkNlbnRyYWwgUmVzb3VyY2UgVW5pdCIpIHJlZ2lzdGVy
-cy4gVGhlcmUgYXJlIG1vcmUgQ1JVIHJlZ2lzdGVycyBhbmQKPiBmdW5jdGlvbnMgc28gQ1JVIHNo
-b3VsZCBiZSByZXByZXNlbnRlZCBhcyBhIHNlcGFyYXRlZCBibG9jayBpbiBEVC4KPgo+IE1vcmVv
-dmVyIENSVSBpcyBhIHN1Yi1ibG9jayBvZiBETVUgKCJEZXZpY2UgTWFuYWdlbWVudCBVbml0Iikg
-c28gdGhhdAo+IG9uZSBzaG91bGQgYWxzbyBnZXQgaXRzIG93biBub2RlLgo+Cj4gU2lnbmVkLW9m
-Zi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+IC0tLQo+ICAuLi4vYmlu
-ZGluZ3MvcGluY3RybC9icmNtLGJjbTQ3MDgtcGlubXV4LnR4dCAgICAgICB8IDMxICsrKysrKysr
-KysrKysrKystLS0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDIzIGluc2VydGlvbnMoKyksIDggZGVs
-ZXRpb25zKC0pCj4KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3BpbmN0cmwvYnJjbSxiY200NzA4LXBpbm11eC50eHQgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcGluY3RybC9icmNtLGJjbTQ3MDgtcGlubXV4LnR4dAo+IGluZGV4IGFm
-OTA2ZjE5NmU4Yy4uMGNlMTMyYzdlMDRjIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL2JyY20sYmNtNDcwOC1waW5tdXgudHh0Cj4gKysrIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvYnJjbSxiY200NzA4LXBp
-bm11eC50eHQKPiBAQCAtMzAsMTMgKzMwLDI4IEBAIEZvciBkb2N1bWVudGF0aW9uIG9mIHN1Ym5v
-ZGVzIHNlZToKPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvcGlu
-Y3RybC1iaW5kaW5ncy50eHQKPgo+ICBFeGFtcGxlOgo+IC0gICAgICAgcGluY3RybEAxODAwYzFj
-MCB7Cj4gLSAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYnJjbSxiY200NzA4LXBpbm11eCI7
-Cj4gLSAgICAgICAgICAgICAgIHJlZyA9IDwweDE4MDBjMWMwIDB4MjQ+Owo+IC0gICAgICAgICAg
-ICAgICByZWctbmFtZXMgPSAiY3J1X2dwaW9fY29udHJvbCI7Cj4gLQo+IC0gICAgICAgICAgICAg
-ICBzcGkgewo+IC0gICAgICAgICAgICAgICAgICAgICAgIGZ1bmN0aW9uID0gInNwaSI7Cj4gLSAg
-ICAgICAgICAgICAgICAgICAgICAgZ3JvdXBzID0gInNwaV9ncnAiOwo+ICsgICAgICAgZG11QDE4
-MDBjMDAwIHsKPiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJzaW1wbGUtYnVzIjsKCkV2
-ZXJ5dGhpbmcgaW4gdGhlIERNVSBpcyBnb2luZyB0byB3YXJyYW50IGhhdmluZyBzdWItbm9kZXM/
-CgpXYW50aW5nIGEgbm9kZSBwZXIgcHJvdmlkZXIgKGNsb2NrcywgcmVzZXQsIHBoeSwgZXRjLikg
-aXMgY29tbW9uLCBidXQKSSB0ZW5kIHRvIHB1c2ggYmFjayBvbiB0aGF0IGlmIGl0J3Mgb25seSB0
-byBpbnN0YW50aWF0ZSBkcml2ZXJzIGFuZAp0aGVyZSBhcmVuJ3QgYW55IERUIHJlc291cmNlcyB3
-aXRoaW4gdGhlIG5vZGVzLiBBIHBpbmN0cmwgaXMgb25lIGNhc2UKdGhhdCdzIGp1c3RpZmllZCwg
-YnV0IHdoYXQgaXMgYSBiaXQgdW51c3VhbCBoZXJlIGlzIHRoZSAnc2ltcGxlLWJ1cycKbm9kZXMg
-Zm9yIHRoaW5ncyB0aGF0IGFyZSBtb3JlIHRoYW4gYSBjb2xsZWN0aW9uIG9mIGluZGVwZW5kZW50
-CmRldmljZXMuCgo+ICsgICAgICAgICAgICAgICByYW5nZXMgPSA8MCAweDE4MDBjMDAwIDB4MTAw
-MD47Cj4gKyAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsgICAgICAgICAg
-ICAgICAjc2l6ZS1jZWxscyA9IDwxPjsKPiArCj4gKyAgICAgICAgICAgICAgIGNydUAxMDAgewo+
-ICsgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAic2ltcGxlLWJ1cyI7CgpTYW1l
-IHF1ZXN0aW9uIGhlcmUuCgo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDEwMCAw
-eDFhND47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmFuZ2VzOwo+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICNzaXplLWNlbGxzID0gPDE+Owo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICBwaW4tY29u
-dHJvbGxlckAxYzAgewoKJ3BpbmN0cmwnIHdhcyB0aGUgc3RhbmRhcmQgbmFtZS4KCj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImJyY20sYmNtNDcwOC1waW5t
-dXgiOwo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MWMwIDB4MjQ+
-Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnLW5hbWVzID0gImNydV9ncGlv
-X2NvbnRyb2wiOwo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNwaS1waW5z
-IHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZnVuY3Rpb24gPSAi
-c3BpIjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZ3JvdXBzID0g
-InNwaV9ncnAiOwo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiArICAgICAg
-ICAgICAgICAgICAgICAgICB9Owo+ICAgICAgICAgICAgICAgICB9Owo+ICAgICAgICAgfTsKPiAt
-LQo+IDIuMTMuNwo+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9saW51eC1hcm0ta2VybmVsCg==
+On Tue, Oct 16, 2018 at 05:34:26PM -0700, frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
+> 
+> When an overlay is applied or removed, the live devicetree visible in
+> /proc/device-tree/, aka /sys/firmware/devicetree/base/, reflects the
+> changes.  There is no method for user space to determine whether the
+> live devicetree was modified by overlay actions.
+
+Because userspace has no way to modify the DT and the ways the kernel 
+can do modifications is limited.
+
+Do you have an actually need for this outside of testing/development?
+
+> Provide a sysfs file, /sys/firmware/devicetree/tree_version,  to allow
+> user space to determine if the live devicetree has remained unchanged
+> while a series of one or more accesses of /proc/device-tree/ occur.
+> 
+> The use of both (1) dynamic devicetree modifications and (2) overlay
+> apply and removal are not supported during the same boot cycle.  Thus
+> non-overlay dynamic modifications are not reflected in the value of
+> tree_version.
+
+I'd prefer to see some sort of information on overlays exported and user 
+space can check if that changed. IIRC, Pantelis had a series to do that 
+along with a kill switch to prevent further modifications. At least some 
+of that series only had minor issues to fix.
+
+Also, shouldn't we get uevents if the tree changes? Maybe that's not 
+guaranteed, but I'd bet we can't handle cases where we don't get events. 
+A property added to an existing node comes to mind.
+
+Rob
