@@ -1,56 +1,48 @@
 From: Nickhu <nickhu@andestech.com>
-Subject: [PATCH 0/5] nds32: Perf support
-Date: Thu, 18 Oct 2018 16:43:12 +0800
-Message-ID: <cover.1539745993.git.nickhu@andestech.com>
+Subject: [PATCH 5/5] nds32: Add document for NDS32 PMU.
+Date: Thu, 18 Oct 2018 16:43:17 +0800
+Message-ID: <c0a80d2db642b1d9547ff412d91baa9927b68aac.1539745993.git.nickhu@andestech.com>
+References: <cover.1539745993.git.nickhu@andestech.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1539745993.git.nickhu@andestech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: greentime@andestech.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, deanbo422@gmail.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, arnd@arndb.de, sboyd@codeaurora.org, geert@linux-m68k.org, zong@andestech.com, ebiederm@xmission.com, akpm@linux-foundation.org, gregkh@linuxfoundation.org, pombredanne@nexb.com, tglx@linutronix.de, kstewart@linuxfoundation.org, devicetree@vger.kernel.org
 Cc: Nickhu <nickhu@andestech.com>, green.hu@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-These two commit are perf supporting for nds32.
-There are three perfomance counters in nds32, and
-each of them can counts different events. You can
-use 'perf list' to show the available events that
-can be used.
+The document for how to add NDS32 PMU
+in devicetree.
 
-Nickhu (5):
-  nds32: Perf porting
-  nds32: Fix bug in bitfield.h
-  nds32: Add perf call-graph support.
-  nds32: Fix perf multiple events map to same counter.
-  nds32: Add document for NDS32 PMU.
-
- .../devicetree/bindings/nds32/pmu.txt         |   17 +
- arch/nds32/Kconfig                            |    1 +
- arch/nds32/boot/dts/ae3xx.dts                 |    5 +
- arch/nds32/include/asm/Kbuild                 |    1 +
- arch/nds32/include/asm/bitfield.h             |    4 +-
- arch/nds32/include/asm/perf_event.h           |   16 +
- arch/nds32/include/asm/pmu.h                  |  431 +++++
- arch/nds32/include/asm/stacktrace.h           |   39 +
- arch/nds32/kernel/Makefile                    |    3 +-
- arch/nds32/kernel/perf_event_cpu.c            | 1579 +++++++++++++++++
- arch/nds32/mm/fault.c                         |   13 +-
- tools/include/asm/barrier.h                   |    2 +
- tools/perf/arch/nds32/Build                   |    1 +
- tools/perf/arch/nds32/util/Build              |    1 +
- tools/perf/arch/nds32/util/header.c           |   29 +
- tools/perf/pmu-events/arch/nds32/mapfile.csv  |   15 +
- .../pmu-events/arch/nds32/n13/atcpmu.json     |  290 +++
- 17 files changed, 2439 insertions(+), 8 deletions(-)
+Signed-off-by: Nickhu <nickhu@andestech.com>
+---
+ Documentation/devicetree/bindings/nds32/pmu.txt | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/nds32/pmu.txt
- create mode 100644 arch/nds32/include/asm/perf_event.h
- create mode 100644 arch/nds32/include/asm/pmu.h
- create mode 100644 arch/nds32/include/asm/stacktrace.h
- create mode 100644 arch/nds32/kernel/perf_event_cpu.c
- create mode 100644 tools/perf/arch/nds32/Build
- create mode 100644 tools/perf/arch/nds32/util/Build
- create mode 100644 tools/perf/arch/nds32/util/header.c
- create mode 100644 tools/perf/pmu-events/arch/nds32/mapfile.csv
- create mode 100644 tools/perf/pmu-events/arch/nds32/n13/atcpmu.json
 
+diff --git a/Documentation/devicetree/bindings/nds32/pmu.txt b/Documentation/devicetree/bindings/nds32/pmu.txt
+new file mode 100644
+index 000000000000..02762b850e59
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nds32/pmu.txt
+@@ -0,0 +1,17 @@
++* NDS32 Performance Monitor Units
++
++NDS32 core have a PMU for counting cpu and cache events like cache misses.
++The NDS32 PMU representation in the device tree should be done as under:
++
++Required properties:
++
++- compatilbe :
++	"andestech,atcpmu"
++
++- interrupts : The interrupt number for NDS32 PMU is 13.
++
++Example:
++pmu{
++	compatible = "andestech,atcpmu";
++	interrupts = <13>;
++}
 -- 
 2.17.0
