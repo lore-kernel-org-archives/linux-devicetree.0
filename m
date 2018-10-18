@@ -1,45 +1,76 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v5 1/3] clk: meson: add emmc sub clock phase delay driver
-Date: Thu, 18 Oct 2018 10:14:31 -0700
-Message-ID: <153988287137.5275.1146335138540290297@swboyd.mtv.corp.google.com>
-References: <1539839245-13793-1-git-send-email-jianxin.pan@amlogic.com>
- <1539839245-13793-2-git-send-email-jianxin.pan@amlogic.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: [PATCH V7 1/3] dt-bindings: fsl: scu: make power domain compatible
+ string SoC specific
+Date: Thu, 18 Oct 2018 17:25:57 +0000
+Message-ID: <1539883285-7990-2-git-send-email-aisheng.dong@nxp.com>
+References: <1539883285-7990-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539839245-13793-2-git-send-email-jianxin.pan@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Yixun Lan <yixun.lan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1539883285-7990-1-git-send-email-aisheng.dong@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "A.s. Dong" <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "khilman@kernel.org" <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jianxin Pan (2018-10-17 22:07:23)
-> diff --git a/drivers/clk/meson/clkc.h b/drivers/clk/meson/clkc.h
-> index 6b96d55..3309d78 100644
-> --- a/drivers/clk/meson/clkc.h
-> +++ b/drivers/clk/meson/clkc.h
-> @@ -105,6 +105,18 @@ struct clk_regmap _name =3D {                       =
-                         \
->         },                                                              \
->  };
->  =
+As the power domain API might change in the future for new SoCs, although
+in a very low possibility, it's still better to make the compatible string
+more SoC specific to avoid the possible version change for new SoCs.
 
-> +struct meson_clk_phase_delay_data {
-> +       struct parm                     phase;
-> +       struct parm                     delay;
-> +       unsigned int                    delay_step_ps;
-> +};
-> +
-> +static inline struct meson_clk_phase_delay_data *
-> +meson_clk_get_phase_delay_data(struct clk_regmap *clk)
-> +{
-> +       return (struct meson_clk_phase_delay_data *)clk->data;
+Due to there're still no users in kernel, it's safe to update it without
+breaking anything.
 
-Is data a void *? If so, please drop the useless cast.
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Suggested-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+ChangeLog:
+v6->v7:
+ * keep "fsl,scu-pd" as fall back compatible string
+v5->v6:
+ * new patch
+---
+ Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> +}
-> +
->  /* clk_ops */
->  extern const struct clk_ops meson_clk_pll_ro_ops;
->  extern const struct clk_ops meson_clk_pll_ops;
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index 46d0af1..e5f3edf 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -58,7 +58,9 @@ This binding for the SCU power domain providers uses the generic power
+ domain binding[2].
+ 
+ Required properties:
+-- compatible:		Should be "fsl,scu-pd".
++- compatible:		Should be one of:
++			  "fsl,imx8qxp-scu-pd"
++			followed by "fsl,scu-pd"
+ - #address-cells:	Should be 1.
+ - #size-cells:		Should be 0.
+ 
+@@ -153,7 +155,7 @@ firmware {
+ 		};
+ 
+ 		imx8qx-pm {
+-			compatible = "fsl,scu-pd";
++			compatible = "fsl,imx8qxp-scu-pd", "fsl,scu-pd";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 
+-- 
+2.7.4
