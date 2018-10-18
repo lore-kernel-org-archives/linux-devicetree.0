@@ -1,95 +1,60 @@
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: [PATCH v5 1/2] dt-bindings: nand: meson: add Amlogic NAND controller driver
-Date: Thu, 18 Oct 2018 13:09:04 +0800
-Message-ID: <1539839345-14021-2-git-send-email-jianxin.pan@amlogic.com>
-References: <1539839345-14021-1-git-send-email-jianxin.pan@amlogic.com>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH] Input: pm8941-pwrkey - Add pms405 pwrkey support
+Date: Thu, 18 Oct 2018 10:54:37 +0530
+Message-ID: <20181018052437.GW2400@vkoul-mobl>
+References: <20180920014928.15422-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539839345-14021-1-git-send-email-jianxin.pan@amlogic.com>
+Content-Disposition: inline
+In-Reply-To: <20180920014928.15422-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org
-Cc: Liang Yang <liang.yang@amlogic.com>, Yixun Lan <yixun.lan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Liang Yang <liang.yang@amlogic.com>
+On 19-09-18, 18:49, Bjorn Andersson wrote:
+> From: Vinod Koul <vkoul@kernel.org>
+> 
+> Update the binding and driver for pms405 pwrkey.
 
-Add Amlogic NAND controller dt-bindings for Meson SoC,
-Current this driver support GXBB/GXL/AXG platform.
+Rob, Dmitry
 
-Signed-off-by: Liang Yang <liang.yang@amlogic.com>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
----
- .../devicetree/bindings/mtd/amlogic,meson-nand.txt | 60 ++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+Gentle reminder for this patch...
 
-diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-new file mode 100644
-index 0000000..3983c11
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-@@ -0,0 +1,60 @@
-+Amlogic NAND Flash Controller (NFC) for GXBB/GXL/AXG family SoCs
-+
-+This file documents the properties in addition to those available in
-+the MTD NAND bindings.
-+
-+Required properties:
-+- compatible : contains one of:
-+  - "amlogic,meson-gxl-nfc"
-+  - "amlogic,meson-axg-nfc"
-+- clocks     :
-+	A list of phandle + clock-specifier pairs for the clocks listed
-+	in clock-names.
-+
-+- clock-names: Should contain the following:
-+	"core" - NFC module gate clock
-+	"device" - device clock from eMMC sub clock controller
-+	"rx" - rx clock phase
-+	"tx" - tx clock phase
-+
-+- amlogic,mmc-syscon	: Required for NAND clocks, it's shared with SD/eMMC
-+				controller port C
-+
-+Optional children nodes:
-+Children nodes represent the available nand chips.
-+
-+Other properties:
-+see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
-+
-+Example demonstrate on AXG SoC:
-+
-+	sd_emmc_c_clkc: mmc@7000 {
-+		compatible = "amlogic,meson-axg-mmc-clkc", "syscon";
-+		reg = <0x0 0x7000 0x0 0x800>;
-+	};
-+
-+	nand-controller@7800 {
-+		compatible = "amlogic,meson-axg-nfc";
-+		reg = <0x0 0x7800 0x0 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
-+
-+		clocks = <&clkc CLKID_SD_EMMC_C>,
-+			<&sd_emmc_c_clkc CLKID_MMC_DIV>,
-+			<&sd_emmc_c_clkc CLKID_MMC_PHASE_RX>,
-+			<&sd_emmc_c_clkc CLKID_MMC_PHASE_TX>;
-+		clock-names = "core", "device", "rx", "tx";
-+		amlogic,mmc-syscon = <&sd_emmc_c_clkc>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&nand_pins>;
-+
-+		nand@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			nand-on-flash-bbt;
-+		};
-+	};
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt | 1 +
+>  drivers/input/misc/pm8941-pwrkey.c                             | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+> index 34ab5763f494..736fba3bad54 100644
+> --- a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+> +++ b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+> @@ -8,6 +8,7 @@ PROPERTIES
+>  	Definition: must be one of:
+>  		    "qcom,pm8941-pwrkey"
+>  		    "qcom,pm8941-resin"
+> +		    "qcom,pms405-pwrkey"
+>  
+>  - reg:
+>  	Usage: required
+> diff --git a/drivers/input/misc/pm8941-pwrkey.c b/drivers/input/misc/pm8941-pwrkey.c
+> index 48153e0ca19a..fccf63263c1c 100644
+> --- a/drivers/input/misc/pm8941-pwrkey.c
+> +++ b/drivers/input/misc/pm8941-pwrkey.c
+> @@ -317,6 +317,7 @@ static const struct pm8941_data resin_data = {
+>  static const struct of_device_id pm8941_pwr_key_id_table[] = {
+>  	{ .compatible = "qcom,pm8941-pwrkey", .data = &pwrkey_data },
+>  	{ .compatible = "qcom,pm8941-resin", .data = &resin_data },
+> +	{ .compatible = "qcom,pms405-pwrkey", .data = &pwrkey_data },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, pm8941_pwr_key_id_table);
+> -- 
+> 2.18.0
+
 -- 
-1.9.1
+~Vinod
