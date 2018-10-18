@@ -1,98 +1,138 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v3 3/7] PCI: OF: Allow endpoints to bypass the iommu
-Date: Thu, 18 Oct 2018 11:47:18 +0100
-Message-ID: <e609de5e-1be2-594e-a4a9-ec1a40d997ab@arm.com>
-References: <20181012145917.6840-1-jean-philippe.brucker@arm.com>
- <20181012145917.6840-4-jean-philippe.brucker@arm.com>
- <20181012194158.GX5906@bhelgaas-glaptop.roam.corp.google.com>
- <20181015065024-mutt-send-email-mst@kernel.org>
- <482d0eb9-8c4c-9d64-7b32-25d5d11a8b8f@gmail.com>
- <20181017111100-mutt-send-email-mst@kernel.org>
+From: Stefan Popa <stefan.popa@analog.com>
+Subject: [PATCH 2/2] dt-bindings: iio: adc: Add docs for ad7124
+Date: Thu, 18 Oct 2018 14:05:39 +0300
+Message-ID: <1539860739-3416-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
-In-Reply-To: <20181017111100-mutt-send-email-mst@kernel.org>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
-List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
-List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
-List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
-List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
-Errors-To: kvmarm-bounces@lists.cs.columbia.edu
-Sender: kvmarm-bounces@lists.cs.columbia.edu
-To: "Michael S. Tsirkin" <mst@redhat.com>, Jean-philippe Brucker <jphilippe.brucker@gmail.com>
-Cc: devicetree@vger.kernel.org, kevin.tian@intel.com, tnowicki@caviumnetworks.com, marc.zyngier@arm.com, linux-pci@vger.kernel.org, jasowang@redhat.com, will.deacon@arm.com, virtualization@lists.linux-foundation.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, Bjorn Helgaas <helgaas@kernel.org>, kvmarm@lists.cs.columbia.edu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
 List-Id: devicetree@vger.kernel.org
 
-On 17/10/18 16:14, Michael S. Tsirkin wrote:
-> On Mon, Oct 15, 2018 at 08:46:41PM +0100, Jean-philippe Brucker wrote:
->> [Replying with my personal address because we're having SMTP issues]
->>
->> On 15/10/2018 11:52, Michael S. Tsirkin wrote:
->>> On Fri, Oct 12, 2018 at 02:41:59PM -0500, Bjorn Helgaas wrote:
->>>> s/iommu/IOMMU/ in subject
->>>>
->>>> On Fri, Oct 12, 2018 at 03:59:13PM +0100, Jean-Philippe Brucker wrote:
->>>>> Using the iommu-map binding, endpoints in a given PCI domain can be
->>>>> managed by different IOMMUs. Some virtual machines may allow a subset of
->>>>> endpoints to bypass the IOMMU. In some case the IOMMU itself is presented
->>>>
->>>> s/case/cases/
->>>>
->>>>> as a PCI endpoint (e.g. AMD IOMMU and virtio-iommu). Currently, when a
->>>>> PCI root complex has an iommu-map property, the driver requires all
->>>>> endpoints to be described by the property. Allow the iommu-map property to
->>>>> have gaps.
->>>>
->>>> I'm not an IOMMU or virtio expert, so it's not obvious to me why it is
->>>> safe to allow devices to bypass the IOMMU.  Does this mean a typo in
->>>> iommu-map could inadvertently allow devices to bypass it?
->>>
->>>
->>> Thinking about this comment, I would like to ask: can't the
->>> virtio device indicate the ranges in a portable way?
->>> This would minimize the dependency on dt bindings and ACPI,
->>> enabling support for systems that have neither but do
->>> have virtio e.g. through pci.
->>
->> I thought about adding a PROBE request for this in virtio-iommu, but it
->> wouldn't be usable by a Linux guest because of a bootstrapping problem.
-> 
-> Hmm. At some level it seems wrong to design hardware interfaces
-> around how Linux happens to probe things. That can change at any time
-> ...
+Add support for Analog Devices AD7124 4-channels and 8-channels ADC.
 
-This isn't Linux-specific though. In general it's somewhere between 
-difficult and impossible to pull in an IOMMU underneath a device after 
-at device is active, so if any OS wants to use an IOMMU, it's going to 
-want to know up-front that it's there and which devices it translates so 
-that it can program said IOMMU appropriately *before* potentially 
-starting DMA and/or interrupts from the relevant devices. Linux happens 
-to do things in that order (either by firmware-driven probe-deferral or 
-just perilous initcall ordering) because it is the only reasonable order 
-in which to do them. AFAIK the platforms which don't rely on any 
-firmware description of their IOMMU tend to have a fairly static system 
-architecture (such that the OS simply makes hard-coded assumptions), so 
-it's not necessarily entirely clear how they would cope with 
-virtio-iommu either way.
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+---
+ .../devicetree/bindings/iio/adc/adi,ad7124.txt     | 96 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 97 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
 
-Robin.
-
->> Early on, Linux needs a description of device dependencies, to determine
->> in which order to probe them. If the device dependency was described by
->> virtio-iommu itself, the guest could for example initialize a NIC,
->> allocate buffers and start DMA on the physical address space (which aborts
->> if the IOMMU implementation disallows DMA by default), only to find out
->> once the virtio-iommu module is loaded that it needs to cancel all DMA and
->> reconfigure the NIC. With a static description such as iommu-map in DT or
->> ACPI remapping tables, the guest can defer probing of the NIC until the
->> IOMMU is initialized.
->>
->> Thanks,
->> Jean
-> 
-> Could you point me at the code you refer to here?
-> 
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
+new file mode 100644
+index 0000000..77a7b92
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
+@@ -0,0 +1,96 @@
++Analog Devices AD7124 ADC device driver
++
++Required properties for the AD7124:
++	- compatible: Must be one of "adi,ad7124-4" or "adi,ad7124-8"
++	- reg: SPI chip select number for the device
++	- spi-max-frequency: Max SPI frequency to use
++		see: Documentation/devicetree/bindings/spi/spi-bus.txt
++	- clocks: phandle to the master clock (mclk)
++		see: Documentation/devicetree/bindings/clock/clock-bindings.txt
++	- clock-names: Must be "mclk".
++	- interrupts: IRQ line for the ADC
++		see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++
++	- adi,channels: List of external channels connected to the ADC:
++	  Required properties:
++		* #address-cells: Must be 2.
++		* #size-cells: Must be 0.
++
++	  The child nodes of this node represent the external channels which are
++	  connected to the ADC.
++
++	  Each child node represents one channel and has the following
++	  properties:
++		Required properties:
++			* reg: Pins the channel is connected to. The first value specifies
++			  the positive input pin, the second value the negative input pin.
++			* adi,channel-number: It can have up to 4 channels on ad7124-4 and
++			  8 channels on ad7124-8, numbered from 0 to 15.
++
++		Optional properties:
++			* adi,bipolar: If set the channel is used in bipolar mode.
++			* adi,reference-select: Select the reference source to use when
++			  converting on the the specific channel. Valid values are:
++			  0: REFIN1(+)/REFIN1(−).
++			  1: REFIN2(+)/REFIN2(−).
++			  3: AVDD
++			  If this field is left empty, internal reference is selected.
++			* adi,gain: Select the gain when converting on the specific channel.
++			  Valid values are: 1, 2, 4, 8, 16, 32, 64, 128.
++			  If this field is left empty, gain of 1 is selected.
++			* adi,odr-hz: The output data rate can be programmed from:
++			  9 to 19200 for full power mode (when the master clock is 614.4 kHz)
++			  2 to 4800 for mid power mode (when the master clock is 153.6 kHz)
++			  1 to 2400 for low power mode (when the master clock is 76.8 kHz)
++			  If this field is left empty, odr of 9 is selected.
++
++Optional properties:
++	- refin1-supply: refin1 supply can be used as reference for conversion.
++	- refin2-supply: refin2 supply can be used as reference for conversion.
++	- avdd-supply: avdd supply can be used as reference for conversion.
++
++Example:
++	adc@0 {
++		compatible = "adi,ad7124-4";
++		reg = <0>;
++		spi-max-frequency = <5000000>;
++		interrupts = <25 2>;
++		interrupt-parent = <&gpio>;
++		refin1-supply = <&adc_vref>;
++		clocks = <&ad7124_mclk>;
++		clock-names = "mclk";
++
++		adi,channels {
++			#address-cells = <2>;
++			#size-cells = <0>;
++
++			channel@0 {
++				reg = <0 1>;
++				adi,channel-number = <0>;
++				adi,reference-select = <0>;
++				adi,gain = <2>;
++				adi,odr-hz = <10>;
++			};
++
++			channel@1 {
++				reg = <2 3>;
++				adi,bipolar;
++				adi,channel-number = <1>;
++				adi,reference-select = <0>;
++				adi,gain = <4>;
++				adi,odr-hz = <50>;
++			};
++
++			channel@2 {
++				reg = <4 5>;
++				adi,channel-number = <2>;
++				adi,gain = <128>;
++				adi,odr-hz = <19200>;
++			};
++
++			channel@3 {
++				reg = <6 7>;
++				adi,channel-number = <3>;
++			};
++		};
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3a1bfcb..f2fa508 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -845,6 +845,7 @@ L:	linux-iio@vger.kernel.org
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+ F:	drivers/iio/adc/ad7124.c
++F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
+ 
+ ANALOG DEVICES INC AD9389B DRIVER
+ M:	Hans Verkuil <hans.verkuil@cisco.com>
+-- 
+2.7.4
