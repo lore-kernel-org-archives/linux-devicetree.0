@@ -1,402 +1,134 @@
-From: Marcel Ziswiler <marcel@ziswiler.com>
-Subject: [PATCH v3 7/7] ARM: tegra: apalis_t30: further regulator clean-up
-Date: Thu, 18 Oct 2018 13:14:11 +0200
-Message-ID: <20181018111411.26623-8-marcel@ziswiler.com>
-References: <20181018111411.26623-1-marcel@ziswiler.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181018111411.26623-1-marcel@ziswiler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 4/9] dt-bindings: Add ANX6345 DP/eDP
+ transmitter binding
+Date: Thu, 18 Oct 2018 14:23:50 +0300
+Message-ID: <2778638.na8ndVNUfi@avalon>
+References: <20181018073327.64942-1-icenowy@aosc.io> <1886367.eljNk7jKYl@avalon> <c68f0da9607805e1f6673a9a16a7dcfff4d8fe91.camel@aosc.io>
+Reply-To: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDKM3GOS4YHBBPO2UHPAKGQEJF5B6OQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <c68f0da9607805e1f6673a9a16a7dcfff4d8fe91.camel-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Hi Icenowy,
 
-Rename label vdd2_reg to reg_1v05.
-Rename label ldo6_reg to reg_1v05_avdd_plle.
-Drop unused labels.
-Rename regulator tps62362-vout to +V1.2_VDD_CORE.
-Reorder TPS65911 properties.
-Rename +V1.05 to +V1.05_AVDD_PLLE.
-Add ti,en-ck32k-xtal.
-Specify TPS62362 vin-supply.
-Drop spurious newline in TPS62362 properties.
-Rename vddio_sdmmc_1v8_reg to reg_1v8_vddio_sdmmc3.
-Rename +V1.05 to +V1.05_AVDD_PLLE.
-
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-
----
-
-Changes in v3:
-- Dropped ASoC patches in favour of sending them as a separate series.
-
-Changes in v2:
-- Dropped "[PATCH v1 3/8] ARM: tegra: apalis/colibri_t30: fix hdmi
-  regulator" as suggested by Russell et. al.
-- Added 2 new patches improving/fixing audio on Apalis TK1.
-
-Changes in v1: None
-
- arch/arm/boot/dts/tegra30-apalis-v1.1-eval.dts |  2 +-
- arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi     | 70 +++++++++++---------------
- arch/arm/boot/dts/tegra30-apalis.dtsi          | 68 +++++++++++--------------
- 3 files changed, 58 insertions(+), 82 deletions(-)
-
-diff --git a/arch/arm/boot/dts/tegra30-apalis-v1.1-eval.dts b/arch/arm/boot/dts/tegra30-apalis-v1.1-eval.dts
-index e29dca92ba0a..34c9fcd9198f 100644
---- a/arch/arm/boot/dts/tegra30-apalis-v1.1-eval.dts
-+++ b/arch/arm/boot/dts/tegra30-apalis-v1.1-eval.dts
-@@ -251,7 +251,7 @@
- 		states = <1800000 0x0
- 			  3300000 0x1>;
- 		startup-delay-us = <100000>;
--		vin-supply = <&vddio_sdmmc_1v8_reg>;
-+		vin-supply = <&reg_1v8_vddio_sdmmc3>;
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi b/arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi
-index bc714032d771..fcfd3fddfda9 100644
---- a/arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi
-+++ b/arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi
-@@ -13,14 +13,14 @@
- 
- 	pcie@3000 {
- 		status = "okay";
--		avdd-pexa-supply = <&vdd2_reg>;
--		avdd-pexb-supply = <&vdd2_reg>;
--		avdd-pex-pll-supply = <&vdd2_reg>;
--		avdd-plle-supply = <&ldo6_reg>;
-+		avdd-pexa-supply = <&reg_1v05>;
-+		avdd-pexb-supply = <&reg_1v05>;
-+		avdd-pex-pll-supply = <&reg_1v05>;
-+		avdd-plle-supply = <&reg_1v05>;
- 		hvdd-pex-supply = <&reg_module_3v3>;
- 		vddio-pex-ctl-supply = <&reg_module_3v3>;
--		vdd-pexa-supply = <&vdd2_reg>;
--		vdd-pexb-supply = <&vdd2_reg>;
-+		vdd-pexa-supply = <&reg_1v05>;
-+		vdd-pexb-supply = <&reg_1v05>;
- 
- 		/* Apalis type specific */
- 		pci@1,0 {
-@@ -864,16 +864,13 @@
- 		pmic: pmic@2d {
- 			compatible = "ti,tps65911";
- 			reg = <0x2d>;
--
-+			#gpio-cells = <2>;
-+			gpio-controller;
- 			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
- 			#interrupt-cells = <2>;
- 			interrupt-controller;
--
-+			ti,en-ck32k-xtal;
- 			ti,system-power-controller;
--
--			#gpio-cells = <2>;
--			gpio-controller;
--
- 			vcc1-supply = <&reg_module_3v3>;
- 			vcc2-supply = <&reg_module_3v3>;
- 			vcc3-supply = <&reg_1v8_vio>;
-@@ -884,38 +881,38 @@
- 			vccio-supply = <&reg_module_3v3>;
- 
- 			regulators {
--				vdd1_reg: vdd1 {
-+				reg_1v8_vio: vio {
-+					regulator-name = "+V1.8";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+				};
+On Thursday, 18 October 2018 13:00:05 EEST Icenowy Zheng wrote:
+> =E5=9C=A8 2018-10-18=E5=9B=9B=E7=9A=84 11:53 +0300=EF=BC=8CLaurent Pincha=
+rt=E5=86=99=E9=81=93=EF=BC=9A
+> > On Thursday, 18 October 2018 10:33:22 EEST Icenowy Zheng wrote:
+> >> The ANX6345 is an ultra-low power DisplayPort/eDP transmitter
+> >> designed
+> >> for portable devices.
+> >>=20
+> >> Add a binding document for it.
+> >>=20
+> >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> >> ---
+> >>=20
+> >>  .../bindings/display/bridge/anx6345.txt       | 39 ++++++++++++++++++=
 +
-+				vdd1 {
- 					regulator-name = "+V1.35_VDDIO_DDR";
- 					regulator-min-microvolt = <1350000>;
- 					regulator-max-microvolt = <1350000>;
- 					regulator-always-on;
- 				};
- 
--				vdd2_reg: vdd2 {
-+				reg_1v05: vdd2 {
- 					regulator-name = "+V1.05";
- 					regulator-min-microvolt = <1050000>;
- 					regulator-max-microvolt = <1050000>;
- 				};
- 
--				vddctrl_reg: vddctrl {
-+				vddctrl {
- 					regulator-name = "+V1.0_VDD_CPU";
- 					regulator-min-microvolt = <1150000>;
- 					regulator-max-microvolt = <1150000>;
- 					regulator-always-on;
- 				};
- 
--				reg_1v8_vio: vio {
--					regulator-name = "+V1.8";
--					regulator-min-microvolt = <1800000>;
--					regulator-max-microvolt = <1800000>;
--					regulator-always-on;
--				};
--
- 				/*
- 				 * 1.8 volt +VDDIO_SDMMC3 in case EN_+3.3_SDMMC3
- 				 * is off
- 				 */
--				vddio_sdmmc_1v8_reg: ldo1 {
-+				reg_1v8_vddio_sdmmc3: ldo1 {
- 					regulator-name = "+VDDIO_SDMMC3_1V8";
- 					regulator-min-microvolt = <1800000>;
- 					regulator-max-microvolt = <1800000>;
-@@ -927,20 +924,20 @@
- 				 * +V3.3_AUDIO_AVDD_S, +V3.3
- 				 * see also +V3.3 fixed supply
- 				 */
--				ldo2_reg: ldo2 {
-+				ldo2 {
- 					regulator-name = "EN_+V3.3";
- 					regulator-min-microvolt = <3300000>;
- 					regulator-max-microvolt = <3300000>;
- 					regulator-always-on;
- 				};
- 
--				ldo3_reg: ldo3 {
-+				ldo3 {
- 					regulator-name = "+V1.2_CSI";
- 					regulator-min-microvolt = <1200000>;
- 					regulator-max-microvolt = <1200000>;
- 				};
- 
--				ldo4_reg: ldo4 {
-+				ldo4 {
- 					regulator-name = "+V1.2_VDD_RTC";
- 					regulator-min-microvolt = <1200000>;
- 					regulator-max-microvolt = <1200000>;
-@@ -951,32 +948,23 @@
- 				 * +V2.8_AVDD_VDAC:
- 				 * only required for (unsupported) analog RGB
- 				 */
--				ldo5_reg: ldo5 {
-+				ldo5 {
- 					regulator-name = "+V2.8_AVDD_VDAC";
- 					regulator-min-microvolt = <2800000>;
- 					regulator-max-microvolt = <2800000>;
- 					regulator-always-on;
- 				};
- 
--				/*
--				 * +V1.05_AVDD_PLLE: avdd_plle should be 1.05V
--				 * but LDO6 can't set voltage in 50mV
--				 * granularity
--				 */
--				ldo6_reg: ldo6 {
--					regulator-name = "+V1.05_AVDD_PLLE";
--					regulator-min-microvolt = <1100000>;
--					regulator-max-microvolt = <1100000>;
--				};
-+				/* LDO6: unused */
- 
--				ldo7_reg: ldo7 {
-+				ldo7 {
- 					regulator-name = "+V1.2_AVDD_PLL";
- 					regulator-min-microvolt = <1200000>;
- 					regulator-max-microvolt = <1200000>;
- 					regulator-always-on;
- 				};
- 
--				ldo8_reg: ldo8 {
-+				ldo8 {
- 					regulator-name = "+V1.0_VDD_DDR_HS";
- 					regulator-min-microvolt = <1000000>;
- 					regulator-max-microvolt = <1000000>;
-@@ -1034,8 +1022,7 @@
- 		regulator@60 {
- 			compatible = "ti,tps62362";
- 			reg = <0x60>;
--
--			regulator-name = "tps62362-vout";
-+			regulator-name = "+V1.2_VDD_CORE";
- 			regulator-min-microvolt = <900000>;
- 			regulator-max-microvolt = <1400000>;
- 			regulator-boot-on;
-@@ -1043,6 +1030,7 @@
- 			ti,vsel0-state-low;
- 			/* VSEL1: EN_CORE_DVFS_N low for DVFS */
- 			ti,vsel1-state-low;
-+			vin-supply =<&reg_module_3v3>;
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
-index 4b6a8ecaac76..d2b688d90223 100644
---- a/arch/arm/boot/dts/tegra30-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
-@@ -12,14 +12,14 @@
- 
- 	pcie@3000 {
- 		status = "okay";
--		avdd-pexa-supply = <&vdd2_reg>;
--		avdd-pexb-supply = <&vdd2_reg>;
--		avdd-pex-pll-supply = <&vdd2_reg>;
--		avdd-plle-supply = <&ldo6_reg>;
-+		avdd-pexa-supply = <&reg_1v05>;
-+		avdd-pexb-supply = <&reg_1v05>;
-+		avdd-pex-pll-supply = <&reg_1v05>;
-+		avdd-plle-supply = <&reg_1v05>;
- 		hvdd-pex-supply = <&reg_module_3v3>;
- 		vddio-pex-ctl-supply = <&reg_module_3v3>;
--		vdd-pexa-supply = <&vdd2_reg>;
--		vdd-pexb-supply = <&vdd2_reg>;
-+		vdd-pexa-supply = <&reg_1v05>;
-+		vdd-pexb-supply = <&reg_1v05>;
- 
- 		/* Apalis type specific */
- 		pci@1,0 {
-@@ -855,16 +855,13 @@
- 		pmic: pmic@2d {
- 			compatible = "ti,tps65911";
- 			reg = <0x2d>;
--
-+			#gpio-cells = <2>;
-+			gpio-controller;
- 			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
- 			#interrupt-cells = <2>;
- 			interrupt-controller;
--
-+			ti,en-ck32k-xtal;
- 			ti,system-power-controller;
--
--			#gpio-cells = <2>;
--			gpio-controller;
--
- 			vcc1-supply = <&reg_module_3v3>;
- 			vcc2-supply = <&reg_module_3v3>;
- 			vcc3-supply = <&reg_1v8_vio>;
-@@ -875,33 +872,33 @@
- 			vccio-supply = <&reg_module_3v3>;
- 
- 			regulators {
--				vdd1_reg: vdd1 {
-+				reg_1v8_vio: vio {
-+					regulator-name = "+V1.8";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+				};
-+
-+				vdd1 {
- 					regulator-name = "+V1.35_VDDIO_DDR";
- 					regulator-min-microvolt = <1350000>;
- 					regulator-max-microvolt = <1350000>;
- 					regulator-always-on;
- 				};
- 
--				vdd2_reg: vdd2 {
-+				reg_1v05: vdd2 {
- 					regulator-name = "+V1.05";
- 					regulator-min-microvolt = <1050000>;
- 					regulator-max-microvolt = <1050000>;
- 				};
- 
--				vddctrl_reg: vddctrl {
-+				vddctrl {
- 					regulator-name = "+V1.0_VDD_CPU";
- 					regulator-min-microvolt = <1150000>;
- 					regulator-max-microvolt = <1150000>;
- 					regulator-always-on;
- 				};
- 
--				reg_1v8_vio: vio {
--					regulator-name = "+V1.8";
--					regulator-min-microvolt = <1800000>;
--					regulator-max-microvolt = <1800000>;
--					regulator-always-on;
--				};
--
- 				/* LDO1: unused */
- 
- 				/*
-@@ -909,20 +906,20 @@
- 				 * +V3.3_AUDIO_AVDD_S, +V3.3
- 				 * see also +V3.3 fixed supply
- 				 */
--				ldo2_reg: ldo2 {
-+				ldo2 {
- 					regulator-name = "EN_+V3.3";
- 					regulator-min-microvolt = <3300000>;
- 					regulator-max-microvolt = <3300000>;
- 					regulator-always-on;
- 				};
- 
--				ldo3_reg: ldo3 {
-+				ldo3 {
- 					regulator-name = "+V1.2_CSI";
- 					regulator-min-microvolt = <1200000>;
- 					regulator-max-microvolt = <1200000>;
- 				};
- 
--				ldo4_reg: ldo4 {
-+				ldo4 {
- 					regulator-name = "+V1.2_VDD_RTC";
- 					regulator-min-microvolt = <1200000>;
- 					regulator-max-microvolt = <1200000>;
-@@ -933,32 +930,23 @@
- 				 * +V2.8_AVDD_VDAC:
- 				 * only required for (unsupported) analog RGB
- 				 */
--				ldo5_reg: ldo5 {
-+				ldo5 {
- 					regulator-name = "+V2.8_AVDD_VDAC";
- 					regulator-min-microvolt = <2800000>;
- 					regulator-max-microvolt = <2800000>;
- 					regulator-always-on;
- 				};
- 
--				/*
--				 * +V1.05_AVDD_PLLE: avdd_plle should be 1.05V
--				 * but LDO6 can't set voltage in 50mV
--				 * granularity
--				 */
--				ldo6_reg: ldo6 {
--					regulator-name = "+V1.05_AVDD_PLLE";
--					regulator-min-microvolt = <1100000>;
--					regulator-max-microvolt = <1100000>;
--				};
-+				/* LDO6: unused */
- 
--				ldo7_reg: ldo7 {
-+				ldo7 {
- 					regulator-name = "+V1.2_AVDD_PLL";
- 					regulator-min-microvolt = <1200000>;
- 					regulator-max-microvolt = <1200000>;
- 					regulator-always-on;
- 				};
- 
--				ldo8_reg: ldo8 {
-+				ldo8 {
- 					regulator-name = "+V1.0_VDD_DDR_HS";
- 					regulator-min-microvolt = <1000000>;
- 					regulator-max-microvolt = <1000000>;
-@@ -1016,8 +1004,7 @@
- 		regulator@60 {
- 			compatible = "ti,tps62362";
- 			reg = <0x60>;
--
--			regulator-name = "tps62362-vout";
-+			regulator-name = "+V1.2_VDD_CORE";
- 			regulator-min-microvolt = <900000>;
- 			regulator-max-microvolt = <1400000>;
- 			regulator-boot-on;
-@@ -1025,6 +1012,7 @@
- 			ti,vsel0-state-low;
- 			/* VSEL1: EN_CORE_DVFS_N low for DVFS */
- 			ti,vsel1-state-low;
-+			vin-supply =<&reg_module_3v3>;
- 		};
- 	};
- 
--- 
-2.14.4
+> >>=20
+> >>  1 file changed, 39 insertions(+)
+> >>  create mode 100644
+> >>=20
+> >> Documentation/devicetree/bindings/display/bridge/anx6345.txt
+> >>=20
+> >> diff --git
+> >> a/Documentation/devicetree/bindings/display/bridge/anx6345.txt
+> >> b/Documentation/devicetree/bindings/display/bridge/anx6345.txt new
+> >> file
+> >> mode 100644
+> >> index 000000000000..0689d4eb5f65
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
+> >> @@ -0,0 +1,39 @@
+> >> +Analogix ANX6345 eDP Transmitter
+> >> +--------------------------------
+> >> +
+> >> +The ANX6345 is an ultra-low power Full-HD eDP transmitter designed
+> >> for
+> >> +portable devices.
+> >> +
+> >> +Required properties:
+> >> +
+> >> + - compatible		: "analogix,anx6345"
+> >> + - reg			: I2C address of the device
+> >> + - reset-gpios		: Which GPIO to use for reset
+> >> +
+> >> +Optional properties:
+> >> +
+> >> + - dvdd12-supply	: Regulator for 1.2V digital core power.
+> >> + - dvdd25-supply	: Regulator for 2.5V digital core power.
+> >=20
+> > Shouldn't these to supplies be mandatory ?
+>=20
+> Yes they should.
+>=20
+> >> + - panel-supply		: Regulator for the power of the panel.
+> >=20
+> > Shouldn't the panel supply for specified in the DT node of the panel
+> > ?
+>=20
+> However, eDP panel can be probed, may vary on the same device, and we
+> don't have a generic binding for it...
+
+Shouldn't we fix that ? :-)
+
+> >> + - edid			: verbatim EDID data block describing
+> >> attached
+> >> +			  panel, only used when the panel has no EDID
+> >> info.
+> >=20
+> > This should also be specified in the panel DT node.
+> >=20
+> > > + - Video port for RGB input, using the DT bindings defined in [1].
+> >=20
+> > I think you should also add a port for the output.
+>=20
+> What will it point to?
+
+The panel DT node ?
+
+> >> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+> >> +
+> >> +Example:
+> >> +
+> >> +anx6345: anx6345@38 {
+> >> +	compatible =3D "analogix,anx6345";
+> >> +	reg =3D <0x38>;
+> >> +	reset-gpios =3D <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
+> >> +	panel-supply =3D <&reg_dc1sw>;
+> >> +	dvdd25-supply =3D <&reg_dldo2>;
+> >> +	dvdd12-supply =3D <&reg_fldo1>;
+> >> +
+> >> +	port {
+> >> +		anx6345_in: endpoint {
+> >> +			remote-endpoint =3D <&tcon0_out_anx6345>;
+> >> +		};
+> >> +	};
+> >> +};
+
+--=20
+Regards,
+
+Laurent Pinchart
+
+
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
