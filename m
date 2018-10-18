@@ -1,74 +1,71 @@
-From: Pascal PAILLET-LME <p.paillet@st.com>
-Subject: [PATCH v4 0/8] Introduce STPMIC1 PMIC Driver
-Date: Thu, 18 Oct 2018 09:02:10 +0000
-Message-ID: <1539853324-29051-1-git-send-email-p.paillet@st.com>
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V9 00/21] C-SKY(csky) Linux Kernel Port
+Date: Thu, 18 Oct 2018 17:03:22 +0800
+Message-ID: <20181018090322.GB21934@guoren-Inspiron-7460>
+References: <cover.1539655731.git.ren_guo@c-sky.com>
+ <CAK8P3a25W5rE093QsmC539d+s038Wv9PmV8Xa76LQzDLk3E8Wg@mail.gmail.com>
+ <20181018041038.GB17276@guoren-Inspiron-7460>
+ <CAK8P3a0wRPfXm3wupQd6RdN6L8CvjD0HX_Bk61VBxOYeNCh+FA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0wRPfXm3wupQd6RdN6L8CvjD0HX_Bk61VBxOYeNCh+FA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
-Cc: Pascal PAILLET-LME <p.paillet@st.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Christoph Hellwig <hch@infradead.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, c-sky_gcc_upstream@c-sky.com
 List-Id: devicetree@vger.kernel.org
 
-The goal of this patch-set is to propose a driver for the STPMIC1 PMIC from 
-STMicroelectronics. 
-The STPMIC1 regulators supply power to an application processor as well as 
-to external system peripherals such as DDR, Flash memories and system
-devices. It also features onkey button input and an hardware watchdog.
-The STPMIC1 is controlled via I2C. 
+On Thu, Oct 18, 2018 at 10:36:45AM +0200, Arnd Bergmann wrote:
+> On Thu, Oct 18, 2018 at 6:11 AM Guo Ren <ren_guo@c-sky.com> wrote:
+> >
+> > On Wed, Oct 17, 2018 at 05:58:46PM +0200, Arnd Bergmann wrote:
+> > > On Tue, Oct 16, 2018 at 4:58 AM Guo Ren <ren_guo@c-sky.com> wrote:
+> > > >
+> > > > This is the 9th version patchset to add the Linux kernel port for
+> > > > C-SKY(csky) based on linux-4.19-rc3.
+> > > >
+> > > > There are only a few changes between V8 patchset. Hope it could be
+> > > > merged into linux-4.20 and I'm very grateful for any help.
+> > >
+> > > I've gone through the entire series once more and saw no show-stoppers.
+> > > The last patch looked like it introduced a bug, but with that one dropped,
+> > > I'm happy for the architecture to get merged, unless anyone else
+> > > has any last-minute concerns. (Alternatively, explain why I'm wrong
+> > > and the code works correctly, of course).
+> > Ok and thx for the job of csky subsystem.
+> >
+> > >
+> > > I'd appreciate having someone else take another look at the signal
+> > > handling code, the atomics, and the DT bindings and provide another
+> > > Ack for those.
+> > >
+> > > The remaining open question is about the 32-bit time_t interfaces.
+> > > With 4.20, I did not manage to get the required system calls in place
+> > > for using 64-bit time_t in a new architecture, so you will at least
+> > > start out using 32-bit time_t and likely have to keep supporting
+> > > that going forward, unless we decide to break the ABI here later
+> > > on .This is something we normally don't do, but we might make
+> > > an exception here, under the assumption that there are no
+> > > existing users with the ABI. We can debate that once we get there.
+> > We support uclibc-ng and glibc.
+> >
+> > 1. For uclibc-ng, linux-4.20 could run with it.
+> >
+> > 2. For glibc, Maybe we could support 32-bit + 64-bit time_t with
+> > KERNEL_VERSION, or just only 64-bit then linux-4.20 couldn't work with
+> > the csky first glibc release.
+> 
+> Yes, it is always an option to make glibc more restrictive than the kernel.
+> We could also just make it a configuration option in the kernel whether
+> the system calls are provided, so they don't use memory for the
+> implementation.
+Ok.
+ 
+> You will probably want musl support at some point. musl-1.x always
+> uses 32-bit time_t today, but musl-2.x will use the 64-bit interfaces,
+> so just waiting a bit will probably make it work out for you.
+Thx for the tips, we'll consider musl in the future.
 
-Main driver is drivers/mfd/stpmic1 that handle I2C regmap configuration and
-irqchip. stpmic1_regulator, stpmic1_onkey and stpmic1_wdt need stpmic1 mfd
-as parent.
-
-stpmic1 mfd and regulator drivers maybe mandatory at boot time.
-
-changes in v4:
-* fix watchdog stop function
-* rework onkey probe function
-* various fixes in bindings
-
-pascal paillet (8):
-  dt-bindings: mfd: document stpmic1
-  mfd: stpmic1: add stpmic1 driver
-  dt-bindings: regulator: document stpmic1 pmic regulators
-  regulator: stpmic1: add stpmic1 regulator driver
-  dt-bindings: input: document stpmic1 pmic onkey
-  input: stpmic1: add stpmic1 onkey driver
-  dt-bindings: watchdog: document stpmic1 pmic watchdog
-  watchdog: stpmic1: add stpmic1 watchdog driver
-
- .../devicetree/bindings/input/st,stpmic1-onkey.txt |  28 +
- .../devicetree/bindings/mfd/st,stpmic1.txt         | 131 ++++
- .../bindings/regulator/st,stpmic1-regulator.txt    |  68 +++
- .../bindings/watchdog/st,stpmic1-wdt.txt           |  11 +
- drivers/input/misc/Kconfig                         |  11 +
- drivers/input/misc/Makefile                        |   2 +
- drivers/input/misc/stpmic1_onkey.c                 | 197 ++++++
- drivers/mfd/Kconfig                                |  13 +
- drivers/mfd/Makefile                               |   1 +
- drivers/mfd/stpmic1.c                              | 401 ++++++++++++
- drivers/regulator/Kconfig                          |  12 +
- drivers/regulator/Makefile                         |   1 +
- drivers/regulator/stpmic1_regulator.c              | 674 +++++++++++++++++++++
- drivers/watchdog/Kconfig                           |  12 +
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/stpmic1_wdt.c                     | 139 +++++
- include/dt-bindings/mfd/st,stpmic1.h               |  46 ++
- include/linux/mfd/stpmic1.h                        | 212 +++++++
- 18 files changed, 1960 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
- create mode 100644 drivers/input/misc/stpmic1_onkey.c
- create mode 100644 drivers/mfd/stpmic1.c
- create mode 100644 drivers/regulator/stpmic1_regulator.c
- create mode 100644 drivers/watchdog/stpmic1_wdt.c
- create mode 100644 include/dt-bindings/mfd/st,stpmic1.h
- create mode 100644 include/linux/mfd/stpmic1.h
-
--- 
-1.9.1
+Best Regards
+ Guo Ren
