@@ -1,61 +1,41 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v2 1/4] nfc: pn533: add UART phy driver
-Date: Thu, 18 Oct 2018 17:00:28 +0200
-Message-ID: <6CB47B97-F58D-4162-98C1-8C8C88CE2914@holtmann.org>
-References: <20181018144251.30028-1-poeschel@lemonage.de>
-Mime-Version: 1.0 (Mac OS X Mail 12.0 \(3445.100.39\))
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181018144251.30028-1-poeschel@lemonage.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lars Poeschel <poeschel@lemonage.de>
-Cc: devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, open list <linux-kernel@vger.kernel.org>, "open list:NFC SUBSYSTEM" <linux-wireless@vger.kernel.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx: Add missing stdout-path property
+Date: Thu, 18 Oct 2018 11:55:22 -0300
+Message-ID: <CAOMZO5Di60q+ma2ASe-PbSitAPMEBvWN1Sa2uQY6CKN6rEkSgg@mail.gmail.com>
+References: <20181018145128.21117-1-shyam.saini@amarulasolutions.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181018145128.21117-1-shyam.saini@amarulasolutions.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shyam Saini <shyam.saini@amarulasolutions.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Jagan Teki <jagan@amarulasolutions.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Michael Trimarchi <michael@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lars,
+On Thu, Oct 18, 2018 at 11:52 AM Shyam Saini
+<shyam.saini@amarulasolutions.com> wrote:
+>
+> This would help us to get early boot logs by passing "earlycon" to
+> kernel bootargs.
+>
+> Further, by adding this we don't have to depend on complex earlyprintk
+> configs for early boot logs.
+>
+> Signed-off-by: Shyam Saini <shyam.saini@amarulasolutions.com>
 
-> This adds the UART phy interface for the pn533 driver.
-> The pn533 driver can be used through UART interface this way.
-> It is implemented as a serdev device.
-> 
-> Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
-> ---
-> Changes in v2:
-> - switched from tty line discipline to serdev, resulting in many
->  simplifications
-> - SPDX License Identifier
-> 
-> drivers/nfc/pn533/Kconfig  |  10 ++
-> drivers/nfc/pn533/Makefile |   2 +
-> drivers/nfc/pn533/pn533.h  |   8 ++
-> drivers/nfc/pn533/uart.c   | 283 +++++++++++++++++++++++++++++++++++++
-> 4 files changed, 303 insertions(+)
-> create mode 100644 drivers/nfc/pn533/uart.c
-> 
-> diff --git a/drivers/nfc/pn533/Kconfig b/drivers/nfc/pn533/Kconfig
-> index d94122dd30e4..da3ea2dbaa8a 100644
-> --- a/drivers/nfc/pn533/Kconfig
-> +++ b/drivers/nfc/pn533/Kconfig
-> @@ -25,3 +25,13 @@ config NFC_PN533_I2C
-> 
-> 	  If you choose to build a module, it'll be called pn533_i2c.
-> 	  Say N if unsure.
-> +
-> +config NFC_PN532_UART
-> +	tristate "NFC PN532 device support (UART)”
+In the Subject please mention the board name:
 
-you are missing the "depends on SERIAL_DEV_BUS” here.
+ARM: dts: imx6qdl-icore: Add missing stdout-path property
 
-> +	select NFC_PN533
-> +	---help---
-> +	  This module adds support for the NXP pn532 UART interface.
-> +	  Select this if your platform is using the UART bus.
-> +
-> +	  If you choose to build a module, it'll be called pn532_uart.
-> +	  Say N if unsure.
+With this change in place then you can add:
 
-Regards
-
-Marcel
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
