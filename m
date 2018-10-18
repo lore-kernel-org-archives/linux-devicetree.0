@@ -1,83 +1,98 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH 2/2] dt-bindings: iio: adc: Add docs for AD7606 ADC
-Date: Thu, 18 Oct 2018 10:35:42 +0000
-Message-ID: <66d43c0401e0899584665c7ddec5d36caae49a20.camel@analog.com>
-References: <1539853956-26644-1-git-send-email-stefan.popa@analog.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v3 3/7] PCI: OF: Allow endpoints to bypass the iommu
+Date: Thu, 18 Oct 2018 11:47:18 +0100
+Message-ID: <e609de5e-1be2-594e-a4a9-ec1a40d997ab@arm.com>
+References: <20181012145917.6840-1-jean-philippe.brucker@arm.com>
+ <20181012145917.6840-4-jean-philippe.brucker@arm.com>
+ <20181012194158.GX5906@bhelgaas-glaptop.roam.corp.google.com>
+ <20181015065024-mutt-send-email-mst@kernel.org>
+ <482d0eb9-8c4c-9d64-7b32-25d5d11a8b8f@gmail.com>
+ <20181017111100-mutt-send-email-mst@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539853956-26644-1-git-send-email-stefan.popa@analog.com>
-Content-Language: en-US
-Content-ID: <ECA681831DD86E43999D19CFB96EFCB7@analog.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "mark.rutland@arm.com" <mark.rutland@arm.com>, "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>, "jic23@kernel.org" <jic23@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lars@metafoo.de" <lars@metafoo.de>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
+In-Reply-To: <20181017111100-mutt-send-email-mst@kernel.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
+List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
+List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
+List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
+List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
+Errors-To: kvmarm-bounces@lists.cs.columbia.edu
+Sender: kvmarm-bounces@lists.cs.columbia.edu
+To: "Michael S. Tsirkin" <mst@redhat.com>, Jean-philippe Brucker <jphilippe.brucker@gmail.com>
+Cc: devicetree@vger.kernel.org, kevin.tian@intel.com, tnowicki@caviumnetworks.com, marc.zyngier@arm.com, linux-pci@vger.kernel.org, jasowang@redhat.com, will.deacon@arm.com, virtualization@lists.linux-foundation.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, Bjorn Helgaas <helgaas@kernel.org>, kvmarm@lists.cs.columbia.edu
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE4LTEwLTE4IGF0IDEyOjEyICswMzAwLCBTdGVmYW4gUG9wYSB3cm90ZToNCj4g
-RG9jdW1lbnQgc3VwcG9ydCBmb3IgQUQ3NjA2IEFuYWxvZyB0byBEaWdpdGFsIENvbnZlcnRlci4N
-Cj4gDQoNCkNvbW1tZW50cyBpbmxpbmUNCg0KPiBTaWduZWQtb2ZmLWJ5OiBTdGVmYW4gUG9wYSA8
-c3RlZmFuLnBvcGFAYW5hbG9nLmNvbT4NCj4gLS0tDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
-cy9paW8vYWRjL2FkaSxhZDc2MDYudHh0ICAgICB8IDUxDQo+ICsrKysrKysrKysrKysrKysrKysr
-KysNCj4gIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IHwgIDEgKw0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA1MiBpbnNlcnRpb25zKCspDQo+ICBjcmVhdGUg
-bW9kZSAxMDA2NDQNCj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hZGMv
-YWRpLGFkNzYwNi50eHQNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvaWlvL2FkYy9hZGksYWQ3NjA2LnR4dA0KPiBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9paW8vYWRjL2FkaSxhZDc2MDYudHh0DQo+IG5ldyBmaWxlIG1vZGUg
-MTAwNjQ0DQo+IGluZGV4IDAwMDAwMDAuLmRlZGU1ODENCj4gLS0tIC9kZXYvbnVsbA0KPiArKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaWlvL2FkYy9hZGksYWQ3NjA2LnR4
-dA0KPiBAQCAtMCwwICsxLDUxIEBADQo+ICtBbmFsb2cgRGV2aWNlcyBBRDc2MDYgU2ltdWx0YW5l
-b3VzIFNhbXBsaW5nIEFEQw0KPiArDQo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciB0aGUgQUQ3
-NjA2Og0KPiArDQo+ICsgLSBjb21wYXRpYmxlOiBNdXN0IGJlIG9uZSBvZiAiYWRpLGFkNzYwNS00
-IiwgImFkaSxhZDc2MDYtOCIsDQo+ICJhZGksYWQ3NjA2LTYiIG9yDQo+ICsgCSAgICAgICAiYWRp
-LGFkNzYwNi00Ii4NCj4gKyAtIHJlZzogU1BJIGNoaXAgc2VsZWN0IG51bWJlciBmb3IgdGhlIGRl
-dmljZQ0KPiArIC0gc3BpLW1heC1mcmVxdWVuY3k6IE1heCBTUEkgZnJlcXVlbmN5IHRvIHVzZQ0K
-PiArIAlzZWU6IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLWJ1cy50
-eHQNCj4gKyAtIHNwaS1jcGhhOiBTZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3NwaS9zcGktYnVzLnR4dA0KDQpJIGRvbid0IGtub3cgd2hhdCB0aGUgdHlwaWNhbCBwcmVmZXJl
-bmNlIGlzICh3aXRoIHJlc3BlY3QgdG8gU1BJIGRvY3MpLCBidXQNCkknZCBqdXN0IHJlZmVyZW5j
-ZSB0aGUgIkRvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLWJ1cy50eHQN
-CiJkb2MgaGVyZS4NCg0KPiArIC0gYXZjYy1zdXBwbHk6IHBoYW5kbGUgdG8gdGhlIEF2Y2MgcG93
-ZXIgc3VwcGx5DQo+ICsgLSBpbnRlcnJ1cHRzOiBJUlEgbGluZSBmb3IgdGhlIEFEQw0KPiArIAlz
-ZWU6IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtDQo+IGNvbnRy
-b2xsZXIvaW50ZXJydXB0cy50eHQNCj4gKyAtIGNvbnZlcnNpb24tc3RhcnQtZ3BpbzogbXVzdCBi
-ZSB0aGUgZGV2aWNlIHRyZWUgaWRlbnRpZmllciBvZiB0aGUNCj4gQ09OVlNUIHBpbi4NCj4gKwkJ
-CSAgVGhpcyBsb2dpYyBpbnB1dCBpcyB1c2VkIHRvIGluaXRpYXRlIGNvbnZlcnNpb25zDQo+IG9u
-DQo+ICsJCQkgIHRoZSBhbmFsb2cgaW5wdXQgY2hhbm5lbHMuDQo+ICsNCj4gK09wdGlvbmFsIHBy
-b3BlcnRpZXM6DQo+ICsNCj4gKyAtIHJlc2V0LWdwaW86IG11c3QgYmUgdGhlIGRldmljZSB0cmVl
-IGlkZW50aWZpZXIgb2YgdGhlIFJFU0VUIHBpbi4gSWYNCj4gc3BlY2lmaWVkLA0KPiArIAkgICAg
-ICAgaXQgd2lsbCBiZSBhc3NlcnRlZCBkdXJpbmcgZHJpdmVyIHByb2JlLg0KPiArIC0gZmlyc3Qt
-ZGF0YS1ncGlvOiBtdXN0IGJlIHRoZSBkZXZpY2UgdHJlZSBpZGVudGlmaWVyIG9mIHRoZSBGUlNU
-REFUQQ0KPiBwaW4uDQo+ICsgCQkgICAgVGhlIEZSU1REQVRBIG91dHB1dCBpbmRpY2F0ZXMgd2hl
-biB0aGUgZmlyc3QgY2hhbm5lbCwNCj4gVjEsIGlzDQo+ICsJCSAgICBiZWluZyByZWFkIGJhY2sg
-b24gZWl0aGVyIHRoZSBwYXJhbGxlbCwgYnl0ZSBvciBzZXJpYWwNCj4gaW50ZXJmYWNlLg0KPiAr
-LSBzdGFuZGJ5LWdwaW86IG11c3QgYmUgdGhlIGRldmljZSB0cmVlIGlkZW50aWZpZXIgb2YgdGhl
-IFNUQlkgcGluLiBUaGlzDQo+IHBpbiBpcyB1c2VkDQo+ICsJCXRvIHBsYWNlIHRoZSBBRDc2MDYg
-aW50byBvbmUgb2YgdHdvIHBvd2VyLWRvd24gbW9kZXMsDQo+IFN0YW5kYnkgbW9kZSBvcg0KPiAr
-CQlTaHV0ZG93biBtb2RlLg0KPiArLSByYW5nZS1ncGlvOiBtdXN0IGJlIHRoZSBkZXZpY2UgdHJl
-ZSBpZGVudGlmaWVyIG9mIHRoZSBSQU5HRSBwaW4uIFRoZQ0KPiBwb2xhcml0eSBvbg0KPiArCSAg
-ICAgIHRoaXMgcGluIGRldGVybWluZXMgdGhlIGlucHV0IHJhbmdlIG9mIHRoZSBhbmFsb2cgaW5w
-dXQNCj4gY2hhbm5lbHMuIElmDQo+ICsJICAgICAgdGhpcyBwaW4gaXMgdGllZCB0byBhIGxvZ2lj
-IGhpZ2gsIHRoZSBhbmFsb2cgaW5wdXQgcmFuZ2UgaXMNCj4gwrExMFYgZm9yDQo+ICsJICAgICAg
-YWxsY2hhbm5lbHMuIElmIHRoaXMgcGluIGlzIHRpZWQgdG8gYSBsb2dpYyBsb3csIHRoZSBhbmFs
-b2cNCj4gaW5wdXQgcmFuZ2UNCj4gKwkgICAgICBpcyDCsTVWIGZvciBhbGwgY2hhbm5lbHMuDQo+
-ICsNCg0Kbml0cGljazogYHJhbmdlLWdwaW9gICYmIGBzdGFuZGJ5LWdwaW9gIGVudHJpZXMgYXJl
-IGluZGVudGVkIGRpZmZlcmVudGx5DQp0aGFuIGByZXNldC1ncGlvYCAmJiBgZmlyc3QtZGF0YS1n
-cGlvYA0KDQo+ICtFeGFtcGxlOg0KPiArDQo+ICsJYWRjQDAgew0KPiArCQljb21wYXRpYmxlID0g
-ImFkaSxhZDc2MDYtOCI7DQo+ICsJCXJlZyA9IDwwPjsNCj4gKwkJc3BpLW1heC1mcmVxdWVuY3kg
-PSA8MTAwMDAwMD47DQo+ICsJCXNwaS1jcG9sOw0KPiArDQo+ICsJCWF2Y2Mtc3VwcGx5ID0gPCZh
-ZGNfdnJlZj47DQo+ICsNCj4gKwkJaW50ZXJydXB0cyA9IDwyNSBJUlFfVFlQRV9FREdFX0ZBTExJ
-Tkc+Ow0KPiArCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvPjsNCj4gKw0KPiArCQljb252ZXJz
-aW9uLXN0YXJ0LWdwaW8gPSA8JmdwaW8gMTcgMD47DQo+ICsJCXJlc2V0LWdwaW8gPSA8JmdwaW8g
-MjcgMD47DQo+ICsJCWZpcnN0LWRhdGEtZ3BpbyA9IDwmZ3BpbyAyMiAwPjsNCj4gKwkJc3RhbmRi
-eS1ncGlvID0gPCZncGlvIDI0IDA+Ow0KPiArCX07DQo+IGRpZmYgLS1naXQgYS9NQUlOVEFJTkVS
-UyBiL01BSU5UQUlORVJTDQo+IGluZGV4IDg0MzU0NWQuLjZkNjNkYjQgMTAwNjQ0DQo+IC0tLSBh
-L01BSU5UQUlORVJTDQo+ICsrKyBiL01BSU5UQUlORVJTDQo+IEBAIC04NDUsNiArODQ1LDcgQEAg
-TDoJbGludXgtaWlvQHZnZXIua2VybmVsLm9yZw0KPiAgVzoJaHR0cDovL2V6LmFuYWxvZy5jb20v
-Y29tbXVuaXR5L2xpbnV4LWRldmljZS1kcml2ZXJzDQo+ICBTOglTdXBwb3J0ZWQNCj4gIEY6CWRy
-aXZlcnMvaWlvL2FkYy9hZDc2MDYuYw0KPiArRjoJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2lpby9hZGMvYWQ3NjA2LnR4dA0KPiAgDQo+ICBBTkFMT0cgREVWSUNFUyBJTkMgQUQ5
-Mzg5QiBEUklWRVINCj4gIE06CUhhbnMgVmVya3VpbCA8aGFucy52ZXJrdWlsQGNpc2NvLmNvbT4N
-Cg==
+On 17/10/18 16:14, Michael S. Tsirkin wrote:
+> On Mon, Oct 15, 2018 at 08:46:41PM +0100, Jean-philippe Brucker wrote:
+>> [Replying with my personal address because we're having SMTP issues]
+>>
+>> On 15/10/2018 11:52, Michael S. Tsirkin wrote:
+>>> On Fri, Oct 12, 2018 at 02:41:59PM -0500, Bjorn Helgaas wrote:
+>>>> s/iommu/IOMMU/ in subject
+>>>>
+>>>> On Fri, Oct 12, 2018 at 03:59:13PM +0100, Jean-Philippe Brucker wrote:
+>>>>> Using the iommu-map binding, endpoints in a given PCI domain can be
+>>>>> managed by different IOMMUs. Some virtual machines may allow a subset of
+>>>>> endpoints to bypass the IOMMU. In some case the IOMMU itself is presented
+>>>>
+>>>> s/case/cases/
+>>>>
+>>>>> as a PCI endpoint (e.g. AMD IOMMU and virtio-iommu). Currently, when a
+>>>>> PCI root complex has an iommu-map property, the driver requires all
+>>>>> endpoints to be described by the property. Allow the iommu-map property to
+>>>>> have gaps.
+>>>>
+>>>> I'm not an IOMMU or virtio expert, so it's not obvious to me why it is
+>>>> safe to allow devices to bypass the IOMMU.  Does this mean a typo in
+>>>> iommu-map could inadvertently allow devices to bypass it?
+>>>
+>>>
+>>> Thinking about this comment, I would like to ask: can't the
+>>> virtio device indicate the ranges in a portable way?
+>>> This would minimize the dependency on dt bindings and ACPI,
+>>> enabling support for systems that have neither but do
+>>> have virtio e.g. through pci.
+>>
+>> I thought about adding a PROBE request for this in virtio-iommu, but it
+>> wouldn't be usable by a Linux guest because of a bootstrapping problem.
+> 
+> Hmm. At some level it seems wrong to design hardware interfaces
+> around how Linux happens to probe things. That can change at any time
+> ...
+
+This isn't Linux-specific though. In general it's somewhere between 
+difficult and impossible to pull in an IOMMU underneath a device after 
+at device is active, so if any OS wants to use an IOMMU, it's going to 
+want to know up-front that it's there and which devices it translates so 
+that it can program said IOMMU appropriately *before* potentially 
+starting DMA and/or interrupts from the relevant devices. Linux happens 
+to do things in that order (either by firmware-driven probe-deferral or 
+just perilous initcall ordering) because it is the only reasonable order 
+in which to do them. AFAIK the platforms which don't rely on any 
+firmware description of their IOMMU tend to have a fairly static system 
+architecture (such that the OS simply makes hard-coded assumptions), so 
+it's not necessarily entirely clear how they would cope with 
+virtio-iommu either way.
+
+Robin.
+
+>> Early on, Linux needs a description of device dependencies, to determine
+>> in which order to probe them. If the device dependency was described by
+>> virtio-iommu itself, the guest could for example initialize a NIC,
+>> allocate buffers and start DMA on the physical address space (which aborts
+>> if the IOMMU implementation disallows DMA by default), only to find out
+>> once the virtio-iommu module is loaded that it needs to cancel all DMA and
+>> reconfigure the NIC. With a static description such as iommu-map in DT or
+>> ACPI remapping tables, the guest can defer probing of the NIC until the
+>> IOMMU is initialized.
+>>
+>> Thanks,
+>> Jean
+> 
+> Could you point me at the code you refer to here?
+> 
