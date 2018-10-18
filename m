@@ -1,106 +1,38 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 4/5] nds32: Fix perf multiple events map to same counter.
-Date: Thu, 18 Oct 2018 15:29:05 +0100
-Message-ID: <20181018142905.bn73t7rvtdjr2tbf@lakrids.cambridge.arm.com>
-References: <cover.1539745993.git.nickhu@andestech.com>
- <a683ef0bac252d0a0982643e9095dc0fc46a1305.1539745993.git.nickhu@andestech.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V15 1/2] scsi: ufs: set the device reference clock setting
+Date: Thu, 18 Oct 2018 09:30:21 -0500
+Message-ID: <20181018143021.GA18795@bogus>
+References: <1539680382-31136-1-git-send-email-sayalil@codeaurora.org>
+ <1539680382-31136-2-git-send-email-sayalil@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <a683ef0bac252d0a0982643e9095dc0fc46a1305.1539745993.git.nickhu@andestech.com>
+In-Reply-To: <1539680382-31136-2-git-send-email-sayalil@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nickhu <nickhu@andestech.com>
-Cc: greentime@andestech.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, deanbo422@gmail.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, arnd@arndb.de, sboyd@codeaurora.org, geert@linux-m68k.org, zong@andestech.com, ebiederm@xmission.com, akpm@linux-foundation.org, gregkh@linuxfoundation.org, pombredanne@nexb.com, tglx@linutronix.de, kstewart@linuxfoundation.org, devicetree@vger.kernel.org, green.hu@gmail.com
+To: Sayali Lokhande <sayalil@codeaurora.org>
+Cc: subhashj@codeaurora.org, cang@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, asutoshd@codeaurora.org, evgreen@chromium.org, riteshh@codeaurora.org, stummala@codeaurora.org, adrian.hunter@intel.com, jlbec@evilplan.org, linux-scsi@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 18, 2018 at 04:43:16PM +0800, Nickhu wrote:
-> When there are multiple events map to the same counter, the counter
-> counts inaccurately. This is because each counter only counts one event
-> in the same time.
-> So when there are multiple events map to same counter, they have to take
-> turns in each context.
+On Tue, Oct 16, 2018 at 02:29:41PM +0530, Sayali Lokhande wrote:
+> From: Subhash Jadavani <subhashj@codeaurora.org>
 > 
-> There are two solution:
-> 1. Print the error message when multiple events map to the same counter.
-> But print the error message would let the program hang in loop. The ltp
-> (linux test program) would be failed when the program hang in loop.
+> UFS host supplies the reference clock to UFS device and UFS device
+> specification allows host to provide one of the 4 frequencies (19.2 MHz,
+> 26 MHz, 38.4 MHz, 52 MHz) for reference clock. Host should set the
+> device reference clock frequency setting in the device based on what
+> frequency it is supplying to UFS device.
 > 
-> 2. Don't print the error message, the ltp would pass. But the user need to
-> have the knowledge that don't count the events which map to the same
-> counter, or the user will get the inaccurate results.
-> 
-> We choose method 2 for the solution
-
-This is the correct solution. Perf exposes the active/enabled time in
-the perf event, so the user can determine that the event wasn't enabled
-all of the time.
-
-This should be folded into the commit adding perf support.
-
-Thanks,
-Mark.
-
-> 
-> Signed-off-by: Nickhu <nickhu@andestech.com>
+> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+> Reviewed-by: Evan Green <evgreen@chromium.org>
 > ---
->  arch/nds32/include/asm/pmu.h       |  1 +
->  arch/nds32/kernel/perf_event_cpu.c | 30 ++++++++++++++++++++----------
->  2 files changed, 21 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/nds32/include/asm/pmu.h b/arch/nds32/include/asm/pmu.h
-> index 3fbbe97c2d42..e75ec34af5f6 100644
-> --- a/arch/nds32/include/asm/pmu.h
-> +++ b/arch/nds32/include/asm/pmu.h
-> @@ -55,6 +55,7 @@ enum { PFMC0, PFMC1, PFMC2, MAX_COUNTERS };
->   */
->  #define NDS32_IDX_CYCLE_COUNTER			0
->  #define NDS32_IDX_COUNTER0			1
-> +#define NDS32_IDX_COUNTER1			2
->  #define NDS32_IDX_COUNTER_LAST(cpu_pmu) \
->  	(NDS32_IDX_CYCLE_COUNTER + (cpu_pmu)->num_events - 1)
->  
-> diff --git a/arch/nds32/kernel/perf_event_cpu.c b/arch/nds32/kernel/perf_event_cpu.c
-> index 7bb4ebb87b5c..e9a0d8bb2bc1 100644
-> --- a/arch/nds32/kernel/perf_event_cpu.c
-> +++ b/arch/nds32/kernel/perf_event_cpu.c
-> @@ -566,16 +566,26 @@ static int nds32_pmu_get_event_idx(struct pmu_hw_events *cpuc,
->  	/*
->  	 * Try to get the counter for correpsonding event
->  	 */
-> -	if (!test_and_set_bit(idx, cpuc->used_mask))
-> -		return idx;
-> -
-> -	/*
-> -	 * The counter is in use.
-> -	 * The system will hang in the loop.
-> -	 */
-> -	pr_err
-> -	("Multiple events map to one counter, the behavior is undefined.\n");
-> -	return -EPERM;
-> +	if (evtype == SPAV3_0_SEL_TOTAL_CYCLES) {
-> +		if (!test_and_set_bit(idx, cpuc->used_mask))
-> +			return idx;
-> +		if (!test_and_set_bit(NDS32_IDX_COUNTER0, cpuc->used_mask))
-> +			return NDS32_IDX_COUNTER0;
-> +		if (!test_and_set_bit(NDS32_IDX_COUNTER1, cpuc->used_mask))
-> +			return NDS32_IDX_COUNTER1;
-> +	} else if (evtype == SPAV3_1_SEL_COMPLETED_INSTRUCTION) {
-> +		if (!test_and_set_bit(idx, cpuc->used_mask))
-> +			return idx;
-> +		else if (!test_and_set_bit(NDS32_IDX_COUNTER1, cpuc->used_mask))
-> +			return NDS32_IDX_COUNTER1;
-> +		else if (!test_and_set_bit
-> +			 (NDS32_IDX_CYCLE_COUNTER, cpuc->used_mask))
-> +			return NDS32_IDX_CYCLE_COUNTER;
-> +	} else {
-> +		if (!test_and_set_bit(idx, cpuc->used_mask))
-> +			return idx;
-> +	}
-> +	return -EAGAIN;
->  }
->  
->  static void nds32_pmu_start(struct nds32_pmu *cpu_pmu)
-> -- 
-> 2.17.0
-> 
+>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  6 ++
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/scsi/ufs/ufs.h                             | 14 ++++
+>  drivers/scsi/ufs/ufshcd.c                          | 83 ++++++++++++++++++++++
+>  drivers/scsi/ufs/ufshcd.h                          |  2 +
+>  4 files changed, 105 insertions(+)
