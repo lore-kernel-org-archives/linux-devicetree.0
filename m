@@ -1,63 +1,45 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 04/18] powerpc/pseries: add of_node_put() in
- dlpar_detach_node()
-Date: Thu, 18 Oct 2018 12:09:31 -0500
-Message-ID: <20181018170931.GC15557@bogus>
-References: <1539657458-24401-1-git-send-email-frowand.list@gmail.com>
- <1539657458-24401-5-git-send-email-frowand.list@gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v5 1/3] clk: meson: add emmc sub clock phase delay driver
+Date: Thu, 18 Oct 2018 10:14:31 -0700
+Message-ID: <153988287137.5275.1146335138540290297@swboyd.mtv.corp.google.com>
+References: <1539839245-13793-1-git-send-email-jianxin.pan@amlogic.com>
+ <1539839245-13793-2-git-send-email-jianxin.pan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1539657458-24401-5-git-send-email-frowand.list@gmail.com>
+In-Reply-To: <1539839245-13793-2-git-send-email-jianxin.pan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: Yixun Lan <yixun.lan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 15, 2018 at 07:37:24PM -0700, frowand.list@gmail.com wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
-> 
-> "of: overlay: add missing of_node_get() in __of_attach_node_sysfs"
-> added a missing of_node_get() to __of_attach_node_sysfs().  This
-> results in a refcount imbalance for nodes attached with
-> dlpar_attach_node().  The calling sequence from dlpar_attach_node()
-> to __of_attach_node_sysfs() is:
-> 
->    dlpar_attach_node()
->       of_attach_node()
->          __of_attach_node_sysfs()
+Quoting Jianxin Pan (2018-10-17 22:07:23)
+> diff --git a/drivers/clk/meson/clkc.h b/drivers/clk/meson/clkc.h
+> index 6b96d55..3309d78 100644
+> --- a/drivers/clk/meson/clkc.h
+> +++ b/drivers/clk/meson/clkc.h
+> @@ -105,6 +105,18 @@ struct clk_regmap _name =3D {                       =
+                         \
+>         },                                                              \
+>  };
+>  =
 
-IIRC, there's a long standing item in the todo (Grant's) to convert the 
-open coded dlpar code. Maybe you want to do that first?
-
-> 
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
-> 
-> ***** UNTESTED.  I need people with the affected PowerPC systems
-> *****            (systems that dynamically allocate and deallocate
-> *****            devicetree nodes) to test this patch.
-
-Can't we write a test case that does the same thing?
-
-> 
->  arch/powerpc/platforms/pseries/dlpar.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
-> index a0b20c03f078..e3010b14aea5 100644
-> --- a/arch/powerpc/platforms/pseries/dlpar.c
-> +++ b/arch/powerpc/platforms/pseries/dlpar.c
-> @@ -272,6 +272,8 @@ int dlpar_detach_node(struct device_node *dn)
->  	if (rc)
->  		return rc;
->  
-> +	of_node_put(dn);
+> +struct meson_clk_phase_delay_data {
+> +       struct parm                     phase;
+> +       struct parm                     delay;
+> +       unsigned int                    delay_step_ps;
+> +};
 > +
->  	return 0;
->  }
->  
-> -- 
-> Frank Rowand <frank.rowand@sony.com>
-> 
+> +static inline struct meson_clk_phase_delay_data *
+> +meson_clk_get_phase_delay_data(struct clk_regmap *clk)
+> +{
+> +       return (struct meson_clk_phase_delay_data *)clk->data;
+
+Is data a void *? If so, please drop the useless cast.
+
+> +}
+> +
+>  /* clk_ops */
+>  extern const struct clk_ops meson_clk_pll_ro_ops;
+>  extern const struct clk_ops meson_clk_pll_ops;
