@@ -1,75 +1,111 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [[PATCH] 8/9] DMA-UART-Driver-for-AST2500
-Date: Thu, 18 Oct 2018 15:25:07 +0530
-Message-ID: <20181018095507.GC2400@vkoul-mobl>
-References: <1539749466-3912-1-git-send-email-open.sudheer@gmail.com>
- <1539749466-3912-9-git-send-email-open.sudheer@gmail.com>
- <20181017060531.GU2400@vkoul-mobl>
- <351eecd5b1b21893e94f76b34c058c6257b7f837.camel@kernel.crashing.org>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH 4/9] dt-bindings: Add ANX6345 DP/eDP transmitter binding
+Date: Thu, 18 Oct 2018 18:00:05 +0800
+Message-ID: <c68f0da9607805e1f6673a9a16a7dcfff4d8fe91.camel@aosc.io>
+References: <20181018073327.64942-1-icenowy@aosc.io>
+         <20181018073327.64942-5-icenowy@aosc.io> <1886367.eljNk7jKYl@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <351eecd5b1b21893e94f76b34c058c6257b7f837.camel@kernel.crashing.org>
+In-Reply-To: <1886367.eljNk7jKYl@avalon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: "sudheer.v" <open.sudheer@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, Jiri Slaby <jslaby@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Michael Moese <mmoese@suse.de>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Kate Stewart <kstewart@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-arm-k
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, David Airlie <airlied@linux.ie>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 17-10-18, 19:56, Benjamin Herrenschmidt wrote:
-> On Wed, 2018-10-17 at 11:35 +0530, Vinod wrote:
-> > On 17-10-18, 09:41, sudheer.v wrote:
-> > 
-> > Please add the change log describing the driver and its features
-> > 
-> > > Signed-off-by: sudheer.v <open.sudheer@gmail.com>
-> > > ---
-> > >  drivers/tty/serial/8250/8250_aspeed_uart_dma.c | 1594 ++++++++++++++++++++++++
-> > >  1 file changed, 1594 insertions(+)
-> > >  create mode 100644 drivers/tty/serial/8250/8250_aspeed_uart_dma.c
-> > > 
-> > > diff --git a/drivers/tty/serial/8250/8250_aspeed_uart_dma.c b/drivers/tty/serial/8250/8250_aspeed_uart_dma.c
-> > > new file mode 100644
-> > > index 0000000..e1019a8
-> > > --- /dev/null
-> > > +++ b/drivers/tty/serial/8250/8250_aspeed_uart_dma.c
-> > 
-> > why is this in serial. It is dmaengine driver so belongs to drivers/dma/
-> > like other controllers. Please move it out and resubmit.
->  
-> It's not a dmaengine driver. It's a serial UART driver that happens to
-> use a dedicated DMA engine.
-
-Then I see no reason for it to use dmaengine APIs. The framework allows
-people to share a controller for many clients, but if you have dedicated
-one then you may use it directly
-
-> It's unclear whether it should be split into two drivers, or just have
-> the serial driver directly use the dma engine since that engine is
-> dedicated in HW to only work on those UARTs and nothing else...
+在 2018-10-18四的 11:53 +0300，Laurent Pinchart写道：
+> Hi Icenowy,
 > 
-> Cheers,
-> Ben.
+> Thank you for the patch.
 > 
+> On Thursday, 18 October 2018 10:33:22 EEST Icenowy Zheng wrote:
+> > The ANX6345 is an ultra-low power DisplayPort/eDP transmitter
+> > designed
+> > for portable devices.
+> > 
+> > Add a binding document for it.
+> > 
+> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > ---
+> >  .../bindings/display/bridge/anx6345.txt       | 39
+> > +++++++++++++++++++
+> >  1 file changed, 39 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/display/bridge/anx6345.txt
+> > 
+> > diff --git
+> > a/Documentation/devicetree/bindings/display/bridge/anx6345.txt
+> > b/Documentation/devicetree/bindings/display/bridge/anx6345.txt new
+> > file
+> > mode 100644
+> > index 000000000000..0689d4eb5f65
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
+> > @@ -0,0 +1,39 @@
+> > +Analogix ANX6345 eDP Transmitter
+> > +--------------------------------
+> > +
+> > +The ANX6345 is an ultra-low power Full-HD eDP transmitter designed
+> > for
+> > +portable devices.
+> > +
+> > +Required properties:
+> > +
+> > + - compatible		: "analogix,anx6345"
+> > + - reg			: I2C address of the device
+> > + - reset-gpios		: Which GPIO to use for reset
+> > +
+> > +Optional properties:
+> > +
+> > + - dvdd12-supply	: Regulator for 1.2V digital core power.
+> > + - dvdd25-supply	: Regulator for 2.5V digital core power.
 > 
-> > While doing resubmission please take some time to understand subsystem
-> > tags to use. (hint git log <subsystem> will tell you)
-> > 
-> > Also series has [[PATCH] 8/9] whereas it should be [PATCH 8/9] please
-> > let git generate that for you (hint git format-patch start..end does a
-> > good job)
-> > 
-> > > @@ -0,0 +1,1594 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + *   drivers/tty/serial/8250/8250_aspeed_uart_dma.c
-> > > + *    1. 2018/07/01 Shivah Shankar created
-> > > + *    2. 2018/08/25 sudheer.veliseti<open.sudheer@gmail.com> modified
-> > 
-> > we dont use this log in kernel. I do not see s-o-b by Shivah, that
-> > should be added. I think he should be author and you need to list
-> > changes you did..
-> > 
+> Shouldn't these to supplies be mandatory ?
 
--- 
-~Vinod
+Yes they should.
+
+> 
+> > + - panel-supply		: Regulator for the power of the panel.
+> 
+> Shouldn't the panel supply for specified in the DT node of the panel
+> ?
+
+However, eDP panel can be probed, may vary on the same device, and we
+don't have a generic binding for it...
+
+> 
+> > + - edid			: verbatim EDID data block describing
+> > attached
+> > +			  panel, only used when the panel has no EDID
+> > info.
+> 
+> This should also be specified in the panel DT node.
+> 
+> > + - Video port for RGB input, using the DT bindings defined in [1].
+> 
+> I think you should also add a port for the output.
+
+What will it point to?
+
+> 
+> > +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+> > +
+> > +Example:
+> > +
+> > +anx6345: anx6345@38 {
+> > +	compatible = "analogix,anx6345";
+> > +	reg = <0x38>;
+> > +	reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
+> > +	panel-supply = <&reg_dc1sw>;
+> > +	dvdd25-supply = <&reg_dldo2>;
+> > +	dvdd12-supply = <&reg_fldo1>;
+> > +
+> > +	port {
+> > +		anx6345_in: endpoint {
+> > +			remote-endpoint = <&tcon0_out_anx6345>;
+> > +		};
+> > +	};
+> > +};
+> 
+> 
