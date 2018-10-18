@@ -1,40 +1,115 @@
-From: Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] ARM: dts: omap3-gta04: Fix comment block
-Date: Wed, 17 Oct 2018 17:48:16 -0700
-Message-ID: <20181018004816.6627-1-natechancellor@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
+Date: Wed, 17 Oct 2018 19:51:30 -0500
+Message-ID: <20181018005130.GA8173@bogus>
+References: <1539527419-23613-1-git-send-email-aisheng.dong@nxp.com>
+ <1539527419-23613-3-git-send-email-aisheng.dong@nxp.com>
+ <CAOMZO5BEwNQy0HA80qOzm_w-c63tFK1eL+cOHNCxKYq9PHGsqw@mail.gmail.com>
+ <AM0PR04MB4211ECC04FD48918E9DFBAB880FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nathan Chancellor <natechancellor@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB4211ECC04FD48918E9DFBAB880FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Dong Aisheng <dongas86@gmail.com>, Fabio Estevam <festevam@gmail.com>, Will Deacon <will.deacon@arm.com>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Catalin Marinas <catalin.marinas@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-When compiling the kernel with Clang, the following warning appears:
+On Mon, Oct 15, 2018 at 07:57:07AM +0000, A.s. Dong wrote:
+> > -----Original Message-----
+> > From: Fabio Estevam [mailto:festevam@gmail.com]
+> > Sent: Monday, October 15, 2018 7:14 AM
+> > To: A.s. Dong <aisheng.dong@nxp.com>
+> > Cc: moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE
+> > <linux-arm-kernel@lists.infradead.org>; Dong Aisheng <dongas86@gmail.com>;
+> > Sascha Hauer <kernel@pengutronix.de>; Shawn Guo <shawnguo@kernel.org>;
+> > Fabio Estevam <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>;
+> > Catalin Marinas <catalin.marinas@arm.com>; Will Deacon
+> > <will.deacon@arm.com>; dl-linux-imx <linux-imx@nxp.com>; Mark Rutland
+> > <mark.rutland@arm.com>; open list:OPEN FIRMWARE AND FLATTENED
+> > DEVICE TREE BINDINGS <devicetree@vger.kernel.org>
+> > Subject: Re: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
+> > 
+> > Hi Dong,
+> > 
+> > On Sun, Oct 14, 2018 at 11:35 AM A.s. Dong <aisheng.dong@nxp.com> wrote:
+> > >
+> > > Add imx8qxp support
+> > 
+> > You could probably expand the commit log by explaining a bit of what im8qxp
+> > means.
+> > 
+> 
+> Got it, thanks for the suggestion.
+> 
+> > > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > > new file mode 100644
+> > > index 0000000..e1d2578
+> > > --- /dev/null
+> > > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > > @@ -0,0 +1,861 @@
+> > > +// SPDX-License-Identifier: GPL-2.0+
+> > > +/*
+> > > + * Copyright (C) 2016 Freescale Semiconductor, Inc.
+> > > + * Copyright 2017~2018 NXP
+> > 
+> > I guess you meant "-" instead of "~".
+> > 
+> > > +       memory@80000000 {
+> > > +               device_type = "memory";
+> > > +               reg = <0x00000000 0x80000000 0 0x40000000>;
+> > > +       };
+> > 
+> > This should go to the board dts file instead as the memory size may vary from
+> > board to board.
+> > 
+> 
+> That's right. Will change it.
+> 
+> > > +               imx8qx-pm {
+> > > +                       compatible = "fsl,scu-pd";
+> > > +                       #address-cells = <1>;
+> > > +                       #size-cells = <0>;
+> > > +
+> > > +                       pd_lsio: lsio-power-domain {
+> > > +                               #power-domain-cells = <0>;
+> > > +                               #address-cells = <1>;
+> > > +                               #size-cells = <0>;
+> > > +
+> > > +                               pd_lsio_pwm0: lsio-pwm0@191 {
+> > > +                                       reg = <191>;
+> > 
+> > The number after @ is in hex, so the reg property should be 0x191.
+> 
+> Thanks for the reminder.
+> The PD ID is defined in DEC. So I will change them all into HEX later manually.
+> 
+> BTW, this seems like error prone and checkpatch can't report it.
 
-arch/arm/boot/dts/omap3-gta04.dtsi:385:56: warning: '/*' within block comment [-Wcomment]
-                        /* OMAP3_CORE1_IOPAD(0x2194, PIN_INPUT | MUX_MODE0)     /* mcbsp_clks.mcbsp_clks */
-                                                                                ^
-1 warning generated.
+checkpatch doesn't really check dts files.
 
-Fixes: 3c10507a39e8 ("ARM: dts: omap3-gta04: add mcbsp (audio subsystem) pinmux")
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- arch/arm/boot/dts/omap3-gta04.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+But if it did would you have noticed? Because there is at least one 
+checkpatch issue with your author name and S-o-b name not matching.
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index d5fe55392230..e53d32691308 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -382,7 +382,7 @@
- 			OMAP3_CORE1_IOPAD(0x2190, PIN_OUTPUT | MUX_MODE0)	/* mcbsp1_dx.mcbsp1_dx */
- 			OMAP3_CORE1_IOPAD(0x2192, PIN_INPUT | MUX_MODE0)	/* mcbsp1_dx.mcbsp1_dr */
- 			/* mcbsp_clks is used as PENIRQ */
--			/* OMAP3_CORE1_IOPAD(0x2194, PIN_INPUT | MUX_MODE0)	/* mcbsp_clks.mcbsp_clks */
-+			/* OMAP3_CORE1_IOPAD(0x2194, PIN_INPUT | MUX_MODE0)	   mcbsp_clks.mcbsp_clks */
- 			OMAP3_CORE1_IOPAD(0x2196, PIN_INPUT | MUX_MODE0)	/* mcbsp_clks.mcbsp1_fsx */
- 			OMAP3_CORE1_IOPAD(0x2198, PIN_INPUT | MUX_MODE0)	/* mcbsp1_clkx.mcbsp1_clkx */
- 		>;
--- 
-2.19.1
+> And I notice many similar users in kernel with the same issue:
+> arch/arm/boot/dts/tps65910.dtsi
+> arch/arm/boot/dts/tegra124-nyan.dtsi
+> arch/arm/boot/dts/rk3288.dtsi
+
+At least I2C and SPI are now checked by dtc. 'simple-bus' children were 
+too, but silently broke and only recently got fixed in upstream dtc. 
+I've not pulled that into the kernel yet, but you can build dtbs using 
+an external copy of dtc. And guess what, there are *lots* of warnings.
+
+Rob
