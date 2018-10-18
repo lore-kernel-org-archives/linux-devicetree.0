@@ -1,51 +1,76 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 29/36] dt-bindings: arm: Convert Renesas board/soc
- bindings to json-schema
-Date: Thu, 18 Oct 2018 15:01:05 +0200
-Message-ID: <20181018130105.2guhavajp754qbnk@verge.net.au>
-References: <20181005165848.3474-1-robh@kernel.org>
- <20181005165848.3474-30-robh@kernel.org>
- <20181008080220.rmxk57ckdfmwuk62@verge.net.au>
- <CAL_Jsq+8EwYzBmzSWL0q0YB3rP-xdrZreRnt1Rj-h=D8OTNVwA@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/5] dt-bindings: add more optional properties for
+ elan_i2c touchpads
+Date: Thu, 18 Oct 2018 08:04:00 -0500
+Message-ID: <CAL_JsqLdXEPYsK5q4J9_ZF10NJbj6_cH199zLhZ5+9oQYw9B6w@mail.gmail.com>
+References: <20181012142413.26107-1-benjamin.tissoires@redhat.com>
+ <20181012142413.26107-4-benjamin.tissoires@redhat.com> <20181017201522.GA26525@bogus>
+ <CAO-hwJ+z6YdnLdbzeh-7f99cBBjHfbLKLzKo-fQQaC_W8bt_Uw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+8EwYzBmzSWL0q0YB3rP-xdrZreRnt1Rj-h=D8OTNVwA@mail.gmail.com>
+In-Reply-To: <CAO-hwJ+z6YdnLdbzeh-7f99cBBjHfbLKLzKo-fQQaC_W8bt_Uw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Magnus Damm <magnus.damm@gmail.com>
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, KT Liao <kt.liao@emc.com.tw>, linux-input@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 08, 2018 at 09:05:58AM -0500, Rob Herring wrote:
-> On Mon, Oct 8, 2018 at 3:02 AM Simon Horman <horms@verge.net.au> wrote:
+On Thu, Oct 18, 2018 at 3:10 AM Benjamin Tissoires
+<benjamin.tissoires@redhat.com> wrote:
+>
+> On Wed, Oct 17, 2018 at 10:15 PM Rob Herring <robh@kernel.org> wrote:
 > >
-> > On Fri, Oct 05, 2018 at 11:58:41AM -0500, Rob Herring wrote:
-> > > Convert Renesas SoC bindings to DT schema format using json-schema.
+> > On Fri, Oct 12, 2018 at 04:24:11PM +0200, Benjamin Tissoires wrote:
+> > > Some new touchpads IC are connected through PS/2 and I2C. On some of these
+> > > new IC, the I2C part doesn't have all of the information available.
+> > > We need to be able to forward the touchpad parameters from PS/2 and
+> > > thus, we need those new optional properties.
 > > >
-> > > Cc: Simon Horman <horms@verge.net.au>
-> > > Cc: Magnus Damm <magnus.damm@gmail.com>
-> > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > Cc: linux-renesas-soc@vger.kernel.org
-> > > Cc: devicetree@vger.kernel.org
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > Link: https://bugzilla.redhat.com/show_bug.cgi?id=1628715
+> > > Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/input/elan_i2c.txt | 8 ++++++++
+> > >  1 file changed, 8 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/input/elan_i2c.txt b/Documentation/devicetree/bindings/input/elan_i2c.txt
+> > > index 797607460735..ace6bcb0b4eb 100644
+> > > --- a/Documentation/devicetree/bindings/input/elan_i2c.txt
+> > > +++ b/Documentation/devicetree/bindings/input/elan_i2c.txt
+> > > @@ -13,6 +13,14 @@ Optional properties:
+> > >    pinctrl binding [1]).
+> > >  - vcc-supply: a phandle for the regulator supplying 3.3V power.
+> > >  - elan,trackpoint: touchpad can support a trackpoint (boolean)
+> > > +- elan,clickpad: touchpad is a clickpad (the entire surface is a button)
 > >
-> > This seems fine to me other than that it does not seem
-> > to apply cleanly to next.
+> > > +- elan,max_x: the maximum reported value on the X axis
+> > > +- elan,max_y: the maximum reported value on the Y axis
+> > > +- elan,min_x: the minimum reported value on the X axis
+> > > +- elan,min_y: the minimum reported value on the Y axis
+> > > +- elan,x_res: the resolution of the X axis (in units per mm)
+> > > +- elan,y_res: the resolution of the Y axis (in units per mm)
+> > > +- elan,width: max reported width of a blob
 > >
-> > shmobile.txt sees a couple of updates per release cycle so from my point of
-> > view it would ideal if this change could hit -rc1 to allow patches for
-> > v4.21 to be accepted smoothly (already one from Sergei will need rebasing).
-> 
-> When we get to the point of merging (which isn't going to be 4.20),
-> you and other maintainers can probably take all these patches. Other
-> than the few restructuring patches, the only dependency is the build
-> support which isn't a dependency to apply it, but build it. I plan to
-> build any patches as part of reviewing at least early on. OTOH, the
-> build support is small enough and self contained that maybe it can
-> just be applied for 4.20.
+> > Can't we use standard touchscreen properties here? (Yes, I get this is a
+> > touchpad, not touchscreen).
+>
+> Hey Rob,
+>
+> Well, there is that (it's a touchpad driver) and we can't also really
+> use the of_touchscreen.c implementation.
+> If both concerns are not an issue, we can then move the [min/max/res]
+> properties to the touchscreen ones.
 
-Thanks, understood.
+Neither is problem for me. Bindings don't have to map 1:1 to kernel code.
 
-My preference would be to, as you suggest, take changes like
-this through the renesas tree.
+> Regarding 'elan,width', this is something missing from the standard ts
+> properties, and AFAICT, this controls the maximum reported
+> width/height of a touch.
+> I should probably rename them to max_width, max_height.
+
+Sure, just use '-' rather than '_' in property names.
+
+> Hans, do you think we should add such properties to of_touchscreen.c
+> too? (the width/height ones)
+>
+> Cheers,
+> Benjamin
