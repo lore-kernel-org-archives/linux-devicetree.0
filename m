@@ -1,71 +1,93 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V9 00/21] C-SKY(csky) Linux Kernel Port
-Date: Thu, 18 Oct 2018 17:03:22 +0800
-Message-ID: <20181018090322.GB21934@guoren-Inspiron-7460>
-References: <cover.1539655731.git.ren_guo@c-sky.com>
- <CAK8P3a25W5rE093QsmC539d+s038Wv9PmV8Xa76LQzDLk3E8Wg@mail.gmail.com>
- <20181018041038.GB17276@guoren-Inspiron-7460>
- <CAK8P3a0wRPfXm3wupQd6RdN6L8CvjD0HX_Bk61VBxOYeNCh+FA@mail.gmail.com>
+From: Stefan Popa <stefan.popa@analog.com>
+Subject: [PATCH 2/2] dt-bindings: iio: adc: Add docs for AD7606 ADC
+Date: Thu, 18 Oct 2018 12:12:36 +0300
+Message-ID: <1539853956-26644-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a0wRPfXm3wupQd6RdN6L8CvjD0HX_Bk61VBxOYeNCh+FA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Christoph Hellwig <hch@infradead.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, c-sky_gcc_upstream@c-sky.com
+To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 18, 2018 at 10:36:45AM +0200, Arnd Bergmann wrote:
-> On Thu, Oct 18, 2018 at 6:11 AM Guo Ren <ren_guo@c-sky.com> wrote:
-> >
-> > On Wed, Oct 17, 2018 at 05:58:46PM +0200, Arnd Bergmann wrote:
-> > > On Tue, Oct 16, 2018 at 4:58 AM Guo Ren <ren_guo@c-sky.com> wrote:
-> > > >
-> > > > This is the 9th version patchset to add the Linux kernel port for
-> > > > C-SKY(csky) based on linux-4.19-rc3.
-> > > >
-> > > > There are only a few changes between V8 patchset. Hope it could be
-> > > > merged into linux-4.20 and I'm very grateful for any help.
-> > >
-> > > I've gone through the entire series once more and saw no show-stoppers.
-> > > The last patch looked like it introduced a bug, but with that one dropped,
-> > > I'm happy for the architecture to get merged, unless anyone else
-> > > has any last-minute concerns. (Alternatively, explain why I'm wrong
-> > > and the code works correctly, of course).
-> > Ok and thx for the job of csky subsystem.
-> >
-> > >
-> > > I'd appreciate having someone else take another look at the signal
-> > > handling code, the atomics, and the DT bindings and provide another
-> > > Ack for those.
-> > >
-> > > The remaining open question is about the 32-bit time_t interfaces.
-> > > With 4.20, I did not manage to get the required system calls in place
-> > > for using 64-bit time_t in a new architecture, so you will at least
-> > > start out using 32-bit time_t and likely have to keep supporting
-> > > that going forward, unless we decide to break the ABI here later
-> > > on .This is something we normally don't do, but we might make
-> > > an exception here, under the assumption that there are no
-> > > existing users with the ABI. We can debate that once we get there.
-> > We support uclibc-ng and glibc.
-> >
-> > 1. For uclibc-ng, linux-4.20 could run with it.
-> >
-> > 2. For glibc, Maybe we could support 32-bit + 64-bit time_t with
-> > KERNEL_VERSION, or just only 64-bit then linux-4.20 couldn't work with
-> > the csky first glibc release.
-> 
-> Yes, it is always an option to make glibc more restrictive than the kernel.
-> We could also just make it a configuration option in the kernel whether
-> the system calls are provided, so they don't use memory for the
-> implementation.
-Ok.
- 
-> You will probably want musl support at some point. musl-1.x always
-> uses 32-bit time_t today, but musl-2.x will use the 64-bit interfaces,
-> so just waiting a bit will probably make it work out for you.
-Thx for the tips, we'll consider musl in the future.
+Document support for AD7606 Analog to Digital Converter.
 
-Best Regards
- Guo Ren
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+---
+ .../devicetree/bindings/iio/adc/adi,ad7606.txt     | 51 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+new file mode 100644
+index 0000000..dede581
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+@@ -0,0 +1,51 @@
++Analog Devices AD7606 Simultaneous Sampling ADC
++
++Required properties for the AD7606:
++
++ - compatible: Must be one of "adi,ad7605-4", "adi,ad7606-8", "adi,ad7606-6" or
++ 	       "adi,ad7606-4".
++ - reg: SPI chip select number for the device
++ - spi-max-frequency: Max SPI frequency to use
++ 	see: Documentation/devicetree/bindings/spi/spi-bus.txt
++ - spi-cpha: See Documentation/devicetree/bindings/spi/spi-bus.txt
++ - avcc-supply: phandle to the Avcc power supply
++ - interrupts: IRQ line for the ADC
++ 	see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++ - conversion-start-gpio: must be the device tree identifier of the CONVST pin.
++			  This logic input is used to initiate conversions on
++			  the analog input channels.
++
++Optional properties:
++
++ - reset-gpio: must be the device tree identifier of the RESET pin. If specified,
++ 	       it will be asserted during driver probe.
++ - first-data-gpio: must be the device tree identifier of the FRSTDATA pin.
++ 		    The FRSTDATA output indicates when the first channel, V1, is
++		    being read back on either the parallel, byte or serial interface.
++- standby-gpio: must be the device tree identifier of the STBY pin. This pin is used
++		to place the AD7606 into one of two power-down modes, Standby mode or
++		Shutdown mode.
++- range-gpio: must be the device tree identifier of the RANGE pin. The polarity on
++	      this pin determines the input range of the analog input channels. If
++	      this pin is tied to a logic high, the analog input range is ±10V for
++	      allchannels. If this pin is tied to a logic low, the analog input range
++	      is ±5V for all channels.
++
++Example:
++
++	adc@0 {
++		compatible = "adi,ad7606-8";
++		reg = <0>;
++		spi-max-frequency = <1000000>;
++		spi-cpol;
++
++		avcc-supply = <&adc_vref>;
++
++		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
++		interrupt-parent = <&gpio>;
++
++		conversion-start-gpio = <&gpio 17 0>;
++		reset-gpio = <&gpio 27 0>;
++		first-data-gpio = <&gpio 22 0>;
++		standby-gpio = <&gpio 24 0>;
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 843545d..6d63db4 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -845,6 +845,7 @@ L:	linux-iio@vger.kernel.org
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+ F:	drivers/iio/adc/ad7606.c
++F:	Documentation/devicetree/bindings/iio/adc/ad7606.txt
+ 
+ ANALOG DEVICES INC AD9389B DRIVER
+ M:	Hans Verkuil <hans.verkuil@cisco.com>
+-- 
+2.7.4
