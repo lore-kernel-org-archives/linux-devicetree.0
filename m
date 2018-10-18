@@ -1,90 +1,96 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [RFC PATCH] soc: qcom: rmtfs_mem: Control remoteproc from
- rmtfs_mem
-Date: Wed, 17 Oct 2018 17:23:59 -0700
-Message-ID: <20181018002350.GB179852@rodete-desktop-imager.corp.google.com>
-References: <20180925080607.30565-1-bjorn.andersson@linaro.org>
- <20180925172943.GA118699@ban.mtv.corp.google.com>
- <37621d4fadff8e3a0bbe034119351d16@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/7] dt-bindings: virtio-mmio: Add IOMMU description
+Date: Wed, 17 Oct 2018 19:30:51 -0500
+Message-ID: <20181018003051.GA3400@bogus>
+References: <20181012145917.6840-1-jean-philippe.brucker@arm.com>
+	<20181012145917.6840-2-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <37621d4fadff8e3a0bbe034119351d16@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+In-Reply-To: <20181012145917.6840-2-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, tnowicki-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sibi,
-
-On Sun, Sep 30, 2018 at 08:58:49PM +0530, Sibi Sankar wrote:
-> On 2018-09-25 22:59, Brian Norris wrote:
-> > On Tue, Sep 25, 2018 at 01:06:07AM -0700, Bjorn Andersson wrote:
-> > So rather than looking for open(), I think somebody needs to be looking
-> > for the appearance and disappearance of the RMTFS_QMI_SERVICE. (Looking
-> > for disappearance would resolve the daemon restart issue, no?) That
-> > "somebody" could be the remoteproc driver I suppose (qmi_add_lookup()?),
-> > or...couldn't it just be the modem itself? Do you actually need to
-> > restart the entire modem when the RMTFS service goes away, or do you
-> > just need to pause storage activity?
-> > 
+On Fri, Oct 12, 2018 at 03:59:11PM +0100, Jean-Philippe Brucker wrote:
+> The nature of a virtio-mmio node is discovered by the virtio driver at
+> probe time. However the DMA relation between devices must be described
+> statically. When a virtio-mmio node is a virtio-iommu device, it needs an
+> "#iommu-cells" property as specified by bindings/iommu/iommu.txt.
 > 
-> Hi Brian,
+> Otherwise, the virtio-mmio device may perform DMA through an IOMMU, which
+> requires an "iommus" property. Describe these requirements in the
+> device-tree bindings documentation.
 > 
-> It might be more logical to make that "somebody" the rmtfs_mem driver
-> itself, since
-> the modem as such does not have any direct functional dependency on
-> rmtfs_mem i.e
-> the firmware can be configured to run on rmtfs_mem or internal fs. So in
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  .../devicetree/bindings/virtio/mmio.txt       | 30 +++++++++++++++++++
+>  1 file changed, 30 insertions(+)
 
-How exactly is the firmware configured for this? Isn't this something
-that's just determined at (firmware) build time? I seem to recall seeing
-early firmware releases that booted OK without rmtfs (and therefore
-probably had an internal FS?) and later ones that didn't.
+One nit, otherwise,
 
-Anyway, this sounds even more like an argument for:
-(1) not describing this in the device tree; and
-(2) as a result of (1), probably not handled in the kernel either
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-The reasoning for (1): this is purely a software configuration, and does
-not really describe the hardware. There's nothing about the hardware
-that says the modem won't have an internal FS; so you have to choose
-whether to add a rmtfs-to-rproc phandle based on which firmware you're
-building in.
+> 
+> diff --git a/Documentation/devicetree/bindings/virtio/mmio.txt b/Documentation/devicetree/bindings/virtio/mmio.txt
+> index 5069c1b8e193..748595473b36 100644
+> --- a/Documentation/devicetree/bindings/virtio/mmio.txt
+> +++ b/Documentation/devicetree/bindings/virtio/mmio.txt
+> @@ -8,10 +8,40 @@ Required properties:
+>  - reg:		control registers base address and size including configuration space
+>  - interrupts:	interrupt generated by the device
+>  
+> +Required properties for virtio-iommu:
+> +
+> +- #iommu-cells:	When the node corresponds to a virtio-iommu device, it is
+> +		linked to DMA masters using the "iommus" or "iommu-map"
+> +		properties [1][2]. #iommu-cells specifies the size of the
+> +		"iommus" property. For virtio-iommu #iommu-cells must be
+> +		1, each cell describing a single endpoint ID.
+> +
+> +Optional properties:
+> +
+> +- iommus:	If the device accesses memory through an IOMMU, it should
+> +		have an "iommus" property [1]. Since virtio-iommu itself
+> +		does not access memory through an IOMMU, the "virtio,mmio"
+> +		node cannot have both an "#iommu-cells" and an "iommus"
+> +		property.
+> +
+>  Example:
+>  
+>  	virtio_block@3000 {
+>  		compatible = "virtio,mmio";
+>  		reg = <0x3000 0x100>;
+>  		interrupts = <41>;
+> +
+> +		/* Device has endpoint ID 23 */
+> +		iommus = <&viommu 23>
+>  	}
+> +
+> +	viommu: virtio_iommu@3100 {
 
-On second thought, that might even be an argument for killing the entire
-rmtfs_mem node in DT actually -- and as a matter of fact, I think you
-have the same "configuration" (i.e., DT isn't just describing hardware)
-problem with the rmtfs_mem node. AIUI, you may have to choose a
-different memory region size based on the number of firmware features
-a particular product supports. That's typically a Device Tree no-no.
+iommu@3100
 
-But I don't know how far down that rabbit hole we should go...
-
-> such cases
-> where the modem is running on internal fs, it would be undesirable to have a
-> hard
-> coded dependency for rmtfs_mem in remoteproc modem itself.
-
-OK, sure. But as per the above, the whole software-configuration-in-DT
-thing is undesirable as well.
-
-Anyway, I'll take a look at your v2.
-
-> Wouldn't it be simpler/quicker to fix this in kernel than churning out new
-> firmware
-> releases. A fix in firmware will also mean that this becomes one-off fix for
-> dragon
-> boards diverging the firmware branch from whats used in android for
-> 8916/8974/8996.
-
-I'm not so sure. Well, sure, it's probably quicker. But this is a known
-bug in Android that you've clearly added Android workarounds for. Fixing
-it in later firmware doesn't preclude you also continuing to use your
-hack on Android.
-
-And can you explain: why can't this fix be applied on all new firmware?
-Why does it have to be a "one-off" for dragon boards?
-
-Brian
+> +		compatible = "virtio,mmio";
+> +		reg = <0x3100 0x100>;
+> +		interrupts = <42>;
+> +
+> +		#iommu-cells = <1>
+> +	}
+> +
+> +[1] Documentation/devicetree/bindings/iommu/iommu.txt
+> +[2] Documentation/devicetree/bindings/pci/pci-iommu.txt
+> -- 
+> 2.19.1
+> 
