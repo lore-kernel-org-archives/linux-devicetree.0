@@ -1,55 +1,59 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: [PATCH v2 5/5] arm64: dts: qcom: sdm845: Add USB PHY lane two
-Date: Thu, 18 Oct 2018 14:09:33 -0700
-Message-ID: <20181018210933.113592-6-evgreen@chromium.org>
-References: <20181018210933.113592-1-evgreen@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181018210933.113592-1-evgreen@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Douglas Anderson <dianders@chromium.org>, Manu Gautam <mgautam@codeaurora.org>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, swboyd@chromium.org
-Cc: Evan Green <evgreen@chromium.org>
+From: Stefano Stabellini <sstabellini@kernel.org>
+Subject: Re: [PATCH] devicetree, xen: add xen,
+ shared-memory binding
+Date: Thu, 18 Oct 2018 14:30:57 -0700 (PDT)
+Message-ID: <alpine.DEB.2.10.1810181421030.3835@sstabellini-ThinkPad-X260>
+References: <alpine.DEB.2.10.1810081600350.28877@sstabellini-ThinkPad-X260>
+ <20181017153527.GA9130@bogus>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xenproject.org>
+In-Reply-To: <20181017153527.GA9130@bogus>
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, julien.grall@arm.com, Stefano Stabellini <sstabellini@kernel.org>, xen-devel@lists.xen.org
 List-Id: devicetree@vger.kernel.org
 
-This change adds the second lane registers for the USB PHY, now that the
-QMP phy bindings have been updated. This way the driver can stop
-reaching beyond its register region to get at the second lane.
-
-Signed-off-by: Evan Green <evgreen@chromium.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 9c72edb678ec..f28c50e93f5a 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1188,10 +1188,12 @@
- 				 <&gcc GCC_USB3_PHY_PRIM_BCR>;
- 			reset-names = "phy", "common";
- 
--			usb_1_ssphy: lane@88e9200 {
-+			usb_1_ssphy: lanes@88e9200 {
- 				reg = <0x88e9200 0x128>,
- 				      <0x88e9400 0x200>,
- 				      <0x88e9c00 0x218>,
-+				      <0x88e9600 0x128>,
-+				      <0x88e9800 0x200>,
- 				      <0x88e9a00 0x100>;
- 				#phy-cells = <0>;
- 				clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
-@@ -1219,10 +1221,12 @@
- 				 <&gcc GCC_USB3_PHY_SEC_BCR>;
- 			reset-names = "phy", "common";
- 
--			usb_2_ssphy: lane@88eb200 {
-+			usb_2_ssphy: lanes@88eb200 {
- 				reg = <0x88eb200 0x128>,
- 				      <0x88eb400 0x1fc>,
- 				      <0x88eb800 0x218>,
-+				      <0x88eb600 0x128>,
-+				      <0x88eb800 0x1fc>,
- 				      <0x88e9600 0x70>;
- 				#phy-cells = <0>;
- 				clocks = <&gcc GCC_USB3_SEC_PHY_PIPE_CLK>;
--- 
-2.16.4
+T24gV2VkLCAxNyBPY3QgMjAxOCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gTW9uLCBPY3QgMDgs
+IDIwMTggYXQgMDQ6MDM6NTRQTSAtMDcwMCwgU3RlZmFubyBTdGFiZWxsaW5pIHdyb3RlOgo+ID4g
+SW50cm9kdWNlIGEgZGV2aWNlIHRyZWUgYmluZGluZyBmb3IgWGVuIHJlc2VydmVkLW1lbW9yeSBy
+ZWdpb25zLiBUaGV5Cj4gPiBhcmUgdXNlZCB0byBzaGFyZSBtZW1vcnkgYWNyb3NzIFZNcyBmcm9t
+IHRoZSBWTSBjb25maWcgZmlsZXMuIChTZWUKPiA+IHN0YXRpY19zaG0gY29uZmlnIG9wdGlvbi4p
+Cj4gPiAgCj4gPiBTaWduZWQtb2ZmLWJ5OiBTdGVmYW5vIFN0YWJlbGxpbmkgPHN0ZWZhbm9zQHhp
+bGlueC5jb20+Cj4gCj4gY2hlY2twYXRjaC5wbCBjb21wbGFpbnMgdGhhdCB0aGUgYXV0aG9yIGFu
+ZCBTLW8tYiBkb24ndCBtYXRjaC4KCkkgZGlkbid0IGtub3cgaXQgd2Fzbid0IGFsbG93ZWQuIEkn
+bGwgZml4IGl0LgoKCj4gPiBDYzoganVsaWVuLmdyYWxsQGFybS5jb20KPiA+IAo+ID4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkv
+eGVuLHNoYXJlZC1tZW1vcnkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50eHQKPiA+IG5ldyBmaWxlIG1vZGUg
+MTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAwLi5hOTI3YTk0Cj4gPiAtLS0gL2Rldi9udWxsCj4gPiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hl
+bixzaGFyZWQtbWVtb3J5LnR4dAo+ID4gQEAgLTAsMCArMSwyMCBAQAo+ID4gKyogWGVuIGh5cGVy
+dmlzb3IgcmVzZXJ2ZWQtbWVtb3J5IGJpbmRpbmcKPiA+ICsKPiA+ICtFeHBvc2Ugb25lIG9yIG1v
+cmUgbWVtb3J5IHJlZ2lvbnMgYXMgcmVzZXJ2ZWQtbWVtb3J5IHRvIHRoZSBndWVzdAo+ID4gK3Zp
+cnR1YWwgbWFjaGluZS4gVHlwaWNhbGx5LCBhIHJlZ2lvbiBpcyBjb25maWd1cmVkIGF0IFZNIGNy
+ZWF0aW9uIHRpbWUKPiA+ICt0byBiZSBhIHNoYXJlZCBtZW1vcnkgYXJlYSBhY3Jvc3MgbXVsdGlw
+bGUgdmlydHVhbCBtYWNoaW5lcyBmb3IKPiA+ICtjb21tdW5pY2F0aW9uIGFtb25nIHRoZW0uCj4g
+PiArCj4gPiArRm9yIGVhY2ggb2YgdGhlc2UgcHJlLXNoYXJlZCBtZW1vcnkgcmVnaW9ucywgYSBy
+YW5nZSBpcyBleHBvc2VkIHVuZGVyCj4gPiArdGhlIC9yZXNlcnZlZC1tZW1vcnkgbm9kZSBhcyBh
+IGNoaWxkIG5vZGUuIEVhY2ggcmFuZ2Ugc3ViLW5vZGUgaXMgbmFtZWQKPiA+ICt4ZW4tc2htZW1A
+PGFkZHJlc3M+IGFuZCBoYXMgdGhlIGZvbGxvd2luZyBwcm9wZXJ0aWVzOgo+ID4gKwo+ID4gKy0g
+Y29tcGF0aWJsZToKPiA+ICsJY29tcGF0aWJsZSA9IHhlbixzaGFyZWQtbWVtb3J5Igo+IAo+IEFu
+eSBuZWVkIGZvciB2ZXJzaW9uaW5nPwoKVGhlcmUgaXMgYWx3YXlzIG5lZWQgZm9yIHZlcnNpb25p
+bmcgOi0pCkknbGwgc2VuZCBuZXcgcGF0Y2ggd2l0aCB0aGUgZm9sbG93aW5nOgoKICBjb21wYXRp
+YmxlID0gInhlbixzaGFyZWQtbWVtb3J5LXYxIiwgInhlbixzaGFyZWQtbWVtb3J5IgoKPiA+ICsK
+PiA+ICstIHJlZzoKPiA+ICsJdGhlIGJhc2UgZ3Vlc3QgcGh5c2ljYWwgYWRkcmVzcyBhbmQgc2l6
+ZSBvZiB0aGUgc2hhcmVkIG1lbW9yeSByZWdpb24KPiA+ICsKPiA+ICstIGlkOgo+IAo+IHhlbixp
+ZAoKT0sKCgo+ID4gKwlhIHN0cmluZyB0aGF0IGlkZW50aWZpZXMgdGhlIHNoYXJlZCBtZW1vcnkg
+cmVnaW9uIGFzIHNwZWNpZmllZCBpbgo+ID4gKwl0aGUgVk0gY29uZmlnIGZpbGUKPiAKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fClhlbi1kZXZlbCBtYWls
+aW5nIGxpc3QKWGVuLWRldmVsQGxpc3RzLnhlbnByb2plY3Qub3JnCmh0dHBzOi8vbGlzdHMueGVu
+cHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby94ZW4tZGV2ZWw=
