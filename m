@@ -1,132 +1,115 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH 1/9] drm/bridge: move ANA78xx driver to
- analogix subdirectory
-Date: Thu, 18 Oct 2018 11:47:20 +0300
-Message-ID: <1600163.alMOuyZOxo@avalon>
-References: <20181018073327.64942-1-icenowy@aosc.io> <20181018073327.64942-2-icenowy@aosc.io>
-Reply-To: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 3/5] dt-bindings: add more optional properties for
+ elan_i2c touchpads
+Date: Thu, 18 Oct 2018 10:51:44 +0200
+Message-ID: <4a81a5d1-39c8-60f3-16be-559d43c0116a@redhat.com>
+References: <20181012142413.26107-1-benjamin.tissoires@redhat.com>
+ <20181012142413.26107-4-benjamin.tissoires@redhat.com>
+ <20181017201522.GA26525@bogus>
+ <CAO-hwJ+z6YdnLdbzeh-7f99cBBjHfbLKLzKo-fQQaC_W8bt_Uw@mail.gmail.com>
+ <1fb98946-a518-d7d7-3bec-8944be95b91c@redhat.com>
+ <CAO-hwJKXBvuGLensAQv82SoPh-vrt9UFgoC3_XeTA78EHCOANA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDKM3GOS4YHBBEMRUHPAKGQESQCFP5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181018073327.64942-2-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAO-hwJKXBvuGLensAQv82SoPh-vrt9UFgoC3_XeTA78EHCOANA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: robh@kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Icenowy,
+Hi,
 
-Thank you for the patch.
-
-On Thursday, 18 October 2018 10:33:19 EEST Icenowy Zheng wrote:
-> As ANA78xx chips are designed and produced by Analogix Semiconductor,
-> Inc, move their driver codes into analogix subdirectory.
+On 18-10-18 10:44, Benjamin Tissoires wrote:
+> On Thu, Oct 18, 2018 at 10:39 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Hi,
+>>
+>> On 18-10-18 10:10, Benjamin Tissoires wrote:
+>>> On Wed, Oct 17, 2018 at 10:15 PM Rob Herring <robh@kernel.org> wrote:
+>>>>
+>>>> On Fri, Oct 12, 2018 at 04:24:11PM +0200, Benjamin Tissoires wrote:
+>>>>> Some new touchpads IC are connected through PS/2 and I2C. On some of these
+>>>>> new IC, the I2C part doesn't have all of the information available.
+>>>>> We need to be able to forward the touchpad parameters from PS/2 and
+>>>>> thus, we need those new optional properties.
+>>>>>
+>>>>> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1628715
+>>>>> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+>>>>> ---
+>>>>>    Documentation/devicetree/bindings/input/elan_i2c.txt | 8 ++++++++
+>>>>>    1 file changed, 8 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/input/elan_i2c.txt b/Documentation/devicetree/bindings/input/elan_i2c.txt
+>>>>> index 797607460735..ace6bcb0b4eb 100644
+>>>>> --- a/Documentation/devicetree/bindings/input/elan_i2c.txt
+>>>>> +++ b/Documentation/devicetree/bindings/input/elan_i2c.txt
+>>>>> @@ -13,6 +13,14 @@ Optional properties:
+>>>>>      pinctrl binding [1]).
+>>>>>    - vcc-supply: a phandle for the regulator supplying 3.3V power.
+>>>>>    - elan,trackpoint: touchpad can support a trackpoint (boolean)
+>>>>> +- elan,clickpad: touchpad is a clickpad (the entire surface is a button)
+>>>>
+>>>>> +- elan,max_x: the maximum reported value on the X axis
+>>>>> +- elan,max_y: the maximum reported value on the Y axis
+>>>>> +- elan,min_x: the minimum reported value on the X axis
+>>>>> +- elan,min_y: the minimum reported value on the Y axis
+>>>>> +- elan,x_res: the resolution of the X axis (in units per mm)
+>>>>> +- elan,y_res: the resolution of the Y axis (in units per mm)
+>>>>> +- elan,width: max reported width of a blob
+>>>>
+>>>> Can't we use standard touchscreen properties here? (Yes, I get this is a
+>>>> touchpad, not touchscreen).
+>>>
+>>> Hey Rob,
+>>>
+>>> Well, there is that (it's a touchpad driver) and we can't also really
+>>> use the of_touchscreen.c implementation.
+>>> If both concerns are not an issue, we can then move the [min/max/res]
+>>> properties to the touchscreen ones.
+>>>
+>>> Regarding 'elan,width', this is something missing from the standard ts
+>>> properties, and AFAICT, this controls the maximum reported
+>>> width/height of a touch.
+>>> I should probably rename them to max_width, max_height.
+>>>
+>>> Hans, do you think we should add such properties to of_touchscreen.c
+>>> too? (the width/height ones)
+>>
+>> Are there touchscreens which report finger/touch width / height ? if so
+>> then it probably does make sense.
 > 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
->  drivers/gpu/drm/bridge/Kconfig                         | 10 ----------
->  drivers/gpu/drm/bridge/Makefile                        |  4 ++--
->  drivers/gpu/drm/bridge/analogix/Kconfig                | 10 ++++++++++
->  drivers/gpu/drm/bridge/analogix/Makefile               |  1 +
->  .../gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c   |  0
->  .../gpu/drm/bridge/{ => analogix}/analogix-anx78xx.h   |  0
->  6 files changed, 13 insertions(+), 12 deletions(-)
->  rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c (100%)
->  rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.h (100%)
+> Well, it's pretty common for hid-multitouch touchscreens to report
+> such properties (it's a way to indicate the palm). Don't know about
+> the touchscreens that rely on of_touchscreen though.
+
+Now that you mention it I think some may also have some sort of
+pressure/weight value, but at least for the ones I wrote I do not
+think we do anything with it, since the actual meaning of the
+field is somewhat vague. This is all IIRC.
+
+>> Note that for historical reasons
+>> Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
 > 
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index 9eeb8ef0b174..8a7ffb3256d8 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -15,16 +15,6 @@ config DRM_PANEL_BRIDGE
->  menu "Display Interface Bridges"
->  	depends on DRM && DRM_BRIDGE
+> Looks like your sentence is not finished here :)
+
+I actually deleted it, but not those 2 lines, what I had written there
+was that for historical reasons it uses touchscreen-size-x rather then
+max-x and that that might be a bit confusing vs max-width, but I could
+not come up with something better then max-width, so I deleted my
+rambling, but ended up not deleting all of it :)
+
+>> Also the touchscreen bindings have: touchscreen-x-mm and touchscreen-y-mm
+>> rather then res, which can then be used to calculate the resolution.
+>>
 > 
-> -config DRM_ANALOGIX_ANX78XX
-> -	tristate "Analogix ANX78XX bridge"
-> -	select DRM_KMS_HELPER
-> -	select REGMAP_I2C
-> -	---help---
-> -	  ANX78XX is an ultra-low Full-HD SlimPort transmitter
-> -	  designed for portable devices. The ANX78XX transforms
-> -	  the HDMI output of an application processor to MyDP
-> -	  or DisplayPort.
-> -
->  config DRM_CDNS_DSI
->  	tristate "Cadence DPI/DSI bridge"
->  	select DRM_KMS_HELPER
-> diff --git a/drivers/gpu/drm/bridge/Makefile
-> b/drivers/gpu/drm/bridge/Makefile index 4934fcf5a6f8..a6c7dd7727ea 100644
-> --- a/drivers/gpu/drm/bridge/Makefile
-> +++ b/drivers/gpu/drm/bridge/Makefile
-> @@ -1,5 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
->  obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
->  obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
->  obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
-> @@ -12,8 +11,9 @@ obj-$(CONFIG_DRM_SII9234) += sii9234.o
->  obj-$(CONFIG_DRM_THINE_THC63LVD1024) += thc63lvd1024.o
->  obj-$(CONFIG_DRM_TOSHIBA_TC358764) += tc358764.o
->  obj-$(CONFIG_DRM_TOSHIBA_TC358767) += tc358767.o
-> -obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix/
->  obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511/
->  obj-$(CONFIG_DRM_TI_SN65DSI86) += ti-sn65dsi86.o
->  obj-$(CONFIG_DRM_TI_TFP410) += ti-tfp410.o
-> +
-> +obj-y += analogix/
->  obj-y += synopsys/
-> diff --git a/drivers/gpu/drm/bridge/analogix/Kconfig
-> b/drivers/gpu/drm/bridge/analogix/Kconfig index 80f286fa3a69..27b37aa2ea77
-> 100644
-> --- a/drivers/gpu/drm/bridge/analogix/Kconfig
-> +++ b/drivers/gpu/drm/bridge/analogix/Kconfig
-> @@ -1,3 +1,13 @@
->  config DRM_ANALOGIX_DP
->  	tristate
->  	depends on DRM
-> +
-> +config DRM_ANALOGIX_ANX78XX
-> +	tristate "Analogix ANX78XX bridge"
-> +	select DRM_KMS_HELPER
-> +	select REGMAP_I2C
-> +	---help---
-> +	  ANX78XX is an ultra-low Full-HD SlimPort transmitter
-> +	  designed for portable devices. The ANX78XX transforms
-> +	  the HDMI output of an application processor to MyDP
-> +	  or DisplayPort.
-> diff --git a/drivers/gpu/drm/bridge/analogix/Makefile
-> b/drivers/gpu/drm/bridge/analogix/Makefile index cd4010ba6890..eb41be845055
-> 100644
-> --- a/drivers/gpu/drm/bridge/analogix/Makefile
-> +++ b/drivers/gpu/drm/bridge/analogix/Makefile
-> @@ -1,2 +1,3 @@
->  analogix_dp-objs := analogix_dp_core.o analogix_dp_reg.o
->  obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix_dp.o
-> +obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+> yeah, that's fine, I would need to convert to mm, then go back to res.
+> Extra effort, but that's the price to pay.
 
-This makes sense to me. I would have tried to keep the Kconfig and Makefile 
-entries alphabetically sorted, but that's not a big deal. With or without the 
-sorting,
+Ack.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-
-> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c
-> b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c similarity index 100%
-> rename from drivers/gpu/drm/bridge/analogix-anx78xx.c
-> rename to drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
-> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h
-> b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h similarity index 100%
-> rename from drivers/gpu/drm/bridge/analogix-anx78xx.h
-> rename to drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
-
--- 
 Regards,
 
-Laurent Pinchart
+Hans
