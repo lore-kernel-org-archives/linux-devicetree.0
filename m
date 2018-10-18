@@ -1,17 +1,11 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V6 1/3] dt-bindings: fsl: scu: make power domain
- compatible string SoC specific
-Date: Thu, 18 Oct 2018 15:08:46 +0000
-Message-ID: <AM0PR04MB42110D63D97B31830B5EC93580F80@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1539760797-12991-1-git-send-email-aisheng.dong@nxp.com>
- <1539760797-12991-2-git-send-email-aisheng.dong@nxp.com>
- <20181018143342.GA22874@bogus>
+From: Shyam Saini <shyam.saini@amarulasolutions.com>
+Subject: [PATCH V2] ARM: dts: imx6qdl-icore: Add missing stdout-path property
+Date: Thu, 18 Oct 2018 20:33:05 +0530
+Message-ID: <20181018150305.21408-1-shyam.saini@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181018143342.GA22874@bogus>
-Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,95 +15,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "khilman@kernel.org" <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: shawnguo@kernel.org
+Cc: devicetree@vger.kernel.org, s.hauer@pengutronix.de, linux-imx@nxp.com, Shyam Saini <shyam.saini@amarulasolutions.com>, jagan@amarulasolutions.com, kernel@pengutronix.de, fabio.estevam@nxp.com, michael@amarulasolutions.com, linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Thursday, October 18, 2018 10:34 PM
-> To: A.s. Dong <aisheng.dong@nxp.com>
-[...]
-> On Wed, Oct 17, 2018 at 07:24:40AM +0000, A.s. Dong wrote:
-> > As the power domain API might change in the future for new SoCs,
-> > although in a very low possibility, it's still better to make the
-> > compatible string more SoC specific to avoid the possible version change for
-> new SoCs.
-> >
-> > Due to there're still no users in kernel, it's safe to update it
-> > without breaking anything.
-> >
-> > Cc: Shawn Guo <shawnguo@kernel.org>
-> > Cc: Sascha Hauer <kernel@pengutronix.de>
-> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: devicetree@vger.kernel.org
-> > Suggested-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> 
-> checkpatch says:
-> 
-> WARNING: Missing Signed-off-by: line by nominal patch author 'A.s. Dong
-> <aisheng.dong@nxp.com>'
-> 
+This would help us to get early boot logs by passing "earlycon" to
+kernel bootargs.
 
-Do you think if we can ignore this warning?
+Further, by adding this we don't have to depend on complex earlyprintk
+configs for early boot logs.
 
-It seems checkpatch checks the email sender name as nominal patch author
-which is abbreviated as 'A.S. Dong'. But I always use the full name in
-upstreaming patches.
+Signed-off-by: Shyam Saini <shyam.saini@amarulasolutions.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+---
+ arch/arm/boot/dts/imx6qdl-icore.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> > ---
-> > ChangeLog:
-> > v5->v6:
-> >  * new patch
-> > ---
-> >  Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> > b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> > index 46d0af1..87fc4b4 100644
-> > --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> > @@ -58,7 +58,7 @@ This binding for the SCU power domain providers uses
-> > the generic power  domain binding[2].
-> >
-> >  Required properties:
-> > -- compatible:		Should be "fsl,scu-pd".
-> > +- compatible:		Should be "fsl,imx8qxp-scu-pd".
-> 
-> You can keep both if you think future SoCs will be compatible.
-> 
-
-They're likely to be compatible AFAIK.
-
-Just to be clear, you mean keep both of them?
-e.g.
-compatible: Should be "fsl,imx8qxp-scu-pd" or "fsl,scu-pd"
-Can you please help clarify a bit more on why it's better to do that as I'm not quite
-Understand?
-
-And for later when mx8qm is supported, should we add it again as follows?
-compatible: Should be "fsl,imx8qm-scu-pd", "fsl,imx8qxp-scu-pd" or "fsl,scu-pd"
-
-Regards
-Dong Aisheng
-
-> >  - #address-cells:	Should be 1.
-> >  - #size-cells:		Should be 0.
-> >
-> > @@ -153,7 +153,7 @@ firmware {
-> >  		};
-> >
-> >  		imx8qx-pm {
-> > -			compatible = "fsl,scu-pd";
-> > +			compatible = "fsl,imx8qxp-scu-pd";
-> >  			#address-cells = <1>;
-> >  			#size-cells = <0>;
-> >
-> > --
-> > 2.7.4
-> >
+diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+index 9ce993776160..f5b8ea6f7ee9 100644
+--- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+@@ -49,6 +49,10 @@
+ 		reg = <0x10000000 0x80000000>;
+ 	};
+ 
++	chosen {
++		stdout-path = &uart4;
++	};
++
+ 	backlight_lvds: backlight-lvds {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&pwm3 0 100000>;
+-- 
+2.11.0
