@@ -1,45 +1,77 @@
-Return-Path: <SRS0=Uwhs=M4=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr00054.outbound.protection.outlook.com ([40.107.0.54]:62584
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726729AbeJPOGQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Oct 2018 10:06:16 -0400
-From: Andy Tang <andy.tang@nxp.com>
-Subject: RE: [PATCH 1/3] clk: qoriq: add t1023 soc support
-Date: Tue, 16 Oct 2018 06:17:18 +0000
-Message-ID: <DB5PR0401MB22134ACEF603C05F6B0D9980F3FE0@DB5PR0401MB2213.eurprd04.prod.outlook.com>
-References: <20180919073906.34187-1-andy.tang@nxp.com>
-In-Reply-To: <20180919073906.34187-1-andy.tang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=h0FC=M6=the-dreams.de=wsa@kernel.org>
+Date: Thu, 18 Oct 2018 20:07:21 +0200
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v2] hwmon: (sht3x) add devicetree support
+Message-ID: <20181018180721.GA941@kunai>
+References: <1538717915-22294-1-git-send-email-wojciech.slenska@gmail.com>
+ <20181012202829.GA24897@bogus>
+ <CAMYPSMqVHYYLpTmk5ACktKCms3yGFXXs9_m4xOGyVpq3VVSigg@mail.gmail.com>
+ <20181015195440.GA21968@roeck-us.net>
+ <CAL_JsqKzwhnQUbF3vOTU3pDCLPQQL33TbgWqrFf1bzRt8VmMgw@mail.gmail.com>
+ <20181016233821.GA1662@roeck-us.net>
+ <CAL_JsqK42DkjRjG81Yi=qmhPZx=RUT0oe-z4zJOxB__MqGgihw@mail.gmail.com>
+ <20181018144141.GA3963@roeck-us.net>
+ <CAL_JsqK62Yi9+w=06LrsiDCgLp9W0WmfYTL9QCv98Qfij7Zbbw@mail.gmail.com>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "mturquette@baylibre.com" <mturquette@baylibre.com>, "oss@buserror.net" <oss@buserror.net>
-Cc: "sboyd@kernel.org" <sboyd@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqK62Yi9+w=06LrsiDCgLp9W0WmfYTL9QCv98Qfij7Zbbw@mail.gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, Wojciech Slenska <wojciech.slenska@gmail.com>, Jean Delvare <jdelvare@suse.com>, Mark Rutland <mark.rutland@arm.com>, Linux HWMON List <linux-hwmon@vger.kernel.org>, devicetree@vger.kernel.org, Linux I2C <linux-i2c@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-SGksDQoNCkFwcHJlY2lhdGUgaWYgeW91IGNhbiB0YWtlIGEgbG9vayBhdCB0aGlzIHBhdGNoIHNl
-dC4NCg0KQlIsDQpBbmR5DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTog
-YW5keS50YW5nQG54cC5jb20gPGFuZHkudGFuZ0BueHAuY29tPg0KPiBTZW50OiAyMDE4xOo51MIx
-OcjVIDE1OjM5DQo+IFRvOiBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsgb3NzQGJ1c2Vycm9yLm5l
-dA0KPiBDYzogc2JveWRAa2VybmVsLm9yZzsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxh
-bmRAYXJtLmNvbTsNCj4gbGludXgtY2xrQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmc7IEFuZHkgVGFuZw0KPiA8YW5keS50YW5nQG54cC5jb20+DQo+IFN1YmplY3Q6
-IFtQQVRDSCAxLzNdIGNsazogcW9yaXE6IGFkZCB0MTAyMyBzb2Mgc3VwcG9ydA0KPiANCj4gRnJv
-bTogWXVhbnRpYW4gVGFuZyA8YW5keS50YW5nQG54cC5jb20+DQo+IA0KPiBBZGQgdDEwMjMgY2xv
-Y2sgY29tcGF0aWJsZSBzdHJpbmcgdG8gdGhlIGJpbmRpbmdzLg0KPiANCj4gU2lnbmVkLW9mZi1i
-eTogVGFuZyBZdWFudGlhbiA8YW5keS50YW5nQG54cC5jb20+DQo+IC0tLQ0KPiAgLi4uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvY2xvY2svcW9yaXEtY2xvY2sudHh0ICAgICAgfCAgICAxICsNCj4gIDEg
-ZmlsZXMgY2hhbmdlZCwgMSBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlm
-ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9xb3JpcS1j
-bG9jay50eHQNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcW9y
-aXEtY2xvY2sudHh0DQo+IGluZGV4IDk3ZjQ2YWQuLjM0ZTE5MzMgMTAwNjQ0DQo+IC0tLSBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9xb3JpcS1jbG9jay50eHQNCj4g
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3FvcmlxLWNsb2Nr
-LnR4dA0KPiBAQCAtMzcsNiArMzcsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAgCSogImZz
-bCxsczEwNDZhLWNsb2NrZ2VuIg0KPiAgCSogImZzbCxsczEwODhhLWNsb2NrZ2VuIg0KPiAgCSog
-ImZzbCxsczIwODBhLWNsb2NrZ2VuIg0KPiArCSogImZzbCx0MTAyMy1jbG9ja2dlbiINCj4gIAlD
-aGFzc2lzLXZlcnNpb24gY2xvY2sgc3RyaW5ncyBpbmNsdWRlOg0KPiAgCSogImZzbCxxb3JpcS1j
-bG9ja2dlbi0xLjAiOiBmb3IgY2hhc3NpcyAxLjAgY2xvY2tzDQo+ICAJKiAiZnNsLHFvcmlxLWNs
-b2NrZ2VuLTIuMCI6IGZvciBjaGFzc2lzIDIuMCBjbG9ja3MNCj4gLS0NCj4gMS43LjENCg0K
+
+--ReaqsoxgOBHFXBhH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi,
+
+> And here's another device with programmable clock stretching[1]. Lots
+> of discussions in searching about masters not supporting clock
+> stretching more than I found of slaves which are configurable. At
+> least in that case, we should be able to derive it from master
+> compatible strings. But for the cases where both ends can support
+> stretching or not, seems like we need an i2c property.
+
+I haven't read all this, but regarding clock stretching, this is the
+current state:
+
+* clock streching is defined in the I2C specs and thus masters are
+  assumed to handle it properly
+* if they can't, this is a quirk and we have a flag for it:
+  I2C_AQ_NO_CLK_STRETCH
+* client drivers can check for quirks and act accordingly:
+  i2c_check_quirks(struct i2c_adapter *adap, u64 quirks)
+
+Note: there is currently no user of this feature because mainlining the
+client got stuck for some reason. So, I'd be happy if all this is useful
+to you.
+
+Regards,
+
+   Wolfram
+
+
+--ReaqsoxgOBHFXBhH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlvIy9UACgkQFA3kzBSg
+KbaaHRAAhwDHds2Kdekb2TMRBArWzrdhaYsMHD1aMGGx1PfGfQq3QuLTm0ipdax3
+YqLZ8FXXDiWMgRgVO9dzZOloGhnCZOhP6w7oX7fYwyA9sqiz6A1pQBZqMAlTRDrA
+zyJk8fqd9368GarqbapulalX6CXK5+D4aMNT3uT0MsGPNmDZYG1RA+rjh3k9ksRc
+Fw+u9fcD+tqkBT035aKch+//VAW8Vv8sdw4lCJHmAxaaHRVMZIR6pwg6lwZr72Ay
+0euOKPSS1G/c9qF7i4tRCneWbI8M0QOlFKLeNzjlGJbkhYGM4ywrW7oTX0/1oTaS
+s+mYIrNWspRqsDpSgHprNddI7p1jvK6+DZcgcYoJhtLp94IMez/X6ZyfDrQxLPhj
+Qnt477YlVg1x3GeaNWEE7XEDbuyTi2zjDfBf78CLaYR4qC8i5feq5w/lfZGsMX34
+12098Kv3+7fNnZkj120hw08yUIH4r/iPpTpDB5Jmk3YhZQaldzOTB5l8sMGHwsrZ
+QWEXmn6K42rZcgatoAUfqo/c1hHNStWBqlAgPOdEu+Y5XLSNT4vrLJwLTsLFAjWg
+JmIw0vq0HOUiDS6gH4qfZRgvIbfrmniJbAoHUKptwdfF0IV4otHipk79gAFguFvb
+TBCh/lcJgq1ZhA5apDPxRp3SLEIfhVGAJBmjIR4NxTATUFdKfEw=
+=qUEj
+-----END PGP SIGNATURE-----
+
+--ReaqsoxgOBHFXBhH--
