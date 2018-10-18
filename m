@@ -1,127 +1,170 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH 1/2] arm64: dts: qcom: sdm845: add UFS controller
-Date: Thu, 18 Oct 2018 08:37:37 -0700
-Message-ID: <CAE=gft79oeGdTLsRiTgP_eSoCD452sfPLQEvFsOMKE+k2z=h=A@mail.gmail.com>
-References: <20181017172312.194281-1-evgreen@chromium.org> <20181017172312.194281-2-evgreen@chromium.org>
- <CAFp+6iHRECKosJWQZoaZa6QxAmW0MZLNPsFAbD21vW+kG0xJ-A@mail.gmail.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH v2 01/10] firmware: ti_sci: Add support to get TISCI handle using of_phandle
+Date: Thu, 18 Oct 2018 21:10:08 +0530
+Message-ID: <20181018154017.7112-2-lokeshvutla@ti.com>
+References: <20181018154017.7112-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iHRECKosJWQZoaZa6QxAmW0MZLNPsFAbD21vW+kG0xJ-A@mail.gmail.com>
+In-Reply-To: <20181018154017.7112-1-lokeshvutla@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vivek.gautam@codeaurora.org
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, swboyd@chromium.org, Doug Anderson <dianders@chromium.org>
+To: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
+Cc: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 18, 2018 at 4:33 AM Vivek Gautam
-<vivek.gautam@codeaurora.org> wrote:
->
-> Hi Evan,
->
-> On Wed, Oct 17, 2018 at 10:55 PM Evan Green <evgreen@chromium.org> wrote:
-> >
-> > This change adds the UFS controller and PHY to SDM845.
-> >
-> > Signed-off-by: Evan Green <evgreen@chromium.org>
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 66 ++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 66 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > index b72bdb0a31a5..20b2c258816a 100644
-> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > @@ -808,6 +808,72 @@
-> >                         };
-> >                 };
-> >
-> > +               ufshc1: ufshc@1d84000 {
-> > +                       compatible = "qcom,sdm845-ufshc", "qcom,ufshc",
-> > +                                    "jedec,ufs-2.0";
-> > +                       reg = <0x1d84000 0x2500>;
-> > +                       interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
-> > +                       phys = <&ufsphy1_lanes>;
-> > +                       phy-names = "ufsphy";
-> > +                       lanes-per-direction = <2>;
-> > +                       power-domains = <&gcc UFS_PHY_GDSC>;
-> > +
-> > +                       clock-names =
-> > +                               "core_clk",
-> > +                               "bus_aggr_clk",
-> > +                               "iface_clk",
-> > +                               "core_clk_unipro",
-> > +                               "ref_clk",
-> > +                               "tx_lane0_sync_clk",
-> > +                               "rx_lane0_sync_clk",
-> > +                               "rx_lane1_sync_clk";
-> > +                       clocks =
-> > +                               <&gcc GCC_UFS_PHY_AXI_CLK>,
-> > +                               <&gcc GCC_AGGRE_UFS_PHY_AXI_CLK>,
-> > +                               <&gcc GCC_UFS_PHY_AHB_CLK>,
-> > +                               <&gcc GCC_UFS_PHY_UNIPRO_CORE_CLK>,
-> > +                               <&rpmhcc RPMH_CXO_CLK>,
-> > +                               <&gcc GCC_UFS_PHY_TX_SYMBOL_0_CLK>,
-> > +                               <&gcc GCC_UFS_PHY_RX_SYMBOL_0_CLK>,
-> > +                               <&gcc GCC_UFS_PHY_RX_SYMBOL_1_CLK>;
-> > +                       freq-table-hz =
-> > +                               <50000000 200000000>,
-> > +                               <0 0>,
-> > +                               <0 0>,
-> > +                               <37500000 150000000>,
-> > +                               <0 0>,
-> > +                               <0 0>,
-> > +                               <0 0>,
-> > +                               <0 0>;
-> > +
-> > +                       resets = <&gcc GCC_UFS_PHY_BCR>;
-> > +                       reset-names = "rst";
-> > +
-> > +                       status = "disabled";
-> > +               };
-> > +
-> > +               ufsphy1: ufsphy@1d87000 {
->
-> nit: s/ufsphy@1d87000/phy@1d87000
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-Ok, will change.
+TISCI has been updated to have support for Resource management(likes
+interrupts etc..). And there can be multiple device instances of a
+resource type in a SoC. So every driver corresponding to a resource type
+should get a TISCI handle so that it can make TISCI calls. And each
+DT node corresponding to a device should exist under its corresponding
+bus node as per the SoC architecture.
 
->
-> > +                       compatible = "qcom,sdm845-qmp-ufs-phy";
-> > +                       reg = <0x1d87000 0x18c>;
-> > +                       #clock-cells = <1>;
->
-> why do we need this clock-cells? ufsphy i think is not providing any
-> clocks. Is it?
+But existing apis in TISCI library assumes that all TISCI users are
+child nodes of TISCI. Which is not true in the above case. So introduce
+(devm_)ti_sci_get_by_phandle() apis that can be used by TISCI users
+to get TISCI handle using of phandle property.
 
-Right. USB provides the pipe clock, but you're right, UFS doesn't
-provide any clocks, so I'll remove.
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+---
+Changes since v1:
+- None.
 
-> Rest looks good.
->
-> Best regards
-> Vivek
->
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <1>;
-> > +                       ranges;
-> > +                       clock-names = "ref",
-> > +                                     "ref_aux";
-> > +                       clocks = <&gcc GCC_UFS_MEM_CLKREF_CLK>,
-> > +                                <&gcc GCC_UFS_PHY_PHY_AUX_CLK>;
-> > +
-> > +                       status = "disabled";
-> > +
-> > +                       ufsphy1_lanes: lanes@1d87400 {
-> > +                               reg = <0x1d87400 0x108>,
-> > +                                     <0x1d87600 0x1e0>,
-> > +                                     <0x1d87c00 0x1dc>;
+ drivers/firmware/ti_sci.c              | 83 ++++++++++++++++++++++++++
+ include/linux/soc/ti/ti_sci_protocol.h | 17 ++++++
+ 2 files changed, 100 insertions(+)
 
-Doug, Stephen and I were looking more at the PHY driver and realized
-it overreaches its registers here by adding 0x400 to get at the second
-lane. We found this unappealing. Our current thinking is to add two
-more reg regions here and fix up the binding, so that tx2 and rx2 are
-properly specified. I'll try to come up with that patch today and
-resend along with this.
-
--Evan
+diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+index 69ed1464175c..f0cafa8a2ee9 100644
+--- a/drivers/firmware/ti_sci.c
++++ b/drivers/firmware/ti_sci.c
+@@ -1781,6 +1781,89 @@ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(devm_ti_sci_get_handle);
+ 
++/**
++ * ti_sci_get_by_phandle() - Get the TI SCI handle using DT phandle
++ * @np:		device node
++ * @propname:	property name containing phandle on TISCI node
++ *
++ * NOTE: The function does not track individual clients of the framework
++ * and is expected to be maintained by caller of TI SCI protocol library.
++ * ti_sci_put_handle must be balanced with successful ti_sci_get_by_phandle
++ * Return: pointer to handle if successful, else:
++ * -EPROBE_DEFER if the instance is not ready
++ * -ENODEV if the required node handler is missing
++ * -EINVAL if invalid conditions are encountered.
++ */
++const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
++						  const char *property)
++{
++	struct ti_sci_handle *handle = NULL;
++	struct device_node *ti_sci_np;
++	struct ti_sci_info *info;
++	struct list_head *p;
++
++	if (!np) {
++		pr_err("I need a device pointer\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	ti_sci_np = of_parse_phandle(np, property, 0);
++	if (!ti_sci_np)
++		return ERR_PTR(-ENODEV);
++
++	mutex_lock(&ti_sci_list_mutex);
++	list_for_each(p, &ti_sci_list) {
++		info = list_entry(p, struct ti_sci_info, node);
++		if (ti_sci_np == info->dev->of_node) {
++			handle = &info->handle;
++			info->users++;
++			break;
++		}
++	}
++	mutex_unlock(&ti_sci_list_mutex);
++	of_node_put(ti_sci_np);
++
++	if (!handle)
++		return ERR_PTR(-EPROBE_DEFER);
++
++	return handle;
++}
++EXPORT_SYMBOL_GPL(ti_sci_get_by_phandle);
++
++/**
++ * devm_ti_sci_get_by_phandle() - Managed get handle using phandle
++ * @dev:	Device pointer requesting TISCI handle
++ * @propname:	property name containing phandle on TISCI node
++ *
++ * NOTE: This releases the handle once the device resources are
++ * no longer needed. MUST NOT BE released with ti_sci_put_handle.
++ * The function does not track individual clients of the framework
++ * and is expected to be maintained by caller of TI SCI protocol library.
++ *
++ * Return: 0 if all went fine, else corresponding error.
++ */
++const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
++						       const char *property)
++{
++	const struct ti_sci_handle *handle;
++	const struct ti_sci_handle **ptr;
++
++	ptr = devres_alloc(devm_ti_sci_release, sizeof(*ptr), GFP_KERNEL);
++	if (!ptr)
++		return ERR_PTR(-ENOMEM);
++	handle = ti_sci_get_by_phandle(dev_of_node(dev), property);
++
++	if (!IS_ERR(handle)) {
++		*ptr = handle;
++		devres_add(dev, ptr);
++	} else {
++		devres_free(ptr);
++	}
++
++	return handle;
++}
++EXPORT_SYMBOL_GPL(devm_ti_sci_get_by_phandle);
++
+ static int tisci_reboot_handler(struct notifier_block *nb, unsigned long mode,
+ 				void *cmd)
+ {
+diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
+index 18435e5c6364..515587e9d373 100644
+--- a/include/linux/soc/ti/ti_sci_protocol.h
++++ b/include/linux/soc/ti/ti_sci_protocol.h
+@@ -217,6 +217,10 @@ struct ti_sci_handle {
+ const struct ti_sci_handle *ti_sci_get_handle(struct device *dev);
+ int ti_sci_put_handle(const struct ti_sci_handle *handle);
+ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev);
++const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
++						  const char *property);
++const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
++						       const char *property);
+ 
+ #else	/* CONFIG_TI_SCI_PROTOCOL */
+ 
+@@ -236,6 +240,19 @@ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev)
+ 	return ERR_PTR(-EINVAL);
+ }
+ 
++static inline
++const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
++						  const char *property)
++{
++	return ERR_PTR(-EINVAL);
++}
++
++static inline
++const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
++						       const char *property)
++{
++	return ERR_PTR(-EINVAL);
++}
+ #endif	/* CONFIG_TI_SCI_PROTOCOL */
+ 
+ #endif	/* __TISCI_PROTOCOL_H */
+-- 
+2.19.1
