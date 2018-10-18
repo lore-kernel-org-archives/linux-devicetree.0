@@ -1,219 +1,96 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4 8/8] watchdog: stpmic1: add stpmic1 watchdog driver
-Date: Thu, 18 Oct 2018 06:34:45 -0700
-Message-ID: <be9eb164-6ada-25c8-6f75-e3d8667728e1@roeck-us.net>
-References: <1539853324-29051-1-git-send-email-p.paillet@st.com>
- <1539853324-29051-9-git-send-email-p.paillet@st.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 9/9] [DO NOT MERGE] drm/sun4i: rgb: Add 5%
+ tolerance to dot clock frequency check
+Date: Thu, 18 Oct 2018 16:57:03 +0300
+Message-ID: <18807799.FbuUgLpiEM@avalon>
+References: <20181018073327.64942-1-icenowy@aosc.io> <1585874.9P5eR8PMbl@avalon> <20181018121819.gmup3jd7ukj52rvx@flea>
+Reply-To: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539853324-29051-9-git-send-email-p.paillet@st.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pascal PAILLET-LME <p.paillet@st.com>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDKM3GOS4YHBBMVCULPAKGQEZVUE2YQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181018121819.gmup3jd7ukj52rvx@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/18/2018 02:02 AM, Pascal PAILLET-LME wrote:
-> From: pascal paillet <p.paillet@st.com>
-> 
-> The stpmic1 PMIC embeds a watchdog which is disabled by default. As soon
-> as the watchdog is started, it must be refreshed periodically otherwise
-> the PMIC goes off.
-> 
-> Signed-off-by: pascal paillet <p.paillet@st.com>
-> ---
-> changes in v4:
-> * fix stop watchdog function
-> * Kconfig: fix grammar issue
-> 
->   drivers/watchdog/Kconfig       |  12 ++++
->   drivers/watchdog/Makefile      |   1 +
->   drivers/watchdog/stpmic1_wdt.c | 139 +++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 152 insertions(+)
->   create mode 100644 drivers/watchdog/stpmic1_wdt.c
-> 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 5ea8909..6d2ffef 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -806,6 +806,18 @@ config STM32_WATCHDOG
->   	  To compile this driver as a module, choose M here: the
->   	  module will be called stm32_iwdg.
->   
-> +config STPMIC1_WATCHDOG
-> +	tristate "STPMIC1 PMIC watchdog support"
-> +	depends on MFD_STPMIC1
-> +	select WATCHDOG_CORE
-> +	help
-> +	  Say Y here to include watchdog support embedded into STPMIC1 PMIC.
-> +	  If the watchdog timer expires, stpmic1 will shut down all its power
-> +	  supplies.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called spmic1_wdt.
-> +
->   config UNIPHIER_WATCHDOG
->   	tristate "UniPhier watchdog support"
->   	depends on ARCH_UNIPHIER || COMPILE_TEST
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index bf92e7b..2649cf3 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -217,3 +217,4 @@ obj-$(CONFIG_SOFT_WATCHDOG) += softdog.o
->   obj-$(CONFIG_MENF21BMC_WATCHDOG) += menf21bmc_wdt.o
->   obj-$(CONFIG_MENZ069_WATCHDOG) += menz69_wdt.o
->   obj-$(CONFIG_RAVE_SP_WATCHDOG) += rave-sp-wdt.o
-> +obj-$(CONFIG_STPMIC1_WATCHDOG) += stpmic1_wdt.o
-> diff --git a/drivers/watchdog/stpmic1_wdt.c b/drivers/watchdog/stpmic1_wdt.c
-> new file mode 100644
-> index 0000000..a6cbc27
-> --- /dev/null
-> +++ b/drivers/watchdog/stpmic1_wdt.c
-> @@ -0,0 +1,139 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) STMicroelectronics 2018
-> +// Author: Pascal Paillet <p.paillet@st.com> for STMicroelectronics.
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/stpmic1.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +#include <linux/watchdog.h>
-> +
-> +/* WATCHDOG CONTROL REGISTER bit */
-> +#define WDT_START		BIT(0)
-> +#define WDT_PING		BIT(1)
-> +#define WDT_START_MASK		BIT(0)
-> +#define WDT_PING_MASK		BIT(1)
-> +#define WDT_STOP		0
-> +
-> +#define PMIC_WDT_MIN_TIMEOUT 1
-> +#define PMIC_WDT_MAX_TIMEOUT 256
-> +#define PMIC_WDT_DEFAULT_TIMEOUT 30
-> +
-> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> +module_param(nowayout, bool, 0);
-> +MODULE_PARM_DESC(nowayout,
-> +		"Watchdog cannot be stopped once started (default="
-> +				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> +
-> +struct stpmic1_wdt {
-> +	struct stpmic1 *pmic;
-> +	struct watchdog_device wdtdev;
-> +};
-> +
-> +static int pmic_wdt_start(struct watchdog_device *wdd)
-> +{
-> +	struct stpmic1_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	return regmap_update_bits(wdt->pmic->regmap,
-> +				  WCHDG_CR, WDT_START_MASK, WDT_START);
-> +}
-> +
-> +static int pmic_wdt_stop(struct watchdog_device *wdd)
-> +{
-> +	struct stpmic1_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	return regmap_update_bits(wdt->pmic->regmap,
-> +				  WCHDG_CR, WDT_START_MASK, WDT_STOP);
-> +}
-> +
-> +static int pmic_wdt_ping(struct watchdog_device *wdd)
-> +{
-> +	struct stpmic1_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	return regmap_update_bits(wdt->pmic->regmap,
-> +				  WCHDG_CR, WDT_PING_MASK, WDT_PING);
-> +}
-> +
-> +static int pmic_wdt_set_timeout(struct watchdog_device *wdd,
-> +				unsigned int timeout)
-> +{
-> +	struct stpmic1_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	wdd->timeout = timeout;
-> +	/* timeout is equal to register value + 1 */
-> +	return regmap_write(wdt->pmic->regmap, WCHDG_TIMER_CR, timeout - 1);
-> +}
-> +
-> +static const struct watchdog_info pmic_watchdog_info = {
-> +	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-> +	.identity = "STPMIC1 PMIC Watchdog",
-> +};
-> +
-> +static const struct watchdog_ops pmic_watchdog_ops = {
-> +	.owner = THIS_MODULE,
-> +	.start = pmic_wdt_start,
-> +	.stop = pmic_wdt_stop,
-> +	.ping = pmic_wdt_ping,
-> +	.set_timeout = pmic_wdt_set_timeout,
-> +};
-> +
-> +static int pmic_wdt_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +	struct stpmic1 *pmic;
-> +	struct stpmic1_wdt *wdt;
-> +
-> +	if (!pdev->dev.parent)
-> +		return -EINVAL;
-> +
-> +	pmic = dev_get_drvdata(pdev->dev.parent);
-> +	if (!pmic)
-> +		return -EINVAL;
-> +
-> +	wdt = devm_kzalloc(&pdev->dev, sizeof(struct stpmic1_wdt), GFP_KERNEL);
-> +	if (!wdt)
-> +		return -ENOMEM;
-> +
-> +	wdt->pmic = pmic;
-> +
-> +	wdt->wdtdev.info = &pmic_watchdog_info;
-> +	wdt->wdtdev.ops = &pmic_watchdog_ops;
-> +	wdt->wdtdev.min_timeout = PMIC_WDT_MIN_TIMEOUT;
-> +	wdt->wdtdev.max_timeout = PMIC_WDT_MAX_TIMEOUT;
+Hi Maxime,
 
-Sorry I missed that earlier: You'll also want to set wdtdev.parent.
-
-Thanks,
-Guenter
-
-> +
-> +	wdt->wdtdev.timeout = PMIC_WDT_DEFAULT_TIMEOUT;
-> +	watchdog_init_timeout(&wdt->wdtdev, 0, &pdev->dev);
-> +
-> +	watchdog_set_nowayout(&wdt->wdtdev, nowayout);
-> +	watchdog_set_drvdata(&wdt->wdtdev, wdt);
-> +
-> +	ret = devm_watchdog_register_device(&pdev->dev, &wdt->wdtdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_dbg(wdt->pmic->dev, "PMIC Watchdog driver probed\n");
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id of_pmic_wdt_match[] = {
-> +	{ .compatible = "st,stpmic1-wdt" },
-> +	{ },
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, of_pmic_wdt_match);
-> +
-> +static struct platform_driver stpmic1_wdt_driver = {
-> +	.probe = pmic_wdt_probe,
-> +	.driver = {
-> +		.name = "stpmic1-wdt",
-> +		.of_match_table = of_pmic_wdt_match,
-> +	},
-> +};
-> +module_platform_driver(stpmic1_wdt_driver);
-> +
-> +MODULE_DESCRIPTION("Watchdog driver for STPMIC1 device");
-> +MODULE_AUTHOR("Pascal Paillet <p.paillet@st.com>");
-> +MODULE_LICENSE("GPL v2");
+On Thursday, 18 October 2018 15:18:19 EEST Maxime Ripard wrote:
+> On Thu, Oct 18, 2018 at 02:31:01PM +0300, Laurent Pinchart wrote:
+> > On Thursday, 18 October 2018 12:42:58 EEST Maxime Ripard wrote:
+> >> On Thu, Oct 18, 2018 at 11:18:06AM +0200, Daniel Vetter wrote:
+> >>> On Thu, Oct 18, 2018 at 10:55 AM Laurent Pinchart wrote:
+> >>>> On Thursday, 18 October 2018 10:33:27 EEST Icenowy Zheng wrote:
+> >>>>> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >>>>> 
+> >>>>> The panels shipped with Allwinner devices are very "generic", i.e.
+> >>>>> they do not have model numbers or reliable sources of information
+> >>>>> for the timings (that we know of) other than the fex files shipped
+> >>>>> on them. The dot clock frequency provided in the fex files have all
+> >>>>> been rounded to the nearest MHz, as that is the unit used in them.
+> >>>>> 
+> >>>>> We were using the simple panel "urt,umsh-8596md-t" as a substitute
+> >>>>> for the A13 Q8 tablets in the absence of a specific model for what
+> >>>>> may be many different but otherwise timing compatible panels. This
+> >>>>> was usable without any visual artifacts or side effects, until the
+> >>>>> dot clock rate check was added in commit bb43d40d7c83 ("drm/sun4i:
+> >>>>> rgb: Validate the clock rate").
+> >>>>> 
+> >>>>> The reason this check fails is because the dotclock frequency for
+> >>>>> this model is 33.26 MHz, which is not achievable with our dot clock
+> >>>>> hardware, and the rate returned by clk_round_rate deviates slightly,
+> >>>>> causing the driver to reject the display mode.
+> >>>>> 
+> >>>>> The LCD panels have some tolerance on the dot clock frequency, even
+> >>>>> if it's not specified in their datasheets.
+> >>>>> 
+> >>>>> This patch adds a 5% tolerence to the dot clock check.
+> >>>> 
+> >>>> Why do you think this shouldn't be merged ?
+> >>> 
+> >>> It pisses of a lot of people who really insist upon accurate timing.
+> >> 
+> >> It's not just about accurate timings. That 5% is a made-up limit, that
+> >> never have really been confirmed by looking at the typical tolerancies
+> >> of panels.
+> >> 
+> >> And while being to relaxed might make some panels work that are not
+> >> working currently, it might also break some panels that currently work
+> >> and won't now, and ideally, we should really be able to let those
+> >> panels work if they can, and filter out resolutions if they can't.
+> >> 
+> >>> I think a better fix would be to have a dotclock range in drm_panel,
+> >>> and some magic to figure out which one of these we can actually
+> >>> do. Then tell userspace that this is the mode is should
+> >>> request. That way userspace knows what the actual dotclock/refresh
+> >>> rate is, and the panel still works.
+> >> 
+> >> It's not just about panels, but also bridges with EDID where the
+> >> tolerancy is not exposed.
+> > 
+> > Given that the tolerance is a property of the panel or bridge, I agree
+> > with Daniel that it should be implemented there, or at least in
+> > cooperation with drm_panel and drm_bridge.
 > 
+> How are we supposed to deal with panels without any documentation then?
+
+We can only guess, but if the guess comes from the panel driver, it will at 
+least not affect all panels and bridges, like this patch does.
+
+> > Semi-related information, I think the CEA and VESA standards allow a 0.5%
+> > clock tolerance. What is the maximum clock frequency deviation required
+> > for this platform ?
+> 
+> Looks like it does indeed. That's definetely good to know.
+
+-- 
+Regards,
+
+Laurent Pinchart
