@@ -1,55 +1,106 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/5] nds32: Fix bug in bitfield.h
-Date: Thu, 18 Oct 2018 15:26:31 +0100
-Message-ID: <20181018142622.p3hrrymexubkkuf5@lakrids.cambridge.arm.com>
+Subject: Re: [PATCH 4/5] nds32: Fix perf multiple events map to same counter.
+Date: Thu, 18 Oct 2018 15:29:05 +0100
+Message-ID: <20181018142905.bn73t7rvtdjr2tbf@lakrids.cambridge.arm.com>
 References: <cover.1539745993.git.nickhu@andestech.com>
- <6702edd2853db9a475853a9b8d00b5aacf546bb2.1539745993.git.nickhu@andestech.com>
+ <a683ef0bac252d0a0982643e9095dc0fc46a1305.1539745993.git.nickhu@andestech.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <6702edd2853db9a475853a9b8d00b5aacf546bb2.1539745993.git.nickhu@andestech.com>
+In-Reply-To: <a683ef0bac252d0a0982643e9095dc0fc46a1305.1539745993.git.nickhu@andestech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Nickhu <nickhu@andestech.com>
 Cc: greentime@andestech.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, deanbo422@gmail.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, arnd@arndb.de, sboyd@codeaurora.org, geert@linux-m68k.org, zong@andestech.com, ebiederm@xmission.com, akpm@linux-foundation.org, gregkh@linuxfoundation.org, pombredanne@nexb.com, tglx@linutronix.de, kstewart@linuxfoundation.org, devicetree@vger.kernel.org, green.hu@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 18, 2018 at 04:43:14PM +0800, Nickhu wrote:
-> There two bitfield bug for perfomance counter
-> in bitfield.h:
+On Thu, Oct 18, 2018 at 04:43:16PM +0800, Nickhu wrote:
+> When there are multiple events map to the same counter, the counter
+> counts inaccurately. This is because each counter only counts one event
+> in the same time.
+> So when there are multiple events map to same counter, they have to take
+> turns in each context.
 > 
-> 	PFM_CTL_offSEL1		21 --> 16
-> 	PFM_CTL_offSEL2		27 --> 22
+> There are two solution:
+> 1. Print the error message when multiple events map to the same counter.
+> But print the error message would let the program hang in loop. The ltp
+> (linux test program) would be failed when the program hang in loop.
 > 
-> This commit fix it.
+> 2. Don't print the error message, the ltp would pass. But the user need to
+> have the knowledge that don't count the events which map to the same
+> counter, or the user will get the inaccurate results.
 > 
-> Signed-off-by: Nickhu <nickhu@andestech.com>
+> We choose method 2 for the solution
 
-This patch should probably be move before the patch adding perf support.
-That way, perf support isn't broken at the point it is added.
+This is the correct solution. Perf exposes the active/enabled time in
+the perf event, so the user can determine that the event wasn't enabled
+all of the time.
+
+This should be folded into the commit adding perf support.
 
 Thanks,
 Mark.
 
-> ---
->  arch/nds32/include/asm/bitfield.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/nds32/include/asm/bitfield.h b/arch/nds32/include/asm/bitfield.h
-> index 8e84fc385b94..19b2841219ad 100644
-> --- a/arch/nds32/include/asm/bitfield.h
-> +++ b/arch/nds32/include/asm/bitfield.h
-> @@ -692,8 +692,8 @@
->  #define PFM_CTL_offKU1		13	/* Enable user mode event counting for PFMC1 */
->  #define PFM_CTL_offKU2		14	/* Enable user mode event counting for PFMC2 */
->  #define PFM_CTL_offSEL0		15	/* The event selection for PFMC0 */
-> -#define PFM_CTL_offSEL1		21	/* The event selection for PFMC1 */
-> -#define PFM_CTL_offSEL2		27	/* The event selection for PFMC2 */
-> +#define PFM_CTL_offSEL1		16	/* The event selection for PFMC1 */
-> +#define PFM_CTL_offSEL2		22	/* The event selection for PFMC2 */
->  /* bit 28:31 reserved */
+> Signed-off-by: Nickhu <nickhu@andestech.com>
+> ---
+>  arch/nds32/include/asm/pmu.h       |  1 +
+>  arch/nds32/kernel/perf_event_cpu.c | 30 ++++++++++++++++++++----------
+>  2 files changed, 21 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/nds32/include/asm/pmu.h b/arch/nds32/include/asm/pmu.h
+> index 3fbbe97c2d42..e75ec34af5f6 100644
+> --- a/arch/nds32/include/asm/pmu.h
+> +++ b/arch/nds32/include/asm/pmu.h
+> @@ -55,6 +55,7 @@ enum { PFMC0, PFMC1, PFMC2, MAX_COUNTERS };
+>   */
+>  #define NDS32_IDX_CYCLE_COUNTER			0
+>  #define NDS32_IDX_COUNTER0			1
+> +#define NDS32_IDX_COUNTER1			2
+>  #define NDS32_IDX_COUNTER_LAST(cpu_pmu) \
+>  	(NDS32_IDX_CYCLE_COUNTER + (cpu_pmu)->num_events - 1)
 >  
->  #define PFM_CTL_mskEN0		( 0x01  << PFM_CTL_offEN0 )
+> diff --git a/arch/nds32/kernel/perf_event_cpu.c b/arch/nds32/kernel/perf_event_cpu.c
+> index 7bb4ebb87b5c..e9a0d8bb2bc1 100644
+> --- a/arch/nds32/kernel/perf_event_cpu.c
+> +++ b/arch/nds32/kernel/perf_event_cpu.c
+> @@ -566,16 +566,26 @@ static int nds32_pmu_get_event_idx(struct pmu_hw_events *cpuc,
+>  	/*
+>  	 * Try to get the counter for correpsonding event
+>  	 */
+> -	if (!test_and_set_bit(idx, cpuc->used_mask))
+> -		return idx;
+> -
+> -	/*
+> -	 * The counter is in use.
+> -	 * The system will hang in the loop.
+> -	 */
+> -	pr_err
+> -	("Multiple events map to one counter, the behavior is undefined.\n");
+> -	return -EPERM;
+> +	if (evtype == SPAV3_0_SEL_TOTAL_CYCLES) {
+> +		if (!test_and_set_bit(idx, cpuc->used_mask))
+> +			return idx;
+> +		if (!test_and_set_bit(NDS32_IDX_COUNTER0, cpuc->used_mask))
+> +			return NDS32_IDX_COUNTER0;
+> +		if (!test_and_set_bit(NDS32_IDX_COUNTER1, cpuc->used_mask))
+> +			return NDS32_IDX_COUNTER1;
+> +	} else if (evtype == SPAV3_1_SEL_COMPLETED_INSTRUCTION) {
+> +		if (!test_and_set_bit(idx, cpuc->used_mask))
+> +			return idx;
+> +		else if (!test_and_set_bit(NDS32_IDX_COUNTER1, cpuc->used_mask))
+> +			return NDS32_IDX_COUNTER1;
+> +		else if (!test_and_set_bit
+> +			 (NDS32_IDX_CYCLE_COUNTER, cpuc->used_mask))
+> +			return NDS32_IDX_CYCLE_COUNTER;
+> +	} else {
+> +		if (!test_and_set_bit(idx, cpuc->used_mask))
+> +			return idx;
+> +	}
+> +	return -EAGAIN;
+>  }
+>  
+>  static void nds32_pmu_start(struct nds32_pmu *cpu_pmu)
 > -- 
 > 2.17.0
 > 
