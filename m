@@ -1,76 +1,43 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/5] dt-bindings: add more optional properties for
- elan_i2c touchpads
-Date: Thu, 18 Oct 2018 08:04:00 -0500
-Message-ID: <CAL_JsqLdXEPYsK5q4J9_ZF10NJbj6_cH199zLhZ5+9oQYw9B6w@mail.gmail.com>
-References: <20181012142413.26107-1-benjamin.tissoires@redhat.com>
- <20181012142413.26107-4-benjamin.tissoires@redhat.com> <20181017201522.GA26525@bogus>
- <CAO-hwJ+z6YdnLdbzeh-7f99cBBjHfbLKLzKo-fQQaC_W8bt_Uw@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 05/36] dt-bindings: arm: renesas: Move 'renesas,prr'
+ binding to its own doc
+Date: Thu, 18 Oct 2018 15:04:11 +0200
+Message-ID: <20181018130411.vbammbqqiyvmmcxo@verge.net.au>
+References: <20181005165848.3474-1-robh@kernel.org>
+ <20181005165848.3474-6-robh@kernel.org>
+ <CAMuHMdV=HaVhGf-7-21OHb05dCc0q9MDUNknAcybEiGSxATeEA@mail.gmail.com>
+ <CAL_JsqJGGRfoEb_TjZy2X9QwjfAdoxs_EB+cLNmszHOE8-OtHw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAO-hwJ+z6YdnLdbzeh-7f99cBBjHfbLKLzKo-fQQaC_W8bt_Uw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJGGRfoEb_TjZy2X9QwjfAdoxs_EB+cLNmszHOE8-OtHw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, KT Liao <kt.liao@emc.com.tw>, linux-input@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 18, 2018 at 3:10 AM Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
->
-> On Wed, Oct 17, 2018 at 10:15 PM Rob Herring <robh@kernel.org> wrote:
+On Mon, Oct 08, 2018 at 09:59:19AM -0500, Rob Herring wrote:
+> On Mon, Oct 8, 2018 at 2:05 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 > >
-> > On Fri, Oct 12, 2018 at 04:24:11PM +0200, Benjamin Tissoires wrote:
-> > > Some new touchpads IC are connected through PS/2 and I2C. On some of these
-> > > new IC, the I2C part doesn't have all of the information available.
-> > > We need to be able to forward the touchpad parameters from PS/2 and
-> > > thus, we need those new optional properties.
+> > Hi Rob,
+> >
+> > On Fri, Oct 5, 2018 at 6:58 PM Rob Herring <robh@kernel.org> wrote:
+> > > In preparation to convert board-level bindings to json-schema, move
+> > > various misc SoC bindings out to their own file.
 > > >
-> > > Link: https://bugzilla.redhat.com/show_bug.cgi?id=1628715
-> > > Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/input/elan_i2c.txt | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/input/elan_i2c.txt b/Documentation/devicetree/bindings/input/elan_i2c.txt
-> > > index 797607460735..ace6bcb0b4eb 100644
-> > > --- a/Documentation/devicetree/bindings/input/elan_i2c.txt
-> > > +++ b/Documentation/devicetree/bindings/input/elan_i2c.txt
-> > > @@ -13,6 +13,14 @@ Optional properties:
-> > >    pinctrl binding [1]).
-> > >  - vcc-supply: a phandle for the regulator supplying 3.3V power.
-> > >  - elan,trackpoint: touchpad can support a trackpoint (boolean)
-> > > +- elan,clickpad: touchpad is a clickpad (the entire surface is a button)
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Simon Horman <horms@verge.net.au>
+> > > Cc: Magnus Damm <magnus.damm@gmail.com>
+> > > Cc: devicetree@vger.kernel.org
+> > > Cc: linux-renesas-soc@vger.kernel.org
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
 > >
-> > > +- elan,max_x: the maximum reported value on the X axis
-> > > +- elan,max_y: the maximum reported value on the Y axis
-> > > +- elan,min_x: the minimum reported value on the X axis
-> > > +- elan,min_y: the minimum reported value on the Y axis
-> > > +- elan,x_res: the resolution of the X axis (in units per mm)
-> > > +- elan,y_res: the resolution of the Y axis (in units per mm)
-> > > +- elan,width: max reported width of a blob
-> >
-> > Can't we use standard touchscreen properties here? (Yes, I get this is a
-> > touchpad, not touchscreen).
->
-> Hey Rob,
->
-> Well, there is that (it's a touchpad driver) and we can't also really
-> use the of_touchscreen.c implementation.
-> If both concerns are not an issue, we can then move the [min/max/res]
-> properties to the touchscreen ones.
+> > Looks good to me, but needs a rebase, as the PRR section has been extended
+> > in -next.
+> 
+> Is this something you all can apply still for 4.20?
 
-Neither is problem for me. Bindings don't have to map 1:1 to kernel code.
+Sorry, missing this until now. It was too late.
 
-> Regarding 'elan,width', this is something missing from the standard ts
-> properties, and AFAICT, this controls the maximum reported
-> width/height of a touch.
-> I should probably rename them to max_width, max_height.
-
-Sure, just use '-' rather than '_' in property names.
-
-> Hans, do you think we should add such properties to of_touchscreen.c
-> too? (the width/height ones)
->
-> Cheers,
-> Benjamin
+Shall I take it for v4.21?
