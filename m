@@ -1,33 +1,79 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/3] dt-bindings: thermal: Add binding document for SR
- thermal
-Date: Thu, 18 Oct 2018 09:36:33 -0500
-Message-ID: <20181018143633.GA29126@bogus>
-References: <1539702680-3746-1-git-send-email-srinath.mannam@broadcom.com>
- <1539702680-3746-2-git-send-email-srinath.mannam@broadcom.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH]  arm64/pvpanic-mmio : add pvpanic mmio device
+Date: Thu, 18 Oct 2018 15:43:32 +0100
+Message-ID: <20181018144332.dfiukokzcbtxe573@lakrids.cambridge.arm.com>
+References: <20181017113816.6kub42pii5hev6fh@lakrids.cambridge.arm.com>
+ <201810180956117739833@zte.com.cn>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1539702680-3746-2-git-send-email-srinath.mannam@broadcom.com>
+In-Reply-To: <201810180956117739833@zte.com.cn>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: daniel.lezcano@linaro.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Pramod Kumar <pramod.kumar@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>
+To: peng.hao2@zte.com.cn
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, nd@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 16 Oct 2018 20:41:18 +0530, Srinath Mannam wrote:
-> From: Pramod Kumar <pramod.kumar@broadcom.com>
-> 
-> Add binding document for supported thermal implementation
-> in Stingray.
-> 
-> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
-> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> ---
->  .../bindings/thermal/brcm,sr-thermal.txt           | 105 +++++++++++++++++++++
->  1 file changed, 105 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
-> 
+On Thu, Oct 18, 2018 at 09:56:11AM +0800, peng.hao2@zte.com.cn wrote:
+> >Hi,
+> >
+> >[adding devicetree]
+> >
+> >On Wed, Oct 17, 2018 at 06:08:23PM +0800, Peng Hao wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+[...]
+
+> >> +#define PVPANIC_MMIO_CRASHED    (1 << 0)
+> >
+> >This looks like it's identical to PVPANIC_PANICKED in the existing ACPI
+> >IO pvpanic driver.
+> >
+> >I suspect on the QEMU side, there's one device, and the distinction is
+> >only in how this is described.
+> >
+> in qemu:
+> Firstly pvpanic(x86) use ioport, but arm don't support ioport.
+> secondly pvpanic device is emulated as a isa bus device, but arm don't support
+> isa bus.
+
+I am aware of arm platforms with an ISA bus (well, LPC, at least).
+
+> thirdly the realization of pvpanic device is depends on ACPI in linux
+> kernel driver and in qemu the port info is passed through ACPI , but
+> It is not necessary to configure ACPI for arm guest.
+
+There are many people using ACPI with arm64 under QEMU, so while it's
+not *necessary* to use ACPI, it is a common use case that we cannot rule
+out.
+
+> in linux : I don't want to depends on ACPI .
+
+I'm not saying that you must depend on ACPI for your specific use-case.
+
+> ARM virt machine  in qemu uses FDT, and I can easily 
+> use FDT to get mmio information from QEMU. 
+> >Can't one driver support both?
+> Just like  virtio-mmio driver, It is mainly used for non x86 architecture.
+
+So? I can build virtio-mmio for x86, too.
+
+My concern is that other than the initial probing, the vast majority of
+this is *identical* to the existing pvpanic driver (ignoring cosmetic
+differences like the naming of variables).
+
+I'm worried that there could be additions to the pvpanic device in
+future (e.g. passing a pointer to some crash context), which would then
+have to be duplicated across two drivers.
+
+IMO we should:
+
+a) Move the existing pvpanic driver to a neutral location (e.g.
+   drivers/virt/qemu_pvpanic.c).
+
+b) Teach the existing pvpanic driver to handle MMIO, even for ACPI.
+
+c) Teach the existing pvpanic driver to handle DT, even if that DT
+   binding only caters for MMIO.
+
+Thanks,
+Mark.
