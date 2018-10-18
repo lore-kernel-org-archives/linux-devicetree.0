@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v5 08/18] of: overlay: reorder fields in struct fragment
-Date: Thu, 18 Oct 2018 15:46:26 -0700
-Message-ID: <1539902796-8382-9-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v5 06/18] of: overlay: do not duplicate properties from overlay for new nodes
+Date: Thu, 18 Oct 2018 15:46:24 -0700
+Message-ID: <1539902796-8382-7-git-send-email-frowand.list@gmail.com>
 References: <1539902796-8382-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1539902796-8382-1-git-send-email-frowand.list@gmail.com>
@@ -12,11 +12,24 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-Order the fields of struct fragment in the same order as
-struct of_overlay_notify_data.  The order in struct fragment is
-not significant.  If both structs are ordered the same then when
-examining the data in a debugger or dump the human involved does
-not have to remember which context they are examining.
+When allocating a new node, add_changeset_node() was duplicating the
+properties from the respective node in the overlay instead of
+allocating a node with no properties.
+
+When this patch is applied the errors reported by the devictree
+unittest from patch "of: overlay: add tests to validate kfrees from
+overlay removal" will no longer occur.  These error messages are of
+the form:
+
+   "OF: ERROR: ..."
+
+and the unittest results will change from:
+
+   ### dt-test ### end of unittest - 203 passed, 7 failed
+
+to
+
+   ### dt-test ### end of unittest - 210 passed, 0 failed
 
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
@@ -24,18 +37,17 @@ Signed-off-by: Frank Rowand <frank.rowand@sony.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 7fcf4a812d06..272a0d1a5e18 100644
+index 94740f4ee34c..7fcf4a812d06 100644
 --- a/drivers/of/overlay.c
 +++ b/drivers/of/overlay.c
-@@ -49,8 +49,8 @@ struct target {
-  * @overlay:	pointer to the __overlay__ node
-  */
- struct fragment {
--	struct device_node *target;
- 	struct device_node *overlay;
-+	struct device_node *target;
- };
+@@ -393,7 +393,7 @@ static int add_changeset_node(struct overlay_changeset *ovcs,
+ 			break;
  
- /**
+ 	if (!tchild) {
+-		tchild = __of_node_dup(node, node_kbasename);
++		tchild = __of_node_dup(NULL, node_kbasename);
+ 		if (!tchild)
+ 			return -ENOMEM;
+ 
 -- 
 Frank Rowand <frank.rowand@sony.com>
