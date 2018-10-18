@@ -1,61 +1,51 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: [PATCH 1/2] dt-bindings: serial: add documentation for the SiFive UART driver
-Date: Thu, 18 Oct 2018 16:43:53 -0700
-Message-ID: <20181018234352.26788-2-paul.walmsley@sifive.com>
-References: <20181018234352.26788-1-paul.walmsley@sifive.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: phy-qcom-qmp: Fix register underspecification
+Date: Thu, 18 Oct 2018 16:50:34 -0700
+Message-ID: <CAD=FV=XM9uG8EfamXmEp2-g5tgagir0KHpdMZMtL6ckqt+Jjsg@mail.gmail.com>
+References: <20181018210933.113592-1-evgreen@chromium.org> <20181018210933.113592-2-evgreen@chromium.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181018234352.26788-1-paul.walmsley@sifive.com>
+In-Reply-To: <20181018210933.113592-2-evgreen@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-serial@vger.kernel.org
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul@pwsan.com>
+To: Evan Green <evgreen@chromium.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Manu Gautam <mgautam@codeaurora.org>, cang@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding documentation for the Linux driver for the SiFive
-asynchronous serial IP block.  Nothing too exotic.
+Hi,
 
-Cc: linux-serial@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-riscv@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Signed-off-by: Paul Walmsley <paul@pwsan.com>
----
- .../bindings/serial/sifive-serial.txt         | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.txt
+On Thu, Oct 18, 2018 at 2:09 PM Evan Green <evgreen@chromium.org> wrote:
+>
+> This change adds register regions for the second lane of dual-lane nodes.
+> This additional specification is needed so that the driver can stop
+> reaching beyond the tx and rx register allocations to get at the
+> second lane registers in a dual-lane PHY.
+>
+> While in there, document #clock-cells as optional for PHYs that don't
+> provide a pipe clock. Also, document the pcs_misc register region, which
+> was being quietly supplied and used.
+>
+> Signed-off-by: Evan Green <evgreen@chromium.org>
+>
+> ---
+> This applies atop linux-next 20181018 with the addition of Doug's
+> changes [1] and [2].
+>
+> [1] https://lore.kernel.org/lkml/20181012213632.252346-1-dianders@chromium.org/
+> [2] https://lore.kernel.org/lkml/20181012213926.253765-1-dianders@chromium.org/
+>
+>  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 73 +++++++++++++++++++---
+>  1 file changed, 65 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/serial/sifive-serial.txt b/Documentation/devicetree/bindings/serial/sifive-serial.txt
-new file mode 100644
-index 000000000000..8982338512f5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/sifive-serial.txt
-@@ -0,0 +1,21 @@
-+SiFive asynchronous serial interface (UART)
-+
-+Required properties:
-+
-+- compatible: should be "sifive,fu540-c000-uart0" or "sifive,uart0"
-+- reg: address and length of the register space
-+- interrupt-parent: should contain a phandle pointing to the SoC interrupt
-+    controller device node that the UART interrupts are connected to
-+- interrupts: Should contain the UART interrupt identifier
-+- clocks: Should contain a clock identifier for the UART's parent clock
-+
-+
-+Example:
-+
-+uart0: serial@10010000 {
-+	compatible = "sifive,uart0";
-+	interrupt-parent = <&plic0>;
-+	interrupts = <80>;
-+	reg = <0x0 0x10010000 0x0 0x1000>;
-+	clocks = <&prci PRCI_CLK_TLCLK>;
-+};
--- 
-2.19.1
+This all makes sense to me and seems like the right compromise to make
+
+The only current SoC that uses tx2/rx2 is SDM845 and the support of
+that SoC is in its infancy in mainline.  Thus I don't mind that we say
+that all 5 registers are "required" even though there is an existing
+device tree out there that don't include tx2/rx2 for USB.  Currently
+patch #2 in this series still makes old device trees "work" (as well
+as they used to) but I'm all for that being very temporary code and
+that officially tx2/rx2 are not optional.
+
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
