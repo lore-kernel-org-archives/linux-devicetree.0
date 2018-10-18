@@ -1,61 +1,83 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 5/5] nds32: Add document for NDS32 PMU.
-Date: Thu, 18 Oct 2018 15:31:32 +0100
-Message-ID: <20181018143132.vhhc6qpz4sooljlj@lakrids.cambridge.arm.com>
-References: <cover.1539745993.git.nickhu@andestech.com>
- <c0a80d2db642b1d9547ff412d91baa9927b68aac.1539745993.git.nickhu@andestech.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V6 1/3] dt-bindings: fsl: scu: make power domain
+ compatible string SoC specific
+Date: Thu, 18 Oct 2018 09:33:42 -0500
+Message-ID: <20181018143342.GA22874@bogus>
+References: <1539760797-12991-1-git-send-email-aisheng.dong@nxp.com>
+ <1539760797-12991-2-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <c0a80d2db642b1d9547ff412d91baa9927b68aac.1539745993.git.nickhu@andestech.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nickhu <nickhu@andestech.com>
-Cc: greentime@andestech.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, deanbo422@gmail.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, arnd@arndb.de, sboyd@codeaurora.org, geert@linux-m68k.org, zong@andestech.com, ebiederm@xmission.com, akpm@linux-foundation.org, gregkh@linuxfoundation.org, pombredanne@nexb.com, tglx@linutronix.de, kstewart@linuxfoundation.org, devicetree@vger.kernel.org, green.hu@gmail.com
+In-Reply-To: <1539760797-12991-2-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "khilman@kernel.org" <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 18, 2018 at 04:43:17PM +0800, Nickhu wrote:
-> The document for how to add NDS32 PMU
-> in devicetree.
+On Wed, Oct 17, 2018 at 07:24:40AM +0000, A.s. Dong wrote:
+> As the power domain API might change in the future for new SoCs, although
+> in a very low possibility, it's still better to make the compatible string
+> more SoC specific to avoid the possible version change for new SoCs.
 > 
-> Signed-off-by: Nickhu <nickhu@andestech.com>
+> Due to there're still no users in kernel, it's safe to update it without
+> breaking anything.
+> 
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Suggested-by: Sascha Hauer <s.hauer@pengutronix.de>
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+
+checkpatch says:
+
+WARNING: Missing Signed-off-by: line by nominal patch author 'A.s. Dong <aisheng.dong@nxp.com>'
+
 > ---
->  Documentation/devicetree/bindings/nds32/pmu.txt | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nds32/pmu.txt
+> ChangeLog:
+> v5->v6:
+>  * new patch
+> ---
+>  Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/nds32/pmu.txt b/Documentation/devicetree/bindings/nds32/pmu.txt
-> new file mode 100644
-> index 000000000000..02762b850e59
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nds32/pmu.txt
-> @@ -0,0 +1,17 @@
-> +* NDS32 Performance Monitor Units
-> +
-> +NDS32 core have a PMU for counting cpu and cache events like cache misses.
-> +The NDS32 PMU representation in the device tree should be done as under:
-> +
-> +Required properties:
-> +
-> +- compatilbe :
-> +	"andestech,atcpmu"
+> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> index 46d0af1..87fc4b4 100644
+> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> @@ -58,7 +58,7 @@ This binding for the SCU power domain providers uses the generic power
+>  domain binding[2].
+>  
+>  Required properties:
+> -- compatible:		Should be "fsl,scu-pd".
+> +- compatible:		Should be "fsl,imx8qxp-scu-pd".
 
-Which CPUs have this PMU?
+You can keep both if you think future SoCs will be compatible.
 
-I expected more specific strings, e.g. "andestech,n13-pmu" and/or
-"andestech,andestech,nds32v3-pmu".
-
-> +
-> +- interrupts : The interrupt number for NDS32 PMU is 13.
-> +
-> +Example:
-> +pmu{
-> +	compatible = "andestech,atcpmu";
-> +	interrupts = <13>;
-> +}
-
-The driver tried to find multiple interrupts. Is there only a single
-interrupt in all cases?
-
-Thanks,
-Mark.
+>  - #address-cells:	Should be 1.
+>  - #size-cells:		Should be 0.
+>  
+> @@ -153,7 +153,7 @@ firmware {
+>  		};
+>  
+>  		imx8qx-pm {
+> -			compatible = "fsl,scu-pd";
+> +			compatible = "fsl,imx8qxp-scu-pd";
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  
+> -- 
+> 2.7.4
+> 
