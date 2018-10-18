@@ -1,36 +1,156 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/8] dt-bindings: mfd: document stpmic1
-Date: Thu, 18 Oct 2018 13:47:26 -0500
-Message-ID: <20181018184726.GA27696@bogus>
-References: <1539853324-29051-1-git-send-email-p.paillet@st.com>
- <1539853324-29051-2-git-send-email-p.paillet@st.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v4 01/18] of: overlay: add tests to validate kfrees from
+ overlay removal
+Date: Thu, 18 Oct 2018 12:01:50 -0700
+Message-ID: <f6aaf5be-ed08-a055-c270-4284ed6532a9@gmail.com>
+References: <1539657458-24401-1-git-send-email-frowand.list@gmail.com>
+ <1539657458-24401-2-git-send-email-frowand.list@gmail.com>
+ <20181018170303.GA15557@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1539853324-29051-2-git-send-email-p.paillet@st.com>
+In-Reply-To: <20181018170303.GA15557@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, Pascal PAILLET-LME <p.paillet@st.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 18 Oct 2018 09:02:11 +0000, Pascal PAILLET-LME wrote:
-> From: pascal paillet <p.paillet@st.com>
+On 10/18/18 10:03, Rob Herring wrote:
+> On Mon, Oct 15, 2018 at 07:37:21PM -0700, frowand.list@gmail.com wrote:
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> Add checks:
+>>   - attempted kfree due to refcount reaching zero before overlay
+>>     is removed
+>>   - properties linked to an overlay node when the node is removed
+>>   - node refcount > one during node removal in a changeset destroy,
+>>     if the node was created by the changeset
+>>
+>> After applying this patch, several validation warnings will be
+>> reported from the devicetree unittest during boot due to
+>> pre-existing devicetree bugs. The warnings will be similar to:
+>>
+>>   OF: ERROR: of_node_release() overlay node /testcase-data/overlay-node/test-bus/test-unittest11/test-unittest111 contains unexpected properties
+>>   OF: ERROR: memory leak - destroy cset entry: attach overlay node /testcase-data-2/substation@100/hvac-medium-2 expected refcount 1 instead of 2.  of_node_get() / of_node_put() are unbalanced for this node.
 > 
-> stpmic1 is a pmic from STMicroelectronics. The STPMIC1 integrates 10
-> regulators , 3 switches, a watchdog and an input for a power on key.
-> 
-> Signed-off-by: pascal paillet <p.paillet@st.com>
-> ---
-> changes in v4:
-> * remove interrupt-parent description
-> * pmic1@33 renamed to pmic@33
-> * fix indentation
-> 
->  .../devicetree/bindings/mfd/st,stpmic1.txt         | 131 +++++++++++++++++++++
->  include/dt-bindings/mfd/st,stpmic1.h               |  46 ++++++++
->  2 files changed, 177 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
->  create mode 100644 include/dt-bindings/mfd/st,stpmic1.h
-> 
+> These messages could be formatted more consistently. Put the path either 
+> at the beginning (after any prefix) or end. Beginning is more like a 
+> compiler error. End puts what the problem is before it's off the edge of 
+> the screen. 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The inconsistency makes the word flow more natural, but I agree that
+consistency is more important.  I think I can make all the messages
+say the problem first, then provide the path at the end.
+
+
+>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+>> ---
+>> Changes since v3:
+>>   - Add expected value of refcount for destroy cset entry error.  Also
+>>     explain the cause of the error.
+>>
+>>  drivers/of/dynamic.c | 29 +++++++++++++++++++++++++++++
+>>  drivers/of/overlay.c |  1 +
+>>  include/linux/of.h   | 15 ++++++++++-----
+>>  3 files changed, 40 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+>> index f4f8ed9b5454..24c97b7a050f 100644
+>> --- a/drivers/of/dynamic.c
+>> +++ b/drivers/of/dynamic.c
+>> @@ -330,6 +330,25 @@ void of_node_release(struct kobject *kobj)
+>>  	if (!of_node_check_flag(node, OF_DYNAMIC))
+>>  		return;
+>>  
+>> +	if (of_node_check_flag(node, OF_OVERLAY)) {
+>> +
+>> +		if (!of_node_check_flag(node, OF_OVERLAY_FREE_CSET)) {
+> 
+> I worry the flags are getting unwieldy.
+
+I considered that.  I think we are still ok, and I don't have a better
+solution than adding flag values.  (I did have some Rube Goldberg
+variations.)
+
+
+> 
+>> +			/* premature refcount of zero, do not free memory */
+>> +			pr_err("ERROR: memory leak %s() overlay node %pOF before free overlay changeset\n",
+>> +			       __func__, node);
+>> +			return;
+>> +		}
+>> +
+>> +		/*
+>> +		 * If node->properties non-empty then properties were added
+>> +		 * to this node either by different overlay that has not
+>> +		 * yet been removed, or by a non-overlay mechanism.
+>> +		 */
+>> +		if (node->properties)
+>> +			pr_err("ERROR: %s() overlay node %pOF contains unexpected properties\n",
+>> +			       __func__, node);
+>> +	}
+>> +
+>>  	property_list_free(node->properties);
+>>  	property_list_free(node->deadprops);
+>>  
+>> @@ -434,6 +453,16 @@ struct device_node *__of_node_dup(const struct device_node *np,
+>>  
+>>  static void __of_changeset_entry_destroy(struct of_changeset_entry *ce)
+>>  {
+>> +	if (ce->action == OF_RECONFIG_ATTACH_NODE &&
+>> +	    of_node_check_flag(ce->np, OF_OVERLAY)) {
+>> +		if (kref_read(&ce->np->kobj.kref) > 1) {
+>> +			pr_err("ERROR: memory leak - destroy cset entry: attach overlay node %pOF expected refcount 1 instead of %d.  of_node_get() / of_node_put() are unbalanced for this node.\n",
+>> +			       ce->np, kref_read(&ce->np->kobj.kref));
+>> +		} else {
+>> +			of_node_set_flag(ce->np, OF_OVERLAY_FREE_CSET);
+>> +		}
+>> +	}
+>> +
+>>  	of_node_put(ce->np);
+>>  	list_del(&ce->node);
+>>  	kfree(ce);
+>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+>> index eda57ef12fd0..1176cb4b6e4e 100644
+>> --- a/drivers/of/overlay.c
+>> +++ b/drivers/of/overlay.c
+>> @@ -373,6 +373,7 @@ static int add_changeset_node(struct overlay_changeset *ovcs,
+>>  			return -ENOMEM;
+>>  
+>>  		tchild->parent = target_node;
+>> +		of_node_set_flag(tchild, OF_OVERLAY);
+>>  
+>>  		ret = of_changeset_attach_node(&ovcs->cset, tchild);
+>>  		if (ret)
+>> diff --git a/include/linux/of.h b/include/linux/of.h
+>> index 4d25e4f952d9..aa1dafaec6ae 100644
+>> --- a/include/linux/of.h
+>> +++ b/include/linux/of.h
+>> @@ -138,11 +138,16 @@ static inline void of_node_put(struct device_node *node) { }
+>>  extern struct device_node *of_stdout;
+>>  extern raw_spinlock_t devtree_lock;
+>>  
+>> -/* flag descriptions (need to be visible even when !CONFIG_OF) */
+>> -#define OF_DYNAMIC	1 /* node and properties were allocated via kmalloc */
+>> -#define OF_DETACHED	2 /* node has been detached from the device tree */
+>> -#define OF_POPULATED	3 /* device already created for the node */
+>> -#define OF_POPULATED_BUS	4 /* of_platform_populate recursed to children of this node */
+>> +/*
+>> + * struct device_node flag descriptions
+>> + * (need to be visible even when !CONFIG_OF)
+>> + */
+>> +#define OF_DYNAMIC		1 /* (and properties) allocated via kmalloc */
+>> +#define OF_DETACHED		2 /* detached from the device tree */
+>> +#define OF_POPULATED		3 /* device already created */
+>> +#define OF_POPULATED_BUS	4 /* platform bus created for children */
+>> +#define OF_OVERLAY		5 /* allocated for an overlay */
+>> +#define OF_OVERLAY_FREE_CSET	6 /* in overlay cset being freed */
+>>  
+>>  #define OF_BAD_ADDR	((u64)-1)
+>>  
+>> -- 
+>> Frank Rowand <frank.rowand@sony.com>
+>>
+> 
