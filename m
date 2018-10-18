@@ -1,87 +1,122 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH 9/9] [DO NOT MERGE] drm/sun4i: rgb: Add 5%
- tolerance to dot clock frequency check
-Date: Thu, 18 Oct 2018 14:31:01 +0300
-Message-ID: <1585874.9P5eR8PMbl@avalon>
-References: <20181018073327.64942-1-icenowy@aosc.io> <CAKMK7uFp2c=wqzPi096MTRB6Cdfacerkp6dM=fEqCAr99PQG9w@mail.gmail.com> <20181018094258.oahlopafvm2udvoe@flea>
-Reply-To: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH 1/2] arm64: dts: qcom: sdm845: add UFS controller
+Date: Thu, 18 Oct 2018 17:03:06 +0530
+Message-ID: <CAFp+6iHRECKosJWQZoaZa6QxAmW0MZLNPsFAbD21vW+kG0xJ-A@mail.gmail.com>
+References: <20181017172312.194281-1-evgreen@chromium.org> <20181017172312.194281-2-evgreen@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDKM3GOS4YHBB3G5UHPAKGQEGPETRJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181018094258.oahlopafvm2udvoe@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181017172312.194281-2-evgreen@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: evgreen@chromium.org
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, swboyd@chromium.org, Doug Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi Evan,
 
-On Thursday, 18 October 2018 12:42:58 EEST Maxime Ripard wrote:
-> On Thu, Oct 18, 2018 at 11:18:06AM +0200, Daniel Vetter wrote:
-> > On Thu, Oct 18, 2018 at 10:55 AM Laurent Pinchart wrote:
-> >> On Thursday, 18 October 2018 10:33:27 EEST Icenowy Zheng wrote:
-> >>> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> >>> 
-> >>> The panels shipped with Allwinner devices are very "generic", i.e.
-> >>> they do not have model numbers or reliable sources of information
-> >>> for the timings (that we know of) other than the fex files shipped
-> >>> on them. The dot clock frequency provided in the fex files have all
-> >>> been rounded to the nearest MHz, as that is the unit used in them.
-> >>> 
-> >>> We were using the simple panel "urt,umsh-8596md-t" as a substitute
-> >>> for the A13 Q8 tablets in the absence of a specific model for what
-> >>> may be many different but otherwise timing compatible panels. This
-> >>> was usable without any visual artifacts or side effects, until the
-> >>> dot clock rate check was added in commit bb43d40d7c83 ("drm/sun4i:
-> >>> rgb: Validate the clock rate").
-> >>> 
-> >>> The reason this check fails is because the dotclock frequency for
-> >>> this model is 33.26 MHz, which is not achievable with our dot clock
-> >>> hardware, and the rate returned by clk_round_rate deviates slightly,
-> >>> causing the driver to reject the display mode.
-> >>> 
-> >>> The LCD panels have some tolerance on the dot clock frequency, even
-> >>> if it's not specified in their datasheets.
-> >>> 
-> >>> This patch adds a 5% tolerence to the dot clock check.
-> >> 
-> >> Why do you think this shouldn't be merged ?
-> > 
-> > It pisses of a lot of people who really insist upon accurate timing.
-> 
-> It's not just about accurate timings. That 5% is a made-up limit, that
-> never have really been confirmed by looking at the typical tolerancies
-> of panels.
-> 
-> And while being to relaxed might make some panels work that are not
-> working currently, it might also break some panels that currently work
-> and won't now, and ideally, we should really be able to let those
-> panels work if they can, and filter out resolutions if they can't.
-> 
-> > I think a better fix would be to have a dotclock range in drm_panel,
-> > and some magic to figure out which one of these we can actually
-> > do. Then tell userspace that this is the mode is should
-> > request. That way userspace knows what the actual dotclock/refresh
-> > rate is, and the panel still works.
-> 
-> It's not just about panels, but also bridges with EDID where the
-> tolerancy is not exposed.
+On Wed, Oct 17, 2018 at 10:55 PM Evan Green <evgreen@chromium.org> wrote:
+>
+> This change adds the UFS controller and PHY to SDM845.
+>
+> Signed-off-by: Evan Green <evgreen@chromium.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 66 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index b72bdb0a31a5..20b2c258816a 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -808,6 +808,72 @@
+>                         };
+>                 };
+>
+> +               ufshc1: ufshc@1d84000 {
+> +                       compatible = "qcom,sdm845-ufshc", "qcom,ufshc",
+> +                                    "jedec,ufs-2.0";
+> +                       reg = <0x1d84000 0x2500>;
+> +                       interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
+> +                       phys = <&ufsphy1_lanes>;
+> +                       phy-names = "ufsphy";
+> +                       lanes-per-direction = <2>;
+> +                       power-domains = <&gcc UFS_PHY_GDSC>;
+> +
+> +                       clock-names =
+> +                               "core_clk",
+> +                               "bus_aggr_clk",
+> +                               "iface_clk",
+> +                               "core_clk_unipro",
+> +                               "ref_clk",
+> +                               "tx_lane0_sync_clk",
+> +                               "rx_lane0_sync_clk",
+> +                               "rx_lane1_sync_clk";
+> +                       clocks =
+> +                               <&gcc GCC_UFS_PHY_AXI_CLK>,
+> +                               <&gcc GCC_AGGRE_UFS_PHY_AXI_CLK>,
+> +                               <&gcc GCC_UFS_PHY_AHB_CLK>,
+> +                               <&gcc GCC_UFS_PHY_UNIPRO_CORE_CLK>,
+> +                               <&rpmhcc RPMH_CXO_CLK>,
+> +                               <&gcc GCC_UFS_PHY_TX_SYMBOL_0_CLK>,
+> +                               <&gcc GCC_UFS_PHY_RX_SYMBOL_0_CLK>,
+> +                               <&gcc GCC_UFS_PHY_RX_SYMBOL_1_CLK>;
+> +                       freq-table-hz =
+> +                               <50000000 200000000>,
+> +                               <0 0>,
+> +                               <0 0>,
+> +                               <37500000 150000000>,
+> +                               <0 0>,
+> +                               <0 0>,
+> +                               <0 0>,
+> +                               <0 0>;
+> +
+> +                       resets = <&gcc GCC_UFS_PHY_BCR>;
+> +                       reset-names = "rst";
+> +
+> +                       status = "disabled";
+> +               };
+> +
+> +               ufsphy1: ufsphy@1d87000 {
 
-Given that the tolerance is a property of the panel or bridge, I agree with 
-Daniel that it should be implemented there, or at least in cooperation with 
-drm_panel and drm_bridge.
+nit: s/ufsphy@1d87000/phy@1d87000
 
-Semi-related information, I think the CEA and VESA standards allow a 0.5% 
-clock tolerance. What is the maximum clock frequency deviation required for 
-this platform ?
+> +                       compatible = "qcom,sdm845-qmp-ufs-phy";
+> +                       reg = <0x1d87000 0x18c>;
+> +                       #clock-cells = <1>;
+
+why do we need this clock-cells? ufsphy i think is not providing any
+clocks. Is it?
+Rest looks good.
+
+Best regards
+Vivek
+
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       ranges;
+> +                       clock-names = "ref",
+> +                                     "ref_aux";
+> +                       clocks = <&gcc GCC_UFS_MEM_CLKREF_CLK>,
+> +                                <&gcc GCC_UFS_PHY_PHY_AUX_CLK>;
+> +
+> +                       status = "disabled";
+> +
+> +                       ufsphy1_lanes: lanes@1d87400 {
+> +                               reg = <0x1d87400 0x108>,
+> +                                     <0x1d87600 0x1e0>,
+> +                                     <0x1d87c00 0x1dc>;
+> +                               #phy-cells = <0>;
+> +                       };
+> +               };
+> +
+>                 tcsr_mutex_regs: syscon@1f40000 {
+>                         compatible = "syscon";
+>                         reg = <0x1f40000 0x40000>;
+> --
+> 2.16.4
+>
+
 
 -- 
-Regards,
-
-Laurent Pinchart
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
