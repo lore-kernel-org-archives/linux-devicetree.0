@@ -1,102 +1,53 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v3 2/9] dt-bindings: ti-lmu: Remove LM3697
-Date: Fri, 19 Oct 2018 00:10:48 +0200
-Message-ID: <20181018221048.GA6364@amd>
-References: <4fcb91c7-b2b2-798d-8a41-fa1b475086e0@ti.com>
- <8c1559e1-b703-4c98-8bd9-7c9993bd59f5@gmail.com>
- <20181012162619.GA28573@bogus>
- <20181012180312.GB5565@amd>
- <60cc9238-aba2-aa6a-64a4-2b5e20835549@gmail.com>
- <CAL_Jsq+Yspr_iNP1eYanvtmiuMf-xNEZ0suDH3tQayV=V5r5=g@mail.gmail.com>
- <73647af4-0258-49a9-d9b6-eeef7e7813dc@gmail.com>
- <5c7f03cc-4d45-6010-523d-46721c218731@ti.com>
- <20181015214512.GA2001@amd>
- <aa401333-9650-c925-2085-6e6d17b576bd@ti.com>
+From: Stefano Stabellini <sstabellini@kernel.org>
+Subject: [PATCH v2] devicetree, xen: add xen,
+ shared-memory binding
+Date: Thu, 18 Oct 2018 15:10:30 -0700
+Message-ID: <1539900630-26566-1-git-send-email-sstabellini@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Kj7319i9nmIyA2yE"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <aa401333-9650-c925-2085-6e6d17b576bd@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh@kernel.org>, Lee Jones <lee.jones@linaro.org>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xenproject.org>
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
+To: devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, Stefano Stabellini <stefanos@xilinx.com>, sstabellini@kernel.org, xen-devel@lists.xen.org, julien.grall@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---Kj7319i9nmIyA2yE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> >>>> Given this one seems to have not really been finished, it's probably
-> >>>> okay to make changes in this case. Still, it would be good to see
-> >>>> patches structured so that it's obvious we're breaking things. But h=
-ow
-> >>>> the patches are structured doesn't matter until there's some agreeme=
-nt
-> >>>> on the end result.
-> >>>
-> >>> OK, so if I'm getting it right, the correct patch structure in this c=
-ase
-> >>> means that changes removing bindings from MFD and moving them along
-> >>> with the modifications to the LED subsystem should be placed in a sin=
-gle
-> >>> patch.
-> >>>
-> >>> Dan, could you please arrange the next patch set version accordingly?
-> >>
-> >> Yes I can squash the DT bindings patches and call it a "move and modif=
-y"
-> >=20
-> > You can do move without problems. But if you plan to modify them,
-> > please try to change as little as possible, make it separate patch and
-> > explain why new version is better than old one.
-> >=20
->=20
-> I have been thinking of how to do this.  Since the 2 devices are part of =
-the current
-> binding there really is not a way to move them.  Since there are still MF=
-D capable
-> devices available.
->=20
-> I would still need to remove the current active binding and create a new =
-binding in the LED
-> bindings directory.
->=20
-> I would have to remove and create in the same patch.
-
-Yeah, and this all is a sign that you should just keep the current
-binding, and make your code use it, see?
-
-You are free to use Sebastian's updated binding. It has "suggested by:
-Rob" or something like that on it, so it should be fine.
-
-You can add note to bindings/leds pointing to mfd binding.
-
-Now... this is what I've suggested before. If you don't agree, you may
-want to contact Tony Lindgren, IIRC he works for TI, too, and might be
-willing to help.
-
-Thank you,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---Kj7319i9nmIyA2yE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvJBOgACgkQMOfwapXb+vK14QCgtVl9pa/1OxjqylTQJZ5qJ0bm
-ihgAnRt5xkqAWZuKzr385+l6umkgYMS4
-=0x8R
------END PGP SIGNATURE-----
-
---Kj7319i9nmIyA2yE--
+RnJvbTogU3RlZmFubyBTdGFiZWxsaW5pIDxzdGVmYW5vc0B4aWxpbnguY29tPgoKSW50cm9kdWNl
+IGEgZGV2aWNlIHRyZWUgYmluZGluZyBmb3IgWGVuIHJlc2VydmVkLW1lbW9yeSByZWdpb25zLiBU
+aGV5CmFyZSB1c2VkIHRvIHNoYXJlIG1lbW9yeSBhY3Jvc3MgVk1zIGZyb20gdGhlIFZNIGNvbmZp
+ZyBmaWxlcy4gKFNlZQpzdGF0aWNfc2htIGNvbmZpZyBvcHRpb24uKQoKU2lnbmVkLW9mZi1ieTog
+U3RlZmFubyBTdGFiZWxsaW5pIDxzdGVmYW5vc0B4aWxpbnguY29tPgotLS0KQ2hhbmdlcyBpbiB2
+MjoKLSBmaXggQXV0aG9yIGxpbmUKLSBhZGQgdmVyc2lvbmluZwotIHhlbixpZCBpbnN0ZWFkIG9m
+IGlkCi0tLQogLi4uL2JpbmRpbmdzL3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50
+eHQgICB8IDIwICsrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0
+aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9yZXNlcnZlZC1tZW1vcnkveGVuLHNoYXJlZC1tZW1vcnkudHh0CgpkaWZmIC0tZ2l0IGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hh
+cmVkLW1lbW9yeS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2
+ZWQtbWVtb3J5L3hlbixzaGFyZWQtbWVtb3J5LnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRl
+eCAwMDAwMDAwLi45MDc4ZmI3Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50eHQKQEAg
+LTAsMCArMSwyMCBAQAorKiBYZW4gaHlwZXJ2aXNvciByZXNlcnZlZC1tZW1vcnkgYmluZGluZwor
+CitFeHBvc2Ugb25lIG9yIG1vcmUgbWVtb3J5IHJlZ2lvbnMgYXMgcmVzZXJ2ZWQtbWVtb3J5IHRv
+IHRoZSBndWVzdAordmlydHVhbCBtYWNoaW5lLiBUeXBpY2FsbHksIGEgcmVnaW9uIGlzIGNvbmZp
+Z3VyZWQgYXQgVk0gY3JlYXRpb24gdGltZQordG8gYmUgYSBzaGFyZWQgbWVtb3J5IGFyZWEgYWNy
+b3NzIG11bHRpcGxlIHZpcnR1YWwgbWFjaGluZXMgZm9yCitjb21tdW5pY2F0aW9uIGFtb25nIHRo
+ZW0uCisKK0ZvciBlYWNoIG9mIHRoZXNlIHByZS1zaGFyZWQgbWVtb3J5IHJlZ2lvbnMsIGEgcmFu
+Z2UgaXMgZXhwb3NlZCB1bmRlcgordGhlIC9yZXNlcnZlZC1tZW1vcnkgbm9kZSBhcyBhIGNoaWxk
+IG5vZGUuIEVhY2ggcmFuZ2Ugc3ViLW5vZGUgaXMgbmFtZWQKK3hlbi1zaG1lbUA8YWRkcmVzcz4g
+YW5kIGhhcyB0aGUgZm9sbG93aW5nIHByb3BlcnRpZXM6CisKKy0gY29tcGF0aWJsZToKKwljb21w
+YXRpYmxlID0gInhlbixzaGFyZWQtbWVtb3J5LXYxIiwgInhlbixzaGFyZWQtbWVtb3J5IgorCist
+IHJlZzoKKwl0aGUgYmFzZSBndWVzdCBwaHlzaWNhbCBhZGRyZXNzIGFuZCBzaXplIG9mIHRoZSBz
+aGFyZWQgbWVtb3J5IHJlZ2lvbgorCistIHhlbixpZDoKKwlhIHN0cmluZyB0aGF0IGlkZW50aWZp
+ZXMgdGhlIHNoYXJlZCBtZW1vcnkgcmVnaW9uIGFzIHNwZWNpZmllZCBpbgorCXRoZSBWTSBjb25m
+aWcgZmlsZQotLSAKMS45LjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpYZW4tZGV2ZWwgbWFpbGluZyBsaXN0Clhlbi1kZXZlbEBsaXN0cy54ZW5wcm9q
+ZWN0Lm9yZwpodHRwczovL2xpc3RzLnhlbnByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8veGVu
+LWRldmVs
