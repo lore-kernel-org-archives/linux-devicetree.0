@@ -1,136 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 7/8] arm64: dts: imx: add imx8qxp mek support
-Date: Thu, 18 Oct 2018 15:27:40 -0500
-Message-ID: <20181018202740.GA7262@bogus>
-References: <1539886483-15775-1-git-send-email-aisheng.dong@nxp.com>
- <1539886483-15775-8-git-send-email-aisheng.dong@nxp.com>
+Subject: Re: [PATCH v3 net-next 2/2] dt-bindings: net: add support for
+ Microchip KSZ9131
+Date: Thu, 18 Oct 2018 15:28:56 -0500
+Message-ID: <20181018202856.GA12458@bogus>
+References: <1539889562-21458-1-git-send-email-yuiko.oshino@microchip.com>
+ <1539889562-21458-3-git-send-email-yuiko.oshino@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1539886483-15775-8-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1539889562-21458-3-git-send-email-yuiko.oshino@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yuiko Oshino <yuiko.oshino@microchip.com>
+Cc: davem@davemloft.net, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, andrew@lunn.ch, linux-kernel@vger.kernel.org, mark.rutland@arm.com, m.felsch@pengutronix.de, Markus.Niebel@tqs.de, netdev@vger.kernel.org, UNGLinuxDriver@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 18, 2018 at 06:19:43PM +0000, A.s. Dong wrote:
-> i.MX 8QuadXPlus is a quad (4x) Cortex-A35 proccessor with powerful
-> graphic and multimedia features. This patch adds imx8qxp mek board
-> support.
+On Thu, 18 Oct 2018 15:06:02 -0400, Yuiko Oshino wrote:
+> Add support for Microchip Technology KSZ9131 10/100/1000 Ethernet PHY
 > 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> Signed-off-by: Yuiko Oshino <yuiko.oshino@microchip.com>
 > ---
-> v2->v3:
->  * Pad names update
->  * move memory node to here
->  * add no-sd and no-sdio under emmc node
-> ---
->  Documentation/devicetree/bindings/arm/fsl.txt |   4 +
->  arch/arm64/boot/dts/freescale/Makefile        |   1 +
->  arch/arm64/boot/dts/freescale/imx8qxp-mek.dts | 141 ++++++++++++++++++++++++++
->  3 files changed, 146 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+>  .../devicetree/bindings/net/micrel-ksz90x1.txt     | 28 +++++++++++++++++++++-
+>  1 file changed, 27 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-> index baeb1fc..704472b 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.txt
-> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
-> @@ -97,6 +97,10 @@ i.MX7 SabreSD Board
->  Required root node properties:
->      - compatible = "fsl,imx7d-sdb", "fsl,imx7d";
->  
-> +i.MX8QXP MEK Board
-> +Required root node properties:
-> +    - compatible = "fsl,imx8qxp-mek", "fsl,imx8qxp";
-> +
->  Generic i.MX boards
->  -------------------
->  
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 86e18ad..cff87f3 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -13,3 +13,4 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-rdb.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-simu.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-rdb.dtb
-> +dtb-$(CONFIG_SOC_IMX8QXP) += imx8qxp-mek.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> new file mode 100644
-> index 0000000..6087ead
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> @@ -0,0 +1,141 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright 2017~2018 NXP
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "imx8qxp.dtsi"
-> +
-> +/ {
-> +	model = "Freescale i.MX8QXP MEK";
-> +	compatible = "fsl,imx8qxp-mek", "fsl,imx8qxp";
-> +
-> +	chosen {
-> +		stdout-path = &dma_lpuart0;
-> +	};
-> +
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		reg = <0x00000000 0x80000000 0 0x40000000>;
-> +	};
-> +
-> +	reg_usdhc2_vmmc: usdhc2-vmmc {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "SD1_SPWR";
-> +		regulator-min-microvolt = <3000000>;
-> +		regulator-max-microvolt = <3000000>;
-> +		gpio = <&lsio_gpio4 19 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
-> +};
-> +
-> +&dma_lpuart0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_lpuart0>;
-> +	status = "okay";
-> +};
-> +
-> +&fec1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_fec1>;
-> +	phy-mode = "rgmii-id";
-> +	phy-handle = <&ethphy0>;
-> +	fsl,magic-packet;
-> +	status = "okay";
-> +
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ethphy0: ethernet-phy@0 {
-> +			compatible = "ethernet-phy-ieee802.3-c22";
 
-> +			at803x,eee-disabled;
-> +			at803x,vddio-1p8v;
-
-These 2 are Not documented.
+Reviewed-by: Rob Herring <robh@kernel.org>
