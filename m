@@ -1,98 +1,141 @@
-Return-Path: <jic23@kernel.org>
-Date: Sat, 13 Oct 2018 14:54:24 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 2/2] iio:temperature:max31856:Add device tree bind
- info
-Message-ID: <20181013145424.63fec888@archlinux>
-In-Reply-To: <1539275890-38141-2-git-send-email-matthew.weber@rockwellcollins.com>
-References: <1539275890-38141-1-git-send-email-matthew.weber@rockwellcollins.com>
-	<1539275890-38141-2-git-send-email-matthew.weber@rockwellcollins.com>
+Return-Path: <SRS0=yDjn=M6=pengutronix.de=mfe@kernel.org>
+Date: Thu, 18 Oct 2018 23:16:43 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH] Input: qt1050 - add Microchip AT42QT1050 support
+Message-ID: <20181018211643.ypdssxyuo6qn4ko2@pengutronix.de>
+References: <20180924151330.6114-1-m.felsch@pengutronix.de>
+ <20181016034434.GA56342@dtor-ws>
+ <20181017233153.s4ihu5gmc5qpul7u@pengutronix.de>
+ <20181018003918.GA205061@dtor-ws>
+ <20181018081308.gsvmdpprlqavwh45@pengutronix.de>
+ <20181018182329.GC210757@dtor-ws>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-To: Matt Weber <matthew.weber@rockwellcollins.com>
-Cc: linux-iio@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181018182329.GC210757@dtor-ws>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, voice.shen@atmel.com, raphaelpereira@gmail.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, 11 Oct 2018 11:38:10 -0500
-Matt Weber <matthew.weber@rockwellcollins.com> wrote:
-
-> From: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
+On 18-10-18 11:23, Dmitry Torokhov wrote:
+> On Thu, Oct 18, 2018 at 10:13:08AM +0200, Marco Felsch wrote:
+> > Hi Dmitry,
+> > On 18-10-17 17:39, Dmitry Torokhov wrote:
+> > > On Thu, Oct 18, 2018 at 01:31:53AM +0200, Marco Felsch wrote:
+> > > > On 18-10-15 20:44, Dmitry Torokhov wrote:
+> > > > > On Mon, Sep 24, 2018 at 05:13:30PM +0200, Marco Felsch wrote:
+> > > > > > +static int qt1050_disable_key(struct regmap *map, int number)
+> > > > > > +{
+> > > > > > +	unsigned int reg;
+> > > > > > +
+> > > > > > +	switch (number) {
+> > > > > > +	case 0:
+> > > > > > +		reg = QT1050_DI_AKS_0;
+> > > > > > +		break;
+> > > > > > +	case 1:
+> > > > > > +		reg = QT1050_DI_AKS_1;
+> > > > > > +		break;
+> > > > > > +	case 2:
+> > > > > > +		reg = QT1050_DI_AKS_2;
+> > > > > > +		break;
+> > > > > > +	case 3:
+> > > > > > +		reg = QT1050_DI_AKS_3;
+> > > > > > +		break;
+> > > > > > +	case 4:
+> > > > > > +		reg = QT1050_DI_AKS_4;
+> > > > > > +		break;
+> > > 
+> > > I wonder if there is any value in doing
+> > > 
+> > > 	reg = QT1050_DI_AKS_0 + i + (i > 2);
+> > > 
+> > > and similarly for other registers.
+> > 
+> > Yes there is a gap in the register map and your approach is smart, but I
+> > find my less error prone (i.e. it should be (i > 1)) and easier to read
+> > it. Anyway I can change this if you find it better.
 > 
-> This patch added device tree binding info for MAX31856 driver.
+> No, I was just wondering if we could avoid bunch of "switch"es in the
+> code. Maybe have static const array of structures for various registers
+> and offsets which you index by key number?
+
+Yes, that is a better approach. I will convert the driver to it, thanks
+for your suggestion.
+
 > 
-> Signed-off-by: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
-> Signed-off-by: Matt Weber <matthew.weber@rockwellcollins.com>
-Device tree bindings should be cc'd to the devicetree list and maintainers.
-
-Thanks,
-
-Jonathan
-
-> ---
-> Changes v1 -> v2
-> [Matt
->  - Removed comment block and added possibilities of
->    thermocouple type in device tree binding doc.
+> ...
 > 
-> ---
->  .../bindings/iio/temperature/max31856.txt          | 32 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/temperature/max31856.txt
+> > > > > > +	if (IS_ENABLED(CONFIG_OF)) {
+> > > > > > +		err = qt1050_parse_dt(ts);
+> > > > > > +		if (err) {
+> > > > > > +			dev_err(dev, "Failed to parse dt: %d\n", err);
+> > > > > > +			return err;
+> > > > > > +		}
+> > > > > > +	} else {
+> > > > > > +		/* init each key with a valid code */
+> > > > > > +		for (i = 0; i < QT1050_MAX_KEYS; i++)
+> > > > > > +			ts->keys[i].keycode = KEY_1 + i;
+> > > > > > +	}
+> > > > > 
+> > > > > I'd rather we used generic device properties (i.e.
+> > > > > device_property_read_xxx() instead of of_property_read_xxx()) and did
+> > > > > not provide this fallback.
+> > > > 
+> > > > I'm with you, but I wanted to use the of_property_read_variable_*()
+> > > > helpers, since all properties can distinguish in their array size.
+> > > > Sure I can add a helper to reimplement that localy using the 
+> > > > device_property_read_xxx() functions. IMHO this will be a later on
+> > > > feature, if the acpi guys needs this features too. Is that okay?
+> > > 
+> > > Well, that is an argument for adding proper
+> > > device_property_read_variable_*(). However, after lookign at the binding
+> > > again, I wonder if you should not describe this as sub-nodes:
+> > 
+> > A device_property_read_variable_*() would be nice.
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/temperature/max31856.txt b/Documentation/devicetree/bindings/iio/temperature/max31856.txt
-> new file mode 100644
-> index 0000000..e1def9f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/temperature/max31856.txt
-> @@ -0,0 +1,32 @@
-> +Maxim MAX31856 thermocouple support
-> +
-> +https://datasheets.maximintegrated.com/en/ds/MAX31856.pdf
-> +
-> +Required properties:
-> +	- compatible: must be "max31856"
-> +	- reg: SPI chip select number for the device
-> +	- spi-max-frequency: As per datasheet max. supported freq is 5000000
-> +	- spi-cpha: must be defined for max31856 to enable SPI mode 1
-> +	- type: Type of thermocouple (By default is K-Type)
-> +		0x00 : TYPE_B
-> +		0x01 : TYPE_E
-> +		0x02 : TYPE_J
-> +		0x03 : TYPE_K (default)
-> +		0x04 : TYPE_N
-> +		0x05 : TYPE_R
-> +		0x06 : TYPE_S
-> +		0x07 : TYPE_T
-> +
-> +	Refer to spi/spi-bus.txt for generic SPI slave bindings.
-> +
-> +Optional properties:
-> +	- one-shot: Enable one-shot Conversion mode (By default mode is auto)
+> Then please add it ;)
+> 
+> > 
+> > > 
+> > > 	touchkeys@41 {
+> > > 		...
+> > > 		up@0 {
+> > > 			reg = <0>;
+> > > 			linux,code = <KEY_UP>;
+> > > 			average-samples = <64>;
+> > > 			pre-scaling = <16>;
+> > > 			pressure-threshold = <...>;
+> > > 		};
+> > > 
+> > > 		right@1 {
+> > > 			reg = <1>;
+> > > 			linux,code = <KEY_RIGHT>;
+> > > 			average-samples = <64>;
+> > > 			pre-scaling = <8>;
+> > > 			pressure-threshold = <2>;
+> > > 		};
+> > > 		...
+> > > 	};
+> > > 
+> > > and then use device_for_each_child_node() to parse it.
+> > 
+> > That's a good approach, thanks. I wanted to be similar with the other
+> > input bindings, which uses arrays for linux,code and scalar values for
+> > other properties. Since the qt1050 can configure each pad differently
+> > I used only arrays. Is it good to change the layout only for one deivce?
+> > Maybe it would better to implement the device_property_read_variable_*()
+> > helper.
+> 
+> We do have similar binding in input, namely
+> Documentation/devicetree/bindings/input/gpio-keys.txt
+> I think if keys form a simple array and not allow individual
+> configuration (noise, number of samples, etc), then weshoudl use
+> linux,keycodes binding, and if keys are individually controllable you
+> might want to use the sub-node approach.
 
-Why is this something that should be in devicetree rather than controlled
-in the driver in response to some userspace interaction?
+Yes, I got your point.
 
+Thanks fpr your feedback I will integrate it and send a v2.
 
-> +
-> + Example:
-> +	max31856@0 {
-> +		compatible = "max31856";
-> +		reg = <0>;
-> +		spi-max-frequency = <5000000>;
-> +		spi-cpha;
-> +		type = <0x03>;
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index dd9a83d..6482ae8 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7161,6 +7161,7 @@ MAX31856 IIO DRIVER
->  M:	Matthew Weber <matthew.weber@rockwellcollins.com>
->  S:	Maintained
->  F:	drivers/iio/temperature/max31856.c
-> +F:	Documentation/devicetree/bindings/iio/temperature/max31856.txt
->  
->  IIO UNIT CONVERTER
->  M:	Peter Rosin <peda@axentia.se>
+Regards,
+Marco
