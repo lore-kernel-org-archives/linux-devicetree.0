@@ -1,111 +1,83 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [PATCH 4/9] dt-bindings: Add ANX6345 DP/eDP transmitter binding
-Date: Thu, 18 Oct 2018 18:00:05 +0800
-Message-ID: <c68f0da9607805e1f6673a9a16a7dcfff4d8fe91.camel@aosc.io>
-References: <20181018073327.64942-1-icenowy@aosc.io>
-         <20181018073327.64942-5-icenowy@aosc.io> <1886367.eljNk7jKYl@avalon>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH 2/2] dt-bindings: iio: adc: Add docs for AD7606 ADC
+Date: Thu, 18 Oct 2018 10:35:42 +0000
+Message-ID: <66d43c0401e0899584665c7ddec5d36caae49a20.camel@analog.com>
+References: <1539853956-26644-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1886367.eljNk7jKYl@avalon>
+In-Reply-To: <1539853956-26644-1-git-send-email-stefan.popa@analog.com>
+Content-Language: en-US
+Content-ID: <ECA681831DD86E43999D19CFB96EFCB7@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, David Airlie <airlied@linux.ie>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: "mark.rutland@arm.com" <mark.rutland@arm.com>, "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>, "jic23@kernel.org" <jic23@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lars@metafoo.de" <lars@metafoo.de>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-在 2018-10-18四的 11:53 +0300，Laurent Pinchart写道：
-> Hi Icenowy,
-> 
-> Thank you for the patch.
-> 
-> On Thursday, 18 October 2018 10:33:22 EEST Icenowy Zheng wrote:
-> > The ANX6345 is an ultra-low power DisplayPort/eDP transmitter
-> > designed
-> > for portable devices.
-> > 
-> > Add a binding document for it.
-> > 
-> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> > ---
-> >  .../bindings/display/bridge/anx6345.txt       | 39
-> > +++++++++++++++++++
-> >  1 file changed, 39 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/display/bridge/anx6345.txt
-> > 
-> > diff --git
-> > a/Documentation/devicetree/bindings/display/bridge/anx6345.txt
-> > b/Documentation/devicetree/bindings/display/bridge/anx6345.txt new
-> > file
-> > mode 100644
-> > index 000000000000..0689d4eb5f65
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
-> > @@ -0,0 +1,39 @@
-> > +Analogix ANX6345 eDP Transmitter
-> > +--------------------------------
-> > +
-> > +The ANX6345 is an ultra-low power Full-HD eDP transmitter designed
-> > for
-> > +portable devices.
-> > +
-> > +Required properties:
-> > +
-> > + - compatible		: "analogix,anx6345"
-> > + - reg			: I2C address of the device
-> > + - reset-gpios		: Which GPIO to use for reset
-> > +
-> > +Optional properties:
-> > +
-> > + - dvdd12-supply	: Regulator for 1.2V digital core power.
-> > + - dvdd25-supply	: Regulator for 2.5V digital core power.
-> 
-> Shouldn't these to supplies be mandatory ?
-
-Yes they should.
-
-> 
-> > + - panel-supply		: Regulator for the power of the panel.
-> 
-> Shouldn't the panel supply for specified in the DT node of the panel
-> ?
-
-However, eDP panel can be probed, may vary on the same device, and we
-don't have a generic binding for it...
-
-> 
-> > + - edid			: verbatim EDID data block describing
-> > attached
-> > +			  panel, only used when the panel has no EDID
-> > info.
-> 
-> This should also be specified in the panel DT node.
-> 
-> > + - Video port for RGB input, using the DT bindings defined in [1].
-> 
-> I think you should also add a port for the output.
-
-What will it point to?
-
-> 
-> > +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +
-> > +Example:
-> > +
-> > +anx6345: anx6345@38 {
-> > +	compatible = "analogix,anx6345";
-> > +	reg = <0x38>;
-> > +	reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
-> > +	panel-supply = <&reg_dc1sw>;
-> > +	dvdd25-supply = <&reg_dldo2>;
-> > +	dvdd12-supply = <&reg_fldo1>;
-> > +
-> > +	port {
-> > +		anx6345_in: endpoint {
-> > +			remote-endpoint = <&tcon0_out_anx6345>;
-> > +		};
-> > +	};
-> > +};
-> 
-> 
+T24gVGh1LCAyMDE4LTEwLTE4IGF0IDEyOjEyICswMzAwLCBTdGVmYW4gUG9wYSB3cm90ZToNCj4g
+RG9jdW1lbnQgc3VwcG9ydCBmb3IgQUQ3NjA2IEFuYWxvZyB0byBEaWdpdGFsIENvbnZlcnRlci4N
+Cj4gDQoNCkNvbW1tZW50cyBpbmxpbmUNCg0KPiBTaWduZWQtb2ZmLWJ5OiBTdGVmYW4gUG9wYSA8
+c3RlZmFuLnBvcGFAYW5hbG9nLmNvbT4NCj4gLS0tDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
+cy9paW8vYWRjL2FkaSxhZDc2MDYudHh0ICAgICB8IDUxDQo+ICsrKysrKysrKysrKysrKysrKysr
+KysNCj4gIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHwgIDEgKw0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA1MiBpbnNlcnRpb25zKCspDQo+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQNCj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hZGMv
+YWRpLGFkNzYwNi50eHQNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvaWlvL2FkYy9hZGksYWQ3NjA2LnR4dA0KPiBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9paW8vYWRjL2FkaSxhZDc2MDYudHh0DQo+IG5ldyBmaWxlIG1vZGUg
+MTAwNjQ0DQo+IGluZGV4IDAwMDAwMDAuLmRlZGU1ODENCj4gLS0tIC9kZXYvbnVsbA0KPiArKysg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaWlvL2FkYy9hZGksYWQ3NjA2LnR4
+dA0KPiBAQCAtMCwwICsxLDUxIEBADQo+ICtBbmFsb2cgRGV2aWNlcyBBRDc2MDYgU2ltdWx0YW5l
+b3VzIFNhbXBsaW5nIEFEQw0KPiArDQo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciB0aGUgQUQ3
+NjA2Og0KPiArDQo+ICsgLSBjb21wYXRpYmxlOiBNdXN0IGJlIG9uZSBvZiAiYWRpLGFkNzYwNS00
+IiwgImFkaSxhZDc2MDYtOCIsDQo+ICJhZGksYWQ3NjA2LTYiIG9yDQo+ICsgCSAgICAgICAiYWRp
+LGFkNzYwNi00Ii4NCj4gKyAtIHJlZzogU1BJIGNoaXAgc2VsZWN0IG51bWJlciBmb3IgdGhlIGRl
+dmljZQ0KPiArIC0gc3BpLW1heC1mcmVxdWVuY3k6IE1heCBTUEkgZnJlcXVlbmN5IHRvIHVzZQ0K
+PiArIAlzZWU6IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLWJ1cy50
+eHQNCj4gKyAtIHNwaS1jcGhhOiBTZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3NwaS9zcGktYnVzLnR4dA0KDQpJIGRvbid0IGtub3cgd2hhdCB0aGUgdHlwaWNhbCBwcmVmZXJl
+bmNlIGlzICh3aXRoIHJlc3BlY3QgdG8gU1BJIGRvY3MpLCBidXQNCkknZCBqdXN0IHJlZmVyZW5j
+ZSB0aGUgIkRvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLWJ1cy50eHQN
+CiJkb2MgaGVyZS4NCg0KPiArIC0gYXZjYy1zdXBwbHk6IHBoYW5kbGUgdG8gdGhlIEF2Y2MgcG93
+ZXIgc3VwcGx5DQo+ICsgLSBpbnRlcnJ1cHRzOiBJUlEgbGluZSBmb3IgdGhlIEFEQw0KPiArIAlz
+ZWU6IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtDQo+IGNvbnRy
+b2xsZXIvaW50ZXJydXB0cy50eHQNCj4gKyAtIGNvbnZlcnNpb24tc3RhcnQtZ3BpbzogbXVzdCBi
+ZSB0aGUgZGV2aWNlIHRyZWUgaWRlbnRpZmllciBvZiB0aGUNCj4gQ09OVlNUIHBpbi4NCj4gKwkJ
+CSAgVGhpcyBsb2dpYyBpbnB1dCBpcyB1c2VkIHRvIGluaXRpYXRlIGNvbnZlcnNpb25zDQo+IG9u
+DQo+ICsJCQkgIHRoZSBhbmFsb2cgaW5wdXQgY2hhbm5lbHMuDQo+ICsNCj4gK09wdGlvbmFsIHBy
+b3BlcnRpZXM6DQo+ICsNCj4gKyAtIHJlc2V0LWdwaW86IG11c3QgYmUgdGhlIGRldmljZSB0cmVl
+IGlkZW50aWZpZXIgb2YgdGhlIFJFU0VUIHBpbi4gSWYNCj4gc3BlY2lmaWVkLA0KPiArIAkgICAg
+ICAgaXQgd2lsbCBiZSBhc3NlcnRlZCBkdXJpbmcgZHJpdmVyIHByb2JlLg0KPiArIC0gZmlyc3Qt
+ZGF0YS1ncGlvOiBtdXN0IGJlIHRoZSBkZXZpY2UgdHJlZSBpZGVudGlmaWVyIG9mIHRoZSBGUlNU
+REFUQQ0KPiBwaW4uDQo+ICsgCQkgICAgVGhlIEZSU1REQVRBIG91dHB1dCBpbmRpY2F0ZXMgd2hl
+biB0aGUgZmlyc3QgY2hhbm5lbCwNCj4gVjEsIGlzDQo+ICsJCSAgICBiZWluZyByZWFkIGJhY2sg
+b24gZWl0aGVyIHRoZSBwYXJhbGxlbCwgYnl0ZSBvciBzZXJpYWwNCj4gaW50ZXJmYWNlLg0KPiAr
+LSBzdGFuZGJ5LWdwaW86IG11c3QgYmUgdGhlIGRldmljZSB0cmVlIGlkZW50aWZpZXIgb2YgdGhl
+IFNUQlkgcGluLiBUaGlzDQo+IHBpbiBpcyB1c2VkDQo+ICsJCXRvIHBsYWNlIHRoZSBBRDc2MDYg
+aW50byBvbmUgb2YgdHdvIHBvd2VyLWRvd24gbW9kZXMsDQo+IFN0YW5kYnkgbW9kZSBvcg0KPiAr
+CQlTaHV0ZG93biBtb2RlLg0KPiArLSByYW5nZS1ncGlvOiBtdXN0IGJlIHRoZSBkZXZpY2UgdHJl
+ZSBpZGVudGlmaWVyIG9mIHRoZSBSQU5HRSBwaW4uIFRoZQ0KPiBwb2xhcml0eSBvbg0KPiArCSAg
+ICAgIHRoaXMgcGluIGRldGVybWluZXMgdGhlIGlucHV0IHJhbmdlIG9mIHRoZSBhbmFsb2cgaW5w
+dXQNCj4gY2hhbm5lbHMuIElmDQo+ICsJICAgICAgdGhpcyBwaW4gaXMgdGllZCB0byBhIGxvZ2lj
+IGhpZ2gsIHRoZSBhbmFsb2cgaW5wdXQgcmFuZ2UgaXMNCj4gwrExMFYgZm9yDQo+ICsJICAgICAg
+YWxsY2hhbm5lbHMuIElmIHRoaXMgcGluIGlzIHRpZWQgdG8gYSBsb2dpYyBsb3csIHRoZSBhbmFs
+b2cNCj4gaW5wdXQgcmFuZ2UNCj4gKwkgICAgICBpcyDCsTVWIGZvciBhbGwgY2hhbm5lbHMuDQo+
+ICsNCg0Kbml0cGljazogYHJhbmdlLWdwaW9gICYmIGBzdGFuZGJ5LWdwaW9gIGVudHJpZXMgYXJl
+IGluZGVudGVkIGRpZmZlcmVudGx5DQp0aGFuIGByZXNldC1ncGlvYCAmJiBgZmlyc3QtZGF0YS1n
+cGlvYA0KDQo+ICtFeGFtcGxlOg0KPiArDQo+ICsJYWRjQDAgew0KPiArCQljb21wYXRpYmxlID0g
+ImFkaSxhZDc2MDYtOCI7DQo+ICsJCXJlZyA9IDwwPjsNCj4gKwkJc3BpLW1heC1mcmVxdWVuY3kg
+PSA8MTAwMDAwMD47DQo+ICsJCXNwaS1jcG9sOw0KPiArDQo+ICsJCWF2Y2Mtc3VwcGx5ID0gPCZh
+ZGNfdnJlZj47DQo+ICsNCj4gKwkJaW50ZXJydXB0cyA9IDwyNSBJUlFfVFlQRV9FREdFX0ZBTExJ
+Tkc+Ow0KPiArCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvPjsNCj4gKw0KPiArCQljb252ZXJz
+aW9uLXN0YXJ0LWdwaW8gPSA8JmdwaW8gMTcgMD47DQo+ICsJCXJlc2V0LWdwaW8gPSA8JmdwaW8g
+MjcgMD47DQo+ICsJCWZpcnN0LWRhdGEtZ3BpbyA9IDwmZ3BpbyAyMiAwPjsNCj4gKwkJc3RhbmRi
+eS1ncGlvID0gPCZncGlvIDI0IDA+Ow0KPiArCX07DQo+IGRpZmYgLS1naXQgYS9NQUlOVEFJTkVS
+UyBiL01BSU5UQUlORVJTDQo+IGluZGV4IDg0MzU0NWQuLjZkNjNkYjQgMTAwNjQ0DQo+IC0tLSBh
+L01BSU5UQUlORVJTDQo+ICsrKyBiL01BSU5UQUlORVJTDQo+IEBAIC04NDUsNiArODQ1LDcgQEAg
+TDoJbGludXgtaWlvQHZnZXIua2VybmVsLm9yZw0KPiAgVzoJaHR0cDovL2V6LmFuYWxvZy5jb20v
+Y29tbXVuaXR5L2xpbnV4LWRldmljZS1kcml2ZXJzDQo+ICBTOglTdXBwb3J0ZWQNCj4gIEY6CWRy
+aXZlcnMvaWlvL2FkYy9hZDc2MDYuYw0KPiArRjoJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2lpby9hZGMvYWQ3NjA2LnR4dA0KPiAgDQo+ICBBTkFMT0cgREVWSUNFUyBJTkMgQUQ5
+Mzg5QiBEUklWRVINCj4gIE06CUhhbnMgVmVya3VpbCA8aGFucy52ZXJrdWlsQGNpc2NvLmNvbT4N
+Cg==
