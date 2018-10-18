@@ -1,66 +1,51 @@
-From: Yuiko Oshino <yuiko.oshino@microchip.com>
-Subject: [PATCH v3 net-next 2/2] dt-bindings: net: add support for Microchip KSZ9131
-Date: Thu, 18 Oct 2018 15:06:02 -0400
-Message-ID: <1539889562-21458-3-git-send-email-yuiko.oshino@microchip.com>
-References: <1539889562-21458-1-git-send-email-yuiko.oshino@microchip.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: [PATCH V3 2/8] dt-bindings: serial: lpuart: add imx8qxp compatible
+ string
+Date: Thu, 18 Oct 2018 18:19:18 +0000
+Message-ID: <1539886483-15775-3-git-send-email-aisheng.dong@nxp.com>
+References: <1539886483-15775-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539889562-21458-1-git-send-email-yuiko.oshino@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: davem@davemloft.net, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, andrew@lunn.ch
-Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, m.felsch@pengutronix.de, Markus.Niebel@tqs.de, netdev@vger.kernel.org, UNGLinuxDriver@microchip.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1539886483-15775-1-git-send-email-aisheng.dong@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "A.s. Dong" <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Microchip Technology KSZ9131 10/100/1000 Ethernet PHY
+Add imx8qxp compatible string
 
-Signed-off-by: Yuiko Oshino <yuiko.oshino@microchip.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-serial@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
- .../devicetree/bindings/net/micrel-ksz90x1.txt     | 28 +++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/serial/fsl-lpuart.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-index e22d8cf..5100358 100644
---- a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-+++ b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-@@ -1,4 +1,4 @@
--Micrel KSZ9021/KSZ9031 Gigabit Ethernet PHY
-+Micrel KSZ9021/KSZ9031/KSZ9131 Gigabit Ethernet PHY
- 
- Some boards require special tuning values, particularly when it comes
- to clock delays. You can specify clock delay values in the PHY OF
-@@ -64,6 +64,32 @@ KSZ9031:
-         Attention: The link partner must be configurable as slave otherwise
-         no link will be established.
- 
-+KSZ9131:
-+
-+  All skew control options are specified in picoseconds. The increment
-+  step is 100ps. Unlike KSZ9031, the values represent picoseccond delays.
-+  A negative value can be assigned as rxc-skew-psec = <(-100)>;.
-+
-+  Optional properties:
-+
-+    Range of the value -700 to 2400, default value 0:
-+
-+      - rxc-skew-psec : Skew control of RX clock pad
-+      - txc-skew-psec : Skew control of TX clock pad
-+
-+    Range of the value -700 to 800, default value 0:
-+
-+      - rxdv-skew-psec : Skew control of RX CTL pad
-+      - txen-skew-psec : Skew control of TX CTL pad
-+      - rxd0-skew-psec : Skew control of RX data 0 pad
-+      - rxd1-skew-psec : Skew control of RX data 1 pad
-+      - rxd2-skew-psec : Skew control of RX data 2 pad
-+      - rxd3-skew-psec : Skew control of RX data 3 pad
-+      - txd0-skew-psec : Skew control of TX data 0 pad
-+      - txd1-skew-psec : Skew control of TX data 1 pad
-+      - txd2-skew-psec : Skew control of TX data 2 pad
-+      - txd3-skew-psec : Skew control of TX data 3 pad
-+
- Examples:
- 
- 	mdio {
+diff --git a/Documentation/devicetree/bindings/serial/fsl-lpuart.txt b/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
+index 6bd3f2e..21483ba 100644
+--- a/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
++++ b/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
+@@ -8,6 +8,8 @@ Required properties:
+     on LS1021A SoC with 32-bit big-endian register organization
+   - "fsl,imx7ulp-lpuart" for lpuart compatible with the one integrated
+     on i.MX7ULP SoC with 32-bit little-endian register organization
++  - "fsl,imx8qxp-lpuart" for lpuart compatible with the one integrated
++    on i.MX8QXP SoC with 32-bit little-endian register organization
+ - reg : Address and length of the register set for the device
+ - interrupts : Should contain uart interrupt
+ - clocks : phandle + clock specifier pairs, one for each entry in clock-names
 -- 
 2.7.4
