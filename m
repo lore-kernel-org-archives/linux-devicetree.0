@@ -1,113 +1,68 @@
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
-Subject: [PATCH] ARM: dts: imx: Add dummy PHYs for HSIC-only USB controllers
-Date: Thu, 18 Oct 2018 09:45:04 +0200
-Message-ID: <1539848729-27646-1-git-send-email-frieder.schrempf@kontron.de>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH 3/5] dt-bindings: add more optional properties for
+ elan_i2c touchpads
+Date: Thu, 18 Oct 2018 10:10:44 +0200
+Message-ID: <CAO-hwJ+z6YdnLdbzeh-7f99cBBjHfbLKLzKo-fQQaC_W8bt_Uw@mail.gmail.com>
+References: <20181012142413.26107-1-benjamin.tissoires@redhat.com>
+ <20181012142413.26107-4-benjamin.tissoires@redhat.com> <20181017201522.GA26525@bogus>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181017201522.GA26525@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, peter.chen@nxp.com
-Cc: Frieder Schrempf <frieder.schrempf@kontron.de>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: robh@kernel.org, Hans de Goede <hdegoede@redhat.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some SOCs in the i.MX6 family have a USB host controller that is
-only capable of the HSIC interface and has no on-board PHY.
+On Wed, Oct 17, 2018 at 10:15 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Oct 12, 2018 at 04:24:11PM +0200, Benjamin Tissoires wrote:
+> > Some new touchpads IC are connected through PS/2 and I2C. On some of these
+> > new IC, the I2C part doesn't have all of the information available.
+> > We need to be able to forward the touchpad parameters from PS/2 and
+> > thus, we need those new optional properties.
+> >
+> > Link: https://bugzilla.redhat.com/show_bug.cgi?id=1628715
+> > Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > ---
+> >  Documentation/devicetree/bindings/input/elan_i2c.txt | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/input/elan_i2c.txt b/Documentation/devicetree/bindings/input/elan_i2c.txt
+> > index 797607460735..ace6bcb0b4eb 100644
+> > --- a/Documentation/devicetree/bindings/input/elan_i2c.txt
+> > +++ b/Documentation/devicetree/bindings/input/elan_i2c.txt
+> > @@ -13,6 +13,14 @@ Optional properties:
+> >    pinctrl binding [1]).
+> >  - vcc-supply: a phandle for the regulator supplying 3.3V power.
+> >  - elan,trackpoint: touchpad can support a trackpoint (boolean)
+> > +- elan,clickpad: touchpad is a clickpad (the entire surface is a button)
+>
+> > +- elan,max_x: the maximum reported value on the X axis
+> > +- elan,max_y: the maximum reported value on the Y axis
+> > +- elan,min_x: the minimum reported value on the X axis
+> > +- elan,min_y: the minimum reported value on the Y axis
+> > +- elan,x_res: the resolution of the X axis (in units per mm)
+> > +- elan,y_res: the resolution of the Y axis (in units per mm)
+> > +- elan,width: max reported width of a blob
+>
+> Can't we use standard touchscreen properties here? (Yes, I get this is a
+> touchpad, not touchscreen).
 
-To be able to use these controllers, we need to add "usb-nop-xceiv"
-dummy PHYs.
+Hey Rob,
 
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
----
- arch/arm/boot/dts/imx6qdl.dtsi | 14 ++++++++++++++
- arch/arm/boot/dts/imx6sl.dtsi  |  7 +++++++
- arch/arm/boot/dts/imx6sx.dtsi  |  6 ++++++
- 3 files changed, 27 insertions(+)
+Well, there is that (it's a touchpad driver) and we can't also really
+use the of_touchscreen.c implementation.
+If both concerns are not an issue, we can then move the [min/max/res]
+properties to the touchscreen ones.
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 61d2d26..d3404d1 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -139,6 +139,16 @@
- 		interrupts = <0 94 IRQ_TYPE_LEVEL_HIGH>;
- 	};
- 
-+	usbphynop1: usbphynop1 {
-+		compatible = "usb-nop-xceiv";
-+		#phy-cells = <0>;
-+	};
-+
-+	usbphynop2: usbphynop2 {
-+		compatible = "usb-nop-xceiv";
-+		#phy-cells = <0>;
-+	};
-+
- 	soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -981,6 +991,8 @@
- 				reg = <0x02184400 0x200>;
- 				interrupts = <0 41 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6QDL_CLK_USBOH3>;
-+				fsl,usbphy = <&usbphynop1>;
-+				phy_type = "hsic";
- 				fsl,usbmisc = <&usbmisc 2>;
- 				dr_mode = "host";
- 				ahb-burst-config = <0x0>;
-@@ -994,6 +1006,8 @@
- 				reg = <0x02184600 0x200>;
- 				interrupts = <0 42 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6QDL_CLK_USBOH3>;
-+				fsl,usbphy = <&usbphynop2>;
-+				phy_type = "hsic";
- 				fsl,usbmisc = <&usbmisc 3>;
- 				dr_mode = "host";
- 				ahb-burst-config = <0x0>;
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 7a4f5da..81edcdc 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -110,6 +110,11 @@
- 		interrupts = <0 94 IRQ_TYPE_LEVEL_HIGH>;
- 	};
- 
-+	usbphynop1: usbphynop1 {
-+		compatible = "usb-nop-xceiv";
-+		#phy-cells = <0>;
-+	};
-+
- 	soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -815,6 +820,8 @@
- 				reg = <0x02184400 0x200>;
- 				interrupts = <0 40 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6SL_CLK_USBOH3>;
-+				fsl,usbphy = <&usbphynop1>;
-+				phy_type = "hsic";
- 				fsl,usbmisc = <&usbmisc 2>;
- 				dr_mode = "host";
- 				ahb-burst-config = <0x0>;
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 844caa3..07ed417 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -159,6 +159,11 @@
- 		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
- 	};
- 
-+	usbphynop1: usbphynop1 {
-+		compatible = "usb-nop-xceiv";
-+		#phy-cells = <0>;
-+	};
-+
- 	soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -877,6 +882,7 @@
- 				reg = <0x02184400 0x200>;
- 				interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6SX_CLK_USBOH3>;
-+				fsl,usbphy = <&usbphynop1>;
- 				fsl,usbmisc = <&usbmisc 2>;
- 				phy_type = "hsic";
- 				fsl,anatop = <&anatop>;
--- 
-2.7.4
+Regarding 'elan,width', this is something missing from the standard ts
+properties, and AFAICT, this controls the maximum reported
+width/height of a touch.
+I should probably rename them to max_width, max_height.
+
+Hans, do you think we should add such properties to of_touchscreen.c
+too? (the width/height ones)
+
+Cheers,
+Benjamin
