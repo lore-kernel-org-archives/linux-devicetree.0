@@ -1,32 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 1/6] dt-bindings: Add Broadcom STB OHCI, EHCI and XHCI
- binding document
-Date: Thu, 18 Oct 2018 15:38:08 -0500
-Message-ID: <20181018203808.GA25281@bogus>
-References: <1539815349-24126-1-git-send-email-alcooperx@gmail.com>
- <1539815349-24126-2-git-send-email-alcooperx@gmail.com>
+From: Kun Yi <kunyi@google.com>
+Subject: Re: [PATCH v3 2/2] dt-bindings: hwmon: Add adm127x documentation
+Date: Thu, 18 Oct 2018 13:39:32 -0700
+Message-ID: <CAGMNF6UY1dS83h+zSauHqjETWM7rzpc3EmAEwNSCr0HW0J=cAg@mail.gmail.com>
+References: <20181017222710.254994-1-kunyi@google.com> <20181018194758.GA21705@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1539815349-24126-2-git-send-email-alcooperx@gmail.com>
+In-Reply-To: <20181018194758.GA21705@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Al Cooper <alcooperx@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <kees>
+To: robh@kernel.org
+Cc: OpenBMC Maillist <openbmc@lists.ozlabs.org>, jdelvare@suse.com, Guenter Roeck <linux@roeck-us.net>, mark.rutland@arm.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 17 Oct 2018 18:29:04 -0400, Al Cooper wrote:
-> Add DT bindings document for Broadcom STB USB OHCI, EHCI and
-> XHCI drivers.
-> 
-> Signed-off-by: Al Cooper <alcooperx@gmail.com>
-> ---
->  .../devicetree/bindings/usb/brcm,bcm7445-ehci.txt  | 22 +++++++++++++++++++++
->  .../devicetree/bindings/usb/brcm,bcm7445-ohci.txt  | 22 +++++++++++++++++++++
->  .../devicetree/bindings/usb/brcm,bcm7445-xhci.txt  | 23 ++++++++++++++++++++++
->  3 files changed, 67 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.txt
->  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ohci.txt
->  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-xhci.txt
-> 
+On Thu, Oct 18, 2018 at 12:48 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, 17 Oct 2018 15:27:09 -0700, Kun Yi wrote:
+> > adm127x are hot-swap controllers that allow a circuit board to be removed from
+> > or inserted into a live backplane. This patch adds the device tree
+> > bindings documentation.
+> >
+> > Signed-off-by: Kun Yi <kunyi@google.com>
+> > ---
+> >  .../devicetree/bindings/hwmon/adm1275.txt     | 25 +++++++++++++++++++
+> >  1 file changed, 25 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/hwmon/adm1275.txt
+> >
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thanks a lot for the Review!
+
+
+-- 
+Regards,
+Kun
