@@ -1,7 +1,7 @@
 From: Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH 6/9] arm64: allwinner: a64: add pinmux for RGB666 LCD
-Date: Thu, 18 Oct 2018 15:33:24 +0800
-Message-ID: <20181018073327.64942-7-icenowy@aosc.io>
+Subject: [PATCH 7/9] arm64: allwinner: a64: enable ANX6345 bridge on Pinebook
+Date: Thu, 18 Oct 2018 15:33:25 +0800
+Message-ID: <20181018073327.64942-8-icenowy@aosc.io>
 References: <20181018073327.64942-1-icenowy@aosc.io>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181018073327.64942-1-icenowy@aosc.io>
@@ -10,34 +10,91 @@ To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Maxime Ri
 Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner A64's TCON0 can output RGB666 LCD signal.
+Pinebook has an ANX6345 bridge connected to the RGB666 LCD output, and
+the I2C controlling signals are connected to R_I2C bus.
 
-Add its pinmux.
+Enable it in the device tree, and add a usable EDID from the panel's
+datasheet (at least 14" Pinebook used a panel without EDID).
 
 Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ .../dts/allwinner/sun50i-a64-pinebook.dts     | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index f3a66f888205..9806cbf6cc64 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -518,6 +518,15 @@
- 				function = "i2c1";
- 			};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+index 77fac84797e9..d7c14d0d61f9 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+@@ -66,6 +66,10 @@
+ 	};
+ };
  
-+			lcd_rgb666_pins: lcd-rgb666 {
-+				pins = "PD0", "PD1", "PD2", "PD3", "PD4",
-+				       "PD5", "PD6", "PD7", "PD8", "PD9",
-+				       "PD10", "PD11", "PD12", "PD13",
-+				       "PD14", "PD15", "PD16", "PD17",
-+				       "PD18", "PD19", "PD20", "PD21";
-+				function = "lcd0";
-+			};
++&de {
++	status = "okay";
++};
 +
- 			mmc0_pins: mmc0-pins {
- 				pins = "PF0", "PF1", "PF2", "PF3",
- 				       "PF4", "PF5";
+ &ehci0 {
+ 	phys = <&usbphy 0>;
+ 	phy-names = "usb";
+@@ -76,6 +80,10 @@
+ 	status = "okay";
+ };
+ 
++&mixer0 {
++	status = "okay";
++};
++
+ &mmc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins>;
+@@ -127,6 +135,27 @@
+ 	status = "okay";
+ };
+ 
++&r_i2c {
++	pinctrl-names = "default";
++	pinctrl-0 = <&r_i2c_pins_a>;
++	status = "okay";
++
++	anx6345: anx6345@38 {
++		compatible = "analogix,anx6345";
++		reg = <0x38>;
++		reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
++		panel-supply = <&reg_dc1sw>;
++		dvdd25-supply = <&reg_dldo2>;
++		dvdd12-supply = <&reg_fldo1>;
++
++		port {
++			anx6345_in: endpoint {
++				remote-endpoint = <&tcon0_out_anx6345>;
++			};
++		};
++	};
++};
++
+ &r_rsb {
+ 	status = "okay";
+ 
+@@ -267,6 +296,20 @@
+ 	vcc-hdmi-supply = <&reg_dldo1>;
+ };
+ 
++&tcon0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&lcd_rgb666_pins>;
++
++	status = "okay";
++};
++
++&tcon0_out {
++	tcon0_out_anx6345: endpoint@0 {
++		reg = <0>;
++		remote-endpoint = <&anx6345_in>;
++	};
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pb_pins>;
 -- 
 2.18.1
