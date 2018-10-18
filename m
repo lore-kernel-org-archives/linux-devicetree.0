@@ -1,101 +1,29 @@
-Return-Path: <robherring2@gmail.com>
-Date: Mon, 15 Oct 2018 11:20:29 -0500
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] Input: qt1050 - add Microchip AT42QT1050 support
-Message-ID: <20181015162029.GA6949@bogus>
-References: <20180924151330.6114-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=2YST=M6=verge.net.au=horms@kernel.org>
+Date: Thu, 18 Oct 2018 15:08:28 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] dt-bindings: arm: Fix RZ/G2E part number
+Message-ID: <20181018130828.l362iiiikoufw3zr@verge.net.au>
+References: <1538643190-21880-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20181015191425.GA16383@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20180924151330.6114-1-m.felsch@pengutronix.de>
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: dmitry.torokhov@gmail.com, mark.rutland@arm.com, voice.shen@atmel.com, raphaelpereira@gmail.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+In-Reply-To: <20181015191425.GA16383@bogus>
+To: Rob Herring <robh@kernel.org>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Sep 24, 2018 at 05:13:30PM +0200, Marco Felsch wrote:
-> Add initial support for the AT42QT1050 (QT1050) device. The device
-> supports up to five input keys, dependent on the mode. Since it adds only
-> the initial support the "1 to 4 keys plus Guard Channel" mode isn't
-> support.
+On Mon, Oct 15, 2018 at 02:14:25PM -0500, Rob Herring wrote:
+> On Thu,  4 Oct 2018 09:53:10 +0100, Fabrizio Castro wrote:
+> > Fix RZ/G2E part number from its description.
+> > 
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/arm/shmobile.txt | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
 > 
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> ---
->  .../bindings/input/microchip,qt1050.txt       |  54 ++
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Please split binding patches.
-
->  drivers/input/keyboard/Kconfig                |  11 +
->  drivers/input/keyboard/Makefile               |   1 +
->  drivers/input/keyboard/qt1050.c               | 589 ++++++++++++++++++
->  4 files changed, 655 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/microchip,qt1050.txt
->  create mode 100644 drivers/input/keyboard/qt1050.c
-> 
-> diff --git a/Documentation/devicetree/bindings/input/microchip,qt1050.txt b/Documentation/devicetree/bindings/input/microchip,qt1050.txt
-> new file mode 100644
-> index 000000000000..d63e286f6526
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/microchip,qt1050.txt
-> @@ -0,0 +1,54 @@
-> +Microchip AT42QT1050 Five-channel Touch Sensor IC
-> +
-> +The AT42QT1050 (QT1050) is a QTouchADC sensor driver. The device can sense from
-
-s/driver/device/
-
-Bindings don't describe drivers.
-
-> +one to five keys, dependent on mode. The QT1050 includes all signal processing
-> +functions necessary to provide stable sensing under a wide variety of changing
-> +conditions, and the outputs are fully debounced.
-> +
-> +The touchkey device node should be placed inside an I2C bus node.
-> +
-> +Required properties:
-> +- compatible: Must be "microchip,qt1050"
-> +- reg: The I2C address of the touchkeys
-> +- interrupts: The sink for the touchpad's IRQ output,
-> +  see ../interrupt-controller/interrupts.txt
-> +- linux,keycodes: Specifies an array of numeric keycode values to be used for
-> +  reporting button presses. The array can contain up to 5 entries. Array index
-> +  0 correspond to key 0 and so on. If the keys aren't continuous the
-> +  KEY_RESERVED must be used. Keys marked as KEY_RESERVED or not specified will
-> +  be disabled.
-> +
-> +Optional properties:
-> +- pre-charge-time: Specifies an array of precharge times in ns for each touch
-> +  pad. The value for each pad depend on the hardware layouts. If not specified
-> +  or invalid values are specified the default value is taken.
-> +  Valid value range [ns]: 0 - 637500; values must be a multiple of 2500;
-> +  default is 0.
-
-Needs a unit suffix as defined in property-units.txt.
-
-> +- touchscreen-average-samples: Please see ../input/touchscreen/touchscreen.txt
-> +  for more information. Unlike the general binding, this is an array to specify
-> +  the samples for each pad. If not specified or invalid values are specified
-> +  the default value is taken.
-> +  Valid values: 1, 4, 16, 64, 256, 1024, 4096, 16384; default is 1.
-> +- touchscreen-pre-scaling: Please see ../input/touchscreen/touchscreen.txt for
-> +  more information. Unlike the general binding, this is an array to specify the
-> +  scaling factor for each pad. If not specified or invalid values are specified
-> +  the default value is taken.
-> +  Valid values: 1, 2, 4, 8, 16, 32, 64, 128; default is 1.
-> +- touchscreen-fuzz-pressure: Please see ../input/touchscreen/touchscreen.txt for
-> +  more information. Unlike the general binding, this is an array to specify the
-> +  noise (threshold) value for each pad. If not specified or invalid values are
-> +  specified the default value is taken.
-> +  Valid value range: 0 - 255; default is 20.
-> +
-> +Example:
-> +QT1050 with 3 non continuous key, key3 and key5 are disabled.
-> +
-> +touchkeys@41 {
-> +	compatible = "microchip,qt1050";
-> +	reg = <0x41>;
-> +	interrupt-parent = <&gpio0>;
-> +	interrupts = <17 IRQ_TYPE_EDGE_FALLING>;
-> +	linux,keycodes = <KEY_UP>, <KEY_RIGHT>, <KEY_RESERVED>, <KEY_DOWN>;
-> +	touchscreen-average-samples = <64>, <64>, <64>, <256>;
-> +	touchscreen-pre-scaling = <16>, <8>, <16>, <16>;
-> +};
+Thanks, I have applied this, tentatively as a fix for v4.20.
