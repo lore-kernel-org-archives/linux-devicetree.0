@@ -1,115 +1,101 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 3/5] dt-bindings: add more optional properties for
- elan_i2c touchpads
-Date: Thu, 18 Oct 2018 10:51:44 +0200
-Message-ID: <4a81a5d1-39c8-60f3-16be-559d43c0116a@redhat.com>
-References: <20181012142413.26107-1-benjamin.tissoires@redhat.com>
- <20181012142413.26107-4-benjamin.tissoires@redhat.com>
- <20181017201522.GA26525@bogus>
- <CAO-hwJ+z6YdnLdbzeh-7f99cBBjHfbLKLzKo-fQQaC_W8bt_Uw@mail.gmail.com>
- <1fb98946-a518-d7d7-3bec-8944be95b91c@redhat.com>
- <CAO-hwJKXBvuGLensAQv82SoPh-vrt9UFgoC3_XeTA78EHCOANA@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 4/9] dt-bindings: Add ANX6345 DP/eDP
+ transmitter binding
+Date: Thu, 18 Oct 2018 11:53:16 +0300
+Message-ID: <1886367.eljNk7jKYl@avalon>
+References: <20181018073327.64942-1-icenowy@aosc.io> <20181018073327.64942-5-icenowy@aosc.io>
+Reply-To: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAO-hwJKXBvuGLensAQv82SoPh-vrt9UFgoC3_XeTA78EHCOANA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: robh@kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDKM3GOS4YHBB5ETUHPAKGQE2RIFR4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181018073327.64942-5-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Icenowy,
 
-On 18-10-18 10:44, Benjamin Tissoires wrote:
-> On Thu, Oct 18, 2018 at 10:39 AM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Hi,
->>
->> On 18-10-18 10:10, Benjamin Tissoires wrote:
->>> On Wed, Oct 17, 2018 at 10:15 PM Rob Herring <robh@kernel.org> wrote:
->>>>
->>>> On Fri, Oct 12, 2018 at 04:24:11PM +0200, Benjamin Tissoires wrote:
->>>>> Some new touchpads IC are connected through PS/2 and I2C. On some of these
->>>>> new IC, the I2C part doesn't have all of the information available.
->>>>> We need to be able to forward the touchpad parameters from PS/2 and
->>>>> thus, we need those new optional properties.
->>>>>
->>>>> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1628715
->>>>> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
->>>>> ---
->>>>>    Documentation/devicetree/bindings/input/elan_i2c.txt | 8 ++++++++
->>>>>    1 file changed, 8 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/input/elan_i2c.txt b/Documentation/devicetree/bindings/input/elan_i2c.txt
->>>>> index 797607460735..ace6bcb0b4eb 100644
->>>>> --- a/Documentation/devicetree/bindings/input/elan_i2c.txt
->>>>> +++ b/Documentation/devicetree/bindings/input/elan_i2c.txt
->>>>> @@ -13,6 +13,14 @@ Optional properties:
->>>>>      pinctrl binding [1]).
->>>>>    - vcc-supply: a phandle for the regulator supplying 3.3V power.
->>>>>    - elan,trackpoint: touchpad can support a trackpoint (boolean)
->>>>> +- elan,clickpad: touchpad is a clickpad (the entire surface is a button)
->>>>
->>>>> +- elan,max_x: the maximum reported value on the X axis
->>>>> +- elan,max_y: the maximum reported value on the Y axis
->>>>> +- elan,min_x: the minimum reported value on the X axis
->>>>> +- elan,min_y: the minimum reported value on the Y axis
->>>>> +- elan,x_res: the resolution of the X axis (in units per mm)
->>>>> +- elan,y_res: the resolution of the Y axis (in units per mm)
->>>>> +- elan,width: max reported width of a blob
->>>>
->>>> Can't we use standard touchscreen properties here? (Yes, I get this is a
->>>> touchpad, not touchscreen).
->>>
->>> Hey Rob,
->>>
->>> Well, there is that (it's a touchpad driver) and we can't also really
->>> use the of_touchscreen.c implementation.
->>> If both concerns are not an issue, we can then move the [min/max/res]
->>> properties to the touchscreen ones.
->>>
->>> Regarding 'elan,width', this is something missing from the standard ts
->>> properties, and AFAICT, this controls the maximum reported
->>> width/height of a touch.
->>> I should probably rename them to max_width, max_height.
->>>
->>> Hans, do you think we should add such properties to of_touchscreen.c
->>> too? (the width/height ones)
->>
->> Are there touchscreens which report finger/touch width / height ? if so
->> then it probably does make sense.
+Thank you for the patch.
+
+On Thursday, 18 October 2018 10:33:22 EEST Icenowy Zheng wrote:
+> The ANX6345 is an ultra-low power DisplayPort/eDP transmitter designed
+> for portable devices.
 > 
-> Well, it's pretty common for hid-multitouch touchscreens to report
-> such properties (it's a way to indicate the palm). Don't know about
-> the touchscreens that rely on of_touchscreen though.
-
-Now that you mention it I think some may also have some sort of
-pressure/weight value, but at least for the ones I wrote I do not
-think we do anything with it, since the actual meaning of the
-field is somewhat vague. This is all IIRC.
-
->> Note that for historical reasons
->> Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+> Add a binding document for it.
 > 
-> Looks like your sentence is not finished here :)
-
-I actually deleted it, but not those 2 lines, what I had written there
-was that for historical reasons it uses touchscreen-size-x rather then
-max-x and that that might be a bit confusing vs max-width, but I could
-not come up with something better then max-width, so I deleted my
-rambling, but ended up not deleting all of it :)
-
->> Also the touchscreen bindings have: touchscreen-x-mm and touchscreen-y-mm
->> rather then res, which can then be used to calculate the resolution.
->>
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  .../bindings/display/bridge/anx6345.txt       | 39 +++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/display/bridge/anx6345.txt
 > 
-> yeah, that's fine, I would need to convert to mm, then go back to res.
-> Extra effort, but that's the price to pay.
+> diff --git a/Documentation/devicetree/bindings/display/bridge/anx6345.txt
+> b/Documentation/devicetree/bindings/display/bridge/anx6345.txt new file
+> mode 100644
+> index 000000000000..0689d4eb5f65
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
+> @@ -0,0 +1,39 @@
+> +Analogix ANX6345 eDP Transmitter
+> +--------------------------------
+> +
+> +The ANX6345 is an ultra-low power Full-HD eDP transmitter designed for
+> +portable devices.
+> +
+> +Required properties:
+> +
+> + - compatible		: "analogix,anx6345"
+> + - reg			: I2C address of the device
+> + - reset-gpios		: Which GPIO to use for reset
+> +
+> +Optional properties:
+> +
+> + - dvdd12-supply	: Regulator for 1.2V digital core power.
+> + - dvdd25-supply	: Regulator for 2.5V digital core power.
 
-Ack.
+Shouldn't these to supplies be mandatory ?
 
+> + - panel-supply		: Regulator for the power of the panel.
+
+Shouldn't the panel supply for specified in the DT node of the panel ?
+
+> + - edid			: verbatim EDID data block describing attached
+> +			  panel, only used when the panel has no EDID info.
+
+This should also be specified in the panel DT node.
+
+> + - Video port for RGB input, using the DT bindings defined in [1].
+
+I think you should also add a port for the output.
+
+> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +Example:
+> +
+> +anx6345: anx6345@38 {
+> +	compatible = "analogix,anx6345";
+> +	reg = <0x38>;
+> +	reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
+> +	panel-supply = <&reg_dc1sw>;
+> +	dvdd25-supply = <&reg_dldo2>;
+> +	dvdd12-supply = <&reg_fldo1>;
+> +
+> +	port {
+> +		anx6345_in: endpoint {
+> +			remote-endpoint = <&tcon0_out_anx6345>;
+> +		};
+> +	};
+> +};
+
+-- 
 Regards,
 
-Hans
+Laurent Pinchart
