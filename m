@@ -1,12 +1,12 @@
 From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: phy-qcom-qmp: Fix register underspecification
-Date: Thu, 18 Oct 2018 16:50:34 -0700
-Message-ID: <CAD=FV=XM9uG8EfamXmEp2-g5tgagir0KHpdMZMtL6ckqt+Jjsg@mail.gmail.com>
-References: <20181018210933.113592-1-evgreen@chromium.org> <20181018210933.113592-2-evgreen@chromium.org>
+Subject: Re: [PATCH v2 2/5] phy: qcom-qmp: Utilize fully-specified DT registers
+Date: Thu, 18 Oct 2018 16:51:08 -0700
+Message-ID: <CAD=FV=VMnTEUgPoDnfF-Oh8FDj9hy+ohz6oViJOtZCD_K-t_Dg@mail.gmail.com>
+References: <20181018210933.113592-1-evgreen@chromium.org> <20181018210933.113592-3-evgreen@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181018210933.113592-2-evgreen@chromium.org>
+In-Reply-To: <20181018210933.113592-3-evgreen@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Evan Green <evgreen@chromium.org>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Manu Gautam <mgautam@codeaurora.org>, cang@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>
@@ -16,36 +16,40 @@ Hi,
 
 On Thu, Oct 18, 2018 at 2:09 PM Evan Green <evgreen@chromium.org> wrote:
 >
-> This change adds register regions for the second lane of dual-lane nodes.
-> This additional specification is needed so that the driver can stop
-> reaching beyond the tx and rx register allocations to get at the
-> second lane registers in a dual-lane PHY.
+> This change utilizes the newly fixed up DT bindings to get the tx2
+> and rx2 register regions for the second lane of dual-lane PHYs. Before
+> this change, the driver was simply using lane one's register region and
+> adding 0x400, which reached well beyond the DT-specified register
+> allocation. This would have been a crash were it not for the page size on
+> ARM64. Fix the driver not to rely on the magic of virtual memory by using
+> the newly specified DT register regions for tx2 and rx2.
 >
-> While in there, document #clock-cells as optional for PHYs that don't
-> provide a pipe clock. Also, document the pcs_misc register region, which
-> was being quietly supplied and used.
+> In order to support existing device trees, this change also contains a
+> fallback mode for when those new register regions don't exist, which
+> reverts to the original behavior of overreaching and prints a complaint.
 >
 > Signed-off-by: Evan Green <evgreen@chromium.org>
->
 > ---
-> This applies atop linux-next 20181018 with the addition of Doug's
-> changes [1] and [2].
->
-> [1] https://lore.kernel.org/lkml/20181012213632.252346-1-dianders@chromium.org/
-> [2] https://lore.kernel.org/lkml/20181012213926.253765-1-dianders@chromium.org/
->
->  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 73 +++++++++++++++++++---
->  1 file changed, 65 insertions(+), 8 deletions(-)
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 51 +++++++++++++++++++++++++++----------
+>  1 file changed, 38 insertions(+), 13 deletions(-)
 
-This all makes sense to me and seems like the right compromise to make
+Looks good to me.  This seems like the right compromise for moving
+forward to fix the problem.
 
-The only current SoC that uses tx2/rx2 is SDM845 and the support of
-that SoC is in its infancy in mainline.  Thus I don't mind that we say
-that all 5 registers are "required" even though there is an existing
-device tree out there that don't include tx2/rx2 for USB.  Currently
-patch #2 in this series still makes old device trees "work" (as well
-as they used to) but I'm all for that being very temporary code and
-that officially tx2/rx2 are not optional.
+A few notes:
+
+* The only current SoC that uses tx2/rx2 is SDM845 and the support of
+that SoC is in its infancy in mainline.  Thus I don't mind that using
+existing device trees with this new patch will print a warning and
+continue to take advantage of the Linux "bug" that the whole page
+could be accessed.  We should fix the old DTS files ASAP and then
+remove the nod to backward compatibility in the code.
+
+* This should land _before_ dts patches land.  If dts changes land
+without this change then the old code will end up mapping tx2 and
+using it as pcsmisc.  ...so either we'll need to delay landing the
+device tree patch by one major version or Andy / Kishon will need to
+coordinate.
 
 
 Reviewed-by: Douglas Anderson <dianders@chromium.org>
