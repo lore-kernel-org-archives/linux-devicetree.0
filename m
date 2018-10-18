@@ -1,115 +1,175 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
-Date: Wed, 17 Oct 2018 19:51:30 -0500
-Message-ID: <20181018005130.GA8173@bogus>
-References: <1539527419-23613-1-git-send-email-aisheng.dong@nxp.com>
- <1539527419-23613-3-git-send-email-aisheng.dong@nxp.com>
- <CAOMZO5BEwNQy0HA80qOzm_w-c63tFK1eL+cOHNCxKYq9PHGsqw@mail.gmail.com>
- <AM0PR04MB4211ECC04FD48918E9DFBAB880FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+From: Honghui Zhang <honghui.zhang@mediatek.com>
+Subject: Re: [PATCH v9 2/9] PCI: Using PCI configuration space header type
+ instead of class type to assign resource
+Date: Thu, 18 Oct 2018 09:25:12 +0800
+Message-ID: <1539825912.11281.8.camel@mhfsdcap03>
+References: <1539686690-24068-1-git-send-email-honghui.zhang@mediatek.com>
+         <1539686690-24068-3-git-send-email-honghui.zhang@mediatek.com>
+         <20181016145355.GB16390@e107981-ln.cambridge.arm.com>
+         <20181017132251.GG5906@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <AM0PR04MB4211ECC04FD48918E9DFBAB880FD0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Dong Aisheng <dongas86@gmail.com>, Fabio Estevam <festevam@gmail.com>, Will Deacon <will.deacon@arm.com>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Catalin Marinas <catalin.marinas@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181017132251.GG5906@bhelgaas-glaptop.roam.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, youlin.pei@mediatek.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, ryder.lee@mediatek.com, marc.zyngier@arm.com, linux-pci@vger.kernel.org, jianjun.wang@mediatek.com, linux-kernel@vger.kernel.org, yt.shen@mediatek.com, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, bhelgaas@google.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 15, 2018 at 07:57:07AM +0000, A.s. Dong wrote:
-> > -----Original Message-----
-> > From: Fabio Estevam [mailto:festevam@gmail.com]
-> > Sent: Monday, October 15, 2018 7:14 AM
-> > To: A.s. Dong <aisheng.dong@nxp.com>
-> > Cc: moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE
-> > <linux-arm-kernel@lists.infradead.org>; Dong Aisheng <dongas86@gmail.com>;
-> > Sascha Hauer <kernel@pengutronix.de>; Shawn Guo <shawnguo@kernel.org>;
-> > Fabio Estevam <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>;
-> > Catalin Marinas <catalin.marinas@arm.com>; Will Deacon
-> > <will.deacon@arm.com>; dl-linux-imx <linux-imx@nxp.com>; Mark Rutland
-> > <mark.rutland@arm.com>; open list:OPEN FIRMWARE AND FLATTENED
-> > DEVICE TREE BINDINGS <devicetree@vger.kernel.org>
-> > Subject: Re: [PATCH V2 2/4] arm64: dts: imx: add imx8qxp support
+On Wed, 2018-10-17 at 08:22 -0500, Bjorn Helgaas wrote:
+> On Tue, Oct 16, 2018 at 03:53:55PM +0100, Lorenzo Pieralisi wrote:
+> > On Tue, Oct 16, 2018 at 06:44:43PM +0800, honghui.zhang@mediatek.com wrote:
+> > > From: Honghui Zhang <honghui.zhang@mediatek.com>
+> > > 
+> > > The PCI configuration space header type defines the layout of the rest
+> > > of the header (PCI r3.0 sec 6.1, PCIe r4.0 sec 7.5.1.1.9) while the
+> > > resource assignment is based on the configuration space layout instead
+> > > of its class type. Using configuration space header type instead of
+> > > class type for the resource assignment.
+> > > 
+> > > Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+> > > ---
+> > >  drivers/pci/pci.c       |  3 +--
+> > >  drivers/pci/probe.c     |  3 ---
+> > >  drivers/pci/setup-bus.c | 20 ++++++++++----------
+> > >  3 files changed, 11 insertions(+), 15 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > index 29ff961..7d379ca 100644
+> > > --- a/drivers/pci/pci.c
+> > > +++ b/drivers/pci/pci.c
+> > > @@ -5908,8 +5908,7 @@ void pci_reassigndev_resource_alignment(struct pci_dev *dev)
+> > >  	 * to enable the kernel to reassign new resource
+> > >  	 * window later on.
+> > >  	 */
+> > > -	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE &&
+> > > -	    (dev->class >> 8) == PCI_CLASS_BRIDGE_PCI) {
+> > > +	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE) {
+> > >  		for (i = PCI_BRIDGE_RESOURCES; i < PCI_NUM_RESOURCES; i++) {
+> > >  			r = &dev->resource[i];
+> > >  			if (!(r->flags & IORESOURCE_MEM))
+> > > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > > index ec78400..29a35c1 100644
+> > > --- a/drivers/pci/probe.c
+> > > +++ b/drivers/pci/probe.c
+> > > @@ -1695,9 +1695,6 @@ int pci_setup_device(struct pci_dev *dev)
+> > >  		break;
+> > >  
+> > >  	case PCI_HEADER_TYPE_BRIDGE:		    /* bridge header */
+> > > -		if (class != PCI_CLASS_BRIDGE_PCI)
+> > > -			goto bad;
+> > > -
+> > >  		/*
+> > >  		 * The PCI-to-PCI bridge spec requires that subtractive
+> > >  		 * decoding (i.e. transparent) bridge must have programming
+> > > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> > > index 79b1824..69f90f4 100644
+> > > --- a/drivers/pci/setup-bus.c
+> > > +++ b/drivers/pci/setup-bus.c
+> > > @@ -182,7 +182,7 @@ static void __dev_sort_resources(struct pci_dev *dev,
+> > >  	u16 class = dev->class >> 8;
+> > >  
+> > >  	/* Don't touch classless devices or host bridges or ioapics.  */
+> > > -	if (class == PCI_CLASS_NOT_DEFINED || class == PCI_CLASS_BRIDGE_HOST)
+> > > +	if (class == PCI_CLASS_NOT_DEFINED)
 > > 
-> > Hi Dong,
+> > I think this check has been there since the first initial git commit,
+> > whether that's _really_ needed or not in the current kernel it is very
+> > hard to say.
 > > 
-> > On Sun, Oct 14, 2018 at 11:35 AM A.s. Dong <aisheng.dong@nxp.com> wrote:
-> > >
-> > > Add imx8qxp support
-> > 
-> > You could probably expand the commit log by explaining a bit of what im8qxp
-> > means.
-> > 
+> > I am not that sure it is safe to remove it, especially given that we are at
+> > -rc8 and close to a release, it would be good if this patch could sit in
+> > next to give it some exposure to testing before merging it upstream.
 > 
-> Got it, thanks for the suggestion.
-> 
-> > > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > > new file mode 100644
-> > > index 0000000..e1d2578
-> > > --- /dev/null
-> > > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > > @@ -0,0 +1,861 @@
-> > > +// SPDX-License-Identifier: GPL-2.0+
-> > > +/*
-> > > + * Copyright (C) 2016 Freescale Semiconductor, Inc.
-> > > + * Copyright 2017~2018 NXP
-> > 
-> > I guess you meant "-" instead of "~".
-> > 
-> > > +       memory@80000000 {
-> > > +               device_type = "memory";
-> > > +               reg = <0x00000000 0x80000000 0 0x40000000>;
-> > > +       };
-> > 
-> > This should go to the board dts file instead as the memory size may vary from
-> > board to board.
-> > 
-> 
-> That's right. Will change it.
-> 
-> > > +               imx8qx-pm {
-> > > +                       compatible = "fsl,scu-pd";
-> > > +                       #address-cells = <1>;
-> > > +                       #size-cells = <0>;
-> > > +
-> > > +                       pd_lsio: lsio-power-domain {
-> > > +                               #power-domain-cells = <0>;
-> > > +                               #address-cells = <1>;
-> > > +                               #size-cells = <0>;
-> > > +
-> > > +                               pd_lsio_pwm0: lsio-pwm0@191 {
-> > > +                                       reg = <191>;
-> > 
-> > The number after @ is in hex, so the reg property should be 0x191.
-> 
-> Thanks for the reminder.
-> The PD ID is defined in DEC. So I will change them all into HEX later manually.
-> 
-> BTW, this seems like error prone and checkpatch can't report it.
 
-checkpatch doesn't really check dts files.
+I'm not sure why the first version has take care of
+PCI_CLASS_BRIDGE_HOST separately, I have no idea whether there's some
+host bridge device that has their resource fixed.
 
-But if it did would you have noticed? Because there is at least one 
-checkpatch issue with your author name and S-o-b name not matching.
+I agree that this patch should be hold for the moment since I have it
+tested only in Mediatek's platform.
 
-> And I notice many similar users in kernel with the same issue:
-> arch/arm/boot/dts/tps65910.dtsi
-> arch/arm/boot/dts/tegra124-nyan.dtsi
-> arch/arm/boot/dts/rk3288.dtsi
+Thanks
 
-At least I2C and SPI are now checked by dtc. 'simple-bus' children were 
-too, but silently broke and only recently got fixed in upstream dtc. 
-I've not pulled that into the kernel yet, but you can build dtbs using 
-an external copy of dtc. And guess what, there are *lots* of warnings.
+> Yes, you're right; I think I think this is a little too risky at this
+> point.  I'll pull this patch out and queue it up for the next cycle
+> (v4.21).
 
-Rob
+Thanks, I will follow up this patch.
+
+> 
+> For v4.20, I think you should resurrect the class code patch [1].  That
+> should be enough to make things work in v4.20, even without this hdr_type
+> patch.  It will also improve the lspci output, because I think it uses the
+> class code to look up the generic description, e.g., in this output:
+> 
+>   00:1c.0 PCI bridge: Intel Corporation Sunrise Point-LP PCI Express Root Port (rev f1)
+> 
+> I think the "PCI bridge" part is based on the class code.
+> 
+> Bjorn
+> 
+> [1] https://lore.kernel.org/linux-pci/1539590940-13355-3-git-send-email-honghui.zhang@mediatek.com
+> 
+> > >  		return;
+> > >  
+> > >  	/* Don't touch ioapic devices already enabled by firmware */
+> > > @@ -1221,12 +1221,12 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
+> > >  		if (!b)
+> > >  			continue;
+> > >  
+> > > -		switch (dev->class >> 8) {
+> > > -		case PCI_CLASS_BRIDGE_CARDBUS:
+> > > +		switch (dev->hdr_type) {
+> > > +		case PCI_HEADER_TYPE_CARDBUS:
+> > >  			pci_bus_size_cardbus(b, realloc_head);
+> > >  			break;
+> > >  
+> > > -		case PCI_CLASS_BRIDGE_PCI:
+> > > +		case PCI_HEADER_TYPE_BRIDGE:
+> > >  		default:
+> > >  			__pci_bus_size_bridges(b, realloc_head);
+> > >  			break;
+> > > @@ -1237,12 +1237,12 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
+> > >  	if (pci_is_root_bus(bus))
+> > >  		return;
+> > >  
+> > > -	switch (bus->self->class >> 8) {
+> > > -	case PCI_CLASS_BRIDGE_CARDBUS:
+> > > +	switch (bus->self->hdr_type) {
+> > > +	case PCI_HEADER_TYPE_CARDBUS:
+> > >  		/* don't size cardbuses yet. */
+> > >  		break;
+> > >  
+> > > -	case PCI_CLASS_BRIDGE_PCI:
+> > > +	case PCI_HEADER_TYPE_BRIDGE:
+> > >  		pci_bridge_check_ranges(bus);
+> > >  		if (bus->self->is_hotplug_bridge) {
+> > >  			additional_io_size  = pci_hotplug_io_size;
+> > > @@ -1391,13 +1391,13 @@ void __pci_bus_assign_resources(const struct pci_bus *bus,
+> > >  
+> > >  		__pci_bus_assign_resources(b, realloc_head, fail_head);
+> > >  
+> > > -		switch (dev->class >> 8) {
+> > > -		case PCI_CLASS_BRIDGE_PCI:
+> > > +		switch (dev->hdr_type) {
+> > > +		case PCI_HEADER_TYPE_BRIDGE:
+> > >  			if (!pci_is_enabled(dev))
+> > >  				pci_setup_bridge(b);
+> > >  			break;
+> > >  
+> > > -		case PCI_CLASS_BRIDGE_CARDBUS:
+> > > +		case PCI_HEADER_TYPE_CARDBUS:
+> > >  			pci_setup_cardbus(b);
+> > >  			break;
+> > >  
+> > > -- 
+> > > 2.6.4
+> > > 
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
