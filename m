@@ -1,55 +1,70 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V9 00/21] C-SKY(csky) Linux Kernel Port
-Date: Thu, 18 Oct 2018 12:10:51 +0800
-Message-ID: <20181018041038.GB17276@guoren-Inspiron-7460>
-References: <cover.1539655731.git.ren_guo@c-sky.com>
- <CAK8P3a25W5rE093QsmC539d+s038Wv9PmV8Xa76LQzDLk3E8Wg@mail.gmail.com>
+From: Jianxin Pan <jianxin.pan@amlogic.com>
+Subject: [PATCH v5 0/3] clk: meson: add a sub EMMC clock controller support
+Date: Thu, 18 Oct 2018 13:07:22 +0800
+Message-ID: <1539839245-13793-1-git-send-email-jianxin.pan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a25W5rE093QsmC539d+s038Wv9PmV8Xa76LQzDLk3E8Wg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Christoph Hellwig <hch@infradead.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, c-sky_gcc_upstream@c-sky.com
+To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: Jianxin Pan <jianxin.pan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 17, 2018 at 05:58:46PM +0200, Arnd Bergmann wrote:
-> On Tue, Oct 16, 2018 at 4:58 AM Guo Ren <ren_guo@c-sky.com> wrote:
-> >
-> > This is the 9th version patchset to add the Linux kernel port for
-> > C-SKY(csky) based on linux-4.19-rc3.
-> >
-> > There are only a few changes between V8 patchset. Hope it could be
-> > merged into linux-4.20 and I'm very grateful for any help.
-> 
-> I've gone through the entire series once more and saw no show-stoppers.
-> The last patch looked like it introduced a bug, but with that one dropped,
-> I'm happy for the architecture to get merged, unless anyone else
-> has any last-minute concerns. (Alternatively, explain why I'm wrong
-> and the code works correctly, of course).
-Ok and thx for the job of csky subsystem.
+This driver will add a MMC clock controller driver support.
+The original idea about adding a clock controller is during the
+discussion in the NAND driver mainline effort[1].
 
-> 
-> I'd appreciate having someone else take another look at the signal
-> handling code, the atomics, and the DT bindings and provide another
-> Ack for those.
-> 
-> The remaining open question is about the 32-bit time_t interfaces.
-> With 4.20, I did not manage to get the required system calls in place
-> for using 64-bit time_t in a new architecture, so you will at least
-> start out using 32-bit time_t and likely have to keep supporting
-> that going forward, unless we decide to break the ABI here later
-> on .This is something we normally don't do, but we might make
-> an exception here, under the assumption that there are no
-> existing users with the ABI. We can debate that once we get there.
-We support uclibc-ng and glibc.
+This driver is tested in the S400 board (AXG platform) with NAND driver.
 
-1. For uclibc-ng, linux-4.20 could run with it.
+Changes since v4 [5]:
+ - use struct parm in phase delay driver
+ - remove 0 delay releted part in phase delay driver
+ - don't rebuild the parent name once again
+ - add divider ops with .init
 
-2. For glibc, Maybe we could support 32-bit + 64-bit time_t with
-KERNEL_VERSION, or just only 64-bit then linux-4.20 couldn't work with
-the csky first glibc release.
+Changes since v3 [4]:
+ - separate clk-phase-delay driver
+ - replace clk_get_rate() with clk_hw_get_rate()
+ - collect Rob's R-Y
+ - drop 'meson-' prefix from compatible string
 
-Best Regards
- Guo Ren
+ Changes since v2 [3]:
+ - squash dt-binding clock-id patch
+ - update license
+ - fix alignment
+ - construct a clk register helper() function
+
+Changes since v1 [2]:
+ - implement phase clock
+ - update compatible name
+ - adjust file name
+ - divider probe() into small functions, and re-use them
+
+[1] https://lkml.kernel.org/r/20180628090034.0637a062@xps13
+[2] https://lkml.kernel.org/r/20180703145716.31860-1-yixun.lan@amlogic.com
+[3] https://lkml.kernel.org/r/20180710163658.6175-1-yixun.lan@amlogic.com
+[4] https://lkml.kernel.org/r/20180712211244.11428-1-yixun.lan@amlogic.com
+[5] https://lkml.kernel.org/r/20180809070724.11935-4-yixun.lan@amlogic.com
+
+Yixun Lan (3):
+  clk: meson: add emmc sub clock phase delay driver
+  clk: meson: add DT documentation for emmc clock controller
+  clk: meson: add sub MMC clock controller driver
+
+ .../devicetree/bindings/clock/amlogic,mmc-clkc.txt |  31 +++
+ drivers/clk/meson/Kconfig                          |  10 +
+ drivers/clk/meson/Makefile                         |   3 +-
+ drivers/clk/meson/clk-phase-delay.c                |  79 ++++++
+ drivers/clk/meson/clk-regmap.c                     |  27 +-
+ drivers/clk/meson/clk-regmap.h                     |   1 +
+ drivers/clk/meson/clkc.h                           |  13 +
+ drivers/clk/meson/mmc-clkc.c                       | 296 +++++++++++++++++++++
+ include/dt-bindings/clock/amlogic,mmc-clkc.h       |  17 ++
+ 9 files changed, 475 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
+ create mode 100644 drivers/clk/meson/clk-phase-delay.c
+ create mode 100644 drivers/clk/meson/mmc-clkc.c
+ create mode 100644 include/dt-bindings/clock/amlogic,mmc-clkc.h
+
+-- 
+1.9.1
