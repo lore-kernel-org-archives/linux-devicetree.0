@@ -1,41 +1,51 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v2 2/4] nfc: pn532_uart: Add NXP PN532 to devicetree docs
-Date: Thu, 18 Oct 2018 17:03:13 +0200
-Message-ID: <F2B73CDB-434A-41F5-8A9E-3E4E76DB89C9@holtmann.org>
-References: <20181018144251.30028-1-poeschel@lemonage.de>
- <20181018144251.30028-2-poeschel@lemonage.de>
-Mime-Version: 1.0 (Mac OS X Mail 12.0 \(3445.100.39\))
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: 8BIT
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH v2 0/2] phy: ocelot-serdes: fix out-of-bounds read
+Date: Thu, 18 Oct 2018 17:05:54 +0200
+Message-ID: <cover.1539874459.git.gustavo@embeddedor.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181018144251.30028-2-poeschel@lemonage.de>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lars Poeschel <poeschel@lemonage.de>
-Cc: devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Peter Rosin <peda@axentia.se>, Vadim Pasternak <vadimp@mellanox.com>, Lei YU <mine260309@gmail.com>, =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, =?utf-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, open list <linux-kernel@vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Quentin Schulz <quentin.schulz@bootlin.com>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lars,
+This patchset aims to fix an out-of-bounds bug in
+the phy-ocelot-serdes driver.
 
-> Add pn532 to the trivial-devices.txt binding doc.
-> 
-> Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
-> ---
-> Documentation/devicetree/bindings/trivial-devices.txt | 1 +
-> 1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
-> index 763a2808a95c..c580be08a380 100644
-> --- a/Documentation/devicetree/bindings/trivial-devices.txt
-> +++ b/Documentation/devicetree/bindings/trivial-devices.txt
-> @@ -172,6 +172,7 @@ nxp,pcf2129		Real-time clock
-> nxp,pcf8523		Real-time Clock
-> nxp,pcf8563		Real-time clock/calendar
-> nxp,pcf85063		Tiny Real-Time Clock
-> +nxp,pn532-uart		NXP PN532 NFC-/RFID-Chip, using UART interface
+Currently, there is an out-of-bounds read on array ctrl->phys,
+once variable i reaches the maximum array size of SERDES_MAX
+in the for loop.
 
-is this really such a trivial device? It doesn’t require any GPIO to enable / reset the NFC chip?
+Quentin Schulz pointed out that SERDES_MAX is a valid value to
+index ctrl->phys. So, I updated SERDES_MAX to be SERDES6G_MAX + 1
+in include/dt-bindings/phy/phy-ocelot-serdes.h.
 
-Regards
+Then I changed the condition in the for loop from
+i <= SERDES_MAX to i < SERDES_MAX in order to
+complete the fix.
 
-Marcel
+The reason I'm sending this fix as series is because
+checkpatch reported an error when I first tried to
+integrate the whole solution into a singe patch. So,
+changes to dt-bindings should be sent as a separate
+patch.
+
+Changes in v2:
+ - Send the whole series to Kishon Vijay Abraham I, so it
+   can be taken into the PHY tree.
+ - Add Quentin's Reviewed-by to commit log in both patches.
+
+Thanks!
+
+Gustavo A. R. Silva (2):
+  dt-bindings: phy: Update SERDES_MAX to be SERDES_MAX + 1
+  phy: ocelot-serdes: fix out-of-bounds read
+
+ drivers/phy/mscc/phy-ocelot-serdes.c        | 4 ++--
+ include/dt-bindings/phy/phy-ocelot-serdes.h | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+-- 
+2.7.4
