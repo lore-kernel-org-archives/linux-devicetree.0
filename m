@@ -1,158 +1,79 @@
 From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: [PATCH v5 1/3] clk: meson: add emmc sub clock phase delay driver
-Date: Thu, 18 Oct 2018 13:07:23 +0800
-Message-ID: <1539839245-13793-2-git-send-email-jianxin.pan@amlogic.com>
-References: <1539839245-13793-1-git-send-email-jianxin.pan@amlogic.com>
+Subject: [PATCH v5 0/2] mtd: rawnand: meson: add Amlogic NAND driver support
+Date: Thu, 18 Oct 2018 13:09:03 +0800
+Message-ID: <1539839345-14021-1-git-send-email-jianxin.pan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539839245-13793-1-git-send-email-jianxin.pan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Yixun Lan <yixun.lan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org
+Cc: Jianxin Pan <jianxin.pan@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yixun Lan <yixun.lan@amlogic.com>
+  These two patches try to add initial NAND driver support for Amlogic Meson
+SoCs, current it has been tested on GXL(p212) and AXG(s400) platform.
 
-Export the emmc sub clock phase delay ops which will be used
-by the emmc sub clock driver itself.
 
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
----
- drivers/clk/meson/Makefile          |  2 +-
- drivers/clk/meson/clk-phase-delay.c | 79 +++++++++++++++++++++++++++++++++++++
- drivers/clk/meson/clkc.h            | 13 ++++++
- 3 files changed, 93 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/meson/clk-phase-delay.c
+Changes since v4 at [5]:
+ - remove the initial default divider(CLK_DIV_MASK) in meson_nfc_clk_init()
+ - dt-bindings: remove staus, add "rx" and "tx" clock, and node rename
 
-diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
-index 72ec8c4..39ce566 100644
---- a/drivers/clk/meson/Makefile
-+++ b/drivers/clk/meson/Makefile
-@@ -2,7 +2,7 @@
- # Makefile for Meson specific clk
- #
- 
--obj-$(CONFIG_COMMON_CLK_AMLOGIC) += clk-pll.o clk-mpll.o clk-phase.o
-+obj-$(CONFIG_COMMON_CLK_AMLOGIC) += clk-pll.o clk-mpll.o clk-phase.o clk-phase-delay.o
- obj-$(CONFIG_COMMON_CLK_AMLOGIC_AUDIO)	+= clk-triphase.o sclk-div.o
- obj-$(CONFIG_COMMON_CLK_MESON_AO) += meson-aoclk.o
- obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o
-diff --git a/drivers/clk/meson/clk-phase-delay.c b/drivers/clk/meson/clk-phase-delay.c
-new file mode 100644
-index 0000000..b9573a7
---- /dev/null
-+++ b/drivers/clk/meson/clk-phase-delay.c
-@@ -0,0 +1,79 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Amlogic Meson MMC Sub Clock Controller Driver
-+ *
-+ * Copyright (c) 2017 Baylibre SAS.
-+ * Author: Jerome Brunet <jbrunet@baylibre.com>
-+ *
-+ * Copyright (c) 2018 Amlogic, inc.
-+ * Author: Yixun Lan <yixun.lan@amlogic.com>
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include "clkc.h"
-+
-+static int meson_clk_phase_delay_get_phase(struct clk_hw *hw)
-+{
-+	struct clk_regmap *clk = to_clk_regmap(hw);
-+	struct meson_clk_phase_delay_data *ph =
-+		meson_clk_get_phase_delay_data(clk);
-+	unsigned long period_ps, p, d;
-+	int degrees;
-+	u32 val;
-+
-+	regmap_read(clk->map, ph->phase.reg_off, &val);
-+	p = PARM_GET(ph->phase.width, ph->phase.shift, val);
-+	degrees = p * 360 / (1 << (ph->phase.width));
-+
-+	period_ps = DIV_ROUND_UP((unsigned long)NSEC_PER_SEC * 1000,
-+				 clk_hw_get_rate(hw));
-+
-+	d = PARM_GET(ph->delay.width, ph->delay.shift, val);
-+	degrees += d * ph->delay_step_ps * 360 / period_ps;
-+	degrees %= 360;
-+
-+	return degrees;
-+}
-+
-+static void meson_clk_apply_phase_delay(struct clk_regmap *clk,
-+					unsigned int phase,
-+					unsigned int delay)
-+{
-+	struct meson_clk_phase_delay_data *ph = clk->data;
-+	u32 val;
-+
-+	regmap_read(clk->map, ph->delay.reg_off, &val);
-+	val = PARM_SET(ph->phase.width, ph->phase.shift, val, phase);
-+	val = PARM_SET(ph->delay.width, ph->delay.shift, val, delay);
-+	regmap_write(clk->map, ph->delay.reg_off, val);
-+}
-+
-+static int meson_clk_phase_delay_set_phase(struct clk_hw *hw, int degrees)
-+{
-+	struct clk_regmap *clk = to_clk_regmap(hw);
-+	struct meson_clk_phase_delay_data *ph =
-+		meson_clk_get_phase_delay_data(clk);
-+	unsigned long period_ps, d = 0, r;
-+	u64 p;
-+
-+	p = degrees % 360;
-+	period_ps = DIV_ROUND_UP((unsigned long)NSEC_PER_SEC * 1000,
-+				 clk_hw_get_rate(hw));
-+
-+	/* First compute the phase index (p), the remainder (r) is the
-+	 * part we'll try to acheive using the delays (d).
-+	 */
-+	r = do_div(p, 360 / (1 << (ph->phase.width)));
-+	d = DIV_ROUND_CLOSEST(r * period_ps,
-+			      360 * ph->delay_step_ps);
-+	d = min(d, PMASK(ph->delay.width));
-+
-+	meson_clk_apply_phase_delay(clk, p, d);
-+	return 0;
-+}
-+
-+const struct clk_ops meson_clk_phase_delay_ops = {
-+	.get_phase = meson_clk_phase_delay_get_phase,
-+	.set_phase = meson_clk_phase_delay_set_phase,
-+};
-+EXPORT_SYMBOL_GPL(meson_clk_phase_delay_ops);
-diff --git a/drivers/clk/meson/clkc.h b/drivers/clk/meson/clkc.h
-index 6b96d55..3309d78 100644
---- a/drivers/clk/meson/clkc.h
-+++ b/drivers/clk/meson/clkc.h
-@@ -105,6 +105,18 @@ struct clk_regmap _name = {						\
- 	},								\
- };
- 
-+struct meson_clk_phase_delay_data {
-+	struct parm			phase;
-+	struct parm			delay;
-+	unsigned int			delay_step_ps;
-+};
-+
-+static inline struct meson_clk_phase_delay_data *
-+meson_clk_get_phase_delay_data(struct clk_regmap *clk)
-+{
-+	return (struct meson_clk_phase_delay_data *)clk->data;
-+}
-+
- /* clk_ops */
- extern const struct clk_ops meson_clk_pll_ro_ops;
- extern const struct clk_ops meson_clk_pll_ops;
-@@ -112,5 +124,6 @@ struct clk_regmap _name = {						\
- extern const struct clk_ops meson_clk_mpll_ro_ops;
- extern const struct clk_ops meson_clk_mpll_ops;
- extern const struct clk_ops meson_clk_phase_ops;
-+extern const struct clk_ops meson_clk_phase_delay_ops;
- 
- #endif /* __CLKC_H */
+Changes since v3 at [4]:
+ - remove partition table and some used props from dt-bindings 
+
+Changes since v2 at [3]:
+ - remove some hardcode time value, like twb
+ - use dev wait R/B instead of nand_soft_waitrdy
+ - implement nfc ecc init by ecc helper
+ - rework nfc buffer init to register the maximun buffer when several chips
+ - free nfc buffer when error and cleanup
+ - add variable to teack all the already assigned CS lines
+ - fix mtd->name use the first cs line only
+ - remove dt "nand-enable-scrambler" and use NAND_NEED_SCRAMBLING instead.
+ - move setuping ECC fileds after the identification phase
+ - use nand_scan() and attach_chip()
+ - check one event to return IRQ_NONE
+ - delete cast when of_device_get_match_data
+ - use nand_controller_init() helper
+ - remove nfc driver complains when calling devm_ioremap_resource
+ - clear irqs before setting up irq handler
+
+Changes since v1 at [1]:
+  - adopt property amlogic,nand-enable-scrambler - thanks Martin
+  - drop nand pins in DT
+  - convert clk access to emmc clkc model 
+  - fix regiser field definition alignment
+  - drop nand-user-mode 
+  - parse cs id from DT
+  - rework n2m, m2n function
+  - explain why insert two "IDLE" command
+  - implement exec_op()
+  - drop meson_nfc_get_nand_chip_dts()
+  - release resource once error occur in meson_nfc_nand_chips_init(), 
+  - call nand_cleanup(nand) once mtd_device_register fail
+
+Items not addressed ( or confirmed ) in this version:
+  - convert to ECC conf helper() 
+  - convert to dma coherent API
+  - how to construct mtd->name
+
+[1] https://lkml.kernel.org/r/20180613161314.14894-1-yixun.lan@amlogic.com
+[2] https://lkml.kernel.org/r/20180712211244.11428-1-yixun.lan@amlogic.com
+[3] https://lkml.kernel.org/r/20180719094612.5833-1-yixun.lan@amlogic.com
+[4] https://lkml.kernel.org/r/1536317831-58056-1-git-send-email-jianxin.pan@amlogic.com/
+[5] https://lore.kernel.org/r/1537433449-65213-2-git-send-email-jianxin.pan@amlogic.com/
+
+Liang Yang (2):
+  dt-bindings: nand: meson: add Amlogic NAND controller driver
+  mtd: rawnand: meson: add support for Amlogic NAND flash controller
+
+ .../devicetree/bindings/mtd/amlogic,meson-nand.txt |   60 +
+ drivers/mtd/nand/raw/Kconfig                       |   10 +
+ drivers/mtd/nand/raw/Makefile                      |    1 +
+ drivers/mtd/nand/raw/meson_nand.c                  | 1370 ++++++++++++++++++++
+ 4 files changed, 1441 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+ create mode 100644 drivers/mtd/nand/raw/meson_nand.c
+
 -- 
 1.9.1
