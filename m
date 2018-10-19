@@ -1,151 +1,57 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v3 4/9] dt-bindings: leds: Add bindings for lm3697 driver
-Date: Fri, 19 Oct 2018 06:47:47 -0500
-Message-ID: <3b96b65f-edd6-aa13-9f47-cdc58eac6c9d@ti.com>
-References: <20181011165123.32198-1-dmurphy@ti.com>
- <20181011165123.32198-5-dmurphy@ti.com> <20181012162702.GA5672@bogus>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 4/8] regulator: stpmic1: add stpmic1 regulator driver
+Date: Fri, 19 Oct 2018 12:50:15 +0100
+Message-ID: <20181019115015.GC5895@sirena.org.uk>
+References: <1539853324-29051-1-git-send-email-p.paillet@st.com>
+ <1539853324-29051-5-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TYecfFk8j8mZq+dy"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181012162702.GA5672@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1539853324-29051-5-git-send-email-p.paillet@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, lee.jones@linaro.org, tony@atomide.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Pascal PAILLET-LME <p.paillet@st.com>
+Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Rob
 
-Thanks for the review.
+--TYecfFk8j8mZq+dy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 10/12/2018 11:27 AM, Rob Herring wrote:
-> On Thu, Oct 11, 2018 at 11:51:18AM -0500, Dan Murphy wrote:
->> Add the device tree bindings for the lm3697
->> LED driver for backlighting and display.
-> 
-> Bindings are for h/w, not drivers...
-> 
+On Thu, Oct 18, 2018 at 09:02:12AM +0000, Pascal PAILLET-LME wrote:
 
-ACK
+> +	for (i = 0; i < ARRAY_SIZE(stpmic1_regulator_cfgs); i++) {
+> +		/* Parse DT & find regulators to register */
+> +		init_data = stpmic1_regulators_matches[i].init_data;
+> +		if (init_data)
+> +			init_data->regulator_init = &stpmic1_regulator_parse_dt;
+> +
+> +		rdev = stpmic1_regulator_register(pdev, i, init_data, regul);
+> +		if (IS_ERR(rdev))
+> +			return PTR_ERR(rdev);
 
-Dan
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>  .../devicetree/bindings/leds/leds-lm3697.txt  | 98 +++++++++++++++++++
->>  1 file changed, 98 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3697.txt b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
->> new file mode 100644
->> index 000000000000..4bb2ed51025b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
->> @@ -0,0 +1,98 @@
->> +* Texas Instruments - LM3697 Highly Efficient White LED Driver
->> +
->> +The LM3697 11-bit LED driver provides high-
->> +performance backlight dimming for 1, 2, or 3 series
->> +LED strings while delivering up to 90% efficiency.
->> +
->> +This device is suitable for display and keypad Lighting
->> +
->> +Required properties:
->> +	- compatible:
->> +		"ti,lm3697"
->> +	- reg :  I2C slave address
->> +	- #address-cells : 1
->> +	- #size-cells : 0
->> +
->> +Optional properties:
->> +	- enable-gpios : GPIO pin to enable/disable the device
->> +	- vled-supply : LED supply
->> +
->> +Required child properties:
->> +	- reg : 0 - LED is Controlled by bank A
->> +		1 - LED is Controlled by bank B
->> +	- led-sources : Indicates which HVLED string is associated to which
->> +			control bank.  Each element in the array is associated
->> +			with a specific HVLED string.  Element 0 is HVLED1,
->> +			element 1 is HVLED2 and element 2 HVLED3.
->> +			Additional information is contained
->> +			in Documentation/devicetree/bindings/leds/common.txt
->> +			0 - HVLED is not active in this control bank
->> +			1 - HVLED string is controlled by this control bank
->> +
->> +Optional child properties:
->> +	- runtime-ramp-up-msec: Current ramping from one brightness level to
->> +				the a higher brightness level.
->> +				Range from 2048 us - 117.44 s
->> +	- runtime-ramp-down-msec: Current ramping from one brightness level to
->> +				  the a lower brightness level.
->> +				  Range from 2048 us - 117.44 s
->> +	- label : see Documentation/devicetree/bindings/leds/common.txt
->> +	- linux,default-trigger :
->> +	   see Documentation/devicetree/bindings/leds/common.txt
->> +
->> +Example:
->> +
->> +HVLED string 1 and 3 are controlled by control bank A and HVLED 2 string is
->> +controlled by control bank B.
->> +
->> +led-controller@36 {
->> +	compatible = "ti,lm3697";
->> +	reg = <0x36>;
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->> +
->> +	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
->> +	vled-supply = <&vbatt>;
->> +
->> +	led@0 {
->> +		reg = <0>;
->> +		led-sources = <1 0 1>;
->> +		runtime-ramp-up-msec = <5000>;
->> +		runtime-ramp-down-msec = <1000>;
->> +		label = "white:first_backlight_cluster";
->> +		linux,default-trigger = "backlight";
->> +	};
->> +
->> +	led@1 {
->> +		reg = <1>;
->> +		led-sources = <0 1 0>;
->> +		runtime-ramp-up-msec = <500>;
->> +		runtime-ramp-down-msec = <1000>;
->> +		label = "white:second_backlight_cluster";
->> +		linux,default-trigger = "backlight";
->> +	};
->> +}
->> +
->> +All HVLED strings controlled by control bank A
->> +
->> +led-controller@36 {
->> +	compatible = "ti,lm3697";
->> +	reg = <0x36>;
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->> +
->> +	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
->> +	vled-supply = <&vbatt>;
->> +
->> +	led@0 {
->> +		reg = <0>;
->> +		led-sources = <1 1 1>;
->> +		runtime-ramp-up-msec = <500>;
->> +		runtime-ramp-down-msec = <1000>;
->> +		label = "white:backlight_cluster";
->> +		linux,default-trigger = "backlight";
->> +	};
->> +}
->> +
->> +For more product information please see the link below:
->> +http://www.ti.com/lit/ds/symlink/lm3697.pdf
->> -- 
->> 2.19.0
->>
+This looks mostly good, the only big thing is this - the default is to
+just unconditionally register all the regulators that exist rather than
+only those that are configured on that particular platform.  This is a
+bit simpler and means that all the readback of the configuration for the
+unconfigured regulators is available for diagnostics.  Is there a reason
+not to do that?
 
+--TYecfFk8j8mZq+dy
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-------------------
-Dan Murphy
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlvJxPYACgkQJNaLcl1U
+h9AVFwf9HuCK1nKd89bM5cuVWMEtrJN5wwS0dwfV9NJNvZ8H5h6NdUcTYb8JASZo
+c2MckaIg5ZWdFkVtQseoT85lrBAtbROJWGrSks44FXy+fmQM6SBosll+LKRavA2b
+1VPuCiyqBHPTUz6+dVUeAQRidxERF+dZdfK2FrJGaw7G96WKeHfg7zQXy4cRNJJ0
+kcfl9qNCYjF7I4FKDqugM0gKnEARpRPThYY0agxvSnJvjsR9HAcEKDNh2BBIrDQG
+acGQE+u8/nDkD6a0Wo8NgQ+V2GsJeSjMgBVUgl+gUFaoEcogr8t0wuAlnG+kvxtX
+/pYld58dINQUYBa8+hAqgvDZK9V+iQ==
+=W0oL
+-----END PGP SIGNATURE-----
+
+--TYecfFk8j8mZq+dy--
