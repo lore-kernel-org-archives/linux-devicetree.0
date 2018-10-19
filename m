@@ -1,69 +1,65 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 5/5] arm64: dts: qcom: sdm845: Add USB PHY lane two
-Date: Thu, 18 Oct 2018 16:53:22 -0700
-Message-ID: <CAD=FV=XAdZhb4Bq_MKni_-ep283v4dLw8i3Y7dy5-Y+7gwOKxg@mail.gmail.com>
-References: <20181018210933.113592-1-evgreen@chromium.org> <20181018210933.113592-6-evgreen@chromium.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] Input: pm8941-pwrkey - Add pms405 pwrkey support
+Date: Thu, 18 Oct 2018 17:01:16 -0700
+Message-ID: <20181019000116.GD210757@dtor-ws>
+References: <20180920014928.15422-1-bjorn.andersson@linaro.org>
+ <20181018052437.GW2400@vkoul-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181018210933.113592-6-evgreen@chromium.org>
+Content-Disposition: inline
+In-Reply-To: <20181018052437.GW2400@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Evan Green <evgreen@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Manu Gautam <mgautam@codeaurora.org>, cang@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>
+To: Vinod <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Oct 18, 2018 at 10:54:37AM +0530, Vinod wrote:
+> On 19-09-18, 18:49, Bjorn Andersson wrote:
+> > From: Vinod Koul <vkoul@kernel.org>
+> > 
+> > Update the binding and driver for pms405 pwrkey.
+> 
+> Rob, Dmitry
+> 
+> Gentle reminder for this patch...
+> 
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt | 1 +
+> >  drivers/input/misc/pm8941-pwrkey.c                             | 1 +
+> >  2 files changed, 2 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+> > index 34ab5763f494..736fba3bad54 100644
+> > --- a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+> > +++ b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+> > @@ -8,6 +8,7 @@ PROPERTIES
+> >  	Definition: must be one of:
+> >  		    "qcom,pm8941-pwrkey"
+> >  		    "qcom,pm8941-resin"
+> > +		    "qcom,pms405-pwrkey"
+> >  
+> >  - reg:
+> >  	Usage: required
+> > diff --git a/drivers/input/misc/pm8941-pwrkey.c b/drivers/input/misc/pm8941-pwrkey.c
+> > index 48153e0ca19a..fccf63263c1c 100644
+> > --- a/drivers/input/misc/pm8941-pwrkey.c
+> > +++ b/drivers/input/misc/pm8941-pwrkey.c
+> > @@ -317,6 +317,7 @@ static const struct pm8941_data resin_data = {
+> >  static const struct of_device_id pm8941_pwr_key_id_table[] = {
+> >  	{ .compatible = "qcom,pm8941-pwrkey", .data = &pwrkey_data },
+> >  	{ .compatible = "qcom,pm8941-resin", .data = &resin_data },
+> > +	{ .compatible = "qcom,pms405-pwrkey", .data = &pwrkey_data },
 
-On Thu, Oct 18, 2018 at 2:10 PM Evan Green <evgreen@chromium.org> wrote:
->
-> This change adds the second lane registers for the USB PHY, now that the
-> QMP phy bindings have been updated. This way the driver can stop
-> reaching beyond its register region to get at the second lane.
->
-> Signed-off-by: Evan Green <evgreen@chromium.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 9c72edb678ec..f28c50e93f5a 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -1188,10 +1188,12 @@
->                                  <&gcc GCC_USB3_PHY_PRIM_BCR>;
->                         reset-names = "phy", "common";
->
-> -                       usb_1_ssphy: lane@88e9200 {
-> +                       usb_1_ssphy: lanes@88e9200 {
->                                 reg = <0x88e9200 0x128>,
->                                       <0x88e9400 0x200>,
->                                       <0x88e9c00 0x218>,
-> +                                     <0x88e9600 0x128>,
-> +                                     <0x88e9800 0x200>,
->                                       <0x88e9a00 0x100>;
->                                 #phy-cells = <0>;
->                                 clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
-> @@ -1219,10 +1221,12 @@
->                                  <&gcc GCC_USB3_PHY_SEC_BCR>;
->                         reset-names = "phy", "common";
->
-> -                       usb_2_ssphy: lane@88eb200 {
-> +                       usb_2_ssphy: lanes@88eb200 {
->                                 reg = <0x88eb200 0x128>,
->                                       <0x88eb400 0x1fc>,
->                                       <0x88eb800 0x218>,
-> +                                     <0x88eb600 0x128>,
-> +                                     <0x88eb800 0x1fc>,
+I am sure I asked this question before (in context of a different
+driver), but why do we need this compatible if we already have
+pm8941-pwrkey compatible? Isn't pms405-pwrkey compatible with
+pm8941-pwrkey as far as power key block goes? In which cases do we need
+new compatibles and when can we reuse existing ones? Rob?
 
-This is wrong and needs to be fixed.  The
-"qcom,sdm845-qmp-usb3-uni-phy" is not dual-lane and thus shouldn't
-have tx2/rx2.  The driver knows "qcom,sdm845-qmp-usb3-uni-phy" is not
-dual lane and thus will try to map tx2 as pcs_misc.
+Thanks.
 
-
-Also overall I'll continue to point out that this patch needs to land
-_after_ the driver fix since the new driver can cope with either style
-device tree (at least temporarily) but the old driver can't cope with
-the new device tree.  See patch #2 comments for details.
-
--Doug
+-- 
+Dmitry
