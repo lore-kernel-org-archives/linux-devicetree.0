@@ -1,56 +1,42 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 0/15] Add support for OLPC XO 1.75 Embedded Controller
-Date: Fri, 19 Oct 2018 16:57:04 +0300
-Message-ID: <CAHp75Vd_9RmfDFnSzkNOQyfKVOR1tfzbMPy0_J7_DfZ2e4A16g@mail.gmail.com>
-References: <20181010172300.317643-1-lkundrak@v3.sk>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v3 2/9] dt-bindings: ti-lmu: Remove LM3697
+Date: Fri, 19 Oct 2018 07:58:12 -0700
+Message-ID: <20181019145812.GC43338@atomide.com>
+References: <20181012162619.GA28573@bogus>
+ <20181012180312.GB5565@amd>
+ <60cc9238-aba2-aa6a-64a4-2b5e20835549@gmail.com>
+ <CAL_Jsq+Yspr_iNP1eYanvtmiuMf-xNEZ0suDH3tQayV=V5r5=g@mail.gmail.com>
+ <73647af4-0258-49a9-d9b6-eeef7e7813dc@gmail.com>
+ <5c7f03cc-4d45-6010-523d-46721c218731@ti.com>
+ <20181015214512.GA2001@amd>
+ <aa401333-9650-c925-2085-6e6d17b576bd@ti.com>
+ <20181018221048.GA6364@amd>
+ <b3d390c8-46bf-2c94-fad5-ec85b1cca2fe@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181010172300.317643-1-lkundrak@v3.sk>
+Content-Disposition: inline
+In-Reply-To: <b3d390c8-46bf-2c94-fad5-ec85b1cca2fe@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, quozl@laptop.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, devel@driverdev.osuosl.or
+To: Dan Murphy <dmurphy@ti.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh@kernel.org>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 10, 2018 at 8:23 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
+* Dan Murphy <dmurphy@ti.com> [181019 11:42]:
+> On 10/18/2018 05:10 PM, Pavel Machek wrote:
+> > 
+> > Now... this is what I've suggested before. If you don't agree, you may
+> > want to contact Tony Lindgren, IIRC he works for TI, too, and might be
+> > willing to help.
 >
-> Hi.
->
-> This patchset adds support for the Embedded Controller on an OLPC XO
-> 1.75 machine. OLPC XO 1.75 is a MMP2 based ARM laptop. It plugs into
-> the existing OLPC platform infrastructure, currently used by the x86
-> based models.
->
-> The EC operates in SPI master mode, meaning the SOC is the SPI slave. It
-> uses extra handshake signal to signal readiness of SOC to accept data
-> from EC and to initiate a transaction if SOC wishes to submit data.
->
-> The SPI slave support for MMP2 was submitted separately:
-> https://lore.kernel.org/lkml/20181010170936.316862-1-lkundrak@v3.sk/T/#t
->
+> I will ping Tony just to close the loop.  I will be posting v4 today after making the changes.
+> I was hoping to have some code review prior to posting v4 but have not received any comments so
+> v4 will just be a patch rearrangement.
 
-> THe "power: supply: olpc_battery: correct the temperature" patch was
+I guess not much to ping here though as I know little about these
+chips :) As long as Rob is happy with the binding changes I'll be
+happy too.
 
-The
+Regards,
 
-> already sent out separately, but I'm including it because the last
-> commit of the set depends on it.
->
-> Tested to work on an OLPC XO 1.75 and also tested not to break x86
-> support with an OLPC XO 1 machine. I don't have a XO 1.5, but it's
-> unlikely this breaks it when XO 1 works.
->
-> Thanks in advance for reviews and feedback of any kind.
-
-Thanks for the series.
-I'm about to review the patch 6, otherwise read my comments for the
-rest and consider addressing them.
-
->
-> Lubo
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Tony
