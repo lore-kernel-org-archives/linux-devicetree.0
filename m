@@ -1,738 +1,393 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH v5 6/6] power: supply: Add Spreadtrum SC27XX fuel gauge unit driver
-Date: Fri, 19 Oct 2018 18:53:15 +0800
-Message-ID: <2983281f449d180d008c2f49133088a12ea4046d.1539915051.git.baolin.wang@linaro.org>
-References: <e7c061535f2dcca54d6498405fdd5ed7098b19f9.1539915051.git.baolin.wang@linaro.org>
+From: Claudiu Beznea <Claudiu.Beznea@microchip.com>
+Subject: Re: [RESEND PATCH v5 0/9] extend PWM framework to support PWM modes
+Date: Fri, 19 Oct 2018 14:18:25 +0300
+Message-ID: <67708c92-edbb-0429-d7e7-ac000968c271@microchip.com>
+References: <1535461286-12308-1-git-send-email-claudiu.beznea@microchip.com>
+ <b95d0de2-1a97-36f0-03ad-3b5e52b1fa5d@microchip.com>
+ <20181016120321.GG8852@ulmo>
+ <fca49cff-f883-baf4-4bd3-80f45635bb5a@microchip.com>
+ <20181018160038.GD6226@ulmo>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e7c061535f2dcca54d6498405fdd5ed7098b19f9.1539915051.git.baolin.wang@linaro.org>
-In-Reply-To: <e7c061535f2dcca54d6498405fdd5ed7098b19f9.1539915051.git.baolin.wang@linaro.org>
-References: <e7c061535f2dcca54d6498405fdd5ed7098b19f9.1539915051.git.baolin.wang@linaro.org>
+In-Reply-To: <20181018160038.GD6226@ulmo>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, baolin.wang@linaro.org, broonie@kernel.org, ctatlor97@gmail.com, linus.walleij@linaro.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Nicolas.Ferre@microchip.com, robh+dt@kernel.org, alexandre.belloni@bootlin.com, linux-pwm@vger.kernel.org, treding@nvidia.com, shc_work@mail.ru, mark.rutland@arm.com, corbet@lwn.net, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, thomas.petazzoni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the Spreadtrum SC27XX serial PMICs fuel gauge support,
-which is used to calculate the battery capacity.
 
-Original-by: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
----
-Changes from v4:
- - None.
 
-Changes from v3:
- - None.
+On 18.10.2018 19:00, Thierry Reding wrote:
+> On Wed, Oct 17, 2018 at 12:41:53PM +0000, Claudiu.Beznea@microchip.com wrote:
+>>
+>>
+>> On 16.10.2018 15:03, Thierry Reding wrote:
+>>> On Fri, Sep 14, 2018 at 06:20:48PM +0200, Nicolas Ferre wrote:
+>>>> Thierry,
+>>>>
+>>>> On 28/08/2018 at 15:01, Claudiu Beznea wrote:
+>>>>> Hi,
+>>>>>
+>>>>> Please give feedback on these patches which extends the PWM framework in
+>>>>> order to support multiple PWM modes of operations. This series is a rework
+>>>>> of [1] and [2].
+>>>>
+>>>> This series started with a RFC back on 5 April 2017 "extend PWM framework to
+>>>> support PWM modes". The continuous work starting with v2 of this series on
+>>>> January 12, 2018.
+>>>>
+>>>> Then Claudiu tried to address all comments up to v4 which didn't have any
+>>>> more reviews. He posted a v5 without comments since May 22, 2018. This
+>>>> series is basically a resent of the v5 (as said in the $subject).
+>>>>
+>>>> We would like to know what is preventing this series to be included in the
+>>>> PWM sub-system. Note that if some issue still remain with it, we are ready
+>>>> to help to solve them.
+>>>>
+>>>> Without feedback from you side, we fear that we would miss a merge window
+>>>> again for no obvious reason (DT part is Acked by Rob: patch 5/9).
+>>>
+>>> First off, apologies for not getting around to this earlier.
+>>>
+>>> I think this series is mostly fine, but I still have doubts about the DT
+>>> aspects of this. In particular, Rob raised a concern about this here:
+>>>
+>>> 	https://lkml.org/lkml/2018/1/22/655
+>>>
+>>> and it seems like that particular question was never fully resolved as
+>>> the discussion veered off that particular topic.
+>>
+>> 1/ If you are talking about this sentence:
+>> "Yes, but you have to make "normal" be no bit set to be compatible with
+>> everything already out there."
+>>
+>> The current implementation consider that if no mode is provided then, the
+>> old approach is considered, meaning the normal mode will be used by every
+>> PWM in-kernel clients.
+>>
+>> In of_pwm_xlate_with_flags() the pmw->args.mode is initialized with what
+>> pwm_mode_get_valid() returns. In case of controllers which does not
+>> implement something special for PWM modes the PWM normal mode will be
+>> returned (pwmchip_get_default_caps() function has to be called in the end).
+>> Otherwise the pwm->args.mode will be populated with what user provided as
+>> input from DT, if what was provided from DT is valid for PWM channel.
+>> Please see that pwm_mode_valid() is used to validate user input, otherwise
+>> PWM normal mode will be used.
+> 
+> No, that part looks fine.
+> 
+>>
+>> +	pwm->args.mode = pwm_mode_get_valid(pc, pwm);
+>>
+>> -	if (args->args_count > 2 && args->args[2] & PWM_POLARITY_INVERTED)
+>> -		pwm->args.polarity = PWM_POLARITY_INVERSED;
+>> +	if (args->args_count > 2) {
+>> +		if (args->args[2] & PWM_POLARITY_INVERTED)
+>> +			pwm->args.polarity = PWM_POLARITY_INVERSED;
+>> +
+>> +		for (modebit = PWMC_MODE_COMPLEMENTARY_BIT;
+>> +		     modebit < PWMC_MODE_CNT; modebit++) {
+>> +			unsigned long mode = BIT(modebit);
+>> +
+>> +			if ((args->args[2] & mode) &&
+>> +			    pwm_mode_valid(pwm, mode)) {
+>> +				pwm->args.mode = mode;
+>> +				break;
+>> +			}
+>> +		}
+>> +	}
+>>
+>>
+>> 2/ If you are talking about this sentence:
+>> "Thinking about this some more, shouldn't the new modes just be
+>> implied? A client is going to require one of these modes or it won't
+>> work right."
+>>
+>> As explained at point 1, if there is no mode requested from DT the default
+>> mode for channel will be used, which, in case of PWM controller which are
+>> not implementing the new modes, will be PWM normal mode.
+> 
+> I don't think that's an issue. I think what Rob was referring to and
+> which mirrors my concern is that these modes are a feature that doesn't
+> extend to typical use-cases. So for all existing use-cases (like LED or
+> backlight) we always assume a PWM running in normal mode. Now, if you
+> write a driver for some particular piece of hardware that needs a mode
+> that is not the normal mode, the question is: wouldn't that driver know
+> that it wants exactly push-pull or complementary mode?
 
-Changes from v2:
- - Use core helper functions to look up OCV capacity table.
- - Use device_property_read_u32() instead of of_property_read_u32().
- - Add acked tag from Linus.
+It should, yes.
 
-Changes from v1:
- - Use battery standard properties to get internal resistance and ocv table.
- - Change devm_gpiod_get_optional() to devm_gpiod_get().
- - Add power_supply_changed() when detecting battery present change.
- - Return micro volts for sc27xx_fgu_get_vbat_ocv().
----
- drivers/power/supply/Kconfig             |    7 +
- drivers/power/supply/Makefile            |    1 +
- drivers/power/supply/sc27xx_fuel_gauge.c |  661 ++++++++++++++++++++++++++++++
- 3 files changed, 669 insertions(+)
- create mode 100644 drivers/power/supply/sc27xx_fuel_gauge.c
+Wouldn't it have
+> to explicitly check that the PWM supports it and select it (i.e. in the
+> driver code)?
 
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index f27cf07..917f4b7 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -652,4 +652,11 @@ config CHARGER_SC2731
- 	 Say Y here to enable support for battery charging with SC2731
- 	 PMIC chips.
- 
-+config FUEL_GAUGE_SC27XX
-+	tristate "Spreadtrum SC27XX fuel gauge driver"
-+	depends on MFD_SC27XX_PMIC || COMPILE_TEST
-+	help
-+	 Say Y here to enable support for fuel gauge with SC27XX
-+	 PMIC chips.
-+
- endif # POWER_SUPPLY
-diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-index 767105b..b731c2a 100644
---- a/drivers/power/supply/Makefile
-+++ b/drivers/power/supply/Makefile
-@@ -86,3 +86,4 @@ obj-$(CONFIG_AXP288_FUEL_GAUGE) += axp288_fuel_gauge.o
- obj-$(CONFIG_AXP288_CHARGER)	+= axp288_charger.o
- obj-$(CONFIG_CHARGER_CROS_USBPD)	+= cros_usbpd-charger.o
- obj-$(CONFIG_CHARGER_SC2731)	+= sc2731_charger.o
-+obj-$(CONFIG_FUEL_GAUGE_SC27XX)	+= sc27xx_fuel_gauge.o
-diff --git a/drivers/power/supply/sc27xx_fuel_gauge.c b/drivers/power/supply/sc27xx_fuel_gauge.c
-new file mode 100644
-index 0000000..1c0b856
---- /dev/null
-+++ b/drivers/power/supply/sc27xx_fuel_gauge.c
-@@ -0,0 +1,661 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2018 Spreadtrum Communications Inc.
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/iio/consumer.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/power_supply.h>
-+#include <linux/regmap.h>
-+
-+/* PMIC global control registers definition */
-+#define SC27XX_MODULE_EN0		0xc08
-+#define SC27XX_CLK_EN0			0xc18
-+#define SC27XX_FGU_EN			BIT(7)
-+#define SC27XX_FGU_RTC_EN		BIT(6)
-+
-+/* FGU registers definition */
-+#define SC27XX_FGU_START		0x0
-+#define SC27XX_FGU_CONFIG		0x4
-+#define SC27XX_FGU_ADC_CONFIG		0x8
-+#define SC27XX_FGU_STATUS		0xc
-+#define SC27XX_FGU_INT_EN		0x10
-+#define SC27XX_FGU_INT_CLR		0x14
-+#define SC27XX_FGU_INT_STS		0x1c
-+#define SC27XX_FGU_VOLTAGE		0x20
-+#define SC27XX_FGU_OCV			0x24
-+#define SC27XX_FGU_POCV			0x28
-+#define SC27XX_FGU_CURRENT		0x2c
-+#define SC27XX_FGU_CLBCNT_SETH		0x50
-+#define SC27XX_FGU_CLBCNT_SETL		0x54
-+#define SC27XX_FGU_CLBCNT_VALH		0x68
-+#define SC27XX_FGU_CLBCNT_VALL		0x6c
-+#define SC27XX_FGU_CLBCNT_QMAXL		0x74
-+
-+#define SC27XX_WRITE_SELCLB_EN		BIT(0)
-+#define SC27XX_FGU_CLBCNT_MASK		GENMASK(15, 0)
-+#define SC27XX_FGU_CLBCNT_SHIFT		16
-+
-+#define SC27XX_FGU_1000MV_ADC		686
-+#define SC27XX_FGU_1000MA_ADC		1372
-+#define SC27XX_FGU_CUR_BASIC_ADC	8192
-+#define SC27XX_FGU_SAMPLE_HZ		2
-+
-+/*
-+ * struct sc27xx_fgu_data: describe the FGU device
-+ * @regmap: regmap for register access
-+ * @dev: platform device
-+ * @battery: battery power supply
-+ * @base: the base offset for the controller
-+ * @lock: protect the structure
-+ * @gpiod: GPIO for battery detection
-+ * @channel: IIO channel to get battery temperature
-+ * @internal_resist: the battery internal resistance in mOhm
-+ * @total_cap: the total capacity of the battery in mAh
-+ * @init_cap: the initial capacity of the battery in mAh
-+ * @init_clbcnt: the initial coulomb counter
-+ * @max_volt: the maximum constant input voltage in millivolt
-+ * @table_len: the capacity table length
-+ * @cap_table: capacity table with corresponding ocv
-+ */
-+struct sc27xx_fgu_data {
-+	struct regmap *regmap;
-+	struct device *dev;
-+	struct power_supply *battery;
-+	u32 base;
-+	struct mutex lock;
-+	struct gpio_desc *gpiod;
-+	struct iio_channel *channel;
-+	bool bat_present;
-+	int internal_resist;
-+	int total_cap;
-+	int init_cap;
-+	int init_clbcnt;
-+	int max_volt;
-+	int table_len;
-+	struct power_supply_battery_ocv_table *cap_table;
-+};
-+
-+static const char * const sc27xx_charger_supply_name[] = {
-+	"sc2731_charger",
-+	"sc2720_charger",
-+	"sc2721_charger",
-+	"sc2723_charger",
-+};
-+
-+static int sc27xx_fgu_adc_to_current(int adc)
-+{
-+	return (adc * 1000) / SC27XX_FGU_1000MA_ADC;
-+}
-+
-+static int sc27xx_fgu_adc_to_voltage(int adc)
-+{
-+	return (adc * 1000) / SC27XX_FGU_1000MV_ADC;
-+}
-+
-+/*
-+ * When system boots on, we can not read battery capacity from coulomb
-+ * registers, since now the coulomb registers are invalid. So we should
-+ * calculate the battery open circuit voltage, and get current battery
-+ * capacity according to the capacity table.
-+ */
-+static int sc27xx_fgu_get_boot_capacity(struct sc27xx_fgu_data *data, int *cap)
-+{
-+	int volt, cur, oci, ocv, ret;
-+
-+	/*
-+	 * After system booting on, the SC27XX_FGU_CLBCNT_QMAXL register saved
-+	 * the first sampled open circuit current.
-+	 */
-+	ret = regmap_read(data->regmap, data->base + SC27XX_FGU_CLBCNT_QMAXL,
-+			  &cur);
-+	if (ret)
-+		return ret;
-+
-+	cur <<= 1;
-+	oci = sc27xx_fgu_adc_to_current(cur - SC27XX_FGU_CUR_BASIC_ADC);
-+
-+	/*
-+	 * Should get the OCV from SC27XX_FGU_POCV register at the system
-+	 * beginning. It is ADC values reading from registers which need to
-+	 * convert the corresponding voltage.
-+	 */
-+	ret = regmap_read(data->regmap, data->base + SC27XX_FGU_POCV, &volt);
-+	if (ret)
-+		return ret;
-+
-+	volt = sc27xx_fgu_adc_to_voltage(volt);
-+	ocv = volt - (oci * data->internal_resist) / 1000;
-+
-+	/*
-+	 * Parse the capacity table to look up the correct capacity percent
-+	 * according to current battery's corresponding OCV values.
-+	 */
-+	*cap = power_supply_ocv2cap_simple(data->cap_table, data->table_len,
-+					   ocv);
-+
-+	return 0;
-+}
-+
-+static int sc27xx_fgu_set_clbcnt(struct sc27xx_fgu_data *data, int clbcnt)
-+{
-+	int ret;
-+
-+	clbcnt *= SC27XX_FGU_SAMPLE_HZ;
-+
-+	ret = regmap_update_bits(data->regmap,
-+				 data->base + SC27XX_FGU_CLBCNT_SETL,
-+				 SC27XX_FGU_CLBCNT_MASK, clbcnt);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_update_bits(data->regmap,
-+				 data->base + SC27XX_FGU_CLBCNT_SETH,
-+				 SC27XX_FGU_CLBCNT_MASK,
-+				 clbcnt >> SC27XX_FGU_CLBCNT_SHIFT);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_update_bits(data->regmap, data->base + SC27XX_FGU_START,
-+				 SC27XX_WRITE_SELCLB_EN,
-+				 SC27XX_WRITE_SELCLB_EN);
-+}
-+
-+static int sc27xx_fgu_get_clbcnt(struct sc27xx_fgu_data *data, int *clb_cnt)
-+{
-+	int ccl, cch, ret;
-+
-+	ret = regmap_read(data->regmap, data->base + SC27XX_FGU_CLBCNT_VALL,
-+			  &ccl);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_read(data->regmap, data->base + SC27XX_FGU_CLBCNT_VALH,
-+			  &cch);
-+	if (ret)
-+		return ret;
-+
-+	*clb_cnt = ccl & SC27XX_FGU_CLBCNT_MASK;
-+	*clb_cnt |= (cch & SC27XX_FGU_CLBCNT_MASK) << SC27XX_FGU_CLBCNT_SHIFT;
-+	*clb_cnt /= SC27XX_FGU_SAMPLE_HZ;
-+
-+	return 0;
-+}
-+
-+static int sc27xx_fgu_get_capacity(struct sc27xx_fgu_data *data, int *cap)
-+{
-+	int ret, cur_clbcnt, delta_clbcnt, delta_cap, temp;
-+
-+	/* Get current coulomb counters firstly */
-+	ret = sc27xx_fgu_get_clbcnt(data, &cur_clbcnt);
-+	if (ret)
-+		return ret;
-+
-+	delta_clbcnt = cur_clbcnt - data->init_clbcnt;
-+
-+	/*
-+	 * Convert coulomb counter to delta capacity (mAh), and set multiplier
-+	 * as 100 to improve the precision.
-+	 */
-+	temp = DIV_ROUND_CLOSEST(delta_clbcnt, 360);
-+	temp = sc27xx_fgu_adc_to_current(temp);
-+
-+	/*
-+	 * Convert to capacity percent of the battery total capacity,
-+	 * and multiplier is 100 too.
-+	 */
-+	delta_cap = DIV_ROUND_CLOSEST(temp * 100, data->total_cap);
-+	*cap = delta_cap + data->init_cap;
-+
-+	return 0;
-+}
-+
-+static int sc27xx_fgu_get_vbat_vol(struct sc27xx_fgu_data *data, int *val)
-+{
-+	int ret, vol;
-+
-+	ret = regmap_read(data->regmap, data->base + SC27XX_FGU_VOLTAGE, &vol);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * It is ADC values reading from registers which need to convert to
-+	 * corresponding voltage values.
-+	 */
-+	*val = sc27xx_fgu_adc_to_voltage(vol);
-+
-+	return 0;
-+}
-+
-+static int sc27xx_fgu_get_current(struct sc27xx_fgu_data *data, int *val)
-+{
-+	int ret, cur;
-+
-+	ret = regmap_read(data->regmap, data->base + SC27XX_FGU_CURRENT, &cur);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * It is ADC values reading from registers which need to convert to
-+	 * corresponding current values.
-+	 */
-+	*val = sc27xx_fgu_adc_to_current(cur - SC27XX_FGU_CUR_BASIC_ADC);
-+
-+	return 0;
-+}
-+
-+static int sc27xx_fgu_get_vbat_ocv(struct sc27xx_fgu_data *data, int *val)
-+{
-+	int vol, cur, ret;
-+
-+	ret = sc27xx_fgu_get_vbat_vol(data, &vol);
-+	if (ret)
-+		return ret;
-+
-+	ret = sc27xx_fgu_get_current(data, &cur);
-+	if (ret)
-+		return ret;
-+
-+	/* Return the battery OCV in micro volts. */
-+	*val = vol * 1000 - cur * data->internal_resist;
-+
-+	return 0;
-+}
-+
-+static int sc27xx_fgu_get_temp(struct sc27xx_fgu_data *data, int *temp)
-+{
-+	return iio_read_channel_processed(data->channel, temp);
-+}
-+
-+static int sc27xx_fgu_get_health(struct sc27xx_fgu_data *data, int *health)
-+{
-+	int ret, vol;
-+
-+	ret = sc27xx_fgu_get_vbat_vol(data, &vol);
-+	if (ret)
-+		return ret;
-+
-+	if (vol > data->max_volt)
-+		*health = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
-+	else
-+		*health = POWER_SUPPLY_HEALTH_GOOD;
-+
-+	return 0;
-+}
-+
-+static int sc27xx_fgu_get_status(struct sc27xx_fgu_data *data, int *status)
-+{
-+	union power_supply_propval val;
-+	struct power_supply *psy;
-+	int i, ret = -EINVAL;
-+
-+	for (i = 0; i < ARRAY_SIZE(sc27xx_charger_supply_name); i++) {
-+		psy = power_supply_get_by_name(sc27xx_charger_supply_name[i]);
-+		if (!psy)
-+			continue;
-+
-+		ret = power_supply_get_property(psy, POWER_SUPPLY_PROP_STATUS,
-+						&val);
-+		power_supply_put(psy);
-+		if (ret)
-+			return ret;
-+
-+		*status = val.intval;
-+	}
-+
-+	return ret;
-+}
-+
-+static int sc27xx_fgu_get_property(struct power_supply *psy,
-+				   enum power_supply_property psp,
-+				   union power_supply_propval *val)
-+{
-+	struct sc27xx_fgu_data *data = power_supply_get_drvdata(psy);
-+	int ret = 0;
-+	int value;
-+
-+	mutex_lock(&data->lock);
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_STATUS:
-+		ret = sc27xx_fgu_get_status(data, &value);
-+		if (ret)
-+			goto error;
-+
-+		val->intval = value;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_HEALTH:
-+		ret = sc27xx_fgu_get_health(data, &value);
-+		if (ret)
-+			goto error;
-+
-+		val->intval = value;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_PRESENT:
-+		val->intval = data->bat_present;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_TEMP:
-+		ret = sc27xx_fgu_get_temp(data, &value);
-+		if (ret)
-+			goto error;
-+
-+		val->intval = value;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_TECHNOLOGY:
-+		val->intval = POWER_SUPPLY_TECHNOLOGY_LION;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_CAPACITY:
-+		ret = sc27xx_fgu_get_capacity(data, &value);
-+		if (ret)
-+			goto error;
-+
-+		val->intval = value;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-+		ret = sc27xx_fgu_get_vbat_vol(data, &value);
-+		if (ret)
-+			goto error;
-+
-+		val->intval = value * 1000;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_VOLTAGE_OCV:
-+		ret = sc27xx_fgu_get_vbat_ocv(data, &value);
-+		if (ret)
-+			goto error;
-+
-+		val->intval = value;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_CURRENT_NOW:
-+	case POWER_SUPPLY_PROP_CURRENT_AVG:
-+		ret = sc27xx_fgu_get_current(data, &value);
-+		if (ret)
-+			goto error;
-+
-+		val->intval = value * 1000;
-+		break;
-+
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+
-+error:
-+	mutex_unlock(&data->lock);
-+	return ret;
-+}
-+
-+static void sc27xx_fgu_external_power_changed(struct power_supply *psy)
-+{
-+	struct sc27xx_fgu_data *data = power_supply_get_drvdata(psy);
-+
-+	power_supply_changed(data->battery);
-+}
-+
-+static enum power_supply_property sc27xx_fgu_props[] = {
-+	POWER_SUPPLY_PROP_STATUS,
-+	POWER_SUPPLY_PROP_HEALTH,
-+	POWER_SUPPLY_PROP_PRESENT,
-+	POWER_SUPPLY_PROP_TEMP,
-+	POWER_SUPPLY_PROP_TECHNOLOGY,
-+	POWER_SUPPLY_PROP_CAPACITY,
-+	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-+	POWER_SUPPLY_PROP_VOLTAGE_OCV,
-+	POWER_SUPPLY_PROP_CURRENT_NOW,
-+	POWER_SUPPLY_PROP_CURRENT_AVG,
-+};
-+
-+static const struct power_supply_desc sc27xx_fgu_desc = {
-+	.name			= "sc27xx-fgu",
-+	.type			= POWER_SUPPLY_TYPE_BATTERY,
-+	.properties		= sc27xx_fgu_props,
-+	.num_properties		= ARRAY_SIZE(sc27xx_fgu_props),
-+	.get_property		= sc27xx_fgu_get_property,
-+	.external_power_changed	= sc27xx_fgu_external_power_changed,
-+};
-+
-+static irqreturn_t sc27xx_fgu_bat_detection(int irq, void *dev_id)
-+{
-+	struct sc27xx_fgu_data *data = dev_id;
-+	int state;
-+
-+	mutex_lock(&data->lock);
-+
-+	state = gpiod_get_value_cansleep(data->gpiod);
-+	if (state < 0) {
-+		dev_err(data->dev, "failed to get gpio state\n");
-+		mutex_unlock(&data->lock);
-+		return IRQ_RETVAL(state);
-+	}
-+
-+	data->bat_present = !!state;
-+
-+	mutex_unlock(&data->lock);
-+
-+	power_supply_changed(data->battery);
-+	return IRQ_HANDLED;
-+}
-+
-+static void sc27xx_fgu_disable(void *_data)
-+{
-+	struct sc27xx_fgu_data *data = _data;
-+
-+	regmap_update_bits(data->regmap, SC27XX_CLK_EN0, SC27XX_FGU_RTC_EN, 0);
-+	regmap_update_bits(data->regmap, SC27XX_MODULE_EN0, SC27XX_FGU_EN, 0);
-+}
-+
-+static int sc27xx_fgu_cap_to_clbcnt(struct sc27xx_fgu_data *data, int capacity)
-+{
-+	/*
-+	 * Get current capacity (mAh) = battery total capacity (mAh) *
-+	 * current capacity percent (capacity / 100).
-+	 */
-+	int cur_cap = DIV_ROUND_CLOSEST(data->total_cap * capacity, 100);
-+
-+	/*
-+	 * Convert current capacity (mAh) to coulomb counter according to the
-+	 * formula: 1 mAh =3.6 coulomb.
-+	 */
-+	return DIV_ROUND_CLOSEST(cur_cap * 36, 10);
-+}
-+
-+static int sc27xx_fgu_hw_init(struct sc27xx_fgu_data *data)
-+{
-+	struct power_supply_battery_info info = { };
-+	struct power_supply_battery_ocv_table *table;
-+	int ret, i;
-+
-+	ret = power_supply_get_battery_info(data->battery, &info);
-+	if (ret) {
-+		dev_err(data->dev, "failed to get battery information\n");
-+		return ret;
-+	}
-+
-+	data->total_cap = info.charge_full_design_uah / 1000;
-+	data->max_volt = info.constant_charge_voltage_max_uv / 1000;
-+	data->internal_resist = info.factory_internal_resistance_uohm / 1000;
-+
-+	/*
-+	 * For SC27XX fuel gauge device, we only use one ocv-capacity
-+	 * table in normal temperature 20 Celsius.
-+	 */
-+	table = power_supply_find_ocv2cap_table(&info, 20, &data->table_len);
-+	if (!table)
-+		return -EINVAL;
-+
-+	data->cap_table = devm_kzalloc(data->dev,
-+				       data->table_len * sizeof(*table),
-+				       GFP_KERNEL);
-+	if (!data->cap_table) {
-+		power_supply_put_battery_info(data->battery, &info);
-+		return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < data->table_len; i++) {
-+		data->cap_table[i].ocv = table[i].ocv / 1000;
-+		data->cap_table[i].capacity = table[i].capacity;
-+	}
-+
-+	power_supply_put_battery_info(data->battery, &info);
-+
-+	/* Enable the FGU module */
-+	ret = regmap_update_bits(data->regmap, SC27XX_MODULE_EN0,
-+				 SC27XX_FGU_EN, SC27XX_FGU_EN);
-+	if (ret) {
-+		dev_err(data->dev, "failed to enable fgu\n");
-+		return ret;
-+	}
-+
-+	/* Enable the FGU RTC clock to make it work */
-+	ret = regmap_update_bits(data->regmap, SC27XX_CLK_EN0,
-+				 SC27XX_FGU_RTC_EN, SC27XX_FGU_RTC_EN);
-+	if (ret) {
-+		dev_err(data->dev, "failed to enable fgu RTC clock\n");
-+		goto disable_fgu;
-+	}
-+
-+	/*
-+	 * Get the boot battery capacity when system powers on, which is used to
-+	 * initialize the coulomb counter. After that, we can read the coulomb
-+	 * counter to measure the battery capacity.
-+	 */
-+	ret = sc27xx_fgu_get_boot_capacity(data, &data->init_cap);
-+	if (ret) {
-+		dev_err(data->dev, "failed to get boot capacity\n");
-+		goto disable_clk;
-+	}
-+
-+	/*
-+	 * Convert battery capacity to the corresponding initial coulomb counter
-+	 * and set into coulomb counter registers.
-+	 */
-+	data->init_clbcnt = sc27xx_fgu_cap_to_clbcnt(data, data->init_cap);
-+	ret = sc27xx_fgu_set_clbcnt(data, data->init_clbcnt);
-+	if (ret) {
-+		dev_err(data->dev, "failed to initialize coulomb counter\n");
-+		goto disable_clk;
-+	}
-+
-+	return 0;
-+
-+disable_clk:
-+	regmap_update_bits(data->regmap, SC27XX_CLK_EN0, SC27XX_FGU_RTC_EN, 0);
-+disable_fgu:
-+	regmap_update_bits(data->regmap, SC27XX_MODULE_EN0, SC27XX_FGU_EN, 0);
-+
-+	return ret;
-+}
-+
-+static int sc27xx_fgu_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct power_supply_config fgu_cfg = { };
-+	struct sc27xx_fgu_data *data;
-+	int ret, irq;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!data->regmap) {
-+		dev_err(&pdev->dev, "failed to get regmap\n");
-+		return -ENODEV;
-+	}
-+
-+	ret = device_property_read_u32(&pdev->dev, "reg", &data->base);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to get fgu address\n");
-+		return ret;
-+	}
-+
-+	data->channel = devm_iio_channel_get(&pdev->dev, "bat-temp");
-+	if (IS_ERR(data->channel)) {
-+		dev_err(&pdev->dev, "failed to get IIO channel\n");
-+		return PTR_ERR(data->channel);
-+	}
-+
-+	data->gpiod = devm_gpiod_get(&pdev->dev, "bat-detect", GPIOD_IN);
-+	if (IS_ERR(data->gpiod)) {
-+		dev_err(&pdev->dev, "failed to get battery detection GPIO\n");
-+		return PTR_ERR(data->gpiod);
-+	}
-+
-+	ret = gpiod_get_value_cansleep(data->gpiod);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to get gpio state\n");
-+		return ret;
-+	}
-+
-+	data->bat_present = !!ret;
-+	mutex_init(&data->lock);
-+	data->dev = &pdev->dev;
-+
-+	fgu_cfg.drv_data = data;
-+	fgu_cfg.of_node = np;
-+	data->battery = devm_power_supply_register(&pdev->dev, &sc27xx_fgu_desc,
-+						   &fgu_cfg);
-+	if (IS_ERR(data->battery)) {
-+		dev_err(&pdev->dev, "failed to register power supply\n");
-+		return PTR_ERR(data->battery);
-+	}
-+
-+	ret = sc27xx_fgu_hw_init(data);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to initialize fgu hardware\n");
-+		return ret;
-+	}
-+
-+	ret = devm_add_action(&pdev->dev, sc27xx_fgu_disable, data);
-+	if (ret) {
-+		sc27xx_fgu_disable(data);
-+		dev_err(&pdev->dev, "failed to add fgu disable action\n");
-+		return ret;
-+	}
-+
-+	irq = gpiod_to_irq(data->gpiod);
-+	if (irq < 0) {
-+		dev_err(&pdev->dev, "failed to translate GPIO to IRQ\n");
-+		return irq;
-+	}
-+
-+	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
-+					sc27xx_fgu_bat_detection,
-+					IRQF_ONESHOT | IRQF_TRIGGER_RISING |
-+					IRQF_TRIGGER_FALLING,
-+					pdev->name, data);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to request IRQ\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id sc27xx_fgu_of_match[] = {
-+	{ .compatible = "sprd,sc2731-fgu", },
-+	{ }
-+};
-+
-+static struct platform_driver sc27xx_fgu_driver = {
-+	.probe = sc27xx_fgu_probe,
-+	.driver = {
-+		.name = "sc27xx-fgu",
-+		.of_match_table = sc27xx_fgu_of_match,
-+	}
-+};
-+
-+module_platform_driver(sc27xx_fgu_driver);
-+
-+MODULE_DESCRIPTION("Spreadtrum SC27XX PMICs Fual Gauge Unit Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.7.9.5
+Yes, that should be the flow. I added the DT changes for cases where a
+driver could use more than one mode and to be able to choose one of the
+modes it may needs.
+
+> 
+> Say you have a driver that requires push-pull mode. It doesn't really
+> make sense to require the mode to be encoded in DT, because the driver
+> will only work with one specific mode anyway. So might as well require
+> it and have the driver check for support and fail if the PWM is not
+> compatible. This would likely never happen, because hardware engineers
+> couldn't have validated the design in that case, but there's no reason
+> for the mode to be specified in DT because it is fixed by the very use-
+> case anyway.
+
+Yes, agree.
+
+> 
+> Also, leaving it out of DT simplifies things.
+
+Agree.
+
+> If you allow the mode to
+> be specified in DT you could end up with a situation where the driver
+> required push-pull mode, but the DT specifies complementary mode. What
+> do you do in such a situation? Warn about it and just go with push-pull
+> anyway? Then why give the users a way of screwing things up in the first
+> place?
+
+I only introduce this because I had in mind the PWM regulator and I was
+thinking to make it work for either push-pull mode and normal mode. But
+since there is no code for this at the moment I totally agree with you to
+not introduce the DT part. My bad I push it here without a use case.
+
+> 
+>> 3/ If you are talking about:
+>> "Also complementary mode could be accomplished with a single pwm output
+>> and a board level inverter, right? How would that be handled when the
+>> PWM driver doesn't support that mode?"
+>> This complicates the things and I think it requires extra device tree
+>> bindings to describe extra per-pwm channel capabilities. For the moment,
+>> with this series I've stopped to only have the capabilities registered from
+>> driver. My understanding is that this could be accomplished with extra
+>> device tree bindings in PWM controller to describe PWM channels
+>> capabilities. If you also want me to look into this direction please let me
+>> know. And also, suggestions would be appreciated.
+> 
+> I think this is very interesting, but I don't think this needs to be
+> done as part of this series.
+> 
+>> I know that Rob acked
+>>> the DT parts of this, but I suspect that this might have been glossed
+>>> over.
+>>
+>> If this is about point 3 I've emphasize above I would like to have some
+>> inputs from your side, if you agree with a behavior like having extra DT
+>> bindings. The intention wasn't to left this over but to have a better
+>> understanding of the subject. I'm thinking if it is ok to have modules
+>> outside of the SoC that model a behavior that could not be controlled from
+>> software (it could be only hardware) but to behave in a single way. Take
+>> for instance this scenario:
+>>
+>> - new DT bindings are implemented to specify this behavior per channel
+>> - hardware modules are soldered outside of a PWM channel with one output
+>> - the new DT bindings are not specified for the soldered PWM channel
+>> - user enables this channel, it will have only normal mode available for it
+>> to configure (because the new DT bindings were not provided)
+>> - but the real output the user will see would be in complementary or even
+>> push-pull mode.
+> 
+> I think we could possible model this as a "logical" PWM in DT. We could
+> for example have something like this:
+> 
+> 	/ {
+> 		...
+> 
+> 		pwms {
+> 			pwm@0 {
+> 				compatible = "pwm-fixed"; /* or whatever */
+> 				pwms = <&pwm 0 40000>; /* input PWM */
+> 				mode = <PWM_MODE_COMPLEMENTARY>;
+> 			};
+> 
+> 			...
+> 		};
+> 
+> 		...
+> 	};
+> 
+> The above would model a logical PWM that is driven by the specified PWM
+> in normal mode but which is effectively complementary because of some
+> additional circuitry on the board.
+
+Ok, i see it. Sounds good to me.
+
+> 
+>>> To restate the concern: these extended modes have special uses and none
+>>> of the users in the kernel, other than sysfs, can use anything other
+>>> than the normal mode. They may work fine with other modes, but only if
+>>> they ignore the extras that come with them. Therefore I think it's safe
+>>> to say that anyone who would want to use these modes would want to
+>>> explicitly say so. For example the sysfs interface already does that by
+>>> changing the mode only after the "mode" attribute is written. Any users
+>>> for special use-cases would want to do the same thing, that is, drive a
+>>> PWM in a specific mode, on purpose. You wouldn't have a "generic" user
+>>> such as pwm-backlight or leds-pwm request anything other than the normal
+>>> mode.
+>>>
+>>> So my question is, do we really need to represent these modes in DT? The
+>>> series currently doesn't contain any patches that add users of these new
+>>> modes. Are such patches available somewhere, or is the only user of this
+>>> supposed to be sysfs?
+>>
+>> For the moment, no, there is no in-kernel user for this, only sysfs. I had
+>> in mind to adapt the use of these new mode for PWM regulator for scenarios
+>> described in [1] page 2126. Anyway, since these patches doesn't introduce
+>> any user other that sysfs it will not disturbed me to drop the changes. By
+>> the time I or someone else will do some other changes that requires this,
+>> the DT part should also be introduced.
+>>
+>> [1] http://ww1.microchip.com/downloads/en/DeviceDoc/DS60001476B.pdf
+> 
+> Yes, I'd like that. The half-bridge converter certainly sounds like
+> something that may be able to use the DT bindings that you specified,
+> but I'd be less concerned about these changes if we had actual users.
+
+I understand.
+
+Now, thinking again at what you proposed above with regards to logical PWM
+channels I'm wondering if, for future, if needed, would be good for PWM
+clients that could used a PWM channel in more than one PWM mode, to have
+specified in device tree, as a child of PWM controller, the mode that the
+client would use that channel. E.g. if DriverX wants to use PWM0 in
+complementary mode:
+
+pwm@00aabbcc {
+	// ...
+	pwm@0 {
+		mode = <PWM_MODE_COMPLEMENTARY>;
+		// this being the only mode that could be used for
+		// PWM channel 0
+	};
+}
+
+driverx@00ffffff {
+	pwms=<pwm 0 50000>;
+}
+
+For future reference, do you find this feasible?
+
+> 
+>>> I'm hesitant to move forward with this as-is without seeing how it will
+>>> be used.
+>>
+>> For the moment only sysfs is supposed to use this.
+>>
+>> The PWM specifier flags are somewhat abused by adding modes to
+>>> them. 
+>>
+>> I see.
+>>
+>> I think this hasn't been completely thought through, because the
+>>> only reason to specify a mode is to actually set that mode.
+>>
+>> Maybe it wasn't clear understand, with the current implementation if no
+>> mode will be specified the default mode will be used. There is no impose to
+>> specify a mode.
+>>
+>>  But then the
+>>> DT ABI allows a bitmask of modes to be requested via DT. I know that
+>>> only the first of those modes will end up being used, but then why even
+>>> allow it in the first place?
+>>
+>> I had in mind that I will change the PWM regulator driver to work in
+>> scenarios like the one specified in the link above.
+> 
+> Yeah, that sounds like it would be reasonable from a quick look.
+> However, what I don't quite understand yet is why the mode in the PWM
+> specifier would need to be a bitmask.
+
+You are talking to have them as bitmask in pwm-flags cell right?
+I though to stick this to the current way to request the PWM mode.
+
+Take for example the pwm-regulator
+> case for a half-bridge converter. If your board uses such a setup, then
+> you absolutely must drive the PWM in push-pull mode, otherwise the
+> converter will not work, right?
+
+Right!
+
+So you want exactly one mode to be
+> applied. Then why complicate matters by allowing the mode to be a
+> bitmask? 
+
+Just to have everything behaving almost in the same way as it was
+previously.  I'm saying to request the PWM channel from a PWM client (via
+DT) as it was previously done but just adding the PWM mode (in pwm-flags
+cell as per this version).
+
+I also was not sure about this: in the 2nd version of this series I
+introduced a new cell for PWM modes but this new cell was after pwm-flags
+cell, and pwm-flags cell is optional, so to have simpler code, in scenarios
+with PWM modes user would have also specified the pwm-flags cell (although
+maybe it was not necessary).
+
+> We could just as easily reserve, say, 8 bits (24-31) for the
+> mode, which could then be identical to enum pwm_mode.
+
+In pwm-flags cell, right?
+
+
+> 
+>>> And again, even if we allow the mode to be specified in DT, how do the
+>>> consumer drivers know that the correct mode was being set in DT. 
+>>
+>> PWM user will call at some point devm_pwm_get() which, in turn, will call
+>> of_pwm_get() which in turn will initialize PWM args with inputs from DT.
+>> After that PWM user will, at some point, apply a PWM state; if it is
+>> initialized with PWM args initialized when devm_pwm_get() was called then
+>> pwm_apply_state() would fail if no good mode is provided as input via DT.
+>>
+>> Same thing happens if a bad period is provided via DT.
+> 
+> But that only checks that the DT specified a supported mode, it doesn't
+> mean that it's the correct one. For cases like pwm-regulator this may be
+> fine because the driver ultimately doesn't care about the exact mode. If
+> you have a driver that only works with a specific mode, however, it can
+> be problematic.
+
+Yes, agree.
+
+> 
+>> Let's
+>>> say we have a consumer that requires the PWM to be driven in
+>>> complementary mode. Should it rely on the DT to contain the correct
+>>> specification for the mode? And if it knows that it needs complementary
+>>> mode, why not just set that mode itself?
+>>
+>> I'm thinking it's the same way as is with PWM period which could also be
+>> provided from DT. In the end a bad period value could be provided from
+>> device tree. E.g. Atmel PWM controller could generate PWM signals who's
+>> periods could not be higher than ~0.6 seconds. If a bad value is provided
+>> the pwm_apply_state() will fail.
+> 
+> I understand that. And it's good to validate these things in the driver.
+> However, the PWM driver can only validate for the PWM that it is
+> driving. It doesn't know if the consumer has any special requirements
+> regarding the mode. So if the PWM supports push-pull mode and the DT
+> contains PWM_MODE_PUSH_PULL, then everything is fine as far as the PWM
+> driver is concerned. However, if the consumer driver strictly requires
+> complementary mode, there's nothing the PWM driver can do about it. So
+> we either need the consumer to be able to query the mode if it has any
+> specific needs and refuse to use a PWM that has the wrong mode in the
+> specifier, or the consumer needs to explicitly set a mode, in which case
+> there's no need to have it in DT and the PWM driver needs to reject it
+> if the PWM doesn't support it.
+
+Ok, I see your point and understand that DT part may be risky and
+complicates the things. And I agree to remove it from this series since,
+anyway, there is no in-kernel user for that.
+
+Thank you,
+Claudiu Beznea
+
+
+> 
+> Thierry
+> 
