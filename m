@@ -1,141 +1,50 @@
-From: Stefan Popa <stefan.popa@analog.com>
-Subject: [PATCH v2 3/3] dt-bindings: iio: adc: Add docs for ad7124
-Date: Fri, 19 Oct 2018 10:47:45 +0300
-Message-ID: <1539935265-8904-1-git-send-email-stefan.popa@analog.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: [PATCH v2 01/15] mtd: maps: physmap: Add SPDX header
+Date: Fri, 19 Oct 2018 09:48:54 +0200
+Message-ID: <20181019074908.13226-2-boris.brezillon@bootlin.com>
+References: <20181019074908.13226-1-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20181019074908.13226-1-boris.brezillon@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Analog Devices AD7124 4-channels and 8-channels ADC.
+Add an SPDX header matching the MODULE_LICENSE("GPL") definition.
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+Reviewed-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 ---
 Changes in v2:
-	- Nothing changed.
+- Add Ricardo's R-b
+---
+ drivers/mtd/maps/physmap.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- .../devicetree/bindings/iio/adc/adi,ad7124.txt     | 96 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 97 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
-new file mode 100644
-index 0000000..77a7b92
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
-@@ -0,0 +1,96 @@
-+Analog Devices AD7124 ADC device driver
-+
-+Required properties for the AD7124:
-+	- compatible: Must be one of "adi,ad7124-4" or "adi,ad7124-8"
-+	- reg: SPI chip select number for the device
-+	- spi-max-frequency: Max SPI frequency to use
-+		see: Documentation/devicetree/bindings/spi/spi-bus.txt
-+	- clocks: phandle to the master clock (mclk)
-+		see: Documentation/devicetree/bindings/clock/clock-bindings.txt
-+	- clock-names: Must be "mclk".
-+	- interrupts: IRQ line for the ADC
-+		see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+
-+	- adi,channels: List of external channels connected to the ADC:
-+	  Required properties:
-+		* #address-cells: Must be 2.
-+		* #size-cells: Must be 0.
-+
-+	  The child nodes of this node represent the external channels which are
-+	  connected to the ADC.
-+
-+	  Each child node represents one channel and has the following
-+	  properties:
-+		Required properties:
-+			* reg: Pins the channel is connected to. The first value specifies
-+			  the positive input pin, the second value the negative input pin.
-+			* adi,channel-number: It can have up to 4 channels on ad7124-4 and
-+			  8 channels on ad7124-8, numbered from 0 to 15.
-+
-+		Optional properties:
-+			* adi,bipolar: If set the channel is used in bipolar mode.
-+			* adi,reference-select: Select the reference source to use when
-+			  converting on the the specific channel. Valid values are:
-+			  0: REFIN1(+)/REFIN1(−).
-+			  1: REFIN2(+)/REFIN2(−).
-+			  3: AVDD
-+			  If this field is left empty, internal reference is selected.
-+			* adi,gain: Select the gain when converting on the specific channel.
-+			  Valid values are: 1, 2, 4, 8, 16, 32, 64, 128.
-+			  If this field is left empty, gain of 1 is selected.
-+			* adi,odr-hz: The output data rate can be programmed from:
-+			  9 to 19200 for full power mode (when the master clock is 614.4 kHz)
-+			  2 to 4800 for mid power mode (when the master clock is 153.6 kHz)
-+			  1 to 2400 for low power mode (when the master clock is 76.8 kHz)
-+			  If this field is left empty, odr of 9 is selected.
-+
-+Optional properties:
-+	- refin1-supply: refin1 supply can be used as reference for conversion.
-+	- refin2-supply: refin2 supply can be used as reference for conversion.
-+	- avdd-supply: avdd supply can be used as reference for conversion.
-+
-+Example:
-+	adc@0 {
-+		compatible = "adi,ad7124-4";
-+		reg = <0>;
-+		spi-max-frequency = <5000000>;
-+		interrupts = <25 2>;
-+		interrupt-parent = <&gpio>;
-+		refin1-supply = <&adc_vref>;
-+		clocks = <&ad7124_mclk>;
-+		clock-names = "mclk";
-+
-+		adi,channels {
-+			#address-cells = <2>;
-+			#size-cells = <0>;
-+
-+			channel@0 {
-+				reg = <0 1>;
-+				adi,channel-number = <0>;
-+				adi,reference-select = <0>;
-+				adi,gain = <2>;
-+				adi,odr-hz = <10>;
-+			};
-+
-+			channel@1 {
-+				reg = <2 3>;
-+				adi,bipolar;
-+				adi,channel-number = <1>;
-+				adi,reference-select = <0>;
-+				adi,gain = <4>;
-+				adi,odr-hz = <50>;
-+			};
-+
-+			channel@2 {
-+				reg = <4 5>;
-+				adi,channel-number = <2>;
-+				adi,gain = <128>;
-+				adi,odr-hz = <19200>;
-+			};
-+
-+			channel@3 {
-+				reg = <6 7>;
-+				adi,channel-number = <3>;
-+			};
-+		};
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3a1bfcb..f2fa508 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -845,6 +845,7 @@ L:	linux-iio@vger.kernel.org
- W:	http://ez.analog.com/community/linux-device-drivers
- S:	Supported
- F:	drivers/iio/adc/ad7124.c
-+F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
- 
- ANALOG DEVICES INC AD9389B DRIVER
- M:	Hans Verkuil <hans.verkuil@cisco.com>
+diff --git a/drivers/mtd/maps/physmap.c b/drivers/mtd/maps/physmap.c
+index cc2adbbcd60f..19ec105cbb2d 100644
+--- a/drivers/mtd/maps/physmap.c
++++ b/drivers/mtd/maps/physmap.c
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * Normal mappings of chips in physical memory
+  *
 -- 
-2.7.4
+2.14.1
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
