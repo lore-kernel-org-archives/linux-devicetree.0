@@ -1,7 +1,8 @@
 From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: [PATCH v2 10/15] mtd: maps: Prepare merging of physmap and physmap_of
-Date: Fri, 19 Oct 2018 09:49:03 +0200
-Message-ID: <20181019074908.13226-11-boris.brezillon@bootlin.com>
+Subject: [PATCH v2 09/15] mtd: maps: physmap: Fix coding style issues reported
+ by checkpatch
+Date: Fri, 19 Oct 2018 09:49:02 +0200
+Message-ID: <20181019074908.13226-10-boris.brezillon@bootlin.com>
 References: <20181019074908.13226-1-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,10 +22,10 @@ To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-We want to merge the physmap and physmap_of driver, but before we can
-do that we must prepare things to create physmap.o out of several .c
-files. Rename physmap.c into physmap-core.c and add a new Makefile
-rule to create physmap.o (right now it only contains physmap-core.o).
+Fix the following coding style issues:
+- != NULL and == NULL test replaced by ! (or nothing)
+- split over 80 chars lines
+- add missing braces in multi-line if() {} else {} statements
 
 Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 Reviewed-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
@@ -32,28 +33,100 @@ Reviewed-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 Changes in v2:
 - Add Ricardo's R-b
 ---
- drivers/mtd/maps/Makefile                      | 2 ++
- drivers/mtd/maps/{physmap.c => physmap-core.c} | 0
- 2 files changed, 2 insertions(+)
- rename drivers/mtd/maps/{physmap.c => physmap-core.c} (100%)
+ drivers/mtd/maps/physmap.c | 33 ++++++++++++++++++---------------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/mtd/maps/Makefile b/drivers/mtd/maps/Makefile
-index 51acf1fec19b..2574909edffd 100644
---- a/drivers/mtd/maps/Makefile
-+++ b/drivers/mtd/maps/Makefile
-@@ -17,6 +17,8 @@ obj-$(CONFIG_MTD_ICHXROM)	+= ichxrom.o
- obj-$(CONFIG_MTD_CK804XROM)	+= ck804xrom.o
- obj-$(CONFIG_MTD_TSUNAMI)	+= tsunami_flash.o
- obj-$(CONFIG_MTD_PXA2XX)	+= pxa2xx-flash.o
-+physmap-objs-y			+= physmap-core.o
-+physmap-objs			:= $(physmap-objs-y)
- obj-$(CONFIG_MTD_PHYSMAP)	+= physmap.o
- physmap_of-objs-y		+= physmap_of_core.o
- physmap_of-objs-$(CONFIG_MTD_PHYSMAP_OF_VERSATILE) += physmap_of_versatile.o
-diff --git a/drivers/mtd/maps/physmap.c b/drivers/mtd/maps/physmap-core.c
-similarity index 100%
-rename from drivers/mtd/maps/physmap.c
-rename to drivers/mtd/maps/physmap-core.c
+diff --git a/drivers/mtd/maps/physmap.c b/drivers/mtd/maps/physmap.c
+index 7d30f3524d35..e27051bc5dc6 100644
+--- a/drivers/mtd/maps/physmap.c
++++ b/drivers/mtd/maps/physmap.c
+@@ -38,7 +38,7 @@ static int physmap_flash_remove(struct platform_device *dev)
+ 	int i, err;
+ 
+ 	info = platform_get_drvdata(dev);
+-	if (info == NULL)
++	if (!info)
+ 		return 0;
+ 
+ 	physmap_data = dev_get_platdata(&dev->dev);
+@@ -53,7 +53,7 @@ static int physmap_flash_remove(struct platform_device *dev)
+ 	}
+ 
+ 	for (i = 0; i < info->nmaps; i++) {
+-		if (info->mtds[i] != NULL)
++		if (info->mtds[i])
+ 			map_destroy(info->mtds[i]);
+ 	}
+ 
+@@ -90,10 +90,12 @@ static void physmap_set_vpp(struct map_info *map, int state)
+ }
+ 
+ static const char * const rom_probe_types[] = {
+-	"cfi_probe", "jedec_probe", "qinfo_probe", "map_rom", NULL };
++	"cfi_probe", "jedec_probe", "qinfo_probe", "map_rom", NULL
++};
+ 
+ static const char * const part_probe_types[] = {
+-	"cmdlinepart", "RedBoot", "afs", NULL };
++	"cmdlinepart", "RedBoot", "afs", NULL
++};
+ 
+ static int physmap_flash_probe(struct platform_device *dev)
+ {
+@@ -105,11 +107,10 @@ static int physmap_flash_probe(struct platform_device *dev)
+ 	int i;
+ 
+ 	physmap_data = dev_get_platdata(&dev->dev);
+-	if (physmap_data == NULL)
++	if (!physmap_data)
+ 		return -ENODEV;
+ 
+-	info = devm_kzalloc(&dev->dev, sizeof(struct physmap_flash_info),
+-			    GFP_KERNEL);
++	info = devm_kzalloc(&dev->dev, sizeof(*info), GFP_KERNEL);
+ 	if (!info)
+ 		return -ENOMEM;
+ 
+@@ -163,13 +164,16 @@ static int physmap_flash_probe(struct platform_device *dev)
+ 		simple_map_init(&info->maps[i]);
+ 
+ 		probe_type = rom_probe_types;
+-		if (physmap_data->probe_type == NULL) {
+-			for (; info->mtds[i] == NULL && *probe_type != NULL; probe_type++)
+-				info->mtds[i] = do_map_probe(*probe_type, &info->maps[i]);
+-		} else
+-			info->mtds[i] = do_map_probe(physmap_data->probe_type, &info->maps[i]);
++		if (!physmap_data->probe_type) {
++			for (; !info->mtds[i] && *probe_type; probe_type++)
++				info->mtds[i] = do_map_probe(*probe_type,
++							     &info->maps[i]);
++		} else {
++			info->mtds[i] = do_map_probe(physmap_data->probe_type,
++						     &info->maps[i]);
++		}
+ 
+-		if (info->mtds[i] == NULL) {
++		if (!info->mtds[i]) {
+ 			dev_err(&dev->dev, "map_probe failed\n");
+ 			err = -ENXIO;
+ 			goto err_out;
+@@ -185,7 +189,7 @@ static int physmap_flash_probe(struct platform_device *dev)
+ 		 */
+ 		info->cmtd = mtd_concat_create(info->mtds, info->nmaps,
+ 					       dev_name(&dev->dev));
+-		if (info->cmtd == NULL)
++		if (!info->cmtd)
+ 			err = -ENXIO;
+ 	}
+ 	if (err)
+@@ -231,7 +235,6 @@ static struct platform_driver physmap_flash_driver = {
+ 	},
+ };
+ 
+-
+ #ifdef CONFIG_MTD_PHYSMAP_COMPAT
+ static struct physmap_flash_data physmap_flash_data = {
+ 	.width		= CONFIG_MTD_PHYSMAP_BANKWIDTH,
 -- 
 2.14.1
 
