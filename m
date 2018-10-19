@@ -1,217 +1,254 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ
- Firmware bindings
-Date: Fri, 19 Oct 2018 14:30:13 -0700
-Message-ID: <20181019213013.GW22824@google.com>
-References: <1539257761-23023-1-git-send-email-tdas@codeaurora.org>
- <1539257761-23023-2-git-send-email-tdas@codeaurora.org>
+From: Moritz Fischer <moritz.fischer.private@gmail.com>
+Subject: Re: [PATCH 3/3] fpga manager: Adding FPGA Manager support for Xilinx zynqmp
+Date: Fri, 19 Oct 2018 14:23:44 -0700
+Message-ID: <CAJYdmePxnkG=3iJC5Lewq3n3zFGTKASJX7ceUEufBvOJogCfdA@mail.gmail.com>
+References: <20181020084805.29103-1-nava.manne@xilinx.com> <20181020084805.29103-4-nava.manne@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1539257761-23023-2-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <20181020084805.29103-4-nava.manne@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
+To: nava.manne@xilinx.com
+Cc: Alan Tull <atull@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, rajanv@xilinx.com, jollys@xilinx.com, linux-fpga@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, chinnikishore369@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 11, 2018 at 05:06:00PM +0530, Taniya Das wrote:
-> Add QCOM cpufreq firmware device bindings for Qualcomm Technology Inc's
-> SoCs. This is required for managing the cpu frequency transitions which are
-> controlled by the hardware engine.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+Hi Nava,
+
+Looks good to me, a couple of nits inline below.
+
+On Fri, Oct 19, 2018 at 1:50 AM Nava kishore Manne
+<nava.manne@xilinx.com> wrote:
+>
+> This patch adds FPGA Manager support for the Xilinx
+> ZynqMp chip.
+
+Isn't it ZynqMP ?
+>
+> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
 > ---
->  .../bindings/cpufreq/cpufreq-qcom-hw.txt           | 173 +++++++++++++++++++++
->  1 file changed, 173 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+> Changes for v1:
+>                 -None.
+>
+> Changes for RFC-V2:
+>                 -Updated the Fpga Mgr registrations call's
+>                  to 4.18
+>
+>  drivers/fpga/Kconfig       |   9 +++
+>  drivers/fpga/Makefile      |   1 +
+>  drivers/fpga/zynqmp-fpga.c | 159 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 169 insertions(+)
+>  create mode 100644 drivers/fpga/zynqmp-fpga.c
+>
+> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+> index 1ebcef4bab5b..26ebbcf3d3a3 100644
+> --- a/drivers/fpga/Kconfig
+> +++ b/drivers/fpga/Kconfig
+> @@ -56,6 +56,15 @@ config FPGA_MGR_ZYNQ_FPGA
+>         help
+>           FPGA manager driver support for Xilinx Zynq FPGAs.
+>
+> +config FPGA_MGR_ZYNQMP_FPGA
+> +       tristate "Xilinx Zynqmp FPGA"
+> +       depends on ARCH_ZYNQMP || COMPILE_TEST
+> +       help
+> +         FPGA manager driver support for Xilinx ZynqMP FPGAs.
+> +         This driver uses processor configuration port(PCAP)
+This driver uses *the* processor configuration port.
+
+> +         to configure the programmable logic(PL) through PS
+> +         on ZynqMP SoC.
+> +
+>  config FPGA_MGR_XILINX_SPI
+>         tristate "Xilinx Configuration over Slave Serial (SPI)"
+>         depends on SPI
+> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+> index 7a2d73ba7122..3488ebbaee46 100644
+> --- a/drivers/fpga/Makefile
+> +++ b/drivers/fpga/Makefile
+> @@ -16,6 +16,7 @@ obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)    += socfpga-a10.o
+>  obj-$(CONFIG_FPGA_MGR_TS73XX)          += ts73xx-fpga.o
+>  obj-$(CONFIG_FPGA_MGR_XILINX_SPI)      += xilinx-spi.o
+>  obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)       += zynq-fpga.o
+> +obj-$(CONFIG_FPGA_MGR_ZYNQMP_FPGA)     += zynqmp-fpga.o
+>  obj-$(CONFIG_ALTERA_PR_IP_CORE)         += altera-pr-ip-core.o
+>  obj-$(CONFIG_ALTERA_PR_IP_CORE_PLAT)    += altera-pr-ip-core-plat.o
+>
+> diff --git a/drivers/fpga/zynqmp-fpga.c b/drivers/fpga/zynqmp-fpga.c
 > new file mode 100644
-> index 0000000..712643f
+> index 000000000000..2760d7e3872a
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
-> @@ -0,0 +1,173 @@
-> +Qualcomm Technologies, Inc. CPUFREQ Bindings
+> +++ b/drivers/fpga/zynqmp-fpga.c
+> @@ -0,0 +1,159 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2018 Xilinx, Inc.
+> + */
 > +
-> +CPUFREQ HW is a hardware engine used by some Qualcomm Technologies, Inc. (QTI)
-> +SoCs to manage frequency in hardware. It is capable of controlling frequency
-> +for multiple clusters.
+> +#include <linux/dma-mapping.h>
+> +#include <linux/fpga/fpga-mgr.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/string.h>
+> +#include <linux/firmware/xlnx-zynqmp.h>
 > +
-> +Properties:
-> +- compatible
-> +	Usage:		required
-> +	Value type:	<string>
-> +	Definition:	must be "qcom,cpufreq-hw".
+> +/* Constant Definitions */
+> +#define IXR_FPGA_DONE_MASK     0X00000008U
 > +
-> +- clocks
-> +	Usage:		required
-> +	Value type:	<phandle> From common clock binding.
-> +	Definition:	clock handle for XO clock and GPLL0 clock.
+> +/**
+> + * struct zynqmp_fpga_priv - Private data structure
+> + * @dev:       Device data structure
+> + * @flags:     flags which is used to identify the bitfile type
+> + */
+> +struct zynqmp_fpga_priv {
+> +       struct device *dev;
+> +       u32 flags;
+> +};
 > +
-> +- clock-names
-> +	Usage:		required
-> +	Value type:	<string> From common clock binding.
-> +	Definition:	must be "xo", "cpu_clk".
+> +static int zynqmp_fpga_ops_write_init(struct fpga_manager *mgr,
+> +                                     struct fpga_image_info *info,
+> +                                     const char *buf, size_t size)
+> +{
+> +       struct zynqmp_fpga_priv *priv;
 > +
-> +- reg
-> +	Usage:		required
-> +	Value type:	<prop-encoded-array>
-> +	Definition:	Addresses and sizes for the memory of the HW bases in
-> +			each frequency domain.
-> +- reg-names
-> +	Usage:		Optional
-> +	Value type:	<string>
-> +	Definition:	Frequency domain name i.e.
-> +			"freq-domain0", "freq-domain1".
+> +       priv = mgr->priv;
+> +       priv->flags = info->flags;
 > +
-> +- freq-domain-cells:
-> +	Usage:		required.
-> +	Definition:	Number of cells in a freqency domain specifier.
-> +
-> +* Property qcom,freq-domain
-> +Devices supporting freq-domain must set their "qcom,freq-domain" property with
-> +phandle to a cpufreq_hw followed by the Domain ID(0/1) in the CPU DT node.
-> +
-> +
-> +Example:
-> +
-> +Example 1: Dual-cluster, Quad-core per cluster. CPUs within a cluster switch
-> +DCVS state together.
-> +
-> +/ {
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		CPU0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x0>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_0>;
-> +			qcom,freq-domain = <&cpufreq_hw 0>;
-> +			L2_0: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +				L3_0: l3-cache {
-> +				      compatible = "cache";
-> +				};
-> +			};
-> +		};
-> +
-> +		CPU1: cpu@100 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x100>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_100>;
-> +			qcom,freq-domain = <&cpufreq_hw 0>;
-> +			L2_100: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU2: cpu@200 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x200>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_200>;
-> +			qcom,freq-domain = <&cpufreq_hw 0>;
-> +			L2_200: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU3: cpu@300 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x300>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_300>;
-> +			qcom,freq-domain = <&cpufreq_hw 0>;
-> +			L2_300: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU4: cpu@400 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x400>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_400>;
-> +			qcom,freq-domain = <&cpufreq_hw 1>;
-> +			L2_400: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU5: cpu@500 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x500>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_500>;
-> +			qcom,freq-domain = <&cpufreq_hw 1>;
-> +			L2_500: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU6: cpu@600 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x600>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_600>;
-> +			qcom,freq-domain = <&cpufreq_hw 1>;
-> +			L2_600: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU7: cpu@700 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x700>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_700>;
-> +			qcom,freq-domain = <&cpufreq_hw 1>;
-> +			L2_700: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +	};
-> +
-> + soc {
-> +	cpufreq_hw: cpufreq@17d43000 {
-> +		compatible = "qcom,cpufreq-hw";
-> +		reg = <0x17d43000 0x1400>, <0x17d45800 0x1400>;
-> +		reg-names = "freq-domain0", "freq-domain1";
-> +
-> +		clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
-> +		clock-names = "xo", "cpu_clk";
-> +
-> +		#freq-domain-cells = <1>
-
-semicolon is missing.
-
-> +
-
-delete empty line
-
-> +	};
+> +       return 0;
 > +}
+> +
+> +static int zynqmp_fpga_ops_write(struct fpga_manager *mgr,
+> +                                const char *buf, size_t size)
+> +{
+> +       struct zynqmp_fpga_priv *priv;
+> +       char *kbuf;
+> +       dma_addr_t dma_addr;
+> +       int ret;
+> +       const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
 
-Thanks
+Reverse xmas-tree please, i.e. long lines first.
 
-Matthias
+> +
+> +       if (!eemi_ops || !eemi_ops->fpga_load)
+> +               return -ENXIO;
+> +
+> +       priv = mgr->priv;
+> +
+> +       kbuf = dma_alloc_coherent(priv->dev, size, &dma_addr, GFP_KERNEL);
+> +       if (!kbuf)
+> +               return -ENOMEM;
+> +
+> +       memcpy(kbuf, buf, size);
+> +
+> +       wmb(); /* ensure all writes are done before initiate FW call */
+> +
+> +       ret = eemi_ops->fpga_load(dma_addr, size, priv->flags);
+> +
+> +       dma_free_coherent(priv->dev, size, kbuf, dma_addr);
+> +
+> +       return ret;
+> +}
+> +
+> +static int zynqmp_fpga_ops_write_complete(struct fpga_manager *mgr,
+> +                                         struct fpga_image_info *info)
+> +{
+> +       return 0;
+> +}
+> +
+> +static enum fpga_mgr_states zynqmp_fpga_ops_state(struct fpga_manager *mgr)
+> +{
+> +       u32 status;
+> +       const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
+
+Same here, split it up if necessary.
+> +
+> +       if (!eemi_ops || !eemi_ops->fpga_get_status)
+> +               return FPGA_MGR_STATE_UNKNOWN;
+> +
+> +       eemi_ops->fpga_get_status(&status);
+> +       if (status & IXR_FPGA_DONE_MASK)
+> +               return FPGA_MGR_STATE_OPERATING;
+> +
+> +       return FPGA_MGR_STATE_UNKNOWN;
+> +}
+> +
+> +static const struct fpga_manager_ops zynqmp_fpga_ops = {
+> +       .state = zynqmp_fpga_ops_state,
+> +       .write_init = zynqmp_fpga_ops_write_init,
+> +       .write = zynqmp_fpga_ops_write,
+> +       .write_complete = zynqmp_fpga_ops_write_complete,
+> +};
+> +
+> +static int zynqmp_fpga_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +       struct zynqmp_fpga_priv *priv;
+> +       struct fpga_manager *mgr;
+> +       int err, ret;
+> +
+> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
+> +
+> +       priv->dev = dev;
+> +       ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(44));
+> +       if (ret < 0)
+> +               dev_err(dev, "no usable DMA configuration");
+
+Do you wanna do something about this error if it happens? Return 'ret' maybe?
+> +
+> +       mgr = fpga_mgr_create(dev, "Xilinx ZynqMP FPGA Manager",
+> +                             &zynqmp_fpga_ops, priv);
+> +       if (!mgr)
+> +               return -ENOMEM;
+> +
+> +       platform_set_drvdata(pdev, mgr);
+> +
+> +       err = fpga_mgr_register(mgr);
+> +       if (err) {
+> +               dev_err(dev, "unable to register FPGA manager");
+> +               fpga_mgr_free(mgr);
+> +               return err;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int zynqmp_fpga_remove(struct platform_device *pdev)
+> +{
+> +       struct fpga_manager *mgr = platform_get_drvdata(pdev);
+> +
+> +       fpga_mgr_unregister(mgr);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id zynqmp_fpga_of_match[] = {
+> +       { .compatible = "xlnx,zynqmp-pcap-fpga", },
+> +       {},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, zynqmp_fpga_of_match);
+> +
+> +static struct platform_driver zynqmp_fpga_driver = {
+> +       .probe = zynqmp_fpga_probe,
+> +       .remove = zynqmp_fpga_remove,
+> +       .driver = {
+> +               .name = "zynqmp_fpga_manager",
+> +               .of_match_table = of_match_ptr(zynqmp_fpga_of_match),
+> +       },
+> +};
+> +
+> +module_platform_driver(zynqmp_fpga_driver);
+> +
+> +MODULE_AUTHOR("Nava kishore Manne <navam@xilinx.com>");
+> +MODULE_DESCRIPTION("Xilinx ZynqMp FPGA Manager");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.18.0
+>
+
+Thanks,
+
+Moritz
