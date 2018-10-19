@@ -1,33 +1,22 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: dt-bindings: add mclk provider support
-	to stm32 sai" to the asoc tree
-Date: Fri, 19 Oct 2018 13:26:25 +0100 (BST)
-Message-ID: <20181019122625.DD8F91122548@debutante.sirena.org.uk>
-References: <1539612216-12602-2-git-send-email-olivier.moysan@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1539612216-12602-2-git-send-email-olivier.moysan@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-Cc: mark.rutland@arm.com, robh@kernel.org, alsa-devel@alsa-project.org, olivier.moysan@st.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, arnaud.pouliquen@st.com, tiwai@suse.com, lgirdwood@gmail.com, broonie@kernel.org, mcoquelin.stm32@gmail.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
+Subject: Applied "dt-bindings: spi: add stm32 qspi controller" to the spi tree
+Date: Fri, 19 Oct 2018 13:29:58 +0100 (BST)
+Message-ID: <20181019122958.67B8D1122548@debutante.sirena.org.uk>
+References: <1538725383-19781-2-git-send-email-ludovic.Barre@st.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1538725383-19781-2-git-send-email-ludovic.Barre@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ludovic Barre <ludovic.barre@st.com>
+Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, devicetree@vger.kernel.orglinux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: dt-bindings: add mclk provider support to stm32 sai
+   dt-bindings: spi: add stm32 qspi controller
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -48,44 +37,72 @@ to this mail.
 Thanks,
 Mark
 
->From af16112457d8175b444baa9aac02558a1e1154b5 Mon Sep 17 00:00:00 2001
-From: Olivier Moysan <olivier.moysan@st.com>
-Date: Mon, 15 Oct 2018 16:03:33 +0200
-Subject: [PATCH] ASoC: dt-bindings: add mclk provider support to stm32 sai
+>From 0c0eb3ba9186138b0ffed91e994d473d0f0960cf Mon Sep 17 00:00:00 2001
+From: Ludovic Barre <ludovic.barre@st.com>
+Date: Fri, 5 Oct 2018 09:43:02 +0200
+Subject: [PATCH] dt-bindings: spi: add stm32 qspi controller
 
-add mclk provider support to stm32 sai
+This patch adds the documentation of device tree bindings
+for the STM32 QSPI controller. It is a specialized communication
+interface targeting single, dual or quad SPI Flash memories (NOR/NAND).
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/sound/st,stm32-sai.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+ .../bindings/spi/spi-stm32-qspi.txt           | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
 
-diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
-index 3a3fc506e43a..3f4467ff0aa2 100644
---- a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
-+++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
-@@ -31,7 +31,11 @@ SAI subnodes required properties:
-   - reg: Base address and size of SAI sub-block register set.
-   - clocks: Must contain one phandle and clock specifier pair
- 	for sai_ck which feeds the internal clock generator.
-+	If the SAI shares a master clock, with another SAI set as MCLK
-+	clock provider, SAI provider phandle must be specified here.
-   - clock-names: Must contain "sai_ck".
-+	Must also contain "MCLK", if SAI shares a master clock,
-+	with a SAI set as MCLK clock provider.
-   - dmas: see Documentation/devicetree/bindings/dma/stm32-dma.txt
-   - dma-names: identifier string for each DMA request line
- 	"tx": if sai sub-block is configured as playback DAI
-@@ -51,6 +55,9 @@ SAI subnodes Optional properties:
- 	configured according to protocol defined in related DAI link node,
- 	such as i2s, left justified, right justified, dsp and pdm protocols.
- 	Note: ac97 protocol is not supported by SAI driver
-+   - #clock-cells: should be 0. This property must be present if the SAI device
-+	is a master clock provider, according to clocks bindings, described in
-+	Documentation/devicetree/bindings/clock/clock-bindings.txt.
- 
- The device node should contain one 'port' child node with one child 'endpoint'
- node, according to the bindings defined in Documentation/devicetree/bindings/
+diff --git a/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt b/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
+new file mode 100644
+index 000000000000..adeeb63e84b9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
+@@ -0,0 +1,44 @@
++* STMicroelectronics Quad Serial Peripheral Interface(QSPI)
++
++Required properties:
++- compatible: should be "st,stm32f469-qspi"
++- reg: the first contains the register location and length.
++       the second contains the memory mapping address and length
++- reg-names: should contain the reg names "qspi" "qspi_mm"
++- interrupts: should contain the interrupt for the device
++- clocks: the phandle of the clock needed by the QSPI controller
++- A pinctrl must be defined to set pins in mode of operation for QSPI transfer
++
++Optional properties:
++- resets: must contain the phandle to the reset controller.
++
++A spi flash (NOR/NAND) must be a child of spi node and could have some
++properties. Also see jedec,spi-nor.txt.
++
++Required properties:
++- reg: chip-Select number (QSPI controller may connect 2 flashes)
++- spi-max-frequency: max frequency of spi bus
++
++Optional property:
++- spi-rx-bus-width: see ./spi-bus.txt for the description
++
++Example:
++
++qspi: spi@a0001000 {
++	compatible = "st,stm32f469-qspi";
++	reg = <0xa0001000 0x1000>, <0x90000000 0x10000000>;
++	reg-names = "qspi", "qspi_mm";
++	interrupts = <91>;
++	resets = <&rcc STM32F4_AHB3_RESET(QSPI)>;
++	clocks = <&rcc 0 STM32F4_AHB3_CLOCK(QSPI)>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_qspi0>;
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-rx-bus-width = <4>;
++		spi-max-frequency = <108000000>;
++		...
++	};
++};
 -- 
 2.19.0.rc2
