@@ -1,8 +1,7 @@
 From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: [PATCH v2 12/15] mtd: maps: Rename physmap_of_{versatile,
- gemini} into physmap-{versatile, gemini}
-Date: Fri, 19 Oct 2018 09:49:05 +0200
-Message-ID: <20181019074908.13226-13-boris.brezillon@bootlin.com>
+Subject: [PATCH v2 05/15] mtd: maps: physmap: Use devm_ioremap_resource()
+Date: Fri, 19 Oct 2018 09:48:58 +0200
+Message-ID: <20181019074908.13226-6-boris.brezillon@bootlin.com>
 References: <20181019074908.13226-1-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,9 +21,8 @@ To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Now that the physmap_of driver is gone, the gemini and versative
-extensions are part of the physmap driver. Rename the source files and
-the config option to reflect this.
+Use devm_ioremap_resource() to replace the devm_request_mem_region() +
+devm_ioremap() combination.
 
 Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 Reviewed-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
@@ -32,135 +30,53 @@ Reviewed-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 Changes in v2:
 - Add Ricardo's R-b
 ---
- drivers/mtd/maps/Kconfig                                         | 4 ++--
- drivers/mtd/maps/Makefile                                        | 4 ++--
- drivers/mtd/maps/physmap-core.c                                  | 4 ++--
- drivers/mtd/maps/{physmap_of_gemini.c => physmap-gemini.c}       | 2 +-
- drivers/mtd/maps/{physmap_of_gemini.h => physmap-gemini.h}       | 2 +-
- drivers/mtd/maps/{physmap_of_versatile.c => physmap-versatile.c} | 2 +-
- drivers/mtd/maps/{physmap_of_versatile.h => physmap-versatile.h} | 2 +-
- 7 files changed, 10 insertions(+), 10 deletions(-)
- rename drivers/mtd/maps/{physmap_of_gemini.c => physmap-gemini.c} (98%)
- rename drivers/mtd/maps/{physmap_of_gemini.h => physmap-gemini.h} (90%)
- rename drivers/mtd/maps/{physmap_of_versatile.c => physmap-versatile.c} (99%)
- rename drivers/mtd/maps/{physmap_of_versatile.h => physmap-versatile.h} (90%)
+ drivers/mtd/maps/physmap.c | 23 ++++++-----------------
+ 1 file changed, 6 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/mtd/maps/Kconfig b/drivers/mtd/maps/Kconfig
-index 5bffebacce86..bb0d64e3fcd6 100644
---- a/drivers/mtd/maps/Kconfig
-+++ b/drivers/mtd/maps/Kconfig
-@@ -74,7 +74,7 @@ config MTD_PHYSMAP_OF
- 	  physically into the CPU's memory. The mapping description here is
- 	  taken from OF device tree.
+diff --git a/drivers/mtd/maps/physmap.c b/drivers/mtd/maps/physmap.c
+index b98072a67d74..1d0f6f034a03 100644
+--- a/drivers/mtd/maps/physmap.c
++++ b/drivers/mtd/maps/physmap.c
+@@ -129,17 +129,15 @@ static int physmap_flash_probe(struct platform_device *dev)
+ 		if (!res)
+ 			break;
  
--config MTD_PHYSMAP_OF_VERSATILE
-+config MTD_PHYSMAP_VERSATILE
- 	bool "ARM Versatile OF-based physical memory map handling"
- 	depends on MTD_PHYSMAP_OF
- 	depends on MFD_SYSCON
-@@ -84,7 +84,7 @@ config MTD_PHYSMAP_OF_VERSATILE
- 	  platforms, basically to add a VPP (write protection) callback so
- 	  the flash can be taken out of write protection.
+-		dev_notice(&dev->dev, "physmap platform flash device: %pR\n",
+-			   res);
+-
+-		if (!devm_request_mem_region(&dev->dev, res->start,
+-					     resource_size(res),
+-					     dev_name(&dev->dev))) {
+-			dev_err(&dev->dev, "Could not reserve memory region\n");
+-			err = -ENOMEM;
++		info->maps[i].virt = devm_ioremap_resource(&dev->dev, res);
++		if (IS_ERR(info->maps[i].virt)) {
++			err = PTR_ERR(info->maps[i].virt);
+ 			goto err_out;
+ 		}
  
--config MTD_PHYSMAP_OF_GEMINI
-+config MTD_PHYSMAP_GEMINI
- 	bool "Cortina Gemini OF-based physical memory map handling"
- 	depends on MTD_PHYSMAP_OF
- 	depends on MFD_SYSCON
-diff --git a/drivers/mtd/maps/Makefile b/drivers/mtd/maps/Makefile
-index ad32b185a120..ce737e15b7cf 100644
---- a/drivers/mtd/maps/Makefile
-+++ b/drivers/mtd/maps/Makefile
-@@ -18,8 +18,8 @@ obj-$(CONFIG_MTD_CK804XROM)	+= ck804xrom.o
- obj-$(CONFIG_MTD_TSUNAMI)	+= tsunami_flash.o
- obj-$(CONFIG_MTD_PXA2XX)	+= pxa2xx-flash.o
- physmap-objs-y			+= physmap-core.o
--physmap-objs-$(CONFIG_MTD_PHYSMAP_OF_VERSATILE) += physmap_of_versatile.o
--physmap-objs-$(CONFIG_MTD_PHYSMAP_OF_GEMINI) += physmap_of_gemini.o
-+physmap-objs-$(CONFIG_MTD_PHYSMAP_VERSATILE) += physmap-versatile.o
-+physmap-objs-$(CONFIG_MTD_PHYSMAP_GEMINI) += physmap-gemini.o
- physmap-objs			:= $(physmap-objs-y)
- obj-$(CONFIG_MTD_PHYSMAP)	+= physmap.o
- obj-$(CONFIG_MTD_PISMO)		+= pismo.o
-diff --git a/drivers/mtd/maps/physmap-core.c b/drivers/mtd/maps/physmap-core.c
-index 07af8368d173..8a8af37576ff 100644
---- a/drivers/mtd/maps/physmap-core.c
-+++ b/drivers/mtd/maps/physmap-core.c
-@@ -31,8 +31,8 @@
- #include <linux/io.h>
- #include <linux/of_device.h>
++		dev_notice(&dev->dev, "physmap platform flash device: %pR\n",
++			   res);
++
+ 		info->maps[i].name = dev_name(&dev->dev);
+ 		info->maps[i].phys = res->start;
+ 		info->maps[i].size = resource_size(res);
+@@ -148,15 +146,6 @@ static int physmap_flash_probe(struct platform_device *dev)
+ 		info->maps[i].pfow_base = physmap_data->pfow_base;
+ 		info->maps[i].map_priv_1 = (unsigned long)dev;
  
--#include "physmap_of_gemini.h"
--#include "physmap_of_versatile.h"
-+#include "physmap-gemini.h"
-+#include "physmap-versatile.h"
+-		info->maps[i].virt = devm_ioremap(&dev->dev,
+-						  info->maps[i].phys,
+-						  info->maps[i].size);
+-		if (info->maps[i].virt == NULL) {
+-			dev_err(&dev->dev, "Failed to ioremap flash region\n");
+-			err = -EIO;
+-			goto err_out;
+-		}
+-
+ 		simple_map_init(&info->maps[i]);
  
- struct physmap_flash_info {
- 	unsigned int		nmaps;
-diff --git a/drivers/mtd/maps/physmap_of_gemini.c b/drivers/mtd/maps/physmap-gemini.c
-similarity index 98%
-rename from drivers/mtd/maps/physmap_of_gemini.c
-rename to drivers/mtd/maps/physmap-gemini.c
-index 9df62ca721d5..1cf128a0526d 100644
---- a/drivers/mtd/maps/physmap_of_gemini.c
-+++ b/drivers/mtd/maps/physmap-gemini.c
-@@ -13,7 +13,7 @@
- #include <linux/mfd/syscon.h>
- #include <linux/regmap.h>
- #include <linux/bitops.h>
--#include "physmap_of_gemini.h"
-+#include "physmap-gemini.h"
- 
- /*
-  * The Flash-relevant parts of the global status register
-diff --git a/drivers/mtd/maps/physmap_of_gemini.h b/drivers/mtd/maps/physmap-gemini.h
-similarity index 90%
-rename from drivers/mtd/maps/physmap_of_gemini.h
-rename to drivers/mtd/maps/physmap-gemini.h
-index 60e13a689d6a..72bd04ce3fdb 100644
---- a/drivers/mtd/maps/physmap_of_gemini.h
-+++ b/drivers/mtd/maps/physmap-gemini.h
-@@ -2,7 +2,7 @@
- #include <linux/of.h>
- #include <linux/mtd/map.h>
- 
--#ifdef CONFIG_MTD_PHYSMAP_OF_GEMINI
-+#ifdef CONFIG_MTD_PHYSMAP_GEMINI
- int of_flash_probe_gemini(struct platform_device *pdev,
- 			  struct device_node *np,
- 			  struct map_info *map);
-diff --git a/drivers/mtd/maps/physmap_of_versatile.c b/drivers/mtd/maps/physmap-versatile.c
-similarity index 99%
-rename from drivers/mtd/maps/physmap_of_versatile.c
-rename to drivers/mtd/maps/physmap-versatile.c
-index 03f2b6e7bc7e..0179d710bb3f 100644
---- a/drivers/mtd/maps/physmap_of_versatile.c
-+++ b/drivers/mtd/maps/physmap-versatile.c
-@@ -28,7 +28,7 @@
- #include <linux/mfd/syscon.h>
- #include <linux/regmap.h>
- #include <linux/bitops.h>
--#include "physmap_of_versatile.h"
-+#include "physmap-versatile.h"
- 
- static struct regmap *syscon_regmap;
- 
-diff --git a/drivers/mtd/maps/physmap_of_versatile.h b/drivers/mtd/maps/physmap-versatile.h
-similarity index 90%
-rename from drivers/mtd/maps/physmap_of_versatile.h
-rename to drivers/mtd/maps/physmap-versatile.h
-index 0302502c9462..9cf39d031f5a 100644
---- a/drivers/mtd/maps/physmap_of_versatile.h
-+++ b/drivers/mtd/maps/physmap-versatile.h
-@@ -2,7 +2,7 @@
- #include <linux/of.h>
- #include <linux/mtd/map.h>
- 
--#ifdef CONFIG_MTD_PHYSMAP_OF_VERSATILE
-+#ifdef CONFIG_MTD_PHYSMAP_VERSATILE
- int of_flash_probe_versatile(struct platform_device *pdev,
- 			     struct device_node *np,
- 			     struct map_info *map);
+ 		probe_type = rom_probe_types;
 -- 
 2.14.1
 
