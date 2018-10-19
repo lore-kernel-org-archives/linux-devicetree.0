@@ -1,84 +1,78 @@
-From: Luis Oliveira <luis.oliveira@synopsys.com>
-Subject: [V3, 3/4] Documentation: dt-bindings: media: Document bindings for DW MIPI CSI-2 Host
-Date: Fri, 19 Oct 2018 14:52:25 +0200
-Message-ID: <1539953556-35762-4-git-send-email-lolivei@synopsys.com>
-References: <1539953556-35762-1-git-send-email-lolivei@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539953556-35762-1-git-send-email-lolivei@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: joao.pinto@synopsys.com, festevam@gmail.com, Luis Oliveira <luis.oliveira@synopsys.com>Luis Oliveira <luis.oliveira@synopsys.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Neil Armstrong <narmstrong@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Keiichi Watanabe <keiichiw@chromium.org>, Kate Stewart <kstewart@linuxfoundation.org>, Todor Tomov <todor.tomov@linaro.org>, devicetree@vger.kernel.org
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 01/15] power: supply: olpc_battery: correct the
+ temperature units
+Date: Fri, 19 Oct 2018 16:00:32 +0300
+Message-ID: <CAHp75VenECSZWR3RVh=t35Os93t-MzEH_YzPgT=qQWL-SwjgFQ@mail.gmail.com>
+References: <20181010172300.317643-1-lkundrak@v3.sk> <20181010172300.317643-2-lkundrak@v3.sk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20181010172300.317643-2-lkundrak@v3.sk>
+Sender: stable-owner@vger.kernel.org
+To: Lubomir Rintel <lkundrak@v3.sk>, David Woodhouse <dwmw2@infradead.org>
+Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, quozl@laptop.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, devel@driverdev.osuosl.or
 List-Id: devicetree@vger.kernel.org
 
-Add bindings for Synopsys DesignWare MIPI CSI-2 host.
+On Wed, Oct 10, 2018 at 8:23 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
+>
+> According to [1] and [2], the temperature values are in tenths of degree
+> Celsius. Exposing the Celsius value makes the battery appear on fire:
+>
+>   $ upower -i /org/freedesktop/UPower/devices/battery_olpc_battery
+>   ...
+>       temperature:         236.9 degrees C
+>
+> Tested on OLPC XO-1 and OLPC XO-1.75 laptops.
 
-Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
----
-Changelog
-v2-V3
-- removed IPI settings
+It's interesting that the very author of that code is not included in
+so-o long Cc list :)
+Cc: David.
 
- .../devicetree/bindings/media/snps,dw-csi-plat.txt | 52 ++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/snps,dw-csi-plat.txt
+David, do you remember if and how you had tested temperature report of
+the battery on OLPC?
+I guess this kind of error would be appear immediately.
 
-diff --git a/Documentation/devicetree/bindings/media/snps,dw-csi-plat.txt b/Documentation/devicetree/bindings/media/snps,dw-csi-plat.txt
-new file mode 100644
-index 0000000..be3da05
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/snps,dw-csi-plat.txt
-@@ -0,0 +1,52 @@
-+Synopsys DesignWare CSI-2 Host controller
-+
-+Description
-+-----------
-+
-+This HW block is used to receive image coming from an MIPI CSI-2 compatible
-+camera.
-+
-+Required properties:
-+- compatible: shall be "snps,dw-csi-plat"
-+- reg			: physical base address and size of the device memory mapped
-+  registers;
-+- interrupts		: CSI-2 Host interrupt
-+- snps,output-type	: Core output to be used (IPI-> 0 or IDI->1 or BOTH->2)
-+			  These  values choose which of the Core outputs will be used,
-+			  it can be Image Data Interface or Image Pixel Interface.
-+- phys			: List of one PHY specifier (as defined in
-+			  Documentation/devicetree/bindings/phy/phy-bindings.txt).
-+			  This PHY is a MIPI DPHY working in RX mode.
-+- resets		: Reference to a reset controller (optional)
-+
-+The per-board settings:
-+ - port sub-node describing a single endpoint connected to the camera as
-+   described in video-interfaces.txt[1].
-+
-+Example:
-+
-+	csi2_1: csi2@3000 {
-+		compatible = "snps,dw-csi-plat";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = < 0x03000 0x7FF>;
-+		interrupts = <2>;
-+		output-type = <2>;
-+		resets = <&dw_rst 1>;
-+		phys = <&mipi_dphy_rx1 0>;
-+		phy-names = "csi2-dphy";
-+
-+		/* CSI-2 per-board settings */
-+		port@1 {
-+			reg = <1>;
-+			csi1_ep1: endpoint {
-+				remote-endpoint = <&camera_1>;
-+				data-lanes = <1 2>;
-+			};
-+		};
-+		port@2 {
-+			csi1_ep2: endpoint {
-+				remote-endpoint = <&vif1_ep>;
-+			};
-+		};
-+	};
---
-2.7.4
+OTOH it might be that power framework had changed requirements (which
+would be noticeable change).
+If the latter is true, this patch misses Fixes tag. Actually in any
+case it misses it.
+
+>
+> [1] include/linux/power_supply.h
+> [2] Documentation/power/power_supply_class.txt
+>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  drivers/power/supply/olpc_battery.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/power/supply/olpc_battery.c b/drivers/power/supply/olpc_battery.c
+> index 6da79ae14860..5a97e42a3547 100644
+> --- a/drivers/power/supply/olpc_battery.c
+> +++ b/drivers/power/supply/olpc_battery.c
+> @@ -428,14 +428,14 @@ static int olpc_bat_get_property(struct power_supply *psy,
+>                 if (ret)
+>                         return ret;
+>
+> -               val->intval = (s16)be16_to_cpu(ec_word) * 100 / 256;
+> +               val->intval = (s16)be16_to_cpu(ec_word) * 10 / 256;
+>                 break;
+>         case POWER_SUPPLY_PROP_TEMP_AMBIENT:
+>                 ret = olpc_ec_cmd(EC_AMB_TEMP, NULL, 0, (void *)&ec_word, 2);
+>                 if (ret)
+>                         return ret;
+>
+> -               val->intval = (int)be16_to_cpu(ec_word) * 100 / 256;
+> +               val->intval = (int)be16_to_cpu(ec_word) * 10 / 256;
+>                 break;
+>         case POWER_SUPPLY_PROP_CHARGE_COUNTER:
+>                 ret = olpc_ec_cmd(EC_BAT_ACR, NULL, 0, (void *)&ec_word, 2);
+> --
+> 2.19.0
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
