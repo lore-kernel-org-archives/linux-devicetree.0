@@ -1,62 +1,157 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: [PATCH v2 1/2] dt-bindings: serial: add documentation for the SiFive UART driver
-Date: Fri, 19 Oct 2018 11:48:27 -0700
-Message-ID: <20181019184827.12351-2-paul.walmsley@sifive.com>
-References: <20181019184827.12351-1-paul.walmsley@sifive.com>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add PSCI cpuidle low power states
+Date: Fri, 19 Oct 2018 13:48:03 -0600
+Message-ID: <20181019194803.GC17444@codeaurora.org>
+References: <1539622953-4188-1-git-send-email-rplsssn@codeaurora.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181019184827.12351-1-paul.walmsley@sifive.com>
+Content-Disposition: inline
+In-Reply-To: <1539622953-4188-1-git-send-email-rplsssn@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-serial@vger.kernel.org
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul@pwsan.com>
+To: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding documentation for the Linux driver for the SiFive
-asynchronous serial IP block.  Nothing too exotic.
+On Mon, Oct 15 2018 at 11:02 -0600, Raju P.L.S.S.S.N wrote:
+>Add device bindings for cpuidle states for cpu devices.
+>
+>Cc: <devicetree@vger.kernel.org>
+>Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
+>---
+Reviewed-by: Lina Iyer <ilina@codeaurora.org>
 
-Cc: linux-serial@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-riscv@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Signed-off-by: Paul Walmsley <paul@pwsan.com>
----
- .../bindings/serial/sifive-serial.txt         | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.txt
-
-diff --git a/Documentation/devicetree/bindings/serial/sifive-serial.txt b/Documentation/devicetree/bindings/serial/sifive-serial.txt
-new file mode 100644
-index 000000000000..8982338512f5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/sifive-serial.txt
-@@ -0,0 +1,21 @@
-+SiFive asynchronous serial interface (UART)
-+
-+Required properties:
-+
-+- compatible: should be "sifive,fu540-c000-uart0" or "sifive,uart0"
-+- reg: address and length of the register space
-+- interrupt-parent: should contain a phandle pointing to the SoC interrupt
-+    controller device node that the UART interrupts are connected to
-+- interrupts: Should contain the UART interrupt identifier
-+- clocks: Should contain a clock identifier for the UART's parent clock
-+
-+
-+Example:
-+
-+uart0: serial@10010000 {
-+	compatible = "sifive,uart0";
-+	interrupt-parent = <&plic0>;
-+	interrupts = <80>;
-+	reg = <0x0 0x10010000 0x0 0x1000>;
-+	clocks = <&prci PRCI_CLK_TLCLK>;
-+};
--- 
-2.19.1
+> arch/arm64/boot/dts/qcom/sdm845.dtsi | 62 ++++++++++++++++++++++++++++++++++++
+> 1 file changed, 62 insertions(+)
+>
+>diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>index 0c9a2aa..32262b0 100644
+>--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>@@ -96,6 +96,7 @@
+> 			reg = <0x0 0x0>;
+> 			enable-method = "psci";
+> 			next-level-cache = <&L2_0>;
+>+			cpu-idle-states = <&C0_CPU_SPC &C0_CPU_PC &CLUSTER_PC>;
+> 			L2_0: l2-cache {
+> 				compatible = "cache";
+> 				next-level-cache = <&L3_0>;
+>@@ -111,6 +112,7 @@
+> 			reg = <0x0 0x100>;
+> 			enable-method = "psci";
+> 			next-level-cache = <&L2_100>;
+>+			cpu-idle-states = <&C0_CPU_SPC &C0_CPU_PC &CLUSTER_PC>;
+> 			L2_100: l2-cache {
+> 				compatible = "cache";
+> 				next-level-cache = <&L3_0>;
+>@@ -123,6 +125,7 @@
+> 			reg = <0x0 0x200>;
+> 			enable-method = "psci";
+> 			next-level-cache = <&L2_200>;
+>+			cpu-idle-states = <&C0_CPU_SPC &C0_CPU_PC &CLUSTER_PC>;
+> 			L2_200: l2-cache {
+> 				compatible = "cache";
+> 				next-level-cache = <&L3_0>;
+>@@ -135,6 +138,7 @@
+> 			reg = <0x0 0x300>;
+> 			enable-method = "psci";
+> 			next-level-cache = <&L2_300>;
+>+			cpu-idle-states = <&C0_CPU_SPC &C0_CPU_PC &CLUSTER_PC>;
+> 			L2_300: l2-cache {
+> 				compatible = "cache";
+> 				next-level-cache = <&L3_0>;
+>@@ -147,6 +151,7 @@
+> 			reg = <0x0 0x400>;
+> 			enable-method = "psci";
+> 			next-level-cache = <&L2_400>;
+>+			cpu-idle-states = <&C4_CPU_SPC &C4_CPU_PC &CLUSTER_PC>;
+> 			L2_400: l2-cache {
+> 				compatible = "cache";
+> 				next-level-cache = <&L3_0>;
+>@@ -159,6 +164,7 @@
+> 			reg = <0x0 0x500>;
+> 			enable-method = "psci";
+> 			next-level-cache = <&L2_500>;
+>+			cpu-idle-states = <&C4_CPU_SPC &C4_CPU_PC &CLUSTER_PC>;
+> 			L2_500: l2-cache {
+> 				compatible = "cache";
+> 				next-level-cache = <&L3_0>;
+>@@ -171,6 +177,7 @@
+> 			reg = <0x0 0x600>;
+> 			enable-method = "psci";
+> 			next-level-cache = <&L2_600>;
+>+			cpu-idle-states = <&C4_CPU_SPC &C4_CPU_PC &CLUSTER_PC>;
+> 			L2_600: l2-cache {
+> 				compatible = "cache";
+> 				next-level-cache = <&L3_0>;
+>@@ -183,11 +190,66 @@
+> 			reg = <0x0 0x700>;
+> 			enable-method = "psci";
+> 			next-level-cache = <&L2_700>;
+>+			cpu-idle-states = <&C4_CPU_SPC &C4_CPU_PC &CLUSTER_PC>;
+> 			L2_700: l2-cache {
+> 				compatible = "cache";
+> 				next-level-cache = <&L3_0>;
+> 			};
+> 		};
+>+
+>+		idle-states {
+>+			entry-method = "psci";
+>+
+>+			C0_CPU_SPC: c0_spc {
+>+				compatible = "arm,idle-state";
+>+				arm,psci-suspend-param = <0x40000003>;
+>+				entry-latency-us = <350>;
+>+				exit-latency-us = <461>;
+>+				min-residency-us = <1890>;
+>+				local-timer-stop;
+>+				idle-state-name = "pc";
+>+			};
+>+
+>+			C0_CPU_PC: c0_pc {
+>+				compatible = "arm,idle-state";
+>+				arm,psci-suspend-param = <0x40000004>;
+>+				entry-latency-us = <360>;
+>+				exit-latency-us = <531>;
+>+				min-residency-us = <3934>;
+>+				local-timer-stop;
+>+				idle-state-name = "rail pc";
+>+			};
+>+
+>+			C4_CPU_SPC: c4_spc {
+>+				compatible = "arm,idle-state";
+>+				arm,psci-suspend-param = <0x40000003>;
+>+				entry-latency-us = <264>;
+>+				exit-latency-us = <621>;
+>+				min-residency-us = <952>;
+>+				local-timer-stop;
+>+				idle-state-name = "pc";
+>+			};
+>+
+>+			C4_CPU_PC: c4_pc {
+>+				compatible = "arm,idle-state";
+>+				arm,psci-suspend-param = <0x40000004>;
+>+				entry-latency-us = <702>;
+>+				exit-latency-us = <1061>;
+>+				min-residency-us = <4488>;
+>+				local-timer-stop;
+>+				idle-state-name = "rail pc";
+>+			};
+>+
+>+			CLUSTER_PC: cluster_pc {
+>+				compatible = "arm,idle-state";
+>+				arm,psci-suspend-param = <0x400000F4>;
+>+				entry-latency-us = <3263>;
+>+				exit-latency-us = <6562>;
+>+				min-residency-us = <9987>;
+>+				local-timer-stop;
+>+				idle-state-name = "cluster pc";
+>+			};
+>+		};
+> 	};
+>
+> 	pmu {
+>--
+>QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>of the Code Aurora Forum, hosted by The Linux Foundation.
+>
