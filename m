@@ -1,93 +1,73 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [linux-sunxi] Re: [PATCH v4 07/10] dt-bindings: phy: add binding for Allwinner USB3 PHY
-Date: Fri, 19 Oct 2018 13:54:10 +0800
-Message-ID: <6A511BD2-AF0F-40E5-B1B4-F37BC8D7263E@aosc.io>
-References: <20181004122855.22981-1-icenowy@aosc.io> <20181004122855.22981-8-icenowy@aosc.io> <20181005205855.GA2458@bogus> <92e92f817d4df753d654124514e89c62f40d52eb.camel@aosc.io> <CAL_JsqL=YY2K0KPK-fN1O-a3R4o5GwYUZr9wyA2DOaXc29Hh3g@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 2/3] mtd: partitions: Add RedBoot FIS DT bindings
+Date: Fri, 19 Oct 2018 09:06:21 +0200
+Message-ID: <20181019070622.26661-2-linus.walleij@linaro.org>
+References: <20181019070622.26661-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL=YY2K0KPK-fN1O-a3R4o5GwYUZr9wyA2DOaXc29Hh3g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.orgRob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, linux-sunxi <linux-sunxi@googlegroups.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Chen-Yu Tsai <wens@csie.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20181019070622.26661-1-linus.walleij@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+This adds device tree bindings for the RedBoot FIS partition
+format.
+
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ .../bindings/mtd/partitions/redboot-fis.txt   | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/partitions/redboot-fis.txt
+
+diff --git a/Documentation/devicetree/bindings/mtd/partitions/redboot-fis.txt b/Documentation/devicetree/bindings/mtd/partitions/redboot-fis.txt
+new file mode 100644
+index 000000000000..fd0ebe4e3415
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/partitions/redboot-fis.txt
+@@ -0,0 +1,27 @@
++RedBoot FLASH Image System (FIS) Partitions
++===========================================
++
++The FLASH Image System (FIS) directory is a flash description
++format closely associated with the RedBoot boot loader.
++
++It uses one single flash eraseblock in the flash to store an index of
++all images in the flash.
++
++This block size will vary depending on flash but is typically
++32 KB in size.
++
++Required properties:
++- compatible : (required) must be "redboot-fis"
++- fis-index-block : (required) a index to the eraseblock containing
++  the FIS directory on this device. On a flash memory with 32KB
++  eraseblocks, 0 means the first eraseblock at 0x00000000, 1 means the
++  second eraseblock at 0x00008000 and so on.
++
++Example:
++
++flash@0 {
++	partitions {
++		compatible = "redboot-fis";
++		fis-index-block = <0>;
++	};
++};
+-- 
+2.17.2
 
 
-于 2018年10月18日 GMT+08:00 下午9:58:25, Rob Herring <robh@kernel.org> 写到:
->On Sat, Oct 13, 2018 at 9:42 PM Icenowy Zheng <icenowy@aosc.io> wrote:
->>
->> 在 2018-10-05五的 15:58 -0500，Rob Herring写道：
->> > On Thu, Oct 04, 2018 at 08:28:52PM +0800, Icenowy Zheng wrote:
->> > > The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
->> > > external USB3 pins of the SoC.
->> > >
->> > > Add a device tree binding for the PHY.
->> > >
->> > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->> > > Reviewed-by: Chen-Yu Tsai <wens@csie.org>
->> > > ---
->> > > Changes in v4:
->> > > - Changed Vbus regulator property to vbus-supply.
->> > >
->> > > Changes in v3:
->> > > - Added Chen-Yu's Review tag.
->> > >
->> > > No changes in v2, v1.
->> > >
->> > >  .../bindings/phy/sun50i-usb3-phy.txt          | 23
->> > > +++++++++++++++++++
->> > >  1 file changed, 23 insertions(+)
->> > >  create mode 100644 Documentation/devicetree/bindings/phy/sun50i-
->> > > usb3-phy.txt
->> > >
->> > > diff --git a/Documentation/devicetree/bindings/phy/sun50i-usb3-
->> > > phy.txt
->b/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
->> > > new file mode 100644
->> > > index 000000000000..9f49c6b8c7e7
->> > > --- /dev/null
->> > > +++ b/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
->> > > @@ -0,0 +1,23 @@
->> > > +Allwinner sun50i USB3 PHY
->> > > +-----------------------
->> > > +
->> > > +Required properties:
->> > > +- compatible : should be one of
->> > > +  * allwinner,sun60i-h6-usb3-phy
->> > > +- reg : a list of offset + length pairs
->> > > +- #phy-cells : from the generic phy bindings, must be 0
->> > > +- clocks : phandle + clock specifier for the phy clock
->> > > +- resets : phandle + reset specifier for the phy reset
->> > > +
->> > > +Optional Properties:
->> > > +- vbus-supply : a phandle to a regulator that provides power to
->> > > VBUS.
->> >
->> > This belongs in a connector node as it is part of the connector
->> > unless
->> > the phy physically needs Vbus for power.
->> >
->> > But others have done this, so all the phys can just be wrong...
->>
->> How should we reference the connector?
->>
->> Via OF graph or simply a property in PHY node?
->
->The connector is either a child of the controller or an OF graph from
->the controller to the connector. The phy driver needs the controller
->node and then it can walk the tree or graph to get the connector node.
-
-Why is it a child of the controller?
-
-I think on hardware the connector is connected to the PHY via USB, and PHY is
-connected to the controller via ULPI/UTMI and PIPE, so the connector node
-should link to PHY in some way, not to controller.
-
-For Allwinner USB3 PHY I prefer to use child node now, as it's a simple
-single-port PHY, and there seems to be no reserved space for multi-port.
-
->
->Rob
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
