@@ -1,157 +1,74 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add PSCI cpuidle low power states
-Date: Fri, 19 Oct 2018 13:48:03 -0600
-Message-ID: <20181019194803.GC17444@codeaurora.org>
-References: <1539622953-4188-1-git-send-email-rplsssn@codeaurora.org>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH 1/2] dt-bindings: drm/bridge: sn65dsi86: Add panel-hpd-delay
+Date: Fri, 19 Oct 2018 13:19:39 -0700
+Message-ID: <20181019201940.138179-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1539622953-4188-1-git-send-email-rplsssn@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sandeep Panda <spanda@codeaurora.org>, Sean Paul <seanpaul@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-arm-msm@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, Stephen Boyd <swboyd@chromium.org>, Rob Herring <robh+dt@kernel.org>, ryandcase@chromium.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 15 2018 at 11:02 -0600, Raju P.L.S.S.S.N wrote:
->Add device bindings for cpuidle states for cpu devices.
->
->Cc: <devicetree@vger.kernel.org>
->Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
->---
-Reviewed-by: Lina Iyer <ilina@codeaurora.org>
-
-> arch/arm64/boot/dts/qcom/sdm845.dtsi | 62 ++++++++++++++++++++++++++++++++++++
-> 1 file changed, 62 insertions(+)
->
->diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->index 0c9a2aa..32262b0 100644
->--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->@@ -96,6 +96,7 @@
-> 			reg = <0x0 0x0>;
-> 			enable-method = "psci";
-> 			next-level-cache = <&L2_0>;
->+			cpu-idle-states = <&C0_CPU_SPC &C0_CPU_PC &CLUSTER_PC>;
-> 			L2_0: l2-cache {
-> 				compatible = "cache";
-> 				next-level-cache = <&L3_0>;
->@@ -111,6 +112,7 @@
-> 			reg = <0x0 0x100>;
-> 			enable-method = "psci";
-> 			next-level-cache = <&L2_100>;
->+			cpu-idle-states = <&C0_CPU_SPC &C0_CPU_PC &CLUSTER_PC>;
-> 			L2_100: l2-cache {
-> 				compatible = "cache";
-> 				next-level-cache = <&L3_0>;
->@@ -123,6 +125,7 @@
-> 			reg = <0x0 0x200>;
-> 			enable-method = "psci";
-> 			next-level-cache = <&L2_200>;
->+			cpu-idle-states = <&C0_CPU_SPC &C0_CPU_PC &CLUSTER_PC>;
-> 			L2_200: l2-cache {
-> 				compatible = "cache";
-> 				next-level-cache = <&L3_0>;
->@@ -135,6 +138,7 @@
-> 			reg = <0x0 0x300>;
-> 			enable-method = "psci";
-> 			next-level-cache = <&L2_300>;
->+			cpu-idle-states = <&C0_CPU_SPC &C0_CPU_PC &CLUSTER_PC>;
-> 			L2_300: l2-cache {
-> 				compatible = "cache";
-> 				next-level-cache = <&L3_0>;
->@@ -147,6 +151,7 @@
-> 			reg = <0x0 0x400>;
-> 			enable-method = "psci";
-> 			next-level-cache = <&L2_400>;
->+			cpu-idle-states = <&C4_CPU_SPC &C4_CPU_PC &CLUSTER_PC>;
-> 			L2_400: l2-cache {
-> 				compatible = "cache";
-> 				next-level-cache = <&L3_0>;
->@@ -159,6 +164,7 @@
-> 			reg = <0x0 0x500>;
-> 			enable-method = "psci";
-> 			next-level-cache = <&L2_500>;
->+			cpu-idle-states = <&C4_CPU_SPC &C4_CPU_PC &CLUSTER_PC>;
-> 			L2_500: l2-cache {
-> 				compatible = "cache";
-> 				next-level-cache = <&L3_0>;
->@@ -171,6 +177,7 @@
-> 			reg = <0x0 0x600>;
-> 			enable-method = "psci";
-> 			next-level-cache = <&L2_600>;
->+			cpu-idle-states = <&C4_CPU_SPC &C4_CPU_PC &CLUSTER_PC>;
-> 			L2_600: l2-cache {
-> 				compatible = "cache";
-> 				next-level-cache = <&L3_0>;
->@@ -183,11 +190,66 @@
-> 			reg = <0x0 0x700>;
-> 			enable-method = "psci";
-> 			next-level-cache = <&L2_700>;
->+			cpu-idle-states = <&C4_CPU_SPC &C4_CPU_PC &CLUSTER_PC>;
-> 			L2_700: l2-cache {
-> 				compatible = "cache";
-> 				next-level-cache = <&L3_0>;
-> 			};
-> 		};
->+
->+		idle-states {
->+			entry-method = "psci";
->+
->+			C0_CPU_SPC: c0_spc {
->+				compatible = "arm,idle-state";
->+				arm,psci-suspend-param = <0x40000003>;
->+				entry-latency-us = <350>;
->+				exit-latency-us = <461>;
->+				min-residency-us = <1890>;
->+				local-timer-stop;
->+				idle-state-name = "pc";
->+			};
->+
->+			C0_CPU_PC: c0_pc {
->+				compatible = "arm,idle-state";
->+				arm,psci-suspend-param = <0x40000004>;
->+				entry-latency-us = <360>;
->+				exit-latency-us = <531>;
->+				min-residency-us = <3934>;
->+				local-timer-stop;
->+				idle-state-name = "rail pc";
->+			};
->+
->+			C4_CPU_SPC: c4_spc {
->+				compatible = "arm,idle-state";
->+				arm,psci-suspend-param = <0x40000003>;
->+				entry-latency-us = <264>;
->+				exit-latency-us = <621>;
->+				min-residency-us = <952>;
->+				local-timer-stop;
->+				idle-state-name = "pc";
->+			};
->+
->+			C4_CPU_PC: c4_pc {
->+				compatible = "arm,idle-state";
->+				arm,psci-suspend-param = <0x40000004>;
->+				entry-latency-us = <702>;
->+				exit-latency-us = <1061>;
->+				min-residency-us = <4488>;
->+				local-timer-stop;
->+				idle-state-name = "rail pc";
->+			};
->+
->+			CLUSTER_PC: cluster_pc {
->+				compatible = "arm,idle-state";
->+				arm,psci-suspend-param = <0x400000F4>;
->+				entry-latency-us = <3263>;
->+				exit-latency-us = <6562>;
->+				min-residency-us = <9987>;
->+				local-timer-stop;
->+				idle-state-name = "cluster pc";
->+			};
->+		};
-> 	};
->
-> 	pmu {
->--
->QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->of the Code Aurora Forum, hosted by The Linux Foundation.
->
+VGhlIHRpbWluZyBkaWFncmFtIG9mIHNvbWUgZURQIHBhbmVscyBzYXlzIHRoYXQgeW91J3JlIHN1
+cHBvc2VkIHRvCndhaXQgZm9yIEhQRCB0byBiZSBhc3NlcnRlZCBiZWZvcmUgdGhlIGF1eCBjaGFu
+bmVsIGlzIG9wZXJhdGlvbmFsLgoKSW4gc29tZSBjYXNlcywgaG93ZXZlciwgaXQncyBiZXR0ZXIg
+dG8ganVzdCBoYXJkY29kZSB0aGUgbWF4IGRlbGF5Cmluc3RlYWQgb2YgdHJ5aW5nIHRvIHVzZSBI
+UEQuICBXaHk/CgpUaGUgc242NWRzaTg2IGRhdGFzaGVldCBzYXlzIHRoYXQgaXQgb25seSByZXBv
+cnRzIHRoZSBkZWJvdW5jZWQKSFBEIHNpZ25hbCB0byBzb2Z0d2FyZS4gIEl0IHdpbGwgdGVsbCBz
+b2Z0d2FyZSBhYm91dCBIUEQgYXNzZXJ0aW9uCmFzIHF1aWNrbHkgYXMgMTAwIG1zIGFmdGVyIGl0
+J3MgYXNzZXJ0ZWQsIGJ1dCBzb21ldGltZXMgaXQgbWlnaHQKdGFrZSA0MDAgbXMgYmVjYXVzZSBp
+dCdzIHRpbWVkIHdpdGggYSB2ZXJ5IGluYWNjdXJhdGUgcmluZwpvc2NpbGxhdG9yLiAgSW4gcHJh
+Y3RpY2UgaXQgd2FzIG1lYXN1cmVkIGF0IDIwMCBtcyBvbiBhdCBsZWFzdApvbmUgc3lzdGVtLgoK
+T24gYSBwYXJ0aWN1bGFyIHBhbmVsLCBIUEQgd2FzIGFzc2VydGVkIDg0IG1zIGFmdGVyIHBvd2Vy
+IHdhcyBnaXZlbi4KVGhpcyBzYW1lIHBhbmVsIHNwZWNpZmllZCB0aGF0IEhQRCB3b3VsZCBhbHdh
+eXMgYmUgYXNzZXJ0ZWQgd2l0aGluCjIwMCBtcyBvZiBhcHBseWluZyBwb3dlci4gIFRodXMgb24g
+dGhpcyBwYW5lbCB3aXRoIHRoZSBtZWFzdXJlZAo4NCBtcyB0byBhc3NlcnQgSFBEICsgdGhlIDIw
+MCBtcyBtZWFzdXJlZCBkZWJvdW5jZSB3ZSdkIHdhaXQgMjg0IG1zCndoaWNoIGlzIDg0IG1zIGxv
+bmdlciB0aGFuIGp1c3QgaGFyZGNvZGluZyB0aGUgc2xlZXAuCgpMZXQncyBhbGxvdyBib2FyZHMg
+dG8gZXhwbGljaXRseSBjaG9vc2UgdGhlIGhhcmRjb2RlZCBkZWxheSBieSBhZGRpbmcKYSBkZXZp
+Y2UgdHJlZSBhdHRyaWJ1dGUgZm9yIGl0LiAgQSBmZXcgbm90ZXM6CmEpIFRoaXMgZGVsYXkgY2Fu
+J3QgZWFzaWx5IGJlIGluIHRoZSBwYW5lbCBiaW5kaW5ncyBiZWNhdXNlIHRoZSBkZWxheQogICB3
+b3VsZG4ndCBhY3R1YWxseSBiZSBuZWVkZWQgaWYgdGhlIHNhbWUgcGFuZWwgd2VyZSBob29rZWQg
+c29tZXdoZXJlCiAgIGVsc2UgKHNvbWVwbGFjZSB3aXRoIG1vcmUgc2FuZSBIUEQgYmVoYXZpb3Ip
+LgpiKSBUaGUgbmljZSB0aGluZyBhYm91dCBiZWluZyBhYmxlIHRvIHNldCB0aGlzIGRlbGF5IGlz
+IHRoYXQgaXQncyBhbHNvCiAgIHVzZWZ1bCBvbiBib2FyZHMgd2hlcmUgSFBEIHdhc24ndCBob29r
+ZWQgdXAgYXQgYWxsIChmb3Igd2hhdGV2ZXIKICAgcmVhc29uKS4KClNpZ25lZC1vZmYtYnk6IERv
+dWdsYXMgQW5kZXJzb24gPGRpYW5kZXJzQGNocm9taXVtLm9yZz4KLS0tCgogLi4uL2JpbmRpbmdz
+L2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQgICAgICAgICAgfCAxMSArKysrKysrKysr
+KwogMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4
+dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxz
+bjY1ZHNpODYudHh0CmluZGV4IDBhM2ZiYjUzYTE2ZS4uMWExY2EwZjdhMWQ4IDEwMDY0NAotLS0g
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242
+NWRzaTg2LnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9icmlkZ2UvdGksc242NWRzaTg2LnR4dApAQCAtMzMsNiArMzMsMTUgQEAgT3B0aW9uYWwgcHJv
+cGVydGllczoKIAogLSBzdXNwZW5kLWdwaW9zOiBzcGVjaWZpY2F0aW9uIGZvciBHUElPMSBwaW4g
+b24gYnJpZGdlIChhY3RpdmUgbG93KQogCistIHRpLHBhbmVsLWhwZC1kZWxheS1tczogQXNzdW1l
+IHRoYXQgSFBEIGZyb20gdGhlIHBhbmVsIHdpbGwgYmUgYXNzZXJ0ZWQgd2l0aGluCisJCQkgdGhp
+cyBtYW55IG1pbGxpc2Vjb25kcyBhZnRlciBnaXZpbmcgcG93ZXIgdG8gdGhlIHBhbmVsLgorCQkJ
+IFdpdGggdGhpcyBudW1iZXIgd2UgY2FuIGlnbm9yZSB0aGUgSFBEIHNpZ25hbCBmcm9tCisJCQkg
+dGhlIHBhbmVsIGFuZCBqdXN0IGhhcmRjb2RlIGEgZGVsYXkuICBUaGlzIGlzIHVzZWZ1bAorCQkJ
+IHRvIGRvIGJlY2F1c2UgdGhlIGJyaWRnZSBjaGlwIG9ubHkgcHJvdmlkZXMgdGhlCisJCQkgZGVi
+b3VuY2VkIEhQRCBzaWduYWwgdG8gc29mdHdhcmUgYW5kIHRoZSB0aW1pbmcgb2YgdGhlCisJCQkg
+ZGVib3VuY2UgaXMgdmVyeSBpbmFjY3VyYXRlIHNvIGl0J3Mgb2Z0ZW4gZmFzdGVyIHRvCisJCQkg
+aGFyZGNvZGUgdGhlIG1heCBmcm9tIHRoZSBwYW5lbCBzcGVjLgorCiBSZXF1aXJlZCBub2RlczoK
+IFRoaXMgZGV2aWNlIGhhcyB0d28gdmlkZW8gcG9ydHMuIFRoZWlyIGNvbm5lY3Rpb25zIGFyZSBt
+b2RlbGxlZCB1c2luZyB0aGUKIE9GIGdyYXBoIGJpbmRpbmdzIHNwZWNpZmllZCBpbiBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0LgpAQCAtNjIsNiArNzEsOCBAQCBl
+ZHAtYnJpZGdlQDJkIHsKIAljbG9jay1uYW1lcyA9ICJyZWZjbGsiOwogCWNsb2NrcyA9IDwmaW5w
+dXRfcmVmY2xrPjsKIAorCXRpLHBhbmVsLWhwZC1kZWxheS1tcyA9IDwyMDA+OworCiAJcG9ydHMg
+ewogCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKIAkJI3NpemUtY2VsbHMgPSA8MD47Ci0tIAoyLjE5
+LjEuNTY4LmcxNTJhZDhlMzM2LWdvb2cKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
