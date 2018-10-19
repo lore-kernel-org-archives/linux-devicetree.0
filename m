@@ -1,53 +1,64 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 6/6] mmc: mediatek: drop too much code of tuning method
-Date: Fri, 19 Oct 2018 10:54:21 +0200
-Message-ID: <513726cb-79e8-ca4d-e887-bf63c833260b@gmail.com>
-References: <1539415250-32337-1-git-send-email-chaotian.jing@mediatek.com>
- <1539415250-32337-7-git-send-email-chaotian.jing@mediatek.com>
+From: Lars Poeschel <poeschel@lemonage.de>
+Subject: Re: [PATCH v2 1/4] nfc: pn533: add UART phy driver
+Date: Fri, 19 Oct 2018 10:57:28 +0200
+Message-ID: <20181019085728.GA26696@lem-wkst-02.lemonage>
+References: <20181018144251.30028-1-poeschel@lemonage.de>
+ <6CB47B97-F58D-4162-98C1-8C8C88CE2914@holtmann.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539415250-32337-7-git-send-email-chaotian.jing@mediatek.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <6CB47B97-F58D-4162-98C1-8C8C88CE2914@holtmann.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chaotian Jing <chaotian.jing@mediatek.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Sean Wang <sean.wang@mediatek.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, jjian.zhou@mediatek.com, wenbin.mei@mediatek.com
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, open list <linux-kernel@vger.kernel.org>, "open list:NFC SUBSYSTEM" <linux-wireless@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 13/10/2018 09:20, Chaotian Jing wrote:
-> the tuning code is becoming more and more bloated, let's make the
-> set cmd/data delay to inline function to avoid too much redundant code.
+On Thu, Oct 18, 2018 at 05:00:28PM +0200, Marcel Holtmann wrote:
+> Hi Lars,
 > 
-> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-> ---
->  drivers/mmc/host/mtk-sd.c | 133 +++++++++++++---------------------------------
->  1 file changed, 38 insertions(+), 95 deletions(-)
+> > This adds the UART phy interface for the pn533 driver.
+> > The pn533 driver can be used through UART interface this way.
+> > It is implemented as a serdev device.
+> > 
+> > Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+> > ---
+> > Changes in v2:
+> > - switched from tty line discipline to serdev, resulting in many
+> >  simplifications
+> > - SPDX License Identifier
+> > 
+> > drivers/nfc/pn533/Kconfig  |  10 ++
+> > drivers/nfc/pn533/Makefile |   2 +
+> > drivers/nfc/pn533/pn533.h  |   8 ++
+> > drivers/nfc/pn533/uart.c   | 283 +++++++++++++++++++++++++++++++++++++
+> > 4 files changed, 303 insertions(+)
+> > create mode 100644 drivers/nfc/pn533/uart.c
+> > 
+> > diff --git a/drivers/nfc/pn533/Kconfig b/drivers/nfc/pn533/Kconfig
+> > index d94122dd30e4..da3ea2dbaa8a 100644
+> > --- a/drivers/nfc/pn533/Kconfig
+> > +++ b/drivers/nfc/pn533/Kconfig
+> > @@ -25,3 +25,13 @@ config NFC_PN533_I2C
+> > 
+> > 	  If you choose to build a module, it'll be called pn533_i2c.
+> > 	  Say N if unsure.
+> > +
+> > +config NFC_PN532_UART
+> > +	tristate "NFC PN532 device support (UART)”
 > 
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-[...]> @@ -1923,17 +1898,8 @@ static int msdc_tune_together(struct mmc_host
-*mmc, u32 opcode)
->  	sdr_clr_bits(host->base + MSDC_IOCON,
->  		     MSDC_IOCON_DSPL | MSDC_IOCON_W_DSPL);
->  	for (i = 0 ; i < PAD_DELAY_MAX; i++) {
-> -		if (host->top_base) {
-> -			sdr_set_field(host->top_base + EMMC_TOP_CMD,
-> -				      PAD_CMD_RXDLY, i);
-> -			sdr_set_field(host->top_base + EMMC_TOP_CONTROL,
-> -				      PAD_DAT_RD_RXDLY, i);
-> -		} else {
-> -			sdr_set_field(host->base + tune_reg,
-> -				      MSDC_PAD_TUNE_CMDRDLY, i);
-> -			sdr_set_field(host->base + tune_reg,
-> -				      MSDC_PAD_TUNE_DATRRDLY, i);
-> -		}
-> +		msdc_set_cmd_delay(host, i);
-> +		msdc_set_data_delay(host, i);
+> you are missing the "depends on SERIAL_DEV_BUS” here.
 
-Put the clean-up before introducing msdc_tune_together, that makes the series
-much easier to read.
+Yes, absolutely right. I missed that. I will post a follow-up.
+
+BTW a question:
+Only enabling SERIAL_DEV_BUS did not suffice for me. I also had to
+enable SERIAL_DEV_CTRL_TTYPORT, otherwise the probe of the driver was
+not called. This seems a bit odd to me. This option seems unrelated, but
+without it, it did not work.
+
+Should I better depend on SERIAL_DEV_CTRL_TTYPORT then ?
 
 Thanks,
-Matthias
+Lars
