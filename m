@@ -1,177 +1,60 @@
-Return-Path: <SRS0=AkGh=M7=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 2/2] dt-bindings: pinctrl: Add RZ/A2 pinctrl and GPIO
-Date: Fri, 19 Oct 2018 08:40:30 -0500
-Message-Id: <20181019134030.10472-3-chris.brandt@renesas.com>
-In-Reply-To: <20181019134030.10472-1-chris.brandt@renesas.com>
-References: <20181019134030.10472-1-chris.brandt@renesas.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: jacopo mondi <jacopo@jmondi.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=AkGh=M7=renesas.com=Chris.Brandt@kernel.org>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH 2/2] dt-bindings: pinctrl: Add RZ/A2 pinctrl and GPIO
+Date: Fri, 19 Oct 2018 01:47:00 +0000
+Message-ID: 
+ <TY1PR01MB15624F28A1F8F80B5915E7C28AF90@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20181005150951.22129-1-chris.brandt@renesas.com>
+ <20181005150951.22129-3-chris.brandt@renesas.com>
+ <20181016224700.GA26385@bogus> <20181018211035.GA16601@w540>
+In-Reply-To: <20181018211035.GA16601@w540>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree binding documentation and header file for Renesas R7S9210
-(RZ/A2) SoCs.
-
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
-v2:
- * Moved gpio-controller to required
- * Wrote a better description of what the sub-nodes are for
- * Added pinmux property description
- * Changed macro RZA2_PIN_ID to RZA2_PIN
----
- .../bindings/pinctrl/renesas,rza2-pinctrl.txt      | 88 ++++++++++++++++++++++
- include/dt-bindings/pinctrl/r7s9210-pinctrl.h      | 47 ++++++++++++
- 2 files changed, 135 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
- create mode 100644 include/dt-bindings/pinctrl/r7s9210-pinctrl.h
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
-new file mode 100644
-index 000000000000..622d37a7225b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
-@@ -0,0 +1,88 @@
-+Renesas RZ/A2 combined Pin and GPIO controller
-+
-+The Renesas SoCs of the RZ/A2 series feature a combined Pin and GPIO controller.
-+Pin multiplexing and GPIO configuration is performed on a per-pin basis.
-+Each port features up to 8 pins, each of them configurable for GPIO
-+function (port mode) or in alternate function mode.
-+Up to 8 different alternate function modes exist for each single pin.
-+
-+Pin controller node
-+-------------------
-+
-+Required properties:
-+  - compatible: should be:
-+    - "renesas,r7s9210-pinctrl": for RZ/A2M
-+  - reg
-+    Address base and length of the memory area where the pin controller
-+    hardware is mapped to.
-+  - gpio-controller
-+    This pin controller also controls pins as GPIO
-+  - #gpio-cells
-+    Must be 2
-+  - gpio-ranges
-+    Expresses the total number GPIO ports/pins in this SoC
-+
-+
-+Example: Pin controller node for RZ/A2M SoC (r7s9210)
-+
-+	pinctrl: pin-controller@fcffe000 {
-+		compatible = "renesas,r7s9210-pinctrl";
-+		reg = <0xfcffe000 0x9D1>;
-+
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		gpio-ranges = <&pinctrl 0 0 176>;
-+	};
-+
-+Sub-nodes
-+---------
-+
-+The child nodes of the pin controller designate pins to be used for
-+specific peripheral functions or as GPIO.
-+
-+- Pin multiplexing sub-nodes:
-+  A pin multiplexing sub-node describes how to configure a set of
-+  (or a single) pin in some desired alternate function mode.
-+  The values for the pinmux properties are a combination of port name, pin
-+  number and the desired function index. Use the RZA2_PINMUX macro located
-+  in include/dt-bindings/pinctrl/r7s9210-pinctrl.h to easily define these.
-+  For assigning GPIO pins, use the macro RZA2_PIN_ID also in r7s9210-pinctrl.h
-+  to express the desired port pin.
-+
-+  Required properties:
-+    - pinmux:
-+      integer array representing pin number and pin multiplexing configuration.
-+      When a pin has to be configured in alternate function mode, use this
-+      property to identify the pin by its global index, and provide its
-+      alternate function configuration number along with it.
-+      When multiple pins are required to be configured as part of the same
-+      alternate function they shall be specified as members of the same
-+      argument list of a single "pinmux" property.
-+      Helper macros to ease assembling the pin index from its position
-+      (port where it sits on and pin number) and alternate function identifier
-+      are provided by the pin controller header file at:
-+      <include/dt-bindings/pinctrl/r7s9210-pinctrl.h>
-+      Integers values in "pinmux" argument list are assembled as:
-+      ((PORT * 8 + PIN) | MUX_FUNC << 16)
-+
-+  Example: Board specific pins configuration
-+
-+	&pinctrl {
-+		/* Serial Console */
-+		scif4_pins: serial4 {
-+			pinmux = <RZA2_PINMUX(P9, 0, 4)>,	/* TxD4 */
-+				 <RZA2_PINMUX(P9, 1, 4)>;	/* RxD4 */
-+		};
-+	};
-+
-+  Example: Assigning a GPIO:
-+
-+	leds {
-+		status = "okay";
-+		compatible = "gpio-leds";
-+
-+		led0 {
-+			/* P6_0 */
-+			gpios = <&pinctrl RZA2_PIN(P6, 0) GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-diff --git a/include/dt-bindings/pinctrl/r7s9210-pinctrl.h b/include/dt-bindings/pinctrl/r7s9210-pinctrl.h
-new file mode 100644
-index 000000000000..1e2671b61c0a
---- /dev/null
-+++ b/include/dt-bindings/pinctrl/r7s9210-pinctrl.h
-@@ -0,0 +1,47 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Defines macros and constants for Renesas RZ/A2 pin controller pin
-+ * muxing functions.
-+ */
-+#ifndef __DT_BINDINGS_PINCTRL_RENESAS_RZA2_H
-+#define __DT_BINDINGS_PINCTRL_RENESAS_RZA2_H
-+
-+#define RZA2_PINS_PER_PORT	8
-+
-+/* Port names as labeled in the Hardware Manual */
-+#define P0 0
-+#define P1 1
-+#define P2 2
-+#define P3 3
-+#define P4 4
-+#define P5 5
-+#define P6 6
-+#define P7 7
-+#define P8 8
-+#define P9 9
-+#define PA 10
-+#define PB 11
-+#define PC 12
-+#define PD 13
-+#define PE 14
-+#define PF 15
-+#define PG 16
-+#define PH 17
-+/* No I */
-+#define PJ 18
-+#define PK 19
-+#define PL 20
-+#define PM 21
-+
-+/*
-+ * Create the pin index from its bank and position numbers and store in
-+ * the upper 8 bits the alternate function identifier
-+ */
-+#define RZA2_PINMUX(b, p, f)	((b) * RZA2_PINS_PER_PORT + (p) | (f << 16))
-+
-+/*
-+ * Convert a port and pin label to its global pin index
-+ */
-+ #define RZA2_PIN(port, pin)	((port) * RZA2_PINS_PER_PORT + (pin))
-+
-+#endif /* __DT_BINDINGS_PINCTRL_RENESAS_RZA2_H */
--- 
-2.16.1
+SGkgSmFjb3BvLA0KDQpPbiBUaHVyc2RheSwgT2N0b2JlciAxOCwgMjAxOCwgamFjb3BvIG1vbmRp
+IHdyb3RlOg0KPiBIZXJlIHlvdSBkZWZpbmUgYmluZGluZ3MgdGhhdCBhbGxvd3MgeW91IHRvIGhh
+dmUgb25seSBvbmUNCj4gZ3Bpby1jb250cm9sbGVyIG5vZGUgZm9yIHRoZSB3aG9sZSBzeXN0ZW0u
+DQoNCkNvcnJlY3QuIFNpbmNlIERUIGRlc2NyaWJlcyBIVywgd2UgZG8gb25seSBoYXZlIG9uZSBn
+cGlvLWNvbnRyb2xsZXIgZm9yIA0KdGhlIGVudGlyZSBjaGlwLiBJdCBpcyBvbmUgcGllY2Ugb2Yg
+aGFyZHdhcmUsIG5vdCBtYW55IHRpbnkgcGllY2VzIG9mIA0KaGFyZHdhcmUuDQoNCj4gV2l0aCBS
+Wi9BMSB3ZSBoYXZlIGEgZ3Bpby1jb250cm9sbGVyIHN1Yi1ub2RlIGZvciBlYWNoIHBvcnQuDQoN
+CkFzIEkgc3RhcnRlZCB0byB3cml0ZSB0aGlzIGRyaXZlciwgSSB0aGluayB0aGUgUlovQTEgZHJp
+dmVyIGlzIGEgbGl0dGxlIA0KYml0IHN0cmFuZ2UuIEl0IGlzIGFsc28gb25lIGdwaW8tY3RvbnJv
+bGxlciBIVy4gQnV0LCBJJ20gbm90IGFib3V0IHRvIGdvDQpzdWdnZXN0aW5nIHdlIGNoYW5nZSB0
+aGUgUlovQTEgZHJpdmVyIGFueSB0aW1lIHNvb24uDQoNCg0KPiBJdCdzDQo+IHRydWUgdGhvdWdo
+IHRoYXQgeW91IGhhdmUgYSBsb3Qgb2YgcG9ydHMgYW5kIGZldyBwaW5zIHBlciBwb3J0LCBidXQN
+Cj4gdG8gcmVmZXIgdG8gYSBncGlvIHlvdSBoYXZlIHRvIGluZGV4IHRoZSBncGlvIGluIHRoZSB3
+aG9sZSBwaW4gc3BhY2UNCj4gd2l0aCBSWkExX1BJTl9JRCgpOg0KPiANCj4gCWdwaW9zID0gPCZw
+aW5jdHJsIFJaQTJfUElOX0lEKFA2LCAwKSBHUElPX0FDVElWRV9ISUdIPjsNCj4gDQo+IFdoaWxl
+IEkgdGhpbmsgdGhpcyBpcyBuaWNlcjoNCj4gICAgICAgICBncGlvcyA9IDwmcG9ydDYgMCBHUElP
+X0FDVElWRV9ISUdIPjsNCiANCkJvdGggc2VlbSBqdXN0IGFzIGVhc3kgdG8gdXNlLg0KVGhlIGRp
+ZmZlcmVuY2UgaXMgSSBkb24ndCB3YW50IGxvdHMgYW5kIGxvdHMgb2YgZGV2aWNlIHRyZWUgc3Vi
+IG5vZGVzIA0KdGhhdCBhcmUgbm90IHJlYWxseSBuZWVkZWQuDQoNClRlY2huaWNhbGx5LCB0aGUg
+R1BJTyBjb250cm9sbGVyIGlzIGEgc2luZ2xlIHBpZWNlIG9mIEhXIHRoYXQgeW91IGluZGV4IA0K
+aW50byBpdCB3aGF0IHBpbiB5b3Ugd2FudCB0byBjb250cm9sLiBUaGUgJ2luZGV4aW5nJyBpcyBi
+YXNpY2FsbHkgDQpyZWdpc3RlcnMgYW5kIGJpdHMgYWRkcmVzc2VzLiBCdXQsIGl0IGlzIHN0aWxs
+IG9uZSBiaWcgY29udHJvbGxlciAobm90IG1hbnkgDQpzbWFsbGVyIGNvbnRyb2xsZXJzIGxpa2Ug
+Y2hhbm5lbHMgb2YgU1BJLCBVQVJUIG9yIEkyQykuDQoNCg0KPiBIYXZpbmcgZ3Bpby1jb250cm9s
+bGVyIHN1Yi1ub2RlcyBhbHNvIGFsbG93cyB5b3UNCj4gdG8gc3BlY2lmeSBhICduZ3Bpb3MnIHBy
+b3BlcnR5IGZvciBlYWNoIHBvcnQgKG9yIGRvIGFsbCBwb3J0cyBoYXZlIDgNCj4gcGlucz8gSWYg
+SSByZWFkIFRhYmxlIDUxLjEgcmlnaHQgdGhleSBkb24ndC4uKSwNCg0KVGhlICJjb250cm9sbGVy
+IiAoYWN0dWFsIEhXKSBjb250cm9scyA4LXBpbnMgcGVyIHBvcnQuIEluIHRoZSBSWi9BMk0sIA0K
+bm90IGFsbCBwaW5zIGFyZSBob29rZWQgdXAgdG8gYWN0dWFsIHBpbiBwYWRzLiBBbmQgdGhhdCBh
+bHNvIGNoYW5nZSB3aXRoIA0KZGlmZmVyZW50IHBhY2thZ2VzIGxpa2UgeW91IG1lbnRpb25lZC4N
+Cg0KPiBhbmQgd2hlbiBSWi9BMnggd2lsbA0KPiBjb21lIGFuZCBoYXMgZGlmZmVyZW50IHBpbnMg
+cGVyIHBvcnQgaXQncw0KPiBlYXN5IGZvciBkZXZlbG9wZXJzIHRvIGlkZW50aWZ5IHRoZSBkaWZm
+ZXJlbmNlcyAoYnV0IHRoaXMNCj4gZGVwZW5kcyBvbiB0aGUgcGFja2FnZSB0b28sIHNvIGl0J3Mg
+bm90IHRoYXQgZWFzeSBhcyBJJ20gcHV0dGluZyBpdA0KPiBoZXJlIHByb2JhYmx5KQ0KDQpZZXMs
+IGFzIHlvdSBzdGFydCB0byBndWVzcyBhYm91dCBkaWZmZXJlbnQgcGFja2FnZXMsIGFuIFJaL0Ey
+eCwgb3IgZXZlbiANCmEgUlovQTMsIGFuZCBhbGwgdGhlIGRpZmZlcmVudCBjb21iaW5hdGlvbnMs
+IGl0IGdldHMgY29tcGxpY2F0ZWQuDQoNCkhvd2V2ZXIsIHdoYXQgd2lsbCBhbHdheXMgYmUgdHJ1
+ZSBpcyB0aGF0IHRoaXMgcGluIGNvbnRyb2xsZXIgSFcsIG5vDQptYXR0ZXIgd2hhdCBTb0MgaXQg
+aXMgaW4sIHdpbGwgYWx3YXlzIGhhdmUgdGhlIGFiaWxpdHkgdG8gY29udHJvbCA4IHBpbnMNCnBl
+ciBwb3J0LiBTbyB5b3UganVzdCBoYXZlIHRvIHNwZWNpZnkgaG93IG1hbnkgcG9ydHMgaXQgaGFz
+LCBhbmQgdGhlbg0KdGhhdCB3aWxsIGJlIGEgY29ycmVjdCBkZXNjcmlwdGlvbiBvZiB0aGUgaGFy
+ZHdhcmUuDQoNCkNocmlzDQoNCg==
