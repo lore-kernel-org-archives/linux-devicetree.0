@@ -1,156 +1,79 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V3 7/8] arm64: dts: imx: add imx8qxp mek support
-Date: Fri, 19 Oct 2018 08:05:51 +0000
-Message-ID: <DB7PR04MB4218778D66FBD51554D64D6980F90@DB7PR04MB4218.eurprd04.prod.outlook.com>
-References: <1539886483-15775-1-git-send-email-aisheng.dong@nxp.com>
- <1539886483-15775-8-git-send-email-aisheng.dong@nxp.com>
- <20181018202740.GA7262@bogus>
+From: Nava kishore Manne <nava.manne@xilinx.com>
+Subject: [PATCH 2/3] dt-bindings: nvmem: Add bindings for ZynqMP nvmem driver
+Date: Fri, 19 Oct 2018 08:35:48 +0000 (UTC)
+Message-ID: <20181020083603.27602-3-nava.manne@xilinx.com>
+References: <20181020083603.27602-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181018202740.GA7262@bogus>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Date: Sat, 20 Oct 2018 14:06:02 +0530
+In-Reply-To: <20181020083603.27602-1-nava.manne@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, jollys@xilinx.com, rajanv@xilinx.com, nava.manne@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Friday, October 19, 2018 4:28 AM
-> To: A.s. Dong <aisheng.dong@nxp.com>
-[...]
-> On Thu, Oct 18, 2018 at 06:19:43PM +0000, A.s. Dong wrote:
-> > i.MX 8QuadXPlus is a quad (4x) Cortex-A35 proccessor with powerful
-> > graphic and multimedia features. This patch adds imx8qxp mek board
-> > support.
-> >
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: Shawn Guo <shawnguo@kernel.org>
-> > Cc: Sascha Hauer <kernel@pengutronix.de>
-> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> > ---
-> > v2->v3:
-> >  * Pad names update
-> >  * move memory node to here
-> >  * add no-sd and no-sdio under emmc node
-> > ---
-> >  Documentation/devicetree/bindings/arm/fsl.txt |   4 +
-> >  arch/arm64/boot/dts/freescale/Makefile        |   1 +
-> >  arch/arm64/boot/dts/freescale/imx8qxp-mek.dts | 141
-> > ++++++++++++++++++++++++++
-> >  3 files changed, 146 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/fsl.txt
-> > b/Documentation/devicetree/bindings/arm/fsl.txt
-> > index baeb1fc..704472b 100644
-> > --- a/Documentation/devicetree/bindings/arm/fsl.txt
-> > +++ b/Documentation/devicetree/bindings/arm/fsl.txt
-> > @@ -97,6 +97,10 @@ i.MX7 SabreSD Board  Required root node
-> properties:
-> >      - compatible = "fsl,imx7d-sdb", "fsl,imx7d";
-> >
-> > +i.MX8QXP MEK Board
-> > +Required root node properties:
-> > +    - compatible = "fsl,imx8qxp-mek", "fsl,imx8qxp";
-> > +
-> >  Generic i.MX boards
-> >  -------------------
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/Makefile
-> > b/arch/arm64/boot/dts/freescale/Makefile
-> > index 86e18ad..cff87f3 100644
-> > --- a/arch/arm64/boot/dts/freescale/Makefile
-> > +++ b/arch/arm64/boot/dts/freescale/Makefile
-> > @@ -13,3 +13,4 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) +=
-> fsl-ls2080a-rdb.dtb
-> >  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-simu.dtb
-> >  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-qds.dtb
-> >  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-rdb.dtb
-> > +dtb-$(CONFIG_SOC_IMX8QXP) += imx8qxp-mek.dtb
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> > b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> > new file mode 100644
-> > index 0000000..6087ead
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> > @@ -0,0 +1,141 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Copyright 2017~2018 NXP
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "imx8qxp.dtsi"
-> > +
-> > +/ {
-> > +	model = "Freescale i.MX8QXP MEK";
-> > +	compatible = "fsl,imx8qxp-mek", "fsl,imx8qxp";
-> > +
-> > +	chosen {
-> > +		stdout-path = &dma_lpuart0;
-> > +	};
-> > +
-> > +	memory@80000000 {
-> > +		device_type = "memory";
-> > +		reg = <0x00000000 0x80000000 0 0x40000000>;
-> > +	};
-> > +
-> > +	reg_usdhc2_vmmc: usdhc2-vmmc {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "SD1_SPWR";
-> > +		regulator-min-microvolt = <3000000>;
-> > +		regulator-max-microvolt = <3000000>;
-> > +		gpio = <&lsio_gpio4 19 GPIO_ACTIVE_HIGH>;
-> > +		enable-active-high;
-> > +	};
-> > +};
-> > +
-> > +&dma_lpuart0 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_lpuart0>;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&fec1 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_fec1>;
-> > +	phy-mode = "rgmii-id";
-> > +	phy-handle = <&ethphy0>;
-> > +	fsl,magic-packet;
-> > +	status = "okay";
-> > +
-> > +	mdio {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		ethphy0: ethernet-phy@0 {
-> > +			compatible = "ethernet-phy-ieee802.3-c22";
-> 
-> > +			at803x,eee-disabled;
-> > +			at803x,vddio-1p8v;
-> 
-> These 2 are Not documented.
+Add documentation to describe Xilinx ZynqMP nvmem driver
+bindings.
 
-Sorry for missing these.
-They're seemed to be introduce with original local code, as it does not
-Affect the normal function, I will remove them in next patch set.
+Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+---
+Changes for v1:
+		Created a Seperate(New) DT binding file as
+		suggested by Rob.
 
-Thanks for the carefully review.
+Changes for RFC-V3:
+                -None.
 
-Regards
-Dong Aisheng
+Changes for RFC-V2:
+                -Moved nvmem_firmware node as a child to
+                 firwmare node.
+
+ .../bindings/nvmem/xlnx,zynqmp-nvmem.txt           | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt
+
+diff --git a/Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt b/Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt
+new file mode 100644
+index 0000000..0bafb9f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt
+@@ -0,0 +1,37 @@
++--------------------------------------------------------------------------
++=  Zynq UltraScale+ MPSoC nvmem firmware driver binding =
++--------------------------------------------------------------------------
++The nvmem_firmware node provides access to the hardware related data
++like soc revision, IDCODE... etc, By using the firmware interface.
++
++Required properties:
++- compatible: should be "xlnx,zynqmp-nvmem-fw"
++
++= Data cells =
++Are child nodes of silicon id, bindings of which as described in
++bindings/nvmem/nvmem.txt
++
++-------
++ Example
++-------
++	nvmem_firmware {
++		compatible = "xlnx,zynqmp-nvmem-fw";
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		/* Data cells */
++		soc_revision: soc_revision {
++			reg = <0x0 0x4>;
++		};
++	};
++
++= Data consumers =
++Are device nodes which consume nvmem data cells.
++
++For example:
++	pcap {
++		...
++		nvmem-cells = <&soc_revision>;
++		nvmem-cell-names = "soc_revision";
++	};
++
+-- 
+2.7.4
