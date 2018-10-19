@@ -1,68 +1,60 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH] Input: pm8941-pwrkey - Add pms405 pwrkey support
-Date: Fri, 19 Oct 2018 14:35:55 +0530
-Message-ID: <20181019090555.GH2400@vkoul-mobl>
-References: <20180920014928.15422-1-bjorn.andersson@linaro.org>
- <20181018052437.GW2400@vkoul-mobl>
- <20181019000116.GD210757@dtor-ws>
+From: Lars Poeschel <poeschel@lemonage.de>
+Subject: Re: [PATCH v2 2/4] nfc: pn532_uart: Add NXP PN532 to devicetree docs
+Date: Fri, 19 Oct 2018 11:12:21 +0200
+Message-ID: <20181019091221.GB26696@lem-wkst-02.lemonage>
+References: <20181018144251.30028-1-poeschel@lemonage.de>
+ <20181018144251.30028-2-poeschel@lemonage.de>
+ <F2B73CDB-434A-41F5-8A9E-3E4E76DB89C9@holtmann.org>
+ <20181018204129.GA25436@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181019000116.GD210757@dtor-ws>
+In-Reply-To: <20181018204129.GA25436@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Peter Rosin <peda@axentia.se>, Vadim Pasternak <vadimp@mellanox.com>, Lei YU <mine260309@gmail.com>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18-10-18, 17:01, Dmitry Torokhov wrote:
-> On Thu, Oct 18, 2018 at 10:54:37AM +0530, Vinod wrote:
-> > On 19-09-18, 18:49, Bjorn Andersson wrote:
-> > > From: Vinod Koul <vkoul@kernel.org>
+On Thu, Oct 18, 2018 at 03:41:29PM -0500, Rob Herring wrote:
+> On Thu, Oct 18, 2018 at 05:03:13PM +0200, Marcel Holtmann wrote:
+> > Hi Lars,
+> > 
+> > > Add pn532 to the trivial-devices.txt binding doc.
 > > > 
-> > > Update the binding and driver for pms405 pwrkey.
-> > 
-> > Rob, Dmitry
-> > 
-> > Gentle reminder for this patch...
-> > 
-> > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
 > > > ---
-> > >  Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt | 1 +
-> > >  drivers/input/misc/pm8941-pwrkey.c                             | 1 +
-> > >  2 files changed, 2 insertions(+)
+> > > Documentation/devicetree/bindings/trivial-devices.txt | 1 +
+> > > 1 file changed, 1 insertion(+)
 > > > 
-> > > diff --git a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-> > > index 34ab5763f494..736fba3bad54 100644
-> > > --- a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-> > > +++ b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-> > > @@ -8,6 +8,7 @@ PROPERTIES
-> > >  	Definition: must be one of:
-> > >  		    "qcom,pm8941-pwrkey"
-> > >  		    "qcom,pm8941-resin"
-> > > +		    "qcom,pms405-pwrkey"
-> > >  
-> > >  - reg:
-> > >  	Usage: required
-> > > diff --git a/drivers/input/misc/pm8941-pwrkey.c b/drivers/input/misc/pm8941-pwrkey.c
-> > > index 48153e0ca19a..fccf63263c1c 100644
-> > > --- a/drivers/input/misc/pm8941-pwrkey.c
-> > > +++ b/drivers/input/misc/pm8941-pwrkey.c
-> > > @@ -317,6 +317,7 @@ static const struct pm8941_data resin_data = {
-> > >  static const struct of_device_id pm8941_pwr_key_id_table[] = {
-> > >  	{ .compatible = "qcom,pm8941-pwrkey", .data = &pwrkey_data },
-> > >  	{ .compatible = "qcom,pm8941-resin", .data = &resin_data },
-> > > +	{ .compatible = "qcom,pms405-pwrkey", .data = &pwrkey_data },
+> > > diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
+> > > index 763a2808a95c..c580be08a380 100644
+> > > --- a/Documentation/devicetree/bindings/trivial-devices.txt
+> > > +++ b/Documentation/devicetree/bindings/trivial-devices.txt
+> > > @@ -172,6 +172,7 @@ nxp,pcf2129		Real-time clock
+> > > nxp,pcf8523		Real-time Clock
+> > > nxp,pcf8563		Real-time clock/calendar
+> > > nxp,pcf85063		Tiny Real-Time Clock
+> > > +nxp,pn532-uart		NXP PN532 NFC-/RFID-Chip, using UART interface
+> > 
+> > is this really such a trivial device? It doesn’t require any GPIO to enable / reset the NFC chip?
+
+It does not require any additional things like GPIO or Interrupts. These
+are optional and at the moment not supported by the driver.
+
+> Considering it supports multiple interfaces, it is not.
 > 
-> I am sure I asked this question before (in context of a different
-> driver), but why do we need this compatible if we already have
-> pm8941-pwrkey compatible? Isn't pms405-pwrkey compatible with
-> pm8941-pwrkey as far as power key block goes? In which cases do we need
-> new compatibles and when can we reuse existing ones? Rob?
+> The '-uart' can be dropped and the same compatible used for any 
+> of the bus connections because the device is bound based on the bus 
+> type.
 
-Relooking I do think that reuse of pm8941-pwrkey is entirely feasible,
-thanks for the suggestion. We can drop this and I will update DTS
+Ok.
+I drop the '-uart' part from the compatible string and provide a
+seperate, little binding doc, documenting the compatible string used.
 
--- 
-~Vinod
+But does this also have consequences for the already existing -i2c
+driver? This one uses 'nxp,pn532-i2c' as compatible string.
+
+Thanks,
+Lars
