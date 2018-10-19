@@ -1,102 +1,58 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v3 1/2] dt-bindings: uniphier: add bindings for UniPhier SoC family
-Date: Fri, 19 Oct 2018 19:30:17 +0900
-Message-ID: <1539945019-24950-2-git-send-email-yamada.masahiro@socionext.com>
-References: <1539945019-24950-1-git-send-email-yamada.masahiro@socionext.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 13/36] dt-bindings: arm: Convert PMU binding to
+ json-schema
+Date: Fri, 19 Oct 2018 11:34:51 +0100
+Message-ID: <20181019103451.GB14246@arm.com>
+References: <20181005165848.3474-1-robh@kernel.org>
+ <20181005165848.3474-14-robh@kernel.org>
+ <20181009115713.GE6248@arm.com>
+ <CAL_JsqLeG3WUa2peOWFGUoMuonWaWJoU-7A6d8cqXp-_e3B3XA@mail.gmail.com>
+ <20181010165048.GB16512@arm.com>
+ <CAL_Jsq+NExxsksmhA6z5_eTutVkm_NFthayvHz-vvq1gkSeXNA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539945019-24950-1-git-send-email-yamada.masahiro@socionext.com>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+NExxsksmhA6z5_eTutVkm_NFthayvHz-vvq1gkSeXNA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: arm@kernel.org, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the list of SoCs and boards of UniPhier platform.
+Hi Rob,
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
+On Wed, Oct 10, 2018 at 01:51:24PM -0500, Rob Herring wrote:
+> On Wed, Oct 10, 2018 at 11:50 AM Will Deacon <will.deacon@arm.com> wrote:
+> > On Tue, Oct 09, 2018 at 01:14:02PM -0500, Rob Herring wrote:
+> > > I guess the single interrupt case is less obvious now with no
+> > > description (it's the first list item of 'oneOf'). The schema If the
+> > > single interrupt is not supported, then we can drop it here.
+> >
+> > Well the description says "1 interrupt per core" which is incorrect.
+> 
+> You are reading the schema wrong. There are 2 cases supported as
+> defined by each '-'. The 2nd case is all the keywords until the
+> indentation decreases. So 'description' is just description of the 2nd
+> case. The first case is just "maxItems: 1". I probably didn't put a
+> description because why write in free form text what the schema says
+> (other than of course no one knows json-schema...).
 
-Changes in v3:
-  - Capitalize 'Board' consistently
-  - Add Rob's Reviewed-by
+Apologies, I've not read one of these things before and looks like I
+completely misread it.
 
-Changes in v2:
-  Changes suggested by Rob.
-  - Move the file to
-    Documentation/devicetree/bindings/arm/socionext/uniphier.txt
-  - Group boards by each SoC
-  Previous post:
-  v1: https://patchwork.ozlabs.org/patch/842010/
+> YAML combines the best of Makefiles and python. You can't have tabs
+> and Indentation is significant. :)
 
- .../devicetree/bindings/arm/socionext/uniphier.txt | 47 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/socionext/uniphier.txt
+Oh wow, I'm in way over my head here!
 
-diff --git a/Documentation/devicetree/bindings/arm/socionext/uniphier.txt b/Documentation/devicetree/bindings/arm/socionext/uniphier.txt
-new file mode 100644
-index 0000000..b3ed103
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/socionext/uniphier.txt
-@@ -0,0 +1,47 @@
-+Socionext UniPhier SoC family
-+-----------------------------
-+
-+Required properties in the root node:
-+  - compatible: should contain board and SoC compatible strings
-+
-+SoC and board compatible strings:
-+  (sorted chronologically)
-+
-+  - LD4 SoC:  "socionext,uniphier-ld4"
-+      - Reference Board: "socionext,uniphier-ld4-ref"
-+
-+  - Pro4 SoC: "socionext,uniphier-pro4"
-+      - Reference Board: "socionext,uniphier-pro4-ref"
-+      - Ace Board:       "socionext,uniphier-pro4-ace"
-+      - Sanji Board:     "socionext,uniphier-pro4-sanji"
-+
-+  - sLD8 SoC: "socionext,uniphier-sld8"
-+      - Reference Board: "socionext,uniphier-sld8-ref"
-+
-+  - PXs2 SoC: "socionext,uniphier-pxs2"
-+      - Gentil Board:    "socionext,uniphier-pxs2-gentil"
-+      - Vodka Board:     "socionext,uniphier-pxs2-vodka"
-+
-+  - LD6b SoC: "socionext,uniphier-ld6b"
-+      - Reference Board: "socionext,uniphier-ld6b-ref"
-+
-+  - LD11 SoC: "socionext,uniphier-ld11"
-+      - Reference Board: "socionext,uniphier-ld11-ref"
-+      - Global Board:    "socionext,uniphier-ld11-global"
-+
-+  - LD20 SoC: "socionext,uniphier-ld20"
-+      - Reference Board: "socionext,uniphier-ld20-ref"
-+      - Global Board:    "socionext,uniphier-ld20-global"
-+
-+  - PXs3 SoC: "socionext,uniphier-pxs3"
-+      - Reference Board: "socionext,uniphier-pxs3-ref"
-+
-+Example:
-+
-+/dts-v1/;
-+
-+/ {
-+	compatible = "socionext,uniphier-ld20-ref", "socionext,uniphier-ld20";
-+
-+	...
-+};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5e6a1da..87b2c2c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2183,6 +2183,7 @@ M:	Masahiro Yamada <yamada.masahiro@socionext.com>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
- S:	Maintained
-+F:	Documentation/devicetree/bindings/arm/socionext/uniphier.txt
- F:	Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
- F:	Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
- F:	arch/arm/boot/dts/uniphier*
--- 
-2.7.4
+> > I also
+> > don't understand why maxItems is 8.
+> 
+> Humm, I probably just made that up based on GICv2 limitations. What
+> should it be? If there's not any inherit maximum, can we put something
+> reasonable? There's not really any way to express that it should match
+> the number of cores in the system.
+
+What's the largest number you can think of?
+
+Will
