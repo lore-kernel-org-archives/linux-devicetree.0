@@ -1,73 +1,58 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/3] mtd: partitions: Add RedBoot FIS DT bindings
-Date: Fri, 19 Oct 2018 09:06:21 +0200
-Message-ID: <20181019070622.26661-2-linus.walleij@linaro.org>
-References: <20181019070622.26661-1-linus.walleij@linaro.org>
+From: "sudheer.v" <open.sudheer@gmail.com>
+Subject: Re: [[PATCH] 8/9] DMA-UART-Driver-for-AST2500
+Date: Fri, 19 Oct 2018 12:41:56 +0530
+Message-ID: <20181019071154.GE13642@Pilot130>
+References: <1539749466-3912-1-git-send-email-open.sudheer@gmail.com>
+ <1539749466-3912-9-git-send-email-open.sudheer@gmail.com>
+ <20181017060531.GU2400@vkoul-mobl>
+ <351eecd5b1b21893e94f76b34c058c6257b7f837.camel@kernel.crashing.org>
+ <20181018095507.GC2400@vkoul-mobl>
+ <a3fecf7913d6a85a6294afbc5a1a18b7714d6756.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20181019070622.26661-1-linus.walleij@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <a3fecf7913d6a85a6294afbc5a1a18b7714d6756.camel@kernel.crashing.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Vinod <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, Jiri Slaby <jslaby@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Michael Moese <mmoese@suse.de>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Kate Stewart <kstewart@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradea
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree bindings for the RedBoot FIS partition
-format.
+On Fri, Oct 19, 2018 at 10:32:24AM +1100, Benjamin Herrenschmidt wrote:
+> On Thu, 2018-10-18 at 15:25 +0530, Vinod wrote:
+> > 
+> > > It's not a dmaengine driver. It's a serial UART driver that happens to
+> > > use a dedicated DMA engine.
+> > 
+> > Then I see no reason for it to use dmaengine APIs. The framework allows
+> > people to share a controller for many clients, but if you have dedicated
+> > one then you may use it directly
+> 
+> Well... the engine is shared by a few UARTs, they have dedicated rings
+> but there's a common set of regs for interrupt handling etc.
+> 
+> That said, I still think it could be contained within a UART driver,
+> there's little benefit in adding the framework overhead, esp since
+> these are really weak cores, any overhead will be felt.
+> 
+> Ben.
+> 
+> > > It's unclear whether it should be split into two drivers, or just have
+> > > the serial driver directly use the dma engine since that engine is
+> > > dedicated in HW to only work on those UARTs and nothing else...
+> > > 
+> > > Cheers,
+> > > Ben.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- .../bindings/mtd/partitions/redboot-fis.txt   | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/partitions/redboot-fis.txt
+Initially we wanted to have  a single driver,
+however we had an informal discussion with one of the maintainer 
+and based on the feedback, followed the Linux DMA and UART architecture.
 
-diff --git a/Documentation/devicetree/bindings/mtd/partitions/redboot-fis.txt b/Documentation/devicetree/bindings/mtd/partitions/redboot-fis.txt
-new file mode 100644
-index 000000000000..fd0ebe4e3415
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/partitions/redboot-fis.txt
-@@ -0,0 +1,27 @@
-+RedBoot FLASH Image System (FIS) Partitions
-+===========================================
-+
-+The FLASH Image System (FIS) directory is a flash description
-+format closely associated with the RedBoot boot loader.
-+
-+It uses one single flash eraseblock in the flash to store an index of
-+all images in the flash.
-+
-+This block size will vary depending on flash but is typically
-+32 KB in size.
-+
-+Required properties:
-+- compatible : (required) must be "redboot-fis"
-+- fis-index-block : (required) a index to the eraseblock containing
-+  the FIS directory on this device. On a flash memory with 32KB
-+  eraseblocks, 0 means the first eraseblock at 0x00000000, 1 means the
-+  second eraseblock at 0x00008000 and so on.
-+
-+Example:
-+
-+flash@0 {
-+	partitions {
-+		compatible = "redboot-fis";
-+		fis-index-block = <0>;
-+	};
-+};
--- 
-2.17.2
+If this seperate DMA-engine driver adds more overhead than benifit,
+we will merge them into a single UART driver and resubmitt the patches.
+Vinod,
+      can this dma-controller driver sit under dma subsystem?.
+      or better to move it under UART framework.
 
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Thank you.
+-- Sudheer
