@@ -1,8 +1,7 @@
 From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: [PATCH v2 09/15] mtd: maps: physmap: Fix coding style issues reported
- by checkpatch
-Date: Fri, 19 Oct 2018 09:49:02 +0200
-Message-ID: <20181019074908.13226-10-boris.brezillon@bootlin.com>
+Subject: [PATCH v2 15/15] mtd: maps: physmap: Invert logic on if/else branch
+Date: Fri, 19 Oct 2018 09:49:08 +0200
+Message-ID: <20181019074908.13226-16-boris.brezillon@bootlin.com>
 References: <20181019074908.13226-1-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,111 +21,57 @@ To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Fix the following coding style issues:
-- != NULL and == NULL test replaced by ! (or nothing)
-- split over 80 chars lines
-- add missing braces in multi-line if() {} else {} statements
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 
+It is preferred to have the positive statement on an if/else. While we
+are at it we replace the way we access rom_probe_types.
+
+Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-Reviewed-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 ---
 Changes in v2:
-- Add Ricardo's R-b
+- New patch
 ---
- drivers/mtd/maps/physmap.c | 33 ++++++++++++++++++---------------
- 1 file changed, 18 insertions(+), 15 deletions(-)
+ drivers/mtd/maps/physmap-core.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/mtd/maps/physmap.c b/drivers/mtd/maps/physmap.c
-index 7d30f3524d35..e27051bc5dc6 100644
---- a/drivers/mtd/maps/physmap.c
-+++ b/drivers/mtd/maps/physmap.c
-@@ -38,7 +38,7 @@ static int physmap_flash_remove(struct platform_device *dev)
- 	int i, err;
- 
- 	info = platform_get_drvdata(dev);
--	if (info == NULL)
-+	if (!info)
- 		return 0;
- 
- 	physmap_data = dev_get_platdata(&dev->dev);
-@@ -53,7 +53,7 @@ static int physmap_flash_remove(struct platform_device *dev)
- 	}
- 
- 	for (i = 0; i < info->nmaps; i++) {
--		if (info->mtds[i] != NULL)
-+		if (info->mtds[i])
- 			map_destroy(info->mtds[i]);
- 	}
- 
-@@ -90,10 +90,12 @@ static void physmap_set_vpp(struct map_info *map, int state)
- }
- 
- static const char * const rom_probe_types[] = {
--	"cfi_probe", "jedec_probe", "qinfo_probe", "map_rom", NULL };
-+	"cfi_probe", "jedec_probe", "qinfo_probe", "map_rom", NULL
-+};
- 
- static const char * const part_probe_types[] = {
--	"cmdlinepart", "RedBoot", "afs", NULL };
-+	"cmdlinepart", "RedBoot", "afs", NULL
-+};
- 
+diff --git a/drivers/mtd/maps/physmap-core.c b/drivers/mtd/maps/physmap-core.c
+index 11e6239aadc7..33b77bd9022c 100644
+--- a/drivers/mtd/maps/physmap-core.c
++++ b/drivers/mtd/maps/physmap-core.c
+@@ -437,7 +437,6 @@ static int physmap_flash_pdata_init(struct platform_device *dev)
  static int physmap_flash_probe(struct platform_device *dev)
  {
-@@ -105,11 +107,10 @@ static int physmap_flash_probe(struct platform_device *dev)
+ 	struct physmap_flash_info *info;
+-	const char * const *probe_type;
+ 	int err = 0;
  	int i;
  
- 	physmap_data = dev_get_platdata(&dev->dev);
--	if (physmap_data == NULL)
-+	if (!physmap_data)
- 		return -ENODEV;
+@@ -519,14 +518,18 @@ static int physmap_flash_probe(struct platform_device *dev)
+ 			simple_map_init(&info->maps[i]);
+ 		}
  
--	info = devm_kzalloc(&dev->dev, sizeof(struct physmap_flash_info),
--			    GFP_KERNEL);
-+	info = devm_kzalloc(&dev->dev, sizeof(*info), GFP_KERNEL);
- 	if (!info)
- 		return -ENOMEM;
- 
-@@ -163,13 +164,16 @@ static int physmap_flash_probe(struct platform_device *dev)
- 		simple_map_init(&info->maps[i]);
- 
- 		probe_type = rom_probe_types;
--		if (physmap_data->probe_type == NULL) {
--			for (; info->mtds[i] == NULL && *probe_type != NULL; probe_type++)
--				info->mtds[i] = do_map_probe(*probe_type, &info->maps[i]);
--		} else
--			info->mtds[i] = do_map_probe(physmap_data->probe_type, &info->maps[i]);
-+		if (!physmap_data->probe_type) {
-+			for (; !info->mtds[i] && *probe_type; probe_type++)
-+				info->mtds[i] = do_map_probe(*probe_type,
-+							     &info->maps[i]);
+-		probe_type = rom_probe_types;
+-		if (!info->probe_type) {
+-			for (; !info->mtds[i] && *probe_type; probe_type++)
+-				info->mtds[i] = do_map_probe(*probe_type,
+-							     &info->maps[i]);
+-		} else {
++		if (info->probe_type) {
+ 			info->mtds[i] = do_map_probe(info->probe_type,
+ 						     &info->maps[i]);
 +		} else {
-+			info->mtds[i] = do_map_probe(physmap_data->probe_type,
-+						     &info->maps[i]);
-+		}
++			int j;
++
++			for (j = 0; ARRAY_SIZE(rom_probe_types); j++) {
++				info->mtds[i] = do_map_probe(rom_probe_types[j],
++							     &info->maps[i]);
++				if (info->mtds[i])
++					break;
++			}
+ 		}
  
--		if (info->mtds[i] == NULL) {
-+		if (!info->mtds[i]) {
- 			dev_err(&dev->dev, "map_probe failed\n");
- 			err = -ENXIO;
- 			goto err_out;
-@@ -185,7 +189,7 @@ static int physmap_flash_probe(struct platform_device *dev)
- 		 */
- 		info->cmtd = mtd_concat_create(info->mtds, info->nmaps,
- 					       dev_name(&dev->dev));
--		if (info->cmtd == NULL)
-+		if (!info->cmtd)
- 			err = -ENXIO;
- 	}
- 	if (err)
-@@ -231,7 +235,6 @@ static struct platform_driver physmap_flash_driver = {
- 	},
- };
- 
--
- #ifdef CONFIG_MTD_PHYSMAP_COMPAT
- static struct physmap_flash_data physmap_flash_data = {
- 	.width		= CONFIG_MTD_PHYSMAP_BANKWIDTH,
+ 		if (!info->mtds[i]) {
 -- 
 2.14.1
 
