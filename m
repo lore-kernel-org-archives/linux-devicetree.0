@@ -1,8 +1,8 @@
 From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: [PATCH v2 06/15] mtd: maps: physmap: Remove the MAX_RESOURCES
- limitation
-Date: Fri, 19 Oct 2018 09:48:59 +0200
-Message-ID: <20181019074908.13226-7-boris.brezillon@bootlin.com>
+Subject: [PATCH v2 07/15] mtd: maps: physmap: Check mtd_device_{parse_register,
+ unregister}() ret code
+Date: Fri, 19 Oct 2018 09:49:00 +0200
+Message-ID: <20181019074908.13226-8-boris.brezillon@bootlin.com>
 References: <20181019074908.13226-1-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,9 +22,9 @@ To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Remove the MAX_RESOURCES limitation by dynamically allocating the
-->mtds[] and ->maps[] at probe time based on the number of iomem
-resources attached to the platform device.
+mtd_device_parse_register() and mtd_device_unregister() can fail,
+check their return code and propagate the error to the upper layer
+if needed.
 
 Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 Reviewed-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
@@ -32,120 +32,49 @@ Reviewed-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 Changes in v2:
 - Add Ricardo's R-b
 ---
- drivers/mtd/maps/physmap.c | 44 +++++++++++++++++++++++++++-----------------
- 1 file changed, 27 insertions(+), 17 deletions(-)
+ drivers/mtd/maps/physmap.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/mtd/maps/physmap.c b/drivers/mtd/maps/physmap.c
-index 1d0f6f034a03..86679d149a49 100644
+index 86679d149a49..9b34223c4635 100644
 --- a/drivers/mtd/maps/physmap.c
 +++ b/drivers/mtd/maps/physmap.c
-@@ -22,12 +22,11 @@
- #include <linux/mtd/concat.h>
- #include <linux/io.h>
+@@ -35,7 +35,7 @@ static int physmap_flash_remove(struct platform_device *dev)
+ {
+ 	struct physmap_flash_info *info;
+ 	struct physmap_flash_data *physmap_data;
+-	int i;
++	int i, err;
  
--#define MAX_RESOURCES		4
--
- struct physmap_flash_info {
--	struct mtd_info		*mtds[MAX_RESOURCES];
-+	unsigned int		nmaps;
-+	struct mtd_info		**mtds;
- 	struct mtd_info		*cmtd;
--	struct map_info		maps[MAX_RESOURCES];
-+	struct map_info		*maps;
- 	spinlock_t		vpp_lock;
- 	int			vpp_refcnt;
- };
-@@ -50,7 +49,7 @@ static int physmap_flash_remove(struct platform_device *dev)
+ 	info = platform_get_drvdata(dev);
+ 	if (info == NULL)
+@@ -44,7 +44,10 @@ static int physmap_flash_remove(struct platform_device *dev)
+ 	physmap_data = dev_get_platdata(&dev->dev);
+ 
+ 	if (info->cmtd) {
+-		mtd_device_unregister(info->cmtd);
++		err = mtd_device_unregister(info->cmtd);
++		if (err)
++			return err;
++
+ 		if (info->cmtd != info->mtds[0])
  			mtd_concat_destroy(info->cmtd);
  	}
+@@ -194,8 +197,12 @@ static int physmap_flash_probe(struct platform_device *dev)
  
--	for (i = 0; i < MAX_RESOURCES; i++) {
-+	for (i = 0; i < info->nmaps; i++) {
- 		if (info->mtds[i] != NULL)
- 			map_destroy(info->mtds[i]);
- 	}
-@@ -101,7 +100,6 @@ static int physmap_flash_probe(struct platform_device *dev)
- 	const char * const *part_types;
- 	int err = 0;
- 	int i;
--	int devices_found = 0;
+ 	part_types = physmap_data->part_probe_types ? : part_probe_types;
  
- 	physmap_data = dev_get_platdata(&dev->dev);
- 	if (physmap_data == NULL)
-@@ -114,6 +112,24 @@ static int physmap_flash_probe(struct platform_device *dev)
- 		goto err_out;
- 	}
- 
-+	while (platform_get_resource(dev, IORESOURCE_MEM, info->nmaps))
-+		info->nmaps++;
+-	mtd_device_parse_register(info->cmtd, part_types, NULL,
+-				  physmap_data->parts, physmap_data->nr_parts);
++	err = mtd_device_parse_register(info->cmtd, part_types, NULL,
++					physmap_data->parts,
++					physmap_data->nr_parts);
++	if (err)
++		goto err_out;
 +
-+	if (!info->nmaps)
-+		return -ENODEV;
-+
-+	info->maps = devm_kzalloc(&dev->dev,
-+				  sizeof(*info->maps) * info->nmaps,
-+				  GFP_KERNEL);
-+	if (!info->maps)
-+		return -ENOMEM;
-+
-+	info->mtds = devm_kzalloc(&dev->dev,
-+				  sizeof(*info->mtds) * info->nmaps,
-+				  GFP_KERNEL);
-+	if (!info->mtds)
-+		return -ENOMEM;
-+
- 	if (physmap_data->init) {
- 		err = physmap_data->init(dev);
- 		if (err)
-@@ -122,13 +138,10 @@ static int physmap_flash_probe(struct platform_device *dev)
+ 	return 0;
  
- 	platform_set_drvdata(dev, info);
- 
--	for (i = 0; i < MAX_RESOURCES; i++) {
-+	for (i = 0; i < info->nmaps; i++) {
- 		struct resource *res;
- 
- 		res = platform_get_resource(dev, IORESOURCE_MEM, i);
--		if (!res)
--			break;
--
- 		info->maps[i].virt = devm_ioremap_resource(&dev->dev, res);
- 		if (IS_ERR(info->maps[i].virt)) {
- 			err = PTR_ERR(info->maps[i].virt);
-@@ -159,21 +172,18 @@ static int physmap_flash_probe(struct platform_device *dev)
- 			dev_err(&dev->dev, "map_probe failed\n");
- 			err = -ENXIO;
- 			goto err_out;
--		} else {
--			devices_found++;
- 		}
- 		info->mtds[i]->dev.parent = &dev->dev;
- 	}
- 
--	if (!devices_found) {
--		err = -ENODEV;
--	} else if (devices_found == 1) {
-+	if (info->nmaps == 1) {
- 		info->cmtd = info->mtds[0];
- 	} else {
- 		/*
- 		 * We detected multiple devices. Concatenate them together.
- 		 */
--		info->cmtd = mtd_concat_create(info->mtds, devices_found, dev_name(&dev->dev));
-+		info->cmtd = mtd_concat_create(info->mtds, info->nmaps,
-+					       dev_name(&dev->dev));
- 		if (info->cmtd == NULL)
- 			err = -ENXIO;
- 	}
-@@ -199,7 +209,7 @@ static void physmap_flash_shutdown(struct platform_device *dev)
- 	struct physmap_flash_info *info = platform_get_drvdata(dev);
- 	int i;
- 
--	for (i = 0; i < MAX_RESOURCES && info->mtds[i]; i++)
-+	for (i = 0; i < info->nmaps && info->mtds[i]; i++)
- 		if (mtd_suspend(info->mtds[i]) == 0)
- 			mtd_resume(info->mtds[i]);
- }
+ err_out:
 -- 
 2.14.1
 
