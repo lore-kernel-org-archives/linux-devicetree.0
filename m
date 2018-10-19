@@ -1,34 +1,56 @@
 From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: [PATCH 0/3] Add Bitstream configuration support for ZynqMP
-Date: Fri, 19 Oct 2018 08:47:39 +0000 (UTC)
-Message-ID: <20181020084805.29103-1-nava.manne@xilinx.com>
+Subject: [PATCH 2/3] dt-bindings: fpga: Add bindings for ZynqMP fpga driver
+Date: Fri, 19 Oct 2018 08:47:48 +0000 (UTC)
+Message-ID: <20181020084805.29103-3-nava.manne@xilinx.com>
+References: <20181020084805.29103-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Date: Sat, 20 Oct 2018 14:18:02 +0530
+Date: Sat, 20 Oct 2018 14:18:04 +0530
+In-Reply-To: <20181020084805.29103-1-nava.manne@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: atull@kernel.org, mdf@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, rajanv@xilinx.com, jollys@xilinx.com, nava.manne@xilinx.com, linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chinnikishore369@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This series of patches are created On top of the
-below repo.
-//git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git
-BRANCH: next/drivers.  
+Add documentation to describe Xilinx ZynqMP fpga driver
+bindings.
 
-Nava kishore Manne (3):
-  firmware: xilinx: Add fpga API's
-  dt-bindings: fpga: Add bindings for ZynqMP fpga driver
-  fpga manager: Adding FPGA Manager support for Xilinx zynqmp
+Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+---
+Changes for v1:
+                Created a Seperate(New) DT binding file as
+                suggested by Rob.
 
- .../bindings/fpga/xlnx,zynqmp-pcap-fpga.txt   |  17 ++
- drivers/firmware/xilinx/zynqmp.c              |  46 +++++
- drivers/fpga/Kconfig                          |   9 +
- drivers/fpga/Makefile                         |   1 +
- drivers/fpga/zynqmp-fpga.c                    | 159 ++++++++++++++++++
- include/linux/firmware/xlnx-zynqmp.h          |   4 +
- 6 files changed, 236 insertions(+)
+Changes for RFC-V2:
+                -Moved pcap node as a child to firwmare
+                 node as suggested by Rob.
+
+ .../bindings/fpga/xlnx,zynqmp-pcap-fpga.txt     | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
- create mode 100644 drivers/fpga/zynqmp-fpga.c
 
+diff --git a/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
+new file mode 100644
+index 000000000000..248ff0ee60a8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
+@@ -0,0 +1,17 @@
++--------------------------------------------------------------------------
++Device Tree zynqmp-fpga bindings for the Zynq Ultrascale+ MPSoC controlled
++using ZynqMP SoC firmware interface
++--------------------------------------------------------------------------
++For Bitstream configuration on ZynqMp Soc uses processor configuration
++port(PCAP) to configure the programmable logic(PL) through PS by using
++FW interface.
++
++Required properties:
++- compatible: should contain "xlnx,zynqmp-pcap-fpga"
++
++-------
++Example
++-------
++	zynqmp_pcap: pcap {
++		compatible = "xlnx,zynqmp-pcap-fpga";
++	};
 -- 
 2.18.0
