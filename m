@@ -1,105 +1,113 @@
-From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: Re: [PATCH v3 4/7] dmaengine: stm32-dma: Add DMA/MDMA chaining
- support
-Date: Fri, 19 Oct 2018 11:21:37 +0200
-Message-ID: <fe4469fd-14bf-2031-7eda-babc3eef9cf3@st.com>
-References: <1538139715-24406-1-git-send-email-pierre-yves.mordret@st.com>
- <1538139715-24406-5-git-send-email-pierre-yves.mordret@st.com>
- <20181007160030.GB2372@vkoul-mobl>
- <e9cedfdd-ad90-9123-03bb-34a2e84059c5@st.com>
- <20181010040343.GO2372@vkoul-mobl>
- <d64da587-a680-20c4-7139-f59fd1f299bc@st.com>
- <20181015171403.GM2400@vkoul-mobl>
- <9a375fd3-964f-3d57-9d18-b010e20a4d42@st.com>
- <20181016144432.GR2400@vkoul-mobl>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: [PATCH] ARM: dts: imx6sx-sdb: Add flexcan support
+Date: Fri, 19 Oct 2018 09:42:47 +0000
+Message-ID: <20181019094031.22492-1-qiangqing.zhang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181016144432.GR2400@vkoul-mobl>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "A.s. Dong" <aisheng.dong@nxp.com>, Joakim Zhang <qiangqing.zhang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Dong Aisheng <aisheng.dong@nxp.com>
 
+CAN transceiver is different on RevA and RevB board.
+It's active high on RevA while active low on Rev B.
 
-On 10/16/18 4:44 PM, Vinod wrote:
-> On 16-10-18, 11:19, Pierre Yves MORDRET wrote:
->>
->>
->> On 10/15/18 7:14 PM, Vinod wrote:
->>> On 10-10-18, 09:02, Pierre Yves MORDRET wrote:
->>>>
->>>>
->>>> On 10/10/2018 06:03 AM, Vinod wrote:
->>>>> On 09-10-18, 10:40, Pierre Yves MORDRET wrote:
->>>>>>
->>>>>>
->>>>>> On 10/07/2018 06:00 PM, Vinod wrote:
->>>>>>> On 28-09-18, 15:01, Pierre-Yves MORDRET wrote:
->>>>>>>> This patch adds support of DMA/MDMA chaining support.
->>>>>>>> It introduces an intermediate transfer between peripherals and STM32 DMA.
->>>>>>>> This intermediate transfer is triggered by SW for single M2D transfer and
->>>>>>>> by STM32 DMA IP for all other modes (sg, cyclic) and direction (D2M).
->>>>>>>>
->>>>>>>> A generic SRAM allocator is used for this intermediate buffer
->>>>>>>> Each DMA channel will be able to define its SRAM needs to achieve chaining
->>>>>>>> feature : (2 ^ order) * PAGE_SIZE.
->>>>>>>> For cyclic, SRAM buffer is derived from period length (rounded on
->>>>>>>> PAGE_SIZE).
->>>>>>>
->>>>>>> So IIUC, you chain two dma txns together and transfer data via an SRAM?
->>>>>>
->>>>>> Correct. one DMA is DMAv2 (stm32-dma) and the other is MDMA(stm32-mdma).
->>>>>> Intermediate transfer is between device and memory.
->>>>>> This intermediate transfer is using SDRAM.
->>>>>
->>>>> Ah so you use dma calls to setup mdma xtfers? I dont think that is a
->>>>> good idea. How do you know you should use mdma for subsequent transfer?
->>>>>
->>>>
->>>> When user bindings told to setup chaining intermediate MDMA transfers are always
->>>> triggers.
->>>> For instance if a user requests a Dev2Mem transfer with chaining. From client
->>>> pov this is still a prep_slave_sg. Internally DMAv2 is setup in cyclic mode (in
->>>> double buffer mode indeed => 2 buffer of PAGE_SIZE/2) and destination is SDRAM.
->>>> DMAv2 will flip/flop on those 2 buffers.
->>>> At the same time DMAv2 driver prepares a MDMA SG that will fetch data from those
->>>> 2 buffers in SDRAM and fills final destination memory.
->>>
->>> I am not able to follow is why does it need to be internal, why should
->>> the client not set the two transfers and trigger them?
->>>
->>
->> Client may use or not chaining: defined within DT. API and dynamic are same at
-> 
-> That should be upto client... As a dmaengine driver you should enable
-> data transfer from src to dstn.
-> 
->> driver client level. Moreover driver exposes only DMAv2 and not both DMAv2 and
->> MDMA. This is totally hidden for client. If client sets both this would imply
-> 
-> Why should a controller be hidden from user, I dont see why that would
-> be a good thing
-> 
->> changing all drivers that may want use chaining. Even more to deal with DMAv2
->> and MDMA at its level.
->> Since DMAv2 deals with MDMA, all drivers are same as before. no changes required.
-> 
-> It is not about changes, it is about the SW model you want to have.
-> 
-> The intermediate SRAM transfers should not be made within DMAengine
-> driver, client can chose to have two transfers and couple or not, it is
-> upto them to choose. Sorry I do not like this abstraction and would like
-> to see a cleaner approach
-> 
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+---
+ arch/arm/boot/dts/imx6sx-sdb.dts  |  5 ++++
+ arch/arm/boot/dts/imx6sx-sdb.dtsi | 42 +++++++++++++++++++++++++++++++
+ 2 files changed, 47 insertions(+)
 
-What we have done it to hide all the complexity related to DMA engine:
-synchronization, residue and many other topics solved by this approach. If this
-is up to client to perform intermediate transfer, each client drivers using
-chaining will need to duplicate the required sw.
-This approach is present as a feature from driver pov.
-
-Regards
+diff --git a/arch/arm/boot/dts/imx6sx-sdb.dts b/arch/arm/boot/dts/imx6sx-sd=
+b.dts
+index 6dd9bebfe027..092b8de142a8 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb.dts
++++ b/arch/arm/boot/dts/imx6sx-sdb.dts
+@@ -10,6 +10,11 @@
+=20
+ / {
+ 	model =3D "Freescale i.MX6 SoloX SDB RevB Board";
++
++	/* Transceiver EN/STBY is active low on RevB board */
++	reg_can_stby: regulator-can-stby {
++		gpio =3D <&gpio4 27 GPIO_ACTIVE_LOW>;
++	};
+ };
+=20
+ &i2c1 {
+diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-s=
+db.dtsi
+index f8f31872fa14..e37ec4b396a2 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
++++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+@@ -136,6 +136,20 @@
+ 		regulator-max-microvolt =3D <5000000>;
+ 	};
+=20
++	reg_can_en: regulator-can-en {
++		compatible =3D "regulator-fixed";
++		regulator-name =3D "can-en";
++		regulator-min-microvolt =3D <3300000>;
++		regulator-max-microvolt =3D <3300000>;
++	};
++
++	reg_can_stby: regulator-can-stby {
++		compatible =3D "regulator-fixed";
++		regulator-name =3D "can-stby";
++		regulator-min-microvolt =3D <3300000>;
++		regulator-max-microvolt =3D <3300000>;
++	};
++
+ 	sound {
+ 		compatible =3D "fsl,imx6sx-sdb-wm8962", "fsl,imx-audio-wm8962";
+ 		model =3D "wm8962-audio";
+@@ -202,6 +216,20 @@
+ 	status =3D "okay";
+ };
+=20
++&flexcan1 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_flexcan1>;
++	xceiver-supply =3D <&reg_can_stby>;
++	status =3D "okay";
++};
++
++&flexcan2 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_flexcan2>;
++	xceiver-supply =3D <&reg_can_stby>;
++	status =3D "okay";
++};
++
+ &i2c3 {
+ 	clock-frequency =3D <100000>;
+ 	pinctrl-names =3D "default";
+@@ -397,6 +425,20 @@
+ 			>;
+ 		};
+=20
++		pinctrl_flexcan1: flexcan1grp {
++			fsl,pins =3D <
++				MX6SX_PAD_QSPI1B_DQS__CAN1_TX		0x1b020
++				MX6SX_PAD_QSPI1A_SS1_B__CAN1_RX		0x1b020
++			>;
++		};
++
++		pinctrl_flexcan2: flexcan2grp {
++			fsl,pins =3D <
++				MX6SX_PAD_QSPI1B_SS1_B__CAN2_RX		0x1b020
++				MX6SX_PAD_QSPI1A_DQS__CAN2_TX		0x1b020
++			>;
++		};
++
+ 		pinctrl_gpio_keys: gpio_keysgrp {
+ 			fsl,pins =3D <
+ 				MX6SX_PAD_CSI_DATA04__GPIO1_IO_18 0x17059
+--=20
+2.17.1
