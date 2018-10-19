@@ -1,22 +1,33 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "dt-bindings: spi: add stm32 qspi controller" to the spi tree
-Date: Fri, 19 Oct 2018 13:29:58 +0100 (BST)
-Message-ID: <20181019122958.67B8D1122548@debutante.sirena.org.uk>
-References: <1538725383-19781-2-git-send-email-ludovic.Barre@st.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538725383-19781-2-git-send-email-ludovic.Barre@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.barre@st.com>
-Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, devicetree@vger.kernel.orglinux-spi@vger.kernel.org
+Subject: Applied "ASoC: cs42l51: add mclk support" to the asoc
+	tree
+Date: Fri, 19 Oct 2018 13:33:50 +0100 (BST)
+Message-ID: <20181019123350.D34AD1122548@debutante.sirena.org.uk>
+References: <1539612216-12602-5-git-send-email-olivier.moysan@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1539612216-12602-5-git-send-email-olivier.moysan@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+Cc: mark.rutland@arm.com, robh@kernel.org, alsa-devel@alsa-project.org, olivier.moysan@st.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, arnaud.pouliquen@st.com, tiwai@suse.com, lgirdwood@gmail.com, broonie@kernel.org, mcoquelin.stm32@gmail.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   dt-bindings: spi: add stm32 qspi controller
+   ASoC: cs42l51: add mclk support
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -37,72 +48,45 @@ to this mail.
 Thanks,
 Mark
 
->From 0c0eb3ba9186138b0ffed91e994d473d0f0960cf Mon Sep 17 00:00:00 2001
-From: Ludovic Barre <ludovic.barre@st.com>
-Date: Fri, 5 Oct 2018 09:43:02 +0200
-Subject: [PATCH] dt-bindings: spi: add stm32 qspi controller
+>From 5e8d63a726f8f2fef089515e9a501785cc67dcdc Mon Sep 17 00:00:00 2001
+From: Olivier Moysan <olivier.moysan@st.com>
+Date: Mon, 15 Oct 2018 16:03:36 +0200
+Subject: [PATCH] ASoC: cs42l51: add mclk support
 
-This patch adds the documentation of device tree bindings
-for the STM32 QSPI controller. It is a specialized communication
-interface targeting single, dual or quad SPI Flash memories (NOR/NAND).
+Add MCLK dapm to allow configuration of cirrus CS42l51
+codec as a master clock consumer.
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../bindings/spi/spi-stm32-qspi.txt           | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
+ sound/soc/codecs/cs42l51.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt b/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
-new file mode 100644
-index 000000000000..adeeb63e84b9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
-@@ -0,0 +1,44 @@
-+* STMicroelectronics Quad Serial Peripheral Interface(QSPI)
-+
-+Required properties:
-+- compatible: should be "st,stm32f469-qspi"
-+- reg: the first contains the register location and length.
-+       the second contains the memory mapping address and length
-+- reg-names: should contain the reg names "qspi" "qspi_mm"
-+- interrupts: should contain the interrupt for the device
-+- clocks: the phandle of the clock needed by the QSPI controller
-+- A pinctrl must be defined to set pins in mode of operation for QSPI transfer
-+
-+Optional properties:
-+- resets: must contain the phandle to the reset controller.
-+
-+A spi flash (NOR/NAND) must be a child of spi node and could have some
-+properties. Also see jedec,spi-nor.txt.
-+
-+Required properties:
-+- reg: chip-Select number (QSPI controller may connect 2 flashes)
-+- spi-max-frequency: max frequency of spi bus
-+
-+Optional property:
-+- spi-rx-bus-width: see ./spi-bus.txt for the description
-+
-+Example:
-+
-+qspi: spi@a0001000 {
-+	compatible = "st,stm32f469-qspi";
-+	reg = <0xa0001000 0x1000>, <0x90000000 0x10000000>;
-+	reg-names = "qspi", "qspi_mm";
-+	interrupts = <91>;
-+	resets = <&rcc STM32F4_AHB3_RESET(QSPI)>;
-+	clocks = <&rcc 0 STM32F4_AHB3_CLOCK(QSPI)>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_qspi0>;
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		spi-rx-bus-width = <4>;
-+		spi-max-frequency = <108000000>;
-+		...
-+	};
+diff --git a/sound/soc/codecs/cs42l51.c b/sound/soc/codecs/cs42l51.c
+index 5080d7a3c279..eb40bff54cec 100644
+--- a/sound/soc/codecs/cs42l51.c
++++ b/sound/soc/codecs/cs42l51.c
+@@ -237,6 +237,10 @@ static const struct snd_soc_dapm_widget cs42l51_dapm_widgets[] = {
+ 		&cs42l51_adcr_mux_controls),
+ };
+ 
++static const struct snd_soc_dapm_widget cs42l51_dapm_mclk_widgets[] = {
++	SND_SOC_DAPM_CLOCK_SUPPLY("MCLK")
 +};
++
+ static const struct snd_soc_dapm_route cs42l51_routes[] = {
+ 	{"HPL", NULL, "Left DAC"},
+ 	{"HPR", NULL, "Right DAC"},
+@@ -487,6 +491,10 @@ static struct snd_soc_dai_driver cs42l51_dai = {
+ static int cs42l51_component_probe(struct snd_soc_component *component)
+ {
+ 	int ret, reg;
++	struct snd_soc_dapm_context *dapm;
++
++	dapm = snd_soc_component_get_dapm(component);
++	snd_soc_dapm_new_controls(dapm, cs42l51_dapm_mclk_widgets, 1);
+ 
+ 	/*
+ 	 * DAC configuration
 -- 
 2.19.0.rc2
