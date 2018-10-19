@@ -1,73 +1,93 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [[PATCH] 8/9] DMA-UART-Driver-for-AST2500
-Date: Fri, 19 Oct 2018 10:32:24 +1100
-Message-ID: <a3fecf7913d6a85a6294afbc5a1a18b7714d6756.camel@kernel.crashing.org>
-References: <1539749466-3912-1-git-send-email-open.sudheer@gmail.com>
- <1539749466-3912-9-git-send-email-open.sudheer@gmail.com>
- <20181017060531.GU2400@vkoul-mobl>
- <351eecd5b1b21893e94f76b34c058c6257b7f837.camel@kernel.crashing.org>
- <20181018095507.GC2400@vkoul-mobl>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v4 3/6] dt-bindings: power: Introduce properties to
+ present the battery OCV capacity table
+Date: Fri, 19 Oct 2018 09:50:51 +0800
+Message-ID: <CAMz4kuK7FjFSs0gUENsGekg+0eWyd40yaG6d27A-gMJCG-9_Sw@mail.gmail.com>
+References: <e7c061535f2dcca54d6498405fdd5ed7098b19f9.1539587217.git.baolin.wang@linaro.org>
+ <eb56baf2e2d127067e459b6014516071ba9005c0.1539587217.git.baolin.wang@linaro.org>
+ <20181018165101.GA11562@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181018095507.GC2400@vkoul-mobl>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vinod <vkoul@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kate Stewart <kstewart@linuxfoundation.org>, linux-aspeed@lists.ozlabs.org, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Michael Moese <mmoese@suse.de>, Russell King <linux@armlinux.org.uk>, Christian Borntraeger <borntraeger@de.ibm.com>, Joel Stanley <joel@jms.id.au>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, ShivahShankar Shakarnarayan rao <shivahshankar.shankarnarayanrao@aspeedtech.com>, Rob Herring <robh+dt@kernel.org>, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org, Sudheer V <sudheer.veliseti@aspeedtech.com>, Andrew Jeffery <andrew@aj.id.au>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, "sudheer.v" <open.sudheer@gmail.com>, Philippe
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181018165101.GA11562@bogus>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>, Craig Tatlor <ctatlor97@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-10-18 at 15:25 +0530, Vinod wrote:
-> 
-> > It's not a dmaengine driver. It's a serial UART driver that happens to
-> > use a dedicated DMA engine.
-> 
-> Then I see no reason for it to use dmaengine APIs. The framework allows
-> people to share a controller for many clients, but if you have dedicated
-> one then you may use it directly
+On 19 October 2018 at 00:51, Rob Herring <robh@kernel.org> wrote:
+> On Mon, Oct 15, 2018 at 04:09:22PM +0800, Baolin Wang wrote:
+>> Some battery driver will use the open circuit voltage (OCV) value to look
+>> up the corresponding battery capacity percent in one certain degree Celsius.
+>> Thus this patch provides some battery properties to present the OCV table
+>> temperatures and OCV capacity table values.
+>>
+>> Suggested-by: Sebastian Reichel <sre@kernel.org>
+>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>> ---
+>> Changes from v3:
+>>  - Split binding into one separate patch.
+>>  - Rename ocv-capacity-table-temperatures to ocv-capacity-celsius.
+>>  - Add some words to specify the OCV's unit.
+>>
+>> Changes from v2:
+>>  - Use type __be32 to calculate the table length.
+>>  - Update error messages.
+>>  - Add some helper functions.
+>>
+>> Changes from v1:
+>>  - New patch in v2.
+>> ---
+>>  .../devicetree/bindings/power/supply/battery.txt   |   15 +++++++++++++++
+>>  1 file changed, 15 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+>> index 938d027..1f70e5d 100644
+>> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
+>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+>> @@ -23,6 +23,17 @@ Optional Properties:
+>>   - constant-charge-current-max-microamp: maximum constant input current
+>>   - constant-charge-voltage-max-microvolt: maximum constant input voltage
+>>   - factory-internal-resistance-micro-ohms: battery factory internal resistance
+>> + - ocv-capacity-table-0: An array providing the battery capacity percent
+>> +   with corresponding open circuit voltage (OCV) of the battery, which
+>> +   is used to look up battery capacity according to current OCV value.
+>> +   And the open circuit voltage unit is microvolt.
+>
+> The order percent and voltage is still not clear. I'd guess one way
+> based on the text here, but the example is the opposite. The description
+> here must stand on its own.
 
-Well... the engine is shared by a few UARTs, they have dedicated rings
-but there's a common set of regs for interrupt handling etc.
+Yes, you are right. I will correct the order of ocv-capacity-table-n. Thanks.
 
-That said, I still think it could be contained within a UART driver,
-there's little benefit in adding the framework overhead, esp since
-these are really weak cores, any overhead will be felt.
+>> + - ocv-capacity-table-1: Same as ocv-capacity-table-0
+>> + ......
+>> + - ocv-capacity-table-n: Same as ocv-capacity-table-0
+>> + - ocv-capacity-celsius: An array containing the temperature in degree Celsius,
+>> +   for each of the battery capacity lookup table. The first temperature value
+>> +   specifies the OCV table 0, and the second temperature value specifies the
+>> +   OCV table 1, and so on.
+>>
+>>  Battery properties are named, where possible, for the corresponding
+>>  elements in enum power_supply_property, defined in
+>> @@ -44,6 +55,10 @@ Example:
+>>               constant-charge-current-max-microamp = <900000>;
+>>               constant-charge-voltage-max-microvolt = <4200000>;
+>>               factory-internal-resistance-micro-ohms = <250000>;
+>> +             ocv-capacity-celsius = <(-10) 0 10>;
+>> +             ocv-capacity-table-0 = <4185000 100>, <4113000 95>, <4066000 90>, ...;
+>> +             ocv-capacity-table-1 = <4200000 100>, <4185000 95>, <4113000 90>, ...;
+>> +             ocv-capacity-table-2 = <4250000 100>, <4200000 95>, <4185000 90>, ...;
+>>       };
+>>
+>>       charger: charger@11 {
+>> --
+>> 1.7.9.5
+>>
 
-Ben.
 
-> > It's unclear whether it should be split into two drivers, or just have
-> > the serial driver directly use the dma engine since that engine is
-> > dedicated in HW to only work on those UARTs and nothing else...
-> > 
-> > Cheers,
-> > Ben.
-> > 
-> > 
-> > > While doing resubmission please take some time to understand subsystem
-> > > tags to use. (hint git log <subsystem> will tell you)
-> > > 
-> > > Also series has [[PATCH] 8/9] whereas it should be [PATCH 8/9] please
-> > > let git generate that for you (hint git format-patch start..end does a
-> > > good job)
-> > > 
-> > > > @@ -0,0 +1,1594 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +/*
-> > > > + *   drivers/tty/serial/8250/8250_aspeed_uart_dma.c
-> > > > + *    1. 2018/07/01 Shivah Shankar created
-> > > > + *    2. 2018/08/25 sudheer.veliseti<open.sudheer@gmail.com> modified
-> > > 
-> > > we dont use this log in kernel. I do not see s-o-b by Shivah, that
-> > > should be added. I think he should be author and you need to list
-> > > changes you did..
-> > > 
-> 
-> 
+
+-- 
+Baolin Wang
+Best Regards
