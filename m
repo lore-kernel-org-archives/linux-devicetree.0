@@ -1,56 +1,91 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 4/5] regulator: lochnagar: Add support for the Cirrus
- Logic Lochnagar
-Date: Fri, 19 Oct 2018 12:26:22 +0100
-Message-ID: <20181019112622.GB5895@sirena.org.uk>
-References: <20181019095003.26046-1-ckeepax@opensource.cirrus.com>
- <20181019095003.26046-4-ckeepax@opensource.cirrus.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v3 2/9] dt-bindings: ti-lmu: Remove LM3697
+Date: Fri, 19 Oct 2018 06:42:52 -0500
+Message-ID: <b3d390c8-46bf-2c94-fad5-ec85b1cca2fe@ti.com>
+References: <4fcb91c7-b2b2-798d-8a41-fa1b475086e0@ti.com>
+ <8c1559e1-b703-4c98-8bd9-7c9993bd59f5@gmail.com>
+ <20181012162619.GA28573@bogus> <20181012180312.GB5565@amd>
+ <60cc9238-aba2-aa6a-64a4-2b5e20835549@gmail.com>
+ <CAL_Jsq+Yspr_iNP1eYanvtmiuMf-xNEZ0suDH3tQayV=V5r5=g@mail.gmail.com>
+ <73647af4-0258-49a9-d9b6-eeef7e7813dc@gmail.com>
+ <5c7f03cc-4d45-6010-523d-46721c218731@ti.com> <20181015214512.GA2001@amd>
+ <aa401333-9650-c925-2085-6e6d17b576bd@ti.com> <20181018221048.GA6364@amd>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="b5gNqxB1S1yM7hjW"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181019095003.26046-4-ckeepax@opensource.cirrus.com>
+In-Reply-To: <20181018221048.GA6364@amd>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: lee.jones@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh@kernel.org>, Lee Jones <lee.jones@linaro.org>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 10/18/2018 05:10 PM, Pavel Machek wrote:
+> Hi!
+> 
+>>>>>> Given this one seems to have not really been finished, it's probably
+>>>>>> okay to make changes in this case. Still, it would be good to see
+>>>>>> patches structured so that it's obvious we're breaking things. But how
+>>>>>> the patches are structured doesn't matter until there's some agreement
+>>>>>> on the end result.
+>>>>>
+>>>>> OK, so if I'm getting it right, the correct patch structure in this case
+>>>>> means that changes removing bindings from MFD and moving them along
+>>>>> with the modifications to the LED subsystem should be placed in a single
+>>>>> patch.
+>>>>>
+>>>>> Dan, could you please arrange the next patch set version accordingly?
+>>>>
+>>>> Yes I can squash the DT bindings patches and call it a "move and modify"
+>>>
+>>> You can do move without problems. But if you plan to modify them,
+>>> please try to change as little as possible, make it separate patch and
+>>> explain why new version is better than old one.
+>>>
+>>
+>> I have been thinking of how to do this.  Since the 2 devices are part of the current
+>> binding there really is not a way to move them.  Since there are still MFD capable
+>> devices available.
+>>
+>> I would still need to remove the current active binding and create a new binding in the LED
+>> bindings directory.
+>>
+>> I would have to remove and create in the same patch.
+> 
+> Yeah, and this all is a sign that you should just keep the current
+> binding, and make your code use it, see?
 
---b5gNqxB1S1yM7hjW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Fri, Oct 19, 2018 at 10:50:02AM +0100, Charles Keepax wrote:
+No I don't actually see this as a sign.  This is just operational issues
+nothing to do with actually correcting the incomplete unused bindings.
 
-Please do not submit new versions of already applied patches, please
-submit incremental updates to the existing code.  Modifying existing
-commits creates problems for other users building on top of those
-commits so it's best practice to only change pubished git commits if
-absolutely essential.
+And actually moving and creating the bindings in the same patch makes
+sense as the change is self contained in a single patch and is easier to
+track.
 
-> +++ b/drivers/regulator/lochnagar-regulator.c
-> @@ -0,0 +1,255 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Lochnagar regulator driver
+> 
+> You are free to use Sebastian's updated binding. It has "suggested by:
+> Rob" or something like that on it, so it should be fine.
+> 
+> You can add note to bindings/leds pointing to mfd binding.
+> 
+> Now... this is what I've suggested before. If you don't agree, you may
+> want to contact Tony Lindgren, IIRC he works for TI, too, and might be
+> willing to help.
 
-Please don't mix C and C++ comments like this in the same block, just
-have it be a C++ block so it looks consistent.
+I will ping Tony just to close the loop.  I will be posting v4 today after making the changes.
+I was hoping to have some code review prior to posting v4 but have not received any comments so
+v4 will just be a patch rearrangement.
 
---b5gNqxB1S1yM7hjW
-Content-Type: application/pgp-signature; name="signature.asc"
+Dan
 
------BEGIN PGP SIGNATURE-----
+> 
+> Thank you,
+> 									Pavel
+> 
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlvJv14ACgkQJNaLcl1U
-h9CEHQf+PHqc2tgv1Kfy2yfK7QJ0WcQGfD+cYkoRa+izvWVAHfElb/sZmJouxUkb
-NYZDF51pizrkjR7p+/0Y4HaXJAYwygYO0GGdk6sWUASW10yobyHyCeZsJQWU2eyo
-2GHUsm2RB/5dgLV8azPhazUNdI1UNmWYsvMkoh07cj1I/9BQdS/XoYPzx/ePFtf0
-IMWE+mhP4nfGAY5GuS8JlGVHLZaMQU6L38J/J4/RgK3+H4+7eB8N4I0EFsGYcSfU
-IXxNZsGvmObRQ2bSWs+tJV8IfcufGj+f/kv66ooh5Y1AIVhrksO6kauugASyIs4u
-WQ4G2lPTapbOAOAysu0V2JZlQyFQPA==
-=devJ
------END PGP SIGNATURE-----
 
---b5gNqxB1S1yM7hjW--
+-- 
+------------------
+Dan Murphy
