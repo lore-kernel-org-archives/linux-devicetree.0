@@ -1,81 +1,217 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: serial: add documentation for the
- SiFive UART driver
-Date: Fri, 19 Oct 2018 15:45:57 -0500
-Message-ID: <CAL_JsqJBSqaxnETdJg1Mdp+H2ay+WKT0JaxLe6D4Fwo_99qUkw@mail.gmail.com>
-References: <20181019184827.12351-1-paul.walmsley@sifive.com> <20181019184827.12351-2-paul.walmsley@sifive.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ
+ Firmware bindings
+Date: Fri, 19 Oct 2018 14:30:13 -0700
+Message-ID: <20181019213013.GW22824@google.com>
+References: <1539257761-23023-1-git-send-email-tdas@codeaurora.org>
+ <1539257761-23023-2-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181019184827.12351-2-paul.walmsley@sifive.com>
+Content-Disposition: inline
+In-Reply-To: <1539257761-23023-2-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul@pwsan.com>
+To: Taniya Das <tdas@codeaurora.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 19, 2018 at 1:48 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->
-> Add DT binding documentation for the Linux driver for the SiFive
-> asynchronous serial IP block.  Nothing too exotic.
->
-> Cc: linux-serial@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Paul Walmsley <paul@pwsan.com>
+On Thu, Oct 11, 2018 at 05:06:00PM +0530, Taniya Das wrote:
+> Add QCOM cpufreq firmware device bindings for Qualcomm Technology Inc's
+> SoCs. This is required for managing the cpu frequency transitions which are
+> controlled by the hardware engine.
+> 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
 > ---
->  .../bindings/serial/sifive-serial.txt         | 21 +++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.txt
->
-> diff --git a/Documentation/devicetree/bindings/serial/sifive-serial.txt b/Documentation/devicetree/bindings/serial/sifive-serial.txt
+>  .../bindings/cpufreq/cpufreq-qcom-hw.txt           | 173 +++++++++++++++++++++
+>  1 file changed, 173 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
 > new file mode 100644
-> index 000000000000..8982338512f5
+> index 0000000..712643f
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/sifive-serial.txt
-> @@ -0,0 +1,21 @@
-> +SiFive asynchronous serial interface (UART)
+> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+> @@ -0,0 +1,173 @@
+> +Qualcomm Technologies, Inc. CPUFREQ Bindings
 > +
-> +Required properties:
+> +CPUFREQ HW is a hardware engine used by some Qualcomm Technologies, Inc. (QTI)
+> +SoCs to manage frequency in hardware. It is capable of controlling frequency
+> +for multiple clusters.
 > +
-> +- compatible: should be "sifive,fu540-c000-uart0" or "sifive,uart0"
-
-I assume once again, the last '0' is a version? As I mentioned for the
-intc and now the pwm block bindings, if you are going to do version
-numbers please document the versioning scheme. Palmer mentioned the
-compatible string is part of the IP block repository? Where does the
-number come from? What's the next version? Major vs. minor versions?
-ECO fixes? Is the version s/w readable? How do you ensure it gets
-updated? All that should be addressed.
-
-Otherwise, don't do version numbers because we have no visibility to
-what they mean.
-
-> +- reg: address and length of the register space
-> +- interrupt-parent: should contain a phandle pointing to the SoC interrupt
-> +    controller device node that the UART interrupts are connected to
-
-Don't need to document interrupt-parent here.
-
-> +- interrupts: Should contain the UART interrupt identifier
-> +- clocks: Should contain a clock identifier for the UART's parent clock
+> +Properties:
+> +- compatible
+> +	Usage:		required
+> +	Value type:	<string>
+> +	Definition:	must be "qcom,cpufreq-hw".
+> +
+> +- clocks
+> +	Usage:		required
+> +	Value type:	<phandle> From common clock binding.
+> +	Definition:	clock handle for XO clock and GPLL0 clock.
+> +
+> +- clock-names
+> +	Usage:		required
+> +	Value type:	<string> From common clock binding.
+> +	Definition:	must be "xo", "cpu_clk".
+> +
+> +- reg
+> +	Usage:		required
+> +	Value type:	<prop-encoded-array>
+> +	Definition:	Addresses and sizes for the memory of the HW bases in
+> +			each frequency domain.
+> +- reg-names
+> +	Usage:		Optional
+> +	Value type:	<string>
+> +	Definition:	Frequency domain name i.e.
+> +			"freq-domain0", "freq-domain1".
+> +
+> +- freq-domain-cells:
+> +	Usage:		required.
+> +	Definition:	Number of cells in a freqency domain specifier.
+> +
+> +* Property qcom,freq-domain
+> +Devices supporting freq-domain must set their "qcom,freq-domain" property with
+> +phandle to a cpufreq_hw followed by the Domain ID(0/1) in the CPU DT node.
 > +
 > +
 > +Example:
 > +
-> +uart0: serial@10010000 {
-> +       compatible = "sifive,uart0";
-> +       interrupt-parent = <&plic0>;
-> +       interrupts = <80>;
-> +       reg = <0x0 0x10010000 0x0 0x1000>;
-> +       clocks = <&prci PRCI_CLK_TLCLK>;
-> +};
-> --
-> 2.19.1
->
+> +Example 1: Dual-cluster, Quad-core per cluster. CPUs within a cluster switch
+> +DCVS state together.
+> +
+> +/ {
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		CPU0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x0>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_0>;
+> +			qcom,freq-domain = <&cpufreq_hw 0>;
+> +			L2_0: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +				L3_0: l3-cache {
+> +				      compatible = "cache";
+> +				};
+> +			};
+> +		};
+> +
+> +		CPU1: cpu@100 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x100>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_100>;
+> +			qcom,freq-domain = <&cpufreq_hw 0>;
+> +			L2_100: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU2: cpu@200 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x200>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_200>;
+> +			qcom,freq-domain = <&cpufreq_hw 0>;
+> +			L2_200: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU3: cpu@300 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x300>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_300>;
+> +			qcom,freq-domain = <&cpufreq_hw 0>;
+> +			L2_300: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU4: cpu@400 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x400>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_400>;
+> +			qcom,freq-domain = <&cpufreq_hw 1>;
+> +			L2_400: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU5: cpu@500 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x500>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_500>;
+> +			qcom,freq-domain = <&cpufreq_hw 1>;
+> +			L2_500: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU6: cpu@600 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x600>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_600>;
+> +			qcom,freq-domain = <&cpufreq_hw 1>;
+> +			L2_600: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU7: cpu@700 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x700>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_700>;
+> +			qcom,freq-domain = <&cpufreq_hw 1>;
+> +			L2_700: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +	};
+> +
+> + soc {
+> +	cpufreq_hw: cpufreq@17d43000 {
+> +		compatible = "qcom,cpufreq-hw";
+> +		reg = <0x17d43000 0x1400>, <0x17d45800 0x1400>;
+> +		reg-names = "freq-domain0", "freq-domain1";
+> +
+> +		clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
+> +		clock-names = "xo", "cpu_clk";
+> +
+> +		#freq-domain-cells = <1>
+
+semicolon is missing.
+
+> +
+
+delete empty line
+
+> +	};
+> +}
+
+Thanks
+
+Matthias
