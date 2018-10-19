@@ -1,147 +1,117 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 4/6] mmc: mediatek: tune CMD/DATA together
-Date: Fri, 19 Oct 2018 10:46:38 +0200
-Message-ID: <51d95ab5-896e-c386-7a3e-362e8a3c2960@gmail.com>
-References: <1539415250-32337-1-git-send-email-chaotian.jing@mediatek.com>
- <1539415250-32337-5-git-send-email-chaotian.jing@mediatek.com>
+From: Nava kishore Manne <nava.manne@xilinx.com>
+Subject: [PATCH 1/3] firmware: xilinx: Add fpga API's
+Date: Fri, 19 Oct 2018 08:47:37 +0000 (UTC)
+Message-ID: <20181020084805.29103-2-nava.manne@xilinx.com>
+References: <20181020084805.29103-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539415250-32337-5-git-send-email-chaotian.jing@mediatek.com>
-Content-Language: en-US
+Date: Sat, 20 Oct 2018 14:18:03 +0530
+In-Reply-To: <20181020084805.29103-1-nava.manne@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chaotian Jing <chaotian.jing@mediatek.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Sean Wang <sean.wang@mediatek.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, jjian.zhou@mediatek.com, wenbin.mei@mediatek.com
+To: atull@kernel.org, mdf@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, rajanv@xilinx.com, jollys@xilinx.com, nava.manne@xilinx.com, linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chinnikishore369@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+This Patch Adds fpga API's to support the Bitstream loading
+by using firmware interface.
 
+Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+---
+Changes for v1:
+		-None.
 
-On 13/10/2018 09:20, Chaotian Jing wrote:
-> for MSDC IP which supports both data tune and async fifo, it can
-> tune cmd/data together. which can save the time and make the tune
-> result of CMD more stable as data line are 4bit or 8bit.
-> 
-> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-> ---
->  drivers/mmc/host/mtk-sd.c | 87 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 87 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> index fe80a1d..09d7e44 100644
-> --- a/drivers/mmc/host/mtk-sd.c
-> +++ b/drivers/mmc/host/mtk-sd.c
-> @@ -1773,12 +1773,98 @@ static int msdc_tune_data(struct mmc_host *mmc, u32 opcode)
->  	return final_delay == 0xff ? -EIO : 0;
->  }
->  
-> +/*
-> + * MSDC IP which supports data tune + async fifo can do CMD/DAT tune
-> + * together, which can save the tuning time.
-> + */
-> +static int msdc_tune_together(struct mmc_host *mmc, u32 opcode)
-> +{
-> +	struct msdc_host *host = mmc_priv(mmc);
-> +	u32 rise_delay = 0, fall_delay = 0;
-> +	struct msdc_delay_phase final_rise_delay, final_fall_delay = { 0,};
-> +	u8 final_delay, final_maxlen;
-> +	u32 tune_reg = host->dev_comp->pad_tune_reg;
-> +	int i, ret;
-> +
-> +	sdr_set_field(host->base + MSDC_PATCH_BIT, MSDC_INT_DAT_LATCH_CK_SEL,
-> +		      host->latch_ck);
-> +
-> +	sdr_clr_bits(host->base + MSDC_IOCON, MSDC_IOCON_RSPL);
-> +	sdr_clr_bits(host->base + MSDC_IOCON,
-> +		     MSDC_IOCON_DSPL | MSDC_IOCON_W_DSPL);
-> +	for (i = 0 ; i < PAD_DELAY_MAX; i++) {
-> +		sdr_set_field(host->base + tune_reg,
-> +			      MSDC_PAD_TUNE_CMDRDLY, i);
-> +		sdr_set_field(host->base + tune_reg,
-> +			      MSDC_PAD_TUNE_DATRRDLY, i);
-> +		ret = mmc_send_tuning(mmc, opcode, NULL);
-> +		if (!ret)
-> +			rise_delay |= (1 << i);
-> +	}
-> +	final_rise_delay = get_best_delay(host, rise_delay);
-> +	/* if rising edge has enough margin, then do not scan falling edge */
-> +	if (final_rise_delay.maxlen >= 12 ||
-> +	    (final_rise_delay.start == 0 && final_rise_delay.maxlen >= 4))
-> +		goto skip_fall;
-> +
-> +	sdr_set_bits(host->base + MSDC_IOCON, MSDC_IOCON_RSPL);
-> +	sdr_set_bits(host->base + MSDC_IOCON,
-> +		     MSDC_IOCON_DSPL | MSDC_IOCON_W_DSPL);
-> +	for (i = 0; i < PAD_DELAY_MAX; i++) {
-> +		sdr_set_field(host->base + tune_reg,
-> +			      MSDC_PAD_TUNE_CMDRDLY, i);
-> +		sdr_set_field(host->base + tune_reg,
-> +			      MSDC_PAD_TUNE_DATRRDLY, i);
-> +		ret = mmc_send_tuning(mmc, opcode, NULL);
-> +		if (!ret)
-> +			fall_delay |= (1 << i);
-> +	}
-> +	final_fall_delay = get_best_delay(host, fall_delay);
-> +
-> +skip_fall:
-> +	final_maxlen = max(final_rise_delay.maxlen, final_fall_delay.maxlen);
-> +	if (final_maxlen == final_rise_delay.maxlen) {
-> +		sdr_clr_bits(host->base + MSDC_IOCON, MSDC_IOCON_RSPL);
-> +		sdr_clr_bits(host->base + MSDC_IOCON,
-> +			     MSDC_IOCON_DSPL | MSDC_IOCON_W_DSPL);
-> +		sdr_set_field(host->base + tune_reg, MSDC_PAD_TUNE_CMDRDLY,
-> +			      final_rise_delay.final_phase);
-> +		sdr_set_field(host->base + tune_reg,
-> +			      MSDC_PAD_TUNE_DATRRDLY,
-> +			      final_rise_delay.final_phase);
-> +		final_delay = final_rise_delay.final_phase;
-> +	} else {
-> +		sdr_set_bits(host->base + MSDC_IOCON, MSDC_IOCON_RSPL);
-> +		sdr_set_bits(host->base + MSDC_IOCON,
-> +			     MSDC_IOCON_DSPL | MSDC_IOCON_W_DSPL);
-> +		sdr_set_field(host->base + tune_reg, MSDC_PAD_TUNE_CMDRDLY,
-> +			      final_fall_delay.final_phase);
-> +		sdr_set_field(host->base + tune_reg,
-> +			      MSDC_PAD_TUNE_DATRRDLY,
-> +			      final_fall_delay.final_phase);
-> +		final_delay = final_fall_delay.final_phase;
-> +	}
-> +
-> +	dev_dbg(host->dev, "Final pad delay: %x\n", final_delay);
-> +	return final_delay == 0xff ? -EIO : 0;
-> +}
-> +
->  static int msdc_execute_tuning(struct mmc_host *mmc, u32 opcode)
->  {
->  	struct msdc_host *host = mmc_priv(mmc);
->  	int ret;
->  	u32 tune_reg = host->dev_comp->pad_tune_reg;
->  
-> +	if (host->dev_comp->data_tune && host->dev_comp->async_fifo) {
-> +		ret = msdc_tune_together(mmc, opcode);
-> +		if (host->hs400_mode) {
-> +			sdr_clr_bits(host->base + MSDC_IOCON,
-> +				     MSDC_IOCON_DSPL | MSDC_IOCON_W_DSPL);
-> +			sdr_set_field(host->base + tune_reg,
-> +				      MSDC_PAD_TUNE_DATRRDLY, 0);
-> +		}
-> +		goto tune_done;
-> +	}
->  	if (host->hs400_mode &&
+Changes for RFC-V2:
+                -New Patch.
 
-Couldn't we put a else if here instead of using a goto?
+ drivers/firmware/xilinx/zynqmp.c     | 46 ++++++++++++++++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h |  4 +++
+ 2 files changed, 50 insertions(+)
 
-Regards,
-Matthias
-
->  	    host->dev_comp->hs400_tune)
->  		ret = hs400_tune_response(mmc, opcode);
-> @@ -1794,6 +1880,7 @@ static int msdc_execute_tuning(struct mmc_host *mmc, u32 opcode)
->  			dev_err(host->dev, "Tune data fail!\n");
->  	}
->  
-> +tune_done:
->  	host->saved_tune_para.iocon = readl(host->base + MSDC_IOCON);
->  	host->saved_tune_para.pad_tune = readl(host->base + tune_reg);
->  	host->saved_tune_para.pad_cmd_tune = readl(host->base + PAD_CMD_TUNE);
-> 
+diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+index 84b3fd2eca8b..38a1ab1be03b 100644
+--- a/drivers/firmware/xilinx/zynqmp.c
++++ b/drivers/firmware/xilinx/zynqmp.c
+@@ -428,6 +428,50 @@ static int zynqmp_pm_clock_getparent(u32 clock_id, u32 *parent_id)
+ 	return ret;
+ }
+ 
++/**
++ * zynqmp_pm_fpga_load - Perform the fpga load
++ * @address:	Address to write to
++ * @size:	pl bitstream size
++ * @flags:
++ *	BIT(0) - Bit-stream type.
++ *		 0 - Full Bit-stream.
++ *		 1 - Partial Bit-stream.
++ *
++ * This function provides access to pmufw. To transfer
++ * the required bitstream into PL.
++ *
++ * Return: Returns status, either success or error+reason
++ */
++static int zynqmp_pm_fpga_load(const u64 address, const u32 size,
++			       const u32 flags)
++{
++	return zynqmp_pm_invoke_fn(PM_FPGA_LOAD, lower_32_bits(address),
++				   upper_32_bits(address), size, flags, NULL);
++}
++
++/**
++ * zynqmp_pm_fpga_get_status - Read value from PCAP status register
++ * @value: Value to read
++ *
++ * This function provides access to the xilfpga library to get
++ * the PCAP status
++ *
++ * Return: Returns status, either success or error+reason
++ */
++static int zynqmp_pm_fpga_get_status(u32 *value)
++{
++	u32 ret_payload[PAYLOAD_ARG_CNT];
++	int ret;
++
++	if (!value)
++		return -EINVAL;
++
++	ret = zynqmp_pm_invoke_fn(PM_FPGA_GET_STATUS, 0, 0, 0, 0, ret_payload);
++	*value = ret_payload[1];
++
++	return ret;
++}
++
+ static const struct zynqmp_eemi_ops eemi_ops = {
+ 	.get_api_version = zynqmp_pm_get_api_version,
+ 	.query_data = zynqmp_pm_query_data,
+@@ -440,6 +484,8 @@ static const struct zynqmp_eemi_ops eemi_ops = {
+ 	.clock_getrate = zynqmp_pm_clock_getrate,
+ 	.clock_setparent = zynqmp_pm_clock_setparent,
+ 	.clock_getparent = zynqmp_pm_clock_getparent,
++	.fpga_load = zynqmp_pm_fpga_load,
++	.fpga_get_status = zynqmp_pm_fpga_get_status,
+ };
+ 
+ /**
+diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+index 015e130431e6..b24400ee630a 100644
+--- a/include/linux/firmware/xlnx-zynqmp.h
++++ b/include/linux/firmware/xlnx-zynqmp.h
+@@ -34,6 +34,8 @@
+ 
+ enum pm_api_id {
+ 	PM_GET_API_VERSION = 1,
++	PM_FPGA_LOAD = 22,
++	PM_FPGA_GET_STATUS,
+ 	PM_QUERY_DATA = 35,
+ 	PM_CLOCK_ENABLE,
+ 	PM_CLOCK_DISABLE,
+@@ -89,6 +91,8 @@ struct zynqmp_pm_query_data {
+ 
+ struct zynqmp_eemi_ops {
+ 	int (*get_api_version)(u32 *version);
++	int (*fpga_load)(const u64 address, const u32 size, const u32 flags);
++	int (*fpga_get_status)(u32 *value);
+ 	int (*query_data)(struct zynqmp_pm_query_data qdata, u32 *out);
+ 	int (*clock_enable)(u32 clock_id);
+ 	int (*clock_disable)(u32 clock_id);
+-- 
+2.18.0
