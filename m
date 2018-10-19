@@ -1,97 +1,86 @@
-From: Alan Douglas <adouglas@cadence.com>
-Subject: RE: [PATCH 1/2] dt-bindings: phy: Document cadence Sierra PHY
- bindings
-Date: Fri, 19 Oct 2018 15:30:33 +0000
-Message-ID: <MWHPR07MB3502E5AD55EE63D83AA640E2D8F90@MWHPR07MB3502.namprd07.prod.outlook.com>
-References: <1538582545-22041-1-git-send-email-adouglas@cadence.com>
- <20181015190929.GA22554@bogus>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3] of: overlay: user space synchronization
+Date: Fri, 19 Oct 2018 11:06:25 -0500
+Message-ID: <CAL_Jsq+=OiXTSSEr4QuiyqCzyrKdH0M8HhmOjVha3SWM5Y62Gw@mail.gmail.com>
+References: <1539736466-28638-1-git-send-email-frowand.list@gmail.com>
+ <20181018193216.GA9971@bogus> <2f99d700-6276-cfa4-8878-4eb161126330@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181015190929.GA22554@bogus>
-Content-Language: en-US
+In-Reply-To: <2f99d700-6276-cfa4-8878-4eb161126330@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "kishon@ti.com" <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Alan Tull <atull@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTUgT2N0b2JlciAyMDE4IDIwOjA5LCBSb2IgSGVycmluZyB3cm90ZToNCj4gT24gV2VkLCBP
-Y3QgMDMsIDIwMTggYXQgMDU6MDI6MjVQTSArMDEwMCwgQWxhbiBEb3VnbGFzIHdyb3RlOg0KPiA+
-IEFkZCBEVCBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIFNpZXJyYSBQSFkuICBUaGUgUEhZIHN1
-cHBvcnRzDQo+ID4gYSBudW1iZXIgb2YgZGlmZmVyZW50IHByb3RvY29scywgaW5jbHVkaW5nIFBD
-SWUgYW5kIFVTQi4NCj4gPg0KPiA+IFRoZSBQSFkgbGFuZXMgbWF5IGJlIGNvbmZpZ3VyZWQgYXMg
-c2luZ2xlIG9yIG11bHRpLWxhbmUgbGlua3MuDQo+ID4gRWFjaCBsaW5rIGlzIHRyZWF0ZWQgYXMg
-YSBzZXBhcmF0ZSBzdWItbm9kZS4gIEZvciBleGFtcGxlLCBpZg0KPiA+IHRoZXJlIGFyZSA0IGxh
-bmVzIGluIHRvdGFsIHRoZSBmaXJzdCAyIG1pZ2h0IGJlIGNvbmZpZ3VyZWQgYXMNCj4gPiBhIG11
-bHRpLWxhbmUgUENJZSBsaW5rIHdoaWxlIHRoZSBvdGhlciB0d28gYXJlIHNpbmdsZSBsYW5lDQo+
-ID4gVVNCIGxpbmtzLCBhbmQgaW4gdGhpcyBjYXNlIHRoZXJlIHdvdWxkIGJlIDMgc3ViLW5vZGVz
-Lg0KPiA+DQo+ID4gVGhlcmUgYXJlIHR3byByZXNldHMgZm9yIHRoZSBQSFkgYmxvY2sgKG9uZSBm
-b3IgQVBCIHJlZ2lzdGVyDQo+ID4gYWNjZXNzLCBvbmUgZm9yIHRoZSBQSFkgbGluaykgYW5kIHNl
-cGFyYXRlIHJlc2V0cyBmb3IgZWFjaA0KPiA+IGxpbmsuICBGb3IgbXVsdGktbGFuZSBsaW5rcywg
-dGhlIHJlc2V0IGNvcnJlc3BvbmRzIHRvIHRoZQ0KPiA+IHJlc2V0IGxpbmUgb24gdGhlIG1hc3Rl
-ciBsYW5lLCB0aGUgcmVzZXRzIG9uIG90aGVyIGxhbmVzDQo+ID4gaGF2ZSBubyBlZmZlY3QuDQo+
-ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbGFuIERvdWdsYXMgPGFkb3VnbGFzQGNhZGVuY2UuY29t
-Pg0KPiA+IC0tLQ0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvY2Rucy1zaWVycmEt
-cGh5LnR4dCAgICB8IDY4ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5n
-ZWQsIDY4IGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvY2Rucy1zaWVycmEtcGh5LnR4dA0KPiA+DQo+ID4g
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvY2Rucy1z
-aWVycmEtcGh5LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvY2Ru
-cy1zaWVycmEtDQo+IHBoeS50eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4
-IDAwMDAwMDAuLjBlMmYzZTMNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9jZG5zLXNpZXJyYS1waHkudHh0DQo+ID4gQEAg
-LTAsMCArMSw2OCBAQA0KPiA+ICtDYWRlbmNlIFNpZXJyYSBQSFkNCj4gPiArLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0NCj4gPiArDQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKy0gY29t
-cGF0aWJsZToJY2RucyxzaWVycmEtcGh5LXQwDQo+ID4gKy0gY2xvY2tzOglNdXN0IGNvbnRhaW4g
-YW4gZW50cnkgaW4gY2xvY2stbmFtZXMuDQo+ID4gKwkJU2VlIC4uL2Nsb2Nrcy9jbG9jay1iaW5k
-aW5ncy50eHQgZm9yIGRldGFpbHMuDQo+ID4gKy0gY2xvY2stbmFtZXM6CU11c3QgYmUgInBoeV9j
-bGsiDQo+ID4gKy0gcmVzZXRzOglNdXN0IGNvbnRhaW4gYW4gZW50cnkgZm9yIGVhY2ggaW4gcmVz
-ZXQtbmFtZXMuDQo+ID4gKwkJU2VlIC4uL3Jlc2V0L3Jlc2V0LnR4dCBmb3IgZGV0YWlscy4NCj4g
-PiArLSByZXNldC1uYW1lczoJTXVzdCBpbmNsdWRlICJzaWVycmFfcmVzZXQiIGFuZCAic2llcnJh
-X2FwYiIgYW5kIG9uZSBmb3IgZWFjaA0KPiA+ICsJCXN1Yi1ub2RlLg0KPiA+ICsJCSJzaWVycmFf
-cmVzZXQiIG11c3QgY29udHJvbCB0aGUgcmVzZXQgbGluZSB0byB0aGUgUEhZLg0KPiA+ICsJCSJz
-aWVycmFfYXBiIiBtdXN0IGNvbnRyb2wgdGhlIHJlc2V0IGxpbmUgdG8gdGhlIEFQQiBQSFkNCj4g
-PiArCQlpbnRlcmZhY2UuDQo+ID4gKwkJVGhlIG5hbWUgb2YgdGhlIHJlc2V0IGZvciBlYWNoIHN1
-Yi1ub2RlIHNob3VsZCBtYXRjaCB0aGUgZnVsbA0KPiA+ICsJCW5hbWUgb2YgdGhlIHN1Yi1ub2Rl
-LiAgVGhlIHN1Yi1ub2RlIHJlc2V0cyBtdXN0IGNvbnRyb2wgdGhlDQo+ID4gKwkJcmVzZXQgbGlu
-ZSBmb3IgdGhlIG1hc3RlciBsYW5lIG9mIHRoZSBzdWItbm9kZS4NCj4gDQo+IEFkZCBhIHJlc2V0
-cyBwcm9wZXJ0eSB0byB0aGUgc3ViLW5vZGVzIGluc3RlYWQuDQo+IA0KV2lsbCBkby4gIEFzIGZh
-ciBhcyBJIGNhbiBzZWUgaXQgcHJldmVudHMgbWUgdXNpbmcgZGV2bV9yZXNldF9jb250cm9sX2dl
-dCgpDQp0aG91Z2gsIHNvIEkgbmVlZCB0byB3b3JrIG91dCB0aGUgYmVzdCB3YXkgdG8gcHV0IHRo
-ZXNlIHJlc2V0cyBvbiByZW1vdmUoKQ0KDQo+ID4gKy0gcmVnOgkJcmVnaXN0ZXIgcmFuZ2UgZm9y
-IHRoZSBQSFkuDQo+ID4gKy0gI2FkZHJlc3MtY2VsbHM6IE11c3QgYmUgMQ0KPiA+ICstICNzaXpl
-LWNlbGxzOglNdXN0IGJlIDANCj4gPiArDQo+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4g
-Ky0gY2RucyxhdXRvY29uZjoJQSBib29sZWFuIHByb3BlcnR5IHdob3NlIHByZXNlbmNlIGluZGlj
-YXRlcyB0aGF0IHRoZQ0KPiA+ICsJCQlQSFkgcmVnaXN0ZXJzIHdpbGwgYmUgY29uZmlndXJlZCBi
-eSBoYXJkd2FyZS4gSWYgbm90DQo+ID4gKwkJCXByZXNlbnQsIGFsbCBzdWItbm9kZSBvcHRpb25h
-bCBwcm9wZXJ0aWVzIG11c3QgYmUNCj4gPiArCQkJcHJvdmlkZWQuDQo+ID4gKw0KPiA+ICtTdWIt
-bm9kZXM6DQo+ID4gKyAgRWFjaCBncm91cCBvZiBQSFkgbGFuZXMgd2l0aCBhIHNpbmdsZSBtYXN0
-ZXIgbGFuZSBzaG91bGQgYmUgcmVwcmVzZW50ZWQgYXMNCj4gPiArICBhIHN1Yi1ub2RlLiBOb3Rl
-IHRoYXQgdGhlIGFjdHVhbCBjb25maWd1cmF0aW9uIG9mIGVhY2ggbGFuZSBpcyBkZXRlcm1pbmVk
-IGJ5DQo+ID4gKyAgaGFyZHdhcmUgc3RyYXBwaW5nLCBhbmQgbXVzdCBtYXRjaCB0aGUgY29uZmln
-dXJhdGlvbiBzcGVjaWZpZWQgaGVyZS4NCj4gPiArDQo+ID4gK1N1Yi1ub2RlIHJlcXVpcmVkIHBy
-b3BlcnRpZXM6DQo+ID4gKy0gI3BoeS1jZWxsczoJR2VuZXJpYyBQSFkgYmluZGluZzsgbXVzdCBi
-ZSAwLg0KPiA+ICsNCj4gPiArU3ViLW5vZGUgb3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiArLSBy
-ZWc6CQkJVGhlIG1hc3RlciBsYW5lIG51bWJlci4gIFRoaXMgaXMgdGhlIGxvd2VzdCBudW1iZXJl
-ZA0KPiA+ICsJCQlsYW5lIGluIHRoZSBsYW5lIGdyb3VwLg0KPiANCj4gSG93IGRvIHlvdSBuYW1l
-IHRoZSBub2RlcyBpZiB0aGlzIGlzIG9wdGlvbmFsPw0KPiANCkknbGwgY2hhbmdlIHRoaXMgdG8g
-YmUgcmVxdWlyZWQuDQoNClRoYW5rcyBmb3IgeW91ciBjb21tZW50cywNCkFsYW4NCg0KPiA+ICst
-IGNkbnMsbnVtLWxhbmVzOglOdW1iZXIgb2YgbGFuZXMgaW4gdGhpcyBncm91cC4gIEZyb20gMSB0
-byA0LiAgVGhlDQo+ID4gKwkJCWdyb3VwIGlzIG1hZGUgdXAgb2YgY29uc2VjdXRpdmUgbGFuZXMu
-DQo+ID4gKy0gY2RucyxwaHktdHlwZToJQ2FuIGJlIFBIWV9UWVBFX1BDSUUgb3IgUEhZX1RZUEVf
-VVNCMywgZGVwZW5kaW5nIG9uDQo+ID4gKwkJCWNvbmZpZ3VyYXRpb24gb2YgbGFuZXMuDQo+ID4g
-Kw0KPiA+ICtFeGFtcGxlOg0KPiA+ICsJcGNpZV9waHk0OiBwY2llLXBoeUBmZDI0MDAwMCB7DQo+
-ID4gKwkJY29tcGF0aWJsZSA9ICJjZG5zLHNpZXJyYS1waHktdDAiOw0KPiA+ICsJCXJlZyA9IDww
-eDAgMHhmZDI0MDAwMCAweDAgMHg0MDAwMD47DQo+ID4gKwkJcmVzZXRzID0gPCZwaHlyc3QgMD4s
-IDwmcGh5cnN0IDE+LCA8JnBoeXJzdCAyPiwgPCZwaHlyc3QgND47DQo+ID4gKwkJcmVzZXQtbmFt
-ZXMgPSAic2llcnJhX3Jlc2V0IiwgInNpZXJyYV9hcGIiLA0KPiA+ICsJCQkJInBjaWVfcGh5QDAi
-LCAicGNpZV9waHlAMiI7DQo+ID4gKwkJY2xvY2tzID0gPCZwaHljbG9jaz47DQo+ID4gKwkJY2xv
-Y2stbmFtZXMgPSAicGh5X2NsayI7DQo+ID4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4g
-KwkJI3NpemUtY2VsbHMgPSA8MD47DQo+ID4gKwkJcGNpZTBfcGh5MDogcGNpZS1waHlAMCB7DQo+
-ID4gKwkJCQlyZWcgPSA8MD47DQo+ID4gKwkJCQljZG5zLG51bS1sYW5lcyA9IDwyPjsNCj4gPiAr
-CQkJCSNwaHktY2VsbHMgPSA8MD47DQo+ID4gKwkJCQljZG5zLHBoeS10eXBlID0gPFBIWV9UWVBF
-X1BDSUU+Ow0KPiA+ICsJCX07DQo+ID4gKwkJcGNpZTBfcGh5MTogcGNpZS1waHlAMiB7DQo+ID4g
-KwkJCQlyZWcgPSA8Mj47DQo+ID4gKwkJCQljZG5zLG51bS1sYW5lcyA9IDwxPjsNCj4gPiArCQkJ
-CSNwaHktY2VsbHMgPSA8MD47DQo+ID4gKwkJCQljZG5zLHBoeS10eXBlID0gPFBIWV9UWVBFX1BD
-SUU+Ow0KPiA+ICsJCX07DQo+ID4gKw0KPiA+IC0tDQo+ID4gMS45LjANCj4gPg0K
+On Thu, Oct 18, 2018 at 7:06 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> On 10/18/18 12:32, Rob Herring wrote:
+> > On Tue, Oct 16, 2018 at 05:34:26PM -0700, frowand.list@gmail.com wrote:
+> >> From: Frank Rowand <frank.rowand@sony.com>
+> >>
+> >> When an overlay is applied or removed, the live devicetree visible in
+> >> /proc/device-tree/, aka /sys/firmware/devicetree/base/, reflects the
+> >> changes.  There is no method for user space to determine whether the
+> >> live devicetree was modified by overlay actions.
+> >
+> > Because userspace has no way to modify the DT and the ways the kernel
+> > can do modifications is limited.
+> >
+> > Do you have an actually need for this outside of testing/development?
+>
+> I do not know if anyone uses /proc/device-tree for anything outside of
+> testing/development.  If we believe that there is no other use of
+> /proc/device-tree we can simply document that there is no expectation
+> that accessors will see a consistent, unchanging /proc/device-tree.
+
+I didn't mean whether /proc/device-tree is used outside of testing. It
+is. The question is whether any users care if there are changes
+happening. If so what is the use case?
+
+kexec used to be one of the main users, but I think it has switched
+over to the exported FDT which matches what the kernel was originally
+passed.
+
+>
+> That would be a much smaller patch.
+>
+>
+> >> Provide a sysfs file, /sys/firmware/devicetree/tree_version,  to allow
+> >> user space to determine if the live devicetree has remained unchanged
+> >> while a series of one or more accesses of /proc/device-tree/ occur.
+> >>
+> >> The use of both (1) dynamic devicetree modifications and (2) overlay
+> >> apply and removal are not supported during the same boot cycle.  Thus
+> >> non-overlay dynamic modifications are not reflected in the value of
+> >> tree_version.
+> >
+> > I'd prefer to see some sort of information on overlays exported and user
+> > space can check if that changed. IIRC, Pantelis had a series to do that
+> > along with a kill switch to prevent further modifications. At least some
+> > of that series only had minor issues to fix.
+>
+> The kill switch addresses a different concern, which was from the security
+> community.  The kill switch is on my todo list.
+
+Yes, but there could be other uses. It's not a big step from wanting
+to know if the DT has changed to wanting to control it changing or
+not.
+
+Perhaps the kill switch needs 2 levels: a temporary freeze and a
+permanent freeze. In any case, they don't seem completely unrelated
+and I don't really want to see userspace ABI added bit by bit.
+
+> I don't remember exactly what info the overlay information export patch
+> provided.  I'll have to go find it and re-read it.
+>
+>
+> > Also, shouldn't we get uevents if the tree changes? Maybe that's not
+>
+> Yes (off the top of my head).  But a shell script accessing /proc/device-tree
+> is not going to get uevents.
+
+No, but userspace can get them. Accessible from a shell script is not
+a requirement of kernel interfaces.
+
+Rob
