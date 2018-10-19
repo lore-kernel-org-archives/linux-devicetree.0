@@ -1,41 +1,35 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V9 18/21] dt-bindings: csky CPU Bindings
-Date: Fri, 19 Oct 2018 10:19:09 +0800
-Message-ID: <20181019021908.GA6298@guoren-Inspiron-7460>
-References: <cover.1539655731.git.ren_guo@c-sky.com>
- <867b2328e3dbaef58d0b5e7fc58e8545d1510951.1539655732.git.ren_guo@c-sky.com>
- <20181018143135.GA22243@bogus>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3] arm64: dts: add LX2160AQDS board support
+Date: Thu, 18 Oct 2018 21:16:50 -0700
+Message-ID: <20181019041648.GA6716@X250>
+References: <20181005081053.27105-1-pankaj.bansal@nxp.com>
+ <20181017160430.22381-1-pankaj.bansal@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20181018143135.GA22243@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, hch@infradead.org, marc.zyngier@arm.com, mark.rutland@arm.com, peterz@infradead.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, c-sky_gcc_upstream@c-sky.com
+In-Reply-To: <20181017160430.22381-1-pankaj.bansal@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Pankaj Bansal <pankaj.bansal@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Vabhav Sharma <vabhav.sharma@nxp.com>, Sriram Dash <sriram.dash@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 18, 2018 at 09:31:35AM -0500, Rob Herring wrote:
-> On Tue, 16 Oct 2018 10:58:37 +0800, Guo Ren wrote:
-> > This patch adds the documentation to describe that how to add cpu nodes in
-> > dts for SMP.
-> > 
-> > Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> > Cc: Rob Herring <robh@kernel.org>
-> > ---
-> > Changelog:
-> >  - Add compatible.
-> >  - Remove status part.
-> > ---
-> > ---
-> >  Documentation/devicetree/bindings/csky/cpus.txt | 73 +++++++++++++++++++++++++
-> >  1 file changed, 73 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/csky/cpus.txt
-> > 
+On Wed, Oct 17, 2018 at 10:32:45AM +0000, Pankaj Bansal wrote:
+> The LX2160A QorIQ Development System (QDS) is a test, evaluation, and
+> development platform, supporting QorIQ LX2160A processor.
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Sriram Dash <sriram.dash@nxp.com>
+> Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
 
-Thx Rob
+Looks good to me.  @Leo, are you okay with it?
 
-Best Regards
- Guo Ren
+Shawn
