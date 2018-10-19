@@ -1,57 +1,52 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 4/8] regulator: stpmic1: add stpmic1 regulator driver
-Date: Fri, 19 Oct 2018 12:50:15 +0100
-Message-ID: <20181019115015.GC5895@sirena.org.uk>
-References: <1539853324-29051-1-git-send-email-p.paillet@st.com>
- <1539853324-29051-5-git-send-email-p.paillet@st.com>
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+Subject: Re: [PATCH v3 4/5] regulator: lochnagar: Add support for the Cirrus
+ Logic Lochnagar
+Date: Fri, 19 Oct 2018 13:02:45 +0100
+Message-ID: <70dcdc5d-73c2-d26f-6228-4bb0bb8ef612@opensource.cirrus.com>
+References: <20181019095003.26046-1-ckeepax@opensource.cirrus.com>
+ <20181019095003.26046-4-ckeepax@opensource.cirrus.com>
+ <20181019112622.GB5895@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="TYecfFk8j8mZq+dy"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1539853324-29051-5-git-send-email-p.paillet@st.com>
+In-Reply-To: <20181019112622.GB5895@sirena.org.uk>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pascal PAILLET-LME <p.paillet@st.com>
-Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
+To: Mark Brown <broonie@kernel.org>, Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: lee.jones@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 19/10/18 12:26, Mark Brown wrote:
+> On Fri, Oct 19, 2018 at 10:50:02AM +0100, Charles Keepax wrote:
+> 
+> Please do not submit new versions of already applied patches, please
+> submit incremental updates to the existing code.  Modifying existing
+> commits creates problems for other users building on top of those
+> commits so it's best practice to only change pubished git commits if
+> absolutely essential.
+> 
+>> +++ b/drivers/regulator/lochnagar-regulator.c
+>> @@ -0,0 +1,255 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Lochnagar regulator driver
+> 
+> Please don't mix C and C++ comments like this in the same block, just
+> have it be a C++ block so it looks consistent.
+> 
 
---TYecfFk8j8mZq+dy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Most SPDX headers on C files that I've looked at have it this way with a
+C++ style comment above a C-style comment, though some don't. license-rules.rst
+doesn't define how or if a SPDX comment line should be merged with the following
+file header comment. I've had a bunch of patches in different subsystems all
+accepted with this mixed format (copied from existing files). Doing the same as
+existing files sounds reasonable but often isn't in the Linux kernel. It's a
+common problem/barrier to kernel programming that existing code isn't a guide
+and there isn't a consistent style across the kernel so one never really knows
+what the coding style is until you've pushed a patch and annoyed a maintainer.
+And then you adopt that style on your next patch and annoy different maintainer.
 
-On Thu, Oct 18, 2018 at 09:02:12AM +0000, Pascal PAILLET-LME wrote:
-
-> +	for (i = 0; i < ARRAY_SIZE(stpmic1_regulator_cfgs); i++) {
-> +		/* Parse DT & find regulators to register */
-> +		init_data = stpmic1_regulators_matches[i].init_data;
-> +		if (init_data)
-> +			init_data->regulator_init = &stpmic1_regulator_parse_dt;
-> +
-> +		rdev = stpmic1_regulator_register(pdev, i, init_data, regul);
-> +		if (IS_ERR(rdev))
-> +			return PTR_ERR(rdev);
-
-This looks mostly good, the only big thing is this - the default is to
-just unconditionally register all the regulators that exist rather than
-only those that are configured on that particular platform.  This is a
-bit simpler and means that all the readback of the configuration for the
-unconfigured regulators is available for diagnostics.  Is there a reason
-not to do that?
-
---TYecfFk8j8mZq+dy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlvJxPYACgkQJNaLcl1U
-h9AVFwf9HuCK1nKd89bM5cuVWMEtrJN5wwS0dwfV9NJNvZ8H5h6NdUcTYb8JASZo
-c2MckaIg5ZWdFkVtQseoT85lrBAtbROJWGrSks44FXy+fmQM6SBosll+LKRavA2b
-1VPuCiyqBHPTUz6+dVUeAQRidxERF+dZdfK2FrJGaw7G96WKeHfg7zQXy4cRNJJ0
-kcfl9qNCYjF7I4FKDqugM0gKnEARpRPThYY0agxvSnJvjsR9HAcEKDNh2BBIrDQG
-acGQE+u8/nDkD6a0Wo8NgQ+V2GsJeSjMgBVUgl+gUFaoEcogr8t0wuAlnG+kvxtX
-/pYld58dINQUYBa8+hAqgvDZK9V+iQ==
-=W0oL
------END PGP SIGNATURE-----
-
---TYecfFk8j8mZq+dy--
+Maybe someone should update license-rules.rst to make a definite statement of the
+style instead of leaving it to become another style that varies across the kernel
+and between files.
