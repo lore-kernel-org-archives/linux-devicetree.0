@@ -1,56 +1,38 @@
-Return-Path: <SRS0=/AVO=NC=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr10065.outbound.protection.outlook.com ([40.107.1.65]:43296
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725884AbeJVJvH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Oct 2018 05:51:07 -0400
-From: Andy Tang <andy.tang@nxp.com>
-Subject: RE: [PATCH 2/3] powerpc: t102x: upgrade the legacy clock node
-Date: Mon, 22 Oct 2018 01:34:41 +0000
-Message-ID: <DB5PR0401MB2213DC3FA17E6B8E42258EDFF3F40@DB5PR0401MB2213.eurprd04.prod.outlook.com>
+Return-Path: <SRS0=T388=NA=buserror.net=oss@kernel.org>
+Message-ID: <bb158670f1556156f17c3a9eefaa0a5e35c1591e.camel@buserror.net>
+From: Scott Wood <oss@buserror.net>
+Date: Sat, 20 Oct 2018 18:53:58 -0500
+In-Reply-To: <20180919073906.34187-2-andy.tang@nxp.com>
 References: <20180919073906.34187-1-andy.tang@nxp.com>
-         <20180919073906.34187-2-andy.tang@nxp.com>
- <bb158670f1556156f17c3a9eefaa0a5e35c1591e.camel@buserror.net>
-In-Reply-To: <bb158670f1556156f17c3a9eefaa0a5e35c1591e.camel@buserror.net>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Scott Wood <oss@buserror.net>, "mturquette@baylibre.com" <mturquette@baylibre.com>
-Cc: "sboyd@kernel.org" <sboyd@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+	 <20180919073906.34187-2-andy.tang@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 2/3] powerpc: t102x: upgrade the legacy clock node
+To: andy.tang@nxp.com, mturquette@baylibre.com
+Cc: sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgU2NvdHQsDQoNClBsZWFzZSBzZWUgbXkgcmVwbHkgaW5saW5lLg0KDQo+IC0tLS0tT3JpZ2lu
-YWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFNjb3R0IFdvb2QgPG9zc0BidXNlcnJvci5uZXQ+DQo+
-IFNlbnQ6IDIwMTjlubQxMOaciDIx5pelIDc6NTQNCj4gVG86IEFuZHkgVGFuZyA8YW5keS50YW5n
-QG54cC5jb20+OyBtdHVycXVldHRlQGJheWxpYnJlLmNvbQ0KPiBDYzogc2JveWRAa2VybmVsLm9y
-Zzsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gbGludXgtY2xr
-QHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDog
-UmU6IFtQQVRDSCAyLzNdIHBvd2VycGM6IHQxMDJ4OiB1cGdyYWRlIHRoZSBsZWdhY3kgY2xvY2sg
-bm9kZQ0KPiANCj4gT24gV2VkLCAyMDE4LTA5LTE5IGF0IDE1OjM5ICswODAwLCBhbmR5LnRhbmdA
-bnhwLmNvbSB3cm90ZToNCj4gPiArY2xvY2tnZW46IGdsb2JhbC11dGlsaXRpZXNAZTEwMDAgew0K
-PiA+ICsJY29tcGF0aWJsZSA9ICJmc2wscW9yaXEtY2xvY2tnZW4iOw0KPiANCj4gV2hlcmUgZG9l
-cyB0aGlzIGNvbXBhdGlibGUgc3RyaW5nIGNvbWUgZnJvbT8NCj4gDQo+ID4gKwkJY29tcGF0aWJs
-ZSA9ICJmc2wsdDEwMjMtY2xvY2tnZW4iOw0KPiA+ICAJfTsNCj4gDQo+IEFuZCBoZXJlIHlvdSBv
-dmVyd3JpdGUgaXQgd2l0aCBvbmx5IHRoZSBjaGlwLXNwZWNpZmljIGNvbXBhdGlibGU/DQo+IA0K
-PiBJcyB0MTAyMyBpbmNvbXBhdGlibGUgd2l0aCBib3RoIGZzbCxxb3JpcS1jbG9ja2dlbi0xLjAg
-YW5kDQo+IGZzbCxxb3JpcS1jbG9ja2dlbi0gMi4wPyAgVGhlIGV4aXN0aW5nIGR0cyBzYXlzIDIu
-MDsgaXMgdGhhdCB3cm9uZz8NCj4gDQo+IEJUVywgYXNzdW1pbmcgaXQgaXMgMi4wIGNvbXBhdGli
-bGUgYW5kIHRodXMgdGhlIHVzZSBvZg0KPiBxb3JpcS1jbG9ja2dlbjIuZHRzaSBpcyBjb3JyZWN0
-LCB0aGUgYmVzdCBjb3Vyc2Ugb2YgYWN0aW9uIGlzIHByb2JhYmx5IHRvIHRvDQo+IHJlbW92ZSB0
-aGUgbGVnYWN5IHN0dWZmIGZyb20gYWxsIGZzbCBjaGlwcywgcmF0aGVyIHRoYW4gaW50cm9kdWNl
-IGEgbmV3IGR0c2kuDQo+IEluIGZhY3QgaXQnZCBiZSBuaWNlIHRvIHNlZSBpdCBhbGwgcmVtb3Zl
-ZCBpbiBhbnkgY2FzZS4gOi0pDQpxb3JpcS1jbG9ja2dlbiouZHRzaSBhcmUgdXNlZCBieSBsZWdh
-Y3kgYmluZGluZ3MuIFRoZSBjb250ZW50cyBhcmUgYWxsIG9mIGxlZ2FjeSBiaW5kaW5ncy4NClRv
-IHVzZSBuZXcgZnJhbWV3b3JrLCBJIGludHJvZHVjZSBhIG5ldyBkdHNpIHdoaWNoIGNvbnRhaW5z
-IG5ldyBiaW5kaW5ncyBhbmQgdXNlZCBmb3IgYWxsIFBQQyBzb2MuDQpBIGNoaXAtc3BlY2lmaWMg
-Y29tcGF0aWJsZSBpcyBuZWVkZWQgYmVjYXVzZSBkcml2ZXIgd2lsbCB1c2UgaXQgdG8gZ2V0IGNo
-aXAtc3BlY2lmaWMgY2xvY2sgdHJlZSBpbmZvcm1hdGlvbi4NClRoZSBjbG9jayBpbmZvcm1hdGlv
-biB3YXMgZGVmaW5lZCBpbiBkcml2ZXIgbm90IGluIGR0cyBpbiBuZXcgZnJhbWV3b3JrLCByZW1l
-bWJlcj8NCg0KVGhpcyBwYXRjaCBzZXQgaXMgdGhlIGZpcnN0IHN0ZXAgdG8gY29udmVydCBpdCB0
-byB1c2luZyBuZXcgZnJhbWV3b3JrLiBBZnRlciBhbGwgdGhlIGNoaXBzIGhhdmUgYmVlbiB1cGRh
-dGVkLA0KdGhlIGxlZ2FjeSBzdHVmZiB3aWxsIGJlIHJlbW92ZWQuIEluY2x1ZGluZyBxb3JpcS1j
-bG9ja2dlbiouZHRzaS4NCj4gDQo+IEFsc28sIHBsZWFzZSBwb3N0IGFueSBwYXRjaGVzIHRoYXQg
-eW91IHdhbnQgbWUgdG8gYXBwbHkgdG8gdGhlDQo+IGxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3Qu
-DQpTdXJlLCBubyBwcm9ibGVtLg0KDQpCUiwNCkFuZHkNCj4gDQo+IC1TY290dA0KDQo=
+On Wed, 2018-09-19 at 15:39 +0800, andy.tang@nxp.com wrote:
+> +clockgen: global-utilities@e1000 {
+> +	compatible = "fsl,qoriq-clockgen";
+
+Where does this compatible string come from?
+
+> +		compatible = "fsl,t1023-clockgen";
+>  	};
+
+And here you overwrite it with only the chip-specific compatible?
+
+Is t1023 incompatible with both fsl,qoriq-clockgen-1.0 and fsl,qoriq-clockgen-
+2.0?  The existing dts says 2.0; is that wrong?
+
+BTW, assuming it is 2.0 compatible and thus the use of qoriq-clockgen2.dtsi is
+correct, the best course of action is probably to to remove the legacy stuff
+from all fsl chips, rather than introduce a new dtsi.  In fact it'd be nice to
+see it all removed in any case. :-)
+
+Also, please post any patches that you want me to apply to the linuxppc-dev
+mailing list.
+
+-Scott
