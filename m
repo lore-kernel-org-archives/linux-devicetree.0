@@ -1,72 +1,43 @@
-From: Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH 0/6] Tracing register accesses with pstore and dynamic
- debug
-Date: Sat, 20 Oct 2018 09:27:19 -0700
-Message-ID: <20181020162719.GA49955@joelaf.mtv.corp.google.com>
-References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
- <20181020052535.GA155509@joelaf.mtv.corp.google.com>
- <1d3ddbe3-d3ac-aa3e-fc9e-36739ddd0c91@codeaurora.org>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: [PATCH] arm64: dts: rockchip: enable HS200 for eMMC on rock64
+Date: Sat, 20 Oct 2018 10:57:56 -0700
+Message-ID: <20181020175756.28072-1-anarsoul@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1d3ddbe3-d3ac-aa3e-fc9e-36739ddd0c91@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Laura Abbott <labbott@redhat.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Colin Cross <ccross@android.com>, Jason Baron <jbaron@akamai.com>, Tony Luck <tony.luck@intel.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, Joe Perches <joe@perches.com>, Jim Cromie <jim.cromie@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-m
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Katsuhiro Suzuki <katsuhiro@katsuster.net>, Matthias Brugger <mbrugger@suse.com>, Douglas Anderson <dianders@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Chen-Yu Tsai <wens@csie.org>, =?UTF-8?q?Kamil=20Trzci=C5=84ski?= <ayufan@ayufan.eu>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Cc: Vasily Khoruzhick <anarsoul@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 20, 2018 at 12:02:37PM +0530, Sai Prakash Ranjan wrote:
-> On 10/20/2018 10:55 AM, Joel Fernandes wrote:
-> > On Sun, Sep 09, 2018 at 01:57:01AM +0530, Sai Prakash Ranjan wrote:
-> > > Hi,
-> > > 
-> > > This patch series adds Event tracing support to pstore and is continuation
-> > > to the RFC patch introduced to add a new tracing facility for register
-> > > accesses called Register Trace Buffer(RTB). Since we decided to not introduce
-> > > a separate framework to trace register accesses and use existing framework
-> > > like tracepoints, I have moved from RFC. Details of the RFC in link below:
-> > > 
-> > > Link: https://lore.kernel.org/lkml/cover.1535119710.git.saiprakash.ranjan@codeaurora.org/
-> > > 
-> > > MSR tracing example given by Steven was helpful in using tracepoints for
-> > > register accesses instead of using separate trace. But just having these
-> > > IO traces would not help much unless we could have them in some persistent
-> > > ram buffer for debugging unclocked access or some kind of bus hang or an
-> > > unexpected reset caused by some buggy driver which happens a lot during
-> > > initial development stages. By analyzing the last few entries of this buffer,
-> > > we could identify the register access which is causing the issue.
-> > 
-> > Hi Sai,
-> > 
-> > I wanted to see if I could make some time to get your patches working. We are
-> > hitting usecases that need something like this as well. Basically devices
-> > hanging and then the ramdump does not tell us much, so in this case pstore
-> > events can be really helpful. This usecase came up last year as well.
-> > 
-> > Anyway while I was going through your patches, I cleaned up some pstore code
-> > as well and I have 3 more patches on top of yours for this clean up. I prefer
-> > we submit the patches together and sync our work together so that there is
-> > least conflict.
-> > 
-> > Here's my latest tree:
-> > https://github.com/joelagnel/linux-kernel/commits/pstore-events
-> > (note that I have only build tested the patches since I just wrote them and
-> > its quite late in the night here ;-))
-> > 
-> 
-> Hi Joel,
-> 
-> Thanks for looking into this. Sure, I will be happy to sync up with you on
+eMMC that's sold by Pine64 can do HS200, rk3328 can do it
+as well, so update DTS to enable it.
 
-Thanks. And added a fourth patch in the tree too.
+Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-> this. I can test your additional patches on top of my pstore patches. BTW,
-> I'm still stuck at copying binary record into pstore and then extract it
-> during read time. Seems like I'm missing something.
-
-Sure, push your latest somewhere and let me know. I'll try to get you unstuck.
-
-thanks,
-
- - Joel
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+index dc20145dd393..bd937d68ca3b 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+@@ -100,6 +100,7 @@
+ &emmc {
+ 	bus-width = <8>;
+ 	cap-mmc-highspeed;
++	mmc-hs200-1_8v;
+ 	non-removable;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
+-- 
+2.19.0
