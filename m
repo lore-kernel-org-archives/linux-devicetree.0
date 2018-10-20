@@ -1,51 +1,52 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v2 1/4] nfc: pn533: add UART phy driver
-Date: Sat, 20 Oct 2018 11:27:33 +0200
-Message-ID: <20181020092733.GV3383@localhost>
-References: <20181018144251.30028-1-poeschel@lemonage.de>
- <6CB47B97-F58D-4162-98C1-8C8C88CE2914@holtmann.org>
- <20181019085728.GA26696@lem-wkst-02.lemonage>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: [PATCH v3 0/2] tty: serial: add DT bindings and serial driver for the SiFive FU540 UART
+Date: Sat, 20 Oct 2018 03:10:44 -0700
+Message-ID: <20181020101045.15991-1-paul.walmsley@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181019085728.GA26696@lem-wkst-02.lemonage>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lars Poeschel <poeschel@lemonage.de>
-Cc: Marcel Holtmann <marcel@holtmann.org>, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, open list <linux-kernel@vger.kernel.org>, "open list:NFC SUBSYSTEM" <linux-wireless@vger.kernel.org>
+To: linux-serial@vger.kernel.org
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Palmer Dabbelt <palmer@sifive.com>, Wesley Terpstra <wesley@sifive.com>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 19, 2018 at 10:57:28AM +0200, Lars Poeschel wrote:
-> On Thu, Oct 18, 2018 at 05:00:28PM +0200, Marcel Holtmann wrote:
+This series adds a serial driver, with console support, for the
+UART IP block present on the SiFive FU540 SoC.  The programming
+model is straightforward, but unique.
 
-> > > --- a/drivers/nfc/pn533/Kconfig
-> > > +++ b/drivers/nfc/pn533/Kconfig
-> > > @@ -25,3 +25,13 @@ config NFC_PN533_I2C
-> > > 
-> > > 	  If you choose to build a module, it'll be called pn533_i2c.
-> > > 	  Say N if unsure.
-> > > +
-> > > +config NFC_PN532_UART
-> > > +	tristate "NFC PN532 device support (UART)”
-> > 
-> > you are missing the "depends on SERIAL_DEV_BUS” here.
-> 
-> Yes, absolutely right. I missed that. I will post a follow-up.
-> 
-> BTW a question:
-> Only enabling SERIAL_DEV_BUS did not suffice for me. I also had to
-> enable SERIAL_DEV_CTRL_TTYPORT, otherwise the probe of the driver was
-> not called. This seems a bit odd to me. This option seems unrelated, but
-> without it, it did not work.
-> 
-> Should I better depend on SERIAL_DEV_CTRL_TTYPORT then ?
+Boot-tested on a SiFive FU540 HiFive-U board (with appropriate patches
+to the DT data).
 
-No, SERIAL_DEV_BUS is the correct (build-time) dependency.
+The patches in this series can also be found at:
 
-In principle, your driver will work with any serdev-controller
-implementation even if we currently only have one of those in the kernel
-(and SERIAL_DEV_CTRL_TTYPORT therefore default to Y whenever
-SERIAL_DEV_BUS is selected).
+https://github.com/sifive/riscv-linux/tree/dev/paulw/serial-v4.19-rc7
 
-Johan
+This third version updates the DT binding documentation per discussion
+with Rob Herring and fixes one additional issue identified by the 0-day
+build system related to MODULE_DEVICE_TABLE.
+
+Paul Walmsley (2):
+  dt-bindings: serial: add documentation for the SiFive UART driver
+  tty: serial: add driver for the SiFive UART
+
+ .../bindings/serial/sifive-serial.txt         |   33 +
+ drivers/tty/serial/Kconfig                    |   24 +
+ drivers/tty/serial/Makefile                   |    1 +
+ drivers/tty/serial/sifive.c                   | 1067 +++++++++++++++++
+ include/uapi/linux/serial_core.h              |    3 +
+ 5 files changed, 1128 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.txt
+ create mode 100644 drivers/tty/serial/sifive.c
+
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: Palmer Dabbelt <palmer@sifive.com>
+Cc: Wesley Terpstra <wesley@sifive.com>
+Cc: linux-serial@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+
+-- 
+2.19.1
