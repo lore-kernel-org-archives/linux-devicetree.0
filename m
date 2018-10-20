@@ -1,64 +1,138 @@
 From: Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: RE: [PATCH] ARM: dts: imx6sx-sdb: Add flexcan support
-Date: Sat, 20 Oct 2018 02:03:34 +0000
-Message-ID: <DB7PR04MB46185B34429D52D0D5F7465CE6FA0@DB7PR04MB4618.eurprd04.prod.outlook.com>
-References: <20181019094031.22492-1-qiangqing.zhang@nxp.com>
- <CAOMZO5AqZrYmc474NjvG1nF94ZNvgHyv7Q3R+QxrLmSN6EhYDw@mail.gmail.com>
+Subject: [PATCH v2 1/1] ARM: dts: imx6sx-sdb: Add flexcan support
+Date: Sat, 20 Oct 2018 02:35:36 +0000
+Message-ID: <20181020023318.21663-1-qiangqing.zhang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOMZO5AqZrYmc474NjvG1nF94ZNvgHyv7Q3R+QxrLmSN6EhYDw@mail.gmail.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "A.s. Dong" <aisheng.dong@nxp.com>, Joakim Zhang <qiangqing.zhang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-DQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogRmFiaW8gRXN0ZXZhbSBbbWFpbHRv
-OmZlc3RldmFtQGdtYWlsLmNvbV0gDQpTZW50OiAyMDE45bm0MTDmnIgxOeaXpSAyMDo1Mg0KVG86
-IEpvYWtpbSBaaGFuZyA8cWlhbmdxaW5nLnpoYW5nQG54cC5jb20+DQpDYzogU2hhd24gR3VvIDxz
-aGF3bmd1b0BrZXJuZWwub3JnPjsgU2FzY2hhIEhhdWVyIDxzLmhhdWVyQHBlbmd1dHJvbml4LmRl
-PjsgU2FzY2hhIEhhdWVyIDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+OyBGYWJpbyBFc3RldmFtIDxm
-YWJpby5lc3RldmFtQG54cC5jb20+OyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPjsg
-Um9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRs
-YW5kQGFybS5jb20+OyBBLnMuIERvbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPjsgb3BlbiBsaXN0
-Ok9QRU4gRklSTVdBUkUgQU5EIEZMQVRURU5FRCBERVZJQ0UgVFJFRSBCSU5ESU5HUyA8ZGV2aWNl
-dHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBsaW51eC1rZXJuZWwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc+OyBtb2RlcmF0ZWQgbGlzdDpBUk0vRlJFRVNDQUxFIElNWCAvIE1YQyBBUk0gQVJD
-SElURUNUVVJFIDxsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+DQpTdWJqZWN0
-OiBSZTogW1BBVENIXSBBUk06IGR0czogaW14NnN4LXNkYjogQWRkIGZsZXhjYW4gc3VwcG9ydA0K
-DQpIaSBKb2FraW0sDQoNCk9uIEZyaSwgT2N0IDE5LCAyMDE4IGF0IDY6NDMgQU0gSm9ha2ltIFpo
-YW5nIDxxaWFuZ3FpbmcuemhhbmdAbnhwLmNvbT4gd3JvdGU6DQo+DQo+IEZyb206IERvbmcgQWlz
-aGVuZyA8YWlzaGVuZy5kb25nQG54cC5jb20+DQo+DQo+IENBTiB0cmFuc2NlaXZlciBpcyBkaWZm
-ZXJlbnQgb24gUmV2QSBhbmQgUmV2QiBib2FyZC4NCj4gSXQncyBhY3RpdmUgaGlnaCBvbiBSZXZB
-IHdoaWxlIGFjdGl2ZSBsb3cgb24gUmV2IEIuDQo+DQo+IFNpZ25lZC1vZmYtYnk6IERvbmcgQWlz
-aGVuZyA8YWlzaGVuZy5kb25nQG54cC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IEpvYWtpbSBaaGFu
-ZyA8cWlhbmdxaW5nLnpoYW5nQG54cC5jb20+DQo+IC0tLQ0KPiAgYXJjaC9hcm0vYm9vdC9kdHMv
-aW14NnN4LXNkYi5kdHMgIHwgIDUgKysrKyAgDQo+IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZzeC1z
-ZGIuZHRzaSB8IDQyICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gIDIgZmlsZXMg
-Y2hhbmdlZCwgNDcgaW5zZXJ0aW9ucygrKQ0KPg0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
-dC9kdHMvaW14NnN4LXNkYi5kdHMgDQo+IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnN4LXNkYi5k
-dHMNCj4gaW5kZXggNmRkOWJlYmZlMDI3Li4wOTJiOGRlMTQyYTggMTAwNjQ0DQo+IC0tLSBhL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2lteDZzeC1zZGIuZHRzDQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L2lteDZzeC1zZGIuZHRzDQo+IEBAIC0xMCw2ICsxMCwxMSBAQA0KPg0KPiAgLyB7DQo+ICAgICAg
-ICAgbW9kZWwgPSAiRnJlZXNjYWxlIGkuTVg2IFNvbG9YIFNEQiBSZXZCIEJvYXJkIjsNCj4gKw0K
-PiArICAgICAgIC8qIFRyYW5zY2VpdmVyIEVOL1NUQlkgaXMgYWN0aXZlIGxvdyBvbiBSZXZCIGJv
-YXJkICovDQo+ICsgICAgICAgcmVnX2Nhbl9zdGJ5OiByZWd1bGF0b3ItY2FuLXN0Ynkgew0KPiAr
-ICAgICAgICAgICAgICAgZ3BpbyA9IDwmZ3BpbzQgMjcgR1BJT19BQ1RJVkVfTE9XPjsNCg0KRG9u
-J3Qgd2UgbmVlZCBhICBncGlvID0gPCZncGlvNCAyNyBHUElPX0FDVElWRV9ISUdIPjsgYW5kIGFs
-c28gYSAiZW5hYmxlLWFjdGl2ZS1oaWdoIiBlbnRyaWVzIGluIHRoZSBpbXg2c3gtc2RiLXJldmEu
-ZHRzPw0KDQpZZXMsIHlvdSBhcmUgcmlnaHQuIEkgd2lsbCBhZGQgdGhlIGVudHJ5IGluIHRoZSBp
-bXg2c3gtc2RiLXJldmEuZHRzLiBUaGFua3MgYSBsb3QhIA0KDQpCUnMsDQpKYW9raW0gWmhhbmcN
-Cg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgt
-YXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJt
-LWtlcm5lbAo=
+From: Dong Aisheng <aisheng.dong@nxp.com>
+
+CAN transceiver is different on RevA and RevB board.
+It's active high on RevA while active low on Rev B.
+
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+---
+ arch/arm/boot/dts/imx6sx-sdb-reva.dts | 12 ++++++++
+ arch/arm/boot/dts/imx6sx-sdb.dts      |  5 ++++
+ arch/arm/boot/dts/imx6sx-sdb.dtsi     | 42 +++++++++++++++++++++++++++
+ 3 files changed, 59 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6=
+sx-sdb-reva.dts
+index 9cc6ff206aea..d98dcf00b9c4 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb-reva.dts
++++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+@@ -10,6 +10,18 @@
+=20
+ / {
+ 	model =3D "Freescale i.MX6 SoloX SDB RevA Board";
++
++	/* Transceiver EN/STBY is active high on RevA board */
++	reg_can_en: regulator-can-en {
++		gpio =3D <&gpio4 25 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	reg_can_stby: regulator-can-stby {
++		gpio =3D <&gpio4 27 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		vin-supply =3D <&reg_can_en>;
++	};
+ };
+=20
+ &i2c1 {
+diff --git a/arch/arm/boot/dts/imx6sx-sdb.dts b/arch/arm/boot/dts/imx6sx-sd=
+b.dts
+index 6dd9bebfe027..092b8de142a8 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb.dts
++++ b/arch/arm/boot/dts/imx6sx-sdb.dts
+@@ -10,6 +10,11 @@
+=20
+ / {
+ 	model =3D "Freescale i.MX6 SoloX SDB RevB Board";
++
++	/* Transceiver EN/STBY is active low on RevB board */
++	reg_can_stby: regulator-can-stby {
++		gpio =3D <&gpio4 27 GPIO_ACTIVE_LOW>;
++	};
+ };
+=20
+ &i2c1 {
+diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-s=
+db.dtsi
+index f8f31872fa14..e37ec4b396a2 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
++++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+@@ -136,6 +136,20 @@
+ 		regulator-max-microvolt =3D <5000000>;
+ 	};
+=20
++	reg_can_en: regulator-can-en {
++		compatible =3D "regulator-fixed";
++		regulator-name =3D "can-en";
++		regulator-min-microvolt =3D <3300000>;
++		regulator-max-microvolt =3D <3300000>;
++	};
++
++	reg_can_stby: regulator-can-stby {
++		compatible =3D "regulator-fixed";
++		regulator-name =3D "can-stby";
++		regulator-min-microvolt =3D <3300000>;
++		regulator-max-microvolt =3D <3300000>;
++	};
++
+ 	sound {
+ 		compatible =3D "fsl,imx6sx-sdb-wm8962", "fsl,imx-audio-wm8962";
+ 		model =3D "wm8962-audio";
+@@ -202,6 +216,20 @@
+ 	status =3D "okay";
+ };
+=20
++&flexcan1 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_flexcan1>;
++	xceiver-supply =3D <&reg_can_stby>;
++	status =3D "okay";
++};
++
++&flexcan2 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_flexcan2>;
++	xceiver-supply =3D <&reg_can_stby>;
++	status =3D "okay";
++};
++
+ &i2c3 {
+ 	clock-frequency =3D <100000>;
+ 	pinctrl-names =3D "default";
+@@ -397,6 +425,20 @@
+ 			>;
+ 		};
+=20
++		pinctrl_flexcan1: flexcan1grp {
++			fsl,pins =3D <
++				MX6SX_PAD_QSPI1B_DQS__CAN1_TX		0x1b020
++				MX6SX_PAD_QSPI1A_SS1_B__CAN1_RX		0x1b020
++			>;
++		};
++
++		pinctrl_flexcan2: flexcan2grp {
++			fsl,pins =3D <
++				MX6SX_PAD_QSPI1B_SS1_B__CAN2_RX		0x1b020
++				MX6SX_PAD_QSPI1A_DQS__CAN2_TX		0x1b020
++			>;
++		};
++
+ 		pinctrl_gpio_keys: gpio_keysgrp {
+ 			fsl,pins =3D <
+ 				MX6SX_PAD_CSI_DATA04__GPIO1_IO_18 0x17059
+--=20
+2.17.1
