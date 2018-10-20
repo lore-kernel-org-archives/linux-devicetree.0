@@ -1,77 +1,73 @@
 From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: [PATCH v3 1/2] dt-bindings: serial: add documentation for the SiFive UART driver
-Date: Sat, 20 Oct 2018 03:10:46 -0700
-Message-ID: <20181020101045.15991-2-paul.walmsley@sifive.com>
-References: <20181020101045.15991-1-paul.walmsley@sifive.com>
+Subject: [PATCH 0/3] clk: add driver for the SiFive FU540 PRCI and PLLs it controls
+Date: Sat, 20 Oct 2018 06:38:21 -0700
+Message-ID: <20181020133823.27103-1-paul.walmsley@sifive.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181020101045.15991-1-paul.walmsley@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-serial@vger.kernel.org
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul@pwsan.com>
+To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, "Wesley W . Terpstra" <wesley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>, Megan Wachs <megan@sifive.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding documentation for the Linux driver for the SiFive
-asynchronous serial IP block.
+Add a driver for the SiFive FU540 PRCI IP block, which handles clock and
+some device reset control for the SiFive FU540 chip.  Also add a driver-
+independent library for the Analog Bits Wide-Range PLL (WRPLL), used by
+the PRCI driver to monitor and control the WRPLL instances on the FU540
+chip.
 
-Cc: linux-serial@vger.kernel.org
+It's been a long time since I've worked on Linux clock code, so Mike &
+Stephen, I'd appreciate a close look at the PRCI driver to make sure
+what it's doing makes sense.
+
+Boot-tested on a SiFive HiFive Unleashed board.  COREPLL rate changes
+and notification were also tested on the same board.
+
+This patch series is also available at:
+
+https://github.com/sifive/riscv-linux/tree/dev/paulw/prci-v4.19-rc7
+
+
+Paul Walmsley (3):
+  clk: analogbits: add Wide-Range PLL library
+  dt-bindings: clk: add documentation for the SiFive PRCI driver
+  clk: sifive: add a driver for the SiFive FU540 PRCI IP block
+
+ .../bindings/clock/sifive/fu540-prci.txt      |  40 ++
+ MAINTAINERS                                   |   6 +
+ drivers/clk/Kconfig                           |   2 +
+ drivers/clk/Makefile                          |   2 +
+ drivers/clk/analogbits/Kconfig                |   3 +
+ drivers/clk/analogbits/Makefile               |   2 +
+ drivers/clk/analogbits/wrpll-cln28hpc.c       | 387 +++++++++++
+ drivers/clk/sifive/Kconfig                    |  18 +
+ drivers/clk/sifive/Makefile                   |   1 +
+ drivers/clk/sifive/fu540-prci.c               | 634 ++++++++++++++++++
+ include/linux/clk/analogbits-wrpll-cln28hpc.h |  99 +++
+ include/linux/clk/sifive-fu540-prci.h         |  27 +
+ 12 files changed, 1221 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/sifive/fu540-prci.txt
+ create mode 100644 drivers/clk/analogbits/Kconfig
+ create mode 100644 drivers/clk/analogbits/Makefile
+ create mode 100644 drivers/clk/analogbits/wrpll-cln28hpc.c
+ create mode 100644 drivers/clk/sifive/Kconfig
+ create mode 100644 drivers/clk/sifive/Makefile
+ create mode 100644 drivers/clk/sifive/fu540-prci.c
+ create mode 100644 include/linux/clk/analogbits-wrpll-cln28hpc.h
+ create mode 100644 include/linux/clk/sifive-fu540-prci.h
+
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Wesley W. Terpstra <wesley@sifive.com>
+Cc: Palmer Dabbelt <palmer@sifive.com>
+Cc: Megan Wachs <megan@sifive.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: devicetree@vger.kernel.org
 Cc: linux-riscv@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Signed-off-by: Paul Walmsley <paul@pwsan.com>
----
-v3: update description and example for compatible strings, per
-    discussion with Rob Herring.
+Cc: linux-clk@vger.kernel.org
 
- .../bindings/serial/sifive-serial.txt         | 33 +++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.txt
-
-diff --git a/Documentation/devicetree/bindings/serial/sifive-serial.txt b/Documentation/devicetree/bindings/serial/sifive-serial.txt
-new file mode 100644
-index 000000000000..a426b18ba049
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/sifive-serial.txt
-@@ -0,0 +1,33 @@
-+SiFive asynchronous serial interface (UART)
-+
-+Required properties:
-+
-+- compatible: should be something similar to
-+	      "sifive,<chip>-uart<version>" for the UART as integrated
-+	      on a particular chip, and "sifive,uart<version>" for the
-+	      general UART IP block programming model.	Supported
-+	      compatible strings as of the date of this writing are:
-+	      "sifive,fu540-c000-uart0" for the SiFive UART v0 as
-+	      integrated onto the SiFive FU540 chip, or "sifive,uart0"
-+	      for the SiFive UART v0 IP block with no chip integration
-+	      tweaks (if any)
-+- reg: address and length of the register space
-+- interrupts: Should contain the UART interrupt identifier
-+- clocks: Should contain a clock identifier for the UART's parent clock
-+
-+
-+UART RTL that corresponds to the IP block version numbers can be found
-+here:
-+
-+https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/uart
-+
-+
-+Example:
-+
-+uart0: serial@10010000 {
-+	compatible = "sifive,fu540-c000-uart0", "sifive,uart0";
-+	interrupt-parent = <&plic0>;
-+	interrupts = <80>;
-+	reg = <0x0 0x10010000 0x0 0x1000>;
-+	clocks = <&prci PRCI_CLK_TLCLK>;
-+};
 -- 
 2.19.1
