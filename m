@@ -1,169 +1,33 @@
 From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: [PATCH 3/3] reset: reset-zynqmp: Adding support for Xilinx zynqmp reset controller.
-Date: Sat, 20 Oct 2018 14:11:07 +0530
-Message-ID: <20181020084107.28251-4-nava.manne@xilinx.com>
-References: <20181020084107.28251-1-nava.manne@xilinx.com>
+Subject: [PATCH 0/3] Add reset driver support for ZynqMP
+Date: Sat, 20 Oct 2018 14:11:04 +0530
+Message-ID: <20181020084107.28251-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181020084107.28251-1-nava.manne@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, rajanv@xilinx.com, jollys@xilinx.com, nava.manne@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chinnikishore369@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add a reset controller driver for Xilinx Zynq UltraScale+ MPSoC.
-The zynqmp reset-controller has the ability to reset lines
-connected to different blocks and peripheral in the Soc.
+This series of patches are created On top of the
+below repo. 
+git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git (fetch)
+BRANCH: next/drivers
+ 
+Nava kishore Manne (3):
+  firmware: xilinx: Add reset API's
+  dt-bindings: reset: Add bindings for ZynqMP reset driver
+  reset: reset-zynqmp: Adding support for Xilinx zynqmp reset
+    controller.
 
-Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
----
-Changes for v1:
-		-None.
-
-Changes for RFC-V3:
-                -None.
-
-Changes for RFC-V2:
-                -Moved eemi_ops into a priv struct as suggested
-                 by philipp.
-
- drivers/reset/Makefile       |   1 +
- drivers/reset/reset-zynqmp.c | 117 +++++++++++++++++++++++++++++++++++
- 2 files changed, 118 insertions(+)
+ .../bindings/reset/xlnx,zynqmp-reset.txt      | 146 ++++++++++++++++++
+ drivers/firmware/xilinx/zynqmp.c              |  40 +++++
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-zynqmp.c                  | 117 ++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h          | 136 ++++++++++++++++
+ 5 files changed, 440 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
  create mode 100644 drivers/reset/reset-zynqmp.c
 
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 4243c38228e2..eb315d14a520 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -24,4 +24,5 @@ obj-$(CONFIG_RESET_TI_SYSCON) += reset-ti-syscon.o
- obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
- obj-$(CONFIG_RESET_UNIPHIER_USB3) += reset-uniphier-usb3.o
- obj-$(CONFIG_RESET_ZYNQ) += reset-zynq.o
-+obj-$(CONFIG_ARCH_ZYNQMP) += reset-zynqmp.o
- 
-diff --git a/drivers/reset/reset-zynqmp.c b/drivers/reset/reset-zynqmp.c
-new file mode 100644
-index 000000000000..9528fa3894fc
---- /dev/null
-+++ b/drivers/reset/reset-zynqmp.c
-@@ -0,0 +1,117 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2018 Xilinx, Inc.
-+ *
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+#include <linux/firmware/xlnx-zynqmp.h>
-+
-+#define ZYNQMP_NR_RESETS (ZYNQMP_PM_RESET_END - ZYNQMP_PM_RESET_START - 2)
-+#define ZYNQMP_RESET_ID (ZYNQMP_PM_RESET_START + 1)
-+
-+struct zynqmp_reset_data {
-+	struct reset_controller_dev rcdev;
-+	const struct zynqmp_eemi_ops *eemi_ops;
-+};
-+
-+static inline struct zynqmp_reset_data *
-+to_zynqmp_reset_data(struct reset_controller_dev *rcdev)
-+{
-+	return container_of(rcdev, struct zynqmp_reset_data, rcdev);
-+}
-+
-+static int zynqmp_reset_assert(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	struct zynqmp_reset_data *priv = to_zynqmp_reset_data(rcdev);
-+
-+	return priv->eemi_ops->reset_assert(ZYNQMP_RESET_ID + id,
-+					    PM_RESET_ACTION_ASSERT);
-+}
-+
-+static int zynqmp_reset_deassert(struct reset_controller_dev *rcdev,
-+				 unsigned long id)
-+{
-+	struct zynqmp_reset_data *priv = to_zynqmp_reset_data(rcdev);
-+
-+	return priv->eemi_ops->reset_assert(ZYNQMP_RESET_ID + id,
-+					    PM_RESET_ACTION_RELEASE);
-+}
-+
-+static int zynqmp_reset_status(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	struct zynqmp_reset_data *priv = to_zynqmp_reset_data(rcdev);
-+	int val, err;
-+
-+	err = priv->eemi_ops->reset_get_status(ZYNQMP_RESET_ID + id, &val);
-+	if (!err)
-+		return -EINVAL;
-+
-+	return val;
-+}
-+
-+static int zynqmp_reset_reset(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	struct zynqmp_reset_data *priv = to_zynqmp_reset_data(rcdev);
-+
-+	return priv->eemi_ops->reset_assert(ZYNQMP_RESET_ID + id,
-+					    PM_RESET_ACTION_PULSE);
-+}
-+
-+static struct reset_control_ops zynqmp_reset_ops = {
-+	.reset = zynqmp_reset_reset,
-+	.assert = zynqmp_reset_assert,
-+	.deassert = zynqmp_reset_deassert,
-+	.status = zynqmp_reset_status,
-+};
-+
-+static int zynqmp_reset_probe(struct platform_device *pdev)
-+{
-+	struct zynqmp_reset_data *priv;
-+
-+	priv = devm_kzalloc(&pdev->dev,
-+			    sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	priv->eemi_ops = zynqmp_pm_get_eemi_ops();
-+	if (!priv->eemi_ops)
-+		return -ENXIO;
-+
-+	priv->rcdev.ops = &zynqmp_reset_ops;
-+	priv->rcdev.owner = THIS_MODULE;
-+	priv->rcdev.of_node = pdev->dev.of_node;
-+	priv->rcdev.nr_resets = ZYNQMP_NR_RESETS;
-+
-+	return devm_reset_controller_register(&pdev->dev, &priv->rcdev);
-+}
-+
-+static const struct of_device_id zynqmp_reset_dt_ids[] = {
-+	{ .compatible = "xlnx,zynqmp-reset", },
-+	{ /* sentinel */ },
-+};
-+
-+static struct platform_driver zynqmp_reset_driver = {
-+	.probe	= zynqmp_reset_probe,
-+	.driver = {
-+		.name		= KBUILD_MODNAME,
-+		.of_match_table	= zynqmp_reset_dt_ids,
-+	},
-+};
-+
-+static int __init zynqmp_reset_init(void)
-+{
-+	return platform_driver_register(&zynqmp_reset_driver);
-+}
-+
-+arch_initcall(zynqmp_reset_init);
 -- 
 2.18.0
