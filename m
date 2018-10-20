@@ -1,44 +1,51 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v2 0/2] i2c-omap: Enable i2c-omap driver for AM654 SoCs
-Date: Sat, 20 Oct 2018 13:23:40 +0530
-Message-ID: <09a6b1d4-f8f4-ea90-f361-bd3a92088430@ti.com>
-References: <20180928052557.21663-1-vigneshr@ti.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v2 1/4] nfc: pn533: add UART phy driver
+Date: Sat, 20 Oct 2018 11:27:33 +0200
+Message-ID: <20181020092733.GV3383@localhost>
+References: <20181018144251.30028-1-poeschel@lemonage.de>
+ <6CB47B97-F58D-4162-98C1-8C8C88CE2914@holtmann.org>
+ <20181019085728.GA26696@lem-wkst-02.lemonage>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180928052557.21663-1-vigneshr@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Peter Rosin <peda@axentia.se>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181019085728.GA26696@lem-wkst-02.lemonage>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars Poeschel <poeschel@lemonage.de>
+Cc: Marcel Holtmann <marcel@holtmann.org>, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, open list <linux-kernel@vger.kernel.org>, "open list:NFC SUBSYSTEM" <linux-wireless@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Oct 19, 2018 at 10:57:28AM +0200, Lars Poeschel wrote:
+> On Thu, Oct 18, 2018 at 05:00:28PM +0200, Marcel Holtmann wrote:
 
+> > > --- a/drivers/nfc/pn533/Kconfig
+> > > +++ b/drivers/nfc/pn533/Kconfig
+> > > @@ -25,3 +25,13 @@ config NFC_PN533_I2C
+> > > 
+> > > 	  If you choose to build a module, it'll be called pn533_i2c.
+> > > 	  Say N if unsure.
+> > > +
+> > > +config NFC_PN532_UART
+> > > +	tristate "NFC PN532 device support (UART)”
+> > 
+> > you are missing the "depends on SERIAL_DEV_BUS” here.
+> 
+> Yes, absolutely right. I missed that. I will post a follow-up.
+> 
+> BTW a question:
+> Only enabling SERIAL_DEV_BUS did not suffice for me. I also had to
+> enable SERIAL_DEV_CTRL_TTYPORT, otherwise the probe of the driver was
+> not called. This seems a bit odd to me. This option seems unrelated, but
+> without it, it did not work.
+> 
+> Should I better depend on SERIAL_DEV_CTRL_TTYPORT then ?
 
-On 28-Sep-18 10:55 AM, Vignesh R wrote:
-> Couple of patches to enable i2c-omap driver to be used with TI's new
-> AM654 platforms.
-> 
-> 
-> Vignesh R (2):
->   dt-bindings: i2c-omap: Add new compatible for AM654 SoCs
->   i2c: busses: Kconfig: Enable I2C_OMAP for ARCH_K3
-> 
->  Documentation/devicetree/bindings/i2c/i2c-omap.txt | 8 ++++++--
->  drivers/i2c/busses/Kconfig                         | 2 +-
->  2 files changed, 7 insertions(+), 3 deletions(-)
-> 
+No, SERIAL_DEV_BUS is the correct (build-time) dependency.
 
-Gentle ping...
+In principle, your driver will work with any serdev-controller
+implementation even if we currently only have one of those in the kernel
+(and SERIAL_DEV_CTRL_TTYPORT therefore default to Y whenever
+SERIAL_DEV_BUS is selected).
 
-Regards
-Vignesh
+Johan
