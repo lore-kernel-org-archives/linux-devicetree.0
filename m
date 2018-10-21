@@ -1,48 +1,108 @@
-Return-Path: <SRS0=Uwhs=M4=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-ve1eur01on0074.outbound.protection.outlook.com ([104.47.1.74]:41568
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727528AbeJPMul (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Oct 2018 08:50:41 -0400
-From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 4/4] doc: usb: ci-hdrc-usb2: Add pinctrl properties for HSIC
- pin groups
-Date: Tue, 16 Oct 2018 05:01:28 +0000
-Message-ID: <20181016045846.2345-5-peter.chen@nxp.com>
-References: <20181016045846.2345-1-peter.chen@nxp.com>
-In-Reply-To: <20181016045846.2345-1-peter.chen@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <jic23@kernel.org>
+Date: Sun, 21 Oct 2018 18:03:52 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 2/2] iio:temperature:max31856:Add device tree bind
+ info
+Message-ID: <20181021180352.7e9aba1b@archlinux>
+In-Reply-To: <1539887789-7562-2-git-send-email-matthew.weber@rockwellcollins.com>
+References: <1539887789-7562-1-git-send-email-matthew.weber@rockwellcollins.com>
+	<1539887789-7562-2-git-send-email-matthew.weber@rockwellcollins.com>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Matt Weber <matthew.weber@rockwellcollins.com>
+Cc: linux-iio@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-For USB HSIC, the data and strobe pin needs to be pulled down
-at default, we consider it as "idle" state. When the USB host
-is ready to be used, the strobe pin needs to be pulled up,
-we consider it as "active" state.
+On Thu, 18 Oct 2018 13:36:29 -0500
+Matt Weber <matthew.weber@rockwellcollins.com> wrote:
 
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
----
- Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 1 +
- 1 file changed, 1 insertion(+)
+> From: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
+> 
+> This patch added device tree binding info for MAX31856 driver.
+> 
+> Signed-off-by: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
+> Signed-off-by: Matt Weber <matthew.weber@rockwellcollins.com>
 
-diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Docum=
-entation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-index 529e51879fb2..10c8d793ea49 100644
---- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-+++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-@@ -81,6 +81,7 @@ Optional properties:
-   mux state of 1 indicates host mode.
- - mux-control-names: Shall be "usb_switch" if mux-controls is specified.
- - pinctrl-names: Names for optional pin modes in "default", "host", "devic=
-e"
-+  Or names for HSIC "idle" and "active" pin modes.
- - pinctrl-n: alternate pin modes
-=20
- i.mx specific properties
---=20
-2.14.1
+Device tree bindings must be sent to the devicetree list and binding
+maintainers for review.
+
+A few comments from me inline.
+
+Thanks,
+
+Jonathan
+
+> ---
+> Changes
+> v1 -> v2
+> [Matt
+>  - Removed comment block and added possibilities of
+>    thermocouple type in device tree binding doc.
+> 
+> v2 -> v3
+>  - Rebased
+> ---
+>  .../bindings/iio/temperature/max31856.txt          | 32 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/temperature/max31856.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/temperature/max31856.txt b/Documentation/devicetree/bindings/iio/temperature/max31856.txt
+> new file mode 100644
+> index 0000000..e1def9f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/temperature/max31856.txt
+> @@ -0,0 +1,32 @@
+> +Maxim MAX31856 thermocouple support
+> +
+> +https://datasheets.maximintegrated.com/en/ds/MAX31856.pdf
+> +
+> +Required properties:
+> +	- compatible: must be "max31856"
+> +	- reg: SPI chip select number for the device
+> +	- spi-max-frequency: As per datasheet max. supported freq is 5000000
+> +	- spi-cpha: must be defined for max31856 to enable SPI mode 1
+> +	- type: Type of thermocouple (By default is K-Type)
+> +		0x00 : TYPE_B
+> +		0x01 : TYPE_E
+> +		0x02 : TYPE_J
+> +		0x03 : TYPE_K (default)
+> +		0x04 : TYPE_N
+> +		0x05 : TYPE_R
+> +		0x06 : TYPE_S
+> +		0x07 : TYPE_T
+> +
+> +	Refer to spi/spi-bus.txt for generic SPI slave bindings.
+> +
+> +Optional properties:
+> +	- one-shot: Enable one-shot Conversion mode (By default mode is auto)
+
+As I expressed (rather late) in the previous version's thread,
+this should be dropped as it is a policy decision that should be made
+from userspace not the devicetree.
+
+> +
+> + Example:
+> +	max31856@0 {
+Should probably use the standard naming for a temp sensor.
+temp-sensor@0
+
+> +		compatible = "max31856";
+> +		reg = <0>;
+> +		spi-max-frequency = <5000000>;
+> +		spi-cpha;
+> +		type = <0x03>;
+> +	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3cfa518..44ec309 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7163,6 +7163,7 @@ L:	linux-iio@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/iio/temperature/max31856.c
+>  F:	Documentation/ABI/testing/sysfs-bus-iio-temperature-max31856
+> +F:	Documentation/devicetree/bindings/iio/temperature/max31856.txt
+>  
+>  IIO UNIT CONVERTER
+>  M:	Peter Rosin <peda@axentia.se>
