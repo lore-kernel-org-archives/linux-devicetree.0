@@ -1,262 +1,164 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: [PATCH RESEND V4 6/9] dt-bindings: clock: add imx7ulp clock binding
- doc
-Date: Sun, 21 Oct 2018 13:11:09 +0000
-Message-ID: <1540127173-21346-7-git-send-email-aisheng.dong@nxp.com>
-References: <1540127173-21346-1-git-send-email-aisheng.dong@nxp.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 3/3] dt-bindings: iio: adc: Add docs for ad7124
+Date: Sun, 21 Oct 2018 15:01:37 +0100
+Message-ID: <20181021150137.2e2ec279@archlinux>
+References: <1539935265-8904-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1540127173-21346-1-git-send-email-aisheng.dong@nxp.com>
-Content-Language: en-US
+In-Reply-To: <1539935265-8904-1-git-send-email-stefan.popa@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Anson Huang <anson.huang@nxp.com>, Jacky Bai <ping.bai@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Stefan Popa <stefan.popa@analog.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-i.MX7ULP Clock functions are under joint control of the System
-Clock Generation (SCG) modules, Peripheral Clock Control (PCC)
-modules, and Core Mode Controller (CMC)1 blocks
+On Fri, 19 Oct 2018 10:47:45 +0300
+Stefan Popa <stefan.popa@analog.com> wrote:
 
-Note IMX7ULP has two clock domains: M4 and A7. This binding doc
-is only for A7 clock domain.
+> Add support for Analog Devices AD7124 4-channels and 8-channels ADC.
+>=20
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: devicetree@vger.kernel.org
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Anson Huang <Anson.Huang@nxp.com>
-Cc: Bai Ping <ping.bai@nxp.com>
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+I'm not certain on how to do reg for the channels.  Input from
+Devicetree people please!
 
----
-ChangeLog:
-v3->v4:
- * make scg, pcc separate nodes according to Rob's suggestion
-v2->v3:
- * no changes
-v1->v2: no changes
----
- .../devicetree/bindings/clock/imx7ulp-clock.txt    |  87 ++++++++++++++++
- include/dt-bindings/clock/imx7ulp-clock.h          | 109 +++++++++++++++++=
-++++
- 2 files changed, 196 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/imx7ulp-clock.t=
-xt
- create mode 100644 include/dt-bindings/clock/imx7ulp-clock.h
+Given I would imagine this is very similar to some previous parts, it
+might help to have a cross reference in the description.
 
-diff --git a/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt b/Do=
-cumentation/devicetree/bindings/clock/imx7ulp-clock.txt
-new file mode 100644
-index 0000000..2239383
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt
-@@ -0,0 +1,87 @@
-+* Clock bindings for Freescale i.MX7ULP
-+
-+i.MX7ULP Clock functions are under joint control of the System
-+Clock Generation (SCG) modules, Peripheral Clock Control (PCC)
-+modules, and Core Mode Controller (CMC)1 blocks
-+
-+The clocking scheme provides clear separation between M4 domain
-+and A7 domain. Except for a few clock sources shared between two
-+domains, such as the System Oscillator clock, the Slow IRC (SIRC),
-+and and the Fast IRC clock (FIRCLK), clock sources and clock
-+management are separated and contained within each domain.
-+
-+M4 clock management consists of SCG0, PCC0, PCC1, and CMC0 modules.
-+A7 clock management consists of SCG1, PCC2, PCC3, and CMC1 modules.
-+
-+Note: this binding doc is only for A7 clock domain.
-+
-+System Clock Generation (SCG) modules:
-+---------------------------------------------------------------------
-+The System Clock Generation (SCG) is responsible for clock generation
-+and distribution across this device. Functions performed by the SCG
-+include: clock reference selection, generation of clock used to derive
-+processor, system, peripheral bus and external memory interface clocks,
-+source selection for peripheral clocks and control of power saving
-+clock gating mode.
-+
-+Required properties:
-+
-+- compatible:	Should be "fsl,imx7ulp-scg1".
-+- reg : 	Should contain registers location and length.
-+- #clock-cells:	Should be <1>.
-+- clocks:	Should contain the fixed input clocks.
-+- clock-name:   Should contain the following clock names:"rosc", "sosc",
-+		"sirc", "firc", "upll", "mpll".
-+
-+Peripheral Clock Control (PCC) modules:
-+---------------------------------------------------------------------
-+The Peripheral Clock Control (PCC) is responsible for clock selection,
-+optional division and clock gating mode for peripherals in their
-+respected power domain
-+
-+Required properties:
-+- compatible:	Should be "fsl,imx7ulp-pcc2" or "fsl,imx7ulp-pcc3".
-+- reg : 	Should contain registers location and length.
-+- #clock-cells:	Should be <1>.
-+
-+The clock consumer should specify the desired clock by having the clock
-+ID in its "clocks" phandle cell.
-+See include/dt-bindings/clock/imx7ulp-clock.h
-+for the full list of i.MX7ULP clock IDs of each module.
-+
-+Examples:
-+
-+#include <dt-bindings/clock/imx7ulp-clock.h>
-+
-+scg1: scg1@403e0000 {
-+	compatible =3D "fsl,imx7ulp-scg1;
-+	reg =3D <0x403e0000 0x10000>;
-+	clocks =3D <&rosc>, <&sosc>, <&sirc>,
-+		 <&firc>, <&upll>, <&mpll>;
-+	clock-names =3D "rosc", "sosc", "sirc",
-+		      "firc", "upll", "mpll";
-+	#clock-cells =3D <1>;
-+};
-+
-+pcc2: pcc2@403f0000 {
-+	compatible =3D "fsl,imx7ulp-pcc2";
-+	reg =3D <0x403f0000 0x10000>;
-+	#clock-cells =3D <1>;
-+};
-+
-+pcc3: pcc3@40b30000 {
-+	compatible =3D "fsl,imx7ulp-pcc3";
-+	reg =3D <0x40b30000 0x10000>;
-+	#clock-cells =3D <1>;
-+};
-+
-+usdhc1: usdhc@40380000 {
-+	compatible =3D "fsl,imx7ulp-usdhc";
-+	reg =3D <0x40380000 0x10000>;
-+	interrupts =3D <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks =3D <&scg1 IMX7ULP_CLK_NIC1_BUS_DIV>,
-+		 <&scg1 IMX7ULP_CLK_NIC1_DIV>,
-+		 <&pcc2 IMX7ULP_CLK_USDHC1>;
-+	clock-names =3D"ipg", "ahb", "per";
-+	bus-width =3D <4>;
-+};
-diff --git a/include/dt-bindings/clock/imx7ulp-clock.h b/include/dt-binding=
-s/clock/imx7ulp-clock.h
-new file mode 100644
-index 0000000..008c5ee
---- /dev/null
-+++ b/include/dt-bindings/clock/imx7ulp-clock.h
-@@ -0,0 +1,109 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * Copyright (C) 2016 Freescale Semiconductor, Inc.
-+ * Copyright 2017~2018 NXP
-+ *
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_IMX7ULP_H
-+#define __DT_BINDINGS_CLOCK_IMX7ULP_H
-+
-+/* SCG1 */
-+
-+#define IMX7ULP_CLK_DUMMY		0
-+#define IMX7ULP_CLK_ROSC		1
-+#define IMX7ULP_CLK_SOSC		2
-+#define IMX7ULP_CLK_FIRC		3
-+#define IMX7ULP_CLK_SPLL_PRE_SEL	4
-+#define IMX7ULP_CLK_SPLL_PRE_DIV	5
-+#define IMX7ULP_CLK_SPLL		6
-+#define IMX7ULP_CLK_SPLL_POST_DIV1	7
-+#define IMX7ULP_CLK_SPLL_POST_DIV2	8
-+#define IMX7ULP_CLK_SPLL_PFD0		9
-+#define IMX7ULP_CLK_SPLL_PFD1		10
-+#define IMX7ULP_CLK_SPLL_PFD2		11
-+#define IMX7ULP_CLK_SPLL_PFD3		12
-+#define IMX7ULP_CLK_SPLL_PFD_SEL	13
-+#define IMX7ULP_CLK_SPLL_SEL		14
-+#define IMX7ULP_CLK_APLL_PRE_SEL	15
-+#define IMX7ULP_CLK_APLL_PRE_DIV	16
-+#define IMX7ULP_CLK_APLL		17
-+#define IMX7ULP_CLK_APLL_POST_DIV1	18
-+#define IMX7ULP_CLK_APLL_POST_DIV2	19
-+#define IMX7ULP_CLK_APLL_PFD0		20
-+#define IMX7ULP_CLK_APLL_PFD1		21
-+#define IMX7ULP_CLK_APLL_PFD2		22
-+#define IMX7ULP_CLK_APLL_PFD3		23
-+#define IMX7ULP_CLK_APLL_PFD_SEL	24
-+#define IMX7ULP_CLK_APLL_SEL		25
-+#define IMX7ULP_CLK_UPLL		26
-+#define IMX7ULP_CLK_SYS_SEL		27
-+#define IMX7ULP_CLK_CORE_DIV		28
-+#define IMX7ULP_CLK_BUS_DIV		29
-+#define IMX7ULP_CLK_PLAT_DIV		30
-+#define IMX7ULP_CLK_DDR_SEL		31
-+#define IMX7ULP_CLK_DDR_DIV		32
-+#define IMX7ULP_CLK_NIC_SEL		33
-+#define IMX7ULP_CLK_NIC0_DIV		34
-+#define IMX7ULP_CLK_GPU_DIV		35
-+#define IMX7ULP_CLK_NIC1_DIV		36
-+#define IMX7ULP_CLK_NIC1_BUS_DIV	37
-+#define IMX7ULP_CLK_NIC1_EXT_DIV	38
-+#define IMX7ULP_CLK_MIPI_PLL		39
-+#define IMX7ULP_CLK_SIRC		40
-+#define IMX7ULP_CLK_SOSC_BUS_CLK	41
-+#define IMX7ULP_CLK_FIRC_BUS_CLK	42
-+#define IMX7ULP_CLK_SPLL_BUS_CLK	43
-+
-+#define IMX7ULP_CLK_SCG1_END		44
-+
-+/* PCC2 */
-+#define IMX7ULP_CLK_DMA1		0
-+#define IMX7ULP_CLK_RGPIO2P1		1
-+#define IMX7ULP_CLK_FLEXBUS		2
-+#define IMX7ULP_CLK_SEMA42_1		3
-+#define IMX7ULP_CLK_DMA_MUX1		4
-+#define IMX7ULP_CLK_SNVS		5
-+#define IMX7ULP_CLK_CAAM		6
-+#define IMX7ULP_CLK_LPTPM4		7
-+#define IMX7ULP_CLK_LPTPM5		8
-+#define IMX7ULP_CLK_LPIT1		9
-+#define IMX7ULP_CLK_LPSPI2		10
-+#define IMX7ULP_CLK_LPSPI3		11
-+#define IMX7ULP_CLK_LPI2C4		12
-+#define IMX7ULP_CLK_LPI2C5		13
-+#define IMX7ULP_CLK_LPUART4		14
-+#define IMX7ULP_CLK_LPUART5		15
-+#define IMX7ULP_CLK_FLEXIO1		16
-+#define IMX7ULP_CLK_USB0		17
-+#define IMX7ULP_CLK_USB1		18
-+#define IMX7ULP_CLK_USB_PHY		19
-+#define IMX7ULP_CLK_USB_PL301		20
-+#define IMX7ULP_CLK_USDHC0		21
-+#define IMX7ULP_CLK_USDHC1		22
-+#define IMX7ULP_CLK_WDG1		23
-+#define IMX7ULP_CLK_WDG2		24
-+
-+#define IMX7ULP_CLK_PCC2_END		25
-+
-+/* PCC3 */
-+#define IMX7ULP_CLK_LPTPM6		0
-+#define IMX7ULP_CLK_LPTPM7		1
-+#define IMX7ULP_CLK_LPI2C6		2
-+#define IMX7ULP_CLK_LPI2C7		3
-+#define IMX7ULP_CLK_LPUART6		4
-+#define IMX7ULP_CLK_LPUART7		5
-+#define IMX7ULP_CLK_VIU			6
-+#define IMX7ULP_CLK_DSI			7
-+#define IMX7ULP_CLK_LCDIF		8
-+#define IMX7ULP_CLK_MMDC		9
-+#define IMX7ULP_CLK_PCTLC		10
-+#define IMX7ULP_CLK_PCTLD		11
-+#define IMX7ULP_CLK_PCTLE		12
-+#define IMX7ULP_CLK_PCTLF		13
-+#define IMX7ULP_CLK_GPU3D		14
-+#define IMX7ULP_CLK_GPU2D		15
-+
-+#define IMX7ULP_CLK_PCC3_END		16
-+
-+#endif /* __DT_BINDINGS_CLOCK_IMX7ULP_H */
---=20
-2.7.4
+Thanks,
+
+Jonathan
+
+> ---
+> Changes in v2:
+> 	- Nothing changed.
+>=20
+>  .../devicetree/bindings/iio/adc/adi,ad7124.txt     | 96 ++++++++++++++++=
+++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 97 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.=
+txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt b/D=
+ocumentation/devicetree/bindings/iio/adc/adi,ad7124.txt
+> new file mode 100644
+> index 0000000..77a7b92
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
+> @@ -0,0 +1,96 @@
+> +Analog Devices AD7124 ADC device driver
+> +
+> +Required properties for the AD7124:
+> +	- compatible: Must be one of "adi,ad7124-4" or "adi,ad7124-8"
+> +	- reg: SPI chip select number for the device
+> +	- spi-max-frequency: Max SPI frequency to use
+> +		see: Documentation/devicetree/bindings/spi/spi-bus.txt
+> +	- clocks: phandle to the master clock (mclk)
+> +		see: Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +	- clock-names: Must be "mclk".
+> +	- interrupts: IRQ line for the ADC
+> +		see: Documentation/devicetree/bindings/interrupt-controller/interrupts=
+.txt
+> +
+> +	- adi,channels: List of external channels connected to the ADC:
+> +	  Required properties:
+> +		* #address-cells: Must be 2.
+> +		* #size-cells: Must be 0.
+> +
+> +	  The child nodes of this node represent the external channels which are
+> +	  connected to the ADC.
+> +
+> +	  Each child node represents one channel and has the following
+> +	  properties:
+> +		Required properties:
+> +			* reg: Pins the channel is connected to. The first value specifies
+> +			  the positive input pin, the second value the negative input pin.
+> +			* adi,channel-number: It can have up to 4 channels on ad7124-4 and
+> +			  8 channels on ad7124-8, numbered from 0 to 15.
+> +
+> +		Optional properties:
+> +			* adi,bipolar: If set the channel is used in bipolar mode.
+> +			* adi,reference-select: Select the reference source to use when
+> +			  converting on the the specific channel. Valid values are:
+> +			  0: REFIN1(+)/REFIN1(=E2=88=92).
+> +			  1: REFIN2(+)/REFIN2(=E2=88=92).
+> +			  3: AVDD
+> +			  If this field is left empty, internal reference is selected.
+> +			* adi,gain: Select the gain when converting on the specific channel.
+> +			  Valid values are: 1, 2, 4, 8, 16, 32, 64, 128.
+> +			  If this field is left empty, gain of 1 is selected.
+> +			* adi,odr-hz: The output data rate can be programmed from:
+> +			  9 to 19200 for full power mode (when the master clock is 614.4 kHz)
+> +			  2 to 4800 for mid power mode (when the master clock is 153.6 kHz)
+> +			  1 to 2400 for low power mode (when the master clock is 76.8 kHz)
+> +			  If this field is left empty, odr of 9 is selected.
+> +
+> +Optional properties:
+> +	- refin1-supply: refin1 supply can be used as reference for conversion.
+> +	- refin2-supply: refin2 supply can be used as reference for conversion.
+> +	- avdd-supply: avdd supply can be used as reference for conversion.
+> +
+> +Example:
+> +	adc@0 {
+> +		compatible =3D "adi,ad7124-4";
+> +		reg =3D <0>;
+> +		spi-max-frequency =3D <5000000>;
+> +		interrupts =3D <25 2>;
+> +		interrupt-parent =3D <&gpio>;
+> +		refin1-supply =3D <&adc_vref>;
+> +		clocks =3D <&ad7124_mclk>;
+> +		clock-names =3D "mclk";
+> +
+> +		adi,channels {
+> +			#address-cells =3D <2>;
+> +			#size-cells =3D <0>;
+> +
+> +			channel@0 {
+> +				reg =3D <0 1>;
+Normally we'd use the value of reg in the @.
+
+I'm not actually sure what we do when there are two reg values
+and they have no particular precedence.. Rob?
+
+> +				adi,channel-number =3D <0>;
+> +				adi,reference-select =3D <0>;
+> +				adi,gain =3D <2>;
+> +				adi,odr-hz =3D <10>;
+> +			};
+> +
+> +			channel@1 {
+> +				reg =3D <2 3>;
+> +				adi,bipolar;
+> +				adi,channel-number =3D <1>;
+> +				adi,reference-select =3D <0>;
+> +				adi,gain =3D <4>;
+> +				adi,odr-hz =3D <50>;
+> +			};
+> +
+> +			channel@2 {
+> +				reg =3D <4 5>;
+> +				adi,channel-number =3D <2>;
+> +				adi,gain =3D <128>;
+> +				adi,odr-hz =3D <19200>;
+> +			};
+> +
+> +			channel@3 {
+> +				reg =3D <6 7>;
+> +				adi,channel-number =3D <3>;
+> +			};
+> +		};
+> +	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3a1bfcb..f2fa508 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -845,6 +845,7 @@ L:	linux-iio@vger.kernel.org
+>  W:	http://ez.analog.com/community/linux-device-drivers
+>  S:	Supported
+>  F:	drivers/iio/adc/ad7124.c
+> +F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
+> =20
+>  ANALOG DEVICES INC AD9389B DRIVER
+>  M:	Hans Verkuil <hans.verkuil@cisco.com>
