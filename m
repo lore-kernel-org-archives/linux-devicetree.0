@@ -1,100 +1,262 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/2] dt-bindings: drm/bridge: sn65dsi86: Add panel-hpd-delay
-Date: Sun, 21 Oct 2018 12:06:56 +0300
-Message-ID: <7337055.Mnli2TfP4b@avalon>
-References: <20181019201940.138179-1-dianders@chromium.org>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: [PATCH RESEND V4 6/9] dt-bindings: clock: add imx7ulp clock binding
+ doc
+Date: Sun, 21 Oct 2018 13:11:09 +0000
+Message-ID: <1540127173-21346-7-git-send-email-aisheng.dong@nxp.com>
+References: <1540127173-21346-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181019201940.138179-1-dianders@chromium.org>
+In-Reply-To: <1540127173-21346-1-git-send-email-aisheng.dong@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Sandeep Panda <spanda@codeaurora.org>, Sean Paul <seanpaul@chromium.org>, linux-arm-msm@vger.kernel.org, jsanka@codeaurora.org, ryandcase@chromium.org, Andrzej Hajda <a.hajda@samsung.com>, Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Anson Huang <anson.huang@nxp.com>, Jacky Bai <ping.bai@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Douglas,
+i.MX7ULP Clock functions are under joint control of the System
+Clock Generation (SCG) modules, Peripheral Clock Control (PCC)
+modules, and Core Mode Controller (CMC)1 blocks
 
-Thank you for the patch.
+Note IMX7ULP has two clock domains: M4 and A7. This binding doc
+is only for A7 clock domain.
 
-On Friday, 19 October 2018 23:19:39 EEST Douglas Anderson wrote:
-> The timing diagram of some eDP panels says that you're supposed to
-> wait for HPD to be asserted before the aux channel is operational.
-> 
-> In some cases, however, it's better to just hardcode the max delay
-> instead of trying to use HPD.  Why?
-> 
-> The sn65dsi86 datasheet says that it only reports the debounced
-> HPD signal to software.  It will tell software about HPD assertion
-> as quickly as 100 ms after it's asserted, but sometimes it might
-> take 400 ms because it's timed with a very inaccurate ring
-> oscillator.  In practice it was measured at 200 ms on at least
-> one system.
-> 
-> On a particular panel, HPD was asserted 84 ms after power was given.
-> This same panel specified that HPD would always be asserted within
-> 200 ms of applying power.  Thus on this panel with the measured
-> 84 ms to assert HPD + the 200 ms measured debounce we'd wait 284 ms
-> which is 84 ms longer than just hardcoding the sleep.
-> 
-> Let's allow boards to explicitly choose the hardcoded delay by adding
-> a device tree attribute for it.  A few notes:
-> a) This delay can't easily be in the panel bindings because the delay
->    wouldn't actually be needed if the same panel were hooked somewhere
->    else (someplace with more sane HPD behavior).
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: devicetree@vger.kernel.org
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Anson Huang <Anson.Huang@nxp.com>
+Cc: Bai Ping <ping.bai@nxp.com>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-The delay shouldn't be handled in the panel driver, but I think it's still a 
-property of the panel, and should thus be specified in the panel DT node. The 
-panel driver should parse it from DT (or, if the panel driver knows about the 
-specific panel model, just hardcode it), and then report it to the bridge 
-driver which can then decide, based on its knowledge if the bridge internal 
-HPD processing delays, to just wait for a fixed delay or use regular HPD 
-handling.
+---
+ChangeLog:
+v3->v4:
+ * make scg, pcc separate nodes according to Rob's suggestion
+v2->v3:
+ * no changes
+v1->v2: no changes
+---
+ .../devicetree/bindings/clock/imx7ulp-clock.txt    |  87 ++++++++++++++++
+ include/dt-bindings/clock/imx7ulp-clock.h          | 109 +++++++++++++++++=
+++++
+ 2 files changed, 196 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/imx7ulp-clock.t=
+xt
+ create mode 100644 include/dt-bindings/clock/imx7ulp-clock.h
 
-> b) The nice thing about being able to set this delay is that it's also
->    useful on boards where HPD wasn't hooked up at all (for whatever
->    reason).
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->  .../bindings/display/bridge/ti,sn65dsi86.txt          | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
-> b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt index
-> 0a3fbb53a16e..1a1ca0f7a1d8 100644
-> --- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
-> +++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
-> @@ -33,6 +33,15 @@ Optional properties:
-> 
->  - suspend-gpios: specification for GPIO1 pin on bridge (active low)
-> 
-> +- ti,panel-hpd-delay-ms: Assume that HPD from the panel will be asserted
-> within
-> +			 this many milliseconds after giving power to the panel.
-> +			 With this number we can ignore the HPD signal from
-> +			 the panel and just hardcode a delay.  This is useful
-> +			 to do because the bridge chip only provides the
-> +			 debounced HPD signal to software and the timing of the
-> +			 debounce is very inaccurate so it's often faster to
-> +			 hardcode the max from the panel spec.
-> +
->  Required nodes:
->  This device has two video ports. Their connections are modelled using the
->  OF graph bindings specified in Documentation/devicetree/bindings/graph.txt.
-> @@ -62,6 +71,8 @@ edp-bridge@2d {
->  	clock-names = "refclk";
->  	clocks = <&input_refclk>;
-> 
-> +	ti,panel-hpd-delay-ms = <200>;
-> +
->  	ports {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-
--- 
-Regards,
-
-Laurent Pinchart
+diff --git a/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt b/Do=
+cumentation/devicetree/bindings/clock/imx7ulp-clock.txt
+new file mode 100644
+index 0000000..2239383
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt
+@@ -0,0 +1,87 @@
++* Clock bindings for Freescale i.MX7ULP
++
++i.MX7ULP Clock functions are under joint control of the System
++Clock Generation (SCG) modules, Peripheral Clock Control (PCC)
++modules, and Core Mode Controller (CMC)1 blocks
++
++The clocking scheme provides clear separation between M4 domain
++and A7 domain. Except for a few clock sources shared between two
++domains, such as the System Oscillator clock, the Slow IRC (SIRC),
++and and the Fast IRC clock (FIRCLK), clock sources and clock
++management are separated and contained within each domain.
++
++M4 clock management consists of SCG0, PCC0, PCC1, and CMC0 modules.
++A7 clock management consists of SCG1, PCC2, PCC3, and CMC1 modules.
++
++Note: this binding doc is only for A7 clock domain.
++
++System Clock Generation (SCG) modules:
++---------------------------------------------------------------------
++The System Clock Generation (SCG) is responsible for clock generation
++and distribution across this device. Functions performed by the SCG
++include: clock reference selection, generation of clock used to derive
++processor, system, peripheral bus and external memory interface clocks,
++source selection for peripheral clocks and control of power saving
++clock gating mode.
++
++Required properties:
++
++- compatible:	Should be "fsl,imx7ulp-scg1".
++- reg : 	Should contain registers location and length.
++- #clock-cells:	Should be <1>.
++- clocks:	Should contain the fixed input clocks.
++- clock-name:   Should contain the following clock names:"rosc", "sosc",
++		"sirc", "firc", "upll", "mpll".
++
++Peripheral Clock Control (PCC) modules:
++---------------------------------------------------------------------
++The Peripheral Clock Control (PCC) is responsible for clock selection,
++optional division and clock gating mode for peripherals in their
++respected power domain
++
++Required properties:
++- compatible:	Should be "fsl,imx7ulp-pcc2" or "fsl,imx7ulp-pcc3".
++- reg : 	Should contain registers location and length.
++- #clock-cells:	Should be <1>.
++
++The clock consumer should specify the desired clock by having the clock
++ID in its "clocks" phandle cell.
++See include/dt-bindings/clock/imx7ulp-clock.h
++for the full list of i.MX7ULP clock IDs of each module.
++
++Examples:
++
++#include <dt-bindings/clock/imx7ulp-clock.h>
++
++scg1: scg1@403e0000 {
++	compatible =3D "fsl,imx7ulp-scg1;
++	reg =3D <0x403e0000 0x10000>;
++	clocks =3D <&rosc>, <&sosc>, <&sirc>,
++		 <&firc>, <&upll>, <&mpll>;
++	clock-names =3D "rosc", "sosc", "sirc",
++		      "firc", "upll", "mpll";
++	#clock-cells =3D <1>;
++};
++
++pcc2: pcc2@403f0000 {
++	compatible =3D "fsl,imx7ulp-pcc2";
++	reg =3D <0x403f0000 0x10000>;
++	#clock-cells =3D <1>;
++};
++
++pcc3: pcc3@40b30000 {
++	compatible =3D "fsl,imx7ulp-pcc3";
++	reg =3D <0x40b30000 0x10000>;
++	#clock-cells =3D <1>;
++};
++
++usdhc1: usdhc@40380000 {
++	compatible =3D "fsl,imx7ulp-usdhc";
++	reg =3D <0x40380000 0x10000>;
++	interrupts =3D <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
++	clocks =3D <&scg1 IMX7ULP_CLK_NIC1_BUS_DIV>,
++		 <&scg1 IMX7ULP_CLK_NIC1_DIV>,
++		 <&pcc2 IMX7ULP_CLK_USDHC1>;
++	clock-names =3D"ipg", "ahb", "per";
++	bus-width =3D <4>;
++};
+diff --git a/include/dt-bindings/clock/imx7ulp-clock.h b/include/dt-binding=
+s/clock/imx7ulp-clock.h
+new file mode 100644
+index 0000000..008c5ee
+--- /dev/null
++++ b/include/dt-bindings/clock/imx7ulp-clock.h
+@@ -0,0 +1,109 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * Copyright (C) 2016 Freescale Semiconductor, Inc.
++ * Copyright 2017~2018 NXP
++ *
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_IMX7ULP_H
++#define __DT_BINDINGS_CLOCK_IMX7ULP_H
++
++/* SCG1 */
++
++#define IMX7ULP_CLK_DUMMY		0
++#define IMX7ULP_CLK_ROSC		1
++#define IMX7ULP_CLK_SOSC		2
++#define IMX7ULP_CLK_FIRC		3
++#define IMX7ULP_CLK_SPLL_PRE_SEL	4
++#define IMX7ULP_CLK_SPLL_PRE_DIV	5
++#define IMX7ULP_CLK_SPLL		6
++#define IMX7ULP_CLK_SPLL_POST_DIV1	7
++#define IMX7ULP_CLK_SPLL_POST_DIV2	8
++#define IMX7ULP_CLK_SPLL_PFD0		9
++#define IMX7ULP_CLK_SPLL_PFD1		10
++#define IMX7ULP_CLK_SPLL_PFD2		11
++#define IMX7ULP_CLK_SPLL_PFD3		12
++#define IMX7ULP_CLK_SPLL_PFD_SEL	13
++#define IMX7ULP_CLK_SPLL_SEL		14
++#define IMX7ULP_CLK_APLL_PRE_SEL	15
++#define IMX7ULP_CLK_APLL_PRE_DIV	16
++#define IMX7ULP_CLK_APLL		17
++#define IMX7ULP_CLK_APLL_POST_DIV1	18
++#define IMX7ULP_CLK_APLL_POST_DIV2	19
++#define IMX7ULP_CLK_APLL_PFD0		20
++#define IMX7ULP_CLK_APLL_PFD1		21
++#define IMX7ULP_CLK_APLL_PFD2		22
++#define IMX7ULP_CLK_APLL_PFD3		23
++#define IMX7ULP_CLK_APLL_PFD_SEL	24
++#define IMX7ULP_CLK_APLL_SEL		25
++#define IMX7ULP_CLK_UPLL		26
++#define IMX7ULP_CLK_SYS_SEL		27
++#define IMX7ULP_CLK_CORE_DIV		28
++#define IMX7ULP_CLK_BUS_DIV		29
++#define IMX7ULP_CLK_PLAT_DIV		30
++#define IMX7ULP_CLK_DDR_SEL		31
++#define IMX7ULP_CLK_DDR_DIV		32
++#define IMX7ULP_CLK_NIC_SEL		33
++#define IMX7ULP_CLK_NIC0_DIV		34
++#define IMX7ULP_CLK_GPU_DIV		35
++#define IMX7ULP_CLK_NIC1_DIV		36
++#define IMX7ULP_CLK_NIC1_BUS_DIV	37
++#define IMX7ULP_CLK_NIC1_EXT_DIV	38
++#define IMX7ULP_CLK_MIPI_PLL		39
++#define IMX7ULP_CLK_SIRC		40
++#define IMX7ULP_CLK_SOSC_BUS_CLK	41
++#define IMX7ULP_CLK_FIRC_BUS_CLK	42
++#define IMX7ULP_CLK_SPLL_BUS_CLK	43
++
++#define IMX7ULP_CLK_SCG1_END		44
++
++/* PCC2 */
++#define IMX7ULP_CLK_DMA1		0
++#define IMX7ULP_CLK_RGPIO2P1		1
++#define IMX7ULP_CLK_FLEXBUS		2
++#define IMX7ULP_CLK_SEMA42_1		3
++#define IMX7ULP_CLK_DMA_MUX1		4
++#define IMX7ULP_CLK_SNVS		5
++#define IMX7ULP_CLK_CAAM		6
++#define IMX7ULP_CLK_LPTPM4		7
++#define IMX7ULP_CLK_LPTPM5		8
++#define IMX7ULP_CLK_LPIT1		9
++#define IMX7ULP_CLK_LPSPI2		10
++#define IMX7ULP_CLK_LPSPI3		11
++#define IMX7ULP_CLK_LPI2C4		12
++#define IMX7ULP_CLK_LPI2C5		13
++#define IMX7ULP_CLK_LPUART4		14
++#define IMX7ULP_CLK_LPUART5		15
++#define IMX7ULP_CLK_FLEXIO1		16
++#define IMX7ULP_CLK_USB0		17
++#define IMX7ULP_CLK_USB1		18
++#define IMX7ULP_CLK_USB_PHY		19
++#define IMX7ULP_CLK_USB_PL301		20
++#define IMX7ULP_CLK_USDHC0		21
++#define IMX7ULP_CLK_USDHC1		22
++#define IMX7ULP_CLK_WDG1		23
++#define IMX7ULP_CLK_WDG2		24
++
++#define IMX7ULP_CLK_PCC2_END		25
++
++/* PCC3 */
++#define IMX7ULP_CLK_LPTPM6		0
++#define IMX7ULP_CLK_LPTPM7		1
++#define IMX7ULP_CLK_LPI2C6		2
++#define IMX7ULP_CLK_LPI2C7		3
++#define IMX7ULP_CLK_LPUART6		4
++#define IMX7ULP_CLK_LPUART7		5
++#define IMX7ULP_CLK_VIU			6
++#define IMX7ULP_CLK_DSI			7
++#define IMX7ULP_CLK_LCDIF		8
++#define IMX7ULP_CLK_MMDC		9
++#define IMX7ULP_CLK_PCTLC		10
++#define IMX7ULP_CLK_PCTLD		11
++#define IMX7ULP_CLK_PCTLE		12
++#define IMX7ULP_CLK_PCTLF		13
++#define IMX7ULP_CLK_GPU3D		14
++#define IMX7ULP_CLK_GPU2D		15
++
++#define IMX7ULP_CLK_PCC3_END		16
++
++#endif /* __DT_BINDINGS_CLOCK_IMX7ULP_H */
+--=20
+2.7.4
