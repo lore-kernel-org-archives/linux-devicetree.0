@@ -1,89 +1,100 @@
-From: Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH 0/6] Tracing register accesses with pstore and dynamic
- debug
-Date: Sat, 20 Oct 2018 22:09:06 -0700
-Message-ID: <20181021050906.GA238354@joelaf.mtv.corp.google.com>
-References: <15ec736d-bd54-5519-4b99-47dd161bc556@codeaurora.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/2] dt-bindings: drm/bridge: sn65dsi86: Add panel-hpd-delay
+Date: Sun, 21 Oct 2018 12:06:56 +0300
+Message-ID: <7337055.Mnli2TfP4b@avalon>
+References: <20181019201940.138179-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <15ec736d-bd54-5519-4b99-47dd161bc556@codeaurora.org>
+In-Reply-To: <20181019201940.138179-1-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>, rostedt@goodmis.org, Kees Cook <keescook@chromium.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Laura Abbott <labbott@redhat.com>, Anton Vorontsov <anton@enomsg.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Colin Cross <ccross@android.com>, Jason Baron <jbaron@akamai.com>, Tony Luck <tony.luck@intel.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, Joe Perches <joe@perches.com>, Jim Cromie <jim.cromie@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>Ingo
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Sandeep Panda <spanda@codeaurora.org>, Sean Paul <seanpaul@chromium.org>, linux-arm-msm@vger.kernel.org, jsanka@codeaurora.org, ryandcase@chromium.org, Andrzej Hajda <a.hajda@samsung.com>, Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 21, 2018 at 09:16:59AM +0530, Sai Prakash Ranjan wrote:
-> On 10/20/2018 9:57 PM, Joel Fernandes wrote:
-> > On Sat, Oct 20, 2018 at 12:02:37PM +0530, Sai Prakash Ranjan wrote:
-> > > On 10/20/2018 10:55 AM, Joel Fernandes wrote:
-> > > > On Sun, Sep 09, 2018 at 01:57:01AM +0530, Sai Prakash Ranjan wrote:
-> > > > > Hi,
-> > > > > 
-> > > > > This patch series adds Event tracing support to pstore and is continuation
-> > > > > to the RFC patch introduced to add a new tracing facility for register
-> > > > > accesses called Register Trace Buffer(RTB). Since we decided to not introduce
-> > > > > a separate framework to trace register accesses and use existing framework
-> > > > > like tracepoints, I have moved from RFC. Details of the RFC in link below:
-> > > > > 
-> > > > > Link: https://lore.kernel.org/lkml/cover.1535119710.git.saiprakash.ranjan@codeaurora.org/
-> > > > > 
-> > > > > MSR tracing example given by Steven was helpful in using tracepoints for
-> > > > > register accesses instead of using separate trace. But just having these
-> > > > > IO traces would not help much unless we could have them in some persistent
-> > > > > ram buffer for debugging unclocked access or some kind of bus hang or an
-> > > > > unexpected reset caused by some buggy driver which happens a lot during
-> > > > > initial development stages. By analyzing the last few entries of this buffer,
-> > > > > we could identify the register access which is causing the issue.
-> > > > 
-> > > > Hi Sai,
-> > > > 
-> > > > I wanted to see if I could make some time to get your patches working. We are
-> > > > hitting usecases that need something like this as well. Basically devices
-> > > > hanging and then the ramdump does not tell us much, so in this case pstore
-> > > > events can be really helpful. This usecase came up last year as well.
-> > > > 
-> > > > Anyway while I was going through your patches, I cleaned up some pstore code
-> > > > as well and I have 3 more patches on top of yours for this clean up. I prefer
-> > > > we submit the patches together and sync our work together so that there is
-> > > > least conflict.
-> > > > 
-> > > > Here's my latest tree:
-> > > > https://github.com/joelagnel/linux-kernel/commits/pstore-events
-> > > > (note that I have only build tested the patches since I just wrote them and
-> > > > its quite late in the night here ;-))
-> > > > 
-> > > 
-> > > Hi Joel,
-> > > 
-> > > Thanks for looking into this. Sure, I will be happy to sync up with you on
-> > 
-> > Thanks. And added a fourth patch in the tree too.
+Hi Douglas,
 
+Thank you for the patch.
 
-While at it, I was thinking about the problem we are trying to solve in
-another way. If ftrace itself can use pages from the persistent ram store,
-instead of the kernel's buddy allocator, then the ftrace ring buffer itself
-could persist across a system reboot.
+On Friday, 19 October 2018 23:19:39 EEST Douglas Anderson wrote:
+> The timing diagram of some eDP panels says that you're supposed to
+> wait for HPD to be asserted before the aux channel is operational.
+> 
+> In some cases, however, it's better to just hardcode the max delay
+> instead of trying to use HPD.  Why?
+> 
+> The sn65dsi86 datasheet says that it only reports the debounced
+> HPD signal to software.  It will tell software about HPD assertion
+> as quickly as 100 ms after it's asserted, but sometimes it might
+> take 400 ms because it's timed with a very inaccurate ring
+> oscillator.  In practice it was measured at 200 ms on at least
+> one system.
+> 
+> On a particular panel, HPD was asserted 84 ms after power was given.
+> This same panel specified that HPD would always be asserted within
+> 200 ms of applying power.  Thus on this panel with the measured
+> 84 ms to assert HPD + the 200 ms measured debounce we'd wait 284 ms
+> which is 84 ms longer than just hardcoding the sleep.
+> 
+> Let's allow boards to explicitly choose the hardcoded delay by adding
+> a device tree attribute for it.  A few notes:
+> a) This delay can't easily be in the panel bindings because the delay
+>    wouldn't actually be needed if the same panel were hooked somewhere
+>    else (someplace with more sane HPD behavior).
 
-The clear advantage of that for Sai's pstore events work is, not having to
-duplicate a lot of the ring buffer code and stuff into pstore (for the pstore
-events for example, I wanted time stamps as well and ftrace's ring buffer has
-some nice time management code to deal with time deltas). We already have
-other ring buffers maintained in other parts of the kernel for tracing right?
-So I'm a bit averse to duplicating that into pstore as well for tracing. The
-other advantage of persisting the ftrace ring buffer would also mean data
-from other tracers such as function-graph tracer and irqsoff tracers would
-also persist and then we can also probably get rid of ftrace-in-pstore stuff
-which is kind of incomplete anyway since it does not have time stamps for
-recorded functions.
+The delay shouldn't be handled in the panel driver, but I think it's still a 
+property of the panel, and should thus be specified in the panel DT node. The 
+panel driver should parse it from DT (or, if the panel driver knows about the 
+specific panel model, just hardcode it), and then report it to the bridge 
+driver which can then decide, based on its knowledge if the bridge internal 
+HPD processing delays, to just wait for a fixed delay or use regular HPD 
+handling.
 
-Steven and Kees: what do you think, is persisting ftrace ring buffer across
-reboots a worthwhile idea? Any thoughts on how feasible something like that
-could be, code wise? Off the top, I think the ring buffer state that ftrace
-needs other than the trace data itself will also have to be persisted.
+> b) The nice thing about being able to set this delay is that it's also
+>    useful on boards where HPD wasn't hooked up at all (for whatever
+>    reason).
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+>  .../bindings/display/bridge/ti,sn65dsi86.txt          | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git
+> a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
+> b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt index
+> 0a3fbb53a16e..1a1ca0f7a1d8 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
+> +++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
+> @@ -33,6 +33,15 @@ Optional properties:
+> 
+>  - suspend-gpios: specification for GPIO1 pin on bridge (active low)
+> 
+> +- ti,panel-hpd-delay-ms: Assume that HPD from the panel will be asserted
+> within
+> +			 this many milliseconds after giving power to the panel.
+> +			 With this number we can ignore the HPD signal from
+> +			 the panel and just hardcode a delay.  This is useful
+> +			 to do because the bridge chip only provides the
+> +			 debounced HPD signal to software and the timing of the
+> +			 debounce is very inaccurate so it's often faster to
+> +			 hardcode the max from the panel spec.
+> +
+>  Required nodes:
+>  This device has two video ports. Their connections are modelled using the
+>  OF graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+> @@ -62,6 +71,8 @@ edp-bridge@2d {
+>  	clock-names = "refclk";
+>  	clocks = <&input_refclk>;
+> 
+> +	ti,panel-hpd-delay-ms = <200>;
+> +
+>  	ports {
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
 
-thanks,
+-- 
+Regards,
 
- - Joel
+Laurent Pinchart
