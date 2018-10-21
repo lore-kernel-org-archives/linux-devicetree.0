@@ -1,80 +1,77 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: iio: vadc: Update example to
- include unit address for node 'usb-id-nopull'
-Date: Sun, 21 Oct 2018 15:17:01 +0100
-Message-ID: <20181021151701.7b9daa41@archlinux>
-References: <20181004001432.21218-1-mka@chromium.org>
-        <20181004001432.21218-2-mka@chromium.org>
-        <20181005204743.GA17135@bogus>
-        <20181012171523.GQ22824@google.com>
-        <20181018194010.GV22824@google.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: lpspi: add imx8qxp compatible string" to the spi tree
+Date: Sun, 21 Oct 2018 17:59:08 +0200 (CEST)
+Message-ID: <20181021155908.81C2F440078@finisterre.ee.mobilebroadband>
+References: <1539886483-15775-6-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181018194010.GV22824@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Rob Herring <robh@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1539886483-15775-6-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: "A.s. Dong" <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 18 Oct 2018 12:40:10 -0700
-Matthias Kaehlcke <mka@chromium.org> wrote:
+The patch
 
-> On Fri, Oct 12, 2018 at 10:15:23AM -0700, Matthias Kaehlcke wrote:
-> > On Fri, Oct 05, 2018 at 03:47:43PM -0500, Rob Herring wrote:  
-> > > On Wed, Oct 03, 2018 at 05:14:31PM -0700, Matthias Kaehlcke wrote:  
-> > > > The node has a reg property, therefore its name should include a unit
-> > > > address.
-> > > > 
-> > > > Also change the name from 'usb_id_nopull' to 'usb-id-nopull' to follow
-> > > > DT conventions.  
-> > > 
-> > > This is ADC channels? If so, then DT convention would really be 
-> > > "adc@...".   
-> > 
-> > Is it really? A grep for 'adc@' in arch/${ARCH}/boot/dts yields
-> > mostly ADC controller not channel nodes.
-> > 
-> > I'm totally fine with changing the name to 'adc@...' if that's the
-> > preference/convention, just want to reconfirm since the actual use is
-> > a bit ambiguous.  
-> 
-> Could we please reach a conclusion on this?
-> 
-> Summarizing the options on the table so far are:
-> 
-> 1. usb-id-nopull@VADC_LR_MUX10_USB_ID
-> 2. usb-id-nopull@57
-> 3. adc@VADC_LR_MUX10_USB_ID
-> 4. adc@57
-> 
-> My personal preference goes to something <node name>@<define>
-> since the unit address doesn't just resolve to an ADC channel number
-> but also includes configuation information. A literal like '57'
-> conveys less information than the define, it's easier to introduce
-> errors and these errors are harder to spot.
+   spi: lpspi: add imx8qxp compatible string
 
-I agree that to my mind this is the most sensible option.
+has been applied to the spi tree at
 
-> 
-> If 'adc@...' really was the convention (or should be) I'd be clearly
-> in favor of following it. As mentioned above, in practice the use of
-> the 'adc@...' node name seems to be more prevalent for ADC controllers
-> than channels, so I'm more inclined towards 'usb-id-nopull@...' or
-> similar.
-> 
-> All that said, these are just my preferences for the reasons outlined
-> above, if DT maintainers really want it to be 'adc@57' or some
-> variation of that, I'm fine with that too. Please let me know and we
-> can move forward with this trivial series.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
-Rob, what's your view on this?
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
+Mark
 
-Jonathan
-> 
-> Thanks
-> 
-> Matthias
+>From 0c903aafc8529f64d24d2cd6df32f2bf16aad20b Mon Sep 17 00:00:00 2001
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Date: Thu, 18 Oct 2018 18:19:34 +0000
+Subject: [PATCH] spi: lpspi: add imx8qxp compatible string
+
+Add imx8qxp compatible string
+
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt
+index 4af132606b37..8d178a4503cf 100644
+--- a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt
+@@ -3,6 +3,7 @@
+ Required properties:
+ - compatible :
+   - "fsl,imx7ulp-spi" for LPSPI compatible with the one integrated on i.MX7ULP soc
++  - "fsl,imx8qxp-spi" for LPSPI compatible with the one integrated on i.MX8QXP soc
+ - reg : address and length of the lpspi master registers
+ - interrupts : lpspi interrupt
+ - clocks : lpspi clock specifier
+-- 
+2.19.0
