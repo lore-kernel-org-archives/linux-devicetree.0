@@ -1,88 +1,74 @@
 From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: [PATCH v9 9/9] dt-bindings: gpio: Add bindings for Cadence I3C gpio expander
-Date: Mon, 22 Oct 2018 15:34:04 +0200
-Message-ID: <20181022133404.2061-10-boris.brezillon@bootlin.com>
-References: <20181022133404.2061-1-boris.brezillon@bootlin.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181022133404.2061-1-boris.brezillon@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares@synopsys.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Linus
+Subject: Re: [PATCH v2 00/15] mtd: maps: physmap cleanups
+Date: Mon, 22 Oct 2018 15:41:10 +0200
+Message-ID: <20181022154110.62c0e178@bbrezillon>
+References: <20181019074908.13226-1-boris.brezillon@bootlin.com>
+ <CACRpkdbHDTcz_X_ijV+B-DkahsTWDyW2+h0n4W5o9GU3f6kmrA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdbHDTcz_X_ijV+B-DkahsTWDyW2+h0n4W5o9GU3f6kmrA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE
+ TREE BINDINGS" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Mark Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the Cadence I3C gpio expander bindings.
+Hi Linus,
 
-Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
-Changes in v9:
-- Add Linus R-b
+On Mon, 22 Oct 2018 13:45:49 +0200
+Linus Walleij <linus.walleij@linaro.org> wrote:
 
-Changes in v8:
-- None
+> On Fri, Oct 19, 2018 at 9:49 AM Boris Brezillon
+> <boris.brezillon@bootlin.com> wrote:
+> 
+> > This is an attempt at merging physmap_of.c, gpio-addr-flash.c and
+> > physmap.c. The rational behind this decision is code sharing and
+> > consistency with what's done in other parts of the kernel:
+> >
+> > - physmap_of is just adding OF/DT support to the physmap logic, and we
+> >   usually put that code in the pre-existing driver instead of creating
+> >   a new one
+> >
+> > - gpio-addr-flash is just an extension of the physmap logic which is
+> >   needed when the platform does not have enough native ADDR lines
+> >   to address the whole flash. Again, I think this core belongs in the
+> >   physmap driver
+> >
+> > Patches 1 to 9 are just cleanups, and are not really related to the
+> > merging of physmap_of and gpio-addr-flash into physmap.c.
+> >
+> > Patch 10 to 13 are doing the actual merging work, and patch 14 is
+> > documenting the addr-gpios property that has been added to support
+> > the gpio-addr-flash on DT platforms.
+> >
+> > Patch 15 is a cosmetic change proposed by Ricardo.  
+> 
+> This series:
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> I expect to test the result when rebasing my patches for Gemini,
+> so hope for this to hit your devel branch after v4.20-rc1.
+> 
 
-Changes in v7:
-- None
+I already have a topic branch [1] in case you want to start working on
+it before 4.20-rc1.
 
-Changes in v6:
-- None
+Regards,
 
-Changes in v5:
-- Add Rob's R-b
+Boris
 
-Changes in v4:
-- Use GPIO_ and IRQ_TYPE_ macros instead of raw numbers
-- Fix the unit-address in the example
----
- .../bindings/gpio/gpio-cdns-i3c.txt           | 39 +++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-cdns-i3c.txt
+[1]https://github.com/bbrezillon/linux-0day/tree/mtd/physmap-cleanup
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-cdns-i3c.txt b/Documentation/devicetree/bindings/gpio/gpio-cdns-i3c.txt
-new file mode 100644
-index 000000000000..d0155a9cea79
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-cdns-i3c.txt
-@@ -0,0 +1,39 @@
-+* Cadence I3C GPIO expander
-+
-+The Cadence I3C GPIO expander provides 8 GPIOs controllable over I3C.
-+This GPIOs can be configured in output or input mode and if they are in input
-+mode they can generate IBIs (In Band Interrupts).
-+
-+Required properties for GPIO node:
-+- reg : 3 cells encoding the I3C static address (none in our case) and the I3C
-+	Provisional ID. See Documentation/devicetree/bindings/i3c/i3c.txt for
-+	more details.
-+	Should be <0x0 0x392 0x0>.
-+- gpio-controller : Marks the device node as a gpio controller.
-+- #gpio-cells : Should be two. The first cell is the pin number and
-+  the second cell is used to specify the gpio polarity (GPIO_ACTIVE_HIGH or
-+  GPIO_ACTIVE_LOW)
-+- interrupt-controller: Marks the device node as an interrupt controller.
-+- #interrupt-cells : Should be 2. The first cell is the GPIO number.
-+  The second cell is used to specify trigger type and level flags.
-+  The following trigger types are accepted (see
-+  <dt-bindings/interrupt-controller/irq.h> for their definition):
-+	IRQ_TYPE_EDGE_RISING
-+	IRQ_TYPE_EDGE_FALLING
-+	IRQ_TYPE_EDGE_BOTH
-+	IRQ_TYPE_LEVEL_HIGH
-+	IRQ_TYPE_LEVEL_LOW
-+
-+Example:
-+
-+	i3c-master@xxx {
-+		...
-+		i3c_gpio_expander: gpio@0,39200000000 {
-+			reg = <0 0x392 0x0>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+		...
-+	};
--- 
-2.17.1
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
