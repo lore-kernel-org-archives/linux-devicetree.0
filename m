@@ -1,59 +1,244 @@
-From: Julien Grall <julien.grall@arm.com>
-Subject: Re: [PATCH v2] devicetree, xen: add xen,
- shared-memory binding
-Date: Mon, 22 Oct 2018 11:27:23 +0100
-Message-ID: <260c1981-d911-2b7f-6f0b-ac5481e3f48d@arm.com>
-References: <1539900630-26566-1-git-send-email-sstabellini@kernel.org>
+From: Nava kishore Manne <navam@xilinx.com>
+Subject: RE: [PATCH 3/3] fpga manager: Adding FPGA Manager support for Xilinx
+ zynqmp
+Date: Mon, 22 Oct 2018 10:31:01 +0000
+Message-ID: <BYAPR02MB4710080A6C3947734D8FB21CC2F40@BYAPR02MB4710.namprd02.prod.outlook.com>
+References: <20181020084805.29103-1-nava.manne@xilinx.com>
+ <20181020084805.29103-4-nava.manne@xilinx.com>
+ <CAJYdmePxnkG=3iJC5Lewq3n3zFGTKASJX7ceUEufBvOJogCfdA@mail.gmail.com>
+ <CAAtXAHdP6z5NG+EAvW_N_RfcPv59e15hkd83AR-L3RDBrLMvcQ@mail.gmail.com>
+ <BYAPR02MB47106D61C0CDB8268BAF4E44C2F40@BYAPR02MB4710.namprd02.prod.outlook.com>
+ <20181022102255.GA1428@archbook>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <xen-devel-bounces@lists.xenproject.org>
-In-Reply-To: <1539900630-26566-1-git-send-email-sstabellini@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181022102255.GA1428@archbook>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
-List-Post: <mailto:xen-devel@lists.xenproject.org>
-List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
-List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
-Errors-To: xen-devel-bounces@lists.xenproject.org
-Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
-To: Stefano Stabellini <sstabellini@kernel.org>, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, Stefano Stabellini <stefanos@xilinx.com>, robh+dt@kernel.org, xen-devel@lists.xen.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Moritz Fischer <mdf@kernel.org>
+Cc: Moritz Fischer <moritz.fischer@ettus.com>, Moritz Fischer <moritz.fischer.private@gmail.com>, Alan Tull <atull@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>, "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "chinnikishore369@gmail.com" <chinnikishore369@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3RlZmFubywKCk9uIDE4LzEwLzIwMTggMjM6MTAsIFN0ZWZhbm8gU3RhYmVsbGluaSB3cm90
-ZToKPiBGcm9tOiBTdGVmYW5vIFN0YWJlbGxpbmkgPHN0ZWZhbm9zQHhpbGlueC5jb20+Cj4gCj4g
-SW50cm9kdWNlIGEgZGV2aWNlIHRyZWUgYmluZGluZyBmb3IgWGVuIHJlc2VydmVkLW1lbW9yeSBy
-ZWdpb25zLiBUaGV5Cj4gYXJlIHVzZWQgdG8gc2hhcmUgbWVtb3J5IGFjcm9zcyBWTXMgZnJvbSB0
-aGUgVk0gY29uZmlnIGZpbGVzLiAoU2VlCj4gc3RhdGljX3NobSBjb25maWcgb3B0aW9uLikKPiAK
-PiBTaWduZWQtb2ZmLWJ5OiBTdGVmYW5vIFN0YWJlbGxpbmkgPHN0ZWZhbm9zQHhpbGlueC5jb20+
-Cj4gLS0tCj4gQ2hhbmdlcyBpbiB2MjoKPiAtIGZpeCBBdXRob3IgbGluZQo+IC0gYWRkIHZlcnNp
-b25pbmcKPiAtIHhlbixpZCBpbnN0ZWFkIG9mIGlkCj4gLS0tCj4gICAuLi4vYmluZGluZ3MvcmVz
-ZXJ2ZWQtbWVtb3J5L3hlbixzaGFyZWQtbWVtb3J5LnR4dCAgIHwgMjAgKysrKysrKysrKysrKysr
-KysrKysKPiAgIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspCj4gICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2VydmVkLW1lbW9y
-eS94ZW4sc2hhcmVkLW1lbW9yeS50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50eHQg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hlbixz
-aGFyZWQtbWVtb3J5LnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4u
-OTA3OGZiNwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hlbixzaGFyZWQtbWVtb3J5LnR4dAo+IEBAIC0wLDAg
-KzEsMjAgQEAKPiArKiBYZW4gaHlwZXJ2aXNvciByZXNlcnZlZC1tZW1vcnkgYmluZGluZwo+ICsK
-PiArRXhwb3NlIG9uZSBvciBtb3JlIG1lbW9yeSByZWdpb25zIGFzIHJlc2VydmVkLW1lbW9yeSB0
-byB0aGUgZ3Vlc3QKPiArdmlydHVhbCBtYWNoaW5lLiAKPiBUeXBpY2FsbHksIGEgcmVnaW9uIGlz
-IGNvbmZpZ3VyZWQgYXQgVk0gY3JlYXRpb24gdGltZQo+ICt0byBiZSBhIHNoYXJlZCBtZW1vcnkg
-YXJlYSBhY3Jvc3MgbXVsdGlwbGUgdmlydHVhbCBtYWNoaW5lcyBmb3IKPiArY29tbXVuaWNhdGlv
-biBhbW9uZyB0aGVtLgo+ICsKPiArRm9yIGVhY2ggb2YgdGhlc2UgcHJlLXNoYXJlZCBtZW1vcnkg
-cmVnaW9ucywgYSByYW5nZSBpcyBleHBvc2VkIHVuZGVyCj4gK3RoZSAvcmVzZXJ2ZWQtbWVtb3J5
-IG5vZGUgYXMgYSBjaGlsZCBub2RlLiBFYWNoIHJhbmdlIHN1Yi1ub2RlIGlzIG5hbWVkCj4gK3hl
-bi1zaG1lbUA8YWRkcmVzcz4gYW5kIGhhcyB0aGUgZm9sbG93aW5nIHByb3BlcnRpZXM6Cj4gKwo+
-ICstIGNvbXBhdGlibGU6Cj4gKwljb21wYXRpYmxlID0gInhlbixzaGFyZWQtbWVtb3J5LXYxIiwg
-InhlbixzaGFyZWQtbWVtb3J5IgoKRG8gd2UgbmVlZCB0byBzcGVjaWZ5IHRoZSB0d28gY29tcGF0
-aWJsZXM/Cgo+ICsKPiArLSByZWc6Cj4gKwl0aGUgYmFzZSBndWVzdCBwaHlzaWNhbCBhZGRyZXNz
-IGFuZCBzaXplIG9mIHRoZSBzaGFyZWQgbWVtb3J5IHJlZ2lvbgo+ICsKPiArLSB4ZW4saWQ6Cj4g
-KwlhIHN0cmluZyB0aGF0IGlkZW50aWZpZXMgdGhlIHNoYXJlZCBtZW1vcnkgcmVnaW9uIGFzIHNw
-ZWNpZmllZCBpbgo+ICsJdGhlIFZNIGNvbmZpZyBmaWxlCj4gCgotLSAKSnVsaWVuIEdyYWxsCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpYZW4tZGV2ZWwg
-bWFpbGluZyBsaXN0Clhlbi1kZXZlbEBsaXN0cy54ZW5wcm9qZWN0Lm9yZwpodHRwczovL2xpc3Rz
-LnhlbnByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8veGVuLWRldmVs
+Hi Moritz,
+
+Thanks for the quick response..
+Please find my response inline.
+
+> -----Original Message-----
+> From: Moritz Fischer [mailto:mdf@kernel.org]
+> Sent: Monday, October 22, 2018 3:53 PM
+> To: Nava kishore Manne <navam@xilinx.com>
+> Cc: Moritz Fischer <moritz.fischer@ettus.com>; Moritz Fischer
+> <moritz.fischer.private@gmail.com>; Alan Tull <atull@kernel.org>; Rob Her=
+ring
+> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Michal Simek
+> <michals@xilinx.com>; Rajan Vaja <RAJANV@xilinx.com>; Jolly Shah
+> <JOLLYS@xilinx.com>; linux-fpga@vger.kernel.org; Devicetree List
+> <devicetree@vger.kernel.org>; linux-arm-kernel <linux-arm-
+> kernel@lists.infradead.org>; Linux Kernel Mailing List <linux-
+> kernel@vger.kernel.org>; chinnikishore369@gmail.com
+> Subject: Re: [PATCH 3/3] fpga manager: Adding FPGA Manager support for
+> Xilinx zynqmp
+>=20
+> On Mon, Oct 22, 2018 at 10:03:55AM +0000, Nava kishore Manne wrote:
+> > Hi Mortiz,
+> >
+> > Thanks for the quick response....
+> > Please find my response inline.
+> >
+> > > -----Original Message-----
+> > > From: Moritz Fischer [mailto:moritz.fischer@ettus.com]
+> > > Sent: Saturday, October 20, 2018 7:02 AM
+> > > To: Moritz Fischer <moritz.fischer.private@gmail.com>
+> > > Cc: Nava kishore Manne <navam@xilinx.com>; Alan Tull
+> > > <atull@kernel.org>; Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> > > <mark.rutland@arm.com>; Michal Simek <michals@xilinx.com>; Rajan
+> > > Vaja <RAJANV@xilinx.com>; Jolly Shah <JOLLYS@xilinx.com>;
+> > > linux-fpga@vger.kernel.org; Devicetree List
+> > > <devicetree@vger.kernel.org>; linux-arm-kernel <linux-arm-
+> > > kernel@lists.infradead.org>; Linux Kernel Mailing List <linux-
+> > > kernel@vger.kernel.org>; chinnikishore369@gmail.com
+> > > Subject: Re: [PATCH 3/3] fpga manager: Adding FPGA Manager support
+> > > for Xilinx zynqmp
+> > >
+> > > On Fri, Oct 19, 2018 at 2:33 PM Moritz Fischer
+> > > <moritz.fischer.private@gmail.com> wrote:
+> > > >
+> > > > Hi Nava,
+> > > >
+> > > > Looks good to me, a couple of nits inline below.
+> > > >
+> > > > On Fri, Oct 19, 2018 at 1:50 AM Nava kishore Manne
+> > > > <nava.manne@xilinx.com> wrote:
+> > > > >
+> > > > > This patch adds FPGA Manager support for the Xilinx ZynqMp chip.
+> > > >
+> > > > Isn't it ZynqMP ?
+> > > > >
+> > > > > Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+> > > > > ---
+> > > > > Changes for v1:
+> > > > >                 -None.
+> > > > >
+> > > > > Changes for RFC-V2:
+> > > > >                 -Updated the Fpga Mgr registrations call's
+> > > > >                  to 4.18
+> > > > >
+> > > > >  drivers/fpga/Kconfig       |   9 +++
+> > > > >  drivers/fpga/Makefile      |   1 +
+> > > > >  drivers/fpga/zynqmp-fpga.c | 159
+> > > > > +++++++++++++++++++++++++++++++++++++
+> > > > >  3 files changed, 169 insertions(+)  create mode 100644
+> > > > > drivers/fpga/zynqmp-fpga.c
+> > > > >
+> > > > > diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig index
+> > > > > 1ebcef4bab5b..26ebbcf3d3a3 100644
+> > > > > --- a/drivers/fpga/Kconfig
+> > > > > +++ b/drivers/fpga/Kconfig
+> > > > > @@ -56,6 +56,15 @@ config FPGA_MGR_ZYNQ_FPGA
+> > > > >         help
+> > > > >           FPGA manager driver support for Xilinx Zynq FPGAs.
+> > > > >
+> > > > > +config FPGA_MGR_ZYNQMP_FPGA
+> > > > > +       tristate "Xilinx Zynqmp FPGA"
+> > > > > +       depends on ARCH_ZYNQMP || COMPILE_TEST
+> > > > > +       help
+> > > > > +         FPGA manager driver support for Xilinx ZynqMP FPGAs.
+> > > > > +         This driver uses processor configuration port(PCAP)
+> > > > This driver uses *the* processor configuration port.
+> > > >
+> > > > > +         to configure the programmable logic(PL) through PS
+> > > > > +         on ZynqMP SoC.
+> > > > > +
+> > > > >  config FPGA_MGR_XILINX_SPI
+> > > > >         tristate "Xilinx Configuration over Slave Serial (SPI)"
+> > > > >         depends on SPI
+> > > > > diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile index
+> > > > > 7a2d73ba7122..3488ebbaee46 100644
+> > > > > --- a/drivers/fpga/Makefile
+> > > > > +++ b/drivers/fpga/Makefile
+> > > > > @@ -16,6 +16,7 @@ obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)    +=3D
+> > > socfpga-a10.o
+> > > > >  obj-$(CONFIG_FPGA_MGR_TS73XX)          +=3D ts73xx-fpga.o
+> > > > >  obj-$(CONFIG_FPGA_MGR_XILINX_SPI)      +=3D xilinx-spi.o
+> > > > >  obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)       +=3D zynq-fpga.o
+> > > > > +obj-$(CONFIG_FPGA_MGR_ZYNQMP_FPGA)     +=3D zynqmp-fpga.o
+> > > > >  obj-$(CONFIG_ALTERA_PR_IP_CORE)         +=3D altera-pr-ip-core.o
+> > > > >  obj-$(CONFIG_ALTERA_PR_IP_CORE_PLAT)    +=3D altera-pr-ip-core-p=
+lat.o
+> > > > >
+> > > > > diff --git a/drivers/fpga/zynqmp-fpga.c
+> > > > > b/drivers/fpga/zynqmp-fpga.c new file mode 100644 index
+> > > > > 000000000000..2760d7e3872a
+> > > > > --- /dev/null
+> > > > > +++ b/drivers/fpga/zynqmp-fpga.c
+> > > > > @@ -0,0 +1,159 @@
+> > > > > +// SPDX-License-Identifier: GPL-2.0+
+> > > > > +/*
+> > > > > + * Copyright (C) 2018 Xilinx, Inc.
+> > > > > + */
+> > > > > +
+> > > > > +#include <linux/dma-mapping.h>
+> > > > > +#include <linux/fpga/fpga-mgr.h> #include <linux/io.h> #include
+> > > > > +<linux/kernel.h> #include <linux/module.h> #include
+> > > > > +<linux/of_address.h> #include <linux/string.h> #include
+> > > > > +<linux/firmware/xlnx-zynqmp.h>
+> > > > > +
+> > > > > +/* Constant Definitions */
+> > > > > +#define IXR_FPGA_DONE_MASK     0X00000008U
+> > > > > +
+> > > > > +/**
+> > > > > + * struct zynqmp_fpga_priv - Private data structure
+> > > > > + * @dev:       Device data structure
+> > > > > + * @flags:     flags which is used to identify the bitfile type
+> > > > > + */
+> > > > > +struct zynqmp_fpga_priv {
+> > > > > +       struct device *dev;
+> > > > > +       u32 flags;
+> > > > > +};
+> > > > > +
+> > > > > +static int zynqmp_fpga_ops_write_init(struct fpga_manager *mgr,
+> > > > > +                                     struct fpga_image_info *inf=
+o,
+> > > > > +                                     const char *buf, size_t
+> > > > > +size) {
+> > > > > +       struct zynqmp_fpga_priv *priv;
+> > > > > +
+> > > > > +       priv =3D mgr->priv;
+> > > > > +       priv->flags =3D info->flags;
+> > > > > +
+> > > > > +       return 0;
+> > > > > +}
+> > > > > +
+> > > > > +static int zynqmp_fpga_ops_write(struct fpga_manager *mgr,
+> > > > > +                                const char *buf, size_t size) {
+> > > > > +       struct zynqmp_fpga_priv *priv;
+> > > > > +       char *kbuf;
+> > > > > +       dma_addr_t dma_addr;
+> > > > > +       int ret;
+> > > > > +       const struct zynqmp_eemi_ops *eemi_ops =3D
+> > > > > +zynqmp_pm_get_eemi_ops();
+> > > >
+> > > > Reverse xmas-tree please, i.e. long lines first.
+> > > >
+> > > > > +
+> > > > > +       if (!eemi_ops || !eemi_ops->fpga_load)
+> > > > > +               return -ENXIO;
+> > > > > +
+> > > > > +       priv =3D mgr->priv;
+> > > > > +
+> > > > > +       kbuf =3D dma_alloc_coherent(priv->dev, size, &dma_addr,
+> > > GFP_KERNEL);
+> > > > > +       if (!kbuf)
+> > > > > +               return -ENOMEM;
+> > > > > +
+> > > > > +       memcpy(kbuf, buf, size);
+> > > > > +
+> > > > > +       wmb(); /* ensure all writes are done before initiate FW
+> > > > > + call */
+> > > > > +
+> > > > > +       ret =3D eemi_ops->fpga_load(dma_addr, size, priv->flags);
+> > >
+> > > Don't you have to do anything with the flags? Is it really just a
+> > > pass-through of FPGA manager flags to eemi calls?
+> > >
+> > > Don't you want to make partial bitstreams e.g. use a flags value
+> > > that you export in your firmware header (xlnx-zynqmp.h) and set
+> > > those based on what flags get passed in, i.e. explicitely translate F=
+PGA
+> Manager flags to your firmware flags?
+> >
+> > At this point of time the firmware use Flag 0 for full Bitstream and 1 =
+for partial
+> bitstream loading.
+> > So I have not doing any explicit translate FPGA Manager flags inside th=
+e
+> driver.
+> > Will document the flags info in xlnx-zynqmp.h
+>=20
+> I think you should explicitely translate them, the fact that they happen =
+to line
+> up in the current implementation is somewhat of coincidence, and in futur=
+e
+> might break (since it's not really easy to to spot the dependency when
+> refactoring).
+>=20
+> Why don't you do something like:
+>=20
+> #include <linux/firmware/xilinx-zynqmp.h>
+>=20
+> [...]
+>=20
+> eemi_flags =3D 0;
+>=20
+> if (flags & FPGA_MGR_PARTIAL_RECONFIG)
+> 	eemi_flags |=3D XILINX_ZYNQMP_PM_FPGA_PARTIAL;
+>=20
+> eemi_ops->fpga_load(...., eemi_flags);
+>=20
+
+Yes, I agree with you and it's sound good. Will fix in the next version.
+
+Regards,
+Navakishore.
