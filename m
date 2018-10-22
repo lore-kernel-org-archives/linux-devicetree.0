@@ -1,50 +1,71 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC PATCH v2 01/17] OPP: Allow to request stub voltage
- regulators
-Date: Mon, 22 Oct 2018 11:06:36 +0530
-Message-ID: <20181022053636.ag62j3rj3vovbz53@vireshk-i7>
-References: <20181021205501.23943-1-digetx@gmail.com>
- <20181021205501.23943-2-digetx@gmail.com>
+Subject: Re: [RFC PATCH] dt-bindings: opp: Extend qcom-opp bindings with
+ properties needed for CPR
+Date: Mon, 22 Oct 2018 11:15:50 +0530
+Message-ID: <20181022054550.zlreptvlqn4z2jtq@vireshk-i7>
+References: <20180627045234.27403-3-rnayak@codeaurora.org>
+ <20181015124749.27276-1-niklas.cassel@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181021205501.23943-2-digetx@gmail.com>
+In-Reply-To: <20181015124749.27276-1-niklas.cassel@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org, robh@kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 21-10-18, 23:54, Dmitry Osipenko wrote:
-> Voltage regulators may be not available on some variations of HW, allow to
-> request stub voltage regulators by OPP core in a such case to reduce code
-> churning within drivers.
+On 15-10-18, 14:47, Niklas Cassel wrote:
+> Extend qcom-opp bindings with properties needed for Core Power Reduction
+> (CPR).
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> CPR is included in a great variety of Qualcomm SoC, e.g. msm8916 and
+> msm8996, and was first introduced in msm8974.
+> 
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 > ---
->  drivers/cpufreq/cpufreq-dt.c | 2 +-
->  drivers/cpufreq/ti-cpufreq.c | 3 ++-
->  drivers/opp/core.c           | 9 +++++++--
->  include/linux/pm_opp.h       | 4 ++--
->  4 files changed, 12 insertions(+), 6 deletions(-)
+> Hello Rob, Rajendra,
 > 
-> diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
-> index e58bfcb1169e..6ebca472ec76 100644
-> --- a/drivers/cpufreq/cpufreq-dt.c
-> +++ b/drivers/cpufreq/cpufreq-dt.c
-> @@ -196,7 +196,7 @@ static int cpufreq_init(struct cpufreq_policy *policy)
->  	 */
->  	name = find_supply_name(cpu_dev);
->  	if (name) {
-> -		opp_table = dev_pm_opp_set_regulators(cpu_dev, &name, 1);
-> +		opp_table = dev_pm_opp_set_regulators(cpu_dev, &name, 1, false);
->  		if (IS_ERR(opp_table)) {
->  			ret = PTR_ERR(opp_table);
->  			dev_err(cpu_dev, "Failed to set regulator for cpu%d: %d\n",
+> Sorry for not replying sooner.
+> Since Rob wanted the binding to be complete before merging,
+> this is my proposal to extend the OPP binding with properties
+> needed to support CPR (both for msm8916 and msm8996).
+> I've discussed the proposal with Viresh, and this proposal
+> seems better than what I previously suggested here:
+> https://lore.kernel.org/lkml/20181005204424.GA29500@centauri.lan/
+> 
+>  .../devicetree/bindings/opp/qcom-opp.txt      | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/opp/qcom-opp.txt b/Documentation/devicetree/bindings/opp/qcom-opp.txt
+> index db4d970c7ec7..3ab5dd84de86 100644
+> --- a/Documentation/devicetree/bindings/opp/qcom-opp.txt
+> +++ b/Documentation/devicetree/bindings/opp/qcom-opp.txt
+> @@ -23,3 +23,22 @@ Required properties:
+>  representing a corner/level that's communicated with a remote microprocessor
+>  (usually called the RPM) which then translates it into a certain voltage on
+>  a voltage rail.
+> +
+> +Optional properties:
+> +- opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. Even
+> +  though a power domain doesn't need a opp-hz, there can be devices in the
+> +  power domain that need to know the highest supported frequency for each
+> +  corner/level (e.g. CPR), in order to properly initialize the hardware.
+> +
+> +- qcom,fuse-level: A positive value representing the fuse corner/level
+> +  associated with this OPP node. Sometimes several corners/levels shares
+> +  a certain fuse corner/level. A fuse corner/level contains e.g. ref uV,
+> +  min uV, and max uV.
+> +
+> +- qcom,fuse-level-<name>: Named qcom,fuse-level property. This is exactly
+> +  similar to the above qcom,fuse-level property, but allows multiple
+> +  fuse corners/levels to be provided for the same OPP. At runtime, the
+> +  platform can pick a <name> and matching qcom,fuse-level-<name> property
+> +  will be enabled for all OPPs. If the platform doesn't pick a specific
+> +  <name> or the <name> doesn't match with any qcom,fuse-level-<name>
+> +  properties, then qcom,fuse-level property shall be used, if present.
 
-Have you actually tested this stuff ? The cpufreq-dt driver will
-probably fail to probe if the CPU node has a "-supply" property, but
-no regulator matching that.
+LGTM.
 
 -- 
 viresh
