@@ -1,65 +1,28 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [RFC PATCH v2 01/17] OPP: Allow to request stub voltage
- regulators
-Date: Mon, 22 Oct 2018 15:12:08 +0300
-Message-ID: <29f893be-feed-c4c5-8468-51f7228dd468@gmail.com>
-References: <20181021205501.23943-1-digetx@gmail.com>
- <20181021205501.23943-2-digetx@gmail.com>
- <20181022053636.ag62j3rj3vovbz53@vireshk-i7>
- <e4027793-9436-413d-2a7b-34cf519218c3@gmail.com>
- <20181022113224.b5fiebgy2aap66nd@vireshk-i7>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v1] ARM: dts: imx6ul: ccimx6ulsom: Add support for
+ wireless SOM variant
+Date: Mon, 22 Oct 2018 09:33:16 -0300
+Message-ID: <CAOMZO5CeZN5QhGha8rOm6qvSPmeVAPjQogmYsHLj5BE4CJ2jAQ@mail.gmail.com>
+References: <1540200443-24773-1-git-send-email-alex.gonzalez@digi.com> <1540200443-24773-2-git-send-email-alex.gonzalez@digi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181022113224.b5fiebgy2aap66nd@vireshk-i7>
-Content-Language: en-US
+In-Reply-To: <1540200443-24773-2-git-send-email-alex.gonzalez@digi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Gonzalez, Alex" <alex.gonzalez@digi.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/22/18 2:32 PM, Viresh Kumar wrote:
-> On 22-10-18, 14:29, Dmitry Osipenko wrote:
->> On 10/22/18 8:36 AM, Viresh Kumar wrote:
->>> On 21-10-18, 23:54, Dmitry Osipenko wrote:
->>>> Voltage regulators may be not available on some variations of HW, allow to
->>>> request stub voltage regulators by OPP core in a such case to reduce code
->>>> churning within drivers.
->>>>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>  drivers/cpufreq/cpufreq-dt.c | 2 +-
->>>>  drivers/cpufreq/ti-cpufreq.c | 3 ++-
->>>>  drivers/opp/core.c           | 9 +++++++--
->>>>  include/linux/pm_opp.h       | 4 ++--
->>>>  4 files changed, 12 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
->>>> index e58bfcb1169e..6ebca472ec76 100644
->>>> --- a/drivers/cpufreq/cpufreq-dt.c
->>>> +++ b/drivers/cpufreq/cpufreq-dt.c
->>>> @@ -196,7 +196,7 @@ static int cpufreq_init(struct cpufreq_policy *policy)
->>>>  	 */
->>>>  	name = find_supply_name(cpu_dev);
->>>>  	if (name) {
->>>> -		opp_table = dev_pm_opp_set_regulators(cpu_dev, &name, 1);
->>>> +		opp_table = dev_pm_opp_set_regulators(cpu_dev, &name, 1, false);
->>>>  		if (IS_ERR(opp_table)) {
->>>>  			ret = PTR_ERR(opp_table);
->>>>  			dev_err(cpu_dev, "Failed to set regulator for cpu%d: %d\n",
->>>
->>> Have you actually tested this stuff ? The cpufreq-dt driver will
->>> probably fail to probe if the CPU node has a "-supply" property, but
->>> no regulator matching that.
->>>
->>
->> Please notice that this patch doesn't change the original behaviour
->> and I suppose that failing in a case of missing regulator is the
->> expected behaviour for cpufreq-dt. Hence can't see any problem here.
-> 
-> So why have this patch then ?
+On Mon, Oct 22, 2018 at 6:28 AM Alex Gonzalez <alex.gonzalez@digi.com> wrote:
+>
+> The wireless variants of the ConnecCore 6UL SOM include a Qualcomm
+> QCA6564 wireless chip with dual WiFi and Bluetooth.
+>
+> Both the ConnectCore 6UL SBC Express and Pro boards fit a wireless SOM.
+>
+> The Wifi is connected through the SDIO interface on usdhc1 and the
+> Bluetooth is connected via uart1.
+>
+> Signed-off-by: Alex Gonzalez <alex.gonzalez@digi.com>
 
-Because there is one Tegra20 board (tegra20-trimslice) that doesn't declare necessary regulators, but we want to have CPU frequency scaling. I couldn't find board schematics and so don't know if CPU / CORE voltages are fixed on Trim-Slice or it is just preferable not to have DVFS for that board, it is an outlet-powered device [0]. Hence tegra20-cpufreq driver will request a dummy regulators when appropriate. 
-
-[0] http://www.compulab.co.il/utilite-computer/web/trim-slice
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
