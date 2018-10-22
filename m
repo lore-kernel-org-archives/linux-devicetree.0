@@ -1,85 +1,40 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 6/6] dt-bindings: drm/panel: simple: Innolux TV123WAM is
- actually P120ZDG-BF1
-Date: Mon, 22 Oct 2018 13:46:39 -0700
-Message-ID: <20181022204639.8558-6-dianders@chromium.org>
-References: <20181022204639.8558-1-dianders@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20181022204639.8558-1-dianders@chromium.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sean Paul <seanpaul@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, Sandeep Panda <spanda@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-arm-msm@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, ryandcase@chromium.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Evan Green <evgreen@chromium.org>
+Subject: [PATCH v3 0/5] arm64: dts: qcom: sdm845: Add UFS DT nodes
+Date: Mon, 22 Oct 2018 13:50:57 -0700
+Message-ID: <20181022205102.74825-1-evgreen@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Douglas Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Can Guo <cang@codeaurora.org>, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Manu Gautam <mgautam@codeaurora.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-QXMgZmFyIGFzIEkgY2FuIHRlbGwgdGhlIGJpbmRpbmdzIHRoYXQgd2VyZSBhZGRlZCBpbiBjb21t
-aXQKOWMwNDQwMGY3ZWE2ICgiZHQtYmluZGluZ3M6IGRybS9wYW5lbDogRG9jdW1lbnQgSW5ub2x1
-eCBUVjEyM1dBTSBwYW5lbApiaW5kaW5ncyIpIHdlcmVuJ3QgYWN0dWFsbHkgZm9yIElubm9sdXgg
-VFYxMjNXQU0gYnV0IHdlcmUgYWN0dWFsbHkgZm9yCklubm9sdXggUDEyMFpERy1CRjEuCgpBcyBm
-YXIgYXMgSSBjYW4gdGVsbCB0aGUgSW5ub2x1eCBUVjEyM1dBTSBpc24ndCBhIHJlYWwgcGFuZWwg
-YW5kIGJ1dAppdCdzIGEgbW9zaCBiZXR3ZWVuIHRoZSBUSSBUVjEyM1dBTSBhbmQgdGhlIElubm9s
-dXggUDEyMFpERy1CRjEuCkxldCdzIHVubW9zaC4KCkhlcmUncyBteSBldmlkZW5jZToKCiogU2Vh
-cmNoaW5nIGZvciBUVjEyM1dBTSBvbiB0aGUgSW50ZXJuZXQgdHVybnMgdXAgYSBUSSBwYW5lbC4g
-IFdoaWxlCiAgaXQncyBwb3NzaWJsZSB0aGF0IGFuIElubm9sdXggcGFuZWwgaGFzIHRoZSBzYW1l
-IG1vZGVsIG51bWJlciBhcyB0aGUKICBUSSBQYW5lbCwgaXQgc2VlbXMgYSBsaXR0bGUgZG91YnRm
-dWwuICBMb29raW5nIHVwIHRoZSBkYXRhc2hlZXQgZnJvbQogIHRoZSBUSSBQYW5lbCBzaG93cyB0
-aGF0IGl0J3MgMTkyMCB4IDEyODAgYW5kIDI1OS4yIG1tIHggMTcyLjggbW0uCgoqIEFzIGZhciBh
-cyBJIGtub3csIHRoZSBwYXRjaCBhZGRpbmcgdGhlIElubm9sdXggUGFuZWwgd2FzIHN1cHBvc2Vk
-IHRvCiAgYmUgZm9yIHRoZSBib2FyZCB0aGF0J3Mgc2l0dGluZyBpbiBmcm9udCBvZiBtZSBhcyBJ
-IHR5cGUgdGhpcwogIChzdXBwb3J0IGZvciB0aGF0IGJvYXJkIGlzIG5vdCB5ZXQgdXBzdHJlYW0p
-LiAgT24gdGhlIGJhY2sgb2YgdGhhdAogIHBhbmVsIEkgc2VlIElubm9sdXggUDEyMFpEWi1FWjEg
-cmV2IEIxLgoKKiBTb21lb25lIHBvaW50ZWQgbWUgYXQgYSBkYXRhc2hlZXQgdGhhdCdzIHN1cHBv
-c2VkIHRvIGJlIGZvciB0aGUKICBwYW5lbCBpbiBmcm9udCBvZiBtZSAoc29ycnksIEkgY2FuJ3Qg
-c2hhcmUgdGhlIGRhdGFzaGVldCkuICBUaGF0CiAgZGF0YXNoZWV0IGhhcyB0aGUgc3RyaW5nICJw
-MTIwemRnLWJmMSIKCiogSWYgSSBzZWFyY2ggZm9yICJQMTIwWkRHLUJGMSIgb24gdGhlIEludGVy
-bmV0IEkgZ2V0IGhpdHMgZm9yIHBhbmVscwogIHRoYXQgYXJlIDIxNjB4MTQ0MC4gIFRoZXkgZG9u
-J3QgaGF2ZSBkYXRhc2hlZXRzLCBidXQgdGhlIGZhY3QgdGhhdAogIHRoZSByZXNvbHV0aW9uIG1h
-dGNoZXMgaXMgYSBnb29kIHNpZ24uCgpXaGlsZSB3ZSBkb2luZyB0aGUgcmVuYW1lLCBhbHNvIG1l
-bnRpb24gdGhhdCBuby1ocGQgY2FuIGJlIHVzZWQgd2l0aAp0aGlzIHBhbmVsLiAgU2VlIHRoZSBw
-cmV2aW91cyBwYXRjaCBpbiB0aGlzIHNlcmllcyAoImRybS9wYW5lbDoKc2ltcGxlOiBBZGQgIm5v
-LWhwZCIgZGVsYXkgZm9yIElubm9sdXggVFYxMjNXQU0iKS4KCkZpeGVzOiA5YzA0NDAwZjdlYTYg
-KCJkdC1iaW5kaW5nczogZHJtL3BhbmVsOiBEb2N1bWVudCBJbm5vbHV4IFRWMTIzV0FNIHBhbmVs
-IGJpbmRpbmdzIikKU2lnbmVkLW9mZi1ieTogRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hy
-b21pdW0ub3JnPgpDYzogU2FuZGVlcCBQYW5kYSA8c3BhbmRhQGNvZGVhdXJvcmEub3JnPgotLS0K
-CiAuLi4ve2lubm9sdXgsdHYxMjN3YW0udHh0ID0+IGlubm9sdXgscDEyMHpkZy1iZjEudHh0fSAg
-ICAgfCA4ICsrKysrLS0tCiAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAzIGRlbGV0
-aW9ucygtKQogcmVuYW1lIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3BhbmVsL3tpbm5vbHV4LHR2MTIzd2FtLnR4dCA9PiBpbm5vbHV4LHAxMjB6ZGctYmYxLnR4dH0g
-KDcwJSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2FtLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgscDEyMHpkZy1iZjEudHh0CnNpbWlsYXJp
-dHkgaW5kZXggNzAlCnJlbmFtZSBmcm9tIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsdHYxMjN3YW0udHh0CnJlbmFtZSB0byBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHAxMjB6ZGctYmYx
-LnR4dAppbmRleCBhOWIzNTI2NWZhMTMuLjUxM2YwMzQ2NmFiYSAxMDA2NDQKLS0tIGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dh
-bS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
-ZWwvaW5ub2x1eCxwMTIwemRnLWJmMS50eHQKQEAgLTEsMjAgKzEsMjIgQEAKLUlubm9sdXggVFYx
-MjNXQU0gMTIuMyBpbmNoIGVEUCAySyBkaXNwbGF5IHBhbmVsCitJbm5vbHV4IFAxMjBaREctQkYx
-IDEyLjAyIGluY2ggZURQIDJLIGRpc3BsYXkgcGFuZWwKIAogVGhpcyBiaW5kaW5nIGlzIGNvbXBh
-dGlibGUgd2l0aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAog
-aW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlzIGRpcmVjdG9yeS4KIAogUmVxdWlyZWQgcHJvcGVy
-dGllczoKLS0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJpbm5vbHV4LHR2MTIzd2FtIgorLSBjb21w
-YXRpYmxlOiBzaG91bGQgYmUgImlubm9sdXgscDEyMHpkZy1iZjEiCiAtIHBvd2VyLXN1cHBseTog
-cmVndWxhdG9yIHRvIHByb3ZpZGUgdGhlIHN1cHBseSB2b2x0YWdlCiAKIE9wdGlvbmFsIHByb3Bl
-cnRpZXM6CiAtIGVuYWJsZS1ncGlvczogR1BJTyBwaW4gdG8gZW5hYmxlIG9yIGRpc2FibGUgdGhl
-IHBhbmVsCiAtIGJhY2tsaWdodDogcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0IGRldmljZSBhdHRh
-Y2hlZCB0byB0aGUgcGFuZWwKKy0gbm8taHBkOiBJZiBIUEQgaXNuJ3QgaG9va2VkIHVwOyBhZGQg
-dGhpcyBwcm9wZXJ0eS4KIAogRXhhbXBsZToKIAlwYW5lbF9lZHA6IHBhbmVsLWVkcCB7Ci0JCWNv
-bXBhdGlibGUgPSAiaW5ub2x1eCx0djEyM3dhbSI7CisJCWNvbXBhdGlibGUgPSAiaW5ub2x1eCxw
-MTIwemRnLWJmMSI7CiAJCWVuYWJsZS1ncGlvcyA9IDwmbXNtZ3BpbyAzMSBHUElPX0FDVElWRV9M
-T1c+OwogCQlwb3dlci1zdXBwbHkgPSA8JnBtODkxNl9sMj47CiAJCWJhY2tsaWdodCA9IDwmYmFj
-a2xpZ2h0PjsKKwkJbm8taHBkOwogCX07Ci0tIAoyLjE5LjEuNTY4LmcxNTJhZDhlMzM2LWdvb2cK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Update the device tree bindings for the QMP PHY to properly
+specify the registers for dual-lane PHYs. Update the driver to use
+those new registers. Add the DT nodes for UFS on SDM845 and MTP.
+Finally, fix up the USB3 PHY on SDM845, which also has a dual-lane phy
+
+Changes in v3:
+ - Removed erroneous fixup for USB UniPro PHY, which is not dual lane (Doug)
+
+Changes in v2:
+- Added dt bindings change, corresponding driver fixup, and USB PHY fixup
+- Renamed ufsphy to phy (Vivek)
+- Removed #clock-cells (Vivek)
+
+Can Guo (1):
+  arm64: dts: qcom: sdm845: Add UFS nodes for sdm845-mtp
+
+Evan Green (4):
+  dt-bindings: phy-qcom-qmp: Fix register underspecification
+  phy: qcom-qmp: Utilize fully-specified DT registers
+  arm64: dts: qcom: sdm845: add UFS controller
+  arm64: dts: qcom: sdm845: Add USB PHY lane two
+
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 73 +++++++++++++++++++---
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts            | 14 +++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               | 71 ++++++++++++++++++++-
+ drivers/phy/qualcomm/phy-qcom-qmp.c                | 51 +++++++++++----
+ 4 files changed, 187 insertions(+), 22 deletions(-)
+
+-- 
+2.16.4
