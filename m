@@ -1,134 +1,62 @@
-From: Nava kishore Manne <navam@xilinx.com>
-Subject: RE: [PATCH 3/3] fpga manager: Adding FPGA Manager support for Xilinx
- zynqmp
-Date: Mon, 22 Oct 2018 10:03:55 +0000
-Message-ID: <BYAPR02MB47106D61C0CDB8268BAF4E44C2F40@BYAPR02MB4710.namprd02.prod.outlook.com>
-References: <20181020084805.29103-1-nava.manne@xilinx.com>
- <20181020084805.29103-4-nava.manne@xilinx.com>
- <CAJYdmePxnkG=3iJC5Lewq3n3zFGTKASJX7ceUEufBvOJogCfdA@mail.gmail.com>
- <CAAtXAHdP6z5NG+EAvW_N_RfcPv59e15hkd83AR-L3RDBrLMvcQ@mail.gmail.com>
+From: Nick Hu <nickhu@andestech.com>
+Subject: Re: [PATCH 2/5] nds32: Fix bug in bitfield.h
+Date: Mon, 22 Oct 2018 18:19:25 +0800
+Message-ID: <20181022101925.GB24110@andestech.com>
+References: <cover.1539745993.git.nickhu@andestech.com>
+ <6702edd2853db9a475853a9b8d00b5aacf546bb2.1539745993.git.nickhu@andestech.com>
+ <20181018142622.p3hrrymexubkkuf5@lakrids.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAtXAHdP6z5NG+EAvW_N_RfcPv59e15hkd83AR-L3RDBrLMvcQ@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181018142622.p3hrrymexubkkuf5@lakrids.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>, Moritz Fischer <moritz.fischer.private@gmail.com>
-Cc: Alan Tull <atull@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>, "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "chinnikishore369@gmail.com" <chinnikishore369@gmail.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Greentime Ying-Han =?utf-8?B?SHUo6IOh6Iux5ryiKQ==?= <greentime@andestech.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "deanbo422@gmail.com" <deanbo422@gmail.com>, "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@redhat.com" <jolsa@redhat.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "geert@linux-m68k.org" <geert@linux-m68k.org>, Zong Zong-Xian =?utf-8?B?TGko5p2O5a6X5oayKQ==?= <zong@andestech.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTW9ydGl6LA0KDQpUaGFua3MgZm9yIHRoZSBxdWljayByZXNwb25zZS4uLi4NClBsZWFzZSBm
-aW5kIG15IHJlc3BvbnNlIGlubGluZS4NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
-PiBGcm9tOiBNb3JpdHogRmlzY2hlciBbbWFpbHRvOm1vcml0ei5maXNjaGVyQGV0dHVzLmNvbV0N
-Cj4gU2VudDogU2F0dXJkYXksIE9jdG9iZXIgMjAsIDIwMTggNzowMiBBTQ0KPiBUbzogTW9yaXR6
-IEZpc2NoZXIgPG1vcml0ei5maXNjaGVyLnByaXZhdGVAZ21haWwuY29tPg0KPiBDYzogTmF2YSBr
-aXNob3JlIE1hbm5lIDxuYXZhbUB4aWxpbnguY29tPjsgQWxhbiBUdWxsIDxhdHVsbEBrZXJuZWwu
-b3JnPjsNCj4gUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZCA8
-bWFyay5ydXRsYW5kQGFybS5jb20+Ow0KPiBNaWNoYWwgU2ltZWsgPG1pY2hhbHNAeGlsaW54LmNv
-bT47IFJhamFuIFZhamEgPFJBSkFOVkB4aWxpbnguY29tPjsgSm9sbHkNCj4gU2hhaCA8Sk9MTFlT
-QHhpbGlueC5jb20+OyBsaW51eC1mcGdhQHZnZXIua2VybmVsLm9yZzsgRGV2aWNldHJlZSBMaXN0
-DQo+IDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IGxpbnV4LWFybS1rZXJuZWwgPGxpbnV4
-LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBMaW51eCBLZXJuZWwgTWFpbGlu
-ZyBMaXN0IDxsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZz47IGNoaW5uaWtpc2hvcmUz
-NjlAZ21haWwuY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMy8zXSBmcGdhIG1hbmFnZXI6IEFk
-ZGluZyBGUEdBIE1hbmFnZXIgc3VwcG9ydCBmb3INCj4gWGlsaW54IHp5bnFtcA0KPiANCj4gT24g
-RnJpLCBPY3QgMTksIDIwMTggYXQgMjozMyBQTSBNb3JpdHogRmlzY2hlcg0KPiA8bW9yaXR6LmZp
-c2NoZXIucHJpdmF0ZUBnbWFpbC5jb20+IHdyb3RlOg0KPiA+DQo+ID4gSGkgTmF2YSwNCj4gPg0K
-PiA+IExvb2tzIGdvb2QgdG8gbWUsIGEgY291cGxlIG9mIG5pdHMgaW5saW5lIGJlbG93Lg0KPiA+
-DQo+ID4gT24gRnJpLCBPY3QgMTksIDIwMTggYXQgMTo1MCBBTSBOYXZhIGtpc2hvcmUgTWFubmUN
-Cj4gPiA8bmF2YS5tYW5uZUB4aWxpbnguY29tPiB3cm90ZToNCj4gPiA+DQo+ID4gPiBUaGlzIHBh
-dGNoIGFkZHMgRlBHQSBNYW5hZ2VyIHN1cHBvcnQgZm9yIHRoZSBYaWxpbnggWnlucU1wIGNoaXAu
-DQo+ID4NCj4gPiBJc24ndCBpdCBaeW5xTVAgPw0KPiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6
-IE5hdmEga2lzaG9yZSBNYW5uZSA8bmF2YS5tYW5uZUB4aWxpbnguY29tPg0KPiA+ID4gLS0tDQo+
-ID4gPiBDaGFuZ2VzIGZvciB2MToNCj4gPiA+ICAgICAgICAgICAgICAgICAtTm9uZS4NCj4gPiA+
-DQo+ID4gPiBDaGFuZ2VzIGZvciBSRkMtVjI6DQo+ID4gPiAgICAgICAgICAgICAgICAgLVVwZGF0
-ZWQgdGhlIEZwZ2EgTWdyIHJlZ2lzdHJhdGlvbnMgY2FsbCdzDQo+ID4gPiAgICAgICAgICAgICAg
-ICAgIHRvIDQuMTgNCj4gPiA+DQo+ID4gPiAgZHJpdmVycy9mcGdhL0tjb25maWcgICAgICAgfCAg
-IDkgKysrDQo+ID4gPiAgZHJpdmVycy9mcGdhL01ha2VmaWxlICAgICAgfCAgIDEgKw0KPiA+ID4g
-IGRyaXZlcnMvZnBnYS96eW5xbXAtZnBnYS5jIHwgMTU5DQo+ID4gPiArKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrDQo+ID4gPiAgMyBmaWxlcyBjaGFuZ2VkLCAxNjkgaW5zZXJ0
-aW9ucygrKQ0KPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2ZwZ2EvenlucW1wLWZw
-Z2EuYw0KPiA+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2ZwZ2EvS2NvbmZpZyBiL2Ry
-aXZlcnMvZnBnYS9LY29uZmlnIGluZGV4DQo+ID4gPiAxZWJjZWY0YmFiNWIuLjI2ZWJiY2YzZDNh
-MyAxMDA2NDQNCj4gPiA+IC0tLSBhL2RyaXZlcnMvZnBnYS9LY29uZmlnDQo+ID4gPiArKysgYi9k
-cml2ZXJzL2ZwZ2EvS2NvbmZpZw0KPiA+ID4gQEAgLTU2LDYgKzU2LDE1IEBAIGNvbmZpZyBGUEdB
-X01HUl9aWU5RX0ZQR0ENCj4gPiA+ICAgICAgICAgaGVscA0KPiA+ID4gICAgICAgICAgIEZQR0Eg
-bWFuYWdlciBkcml2ZXIgc3VwcG9ydCBmb3IgWGlsaW54IFp5bnEgRlBHQXMuDQo+ID4gPg0KPiA+
-ID4gK2NvbmZpZyBGUEdBX01HUl9aWU5RTVBfRlBHQQ0KPiA+ID4gKyAgICAgICB0cmlzdGF0ZSAi
-WGlsaW54IFp5bnFtcCBGUEdBIg0KPiA+ID4gKyAgICAgICBkZXBlbmRzIG9uIEFSQ0hfWllOUU1Q
-IHx8IENPTVBJTEVfVEVTVA0KPiA+ID4gKyAgICAgICBoZWxwDQo+ID4gPiArICAgICAgICAgRlBH
-QSBtYW5hZ2VyIGRyaXZlciBzdXBwb3J0IGZvciBYaWxpbnggWnlucU1QIEZQR0FzLg0KPiA+ID4g
-KyAgICAgICAgIFRoaXMgZHJpdmVyIHVzZXMgcHJvY2Vzc29yIGNvbmZpZ3VyYXRpb24gcG9ydChQ
-Q0FQKQ0KPiA+IFRoaXMgZHJpdmVyIHVzZXMgKnRoZSogcHJvY2Vzc29yIGNvbmZpZ3VyYXRpb24g
-cG9ydC4NCj4gPg0KPiA+ID4gKyAgICAgICAgIHRvIGNvbmZpZ3VyZSB0aGUgcHJvZ3JhbW1hYmxl
-IGxvZ2ljKFBMKSB0aHJvdWdoIFBTDQo+ID4gPiArICAgICAgICAgb24gWnlucU1QIFNvQy4NCj4g
-PiA+ICsNCj4gPiA+ICBjb25maWcgRlBHQV9NR1JfWElMSU5YX1NQSQ0KPiA+ID4gICAgICAgICB0
-cmlzdGF0ZSAiWGlsaW54IENvbmZpZ3VyYXRpb24gb3ZlciBTbGF2ZSBTZXJpYWwgKFNQSSkiDQo+
-ID4gPiAgICAgICAgIGRlcGVuZHMgb24gU1BJDQo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9m
-cGdhL01ha2VmaWxlIGIvZHJpdmVycy9mcGdhL01ha2VmaWxlIGluZGV4DQo+ID4gPiA3YTJkNzNi
-YTcxMjIuLjM0ODhlYmJhZWU0NiAxMDA2NDQNCj4gPiA+IC0tLSBhL2RyaXZlcnMvZnBnYS9NYWtl
-ZmlsZQ0KPiA+ID4gKysrIGIvZHJpdmVycy9mcGdhL01ha2VmaWxlDQo+ID4gPiBAQCAtMTYsNiAr
-MTYsNyBAQCBvYmotJChDT05GSUdfRlBHQV9NR1JfU09DRlBHQV9BMTApICAgICs9DQo+IHNvY2Zw
-Z2EtYTEwLm8NCj4gPiA+ICBvYmotJChDT05GSUdfRlBHQV9NR1JfVFM3M1hYKSAgICAgICAgICAr
-PSB0czczeHgtZnBnYS5vDQo+ID4gPiAgb2JqLSQoQ09ORklHX0ZQR0FfTUdSX1hJTElOWF9TUEkp
-ICAgICAgKz0geGlsaW54LXNwaS5vDQo+ID4gPiAgb2JqLSQoQ09ORklHX0ZQR0FfTUdSX1pZTlFf
-RlBHQSkgICAgICAgKz0genlucS1mcGdhLm8NCj4gPiA+ICtvYmotJChDT05GSUdfRlBHQV9NR1Jf
-WllOUU1QX0ZQR0EpICAgICArPSB6eW5xbXAtZnBnYS5vDQo+ID4gPiAgb2JqLSQoQ09ORklHX0FM
-VEVSQV9QUl9JUF9DT1JFKSAgICAgICAgICs9IGFsdGVyYS1wci1pcC1jb3JlLm8NCj4gPiA+ICBv
-YmotJChDT05GSUdfQUxURVJBX1BSX0lQX0NPUkVfUExBVCkgICAgKz0gYWx0ZXJhLXByLWlwLWNv
-cmUtcGxhdC5vDQo+ID4gPg0KPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZnBnYS96eW5xbXAt
-ZnBnYS5jIGIvZHJpdmVycy9mcGdhL3p5bnFtcC1mcGdhLmMNCj4gPiA+IG5ldyBmaWxlIG1vZGUg
-MTAwNjQ0IGluZGV4IDAwMDAwMDAwMDAwMC4uMjc2MGQ3ZTM4NzJhDQo+ID4gPiAtLS0gL2Rldi9u
-dWxsDQo+ID4gPiArKysgYi9kcml2ZXJzL2ZwZ2EvenlucW1wLWZwZ2EuYw0KPiA+ID4gQEAgLTAs
-MCArMSwxNTkgQEANCj4gPiA+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMCsN
-Cj4gPiA+ICsvKg0KPiA+ID4gKyAqIENvcHlyaWdodCAoQykgMjAxOCBYaWxpbngsIEluYy4NCj4g
-PiA+ICsgKi8NCj4gPiA+ICsNCj4gPiA+ICsjaW5jbHVkZSA8bGludXgvZG1hLW1hcHBpbmcuaD4N
-Cj4gPiA+ICsjaW5jbHVkZSA8bGludXgvZnBnYS9mcGdhLW1nci5oPg0KPiA+ID4gKyNpbmNsdWRl
-IDxsaW51eC9pby5oPg0KPiA+ID4gKyNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4NCj4gPiA+ICsj
-aW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ID4gPiArI2luY2x1ZGUgPGxpbnV4L29mX2FkZHJl
-c3MuaD4NCj4gPiA+ICsjaW5jbHVkZSA8bGludXgvc3RyaW5nLmg+DQo+ID4gPiArI2luY2x1ZGUg
-PGxpbnV4L2Zpcm13YXJlL3hsbngtenlucW1wLmg+DQo+ID4gPiArDQo+ID4gPiArLyogQ29uc3Rh
-bnQgRGVmaW5pdGlvbnMgKi8NCj4gPiA+ICsjZGVmaW5lIElYUl9GUEdBX0RPTkVfTUFTSyAgICAg
-MFgwMDAwMDAwOFUNCj4gPiA+ICsNCj4gPiA+ICsvKioNCj4gPiA+ICsgKiBzdHJ1Y3QgenlucW1w
-X2ZwZ2FfcHJpdiAtIFByaXZhdGUgZGF0YSBzdHJ1Y3R1cmUNCj4gPiA+ICsgKiBAZGV2OiAgICAg
-ICBEZXZpY2UgZGF0YSBzdHJ1Y3R1cmUNCj4gPiA+ICsgKiBAZmxhZ3M6ICAgICBmbGFncyB3aGlj
-aCBpcyB1c2VkIHRvIGlkZW50aWZ5IHRoZSBiaXRmaWxlIHR5cGUNCj4gPiA+ICsgKi8NCj4gPiA+
-ICtzdHJ1Y3QgenlucW1wX2ZwZ2FfcHJpdiB7DQo+ID4gPiArICAgICAgIHN0cnVjdCBkZXZpY2Ug
-KmRldjsNCj4gPiA+ICsgICAgICAgdTMyIGZsYWdzOw0KPiA+ID4gK307DQo+ID4gPiArDQo+ID4g
-PiArc3RhdGljIGludCB6eW5xbXBfZnBnYV9vcHNfd3JpdGVfaW5pdChzdHJ1Y3QgZnBnYV9tYW5h
-Z2VyICptZ3IsDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0
-cnVjdCBmcGdhX2ltYWdlX2luZm8gKmluZm8sDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIGNvbnN0IGNoYXIgKmJ1Ziwgc2l6ZV90IHNpemUpDQo+ID4gPiArew0K
-PiA+ID4gKyAgICAgICBzdHJ1Y3QgenlucW1wX2ZwZ2FfcHJpdiAqcHJpdjsNCj4gPiA+ICsNCj4g
-PiA+ICsgICAgICAgcHJpdiA9IG1nci0+cHJpdjsNCj4gPiA+ICsgICAgICAgcHJpdi0+ZmxhZ3Mg
-PSBpbmZvLT5mbGFnczsNCj4gPiA+ICsNCj4gPiA+ICsgICAgICAgcmV0dXJuIDA7DQo+ID4gPiAr
-fQ0KPiA+ID4gKw0KPiA+ID4gK3N0YXRpYyBpbnQgenlucW1wX2ZwZ2Ffb3BzX3dyaXRlKHN0cnVj
-dCBmcGdhX21hbmFnZXIgKm1nciwNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIGNvbnN0IGNoYXIgKmJ1Ziwgc2l6ZV90IHNpemUpIHsNCj4gPiA+ICsgICAgICAgc3RydWN0
-IHp5bnFtcF9mcGdhX3ByaXYgKnByaXY7DQo+ID4gPiArICAgICAgIGNoYXIgKmtidWY7DQo+ID4g
-PiArICAgICAgIGRtYV9hZGRyX3QgZG1hX2FkZHI7DQo+ID4gPiArICAgICAgIGludCByZXQ7DQo+
-ID4gPiArICAgICAgIGNvbnN0IHN0cnVjdCB6eW5xbXBfZWVtaV9vcHMgKmVlbWlfb3BzID0NCj4g
-PiA+ICt6eW5xbXBfcG1fZ2V0X2VlbWlfb3BzKCk7DQo+ID4NCj4gPiBSZXZlcnNlIHhtYXMtdHJl
-ZSBwbGVhc2UsIGkuZS4gbG9uZyBsaW5lcyBmaXJzdC4NCj4gPg0KPiA+ID4gKw0KPiA+ID4gKyAg
-ICAgICBpZiAoIWVlbWlfb3BzIHx8ICFlZW1pX29wcy0+ZnBnYV9sb2FkKQ0KPiA+ID4gKyAgICAg
-ICAgICAgICAgIHJldHVybiAtRU5YSU87DQo+ID4gPiArDQo+ID4gPiArICAgICAgIHByaXYgPSBt
-Z3ItPnByaXY7DQo+ID4gPiArDQo+ID4gPiArICAgICAgIGtidWYgPSBkbWFfYWxsb2NfY29oZXJl
-bnQocHJpdi0+ZGV2LCBzaXplLCAmZG1hX2FkZHIsDQo+IEdGUF9LRVJORUwpOw0KPiA+ID4gKyAg
-ICAgICBpZiAoIWtidWYpDQo+ID4gPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07DQo+
-ID4gPiArDQo+ID4gPiArICAgICAgIG1lbWNweShrYnVmLCBidWYsIHNpemUpOw0KPiA+ID4gKw0K
-PiA+ID4gKyAgICAgICB3bWIoKTsgLyogZW5zdXJlIGFsbCB3cml0ZXMgYXJlIGRvbmUgYmVmb3Jl
-IGluaXRpYXRlIEZXIGNhbGwNCj4gPiA+ICsgKi8NCj4gPiA+ICsNCj4gPiA+ICsgICAgICAgcmV0
-ID0gZWVtaV9vcHMtPmZwZ2FfbG9hZChkbWFfYWRkciwgc2l6ZSwgcHJpdi0+ZmxhZ3MpOw0KPiAN
-Cj4gRG9uJ3QgeW91IGhhdmUgdG8gZG8gYW55dGhpbmcgd2l0aCB0aGUgZmxhZ3M/IElzIGl0IHJl
-YWxseSBqdXN0IGEgcGFzcy10aHJvdWdoIG9mDQo+IEZQR0EgbWFuYWdlciBmbGFncyB0byBlZW1p
-IGNhbGxzPw0KPiANCj4gRG9uJ3QgeW91IHdhbnQgdG8gbWFrZSBwYXJ0aWFsIGJpdHN0cmVhbXMg
-ZS5nLiB1c2UgYSBmbGFncyB2YWx1ZSB0aGF0IHlvdSBleHBvcnQNCj4gaW4geW91ciBmaXJtd2Fy
-ZSBoZWFkZXIgKHhsbngtenlucW1wLmgpIGFuZCBzZXQgdGhvc2UgYmFzZWQgb24gd2hhdCBmbGFn
-cyBnZXQNCj4gcGFzc2VkIGluLCBpLmUuIGV4cGxpY2l0ZWx5IHRyYW5zbGF0ZSBGUEdBIE1hbmFn
-ZXIgZmxhZ3MgdG8geW91ciBmaXJtd2FyZSBmbGFncz8NCg0KQXQgdGhpcyBwb2ludCBvZiB0aW1l
-IHRoZSBmaXJtd2FyZSB1c2UgRmxhZyAwIGZvciBmdWxsIEJpdHN0cmVhbSBhbmQgMSBmb3IgcGFy
-dGlhbCBiaXRzdHJlYW0gbG9hZGluZy4NClNvIEkgaGF2ZSBub3QgZG9pbmcgYW55IGV4cGxpY2l0
-IHRyYW5zbGF0ZSBGUEdBIE1hbmFnZXIgZmxhZ3MgaW5zaWRlIHRoZSBkcml2ZXIuDQpXaWxsIGRv
-Y3VtZW50IHRoZSBmbGFncyBpbmZvIGluIHhsbngtenlucW1wLmgNCg0KUmVnYXJkcywNCk5hdmFr
-aXNob3JlLg0K
+Hi Mark,
+
+On Thu, Oct 18, 2018 at 10:26:31PM +0800, Mark Rutland wrote:
+> On Thu, Oct 18, 2018 at 04:43:14PM +0800, Nickhu wrote:
+> > There two bitfield bug for perfomance counter
+> > in bitfield.h:
+> > 
+> > 	PFM_CTL_offSEL1		21 --> 16
+> > 	PFM_CTL_offSEL2		27 --> 22
+> > 
+> > This commit fix it.
+> > 
+> > Signed-off-by: Nickhu <nickhu@andestech.com>
+> 
+> This patch should probably be move before the patch adding perf support.
+> That way, perf support isn't broken at the point it is added.
+> 
+> Thanks,
+> Mark.
+> 
+> > ---
+> >  arch/nds32/include/asm/bitfield.h | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/nds32/include/asm/bitfield.h b/arch/nds32/include/asm/bitfield.h
+> > index 8e84fc385b94..19b2841219ad 100644
+> > --- a/arch/nds32/include/asm/bitfield.h
+> > +++ b/arch/nds32/include/asm/bitfield.h
+> > @@ -692,8 +692,8 @@
+> >  #define PFM_CTL_offKU1		13	/* Enable user mode event counting for PFMC1 */
+> >  #define PFM_CTL_offKU2		14	/* Enable user mode event counting for PFMC2 */
+> >  #define PFM_CTL_offSEL0		15	/* The event selection for PFMC0 */
+> > -#define PFM_CTL_offSEL1		21	/* The event selection for PFMC1 */
+> > -#define PFM_CTL_offSEL2		27	/* The event selection for PFMC2 */
+> > +#define PFM_CTL_offSEL1		16	/* The event selection for PFMC1 */
+> > +#define PFM_CTL_offSEL2		22	/* The event selection for PFMC2 */
+> >  /* bit 28:31 reserved */
+> >  
+> >  #define PFM_CTL_mskEN0		( 0x01  << PFM_CTL_offEN0 )
+> > -- 
+> > 2.17.0
+> >
+
+Thank you for the advice !!
+I will prepare another patch for it. 
