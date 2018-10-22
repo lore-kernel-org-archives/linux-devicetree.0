@@ -1,79 +1,118 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 6/6] arm64: dts: xilinx: ultra96: Standardize LED labels
- and triggers
-Date: Mon, 22 Oct 2018 12:20:08 +0530
-Message-ID: <20181022065008.GA10999@mani>
-References: <20181009140522.6492-1-manivannan.sadhasivam@linaro.org>
- <20181009140522.6492-7-manivannan.sadhasivam@linaro.org>
- <7b94c09d-ecbd-e48e-6583-127566715a76@xilinx.com>
- <20181015185147.GA29649@amd>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v3] of: overlay: user space synchronization
+Date: Mon, 22 Oct 2018 00:30:21 -0700
+Message-ID: <399b1ed0-ac64-d962-5eea-23a99011aada@gmail.com>
+References: <1539736466-28638-1-git-send-email-frowand.list@gmail.com>
+ <20181018193216.GA9971@bogus>
+ <2f99d700-6276-cfa4-8878-4eb161126330@gmail.com>
+ <CAL_Jsq+=OiXTSSEr4QuiyqCzyrKdH0M8HhmOjVha3SWM5Y62Gw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181015185147.GA29649@amd>
+In-Reply-To: <CAL_Jsq+=OiXTSSEr4QuiyqCzyrKdH0M8HhmOjVha3SWM5Y62Gw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Michal Simek <michal.simek@xilinx.com>, robh+dt@kernel.org, heiko@sntech.de, ezequiel@collabora.com, xuwei5@hisilicon.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, koen.kooi@linaro.org
+To: Rob Herring <robh@kernel.org>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Alan Tull <atull@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
-
-Sorry for the late reply! Not sure why your resonse was filtered by the
-Spam filter :\
-
-On Mon, Oct 15, 2018 at 09:56:01PM +0200, Pavel Machek wrote:
-> On Wed 2018-10-10 09:25:24, Michal Simek wrote:
-> > On 9.10.2018 16:05, Manivannan Sadhasivam wrote:
-> > > For all 96Boards, the following standard is used for onboard LEDs.
-> > > 
-> > > device-name:green:user1  default-trigger: heartbeat
-> > > device-name:green:user2  default-trigger: mmc0/disk-activity
-> > >                                           (onboard-storage)
-> > > device-name:green:user3  default-trigger: mmc1 (SD-card)
-> > > device-name:green:user4  default-trigger: none, panic-indicator
+On 10/19/18 9:06 AM, Rob Herring wrote:
+> On Thu, Oct 18, 2018 at 7:06 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>>
+>> On 10/18/18 12:32, Rob Herring wrote:
+>>> On Tue, Oct 16, 2018 at 05:34:26PM -0700, frowand.list@gmail.com wrote:
+>>>> From: Frank Rowand <frank.rowand@sony.com>
+>>>>
+>>>> When an overlay is applied or removed, the live devicetree visible in
+>>>> /proc/device-tree/, aka /sys/firmware/devicetree/base/, reflects the
+>>>> changes.  There is no method for user space to determine whether the
+>>>> live devicetree was modified by overlay actions.
+>>>
+>>> Because userspace has no way to modify the DT and the ways the kernel
+>>> can do modifications is limited.
+>>>
+>>> Do you have an actually need for this outside of testing/development?
+>>
+>> I do not know if anyone uses /proc/device-tree for anything outside of
+>> testing/development.  If we believe that there is no other use of
+>> /proc/device-tree we can simply document that there is no expectation
+>> that accessors will see a consistent, unchanging /proc/device-tree.
 > 
-> Actually, having one LED as heartbeat and second as panic indicator
-> only... Could those be merged and remaining LED used to something
-> useful?
->
+> I didn't mean whether /proc/device-tree is used outside of testing. It
+> is. The question is whether any users care if there are changes
+> happening. If so what is the use case?
 
-No. Our intention is to leave one LED as a panic indicator and a dedicated
-LED for heartbeat. If user wants to override the defaults, he can always do
-with any LEDs.
+What is the point of looking at a devicetree if you don't know if it
+is in a consistent state or part way through a change?
+
  
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > ---
-> 
-> > > index eb5e8bddb610..565ceb390f99 100644
-> > > --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-> > > +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-> > > @@ -57,29 +57,30 @@
-> > >  	leds {
-> > >  		compatible = "gpio-leds";
-> > >  		ds2 {
-> > > -			label = "ds2";
-> > > +			label = "zynqmp-zcu100-revC:green:user1";
-> > 
-> > The purpose of this series should be standardize Led labels that's why I
-> > would expect that leds will be called in the same way on all these
-> > boards that's why I am not getting why there is board name.
-> > 
-> > green:user1 or just user1 should be enough.
-> 
-> green:user1 is better. Also... I guess this should go to the LEDs
-> list... and if you want to make names standard, maybe there's better
-> naming than user1..user4?
-> 
+> kexec used to be one of the main users, but I think it has switched
+> over to the exported FDT which matches what the kernel was originally
+> passed.
 
-These are user LEDs and that's why the `userN` naming convention comes into
-place. Here I agree to move with "green:user1" format and sending it to the
-LEDs list.
+Yes, last I checked kexec was using FDT from /sys/firmware/fdt.
 
-Thanks,
-Mani
 
-> 									Pavel
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+>>
+>> That would be a much smaller patch.
+>>
+>>
+>>>> Provide a sysfs file, /sys/firmware/devicetree/tree_version,  to allow
+>>>> user space to determine if the live devicetree has remained unchanged
+>>>> while a series of one or more accesses of /proc/device-tree/ occur.
+>>>>
+>>>> The use of both (1) dynamic devicetree modifications and (2) overlay
+>>>> apply and removal are not supported during the same boot cycle.  Thus
+>>>> non-overlay dynamic modifications are not reflected in the value of
+>>>> tree_version.
+>>>
+>>> I'd prefer to see some sort of information on overlays exported and user
+>>> space can check if that changed. IIRC, Pantelis had a series to do that
+>>> along with a kill switch to prevent further modifications. At least some
+>>> of that series only had minor issues to fix.
+>>
+>> The kill switch addresses a different concern, which was from the security
+>> community.  The kill switch is on my todo list.
+> 
+> Yes, but there could be other uses. It's not a big step from wanting
+> to know if the DT has changed to wanting to control it changing or
+> not.
+> 
+> Perhaps the kill switch needs 2 levels: a temporary freeze and a
+> permanent freeze. In any case, they don't seem completely unrelated
+> and I don't really want to see userspace ABI added bit by bit.
+
+I can add a kill switch patch.
+
+ 
+>> I don't remember exactly what info the overlay information export patch
+>> provided.  I'll have to go find it and re-read it.
+>>
+>>
+>>> Also, shouldn't we get uevents if the tree changes? Maybe that's not
+>>
+>> Yes (off the top of my head).  But a shell script accessing /proc/device-tree
+>> is not going to get uevents.
+> 
+> No, but userspace can get them. Accessible from a shell script is not
+> a requirement of kernel interfaces.
+
+OK for now.  I haven't thought that concept through, but it is not key to
+whether this feature is useful.  The same functionality is also needed
+by programs.
+
+I'll have to dig into the uevent implementation and architecture to see
+whether uevents are a possible solution.  This patch can wait for me to
+finish this.
+
+If the current patch ends up being the best method, I still need to
+re-work to add memory barriers (or somehow convince myself that they
+are not needed).
+
+-Frank
+
+
+> 
+> Rob
+> 
