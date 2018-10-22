@@ -1,61 +1,106 @@
 Return-Path: <SRS0=/AVO=NC=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46819 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbeJWFYL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Oct 2018 01:24:11 -0400
-Received: by mail-ed1-f65.google.com with SMTP id v22-v6so2831734edq.13
-        for <devicetree@vger.kernel.org>; Mon, 22 Oct 2018 14:04:01 -0700 (PDT)
-From: Charles-Antoine Couret <charles-antoine.couret@essensium.com>
-Subject: [PATCH V3 2/2] doc:devicetree: Add ti,dac7311 device tree bindings in documentation
-Date: Mon, 22 Oct 2018 23:03:40 +0200
-Message-Id: <20181022210340.1136-2-charles-antoine.couret@essensium.com>
-In-Reply-To: <20181022210340.1136-1-charles-antoine.couret@essensium.com>
-References: <20181022210340.1136-1-charles-antoine.couret@essensium.com>
+Received: from mail-eopbgr10066.outbound.protection.outlook.com ([40.107.1.66]:36974
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726784AbeJVOAC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Oct 2018 10:00:02 -0400
+From: Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH v2 1/4] usb: chipidea: add flag for imx hsic implementation
+Date: Mon, 22 Oct 2018 05:42:56 +0000
+Message-ID: <20181022054031.14027-2-peter.chen@nxp.com>
+References: <20181022054031.14027-1-peter.chen@nxp.com>
+In-Reply-To: <20181022054031.14027-1-peter.chen@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-iio@vger.kernel.org
-Cc: Charles-Antoine Couret <charles-antoine.couret@essensium.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>, Peter Chen <peter.chen@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Description how to invoke ti-dac7311 driver from device tree file.
+NXP (Freecale) imx HSIC design has some special requirements, add
+some flags at host code to handle them.
 
-Signed-off-by: Charles-Antoine Couret <charles-antoine.couret@essensium.com>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
 ---
+ drivers/usb/chipidea/host.c  | 24 ++++++++++++++++++++++++
+ include/linux/usb/chipidea.h |  3 +++
+ 2 files changed, 27 insertions(+)
 
-V1 to V3:
-* Cosmetic changes
-* Improve description of the patch
-
- .../bindings/iio/dac/ti,dac7311.txt           | 20 +++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/dac/ti,dac7311.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/dac/ti,dac7311.txt b/Documentation/devicetree/bindings/iio/dac/ti,dac7311.txt
-new file mode 100644
-index 000000000000..b681060579b4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/dac/ti,dac7311.txt
-@@ -0,0 +1,20 @@
-+TI DAC7311 device tree bindings
+diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+index d858a82c4f44..d74a13d7c21c 100644
+--- a/drivers/usb/chipidea/host.c
++++ b/drivers/usb/chipidea/host.c
+@@ -28,6 +28,20 @@ struct ehci_ci_priv {
+ 	struct regulator *reg_vbus;
+ };
+=20
++/* This function is used to override WKCN, WKDN, and WKOC */
++static void ci_ehci_override_wakeup_flag(struct ehci_hcd *ehci,
++		u32 __iomem *reg, u32 flags, bool set)
++{
++	u32 val =3D ehci_readl(ehci, reg);
 +
-+Required properties:
++	if (set)
++		val |=3D flags;
++	else
++		val &=3D ~flags;
 +
-+- compatible: Must be set to "ti,dac7311", "ti,dac6311" or "ti,dac5311"
-+- reg: spi chip select number for the device
-+- vref-supply: The regulator supply for ADC reference voltage
-+- spi-max-frequency: Max SPI frequency to use (< 50000000)
++	ehci_writel(ehci, val, reg);
++}
 +
-+Example:
+ static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enable=
+)
+ {
+ 	struct ehci_hcd *ehci =3D hcd_to_ehci(hcd);
+@@ -170,6 +184,11 @@ static int host_start(struct ci_hdrc *ci)
+ 			otg->host =3D &hcd->self;
+ 			hcd->self.otg_port =3D 1;
+ 		}
 +
-+	spi_master {
-+		dac: dac7311@0 {
-+			compatible = "ti,dac7311";
-+			reg = <0>; /* CS0 */
-+			spi-max-frequency = <1000000>;
-+			vref-supply = <&vdd_supply>;
-+		};
-+	};
-+
--- 
-2.19.1
++		if (ci->platdata->notify_event &&
++			(ci->platdata->flags & CI_HDRC_IMX_IS_HSIC))
++			ci->platdata->notify_event
++				(ci, CI_HDRC_IMX_HSIC_ACTIVE_EVENT);
+ 	}
+=20
+ 	return ret;
+@@ -218,6 +237,8 @@ void ci_hdrc_host_destroy(struct ci_hdrc *ci)
+ static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
+ {
+ 	struct ehci_hcd *ehci =3D hcd_to_ehci(hcd);
++	struct device *dev =3D hcd->self.controller;
++	struct ci_hdrc *ci =3D dev_get_drvdata(dev);
+ 	int port;
+ 	u32 tmp;
+=20
+@@ -249,6 +270,9 @@ static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
+ 			 * It needs a short delay between set RS bit and PHCD.
+ 			 */
+ 			usleep_range(150, 200);
++			if (ci->platdata->flags & CI_HDRC_IMX_IS_HSIC)
++				ci_ehci_override_wakeup_flag(ehci, reg,
++					PORT_WKDISC_E | PORT_WKCONN_E, false);
+ 			break;
+ 		}
+ 	}
+diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+index 63758c399e4e..911e05af671e 100644
+--- a/include/linux/usb/chipidea.h
++++ b/include/linux/usb/chipidea.h
+@@ -60,9 +60,12 @@ struct ci_hdrc_platform_data {
+ #define CI_HDRC_OVERRIDE_RX_BURST	BIT(11)
+ #define CI_HDRC_OVERRIDE_PHY_CONTROL	BIT(12) /* Glue layer manages phy */
+ #define CI_HDRC_REQUIRES_ALIGNED_DMA	BIT(13)
++#define CI_HDRC_IMX_IS_HSIC		BIT(14)
+ 	enum usb_dr_mode	dr_mode;
+ #define CI_HDRC_CONTROLLER_RESET_EVENT		0
+ #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
++#define CI_HDRC_IMX_HSIC_ACTIVE_EVENT		2
++#define CI_HDRC_IMX_HSIC_SUSPEND_EVENT		3
+ 	int	(*notify_event) (struct ci_hdrc *ci, unsigned event);
+ 	struct regulator	*reg_vbus;
+ 	struct usb_otg_caps	ci_otg_caps;
+--=20
+2.14.1
