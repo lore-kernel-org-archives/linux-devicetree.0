@@ -1,60 +1,65 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 00/15] mtd: maps: physmap cleanups
-Date: Mon, 22 Oct 2018 13:45:49 +0200
-Message-ID: <CACRpkdbHDTcz_X_ijV+B-DkahsTWDyW2+h0n4W5o9GU3f6kmrA@mail.gmail.com>
-References: <20181019074908.13226-1-boris.brezillon@bootlin.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [RFC PATCH v2 01/17] OPP: Allow to request stub voltage
+ regulators
+Date: Mon, 22 Oct 2018 15:12:08 +0300
+Message-ID: <29f893be-feed-c4c5-8468-51f7228dd468@gmail.com>
+References: <20181021205501.23943-1-digetx@gmail.com>
+ <20181021205501.23943-2-digetx@gmail.com>
+ <20181022053636.ag62j3rj3vovbz53@vireshk-i7>
+ <e4027793-9436-413d-2a7b-34cf519218c3@gmail.com>
+ <20181022113224.b5fiebgy2aap66nd@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20181019074908.13226-1-boris.brezillon@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Mark Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181022113224.b5fiebgy2aap66nd@vireshk-i7>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 19, 2018 at 9:49 AM Boris Brezillon
-<boris.brezillon@bootlin.com> wrote:
+On 10/22/18 2:32 PM, Viresh Kumar wrote:
+> On 22-10-18, 14:29, Dmitry Osipenko wrote:
+>> On 10/22/18 8:36 AM, Viresh Kumar wrote:
+>>> On 21-10-18, 23:54, Dmitry Osipenko wrote:
+>>>> Voltage regulators may be not available on some variations of HW, allow to
+>>>> request stub voltage regulators by OPP core in a such case to reduce code
+>>>> churning within drivers.
+>>>>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  drivers/cpufreq/cpufreq-dt.c | 2 +-
+>>>>  drivers/cpufreq/ti-cpufreq.c | 3 ++-
+>>>>  drivers/opp/core.c           | 9 +++++++--
+>>>>  include/linux/pm_opp.h       | 4 ++--
+>>>>  4 files changed, 12 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
+>>>> index e58bfcb1169e..6ebca472ec76 100644
+>>>> --- a/drivers/cpufreq/cpufreq-dt.c
+>>>> +++ b/drivers/cpufreq/cpufreq-dt.c
+>>>> @@ -196,7 +196,7 @@ static int cpufreq_init(struct cpufreq_policy *policy)
+>>>>  	 */
+>>>>  	name = find_supply_name(cpu_dev);
+>>>>  	if (name) {
+>>>> -		opp_table = dev_pm_opp_set_regulators(cpu_dev, &name, 1);
+>>>> +		opp_table = dev_pm_opp_set_regulators(cpu_dev, &name, 1, false);
+>>>>  		if (IS_ERR(opp_table)) {
+>>>>  			ret = PTR_ERR(opp_table);
+>>>>  			dev_err(cpu_dev, "Failed to set regulator for cpu%d: %d\n",
+>>>
+>>> Have you actually tested this stuff ? The cpufreq-dt driver will
+>>> probably fail to probe if the CPU node has a "-supply" property, but
+>>> no regulator matching that.
+>>>
+>>
+>> Please notice that this patch doesn't change the original behaviour
+>> and I suppose that failing in a case of missing regulator is the
+>> expected behaviour for cpufreq-dt. Hence can't see any problem here.
+> 
+> So why have this patch then ?
 
-> This is an attempt at merging physmap_of.c, gpio-addr-flash.c and
-> physmap.c. The rational behind this decision is code sharing and
-> consistency with what's done in other parts of the kernel:
->
-> - physmap_of is just adding OF/DT support to the physmap logic, and we
->   usually put that code in the pre-existing driver instead of creating
->   a new one
->
-> - gpio-addr-flash is just an extension of the physmap logic which is
->   needed when the platform does not have enough native ADDR lines
->   to address the whole flash. Again, I think this core belongs in the
->   physmap driver
->
-> Patches 1 to 9 are just cleanups, and are not really related to the
-> merging of physmap_of and gpio-addr-flash into physmap.c.
->
-> Patch 10 to 13 are doing the actual merging work, and patch 14 is
-> documenting the addr-gpios property that has been added to support
-> the gpio-addr-flash on DT platforms.
->
-> Patch 15 is a cosmetic change proposed by Ricardo.
+Because there is one Tegra20 board (tegra20-trimslice) that doesn't declare necessary regulators, but we want to have CPU frequency scaling. I couldn't find board schematics and so don't know if CPU / CORE voltages are fixed on Trim-Slice or it is just preferable not to have DVFS for that board, it is an outlet-powered device [0]. Hence tegra20-cpufreq driver will request a dummy regulators when appropriate. 
 
-This series:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-I expect to test the result when rebasing my patches for Gemini,
-so hope for this to hit your devel branch after v4.20-rc1.
-
-Yours,
-Linus Walleij
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+[0] http://www.compulab.co.il/utilite-computer/web/trim-slice
