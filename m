@@ -1,77 +1,59 @@
-From: Nick Hu <nickhu@andestech.com>
-Subject: Re: [PATCH 5/5] nds32: Add document for NDS32 PMU.
-Date: Mon, 22 Oct 2018 18:23:08 +0800
-Message-ID: <20181022102308.GD24110@andestech.com>
-References: <cover.1539745993.git.nickhu@andestech.com>
- <c0a80d2db642b1d9547ff412d91baa9927b68aac.1539745993.git.nickhu@andestech.com>
- <20181018143132.vhhc6qpz4sooljlj@lakrids.cambridge.arm.com>
+From: Julien Grall <julien.grall@arm.com>
+Subject: Re: [PATCH v2] devicetree, xen: add xen,
+ shared-memory binding
+Date: Mon, 22 Oct 2018 11:27:23 +0100
+Message-ID: <260c1981-d911-2b7f-6f0b-ac5481e3f48d@arm.com>
+References: <1539900630-26566-1-git-send-email-sstabellini@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181018143132.vhhc6qpz4sooljlj@lakrids.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Greentime Ying-Han =?utf-8?B?SHUo6IOh6Iux5ryiKQ==?= <greentime@andestech.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "deanbo422@gmail.com" <deanbo422@gmail.com>, "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@redhat.com" <jolsa@redhat.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "geert@linux-m68k.org" <geert@linux-m68k.org>, Zong Zong-Xian =?utf-8?B?TGko5p2O5a6X5oayKQ==?= <zong@andestech.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xenproject.org>
+In-Reply-To: <1539900630-26566-1-git-send-email-sstabellini@kernel.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
+To: Stefano Stabellini <sstabellini@kernel.org>, devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, Stefano Stabellini <stefanos@xilinx.com>, robh+dt@kernel.org, xen-devel@lists.xen.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On Thu, Oct 18, 2018 at 10:31:32PM +0800, Mark Rutland wrote:
-> On Thu, Oct 18, 2018 at 04:43:17PM +0800, Nickhu wrote:
-> > The document for how to add NDS32 PMU
-> > in devicetree.
-> > 
-> > Signed-off-by: Nickhu <nickhu@andestech.com>
-> > ---
-> >  Documentation/devicetree/bindings/nds32/pmu.txt | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/nds32/pmu.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/nds32/pmu.txt b/Documentation/devicetree/bindings/nds32/pmu.txt
-> > new file mode 100644
-> > index 000000000000..02762b850e59
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/nds32/pmu.txt
-> > @@ -0,0 +1,17 @@
-> > +* NDS32 Performance Monitor Units
-> > +
-> > +NDS32 core have a PMU for counting cpu and cache events like cache misses.
-> > +The NDS32 PMU representation in the device tree should be done as under:
-> > +
-> > +Required properties:
-> > +
-> > +- compatilbe :
-> > +	"andestech,atcpmu"
-> 
-> Which CPUs have this PMU?
-> 
-> I expected more specific strings, e.g. "andestech,n13-pmu" and/or
-> "andestech,andestech,nds32v3-pmu".
->
-In nds32 V3, all of our CPU have PMU.
-So I will change the string to andestech,nds32v3-pmu.
-
-> > +
-> > +- interrupts : The interrupt number for NDS32 PMU is 13.
-> > +
-> > +Example:
-> > +pmu{
-> > +	compatible = "andestech,atcpmu";
-> > +	interrupts = <13>;
-> > +}
-> 
-> The driver tried to find multiple interrupts. Is there only a single
-> interrupt in all cases?
-> 
-There is only overflow interrupt for performance couner in nds32 V3.
-I will modified the driver and prepare another patch.
-Thanks!
-
-> Thanks,
-> Mark.
-
-Thank you for replying the patch set so quickly.
-I will prepare the next patch set for it.
-Thanks,
-Nick
+SGkgU3RlZmFubywKCk9uIDE4LzEwLzIwMTggMjM6MTAsIFN0ZWZhbm8gU3RhYmVsbGluaSB3cm90
+ZToKPiBGcm9tOiBTdGVmYW5vIFN0YWJlbGxpbmkgPHN0ZWZhbm9zQHhpbGlueC5jb20+Cj4gCj4g
+SW50cm9kdWNlIGEgZGV2aWNlIHRyZWUgYmluZGluZyBmb3IgWGVuIHJlc2VydmVkLW1lbW9yeSBy
+ZWdpb25zLiBUaGV5Cj4gYXJlIHVzZWQgdG8gc2hhcmUgbWVtb3J5IGFjcm9zcyBWTXMgZnJvbSB0
+aGUgVk0gY29uZmlnIGZpbGVzLiAoU2VlCj4gc3RhdGljX3NobSBjb25maWcgb3B0aW9uLikKPiAK
+PiBTaWduZWQtb2ZmLWJ5OiBTdGVmYW5vIFN0YWJlbGxpbmkgPHN0ZWZhbm9zQHhpbGlueC5jb20+
+Cj4gLS0tCj4gQ2hhbmdlcyBpbiB2MjoKPiAtIGZpeCBBdXRob3IgbGluZQo+IC0gYWRkIHZlcnNp
+b25pbmcKPiAtIHhlbixpZCBpbnN0ZWFkIG9mIGlkCj4gLS0tCj4gICAuLi4vYmluZGluZ3MvcmVz
+ZXJ2ZWQtbWVtb3J5L3hlbixzaGFyZWQtbWVtb3J5LnR4dCAgIHwgMjAgKysrKysrKysrKysrKysr
+KysrKysKPiAgIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspCj4gICBjcmVhdGUgbW9k
+ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2VydmVkLW1lbW9y
+eS94ZW4sc2hhcmVkLW1lbW9yeS50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50eHQg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hlbixz
+aGFyZWQtbWVtb3J5LnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4u
+OTA3OGZiNwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hlbixzaGFyZWQtbWVtb3J5LnR4dAo+IEBAIC0wLDAg
+KzEsMjAgQEAKPiArKiBYZW4gaHlwZXJ2aXNvciByZXNlcnZlZC1tZW1vcnkgYmluZGluZwo+ICsK
+PiArRXhwb3NlIG9uZSBvciBtb3JlIG1lbW9yeSByZWdpb25zIGFzIHJlc2VydmVkLW1lbW9yeSB0
+byB0aGUgZ3Vlc3QKPiArdmlydHVhbCBtYWNoaW5lLiAKPiBUeXBpY2FsbHksIGEgcmVnaW9uIGlz
+IGNvbmZpZ3VyZWQgYXQgVk0gY3JlYXRpb24gdGltZQo+ICt0byBiZSBhIHNoYXJlZCBtZW1vcnkg
+YXJlYSBhY3Jvc3MgbXVsdGlwbGUgdmlydHVhbCBtYWNoaW5lcyBmb3IKPiArY29tbXVuaWNhdGlv
+biBhbW9uZyB0aGVtLgo+ICsKPiArRm9yIGVhY2ggb2YgdGhlc2UgcHJlLXNoYXJlZCBtZW1vcnkg
+cmVnaW9ucywgYSByYW5nZSBpcyBleHBvc2VkIHVuZGVyCj4gK3RoZSAvcmVzZXJ2ZWQtbWVtb3J5
+IG5vZGUgYXMgYSBjaGlsZCBub2RlLiBFYWNoIHJhbmdlIHN1Yi1ub2RlIGlzIG5hbWVkCj4gK3hl
+bi1zaG1lbUA8YWRkcmVzcz4gYW5kIGhhcyB0aGUgZm9sbG93aW5nIHByb3BlcnRpZXM6Cj4gKwo+
+ICstIGNvbXBhdGlibGU6Cj4gKwljb21wYXRpYmxlID0gInhlbixzaGFyZWQtbWVtb3J5LXYxIiwg
+InhlbixzaGFyZWQtbWVtb3J5IgoKRG8gd2UgbmVlZCB0byBzcGVjaWZ5IHRoZSB0d28gY29tcGF0
+aWJsZXM/Cgo+ICsKPiArLSByZWc6Cj4gKwl0aGUgYmFzZSBndWVzdCBwaHlzaWNhbCBhZGRyZXNz
+IGFuZCBzaXplIG9mIHRoZSBzaGFyZWQgbWVtb3J5IHJlZ2lvbgo+ICsKPiArLSB4ZW4saWQ6Cj4g
+KwlhIHN0cmluZyB0aGF0IGlkZW50aWZpZXMgdGhlIHNoYXJlZCBtZW1vcnkgcmVnaW9uIGFzIHNw
+ZWNpZmllZCBpbgo+ICsJdGhlIFZNIGNvbmZpZyBmaWxlCj4gCgotLSAKSnVsaWVuIEdyYWxsCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpYZW4tZGV2ZWwg
+bWFpbGluZyBsaXN0Clhlbi1kZXZlbEBsaXN0cy54ZW5wcm9qZWN0Lm9yZwpodHRwczovL2xpc3Rz
+LnhlbnByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8veGVuLWRldmVs
