@@ -1,118 +1,61 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v3] of: overlay: user space synchronization
-Date: Mon, 22 Oct 2018 00:30:21 -0700
-Message-ID: <399b1ed0-ac64-d962-5eea-23a99011aada@gmail.com>
-References: <1539736466-28638-1-git-send-email-frowand.list@gmail.com>
- <20181018193216.GA9971@bogus>
- <2f99d700-6276-cfa4-8878-4eb161126330@gmail.com>
- <CAL_Jsq+=OiXTSSEr4QuiyqCzyrKdH0M8HhmOjVha3SWM5Y62Gw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH v6 1/6] dt-bindings: power: Introduce one property to present the battery internal resistance
+Date: Mon, 22 Oct 2018 15:43:57 +0800
+Message-ID: <e7c061535f2dcca54d6498405fdd5ed7098b19f9.1540189330.git.baolin.wang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+=OiXTSSEr4QuiyqCzyrKdH0M8HhmOjVha3SWM5Y62Gw@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Alan Tull <atull@kernel.org>
+To: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, baolin.wang@linaro.org, broonie@kernel.org, ctatlor97@gmail.com, linus.walleij@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/19/18 9:06 AM, Rob Herring wrote:
-> On Thu, Oct 18, 2018 at 7:06 PM Frank Rowand <frowand.list@gmail.com> wrote:
->>
->> On 10/18/18 12:32, Rob Herring wrote:
->>> On Tue, Oct 16, 2018 at 05:34:26PM -0700, frowand.list@gmail.com wrote:
->>>> From: Frank Rowand <frank.rowand@sony.com>
->>>>
->>>> When an overlay is applied or removed, the live devicetree visible in
->>>> /proc/device-tree/, aka /sys/firmware/devicetree/base/, reflects the
->>>> changes.  There is no method for user space to determine whether the
->>>> live devicetree was modified by overlay actions.
->>>
->>> Because userspace has no way to modify the DT and the ways the kernel
->>> can do modifications is limited.
->>>
->>> Do you have an actually need for this outside of testing/development?
->>
->> I do not know if anyone uses /proc/device-tree for anything outside of
->> testing/development.  If we believe that there is no other use of
->> /proc/device-tree we can simply document that there is no expectation
->> that accessors will see a consistent, unchanging /proc/device-tree.
-> 
-> I didn't mean whether /proc/device-tree is used outside of testing. It
-> is. The question is whether any users care if there are changes
-> happening. If so what is the use case?
+The internal resistance of a battery is not a constant in its life cycle,
+this varies over the age of the battery or temperature and so on. But we
+just want use one constant battery internal resistance to estimate the
+battery capacity. Thus this patch introduces one property to present
+the battery factory internal resistance for battery information.
 
-What is the point of looking at a devicetree if you don't know if it
-is in a consistent state or part way through a change?
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+---
+Changes from v5:
+ - None.
 
+Changes from v4:
+ - None.
+
+Changes from v3:
+ - Split binding into one separate patch.
+ - Add LinusW reviewed tag.
+
+Changes from v2:
+ - Rename the property.
+ - Improve the commit message.
+
+Changes from v1:
+ - New patch in v2.
+---
+ .../devicetree/bindings/power/supply/battery.txt   |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+index f4d3b4a..938d027 100644
+--- a/Documentation/devicetree/bindings/power/supply/battery.txt
++++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+@@ -22,6 +22,7 @@ Optional Properties:
+  - charge-term-current-microamp: current for charge termination phase
+  - constant-charge-current-max-microamp: maximum constant input current
+  - constant-charge-voltage-max-microvolt: maximum constant input voltage
++ - factory-internal-resistance-micro-ohms: battery factory internal resistance
  
-> kexec used to be one of the main users, but I think it has switched
-> over to the exported FDT which matches what the kernel was originally
-> passed.
-
-Yes, last I checked kexec was using FDT from /sys/firmware/fdt.
-
-
->>
->> That would be a much smaller patch.
->>
->>
->>>> Provide a sysfs file, /sys/firmware/devicetree/tree_version,  to allow
->>>> user space to determine if the live devicetree has remained unchanged
->>>> while a series of one or more accesses of /proc/device-tree/ occur.
->>>>
->>>> The use of both (1) dynamic devicetree modifications and (2) overlay
->>>> apply and removal are not supported during the same boot cycle.  Thus
->>>> non-overlay dynamic modifications are not reflected in the value of
->>>> tree_version.
->>>
->>> I'd prefer to see some sort of information on overlays exported and user
->>> space can check if that changed. IIRC, Pantelis had a series to do that
->>> along with a kill switch to prevent further modifications. At least some
->>> of that series only had minor issues to fix.
->>
->> The kill switch addresses a different concern, which was from the security
->> community.  The kill switch is on my todo list.
-> 
-> Yes, but there could be other uses. It's not a big step from wanting
-> to know if the DT has changed to wanting to control it changing or
-> not.
-> 
-> Perhaps the kill switch needs 2 levels: a temporary freeze and a
-> permanent freeze. In any case, they don't seem completely unrelated
-> and I don't really want to see userspace ABI added bit by bit.
-
-I can add a kill switch patch.
-
+ Battery properties are named, where possible, for the corresponding
+ elements in enum power_supply_property, defined in
+@@ -42,6 +43,7 @@ Example:
+ 		charge-term-current-microamp = <128000>;
+ 		constant-charge-current-max-microamp = <900000>;
+ 		constant-charge-voltage-max-microvolt = <4200000>;
++		factory-internal-resistance-micro-ohms = <250000>;
+ 	};
  
->> I don't remember exactly what info the overlay information export patch
->> provided.  I'll have to go find it and re-read it.
->>
->>
->>> Also, shouldn't we get uevents if the tree changes? Maybe that's not
->>
->> Yes (off the top of my head).  But a shell script accessing /proc/device-tree
->> is not going to get uevents.
-> 
-> No, but userspace can get them. Accessible from a shell script is not
-> a requirement of kernel interfaces.
-
-OK for now.  I haven't thought that concept through, but it is not key to
-whether this feature is useful.  The same functionality is also needed
-by programs.
-
-I'll have to dig into the uevent implementation and architecture to see
-whether uevents are a possible solution.  This patch can wait for me to
-finish this.
-
-If the current patch ends up being the best method, I still need to
-re-work to add memory barriers (or somehow convince myself that they
-are not needed).
-
--Frank
-
-
-> 
-> Rob
-> 
+ 	charger: charger@11 {
+-- 
+1.7.9.5
