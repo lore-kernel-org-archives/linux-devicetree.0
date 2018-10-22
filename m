@@ -1,43 +1,89 @@
-From: Li Yang <leoyang.li@nxp.com>
-Subject: Re: [PATCH v3] arm64: dts: add LX2160AQDS board support
-Date: Mon, 22 Oct 2018 15:58:15 -0500
-Message-ID: <CADRPPNQ3FoEiYC6SoLtD+=uyL_zFS+rQ+79-g=NLiAE3HckFtA@mail.gmail.com>
-References: <20181005081053.27105-1-pankaj.bansal@nxp.com>
- <20181017160430.22381-1-pankaj.bansal@nxp.com>
- <20181019041648.GA6716@X250>
+From: Thor Thayer <thor.thayer@linux.intel.com>
+Subject: Re: [PATCH 2/2] net: stmmac: Set OWN bit for jumbo frames
+Date: Mon, 22 Oct 2018 16:05:15 -0500
+Message-ID: <4a4a3e09-da21-0bd5-969a-c3ea56f32552@linux.intel.com>
+References: <1540229352-26010-1-git-send-email-thor.thayer@linux.intel.com>
+ <1540229352-26010-2-git-send-email-thor.thayer@linux.intel.com>
+Reply-To: thor.thayer@linux.intel.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181019041648.GA6716@X250>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, yogeshnarayan.gaur@nxp.com, pankaj.bansal@nxp.com, Rob Herring <robh+dt@kernel.org>, Vabhav Sharma <vabhav.sharma@nxp.com>, Sriram Dash <sriram.dash@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1540229352-26010-2-git-send-email-thor.thayer@linux.intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com, davem@davemloft.net, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 18, 2018 at 11:17 PM Shawn Guo <shawnguo@kernel.org> wrote:
->
-> On Wed, Oct 17, 2018 at 10:32:45AM +0000, Pankaj Bansal wrote:
-> > The LX2160A QorIQ Development System (QDS) is a test, evaluation, and
-> > development platform, supporting QorIQ LX2160A processor.
-> >
-> > Signed-off-by: Sriram Dash <sriram.dash@nxp.com>
-> > Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
->
-> Looks good to me.  @Leo, are you okay with it?
-
-Yes.  But be aware that the dependency patches of this patch are not
-applied yet.
-
-Acked-by: Li Yang <leoyang.li@nxp.com>
-
->
-> Shawn
+On 10/22/2018 12:29 PM, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
+> 
+> Ping with Jumbo packet does not reply and get a watchdog timeout
+> 
+> [   46.059616] ------------[ cut here ]------------
+> [   46.064268] NETDEV WATCHDOG: eth0 (socfpga-dwmac): transmit queue 0 timed out
+> [   46.071471] WARNING: CPU: 1 PID: 0 at net/sched/sch_generic.c:461 dev_watchdog+0x2cc/0x2d8
+> [   46.079708] Modules linked in:
+> [   46.082761] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.18.0-00115-gc262be665854-dirty #264
+> [   46.091082] Hardware name: SoCFPGA Stratix 10 SoCDK (DT)
+> [   46.096377] pstate: 20000005 (nzCv daif -PAN -UAO)
+> [   46.101152] pc : dev_watchdog+0x2cc/0x2d8
+> [   46.105149] lr : dev_watchdog+0x2cc/0x2d8
+> [   46.109144] sp : ffff00000800bd80
+> [   46.112447] x29: ffff00000800bd80 x28: ffff80007a9b4940
+> [   46.117744] x27: 00000000ffffffff x26: ffff80007aa183b0
+> [   46.123040] x25: 0000000000000001 x24: 0000000000000140
+> [   46.128336] x23: ffff80007aa1839c x22: ffff80007aa17fb0
+> [   46.133632] x21: ffff80007aa18000 x20: ffff0000091a7000
+> [   46.138927] x19: 0000000000000000 x18: ffffffffffffffff
+> [   46.144223] x17: 0000000000000000 x16: 0000000000000000
+> [   46.149519] x15: ffff0000091a96c8 x14: 07740775076f0720
+> [   46.154814] x13: 07640765076d0769 x12: 0774072007300720
+> [   46.160110] x11: 0765077507650775 x10: 0771072007740769
+> [   46.165406] x9 : 076d0773076e0761 x8 : 077207740720073a
+> [   46.170702] x7 : 072907630761076d x6 : ffff80007ff9a0c0
+> [   46.175997] x5 : ffff80007ff9a0c0 x4 : 0000000000000002
+> [   46.181293] x3 : 0000000000000000 x2 : ffff0000091ac180
+> [   46.186589] x1 : e6a742ebe628e800 x0 : 0000000000000000
+> [   46.191885] Call trace:
+> [   46.194326]  dev_watchdog+0x2cc/0x2d8
+> [   46.197980]  call_timer_fn+0x20/0x78
+> [   46.201544]  expire_timers+0xa4/0xb0
+> [   46.205108]  run_timer_softirq+0xe4/0x198
+> [   46.209107]  __do_softirq+0x114/0x210
+> [   46.212760]  irq_exit+0xd0/0xd8
+> [   46.215895]  __handle_domain_irq+0x60/0xb0
+> [   46.219977]  gic_handle_irq+0x58/0xa8
+> [   46.223628]  el1_irq+0xb0/0x128
+> [   46.226761]  arch_cpu_idle+0x10/0x18
+> [   46.230326]  do_idle+0x1d4/0x288
+> [   46.233544]  cpu_startup_entry+0x24/0x28
+> [   46.237457]  secondary_start_kernel+0x17c/0x1c0
+> [   46.241971] ---[ end trace 57048cd1372cd828 ]---
+> 
+> Inspection of queue showed Jumbo packets were not sent out.
+> The ring Jumbo packet function needs to set the OWN bit so
+> the packet is sent.
+> 
+> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+> ---
+>   drivers/net/ethernet/stmicro/stmmac/ring_mode.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/ring_mode.c b/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
+> index a7ffc73fffe8..c5fd9483bd96 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
+> @@ -91,7 +91,7 @@ static int jumbo_frm(void *p, struct sk_buff *skb, int csum)
+>   		tx_q->tx_skbuff_dma[entry].is_jumbo = true;
+>   		desc->des3 = cpu_to_le32(des2 + BUF_SIZE_4KiB);
+>   		stmmac_prepare_tx_desc(priv, desc, 1, nopaged_len, csum,
+> -				STMMAC_RING_MODE, 0, true, skb->len);
+> +				STMMAC_RING_MODE, 1, true, skb->len);
+>   	}
+>   
+>   	tx_q->cur_tx = entry;
+> 
+I'm seeing a similar problem with packets > 8K. I'll send out a rev2 
+with that fix shortly.
