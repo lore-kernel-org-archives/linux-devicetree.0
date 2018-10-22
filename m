@@ -1,46 +1,85 @@
 From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 1/6] dt-bindings: drm/panel: simple: Add no-hpd property
-Date: Mon, 22 Oct 2018 13:46:34 -0700
-Message-ID: <20181022204639.8558-1-dianders@chromium.org>
+Subject: [PATCH 6/6] dt-bindings: drm/panel: simple: Innolux TV123WAM is
+ actually P120ZDG-BF1
+Date: Mon, 22 Oct 2018 13:46:39 -0700
+Message-ID: <20181022204639.8558-6-dianders@chromium.org>
+References: <20181022204639.8558-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20181022204639.8558-1-dianders@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Sean Paul <seanpaul@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, Sandeep Panda <spanda@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, jsanka@codeaurora.org, ryandcase@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-arm-msm@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, ryandcase@chromium.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Some eDP panels that are designed to be always connected to a board
-use their HPD signal to signal that they've finished powering on and
-they're ready to be talked to.
-
-However, for various reasons it's possible that the HPD signal from
-the panel isn't actually hooked up.  In the case where the HPD isn't
-hooked up you can look at the timing diagram on the panel datasheet
-and insert a delay for the maximum amount of time that the HPD might
-take to come up.
-
-Let's add a property in the device tree for this concept.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
- .../devicetree/bindings/display/panel/simple-panel.txt         | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/panel/simple-panel.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-index 45a457ad38f0..b2b872c710f2 100644
---- a/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-+++ b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-@@ -11,6 +11,9 @@ Optional properties:
- - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
- - enable-gpios: GPIO pin to enable or disable the panel
- - backlight: phandle of the backlight device attached to the panel
-+- no-hpd: This panel is supposed to communicate that it's ready via HPD
-+  (hot plug detect) signal, but the signal isn't hooked up so we should
-+  hardcode the max delay from the panel spec when powering up the panel.
- 
- Example:
- 
--- 
-2.19.1.568.g152ad8e336-goog
+QXMgZmFyIGFzIEkgY2FuIHRlbGwgdGhlIGJpbmRpbmdzIHRoYXQgd2VyZSBhZGRlZCBpbiBjb21t
+aXQKOWMwNDQwMGY3ZWE2ICgiZHQtYmluZGluZ3M6IGRybS9wYW5lbDogRG9jdW1lbnQgSW5ub2x1
+eCBUVjEyM1dBTSBwYW5lbApiaW5kaW5ncyIpIHdlcmVuJ3QgYWN0dWFsbHkgZm9yIElubm9sdXgg
+VFYxMjNXQU0gYnV0IHdlcmUgYWN0dWFsbHkgZm9yCklubm9sdXggUDEyMFpERy1CRjEuCgpBcyBm
+YXIgYXMgSSBjYW4gdGVsbCB0aGUgSW5ub2x1eCBUVjEyM1dBTSBpc24ndCBhIHJlYWwgcGFuZWwg
+YW5kIGJ1dAppdCdzIGEgbW9zaCBiZXR3ZWVuIHRoZSBUSSBUVjEyM1dBTSBhbmQgdGhlIElubm9s
+dXggUDEyMFpERy1CRjEuCkxldCdzIHVubW9zaC4KCkhlcmUncyBteSBldmlkZW5jZToKCiogU2Vh
+cmNoaW5nIGZvciBUVjEyM1dBTSBvbiB0aGUgSW50ZXJuZXQgdHVybnMgdXAgYSBUSSBwYW5lbC4g
+IFdoaWxlCiAgaXQncyBwb3NzaWJsZSB0aGF0IGFuIElubm9sdXggcGFuZWwgaGFzIHRoZSBzYW1l
+IG1vZGVsIG51bWJlciBhcyB0aGUKICBUSSBQYW5lbCwgaXQgc2VlbXMgYSBsaXR0bGUgZG91YnRm
+dWwuICBMb29raW5nIHVwIHRoZSBkYXRhc2hlZXQgZnJvbQogIHRoZSBUSSBQYW5lbCBzaG93cyB0
+aGF0IGl0J3MgMTkyMCB4IDEyODAgYW5kIDI1OS4yIG1tIHggMTcyLjggbW0uCgoqIEFzIGZhciBh
+cyBJIGtub3csIHRoZSBwYXRjaCBhZGRpbmcgdGhlIElubm9sdXggUGFuZWwgd2FzIHN1cHBvc2Vk
+IHRvCiAgYmUgZm9yIHRoZSBib2FyZCB0aGF0J3Mgc2l0dGluZyBpbiBmcm9udCBvZiBtZSBhcyBJ
+IHR5cGUgdGhpcwogIChzdXBwb3J0IGZvciB0aGF0IGJvYXJkIGlzIG5vdCB5ZXQgdXBzdHJlYW0p
+LiAgT24gdGhlIGJhY2sgb2YgdGhhdAogIHBhbmVsIEkgc2VlIElubm9sdXggUDEyMFpEWi1FWjEg
+cmV2IEIxLgoKKiBTb21lb25lIHBvaW50ZWQgbWUgYXQgYSBkYXRhc2hlZXQgdGhhdCdzIHN1cHBv
+c2VkIHRvIGJlIGZvciB0aGUKICBwYW5lbCBpbiBmcm9udCBvZiBtZSAoc29ycnksIEkgY2FuJ3Qg
+c2hhcmUgdGhlIGRhdGFzaGVldCkuICBUaGF0CiAgZGF0YXNoZWV0IGhhcyB0aGUgc3RyaW5nICJw
+MTIwemRnLWJmMSIKCiogSWYgSSBzZWFyY2ggZm9yICJQMTIwWkRHLUJGMSIgb24gdGhlIEludGVy
+bmV0IEkgZ2V0IGhpdHMgZm9yIHBhbmVscwogIHRoYXQgYXJlIDIxNjB4MTQ0MC4gIFRoZXkgZG9u
+J3QgaGF2ZSBkYXRhc2hlZXRzLCBidXQgdGhlIGZhY3QgdGhhdAogIHRoZSByZXNvbHV0aW9uIG1h
+dGNoZXMgaXMgYSBnb29kIHNpZ24uCgpXaGlsZSB3ZSBkb2luZyB0aGUgcmVuYW1lLCBhbHNvIG1l
+bnRpb24gdGhhdCBuby1ocGQgY2FuIGJlIHVzZWQgd2l0aAp0aGlzIHBhbmVsLiAgU2VlIHRoZSBw
+cmV2aW91cyBwYXRjaCBpbiB0aGlzIHNlcmllcyAoImRybS9wYW5lbDoKc2ltcGxlOiBBZGQgIm5v
+LWhwZCIgZGVsYXkgZm9yIElubm9sdXggVFYxMjNXQU0iKS4KCkZpeGVzOiA5YzA0NDAwZjdlYTYg
+KCJkdC1iaW5kaW5nczogZHJtL3BhbmVsOiBEb2N1bWVudCBJbm5vbHV4IFRWMTIzV0FNIHBhbmVs
+IGJpbmRpbmdzIikKU2lnbmVkLW9mZi1ieTogRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hy
+b21pdW0ub3JnPgpDYzogU2FuZGVlcCBQYW5kYSA8c3BhbmRhQGNvZGVhdXJvcmEub3JnPgotLS0K
+CiAuLi4ve2lubm9sdXgsdHYxMjN3YW0udHh0ID0+IGlubm9sdXgscDEyMHpkZy1iZjEudHh0fSAg
+ICAgfCA4ICsrKysrLS0tCiAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAzIGRlbGV0
+aW9ucygtKQogcmVuYW1lIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3BhbmVsL3tpbm5vbHV4LHR2MTIzd2FtLnR4dCA9PiBpbm5vbHV4LHAxMjB6ZGctYmYxLnR4dH0g
+KDcwJSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2FtLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgscDEyMHpkZy1iZjEudHh0CnNpbWlsYXJp
+dHkgaW5kZXggNzAlCnJlbmFtZSBmcm9tIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsdHYxMjN3YW0udHh0CnJlbmFtZSB0byBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHAxMjB6ZGctYmYx
+LnR4dAppbmRleCBhOWIzNTI2NWZhMTMuLjUxM2YwMzQ2NmFiYSAxMDA2NDQKLS0tIGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dh
+bS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
+ZWwvaW5ub2x1eCxwMTIwemRnLWJmMS50eHQKQEAgLTEsMjAgKzEsMjIgQEAKLUlubm9sdXggVFYx
+MjNXQU0gMTIuMyBpbmNoIGVEUCAySyBkaXNwbGF5IHBhbmVsCitJbm5vbHV4IFAxMjBaREctQkYx
+IDEyLjAyIGluY2ggZURQIDJLIGRpc3BsYXkgcGFuZWwKIAogVGhpcyBiaW5kaW5nIGlzIGNvbXBh
+dGlibGUgd2l0aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAog
+aW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlzIGRpcmVjdG9yeS4KIAogUmVxdWlyZWQgcHJvcGVy
+dGllczoKLS0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJpbm5vbHV4LHR2MTIzd2FtIgorLSBjb21w
+YXRpYmxlOiBzaG91bGQgYmUgImlubm9sdXgscDEyMHpkZy1iZjEiCiAtIHBvd2VyLXN1cHBseTog
+cmVndWxhdG9yIHRvIHByb3ZpZGUgdGhlIHN1cHBseSB2b2x0YWdlCiAKIE9wdGlvbmFsIHByb3Bl
+cnRpZXM6CiAtIGVuYWJsZS1ncGlvczogR1BJTyBwaW4gdG8gZW5hYmxlIG9yIGRpc2FibGUgdGhl
+IHBhbmVsCiAtIGJhY2tsaWdodDogcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0IGRldmljZSBhdHRh
+Y2hlZCB0byB0aGUgcGFuZWwKKy0gbm8taHBkOiBJZiBIUEQgaXNuJ3QgaG9va2VkIHVwOyBhZGQg
+dGhpcyBwcm9wZXJ0eS4KIAogRXhhbXBsZToKIAlwYW5lbF9lZHA6IHBhbmVsLWVkcCB7Ci0JCWNv
+bXBhdGlibGUgPSAiaW5ub2x1eCx0djEyM3dhbSI7CisJCWNvbXBhdGlibGUgPSAiaW5ub2x1eCxw
+MTIwemRnLWJmMSI7CiAJCWVuYWJsZS1ncGlvcyA9IDwmbXNtZ3BpbyAzMSBHUElPX0FDVElWRV9M
+T1c+OwogCQlwb3dlci1zdXBwbHkgPSA8JnBtODkxNl9sMj47CiAJCWJhY2tsaWdodCA9IDwmYmFj
+a2xpZ2h0PjsKKwkJbm8taHBkOwogCX07Ci0tIAoyLjE5LjEuNTY4LmcxNTJhZDhlMzM2LWdvb2cK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
