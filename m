@@ -1,43 +1,53 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC PATCH v2 09/17] ARM: dts: tegra20: harmony: Setup voltage
- regulators for DVFS
-Date: Mon, 22 Oct 2018 09:33:23 -0600
-Message-ID: <a1b4cd27-858c-de53-8ae2-b1aee689475f@wwwdotorg.org>
-References: <20181021205501.23943-1-digetx@gmail.com>
- <20181021205501.23943-10-digetx@gmail.com>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH 0/3] Add Bitstream configuration support for ZynqMP
+Date: Mon, 22 Oct 2018 10:58:42 -0500
+Message-ID: <CANk1AXTUu=qiko9_sLrxrNxBmX7p0OXVxNN13p1uBirNh+Ymtw@mail.gmail.com>
+References: <20181020084805.29103-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181021205501.23943-10-digetx@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181020084805.29103-1-nava.manne@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Nava kishore Manne <nava.manne@xilinx.com>
+Cc: Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, rajanv@xilinx.com, jollys@xilinx.com, linux-fpga@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, kishore m <chinnikishore369@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/18 2:54 PM, Dmitry Osipenko wrote:
-> Set min/max regulators voltage and add CPU node that hooks up CPU with
-> voltage regulators.
+On Fri, Oct 19, 2018 at 3:49 AM Nava kishore Manne
+<nava.manne@xilinx.com> wrote:
 
-> diff --git a/arch/arm/boot/dts/tegra20-harmony.dts b/arch/arm/boot/dts/tegra20-harmony.dts
+Hi Nava,
 
-> -				sm0 {
-> +				core_vdd_reg: sm0 {
->   					regulator-name = "vdd_sm0,vdd_core";
-> -					regulator-min-microvolt = <1200000>;
-> -					regulator-max-microvolt = <1200000>;
-> +					regulator-min-microvolt = <1000000>;
-> +					regulator-max-microvolt = <1300000>;
-> +					regulator-coupled-with = <&rtc_vdd_reg>;
-> +					regulator-coupled-max-spread = <150000>;
->   					regulator-always-on;
->   				};
+>
+> This series of patches are created On top of the
+> below repo.
+> //git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git
+> BRANCH: next/drivers.
 
-How do you know for sure that these increased ranges are safe (high end) 
-and stable (low end) for this particular board? IIRC the safe/legal 
-range depends on the chip SKU, and to be honest I have no idea which SKU 
-is present on Harmony... For public boards like Colibri I imagine 
-there's enough information out there to tell what will work, but maybe 
-not our internal boards like Harmony, unless you checked our ancient 
-downstream kernels?
+IIUC this is dependent on some patches that aren't released yet.
+Please make this explicit by specifying which patches this is
+dependent on in each future submission of new versions.  It will help
+so that I don't send these upstream prematurely and introduce build
+breaks.  Of course, we can keep reviewing!
+
+Thanks for submitting!
+Alan
+
+>
+> Nava kishore Manne (3):
+>   firmware: xilinx: Add fpga API's
+>   dt-bindings: fpga: Add bindings for ZynqMP fpga driver
+>   fpga manager: Adding FPGA Manager support for Xilinx zynqmp
+>
+>  .../bindings/fpga/xlnx,zynqmp-pcap-fpga.txt   |  17 ++
+>  drivers/firmware/xilinx/zynqmp.c              |  46 +++++
+>  drivers/fpga/Kconfig                          |   9 +
+>  drivers/fpga/Makefile                         |   1 +
+>  drivers/fpga/zynqmp-fpga.c                    | 159 ++++++++++++++++++
+>  include/linux/firmware/xlnx-zynqmp.h          |   4 +
+>  6 files changed, 236 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
+>  create mode 100644 drivers/fpga/zynqmp-fpga.c
+>
+> --
+> 2.18.0
+>
