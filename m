@@ -1,76 +1,64 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 5/5] nds32: Add document for NDS32 PMU.
-Date: Mon, 22 Oct 2018 14:17:05 +0100
-Message-ID: <20181022131705.vqou7dinw47fkez4@lakrids.cambridge.arm.com>
-References: <cover.1539745993.git.nickhu@andestech.com>
- <c0a80d2db642b1d9547ff412d91baa9927b68aac.1539745993.git.nickhu@andestech.com>
- <20181018143132.vhhc6qpz4sooljlj@lakrids.cambridge.arm.com>
- <20181022102308.GD24110@andestech.com>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [Freedreno] [PATCH 5/9] arm64: dts: sdm845: Add gpu and gmu
+ device nodes
+Date: Mon, 22 Oct 2018 15:20:27 +0200
+Message-ID: <20181022132027.GA15708@centauri.lan>
+References: <20181010142905.GB9977@jcrouse-lnx.qualcomm.com>
+ <20181010143149.4e3ct3efkuwxa2hw@vireshk-i7>
+ <20181010144856.GC9977@jcrouse-lnx.qualcomm.com>
+ <20181010145139.nvalsr2ij2lj53dh@vireshk-i7>
+ <20181010151006.GD9977@jcrouse-lnx.qualcomm.com>
+ <20181011050216.4ba5i3ghh5rbvjbl@vireshk-i7>
+ <20181011145456.GG9977@jcrouse-lnx.qualcomm.com>
+ <20181015100327.qoojonf46lh6g3sh@vireshk-i7>
+ <20181015143444.GA4751@jcrouse-lnx.qualcomm.com>
+ <20181022103811.ywvyasnshjtdzjki@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20181022102308.GD24110@andestech.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nick Hu <nickhu@andestech.com>
-Cc: Greentime Ying-Han =?utf-8?B?SHUo6IOh6Iux5ryiKQ==?= <greentime@andestech.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "deanbo422@gmail.com" <deanbo422@gmail.com>, "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@redhat.com" <jolsa@redhat.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "geert@linux-m68k.org" <geert@linux-m68k.org>, Zong Zong-Xian =?utf-8?B?TGko5p2O5a6X5oayKQ==?= <zong@andestech.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>
+In-Reply-To: <20181022103811.ywvyasnshjtdzjki@vireshk-i7>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Jordan Crouse <jcrouse@codeaurora.org>
+Cc: nm@ti.com, devicetree@vger.kernel.org, rnayak@codeaurora.org, linux-pm@vger.kernel.org, sboyd@kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, bjorn.andersson@linaro.org, vireshk@kernel.org, freedreno@lists.freedesktop.org, georgi.djakov@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 22, 2018 at 06:23:08PM +0800, Nick Hu wrote:
-> Hi Mark,
+On Mon, Oct 22, 2018 at 04:08:11PM +0530, Viresh Kumar wrote:
+> On 15-10-18, 08:34, Jordan Crouse wrote:
+> > I agree that consistency is good. But the GPU is by design outside of the
+> > control of the genpd universe so it is by design not using the same features.
+> > It unfortunately does happen to use a similar number in an OPP binding to
+> > construct the level mapping but since we can't read the cmd-db from the GMU
+> > space this is a necessary evil.
 > 
-> On Thu, Oct 18, 2018 at 10:31:32PM +0800, Mark Rutland wrote:
-> > On Thu, Oct 18, 2018 at 04:43:17PM +0800, Nickhu wrote:
-> > > The document for how to add NDS32 PMU
-> > > in devicetree.
-> > > 
-> > > Signed-off-by: Nickhu <nickhu@andestech.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/nds32/pmu.txt | 17 +++++++++++++++++
-> > >  1 file changed, 17 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/nds32/pmu.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/nds32/pmu.txt b/Documentation/devicetree/bindings/nds32/pmu.txt
-> > > new file mode 100644
-> > > index 000000000000..02762b850e59
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/nds32/pmu.txt
-> > > @@ -0,0 +1,17 @@
-> > > +* NDS32 Performance Monitor Units
-> > > +
-> > > +NDS32 core have a PMU for counting cpu and cache events like cache misses.
-> > > +The NDS32 PMU representation in the device tree should be done as under:
-> > > +
-> > > +Required properties:
-> > > +
-> > > +- compatilbe :
-> > > +	"andestech,atcpmu"
-> > 
-> > Which CPUs have this PMU?
-> > 
-> > I expected more specific strings, e.g. "andestech,n13-pmu" and/or
-> > "andestech,andestech,nds32v3-pmu".
-> >
-> In nds32 V3, all of our CPU have PMU.
-> So I will change the string to andestech,nds32v3-pmu.
+> Where do you define how to use this binding in case of GPU? I mean
+> some DT binding doc must have some information to avoid confusion as
+> all other users will have the qcom,level thing in the genpd's OPP
+> table which GPU will have it directly within its OPP table.
 
-That sounds good to me; thanks.
+Jordan suggested to use the RPMH_REGULATOR_LEVEL_* defines.
+These are defined in include/dt-bindings/power/qcom-rpmpd.h.
 
-> > > +- interrupts : The interrupt number for NDS32 PMU is 13.
-> > > +
-> > > +Example:
-> > > +pmu{
-> > > +	compatible = "andestech,atcpmu";
-> > > +	interrupts = <13>;
-> > > +}
-> > 
-> > The driver tried to find multiple interrupts. Is there only a single
-> > interrupt in all cases?
-> > 
-> There is only overflow interrupt for performance couner in nds32 V3.
-> I will modified the driver and prepare another patch.
+This header is only referenced in
+Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+(Which this patch series does not seem to use.)
 
-Ok.
+This patch series does use
+Documentation/devicetree/bindings/opp/qcom-opp.txt
+but it does not reference include/dt-bindings/power/qcom-rpmpd.h.
 
-Thanks,
-Mark.
+So to further avoid confusion, perhaps it is better to create new
+defines, instead of reusing the RPMH_REGULATOR_LEVEL_* defines?
+
+
+Kind regards,
+Niklas
