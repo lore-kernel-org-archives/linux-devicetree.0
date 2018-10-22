@@ -1,83 +1,71 @@
-Return-Path: <SRS0=/AVO=NC=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-he1eur01on0050.outbound.protection.outlook.com ([104.47.0.50]:21927
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727135AbeJVQGB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Oct 2018 12:06:01 -0400
-From: Andy Tang <andy.tang@nxp.com>
-Subject: RE: [PATCH 2/3] powerpc: t102x: upgrade the legacy clock node
-Date: Mon, 22 Oct 2018 07:48:31 +0000
-Message-ID: <DB5PR0401MB2213CE73626357FF87AE411CF3F40@DB5PR0401MB2213.eurprd04.prod.outlook.com>
+Return-Path: <SRS0=5DI3=NC=buserror.net=oss@kernel.org>
+Message-ID: <23919e8b8ec0d7cd9eb7fb1a134adbb9a17ca209.camel@buserror.net>
+From: Scott Wood <oss@buserror.net>
+Date: Mon, 22 Oct 2018 00:20:45 -0500
+In-Reply-To: <DB5PR0401MB2213DC3FA17E6B8E42258EDFF3F40@DB5PR0401MB2213.eurprd04.prod.outlook.com>
 References: <20180919073906.34187-1-andy.tang@nxp.com>
-         <20180919073906.34187-2-andy.tang@nxp.com>
-         <bb158670f1556156f17c3a9eefaa0a5e35c1591e.camel@buserror.net>
-         <DB5PR0401MB2213DC3FA17E6B8E42258EDFF3F40@DB5PR0401MB2213.eurprd04.prod.outlook.com>
- <23919e8b8ec0d7cd9eb7fb1a134adbb9a17ca209.camel@buserror.net>
-In-Reply-To: <23919e8b8ec0d7cd9eb7fb1a134adbb9a17ca209.camel@buserror.net>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Scott Wood <oss@buserror.net>, "mturquette@baylibre.com" <mturquette@baylibre.com>
+	 <20180919073906.34187-2-andy.tang@nxp.com>
+	 <bb158670f1556156f17c3a9eefaa0a5e35c1591e.camel@buserror.net>
+	 <DB5PR0401MB2213DC3FA17E6B8E42258EDFF3F40@DB5PR0401MB2213.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 2/3] powerpc: t102x: upgrade the legacy clock node
+To: Andy Tang <andy.tang@nxp.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>
 Cc: "sboyd@kernel.org" <sboyd@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgU2NvdHQsDQoNClBsZWFzZSBzZWUgbXkgcmVwbHkgaW5saW5lLg0KDQo+IC0tLS0tT3JpZ2lu
-YWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFNjb3R0IFdvb2QgPG9zc0BidXNlcnJvci5uZXQ+DQo+
-IFNlbnQ6IDIwMTjlubQxMOaciDIy5pelIDEzOjIxDQo+IFRvOiBBbmR5IFRhbmcgPGFuZHkudGFu
-Z0BueHAuY29tPjsgbXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb20NCj4gQ2M6IHNib3lkQGtlcm5lbC5v
-cmc7IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGxpbnV4LWNs
-a0B2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6
-IFJlOiBbUEFUQ0ggMi8zXSBwb3dlcnBjOiB0MTAyeDogdXBncmFkZSB0aGUgbGVnYWN5IGNsb2Nr
-IG5vZGUNCj4gDQo+IE9uIE1vbiwgMjAxOC0xMC0yMiBhdCAwMTozNCArMDAwMCwgQW5keSBUYW5n
-IHdyb3RlOg0KPiA+IEhpIFNjb3R0LA0KPiA+DQo+ID4gUGxlYXNlIHNlZSBteSByZXBseSBpbmxp
-bmUuDQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBT
-Y290dCBXb29kIDxvc3NAYnVzZXJyb3IubmV0Pg0KPiA+ID4gU2VudDogMjAxOOW5tDEw5pyIMjHm
-l6UgNzo1NA0KPiA+ID4gVG86IEFuZHkgVGFuZyA8YW5keS50YW5nQG54cC5jb20+OyBtdHVycXVl
-dHRlQGJheWxpYnJlLmNvbQ0KPiA+ID4gQ2M6IHNib3lkQGtlcm5lbC5vcmc7IHJvYmgrZHRAa2Vy
-bmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+ID4gPiBsaW51eC1jbGtAdmdlci5rZXJu
-ZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiA+ID4gU3ViamVjdDogUmU6IFtQ
-QVRDSCAyLzNdIHBvd2VycGM6IHQxMDJ4OiB1cGdyYWRlIHRoZSBsZWdhY3kgY2xvY2sNCj4gPiA+
-IG5vZGUNCj4gPiA+DQo+ID4gPiBPbiBXZWQsIDIwMTgtMDktMTkgYXQgMTU6MzkgKzA4MDAsIGFu
-ZHkudGFuZ0BueHAuY29tIHdyb3RlOg0KPiA+ID4gPiArY2xvY2tnZW46IGdsb2JhbC11dGlsaXRp
-ZXNAZTEwMDAgew0KPiA+ID4gPiArCWNvbXBhdGlibGUgPSAiZnNsLHFvcmlxLWNsb2NrZ2VuIjsN
-Cj4gPiA+DQo+ID4gPiBXaGVyZSBkb2VzIHRoaXMgY29tcGF0aWJsZSBzdHJpbmcgY29tZSBmcm9t
-Pw0KPiA+ID4NCj4gPiA+ID4gKwkJY29tcGF0aWJsZSA9ICJmc2wsdDEwMjMtY2xvY2tnZW4iOw0K
-PiA+ID4gPiAgCX07DQo+ID4gPg0KPiA+ID4gQW5kIGhlcmUgeW91IG92ZXJ3cml0ZSBpdCB3aXRo
-IG9ubHkgdGhlIGNoaXAtc3BlY2lmaWMgY29tcGF0aWJsZT8NCj4gPiA+DQo+ID4gPiBJcyB0MTAy
-MyBpbmNvbXBhdGlibGUgd2l0aCBib3RoIGZzbCxxb3JpcS1jbG9ja2dlbi0xLjAgYW5kDQo+ID4g
-PiBmc2wscW9yaXEtY2xvY2tnZW4tIDIuMD8gIFRoZSBleGlzdGluZyBkdHMgc2F5cyAyLjA7IGlz
-IHRoYXQgd3Jvbmc/DQo+ID4gPg0KPiA+ID4gQlRXLCBhc3N1bWluZyBpdCBpcyAyLjAgY29tcGF0
-aWJsZSBhbmQgdGh1cyB0aGUgdXNlIG9mDQo+ID4gPiBxb3JpcS1jbG9ja2dlbjIuZHRzaSBpcyBj
-b3JyZWN0LCB0aGUgYmVzdCBjb3Vyc2Ugb2YgYWN0aW9uIGlzDQo+ID4gPiBwcm9iYWJseSB0byB0
-byByZW1vdmUgdGhlIGxlZ2FjeSBzdHVmZiBmcm9tIGFsbCBmc2wgY2hpcHMsIHJhdGhlcg0KPiA+
-ID4gdGhhbiBpbnRyb2R1Y2UgYSBuZXcgZHRzaS4NCj4gPiA+IEluIGZhY3QgaXQnZCBiZSBuaWNl
-IHRvIHNlZSBpdCBhbGwgcmVtb3ZlZCBpbiBhbnkgY2FzZS4gOi0pDQo+ID4NCj4gPiBxb3JpcS1j
-bG9ja2dlbiouZHRzaSBhcmUgdXNlZCBieSBsZWdhY3kgYmluZGluZ3MuIFRoZSBjb250ZW50cyBh
-cmUgYWxsDQo+ID4gb2YgbGVnYWN5IGJpbmRpbmdzLg0KPiA+IFRvIHVzZSBuZXcgZnJhbWV3b3Jr
-LCBJIGludHJvZHVjZSBhIG5ldyBkdHNpIHdoaWNoIGNvbnRhaW5zIG5ldw0KPiA+IGJpbmRpbmdz
-IGFuZCB1c2VkIGZvciBhbGwgUFBDIHNvYy4NCj4gPiBBIGNoaXAtc3BlY2lmaWMgY29tcGF0aWJs
-ZSBpcyBuZWVkZWQgYmVjYXVzZSBkcml2ZXIgd2lsbCB1c2UgaXQgdG8gZ2V0DQo+ID4gY2hpcC0g
-c3BlY2lmaWMgY2xvY2sgdHJlZSBpbmZvcm1hdGlvbi4NCj4gPiBUaGUgY2xvY2sgaW5mb3JtYXRp
-b24gd2FzIGRlZmluZWQgaW4gZHJpdmVyIG5vdCBpbiBkdHMgaW4gbmV3DQo+ID4gZnJhbWV3b3Jr
-LCByZW1lbWJlcj8NCj4gDQo+IEknbSBhd2FyZSB0aGF0IGEgY2hpcC1zcGVjaWZpYyBjb21wYXRp
-YmxlIGlzIHJlcXVpcmVkLiAgV2hhdCBpcyB1bnVzdWFsIChvbg0KPiBQUEMpIGlzIHByb3ZpZGlu
-ZyAqb25seSogdGhlIGNoaXAtc3BlY2lmaWMgY29tcGF0aWJsZS4gIEkgd2FzIGV4cGVjdGluZw0K
-PiBzb21ldGhpbmcgbW9yZSBhbG9uZyB0aGUgbGluZXMgb2YNCj4gaHR0cHM6Ly9lbWVhMDEuc2Fm
-ZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRnANCj4gYXRj
-aHdvcmsub3psYWJzLm9yZyUyRnBhdGNoJTJGNDg2NTY1JTJGJmFtcDtkYXRhPTAyJTdDMDElN0Nh
-bg0KPiBkeS50YW5nJTQwbnhwLmNvbSU3Q2VhZjQ2ZTQzNjIwYjQ1YTE5ZWI0MDhkNjM3ZGUyMGNi
-JTdDNjg2ZQ0KPiBhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzAlN0M2MzY3NTc4
-MjQ1MDU2Njc1MzkNCj4gJmFtcDtzZGF0YT1UNXlSU1d0SFlPMnlMTWpzWlJJeFpUJTJCTTgyeHVH
-UW0yVkdYN01SQjhNSkElDQo+IDNEJmFtcDtyZXNlcnZlZD0wDQo+IA0KPiBHcmFudGVkLCB0aGUg
-ZHJpdmVyIHJlcXVpcmluZyB0d28gZGlmZmVyZW50IGNvbXBhdGlibGVzIHRvIGJlIHByZXNlbnQg
-aXMNCj4gb2RkLCBhbmQgd2FzIGEgY29udmVuaWVuY2UgYmFzZWQgb24gd2hhdCB3YXMgYWxyZWFk
-eSBpbiB0aGUgZGV2aWNlDQo+IHRyZWVzLCBidXQgdGhlDQo+IGZzbCxxb3JpcS1jbG9ja2dlbi0y
-LjAgY29tcGF0aWJsZSBpcyBwYXJ0IG9mIHRoZSBuZXcgYmluZGluZyAoYWxiZWl0IGFuDQo+IG9w
-dGlvbmFsIHBhcnQpLiAgSSBndWVzcyBJIGRvbid0IG1pbmQgbm8gbG9uZ2VyIHJlbHlpbmcgb24g
-aXQsIGJ1dCBhdCBsZWFzdA0KPiByZW1vdmUgdGhlICJmc2wscW9yaXEtY2xvY2tnZW4iIHN0cmlu
-Zy4NCkFmdGVyIHNhdyB5b3VyIHByZXZpb3VzIHBhdGNoLCBJIHBsYW4gdG8gd29yayBvdXQgYSBz
-aW1pbGFyIHBhdGNoLiBUaGUgZnNsLHFvcmlxLWNsb2NrZ2VuLTIuMCBhbmQgZnNsLHFvcmlxLWNs
-b2NrZ2VuLTEuMCB3aWxsIGJlIHJldGFpbmVkLg0KDQpUaGFua3MsDQpBbmR5DQoNCj4gDQo+IC1T
-Y290dA0KDQo=
+On Mon, 2018-10-22 at 01:34 +0000, Andy Tang wrote:
+> Hi Scott,
+> 
+> Please see my reply inline.
+> 
+> > -----Original Message-----
+> > From: Scott Wood <oss@buserror.net>
+> > Sent: 2018年10月21日 7:54
+> > To: Andy Tang <andy.tang@nxp.com>; mturquette@baylibre.com
+> > Cc: sboyd@kernel.org; robh+dt@kernel.org; mark.rutland@arm.com;
+> > linux-clk@vger.kernel.org; devicetree@vger.kernel.org
+> > Subject: Re: [PATCH 2/3] powerpc: t102x: upgrade the legacy clock node
+> > 
+> > On Wed, 2018-09-19 at 15:39 +0800, andy.tang@nxp.com wrote:
+> > > +clockgen: global-utilities@e1000 {
+> > > +	compatible = "fsl,qoriq-clockgen";
+> > 
+> > Where does this compatible string come from?
+> > 
+> > > +		compatible = "fsl,t1023-clockgen";
+> > >  	};
+> > 
+> > And here you overwrite it with only the chip-specific compatible?
+> > 
+> > Is t1023 incompatible with both fsl,qoriq-clockgen-1.0 and
+> > fsl,qoriq-clockgen- 2.0?  The existing dts says 2.0; is that wrong?
+> > 
+> > BTW, assuming it is 2.0 compatible and thus the use of
+> > qoriq-clockgen2.dtsi is correct, the best course of action is probably to
+> > to
+> > remove the legacy stuff from all fsl chips, rather than introduce a new
+> > dtsi.
+> > In fact it'd be nice to see it all removed in any case. :-)
+> 
+> qoriq-clockgen*.dtsi are used by legacy bindings. The contents are all of
+> legacy bindings.
+> To use new framework, I introduce a new dtsi which contains new bindings and
+> used for all PPC soc.
+> A chip-specific compatible is needed because driver will use it to get chip-
+> specific clock tree information.
+> The clock information was defined in driver not in dts in new framework,
+> remember?
+
+I'm aware that a chip-specific compatible is required.  What is unusual (on
+PPC) is providing *only* the chip-specific compatible.  I was expecting
+something more along the lines of https://patchwork.ozlabs.org/patch/486565/
+
+Granted, the driver requiring two different compatibles to be present is odd,
+and was a convenience based on what was already in the device trees, but the
+fsl,qoriq-clockgen-2.0 compatible is part of the new binding (albeit an
+optional part).  I guess I don't mind no longer relying on it, but at least
+remove the "fsl,qoriq-clockgen" string.
+
+-Scott
