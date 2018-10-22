@@ -1,51 +1,45 @@
-From: Palmer Dabbelt <palmer@sifive.com>
-Subject: Re: [PATCH v2] OF: Handle CMDLINE when /chosen node is not present
-Date: Mon, 22 Oct 2018 15:55:26 -0700 (PDT)
-Message-ID: <mhng-08dbc241-46e4-411b-ba13-32435abde7ad@palmer-si-x1c4>
-References: <20181022224213.GA25145@bogus>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181022224213.GA25145@bogus>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: robh@kernel.org, linux-mips@linux-mips.org
-Cc: mick@ics.forth.gr, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, frowand.list@gmail.com
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [RFC PATCH v2 09/17] ARM: dts: tegra20: harmony: Setup voltage
+ regulators for DVFS
+Date: Tue, 23 Oct 2018 01:59:26 +0300
+Message-ID: <5f3b5213-0901-be42-4f8d-2e68551f100c@gmail.com>
+References: <20181021205501.23943-1-digetx@gmail.com>
+ <20181021205501.23943-10-digetx@gmail.com>
+ <a1b4cd27-858c-de53-8ae2-b1aee689475f@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a1b4cd27-858c-de53-8ae2-b1aee689475f@wwwdotorg.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 22 Oct 2018 15:42:13 PDT (-0700), robh@kernel.org wrote:
-> On Mon, Oct 15, 2018 at 05:20:10PM +0300, Nick Kossifidis wrote:
->> The /chosen node is optional so we should handle CMDLINE regardless
->> the presence of /chosen/bootargs. Move handling of CMDLINE in
->> early_init_dt_scan() instead.
->
-> I looked at this a while back. I'm not sure this behavior can be changed
-> without breaking some MIPS platforms that could be relying on the
-> current behavior. But trying to make sense of the MIPS code is a
-> challenge and they have some other issues in this area.
->
-> Can't this be fixed by making /chosen manditory? I'd expect ultimately
-> you are always going to need it.
->
-> I'd rather not resort to making this per arch. There's also some effort
-> to consolidate cmd line handling[1].
+On 10/22/18 6:33 PM, Stephen Warren wrote:
+> On 10/21/18 2:54 PM, Dmitry Osipenko wrote:
+>> Set min/max regulators voltage and add CPU node that hooks up CPU with
+>> voltage regulators.
+> 
+>> diff --git a/arch/arm/boot/dts/tegra20-harmony.dts b/arch/arm/boot/dts/tegra20-harmony.dts
+> 
+>> -                sm0 {
+>> +                core_vdd_reg: sm0 {
+>>                       regulator-name = "vdd_sm0,vdd_core";
+>> -                    regulator-min-microvolt = <1200000>;
+>> -                    regulator-max-microvolt = <1200000>;
+>> +                    regulator-min-microvolt = <1000000>;
+>> +                    regulator-max-microvolt = <1300000>;
+>> +                    regulator-coupled-with = <&rtc_vdd_reg>;
+>> +                    regulator-coupled-max-spread = <150000>;
+>>                       regulator-always-on;
+>>                   };
+> 
+> How do you know for sure that these increased ranges are safe (high end) and stable (low end) for this particular board? IIRC the safe/legal range depends on the chip SKU, and to be honest I have no idea which SKU is present on Harmony... For public boards like Colibri I imagine there's enough information out there to tell what will work, but maybe not our internal boards like Harmony, unless you checked our ancient downstream kernels?
 
-I'd rather make /chosen mandatory on RISC-V than to have per-arch handling, as 
-like you've said there's already too much duplication.  That said, it does seem 
-like a bug to me because the behavior seems somewhat arbitrary -- an empty 
-/chosen node causing the built-in command-line argument handling to go off the 
-rails just smells so buggy.
+Yes, the ranges could be inaccurate in these DT patches. But it shouldn't matter much because only OPP's that match actual HW SKU will be used for DVFS. Though certainly it will be nice if we could specify exactly correct ranges.
 
-If that's the case, could we at least have something like 
-"CONFIG_OF_CHOSEN_IS_MANDATORY" that provides a warning when there is no 
-/chosen node and is set on architecture where the spec mandates /chosen?
+Looks like downstream doesn't specify safe ranges for any of the boards and it is relying on the SKU-VOLTAGE DVFS table values only. 
 
-I've added linux-mips to see if anyone has any ideas.
+For now there are quite few obstacles that need to be resolved in order to get a properly working system-wide DVFS, but things are getting a bit closer. Thank you very much for your input!
