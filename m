@@ -1,89 +1,139 @@
-From: Thor Thayer <thor.thayer@linux.intel.com>
-Subject: Re: [PATCH 2/2] net: stmmac: Set OWN bit for jumbo frames
-Date: Mon, 22 Oct 2018 16:05:15 -0500
-Message-ID: <4a4a3e09-da21-0bd5-969a-c3ea56f32552@linux.intel.com>
-References: <1540229352-26010-1-git-send-email-thor.thayer@linux.intel.com>
- <1540229352-26010-2-git-send-email-thor.thayer@linux.intel.com>
-Reply-To: thor.thayer@linux.intel.com
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH v5 00/18] of: overlay: validation checks, subsequent fixes
+Date: Mon, 22 Oct 2018 16:24:23 -0500
+Message-ID: <CANk1AXSLZLn6XjC=nv3+pK_NQc_VL5MxWfOW9mLCgv_eFYvPPw@mail.gmail.com>
+References: <1539902796-8382-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1540229352-26010-2-git-send-email-thor.thayer@linux.intel.com>
-Content-Language: en-US
+In-Reply-To: <1539902796-8382-1-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com, davem@davemloft.net, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Moritz Fischer <mdf@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/22/2018 12:29 PM, thor.thayer@linux.intel.com wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
-> 
-> Ping with Jumbo packet does not reply and get a watchdog timeout
-> 
-> [   46.059616] ------------[ cut here ]------------
-> [   46.064268] NETDEV WATCHDOG: eth0 (socfpga-dwmac): transmit queue 0 timed out
-> [   46.071471] WARNING: CPU: 1 PID: 0 at net/sched/sch_generic.c:461 dev_watchdog+0x2cc/0x2d8
-> [   46.079708] Modules linked in:
-> [   46.082761] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.18.0-00115-gc262be665854-dirty #264
-> [   46.091082] Hardware name: SoCFPGA Stratix 10 SoCDK (DT)
-> [   46.096377] pstate: 20000005 (nzCv daif -PAN -UAO)
-> [   46.101152] pc : dev_watchdog+0x2cc/0x2d8
-> [   46.105149] lr : dev_watchdog+0x2cc/0x2d8
-> [   46.109144] sp : ffff00000800bd80
-> [   46.112447] x29: ffff00000800bd80 x28: ffff80007a9b4940
-> [   46.117744] x27: 00000000ffffffff x26: ffff80007aa183b0
-> [   46.123040] x25: 0000000000000001 x24: 0000000000000140
-> [   46.128336] x23: ffff80007aa1839c x22: ffff80007aa17fb0
-> [   46.133632] x21: ffff80007aa18000 x20: ffff0000091a7000
-> [   46.138927] x19: 0000000000000000 x18: ffffffffffffffff
-> [   46.144223] x17: 0000000000000000 x16: 0000000000000000
-> [   46.149519] x15: ffff0000091a96c8 x14: 07740775076f0720
-> [   46.154814] x13: 07640765076d0769 x12: 0774072007300720
-> [   46.160110] x11: 0765077507650775 x10: 0771072007740769
-> [   46.165406] x9 : 076d0773076e0761 x8 : 077207740720073a
-> [   46.170702] x7 : 072907630761076d x6 : ffff80007ff9a0c0
-> [   46.175997] x5 : ffff80007ff9a0c0 x4 : 0000000000000002
-> [   46.181293] x3 : 0000000000000000 x2 : ffff0000091ac180
-> [   46.186589] x1 : e6a742ebe628e800 x0 : 0000000000000000
-> [   46.191885] Call trace:
-> [   46.194326]  dev_watchdog+0x2cc/0x2d8
-> [   46.197980]  call_timer_fn+0x20/0x78
-> [   46.201544]  expire_timers+0xa4/0xb0
-> [   46.205108]  run_timer_softirq+0xe4/0x198
-> [   46.209107]  __do_softirq+0x114/0x210
-> [   46.212760]  irq_exit+0xd0/0xd8
-> [   46.215895]  __handle_domain_irq+0x60/0xb0
-> [   46.219977]  gic_handle_irq+0x58/0xa8
-> [   46.223628]  el1_irq+0xb0/0x128
-> [   46.226761]  arch_cpu_idle+0x10/0x18
-> [   46.230326]  do_idle+0x1d4/0x288
-> [   46.233544]  cpu_startup_entry+0x24/0x28
-> [   46.237457]  secondary_start_kernel+0x17c/0x1c0
-> [   46.241971] ---[ end trace 57048cd1372cd828 ]---
-> 
-> Inspection of queue showed Jumbo packets were not sent out.
-> The ring Jumbo packet function needs to set the OWN bit so
-> the packet is sent.
-> 
-> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
-> ---
->   drivers/net/ethernet/stmicro/stmmac/ring_mode.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/ring_mode.c b/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
-> index a7ffc73fffe8..c5fd9483bd96 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
-> @@ -91,7 +91,7 @@ static int jumbo_frm(void *p, struct sk_buff *skb, int csum)
->   		tx_q->tx_skbuff_dma[entry].is_jumbo = true;
->   		desc->des3 = cpu_to_le32(des2 + BUF_SIZE_4KiB);
->   		stmmac_prepare_tx_desc(priv, desc, 1, nopaged_len, csum,
-> -				STMMAC_RING_MODE, 0, true, skb->len);
-> +				STMMAC_RING_MODE, 1, true, skb->len);
->   	}
->   
->   	tx_q->cur_tx = entry;
-> 
-I'm seeing a similar problem with packets > 8K. I'll send out a rev2 
-with that fix shortly.
+On Thu, Oct 18, 2018 at 5:48 PM <frowand.list@gmail.com> wrote:
+>
+> From: Frank Rowand <frank.rowand@sony.com>
+>
+> Add checks to (1) overlay apply process and (2) memory freeing
+> triggered by overlay release.  The checks are intended to detect
+> possible memory leaks and invalid overlays.
+
+I've tested v5, nothing new to report.
+
+Alan
+
+>
+> The checks revealed bugs in existing code.  Fixed the bugs.
+>
+> While fixing bugs, noted other issues, which are fixed in
+> separate patches.
+>
+> *****  Powerpc folks: I was not able to test the patches that
+> *****  directly impact Powerpc systems that use dynamic
+> *****  devicetree.  Please review that code carefully and
+> *****  test.  The specific patches are: 03/16, 04/16, 07/16
+>
+> FPGA folks:
+>
+>   I made the validation checks that should result in an
+>   invalid live devicetree report "ERROR" and cause the overlay apply
+>   to fail.
+>
+>   I made the memory leak validation tests report "WARNING" and allow
+>   the overlay apply to complete successfully.  Please let me know
+>   if you encounter the warnings.  There are at least two paths
+>   forward to deal with the cases that trigger the warning: (1) change
+>   the warning to an error and fail the overlay apply, or (2) find a
+>   way to detect the potential memory leaks and free the memory
+>   appropriately.
+>
+> ALL people:
+>
+>   The validations do _not_ address another major concern I have with
+>   releasing overlays, which is use after free errors.
+>
+> Changes since v4:
+>   - 01/18: make error message format consistent, error first, path last
+>   - 09/18: create of_prop_val_eq() and change open code to use it
+>   - 09/18: remove extra blank lines
+>
+> Changes since v3:
+>   - 01/18: Add expected value of refcount for destroy cset entry error.  Also
+>     explain the cause of the error.
+>
+>   - 09/18: for errors of an overlay changing the value of #size-cells or
+>     #address-cells, return -EINVAL so that overlay apply will fail
+>   - 09/18: for errors of an overlay changing the value of #size-cells or
+>     #address-cells, make the message more direct.
+>     Old message:
+>       OF: overlay: ERROR: overlay and/or live tree #size-cells invalid in node /soc/base_fpga_region
+>     New message:
+>       OF: overlay: ERROR: changing value of /soc/base_fpga_region/#size-cells not allowed
+>
+>   - 13/18: Update patch comment header to state that this patch modifies the
+>     previous patch to not return immediately on fragment error and
+>     explain this is not a performance issue.
+>   - 13/18: remove redundant "overlay" from two error messages.  "OF: overlay:"
+>     is already present in pr_fmt()
+>
+> Changes since v2:
+>
+>   - 13/18: Use continue to reduce indentation in find_dup_cset_node_entry()
+>     and find_dup_cset_prop()
+>
+> Changes since v1:
+>
+>   - move patch 16/16 to 17/18
+>   - move patch 15/16 to 18/18
+>   - new patch 15/18
+>   - new patch 16/18
+>
+>   - 05/18: add_changeset_node() header comment: incorrect comment for @target
+>
+>   - 18/18: add same fix for of_parse_phandle_with_args()
+>   - 18/18: add same fix for of_parse_phandle_with_args_map()
+>
+>
+> *** BLURB HERE ***
+>
+> Frank Rowand (18):
+>   of: overlay: add tests to validate kfrees from overlay removal
+>   of: overlay: add missing of_node_put() after add new node to changeset
+>   of: overlay: add missing of_node_get() in __of_attach_node_sysfs
+>   powerpc/pseries: add of_node_put() in dlpar_detach_node()
+>   of: overlay: use prop add changeset entry for property in new nodes
+>   of: overlay: do not duplicate properties from overlay for new nodes
+>   of: dynamic: change type of of_{at,de}tach_node() to void
+>   of: overlay: reorder fields in struct fragment
+>   of: overlay: validate overlay properties #address-cells and
+>     #size-cells
+>   of: overlay: make all pr_debug() and pr_err() messages unique
+>   of: overlay: test case of two fragments adding same node
+>   of: overlay: check prevents multiple fragments add or delete same node
+>   of: overlay: check prevents multiple fragments touching same property
+>   of: unittest: remove unused of_unittest_apply_overlay() argument
+>   of: overlay: set node fields from properties when add new overlay node
+>   of: unittest: allow base devicetree to have symbol metadata
+>   of: unittest: find overlays[] entry by name instead of index
+>   of: unittest: initialize args before calling of_*parse_*()
+>
+>  arch/powerpc/platforms/pseries/dlpar.c             |  15 +-
+>  arch/powerpc/platforms/pseries/reconfig.c          |   6 +-
+>  drivers/of/dynamic.c                               |  68 +++--
+>  drivers/of/kobj.c                                  |   4 +-
+>  drivers/of/overlay.c                               | 292 ++++++++++++++++-----
+>  drivers/of/unittest-data/Makefile                  |   2 +
+>  .../of/unittest-data/overlay_bad_add_dup_node.dts  |  28 ++
+>  .../of/unittest-data/overlay_bad_add_dup_prop.dts  |  24 ++
+>  drivers/of/unittest-data/overlay_base.dts          |   1 +
+>  drivers/of/unittest.c                              |  96 +++++--
+>  include/linux/of.h                                 |  25 +-
+>  11 files changed, 439 insertions(+), 122 deletions(-)
+>  create mode 100644 drivers/of/unittest-data/overlay_bad_add_dup_node.dts
+>  create mode 100644 drivers/of/unittest-data/overlay_bad_add_dup_prop.dts
+>
+> --
+> Frank Rowand <frank.rowand@sony.com>
+>
