@@ -1,41 +1,62 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [RFC PATCH v2 02/17] soc/tegra: fuse: Export tegra_get_chip_id()
-Date: Mon, 22 Oct 2018 00:33:23 +0300
-Message-ID: <23d8d451-ec25-d557-660b-bdce90fcefb0@gmail.com>
-References: <20181021205501.23943-1-digetx@gmail.com>
- <20181021205501.23943-3-digetx@gmail.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH] thermal: qoriq: add i.mx8mq support
+Date: Mon, 22 Oct 2018 01:43:37 +0000
+Message-ID: <DB3PR0402MB39161B63E12A188E4ABC34BEF5F40@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1535595286-18371-1-git-send-email-Anson.Huang@nxp.com>
+ <5b8e8a6d.1c69fb81.cdb61.0b30@mx.google.com>
+ <DB3PR0402MB3916E21AC0E72E5F1EA0DF4EF51A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181021205501.23943-3-digetx@gmail.com>
+In-Reply-To: <DB3PR0402MB3916E21AC0E72E5F1EA0DF4EF51A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/18 11:54 PM, Dmitry Osipenko wrote:
-> This function is used by tegra20-cpufreq driver which can be built as a
-> kernel module.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/soc/tegra/fuse/tegra-apbmisc.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/soc/tegra/fuse/tegra-apbmisc.c b/drivers/soc/tegra/fuse/tegra-apbmisc.c
-> index e5a4d8f98b10..c94dccf3eb30 100644
-> --- a/drivers/soc/tegra/fuse/tegra-apbmisc.c
-> +++ b/drivers/soc/tegra/fuse/tegra-apbmisc.c
-> @@ -51,6 +51,7 @@ u8 tegra_get_chip_id(void)
->  {
->  	return (tegra_read_chipid() >> 8) & 0xff;
->  }
-> +EXPORT_SYMBOL_GPL(tegra_get_chip_id);
->  
->  u32 tegra_read_straps(void)
->  {
-> 
+Ping...
 
-A quick note.. I just recalled about existence of the of_machine_is_compatible() which will be more appropriate to use in the driver, hence this patch won't be needed.
+Anson Huang
+Best Regards!
+
+
+> -----Original Message-----
+> From: Anson Huang
+> Sent: Thursday, September 13, 2018 5:44 PM
+> To: 'Rob Herring' <robh@kernel.org>
+> Cc: rui.zhang@intel.com; edubezval@gmail.com; robh+dt@kernel.org;
+> mark.rutland@arm.com; linux-pm@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; dl-linux-imx
+> <linux-imx@nxp.com>
+> Subject: RE: [PATCH] thermal: qoriq: add i.mx8mq support
+>=20
+> Gentle ping...
+>=20
+> Anson Huang
+> Best Regards!
+>=20
+>=20
+> > -----Original Message-----
+> > From: Rob Herring <robh@kernel.org>
+> > Sent: Tuesday, September 4, 2018 9:18 AM
+> > To: Anson Huang <anson.huang@nxp.com>
+> > Cc: rui.zhang@intel.com; edubezval@gmail.com; robh+dt@kernel.org;
+> > mark.rutland@arm.com; linux-pm@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; dl-linux-imx
+> > <linux-imx@nxp.com>
+> > Subject: Re: [PATCH] thermal: qoriq: add i.mx8mq support
+> >
+> > On Thu, 30 Aug 2018 10:14:46 +0800, Anson Huang wrote:
+> > > Add i.mx8mq specific compatible string.
+> > >
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/thermal/qoriq-thermal.txt | 6 +++-=
+--
+> > >  drivers/thermal/qoriq_thermal.c                             | 1 +
+> > >  2 files changed, 4 insertions(+), 3 deletions(-)
+> > >
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
