@@ -1,33 +1,50 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 5/5] arm64: dts: qcom: sdm845: Add USB PHY lane two
-Date: Mon, 22 Oct 2018 15:09:00 -0700
-Message-ID: <CAD=FV=W4mfsB35XSnhL=p-K4vNVQBwpuq_3mULc3MKta-wwv4Q@mail.gmail.com>
-References: <20181022205102.74825-1-evgreen@chromium.org> <20181022205102.74825-6-evgreen@chromium.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 3/6] dt-bindings: power: Introduce properties to
+ present the battery OCV capacity table
+Date: Mon, 22 Oct 2018 17:10:31 -0500
+Message-ID: <20181022221031.GA31167@bogus>
+References: <e7c061535f2dcca54d6498405fdd5ed7098b19f9.1540189330.git.baolin.wang@linaro.org>
+ <3a0c6487c9503cf64432f630e65790cc5c3f70ab.1540189330.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181022205102.74825-6-evgreen@chromium.org>
+Content-Disposition: inline
+In-Reply-To: <3a0c6487c9503cf64432f630e65790cc5c3f70ab.1540189330.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Evan Green <evgreen@chromium.org>
-Cc: Rob Herring <robh@kernel.org>, Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
+Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, baolin.wang@linaro.org, broonie@kernel.org, ctatlor97@gmail.com, linus.walleij@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On Mon, Oct 22, 2018 at 1:52 PM Evan Green <evgreen@chromium.org> wrote:
->
-> Add the second lane registers for the USB PHY, now that the
-> QMP phy bindings have been updated. This way the driver can stop
-> reaching beyond its register region to get at the second lane.
->
-> Signed-off-by: Evan Green <evgreen@chromium.org>
+On Mon, 22 Oct 2018 15:43:59 +0800, Baolin Wang wrote:
+> Some battery driver will use the open circuit voltage (OCV) value to look
+> up the corresponding battery capacity percent in one certain degree Celsius.
+> Thus this patch provides some battery properties to present the OCV table
+> temperatures and OCV capacity table values.
+> 
+> Suggested-by: Sebastian Reichel <sre@kernel.org>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->
-> Changes in v3:
->  - Removed erroneous fixup for USB UniPro PHY, which is not dual lane (Doug)
->
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> Changes from v5:
+>  - None.
+> 
+> Changes from v4:
+>  - Improve the description of ocv-capacity-table-n to make the order clear.
+> 
+> Changes from v3:
+>  - Split binding into one separate patch.
+>  - Rename ocv-capacity-table-temperatures to ocv-capacity-celsius.
+>  - Add some words to specify the OCV's unit.
+> 
+> Changes from v2:
+>  - Use type __be32 to calculate the table length.
+>  - Update error messages.
+>  - Add some helper functions.
+> 
+> Changes from v1:
+>  - New patch in v2.
+> ---
+>  .../devicetree/bindings/power/supply/battery.txt   |   15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
 
-Super.  Thanks for doing this.
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
