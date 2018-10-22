@@ -1,67 +1,124 @@
-Return-Path: <SRS0=65Mf=NB=jic23.retrosnub.co.uk=jic23@kernel.org>
-Date: Sun, 21 Oct 2018 15:58:24 +0100
-From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Subject: Re: [PATCH 2/2] Add ti,dac7311 device tree bindings in
- documentation
-Message-ID: <20181021155811.0530ec23@archlinux>
-In-Reply-To: <20181017203738.13477-2-charles-antoine.couret@essensium.com>
-References: <20181017203738.13477-1-charles-antoine.couret@essensium.com>
-	<20181017203738.13477-2-charles-antoine.couret@essensium.com>
+Return-Path: <SRS0=/AVO=NC=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr40044.outbound.protection.outlook.com ([40.107.4.44]:47008
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727269AbeJVOAs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Oct 2018 10:00:48 -0400
+From: Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH v2 3/4] usb: chipidea: host: override ehci->hub_control
+Date: Mon, 22 Oct 2018 05:43:04 +0000
+Message-ID: <20181022054031.14027-4-peter.chen@nxp.com>
+References: <20181022054031.14027-1-peter.chen@nxp.com>
+In-Reply-To: <20181022054031.14027-1-peter.chen@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-To: Charles-Antoine Couret <charles-antoine.couret@essensium.com>
-Cc: linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Sender: devicetree-owner@vger.kernel.org
+To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>, Peter Chen <peter.chen@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, 17 Oct 2018 22:37:38 +0200
-Charles-Antoine Couret <charles-antoine.couret@essensium.com> wrote:
+The chipidea controller has some special requirements during
+suspend/resume, override common ehci->hub_control to implement
+it.
 
-Would be good to have a small amount of description here + it seems you didn't
-sign off on this patch so we can't apply it to the kernel.
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+---
+ drivers/usb/chipidea/host.c | 74 +++++++++++++++++++++++++++++++++++++++++=
+++++
+ 1 file changed, 74 insertions(+)
 
-Please cc devicetree list and maintainers for any devicetree bindings.
-+cc Rob, Mark and list.
-
-Thanks,
-
-Jonathan
-> ---
->  .../bindings/iio/dac/ti,dac7311.txt           | 20 +++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/dac/ti,dac7311.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/dac/ti,dac7311.txt b/Documentation/devicetree/bindings/iio/dac/ti,dac7311.txt
-> new file mode 100644
-> index 000000000000..771414024cd0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/dac/ti,dac7311.txt
-> @@ -0,0 +1,20 @@
-> +TI DAC7311 device tree bindings
-> +
-> +Required properties:
-> +
-> +- compatible: Must be set to "ti,dac7311", "ti,dac6311" or "ti,dac5311"
-> +- reg: spi chip select number for the device
-> +- vref-supply: The regulator supply for ADC reference voltage
-> +- spi-max-frequency: Max SPI frequency to use (< 50000000)
-> +
-> +Example:
-> +
-> +	spi_master {
-> +		dac7311: dac7311@0 {
-Not sure why you need the pre colon bit here.
-
-Also I'd imagine the standard naming for a dac is probably
-dac@0
-(I haven't checked the devicetree spec to see if they actually
-have that one in there as I'm on a train with dodgy wifi).
-
-Jonathan
-> +			compatible = "ti,dac7311";
-> +			reg = <0>; /* CS0 */
-> +			spi-max-frequency = <1000000>;
-> +			vref-supply = <&vdd_supply>;
-> +		};
-> +	};
-> +
+diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+index d74a13d7c21c..b8e7d7fe3d53 100644
+--- a/drivers/usb/chipidea/host.c
++++ b/drivers/usb/chipidea/host.c
+@@ -234,6 +234,79 @@ void ci_hdrc_host_destroy(struct ci_hdrc *ci)
+ 		host_stop(ci);
+ }
+=20
++/* The below code is based on tegra ehci driver */
++static int ci_ehci_hub_control(
++	struct usb_hcd	*hcd,
++	u16		typeReq,
++	u16		wValue,
++	u16		wIndex,
++	char		*buf,
++	u16		wLength
++)
++{
++	struct ehci_hcd	*ehci =3D hcd_to_ehci(hcd);
++	u32 __iomem	*status_reg;
++	u32		temp;
++	unsigned long	flags;
++	int		retval =3D 0;
++	struct device *dev =3D hcd->self.controller;
++	struct ci_hdrc *ci =3D dev_get_drvdata(dev);
++
++	status_reg =3D &ehci->regs->port_status[(wIndex & 0xff) - 1];
++
++	spin_lock_irqsave(&ehci->lock, flags);
++
++	if (typeReq =3D=3D SetPortFeature && wValue =3D=3D USB_PORT_FEAT_SUSPEND)=
+ {
++		temp =3D ehci_readl(ehci, status_reg);
++		if ((temp & PORT_PE) =3D=3D 0 || (temp & PORT_RESET) !=3D 0) {
++			retval =3D -EPIPE;
++			goto done;
++		}
++
++		temp &=3D ~(PORT_RWC_BITS | PORT_WKCONN_E);
++		temp |=3D PORT_WKDISC_E | PORT_WKOC_E;
++		ehci_writel(ehci, temp | PORT_SUSPEND, status_reg);
++
++		/*
++		 * If a transaction is in progress, there may be a delay in
++		 * suspending the port. Poll until the port is suspended.
++		 */
++		if (ehci_handshake(ehci, status_reg, PORT_SUSPEND,
++						PORT_SUSPEND, 5000))
++			ehci_err(ehci, "timeout waiting for SUSPEND\n");
++
++		if (ci->platdata->flags & CI_HDRC_IMX_IS_HSIC) {
++			if (ci->platdata->notify_event)
++				ci->platdata->notify_event
++					(ci, CI_HDRC_IMX_HSIC_SUSPEND_EVENT);
++			ci_ehci_override_wakeup_flag(ehci, status_reg,
++				PORT_WKDISC_E | PORT_WKCONN_E, false);
++		}
++
++		set_bit((wIndex & 0xff) - 1, &ehci->suspended_ports);
++		goto done;
++	}
++
++	/*
++	 * After resume has finished, it needs do some post resume
++	 * operation for some SoCs.
++	 */
++	else if (typeReq =3D=3D ClearPortFeature &&
++					wValue =3D=3D USB_PORT_FEAT_C_SUSPEND) {
++
++		/* Make sure the resume has finished, it should be finished */
++		if (ehci_handshake(ehci, status_reg, PORT_RESUME, 0, 25000))
++			ehci_err(ehci, "timeout waiting for resume\n");
++	}
++
++	spin_unlock_irqrestore(&ehci->lock, flags);
++
++	/* Handle the hub control events here */
++	return ehci_hub_control(hcd, typeReq, wValue, wIndex, buf, wLength);
++done:
++	spin_unlock_irqrestore(&ehci->lock, flags);
++	return retval;
++}
+ static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
+ {
+ 	struct ehci_hcd *ehci =3D hcd_to_ehci(hcd);
+@@ -305,4 +378,5 @@ void ci_hdrc_host_driver_init(void)
+ 	ehci_init_driver(&ci_ehci_hc_driver, &ehci_ci_overrides);
+ 	orig_bus_suspend =3D ci_ehci_hc_driver.bus_suspend;
+ 	ci_ehci_hc_driver.bus_suspend =3D ci_ehci_bus_suspend;
++	ci_ehci_hc_driver.hub_control =3D ci_ehci_hub_control;
+ }
+--=20
+2.14.1
