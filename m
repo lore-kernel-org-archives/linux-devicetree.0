@@ -1,74 +1,57 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v2 00/15] mtd: maps: physmap cleanups
-Date: Mon, 22 Oct 2018 15:41:10 +0200
-Message-ID: <20181022154110.62c0e178@bbrezillon>
-References: <20181019074908.13226-1-boris.brezillon@bootlin.com>
- <CACRpkdbHDTcz_X_ijV+B-DkahsTWDyW2+h0n4W5o9GU3f6kmrA@mail.gmail.com>
+From: Jordan Crouse <jcrouse@codeaurora.org>
+Subject: Re: [Freedreno] [PATCH 5/9] arm64: dts: sdm845: Add gpu and gmu
+ device nodes
+Date: Mon, 22 Oct 2018 08:34:51 -0600
+Message-ID: <20181022143450.GE26762@jcrouse-lnx.qualcomm.com>
+References: <20181010142905.GB9977@jcrouse-lnx.qualcomm.com>
+ <20181010143149.4e3ct3efkuwxa2hw@vireshk-i7>
+ <20181010144856.GC9977@jcrouse-lnx.qualcomm.com>
+ <20181010145139.nvalsr2ij2lj53dh@vireshk-i7>
+ <20181010151006.GD9977@jcrouse-lnx.qualcomm.com>
+ <20181011050216.4ba5i3ghh5rbvjbl@vireshk-i7>
+ <20181011145456.GG9977@jcrouse-lnx.qualcomm.com>
+ <20181015100327.qoojonf46lh6g3sh@vireshk-i7>
+ <20181015143444.GA4751@jcrouse-lnx.qualcomm.com>
+ <20181022103811.ywvyasnshjtdzjki@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdbHDTcz_X_ijV+B-DkahsTWDyW2+h0n4W5o9GU3f6kmrA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE
- TREE BINDINGS" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Mark Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20181022103811.ywvyasnshjtdzjki@vireshk-i7>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: nm@ti.com, devicetree@vger.kernel.org, rnayak@codeaurora.org, linux-pm@vger.kernel.org, sboyd@kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, bjorn.andersson@linaro.org, vireshk@kernel.org, niklas.cassel@linaro.org, freedreno@lists.freedesktop.org, georgi.djakov@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-On Mon, 22 Oct 2018 13:45:49 +0200
-Linus Walleij <linus.walleij@linaro.org> wrote:
-
-> On Fri, Oct 19, 2018 at 9:49 AM Boris Brezillon
-> <boris.brezillon@bootlin.com> wrote:
-> 
-> > This is an attempt at merging physmap_of.c, gpio-addr-flash.c and
-> > physmap.c. The rational behind this decision is code sharing and
-> > consistency with what's done in other parts of the kernel:
-> >
-> > - physmap_of is just adding OF/DT support to the physmap logic, and we
-> >   usually put that code in the pre-existing driver instead of creating
-> >   a new one
-> >
-> > - gpio-addr-flash is just an extension of the physmap logic which is
-> >   needed when the platform does not have enough native ADDR lines
-> >   to address the whole flash. Again, I think this core belongs in the
-> >   physmap driver
-> >
-> > Patches 1 to 9 are just cleanups, and are not really related to the
-> > merging of physmap_of and gpio-addr-flash into physmap.c.
-> >
-> > Patch 10 to 13 are doing the actual merging work, and patch 14 is
-> > documenting the addr-gpios property that has been added to support
-> > the gpio-addr-flash on DT platforms.
-> >
-> > Patch 15 is a cosmetic change proposed by Ricardo.  
-> 
-> This series:
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> I expect to test the result when rebasing my patches for Gemini,
-> so hope for this to hit your devel branch after v4.20-rc1.
-> 
-
-I already have a topic branch [1] in case you want to start working on
-it before 4.20-rc1.
-
-Regards,
-
-Boris
-
-[1]https://github.com/bbrezillon/linux-0day/tree/mtd/physmap-cleanup
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+T24gTW9uLCBPY3QgMjIsIDIwMTggYXQgMDQ6MDg6MTFQTSArMDUzMCwgVmlyZXNoIEt1bWFyIHdy
+b3RlOgo+IE9uIDE1LTEwLTE4LCAwODozNCwgSm9yZGFuIENyb3VzZSB3cm90ZToKPiA+IEkgYWdy
+ZWUgdGhhdCBjb25zaXN0ZW5jeSBpcyBnb29kLiBCdXQgdGhlIEdQVSBpcyBieSBkZXNpZ24gb3V0
+c2lkZSBvZiB0aGUKPiA+IGNvbnRyb2wgb2YgdGhlIGdlbnBkIHVuaXZlcnNlIHNvIGl0IGlzIGJ5
+IGRlc2lnbiBub3QgdXNpbmcgdGhlIHNhbWUgZmVhdHVyZXMuCj4gPiBJdCB1bmZvcnR1bmF0ZWx5
+IGRvZXMgaGFwcGVuIHRvIHVzZSBhIHNpbWlsYXIgbnVtYmVyIGluIGFuIE9QUCBiaW5kaW5nIHRv
+Cj4gPiBjb25zdHJ1Y3QgdGhlIGxldmVsIG1hcHBpbmcgYnV0IHNpbmNlIHdlIGNhbid0IHJlYWQg
+dGhlIGNtZC1kYiBmcm9tIHRoZSBHTVUKPiA+IHNwYWNlIHRoaXMgaXMgYSBuZWNlc3NhcnkgZXZp
+bC4KPiAKPiBXaGVyZSBkbyB5b3UgZGVmaW5lIGhvdyB0byB1c2UgdGhpcyBiaW5kaW5nIGluIGNh
+c2Ugb2YgR1BVPyBJIG1lYW4KPiBzb21lIERUIGJpbmRpbmcgZG9jIG11c3QgaGF2ZSBzb21lIGlu
+Zm9ybWF0aW9uIHRvIGF2b2lkIGNvbmZ1c2lvbiBhcwo+IGFsbCBvdGhlciB1c2VycyB3aWxsIGhh
+dmUgdGhlIHFjb20sbGV2ZWwgdGhpbmcgaW4gdGhlIGdlbnBkJ3MgT1BQCj4gdGFibGUgd2hpY2gg
+R1BVIHdpbGwgaGF2ZSBpdCBkaXJlY3RseSB3aXRoaW4gaXRzIE9QUCB0YWJsZS4KCldoZW4gSSBm
+aXJzdCBtYWRlIHRoZSBwYXRjaCBJIHdhcyBqdXN0IHVzaW5nIGV4aXN0aW5nIE9QUCBiaW5kaW5n
+cyBmb3IgIEdQVQpsZXZlbHMgYXMgdGhlIHdvcmRpbmcgd2FzIGdlbmVyaWMgZW5vdWdoIHRvIGNv
+dmVyIGJvdGggY2FzZXMuIEkgd291bGQgYmUgaGFwcHkKdG8gcmV2aXNpdCB0aGF0IGFuZCBpbmRp
+Y2F0ZSB0aGF0IHRoZSBPUFAgYmluZGluZ3MgYXBwbHkgdG8gUlBNaCBhbmQgR1BVL0dNVQphcyB3
+ZSd2ZSBkaXNjdXNzZWQgaW4gdGhpcyB0aHJlYWQuCgpKb3JkYW4KCi0tIApUaGUgUXVhbGNvbW0g
+SW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0s
+CmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2plY3QKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
