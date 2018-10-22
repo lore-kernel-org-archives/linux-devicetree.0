@@ -1,13 +1,13 @@
 Return-Path: <SRS0=/AVO=NC=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-ve1eur01on0043.outbound.protection.outlook.com ([104.47.1.43]:51792
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+Received: from mail-eopbgr70059.outbound.protection.outlook.com ([40.107.7.59]:10723
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727218AbeJWBSE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Oct 2018 21:18:04 -0400
+        id S1728306AbeJWAc1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Oct 2018 20:32:27 -0400
 From: York Sun <york.sun@nxp.com>
 Subject: Re: re-licensing of bindings/chosen.txt
-Date: Mon, 22 Oct 2018 16:58:41 +0000
-Message-ID: <DB7PR04MB429865C654766E957039F20B9AF40@DB7PR04MB4298.eurprd04.prod.outlook.com>
+Date: Mon, 22 Oct 2018 16:13:13 +0000
+Message-ID: <DB7PR04MB4298D55E850FC591BFE8282A9AF40@DB7PR04MB4298.eurprd04.prod.outlook.com>
 References: <CAL_Jsq+Mab+6fwGMyC+aBiGQ3+EtYL2XxSqb-pSP1-BDhTbEBg@mail.gmail.com>
  <CAL_Jsq++N9RXU5VjdQpjCB7ijrbfBe5KKy-hYjuE-75ApUQROg@mail.gmail.com>
  <CAL_Jsq+QKQjShb9TO_Db2R5w2X_NheSZHNKwprB3qNQDshpW0A@mail.gmail.com>
@@ -63,9 +63,8 @@ eak for=0A=
 > different secondary CPU release mechanism)=0A=
 > =0A=
 =0A=
-Rob,=0A=
-=0A=
-We are OK for the dual license.=0A=
-Copyright 2015 Freescale Semiconductor, Inc.=0A=
+Thanks for pointing it out. I with OK with the dual license.I think it=0A=
+should carry Freescale's name as the change was made in 2015. I will get=0A=
+back to you on the copyright text.=0A=
 =0A=
 York=0A=
