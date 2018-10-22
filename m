@@ -1,57 +1,83 @@
 Return-Path: <SRS0=/AVO=NC=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from 107-173-140-25-host.colocrossing.com ([107.173.140.25]:47199
-        "EHLO resetyourbody.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727146AbeJVWQE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Oct 2018 18:16:04 -0400
-Subject: Logo products for your company
-Message-ID: <3c4331632f840916a07b5529365db8e6@woodgenius.com>
-Date: Mon, 22 Oct 2018 12:37:58 +0200
-From: "Lilly Koller" <satdefissnsuitez@aol.jp>
-Reply-To: manhusat@sina.com
+Received: from mail-he1eur01on0050.outbound.protection.outlook.com ([104.47.0.50]:21927
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727135AbeJVQGB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Oct 2018 12:06:01 -0400
+From: Andy Tang <andy.tang@nxp.com>
+Subject: RE: [PATCH 2/3] powerpc: t102x: upgrade the legacy clock node
+Date: Mon, 22 Oct 2018 07:48:31 +0000
+Message-ID: <DB5PR0401MB2213CE73626357FF87AE411CF3F40@DB5PR0401MB2213.eurprd04.prod.outlook.com>
+References: <20180919073906.34187-1-andy.tang@nxp.com>
+         <20180919073906.34187-2-andy.tang@nxp.com>
+         <bb158670f1556156f17c3a9eefaa0a5e35c1591e.camel@buserror.net>
+         <DB5PR0401MB2213DC3FA17E6B8E42258EDFF3F40@DB5PR0401MB2213.eurprd04.prod.outlook.com>
+ <23919e8b8ec0d7cd9eb7fb1a134adbb9a17ca209.camel@buserror.net>
+In-Reply-To: <23919e8b8ec0d7cd9eb7fb1a134adbb9a17ca209.camel@buserror.net>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+To: Scott Wood <oss@buserror.net>, "mturquette@baylibre.com" <mturquette@baylibre.com>
+Cc: "sboyd@kernel.org" <sboyd@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
-
-I didn’t know if you had received my email from last week?
-Can you direct me to the person that handles your company  promo items?
-Do you have any upcoming events, tradeshows or promotional needs?
-We manufacture ALL custom LOGO and branded products.
-The most asked about product that we make, is the custom printed USB flash
-drives!
-
-We can print your logo on them and load your digital images, videos and
-files!
-If you need marketing, advertising, gifts or incentives, USB flash drives
-are the solution!
-
-Here is what we include:
--Any size memory you need: 64MB up to 128GB
--We will print your logo on both sides, just ask!
--Very Low Order Minimums
--Need them quickly?  Not a problem, we offer Rush Service
-
-NEW:   We can make a custom shaped USB drive to look like your Logo or
-product!
-Email over a copy of your logo and we will create a design mock up for you
-at no cost!
-Our higher memory sizes are a really good option right now!
-
-Ask about the “Double Your Memory” upgrade promotion going on right
-now!
-Pricing is low right now, so let us know what you need and we will get you
-a quick quote.
-
-We will beat any competitors pricing, send us your last invoice and we will
-beat it!
-
-We always offer great rates for schools and nonprofits as well.
-Regards,
-
-Lilly Koller
-Logo USB Account Manager
+SGkgU2NvdHQsDQoNClBsZWFzZSBzZWUgbXkgcmVwbHkgaW5saW5lLg0KDQo+IC0tLS0tT3JpZ2lu
+YWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFNjb3R0IFdvb2QgPG9zc0BidXNlcnJvci5uZXQ+DQo+
+IFNlbnQ6IDIwMTjlubQxMOaciDIy5pelIDEzOjIxDQo+IFRvOiBBbmR5IFRhbmcgPGFuZHkudGFu
+Z0BueHAuY29tPjsgbXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb20NCj4gQ2M6IHNib3lkQGtlcm5lbC5v
+cmc7IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGxpbnV4LWNs
+a0B2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6
+IFJlOiBbUEFUQ0ggMi8zXSBwb3dlcnBjOiB0MTAyeDogdXBncmFkZSB0aGUgbGVnYWN5IGNsb2Nr
+IG5vZGUNCj4gDQo+IE9uIE1vbiwgMjAxOC0xMC0yMiBhdCAwMTozNCArMDAwMCwgQW5keSBUYW5n
+IHdyb3RlOg0KPiA+IEhpIFNjb3R0LA0KPiA+DQo+ID4gUGxlYXNlIHNlZSBteSByZXBseSBpbmxp
+bmUuDQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBT
+Y290dCBXb29kIDxvc3NAYnVzZXJyb3IubmV0Pg0KPiA+ID4gU2VudDogMjAxOOW5tDEw5pyIMjHm
+l6UgNzo1NA0KPiA+ID4gVG86IEFuZHkgVGFuZyA8YW5keS50YW5nQG54cC5jb20+OyBtdHVycXVl
+dHRlQGJheWxpYnJlLmNvbQ0KPiA+ID4gQ2M6IHNib3lkQGtlcm5lbC5vcmc7IHJvYmgrZHRAa2Vy
+bmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+ID4gPiBsaW51eC1jbGtAdmdlci5rZXJu
+ZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiA+ID4gU3ViamVjdDogUmU6IFtQ
+QVRDSCAyLzNdIHBvd2VycGM6IHQxMDJ4OiB1cGdyYWRlIHRoZSBsZWdhY3kgY2xvY2sNCj4gPiA+
+IG5vZGUNCj4gPiA+DQo+ID4gPiBPbiBXZWQsIDIwMTgtMDktMTkgYXQgMTU6MzkgKzA4MDAsIGFu
+ZHkudGFuZ0BueHAuY29tIHdyb3RlOg0KPiA+ID4gPiArY2xvY2tnZW46IGdsb2JhbC11dGlsaXRp
+ZXNAZTEwMDAgew0KPiA+ID4gPiArCWNvbXBhdGlibGUgPSAiZnNsLHFvcmlxLWNsb2NrZ2VuIjsN
+Cj4gPiA+DQo+ID4gPiBXaGVyZSBkb2VzIHRoaXMgY29tcGF0aWJsZSBzdHJpbmcgY29tZSBmcm9t
+Pw0KPiA+ID4NCj4gPiA+ID4gKwkJY29tcGF0aWJsZSA9ICJmc2wsdDEwMjMtY2xvY2tnZW4iOw0K
+PiA+ID4gPiAgCX07DQo+ID4gPg0KPiA+ID4gQW5kIGhlcmUgeW91IG92ZXJ3cml0ZSBpdCB3aXRo
+IG9ubHkgdGhlIGNoaXAtc3BlY2lmaWMgY29tcGF0aWJsZT8NCj4gPiA+DQo+ID4gPiBJcyB0MTAy
+MyBpbmNvbXBhdGlibGUgd2l0aCBib3RoIGZzbCxxb3JpcS1jbG9ja2dlbi0xLjAgYW5kDQo+ID4g
+PiBmc2wscW9yaXEtY2xvY2tnZW4tIDIuMD8gIFRoZSBleGlzdGluZyBkdHMgc2F5cyAyLjA7IGlz
+IHRoYXQgd3Jvbmc/DQo+ID4gPg0KPiA+ID4gQlRXLCBhc3N1bWluZyBpdCBpcyAyLjAgY29tcGF0
+aWJsZSBhbmQgdGh1cyB0aGUgdXNlIG9mDQo+ID4gPiBxb3JpcS1jbG9ja2dlbjIuZHRzaSBpcyBj
+b3JyZWN0LCB0aGUgYmVzdCBjb3Vyc2Ugb2YgYWN0aW9uIGlzDQo+ID4gPiBwcm9iYWJseSB0byB0
+byByZW1vdmUgdGhlIGxlZ2FjeSBzdHVmZiBmcm9tIGFsbCBmc2wgY2hpcHMsIHJhdGhlcg0KPiA+
+ID4gdGhhbiBpbnRyb2R1Y2UgYSBuZXcgZHRzaS4NCj4gPiA+IEluIGZhY3QgaXQnZCBiZSBuaWNl
+IHRvIHNlZSBpdCBhbGwgcmVtb3ZlZCBpbiBhbnkgY2FzZS4gOi0pDQo+ID4NCj4gPiBxb3JpcS1j
+bG9ja2dlbiouZHRzaSBhcmUgdXNlZCBieSBsZWdhY3kgYmluZGluZ3MuIFRoZSBjb250ZW50cyBh
+cmUgYWxsDQo+ID4gb2YgbGVnYWN5IGJpbmRpbmdzLg0KPiA+IFRvIHVzZSBuZXcgZnJhbWV3b3Jr
+LCBJIGludHJvZHVjZSBhIG5ldyBkdHNpIHdoaWNoIGNvbnRhaW5zIG5ldw0KPiA+IGJpbmRpbmdz
+IGFuZCB1c2VkIGZvciBhbGwgUFBDIHNvYy4NCj4gPiBBIGNoaXAtc3BlY2lmaWMgY29tcGF0aWJs
+ZSBpcyBuZWVkZWQgYmVjYXVzZSBkcml2ZXIgd2lsbCB1c2UgaXQgdG8gZ2V0DQo+ID4gY2hpcC0g
+c3BlY2lmaWMgY2xvY2sgdHJlZSBpbmZvcm1hdGlvbi4NCj4gPiBUaGUgY2xvY2sgaW5mb3JtYXRp
+b24gd2FzIGRlZmluZWQgaW4gZHJpdmVyIG5vdCBpbiBkdHMgaW4gbmV3DQo+ID4gZnJhbWV3b3Jr
+LCByZW1lbWJlcj8NCj4gDQo+IEknbSBhd2FyZSB0aGF0IGEgY2hpcC1zcGVjaWZpYyBjb21wYXRp
+YmxlIGlzIHJlcXVpcmVkLiAgV2hhdCBpcyB1bnVzdWFsIChvbg0KPiBQUEMpIGlzIHByb3ZpZGlu
+ZyAqb25seSogdGhlIGNoaXAtc3BlY2lmaWMgY29tcGF0aWJsZS4gIEkgd2FzIGV4cGVjdGluZw0K
+PiBzb21ldGhpbmcgbW9yZSBhbG9uZyB0aGUgbGluZXMgb2YNCj4gaHR0cHM6Ly9lbWVhMDEuc2Fm
+ZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRnANCj4gYXRj
+aHdvcmsub3psYWJzLm9yZyUyRnBhdGNoJTJGNDg2NTY1JTJGJmFtcDtkYXRhPTAyJTdDMDElN0Nh
+bg0KPiBkeS50YW5nJTQwbnhwLmNvbSU3Q2VhZjQ2ZTQzNjIwYjQ1YTE5ZWI0MDhkNjM3ZGUyMGNi
+JTdDNjg2ZQ0KPiBhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzAlN0M2MzY3NTc4
+MjQ1MDU2Njc1MzkNCj4gJmFtcDtzZGF0YT1UNXlSU1d0SFlPMnlMTWpzWlJJeFpUJTJCTTgyeHVH
+UW0yVkdYN01SQjhNSkElDQo+IDNEJmFtcDtyZXNlcnZlZD0wDQo+IA0KPiBHcmFudGVkLCB0aGUg
+ZHJpdmVyIHJlcXVpcmluZyB0d28gZGlmZmVyZW50IGNvbXBhdGlibGVzIHRvIGJlIHByZXNlbnQg
+aXMNCj4gb2RkLCBhbmQgd2FzIGEgY29udmVuaWVuY2UgYmFzZWQgb24gd2hhdCB3YXMgYWxyZWFk
+eSBpbiB0aGUgZGV2aWNlDQo+IHRyZWVzLCBidXQgdGhlDQo+IGZzbCxxb3JpcS1jbG9ja2dlbi0y
+LjAgY29tcGF0aWJsZSBpcyBwYXJ0IG9mIHRoZSBuZXcgYmluZGluZyAoYWxiZWl0IGFuDQo+IG9w
+dGlvbmFsIHBhcnQpLiAgSSBndWVzcyBJIGRvbid0IG1pbmQgbm8gbG9uZ2VyIHJlbHlpbmcgb24g
+aXQsIGJ1dCBhdCBsZWFzdA0KPiByZW1vdmUgdGhlICJmc2wscW9yaXEtY2xvY2tnZW4iIHN0cmlu
+Zy4NCkFmdGVyIHNhdyB5b3VyIHByZXZpb3VzIHBhdGNoLCBJIHBsYW4gdG8gd29yayBvdXQgYSBz
+aW1pbGFyIHBhdGNoLiBUaGUgZnNsLHFvcmlxLWNsb2NrZ2VuLTIuMCBhbmQgZnNsLHFvcmlxLWNs
+b2NrZ2VuLTEuMCB3aWxsIGJlIHJldGFpbmVkLg0KDQpUaGFua3MsDQpBbmR5DQoNCj4gDQo+IC1T
+Y290dA0KDQo=
