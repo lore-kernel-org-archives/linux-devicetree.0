@@ -1,75 +1,58 @@
-Return-Path: <SRS0=sPCw=ND=gmail.com=pku.leo@kernel.org>
-MIME-Version: 1.0
+Return-Path: <SRS0=E+ci=ND=nvidia.com=swarren@kernel.org>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: RE: using interrupt controller dt-bindings macros in Non GPL dts
+ files
+Date: Tue, 23 Oct 2018 21:39:46 +0000
+Message-ID: <958f281574ad4d89a14ee8ef28ebf175@HQMAIL107.nvidia.com>
 References: <HE1PR0402MB3323967BD6C0E11C738BFF38F1F40@HE1PR0402MB3323.eurprd04.prod.outlook.com>
- <20181022082906.GE7068@kroah.com> <HE1PR0402MB3323E108AF8810DEC38B7691F1F40@HE1PR0402MB3323.eurprd04.prod.outlook.com>
- <20181022103426.GA4546@kroah.com> <CADRPPNQyxKpz8QY0myVOz9+sA-aAnwJptcaxxxBnXUskT=f6Lg@mail.gmail.com>
- <2f64ffc4477a4f17b4f8188e61c52ae8@HQMAIL107.nvidia.com> <958f281574ad4d89a14ee8ef28ebf175@HQMAIL107.nvidia.com>
-In-Reply-To: <958f281574ad4d89a14ee8ef28ebf175@HQMAIL107.nvidia.com>
-From: Li Yang <leoyang.li@nxp.com>
-Date: Tue, 23 Oct 2018 17:31:26 -0500
-Message-ID: <CADRPPNSZSw_ur=fZrj7xjpSCLVXyG_2pYU6b4-6pTXDV5T8bDg@mail.gmail.com>
-Subject: Re: using interrupt controller dt-bindings macros in Non GPL dts files
-Content-Type: text/plain; charset="UTF-8"
-To: swarren@nvidia.com
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, pankaj.bansal@nxp.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, geert+renesas@glider.be, Thierry Reding <treding@nvidia.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, V.Sethi@nxp.com, udit.kumar@nxp.com
+ <20181022082906.GE7068@kroah.com>
+ <HE1PR0402MB3323E108AF8810DEC38B7691F1F40@HE1PR0402MB3323.eurprd04.prod.outlook.com>
+ <20181022103426.GA4546@kroah.com>
+ <CADRPPNQyxKpz8QY0myVOz9+sA-aAnwJptcaxxxBnXUskT=f6Lg@mail.gmail.com>
+ <2f64ffc4477a4f17b4f8188e61c52ae8@HQMAIL107.nvidia.com>
+In-Reply-To: <2f64ffc4477a4f17b4f8188e61c52ae8@HQMAIL107.nvidia.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Li Yang <leoyang.li@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "pankaj.bansal@nxp.com" <pankaj.bansal@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "geert+renesas@glider.be" <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" BINDINGS" <devicetree@vger.kernel.org>, "V.Sethi@nxp.com, " <V.Sethi@nxp.com>, udit.kumar@nxp.com" <udit.kumar@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Oct 23, 2018 at 4:40 PM Stephen Warren <swarren@nvidia.com> wrote:
->
-> Stephen Warren wrote at Tuesday, October 23, 2018 1:40 PM:
-> > Li Yang wrote at Tuesday, October 23, 2018 1:10 PM:
-> > > On Mon, Oct 22, 2018 at 5:35 AM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Mon, Oct 22, 2018 at 09:18:02AM +0000, Pankaj Bansal wrote:
-> > > > > 2. Would it be possible for the copyright owners of these header files
-> > > > > to make these files dual licensed, so that we are able to use these
-> > > > > files in our dts/dtsi files?
-> > > >
-> > > > You are going to have to deal with the legal departments of the
-> > > > companies that own those copyrights.  Again, talk to your legal
-> > > > department about how that would even work, or if they even wish for you
-> > > > to be asking people and companies to do that.
-> > >
-> > > Right, we should work with the author/contributor of these two files.
-> > >
-> > > Hi Stephen and Geert,
-> > >
-> > > Are you ok with relicensing these two files with (GPL-2.0 OR MIT)?
-> > > Given that many dts files in arm/arm64 are dual licensed with GPL and
-> > > MIT/X11/BSD, it makes more sense that these header files are dual
-> > > licensed with a permissive license too.
-> >
-> > FWIW, I have filed an internal bug to our IP audit team to see what they
-> > think. I cannot predict the answer or timeline for an answer.
->
-> It turns out I got a very quick answer from our legal department. The
-> joy of filing a bug right before their scheduled meeting! We're fine
-> either:
->
-> a) Sending the files direct to you with an MIT license (we'd send a copy
-> of the last version only touched by me, un less Geert also ack's the
-> license change).
->
-> b) Sending a patch to convert these files to just MIT (preferable), or
-> perhaps dual GPLv2/MIT if that's what the kernel maintainers want.
-
-I think b) is better as it can also benefit others who also use dual
-license in dts files.
-
->
-> Let me know which option works best for you.
->
-> That said, have you thought about all the other files you'll likely
-> need; those two IRQ related files are unlikely to be the only files that
-> are useful. Don't you want/need to relicense "everything" in include/dt/
-> and arch/*/boot/dts/?
-
-There are only a few header files in include/dt-bindings/ suppose to
-be generic.  The irq related ones are the only files we used.  Maybe
-it will be helpful to have the generic headers dual licensed too.  But
-I think the license used for the arch/*/boot/dts/ files should be
-decided by the hardware vendor/copyright holders themselves.
-
-Regards,
-Leo
+U3RlcGhlbiBXYXJyZW4gd3JvdGUgYXQgVHVlc2RheSwgT2N0b2JlciAyMywgMjAxOCAxOjQwIFBN
+Og0KPiBMaSBZYW5nIHdyb3RlIGF0IFR1ZXNkYXksIE9jdG9iZXIgMjMsIDIwMTggMToxMCBQTToN
+Cj4gPiBPbiBNb24sIE9jdCAyMiwgMjAxOCBhdCA1OjM1IEFNIEdyZWcgS3JvYWgtSGFydG1hbg0K
+PiA+IDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz4gd3JvdGU6DQo+ID4gPg0KPiA+ID4gT24g
+TW9uLCBPY3QgMjIsIDIwMTggYXQgMDk6MTg6MDJBTSArMDAwMCwgUGFua2FqIEJhbnNhbCB3cm90
+ZToNCj4gPiA+ID4gMi4gV291bGQgaXQgYmUgcG9zc2libGUgZm9yIHRoZSBjb3B5cmlnaHQgb3du
+ZXJzIG9mIHRoZXNlIGhlYWRlciBmaWxlcw0KPiA+ID4gPiB0byBtYWtlIHRoZXNlIGZpbGVzIGR1
+YWwgbGljZW5zZWQsIHNvIHRoYXQgd2UgYXJlIGFibGUgdG8gdXNlIHRoZXNlDQo+ID4gPiA+IGZp
+bGVzIGluIG91ciBkdHMvZHRzaSBmaWxlcz8NCj4gPiA+DQo+ID4gPiBZb3UgYXJlIGdvaW5nIHRv
+IGhhdmUgdG8gZGVhbCB3aXRoIHRoZSBsZWdhbCBkZXBhcnRtZW50cyBvZiB0aGUNCj4gPiA+IGNv
+bXBhbmllcyB0aGF0IG93biB0aG9zZSBjb3B5cmlnaHRzLiAgQWdhaW4sIHRhbGsgdG8geW91ciBs
+ZWdhbA0KPiA+ID4gZGVwYXJ0bWVudCBhYm91dCBob3cgdGhhdCB3b3VsZCBldmVuIHdvcmssIG9y
+IGlmIHRoZXkgZXZlbiB3aXNoIGZvciB5b3UNCj4gPiA+IHRvIGJlIGFza2luZyBwZW9wbGUgYW5k
+IGNvbXBhbmllcyB0byBkbyB0aGF0Lg0KPiA+DQo+ID4gUmlnaHQsIHdlIHNob3VsZCB3b3JrIHdp
+dGggdGhlIGF1dGhvci9jb250cmlidXRvciBvZiB0aGVzZSB0d28gZmlsZXMuDQo+ID4NCj4gPiBI
+aSBTdGVwaGVuIGFuZCBHZWVydCwNCj4gPg0KPiA+IEFyZSB5b3Ugb2sgd2l0aCByZWxpY2Vuc2lu
+ZyB0aGVzZSB0d28gZmlsZXMgd2l0aCAoR1BMLTIuMCBPUiBNSVQpPw0KPiA+IEdpdmVuIHRoYXQg
+bWFueSBkdHMgZmlsZXMgaW4gYXJtL2FybTY0IGFyZSBkdWFsIGxpY2Vuc2VkIHdpdGggR1BMIGFu
+ZA0KPiA+IE1JVC9YMTEvQlNELCBpdCBtYWtlcyBtb3JlIHNlbnNlIHRoYXQgdGhlc2UgaGVhZGVy
+IGZpbGVzIGFyZSBkdWFsDQo+ID4gbGljZW5zZWQgd2l0aCBhIHBlcm1pc3NpdmUgbGljZW5zZSB0
+b28uDQo+IA0KPiBGV0lXLCBJIGhhdmUgZmlsZWQgYW4gaW50ZXJuYWwgYnVnIHRvIG91ciBJUCBh
+dWRpdCB0ZWFtIHRvIHNlZSB3aGF0IHRoZXkNCj4gdGhpbmsuIEkgY2Fubm90IHByZWRpY3QgdGhl
+IGFuc3dlciBvciB0aW1lbGluZSBmb3IgYW4gYW5zd2VyLg0KDQpJdCB0dXJucyBvdXQgSSBnb3Qg
+YSB2ZXJ5IHF1aWNrIGFuc3dlciBmcm9tIG91ciBsZWdhbCBkZXBhcnRtZW50LiBUaGUNCmpveSBv
+ZiBmaWxpbmcgYSBidWcgcmlnaHQgYmVmb3JlIHRoZWlyIHNjaGVkdWxlZCBtZWV0aW5nISBXZSdy
+ZSBmaW5lDQplaXRoZXI6DQoNCmEpIFNlbmRpbmcgdGhlIGZpbGVzIGRpcmVjdCB0byB5b3Ugd2l0
+aCBhbiBNSVQgbGljZW5zZSAod2UnZCBzZW5kIGEgY29weQ0Kb2YgdGhlIGxhc3QgdmVyc2lvbiBv
+bmx5IHRvdWNoZWQgYnkgbWUsIHVuIGxlc3MgR2VlcnQgYWxzbyBhY2sncyB0aGUNCmxpY2Vuc2Ug
+Y2hhbmdlKS4NCg0KYikgU2VuZGluZyBhIHBhdGNoIHRvIGNvbnZlcnQgdGhlc2UgZmlsZXMgdG8g
+anVzdCBNSVQgKHByZWZlcmFibGUpLCBvcg0KcGVyaGFwcyBkdWFsIEdQTHYyL01JVCBpZiB0aGF0
+J3Mgd2hhdCB0aGUga2VybmVsIG1haW50YWluZXJzIHdhbnQuDQoNCkxldCBtZSBrbm93IHdoaWNo
+IG9wdGlvbiB3b3JrcyBiZXN0IGZvciB5b3UuDQoNClRoYXQgc2FpZCwgaGF2ZSB5b3UgdGhvdWdo
+dCBhYm91dCBhbGwgdGhlIG90aGVyIGZpbGVzIHlvdSdsbCBsaWtlbHkNCm5lZWQ7IHRob3NlIHR3
+byBJUlEgcmVsYXRlZCBmaWxlcyBhcmUgdW5saWtlbHkgdG8gYmUgdGhlIG9ubHkgZmlsZXMgdGhh
+dA0KYXJlIHVzZWZ1bC4gRG9uJ3QgeW91IHdhbnQvbmVlZCB0byByZWxpY2Vuc2UgImV2ZXJ5dGhp
+bmciIGluIGluY2x1ZGUvZHQvDQphbmQgYXJjaC8qL2Jvb3QvZHRzLz8NCg0KLS0gDQpudnB1Ymxp
+Yw0K
