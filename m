@@ -1,75 +1,77 @@
-From: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH v2 00/10] Add support for TISCI irqchip drivers
-Date: Tue, 23 Oct 2018 10:34:14 -0700
-Message-ID: <38811dd7-0645-0439-092d-6759ab52cb0a@oracle.com>
-References: <20181018154017.7112-1-lokeshvutla@ti.com>
- <942981b8-7536-2b6b-ad49-dc59671cbda6@oracle.com>
- <050161aa-a257-9bf8-b3c9-35b13925b556@ti.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 5/9] mtd: nand: atmel: fix OF child-node lookup
+Date: Tue, 23 Oct 2018 13:28:09 -0500
+Message-ID: <CAL_Jsq+fiM8E-za-fKufgDuoDqu3DY5a4bgZOuF3Ssvj2=6ayg@mail.gmail.com>
+References: <20180827082153.22537-1-johan@kernel.org> <20180827082153.22537-6-johan@kernel.org>
+ <20180827102820.3abf7291@bbrezillon> <20180827084414.GZ14967@localhost>
+ <20180827104842.26bce912@bbrezillon> <20180827094423.GA14967@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <050161aa-a257-9bf8-b3c9-35b13925b556@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
-Cc: Santosh Shilimkar <ssantosh@kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20180827094423.GA14967@localhost>
+Sender: stable-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>, Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Josh Wu <rainyfeeling@outlook.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/23/2018 1:17 AM, Lokesh Vutla wrote:
-> Hi Santosh,
-> 
-> On Tuesday 23 October 2018 02:09 AM, Santosh Shilimkar wrote:
->> On 10/18/2018 8:40 AM, Lokesh Vutla wrote:
->>> TISCI abstracts the handling of IRQ routes where interrupt sources
->>> are not directly connected to host interrupt controller. This series
->>> adds support for:
->>> - TISCI commands needed for IRQ configuration
->>> - Interrupt Router(INTR) and Interrupt Aggregator(INTA) drivers
->>>
->>> More information on TISCI IRQ management can be found here[1].
->>> Complete TISCI resource management information can be found here[2].
->>> AM65x SoC related TISCI information can be found here[3].
->>> INTR and INTA related information can be found in TRM[4].
->>>
->> I didn't read the specs but from what you described in
->> INTA and INTR bindings, does the flow of IRQs like below ?
->>
->> Device IRQ(e.g USB) -->INTR-->INTA--->HOST IRQ controller(GIC)
-> 
-> Not all devices in SoC are connected to INTA. Only the devices that are 
-> capable of generating events are connected to INTA. And INTA is 
-> connected to INTR.
-> 
-> So there are three ways in which IRQ can flow in AM65x SoC:
-> 1) Device directly connected to GIC
->      - Device IRQ --> GIC
->      - (Most legacy peripherals like MMC, UART falls in this case)
-> 2) Device connected to INTR.
->      - Device IRQ --> INTR --> GIC
->      - This is cases where you want to mux IRQs. Used for GPIOs and 
-> Mailboxes
->      - (This is somewhat similar to crossbar on DRA7 devices)
-> 3) Devices connected to INTA.
->      - Device Event --> INTA --> INTR --> GIC
->      - Used for DMA and networking devices.
-> 
-> Events are messages based on a hw protocol, sent by a master over a 
-> dedicated Event transport lane. Events are highly precise that no 
-> under/over flow of data transfer occurs at source/destination regardless 
-> of distance and latency. So this is mostly preferred in DMA and 
-> networking usecases. Now Interrupt Aggregator(IA) has the logic to 
-> converts these events to Interrupts.
-> 
-This helps but none of the kernel doc you added, makes this clear so
-perhaps you want to add this info to make that clear for reviewers
-as well as for future reference.
+On Mon, Aug 27, 2018 at 4:44 AM Johan Hovold <johan@kernel.org> wrote:
+>
+> On Mon, Aug 27, 2018 at 10:48:42AM +0200, Boris Brezillon wrote:
+> > On Mon, 27 Aug 2018 10:44:14 +0200
+> > Johan Hovold <johan@kernel.org> wrote:
+> >
+> > > On Mon, Aug 27, 2018 at 10:28:20AM +0200, Boris Brezillon wrote:
+> > > > Hi Johan
+> > > >
+> > > > On Mon, 27 Aug 2018 10:21:49 +0200
+> > > > Johan Hovold <johan@kernel.org> wrote:
+> > > >
+> > > > > Use the new of_get_compatible_child() helper to lookup the nfc child
+> > > > > node instead of using of_find_compatible_node(), which searches the
+> > > > > entire tree from a given start node and thus can return an unrelated
+> > > > > (i.e. non-child) node.
+> > > > >
+> > > > > This also addresses a potential use-after-free (e.g. after probe
+> > > > > deferral) as the tree-wide helper drops a reference to its first
+> > > > > argument (i.e. the node of the device being probed).
+> > > > >
+> > > > > While at it, also fix a related nfc-node reference leak.
+> > > > >
+> > > > > Fixes: f88fc122cc34 ("mtd: nand: Cleanup/rework the atmel_nand driver")
+> > > > > Cc: stable <stable@vger.kernel.org>     # 4.11
+> > > > > Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> > > > > Cc: Josh Wu <rainyfeeling@outlook.com>
+> > > > > Cc: Boris Brezillon <boris.brezillon@bootlin.com>
+> > > > > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > > >
+> > > > Acked-by: Boris Brezillon <boris.brezillon@bootlin.com>
+> > >
+> > > Thanks for the ack.
+> > >
+> > > > I'll let Miquel queue this patch to the nand/next branch, unless you
+> > > > want it to be merged in 4.19, in which case I'll queue it to the
+> > > > mtd/fixes branch.
+> > >
+> > > Note that there's a dependency on the first patch of the series which
+> > > adds the new helper.
+> >
+> > I was not Cc-ed on this patch :P.
+>
+> Yeah, sorry about that. I made sure everyone was CCed on the
+> cover letter, but guess I could have reused that list for the helper as
+> well.
+>
+> > > Rob can pick up the entire series if the various
+> > > maintainers agree, otherwise I'll try to get at the least the helper
+> > > into -rc2.
+> >
+> > If everything goes in 4.19-rc2 through Rob's tree that's fine, but if
+> > it's queued for 4.20 we might need an immutable tag just in case we
+> > queue conflicting changes to the NAND tree.
+>
+> Ok, thanks.
 
-Now regarding the events, no matter how they are routed/processed
-within SOC, they are essentially interrupts so I do agree with
-Marc's other comment.
+Hi Boris, can you pick this one up. It conflicts with "mtd: rawnand:
+atmel: Fix potential NULL pointer dereference"
 
-Thanks for explanation again !!
-
-regards,
-Santosh
+Rob
