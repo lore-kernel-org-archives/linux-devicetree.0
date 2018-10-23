@@ -1,7 +1,7 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 13/15] dt-bindings: sun6i-dsi: Add compatible for A64 DPHY
-Date: Tue, 23 Oct 2018 21:20:33 +0530
-Message-ID: <20181023155035.9101-14-jagan@amarulasolutions.com>
+Subject: [PATCH v2 14/15] arm64: dts: allwinner: a64: Add DSI pipeline
+Date: Tue, 23 Oct 2018 21:20:34 +0530
+Message-ID: <20181023155035.9101-15-jagan@amarulasolutions.com>
 References: <20181023155035.9101-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,31 +12,83 @@ To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.or
 Cc: Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-The MIPI DSI PHY HDMI controller on Allwinner A64 is similar
-on the one on A31.
+The A64 has a MIPI-DSI block which is similar to A31
+without mod clock.
 
-Add A64 compatible and append A31 compatible as fallback.
+So, add dsi node with A64 compatible, dphy node with
+A31 compatible and finally connect dsi to tcon0 to
+make proper DSI pipeline.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v2:
-- new patch
+- use A64 dphy compatible
 
- Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 45 +++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-index 9fa6e7a758ad..704fb31962f2 100644
---- a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-+++ b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-@@ -36,7 +36,7 @@ D-PHY
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index f3a66f888205..f82e6b165d57 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -320,6 +320,11 @@
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+ 					reg = <1>;
++
++					tcon0_out_dsi: endpoint@1 {
++						reg = <1>;
++						remote-endpoint = <&dsi_in_tcon0>;
++					};
+ 				};
+ 			};
+ 		};
+@@ -818,6 +823,46 @@
+ 			#interrupt-cells = <3>;
+ 		};
  
- Required properties:
-   - compatible: value must be one of:
--    * allwinner,sun6i-a31-mipi-dphy
-+    * "allwinner,sun50i-a64-mipi-dphy", "allwinner,sun6i-a31-mipi-dphy"
-   - reg: base address and size of memory-mapped region
-   - clocks: phandles to the clocks feeding the DSI encoder
-     * bus: the DSI interface clock
++
++		dsi: dsi@1ca0000 {
++			compatible = "allwinner,sun50i-a64-mipi-dsi";
++			reg = <0x01ca0000 0x1000>;
++			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_MIPI_DSI>;
++			clock-names = "bus";
++			resets = <&ccu RST_BUS_MIPI_DSI>;
++			phys = <&dphy>;
++			phy-names = "dphy";
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <0>;
++
++					dsi_in_tcon0: endpoint {
++						remote-endpoint = <&tcon0_out_dsi>;
++					};
++				};
++			};
++		};
++
++		dphy: d-phy@1ca1000 {
++			compatible = "allwinner,sun50i-a64-mipi-dphy",
++				     "allwinner,sun6i-a31-mipi-dphy";
++			reg = <0x01ca1000 0x1000>;
++			clocks = <&ccu CLK_BUS_MIPI_DSI>,
++				 <&ccu CLK_DSI_DPHY>;
++			clock-names = "bus", "mod";
++			resets = <&ccu RST_BUS_MIPI_DSI>;
++			status = "disabled";
++			#phy-cells = <0>;
++		};
++
+ 		pwm: pwm@1c21400 {
+ 			compatible = "allwinner,sun50i-a64-pwm",
+ 				     "allwinner,sun5i-a13-pwm";
 -- 
 2.18.0.321.gffc6fa0e3
