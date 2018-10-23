@@ -1,82 +1,73 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V2 7/8] dts: fsl: add imx7ulp evk support
-Date: Tue, 23 Oct 2018 14:42:09 +0000
-Message-ID: <AM0PR04MB42110E5309341D1626EB6EF980F50@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1540295058-26090-1-git-send-email-aisheng.dong@nxp.com>
- <1540295058-26090-8-git-send-email-aisheng.dong@nxp.com>
- <CAOMZO5C3Fv+s-bLeHGZ6LEB=ZqRxf=gXuzbtwfNS=PvQeVJ1Ag@mail.gmail.com>
+From: Maksym Kokhan <maksym.kokhan@globallogic.com>
+Subject: Re: [PATCH 0/8] add generic builtin command line
+Date: Tue, 23 Oct 2018 17:43:18 +0300
+Message-ID: <CAMT6-xj1rjVAy1AWFiMHc5wH36eu=TUSMtdKU=-qRtUbwr9bkg@mail.gmail.com>
+References: <1538067309-5711-1-git-send-email-maksym.kokhan@globallogic.com>
+ <20180929181725.GB27441@fifo99.com> <CAMT6-xiQ0vGcKpA+SiWHQWQFwU9Oo9j=Zin+UXDoPqKTz5fbeA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOMZO5C3Fv+s-bLeHGZ6LEB=ZqRxf=gXuzbtwfNS=PvQeVJ1Ag@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE
- BINDINGS" <devicetree@vger.kernel.org>, Dong Aisheng <dongas86@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMT6-xiQ0vGcKpA+SiWHQWQFwU9Oo9j=Zin+UXDoPqKTz5fbeA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Walker <dwalker@fifo99.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Daniel Walker <danielwa@cisco.com>, Andrii Bordunov <aborduno@cisco.com>, Ruslan Bilovol <rbil>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Fabio Estevam [mailto:festevam@gmail.com]
-> Sent: Tuesday, October 23, 2018 8:29 PM
-[...] 
-> On Tue, Oct 23, 2018 at 8:56 AM A.s. Dong <aisheng.dong@nxp.com> wrote:
-> 
-> > +/ {
-> > +       model = "NXP i.MX7ULP EVK";
-> > +       compatible = "fsl,imx7ulp-evk", "fsl,imx7ulp", "Generic DT
-> > +based system";
-> 
-> This "Generic DT based system" should be removed.
-> 
+On Mon, Oct 8, 2018 at 9:01 PM Maksym Kokhan
+<maksym.kokhan@globallogic.com> wrote:
+>
+> Hi, Daniel
+>
+> On Sat, Sep 29, 2018 at 9:17 PM <dwalker@fifo99.com> wrote:
+> >
+> > On Thu, Sep 27, 2018 at 07:55:08PM +0300, Maksym Kokhan wrote:
+> > > Daniel Walker (7):
+> > >   add generic builtin command line
+> > >   drivers: of: ifdef out cmdline section
+> > >   x86: convert to generic builtin command line
+> > >   arm: convert to generic builtin command line
+> > >   arm64: convert to generic builtin command line
+> > >   mips: convert to generic builtin command line
+> > >   powerpc: convert to generic builtin command line
+> > >
+> >
+> > When I originally submitted these I had a very good conversion with Rob Herring
+> > on the device tree changes. It seemed fairly clear that my approach in these
+> > changes could be done better. It effected specifically arm64, but a lot of other
+> > platforms use the device tree integrally. With arm64 you can reduce the changes
+> > down to only Kconfig changes, and that would likely be the case for many of the
+> > other architecture. I made patches to do this a while back, but have not had
+> > time to test them and push them out.
+>
+> Can you please share this patches? I could test them and use to improve this
+> generic command line implementation.
+>
+> > In terms of mips I think there's a fair amount of work needed to pull out their
+> > architecture specific mangling into something generic. Part of my motivation for
+> > these was to take the architecture specific feature and open that up for all the
+> > architecture. So it makes sense that the mips changes should become part of
+> > that.
+>
+> This is really makes sense, and we have intentions to implement it
+> afterward. It would be easier to initially merge this simple
+> implementation and then develop it step by step.
+>
+> > The only changes which have no comments are the generic changes, x86, and
+> > powerpc. Those patches have been used at Cisco for years with no issues.
+> > I added those changes into my -next tree for a round of testing. Assuming there
+> > are no issues I can work out the merging with the architecture maintainers.
+> > As for the other changes I think they can be done in time, as long as the
+> > generic parts of upstream the rest can be worked on by any of the architecture
+> > developers.
+>
+> Thanks,
+> Maksym
 
-Got it
+We still have no response to patches for x86, arm, arm64 and powerpc.
+Is current generic command line implementation appropriate for these
+architectures?
+Is it possible to merge these patches in the current form (for x86,
+arm, arm64 and powerpc)?
 
-> > +       chosen {
-> > +               stdout-path = &lpuart4;
-> > +       };
-> > +
-> > +       memory@60000000 {
-> 
->        device_type = "memory";
-
-Got it
-
-> > +               reg = <0x60000000 0x40000000>;
-> > +       };
-> 
-> > +&iomuxc1 {
-> > +       pinctrl_lpuart4: lpuart4grp {
-> > +               pinmux = <
-> > +                       IMX7ULP_PAD_PTC3__LPUART4_RX
-> > +                       IMX7ULP_PAD_PTC2__LPUART4_TX
-> > +               >;
-> > +               bias-pull-up;
-> 
-> Please change the mx7ulp pinctrl driver to accept the "old" notation and
-> change the dts to use:
-> 
-> IMX7ULP_PAD_PTC3__LPUART4_RX 0x3
-> 
-> This way we use the same method for all i.MX devices.
-
-I'm a bit hesitate to do that as the driver already supports it. There's no extra effort
-to use it. And we probably could take ULP as a special case to test generic binding
-rather then simply drop it and drop driver features. Once we get objection from users
-later, we still can simply fallback as there's still only official boards using it.
-
-Last, it's not correct that there's not only one method for all i.MX devices.
-MX23/28 are different ones and ULP is more like MX23/28.
-And I saw no objections from users for MX23/28.
-
-Regards
-Dong Aisheng
+Thanks,
+Maksym
