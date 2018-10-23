@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2 06/15] drm/sun4i: sun6i_mipi_dsi: Add DSI
- Generic short write 2 param transfer
-Date: Tue, 23 Oct 2018 21:20:26 +0530
-Message-ID: <20181023155035.9101-7-jagan@amarulasolutions.com>
+Subject: [PATCH v2 07/15] drm/sun4i: sun6i_mipi_dsi: Fix VBP
+ size calculation
+Date: Tue, 23 Oct 2018 21:20:27 +0530
+Message-ID: <20181023155035.9101-8-jagan@amarulasolutions.com>
 References: <20181023155035.9101-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBBMHXXPAKGQENGL3QRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBC4HXXPAKGQERKSJOVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181023155035.9101-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,31 +20,62 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Short transfer write support for DCS and Generic transfer types
-share similar way to process command sequence in DSI block so
-add generic write 2 param transfer type macro so-that the panels
-which are requesting similar transfer type may process properly.
+According to horizontal and vertical timings are defined
+per the diagram from include/drm/drm_modes.h
+
+Back porch = [hv]total - [hv]sync_end
+
+So, update SUN6I_DSI_BASIC_SIZE0_VBP calculation as
+mode->vtotal - mode->vsync_end
+
+Horizontal or Vertical back porch calculation in BSP code
+is simply following the Linux drm comment diagram from
+include/drm/drm_modes.h which is
+
+[hv]back porch = [hv]total - [hv]sync_end
+
+BSP code form BPI-M64-bsp is calculating as vertical back porch as
+in linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c
+
+timmings->ver_sync_time= panel_info->lcd_vspw;
+timmings->ver_back_porch= panel_info->lcd_vbp-panel_info->lcd_vspw;
+
+vbp = panel->lcd_vbp;
+vspw = panel->lcd_vspw;
+dsi_dev[sel]->dsi_basic_size0.bits.vbp = vbp-vspw;
+dsi_dev[sel]->dsi_basic_size0.bits.vbp = panel->lcd_vbp - panel->lcd_vspw;
+=>  timmings->ver_back_porch + panel_info->lcd_vspw - panel_info->lcd_vspw
+=>  timmings->ver_back_porch
+=>  mode->vtotal - mode->end
+
+Which evatually same as mode->vtotal - mode->vsync_end so update the
+same in SUN6I_DSI_BASIC_SIZE0_VBP
+
+On the information note, existing SUN6I_DSI_BASIC_SIZE0_VSA is proper
+value.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
 Changes for v2:
-- drop dev_err
-- add macro in alphabetical
+- Add detailed commit message
 
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 8e9c76febca2..fc8560607147 100644
+index fc8560607147..3a1d48bc1996 100644
 --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
 +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -871,6 +871,7 @@ static ssize_t sun6i_dsi_transfer(struct mipi_dsi_host *host,
- 	switch (msg->type) {
- 	case MIPI_DSI_DCS_SHORT_WRITE:
- 	case MIPI_DSI_DCS_SHORT_WRITE_PARAM:
-+	case MIPI_DSI_GENERIC_SHORT_WRITE_2_PARAM:
- 		ret = sun6i_dsi_dcs_write_short(dsi, msg);
- 		break;
+@@ -526,8 +526,8 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+ 	regmap_write(dsi->regs, SUN6I_DSI_BASIC_SIZE0_REG,
+ 		     SUN6I_DSI_BASIC_SIZE0_VSA(mode->vsync_end -
+ 					       mode->vsync_start) |
+-		     SUN6I_DSI_BASIC_SIZE0_VBP(mode->vsync_start -
+-					       mode->vdisplay));
++		     SUN6I_DSI_BASIC_SIZE0_VBP(mode->vtotal -
++					       mode->vsync_end));
  
+ 	regmap_write(dsi->regs, SUN6I_DSI_BASIC_SIZE1_REG,
+ 		     SUN6I_DSI_BASIC_SIZE1_VACT(mode->vdisplay) |
 -- 
 2.18.0.321.gffc6fa0e3
