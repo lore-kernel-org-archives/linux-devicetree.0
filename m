@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2 05/15] dt-bindings: sun6i-dsi: Add compatible
- for A64 MIPI DSI
-Date: Tue, 23 Oct 2018 21:20:25 +0530
-Message-ID: <20181023155035.9101-6-jagan@amarulasolutions.com>
+Subject: [PATCH v2 06/15] drm/sun4i: sun6i_mipi_dsi: Add DSI
+ Generic short write 2 param transfer
+Date: Tue, 23 Oct 2018 21:20:26 +0530
+Message-ID: <20181023155035.9101-7-jagan@amarulasolutions.com>
 References: <20181023155035.9101-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB74GXXPAKGQEAKUZCUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBBMHXXPAKGQENGL3QRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181023155035.9101-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,29 +20,31 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The MIPI DSI controller on Allwinner A64 is similar to
-Allwinner A31 without support of DSI mod clock.
+Short transfer write support for DCS and Generic transfer types
+share similar way to process command sequence in DSI block so
+add generic write 2 param transfer type macro so-that the panels
+which are requesting similar transfer type may process properly.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
 Changes for v2:
-- none
+- drop dev_err
+- add macro in alphabetical
 
- Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt | 1 +
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-index 6a6cf5de08b0..9fa6e7a758ad 100644
---- a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-+++ b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-@@ -12,6 +12,7 @@ The DSI Encoder generates the DSI signal from the TCON's.
- Required properties:
-   - compatible: value must be one of:
-     * allwinner,sun6i-a31-mipi-dsi
-+    * allwinner,sun50i-a64-mipi-dsi
-   - reg: base address and size of memory-mapped region
-   - interrupts: interrupt associated to this IP
-   - clocks: phandles to the clocks feeding the DSI encoder
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index 8e9c76febca2..fc8560607147 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -871,6 +871,7 @@ static ssize_t sun6i_dsi_transfer(struct mipi_dsi_host *host,
+ 	switch (msg->type) {
+ 	case MIPI_DSI_DCS_SHORT_WRITE:
+ 	case MIPI_DSI_DCS_SHORT_WRITE_PARAM:
++	case MIPI_DSI_GENERIC_SHORT_WRITE_2_PARAM:
+ 		ret = sun6i_dsi_dcs_write_short(dsi, msg);
+ 		break;
+ 
 -- 
 2.18.0.321.gffc6fa0e3
