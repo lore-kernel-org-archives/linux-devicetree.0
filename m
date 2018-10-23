@@ -1,343 +1,63 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V3 6/8] arm64: dts: imx: add imx8qxp support
-Date: Tue, 23 Oct 2018 16:55:20 +0200
-Message-ID: <CAPDyKFpYXo21fsHynZWTV9OOoCWGUJe2SZBR-A-dc8T8g3cLrg@mail.gmail.com>
-References: <1539886483-15775-1-git-send-email-aisheng.dong@nxp.com>
- <1539886483-15775-7-git-send-email-aisheng.dong@nxp.com>
- <20181018202457.GA25174@bogus>
- <DB7PR04MB42188ABE426A055E6097C03080F90@DB7PR04MB4218.eurprd04.prod.outlook.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 09/12] dt-bindings: panel: Add Bananapi
+ S070WV20-CT16 MIPI-DSI panel bindings
+Date: Tue, 23 Oct 2018 10:11:08 -0500
+Message-ID: <CAL_JsqJPn9hhGsk62RzLc1dPQyF2_iCSau+MvY9mD_QADybgvg@mail.gmail.com>
+References: <20180927114850.24565-1-jagan@amarulasolutions.com>
+ <20180927114850.24565-10-jagan@amarulasolutions.com> <20181015182448.GA7134@bogus>
+ <CAGb2v64QEhy1J05L9W0_uWhmrky8wD+vg3v5wA7Yd3_U-DdpKg@mail.gmail.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <DB7PR04MB42188ABE426A055E6097C03080F90@DB7PR04MB4218.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBHXUXTPAKGQECKQCBDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v64QEhy1J05L9W0_uWhmrky8wD+vg3v5wA7Yd3_U-DdpKg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 19 October 2018 at 10:02, A.s. Dong <aisheng.dong@nxp.com> wrote:
->> -----Original Message-----
->> From: Rob Herring [mailto:robh@kernel.org]
->> Sent: Friday, October 19, 2018 4:25 AM
->> To: A.s. Dong <aisheng.dong@nxp.com>
-> [...]
->> On Thu, Oct 18, 2018 at 06:19:39PM +0000, A.s. Dong wrote:
->> > i.MX 8QuadXPlus is a quad (4x) Cortex-A35 proccessor with powerful
->> > graphic and multimedia features. This patch adds the core SoC dtsi
->> > file support.
->> >
->> > Cc: Rob Herring <robh+dt@kernel.org>
->> > Cc: Mark Rutland <mark.rutland@arm.com>
->> > Cc: devicetree@vger.kernel.org
->> > Cc: Shawn Guo <shawnguo@kernel.org>
->> > Cc: Sascha Hauer <kernel@pengutronix.de>
->> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
->> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
->> > ---
->> > v2->v3:
->> >  * add more SoC specific compatible string to IP nodes
->> >  * move memory node into board dts
->> >  * change pd reg value into hex
->> >  * add more explanation about SoC in commit message
->> >  * add external clocks
->> >  * remove pmu compatible string which is not supported
->> > v1->v2:
->> >  * mu binding usage update
->> >  * no define for node address
->> >  * do not use '_' for node name
->> >  * drop 'fsl-' prefix for imx dtsi
->> >  * no defines for unit address
->> >  * generic node names
->> >  * range map for 32bit register
->> >  * separate board dts
->> > ---
->> >  Documentation/devicetree/bindings/arm/fsl.txt |   4 +
->> >  arch/arm64/boot/dts/freescale/imx8-ca35.dtsi  |  61 ++
->> >  arch/arm64/boot/dts/freescale/imx8qxp.dtsi    | 870
->> ++++++++++++++++++++++++++
->> >  3 files changed, 935 insertions(+)
->> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8-ca35.dtsi
->> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp.dtsi
->> >
->> > diff --git a/Documentation/devicetree/bindings/arm/fsl.txt
->> > b/Documentation/devicetree/bindings/arm/fsl.txt
->> > index 968f238..baeb1fc 100644
->> > --- a/Documentation/devicetree/bindings/arm/fsl.txt
->> > +++ b/Documentation/devicetree/bindings/arm/fsl.txt
->> > @@ -119,6 +119,10 @@ i.MX6q generic board  Required root node
->> > properties:
->> >      - compatible = "fsl,imx6q";
->> >
->> > +i.MX8QXP generic board
->> > +Required root node properties:
->> > +    - compatible = "fsl,imx8qxp";
->> > +
->> >  Freescale Vybrid Platform Device Tree Bindings
->> >  ----------------------------------------------
->> >
->> > diff --git a/arch/arm64/boot/dts/freescale/imx8-ca35.dtsi
->> > b/arch/arm64/boot/dts/freescale/imx8-ca35.dtsi
->> > new file mode 100644
->> > index 0000000..c79e97a
->> > --- /dev/null
->> > +++ b/arch/arm64/boot/dts/freescale/imx8-ca35.dtsi
->> > @@ -0,0 +1,61 @@
->> > +// SPDX-License-Identifier: GPL-2.0+
->> > +/*
->> > + * Copyright (C) 2016 Freescale Semiconductor, Inc.
->> > + * Copyright 2017~2018 NXP
->> > + */
->> > +
->> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
->> > +
->> > +/{
->> > +   cpus {
->> > +           #address-cells = <2>;
->> > +           #size-cells = <0>;
->> > +
->> > +           /* We have 1 clusters with 4 Cortex-A35 cores */
->> > +           A35_0: cpu@0 {
->> > +                   device_type = "cpu";
->> > +                   compatible = "arm,cortex-a35";
->> > +                   reg = <0x0 0x0>;
->> > +                   enable-method = "psci";
->> > +                   next-level-cache = <&A35_L2>;
->> > +           };
->> > +
->> > +           A35_1: cpu@1 {
->> > +                   device_type = "cpu";
->> > +                   compatible = "arm,cortex-a35";
->> > +                   reg = <0x0 0x1>;
->> > +                   enable-method = "psci";
->> > +                   next-level-cache = <&A35_L2>;
->> > +           };
->> > +
->> > +           A35_2: cpu@2 {
->> > +                   device_type = "cpu";
->> > +                   compatible = "arm,cortex-a35";
->> > +                   reg = <0x0 0x2>;
->> > +                   enable-method = "psci";
->> > +                   next-level-cache = <&A35_L2>;
->> > +           };
->> > +
->> > +           A35_3: cpu@3 {
->> > +                   device_type = "cpu";
->> > +                   compatible = "arm,cortex-a35";
->> > +                   reg = <0x0 0x3>;
->> > +                   enable-method = "psci";
->> > +                   next-level-cache = <&A35_L2>;
->> > +           };
->> > +
->> > +           A35_L2: l2-cache0 {
->> > +                   compatible = "cache";
->> > +           };
->> > +   };
->> > +
->> > +   pmu {
->> > +           compatible = "arm,armv8-pmuv3";
->> > +           interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
->> > +   };
->> > +
->> > +   psci {
->> > +           compatible = "arm,psci-1.0";
->> > +           method = "smc";
->> > +   };
->> > +};
->> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
->> > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
->> > new file mode 100644
->> > index 0000000..acb4770
->> > --- /dev/null
->> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
->> > @@ -0,0 +1,870 @@
->> > +// SPDX-License-Identifier: GPL-2.0+
->> > +/*
->> > + * Copyright (C) 2016 Freescale Semiconductor, Inc.
->> > + * Copyright 2017-2018 NXP
->> > + * Dong Aisheng <aisheng.dong@nxp.com>
->> > + */
->> > +
->> > +#include <dt-bindings/clock/imx8qxp-clock.h>
->> > +#include <dt-bindings/gpio/gpio.h>
->> > +#include <dt-bindings/pinctrl/pads-imx8qxp.h>
->> > +
->> > +#include "imx8-ca35.dtsi"
->> > +
->> > +/ {
->> > +   interrupt-parent = <&gic>;
->> > +   #address-cells = <2>;
->> > +   #size-cells = <2>;
->> > +
->> > +   aliases {
->> > +           serial0 = &dma_lpuart0;
->> > +           mmc0 = &usdhc1;
->> > +           mmc1 = &usdhc2;
->> > +           mmc2 = &usdhc3;
->> > +   };
->> > +
->> > +   gic: interrupt-controller@51a00000 {
->> > +           compatible = "arm,gic-v3";
->> > +           reg = <0x0 0x51a00000 0 0x10000>, /* GIC Dist */
->> > +                 <0x0 0x51b00000 0 0xc0000>; /* GICR (RD_base + SGI_base)
->> */
->> > +           #interrupt-cells = <3>;
->> > +           interrupt-controller;
->> > +           interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
->> > +   };
->> > +
->> > +   timer {
->> > +           compatible = "arm,armv8-timer";
->> > +           interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>, /* Physical Secure
->> */
->> > +                        <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>, /* Physical
->> Non-Secure */
->> > +                        <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>, /* Virtual */
->> > +                        <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>; /* Hypervisor */
->> > +   };
->> > +
->> > +   xtal32k: clock-xtal32k {
->> > +           compatible = "fixed-clock";
->> > +           #clock-cells = <0>;
->> > +           clock-frequency = <32768>;
->> > +           clock-output-names = "xtal_32KHz";
->> > +   };
->> > +
->> > +   xtal24m: clock-xtal24m {
->> > +           compatible = "fixed-clock";
->> > +           #clock-cells = <0>;
->> > +           clock-frequency = <24000000>;
->> > +           clock-output-names = "xtal_24MHz";
->> > +   };
->> > +
->> > +   scu {
->> > +           compatible = "fsl,imx-scu";
->> > +           mbox-names = "tx0", "tx1", "tx2", "tx3",
->> > +                        "rx0", "rx1", "rx2", "rx3";
->> > +           mboxes = <&lsio_mu1 0 0
->> > +                     &lsio_mu1 0 1
->> > +                     &lsio_mu1 0 2
->> > +                     &lsio_mu1 0 3
->> > +                     &lsio_mu1 1 0
->> > +                     &lsio_mu1 1 1
->> > +                     &lsio_mu1 1 2
->> > +                     &lsio_mu1 1 3>;
->> > +
->> > +           clk: clock-controller {
->> > +                   compatible = "fsl,imx8qxp-clk";
->> > +                   #clock-cells = <1>;
->> > +                   clocks = <&xtal32k &xtal24m>;
->> > +                   clock-names = "xtal_32KHz", "xtal_24Mhz";
->> > +           };
->> > +
->> > +           iomuxc: pinctrl {
->> > +                   compatible = "fsl,imx8qxp-iomuxc";
->> > +           };
->> > +
->> > +           imx8qx-pm {
->> > +                   compatible = "fsl,imx8qxp-scu-pd", "fsl,scu-pd";
->> > +                   #address-cells = <1>;
->> > +                   #size-cells = <0>;
->> > +
->> > +                   pd_lsio: lsio-power-domain {
->> > +                           #power-domain-cells = <0>;
->> > +                           #address-cells = <1>;
->> > +                           #size-cells = <0>;
->> > +
->> > +                           pd_lsio_pwm0: lsio-pwm0@bf {
->> > +                                   reg = <0xbf>;
->> > +                                   #power-domain-cells = <0>;
->> > +                                   power-domains = <&pd_lsio>;
->>
->> Power domains are supposed to be a block that can be power gated. No chip
->> design is going to put tiny PWM, GPIO, etc. blocks each in their own domain.
->>
->> If you really want to maintain these sub domains, just use 2
->> #power-domain-cells. The first cell can be the power domain and the 2nd cell
->> the device ID.
->>
+On Mon, Oct 22, 2018 at 5:22 AM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
 >
-> Unfortunately the SCU firmware is designed like that each device has a power domain
-> ID which is specified in reg property in device tree.
-> Each driver should enable that power domain before being able to access the HW,
-> otherwise, xRDC (security and access control HW) may report bus errors.
+> Hi Rob,
+>
+> On Mon, Oct 15, 2018 at 7:24 PM Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> >
+> > On Thu, 27 Sep 2018 17:18:47 +0530, Jagan Teki wrote:
+> > > Bananapi S070WV20-CT16 is 800x480, 4-lane MIPI-DSI panel, the
+> > > same panel PCB comes with parallel RBG which is supported via
+> > > panel-simple with "bananapi,s070wv20-ct16" compatible.
+> > >
+> > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > ---
+> > >  .../panel/bananapi,s070wv20-ct16-dsi.txt      | 21 +++++++++++++++++++
+> > >  1 file changed, 21 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16-dsi.txt
+> > >
+> >
+> > Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+> This "panel" is actually an RGB panel with a MIPI-DSI-to-RGB bridge
+> tacked on. On one particular revision of this module, one can also
+> directly use the RGB interface.
+>
+> Would it be better to model this as bridge+panel? We already have
+> a binding for the RGB version [1]. This would make it harder to
+> make a driver though, as there is no publicly available datasheet
+> for the bridge chip, so it's likely that part of the init sequence
+> would have to be hard-coded.
 
-This is what Rob is suggesting:
+Perhaps you can use the same compatible and detect based on the OF
+graph connection whether it is DSI or RGB interface? That would mean
+the RGB version doesn't use simple-panel driver, but that should be
+okay.
 
-pd_lsio: lsio-power-domain {
-       compatible = "fsl,imx8qxp-scu-pd", "fsl,scu-pd";
-       #power-domain-cells = <2>;
-}
+If there's other users of this bridge chip, then modeling the bridge
+separately would be better.
 
-pd_lsio_pwm0: lsio-pwm0@bf {
-       power-domains = <&pd_lsio 0 0xbf>;
-}
-
-Perhaps it's even sufficient for you to use one cell, if your
-power-domain provider models only one PM domain. In such case, the
-below works as well:
-
-pd_lsio: lsio-power-domain {
-       compatible = "fsl,imx8qxp-scu-pd", "fsl,scu-pd";
-       #power-domain-cells = <1>;
-}
-
-pd_lsio_pwm0: lsio-pwm0@bf {
-       power-domains = <&pd_lsio 0xbf>;
-}
-
-In other words, you don't need "reg".
-
-To make this work, you also need to implement your own genpd xlate
-provider function. Do notice that, of_genpd_add_provider_onecell()
-already supports provider specific xlate functions. Just set it,
-before calling of_genpd_add_provider_onecell().
-
-If you would like to look at an example, see drivers/soc/tegra/powergate-bpmp.c.
-
-> And there could be different multi-level domains, how to do 2cells presentation for this case?
-> E.g.
-> Domain_A: {
->         Domain_B {
->                 Domain_C {
->                         ...
->                 }
->         }
-> }
-
-To specify a master domain, we use the power-domains specifier from
-within a power domain provider node. Of course it needs to use the
-correct number of cells as specified by the master provider, which may
-be something different that what it self uses.
-
-Something like this:
-
-pd_lsio_master: lsio-power-domain-master {
-       compatible = "fsl,imx8qxp-scu-pd-master", "fsl,scu-pd0-master";
-       #power-domain-cells = <0>;
-}
-
-pd_lsio: lsio-power-domain {
-       compatible = "fsl,imx8qxp-scu-pd", "fsl,scu-pd";
-       #power-domain-cells = <1>;
-       power-domains = <&pd_lsio_master>;
-}
-
-pd_lsio_pwm0: lsio-pwm0@bf {
-       power-domains = <&pd_lsio 0xbf>;
-}
-
-[...]
-
-Hope this helps!
-
-Kind regards
-Uffe
+Rob
