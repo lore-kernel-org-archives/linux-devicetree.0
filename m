@@ -1,155 +1,60 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: phy-qcom-qmp: Fix register
- underspecification
-Date: Mon, 22 Oct 2018 19:29:03 -0500
-Message-ID: <20181023002903.GA16854@bogus>
-References: <20181018210933.113592-1-evgreen@chromium.org>
- <20181018210933.113592-2-evgreen@chromium.org>
+Subject: Re: [PATCH v2] devicetree, xen: add xen,
+ shared-memory binding
+Date: Mon, 22 Oct 2018 19:30:07 -0500
+Message-ID: <20181023003007.GA22803@bogus>
+References: <1539900630-26566-1-git-send-email-sstabellini@kernel.org>
+ <260c1981-d911-2b7f-6f0b-ac5481e3f48d@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xenproject.org>
 Content-Disposition: inline
-In-Reply-To: <20181018210933.113592-2-evgreen@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Evan Green <evgreen@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Douglas Anderson <dianders@chromium.org>, Manu Gautam <mgautam@codeaurora.org>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, swboyd@chromium.org
+In-Reply-To: <260c1981-d911-2b7f-6f0b-ac5481e3f48d@arm.com>
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
+To: Julien Grall <julien.grall@arm.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Stefano Stabellini <stefanos@xilinx.com>, Stefano Stabellini <sstabellini@kernel.org>, xen-devel@lists.xen.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 18, 2018 at 02:09:29PM -0700, Evan Green wrote:
-> This change adds register regions for the second lane of dual-lane nodes.
-> This additional specification is needed so that the driver can stop
-> reaching beyond the tx and rx register allocations to get at the
-> second lane registers in a dual-lane PHY.
-> 
-> While in there, document #clock-cells as optional for PHYs that don't
-> provide a pipe clock. Also, document the pcs_misc register region, which
-> was being quietly supplied and used.
-> 
-> Signed-off-by: Evan Green <evgreen@chromium.org>
-> 
-> ---
-> This applies atop linux-next 20181018 with the addition of Doug's
-> changes [1] and [2].
-> 
-> [1] https://lore.kernel.org/lkml/20181012213632.252346-1-dianders@chromium.org/
-> [2] https://lore.kernel.org/lkml/20181012213926.253765-1-dianders@chromium.org/
-> 
->  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 73 +++++++++++++++++++---
->  1 file changed, 65 insertions(+), 8 deletions(-)
-
-One nit below, otherwise:
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> index fbc198d5dd39..297a7c753fc8 100644
-> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> @@ -25,7 +25,7 @@ Required properties:
->    - For all others:
->      - The reg-names property shouldn't be defined.
->  
-> - - #clock-cells: must be 1
-> + - #clock-cells: must be 1 (PCIe and USB3 PHYs only)
->      - Phy pll outputs a bunch of clocks for Tx, Rx and Pipe
->        interface (for pipe based PHYs). These clock are then gate-controlled
->        by gcc.
-> @@ -82,23 +82,26 @@ Required nodes:
->   - Each device node of QMP phy is required to have as many child nodes as
->     the number of lanes the PHY has.
->  
-> -Required properties for child node:
-> +Required properties for child nodes of PCIe PHYs (one child per lane):
->   - reg: list of offset and length pairs of register sets for PHY blocks -
-> -	- index 0: tx
-> -	- index 1: rx
-> -	- index 2: pcs
-> -	- index 3: pcs_misc (optional)
-> +	tx, rx, pcs, and pcs_misc (optional).
-> + - #phy-cells: must be 0
->  
-> +Required properties for a single "lanes" child node of non-PCIe PHYs:
-> + - reg: list of offset and length pairs of register sets for PHY blocks
-> +	For 1-lane devices:
-> +		tx, rx, pcs, and (optionally) pcs_misc
-> +	For 2-lane devices:
-> +		tx0, rx0, pcs, tx1, rx1, and (optionally) pcs_misc
->   - #phy-cells: must be 0
->  
-> -Required properties child node of pcie and usb3 qmp phys:
-> +Required properties for child node of PCIe and USB3 qmp phys:
->   - clocks: a list of phandles and clock-specifier pairs,
->  	   one for each entry in clock-names.
->   - clock-names: Must contain following:
->  		 "pipe<lane-number>" for pipe clock specific to each lane.
->   - clock-output-names: Name of the PHY clock that will be the parent for
->  		       the above pipe clock.
-> -
->  	For "qcom,ipq8074-qmp-pcie-phy":
->  		- "pcie20_phy0_pipe_clk"	Pipe Clock parent
->  			(or)
-> @@ -150,3 +153,57 @@ Example:
->  		...
->  		...
->  	};
-> +
-> +	phy@88eb000 {
-> +		compatible = "qcom,sdm845-qmp-usb3-uni-phy";
-> +		reg = <0x88eb000 0x18c>;
-> +		status = "disabled";
-
-Don't show status in examples.
-
-> +		#clock-cells = <1>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		clocks = <&gcc GCC_USB3_SEC_PHY_AUX_CLK>,
-> +			 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-> +			 <&gcc GCC_USB3_SEC_CLKREF_CLK>,
-> +			 <&gcc GCC_USB3_SEC_PHY_COM_AUX_CLK>;
-> +		clock-names = "aux", "cfg_ahb", "ref", "com_aux";
-> +
-> +		resets = <&gcc GCC_USB3PHY_PHY_SEC_BCR>,
-> +			 <&gcc GCC_USB3_PHY_SEC_BCR>;
-> +		reset-names = "phy", "common";
-> +
-> +		lane@88eb200 {
-> +			reg = <0x88eb200 0x128>,
-> +			      <0x88eb400 0x1fc>,
-> +			      <0x88eb800 0x218>,
-> +			      <0x88e9600 0x70>;
-> +			#phy-cells = <0>;
-> +			clocks = <&gcc GCC_USB3_SEC_PHY_PIPE_CLK>;
-> +			clock-names = "pipe0";
-> +			clock-output-names = "usb3_uni_phy_pipe_clk_src";
-> +		};
-> +	};
-> +
-> +	phy@1d87000 {
-> +		compatible = "qcom,sdm845-qmp-ufs-phy";
-> +		reg = <0x1d87000 0x18c>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +		clock-names = "ref",
-> +			      "ref_aux";
-> +		clocks = <&gcc GCC_UFS_MEM_CLKREF_CLK>,
-> +			 <&gcc GCC_UFS_PHY_PHY_AUX_CLK>;
-> +
-> +		status = "disabled";
-> +
-> +		lanes@1d87400 {
-> +			reg = <0x1d87400 0x108>,
-> +			      <0x1d87600 0x1e0>,
-> +			      <0x1d87c00 0x1dc>,
-> +			      <0x1d87800 0x108>,
-> +			      <0x1d87a00 0x1e0>;
-> +			#phy-cells = <0>;
-> +		};
-> +	};
-> -- 
-> 2.16.4
-> 
+T24gTW9uLCBPY3QgMjIsIDIwMTggYXQgMTE6Mjc6MjNBTSArMDEwMCwgSnVsaWVuIEdyYWxsIHdy
+b3RlOgo+IEhpIFN0ZWZhbm8sCj4gCj4gT24gMTgvMTAvMjAxOCAyMzoxMCwgU3RlZmFubyBTdGFi
+ZWxsaW5pIHdyb3RlOgo+ID4gRnJvbTogU3RlZmFubyBTdGFiZWxsaW5pIDxzdGVmYW5vc0B4aWxp
+bnguY29tPgo+ID4gCj4gPiBJbnRyb2R1Y2UgYSBkZXZpY2UgdHJlZSBiaW5kaW5nIGZvciBYZW4g
+cmVzZXJ2ZWQtbWVtb3J5IHJlZ2lvbnMuIFRoZXkKPiA+IGFyZSB1c2VkIHRvIHNoYXJlIG1lbW9y
+eSBhY3Jvc3MgVk1zIGZyb20gdGhlIFZNIGNvbmZpZyBmaWxlcy4gKFNlZQo+ID4gc3RhdGljX3No
+bSBjb25maWcgb3B0aW9uLikKPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogU3RlZmFubyBTdGFiZWxs
+aW5pIDxzdGVmYW5vc0B4aWxpbnguY29tPgo+ID4gLS0tCj4gPiBDaGFuZ2VzIGluIHYyOgo+ID4g
+LSBmaXggQXV0aG9yIGxpbmUKPiA+IC0gYWRkIHZlcnNpb25pbmcKPiA+IC0geGVuLGlkIGluc3Rl
+YWQgb2YgaWQKPiA+IC0tLQo+ID4gICAuLi4vYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hlbixz
+aGFyZWQtbWVtb3J5LnR4dCAgIHwgMjAgKysrKysrKysrKysrKysrKysrKysKPiA+ICAgMSBmaWxl
+IGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKykKPiA+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkveGVuLHNoYXJlZC1t
+ZW1vcnkudHh0Cj4gPiAKPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hlbixzaGFyZWQtbWVtb3J5LnR4dCBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkveGVuLHNoYXJlZC1tZW1v
+cnkudHh0Cj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMC4uOTA3OGZi
+Nwo+ID4gLS0tIC9kZXYvbnVsbAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50eHQKPiA+IEBAIC0wLDAg
+KzEsMjAgQEAKPiA+ICsqIFhlbiBoeXBlcnZpc29yIHJlc2VydmVkLW1lbW9yeSBiaW5kaW5nCj4g
+PiArCj4gPiArRXhwb3NlIG9uZSBvciBtb3JlIG1lbW9yeSByZWdpb25zIGFzIHJlc2VydmVkLW1l
+bW9yeSB0byB0aGUgZ3Vlc3QKPiA+ICt2aXJ0dWFsIG1hY2hpbmUuIFR5cGljYWxseSwgYSByZWdp
+b24gaXMgY29uZmlndXJlZCBhdCBWTSBjcmVhdGlvbiB0aW1lCj4gPiArdG8gYmUgYSBzaGFyZWQg
+bWVtb3J5IGFyZWEgYWNyb3NzIG11bHRpcGxlIHZpcnR1YWwgbWFjaGluZXMgZm9yCj4gPiArY29t
+bXVuaWNhdGlvbiBhbW9uZyB0aGVtLgo+ID4gKwo+ID4gK0ZvciBlYWNoIG9mIHRoZXNlIHByZS1z
+aGFyZWQgbWVtb3J5IHJlZ2lvbnMsIGEgcmFuZ2UgaXMgZXhwb3NlZCB1bmRlcgo+ID4gK3RoZSAv
+cmVzZXJ2ZWQtbWVtb3J5IG5vZGUgYXMgYSBjaGlsZCBub2RlLiBFYWNoIHJhbmdlIHN1Yi1ub2Rl
+IGlzIG5hbWVkCj4gPiAreGVuLXNobWVtQDxhZGRyZXNzPiBhbmQgaGFzIHRoZSBmb2xsb3dpbmcg
+cHJvcGVydGllczoKPiA+ICsKPiA+ICstIGNvbXBhdGlibGU6Cj4gPiArCWNvbXBhdGlibGUgPSAi
+eGVuLHNoYXJlZC1tZW1vcnktdjEiLCAieGVuLHNoYXJlZC1tZW1vcnkiCj4gCj4gRG8gd2UgbmVl
+ZCB0byBzcGVjaWZ5IHRoZSB0d28gY29tcGF0aWJsZXM/CgpJJ2QganVzdCBkcm9wIHRoZSBmYWxs
+YmFjayBhcyB2ZXJzaW9uIHNlZW1zIHRvIGJlIGp1c3QgaW4gY2FzZS4KClJvYgoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KWGVuLWRldmVsIG1haWxpbmcg
+bGlzdApYZW4tZGV2ZWxAbGlzdHMueGVucHJvamVjdC5vcmcKaHR0cHM6Ly9saXN0cy54ZW5wcm9q
+ZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL3hlbi1kZXZlbA==
