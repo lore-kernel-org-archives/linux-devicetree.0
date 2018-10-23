@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2 07/15] drm/sun4i: sun6i_mipi_dsi: Fix VBP
- size calculation
-Date: Tue, 23 Oct 2018 21:20:27 +0530
-Message-ID: <20181023155035.9101-8-jagan@amarulasolutions.com>
+Subject: [PATCH v2 08/15] drm/sun4i: sun6i_mipi_dsi: Fix TCON
+ DRQ set bits
+Date: Tue, 23 Oct 2018 21:20:28 +0530
+Message-ID: <20181023155035.9101-9-jagan@amarulasolutions.com>
 References: <20181023155035.9101-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBC4HXXPAKGQERKSJOVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBEMHXXPAKGQEUT3ITVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181023155035.9101-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,39 +20,20 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-According to horizontal and vertical timings are defined
-per the diagram from include/drm/drm_modes.h
+TCON DRQ set bits for non-burst DSI mode can computed via
+horizontal front porch instead of front porch + sync timings.
 
-Back porch = [hv]total - [hv]sync_end
+According to BSP code form BPI-M64-bsp in
+linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c
+TCON DRQ set bits are computed for non-burst mode as
 
-So, update SUN6I_DSI_BASIC_SIZE0_VBP calculation as
-mode->vtotal - mode->vsync_end
+=> panel->lcd_ht -    panel->lcd_x - panel->lcd_hbp
+=> (timmings->hor_front_porch + panel->lcd_hbp + panel->lcd_x)
+   - panel->lcd_x - panel->hbp
+=> timmings->hor_front_porch
+=> mode->hsync_start - mode->hdisplay
 
-Horizontal or Vertical back porch calculation in BSP code
-is simply following the Linux drm comment diagram from
-include/drm/drm_modes.h which is
-
-[hv]back porch = [hv]total - [hv]sync_end
-
-BSP code form BPI-M64-bsp is calculating as vertical back porch as
-in linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c
-
-timmings->ver_sync_time= panel_info->lcd_vspw;
-timmings->ver_back_porch= panel_info->lcd_vbp-panel_info->lcd_vspw;
-
-vbp = panel->lcd_vbp;
-vspw = panel->lcd_vspw;
-dsi_dev[sel]->dsi_basic_size0.bits.vbp = vbp-vspw;
-dsi_dev[sel]->dsi_basic_size0.bits.vbp = panel->lcd_vbp - panel->lcd_vspw;
-=>  timmings->ver_back_porch + panel_info->lcd_vspw - panel_info->lcd_vspw
-=>  timmings->ver_back_porch
-=>  mode->vtotal - mode->end
-
-Which evatually same as mode->vtotal - mode->vsync_end so update the
-same in SUN6I_DSI_BASIC_SIZE0_VBP
-
-On the information note, existing SUN6I_DSI_BASIC_SIZE0_VSA is proper
-value.
+So, update the DRQ set bits accordingly.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
@@ -63,19 +44,20 @@ Changes for v2:
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index fc8560607147..3a1d48bc1996 100644
+index 3a1d48bc1996..8d154cf2e6d6 100644
 --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
 +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -526,8 +526,8 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
- 	regmap_write(dsi->regs, SUN6I_DSI_BASIC_SIZE0_REG,
- 		     SUN6I_DSI_BASIC_SIZE0_VSA(mode->vsync_end -
- 					       mode->vsync_start) |
--		     SUN6I_DSI_BASIC_SIZE0_VBP(mode->vsync_start -
--					       mode->vdisplay));
-+		     SUN6I_DSI_BASIC_SIZE0_VBP(mode->vtotal -
-+					       mode->vsync_end));
+@@ -367,9 +367,9 @@ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
+ 	struct mipi_dsi_device *device = dsi->device;
+ 	u32 val = 0;
  
- 	regmap_write(dsi->regs, SUN6I_DSI_BASIC_SIZE1_REG,
- 		     SUN6I_DSI_BASIC_SIZE1_VACT(mode->vdisplay) |
+-	if ((mode->hsync_end - mode->hdisplay) > 20) {
++	if ((mode->hsync_start - mode->hdisplay) > 20) {
+ 		/* Maaaaaagic */
+-		u16 drq = (mode->hsync_end - mode->hdisplay) - 20;
++		u16 drq = (mode->hsync_start - mode->hdisplay) - 20;
+ 
+ 		drq *= mipi_dsi_pixel_format_to_bpp(device->format);
+ 		drq /= 32;
 -- 
 2.18.0.321.gffc6fa0e3
