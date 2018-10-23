@@ -1,7 +1,7 @@
 From: Can Guo <cang@codeaurora.org>
-Subject: [PATCH v10 5/6] scsi: ufs: Power on phy after it is initialized
-Date: Mon, 22 Oct 2018 21:36:00 -0700
-Message-ID: <1540269361-28185-6-git-send-email-cang@codeaurora.org>
+Subject: [PATCH v10 2/6] phy: General struct and field cleanup
+Date: Mon, 22 Oct 2018 21:35:57 -0700
+Message-ID: <1540269361-28185-3-git-send-email-cang@codeaurora.org>
 References: <1540269361-28185-1-git-send-email-cang@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1540269361-28185-1-git-send-email-cang@codeaurora.org>
@@ -10,55 +10,106 @@ To: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.or
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Can Guo <cang@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Before UFS PHY is initialized, powering on it has no effect but increases
-the PHY's power on count. Then when power on PHY to enable it after phy
-initialization where it is really needed, as PHY's power on count is not
-zero, again it would do nothing but directly return and leaves the PHY
-disabled. This change adds condition checks to phy power on calls which
-happen before phy initialization.
+Move MSM8996 specific PHY vreg list struct name to a genernal one as it is
+used by all PHYs. Add a specific field to handle dual lane situation.
 
 Signed-off-by: Can Guo <cang@codeaurora.org>
 Reviewed-by: Evan Green <evgreen@chromium.org>
+Reviewed-by: Manu Gautam <mgautam@codeaurora.org>
 Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
 ---
- drivers/scsi/ufs/ufs-qcom.c | 4 +++-
- drivers/scsi/ufs/ufs-qcom.h | 1 +
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-index 698b92d..fa20de4 100644
---- a/drivers/scsi/ufs/ufs-qcom.c
-+++ b/drivers/scsi/ufs/ufs-qcom.c
-@@ -288,6 +288,7 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
- 			__func__, ret);
- 		goto out;
- 	}
-+	host->is_phy_init = true;
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index ccb8578..9be9754 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -649,6 +649,8 @@ struct qmp_phy_cfg {
  
- 	/* De-assert PHY reset and start serdes */
- 	ufs_qcom_deassert_reset(hba);
-@@ -1176,7 +1177,8 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
- 		return 0;
- 
- 	if (on && (status == POST_CHANGE)) {
--		phy_power_on(host->generic_phy);
-+		if (host->is_phy_init)
-+			phy_power_on(host->generic_phy);
- 
- 		/* enable the device ref clock for HS mode*/
- 		if (ufshcd_is_hs_mode(&hba->pwr_info))
-diff --git a/drivers/scsi/ufs/ufs-qcom.h b/drivers/scsi/ufs/ufs-qcom.h
-index 295f4be..5747aa3 100644
---- a/drivers/scsi/ufs/ufs-qcom.h
-+++ b/drivers/scsi/ufs/ufs-qcom.h
-@@ -242,6 +242,7 @@ struct ufs_qcom_host {
- 	/* Bitmask for enabling debug prints */
- 	u32 dbg_print_en;
- 	struct ufs_qcom_testbus testbus;
-+	bool is_phy_init;
+ 	/* true, if PHY has a separate DP_COM control block */
+ 	bool has_phy_dp_com_ctrl;
++	/* true, if PHY has secondary tx/rx lanes to be configured */
++	bool is_dual_lane_phy;
+ 	/* Register offset of secondary tx/rx lanes for USB DP combo PHY */
+ 	unsigned int tx_b_lane_offset;
+ 	unsigned int rx_b_lane_offset;
+@@ -758,7 +760,7 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
  };
  
- static inline u32
+ /* list of regulators */
+-static const char * const msm8996_phy_vreg_l[] = {
++static const char * const qmp_phy_vreg_l[] = {
+ 	"vdda-phy", "vdda-pll",
+ };
+ 
+@@ -778,8 +780,8 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
+ 	.num_clks		= ARRAY_SIZE(msm8996_phy_clk_l),
+ 	.reset_list		= msm8996_pciephy_reset_l,
+ 	.num_resets		= ARRAY_SIZE(msm8996_pciephy_reset_l),
+-	.vreg_list		= msm8996_phy_vreg_l,
+-	.num_vregs		= ARRAY_SIZE(msm8996_phy_vreg_l),
++	.vreg_list		= qmp_phy_vreg_l,
++	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
+ 	.regs			= pciephy_regs_layout,
+ 
+ 	.start_ctrl		= PCS_START | PLL_READY_GATE_EN,
+@@ -809,8 +811,8 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
+ 	.num_clks		= ARRAY_SIZE(msm8996_phy_clk_l),
+ 	.reset_list		= msm8996_usb3phy_reset_l,
+ 	.num_resets		= ARRAY_SIZE(msm8996_usb3phy_reset_l),
+-	.vreg_list		= msm8996_phy_vreg_l,
+-	.num_vregs		= ARRAY_SIZE(msm8996_phy_vreg_l),
++	.vreg_list		= qmp_phy_vreg_l,
++	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
+ 	.regs			= usb3phy_regs_layout,
+ 
+ 	.start_ctrl		= SERDES_START | PCS_START,
+@@ -870,8 +872,8 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
+ 	.num_clks		= ARRAY_SIZE(qmp_v3_phy_clk_l),
+ 	.reset_list		= msm8996_usb3phy_reset_l,
+ 	.num_resets		= ARRAY_SIZE(msm8996_usb3phy_reset_l),
+-	.vreg_list		= msm8996_phy_vreg_l,
+-	.num_vregs		= ARRAY_SIZE(msm8996_phy_vreg_l),
++	.vreg_list		= qmp_phy_vreg_l,
++	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
+ 	.regs			= qmp_v3_usb3phy_regs_layout,
+ 
+ 	.start_ctrl		= SERDES_START | PCS_START,
+@@ -883,6 +885,7 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
+ 	.pwrdn_delay_max	= POWER_DOWN_DELAY_US_MAX,
+ 
+ 	.has_phy_dp_com_ctrl	= true,
++	.is_dual_lane_phy	= true,
+ 	.tx_b_lane_offset	= 0x400,
+ 	.rx_b_lane_offset	= 0x400,
+ };
+@@ -903,8 +906,8 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
+ 	.num_clks		= ARRAY_SIZE(qmp_v3_phy_clk_l),
+ 	.reset_list		= msm8996_usb3phy_reset_l,
+ 	.num_resets		= ARRAY_SIZE(msm8996_usb3phy_reset_l),
+-	.vreg_list		= msm8996_phy_vreg_l,
+-	.num_vregs		= ARRAY_SIZE(msm8996_phy_vreg_l),
++	.vreg_list		= qmp_phy_vreg_l,
++	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
+ 	.regs			= qmp_v3_usb3phy_regs_layout,
+ 
+ 	.start_ctrl		= SERDES_START | PCS_START,
+@@ -1116,12 +1119,12 @@ static int qcom_qmp_phy_init(struct phy *phy)
+ 	/* Tx, Rx, and PCS configurations */
+ 	qcom_qmp_phy_configure(tx, cfg->regs, cfg->tx_tbl, cfg->tx_tbl_num);
+ 	/* Configuration for other LANE for USB-DP combo PHY */
+-	if (cfg->has_phy_dp_com_ctrl)
++	if (cfg->is_dual_lane_phy)
+ 		qcom_qmp_phy_configure(tx + cfg->tx_b_lane_offset, cfg->regs,
+ 				       cfg->tx_tbl, cfg->tx_tbl_num);
+ 
+ 	qcom_qmp_phy_configure(rx, cfg->regs, cfg->rx_tbl, cfg->rx_tbl_num);
+-	if (cfg->has_phy_dp_com_ctrl)
++	if (cfg->is_dual_lane_phy)
+ 		qcom_qmp_phy_configure(rx + cfg->rx_b_lane_offset, cfg->regs,
+ 				       cfg->rx_tbl, cfg->rx_tbl_num);
+ 
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
