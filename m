@@ -1,61 +1,82 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] OF: Handle CMDLINE when /chosen node is not present
-Date: Tue, 23 Oct 2018 09:30:35 -0500
-Message-ID: <CAL_JsqKA6_saB7Ak=BZqSth6KAZ1g2srF5BsOQRGdE2+rmcR8w@mail.gmail.com>
-References: <20181022224213.GA25145@bogus>
- <mhng-08dbc241-46e4-411b-ba13-32435abde7ad@palmer-si-x1c4>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V2 7/8] dts: fsl: add imx7ulp evk support
+Date: Tue, 23 Oct 2018 14:42:09 +0000
+Message-ID: <AM0PR04MB42110E5309341D1626EB6EF980F50@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1540295058-26090-1-git-send-email-aisheng.dong@nxp.com>
+ <1540295058-26090-8-git-send-email-aisheng.dong@nxp.com>
+ <CAOMZO5C3Fv+s-bLeHGZ6LEB=ZqRxf=gXuzbtwfNS=PvQeVJ1Ag@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <mhng-08dbc241-46e4-411b-ba13-32435abde7ad@palmer-si-x1c4>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Palmer Dabbelt <palmer@sifive.com>
-Cc: Nick Kossifidis <mick@ics.forth.gr>, Linux-MIPS <linux-mips@linux-mips.org>, linux-riscv@lists.infradead.org, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAOMZO5C3Fv+s-bLeHGZ6LEB=ZqRxf=gXuzbtwfNS=PvQeVJ1Ag@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE
+ BINDINGS" <devicetree@vger.kernel.org>, Dong Aisheng <dongas86@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 22, 2018 at 5:55 PM Palmer Dabbelt <palmer@sifive.com> wrote:
->
-> On Mon, 22 Oct 2018 15:42:13 PDT (-0700), robh@kernel.org wrote:
-> > On Mon, Oct 15, 2018 at 05:20:10PM +0300, Nick Kossifidis wrote:
-> >> The /chosen node is optional so we should handle CMDLINE regardless
-> >> the presence of /chosen/bootargs. Move handling of CMDLINE in
-> >> early_init_dt_scan() instead.
-> >
-> > I looked at this a while back. I'm not sure this behavior can be changed
-> > without breaking some MIPS platforms that could be relying on the
-> > current behavior. But trying to make sense of the MIPS code is a
-> > challenge and they have some other issues in this area.
-> >
-> > Can't this be fixed by making /chosen manditory? I'd expect ultimately
-> > you are always going to need it.
-> >
-> > I'd rather not resort to making this per arch. There's also some effort
-> > to consolidate cmd line handling[1].
->
-> I'd rather make /chosen mandatory on RISC-V than to have per-arch handling, as
-> like you've said there's already too much duplication.  That said, it does seem
-> like a bug to me because the behavior seems somewhat arbitrary -- an empty
-> /chosen node causing the built-in command-line argument handling to go off the
-> rails just smells so buggy.
+> -----Original Message-----
+> From: Fabio Estevam [mailto:festevam@gmail.com]
+> Sent: Tuesday, October 23, 2018 8:29 PM
+[...] 
+> On Tue, Oct 23, 2018 at 8:56 AM A.s. Dong <aisheng.dong@nxp.com> wrote:
+> 
+> > +/ {
+> > +       model = "NXP i.MX7ULP EVK";
+> > +       compatible = "fsl,imx7ulp-evk", "fsl,imx7ulp", "Generic DT
+> > +based system";
+> 
+> This "Generic DT based system" should be removed.
+> 
 
-Yes. Probably need to do some archaeology on this code to figure out
-some of the expectations.
+Got it
 
-> If that's the case, could we at least have something like
-> "CONFIG_OF_CHOSEN_IS_MANDATORY" that provides a warning when there is no
-> /chosen node and is set on architecture where the spec mandates /chosen?
+> > +       chosen {
+> > +               stdout-path = &lpuart4;
+> > +       };
+> > +
+> > +       memory@60000000 {
+> 
+>        device_type = "memory";
 
-I'd be okay to make it a warning unconditionally. At least then we can
-find the cases that deviate and either fix them or understand their
-expectations.
+Got it
 
-Rob
+> > +               reg = <0x60000000 0x40000000>;
+> > +       };
+> 
+> > +&iomuxc1 {
+> > +       pinctrl_lpuart4: lpuart4grp {
+> > +               pinmux = <
+> > +                       IMX7ULP_PAD_PTC3__LPUART4_RX
+> > +                       IMX7ULP_PAD_PTC2__LPUART4_TX
+> > +               >;
+> > +               bias-pull-up;
+> 
+> Please change the mx7ulp pinctrl driver to accept the "old" notation and
+> change the dts to use:
+> 
+> IMX7ULP_PAD_PTC3__LPUART4_RX 0x3
+> 
+> This way we use the same method for all i.MX devices.
+
+I'm a bit hesitate to do that as the driver already supports it. There's no extra effort
+to use it. And we probably could take ULP as a special case to test generic binding
+rather then simply drop it and drop driver features. Once we get objection from users
+later, we still can simply fallback as there's still only official boards using it.
+
+Last, it's not correct that there's not only one method for all i.MX devices.
+MX23/28 are different ones and ULP is more like MX23/28.
+And I saw no objections from users for MX23/28.
+
+Regards
+Dong Aisheng
