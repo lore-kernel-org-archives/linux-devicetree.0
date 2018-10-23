@@ -1,27 +1,97 @@
-Return-Path: <SRS0=mtda=NE=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v5 0/3] mmc: tmio_mmc: Add support for RZ/A2
-Date: Wed, 24 Oct 2018 17:22:58 -0500
-Message-Id: <20181024222301.21455-1-chris.brandt@renesas.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-clk@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=hXfH=ND=codeaurora.org=rplsssn@kernel.org>
+Subject: Re: [PATCH RFC v2 2/4] dt-bindings: introduce System PM domain
+ bindings for Qualcomm SoCs
+References: <1539186879-10009-1-git-send-email-rplsssn@codeaurora.org>
+ <1539186879-10009-3-git-send-email-rplsssn@codeaurora.org>
+ <20181017184247.GA28562@bogus>
+From: Raju P L S S S N <rplsssn@codeaurora.org>
+Message-ID: <ddcf0993-4d8e-91d7-cd83-4133034384ba@codeaurora.org>
+Date: Wed, 24 Oct 2018 01:05:15 +0530
+MIME-Version: 1.0
+In-Reply-To: <20181017184247.GA28562@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Rob Herring <robh@kernel.org>
+Cc: ilina@codearuroa.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Basically the same HW block that was used in R-Car Gen 3 is used in
-RZ/A2 (with only a couple small differences).
 
-V5 was just to rebase to fix merge conflicts
 
-Chris Brandt (3):
-  clk: renesas: r7s9210: Add SDHI clocks
-  mmc: renesas_sdhi_internal_dmac: Add R7S9210 support
-  dt-bindings: mmc: tmio_mmc: Document Renesas R7S9210
+On 10/18/2018 12:12 AM, Rob Herring wrote:
+> On Wed, Oct 10, 2018 at 09:24:37PM +0530, Raju P.L.S.S.S.N wrote:
+>> Add device binding documentation for Qualcomm Technology Inc's System PM
+>> domain driver. The driver is used for managing system sleep activities
+>> that are required when application processor is going to deepest low
+>> power mode.
+>>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
+>> ---
+>>   .../bindings/soc/qcom/system_pm_domain.txt         | 38 ++++++++++++++++++++++
+>>   1 file changed, 38 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/soc/qcom/system_pm_domain.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/qcom/system_pm_domain.txt b/Documentation/devicetree/bindings/soc/qcom/system_pm_domain.txt
+>> new file mode 100644
+>> index 0000000..9f913c3
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/qcom/system_pm_domain.txt
+>> @@ -0,0 +1,38 @@
+>> +Qualcomm Technologies system power domain
+>> +-----------------------------------------
+>> +
+>> +System pm domain handles the tasks that need to be performed during application
+>> +processor deeper low power mode entry for QCOM SoCs which have hardened IP blocks
+>> +combinedly called as RPMH (Resource Power Manager Hardened) for shared resource
+>> +management. Flushing the buffered requests to TCS (Triggered Command Set) in RSC
+>> +(Resource State Coordinator) and programming the wakeup timer in PDC (Power
+>> +Domain Controller) for timer based wakeup are handled as part of domain power
+>> +down.
+>> +
+>> +The bindings for System PM domain is specified in the RSC section in devicetree.
+>> +
+>> +Properties:
+>> +- compatible:
+>> +	Usage: required
+>> +	Value type: <string>
+>> +	Definition: must be "qcom,system-pm-domain".
+>> +
+>> +- #power-domain-cells: number of cells in power domain specifier;
+>> +    must be 0.
+>> +
+>> +Node of a device using power domains must have a power-domains property
+>> +defined with a phandle to respective power domain.
+>> +
+>> +Example:
+>> +
+>> +	apps_rsc: rsc@179c0000 {
+>> +		[...]
+>> +		system_pd: system-power-domain {
+>> +			compatible = "qcom,system-pm";
+>> +            #power-domain-cells = <0>;
+> 
+> I don't understand why this is split from "qcom,cpu-pm-domain". Just
+> make the parent (RSC) a power domain provider with multiple domains. As
+> long as each domain doesn't have its own resources, you don't need child
+> nodes here.
 
- Documentation/devicetree/bindings/mmc/tmio_mmc.txt |  3 ++-
- drivers/clk/renesas/r7s9210-cpg-mssr.c             |  5 ++++
- drivers/mmc/host/Kconfig                           |  7 +++---
- drivers/mmc/host/renesas_sdhi_internal_dmac.c      | 28 ++++++++++++++++++++--
- 4 files changed, 37 insertions(+), 6 deletions(-)
+Hi Rob,
 
--- 
-2.16.1
+Since the patch had cc:devicetree, it was unintentionally posted in 
+mailing list. Sorry about that and please ignore this one. The intended 
+version is posted as https://lkml.org/lkml/2018/10/11/28
+The power down activities are handled by top level rpmh layer[1] which 
+are not core functions of RSC driver. Though it is doable, it would be 
+messy to invoke calls to top level rpmh layer by declaring RSC parent 
+node itself as power domain provider.
+
+[1].https://patchwork.kernel.org/patch/10474327/
+
+Thanks,
+Raju
+
+
+> 
+> Rob
+> 
