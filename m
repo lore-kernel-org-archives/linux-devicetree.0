@@ -1,63 +1,41 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 09/12] dt-bindings: panel: Add Bananapi
- S070WV20-CT16 MIPI-DSI panel bindings
-Date: Tue, 23 Oct 2018 10:11:08 -0500
-Message-ID: <CAL_JsqJPn9hhGsk62RzLc1dPQyF2_iCSau+MvY9mD_QADybgvg@mail.gmail.com>
-References: <20180927114850.24565-1-jagan@amarulasolutions.com>
- <20180927114850.24565-10-jagan@amarulasolutions.com> <20181015182448.GA7134@bogus>
- <CAGb2v64QEhy1J05L9W0_uWhmrky8wD+vg3v5wA7Yd3_U-DdpKg@mail.gmail.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/5] dt-bindings: phy-qcom-qmp: Fix register
+ underspecification
+Date: Tue, 23 Oct 2018 10:35:17 -0500
+Message-ID: <20181023153517.GA24710@bogus>
+References: <20181022205102.74825-1-evgreen@chromium.org>
+ <20181022205102.74825-2-evgreen@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBHXUXTPAKGQECKQCBDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v64QEhy1J05L9W0_uWhmrky8wD+vg3v5wA7Yd3_U-DdpKg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181022205102.74825-2-evgreen@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Evan Green <evgreen@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Douglas Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org, Can Guo <cang@codeaurora.org>, linux-kernel@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 22, 2018 at 5:22 AM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->
-> Hi Rob,
->
-> On Mon, Oct 15, 2018 at 7:24 PM Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> >
-> > On Thu, 27 Sep 2018 17:18:47 +0530, Jagan Teki wrote:
-> > > Bananapi S070WV20-CT16 is 800x480, 4-lane MIPI-DSI panel, the
-> > > same panel PCB comes with parallel RBG which is supported via
-> > > panel-simple with "bananapi,s070wv20-ct16" compatible.
-> > >
-> > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > > ---
-> > >  .../panel/bananapi,s070wv20-ct16-dsi.txt      | 21 +++++++++++++++++++
-> > >  1 file changed, 21 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16-dsi.txt
-> > >
-> >
-> > Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
-> This "panel" is actually an RGB panel with a MIPI-DSI-to-RGB bridge
-> tacked on. On one particular revision of this module, one can also
-> directly use the RGB interface.
->
-> Would it be better to model this as bridge+panel? We already have
-> a binding for the RGB version [1]. This would make it harder to
-> make a driver though, as there is no publicly available datasheet
-> for the bridge chip, so it's likely that part of the init sequence
-> would have to be hard-coded.
+On Mon, Oct 22, 2018 at 01:50:58PM -0700, Evan Green wrote:
+> Add register regions for the second lane of dual-lane nodes.
+> This additional specification is needed so that the driver can stop
+> reaching beyond the tx and rx register allocations to get at the
+> second lane registers in a dual-lane PHY.
+> 
+> While in there, document #clock-cells as optional for PHYs that don't
+> provide a pipe clock. Also, document the pcs_misc register region, which
+> was being quietly supplied and used.
+> 
+> Signed-off-by: Evan Green <evgreen@chromium.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> 
+> ---
+> 
+> Changes in v3: None
+> Changes in v2:
+> - Added dt bindings change, corresponding driver fixup, and USB PHY fixup
 
-Perhaps you can use the same compatible and detect based on the OF
-graph connection whether it is DSI or RGB interface? That would mean
-the RGB version doesn't use simple-panel driver, but that should be
-okay.
+Please see my reply on v2.
 
-If there's other users of this bridge chip, then modeling the bridge
-separately would be better.
-
-Rob
+> 
+>  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 73 +++++++++++++++++++---
+>  1 file changed, 65 insertions(+), 8 deletions(-)
