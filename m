@@ -1,60 +1,55 @@
-From: tony <tony.xie@rock-chips.com>
-Subject: Re: [PATCH v3 1/5] mfd: rk808: Add RK817 and RK809 support
-Date: Tue, 23 Oct 2018 15:21:50 +0800
-Message-ID: <3d96be69-e50c-187e-7d3a-75eec63d2be0@rock-chips.com>
-References: <1535081441-20718-1-git-send-email-tony.xie@rock-chips.com>
- <1535081441-20718-2-git-send-email-tony.xie@rock-chips.com>
- <20180911114732.GL4185@dell>
- <b0f9fff3-3084-91b3-fa78-5163ebd43bbb@rock-chips.com>
- <20181023062601.GS4939@dell>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/2 v3] drm/panel: Add DT bindings for Samsung S6D16D0
+Date: Tue, 23 Oct 2018 09:46:29 +0200
+Message-ID: <20181023074630.29186-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181023062601.GS4939@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: heiko@sntech.de, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-在 2018/10/23 14:26, Lee Jones 写道:
->>>>       The rk809 and rk817 are a Power Management IC (PMIC) for multimedia
->>>>       and handheld devices. It contains the following components:
->>>>
->>>>           - Regulators
->>>>           - RTC
->>>>           - Clocking
->>>>
->>>>       Both RK809 and RK817 chips are using a similar register map,
->>>>       so we can reuse the RTC and Clocking and regulators functionality.
->>>>
->>>> Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
->>>> ---
->>>>    drivers/mfd/Kconfig       |   6 +-
->>>>    drivers/mfd/rk808.c       | 218 +++++++++++++++++++++++++++++++++++++++++++++-
->>>>    include/linux/mfd/rk808.h | 172 ++++++++++++++++++++++++++++++++++++
->>>>    kernel/reboot.c           |   1 +
->>>>    4 files changed, 391 insertions(+), 6 deletions(-)
-> [...]
->
->>>> diff --git a/kernel/reboot.c b/kernel/reboot.c
->>>> index e4ced88..83810d7 100644
->>>> --- a/kernel/reboot.c
->>>> +++ b/kernel/reboot.c
->>>> @@ -49,6 +49,7 @@
->>>>     */
->>>>    void (*pm_power_off_prepare)(void);
->>>> +EXPORT_SYMBOL_GPL(pm_power_off_prepare);
->>> Why do you need this where no other driver in the kernel does?
->>      There is a gpio_slp pin for RK809 and RK817，this pin has reset、power
->> down and sleep functions，so
->>      when system is going to power down, this pin is needed to switch to
->> power down function，and then we just only control
->>      this pin to high to power down the system in atf at last。
-> There are other PM call-backs that you can use for this.  There
-> shouldn't be any requirement to export and call functions at this
-> level directly.
-     I will use a shutdown call-backs from syscore to implement it.
->
+VGhpcyBhZGRzIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5ncyBmb3IgdGhlIFNhbXN1bmcgUzZEMTZE
+MApwYW5lbC4gVGhpcyBpcyBhIGNvbW1hbmQgbW9kZSBvbmx5IHBhbmVsIHVzaW5nIERTSS4KCkNj
+OiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwpDYzogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBz
+YW1zdW5nLmNvbT4KQWNrZWQtYnk6IFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3JnLm9yZz4KUmV2
+aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+ClNpZ25lZC1vZmYtYnk6IExp
+bnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4KLS0tCkNoYW5nZUxvZyB2Mi0+
+djM6Ci0gQ29sbGVjdGVkIFNhbSdzIEFDSy4KLSBDb2xsZWN0ZWQgUm9iJ3MgQUNLLgpDaGFuZ2VM
+b2cgdjEtPnYyOgotIE5vbmUsIGlmIHlvdSdyZSBPSyB3aXRoIGl0IHBsZWFzZSBBQ0sgc28gSSBj
+YW4gcXVldWUKICB0aGUgcGF0Y2guCi0tLQogLi4uL2Rpc3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmQx
+NmQwLnR4dCAgICAgICAgIHwgMzAgKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQs
+IDMwIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZDE2ZDAudHh0CgpkaWZmIC0t
+Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ft
+c3VuZyxzNmQxNmQwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L3BhbmVsL3NhbXN1bmcsczZkMTZkMC50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXgg
+MDAwMDAwMDAwMDAwLi5iOTRlMzY2ZjQ1MWIKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZDE2ZDAudHh0
+CkBAIC0wLDAgKzEsMzAgQEAKK1NhbXN1bmcgUzZEMTZEMCA0IiA4NjR4NDgwIEFNT0xFRCBwYW5l
+bAorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorICAtIGNvbXBhdGlibGU6IHNob3VsZCBiZToKKyAg
+ICAic2Ftc3VuZyxzNmQxNmQwIiwKKyAgLSByZWc6IHRoZSB2aXJ0dWFsIGNoYW5uZWwgbnVtYmVy
+IG9mIGEgRFNJIHBlcmlwaGVyYWwKKyAgLSB2ZGQxLXN1cHBseTogSS9PIHZvbHRhZ2Ugc3VwcGx5
+CisgIC0gcmVzZXQtZ3Bpb3M6IGEgR1BJTyBzcGVjIGZvciB0aGUgcmVzZXQgcGluIChhY3RpdmUg
+bG93KQorCitUaGUgZGV2aWNlIG5vZGUgY2FuIGNvbnRhaW4gb25lICdwb3J0JyBjaGlsZCBub2Rl
+IHdpdGggb25lIGNoaWxkCisnZW5kcG9pbnQnIG5vZGUsIGFjY29yZGluZyB0byB0aGUgYmluZGlu
+Z3MgZGVmaW5lZCBpbgorbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQuIFRoaXMgbm9kZSBzaG91
+bGQgZGVzY3JpYmUgcGFuZWwncyB2aWRlbyBidXMuCisKK0V4YW1wbGU6CismZHNpIHsKKwkuLi4K
+KworCXBhbmVsQDAgeworCQljb21wYXRpYmxlID0gInNhbXN1bmcsczZkMTZkMCI7CisJCXJlZyA9
+IDwwPjsKKwkJdmRkMS1zdXBwbHkgPSA8JmZvbz47CisJCXJlc2V0LWdwaW9zID0gPCZmb29fZ3Bp
+byAwIEdQSU9fQUNUSVZFX0xPVz47CisKKwkJcG9ydCB7CisJCQlwYW5lbF9pbjogZW5kcG9pbnQg
+eworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHNpX291dD47CisJCQl9OworCQl9OworCX07Cit9
+OwotLSAKMi4xNy4yCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwK
