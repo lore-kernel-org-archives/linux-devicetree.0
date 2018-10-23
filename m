@@ -1,49 +1,63 @@
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: [PATCH V1 4/4] ARM: dts: imx7s: Add flexcan stop mode wakeup support
-Date: Tue, 23 Oct 2018 05:31:27 +0000
-Message-ID: <20181023052831.2553-5-qiangqing.zhang@nxp.com>
-References: <20181023052831.2553-1-qiangqing.zhang@nxp.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 1/5] mfd: rk808: Add RK817 and RK809 support
+Date: Tue, 23 Oct 2018 07:26:01 +0100
+Message-ID: <20181023062601.GS4939@dell>
+References: <1535081441-20718-1-git-send-email-tony.xie@rock-chips.com>
+ <1535081441-20718-2-git-send-email-tony.xie@rock-chips.com>
+ <20180911114732.GL4185@dell>
+ <b0f9fff3-3084-91b3-fa78-5163ebd43bbb@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181023052831.2553-1-qiangqing.zhang@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <b0f9fff3-3084-91b3-fa78-5163ebd43bbb@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "A.s. Dong" <aisheng.dong@nxp.com>, Joakim Zhang <qiangqing.zhang@nxp.com>
+To: tony <tony.xie@rock-chips.com>
+Cc: heiko@sntech.de, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-From: Dong Aisheng <aisheng.dong@nxp.com>
+> > >      The rk809 and rk817 are a Power Management IC (PMIC) for multimedia
+> > >      and handheld devices. It contains the following components:
+> > > 
+> > >          - Regulators
+> > >          - RTC
+> > >          - Clocking
+> > > 
+> > >      Both RK809 and RK817 chips are using a similar register map,
+> > >      so we can reuse the RTC and Clocking and regulators functionality.
+> > > 
+> > > Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
+> > > ---
+> > >   drivers/mfd/Kconfig       |   6 +-
+> > >   drivers/mfd/rk808.c       | 218 +++++++++++++++++++++++++++++++++++++++++++++-
+> > >   include/linux/mfd/rk808.h | 172 ++++++++++++++++++++++++++++++++++++
+> > >   kernel/reboot.c           |   1 +
+> > >   4 files changed, 391 insertions(+), 6 deletions(-)
 
-Add stop-mode property which is required by stop mode wakeup
-feature.
+[...]
 
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
----
- arch/arm/boot/dts/imx7s.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+> > > diff --git a/kernel/reboot.c b/kernel/reboot.c
+> > > index e4ced88..83810d7 100644
+> > > --- a/kernel/reboot.c
+> > > +++ b/kernel/reboot.c
+> > > @@ -49,6 +49,7 @@
+> > >    */
+> > >   void (*pm_power_off_prepare)(void);
+> > > +EXPORT_SYMBOL_GPL(pm_power_off_prepare);
+> > Why do you need this where no other driver in the kernel does?
+>     There is a gpio_slp pin for RK809 and RK817，this pin has reset、power
+> down and sleep functions，so
+>     when system is going to power down, this pin is needed to switch to
+> power down function，and then we just only control
+>     this pin to high to power down the system in atf at last。
 
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index a052198f6e96..382f1e1a92e3 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -877,6 +877,7 @@
- 				clocks =3D <&clks IMX7D_CLK_DUMMY>,
- 					<&clks IMX7D_CAN1_ROOT_CLK>;
- 				clock-names =3D "ipg", "per";
-+				stop-mode =3D <&gpr 0x10 1 0x10 17>;
- 				status =3D "disabled";
- 			};
-=20
-@@ -887,6 +888,7 @@
- 				clocks =3D <&clks IMX7D_CLK_DUMMY>,
- 					<&clks IMX7D_CAN2_ROOT_CLK>;
- 				clock-names =3D "ipg", "per";
-+				stop-mode =3D <&gpr 0x10 2 0x10 18>;
- 				status =3D "disabled";
- 			};
-=20
---=20
-2.17.1
+There are other PM call-backs that you can use for this.  There
+shouldn't be any requirement to export and call functions at this
+level directly.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
