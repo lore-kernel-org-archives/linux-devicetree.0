@@ -1,7 +1,7 @@
 From: Can Guo <cang@codeaurora.org>
-Subject: [PATCH v10 1/6] phy: Update PHY power control sequence
-Date: Mon, 22 Oct 2018 21:35:56 -0700
-Message-ID: <1540269361-28185-2-git-send-email-cang@codeaurora.org>
+Subject: [PATCH v10 6/6] dt-bindings: phy-qcom-qmp: Add UFS phy compatible string for sdm845
+Date: Mon, 22 Oct 2018 21:36:01 -0700
+Message-ID: <1540269361-28185-7-git-send-email-cang@codeaurora.org>
 References: <1540269361-28185-1-git-send-email-cang@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1540269361-28185-1-git-send-email-cang@codeaurora.org>
@@ -10,78 +10,36 @@ To: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.or
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Can Guo <cang@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-All PHYs should be powered on before register configuration starts. And
-only PCIe PHYs need an extra power control before deasserts reset state.
+Update the compatible string for UFS QMP PHY on SDM845.
 
 Signed-off-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Manu Gautam <mgautam@codeaurora.org>
-Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/phy/qualcomm/phy-qcom-qmp.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 97ef942..ccb8578 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -935,10 +935,12 @@ static void qcom_qmp_phy_configure(void __iomem *base,
- 	}
- }
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+index cef8765..930d94c 100644
+--- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
++++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+@@ -11,7 +11,8 @@ Required properties:
+ 	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
+ 	       "qcom,qmp-v3-usb3-phy" for USB3 QMP V3 phy,
+ 	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
+-	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845.
++	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
++	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
  
--static int qcom_qmp_phy_com_init(struct qcom_qmp *qmp)
-+static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
- {
-+	struct qcom_qmp *qmp = qphy->qmp;
- 	const struct qmp_phy_cfg *cfg = qmp->cfg;
- 	void __iomem *serdes = qmp->serdes;
-+	void __iomem *pcs = qphy->pcs;
- 	void __iomem *dp_com = qmp->dp_com;
- 	int ret, i;
+  - reg: offset and length of register set for PHY's common serdes block.
  
-@@ -979,10 +981,6 @@ static int qcom_qmp_phy_com_init(struct qcom_qmp *qmp)
- 		goto err_rst;
- 	}
- 
--	if (cfg->has_phy_com_ctrl)
--		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
--			     SW_PWRDN);
--
- 	if (cfg->has_phy_dp_com_ctrl) {
- 		qphy_setbits(dp_com, QPHY_V3_DP_COM_POWER_DOWN_CTRL,
- 			     SW_PWRDN);
-@@ -1000,6 +998,12 @@ static int qcom_qmp_phy_com_init(struct qcom_qmp *qmp)
- 			     SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
- 	}
- 
-+	if (cfg->has_phy_com_ctrl)
-+		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
-+			     SW_PWRDN);
-+	else
-+		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
-+
- 	/* Serdes configuration */
- 	qcom_qmp_phy_configure(serdes, cfg->regs, cfg->serdes_tbl,
- 			       cfg->serdes_tbl_num);
-@@ -1090,7 +1094,7 @@ static int qcom_qmp_phy_init(struct phy *phy)
- 
- 	dev_vdbg(qmp->dev, "Initializing QMP phy\n");
- 
--	ret = qcom_qmp_phy_com_init(qmp);
-+	ret = qcom_qmp_phy_com_init(qphy);
- 	if (ret)
- 		return ret;
- 
-@@ -1127,7 +1131,8 @@ static int qcom_qmp_phy_init(struct phy *phy)
- 	 * Pull out PHY from POWER DOWN state.
- 	 * This is active low enable signal to power-down PHY.
- 	 */
--	qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
-+	if(cfg->type == PHY_TYPE_PCIE)
-+		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
- 
- 	if (cfg->has_pwrdn_delay)
- 		usleep_range(cfg->pwrdn_delay_min, cfg->pwrdn_delay_max);
+@@ -29,6 +30,7 @@ Required properties:
+ 		"aux" for phy aux clock,
+ 		"ref" for 19.2 MHz ref clk,
+ 		"com_aux" for phy common block aux clock,
++		"ref_aux" for phy reference aux clock,
+ 		For "qcom,msm8996-qmp-pcie-phy" must contain:
+ 			"aux", "cfg_ahb", "ref".
+ 		For "qcom,msm8996-qmp-usb3-phy" must contain:
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
