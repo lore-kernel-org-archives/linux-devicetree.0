@@ -1,71 +1,273 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: [PATCH V2 2/8] dt-bindings: fsl: add imx7ulp pm related components
- bindings
-Date: Tue, 23 Oct 2018 11:49:08 +0000
-Message-ID: <1540295058-26090-3-git-send-email-aisheng.dong@nxp.com>
-References: <1540295058-26090-1-git-send-email-aisheng.dong@nxp.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ Firmware bindings
+Date: Tue, 23 Oct 2018 17:23:34 +0530
+Message-ID: <CAP245DV4yK2u2tS_Jjgb1PBx+qkXPXBOs3w4THNDaBEw7WGDLg@mail.gmail.com>
+References: <1539257761-23023-1-git-send-email-tdas@codeaurora.org> <1539257761-23023-2-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1540295058-26090-1-git-send-email-aisheng.dong@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1539257761-23023-2-git-send-email-tdas@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Taniya Das <tdas@codeaurora.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Saravana Kannan <skannan@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-Add imx7ulp pm related components bindings
+Hi Taniya,
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
----
-ChangeLog:
-v1->v2:
- * new patch
----
- .../bindings/arm/freescale/fsl,imx7ulp-pm.txt      | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.txt
+Both the patches are missing v9 in their subject line - this threw off
+patchwork when trying to download the patches.
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.txt
-new file mode 100644
-index 0000000..75195be
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.txt
-@@ -0,0 +1,23 @@
-+Freescale i.MX7ULP Power Management Components
-+----------------------------------------------
-+
-+The Multi-System Mode Controller (MSMC) is responsible for sequencing
-+the MCU into and out of all stop and run power modes. Specifically, it
-+monitors events to trigger transitions between power modes while
-+controlling the power, clocks, and memories of the MCU to achieve the
-+power consumption and functionality of that mode.
-+
-+The WFI or WFE instruction is used to invoke a Sleep, Deep Sleep or
-+Standby modes for either Cortex family. Run, Wait, and Stop are the
-+common terms used for the primary operating modes of Kinetis
-+microcontrollers.
-+
-+Required properties:
-+- compatible:	Should be "fsl,imx7ulp-smc1".
-+- reg:		Specifies base physical address and size of the register sets.
-+
-+Example:
-+smc1: smc1@40410000 {
-+	compatible = "fsl,imx7ulp-smc1";
-+	reg = <0x40410000 0x1000>;
-+};
--- 
-2.7.4
+On Thu, Oct 11, 2018 at 5:06 PM Taniya Das <tdas@codeaurora.org> wrote:
+>
+> Add QCOM cpufreq firmware device bindings for Qualcomm Technology Inc's
+> SoCs. This is required for managing the cpu frequency transitions which are
+> controlled by the hardware engine.
+
+I tested these patches on the sdm845-mtp against 4.19 and found that
+the frequency gets stuck at the highest opp (the boost frequency)
+after running a couple of 'yes > /dev/null &' instances. Have you
+tested these against a mainline kernel?
+
+See cpufreq statistics below:
+
+linaro-test [rc=0]# cat policy?/scaling_cur_freq
+300000
+2803200
+
+linaro-test [rc=0]# cat policy?/stats/time_in_state
+300000 100840
+403200 388
+480000 71
+576000 54
+652800 22
+748800 11
+825600 5
+902400 5
+979200 9
+1056000 3
+1132800 2
+1228800 5
+1324800 8
+1420800 2
+1516800 1
+1612800 0
+1689600 0
+1766400 392
+825600 22048
+902400 21
+979200 4
+1056000 15
+1209600 6
+1286400 0
+1363200 1
+1459200 0
+1536000 0
+1612800 1
+1689600 0
+1766400 0
+1843200 2
+1920000 2
+1996800 0
+2092800 0
+2169600 0
+2246400 0
+2323200 0
+2400000 0
+2476800 0
+2553600 0
+2649600 0
+2707200 0
+2764800 0
+2784000 0
+2803200 79718
+
+
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  .../bindings/cpufreq/cpufreq-qcom-hw.txt           | 173 +++++++++++++++++++++
+>  1 file changed, 173 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+>
+> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+> new file mode 100644
+> index 0000000..712643f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+> @@ -0,0 +1,173 @@
+> +Qualcomm Technologies, Inc. CPUFREQ Bindings
+> +
+> +CPUFREQ HW is a hardware engine used by some Qualcomm Technologies, Inc. (QTI)
+> +SoCs to manage frequency in hardware. It is capable of controlling frequency
+> +for multiple clusters.
+> +
+> +Properties:
+> +- compatible
+> +       Usage:          required
+> +       Value type:     <string>
+> +       Definition:     must be "qcom,cpufreq-hw".
+> +
+> +- clocks
+> +       Usage:          required
+> +       Value type:     <phandle> From common clock binding.
+> +       Definition:     clock handle for XO clock and GPLL0 clock.
+> +
+> +- clock-names
+> +       Usage:          required
+> +       Value type:     <string> From common clock binding.
+> +       Definition:     must be "xo", "cpu_clk".
+> +
+> +- reg
+> +       Usage:          required
+> +       Value type:     <prop-encoded-array>
+> +       Definition:     Addresses and sizes for the memory of the HW bases in
+> +                       each frequency domain.
+> +- reg-names
+> +       Usage:          Optional
+> +       Value type:     <string>
+> +       Definition:     Frequency domain name i.e.
+> +                       "freq-domain0", "freq-domain1".
+> +
+> +- freq-domain-cells:
+> +       Usage:          required.
+> +       Definition:     Number of cells in a freqency domain specifier.
+> +
+> +* Property qcom,freq-domain
+> +Devices supporting freq-domain must set their "qcom,freq-domain" property with
+> +phandle to a cpufreq_hw followed by the Domain ID(0/1) in the CPU DT node.
+> +
+> +
+> +Example:
+> +
+> +Example 1: Dual-cluster, Quad-core per cluster. CPUs within a cluster switch
+> +DCVS state together.
+> +
+> +/ {
+> +       cpus {
+> +               #address-cells = <2>;
+> +               #size-cells = <0>;
+> +
+> +               CPU0: cpu@0 {
+> +                       device_type = "cpu";
+> +                       compatible = "qcom,kryo385";
+> +                       reg = <0x0 0x0>;
+> +                       enable-method = "psci";
+> +                       next-level-cache = <&L2_0>;
+> +                       qcom,freq-domain = <&cpufreq_hw 0>;
+> +                       L2_0: l2-cache {
+> +                               compatible = "cache";
+> +                               next-level-cache = <&L3_0>;
+> +                               L3_0: l3-cache {
+> +                                     compatible = "cache";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               CPU1: cpu@100 {
+> +                       device_type = "cpu";
+> +                       compatible = "qcom,kryo385";
+> +                       reg = <0x0 0x100>;
+> +                       enable-method = "psci";
+> +                       next-level-cache = <&L2_100>;
+> +                       qcom,freq-domain = <&cpufreq_hw 0>;
+> +                       L2_100: l2-cache {
+> +                               compatible = "cache";
+> +                               next-level-cache = <&L3_0>;
+> +                       };
+> +               };
+> +
+> +               CPU2: cpu@200 {
+> +                       device_type = "cpu";
+> +                       compatible = "qcom,kryo385";
+> +                       reg = <0x0 0x200>;
+> +                       enable-method = "psci";
+> +                       next-level-cache = <&L2_200>;
+> +                       qcom,freq-domain = <&cpufreq_hw 0>;
+> +                       L2_200: l2-cache {
+> +                               compatible = "cache";
+> +                               next-level-cache = <&L3_0>;
+> +                       };
+> +               };
+> +
+> +               CPU3: cpu@300 {
+> +                       device_type = "cpu";
+> +                       compatible = "qcom,kryo385";
+> +                       reg = <0x0 0x300>;
+> +                       enable-method = "psci";
+> +                       next-level-cache = <&L2_300>;
+> +                       qcom,freq-domain = <&cpufreq_hw 0>;
+> +                       L2_300: l2-cache {
+> +                               compatible = "cache";
+> +                               next-level-cache = <&L3_0>;
+> +                       };
+> +               };
+> +
+> +               CPU4: cpu@400 {
+> +                       device_type = "cpu";
+> +                       compatible = "qcom,kryo385";
+> +                       reg = <0x0 0x400>;
+> +                       enable-method = "psci";
+> +                       next-level-cache = <&L2_400>;
+> +                       qcom,freq-domain = <&cpufreq_hw 1>;
+> +                       L2_400: l2-cache {
+> +                               compatible = "cache";
+> +                               next-level-cache = <&L3_0>;
+> +                       };
+> +               };
+> +
+> +               CPU5: cpu@500 {
+> +                       device_type = "cpu";
+> +                       compatible = "qcom,kryo385";
+> +                       reg = <0x0 0x500>;
+> +                       enable-method = "psci";
+> +                       next-level-cache = <&L2_500>;
+> +                       qcom,freq-domain = <&cpufreq_hw 1>;
+> +                       L2_500: l2-cache {
+> +                               compatible = "cache";
+> +                               next-level-cache = <&L3_0>;
+> +                       };
+> +               };
+> +
+> +               CPU6: cpu@600 {
+> +                       device_type = "cpu";
+> +                       compatible = "qcom,kryo385";
+> +                       reg = <0x0 0x600>;
+> +                       enable-method = "psci";
+> +                       next-level-cache = <&L2_600>;
+> +                       qcom,freq-domain = <&cpufreq_hw 1>;
+> +                       L2_600: l2-cache {
+> +                               compatible = "cache";
+> +                               next-level-cache = <&L3_0>;
+> +                       };
+> +               };
+> +
+> +               CPU7: cpu@700 {
+> +                       device_type = "cpu";
+> +                       compatible = "qcom,kryo385";
+> +                       reg = <0x0 0x700>;
+> +                       enable-method = "psci";
+> +                       next-level-cache = <&L2_700>;
+> +                       qcom,freq-domain = <&cpufreq_hw 1>;
+> +                       L2_700: l2-cache {
+> +                               compatible = "cache";
+> +                               next-level-cache = <&L3_0>;
+> +                       };
+> +               };
+> +       };
+> +
+> + soc {
+> +       cpufreq_hw: cpufreq@17d43000 {
+> +               compatible = "qcom,cpufreq-hw";
+> +               reg = <0x17d43000 0x1400>, <0x17d45800 0x1400>;
+> +               reg-names = "freq-domain0", "freq-domain1";
+> +
+> +               clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
+> +               clock-names = "xo", "cpu_clk";
+> +
+> +               #freq-domain-cells = <1>
+> +
+> +       };
+> +}
+> --
+> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+> of the Code Aurora Forum, hosted by the  Linux Foundation.
+>
