@@ -1,77 +1,65 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 5/9] mtd: nand: atmel: fix OF child-node lookup
-Date: Tue, 23 Oct 2018 13:28:09 -0500
-Message-ID: <CAL_Jsq+fiM8E-za-fKufgDuoDqu3DY5a4bgZOuF3Ssvj2=6ayg@mail.gmail.com>
-References: <20180827082153.22537-1-johan@kernel.org> <20180827082153.22537-6-johan@kernel.org>
- <20180827102820.3abf7291@bbrezillon> <20180827084414.GZ14967@localhost>
- <20180827104842.26bce912@bbrezillon> <20180827094423.GA14967@localhost>
+Subject: Re: [PATCH v2 0/9] of: fix compatible-child-node lookups
+Date: Tue, 23 Oct 2018 13:32:56 -0500
+Message-ID: <CAL_Jsq+eX0Zr46UT6_+OKhfxLhc315Un5MZkHHAWhK0tt4OvzA@mail.gmail.com>
+References: <20180827082153.22537-1-johan@kernel.org> <20180904130557.GT28861@localhost>
+ <20181023091951.GC20058@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20180827094423.GA14967@localhost>
-Sender: stable-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>, Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Josh Wu <rainyfeeling@outlook.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181023091951.GC20058@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Ulf Hansson <ulf.hansson@linaro.org>, Josh Wu <rainyfeeling@outlook.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Doug Berger <opendmb@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, David Miller <davem@davemloft.net>, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, joabreu@synopsys.com, Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>Martin Blumenstingl <ma>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 27, 2018 at 4:44 AM Johan Hovold <johan@kernel.org> wrote:
+On Tue, Oct 23, 2018 at 4:21 AM Johan Hovold <johan@kernel.org> wrote:
 >
-> On Mon, Aug 27, 2018 at 10:48:42AM +0200, Boris Brezillon wrote:
-> > On Mon, 27 Aug 2018 10:44:14 +0200
-> > Johan Hovold <johan@kernel.org> wrote:
+> Hi Rob,
+>
+> On Tue, Sep 04, 2018 at 03:05:57PM +0200, Johan Hovold wrote:
+> > Hi all,
 > >
-> > > On Mon, Aug 27, 2018 at 10:28:20AM +0200, Boris Brezillon wrote:
-> > > > Hi Johan
-> > > >
-> > > > On Mon, 27 Aug 2018 10:21:49 +0200
-> > > > Johan Hovold <johan@kernel.org> wrote:
-> > > >
-> > > > > Use the new of_get_compatible_child() helper to lookup the nfc child
-> > > > > node instead of using of_find_compatible_node(), which searches the
-> > > > > entire tree from a given start node and thus can return an unrelated
-> > > > > (i.e. non-child) node.
-> > > > >
-> > > > > This also addresses a potential use-after-free (e.g. after probe
-> > > > > deferral) as the tree-wide helper drops a reference to its first
-> > > > > argument (i.e. the node of the device being probed).
-> > > > >
-> > > > > While at it, also fix a related nfc-node reference leak.
-> > > > >
-> > > > > Fixes: f88fc122cc34 ("mtd: nand: Cleanup/rework the atmel_nand driver")
-> > > > > Cc: stable <stable@vger.kernel.org>     # 4.11
-> > > > > Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> > > > > Cc: Josh Wu <rainyfeeling@outlook.com>
-> > > > > Cc: Boris Brezillon <boris.brezillon@bootlin.com>
-> > > > > Signed-off-by: Johan Hovold <johan@kernel.org>
-> > > >
-> > > > Acked-by: Boris Brezillon <boris.brezillon@bootlin.com>
+> > On Mon, Aug 27, 2018 at 10:21:44AM +0200, Johan Hovold wrote:
+> > > Several drivers currently use of_find_compatible_node() to lookup child
+> > > nodes while failing to notice that the of_find_ functions search the
+> > > entire tree depth-first (from a given start node) and therefore can
+> > > match unrelated nodes.
 > > >
-> > > Thanks for the ack.
+> > > The fact that these functions also drop a reference to the node they
+> > > start searching from (e.g. the parent node) is typically also
+> > > overlooked, something which can lead to use-after-free bugs (e.g. after
+> > > probe deferrals).
 > > >
-> > > > I'll let Miquel queue this patch to the nand/next branch, unless you
-> > > > want it to be merged in 4.19, in which case I'll queue it to the
-> > > > mtd/fixes branch.
+> > > This series adds a new helper, similar to of_get_child_by_name(),
+> > > that can be used to lookup compatible child nodes, and uses the new
+> > > helper to fix child-node lookups throughout the tree.
 > > >
-> > > Note that there's a dependency on the first patch of the series which
-> > > adds the new helper.
+> > > This is related to the fixes I posted about a year ago, which addressed
+> > > a similar anti-pattern when looking up child nodes by name. Since it
+> > > took me more than a year to get all those fixes into Linus' tree (one
+> > > fix is still pending), and as these fixes depend on the new helper, I'm
+> > > suggesting that these all go in through Rob's or Greg's trees.
+> > >
+> > > Alternatively, the helper could go into to -rc2, and I'll be pinging
+> > > submaintainers for the coming year as well. ;)
 > >
-> > I was not Cc-ed on this patch :P.
->
-> Yeah, sorry about that. I made sure everyone was CCed on the
-> cover letter, but guess I could have reused that list for the helper as
-> well.
->
-> > > Rob can pick up the entire series if the various
-> > > maintainers agree, otherwise I'll try to get at the least the helper
-> > > into -rc2.
+> > Rob has gotten the helper into -rc2 now:
 > >
-> > If everything goes in 4.19-rc2 through Rob's tree that's fine, but if
-> > it's queued for 4.20 we might need an immutable tag just in case we
-> > queue conflicting changes to the NAND tree.
+> >         36156f9241cb of: add helper to lookup compatible child node
+> >
+> > so feel free to pick these fixes up directly for 4.19-rc or -next,
+> > whichever you prefer. I've been able to trigger crashes after probe
+> > deferrals due to the use-after-free, but this seems unlikely to be
+> > exploitable.
+> >
+> > I think Rob will be picking up any patches that remain by the end of the
+> > release cycle for 4.20.
 >
-> Ok, thanks.
+> So far only Ulf has picked up the mmc patch below directly, so if you
+> could take the rest through your tree for -rc1 that would be great.
 
-Hi Boris, can you pick this one up. It conflicts with "mtd: rawnand:
-atmel: Fix potential NULL pointer dereference"
+Thanks for the reminder, though before the merge window opened would
+have been better. I've applied all but the mtd patch.
 
 Rob
