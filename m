@@ -1,60 +1,162 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] devicetree, xen: add xen,
- shared-memory binding
-Date: Mon, 22 Oct 2018 19:30:07 -0500
-Message-ID: <20181023003007.GA22803@bogus>
-References: <1539900630-26566-1-git-send-email-sstabellini@kernel.org>
- <260c1981-d911-2b7f-6f0b-ac5481e3f48d@arm.com>
+Subject: Re: [PATCH v2 3/3] dt-bindings: iio: adc: Add docs for ad7124
+Date: Mon, 22 Oct 2018 19:39:49 -0500
+Message-ID: <20181023003949.GA24213@bogus>
+References: <1539935265-8904-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <xen-devel-bounces@lists.xenproject.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <260c1981-d911-2b7f-6f0b-ac5481e3f48d@arm.com>
-List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
-List-Post: <mailto:xen-devel@lists.xenproject.org>
-List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
-List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
-Errors-To: xen-devel-bounces@lists.xenproject.org
-Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
-To: Julien Grall <julien.grall@arm.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Stefano Stabellini <stefanos@xilinx.com>, Stefano Stabellini <sstabellini@kernel.org>, xen-devel@lists.xen.org
+In-Reply-To: <1539935265-8904-1-git-send-email-stefan.popa@analog.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Popa <stefan.popa@analog.com>
+Cc: jic23@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBPY3QgMjIsIDIwMTggYXQgMTE6Mjc6MjNBTSArMDEwMCwgSnVsaWVuIEdyYWxsIHdy
-b3RlOgo+IEhpIFN0ZWZhbm8sCj4gCj4gT24gMTgvMTAvMjAxOCAyMzoxMCwgU3RlZmFubyBTdGFi
-ZWxsaW5pIHdyb3RlOgo+ID4gRnJvbTogU3RlZmFubyBTdGFiZWxsaW5pIDxzdGVmYW5vc0B4aWxp
-bnguY29tPgo+ID4gCj4gPiBJbnRyb2R1Y2UgYSBkZXZpY2UgdHJlZSBiaW5kaW5nIGZvciBYZW4g
-cmVzZXJ2ZWQtbWVtb3J5IHJlZ2lvbnMuIFRoZXkKPiA+IGFyZSB1c2VkIHRvIHNoYXJlIG1lbW9y
-eSBhY3Jvc3MgVk1zIGZyb20gdGhlIFZNIGNvbmZpZyBmaWxlcy4gKFNlZQo+ID4gc3RhdGljX3No
-bSBjb25maWcgb3B0aW9uLikKPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogU3RlZmFubyBTdGFiZWxs
-aW5pIDxzdGVmYW5vc0B4aWxpbnguY29tPgo+ID4gLS0tCj4gPiBDaGFuZ2VzIGluIHYyOgo+ID4g
-LSBmaXggQXV0aG9yIGxpbmUKPiA+IC0gYWRkIHZlcnNpb25pbmcKPiA+IC0geGVuLGlkIGluc3Rl
-YWQgb2YgaWQKPiA+IC0tLQo+ID4gICAuLi4vYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hlbixz
-aGFyZWQtbWVtb3J5LnR4dCAgIHwgMjAgKysrKysrKysrKysrKysrKysrKysKPiA+ICAgMSBmaWxl
-IGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKykKPiA+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkveGVuLHNoYXJlZC1t
-ZW1vcnkudHh0Cj4gPiAKPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hlbixzaGFyZWQtbWVtb3J5LnR4dCBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkveGVuLHNoYXJlZC1tZW1v
-cnkudHh0Cj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMC4uOTA3OGZi
-Nwo+ID4gLS0tIC9kZXYvbnVsbAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50eHQKPiA+IEBAIC0wLDAg
-KzEsMjAgQEAKPiA+ICsqIFhlbiBoeXBlcnZpc29yIHJlc2VydmVkLW1lbW9yeSBiaW5kaW5nCj4g
-PiArCj4gPiArRXhwb3NlIG9uZSBvciBtb3JlIG1lbW9yeSByZWdpb25zIGFzIHJlc2VydmVkLW1l
-bW9yeSB0byB0aGUgZ3Vlc3QKPiA+ICt2aXJ0dWFsIG1hY2hpbmUuIFR5cGljYWxseSwgYSByZWdp
-b24gaXMgY29uZmlndXJlZCBhdCBWTSBjcmVhdGlvbiB0aW1lCj4gPiArdG8gYmUgYSBzaGFyZWQg
-bWVtb3J5IGFyZWEgYWNyb3NzIG11bHRpcGxlIHZpcnR1YWwgbWFjaGluZXMgZm9yCj4gPiArY29t
-bXVuaWNhdGlvbiBhbW9uZyB0aGVtLgo+ID4gKwo+ID4gK0ZvciBlYWNoIG9mIHRoZXNlIHByZS1z
-aGFyZWQgbWVtb3J5IHJlZ2lvbnMsIGEgcmFuZ2UgaXMgZXhwb3NlZCB1bmRlcgo+ID4gK3RoZSAv
-cmVzZXJ2ZWQtbWVtb3J5IG5vZGUgYXMgYSBjaGlsZCBub2RlLiBFYWNoIHJhbmdlIHN1Yi1ub2Rl
-IGlzIG5hbWVkCj4gPiAreGVuLXNobWVtQDxhZGRyZXNzPiBhbmQgaGFzIHRoZSBmb2xsb3dpbmcg
-cHJvcGVydGllczoKPiA+ICsKPiA+ICstIGNvbXBhdGlibGU6Cj4gPiArCWNvbXBhdGlibGUgPSAi
-eGVuLHNoYXJlZC1tZW1vcnktdjEiLCAieGVuLHNoYXJlZC1tZW1vcnkiCj4gCj4gRG8gd2UgbmVl
-ZCB0byBzcGVjaWZ5IHRoZSB0d28gY29tcGF0aWJsZXM/CgpJJ2QganVzdCBkcm9wIHRoZSBmYWxs
-YmFjayBhcyB2ZXJzaW9uIHNlZW1zIHRvIGJlIGp1c3QgaW4gY2FzZS4KClJvYgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KWGVuLWRldmVsIG1haWxpbmcg
-bGlzdApYZW4tZGV2ZWxAbGlzdHMueGVucHJvamVjdC5vcmcKaHR0cHM6Ly9saXN0cy54ZW5wcm9q
-ZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL3hlbi1kZXZlbA==
+On Fri, Oct 19, 2018 at 10:47:45AM +0300, Stefan Popa wrote:
+> Add support for Analog Devices AD7124 4-channels and 8-channels ADC.
+> 
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+> ---
+> Changes in v2:
+> 	- Nothing changed.
+> 
+>  .../devicetree/bindings/iio/adc/adi,ad7124.txt     | 96 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 97 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
+> new file mode 100644
+> index 0000000..77a7b92
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
+> @@ -0,0 +1,96 @@
+> +Analog Devices AD7124 ADC device driver
+> +
+> +Required properties for the AD7124:
+> +	- compatible: Must be one of "adi,ad7124-4" or "adi,ad7124-8"
+> +	- reg: SPI chip select number for the device
+> +	- spi-max-frequency: Max SPI frequency to use
+> +		see: Documentation/devicetree/bindings/spi/spi-bus.txt
+> +	- clocks: phandle to the master clock (mclk)
+> +		see: Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +	- clock-names: Must be "mclk".
+> +	- interrupts: IRQ line for the ADC
+> +		see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +
+> +	- adi,channels: List of external channels connected to the ADC:
+
+It's not clear here that this is a node, not a property. However, I 
+think you can just get rid of this extra level unless you anticipate 
+having other child nodes that aren't channels.
+
+> +	  Required properties:
+> +		* #address-cells: Must be 2.
+> +		* #size-cells: Must be 0.
+> +
+> +	  The child nodes of this node represent the external channels which are
+> +	  connected to the ADC.
+> +
+> +	  Each child node represents one channel and has the following
+> +	  properties:
+> +		Required properties:
+> +			* reg: Pins the channel is connected to. The first value specifies
+> +			  the positive input pin, the second value the negative input pin.
+
+That sounds more like 2 entries than a 2 cell address.
+
+> +			* adi,channel-number: It can have up to 4 channels on ad7124-4 and
+> +			  8 channels on ad7124-8, numbered from 0 to 15.
+
+Humm, I think the channel number would be more typically what 'reg' 
+defines and then have a custom property to list the pins. There's 
+probably some other multi-channel ADC examples in the tree.
+
+> +
+> +		Optional properties:
+> +			* adi,bipolar: If set the channel is used in bipolar mode.
+
+So boolean type?
+
+> +			* adi,reference-select: Select the reference source to use when
+> +			  converting on the the specific channel. Valid values are:
+> +			  0: REFIN1(+)/REFIN1(−).
+> +			  1: REFIN2(+)/REFIN2(−).
+> +			  3: AVDD
+> +			  If this field is left empty, internal reference is selected.
+> +			* adi,gain: Select the gain when converting on the specific channel.
+> +			  Valid values are: 1, 2, 4, 8, 16, 32, 64, 128.
+> +			  If this field is left empty, gain of 1 is selected.
+> +			* adi,odr-hz: The output data rate can be programmed from:
+> +			  9 to 19200 for full power mode (when the master clock is 614.4 kHz)
+> +			  2 to 4800 for mid power mode (when the master clock is 153.6 kHz)
+> +			  1 to 2400 for low power mode (when the master clock is 76.8 kHz)
+> +			  If this field is left empty, odr of 9 is selected.
+> +
+> +Optional properties:
+> +	- refin1-supply: refin1 supply can be used as reference for conversion.
+> +	- refin2-supply: refin2 supply can be used as reference for conversion.
+> +	- avdd-supply: avdd supply can be used as reference for conversion.
+> +
+> +Example:
+> +	adc@0 {
+> +		compatible = "adi,ad7124-4";
+> +		reg = <0>;
+> +		spi-max-frequency = <5000000>;
+> +		interrupts = <25 2>;
+> +		interrupt-parent = <&gpio>;
+> +		refin1-supply = <&adc_vref>;
+> +		clocks = <&ad7124_mclk>;
+> +		clock-names = "mclk";
+> +
+> +		adi,channels {
+> +			#address-cells = <2>;
+> +			#size-cells = <0>;
+> +
+> +			channel@0 {
+> +				reg = <0 1>;
+> +				adi,channel-number = <0>;
+> +				adi,reference-select = <0>;
+> +				adi,gain = <2>;
+> +				adi,odr-hz = <10>;
+> +			};
+> +
+> +			channel@1 {
+> +				reg = <2 3>;
+> +				adi,bipolar;
+> +				adi,channel-number = <1>;
+> +				adi,reference-select = <0>;
+> +				adi,gain = <4>;
+> +				adi,odr-hz = <50>;
+> +			};
+> +
+> +			channel@2 {
+> +				reg = <4 5>;
+> +				adi,channel-number = <2>;
+> +				adi,gain = <128>;
+> +				adi,odr-hz = <19200>;
+> +			};
+> +
+> +			channel@3 {
+> +				reg = <6 7>;
+> +				adi,channel-number = <3>;
+> +			};
+> +		};
+> +	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3a1bfcb..f2fa508 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -845,6 +845,7 @@ L:	linux-iio@vger.kernel.org
+>  W:	http://ez.analog.com/community/linux-device-drivers
+>  S:	Supported
+>  F:	drivers/iio/adc/ad7124.c
+> +F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
+>  
+>  ANALOG DEVICES INC AD9389B DRIVER
+>  M:	Hans Verkuil <hans.verkuil@cisco.com>
+> -- 
+> 2.7.4
+> 
