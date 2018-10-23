@@ -1,56 +1,201 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v3 0/7] ARM: rockchip: add power-domains for Cortex-A9 socs
-Date: Tue, 23 Oct 2018 12:38:13 +0200
-Message-ID: <20181023103820.6464-1-heiko@sntech.de>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH v3 7/7] ARM: dts: rockchip: add rk3066/rk3188 power-domains
+Date: Tue, 23 Oct 2018 12:38:20 +0200
+Message-ID: <20181023103820.6464-8-heiko@sntech.de>
+References: <20181023103820.6464-1-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181023103820.6464-1-heiko@sntech.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-rockchip@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Domain values are done by the book (aka soc documentation for pmu and
-power-domain <-> ip block connections) and tested with the gpu and the
-wip lima kernel driver as well as te new vop support on rk3188.
+Add the power-domain nodes to both rk3066 and rk3188 including
+their clocks and qos connections.
 
-changes in v3:
-- added spdx license header to dt-binding headers
-- added Rob's Review for the added compatibles in patch 3
-changes in v2:
-- fix typos found by Julien
-- adapt to changes happening in the power-domain driver since v1
-- add vop power-domain links for rk3188
-- drop already applied clock fixes
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ arch/arm/boot/dts/rk3066a.dtsi | 52 ++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/rk3188.dtsi  | 51 +++++++++++++++++++++++++++++++++
+ 2 files changed, 103 insertions(+)
 
-Heiko Stuebner (7):
-  dt-bindings: add power-domain header for RK3188 SoCs
-  dt-bindings: add power-domain header for RK3066 SoCs
-  dt-bindings: add compatibles for rk3066/rk3188 power controllers
-  soc: rockchip: power-domain: add rk3188 powerdomains
-  soc: rockchip: power-domain: add rk3066 powerdomains
-  ARM: dts: rockchip: add qos nodes found on rk3066 and rk3188
-  ARM: dts: rockchip: add rk3066/rk3188 power-domains
-
- .../bindings/soc/rockchip/power_domain.txt    |  4 ++
- arch/arm/boot/dts/rk3066a.dtsi                | 52 +++++++++++++++++++
- arch/arm/boot/dts/rk3188.dtsi                 | 51 ++++++++++++++++++
- arch/arm/boot/dts/rk3xxx.dtsi                 | 40 ++++++++++++++
- drivers/soc/rockchip/pm_domains.c             | 48 +++++++++++++++++
- include/dt-bindings/power/rk3066-power.h      | 22 ++++++++
- include/dt-bindings/power/rk3188-power.h      | 24 +++++++++
- 7 files changed, 241 insertions(+)
- create mode 100644 include/dt-bindings/power/rk3066-power.h
- create mode 100644 include/dt-bindings/power/rk3188-power.h
-
+diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
+index 2ab3c4b32003..112d2bf8e998 100644
+--- a/arch/arm/boot/dts/rk3066a.dtsi
++++ b/arch/arm/boot/dts/rk3066a.dtsi
+@@ -7,6 +7,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
+ #include <dt-bindings/clock/rk3066a-cru.h>
++#include <dt-bindings/power/rk3066-power.h>
+ #include "rk3xxx.dtsi"
+ 
+ / {
+@@ -595,6 +596,7 @@
+ 			  "ppmmu2",
+ 			  "pp3",
+ 			  "ppmmu3";
++	power-domains = <&power RK3066_PD_GPU>;
+ };
+ 
+ &i2c0 {
+@@ -643,6 +645,56 @@
+ 	dma-names = "rx-tx";
+ };
+ 
++&pmu {
++	power: power-controller {
++		compatible = "rockchip,rk3066-power-controller";
++		#power-domain-cells = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		pd_vio@RK3066_PD_VIO {
++			reg = <RK3066_PD_VIO>;
++			clocks = <&cru ACLK_LCDC0>,
++				 <&cru ACLK_LCDC1>,
++				 <&cru DCLK_LCDC0>,
++				 <&cru DCLK_LCDC1>,
++				 <&cru HCLK_LCDC0>,
++				 <&cru HCLK_LCDC1>,
++				 <&cru SCLK_CIF1>,
++				 <&cru ACLK_CIF1>,
++				 <&cru HCLK_CIF1>,
++				 <&cru SCLK_CIF0>,
++				 <&cru ACLK_CIF0>,
++				 <&cru HCLK_CIF0>,
++				 <&cru ACLK_IPP>,
++				 <&cru HCLK_IPP>,
++				 <&cru ACLK_RGA>,
++				 <&cru HCLK_RGA>;
++			pm_qos = <&qos_lcdc0>,
++				 <&qos_lcdc1>,
++				 <&qos_cif0>,
++				 <&qos_cif1>,
++				 <&qos_ipp>,
++				 <&qos_rga>;
++		};
++
++		pd_video@RK3066_PD_VIDEO {
++			reg = <RK3066_PD_VIDEO>;
++			clocks = <&cru ACLK_VDPU>,
++				 <&cru ACLK_VEPU>,
++				 <&cru HCLK_VDPU>,
++				 <&cru HCLK_VEPU>;
++			pm_qos = <&qos_vpu>;
++		};
++
++		pd_gpu@RK3066_PD_GPU {
++			reg = <RK3066_PD_GPU>;
++			clocks = <&cru ACLK_GPU>;
++			pm_qos = <&qos_gpu>;
++		};
++	};
++};
++
+ &pwm0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pwm0_out>;
+diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
+index b6f790973736..7e0dc52630d9 100644
+--- a/arch/arm/boot/dts/rk3188.dtsi
++++ b/arch/arm/boot/dts/rk3188.dtsi
+@@ -7,6 +7,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
+ #include <dt-bindings/clock/rk3188-cru.h>
++#include <dt-bindings/power/rk3188-power.h>
+ #include "rk3xxx.dtsi"
+ 
+ / {
+@@ -80,6 +81,7 @@
+ 		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru ACLK_LCDC0>, <&cru DCLK_LCDC0>, <&cru HCLK_LCDC0>;
+ 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
++		power-domains = <&power RK3188_PD_VIO>;
+ 		resets = <&cru SRST_LCDC0_AXI>, <&cru SRST_LCDC0_AHB>, <&cru SRST_LCDC0_DCLK>;
+ 		reset-names = "axi", "ahb", "dclk";
+ 		status = "disabled";
+@@ -96,6 +98,7 @@
+ 		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru ACLK_LCDC1>, <&cru DCLK_LCDC1>, <&cru HCLK_LCDC1>;
+ 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
++		power-domains = <&power RK3188_PD_VIO>;
+ 		resets = <&cru SRST_LCDC1_AXI>, <&cru SRST_LCDC1_AHB>, <&cru SRST_LCDC1_DCLK>;
+ 		reset-names = "axi", "ahb", "dclk";
+ 		status = "disabled";
+@@ -620,6 +623,7 @@
+ 			  "ppmmu2",
+ 			  "pp3",
+ 			  "ppmmu3";
++	power-domains = <&power RK3188_PD_GPU>;
+ };
+ 
+ &i2c0 {
+@@ -652,6 +656,53 @@
+ 	pinctrl-0 = <&i2c4_xfer>;
+ };
+ 
++&pmu {
++	power: power-controller {
++		compatible = "rockchip,rk3188-power-controller";
++		#power-domain-cells = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		pd_vio@RK3188_PD_VIO {
++			reg = <RK3188_PD_VIO>;
++			clocks = <&cru ACLK_LCDC0>,
++				 <&cru ACLK_LCDC1>,
++				 <&cru DCLK_LCDC0>,
++				 <&cru DCLK_LCDC1>,
++				 <&cru HCLK_LCDC0>,
++				 <&cru HCLK_LCDC1>,
++				 <&cru SCLK_CIF0>,
++				 <&cru ACLK_CIF0>,
++				 <&cru HCLK_CIF0>,
++				 <&cru ACLK_IPP>,
++				 <&cru HCLK_IPP>,
++				 <&cru ACLK_RGA>,
++				 <&cru HCLK_RGA>;
++			pm_qos = <&qos_lcdc0>,
++				 <&qos_lcdc1>,
++				 <&qos_cif0>,
++				 <&qos_cif1>,
++				 <&qos_ipp>,
++				 <&qos_rga>;
++		};
++
++		pd_video@RK3188_PD_VIDEO {
++			reg = <RK3188_PD_VIDEO>;
++			clocks = <&cru ACLK_VDPU>,
++				 <&cru ACLK_VEPU>,
++				 <&cru HCLK_VDPU>,
++				 <&cru HCLK_VEPU>;
++			pm_qos = <&qos_vpu>;
++		};
++
++		pd_gpu@RK3188_PD_GPU {
++			reg = <RK3188_PD_GPU>;
++			clocks = <&cru ACLK_GPU>;
++			pm_qos = <&qos_gpu>;
++		};
++	};
++};
++
+ &pwm0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pwm0_out>;
 -- 
 2.18.0
