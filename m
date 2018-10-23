@@ -1,164 +1,450 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: serial: add documentation for the
- SiFive UART driver
-Date: Tue, 23 Oct 2018 10:05:40 -0700
-Message-ID: <6571bb0e-b36a-1196-4d90-8aa62d8a2a90@sifive.com>
-References: <20181019184827.12351-1-paul.walmsley@sifive.com>
- <20181019184827.12351-2-paul.walmsley@sifive.com>
- <CAL_JsqJBSqaxnETdJg1Mdp+H2ay+WKT0JaxLe6D4Fwo_99qUkw@mail.gmail.com>
- <4317548d-f831-29ba-3be9-35f080587db9@sifive.com>
- <CAL_JsqLagTgjDhZ02X=wPFDB4WF2bR7=LyzSW9D=ooo_XB_zOg@mail.gmail.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v4 4/7] leds: lm3697: Introduce the lm3697 driver
+Date: Tue, 23 Oct 2018 12:06:20 -0500
+Message-ID: <20181023170623.31820-4-dmurphy@ti.com>
+References: <20181023170623.31820-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLagTgjDhZ02X=wPFDB4WF2bR7=LyzSW9D=ooo_XB_zOg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181023170623.31820-1-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul@pwsan.com>
+To: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, lee.jones@linaro.org, tony@atomide.com, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Introduce the lm3697 LED driver for
+backlighting and display.
 
-On 10/20/18 7:21 AM, Rob Herring wrote:
-> On Fri, Oct 19, 2018 at 5:06 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->> On 10/19/18 1:45 PM, Rob Herring wrote:
->>> On Fri, Oct 19, 2018 at 1:48 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->>>> Add DT binding documentation for the Linux driver for the SiFive
->>>> asynchronous serial IP block.  Nothing too exotic.
->>>>
->>>> Cc: linux-serial@vger.kernel.org
->>>> Cc: devicetree@vger.kernel.org
->>>> Cc: linux-riscv@lists.infradead.org
->>>> Cc: linux-kernel@vger.kernel.org
->>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>> Cc: Rob Herring <robh+dt@kernel.org>
->>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>> Cc: Palmer Dabbelt <palmer@sifive.com>
->>>> Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
->>>> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
->>>> Signed-off-by: Paul Walmsley <paul@pwsan.com>
->>>> ---
->>>>    .../bindings/serial/sifive-serial.txt         | 21 +++++++++++++++++++
->>>>    1 file changed, 21 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/serial/sifive-serial.txt b/Documentation/devicetree/bindings/serial/sifive-serial.txt
->>>> new file mode 100644
->>>> index 000000000000..8982338512f5
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/serial/sifive-serial.txt
->>>> @@ -0,0 +1,21 @@
->>>> +SiFive asynchronous serial interface (UART)
->>>> +
->>>> +Required properties:
->>>> +
->>>> +- compatible: should be "sifive,fu540-c000-uart0" or "sifive,uart0"
->>>>
->>> As I mentioned for the
->>> intc and now the pwm block bindings, if you are going to do version
->>> numbers please document the versioning scheme.
->>>
->>>
->>> Will add that to the binding document.
-> I don't seem to be making my point clear. I don't want any of this
-> added to a binding doc for particular IP blocks. Write a common doc
-> that explains the scheme and addresses the questions I asked. Then
-> just reference that doc here.
->
-> Maybe this is documented somewhere already? Otherwise, if one is
-> creating a new IP block, how do they know what the versioning scheme
-> is or what goes in the DT ROM?
+Datasheet location:
+http://www.ti.com/lit/ds/symlink/lm3697.pdf
 
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/leds/Kconfig       |   8 +-
+ drivers/leds/Makefile      |   1 +
+ drivers/leds/leds-lm3697.c | 381 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 389 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/leds/leds-lm3697.c
 
-Seems like there might be some confusion between IP blocks as integrated 
-on an SoC vs. IP blocks in isolation.  It's not necessarily the SoC 
-integrator that sets an IP block version number; this can come from the 
-IP block vendor itself.  So each IP block may have its own version 
-numbering practices for the IP block alone.
-
-
-For SiFive IP blocks, we at SiFive could probably align on a common 
-version numbering structure for what's in the sifive-blocks repository.
-
-But other IP blocks from other vendors may not align to that, or may not 
-have version numbers exposed at all.  In those cases there's no way for 
-software folks to find out what they are,  as you pointed out earlier.  
-This is the case with most DT compatible strings in the kernel tree.
-
-For example, we've integrated the NVDLA IP block, from NVIDIA, on some 
-designs.  Any NVIDIA version numbers in that IP block will probably not 
-follow the SiFive version numbering scheme.  I'd propose the right thing 
-to do for an IP block compatible string is to follow the vendor's 
-practice, and then use the SoC integrator's version numbering practice 
-for the SoC-integrated compatible string.
-
-
-In effect, an SoC integration DT compatible string like 
-"sifive,fu540-c000-uart" implicitly states an IP block version number: 
-"whatever came out of the fab on the chip"[**].   I'd propose that even 
-in these cases, there's an advantage to keeping the "0" on the end, 
-since it uniquely identifies an SoC-independent IP block, rather than 
-just the type of the IP block.   But if the "0" on the end of the SoC 
-integration DT compatible string is problematic for you, we can 
-certainly drop that last 0 from the SoC integration DT compatible 
-string, and only suffer a slight lack of clarity as to what version was 
-integrated on that chip.
-
-
-But for IP block-specific version strings like "sifive,uart0", I think 
-we can address your concern, at least for these public IP blocks. Since 
-the SiFive UART and some other peripheral IP blocks are open-source, the 
-public can have a pretty good idea of what DT version number corresponds 
-to the source RTL, since the RTL is public.   The version number 
-identifies a specific programming model, without tying that programming 
-model to any SoC-specific workarounds, etc.  So for these cases, I think 
-there's a pretty good case for having IP block-specific version numbers 
-in DT compatible strings, and I hope you'll agree.
-
-
-The advantage for all of us is that there's then no need to embed 
-chip-specific DT match strings in these drivers, for the most part.  We 
-just match on "sifive,uart0" and that's it, assuming no chip-specific 
-workarounds are needed.
-
-
->>>    Where does the
->>> number come from?
->>
->> It comes from the RTL, which is public:
->>
->> https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/devices/uart/UART.scala#L43
-> I'm not going to go read your RTL, sorry.
-
-
-There's no need, but you did ask where it came from.  Sorry you didn't 
-like the answer.
-
-
-Please let us know what you want us to do.
-
-
-Thanks for your review
-
-
-- Paul
-
-
-** The caveat is that even with SoC identifiers in the Linux DT 
-compatible strings, there's not enough information in many of the 
-existing kernel DT compatibility strings to uniquely identify chip 
-versions.  Taking OMAP and Tegra as examples, there are several 
-different chip versions for a given SoC generation that came out of the 
-fab.    OMAP chip version strings usually began with "ES"; Tegra version 
-numbers, as I recall, were a letter and two numbers.  For the most part, 
-those versions were never specifically identified in the upstream kernel 
-DT strings or in DT file names. (There are some exceptions with OMAP 
-where we did identify specific chip version numbers, because sizable 
-numbers of folks had boards with early silicon, and we were committed to 
-supporting them at the time.)    Sadly even adding these additional chip 
-version identifiers to the DT strings wouldn't be perfect: I've seen at 
-least one large vendor implementing metal-only ECOs without incrementing 
-public chip version numbers. The point here is that we're already not 
-uniquely identifying IP blocks with our current Linux DT compatibility 
-string scheme.
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index 853014dbb1c2..7d9a98044be4 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -756,9 +756,15 @@ config LEDS_NIC78BX
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called leds-nic78bx.
+ 
++config LEDS_LM3697
++	tristate "LED driver for LM3697"
++ 	depends on LEDS_TI_LMU_COMMON
++	help
++          Say Y to enable the LED driver for TI LMU devices.
++          This supports the LED device LM3697.
++
+ config LEDS_TI_LMU_COMMON
+ 	tristate "LED driver for TI LMU"
+-	depends on REGMAP
+ 	help
+           Say Y to enable the LED driver for TI LMU devices.
+           This supports common features between the TI LM3532, LM3631, LM3632,
+diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+index e09bb27bc7ea..6fbce7cfc41c 100644
+--- a/drivers/leds/Makefile
++++ b/drivers/leds/Makefile
+@@ -78,6 +78,7 @@ obj-$(CONFIG_LEDS_MT6323)		+= leds-mt6323.o
+ obj-$(CONFIG_LEDS_LM3692X)		+= leds-lm3692x.o
+ obj-$(CONFIG_LEDS_SC27XX_BLTC)		+= leds-sc27xx-bltc.o
+ obj-$(CONFIG_LEDS_LM3601X)		+= leds-lm3601x.o
++obj-$(CONFIG_LEDS_LM3697)		+= leds-lm3697.o
+ obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= ti-lmu-led-common.o
+ 
+ # LED SPI Drivers
+diff --git a/drivers/leds/leds-lm3697.c b/drivers/leds/leds-lm3697.c
+new file mode 100644
+index 000000000000..1ed724fb0c43
+--- /dev/null
++++ b/drivers/leds/leds-lm3697.c
+@@ -0,0 +1,381 @@
++// SPDX-License-Identifier: GPL-2.0
++// TI LM3697 LED chip family driver
++// Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++
++#include <linux/gpio/consumer.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
++#include <linux/regulator/consumer.h>
++#include <linux/ti-lmu-led-common.h>
++
++#define LM3697_REV			0x0
++#define LM3697_RESET			0x1
++#define LM3697_OUTPUT_CONFIG		0x10
++#define LM3697_CTRL_A_RAMP		0x11
++#define LM3697_CTRL_B_RAMP		0x12
++#define LM3697_CTRL_A_B_RT_RAMP		0x13
++#define LM3697_CTRL_A_B_RAMP_CFG	0x14
++#define LM3697_CTRL_A_B_BRT_CFG		0x16
++#define LM3697_CTRL_A_FS_CURR_CFG	0x17
++#define LM3697_CTRL_B_FS_CURR_CFG	0x18
++#define LM3697_PWM_CFG			0x1c
++#define LM3697_CTRL_A_BRT_LSB		0x20
++#define LM3697_CTRL_A_BRT_MSB		0x21
++#define LM3697_CTRL_B_BRT_LSB		0x22
++#define LM3697_CTRL_B_BRT_MSB		0x23
++#define LM3697_CTRL_ENABLE		0x24
++
++#define LM3697_SW_RESET		BIT(0)
++
++#define LM3697_CTRL_A_EN	BIT(0)
++#define LM3697_CTRL_B_EN	BIT(1)
++#define LM3697_CTRL_A_B_EN	(LM3697_CTRL_A_EN | LM3697_CTRL_B_EN)
++
++#define LM3697_MAX_LED_STRINGS	3
++
++#define LM3697_CONTROL_A	0
++#define LM3697_CONTROL_B	1
++#define LM3697_MAX_CONTROL_BANKS 2
++
++#define LM3697_HVLED_ASSIGNMENT	1
++
++/**
++ * struct lm3697_led -
++ * @hvled_strings: Array of LED strings associated with a control bank
++ * @label: LED label
++ * @led_dev: LED class device
++ * @priv: Pointer to the device struct
++ * @lmu_data: Register and setting values for common code
++ * @control_bank: Control bank the LED is associated to. 0 is control bank A
++ *		   1 is control bank B
++ */
++struct lm3697_led {
++	u32 hvled_strings[LM3697_MAX_LED_STRINGS];
++	char label[LED_MAX_NAME_SIZE];
++	struct led_classdev led_dev;
++	struct lm3697 *priv;
++	struct ti_lmu_bank lmu_data;
++	int control_bank;
++};
++
++/**
++ * struct lm3697 -
++ * @enable_gpio: Hardware enable gpio
++ * @regulator: LED supply regulator pointer
++ * @client: Pointer to the I2C client
++ * @regmap: Devices register map
++ * @dev: Pointer to the devices device struct
++ * @lock: Lock for reading/writing the device
++ * @leds: Array of LED strings
++ */
++struct lm3697 {
++	struct gpio_desc *enable_gpio;
++	struct regulator *regulator;
++	struct i2c_client *client;
++	struct regmap *regmap;
++	struct device *dev;
++	struct mutex lock;
++	struct lm3697_led leds[];
++};
++
++static const struct reg_default lm3697_reg_defs[] = {
++	{LM3697_OUTPUT_CONFIG, 0x6},
++	{LM3697_CTRL_A_RAMP, 0x0},
++	{LM3697_CTRL_B_RAMP, 0x0},
++	{LM3697_CTRL_A_B_RT_RAMP, 0x0},
++	{LM3697_CTRL_A_B_RAMP_CFG, 0x0},
++	{LM3697_CTRL_A_B_BRT_CFG, 0x0},
++	{LM3697_CTRL_A_FS_CURR_CFG, 0x13},
++	{LM3697_CTRL_B_FS_CURR_CFG, 0x13},
++	{LM3697_PWM_CFG, 0xc},
++	{LM3697_CTRL_A_BRT_LSB, 0x0},
++	{LM3697_CTRL_A_BRT_MSB, 0x0},
++	{LM3697_CTRL_B_BRT_LSB, 0x0},
++	{LM3697_CTRL_B_BRT_MSB, 0x0},
++	{LM3697_CTRL_ENABLE, 0x0},
++};
++
++static const struct regmap_config lm3697_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++
++	.max_register = LM3697_CTRL_ENABLE,
++	.reg_defaults = lm3697_reg_defs,
++	.num_reg_defaults = ARRAY_SIZE(lm3697_reg_defs),
++	.cache_type = REGCACHE_FLAT,
++};
++
++static int lm3697_brightness_set(struct led_classdev *led_cdev,
++				enum led_brightness brt_val)
++{
++	struct lm3697_led *led = container_of(led_cdev, struct lm3697_led,
++					      led_dev);
++	int ctrl_en_val;
++	int ret;
++
++	mutex_lock(&led->priv->lock);
++
++	if (led->control_bank == LM3697_CONTROL_A) {
++		led->lmu_data.msb_brightness_reg = LM3697_CTRL_A_BRT_MSB;
++		led->lmu_data.lsb_brightness_reg = LM3697_CTRL_A_BRT_LSB;
++		ctrl_en_val = LM3697_CTRL_A_EN;
++	} else {
++		led->lmu_data.msb_brightness_reg = LM3697_CTRL_B_BRT_MSB;
++		led->lmu_data.lsb_brightness_reg = LM3697_CTRL_B_BRT_LSB;
++		ctrl_en_val = LM3697_CTRL_B_EN;
++	}
++
++	if (brt_val == LED_OFF)
++		ret = regmap_update_bits(led->priv->regmap, LM3697_CTRL_ENABLE,
++					 ctrl_en_val, ~ctrl_en_val);
++	else
++		ret = regmap_update_bits(led->priv->regmap, LM3697_CTRL_ENABLE,
++					 ctrl_en_val, ctrl_en_val);
++
++	ret = ti_lmu_common_set_brightness(&led->lmu_data, brt_val);
++	if (ret)
++		dev_err(&led->priv->client->dev, "Cannot write brightness\n");
++
++	mutex_unlock(&led->priv->lock);
++	return ret;
++}
++
++static int lm3697_set_control_bank(struct lm3697 *priv)
++{
++	u8 control_bank_config = 0;
++	struct lm3697_led *led;
++	int ret, i;
++
++	led = &priv->leds[0];
++	if (led->control_bank == LM3697_CONTROL_A)
++		led = &priv->leds[1];
++
++	for (i = 0; i < LM3697_MAX_LED_STRINGS; i++)
++		if (led->hvled_strings[i] == LM3697_HVLED_ASSIGNMENT)
++			control_bank_config |= 1 << i;
++
++	ret = regmap_write(priv->regmap, LM3697_OUTPUT_CONFIG,
++			   control_bank_config);
++	if (ret)
++		dev_err(&priv->client->dev, "Cannot write OUTPUT config\n");
++
++	return ret;
++}
++
++static int lm3697_init(struct lm3697 *priv)
++{
++	struct lm3697_led *led;
++	int i, ret;
++
++	if (priv->enable_gpio) {
++		gpiod_direction_output(priv->enable_gpio, 1);
++	} else {
++		ret = regmap_write(priv->regmap, LM3697_RESET, LM3697_SW_RESET);
++		if (ret) {
++			dev_err(&priv->client->dev, "Cannot reset the device\n");
++			goto out;
++		}
++	}
++
++	ret = regmap_write(priv->regmap, LM3697_CTRL_ENABLE, 0x0);
++	if (ret) {
++		dev_err(&priv->client->dev, "Cannot write ctrl enable\n");
++		goto out;
++	}
++
++	ret = lm3697_set_control_bank(priv);
++	if (ret)
++		dev_err(&priv->client->dev, "Setting the CRTL bank failed\n");
++
++	for (i = 0; i < LM3697_MAX_CONTROL_BANKS; i++) {
++		led = &priv->leds[i];
++		ti_lmu_common_set_ramp(&led->lmu_data);
++		if (ret)
++			dev_err(&priv->client->dev, "Setting the ramp rate failed\n");
++	}
++out:
++	return ret;
++}
++
++static int lm3697_probe_dt(struct lm3697 *priv)
++{
++	struct fwnode_handle *child = NULL;
++	struct lm3697_led *led;
++	const char *name;
++	int control_bank;
++	size_t i = 0;
++	int ret;
++
++	priv->enable_gpio = devm_gpiod_get_optional(&priv->client->dev,
++						   "enable", GPIOD_OUT_LOW);
++	if (IS_ERR(priv->enable_gpio)) {
++		ret = PTR_ERR(priv->enable_gpio);
++		dev_err(&priv->client->dev, "Failed to get enable gpio: %d\n",
++			ret);
++		return ret;
++	}
++
++	priv->regulator = devm_regulator_get(&priv->client->dev, "vled");
++	if (IS_ERR(priv->regulator))
++		priv->regulator = NULL;
++
++	device_for_each_child_node(priv->dev, child) {
++		ret = fwnode_property_read_u32(child, "reg", &control_bank);
++		if (ret) {
++			dev_err(&priv->client->dev, "reg property missing\n");
++			fwnode_handle_put(child);
++			goto child_out;
++		}
++
++		if (control_bank > LM3697_CONTROL_B) {
++			dev_err(&priv->client->dev, "reg property is invalid\n");
++			ret = -EINVAL;
++			fwnode_handle_put(child);
++			goto child_out;
++		}
++
++		led = &priv->leds[i];
++
++		led->control_bank = control_bank;
++		led->lmu_data.bank_id = control_bank;
++		led->lmu_data.enable_reg = LM3697_CTRL_ENABLE;
++		led->lmu_data.regmap = priv->regmap;
++		if (control_bank == LM3697_CONTROL_A)
++			led->lmu_data.runtime_ramp_reg = LM3697_CTRL_A_RAMP;
++		else
++			led->lmu_data.runtime_ramp_reg = LM3697_CTRL_B_RAMP;
++
++		ret = fwnode_property_read_u32_array(child, "led-sources",
++						    led->hvled_strings,
++						    LM3697_MAX_LED_STRINGS);
++		if (ret) {
++			dev_err(&priv->client->dev, "led-sources property missing\n");
++			fwnode_handle_put(child);
++			goto child_out;
++		}
++
++		ret = ti_lmu_common_get_ramp_params(&priv->client->dev, child, &led->lmu_data);
++		if (ret)
++			dev_warn(&priv->client->dev, "runtime-ramp properties missing\n");
++
++		fwnode_property_read_string(child, "linux,default-trigger",
++					    &led->led_dev.default_trigger);
++
++		ret = fwnode_property_read_string(child, "label", &name);
++		if (ret)
++			snprintf(led->label, sizeof(led->label),
++				"%s::", priv->client->name);
++		else
++			snprintf(led->label, sizeof(led->label),
++				 "%s:%s", priv->client->name, name);
++
++		led->priv = priv;
++		led->led_dev.name = led->label;
++		led->led_dev.brightness_set_blocking = lm3697_brightness_set;
++
++		ret = devm_led_classdev_register(priv->dev, &led->led_dev);
++		if (ret) {
++			dev_err(&priv->client->dev, "led register err: %d\n",
++				ret);
++			fwnode_handle_put(child);
++			goto child_out;
++		}
++
++		i++;
++	}
++
++child_out:
++	return ret;
++}
++
++static int lm3697_probe(struct i2c_client *client,
++			const struct i2c_device_id *id)
++{
++	struct lm3697 *led;
++	int count;
++	int ret;
++
++	count = device_get_child_node_count(&client->dev);
++	if (!count) {
++		dev_err(&client->dev, "LEDs are not defined in device tree!");
++		return -ENODEV;
++	}
++
++	led = devm_kzalloc(&client->dev, struct_size(led, leds, count),
++			   GFP_KERNEL);
++	if (!led)
++		return -ENOMEM;
++
++	mutex_init(&led->lock);
++	i2c_set_clientdata(client, led);
++
++	led->client = client;
++	led->dev = &client->dev;
++	led->regmap = devm_regmap_init_i2c(client, &lm3697_regmap_config);
++	if (IS_ERR(led->regmap)) {
++		ret = PTR_ERR(led->regmap);
++		dev_err(&client->dev, "Failed to allocate register map: %d\n",
++			ret);
++		return ret;
++	}
++
++	ret = lm3697_probe_dt(led);
++	if (ret)
++		return ret;
++
++	return lm3697_init(led);
++}
++
++static int lm3697_remove(struct i2c_client *client)
++{
++	struct lm3697 *led = i2c_get_clientdata(client);
++	int ret;
++
++	ret = regmap_update_bits(led->regmap, LM3697_CTRL_ENABLE,
++				 LM3697_CTRL_A_B_EN, 0);
++	if (ret) {
++		dev_err(&led->client->dev, "Failed to disable the device\n");
++		return ret;
++	}
++
++	if (led->enable_gpio)
++		gpiod_direction_output(led->enable_gpio, 0);
++
++	if (led->regulator) {
++		ret = regulator_disable(led->regulator);
++		if (ret)
++			dev_err(&led->client->dev,
++				"Failed to disable regulator\n");
++	}
++
++	mutex_destroy(&led->lock);
++
++	return 0;
++}
++
++static const struct i2c_device_id lm3697_id[] = {
++	{ "lm3697", 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, lm3697_id);
++
++static const struct of_device_id of_lm3697_leds_match[] = {
++	{ .compatible = "ti,lm3697", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, of_lm3697_leds_match);
++
++static struct i2c_driver lm3697_driver = {
++	.driver = {
++		.name	= "lm3697",
++		.of_match_table = of_lm3697_leds_match,
++	},
++	.probe		= lm3697_probe,
++	.remove		= lm3697_remove,
++	.id_table	= lm3697_id,
++};
++module_i2c_driver(lm3697_driver);
++
++MODULE_DESCRIPTION("Texas Instruments LM3697 LED driver");
++MODULE_AUTHOR("Dan Murphy <dmurphy@ti.com>");
++MODULE_LICENSE("GPL v2");
+-- 
+2.19.0
