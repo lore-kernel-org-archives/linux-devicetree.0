@@ -1,52 +1,85 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add PSCI cpuidle low power states
-Date: Tue, 23 Oct 2018 11:36:03 -0700
-Message-ID: <CAD=FV=XB9diR_n1TB4+wUjVaRf0VAmCMgkSbtuOSNO5pkrQ8zg@mail.gmail.com>
-References: <1539622953-4188-1-git-send-email-rplsssn@codeaurora.org>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v2 5/9] mtd: nand: atmel: fix OF child-node lookup
+Date: Tue, 23 Oct 2018 20:51:17 +0200
+Message-ID: <20181023205117.745a8f97@bbrezillon>
+References: <20180827082153.22537-1-johan@kernel.org>
+        <20180827082153.22537-6-johan@kernel.org>
+        <20180827102820.3abf7291@bbrezillon>
+        <20180827084414.GZ14967@localhost>
+        <20180827104842.26bce912@bbrezillon>
+        <20180827094423.GA14967@localhost>
+        <CAL_Jsq+fiM8E-za-fKufgDuoDqu3DY5a4bgZOuF3Ssvj2=6ayg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539622953-4188-1-git-send-email-rplsssn@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Raju P L S S S N <rplsssn@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Evan Green <evgreen@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, Lina Iyer <ilina@codeaurora.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+fiM8E-za-fKufgDuoDqu3DY5a4bgZOuF3Ssvj2=6ayg@mail.gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Josh Wu <rainyfeeling@outlook.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, 23 Oct 2018 13:28:09 -0500
+Rob Herring <robh+dt@kernel.org> wrote:
 
-On Mon, Oct 15, 2018 at 10:02 AM Raju P.L.S.S.S.N
-<rplsssn@codeaurora.org> wrote:
-> +               idle-states {
-> +                       entry-method = "psci";
-> +
-> +                       C0_CPU_SPC: c0_spc {
+> On Mon, Aug 27, 2018 at 4:44 AM Johan Hovold <johan@kernel.org> wrote:
+> >
+> > On Mon, Aug 27, 2018 at 10:48:42AM +0200, Boris Brezillon wrote:  
+> > > On Mon, 27 Aug 2018 10:44:14 +0200
+> > > Johan Hovold <johan@kernel.org> wrote:
+> > >  
+> > > > On Mon, Aug 27, 2018 at 10:28:20AM +0200, Boris Brezillon wrote:  
+> > > > > Hi Johan
+> > > > >
+> > > > > On Mon, 27 Aug 2018 10:21:49 +0200
+> > > > > Johan Hovold <johan@kernel.org> wrote:
+> > > > >  
+> > > > > > Use the new of_get_compatible_child() helper to lookup the nfc child
+> > > > > > node instead of using of_find_compatible_node(), which searches the
+> > > > > > entire tree from a given start node and thus can return an unrelated
+> > > > > > (i.e. non-child) node.
+> > > > > >
+> > > > > > This also addresses a potential use-after-free (e.g. after probe
+> > > > > > deferral) as the tree-wide helper drops a reference to its first
+> > > > > > argument (i.e. the node of the device being probed).
+> > > > > >
+> > > > > > While at it, also fix a related nfc-node reference leak.
+> > > > > >
+> > > > > > Fixes: f88fc122cc34 ("mtd: nand: Cleanup/rework the atmel_nand driver")
+> > > > > > Cc: stable <stable@vger.kernel.org>     # 4.11
+> > > > > > Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> > > > > > Cc: Josh Wu <rainyfeeling@outlook.com>
+> > > > > > Cc: Boris Brezillon <boris.brezillon@bootlin.com>
+> > > > > > Signed-off-by: Johan Hovold <johan@kernel.org>  
+> > > > >
+> > > > > Acked-by: Boris Brezillon <boris.brezillon@bootlin.com>  
+> > > >
+> > > > Thanks for the ack.
+> > > >  
+> > > > > I'll let Miquel queue this patch to the nand/next branch, unless you
+> > > > > want it to be merged in 4.19, in which case I'll queue it to the
+> > > > > mtd/fixes branch.  
+> > > >
+> > > > Note that there's a dependency on the first patch of the series which
+> > > > adds the new helper.  
+> > >
+> > > I was not Cc-ed on this patch :P.  
+> >
+> > Yeah, sorry about that. I made sure everyone was CCed on the
+> > cover letter, but guess I could have reused that list for the helper as
+> > well.
+> >  
+> > > > Rob can pick up the entire series if the various
+> > > > maintainers agree, otherwise I'll try to get at the least the helper
+> > > > into -rc2.  
+> > >
+> > > If everything goes in 4.19-rc2 through Rob's tree that's fine, but if
+> > > it's queued for 4.20 we might need an immutable tag just in case we
+> > > queue conflicting changes to the NAND tree.  
+> >
+> > Ok, thanks.  
+> 
+> Hi Boris, can you pick this one up. It conflicts with "mtd: rawnand:
+> atmel: Fix potential NULL pointer dereference"
 
-nit: all these nodes should have dashes instead of spaces in the node
-names (labels can still have spaces).  AKA:
-
-C0_CPU_SPC: c0-spc {
-
-
-> +                               compatible = "arm,idle-state";
-> +                               arm,psci-suspend-param = <0x40000003>;
-> +                               entry-latency-us = <350>;
-> +                               exit-latency-us = <461>;
-> +                               min-residency-us = <1890>;
-> +                               local-timer-stop;
-> +                               idle-state-name = "pc";
-
-It seems weird that the idle state with the node name "spc" has the
-name "pc" and the idle state with the node name "pc" has the name
-"rail pc".  Can this be more consistent or is there a reason why they
-need to be mismatched?
-
-Also: AAHTUFSWDKWTM (acronyms are hard to understand for someone who
-doesn't know what they mean).  If you really need to use an the
-acronyms "PC" and "SPC" please document them somewhere.  In the very
-least the commit message, but having a comment in the file is good
-too.  ...or (even better) don't use the acronym and spell out what
-you're talking about.  Please correct me if I'm wrong, but I don't
-think it's obvious what the "PC" and "SPC" idle states mean.
-
-
--Doug
+Sure, I'll queue it for -rc2.
