@@ -1,120 +1,85 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: [RESEND PATCHv2] ARM: dspi: Provide support for DSPI slave more operation (Vybryd vf610)
-Date: Tue, 23 Oct 2018 11:13:19 +0200
-Message-ID: <20181023091319.27868-1-lukma@denx.de>
-References: <20180927150709.17010-1-lukma@denx.de>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v2 0/9] of: fix compatible-child-node lookups
+Date: Tue, 23 Oct 2018 11:19:51 +0200
+Message-ID: <20181023091951.GC20058@localhost>
+References: <20180827082153.22537-1-johan@kernel.org>
+ <20180904130557.GT28861@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180927150709.17010-1-lukma@denx.de>
+Content-Disposition: inline
+In-Reply-To: <20180904130557.GT28861@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Esben Haabendal <eha@deif.com>, =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Lukasz Majewski <lukma@denx.de>
+To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Ulf Hansson <ulf.hansson@linaro.org>, Josh Wu <rainyfeeling@outlook.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Doug Berger <opendmb@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-The NXP's Vybryd vf610 can work as a SPI slave device (the CS and clock
-signals are provided by master).
+Hi Rob,
 
-It is possible to specify a single device to work in that mode. As we do
-use DMA for transferring data, the RX channel must be prepared for
-incoming data.
-Moreover, in slave mode we just set a subset of control fields in
-configuration registers (CTAR0, PUSHR).
+On Tue, Sep 04, 2018 at 03:05:57PM +0200, Johan Hovold wrote:
+> Hi all,
+> 
+> On Mon, Aug 27, 2018 at 10:21:44AM +0200, Johan Hovold wrote:
+> > Several drivers currently use of_find_compatible_node() to lookup child
+> > nodes while failing to notice that the of_find_ functions search the
+> > entire tree depth-first (from a given start node) and therefore can
+> > match unrelated nodes.
+> > 
+> > The fact that these functions also drop a reference to the node they
+> > start searching from (e.g. the parent node) is typically also
+> > overlooked, something which can lead to use-after-free bugs (e.g. after
+> > probe deferrals).
+> > 
+> > This series adds a new helper, similar to of_get_child_by_name(), 
+> > that can be used to lookup compatible child nodes, and uses the new
+> > helper to fix child-node lookups throughout the tree.
+> > 
+> > This is related to the fixes I posted about a year ago, which addressed
+> > a similar anti-pattern when looking up child nodes by name. Since it
+> > took me more than a year to get all those fixes into Linus' tree (one
+> > fix is still pending), and as these fixes depend on the new helper, I'm
+> > suggesting that these all go in through Rob's or Greg's trees.
+> > 
+> > Alternatively, the helper could go into to -rc2, and I'll be pinging
+> > submaintainers for the coming year as well. ;)
+> 
+> Rob has gotten the helper into -rc2 now:
+> 
+>         36156f9241cb of: add helper to lookup compatible child node
+> 
+> so feel free to pick these fixes up directly for 4.19-rc or -next,
+> whichever you prefer. I've been able to trigger crashes after probe
+> deferrals due to the use-after-free, but this seems unlikely to be
+> exploitable.
+> 
+> I think Rob will be picking up any patches that remain by the end of the
+> release cycle for 4.20.
 
-For testing the spidev_test program has been used.
-Test script for this patch can be found here:
-https://github.com/lmajewski/tests-spi/blob/master/tests/spi/spi_tests.sh
+So far only Ulf has picked up the mmc patch below directly, so if you
+could take the rest through your tree for -rc1 that would be great.
 
-
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
----
-Changes for v2:
-
-- Remove patch which adds extra NXP specific DTS property to support slave
-mode and reuse the generic one (spi-slave)
-- Remove patch which brings back the mcr_register local copy. It is not
-needed as generic SPI slave infrastructure is used.
-- Rewrite the code to use spi_controller_is_slave() helper functions
----
- drivers/spi/spi-fsl-dspi.c | 40 ++++++++++++++++++++++++++++++----------
- 1 file changed, 30 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 3082e72e4f6c..94b6a9690062 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -233,6 +233,9 @@ static u32 dspi_pop_tx_pushr(struct fsl_dspi *dspi)
- {
- 	u16 cmd = dspi->tx_cmd, data = dspi_pop_tx(dspi);
+Thanks,
+Johan
  
-+	if (spi_controller_is_slave(dspi->master))
-+		return data;
-+
- 	if (dspi->len > 0)
- 		cmd |= SPI_PUSHR_CMD_CONT;
- 	return cmd << 16 | data;
-@@ -329,6 +332,11 @@ static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
- 	dma_async_issue_pending(dma->chan_rx);
- 	dma_async_issue_pending(dma->chan_tx);
- 
-+	if (spi_controller_is_slave(dspi->master)) {
-+		wait_for_completion_interruptible(&dspi->dma->cmd_rx_complete);
-+		return 0;
-+	}
-+
- 	time_left = wait_for_completion_timeout(&dspi->dma->cmd_tx_complete,
- 					DMA_COMPLETION_TIMEOUT);
- 	if (time_left == 0) {
-@@ -798,14 +806,18 @@ static int dspi_setup(struct spi_device *spi)
- 	ns_delay_scale(&pasc, &asc, sck_cs_delay, clkrate);
- 
- 	chip->ctar_val = SPI_CTAR_CPOL(spi->mode & SPI_CPOL ? 1 : 0)
--		| SPI_CTAR_CPHA(spi->mode & SPI_CPHA ? 1 : 0)
--		| SPI_CTAR_LSBFE(spi->mode & SPI_LSB_FIRST ? 1 : 0)
--		| SPI_CTAR_PCSSCK(pcssck)
--		| SPI_CTAR_CSSCK(cssck)
--		| SPI_CTAR_PASC(pasc)
--		| SPI_CTAR_ASC(asc)
--		| SPI_CTAR_PBR(pbr)
--		| SPI_CTAR_BR(br);
-+		| SPI_CTAR_CPHA(spi->mode & SPI_CPHA ? 1 : 0);
-+
-+	if (!spi_controller_is_slave(dspi->master)) {
-+		chip->ctar_val |= SPI_CTAR_LSBFE(spi->mode &
-+						 SPI_LSB_FIRST ? 1 : 0)
-+			| SPI_CTAR_PCSSCK(pcssck)
-+			| SPI_CTAR_CSSCK(cssck)
-+			| SPI_CTAR_PASC(pasc)
-+			| SPI_CTAR_ASC(asc)
-+			| SPI_CTAR_PBR(pbr)
-+			| SPI_CTAR_BR(br);
-+	}
- 
- 	spi_set_ctldata(spi, chip);
- 
-@@ -970,8 +982,13 @@ static const struct regmap_config dspi_xspi_regmap_config[] = {
- 
- static void dspi_init(struct fsl_dspi *dspi)
- {
--	regmap_write(dspi->regmap, SPI_MCR, SPI_MCR_MASTER | SPI_MCR_PCSIS |
--		     (dspi->devtype_data->xspi_mode ? SPI_MCR_XSPI : 0));
-+	unsigned int mcr = SPI_MCR_PCSIS |
-+		(dspi->devtype_data->xspi_mode ? SPI_MCR_XSPI : 0);
-+
-+	if (!spi_controller_is_slave(dspi->master))
-+		mcr |= SPI_MCR_MASTER;
-+
-+	regmap_write(dspi->regmap, SPI_MCR, mcr);
- 	regmap_write(dspi->regmap, SPI_SR, SPI_SR_CLEAR);
- 	if (dspi->devtype_data->xspi_mode)
- 		regmap_write(dspi->regmap, SPI_CTARE(0),
-@@ -1027,6 +1044,9 @@ static int dspi_probe(struct platform_device *pdev)
- 		}
- 		master->bus_num = bus_num;
- 
-+		if (of_property_read_bool(np, "spi-slave"))
-+			master->slave = true;
-+
- 		dspi->devtype_data = of_device_get_match_data(&pdev->dev);
- 		if (!dspi->devtype_data) {
- 			dev_err(&pdev->dev, "can't get devtype_data\n");
--- 
-2.11.0
+> > Johan Hovold (9):
+> >   of: add helper to lookup compatible child node
+> >   drm/mediatek: fix OF sibling-node lookup
+> >   drm/msm: fix OF child-node lookup
+> >   mmc: meson-mx-sdio: fix OF child-node lookup
+> >   mtd: nand: atmel: fix OF child-node lookup
+> >   net: bcmgenet: fix OF child-node lookup
+> >   net: stmmac: dwmac-sun8i: fix OF child-node lookup
+> >   NFC: nfcmrvl_uart: fix OF child-node lookup
+> >   power: supply: twl4030-charger: fix OF sibling-node lookup
+> > 
+> >  drivers/gpu/drm/mediatek/mtk_hdmi.c           |  5 ++--
+> >  drivers/gpu/drm/msm/adreno/adreno_gpu.c       |  5 ++--
+> >  drivers/mmc/host/meson-mx-sdio.c              |  8 ++++--
+> >  drivers/mtd/nand/raw/atmel/nand-controller.c  | 11 +++++---
+> >  drivers/net/ethernet/broadcom/genet/bcmmii.c  |  2 +-
+> >  .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 12 +++++++--
+> >  drivers/nfc/nfcmrvl/uart.c                    |  5 ++--
+> >  drivers/of/base.c                             | 25 +++++++++++++++++++
+> >  drivers/power/supply/twl4030_charger.c        |  5 ++--
+> >  include/linux/of.h                            |  8 ++++++
+> >  10 files changed, 68 insertions(+), 18 deletions(-)
