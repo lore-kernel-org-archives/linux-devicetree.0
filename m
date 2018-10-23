@@ -1,7 +1,7 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 2/5] arm64: dts: hisilicon: hi3760: Add GPIO controller support
-Date: Wed, 24 Oct 2018 00:36:52 +0530
-Message-ID: <20181023190655.12004-3-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 3/5] arm64: dts: hisilicon: hi3670: Add UART nodes
+Date: Wed, 24 Oct 2018 00:36:53 +0530
+Message-ID: <20181023190655.12004-4-manivannan.sadhasivam@linaro.org>
 References: <20181023190655.12004-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181023190655.12004-1-manivannan.sadhasivam@linaro.org>
@@ -10,415 +10,279 @@ To: xuwei5@hisilicon.com, linus.walleij@linaro.org, robh+dt@kernel.org
 Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add GPIO controller support for HiSilicon HI3670 SoC based on ARM
-Primecell PL061 GPIO controller.
+Add UART nodes for HiSilicon HI3670 SoC and also relevant pinmux/pinconf
+entries.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- .../boot/dts/hisilicon/hi3670-hikey970.dts    |   1 +
- arch/arm64/boot/dts/hisilicon/hi3670.dtsi     | 379 ++++++++++++++++++
- 2 files changed, 380 insertions(+)
+ arch/arm64/boot/dts/hisilicon/hi3670.dtsi     |  72 ++++++++
+ .../boot/dts/hisilicon/hikey970-pinctrl.dtsi  | 157 ++++++++++++++++++
+ 2 files changed, 229 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts b/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
-index 4f5118642024..8fdc1dfcb06c 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
-@@ -10,6 +10,7 @@
- /dts-v1/;
- 
- #include "hi3670.dtsi"
-+#include "hikey970-pinctrl.dtsi"
- 
- / {
- 	model = "HiKey970";
 diff --git a/arch/arm64/boot/dts/hisilicon/hi3670.dtsi b/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
-index 34a2f0dbc6f7..b99f5e0fe577 100644
+index b99f5e0fe577..a5bd6d80b226 100644
 --- a/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
 +++ b/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
-@@ -196,5 +196,384 @@
+@@ -187,6 +187,76 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		uart0: serial@fdf02000 {
++			compatible = "arm,pl011", "arm,primecell";
++			reg = <0x0 0xfdf02000 0x0 0x1000>;
++			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&crg_ctrl HI3670_CLK_GATE_UART0>,
++				 <&crg_ctrl HI3670_PCLK>;
++			clock-names = "uartclk", "apb_pclk";
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart0_pmx_func &uart0_cfg_func>;
++			status = "disabled";
++		};
++
++		uart1: serial@fdf00000 {
++			compatible = "arm,pl011", "arm,primecell";
++			reg = <0x0 0xfdf00000 0x0 0x1000>;
++			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&crg_ctrl HI3670_CLK_GATE_UART1>,
++				 <&crg_ctrl HI3670_PCLK>;
++			clock-names = "uartclk", "apb_pclk";
++			pinctrl-names = "default";
++			status = "disabled";
++		};
++
++		uart2: serial@fdf03000 {
++			compatible = "arm,pl011", "arm,primecell";
++			reg = <0x0 0xfdf03000 0x0 0x1000>;
++			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&crg_ctrl HI3670_CLK_GATE_UART2>,
++				 <&crg_ctrl HI3670_PCLK>;
++			clock-names = "uartclk", "apb_pclk";
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart2_pmx_func &uart2_cfg_func>;
++			status = "disabled";
++		};
++
++		uart3: serial@ffd74000 {
++			compatible = "arm,pl011", "arm,primecell";
++			reg = <0x0 0xffd74000 0x0 0x1000>;
++			interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&crg_ctrl HI3670_CLK_GATE_UART3>,
++				 <&crg_ctrl HI3670_PCLK>;
++			clock-names = "uartclk", "apb_pclk";
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart3_pmx_func &uart3_cfg_func>;
++			status = "disabled";
++		};
++
++		uart4: serial@fdf01000 {
++			compatible = "arm,pl011", "arm,primecell";
++			reg = <0x0 0xfdf01000 0x0 0x1000>;
++			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&crg_ctrl HI3670_CLK_GATE_UART4>,
++				 <&crg_ctrl HI3670_PCLK>;
++			clock-names = "uartclk", "apb_pclk";
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart4_pmx_func &uart4_cfg_func>;
++			status = "disabled";
++		};
++
++		uart5: serial@fdf05000 {
++			compatible = "arm,pl011", "arm,primecell";
++			reg = <0x0 0xfdf05000 0x0 0x1000>;
++			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&crg_ctrl HI3670_CLK_GATE_UART5>,
++				 <&crg_ctrl HI3670_PCLK>;
++			clock-names = "uartclk", "apb_pclk";
++			pinctrl-names = "default";
++			status = "disabled";
++		};
++
+ 		uart6: serial@fff32000 {
+ 			compatible = "arm,pl011", "arm,primecell";
+ 			reg = <0x0 0xfff32000 0x0 0x1000>;
+@@ -194,6 +264,8 @@
+ 			clocks = <&crg_ctrl HI3670_CLK_UART6>,
+ 				 <&crg_ctrl HI3670_PCLK>;
  			clock-names = "uartclk", "apb_pclk";
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart6_pmx_func &uart6_cfg_func>;
  			status = "disabled";
  		};
+ 
+diff --git a/arch/arm64/boot/dts/hisilicon/hikey970-pinctrl.dtsi b/arch/arm64/boot/dts/hisilicon/hikey970-pinctrl.dtsi
+index 64fb9a3bd707..67bb52d43619 100644
+--- a/arch/arm64/boot/dts/hisilicon/hikey970-pinctrl.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hikey970-pinctrl.dtsi
+@@ -20,6 +20,47 @@
+ 			pinctrl-single,function-mask = <0x7>;
+ 			/* pin base, nr pins & gpio function */
+ 			pinctrl-single,gpio-range = <&range 0 82 0>;
 +
-+		gpio0: gpio@e8a0b000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a0b000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmx0 1 0 1 &pmx0 3 1 5>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO0>;
-+			clock-names = "apb_pclk";
-+		};
++			uart0_pmx_func: uart0_pmx_func {
++				pinctrl-single,pins = <
++					0x054 MUX_M2 /* UART0_RXD */
++					0x058 MUX_M2 /* UART0_TXD */
++				>;
++			};
 +
-+		gpio1: gpio@e8a0c000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a0c000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO1>;
-+			clock-names = "apb_pclk";
-+		};
++			uart2_pmx_func: uart2_pmx_func {
++				pinctrl-single,pins = <
++					0x700 MUX_M2 /* UART2_CTS_N */
++					0x704 MUX_M2 /* UART2_RTS_N */
++					0x708 MUX_M2 /* UART2_RXD */
++					0x70c MUX_M2 /* UART2_TXD */
++				>;
++			};
 +
-+		gpio2: gpio@e8a0d000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a0d000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmx0 1 6 7>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO2>;
-+			clock-names = "apb_pclk";
-+		};
++			uart3_pmx_func: uart3_pmx_func {
++				pinctrl-single,pins = <
++					0x064 MUX_M1 /* UART3_CTS_N */
++					0x068 MUX_M1 /* UART3_RTS_N */
++					0x06c MUX_M1 /* UART3_RXD */
++					0x070 MUX_M1 /* UART3_TXD */
++				>;
++			};
 +
-+		gpio3: gpio@e8a0e000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a0e000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges =  <&pmx0 0 13 4 &pmx0 7 17 1>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO3>;
-+			clock-names = "apb_pclk";
-+		};
++			uart4_pmx_func: uart4_pmx_func {
++				pinctrl-single,pins = <
++					0x074 MUX_M1 /* UART4_CTS_N */
++					0x078 MUX_M1 /* UART4_RTS_N */
++					0x07c MUX_M1 /* UART4_RXD */
++					0x080 MUX_M1 /* UART4_TXD */
++				>;
++			};
 +
-+		gpio4: gpio@e8a0f000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a0f000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmx0 0 18 8>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO4>;
-+			clock-names = "apb_pclk";
-+		};
++			uart6_pmx_func: uart6_pmx_func {
++				pinctrl-single,pins = <
++					0x05c MUX_M1 /* UART6_RXD */
++					0x060 MUX_M1 /* UART6_TXD */
++				>;
++			};
+ 		};
+ 
+ 		pmx2: pinmux@e896c800 {
+@@ -27,6 +68,122 @@
+ 			reg = <0x0 0xe896c800 0x0 0x72c>;
+ 			#pinctrl-cells = <1>;
+ 			pinctrl-single,register-width = <0x20>;
 +
-+		gpio5: gpio@e8a10000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a10000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmx0 0 26 8>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO5>;
-+			clock-names = "apb_pclk";
-+		};
++			uart0_cfg_func: uart0_cfg_func {
++				pinctrl-single,pins = <
++					0x058 0x0 /* UART0_RXD */
++					0x05c 0x0 /* UART0_TXD */
++				>;
++				pinctrl-single,bias-pulldown = <
++					PULL_DIS
++					PULL_DOWN
++					PULL_DIS
++					PULL_DOWN
++				>;
++				pinctrl-single,bias-pullup = <
++					PULL_DIS
++					PULL_UP
++					PULL_DIS
++					PULL_UP
++				>;
++				pinctrl-single,drive-strength = <
++					DRIVE7_04MA DRIVE6_MASK
++				>;
++			};
 +
-+		gpio6: gpio@e8a11000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a11000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmx0 1 34 7>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO6>;
-+			clock-names = "apb_pclk";
-+		};
++			uart2_cfg_func: uart2_cfg_func {
++				pinctrl-single,pins = <
++					0x700 0x0 /* UART2_CTS_N */
++					0x704 0x0 /* UART2_RTS_N */
++					0x708 0x0 /* UART2_RXD */
++					0x70c 0x0 /* UART2_TXD */
++				>;
++				pinctrl-single,bias-pulldown = <
++					PULL_DIS
++					PULL_DOWN
++					PULL_DIS
++					PULL_DOWN
++				>;
++				pinctrl-single,bias-pullup = <
++					PULL_DIS
++					PULL_UP
++					PULL_DIS
++					PULL_UP
++				>;
++				pinctrl-single,drive-strength = <
++					DRIVE7_04MA DRIVE6_MASK
++				>;
++			};
 +
-+		gpio7: gpio@e8a12000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a12000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmx0 0 41 8>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO7>;
-+			clock-names = "apb_pclk";
-+		};
++			uart3_cfg_func: uart3_cfg_func {
++				pinctrl-single,pins = <
++					0x068 0x0 /* UART3_CTS_N */
++					0x06c 0x0 /* UART3_RTS_N */
++					0x070 0x0 /* UART3_RXD */
++					0x074 0x0 /* UART3_TXD */
++				>;
++				pinctrl-single,bias-pulldown = <
++					PULL_DIS
++					PULL_DOWN
++					PULL_DIS
++					PULL_DOWN
++				>;
++				pinctrl-single,bias-pullup = <
++					PULL_DIS
++					PULL_UP
++					PULL_DIS
++					PULL_UP
++				>;
++				pinctrl-single,drive-strength = <
++					DRIVE7_04MA DRIVE6_MASK
++				>;
++			};
 +
-+		gpio8: gpio@e8a13000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a13000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmx0 0 49 8>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO8>;
-+			clock-names = "apb_pclk";
-+		};
++			uart4_cfg_func: uart4_cfg_func {
++				pinctrl-single,pins = <
++					0x078 0x0 /* UART4_CTS_N */
++					0x07c 0x0 /* UART4_RTS_N */
++					0x080 0x0 /* UART4_RXD */
++					0x084 0x0 /* UART4_TXD */
++				>;
++				pinctrl-single,bias-pulldown = <
++					PULL_DIS
++					PULL_DOWN
++					PULL_DIS
++					PULL_DOWN
++				>;
++				pinctrl-single,bias-pullup = <
++					PULL_DIS
++					PULL_UP
++					PULL_DIS
++					PULL_UP
++				>;
++				pinctrl-single,drive-strength = <
++					DRIVE7_04MA DRIVE6_MASK
++				>;
++			};
 +
-+		gpio9: gpio@e8a14000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a14000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmx0 0 57 8>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO9>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio10: gpio@e8a15000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a15000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmx0 0 65 8>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO10>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio11: gpio@e8a16000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a16000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmx0 0 73 8>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO11>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio12: gpio@e8a17000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a17000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmx0 0 81 1>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO12>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio13: gpio@e8a18000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a18000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO13>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio14: gpio@e8a19000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a19000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO14>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio15: gpio@e8a1a000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a1a000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO15>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio16: gpio@e8a1b000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a1b000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmx5 0 0 8>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO16>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio17: gpio@e8a1c000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a1c000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmx5 0 8 2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO17>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio18: gpio@fff28000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xfff28000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmx1 4 42 4>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&sctrl HI3670_PCLK_GPIO18>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio19: gpio@fff29000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xfff29000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmx1 0 61 2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&sctrl HI3670_PCLK_GPIO19>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio20: gpio@e8a1f000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a1f000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmx7 0 0 8>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO20>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio21: gpio@e8a20000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xe8a20000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmx7 0 8 4>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg_ctrl HI3670_PCLK_GPIO21>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio22: gpio@fff0b000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xfff0b000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			/* GPIO176 */
-+			gpio-ranges = <&pmx1 2 0 6>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&sctrl HI3670_PCLK_AO_GPIO0>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio23: gpio@fff0c000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xfff0c000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			/* GPIO184 */
-+			gpio-ranges = <&pmx1 0 6 8>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&sctrl HI3670_PCLK_AO_GPIO1>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio24: gpio@fff0d000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xfff0d000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			/* GPIO192 */
-+			gpio-ranges = <&pmx1 0 14 8>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&sctrl HI3670_PCLK_AO_GPIO2>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio25: gpio@fff0e000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xfff0e000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			/* GPIO200 */
-+			gpio-ranges = <&pmx1 0 22 8>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&sctrl HI3670_PCLK_AO_GPIO3>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio26: gpio@fff0f000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xfff0f000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			/* GPIO208 */
-+			gpio-ranges = <&pmx1 0 30 1>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&sctrl HI3670_PCLK_AO_GPIO4>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio27: gpio@fff10000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xfff10000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			/* GPIO216 */
-+			gpio-ranges = <&pmx1 4 31 4>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&sctrl HI3670_PCLK_AO_GPIO5>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio28: gpio@fff1d000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xfff1d000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pmx1 1 35 7>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&sctrl HI3670_PCLK_AO_GPIO6>;
-+			clock-names = "apb_pclk";
-+		};
- 	};
- };
++			uart6_cfg_func: uart6_cfg_func {
++				pinctrl-single,pins = <
++					0x060 0x0 /* UART6_RXD */
++					0x064 0x0 /* UART6_TXD */
++				>;
++				pinctrl-single,bias-pulldown = <
++					PULL_DIS
++					PULL_DOWN
++					PULL_DIS
++					PULL_DOWN
++				>;
++				pinctrl-single,bias-pullup = <
++					PULL_DIS
++					PULL_UP
++					PULL_DIS
++					PULL_UP
++				>;
++				pinctrl-single,drive-strength = <
++					DRIVE7_02MA DRIVE6_MASK
++				>;
++			};
+ 		};
+ 
+ 		pmx5: pinmux@fc182000 {
 -- 
 2.17.1
