@@ -1,63 +1,90 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v3 1/7] dt-bindings: add power-domain header for RK3188 SoCs
-Date: Tue, 23 Oct 2018 12:38:14 +0200
-Message-ID: <20181023103820.6464-2-heiko@sntech.de>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH v3 6/7] ARM: dts: rockchip: add qos nodes found on rk3066 and
+ rk3188
+Date: Tue, 23 Oct 2018 12:38:19 +0200
+Message-ID: <20181023103820.6464-7-heiko@sntech.de>
 References: <20181023103820.6464-1-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20181023103820.6464-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181023103820.6464-1-heiko@sntech.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-rockchip@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add rk3188 power-domains as described by the TRM.
+QoS nodes keep information about priorites etc on the interconnect
+and loose state when the power-domain gets disabled. Therefore the
+power-domain driver stores the settings of available qos nodes and
+restores them when the power-domain gets enabled again.
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+So add the qos nodes found on the Cortex-A9 socs from Rockchip, so
+that they can then be connected to the power-domains.
+
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 ---
- include/dt-bindings/power/rk3188-power.h | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 include/dt-bindings/power/rk3188-power.h
+ arch/arm/boot/dts/rk3xxx.dtsi | 40 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/include/dt-bindings/power/rk3188-power.h b/include/dt-bindings/power/rk3188-power.h
-new file mode 100644
-index 000000000000..93d23dfba33f
---- /dev/null
-+++ b/include/dt-bindings/power/rk3188-power.h
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __DT_BINDINGS_POWER_RK3188_POWER_H__
-+#define __DT_BINDINGS_POWER_RK3188_POWER_H__
+diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+index d752dc611fd7..97307a405e60 100644
+--- a/arch/arm/boot/dts/rk3xxx.dtsi
++++ b/arch/arm/boot/dts/rk3xxx.dtsi
+@@ -147,6 +147,46 @@
+ 		status = "disabled";
+ 	};
+ 
++	qos_gpu: qos@1012d000 {
++		compatible = "syscon";
++		reg = <0x1012d000 0x20>;
++	};
 +
-+/* VD_CORE */
-+#define RK3188_PD_A9_0		0
-+#define RK3188_PD_A9_1		1
-+#define RK3188_PD_A9_2		2
-+#define RK3188_PD_A9_3		3
-+#define RK3188_PD_DBG		4
-+#define RK3188_PD_SCU		5
++	qos_vpu: qos@1012e000 {
++		compatible = "syscon";
++		reg = <0x1012e000 0x20>;
++	};
 +
-+/* VD_LOGIC */
-+#define RK3188_PD_VIDEO		6
-+#define RK3188_PD_VIO		7
-+#define RK3188_PD_GPU		8
-+#define RK3188_PD_PERI		9
-+#define RK3188_PD_CPU		10
-+#define RK3188_PD_ALIVE		11
++	qos_lcdc0: qos@1012f000 {
++		compatible = "syscon";
++		reg = <0x1012f000 0x20>;
++	};
 +
-+/* VD_PMU */
-+#define RK3188_PD_RTC		12
++	qos_cif0: qos@1012f080 {
++		compatible = "syscon";
++		reg = <0x1012f080 0x20>;
++	};
 +
-+#endif
++	qos_ipp: qos@1012f100 {
++		compatible = "syscon";
++		reg = <0x1012f100 0x20>;
++	};
++
++	qos_lcdc1: qos@1012f180 {
++		compatible = "syscon";
++		reg = <0x1012f180 0x20>;
++	};
++
++	qos_cif1: qos@1012f200 {
++		compatible = "syscon";
++		reg = <0x1012f200 0x20>;
++	};
++
++	qos_rga: qos@1012f280 {
++		compatible = "syscon";
++		reg = <0x1012f280 0x20>;
++	};
++
+ 	usb_otg: usb@10180000 {
+ 		compatible = "rockchip,rk3066-usb", "snps,dwc2";
+ 		reg = <0x10180000 0x40000>;
 -- 
 2.18.0
