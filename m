@@ -1,30 +1,44 @@
-Return-Path: <SRS0=C4yJ=ND=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr70071.outbound.protection.outlook.com ([40.107.7.71]:57193
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727478AbeJWOz2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 23 Oct 2018 10:55:28 -0400
-From: Peter Chen <peter.chen@nxp.com>
-Subject: RE: [PATCH v2 0/4] usb: chipidea: imx: add HSIC support
-Date: Tue, 23 Oct 2018 06:33:23 +0000
-Message-ID: <VI1PR04MB5327E8A8A55DDA918D460D1D8BF50@VI1PR04MB5327.eurprd04.prod.outlook.com>
+Return-Path: <SRS0=y5Qt=ND=kontron.de=frieder.schrempf@kernel.org>
+From: Schrempf Frieder <frieder.schrempf@kontron.De>
+Subject: Re: [PATCH v2 0/4] usb: chipidea: imx: add HSIC support
+Date: Tue, 23 Oct 2018 06:30:23 +0000
+Message-ID: <92959997-4a83-fe9c-9600-ce51045131d2@kontron.de>
 References: <20181022054031.14027-1-peter.chen@nxp.com>
- <92959997-4a83-fe9c-9600-ce51045131d2@kontron.de>
-In-Reply-To: <92959997-4a83-fe9c-9600-ce51045131d2@kontron.de>
+In-Reply-To: <20181022054031.14027-1-peter.chen@nxp.com>
 Content-Language: en-US
 Content-Type: text/plain; charset="utf-8"
+Content-ID: <376A97EE3631A244B98ABA2F05C55DD5@snt-world.com>
 Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Schrempf Frieder <frieder.schrempf@kontron.De>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+To: Peter Chen <peter.chen@nxp.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-IA0KPiBBcyBJIGFscmVhZHkgcG9zdGVkIHdoZW4gSSB3YXMgdGVzdGluZyB2MSBsYXN0IHdlZWss
-IHRoZXJlIGlzIGEgcHJvYmxlbSB3aXRoIGF1dG8NCj4gc3VzcGVuZCB3aXRoIG15IExBTjk3MzAg
-Y2hpcC4gSSB0aG91Z2h0IGl0IHdhcyBhIHByb2JsZW0gd2l0aCB0aGUNCj4gc21zYzk1eHgvdXNi
-bmV0IGRyaXZlciwgYnV0IEknbSBub3Qgc28gc3VyZSBhbnltb3JlLg0KPiANCj4gU28gSSdkIGxp
-a2UgdG8gZmlndXJlIG91dCBpZiBpdCBoYXMgc29tZXRoaW5nIHRvIGRvIHdpdGggdGhlIEhTSUMg
-cGF0Y2hlcy4gSSBob3BlIHRvDQo+IGZpbmQgc29tZSB0aW1lIHRvIGRvIHNvbWUgbW9yZSBkZWJ1
-Z2dpbmcgc29vbi4NCj4gV2hlbiB0aGlzIGlzIHNvcnRlZCBJIHdpbGwgYXBwZW5kIG15IFItYiwg
-VC1iIHRhZ3MuDQo+IA0KDQpUaGFua3MsIEZyaWVkZXINCg0KUGV0ZXINCg==
+SGkgUGV0ZXIsDQoNCk9uIDIyLjEwLjE4IDA3OjQyLCBQZXRlciBDaGVuIHdyb3RlOg0KPiBNb3N0
+IG9mIE5YUCAoRnJlZXNjYWxlKSBpLm14IFVTQiBwYXJ0IGhhcyBIU0lDIHN1cHBvcnQsIGluIHRo
+aXMgc2VyaWVzLA0KPiB3ZSBhZGQgc3VwcG9ydCBmb3IgdGhlbSwgaXQgc2hvdWxkIGNvdmVyIGFs
+bCBpbXg2IGFuZCBpbXg3ZCBTb0MuDQo+IA0KPiBDaGFuZ2VzIGZvciB2MjoNCj4gLSBDb21waWxl
+IGVycm9yIHJlcG9ydGVkIGJ5IGtidWlsZCByb2JvdCBbUGF0Y2ggMi80XQ0KPiAtIENvbW1lbnQg
+ZnJvbSBGcmllZGVyIFNjaHJlbXBmIGFib3V0IGNvZGUgc3RydWN0dXJlIFtQYXRjaCAyLzRdDQo+
+IC0gQ29tbWVudCBmcm9tIEZhYmlvIGFib3V0IGFkZGluZyBleGFtcGxlIGZvciBwaW5jdHJsIFtQ
+YXRjaCA0LzRdDQo+IA0KPiBQZXRlciBDaGVuICg0KToNCj4gICAgdXNiOiBjaGlwaWRlYTogYWRk
+IGZsYWcgZm9yIGlteCBoc2ljIGltcGxlbWVudGF0aW9uDQo+ICAgIHVzYjogY2hpcGlkZWE6IGlt
+eDogYWRkIEhTSUMgc3VwcG9ydA0KPiAgICB1c2I6IGNoaXBpZGVhOiBob3N0OiBvdmVycmlkZSBl
+aGNpLT5odWJfY29udHJvbA0KPiAgICBkb2M6IHVzYjogY2ktaGRyYy11c2IyOiBBZGQgcGluY3Ry
+bCBwcm9wZXJ0aWVzIGZvciBIU0lDIHBpbiBncm91cHMNCj4gDQo+ICAgLi4uL2RldmljZXRyZWUv
+YmluZGluZ3MvdXNiL2NpLWhkcmMtdXNiMi50eHQgICAgICAgfCAgIDEgKw0KPiAgIGRyaXZlcnMv
+dXNiL2NoaXBpZGVhL2NpX2hkcmNfaW14LmMgICAgICAgICAgICAgICAgIHwgMTQwICsrKysrKysr
+KysrKysrKysrKy0tLQ0KPiAgIGRyaXZlcnMvdXNiL2NoaXBpZGVhL2NpX2hkcmNfaW14LmggICAg
+ICAgICAgICAgICAgIHwgICA5ICstDQo+ICAgZHJpdmVycy91c2IvY2hpcGlkZWEvaG9zdC5jICAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgOTggKysrKysrKysrKysrKysrDQo+ICAgZHJpdmVycy91
+c2IvY2hpcGlkZWEvdXNibWlzY19pbXguYyAgICAgICAgICAgICAgICAgfCAxMzAgKysrKysrKysr
+KysrKysrKysrKw0KPiAgIGluY2x1ZGUvbGludXgvdXNiL2NoaXBpZGVhLmggICAgICAgICAgICAg
+ICAgICAgICAgIHwgICAzICsNCj4gICA2IGZpbGVzIGNoYW5nZWQsIDM2MiBpbnNlcnRpb25zKCsp
+LCAxOSBkZWxldGlvbnMoLSkNCg0KQXMgSSBhbHJlYWR5IHBvc3RlZCB3aGVuIEkgd2FzIHRlc3Rp
+bmcgdjEgbGFzdCB3ZWVrLCB0aGVyZSBpcyBhIHByb2JsZW0gDQp3aXRoIGF1dG8gc3VzcGVuZCB3
+aXRoIG15IExBTjk3MzAgY2hpcC4gSSB0aG91Z2h0IGl0IHdhcyBhIHByb2JsZW0gd2l0aCANCnRo
+ZSBzbXNjOTV4eC91c2JuZXQgZHJpdmVyLCBidXQgSSdtIG5vdCBzbyBzdXJlIGFueW1vcmUuDQoN
+ClNvIEknZCBsaWtlIHRvIGZpZ3VyZSBvdXQgaWYgaXQgaGFzIHNvbWV0aGluZyB0byBkbyB3aXRo
+IHRoZSBIU0lDIA0KcGF0Y2hlcy4gSSBob3BlIHRvIGZpbmQgc29tZSB0aW1lIHRvIGRvIHNvbWUg
+bW9yZSBkZWJ1Z2dpbmcgc29vbi4NCldoZW4gdGhpcyBpcyBzb3J0ZWQgSSB3aWxsIGFwcGVuZCBt
+eSBSLWIsIFQtYiB0YWdzLg0KDQpSZWdhcmRzLA0KRnJpZWRlcg==
