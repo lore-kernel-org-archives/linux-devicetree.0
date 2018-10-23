@@ -1,85 +1,64 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v2 5/9] mtd: nand: atmel: fix OF child-node lookup
-Date: Tue, 23 Oct 2018 20:51:17 +0200
-Message-ID: <20181023205117.745a8f97@bbrezillon>
-References: <20180827082153.22537-1-johan@kernel.org>
-        <20180827082153.22537-6-johan@kernel.org>
-        <20180827102820.3abf7291@bbrezillon>
-        <20180827084414.GZ14967@localhost>
-        <20180827104842.26bce912@bbrezillon>
-        <20180827094423.GA14967@localhost>
-        <CAL_Jsq+fiM8E-za-fKufgDuoDqu3DY5a4bgZOuF3Ssvj2=6ayg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+fiM8E-za-fKufgDuoDqu3DY5a4bgZOuF3Ssvj2=6ayg@mail.gmail.com>
-Sender: stable-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Josh Wu <rainyfeeling@outlook.com>
+From: Oskari Lemmela <oskari@lemmela.net>
+Subject: [PATCH v5 00/11] AXP8x3 AC and battery power supply support
+Date: Tue, 23 Oct 2018 21:53:19 +0300
+Message-ID: <20181023185330.10472-1-oskari@lemmela.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Jonathan Cameron <jic23@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Vasily Khoruzhick <anarsoul@gmail.com>, Quentin Schulz <quentin.schulz@free-electrons.com>, Oskari Lemmela <oskari@lemmela.net>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 Oct 2018 13:28:09 -0500
-Rob Herring <robh+dt@kernel.org> wrote:
+AXP813 AC power supply support with input current and
+voltage limiting support.
 
-> On Mon, Aug 27, 2018 at 4:44 AM Johan Hovold <johan@kernel.org> wrote:
-> >
-> > On Mon, Aug 27, 2018 at 10:48:42AM +0200, Boris Brezillon wrote:  
-> > > On Mon, 27 Aug 2018 10:44:14 +0200
-> > > Johan Hovold <johan@kernel.org> wrote:
-> > >  
-> > > > On Mon, Aug 27, 2018 at 10:28:20AM +0200, Boris Brezillon wrote:  
-> > > > > Hi Johan
-> > > > >
-> > > > > On Mon, 27 Aug 2018 10:21:49 +0200
-> > > > > Johan Hovold <johan@kernel.org> wrote:
-> > > > >  
-> > > > > > Use the new of_get_compatible_child() helper to lookup the nfc child
-> > > > > > node instead of using of_find_compatible_node(), which searches the
-> > > > > > entire tree from a given start node and thus can return an unrelated
-> > > > > > (i.e. non-child) node.
-> > > > > >
-> > > > > > This also addresses a potential use-after-free (e.g. after probe
-> > > > > > deferral) as the tree-wide helper drops a reference to its first
-> > > > > > argument (i.e. the node of the device being probed).
-> > > > > >
-> > > > > > While at it, also fix a related nfc-node reference leak.
-> > > > > >
-> > > > > > Fixes: f88fc122cc34 ("mtd: nand: Cleanup/rework the atmel_nand driver")
-> > > > > > Cc: stable <stable@vger.kernel.org>     # 4.11
-> > > > > > Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> > > > > > Cc: Josh Wu <rainyfeeling@outlook.com>
-> > > > > > Cc: Boris Brezillon <boris.brezillon@bootlin.com>
-> > > > > > Signed-off-by: Johan Hovold <johan@kernel.org>  
-> > > > >
-> > > > > Acked-by: Boris Brezillon <boris.brezillon@bootlin.com>  
-> > > >
-> > > > Thanks for the ack.
-> > > >  
-> > > > > I'll let Miquel queue this patch to the nand/next branch, unless you
-> > > > > want it to be merged in 4.19, in which case I'll queue it to the
-> > > > > mtd/fixes branch.  
-> > > >
-> > > > Note that there's a dependency on the first patch of the series which
-> > > > adds the new helper.  
-> > >
-> > > I was not Cc-ed on this patch :P.  
-> >
-> > Yeah, sorry about that. I made sure everyone was CCed on the
-> > cover letter, but guess I could have reused that list for the helper as
-> > well.
-> >  
-> > > > Rob can pick up the entire series if the various
-> > > > maintainers agree, otherwise I'll try to get at the least the helper
-> > > > into -rc2.  
-> > >
-> > > If everything goes in 4.19-rc2 through Rob's tree that's fine, but if
-> > > it's queued for 4.20 we might need an immutable tag just in case we
-> > > queue conflicting changes to the NAND tree.  
-> >
-> > Ok, thanks.  
-> 
-> Hi Boris, can you pick this one up. It conflicts with "mtd: rawnand:
-> atmel: Fix potential NULL pointer dereference"
+AXP803 AC and battery power supply support.
 
-Sure, I'll queue it for -rc2.
+Changes in v5:
+* Return correct input current limit for values 0x6 and 0x7
+* Add specific compatibles for AXP803
+* Change commit messages
+* Add Vasily Khoruzhick Pinebook DTS patch
+
+Changes in v4:
+* Change order of axp20x-gpio in axp20x.c
+* Fix indentation and spaces to tabs in axp20x.c
+
+Changes in v3:
+* Reorder ac_power_supply DT node
+* Rename axp20x_ac_power_set_property function
+* Split mfd commit 
+
+Changes in v2:
+* Reuse axp813 compatibles for axp803
+* Refactor axp20x_ac_power.c
+
+Oskari Lemmela (10):
+  dt-bindings: power: supply: axp20x: add AXP813 AC power DT binding
+  dt-bindings: power: supply: axp20x: add AXP803 power bindings
+  dt-bindings: gpio: gpio-axp209: add AXP803 GPIO bindings
+  dt-bindings: iio: adc: add AXP803 ADC bindings
+  ARM: dts: axp81x: add AC power supply subnode
+  arm64: dts: allwinner: axp803: add AC and battery power supplies
+  arm64: dts: allwinner: a64: sopine-baseboard: enable power supplies
+  power: supply: add AC power supply driver for AXP813
+  mfd: axp20x: Add AC power supply cell for AXP813
+  mfd: axp20x: Add supported cells for AXP803
+
+Vasily Khoruzhick (1):
+  arm64: dts: allwinner: a64: pinebook: enable power supplies
+
+ .../devicetree/bindings/gpio/gpio-axp209.txt  |  2 +
+ .../bindings/iio/adc/axp20x_adc.txt           |  2 +
+ .../bindings/power/supply/axp20x_ac_power.txt |  4 +
+ .../bindings/power/supply/axp20x_battery.txt  |  1 +
+ arch/arm/boot/dts/axp81x.dtsi                 |  5 +
+ arch/arm64/boot/dts/allwinner/axp803.dtsi     | 33 +++++++
+ .../dts/allwinner/sun50i-a64-pinebook.dts     |  8 ++
+ .../allwinner/sun50i-a64-sopine-baseboard.dts |  8 ++
+ drivers/mfd/axp20x.c                          | 20 ++++
+ drivers/power/supply/axp20x_ac_power.c        | 94 +++++++++++++++++++
+ include/linux/mfd/axp20x.h                    |  1 +
+ 11 files changed, 178 insertions(+)
+
+-- 
+2.17.1
