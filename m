@@ -1,46 +1,81 @@
-From: tony <tony.xie@rock-chips.com>
-Subject: Re: [PATCH v4 1/5] mfd: rk808: Add RK817 and RK809 support
-Date: Tue, 23 Oct 2018 11:33:10 +0800
-Message-ID: <219a9cdd-00d7-2920-4986-dcc1c8a27f6c@rock-chips.com>
-References: <1535968829-19418-1-git-send-email-tony.xie@rock-chips.com>
- <1535968829-19418-2-git-send-email-tony.xie@rock-chips.com>
- <20180911123907.GN4185@dell>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Can Guo <cang@codeaurora.org>
+Subject: [PATCH v10 0/6] Support for Qualcomm UFS QMP PHY on SDM845
+Date: Mon, 22 Oct 2018 21:35:55 -0700
+Message-ID: <1540269361-28185-1-git-send-email-cang@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180911123907.GN4185@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: heiko@sntech.de, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com
+To: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, evgreen@chromium.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Can Guo <cang@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch series adds support for UFS QMP PHY on SDM845 and the
+compatible string for it. This patch series depends on the current
+proposed QMP V3 USB3 UNI PHY support for sdm845 driver [1], on
+the DT bindings for the QMP V3 USB3 PHYs based dirver [2], and also
+rebased on updated pipe_clk initialization sequence [3]. This series
+can only be merged once the dependent patches do.
+[1] http://lists-archives.com/linux-kernel/29071659-dt-bindings-phy-qcom-qmp-update-bindings-for-sdm845.html
+[2] http://lists-archives.com/linux-kernel/29071660-phy-qcom-qmp-add-qmp-v3-usb3-uni-phy-support-for-sdm845.html
+[3] https://patchwork.kernel.org/patch/10376551/
 
-> On Mon, 03 Sep 2018, Tony Xie wrote:
->
->>      The rk809 and rk817 are a Power Management IC (PMIC) for multimedia
->>      and handheld devices. It contains the following components:
->>
->>          - Regulators
->>          - RTC
->>          - Clocking
->>
->>      Both RK809 and RK817 chips are using a similar register map,
->>      so we can reuse the RTC and Clocking and regulators functionality.
->>
->> Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
->> ---
-> It's often helpful to place a Changelog in this space.
-     I will output the changelog in the first mail when send-mail.
->
->>   drivers/mfd/Kconfig       |   6 +-
->>   drivers/mfd/rk808.c       | 218 +++++++++++++++++++++++++++++++++++++++++++++-
->>   include/linux/mfd/rk808.h | 172 ++++++++++++++++++++++++++++++++++++
->>   kernel/reboot.c           |   1 +
->>   4 files changed, 391 insertions(+), 6 deletions(-)
-> I just reviewed v4.
->
-> It looks like the review comments are still relevant.
-     I will commit the v5 today which includes some modification base on 
-your comments base in the v3.
->
+Changes since v9:
+- Incorporated review comments from Rob.
+
+Changes since v8:
+- Add one new change to support ufs core reset.
+- Incorporated review comments from Evan, Vivek.
+
+Changes since v7:
+- Add one new change to update UFS PHY power on sequence
+- Incorporated review comments from Evan, Vivek and Manu.
+
+Changes since v6:
+- Add one new change to clean up some structs and field
+- Updates the PHY power control sequence.
+- Incorporated review comments from Vivek and Manu.
+
+Changes since v5:
+- Updates the PHY power control sequence.
+- Updates UFS PHY power on condition check.
+
+Changes since v4:
+- Adds 'ref_aux' clock back to SDM845 UFS PHY clock list.
+- Power on PHY before serdes configuration starts.
+- Updates the UFS PHY initialization sequence.
+- Updates a few UFS PHY registers.
+- Incorporated review comments from Vivek and Manu.
+
+Changes since v3:
+- Incorporated review comments from Vivek and Rob.
+
+Changes since v2:
+- Incorporated review comments from Vivek and Rob.
+- Remove "ref_aux" from sdm845 ufs phy clock list structure.
+
+Changes since v1:
+- Incorporated review comments from Vivek and Manu.
+- Update the commit title of patch 2.
+
+Can Guo (5):
+  phy: Update PHY power control sequence
+  phy: General struct and field cleanup
+  phy: Add QMP phy based UFS phy support for sdm845
+  scsi: ufs: Power on phy after it is initialized
+  dt-bindings: phy-qcom-qmp: Add UFS phy compatible string for sdm845
+
+Dov Levenglick (1):
+  scsi: ufs: Add core reset support
+
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt       |   4 +-
+ drivers/phy/qualcomm/phy-qcom-qmp.c                | 216 +++++++++++++++++++--
+ drivers/phy/qualcomm/phy-qcom-qmp.h                |  15 ++
+ drivers/scsi/ufs/ufs-qcom.c                        |  34 +++-
+ drivers/scsi/ufs/ufs-qcom.h                        |   1 +
+ drivers/scsi/ufs/ufshcd-pltfrm.c                   |  22 +++
+ drivers/scsi/ufs/ufshcd.c                          |  13 ++
+ drivers/scsi/ufs/ufshcd.h                          |  12 ++
+ 8 files changed, 296 insertions(+), 21 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
