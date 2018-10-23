@@ -1,42 +1,39 @@
-Return-Path: <SRS0=E+ci=ND=nvidia.com=swarren@kernel.org>
-From: Stephen Warren <swarren@nvidia.com>
-Subject: RE: using interrupt controller dt-bindings macros in Non GPL dts
- files
-Date: Tue, 23 Oct 2018 19:39:31 +0000
-Message-ID: <2f64ffc4477a4f17b4f8188e61c52ae8@HQMAIL107.nvidia.com>
-References: <HE1PR0402MB3323967BD6C0E11C738BFF38F1F40@HE1PR0402MB3323.eurprd04.prod.outlook.com>
- <20181022082906.GE7068@kroah.com>
- <HE1PR0402MB3323E108AF8810DEC38B7691F1F40@HE1PR0402MB3323.eurprd04.prod.outlook.com>
- <20181022103426.GA4546@kroah.com>
- <CADRPPNQyxKpz8QY0myVOz9+sA-aAnwJptcaxxxBnXUskT=f6Lg@mail.gmail.com>
-In-Reply-To: <CADRPPNQyxKpz8QY0myVOz9+sA-aAnwJptcaxxxBnXUskT=f6Lg@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=sPCw=ND=gmail.com=pku.leo@kernel.org>
 MIME-Version: 1.0
-To: Li Yang <leoyang.li@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "pankaj.bansal@nxp.com" <pankaj.bansal@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "geert+renesas@glider.be" <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" BINDINGS" <devicetree@vger.kernel.org>, "V.Sethi@nxp.com, " <V.Sethi@nxp.com>, udit.kumar@nxp.com" <udit.kumar@nxp.com>
+References: <HE1PR0402MB3323967BD6C0E11C738BFF38F1F40@HE1PR0402MB3323.eurprd04.prod.outlook.com>
+ <20181022082906.GE7068@kroah.com> <HE1PR0402MB3323E108AF8810DEC38B7691F1F40@HE1PR0402MB3323.eurprd04.prod.outlook.com>
+ <20181022103426.GA4546@kroah.com>
+In-Reply-To: <20181022103426.GA4546@kroah.com>
+From: Li Yang <leoyang.li@nxp.com>
+Date: Tue, 23 Oct 2018 14:10:06 -0500
+Message-ID: <CADRPPNQyxKpz8QY0myVOz9+sA-aAnwJptcaxxxBnXUskT=f6Lg@mail.gmail.com>
+Subject: Re: using interrupt controller dt-bindings macros in Non GPL dts files
+Content-Type: text/plain; charset="UTF-8"
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: pankaj.bansal@nxp.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, swarren@nvidia.com, geert+renesas@glider.be, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, V.Sethi@nxp.com, udit.kumar@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-TGkgWWFuZyB3cm90ZSBhdCBUdWVzZGF5LCBPY3RvYmVyIDIzLCAyMDE4IDE6MTAgUE06DQo+IE9u
-IE1vbiwgT2N0IDIyLCAyMDE4IGF0IDU6MzUgQU0gR3JlZyBLcm9haC1IYXJ0bWFuDQo+IDxncmVn
-a2hAbGludXhmb3VuZGF0aW9uLm9yZz4gd3JvdGU6DQo+ID4NCj4gPiBPbiBNb24sIE9jdCAyMiwg
-MjAxOCBhdCAwOToxODowMkFNICswMDAwLCBQYW5rYWogQmFuc2FsIHdyb3RlOg0KPiA+ID4gMi4g
-V291bGQgaXQgYmUgcG9zc2libGUgZm9yIHRoZSBjb3B5cmlnaHQgb3duZXJzIG9mIHRoZXNlIGhl
-YWRlciBmaWxlcw0KPiA+ID4gdG8gbWFrZSB0aGVzZSBmaWxlcyBkdWFsIGxpY2Vuc2VkLCBzbyB0
-aGF0IHdlIGFyZSBhYmxlIHRvIHVzZSB0aGVzZQ0KPiA+ID4gZmlsZXMgaW4gb3VyIGR0cy9kdHNp
-IGZpbGVzPw0KPiA+DQo+ID4gWW91IGFyZSBnb2luZyB0byBoYXZlIHRvIGRlYWwgd2l0aCB0aGUg
-bGVnYWwgZGVwYXJ0bWVudHMgb2YgdGhlDQo+ID4gY29tcGFuaWVzIHRoYXQgb3duIHRob3NlIGNv
-cHlyaWdodHMuICBBZ2FpbiwgdGFsayB0byB5b3VyIGxlZ2FsDQo+ID4gZGVwYXJ0bWVudCBhYm91
-dCBob3cgdGhhdCB3b3VsZCBldmVuIHdvcmssIG9yIGlmIHRoZXkgZXZlbiB3aXNoIGZvciB5b3UN
-Cj4gPiB0byBiZSBhc2tpbmcgcGVvcGxlIGFuZCBjb21wYW5pZXMgdG8gZG8gdGhhdC4NCj4gDQo+
-IFJpZ2h0LCB3ZSBzaG91bGQgd29yayB3aXRoIHRoZSBhdXRob3IvY29udHJpYnV0b3Igb2YgdGhl
-c2UgdHdvIGZpbGVzLg0KPiANCj4gSGkgU3RlcGhlbiBhbmQgR2VlcnQsDQo+IA0KPiBBcmUgeW91
-IG9rIHdpdGggcmVsaWNlbnNpbmcgdGhlc2UgdHdvIGZpbGVzIHdpdGggKEdQTC0yLjAgT1IgTUlU
-KT8NCj4gR2l2ZW4gdGhhdCBtYW55IGR0cyBmaWxlcyBpbiBhcm0vYXJtNjQgYXJlIGR1YWwgbGlj
-ZW5zZWQgd2l0aCBHUEwgYW5kDQo+IE1JVC9YMTEvQlNELCBpdCBtYWtlcyBtb3JlIHNlbnNlIHRo
-YXQgdGhlc2UgaGVhZGVyIGZpbGVzIGFyZSBkdWFsDQo+IGxpY2Vuc2VkIHdpdGggYSBwZXJtaXNz
-aXZlIGxpY2Vuc2UgdG9vLg0KDQpGV0lXLCBJIGhhdmUgZmlsZWQgYW4gaW50ZXJuYWwgYnVnIHRv
-IG91ciBJUCBhdWRpdCB0ZWFtIHRvIHNlZSB3aGF0IHRoZXkNCnRoaW5rLiBJIGNhbm5vdCBwcmVk
-aWN0IHRoZSBhbnN3ZXIgb3IgdGltZWxpbmUgZm9yIGFuIGFuc3dlci4NCg0KLS0gDQpudnB1Ymxp
-Yw0K
+On Mon, Oct 22, 2018 at 5:35 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Oct 22, 2018 at 09:18:02AM +0000, Pankaj Bansal wrote:
+> > 2. Would it be possible for the copyright owners of these header files
+> > to make these files dual licensed, so that we are able to use these
+> > files in our dts/dtsi files?
+>
+> You are going to have to deal with the legal departments of the
+> companies that own those copyrights.  Again, talk to your legal
+> department about how that would even work, or if they even wish for you
+> to be asking people and companies to do that.
+
+Right, we should work with the author/contributor of these two files.
+
+Hi Stephen and Geert,
+
+Are you ok with relicensing these two files with (GPL-2.0 OR MIT)?
+Given that many dts files in arm/arm64 are dual licensed with GPL and
+MIT/X11/BSD, it makes more sense that these header files are dual
+licensed with a permissive license too.
+
+Regards,
+Leo
