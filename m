@@ -1,35 +1,65 @@
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH v3 0/2] phy: ocelot-serdes: fix out-of-bounds read
-Date: Tue, 23 Oct 2018 13:14:56 +0200
-Message-ID: <edb88888-0c90-4e5f-6dda-d84630b4c497@embeddedor.com>
-References: <cover.1539940387.git.gustavo@embeddedor.com>
- <20181022.192747.1517598401629589272.davem@davemloft.net>
+From: Tony Xie <tony.xie@rock-chips.com>
+Subject: [PATCH v5 0/5] support a new type of PMIC,including two chips(rk817 and rk809)
+Date: Tue, 23 Oct 2018 19:34:22 +0800
+Message-ID: <1540294467-25813-1-git-send-email-tony.xie@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181022.192747.1517598401629589272.davem@davemloft.net>
-Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, kishon@ti.com, quentin.schulz@bootlin.com, netdev@vger.kernel.org
+To: heiko@sntech.de
+Cc: broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com, tony.xie@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
+Most of functions and registers of the rk817 and rk808 are the same,
+so they can share allmost all codes.
 
+Their specifications are as follows£º
+  1) The RK809 and RK809 consist of 5 DCDCs, 9 LDOs and have the same registers
+     for these components except dcdc5.
+  2) The dcdc5 is a boost dcdc for RK817 and is a buck for RK809.
+  3) The RK817 has one switch but The Rk809 has two.
 
-On 10/23/18 4:27 AM, David Miller wrote:
->>
->> Changes in v3:
->>  - Post the series to netdev, so Dave can take it.
->>
->> Changes in v2:
->>  - Send the whole series to Kishon Vijay Abraham I, so it
->>    can be taken into the PHY tree.
->>  - Add Quentin's Reviewed-by to commit log in both patches.
-> 
-> Series applied.
-> 
+Changes in V2:
+1. initialize the pm_pwroff_fn to NULL. 
+2. use EXPORT_SYMBOL_GPL to export pm_power_off_prepare.
+3. change patch 2/3/4/5 subjects. 
 
-Thanks, Dave.
---
-Gustavo
+Changes in V3£º
+1. change patch 4 subjects
+2. replace pr_ with dev_ for printing in patch 2
+3. modify switch1 and switch2 configs in patch 2
+4. explain gpio information for rk809 and rk817 in patch 4
+
+Changes in V4:
+1. modify some codes for patch 2 and patch 5 according to comments 
+2. add reviewer mail lists for patch 3 and 4
+
+Changes in V5:
+modify some codes for patch 1 according to reveiw comments for v3.
+ 1) remove the pm_power_off_prepare() and replace with shutdown call-back from syscore
+ 2) move the macro REGMAP_IRQ_M into the regmap.h and rename it REGMAP_IRQ_LINE
+ 3) make some dev_warn() log clear
+
+Tony Xie (5):
+  mfd: rk808: Add RK817 and RK809 support
+  regulator: rk808: add RK809 and RK817 support.
+  dt-bindings: mfd: rk808: Add binding information for RK809 and RK817.
+  rtc: rk808: add RK809 and RK817 support.
+  clk: RK808: add RK809 and RK817 support.
+
+ Documentation/devicetree/bindings/mfd/rk808.txt |  44 ++
+ drivers/clk/Kconfig                             |   9 +-
+ drivers/clk/clk-rk808.c                         |  64 ++-
+ drivers/mfd/Kconfig                             |   6 +-
+ drivers/mfd/rk808.c                             | 225 +++++++-
+ drivers/regulator/Kconfig                       |   4 +-
+ drivers/regulator/rk808-regulator.c             | 657 +++++++++++++++++++++++-
+ drivers/rtc/Kconfig                             |   4 +-
+ drivers/rtc/rtc-rk808.c                         |  68 ++-
+ include/linux/mfd/rk808.h                       | 175 +++++++
+ include/linux/regmap.h                          |   6 +
+ 11 files changed, 1193 insertions(+), 69 deletions(-)
+
+-- 
+1.9.1
