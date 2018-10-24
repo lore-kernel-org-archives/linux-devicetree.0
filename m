@@ -1,45 +1,130 @@
-Return-Path: <SRS0=/AVO=NC=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr10066.outbound.protection.outlook.com ([40.107.1.66]:36974
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726784AbeJVN76 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Oct 2018 09:59:58 -0400
-From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH v2 0/4] usb: chipidea: imx: add HSIC support
-Date: Mon, 22 Oct 2018 05:42:53 +0000
-Message-ID: <20181022054031.14027-1-peter.chen@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>, Peter Chen <peter.chen@nxp.com>
+Return-Path: <SRS0=mtda=NE=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v5 2/3] mmc: renesas_sdhi_internal_dmac: Add R7S9210 support
+Date: Wed, 24 Oct 2018 17:23:00 -0500
+Message-Id: <20181024222301.21455-3-chris.brandt@renesas.com>
+In-Reply-To: <20181024222301.21455-1-chris.brandt@renesas.com>
+References: <20181024222301.21455-1-chris.brandt@renesas.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-clk@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Most of NXP (Freescale) i.mx USB part has HSIC support, in this series,
-we add support for them, it should cover all imx6 and imx7d SoC.
+The SDHI/MMC controller in the RZ/A2 is almost the same as R-Car gen3, but
+with some minor differences.
 
-Changes for v2:
-- Compile error reported by kbuild robot [Patch 2/4]
-- Comment from Frieder Schrempf about code structure [Patch 2/4]
-- Comment from Fabio about adding example for pinctrl [Patch 4/4]
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+---
+v5:
+ * Rebased against -next to fix conficts with RZ/G1C patches
+ * Changed Kconfig message to say "found in some RZ" instead of just
+   "found in RZ/A"
+v4:
+ * Fixed spelling in #define
+v3:
+ * Removed extra space in Kconfig
+ * Removed unneeded parentheses
+v2:
+ * Made comment clearer
+---
+ drivers/mmc/host/Kconfig                      |  7 ++++---
+ drivers/mmc/host/renesas_sdhi_internal_dmac.c | 28 +++++++++++++++++++++++++--
+ 2 files changed, 30 insertions(+), 5 deletions(-)
 
-Peter Chen (4):
-  usb: chipidea: add flag for imx hsic implementation
-  usb: chipidea: imx: add HSIC support
-  usb: chipidea: host: override ehci->hub_control
-  doc: usb: ci-hdrc-usb2: Add pinctrl properties for HSIC pin groups
-
- .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |   1 +
- drivers/usb/chipidea/ci_hdrc_imx.c                 | 140 +++++++++++++++++=
-+---
- drivers/usb/chipidea/ci_hdrc_imx.h                 |   9 +-
- drivers/usb/chipidea/host.c                        |  98 +++++++++++++++
- drivers/usb/chipidea/usbmisc_imx.c                 | 130 +++++++++++++++++=
-++
- include/linux/usb/chipidea.h                       |   3 +
- 6 files changed, 362 insertions(+), 19 deletions(-)
-
---=20
-2.14.1
+diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+index 1b58739d9744..720311ece714 100644
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@ -646,13 +646,14 @@ config MMC_SDHI_SYS_DMAC
+ 
+ config MMC_SDHI_INTERNAL_DMAC
+ 	tristate "DMA for SDHI SD/SDIO controllers using on-chip bus mastering"
+-	depends on ARM64 || ARCH_R8A77470 || COMPILE_TEST
++	depends on ARM64 || ARCH_R7S9210 || ARCH_R8A77470 || COMPILE_TEST
+ 	depends on MMC_SDHI
+-	default MMC_SDHI if (ARM64 || ARCH_R8A77470)
++	default MMC_SDHI if (ARM64 || ARCH_R7S9210 || ARCH_R8A77470)
+ 	help
+ 	  This provides DMA support for SDHI SD/SDIO controllers
+ 	  using on-chip bus mastering. This supports the controllers
+-	  found in arm64 based SoCs.
++	  found in arm64 based SoCs. This controller is also found in
++	  some RZ family SoCs.
+ 
+ config MMC_UNIPHIER
+ 	tristate "UniPhier SD/eMMC Host Controller support"
+diff --git a/drivers/mmc/host/renesas_sdhi_internal_dmac.c b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
+index b6f54102bfdd..b9d83d6ed346 100644
+--- a/drivers/mmc/host/renesas_sdhi_internal_dmac.c
++++ b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
+@@ -34,7 +34,7 @@
+ #define DTRAN_MODE_CH_NUM_CH0	0	/* "downstream" = for write commands */
+ #define DTRAN_MODE_CH_NUM_CH1	BIT(16)	/* "upstream" = for read commands */
+ #define DTRAN_MODE_BUS_WIDTH	(BIT(5) | BIT(4))
+-#define DTRAN_MODE_ADDR_MODE	BIT(0)	/* 1 = Increment address */
++#define DTRAN_MODE_ADDR_MODE	BIT(0)	/* 1 = Increment address, 0 = Fixed */
+ 
+ /* DM_CM_DTRAN_CTRL */
+ #define DTRAN_CTRL_DM_START	BIT(0)
+@@ -73,6 +73,9 @@ static unsigned long global_flags;
+ #define SDHI_INTERNAL_DMAC_ONE_RX_ONLY	0
+ #define SDHI_INTERNAL_DMAC_RX_IN_USE	1
+ 
++/* RZ/A2 does not have the ADRR_MODE bit */
++#define SDHI_INTERNAL_DMAC_ADDR_MODE_FIXED_ONLY 2
++
+ /* Definitions for sampling clocks */
+ static struct renesas_sdhi_scc rcar_gen3_scc_taps[] = {
+ 	{
+@@ -81,6 +84,21 @@ static struct renesas_sdhi_scc rcar_gen3_scc_taps[] = {
+ 	},
+ };
+ 
++static const struct renesas_sdhi_of_data of_rza2_compatible = {
++	.tmio_flags	= TMIO_MMC_HAS_IDLE_WAIT | TMIO_MMC_CLK_ACTUAL |
++			  TMIO_MMC_HAVE_CBSY,
++	.tmio_ocr_mask	= MMC_VDD_32_33,
++	.capabilities	= MMC_CAP_SD_HIGHSPEED | MMC_CAP_SDIO_IRQ |
++			  MMC_CAP_CMD23,
++	.bus_shift	= 2,
++	.scc_offset	= 0 - 0x1000,
++	.taps		= rcar_gen3_scc_taps,
++	.taps_num	= ARRAY_SIZE(rcar_gen3_scc_taps),
++	/* DMAC can handle 0xffffffff blk count but only 1 segment */
++	.max_blk_count	= 0xffffffff,
++	.max_segs	= 1,
++};
++
+ static const struct renesas_sdhi_of_data of_rcar_r8a7795_compatible = {
+ 	.tmio_flags	= TMIO_MMC_HAS_IDLE_WAIT | TMIO_MMC_CLK_ACTUAL |
+ 			  TMIO_MMC_HAVE_CBSY | TMIO_MMC_MIN_RCAR2 |
+@@ -113,6 +131,7 @@ static const struct renesas_sdhi_of_data of_rcar_gen3_compatible = {
+ };
+ 
+ static const struct of_device_id renesas_sdhi_internal_dmac_of_match[] = {
++	{ .compatible = "renesas,sdhi-r7s9210", .data = &of_rza2_compatible, },
+ 	{ .compatible = "renesas,sdhi-mmc-r8a77470", .data = &of_rcar_gen3_compatible, },
+ 	{ .compatible = "renesas,sdhi-r8a7795", .data = &of_rcar_r8a7795_compatible, },
+ 	{ .compatible = "renesas,sdhi-r8a7796", .data = &of_rcar_r8a7795_compatible, },
+@@ -172,7 +191,10 @@ renesas_sdhi_internal_dmac_start_dma(struct tmio_mmc_host *host,
+ 				     struct mmc_data *data)
+ {
+ 	struct scatterlist *sg = host->sg_ptr;
+-	u32 dtran_mode = DTRAN_MODE_BUS_WIDTH | DTRAN_MODE_ADDR_MODE;
++	u32 dtran_mode = DTRAN_MODE_BUS_WIDTH;
++
++	if (!test_bit(SDHI_INTERNAL_DMAC_ADDR_MODE_FIXED_ONLY, &global_flags))
++		dtran_mode |= DTRAN_MODE_ADDR_MODE;
+ 
+ 	if (!dma_map_sg(&host->pdev->dev, sg, host->sg_len,
+ 			mmc_get_dma_dir(data)))
+@@ -292,6 +314,8 @@ static const struct tmio_mmc_dma_ops renesas_sdhi_internal_dmac_dma_ops = {
+  */
+ static const struct soc_device_attribute soc_whitelist[] = {
+ 	/* specific ones */
++	{ .soc_id = "r7s9210",
++	  .data = (void *)BIT(SDHI_INTERNAL_DMAC_ADDR_MODE_FIXED_ONLY) },
+ 	{ .soc_id = "r8a7795", .revision = "ES1.*",
+ 	  .data = (void *)BIT(SDHI_INTERNAL_DMAC_ONE_RX_ONLY) },
+ 	{ .soc_id = "r8a7796", .revision = "ES1.0",
+-- 
+2.16.1
