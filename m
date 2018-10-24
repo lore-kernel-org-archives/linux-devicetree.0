@@ -1,29 +1,37 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 4/4] nds32: Add document for NDS32 PMU.
-Date: Wed, 24 Oct 2018 13:32:48 -0500
-Message-ID: <20181024183247.GA12203@bogus>
-References: <cover.1540350887.git.nickhu@andestech.com>
- <bdfe23ce3ded5299d7b525fcb16c353c2be31924.1540350887.git.nickhu@andestech.com>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [PATCH 3/3 v2] clk: qoriq: update clock driver
+Date: Wed, 24 Oct 2018 13:37:28 -0500
+Message-ID: <d4598171243a37516faae71095eb3126d77fa723.camel@buserror.net>
+References: <20181024021122.3942-1-andy.tang@nxp.com>
+         <20181024021122.3942-2-andy.tang@nxp.com>
+         <20181024021122.3942-3-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <bdfe23ce3ded5299d7b525fcb16c353c2be31924.1540350887.git.nickhu@andestech.com>
+In-Reply-To: <20181024021122.3942-3-andy.tang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nickhu <nickhu@andestech.com>
-Cc: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, mark.rutland@arm.com, deanbo422@gmail.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, ebiederm@xmission.com, pombredanne@nexb.com, tglx@linutronix.de, kstewart@linuxfoundation.org, gregkh@linuxfoundation.org, john.garry@huawei.com, devicetree@vger.kernel.org, zong@andestech.com, alankao@andestech.com, green.hu@gmail.com
+To: andy.tang@nxp.com, sboyd@kernel.org, mturquette@baylibre.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 24, 2018 at 11:32:40AM +0800, Nickhu wrote:
-> The document for how to add NDS32 PMU
-> in devicetree.
+On Wed, 2018-10-24 at 10:11 +0800, andy.tang@nxp.com wrote:
+> From: Yuantian Tang <andy.tang@nxp.com>
 > 
-> Signed-off-by: Nickhu <nickhu@andestech.com>
-> ---
->  Documentation/devicetree/bindings/nds32/pmu.txt | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nds32/pmu.txt
+> Legacy bindings are deleted. So the legacy support in driver
+> can be deleted safely.
 
-Can you move to bindings/perf/ with other similar h/w. With that,
+NACK (both this and 2/3).  The legacy support is intended to preserve
+compatibility, regardless of what the dts files in the current kernel tree do.
+ If years later we find it's been broken for a while and nobody complained,
+then maybe it'll be time to remove it, but why deliberately throw away
+compatibility the instant the users have been removed from reference DTs that
+might be copied by board vendors, etc?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Note that even if we didn't care about long-term compatibility at all,
+removing the support in the same patchset as the change to the dts files means
+that the patches can't go in via separate trees (though if that's still the
+intent, you should make it clear who you're asking to take what by putting
+them in separate patchsets).
+
+-Scott
