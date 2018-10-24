@@ -1,52 +1,65 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 10/15] dt-bindings: panel: Add Bananapi
- S070WV20-CT16 ICN6211 MIPI-DSI to RGB bridge
-Date: Wed, 24 Oct 2018 21:36:57 +0100
-Message-ID: <CAGb2v67NeVjB7b57pmUN3rw8JsE+3CKEDXtT-91GiFvRRaU3cA@mail.gmail.com>
-References: <20181023155035.9101-1-jagan@amarulasolutions.com>
- <20181023155035.9101-11-jagan@amarulasolutions.com> <20181024180754.pfae27y6i7jhcdgy@flea>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v9 6/9] i3c: master: Add driver for Cadence IP
+Date: Wed, 24 Oct 2018 23:04:32 +0200
+Message-ID: <20181024230432.66dd71df@bbrezillon>
+References: <20181022133404.2061-1-boris.brezillon@bootlin.com>
+        <20181022133404.2061-7-boris.brezillon@bootlin.com>
+        <20181024202048.7e3534f7@bbrezillon>
+        <99a506e3-d9d5-0d3e-26e1-031447c14857@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB6NPYPPAKGQEVJ33BQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181024180754.pfae27y6i7jhcdgy@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <99a506e3-d9d5-0d3e-26e1-031447c14857@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hel>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 24, 2018 at 7:08 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> On Tue, Oct 23, 2018 at 09:20:30PM +0530, Jagan Teki wrote:
-> > Bananapi S070WV20-CT16 ICN6211 is 800x480, 4-lane MIPI-DSI to RGB bridge panel,
-> > the same panel PCB comes with parallel RBG which is supported via
-> > panel-simple driver with "bananapi,s070wv20-ct16" compatible.
-> >
-> > But this binding is specific for MIPI DSI to RGB bridge panels,
-> > which usually accessed using MIPI DSI controller driver.
-> >
-> > for information:
-> > - "bananapi,s070wv20-ct16" compatible for parallel RGB panels
-> > - "bananapi,s070wv20-ct16-icn6211" compatible for MIPI-DSI to RGB
-> > bridge panels
-> >
-> > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->
-> Why not just reusing the same binding document?
+On Wed, 24 Oct 2018 15:25:17 -0500
+Grygorii Strashko <grygorii.strashko@ti.com> wrote:
 
-Agreed. Just put the MIPI-DSI-specific information you added here
-into the existing document.
+> On 10/24/18 1:20 PM, Boris Brezillon wrote:
+> > Hi Arnd,
+> > 
+> > On Mon, 22 Oct 2018 15:34:01 +0200
+> > Boris Brezillon <boris.brezillon@bootlin.com> wrote:
+> > 
+> >   
+> >> +
+> >> +static void cdns_i3c_master_rd_from_rx_fifo(struct cdns_i3c_master *master,
+> >> +					    u8 *bytes, int nbytes)
+> >> +{
+> >> +	readsl(master->regs + RX_FIFO, bytes, nbytes / 4);  
+> > 
+> > Vitor reported a problem with readsl(): this function expects the 2nd
+> > argument to be aligned on 32-bit, which is not guaranteed here. Unless
+> > you see a better solution, I'll switch back to a loop doing:
+> > 
+> > 	for (i = 0; i < nbytes; i += 4) {
+> > 		u32 tmp = __raw_readl(...);  
+> 
+> Pls, do not use __raw io.
 
-Rob suggested that we could even use the same compatible. That would
-make sense if you are modelling the entire panel + PCB as a module,
-instead of a panel node + a bridge node as I originally wanted.
-Don't worry, I gave it some thought and I think having a single
-combined panel node makes more sense.
+Except this is exactly what I want here, unless you have a
+replacement for "readl() without a mem-barrier and without endianness
+conversion"
 
-ChenYu
+> 
+> > 		memcpy(bytes + i, &tmp,
+> > 		       nbytes - i  > 4 ? 4 : nbytes - i);
+> > 	}
+> >   
+> >> +	if (nbytes & 3) {
+> >> +		u32 tmp;
+> >> +
+> >> +		readsl(master->regs + RX_FIFO, &tmp, 1);
+> >> +		memcpy(bytes + (nbytes & ~3), &tmp, nbytes & 3);
+> >> +	}
+> >> +}  
+> > 
+> > Regards,
+> > 
+> > Boris
+> >   
+> 
