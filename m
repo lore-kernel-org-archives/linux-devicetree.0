@@ -1,93 +1,53 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 2/2] arm64: Create asm/initrd.h
-Date: Tue, 23 Oct 2018 16:40:43 -0700
-Message-ID: <20181023234044.1138-3-f.fainelli@gmail.com>
-References: <20181023234044.1138-1-f.fainelli@gmail.com>
+From: Stefano Stabellini <sstabellini@kernel.org>
+Subject: [PATCH v3] devicetree, xen: add xen,
+ shared-memory binding
+Date: Tue, 23 Oct 2018 18:18:41 -0700
+Message-ID: <1540343921-7487-1-git-send-email-sstabellini@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181023234044.1138-1-f.fainelli@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: "open list:MIPS" <linux-mips@linux-mips.org>, Alan Kao <alankao@andestech.com>, "open list:SUPERH" <linux-sh@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Will Deacon <will.deacon@arm.com>, Paul Mackerras <paulus@samba.org>, "open list:GENERIC INCLUDE/ASM HEADER FILES" <linux-arch@vger.kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, "James E.J. Bottomley" <jejb@parisc-linux.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Catalin Marinas <catalin.marinas@arm.com>, Matt Turner <mattst88@gmail.com>, "moderated list:H8/300 ARCHITECTURE" <uclinux-h8-devel@lists.sourceforge.jp>, Marc Zyngier <marc.zyngier@arm.com>, "open list:USER-MODE LINUX UML" <linux-um@lists.infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Richard Henderson <rth@twiddle.net>, Matt Redfearn <matt.redfearn@mips.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ralf
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xenproject.org>
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
+To: devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, stefanos@xilinx.com, sstabellini@kernel.org, xen-devel@lists.xen.org, julien.grall@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-ARM64 is the only architecture that requires a re-definition of
-__early_init_dt_declare_initrd(). Now that we added the infrastructure
-in asm-generic to provide an asm/initrd.h file, properly break up that
-definition from asm/memory.h and make use of that header in
-drivers/of/fdt.c where this is used.
-
-This significantly cuts the number of objects that need to be rebuilt on
-ARM64 due to the repercusions of including asm/memory.h in several
-places.
-
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- arch/arm64/include/asm/initrd.h | 13 +++++++++++++
- arch/arm64/include/asm/memory.h |  8 --------
- drivers/of/fdt.c                |  1 +
- 3 files changed, 14 insertions(+), 8 deletions(-)
- create mode 100644 arch/arm64/include/asm/initrd.h
-
-diff --git a/arch/arm64/include/asm/initrd.h b/arch/arm64/include/asm/initrd.h
-new file mode 100644
-index 000000000000..0c9572485810
---- /dev/null
-+++ b/arch/arm64/include/asm/initrd.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __ASM_INITRD_H
-+#define __ASM_INITRD_H
-+
-+#ifdef CONFIG_BLK_DEV_INITRD
-+#define __early_init_dt_declare_initrd(__start, __end)			\
-+	do {								\
-+		initrd_start = (__start);				\
-+		initrd_end = (__end);					\
-+	} while (0)
-+#endif
-+
-+#endif /* __ASM_INITRD_H */
-diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
-index b96442960aea..dc3ca21ba240 100644
---- a/arch/arm64/include/asm/memory.h
-+++ b/arch/arm64/include/asm/memory.h
-@@ -168,14 +168,6 @@
- #define IOREMAP_MAX_ORDER	(PMD_SHIFT)
- #endif
- 
--#ifdef CONFIG_BLK_DEV_INITRD
--#define __early_init_dt_declare_initrd(__start, __end)			\
--	do {								\
--		initrd_start = (__start);				\
--		initrd_end = (__end);					\
--	} while (0)
--#endif
--
- #ifndef __ASSEMBLY__
- 
- #include <linux/bitops.h>
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 800ad252cf9c..4e4711af907b 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -28,6 +28,7 @@
- 
- #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
- #include <asm/page.h>
-+#include <asm/initrd.h>
- 
- #include "of_private.h"
- 
--- 
-2.17.1
+RnJvbTogU3RlZmFubyBTdGFiZWxsaW5pIDxzdGVmYW5vc0B4aWxpbnguY29tPgoKSW50cm9kdWNl
+IGEgZGV2aWNlIHRyZWUgYmluZGluZyBmb3IgWGVuIHJlc2VydmVkLW1lbW9yeSByZWdpb25zLiBU
+aGV5CmFyZSB1c2VkIHRvIHNoYXJlIG1lbW9yeSBhY3Jvc3MgVk1zIGZyb20gdGhlIFZNIGNvbmZp
+ZyBmaWxlcy4gKFNlZQpzdGF0aWNfc2htIGNvbmZpZyBvcHRpb24uKQoKU2lnbmVkLW9mZi1ieTog
+U3RlZmFubyBTdGFiZWxsaW5pIDxzdGVmYW5vc0B4aWxpbnguY29tPgpDYzoganVsaWVuLmdyYWxs
+QGFybS5jb20KLS0tCkNoYW5nZXMgaW4gdjM6Ci0gcmVtb3ZlIGZhbGxiYWNrIHZlcnNpb24KCkNo
+YW5nZXMgaW4gdjI6Ci0gZml4IEF1dGhvciBsaW5lCi0gYWRkIHZlcnNpb25pbmcKLSB4ZW4saWQg
+aW5zdGVhZCBvZiBpZAotLS0KIC4uLi9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkveGVuLHNoYXJl
+ZC1tZW1vcnkudHh0ICAgfCAyMCArKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQs
+IDIwIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hlbixzaGFyZWQtbWVtb3J5LnR4dAoKZGlm
+ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1v
+cnkveGVuLHNoYXJlZC1tZW1vcnkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50eHQKbmV3IGZpbGUgbW9kZSAx
+MDA2NDQKaW5kZXggMDAwMDAwMC4uN2M4MTY4MwotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkveGVuLHNoYXJlZC1tZW1v
+cnkudHh0CkBAIC0wLDAgKzEsMjAgQEAKKyogWGVuIGh5cGVydmlzb3IgcmVzZXJ2ZWQtbWVtb3J5
+IGJpbmRpbmcKKworRXhwb3NlIG9uZSBvciBtb3JlIG1lbW9yeSByZWdpb25zIGFzIHJlc2VydmVk
+LW1lbW9yeSB0byB0aGUgZ3Vlc3QKK3ZpcnR1YWwgbWFjaGluZS4gVHlwaWNhbGx5LCBhIHJlZ2lv
+biBpcyBjb25maWd1cmVkIGF0IFZNIGNyZWF0aW9uIHRpbWUKK3RvIGJlIGEgc2hhcmVkIG1lbW9y
+eSBhcmVhIGFjcm9zcyBtdWx0aXBsZSB2aXJ0dWFsIG1hY2hpbmVzIGZvcgorY29tbXVuaWNhdGlv
+biBhbW9uZyB0aGVtLgorCitGb3IgZWFjaCBvZiB0aGVzZSBwcmUtc2hhcmVkIG1lbW9yeSByZWdp
+b25zLCBhIHJhbmdlIGlzIGV4cG9zZWQgdW5kZXIKK3RoZSAvcmVzZXJ2ZWQtbWVtb3J5IG5vZGUg
+YXMgYSBjaGlsZCBub2RlLiBFYWNoIHJhbmdlIHN1Yi1ub2RlIGlzIG5hbWVkCit4ZW4tc2htZW1A
+PGFkZHJlc3M+IGFuZCBoYXMgdGhlIGZvbGxvd2luZyBwcm9wZXJ0aWVzOgorCistIGNvbXBhdGli
+bGU6CisJY29tcGF0aWJsZSA9ICJ4ZW4sc2hhcmVkLW1lbW9yeS12MSIKKworLSByZWc6CisJdGhl
+IGJhc2UgZ3Vlc3QgcGh5c2ljYWwgYWRkcmVzcyBhbmQgc2l6ZSBvZiB0aGUgc2hhcmVkIG1lbW9y
+eSByZWdpb24KKworLSB4ZW4saWQ6CisJYSBzdHJpbmcgdGhhdCBpZGVudGlmaWVzIHRoZSBzaGFy
+ZWQgbWVtb3J5IHJlZ2lvbiBhcyBzcGVjaWZpZWQgaW4KKwl0aGUgVk0gY29uZmlnIGZpbGUKLS0g
+CjEuOS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+WGVuLWRldmVsIG1haWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMueGVucHJvamVjdC5vcmcKaHR0
+cHM6Ly9saXN0cy54ZW5wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL3hlbi1kZXZlbA==
