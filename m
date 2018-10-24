@@ -1,65 +1,62 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 09/12] dt-bindings: panel: Add Bananapi S070WV20-CT16
- MIPI-DSI panel bindings
-Date: Wed, 24 Oct 2018 21:22:30 +0100
-Message-ID: <CAGb2v64euJCAZvyGFL+pr+CLQfY8ypnhRAJFKZQ9xGai6RvLDQ@mail.gmail.com>
-References: <20180927114850.24565-1-jagan@amarulasolutions.com>
- <20180927114850.24565-10-jagan@amarulasolutions.com> <20181015182448.GA7134@bogus>
- <CAGb2v64QEhy1J05L9W0_uWhmrky8wD+vg3v5wA7Yd3_U-DdpKg@mail.gmail.com> <CAL_JsqJPn9hhGsk62RzLc1dPQyF2_iCSau+MvY9mD_QADybgvg@mail.gmail.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v9 6/9] i3c: master: Add driver for Cadence IP
+Date: Wed, 24 Oct 2018 15:25:17 -0500
+Message-ID: <99a506e3-d9d5-0d3e-26e1-031447c14857@ti.com>
+References: <20181022133404.2061-1-boris.brezillon@bootlin.com>
+ <20181022133404.2061-7-boris.brezillon@bootlin.com>
+ <20181024202048.7e3534f7@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJPn9hhGsk62RzLc1dPQyF2_iCSau+MvY9mD_QADybgvg@mail.gmail.com>
+In-Reply-To: <20181024202048.7e3534f7@bbrezillon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Jagan Teki <jagan@amarulasolutions.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, linux-clk <linux-clk@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com
+To: Boris Brezillon <boris.brezillon@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares@synopsys.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Li
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 23, 2018 at 4:11 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Oct 22, 2018 at 5:22 AM Chen-Yu Tsai <wens@csie.org> wrote:
-> >
-> > Hi Rob,
-> >
-> > On Mon, Oct 15, 2018 at 7:24 PM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Thu, 27 Sep 2018 17:18:47 +0530, Jagan Teki wrote:
-> > > > Bananapi S070WV20-CT16 is 800x480, 4-lane MIPI-DSI panel, the
-> > > > same panel PCB comes with parallel RBG which is supported via
-> > > > panel-simple with "bananapi,s070wv20-ct16" compatible.
-> > > >
-> > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > > ---
-> > > >  .../panel/bananapi,s070wv20-ct16-dsi.txt      | 21 +++++++++++++++++++
-> > > >  1 file changed, 21 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16-dsi.txt
-> > > >
-> > >
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> >
-> > This "panel" is actually an RGB panel with a MIPI-DSI-to-RGB bridge
-> > tacked on. On one particular revision of this module, one can also
-> > directly use the RGB interface.
-> >
-> > Would it be better to model this as bridge+panel? We already have
-> > a binding for the RGB version [1]. This would make it harder to
-> > make a driver though, as there is no publicly available datasheet
-> > for the bridge chip, so it's likely that part of the init sequence
-> > would have to be hard-coded.
->
-> Perhaps you can use the same compatible and detect based on the OF
-> graph connection whether it is DSI or RGB interface? That would mean
-> the RGB version doesn't use simple-panel driver, but that should be
-> okay.
 
-I think that would work.
 
-> If there's other users of this bridge chip, then modeling the bridge
-> separately would be better.
+On 10/24/18 1:20 PM, Boris Brezillon wrote:
+> Hi Arnd,
+> 
+> On Mon, 22 Oct 2018 15:34:01 +0200
+> Boris Brezillon <boris.brezillon@bootlin.com> wrote:
+> 
+> 
+>> +
+>> +static void cdns_i3c_master_rd_from_rx_fifo(struct cdns_i3c_master *master,
+>> +					    u8 *bytes, int nbytes)
+>> +{
+>> +	readsl(master->regs + RX_FIFO, bytes, nbytes / 4);
+> 
+> Vitor reported a problem with readsl(): this function expects the 2nd
+> argument to be aligned on 32-bit, which is not guaranteed here. Unless
+> you see a better solution, I'll switch back to a loop doing:
+> 
+> 	for (i = 0; i < nbytes; i += 4) {
+> 		u32 tmp = __raw_readl(...);
 
-I doubt we'd find it. And given that there are no docs for the init
-sequence, even though we could make out some parts, it will always
-be a partially binary sequence tied to the compatible for the panel.
+Pls, do not use __raw io.
 
-Thanks
-ChenYu
+> 		memcpy(bytes + i, &tmp,
+> 		       nbytes - i  > 4 ? 4 : nbytes - i);
+> 	}
+> 
+>> +	if (nbytes & 3) {
+>> +		u32 tmp;
+>> +
+>> +		readsl(master->regs + RX_FIFO, &tmp, 1);
+>> +		memcpy(bytes + (nbytes & ~3), &tmp, nbytes & 3);
+>> +	}
+>> +}
+> 
+> Regards,
+> 
+> Boris
+> 
+
+-- 
+regards,
+-grygorii
