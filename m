@@ -1,92 +1,38 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add device node
- for Mali-400 GPU
-Date: Wed, 24 Oct 2018 18:07:09 +0100
-Message-ID: <20181024170709.m4s4x3o6qfr4mdbs@flea>
-References: <20181023161203.2956-1-jagan@amarulasolutions.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [linux-sunxi] Re: [PATCH] arm64: defconfig: Enable MFD_AXP20X_I2C
+Date: Wed, 24 Oct 2018 18:07:51 +0100
+Message-ID: <20181024170751.uf4xxo4h7ew5lpne@flea>
+References: <20180731133828.2582-1-jagan@amarulasolutions.com>
+ <20180731134036.mzgntiv6fwxg2vja@flea>
+ <CAMty3ZC2==BYChib71qyzd7oRkUHB3hunKw2FGRj3t=U2vK5nw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBSONYLPAKGQEAYNITYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181023161203.2956-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAMty3ZC2==BYChib71qyzd7oRkUHB3hunKw2FGRj3t=U2vK5nw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 23, 2018 at 09:42:03PM +0530, Jagan Teki wrote:
-> Add support for Allwinner A64 has Mali-400MP2.
+On Wed, Oct 24, 2018 at 01:52:37PM +0530, Jagan Teki wrote:
+> On Tue, Jul 31, 2018 at 7:10 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Tue, Jul 31, 2018 at 07:08:28PM +0530, Jagan Teki wrote:
+> > > The Allwinner H6 SoC is paired with the X-Powers AXP805 PMIC
+> > > connected via I2C.
+> > >
+> > > Enable the driver for this PMIC.
+> > >
+> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> >
+> > Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 > 
-> All interrupt lines are mentioned in the manual so used the same.
-> Used 408MHz as assigned clock rate used by BSP, so used the same as
-> well.
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> ---
-> Note:
-> - Modules was able to load it on 4.19. 
-> 
->  .../bindings/gpu/arm,mali-utgard.txt          |  1 +
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 25 +++++++++++++++++++
->  2 files changed, 26 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> index 63cd91176a68..a0ee62a5b221 100644
-> --- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> @@ -11,6 +11,7 @@ Required properties:
->        + allwinner,sun4i-a10-mali
->        + allwinner,sun7i-a20-mali
->        + allwinner,sun8i-h3-mali
-> +      + allwinner,sun50i-a64-mali
->        + allwinner,sun50i-h5-mali
->        + amlogic,meson-gxbb-mali
->        + amlogic,meson-gxl-mali
+> Can you apply this? needed for mmc to detect on H6
 
-Please make a separate patch for this change.
+Please resend it.
 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> index f82e6b165d57..2db3aa151902 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -812,6 +812,31 @@
->  			};
->  		};
->  
-> +		mali: gpu@1c40000 {
-> +			compatible = "allwinner,sun50i-a64-mali", "arm,mali-400";
-> +			reg = <0x01c40000 0x10000>;
-> +			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "gp",
-> +					  "gpmmu",
-> +					  "pp0",
-> +					  "ppmmu0",
-> +					  "pp1",
-> +					  "ppmmu1",
-> +					  "pmu";
-> +			clocks = <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
-> +			clock-names = "bus", "core";
-> +			resets = <&ccu RST_BUS_GPU>;
-> +
-> +			assigned-clocks = <&ccu CLK_GPU>;
-> +			assigned-clock-rates = <408000000>;
-
-This is not needed and should be done in the driver.
-
-Thanks!
 Maxime
 
 -- 
