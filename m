@@ -1,96 +1,94 @@
-From: AnilKumar Chimata <anilc@codeaurora.org>
-Subject: Re: [PATCH 3/3] crypto: qce: ice: Add support for Inline Crypto
- Engine
-Date: Wed, 24 Oct 2018 17:34:53 +0530
-Message-ID: <3d330886-3d78-bc85-e2c1-f64a65d20205@codeaurora.org>
-References: <1539789476-6098-1-git-send-email-anilc@codeaurora.org>
- <1539789476-6098-4-git-send-email-anilc@codeaurora.org>
- <20181017170446.GD29710@thunk.org>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v4 2/7] dt-bindings: ti-lmu: Modify dt bindings for the
+ LM3697
+Date: Wed, 24 Oct 2018 07:07:57 -0500
+Message-ID: <e8800c2e-8ada-7a0d-c1a6-14ddcbe1576d@ti.com>
+References: <20181023170623.31820-1-dmurphy@ti.com>
+ <20181023170623.31820-2-dmurphy@ti.com> <20181024090421.GB24997@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181017170446.GD29710@thunk.org>
+In-Reply-To: <20181024090421.GB24997@amd>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: AnilKumar Chimata <anilc@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, herbert@gondor.apana.org.au, davem@davemloft.net, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, ebiggers@kernel.org, mhalcrow@google.com
+To: Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, lee.jones@linaro.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Theodore,
+Pavel
 
-Thanks for the comments,
-
-On 2018-10-17 22:34, Theodore Y. Ts'o wrote:
-> First, thanks for the effort for working on getting the core ICE
-> driver support into upstreamable patches.
+On 10/24/2018 04:04 AM, Pavel Machek wrote:
+> Hi!
 > 
-> On Wed, Oct 17, 2018 at 08:47:56PM +0530, AnilKumar Chimata wrote:
->> +2) Per File Encryption (PFE)
->> +Per File Manager(PFM) calls QSEECom api to create the key. PFM has a 
->> peer comp-
->> +onent(PFT) at kernel layer which gets the corresponding key index 
->> from PFM.
->> ...
->> +Further Improvements
->> +====================
->> +Currently, Due to PFE use case, ICE driver is dependent upon 
->> dm-req-crypt to
->> +provide the keys as part of request structure. This couples ICE 
->> driver with
->> +dm-req-crypt based solution. It is under discussion to expose an 
->> IOCTL based
->> +and registration based interface APIs from ICE driver. ICE driver 
->> would use
->> +these two interfaces to find out if any key exists for current 
->> request. If
->> +yes, choose the right key index received from IOCTL or registration 
->> based
->> +APIs. If not, dont set any crypto parameter in the request.
+>> The LM3697 is a single function LED driver. The single function LED
+>> driver needs to reside in the LED directory as a dedicated LED driver
+>> and not as a MFD device.  The device does have common brightness and ramp
 > 
-> However, this documentation is referencing components which are not in
-> the mainline kernel.
+> So it is single function LED driver. That does not mean it can not
+> share bindings with the rest. Where the bindings live is not imporant.
+> 
 
-Sure, will clean the documentation and try to minimize the unknown 
-components. Provided these details for better understanding of the flow.
+It can share bindings that are correctly done, not ones that are incomplete and incorrect.
+
+Where bindings live is important to new Linux kernel developers and product 
+developers looking for the proper documentation on the H/W bindings.
+
+>> reside in the Documentation/devicetree/bindings/leds directory and follow the
+>> current LED and general bindings guidelines.
+> 
+> What you forgot to tell us in the changelog:
+
+I can add this to the changelog.
 
 > 
-> In the long term, what I'd like to see for per-file key support is a
-> clean solution which interfaces with the in-kernel fscrypt-enabled
-> file systems (e.g., f2fs and ext4).  What I think we need to do is to
+>> +Optional child properties:
+>> +	- runtime-ramp-up-msec: Current ramping from one brightness level to
+>> +				the a higher brightness level.
+>> +				Range from 2048 us - 117.44 s
+> 
+> The other binding uses "ramp-up-msec". Tell us why you are changing this, or
+> better don't change things needlessly.
+> 
+> We don't want to be using "runtime-ramp-up-msec" for one device and
+> "ramp-up-msec" for the other.
 
-Agree, we are working on making per-file key (PFK) driver generic to 
-support any file system.
+This is another example of how the original bindings were incorrect and misleading.
 
-> add a field in the bio structure which references a key id, and then
-> define a bdi-specific interface which allows the file system to
-> register a struct key and get a key id.  Use of the key id will be
-> refcounted, so the device driver knows how many I/O operations are in
-> flight using a particular key --- since each ICE hardware will have a
-> different number of active keys that it can support.
+The LM3697 have 2 ramp implementations that can be used.
 
-Understand the point here, we will consider this refcount while working 
-on upstreamable PFK driver.
+Startup/Shutdown ramp and Runtime Ramp.  Same Ramp rates different registers and
+different end user experience.
+
+So having a single node call ramp-up-msec is misleading and it does not
+indicate what the H/W will do.
 
 > 
-> Until that's there, at least for the upstream documentation, I think
-> it would be better to drop mention of code that is not yet upstream
-> --- and which may have problems ever going upstream in their current
-> form.
+> I'm not sure what other changes you did, and changelog does not tell
+> me.
+> 
+>> --- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+>> +++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+>> @@ -9,7 +9,6 @@ TI LMU driver supports lighting devices below.
+>>    LM3632       Backlight and regulator
+>>    LM3633       Backlight, LED and fault monitor
+>>    LM3695       Backlight
+>> -  LM3697       Backlight and fault monitor
+>>  
+>>  Required properties:
+>>    - compatible: Should be one of:
+> 
+> NAK. You can use existing binding.
 
-Will clean the documentation.
+Thank you for the consistency
+
+Dan
 
 > 
-> (I haven't checked in a while, but last time I looked the code in
-> question blindly dereferenced private pointers assuming that the only
-> two file systems that could ever use ICE were ext4 and f2fs....  not
-> that the code used by Google handsets were _that_ much cleaner, but
-> at least we dropped in a crypto key into the struct bio, instead of
-> playing unnatural games with private pointers from the wrong
-> abstraction layer.  :-)
-
-before upstreaming the PFK drivers, we will try to avoid private pointer 
-dereferences to achieve better abstraction to file system.
-
+> 									Pavel
 > 
-> 						- Ted
+
+
+-- 
+------------------
+Dan Murphy
