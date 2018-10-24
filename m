@@ -1,66 +1,54 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v9 6/9] i3c: master: Add driver for Cadence IP
-Date: Thu, 25 Oct 2018 00:52:39 +0200
-Message-ID: <20181025005239.15506a63@bbrezillon>
-References: <20181022133404.2061-1-boris.brezillon@bootlin.com>
-        <20181022133404.2061-7-boris.brezillon@bootlin.com>
-        <20181024202048.7e3534f7@bbrezillon>
-        <99a506e3-d9d5-0d3e-26e1-031447c14857@ti.com>
-        <20181024230432.66dd71df@bbrezillon>
-        <380d73a8-2e54-3cee-2fdd-c6e891df93f7@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V1 2/2] Documentation: can: flexcan: Add stop-mode
+ property to device tree
+Date: Wed, 24 Oct 2018 18:57:06 -0500
+Message-ID: <20181024235706.GA22938@bogus>
+References: <20181023051449.2116-1-qiangqing.zhang@nxp.com>
+ <20181023051449.2116-3-qiangqing.zhang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <380d73a8-2e54-3cee-2fdd-c6e891df93f7@ti.com>
+Content-Disposition: inline
+In-Reply-To: <20181023051449.2116-3-qiangqing.zhang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hel>
+To: Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc: "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "wg@grandegger.com" <wg@grandegger.com>, "mkl@pengutronix.de" <mkl@pengutronix.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 24 Oct 2018 17:43:00 -0500
-Grygorii Strashko <grygorii.strashko@ti.com> wrote:
-
-> On 10/24/18 4:04 PM, Boris Brezillon wrote:
-> > On Wed, 24 Oct 2018 15:25:17 -0500
-> > Grygorii Strashko <grygorii.strashko@ti.com> wrote:
-> >   
-> >> On 10/24/18 1:20 PM, Boris Brezillon wrote:  
-> >>> Hi Arnd,
-> >>>
-> >>> On Mon, 22 Oct 2018 15:34:01 +0200
-> >>> Boris Brezillon <boris.brezillon@bootlin.com> wrote:
-> >>>
-> >>>      
-> >>>> +
-> >>>> +static void cdns_i3c_master_rd_from_rx_fifo(struct cdns_i3c_master *master,
-> >>>> +					    u8 *bytes, int nbytes)
-> >>>> +{
-> >>>> +	readsl(master->regs + RX_FIFO, bytes, nbytes / 4);  
-> >>>
-> >>> Vitor reported a problem with readsl(): this function expects the 2nd
-> >>> argument to be aligned on 32-bit, which is not guaranteed here. Unless
-> >>> you see a better solution, I'll switch back to a loop doing:
-> >>>
-> >>> 	for (i = 0; i < nbytes; i += 4) {
-> >>> 		u32 tmp = __raw_readl(...);  
-> >>
-> >> Pls, do not use __raw io.  
-> > 
-> > Except this is exactly what I want here, unless you have a
-> > replacement for "readl() without a mem-barrier and without endianness
-> > conversion"
-> >   
+On Tue, Oct 23, 2018 at 05:17:10AM +0000, Joakim Zhang wrote:
+> From: Dong Aisheng <aisheng.dong@nxp.com>
 > 
-> Not sure why endianness is the problem. readl_relaxed?
+> The FlexCAN controller can parse the stop-mode property to enable CAN
+> self wakeup feature.
+> 
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/net/can/fsl-flexcan.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+> index bfc0c433654f..b5ccfc9c14fb 100644
+> --- a/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+> +++ b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+> @@ -24,6 +24,14 @@ Optional properties:
+>                if this property is present then controller is assumed to be big
+>                endian.
+>  
+> +- stop-mode: register bits of stop mode control, the format is
 
-Because we want to read a stream of bytes, and, if we have a CPU that is
-operating in big-endian (ARM kernels can configured in BE or LE), byte
-ordering will be messed up (the controller is LE).
+Should have a vendor prefix: fsl,stop-mode
 
-If I use readl_relaxed(), I'll then have to call cpu_to_le32(), and
-finally copy the result to the buffer.
-
-> Sry, I've missed that this is part of the driver not i3c core,
-> so minor/ignore.
+> +			<&gpr req_gpr req_bit ack_gpr ack_bit>.
+> +			gpr is the phandle to general purpose register node.
+> +			req_gpr is the gpr register offset of CAN stop request.
+> +			req_bit is the bit offset of CAN stop request.
+> +			ack_gpr is the gpr register offset of CAN stop acknowledge.
+> +			ack_bit is the bit offset of CAN stop acknowledge.
+> +
+>  Example:
+>  
+>  	can@1c000 {
+> -- 
+> 2.17.1
 > 
