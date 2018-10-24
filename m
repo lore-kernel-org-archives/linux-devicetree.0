@@ -1,102 +1,118 @@
-From: anilc@codeaurora.org
-Subject: Re: [PATCH 3/3] crypto: qce: ice: Add support for Inline Crypto
- Engine
-Date: Wed, 24 Oct 2018 16:44:37 +0530
-Message-ID: <d6f1930a618f6539a4c3e53d239fdd90@codeaurora.org>
-References: <1539789476-6098-4-git-send-email-anilc@codeaurora.org>
- <201810181902.44DQrfDL%fengguang.wu@intel.com>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: [PATCH V1 2/3] ARM: dts: imx6sx-sabreauto: Add flexcan support
+Date: Wed, 24 Oct 2018 11:14:37 +0000
+Message-ID: <20181024111213.2724-3-qiangqing.zhang@nxp.com>
+References: <20181024111213.2724-1-qiangqing.zhang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201810181902.44DQrfDL%fengguang.wu@intel.com>
+In-Reply-To: <20181024111213.2724-1-qiangqing.zhang@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: kbuild-all@01.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, herbert@gondor.apana.org.au, davem@davemloft.net, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "A.s. Dong" <aisheng.dong@nxp.com>, Joakim Zhang <qiangqing.zhang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Dong Aisheng <aisheng.dong@nxp.com>
 
-Thanks for the comments, response inline.
+The CAN transceiver on MX6SX Sabreauto board seems in sleep mode
+by default after power up the board. User has to press the wakeup
+key on ARD baseboard before using the transceiver, or it may not
+work properly when power up the board at the first time(warm reset
+does not have such issue).
 
-Thanks,
-AnilKumar
+This patch operates the wake pin too besides stby/en pins by chaining
+them together in regulator mode.
 
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+---
+ arch/arm/boot/dts/imx6sx-sabreauto.dts | 57 ++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
 
-On 2018-10-18 17:13, kbuild test robot wrote:
-> Hi AnilKumar,
-> 
-> Thank you for the patch! Yet something to improve:
-> 
-> [auto build test ERROR on cryptodev/master]
-> [also build test ERROR on v4.19-rc8 next-20181018]
-> [if your patch is applied to the wrong git tree, please drop us a note
-> to help improve the system]
-> 
-> url:
-> https://github.com/0day-ci/linux/commits/AnilKumar-Chimata/firmware-qcom-scm-Update-qcom_scm_call-signature/20181018-182318
-> base:
-> https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
-> master
-> config: sh-allmodconfig (attached as .config)
-> compiler: sh4-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
-> reproduce:
->         wget
-> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross
-> -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.2.0 make.cross ARCH=sh
-> 
-> All errors (new ones prefixed by >>):
-> 
->>> drivers/crypto/qce/ice.c:1372:5: error: redefinition of 
->>> 'qcom_ice_setup_ice_hw'
->     int qcom_ice_setup_ice_hw(const char *storage_type, int enable)
->         ^~~~~~~~~~~~~~~~~~~~~
->    In file included from drivers/crypto/qce/ice.c:25:0:
->    include/crypto/ice.h:60:19: note: previous definition of
-> 'qcom_ice_setup_ice_hw' was here
->     static inline int qcom_ice_setup_ice_hw(const char *storage_type,
-> int enable)
->                       ^~~~~~~~~~~~~~~~~~~~~
-> 
-> vim +/qcom_ice_setup_ice_hw +1372 drivers/crypto/qce/ice.c
-> 
->   1371
->> 1372	int qcom_ice_setup_ice_hw(const char *storage_type, int enable)
->   1373	{
->   1374		struct ice_device *ice_dev = NULL;
->   1375		int ret = -1;
->   1376
->   1377		ice_dev = get_ice_device_from_storage_type(storage_type);
->   1378		if (ice_dev == ERR_PTR(-EPROBE_DEFER))
->   1379			return -EPROBE_DEFER;
->   1380
->   1381		if (!ice_dev)
->   1382			return ret;
->   1383
->   1384		if (enable)
->   1385			return enable_ice_setup(ice_dev);
->   1386
->   1387		return disable_ice_setup(ice_dev);
->   1388	}
->   1389
-
-We will check and get back on the compilation. What is the idea behind 
-for this
-effort, is this for testing the ICE driver? If so, this is not possible 
-as  ICE
-module is inline with storage controller and hence testing has to 
-trigger from
-Storage controller/driver. So testing crypto functionality (AES-XTS and 
-AES-CBC)
-with cryptodev is not possible with this driver.
-
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology 
-> Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel 
-> Corporation
+diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx=
+6sx-sabreauto.dts
+index 841a27f3198f..8f3319e7692f 100644
+--- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
++++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+@@ -36,6 +36,35 @@
+ 		gpio =3D <&gpio2 11 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
+ 	};
++
++	reg_can_wake: regulator-can-wake {
++		compatible =3D "regulator-fixed";
++		regulator-name =3D "can-wake";
++		regulator-min-microvolt =3D <3300000>;
++		regulator-max-microvolt =3D <3300000>;
++		gpio =3D <&max7310_b 7 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	reg_can_en: regulator-can-en {
++		compatible =3D "regulator-fixed";
++		regulator-name =3D "can-en";
++		regulator-min-microvolt =3D <3300000>;
++		regulator-max-microvolt =3D <3300000>;
++		gpio =3D <&max7310_b 5 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		vin-supply =3D <&reg_can_wake>;
++	};
++
++	reg_can_stby: regulator-can-stby {
++		compatible =3D "regulator-fixed";
++		regulator-name =3D "can-stby";
++		regulator-min-microvolt =3D <3300000>;
++		regulator-max-microvolt =3D <3300000>;
++		gpio =3D <&max7310_b 4 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		vin-supply =3D <&reg_can_en>;
++	};
+ };
+=20
+ &anaclk2 {
+@@ -75,6 +104,20 @@
+ 	status =3D "okay";
+ };
+=20
++&flexcan1 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_flexcan1>;
++	xceiver-supply =3D <&reg_can_stby>;
++	status =3D "okay";
++};
++
++&flexcan2 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_flexcan2>;
++	xceiver-supply =3D <&reg_can_stby>;
++	status =3D "okay";
++};
++
+ &uart1 {
+ 	pinctrl-names =3D "default";
+ 	pinctrl-0 =3D <&pinctrl_uart1>;
+@@ -149,6 +192,20 @@
+ 		>;
+ 	};
+=20
++	pinctrl_flexcan1: flexcan1grp {
++		fsl,pins =3D <
++			MX6SX_PAD_QSPI1B_DQS__CAN1_TX   0x1b020
++			MX6SX_PAD_QSPI1A_SS1_B__CAN1_RX	0x1b020
++		>;
++	};
++
++	pinctrl_flexcan2: flexcan2grp {
++		fsl,pins =3D <
++			MX6SX_PAD_QSPI1B_SS1_B__CAN2_RX 0x1b020
++			MX6SX_PAD_QSPI1A_DQS__CAN2_TX	0x1b020
++		>;
++	};
++
+ 	pinctrl_i2c2: i2c2grp {
+ 		fsl,pins =3D <
+ 			MX6SX_PAD_GPIO1_IO03__I2C2_SDA          0x4001b8b1
+--=20
+2.17.1
