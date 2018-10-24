@@ -1,33 +1,38 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [V3, 3/4] Documentation: dt-bindings: media: Document bindings
- for DW MIPI CSI-2 Host
-Date: Wed, 24 Oct 2018 12:41:58 -0500
-Message-ID: <20181024174158.GB2902@bogus>
-References: <1539953556-35762-1-git-send-email-lolivei@synopsys.com>
- <1539953556-35762-4-git-send-email-lolivei@synopsys.com>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [PATCH 1/3 v2] powerpc/fsl: Use new clockgen binding
+Date: Wed, 24 Oct 2018 12:41:16 -0500
+Message-ID: <7bceb12756766931772f2ec37f94ad8cdfeb0fd5.camel@buserror.net>
+References: <20181024021122.3942-1-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1539953556-35762-4-git-send-email-lolivei@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Luis Oliveira <luis.oliveira@synopsys.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, joao.pinto@synopsys.com, festevam@gmail.com, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Neil Armstrong <narmstrong@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Keiichi Watanabe <keiichiw@chromium.org>, Kate Stewart <kstewart@linuxfoundation.org>, Todor Tomov <todor.tomov@linaro.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20181024021122.3942-1-andy.tang@nxp.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: andy.tang@nxp.com, sboyd@kernel.org, mturquette@baylibre.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, paulus@samba.org, linuxppc-dev@lists.ozlabs.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 19, 2018 at 02:52:25PM +0200, Luis Oliveira wrote:
-> Add bindings for Synopsys DesignWare MIPI CSI-2 host.
-
-Also, drop "Documentation: " from the subject. All bindings are 
-documentation and the preferred prefix is 'dt-bindings: <binding dir>: '.
-
+On Wed, 2018-10-24 at 10:11 +0800, andy.tang@nxp.com wrote:
+> From: Scott Wood <oss@buserror.net>
 > 
-> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
-> ---
-> Changelog
-> v2-V3
-> - removed IPI settings
+> The driver retains compatibility with old device trees, but we don't
+> want the old nodes lying around to be copied, or used as a reference
+> (some of the mux options are incorrect), or even just being clutter.
 > 
->  .../devicetree/bindings/media/snps,dw-csi-plat.txt | 52 ++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/snps,dw-csi-plat.txt
+> We will also need the #clock-cells in the clockgen node in order to
+> add fman nodes.
+
+The comment about #clock-cells is no longer relevant to this patch, since that
+ has already been added.
+
+-Scott
