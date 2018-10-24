@@ -1,71 +1,41 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v3 2/9] dt-bindings: ti-lmu: Remove LM3697
-Date: Wed, 24 Oct 2018 10:55:43 +0200
-Message-ID: <20181024085543.GA24997@amd>
-References: <20181012180312.GB5565@amd>
- <60cc9238-aba2-aa6a-64a4-2b5e20835549@gmail.com>
- <CAL_Jsq+Yspr_iNP1eYanvtmiuMf-xNEZ0suDH3tQayV=V5r5=g@mail.gmail.com>
- <73647af4-0258-49a9-d9b6-eeef7e7813dc@gmail.com>
- <5c7f03cc-4d45-6010-523d-46721c218731@ti.com>
- <20181015214512.GA2001@amd>
- <aa401333-9650-c925-2085-6e6d17b576bd@ti.com>
- <20181018221048.GA6364@amd>
- <b3d390c8-46bf-2c94-fad5-ec85b1cca2fe@ti.com>
- <20181019145812.GC43338@atomide.com>
+From: Maksym Kokhan <maksym.kokhan@globallogic.com>
+Subject: Re: [PATCH 0/8] add generic builtin command line
+Date: Wed, 24 Oct 2018 11:57:44 +0300
+Message-ID: <CAMT6-xhvqy5PeQmkQ8tsLRiML_pNJTxyq7dizRRvZTEqc7uzgg@mail.gmail.com>
+References: <1538067309-5711-1-git-send-email-maksym.kokhan@globallogic.com>
+ <20180929181725.GB27441@fifo99.com> <CAMT6-xiQ0vGcKpA+SiWHQWQFwU9Oo9j=Zin+UXDoPqKTz5fbeA@mail.gmail.com>
+ <CAMT6-xj1rjVAy1AWFiMHc5wH36eu=TUSMtdKU=-qRtUbwr9bkg@mail.gmail.com> <20181023144815.GP30658@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181019145812.GC43338@atomide.com>
+In-Reply-To: <20181023144815.GP30658@n2100.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Dan Murphy <dmurphy@ti.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh@kernel.org>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
+To: Russell King <linux@armlinux.org.uk>
+Cc: Daniel Walker <dwalker@fifo99.com>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Daniel Walker <danielwa@cisco.com>, Andrii Bordunov <aborduno@cisco.com>, Ruslan Bilovol <rbilov>
 List-Id: devicetree@vger.kernel.org
 
-
---qMm9M+Fa2AknHoGS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri 2018-10-19 07:58:12, Tony Lindgren wrote:
-> * Dan Murphy <dmurphy@ti.com> [181019 11:42]:
-> > On 10/18/2018 05:10 PM, Pavel Machek wrote:
-> > >=20
-> > > Now... this is what I've suggested before. If you don't agree, you may
-> > > want to contact Tony Lindgren, IIRC he works for TI, too, and might be
-> > > willing to help.
-> >
-> > I will ping Tony just to close the loop.  I will be posting v4 today af=
-ter making the changes.
-> > I was hoping to have some code review prior to posting v4 but have not =
-received any comments so
-> > v4 will just be a patch rearrangement.
->=20
-> I guess not much to ping here though as I know little about these
-> chips :) As long as Rob is happy with the binding changes I'll be
-> happy too.
-
-Well, question is more "how to make Rob happy". I see v4 is out, let
-me comment on that.
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---qMm9M+Fa2AknHoGS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvQM48ACgkQMOfwapXb+vKa7QCgrGHsNWr7veMOlP3bWoCrdDpO
-6EkAnji+3GZF+fbvC3H4bPwsBgniHPoi
-=Yi8O
------END PGP SIGNATURE-----
-
---qMm9M+Fa2AknHoGS--
+Do you mean, that you haven't seen patch for ARM, which I sent on
+September 27 along with cover and patch 1? It is strange, because
+you was the one from recipients. If so, you can see this patch here:
+https://lore.kernel.org/patchwork/patch/992779/
+On Tue, Oct 23, 2018 at 5:48 PM Russell King - ARM Linux
+<linux@armlinux.org.uk> wrote:
+>
+> On Tue, Oct 23, 2018 at 05:43:18PM +0300, Maksym Kokhan wrote:
+> > We still have no response to patches for x86, arm, arm64 and powerpc.
+> > Is current generic command line implementation appropriate for these
+> > architectures?
+> > Is it possible to merge these patches in the current form (for x86,
+> > arm, arm64 and powerpc)?
+>
+> You may wish to consider your recipients - I seem to only have received
+> the cover and patch 1 (which doesn't include any ARM specific bits).
+> It may be that you're not getting responses because people haven't seen
+> your patches.
+>
+> Thanks.
+>
+> --
+> RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+> According to speedtest.net: 11.9Mbps down 500kbps up
