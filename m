@@ -1,47 +1,42 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 13/15] dt-binding: mtd: physmap: Document the
- addr-gpios property
-Date: Wed, 24 Oct 2018 13:38:02 -0500
-Message-ID: <20181024183802.GA20794@bogus>
-References: <20181019074908.13226-1-boris.brezillon@bootlin.com>
- <20181019074908.13226-14-boris.brezillon@bootlin.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH 3/3] drm/tinydrm: Fix setting of the column/page end addresses.
+Date: Wed, 24 Oct 2018 11:43:13 -0700
+Message-ID: <20181024184313.2967-4-eric@anholt.net>
+References: <20181024184313.2967-1-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20181019074908.13226-14-boris.brezillon@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Linus Walleij <linus.walleij@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181024184313.2967-1-eric@anholt.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 19 Oct 2018 09:49:06 +0200, Boris Brezillon wrote:
-> From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-> 
-> Add documentation for the addr-gpios. This extension to the physmap
-> binding allow creating flash devices that are paged using GPIOs.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-> ---
-> Changes in v2:
-> - Drop Rob's R-b (waiting for a second review)
-> ---
->  Documentation/devicetree/bindings/mtd/mtd-physmap.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+If the clipped dirty region's x/y happened to align to 256, we would
+have set the top 8 bits wrong.  Noticed by inspection, not by
+reproducing a bug.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Eric Anholt <eric@anholt.net>
+---
+ drivers/gpu/drm/tinydrm/mipi-dbi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+diff --git a/drivers/gpu/drm/tinydrm/mipi-dbi.c b/drivers/gpu/drm/tinydrm/mipi-dbi.c
+index cb3441e51d5f..1bb870021f6e 100644
+--- a/drivers/gpu/drm/tinydrm/mipi-dbi.c
++++ b/drivers/gpu/drm/tinydrm/mipi-dbi.c
+@@ -240,10 +240,10 @@ static int mipi_dbi_fb_dirty(struct drm_framebuffer *fb,
+ 
+ 	mipi_dbi_command(mipi, MIPI_DCS_SET_COLUMN_ADDRESS,
+ 			 (clip.x1 >> 8) & 0xFF, clip.x1 & 0xFF,
+-			 (clip.x2 >> 8) & 0xFF, (clip.x2 - 1) & 0xFF);
++			 ((clip.x2 - 1) >> 8) & 0xFF, (clip.x2 - 1) & 0xFF);
+ 	mipi_dbi_command(mipi, MIPI_DCS_SET_PAGE_ADDRESS,
+ 			 (clip.y1 >> 8) & 0xFF, clip.y1 & 0xFF,
+-			 (clip.y2 >> 8) & 0xFF, (clip.y2 - 1) & 0xFF);
++			 ((clip.y2 - 1) >> 8) & 0xFF, (clip.y2 - 1) & 0xFF);
+ 
+ 	ret = mipi_dbi_command_buf(mipi, MIPI_DCS_WRITE_MEMORY_START, tr,
+ 				(clip.x2 - clip.x1) * (clip.y2 - clip.y1) * 2);
+-- 
+2.19.1
