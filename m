@@ -1,60 +1,35 @@
-Return-Path: <SRS0=Ck17=NI=googlemail.com=martin.blumenstingl@kernel.org>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 3/7] ARM: dts: meson8: add the temperature calibration data for the SAR ADC
-Date: Sun, 28 Oct 2018 13:26:25 +0100
-Message-Id: <20181028122629.10144-4-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20181028122629.10144-1-martin.blumenstingl@googlemail.com>
-References: <20181028122629.10144-1-martin.blumenstingl@googlemail.com>
+Return-Path: <robherring2@gmail.com>
+Date: Wed, 24 Oct 2018 13:39:00 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: pinctrl: Add RZ/A2 pinctrl and GPIO
+Message-ID: <20181024183900.GA22215@bogus>
+References: <20181019134030.10472-1-chris.brandt@renesas.com>
+ <20181019134030.10472-3-chris.brandt@renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de, jic23@kernel.org
-Cc: khilman@baylibre.com, carlo@caione.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181019134030.10472-3-chris.brandt@renesas.com>
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, jacopo mondi <jacopo@jmondi.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The SAR ADC can measure the chip temperature of the SoC. This only
-works if the chip is calibrated and if the calibration data is written
-to the correct registers. The calibration data is stored in the upper
-two bytes of eFuse offset 0x1f4.
+On Fri, 19 Oct 2018 08:40:30 -0500, Chris Brandt wrote:
+> Add device tree binding documentation and header file for Renesas R7S9210
+> (RZ/A2) SoCs.
+> 
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> ---
+> v2:
+>  * Moved gpio-controller to required
+>  * Wrote a better description of what the sub-nodes are for
+>  * Added pinmux property description
+>  * Changed macro RZA2_PIN_ID to RZA2_PIN
+> ---
+>  .../bindings/pinctrl/renesas,rza2-pinctrl.txt      | 88 ++++++++++++++++++++++
+>  include/dt-bindings/pinctrl/r7s9210-pinctrl.h      | 47 ++++++++++++
+>  2 files changed, 135 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
+>  create mode 100644 include/dt-bindings/pinctrl/r7s9210-pinctrl.h
+> 
 
-This adds the eFuse cell for the temperature calibration data and
-passes it to the SAR ADC. We also need to pass the HHI sysctrl node to
-the SAR ADC because the 4th TSC (temperature sensor calibration
-coefficient) bit is stored in the HHI region (unlike bits [3:0] which
-are stored directly inside the SAR ADC's register area).
-
-On boards that have the SAR ADC enabled channel 8 can be used to
-measure the chip temperature.
-
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm/boot/dts/meson8.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-index 3e3d9c54cddc..30d4406f63b3 100644
---- a/arch/arm/boot/dts/meson8.dtsi
-+++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -304,6 +304,11 @@
- 	compatible = "amlogic,meson8-efuse";
- 	clocks = <&clkc CLKID_EFUSE>;
- 	clock-names = "core";
-+
-+	temperature_calib: calib@1f4 {
-+		/* only the upper two bytes are relevant */
-+		reg = <0x1f4 0x4>;
-+	};
- };
- 
- &ethmac {
-@@ -364,6 +369,9 @@
- 	clocks = <&clkc CLKID_XTAL>,
- 		<&clkc CLKID_SAR_ADC>;
- 	clock-names = "clkin", "core";
-+	amlogic,hhi-sysctrl = <&hhi>;
-+	nvmem-cells = <&temperature_calib>;
-+	nvmem-cell-names = "temperature_calib";
- };
- 
- &sdio {
--- 
-2.19.1
+Reviewed-by: Rob Herring <robh@kernel.org>
