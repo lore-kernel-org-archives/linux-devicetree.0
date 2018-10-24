@@ -1,53 +1,242 @@
-From: Stefano Stabellini <sstabellini@kernel.org>
-Subject: [PATCH v3] devicetree, xen: add xen,
- shared-memory binding
-Date: Tue, 23 Oct 2018 18:18:41 -0700
-Message-ID: <1540343921-7487-1-git-send-email-sstabellini@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <xen-devel-bounces@lists.xenproject.org>
-List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
-List-Post: <mailto:xen-devel@lists.xenproject.org>
-List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
-List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
-Errors-To: xen-devel-bounces@lists.xenproject.org
-Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
-To: devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, stefanos@xilinx.com, sstabellini@kernel.org, xen-devel@lists.xen.org, julien.grall@arm.com, robh+dt@kernel.org
+From: andy.tang@nxp.com
+Subject: [PATCH 3/3 v2] clk: qoriq: update clock driver
+Date: Wed, 24 Oct 2018 10:11:22 +0800
+Message-ID: <20181024021122.3942-3-andy.tang@nxp.com>
+References: <20181024021122.3942-1-andy.tang@nxp.com>
+ <20181024021122.3942-2-andy.tang@nxp.com>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20181024021122.3942-2-andy.tang@nxp.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: sboyd@kernel.org, mturquette@baylibre.com, oss@buserror.net
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, paulus@samba.org, linuxppc-dev@lists.ozlabs.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogU3RlZmFubyBTdGFiZWxsaW5pIDxzdGVmYW5vc0B4aWxpbnguY29tPgoKSW50cm9kdWNl
-IGEgZGV2aWNlIHRyZWUgYmluZGluZyBmb3IgWGVuIHJlc2VydmVkLW1lbW9yeSByZWdpb25zLiBU
-aGV5CmFyZSB1c2VkIHRvIHNoYXJlIG1lbW9yeSBhY3Jvc3MgVk1zIGZyb20gdGhlIFZNIGNvbmZp
-ZyBmaWxlcy4gKFNlZQpzdGF0aWNfc2htIGNvbmZpZyBvcHRpb24uKQoKU2lnbmVkLW9mZi1ieTog
-U3RlZmFubyBTdGFiZWxsaW5pIDxzdGVmYW5vc0B4aWxpbnguY29tPgpDYzoganVsaWVuLmdyYWxs
-QGFybS5jb20KLS0tCkNoYW5nZXMgaW4gdjM6Ci0gcmVtb3ZlIGZhbGxiYWNrIHZlcnNpb24KCkNo
-YW5nZXMgaW4gdjI6Ci0gZml4IEF1dGhvciBsaW5lCi0gYWRkIHZlcnNpb25pbmcKLSB4ZW4saWQg
-aW5zdGVhZCBvZiBpZAotLS0KIC4uLi9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkveGVuLHNoYXJl
-ZC1tZW1vcnkudHh0ICAgfCAyMCArKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQs
-IDIwIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hlbixzaGFyZWQtbWVtb3J5LnR4dAoKZGlm
-ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1v
-cnkveGVuLHNoYXJlZC1tZW1vcnkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50eHQKbmV3IGZpbGUgbW9kZSAx
-MDA2NDQKaW5kZXggMDAwMDAwMC4uN2M4MTY4MwotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkveGVuLHNoYXJlZC1tZW1v
-cnkudHh0CkBAIC0wLDAgKzEsMjAgQEAKKyogWGVuIGh5cGVydmlzb3IgcmVzZXJ2ZWQtbWVtb3J5
-IGJpbmRpbmcKKworRXhwb3NlIG9uZSBvciBtb3JlIG1lbW9yeSByZWdpb25zIGFzIHJlc2VydmVk
-LW1lbW9yeSB0byB0aGUgZ3Vlc3QKK3ZpcnR1YWwgbWFjaGluZS4gVHlwaWNhbGx5LCBhIHJlZ2lv
-biBpcyBjb25maWd1cmVkIGF0IFZNIGNyZWF0aW9uIHRpbWUKK3RvIGJlIGEgc2hhcmVkIG1lbW9y
-eSBhcmVhIGFjcm9zcyBtdWx0aXBsZSB2aXJ0dWFsIG1hY2hpbmVzIGZvcgorY29tbXVuaWNhdGlv
-biBhbW9uZyB0aGVtLgorCitGb3IgZWFjaCBvZiB0aGVzZSBwcmUtc2hhcmVkIG1lbW9yeSByZWdp
-b25zLCBhIHJhbmdlIGlzIGV4cG9zZWQgdW5kZXIKK3RoZSAvcmVzZXJ2ZWQtbWVtb3J5IG5vZGUg
-YXMgYSBjaGlsZCBub2RlLiBFYWNoIHJhbmdlIHN1Yi1ub2RlIGlzIG5hbWVkCit4ZW4tc2htZW1A
-PGFkZHJlc3M+IGFuZCBoYXMgdGhlIGZvbGxvd2luZyBwcm9wZXJ0aWVzOgorCistIGNvbXBhdGli
-bGU6CisJY29tcGF0aWJsZSA9ICJ4ZW4sc2hhcmVkLW1lbW9yeS12MSIKKworLSByZWc6CisJdGhl
-IGJhc2UgZ3Vlc3QgcGh5c2ljYWwgYWRkcmVzcyBhbmQgc2l6ZSBvZiB0aGUgc2hhcmVkIG1lbW9y
-eSByZWdpb24KKworLSB4ZW4saWQ6CisJYSBzdHJpbmcgdGhhdCBpZGVudGlmaWVzIHRoZSBzaGFy
-ZWQgbWVtb3J5IHJlZ2lvbiBhcyBzcGVjaWZpZWQgaW4KKwl0aGUgVk0gY29uZmlnIGZpbGUKLS0g
-CjEuOS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-WGVuLWRldmVsIG1haWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMueGVucHJvamVjdC5vcmcKaHR0
-cHM6Ly9saXN0cy54ZW5wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL3hlbi1kZXZlbA==
+From: Yuantian Tang <andy.tang@nxp.com>
+
+Legacy bindings are deleted. So the legacy support in driver
+can be deleted safely.
+Add more chip-specific compatible as well to support more Socs.
+
+Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
+---
+v2:
+  - remove all legacy code
+
+ drivers/clk/clk-qoriq.c |  159 +++-------------------------------------------
+ 1 files changed, 11 insertions(+), 148 deletions(-)
+
+diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
+index 3a1812f..405a9ab 100644
+--- a/drivers/clk/clk-qoriq.c
++++ b/drivers/clk/clk-qoriq.c
+@@ -914,43 +914,6 @@ static void __init create_muxes(struct clockgen *cg)
+ 	}
+ }
+ 
+-static void __init clockgen_init(struct device_node *np);
+-
+-/*
+- * Legacy nodes may get probed before the parent clockgen node.
+- * It is assumed that device trees with legacy nodes will not
+- * contain a "clocks" property -- otherwise the input clocks may
+- * not be initialized at this point.
+- */
+-static void __init legacy_init_clockgen(struct device_node *np)
+-{
+-	if (!clockgen.node)
+-		clockgen_init(of_get_parent(np));
+-}
+-
+-/* Legacy node */
+-static void __init core_mux_init(struct device_node *np)
+-{
+-	struct clk *clk;
+-	struct resource res;
+-	int idx, rc;
+-
+-	legacy_init_clockgen(np);
+-
+-	if (of_address_to_resource(np, 0, &res))
+-		return;
+-
+-	idx = (res.start & 0xf0) >> 5;
+-	clk = clockgen.cmux[idx];
+-
+-	rc = of_clk_add_provider(np, of_clk_src_simple_get, clk);
+-	if (rc) {
+-		pr_err("%s: Couldn't register clk provider for node %s: %d\n",
+-		       __func__, np->name, rc);
+-		return;
+-	}
+-}
+-
+ static struct clk __init
+ *sysclk_from_fixed(struct device_node *node, const char *name)
+ {
+@@ -1036,30 +999,9 @@ static void __init core_mux_init(struct device_node *np)
+ 	if (!IS_ERR(clk))
+ 		return clk;
+ 
+-	/*
+-	 * This indicates a mix of legacy nodes with the new coreclk
+-	 * mechanism, which should never happen.  If this error occurs,
+-	 * don't use the wrong input clock just because coreclk isn't
+-	 * ready yet.
+-	 */
+-	if (WARN_ON(PTR_ERR(clk) == -EPROBE_DEFER))
+-		return clk;
+-
+ 	return NULL;
+ }
+ 
+-/* Legacy node */
+-static void __init sysclk_init(struct device_node *node)
+-{
+-	struct clk *clk;
+-
+-	legacy_init_clockgen(node);
+-
+-	clk = clockgen.sysclk;
+-	if (clk)
+-		of_clk_add_provider(node, of_clk_src_simple_get, clk);
+-}
+-
+ #define PLL_KILL BIT(31)
+ 
+ static void __init create_one_pll(struct clockgen *cg, int idx)
+@@ -1162,82 +1104,6 @@ static void __init create_plls(struct clockgen *cg)
+ 		create_one_pll(cg, i);
+ }
+ 
+-static void __init legacy_pll_init(struct device_node *np, int idx)
+-{
+-	struct clockgen_pll *pll;
+-	struct clk_onecell_data *onecell_data;
+-	struct clk **subclks;
+-	int count, rc;
+-
+-	legacy_init_clockgen(np);
+-
+-	pll = &clockgen.pll[idx];
+-	count = of_property_count_strings(np, "clock-output-names");
+-
+-	BUILD_BUG_ON(ARRAY_SIZE(pll->div) < 4);
+-	subclks = kcalloc(4, sizeof(struct clk *), GFP_KERNEL);
+-	if (!subclks)
+-		return;
+-
+-	onecell_data = kmalloc(sizeof(*onecell_data), GFP_KERNEL);
+-	if (!onecell_data)
+-		goto err_clks;
+-
+-	if (count <= 3) {
+-		subclks[0] = pll->div[0].clk;
+-		subclks[1] = pll->div[1].clk;
+-		subclks[2] = pll->div[3].clk;
+-	} else {
+-		subclks[0] = pll->div[0].clk;
+-		subclks[1] = pll->div[1].clk;
+-		subclks[2] = pll->div[2].clk;
+-		subclks[3] = pll->div[3].clk;
+-	}
+-
+-	onecell_data->clks = subclks;
+-	onecell_data->clk_num = count;
+-
+-	rc = of_clk_add_provider(np, of_clk_src_onecell_get, onecell_data);
+-	if (rc) {
+-		pr_err("%s: Couldn't register clk provider for node %s: %d\n",
+-		       __func__, np->name, rc);
+-		goto err_cell;
+-	}
+-
+-	return;
+-err_cell:
+-	kfree(onecell_data);
+-err_clks:
+-	kfree(subclks);
+-}
+-
+-/* Legacy node */
+-static void __init pltfrm_pll_init(struct device_node *np)
+-{
+-	legacy_pll_init(np, PLATFORM_PLL);
+-}
+-
+-/* Legacy node */
+-static void __init core_pll_init(struct device_node *np)
+-{
+-	struct resource res;
+-	int idx;
+-
+-	if (of_address_to_resource(np, 0, &res))
+-		return;
+-
+-	if ((res.start & 0xfff) == 0xc00) {
+-		/*
+-		 * ls1021a devtree labels the platform PLL
+-		 * with the core PLL compatible
+-		 */
+-		pltfrm_pll_init(np);
+-	} else {
+-		idx = (res.start & 0xf0) >> 5;
+-		legacy_pll_init(np, CGA_PLL1 + idx);
+-	}
+-}
+-
+ static struct clk *clockgen_clk_get(struct of_phandle_args *clkspec, void *data)
+ {
+ 	struct clockgen *cg = data;
+@@ -1347,10 +1213,6 @@ static void __init clockgen_init(struct device_node *np)
+ 	int i, ret;
+ 	bool is_old_ls1021a = false;
+ 
+-	/* May have already been called by a legacy probe */
+-	if (clockgen.node)
+-		return;
+-
+ 	clockgen.node = np;
+ 	clockgen.regs = of_iomap(np, 0);
+ 	if (!clockgen.regs &&
+@@ -1418,19 +1280,20 @@ static void __init clockgen_init(struct device_node *np)
+ 
+ CLK_OF_DECLARE(qoriq_clockgen_1, "fsl,qoriq-clockgen-1.0", clockgen_init);
+ CLK_OF_DECLARE(qoriq_clockgen_2, "fsl,qoriq-clockgen-2.0", clockgen_init);
++CLK_OF_DECLARE(qoriq_clockgen_b4420, "fsl,fsl,b4420-clockgen", clockgen_init);
++CLK_OF_DECLARE(qoriq_clockgen_b4860, "fsl,fsl,b4860-clockgen", clockgen_init);
+ CLK_OF_DECLARE(qoriq_clockgen_ls1012a, "fsl,ls1012a-clockgen", clockgen_init);
+ CLK_OF_DECLARE(qoriq_clockgen_ls1021a, "fsl,ls1021a-clockgen", clockgen_init);
+ CLK_OF_DECLARE(qoriq_clockgen_ls1043a, "fsl,ls1043a-clockgen", clockgen_init);
+ CLK_OF_DECLARE(qoriq_clockgen_ls1046a, "fsl,ls1046a-clockgen", clockgen_init);
+ CLK_OF_DECLARE(qoriq_clockgen_ls1088a, "fsl,ls1088a-clockgen", clockgen_init);
+ CLK_OF_DECLARE(qoriq_clockgen_ls2080a, "fsl,ls2080a-clockgen", clockgen_init);
+-
+-/* Legacy nodes */
+-CLK_OF_DECLARE(qoriq_sysclk_1, "fsl,qoriq-sysclk-1.0", sysclk_init);
+-CLK_OF_DECLARE(qoriq_sysclk_2, "fsl,qoriq-sysclk-2.0", sysclk_init);
+-CLK_OF_DECLARE(qoriq_core_pll_1, "fsl,qoriq-core-pll-1.0", core_pll_init);
+-CLK_OF_DECLARE(qoriq_core_pll_2, "fsl,qoriq-core-pll-2.0", core_pll_init);
+-CLK_OF_DECLARE(qoriq_core_mux_1, "fsl,qoriq-core-mux-1.0", core_mux_init);
+-CLK_OF_DECLARE(qoriq_core_mux_2, "fsl,qoriq-core-mux-2.0", core_mux_init);
+-CLK_OF_DECLARE(qoriq_pltfrm_pll_1, "fsl,qoriq-platform-pll-1.0", pltfrm_pll_init);
+-CLK_OF_DECLARE(qoriq_pltfrm_pll_2, "fsl,qoriq-platform-pll-2.0", pltfrm_pll_init);
++CLK_OF_DECLARE(qoriq_clockgen_p2041, "fsl,p2041-clockgen", clockgen_init);
++CLK_OF_DECLARE(qoriq_clockgen_p3041, "fsl,p3041-clockgen", clockgen_init);
++CLK_OF_DECLARE(qoriq_clockgen_p4080, "fsl,p4080-clockgen", clockgen_init);
++CLK_OF_DECLARE(qoriq_clockgen_p5020, "fsl,p5020-clockgen", clockgen_init);
++CLK_OF_DECLARE(qoriq_clockgen_p5040, "fsl,p5040-clockgen", clockgen_init);
++CLK_OF_DECLARE(qoriq_clockgen_t1023, "fsl,t1023-clockgen", clockgen_init);
++CLK_OF_DECLARE(qoriq_clockgen_t1040, "fsl,t1040-clockgen", clockgen_init);
++CLK_OF_DECLARE(qoriq_clockgen_t2080, "fsl,t2080-clockgen", clockgen_init);
++CLK_OF_DECLARE(qoriq_clockgen_t4240, "fsl,t4240-clockgen", clockgen_init);
+-- 
+1.7.1
