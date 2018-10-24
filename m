@@ -1,48 +1,28 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH] ARM: dts: replace gpio-key,wakeup with wakeup-source
- property
-Date: Wed, 24 Oct 2018 13:43:59 +0000
-Message-ID: <b81ade0b-2ec7-16a9-fb43-909008d96635@axentia.se>
-References: <20181024114540.5196-1-sudeep.holla@arm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 02/11] dt-bindings: power: supply: axp20x: add AXP803
+ power bindings
+Date: Wed, 24 Oct 2018 08:55:24 -0500
+Message-ID: <20181024135524.GA30329@bogus>
+References: <20181023185330.10472-1-oskari@lemmela.net>
+ <20181023185330.10472-3-oskari@lemmela.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181024114540.5196-1-sudeep.holla@arm.com>
-Content-Language: en-US
-Content-ID: <FCC77323DD726F4DA1C40C1AB81EB5FD@eurprd02.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michal Simek <michal.simek@xilinx.com>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181023185330.10472-3-oskari@lemmela.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Oskari Lemmela <oskari@lemmela.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee.jones@linaro.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Vasily Khoruzhick <anarsoul@gmail.com>, Quentin Schulz <quentin.schulz@free-electrons.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-10-24 13:45, Sudeep Holla wrote:
-> Most of the legacy "gpio-key,wakeup" and "enable-sdio-wakeup" boolean
-> properties are already replaced with "wakeup-source". However few
-> occurrences of old property has popped up again, probably from the
-> remnants in downstream trees.
+On Tue, Oct 23, 2018 at 09:53:21PM +0300, Oskari Lemmela wrote:
+> The AXP803 power supplies are compatible with AXP813, but
+> add specific compatibles for them.
 > 
-> This patch replaces the legacy properties with the unified
-> "wakeup-source" property.
-> 
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Peter Rosin <peda@axentia.se>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Michal Simek <michal.simek@xilinx.com>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> Signed-off-by: Oskari Lemmela <oskari@lemmela.net>
+> ---
+>  .../devicetree/bindings/power/supply/axp20x_ac_power.txt         | 1 +
+>  .../devicetree/bindings/power/supply/axp20x_battery.txt          | 1 +
+>  2 files changed, 2 insertions(+)
 
-Acked-by: Peter Rosin <peda@axentia.se>
-
-Cheers,
-Peter
+Reviewed-by: Rob Herring <robh@kernel.org>
