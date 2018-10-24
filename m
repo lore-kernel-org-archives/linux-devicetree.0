@@ -1,79 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 0/2] arm64: Cut rebuild time when changing CONFIG_BLK_DEV_INITRD
-Date: Wed, 24 Oct 2018 16:25:47 -0500
-Message-ID: <CAL_JsqKC6+8gobdk1uhMLLdMUHEO8D0c3m6+F_3y3NTU_KidOw@mail.gmail.com>
-References: <20181024193256.23734-1-f.fainelli@gmail.com> <CAL_Jsq+KCOv6pXXHhHDZ+7-QUrmtMDvSjEVhK15yZ3qbnn61Ag@mail.gmail.com>
- <6e647f76-8523-09d3-9b72-d8d8abd213a4@gmail.com>
+From: Li Yang <leoyang.li@nxp.com>
+Subject: Re: [PATCH v5 2/6] soc/fsl/guts: Add definition for LX2160A
+Date: Wed, 24 Oct 2018 16:39:35 -0500
+Message-ID: <CADRPPNTwpQRu9fxt8PTVb6VoNJEFFrMHpCrRa5T7YEddSVnq-w@mail.gmail.com>
+References: <1539536883-1928-1-git-send-email-vabhav.sharma@nxp.com> <1539536883-1928-3-git-send-email-vabhav.sharma@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6e647f76-8523-09d3-9b72-d8d8abd213a4@gmail.com>
+In-Reply-To: <1539536883-1928-3-git-send-email-vabhav.sharma@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Olof Johansson <olof@lixom.net>, linux-alpha@vger.kernel.org, arcml <linux-snps-arc@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-c6x-dev@linux-c6x.org, "moderated list:H8/300 ARCHITECTURE" <uclinux-h8-devel@lists.sourceforge.jp>, linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org, Linux-MIPS <linux-mips@linux-mips.org>, nios2-dev@lists.rocketboards.org, Openrisc <openrisc@list>
+To: Vabhav Sharma <vabhav.sharma@nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Scott Wood <oss@buserror.net>, lkml <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-clk <linux-clk@vger.kernel.org>, linux-pm@vger.kernel.org, linux-kernel-owner@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundati>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 24, 2018 at 3:01 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+On Mon, Oct 15, 2018 at 12:14 AM Vabhav Sharma <vabhav.sharma@nxp.com> wrote:
 >
-> On 10/24/18 12:55 PM, Rob Herring wrote:
-> > On Wed, Oct 24, 2018 at 2:33 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
-> >>
-> >> Hi all,
-> >>
-> >> While investigating why ARM64 required a ton of objects to be rebuilt
-> >> when toggling CONFIG_DEV_BLK_INITRD, it became clear that this was
-> >> because we define __early_init_dt_declare_initrd() differently and we do
-> >> that in arch/arm64/include/asm/memory.h which gets included by a fair
-> >> amount of other header files, and translation units as well.
-> >
-> > I scratch my head sometimes as to why some config options rebuild so
-> > much stuff. One down, ? to go. :)
-> >
+> Adding compatible string "lx2160a-dcfg" to
+> initialize guts driver for lx2160 and SoC die
+> attribute definition for LX2160A
 >
-> This one was by far the most invasive one due to its include chain, but
-> yes, there would be many more that could be optimized.
->
-> >> Changing the value of CONFIG_DEV_BLK_INITRD is a common thing with build
-> >> systems that generate two kernels: one with the initramfs and one
-> >> without. buildroot is one of these build systems, OpenWrt is also
-> >> another one that does this.
-> >>
-> >> This patch series proposes adding an empty initrd.h to satisfy the need
-> >> for drivers/of/fdt.c to unconditionally include that file, and moves the
-> >> custom __early_init_dt_declare_initrd() definition away from
-> >> asm/memory.h
-> >>
-> >> This cuts the number of objects rebuilds from 1920 down to 26, so a
-> >> factor 73 approximately.
-> >>
-> >> Apologies for the long CC list, please let me know how you would go
-> >> about merging that and if another approach would be preferable, e.g:
-> >> introducing a CONFIG_ARCH_INITRD_BELOW_START_OK Kconfig option or
-> >> something like that.
-> >
-> > There may be a better way as of 4.20 because bootmem is now gone and
-> > only memblock is used. This should unify what each arch needs to do
-> > with initrd early. We need the physical address early for memblock
-> > reserving. Then later on we need the virtual address to access the
-> > initrd. Perhaps we should just change initrd_start and initrd_end to
-> > physical addresses (or add 2 new variables would be less invasive and
-> > allow for different translation than __va()). The sanity checks and
-> > memblock reserve could also perhaps be moved to a common location.
-> >
-> > Alternatively, given arm64 is the only oddball, I'd be fine with an
-> > "if (IS_ENABLED(CONFIG_ARM64))" condition in the default
-> > __early_init_dt_declare_initrd as long as we have a path to removing
-> > it like the above option.
->
-> OK, let me cook a patch doing that and meanwhile I will look at how much
-> work is involved to implement the above option you outlined, which also
-> sounds entirely reasonable.
+> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
 
-BTW, I would suspect that initrd_below_start_ok being 1 is not okay
-for most arches. I'm not sure how that would work. min_low_pfn is
-typically based on the start of memory. arm64 is not even setting it.
+Acked-by: Li Yang <leoyang.li@nxp.com>
 
-Rob
-
+> ---
+>  drivers/soc/fsl/guts.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/soc/fsl/guts.c b/drivers/soc/fsl/guts.c
+> index 302e0c8..bcab1ee 100644
+> --- a/drivers/soc/fsl/guts.c
+> +++ b/drivers/soc/fsl/guts.c
+> @@ -100,6 +100,11 @@ static const struct fsl_soc_die_attr fsl_soc_die[] = {
+>           .svr          = 0x87000000,
+>           .mask         = 0xfff70000,
+>         },
+> +       /* Die: LX2160A, SoC: LX2160A/LX2120A/LX2080A */
+> +       { .die          = "LX2160A",
+> +         .svr          = 0x87360000,
+> +         .mask         = 0xff3f0000,
+> +       },
+>         { },
+>  };
+>
+> @@ -222,6 +227,7 @@ static const struct of_device_id fsl_guts_of_match[] = {
+>         { .compatible = "fsl,ls1088a-dcfg", },
+>         { .compatible = "fsl,ls1012a-dcfg", },
+>         { .compatible = "fsl,ls1046a-dcfg", },
+> +       { .compatible = "fsl,lx2160a-dcfg", },
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(of, fsl_guts_of_match);
 > --
-> Florian
+> 2.7.4
+>
