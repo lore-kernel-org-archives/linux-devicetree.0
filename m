@@ -1,88 +1,48 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v4 2/7] dt-bindings: ti-lmu: Modify dt bindings for the
- LM3697
-Date: Wed, 24 Oct 2018 15:43:24 +0200
-Message-ID: <20181024134324.GA12125@amd>
-References: <20181023170623.31820-1-dmurphy@ti.com>
- <20181023170623.31820-2-dmurphy@ti.com>
- <20181024090421.GB24997@amd>
- <e8800c2e-8ada-7a0d-c1a6-14ddcbe1576d@ti.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH] ARM: dts: replace gpio-key,wakeup with wakeup-source
+ property
+Date: Wed, 24 Oct 2018 13:43:59 +0000
+Message-ID: <b81ade0b-2ec7-16a9-fb43-909008d96635@axentia.se>
+References: <20181024114540.5196-1-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e8800c2e-8ada-7a0d-c1a6-14ddcbe1576d@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, lee.jones@linaro.org, tony@atomide.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181024114540.5196-1-sudeep.holla@arm.com>
+Content-Language: en-US
+Content-ID: <FCC77323DD726F4DA1C40C1AB81EB5FD@eurprd02.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sudeep Holla <sudeep.holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michal Simek <michal.simek@xilinx.com>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 2018-10-24 13:45, Sudeep Holla wrote:
+> Most of the legacy "gpio-key,wakeup" and "enable-sdio-wakeup" boolean
+> properties are already replaced with "wakeup-source". However few
+> occurrences of old property has popped up again, probably from the
+> remnants in downstream trees.
+> 
+> This patch replaces the legacy properties with the unified
+> "wakeup-source" property.
+> 
+> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Peter Rosin <peda@axentia.se>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 
---vkogqOf2sHV7VnPd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Peter Rosin <peda@axentia.se>
 
-Hi!
-
-> >> The LM3697 is a single function LED driver. The single function LED
-> >> driver needs to reside in the LED directory as a dedicated LED driver
-> >> and not as a MFD device.  The device does have common brightness and r=
-amp
-> >=20
-> > So it is single function LED driver. That does not mean it can not
-> > share bindings with the rest. Where the bindings live is not imporant.
->=20
-> It can share bindings that are correctly done, not ones that are incomple=
-te and incorrect.
-
-If you see wrong binding you are welcome to fix it. If it is in wrong
-place, you can move it around.
-
-You are not welcome to create 2 "fixed" versions, while leaving
-original "buggy" version in tree!
-
-=2E..but that's what your series does. Better changelogs will _not_ help.
-
-> Where bindings live is important to new Linux kernel developers and produ=
-ct=20
-> developers looking for the proper documentation on the H/W bindings.
-
-We have talked about this before.
-
-> >> @@ -9,7 +9,6 @@ TI LMU driver supports lighting devices below.
-> >>    LM3632       Backlight and regulator
-> >>    LM3633       Backlight, LED and fault monitor
-> >>    LM3695       Backlight
-> >> -  LM3697       Backlight and fault monitor
-> >> =20
-> >>  Required properties:
-> >>    - compatible: Should be one of:
-> >=20
-> > NAK. You can use existing binding.
->=20
-> Thank you for the consistency
-
-You are wasting your time. What is worse, you are wasting my time,
-too, and time of people on the list.
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---vkogqOf2sHV7VnPd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvQdvwACgkQMOfwapXb+vKIVQCdHKRZaUqDYczyawaKzJ6Jh/hc
-RhAAni+U1fIHCxm+J71dz9ORidtXH868
-=cFuT
------END PGP SIGNATURE-----
-
---vkogqOf2sHV7VnPd--
+Cheers,
+Peter
