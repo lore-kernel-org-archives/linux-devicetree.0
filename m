@@ -1,88 +1,116 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: uniphier: fix incorrect property items" to the spi tree
-Date: Wed, 24 Oct 2018 12:32:27 +0200 (CEST)
-Message-ID: <20181024103227.AA308440078@finisterre.ee.mobilebroadband>
-References: <1540373669-18969-1-git-send-email-hayashibara.keiji@socionext.com>
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1540373669-18969-1-git-send-email-hayashibara.keiji@socionext.com>
-Sender: stable-owner@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, yamada.masahiro@socionext.com, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, stable@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, linux-kernel@vger.kernel.org, hayashibara.keiji@socionext.comlinux-spi@vger.kernel.org
+From: Pankaj Bansal <pankaj.bansal@nxp.com>
+Subject: [PATCH] arm64: dts: Add flexcan nodes in LX2160A
+Date: Wed, 24 Oct 2018 10:49:20 +0000
+Message-ID: <20181024161509.14200-1-pankaj.bansal@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, Oliver Hartkopp <socketcan@hartkopp.net>, Marc Kleine-Budde <mkl@pengutronix.de>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pankaj Bansal <pankaj.bansal@nxp.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+The FlexCAN module in LX2160A is a communication controller implementing
+the CAN protocol according to the ISO 11898-1 standard and CAN 2.0 B
+protocol specifications.
 
-   spi: uniphier: fix incorrect property items
+-Flexible mailboxes configurable to store 0 to 8, 16, 32 or 64 bytes
+data length
+-Each mailbox configurable as receive or transmit, all supporting
+standard and extended messages
 
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 3511ba7d4ca6f39e2d060bb94e42a41ad1fee7bf Mon Sep 17 00:00:00 2001
-From: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Date: Wed, 24 Oct 2018 18:34:29 +0900
-Subject: [PATCH] spi: uniphier: fix incorrect property items
-
-This commit fixes incorrect property because it was different
-from the actual.
-The parameters of '#address-cells' and '#size-cells' were removed,
-and 'interrupts', 'pinctrl-names' and 'pinctrl-0' were added.
-
-Fixes: 4dcd5c2781f3 ("spi: add DT bindings for UniPhier SPI controller")
-Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
 ---
- .../devicetree/bindings/spi/spi-uniphier.txt       | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-uniphier.txt b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
-index 504a4ecfc7b1..b04e66a52de5 100644
---- a/Documentation/devicetree/bindings/spi/spi-uniphier.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
-@@ -5,18 +5,20 @@ UniPhier SoCs have SCSSI which supports SPI single channel.
- Required properties:
-  - compatible: should be "socionext,uniphier-scssi"
-  - reg: address and length of the spi master registers
-- - #address-cells: must be <1>, see spi-bus.txt
-- - #size-cells: must be <0>, see spi-bus.txt
-- - clocks: A phandle to the clock for the device.
-- - resets: A phandle to the reset control for the device.
-+ - interrupts: a single interrupt specifier
-+ - pinctrl-names: should be "default"
-+ - pinctrl-0: pin control state for the default mode
-+ - clocks: a phandle to the clock for the device
-+ - resets: a phandle to the reset control for the device
- 
- Example:
- 
- spi0: spi@54006000 {
- 	compatible = "socionext,uniphier-scssi";
- 	reg = <0x54006000 0x100>;
--	#address-cells = <1>;
--	#size-cells = <0>;
-+	interrupts = <0 39 4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spi0>;
- 	clocks = <&peri_clk 11>;
- 	resets = <&peri_rst 11>;
+Notes:
+    This patch depends on below patches:
+    [1] https://lore.kernel.org/patchwork/project/lkml/list/?series=369563
+    [2] https://patchwork.kernel.org/patch/10645287/
+    
+    This patch is used by below patches:
+    [1] https://www.spinics.net/lists/linux-can/msg00348.html
+
+ .../boot/dts/freescale/fsl-lx2160a-qds.dts   |  8 ++++++++
+ .../boot/dts/freescale/fsl-lx2160a-rdb.dts   |  8 ++++++++
+ .../boot/dts/freescale/fsl-lx2160a.dtsi      | 18 ++++++++++++++++++
+ 3 files changed, 34 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
+index 99a22abbe725..8a0305a2b778 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
+@@ -31,6 +31,14 @@
+ 	};
  };
+ 
++&can0 {
++	status = "okay";
++};
++
++&can1 {
++	status = "okay";
++};
++
+ &crypto {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+index 6481e5f20e69..f8c95fc6de27 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+@@ -31,6 +31,14 @@
+ 	};
+ };
+ 
++&can0 {
++	status = "okay";
++};
++
++&can1 {
++	status = "okay";
++};
++
+ &crypto {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+index 56f846c55812..23ea8776b55a 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -566,6 +566,24 @@
+ 			status = "disabled";
+ 		};
+ 
++		can0: can@2180000 {
++			compatible = "fsl,lx2160ar1-flexcan";
++			reg = <0x0 0x2180000 0x0 0x10000>;
++			interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clockgen 4 7>, <&clockgen 4 7>;
++			clock-names = "ipg", "per";
++			status = "disabled";
++		};
++
++		can1: can@2190000 {
++			compatible = "fsl,lx2160ar1-flexcan";
++			reg = <0x0 0x2190000 0x0 0x10000>;
++			interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clockgen 4 7>, <&clockgen 4 7>;
++			clock-names = "ipg", "per";
++			status = "disabled";
++		};
++
+ 		uart0: serial@21c0000 {
+ 			compatible = "arm,sbsa-uart","arm,pl011";
+ 			reg = <0x0 0x21c0000 0x0 0x1000>;
 -- 
-2.19.0
+2.17.1
