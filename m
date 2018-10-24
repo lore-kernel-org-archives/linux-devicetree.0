@@ -1,83 +1,54 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v4 5/7] dt-bindings: ti-lmu: Modify dt bindings for the
- LM3633
-Date: Wed, 24 Oct 2018 11:23:28 +0200
-Message-ID: <20181024092328.GD24997@amd>
-References: <20181023170623.31820-1-dmurphy@ti.com>
- <20181023170623.31820-5-dmurphy@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="XvKFcGCOAo53UbWW"
+From: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+Subject: [PATCH] spi: uniphier: fix incorrect property items
+Date: Wed, 24 Oct 2018 18:34:29 +0900
+Message-ID: <1540373669-18969-1-git-send-email-hayashibara.keiji@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181023170623.31820-5-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, lee.jones@linaro.org, tony@atomide.com
+To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, yamada.masahiro@socionext.com, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: stable@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, linux-kernel@vger.kernel.org, hayashibara.keiji@socionext.com
 List-Id: devicetree@vger.kernel.org
 
+This commit fixes incorrect property because it was different
+from the actual.
+The parameters of '#address-cells' and '#size-cells' were removed,
+and 'interrupts', 'pinctrl-names' and 'pinctrl-0' were added.
 
---XvKFcGCOAo53UbWW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: 4dcd5c2781f3 ("spi: add DT bindings for UniPhier SPI controller")
+Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+---
+ Documentation/devicetree/bindings/spi/spi-uniphier.txt | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-On Tue 2018-10-23 12:06:21, Dan Murphy wrote:
-> The LM3633 is a single function LED driver. The single function LED
-> driver needs to reside in the LED directory as a dedicated LED driver
-> and not as a MFD device.  The device does have common brightness and ramp
-> features and those can be accomodated by a TI LMU framework.
->=20
-> The LM3633 dt binding needs to be moved from the ti-lmu.txt and a dedicat=
-ed
-> LED dt binding needs to be added.  The new LM3633 LED dt binding will then
-> reside in the Documentation/devicetree/bindings/leds directory and follow=
- the
-> current LED and general bindings guidelines.
-
-What?
-
->  .../devicetree/bindings/leds/leds-lm3633.txt  | 102 ++++++++++++++++++
->  .../devicetree/bindings/mfd/ti-lmu.txt        |  48 ---------
->  2 files changed, 102 insertions(+), 48 deletions(-)
->  create mode 100644
->  Documentation/devicetree/bindings/leds/leds-lm3633.txt
-
-> index 920f910be4e9..573e88578d3d 100644
-> --- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-> +++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-> @@ -7,7 +7,6 @@ TI LMU driver supports lighting devices below.
->    LM3532       Backlight
->    LM3631       Backlight and regulator
->    LM3632       Backlight and regulator
-> -  LM3633       Backlight, LED and fault monitor
->    LM3695       Backlight
-
-Are you seriously proposing to take one binding and split it into 6
-copy&pasted ones?
-
-That's not the way we do development. NAK.
-
-We don't want to have copy & pasted code. We also don't want to have
-copy & pasted bindings. Nor changelogs, for that matter.
-
-Thank you,
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---XvKFcGCOAo53UbWW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvQOhAACgkQMOfwapXb+vJo+ACgjcf+/VFQI8XyvZ7qw6P8d9IZ
-DR0AoJLjzsQ8ywIndhcVH39N07UNYZFu
-=Rmvw
------END PGP SIGNATURE-----
-
---XvKFcGCOAo53UbWW--
+diff --git a/Documentation/devicetree/bindings/spi/spi-uniphier.txt b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
+index 504a4ec..b04e66a 100644
+--- a/Documentation/devicetree/bindings/spi/spi-uniphier.txt
++++ b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
+@@ -5,18 +5,20 @@ UniPhier SoCs have SCSSI which supports SPI single channel.
+ Required properties:
+  - compatible: should be "socionext,uniphier-scssi"
+  - reg: address and length of the spi master registers
+- - #address-cells: must be <1>, see spi-bus.txt
+- - #size-cells: must be <0>, see spi-bus.txt
+- - clocks: A phandle to the clock for the device.
+- - resets: A phandle to the reset control for the device.
++ - interrupts: a single interrupt specifier
++ - pinctrl-names: should be "default"
++ - pinctrl-0: pin control state for the default mode
++ - clocks: a phandle to the clock for the device
++ - resets: a phandle to the reset control for the device
+ 
+ Example:
+ 
+ spi0: spi@54006000 {
+ 	compatible = "socionext,uniphier-scssi";
+ 	reg = <0x54006000 0x100>;
+-	#address-cells = <1>;
+-	#size-cells = <0>;
++	interrupts = <0 39 4>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_spi0>;
+ 	clocks = <&peri_clk 11>;
+ 	resets = <&peri_rst 11>;
+ };
+-- 
+2.7.4
