@@ -1,14 +1,15 @@
-From: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
-Subject: [RESEND PATCH 2/2] ARM: dts: opos6uldev: use OF graph to describe the
- display
-Date: Wed, 24 Oct 2018 14:54:57 +0200
-Message-ID: <20181024125457.25204-2-sebastien.szymanski@armadeus.com>
-References: <20181024125457.25204-1-sebastien.szymanski@armadeus.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V3 3/8] dt-bindings: mmc: fsl-imx-esdhc: add imx8qxp
+ compatible string
+Date: Wed, 24 Oct 2018 12:59:40 +0200
+Message-ID: <CAPDyKFog=sU6DxdCD2OkEVSu0NxyUifYY2uPBE_nDi8z2xi3PA@mail.gmail.com>
+References: <1539886483-15775-1-git-send-email-aisheng.dong@nxp.com>
+ <1539886483-15775-4-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181024125457.25204-1-sebastien.szymanski@armadeus.com>
+In-Reply-To: <1539886483-15775-4-git-send-email-aisheng.dong@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,42 +19,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+To: "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Bough Chen <haibo.chen@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-VG8gbWFrZSB1c2Ugb2YgdGhlIG5ldyBlTENESUYgRFJNIGRyaXZlciBPRiBncmFwaCBkZXNjcmlw
-dGlvbiBpcwpyZXF1aXJlZC4gRGVzY3JpYmUgdGhlIGRpc3BsYXkgdXNpbmcgT0YgZ3JhcGggbm9k
-ZXMuCgpTaWduZWQtb2ZmLWJ5OiBTw6liYXN0aWVuIFN6eW1hbnNraSA8c2ViYXN0aWVuLnN6eW1h
-bnNraUBhcm1hZGV1cy5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLW9wb3M2dWxk
-ZXYuZHRzIHwgMzcgKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hh
-bmdlZCwgMTYgaW5zZXJ0aW9ucygrKSwgMjEgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vYm9vdC9kdHMvaW14NnVsLW9wb3M2dWxkZXYuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-aW14NnVsLW9wb3M2dWxkZXYuZHRzCmluZGV4IDBlNTllZTU3ZmQ1NS4uOGVjZGI5YWQyYjJlIDEw
-MDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwtb3BvczZ1bGRldi5kdHMKKysrIGIv
-YXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLW9wb3M2dWxkZXYuZHRzCkBAIC01Niw3ICs1Niw3IEBA
-CiAJCXN0ZG91dC1wYXRoID0gJnVhcnQxOwogCX07CiAKLQliYWNrbGlnaHQgeworCWJhY2tsaWdo
-dDogYmFja2xpZ2h0IHsKIAkJY29tcGF0aWJsZSA9ICJwd20tYmFja2xpZ2h0IjsKIAkJcHdtcyA9
-IDwmcHdtMyAwIDE5MTAwMD47CiAJCWJyaWdodG5lc3MtbGV2ZWxzID0gPDAgNCA4IDE2IDMyIDY0
-IDEyOCAyNTU+OwpAQCAtOTcsNiArOTcsMTggQEAKIAkJZ3Bpb3MgPSA8JmdwaW81IDEgR1BJT19B
-Q1RJVkVfSElHSD47CiAJfTsKIAorCXBhbmVsOiBwYW5lbCB7CisJCWNvbXBhdGlibGUgPSAiYXJt
-YWRldXMsc3QwNzAwLWFkYXB0IjsKKwkJcG93ZXItc3VwcGx5ID0gPCZyZWdfM3YzPjsKKwkJYmFj
-a2xpZ2h0ID0gPCZiYWNrbGlnaHQ+OworCisJCXBvcnQgeworCQkJcGFuZWxfaW46IGVuZHBvaW50
-IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmxjZGlmX291dD47CisJCQl9OworCQl9OworCX07
-CisKIAlyZWdfNXY6IHJlZ3VsYXRvci01diB7CiAJCWNvbXBhdGlibGUgPSAicmVndWxhdG9yLWZp
-eGVkIjsKIAkJcmVndWxhdG9yLW5hbWUgPSAiNVYiOwpAQCAtMTgyLDI4ICsxOTQsMTEgQEAKICZs
-Y2RpZiB7CiAJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKIAlwaW5jdHJsLTAgPSA8JnBpbmN0
-cmxfbGNkaWY+OwotCWRpc3BsYXkgPSA8JmRpc3BsYXkwPjsKLQlsY2Qtc3VwcGx5ID0gPCZyZWdf
-M3YzPjsKIAlzdGF0dXMgPSAib2theSI7CiAKLQlkaXNwbGF5MDogZGlzcGxheTAgewotCQliaXRz
-LXBlci1waXhlbCA9IDwzMj47Ci0JCWJ1cy13aWR0aCA9IDwxOD47Ci0KLQkJZGlzcGxheS10aW1p
-bmdzIHsKLQkJCXRpbWluZzA6IHRpbWluZzAgewotCQkJCWNsb2NrLWZyZXF1ZW5jeSA9IDwzMzAw
-MDAzMz47Ci0JCQkJaGFjdGl2ZSA9IDw4MDA+OwotCQkJCXZhY3RpdmUgPSA8NDgwPjsKLQkJCQlo
-YmFjay1wb3JjaCA9IDw5Nj47Ci0JCQkJaGZyb250LXBvcmNoID0gPDk2PjsKLQkJCQl2YmFjay1w
-b3JjaCA9IDwyMD47Ci0JCQkJdmZyb250LXBvcmNoID0gPDIxPjsKLQkJCQloc3luYy1sZW4gPSA8
-NjQ+OwotCQkJCXZzeW5jLWxlbiA9IDw0PjsKLQkJCQlkZS1hY3RpdmUgPSA8MT47Ci0JCQkJcGl4
-ZWxjbGstYWN0aXZlID0gPDA+OwotCQkJfTsKKwlwb3J0IHsKKwkJbGNkaWZfb3V0OiBlbmRwb2lu
-dCB7CisJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVsX2luPjsKIAkJfTsKIAl9OwogfTsKLS0g
-CjIuMTYuNAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
-bnV4LWFybS1rZXJuZWwK
+On 18 October 2018 at 20:19, A.s. Dong <aisheng.dong@nxp.com> wrote:
+> Add imx8qxp compatible string
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: linux-serial@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-mmc@vger.kernel.org
+> Cc: Haibo Chen <haibo.chen@nxp.com>
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt | 1 +
+
+Queued for 4.21, thanks!
+
+Kind regards
+Uffe
+
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+> index 3e29050..9201a7d 100644
+> --- a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+> @@ -16,6 +16,7 @@ Required properties:
+>                "fsl,imx6sl-usdhc"
+>                "fsl,imx6sx-usdhc"
+>                "fsl,imx7d-usdhc"
+> +              "fsl,imx8qxp-usdhc"
+>
+>  Optional properties:
+>  - fsl,wp-controller : Indicate to use controller internal write protection
+> --
+> 2.7.4
+>
