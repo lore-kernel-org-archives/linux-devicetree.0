@@ -1,61 +1,55 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V3 3/8] dt-bindings: mmc: fsl-imx-esdhc: add imx8qxp
- compatible string
-Date: Wed, 24 Oct 2018 12:59:40 +0200
-Message-ID: <CAPDyKFog=sU6DxdCD2OkEVSu0NxyUifYY2uPBE_nDi8z2xi3PA@mail.gmail.com>
-References: <1539886483-15775-1-git-send-email-aisheng.dong@nxp.com>
- <1539886483-15775-4-git-send-email-aisheng.dong@nxp.com>
+From: Pascal PAILLET-LME <p.paillet@st.com>
+Subject: Re: [PATCH v4 4/8] regulator: stpmic1: add stpmic1 regulator driver
+Date: Wed, 24 Oct 2018 12:54:46 +0000
+Message-ID: <5BD06B96.3080809@st.com>
+References: <1539853324-29051-1-git-send-email-p.paillet@st.com>
+ <1539853324-29051-5-git-send-email-p.paillet@st.com>
+ <20181019115015.GC5895@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1539886483-15775-4-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Bough Chen <haibo.chen@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181019115015.GC5895@sirena.org.uk>
+Content-Language: en-US
+Content-ID: <25C03AB68B403D46ADF5E95C06741A59@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 18 October 2018 at 20:19, A.s. Dong <aisheng.dong@nxp.com> wrote:
-> Add imx8qxp compatible string
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: linux-serial@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-mmc@vger.kernel.org
-> Cc: Haibo Chen <haibo.chen@nxp.com>
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> ---
->  Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt | 1 +
+Hello Mark,
 
-Queued for 4.21, thanks!
+Le 10/19/2018 01:50 PM, Mark Brown a écrit :
+> On Thu, Oct 18, 2018 at 09:02:12AM +0000, Pascal PAILLET-LME wrote:
+>
+>> +	for (i = 0; i < ARRAY_SIZE(stpmic1_regulator_cfgs); i++) {
+>> +		/* Parse DT & find regulators to register */
+>> +		init_data = stpmic1_regulators_matches[i].init_data;
+>> +		if (init_data)
+>> +			init_data->regulator_init = &stpmic1_regulator_parse_dt;
+>> +
+>> +		rdev = stpmic1_regulator_register(pdev, i, init_data, regul);
+>> +		if (IS_ERR(rdev))
+>> +			return PTR_ERR(rdev);
+> This looks mostly good, the only big thing is this - the default is to
+> just unconditionally register all the regulators that exist rather than
+> only those that are configured on that particular platform.  This is a
+> bit simpler and means that all the readback of the configuration for the
+> unconfigured regulators is available for diagnostics.  Is there a reason
+> not to do that?
+I'm sorry, I'm not sure to understand. Would you prefer to not register 
+regulators that
+are not described in the device-tree ?
 
-Kind regards
-Uffe
+In that case I could add:
+     if (!init_data)
+         continue;
 
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-> index 3e29050..9201a7d 100644
-> --- a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-> @@ -16,6 +16,7 @@ Required properties:
->                "fsl,imx6sl-usdhc"
->                "fsl,imx6sx-usdhc"
->                "fsl,imx7d-usdhc"
-> +              "fsl,imx8qxp-usdhc"
->
->  Optional properties:
->  - fsl,wp-controller : Indicate to use controller internal write protection
-> --
-> 2.7.4
->
+This would permit to keep some regulators unmodified by the kernel. This 
+can be useful
+because we have some regulators configured by boot loaders (for the DDR 
+at least) and
+it would be more simple to not handle them in the kernel.
+
+best regards,
+pascal
