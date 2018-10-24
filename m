@@ -1,60 +1,69 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH 0/8] add generic builtin command line
-Date: Wed, 24 Oct 2018 10:07:32 +0100
-Message-ID: <20181024090732.GS30658@n2100.armlinux.org.uk>
-References: <1538067309-5711-1-git-send-email-maksym.kokhan@globallogic.com>
- <20180929181725.GB27441@fifo99.com>
- <CAMT6-xiQ0vGcKpA+SiWHQWQFwU9Oo9j=Zin+UXDoPqKTz5fbeA@mail.gmail.com>
- <CAMT6-xj1rjVAy1AWFiMHc5wH36eu=TUSMtdKU=-qRtUbwr9bkg@mail.gmail.com>
- <20181023144815.GP30658@n2100.armlinux.org.uk>
- <CAMT6-xhvqy5PeQmkQ8tsLRiML_pNJTxyq7dizRRvZTEqc7uzgg@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v4 1/7] leds: add TI LMU backlight driver
+Date: Wed, 24 Oct 2018 11:14:07 +0200
+Message-ID: <20181024091407.GC24997@amd>
+References: <20181023170623.31820-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="3siQDZowHQqNOShm"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMT6-xhvqy5PeQmkQ8tsLRiML_pNJTxyq7dizRRvZTEqc7uzgg@mail.gmail.com>
+In-Reply-To: <20181023170623.31820-1-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maksym Kokhan <maksym.kokhan@globallogic.com>
-Cc: Daniel Walker <dwalker@fifo99.com>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Daniel Walker <danielwa@cisco.com>, Andrii Bordunov <aborduno@cisco.com>, Ruslan Bilovol <rbilov>
+To: Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, lee.jones@linaro.org, tony@atomide.com, Milo Kim <milo.kim@ti.com>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 24, 2018 at 11:57:44AM +0300, Maksym Kokhan wrote:
-> Do you mean, that you haven't seen patch for ARM, which I sent on
-> September 27 along with cover and patch 1? It is strange, because
-> you was the one from recipients. If so, you can see this patch here:
-> https://lore.kernel.org/patchwork/patch/992779/
 
-It seems that I have received patch 5, _but_ it's not threaded with
-the cover message and patch 1.  With 50k messages in my inbox, and 3k
-messages since you sent the series, it's virtually impossible to find
-it (I only found it by looking at my mail server logs from September
-to find the subject, and then searching my mailbox for that subject.)
+--3siQDZowHQqNOShm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is unnecessarily difficult.
+On Tue 2018-10-23 12:06:17, Dan Murphy wrote:
+> From: Pavel Machek <pavel@ucw.cz>
+>=20
+> This adds backlight support for the following TI LMU
+> chips: LM3532, LM3631, LM3632, LM3633, LM3695 and LM3697.
+>=20
+> It controls LEDs on Droid 4
+> smartphone, including keyboard and screen backlights.
+>=20
+> Signed-off-by: Milo Kim <milo.kim@ti.com>
+> [add LED subsystem support for keyboard backlight and rework DT
+> binding according to Rob Herrings feedback]
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+> [remove backlight subsystem support for now]
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
 
-> On Tue, Oct 23, 2018 at 5:48 PM Russell King - ARM Linux
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Tue, Oct 23, 2018 at 05:43:18PM +0300, Maksym Kokhan wrote:
-> > > We still have no response to patches for x86, arm, arm64 and powerpc.
-> > > Is current generic command line implementation appropriate for these
-> > > architectures?
-> > > Is it possible to merge these patches in the current form (for x86,
-> > > arm, arm64 and powerpc)?
-> >
-> > You may wish to consider your recipients - I seem to only have received
-> > the cover and patch 1 (which doesn't include any ARM specific bits).
-> > It may be that you're not getting responses because people haven't seen
-> > your patches.
-> >
-> > Thanks.
-> >
-> > --
-> > RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-> > FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> > According to speedtest.net: 11.9Mbps down 500kbps up
+This is not correct way to sign off a patch.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+What is worse, this is very different from patch I submitted; this
+misses imporant parts while my patch was complete.
+
+I already submitted better patch for both the driver and device tree
+bindings. Can we go back and apply that?
+
+Then you can add your changes on top of that, if they actually make
+the situation better.
+
+Thanks,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--3siQDZowHQqNOShm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlvQN98ACgkQMOfwapXb+vIOCACfQN8uM9Mm9rBT85ynEiWjE19w
+zKEAn2XQzpMu+BYx1591Y+bK54grktTX
+=4gGL
+-----END PGP SIGNATURE-----
+
+--3siQDZowHQqNOShm--
