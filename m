@@ -1,75 +1,65 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 0/2] arm64: Cut rebuild time when changing
- CONFIG_BLK_DEV_INITRD
-Date: Wed, 24 Oct 2018 13:01:19 -0700
-Message-ID: <6e647f76-8523-09d3-9b72-d8d8abd213a4@gmail.com>
-References: <20181024193256.23734-1-f.fainelli@gmail.com>
- <CAL_Jsq+KCOv6pXXHhHDZ+7-QUrmtMDvSjEVhK15yZ3qbnn61Ag@mail.gmail.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 09/12] dt-bindings: panel: Add Bananapi S070WV20-CT16
+ MIPI-DSI panel bindings
+Date: Wed, 24 Oct 2018 21:22:30 +0100
+Message-ID: <CAGb2v64euJCAZvyGFL+pr+CLQfY8ypnhRAJFKZQ9xGai6RvLDQ@mail.gmail.com>
+References: <20180927114850.24565-1-jagan@amarulasolutions.com>
+ <20180927114850.24565-10-jagan@amarulasolutions.com> <20181015182448.GA7134@bogus>
+ <CAGb2v64QEhy1J05L9W0_uWhmrky8wD+vg3v5wA7Yd3_U-DdpKg@mail.gmail.com> <CAL_JsqJPn9hhGsk62RzLc1dPQyF2_iCSau+MvY9mD_QADybgvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+KCOv6pXXHhHDZ+7-QUrmtMDvSjEVhK15yZ3qbnn61Ag@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <CAL_JsqJPn9hhGsk62RzLc1dPQyF2_iCSau+MvY9mD_QADybgvg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Olof Johansson <olof@lixom.net>, linux-alpha@vger.kernel.org, arcml <linux-snps-arc@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-c6x-dev@linux-c6x.org, "moderated list:H8/300 ARCHITECTURE" <uclinux-h8-devel@lists.sourceforge.jp>, linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org, Linux-MIPS <linux-mips@linux-mips.org>, nios2-dev@lists.rocketboards.org, Openrisc <openrisc@list>
+To: Rob Herring <robh@kernel.org>, Jagan Teki <jagan@amarulasolutions.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, linux-clk <linux-clk@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/24/18 12:55 PM, Rob Herring wrote:
-> On Wed, Oct 24, 2018 at 2:33 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->>
->> Hi all,
->>
->> While investigating why ARM64 required a ton of objects to be rebuilt
->> when toggling CONFIG_DEV_BLK_INITRD, it became clear that this was
->> because we define __early_init_dt_declare_initrd() differently and we do
->> that in arch/arm64/include/asm/memory.h which gets included by a fair
->> amount of other header files, and translation units as well.
-> 
-> I scratch my head sometimes as to why some config options rebuild so
-> much stuff. One down, ? to go. :)
-> 
+On Tue, Oct 23, 2018 at 4:11 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Oct 22, 2018 at 5:22 AM Chen-Yu Tsai <wens@csie.org> wrote:
+> >
+> > Hi Rob,
+> >
+> > On Mon, Oct 15, 2018 at 7:24 PM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Thu, 27 Sep 2018 17:18:47 +0530, Jagan Teki wrote:
+> > > > Bananapi S070WV20-CT16 is 800x480, 4-lane MIPI-DSI panel, the
+> > > > same panel PCB comes with parallel RBG which is supported via
+> > > > panel-simple with "bananapi,s070wv20-ct16" compatible.
+> > > >
+> > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > ---
+> > > >  .../panel/bananapi,s070wv20-ct16-dsi.txt      | 21 +++++++++++++++++++
+> > > >  1 file changed, 21 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16-dsi.txt
+> > > >
+> > >
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> >
+> > This "panel" is actually an RGB panel with a MIPI-DSI-to-RGB bridge
+> > tacked on. On one particular revision of this module, one can also
+> > directly use the RGB interface.
+> >
+> > Would it be better to model this as bridge+panel? We already have
+> > a binding for the RGB version [1]. This would make it harder to
+> > make a driver though, as there is no publicly available datasheet
+> > for the bridge chip, so it's likely that part of the init sequence
+> > would have to be hard-coded.
+>
+> Perhaps you can use the same compatible and detect based on the OF
+> graph connection whether it is DSI or RGB interface? That would mean
+> the RGB version doesn't use simple-panel driver, but that should be
+> okay.
 
-This one was by far the most invasive one due to its include chain, but
-yes, there would be many more that could be optimized.
+I think that would work.
 
->> Changing the value of CONFIG_DEV_BLK_INITRD is a common thing with build
->> systems that generate two kernels: one with the initramfs and one
->> without. buildroot is one of these build systems, OpenWrt is also
->> another one that does this.
->>
->> This patch series proposes adding an empty initrd.h to satisfy the need
->> for drivers/of/fdt.c to unconditionally include that file, and moves the
->> custom __early_init_dt_declare_initrd() definition away from
->> asm/memory.h
->>
->> This cuts the number of objects rebuilds from 1920 down to 26, so a
->> factor 73 approximately.
->>
->> Apologies for the long CC list, please let me know how you would go
->> about merging that and if another approach would be preferable, e.g:
->> introducing a CONFIG_ARCH_INITRD_BELOW_START_OK Kconfig option or
->> something like that.
-> 
-> There may be a better way as of 4.20 because bootmem is now gone and
-> only memblock is used. This should unify what each arch needs to do
-> with initrd early. We need the physical address early for memblock
-> reserving. Then later on we need the virtual address to access the
-> initrd. Perhaps we should just change initrd_start and initrd_end to
-> physical addresses (or add 2 new variables would be less invasive and
-> allow for different translation than __va()). The sanity checks and
-> memblock reserve could also perhaps be moved to a common location.
-> 
-> Alternatively, given arm64 is the only oddball, I'd be fine with an
-> "if (IS_ENABLED(CONFIG_ARM64))" condition in the default
-> __early_init_dt_declare_initrd as long as we have a path to removing
-> it like the above option.
+> If there's other users of this bridge chip, then modeling the bridge
+> separately would be better.
 
-OK, let me cook a patch doing that and meanwhile I will look at how much
-work is involved to implement the above option you outlined, which also
-sounds entirely reasonable.
+I doubt we'd find it. And given that there are no docs for the init
+sequence, even though we could make out some parts, it will always
+be a partially binary sequence tied to the compatible for the panel.
 
-Thanks!
--- 
-Florian
+Thanks
+ChenYu
