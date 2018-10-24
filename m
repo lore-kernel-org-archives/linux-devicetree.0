@@ -1,80 +1,88 @@
-From: Nick Kossifidis <mick@ics.forth.gr>
-Subject: Re: [PATCH v2] OF: Handle CMDLINE when /chosen node is not present
-Date: Wed, 24 Oct 2018 16:32:40 +0300
-Message-ID: <8e420b9dee0f246fda8e018532737b1a@mailhost.ics.forth.gr>
-References: <20181022224213.GA25145@bogus>
- <mhng-08dbc241-46e4-411b-ba13-32435abde7ad@palmer-si-x1c4>
- <CAL_JsqKA6_saB7Ak=BZqSth6KAZ1g2srF5BsOQRGdE2+rmcR8w@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v4 2/7] dt-bindings: ti-lmu: Modify dt bindings for the
+ LM3697
+Date: Wed, 24 Oct 2018 15:43:24 +0200
+Message-ID: <20181024134324.GA12125@amd>
+References: <20181023170623.31820-1-dmurphy@ti.com>
+ <20181023170623.31820-2-dmurphy@ti.com>
+ <20181024090421.GB24997@amd>
+ <e8800c2e-8ada-7a0d-c1a6-14ddcbe1576d@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqKA6_saB7Ak=BZqSth6KAZ1g2srF5BsOQRGdE2+rmcR8w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Linux-MIPS <linux-mips@linux-mips.org>, devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Nick Kossifidis <mick@ics.forth.gr>, linux-riscv@lists.infradead.org, Frank Rowand <frowand.list@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <e8800c2e-8ada-7a0d-c1a6-14ddcbe1576d@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, lee.jones@linaro.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-zqPPhM65z4IgMjAxOC0xMC0yMyAxNzozMCwgUm9iIEhlcnJpbmcgzq3Os8+BzrHPiM61Ogo+IE9u
-IE1vbiwgT2N0IDIyLCAyMDE4IGF0IDU6NTUgUE0gUGFsbWVyIERhYmJlbHQgPHBhbG1lckBzaWZp
-dmUuY29tPiAKPiB3cm90ZToKPj4gCj4+IE9uIE1vbiwgMjIgT2N0IDIwMTggMTU6NDI6MTMgUERU
-ICgtMDcwMCksIHJvYmhAa2VybmVsLm9yZyB3cm90ZToKPj4gPiBPbiBNb24sIE9jdCAxNSwgMjAx
-OCBhdCAwNToyMDoxMFBNICswMzAwLCBOaWNrIEtvc3NpZmlkaXMgd3JvdGU6Cj4+ID4+IFRoZSAv
-Y2hvc2VuIG5vZGUgaXMgb3B0aW9uYWwgc28gd2Ugc2hvdWxkIGhhbmRsZSBDTURMSU5FIHJlZ2Fy
-ZGxlc3MKPj4gPj4gdGhlIHByZXNlbmNlIG9mIC9jaG9zZW4vYm9vdGFyZ3MuIE1vdmUgaGFuZGxp
-bmcgb2YgQ01ETElORSBpbgo+PiA+PiBlYXJseV9pbml0X2R0X3NjYW4oKSBpbnN0ZWFkLgo+PiA+
-Cj4+ID4gSSBsb29rZWQgYXQgdGhpcyBhIHdoaWxlIGJhY2suIEknbSBub3Qgc3VyZSB0aGlzIGJl
-aGF2aW9yIGNhbiBiZSBjaGFuZ2VkCj4+ID4gd2l0aG91dCBicmVha2luZyBzb21lIE1JUFMgcGxh
-dGZvcm1zIHRoYXQgY291bGQgYmUgcmVseWluZyBvbiB0aGUKPj4gPiBjdXJyZW50IGJlaGF2aW9y
-LiBCdXQgdHJ5aW5nIHRvIG1ha2Ugc2Vuc2Ugb2YgdGhlIE1JUFMgY29kZSBpcyBhCj4+ID4gY2hh
-bGxlbmdlIGFuZCB0aGV5IGhhdmUgc29tZSBvdGhlciBpc3N1ZXMgaW4gdGhpcyBhcmVhLgo+PiA+
-Cj4+ID4gQ2FuJ3QgdGhpcyBiZSBmaXhlZCBieSBtYWtpbmcgL2Nob3NlbiBtYW5kaXRvcnk/IEkn
-ZCBleHBlY3QgdWx0aW1hdGVseQo+PiA+IHlvdSBhcmUgYWx3YXlzIGdvaW5nIHRvIG5lZWQgaXQu
-Cj4+ID4KPj4gPiBJJ2QgcmF0aGVyIG5vdCByZXNvcnQgdG8gbWFraW5nIHRoaXMgcGVyIGFyY2gu
-IFRoZXJlJ3MgYWxzbyBzb21lIGVmZm9ydAo+PiA+IHRvIGNvbnNvbGlkYXRlIGNtZCBsaW5lIGhh
-bmRsaW5nWzFdLgo+PiAKPj4gSSdkIHJhdGhlciBtYWtlIC9jaG9zZW4gbWFuZGF0b3J5IG9uIFJJ
-U0MtViB0aGFuIHRvIGhhdmUgcGVyLWFyY2ggCj4+IGhhbmRsaW5nLCBhcwo+PiBsaWtlIHlvdSd2
-ZSBzYWlkIHRoZXJlJ3MgYWxyZWFkeSB0b28gbXVjaCBkdXBsaWNhdGlvbi4gIFRoYXQgc2FpZCwg
-aXQgCj4+IGRvZXMgc2VlbQo+PiBsaWtlIGEgYnVnIHRvIG1lIGJlY2F1c2UgdGhlIGJlaGF2aW9y
-IHNlZW1zIHNvbWV3aGF0IGFyYml0cmFyeSAtLSBhbiAKPj4gZW1wdHkKPj4gL2Nob3NlbiBub2Rl
-IGNhdXNpbmcgdGhlIGJ1aWx0LWluIGNvbW1hbmQtbGluZSBhcmd1bWVudCBoYW5kbGluZyB0byBn
-byAKPj4gb2ZmIHRoZQo+PiByYWlscyBqdXN0IHNtZWxscyBzbyBidWdneS4KPiAKPiBZZXMuIFBy
-b2JhYmx5IG5lZWQgdG8gZG8gc29tZSBhcmNoYWVvbG9neSBvbiB0aGlzIGNvZGUgdG8gZmlndXJl
-IG91dAo+IHNvbWUgb2YgdGhlIGV4cGVjdGF0aW9ucy4KPiAKPj4gSWYgdGhhdCdzIHRoZSBjYXNl
-LCBjb3VsZCB3ZSBhdCBsZWFzdCBoYXZlIHNvbWV0aGluZyBsaWtlCj4+ICJDT05GSUdfT0ZfQ0hP
-U0VOX0lTX01BTkRBVE9SWSIgdGhhdCBwcm92aWRlcyBhIHdhcm5pbmcgd2hlbiB0aGVyZSBpcyAK
-Pj4gbm8KPj4gL2Nob3NlbiBub2RlIGFuZCBpcyBzZXQgb24gYXJjaGl0ZWN0dXJlIHdoZXJlIHRo
-ZSBzcGVjIG1hbmRhdGVzIAo+PiAvY2hvc2VuPwo+IAo+IEknZCBiZSBva2F5IHRvIG1ha2UgaXQg
-YSB3YXJuaW5nIHVuY29uZGl0aW9uYWxseS4gQXQgbGVhc3QgdGhlbiB3ZSBjYW4KPiBmaW5kIHRo
-ZSBjYXNlcyB0aGF0IGRldmlhdGUgYW5kIGVpdGhlciBmaXggdGhlbSBvciB1bmRlcnN0YW5kIHRo
-ZWlyCj4gZXhwZWN0YXRpb25zLgo+IAo+IFJvYgoKSSBkb24ndCB0aGluayB3ZSBjYW4gbWFrZSAv
-Y2hvc2VuIG5vZGUgbWFuZGF0b3J5IHNpbmNlIGl0J3Mgbm90IApzcGVjaWZpZWQgYXMgc3VjaApi
-eSB0aGUgc3BlYyAKKGh0dHBzOi8vZ2l0aHViLmNvbS9kZXZpY2V0cmVlLW9yZy9kZXZpY2V0cmVl
-LXNwZWNpZmljYXRpb24vcmVsZWFzZXMvdGFnL3YwLjIpLgpObyBtYXR0ZXIgd2hhdCB3ZSBzYXkg
-ZnJvbSB0aGUga2VybmVsIHNpZGUsIHRoZSBkZXZpY2UgdHJlZSBwcm92aWRlciBpcyAKbm90IGV4
-cGVjdGVkCnRvIGFsd2F5cyBwcm92aWRlIHRoZSAvY2hvc2VuIG1vZGUuIEFsc28gZGV2aWNlIHRy
-ZWUgaXMgbm90IHRoZSBvbmx5IApwcm92aWRlciBvZgphIGNvbW1hbmQgbGluZSwgd2UgbWlnaHQg
-Z2V0IGEgY29tbWFuZCBsaW5lIGZyb20gZGlmZmVyZW50IHBsYWNlcyAKcGVyLWFyY2ggKGUuZy4g
-YXRhZ3MKb24gYXJtKSBvciB0aHJvdWdoIEVGSS9BQ1BJL2tleGVjIGFzIHdlbGwuIFRoYXQncyB3
-aHkgbXkgaW5pdGlhbCAKYXBwcm9hY2ggZm9yIFJJU0MtVgp3YXMgb24gdGhlIGFyY2gtc3BlY2lm
-aWMgY29kZS4KCldlIHNob3VsZG4ndCB0cnkgdG8gaGFuZGxlIHRoZSBidWlsdC1pbiBDTURMSU5F
-IG9uIGVhY2ggb2YgdGhlIHBvc3NpYmxlIApjb21tYW5kIGxpbmUKcHJvdmlkZXJzIGFuZCBpZiB3
-ZSBkbyB3ZSBzaG91bGQgYXQgbGVhc3QgbWFrZSBzdXJlIHdlIGRvbid0IGRlcGVuZCBvbiAKdGhl
-IHByZXNlbmNlCm9mIGEgcHJvdmlkZWQgY29tbWFuZCBsaW5lICh3aGljaCBpcyB0aGUgaXNzdWUg
-aW4gdGhpcyBjYXNlKS4KCkkgYmVsaWV2ZSB0aGUgYmVzdCBhcHByb2FjaCBpcyB0byBjb25zb2xp
-ZGF0ZSBhbGwgdGhlIGRpZmZlcmVudCBDTURMSU5FIAphcHByb2FjaGVzCmZvciB0aGUgdmFyaW91
-cyBhcmNocyAvIHByb3ZpZGVycyBhbmQgY2xlYW4gdXAgdGhlIG1lc3MgaW5zdGVhZCBvZiAKcmUt
-aW1wbGVtZW50aW5nCnRoZSBzYW1lIHRoaW5nIGFnYWluIGFuZCBhZ2Fpbi4gSSBzYXcgdGhlIHBh
-dGNoIHlvdSBtZW50aW9uZWQgYW5kIGl0J3MgYSAKc3RhcnQuCkknbGwgbG9vayBtb3JlIGludG8g
-aXQgYW5kIHRyeSB0byBjb21lIHVwIHdpdGggYSBzaW1pbGFyIG9uZS4KCk5pY2sKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LXJpc2N2IG1haWxp
-bmcgbGlzdApsaW51eC1yaXNjdkBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcmlzY3YK
+
+--vkogqOf2sHV7VnPd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> >> The LM3697 is a single function LED driver. The single function LED
+> >> driver needs to reside in the LED directory as a dedicated LED driver
+> >> and not as a MFD device.  The device does have common brightness and r=
+amp
+> >=20
+> > So it is single function LED driver. That does not mean it can not
+> > share bindings with the rest. Where the bindings live is not imporant.
+>=20
+> It can share bindings that are correctly done, not ones that are incomple=
+te and incorrect.
+
+If you see wrong binding you are welcome to fix it. If it is in wrong
+place, you can move it around.
+
+You are not welcome to create 2 "fixed" versions, while leaving
+original "buggy" version in tree!
+
+=2E..but that's what your series does. Better changelogs will _not_ help.
+
+> Where bindings live is important to new Linux kernel developers and produ=
+ct=20
+> developers looking for the proper documentation on the H/W bindings.
+
+We have talked about this before.
+
+> >> @@ -9,7 +9,6 @@ TI LMU driver supports lighting devices below.
+> >>    LM3632       Backlight and regulator
+> >>    LM3633       Backlight, LED and fault monitor
+> >>    LM3695       Backlight
+> >> -  LM3697       Backlight and fault monitor
+> >> =20
+> >>  Required properties:
+> >>    - compatible: Should be one of:
+> >=20
+> > NAK. You can use existing binding.
+>=20
+> Thank you for the consistency
+
+You are wasting your time. What is worse, you are wasting my time,
+too, and time of people on the list.
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--vkogqOf2sHV7VnPd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlvQdvwACgkQMOfwapXb+vKIVQCdHKRZaUqDYczyawaKzJ6Jh/hc
+RhAAni+U1fIHCxm+J71dz9ORidtXH868
+=cFuT
+-----END PGP SIGNATURE-----
+
+--vkogqOf2sHV7VnPd--
