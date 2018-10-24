@@ -1,103 +1,80 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: clk: add documentation for the
- SiFive PRCI driver
-Date: Wed, 24 Oct 2018 13:47:57 -0500
-Message-ID: <20181024184757.GA22367@bogus>
-References: <20181020135024.28573-1-paul.walmsley@sifive.com>
- <20181020135024.28573-3-paul.walmsley@sifive.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH v2 0/2] arm64: Cut rebuild time when changing CONFIG_BLK_DEV_INITRD
+Date: Wed, 24 Oct 2018 12:32:54 -0700
+Message-ID: <20181024193256.23734-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181020135024.28573-3-paul.walmsley@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Megan Wachs <megan@sifive.com>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
+To: linux-kernel@vger.kernel.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Olof Johansson <olof@lixom.net>, "open list:ALPHA PORT" <linux-alpha@vger.kernel.org>, "open list:SYNOPSYS ARC ARCHITECTURE" <linux-snps-arc@lists.infradead.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, "open list:C6X ARCHITECTURE" <linux-c6x-dev@linux-c6x.org>, "moderated list:H8/300
+        ARCHITECTURE" <uclinux-h8-devel@lists.sourceforge.jp>, "open list:QUALCOMM HEXAGON ARCHITECTURE" <linux-hexagon@vger.kernel.org>, "open list:IA64 Itanium PLATFORM" <linux-ia64@vger.kernel.org>, "open list:M68" <linux-m68k@lists.linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 20, 2018 at 06:50:23AM -0700, Paul Walmsley wrote:
-> Add DT binding documentation for the Linux driver for the SiFive
-> PRCI clock & reset control IP block, as found on the SiFive
-> FU540 chip.
-> 
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: Megan Wachs <megan@sifive.com>
-> Cc: linux-clk@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Paul Walmsley <paul@pwsan.com>
-> ---
-> v2: remove out-of-date example, add documentation for the compatible
->     string and for the required PCB clock nodes
-> 
-> .../bindings/clock/sifive/fu540-prci.txt      | 43 +++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/sifive/fu540-prci.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/sifive/fu540-prci.txt b/Documentation/devicetree/bindings/clock/sifive/fu540-prci.txt
-> new file mode 100644
-> index 000000000000..d7c1e83fa5ed
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/sifive/fu540-prci.txt
-> @@ -0,0 +1,43 @@
-> +SiFive FU540 PRCI bindings
-> +
-> +On the FU540 family of SoCs, most system-wide clock and reset integration
-> +is via the PRCI IP block.
-> +
-> +Required properties:
-> +- compatible: Should be "sifive,<chip>-prci<version>".  As of the time this
-> +              file was written, only one value is supported:
-> +	      "sifive,fu540-c000-prci0"
+Hi all,
 
-What happens with this depends on the discussion on the other bindings.
+While investigating why ARM64 required a ton of objects to be rebuilt
+when toggling CONFIG_DEV_BLK_INITRD, it became clear that this was
+because we define __early_init_dt_declare_initrd() differently and we do
+that in arch/arm64/include/asm/memory.h which gets included by a fair
+amount of other header files, and translation units as well.
 
-Though here you are inconsistent without a fallback. Of course, I've 
-never seen a clock controller be the same across SoCs.
+Changing the value of CONFIG_DEV_BLK_INITRD is a common thing with build
+systems that generate two kernels: one with the initramfs and one
+without. buildroot is one of these build systems, OpenWrt is also
+another one that does this.
 
-> +- reg: Should describe the PRCI's register target physical address region
-> +- clocks: Should point to the hfclk device tree node and the rtcclk
-> +          device tree node.  The RTC clock here is not a time-of-day clock,
-> +	  but is instead a high-stability clock source for system timers
-> +	  and cycle counters.
-> +- #clock-cells: Should be <1>
-> +
-> +The clock consumer should specify the desired clock via the clock ID
-> +macros defined in include/linux/clk/sifive-fu540-prci.h.  These macros
-> +begin with PRCI_CLK_.
-> +
-> +The hfclk and rtcclk nodes are required, and represent physical
-> +crystals or resonators located on the PCB.
-> +
-> +Examples:
-> +
-> +hfclk: hfclk {
-> +	#clock-cells = <0>;
-> +	compatible = "fixed-clock";
-> +	clock-frequency = <33333333>;
-> +	clock-output-names = "hfclk";
-> +};
-> +rtcclk: rtcclk {
-> +	#clock-cells = <0>;
-> +	compatible = "fixed-clock";
-> +	clock-frequency = <1000000>;
-> +	clock-output-names = "rtcclk";
-> +};
-> +prci0: prci@10000000 {
+This patch series proposes adding an empty initrd.h to satisfy the need
+for drivers/of/fdt.c to unconditionally include that file, and moves the
+custom __early_init_dt_declare_initrd() definition away from
+asm/memory.h
 
-clock-controller@...
+This cuts the number of objects rebuilds from 1920 down to 26, so a
+factor 73 approximately.
 
-> +	compatible = "sifive,fu540-c000-prci0";
-> +	reg = <0x0 0x10000000 0x0 0x1000>;
-> +	clocks = <&hfclk>, <&rtcclk>;
-> +	#clock-cells = <1>;
-> +};
-> -- 
-> 2.19.1
-> 
+Apologies for the long CC list, please let me know how you would go
+about merging that and if another approach would be preferable, e.g:
+introducing a CONFIG_ARCH_INITRD_BELOW_START_OK Kconfig option or
+something like that.
+
+Changes in v2:
+
+- put an /* empty */ comment in the asm-generic/initrd.h file
+- trim down the CC list to maximize the chances of people receiving this
+
+Florian Fainelli (2):
+  arch: Add asm-generic/initrd.h and make use of it for most
+    architectures
+  arm64: Create asm/initrd.h
+
+ arch/alpha/include/asm/Kbuild      |  1 +
+ arch/arc/include/asm/Kbuild        |  1 +
+ arch/arm/include/asm/Kbuild        |  1 +
+ arch/arm64/include/asm/initrd.h    | 13 +++++++++++++
+ arch/arm64/include/asm/memory.h    |  8 --------
+ arch/c6x/include/asm/Kbuild        |  1 +
+ arch/h8300/include/asm/Kbuild      |  1 +
+ arch/hexagon/include/asm/Kbuild    |  1 +
+ arch/ia64/include/asm/Kbuild       |  1 +
+ arch/m68k/include/asm/Kbuild       |  1 +
+ arch/microblaze/include/asm/Kbuild |  1 +
+ arch/mips/include/asm/Kbuild       |  1 +
+ arch/nds32/include/asm/Kbuild      |  1 +
+ arch/nios2/include/asm/Kbuild      |  1 +
+ arch/openrisc/include/asm/Kbuild   |  1 +
+ arch/parisc/include/asm/Kbuild     |  1 +
+ arch/powerpc/include/asm/Kbuild    |  1 +
+ arch/riscv/include/asm/Kbuild      |  1 +
+ arch/s390/include/asm/Kbuild       |  1 +
+ arch/sh/include/asm/Kbuild         |  1 +
+ arch/sparc/include/asm/Kbuild      |  1 +
+ arch/um/include/asm/Kbuild         |  1 +
+ arch/unicore32/include/asm/Kbuild  |  1 +
+ arch/x86/include/asm/Kbuild        |  1 +
+ arch/xtensa/include/asm/Kbuild     |  1 +
+ drivers/of/fdt.c                   |  1 +
+ include/asm-generic/initrd.h       |  1 +
+ 27 files changed, 38 insertions(+), 8 deletions(-)
+ create mode 100644 arch/arm64/include/asm/initrd.h
+ create mode 100644 include/asm-generic/initrd.h
+
+-- 
+2.17.1
