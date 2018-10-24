@@ -1,73 +1,41 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v2 2/3] drm/msm/dpu: Integrate interconnect API in MDSS
-Date: Wed, 24 Oct 2018 09:39:23 -0700
-Message-ID: <20181024163923.GX22824@google.com>
-References: <20181010092434.853-1-skolluku@codeaurora.org>
- <20181010092434.853-3-skolluku@codeaurora.org>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH v8 07/12] dt-bindings: mfd: Add a document for PECI client
+ MFD
+Date: Wed, 24 Oct 2018 09:39:51 -0700
+Message-ID: <8c322777-7c35-1c2a-730f-f8de86522b96@linux.intel.com>
+References: <20180918215124.14003-1-jae.hyun.yoo@linux.intel.com>
+ <20180918215124.14003-8-jae.hyun.yoo@linux.intel.com>
+ <20181024072540.GA4939@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20181010092434.853-3-skolluku@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sravanthi Kollukuduru <skolluku@codeaurora.org>
-Cc: sean@poorly.run, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, seanpaul@chromium.org, freedreno@lists.freedesktop.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181024072540.GA4939@dell>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Randy Dunlap <rdunlap@infradead.org>, linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, Vernon Mauery <vernon.mauery@linux.intel.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Jason M Biils <jason.m.bills@linux.intel.com>, Eric Sandeen <sandeen@redhat.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Jonathan Corbet <corbet@lwn.net>, openbmc@lists.ozlabs.org, linux-doc@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>, David Kershner <david.kershner@unisys.com>, Guenter Roeck <linux@roeck-us.net>, Wu Hao <hao.wu@intel.com>, linux-hwmon@vger.kernel.org, Jean
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3JhdmFudGhpLAoKT24gV2VkLCBPY3QgMTAsIDIwMTggYXQgMDI6NTQ6MzNQTSArMDUzMCwg
-U3JhdmFudGhpIEtvbGx1a3VkdXJ1IHdyb3RlOgo+IFRoZSBpbnRlcmNvbm5lY3QgZnJhbWV3b3Jr
-IGlzIGRlc2lnbmVkIHRvIHByb3ZpZGUgYQo+IHN0YW5kYXJkIGtlcm5lbCBpbnRlcmZhY2UgdG8g
-Y29udHJvbCB0aGUgc2V0dGluZ3Mgb2YKPiB0aGUgaW50ZXJjb25uZWN0cyBvbiBhIFNvQy4KPiAK
-PiBUaGUgaW50ZXJjb25uZWN0IEFQSSB1c2VzIGEgY29uc3VtZXIvcHJvdmlkZXItYmFzZWQgbW9k
-ZWwsCj4gd2hlcmUgdGhlIHByb3ZpZGVycyBhcmUgdGhlIGludGVyY29ubmVjdCBidXNlcyBhbmQg
-dGhlCj4gY29uc3VtZXJzIGNvdWxkIGJlIHZhcmlvdXMgZHJpdmVycy4KPiAKPiBNRFNTIGlzIG9u
-ZSBvZiB0aGUgaW50ZXJjb25uZWN0IGNvbnN1bWVycyB3aGljaCB1c2VzIHRoZQo+IGludGVyY29u
-bmVjdCBBUElzIHRvIGdldCB0aGUgcGF0aCBiZXR3ZWVuIGVuZHBvaW50cyBhbmQKPiBzZXQgaXRz
-IGJhbmR3aWR0aC9sYXRlbmN5L1FvUyByZXF1aXJlbWVudHMgZm9yIHRoZSBnaXZlbgo+IGludGVy
-Y29ubmVjdGVkIHBhdGguCj4gCj4gQ2hhbmdlcyBpbiB2MjoKPiAJLSBSZW1vdmUgZXJyb3IgbG9n
-IGFuZCB1bm5lY2Vzc2FyeSBjaGVjayAoSm9yZGFuIENyb3VzZSkKPiAKPiBTaWduZWQtb2ZmLWJ5
-OiBTcmF2YW50aGkgS29sbHVrdWR1cnUgPHNrb2xsdWt1QGNvZGVhdXJvcmEub3JnPgo+IC0tLQo+
-ICBkcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jIHwgNTAgKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKystLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDQ2IGluc2VydGlvbnMo
-KyksIDQgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20v
-ZGlzcC9kcHUxL2RwdV9tZHNzLmMgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVf
-bWRzcy5jCj4gaW5kZXggMjIzNWVmODEyOWY0Li4yN2MyNTk0ZTUxMzMgMTAwNjQ0Cj4gLS0tIGEv
-ZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3MuYwo+ICsrKyBiL2RyaXZlcnMv
-Z3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMKPiBAQCAtNCw2ICs0LDcgQEAKPiAgICov
-Cj4gIAo+ICAjaW5jbHVkZSAiZHB1X2ttcy5oIgo+ICsjaW5jbHVkZSA8bGludXgvaW50ZXJjb25u
-ZWN0Lmg+Cj4gIAo+ICAjZGVmaW5lIHRvX2RwdV9tZHNzKHgpIGNvbnRhaW5lcl9vZih4LCBzdHJ1
-Y3QgZHB1X21kc3MsIGJhc2UpCj4gIAo+IEBAIC0xNiw4ICsxNywzMyBAQCBzdHJ1Y3QgZHB1X21k
-c3Mgewo+ICAJdTMyIGh3dmVyc2lvbjsKPiAgCXN0cnVjdCBkc3NfbW9kdWxlX3Bvd2VyIG1wOwo+
-ICAJc3RydWN0IGRwdV9pcnFfY29udHJvbGxlciBpcnFfY29udHJvbGxlcjsKPiArCXN0cnVjdCBp
-Y2NfcGF0aCAqcGF0aFsyXTsKPiArCXUzMiBudW1fcGF0aHM7Cj4gIH07Cj4gIAo+ICtzdGF0aWMg
-aW50IGRwdV9tZHNzX3BhcnNlX2RhdGFfYnVzX2ljY19wYXRoKAo+ICsJCXN0cnVjdCBkcm1fZGV2
-aWNlICpkZXYsIHN0cnVjdCBkcHVfbWRzcyAqZHB1X21kc3MpCj4gK3sKPiArCXN0cnVjdCBpY2Nf
-cGF0aCAqcGF0aDAgPSBvZl9pY2NfZ2V0KGRldi0+ZGV2LCAicG9ydDAiKTsKPiArCXN0cnVjdCBp
-Y2NfcGF0aCAqcGF0aDEgPSBvZl9pY2NfZ2V0KGRldi0+ZGV2LCAicG9ydDEiKTsKPiArCWludCB0
-b3RhbF9udW1fcGF0aHMgID0gMDsKCmluaXRpYWxpemF0aW9uIGlzIG5vdCBuZWVkZWQKCm5pdDog
-dGhlICd0b3RhbF8nIHByZWZpeCBkb2Vzbid0IGFkZCBhbnkgdmFsdWUgaGVyZSwganVzdCAnbnVt
-X3BhdGhzJwp3b3VsZCBiZSBlYXNpZXIgdG8gcGFyc2UuIEFjdHVhbGx5IHlvdSBjb3VsZCBnZXQg
-cmlkIG9mIHRoZSB2YXJpYWJsZQpjb21wbGV0ZWx5IGJ5IGp1c3QgaW5pdGlhbGl6aW5nIGFuZCBp
-bmNyZW1lbnRpbmcgZHB1X21kc3MtPm51bV9wYXRocy4KCj4gIHN0YXRpYyBpcnFyZXR1cm5fdCBk
-cHVfbWRzc19pcnEoaW50IGlycSwgdm9pZCAqYXJnKQo+ICB7Cj4gIAlzdHJ1Y3QgZHB1X21kc3Mg
-KmRwdV9tZHNzID0gYXJnOwo+IEBAIC0xMjcsNyArMTUzLDEyIEBAIHN0YXRpYyBpbnQgZHB1X21k
-c3NfZW5hYmxlKHN0cnVjdCBtc21fbWRzcyAqbWRzcykKPiAgewo+ICAJc3RydWN0IGRwdV9tZHNz
-ICpkcHVfbWRzcyA9IHRvX2RwdV9tZHNzKG1kc3MpOwo+ICAJc3RydWN0IGRzc19tb2R1bGVfcG93
-ZXIgKm1wID0gJmRwdV9tZHNzLT5tcDsKPiAtCWludCByZXQ7Cj4gKwlpbnQgcmV0LCBpOwo+ICsJ
-dTY0IGFiID0gKGRwdV9tZHNzLT5udW1fcGF0aHMpID8gNjgwMDAwMDAwMC9kcHVfbWRzcy0+bnVt
-X3BhdGhzIDogMDsKCnBhcmVudGhlc2VzIGFyZSBub3QgbmVlZGVkCgo+ICsJdTY0IGliID0gNjgw
-MDAwMDAwMDsKClRoZXJlIHNob3VsZCBwcm9iYWJseSBiZSBhIGRlZmluZSBmb3IgNjgwMDAwMDAw
-MC4KCm5pdDogbmFtZXMgbGlrZSBhdmdfYncgYW5kIHBlYWtfcHcgd291bGQgYmUgY2xlYXJlciB0
-aGFuIGFiIGFuZCBpYiwKd2l0aG91dCBiZWluZyBleGNlc3NpdmVseSB2ZXJib3NlLgoKQ2hlZXJz
-CgpNYXR0aGlhcwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Lee,
+
+On 10/24/2018 12:25 AM, Lee Jones wrote:
+> On Tue, 18 Sep 2018, Jae Hyun Yoo wrote:
+> 
+>> +Required properties:
+>> +- compatible : Should be "intel,peci-client".
+>> +- reg        : Should contain address of a client CPU. Address range of CPU
+>> +	       clients starts from 0x30 based on PECI specification.
+> 
+> Nit: "start"
+> 
+> Would be better worded:
+> 
+> "According to the PECI specification client addresses start from 0x30."
+> 
+
+Yes, that would be better. Will fix it like you suggested.
+
+Thanks for the review!
+
+Jae
