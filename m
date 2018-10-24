@@ -1,35 +1,49 @@
-Return-Path: <SRS0=BDCp=M3=gmail.com=ykaneko0929@kernel.org>
-From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Subject: [PATCH/RFT 2/2] thermal: rcar_thermal: add R8A77990 support
-Date: Mon, 15 Oct 2018 23:11:59 +0900
-Message-Id: <1539612719-9650-3-git-send-email-ykaneko0929@gmail.com>
-In-Reply-To: <1539612719-9650-1-git-send-email-ykaneko0929@gmail.com>
-References: <1539612719-9650-1-git-send-email-ykaneko0929@gmail.com>
-To: linux-pm@vger.kernel.org
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=mtda=NE=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v5 3/3] dt-bindings: mmc: tmio_mmc: Document Renesas R7S9210
+Date: Wed, 24 Oct 2018 17:23:01 -0500
+Message-Id: <20181024222301.21455-4-chris.brandt@renesas.com>
+In-Reply-To: <20181024222301.21455-1-chris.brandt@renesas.com>
+References: <20181024222301.21455-1-chris.brandt@renesas.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-clk@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for R-Car E3 (R8A77990) thermal support.
+Document support for the RZ/A2 (R7S9210) SoC.
 
-Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 ---
- drivers/thermal/rcar_thermal.c | 4 ++++
- 1 file changed, 4 insertions(+)
+v3:
+ * Added Reviewed-by from Rob and Simon
+v2:
+ * Documented that R7S9210 has 2 clocks
+---
+ Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/rcar_thermal.c b/drivers/thermal/rcar_thermal.c
-index 78f9328..b1bc5c1 100644
---- a/drivers/thermal/rcar_thermal.c
-+++ b/drivers/thermal/rcar_thermal.c
-@@ -113,6 +113,10 @@ struct rcar_thermal_priv {
- 		 .data = &rcar_gen2_thermal,
- 	},
- 	{
-+		.compatible = "renesas,thermal-r8a77990",
-+		.data = &rcar_gen3_thermal,
-+	},
-+	{
- 		.compatible = "renesas,thermal-r8a77995",
- 		.data = &rcar_gen3_thermal,
- 	},
+diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+index 27f2eab2981d..9391ae9a1d9d 100644
+--- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+@@ -13,6 +13,7 @@ Required properties:
+ - compatible: should contain one or more of the following:
+ 		"renesas,sdhi-sh73a0" - SDHI IP on SH73A0 SoC
+ 		"renesas,sdhi-r7s72100" - SDHI IP on R7S72100 SoC
++		"renesas,sdhi-r7s9210" - SDHI IP on R7S9210 SoC
+ 		"renesas,sdhi-r8a73a4" - SDHI IP on R8A73A4 SoC
+ 		"renesas,sdhi-r8a7740" - SDHI IP on R8A7740 SoC
+ 		"renesas,sdhi-r8a7743" - SDHI IP on R8A7743 SoC
+@@ -56,7 +57,7 @@ Required properties:
+ 	  "core" and "cd". If the controller only has 1 clock, naming is not
+ 	  required.
+ 	  Devices which have more than 1 clock are listed below:
+-	  2: R7S72100
++	  2: R7S72100, R7S9210
+ 
+ Optional properties:
+ - pinctrl-names: should be "default", "state_uhs"
 -- 
-1.9.1
+2.16.1
