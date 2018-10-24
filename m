@@ -1,121 +1,138 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] drm/sun4i: tcon: Support an active-low
- DE signal with RGB interface
-Date: Wed, 24 Oct 2018 17:47:58 +0100
-Message-ID: <20181024164758.iqnlie4witckzauy@flea>
-References: <20181010114134.8211-1-contact@paulk.fr>
- <20181010145736.l6zpohvvd4b5qngr@flea>
- <224ec158bf627b4d2f577b1dadf10bd87891e2a7.camel@paulk.fr>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: serial: add documentation for the
+ SiFive UART driver
+Date: Wed, 24 Oct 2018 11:53:49 -0500
+Message-ID: <20181024165349.GA5652@bogus>
+References: <CAL_JsqJBSqaxnETdJg1Mdp+H2ay+WKT0JaxLe6D4Fwo_99qUkw@mail.gmail.com>
+ <mhng-44b7601c-c2f4-4de8-a12e-7730e03d691e@palmer-si-x1c4>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBSOEYLPAKGQENDIW2RI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <224ec158bf627b4d2f577b1dadf10bd87891e2a7.camel-W9ppeneeCTY@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mark Van den Borre <mark-8Ycg9RsmSNMdnm+yROfE0A@public.gmane.org>, Gerry Demaret <gerry-8Ycg9RsmSNMdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <mhng-44b7601c-c2f4-4de8-a12e-7730e03d691e@palmer-si-x1c4>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Palmer Dabbelt <palmer@sifive.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, mark.rutland@arm.com, paul@pwsan.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 23, 2018 at 11:33:10AM +0200, Paul Kocialkowski wrote:
-> Hi,
->=20
-> Le mercredi 10 octobre 2018 =C3=A0 16:57 +0200, Maxime Ripard a =C3=A9cri=
-t :
-> > On Wed, Oct 10, 2018 at 01:41:31PM +0200, Paul Kocialkowski wrote:
-> > > Some panels need an active-low data enable (DE) signal for the RGB
-> > > interface. This requires flipping a bit in the TCON0 polarity registe=
-r
-> > > when setting up the mode for the RGB interface.
-> > >=20
-> > > Add a new helper function to match specific bus flags and use it to s=
-et
-> > > the polarity inversion bit for the DE signal when required.
-> > >=20
-> > > Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+On Mon, Oct 22, 2018 at 09:41:51AM -0700, Palmer Dabbelt wrote:
+> On Fri, 19 Oct 2018 13:45:57 PDT (-0700), robh+dt@kernel.org wrote:
+> > On Fri, Oct 19, 2018 at 1:48 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+> > > 
+> > > Add DT binding documentation for the Linux driver for the SiFive
+> > > asynchronous serial IP block.  Nothing too exotic.
+> > > 
+> > > Cc: linux-serial@vger.kernel.org
+> > > Cc: devicetree@vger.kernel.org
+> > > Cc: linux-riscv@lists.infradead.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Palmer Dabbelt <palmer@sifive.com>
+> > > Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+> > > Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> > > Signed-off-by: Paul Walmsley <paul@pwsan.com>
 > > > ---
-> > >  drivers/gpu/drm/sun4i/sun4i_tcon.c | 28 ++++++++++++++++++++++++++--
-> > >  drivers/gpu/drm/sun4i/sun4i_tcon.h |  1 +
-> > >  2 files changed, 27 insertions(+), 2 deletions(-)
-> > >=20
-> > > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun=
-4i/sun4i_tcon.c
-> > > index 3fb084f802e2..d249a462ec09 100644
-> > > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > @@ -78,6 +78,24 @@ static int sun4i_tcon_get_pixel_depth(const struct=
- drm_encoder *encoder)
-> > >  	return -EINVAL;
-> > >  }
-> > > =20
-> > > +static bool sun4i_tcon_match_bus_flags(const struct drm_encoder *enc=
-oder,
-> > > +				       u32 bus_flags)
-> > > +{
-> > > +	struct drm_connector *connector;
-> > > +	struct drm_display_info *info;
+> > >  .../bindings/serial/sifive-serial.txt         | 21 +++++++++++++++++++
+> > >  1 file changed, 21 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/serial/sifive-serial.txt b/Documentation/devicetree/bindings/serial/sifive-serial.txt
+> > > new file mode 100644
+> > > index 000000000000..8982338512f5
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/serial/sifive-serial.txt
+> > > @@ -0,0 +1,21 @@
+> > > +SiFive asynchronous serial interface (UART)
 > > > +
-> > > +	connector =3D sun4i_tcon_get_connector(encoder);
-> > > +	if (!connector)
-> > > +		return false;
+> > > +Required properties:
 > > > +
-> > > +	info =3D &connector->display_info;
-> > > +
-> > > +	if ((info->bus_flags & bus_flags) =3D=3D bus_flags)
-> > > +		return true;
-> > > +
-> > > +	return false;
-> > > +}
-> > > +
-> > >  static void sun4i_tcon_channel_set_status(struct sun4i_tcon *tcon, i=
-nt channel,
-> > >  					  bool enabled)
-> > >  {
-> > > @@ -415,6 +433,7 @@ static void sun4i_tcon0_mode_set_lvds(struct sun4=
-i_tcon *tcon,
-> > >  }
-> > > =20
-> > >  static void sun4i_tcon0_mode_set_rgb(struct sun4i_tcon *tcon,
-> > > +				     const struct drm_encoder *encoder,
-> > >  				     const struct drm_display_mode *mode)
-> > >  {
-> > >  	unsigned int bp, hsync, vsync;
-> > > @@ -474,8 +493,13 @@ static void sun4i_tcon0_mode_set_rgb(struct sun4=
-i_tcon *tcon,
-> > >  	if (mode->flags & DRM_MODE_FLAG_PVSYNC)
-> > >  		val |=3D SUN4I_TCON0_IO_POL_VSYNC_POSITIVE;
-> > > =20
-> > > +	if (sun4i_tcon_match_bus_flags(encoder, DRM_BUS_FLAG_DE_LOW))
-> > > +		val |=3D SUN4I_TCON0_IO_POL_DE_NEGATIVE;
-> > > +
-> >=20
-> > There's other flags in use in that function, you should also migrate
-> > them (ideally by splitting that new function into a separate patch).
->=20
-> Actually, these other flags are not DRM bus flags but DRM mode flags,
-> which can be accessed directly from the mode pointer passed as
-> argument. Thus, they don't require a helper.
+> > > +- compatible: should be "sifive,fu540-c000-uart0" or "sifive,uart0"
+> > 
+> > I assume once again, the last '0' is a version? As I mentioned for the
+> > intc and now the pwm block bindings, if you are going to do version
+> > numbers please document the versioning scheme. Palmer mentioned the
+> > compatible string is part of the IP block repository? Where does the
+> > number come from? What's the next version? Major vs. minor versions?
+> > ECO fixes? Is the version s/w readable? How do you ensure it gets
+> > updated? All that should be addressed.
+> 
+> The RISC-V ecosystem is a bit different than that of ARM, MIPS, or Intel in
+> that the ISA is an royalty-free open standard that anyone can implement (ie,
+> without even signing a license agreement), with only the "RISC-V" trademark
+> being held behind a pay+conformance wall.  As a result, we don't actually
+> have any control over who builds a RISC-V chip so all we at SiFive can
+> really to is try to demonstrate good practices in software land and go from
+> there.
 
-I was talking about DRM_BUS_FLAG_PIXDATA_POSEDGE and
-DRM_BUS_FLAG_PIXDATA_NEGEDGE, which are in the current tree.
+Rights to the ISA and cores may be different, but how chips are built 
+is not really all that different (or doesn't have to be).
 
-Maxime
+> As far as SiFive's codebase is concerned, the version number is embedded in
+> the RTL generator, and a device tree is generated along with the RTL.  This
+> device tree is then embedded into a mask ROM on the chip, which allows the
+> earliest stage of boot to proceed.  As I'm sure you know, boot is a very
+> complicated process and as a result the device tree passed to Linux doesn't
+> necessarily look like what's in the ROM, but the intent is to keep iterating
+> until we can get these as similar as possible -- that's why we're submitting
+> every devicetree binding to the standard.
 
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+So all this discussion is purely SiFive specific and really has nothing 
+to do with RISC-V ecosystem.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Putting the DT into the ROM isn't something I'd do. It's simply not 
+going to work timeline wise IMO.
+
+> Specifically as far as the UART is concerned, the compat string that's not
+> chip-specific lives here (the "sifive,fu540-c000-uart" string lives in an
+> internal chip repo that I can't point to):
+> 
+>    https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/devices/uart/UART.scala#L43
+> 
+> The version numbering scheme right now is pretty simple: I try to pay as
+> much attention as possible to how the hardware changes (both by looking and
+> with some automation), and I go yell at anyone who does something stupid.  I
+> know it's not the most scalable of schemes, but it's the best we have.  The
+> UART is actually an interesting case right now because we have an
+> outstanding pull request that adds a bit to the UART and then adds
+> "sifive,uart1" to the compat string
+> 
+>    https://github.com/sifive/sifive-blocks/pull/90
+
+Relying on people to catch whether changes are important or not is bound 
+to fail. It's really got to be built into the design flow.
+
+Even just updating a version register I've experienced the h/w designers 
+forgetting to update it.
+
+> My intent is to ensure that the device tree's compat string uniquely
+> identifies the software interface to a block.  Thus, whenever a device's
+> implementation changes in a software-visible way (bug fix or feature
+> addition) we change the compat string -- either adding one (as is the case
+> of the UART, where the compat string will be both "sifive,uart1" and
+> "sifive,uart0" since the new feature is backwards compatible with the old
+> software) or changing one (if the interface change is not compatible with
+> old software).
+
+What about config options? Say the UART has a configurable FIFO size.
+
+What about major vs. minor version changes? Respins of chips would need 
+to make minor changes if picking up major changes are deemed too risky.
+
+> Like I said above, this is all a manual process right now and this only
+> applies to SiFive's implementations.  I'm confident that I can at least
+> ensure that, for any given SiFive implementation, a block's compat string
+> will uniquely identify the software interface to it.  For the rest of the
+> RISC-V world all we can do is set a good example and review the software.
+
+This is all good information and is essentially what I'm looking for. I 
+just don't want it lost in a reply to an email, but something you can 
+reference. Look at bindings/arm/primecell.txt for example. That 
+describes a family of IP blocks and not any specific device.
+
+Whether the versioning is sufficient or not, I don't really care as long 
+as you docuemnt what it is so it is consistent. Since you have a common 
+schema across IP blocks, that means you should have a common document.
+
+Rob
