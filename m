@@ -1,38 +1,54 @@
-From: Scott Wood <oss@buserror.net>
-Subject: Re: [PATCH 1/3 v2] powerpc/fsl: Use new clockgen binding
-Date: Wed, 24 Oct 2018 12:41:16 -0500
-Message-ID: <7bceb12756766931772f2ec37f94ad8cdfeb0fd5.camel@buserror.net>
-References: <20181024021122.3942-1-andy.tang@nxp.com>
+From: Liming Sun <lsun@mellanox.com>
+Subject: [PATCH v4 4/4] MAINTAINERS: Add entry for Mellanox Bluefield Soc
+Date: Wed, 24 Oct 2018 13:55:34 -0400
+Message-ID: <1540403734-137721-4-git-send-email-lsun@mellanox.com>
+References: <1540403734-137721-1-git-send-email-lsun@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20181024021122.3942-1-andy.tang@nxp.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: andy.tang@nxp.com, sboyd@kernel.org, mturquette@baylibre.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, paulus@samba.org, linuxppc-dev@lists.ozlabs.org, linux-clk@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1540403734-137721-1-git-send-email-lsun@mellanox.com>
+In-Reply-To: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, David Woods <dwoods@mellanox.com>, Robin Murphy <robin.murphy@arm.com>, arm-soc <arm@kernel.org>
+Cc: devicetree@vger.kernel.org, Liming Sun <lsun@mellanox.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-10-24 at 10:11 +0800, andy.tang@nxp.com wrote:
-> From: Scott Wood <oss@buserror.net>
-> 
-> The driver retains compatibility with old device trees, but we don't
-> want the old nodes lying around to be copied, or used as a reference
-> (some of the mux options are incorrect), or even just being clutter.
-> 
-> We will also need the #clock-cells in the clockgen node in order to
-> add fman nodes.
+Add maintainer information for Mellanox BlueField SoC.
 
-The comment about #clock-cells is no longer relevant to this patch, since that
- has already been added.
+Reviewed-by: David Woods <dwoods@mellanox.com>
+Signed-off-by: Liming Sun <lsun@mellanox.com>
+---
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
--Scott
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c78feb0..07f7c7e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1649,6 +1649,14 @@ L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	drivers/phy/mediatek/phy-mtk-tphy.c
+ 
++ARM/Mellanox BlueField SoC support
++M:	David Woods <dwoods@mellanox.com>
++M:	Liming Sun <lsun@mellanox.com>
++L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++S:	Maintained
++F:	drivers/soc/mellanox/*
++F:	Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
++
+ ARM/MICREL KS8695 ARCHITECTURE
+ M:	Greg Ungerer <gerg@uclinux.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+-- 
+1.8.3.1
