@@ -1,66 +1,72 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v4 1/7] leds: add TI LMU backlight driver
-Date: Wed, 24 Oct 2018 07:27:57 -0500
-Message-ID: <4afc7944-d6f1-fef1-1ae4-f761e050fec9@ti.com>
-References: <20181023170623.31820-1-dmurphy@ti.com>
- <20181024091407.GC24997@amd>
+From: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
+Subject: [RESEND PATCH 1/2] drm/panel: Add support for Armadeus ST0700 Adapt
+Date: Wed, 24 Oct 2018 14:54:56 +0200
+Message-ID: <20181024125457.25204-1-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181024091407.GC24997@amd>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, lee.jones@linaro.org, tony@atomide.com, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Pavel
-
-On 10/24/2018 04:14 AM, Pavel Machek wrote:
-> On Tue 2018-10-23 12:06:17, Dan Murphy wrote:
->> From: Pavel Machek <pavel@ucw.cz>
->>
->> This adds backlight support for the following TI LMU
->> chips: LM3532, LM3631, LM3632, LM3633, LM3695 and LM3697.
->>
->> It controls LEDs on Droid 4
->> smartphone, including keyboard and screen backlights.
->>
->> Signed-off-by: Milo Kim <milo.kim@ti.com>
->> [add LED subsystem support for keyboard backlight and rework DT
->> binding according to Rob Herrings feedback]
->> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
->> [remove backlight subsystem support for now]
->> Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> 
-> This is not correct way to sign off a patch.
-> 
-> What is worse, this is very different from patch I submitted; this
-> misses imporant parts while my patch was complete.
-> 
-> I already submitted better patch for both the driver and device tree
-> bindings. Can we go back and apply that?
-> 
-> Then you can add your changes on top of that, if they actually make
-> the situation better.
-
-Thanks for this.  I wanted to make sure not to loose any authorship or credit
-in the commit.  Actually removing Milo might help stop getting the bounce back
-from the mail daemon.
-
-I was using the RFC patch as my base https://lore.kernel.org/patchwork/patch/978995/
-
-Which contains this sign off.
-
-Dan
-
-> 
-> Thanks,
-> 								Pavel
-> 
-
-
--- 
-------------------
-Dan Murphy
+VGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIHRoZSBBcm1hZGV1cyBTVDA3MDAgQWRhcHQuIEl0
+IGNvbWVzIHdpdGggYQpTYW50ZWsgU1QwNzAwSTVZLVJCU0xXIDcuMCIgV1ZHQSAoODAweDQ4MCkg
+VEZUIGFuZCBhbiBhZGFwdGVyIGJvYXJkIHNvCnRoYXQgaXQgY2FuIGJlIGNvbm5lY3RlZCBvbiB0
+aGUgVEZUIGhlYWRlciBvZiBBcm1hZGV1cyBEZXYgYm9hcmRzLgoKU2lnbmVkLW9mZi1ieTogU8Op
+YmFzdGllbiBTenltYW5za2kgPHNlYmFzdGllbi5zenltYW5za2lAYXJtYWRldXMuY29tPgotLS0K
+IC4uLi9kaXNwbGF5L3BhbmVsL2FybWFkZXVzLHN0MDcwMC1hZGFwdC50eHQgICAgICAgIHwgIDkg
+KysrKysrKwogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgICAg
+ICAgfCAyOSArKysrKysrKysrKysrKysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQsIDM4IGluc2Vy
+dGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9wYW5lbC9hcm1hZGV1cyxzdDA3MDAtYWRhcHQudHh0CgpkaWZmIC0tZ2l0
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYXJtYWRl
+dXMsc3QwNzAwLWFkYXB0LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL2FybWFkZXVzLHN0MDcwMC1hZGFwdC50eHQKbmV3IGZpbGUgbW9kZSAxMDA2
+NDQKaW5kZXggMDAwMDAwMDAwMDAwLi5hMzBkNjNkYjNjOGYKLS0tIC9kZXYvbnVsbAorKysgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hcm1hZGV1cyxz
+dDA3MDAtYWRhcHQudHh0CkBAIC0wLDAgKzEsOSBAQAorQXJtYWRldXMgU1QwNzAwIEFkYXB0LiBB
+IFNhbnRlayBTVDA3MDBJNVktUkJTTFcgNy4wIiBXVkdBICg4MDB4NDgwKSBURlQgd2l0aAorYW4g
+YWRhcHRlciBib2FyZC4KKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZTogImFy
+bWFkZXVzLHN0MDcwMC1hZGFwdCIKKy0gcG93ZXItc3VwcGx5OiBzZWUgcGFuZWwtY29tbW9uLnR4
+dAorCitPcHRpb25hbCBwcm9wZXJ0aWVzOgorLSBiYWNrbGlnaHQ6IHNlZSBwYW5lbC1jb21tb24u
+dHh0CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgYi9k
+cml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKaW5kZXggOTc5NjRmN2YyYWNlLi5l
+OTZkZjAwYTFjMDAgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1w
+bGUuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKQEAgLTQzNiw2
+ICs0MzYsMzIgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGFtcGlyZV9hbTgwMDQ4
+MHIzdG1xd2ExaCA9IHsKIAkuYnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdCNjY2XzFYMTgs
+CiB9OwogCitzdGF0aWMgY29uc3Qgc3RydWN0IGRpc3BsYXlfdGltaW5nIHNhbnRla19zdDA3MDBp
+NXlfcmJzbHdfZl90aW1pbmcgPSB7CisJLnBpeGVsY2xvY2sgPSB7IDI2NDAwMDAwLCAzMzMwMDAw
+MCwgNDY4MDAwMDAgfSwKKwkuaGFjdGl2ZSA9IHsgODAwLCA4MDAsIDgwMCB9LAorCS5oZnJvbnRf
+cG9yY2ggPSB7IDE2LCAyMTAsIDM1NCB9LAorCS5oYmFja19wb3JjaCA9IHsgNDUsIDM2LCA2IH0s
+CisJLmhzeW5jX2xlbiA9IHsgMSwgMTAsIDQwIH0sCisJLnZhY3RpdmUgPSB7IDQ4MCwgNDgwLCA0
+ODAgfSwKKwkudmZyb250X3BvcmNoID0geyA3LCAyMiwgMTQ3IH0sCisJLnZiYWNrX3BvcmNoID0g
+eyAyMiwgMTMsIDMgfSwKKwkudnN5bmNfbGVuID0geyAxLCAxMCwgMjAgfSwKKwkuZmxhZ3MgPSBE
+SVNQTEFZX0ZMQUdTX0hTWU5DX0xPVyB8IERJU1BMQVlfRkxBR1NfVlNZTkNfTE9XIHwKKwkJRElT
+UExBWV9GTEFHU19ERV9ISUdIIHwgRElTUExBWV9GTEFHU19QSVhEQVRBX1BPU0VER0UKK307CisK
+K3N0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBhcm1hZGV1c19zdDA3MDBfYWRhcHQgPSB7
+CisJLnRpbWluZ3MgPSAmc2FudGVrX3N0MDcwMGk1eV9yYnNsd19mX3RpbWluZywKKwkubnVtX3Rp
+bWluZ3MgPSAxLAorCS5icGMgPSA2LAorCS5zaXplID0geworCQkud2lkdGggPSAxNTQsCisJCS5o
+ZWlnaHQgPSA4NiwKKwl9LAorCS5idXNfZm9ybWF0ID0gTUVESUFfQlVTX0ZNVF9SR0I2NjZfMVgx
+OCwKKwkuYnVzX2ZsYWdzID0gRFJNX0JVU19GTEFHX0RFX0hJR0ggfCBEUk1fQlVTX0ZMQUdfUElY
+REFUQV9QT1NFREdFLAorfTsKKwogc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2Rl
+IGF1b19iMTAxYXcwM19tb2RlID0gewogCS5jbG9jayA9IDUxNDUwLAogCS5oZGlzcGxheSA9IDEw
+MjQsCkBAIC0yMzMwLDYgKzIzNTYsOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9p
+ZCBwbGF0Zm9ybV9vZl9tYXRjaFtdID0gewogCX0sIHsKIAkJLmNvbXBhdGlibGUgPSAiYW1waXJl
+LGFtODAwNDgwcjN0bXF3YTFoIiwKIAkJLmRhdGEgPSAmYW1waXJlX2FtODAwNDgwcjN0bXF3YTFo
+LAorCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAiYXJtYWRldXMsc3QwNzAwLWFkYXB0IiwKKwkJLmRh
+dGEgPSAmYXJtYWRldXNfc3QwNzAwX2FkYXB0LAogCX0sIHsKIAkJLmNvbXBhdGlibGUgPSAiYXVv
+LGIxMDFhdzAzIiwKIAkJLmRhdGEgPSAmYXVvX2IxMDFhdzAzLAotLSAKMi4xNi40CgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
+bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
