@@ -1,48 +1,71 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v5 1/4] clk: sunxi-ng: Enable DE2_CCU for SUN8I and SUN50I
-Date: Wed, 24 Oct 2018 01:52:14 -0700
-Message-ID: <154037113470.53599.9820023879508838050@swboyd.mtv.corp.google.com>
-References: <20181023155727.9383-1-jagan@amarulasolutions.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 2/9] dt-bindings: ti-lmu: Remove LM3697
+Date: Wed, 24 Oct 2018 10:55:43 +0200
+Message-ID: <20181024085543.GA24997@amd>
+References: <20181012180312.GB5565@amd>
+ <60cc9238-aba2-aa6a-64a4-2b5e20835549@gmail.com>
+ <CAL_Jsq+Yspr_iNP1eYanvtmiuMf-xNEZ0suDH3tQayV=V5r5=g@mail.gmail.com>
+ <73647af4-0258-49a9-d9b6-eeef7e7813dc@gmail.com>
+ <5c7f03cc-4d45-6010-523d-46721c218731@ti.com>
+ <20181015214512.GA2001@amd>
+ <aa401333-9650-c925-2085-6e6d17b576bd@ti.com>
+ <20181018221048.GA6364@amd>
+ <b3d390c8-46bf-2c94-fad5-ec85b1cca2fe@ti.com>
+ <20181019145812.GC43338@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181023155727.9383-1-jagan@amarulasolutions.com>
+Content-Disposition: inline
+In-Reply-To: <20181019145812.GC43338@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Michael Trimarchi <michael@amarulasolutions.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Cc: Jagan Teki <jagan@amarulasolutions.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Dan Murphy <dmurphy@ti.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh@kernel.org>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jagan Teki (2018-10-23 08:57:24)
-> Allwinner SoC like SUN8I and SUN50I has DE2 CCU so enable them
-> as default.
-> =
 
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
-> Changes for v5:
-> - remove DRM dependency =
+--qMm9M+Fa2AknHoGS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Changes for v4, v3:
-> - none
-> Changes for v2:
-> - Enable for MACH_SUN8I
-> =
+On Fri 2018-10-19 07:58:12, Tony Lindgren wrote:
+> * Dan Murphy <dmurphy@ti.com> [181019 11:42]:
+> > On 10/18/2018 05:10 PM, Pavel Machek wrote:
+> > >=20
+> > > Now... this is what I've suggested before. If you don't agree, you may
+> > > want to contact Tony Lindgren, IIRC he works for TI, too, and might be
+> > > willing to help.
+> >
+> > I will ping Tony just to close the loop.  I will be posting v4 today af=
+ter making the changes.
+> > I was hoping to have some code review prior to posting v4 but have not =
+received any comments so
+> > v4 will just be a patch rearrangement.
+>=20
+> I guess not much to ping here though as I know little about these
+> chips :) As long as Rob is happy with the binding changes I'll be
+> happy too.
 
->  drivers/clk/sunxi-ng/Kconfig | 2 ++
->  1 file changed, 2 insertions(+)
-> =
+Well, question is more "how to make Rob happy". I see v4 is out, let
+me comment on that.
 
-> diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kconfig
-> index 826674d090fd..99cf8103474c 100644
-> --- a/drivers/clk/sunxi-ng/Kconfig
-> +++ b/drivers/clk/sunxi-ng/Kconfig
-> @@ -63,6 +63,8 @@ config SUN8I_V3S_CCU
->  =
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
->  config SUN8I_DE2_CCU
->         bool "Support for the Allwinner SoCs DE2 CCU"
-> +       default MACH_SUN8I || (ARM64 && ARCH_SUNXI)
-> +       depends on MACH_SUN8I || (ARM64 && ARCH_SUNXI)
+--qMm9M+Fa2AknHoGS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Why do we need 'depends on'? That isn't described in the commit text.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlvQM48ACgkQMOfwapXb+vKa7QCgrGHsNWr7veMOlP3bWoCrdDpO
+6EkAnji+3GZF+fbvC3H4bPwsBgniHPoi
+=Yi8O
+-----END PGP SIGNATURE-----
+
+--qMm9M+Fa2AknHoGS--
