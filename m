@@ -1,107 +1,481 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] OF: Handle CMDLINE when /chosen node is not present
-Date: Wed, 24 Oct 2018 16:06:52 -0500
-Message-ID: <CAL_Jsq+CgxWbCMz_qwLbMJS3fYwKyCMBGVS501-5ShXywyDAXA@mail.gmail.com>
-References: <20181022224213.GA25145@bogus>
- <mhng-08dbc241-46e4-411b-ba13-32435abde7ad@palmer-si-x1c4>
- <CAL_JsqKA6_saB7Ak=BZqSth6KAZ1g2srF5BsOQRGdE2+rmcR8w@mail.gmail.com>
- <8e420b9dee0f246fda8e018532737b1a@mailhost.ics.forth.gr>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH v8 08/12] mfd: intel-peci-client: Add PECI client MFD
+ driver
+Date: Wed, 24 Oct 2018 14:10:44 -0700
+Message-ID: <db7570cb-8f63-b551-d119-c54270ce6139@linux.intel.com>
+References: <20180918215124.14003-1-jae.hyun.yoo@linux.intel.com>
+ <20180918215124.14003-9-jae.hyun.yoo@linux.intel.com>
+ <20181024105903.GB4939@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <8e420b9dee0f246fda8e018532737b1a@mailhost.ics.forth.gr>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Nick Kossifidis <mick@ics.forth.gr>
-Cc: Linux-MIPS <linux-mips@linux-mips.org>, linux-riscv@lists.infradead.org, Palmer Dabbelt <palmer@sifive.com>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181024105903.GB4939@dell>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Randy Dunlap <rdunlap@infradead.org>, linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, Vernon Mauery <vernon.mauery@linux.intel.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Jason M Biils <jason.m.bills@linux.intel.com>, Eric Sandeen <sandeen@redhat.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Jonathan Corbet <corbet@lwn.net>, openbmc@lists.ozlabs.org, linux-doc@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Joel Stanley <joel@jms.id.au>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>, David Kershner <david.kershner@unisys.com>, Guenter Roeck <linux@roeck-us.net>, Wu Hao <hao.wu@intel.com>, linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, Arnd Bergmann <arnd@arndb.de>, Philippe
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBPY3QgMjQsIDIwMTggYXQgODozMyBBTSBOaWNrIEtvc3NpZmlkaXMgPG1pY2tAaWNz
-LmZvcnRoLmdyPiB3cm90ZToKPgo+IM6jz4TOuc+CIDIwMTgtMTAtMjMgMTc6MzAsIFJvYiBIZXJy
-aW5nIM6tzrPPgc6xz4jOtToKPiA+IE9uIE1vbiwgT2N0IDIyLCAyMDE4IGF0IDU6NTUgUE0gUGFs
-bWVyIERhYmJlbHQgPHBhbG1lckBzaWZpdmUuY29tPgo+ID4gd3JvdGU6Cj4gPj4KPiA+PiBPbiBN
-b24sIDIyIE9jdCAyMDE4IDE1OjQyOjEzIFBEVCAoLTA3MDApLCByb2JoQGtlcm5lbC5vcmcgd3Jv
-dGU6Cj4gPj4gPiBPbiBNb24sIE9jdCAxNSwgMjAxOCBhdCAwNToyMDoxMFBNICswMzAwLCBOaWNr
-IEtvc3NpZmlkaXMgd3JvdGU6Cj4gPj4gPj4gVGhlIC9jaG9zZW4gbm9kZSBpcyBvcHRpb25hbCBz
-byB3ZSBzaG91bGQgaGFuZGxlIENNRExJTkUgcmVnYXJkbGVzcwo+ID4+ID4+IHRoZSBwcmVzZW5j
-ZSBvZiAvY2hvc2VuL2Jvb3RhcmdzLiBNb3ZlIGhhbmRsaW5nIG9mIENNRExJTkUgaW4KPiA+PiA+
-PiBlYXJseV9pbml0X2R0X3NjYW4oKSBpbnN0ZWFkLgo+ID4+ID4KPiA+PiA+IEkgbG9va2VkIGF0
-IHRoaXMgYSB3aGlsZSBiYWNrLiBJJ20gbm90IHN1cmUgdGhpcyBiZWhhdmlvciBjYW4gYmUgY2hh
-bmdlZAo+ID4+ID4gd2l0aG91dCBicmVha2luZyBzb21lIE1JUFMgcGxhdGZvcm1zIHRoYXQgY291
-bGQgYmUgcmVseWluZyBvbiB0aGUKPiA+PiA+IGN1cnJlbnQgYmVoYXZpb3IuIEJ1dCB0cnlpbmcg
-dG8gbWFrZSBzZW5zZSBvZiB0aGUgTUlQUyBjb2RlIGlzIGEKPiA+PiA+IGNoYWxsZW5nZSBhbmQg
-dGhleSBoYXZlIHNvbWUgb3RoZXIgaXNzdWVzIGluIHRoaXMgYXJlYS4KPiA+PiA+Cj4gPj4gPiBD
-YW4ndCB0aGlzIGJlIGZpeGVkIGJ5IG1ha2luZyAvY2hvc2VuIG1hbmRpdG9yeT8gSSdkIGV4cGVj
-dCB1bHRpbWF0ZWx5Cj4gPj4gPiB5b3UgYXJlIGFsd2F5cyBnb2luZyB0byBuZWVkIGl0Lgo+ID4+
-ID4KPiA+PiA+IEknZCByYXRoZXIgbm90IHJlc29ydCB0byBtYWtpbmcgdGhpcyBwZXIgYXJjaC4g
-VGhlcmUncyBhbHNvIHNvbWUgZWZmb3J0Cj4gPj4gPiB0byBjb25zb2xpZGF0ZSBjbWQgbGluZSBo
-YW5kbGluZ1sxXS4KPiA+Pgo+ID4+IEknZCByYXRoZXIgbWFrZSAvY2hvc2VuIG1hbmRhdG9yeSBv
-biBSSVNDLVYgdGhhbiB0byBoYXZlIHBlci1hcmNoCj4gPj4gaGFuZGxpbmcsIGFzCj4gPj4gbGlr
-ZSB5b3UndmUgc2FpZCB0aGVyZSdzIGFscmVhZHkgdG9vIG11Y2ggZHVwbGljYXRpb24uICBUaGF0
-IHNhaWQsIGl0Cj4gPj4gZG9lcyBzZWVtCj4gPj4gbGlrZSBhIGJ1ZyB0byBtZSBiZWNhdXNlIHRo
-ZSBiZWhhdmlvciBzZWVtcyBzb21ld2hhdCBhcmJpdHJhcnkgLS0gYW4KPiA+PiBlbXB0eQo+ID4+
-IC9jaG9zZW4gbm9kZSBjYXVzaW5nIHRoZSBidWlsdC1pbiBjb21tYW5kLWxpbmUgYXJndW1lbnQg
-aGFuZGxpbmcgdG8gZ28KPiA+PiBvZmYgdGhlCj4gPj4gcmFpbHMganVzdCBzbWVsbHMgc28gYnVn
-Z3kuCj4gPgo+ID4gWWVzLiBQcm9iYWJseSBuZWVkIHRvIGRvIHNvbWUgYXJjaGFlb2xvZ3kgb24g
-dGhpcyBjb2RlIHRvIGZpZ3VyZSBvdXQKPiA+IHNvbWUgb2YgdGhlIGV4cGVjdGF0aW9ucy4KPiA+
-Cj4gPj4gSWYgdGhhdCdzIHRoZSBjYXNlLCBjb3VsZCB3ZSBhdCBsZWFzdCBoYXZlIHNvbWV0aGlu
-ZyBsaWtlCj4gPj4gIkNPTkZJR19PRl9DSE9TRU5fSVNfTUFOREFUT1JZIiB0aGF0IHByb3ZpZGVz
-IGEgd2FybmluZyB3aGVuIHRoZXJlIGlzCj4gPj4gbm8KPiA+PiAvY2hvc2VuIG5vZGUgYW5kIGlz
-IHNldCBvbiBhcmNoaXRlY3R1cmUgd2hlcmUgdGhlIHNwZWMgbWFuZGF0ZXMKPiA+PiAvY2hvc2Vu
-Pwo+ID4KPiA+IEknZCBiZSBva2F5IHRvIG1ha2UgaXQgYSB3YXJuaW5nIHVuY29uZGl0aW9uYWxs
-eS4gQXQgbGVhc3QgdGhlbiB3ZSBjYW4KPiA+IGZpbmQgdGhlIGNhc2VzIHRoYXQgZGV2aWF0ZSBh
-bmQgZWl0aGVyIGZpeCB0aGVtIG9yIHVuZGVyc3RhbmQgdGhlaXIKPiA+IGV4cGVjdGF0aW9ucy4K
-PiA+Cj4gPiBSb2IKPgo+IEkgZG9uJ3QgdGhpbmsgd2UgY2FuIG1ha2UgL2Nob3NlbiBub2RlIG1h
-bmRhdG9yeSBzaW5jZSBpdCdzIG5vdAo+IHNwZWNpZmllZCBhcyBzdWNoCj4gYnkgdGhlIHNwZWMK
-PiAoaHR0cHM6Ly9naXRodWIuY29tL2RldmljZXRyZWUtb3JnL2RldmljZXRyZWUtc3BlY2lmaWNh
-dGlvbi9yZWxlYXNlcy90YWcvdjAuMikuCgpXZSBjYW4gY2hhbmdlIHRoZSBzcGVjLiA6KSBNYXli
-ZSBvbmx5IHRvIHJlY29tbWVuZGVkIGZvciB0aGUgRFQgc3BlYywKYnV0IHlvdSBzaG91bGQgYWxz
-byBjbGVhcmx5IGRlZmluZSB0aGUgYm9vdCBpbnRlcmZhY2UgdG8gdGhlIGtlcm5lbCBvbgpyaXNj
-LXYgb3Igc3VmZmVyIHRoZSBwYWluIGxhdGVyLiBBbmQgaW4gdGhhdCB5b3UgY2FuIG1ha2UgaXQg
-cmVxdWlyZWQuCgpSZWdhcmRsZXNzLCB3aGF0IEkgd2FzIHJlYWxseSBnZXR0aW5nIGF0IGlzIGVm
-ZmVjdGl2ZWx5IGl0IHdpbGwgYmVjb21lCnJlcXVpcmVkIGFueXdheXMuIFByZXR0eSBtdWNoIGV2
-ZXJ5IHNldHVwIG5lZWRzIGtlcm5lbCBjbWRsaW5lLiBZZXMgaXQKY2FuIGJlIGJ1aWx0LWluLCBi
-dXQgc29vbiBhcyBpdCBpcyB5b3VyIGtlcm5lbCB3b3JrcyBvbiBhIHNpbmdsZQpwbGF0Zm9ybS4g
-V2FudCB0byBzdXBwb3J0IGFuIGluaXRyZD8gTmVlZCBjaG9zZW4uIGNyYXNoZHVtcD8gTmVlZApj
-aG9zZW4uIFdhbnQgYSBjb25zb2xlPyBOZWVkIGNob3Nlbi4KCj4gTm8gbWF0dGVyIHdoYXQgd2Ug
-c2F5IGZyb20gdGhlIGtlcm5lbCBzaWRlLCB0aGUgZGV2aWNlIHRyZWUgcHJvdmlkZXIgaXMKPiBu
-b3QgZXhwZWN0ZWQKPiB0byBhbHdheXMgcHJvdmlkZSB0aGUgL2Nob3NlbiBtb2RlLiBBbHNvIGRl
-dmljZSB0cmVlIGlzIG5vdCB0aGUgb25seQo+IHByb3ZpZGVyIG9mCj4gYSBjb21tYW5kIGxpbmUs
-IHdlIG1pZ2h0IGdldCBhIGNvbW1hbmQgbGluZSBmcm9tIGRpZmZlcmVudCBwbGFjZXMKPiBwZXIt
-YXJjaCAoZS5nLiBhdGFncwo+IG9uIGFybSkgb3IgdGhyb3VnaCBFRkkvQUNQSS9rZXhlYyBhcyB3
-ZWxsLiBUaGF0J3Mgd2h5IG15IGluaXRpYWwKPiBhcHByb2FjaCBmb3IgUklTQy1WCj4gd2FzIG9u
-IHRoZSBhcmNoLXNwZWNpZmljIGNvZGUuCgpBbiBhcmNoIGlzIGZyZWUgdG8gY2hvb3NlIGl0cyBv
-d24gd2F5LCB5ZXMuIFlvdSdkIGJlIGNyYXp5IHRvIGludmVudApzb21ldGhpbmcgbmV3IHRob3Vn
-aC4KCkFUQUdTIGlzIGxlZ2FjeS4gSWYgd2UgZG8gaGF2ZSBBVEFHUyB3aXRoIERULCB3ZSBmaXgg
-aXQgdXAgaW4gb25lCnBsYWNlICh0aGUgZGVjb21wcmVzc29yKSBieSBtb3ZpbmcgYWxsIHRoZSBw
-YXJhbWV0ZXJzIHRvIERULiBUaGVuIGl0CmlzIGVpdGhlciBBVEFHUyBvciBEVCBib290IGFuZCBv
-bmUgY29kZSBwYXRoIGZyb20gdGhlcmUuIE1JUFMgZG9lcyBub3QKZG8gdGhhdCBhbmQgaXMgYSBt
-ZXNzLiBBRkFJQ1QsIHRoZXJlIGNhbiBiZSAzIHNvdXJjZXMgb2YgcGFyYW1ldGVycwooYm9vdGxv
-YWRlcihsZWdhY3kpLCBEVCwgb3Iga2VybmVsKSBhbmQgdGhvc2UgaGF2ZSBhbiB1bmRlZmluZWQg
-d2F5CnRoZXkgYXJlIGNvbWJpbmVkIChvdGhlciB0aGFuIHdoYXQgdGhlIGNvZGUgaGFwcGVucyB0
-byBkbykuIEFuZCBvbiB0b3AKb2YgdGhhdCB0aGUgRFQgY2FuIGJlIGJ1aWx0LWluLCBleHRlcm5h
-bCwgb3IgYm90aC4KCkFDUEkgYW5kIEVGSSBkb24ndCBkZWFsIHdpdGggdGhlIGNvbW1hbmQgbGlu
-ZSAoYXMgbGVhc3Qgb24gYXJtIGFuZAphcm02NCkuIFRoZSBrZXJuZWwgY29tbWFuZCBsaW5lIGlz
-IGFsd2F5cyBwYXNzZWQgdmlhIERULiBEVCBpcyB0aGUKa2VybmVsIGJvb3QgaW50ZXJmYWNlIGV2
-ZW4gZm9yIGFybTY0IEFDUEkgc3lzdGVtcy4KClJvYgoKCj4KPiBXZSBzaG91bGRuJ3QgdHJ5IHRv
-IGhhbmRsZSB0aGUgYnVpbHQtaW4gQ01ETElORSBvbiBlYWNoIG9mIHRoZSBwb3NzaWJsZQo+IGNv
-bW1hbmQgbGluZQo+IHByb3ZpZGVycyBhbmQgaWYgd2UgZG8gd2Ugc2hvdWxkIGF0IGxlYXN0IG1h
-a2Ugc3VyZSB3ZSBkb24ndCBkZXBlbmQgb24KPiB0aGUgcHJlc2VuY2UKPiBvZiBhIHByb3ZpZGVk
-IGNvbW1hbmQgbGluZSAod2hpY2ggaXMgdGhlIGlzc3VlIGluIHRoaXMgY2FzZSkuCj4KPiBJIGJl
-bGlldmUgdGhlIGJlc3QgYXBwcm9hY2ggaXMgdG8gY29uc29saWRhdGUgYWxsIHRoZSBkaWZmZXJl
-bnQgQ01ETElORQo+IGFwcHJvYWNoZXMKPiBmb3IgdGhlIHZhcmlvdXMgYXJjaHMgLyBwcm92aWRl
-cnMgYW5kIGNsZWFuIHVwIHRoZSBtZXNzIGluc3RlYWQgb2YKPiByZS1pbXBsZW1lbnRpbmcKPiB0
-aGUgc2FtZSB0aGluZyBhZ2FpbiBhbmQgYWdhaW4uIEkgc2F3IHRoZSBwYXRjaCB5b3UgbWVudGlv
-bmVkIGFuZCBpdCdzIGEKPiBzdGFydC4KPiBJJ2xsIGxvb2sgbW9yZSBpbnRvIGl0IGFuZCB0cnkg
-dG8gY29tZSB1cCB3aXRoIGEgc2ltaWxhciBvbmUuCj4KPiBOaWNrCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1yaXNjdiBtYWlsaW5nIGxpc3QK
-bGludXgtcmlzY3ZAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJpc2N2Cg==
+Hi Lee,
+
+On 10/24/2018 3:59 AM, Lee Jones wrote:
+> On Tue, 18 Sep 2018, Jae Hyun Yoo wrote:
+> 
+>> This commit adds PECI client MFD driver.
+>>
+
+<snip>
+
+>> +config MFD_INTEL_PECI_CLIENT
+>> +	bool "Intel PECI client"
+>> +	depends on (PECI || COMPILE_TEST)
+>> +	select MFD_CORE
+>> +	help
+>> +	  If you say yes to this option, support will be included for the
+>> +	  multi-functional Intel PECI (Platform Environment Control Interface)
+> 
+> Remove 'multi-functional' from this sentence.
+> 
+
+Will remove the word.
+
+<snip>
+
+>> +static struct mfd_cell peci_functions[] = {
+>> +	{
+>> +		.name = "peci-cputemp",
+>> +	},
+>> +	{
+>> +		.name = "peci-dimmtemp",
+>> +	},
+> 
+> 	{ .name = "peci-cputemp", },
+> 	{ .name = "peci-dimmtemp", },
+> 
+
+Will change it like you suggested.
+
+> Do these have 2 different drivers?  Where are you putting them?
+> 
+
+Yes, these have 2 different drivers as hwmon subsystem drivers.
+I submitted them into this patch series.
+Patch 10/12: https://lkml.org/lkml/2018/9/18/1524
+Patch 11/12: https://lkml.org/lkml/2018/9/18/1523
+
+>> +	/* TODO: Add additional PECI sideband functions into here */
+> 
+> When will this be done?
+> 
+
+I'm hoping it will be done by the end of this year.
+
+>> +};
+>> +
+>> +static const struct cpu_gen_info cpu_gen_info_table[] = {
+>> +	[CPU_GEN_HSX] = {
+>> +		.family        = 6, /* Family code */
+>> +		.model         = INTEL_FAM6_HASWELL_X,
+>> +		.core_max      = CORE_MAX_ON_HSX,
+>> +		.chan_rank_max = CHAN_RANK_MAX_ON_HSX,
+>> +		.dimm_idx_max  = DIMM_IDX_MAX_ON_HSX },
+>> +	[CPU_GEN_BRX] = {
+>> +		.family        = 6, /* Family code */
+>> +		.model         = INTEL_FAM6_BROADWELL_X,
+>> +		.core_max      = CORE_MAX_ON_BDX,
+>> +		.chan_rank_max = CHAN_RANK_MAX_ON_BDX,
+>> +		.dimm_idx_max  = DIMM_IDX_MAX_ON_BDX },
+>> +	[CPU_GEN_SKX] = {
+>> +		.family        = 6, /* Family code */
+>> +		.model         = INTEL_FAM6_SKYLAKE_X,
+>> +		.core_max      = CORE_MAX_ON_SKX,
+>> +		.chan_rank_max = CHAN_RANK_MAX_ON_SKX,
+>> +		.dimm_idx_max  = DIMM_IDX_MAX_ON_SKX },
+> 
+> The '},'s should go on the line below.
+> 
+
+Okay. Will fix it.
+
+>> +};
+>> +
+>> +static int peci_client_get_cpu_gen_info(struct peci_mfd *priv)
+> 
+> Remove all mention of 'mfd'.  It's not a thing.
+> 
+
+Will remove 'mfd'.
+
+>> +{
+>> +	u32 cpu_id;
+>> +	int i, rc;
+>> +
+>> +	rc = peci_get_cpu_id(priv->adapter, priv->addr, &cpu_id);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(cpu_gen_info_table); i++) {
+>> +		if (FIELD_GET(CPU_ID_FAMILY_MASK, cpu_id) +
+>> +			FIELD_GET(CPU_ID_EXT_FAMILY_MASK, cpu_id) ==
+>> +				cpu_gen_info_table[i].family &&
+>> +		    FIELD_GET(CPU_ID_MODEL_MASK, cpu_id) ==
+>> +			FIELD_GET(LOWER_NIBBLE_MASK,
+>> +				  cpu_gen_info_table[i].model) &&
+>> +		    FIELD_GET(CPU_ID_EXT_MODEL_MASK, cpu_id) ==
+>> +			FIELD_GET(UPPER_NIBBLE_MASK,
+>> +				  cpu_gen_info_table[i].model)) {
+>> +			break;
+>> +		}
+>> +	}
+> 
+> This is really read.  Please reformat it, even if you have to use
+> local variables to make it more legible.
+> 
+
+Will reformat it using local variables for better readability as you
+suggest.
+
+>> +	if (i >= ARRAY_SIZE(cpu_gen_info_table))
+>> +		return -ENODEV;
+> 
+> Do you really want to fail silently?
+> 
+
+No. I'll add a dev_err printing.
+
+>> +	priv->gen_info = &cpu_gen_info_table[i];
+> 
+> If you do this in the for(), you can then test priv->gen_info instead
+> of seeing if the iterator maxed out.  Much nicer I think.
+> 
+
+Yes, that would be much nicer. Will fix it.
+
+>> +	return 0;
+>> +}
+>> +
+>> +bool peci_temp_need_update(struct temp_data *temp)
+>> +{
+>> +	if (temp->valid &&
+>> +	    time_before(jiffies, temp->last_updated + UPDATE_INTERVAL))
+>> +		return false;
+>> +
+>> +	return true;
+>> +}
+>> +EXPORT_SYMBOL_GPL(peci_temp_need_update);
+>> +
+>> +void peci_temp_mark_updated(struct temp_data *temp)
+>> +{
+>> +	temp->valid = 1;
+>> +	temp->last_updated = jiffies;
+>> +}
+>> +EXPORT_SYMBOL_GPL(peci_temp_mark_updated);
+> 
+> These are probably better suited as inline functions to be placed in
+> a header file.  No need to export them, since they only use their own
+> data.
+> 
+
+Yes, that makes sense. I'll change these to inline functions.
+
+>> +int peci_client_command(struct peci_mfd *priv, enum peci_cmd cmd, void *vmsg)
+>> +{
+>> +	return peci_command(priv->adapter, cmd, vmsg);
+>> +}
+>> +EXPORT_SYMBOL_GPL(peci_client_command);
+> 
+> If you share the adaptor with the client, you can call peci_command()
+> directly.  There should also be some locking in here somewhere too.
+> 
+
+Yes, the client->adapter can be referenced from child drivers. Will make
+them call peci_command() directly.
+
+>> +int peci_client_rd_pkg_cfg_cmd(struct peci_mfd *priv, u8 mbx_idx,
+> 
+> This is gobbledegook.  What's rd?  Read?
+> 
+
+Yes, the 'rd' means 'read'. I intended to keep command names as listed
+in the PECI specification such as RdPkgConfig, WrPkgConfig and so on.
+Should I change it to 'peci_client_read_package_config_command' ?
+
+>> +			       u16 param, u8 *data)
+>> +{
+>> +	struct peci_rd_pkg_cfg_msg msg;
+>> +	int rc;
+>> +
+>> +	msg.addr = priv->addr;
+>> +	msg.index = mbx_idx;
+>> +	msg.param = param;
+>> +	msg.rx_len = 4;
+>> +
+>> +	rc = peci_command(priv->adapter, PECI_CMD_RD_PKG_CFG, &msg);
+>> +	if (!rc)
+>> +		memcpy(data, msg.pkg_config, 4);
+>> +
+>> +	return rc;
+>> +}
+>> +EXPORT_SYMBOL_GPL(peci_client_rd_pkg_cfg_cmd);
+> 
+> This too should be set-up as an inline function, not an exported one.
+> 
+
+Will change it to inline function.
+
+>> +static int peci_client_probe(struct peci_client *client)
+>> +{
+>> +	struct device *dev = &client->dev;
+>> +	struct peci_mfd *priv;
+>> +	int rc;
+> 
+> 'ret' is more common.
+> 
+
+Will fix it.
+
+>> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>> +	if (!priv)
+>> +		return -ENOMEM;
+>> +
+>> +	dev_set_drvdata(dev, priv);
+>> +	priv->client = client;
+>> +	priv->dev = dev;
+> 
+>> +	priv->adapter = client->adapter;
+>> +	priv->addr = client->addr;
+> 
+> You're already saving client.  No need to save its individual
+> attributes as well.
+> 
+
+I intended to reduce pointer referencing depth because adapter and addr 
+are frequently used, but you are right. I'll remove adapter and addr 
+from the struct.
+
+>> +	priv->cpu_no = client->addr - PECI_BASE_ADDR;
+> 
+> This seems clunky.  Does the spec say that the addresses have to be in
+> numerical order with no gaps?  What if someone chooses to implement 4
+> CPUs at 0x30, 0x35, 0x45 and 0x60?
+> 
+
+The CPU address will be assigned by H/W strap settings in order. Also,
+there would be a case of using some CPU slots left empty, so gaps could
+be happen on the addresses but it's still acceptable.
+
+> What do you then do with cpu_no?
+> 
+
+It is being used for child device id parameter when this code calls
+devm_mfd_add_devices() below. Also, it is referenced from cputemp and
+dimmtemp hwmon drivers but it isn't needed because the hwmon drivers
+already know client->addr. I'll change cpu_no as a local variable in 
+here for child device id and will change the hwmon drivers.
+
+>> +	snprintf(priv->name, PECI_NAME_SIZE, "peci_client.cpu%d", priv->cpu_no);
+>> +
+>> +	rc = peci_client_get_cpu_gen_info(priv);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	rc = devm_mfd_add_devices(priv->dev, priv->cpu_no, peci_functions,
+>> +				  ARRAY_SIZE(peci_functions), NULL, 0, NULL);
+>> +	if (rc < 0) {
+>> +		dev_err(priv->dev, "devm_mfd_add_devices failed: %d\n", rc);
+> 
+> This to too specific.
+> 
+>    "Failed to register child devices"
+> 
+
+Will fix it like you suggested.
+
+>> +		return rc;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +#ifdef CONFIG_OF
+>> +static const struct of_device_id peci_client_of_table[] = {
+>> +	{ .compatible = "intel,peci-client" },
+>> +	{ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, peci_client_of_table);
+>> +#endif
+>> +
+>> +static const struct peci_device_id peci_client_ids[] = {
+>> +	{ .name = "peci-client", .driver_data = 0 },
+> 
+> Remove .driver_data if you're not going to use it.
+> 
+
+Okay. I'll remove .driver_data.
+
+>> +	{ }
+>> +};
+>> +MODULE_DEVICE_TABLE(peci, peci_client_ids);
+>> +
+>> +static struct peci_driver peci_client_driver = {
+>> +	.probe    = peci_client_probe,
+>> +	.id_table = peci_client_ids,
+>> +	.driver   = {
+>> +			.name           = "peci-client",
+>> +			.of_match_table =
+>> +				of_match_ptr(peci_client_of_table),
+>> +	},
+>> +};
+> 
+> Odd tabbing.
+> 
+
+Will fix the indentation.
+
+>> +module_peci_driver(peci_client_driver);
+>> +
+>> +MODULE_AUTHOR("Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>");
+>> +MODULE_DESCRIPTION("PECI client MFD driver");
+> 
+> Remove "MFD".
+> 
+
+Will remove it.
+
+>> +MODULE_LICENSE("GPL v2");
+>> diff --git a/include/linux/mfd/intel-peci-client.h b/include/linux/mfd/intel-peci-client.h
+>> new file mode 100644
+>> index 000000000000..7ec272cddceb
+>> --- /dev/null
+>> +++ b/include/linux/mfd/intel-peci-client.h
+>> @@ -0,0 +1,81 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/* Copyright (c) 2018 Intel Corporation */
+>> +
+>> +#ifndef __LINUX_MFD_PECI_CLIENT_H
+>> +#define __LINUX_MFD_PECI_CLIENT_H
+>> +
+>> +#include <linux/peci.h>
+>> +
+>> +#if IS_ENABLED(CONFIG_X86)
+>> +#include <asm/intel-family.h>
+>> +#else
+>> +/**
+>> + * Architectures other than x86 cannot include the header file so define these
+>> + * at here. These are needed for detecting type of client x86 CPUs behind a PECI
+>> + * connection.
+>> + */
+>> +#define INTEL_FAM6_HASWELL_X   0x3F
+>> +#define INTEL_FAM6_BROADWELL_X 0x4F
+>> +#define INTEL_FAM6_SKYLAKE_X   0x55
+>> +#endif
+>> +
+>> +#define LOWER_NIBBLE_MASK      GENMASK(3, 0)
+>> +#define UPPER_NIBBLE_MASK      GENMASK(7, 4)
+>> +
+>> +#define CPU_ID_MODEL_MASK      GENMASK(7, 4)
+>> +#define CPU_ID_FAMILY_MASK     GENMASK(11, 8)
+>> +#define CPU_ID_EXT_MODEL_MASK  GENMASK(19, 16)
+>> +#define CPU_ID_EXT_FAMILY_MASK GENMASK(27, 20)
+>> +
+>> +#define CORE_MAX_ON_HSX        18 /* Max number of cores on Haswell */
+>> +#define CHAN_RANK_MAX_ON_HSX   8  /* Max number of channel ranks on Haswell */
+>> +#define DIMM_IDX_MAX_ON_HSX    3  /* Max DIMM index per channel on Haswell */
+>> +
+>> +#define CORE_MAX_ON_BDX        24 /* Max number of cores on Broadwell */
+>> +#define CHAN_RANK_MAX_ON_BDX   4  /* Max number of channel ranks on Broadwell */
+>> +#define DIMM_IDX_MAX_ON_BDX    3  /* Max DIMM index per channel on Broadwell */
+>> +
+>> +#define CORE_MAX_ON_SKX        28 /* Max number of cores on Skylake */
+>> +#define CHAN_RANK_MAX_ON_SKX   6  /* Max number of channel ranks on Skylake */
+>> +#define DIMM_IDX_MAX_ON_SKX    2  /* Max DIMM index per channel on Skylake */
+>> +
+>> +#define CORE_NUMS_MAX          CORE_MAX_ON_SKX
+>> +#define CHAN_RANK_MAX          CHAN_RANK_MAX_ON_HSX
+>> +#define DIMM_IDX_MAX           DIMM_IDX_MAX_ON_HSX
+>> +#define DIMM_NUMS_MAX          (CHAN_RANK_MAX * DIMM_IDX_MAX)
+>> +
+>> +#define TEMP_TYPE_PECI         6 /* Sensor type 6: Intel PECI */
+>> +
+>> +#define UPDATE_INTERVAL        HZ
+>> +
+>> +struct temp_data {
+>> +	uint  valid;
+>> +	s32   value;
+>> +	ulong last_updated;
+>> +};
+> 
+> This should not live in here.
+> 
+
+Will move it.
+
+>> +struct cpu_gen_info {
+>> +	u16  family;
+>> +	u8   model;
+>> +	uint core_max;
+>> +	uint chan_rank_max;
+>> +	uint dimm_idx_max;
+>> +};
+>> +
+>> +struct peci_mfd {
+> 
+> Remove "_mfd".
+> 
+
+Will remove 'mfd'.
+
+>> +	struct peci_client *client;
+>> +	struct device *dev;
+>> +	struct peci_adapter *adapter;
+>> +	char name[PECI_NAME_SIZE];
+> 
+> What is this used for?
+> 
+
+This isn't needed. Thanks for your pointing out. I'll remove it.
+
+>> +	u8 addr;
+>> +	uint cpu_no;
+>> +	const struct cpu_gen_info *gen_info;
+> 
+> Where is this used?
+> 
+
+It is referenced from cputemp and dimmtemp hwmon drivers to specify CPU
+generation.
+
+>> +};
+> 
+> Both of these structs need kerneldoc headers.
+> 
+
+Will add kerneldoc headers.
+
+>> +bool peci_temp_need_update(struct temp_data *temp);
+>> +void peci_temp_mark_updated(struct temp_data *temp);
+> 
+> These should live in a temperature driver.
+> 
+
+Agreed. I'll move it to temperature driver.
+
+Thanks a lot for your careful review. I'll submit a new patch set soon.
+
+Jae
+
+>> +int  peci_client_command(struct peci_mfd *mfd, enum peci_cmd cmd, void *vmsg);
+>> +int  peci_client_rd_pkg_cfg_cmd(struct peci_mfd *mfd, u8 mbx_idx,
+>> +				u16 param, u8 *data);
+>> +
+>> +#endif /* __LINUX_MFD_PECI_CLIENT_H */
+> 
