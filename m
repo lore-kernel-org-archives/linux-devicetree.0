@@ -1,47 +1,40 @@
 From: Andy Tang <andy.tang@nxp.com>
-Subject: RE: [PATCH 3/3 v2] clk: qoriq: update clock driver
-Date: Thu, 25 Oct 2018 02:40:03 +0000
-Message-ID: <DB5PR0401MB22130B915A5690E9BC56CCE5F3F70@DB5PR0401MB2213.eurprd04.prod.outlook.com>
+Subject: RE: [PATCH 2/3 v2] clk: qoriq: remove legacy bindings and add more
+ compatibles
+Date: Thu, 25 Oct 2018 02:41:07 +0000
+Message-ID: <DB5PR0401MB2213F740D94F937BB9470396F3F70@DB5PR0401MB2213.eurprd04.prod.outlook.com>
 References: <20181024021122.3942-1-andy.tang@nxp.com>
-         <20181024021122.3942-2-andy.tang@nxp.com>
-         <20181024021122.3942-3-andy.tang@nxp.com>
- <d4598171243a37516faae71095eb3126d77fa723.camel@buserror.net>
+ <20181024021122.3942-2-andy.tang@nxp.com> <20181024221033.GA5876@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="gb2312"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d4598171243a37516faae71095eb3126d77fa723.camel@buserror.net>
+In-Reply-To: <20181024221033.GA5876@bogus>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Wood <oss@buserror.net>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "paulus@samba.org" <paulus@samba.org>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "oss@buserror.net" <oss@buserror.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "paulus@samba.org" <paulus@samba.org>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFNjb3R0IFdvb2QgPG9zc0Bi
-dXNlcnJvci5uZXQ+DQo+IFNlbnQ6IDIwMTjlubQxMOaciDI15pelIDI6MzcNCj4gVG86IEFuZHkg
-VGFuZyA8YW5keS50YW5nQG54cC5jb20+OyBzYm95ZEBrZXJuZWwub3JnOw0KPiBtdHVycXVldHRl
-QGJheWxpYnJlLmNvbQ0KPiBDYzogcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJt
-LmNvbTsNCj4gYmVuaEBrZXJuZWwuY3Jhc2hpbmcub3JnOyBwYXVsdXNAc2FtYmEub3JnOyBtcGVA
-ZWxsZXJtYW4uaWQuYXU7DQo+IGxpbnV4LWNsa0B2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eHBw
-Yy1kZXZAbGlzdHMub3psYWJzLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDMvMyB2Ml0gY2xr
-OiBxb3JpcTogdXBkYXRlIGNsb2NrIGRyaXZlcg0KPiANCj4gT24gV2VkLCAyMDE4LTEwLTI0IGF0
-IDEwOjExICswODAwLCBhbmR5LnRhbmdAbnhwLmNvbSB3cm90ZToNCj4gPiBGcm9tOiBZdWFudGlh
-biBUYW5nIDxhbmR5LnRhbmdAbnhwLmNvbT4NCj4gPg0KPiA+IExlZ2FjeSBiaW5kaW5ncyBhcmUg
-ZGVsZXRlZC4gU28gdGhlIGxlZ2FjeSBzdXBwb3J0IGluIGRyaXZlciBjYW4gYmUNCj4gPiBkZWxl
-dGVkIHNhZmVseS4NCj4gDQo+IE5BQ0sgKGJvdGggdGhpcyBhbmQgMi8zKS4gIFRoZSBsZWdhY3kg
-c3VwcG9ydCBpcyBpbnRlbmRlZCB0byBwcmVzZXJ2ZQ0KPiBjb21wYXRpYmlsaXR5LCByZWdhcmRs
-ZXNzIG9mIHdoYXQgdGhlIGR0cyBmaWxlcyBpbiB0aGUgY3VycmVudCBrZXJuZWwgdHJlZSBkby4N
-Cj4gIElmIHllYXJzIGxhdGVyIHdlIGZpbmQgaXQncyBiZWVuIGJyb2tlbiBmb3IgYSB3aGlsZSBh
-bmQgbm9ib2R5IGNvbXBsYWluZWQsDQo+IHRoZW4gbWF5YmUgaXQnbGwgYmUgdGltZSB0byByZW1v
-dmUgaXQsIGJ1dCB3aHkgZGVsaWJlcmF0ZWx5IHRocm93IGF3YXkNCj4gY29tcGF0aWJpbGl0eSB0
-aGUgaW5zdGFudCB0aGUgdXNlcnMgaGF2ZSBiZWVuIHJlbW92ZWQgZnJvbSByZWZlcmVuY2UNCj4g
-RFRzIHRoYXQgbWlnaHQgYmUgY29waWVkIGJ5IGJvYXJkIHZlbmRvcnMsIGV0Yz8NCj4gDQo+IE5v
-dGUgdGhhdCBldmVuIGlmIHdlIGRpZG4ndCBjYXJlIGFib3V0IGxvbmctdGVybSBjb21wYXRpYmls
-aXR5IGF0IGFsbCwNCj4gcmVtb3ZpbmcgdGhlIHN1cHBvcnQgaW4gdGhlIHNhbWUgcGF0Y2hzZXQg
-YXMgdGhlIGNoYW5nZSB0byB0aGUgZHRzIGZpbGVzDQo+IG1lYW5zIHRoYXQgdGhlIHBhdGNoZXMg
-Y2FuJ3QgZ28gaW4gdmlhIHNlcGFyYXRlIHRyZWVzICh0aG91Z2ggaWYgdGhhdCdzIHN0aWxsDQo+
-IHRoZSBpbnRlbnQsIHlvdSBzaG91bGQgbWFrZSBpdCBjbGVhciB3aG8geW91J3JlIGFza2luZyB0
-byB0YWtlIHdoYXQgYnkNCj4gcHV0dGluZyB0aGVtIGluIHNlcGFyYXRlIHBhdGNoc2V0cykuDQoN
-ClBvaW50cyBhcmUgdGFrZW4uIFdpbGwgdXBkYXRlIHRoaXMgcGF0Y2ggc2V0LiBUaGFua3MgYSBs
-b3QuDQoNCkJSLA0KQW5keQ0KPiANCj4gLVNjb3R0DQoNCg==
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2IgSGVycmluZyA8cm9iaEBr
+ZXJuZWwub3JnPg0KPiBTZW50OiAyMDE4xOoxMNTCMjXI1SA2OjExDQo+IFRvOiBBbmR5IFRhbmcg
+PGFuZHkudGFuZ0BueHAuY29tPg0KPiBDYzogc2JveWRAa2VybmVsLm9yZzsgbXR1cnF1ZXR0ZUBi
+YXlsaWJyZS5jb207IG9zc0BidXNlcnJvci5uZXQ7DQo+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBi
+ZW5oQGtlcm5lbC5jcmFzaGluZy5vcmc7IHBhdWx1c0BzYW1iYS5vcmc7DQo+IG1wZUBlbGxlcm1h
+bi5pZC5hdTsgbGludXgtY2xrQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtl
+cm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4cHBjLWRldkBs
+aXN0cy5vemxhYnMub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMi8zIHYyXSBjbGs6IHFvcmlx
+OiByZW1vdmUgbGVnYWN5IGJpbmRpbmdzIGFuZCBhZGQNCj4gbW9yZSBjb21wYXRpYmxlcw0KPiAN
+Cj4gT24gV2VkLCBPY3QgMjQsIDIwMTggYXQgMTA6MTE6MjFBTSArMDgwMCwgYW5keS50YW5nQG54
+cC5jb20gd3JvdGU6DQo+ID4gRnJvbTogWXVhbnRpYW4gVGFuZyA8YW5keS50YW5nQG54cC5jb20+
+DQo+ID4NCj4gPiBUaGUgbmV3IGJpbmRpbmdzIHdpbGwgYmUgdXNlZCwgc28gZGVsZXRlIHRoZSBv
+bGQgYmluZGluZ3MuDQo+ID4gQWRkIG1vcmUgU09DIGNvbXBhdGlibGVzIGFzIG5lZWRlZCBhcyB3
+ZWxsLg0KPiANCj4gSSdtIGEgYml0IGNvbmZ1c2VkIGJ5IHRoaXMgc2VyaWVzLiBOb3JtYWxseSB5
+b3Ugd2FudCB0byB1cGRhdGUgdGhlIGR0cyBmaWxlcw0KPiBmaXJzdCBhbmQgd2FpdCBzb21lIHBl
+cmlvZCBvZiB0aW1lIGJlZm9yZSByZW1vdmluZyBkcml2ZXIgc3VwcG9ydCAoYW5kDQo+IGJpbmRp
+bmdzKS4NClRoYW5rcywgZ290IHlvdXIgcG9pbnRzLg0KDQpCUiwNCkFuZHkNCj4gDQo+IFJvYg0K
+PiANCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFRhbmcgWXVhbnRpYW4gPGFuZHkudGFuZ0BueHAu
+Y29tPg0KPiA+IC0tLQ0KPiA+IHYyOg0KPiA+ICAgLSBpbnZvbHZlIG1vcmUgY2hpcHMNCj4gPg0K
+PiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9xb3JpcS1jbG9jay50eHQgICAgICB8
+ICAxMTINCj4gKy0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ICAxIGZpbGVzIGNoYW5nZWQsIDYgaW5z
+ZXJ0aW9ucygrKSwgMTA2IGRlbGV0aW9ucygtKQ0K
