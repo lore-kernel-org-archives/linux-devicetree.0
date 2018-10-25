@@ -1,57 +1,52 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH v2 02/15] clk: sunxi-ng: Add check for minimal rate to NKM PLLs
-Date: Thu, 25 Oct 2018 16:25:59 +0530
-Message-ID: <CAMty3ZC2wn-DjR+93yc-n-bAmVCHaEqR_=4XPddoo+7LjebTEg@mail.gmail.com>
-References: <20181023155035.9101-1-jagan@amarulasolutions.com>
- <20181023155035.9101-3-jagan@amarulasolutions.com> <20181024180436.5n3i3z6h2yezc4cv@flea>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH v2 2/5] mfd: lochnagar: Add support for the Cirrus Logic
+ Lochnagar
+Date: Thu, 25 Oct 2018 11:56:26 +0100
+Message-ID: <20181025105626.GE16508@imbe.wolfsonmicro.main>
+References: <20181008132542.19775-1-ckeepax@opensource.cirrus.com>
+ <20181008132542.19775-2-ckeepax@opensource.cirrus.com>
+ <20181025074459.GF4939@dell>
+ <20181025082621.GD16508@imbe.wolfsonmicro.main>
+ <b2f85f45-cbe9-5a27-e9e8-ad28f2bd9bd6@opensource.cirrus.com>
+ <20181025101248.GT2103@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181024180436.5n3i3z6h2yezc4cv@flea>
+Content-Disposition: inline
+In-Reply-To: <20181025101248.GT2103@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com
+To: Mark Brown <broonie@kernel.org>
+Cc: Richard Fitzgerald <rf@opensource.cirrus.com>, Lee Jones <lee.jones@linaro.org>, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 24, 2018 at 11:34 PM Maxime Ripard
-<maxime.ripard@bootlin.com> wrote:
->
-> On Tue, Oct 23, 2018 at 09:20:22PM +0530, Jagan Teki wrote:
-> > Some NKM PLLs doesn't work well when their output clock rate is set below
-> > certain rate.
-> >
-> > So, add support for minimal rate for relevant PLLs.
-> >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> > Changes for v2:
-> > - new patch
-> >
-> >  drivers/clk/sunxi-ng/ccu_nkm.c | 7 +++++++
-> >  drivers/clk/sunxi-ng/ccu_nkm.h | 1 +
-> >  2 files changed, 8 insertions(+)
-> >
-> > diff --git a/drivers/clk/sunxi-ng/ccu_nkm.c b/drivers/clk/sunxi-ng/ccu_nkm.c
-> > index 841840e35e61..d17539dc88dd 100644
-> > --- a/drivers/clk/sunxi-ng/ccu_nkm.c
-> > +++ b/drivers/clk/sunxi-ng/ccu_nkm.c
-> > @@ -125,6 +125,13 @@ static unsigned long ccu_nkm_round_rate(struct ccu_mux_internal *mux,
-> >       if (nkm->common.features & CCU_FEATURE_FIXED_POSTDIV)
-> >               rate *= nkm->fixed_post_div;
-> >
-> > +     if (rate < nkm->min_rate) {
-> > +             rate = nkm->min_rate;
-> > +             if (nkm->common.features & CCU_FEATURE_FIXED_POSTDIV)
-> > +                     rate /= nkm->fixed_post_div;
->
-> I'm not sure this is right. Is the post divider taken into account to
-> calculate the minimum, or is the minimum on the rate before the fixed
-> post divider.
+On Thu, Oct 25, 2018 at 11:12:48AM +0100, Mark Brown wrote:
+> On Thu, Oct 25, 2018 at 10:28:16AM +0100, Richard Fitzgerald wrote:
+> > On 25/10/18 09:26, Charles Keepax wrote:
+> > > On Thu, Oct 25, 2018 at 08:44:59AM +0100, Lee Jones wrote:
+> > > I really feel this isn't the driver you are objecting to as such
+> > > but the way regmap operates and also we seem to always have the same
+> > > discussions around regmap every time we push a driver. Is there
+> > > any way me, you and Mark could hash this out and find out a way to
+> > > handle regmaps that is acceptable to you? I don't suppose you are
+> > > in Edinburgh at the moment for ELCE?
+> 
+> > I suppose if Mark was willing to promote the regmap drivers to be a
+> > top-level subsystem that could contain the regmap definitions of devices
+> > then we could dump our regmap definitions in there, where Mark can review
+> > it as he's familiar with regmap and the chips and the reasons why things
+> > are done the way they are, rather than Lee having to stress about it every
+> > time we need to create an MFD device that uses regmap. Though that would
+> > make the initialization of an MFD rather awkward with the code required
+> > to init the MFD it not actually being in the MFD tree.
+> 
+> I'm not totally against dumping the data tables in some other directory
+> (we could do ../regmap/tables or whatever) but I fear it's going to
+> cause otherwise needless cross tree issues.
 
-Since we are returning from here, we need to take care post div which
-is actually doing at the end of round_rate.
+I guess there is a question here, if i split the regmap stuff
+into a separate file within mfd would that be enough? Is it just
+the mixing of these tables and the code you object to Lee or is
+it the fact the tables exist at all?
 
->
-> How did you test this?
-
-I've not used this on PLL_MIPI atleast, so I didn't test this.
+Thanks,
+Charles
