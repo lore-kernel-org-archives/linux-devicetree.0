@@ -1,70 +1,65 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v3 0/3] iio: adc128s052: add matching options
-Date: Thu, 25 Oct 2018 20:49:54 +0300
-Message-ID: <20181025174954.GC10650@smile.fi.intel.com>
-References: <20180423213805.12591-1-javier@emutex.com>
- <1540481742-23596-1-git-send-email-dan@emutex.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v4 2/7] dt-bindings: ti-lmu: Modify dt bindings for the
+ LM3697
+Date: Thu, 25 Oct 2018 12:56:32 -0500
+Message-ID: <10220e05-c4e0-e2a5-a288-836f5b13e112@ti.com>
+References: <20181023170623.31820-1-dmurphy@ti.com>
+ <20181023170623.31820-2-dmurphy@ti.com> <20181024144951.GB9327@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1540481742-23596-1-git-send-email-dan@emutex.com>
+In-Reply-To: <20181024144951.GB9327@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan O'Donovan <dan@emutex.com>
-Cc: linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Carlos Iglesias <carlos.iglesias@emutex.com>
+To: Rob Herring <robh@kernel.org>
+Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, lee.jones@linaro.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 25, 2018 at 04:35:39PM +0100, Dan O'Donovan wrote:
-> Hi all,
-> 
-> On some SKUs of AAEON's UP Squared board, there is an ADC124S101
-> enumerated via ACPI. This is a pin-compatible variant of ADC124S021,
-> which is already supported by the adc128s052 driver.
-> 
-> This patchset adds missing DT compatible strings for ADC124S021 (and
-> ADC122S021) variants, adds AAEON's allocated ACPI HID, and adds the
-> SPDX GPL identifier to the driver.
-> 
-> v2 was posted at:
-> https://lore.kernel.org/lkml/20180423213805.12591-1-javier@emutex.com/
 
-Overall LGTM
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Rob
 
+Thanks
+
+On 10/24/2018 09:49 AM, Rob Herring wrote:
+> On Tue, Oct 23, 2018 at 12:06:18PM -0500, Dan Murphy wrote:
+>> The LM3697 is a single function LED driver. The single function LED
+>> driver needs to reside in the LED directory as a dedicated LED driver
+>> and not as a MFD device.  The device does have common brightness and ramp
+>> features and those can be accomodated by a TI LMU framework.
+>>
+>> The LM3697 dt binding needs to be moved from the ti-lmu.txt and a dedicated
+>> LED dt binding needs to be added.  The new LM3697 LED dt binding will then
+>> reside in the Documentation/devicetree/bindings/leds directory and follow the
+>> current LED and general bindings guidelines.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>
+>> v4 - Squashed removal and addition of the dt bindings into a single patch - https://lore.kernel.org/patchwork/patch/998703/
 > 
-> Changes from v2:
-> * Added device-tree bindings documentation for new chip variants
-> * Simplified code to get ACPI match data
-> * Dropped redundant patch to facilitate OF matching via ACPI _DSD
-> * Added patch to replace GPL license text with SPDX identifier
+> Still not really the sequence I'd like to see and what I think would 
+> help the discussion move along.
 > 
-> Changes from v1:
-> * Improved patch descriptions and series title
-> * Added an initial commit introducing new compatible strings
->   (as per Jonathan's suggestion)
-> * Moved of_match_ptr removal last as this patch is less important to us
+> Patch 1: move all the devices out of ti-lmu.txt into the grouping which 
+> makes sense. IOW, no functional changes. Probably only strict 
+> sub/supersets of each other should be shared.
 > 
-> Dan O'Donovan (1):
->   iio: adc128s052: use SPDX-License-Identifier
+> Patch 2-N: Make binding changes. Then we discuss things like ramp time 
+> properties separately from binding structure.
 > 
-> Javier Arteaga (1):
->   iio: adc128s052: Add pin-compatible IDs
-> 
-> Nicola Lunghi (1):
->   iio: adc128s052: add ACPI _HID AANT1280
-> 
->  .../devicetree/bindings/iio/adc/ti-adc128s052.txt  |  9 ++++-
->  drivers/iio/adc/ti-adc128s052.c                    | 39 +++++++++++++++++-----
->  2 files changed, 38 insertions(+), 10 deletions(-)
-> 
-> -- 
-> 2.7.4
-> 
-> 
-> ------
-> This email has been scanned for spam and malware by The Email Laundry.
-> 
+
+OK I will re-work the patchset.
+
+Dan
+
+>>
+>>  .../devicetree/bindings/leds/leds-lm3697.txt  | 98 +++++++++++++++++++
+>>  .../devicetree/bindings/mfd/ti-lmu.txt        | 26 +----
+>>  2 files changed, 99 insertions(+), 25 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
+
 
 -- 
-With Best Regards,
-Andy Shevchenko
+------------------
+Dan Murphy
