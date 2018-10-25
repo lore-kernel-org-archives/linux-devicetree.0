@@ -1,56 +1,48 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH linux-next v1 3/4] arm64: ulcb: Add avb counter clock
-Date: Thu, 25 Oct 2018 22:22:47 +0200
-Message-ID: <CAMuHMdUciu+SJR+CsrwzkdUtX3L82xAzqgtrybYmcq--sR7Wig@mail.gmail.com>
-References: <20181025072349.15173-1-jiada_wang@mentor.com> <20181025072349.15173-4-jiada_wang@mentor.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v3 16/16] arm64: dts: sdm845: enable tsens thermal zones
+Date: Thu, 25 Oct 2018 13:37:52 -0700
+Message-ID: <20181025203752.GA22824@google.com>
+References: <cover.1536744310.git.amit.kucheria@linaro.org>
+ <5e2d5fc463a5f5623c4fc1b18ccdf62adc954758.1536744310.git.amit.kucheria@linaro.org>
+ <20181025192501.GZ22824@google.com>
+ <CAP245DUFi1UWqnVfgxdeZHVHSx9Sn3z3AqVp_x5GGHHAvwAjyA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181025072349.15173-4-jiada_wang@mentor.com>
+Content-Disposition: inline
+In-Reply-To: <CAP245DUFi1UWqnVfgxdeZHVHSx9Sn3z3AqVp_x5GGHHAvwAjyA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiada Wang <jiada_wang@mentor.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Andy Gross <andy.gross@linaro.org>, Doug Anderson <dianders@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jiada,
+On Fri, Oct 26, 2018 at 01:33:40AM +0530, Amit Kucheria wrote:
+> On Fri, Oct 26, 2018 at 12:55 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+> >
+> > Hi Amit,
+> >
+> > vaguely related question, since you are working on SDM845 thermal
+> > stuff: Do you have plans to add CPU cooling devices? I raised the
+> > point during the review of the CPUfreq HW, however there was no
+> > clear answer: https://lore.kernel.org/patchwork/patch/966833/#1164748
+> > The driver is still under development/review, but I wonder what the
+> > path forward is.
+> >
+> 
+> Hi Matthias,
+> 
+> I plan to
 
-On Thu, Oct 25, 2018 at 9:24 AM <jiada_wang@mentor.com> wrote:
-> From: Jiada Wang <jiada_wang@mentor.com>
->
-> Add avb counter clock node to R-Car ULCB boards
->
-> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+Great!
 
-Thanks for your patch!
+> but the OSM driver doesn't work well enough for me to send
+> out that patch yet. I responded with my findings on the v9 posting
+> where it seems to get stuck at the high OPP. It'd be nice if somebody
+> else could confirm (or refute) this behaviour.
 
-> --- a/arch/arm64/boot/dts/renesas/ulcb.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/ulcb.dtsi
-> @@ -32,6 +32,12 @@
->                 clock-frequency = <12288000>;
->         };
->
-> +       clk_avb: avb-clock@ec5a011c {
-> +               compatible = "renesas,clk-avb";
-> +               reg = <0 0xec5a011c 0 0x24>;
-> +               #clock-cells = <1>;
-> +       };
-> +
->         hdmi0-out {
->                 compatible = "hdmi-connector";
->                 type = "a";
+Ok, we aren't using the latest version yet, I'll try to repro and
+report back.
 
-Why would this belong in the board .dtsi, not in the SoC .dtsi?
-(same for salvator-common.dtsi)
+Cheers
 
-How is this intended to be used by the AVB?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Matthias
