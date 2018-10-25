@@ -1,54 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] arm64: dts: ls1012a: Add FRWY-LS1012A device tree binding
-Date: Wed, 24 Oct 2018 19:10:25 -0500
-Message-ID: <20181025001025.GA11498@bogus>
-References: <20181016074006.10079-1-pramod.kumar_1@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20181016074006.10079-1-pramod.kumar_1@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pramod Kumar <pramod.kumar_1@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Leo Li <leoyang.li@nxp.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH v3 0/3] of/fdt: Absorb ARM64's __early_init_dt_declare_initrd()
+Date: Wed, 24 Oct 2018 17:17:39 -0700
+Message-ID: <20181025001742.6510-1-f.fainelli@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: bcm-kernel-feedback-list@broadcom.com, Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Christoffer Dall <christoffer.dall@arm.com>, Andrey Konovalov <andreyknvl@google.com>, "moderated list:ARM64 PORT
+        AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE" <devicetree@vger.kernel.org>, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 16, 2018 at 07:39:35AM +0000, Pramod Kumar wrote:
-> LS1012A-FRWY is an ls1012a based SoC board
-> Add device tree binding for LS1012A-FRWY board
+Hi all,
 
-Subject for bindings should be 'dt-bindings: ...'
+Based on Rob's suggestion, this is a follow-up to the patch series
+posted here previously that aims at cutting the ARM64 rebuild
+time/number of objects. Rob indicated that he was adamant to just having
+drivers/of/fdt.c contain the ARM64 specific behavior, so this patch
+series does exactly that.
 
-> 
-> Signed-off-by: Pramod Kumar <pramod.kumar_1@nxp.com>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.txt | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-> index 8a1baa2b9723..1eda1f79eb43 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.txt
-> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
-> @@ -155,6 +155,10 @@ LS1012A ARMv8 based FRDM Board
->  Required root node properties:
->      - compatible = "fsl,ls1012a-frdm", "fsl,ls1012a";
->  
-> +LS1012A ARMv8 based FRWY Board
-> +Required root node properties:
-> +    - compatible = "fsl,ls1012a-frwy", "fsl,ls1012a";
-> +
->  LS1012A ARMv8 based QDS Board
->  Required root node properties:
->      - compatible = "fsl,ls1012a-qds", "fsl,ls1012a";
-> -- 
-> 2.17.1
-> 
+https://www.spinics.net/lists/devicetree/msg255512.html
+
+Florian Fainelli (3):
+  of/fdt: Absorb ARM64's __early_init_dt_declare_initrd()
+  arm64: Remove custom __early_init_dt_declare_initrd implenentation
+  of/fdt: Remove definition check for __early_init_dt_declare_initrd
+
+ arch/arm64/include/asm/memory.h | 8 --------
+ drivers/of/fdt.c                | 7 +++++--
+ 2 files changed, 5 insertions(+), 10 deletions(-)
+
+-- 
+2.17.1
