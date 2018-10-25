@@ -1,49 +1,54 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] crypto: ccree: add dt bindings for ccree 713
-Date: Wed, 24 Oct 2018 19:12:21 -0500
-Message-ID: <20181025001221.GA12740@bogus>
-References: <1539696935-4433-1-git-send-email-gilad@benyossef.com>
- <1539696935-4433-3-git-send-email-gilad@benyossef.com>
+Subject: Re: [PATCH] arm64: dts: ls1012a: Add FRWY-LS1012A device tree binding
+Date: Wed, 24 Oct 2018 19:10:25 -0500
+Message-ID: <20181025001025.GA11498@bogus>
+References: <20181016074006.10079-1-pramod.kumar_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1539696935-4433-3-git-send-email-gilad@benyossef.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Ofir Drang <Ofir.Drang@arm.com>, Yael Chemla <Yael.Chemla@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20181016074006.10079-1-pramod.kumar_1@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Pramod Kumar <pramod.kumar_1@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 16, 2018 at 02:35:32PM +0100, Gilad Ben-Yossef wrote:
-> Add device tree bindings associating Arm TrustZone CryptoCell 713 with the
-> ccree driver.
+On Tue, Oct 16, 2018 at 07:39:35AM +0000, Pramod Kumar wrote:
+> LS1012A-FRWY is an ls1012a based SoC board
+> Add device tree binding for LS1012A-FRWY board
 
-"dt-bindings: crypto: ..." for the subject.
+Subject for bindings should be 'dt-bindings: ...'
+
 > 
-> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+> Signed-off-by: Pramod Kumar <pramod.kumar_1@nxp.com>
 > ---
->  Documentation/devicetree/bindings/crypto/arm-cryptocell.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/arm/fsl.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt b/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
-> index 999fb2a..880de07 100644
-> --- a/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
-> +++ b/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
-> @@ -1,8 +1,9 @@
->  Arm TrustZone CryptoCell cryptographic engine
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+> index 8a1baa2b9723..1eda1f79eb43 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.txt
+> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
+> @@ -155,6 +155,10 @@ LS1012A ARMv8 based FRDM Board
+>  Required root node properties:
+>      - compatible = "fsl,ls1012a-frdm", "fsl,ls1012a";
 >  
->  Required properties:
-> -- compatible: Should be one of: "arm,cryptocell-712-ree",
-> -  "arm,cryptocell-710-ree" or "arm,cryptocell-630p-ree".
-> +- compatible: Should be one of: "arm,cryptocell-713-ree",
-> +  "arm,cryptocell-712-ree", "arm,cryptocell-710-ree" or
-> +  "arm,cryptocell-630p-ree".
-
-Please format 1 per line.
-
->  - reg: Base physical address of the engine and length of memory mapped region.
->  - interrupts: Interrupt number for the device.
->  
+> +LS1012A ARMv8 based FRWY Board
+> +Required root node properties:
+> +    - compatible = "fsl,ls1012a-frwy", "fsl,ls1012a";
+> +
+>  LS1012A ARMv8 based QDS Board
+>  Required root node properties:
+>      - compatible = "fsl,ls1012a-qds", "fsl,ls1012a";
 > -- 
-> 2.7.4
+> 2.17.1
 > 
