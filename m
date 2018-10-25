@@ -1,185 +1,158 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH anybus v1 3/4] bus: support HMS Anybus-S bus.
-Date: Thu, 25 Oct 2018 13:08:35 +0200
-Message-ID: <CACRpkdbtR7mi1VPhA6dpX05-gqDQABKGLRVV7-tmRYzDfP+SQg@mail.gmail.com>
-References: <20181024142456.10084-1-svendev@arcx.com> <20181024142456.10084-4-svendev@arcx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: [PATCH 1/6] arm64: dts: Add the status property disable PCIe
+Date: Thu, 25 Oct 2018 19:08:56 +0800
+Message-ID: <20181025110901.5680-1-xiaowei.bao@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181024142456.10084-4-svendev@arcx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: svendev@arcx.com
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>, Johan Hovold <johan@kernel.org>, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, Arnd Bergmann <arnd@arndb.de>, Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Robin Murphy <robin.murphy@arm.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>, Icenowy Zheng <icenowy@aosc.io>, yuanzhichang@hisilicon.com
+To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org, cyrille.pitchen@free-electrons.com, pombredanne@nexb.com, shawn.lin@rock-chips.com, niklas.cassel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Cc: Bao Xiaowei <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sven,
+From: Bao Xiaowei <xiaowei.bao@nxp.com>
 
-thanks for your patch!
+Add the status property disable the PCIe, the property will be enable
+by bootloader.
 
-On Wed, Oct 24, 2018 at 4:25 PM Sven Van Asbroeck <svendev@arcx.com> wrote:
+Signed-off-by: Bao Xiaowei <xiaowei.bao@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi |    1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |    3 +++
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |    3 +++
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |    3 +++
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi |    4 ++++
+ 5 files changed, 14 insertions(+), 0 deletions(-)
 
-> This driver implementation is designed to be almost completely independent
-> from the way the Anybus-S hardware is accessed by the SoC. All it needs is:
->
-> - a regmap which accesses the underlying Anybus-S dpram by whatever means;
-> - an interrupt line, ultimately connected to the Anybus-S card;
-> - a reset function.
-
-Overall this commit message is a good start! You explain what this thing is
-and what it does.
-
-What you need to add is a bit of how the driver is architected. That can also
-be added as comment in the header of the driver file, maybe that is even
-better, i.e. here:
-
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * HMS Anybus-S Host Driver
-
-<architecture description goes here>
-
-This is really needed because the driver is starting threads and
-running completions and tasks and whatnot to the left and
-right, and when random people come in to maintain this code they
-will be puzzled. You need an overarching description of how the
-driver is constructed here.
-
-Please add proper kerneldoc to the struct anybus_host
-also "buss" is a germanism isn't it?  It should be just "anybus"?
-
-> +struct anybuss_host {
-> +       struct device *dev;
-> +       struct device *parent;
-> +       struct anybuss_client *client;
-
-There as well?
-
-Just search/replace "s/buss/bus/g" everywhere I suspect.
-
-> +static irqreturn_t irq_handler(int irq, void *data)
-> +{
-> +       struct anybuss_host *cd = data;
-> +       int ind_ab;
-> +
-> +       /* reading the anybus indicator register acks the interrupt */
-> +       ind_ab = read_ind_ab(cd->regmap);
-> +       if (ind_ab < 0)
-> +               return IRQ_NONE;
-> +       atomic_set(&cd->ind_ab, ind_ab);
-> +       complete(&cd->card_boot);
-> +       wake_up(&cd->wq);
-> +       return IRQ_HANDLED;
-> +}
-
-It looks a bit like you reinvent threaded interrupts but enlighten me
-on the architecture and I might be able to get it.
-
-> +static int task_fn_power_on_2(struct anybuss_host *cd,
-> +                               struct ab_task *t)
-> +{
-> +       if (completion_done(&cd->card_boot)) {
-> +               cd->power_on = true;
-> +               return 0;
-> +       }
-> +       if (time_after(jiffies, t->start_jiffies + TIMEOUT)) {
-> +               disable_irq(cd->irq);
-> +               ab_reset(cd, true);
-> +               dev_err(cd->dev, "power on timed out");
-> +               return -ETIMEDOUT;
-> +       }
-> +       return -EINPROGRESS;
-> +}
-> +
-> +static int task_fn_power_on(struct anybuss_host *cd,
-> +                               struct ab_task *t)
-> +{
-> +       unsigned int dummy;
-> +
-> +       if (cd->power_on)
-> +               return 0;
-> +       /* anybus docs: prevent false 'init done' interrupt by
-> +        * doing a dummy read of IND_AB register while in reset.
-> +        */
-> +       regmap_read(cd->regmap, REG_IND_AB, &dummy);
-> +       reinit_completion(&cd->card_boot);
-> +       enable_irq(cd->irq);
-> +       ab_reset(cd, false);
-> +       t->task_fn = task_fn_power_on_2;
-> +       return -EINPROGRESS;
-> +}
-
-This looks complex. Why can't you just sleep() and then
-retry this instead of shuffleing around different "tasks"?
-Are you actually modeling a state machine? In that case
-I can kind of understand it, then you just need one
-thread/work and assign it an enum of states or
-something, maybe name that "state" rather than task
-so we see what is going on.
-
-> +static int task_fn_area_3(struct anybuss_host *cd, struct ab_task *t)
-> +static int task_fn_area_2(struct anybuss_host *cd, struct ab_task *t)
-> +static int task_fn_area(struct anybuss_host *cd, struct ab_task *t)
-> +static struct ab_task *
-> +create_area_reader(struct kmem_cache *qcache, u16 flags, u16 addr,
-> +                               size_t count)
-> +static struct ab_task *
-> +create_area_writer(struct kmem_cache *qcache, u16 flags, u16 addr,
-> +                               const void *buf, size_t count)
-> +static struct ab_task *
-> +create_area_user_writer(struct kmem_cache *qcache, u16 flags, u16 addr,
-> +                               const void __user *buf, size_t count)
-
-So there are many different tasks going on.
-
-Are they just created to get something going in process context?
-
-> +static void softint_ack(struct anybuss_host *cd)
-> +static void process_softint(struct anybuss_host *cd)
-
-This looks like MSI (message signalled interrupt) and makes me think
-that you should probably involve the irqchip maintainers. Interrupts
-shall be represented in the irqchip abstraction.
-
-> +int anybuss_client_driver_register(struct anybuss_client_driver *drv)
-> +{
-> +       drv->driver.bus = &anybus_bus;
-> +       return driver_register(&drv->driver);
-> +}
-
-There is nice use of the bus abstractions here.
-
-> +       cd->reset = pdata->reset;
-
-This callback thing to handle reset doesn't seem right.
-
-The kernel has a reset for assert/deassert och just assert()
-reset handling that you can find in
-drivers/reset/*
-
-Maybe that is what you should be using instead of
-rolling your own reset handling?
-
-> +       cd->reset(parent, true);
-
-So this would just be something like
-#include <linux/reset.h>
-
-r = devm_reset_control_get_exclusive(dev, id);
-ret = reset_control_assert(r);
-
-> +       regmap_bulk_read(cd->regmap, REG_SERIAL_NO, val, 4);
-> +       dev_info(dev, "Serial number: %02X%02X%02X%02X",
-> +               val[0], val[1], val[2], val[3]);
-
-This looks like device-unique data so please do this:
-
-#include <linux/random.h>
-
-add_device_randomness(val, 4);
-
-I guess I can provide better review once you add some
-information on this task state machine business and how
-it is engineered, looking forward to the next iteration!
-
-Yours,
-Linus Walleij
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+index 5da732f..21f2b3b 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+@@ -496,6 +496,7 @@
+ 					<0000 0 0 2 &gic 0 111 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic 0 112 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
+ 		};
+ 	};
+ 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 3fed504..760d510 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -683,6 +683,7 @@
+ 					<0000 0 0 2 &gic 0 111 0x4>,
+ 					<0000 0 0 3 &gic 0 112 0x4>,
+ 					<0000 0 0 4 &gic 0 113 0x4>;
++			status = "disabled";
+ 		};
+ 
+ 		pcie@3500000 {
+@@ -708,6 +709,7 @@
+ 					<0000 0 0 2 &gic 0 121 0x4>,
+ 					<0000 0 0 3 &gic 0 122 0x4>,
+ 					<0000 0 0 4 &gic 0 123 0x4>;
++			status = "disabled";
+ 		};
+ 
+ 		pcie@3600000 {
+@@ -733,6 +735,7 @@
+ 					<0000 0 0 2 &gic 0 155 0x4>,
+ 					<0000 0 0 3 &gic 0 156 0x4>,
+ 					<0000 0 0 4 &gic 0 157 0x4>;
++			status = "disabled";
+ 		};
+ 	};
+ 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+index 51cbd50..64d334c 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+@@ -652,6 +652,7 @@
+ 					<0000 0 0 2 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
+ 		};
+ 
+ 		pcie@3500000 {
+@@ -677,6 +678,7 @@
+ 					<0000 0 0 2 &gic GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
+ 		};
+ 
+ 		pcie@3600000 {
+@@ -702,6 +704,7 @@
+ 					<0000 0 0 2 &gic GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
+ 		};
+ 
+ 	};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index a07f612..9deb9cb 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -533,6 +533,7 @@
+ 					<0000 0 0 2 &gic 0 0 0 110 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic 0 0 0 111 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic 0 0 0 112 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
+ 		};
+ 
+ 		pcie@3500000 {
+@@ -557,6 +558,7 @@
+ 					<0000 0 0 2 &gic 0 0 0 115 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic 0 0 0 116 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic 0 0 0 117 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
+ 		};
+ 
+ 		pcie@3600000 {
+@@ -581,6 +583,7 @@
+ 					<0000 0 0 2 &gic 0 0 0 120 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic 0 0 0 121 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic 0 0 0 122 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
+ 		};
+ 
+ 		cluster1_core0_watchdog: wdt@c000000 {
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+index d188774..5732e3b 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+@@ -648,6 +648,7 @@
+ 					<0000 0 0 2 &gic 0 0 0 110 4>,
+ 					<0000 0 0 3 &gic 0 0 0 111 4>,
+ 					<0000 0 0 4 &gic 0 0 0 112 4>;
++			status = "disabled";
+ 		};
+ 
+ 		pcie2: pcie@3500000 {
+@@ -669,6 +670,7 @@
+ 					<0000 0 0 2 &gic 0 0 0 115 4>,
+ 					<0000 0 0 3 &gic 0 0 0 116 4>,
+ 					<0000 0 0 4 &gic 0 0 0 117 4>;
++			status = "disabled";
+ 		};
+ 
+ 		pcie3: pcie@3600000 {
+@@ -690,6 +692,7 @@
+ 					<0000 0 0 2 &gic 0 0 0 120 4>,
+ 					<0000 0 0 3 &gic 0 0 0 121 4>,
+ 					<0000 0 0 4 &gic 0 0 0 122 4>;
++			status = "disabled";
+ 		};
+ 
+ 		pcie4: pcie@3700000 {
+@@ -711,6 +714,7 @@
+ 					<0000 0 0 2 &gic 0 0 0 125 4>,
+ 					<0000 0 0 3 &gic 0 0 0 126 4>,
+ 					<0000 0 0 4 &gic 0 0 0 127 4>;
++			status = "disabled";
+ 		};
+ 
+ 		sata0: sata@3200000 {
+-- 
+1.7.1
