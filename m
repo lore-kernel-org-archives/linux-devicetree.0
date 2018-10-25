@@ -1,86 +1,45 @@
-From: Dan O'Donovan <dan@emutex.com>
-Subject: [PATCH v3 1/3] iio: adc128s052: Add pin-compatible IDs
-Date: Thu, 25 Oct 2018 16:35:40 +0100
-Message-ID: <1540481742-23596-2-git-send-email-dan@emutex.com>
-References: <20180423213805.12591-1-javier@emutex.com>
- <1540481742-23596-1-git-send-email-dan@emutex.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/3] crypto: qce: ice: Add support for Inline Crypto Engine
+Date: Thu, 25 Oct 2018 10:45:25 -0500
+Message-ID: <CAL_Jsq+26Avcb2cQHKKAnrf=H4J=jMfv6sxsqxdMnFZMUdUDLA@mail.gmail.com>
+References: <1539789476-6098-1-git-send-email-anilc@codeaurora.org>
+ <1539789476-6098-4-git-send-email-anilc@codeaurora.org> <20181025145548.GA30244@bogus>
+ <20181025152856.GD4970@thunk.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1540481742-23596-1-git-send-email-dan@emutex.com>
+In-Reply-To: <20181025152856.GD4970@thunk.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Carlos Iglesias <carlos.iglesias@emutex.com>, Javier Arteaga <javier@emutex.com>, Dan O'Donovan <dan@emutex.com>
+To: Theodore Ts'o <tytso@mit.edu>, AnilKumar Chimata <anilc@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Javier Arteaga <javier@emutex.com>
+On Thu, Oct 25, 2018 at 10:29 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+>
+> On Thu, Oct 25, 2018 at 09:55:48AM -0500, Rob Herring wrote:
+> > > +Introduction:
+> > > +=============
+> > > +Storage encryption has been one of the most required feature from security
+> > > +point of view. QTI based storage encryption solution uses general purpose
+> > > +crypto engine. While this kind of solution provide a decent amount of
+> > > +performance, it falls short as storage speed is improving significantly
+> > > +continuously. To overcome performance degradation, newer chips are going to
+> > > +have Inline Crypto Engine (ICE) embedded into storage device. ICE is supposed
+> > > +to meet the line speed of storage devices.
+> >
+> > Is ICE part of the storage device or part of the host as the binding
+> > suggests?
+>
+> My understanding is that for this particular instantiation, the Inline
+> Crypto Engine is located on the SOC.
 
-The datasheets for ADC122S021 and ADC124S021 list two more
-pin-compatible alternatives for each device.
+Mine too, but that is not what this doc says.
 
-Add their IDs as compatible strings.
+> However, from the perspective of generic kernel support, the inline
+> crypto support could be implemented on the SOC, or in the host bus
+> adaptor, or as a "bump in the wire", or on the storage device.  And
+> whatever abstract interface in the block layer should be able to
+> support all of these cases.
 
-Suggested-by: Jonathan Cameron <jic23@kernel.org>
-Signed-off-by: Javier Arteaga <javier@emutex.com>
-Signed-off-by: Dan O'Donovan <dan@emutex.com>
----
- .../devicetree/bindings/iio/adc/ti-adc128s052.txt        |  9 ++++++++-
- drivers/iio/adc/ti-adc128s052.c                          | 16 ++++++++++++----
- 2 files changed, 20 insertions(+), 5 deletions(-)
+Yes, certainly.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
-index daa2b2c..c07ce1a 100644
---- a/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
-@@ -1,7 +1,14 @@
- * Texas Instruments' ADC128S052, ADC122S021 and ADC124S021 ADC chip
- 
- Required properties:
-- - compatible: Should be "ti,adc128s052", "ti,adc122s021" or "ti,adc124s021"
-+ - compatible: Should be one of:
-+   - "ti,adc128s052"
-+   - "ti,adc122s021"
-+   - "ti,adc122s051"
-+   - "ti,adc122s101"
-+   - "ti,adc124s021"
-+   - "ti,adc124s051"
-+   - "ti,adc124s101"
-  - reg: spi chip select number for the device
-  - vref-supply: The regulator supply for ADC reference voltage
- 
-diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
-index 7cf39b3..e6716c3 100644
---- a/drivers/iio/adc/ti-adc128s052.c
-+++ b/drivers/iio/adc/ti-adc128s052.c
-@@ -186,15 +186,23 @@ static int adc128_remove(struct spi_device *spi)
- static const struct of_device_id adc128_of_match[] = {
- 	{ .compatible = "ti,adc128s052", },
- 	{ .compatible = "ti,adc122s021", },
-+	{ .compatible = "ti,adc122s051", },
-+	{ .compatible = "ti,adc122s101", },
- 	{ .compatible = "ti,adc124s021", },
--	{ /* sentinel */ },
-+	{ .compatible = "ti,adc124s051", },
-+	{ .compatible = "ti,adc124s101", },
-+	{ }
- };
- MODULE_DEVICE_TABLE(of, adc128_of_match);
- 
- static const struct spi_device_id adc128_id[] = {
--	{ "adc128s052", 0},	/* index into adc128_config */
--	{ "adc122s021",	1},
--	{ "adc124s021", 2},
-+	{ "adc128s052", 0 },	/* index into adc128_config */
-+	{ "adc122s021",	1 },
-+	{ "adc122s051",	1 },
-+	{ "adc122s101",	1 },
-+	{ "adc124s021", 2 },
-+	{ "adc124s051", 2 },
-+	{ "adc124s101", 2 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(spi, adc128_id);
--- 
-2.7.4
-
-
-------
-This email has been scanned for spam and malware by The Email Laundry.
+Rob
