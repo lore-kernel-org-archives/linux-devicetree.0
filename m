@@ -1,76 +1,86 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v8 08/12] mfd: intel-peci-client: Add PECI client MFD
- driver
-Date: Thu, 25 Oct 2018 06:30:30 +0100
-Message-ID: <20181025053030.GD4939@dell>
-References: <20180918215124.14003-1-jae.hyun.yoo@linux.intel.com>
- <20180918215124.14003-9-jae.hyun.yoo@linux.intel.com>
- <20181024105903.GB4939@dell>
- <db7570cb-8f63-b551-d119-c54270ce6139@linux.intel.com>
+From: Manish Narani <manish.narani@xilinx.com>
+Subject: [PATCH v10 0/6] EDAC: Enhancements to Synopsys EDAC driver
+Date: Thu, 25 Oct 2018 11:36:55 +0530
+Message-ID: <1540447621-22870-1-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <db7570cb-8f63-b551-d119-c54270ce6139@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Darrick J . Wong" <darrick.wong@oracle.com>, Eric Sandeen <sandeen@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, Tomohiro Kusumi <kusumi.tomohiro@gmail.com>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, "David S . Miller" <davem@davemloft.net>, Mauro
+To: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, bp@alien8.de, mchehab@kernel.org, manish.narani@xilinx.com, amit.kucheria@linaro.org, sudeep.holla@arm.com, leoyang.li@nxp.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 24 Oct 2018, Jae Hyun Yoo wrote:
-> On 10/24/2018 3:59 AM, Lee Jones wrote:
-> > On Tue, 18 Sep 2018, Jae Hyun Yoo wrote:
-> > 
-> > > This commit adds PECI client MFD driver.
-> > > 
-> 
-> <snip>
+This patch series enhances the current EDAC driver to support different
+platforms. This series adds support for ZynqMP DDRC controller in synopsys
+EDAC driver. This series also adds Device tree properties and relevant
+binding documentation.
 
-[...]
+Changes in v2:
+	- Moved checking of DDR_ECC_INTR_SUPPORT from (1/4) to (3/4) as it is
+	  a feature of ZynqMP DDRC
+	- The Binding Documentation in (2/4) is modified as per the review
+	  comments
 
-> > > +bool peci_temp_need_update(struct temp_data *temp)
-> > > +{
-> > > +	if (temp->valid &&
-> > > +	    time_before(jiffies, temp->last_updated + UPDATE_INTERVAL))
-> > > +		return false;
-> > > +
-> > > +	return true;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(peci_temp_need_update);
-> > > +
-> > > +void peci_temp_mark_updated(struct temp_data *temp)
-> > > +{
-> > > +	temp->valid = 1;
-> > > +	temp->last_updated = jiffies;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(peci_temp_mark_updated);
-> > 
-> > These are probably better suited as inline functions to be placed in
-> > a header file.  No need to export them, since they only use their own
-> > data.
+Changes in v3:
+	- The commit message in (2/4) is modified (Synopsys EDAC Driver -->
+	  ZynqMP DDRC)
 
-Also move them into the HWMON header file.
+Changes in v4:
+	- Updated the commit message in (1/4)
+	- Renamed function pointer names removing 'synps_' in (1/4)
+	- Shortened unnecessary long lines as per the review comment on (1/4)
 
-They have no business in MFD.
+Changes in v5:
+	- Updated the commit message in (2/4) and (4/4).
+	- Removed the unnecessary check for match data in probe() in (1/4)
+	- Some Indentation changes for better readability in (1/4) and (3/4)
+	- Removed repeated code in (3/4)
+	- Used 'zynq' and 'zynqmp' instead of 'synps_enh_edac' in function names
 
-[...]
+Changes in v6:
+	- Splitted the patches according to functionalities
+	- Addressed code style comments from v5 review
+	- Moved the Error Injection to CONFIG_EDAC_DEBUG mode
 
-> > > +int peci_client_rd_pkg_cfg_cmd(struct peci_mfd *priv, u8 mbx_idx,
-> > 
-> > This is gobbledegook.  What's rd?  Read?
-> > 
-> 
-> Yes, the 'rd' means 'read'. I intended to keep command names as listed
-> in the PECI specification such as RdPkgConfig, WrPkgConfig and so on.
-> Should I change it to 'peci_client_read_package_config_command' ?
+Changes in v7:
+	- Included DTS patch (6/7) which was missed in v6 patch set
 
-I looks/reads a lot nicer, don't you think?
+Changes in v8:
+	- patch (1/7) from v7 is split in to 3 different logically different patches
+		1. functional changes like code cleanup
+		2. functions renaming
+		3. comments cleanup
+	- Added a separate patch (4) for making always successful functions as void
+	- Corrected 'Too many parentheses' review comment in patch (5)
+	- Corrected comments as per the v7 review feedback
+	- Made dedicated functions for IRQ setup, IRQ enable and IRQ disable in patch (8)
+	- Addressed review comments in patch (10)
 
-[...]
+Changes in v9:
+	- Added check for return value of of_device_get_match_data() function
+	  in (1/6).
+	- From v8 the first 5 patches are removed in this series as they are
+	  applied on:
+		https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/?h=edac-for-4.20-synps
+	- Updated Kconfig to check for ARCH_ZYNQMP instead of ARM64
+
+Change in v10:
+	- Moved the checking for ce_cnt and ue_cnt before the readl() call
+	- Aligned arguments on the opening brace in setup_irq()
+
+Manish Narani (6):
+  edac: synopsys: Add error handling for NULL in probe()
+  dt: bindings: Document ZynqMP DDRC in Synopsys documentation
+  edac: synopsys: Add macro defines for ZynqMP DDRC
+  edac: synopsys: Add EDAC ECC support for ZynqMP DDRC
+  arm64: zynqmp: Add DDRC node
+  edac: synopsys: Add Error Injection support for ZynqMP DDRC
+
+ .../bindings/memory-controllers/synopsys.txt       |  27 +-
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi             |   7 +
+ drivers/edac/Kconfig                               |   2 +-
+ drivers/edac/synopsys_edac.c                       | 911 ++++++++++++++++++++-
+ 4 files changed, 918 insertions(+), 29 deletions(-)
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.1.1
