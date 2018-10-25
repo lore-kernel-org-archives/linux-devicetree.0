@@ -1,38 +1,70 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: pci: layerscape-pci: removed
- compatible  string "snps,dw-pcie"
-Date: Thu, 25 Oct 2018 16:51:37 -0500
-Message-ID: <20181025215137.GA14643@bogus>
-References: <20181025094929.29481-1-Zhiqiang.Hou@nxp.com>
- <20181025094929.29481-3-Zhiqiang.Hou@nxp.com>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Subject: Re: [PATCH 0/3] drm: tinydrm driver for adafruit PiTFT 3.5"
+ touchscreen
+Date: Thu, 25 Oct 2018 23:52:35 +0200
+Message-ID: <2e548bd7-81f3-5952-b5de-96c26c9f6b19@tronnes.org>
+References: <20181024184313.2967-1-eric@anholt.net> <87h8harnv4.fsf@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181025094929.29481-3-Zhiqiang.Hou@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <87h8harnv4.fsf@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 25 Oct 2018 09:49:39 +0000, "Z.q. Hou" wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> Removed the compatible string "snps,dw-pcie", it is for the reference
-> platform driver for PCI RC IP Protoyping Kits based on the ARC SDP,
-> so it is not suitable for all platform with designware PCIe controller,
-> and platform vendors have themselves' drivers.
-> 
-> The compatible string "snsp,dw-pcie" was added by mistake and it's not
-> matched that time, but it is matched because PCIe drivers has been
-> collected recently.
-> 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> ---
-> V2:
->  - Improved the subject.
-> 
->  Documentation/devicetree/bindings/pci/layerscape-pci.txt | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+CkRlbiAyNS4xMC4yMDE4IDE4LjI5LCBza3JldiBFcmljIEFuaG9sdDoKPiBFcmljIEFuaG9sdCA8
+ZXJpY0BhbmhvbHQubmV0PiB3cml0ZXM6Cj4KPj4gSSB3YXMgZ29pbmcgdG8gc3RhcnQgd29ya2lu
+ZyBvbiBtYWtpbmcgdGhlIHZjNCBkcml2ZXIgd29yayB3aXRoCj4+IHRpbnlkcm0gcGFuZWxzLCBi
+dXQgaXQgdHVybmVkIG91dCB0aW55ZHJtIGRpZG4ndCBoYXZlIHRoZSBwYW5lbCBJIGhhZAo+PiBw
+cmV2aW91c2x5IGJvdWdodC4gIFNvLCBsYXN0IG5pZ2h0IEkgcG9ydGVkIHRoZSBmYnRmdCBzdGFn
+aW5nCj4+IGRyaXZlciBvdmVyIHRvIERSTS4KPj4KPj4gSXQgc2VlbXMgdG8gd29yayAod2l0aCBE
+VCBhdAo+PiBodHRwczovL2dpdGh1Yi5jb20vYW5ob2x0L2xpbnV4L2NvbW1pdHMvZHJtLW1pc2Mt
+bmV4dC1oeDgzNTdkKSAtLQo+PiBmYmRldiB3b3JrcyBncmVhdCBpbmNsdWRpbmcgcm90YXRlZCwg
+YW5kIHNvIGRvZXMgbW9kZXRlc3QuICBIb3dldmVyLAo+PiB3aGVuIFgxMSBjb21lcyB1cCBhdCAx
+NmJwcCwgSSBnZXQ6Cj4+Cj4+IGh0dHBzOi8vcGhvdG9zLmFwcC5nb28uZ2wvOHR1aHpQRkZvREdh
+bUVmazgKPj4KPj4gSWYgSSBoYXZlIHRpbnlkcm0gc2V0IGEgcHJlZmVycmVkIGJwcCBvZiAyNCwg
+WCBsb29rcyBncmVhdC4gIE5vcmFsZiwKPj4gYW55IGlkZWFzPwo+IEFsc28sIHdpdGggdGhlc2Ug
+cGF0Y2hlcyBhbmQgdGhlIGZvcm1hdCBtb2RpZmllciBwYXRjaCBJIGp1c3Qgc2VudCwgbWVzYQo+
+IHdpdGggdmM0IGlzIG5vdyB3b3JraW5nIHdpdGggdGhpcyBkcml2ZXIgb24gdGhpcyBicmFuY2g6
+Cj4KPiBodHRwczovL2dpdGxhYi5mcmVlZGVza3RvcC5vcmcvYW5ob2x0L21lc2EvY29tbWl0cy9r
+bXNybwoKQWgsIG5pY2UgdG8gc2VlIHRoaXMgaGFwcGVuaW5nIQpHZXR0aW5nIGh3IHJlbmRlcmlu
+ZyB3YXMgb25lIG9mIHRoZSBhZHZhbnRhZ2VzIEkgc2F3IERSTSBjb3VsZCBwcm92aWRlCm92ZXIg
+ZmJkZXYgb24gdGhlc2UgZGlzcGxheXMuIExpdHRsZSBkaWQgSSBrbm93IGhvdyBjb21wbGljYXRl
+ZCBncmFwaGljcwp3YXMgb3V0c2lkZSBmYmRldiwgc28gSSB3YXMgdW5hYmxlIHRvIHJlYWxpc2Ug
+dGhpcyBteXNlbGYuCgpUaGUgY3VycmVudCBzb2x1dGlvbiB0byBnZXQgaHcgcmVuZGVyaW5nIGlz
+IHRvIGhhdmUgYSB1c2Vyc3BhY2UgcHJvY2Vzcwp0aGF0IGNvbnRpbm91c2x5IGNvcGllcyB0aGUg
+ZnJhbWVidWZmZXI6Cmh0dHBzOi8vZ2l0aHViLmNvbS90YXNhbmFrb3JuL3JwaS1mYmNwCgpJdCdz
+IHVzZWQgYnkgc29tZSBvZiB0aGUgc21hbGwgRElZIGhhbmRoZWxkIGdhbWUgY29uc29sZXMgdGhh
+dCBydW4KZW11bGF0b3JzIHdoaWNoIHJlcXVpcmVzIGh3IHJlbmRlcmluZy4KCj4gTm93IEkgd29u
+ZGVyIGhvdyB3ZSBjYW4gaW1wcm92ZSBwZXJmb3JtYW5jZSBvZiB0aGUgU1BJIHVwZGF0ZXMuCgpB
+dCB3aGF0IFNQSSBzcGVlZCBhcmUgeW91IHJ1bm5pbmc/IFRoZSBkYXRhc2hlZXQgZm9yIG1vc3Qg
+b2YgdGhlc2UKZGlzcGxheSBjb250cm9sbGVycyBsaXN0IHRoZSBtYXggc3BlZWQgYXMgMTBNSHos
+IGJ1dCBhbG1vc3QgYWxsIG9mIHRoZW0KY2FuIGdvIGZhc3Rlci4gU29tZSBhcmUgcmVwb3J0ZWQg
+Z29pbmcgYXMgaGlnaCBhcyA3MC04ME1Iei4gVGhhdCdzIGZvcgp0aGUgcGl4ZWwgZGF0YSB0cmFu
+c2Zlciwgbm90IHRoZSBjb21tYW5kcy4gdGlueWRybS9taXBpLWRiaS5jIHNlbmRzCmNvbW1hbmRz
+IGF0IDEwTUh6IGFuZCBwaXhlbHMgYXQgZnVsbCBzcGVlZCAobWlwaV9kYmlfc3BpX2NtZF9tYXhf
+c3BlZWQoKSkuCk1vc3QgcGFuZWxzIEkgaGF2ZSBydW4gYXQgMzJNSHogb3IgNDhNSHouCgpBbG1v
+c3QgYWxsIHRoZSB0aW1lIGlzIHNwZW50IGluIHRoZSBTUEkgdHJhbnNmZXIsIHNvIGV2ZXJ5IGh6
+IGNvdW50cy4gT24KdGhlIFBpIHRoZXJlJ3MgYnl0ZSBzd2FwcGluZyBiZWNhdXNlIHRoZSBETUEg
+Y2FwYWJsZSBTUEkgY29udHJvbGxlciBjYW4ndApkbyAxNi1iaXQgKHRpbnlkcm1fc3dhYjE2KCkp
+LiBJZiBJIHJlbWVtYmVyIGNvcnJlY3RseSB0aGlzIGhhcyBuZWdsaWdpYmxlCmltcGFjdCBvbiBw
+ZXJmb3JtYW5jZS4KClRoZSBTUEkgY29udHJvbGxlci9kcml2ZXIgb24gdGhlIFBpIGhhcyBzb21l
+IHJlc3RyaWN0aW9ucyBvbiB0aGUgc3BlZWRzCnRvIGNob29zZSBmcm9tIGJlY2F1c2UgdGhlIGRp
+dmlzb3IgaGFzIHRvIGJlIGEgbXVsdGlwbGUgb2YgdHdvCihiY20yODM1X3NwaV90cmFuc2Zlcl9v
+bmUoKSkuCgpBIGZ1bGwgdXBkYXRlIG9uIGEgMzIweDQ4MCBSR0I1NjUgcGFuZWwgaXMgMjYyLjVr
+Qiwgc28gaXQncyBhIGxvdCB0byBwdXNoCm92ZXIgU1BJLiBBIDIuOCIgMzIweDI0MCBwYW5lbCBp
+cyBtb3JlIHN1aXRhYmxlIGZvciB2aWRlbyBmcHMsIGJlY2F1c2Ugb2YKdGhlIGxvd2VyIHJlc29s
+dXRpb24uCgpJJ2xsIGxvb2sgYXQgdGhlIHBhdGNoZXMgZHVyaW5nIHRoZSB3ZWVrZW5kLgoKTm9y
+YWxmLgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
