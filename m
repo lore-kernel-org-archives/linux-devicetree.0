@@ -1,66 +1,83 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v9 6/9] i3c: master: Add driver for Cadence IP
-Date: Thu, 25 Oct 2018 18:13:51 +0200
-Message-ID: <CAK8P3a02ELWiMB_pe0bzbsMfdqYOG1G0bFnSHzGu3ZbQHatH2w@mail.gmail.com>
-References: <20181022133404.2061-1-boris.brezillon@bootlin.com>
- <20181022133404.2061-7-boris.brezillon@bootlin.com> <20181024202048.7e3534f7@bbrezillon>
- <CAK8P3a2DBgfvXs-9KzoDvbQpV+VN96xb7xHG-5=NDDgnt7ViVQ@mail.gmail.com> <20181025180720.1790f6a1@bbrezillon>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH v8 08/12] mfd: intel-peci-client: Add PECI client MFD
+ driver
+Date: Thu, 25 Oct 2018 09:16:01 -0700
+Message-ID: <509c4c0e-eabb-2276-3ffd-3fc675801142@linux.intel.com>
+References: <20180918215124.14003-1-jae.hyun.yoo@linux.intel.com>
+ <20180918215124.14003-9-jae.hyun.yoo@linux.intel.com>
+ <20181024105903.GB4939@dell>
+ <db7570cb-8f63-b551-d119-c54270ce6139@linux.intel.com>
+ <20181025053030.GD4939@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181025180720.1790f6a1@bbrezillon>
+In-Reply-To: <20181025053030.GD4939@dell>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, gregkh <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@he>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Darrick J . Wong" <darrick.wong@oracle.com>, Eric Sandeen <sandeen@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, Tomohiro Kusumi <kusumi.tomohiro@gmail.com>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, "David S . Miller" <davem@davemloft.net>, Mauro
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 25, 2018 at 6:07 PM Boris Brezillon
-<boris.brezillon@bootlin.com> wrote:
->
-> On Thu, 25 Oct 2018 17:30:26 +0200
-> Arnd Bergmann <arnd@arndb.de> wrote:
->
-> > On 10/24/18, Boris Brezillon <boris.brezillon@bootlin.com> wrote:
-> > > Hi Arnd,
-> > >
-> > > On Mon, 22 Oct 2018 15:34:01 +0200
-> > > Boris Brezillon <boris.brezillon@bootlin.com> wrote:
-> > >
-> > >
-> > >> +
-> > >> +static void cdns_i3c_master_rd_from_rx_fifo(struct cdns_i3c_master
-> > >> *master,
-> > >> +                                      u8 *bytes, int nbytes)
-> > >> +{
-> > >> +  readsl(master->regs + RX_FIFO, bytes, nbytes / 4);
-> > >
-> > > Vitor reported a problem with readsl(): this function expects the 2nd
-> > > argument to be aligned on 32-bit, which is not guaranteed here. Unless
-> > > you see a better solution, I'll switch back to a loop doing:
-> > >
-> > >     for (i = 0; i < nbytes; i += 4) {
-> > >             u32 tmp = __raw_readl(...);
-> > >             memcpy(bytes + i, &tmp,
-> > >                    nbytes - i  > 4 ? 4 : nbytes - i);
-> > >     }
-> >
-> > Could we maybe mandate that the buffer itself must be aligned here?
-> > What would be a reason why we see an unaligned target buffer?
->
-> Well, the buffers we pass to i3c_send_ccc_cmd() are not necessarily
-> aligned because they're not dynamically allocated (allocated on the
-> stack) and are not naturally aligned on 32-bits (either because they
-> are smaller than 32bits or because the struct is declared __packed).
->
-> I guess I could dynamically allocate the payload, but that requires
-> going over all users of i3c_send_ccc_cmd() to patch them.
+On 10/24/2018 10:30 PM, Lee Jones wrote:
+> On Wed, 24 Oct 2018, Jae Hyun Yoo wrote:
+>> On 10/24/2018 3:59 AM, Lee Jones wrote:
+>>> On Tue, 18 Sep 2018, Jae Hyun Yoo wrote:
+>>>
+>>>> This commit adds PECI client MFD driver.
+>>>>
+>>
+>> <snip>
+> 
+> [...]
+> 
+>>>> +bool peci_temp_need_update(struct temp_data *temp)
+>>>> +{
+>>>> +	if (temp->valid &&
+>>>> +	    time_before(jiffies, temp->last_updated + UPDATE_INTERVAL))
+>>>> +		return false;
+>>>> +
+>>>> +	return true;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(peci_temp_need_update);
+>>>> +
+>>>> +void peci_temp_mark_updated(struct temp_data *temp)
+>>>> +{
+>>>> +	temp->valid = 1;
+>>>> +	temp->last_updated = jiffies;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(peci_temp_mark_updated);
+>>>
+>>> These are probably better suited as inline functions to be placed in
+>>> a header file.  No need to export them, since they only use their own
+>>> data.
+> 
+> Also move them into the HWMON header file.
+> 
+> They have no business in MFD.
+> 
 
-This reminds me that Wolfram mentioned in his ELC talk that the
-buffers on i3c should all be DMA capable to make life easier for
-i3c master drivers that want to implement DMA transfers.
+Agreed. I'll move them into the HWMON header.
 
-If we have buffers here that are not aligned to cache lines
-(or even just 32 bit words), doesn't that also mean that the
-same buffers are not DMA capable either?
+> [...]
+> 
+>>>> +int peci_client_rd_pkg_cfg_cmd(struct peci_mfd *priv, u8 mbx_idx,
+>>>
+>>> This is gobbledegook.  What's rd?  Read?
+>>>
+>>
+>> Yes, the 'rd' means 'read'. I intended to keep command names as listed
+>> in the PECI specification such as RdPkgConfig, WrPkgConfig and so on.
+>> Should I change it to 'peci_client_read_package_config_command' ?
+> 
+> I looks/reads a lot nicer, don't you think?
+> 
 
-        Arnd
+Okay. I'll change it too.
+
+Thanks again for your review, Lee!
+
+Jae
+
+> [...]
+> 
