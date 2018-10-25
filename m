@@ -1,68 +1,55 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 3/4] dt-bindings: soc: Add TmFifo binding for Mellanox
- BlueField SoC
-Date: Thu, 25 Oct 2018 17:32:35 +0200
-Message-ID: <CAK8P3a1K7BjgZRyBMKFrqWfcr-Bb3HQus+QE7qTpd27voE9e0A@mail.gmail.com>
-References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
- <1540403734-137721-1-git-send-email-lsun@mellanox.com>
- <1540403734-137721-3-git-send-email-lsun@mellanox.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v9 6/9] i3c: master: Add driver for Cadence IP
+Date: Thu, 25 Oct 2018 18:07:20 +0200
+Message-ID: <20181025180720.1790f6a1@bbrezillon>
+References: <20181022133404.2061-1-boris.brezillon@bootlin.com>
+        <20181022133404.2061-7-boris.brezillon@bootlin.com>
+        <20181024202048.7e3534f7@bbrezillon>
+        <CAK8P3a2DBgfvXs-9KzoDvbQpV+VN96xb7xHG-5=NDDgnt7ViVQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1540403734-137721-3-git-send-email-lsun@mellanox.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liming Sun <lsun@mellanox.com>
-Cc: devicetree@vger.kernel.org, David Woods <dwoods@mellanox.com>, arm-soc <arm@kernel.org>, Olof Johansson <olof@lixom.net>, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a2DBgfvXs-9KzoDvbQpV+VN96xb7xHG-5=NDDgnt7ViVQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@cod>
 List-Id: devicetree@vger.kernel.org
 
-On 10/24/18, Liming Sun <lsun@mellanox.com> wrote:
-> Add devicetree bindings for the TmFifo which is found on Mellanox
-> BlueField SoCs.
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: David Woods <dwoods@mellanox.com>
-> Signed-off-by: Liming Sun <lsun@mellanox.com>
-> ---
->  .../devicetree/bindings/soc/mellanox/tmfifo.txt    | 23
-> ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
->
-> diff --git a/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
-> b/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
-> new file mode 100644
-> index 0000000..8a13fa6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
-> @@ -0,0 +1,23 @@
-> +* Mellanox BlueField SoC TmFifo
-> +
-> +BlueField TmFifo provides a shared FIFO between the target and the
-> +external host machine, which can be accessed by external host via
-> +USB or PCIe. In the current tmfifo driver, this FIFO has been demuxed
-> +to implement virtual console and network interface based on the virtio
-> +framework.
-> +
-> +Required properties:
-> +
-> +- compatible:	Should be "mellanox,bf-tmfifo"
-> +- reg:		Physical base address and length of Rx/Tx block
-> +- interrupts:	The interrupt number of Rx low water mark, Rx high water
-> mark
-> +		Tx low water mark, Tx high water mark respectively.
+On Thu, 25 Oct 2018 17:30:26 +0200
+Arnd Bergmann <arnd@arndb.de> wrote:
 
+> On 10/24/18, Boris Brezillon <boris.brezillon@bootlin.com> wrote:
+> > Hi Arnd,
+> >
+> > On Mon, 22 Oct 2018 15:34:01 +0200
+> > Boris Brezillon <boris.brezillon@bootlin.com> wrote:
+> >
+> >  
+> >> +
+> >> +static void cdns_i3c_master_rd_from_rx_fifo(struct cdns_i3c_master
+> >> *master,
+> >> +					    u8 *bytes, int nbytes)
+> >> +{
+> >> +	readsl(master->regs + RX_FIFO, bytes, nbytes / 4);  
+> >
+> > Vitor reported a problem with readsl(): this function expects the 2nd
+> > argument to be aligned on 32-bit, which is not guaranteed here. Unless
+> > you see a better solution, I'll switch back to a loop doing:
+> >
+> > 	for (i = 0; i < nbytes; i += 4) {
+> > 		u32 tmp = __raw_readl(...);
+> > 		memcpy(bytes + i, &tmp,
+> > 		       nbytes - i  > 4 ? 4 : nbytes - i);
+> > 	}  
+> 
+> Could we maybe mandate that the buffer itself must be aligned here?
+> What would be a reason why we see an unaligned target buffer?
 
-This sounds like it might fit into the mailbox subsystem, and perhaps
-it should use the mailbox DT bindings. Have you had a look at that?
+Well, the buffers we pass to i3c_send_ccc_cmd() are not necessarily
+aligned because they're not dynamically allocated (allocated on the
+stack) and are not naturally aligned on 32-bits (either because they
+are smaller than 32bits or because the struct is declared __packed).
 
-       Arnd
+I guess I could dynamically allocate the payload, but that requires
+going over all users of i3c_send_ccc_cmd() to patch them.
