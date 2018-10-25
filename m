@@ -1,61 +1,103 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 6/6] dt-bindings: drm/panel: simple: Innolux TV123WAM is
- actually P120ZDG-BF1
-Date: Thu, 25 Oct 2018 14:49:37 -0500
-Message-ID: <20181025194937.GA11705@bogus>
-References: <20181022204639.8558-1-dianders@chromium.org>
- <20181022204639.8558-6-dianders@chromium.org>
+Subject: Re: [PATCH v4 2/7] dt-bindings: ti-lmu: Modify dt bindings for the
+ LM3697
+Date: Thu, 25 Oct 2018 14:54:44 -0500
+Message-ID: <20181025195444.GA12737@bogus>
+References: <20181023170623.31820-1-dmurphy@ti.com>
+ <20181023170623.31820-2-dmurphy@ti.com>
+ <20181024090421.GB24997@amd>
+ <e8800c2e-8ada-7a0d-c1a6-14ddcbe1576d@ti.com>
+ <20181024145434.GC9327@bogus>
+ <beb1a6e1-8120-be94-b1a4-60ea6721765d@ti.com>
+ <ade3121a-58ab-c0c3-6605-cf7d6a638da0@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181022204639.8558-6-dianders@chromium.org>
+In-Reply-To: <ade3121a-58ab-c0c3-6605-cf7d6a638da0@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Sean Paul <seanpaul@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, Sandeep Panda <spanda@codeaurora.org>, linux-arm-msm@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, jsanka@codeaurora.org, ryandcase@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, lee.jones@linaro.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 22 Oct 2018 13:46:39 -0700, Douglas Anderson wrote:
-> As far as I can tell the bindings that were added in commit
-> 9c04400f7ea6 ("dt-bindings: drm/panel: Document Innolux TV123WAM panel
-> bindings") weren't actually for Innolux TV123WAM but were actually for
-> Innolux P120ZDG-BF1.
+On Thu, Oct 25, 2018 at 08:27:18PM +0200, Jacek Anaszewski wrote:
+> On 10/25/2018 08:07 PM, Dan Murphy wrote:
+> > Rob
+> > 
+> > On 10/24/2018 09:54 AM, Rob Herring wrote:
+> >> On Wed, Oct 24, 2018 at 07:07:57AM -0500, Dan Murphy wrote:
+> >>> Pavel
+> >>>
+> >>> On 10/24/2018 04:04 AM, Pavel Machek wrote:
+> >>>> Hi!
+> >>>>
+> >>>>> The LM3697 is a single function LED driver. The single function LED
+> >>>>> driver needs to reside in the LED directory as a dedicated LED driver
+> >>>>> and not as a MFD device.  The device does have common brightness and ramp
+> >>>>
+> >>>> So it is single function LED driver. That does not mean it can not
+> >>>> share bindings with the rest. Where the bindings live is not imporant.
+> >>>>
+> >>>
+> >>> It can share bindings that are correctly done, not ones that are incomplete and incorrect.
+> >>>
+> >>> Where bindings live is important to new Linux kernel developers and product 
+> >>> developers looking for the proper documentation on the H/W bindings.
+> >>>
+> >>>>> reside in the Documentation/devicetree/bindings/leds directory and follow the
+> >>>>> current LED and general bindings guidelines.
+> >>>>
+> >>>> What you forgot to tell us in the changelog:
+> >>>
+> >>> I can add this to the changelog.
+> >>>
+> >>>>
+> >>>>> +Optional child properties:
+> >>>>> +	- runtime-ramp-up-msec: Current ramping from one brightness level to
+> >>>>> +				the a higher brightness level.
+> >>>>> +				Range from 2048 us - 117.44 s
+> >>>>
+> >>>> The other binding uses "ramp-up-msec". Tell us why you are changing this, or
+> >>>> better don't change things needlessly.
+> >>>>
+> >>>> We don't want to be using "runtime-ramp-up-msec" for one device and
+> >>>> "ramp-up-msec" for the other.
+> >>>
+> >>> This is another example of how the original bindings were incorrect and misleading.
+> >>>
+> >>> The LM3697 have 2 ramp implementations that can be used.
+> >>>
+> >>> Startup/Shutdown ramp and Runtime Ramp.  Same Ramp rates different registers and
+> >>> different end user experience.
+> >>>
+> >>> So having a single node call ramp-up-msec is misleading and it does not
+> >>> indicate what the H/W will do.
+> >>
+> >> The existing ones aren't documented (present in the example is not 
+> >> documented). This seems like something that should be common rather than 
+> >> TI specific. Though it also seems more like something the user would 
+> >> want to control (i.e. sysfs) rather than fixed in DT.
+> >>
+> > 
+> > Changing the runtime ramping or startup/shutdown ramping could also be done via sysfs.
+> > I am not dedicated to having it in the DT file I was following prior art.
+> > 
+> > Jacek
+> > 
+> > Do you have an opinion on this?
 > 
-> As far as I can tell the Innolux TV123WAM isn't a real panel and but
-> it's a mosh between the TI TV123WAM and the Innolux P120ZDG-BF1.
-> Let's unmosh.
+> This is this problem with the Device Tree's scope of responsibility.
+> It is defined as a means for "describing the hardware", but often
+> this rule is abused by the properties that fall into "configuration"
+> category. E.g. default-state, retain-state-suspended from leds-gpio.txt
+> or linux-default-trigger from common LED bindings.
 > 
-> Here's my evidence:
-> 
-> * Searching for TV123WAM on the Internet turns up a TI panel.  While
->   it's possible that an Innolux panel has the same model number as the
->   TI Panel, it seems a little doubtful.  Looking up the datasheet from
->   the TI Panel shows that it's 1920 x 1280 and 259.2 mm x 172.8 mm.
-> 
-> * As far as I know, the patch adding the Innolux Panel was supposed to
->   be for the board that's sitting in front of me as I type this
->   (support for that board is not yet upstream).  On the back of that
->   panel I see Innolux P120ZDZ-EZ1 rev B1.
-> 
-> * Someone pointed me at a datasheet that's supposed to be for the
->   panel in front of me (sorry, I can't share the datasheet).  That
->   datasheet has the string "p120zdg-bf1"
-> 
-> * If I search for "P120ZDG-BF1" on the Internet I get hits for panels
->   that are 2160x1440.  They don't have datasheets, but the fact that
->   the resolution matches is a good sign.
-> 
-> While we doing the rename, also mention that no-hpd can be used with
-> this panel.  See the previous patch in this series ("drm/panel:
-> simple: Add "no-hpd" delay for Innolux TV123WAM").
-> 
-> Fixes: 9c04400f7ea6 ("dt-bindings: drm/panel: Document Innolux TV123WAM panel bindings")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Cc: Sandeep Panda <spanda@codeaurora.org>
-> ---
-> 
->  .../{innolux,tv123wam.txt => innolux,p120zdg-bf1.txt}     | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->  rename Documentation/devicetree/bindings/display/panel/{innolux,tv123wam.txt => innolux,p120zdg-bf1.txt} (70%)
-> 
+> In some cases this is justified. The question is whether it is something
+> that necessarily needs to be configured on driver probing? If not, then
+> I'd go for sysfs interface.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Yes. I'd also add it should be along the lines of for a given 
+board it's always configured in that way or is it something you'd want 
+in the BIOS of your PC.
+
+Rob
