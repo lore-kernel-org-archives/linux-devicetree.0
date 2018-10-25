@@ -1,39 +1,27 @@
-Return-Path: <SRS0=Ck17=NI=googlemail.com=martin.blumenstingl@kernel.org>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 6/7] ARM: dts: meson8b: odroidc1: add iio-hwmon for the chip temperature
-Date: Sun, 28 Oct 2018 13:26:28 +0100
-Message-Id: <20181028122629.10144-7-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20181028122629.10144-1-martin.blumenstingl@googlemail.com>
-References: <20181028122629.10144-1-martin.blumenstingl@googlemail.com>
+Return-Path: <robherring2@gmail.com>
+Date: Thu, 25 Oct 2018 14:56:50 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: iio: magn: add LSM9DS1 bindings
+Message-ID: <20181025195650.GA21568@bogus>
+References: <20181024013948.16326-1-martin@martingkelly.com>
+ <20181024013948.16326-2-martin@martingkelly.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de, jic23@kernel.org
-Cc: khilman@baylibre.com, carlo@caione.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181024013948.16326-2-martin@martingkelly.com>
+To: Martin Kelly <martin@martingkelly.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>, Denis Ciocca <denis.ciocca@st.com>, Jonathan Cameron <jic23@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SAR ADC enabled channel 8 can be used to measure the chip temperature.
-This can be made available to the hwmon subsystem by using iio-hwmon.
+On Tue, 23 Oct 2018 18:39:48 -0700, Martin Kelly wrote:
+> From: Martin Kelly <martin@martingkelly.com>
+> 
+> Add DT binding documentation for the LSM9DS1 magnetometer driver.
+> 
+> Signed-off-by: Martin Kelly <martin@martingkelly.com>
+> ---
+>  Documentation/devicetree/bindings/iio/st-sensors.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm/boot/dts/meson8b-odroidc1.dts | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
-index 58669abda259..9251dc102fcc 100644
---- a/arch/arm/boot/dts/meson8b-odroidc1.dts
-+++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
-@@ -118,6 +118,11 @@
- 			  1800000 1>;
- 	};
- 
-+	iio-hwmon {
-+		compatible = "iio-hwmon";
-+		io-channels = <&saradc 8>;
-+	};
-+
- 	vcc_1v8: regulator-vcc-1v8 {
- 		/*
- 		 * RICHTEK RT9179 configured for a fixed output voltage of
--- 
-2.19.1
+Reviewed-by: Rob Herring <robh@kernel.org>
