@@ -1,81 +1,58 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v4 5/7] dt-bindings: ti-lmu: Modify dt bindings for the
- LM3633
-Date: Thu, 25 Oct 2018 13:01:52 -0500
-Message-ID: <57f73b8f-3eab-642d-5b4e-c7c6c890006b@ti.com>
-References: <20181023170623.31820-1-dmurphy@ti.com>
- <20181023170623.31820-5-dmurphy@ti.com> <20181024092328.GD24997@amd>
+From: Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH 1/6] dt-bindings: drm/panel: simple: Add no-hpd property
+Date: Thu, 25 Oct 2018 14:06:22 -0400
+Message-ID: <20181025175118.GJ154160@art_vandelay>
+References: <20181022204639.8558-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181024092328.GD24997@amd>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, lee.jones@linaro.org, tony@atomide.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20181022204639.8558-1-dianders@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-arm-msm@vger.kernel.org, Sandeep Panda <spanda@codeaurora.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, ryandcase@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Pavel
-
-On 10/24/2018 04:23 AM, Pavel Machek wrote:
-> On Tue 2018-10-23 12:06:21, Dan Murphy wrote:
->> The LM3633 is a single function LED driver. The single function LED
->> driver needs to reside in the LED directory as a dedicated LED driver
->> and not as a MFD device.  The device does have common brightness and ramp
->> features and those can be accomodated by a TI LMU framework.
->>
->> The LM3633 dt binding needs to be moved from the ti-lmu.txt and a dedicated
->> LED dt binding needs to be added.  The new LM3633 LED dt binding will then
->> reside in the Documentation/devicetree/bindings/leds directory and follow the
->> current LED and general bindings guidelines.
-> 
-> What?
-> 
->>  .../devicetree/bindings/leds/leds-lm3633.txt  | 102 ++++++++++++++++++
->>  .../devicetree/bindings/mfd/ti-lmu.txt        |  48 ---------
->>  2 files changed, 102 insertions(+), 48 deletions(-)
->>  create mode 100644
->>  Documentation/devicetree/bindings/leds/leds-lm3633.txt
-> 
->> index 920f910be4e9..573e88578d3d 100644
->> --- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
->> +++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
->> @@ -7,7 +7,6 @@ TI LMU driver supports lighting devices below.
->>    LM3532       Backlight
->>    LM3631       Backlight and regulator
->>    LM3632       Backlight and regulator
->> -  LM3633       Backlight, LED and fault monitor
->>    LM3695       Backlight
-> 
-> Are you seriously proposing to take one binding and split it into 6
-> copy&pasted ones?
-
-No that is not what I am proposing.  And never have.  I support keeping the MFD
-devices in the MFD directory and only pulling out the single function devices as we have
-debated over and over again.
-
-> 
-> That's not the way we do development. NAK.
-> 
-> We don't want to have copy & pasted code. We also don't want to have
-> copy & pasted bindings. Nor changelogs, for that matter.
-> 
-
-Change was copy and pasted don't know why I need to rephrase the same exact
-change only for a different part but I can modify it.
-
-I do see what I can update here.  As you said I will fix up the ti-lmu binding in
-such a way that the dedicated LED driver bindings point to the common binding for the TI-LMU
-framework.
-
-Dan
-
-> Thank you,
-> 								Pavel
-> 
-
-
--- 
-------------------
-Dan Murphy
+T24gTW9uLCBPY3QgMjIsIDIwMTggYXQgMDE6NDY6MzRQTSAtMDcwMCwgRG91Z2xhcyBBbmRlcnNv
+biB3cm90ZToKPiBTb21lIGVEUCBwYW5lbHMgdGhhdCBhcmUgZGVzaWduZWQgdG8gYmUgYWx3YXlz
+IGNvbm5lY3RlZCB0byBhIGJvYXJkCj4gdXNlIHRoZWlyIEhQRCBzaWduYWwgdG8gc2lnbmFsIHRo
+YXQgdGhleSd2ZSBmaW5pc2hlZCBwb3dlcmluZyBvbiBhbmQKPiB0aGV5J3JlIHJlYWR5IHRvIGJl
+IHRhbGtlZCB0by4KPiAKPiBIb3dldmVyLCBmb3IgdmFyaW91cyByZWFzb25zIGl0J3MgcG9zc2li
+bGUgdGhhdCB0aGUgSFBEIHNpZ25hbCBmcm9tCj4gdGhlIHBhbmVsIGlzbid0IGFjdHVhbGx5IGhv
+b2tlZCB1cC4gIEluIHRoZSBjYXNlIHdoZXJlIHRoZSBIUEQgaXNuJ3QKPiBob29rZWQgdXAgeW91
+IGNhbiBsb29rIGF0IHRoZSB0aW1pbmcgZGlhZ3JhbSBvbiB0aGUgcGFuZWwgZGF0YXNoZWV0Cj4g
+YW5kIGluc2VydCBhIGRlbGF5IGZvciB0aGUgbWF4aW11bSBhbW91bnQgb2YgdGltZSB0aGF0IHRo
+ZSBIUEQgbWlnaHQKPiB0YWtlIHRvIGNvbWUgdXAuCj4gCj4gTGV0J3MgYWRkIGEgcHJvcGVydHkg
+aW4gdGhlIGRldmljZSB0cmVlIGZvciB0aGlzIGNvbmNlcHQuCj4gCj4gU2lnbmVkLW9mZi1ieTog
+RG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPgoKUmV2aWV3ZWQtYnk6IFNl
+YW4gUGF1bCA8c2VhbkBwb29ybHkucnVuPgoKPiAtLS0KPiAKPiAgLi4uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0ICAgICAgICAgfCAzICsrKwo+ICAx
+IGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUt
+cGFuZWwudHh0Cj4gaW5kZXggNDVhNDU3YWQzOGYwLi5iMmI4NzJjNzEwZjIgMTAwNjQ0Cj4gLS0t
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2ltcGxl
+LXBhbmVsLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQKPiBAQCAtMTEsNiArMTEsOSBAQCBPcHRpb25hbCBw
+cm9wZXJ0aWVzOgo+ICAtIGRkYy1pMmMtYnVzOiBwaGFuZGxlIG9mIGFuIEkyQyBjb250cm9sbGVy
+IHVzZWQgZm9yIEREQyBFRElEIHByb2JpbmcKPiAgLSBlbmFibGUtZ3Bpb3M6IEdQSU8gcGluIHRv
+IGVuYWJsZSBvciBkaXNhYmxlIHRoZSBwYW5lbAo+ICAtIGJhY2tsaWdodDogcGhhbmRsZSBvZiB0
+aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKPiArLSBuby1ocGQ6IFRo
+aXMgcGFuZWwgaXMgc3VwcG9zZWQgdG8gY29tbXVuaWNhdGUgdGhhdCBpdCdzIHJlYWR5IHZpYSBI
+UEQKPiArICAoaG90IHBsdWcgZGV0ZWN0KSBzaWduYWwsIGJ1dCB0aGUgc2lnbmFsIGlzbid0IGhv
+b2tlZCB1cCBzbyB3ZSBzaG91bGQKPiArICBoYXJkY29kZSB0aGUgbWF4IGRlbGF5IGZyb20gdGhl
+IHBhbmVsIHNwZWMgd2hlbiBwb3dlcmluZyB1cCB0aGUgcGFuZWwuCj4gIAo+ICBFeGFtcGxlOgo+
+ICAKPiAtLSAKPiAyLjE5LjEuNTY4LmcxNTJhZDhlMzM2LWdvb2cKPiAKCi0tIApTZWFuIFBhdWws
+IFNvZnR3YXJlIEVuZ2luZWVyLCBHb29nbGUgLyBDaHJvbWl1bSBPUwpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
