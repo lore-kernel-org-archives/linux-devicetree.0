@@ -1,57 +1,36 @@
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: RE: [PATCH V1 3/3] ARM: dts: sabreauto: Add flexcan support
-Date: Thu, 25 Oct 2018 00:44:24 +0000
-Message-ID: <DB7PR04MB4618CEA5069E3A276E92D22AE6F70@DB7PR04MB4618.eurprd04.prod.outlook.com>
-References: <20181024111213.2724-1-qiangqing.zhang@nxp.com>
- <20181024111213.2724-4-qiangqing.zhang@nxp.com>
- <CAOMZO5Cm2U4dR982vYTmb5zfdjfXbQ95B+mDt2Fp8D-QtvT6FA@mail.gmail.com>
+From: Nick Hu <nickhu@andestech.com>
+Subject: Re: [PATCH v3 4/4] nds32: Add document for NDS32 PMU.
+Date: Thu, 25 Oct 2018 08:56:10 +0800
+Message-ID: <20181025005610.GA8101@andestech.com>
+References: <cover.1540350887.git.nickhu@andestech.com>
+ <bdfe23ce3ded5299d7b525fcb16c353c2be31924.1540350887.git.nickhu@andestech.com>
+ <20181024183247.GA12203@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5Cm2U4dR982vYTmb5zfdjfXbQ95B+mDt2Fp8D-QtvT6FA@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181024183247.GA12203@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "A.s. Dong" <aisheng.dong@nxp.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Greentime Ying-Han =?utf-8?B?SHUo6IOh6Iux5ryiKQ==?= <greentime@andestech.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "deanbo422@gmail.com" <deanbo422@gmail.com>, "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@redhat.com" <jolsa@redhat.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, gregkh
 List-Id: devicetree@vger.kernel.org
 
-DQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogRmFiaW8gRXN0ZXZhbSBbbWFpbHRv
-OmZlc3RldmFtQGdtYWlsLmNvbV0gDQpTZW50OiAyMDE45bm0MTDmnIgyNOaXpSAxOToyMA0KVG86
-IEpvYWtpbSBaaGFuZyA8cWlhbmdxaW5nLnpoYW5nQG54cC5jb20+DQpDYzogU2hhd24gR3VvIDxz
-aGF3bmd1b0BrZXJuZWwub3JnPjsgU2FzY2hhIEhhdWVyIDxzLmhhdWVyQHBlbmd1dHJvbml4LmRl
-PjsgU2FzY2hhIEhhdWVyIDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+OyBGYWJpbyBFc3RldmFtIDxm
-YWJpby5lc3RldmFtQG54cC5jb20+OyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPjsg
-Um9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IG1vZGVyYXRlZCBsaXN0OkFSTS9GUkVF
-U0NBTEUgSU1YIC8gTVhDIEFSTSBBUkNISVRFQ1RVUkUgPGxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZz47IG9wZW4gbGlzdDpPUEVOIEZJUk1XQVJFIEFORCBGTEFUVEVORUQgREVW
-SUNFIFRSRUUgQklORElOR1MgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgbGludXgta2Vy
-bmVsIDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgQS5zLiBEb25nIDxhaXNoZW5nLmRv
-bmdAbnhwLmNvbT4NClN1YmplY3Q6IFJlOiBbUEFUQ0ggVjEgMy8zXSBBUk06IGR0czogc2FicmVh
-dXRvOiBBZGQgZmxleGNhbiBzdXBwb3J0DQoNCkhpIEpvYWtpbSwNCg0KT24gV2VkLCBPY3QgMjQs
-IDIwMTggYXQgODoxNSBBTSBKb2FraW0gWmhhbmcgPHFpYW5ncWluZy56aGFuZ0BueHAuY29tPiB3
-cm90ZToNCg0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRsLXNhYnJlYXV0
-by1mbGV4Y2FuMS5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2ZGwtc2FicmVhdXRvLWZsZXhj
-YW4xLmR0cw0KPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAwMDAwMDAwMDAwMDAuLjk2
-M2UwYjU1OWQ2MA0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
-eDZkbC1zYWJyZWF1dG8tZmxleGNhbjEuZHRzDQo+IEBAIC0wLDAgKzEsMTkgQEANCj4gKy8vIFNQ
-RFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+ICsvKg0KPiArICogQ29weXJpZ2h0IChD
-KSAyMDEzIEZyZWVzY2FsZSBTZW1pY29uZHVjdG9yLCBJbmMuDQo+ICsgKg0KPiArICogVGhpcyBw
-cm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vciBt
-b2RpZnkNCj4gKyAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGlj
-IExpY2Vuc2UgdmVyc2lvbiAyIGFzDQo+ICsgKiBwdWJsaXNoZWQgYnkgdGhlIEZyZWUgU29mdHdh
-cmUgRm91bmRhdGlvbi4NCg0KWW91IGNhbiByZW1vdmUgdGhpcyBwYXJhZ3JhcGggYXMgeW91IGFy
-ZSB1c2luZyBTUERYIHRhZy4NCg0KPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cS1zYWJy
-ZWF1dG8tZmxleGNhbjEuZHRzDQo+IEBAIC0wLDAgKzEsMTkgQEANCj4gKy8vIFNQRFgtTGljZW5z
-ZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+ICsvKg0KPiArICogQ29weXJpZ2h0IChDKSAyMDEzIEZy
-ZWVzY2FsZSBTZW1pY29uZHVjdG9yLCBJbmMuDQo+ICsgKg0KPiArICogVGhpcyBwcm9ncmFtIGlz
-IGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vciBtb2RpZnkNCj4g
-KyAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2Ug
-dmVyc2lvbiAyIGFzDQo+ICsgKiBwdWJsaXNoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRh
-dGlvbi4NCj4gKyAqLw0KDQpEaXR0by4NCg0KPiArJmNhbjEgew0KPiArICAgICAgIHBpbmN0cmwt
-bmFtZXMgPSAiZGVmYXVsdCI7DQo+ICsgICAgICAgcGluY3RybC0wID0gPCZwaW5jdHJsX2ZsZXhj
-YW4xPjsNCj4gKyAgICAgICBwaW5jdHJsLWFzc2VydC1ncGlvcyA9IDwmbWF4NzMxMF9iIDMgR1BJ
-T19BQ1RJVkVfSElHSD47IC8qIFRYICovDQoNClRoaXMgcHJvcGVydHkgZG9lcyBub3QgZXhpc3Qg
-aW4gdXBzdHJlYW0uDQoNCg0KSGkgRmFiaW8sDQoNCkkgd2lsbCBtb2RpZnkgd2hhdCB5b3UgaGF2
-ZSBjb21tZW50ZWQuIFRoYW5rcyBhIGxvdC4NCg0KQmVzdCBSZWdhcmRzLA0KSm9ha2ltIFpoYW5n
-DQo=
+Hi Rob,
+
+On Thu, Oct 25, 2018 at 02:32:48AM +0800, Rob Herring wrote:
+> On Wed, Oct 24, 2018 at 11:32:40AM +0800, Nickhu wrote:
+> > The document for how to add NDS32 PMU
+> > in devicetree.
+> > 
+> > Signed-off-by: Nickhu <nickhu@andestech.com>
+> > ---
+> >  Documentation/devicetree/bindings/nds32/pmu.txt | 17 +++++++++++++++++
+> >  1 file changed, 17 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/nds32/pmu.txt
+> 
+> Can you move to bindings/perf/ with other similar h/w. With that,
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+Sure, thanks!
+Nick
