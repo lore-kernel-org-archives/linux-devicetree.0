@@ -1,83 +1,86 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH v8 08/12] mfd: intel-peci-client: Add PECI client MFD
- driver
-Date: Thu, 25 Oct 2018 09:16:01 -0700
-Message-ID: <509c4c0e-eabb-2276-3ffd-3fc675801142@linux.intel.com>
-References: <20180918215124.14003-1-jae.hyun.yoo@linux.intel.com>
- <20180918215124.14003-9-jae.hyun.yoo@linux.intel.com>
- <20181024105903.GB4939@dell>
- <db7570cb-8f63-b551-d119-c54270ce6139@linux.intel.com>
- <20181025053030.GD4939@dell>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 0/3] drm: tinydrm driver for adafruit PiTFT 3.5"
+ touchscreen
+Date: Thu, 25 Oct 2018 09:29:35 -0700
+Message-ID: <87h8harnv4.fsf@anholt.net>
+References: <20181024184313.2967-1-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181025053030.GD4939@dell>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Darrick J . Wong" <darrick.wong@oracle.com>, Eric Sandeen <sandeen@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, Tomohiro Kusumi <kusumi.tomohiro@gmail.com>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, "David S . Miller" <davem@davemloft.net>, Mauro
+Content-Type: multipart/mixed; boundary="===============1151064724=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20181024184313.2967-1-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/24/2018 10:30 PM, Lee Jones wrote:
-> On Wed, 24 Oct 2018, Jae Hyun Yoo wrote:
->> On 10/24/2018 3:59 AM, Lee Jones wrote:
->>> On Tue, 18 Sep 2018, Jae Hyun Yoo wrote:
->>>
->>>> This commit adds PECI client MFD driver.
->>>>
->>
->> <snip>
-> 
-> [...]
-> 
->>>> +bool peci_temp_need_update(struct temp_data *temp)
->>>> +{
->>>> +	if (temp->valid &&
->>>> +	    time_before(jiffies, temp->last_updated + UPDATE_INTERVAL))
->>>> +		return false;
->>>> +
->>>> +	return true;
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(peci_temp_need_update);
->>>> +
->>>> +void peci_temp_mark_updated(struct temp_data *temp)
->>>> +{
->>>> +	temp->valid = 1;
->>>> +	temp->last_updated = jiffies;
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(peci_temp_mark_updated);
->>>
->>> These are probably better suited as inline functions to be placed in
->>> a header file.  No need to export them, since they only use their own
->>> data.
-> 
-> Also move them into the HWMON header file.
-> 
-> They have no business in MFD.
-> 
+--===============1151064724==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-Agreed. I'll move them into the HWMON header.
+--=-=-=
+Content-Type: text/plain
 
-> [...]
-> 
->>>> +int peci_client_rd_pkg_cfg_cmd(struct peci_mfd *priv, u8 mbx_idx,
->>>
->>> This is gobbledegook.  What's rd?  Read?
->>>
->>
->> Yes, the 'rd' means 'read'. I intended to keep command names as listed
->> in the PECI specification such as RdPkgConfig, WrPkgConfig and so on.
->> Should I change it to 'peci_client_read_package_config_command' ?
-> 
-> I looks/reads a lot nicer, don't you think?
-> 
+Eric Anholt <eric@anholt.net> writes:
 
-Okay. I'll change it too.
+> I was going to start working on making the vc4 driver work with
+> tinydrm panels, but it turned out tinydrm didn't have the panel I had
+> previously bought.  So, last night I ported the fbtft staging
+> driver over to DRM.
+>
+> It seems to work (with DT at
+> https://github.com/anholt/linux/commits/drm-misc-next-hx8357d) --
+> fbdev works great including rotated, and so does modetest.  However,
+> when X11 comes up at 16bpp, I get:
+>
+> https://photos.app.goo.gl/8tuhzPFFoDGamEfk8
+>
+> If I have tinydrm set a preferred bpp of 24, X looks great.  Noralf,
+> any ideas?
 
-Thanks again for your review, Lee!
+Also, with these patches and the format modifier patch I just sent, mesa
+with vc4 is now working with this driver on this branch:
 
-Jae
+https://gitlab.freedesktop.org/anholt/mesa/commits/kmsro
 
-> [...]
-> 
+Now I wonder how we can improve performance of the SPI updates.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlvR73AACgkQtdYpNtH8
+nugoeg/9EehIBTfvLB/4Vnb0J//I6yhUw9Sh0Ltb6fVIl+zuFgycl5RH/jWlA3YZ
+aGL0xeAsN5HcW5f+QSlOfqZEvAzo+cwFj8ahs1hqgraLRPOxyf6EyZq6+6zN/d7P
+HNR3HIY7MS1/efyEmOZQDUsObgFUV6SOVGIKvcCq/cRkUk/Hh5bh9lGkW2LibUuc
+2RiQUMtON33CjgYkDbgOCV6pizxjpx9QvmcAsY7rYwwcCdbnzCfscaM5nIQ7fyAd
+b1RIko6zdxGC9IlCbzA/3JwQynW66quNbnZ/2fYTLFtoGBvngWg+KGwlQRv+j/Jz
+Ujdta8cTT2jRHsYYnNguFWaKkJZcDSkckPBv4fsWXzxO/zl2ddBfhxo9pZ92FGQI
+j295TrNkhUZepb76EYzLF3YzMA6HTmRyKZ43IwCjcDcR93L+yBB/DLgbF0+XdZ84
+2jgNoFx4/EX2Jkdq+/ihsI/AWYM0bP3fnhH1DEslEniBKNfWEEadn1B/wfxnmWux
+Z0fZOaRorIot5u/A/JsxH4K48p0M0/aC572KlQCSj3IIr5MRsWQGDMwhEXzcGK7P
+8d4GYsOxlM102p7CJPwZkdxtSoV6gvYAxQ02gX3p9xXtcUUMM7xI71Bl3QndpUw8
+TN9akHZ9x+h0m3ZbkG6H1e+ZlRJ+wGmwQw6YQ53v9bG3cGQueZg=
+=apgK
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+--===============1151064724==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1151064724==--
