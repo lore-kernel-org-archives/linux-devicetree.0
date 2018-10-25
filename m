@@ -1,69 +1,34 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH] dt-bindings: arm: Fix cpu capacity mismatch in example
-Date: Thu, 25 Oct 2018 14:04:12 +0200
-Message-ID: <80206cb7-b550-1cf6-abf4-e4b17de4cdb5@linaro.org>
-References: <138600f5d504b41202a29a1e130a7aa4e51f1925.1540451976.git.viresh.kumar@linaro.org>
+From: Nava kishore Manne <nava.manne@xilinx.com>
+Subject: [PATCH v2 0/3] Add reset driver support for ZynqMP
+Date: Thu, 25 Oct 2018 12:23:57 +0000 (UTC)
+Message-ID: <20181026122424.30831-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <138600f5d504b41202a29a1e130a7aa4e51f1925.1540451976.git.viresh.kumar@linaro.org>
-Content-Language: en-US
+Date: Fri, 26 Oct 2018 17:54:21 +0530
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, catalin.marinas@arm.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, Vincent Guittot <vincent.guittot@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, rajanv@xilinx.com, jollys@xilinx.com, nava.manne@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chinnikishore369@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 25/10/2018 10:27, Viresh Kumar wrote:
-> The example text says the capacity value should be 446, while the
-> example have it set to 578 instead. Fix the mismatch.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  Documentation/devicetree/bindings/arm/cpu-capacity.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> index 9b5685a1d15d..7a0d6b429c8d 100644
-> --- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> @@ -61,7 +61,7 @@ mhz values (normalized w.r.t. the highest value found while parsing the DT).
->  Example 1 (ARM 64-bit, 6-cpu system, two clusters):
->  capacities-dmips-mhz are scaled w.r.t. 1024 (cpu@0 and cpu@1)
->  supposing cluster0@max-freq=1100 and custer1@max-freq=850,
-> -final capacities are 1024 for cluster0 and 446 for cluster1
-> +final capacities are 1024 for cluster0 and 578 for cluster1
->  
->  cpus {
->  	#address-cells = <2>;
+This series of patches are created On top of the
+below repo.
+git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git (fetch)
+BRANCH: next/drivers 
 
-I think it is actually correct. The example is confusing on what the
-numbers are. IIUC, it is:
+Nava kishore Manne (3):
+  firmware: xilinx: Add reset API's
+  dt-bindings: reset: Add bindings for ZynqMP reset driver
+  reset: reset-zynqmp: Adding support for Xilinx zynqmp reset
+    controller.
 
-(after normalizing)
-
-dhrystone result on big CPU is 1024 at 1100MHz
-dhrystone result on little CPU is 446 at 850MHz
-
-We have to scale the result of the little for 1100MHz in order to compare.
-
-1100/850 = 1.294
-
-dhrystone result on little CPU is 446 * 1.294 = 577 at 1100MHz
-
-So we put the normalized values 1024 and 577. The arch_topology will
-scale 577 back to 446 as it will compute the max capacity based on the
-max freq which is 850MHz.
-
-The *final* capacities are 1024 for cluster0 and 446 for cluster1 (read
-the cpu max capacity, the ones showed in the sysfs).
-
-Did I miss something ?
-
+ .../bindings/reset/xlnx,zynqmp-reset.txt           | 146 +++++++++++++++++++++
+ drivers/firmware/xilinx/zynqmp.c                   |  40 ++++++
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-zynqmp.c                       | 114 ++++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h               | 136 +++++++++++++++++++
+ 5 files changed, 437 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
+ create mode 100644 drivers/reset/reset-zynqmp.c
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.7.4
