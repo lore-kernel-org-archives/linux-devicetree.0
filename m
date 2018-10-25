@@ -1,52 +1,84 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v6 1/6] dt-bindings: power: Introduce one property to
- present the battery internal resistance
-Date: Thu, 25 Oct 2018 10:01:55 +0800
-Message-ID: <CAMz4kuJCS1_E+CUdANepYe+WpYSOwovZ9Rnu85zvTgmV9BE5+g@mail.gmail.com>
-References: <e7c061535f2dcca54d6498405fdd5ed7098b19f9.1540189330.git.baolin.wang@linaro.org>
+From: Nick Hu <nickhu@andestech.com>
+Subject: [PATCH v4 0/4] nds32: Perf support
+Date: Thu, 25 Oct 2018 10:24:13 +0800
+Message-ID: <cover.1540430861.git.nickhu@andestech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e7c061535f2dcca54d6498405fdd5ed7098b19f9.1540189330.git.baolin.wang@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Baolin Wang <baolin.wang@linaro.org>, Mark Brown <broonie@kernel.org>, Craig Tatlor <ctatlor97@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, will.deacon@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, ebiederm@xmission.com, gregkh@linuxfoundation.org, kstewart@linuxfoundation.org, tglx@linutronix.de, pombredanne@nexb.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, zong@andestech.com, alankao@andestech.com, deanbo422@gmail.com
+Cc: green.hu@gmail.com, Nick Hu <nickhu@andestech.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+These four commits are perf supporting for nds32.
+There are three perfomance counters in nds32, and
+each of them can counts different events. You can
+use 'perf list' to show the available events that
+can be used.
 
-On 22 October 2018 at 15:43, Baolin Wang <baolin.wang@linaro.org> wrote:
-> The internal resistance of a battery is not a constant in its life cycle,
-> this varies over the age of the battery or temperature and so on. But we
-> just want use one constant battery internal resistance to estimate the
-> battery capacity. Thus this patch introduces one property to present
-> the battery factory internal resistance for battery information.
->
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Changes from v5:
->  - None.
->
-> Changes from v4:
->  - None.
->
-> Changes from v3:
->  - Split binding into one separate patch.
->  - Add LinusW reviewed tag.
->
-> Changes from v2:
->  - Rename the property.
->  - Improve the commit message.
->
-> Changes from v1:
->  - New patch in v2.
-> ---
+Changes in V2:
+        1. Change the definition 'PFM_CTL_xxx' to
+array form.
 
-I think this v6 patch set have addressed your comments on v5, so could
-you apply this patch set if there are no other comments? I hope this
-driver can be merged into 4.20 finally. Thanks.
+        2. Simplify the PMU driver.
+
+        3. Stop all counters when handling irq
+caused by performance counters overflow.
+
+        4. Rename the compatible string in
+devicetree.
+
+Changes in V3:
+        Fix the typo in Documentation/devicetree/
+bindings/nds32/pmu.txt.
+
+Changes in V4:
+	Move 'Documentation/devicetree/bindings/nds32/pmu.txt'
+to 'Documentation/devicetree/bindings/perf/nds32v3-pmu.txt'.
+
+Nickhu (4):
+  nds32: Fix bug in bitfield.h
+  nds32: Perf porting
+  nds32: Add perf call-graph support.
+  nds32: Add document for NDS32 PMU.
+
+ .../devicetree/bindings/perf/nds32v3-pmu.txt  |   17 +
+ arch/nds32/Kconfig                            |    1 +
+ arch/nds32/boot/dts/ae3xx.dts                 |    5 +
+ arch/nds32/include/asm/Kbuild                 |    1 +
+ arch/nds32/include/asm/bitfield.h             |    4 +-
+ arch/nds32/include/asm/perf_event.h           |   16 +
+ arch/nds32/include/asm/pmu.h                  |  386 +++++
+ arch/nds32/include/asm/stacktrace.h           |   39 +
+ arch/nds32/kernel/Makefile                    |    3 +-
+ arch/nds32/kernel/perf_event_cpu.c            | 1522 +++++++++++++++++
+ arch/nds32/mm/fault.c                         |   13 +-
+ tools/include/asm/barrier.h                   |    2 +
+ tools/perf/arch/nds32/Build                   |    1 +
+ tools/perf/arch/nds32/util/Build              |    1 +
+ tools/perf/arch/nds32/util/header.c           |   29 +
+ tools/perf/pmu-events/arch/nds32/mapfile.csv  |   15 +
+ .../pmu-events/arch/nds32/n13/atcpmu.json     |  290 ++++
+ 17 files changed, 2337 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/perf/nds32v3-pmu.txt
+ create mode 100644 arch/nds32/include/asm/perf_event.h
+ create mode 100644 arch/nds32/include/asm/pmu.h
+ create mode 100644 arch/nds32/include/asm/stacktrace.h
+ create mode 100644 arch/nds32/kernel/perf_event_cpu.c
+ create mode 100644 tools/perf/arch/nds32/Build
+ create mode 100644 tools/perf/arch/nds32/util/Build
+ create mode 100644 tools/perf/arch/nds32/util/header.c
+ create mode 100644 tools/perf/pmu-events/arch/nds32/mapfile.csv
+ create mode 100644 tools/perf/pmu-events/arch/nds32/n13/atcpmu.json
 
 -- 
-Baolin Wang
-Best Regards
+2.17.0
