@@ -1,57 +1,39 @@
 From: Lars Poeschel <poeschel@lemonage.de>
-Subject: Re: [PATCH v2 1/4] nfc: pn533: add UART phy driver
-Date: Thu, 25 Oct 2018 15:28:55 +0200
-Message-ID: <20181025132854.GA24350@lem-wkst-02.lemonage>
-References: <20181018144251.30028-1-poeschel@lemonage.de>
- <6CB47B97-F58D-4162-98C1-8C8C88CE2914@holtmann.org>
- <20181019085728.GA26696@lem-wkst-02.lemonage>
- <20181020092733.GV3383@localhost>
+Subject: [PATCH v3 1/5] nfc: pn533: i2c: "pn532" as dt compatible string
+Date: Thu, 25 Oct 2018 15:29:32 +0200
+Message-ID: <20181025132937.24405-1-poeschel@lemonage.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181020092733.GV3383@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Marcel Holtmann <marcel@holtmann.org>, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, open list <linux-kernel@vger.kernel.org>, "open list:NFC SUBSYSTEM" <linux-wireless@vger.kernel.org>
+To: devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Arvind Yadav <arvind.yadav.cs@gmail.com>, Lars Poeschel <poeschel@lemonage.de>, "open list:NFC SUBSYSTEM" <linux-wireless@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 20, 2018 at 11:27:33AM +0200, Johan Hovold wrote:
-> On Fri, Oct 19, 2018 at 10:57:28AM +0200, Lars Poeschel wrote:
-> > On Thu, Oct 18, 2018 at 05:00:28PM +0200, Marcel Holtmann wrote:
-> 
-> > > > --- a/drivers/nfc/pn533/Kconfig
-> > > > +++ b/drivers/nfc/pn533/Kconfig
-> > > > @@ -25,3 +25,13 @@ config NFC_PN533_I2C
-> > > > 
-> > > > 	  If you choose to build a module, it'll be called pn533_i2c.
-> > > > 	  Say N if unsure.
-> > > > +
-> > > > +config NFC_PN532_UART
-> > > > +	tristate "NFC PN532 device support (UART)”
-> > > 
-> > > you are missing the "depends on SERIAL_DEV_BUS” here.
-> > 
-> > Yes, absolutely right. I missed that. I will post a follow-up.
-> > 
-> > BTW a question:
-> > Only enabling SERIAL_DEV_BUS did not suffice for me. I also had to
-> > enable SERIAL_DEV_CTRL_TTYPORT, otherwise the probe of the driver was
-> > not called. This seems a bit odd to me. This option seems unrelated, but
-> > without it, it did not work.
-> > 
-> > Should I better depend on SERIAL_DEV_CTRL_TTYPORT then ?
-> 
-> No, SERIAL_DEV_BUS is the correct (build-time) dependency.
-> 
-> In principle, your driver will work with any serdev-controller
-> implementation even if we currently only have one of those in the kernel
-> (and SERIAL_DEV_CTRL_TTYPORT therefore default to Y whenever
-> SERIAL_DEV_BUS is selected).
+It is favourable to have one unified compatible string for devices that
+have multiple interfaces. So this adds simply "pn532" as the devicetree
+binding compatible string and makes a note that the old ones are
+deprecated.
 
-Thanks, this makes sense for me now.
-I will post a follow-up patchset shortly.
+Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+---
+ drivers/nfc/pn533/i2c.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Regards,
-Lars
+diff --git a/drivers/nfc/pn533/i2c.c b/drivers/nfc/pn533/i2c.c
+index 4389eb4c8d0b..f4eae9dd5305 100644
+--- a/drivers/nfc/pn533/i2c.c
++++ b/drivers/nfc/pn533/i2c.c
+@@ -258,6 +258,11 @@ static int pn533_i2c_remove(struct i2c_client *client)
+ }
+ 
+ static const struct of_device_id of_pn533_i2c_match[] = {
++	{ .compatible = "nxp,pn532", },
++	/*
++	 * NOTE: The use of the compatibles with the trailing "...-i2c" is
++	 * deprecated and will be removed.
++	 */
+ 	{ .compatible = "nxp,pn533-i2c", },
+ 	{ .compatible = "nxp,pn532-i2c", },
+ 	{},
+-- 
+2.19.1
