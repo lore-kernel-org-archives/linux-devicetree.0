@@ -1,65 +1,37 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] spi: uniphier: fix incorrect property items
-Date: Thu, 25 Oct 2018 14:59:07 -0500
-Message-ID: <20181025195906.GA22391@bogus>
-References: <1540373669-18969-1-git-send-email-hayashibara.keiji@socionext.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v3 16/16] arm64: dts: sdm845: enable tsens thermal zones
+Date: Fri, 26 Oct 2018 01:33:40 +0530
+Message-ID: <CAP245DUFi1UWqnVfgxdeZHVHSx9Sn3z3AqVp_x5GGHHAvwAjyA@mail.gmail.com>
+References: <cover.1536744310.git.amit.kucheria@linaro.org>
+ <5e2d5fc463a5f5623c4fc1b18ccdf62adc954758.1536744310.git.amit.kucheria@linaro.org>
+ <20181025192501.GZ22824@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1540373669-18969-1-git-send-email-hayashibara.keiji@socionext.com>
+In-Reply-To: <20181025192501.GZ22824@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Cc: broonie@kernel.org, mark.rutland@arm.com, yamada.masahiro@socionext.com, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, stable@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, linux-kernel@vger.kernel.org
+To: mka@chromium.org
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Andy Gross <andy.gross@linaro.org>, Doug Anderson <dianders@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 24, 2018 at 06:34:29PM +0900, Keiji Hayashibara wrote:
-> This commit fixes incorrect property because it was different
-> from the actual.
-> The parameters of '#address-cells' and '#size-cells' were removed,
-> and 'interrupts', 'pinctrl-names' and 'pinctrl-0' were added.
-> 
-> Fixes: 4dcd5c2781f3 ("spi: add DT bindings for UniPhier SPI controller")
-> Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-> ---
->  Documentation/devicetree/bindings/spi/spi-uniphier.txt | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-uniphier.txt b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
-> index 504a4ec..b04e66a 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-uniphier.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
-> @@ -5,18 +5,20 @@ UniPhier SoCs have SCSSI which supports SPI single channel.
->  Required properties:
->   - compatible: should be "socionext,uniphier-scssi"
->   - reg: address and length of the spi master registers
-> - - #address-cells: must be <1>, see spi-bus.txt
-> - - #size-cells: must be <0>, see spi-bus.txt
+On Fri, Oct 26, 2018 at 12:55 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> Hi Amit,
+>
+> vaguely related question, since you are working on SDM845 thermal
+> stuff: Do you have plans to add CPU cooling devices? I raised the
+> point during the review of the CPUfreq HW, however there was no
+> clear answer: https://lore.kernel.org/patchwork/patch/966833/#1164748
+> The driver is still under development/review, but I wonder what the
+> path forward is.
+>
 
-How is removing these correct? They are needed if you have any child 
-devices.
+Hi Matthias,
 
-> - - clocks: A phandle to the clock for the device.
-> - - resets: A phandle to the reset control for the device.
-> + - interrupts: a single interrupt specifier
-> + - pinctrl-names: should be "default"
-> + - pinctrl-0: pin control state for the default mode
-> + - clocks: a phandle to the clock for the device
-> + - resets: a phandle to the reset control for the device
->  
->  Example:
->  
->  spi0: spi@54006000 {
->  	compatible = "socionext,uniphier-scssi";
->  	reg = <0x54006000 0x100>;
-> -	#address-cells = <1>;
-> -	#size-cells = <0>;
-> +	interrupts = <0 39 4>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_spi0>;
->  	clocks = <&peri_clk 11>;
->  	resets = <&peri_rst 11>;
->  };
-> -- 
-> 2.7.4
-> 
+I plan to but the OSM driver doesn't work well enough for me to send
+out that patch yet. I responded with my findings on the v9 posting
+where it seems to get stuck at the high OPP. It'd be nice if somebody
+else could confirm (or refute) this behaviour.
+
+Regards,
+Amit
