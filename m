@@ -1,37 +1,51 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH v5 00/18] of: overlay: validation checks, subsequent fixes
-Date: Thu, 25 Oct 2018 10:25:08 -0500
-Message-ID: <CANk1AXTm3G-xLz6nEeBh+JGLxF91Cn1-w=J+vKKM2qz1sqLXbA@mail.gmail.com>
-References: <1539902796-8382-1-git-send-email-frowand.list@gmail.com>
- <CANk1AXSLZLn6XjC=nv3+pK_NQc_VL5MxWfOW9mLCgv_eFYvPPw@mail.gmail.com> <CAL_JsqJ1=5ABi5N50HLTSu2xFGJJSf-6EpuvhkG-rxSbv3MZdw@mail.gmail.com>
+From: "Theodore Y. Ts'o" <tytso@mit.edu>
+Subject: Re: [PATCH 3/3] crypto: qce: ice: Add support for Inline Crypto
+ Engine
+Date: Thu, 25 Oct 2018 11:28:56 -0400
+Message-ID: <20181025152856.GD4970@thunk.org>
+References: <1539789476-6098-1-git-send-email-anilc@codeaurora.org>
+ <1539789476-6098-4-git-send-email-anilc@codeaurora.org>
+ <20181025145548.GA30244@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ1=5ABi5N50HLTSu2xFGJJSf-6EpuvhkG-rxSbv3MZdw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20181025145548.GA30244@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Moritz Fischer <mdf@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: AnilKumar Chimata <anilc@codeaurora.org>, andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, herbert@gondor.apana.org.au, davem@davemloft.net, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 24, 2018 at 2:57 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Mon, Oct 22, 2018 at 4:25 PM Alan Tull <atull@kernel.org> wrote:
-> >
-> > On Thu, Oct 18, 2018 at 5:48 PM <frowand.list@gmail.com> wrote:
-> > >
-> > > From: Frank Rowand <frank.rowand@sony.com>
-> > >
-> > > Add checks to (1) overlay apply process and (2) memory freeing
-> > > triggered by overlay release.  The checks are intended to detect
-> > > possible memory leaks and invalid overlays.
-> >
-> > I've tested v5, nothing new to report.
->
-> Does that mean everything broken or everything works great? In the
-> latter case, care to give a Tested-by.
->
-> Rob
+On Thu, Oct 25, 2018 at 09:55:48AM -0500, Rob Herring wrote:
+> > +Introduction:
+> > +=============
+> > +Storage encryption has been one of the most required feature from security
+> > +point of view. QTI based storage encryption solution uses general purpose
+> > +crypto engine. While this kind of solution provide a decent amount of
+> > +performance, it falls short as storage speed is improving significantly
+> > +continuously. To overcome performance degradation, newer chips are going to
+> > +have Inline Crypto Engine (ICE) embedded into storage device. ICE is supposed
+> > +to meet the line speed of storage devices.
+> 
+> Is ICE part of the storage device or part of the host as the binding 
+> suggests?
 
-Tested-by: Alan Tull <atull@kernel.org>
+My understanding is that for this particular instantiation, the Inline
+Crypto Engine is located on the SOC.
 
-Alan
+However, from the perspective of generic kernel support, the inline
+crypto support could be implemented on the SOC, or in the host bus
+adaptor, or as a "bump in the wire", or on the storage device.  And
+whatever abstract interface in the block layer should be able to
+support all of these cases.
+
+I do not believe it would be wise to assume that inline crypto will
+forever be a mobile-only thing.  I could easily see use cases in the
+data center; for example, if you believe that Nation State Actors
+might be trying to create "implants" that attack hard drive firmware,
+per some of the Snowden leaks, creating an open design ICE engine with
+auditable firmware and a trusted secure key store, and which sits
+between the host CPU and the storage device might be one way to
+mitigate against this threat.
+
+					- Ted
