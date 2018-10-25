@@ -1,64 +1,83 @@
-From: thesven73@gmail.com
-Subject: Re: [PATCH anybus v1 2/4] dt-bindings: anybus-bridge: document devicetree binding.
-Date: Thu, 25 Oct 2018 09:55:15 -0400
-Message-ID: <20181025135515.8397-1-TheSven73@googlemail.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 1/3] of/fdt: Absorb ARM64's
+ __early_init_dt_declare_initrd()
+Date: Thu, 25 Oct 2018 15:06:36 +0100
+Message-ID: <20181025140636.GA30658@n2100.armlinux.org.uk>
+References: <20181025001742.6510-1-f.fainelli@gmail.com>
+ <20181025001742.6510-2-f.fainelli@gmail.com>
+ <CAL_JsqK-bSu520fx-dWMyHsooOU9=24DEf6fZSudQ-QKDkXbGA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqK-bSu520fx-dWMyHsooOU9=24DEf6fZSudQ-QKDkXbGA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: svendev@arcx.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, treding@nvidia.com, david@lechnology.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, yuanzhichang@hisilicon.com, stuyoder@gmail.com, linus.walleij@linaro.org, maxime.ripard@bootlin.com, bogdan.purcareata@nxp.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, christoffer.dall@arm.com, Masahiro Yamada <yamada.masahiro@socionext.com>, bcm-kernel-feedback-list@broadcom.com, andreyknvl@google.com, Andrew Morton <akpm@linux-foundation.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus, thank you for the patch review !!
+On Thu, Oct 25, 2018 at 08:25:04AM -0500, Rob Herring wrote:
+> On Wed, Oct 24, 2018 at 7:17 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+> >
+> > ARM64 is the only architecture that requires a re-definition of
+> > __early_init_dt_declare_initrd(), absorb its custom implemention in
+> > drivers/of/fdt.c.
+> >
+> > Suggested-by: Rob Herring <robh@kernel.org.
+> 
+> You forgot a shift key. :)
+> 
+> > Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> > ---
+> >  drivers/of/fdt.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> > index 800ad252cf9c..7d316f008f22 100644
+> > --- a/drivers/of/fdt.c
+> > +++ b/drivers/of/fdt.c
+> > @@ -896,9 +896,14 @@ const void * __init of_flat_dt_match_machine(const void *default_match,
+> >  static void __early_init_dt_declare_initrd(unsigned long start,
+> >                                            unsigned long end)
+> >  {
+> > +#if IS_ENABLED(CONFIG_ARM64)
+> 
+> C code, not preprocessor please.
+> 
+> > +       initrd_start = start;
+> > +       initrd_end = end;
+> 
+> Thinking some more about this, perhaps it is better to just add the
+> *_phys variants now along side the VA variants and set them here. Then
+> the arm64 code can override the initrd_start, initrd_end, and
+> initrd_below_start_ok values.
 
->> +  - pwms : the pwm connected to the bridge's 'pwm input'.
->
-> That is really unintuitive and needs a detailed explanation. What
-> is a bridge doing with a PWM? Is it 100% certain this is a PWM,
-> it's not just a .... clock? A pwm is a pule WIDTH modulator and
-> I can't for my life understand why a bus bridge needs a signal
-> with variable pulse width, but surprise me! :D
+Please, let's not make the age old mistake of inventing new symbols
+for stuff that already exists:
 
-You are 100% correct, this is a clock !
-The hardware designers attached the bridge's clock input to an iMX pwm output,
-and instructed us to provide a clock with 50% duty cycle and a certain freq.
+$ grep phys_initrd_start arch/ -rl
+arch/arm/mm/init.c
+arch/nds32/mm/init.c
+arch/unicore32/mm/init.c
+$ grep initrd_start_phys arch/ -rl
+$
 
-The only way I know to activate a pwm is to connect it to a driver in the fdt,
-then inside the driver enable the pwm, like so:
+Please use the "phys_initrd_start" and "phys_initrd_end" naming,
+which already exist on some architectures rather than inventing a new
+set of symbols for the same thing and then forcing arches to change.
+We could then get rid of:
 
-+       /* PWM */
-+       pwm = devm_pwm_get(dev, NULL);
-+       if (IS_ERR(pwm)) {
-+               dev_err(dev, "pwm not found\n");
-+               return -EINVAL;
-+       }
-+       pwm_get_args(pwm, &pargs);
-+       period = pargs.period;
-+       err = pwm_config(pwm, period/2, period);
-+       if (err)
-+               return err;
-+       err = pwm_enable(pwm);
-+       if (err)
-+               return err;
+        /* FDT scan will populate initrd_start */
+        if (initrd_start && !phys_initrd_size) {
+                phys_initrd_start = __virt_to_phys(initrd_start);
+                phys_initrd_size = initrd_end - initrd_start;
+        }
 
-This is why the bridge driver has a dependency on a pwm.
-If the pwm could be enabled individually, I could drop this dependency.
-Can you think of a way?
+        initrd_start = initrd_end = 0;
 
->> +               fsl,weim-cs-timing = <0x024400b1 0x00001010 0x20081100
->> +                               0x00000000 0xa0000240 0x00000000>;
->
-> Is it just a copy/paste from
-> Documentation/devicetree/bindings/bus/imx-weim.txt
-> leftover?
+in ARM, which exists purely to cope with DT.
 
-No. We attach the bridge to the i.MX WEIM bus. Every fdt WEIM child node
-requires a fsl,weim-cs-timing property, which provides the bus timing for
-that particular chip select. It's the weim driver that requires this,
-I'm only following its instructions.
-
-Should I just leave this out in the example? In theory, the bridge can be
-connected to any parallel bus, so fsl,weim-cs-timing is Too Much Information
-for the example?
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
