@@ -1,38 +1,33 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v2 0/9] of: fix compatible-child-node lookups
-Date: Wed, 24 Oct 2018 09:32:25 +0200
-Message-ID: <20181024073225.GD20058@localhost>
-References: <20180827082153.22537-1-johan@kernel.org>
- <20180904130557.GT28861@localhost>
- <20181023091951.GC20058@localhost>
- <CAL_Jsq+eX0Zr46UT6_+OKhfxLhc315Un5MZkHHAWhK0tt4OvzA@mail.gmail.com>
+From: Nava kishore Manne <nava.manne@xilinx.com>
+Subject: [PATCH v2 0/3] Add Bitstream configuration support for ZynqMP
+Date: Thu, 25 Oct 2018 13:02:03 +0530
+Message-ID: <20181025073206.9264-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+eX0Zr46UT6_+OKhfxLhc315Un5MZkHHAWhK0tt4OvzA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Ulf Hansson <ulf.hansson@linaro.org>, Josh Wu <rainyfeeling@outlook.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Doug Berger <opendmb@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, David Miller <davem@davemloft.net>, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, joabreu@synopsys.com, Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@ker>
+To: atull@kernel.org, mdf@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, rajanv@xilinx.com, jollys@xilinx.com, nava.manne@xilinx.com, linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chinnikishore369@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 23, 2018 at 01:32:56PM -0500, Rob Herring wrote:
-> On Tue, Oct 23, 2018 at 4:21 AM Johan Hovold <johan@kernel.org> wrote:
-> >
-> > Hi Rob,
-> >
-> > On Tue, Sep 04, 2018 at 03:05:57PM +0200, Johan Hovold wrote:
+This series of patches are created On top of the
+below repo.
+//git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git
+BRANCH: next/drivers. 
 
-> > > I think Rob will be picking up any patches that remain by the end of the
-> > > release cycle for 4.20.
-> >
-> > So far only Ulf has picked up the mmc patch below directly, so if you
-> > could take the rest through your tree for -rc1 that would be great.
-> 
-> Thanks for the reminder, though before the merge window opened would
-> have been better. I've applied all but the mtd patch.
+Nava kishore Manne (3):
+  firmware: xilinx: Add fpga API's
+  dt-bindings: fpga: Add bindings for ZynqMP fpga driver
+  fpga manager: Adding FPGA Manager support for Xilinx zynqmp
 
-Yeah, sorry about that, this slipped my mind. Thanks for picking them
-up.
+ .../bindings/fpga/xlnx,zynqmp-pcap-fpga.txt   |  13 ++
+ drivers/firmware/xilinx/zynqmp.c              |  46 +++++
+ drivers/fpga/Kconfig                          |   9 +
+ drivers/fpga/Makefile                         |   1 +
+ drivers/fpga/zynqmp-fpga.c                    | 165 ++++++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h          |  12 ++
+ 6 files changed, 246 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
+ create mode 100644 drivers/fpga/zynqmp-fpga.c
 
-Johan
+-- 
+2.18.0
