@@ -1,63 +1,64 @@
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-Subject: Re: [PATCH v2 2/5] mfd: lochnagar: Add support for the Cirrus Logic
- Lochnagar
-Date: Thu, 25 Oct 2018 14:47:59 +0100
-Message-ID: <d0e76752-1b31-e9e3-d684-9d78ddc98172@opensource.cirrus.com>
-References: <20181008132542.19775-1-ckeepax@opensource.cirrus.com>
- <20181008132542.19775-2-ckeepax@opensource.cirrus.com>
- <20181025074459.GF4939@dell> <20181025082621.GD16508@imbe.wolfsonmicro.main>
- <b2f85f45-cbe9-5a27-e9e8-ad28f2bd9bd6@opensource.cirrus.com>
- <20181025114205.GC4870@dell> <20181025124905.GF16508@imbe.wolfsonmicro.main>
- <20181025132043.GG16508@imbe.wolfsonmicro.main>
+From: thesven73@gmail.com
+Subject: Re: [PATCH anybus v1 2/4] dt-bindings: anybus-bridge: document devicetree binding.
+Date: Thu, 25 Oct 2018 09:55:15 -0400
+Message-ID: <20181025135515.8397-1-TheSven73@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181025132043.GG16508@imbe.wolfsonmicro.main>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>, Lee Jones <lee.jones@linaro.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, broonie@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+To: svendev@arcx.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, treding@nvidia.com, david@lechnology.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, yuanzhichang@hisilicon.com, stuyoder@gmail.com, linus.walleij@linaro.org, maxime.ripard@bootlin.com, bogdan.purcareata@nxp.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/10/18 14:20, Charles Keepax wrote:
-> On Thu, Oct 25, 2018 at 01:49:05PM +0100, Charles Keepax wrote:
->> On Thu, Oct 25, 2018 at 12:42:05PM +0100, Lee Jones wrote:
->>> On Thu, 25 Oct 2018, Richard Fitzgerald wrote:
->>>> On 25/10/18 09:26, Charles Keepax wrote:
->>>>> On Thu, Oct 25, 2018 at 08:44:59AM +0100, Lee Jones wrote:
->>>>>> On Mon, 08 Oct 2018, Charles Keepax wrote:
->>>>>>> From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
->>>>> I really feel this isn't the driver you are objecting to as such
->>>>> but the way regmap operates and also we seem to always have the same
->>>>> discussions around regmap every time we push a driver.
->>>
->>> Absolutely.  I didn't like it before.  I like it even less now.
->>>
->>
->> I guess the question from my side becomes do you want to block
->> this driver pending on major refactoring to regmap? I will have a
->> think about what I can do but its going to affect a LOT of drivers.
->>
-> 
-> Actually one more thought, perhaps as a halfway for now i could
-> look into removing the readables
+Hi Linus, thank you for the patch review !!
 
-Be careful with that, there are some addresses that are illegal to
-access. What does regmap debugfs do if you don't have a readables
-list? Just reading a debugfs shouldn't be able to kill the hardware.
-You might need to add a precious list which is more error prone
-than listing the valid readables we are using.
+>> +  - pwms : the pwm connected to the bridge's 'pwm input'.
+>
+> That is really unintuitive and needs a detailed explanation. What
+> is a bridge doing with a PWM? Is it 100% certain this is a PWM,
+> it's not just a .... clock? A pwm is a pule WIDTH modulator and
+> I can't for my life understand why a bus bridge needs a signal
+> with variable pulse width, but surprise me! :D
 
-  and defaults. We lose some things
-> like error checking that we are reading real registers but as
-> this driver doesnt currently do cache syncs we might be able to
-> get away with this for now.
-> 
-> Unless anyone strenuously objects i will have a look at the
-> options there. As well as looking at wider refactoring but aiming
-> further out.
-> 
-> Thanks,
-> Charles
-> 
+You are 100% correct, this is a clock !
+The hardware designers attached the bridge's clock input to an iMX pwm output,
+and instructed us to provide a clock with 50% duty cycle and a certain freq.
+
+The only way I know to activate a pwm is to connect it to a driver in the fdt,
+then inside the driver enable the pwm, like so:
+
++       /* PWM */
++       pwm = devm_pwm_get(dev, NULL);
++       if (IS_ERR(pwm)) {
++               dev_err(dev, "pwm not found\n");
++               return -EINVAL;
++       }
++       pwm_get_args(pwm, &pargs);
++       period = pargs.period;
++       err = pwm_config(pwm, period/2, period);
++       if (err)
++               return err;
++       err = pwm_enable(pwm);
++       if (err)
++               return err;
+
+This is why the bridge driver has a dependency on a pwm.
+If the pwm could be enabled individually, I could drop this dependency.
+Can you think of a way?
+
+>> +               fsl,weim-cs-timing = <0x024400b1 0x00001010 0x20081100
+>> +                               0x00000000 0xa0000240 0x00000000>;
+>
+> Is it just a copy/paste from
+> Documentation/devicetree/bindings/bus/imx-weim.txt
+> leftover?
+
+No. We attach the bridge to the i.MX WEIM bus. Every fdt WEIM child node
+requires a fsl,weim-cs-timing property, which provides the bus timing for
+that particular chip select. It's the weim driver that requires this,
+I'm only following its instructions.
+
+Should I just leave this out in the example? In theory, the bridge can be
+connected to any parallel bus, so fsl,weim-cs-timing is Too Much Information
+for the example?
