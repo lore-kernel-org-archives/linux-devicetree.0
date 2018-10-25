@@ -1,52 +1,461 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH v2 2/5] mfd: lochnagar: Add support for the Cirrus Logic
- Lochnagar
-Date: Thu, 25 Oct 2018 11:56:26 +0100
-Message-ID: <20181025105626.GE16508@imbe.wolfsonmicro.main>
-References: <20181008132542.19775-1-ckeepax@opensource.cirrus.com>
- <20181008132542.19775-2-ckeepax@opensource.cirrus.com>
- <20181025074459.GF4939@dell>
- <20181025082621.GD16508@imbe.wolfsonmicro.main>
- <b2f85f45-cbe9-5a27-e9e8-ad28f2bd9bd6@opensource.cirrus.com>
- <20181025101248.GT2103@sirena.org.uk>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V3 6/8] arm64: dts: imx: add imx8qxp support
+Date: Thu, 25 Oct 2018 10:57:31 +0000
+Message-ID: <AM0PR04MB421187B2BA549B04B67553E780F70@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1539886483-15775-1-git-send-email-aisheng.dong@nxp.com>
+ <1539886483-15775-7-git-send-email-aisheng.dong@nxp.com>
+ <20181018202457.GA25174@bogus>
+ <DB7PR04MB42188ABE426A055E6097C03080F90@DB7PR04MB4218.eurprd04.prod.outlook.com>
+ <CAPDyKFpYXo21fsHynZWTV9OOoCWGUJe2SZBR-A-dc8T8g3cLrg@mail.gmail.com>
+ <AM0PR04MB4211E163C5AF713142C56A5A80F50@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <CAPDyKFo=gt5eB2B8muA1iVJSin2CJsQ19zeL9pm==Ln73pFSfQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181025101248.GT2103@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Richard Fitzgerald <rf@opensource.cirrus.com>, Lee Jones <lee.jones@linaro.org>, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPDyKFo=gt5eB2B8muA1iVJSin2CJsQ19zeL9pm==Ln73pFSfQ@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 25, 2018 at 11:12:48AM +0100, Mark Brown wrote:
-> On Thu, Oct 25, 2018 at 10:28:16AM +0100, Richard Fitzgerald wrote:
-> > On 25/10/18 09:26, Charles Keepax wrote:
-> > > On Thu, Oct 25, 2018 at 08:44:59AM +0100, Lee Jones wrote:
-> > > I really feel this isn't the driver you are objecting to as such
-> > > but the way regmap operates and also we seem to always have the same
-> > > discussions around regmap every time we push a driver. Is there
-> > > any way me, you and Mark could hash this out and find out a way to
-> > > handle regmaps that is acceptable to you? I don't suppose you are
-> > > in Edinburgh at the moment for ELCE?
+> -----Original Message-----
+> From: Ulf Hansson [mailto:ulf.hansson@linaro.org]
+> Sent: Wednesday, October 24, 2018 6:04 PM
+[...]
+> On 23 October 2018 at 18:09, A.s. Dong <aisheng.dong@nxp.com> wrote:
+> >> -----Original Message-----
+> >> From: Ulf Hansson [mailto:ulf.hansson@linaro.org]
+> >> Sent: Tuesday, October 23, 2018 10:55 PM
+> > [...]
+> >> On 19 October 2018 at 10:02, A.s. Dong <aisheng.dong@nxp.com> wrote:
+> >> >> -----Original Message-----
+> >> >> From: Rob Herring [mailto:robh@kernel.org]
+> >> >> Sent: Friday, October 19, 2018 4:25 AM
+> >> >> To: A.s. Dong <aisheng.dong@nxp.com>
+> >> > [...]
+> >> >> On Thu, Oct 18, 2018 at 06:19:39PM +0000, A.s. Dong wrote:
+> >> >> > i.MX 8QuadXPlus is a quad (4x) Cortex-A35 proccessor with
+> >> >> > powerful graphic and multimedia features. This patch adds the
+> >> >> > core SoC dtsi file support.
+> >> >> >
+> >> >> > Cc: Rob Herring <robh+dt@kernel.org>
+> >> >> > Cc: Mark Rutland <mark.rutland@arm.com>
+> >> >> > Cc: devicetree@vger.kernel.org
+> >> >> > Cc: Shawn Guo <shawnguo@kernel.org>
+> >> >> > Cc: Sascha Hauer <kernel@pengutronix.de>
+> >> >> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> >> >> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> >> >> > ---
+> >> >> > v2->v3:
+> >> >> >  * add more SoC specific compatible string to IP nodes
+> >> >> >  * move memory node into board dts
+> >> >> >  * change pd reg value into hex
+> >> >> >  * add more explanation about SoC in commit message
+> >> >> >  * add external clocks
+> >> >> >  * remove pmu compatible string which is not supported
+> >> >> > v1->v2:
+> >> >> >  * mu binding usage update
+> >> >> >  * no define for node address
+> >> >> >  * do not use '_' for node name
+> >> >> >  * drop 'fsl-' prefix for imx dtsi
+> >> >> >  * no defines for unit address
+> >> >> >  * generic node names
+> >> >> >  * range map for 32bit register
+> >> >> >  * separate board dts
+> >> >> > ---
+> >> >> >  Documentation/devicetree/bindings/arm/fsl.txt |   4 +
+> >> >> >  arch/arm64/boot/dts/freescale/imx8-ca35.dtsi  |  61 ++
+> >> >> >  arch/arm64/boot/dts/freescale/imx8qxp.dtsi    | 870
+> >> >> ++++++++++++++++++++++++++
+> >> >> >  3 files changed, 935 insertions(+)  create mode 100644
+> >> >> > arch/arm64/boot/dts/freescale/imx8-ca35.dtsi
+> >> >> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> >> >> >
+> >> >> > diff --git a/Documentation/devicetree/bindings/arm/fsl.txt
+> >> >> > b/Documentation/devicetree/bindings/arm/fsl.txt
+> >> >> > index 968f238..baeb1fc 100644
+> >> >> > --- a/Documentation/devicetree/bindings/arm/fsl.txt
+> >> >> > +++ b/Documentation/devicetree/bindings/arm/fsl.txt
+> >> >> > @@ -119,6 +119,10 @@ i.MX6q generic board  Required root node
+> >> >> > properties:
+> >> >> >      - compatible = "fsl,imx6q";
+> >> >> >
+> >> >> > +i.MX8QXP generic board
+> >> >> > +Required root node properties:
+> >> >> > +    - compatible = "fsl,imx8qxp";
+> >> >> > +
+> >> >> >  Freescale Vybrid Platform Device Tree Bindings
+> >> >> >  ----------------------------------------------
+> >> >> >
+> >> >> > diff --git a/arch/arm64/boot/dts/freescale/imx8-ca35.dtsi
+> >> >> > b/arch/arm64/boot/dts/freescale/imx8-ca35.dtsi
+> >> >> > new file mode 100644
+> >> >> > index 0000000..c79e97a
+> >> >> > --- /dev/null
+> >> >> > +++ b/arch/arm64/boot/dts/freescale/imx8-ca35.dtsi
+> >> >> > @@ -0,0 +1,61 @@
+> >> >> > +// SPDX-License-Identifier: GPL-2.0+
+> >> >> > +/*
+> >> >> > + * Copyright (C) 2016 Freescale Semiconductor, Inc.
+> >> >> > + * Copyright 2017~2018 NXP
+> >> >> > + */
+> >> >> > +
+> >> >> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> >> >> > +
+> >> >> > +/{
+> >> >> > +   cpus {
+> >> >> > +           #address-cells = <2>;
+> >> >> > +           #size-cells = <0>;
+> >> >> > +
+> >> >> > +           /* We have 1 clusters with 4 Cortex-A35 cores */
+> >> >> > +           A35_0: cpu@0 {
+> >> >> > +                   device_type = "cpu";
+> >> >> > +                   compatible = "arm,cortex-a35";
+> >> >> > +                   reg = <0x0 0x0>;
+> >> >> > +                   enable-method = "psci";
+> >> >> > +                   next-level-cache = <&A35_L2>;
+> >> >> > +           };
+> >> >> > +
+> >> >> > +           A35_1: cpu@1 {
+> >> >> > +                   device_type = "cpu";
+> >> >> > +                   compatible = "arm,cortex-a35";
+> >> >> > +                   reg = <0x0 0x1>;
+> >> >> > +                   enable-method = "psci";
+> >> >> > +                   next-level-cache = <&A35_L2>;
+> >> >> > +           };
+> >> >> > +
+> >> >> > +           A35_2: cpu@2 {
+> >> >> > +                   device_type = "cpu";
+> >> >> > +                   compatible = "arm,cortex-a35";
+> >> >> > +                   reg = <0x0 0x2>;
+> >> >> > +                   enable-method = "psci";
+> >> >> > +                   next-level-cache = <&A35_L2>;
+> >> >> > +           };
+> >> >> > +
+> >> >> > +           A35_3: cpu@3 {
+> >> >> > +                   device_type = "cpu";
+> >> >> > +                   compatible = "arm,cortex-a35";
+> >> >> > +                   reg = <0x0 0x3>;
+> >> >> > +                   enable-method = "psci";
+> >> >> > +                   next-level-cache = <&A35_L2>;
+> >> >> > +           };
+> >> >> > +
+> >> >> > +           A35_L2: l2-cache0 {
+> >> >> > +                   compatible = "cache";
+> >> >> > +           };
+> >> >> > +   };
+> >> >> > +
+> >> >> > +   pmu {
+> >> >> > +           compatible = "arm,armv8-pmuv3";
+> >> >> > +           interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> >> >> > +   };
+> >> >> > +
+> >> >> > +   psci {
+> >> >> > +           compatible = "arm,psci-1.0";
+> >> >> > +           method = "smc";
+> >> >> > +   };
+> >> >> > +};
+> >> >> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> >> >> > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> >> >> > new file mode 100644
+> >> >> > index 0000000..acb4770
+> >> >> > --- /dev/null
+> >> >> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> >> >> > @@ -0,0 +1,870 @@
+> >> >> > +// SPDX-License-Identifier: GPL-2.0+
+> >> >> > +/*
+> >> >> > + * Copyright (C) 2016 Freescale Semiconductor, Inc.
+> >> >> > + * Copyright 2017-2018 NXP
+> >> >> > + * Dong Aisheng <aisheng.dong@nxp.com>  */
+> >> >> > +
+> >> >> > +#include <dt-bindings/clock/imx8qxp-clock.h>
+> >> >> > +#include <dt-bindings/gpio/gpio.h> #include
+> >> >> > +<dt-bindings/pinctrl/pads-imx8qxp.h>
+> >> >> > +
+> >> >> > +#include "imx8-ca35.dtsi"
+> >> >> > +
+> >> >> > +/ {
+> >> >> > +   interrupt-parent = <&gic>;
+> >> >> > +   #address-cells = <2>;
+> >> >> > +   #size-cells = <2>;
+> >> >> > +
+> >> >> > +   aliases {
+> >> >> > +           serial0 = &dma_lpuart0;
+> >> >> > +           mmc0 = &usdhc1;
+> >> >> > +           mmc1 = &usdhc2;
+> >> >> > +           mmc2 = &usdhc3;
+> >> >> > +   };
+> >> >> > +
+> >> >> > +   gic: interrupt-controller@51a00000 {
+> >> >> > +           compatible = "arm,gic-v3";
+> >> >> > +           reg = <0x0 0x51a00000 0 0x10000>, /* GIC Dist */
+> >> >> > +                 <0x0 0x51b00000 0 0xc0000>; /* GICR (RD_base
+> +
+> >> >> > + SGI_base)
+> >> >> */
+> >> >> > +           #interrupt-cells = <3>;
+> >> >> > +           interrupt-controller;
+> >> >> > +           interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> >> >> > +   };
+> >> >> > +
+> >> >> > +   timer {
+> >> >> > +           compatible = "arm,armv8-timer";
+> >> >> > +           interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>, /*
+> >> >> > + Physical Secure
+> >> >> */
+> >> >> > +                        <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>, /*
+> >> >> > + Physical
+> >> >> Non-Secure */
+> >> >> > +                        <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>, /*
+> >> Virtual */
+> >> >> > +                        <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>; /*
+> >> Hypervisor */
+> >> >> > +   };
+> >> >> > +
+> >> >> > +   xtal32k: clock-xtal32k {
+> >> >> > +           compatible = "fixed-clock";
+> >> >> > +           #clock-cells = <0>;
+> >> >> > +           clock-frequency = <32768>;
+> >> >> > +           clock-output-names = "xtal_32KHz";
+> >> >> > +   };
+> >> >> > +
+> >> >> > +   xtal24m: clock-xtal24m {
+> >> >> > +           compatible = "fixed-clock";
+> >> >> > +           #clock-cells = <0>;
+> >> >> > +           clock-frequency = <24000000>;
+> >> >> > +           clock-output-names = "xtal_24MHz";
+> >> >> > +   };
+> >> >> > +
+> >> >> > +   scu {
+> >> >> > +           compatible = "fsl,imx-scu";
+> >> >> > +           mbox-names = "tx0", "tx1", "tx2", "tx3",
+> >> >> > +                        "rx0", "rx1", "rx2", "rx3";
+> >> >> > +           mboxes = <&lsio_mu1 0 0
+> >> >> > +                     &lsio_mu1 0 1
+> >> >> > +                     &lsio_mu1 0 2
+> >> >> > +                     &lsio_mu1 0 3
+> >> >> > +                     &lsio_mu1 1 0
+> >> >> > +                     &lsio_mu1 1 1
+> >> >> > +                     &lsio_mu1 1 2
+> >> >> > +                     &lsio_mu1 1 3>;
+> >> >> > +
+> >> >> > +           clk: clock-controller {
+> >> >> > +                   compatible = "fsl,imx8qxp-clk";
+> >> >> > +                   #clock-cells = <1>;
+> >> >> > +                   clocks = <&xtal32k &xtal24m>;
+> >> >> > +                   clock-names = "xtal_32KHz", "xtal_24Mhz";
+> >> >> > +           };
+> >> >> > +
+> >> >> > +           iomuxc: pinctrl {
+> >> >> > +                   compatible = "fsl,imx8qxp-iomuxc";
+> >> >> > +           };
+> >> >> > +
+> >> >> > +           imx8qx-pm {
+> >> >> > +                   compatible = "fsl,imx8qxp-scu-pd", "fsl,scu-pd";
+> >> >> > +                   #address-cells = <1>;
+> >> >> > +                   #size-cells = <0>;
+> >> >> > +
+> >> >> > +                   pd_lsio: lsio-power-domain {
+> >> >> > +                           #power-domain-cells = <0>;
+> >> >> > +                           #address-cells = <1>;
+> >> >> > +                           #size-cells = <0>;
+> >> >> > +
+> >> >> > +                           pd_lsio_pwm0: lsio-pwm0@bf {
+> >> >> > +                                   reg = <0xbf>;
+> >> >> > +                                   #power-domain-cells = <0>;
+> >> >> > +                                   power-domains =
+> <&pd_lsio>;
+> >> >>
+> >> >> Power domains are supposed to be a block that can be power gated.
+> >> >> No chip design is going to put tiny PWM, GPIO, etc. blocks each in
+> >> >> their own
+> >> domain.
+> >> >>
+> >> >> If you really want to maintain these sub domains, just use 2
+> >> >> #power-domain-cells. The first cell can be the power domain and
+> >> >> the 2nd cell the device ID.
+> >> >>
+> >> >
+> >> > Unfortunately the SCU firmware is designed like that each device
+> >> > has a power domain ID which is specified in reg property in device tree.
+> >> > Each driver should enable that power domain before being able to
+> >> > access the HW, otherwise, xRDC (security and access control HW) may
+> >> > report
+> >> bus errors.
+> >>
+> >> This is what Rob is suggesting:
+> >>
+> >
+> > Thanks for the example
+> >
+> >> pd_lsio: lsio-power-domain {
+> >>        compatible = "fsl,imx8qxp-scu-pd", "fsl,scu-pd";
+> >>        #power-domain-cells = <2>;
+> >> }
+> >>
+> >> pd_lsio_pwm0: lsio-pwm0@bf {
+> >>        power-domains = <&pd_lsio 0 0xbf>; }
+> >>
+> >
+> > What does 0 (cell 1) represent?
 > 
-> > I suppose if Mark was willing to promote the regmap drivers to be a
-> > top-level subsystem that could contain the regmap definitions of devices
-> > then we could dump our regmap definitions in there, where Mark can review
-> > it as he's familiar with regmap and the chips and the reasons why things
-> > are done the way they are, rather than Lee having to stress about it every
-> > time we need to create an MFD device that uses regmap. Though that would
-> > make the initialization of an MFD rather awkward with the code required
-> > to init the MFD it not actually being in the MFD tree.
+> The index to the power domain, which is useful in case your power domain
+> provider manages multiple PM domains.
 > 
-> I'm not totally against dumping the data tables in some other directory
-> (we could do ../regmap/tables or whatever) but I fear it's going to
-> cause otherwise needless cross tree issues.
+> >
+> >> Perhaps it's even sufficient for you to use one cell, if your
+> >> power-domain provider models only one PM domain. In such case, the
+> below works as well:
+> >>
+> >> pd_lsio: lsio-power-domain {
+> >>        compatible = "fsl,imx8qxp-scu-pd", "fsl,scu-pd";
+> >>        #power-domain-cells = <1>;
+> >> }
+> >>
+> >> pd_lsio_pwm0: lsio-pwm0@bf {
+> >>        power-domains = <&pd_lsio 0xbf>; }
+> >>
+> >> In other words, you don't need "reg".
+> >
+> > Will compiler complain a warning if missing "reg" property as we
+> > already have the unit-address?
+> 
+> Not sure.
+> 
+> The above was more meant as an example, in principle any device node that is
+> part of the pd_lsio PM domain, should be able to specify the "id" through one
+> of the power-domain cells, rather than making itself being a power domain
+> provider and thus using "reg". That is my main point.
+> 
 
-I guess there is a question here, if i split the regmap stuff
-into a separate file within mfd would that be enough? Is it just
-the mixing of these tables and the code you object to Lee or is
-it the fact the tables exist at all?
+Yes, understand now.
 
-Thanks,
-Charles
+> >
+> >>
+> >> To make this work, you also need to implement your own genpd xlate
+> >> provider function. Do notice that, of_genpd_add_provider_onecell()
+> >> already supports provider specific xlate functions. Just set it,
+> >> before calling of_genpd_add_provider_onecell().
+> >>
+> >> If you would like to look at an example, see
+> >> drivers/soc/tegra/powergate-bpmp.c.
+> >>
+> >
+> > Will study. Thanks for the sharing.
+> >
+> >> > And there could be different multi-level domains, how to do 2cells
+> >> presentation for this case?
+> >> > E.g.
+> >> > Domain_A: {
+> >> >         Domain_B {
+> >> >                 Domain_C {
+> >> >                         ...
+> >> >                 }
+> >> >         }
+> >> > }
+> >>
+> >> To specify a master domain, we use the power-domains specifier from
+> >> within a power domain provider node. Of course it needs to use the
+> >> correct number of cells as specified by the master provider, which
+> >> may be something different that what it self uses.
+> >>
+> >> Something like this:
+> >>
+> >> pd_lsio_master: lsio-power-domain-master {
+> >>        compatible = "fsl,imx8qxp-scu-pd-master",
+> >> "fsl,scu-pd0-master";
+> >
+> > Introduced two new compatible string?
+> 
+> Because I considered this a completely separate power-domain provider.
+> Again, it was just an example.
+> 
+
+Got it
+
+> >
+> >>        #power-domain-cells = <0>;
+> >> }
+> >>
+> >> pd_lsio: lsio-power-domain {
+> >>        compatible = "fsl,imx8qxp-scu-pd", "fsl,scu-pd";
+> >>        #power-domain-cells = <1>;
+> >>        power-domains = <&pd_lsio_master>; }
+> >>
+> >> pd_lsio_pwm0: lsio-pwm0@bf {
+> >>        power-domains = <&pd_lsio 0xbf>; }
+> >>
+> >
+> > Overally I'm still not quite understand this new approach, may need
+> > some more time to digest.
+> >
+> > A simple question is: Do we lose the power domain tree hierarchy?
+> 
+> Nope, at least not to my understanding.
+> 
+> > The original tree view seems like more straightforward. Not sure why
+> > need to do like that.
+> >
+> > And overally this new approach seems much more complicated than the
+> > old one due to we have to handle the special multilevel power domains.
+> >
+> > I'm a bit confusing whether it's worthy to switch to this new
+> > complicated one and what's real advantage we can get comparing to the old
+> simple way?
+> 
+> The old simple way? :-) I think you are misinterpreting it, to me it's the other
+> way around.
+> 
+> The representation that Rob suggested, does not only model the HW more
+> accurately, but should also becomes more simple.
+> 
+> In regards to model the HW correctly. I don't believe your HW topology have
+> each PWM block, GPIO block, etc, in their own gate-able power domain, right?
+> Or is it so?
+> 
+
+First of all, thanks for your and Rob's good suggestions.
+I spent a lot more time to do research to try to make it better according to your
+suggestions. Some of your ideas absolutely helped me a lot and gave me some
+inspirations.
+
+Some new findings are that some of our power domains are organized in a tree
+was because the kernel does not support multi-power domains for one device.
+but from HW point of view, they're identical. 
+You can more serious situation from local tree at here:
+https://source.codeaurora.org/external/imx/linux-imx/tree/arch/arm64/boot/dts/freescale/fsl-imx8dx.dtsi?h=imx_4.9.88_imx8qxp_beta2#n195
+
+I just found your following patch perfectly addressed our issue as we do have many
+Devices requires to handle multi power domains.
+3c095f32a92b PM / Domains: Add support for multi PM domains per device to genpd
+e.g. For LVDS devices, it need both LVDS and DC(Display controller) PD to work.
+
+Now i was trying to understand all of our current user case with the team, If all of them
+do not need a tree to address dependency issue, I may remove them all from device tree.
+Then it would be much more clearer than before and be something like what Tegra does.
+include/dt-bindings/power/tegra186-powergate.h
+drivers/soc/tegra/powergate-bpmp.c
+
+For example, 1 #power-domain-cells will be enough. The first cell can be a global SCU
+power domain and the 2nd cell the device ID.
+Hopefully this can be what you and Rob want.
+
+If any good suggestions please let me know.
+
+Thanks
+
+Regards
+Dong Aisheng
+
+> Kind regards
+> Uffe
