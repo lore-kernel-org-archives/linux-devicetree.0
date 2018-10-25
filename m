@@ -1,41 +1,42 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] mtd: partitions: Add RedBoot FIS DT bindings
-Date: Thu, 25 Oct 2018 14:08:31 -0500
-Message-ID: <20181025190830.GA20499@bogus>
-References: <20181019070622.26661-1-linus.walleij@linaro.org>
- <20181019070622.26661-2-linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/3] dt-bindings: nvmem: Add bindings for ZynqMP nvmem
+ driver
+Date: Thu, 25 Oct 2018 14:15:08 -0500
+Message-ID: <20181025191508.GA26613@bogus>
+References: <20181020083603.27602-1-nava.manne@xilinx.com>
+ <20181020083603.27602-3-nava.manne@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181019070622.26661-2-linus.walleij@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Linus Walleij <linus.walleij@linaro.org>, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+In-Reply-To: <20181020083603.27602-3-nava.manne@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nava kishore Manne <nava.manne@xilinx.com>
+Cc: srinivas.kandagatla@linaro.org, mark.rutland@arm.com, michal.simek@xilinx.com, jollys@xilinx.com, rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 19 Oct 2018 09:06:21 +0200, Linus Walleij wrote:
-> This adds device tree bindings for the RedBoot FIS partition
-> format.
+On Sat, Oct 20, 2018 at 02:06:02PM +0530, Nava kishore Manne wrote:
+> Add documentation to describe Xilinx ZynqMP nvmem driver
+> bindings.
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
 > ---
->  .../bindings/mtd/partitions/redboot-fis.txt   | 27 +++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/partitions/redboot-fis.txt
+> Changes for v1:
+> 		Created a Seperate(New) DT binding file as
+> 		suggested by Rob.
 > 
+> Changes for RFC-V3:
+>                 -None.
+> 
+> Changes for RFC-V2:
+>                 -Moved nvmem_firmware node as a child to
+>                  firwmare node.
+> 
+>  .../bindings/nvmem/xlnx,zynqmp-nvmem.txt           | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Before I okay any ZynqMP firmware related bindings, I want to see a 
+complete binding, not things added one by one.
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Rob
