@@ -1,98 +1,42 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/3] crypto: qce: ice: Add support for Inline Crypto
- Engine
-Date: Thu, 25 Oct 2018 09:58:41 -0500
-Message-ID: <20181025145841.GB30244@bogus>
-References: <1539789476-6098-4-git-send-email-anilc@codeaurora.org>
- <201810181902.44DQrfDL%fengguang.wu@intel.com>
- <d6f1930a618f6539a4c3e53d239fdd90@codeaurora.org>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v2] arm64: defconfig: Enable MFD_AXP20X_I2C
+Date: Thu, 25 Oct 2018 20:36:59 +0530
+Message-ID: <20181025150659.19657-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d6f1930a618f6539a4c3e53d239fdd90@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: anilc@codeaurora.org
-Cc: kbuild test robot <lkp@intel.com>, kbuild-all@01.org, andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, herbert@gondor.apana.org.au, davem@davemloft.net, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Cc: Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 24, 2018 at 04:44:37PM +0530, anilc@codeaurora.org wrote:
-> Hi,
-> 
-> Thanks for the comments, response inline.
+The Allwinner H6 SoC is paired with the X-Powers AXP805 PMIC
+connected via I2C.
 
-FYI, this was from a bot.
+Enable the driver for this PMIC.
 
-> 
-> Thanks,
-> AnilKumar
-> 
-> 
-> On 2018-10-18 17:13, kbuild test robot wrote:
-> > Hi AnilKumar,
-> > 
-> > Thank you for the patch! Yet something to improve:
-> > 
-> > [auto build test ERROR on cryptodev/master]
-> > [also build test ERROR on v4.19-rc8 next-20181018]
-> > [if your patch is applied to the wrong git tree, please drop us a note
-> > to help improve the system]
-> > 
-> > url:
-> > https://github.com/0day-ci/linux/commits/AnilKumar-Chimata/firmware-qcom-scm-Update-qcom_scm_call-signature/20181018-182318
-> > base:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
-> > master
-> > config: sh-allmodconfig (attached as .config)
-> > compiler: sh4-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
-> > reproduce:
-> >         wget
-> > https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross
-> > -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         # save the attached .config to linux build tree
-> >         GCC_VERSION=7.2.0 make.cross ARCH=sh
-> > 
-> > All errors (new ones prefixed by >>):
-> > 
-> > > > drivers/crypto/qce/ice.c:1372:5: error: redefinition of
-> > > > 'qcom_ice_setup_ice_hw'
-> >     int qcom_ice_setup_ice_hw(const char *storage_type, int enable)
-> >         ^~~~~~~~~~~~~~~~~~~~~
-> >    In file included from drivers/crypto/qce/ice.c:25:0:
-> >    include/crypto/ice.h:60:19: note: previous definition of
-> > 'qcom_ice_setup_ice_hw' was here
-> >     static inline int qcom_ice_setup_ice_hw(const char *storage_type,
-> > int enable)
-> >                       ^~~~~~~~~~~~~~~~~~~~~
-> > 
-> > vim +/qcom_ice_setup_ice_hw +1372 drivers/crypto/qce/ice.c
-> > 
-> >   1371
-> > > 1372	int qcom_ice_setup_ice_hw(const char *storage_type, int enable)
-> >   1373	{
-> >   1374		struct ice_device *ice_dev = NULL;
-> >   1375		int ret = -1;
-> >   1376
-> >   1377		ice_dev = get_ice_device_from_storage_type(storage_type);
-> >   1378		if (ice_dev == ERR_PTR(-EPROBE_DEFER))
-> >   1379			return -EPROBE_DEFER;
-> >   1380
-> >   1381		if (!ice_dev)
-> >   1382			return ret;
-> >   1383
-> >   1384		if (enable)
-> >   1385			return enable_ice_setup(ice_dev);
-> >   1386
-> >   1387		return disable_ice_setup(ice_dev);
-> >   1388	}
-> >   1389
-> 
-> We will check and get back on the compilation. What is the idea behind for
-> this
-> effort, is this for testing the ICE driver?
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Tested-by: Jagan Teki <jagan@amarulasolutions.com> # OPI-1+
+---
+Changes for v2:
+- collect Maxime ack
+- add tested-by credit
 
-The purpose is to make sure changes don't break builds that you likely 
-haven't tested. Either different architectures or configurations.
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Rob
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index b1071d42b4ca..4aebbcf70f9f 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -389,6 +389,7 @@ CONFIG_MESON_WATCHDOG=m
+ CONFIG_RENESAS_WDT=y
+ CONFIG_UNIPHIER_WATCHDOG=y
+ CONFIG_BCM2835_WDT=y
++CONFIG_MFD_AXP20X_I2C=y
+ CONFIG_MFD_BD9571MWV=y
+ CONFIG_MFD_AXP20X_RSB=y
+ CONFIG_MFD_CROS_EC=y
+-- 
+2.18.0.321.gffc6fa0e3
