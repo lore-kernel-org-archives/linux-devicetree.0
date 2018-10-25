@@ -1,111 +1,41 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v4 2/7] dt-bindings: ti-lmu: Modify dt bindings for the
- LM3697
-Date: Thu, 25 Oct 2018 13:32:00 -0500
-Message-ID: <dfee9293-490f-2d47-c75b-971735683d41@ti.com>
-References: <20181023170623.31820-1-dmurphy@ti.com>
- <20181023170623.31820-2-dmurphy@ti.com> <20181024090421.GB24997@amd>
- <e8800c2e-8ada-7a0d-c1a6-14ddcbe1576d@ti.com> <20181024145434.GC9327@bogus>
- <beb1a6e1-8120-be94-b1a4-60ea6721765d@ti.com>
- <ade3121a-58ab-c0c3-6605-cf7d6a638da0@gmail.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v6 8/8] memory: tegra: Introduce Tegra20 EMC driver
+Date: Thu, 25 Oct 2018 21:36:33 +0300
+Message-ID: <221ac544-b57a-e85f-79ac-0b914615c9a9@gmail.com>
+References: <20181021183052.32023-1-digetx@gmail.com>
+ <20181021183052.32023-9-digetx@gmail.com> <20181025143853.GL21521@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ade3121a-58ab-c0c3-6605-cf7d6a638da0@gmail.com>
+In-Reply-To: <20181025143853.GL21521@ulmo>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh@kernel.org>
-Cc: Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, lee.jones@linaro.org, tony@atomide.com
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Jacek
-
-On 10/25/2018 01:27 PM, Jacek Anaszewski wrote:
-> On 10/25/2018 08:07 PM, Dan Murphy wrote:
->> Rob
+On 10/25/18 5:38 PM, Thierry Reding wrote:
+> On Sun, Oct 21, 2018 at 09:30:52PM +0300, Dmitry Osipenko wrote:
+>> Introduce driver for the External Memory Controller (EMC) found on Tegra20
+>> chips, which controls the external DRAM on the board. The purpose of this
+>> driver is to program memory timing for external memory on the EMC clock
+>> rate change.
 >>
->> On 10/24/2018 09:54 AM, Rob Herring wrote:
->>> On Wed, Oct 24, 2018 at 07:07:57AM -0500, Dan Murphy wrote:
->>>> Pavel
->>>>
->>>> On 10/24/2018 04:04 AM, Pavel Machek wrote:
->>>>> Hi!
->>>>>
->>>>>> The LM3697 is a single function LED driver. The single function LED
->>>>>> driver needs to reside in the LED directory as a dedicated LED driver
->>>>>> and not as a MFD device.  The device does have common brightness and ramp
->>>>>
->>>>> So it is single function LED driver. That does not mean it can not
->>>>> share bindings with the rest. Where the bindings live is not imporant.
->>>>>
->>>>
->>>> It can share bindings that are correctly done, not ones that are incomplete and incorrect.
->>>>
->>>> Where bindings live is important to new Linux kernel developers and product 
->>>> developers looking for the proper documentation on the H/W bindings.
->>>>
->>>>>> reside in the Documentation/devicetree/bindings/leds directory and follow the
->>>>>> current LED and general bindings guidelines.
->>>>>
->>>>> What you forgot to tell us in the changelog:
->>>>
->>>> I can add this to the changelog.
->>>>
->>>>>
->>>>>> +Optional child properties:
->>>>>> +	- runtime-ramp-up-msec: Current ramping from one brightness level to
->>>>>> +				the a higher brightness level.
->>>>>> +				Range from 2048 us - 117.44 s
->>>>>
->>>>> The other binding uses "ramp-up-msec". Tell us why you are changing this, or
->>>>> better don't change things needlessly.
->>>>>
->>>>> We don't want to be using "runtime-ramp-up-msec" for one device and
->>>>> "ramp-up-msec" for the other.
->>>>
->>>> This is another example of how the original bindings were incorrect and misleading.
->>>>
->>>> The LM3697 have 2 ramp implementations that can be used.
->>>>
->>>> Startup/Shutdown ramp and Runtime Ramp.  Same Ramp rates different registers and
->>>> different end user experience.
->>>>
->>>> So having a single node call ramp-up-msec is misleading and it does not
->>>> indicate what the H/W will do.
->>>
->>> The existing ones aren't documented (present in the example is not 
->>> documented). This seems like something that should be common rather than 
->>> TI specific. Though it also seems more like something the user would 
->>> want to control (i.e. sysfs) rather than fixed in DT.
->>>
->>
->> Changing the runtime ramping or startup/shutdown ramping could also be done via sysfs.
->> I am not dedicated to having it in the DT file I was following prior art.
->>
->> Jacek
->>
->> Do you have an opinion on this?
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+>> ---
+>>  drivers/memory/tegra/Kconfig       |  10 +
+>>  drivers/memory/tegra/Makefile      |   1 +
+>>  drivers/memory/tegra/tegra20-emc.c | 591 +++++++++++++++++++++++++++++
+>>  3 files changed, 602 insertions(+)
+>>  create mode 100644 drivers/memory/tegra/tegra20-emc.c
 > 
-> This is this problem with the Device Tree's scope of responsibility.
-> It is defined as a means for "describing the hardware", but often
-> this rule is abused by the properties that fall into "configuration"
-> category. E.g. default-state, retain-state-suspended from leds-gpio.txt
-> or linux-default-trigger from common LED bindings.
-> 
-> In some cases this is justified. The question is whether it is something
-> that necessarily needs to be configured on driver probing? If not, then
-> I'd go for sysfs interface.
-> 
+> Applied to for-4.21/memory, thanks.
 
-Appreciate the feedback.  I think you and Rob are right. This should be a sysfs
-entry.  I can think of instances where the ramp times might want to be modified 
-or even turned off.
+Thank you! 
 
-I will change that implementation.
-
-Dan
-
--- 
-------------------
-Dan Murphy
+> Though I did notice that there's quite a bit of code that's very similar
+> between this and the existing Tegra124 driver, so I wonder if we can do
+> a pass over them and refactor some of it as a follow-up.
+I don't think this will really worth the effort.
