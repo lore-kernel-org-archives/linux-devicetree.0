@@ -1,61 +1,240 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCH 1/4] doc/layerscape-pci: update the PCIe compatible strings
-Date: Thu, 25 Oct 2018 09:27:42 +0000
-Message-ID: <DB5PR04MB12216556360604A225BAFC1F84F70@DB5PR04MB1221.eurprd04.prod.outlook.com>
-References: <20181008031428.25293-1-Zhiqiang.Hou@nxp.com>
- <20181008031428.25293-2-Zhiqiang.Hou@nxp.com> <20181017135148.GA29469@bogus>
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+Subject: Re: [PATCH v2 2/5] mfd: lochnagar: Add support for the Cirrus Logic
+ Lochnagar
+Date: Thu, 25 Oct 2018 10:28:16 +0100
+Message-ID: <b2f85f45-cbe9-5a27-e9e8-ad28f2bd9bd6@opensource.cirrus.com>
+References: <20181008132542.19775-1-ckeepax@opensource.cirrus.com>
+ <20181008132542.19775-2-ckeepax@opensource.cirrus.com>
+ <20181025074459.GF4939@dell> <20181025082621.GD16508@imbe.wolfsonmicro.main>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181017135148.GA29469@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181025082621.GD16508@imbe.wolfsonmicro.main>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.cirrus.com>, Lee Jones <lee.jones@linaro.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, broonie@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpUaGFua3MgYSBsb3QgZm9yIHlvdXIgY29tbWVudHMhDQogDQo+IC0tLS0tT3Jp
-Z2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+
-DQo+IFNlbnQ6IDIwMTjE6jEw1MIxN8jVIDIxOjUyDQo+IFRvOiBaLnEuIEhvdSA8emhpcWlhbmcu
-aG91QG54cC5jb20+DQo+IENjOiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7
-IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5v
-cmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBMZW8gTGkNCj4gPGxlb3lhbmcubGlAbnhw
-LmNvbT47IHNoYXduZ3VvQGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiBiaGVs
-Z2Fhc0Bnb29nbGUuY29tOyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBNLmguIExp
-YW4NCj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzRd
-IGRvYy9sYXllcnNjYXBlLXBjaTogdXBkYXRlIHRoZSBQQ0llIGNvbXBhdGlibGUNCj4gc3RyaW5n
-cw0KPiANCj4gT24gTW9uLCBPY3QgMDgsIDIwMTggYXQgMTE6MTQ6MjVBTSArMDgwMCwgWmhpcWlh
-bmcgSG91IHdyb3RlOg0KPiA+IEZyb206IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5j
-b20+DQo+ID4NCj4gPiBUaGUgcGNpZSBjb21wYXRpYmxlIHN0cmluZyBmb3IgTFMxMDQzQSB3YXMg
-bG9zdCwgc28gYWRkIGl0Lg0KPiANCj4gUENJZQ0KPiANCj4gVGhlIHN1YmplY3QgY291bGQgYmUg
-aW1wcm92ZWQgdG8gc2F5IGV4YWN0bHkgd2hhdCBjb21wYXRpYmxlIHN0cmluZyB5b3UgYXJlDQo+
-IGFkZGluZy4gQW5kIHRoZSBzdWJqZWN0IHNob3VsZCBzdGFydCB3aXRoICJkdC1iaW5kaW5nczog
-cGNpOiAuLi4iDQo+DQoNClllcywgd2lsbCBjb3JyZWN0IHRoZW0gaW4gdjIuDQogDQo+ID4NCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+
-IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2Nh
-cGUtcGNpLnR4dCB8IDEgKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4g
-Pg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNp
-L2xheWVyc2NhcGUtcGNpLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3BjaS9sYXllcnNjYXBlLXBjaS50eHQNCj4gPiBpbmRleCA2NmRmMWU4MWUwYjguLjVlYjFj
-MjAyOTMyZiAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvcGNpL2xheWVyc2NhcGUtcGNpLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+ID4gQEAgLTE4LDYgKzE4LDcg
-QEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAgICAgICAgICAiZnNsLGxzMjA4OGEtcGNpZSIN
-Cj4gPiAgICAgICAgICAiZnNsLGxzMTA4OGEtcGNpZSINCj4gPiAgICAgICAgICAiZnNsLGxzMTA0
-NmEtcGNpZSINCj4gPiArICAgICAgICAiZnNsLGxzMTA0M2EtcGNpZSINCj4gPiAgICAgICAgICAi
-ZnNsLGxzMTAxMmEtcGNpZSINCj4gPiAgLSByZWc6IGJhc2UgYWRkcmVzc2VzIGFuZCBsZW5ndGhz
-IG9mIHRoZSBQQ0llIGNvbnRyb2xsZXIgcmVnaXN0ZXIgYmxvY2tzLg0KPiA+ICAtIGludGVycnVw
-dHM6IEEgbGlzdCBvZiBpbnRlcnJ1cHQgb3V0cHV0cyBvZiB0aGUgY29udHJvbGxlci4gTXVzdA0K
-PiA+IGNvbnRhaW4gYW4NCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On 25/10/18 09:26, Charles Keepax wrote:
+> On Thu, Oct 25, 2018 at 08:44:59AM +0100, Lee Jones wrote:
+>> On Mon, 08 Oct 2018, Charles Keepax wrote:
+>>> From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+>>> +static const struct reg_default lochnagar1_reg_defaults[] = {
+>>> +	{ LOCHNAGAR1_CDC_AIF1_SEL,    0x00 },
+>>> +	{ LOCHNAGAR1_CDC_AIF2_SEL,    0x00 },
+> ...
+>>> +	{ LOCHNAGAR1_LED1,            0x00 },
+>>> +	{ LOCHNAGAR1_LED2,            0x00 },
+>>> +	{ LOCHNAGAR1_I2C_CTRL,        0x01 },
+>>> +};
+>>
+>> Why do you need to specify each register value?
+>>
+> 
+> The way regmap operates it needs to know the starting value of
+> each register. It will use this to initialise the cache and to
+> determine if writes need to actually update the hardware on
+> cache_syncs after devices have been powered back up.
+> 
+>>> +static const struct reg_sequence lochnagar1_patch[] = {
+>>> +	{ 0x40, 0x0083 },
+>>> +	{ 0x46, 0x0001 },
+>>> +	{ 0x47, 0x0018 },
+>>> +	{ 0x50, 0x0000 },
+>>> +};
+>>
+>> I'm really not a fan of these so call 'patches'.
+>>
+>> Can't you set the registers up proper way?
+>>
+> 
+> I will see if we could move any out of here or define any of the
+> registers but as we have discussed before it is not always possible.
+> 
+
+Also patches generally come out of hardware tuning/qualification/tools
+as this list of address,value. So it's easy for people to dump an update
+into the driver as a trivial copy-paste but more work if they have to
+reverse-engineer the patch list from hardware/datasheet into what each
+line "means" and then find the relevant lines of code to change. It's also
+much easier to answer the question "Have these hardware patches been
+applied to the driver?" if we have them in the original documented format.
+It just makes people's lives more difficult if they have to search around
+the code to try to find something that looks like the originally specified
+patch list. We don't use them just as a lazy way to setup some registers.
+
+>>> +static bool lochnagar2_readable_register(struct device *dev, unsigned int reg)
+>>> +{
+>>> +	switch (reg) {
+>>> +	case LOCHNAGAR_SOFTWARE_RESET:
+>>> +	case LOCHNAGAR_FIRMWARE_ID1:
+>>> +	case LOCHNAGAR_FIRMWARE_ID2:
+> ...
+>>> +	case LOCHNAGAR2_MICVDD_CTRL2:
+>>> +	case LOCHNAGAR2_VDDCORE_CDC_CTRL1:
+>>> +	case LOCHNAGAR2_VDDCORE_CDC_CTRL2:
+>>> +	case LOCHNAGAR2_SOUNDCARD_AIF_CTRL:
+>>> +		return true;
+>>> +	default:
+>>> +		return false;
+>>> +	}
+>>> +}
+>>> +
+>>> +static bool lochnagar2_volatile_register(struct device *dev, unsigned int reg)
+>>> +{
+>>> +	switch (reg) {
+>>> +	case LOCHNAGAR2_GPIO_CHANNEL1:
+>>> +	case LOCHNAGAR2_GPIO_CHANNEL2:
+>>> +	case LOCHNAGAR2_GPIO_CHANNEL3:
+> ...
+>>> +	case LOCHNAGAR2_GPIO_CHANNEL13:
+>>> +	case LOCHNAGAR2_GPIO_CHANNEL14:
+>>> +	case LOCHNAGAR2_GPIO_CHANNEL15:
+>>> +	case LOCHNAGAR2_GPIO_CHANNEL16:
+>>> +	case LOCHNAGAR2_ANALOGUE_PATH_CTRL1:
+>>> +		return true;
+>>> +	default:
+>>> +		return false;
+>>> +	}
+>>> +}
+>>
+>> This is getting silly now.  Can't you use ranges?
+>>
+> 
+> I can if you feel strongly about it? But it does make the drivers
+> much more error prone and significantly more annoying to work
+> with. I find it is really common to be checking that a register
+> is handled correctly through the regmap callbacks and it is nice
+> to just be able to grep for that. Obviously this won't work for
+> all devices/regmaps as well since many will not have consecutive
+> addresses on registers, for example having multi-byte registers
+> that are byte addressed.
+> 
+> How far would you like me to take this as well? Is it just the
+> numeric registers you want ranges for ie.
+> 
+> LOCHNAGAR2_GPIO_CHANNEL1...LOCHNAGAR_GPIO_CHANNEL16
+> 
+> Or is it all consecutive registers even if they are unrelated
+> (exmaple is probably not accurate as I haven't checked the
+> addresses):
+> 
+> LOCHNAGAR2_GPIO_CHANNEL1...LOCHNAGAR2_ANALOGURE_PATH_CTRL1
+> 
+> I don't mind the first at all but the second is getting really
+> horrible in my opinion.
+> 
+>>> +static const struct reg_default lochnagar2_reg_defaults[] = {
+>>> +	{ LOCHNAGAR2_CDC_AIF1_CTRL,         0x0000 },
+>>> +	{ LOCHNAGAR2_CDC_AIF2_CTRL,         0x0000 },
+>>> +	{ LOCHNAGAR2_CDC_AIF3_CTRL,         0x0000 },
+>>> +	{ LOCHNAGAR2_DSP_AIF1_CTRL,         0x0000 },
+> ...
+>>> +	{ LOCHNAGAR2_MINICARD_RESETS,       0x0000 },
+>>> +	{ LOCHNAGAR2_ANALOGUE_PATH_CTRL2,   0x0000 },
+>>> +	{ LOCHNAGAR2_COMMS_CTRL4,           0x0001 },
+>>> +	{ LOCHNAGAR2_SPDIF_CTRL,            0x0008 },
+>>> +	{ LOCHNAGAR2_POWER_CTRL,            0x0001 },
+>>> +	{ LOCHNAGAR2_SOUNDCARD_AIF_CTRL,    0x0000 },
+>>> +};
+>>
+>> OMG!  Vile, vile vile!
+>>
+> 
+> I really feel this isn't the driver you are objecting to as such
+> but the way regmap operates and also we seem to always have the same
+> discussions around regmap every time we push a driver. Is there
+> any way me, you and Mark could hash this out and find out a way to
+> handle regmaps that is acceptable to you? I don't suppose you are
+> in Edinburgh at the moment for ELCE?
+> 
+
+I suppose if Mark was willing to promote the regmap drivers to be a
+top-level subsystem that could contain the regmap definitions of devices
+then we could dump our regmap definitions in there, where Mark can review
+it as he's familiar with regmap and the chips and the reasons why things
+are done the way they are, rather than Lee having to stress about it every
+time we need to create an MFD device that uses regmap. Though that would
+make the initialization of an MFD rather awkward with the code required
+to init the MFD it not actually being in the MFD tree.
+
+>>> +	/* Wait for Lochnagar to boot */
+>>> +	ret = lochnagar_wait_for_boot(lochnagar->regmap, &val);
+>>> +	if (ret < 0) {
+>>> +		dev_err(dev, "Failed to read device ID: %d\n", ret);
+>>
+>> Eh?
+>>
+>> So you read the LOCHNAGAR_SOFTWARE_RESET register and out pops the
+>> device/revision IDs?  That's just random!
+>
+> I shall let the hardware guys know you don't approve of their
+> life choices :-) and add some comments to the code.
+> 
+>>> +	ret = devm_of_platform_populate(dev);
+>>> +	if (ret < 0) {
+>>> +		dev_err(dev, "Failed to populate child nodes: %d\n", ret);
+>>> +		return ret;
+>>> +	}
+>>
+>> Please do not mix OF and MFD device registration strategies.
+>>
+>> Pick one and register all devices through your chosen method.
+>>
+> 
+> Hmmm we use this to do things like register some fixed regulators
+> and clocks that don't need any control but do need to be associated
+> with the device. I could do that through the MFD although it is in
+> direct conflict with the feedback on the clock patches I received
+> to move the fixed clocks into devicetree rather than registering
+> them manually (see v2 of the patch chain).
+> 
+> I will have a look see if I can find any ideas that will make
+> everyone happy but we might need to discuss with Mark and the
+> clock guys.
+> 
+>>> +	.probe_new = lochnagar_i2c_probe,
+>>
+>> Hasn't this been replaced yet?
+>>
+> 
+> I will check, the patchset has been around internally for a while
+> so it is possible this is no longer needed.
+> 
+>>> +#ifndef CIRRUS_LOCHNAGAR_H
+>>> +#define CIRRUS_LOCHNAGAR_H
+>>> +
+>>> +#include "lochnagar1_regs.h"
+>>> +#include "lochnagar2_regs.h"
+>>
+>> Why are you including these here?
+>>
+> 
+> It is just a convenience so the drivers only need to include
+> lochnagar.h rather than including all three headers manually.
+> 
+>>> diff --git a/include/linux/mfd/lochnagar1_regs.h b/include/linux/mfd/lochnagar1_regs.h
+>>> diff --git a/include/linux/mfd/lochnagar2_regs.h b/include/linux/mfd/lochnagar2_regs.h
+>>
+>> So Lochnagar 1 and 2 are completely different devices?
+>>
+>> What do they do?
+>>
+> 
+> Completely different devices is a bit strong, they are different
+> versions of the same system. They have quite different register
+> maps but provide very similar functionality.
+> 
+
+The register maps are different partly because some silicon
+used on the V1 is no longer manufactured and partly because some
+silicon added in V2 didn't fit into the older register map.
+
+> All the other comments I will get fixed up for the next spin of
+> the patches.
+> 
+> Thanks,
+> Charles
+> 
