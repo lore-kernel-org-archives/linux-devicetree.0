@@ -1,103 +1,236 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/7] dt-bindings: ti-lmu: Modify dt bindings for the
- LM3697
-Date: Thu, 25 Oct 2018 14:54:44 -0500
-Message-ID: <20181025195444.GA12737@bogus>
-References: <20181023170623.31820-1-dmurphy@ti.com>
- <20181023170623.31820-2-dmurphy@ti.com>
- <20181024090421.GB24997@amd>
- <e8800c2e-8ada-7a0d-c1a6-14ddcbe1576d@ti.com>
- <20181024145434.GC9327@bogus>
- <beb1a6e1-8120-be94-b1a4-60ea6721765d@ti.com>
- <ade3121a-58ab-c0c3-6605-cf7d6a638da0@gmail.com>
+From: Jonathan McDowell <noodles@earth.li>
+Subject: [PATCH] dts: sun8i-h3: Add DTS for Mapleboard MP130
+Date: Thu, 25 Oct 2018 20:55:19 +0100
+Message-ID: <20181025195519.hil6o66h4ev2m62q@earth.li>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <ade3121a-58ab-c0c3-6605-cf7d6a638da0@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, lee.jones@linaro.org, tony@atomide.com
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 25, 2018 at 08:27:18PM +0200, Jacek Anaszewski wrote:
-> On 10/25/2018 08:07 PM, Dan Murphy wrote:
-> > Rob
-> > 
-> > On 10/24/2018 09:54 AM, Rob Herring wrote:
-> >> On Wed, Oct 24, 2018 at 07:07:57AM -0500, Dan Murphy wrote:
-> >>> Pavel
-> >>>
-> >>> On 10/24/2018 04:04 AM, Pavel Machek wrote:
-> >>>> Hi!
-> >>>>
-> >>>>> The LM3697 is a single function LED driver. The single function LED
-> >>>>> driver needs to reside in the LED directory as a dedicated LED driver
-> >>>>> and not as a MFD device.  The device does have common brightness and ramp
-> >>>>
-> >>>> So it is single function LED driver. That does not mean it can not
-> >>>> share bindings with the rest. Where the bindings live is not imporant.
-> >>>>
-> >>>
-> >>> It can share bindings that are correctly done, not ones that are incomplete and incorrect.
-> >>>
-> >>> Where bindings live is important to new Linux kernel developers and product 
-> >>> developers looking for the proper documentation on the H/W bindings.
-> >>>
-> >>>>> reside in the Documentation/devicetree/bindings/leds directory and follow the
-> >>>>> current LED and general bindings guidelines.
-> >>>>
-> >>>> What you forgot to tell us in the changelog:
-> >>>
-> >>> I can add this to the changelog.
-> >>>
-> >>>>
-> >>>>> +Optional child properties:
-> >>>>> +	- runtime-ramp-up-msec: Current ramping from one brightness level to
-> >>>>> +				the a higher brightness level.
-> >>>>> +				Range from 2048 us - 117.44 s
-> >>>>
-> >>>> The other binding uses "ramp-up-msec". Tell us why you are changing this, or
-> >>>> better don't change things needlessly.
-> >>>>
-> >>>> We don't want to be using "runtime-ramp-up-msec" for one device and
-> >>>> "ramp-up-msec" for the other.
-> >>>
-> >>> This is another example of how the original bindings were incorrect and misleading.
-> >>>
-> >>> The LM3697 have 2 ramp implementations that can be used.
-> >>>
-> >>> Startup/Shutdown ramp and Runtime Ramp.  Same Ramp rates different registers and
-> >>> different end user experience.
-> >>>
-> >>> So having a single node call ramp-up-msec is misleading and it does not
-> >>> indicate what the H/W will do.
-> >>
-> >> The existing ones aren't documented (present in the example is not 
-> >> documented). This seems like something that should be common rather than 
-> >> TI specific. Though it also seems more like something the user would 
-> >> want to control (i.e. sysfs) rather than fixed in DT.
-> >>
-> > 
-> > Changing the runtime ramping or startup/shutdown ramping could also be done via sysfs.
-> > I am not dedicated to having it in the DT file I was following prior art.
-> > 
-> > Jacek
-> > 
-> > Do you have an opinion on this?
-> 
-> This is this problem with the Device Tree's scope of responsibility.
-> It is defined as a means for "describing the hardware", but often
-> this rule is abused by the properties that fall into "configuration"
-> category. E.g. default-state, retain-state-suspended from leds-gpio.txt
-> or linux-default-trigger from common LED bindings.
-> 
-> In some cases this is justified. The question is whether it is something
-> that necessarily needs to be configured on driver probing? If not, then
-> I'd go for sysfs interface.
 
-Yes. I'd also add it should be along the lines of for a given 
-board it's always configured in that way or is it something you'd want 
-in the BIOS of your PC.
+The Mapleboard MP130 is a single board computer based on the Allwinner
+H3 SoC, with all schematics freely available. The Lite version includes
+1GB main memory and 8GB eMMC.
 
-Rob
+https://www.mapleboard.org/en (still mostly in Chinese even when English
+is selected)
+
+This DTS is based upon the DTS shipped with the board which uses
+mapleboard,mp130- prefixes instead of the allwinner,sun8i variants.
+
+Signed-off-by: Jonathan McDowell <noodles@earth.li>
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b5bd3de87c33..dcf1b9e7f71e 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1035,6 +1035,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-h3-bananapi-m2-plus.dtb \
+ 	sun8i-h3-beelink-x2.dtb \
+ 	sun8i-h3-libretech-all-h3-cc.dtb \
++	sun8i-h3-mapleboard-mp130.dtb \
+ 	sun8i-h3-nanopi-m1.dtb	\
+ 	sun8i-h3-nanopi-m1-plus.dtb \
+ 	sun8i-h3-nanopi-neo.dtb \
+diff --git a/arch/arm/boot/dts/sun8i-h3-mapleboard-mp130.dts b/arch/arm/boot/dts/sun8i-h3-mapleboard-mp130.dts
+new file mode 100644
+index 000000000000..bf948128af94
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-h3-mapleboard-mp130.dts
+@@ -0,0 +1,179 @@
++/*
++ * Copyright (C) 2017 Centrum Embedded Systems, Jia-Bin Huang <jb@ces.com.tw>
++ * Copyright (C) 2018 Jonathan McDowell <noodles@earth.li>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2. This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++/dts-v1/;
++#include "sun8i-h3.dtsi"
++#include "sunxi-common-regulators.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++/ {
++	model = "MapleBoard MP130 Board";
++	compatible = "mapleboard,mp130_board", "allwinner,sun8i-h3";
++
++	aliases {
++		ethernet0 = &emac;
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&leds_pio>, <&leds_r_pio>;
++
++		pwr_led {
++			label = "mp130_board:orange:pwr";
++			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++		status_led {
++			label = "mp130_board:orange:status";
++			gpios = <&pio 0 10 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	r_gpio_keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&sw_r_pio>;
++
++		power {
++			label = "power";
++			linux,code = <KEY_POWER>;
++			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>; /* PL3 */
++		};
++
++		user {
++			label = "user";
++			linux,code = <BTN_0>;
++			gpios = <&r_pio 0 4 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&codec {
++	allwinner,audio-routing =
++		"Line Out", "LINEOUT",
++		"LINEIN", "Line In";
++	status = "okay";
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&ehci2 {
++	status = "okay";
++};
++
++&ehci3 {
++	status = "okay";
++};
++
++&ir {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ir_pins_a>;
++	status = "okay";
++};
++
++&mmc0 {
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
++	cd-inverted;
++	status = "okay";
++};
++
++&mmc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc2_8bit_pins>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <8>;
++	non-removable;
++	cap-mmc-hw-reset;
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&ohci2 {
++	status = "okay";
++};
++
++&ohci3 {
++	status = "okay";
++};
++
++&pio {
++	leds_pio: led_pins {
++		pins = "PA15";
++		function = "gpio_out";
++	};
++};
++
++&r_pio {
++	leds_r_pio: led_pins {
++		pins = "PL10";
++		function = "gpio_out";
++	};
++
++	sw_r_pio: key_pins {
++		pins = "PL3", "PL4";
++		function = "gpio_in";
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins>;
++	status = "disabled";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart2_pins>;
++	status = "disabled";
++};
++
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart3_pins>;
++	status = "disabled";
++};
++
++&usb_otg {
++	dr_mode = "peripheral";
++	status = "okay";
++};
++
++&usbphy {
++	/* USB VBUS is always on */
++	status = "okay";
++};
++
++&emac {
++	phy-handle = <&int_mii_phy>;
++	phy-mode = "mii";
++	allwinner,leds-active-low;
++	status = "okay";
++};
++
+
+J.
+
+-- 
+Revd Jonathan McDowell, ULC | Do you believe in happy endings?
