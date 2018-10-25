@@ -1,139 +1,260 @@
-From: Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH v2 0/2] arm64: Cut rebuild time when changing
- CONFIG_BLK_DEV_INITRD
-Date: Thu, 25 Oct 2018 10:38:34 +0100
-Message-ID: <20181025093833.GA23607@rapoport-lnx>
-References: <20181024193256.23734-1-f.fainelli@gmail.com>
- <CAL_Jsq+KCOv6pXXHhHDZ+7-QUrmtMDvSjEVhK15yZ3qbnn61Ag@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 1/8] dt-bindings: mfd: document stpmic1
+Date: Thu, 25 Oct 2018 10:44:30 +0100
+Message-ID: <20181025094430.GQ4939@dell>
+References: <1539853324-29051-1-git-send-email-p.paillet@st.com>
+ <1539853324-29051-2-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+KCOv6pXXHhHDZ+7-QUrmtMDvSjEVhK15yZ3qbnn61Ag@mail.gmail.com>
+In-Reply-To: <1539853324-29051-2-git-send-email-p.paillet@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Olof Johansson <olof@lixom.net>, linux-alpha@vger.kernel.org, arcml <linux-snps-arc@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-c6x-dev@linux-c6x.org, "moderated list:H8/300 ARCHITECTURE" <uclinux-h8-devel@lists.sourceforge.jp>, linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org, Linux-MIPS <linux-mips@linux-mips.org>, nios2-dev@lists.
+To: Pascal PAILLET-LME <p.paillet@st.com>
+Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 24, 2018 at 02:55:17PM -0500, Rob Herring wrote:
-> On Wed, Oct 24, 2018 at 2:33 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
-> >
-> > Hi all,
-> >
-> > While investigating why ARM64 required a ton of objects to be rebuilt
-> > when toggling CONFIG_DEV_BLK_INITRD, it became clear that this was
-> > because we define __early_init_dt_declare_initrd() differently and we do
-> > that in arch/arm64/include/asm/memory.h which gets included by a fair
-> > amount of other header files, and translation units as well.
-> 
-> I scratch my head sometimes as to why some config options rebuild so
-> much stuff. One down, ? to go. :)
-> 
-> > Changing the value of CONFIG_DEV_BLK_INITRD is a common thing with build
-> > systems that generate two kernels: one with the initramfs and one
-> > without. buildroot is one of these build systems, OpenWrt is also
-> > another one that does this.
-> >
-> > This patch series proposes adding an empty initrd.h to satisfy the need
-> > for drivers/of/fdt.c to unconditionally include that file, and moves the
-> > custom __early_init_dt_declare_initrd() definition away from
-> > asm/memory.h
-> >
-> > This cuts the number of objects rebuilds from 1920 down to 26, so a
-> > factor 73 approximately.
-> >
-> > Apologies for the long CC list, please let me know how you would go
-> > about merging that and if another approach would be preferable, e.g:
-> > introducing a CONFIG_ARCH_INITRD_BELOW_START_OK Kconfig option or
-> > something like that.
-> 
-> There may be a better way as of 4.20 because bootmem is now gone and
-> only memblock is used. This should unify what each arch needs to do
-> with initrd early. We need the physical address early for memblock
-> reserving. Then later on we need the virtual address to access the
-> initrd. Perhaps we should just change initrd_start and initrd_end to
-> physical addresses (or add 2 new variables would be less invasive and
-> allow for different translation than __va()). The sanity checks and
-> memblock reserve could also perhaps be moved to a common location.
->
-> Alternatively, given arm64 is the only oddball, I'd be fine with an
-> "if (IS_ENABLED(CONFIG_ARM64))" condition in the default
-> __early_init_dt_declare_initrd as long as we have a path to removing
-> it like the above option.
+Rob: please grep your name for some feedback.
 
-I think arm64 does not have to redefine __early_init_dt_declare_initrd().
-Something like this might be just all we need (completely untested,
-probably it won't even compile):
+On Thu, 18 Oct 2018, Pascal PAILLET-LME wrote:
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 9d9582c..e9ca238 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -62,6 +62,9 @@ s64 memstart_addr __ro_after_init = -1;
- phys_addr_t arm64_dma_phys_limit __ro_after_init;
- 
- #ifdef CONFIG_BLK_DEV_INITRD
-+
-+static phys_addr_t initrd_start_phys, initrd_end_phys;
-+
- static int __init early_initrd(char *p)
- {
- 	unsigned long start, size;
-@@ -71,8 +74,8 @@ static int __init early_initrd(char *p)
- 	if (*endp == ',') {
- 		size = memparse(endp + 1, NULL);
- 
--		initrd_start = start;
--		initrd_end = start + size;
-+		initrd_start_phys = start;
-+		initrd_end_phys = end;
- 	}
- 	return 0;
- }
-@@ -407,14 +410,27 @@ void __init arm64_memblock_init(void)
- 		memblock_add(__pa_symbol(_text), (u64)(_end - _text));
- 	}
- 
--	if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && initrd_start) {
-+	if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) &&
-+	    (initrd_start || initrd_start_phys)) {
-+		/*
-+		 * FIXME: ensure proper precendence between
-+		 * early_initrd and DT when both are present
-+		 */
-+		if (initrd_start) {
-+			initrd_start_phys = __phys_to_virt(initrd_start);
-+			initrd_end_phys = __phys_to_virt(initrd_end);
-+		} else if (initrd_start_phys) {
-+			initrd_start = __va(initrd_start_phys);
-+			initrd_end = __va(initrd_start_phys);
-+		}
-+
- 		/*
- 		 * Add back the memory we just removed if it results in the
- 		 * initrd to become inaccessible via the linear mapping.
- 		 * Otherwise, this is a no-op
- 		 */
--		u64 base = initrd_start & PAGE_MASK;
--		u64 size = PAGE_ALIGN(initrd_end) - base;
-+		u64 base = initrd_start_phys & PAGE_MASK;
-+		u64 size = PAGE_ALIGN(initrd_end_phys) - base;
- 
- 		/*
- 		 * We can only add back the initrd memory if we don't end up
-@@ -458,7 +474,7 @@ void __init arm64_memblock_init(void)
- 	 * pagetables with memblock.
- 	 */
- 	memblock_reserve(__pa_symbol(_text), _end - _text);
--#ifdef CONFIG_BLK_DEV_INITRD
-+#if 0
- 	if (initrd_start) {
- 		memblock_reserve(initrd_start, initrd_end - initrd_start);
- 
- 
-> Rob
+> From: pascal paillet <p.paillet@st.com>
+
+Please use `git send-email` to send patches.
+
+Please capitalise your name: Pascal Paillet
+
+> stpmic1 is a pmic from STMicroelectronics. The STPMIC1 integrates 10
+
+"STPMIC1"
+"PMIC"
+
+> regulators , 3 switches, a watchdog and an input for a power on key.
+
+Whitespace.
+
+What is a switch?
+
+> Signed-off-by: pascal paillet <p.paillet@st.com>
+> ---
+> changes in v4:
+> * remove interrupt-parent description
+> * pmic1@33 renamed to pmic@33
+> * fix indentation
 > 
+>  .../devicetree/bindings/mfd/st,stpmic1.txt         | 131 +++++++++++++++++++++
+>  include/dt-bindings/mfd/st,stpmic1.h               |  46 ++++++++
+>  2 files changed, 177 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+>  create mode 100644 include/dt-bindings/mfd/st,stpmic1.h
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/st,stpmic1.txt b/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+> new file mode 100644
+> index 0000000..bb19cc8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+> @@ -0,0 +1,131 @@
+> +* STMicroelectronics STPMIC1 Power Management IC
+> +
+> +Required parent device properties:
+> +- compatible:			"st,stpmic1"
+> +- reg:				The I2C slave address for the STPMIC1 chip.
+> +- interrupts:			The interrupt line the device is connected to.
+> +- #interrupt-cells:		Should be 1.
+> +- interrupt-controller: 	Describes the STPMIC1 as an interrupt
+
+Tabbing (this could just be a patch quirk).
+
+Either use full-stops or don't - please be consistent.
+
+> +  controller (has its own domain). Interrupt number are the following:
+
+"numbers"
+
+Actually consider rewording - sounds funny.
+
+> +	/* Interrupt Register 1 (0x50 for latch) */
+> +	IT_SWOUT_R=0
+> +	IT_SWOUT_F=1
+> +	IT_VBUS_OTG_R=2
+> +	IT_VBUS_OTG_F=3
+> +	IT_WAKEUP_R=4
+> +	IT_WAKEUP_F=5
+> +	IT_PONKEY_R=6
+> +	IT_PONKEY_F=7
+> +	/* Interrupt Register 2 (0x51 for latch) */
+> +	IT_OVP_BOOST=8
+> +	IT_OCP_BOOST=9
+> +	IT_OCP_SWOUT=10
+> +	IT_OCP_OTG=11
+> +	IT_CURLIM_BUCK4=12
+> +	IT_CURLIM_BUCK3=13
+> +	IT_CURLIM_BUCK2=14
+> +	IT_CURLIM_BUCK1=15
+> +	/* Interrupt Register 3 (0x52 for latch) */
+> +	IT_SHORT_SWOUT=16
+> +	IT_SHORT_SWOTG=17
+> +	IT_CURLIM_LDO6=18
+> +	IT_CURLIM_LDO5=19
+> +	IT_CURLIM_LDO4=20
+> +	IT_CURLIM_LDO3=21
+> +	IT_CURLIM_LDO2=22
+> +	IT_CURLIM_LDO1=23
+> +	/* Interrupt Register 3 (0x52 for latch) */
+> +	IT_SWIN_R=24
+> +	IT_SWIN_F=25
+> +	IT_RESERVED_1=26
+> +	IT_RESERVED_2=27
+> +	IT_VINLOW_R=28
+> +	IT_VINLOW_F=29
+> +	IT_TWARN_R=30
+> +	IT_TWARN_F=31
+
+Do you really need these in here?  I suspect not.
+
+> +Optional parent device properties:
+> +- st,main-control-register:
+> +	-bit 1: Power cycling will be performed on turn OFF condition
+> +	-bit 2: PWRCTRL is functional
+> +	-bit 3: PWRCTRL active high
+> +- st,pads-pull-register:
+> +	-bit 1: WAKEUP pull down is not active
+> +	-bit 2: PWRCTRL pull up is active
+> +	-bit 3: PWRCTRL pull down is active
+> +	-bit 4: WAKEUP detector is disabled
+> +- st,vin-control-register:
+> +	-bit 0: VINLOW monitoring is enabled
+> +	-bit [1...3]: VINLOW rising threshold
+> +		000 VINOK_f + 50mV
+> +		001 VINOK_f + 100mV
+> +		010 VINOK_f + 150mV
+> +		011 VINOK_f + 200mV
+> +		100 VINOK_f + 250mV
+> +		101 VINOK_f + 300mV
+> +		110 VINOK_f + 350mV
+> +		111 VINOK_f + 400mV
+> +	-bit [4...5]: VINLOW hyst
+> +		00 100mV
+> +		01 200mV
+> +		10 300mV
+> +		11 400mV
+> +	-bit 6: SW_OUT detector is disabled
+> +	-bit 7: SW_IN detector is enabled.
+> +- st,usb-control-register:
+> +	-bit 3: SW_OUT current limit
+> +		0: 600mA
+> +		1: 1.1A
+> +	-bit 4: VBUS_OTG discharge is enabled
+> +	-bit 5: SW_OUT discharge is enabled
+> +	-bit 6: VBUS_OTG detection is enabled
+> +	-bit 7: BOOST_OVP is disabled
+
+I'm surprised Rob allowed you to add register bits in a DT property?
+
+> +STPMIC1 consists in a varied group of sub-devices.
+> +Each sub-device binding is be described in own documentation file.
+> +
+> +Device			 Description
+> +------			------------
+> +st,stpmic1-onkey	: Power on key, see ../input/st,stpmic1-onkey.txt
+> +st,stpmic1-regulators	: Regulators, see ../regulator/st,stpmic1-regulator.txt
+> +st,stpmic1-wdt		: Watchdog, see ../watchdog/st,stpmic1-wdt.txt
+> +
+> +Example:
+> +
+> +pmic: pmic@33 {
+> +	compatible = "st,stpmic1";
+> +	reg = <0x33>;
+> +	interrupt-parent = <&gpioa>;
+> +	interrupts = <0 2>;
+> +	st,main-control-register=<0x0c>;
+> +	interrupt-controller;
+> +	#interrupt-cells = <2>;
+> +
+> +	onkey {
+> +		compatible = "st,stpmic1-onkey";
+> +		interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
+> +		interrupt-names = "onkey-falling", "onkey-rising";
+> +		power-off-time-sec = <10>;
+> +	};
+> +
+> +	watchdog {
+> +		compatible = "st,stpmic1-wdt";
+> +	};
+> +
+> +	regulators {
+> +		compatible = "st,stpmic1-regulators";
+> +
+> +		vdd_core: buck1 {
+> +			regulator-name = "vdd_core";
+> +			regulator-boot-on;
+> +			regulator-min-microvolt = <700000>;
+> +			regulator-max-microvolt = <1200000>;
+> +		};
+> +		vdd: buck3 {
+> +			regulator-name = "vdd";
+> +			regulator-min-microvolt = <3300000>;
+> +			regulator-max-microvolt = <3300000>;
+> +			regulator-boot-on;
+> +			regulator-pull-down;
+> +		};
+> +	};
+> diff --git a/include/dt-bindings/mfd/st,stpmic1.h b/include/dt-bindings/mfd/st,stpmic1.h
+> new file mode 100644
+> index 0000000..b2d6c83
+> --- /dev/null
+> +++ b/include/dt-bindings/mfd/st,stpmic1.h
+> @@ -0,0 +1,46 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) STMicroelectronics 2018 - All Rights Reserved
+> + * Author: Philippe Peurichard <philippe.peurichard@st.com>,
+> + * Pascal Paillet <p.paillet@st.com> for STMicroelectronics.
+> + */
+> +
+> +#ifndef __DT_BINDINGS_STPMIC1_H__
+> +#define __DT_BINDINGS_STPMIC1_H__
+> +
+> +/* IRQ definitions */
+> +#define IT_PONKEY_F	0
+> +#define IT_PONKEY_R	1
+> +#define IT_WAKEUP_F	2
+> +#define IT_WAKEUP_R	3
+> +#define IT_VBUS_OTG_F	4
+> +#define IT_VBUS_OTG_R	5
+> +#define IT_SWOUT_F	6
+> +#define IT_SWOUT_R	7
+> +
+> +#define IT_CURLIM_BUCK1	8
+> +#define IT_CURLIM_BUCK2	9
+> +#define IT_CURLIM_BUCK3	10
+> +#define IT_CURLIM_BUCK4	11
+> +#define IT_OCP_OTG	12
+> +#define IT_OCP_SWOUT	13
+> +#define IT_OCP_BOOST	14
+> +#define IT_OVP_BOOST	15
+> +
+> +#define IT_CURLIM_LDO1	16
+> +#define IT_CURLIM_LDO2	17
+> +#define IT_CURLIM_LDO3	18
+> +#define IT_CURLIM_LDO4	19
+> +#define IT_CURLIM_LDO5	20
+> +#define IT_CURLIM_LDO6	21
+> +#define IT_SHORT_SWOTG	22
+> +#define IT_SHORT_SWOUT	23
+> +
+> +#define IT_TWARN_F	24
+> +#define IT_TWARN_R	25
+> +#define IT_VINLOW_F	26
+> +#define IT_VINLOW_R	27
+> +#define IT_SWIN_F	30
+> +#define IT_SWIN_R	31
+> +
+> +#endif /* __DT_BINDINGS_STPMIC1_H__ */
 
 -- 
-Sincerely yours,
-Mike.
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
