@@ -1,38 +1,46 @@
-Return-Path: <SRS0=T388=NA=buserror.net=oss@kernel.org>
-Message-ID: <bb158670f1556156f17c3a9eefaa0a5e35c1591e.camel@buserror.net>
-From: Scott Wood <oss@buserror.net>
-Date: Sat, 20 Oct 2018 18:53:58 -0500
-In-Reply-To: <20180919073906.34187-2-andy.tang@nxp.com>
-References: <20180919073906.34187-1-andy.tang@nxp.com>
-	 <20180919073906.34187-2-andy.tang@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 2/3] powerpc: t102x: upgrade the legacy clock node
-To: andy.tang@nxp.com, mturquette@baylibre.com
-Cc: sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=SDjf=NF=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 0/7] Add RZ/G1C USB2.0 Host support
+Date: Thu, 25 Oct 2018 14:56:52 +0100
+Message-Id: <1540475819-47950-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Kishon Vijay Abraham I <kishon@ti.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, 2018-09-19 at 15:39 +0800, andy.tang@nxp.com wrote:
-> +clockgen: global-utilities@e1000 {
-> +	compatible = "fsl,qoriq-clockgen";
+This patch series aims to add USB2.0 Host support for RZ/G1C SoC. RZ/G1C
+SoC is similar to R-Car Gen2 SoC, but there are some differences
 
-Where does this compatible string come from?
+- It has a shared pll reset register for hsusb0/hsusb1 and this register 
+  reside in hsusb0 block.
 
-> +		compatible = "fsl,t1023-clockgen";
->  	};
+- Each USB host needs to deassert the pll reset of hsusb block apart from
+  initializing interrupt enable,OVC detection timer and suspend/resume timer
+  register.
 
-And here you overwrite it with only the chip-specific compatible?
+To address the above scenarios, add optional usb2.0 host reg and clock
+properties.
 
-Is t1023 incompatible with both fsl,qoriq-clockgen-1.0 and fsl,qoriq-clockgen-
-2.0?  The existing dts says 2.0; is that wrong?
+This patch is tested against phy-next, usb-next and renesas-devel.
 
-BTW, assuming it is 2.0 compatible and thus the use of qoriq-clockgen2.dtsi is
-correct, the best course of action is probably to to remove the legacy stuff
-from all fsl chips, rather than introduce a new dtsi.  In fact it'd be nice to
-see it all removed in any case. :-)
+References:-
+ *) https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg32115.html
 
-Also, please post any patches that you want me to apply to the linuxppc-dev
-mailing list.
+Biju Das (7):
+  dt-bindings: phy: rcar-gen2: Add r8a77470 support
+  phy: renesas: phy-rcar-gen2: Add support for r8a77470
+  ARM: dts: r8a77470: Add USB PHY DT support
+  ARM: dts: iwg23s-sbc: Enable USB Phy[01]
+  ARM: dts: r8a77470: Add USB2.0 Host (EHCI/OHCI) device nodes
+  ARM: dts: iwg23s-sbc: Enable USB USB2.0 Host
+  ARM: shmobile: Enable USB [EO]HCI HCD PLATFORM support in
+    shmobile_defconfig
 
--Scott
+ .../devicetree/bindings/phy/rcar-gen2-phy.txt      |  64 ++++++-
+ arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts          |  32 ++++
+ arch/arm/boot/dts/r8a77470.dtsi                    |  88 ++++++++++
+ arch/arm/configs/shmobile_defconfig                |   2 +
+ drivers/phy/renesas/phy-rcar-gen2.c                | 188 ++++++++++++++++++++-
+ 5 files changed, 361 insertions(+), 13 deletions(-)
+
+-- 
+2.7.4
