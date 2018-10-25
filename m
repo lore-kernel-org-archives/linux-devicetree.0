@@ -1,233 +1,83 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCH v2 4/4] dts/arm64/layerscape: Clean PCIe controller compatible
- strings
-Date: Thu, 25 Oct 2018 09:49:49 +0000
-Message-ID: <20181025094929.29481-5-Zhiqiang.Hou@nxp.com>
-References: <20181025094929.29481-1-Zhiqiang.Hou@nxp.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v2 0/2] arm64: Cut rebuild time when changing
+ CONFIG_BLK_DEV_INITRD
+Date: Thu, 25 Oct 2018 10:51:34 +0100
+Message-ID: <20181025095134.GX30658@n2100.armlinux.org.uk>
+References: <20181024193256.23734-1-f.fainelli@gmail.com>
+ <CAL_Jsq+KCOv6pXXHhHDZ+7-QUrmtMDvSjEVhK15yZ3qbnn61Ag@mail.gmail.com>
+ <20181025093833.GA23607@rapoport-lnx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181025094929.29481-1-Zhiqiang.Hou@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181025093833.GA23607@rapoport-lnx>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>
-Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Rob Herring <robh@kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, linux-ia64@vger.kernel.org, SH-Linux <linux-sh@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, sparclinux@vger.kernel.org, linux-riscv@lists.infradead.org, "open list:GENERIC INCLUDE/ASM HEADER FILES" <linux-arch@vger.kernel.org>, linux-s390@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, linux-c6x-dev@linux-c6x.org, linux-hexagon@vger.kernel.org, arcml <linux-snps-arc@lists.infradead.org>, "moderated list:H8/300 ARCHITECTURE" <uclinux-h8-devel@lists.sourceforge.jp>, linux-xtensa@linux-xtensa.org, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, linux-um@lists.infradead.org, linux-m68k@lists
 List-Id: devicetree@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On Thu, Oct 25, 2018 at 10:38:34AM +0100, Mike Rapoport wrote:
+> On Wed, Oct 24, 2018 at 02:55:17PM -0500, Rob Herring wrote:
+> > On Wed, Oct 24, 2018 at 2:33 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+> > >
+> > > Hi all,
+> > >
+> > > While investigating why ARM64 required a ton of objects to be rebuilt
+> > > when toggling CONFIG_DEV_BLK_INITRD, it became clear that this was
+> > > because we define __early_init_dt_declare_initrd() differently and we do
+> > > that in arch/arm64/include/asm/memory.h which gets included by a fair
+> > > amount of other header files, and translation units as well.
+> > 
+> > I scratch my head sometimes as to why some config options rebuild so
+> > much stuff. One down, ? to go. :)
+> > 
+> > > Changing the value of CONFIG_DEV_BLK_INITRD is a common thing with build
+> > > systems that generate two kernels: one with the initramfs and one
+> > > without. buildroot is one of these build systems, OpenWrt is also
+> > > another one that does this.
+> > >
+> > > This patch series proposes adding an empty initrd.h to satisfy the need
+> > > for drivers/of/fdt.c to unconditionally include that file, and moves the
+> > > custom __early_init_dt_declare_initrd() definition away from
+> > > asm/memory.h
+> > >
+> > > This cuts the number of objects rebuilds from 1920 down to 26, so a
+> > > factor 73 approximately.
+> > >
+> > > Apologies for the long CC list, please let me know how you would go
+> > > about merging that and if another approach would be preferable, e.g:
+> > > introducing a CONFIG_ARCH_INITRD_BELOW_START_OK Kconfig option or
+> > > something like that.
+> > 
+> > There may be a better way as of 4.20 because bootmem is now gone and
+> > only memblock is used. This should unify what each arch needs to do
+> > with initrd early. We need the physical address early for memblock
+> > reserving. Then later on we need the virtual address to access the
+> > initrd. Perhaps we should just change initrd_start and initrd_end to
+> > physical addresses (or add 2 new variables would be less invasive and
+> > allow for different translation than __va()). The sanity checks and
+> > memblock reserve could also perhaps be moved to a common location.
+> >
+> > Alternatively, given arm64 is the only oddball, I'd be fine with an
+> > "if (IS_ENABLED(CONFIG_ARM64))" condition in the default
+> > __early_init_dt_declare_initrd as long as we have a path to removing
+> > it like the above option.
+> 
+> I think arm64 does not have to redefine __early_init_dt_declare_initrd().
+> Something like this might be just all we need (completely untested,
+> probably it won't even compile):
 
-Removed the wrong compatible string "snps,dw-pcie", in case
-match incorrect driver.
+The alternative solution would be to replace initrd_start/initrd_end
+with physical address versions of these everywhere - that's what
+we're passed from DT, it's what 32-bit ARM would prefer, and seemingly
+what 64-bit ARM would also like as well.
 
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
----
-V2:
- - no change
+Grepping for initrd_start in arch/*/mm shows that there's lots of
+architectures that have virtual/physical conversions on these, and
+a number that have obviously been derived from 32-bit ARM's approach
+(with maintaining a phys_initrd_start variable to simplify things).
 
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi |  2 +-
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |  6 +++---
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |  6 +++---
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |  6 +++---
- arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi |  8 ++++----
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 12 ++++--------
- 6 files changed, 18 insertions(+), 22 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls1012a.dtsi
-index 5da732f82fa0..028a6daa5597 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -475,7 +475,7 @@
- 		};
-=20
- 		pcie@3400000 {
--			compatible =3D "fsl,ls1012a-pcie", "snps,dw-pcie";
-+			compatible =3D "fsl,ls1012a-pcie";
- 			reg =3D <0x00 0x03400000 0x0 0x00100000   /* controller registers */
- 			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names =3D "regs", "config";
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls1043a.dtsi
-index 3fed504b5381..5480d6c4c548 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -661,7 +661,7 @@
- 		};
-=20
- 		pcie@3400000 {
--			compatible =3D "fsl,ls1043a-pcie", "snps,dw-pcie";
-+			compatible =3D "fsl,ls1043a-pcie";
- 			reg =3D <0x00 0x03400000 0x0 0x00100000   /* controller registers */
- 			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names =3D "regs", "config";
-@@ -686,7 +686,7 @@
- 		};
-=20
- 		pcie@3500000 {
--			compatible =3D "fsl,ls1043a-pcie", "snps,dw-pcie";
-+			compatible =3D "fsl,ls1043a-pcie";
- 			reg =3D <0x00 0x03500000 0x0 0x00100000   /* controller registers */
- 			       0x48 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names =3D "regs", "config";
-@@ -711,7 +711,7 @@
- 		};
-=20
- 		pcie@3600000 {
--			compatible =3D "fsl,ls1043a-pcie", "snps,dw-pcie";
-+			compatible =3D "fsl,ls1043a-pcie";
- 			reg =3D <0x00 0x03600000 0x0 0x00100000   /* controller registers */
- 			       0x50 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names =3D "regs", "config";
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls1046a.dtsi
-index 51cbd50012d6..519315c5d507 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -630,7 +630,7 @@
- 		};
-=20
- 		pcie@3400000 {
--			compatible =3D "fsl,ls1046a-pcie", "snps,dw-pcie";
-+			compatible =3D "fsl,ls1046a-pcie";
- 			reg =3D <0x00 0x03400000 0x0 0x00100000   /* controller registers */
- 			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names =3D "regs", "config";
-@@ -655,7 +655,7 @@
- 		};
-=20
- 		pcie@3500000 {
--			compatible =3D "fsl,ls1046a-pcie", "snps,dw-pcie";
-+			compatible =3D "fsl,ls1046a-pcie";
- 			reg =3D <0x00 0x03500000 0x0 0x00100000   /* controller registers */
- 			       0x48 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names =3D "regs", "config";
-@@ -680,7 +680,7 @@
- 		};
-=20
- 		pcie@3600000 {
--			compatible =3D "fsl,ls1046a-pcie", "snps,dw-pcie";
-+			compatible =3D "fsl,ls1046a-pcie";
- 			reg =3D <0x00 0x03600000 0x0 0x00100000   /* controller registers */
- 			       0x50 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names =3D "regs", "config";
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls1088a.dtsi
-index a07f612ab56b..10b253c88a16 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -512,7 +512,7 @@
- 		};
-=20
- 		pcie@3400000 {
--			compatible =3D "fsl,ls1088a-pcie", "snps,dw-pcie";
-+			compatible =3D "fsl,ls1088a-pcie";
- 			reg =3D <0x00 0x03400000 0x0 0x00100000   /* controller registers */
- 			       0x20 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names =3D "regs", "config";
-@@ -536,7 +536,7 @@
- 		};
-=20
- 		pcie@3500000 {
--			compatible =3D "fsl,ls1088a-pcie", "snps,dw-pcie";
-+			compatible =3D "fsl,ls1088a-pcie";
- 			reg =3D <0x00 0x03500000 0x0 0x00100000   /* controller registers */
- 			       0x28 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names =3D "regs", "config";
-@@ -560,7 +560,7 @@
- 		};
-=20
- 		pcie@3600000 {
--			compatible =3D "fsl,ls1088a-pcie", "snps,dw-pcie";
-+			compatible =3D "fsl,ls1088a-pcie";
- 			reg =3D <0x00 0x03600000 0x0 0x00100000   /* controller registers */
- 			       0x30 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names =3D "regs", "config";
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls2088a.dtsi
-index 7c882da3f6b0..a5f668d786b8 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-@@ -119,7 +119,7 @@
- };
-=20
- &pcie1 {
--	compatible =3D "fsl,ls2088a-pcie", "snps,dw-pcie";
-+	compatible =3D "fsl,ls2088a-pcie";
- 	reg =3D <0x00 0x03400000 0x0 0x00100000   /* controller registers */
- 	       0x20 0x00000000 0x0 0x00002000>; /* configuration space */
-=20
-@@ -128,7 +128,7 @@
- };
-=20
- &pcie2 {
--	compatible =3D "fsl,ls2088a-pcie", "snps,dw-pcie";
-+	compatible =3D "fsl,ls2088a-pcie";
- 	reg =3D <0x00 0x03500000 0x0 0x00100000   /* controller registers */
- 	       0x28 0x00000000 0x0 0x00002000>; /* configuration space */
-=20
-@@ -137,7 +137,7 @@
- };
-=20
- &pcie3 {
--	compatible =3D "fsl,ls2088a-pcie", "snps,dw-pcie";
-+	compatible =3D "fsl,ls2088a-pcie";
- 	reg =3D <0x00 0x03600000 0x0 0x00100000   /* controller registers */
- 	       0x30 0x00000000 0x0 0x00002000>; /* configuration space */
-=20
-@@ -146,7 +146,7 @@
- };
-=20
- &pcie4 {
--	compatible =3D "fsl,ls2088a-pcie", "snps,dw-pcie";
-+	compatible =3D "fsl,ls2088a-pcie";
- 	reg =3D <0x00 0x03700000 0x0 0x00100000   /* controller registers */
- 	       0x38 0x00000000 0x0 0x00002000>; /* configuration space */
-=20
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls208xa.dtsi
-index d188774a36e8..80cc40f76a4a 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -630,8 +630,7 @@
- 		};
-=20
- 		pcie1: pcie@3400000 {
--			compatible =3D "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
--				     "snps,dw-pcie";
-+			compatible =3D "fsl,ls2080a-pcie", "fsl,ls2085a-pcie";
- 			reg-names =3D "regs", "config";
- 			interrupts =3D <0 108 0x4>; /* Level high type */
- 			interrupt-names =3D "intr";
-@@ -651,8 +650,7 @@
- 		};
-=20
- 		pcie2: pcie@3500000 {
--			compatible =3D "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
--				     "snps,dw-pcie";
-+			compatible =3D "fsl,ls2080a-pcie", "fsl,ls2085a-pcie";
- 			reg-names =3D "regs", "config";
- 			interrupts =3D <0 113 0x4>; /* Level high type */
- 			interrupt-names =3D "intr";
-@@ -672,8 +670,7 @@
- 		};
-=20
- 		pcie3: pcie@3600000 {
--			compatible =3D "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
--				     "snps,dw-pcie";
-+			compatible =3D "fsl,ls2080a-pcie", "fsl,ls2085a-pcie";
- 			reg-names =3D "regs", "config";
- 			interrupts =3D <0 118 0x4>; /* Level high type */
- 			interrupt-names =3D "intr";
-@@ -693,8 +690,7 @@
- 		};
-=20
- 		pcie4: pcie@3700000 {
--			compatible =3D "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
--				     "snps,dw-pcie";
-+			compatible =3D "fsl,ls2080a-pcie", "fsl,ls2085a-pcie";
- 			reg-names =3D "regs", "config";
- 			interrupts =3D <0 123 0x4>; /* Level high type */
- 			interrupt-names =3D "intr";
---=20
-2.17.1
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
