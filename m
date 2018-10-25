@@ -1,58 +1,92 @@
-From: Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH 1/6] dt-bindings: drm/panel: simple: Add no-hpd property
-Date: Thu, 25 Oct 2018 14:06:22 -0400
-Message-ID: <20181025175118.GJ154160@art_vandelay>
-References: <20181022204639.8558-1-dianders@chromium.org>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v4 2/7] dt-bindings: ti-lmu: Modify dt bindings for the
+ LM3697
+Date: Thu, 25 Oct 2018 13:07:25 -0500
+Message-ID: <beb1a6e1-8120-be94-b1a4-60ea6721765d@ti.com>
+References: <20181023170623.31820-1-dmurphy@ti.com>
+ <20181023170623.31820-2-dmurphy@ti.com> <20181024090421.GB24997@amd>
+ <e8800c2e-8ada-7a0d-c1a6-14ddcbe1576d@ti.com> <20181024145434.GC9327@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20181022204639.8558-1-dianders@chromium.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-arm-msm@vger.kernel.org, Sandeep Panda <spanda@codeaurora.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, ryandcase@chromium.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181024145434.GC9327@bogus>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, lee.jones@linaro.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBPY3QgMjIsIDIwMTggYXQgMDE6NDY6MzRQTSAtMDcwMCwgRG91Z2xhcyBBbmRlcnNv
-biB3cm90ZToKPiBTb21lIGVEUCBwYW5lbHMgdGhhdCBhcmUgZGVzaWduZWQgdG8gYmUgYWx3YXlz
-IGNvbm5lY3RlZCB0byBhIGJvYXJkCj4gdXNlIHRoZWlyIEhQRCBzaWduYWwgdG8gc2lnbmFsIHRo
-YXQgdGhleSd2ZSBmaW5pc2hlZCBwb3dlcmluZyBvbiBhbmQKPiB0aGV5J3JlIHJlYWR5IHRvIGJl
-IHRhbGtlZCB0by4KPiAKPiBIb3dldmVyLCBmb3IgdmFyaW91cyByZWFzb25zIGl0J3MgcG9zc2li
-bGUgdGhhdCB0aGUgSFBEIHNpZ25hbCBmcm9tCj4gdGhlIHBhbmVsIGlzbid0IGFjdHVhbGx5IGhv
-b2tlZCB1cC4gIEluIHRoZSBjYXNlIHdoZXJlIHRoZSBIUEQgaXNuJ3QKPiBob29rZWQgdXAgeW91
-IGNhbiBsb29rIGF0IHRoZSB0aW1pbmcgZGlhZ3JhbSBvbiB0aGUgcGFuZWwgZGF0YXNoZWV0Cj4g
-YW5kIGluc2VydCBhIGRlbGF5IGZvciB0aGUgbWF4aW11bSBhbW91bnQgb2YgdGltZSB0aGF0IHRo
-ZSBIUEQgbWlnaHQKPiB0YWtlIHRvIGNvbWUgdXAuCj4gCj4gTGV0J3MgYWRkIGEgcHJvcGVydHkg
-aW4gdGhlIGRldmljZSB0cmVlIGZvciB0aGlzIGNvbmNlcHQuCj4gCj4gU2lnbmVkLW9mZi1ieTog
-RG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPgoKUmV2aWV3ZWQtYnk6IFNl
-YW4gUGF1bCA8c2VhbkBwb29ybHkucnVuPgoKPiAtLS0KPiAKPiAgLi4uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0ICAgICAgICAgfCAzICsrKwo+ICAx
-IGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUt
-cGFuZWwudHh0Cj4gaW5kZXggNDVhNDU3YWQzOGYwLi5iMmI4NzJjNzEwZjIgMTAwNjQ0Cj4gLS0t
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2ltcGxl
-LXBhbmVsLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQKPiBAQCAtMTEsNiArMTEsOSBAQCBPcHRpb25hbCBw
-cm9wZXJ0aWVzOgo+ICAtIGRkYy1pMmMtYnVzOiBwaGFuZGxlIG9mIGFuIEkyQyBjb250cm9sbGVy
-IHVzZWQgZm9yIEREQyBFRElEIHByb2JpbmcKPiAgLSBlbmFibGUtZ3Bpb3M6IEdQSU8gcGluIHRv
-IGVuYWJsZSBvciBkaXNhYmxlIHRoZSBwYW5lbAo+ICAtIGJhY2tsaWdodDogcGhhbmRsZSBvZiB0
-aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKPiArLSBuby1ocGQ6IFRo
-aXMgcGFuZWwgaXMgc3VwcG9zZWQgdG8gY29tbXVuaWNhdGUgdGhhdCBpdCdzIHJlYWR5IHZpYSBI
-UEQKPiArICAoaG90IHBsdWcgZGV0ZWN0KSBzaWduYWwsIGJ1dCB0aGUgc2lnbmFsIGlzbid0IGhv
-b2tlZCB1cCBzbyB3ZSBzaG91bGQKPiArICBoYXJkY29kZSB0aGUgbWF4IGRlbGF5IGZyb20gdGhl
-IHBhbmVsIHNwZWMgd2hlbiBwb3dlcmluZyB1cCB0aGUgcGFuZWwuCj4gIAo+ICBFeGFtcGxlOgo+
-ICAKPiAtLSAKPiAyLjE5LjEuNTY4LmcxNTJhZDhlMzM2LWdvb2cKPiAKCi0tIApTZWFuIFBhdWws
-IFNvZnR3YXJlIEVuZ2luZWVyLCBHb29nbGUgLyBDaHJvbWl1bSBPUwpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Rob
+
+On 10/24/2018 09:54 AM, Rob Herring wrote:
+> On Wed, Oct 24, 2018 at 07:07:57AM -0500, Dan Murphy wrote:
+>> Pavel
+>>
+>> On 10/24/2018 04:04 AM, Pavel Machek wrote:
+>>> Hi!
+>>>
+>>>> The LM3697 is a single function LED driver. The single function LED
+>>>> driver needs to reside in the LED directory as a dedicated LED driver
+>>>> and not as a MFD device.  The device does have common brightness and ramp
+>>>
+>>> So it is single function LED driver. That does not mean it can not
+>>> share bindings with the rest. Where the bindings live is not imporant.
+>>>
+>>
+>> It can share bindings that are correctly done, not ones that are incomplete and incorrect.
+>>
+>> Where bindings live is important to new Linux kernel developers and product 
+>> developers looking for the proper documentation on the H/W bindings.
+>>
+>>>> reside in the Documentation/devicetree/bindings/leds directory and follow the
+>>>> current LED and general bindings guidelines.
+>>>
+>>> What you forgot to tell us in the changelog:
+>>
+>> I can add this to the changelog.
+>>
+>>>
+>>>> +Optional child properties:
+>>>> +	- runtime-ramp-up-msec: Current ramping from one brightness level to
+>>>> +				the a higher brightness level.
+>>>> +				Range from 2048 us - 117.44 s
+>>>
+>>> The other binding uses "ramp-up-msec". Tell us why you are changing this, or
+>>> better don't change things needlessly.
+>>>
+>>> We don't want to be using "runtime-ramp-up-msec" for one device and
+>>> "ramp-up-msec" for the other.
+>>
+>> This is another example of how the original bindings were incorrect and misleading.
+>>
+>> The LM3697 have 2 ramp implementations that can be used.
+>>
+>> Startup/Shutdown ramp and Runtime Ramp.  Same Ramp rates different registers and
+>> different end user experience.
+>>
+>> So having a single node call ramp-up-msec is misleading and it does not
+>> indicate what the H/W will do.
+> 
+> The existing ones aren't documented (present in the example is not 
+> documented). This seems like something that should be common rather than 
+> TI specific. Though it also seems more like something the user would 
+> want to control (i.e. sysfs) rather than fixed in DT.
+> 
+
+Changing the runtime ramping or startup/shutdown ramping could also be done via sysfs.
+I am not dedicated to having it in the DT file I was following prior art.
+
+Jacek
+
+Do you have an opinion on this?
+
+Dan
+
+> Rob
+> 
+
+
+-- 
+------------------
+Dan Murphy
