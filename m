@@ -1,8 +1,10 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v3 0/3] of/fdt: Absorb ARM64's __early_init_dt_declare_initrd()
-Date: Wed, 24 Oct 2018 17:17:39 -0700
-Message-ID: <20181025001742.6510-1-f.fainelli@gmail.com>
+Subject: [PATCH v3 1/3] of/fdt: Absorb ARM64's __early_init_dt_declare_initrd()
+Date: Wed, 24 Oct 2018 17:17:40 -0700
+Message-ID: <20181025001742.6510-2-f.fainelli@gmail.com>
+References: <20181025001742.6510-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181025001742.6510-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: bcm-kernel-feedback-list@broadcom.com, Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Christoffer Dall <christoffer.dall@arm.com>, Andrey Konovalov <andreyknvl@google.com>, "moderated list:ARM64 PORT
@@ -10,24 +12,34 @@ Cc: bcm-kernel-feedback-list@broadcom.com, Florian Fainelli <f.fainelli@gmail.co
         DEVICE TREE" <devicetree@vger.kernel.org>, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+ARM64 is the only architecture that requires a re-definition of
+__early_init_dt_declare_initrd(), absorb its custom implemention in
+drivers/of/fdt.c.
 
-Based on Rob's suggestion, this is a follow-up to the patch series
-posted here previously that aims at cutting the ARM64 rebuild
-time/number of objects. Rob indicated that he was adamant to just having
-drivers/of/fdt.c contain the ARM64 specific behavior, so this patch
-series does exactly that.
+Suggested-by: Rob Herring <robh@kernel.org.
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/of/fdt.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-https://www.spinics.net/lists/devicetree/msg255512.html
-
-Florian Fainelli (3):
-  of/fdt: Absorb ARM64's __early_init_dt_declare_initrd()
-  arm64: Remove custom __early_init_dt_declare_initrd implenentation
-  of/fdt: Remove definition check for __early_init_dt_declare_initrd
-
- arch/arm64/include/asm/memory.h | 8 --------
- drivers/of/fdt.c                | 7 +++++--
- 2 files changed, 5 insertions(+), 10 deletions(-)
-
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 800ad252cf9c..7d316f008f22 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -896,9 +896,14 @@ const void * __init of_flat_dt_match_machine(const void *default_match,
+ static void __early_init_dt_declare_initrd(unsigned long start,
+ 					   unsigned long end)
+ {
++#if IS_ENABLED(CONFIG_ARM64)
++	initrd_start = start;
++	initrd_end = end;
++#else
+ 	initrd_start = (unsigned long)__va(start);
+ 	initrd_end = (unsigned long)__va(end);
+ 	initrd_below_start_ok = 1;
++#endif
+ }
+ #endif
+ 
 -- 
 2.17.1
