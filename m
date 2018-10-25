@@ -1,58 +1,51 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v2 14/15] arm64: dts: allwinner: a64: Add
- DSI pipeline
-Date: Thu, 25 Oct 2018 18:51:14 +0530
-Message-ID: <CAMty3ZC1jCfuP8tFKvgcdJ5R_Ou0ejAT_VYv=fV1Kh4UanLWcg@mail.gmail.com>
-References: <20181023155035.9101-1-jagan@amarulasolutions.com>
- <20181023155035.9101-15-jagan@amarulasolutions.com> <20181024181048.w4iwebtac6wzmgt4@flea>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Pascal PAILLET-LME <p.paillet@st.com>
+Subject: Re: [PATCH v4 4/8] regulator: stpmic1: add stpmic1 regulator driver
+Date: Thu, 25 Oct 2018 13:23:08 +0000
+Message-ID: <5BD1C3BB.6060500@st.com>
+References: <1539853324-29051-1-git-send-email-p.paillet@st.com>
+ <1539853324-29051-5-git-send-email-p.paillet@st.com>
+ <20181019115015.GC5895@sirena.org.uk> <5BD06B96.3080809@st.com>
+ <20181024131716.GQ2103@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBV4GY7PAKGQEVC5MMQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181024181048.w4iwebtac6wzmgt4@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181024131716.GQ2103@sirena.org.uk>
+Content-Language: en-US
+Content-ID: <AF637F4DFBD7E54B9A25F414B9E1D73B@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 24, 2018 at 11:40 PM Maxime Ripard
-<maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> On Tue, Oct 23, 2018 at 09:20:34PM +0530, Jagan Teki wrote:
-> > The A64 has a MIPI-DSI block which is similar to A31
-> > without mod clock.
-> >
-> > So, add dsi node with A64 compatible, dphy node with
-> > A31 compatible and finally connect dsi to tcon0 to
-> > make proper DSI pipeline.
-> >
-> > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > ---
-> > Changes for v2:
-> > - use A64 dphy compatible
-> >
-> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 45 +++++++++++++++++++
-> >  1 file changed, 45 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > index f3a66f888205..f82e6b165d57 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > @@ -320,6 +320,11 @@
-> >                                       #address-cells = <1>;
-> >                                       #size-cells = <0>;
-> >                                       reg = <1>;
-> > +
-> > +                                     tcon0_out_dsi: endpoint@1 {
-> > +                                             reg = <1>;
-> > +                                             remote-endpoint = <&dsi_in_tcon0>;
->
-> You need to set the allwinner,channel property there.
+Hello Mark,
 
-Are you referring to allwinner,tcon-channel = <1> ?
+Le 10/24/2018 03:17 PM, Mark Brown a écrit :
+> On Wed, Oct 24, 2018 at 12:54:46PM +0000, Pascal PAILLET-LME wrote:
+>
+>> I'm sorry, I'm not sure to understand. Would you prefer to not register
+>> regulators that
+>> are not described in the device-tree ?
+> No, I'm saying register all regulators regardless of if they are in the
+> device tree - you shouldn't be looking at the init data at all here,
+> just let the framework match them using of_match.
+I have reworked the code so that we don't touch any more to the init_data.
+the new loop to register the regulators is below:
+
+     for (i = 0; i < ARRAY_SIZE(stpmic1_regulator_cfgs); i++) {
+         ret = stpmic1_regulator_register(pdev, i, &stpmic1_matches[i],
+                          regul);
+         if (ret < 0)
+             return ret;
+         regul++;
+     }
+
+Each regulator is registered, even is it is not described in the 
+device-tree.
+
+stpmic1_regulator_parse_dt() and stpmic1_regulator_init() are now merged 
+inside
+stpmic1_regulator_register() function.
+
+Thank You,
+pascal
