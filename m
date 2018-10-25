@@ -1,11 +1,10 @@
 From: <jiada_wang@mentor.com>
-Subject: [PATCH linux-next v1 2/4] clk: renesas: Add binding document for AVB Counter Clock
-Date: Thu, 25 Oct 2018 16:23:47 +0900
-Message-ID: <20181025072349.15173-3-jiada_wang@mentor.com>
+Subject: [PATCH linux-next v1 3/4] arm64: ulcb: Add avb counter clock
+Date: Thu, 25 Oct 2018 16:23:48 +0900
+Message-ID: <20181025072349.15173-4-jiada_wang@mentor.com>
 References: <20181025072349.15173-1-jiada_wang@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181025072349.15173-1-jiada_wang@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -15,39 +14,29 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jiada Wang <jiada_wang@mentor.com>
 
-Add device tree bindings for avb counter clock for Renesas
-R-Car Socs.
+Add avb counter clock node to R-Car ULCB boards
 
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- .../bindings/clock/renesas,avb-clk.txt        | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/renesas,avb-clk.txt
+ arch/arm64/boot/dts/renesas/ulcb.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/renesas,avb-clk.txt b/Documentation/devicetree/bindings/clock/renesas,avb-clk.txt
-new file mode 100644
-index 000000000000..03bf50b5830c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/renesas,avb-clk.txt
-@@ -0,0 +1,19 @@
-+* Renesas AVB Counter Clock
-+
-+The AVB Counter Clocks are provided by avb_counter8 Clock Generator,
-+avb_counter8 has dividers which operates with S0D1ϕ clock and has
-+8 output clocks.
-+
-+Required Properties:
-+  - compatible: Must be "renesas,clk-avb"
-+  - reg: Base address and length of the memory resource used by the AVB
-+  - #clock-cells: Must be 1
-+
-+Example
-+-------
-+
+diff --git a/arch/arm64/boot/dts/renesas/ulcb.dtsi b/arch/arm64/boot/dts/renesas/ulcb.dtsi
+index 89daca7356df..698f933d4cec 100644
+--- a/arch/arm64/boot/dts/renesas/ulcb.dtsi
++++ b/arch/arm64/boot/dts/renesas/ulcb.dtsi
+@@ -32,6 +32,12 @@
+ 		clock-frequency = <12288000>;
+ 	};
+ 
 +	clk_avb: avb-clock@ec5a011c {
 +		compatible = "renesas,clk-avb";
 +		reg = <0 0xec5a011c 0 0x24>;
 +		#clock-cells = <1>;
 +	};
++
+ 	hdmi0-out {
+ 		compatible = "hdmi-connector";
+ 		type = "a";
 -- 
 2.17.0
