@@ -1,67 +1,26 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 1/8] dt-bindings: mfd: document stpmic1
-Date: Thu, 25 Oct 2018 07:57:53 -0500
-Message-ID: <CAL_JsqKsp8kTK2v_cBrNm+enzieQSEh2G7KMxsBdidr+XhDwTg@mail.gmail.com>
-References: <1539853324-29051-1-git-send-email-p.paillet@st.com>
- <1539853324-29051-2-git-send-email-p.paillet@st.com> <20181025094430.GQ4939@dell>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx: Add dummy PHYs for HSIC-only USB controllers
+Date: Thu, 25 Oct 2018 10:08:53 -0300
+Message-ID: <CAOMZO5CPPk6nqQdZ8KfXd=+B5m5R_hoOvz6pfPnR4kWeYkG2OQ@mail.gmail.com>
+References: <1539848729-27646-1-git-send-email-frieder.schrempf@kontron.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181025094430.GQ4939@dell>
+In-Reply-To: <1539848729-27646-1-git-send-email-frieder.schrempf@kontron.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Pascal PAILLET-LME <p.paillet@st.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Enric Balletbo i Serra <eballetbo@gmail.com>
+To: frieder.schrempf@kontron.de
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 25, 2018 at 4:44 AM Lee Jones <lee.jones@linaro.org> wrote:
+On Thu, Oct 18, 2018 at 5:00 AM Frieder Schrempf
+<frieder.schrempf@kontron.de> wrote:
 >
-> Rob: please grep your name for some feedback.
+> Some SOCs in the i.MX6 family have a USB host controller that is
+> only capable of the HSIC interface and has no on-board PHY.
 >
-> On Thu, 18 Oct 2018, Pascal PAILLET-LME wrote:
+> To be able to use these controllers, we need to add "usb-nop-xceiv"
+> dummy PHYs.
 >
-> > From: pascal paillet <p.paillet@st.com>
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-> > +Optional parent device properties:
-> > +- st,main-control-register:
-> > +     -bit 1: Power cycling will be performed on turn OFF condition
-> > +     -bit 2: PWRCTRL is functional
-> > +     -bit 3: PWRCTRL active high
-> > +- st,pads-pull-register:
-> > +     -bit 1: WAKEUP pull down is not active
-> > +     -bit 2: PWRCTRL pull up is active
-> > +     -bit 3: PWRCTRL pull down is active
-> > +     -bit 4: WAKEUP detector is disabled
-> > +- st,vin-control-register:
-> > +     -bit 0: VINLOW monitoring is enabled
-> > +     -bit [1...3]: VINLOW rising threshold
-> > +             000 VINOK_f + 50mV
-> > +             001 VINOK_f + 100mV
-> > +             010 VINOK_f + 150mV
-> > +             011 VINOK_f + 200mV
-> > +             100 VINOK_f + 250mV
-> > +             101 VINOK_f + 300mV
-> > +             110 VINOK_f + 350mV
-> > +             111 VINOK_f + 400mV
-> > +     -bit [4...5]: VINLOW hyst
-> > +             00 100mV
-> > +             01 200mV
-> > +             10 300mV
-> > +             11 400mV
-> > +     -bit 6: SW_OUT detector is disabled
-> > +     -bit 7: SW_IN detector is enabled.
-> > +- st,usb-control-register:
-> > +     -bit 3: SW_OUT current limit
-> > +             0: 600mA
-> > +             1: 1.1A
-> > +     -bit 4: VBUS_OTG discharge is enabled
-> > +     -bit 5: SW_OUT discharge is enabled
-> > +     -bit 6: VBUS_OTG detection is enabled
-> > +     -bit 7: BOOST_OVP is disabled
->
-> I'm surprised Rob allowed you to add register bits in a DT property?
-
-Yeah, they are certainly questionable and not something we encourage,
-but the alternative would be dozens of properties which only apply for
-this one device and just get translated back to register values.
-
-Rob
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
