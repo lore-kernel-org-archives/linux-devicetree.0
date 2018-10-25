@@ -1,51 +1,60 @@
-From: Pascal PAILLET-LME <p.paillet@st.com>
-Subject: Re: [PATCH v4 4/8] regulator: stpmic1: add stpmic1 regulator driver
-Date: Thu, 25 Oct 2018 13:23:08 +0000
-Message-ID: <5BD1C3BB.6060500@st.com>
-References: <1539853324-29051-1-git-send-email-p.paillet@st.com>
- <1539853324-29051-5-git-send-email-p.paillet@st.com>
- <20181019115015.GC5895@sirena.org.uk> <5BD06B96.3080809@st.com>
- <20181024131716.GQ2103@sirena.org.uk>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 1/3] of/fdt: Absorb ARM64's __early_init_dt_declare_initrd()
+Date: Thu, 25 Oct 2018 08:25:04 -0500
+Message-ID: <CAL_JsqK-bSu520fx-dWMyHsooOU9=24DEf6fZSudQ-QKDkXbGA@mail.gmail.com>
+References: <20181025001742.6510-1-f.fainelli@gmail.com> <20181025001742.6510-2-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181024131716.GQ2103@sirena.org.uk>
-Content-Language: en-US
-Content-ID: <AF637F4DFBD7E54B9A25F414B9E1D73B@st.com>
+In-Reply-To: <20181025001742.6510-2-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list@broadcom.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, christoffer.dall@arm.com, andreyknvl@google.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
-
-Le 10/24/2018 03:17 PM, Mark Brown a écrit :
-> On Wed, Oct 24, 2018 at 12:54:46PM +0000, Pascal PAILLET-LME wrote:
+On Wed, Oct 24, 2018 at 7:17 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
 >
->> I'm sorry, I'm not sure to understand. Would you prefer to not register
->> regulators that
->> are not described in the device-tree ?
-> No, I'm saying register all regulators regardless of if they are in the
-> device tree - you shouldn't be looking at the init data at all here,
-> just let the framework match them using of_match.
-I have reworked the code so that we don't touch any more to the init_data.
-the new loop to register the regulators is below:
+> ARM64 is the only architecture that requires a re-definition of
+> __early_init_dt_declare_initrd(), absorb its custom implemention in
+> drivers/of/fdt.c.
+>
+> Suggested-by: Rob Herring <robh@kernel.org.
 
-     for (i = 0; i < ARRAY_SIZE(stpmic1_regulator_cfgs); i++) {
-         ret = stpmic1_regulator_register(pdev, i, &stpmic1_matches[i],
-                          regul);
-         if (ret < 0)
-             return ret;
-         regul++;
-     }
+You forgot a shift key. :)
 
-Each regulator is registered, even is it is not described in the 
-device-tree.
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  drivers/of/fdt.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 800ad252cf9c..7d316f008f22 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -896,9 +896,14 @@ const void * __init of_flat_dt_match_machine(const void *default_match,
+>  static void __early_init_dt_declare_initrd(unsigned long start,
+>                                            unsigned long end)
+>  {
+> +#if IS_ENABLED(CONFIG_ARM64)
 
-stpmic1_regulator_parse_dt() and stpmic1_regulator_init() are now merged 
-inside
-stpmic1_regulator_register() function.
+C code, not preprocessor please.
 
-Thank You,
-pascal
+> +       initrd_start = start;
+> +       initrd_end = end;
+
+Thinking some more about this, perhaps it is better to just add the
+*_phys variants now along side the VA variants and set them here. Then
+the arm64 code can override the initrd_start, initrd_end, and
+initrd_below_start_ok values.
+
+> +#else
+>         initrd_start = (unsigned long)__va(start);
+>         initrd_end = (unsigned long)__va(end);
+>         initrd_below_start_ok = 1;
+> +#endif
+>  }
+>  #endif
+>
+> --
+> 2.17.1
+>
