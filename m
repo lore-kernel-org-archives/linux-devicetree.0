@@ -1,90 +1,56 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: Re: [PATCH v6 1/6] dt-bindings: power: Introduce one property to
- present the battery internal resistance
-Date: Thu, 25 Oct 2018 22:13:49 +0200
-Message-ID: <20181025201349.c4564dgc7743kosx@earth.universe>
-References: <e7c061535f2dcca54d6498405fdd5ed7098b19f9.1540189330.git.baolin.wang@linaro.org>
- <CAMz4kuJCS1_E+CUdANepYe+WpYSOwovZ9Rnu85zvTgmV9BE5+g@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH linux-next v1 3/4] arm64: ulcb: Add avb counter clock
+Date: Thu, 25 Oct 2018 22:22:47 +0200
+Message-ID: <CAMuHMdUciu+SJR+CsrwzkdUtX3L82xAzqgtrybYmcq--sR7Wig@mail.gmail.com>
+References: <20181025072349.15173-1-jiada_wang@mentor.com> <20181025072349.15173-4-jiada_wang@mentor.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ugq6v2bge6kmq75q"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMz4kuJCS1_E+CUdANepYe+WpYSOwovZ9Rnu85zvTgmV9BE5+g@mail.gmail.com>
+In-Reply-To: <20181025072349.15173-4-jiada_wang@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>, Craig Tatlor <ctatlor97@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+To: Jiada Wang <jiada_wang@mentor.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Jiada,
 
---ugq6v2bge6kmq75q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Oct 25, 2018 at 9:24 AM <jiada_wang@mentor.com> wrote:
+> From: Jiada Wang <jiada_wang@mentor.com>
+>
+> Add avb counter clock node to R-Car ULCB boards
+>
+> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 
-Hi Baolin,
+Thanks for your patch!
 
-On Thu, Oct 25, 2018 at 10:01:55AM +0800, Baolin Wang wrote:
-> Hi Sebastian,
->=20
-> On 22 October 2018 at 15:43, Baolin Wang <baolin.wang@linaro.org> wrote:
-> > The internal resistance of a battery is not a constant in its life cycl=
-e,
-> > this varies over the age of the battery or temperature and so on. But we
-> > just want use one constant battery internal resistance to estimate the
-> > battery capacity. Thus this patch introduces one property to present
-> > the battery factory internal resistance for battery information.
-> >
-> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > ---
-> > Changes from v5:
-> >  - None.
-> >
-> > Changes from v4:
-> >  - None.
-> >
-> > Changes from v3:
-> >  - Split binding into one separate patch.
-> >  - Add LinusW reviewed tag.
-> >
-> > Changes from v2:
-> >  - Rename the property.
-> >  - Improve the commit message.
-> >
-> > Changes from v1:
-> >  - New patch in v2.
-> > ---
->=20
-> I think this v6 patch set have addressed your comments on v5, so could
-> you apply this patch set if there are no other comments? I hope this
-> driver can be merged into 4.20 finally. Thanks.
+> --- a/arch/arm64/boot/dts/renesas/ulcb.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/ulcb.dtsi
+> @@ -32,6 +32,12 @@
+>                 clock-frequency = <12288000>;
+>         };
+>
+> +       clk_avb: avb-clock@ec5a011c {
+> +               compatible = "renesas,clk-avb";
+> +               reg = <0 0xec5a011c 0 0x24>;
+> +               #clock-cells = <1>;
+> +       };
+> +
+>         hdmi0-out {
+>                 compatible = "hdmi-connector";
+>                 type = "a";
 
-Everything looks fine to me. I will merge this directly after the
-4.20 merge window has been closed and linux-next is open again.
-I'm not merging non-trivial, non-bugfix patches this lates during the
-release process.
+Why would this belong in the board .dtsi, not in the SoC .dtsi?
+(same for salvator-common.dtsi)
 
--- Sebastian
+How is this intended to be used by the AVB?
 
---ugq6v2bge6kmq75q
-Content-Type: application/pgp-signature; name="signature.asc"
+Gr{oetje,eeting}s,
 
------BEGIN PGP SIGNATURE-----
+                        Geert
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlvSI/oACgkQ2O7X88g7
-+poBrA/+KA++EX9zBEIHotTx/Qn4oktuABsscaPQY621URT5I2mNTL/TDclEc3o9
-nFtw4EvEVrLWIfdPM3q2RST6JOWr1oh9/etdfT2wYBdF9Hl6Vn/L5ZVebUnyHNCf
-LjsVwLKd6BjeGlIhEGc3NyLsCDYiH3yZlLrV95fmkDDyAjuKOMXjw00TG7AgH26Z
-2BRNXZIc2stb4ZAJBYoHbVwpCiwHSYe6eUKI4/2Q0rgONalh1z8ZOWpzSTp32kLQ
-wbQ7aBbM2pDhxJwCp0ln7yQeeT3x3ydWn5lXoUAhV9ddkG9vIIjuf/RWQ9tc/wjT
-zCjgfAi4cPa6R3TQCnvky60fcE3MbCr81g8BCyh90jBCbqwtr1/R0Veoyy2QGpI7
-SO/CVTurvroOyP6/F+grRNGEkQAIque6Kyw60tCGDmWPzFHsOCC7kOk91gC1s3b9
-LAGY3QHu1h4Lwr6hUlewW4v+vuz32wa9vufzLoAj4+ckQvE9c7xrv9w4UbJYcTO8
-ku9xD7JR/5d48rUmVp8h+jhkwTKJiL8Ckqtd8KaXQwFN2h/VCUBNYhyl2ctXlMpb
-qJ3y09JvRR3mRty5ojr3ILuPsE8fTKghO/0aWDRNBpuedp2d8BUKdtJFpjjfg0sZ
-KEEAciTlqelWk6Mzx03XHISQxNwvl0xvhXGWdEqBCws0n7SB60A=
-=fu6Q
------END PGP SIGNATURE-----
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---ugq6v2bge6kmq75q--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
