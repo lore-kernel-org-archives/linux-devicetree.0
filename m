@@ -1,94 +1,102 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH v2 5/6] dt-bindings: drm/panel: simple: Innolux TV123WAM is actually P120ZDG-BF1
-Date: Thu, 25 Oct 2018 15:21:33 -0700
-Message-ID: <20181025222134.174583-5-dianders@chromium.org>
-References: <20181025222134.174583-1-dianders@chromium.org>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ
+ Firmware bindings
+Date: Thu, 25 Oct 2018 15:43:39 -0700
+Message-ID: <20181025224339.GB22824@google.com>
+References: <1539257761-23023-1-git-send-email-tdas@codeaurora.org>
+ <1539257761-23023-2-git-send-email-tdas@codeaurora.org>
+ <CAP245DV4yK2u2tS_Jjgb1PBx+qkXPXBOs3w4THNDaBEw7WGDLg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181025222134.174583-1-dianders@chromium.org>
+Content-Disposition: inline
+In-Reply-To: <CAP245DV4yK2u2tS_Jjgb1PBx+qkXPXBOs3w4THNDaBEw7WGDLg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Paul <seanpaul@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, Sandeep Panda <spanda@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, jsanka@codeaurora.org, ryandcase@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Taniya Das <tdas@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Saravana Kannan <skannan@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-As far as I can tell the bindings that were added in commit
-9c04400f7ea6 ("dt-bindings: drm/panel: Document Innolux TV123WAM panel
-bindings") weren't actually for Innolux TV123WAM but were actually for
-Innolux P120ZDG-BF1.
+Hi,
 
-As far as I can tell the Innolux TV123WAM isn't a real panel and but
-it's a mosh between the TI TV123WAM and the Innolux P120ZDG-BF1.
-Let's unmosh.
+On Tue, Oct 23, 2018 at 05:23:34PM +0530, Amit Kucheria wrote:
+> Hi Taniya,
+> 
+> Both the patches are missing v9 in their subject line - this threw off
+> patchwork when trying to download the patches.
+> 
+> On Thu, Oct 11, 2018 at 5:06 PM Taniya Das <tdas@codeaurora.org> wrote:
+> >
+> > Add QCOM cpufreq firmware device bindings for Qualcomm Technology Inc's
+> > SoCs. This is required for managing the cpu frequency transitions which are
+> > controlled by the hardware engine.
+> 
+> I tested these patches on the sdm845-mtp against 4.19 and found that
+> the frequency gets stuck at the highest opp (the boost frequency)
+> after running a couple of 'yes > /dev/null &' instances. Have you
+> tested these against a mainline kernel?
+> 
+> See cpufreq statistics below:
+> 
+> linaro-test [rc=0]# cat policy?/scaling_cur_freq
+> 300000
+> 2803200
+> 
+> linaro-test [rc=0]# cat policy?/stats/time_in_state
+> 300000 100840
+> 403200 388
+> 480000 71
+> 576000 54
+> 652800 22
+> 748800 11
+> 825600 5
+> 902400 5
+> 979200 9
+> 1056000 3
+> 1132800 2
+> 1228800 5
+> 1324800 8
+> 1420800 2
+> 1516800 1
+> 1612800 0
+> 1689600 0
+> 1766400 392
+> 825600 22048
+> 902400 21
+> 979200 4
+> 1056000 15
+> 1209600 6
+> 1286400 0
+> 1363200 1
+> 1459200 0
+> 1536000 0
+> 1612800 1
+> 1689600 0
+> 1766400 0
+> 1843200 2
+> 1920000 2
+> 1996800 0
+> 2092800 0
+> 2169600 0
+> 2246400 0
+> 2323200 0
+> 2400000 0
+> 2476800 0
+> 2553600 0
+> 2649600 0
+> 2707200 0
+> 2764800 0
+> 2784000 0
+> 2803200 79718
 
-Here's my evidence:
+I can repro this on SDM845 with a v4.19 kernel.
 
-* Searching for TV123WAM on the Internet turns up a TI panel.  While
-  it's possible that an Innolux panel has the same model number as the
-  TI Panel, it seems a little doubtful.  Looking up the datasheet from
-  the TI Panel shows that it's 1920 x 1280 and 259.2 mm x 172.8 mm.
+Since the little cores don't have a boost frequency I think maxing out
+can be expected with a high workload and no thermal throttling.
+However the big cores have a boost frequency (2.803 MHz), so the
+driver shouldn't be stuck at it. Though in practice I also wonder if
+the ~1% 'boost' makes a big difference in terms of performance or CPU
+overload ...
 
-* As far as I know, the patch adding the Innolux Panel was supposed to
-  be for the board that's sitting in front of me as I type this
-  (support for that board is not yet upstream).  On the back of that
-  panel I see Innolux P120ZDZ-EZ1 rev B1.
+Cheers
 
-* Someone pointed me at a datasheet that's supposed to be for the
-  panel in front of me (sorry, I can't share the datasheet).  That
-  datasheet has the string "p120zdg-bf1"
-
-* If I search for "P120ZDG-BF1" on the Internet I get hits for panels
-  that are 2160x1440.  They don't have datasheets, but the fact that
-  the resolution matches is a good sign.
-
-While we doing the rename, also mention that no-hpd can be used with
-this panel.  See the previous patch in this series ("drm/panel:
-simple: Add "no-hpd" delay for Innolux TV123WAM").
-
-Fixes: 9c04400f7ea6 ("dt-bindings: drm/panel: Document Innolux TV123WAM panel bindings")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Cc: Sandeep Panda <spanda@codeaurora.org>
----
-
-Changes in v2: None
-
- .../{innolux,tv123wam.txt => innolux,p120zdg-bf1.txt}     | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
- rename Documentation/devicetree/bindings/display/panel/{innolux,tv123wam.txt => innolux,p120zdg-bf1.txt} (70%)
-
-diff --git a/Documentation/devicetree/bindings/display/panel/innolux,tv123wam.txt b/Documentation/devicetree/bindings/display/panel/innolux,p120zdg-bf1.txt
-similarity index 70%
-rename from Documentation/devicetree/bindings/display/panel/innolux,tv123wam.txt
-rename to Documentation/devicetree/bindings/display/panel/innolux,p120zdg-bf1.txt
-index a9b35265fa13..513f03466aba 100644
---- a/Documentation/devicetree/bindings/display/panel/innolux,tv123wam.txt
-+++ b/Documentation/devicetree/bindings/display/panel/innolux,p120zdg-bf1.txt
-@@ -1,20 +1,22 @@
--Innolux TV123WAM 12.3 inch eDP 2K display panel
-+Innolux P120ZDG-BF1 12.02 inch eDP 2K display panel
- 
- This binding is compatible with the simple-panel binding, which is specified
- in simple-panel.txt in this directory.
- 
- Required properties:
--- compatible: should be "innolux,tv123wam"
-+- compatible: should be "innolux,p120zdg-bf1"
- - power-supply: regulator to provide the supply voltage
- 
- Optional properties:
- - enable-gpios: GPIO pin to enable or disable the panel
- - backlight: phandle of the backlight device attached to the panel
-+- no-hpd: If HPD isn't hooked up; add this property.
- 
- Example:
- 	panel_edp: panel-edp {
--		compatible = "innolux,tv123wam";
-+		compatible = "innolux,p120zdg-bf1";
- 		enable-gpios = <&msmgpio 31 GPIO_ACTIVE_LOW>;
- 		power-supply = <&pm8916_l2>;
- 		backlight = <&backlight>;
-+		no-hpd;
- 	};
--- 
-2.19.1.568.g152ad8e336-goog
+Matthias
