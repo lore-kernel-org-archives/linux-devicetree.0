@@ -1,144 +1,69 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V2 6/8] dts: imx: add common imx7ulp dtsi support
-Date: Thu, 25 Oct 2018 11:53:01 +0000
-Message-ID: <AM0PR04MB4211A07053E99036B51ACB5880F70@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1540295058-26090-1-git-send-email-aisheng.dong@nxp.com>
- <1540295058-26090-7-git-send-email-aisheng.dong@nxp.com>
- <20181024220213.GA26789@bogus>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH] dt-bindings: arm: Fix cpu capacity mismatch in example
+Date: Thu, 25 Oct 2018 14:04:12 +0200
+Message-ID: <80206cb7-b550-1cf6-abf4-e4b17de4cdb5@linaro.org>
+References: <138600f5d504b41202a29a1e130a7aa4e51f1925.1540451976.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181024220213.GA26789@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <138600f5d504b41202a29a1e130a7aa4e51f1925.1540451976.git.viresh.kumar@linaro.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, catalin.marinas@arm.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, Vincent Guittot <vincent.guittot@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2IgSGVycmluZyBbbWFpbHRv
-OnJvYmhAa2VybmVsLm9yZ10NCj4gU2VudDogVGh1cnNkYXksIE9jdG9iZXIgMjUsIDIwMTggNjow
-MiBBTQ0KWy4uLl0NCj4gT24gVHVlLCBPY3QgMjMsIDIwMTggYXQgMTE6NDk6MjVBTSArMDAwMCwg
-QS5zLiBEb25nIHdyb3RlOg0KPiA+IFRoZSBpLk1YIDdVTFAgZmFtaWx5IG9mIHByb2Nlc3NvcnMg
-cmVwcmVzZW50cyBOWFDigJlzIGxhdGVzdCBhY2hpZXZlbWVudA0KPiA+IGluIHVsdHJhLWxvdy1w
-b3dlciBwcm9jZXNzaW5nIGZvciB1c2UgY2FzZXMgZGVtYW5kaW5nIGxvbmcgYmF0dGVyeSBsaWZl
-Lg0KPiA+IFRhcmdldGVkIHRvd2FyZHMgdGhlIGdyb3dpbmcgbWFya2V0IG9mIHBvcnRhYmxlIGRl
-dmljZXMsIHRoZSBpLk1YIDdVTFANCj4gPiBmYW1pbHkgb2YgcHJvY2Vzc29ycyBmZWF0dXJlcyBO
-WFAncyBhZHZhbmNlZCBpbXBsZW1lbnRhdGlvbiBvZiB0aGUNCj4gPiBBcm3Crg0KPiA+IENvcnRl
-eMKuLUE3IGNvcmUsIHRoZSBBcm0gQ29ydGV4LU00IGNvcmUsIGFzIHdlbGwgYXMgYSAzRCBhbmQg
-MkQNCj4gPiBHcmFwaGljcyBQcm9jZXNzaW5nIFVuaXRzIChHUFVzKS4NCj4gPg0KPiA+IFRoaXMg
-cGF0Y2ggYWltcyB0byBhZGQgdGhlIGluaXRpYWwgc3VwcG9ydCBpbmNsdWRpbmc6DQo+ID4gMSkg
-Q0xLDQo+ID4gMikgR1BJTyBQVEMsIFBURCwgUFRFLCBQVEYNCj4gPiAzKSB1U0RIQyAxLzINCj4g
-PiA0KSBMUFVBUlQgNC81LzYvNw0KPiA+IDUpIExQSTJDIDYvNw0KPiA+DQo+ID4gQ2M6IFJvYiBI
-ZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+DQo+ID4gQ2M6IFNoYXduIEd1byA8c2hhd25ndW9A
-a2VybmVsLm9yZz4NCj4gPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiBDYzog
-U2FzY2hhIEhhdWVyIDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+DQo+ID4gQ2M6IEZhYmlvIEVzdGV2
-YW0gPGZhYmlvLmVzdGV2YW1AbnhwLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBEb25nIEFpc2hl
-bmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+IENoYW5nZUxvZzoNCj4gPiB2
-MS0+djI6DQo+ID4gICogdXBkYXRlIGNsayBwYXJ0IGR1ZSB0byBiaW5kaW5nIGNoYW5nZQ0KPiA+
-ICAqIHNlcGFyYXRlIHNvYy5kdHNpIGZyb20gYm9hcmQuZHRzDQo+ID4gLS0tDQo+ID4gIGFyY2gv
-YXJtL2Jvb3QvZHRzL2lteDd1bHAuZHRzaSB8IDMyMw0KPiA+ICsrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzMjMgaW5zZXJ0aW9u
-cygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvaW14N3VscC5k
-dHNpDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14N3VscC5kdHNp
-DQo+ID4gYi9hcmNoL2FybS9ib290L2R0cy9pbXg3dWxwLmR0c2kgbmV3IGZpbGUgbW9kZSAxMDA2
-NDQgaW5kZXgNCj4gPiAwMDAwMDAwLi43OTVlZGMyDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsr
-KyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDd1bHAuZHRzaQ0KPiA+IEBAIC0wLDAgKzEsMzIzIEBA
-DQo+ID4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wKw0KPiA+ICsvKg0KPiA+
-ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTYgRnJlZXNjYWxlIFNlbWljb25kdWN0b3IsIEluYy4NCj4g
-PiArICogQ29weXJpZ2h0IDIwMTctMjAxOCBOWFANCj4gPiArICogICBEb25nIEFpc2hlbmcgPGFp
-c2hlbmcuZG9uZ0BueHAuY29tPg0KPiA+ICsgKi8NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxkdC1i
-aW5kaW5ncy9jbG9jay9pbXg3dWxwLWNsb2NrLmg+DQo+ID4gKyNpbmNsdWRlIDxkdC1iaW5kaW5n
-cy9ncGlvL2dwaW8uaD4NCj4gPiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250
-cm9sbGVyL2FybS1naWMuaD4NCj4gPiArDQo+ID4gKyNpbmNsdWRlICJpbXg3dWxwLXBpbmZ1bmMu
-aCINCj4gPiArDQo+ID4gKy8gew0KPiA+ICsJaW50ZXJydXB0LXBhcmVudCA9IDwmaW50Yz47DQo+
-ID4gKw0KPiA+ICsJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gKwkjc2l6ZS1jZWxscyA9IDwx
-PjsNCj4gPiArDQo+ID4gKwlhbGlhc2VzIHsNCj4gPiArCQlncGlvMCA9ICZncGlvX3B0YzsNCj4g
-PiArCQlncGlvMSA9ICZncGlvX3B0ZDsNCj4gPiArCQlncGlvMiA9ICZncGlvX3B0ZTsNCj4gPiAr
-CQlncGlvMyA9ICZncGlvX3B0ZjsNCj4gPiArCQlpMmMwID0gJmxwaTJjNjsNCj4gPiArCQlpMmMx
-ID0gJmxwaTJjNzsNCj4gPiArCQltbWMwID0gJnVzZGhjMDsNCj4gPiArCQltbWMxID0gJnVzZGhj
-MTsNCj4gPiArCQlzZXJpYWwwID0gJmxwdWFydDQ7DQo+ID4gKwkJc2VyaWFsMSA9ICZscHVhcnQ1
-Ow0KPiA+ICsJCXNlcmlhbDIgPSAmbHB1YXJ0NjsNCj4gPiArCQlzZXJpYWwzID0gJmxwdWFydDc7
-DQo+ID4gKwl9Ow0KPiA+ICsNCj4gPiArCWNwdXMgew0KPiA+ICsJCSNhZGRyZXNzLWNlbGxzID0g
-PDE+Ow0KPiA+ICsJCSNzaXplLWNlbGxzID0gPDA+Ow0KPiA+ICsNCj4gPiArCQljcHUwOiBjcHVA
-MCB7DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAiYXJtLGNvcnRleC1hNyI7DQo+ID4gKwkJCWRldmlj
-ZV90eXBlID0gImNwdSI7DQo+ID4gKwkJCXJlZyA9IDwwPjsNCj4gPiArCQl9Ow0KPiA+ICsJfTsN
-Cj4gPiArDQo+ID4gKwlpbnRjOiBpbnRlcnJ1cHQtY29udHJvbGxlckA0MDAyMTAwMCB7DQo+ID4g
-KwkJY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE3LWdpYyI7DQo+ID4gKwkJI2ludGVycnVwdC1j
-ZWxscyA9IDwzPjsNCj4gPiArCQlpbnRlcnJ1cHQtY29udHJvbGxlcjsNCj4gPiArCQlyZWcgPSA8
-MHg0MDAyMTAwMCAweDEwMDA+LA0KPiA+ICsJCSAgICAgIDwweDQwMDIyMDAwIDB4MTAwMD47DQo+
-ID4gKwl9Ow0KPiA+ICsNCj4gPiArCXJvc2M6IGNsb2NrLXJvc2Mgew0KPiA+ICsJCWNvbXBhdGli
-bGUgPSAiZml4ZWQtY2xvY2siOw0KPiA+ICsJCWNsb2NrLWZyZXF1ZW5jeSA9IDwzMjc2OD47DQo+
-ID4gKwkJY2xvY2stb3V0cHV0LW5hbWVzID0gInJvc2MiOw0KPiA+ICsJCSNjbG9jay1jZWxscyA9
-IDwwPjsNCj4gPiArCX07DQo+ID4gKw0KPiA+ICsJc29zYzogY2xvY2stc29zYyB7DQo+ID4gKwkJ
-Y29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7DQo+ID4gKwkJY2xvY2stZnJlcXVlbmN5ID0gPDI0
-MDAwMDAwPjsNCj4gPiArCQljbG9jay1vdXRwdXQtbmFtZXMgPSAic29zYyI7DQo+ID4gKwkJI2Ns
-b2NrLWNlbGxzID0gPDA+Ow0KPiA+ICsJfTsNCj4gPiArDQo+ID4gKwlzaXJjOiBjbG9jay1zaXJj
-IHsNCj4gPiArCQljb21wYXRpYmxlID0gImZpeGVkLWNsb2NrIjsNCj4gPiArCQljbG9jay1mcmVx
-dWVuY3kgPSA8MTYwMDAwMDA+Ow0KPiA+ICsJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJzaXJjIjsN
-Cj4gPiArCQkjY2xvY2stY2VsbHMgPSA8MD47DQo+ID4gKwl9Ow0KPiA+ICsNCj4gPiArCWZpcmM6
-IGNsb2NrLWZpcmMgew0KPiA+ICsJCWNvbXBhdGlibGUgPSAiZml4ZWQtY2xvY2siOw0KPiA+ICsJ
-CWNsb2NrLWZyZXF1ZW5jeSA9IDw0ODAwMDAwMD47DQo+ID4gKwkJY2xvY2stb3V0cHV0LW5hbWVz
-ID0gImZpcmMiOw0KPiA+ICsJCSNjbG9jay1jZWxscyA9IDwwPjsNCj4gPiArCX07DQo+ID4gKw0K
-PiA+ICsJdXBsbDogY2xvY2stdXBsbCB7DQo+ID4gKwkJY29tcGF0aWJsZSA9ICJmaXhlZC1jbG9j
-ayI7DQo+ID4gKwkJY2xvY2stZnJlcXVlbmN5ID0gPDQ4MDAwMDAwMD47DQo+ID4gKwkJY2xvY2st
-b3V0cHV0LW5hbWVzID0gInVwbGwiOw0KPiA+ICsJCSNjbG9jay1jZWxscyA9IDwwPjsNCj4gPiAr
-CX07DQo+ID4gKw0KPiA+ICsJbXBsbDogY2xvY2stbXBsbCB7DQo+ID4gKwkJY29tcGF0aWJsZSA9
-ICJmaXhlZC1jbG9jayI7DQo+ID4gKwkJY2xvY2stZnJlcXVlbmN5ID0gPDQ4MDAwMDAwMD47DQo+
-ID4gKwkJY2xvY2stb3V0cHV0LW5hbWVzID0gIm1wbGwiOw0KPiA+ICsJCSNjbG9jay1jZWxscyA9
-IDwwPjsNCj4gPiArCX07DQo+ID4gKw0KPiA+ICsJdGltZXIgew0KPiA+ICsJCWNvbXBhdGlibGUg
-PSAiYXJtLGFybXY3LXRpbWVyIjsNCj4gPiArCQlhcm0sY3B1LXJlZ2lzdGVycy1ub3QtZnctY29u
-ZmlndXJlZDsNCj4gDQo+IEFJVUksIHRoaXMgd2FzIGEgd29yay1hcm91bmQgZm9yIHNvbWUgZXhp
-c3RpbmcgcGxhdGZvcm0uIE5ldyBwbGF0Zm9ybXMgc2hvdWxkDQo+IG5vdCBoYXZlIHRoaXMgcHJv
-cGVydHkuDQo+IA0KPiA+ICsJCWludGVycnVwdHMgPSA8R0lDX1BQSSAxMyAoR0lDX0NQVV9NQVNL
-X1NJTVBMRSg0KSB8DQo+IElSUV9UWVBFX0xFVkVMX0xPVyk+LA0KPiA+ICsJCQkgICAgIDxHSUNf
-UFBJIDE0IChHSUNfQ1BVX01BU0tfU0lNUExFKDQpIHwNCj4gSVJRX1RZUEVfTEVWRUxfTE9XKT47
-DQo+ID4gKwkJY2xvY2stZnJlcXVlbmN5ID0gPDEwMDAwMDA+Ow0KPiANCj4gVGhpcyB0b28gc2hv
-dWxkIGJlIGluaXRpYWxpemVkIGJ5IGZpcm13YXJlIGFuZCBub3QgaW4gRFQgSUlSQy4NCj4gDQoN
-ClNvcnJ5IGZvciB0aGUgY2FyZWxlc3MuIEkgc2hvdWxkIGRvdWJsZSBjaGVja2luZyB0aGVzZSBj
-b2RlcyBiZWZvcmUgc2VuZGluZw0KYXMgdGhlIG9yaWdpbiBjb2RlIGJhc2UgaXMgcXVpdGUgb2xk
-IHNpbmNlIGZpcnN0IHZlcnNpb24uDQoNCg0KPiA+ICsJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+
-IA0KPiBJIHRoaW5rIGVuYWJsZWQgc2hvdWxkIGJlIHRoZSBub3JtLg0KPiANCg0KVGhpcyBpcyBt
-b3N0bHkgYmVjYXVzZSB0aGUgYXJtIHRpbWVyIG1heSBzdG9wIGR1cmluZyBsb3cgcG93ZXIgaWRs
-ZQ0KYW5kIHdlIGFscmVhZHkgaGF2ZSBhIFRQTSB0aW1lciBmdW5jdGlvbiB0aGUgc2FtZSBpbiBT
-b0MuDQpEbyB5b3UgdGhpbmsgd2Ugc2hvdWxkIHN0aWxsIGVuYWJsZSBpdD8NCg0KPiA+ICsJfTsN
-Cj4gPiArDQo+ID4gKwlhaGJicmlkZ2UwOiBidXNANDAwMDAwMDAgew0KPiA+ICsJCWNvbXBhdGli
-bGUgPSAic2ltcGxlLWJ1cyI7DQo+ID4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gKwkJ
-I3NpemUtY2VsbHMgPSA8MT47DQo+ID4gKwkJcmVnID0gPDB4NDAwMDAwMDAgMHg4MDAwMDA+Ow0K
-PiA+ICsJCXJhbmdlczsNCj4gPiArDQo+ID4gKwkJbHB1YXJ0NDogc2VyaWFsQDQwMmQwMDAwIHsN
-Cj4gPiArCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14N3VscC1scHVhcnQiOw0KPiA+ICsJCQlyZWcg
-PSA8MHg0MDJkMDAwMCAweDEwMDA+Ow0KPiA+ICsJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMzAg
-SVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gKwkJCWNsb2NrcyA9IDwmcGNjMiBJTVg3VUxQX0NM
-S19MUFVBUlQ0PjsNCj4gPiArCQkJY2xvY2stbmFtZXMgPSAiaXBnIjsNCj4gPiArCQkJYXNzaWdu
-ZWQtY2xvY2tzID0gPCZwY2MyIElNWDdVTFBfQ0xLX0xQVUFSVDQ+Ow0KPiA+ICsJCQlhc3NpZ25l
-ZC1jbG9jay1wYXJlbnRzID0gPCZzY2cxDQo+IElNWDdVTFBfQ0xLX1NPU0NfQlVTX0NMSz47DQo+
-ID4gKwkJCWFzc2lnbmVkLWNsb2NrLXJhdGVzID0gPDI0MDAwMDAwPjsNCj4gPiArCQkJc3RhdHVz
-ID0gImRpc2FibGVkIjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQlscHVhcnQ1OiBzZXJpYWxA
-NDAyZTAwMDAgew0KPiA+ICsJCQljb21wYXRpYmxlID0gImZzbCxpbXg3dWxwLWxwdWFydCI7DQo+
-ID4gKwkJCXJlZyA9IDwweDQwMmUwMDAwIDB4MTAwMD47DQo+ID4gKwkJCWludGVycnVwdHMgPSA8
-R0lDX1NQSSAzMSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiArCQkJY2xvY2tzID0gPCZwY2My
-IElNWDdVTFBfQ0xLX0xQVUFSVDU+Ow0KPiA+ICsJCQljbG9jay1uYW1lcyA9ICJpcGciOw0KPiA+
-ICsJCQlhc3NpZ25lZC1jbG9ja3MgPSA8JnBjYzIgSU1YN1VMUF9DTEtfTFBVQVJUNT47DQo+ID4g
-KwkJCWFzc2lnbmVkLWNsb2NrLXBhcmVudHMgPSA8JnNjZzEgSU1YN1VMUF9DTEtfRklSQz47DQo+
-ID4gKwkJCWFzc2lnbmVkLWNsb2NrLXJhdGVzID0gPDQ4MDAwMDAwPjsNCj4gPiArCQkJc3RhdHVz
-ID0gImRpc2FibGVkIjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQl0cG01OiB0cG1ANDAyNjAw
-MDAgew0KPiA+ICsJCQljb21wYXRpYmxlID0gImZzbCxpbXg3dWxwLXRwbSI7DQo+ID4gKwkJCXJl
-ZyA9IDwweDQwMjYwMDAwIDB4MTAwMD47DQo+ID4gKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAy
-MiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiArCQkJY2xvY2tzID0gPCZzY2cxIElNWDdVTFBf
-Q0xLX05JQzFfQlVTX0RJVj4sDQo+ID4gKwkJCQkgPCZwY2MyIElNWDdVTFBfQ0xLX0xQVFBNNT47
-DQo+ID4gKwkJCWNsb2NrLW5hbWVzID0gImlwZyIsICJwZXIiOw0KPiA+ICsJCX07DQo+ID4gKw0K
-PiA+ICsJCXVzZGhjMDogdXNkaGNANDAzNzAwMDAgew0KPiANCj4gbW1jQC4uLiBpcyB0aGUgc3Rh
-bmRhcmQgbmFtZS4NCj4gDQoNCkkgc2hvdWxkIGJlIG1vcmUgY2FyZWZ1bCBhYm91dCB0aGVzZS4g
-T3RoZXIgcGxhY2VzIGFyZSB0aGUgc2FtZS4NClRoYW5rcyBmb3IgdGhlIHJlbWluZGVyLg0KDQpS
-ZWdhcmRzDQpEb25nIEFpc2hlbmcNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On 25/10/2018 10:27, Viresh Kumar wrote:
+> The example text says the capacity value should be 446, while the
+> example have it set to 578 instead. Fix the mismatch.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/arm/cpu-capacity.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> index 9b5685a1d15d..7a0d6b429c8d 100644
+> --- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> @@ -61,7 +61,7 @@ mhz values (normalized w.r.t. the highest value found while parsing the DT).
+>  Example 1 (ARM 64-bit, 6-cpu system, two clusters):
+>  capacities-dmips-mhz are scaled w.r.t. 1024 (cpu@0 and cpu@1)
+>  supposing cluster0@max-freq=1100 and custer1@max-freq=850,
+> -final capacities are 1024 for cluster0 and 446 for cluster1
+> +final capacities are 1024 for cluster0 and 578 for cluster1
+>  
+>  cpus {
+>  	#address-cells = <2>;
+
+I think it is actually correct. The example is confusing on what the
+numbers are. IIUC, it is:
+
+(after normalizing)
+
+dhrystone result on big CPU is 1024 at 1100MHz
+dhrystone result on little CPU is 446 at 850MHz
+
+We have to scale the result of the little for 1100MHz in order to compare.
+
+1100/850 = 1.294
+
+dhrystone result on little CPU is 446 * 1.294 = 577 at 1100MHz
+
+So we put the normalized values 1024 and 577. The arch_topology will
+scale 577 back to 446 as it will compute the max capacity based on the
+max freq which is 850MHz.
+
+The *final* capacities are 1024 for cluster0 and 446 for cluster1 (read
+the cpu max capacity, the ones showed in the sysfs).
+
+Did I miss something ?
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
