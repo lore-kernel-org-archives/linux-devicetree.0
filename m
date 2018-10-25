@@ -1,59 +1,56 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH anybus v1 2/4] dt-bindings: anybus-bridge: document
- devicetree binding.
-Date: Thu, 25 Oct 2018 10:30:49 -0500
-Message-ID: <68f2d881-0c22-60e3-e79f-b8c7c2c02d06@lechnology.com>
-References: <20181025135515.8397-1-TheSven73@googlemail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Dan O'Donovan <dan@emutex.com>
+Subject: [PATCH v3 0/3] iio: adc128s052: add matching options
+Date: Thu, 25 Oct 2018 16:35:39 +0100
+Message-ID: <1540481742-23596-1-git-send-email-dan@emutex.com>
+References: <20180423213805.12591-1-javier@emutex.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181025135515.8397-1-TheSven73@googlemail.com>
-Content-Language: en-US
+In-Reply-To: <20180423213805.12591-1-javier@emutex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: thesven73@gmail.com, svendev@arcx.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, treding@nvidia.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, yuanzhichang@hisilicon.com, stuyoder@gmail.com, linus.walleij@linaro.org, maxime.ripard@bootlin.com, bogdan.purcareata@nxp.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Carlos Iglesias <carlos.iglesias@emutex.com>, Dan O'Donovan <dan@emutex.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/2018 08:55 AM, thesven73@gmail.com wrote:
-> Hi Linus, thank you for the patch review !!
-> 
->>> +  - pwms : the pwm connected to the bridge's 'pwm input'.
->>
->> That is really unintuitive and needs a detailed explanation. What
->> is a bridge doing with a PWM? Is it 100% certain this is a PWM,
->> it's not just a .... clock? A pwm is a pule WIDTH modulator and
->> I can't for my life understand why a bus bridge needs a signal
->> with variable pulse width, but surprise me! :D
-> 
-> You are 100% correct, this is a clock !
-> The hardware designers attached the bridge's clock input to an iMX pwm output,
-> and instructed us to provide a clock with 50% duty cycle and a certain freq.
-> 
-> The only way I know to activate a pwm is to connect it to a driver in the fdt,
-> then inside the driver enable the pwm, like so:
-> 
-> +       /* PWM */
-> +       pwm = devm_pwm_get(dev, NULL);
-> +       if (IS_ERR(pwm)) {
-> +               dev_err(dev, "pwm not found\n");
-> +               return -EINVAL;
-> +       }
-> +       pwm_get_args(pwm, &pargs);
-> +       period = pargs.period;
-> +       err = pwm_config(pwm, period/2, period);
-> +       if (err)
-> +               return err;
-> +       err = pwm_enable(pwm);
-> +       if (err)
-> +               return err;
-> 
-> This is why the bridge driver has a dependency on a pwm.
-> If the pwm could be enabled individually, I could drop this dependency.
-> Can you think of a way?
+Hi all,
+
+On some SKUs of AAEON's UP Squared board, there is an ADC124S101
+enumerated via ACPI. This is a pin-compatible variant of ADC124S021,
+which is already supported by the adc128s052 driver.
+
+This patchset adds missing DT compatible strings for ADC124S021 (and
+ADC122S021) variants, adds AAEON's allocated ACPI HID, and adds the
+SPDX GPL identifier to the driver.
+
+v2 was posted at:
+https://lore.kernel.org/lkml/20180423213805.12591-1-javier@emutex.com/
+
+Changes from v2:
+* Added device-tree bindings documentation for new chip variants
+* Simplified code to get ACPI match data
+* Dropped redundant patch to facilitate OF matching via ACPI _DSD
+* Added patch to replace GPL license text with SPDX identifier
+
+Changes from v1:
+* Improved patch descriptions and series title
+* Added an initial commit introducing new compatible strings
+  (as per Jonathan's suggestion)
+* Moved of_match_ptr removal last as this patch is less important to us
+
+Dan O'Donovan (1):
+  iio: adc128s052: use SPDX-License-Identifier
+
+Javier Arteaga (1):
+  iio: adc128s052: Add pin-compatible IDs
+
+Nicola Lunghi (1):
+  iio: adc128s052: add ACPI _HID AANT1280
+
+ .../devicetree/bindings/iio/adc/ti-adc128s052.txt  |  9 ++++-
+ drivers/iio/adc/ti-adc128s052.c                    | 39 +++++++++++++++++-----
+ 2 files changed, 38 insertions(+), 10 deletions(-)
+
+-- 
+2.7.4
 
 
-How about using the pwm-clock device tree binding to turn the PWM into
-a clock?
-
-Documentation/devicetree/bindings/clock/pwm-clock.txt
+------
+This email has been scanned for spam and malware by The Email Laundry.
