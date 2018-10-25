@@ -1,38 +1,57 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [[PATCH] 0/9] *** DMA support for UART in ASPEED's AST2500  ***
-Date: Thu, 25 Oct 2018 09:48:41 -0500
-Message-ID: <20181025144841.GA21004@bogus>
-References: <1539749466-3912-1-git-send-email-open.sudheer@gmail.com>
+Subject: Re: [PATCH 3/3] crypto: qce: ice: Add support for Inline Crypto
+ Engine
+Date: Thu, 25 Oct 2018 09:55:48 -0500
+Message-ID: <20181025145548.GA30244@bogus>
+References: <1539789476-6098-1-git-send-email-anilc@codeaurora.org>
+ <1539789476-6098-4-git-send-email-anilc@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1539749466-3912-1-git-send-email-open.sudheer@gmail.com>
+In-Reply-To: <1539789476-6098-4-git-send-email-anilc@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "sudheer.v" <open.sudheer@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, Jiri Slaby <jslaby@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@de.ibm.com>, Michael Moese <mmoese@suse.de>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Kate Stewart <kstewart@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-arm
+To: AnilKumar Chimata <anilc@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, herbert@gondor.apana.org.au, davem@davemloft.net, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 17, 2018 at 09:40:57AM +0530, sudheer.v wrote:
-> DMA controller driver  and UART dma client driver for aspeed's AST2500
+On Wed, Oct 17, 2018 at 08:47:56PM +0530, AnilKumar Chimata wrote:
+> This patch adds support for Inline Crypto Engine (ICE), which
+> is embedded into storage device/controller such as UFS/eMMC.
+> ICE is intended for high throughput cryptographic encryption
+> or decryption of storage data.
 > 
-> sudheer.v (9):
+> Signed-off-by: AnilKumar Chimata <anilc@codeaurora.org>
+> ---
+>  Documentation/crypto/msm/ice.txt |  235 ++++++
+>  drivers/crypto/Kconfig           |   10 +
+>  drivers/crypto/qce/Makefile      |    1 +
+>  drivers/crypto/qce/ice.c         | 1613 ++++++++++++++++++++++++++++++++++++++
+>  drivers/crypto/qce/iceregs.h     |  159 ++++
+>  include/crypto/ice.h             |   80 ++
+>  6 files changed, 2098 insertions(+)
+>  create mode 100644 Documentation/crypto/msm/ice.txt
+>  create mode 100644 drivers/crypto/qce/ice.c
+>  create mode 100644 drivers/crypto/qce/iceregs.h
+>  create mode 100644 include/crypto/ice.h
+> 
+> diff --git a/Documentation/crypto/msm/ice.txt b/Documentation/crypto/msm/ice.txt
+> new file mode 100644
+> index 0000000..58f7081
+> --- /dev/null
+> +++ b/Documentation/crypto/msm/ice.txt
+> @@ -0,0 +1,235 @@
+> +Introduction:
+> +=============
+> +Storage encryption has been one of the most required feature from security
+> +point of view. QTI based storage encryption solution uses general purpose
+> +crypto engine. While this kind of solution provide a decent amount of
+> +performance, it falls short as storage speed is improving significantly
+> +continuously. To overcome performance degradation, newer chips are going to
+> +have Inline Crypto Engine (ICE) embedded into storage device. ICE is supposed
+> +to meet the line speed of storage devices.
 
-We need a full name for author and Signed-off-by.
-
->   DT-changes-for-DMA-UART-of-AST2500
->   Defconfig-changes-for-DMA-UART-of-AST2500
->   configuration-for-DMA-of-AST2500
->   Documentation-DTbindings-DMA-controller-of-AST2500
->   DMA-driver-for-AST2500
->   configuration-for-DMA-UART-of-AST2500
->   Documentation-DTbindings-DMA-UART-of-AST2500
->   DMA-UART-Driver-for-AST2500
->   updating MAINTAINERS for DMA and DMA-UART drivers of AST2500
-
-Your commit messages need some work. Use 'git log --oneline <dir>' on 
-each directory for inspiration as to what the subject should be.
-
-DT bindings specifically are "dt-bindings: <binding dir>: ..."
+Is ICE part of the storage device or part of the host as the binding 
+suggests?
 
 Rob
