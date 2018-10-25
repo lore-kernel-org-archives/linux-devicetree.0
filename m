@@ -1,99 +1,96 @@
-From: Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH 6/6] dt-bindings: drm/panel: simple: Innolux TV123WAM is
- actually P120ZDG-BF1
-Date: Thu, 25 Oct 2018 14:15:10 -0400
-Message-ID: <20181025181510.GN154160@art_vandelay>
-References: <20181022204639.8558-1-dianders@chromium.org>
- <20181022204639.8558-6-dianders@chromium.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: Add ICE device specific parameters
+Date: Thu, 25 Oct 2018 13:15:58 -0500
+Message-ID: <20181025181558.GC30244@bogus>
+References: <1539789476-6098-1-git-send-email-anilc@codeaurora.org>
+ <1539789476-6098-3-git-send-email-anilc@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181022204639.8558-6-dianders@chromium.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-arm-msm@vger.kernel.org, Sandeep Panda <spanda@codeaurora.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, ryandcase@chromium.org
+In-Reply-To: <1539789476-6098-3-git-send-email-anilc@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: AnilKumar Chimata <anilc@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, herbert@gondor.apana.org.au, davem@davemloft.net, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBPY3QgMjIsIDIwMTggYXQgMDE6NDY6MzlQTSAtMDcwMCwgRG91Z2xhcyBBbmRlcnNv
-biB3cm90ZToKPiBBcyBmYXIgYXMgSSBjYW4gdGVsbCB0aGUgYmluZGluZ3MgdGhhdCB3ZXJlIGFk
-ZGVkIGluIGNvbW1pdAo+IDljMDQ0MDBmN2VhNiAoImR0LWJpbmRpbmdzOiBkcm0vcGFuZWw6IERv
-Y3VtZW50IElubm9sdXggVFYxMjNXQU0gcGFuZWwKPiBiaW5kaW5ncyIpIHdlcmVuJ3QgYWN0dWFs
-bHkgZm9yIElubm9sdXggVFYxMjNXQU0gYnV0IHdlcmUgYWN0dWFsbHkgZm9yCj4gSW5ub2x1eCBQ
-MTIwWkRHLUJGMS4KPiAKPiBBcyBmYXIgYXMgSSBjYW4gdGVsbCB0aGUgSW5ub2x1eCBUVjEyM1dB
-TSBpc24ndCBhIHJlYWwgcGFuZWwgYW5kIGJ1dAo+IGl0J3MgYSBtb3NoIGJldHdlZW4gdGhlIFRJ
-IFRWMTIzV0FNIGFuZCB0aGUgSW5ub2x1eCBQMTIwWkRHLUJGMS4KPiBMZXQncyB1bm1vc2guCj4g
-Cj4gSGVyZSdzIG15IGV2aWRlbmNlOgo+IAo+ICogU2VhcmNoaW5nIGZvciBUVjEyM1dBTSBvbiB0
-aGUgSW50ZXJuZXQgdHVybnMgdXAgYSBUSSBwYW5lbC4gIFdoaWxlCj4gICBpdCdzIHBvc3NpYmxl
-IHRoYXQgYW4gSW5ub2x1eCBwYW5lbCBoYXMgdGhlIHNhbWUgbW9kZWwgbnVtYmVyIGFzIHRoZQo+
-ICAgVEkgUGFuZWwsIGl0IHNlZW1zIGEgbGl0dGxlIGRvdWJ0ZnVsLiAgTG9va2luZyB1cCB0aGUg
-ZGF0YXNoZWV0IGZyb20KPiAgIHRoZSBUSSBQYW5lbCBzaG93cyB0aGF0IGl0J3MgMTkyMCB4IDEy
-ODAgYW5kIDI1OS4yIG1tIHggMTcyLjggbW0uCj4gCj4gKiBBcyBmYXIgYXMgSSBrbm93LCB0aGUg
-cGF0Y2ggYWRkaW5nIHRoZSBJbm5vbHV4IFBhbmVsIHdhcyBzdXBwb3NlZCB0bwo+ICAgYmUgZm9y
-IHRoZSBib2FyZCB0aGF0J3Mgc2l0dGluZyBpbiBmcm9udCBvZiBtZSBhcyBJIHR5cGUgdGhpcwo+
-ICAgKHN1cHBvcnQgZm9yIHRoYXQgYm9hcmQgaXMgbm90IHlldCB1cHN0cmVhbSkuICBPbiB0aGUg
-YmFjayBvZiB0aGF0Cj4gICBwYW5lbCBJIHNlZSBJbm5vbHV4IFAxMjBaRFotRVoxIHJldiBCMS4K
-PiAKPiAqIFNvbWVvbmUgcG9pbnRlZCBtZSBhdCBhIGRhdGFzaGVldCB0aGF0J3Mgc3VwcG9zZWQg
-dG8gYmUgZm9yIHRoZQo+ICAgcGFuZWwgaW4gZnJvbnQgb2YgbWUgKHNvcnJ5LCBJIGNhbid0IHNo
-YXJlIHRoZSBkYXRhc2hlZXQpLiAgVGhhdAo+ICAgZGF0YXNoZWV0IGhhcyB0aGUgc3RyaW5nICJw
-MTIwemRnLWJmMSIKPiAKPiAqIElmIEkgc2VhcmNoIGZvciAiUDEyMFpERy1CRjEiIG9uIHRoZSBJ
-bnRlcm5ldCBJIGdldCBoaXRzIGZvciBwYW5lbHMKPiAgIHRoYXQgYXJlIDIxNjB4MTQ0MC4gIFRo
-ZXkgZG9uJ3QgaGF2ZSBkYXRhc2hlZXRzLCBidXQgdGhlIGZhY3QgdGhhdAo+ICAgdGhlIHJlc29s
-dXRpb24gbWF0Y2hlcyBpcyBhIGdvb2Qgc2lnbi4KPiAKPiBXaGlsZSB3ZSBkb2luZyB0aGUgcmVu
-YW1lLCBhbHNvIG1lbnRpb24gdGhhdCBuby1ocGQgY2FuIGJlIHVzZWQgd2l0aAo+IHRoaXMgcGFu
-ZWwuICBTZWUgdGhlIHByZXZpb3VzIHBhdGNoIGluIHRoaXMgc2VyaWVzICgiZHJtL3BhbmVsOgo+
-IHNpbXBsZTogQWRkICJuby1ocGQiIGRlbGF5IGZvciBJbm5vbHV4IFRWMTIzV0FNIikuCj4gCj4g
-Rml4ZXM6IDljMDQ0MDBmN2VhNiAoImR0LWJpbmRpbmdzOiBkcm0vcGFuZWw6IERvY3VtZW50IElu
-bm9sdXggVFYxMjNXQU0gcGFuZWwgYmluZGluZ3MiKQo+IFNpZ25lZC1vZmYtYnk6IERvdWdsYXMg
-QW5kZXJzb24gPGRpYW5kZXJzQGNocm9taXVtLm9yZz4KPiBDYzogU2FuZGVlcCBQYW5kYSA8c3Bh
-bmRhQGNvZGVhdXJvcmEub3JnPgo+IC0tLQo+IAo+ICAuLi4ve2lubm9sdXgsdHYxMjN3YW0udHh0
-ID0+IGlubm9sdXgscDEyMHpkZy1iZjEudHh0fSAgICAgfCA4ICsrKysrLS0tCj4gIDEgZmlsZSBj
-aGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCj4gIHJlbmFtZSBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC97aW5ub2x1eCx0djEyM3dh
-bS50eHQgPT4gaW5ub2x1eCxwMTIwemRnLWJmMS50eHR9ICg3MCUpCj4gCj4gZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgs
-dHYxMjN3YW0udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvaW5ub2x1eCxwMTIwemRnLWJmMS50eHQKPiBzaW1pbGFyaXR5IGluZGV4IDcwJQo+IHJl
-bmFtZSBmcm9tIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVs
-L2lubm9sdXgsdHYxMjN3YW0udHh0Cj4gcmVuYW1lIHRvIERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgscDEyMHpkZy1iZjEudHh0CgpTYW1lIGNv
-bmNlcm5zIGhlcmUsIHlvdSBtaWdodCBjb25zaWRlciBsZWF2aW5nIGEgYnJlYWRjcnVtYiBoZXJl
-IHRvIHBvaW50IHRvCnAxMjB6ZGctYmYxIChub3RpbmcgdGhhdCB0aGUgb2xkIGNvbXBhdGlibGUg
-c3RyaW5nIHdpbGwgY29udGludWUgdG8gd29yaykuCgpBZ2FpbiwgaWYgcm9iaCBpcyBPayB3aXRo
-IHdpcGluZyBpbm5vbHV4LHR2MTIzd2FtIGZyb20gZXhpc3RhbmNlLCBwbGVhc2UgaWdub3JlCjop
-CgpTZWFuCgo+IGluZGV4IGE5YjM1MjY1ZmExMy4uNTEzZjAzNDY2YWJhIDEwMDY0NAo+IC0tLSBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgs
-dHYxMjN3YW0udHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvcGFuZWwvaW5ub2x1eCxwMTIwemRnLWJmMS50eHQKPiBAQCAtMSwyMCArMSwyMiBAQAo+
-IC1Jbm5vbHV4IFRWMTIzV0FNIDEyLjMgaW5jaCBlRFAgMksgZGlzcGxheSBwYW5lbAo+ICtJbm5v
-bHV4IFAxMjBaREctQkYxIDEyLjAyIGluY2ggZURQIDJLIGRpc3BsYXkgcGFuZWwKPiAgCj4gIFRo
-aXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBiaW5kaW5nLCB3
-aGljaCBpcyBzcGVjaWZpZWQKPiAgaW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlzIGRpcmVjdG9y
-eS4KPiAgCj4gIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gLS0gY29tcGF0aWJsZTogc2hvdWxkIGJl
-ICJpbm5vbHV4LHR2MTIzd2FtIgo+ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZSAiaW5ub2x1eCxw
-MTIwemRnLWJmMSIKPiAgLSBwb3dlci1zdXBwbHk6IHJlZ3VsYXRvciB0byBwcm92aWRlIHRoZSBz
-dXBwbHkgdm9sdGFnZQo+ICAKPiAgT3B0aW9uYWwgcHJvcGVydGllczoKPiAgLSBlbmFibGUtZ3Bp
-b3M6IEdQSU8gcGluIHRvIGVuYWJsZSBvciBkaXNhYmxlIHRoZSBwYW5lbAo+ICAtIGJhY2tsaWdo
-dDogcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwK
-PiArLSBuby1ocGQ6IElmIEhQRCBpc24ndCBob29rZWQgdXA7IGFkZCB0aGlzIHByb3BlcnR5Lgo+
-ICAKPiAgRXhhbXBsZToKPiAgCXBhbmVsX2VkcDogcGFuZWwtZWRwIHsKPiAtCQljb21wYXRpYmxl
-ID0gImlubm9sdXgsdHYxMjN3YW0iOwo+ICsJCWNvbXBhdGlibGUgPSAiaW5ub2x1eCxwMTIwemRn
-LWJmMSI7Cj4gIAkJZW5hYmxlLWdwaW9zID0gPCZtc21ncGlvIDMxIEdQSU9fQUNUSVZFX0xPVz47
-Cj4gIAkJcG93ZXItc3VwcGx5ID0gPCZwbTg5MTZfbDI+Owo+ICAJCWJhY2tsaWdodCA9IDwmYmFj
-a2xpZ2h0PjsKPiArCQluby1ocGQ7Cj4gIAl9Owo+IC0tIAo+IDIuMTkuMS41NjguZzE1MmFkOGUz
-MzYtZ29vZwo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAoKLS0gClNlYW4gUGF1bCwgU29mdHdhcmUgRW5naW5lZXIsIEdvb2dsZSAvIENocm9t
-aXVtIE9TCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Wed, Oct 17, 2018 at 08:47:55PM +0530, AnilKumar Chimata wrote:
+> Add dt parameters information specific to the Inline
+> Crypto Engine (ICE) device.
+> 
+> Signed-off-by: AnilKumar Chimata <anilc@codeaurora.org>
+> ---
+>  .../devicetree/bindings/crypto/msm/ice.txt         | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/msm/ice.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/crypto/msm/ice.txt b/Documentation/devicetree/bindings/crypto/msm/ice.txt
+> new file mode 100644
+> index 0000000..86eed5e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/msm/ice.txt
+> @@ -0,0 +1,34 @@
+> +* Inline Crypto Engine (ICE)
+> +
+> +Required properties:
+> +  - compatible			: should be "qcom,ice"
+
+Only 1 version ever? Probably not and this needs an SoC specific 
+compatible string. Does this follow any standard or ICE is a QCom thing?
+
+> +  - reg 			: <register mapping>
+
+No need to define standard properties. You need to say how many register 
+ranges.
+
+> +
+> +Optional properties:
+> +  - interrupt-names     	: name describing the interrupts for ICE IRQ
+
+No point to this if there is only 1 IRQ.
+
+> +  - interrupts          	: <interrupt mapping for ICE IRQ>
+> +  - qcom,enable-ice-clk 	: should enable clocks for ICE HW
+
+This shouldn't be needed.
+
+> +  - clocks              	: List of phandle and clock specifier pairs
+> +  - clock-names         	: List of clock input name strings sorted in the same
+> +				  order as the clocks property.
+
+How many?  You need to give the 
+> +  - qcom,op-freq-hz     	: max clock speed sorted in the same order as the clocks
+> +				  property.
+
+Use the assigned-clocks properties for this.
+
+> +  - qcom,instance-type  	: describe the storage type for which ICE node is defined
+> +				  currently, only "ufs" and "sdcc" are supported storage type
+
+What if there is more than one instance of ufs or SD? Do you need to 
+know which ICE goes with which controller?
+
+> +  - power-domains		: regulator supply to be used by ICE HW
+> +
+> +Example:
+> +	ufs_ice: ufsice@1d90000 {
+
+crytpo@...
+
+> +		compatible = "qcom,ice";
+> +		reg = <0x1d90000 0x8000>;
+> +		qcom,enable-ice-clk;
+> +		clock-names = "ufs_core_clk", "bus_clk",
+> +				"iface_clk", "ice_core_clk";
+> +		clocks = <&gcc GCC_UFS_PHY_AXI_CLK>,
+> +			 <&gcc GCC_UFS_MEM_CLKREF_CLK>,
+> +			 <&gcc GCC_UFS_PHY_AHB_CLK>,
+> +			 <&gcc GCC_UFS_PHY_ICE_CORE_CLK>;
+> +		qcom,op-freq-hz = <0>, <0>, <0>, <300000000>;
+> +		power-domains = <&gcc UFS_PHY_GDSC>;
+> +		qcom,instance-type = "ufs";
+> +	};
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
