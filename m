@@ -1,340 +1,52 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH v3 2/3] Input: add new vibrator driver for various MSM SOCs
-Date: Wed, 24 Oct 2018 21:29:36 -0400
-Message-ID: <20181025012937.2154-3-masneyb@onstation.org>
-References: <20181025012937.2154-1-masneyb@onstation.org>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v6 1/6] dt-bindings: power: Introduce one property to
+ present the battery internal resistance
+Date: Thu, 25 Oct 2018 10:01:55 +0800
+Message-ID: <CAMz4kuJCS1_E+CUdANepYe+WpYSOwovZ9Rnu85zvTgmV9BE5+g@mail.gmail.com>
+References: <e7c061535f2dcca54d6498405fdd5ed7098b19f9.1540189330.git.baolin.wang@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181025012937.2154-1-masneyb@onstation.org>
+In-Reply-To: <e7c061535f2dcca54d6498405fdd5ed7098b19f9.1540189330.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, andy.gross@linaro.org, david.brown@linaro.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, masneyb@onstation.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, jonathan@marek.ca
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Baolin Wang <baolin.wang@linaro.org>, Mark Brown <broonie@kernel.org>, Craig Tatlor <ctatlor97@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a new vibrator driver that supports various Qualcomm
-MSM SOCs. Driver was tested on a LG Nexus 5 (hammerhead) phone.
+Hi Sebastian,
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
----
- drivers/input/misc/Kconfig        |  10 ++
- drivers/input/misc/Makefile       |   1 +
- drivers/input/misc/msm-vibrator.c | 276 ++++++++++++++++++++++++++++++
- 3 files changed, 287 insertions(+)
- create mode 100644 drivers/input/misc/msm-vibrator.c
+On 22 October 2018 at 15:43, Baolin Wang <baolin.wang@linaro.org> wrote:
+> The internal resistance of a battery is not a constant in its life cycle,
+> this varies over the age of the battery or temperature and so on. But we
+> just want use one constant battery internal resistance to estimate the
+> battery capacity. Thus this patch introduces one property to present
+> the battery factory internal resistance for battery information.
+>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Changes from v5:
+>  - None.
+>
+> Changes from v4:
+>  - None.
+>
+> Changes from v3:
+>  - Split binding into one separate patch.
+>  - Add LinusW reviewed tag.
+>
+> Changes from v2:
+>  - Rename the property.
+>  - Improve the commit message.
+>
+> Changes from v1:
+>  - New patch in v2.
+> ---
 
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index ca59a2be9bc5..e39aef84f357 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -117,6 +117,16 @@ config INPUT_E3X0_BUTTON
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called e3x0_button.
- 
-+config INPUT_MSM_VIBRATOR
-+	tristate "Qualcomm MSM vibrator driver"
-+	select INPUT_FF_MEMLESS
-+	help
-+	  Support for the vibrator that is found on various Qualcomm MSM
-+	  SOCs.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called msm_vibrator.
-+
- config INPUT_PCSPKR
- 	tristate "PC Speaker support"
- 	depends on PCSPKR_PLATFORM
-diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-index 9d0f9d1ff68f..96a6419cb1f2 100644
---- a/drivers/input/misc/Makefile
-+++ b/drivers/input/misc/Makefile
-@@ -48,6 +48,7 @@ obj-$(CONFIG_INPUT_MAX8925_ONKEY)	+= max8925_onkey.o
- obj-$(CONFIG_INPUT_MAX8997_HAPTIC)	+= max8997_haptic.o
- obj-$(CONFIG_INPUT_MC13783_PWRBUTTON)	+= mc13783-pwrbutton.o
- obj-$(CONFIG_INPUT_MMA8450)		+= mma8450.o
-+obj-$(CONFIG_INPUT_MSM_VIBRATOR)	+= msm-vibrator.o
- obj-$(CONFIG_INPUT_PALMAS_PWRBUTTON)	+= palmas-pwrbutton.o
- obj-$(CONFIG_INPUT_PCAP)		+= pcap_keys.o
- obj-$(CONFIG_INPUT_PCF50633_PMU)	+= pcf50633-input.o
-diff --git a/drivers/input/misc/msm-vibrator.c b/drivers/input/misc/msm-vibrator.c
-new file mode 100644
-index 000000000000..bb862f30a780
---- /dev/null
-+++ b/drivers/input/misc/msm-vibrator.c
-@@ -0,0 +1,276 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Qualcomm MSM vibrator driver
-+ *
-+ * Copyright (c) 2018 Brian Masney <masneyb@onstation.org>
-+ *
-+ * Based on qcom,pwm-vibrator.c from:
-+ * Copyright (c) 2018 Jonathan Marek <jonathan@marek.ca>
-+ *
-+ * Based on msm_pwm_vibrator.c from downstream Android sources:
-+ * Copyright (C) 2009-2014 LGE, Inc.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/gpio.h>
-+#include <linux/input.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+
-+#define REG_CMD_RCGR           0x00
-+#define REG_CFG_RCGR           0x04
-+#define REG_M                  0x08
-+#define REG_N                  0x0C
-+#define REG_D                  0x10
-+#define REG_CBCR               0x24
-+#define MMSS_CC_M_DEFAULT      1
-+
-+struct msm_vibrator {
-+	struct input_dev *input;
-+	struct mutex mutex;
-+	struct work_struct worker;
-+	void __iomem *base;
-+	struct regulator *vcc;
-+	struct clk *clk;
-+	struct gpio_desc *enable_gpio;
-+	u16 magnitude;
-+	bool enabled;
-+};
-+
-+#define msm_vibrator_write(msm_vibrator, offset, value) \
-+	writel((value), (void __iomem *)((msm_vibrator)->base + (offset)))
-+
-+static int msm_vibrator_start(struct msm_vibrator *vibrator)
-+{
-+	int d_reg_val, ret = 0;
-+
-+	mutex_lock(&vibrator->mutex);
-+
-+	if (!vibrator->enabled) {
-+		ret = clk_set_rate(vibrator->clk, 24000);
-+		if (ret) {
-+			dev_err(&vibrator->input->dev,
-+				"Failed to set clock rate: %d\n", ret);
-+			goto unlock;
-+		}
-+
-+		ret = clk_prepare_enable(vibrator->clk);
-+		if (ret) {
-+			dev_err(&vibrator->input->dev,
-+				"Failed to enable clock: %d\n", ret);
-+			goto unlock;
-+		}
-+
-+		ret = regulator_enable(vibrator->vcc);
-+		if (ret) {
-+			dev_err(&vibrator->input->dev,
-+				"Failed to enable regulator: %d\n", ret);
-+			clk_disable(vibrator->clk);
-+			goto unlock;
-+		}
-+
-+		gpiod_set_value_cansleep(vibrator->enable_gpio, 1);
-+
-+		vibrator->enabled = true;
-+	}
-+
-+	d_reg_val = 127 - ((126 * vibrator->magnitude) / 0xffff);
-+	msm_vibrator_write(vibrator, REG_CFG_RCGR,
-+			   (2 << 12) | /* dual edge mode */
-+			   (0 << 8) |  /* cxo */
-+			   (7 << 0));
-+	msm_vibrator_write(vibrator, REG_M, 1);
-+	msm_vibrator_write(vibrator, REG_N, 128);
-+	msm_vibrator_write(vibrator, REG_D, d_reg_val);
-+	msm_vibrator_write(vibrator, REG_CMD_RCGR, 1);
-+	msm_vibrator_write(vibrator, REG_CBCR, 1);
-+
-+unlock:
-+	mutex_unlock(&vibrator->mutex);
-+
-+	return ret;
-+}
-+
-+static void msm_vibrator_stop(struct msm_vibrator *vibrator)
-+{
-+	mutex_lock(&vibrator->mutex);
-+
-+	if (vibrator->enabled) {
-+		gpiod_set_value_cansleep(vibrator->enable_gpio, 0);
-+		regulator_disable(vibrator->vcc);
-+		clk_disable(vibrator->clk);
-+		vibrator->enabled = false;
-+	}
-+
-+	mutex_unlock(&vibrator->mutex);
-+}
-+
-+static void msm_vibrator_worker(struct work_struct *work)
-+{
-+	struct msm_vibrator *vibrator = container_of(work,
-+						     struct msm_vibrator,
-+						     worker);
-+
-+	if (vibrator->magnitude)
-+		msm_vibrator_start(vibrator);
-+	else
-+		msm_vibrator_stop(vibrator);
-+}
-+
-+static int msm_vibrator_play_effect(struct input_dev *dev, void *data,
-+				    struct ff_effect *effect)
-+{
-+	struct msm_vibrator *vibrator = input_get_drvdata(dev);
-+
-+	mutex_lock(&vibrator->mutex);
-+
-+	if (effect->u.rumble.strong_magnitude > 0)
-+		vibrator->magnitude = effect->u.rumble.strong_magnitude;
-+	else
-+		vibrator->magnitude = effect->u.rumble.weak_magnitude;
-+
-+	mutex_unlock(&vibrator->mutex);
-+
-+	schedule_work(&vibrator->worker);
-+
-+	return 0;
-+}
-+
-+static void msm_vibrator_close(struct input_dev *input)
-+{
-+	struct msm_vibrator *vibrator = input_get_drvdata(input);
-+
-+	cancel_work_sync(&vibrator->worker);
-+	msm_vibrator_stop(vibrator);
-+}
-+
-+static int msm_vibrator_probe(struct platform_device *pdev)
-+{
-+	struct msm_vibrator *vibrator;
-+	struct resource *res;
-+	int ret;
-+
-+	vibrator = devm_kzalloc(&pdev->dev, sizeof(*vibrator), GFP_KERNEL);
-+	if (!vibrator)
-+		return -ENOMEM;
-+
-+	vibrator->input = devm_input_allocate_device(&pdev->dev);
-+	if (!vibrator->input)
-+		return -ENOMEM;
-+
-+	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
-+	if (IS_ERR(vibrator->vcc)) {
-+		if (PTR_ERR(vibrator->vcc) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to get regulator: %ld\n",
-+				PTR_ERR(vibrator->vcc));
-+		return PTR_ERR(vibrator->vcc);
-+	}
-+
-+	vibrator->enable_gpio = devm_gpiod_get(&pdev->dev, "enable",
-+					       GPIOD_OUT_LOW);
-+	if (IS_ERR(vibrator->enable_gpio)) {
-+		dev_err(&pdev->dev, "Failed to get enable gpio: %ld\n",
-+			PTR_ERR(vibrator->enable_gpio));
-+		return PTR_ERR(vibrator->enable_gpio);
-+	}
-+
-+	vibrator->clk = devm_clk_get(&pdev->dev, "pwm");
-+	if (IS_ERR(vibrator->clk)) {
-+		dev_err(&pdev->dev, "Failed to lookup pwm clock: %ld\n",
-+			PTR_ERR(vibrator->clk));
-+		return PTR_ERR(vibrator->clk);
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		dev_err(&pdev->dev, "Failed to get platform resource\n");
-+		return -ENODEV;
-+	}
-+
-+	vibrator->base = devm_ioremap(&pdev->dev, res->start,
-+				     resource_size(res));
-+	if (IS_ERR(vibrator->base)) {
-+		dev_err(&pdev->dev, "Failed to iomap resource: %ld\n",
-+			PTR_ERR(vibrator->base));
-+		return PTR_ERR(vibrator->base);
-+	}
-+
-+	vibrator->enabled = false;
-+	mutex_init(&vibrator->mutex);
-+	INIT_WORK(&vibrator->worker, msm_vibrator_worker);
-+
-+	vibrator->input->name = "msm-vibrator";
-+	vibrator->input->id.bustype = BUS_HOST;
-+	vibrator->input->dev.parent = &pdev->dev;
-+	vibrator->input->close = msm_vibrator_close;
-+
-+	input_set_drvdata(vibrator->input, vibrator);
-+	input_set_capability(vibrator->input, EV_FF, FF_RUMBLE);
-+
-+	ret = input_ff_create_memless(vibrator->input, NULL,
-+				      msm_vibrator_play_effect);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to create ff memless: %d", ret);
-+		return ret;
-+	}
-+
-+	ret = input_register_device(vibrator->input);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to register input device: %d", ret);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, vibrator);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused msm_vibrator_suspend(struct device *dev)
-+{
-+	struct msm_vibrator *vibrator = dev_get_drvdata(dev);
-+
-+	cancel_work_sync(&vibrator->worker);
-+
-+	if (vibrator->enabled)
-+		msm_vibrator_stop(vibrator);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused msm_vibrator_resume(struct device *dev)
-+{
-+	struct msm_vibrator *vibrator = dev_get_drvdata(dev);
-+
-+	if (vibrator->enabled)
-+		msm_vibrator_start(vibrator);
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(msm_vibrator_pm_ops, msm_vibrator_suspend,
-+			 msm_vibrator_resume);
-+
-+static const struct of_device_id msm_vibrator_of_match[] = {
-+	{ .compatible = "qcom,msm8226-vibrator" },
-+	{ .compatible = "qcom,msm8974-vibrator" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, msm_vibrator_of_match);
-+
-+static struct platform_driver msm_vibrator_driver = {
-+	.probe	= msm_vibrator_probe,
-+	.driver	= {
-+		.name = "msm-vibrator",
-+		.pm = &msm_vibrator_pm_ops,
-+		.of_match_table = of_match_ptr(msm_vibrator_of_match),
-+	},
-+};
-+module_platform_driver(msm_vibrator_driver);
-+
-+MODULE_AUTHOR("Brian Masney <masneyb@onstation.org>");
-+MODULE_DESCRIPTION("Qualcomm MSM vibrator driver");
-+MODULE_LICENSE("GPL");
+I think this v6 patch set have addressed your comments on v5, so could
+you apply this patch set if there are no other comments? I hope this
+driver can be merged into 4.20 finally. Thanks.
+
 -- 
-2.17.2
+Baolin Wang
+Best Regards
