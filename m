@@ -1,105 +1,284 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V3 6/8] arm64: dts: imx: add imx8qxp support
-Date: Thu, 25 Oct 2018 11:40:12 +0000
-Message-ID: <AM0PR04MB421126852CF634123B17589180F70@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1539886483-15775-1-git-send-email-aisheng.dong@nxp.com>
- <1539886483-15775-7-git-send-email-aisheng.dong@nxp.com>
- <20181018202457.GA25174@bogus>
- <DB7PR04MB42188ABE426A055E6097C03080F90@DB7PR04MB4218.eurprd04.prod.outlook.com>
- <CAPDyKFpYXo21fsHynZWTV9OOoCWGUJe2SZBR-A-dc8T8g3cLrg@mail.gmail.com>
- <AM0PR04MB4211E163C5AF713142C56A5A80F50@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CAPDyKFo=gt5eB2B8muA1iVJSin2CJsQ19zeL9pm==Ln73pFSfQ@mail.gmail.com>
- <AM0PR04MB421187B2BA549B04B67553E780F70@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CAPDyKFoxuRaYyYHqA=hWKQpQAbQ3HCDx+dtzSaePm0T7_j6p1g@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 2/5] mfd: lochnagar: Add support for the Cirrus Logic
+ Lochnagar
+Date: Thu, 25 Oct 2018 12:42:05 +0100
+Message-ID: <20181025114205.GC4870@dell>
+References: <20181008132542.19775-1-ckeepax@opensource.cirrus.com>
+ <20181008132542.19775-2-ckeepax@opensource.cirrus.com>
+ <20181025074459.GF4939@dell>
+ <20181025082621.GD16508@imbe.wolfsonmicro.main>
+ <b2f85f45-cbe9-5a27-e9e8-ad28f2bd9bd6@opensource.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPDyKFoxuRaYyYHqA=hWKQpQAbQ3HCDx+dtzSaePm0T7_j6p1g@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Jon Hunter <jonathanh@nvidia.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <b2f85f45-cbe9-5a27-e9e8-ad28f2bd9bd6@opensource.cirrus.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, mturquette@baylibre.com, sboyd@kernel.org, broonie@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Ulf Hansson [mailto:ulf.hansson@linaro.org]
-> Sent: Thursday, October 25, 2018 7:31 PM
-[...]
-> + Jon
-> 
-> [...]
-> 
-> >>
-> >> In regards to model the HW correctly. I don't believe your HW
-> >> topology have each PWM block, GPIO block, etc, in their own gate-able
-> power domain, right?
-> >> Or is it so?
-> >>
-> >
-> > First of all, thanks for your and Rob's good suggestions.
-> > I spent a lot more time to do research to try to make it better
-> > according to your suggestions. Some of your ideas absolutely helped me
-> > a lot and gave me some inspirations.
-> >
-> > Some new findings are that some of our power domains are organized in
-> > a tree was because the kernel does not support multi-power domains for one
-> device.
-> > but from HW point of view, they're identical.
-> > You can more serious situation from local tree at here:
+On Thu, 25 Oct 2018, Richard Fitzgerald wrote:
+> On 25/10/18 09:26, Charles Keepax wrote:
+> > On Thu, Oct 25, 2018 at 08:44:59AM +0100, Lee Jones wrote:
+> > > On Mon, 08 Oct 2018, Charles Keepax wrote:
+> > > > From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+> > > > +static const struct reg_default lochnagar1_reg_defaults[] = {
+> > > > +	{ LOCHNAGAR1_CDC_AIF1_SEL,    0x00 },
+> > > > +	{ LOCHNAGAR1_CDC_AIF2_SEL,    0x00 },
+> > ...
+> > > > +	{ LOCHNAGAR1_LED1,            0x00 },
+> > > > +	{ LOCHNAGAR1_LED2,            0x00 },
+> > > > +	{ LOCHNAGAR1_I2C_CTRL,        0x01 },
+> > > > +};
+> > > 
+> > > Why do you need to specify each register value?
+> > 
+> > The way regmap operates it needs to know the starting value of
+> > each register. It will use this to initialise the cache and to
+> > determine if writes need to actually update the hardware on
+> > cache_syncs after devices have been powered back up.
 
-[...]
+That sounds crazy to me.  Some devices have thousands of registers.
+At a line per register, that's thousands of lines of code/cruft.
+Especially seeing as most (sane?) register layouts I've seen default
+to zero.  Then default values can be changed at the leisure of the
+s/w.
 
-> >
-> > I just found your following patch perfectly addressed our issue as we
-> > do have many Devices requires to handle multi power domains.
-> > 3c095f32a92b PM / Domains: Add support for multi PM domains per device
-> > to genpd e.g. For LVDS devices, it need both LVDS and DC(Display controller)
-> PD to work.
-> 
-> Thanks for letting me know about further use cases about multiple PM domain
-> per device. Very interesting.
-> 
-> >
-> > Now i was trying to understand all of our current user case with the
-> > team, If all of them do not need a tree to address dependency issue, I may
-> remove them all from device tree.
-> > Then it would be much more clearer than before and be something like what
-> Tegra does.
-> > include/dt-bindings/power/tegra186-powergate.h
-> > drivers/soc/tegra/powergate-bpmp.c
-> 
-> Yes!
-> 
-> >
-> > For example, 1 #power-domain-cells will be enough. The first cell can
-> > be a global SCU power domain and the 2nd cell the device ID.
-> > Hopefully this can be what you and Rob want.
-> >
-> > If any good suggestions please let me know.
-> 
-> It makes perfect sense!
-> 
-> In regards to deploy support for multiple PM domains per device, you may
-> have a look at the recent work done Jon Hunter for the Tegra xHCI genpd
-> support [1].
-> 
+Even if it is absolutely critical that you have to supply these to
+Regmap up-front, instead of on first use/read, why can't you just
+supply the oddball non-zero ones?
 
-Thanks for sharing this info.
-Will investigate it.
-
-Regards
-Dong Aisheng
-
-> [...]
+> > > > +static const struct reg_sequence lochnagar1_patch[] = {
+> > > > +	{ 0x40, 0x0083 },
+> > > > +	{ 0x46, 0x0001 },
+> > > > +	{ 0x47, 0x0018 },
+> > > > +	{ 0x50, 0x0000 },
+> > > > +};
+> > > 
+> > > I'm really not a fan of these so call 'patches'.
+> > > 
+> > > Can't you set the registers up proper way?
+> > > 
+> > 
+> > I will see if we could move any out of here or define any of the
+> > registers but as we have discussed before it is not always possible.
+> > 
 > 
-> Kind regards
-> Uffe
+> Also patches generally come out of hardware tuning/qualification/tools
+> as this list of address,value. So it's easy for people to dump an update
+> into the driver as a trivial copy-paste but more work if they have to
+> reverse-engineer the patch list from hardware/datasheet into what each
+> line "means" and then find the relevant lines of code to change. It's also
+> much easier to answer the question "Have these hardware patches been
+> applied to the driver?" if we have them in the original documented format.
+> It just makes people's lives more difficult if they have to search around
+> the code to try to find something that looks like the originally specified
+> patch list. We don't use them just as a lazy way to setup some registers.
+
+I understand why they normally exist (sometimes people are just lazy
+too) (Mark: BTW chicken-bits sound delicious!).  They're just ugly
+from an Open Source PoV.
+
+> > > > +static bool lochnagar2_readable_register(struct device *dev, unsigned int reg)
+> > > > +{
+> > > > +	switch (reg) {
+> > > > +	case LOCHNAGAR_SOFTWARE_RESET:
+> > > > +	case LOCHNAGAR_FIRMWARE_ID1:
+> > > > +	case LOCHNAGAR_FIRMWARE_ID2:
+> > ...
+> > > > +	case LOCHNAGAR2_MICVDD_CTRL2:
+> > > > +	case LOCHNAGAR2_VDDCORE_CDC_CTRL1:
+> > > > +	case LOCHNAGAR2_VDDCORE_CDC_CTRL2:
+> > > > +	case LOCHNAGAR2_SOUNDCARD_AIF_CTRL:
+> > > > +		return true;
+> > > > +	default:
+> > > > +		return false;
+> > > > +	}
+> > > > +}
+> > > > +
+> > > > +static bool lochnagar2_volatile_register(struct device *dev, unsigned int reg)
+> > > > +{
+> > > > +	switch (reg) {
+> > > > +	case LOCHNAGAR2_GPIO_CHANNEL1:
+> > > > +	case LOCHNAGAR2_GPIO_CHANNEL2:
+> > > > +	case LOCHNAGAR2_GPIO_CHANNEL3:
+> > ...
+> > > > +	case LOCHNAGAR2_GPIO_CHANNEL13:
+> > > > +	case LOCHNAGAR2_GPIO_CHANNEL14:
+> > > > +	case LOCHNAGAR2_GPIO_CHANNEL15:
+> > > > +	case LOCHNAGAR2_GPIO_CHANNEL16:
+> > > > +	case LOCHNAGAR2_ANALOGUE_PATH_CTRL1:
+> > > > +		return true;
+> > > > +	default:
+> > > > +		return false;
+> > > > +	}
+> > > > +}
+> > > 
+> > > This is getting silly now.  Can't you use ranges?
+> > 
+> > I can if you feel strongly about it? But it does make the drivers
+> > much more error prone and significantly more annoying to work
+> > with. I find it is really common to be checking that a register
+> > is handled correctly through the regmap callbacks and it is nice
+> > to just be able to grep for that. Obviously this won't work for
+> > all devices/regmaps as well since many will not have consecutive
+> > addresses on registers, for example having multi-byte registers
+> > that are byte addressed.
+> > 
+> > How far would you like me to take this as well? Is it just the
+> > numeric registers you want ranges for ie.
+> > 
+> > LOCHNAGAR2_GPIO_CHANNEL1...LOCHNAGAR_GPIO_CHANNEL16
+> > 
+> > Or is it all consecutive registers even if they are unrelated
+> > (exmaple is probably not accurate as I haven't checked the
+> > addresses):
+> > 
+> > LOCHNAGAR2_GPIO_CHANNEL1...LOCHNAGAR2_ANALOGURE_PATH_CTRL1
+> > 
+> > I don't mind the first at all but the second is getting really
+> > horrible in my opinion.
+
+My issue is that we have one end of the scale, where contributors are
+submitting patches, trying to remove a line of code here, a line of
+code there, then there are patches like this one which describe the
+initial value, readable status, writable status and volatile status of
+each and every register.
+
+The API is obscene and needs a re-work IMHO.
+
+I really hope we do not really have to list every register, but *if we
+absolutely must*, let's do it once:
+
+  REG_ADDRESS, WRV, INITIAL_VALUE
+
+> > > > +static const struct reg_default lochnagar2_reg_defaults[] = {
+> > > > +	{ LOCHNAGAR2_CDC_AIF1_CTRL,         0x0000 },
+> > > > +	{ LOCHNAGAR2_CDC_AIF2_CTRL,         0x0000 },
+> > > > +	{ LOCHNAGAR2_CDC_AIF3_CTRL,         0x0000 },
+> > > > +	{ LOCHNAGAR2_DSP_AIF1_CTRL,         0x0000 },
+> > ...
+> > > > +	{ LOCHNAGAR2_MINICARD_RESETS,       0x0000 },
+> > > > +	{ LOCHNAGAR2_ANALOGUE_PATH_CTRL2,   0x0000 },
+> > > > +	{ LOCHNAGAR2_COMMS_CTRL4,           0x0001 },
+> > > > +	{ LOCHNAGAR2_SPDIF_CTRL,            0x0008 },
+> > > > +	{ LOCHNAGAR2_POWER_CTRL,            0x0001 },
+> > > > +	{ LOCHNAGAR2_SOUNDCARD_AIF_CTRL,    0x0000 },
+> > > > +};
+> > > 
+> > > OMG!  Vile, vile vile!
+> > 
+> > I really feel this isn't the driver you are objecting to as such
+> > but the way regmap operates and also we seem to always have the same
+> > discussions around regmap every time we push a driver.
+
+Absolutely.  I didn't like it before.  I like it even less now.
+
+> > Is there
+> > any way me, you and Mark could hash this out and find out a way to
+> > handle regmaps that is acceptable to you? I don't suppose you are
+> > in Edinburgh at the moment for ELCE?
+
+I'm not at ELCE I'm afraid.
+
+> I suppose if Mark was willing to promote the regmap drivers to be a
+> top-level subsystem that could contain the regmap definitions of devices
+> then we could dump our regmap definitions in there, where Mark can review
+> it as he's familiar with regmap and the chips and the reasons why things
+> are done the way they are, rather than Lee having to stress about it every
+> time we need to create an MFD device that uses regmap. Though that would
+> make the initialization of an MFD rather awkward with the code required
+> to init the MFD it not actually being in the MFD tree.
+
+My issue isn't where all this bumph lives.
+
+It's the fact that it's required (at least at this level) at all.
+
+> > > > +	/* Wait for Lochnagar to boot */
+> > > > +	ret = lochnagar_wait_for_boot(lochnagar->regmap, &val);
+> > > > +	if (ret < 0) {
+> > > > +		dev_err(dev, "Failed to read device ID: %d\n", ret);
+> > > 
+> > > Eh?
+> > > 
+> > > So you read the LOCHNAGAR_SOFTWARE_RESET register and out pops the
+> > > device/revision IDs?  That's just random!
+> > 
+> > I shall let the hardware guys know you don't approve of their
+> > life choices :-) and add some comments to the code.
+
+Please do.  And tell them to stop drinking at lunch time. ;)
+
+> > > > +	ret = devm_of_platform_populate(dev);
+> > > > +	if (ret < 0) {
+> > > > +		dev_err(dev, "Failed to populate child nodes: %d\n", ret);
+> > > > +		return ret;
+> > > > +	}
+> > > 
+> > > Please do not mix OF and MFD device registration strategies.
+> > > 
+> > > Pick one and register all devices through your chosen method.
+> > 
+> > Hmmm we use this to do things like register some fixed regulators
+> > and clocks that don't need any control but do need to be associated
+> > with the device. I could do that through the MFD although it is in
+> > direct conflict with the feedback on the clock patches I received
+> > to move the fixed clocks into devicetree rather than registering
+> > them manually (see v2 of the patch chain).
+
+The I suggest moving everything to DT.
+
+> > I will have a look see if I can find any ideas that will make
+> > everyone happy but we might need to discuss with Mark and the
+> > clock guys.
+> > 
+> > > > +	.probe_new = lochnagar_i2c_probe,
+> > > 
+> > > Hasn't this been replaced yet?
+> > 
+> > I will check, the patchset has been around internally for a while
+> > so it is possible this is no longer needed.
+> > 
+> > > > +#ifndef CIRRUS_LOCHNAGAR_H
+> > > > +#define CIRRUS_LOCHNAGAR_H
+> > > > +
+> > > > +#include "lochnagar1_regs.h"
+> > > > +#include "lochnagar2_regs.h"
+> > > 
+> > > Why are you including these here?
+> > > 
+> > 
+> > It is just a convenience so the drivers only need to include
+> > lochnagar.h rather than including all three headers manually.
+
+That's against convention.
+
+If a source file needs a head, it should include it explicitly.
+
+> > > > diff --git a/include/linux/mfd/lochnagar1_regs.h b/include/linux/mfd/lochnagar1_regs.h
+> > > > diff --git a/include/linux/mfd/lochnagar2_regs.h b/include/linux/mfd/lochnagar2_regs.h
+> > > 
+> > > So Lochnagar 1 and 2 are completely different devices?
+> > > 
+> > > What do they do?
+> > 
+> > Completely different devices is a bit strong, they are different
+> > versions of the same system. They have quite different register
+> > maps but provide very similar functionality.
+> 
+> The register maps are different partly because some silicon
+> used on the V1 is no longer manufactured and partly because some
+> silicon added in V2 didn't fit into the older register map.
+
+I just looked at the maps, which appeared to be vastly different.
+
+> > All the other comments I will get fixed up for the next spin of
+> > the patches.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
