@@ -1,35 +1,87 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH] dt-bindings: arm: Fix cpu capacity mismatch in example
-Date: Thu, 25 Oct 2018 13:57:51 +0530
-Message-ID: <138600f5d504b41202a29a1e130a7aa4e51f1925.1540451976.git.viresh.kumar@linaro.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH anybus v1 0/4] Support HMS Profinet Card over Anybus
+Date: Thu, 25 Oct 2018 12:18:36 +0300
+Message-ID: <20181025091836.GV10650@smile.fi.intel.com>
+References: <20181024142456.10084-1-svendev@arcx.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181024142456.10084-1-svendev@arcx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: catalin.marinas@arm.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, linux-arm-kernel@lists.infradead.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sven Van Asbroeck <svendev@arcx.com>
+Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, treding@nvidia.com, david@lechnology.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, yuanzhichang@hisilicon.com, stuyoder@gmail.com, linus.walleij@linaro.org, maxime.ripard@bootlin.com, bogdan.purcareata@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The example text says the capacity value should be 446, while the
-example have it set to 578 instead. Fix the mismatch.
+On Wed, Oct 24, 2018 at 10:24:52AM -0400, Sven Van Asbroeck wrote:
+> This patch set adds support for the HMS Industrial Networks AB Profinet card.
+> 
+> Profinet is an industry technical standard for data communication over
+> Industrial Ethernet, designed for collecting data from, and controlling,
+> equipment in industrial systems, with a particular strength in delivering data
+> under tight time constraints (on the order of 1ms or less).
+> 
+> The profinet card itself is connected to the system via an industrial bus
+> called 'anybus'.
+> 
+> I have followed the bus driver/client driver pattern, and created an anybus
+> bus driver, plus a client driver for the profinet card.
+> 
+> In case this patch set gets (eventually) accepted, drivers for other anybus
+> client cards may follow: flnet, cc-link, ...
+> 
+> The anybus slot on the host is located on an 'anybus bridge', which is
+> custom h/w designed by Arcx. Its driver is modeled as an mfd, which
+> instantiates two anybus slots.
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- Documentation/devicetree/bindings/arm/cpu-capacity.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I highly recommend to look at my recent (for few month?) reviews -- they are
+almost repeating each other.
 
-diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-index 9b5685a1d15d..7a0d6b429c8d 100644
---- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-+++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-@@ -61,7 +61,7 @@ mhz values (normalized w.r.t. the highest value found while parsing the DT).
- Example 1 (ARM 64-bit, 6-cpu system, two clusters):
- capacities-dmips-mhz are scaled w.r.t. 1024 (cpu@0 and cpu@1)
- supposing cluster0@max-freq=1100 and custer1@max-freq=850,
--final capacities are 1024 for cluster0 and 446 for cluster1
-+final capacities are 1024 for cluster0 and 578 for cluster1
- 
- cpus {
- 	#address-cells = <2>;
+Also check what we have under lib/ (hint: read linux/kernel.h for inline and
+exported function helpers).
+
+I might look at the patches later on if I would have some spare time (I
+actually don't know why I'm in Cc list here).
+
+> 
+> v1:
+> 	first shot
+> 
+> Sven Van Asbroeck (4):
+>   mfd: support the Arcx anybus bridge.
+>   dt-bindings: anybus-bridge: document devicetree binding.
+>   bus: support HMS Anybus-S bus.
+>   misc: support HMS Profinet IRT industrial controller.
+> 
+>  .../bindings/mfd/arcx,anybus-bridge.txt       |   37 +
+>  .../devicetree/bindings/vendor-prefixes.txt   |    1 +
+>  drivers/bus/Kconfig                           |   11 +
+>  drivers/bus/Makefile                          |    1 +
+>  drivers/bus/anybuss-host.c                    | 1301 +++++++++++++++++
+>  drivers/mfd/Kconfig                           |   11 +
+>  drivers/mfd/Makefile                          |    1 +
+>  drivers/mfd/anybus-bridge.c                   |  441 ++++++
+>  drivers/misc/Kconfig                          |   11 +
+>  drivers/misc/Makefile                         |    1 +
+>  drivers/misc/hms-profinet.c                   |  747 ++++++++++
+>  include/linux/anybuss-client.h                |  100 ++
+>  include/linux/anybuss-host.h                  |   28 +
+>  include/uapi/linux/hms-common.h               |   14 +
+>  include/uapi/linux/hms-profinet.h             |  101 ++
+>  15 files changed, 2806 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/arcx,anybus-bridge.txt
+>  create mode 100644 drivers/bus/anybuss-host.c
+>  create mode 100644 drivers/mfd/anybus-bridge.c
+>  create mode 100644 drivers/misc/hms-profinet.c
+>  create mode 100644 include/linux/anybuss-client.h
+>  create mode 100644 include/linux/anybuss-host.h
+>  create mode 100644 include/uapi/linux/hms-common.h
+>  create mode 100644 include/uapi/linux/hms-profinet.h
+> 
+> -- 
+> 2.17.1
+> 
+
 -- 
-2.19.1.568.g152ad8e3369a
+With Best Regards,
+Andy Shevchenko
