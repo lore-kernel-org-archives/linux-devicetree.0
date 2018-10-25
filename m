@@ -1,80 +1,67 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: irq: add binding for Freescale IRQSTEER
- multiplexer
-Date: Thu, 25 Oct 2018 09:35:04 -0500
-Message-ID: <20181025143504.GA9673@bogus>
-References: <20181016164218.3736-1-l.stach@pengutronix.de>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v6 8/8] memory: tegra: Introduce Tegra20 EMC driver
+Date: Thu, 25 Oct 2018 16:38:53 +0200
+Message-ID: <20181025143853.GL21521@ulmo>
+References: <20181021183052.32023-1-digetx@gmail.com>
+ <20181021183052.32023-9-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="GeDkoc8jIzHasOdk"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181016164218.3736-1-l.stach@pengutronix.de>
+In-Reply-To: <20181021183052.32023-9-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, patchwork-lst@pengutronix.de
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 16, 2018 at 06:42:17PM +0200, Lucas Stach wrote:
-> This adds the DT binding for the Freescale IRQSTEER interrupt
-> multiplexer found in the i.MX8 familiy SoCs.
-> 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+
+--GeDkoc8jIzHasOdk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Oct 21, 2018 at 09:30:52PM +0300, Dmitry Osipenko wrote:
+> Introduce driver for the External Memory Controller (EMC) found on Tegra20
+> chips, which controls the external DRAM on the board. The purpose of this
+> driver is to program memory timing for external memory on the EMC clock
+> rate change.
+>=20
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
 > ---
->  .../interrupt-controller/fsl,irqsteer.txt     | 39 +++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
-> new file mode 100644
-> index 000000000000..ed2b18165591
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
-> @@ -0,0 +1,39 @@
-> +Freescale IRQSTEER Interrupt multiplexer
-> +
-> +Required properties:
-> +
-> +- compatible: should be:
-> +	- "fsl,imx8m-irqsteer"
-> +	- "fsl,imx-irqsteer"
-> +- reg: Physical base address and size of registers.
-> +- interrupts: Should contain the parent interrupt line used to multiplex the
-> +  input interrupts.
-> +- clocks: Should contain one clock for entry in clock-names
-> +  see Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +- clock-names:
-> +   - "ipg": main logic clock
-> +- interrupt-controller: Identifies the node as an interrupt controller.
-> +- #interrupt-cells: Specifies the number of cells needed to encode an
-> +  interrupt source. The value must be 2.
-> +
-> +Optional properties:
-> +- fsl,channel: Number of channels managed by this controller. Each channel
-> +  contains up to 32 interrupt sources. If absent defaults to 1.
+>  drivers/memory/tegra/Kconfig       |  10 +
+>  drivers/memory/tegra/Makefile      |   1 +
+>  drivers/memory/tegra/tegra20-emc.c | 591 +++++++++++++++++++++++++++++
+>  3 files changed, 602 insertions(+)
+>  create mode 100644 drivers/memory/tegra/tegra20-emc.c
 
-What's a channel? Why isn't this implied by the compatible?
+Applied to for-4.21/memory, thanks.
 
-> +- fsl,endian:
+Though I did notice that there's quite a bit of code that's very similar
+between this and the existing Tegra124 driver, so I wonder if we can do
+a pass over them and refactor some of it as a follow-up.
 
-The standard property for endianness doesn't work for you?
+Thierry
 
-> +  0: controller registers are little endian
-> +  1: controller registers are big endian
-> +  If absent defaults to 0.
-> +
-> +Example:
-> +
-> +	interrupt-controller@32e2d000 {
-> +		compatible = "fsl,imx8m-irqsteer", "fsl,imx-irqsteer";
-> +		reg = <0x32e2d000 0x1000>;
-> +		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
-> +		clock-names = "ipg";
-> +		fsl,channel = <2>;
-> +		fsl,endian = <1>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> -- 
-> 2.19.0
-> 
+--GeDkoc8jIzHasOdk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlvR1X0ACgkQ3SOs138+
+s6HOfxAAma4aYV31RRx2/qD14Jn6MGfN3bEIReLqe6IlcvnonSeDMPjw20xowj/K
+03+GR3gN4dVlJ+LzsAaS1Mjv1OGd62is5DPKDtkbHt4r7y913RntQq8bS2aAqRlT
+TbI9vPggHv+Cvc+jim2Gsy0W4fK5RQcFuoqyq/4rjmRNvVIjKU4TzuRh6xryGJms
+zjsUrZASxqVAvf1mfsfNAVh7hr7TNT8DvquAoki9Qy4I6oCFLTMCGJRsRzpKx3Vz
+YeM73On6rRNpJEPERi5xUid+jDR8nFfJIc8Cp3N/3G2J04Kg37L64J13Fbg4n8pf
+8nPLbBRDhcZ7Za0Os4c7nRdb7RrgdrvLFrr/t01dTryy1gG5Xr6UWgM0oHLbYzPx
+gaBV+mXiZz8kzdA1+7sAzgU6NhGoxkpY7JEG3CRzvWYabCjAg4CaMYpF8QQ24KoU
+fct464VbB4jl/Kiq+X+MgmD4G7fuj2a7u++EWEMxaBg5otNuQEnJGflxYmLLzudY
+Ogsd3II2gDXt8x3FspWm3pODNXKGJdOZZhM6lOLx+nueXyYxreQBAhEAJr6k4HLy
+I9I5Mq7pttlp9VcIkhYMB8w+D/ueT7qrQY/SBp+O9yT/GFLOZ5z2HUQ5PObW4Yt3
+4WECZkBJr8XLcOmftZHmTTcCzmbF5MWj8ZYzfLCJAFvUotIc1lU=
+=t1vV
+-----END PGP SIGNATURE-----
+
+--GeDkoc8jIzHasOdk--
