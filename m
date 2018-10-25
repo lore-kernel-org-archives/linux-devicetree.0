@@ -1,63 +1,149 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCH 2/4] doc/layerscape-pci: removed unsuitable compatible
- string
-Date: Thu, 25 Oct 2018 09:28:31 +0000
-Message-ID: <DB5PR04MB1221E4B46FBE26DD52E9020D84F70@DB5PR04MB1221.eurprd04.prod.outlook.com>
-References: <20181008031428.25293-1-Zhiqiang.Hou@nxp.com>
- <20181008031428.25293-3-Zhiqiang.Hou@nxp.com> <20181017135323.GA31980@bogus>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 1/5] mfd: rk808: Add RK817 and RK809 support
+Date: Thu, 25 Oct 2018 10:33:55 +0100
+Message-ID: <20181025093355.GN4939@dell>
+References: <1540294467-25813-1-git-send-email-tony.xie@rock-chips.com>
+ <1540294467-25813-2-git-send-email-tony.xie@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181017135323.GA31980@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1540294467-25813-2-git-send-email-tony.xie@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>
+To: Tony Xie <tony.xie@rock-chips.com>
+Cc: heiko@sntech.de, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-DQpUaGFua3MgUm9iIQ0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJv
-YiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMTjE6jEw1MIxN8jVIDIxOjUz
-DQo+IFRvOiBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+IENjOiBsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
-DQo+IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-OyBMZW8gTGkNCj4gPGxlb3lhbmcubGlAbnhwLmNvbT47IHNoYXduZ3VvQGtlcm5lbC5vcmc7IG1h
-cmsucnV0bGFuZEBhcm0uY29tOw0KPiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyBNaW5na2FpIEh1IDxt
-aW5na2FpLmh1QG54cC5jb20+OyBNLmguIExpYW4NCj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT4N
-Cj4gU3ViamVjdDogUmU6IFtQQVRDSCAyLzRdIGRvYy9sYXllcnNjYXBlLXBjaTogcmVtb3ZlZCB1
-bnN1aXRhYmxlIGNvbXBhdGlibGUNCj4gc3RyaW5nDQo+IA0KPiBPbiBNb24sIE9jdCAwOCwgMjAx
-OCBhdCAxMToxNDoyNkFNICswODAwLCBaaGlxaWFuZyBIb3Ugd3JvdGU6DQo+ID4gRnJvbTogSG91
-IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gDQo+IFNpbWlsYXIgY29tbWVudHMg
-b24gdGhpcyBvbmUgdG9vLg0KPiANCj4gPg0KPiA+IFJlbW92ZWQgdGhlIGNvbXBhdGlibGUgc3Ry
-aW5nICJzbnBzLGR3LXBjaWUiLCBpdCBpcyBmb3IgdGhlIHJlZmVyZW5jZQ0KPiA+IHBsYXRmb3Jt
-IGRyaXZlciBmb3IgUENJIFJDIElQIFByb3RveXBpbmcgS2l0cyBiYXNlZCBvbiB0aGUgQVJDIFNE
-UCwgc28NCj4gPiBpdCBpcyBub3Qgc3VpdGFibGUgZm9yIGFsbCBwbGF0Zm9ybSB3aXRoIGRlc2ln
-bndhcmUgUENJZSBjb250cm9sbGVyLA0KPiA+IGFuZCBwbGF0Zm9ybSB2ZW5kb3JzIGhhdmUgdGhl
-bXNlbHZlcycgZHJpdmVycy4NCj4gPg0KPiA+IFRoZSBjb21wYXRpYmxlIHN0cmluZyAic25zcCxk
-dy1wY2llIiB3YXMgYWRkZWQgYnkgbWlzdGFrZSBhbmQgaXQncyBub3QNCj4gPiBtYXRjaGVkIHRo
-YXQgdGltZSwgYnV0IGl0IGlzIG1hdGNoZWQgYmVjYXVzZSBwY2llIGRyaXZlcnMgaGFzIGJlZW4N
-Cj4gPiBjb2xsZWN0ZWQgcmVjZW50bHkuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhp
-cWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLnR4dCB8IDYgKysrLS0tDQo+
-ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+ID4N
-Cj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9s
-YXllcnNjYXBlLXBjaS50eHQNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+ID4gaW5kZXggNWViMWMyMDI5MzJmLi45YjJiOGQ2
-NmQxZjQgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3BjaS9sYXllcnNjYXBlLXBjaS50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLnR4dA0KPiA+IEBAIC0xMyw4ICsxMyw4IEBA
-IGluZm9ybWF0aW9uLg0KPiA+DQo+ID4gIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gIC0gY29t
-cGF0aWJsZTogc2hvdWxkIGNvbnRhaW4gdGhlIHBsYXRmb3JtIGlkZW50aWZpZXIgc3VjaCBhczoN
-Cj4gPiAtICAgICAgICAiZnNsLGxzMTAyMWEtcGNpZSIsICJzbnBzLGR3LXBjaWUiDQo+ID4gLSAg
-ICAgICAgImZzbCxsczIwODBhLXBjaWUiLCAiZnNsLGxzMjA4NWEtcGNpZSIsICJzbnBzLGR3LXBj
-aWUiDQo+ID4gKyAgICAgICAgImZzbCxsczEwMjFhLXBjaWUiDQo+ID4gKyAgICAgICAgImZzbCxs
-czIwODBhLXBjaWUiLCAiZnNsLGxzMjA4NWEtcGNpZSINCj4gPiAgICAgICAgICAiZnNsLGxzMjA4
-OGEtcGNpZSINCj4gPiAgICAgICAgICAiZnNsLGxzMTA4OGEtcGNpZSINCj4gPiAgICAgICAgICAi
-ZnNsLGxzMTA0NmEtcGNpZSINCj4gPiBAQCAtMzYsNyArMzYsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0
-aWVzOg0KPiA+ICBFeGFtcGxlOg0KPiA+DQo+ID4gIAlwY2llQDM0MDAwMDAgew0KPiA+IC0JCWNv
-bXBhdGlibGUgPSAiZnNsLGxzMTAyMWEtcGNpZSIsICJzbnBzLGR3LXBjaWUiOw0KPiA+ICsJCWNv
-bXBhdGlibGUgPSAiZnNsLGxzMTAyMWEtcGNpZSI7DQo+ID4gIAkJcmVnID0gPDB4MDAgMHgwMzQw
-MDAwMCAweDAgMHgwMDAxMDAwMCAgIC8qIGNvbnRyb2xsZXIgcmVnaXN0ZXJzDQo+ICovDQo+ID4g
-IAkJICAgICAgIDB4NDAgMHgwMDAwMDAwMCAweDAgMHgwMDAwMjAwMD47IC8qIGNvbmZpZ3VyYXRp
-b24gc3BhY2UNCj4gKi8NCj4gPiAgCQlyZWctbmFtZXMgPSAicmVncyIsICJjb25maWciOw0KPiA+
-IC0tDQo+ID4gMi4xNy4xDQo+ID4NCg==
+On Tue, 23 Oct 2018, Tony Xie wrote:
+
+>     The rk809 and rk817 are a Power Management IC (PMIC) for multimedia
+>     and handheld devices. It contains the following components:
+> 
+>         - Regulators
+>         - RTC
+>         - Clocking
+> 
+>     Both RK809 and RK817 chips are using a similar register map,
+>     so we can reuse the RTC and Clocking and regulators functionality.
+
+What's with the odd tabbing at the start of every line?
+
+> Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
+> Acked-by: Stephen Boyd <sboyd@kernel.org>
+> ---
+>  drivers/mfd/Kconfig       |   6 +-
+>  drivers/mfd/rk808.c       | 225 +++++++++++++++++++++++++++++++++++++++++++---
+>  include/linux/mfd/rk808.h | 172 +++++++++++++++++++++++++++++++++++
+>  include/linux/regmap.h    |   6 ++
+>  4 files changed, 392 insertions(+), 17 deletions(-)
+
+[...]
+
+> +static struct resource rk817_rtc_resources[] = {
+> +	{
+> +		.start  = RK817_IRQ_RTC_ALARM,
+> +		.end    = RK817_IRQ_RTC_ALARM,
+> +		.flags  = IORESOURCE_IRQ,
+> +	}
+> +};
+
+There are MACROs for these.  Please consider converting to them.
+
+You don't need to do that for *this* patch though.
+
+[...]
+
+>  static const struct regmap_irq_chip rk818_irq_chip = {
+>  	.name = "rk818",
+>  	.irqs = rk818_irqs,
+> @@ -376,7 +489,7 @@ static void rk805_device_shutdown(void)
+>  
+>  	if (!rk808) {
+>  		dev_warn(&rk808_i2c_client->dev,
+> -			 "have no rk805, so do nothing here\n");
+> +			 "can not get the driver data of rk808!\n");
+
+Nit: "cannot"
+
+>  		return;
+>  	}
+>  
+> @@ -394,7 +507,7 @@ static void rk808_device_shutdown(void)
+>  
+>  	if (!rk808) {
+>  		dev_warn(&rk808_i2c_client->dev,
+> -			 "have no rk808, so do nothing here\n");
+> +			 "can not get the driver data of rk808!\n");
+
+As above (and below).
+
+>  		return;
+>  	}
+>  
+> @@ -412,7 +525,7 @@ static void rk818_device_shutdown(void)
+>  
+>  	if (!rk808) {
+>  		dev_warn(&rk808_i2c_client->dev,
+> -			 "have no rk818, so do nothing here\n");
+> +			 "can not get the driver data of rk808!\n");
+
+"RK808" in all prints and comments.
+
+>  		return;
+>  	}
+>  
+> @@ -423,9 +536,39 @@ static void rk818_device_shutdown(void)
+>  		dev_err(&rk808_i2c_client->dev, "power off error!\n");
+>  }
+>  
+> +static void rk8xx_syscore_shutdown(void)
+> +{
+> +	int ret;
+> +	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
+> +
+> +	if (!rk808) {
+> +		dev_warn(&rk808_i2c_client->dev,
+> +			 "can not get the driver data of rk808!\n");
+> +		return;
+> +	}
+> +
+> +	if (system_state == SYSTEM_POWER_OFF &&
+> +	    (rk808->variant == RK809_ID || rk808->variant == RK817_ID)) {
+> +		ret = regmap_update_bits(rk808->regmap,
+> +					 RK817_SYS_CFG(3),
+> +					 RK817_SLPPIN_FUNC_MSK,
+> +					 SLPPIN_DN_FUN);
+> +		if (ret) {
+> +			dev_warn(&rk808_i2c_client->dev,
+> +				 "the retset pin can not switch to power down function\n");
+
+Spellcheck.
+
+[...]
+
+> diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+> index 4f38068..a468b81 100644
+> --- a/include/linux/regmap.h
+> +++ b/include/linux/regmap.h
+> @@ -1047,6 +1047,12 @@ struct regmap_irq {
+>  #define REGMAP_IRQ_REG(_irq, _off, _mask)		\
+>  	[_irq] = { .reg_offset = (_off), .mask = (_mask) }
+>  
+> +#define REGMAP_IRQ_REG_LINE(_id, _reg_bits) \
+> +	[_id] = {				\
+> +		.mask = BIT((_id) % (_reg_bits)),	\
+> +		.reg_offset = (_id) / (_reg_bits),	\
+> +	}
+> +
+>  /**
+>   * struct regmap_irq_chip - Description of a generic regmap irq_chip.
+>   *
+
+This needs to be a separate patch.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
