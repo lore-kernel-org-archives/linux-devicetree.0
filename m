@@ -1,152 +1,32 @@
-From: Jaewon Kim <jaewon02.kim@gmail.com>
-Subject: [PATCH] of/platform: Support dynamic device tree on AMBA bus
-Date: Fri, 26 Oct 2018 01:39:57 +0900
-Message-ID: <1540485597-12240-1-git-send-email-jaewon02.kim@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jaewon Kim <jaewon02.kim@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH V2 6/8] dts: imx: add common imx7ulp dtsi support
+Date: Thu, 25 Oct 2018 13:44:06 -0300
+Message-ID: <CAOMZO5ArziSkimJvKMFPR-RZwWywLmzjpmvAFT9fB0fp_J_YZw@mail.gmail.com>
+References: <1540295058-26090-1-git-send-email-aisheng.dong@nxp.com>
+ <1540295058-26090-7-git-send-email-aisheng.dong@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1540295058-26090-7-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Dong Aisheng <dongas86@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch supports dynamic device-tree for AMBA device.
-The AMBA device must be registered on the AMBA bus, not the platform bus.
+On Tue, Oct 23, 2018 at 8:55 AM A.s. Dong <aisheng.dong@nxp.com> wrote:
 
-Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
----
- drivers/of/platform.c | 93 ++++++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 73 insertions(+), 20 deletions(-)
+> +               gpio_ptc: gpio@40ae0000 {
+> +                       compatible = "fsl,vf610-gpio";
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 04ad312..b9ac105 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -286,6 +286,22 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
- 	of_node_clear_flag(node, OF_POPULATED);
- 	return NULL;
- }
-+
-+/**
-+ * of_find_amba_device_by_node - Find the amba_device associated with a node
-+ * @np: Pointer to device tree node
-+ *
-+ * Returns amba_device pointer, or NULL if not found
-+ */
-+struct amba_device *of_find_amba_device_by_node(struct device_node *np)
-+{
-+	struct device *dev;
-+
-+	dev = bus_find_device(&amba_bustype, NULL, np, of_dev_node_match);
-+	return dev ? to_amba_device(dev) : NULL;
-+}
-+EXPORT_SYMBOL(of_find_amba_device_by_node);
-+
- #else /* CONFIG_ARM_AMBA */
- static struct amba_device *of_amba_device_create(struct device_node *node,
- 						 const char *bus_id,
-@@ -294,6 +310,12 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
- {
- 	return NULL;
- }
-+
-+struct amba_device *of_find_amba_device_by_node(struct device_node *np)
-+{
-+	return NULL;
-+}
-+EXPORT_SYMBOL(of_find_amba_device_by_node);
- #endif /* CONFIG_ARM_AMBA */
- 
- /**
-@@ -665,6 +687,7 @@ static int of_platform_notify(struct notifier_block *nb,
- {
- 	struct of_reconfig_data *rd = arg;
- 	struct platform_device *pdev_parent, *pdev;
-+	struct amba_device *adev_p, *adev;
- 	bool children_left;
- 
- 	switch (of_reconfig_get_state_change(action, rd)) {
-@@ -677,17 +700,34 @@ static int of_platform_notify(struct notifier_block *nb,
- 		if (of_node_check_flag(rd->dn, OF_POPULATED))
- 			return NOTIFY_OK;
- 
--		/* pdev_parent may be NULL when no bus platform device */
--		pdev_parent = of_find_device_by_node(rd->dn->parent);
--		pdev = of_platform_device_create(rd->dn, NULL,
--				pdev_parent ? &pdev_parent->dev : NULL);
--		of_dev_put(pdev_parent);
--
--		if (pdev == NULL) {
--			pr_err("%s: failed to create for '%pOF'\n",
--					__func__, rd->dn);
--			/* of_platform_device_create tosses the error code */
--			return notifier_from_errno(-EINVAL);
-+		if (of_device_is_compatible(rd->dn, "arm,primecell")) {
-+			/* adev_p may be NULL when no bus amba device */
-+			adev_p = of_find_amba_device_by_node(rd->dn->parent);
-+			adev = of_amba_device_create(rd->dn, NULL, NULL,
-+					adev_p ? &adev_p->dev : NULL);
-+
-+			if (adev_p)
-+				put_device(&adev_p->dev);
-+
-+			if (adev == NULL) {
-+				pr_err("%s: failed to create for '%s'\n",
-+						__func__, rd->dn->full_name);
-+				/* of_amba_device_create tosses the error */
-+				return notifier_from_errno(-EINVAL);
-+			}
-+		} else {
-+			/* pdev_parent may be NULL when no bus platform device*/
-+			pdev_parent = of_find_device_by_node(rd->dn->parent);
-+			pdev = of_platform_device_create(rd->dn, NULL,
-+					pdev_parent ? &pdev_parent->dev : NULL);
-+			of_dev_put(pdev_parent);
-+
-+			if (pdev == NULL) {
-+				pr_err("%s: failed to create for '%pOF'\n",
-+						__func__, rd->dn);
-+				/* of_platform_device_create tosses the error */
-+				return notifier_from_errno(-EINVAL);
-+			}
- 		}
- 		break;
- 
-@@ -698,15 +738,28 @@ static int of_platform_notify(struct notifier_block *nb,
- 			return NOTIFY_OK;
- 
- 		/* find our device by node */
--		pdev = of_find_device_by_node(rd->dn);
--		if (pdev == NULL)
--			return NOTIFY_OK;	/* no? not meant for us */
--
--		/* unregister takes one ref away */
--		of_platform_device_destroy(&pdev->dev, &children_left);
--
--		/* and put the reference of the find */
--		of_dev_put(pdev);
-+		if (of_device_is_compatible(rd->dn, "arm,primecell")) {
-+			adev = of_find_amba_device_by_node(rd->dn);
-+			if (adev == NULL)
-+				return NOTIFY_OK; /* no? not meant for us */
-+
-+			/* unregister takes one ref away */
-+			of_platform_device_destroy(&adev->dev, &children_left);
-+
-+			/* and put the reference of the find */
-+			if (adev)
-+				put_device(&adev->dev);
-+		} else {
-+			pdev = of_find_device_by_node(rd->dn);
-+			if (pdev == NULL)
-+				return NOTIFY_OK; /* no? not meant for us */
-+
-+			/* unregister takes one ref away */
-+			of_platform_device_destroy(&pdev->dev, &children_left);
-+
-+			/* and put the reference of the find */
-+			of_dev_put(pdev);
-+		}
- 		break;
- 	}
- 
--- 
-2.7.4
+This should be:
+
+compatible = "fsl,imx7ulp-gpio", "fsl,vf610-gpio";
