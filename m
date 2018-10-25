@@ -1,36 +1,51 @@
-From: Nick Hu <nickhu@andestech.com>
-Subject: Re: [PATCH v3 4/4] nds32: Add document for NDS32 PMU.
-Date: Thu, 25 Oct 2018 08:56:10 +0800
-Message-ID: <20181025005610.GA8101@andestech.com>
-References: <cover.1540350887.git.nickhu@andestech.com>
- <bdfe23ce3ded5299d7b525fcb16c353c2be31924.1540350887.git.nickhu@andestech.com>
- <20181024183247.GA12203@bogus>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Brian Masney <masneyb@onstation.org>
+Subject: [PATCH v3 0/3] ARM: qcom: add vibrator support for various MSM SOCs
+Date: Wed, 24 Oct 2018 21:29:34 -0400
+Message-ID: <20181025012937.2154-1-masneyb@onstation.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181024183247.GA12203@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Greentime Ying-Han =?utf-8?B?SHUo6IOh6Iux5ryiKQ==?= <greentime@andestech.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "deanbo422@gmail.com" <deanbo422@gmail.com>, "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@redhat.com" <jolsa@redhat.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, gregkh
+To: dmitry.torokhov@gmail.com, andy.gross@linaro.org, david.brown@linaro.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, masneyb@onstation.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, jonathan@marek.ca
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+This patch set adds support for the vibrator found on various Qualcomm
+MSM SOCs. This is based on work from:
 
-On Thu, Oct 25, 2018 at 02:32:48AM +0800, Rob Herring wrote:
-> On Wed, Oct 24, 2018 at 11:32:40AM +0800, Nickhu wrote:
-> > The document for how to add NDS32 PMU
-> > in devicetree.
-> > 
-> > Signed-off-by: Nickhu <nickhu@andestech.com>
-> > ---
-> >  Documentation/devicetree/bindings/nds32/pmu.txt | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/nds32/pmu.txt
-> 
-> Can you move to bindings/perf/ with other similar h/w. With that,
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Jonathan Marek from qcom,pwm-vibrator.c in the PostmarketOS repo:
+https://gitlab.com/postmarketOS/linux-postmarketos/commit/7647fb36cb1cbd060f8b52087a68ab93583292b5
 
-Sure, thanks!
-Nick
+Jongrak Kwon and Devin Kim from msm_pwm_vibrator.c in the downstream
+Android 3.4.0 sources:
+https://android.googlesource.com/kernel/msm/+/android-msm-lenok-3.10-lollipop-wear-release/drivers/misc/msm_pwm_vibrator.c
+
+Driver was tested on a LG Nexus 5 (hammerhead) phone using rumble-test:
+https://git.collabora.com/cgit/user/sre/rumble-test.git/plain/rumble-test.c
+
+Changes since v2
+- Moved from pwm to input subsystem based on feedback from
+  https://lore.kernel.org/lkml/20181012114749.GC31561@ulmo/. I
+  previously wired this into the input system via pwm-vibra.
+
+Changes since v1
+- Update device tree binding document based on feedback from Rob
+  Herring.
+- Changed the driver description to: Qualcomm PWM driver for the MSM
+  vibrator.
+
+Brian Masney (3):
+  dt-bindings: Input: new bindings for MSM vibrator
+  Input: add new vibrator driver for various MSM SOCs
+  ARM: dts: qcom: msm8974-hammerhead: add device tree bindings for
+    vibrator
+
+ .../bindings/input/msm-vibrator.txt           |  36 +++
+ .../qcom-msm8974-lge-nexus5-hammerhead.dts    |  31 ++
+ drivers/input/misc/Kconfig                    |  10 +
+ drivers/input/misc/Makefile                   |   1 +
+ drivers/input/misc/msm-vibrator.c             | 276 ++++++++++++++++++
+ 5 files changed, 354 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/msm-vibrator.txt
+ create mode 100644 drivers/input/misc/msm-vibrator.c
+
+-- 
+2.17.2
