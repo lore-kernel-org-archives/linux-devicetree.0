@@ -1,57 +1,98 @@
 From: Rob Herring <robh@kernel.org>
 Subject: Re: [PATCH 3/3] crypto: qce: ice: Add support for Inline Crypto
  Engine
-Date: Thu, 25 Oct 2018 09:55:48 -0500
-Message-ID: <20181025145548.GA30244@bogus>
-References: <1539789476-6098-1-git-send-email-anilc@codeaurora.org>
- <1539789476-6098-4-git-send-email-anilc@codeaurora.org>
+Date: Thu, 25 Oct 2018 09:58:41 -0500
+Message-ID: <20181025145841.GB30244@bogus>
+References: <1539789476-6098-4-git-send-email-anilc@codeaurora.org>
+ <201810181902.44DQrfDL%fengguang.wu@intel.com>
+ <d6f1930a618f6539a4c3e53d239fdd90@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1539789476-6098-4-git-send-email-anilc@codeaurora.org>
+In-Reply-To: <d6f1930a618f6539a4c3e53d239fdd90@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: AnilKumar Chimata <anilc@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, herbert@gondor.apana.org.au, davem@davemloft.net, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+To: anilc@codeaurora.org
+Cc: kbuild test robot <lkp@intel.com>, kbuild-all@01.org, andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, herbert@gondor.apana.org.au, davem@davemloft.net, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 17, 2018 at 08:47:56PM +0530, AnilKumar Chimata wrote:
-> This patch adds support for Inline Crypto Engine (ICE), which
-> is embedded into storage device/controller such as UFS/eMMC.
-> ICE is intended for high throughput cryptographic encryption
-> or decryption of storage data.
+On Wed, Oct 24, 2018 at 04:44:37PM +0530, anilc@codeaurora.org wrote:
+> Hi,
 > 
-> Signed-off-by: AnilKumar Chimata <anilc@codeaurora.org>
-> ---
->  Documentation/crypto/msm/ice.txt |  235 ++++++
->  drivers/crypto/Kconfig           |   10 +
->  drivers/crypto/qce/Makefile      |    1 +
->  drivers/crypto/qce/ice.c         | 1613 ++++++++++++++++++++++++++++++++++++++
->  drivers/crypto/qce/iceregs.h     |  159 ++++
->  include/crypto/ice.h             |   80 ++
->  6 files changed, 2098 insertions(+)
->  create mode 100644 Documentation/crypto/msm/ice.txt
->  create mode 100644 drivers/crypto/qce/ice.c
->  create mode 100644 drivers/crypto/qce/iceregs.h
->  create mode 100644 include/crypto/ice.h
-> 
-> diff --git a/Documentation/crypto/msm/ice.txt b/Documentation/crypto/msm/ice.txt
-> new file mode 100644
-> index 0000000..58f7081
-> --- /dev/null
-> +++ b/Documentation/crypto/msm/ice.txt
-> @@ -0,0 +1,235 @@
-> +Introduction:
-> +=============
-> +Storage encryption has been one of the most required feature from security
-> +point of view. QTI based storage encryption solution uses general purpose
-> +crypto engine. While this kind of solution provide a decent amount of
-> +performance, it falls short as storage speed is improving significantly
-> +continuously. To overcome performance degradation, newer chips are going to
-> +have Inline Crypto Engine (ICE) embedded into storage device. ICE is supposed
-> +to meet the line speed of storage devices.
+> Thanks for the comments, response inline.
 
-Is ICE part of the storage device or part of the host as the binding 
-suggests?
+FYI, this was from a bot.
+
+> 
+> Thanks,
+> AnilKumar
+> 
+> 
+> On 2018-10-18 17:13, kbuild test robot wrote:
+> > Hi AnilKumar,
+> > 
+> > Thank you for the patch! Yet something to improve:
+> > 
+> > [auto build test ERROR on cryptodev/master]
+> > [also build test ERROR on v4.19-rc8 next-20181018]
+> > [if your patch is applied to the wrong git tree, please drop us a note
+> > to help improve the system]
+> > 
+> > url:
+> > https://github.com/0day-ci/linux/commits/AnilKumar-Chimata/firmware-qcom-scm-Update-qcom_scm_call-signature/20181018-182318
+> > base:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
+> > master
+> > config: sh-allmodconfig (attached as .config)
+> > compiler: sh4-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
+> > reproduce:
+> >         wget
+> > https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross
+> > -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         # save the attached .config to linux build tree
+> >         GCC_VERSION=7.2.0 make.cross ARCH=sh
+> > 
+> > All errors (new ones prefixed by >>):
+> > 
+> > > > drivers/crypto/qce/ice.c:1372:5: error: redefinition of
+> > > > 'qcom_ice_setup_ice_hw'
+> >     int qcom_ice_setup_ice_hw(const char *storage_type, int enable)
+> >         ^~~~~~~~~~~~~~~~~~~~~
+> >    In file included from drivers/crypto/qce/ice.c:25:0:
+> >    include/crypto/ice.h:60:19: note: previous definition of
+> > 'qcom_ice_setup_ice_hw' was here
+> >     static inline int qcom_ice_setup_ice_hw(const char *storage_type,
+> > int enable)
+> >                       ^~~~~~~~~~~~~~~~~~~~~
+> > 
+> > vim +/qcom_ice_setup_ice_hw +1372 drivers/crypto/qce/ice.c
+> > 
+> >   1371
+> > > 1372	int qcom_ice_setup_ice_hw(const char *storage_type, int enable)
+> >   1373	{
+> >   1374		struct ice_device *ice_dev = NULL;
+> >   1375		int ret = -1;
+> >   1376
+> >   1377		ice_dev = get_ice_device_from_storage_type(storage_type);
+> >   1378		if (ice_dev == ERR_PTR(-EPROBE_DEFER))
+> >   1379			return -EPROBE_DEFER;
+> >   1380
+> >   1381		if (!ice_dev)
+> >   1382			return ret;
+> >   1383
+> >   1384		if (enable)
+> >   1385			return enable_ice_setup(ice_dev);
+> >   1386
+> >   1387		return disable_ice_setup(ice_dev);
+> >   1388	}
+> >   1389
+> 
+> We will check and get back on the compilation. What is the idea behind for
+> this
+> effort, is this for testing the ICE driver?
+
+The purpose is to make sure changes don't break builds that you likely 
+haven't tested. Either different architectures or configurations.
 
 Rob
