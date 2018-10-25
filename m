@@ -1,116 +1,143 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: iio: adc: Add docs for AD7606 ADC
-Date: Thu, 25 Oct 2018 13:43:26 -0500
-Message-ID: <20181025184326.GA9995@bogus>
-References: <1539853956-26644-1-git-send-email-stefan.popa@analog.com>
+Subject: Re: [PATCH v2 06/10] dt-bindings: irqchip: Introduce TISCI Interrupt
+ router bindings
+Date: Thu, 25 Oct 2018 13:45:56 -0500
+Message-ID: <20181025184556.GA19597@bogus>
+References: <20181018154017.7112-1-lokeshvutla@ti.com>
+ <20181018154017.7112-7-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1539853956-26644-1-git-send-email-stefan.popa@analog.com>
+In-Reply-To: <20181018154017.7112-7-lokeshvutla@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Popa <stefan.popa@analog.com>
-Cc: jic23@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 18, 2018 at 12:12:36PM +0300, Stefan Popa wrote:
-> Document support for AD7606 Analog to Digital Converter.
+On Thu, Oct 18, 2018 at 09:10:13PM +0530, Lokesh Vutla wrote:
+> Add the DT binding documentation for Interrupt router driver.
 > 
-> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 > ---
->  .../devicetree/bindings/iio/adc/adi,ad7606.txt     | 51 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+> Changes since v1:
+> - Drop dependency on GIC
+> - Updated supported interrupt types.
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+>  .../interrupt-controller/ti,sci-intr.txt      | 81 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 82 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
 > new file mode 100644
-> index 0000000..dede581
+> index 000000000000..276bb4f0ad12
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
-> @@ -0,0 +1,51 @@
-> +Analog Devices AD7606 Simultaneous Sampling ADC
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+> @@ -0,0 +1,81 @@
+> +Texas Instruments K3 Interrupt Router
+> +=====================================
 > +
-> +Required properties for the AD7606:
+> +The Interrupt Router (INTR) module provides a mechanism to mux M
+> +interrupt inputs to N interrupt outputs, where all M inputs are selectable
+> +to be driven per N output. There is one register per output (MUXCNTL_N) that
+> +controls the selection.
 > +
-> + - compatible: Must be one of "adi,ad7605-4", "adi,ad7606-8", "adi,ad7606-6" or
-> + 	       "adi,ad7606-4".
-
-Format as one per line please.
-
-> + - reg: SPI chip select number for the device
-> + - spi-max-frequency: Max SPI frequency to use
-> + 	see: Documentation/devicetree/bindings/spi/spi-bus.txt
-> + - spi-cpha: See Documentation/devicetree/bindings/spi/spi-bus.txt
-> + - avcc-supply: phandle to the Avcc power supply
-> + - interrupts: IRQ line for the ADC
-> + 	see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> + - conversion-start-gpio: must be the device tree identifier of the CONVST pin.
-> +			  This logic input is used to initiate conversions on
-> +			  the analog input channels.
-
-Doesn't IIO have trigger GPIOs?
-
 > +
-> +Optional properties:
+> +                                 Interrupt Router
+> +                             +----------------------+
+> +                             |  Inputs     Outputs  |
+> +        +-------+            | +------+             |
+> +        | GPIO  |----------->| | irq0 |             |       Host IRQ
+> +        +-------+            | +------+             |      controller
+> +                             |    .        +-----+  |      +-------+
+> +        +-------+            |    .        |  0  |  |----->|  IRQ  |
+> +        | INTA  |----------->|    .        +-----+  |      +-------+
+> +        +-------+            |    .          .      |
+> +                             | +------+      .      |
+> +                             | | irqM |    +-----+  |
+> +                             | +------+    |  N  |  |
+> +                             |             +-----+  |
+> +                             +----------------------+
 > +
-> + - reset-gpio: must be the device tree identifier of the RESET pin. If specified,
-> + 	       it will be asserted during driver probe.
+> +Configuration of these MUXCNTL_N registers is done by a system controller
+> +(like the Device Memory and Security Controller on K3 AM654 SoC). System
+> +controller will keep track of the used and unused registers within the Router.
+> +Driver should request the system controller to get the range of GIC IRQs
+> +assigned to the requesting hosts. It is the drivers responsibility to keep
+> +track of Host IRQs.
+> +
+> +Communication between the host processor running an OS and the system
+> +controller happens through a protocol called TI System Control Interface
+> +(TISCI protocol). For more details refer:
+> +Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+> +
+> +TISCI Interrupt Router Node:
+> +----------------------------
+> +- compatible:		Must be "ti,sci-intr".
+> +- interrupt-controller:	Identifies the node as an interrupt controller
+> +- #interrupt-cells:	Specifies the number of cells needed to encode an
+> +			interrupt source. The value should be 3.
+> +			First cell should contain the TISCI device ID of source
+> +			Second cell should contain the interrupt source offset
+> +			within the device
+> +			Third cell specifies the trigger type as defined
+> +			in interrupts.txt in this directory. Only level
+> +			sensitive trigger types are supported.
+> +- interrupt-parent:	phandle of irq parent for TISCI intr.
 
--gpios is the preferred form: reset-gpios
+This is implied and could be in a parent node.
 
-And state the active state
+> +- ti,sci:		Phandle to TI-SCI compatible System controller node.
+> +- ti,sci-dst-id:	TISCI device ID of the destination IRQ controller.
+> +- ti,sci-rm-range-girq:	TISCI subtype id representing the host irqs assigned
+> +			to this interrupt router.
 
-> + - first-data-gpio: must be the device tree identifier of the FRSTDATA pin.
-> + 		    The FRSTDATA output indicates when the first channel, V1, is
-> +		    being read back on either the parallel, byte or serial interface.
-> +- standby-gpio: must be the device tree identifier of the STBY pin. This pin is used
-> +		to place the AD7606 into one of two power-down modes, Standby mode or
-> +		Shutdown mode.
-> +- range-gpio: must be the device tree identifier of the RANGE pin. The polarity on
-> +	      this pin determines the input range of the analog input channels. If
-> +	      this pin is tied to a logic high, the analog input range is ±10V for
-> +	      allchannels. If this pin is tied to a logic low, the analog input range
-
-s/allchannels/all channels/
-
-> +	      is ±5V for all channels.
-
-conversion-start-gpio, first-data-gpio, and range-gpio should all have 
-vendor prefix (in addition to -gpios).
+These need a better explanation and there's still some questions on v1 
+asked of me that I tried to answer.
 
 > +
 > +Example:
+> +--------
+> +The following example demonstrates both interrupt router node and the consumer
+> +node(main gpio) on the AM654 SoC:
 > +
-> +	adc@0 {
-> +		compatible = "adi,ad7606-8";
-> +		reg = <0>;
-> +		spi-max-frequency = <1000000>;
-> +		spi-cpol;
+> +main_intr: interrupt-controller@1 {
+> +	compatible = "ti,sci-intr";
+> +	interrupt-controller;
+> +	interrupt-parent = <&gic>;
+> +	#interrupt-cells = <3>;
+> +	ti,sci = <&dmsc>;
+> +	ti,sci-dst-id = <56>;
+> +	ti,sci-rm-range-girq = <0x1>;
+> +};
 > +
-> +		avcc-supply = <&adc_vref>;
-> +
-> +		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> +		interrupt-parent = <&gpio>;
-> +
-> +		conversion-start-gpio = <&gpio 17 0>;
-> +		reset-gpio = <&gpio 27 0>;
-> +		first-data-gpio = <&gpio 22 0>;
-> +		standby-gpio = <&gpio 24 0>;
-> +	};
+> +main_gpio0:  main_gpio0@600000 {
+
+gpio@...
+
+> +	...
+> +	interrupt-parent = <&main_intr>;
+> +	interrupts = <57 256 IRQ_TYPE_EDGE_RISING>,
+> +			<57 257 IRQ_TYPE_EDGE_RISING>,
+> +			<57 258 IRQ_TYPE_EDGE_RISING>,
+> +			<57 259 IRQ_TYPE_EDGE_RISING>,
+> +			<57 260 IRQ_TYPE_EDGE_RISING>,
+> +			<57 261 IRQ_TYPE_EDGE_RISING>;
+> +	...
+> +};
 > diff --git a/MAINTAINERS b/MAINTAINERS
-> index 843545d..6d63db4 100644
+> index 06966772cad4..710cf728b9d0 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
-> @@ -845,6 +845,7 @@ L:	linux-iio@vger.kernel.org
->  W:	http://ez.analog.com/community/linux-device-drivers
->  S:	Supported
->  F:	drivers/iio/adc/ad7606.c
-> +F:	Documentation/devicetree/bindings/iio/adc/ad7606.txt
+> @@ -14686,6 +14686,7 @@ F:	Documentation/devicetree/bindings/reset/ti,sci-reset.txt
+>  F:	Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>  F:	drivers/clk/keystone/sci-clk.c
+>  F:	drivers/reset/reset-ti-sci.c
+> +F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
 >  
->  ANALOG DEVICES INC AD9389B DRIVER
->  M:	Hans Verkuil <hans.verkuil@cisco.com>
+>  THANKO'S RAREMONO AM/FM/SW RADIO RECEIVER USB DRIVER
+>  M:	Hans Verkuil <hverkuil@xs4all.nl>
 > -- 
-> 2.7.4
+> 2.19.1
 > 
