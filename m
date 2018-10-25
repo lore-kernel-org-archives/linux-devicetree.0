@@ -1,82 +1,152 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v9 6/9] i3c: master: Add driver for Cadence IP
-Date: Thu, 25 Oct 2018 18:30:05 +0200
-Message-ID: <20181025183005.3c0fa452@bbrezillon>
-References: <20181022133404.2061-1-boris.brezillon@bootlin.com>
-        <20181022133404.2061-7-boris.brezillon@bootlin.com>
-        <20181024202048.7e3534f7@bbrezillon>
-        <CAK8P3a2DBgfvXs-9KzoDvbQpV+VN96xb7xHG-5=NDDgnt7ViVQ@mail.gmail.com>
-        <20181025180720.1790f6a1@bbrezillon>
-        <CAK8P3a02ELWiMB_pe0bzbsMfdqYOG1G0bFnSHzGu3ZbQHatH2w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Jaewon Kim <jaewon02.kim@gmail.com>
+Subject: [PATCH] of/platform: Support dynamic device tree on AMBA bus
+Date: Fri, 26 Oct 2018 01:39:57 +0900
+Message-ID: <1540485597-12240-1-git-send-email-jaewon02.kim@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a02ELWiMB_pe0bzbsMfdqYOG1G0bFnSHzGu3ZbQHatH2w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, gregkh <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@he>
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jaewon Kim <jaewon02.kim@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 25 Oct 2018 18:13:51 +0200
-Arnd Bergmann <arnd@arndb.de> wrote:
+This patch supports dynamic device-tree for AMBA device.
+The AMBA device must be registered on the AMBA bus, not the platform bus.
 
-> On Thu, Oct 25, 2018 at 6:07 PM Boris Brezillon
-> <boris.brezillon@bootlin.com> wrote:
-> >
-> > On Thu, 25 Oct 2018 17:30:26 +0200
-> > Arnd Bergmann <arnd@arndb.de> wrote:
-> >  
-> > > On 10/24/18, Boris Brezillon <boris.brezillon@bootlin.com> wrote:  
-> > > > Hi Arnd,
-> > > >
-> > > > On Mon, 22 Oct 2018 15:34:01 +0200
-> > > > Boris Brezillon <boris.brezillon@bootlin.com> wrote:
-> > > >
-> > > >  
-> > > >> +
-> > > >> +static void cdns_i3c_master_rd_from_rx_fifo(struct cdns_i3c_master
-> > > >> *master,
-> > > >> +                                      u8 *bytes, int nbytes)
-> > > >> +{
-> > > >> +  readsl(master->regs + RX_FIFO, bytes, nbytes / 4);  
-> > > >
-> > > > Vitor reported a problem with readsl(): this function expects the 2nd
-> > > > argument to be aligned on 32-bit, which is not guaranteed here. Unless
-> > > > you see a better solution, I'll switch back to a loop doing:
-> > > >
-> > > >     for (i = 0; i < nbytes; i += 4) {
-> > > >             u32 tmp = __raw_readl(...);
-> > > >             memcpy(bytes + i, &tmp,
-> > > >                    nbytes - i  > 4 ? 4 : nbytes - i);
-> > > >     }  
-> > >
-> > > Could we maybe mandate that the buffer itself must be aligned here?
-> > > What would be a reason why we see an unaligned target buffer?  
-> >
-> > Well, the buffers we pass to i3c_send_ccc_cmd() are not necessarily
-> > aligned because they're not dynamically allocated (allocated on the
-> > stack) and are not naturally aligned on 32-bits (either because they
-> > are smaller than 32bits or because the struct is declared __packed).
-> >
-> > I guess I could dynamically allocate the payload, but that requires
-> > going over all users of i3c_send_ccc_cmd() to patch them.  
-> 
-> This reminds me that Wolfram mentioned in his ELC talk that the
-> buffers on i3c should all be DMA capable to make life easier for
-> i3c master drivers that want to implement DMA transfers.
+Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
+---
+ drivers/of/platform.c | 93 ++++++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 73 insertions(+), 20 deletions(-)
 
-And this is the case for all buffers passed to
-i3c_device_do_priv_xfers() (and soon i3c_device_send_hdr_cmd()),
-but I did not enforce that for the internal
-i3c_master_send_ccc_cmd_locked() helper, maybe I should...
-It was just convenient to place the object to be transmitted/received on
-the stack.
-
-> 
-> If we have buffers here that are not aligned to cache lines
-> (or even just 32 bit words), doesn't that also mean that the
-> same buffers are not DMA capable either?
-
-Yep, if it's not cache-line-aligned (and on the stack), it's not
-DMA-able.
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 04ad312..b9ac105 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -286,6 +286,22 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+ 	of_node_clear_flag(node, OF_POPULATED);
+ 	return NULL;
+ }
++
++/**
++ * of_find_amba_device_by_node - Find the amba_device associated with a node
++ * @np: Pointer to device tree node
++ *
++ * Returns amba_device pointer, or NULL if not found
++ */
++struct amba_device *of_find_amba_device_by_node(struct device_node *np)
++{
++	struct device *dev;
++
++	dev = bus_find_device(&amba_bustype, NULL, np, of_dev_node_match);
++	return dev ? to_amba_device(dev) : NULL;
++}
++EXPORT_SYMBOL(of_find_amba_device_by_node);
++
+ #else /* CONFIG_ARM_AMBA */
+ static struct amba_device *of_amba_device_create(struct device_node *node,
+ 						 const char *bus_id,
+@@ -294,6 +310,12 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+ {
+ 	return NULL;
+ }
++
++struct amba_device *of_find_amba_device_by_node(struct device_node *np)
++{
++	return NULL;
++}
++EXPORT_SYMBOL(of_find_amba_device_by_node);
+ #endif /* CONFIG_ARM_AMBA */
+ 
+ /**
+@@ -665,6 +687,7 @@ static int of_platform_notify(struct notifier_block *nb,
+ {
+ 	struct of_reconfig_data *rd = arg;
+ 	struct platform_device *pdev_parent, *pdev;
++	struct amba_device *adev_p, *adev;
+ 	bool children_left;
+ 
+ 	switch (of_reconfig_get_state_change(action, rd)) {
+@@ -677,17 +700,34 @@ static int of_platform_notify(struct notifier_block *nb,
+ 		if (of_node_check_flag(rd->dn, OF_POPULATED))
+ 			return NOTIFY_OK;
+ 
+-		/* pdev_parent may be NULL when no bus platform device */
+-		pdev_parent = of_find_device_by_node(rd->dn->parent);
+-		pdev = of_platform_device_create(rd->dn, NULL,
+-				pdev_parent ? &pdev_parent->dev : NULL);
+-		of_dev_put(pdev_parent);
+-
+-		if (pdev == NULL) {
+-			pr_err("%s: failed to create for '%pOF'\n",
+-					__func__, rd->dn);
+-			/* of_platform_device_create tosses the error code */
+-			return notifier_from_errno(-EINVAL);
++		if (of_device_is_compatible(rd->dn, "arm,primecell")) {
++			/* adev_p may be NULL when no bus amba device */
++			adev_p = of_find_amba_device_by_node(rd->dn->parent);
++			adev = of_amba_device_create(rd->dn, NULL, NULL,
++					adev_p ? &adev_p->dev : NULL);
++
++			if (adev_p)
++				put_device(&adev_p->dev);
++
++			if (adev == NULL) {
++				pr_err("%s: failed to create for '%s'\n",
++						__func__, rd->dn->full_name);
++				/* of_amba_device_create tosses the error */
++				return notifier_from_errno(-EINVAL);
++			}
++		} else {
++			/* pdev_parent may be NULL when no bus platform device*/
++			pdev_parent = of_find_device_by_node(rd->dn->parent);
++			pdev = of_platform_device_create(rd->dn, NULL,
++					pdev_parent ? &pdev_parent->dev : NULL);
++			of_dev_put(pdev_parent);
++
++			if (pdev == NULL) {
++				pr_err("%s: failed to create for '%pOF'\n",
++						__func__, rd->dn);
++				/* of_platform_device_create tosses the error */
++				return notifier_from_errno(-EINVAL);
++			}
+ 		}
+ 		break;
+ 
+@@ -698,15 +738,28 @@ static int of_platform_notify(struct notifier_block *nb,
+ 			return NOTIFY_OK;
+ 
+ 		/* find our device by node */
+-		pdev = of_find_device_by_node(rd->dn);
+-		if (pdev == NULL)
+-			return NOTIFY_OK;	/* no? not meant for us */
+-
+-		/* unregister takes one ref away */
+-		of_platform_device_destroy(&pdev->dev, &children_left);
+-
+-		/* and put the reference of the find */
+-		of_dev_put(pdev);
++		if (of_device_is_compatible(rd->dn, "arm,primecell")) {
++			adev = of_find_amba_device_by_node(rd->dn);
++			if (adev == NULL)
++				return NOTIFY_OK; /* no? not meant for us */
++
++			/* unregister takes one ref away */
++			of_platform_device_destroy(&adev->dev, &children_left);
++
++			/* and put the reference of the find */
++			if (adev)
++				put_device(&adev->dev);
++		} else {
++			pdev = of_find_device_by_node(rd->dn);
++			if (pdev == NULL)
++				return NOTIFY_OK; /* no? not meant for us */
++
++			/* unregister takes one ref away */
++			of_platform_device_destroy(&pdev->dev, &children_left);
++
++			/* and put the reference of the find */
++			of_dev_put(pdev);
++		}
+ 		break;
+ 	}
+ 
+-- 
+2.7.4
