@@ -1,67 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH linux-next v1 2/4] clk: renesas: Add binding document for
- AVB Counter Clock
-Date: Thu, 25 Oct 2018 16:49:25 -0500
-Message-ID: <20181025214925.GA5197@bogus>
-References: <20181025072349.15173-1-jiada_wang@mentor.com>
- <20181025072349.15173-3-jiada_wang@mentor.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: pci: layerscape-pci: add compatible
+  strings "fsl,ls1043a-pcie"
+Date: Thu, 25 Oct 2018 16:50:56 -0500
+Message-ID: <20181025215056.GA13567@bogus>
+References: <20181025094929.29481-1-Zhiqiang.Hou@nxp.com>
+ <20181025094929.29481-2-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181025072349.15173-3-jiada_wang@mentor.com>
+In-Reply-To: <20181025094929.29481-2-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jiada_wang@mentor.com
-Cc: geert+renesas@glider.be, mturquette@baylibre.com, sboyd@kernel.org, horms@verge.net.au, magnus.damm@gmail.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "Z.q. Hou" <zhiqiang.hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 25, 2018 at 04:23:47PM +0900, jiada_wang@mentor.com wrote:
-> From: Jiada Wang <jiada_wang@mentor.com>
+On Thu, 25 Oct 2018 09:49:34 +0000, "Z.q. Hou" wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> Add device tree bindings for avb counter clock for Renesas
-> R-Car Socs.
+> The PCIe compatible string for LS1043A was lost, so add it.
 > 
-> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > ---
->  .../bindings/clock/renesas,avb-clk.txt        | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/renesas,avb-clk.txt
+> V2:
+>  - Improved the subject and corrected 'PCIe' casing.
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/renesas,avb-clk.txt b/Documentation/devicetree/bindings/clock/renesas,avb-clk.txt
-> new file mode 100644
-> index 000000000000..03bf50b5830c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/renesas,avb-clk.txt
-> @@ -0,0 +1,19 @@
-> +* Renesas AVB Counter Clock
-> +
-> +The AVB Counter Clocks are provided by avb_counter8 Clock Generator,
-> +avb_counter8 has dividers which operates with S0D1ϕ clock and has
-> +8 output clocks.
-> +
-> +Required Properties:
-> +  - compatible: Must be "renesas,clk-avb"
-
-Should be SoC specific? 
-
-If the h/w block is called "AVB Counter" then use "avb-counter" in the 
-compatible string.
-
-> +  - reg: Base address and length of the memory resource used by the AVB
-> +  - #clock-cells: Must be 1
-> +
-> +Example
-> +-------
-> +
-> +	clk_avb: avb-clock@ec5a011c {
-
-clock-controller@...
-
-> +		compatible = "renesas,clk-avb";
-> +		reg = <0 0xec5a011c 0 0x24>;
-> +		#clock-cells = <1>;
-> +	};
-> -- 
-> 2.17.0
+>  Documentation/devicetree/bindings/pci/layerscape-pci.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
