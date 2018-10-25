@@ -1,74 +1,102 @@
-From: Vabhav Sharma <vabhav.sharma@nxp.com>
-Subject: RE: [PATCH v4 5/6] arm64: dts: add QorIQ LX2160A SoC support
-Date: Thu, 25 Oct 2018 04:19:43 +0000
-Message-ID: <VI1PR04MB4800F4B5009B90F50B9C70F7F3F70@VI1PR04MB4800.eurprd04.prod.outlook.com>
-References: <1538615031-7507-1-git-send-email-vabhav.sharma@nxp.com>
- <1538615031-7507-6-git-send-email-vabhav.sharma@nxp.com>
- <20181008054510.GG3587@dragon>
- <VI1PR04MB4800C0AB214B258793AF9ABAF3FD0@VI1PR04MB4800.eurprd04.prod.outlook.com>
- <153962211360.5275.18031876744546062419@swboyd.mtv.corp.google.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH anybus v1 2/4] dt-bindings: anybus-bridge: document
+ devicetree binding.
+Date: Thu, 25 Oct 2018 06:19:18 +0100
+Message-ID: <20181025051918.GC4939@dell>
+References: <20181024142456.10084-1-svendev@arcx.com>
+ <20181024142456.10084-3-svendev@arcx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <153962211360.5275.18031876744546062419@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181024142456.10084-3-svendev@arcx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>
-Cc: "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "oss@buserror.net" <oss@buserror.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel-owner@vger.kernel.org" <linux-kernel-owner@vger.kernel.org>
+To: Sven Van Asbroeck <svendev@arcx.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, treding@nvidia.com, david@lechnology.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com, andriy.shevchenko@linux.intel.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, yuanzhichang@hisilicon.com, stuyoder@gmail.com, linus.walleij@linaro.org, maxime.ripard@bootlin.com, bogdan.purcareata@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogZGV2aWNldHJlZS1vd25l
-ckB2Z2VyLmtlcm5lbC5vcmcgPGRldmljZXRyZWUtb3duZXJAdmdlci5rZXJuZWwub3JnPg0KPiBP
-biBCZWhhbGYgT2YgU3RlcGhlbiBCb3lkDQo+IFNlbnQ6IE1vbmRheSwgT2N0b2JlciAxNSwgMjAx
-OCAxMDoxOSBQTQ0KPiBUbzogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgVmFiaGF2
-IFNoYXJtYQ0KPiA8dmFiaGF2LnNoYXJtYUBueHAuY29tPg0KPiBDYzogc3VkZWVwLmhvbGxhQGFy
-bS5jb207IG9zc0BidXNlcnJvci5uZXQ7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+
-IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0
-bGFuZEBhcm0uY29tOw0KPiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsg
-cmp3QHJqd3lzb2NraS5uZXQ7IHZpcmVzaC5rdW1hckBsaW5hcm8ub3JnOw0KPiBsaW51eC1jbGtA
-dmdlci5rZXJuZWwub3JnOyBsaW51eC1wbUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbC0N
-Cj4gb3duZXJAdmdlci5rZXJuZWwub3JnOyBjYXRhbGluLm1hcmluYXNAYXJtLmNvbTsgd2lsbC5k
-ZWFjb25AYXJtLmNvbTsNCj4gZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IGFybmRAYXJuZGIu
-ZGU7DQo+IGtzdGV3YXJ0QGxpbnV4Zm91bmRhdGlvbi5vcmc7IHlhbWFkYS5tYXNhaGlyb0Bzb2Np
-b25leHQuY29tOyBMZW8gTGkNCj4gPGxlb3lhbmcubGlAbnhwLmNvbT47IGxpbnV4QGFybWxpbnV4
-Lm9yZy51azsgVmFydW4gU2V0aGkNCj4gPFYuU2V0aGlAbnhwLmNvbT47IFVkaXQgS3VtYXIgPHVk
-aXQua3VtYXJAbnhwLmNvbT47IFBhbmthaiBCYW5zYWwNCj4gPHBhbmthai5iYW5zYWxAbnhwLmNv
-bT47IFJhbW5lZWsgTWVocmVzaA0KPiA8cmFtbmVlay5tZWhyZXNoQG54cC5jb20+OyBZaW5nIFpo
-YW5nIDx5aW5nLnpoYW5nMjI0NTVAbnhwLmNvbT47DQo+IE5pcHVuIEd1cHRhIDxuaXB1bi5ndXB0
-YUBueHAuY29tPjsgUHJpeWFua2EgSmFpbg0KPiA8cHJpeWFua2EuamFpbkBueHAuY29tPjsgWW9n
-ZXNoIE5hcmF5YW4gR2F1cg0KPiA8eW9nZXNobmFyYXlhbi5nYXVyQG54cC5jb20+OyBTcmlyYW0g
-RGFzaCA8c3JpcmFtLmRhc2hAbnhwLmNvbT4NCj4gU3ViamVjdDogUkU6IFtQQVRDSCB2NCA1LzZd
-IGFybTY0OiBkdHM6IGFkZCBRb3JJUSBMWDIxNjBBIFNvQyBzdXBwb3J0DQo+IA0KPiBRdW90aW5n
-IFZhYmhhdiBTaGFybWEgKDIwMTgtMTAtMTQgMTk6NTg6MTUpDQo+ID4gPiA+ICsNCj4gPiA+ID4g
-KyAgIHBtdSB7DQo+ID4gPiA+ICsgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLGNvcnRleC1h
-NzItcG11IjsNCj4gPiA+ID4gKyAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfUFBJIDcgSVJR
-X1RZUEVfTEVWRUxfTE9XPjsNCj4gPiA+ID4gKyAgIH07DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAg
-IHBzY2kgew0KPiA+ID4gPiArICAgICAgICAgICBjb21wYXRpYmxlID0gImFybSxwc2NpLTAuMiI7
-DQo+ID4gPiA+ICsgICAgICAgICAgIG1ldGhvZCA9ICJzbWMiOw0KPiA+ID4gPiArICAgfTsNCj4g
-PiA+ID4gKw0KPiA+ID4gPiArICAgbWVtb3J5QDgwMDAwMDAwIHsNCj4gPiA+ID4gKyAgICAgICAg
-ICAgLy8gRFJBTSBzcGFjZSAtIDEsIHNpemUgOiAyIEdCIERSQU0NCj4gPiA+ID4gKyAgICAgICAg
-ICAgZGV2aWNlX3R5cGUgPSAibWVtb3J5IjsNCj4gPiA+ID4gKyAgICAgICAgICAgcmVnID0gPDB4
-MDAwMDAwMDAgMHg4MDAwMDAwMCAwIDB4ODAwMDAwMDA+Ow0KPiA+ID4gPiArICAgfTsNCj4gPiA+
-ID4gKw0KPiA+ID4gPiArICAgZGRyMTogbWVtb3J5LWNvbnRyb2xsZXJAMTA4MDAwMCB7DQo+ID4g
-PiA+ICsgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLHFvcmlxLW1lbW9yeS1jb250cm9sbGVy
-IjsNCj4gPiA+ID4gKyAgICAgICAgICAgcmVnID0gPDB4MCAweDEwODAwMDAgMHgwIDB4MTAwMD47
-DQo+ID4gPiA+ICsgICAgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSAxNyBJUlFfVFlQRV9M
-RVZFTF9ISUdIPjsNCj4gPiA+ID4gKyAgICAgICAgICAgbGl0dGxlLWVuZGlhbjsNCj4gPiA+ID4g
-KyAgIH07DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgIGRkcjI6IG1lbW9yeS1jb250cm9sbGVyQDEw
-OTAwMDAgew0KPiA+ID4gPiArICAgICAgICAgICBjb21wYXRpYmxlID0gImZzbCxxb3JpcS1tZW1v
-cnktY29udHJvbGxlciI7DQo+ID4gPiA+ICsgICAgICAgICAgIHJlZyA9IDwweDAgMHgxMDkwMDAw
-IDB4MCAweDEwMDA+Ow0KPiA+ID4gPiArICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkg
-MTggSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gPiA+ICsgICAgICAgICAgIGxpdHRsZS1lbmRp
-YW47DQo+ID4gPiA+ICsgICB9Ow0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICBzeXNjbGs6IHN5c2Ns
-ayB7DQo+ID4gPg0KPiA+ID4gTmFtZSB0aGUgbm9kZSBhIGJpdCBnZW5lcmljIGxpa2UgY2xvY2st
-eHh4Lg0KPiA+IFRoZXJlIGlzIG9ubHkgb25lIGNsb2NrLXVuaXQsIEJvb3Rsb2FkZXIoVS1ib290
-KSByZXF1aXJlIHN5c2NsayBub2RlIGR1cmluZw0KPiBkZXZpY2UgdHJlZSBmaXgtdXAgYXMgZGlm
-ZmVyZW50IHBsYXRmb3JtIHN1cHBvcnQgdmFyaWVkIHBsYXRmb3JtIGZyZXF1ZW5jeSBhcw0KPiBw
-ZXIgcmVzZXQgY29uZmlndXJhdGlvbiB3b3JkIHVzZWQuDQo+ID4gUmVmZXJyZWQgb3RoZXIgQVJN
-IGJhc2VkIHBsYXRmb3JtIHdpdGggb25lIGNsb2NrIHVzaW5nIG5hbWUgYXMgeDogeA0KPiANCj4g
-UGxlYXNlIGFkZCBhIGNvbW1lbnQgYWJvdmUgdGhpcyBub2RlIHdpdGggdGhpcyBpbmZvcm1hdGlv
-bi4gTmV3Y29tZXJzDQo+IHJlYWRpbmcgdGhpcyBEVFMgZmlsZSB3b24ndCBoYXZlIGFueSBpZGVh
-IHdoeSB0aGlzIG5vZGUgaXMgc3BlY2lhbGx5IG5hbWVkDQo+IGFuZCBhIGNvbW1lbnQgd2lsbCBo
-ZWxwIHRyZW1lbmRvdXNseSBoZXJlLg0KU3VyZQ0KDQo=
+On Wed, 24 Oct 2018, Sven Van Asbroeck wrote:
+
+> This patch adds devicetree binding documentation for the
+> Arcx anybus bridge.
+> 
+> Signed-off-by: Sven Van Asbroeck <svendev@arcx.com>
+> ---
+>  .../bindings/mfd/arcx,anybus-bridge.txt       | 37 +++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
+>  2 files changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/arcx,anybus-bridge.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/arcx,anybus-bridge.txt b/Documentation/devicetree/bindings/mfd/arcx,anybus-bridge.txt
+> new file mode 100644
+> index 000000000000..3c0399c4ed45
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/arcx,anybus-bridge.txt
+> @@ -0,0 +1,37 @@
+> +* Arcx anybus bridge
+> +
+> +This chip communicates with the SoC over the WEIM bus. It is
+> +expected that its Device Tree node is specified as the child of a node
+> +corresponding to the WEIM bus used for communication.
+> +
+> +Required properties:
+> +
+> +  - compatible : The following chip-specific string:
+> +        "arcx,anybus-bridge"
+> +
+> +  - reg :
+> +	weim memory area where the cpld registers are located,	followed by:
+> +	weim memory area of the first  anybus-s slot,		followed by:
+> +	weim memory area of the second anybus-s slot.
+> +
+> +  - enable-gpios : the gpio connected to the bridge's 'enable gpio'.
+> +
+> +  - pwms : the pwm connected to the bridge's 'pwm input'.
+> +
+> +  - irq-gpios : the gpios connected to the bridge's interrupt lines.
+> +	note that there is no need to provide the 'interrupts' property here.
+> +
+> +Example of usage:
+> +
+> +&weim {
+> +	bridge@0,0 {
+
+I haven't seen this syntax before.
+
+It doesn't mean it's wrong, but will needs Rob et. al to cast an eye.
+
+> +		compatible = "arcx,anybus-bridge";
+> +		reg = <0 0 0x100>, <0 0x400000 0x800>, <1 0x400000 0x800>;
+> +		fsl,weim-cs-timing = <0x024400b1 0x00001010 0x20081100
+> +				0x00000000 0xa0000240 0x00000000>;
+
+This needs to be documented.
+
+> +		enable-gpios = <&gpio5 2 GPIO_ACTIVE_HIGH>;
+> +		pwms = <&pwm3 0 571>;
+> +		irq-gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>,
+> +					<&gpio1 5 GPIO_ACTIVE_HIGH>;
+
+Tabbing.
+
+> +	};
+> +};
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 2c3fc512e746..1bf07b20a8af 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -35,6 +35,7 @@ aptina	Aptina Imaging
+>  arasan	Arasan Chip Systems
+>  archermind ArcherMind Technology (Nanjing) Co., Ltd.
+>  arctic	Arctic Sand
+> +arcx	Arcx/Archronix Inc.
+>  aries	Aries Embedded GmbH
+>  arm	ARM Ltd.
+>  armadeus	ARMadeus Systems SARL
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
