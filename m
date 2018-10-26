@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v3 11/25] drm/sun4i: sun6i_mipi_dsi: Fix DSI
- hblk timing calculation
-Date: Fri, 26 Oct 2018 20:13:30 +0530
-Message-ID: <20181026144344.27778-12-jagan@amarulasolutions.com>
+Subject: [PATCH v3 12/25] drm/sun4i: sun6i_mipi_dsi: Add DSI
+ hblk packet overhead
+Date: Fri, 26 Oct 2018 20:13:31 +0530
+Message-ID: <20181026144344.27778-13-jagan@amarulasolutions.com>
 References: <20181026144344.27778-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB6WQZTPAKGQEX3CTZ3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBAGRZTPAKGQEAT44W7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181026144344.27778-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,21 +20,14 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-hblk is adding line with all porch timing values, or timings
-values from htotal without sync time.
+Add 10 bytes packet overhead for hblk where blank is set using
+a blanking packet like (4 bytes + 4 bytes + payload + 2 bytes)
 
-Current driver is subtracting htotal with hsa, but the hsa
-is bounded with packet overhead. For real hblk calculation
-needed by subtracting htotal with back and front porch values
-and BSP code BPI-M64-bsp is eventually following the same.
-
-BPI-M64-bsp is computing hbp as
+This is according to BSP code from BPI-M64-bsp
 (in drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
 dsi_hblk = (ht-hspw)*dsi_pixel_bits[format]/8-(4+4+2);
-=> (timmings->hor_total_time - timmings->hor_sync_time)
-=> (mode->htotal - (mode->hsync_end - mode->hsync_start))
 
-So, update the DSI hblk timing accordingly.
+So, add 10 bytes packet overhead for DSI hblk.
 
 Tested on 2-lane, 4-lane MIPI-DSI LCD panels.
 
@@ -46,19 +39,34 @@ Changes for v3:
 Changes for v2:
 - none
 
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 78bad71045ca..596e560263bf 100644
+index 596e560263bf..cf42be1f1ba1 100644
 --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
 +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -495,7 +495,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+@@ -461,7 +461,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+ {
+ 	struct mipi_dsi_device *device = dsi->device;
+ 	unsigned int Bpp = mipi_dsi_pixel_format_to_bpp(device->format) / 8;
+-	u16 hbp, hfp, hsa, hblk, vblk;
++	u16 hbp, hfp, hsa, hblk_max, hblk, vblk;
+ 	size_t bytes;
+ 	u8 *buffer;
+ 
+@@ -494,8 +494,13 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+ 
  	/*
  	 * hblk seems to be the line + porches length.
++	 * The blank is set using a blanking packet (4 bytes + 4 bytes +
++	 * payload + 2 bytes). So minimal size is 10 bytes
  	 */
--	hblk = mode->htotal * Bpp - hsa;
-+	hblk = (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp;
+-	hblk = (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp;
++#define HBLK_PACKET_OVERHEAD	10
++	hblk_max = (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp;
++	hblk_max -= HBLK_PACKET_OVERHEAD;
++	hblk = max((unsigned int)HBLK_PACKET_OVERHEAD, hblk_max);
  
  	/*
  	 * And I'm not entirely sure what vblk is about. The driver in
