@@ -1,157 +1,76 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 1/4] soc: Add TmFifo driver for Mellanox BlueField Soc
-Date: Fri, 26 Oct 2018 20:35:18 +0200
-Message-ID: <CAK8P3a3pi26FJ=vfU3QN=xUS+ktv1W-oqGWkdxc9s_S2HaYf6w@mail.gmail.com>
-References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
- <1540403734-137721-1-git-send-email-lsun@mellanox.com>
- <CAK8P3a0VJkQgqaq7na1_KTQzVs4-PvxYghv5_LysW7EdeBM7fw@mail.gmail.com>
- <AM4PR05MB322089E21DD27295C1B0A946A1F00@AM4PR05MB3220.eurprd05.prod.outlook.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 0/2] arm64: Cut rebuild time when changing
+ CONFIG_BLK_DEV_INITRD
+Date: Fri, 26 Oct 2018 12:05:25 -0700
+Message-ID: <53ec9df5-ef2a-edc5-be1c-bca32959c0bc@gmail.com>
+References: <20181024193256.23734-1-f.fainelli@gmail.com>
+ <CAL_Jsq+KCOv6pXXHhHDZ+7-QUrmtMDvSjEVhK15yZ3qbnn61Ag@mail.gmail.com>
+ <20181025093833.GA23607@rapoport-lnx>
+ <CAL_JsqL62ttsGSbE1BS5v-mX3pKE-p_HyvuZD6nB+GUbQyetzg@mail.gmail.com>
+ <20181025172935.GA27364@rapoport-lnx>
+ <CAL_JsqJrMq+QHvuOsqEdCFchmXsd4s2XKUD_TboKzeEQprJvjg@mail.gmail.com>
+ <1bb3bd63-a88e-b668-ea36-f0f985c0e2b1@gmail.com>
+ <20181026110708.GA3814@rapoport-lnx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM4PR05MB322089E21DD27295C1B0A946A1F00@AM4PR05MB3220.eurprd05.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liming Sun <lsun@mellanox.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Woods <dwoods@mellanox.com>, arm-soc <arm@kernel.org>, Olof Johansson <olof@lixom.net>, Robin Murphy <robin.murphy@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181026110708.GA3814@rapoport-lnx>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Rob Herring <robh@kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Olof Johansson <olof@lixom.net>, linux-alpha@vger.kernel.org, arcml <linux-snps-arc@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-c6x-dev@linux-c6x.org, "moderated list:H8/300 ARCHITECTURE" <uclinux-h8-devel@lists.sourceforge.jp>, linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org, Linux-MIPS <linux-mips>
 List-Id: devicetree@vger.kernel.org
 
-On 10/26/18, Liming Sun <lsun@mellanox.com> wrote:
->> -----Original Message-----
->> From: arndbergmann@gmail.com [mailto:arndbergmann@gmail.com] On
->> Behalf Of Arnd Bergmann
->> Sent: Thursday, October 25, 2018 11:58 AM
->> To: Liming Sun <lsun@mellanox.com>
->> Cc: Olof Johansson <olof@lixom.net>; David Woods
->> <dwoods@mellanox.com>; Robin Murphy <robin.murphy@arm.com>; arm-
->> soc <arm@kernel.org>; devicetree@vger.kernel.org; linux-arm-
->> kernel@lists.infradead.org
->> Subject: Re: [PATCH v4 1/4] soc: Add TmFifo driver for Mellanox BlueField
->> Soc
->>
->> On 10/24/18, Liming Sun <lsun@mellanox.com> wrote:
->> > +struct tmfifo_vdev {
->> > +	struct virtio_device vdev;	/* virtual device */
->> > +	u8 status;
->> > +	u64 features;
->> > +	union {				/* virtio config space */
->> > +		struct virtio_console_config cons;
->> > +		struct virtio_net_config net;
->> > +	} config;
->> > +	struct tmfifo_vring vrings[TMFIFO_VRING_NUM];
->> > +	u8 *tx_buf;			/* tx buffer */
->> > +	u32 tx_head;			/* tx buffer head */
->> > +	u32 tx_tail;			/* tx buffer tail */
->> > +};
->>
->> I suppose you did this to keep the driver simple, but it seems a
->> little inflexible
->> to only support two specific device types. Wouldn't we also want e.g.
->> 9pfs
->> or virtio_blk in some configurations?
->
-> We could definitely add more when needed, which should be straightforward
-> due to the virtio framework. For now only network and console are supported
-> and ben been verified.
+On 10/26/18 4:07 AM, Mike Rapoport wrote:
+> On Thu, Oct 25, 2018 at 04:07:13PM -0700, Florian Fainelli wrote:
+>> On 10/25/18 2:13 PM, Rob Herring wrote:
+>>> On Thu, Oct 25, 2018 at 12:30 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
+>>>>
+>>>> On Thu, Oct 25, 2018 at 08:15:15AM -0500, Rob Herring wrote:
+>>>>> +Ard
+>>>>>
+>>>>> On Thu, Oct 25, 2018 at 4:38 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+>>>>>>
+>>>>>> On Wed, Oct 24, 2018 at 02:55:17PM -0500, Rob Herring wrote:
+>>>>>>> On Wed, Oct 24, 2018 at 2:33 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>>>>>>>>
+>>>>>>>> Hi all,
+>>>>>>>>
+>>>>>>>> While investigating why ARM64 required a ton of objects to be rebuilt
+>>>>>>>> when toggling CONFIG_DEV_BLK_INITRD, it became clear that this was
+>>>>>>>> because we define __early_init_dt_declare_initrd() differently and we do
+>>>>>>>> that in arch/arm64/include/asm/memory.h which gets included by a fair
+>>>>>>>> amount of other header files, and translation units as well.
+>>>>>>>
+>>>>>> I think arm64 does not have to redefine __early_init_dt_declare_initrd().
+>>>>>> Something like this might be just all we need (completely untested,
+>>>>>> probably it won't even compile):
+> 
+> [ ... ]
+>  
+>> FWIW, I am extracting the ARM implementation that parses the initrd
+>> early command line parameter and the "setup" code doing the page
+>> boundary alignment and memblock checking into a helper into lib/ that
+>> other architectures can re-use. So far, this removes the need for
+>> unicore32, arc and arm to duplicate essentially the same logic.
+> 
+> Presuming you are going to need asm-generic/initrd.h for that as well,
+> using override for __early_init_dt_declare_initrd in arm64 version of
+> initrd.h might be the simplest option.
 
-Wouldn't that require a new PCI ID to have the driver on the host
-side match what this side does? I guess I'll see when you post the
-other driver.
+What I am contemplating doing is promote
+phys_initrd_start/phys_initrd_size to be global variables (similar to
+initrd_start, initrd_end) and have a generic helper function for parsing
+the initrd= command line parameter and finally removing
+__early_init_dt_declare_initrd() because we could have
+early_init_dt_check_for_initrd() just populate
+phys_initrd_start/phys_initrd_size directly as well as
+initrd_start/initrd_end using __va() to preserve compatibility with
+architectures that rely on this. Then I would convert ARM64 to check for
+phys_initrd_start which is really what it is is trying to do in
+arch/arm64/mm/init.c::arm64_memblock_init().
 
->> > +/* TMFIFO device structure */
->> > +struct tmfifo {
->> > +	struct tmfifo_vdev *vdev[TMFIFO_VDEV_MAX];	/* virtual devices */
->> > +	struct platform_device *pdev;	/* platform device */
->> > +	struct mutex lock;
->> > +	void __iomem *rx_base;		/* mapped register base */
->> > +	void __iomem *tx_base;		/* mapped register base */
->> > +	int tx_fifo_size;		/* number of entries of the Tx FIFO */
->> > +	int rx_fifo_size;		/* number of entries of the Rx FIFO */
->> > +	unsigned long pend_events;	/* pending bits for deferred process
->> */
->> > +	int irq[TM_IRQ_CNT];		/* irq numbers */
->> > +	struct work_struct work;	/* work struct for deferred process
->> */
->> > +	struct timer_list timer;	/* keepalive timer */
->> > +	struct tmfifo_vring *vring[2];	/* current Tx/Rx ring */
->> > +};
->> > +
->> > +union tmfifo_msg_hdr {
->> > +	struct {
->> > +		u8 type;		/* message type */
->> > +		__be16 len;		/* payload length */
->> > +		u8 unused[5];		/* reserved, set to 0 */
->> > +	} __packed;
->> > +	u64 data;
->> > +};
->> > +
->> > +/*
->> > + * Default MAC.
->> > + * This MAC address will be read from EFI persistent variable if
->> > configured.
->> > + * It can also be reconfigured with standard Linux tools.
->> > + */
->> > +static u8 tmfifo_net_default_mac[6] = {0x00, 0x1A, 0xCA, 0xFF, 0xFF,
->> > 0x01};
->> > +
->>
->> Is a predefined MAC address better than a random one here?
->>
->> For DT based systems, we tend to also call of_get_mac_address()
->> in order to allow setting a unique address from firmware.
->
-> A predefined default MAC address is simpler in this case, which makes
-> DHCP or PXE boot easier in development environment.
->
-> For production, the MAC address is stored in persistent UEFI variable
-> on the eeprom, which is read in function tmfifo_get_cfg_mac() which
-> calls efi.get_variable() to get the MAC address.
-
-Ok, fair enough. Generally speaking the recommended way of doing
-this is to update the DT properties from eeprom when a network
-driver has no way to store the mac address itself, but I suppose
-you always have UEFI anyway, and this also makes it work in
-the same way across both DT and ACPI.
-
->> > +/* Interrupt handler. */
->> > +static irqreturn_t tmfifo_irq_handler(int irq, void *dev_id)
->> > +{
->> > +	int i = (uintptr_t)dev_id % sizeof(void *);
->> > +	struct tmfifo *fifo = dev_id - i;
->> > +
->> > +	if (i < TM_IRQ_CNT && !test_and_set_bit(i, &fifo->pend_events))
->> > +		schedule_work(&fifo->work);
->> > +
->> > +	return IRQ_HANDLED;
->> > +}
->>
->> Maybe using a request_threaded_irq() would be a better way to defer
->> the handler into IRQ context.
->
-> Not sure if I understand this comment correctly... In this case, the
-> implemented handler
-> has some mutex_lock() used, which tries to make the logic simple since
-> multiple services
-> (network & console) are sharing the same fifo. Thus schedule_work() is
-> used.
-
-schedule_work() and threaded IRQs are just two different ways of deferring
-into process context where you can do the mutex_lock(). The effect is
-almost the same, but work queues can be delayed for a substantial
-amount of time depending on what other work functions have been
-queued at the same time, and request_threaded_irq() is the more normal
-way of doing this specifically for an IRQ handler, probably saving a couple
-of lines of source code.
-
-If you have any kind of real-time requirement, you can also assign a
-specific realtime priority to that interrupt thread.
-
-       Arnd
+Does that sound like a reasonable approach?
+-- 
+Florian
