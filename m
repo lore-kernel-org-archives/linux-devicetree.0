@@ -1,56 +1,40 @@
-From: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Subject: [PATCH v2 1/2] spi: uniphier: fix incorrect property items
-Date: Fri, 26 Oct 2018 14:58:44 +0900
-Message-ID: <1540533525-1816-2-git-send-email-hayashibara.keiji@socionext.com>
-References: <1540533525-1816-1-git-send-email-hayashibara.keiji@socionext.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH anybus v1 2/4] dt-bindings: anybus-bridge: document
+ devicetree binding.
+Date: Fri, 26 Oct 2018 07:39:21 +0100
+Message-ID: <20181026063921.GF4870@dell>
+References: <20181025154656.10153-1-TheSven73@googlemail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1540533525-1816-1-git-send-email-hayashibara.keiji@socionext.com>
+Content-Disposition: inline
+In-Reply-To: <20181025154656.10153-1-TheSven73@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, yamada.masahiro@socionext.com, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: stable@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, linux-kernel@vger.kernel.org, hayashibara.keiji@socionext.com
+To: thesven73@gmail.com
+Cc: svendev@arcx.com, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, treding@nvidia.com, david@lechnology.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, stuyoder@gmail.com, linus.walleij@linaro.org, maxime.ripard@bootlin.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This commit fixes incorrect property because it was different
-from the actual.
-The parameters of '#address-cells' and '#size-cells' were removed,
-and 'interrupts', 'pinctrl-names' and 'pinctrl-0' were added.
+On Thu, 25 Oct 2018, thesven73@gmail.com wrote:
 
-Fixes: 4dcd5c2781f3 ("spi: add DT bindings for UniPhier SPI controller")
-Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
----
- Documentation/devicetree/bindings/spi/spi-uniphier.txt | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+> >> This is why the bridge driver has a dependency on a pwm.
+> >> If the pwm could be enabled individually, I could drop this dependency.
+> >> Can you think of a way?
+> >
+> > How about using the pwm-clock device tree binding to turn the PWM into
+> > a clock?
+> > Documentation/devicetree/bindings/clock/pwm-clock.txt
+> 
+> Looks like a winner. Thanks !!
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-uniphier.txt b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
-index 504a4ec..b04e66a 100644
---- a/Documentation/devicetree/bindings/spi/spi-uniphier.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
-@@ -5,18 +5,20 @@ UniPhier SoCs have SCSSI which supports SPI single channel.
- Required properties:
-  - compatible: should be "socionext,uniphier-scssi"
-  - reg: address and length of the spi master registers
-- - #address-cells: must be <1>, see spi-bus.txt
-- - #size-cells: must be <0>, see spi-bus.txt
-- - clocks: A phandle to the clock for the device.
-- - resets: A phandle to the reset control for the device.
-+ - interrupts: a single interrupt specifier
-+ - pinctrl-names: should be "default"
-+ - pinctrl-0: pin control state for the default mode
-+ - clocks: a phandle to the clock for the device
-+ - resets: a phandle to the reset control for the device
- 
- Example:
- 
- spi0: spi@54006000 {
- 	compatible = "socionext,uniphier-scssi";
- 	reg = <0x54006000 0x100>;
--	#address-cells = <1>;
--	#size-cells = <0>;
-+	interrupts = <0 39 4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spi0>;
- 	clocks = <&peri_clk 11>;
- 	resets = <&peri_rst 11>;
- };
+Could you fix your mailed to reply to mails 'threaded' please?
+
+Your mails are now spread far and wide across my Inbox.
+
+Thanks.
+
 -- 
-2.7.4
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
