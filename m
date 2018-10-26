@@ -1,41 +1,151 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v10 0/9] Add the I3C subsystem
-Date: Fri, 26 Oct 2018 18:30:04 +0200
-Message-ID: <20181026183004.4857ce73@bbrezillon>
-References: <20181026144333.12276-1-boris.brezillon@bootlin.com>
-        <ad79f586-860e-bf57-9970-f58dc16d33b8@synopsys.com>
-        <20181026181548.53228a4b@bbrezillon>
-        <87738b8d-8033-9ef1-b0fb-059b64b0dc96@synopsys.com>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Subject: [RESEND PATCH] staging: mt7621-pci: dt-bindings: add dt bindings for
+ mt7621 pcie controller
+Date: Fri, 26 Oct 2018 18:48:06 +0200
+Message-ID: <1540572486-23900-1-git-send-email-sergio.paracuellos@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87738b8d-8033-9ef1-b0fb-059b64b0dc96@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vitor <vitor.soares@synopsys.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetr>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: gregkh@linuxfoundation.org
+Cc: neil@brown.name, devicetree@vger.kernel.org, driverdev-devel@linuxdriverproject.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Oct 2018 17:20:42 +0100
-vitor <vitor.soares@synopsys.com> wrote:
+This commit adds pci device tree bindings for the Mt7621 pci controller.
+This is a temporal file included in staging driver directory and will be
+moved to its correct location when this driver gets out of staging.
 
-> On 26/10/18 17:15, Boris Brezillon wrote:
-> > On Fri, 26 Oct 2018 16:22:06 +0100
-> > vitor <vitor.soares@synopsys.com> wrote:
-> >  
-> >> Can you update the i3c/next tree?  
-> > Done.  
-> 
-> Thanks.
-> 
-> I will apply the driver and them I give you feedback.
+Cc: Rob Herring <robh@kernel.org>
+Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+---
+I resend this because I don't get any feedback in more than two weeks.
+Rob, I was told by Greg that for getting this added into the staging tree
+your Ack is needed to in order to get bindings correct from the beginning.
+I forgot also to send this patch to the device tree mail list. Do it now.
 
-Great! Note that the bug in the ->send_ccc_cmd() path should be fixed,
-but you might have issues with i2c transfers as msg->buf is not
-guaranteed to be aligned on 32-bit.
+Thanks in advance for your time.
 
-Don't know if you've followed the discussion with Arnd, but it seems
-some (most?) archs are making sure writesl()/readsl() work for
-unaligned bufs. Maybe we should fix that for ARC. The other solution is
-to use i2c_get_dma_safe_msg_buf() to get something aligned on a
-cache-line and by extension aligned on 32bits.
+Best regards,
+    Sergio Paracuellos 
+
+ drivers/staging/mt7621-pci/mediatek,mt7621-pci.txt | 100 +++++++++++++++++++++
+ 1 file changed, 100 insertions(+)
+ create mode 100644 drivers/staging/mt7621-pci/mediatek,mt7621-pci.txt
+
+diff --git a/drivers/staging/mt7621-pci/mediatek,mt7621-pci.txt b/drivers/staging/mt7621-pci/mediatek,mt7621-pci.txt
+new file mode 100644
+index 0000000..4f3b082
+--- /dev/null
++++ b/drivers/staging/mt7621-pci/mediatek,mt7621-pci.txt
+@@ -0,0 +1,100 @@
++MediaTek MT7621 PCIe controller
++
++Required properties:
++- compatible: "mediatek,mt7621-pci"
++- device_type: Must be "pci"
++- reg: Base addresses and lengths of the PCIe subsys and root ports.
++- bus-range: Range of bus numbers associated with this controller.
++- #address-cells: Address representation for root ports (must be 3)
++- pinctrl-names : The pin control state names.
++- pinctrl-0: The "default" pinctrl state.
++- #size-cells: Size representation for root ports (must be 2)
++- ranges: Ranges for the PCI memory and I/O regions.
++- #interrupt-cells: Must be 1
++- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties.
++  Please refer to the standard PCI bus binding document for a more detailed
++  explanation.
++- status: either "disabled" or "okay".
++- resets: Must contain an entry for each entry in reset-names.
++  See ../reset/reset.txt for details.
++- reset-names: Must be "pcie0", "pcie1", "pcieN"... based on the number of
++  root ports.
++- clocks: Must contain an entry for each entry in clock-names.
++  See ../clocks/clock-bindings.txt for details.
++- clock-names: Must be "pcie0", "pcie1", "pcieN"... based on the number of
++  root ports.
++
++In addition, the device tree node must have sub-nodes describing each PCIe port
++interface, having the following mandatory properties:
++
++Required properties:
++- reg: Only the first four bytes are used to refer to the correct bus number
++      and device number.
++- #address-cells: Must be 3
++- #size-cells: Must be 2
++- ranges: Sub-ranges distributed from the PCIe controller node. An empty
++  property is sufficient.
++- bus-range: Range of bus numbers associated with this port.
++
++Example for MT7621:
++
++	pcie: pcie@1e140000 {
++		compatible = "mediatek,mt7621-pci";
++        reg = <0x1e140000 0x100    /* host-pci bridge registers */
++               0x1e142000 0x100    /* pcie port 0 RC control registers */
++               0x1e143000 0x100    /* pcie port 1 RC control registers */
++               0x1e144000 0x100    /* pcie port 2 RC control registers */
++               0x1e000000 0x100>;  /* sysctl */
++
++		#address-cells = <3>;
++		#size-cells = <2>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&pcie_pins>;
++
++		device_type = "pci";
++
++		bus-range = <0 255>;
++		ranges = <
++			0x02000000 0 0x00000000 0x60000000 0 0x10000000 /* pci memory */
++			0x01000000 0 0x00000000 0x1e160000 0 0x00010000 /* io space */
++		>;
++
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0xF0000 0 0 1>;
++		interrupt-map = <0x10000 0 0 1 &gic GIC_SHARED 4 IRQ_TYPE_LEVEL_HIGH>,
++				<0x20000 0 0 1 &gic GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH>,
++				<0x30000 0 0 1 &gic GIC_SHARED 25 IRQ_TYPE_LEVEL_HIGH>;
++
++		status = "disabled";
++
++		resets = <&rstctrl 24 &rstctrl 25 &rstctrl 26>;
++		reset-names = "pcie0", "pcie1", "pcie2";
++		clocks = <&clkctrl 24 &clkctrl 25 &clkctrl 26>;
++		clock-names = "pcie0", "pcie1", "pcie2";
++
++		pcie@0,0 {
++			reg = <0x0000 0 0 0 0>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			ranges;
++			bus-range = <0x00 0xff>;
++		};
++
++		pcie@1,0 {
++			reg = <0x0800 0 0 0 0>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			ranges;
++			bus-range = <0x00 0xff>;
++		};
++
++		pcie@2,0 {
++			reg = <0x1000 0 0 0 0>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			ranges;
++			bus-range = <0x00 0xff>;
++		};
++	};
++
+-- 
+2.7.4
