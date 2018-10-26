@@ -1,69 +1,52 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [RFC PATCH v2 01/17] OPP: Allow to request stub voltage
- regulators
-Date: Fri, 26 Oct 2018 15:03:39 +0300
-Message-ID: <ba782346-6ac0-7bf3-e187-00d2634b145b@gmail.com>
-References: <20181021205501.23943-1-digetx@gmail.com>
- <20181021205501.23943-2-digetx@gmail.com>
- <20181022053636.ag62j3rj3vovbz53@vireshk-i7>
- <e4027793-9436-413d-2a7b-34cf519218c3@gmail.com>
- <20181022113224.b5fiebgy2aap66nd@vireshk-i7>
- <29f893be-feed-c4c5-8468-51f7228dd468@gmail.com>
- <20181024064123.lbpbeervghp35fe7@vireshk-i7>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v3 2/3] iio: adc128s052: add ACPI _HID AANT1280
+Date: Fri, 26 Oct 2018 15:12:28 +0300
+Message-ID: <20181026121228.GE10650@smile.fi.intel.com>
+References: <20180423213805.12591-1-javier@emutex.com>
+ <1540481742-23596-1-git-send-email-dan@emutex.com>
+ <1540481742-23596-3-git-send-email-dan@emutex.com>
+ <20181025174638.GB10650@smile.fi.intel.com>
+ <c17cf6de-846b-aed3-7745-4f635495873e@emutex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181024064123.lbpbeervghp35fe7@vireshk-i7>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <c17cf6de-846b-aed3-7745-4f635495873e@emutex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Dan O'Donovan <dan@emutex.com>
+Cc: linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Carlos Iglesias <carlos.iglesias@emutex.com>, Nicola Lunghi <nicola.lunghi@emutex.com>, Javier Arteaga <javier@emutex.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/24/18 9:41 AM, Viresh Kumar wrote:
-> On 22-10-18, 15:12, Dmitry Osipenko wrote:
->> Because there is one Tegra20 board (tegra20-trimslice) that doesn't declare
->> necessary regulators, but we want to have CPU frequency scaling. I couldn't
->> find board schematics and so don't know if CPU / CORE voltages are fixed on
->> Trim-Slice or it is just preferable not to have DVFS for that board, it is an
->> outlet-powered device [0]. Hence tegra20-cpufreq driver will request a dummy
->> regulators when appropriate. 
-> 
-> We have been using the regulator_get_optional() variant until now in the OPP
-> core to make sure that we don't do DVFS for the CPU without the mandatory
-> regulators being present, as that may make things unstable and cause harm to the
-> SoC if we try to take CPU to frequency range over the currently programmed
-> regulator can support.
-> 
-> Now coming back to tegra-20 SoC, which actually requires a regulator normally by
-> design. On one of the boards (which is outlet powered), you aren't sure if there
-> is a programmable regulator or not, or if DVFS should really be done or not.
-> Isn't it worth checking the same from Tegra maintainers, or whomsoever has
-> information on that board ?
+On Fri, Oct 26, 2018 at 11:13:01AM +0100, Dan O'Donovan wrote:
+> On 10/25/2018 06:46 PM, Andy Shevchenko wrote:
+> > On Thu, Oct 25, 2018 at 04:35:41PM +0100, Dan O'Donovan wrote:
 
-I'll try to find out more detailed information for the next revision of the patchset.
+> >> +	{ "AANT1280", 2 }, /* ADC124S021 compatible ACPI ID */
 
- What would happen if there actually was a regulator
-> and its default settings aren't good enough for high end frequencies ?
+> > Looking how driver is organized and what ACPI can provide I would highly
+> > recommend to look forward to PTYP field for utilization of the type of the HW.
 
-Usually this causes kernel/applications crashes and/or machine hang.
+> > Maybe it would not work with published BIOSes, but would be good for the future
+> > (in that case anybody can utilize that _HID + PTYP pair on their platforms).
 
-> On the other hand, the tegra20 cpufreq driver is common across a lot of boards.
-> What will happen if the DT for some of the boards isn't correct and missed the
-> necessary regulator node ?
+> Thanks Andy for your review and feedback.  Your _HID + PTYP suggestion sounds
+> interesting, but I couldn't find any information in the ACPI spec or elsewhere
+> about how/when/where to use it.  
 
-AFAIK, there is assumption that bootloader should setup regulators in a way that kernel could work properly at max clock rates. Otherwise things won't work.
+I stand corrected, it's not in the spec, rather de facto use of it in some
+cases, see below.
 
- And because you are moving to regulator_get() API for
-> the entire SoC (i.e. its cpufreq driver), people will never find the missing
-> regulator.
+> It isn't used in the UP Squared ACPI tables.
+> Do you have any links or other information you could share about it? Thanks!
 
-Regulators core prints info message when dummy regulator is being used.
+As far as I can find the following code in the kernel and thus real ACPI tables
+in the wild that utilize it.
 
-> If we can do it safely for all tegra20 boards, why not migrate to using
-> regulator_get() instead of regulator_get_optional() in the OPP core API itself
-> for everyone ?
-> 
+drivers/acpi/dptf/dptf_power.c:84:      status = acpi_evaluate_integer(acpi_dev->handle, "PTYP", NULL, &ptype);
+drivers/platform/x86/intel_cht_int33fe.c:101:   status = acpi_evaluate_integer(ACPI_HANDLE(dev), "PTYP", NULL, &ptyp);
+drivers/thermal/int340x_thermal/int3403_thermal.c:237:  status = acpi_evaluate_integer(priv->adev->handle, "PTYP",
 
-This should be a platform-specific decision. For Tegra we know that regulators should be in a good state at kernel boot time, I don't think that this applies to other platforms.
+
+-- 
+With Best Regards,
+Andy Shevchenko
