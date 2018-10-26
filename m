@@ -1,160 +1,96 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Subject: Re: [PATCH 0/3] drm: tinydrm driver for adafruit PiTFT 3.5"
- touchscreen
-Date: Fri, 26 Oct 2018 21:16:18 +0200
-Message-ID: <2b5b8650-1e44-ea86-7b38-3b6a7ae793cb@tronnes.org>
-References: <20181024184313.2967-1-eric@anholt.net> <87h8harnv4.fsf@anholt.net>
- <2e548bd7-81f3-5952-b5de-96c26c9f6b19@tronnes.org>
- <87o9bhphhv.fsf@anholt.net>
+From: Liming Sun <lsun@mellanox.com>
+Subject: RE: [PATCH v4 2/4] arm64: Add Mellanox BlueField SoC config option
+Date: Fri, 26 Oct 2018 19:18:30 +0000
+Message-ID: <AM4PR05MB32204021433BBB853C50FF30A1F00@AM4PR05MB3220.eurprd05.prod.outlook.com>
+References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+ <1540403734-137721-1-git-send-email-lsun@mellanox.com>
+ <1540403734-137721-2-git-send-email-lsun@mellanox.com>
+ <CAK8P3a1jTsvzYhS4CxvmK6tOgPn_g7=1S4xAcca2K4v70vhyEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <87o9bhphhv.fsf@anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK8P3a1jTsvzYhS4CxvmK6tOgPn_g7=1S4xAcca2K4v70vhyEA@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Woods <dwoods@mellanox.com>, arm-soc <arm@kernel.org>, Olof Johansson <olof@lixom.net>, Robin Murphy <robin.murphy@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-CkRlbiAyNi4xMC4yMDE4IDA0LjMwLCBza3JldiBFcmljIEFuaG9sdDoKPiBOb3JhbGYgVHLDuG5u
-ZXMgPG5vcmFsZkB0cm9ubmVzLm9yZz4gd3JpdGVzOgo+Cj4+IERlbiAyNS4xMC4yMDE4IDE4LjI5
-LCBza3JldiBFcmljIEFuaG9sdDoKPj4+IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+IHdy
-aXRlczoKPj4+Cj4+Pj4gSSB3YXMgZ29pbmcgdG8gc3RhcnQgd29ya2luZyBvbiBtYWtpbmcgdGhl
-IHZjNCBkcml2ZXIgd29yayB3aXRoCj4+Pj4gdGlueWRybSBwYW5lbHMsIGJ1dCBpdCB0dXJuZWQg
-b3V0IHRpbnlkcm0gZGlkbid0IGhhdmUgdGhlIHBhbmVsIEkgaGFkCj4+Pj4gcHJldmlvdXNseSBi
-b3VnaHQuICBTbywgbGFzdCBuaWdodCBJIHBvcnRlZCB0aGUgZmJ0ZnQgc3RhZ2luZwo+Pj4+IGRy
-aXZlciBvdmVyIHRvIERSTS4KPj4+Pgo+Pj4+IEl0IHNlZW1zIHRvIHdvcmsgKHdpdGggRFQgYXQK
-Pj4+PiBodHRwczovL2dpdGh1Yi5jb20vYW5ob2x0L2xpbnV4L2NvbW1pdHMvZHJtLW1pc2MtbmV4
-dC1oeDgzNTdkKSAtLQo+Pj4+IGZiZGV2IHdvcmtzIGdyZWF0IGluY2x1ZGluZyByb3RhdGVkLCBh
-bmQgc28gZG9lcyBtb2RldGVzdC4gIEhvd2V2ZXIsCj4+Pj4gd2hlbiBYMTEgY29tZXMgdXAgYXQg
-MTZicHAsIEkgZ2V0Ogo+Pj4+Cj4+Pj4gaHR0cHM6Ly9waG90b3MuYXBwLmdvby5nbC84dHVoelBG
-Rm9ER2FtRWZrOAo+Pj4+Cj4+Pj4gSWYgSSBoYXZlIHRpbnlkcm0gc2V0IGEgcHJlZmVycmVkIGJw
-cCBvZiAyNCwgWCBsb29rcyBncmVhdC4gIE5vcmFsZiwKPj4+PiBhbnkgaWRlYXM/Cj4+PiBBbHNv
-LCB3aXRoIHRoZXNlIHBhdGNoZXMgYW5kIHRoZSBmb3JtYXQgbW9kaWZpZXIgcGF0Y2ggSSBqdXN0
-IHNlbnQsIG1lc2EKPj4+IHdpdGggdmM0IGlzIG5vdyB3b3JraW5nIHdpdGggdGhpcyBkcml2ZXIg
-b24gdGhpcyBicmFuY2g6Cj4+Pgo+Pj4gaHR0cHM6Ly9naXRsYWIuZnJlZWRlc2t0b3Aub3JnL2Fu
-aG9sdC9tZXNhL2NvbW1pdHMva21zcm8KPj4gQWgsIG5pY2UgdG8gc2VlIHRoaXMgaGFwcGVuaW5n
-IQo+PiBHZXR0aW5nIGh3IHJlbmRlcmluZyB3YXMgb25lIG9mIHRoZSBhZHZhbnRhZ2VzIEkgc2F3
-IERSTSBjb3VsZCBwcm92aWRlCj4+IG92ZXIgZmJkZXYgb24gdGhlc2UgZGlzcGxheXMuIExpdHRs
-ZSBkaWQgSSBrbm93IGhvdyBjb21wbGljYXRlZCBncmFwaGljcwo+PiB3YXMgb3V0c2lkZSBmYmRl
-diwgc28gSSB3YXMgdW5hYmxlIHRvIHJlYWxpc2UgdGhpcyBteXNlbGYuCj4+Cj4+IFRoZSBjdXJy
-ZW50IHNvbHV0aW9uIHRvIGdldCBodyByZW5kZXJpbmcgaXMgdG8gaGF2ZSBhIHVzZXJzcGFjZSBw
-cm9jZXNzCj4+IHRoYXQgY29udGlub3VzbHkgY29waWVzIHRoZSBmcmFtZWJ1ZmZlcjoKPj4gaHR0
-cHM6Ly9naXRodWIuY29tL3Rhc2FuYWtvcm4vcnBpLWZiY3AKPj4KPj4gSXQncyB1c2VkIGJ5IHNv
-bWUgb2YgdGhlIHNtYWxsIERJWSBoYW5kaGVsZCBnYW1lIGNvbnNvbGVzIHRoYXQgcnVuCj4+IGVt
-dWxhdG9ycyB3aGljaCByZXF1aXJlcyBodyByZW5kZXJpbmcuCj4+Cj4+PiBOb3cgSSB3b25kZXIg
-aG93IHdlIGNhbiBpbXByb3ZlIHBlcmZvcm1hbmNlIG9mIHRoZSBTUEkgdXBkYXRlcy4KPj4gQXQg
-d2hhdCBTUEkgc3BlZWQgYXJlIHlvdSBydW5uaW5nPyBUaGUgZGF0YXNoZWV0IGZvciBtb3N0IG9m
-IHRoZXNlCj4+IGRpc3BsYXkgY29udHJvbGxlcnMgbGlzdCB0aGUgbWF4IHNwZWVkIGFzIDEwTUh6
-LCBidXQgYWxtb3N0IGFsbCBvZiB0aGVtCj4+IGNhbiBnbyBmYXN0ZXIuIFNvbWUgYXJlIHJlcG9y
-dGVkIGdvaW5nIGFzIGhpZ2ggYXMgNzAtODBNSHouIFRoYXQncyBmb3IKPj4gdGhlIHBpeGVsIGRh
-dGEgdHJhbnNmZXIsIG5vdCB0aGUgY29tbWFuZHMuIHRpbnlkcm0vbWlwaS1kYmkuYyBzZW5kcwo+
-PiBjb21tYW5kcyBhdCAxME1IeiBhbmQgcGl4ZWxzIGF0IGZ1bGwgc3BlZWQgKG1pcGlfZGJpX3Nw
-aV9jbWRfbWF4X3NwZWVkKCkpLgo+PiBNb3N0IHBhbmVscyBJIGhhdmUgcnVuIGF0IDMyTUh6IG9y
-IDQ4TUh6Lgo+IEkgY29waWVkIHRoZSBEVCBmcm9tIHRoZSBhZGFmcnVpdCB0cmVlLCB3aGljaCBo
-YXMgaXQgYXQgMzJtaHouICBTeXN0ZW0KPiBwZXJmb3JtYW5jZSBzZWVtcyB0byBiZSBsaW1pdGVk
-IGJ5IHRoZSBjb3B5IGFuZCBmb3JtYXQgY29udmVyc2lvbiBJCj4gdGhpbmsgLS0gaW4gcGFydGlj
-dWxhciwgSSB3b25kZXIgaWYgd2Ugc2hvdWxkbid0IGJlIGRvaW5nIG91ciBkaXJ0eQo+IGNvcGll
-cyBpbiBvdXIgb3duIHdvcmtxdWV1ZS4gIEkgaGF2ZW4ndCBtYW5hZ2VkIHRvIGdldCBhbnkgcmVh
-bGx5IGdvb2QKPiBwcm9maWxpbmcgZGF0YSB5ZXQsIHRob3VnaC4KPgo+IGdseGdlYXJzIGF0IDEy
-OHgxMjggaXMgbmljZSBhbmQgc21vb3RoLCBhbmQgYXQgNDgweDMyMCBpdCdzIDZmcHMuCj4gVGhh
-dCdzIG5vdCBmaWxsaW5nIDMybWh6IG9mIFNQSS4gIE9uIHRoZSBvdGhlciBoYW5kLCBJIHdvdWxk
-IGhhdmUKPiBleHBlY3RlZCB0aGUgdW5jYWNoZWQgcmVhZHMgZm9yIHRoZSA0LXRvLTIgc3dhcHBl
-ZCBjb252ZXJzaW9uIHRvIGJlIGFibGUKPiB0byBnbyBmYXN0ZXIgdGhhbiAzLjVtYi9zZWMuICBJ
-ZiBpdCdzIHRoZSB1bmNhY2hlZCByZWFkcywgd2UgY291bGQgYXQKPiBsZWFzdCB1c2UgTkVPTiBm
-b3IgdGhlIGNvcHkgdG8gY2FjaGVkLCBhbmQgcHJvYmFibHkgZXZlbiBkbyB0aGUgd2hvbGUKPiBj
-b252ZXJzaW9uIGluIE5FT04gd2l0aCBhIGJpdCBtb3JlIHRob3VnaHQuCj4KPiBBbm90aGVyIG9w
-dGlvbjogdXNlIGEgdmM0IFJDTCB0byBkbyBSR0JBODg4OCB0byBSR0I1NjUsIHNpbmNlIHRoYXQg
-d2lsbAo+IGJlIGxlc3MgcHJlc3N1cmUgb24gdGhlIGJ1cy4gIEJ1dCB0aGVuLCBJIHN1cHBvc2Ug
-SSBzaG91bGQganVzdCBmaWd1cmUKPiBvdXQgd2hhdCdzIGdvaW5nIG9uIHRoYXQgbWFrZXMgWDEx
-IGF0IFJHQkE4ODg4IGJyZWFrLCBhbmQgZml4IHRoYXQgc28gd2UKPiBkb24ndCBldmVuIGhhdmUg
-dG8gZG8gdGhhdCBjb252ZXJzaW9uLgo+Cj4gSSBrZWVwIGhvcGluZyB0aGVyZSdzIHNvbWUgd2F5
-IHdlIGNvdWxkIGZlZWQgb3V0cHV0IGZyb20gdGhlIERJU1BTTEFWRQo+IEhWUyByZWdpc3RlciBk
-aXJlY3RseSB0byB0aGUgU1BJIG1hc3RlciAtLSBGSUZPMzIgZ2V0cyB1cyBjbG9zZSAodHdvCj4g
-MTYtYml0IHBpeGVscyBwYWNrZWQgbmV4dCB0byBlYWNoIG90aGVyLCBsZWZ0bW9zdCBpbiB0aGUg
-bG93ZXIgMiBieXRlcyksCj4gYnV0IHRoZSBuZWVkIGZvciBieXRlIHN3YXBwaW5nIChhcyBvcHBv
-c2VkIHRvIFIvQiBzd2FwcGluZykgSSB0aGluawo+IG1ha2VzIGl0IGltcG9zc2libGUuCgpJIGp1
-c3QgZGlkIHNvbWUgc3BlZWQgdGVzdHMgb24gYSAzMjB4MjQwIGRpc3BsYXkgYXQgMyBkaWZmZXJl
-bnQgc3BlZWRzLgpJIGFsc28gdHJpZWQgd2l0aCBieXRlc3dhcHBpbmcgZGlzYWJsZWQuIE9ubHkg
-ZnVsbCB1cGRhdGVzIHdpbGwgYmVuZWZpdApmcm9tIHBhc3NpbmcgdGhlIGJ1ZmZlciBzdHJhaWdo
-dCB0aHJvdWdoIHRvIFNQSS4gVGhpcyBpcyBiZWNhdXNlIHBhcnRpYWwKdXBkYXRlcyBhcmUgY29w
-aWVkIHRvIGEgdHJhbnNmZXIgYnVmZmVyIGFueXdheXMgdG8gbWluaW1pemUgU1BJIHRyYW5zZmVy
-CnRpbWUuIE5vIG5lZWQgdG8gdHJhbnNmZXIgdGhpbmdzIHRoYXQgaGF2ZW4ndCBjaGFuZ2VkIGFu
-ZCBhIG1lbW9yeSBjb3B5CmlzIGZhciBjaGVhcGVyIHRoYW4gYSBTUEkgdHJhbnNmZXIuCgpTUEkg
-YXQgNDhNSHo6CgpwaUBwaTI4MzU6fiQgb2QgLUFuIC12dHU0IC0tZW5kaWFuPWJpZyAKL3N5cy9i
-dXMvc3BpL2RldmljZXMvc3BpMC4wL29mX25vZGUvc3BpLW1heC1mcmVxdWVuY3kKIMKgwqAgNDgw
-MDAwMDAKCnBpQHBpMjgzNTp+JCAuL2xpYmRybS90ZXN0cy9tb2RldGVzdC9tb2RldGVzdCAtTSBt
-aTAyODNxdCAtcyAKMjg6MzIweDI0MEBYUjI0IC12CnNldHRpbmcgbW9kZSAzMjB4MjQwLTBIekBY
-UjI0IG9uIGNvbm5lY3RvcnMgMjgsIGNydGMgMzAKZnJlcTogMjQuODdIegpmcmVxOiAyNC43OUh6
-CgpwaUBwaTI4MzU6fiQgLi9saWJkcm0vdGVzdHMvbW9kZXRlc3QvbW9kZXRlc3QgLU0gbWkwMjgz
-cXQgLXMgCjI4OjMyMHgyNDBAUkcxNiAtdgpzZXR0aW5nIG1vZGUgMzIweDI0MC0wSHpAUkcxNiBv
-biBjb25uZWN0b3JzIDI4LCBjcnRjIDMwCmZyZXE6IDI2LjMzSHoKZnJlcTogMjYuMzBIegoKZGlz
-YWJsZSBieXRlc3dhcHBpbmc6CnBpQHBpMjgzNTp+JCAuL2xpYmRybS90ZXN0cy9tb2RldGVzdC9t
-b2RldGVzdCAtTSBtaTAyODNxdCAtcyAKMjg6MzIweDI0MEBSRzE2IC12CnNldHRpbmcgbW9kZSAz
-MjB4MjQwLTBIekBSRzE2IG9uIGNvbm5lY3RvcnMgMjgsIGNydGMgMzAKZnJlcTogMjguNDBIegpm
-cmVxOiAyOC40M0h6CgoKU1BJIGF0IDY0TUh6IChzZWVtcyB0byB3b3JrKToKCnBpQHBpMjgzNTp+
-JCBvZCAtQW4gLXZ0dTQgLS1lbmRpYW49YmlnIAovc3lzL2J1cy9zcGkvZGV2aWNlcy9zcGkwLjAv
-b2Zfbm9kZS9zcGktbWF4LWZyZXF1ZW5jeQogwqDCoCA2NDAwMDAwMAoKcGlAcGkyODM1On4kIC4v
-bGliZHJtL3Rlc3RzL21vZGV0ZXN0L21vZGV0ZXN0IC1NIG1pMDI4M3F0IC1zIAoyODozMjB4MjQw
-QFhSMjQgLXYKc2V0dGluZyBtb2RlIDMyMHgyNDAtMEh6QFhSMjQgb24gY29ubmVjdG9ycyAyOCwg
-Y3J0YyAzMApmcmVxOiAzMi43NEh6CmZyZXE6IDMyLjY5SHoKCnBpQHBpMjgzNTp+JCAuL2xpYmRy
-bS90ZXN0cy9tb2RldGVzdC9tb2RldGVzdCAtTSBtaTAyODNxdCAtcyAKMjg6MzIweDI0MEBSRzE2
-IC12CnNldHRpbmcgbW9kZSAzMjB4MjQwLTBIekBSRzE2IG9uIGNvbm5lY3RvcnMgMjgsIGNydGMg
-MzAKZnJlcTogMzUuNDRIegpmcmVxOiAzNS4xOUh6CgpkaXNhYmxlZCBieXRlc3dhcHBpbmc6CnBp
-QHBpMjgzNTp+JCAuL2xpYmRybS90ZXN0cy9tb2RldGVzdC9tb2RldGVzdCAtTSBtaTAyODNxdCAt
-cyAKMjg6MzIweDI0MEBSRzE2IC12CnNldHRpbmcgbW9kZSAzMjB4MjQwLTBIekBSRzE2IG9uIGNv
-bm5lY3RvcnMgMjgsIGNydGMgMzAKZnJlcTogMzkuMjlIegpmcmVxOiAzOS4xMUh6CgoKU1BJIGF0
-IDEyOE1IeiAobm90IGF0IGFsbCBhcyBnYXJibGVkIGFzIEkgZXhwZWN0ZWQpOgoKcGlAcGkyODM1
-On4kIG9kIC1BbiAtdnR1NCAtLWVuZGlhbj1iaWcgCi9zeXMvYnVzL3NwaS9kZXZpY2VzL3NwaTAu
-MC9vZl9ub2RlL3NwaS1tYXgtZnJlcXVlbmN5CiDCoCAxMjgwMDAwMDAKCnBpQHBpMjgzNTp+JCAu
-L2xpYmRybS90ZXN0cy9tb2RldGVzdC9tb2RldGVzdCAtTSBtaTAyODNxdCAtcyAKMjg6MzIweDI0
-MEBYUjI0IC12CnNldHRpbmcgbW9kZSAzMjB4MjQwLTBIekBYUjI0IG9uIGNvbm5lY3RvcnMgMjgs
-IGNydGMgMzAKZnJlcTogNDguNjlIegpmcmVxOiA0OC40MEh6CgpwaUBwaTI4MzU6fiQgLi9saWJk
-cm0vdGVzdHMvbW9kZXRlc3QvbW9kZXRlc3QgLU0gbWkwMjgzcXQgLXMgCjI4OjMyMHgyNDBAUkcx
-NiAtdgpzZXR0aW5nIG1vZGUgMzIweDI0MC0wSHpAUkcxNiBvbiBjb25uZWN0b3JzIDI4LCBjcnRj
-IDMwCmZyZXE6IDUzLjYxSHoKZnJlcTogNTQuNDVIegoKZGlzYWJsZWQgYnl0ZXN3YXBwaW5nOgpw
-aUBwaTI4MzU6fiQgLi9saWJkcm0vdGVzdHMvbW9kZXRlc3QvbW9kZXRlc3QgLU0gbWkwMjgzcXQg
-LXMgCjI4OjMyMHgyNDBAUkcxNiAtdgpzZXR0aW5nIG1vZGUgMzIweDI0MC0wSHpAUkcxNiBvbiBj
-b25uZWN0b3JzIDI4LCBjcnRjIDMwCmZyZXE6IDYzLjE2SHoKZnJlcTogNjQuMTlIegoKClRoaXMg
-aXMgaG93IEkgZGlzYWJsZWQgYnl0ZXN3YXBwaW5nIGZvciB0aGlzIHRlc3Q6CgpkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vbWlwaS1kYmkuYyAKYi9kcml2ZXJzL2dwdS9kcm0v
-dGlueWRybS9taXBpLWRiaS5jCmluZGV4IGNiMzQ0MWU1MWQ1Zi4uZmE1ZDgxNTIxNDg1IDEwMDY0
-NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vdGlueWRybS9taXBpLWRiaS5jCisrKyBiL2RyaXZlcnMv
-Z3B1L2RybS90aW55ZHJtL21pcGktZGJpLmMKQEAgLTIyOCw2ICsyMjgsOCBAQCBzdGF0aWMgaW50
-IG1pcGlfZGJpX2ZiX2RpcnR5KHN0cnVjdCBkcm1fZnJhbWVidWZmZXIgKmZiLAogwqDCoMKgwqDC
-oMKgwqAgRFJNX0RFQlVHKCJGbHVzaGluZyBbRkI6JWRdIHgxPSV1LCB4Mj0ldSwgeTE9JXUsIHky
-PSV1XG4iLCAKZmItPmJhc2UuaWQsCiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IGNsaXAueDEsIGNsaXAueDIsIGNsaXAueTEsIGNsaXAueTIpOwoKK8KgwqDCoMKgwqDCoCBmdWxs
-ID0gdHJ1ZTsKK8KgwqDCoMKgwqDCoCBzd2FwID0gZmFsc2U7CiDCoMKgwqDCoMKgwqDCoCBpZiAo
-IW1pcGktPmRjIHx8ICFmdWxsIHx8IHN3YXAgfHwKIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZmIt
-PmZvcm1hdC0+Zm9ybWF0ID09IERSTV9GT1JNQVRfWFJHQjg4ODgpIHsKIMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCB0ciA9IG1pcGktPnR4X2J1ZjsKCgo+PiBBbG1vc3QgYWxsIHRoZSB0
-aW1lIGlzIHNwZW50IGluIHRoZSBTUEkgdHJhbnNmZXIsIHNvIGV2ZXJ5IGh6IGNvdW50cy4gT24K
-Pj4gdGhlIFBpIHRoZXJlJ3MgYnl0ZSBzd2FwcGluZyBiZWNhdXNlIHRoZSBETUEgY2FwYWJsZSBT
-UEkgY29udHJvbGxlciBjYW4ndAo+PiBkbyAxNi1iaXQgKHRpbnlkcm1fc3dhYjE2KCkpLiBJZiBJ
-IHJlbWVtYmVyIGNvcnJlY3RseSB0aGlzIGhhcyBuZWdsaWdpYmxlCj4+IGltcGFjdCBvbiBwZXJm
-b3JtYW5jZS4KPj4KPj4gVGhlIFNQSSBjb250cm9sbGVyL2RyaXZlciBvbiB0aGUgUGkgaGFzIHNv
-bWUgcmVzdHJpY3Rpb25zIG9uIHRoZSBzcGVlZHMKPj4gdG8gY2hvb3NlIGZyb20gYmVjYXVzZSB0
-aGUgZGl2aXNvciBoYXMgdG8gYmUgYSBtdWx0aXBsZSBvZiB0d28KPj4gKGJjbTI4MzVfc3BpX3Ry
-YW5zZmVyX29uZSgpKS4KPiBUaGF0J3Mgd2VpcmQuICBNeSBzcGVjcyBzYXkgQ0RJViBtdXN0IGJl
-IGEgKnBvd2VyKiBvZiB0d28sIHdpdGggbG93ZXIKPiB2YWx1ZXMgcm91bmRlZCBkb3duLiAgSSBn
-dWVzcyB0aGF0IG1lYW5zIHdlIG1pZ2h0IGJlIHJ1bm5pbmcgdGhpbmdzCj4gZmFzdCwgbm90IHNs
-b3csIHRob3VnaCAoYW5kIGF0IDMybWh6IG91dCBvZiAyNTAsIHdlIHNob3VsZCBiZSBnZXR0aW5n
-Cj4gdGhlIHNhbWUgQ0RJVikuCgpZZXMsIHRoYXQncyB3aGF0IHRoZSBkYXRhc2hlZXQgc2F5cy4K
-V2hlbiBmYnRmdCB3YXMgb3V0LW9mLXRyZWUgSSBkaXN0cmlidXRlZCBhIGN1c3RvbSBrZXJuZWwg
-d2l0aCBmYnRmdCBhbmQKTWFydGluIFNwZXJsJ3MgRE1BIGNhcGFibGUgc3BpLWJjbTI3MDguIElu
-IHRoYXQgdmVyc2lvbiBJIGFsc28gYWxsb3dlZApvZGQgY2RpdidzIHdpdGggbm8gaWxsIGVmZmVj
-dHMgcmVwb3J0ZWQ6Cmh0dHBzOi8vZ2l0aHViLmNvbS9ub3Ryby9zcGktYmNtMjcwOC93aWtpI3Nw
-aS1jbG9jay1kaXZpZGVyCihzZWUgdGhlIGxpbmsgdG8gdGhlIGZvcnVtIHBvc3QgZm9yIGRldGFp
-bHMpCk1heWJlIHRoZSBodyBqdXN0IGlnbm9yZXMgb2RkIGNkaXYncywgSSBkb24ndCBrbm93LgoK
-Tm9yYWxmLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Thanks Arnd for the comments!  Please see my response inline.
+
+- Liming
+
+> -----Original Message-----
+> From: arndbergmann@gmail.com [mailto:arndbergmann@gmail.com] On
+> Behalf Of Arnd Bergmann
+> Sent: Thursday, October 25, 2018 11:38 AM
+> To: Liming Sun <lsun@mellanox.com>
+> Cc: Olof Johansson <olof@lixom.net>; David Woods
+> <dwoods@mellanox.com>; Robin Murphy <robin.murphy@arm.com>; arm-
+> soc <arm@kernel.org>; devicetree@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org
+> Subject: Re: [PATCH v4 2/4] arm64: Add Mellanox BlueField SoC config option
+> 
+> On 10/24/18, Liming Sun <lsun@mellanox.com> wrote:
+> > This commit introduces config option for Mellanox BlueField SoC,
+> > which can be used to build the SoC specific drivers, and enables
+> > it by default in configs/defconfig.
+> >
+> > Reviewed-by: David Woods <dwoods@mellanox.com>
+> > Signed-off-by: Liming Sun <lsun@mellanox.com>
+> > ---
+> >  arch/arm64/Kconfig.platforms | 6 ++++++
+> >  arch/arm64/configs/defconfig | 1 +
+> >  2 files changed, 7 insertions(+)
+> 
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> I'm sorry for missing your series in the past. We should definitely merge
+> the platform support soon. Do you also have device tree files for reference
+> systems or even production hardware?
+
+We have obsoleted the device tree, and mainly support ACPI now
+on Reference/Production HW. Below is the TMFIFO definition in the ACPI
+DSDT table.
+
+    // RShim TMFIFO
+    Device(RSH0) {
+      Name(_HID, "MLNXBF01")
+      Name(_UID, Zero)
+      Name(_CCA, 1)
+      Name(_CRS, ResourceTemplate() {
+        Memory32Fixed(ReadWrite, 0x00800a20, 0x00000018)
+        Memory32Fixed(ReadWrite, 0x00800a40, 0x00000018)
+        Interrupt(ResourceConsumer, Edge, ActiveHigh, Exclusive)
+          { BF1_RSH0_TM_HTT_LWM_INT,
+            BF1_RSH0_TM_HTT_HWM_INT,
+            BF1_RSH0_TM_TTH_LWM_INT,
+            BF1_RSH0_TM_TTH_HWM_INT
+          }
+      })
+    }
+
+The full ACPI implementation can be found in the 1.0 release:
+http://www.mellanox.com/downloads/BlueField/BlueField-1.0.0.10521/BlueField-1.0.0.10521.tar.xz
+Inside this tarball, we can see the "src/edk2/" directory which has the edk2 patch file including all the ACPI implementation.
+
+> 
+> I need to have a separate look at the fifo driver.
+> 
+> Unfortunately, you have sent these patches during the merge window,
+> which is the time during which we don't pick up new work. Let's plan
+> to pick these up after 4.20-rc1, and please resend to arm@kernel.org
+> if we manage to forget about it again.
+> 
+>       Arnd
+
+Thanks for the information. I'll resend it to make sure not to miss the date.
