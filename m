@@ -1,107 +1,62 @@
-From: Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH v2 5/6] dt-bindings: drm/panel: simple: Innolux TV123WAM
- is actually P120ZDG-BF1
-Date: Fri, 26 Oct 2018 10:46:57 -0400
-Message-ID: <20181026144657.GU154160@art_vandelay>
-References: <20181025222134.174583-1-dianders@chromium.org>
- <20181025222134.174583-5-dianders@chromium.org>
- <20181026144356.GS154160@art_vandelay>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20181026144356.GS154160@art_vandelay>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-arm-msm@vger.kernel.org, Sandeep Panda <spanda@codeaurora.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, ryandcase@chromium.org
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: [PATCH v10 5/9] MAINTAINERS: Add myself as the I3C subsystem maintainer
+Date: Fri, 26 Oct 2018 16:43:29 +0200
+Message-ID: <20181026144333.12276-6-boris.brezillon@bootlin.com>
+References: <20181026144333.12276-1-boris.brezillon@bootlin.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181026144333.12276-1-boris.brezillon@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares@synopsys.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Linus
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBPY3QgMjYsIDIwMTggYXQgMTA6NDM6NTZBTSAtMDQwMCwgU2VhbiBQYXVsIHdyb3Rl
-Ogo+IE9uIFRodSwgT2N0IDI1LCAyMDE4IGF0IDAzOjIxOjMzUE0gLTA3MDAsIERvdWdsYXMgQW5k
-ZXJzb24gd3JvdGU6Cj4gPiBBcyBmYXIgYXMgSSBjYW4gdGVsbCB0aGUgYmluZGluZ3MgdGhhdCB3
-ZXJlIGFkZGVkIGluIGNvbW1pdAo+ID4gOWMwNDQwMGY3ZWE2ICgiZHQtYmluZGluZ3M6IGRybS9w
-YW5lbDogRG9jdW1lbnQgSW5ub2x1eCBUVjEyM1dBTSBwYW5lbAo+ID4gYmluZGluZ3MiKSB3ZXJl
-bid0IGFjdHVhbGx5IGZvciBJbm5vbHV4IFRWMTIzV0FNIGJ1dCB3ZXJlIGFjdHVhbGx5IGZvcgo+
-ID4gSW5ub2x1eCBQMTIwWkRHLUJGMS4KPiA+IAo+ID4gQXMgZmFyIGFzIEkgY2FuIHRlbGwgdGhl
-IElubm9sdXggVFYxMjNXQU0gaXNuJ3QgYSByZWFsIHBhbmVsIGFuZCBidXQKPiA+IGl0J3MgYSBt
-b3NoIGJldHdlZW4gdGhlIFRJIFRWMTIzV0FNIGFuZCB0aGUgSW5ub2x1eCBQMTIwWkRHLUJGMS4K
-PiA+IExldCdzIHVubW9zaC4KPiA+IAo+ID4gSGVyZSdzIG15IGV2aWRlbmNlOgo+ID4gCj4gPiAq
-IFNlYXJjaGluZyBmb3IgVFYxMjNXQU0gb24gdGhlIEludGVybmV0IHR1cm5zIHVwIGEgVEkgcGFu
-ZWwuICBXaGlsZQo+ID4gICBpdCdzIHBvc3NpYmxlIHRoYXQgYW4gSW5ub2x1eCBwYW5lbCBoYXMg
-dGhlIHNhbWUgbW9kZWwgbnVtYmVyIGFzIHRoZQo+ID4gICBUSSBQYW5lbCwgaXQgc2VlbXMgYSBs
-aXR0bGUgZG91YnRmdWwuICBMb29raW5nIHVwIHRoZSBkYXRhc2hlZXQgZnJvbQo+ID4gICB0aGUg
-VEkgUGFuZWwgc2hvd3MgdGhhdCBpdCdzIDE5MjAgeCAxMjgwIGFuZCAyNTkuMiBtbSB4IDE3Mi44
-IG1tLgo+ID4gCj4gPiAqIEFzIGZhciBhcyBJIGtub3csIHRoZSBwYXRjaCBhZGRpbmcgdGhlIElu
-bm9sdXggUGFuZWwgd2FzIHN1cHBvc2VkIHRvCj4gPiAgIGJlIGZvciB0aGUgYm9hcmQgdGhhdCdz
-IHNpdHRpbmcgaW4gZnJvbnQgb2YgbWUgYXMgSSB0eXBlIHRoaXMKPiA+ICAgKHN1cHBvcnQgZm9y
-IHRoYXQgYm9hcmQgaXMgbm90IHlldCB1cHN0cmVhbSkuICBPbiB0aGUgYmFjayBvZiB0aGF0Cj4g
-PiAgIHBhbmVsIEkgc2VlIElubm9sdXggUDEyMFpEWi1FWjEgcmV2IEIxLgo+ID4gCj4gPiAqIFNv
-bWVvbmUgcG9pbnRlZCBtZSBhdCBhIGRhdGFzaGVldCB0aGF0J3Mgc3VwcG9zZWQgdG8gYmUgZm9y
-IHRoZQo+ID4gICBwYW5lbCBpbiBmcm9udCBvZiBtZSAoc29ycnksIEkgY2FuJ3Qgc2hhcmUgdGhl
-IGRhdGFzaGVldCkuICBUaGF0Cj4gPiAgIGRhdGFzaGVldCBoYXMgdGhlIHN0cmluZyAicDEyMHpk
-Zy1iZjEiCj4gPiAKPiA+ICogSWYgSSBzZWFyY2ggZm9yICJQMTIwWkRHLUJGMSIgb24gdGhlIElu
-dGVybmV0IEkgZ2V0IGhpdHMgZm9yIHBhbmVscwo+ID4gICB0aGF0IGFyZSAyMTYweDE0NDAuICBU
-aGV5IGRvbid0IGhhdmUgZGF0YXNoZWV0cywgYnV0IHRoZSBmYWN0IHRoYXQKPiA+ICAgdGhlIHJl
-c29sdXRpb24gbWF0Y2hlcyBpcyBhIGdvb2Qgc2lnbi4KPiA+IAo+ID4gV2hpbGUgd2UgZG9pbmcg
-dGhlIHJlbmFtZSwgYWxzbyBtZW50aW9uIHRoYXQgbm8taHBkIGNhbiBiZSB1c2VkIHdpdGgKPiA+
-IHRoaXMgcGFuZWwuICBTZWUgdGhlIHByZXZpb3VzIHBhdGNoIGluIHRoaXMgc2VyaWVzICgiZHJt
-L3BhbmVsOgo+ID4gc2ltcGxlOiBBZGQgIm5vLWhwZCIgZGVsYXkgZm9yIElubm9sdXggVFYxMjNX
-QU0iKS4KPiA+IAo+ID4gRml4ZXM6IDljMDQ0MDBmN2VhNiAoImR0LWJpbmRpbmdzOiBkcm0vcGFu
-ZWw6IERvY3VtZW50IElubm9sdXggVFYxMjNXQU0gcGFuZWwgYmluZGluZ3MiKQo+ID4gU2lnbmVk
-LW9mZi1ieTogRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPgo+ID4gUmV2
-aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4gCj4gSSBkaWRuJ3Qgc2Vl
-IHlvdXIgdjIgd2hlbiBJIHJlcGxpZWQgdG8gdGhlIHYxIHBhdGNoLCBzbyBmb3IgdGhlIHJlY29y
-ZCwKPiAKPiBSZXZpZXdlZC1ieTogU2VhbiBQYXVsIDxzZWFuQHBvb3JseS5ydW4+Cj4gCj4gQWxz
-byBub3RlIHRvIHdob2V2ZXIgYXBwbGllcyB0aGlzIHRvIC1taXNjLCB2MSBhbHNvIGhhZAo+IAo+
-IFJldmlld2VkLWJ5OiBBYmhpbmF2IEt1bWFyIDxhYmhpbmF2a0Bjb2RlYXVyb3JhLm9yZz4KCkFu
-ZCBJIGp1c3QgcmVhbGl6ZWQgdGhhdCBwYXRjaGVzIDUgJiA2IHdlcmUgc3dhcHBlZCBpbiB2Mi4g
-U28gbmV2ZXJtaW5kIHRoaXMsCkRvdWcncyB2MiB0YWdzIGFyZSBjb3JyZWN0LgoKRGVhciBjb2Zm
-ZWUsIHBsZWFzZSBraWNrIGluIHNvb24uCgpTZWFuCgoKPiAKPiAKPiBTZWFuCj4gCj4gPiBDYzog
-U2FuZGVlcCBQYW5kYSA8c3BhbmRhQGNvZGVhdXJvcmEub3JnPgo+ID4gLS0tCj4gPiAKPiA+IENo
-YW5nZXMgaW4gdjI6IE5vbmUKPiA+IAo+ID4gIC4uLi97aW5ub2x1eCx0djEyM3dhbS50eHQgPT4g
-aW5ub2x1eCxwMTIwemRnLWJmMS50eHR9ICAgICB8IDggKysrKystLS0KPiA+ICAxIGZpbGUgY2hh
-bmdlZCwgNSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+ID4gIHJlbmFtZSBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC97aW5ub2x1eCx0djEyM3dh
-bS50eHQgPT4gaW5ub2x1eCxwMTIwemRnLWJmMS50eHR9ICg3MCUpCj4gPiAKPiA+IGRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5v
-bHV4LHR2MTIzd2FtLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L3BhbmVsL2lubm9sdXgscDEyMHpkZy1iZjEudHh0Cj4gPiBzaW1pbGFyaXR5IGluZGV4IDcw
-JQo+ID4gcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQKPiA+IHJlbmFtZSB0byBEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHAxMjB6ZGctYmYxLnR4
-dAo+ID4gaW5kZXggYTliMzUyNjVmYTEzLi41MTNmMDM0NjZhYmEgMTAwNjQ0Cj4gPiAtLS0gYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2
-MTIzd2FtLnR4dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvcGFuZWwvaW5ub2x1eCxwMTIwemRnLWJmMS50eHQKPiA+IEBAIC0xLDIwICsxLDIyIEBA
-Cj4gPiAtSW5ub2x1eCBUVjEyM1dBTSAxMi4zIGluY2ggZURQIDJLIGRpc3BsYXkgcGFuZWwKPiA+
-ICtJbm5vbHV4IFAxMjBaREctQkYxIDEyLjAyIGluY2ggZURQIDJLIGRpc3BsYXkgcGFuZWwKPiA+
-ICAKPiA+ICBUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwg
-YmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkCj4gPiAgaW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0
-aGlzIGRpcmVjdG9yeS4KPiA+ICAKPiA+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4gLS0gY29t
-cGF0aWJsZTogc2hvdWxkIGJlICJpbm5vbHV4LHR2MTIzd2FtIgo+ID4gKy0gY29tcGF0aWJsZTog
-c2hvdWxkIGJlICJpbm5vbHV4LHAxMjB6ZGctYmYxIgo+ID4gIC0gcG93ZXItc3VwcGx5OiByZWd1
-bGF0b3IgdG8gcHJvdmlkZSB0aGUgc3VwcGx5IHZvbHRhZ2UKPiA+ICAKPiA+ICBPcHRpb25hbCBw
-cm9wZXJ0aWVzOgo+ID4gIC0gZW5hYmxlLWdwaW9zOiBHUElPIHBpbiB0byBlbmFibGUgb3IgZGlz
-YWJsZSB0aGUgcGFuZWwKPiA+ICAtIGJhY2tsaWdodDogcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0
-IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKPiA+ICstIG5vLWhwZDogSWYgSFBEIGlzbid0
-IGhvb2tlZCB1cDsgYWRkIHRoaXMgcHJvcGVydHkuCj4gPiAgCj4gPiAgRXhhbXBsZToKPiA+ICAJ
-cGFuZWxfZWRwOiBwYW5lbC1lZHAgewo+ID4gLQkJY29tcGF0aWJsZSA9ICJpbm5vbHV4LHR2MTIz
-d2FtIjsKPiA+ICsJCWNvbXBhdGlibGUgPSAiaW5ub2x1eCxwMTIwemRnLWJmMSI7Cj4gPiAgCQll
-bmFibGUtZ3Bpb3MgPSA8Jm1zbWdwaW8gMzEgR1BJT19BQ1RJVkVfTE9XPjsKPiA+ICAJCXBvd2Vy
-LXN1cHBseSA9IDwmcG04OTE2X2wyPjsKPiA+ICAJCWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsK
-PiA+ICsJCW5vLWhwZDsKPiA+ICAJfTsKPiA+IC0tIAo+ID4gMi4xOS4xLjU2OC5nMTUyYWQ4ZTMz
-Ni1nb29nCj4gPiAKPiAKPiAtLSAKPiBTZWFuIFBhdWwsIFNvZnR3YXJlIEVuZ2luZWVyLCBHb29n
-bGUgLyBDaHJvbWl1bSBPUwoKLS0gClNlYW4gUGF1bCwgU29mdHdhcmUgRW5naW5lZXIsIEdvb2ds
-ZSAvIENocm9taXVtIE9TCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+Create an entry for the I3C subsystem and mark it as maintained by me.
+There's no official git repository, patchwork instance, mailing list or
+website yet, but this will be added after the subsystem has been
+accepted.
+
+Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+---
+Changes in v10:
+- None
+
+Changes in v9:
+- None
+
+Changes in v8:
+- None
+
+Changes in v7:
+- Add a ML (not created yet) and a git repo
+
+Changes in v5:
+- Add the sysfs ABI file
+---
+ MAINTAINERS | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a5b256b25905..293c863b6f9f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6918,6 +6918,18 @@ L:	linux-i2c@vger.kernel.org
+ S:	Maintained
+ F:	drivers/i2c/i2c-stub.c
+ 
++I3C SUBSYSTEM
++M:	Boris Brezillon <boris.brezillon@bootlin.com>
++L:	linux-i3c@vger.kernel.org
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux.git
++S:	Maintained
++F:	Documentation/ABI/testing/sysfs-bus-i3c
++F:	Documentation/devicetree/bindings/i3c/
++F:	Documentation/driver-api/i3c
++F:	drivers/i3c/
++F:	include/linux/i3c/
++F:	include/dt-bindings/i3c/
++
+ IA64 (Itanium) PLATFORM
+ M:	Tony Luck <tony.luck@intel.com>
+ M:	Fenghua Yu <fenghua.yu@intel.com>
+-- 
+2.17.1
