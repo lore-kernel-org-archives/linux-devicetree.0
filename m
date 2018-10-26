@@ -1,102 +1,206 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V2 7/8] dts: fsl: add imx7ulp evk support
-Date: Fri, 26 Oct 2018 13:52:13 +0000
-Message-ID: <AM0PR04MB4211EEE43116F7AC69BCF12380F00@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1540295058-26090-1-git-send-email-aisheng.dong@nxp.com>
- <1540295058-26090-8-git-send-email-aisheng.dong@nxp.com>
- <CAOMZO5C3Fv+s-bLeHGZ6LEB=ZqRxf=gXuzbtwfNS=PvQeVJ1Ag@mail.gmail.com>
- <AM0PR04MB42110E5309341D1626EB6EF980F50@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CAOMZO5BLXGYfvq6GqK66Qe1aTNHmYJOBhKTPKTwNx=tDROKw6Q@mail.gmail.com>
- <AM0PR04MB421195B48BA336AD7078110D80F60@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <20181026105659.yixb64lqia5kisgf@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181026105659.yixb64lqia5kisgf@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Dong Aisheng <dongas86@gmail.com>, Fabio Estevam <festevam@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC
- ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: [PATCH v10 0/9] Add the I3C subsystem
+Date: Fri, 26 Oct 2018 16:43:24 +0200
+Message-ID: <20181026144333.12276-1-boris.brezillon@bootlin.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares@synopsys.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Linus
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Sascha Hauer [mailto:s.hauer@pengutronix.de]
-> Sent: Friday, October 26, 2018 6:57 PM
-[...]
-> 
-> On Wed, Oct 24, 2018 at 08:14:01AM +0000, A.s. Dong wrote:
-> > > -----Original Message-----
-> > > From: Fabio Estevam [mailto:festevam@gmail.com]
-> > > Sent: Wednesday, October 24, 2018 12:26 AM
-> > [...]
-> > > On Tue, Oct 23, 2018 at 11:42 AM A.s. Dong <aisheng.dong@nxp.com>
-> wrote:
-> > >
-> > > > I'm a bit hesitate to do that as the driver already supports it.
-> > > > There's no extra effort to use it. And we probably could take ULP
-> > > > as a special case to test generic binding rather then simply drop
-> > > > it and drop driver features. Once we get objection from users
-> > > > later, we still can
-> > > simply fallback as there's still only official boards using it.
-> > >
-> > > We had this same discussion some months ago when we were reviewing
-> > > i.MX8 support.
-> > >
-> > > I don't see the value in doing pinctrl differently on i.MX7ULP.
-> > >
-> >
-> > I thought the situation is different as ULP actually already supports
-> > generic binding before that discussion.
-> >
-> > > > Last, it's not correct that there's not only one method for all i.MX devices.
-> > > > MX23/28 are different ones and ULP is more like MX23/28.
-> > > > And I saw no objections from users for MX23/28.
-> > >
-> > > Yes, but these are legacy platforms.
-> > >
-> > > For new ones, we should try to keep consistency, just like we
-> > > discussed during
-> > > i.MX8 review.
-> >
-> > So the question is whether it's necessary to switch generic binding
-> > back to the legacy one for ULP. Personally I'm not strongly against
-> > this, but I need some confirmation from Shawn and Sascha.
-> >
-> > Shawn & Sascha, would you make a judgement call?
-> > If you also strongly request that, I will try to make it patch to test Linus W.
-> > Hopefully our agreement could satisfy Linus W.
-> 
-> For consistency reasons I vote for using the legacy binding for i.MX7ulp aswell.
-> 
+Hi Greg,
 
-Thanks for the feedback.
-Will try to cook a patch to send to Linus W.
+I think we've reached a point where we can eventually consider the I3C
+framework for inclusion in 4.20 (5.0?). A few more issues were reported
+on v9 and fixed in v10. I can't guarantee that the implementation is
+free of bugs but I still think it's worth merging it in v4.20: it's a
+new subsystem, so we don't risk regressions, and the only way we can
+detect other issues is by having other people experiment with this
+implementation.
 
-Regards
-Dong Aisheng
+The only remaining concern raised by Arnd is the fact that both hosts
+and slaves share the same bus type and are differentiated thanks to
+their device_type, which IMHO is fine since this is what other
+subsystems do (plus I don't see other solutions to have both I3C
+devices and I3C buses represented under /sys/bus/i3c/).
 
-> Sascha
-> 
-> --
-> Pengutronix e.K.                           |
-> |
-> Industrial Linux Solutions                 |
-> https://emea01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fwww.
-> pengutronix.de%2F&amp;data=02%7C01%7Caisheng.dong%40nxp.com%7C74
-> a0d2aca1cf432528a608d63b31c614%7C686ea1d3bc2b4c6fa92cd99c5c3016
-> 35%7C0%7C0%7C636761482309424341&amp;sdata=Mi5aWJmBcYI3xZLsEdj
-> O%2BQ7JUKZS1EzXuW%2Bd2WBJtek%3D&amp;reserved=0  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0
-> |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:
-> +49-5121-206917-5555 |
+I'd really like to get this series merged in 4.20 so that other
+contributors can work on top of it to add
+
+1/ new host drivers
+2/ support for advanced features
+3/ new device drivers
+
+So, unless you have strong reasons to reject this request, and,
+assuming I get Rob's ack soon enough, I plan to send a PR for this
+framework next week.
+
+Here is the usual description copy&pasted from the previous versions:
+
+This patch series is adding a new subsystem to support I3C devices.
+
+This is just adding support for basic features. Extra features will
+be added afterwards.
+
+There are a few design choices that are worth mentioning because they
+impact the way I3C device drivers can interact with their devices:
+
+- all functions used to send I3C/I2C frames must be called in
+  non-atomic context. Mainly done this way to ease implementation, but
+  this is still open to discussion. Please let me know if you think it's
+  worth considering an asynchronous model here
+- the I3C bus and I3C master controller are now tightly coupled even
+  though they're still allocated separately. There's now a 1:1
+  relationship between these objects, and the I3C master is no longer
+  represented under the I3C bus object.
+  Arnd, let me know if you had something different in mind, and I'll
+  rework the implementation accordingly.
+
+- I2C backward compatibility has been designed to be transparent to I2C
+  drivers and the I2C subsystem. The I3C master just registers an I2C
+  adapter which creates a new I2C bus. I'd say that, from a
+  representation PoV it's not ideal because what should appear as a
+  single I3C bus exposing I3C and I2C devices here appears as 2
+  different busses connected to each other through the parenting (the
+  I3C master is the parent of the I2C and I3C busses).
+  On the other hand, I don't see a better solution if we want something
+  that is not invasive.
+
+Missing features (will be added in separate patch series after initial
+support has been accepted/merged):
+- support for HDR modes (has been removed because of lack of real users)
+- no support for multi-master and the associated concepts (mastership
+  handover, support for secondary masters, ...)
+- I2C devices can only be described using DT because this is the only
+  use case I have. However, the framework can easily be extended with
+  ACPI and board info support
+- I3C slave framework. This has been completely omitted, but shouldn't
+  have a huge impact on the I3C framework because I3C slaves don't see
+  the whole bus, it's only about handling master requests and generating
+  IBIs. Some of the struct, constant and enum definitions could be
+  shared, but most of the I3C slave framework logic will be different
+
+Note that this patchset is available on the linux-i3c repo[1].
+
+Main change between v8 and v9:
+- The DT bindings have been simplified to get rid of the I3C/I3C_DEV()
+  macros
+
+Main change between v7 and v8:
+- The bus object is now embedded in the master_controller object (as
+  suggested by Arnd)
+
+Main changes between v6 and v7:
+- I3C bus/master representations have been reworked to match what other
+  subsystems are doing (master implicitly represented by the bus
+  object)
+- I3C dev registration has been fixed
+- I3C bus mode selection has been fixed
+- Calls to readsl/writesl() in the Cadence I3C master driver have been
+  fixed
+
+Main changes between v5 and v6:
+- Introduce {i3c,i2c}_dev_desc structures to better match how I3C
+  master controllers (reservation of one HW slot for each device
+  attached to the bus). With this solution, the resource migration
+  that happens when a device lose its dynamic address and is
+  re-assigned a different address is simplified on the driver side,
+  because most of it is now handled in the core (reserve a new dev
+  slot, reserve IBI resources and free all resources attached to the
+  old slot)
+- Add I3C error codes (M0 to M2) so that the core and device drivers
+  can have fine grained information on what caused an EIO error.
+
+Only minor things happened between v3 and v5 (you can go check the
+changelog in each patch for more details).
+
+Main changes between v2 and v3 are:
+- Reworked the DT bindings as suggested by Rob
+- Reworked the bus initialization step as suggested by Vitor
+- Added a driver for an I3C GPIO expander
+
+Main changes between the initial RFC and this v2 are:
+- Add a generic infrastructure to support IBIs. It's worth mentioning
+  that I tried exposing IBIs as a regular IRQs, but after several
+  attempts and a discussion with Mark Zyngier, it appeared that it was
+  not really fitting in the Linux IRQ model (the fact that you have
+  payload attached to IBIs, the fact that most of the time an IBI will
+  generate a transfer on the bus which has to be done in an atomic
+  context, ...)
+  The counterpart of this decision is the latency induced by the
+  workqueue approach, but since I don't have real use cases, I don't
+  know if this can be a problem or not. 
+- Add helpers to support Hot Join
+- Add support for IBIs and Hot Join in Cadence I3C master driver
+- Address several issues in how I was using the device model
+
+Thanks,
+
+Boris
+
+[1]https://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux.git/log/?h=i3c/next
+
+*** BLURB HERE ***
+
+Boris Brezillon (9):
+  i3c: Add core I3C infrastructure
+  docs: driver-api: Add I3C documentation
+  i3c: Add sysfs ABI spec
+  dt-bindings: i3c: Document core bindings
+  MAINTAINERS: Add myself as the I3C subsystem maintainer
+  i3c: master: Add driver for Cadence IP
+  dt-bindings: i3c: Document Cadence I3C master bindings
+  gpio: Add a driver for Cadence I3C GPIO expander
+  dt-bindings: gpio: Add bindings for Cadence I3C gpio expander
+
+ Documentation/ABI/testing/sysfs-bus-i3c       |  146 +
+ .../bindings/gpio/gpio-cdns-i3c.txt           |   39 +
+ .../bindings/i3c/cdns,i3c-master.txt          |   44 +
+ Documentation/devicetree/bindings/i3c/i3c.txt |  139 +
+ .../driver-api/i3c/device-driver-api.rst      |    9 +
+ Documentation/driver-api/i3c/index.rst        |   11 +
+ .../driver-api/i3c/master-driver-api.rst      |   10 +
+ Documentation/driver-api/i3c/protocol.rst     |  203 ++
+ Documentation/driver-api/index.rst            |    1 +
+ MAINTAINERS                                   |   12 +
+ drivers/Kconfig                               |    2 +
+ drivers/Makefile                              |    2 +-
+ drivers/gpio/Kconfig                          |   11 +
+ drivers/gpio/Makefile                         |    1 +
+ drivers/gpio/gpio-cdns-i3c.c                  |  411 +++
+ drivers/i3c/Kconfig                           |   24 +
+ drivers/i3c/Makefile                          |    4 +
+ drivers/i3c/device.c                          |  233 ++
+ drivers/i3c/internals.h                       |   26 +
+ drivers/i3c/master.c                          | 2661 +++++++++++++++++
+ drivers/i3c/master/Kconfig                    |    6 +
+ drivers/i3c/master/Makefile                   |    1 +
+ drivers/i3c/master/i3c-master-cdns.c          | 1671 +++++++++++
+ include/linux/i3c/ccc.h                       |  385 +++
+ include/linux/i3c/device.h                    |  331 ++
+ include/linux/i3c/master.h                    |  648 ++++
+ include/linux/mod_devicetable.h               |   17 +
+ 27 files changed, 7047 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-i3c
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-cdns-i3c.txt
+ create mode 100644 Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
+ create mode 100644 Documentation/devicetree/bindings/i3c/i3c.txt
+ create mode 100644 Documentation/driver-api/i3c/device-driver-api.rst
+ create mode 100644 Documentation/driver-api/i3c/index.rst
+ create mode 100644 Documentation/driver-api/i3c/master-driver-api.rst
+ create mode 100644 Documentation/driver-api/i3c/protocol.rst
+ create mode 100644 drivers/gpio/gpio-cdns-i3c.c
+ create mode 100644 drivers/i3c/Kconfig
+ create mode 100644 drivers/i3c/Makefile
+ create mode 100644 drivers/i3c/device.c
+ create mode 100644 drivers/i3c/internals.h
+ create mode 100644 drivers/i3c/master.c
+ create mode 100644 drivers/i3c/master/Kconfig
+ create mode 100644 drivers/i3c/master/Makefile
+ create mode 100644 drivers/i3c/master/i3c-master-cdns.c
+ create mode 100644 include/linux/i3c/ccc.h
+ create mode 100644 include/linux/i3c/device.h
+ create mode 100644 include/linux/i3c/master.h
+
+-- 
+2.17.1
