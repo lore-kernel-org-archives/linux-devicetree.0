@@ -1,59 +1,69 @@
-From: Ding Tao <miyatsu@qq.com>
-Subject: [PATCH 1/2] arm64: dts: marvell: armada37xx: Add emmc/sdio pinctrl
- definition
-Date: Fri, 26 Oct 2018 11:50:27 +0000
-Message-ID: <20181026115028.193203-1-miyatsu@qq.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [RFC PATCH v2 01/17] OPP: Allow to request stub voltage
+ regulators
+Date: Fri, 26 Oct 2018 15:03:39 +0300
+Message-ID: <ba782346-6ac0-7bf3-e187-00d2634b145b@gmail.com>
+References: <20181021205501.23943-1-digetx@gmail.com>
+ <20181021205501.23943-2-digetx@gmail.com>
+ <20181022053636.ag62j3rj3vovbz53@vireshk-i7>
+ <e4027793-9436-413d-2a7b-34cf519218c3@gmail.com>
+ <20181022113224.b5fiebgy2aap66nd@vireshk-i7>
+ <29f893be-feed-c4c5-8468-51f7228dd468@gmail.com>
+ <20181024064123.lbpbeervghp35fe7@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jason@lakedaemon.net
-Cc: mark.rutland@arm.com, andrew@lunn.ch, devicetree@vger.kernel.org, gregory.clement@bootlin.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, miyatsu@qq.com, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181024064123.lbpbeervghp35fe7@vireshk-i7>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add emmc/sdio pinctrl definition for marvell armada37xx SoCs.
+On 10/24/18 9:41 AM, Viresh Kumar wrote:
+> On 22-10-18, 15:12, Dmitry Osipenko wrote:
+>> Because there is one Tegra20 board (tegra20-trimslice) that doesn't declare
+>> necessary regulators, but we want to have CPU frequency scaling. I couldn't
+>> find board schematics and so don't know if CPU / CORE voltages are fixed on
+>> Trim-Slice or it is just preferable not to have DVFS for that board, it is an
+>> outlet-powered device [0]. Hence tegra20-cpufreq driver will request a dummy
+>> regulators when appropriate. 
+> 
+> We have been using the regulator_get_optional() variant until now in the OPP
+> core to make sure that we don't do DVFS for the CPU without the mandatory
+> regulators being present, as that may make things unstable and cause harm to the
+> SoC if we try to take CPU to frequency range over the currently programmed
+> regulator can support.
+> 
+> Now coming back to tegra-20 SoC, which actually requires a regulator normally by
+> design. On one of the boards (which is outlet powered), you aren't sure if there
+> is a programmable regulator or not, or if DVFS should really be done or not.
+> Isn't it worth checking the same from Tegra maintainers, or whomsoever has
+> information on that board ?
 
-Signed-off-by: Ding Tao <miyatsu@qq.com>
----
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+I'll try to find out more detailed information for the next revision of the patchset.
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index d9531e242eb4..eeec04a1add6 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -221,6 +221,11 @@
- 					groups = "uart2";
- 					function = "uart";
- 				};
-+
-+				mmc_pins: mmc-pins {
-+					groups = "emmc_nb";
-+					function = "emmc";
-+				};
- 			};
- 
- 			nb_pm: syscon@14000 {
-@@ -253,6 +258,11 @@
- 					function = "mii";
- 				};
- 
-+				sdio_pins: sdio-pins {
-+					groups = "sdio_sb";
-+					function = "sdio";
-+				};
-+
- 			};
- 
- 			eth0: ethernet@30000 {
--- 
-2.17.1
+ What would happen if there actually was a regulator
+> and its default settings aren't good enough for high end frequencies ?
+
+Usually this causes kernel/applications crashes and/or machine hang.
+
+> On the other hand, the tegra20 cpufreq driver is common across a lot of boards.
+> What will happen if the DT for some of the boards isn't correct and missed the
+> necessary regulator node ?
+
+AFAIK, there is assumption that bootloader should setup regulators in a way that kernel could work properly at max clock rates. Otherwise things won't work.
+
+ And because you are moving to regulator_get() API for
+> the entire SoC (i.e. its cpufreq driver), people will never find the missing
+> regulator.
+
+Regulators core prints info message when dummy regulator is being used.
+
+> If we can do it safely for all tegra20 boards, why not migrate to using
+> regulator_get() instead of regulator_get_optional() in the OPP core API itself
+> for everyone ?
+> 
+
+This should be a platform-specific decision. For Tegra we know that regulators should be in a good state at kernel boot time, I don't think that this applies to other platforms.
