@@ -1,222 +1,65 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 2/5] mfd: lochnagar: Add support for the Cirrus Logic
- Lochnagar
-Date: Fri, 26 Oct 2018 08:33:01 +0100
-Message-ID: <20181026073301.GJ4870@dell>
-References: <20181008132542.19775-1-ckeepax@opensource.cirrus.com>
- <20181008132542.19775-2-ckeepax@opensource.cirrus.com>
- <20181025074459.GF4939@dell>
- <20181025082621.GD16508@imbe.wolfsonmicro.main>
- <b2f85f45-cbe9-5a27-e9e8-ad28f2bd9bd6@opensource.cirrus.com>
- <20181025114205.GC4870@dell>
- <20181025124905.GF16508@imbe.wolfsonmicro.main>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCH 3/6] PCI: layerscape: Add the EP mode support
+Date: Fri, 26 Oct 2018 07:42:11 +0000
+Message-ID: <HE1PR04MB14972C9176E68EEDBD3AD64BF5F00@HE1PR04MB1497.eurprd04.prod.outlook.com>
+References: <20181025110901.5680-1-xiaowei.bao@nxp.com>
+ <20181025110901.5680-3-xiaowei.bao@nxp.com> <20181025215246.GA14861@bogus>
+ <HE1PR04MB149735C7EF2A23AEE982BB9FF5F00@HE1PR04MB1497.eurprd04.prod.outlook.com>
+ <CAK8P3a3Ty4bRuHiVHY6dh55b1ms8z7RpG2sALM0Dn_8Yd39-xQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181025124905.GF16508@imbe.wolfsonmicro.main>
+In-Reply-To: <CAK8P3a3Ty4bRuHiVHY6dh55b1ms8z7RpG2sALM0Dn_8Yd39-xQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: Richard Fitzgerald <rf@opensource.cirrus.com>, mturquette@baylibre.com, sboyd@kernel.org, broonie@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "cyrille.pitchen@free-electrons.com" <cyrille.pitchen@free-electrons.com>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>, "niklas.cassel@axis.com" <niklas.cassel@axis.com>, "linux-pci@vger.kernel.org" <linux-pci@>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 25 Oct 2018, Charles Keepax wrote:
-
-> On Thu, Oct 25, 2018 at 12:42:05PM +0100, Lee Jones wrote:
-> > On Thu, 25 Oct 2018, Richard Fitzgerald wrote:
-> > > On 25/10/18 09:26, Charles Keepax wrote:
-> > > > On Thu, Oct 25, 2018 at 08:44:59AM +0100, Lee Jones wrote:
-> > > > > On Mon, 08 Oct 2018, Charles Keepax wrote:
-> > > > > > From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> > > > > > +static const struct reg_default lochnagar1_reg_defaults[] = {
-> > > > > > +	{ LOCHNAGAR1_CDC_AIF1_SEL,    0x00 },
-> > > > > > +	{ LOCHNAGAR1_CDC_AIF2_SEL,    0x00 },
-> > > > ...
-> > > > > > +	{ LOCHNAGAR1_LED1,            0x00 },
-> > > > > > +	{ LOCHNAGAR1_LED2,            0x00 },
-> > > > > > +	{ LOCHNAGAR1_I2C_CTRL,        0x01 },
-> > > > > > +};
-> > > > > 
-> > > > > Why do you need to specify each register value?
-> > > > 
-> > > > The way regmap operates it needs to know the starting value of
-> > > > each register. It will use this to initialise the cache and to
-> > > > determine if writes need to actually update the hardware on
-> > > > cache_syncs after devices have been powered back up.
-> > 
-> > That sounds crazy to me.  Some devices have thousands of registers.
-> > At a line per register, that's thousands of lines of code/cruft.
-> > Especially seeing as most (sane?) register layouts I've seen default
-> > to zero.  Then default values can be changed at the leisure of the
-> > s/w.
-> > 
-> > Even if it is absolutely critical that you have to supply these to
-> > Regmap up-front, instead of on first use/read, why can't you just
-> > supply the oddball non-zero ones?
-> 
-> I don't think you can sensibly get away with not supplying
-> default values. You say most sane register layouts have zero
-> values, alas again you may not be the biggest fan of our hardware
-> guys. The Lochnagar actually does have mostly zero defaults but
-> that is very much not generally the case with our hardware.
-> 
-> One of the main aims of regmap is to avoid bus accesses when
-> possible but I guess on the first write/read to any register you
-> could insert a read to pull the default, although I do worry
-> there is some corner case/flexibility that is going to cause
-> headaches later.
-
-This is basically what I am suggesting.
-
-> I am not sure that dynamically constructing the defaults would be
-> possible from a table of non-zero ones, or at least doing so would
-> probably require a fairly major change to the way registers are
-> specified since with the current callback based approach and a
-> sparse regmap you could need to iterate over billions of
-> potential registers to build the table.
-
-What if a valid register range was provided with only the non-zero
-values?
-
-> > > > > > +static bool lochnagar2_readable_register(struct device *dev, unsigned int reg)
-> > > > > > +{
-> > > > > > +	switch (reg) {
-> > > > > > +	case LOCHNAGAR_SOFTWARE_RESET:
-> > > > > > +	case LOCHNAGAR_FIRMWARE_ID1:
-> > > > > > +	case LOCHNAGAR_FIRMWARE_ID2:
-> > > > ...
-> > > > > > +	case LOCHNAGAR2_MICVDD_CTRL2:
-> > > > > > +	case LOCHNAGAR2_VDDCORE_CDC_CTRL1:
-> > > > > > +	case LOCHNAGAR2_VDDCORE_CDC_CTRL2:
-> > > > > > +	case LOCHNAGAR2_SOUNDCARD_AIF_CTRL:
-> > > > > > +		return true;
-> > > > > > +	default:
-> > > > > > +		return false;
-> > > > > > +	}
-> > > > > > +}
-> > > > > > +
-> > > > > > +static bool lochnagar2_volatile_register(struct device *dev, unsigned int reg)
-> > > > > > +{
-> > > > > > +	switch (reg) {
-> > > > > > +	case LOCHNAGAR2_GPIO_CHANNEL1:
-> > > > > > +	case LOCHNAGAR2_GPIO_CHANNEL2:
-> > > > > > +	case LOCHNAGAR2_GPIO_CHANNEL3:
-> > > > ...
-> > > > > > +	case LOCHNAGAR2_GPIO_CHANNEL13:
-> > > > > > +	case LOCHNAGAR2_GPIO_CHANNEL14:
-> > > > > > +	case LOCHNAGAR2_GPIO_CHANNEL15:
-> > > > > > +	case LOCHNAGAR2_GPIO_CHANNEL16:
-> > > > > > +	case LOCHNAGAR2_ANALOGUE_PATH_CTRL1:
-> > > > > > +		return true;
-> > > > > > +	default:
-> > > > > > +		return false;
-> > > > > > +	}
-> > > > > > +}
-> > > > > 
-> > > > > This is getting silly now.  Can't you use ranges?
-> > > > 
-> > > > I can if you feel strongly about it? But it does make the drivers
-> > > > much more error prone and significantly more annoying to work
-> > > > with. I find it is really common to be checking that a register
-> > > > is handled correctly through the regmap callbacks and it is nice
-> > > > to just be able to grep for that. Obviously this won't work for
-> > > > all devices/regmaps as well since many will not have consecutive
-> > > > addresses on registers, for example having multi-byte registers
-> > > > that are byte addressed.
-> > > > 
-> > > > How far would you like me to take this as well? Is it just the
-> > > > numeric registers you want ranges for ie.
-> > > > 
-> > > > LOCHNAGAR2_GPIO_CHANNEL1...LOCHNAGAR_GPIO_CHANNEL16
-> > > > 
-> > > > Or is it all consecutive registers even if they are unrelated
-> > > > (exmaple is probably not accurate as I haven't checked the
-> > > > addresses):
-> > > > 
-> > > > LOCHNAGAR2_GPIO_CHANNEL1...LOCHNAGAR2_ANALOGURE_PATH_CTRL1
-> > > > 
-> > > > I don't mind the first at all but the second is getting really
-> > > > horrible in my opinion.
-> > 
-> > My issue is that we have one end of the scale, where contributors are
-> > submitting patches, trying to remove a line of code here, a line of
-> > code there, then there are patches like this one which describe the
-> > initial value, readable status, writable status and volatile status of
-> > each and every register.
-> 
-> Removing code is one thing but I would argue that data tables are
-> somewhat less of a concern. I guess kernel size for very small
-> systems but then is someone going to be using Lochnagar on one of
-> those.
-> 
-> > The API is obscene and needs a re-work IMHO.
-> > 
-> > I really hope we do not really have to list every register, but *if we
-> > absolutely must*, let's do it once:
-> > 
-> >   REG_ADDRESS, WRV, INITIAL_VALUE
-> 
-> It might be possible to combine all these into one thing,
-> although again its a fairly major core change.
-
-I'm not suggesting that this will be solved overnight.
-
-> > > > > > +static const struct reg_default lochnagar2_reg_defaults[] = {
-> > > > > > +	{ LOCHNAGAR2_CDC_AIF1_CTRL,         0x0000 },
-> > > > > > +	{ LOCHNAGAR2_CDC_AIF2_CTRL,         0x0000 },
-> > > > > > +	{ LOCHNAGAR2_CDC_AIF3_CTRL,         0x0000 },
-> > > > > > +	{ LOCHNAGAR2_DSP_AIF1_CTRL,         0x0000 },
-> > > > ...
-> > > > > > +	{ LOCHNAGAR2_MINICARD_RESETS,       0x0000 },
-> > > > > > +	{ LOCHNAGAR2_ANALOGUE_PATH_CTRL2,   0x0000 },
-> > > > > > +	{ LOCHNAGAR2_COMMS_CTRL4,           0x0001 },
-> > > > > > +	{ LOCHNAGAR2_SPDIF_CTRL,            0x0008 },
-> > > > > > +	{ LOCHNAGAR2_POWER_CTRL,            0x0001 },
-> > > > > > +	{ LOCHNAGAR2_SOUNDCARD_AIF_CTRL,    0x0000 },
-> > > > > > +};
-> > > > > 
-> > > > > OMG!  Vile, vile vile!
-> > > > 
-> > > > I really feel this isn't the driver you are objecting to as such
-> > > > but the way regmap operates and also we seem to always have the same
-> > > > discussions around regmap every time we push a driver.
-> > 
-> > Absolutely.  I didn't like it before.  I like it even less now.
-> 
-> I guess the question from my side becomes do you want to block
-> this driver pending on major refactoring to regmap? I will have a
-> think about what I can do but its going to affect a LOT of drivers.
-
-No one is NACKing this driver.
-
-We're using it as a vehicle for discussion.
-
-> > > > > > +	ret = devm_of_platform_populate(dev);
-> > > > > > +	if (ret < 0) {
-> > > > > > +		dev_err(dev, "Failed to populate child nodes: %d\n", ret);
-> > > > > > +		return ret;
-> > > > > > +	}
-> > > > > 
-> > > > > Please do not mix OF and MFD device registration strategies.
-> > > > > 
-> > > > > Pick one and register all devices through your chosen method.
-> > > > 
-> > > > Hmmm we use this to do things like register some fixed regulators
-> > > > and clocks that don't need any control but do need to be associated
-> > > > with the device. I could do that through the MFD although it is in
-> > > > direct conflict with the feedback on the clock patches I received
-> > > > to move the fixed clocks into devicetree rather than registering
-> > > > them manually (see v2 of the patch chain).
-> > 
-> > The I suggest moving everything to DT.
-> 
-> I will have a look and see what that would look like.
-
-Thanks.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBhcm5kYmVyZ21hbm5AZ21haWwu
+Y29tIDxhcm5kYmVyZ21hbm5AZ21haWwuY29tPiBPbiBCZWhhbGYgT2YgQXJuZCBCZXJnbWFubg0K
+U2VudDogMjAxOOW5tDEw5pyIMjbml6UgMTU6MDENClRvOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5i
+YW9AbnhwLmNvbT4NCkNjOiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPjsgYmhlbGdhYXNA
+Z29vZ2xlLmNvbTsgbWFyay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExl
+byBMaSA8bGVveWFuZy5saUBueHAuY29tPjsga2lzaG9uQHRpLmNvbTsgbG9yZW56by5waWVyYWxp
+c2lAYXJtLmNvbTsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IE0uaC4gTGlhbiA8bWluZ2h1
+YW4ubGlhbkBueHAuY29tPjsgTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgUm95IFph
+bmcgPHJveS56YW5nQG54cC5jb20+OyBrc3Rld2FydEBsaW51eGZvdW5kYXRpb24ub3JnOyBjeXJp
+bGxlLnBpdGNoZW5AZnJlZS1lbGVjdHJvbnMuY29tOyBwb21icmVkYW5uZUBuZXhiLmNvbTsgc2hh
+d24ubGluQHJvY2stY2hpcHMuY29tOyBuaWtsYXMuY2Fzc2VsQGF4aXMuY29tOyBsaW51eC1wY2lA
+dmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVs
+QHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBs
+aW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZw0KU3ViamVjdDogUmU6IFtQQVRDSCAzLzZdIFBD
+STogbGF5ZXJzY2FwZTogQWRkIHRoZSBFUCBtb2RlIHN1cHBvcnQNCg0KT24gMTAvMjYvMTgsIFhp
+YW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPiB3cm90ZToNCj4gRnJvbTogUm9iIEhlcnJp
+bmcgPHJvYmhAa2VybmVsLm9yZz4NCj4+IE9uIFRodSwgT2N0IDI1LCAyMDE4IGF0IDA3OjA4OjU4
+UE0gKzA4MDAsIFhpYW93ZWkgQmFvIHdyb3RlOg0KPj4+ICAgICAgICAgICJmc2wsbHMyMDgwYS1w
+Y2llIiwgImZzbCxsczIwODVhLXBjaWUiLCAic25wcyxkdy1wY2llIg0KPj4+ICAgICAgICAgICJm
+c2wsbHMyMDg4YS1wY2llIg0KPj4+ICAgICAgICAgICJmc2wsbHMxMDg4YS1wY2llIg0KPj4+ICAg
+ICAgICAgICJmc2wsbHMxMDQ2YS1wY2llIg0KPj4+ICAgICAgICAgICJmc2wsbHMxMDEyYS1wY2ll
+DQo+Pj4gKyAgRVAgbW9kZToNCj4+PiArICAgICAgICAiZnNsLGxzLXBjaWUtZXAiDQo+Pg0KPiA+
+IFlvdSBuZWVkIFNvQyBzcGVjaWZpYyBjb21wYXRpYmxlcyBmb3IgdGhlIHNhbWUgcmVhc29ucyBh
+cyB0aGUgUkMuDQo+DQo+IFtYaWFvd2VpIEJhb10gSSB3YW50IHRvIGNvbnRhaW5zIGFsbCBsYXll
+cnNjYXBlIHBsYXRmb3JtIHVzZSBvbmUgDQo+IGNvbXBhdGlibGUgaWYgdGhlIFBDSWUgY29udHJv
+bGxlciB3b3JrIGluIEVQIG1vZGUuDQoNCkRvIHlvdSBtZWFuIG9ubHkgb25lIG9mIHRoZSBTb0Nz
+IHRoYXQgc3VwcG9ydCBSQyBtb2RlIGhhcyBFUCBtb2RlPw0KSSB0aGluayB5b3Ugc3RpbGwgbmVl
+ZCBhIFNvQyBzcGVjaWZpYyBjb21wYXRpYmxlIGFzIFJvYiBleHBsYWluZWQsIGluIGNhc2UgdGhl
+cmUgd2lsbCBiZSBhIHNlY29uZCBvbmUgaW4gdGhlIGZ1dHVyZS4NCg0KSWYgeW91IHdhbnQgdG8g
+ZW5zdXJlIHRoYXQgeW91IGRvbid0IGhhdmUgdG8gdXBkYXRlIHRoZSBkZXZpY2UgZHJpdmVyIGZv
+ciBlYWNoIG5ldyBjaGlwIHRoYXQgY29tZXMgaW4gd2hlbiB0aGUgRVAgbW9kZSBpcyBjb21wYXRp
+YmxlLCB0aGUgd2F5IHRoaXMgaXMgaGFuZGxlZCBpcyB0byBsaXN0IG11bHRpcGxlIHZhbHVlcyBp
+biB0aGUgY29tcGF0aWJsZSBwcm9wZXJ0eSwgbGlzdGluZyB0aGUgZmlyc3QgU29DIHRoYXQgaW50
+cm9kdWNlZCB0aGUgc3BlY2lmaWMgdmVyc2lvbiBvZiB0aGF0IElQIGJsb2NrIGFzIHRoZSBtb3N0
+IGdlbmVyaWMgdHlwZSwgZS5nLg0KDQogIGNvcGF0aWJsZSA9ICJmc2wsbHMyMDg4YS1wY2llLWVw
+IiwgImZzbCxsczEwMTJhLXBjaWUtZXAiLCAic25wcyxkdy1wY2llLWVwIjsNCg0KRm9yIGNvbnNp
+c3RlbmN5LCBpdCBwcm9iYWJseSBpcyBiZXN0IHRvIG1hdGNoIGVhY2ggUkMgbW9kZSB2YWx1ZSB3
+aXRoIHRoZSBjb3JyZXNwb25kaW5nIEVQIG1vZGUgc3RyaW5nIGZvciBlYWNoIGRldmljZSB0aGF0
+IGNhbiBzdXBwb3J0IGJvdGggKGlmIHRoZXJlIGlzIG1vcmUgdGhhbiBvbmUpLg0KDQogICAgICBB
+cm5kDQpbWGlhb3dlaSBCYW9dIE15IG1lYW4gaXMgdGhhdCB0aGUgbHMtcGNpZS1lcCBjb21wYXRp
+YmxlcyB3aWxsIGNvbnRhaW4gYWxsIGxheWVyc2NhcGUgU09DcyBvZiBOWFAsIGUuZzogbHMxMDQ2
+YS1wY2llLWVwLCBmc2wsbHMyMDg4YS1wY2llLWVwLCBsczIwODhhLXBjaWUtZXAgYW5kIHNvIG9u
+LCBvdGhlciBsYXllcnNjYXBlIFNPQ3MgaGF2ZSBub3QgdGVzdCBleGNlcHQgdGhlIGxzMTA0NmEs
+IEkgdGhpbmsgaXQgaXMgY29tcGF0aWJsZSBpZiB0aGUgbmV3IGNoaXAgb3Igb3RoZXIgU09DcyB1
+c2UgdGhlIERXIGNvcmUsIE9LLCBJIHdpbGwgZGlzY3VzcyB0aGlzIGlzc3VlIGludGVybmFsbHks
+IGFuZCByZXBseSB0byB5b3UgbGF0ZXIuDQo=
