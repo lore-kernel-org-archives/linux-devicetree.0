@@ -1,65 +1,68 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v6 1/6] dt-bindings: power: Introduce one property to
- present the battery internal resistance
-Date: Fri, 26 Oct 2018 09:57:05 +0800
-Message-ID: <CAMz4ku+a8if7oO1mbG=0xeEYE0poi1K_UDcT5AsXxBGjXss9HA@mail.gmail.com>
-References: <e7c061535f2dcca54d6498405fdd5ed7098b19f9.1540189330.git.baolin.wang@linaro.org>
- <CAMz4kuJCS1_E+CUdANepYe+WpYSOwovZ9Rnu85zvTgmV9BE5+g@mail.gmail.com> <20181025201349.c4564dgc7743kosx@earth.universe>
+From: Jiada Wang <jiada_wang@mentor.com>
+Subject: Re: [PATCH linux-next v1 3/4] arm64: ulcb: Add avb counter clock
+Date: Fri, 26 Oct 2018 11:19:21 +0900
+Message-ID: <1aff414d-14d4-9d94-1a42-b58a0ce48230@mentor.com>
+References: <20181025072349.15173-1-jiada_wang@mentor.com>
+ <20181025072349.15173-4-jiada_wang@mentor.com>
+ <CAMuHMdUciu+SJR+CsrwzkdUtX3L82xAzqgtrybYmcq--sR7Wig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181025201349.c4564dgc7743kosx@earth.universe>
+In-Reply-To: <CAMuHMdUciu+SJR+CsrwzkdUtX3L82xAzqgtrybYmcq--sR7Wig@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>, Craig Tatlor <ctatlor97@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26 October 2018 at 04:13, Sebastian Reichel
-<sebastian.reichel@collabora.com> wrote:
-> Hi Baolin,
->
-> On Thu, Oct 25, 2018 at 10:01:55AM +0800, Baolin Wang wrote:
->> Hi Sebastian,
->>
->> On 22 October 2018 at 15:43, Baolin Wang <baolin.wang@linaro.org> wrote:
->> > The internal resistance of a battery is not a constant in its life cycle,
->> > this varies over the age of the battery or temperature and so on. But we
->> > just want use one constant battery internal resistance to estimate the
->> > battery capacity. Thus this patch introduces one property to present
->> > the battery factory internal resistance for battery information.
->> >
->> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
->> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->> > ---
->> > Changes from v5:
->> >  - None.
->> >
->> > Changes from v4:
->> >  - None.
->> >
->> > Changes from v3:
->> >  - Split binding into one separate patch.
->> >  - Add LinusW reviewed tag.
->> >
->> > Changes from v2:
->> >  - Rename the property.
->> >  - Improve the commit message.
->> >
->> > Changes from v1:
->> >  - New patch in v2.
->> > ---
->>
->> I think this v6 patch set have addressed your comments on v5, so could
->> you apply this patch set if there are no other comments? I hope this
->> driver can be merged into 4.20 finally. Thanks.
->
-> Everything looks fine to me. I will merge this directly after the
-> 4.20 merge window has been closed and linux-next is open again.
-> I'm not merging non-trivial, non-bugfix patches this lates during the
-> release process.
+Hi Geert
 
-Understood. Thanks Sebastian.
+Thanks for your comment
 
--- 
-Baolin Wang
-Best Regards
+
+On 2018/10/26 5:22, Geert Uytterhoeven wrote:
+> Hi Jiada,
+>
+> On Thu, Oct 25, 2018 at 9:24 AM <jiada_wang@mentor.com> wrote:
+>> From: Jiada Wang <jiada_wang@mentor.com>
+>>
+>> Add avb counter clock node to R-Car ULCB boards
+>>
+>> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+> Thanks for your patch!
+>
+>> --- a/arch/arm64/boot/dts/renesas/ulcb.dtsi
+>> +++ b/arch/arm64/boot/dts/renesas/ulcb.dtsi
+>> @@ -32,6 +32,12 @@
+>>                  clock-frequency = <12288000>;
+>>          };
+>>
+>> +       clk_avb: avb-clock@ec5a011c {
+>> +               compatible = "renesas,clk-avb";
+>> +               reg = <0 0xec5a011c 0 0x24>;
+>> +               #clock-cells = <1>;
+>> +       };
+>> +
+>>          hdmi0-out {
+>>                  compatible = "hdmi-connector";
+>>                  type = "a";
+> Why would this belong in the board .dtsi, not in the SoC .dtsi?
+> (same for salvator-common.dtsi)
+right, it belongs to Soc .dtsi, I will move it to each Soc .dtsi
+> How is this intended to be used by the AVB?
+R-Car audio can use AVB clock to support continuous clock rate,
+with out AVB clock, currently only limited rates are supports by R-Car audio
+
+Thanks,
+Jiada
+> Gr{oetje,eeting}s,
+>
+>                          Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                  -- Linus Torvalds
