@@ -1,65 +1,74 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCH 3/6] PCI: layerscape: Add the EP mode support
-Date: Fri, 26 Oct 2018 07:42:11 +0000
-Message-ID: <HE1PR04MB14972C9176E68EEDBD3AD64BF5F00@HE1PR04MB1497.eurprd04.prod.outlook.com>
-References: <20181025110901.5680-1-xiaowei.bao@nxp.com>
- <20181025110901.5680-3-xiaowei.bao@nxp.com> <20181025215246.GA14861@bogus>
- <HE1PR04MB149735C7EF2A23AEE982BB9FF5F00@HE1PR04MB1497.eurprd04.prod.outlook.com>
- <CAK8P3a3Ty4bRuHiVHY6dh55b1ms8z7RpG2sALM0Dn_8Yd39-xQ@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v9 6/9] i3c: master: Add driver for Cadence IP
+Date: Fri, 26 Oct 2018 09:43:25 +0200
+Message-ID: <CAK8P3a0WDRpukjDBm1rGPnZiH2FJRpquWhEknOBg=CphNOYOwg@mail.gmail.com>
+References: <20181022133404.2061-1-boris.brezillon@bootlin.com>
+ <20181022133404.2061-7-boris.brezillon@bootlin.com> <20181024202048.7e3534f7@bbrezillon>
+ <CAK8P3a2DBgfvXs-9KzoDvbQpV+VN96xb7xHG-5=NDDgnt7ViVQ@mail.gmail.com>
+ <20181025180720.1790f6a1@bbrezillon> <CAK8P3a02ELWiMB_pe0bzbsMfdqYOG1G0bFnSHzGu3ZbQHatH2w@mail.gmail.com>
+ <20181025183005.3c0fa452@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a3Ty4bRuHiVHY6dh55b1ms8z7RpG2sALM0Dn_8Yd39-xQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181025183005.3c0fa452@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "cyrille.pitchen@free-electrons.com" <cyrille.pitchen@free-electrons.com>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>, "niklas.cassel@axis.com" <niklas.cassel@axis.com>, "linux-pci@vger.kernel.org" <linux-pci@>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, gregkh <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@he>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBhcm5kYmVyZ21hbm5AZ21haWwu
-Y29tIDxhcm5kYmVyZ21hbm5AZ21haWwuY29tPiBPbiBCZWhhbGYgT2YgQXJuZCBCZXJnbWFubg0K
-U2VudDogMjAxOOW5tDEw5pyIMjbml6UgMTU6MDENClRvOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5i
-YW9AbnhwLmNvbT4NCkNjOiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPjsgYmhlbGdhYXNA
-Z29vZ2xlLmNvbTsgbWFyay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExl
-byBMaSA8bGVveWFuZy5saUBueHAuY29tPjsga2lzaG9uQHRpLmNvbTsgbG9yZW56by5waWVyYWxp
-c2lAYXJtLmNvbTsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IE0uaC4gTGlhbiA8bWluZ2h1
-YW4ubGlhbkBueHAuY29tPjsgTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgUm95IFph
-bmcgPHJveS56YW5nQG54cC5jb20+OyBrc3Rld2FydEBsaW51eGZvdW5kYXRpb24ub3JnOyBjeXJp
-bGxlLnBpdGNoZW5AZnJlZS1lbGVjdHJvbnMuY29tOyBwb21icmVkYW5uZUBuZXhiLmNvbTsgc2hh
-d24ubGluQHJvY2stY2hpcHMuY29tOyBuaWtsYXMuY2Fzc2VsQGF4aXMuY29tOyBsaW51eC1wY2lA
-dmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBs
-aW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZw0KU3ViamVjdDogUmU6IFtQQVRDSCAzLzZdIFBD
-STogbGF5ZXJzY2FwZTogQWRkIHRoZSBFUCBtb2RlIHN1cHBvcnQNCg0KT24gMTAvMjYvMTgsIFhp
-YW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPiB3cm90ZToNCj4gRnJvbTogUm9iIEhlcnJp
-bmcgPHJvYmhAa2VybmVsLm9yZz4NCj4+IE9uIFRodSwgT2N0IDI1LCAyMDE4IGF0IDA3OjA4OjU4
-UE0gKzA4MDAsIFhpYW93ZWkgQmFvIHdyb3RlOg0KPj4+ICAgICAgICAgICJmc2wsbHMyMDgwYS1w
-Y2llIiwgImZzbCxsczIwODVhLXBjaWUiLCAic25wcyxkdy1wY2llIg0KPj4+ICAgICAgICAgICJm
-c2wsbHMyMDg4YS1wY2llIg0KPj4+ICAgICAgICAgICJmc2wsbHMxMDg4YS1wY2llIg0KPj4+ICAg
-ICAgICAgICJmc2wsbHMxMDQ2YS1wY2llIg0KPj4+ICAgICAgICAgICJmc2wsbHMxMDEyYS1wY2ll
-DQo+Pj4gKyAgRVAgbW9kZToNCj4+PiArICAgICAgICAiZnNsLGxzLXBjaWUtZXAiDQo+Pg0KPiA+
-IFlvdSBuZWVkIFNvQyBzcGVjaWZpYyBjb21wYXRpYmxlcyBmb3IgdGhlIHNhbWUgcmVhc29ucyBh
-cyB0aGUgUkMuDQo+DQo+IFtYaWFvd2VpIEJhb10gSSB3YW50IHRvIGNvbnRhaW5zIGFsbCBsYXll
-cnNjYXBlIHBsYXRmb3JtIHVzZSBvbmUgDQo+IGNvbXBhdGlibGUgaWYgdGhlIFBDSWUgY29udHJv
-bGxlciB3b3JrIGluIEVQIG1vZGUuDQoNCkRvIHlvdSBtZWFuIG9ubHkgb25lIG9mIHRoZSBTb0Nz
-IHRoYXQgc3VwcG9ydCBSQyBtb2RlIGhhcyBFUCBtb2RlPw0KSSB0aGluayB5b3Ugc3RpbGwgbmVl
-ZCBhIFNvQyBzcGVjaWZpYyBjb21wYXRpYmxlIGFzIFJvYiBleHBsYWluZWQsIGluIGNhc2UgdGhl
-cmUgd2lsbCBiZSBhIHNlY29uZCBvbmUgaW4gdGhlIGZ1dHVyZS4NCg0KSWYgeW91IHdhbnQgdG8g
-ZW5zdXJlIHRoYXQgeW91IGRvbid0IGhhdmUgdG8gdXBkYXRlIHRoZSBkZXZpY2UgZHJpdmVyIGZv
-ciBlYWNoIG5ldyBjaGlwIHRoYXQgY29tZXMgaW4gd2hlbiB0aGUgRVAgbW9kZSBpcyBjb21wYXRp
-YmxlLCB0aGUgd2F5IHRoaXMgaXMgaGFuZGxlZCBpcyB0byBsaXN0IG11bHRpcGxlIHZhbHVlcyBp
-biB0aGUgY29tcGF0aWJsZSBwcm9wZXJ0eSwgbGlzdGluZyB0aGUgZmlyc3QgU29DIHRoYXQgaW50
-cm9kdWNlZCB0aGUgc3BlY2lmaWMgdmVyc2lvbiBvZiB0aGF0IElQIGJsb2NrIGFzIHRoZSBtb3N0
-IGdlbmVyaWMgdHlwZSwgZS5nLg0KDQogIGNvcGF0aWJsZSA9ICJmc2wsbHMyMDg4YS1wY2llLWVw
-IiwgImZzbCxsczEwMTJhLXBjaWUtZXAiLCAic25wcyxkdy1wY2llLWVwIjsNCg0KRm9yIGNvbnNp
-c3RlbmN5LCBpdCBwcm9iYWJseSBpcyBiZXN0IHRvIG1hdGNoIGVhY2ggUkMgbW9kZSB2YWx1ZSB3
-aXRoIHRoZSBjb3JyZXNwb25kaW5nIEVQIG1vZGUgc3RyaW5nIGZvciBlYWNoIGRldmljZSB0aGF0
-IGNhbiBzdXBwb3J0IGJvdGggKGlmIHRoZXJlIGlzIG1vcmUgdGhhbiBvbmUpLg0KDQogICAgICBB
-cm5kDQpbWGlhb3dlaSBCYW9dIE15IG1lYW4gaXMgdGhhdCB0aGUgbHMtcGNpZS1lcCBjb21wYXRp
-YmxlcyB3aWxsIGNvbnRhaW4gYWxsIGxheWVyc2NhcGUgU09DcyBvZiBOWFAsIGUuZzogbHMxMDQ2
-YS1wY2llLWVwLCBmc2wsbHMyMDg4YS1wY2llLWVwLCBsczIwODhhLXBjaWUtZXAgYW5kIHNvIG9u
-LCBvdGhlciBsYXllcnNjYXBlIFNPQ3MgaGF2ZSBub3QgdGVzdCBleGNlcHQgdGhlIGxzMTA0NmEs
-IEkgdGhpbmsgaXQgaXMgY29tcGF0aWJsZSBpZiB0aGUgbmV3IGNoaXAgb3Igb3RoZXIgU09DcyB1
-c2UgdGhlIERXIGNvcmUsIE9LLCBJIHdpbGwgZGlzY3VzcyB0aGlzIGlzc3VlIGludGVybmFsbHks
-IGFuZCByZXBseSB0byB5b3UgbGF0ZXIuDQo=
+On Thu, Oct 25, 2018 at 6:30 PM Boris Brezillon
+<boris.brezillon@bootlin.com> wrote:
+> On Thu, 25 Oct 2018 18:13:51 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
+> On Thu, Oct 25, 2018 at 6:07 PM Boris Brezillon <boris.brezillon@bootlin.com> wrote:
+> > > On Thu, 25 Oct 2018 17:30:26 +0200
+> > > Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > On 10/24/18, Boris Brezillon <boris.brezillon@bootlin.com> wrote:
+> > > > > On Mon, 22 Oct 2018 15:34:01 +0200
+> > > I guess I could dynamically allocate the payload, but that requires
+> > > going over all users of i3c_send_ccc_cmd() to patch them.
+> >
+> > This reminds me that Wolfram mentioned in his ELC talk that the
+> > buffers on i3c should all be DMA capable to make life easier for
+> > i3c master drivers that want to implement DMA transfers.
+>
+> And this is the case for all buffers passed to
+> i3c_device_do_priv_xfers() (and soon i3c_device_send_hdr_cmd()),
+> but I did not enforce that for the internal
+> i3c_master_send_ccc_cmd_locked() helper, maybe I should...
+> It was just convenient to place the object to be transmitted/received on
+> the stack.
+
+Ok. Is i3c_master_send_ccc_cmd_locked() what implements the public
+interfaces then, or is this something else?
+
+If you place a buffer on the stack, it is not DMA capable, but
+it is guaranteed to be at least 32-bit word aligned, and should
+not cause an exception in readsl(), unless it starts with a couple of
+(not multiple of four)  extra bytes that are not sent to the devices.
+Is that what happens here?
+
+> > If we have buffers here that are not aligned to cache lines
+> > (or even just 32 bit words), doesn't that also mean that the
+> > same buffers are not DMA capable either?
+>
+> Yep, if it's not cache-line-aligned (and on the stack), it's not
+> DMA-able.
+
+This sounds like a more fundamental problem to solve first
+then. Obviously it is incredibly /useful/ to be able to put short
+i2c or i3c messages on the stack, but allowing that in general
+also prevents the use of DMA without bounce buffers.
+
+One way to address this might be to always bounce any
+messages that are less than a cache line through a
+(pre-)kmallocated buffer, and require any longer messages
+to be cache capable. This could also solve the issue with
+readsl(), but it would be a rather confusing user interface.
+
+Another option might be to have separate interfaces for
+"short" and "long" messages at the API level and have
+distinct rules for those: short would always be bounced
+by the i3c code, and long puts restrictions on the buffer
+location.
+
+       Arnd
