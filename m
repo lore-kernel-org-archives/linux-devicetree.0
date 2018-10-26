@@ -1,40 +1,90 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH anybus v1 2/4] dt-bindings: anybus-bridge: document
- devicetree binding.
-Date: Fri, 26 Oct 2018 07:39:21 +0100
-Message-ID: <20181026063921.GF4870@dell>
-References: <20181025154656.10153-1-TheSven73@googlemail.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH v2 00/10] Add support for TISCI irqchip drivers
+Date: Fri, 26 Oct 2018 12:09:01 +0530
+Message-ID: <bc7312c2-b068-ddda-b183-54e6bc3f8219@ti.com>
+References: <20181018154017.7112-1-lokeshvutla@ti.com>
+ <942981b8-7536-2b6b-ad49-dc59671cbda6@oracle.com>
+ <050161aa-a257-9bf8-b3c9-35b13925b556@ti.com>
+ <38811dd7-0645-0439-092d-6759ab52cb0a@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181025154656.10153-1-TheSven73@googlemail.com>
+In-Reply-To: <38811dd7-0645-0439-092d-6759ab52cb0a@oracle.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: thesven73@gmail.com
-Cc: svendev@arcx.com, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, treding@nvidia.com, david@lechnology.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, stuyoder@gmail.com, linus.walleij@linaro.org, maxime.ripard@bootlin.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@oracle.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
+Cc: Santosh Shilimkar <ssantosh@kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 25 Oct 2018, thesven73@gmail.com wrote:
+Hi Santosh,
 
-> >> This is why the bridge driver has a dependency on a pwm.
-> >> If the pwm could be enabled individually, I could drop this dependency.
-> >> Can you think of a way?
-> >
-> > How about using the pwm-clock device tree binding to turn the PWM into
-> > a clock?
-> > Documentation/devicetree/bindings/clock/pwm-clock.txt
+On Tuesday 23 October 2018 11:04 PM, Santosh Shilimkar wrote:
+> On 10/23/2018 1:17 AM, Lokesh Vutla wrote:
+>> Hi Santosh,
+>>
+>> On Tuesday 23 October 2018 02:09 AM, Santosh Shilimkar wrote:
+>>> On 10/18/2018 8:40 AM, Lokesh Vutla wrote:
+>>>> TISCI abstracts the handling of IRQ routes where interrupt sources
+>>>> are not directly connected to host interrupt controller. This series
+>>>> adds support for:
+>>>> - TISCI commands needed for IRQ configuration
+>>>> - Interrupt Router(INTR) and Interrupt Aggregator(INTA) drivers
+>>>>
+>>>> More information on TISCI IRQ management can be found here[1].
+>>>> Complete TISCI resource management information can be found here[2].
+>>>> AM65x SoC related TISCI information can be found here[3].
+>>>> INTR and INTA related information can be found in TRM[4].
+>>>>
+>>> I didn't read the specs but from what you described in
+>>> INTA and INTR bindings, does the flow of IRQs like below ?
+>>>
+>>> Device IRQ(e.g USB) -->INTR-->INTA--->HOST IRQ controller(GIC)
+>>
+>> Not all devices in SoC are connected to INTA. Only the devices that are
+>> capable of generating events are connected to INTA. And INTA is
+>> connected to INTR.
+>>
+>> So there are three ways in which IRQ can flow in AM65x SoC:
+>> 1) Device directly connected to GIC
+>>       - Device IRQ --> GIC
+>>       - (Most legacy peripherals like MMC, UART falls in this case)
+>> 2) Device connected to INTR.
+>>       - Device IRQ --> INTR --> GIC
+>>       - This is cases where you want to mux IRQs. Used for GPIOs and
+>> Mailboxes
+>>       - (This is somewhat similar to crossbar on DRA7 devices)
+>> 3) Devices connected to INTA.
+>>       - Device Event --> INTA --> INTR --> GIC
+>>       - Used for DMA and networking devices.
+>>
+>> Events are messages based on a hw protocol, sent by a master over a
+>> dedicated Event transport lane. Events are highly precise that no
+>> under/over flow of data transfer occurs at source/destination regardless
+>> of distance and latency. So this is mostly preferred in DMA and
+>> networking usecases. Now Interrupt Aggregator(IA) has the logic to
+>> converts these events to Interrupts.
+>>
+> This helps but none of the kernel doc you added, makes this clear so
+> perhaps you want to add this info to make that clear for reviewers
+> as well as for future reference.
+
+Sure will add it.
+
 > 
-> Looks like a winner. Thanks !!
+> Now regarding the events, no matter how they are routed/processed
+> within SOC, they are essentially interrupts so I do agree with
+> Marc's other comment.
 
-Could you fix your mailed to reply to mails 'threaded' please?
+Agreed. Marc suggested to use MSI in this scenario. Currently working in that 
+direction. Will repost the series once it is done.
 
-Your mails are now spread far and wide across my Inbox.
+Thanks and regards,
+Lokesh
 
-Thanks.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> 
+> Thanks for explanation again !!
+> 
+> regards,
+> Santosh
+> 
