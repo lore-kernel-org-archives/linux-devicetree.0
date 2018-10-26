@@ -1,121 +1,29 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: [PATCH 2/2] ARM: dts: at91: sama5d2_xplained: Add proper regulator
- states for suspend-to-mem
-Date: Fri, 26 Oct 2018 16:19:51 +0000
-Message-ID: <1540570753-16370-3-git-send-email-claudiu.beznea@microchip.com>
-References: <1540570753-16370-1-git-send-email-claudiu.beznea@microchip.com>
+From: vitor <vitor.soares@synopsys.com>
+Subject: Re: [PATCH v10 0/9] Add the I3C subsystem
+Date: Fri, 26 Oct 2018 17:20:42 +0100
+Message-ID: <87738b8d-8033-9ef1-b0fb-059b64b0dc96@synopsys.com>
+References: <20181026144333.12276-1-boris.brezillon@bootlin.com>
+ <ad79f586-860e-bf57-9970-f58dc16d33b8@synopsys.com>
+ <20181026181548.53228a4b@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1540570753-16370-1-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <20181026181548.53228a4b@bbrezillon>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, boris.brezillon@bootlin.com, Claudiu.Beznea@microchip.com
+To: Boris Brezillon <boris.brezillon@bootlin.com>, vitor <vitor.soares@synopsys.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetr>
 List-Id: devicetree@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@bootlin.com>
 
-When entering suspend-to-mem, all PMIC outputs are disabled except
-VDDIODDR which is put in power saving mode, and whose voltage is
-increased (probably to counter the poor accuracy of power saving mode).
+On 26/10/18 17:15, Boris Brezillon wrote:
+> On Fri, 26 Oct 2018 16:22:06 +0100
+> vitor <vitor.soares@synopsys.com> wrote:
+>
+>> Can you update the i3c/next tree?
+> Done.
 
-Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-[claudiu.beznea@microchip.com: use regulator-changeable-in-suspend,
- regulator-suspend-max-microvolt, regulator-suspend-max-microvolt]
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 33 +++++++++++++++++++++++++=
-++++
- 1 file changed, 33 insertions(+)
+Thanks.
 
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dt=
-s/at91-sama5d2_xplained.dts
-index fcc85d70f36e..0137d7432834 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -182,6 +182,15 @@
- 							regulator-min-microvolt =3D <1350000>;
- 							regulator-max-microvolt =3D <1350000>;
- 							regulator-always-on;
-+
-+							regulator-state-mem {
-+								regulator-on-in-suspend;
-+								regulator-suspend-min-microvolt=3D<1400000>;
-+								regulator-suspend-max-microvolt=3D<1400000>;
-+								regulator-changeable-in-suspend;
-+								/* Power saving mode. */
-+								regulator-mode=3D<0>;
-+							};
- 						};
-=20
- 						vdd_1v2_reg: REG_DCDC2 {
-@@ -189,6 +198,10 @@
- 							regulator-min-microvolt =3D <1100000>;
- 							regulator-max-microvolt =3D <1300000>;
- 							regulator-always-on;
-+
-+							regulator-state-mem {
-+								regulator-off-in-suspend;
-+							};
- 						};
-=20
- 						vdd_3v3_reg: REG_DCDC3 {
-@@ -196,6 +209,10 @@
- 							regulator-min-microvolt =3D <3300000>;
- 							regulator-max-microvolt =3D <3300000>;
- 							regulator-always-on;
-+
-+							regulator-state-mem {
-+								regulator-off-in-suspend;
-+							};
- 						};
-=20
- 						vdd_fuse_reg: REG_LDO1 {
-@@ -203,6 +220,10 @@
- 							regulator-min-microvolt =3D <2500000>;
- 							regulator-max-microvolt =3D <2500000>;
- 							regulator-always-on;
-+
-+							regulator-state-mem {
-+								regulator-off-in-suspend;
-+							};
- 						};
-=20
- 						vdd_3v3_lp_reg: REG_LDO2 {
-@@ -210,6 +231,10 @@
- 							regulator-min-microvolt =3D <3300000>;
- 							regulator-max-microvolt =3D <3300000>;
- 							regulator-always-on;
-+
-+							regulator-state-mem {
-+								regulator-off-in-suspend;
-+							};
- 						};
-=20
- 						vdd_led_reg: REG_LDO3 {
-@@ -217,6 +242,10 @@
- 							regulator-min-microvolt =3D <3300000>;
- 							regulator-max-microvolt =3D <3300000>;
- 							regulator-always-on;
-+
-+							regulator-state-mem {
-+								regulator-off-in-suspend;
-+							};
- 						};
-=20
- 						vdd_sdhc_1v8_reg: REG_LDO4 {
-@@ -224,6 +253,10 @@
- 							regulator-min-microvolt =3D <1800000>;
- 							regulator-max-microvolt =3D <1800000>;
- 							regulator-always-on;
-+
-+							regulator-state-mem {
-+								regulator-off-in-suspend;
-+							};
- 						};
- 					};
-=20
---=20
-2.7.4
+I will apply the driver and them I give you feedback.
