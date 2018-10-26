@@ -1,147 +1,137 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 0/2] arm64: Cut rebuild time when changing
- CONFIG_BLK_DEV_INITRD
-Date: Thu, 25 Oct 2018 16:07:13 -0700
-Message-ID: <1bb3bd63-a88e-b668-ea36-f0f985c0e2b1@gmail.com>
-References: <20181024193256.23734-1-f.fainelli@gmail.com>
- <CAL_Jsq+KCOv6pXXHhHDZ+7-QUrmtMDvSjEVhK15yZ3qbnn61Ag@mail.gmail.com>
- <20181025093833.GA23607@rapoport-lnx>
- <CAL_JsqL62ttsGSbE1BS5v-mX3pKE-p_HyvuZD6nB+GUbQyetzg@mail.gmail.com>
- <20181025172935.GA27364@rapoport-lnx>
- <CAL_JsqJrMq+QHvuOsqEdCFchmXsd4s2XKUD_TboKzeEQprJvjg@mail.gmail.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH 4/9] dt-bindings: Add ANX6345 DP/eDP
+ transmitter binding
+Date: Fri, 26 Oct 2018 08:08:43 +0800
+Message-ID: <3E73AB92-AFD7-4DA6-AF42-725B894DE114@aosc.io>
+References: <20181018073327.64942-1-icenowy@aosc.io> <1886367.eljNk7jKYl@avalon> <c68f0da9607805e1f6673a9a16a7dcfff4d8fe91.camel@aosc.io> <2778638.na8ndVNUfi@avalon> <f71d442412f31828c466e3483e9d42f5e96ddc1d.camel@aosc.io> <20181025183003.GA12672@bogus>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJrMq+QHvuOsqEdCFchmXsd4s2XKUD_TboKzeEQprJvjg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, rppt@linux.ibm.com
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Olof Johansson <olof@lixom.net>, linux-alpha@vger.kernel.org, arcml <linux-snps-arc@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-c6x-dev@linux-c6x.org, "moderated list:H8/300 ARCHITECTURE" <uclinux-h8-devel@lists.sourceforge.jp>, linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org, Linux-MIPS <linux-mips@linux-mips.org>, nios2-dev@lis
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBGFWZHPAKGQE757E2UY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181025183003.GA12672@bogus>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/18 2:13 PM, Rob Herring wrote:
-> On Thu, Oct 25, 2018 at 12:30 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
->>
->> On Thu, Oct 25, 2018 at 08:15:15AM -0500, Rob Herring wrote:
->>> +Ard
->>>
->>> On Thu, Oct 25, 2018 at 4:38 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
->>>>
->>>> On Wed, Oct 24, 2018 at 02:55:17PM -0500, Rob Herring wrote:
->>>>> On Wed, Oct 24, 2018 at 2:33 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->>>>>>
->>>>>> Hi all,
->>>>>>
->>>>>> While investigating why ARM64 required a ton of objects to be rebuilt
->>>>>> when toggling CONFIG_DEV_BLK_INITRD, it became clear that this was
->>>>>> because we define __early_init_dt_declare_initrd() differently and we do
->>>>>> that in arch/arm64/include/asm/memory.h which gets included by a fair
->>>>>> amount of other header files, and translation units as well.
->>>>>
->>>>> I scratch my head sometimes as to why some config options rebuild so
->>>>> much stuff. One down, ? to go. :)
->>>>>
->>>>>> Changing the value of CONFIG_DEV_BLK_INITRD is a common thing with build
->>>>>> systems that generate two kernels: one with the initramfs and one
->>>>>> without. buildroot is one of these build systems, OpenWrt is also
->>>>>> another one that does this.
->>>>>>
->>>>>> This patch series proposes adding an empty initrd.h to satisfy the need
->>>>>> for drivers/of/fdt.c to unconditionally include that file, and moves the
->>>>>> custom __early_init_dt_declare_initrd() definition away from
->>>>>> asm/memory.h
->>>>>>
->>>>>> This cuts the number of objects rebuilds from 1920 down to 26, so a
->>>>>> factor 73 approximately.
->>>>>>
->>>>>> Apologies for the long CC list, please let me know how you would go
->>>>>> about merging that and if another approach would be preferable, e.g:
->>>>>> introducing a CONFIG_ARCH_INITRD_BELOW_START_OK Kconfig option or
->>>>>> something like that.
->>>>>
->>>>> There may be a better way as of 4.20 because bootmem is now gone and
->>>>> only memblock is used. This should unify what each arch needs to do
->>>>> with initrd early. We need the physical address early for memblock
->>>>> reserving. Then later on we need the virtual address to access the
->>>>> initrd. Perhaps we should just change initrd_start and initrd_end to
->>>>> physical addresses (or add 2 new variables would be less invasive and
->>>>> allow for different translation than __va()). The sanity checks and
->>>>> memblock reserve could also perhaps be moved to a common location.
->>>>>
->>>>> Alternatively, given arm64 is the only oddball, I'd be fine with an
->>>>> "if (IS_ENABLED(CONFIG_ARM64))" condition in the default
->>>>> __early_init_dt_declare_initrd as long as we have a path to removing
->>>>> it like the above option.
->>>>
->>>> I think arm64 does not have to redefine __early_init_dt_declare_initrd().
->>>> Something like this might be just all we need (completely untested,
->>>> probably it won't even compile):
->>>>
->>>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->>>> index 9d9582c..e9ca238 100644
->>>> --- a/arch/arm64/mm/init.c
->>>> +++ b/arch/arm64/mm/init.c
->>>> @@ -62,6 +62,9 @@ s64 memstart_addr __ro_after_init = -1;
->>>>  phys_addr_t arm64_dma_phys_limit __ro_after_init;
->>>>
->>>>  #ifdef CONFIG_BLK_DEV_INITRD
->>>> +
->>>> +static phys_addr_t initrd_start_phys, initrd_end_phys;
->>>> +
->>>>  static int __init early_initrd(char *p)
->>>>  {
->>>>         unsigned long start, size;
->>>> @@ -71,8 +74,8 @@ static int __init early_initrd(char *p)
->>>>         if (*endp == ',') {
->>>>                 size = memparse(endp + 1, NULL);
->>>>
->>>> -               initrd_start = start;
->>>> -               initrd_end = start + size;
->>>> +               initrd_start_phys = start;
->>>> +               initrd_end_phys = end;
->>>>         }
->>>>         return 0;
->>>>  }
->>>> @@ -407,14 +410,27 @@ void __init arm64_memblock_init(void)
->>>>                 memblock_add(__pa_symbol(_text), (u64)(_end - _text));
->>>>         }
->>>>
->>>> -       if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && initrd_start) {
->>>> +       if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) &&
->>>> +           (initrd_start || initrd_start_phys)) {
->>>> +               /*
->>>> +                * FIXME: ensure proper precendence between
->>>> +                * early_initrd and DT when both are present
->>>
->>> Command line takes precedence, so just reverse the order.
->>>
->>>> +                */
->>>> +               if (initrd_start) {
->>>> +                       initrd_start_phys = __phys_to_virt(initrd_start);
->>>> +                       initrd_end_phys = __phys_to_virt(initrd_end);
-> 
-> BTW, I think you meant virt_to_phys() here?
-> 
->>>
->>> AIUI, the original issue was doing the P2V translation was happening
->>> too early and the VA could be wrong if the linear range is adjusted.
->>> So I don't think this would work.
->>
->> Probably things have changed since then, but in the current code there is
->>
->>                 initrd_start = __phys_to_virt(initrd_start);
->>
->> and in between only the code related to CONFIG_RANDOMIZE_BASE, so I believe
->> it's safe to use __phys_to_virt() here as well.
-> 
-> Here is fine yes, but I believe it was the the phys to virt in the DT
-> code before adjusting the linear range that was the problem.
 
-FWIW, I am extracting the ARM implementation that parses the initrd
-early command line parameter and the "setup" code doing the page
-boundary alignment and memblock checking into a helper into lib/ that
-other architectures can re-use. So far, this removes the need for
-unicore32, arc and arm to duplicate essentially the same logic.
--- 
-Florian
+
+=E4=BA=8E 2018=E5=B9=B410=E6=9C=8826=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=882=
+:30:03, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> =E5=86=99=E5=88=B0:
+>On Thu, Oct 18, 2018 at 08:40:11PM +0800, Icenowy Zheng wrote:
+>> =E5=9C=A8 2018-10-18=E5=9B=9B=E7=9A=84 14:23 +0300=EF=BC=8CLaurent Pinch=
+art=E5=86=99=E9=81=93=EF=BC=9A
+>> > Hi Icenowy,
+>> >=20
+>> > On Thursday, 18 October 2018 13:00:05 EEST Icenowy Zheng wrote:
+>> > > =E5=9C=A8 2018-10-18=E5=9B=9B=E7=9A=84 11:53 +0300=EF=BC=8CLaurent P=
+inchart=E5=86=99=E9=81=93=EF=BC=9A
+>> > > > On Thursday, 18 October 2018 10:33:22 EEST Icenowy Zheng wrote:
+>> > > > > The ANX6345 is an ultra-low power DisplayPort/eDP transmitter
+>> > > > > designed
+>> > > > > for portable devices.
+>> > > > >=20
+>> > > > > Add a binding document for it.
+>> > > > >=20
+>> > > > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> > > > > ---
+>> > > > >=20
+>> > > > >  .../bindings/display/bridge/anx6345.txt       | 39
+>> > > > > +++++++++++++++++++
+>> > > > >=20
+>> > > > >  1 file changed, 39 insertions(+)
+>> > > > >  create mode 100644
+>> > > > >=20
+>> > > > > Documentation/devicetree/bindings/display/bridge/anx6345.txt
+>> > > > >=20
+>> > > > > diff --git
+>> > > > >
+>a/Documentation/devicetree/bindings/display/bridge/anx6345.txt
+>> > > > >
+>b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
+>> > > > > new
+>> > > > > file
+>> > > > > mode 100644
+>> > > > > index 000000000000..0689d4eb5f65
+>> > > > > --- /dev/null
+>> > > > > +++
+>> > > > >
+>b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
+>> > > > > @@ -0,0 +1,39 @@
+>> > > > > +Analogix ANX6345 eDP Transmitter
+>> > > > > +--------------------------------
+>> > > > > +
+>> > > > > +The ANX6345 is an ultra-low power Full-HD eDP transmitter
+>> > > > > designed
+>> > > > > for
+>> > > > > +portable devices.
+>> > > > > +
+>> > > > > +Required properties:
+>> > > > > +
+>> > > > > + - compatible		: "analogix,anx6345"
+>> > > > > + - reg			: I2C address of the device
+>> > > > > + - reset-gpios		: Which GPIO to use for reset
+>> > > > > +
+>> > > > > +Optional properties:
+>> > > > > +
+>> > > > > + - dvdd12-supply	: Regulator for 1.2V digital core
+>> > > > > power.
+>> > > > > + - dvdd25-supply	: Regulator for 2.5V digital core
+>> > > > > power.
+>> > > >=20
+>> > > > Shouldn't these to supplies be mandatory ?
+>> > >=20
+>> > > Yes they should.
+>> > >=20
+>> > > > > + - panel-supply		: Regulator for the power of
+>> > > > > the panel.
+>> > > >=20
+>> > > > Shouldn't the panel supply for specified in the DT node of the
+>> > > > panel
+>> > > > ?
+>> > >=20
+>> > > However, eDP panel can be probed, may vary on the same device,
+>and
+>> > > we
+>> > > don't have a generic binding for it...
+>> >=20
+>> > Shouldn't we fix that ? :-)
+>>=20
+>> Maybe we should create a connector binding instead of a panel
+>binding?
+>
+>There's not any such thing as a standard eDP connector, is there?=20
+>Otherwise, that's just creating a generic panel binding in disguise.=20
+>Maybe if eDP interface is standardized enough in terms of power
+>control,=20
+>control lines, EDID at least sometimes present, etc., then we could
+
+eDP has the same display signal set with DP, including AUX which
+carries DPCD and EDID (if present).
+
+But I don't know whether other lines are standardized, including power, bac=
+klight, etc.
+
+>have=20
+>some sort of generic eDP panel/connector binding.
+>
+>Rob
+>
+>_______________________________________________
+>linux-arm-kernel mailing list
+>linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
