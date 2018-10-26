@@ -1,50 +1,46 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: [PATCH v5 5/5] arm64: dts: qcom: sdm845: Add USB PHY lane two
-Date: Fri, 26 Oct 2018 10:35:44 -0700
-Message-ID: <20181026173544.136037-6-evgreen@chromium.org>
-References: <20181026173544.136037-1-evgreen@chromium.org>
+From: Carlos Iglesias <carlos.iglesias@emutex.com>
+Subject: [PATCH 0/2] iio: pressure: Add support for Honeywell HSC SPI sensors
+Date: Fri, 26 Oct 2018 18:14:35 +0000
+Message-ID: <20181026181406.14545-1-carlos.iglesias@emutex.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181026173544.136037-1-evgreen@chromium.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Douglas Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jic23@kernel.org" <jic23@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dan O'Donovan <dan.odonovan@emutex.com>, Carlos Iglesias <carlos.iglesias@emutex.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the second lane registers for the USB PHY, now that the
-QMP phy bindings have been updated. This way the driver can stop
-reaching beyond its register region to get at the second lane.
+Hi all,
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
----
+The Honeywell HSC is a series of pressure sensors that provide different
+pressure ranges and measurement types (absolute, differential, gauge). The
+available output types are analog, I2C or SPI (see [1]).
 
-Changes in v5: None
-Changes in v4: None
-Changes in v3:
- - Removed erroneous fixup for USB UniPro PHY, which is not dual lane (Doug)
+This driver provides support for a limited set of the HSC sensor models,
+namely the absolute pressure sensors with SPI interface.
 
-Changes in v2: None
+References:
+[1] Datasheet https://sensing.honeywell.com/honeywell-sensing-trustability-=
+hsc-series-high-accuracy-board-mount-pressure-sensors-50099148-a-en.pdf
+[2] SPI Communications with Honeywell Digital Output Pressure Sensors https=
+://sensing.honeywell.com/spi-comms-digital-ouptu-pressure-sensors-tn-008202=
+-3-en-final-30may12.pdf
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Carlos Iglesias (2):
+  dt-bindings: iio: pressure: Add support for Honeywell HSC SPI sensors
+  iio: pressure: Add support for Honeywell HSC SPI sensors
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 9c72edb678ec..ff2db36ec4fa 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1188,10 +1188,12 @@
- 				 <&gcc GCC_USB3_PHY_PRIM_BCR>;
- 			reset-names = "phy", "common";
- 
--			usb_1_ssphy: lane@88e9200 {
-+			usb_1_ssphy: lanes@88e9200 {
- 				reg = <0x88e9200 0x128>,
- 				      <0x88e9400 0x200>,
- 				      <0x88e9c00 0x218>,
-+				      <0x88e9600 0x128>,
-+				      <0x88e9800 0x200>,
- 				      <0x88e9a00 0x100>;
- 				#phy-cells = <0>;
- 				clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
--- 
-2.16.4
+ .../bindings/iio/pressure/hsc_spi.txt         |  85 +++
+ MAINTAINERS                                   |   6 +
+ drivers/iio/pressure/Kconfig                  |  10 +
+ drivers/iio/pressure/Makefile                 |   2 +
+ drivers/iio/pressure/hsc_spi.c                | 543 ++++++++++++++++++
+ 5 files changed, 646 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/pressure/hsc_spi.=
+txt
+ create mode 100644 drivers/iio/pressure/hsc_spi.c
+
+--=20
+2.19.1
