@@ -1,128 +1,107 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v3 25/25] arm64: dts: allwinner:
- a64-amarula-relic: Enable Techstar TS8550B MIPI-DSI panel
-Date: Fri, 26 Oct 2018 20:13:44 +0530
-Message-ID: <20181026144344.27778-26-jagan@amarulasolutions.com>
-References: <20181026144344.27778-1-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH v2 5/6] dt-bindings: drm/panel: simple: Innolux TV123WAM
+ is actually P120ZDG-BF1
+Date: Fri, 26 Oct 2018 10:46:57 -0400
+Message-ID: <20181026144657.GU154160@art_vandelay>
+References: <20181025222134.174583-1-dianders@chromium.org>
+ <20181025222134.174583-5-dianders@chromium.org>
+ <20181026144356.GS154160@art_vandelay>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBSWRZTPAKGQE7RBO24A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181026144344.27778-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20181026144356.GS154160@art_vandelay>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-arm-msm@vger.kernel.org, Sandeep Panda <spanda@codeaurora.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, ryandcase@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Amarula A64-Relic board by default bound with Techstar TS8550B
-MIPI-DSI panel, add support for it.
-
-DSI panel connected via board DSI port with,
-- DC1SW as AVDD supply
-- DCDC2 as DVDD supply
-- DCDC1 as VCC-DSI supply
-- PD24 gpio for reset pin
-- PD23 gpio for backlight enable pin
-
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Tested-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
-Changes for v3:
-- new patch
-
- .../allwinner/sun50i-a64-amarula-relic.dts    | 46 +++++++++++++++++++
- 1 file changed, 46 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-index 6cb2b7f0c817..ecc0d8094815 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-@@ -9,6 +9,7 @@
- #include "sun50i-a64.dtsi"
- 
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pwm/pwm.h>
- 
- / {
- 	model = "Amarula A64-Relic";
-@@ -18,6 +19,14 @@
- 		serial0 = &uart0;
- 	};
- 
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
-+		brightness-levels = <1 2 4 8 16 32 64 128 512>;
-+		default-brightness-level = <2>;
-+		enable-gpios = <&pio 3 23 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PD23 */
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -30,6 +39,28 @@
- 	};
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
-+&dphy {
-+	status = "okay";
-+};
-+
-+&dsi {
-+	vcc-dsi-supply = <&reg_dldo1>;
-+	status = "okay";
-+
-+	panel@0 {
-+		compatible = "techstar,ts8550b";
-+		reg = <0>;
-+		avdd-supply = <&reg_dc1sw>;
-+		dvdd-supply = <&reg_dldo2>;
-+		reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
-+		backlight = <&backlight>;
-+	};
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -72,6 +103,12 @@
- 	status = "okay";
- };
- 
-+&pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm_pin>;
-+	status = "okay";
-+};
-+
- &r_rsb {
- 	status = "okay";
- 
-@@ -107,6 +144,15 @@
- 	regulator-name = "vcc-pll-avcc";
- };
- 
-+&reg_dc1sw {
-+	/*
-+	 * This regulator also indirectly drives the PD pingroup GPIOs,
-+	 * which also controls the power LED.
-+	 */
-+	regulator-always-on;
-+	regulator-name = "vcc-phy";
-+};
-+
- &reg_dcdc1 {
- 	regulator-always-on;
- 	regulator-min-microvolt = <3300000>;
--- 
-2.18.0.321.gffc6fa0e3
+T24gRnJpLCBPY3QgMjYsIDIwMTggYXQgMTA6NDM6NTZBTSAtMDQwMCwgU2VhbiBQYXVsIHdyb3Rl
+Ogo+IE9uIFRodSwgT2N0IDI1LCAyMDE4IGF0IDAzOjIxOjMzUE0gLTA3MDAsIERvdWdsYXMgQW5k
+ZXJzb24gd3JvdGU6Cj4gPiBBcyBmYXIgYXMgSSBjYW4gdGVsbCB0aGUgYmluZGluZ3MgdGhhdCB3
+ZXJlIGFkZGVkIGluIGNvbW1pdAo+ID4gOWMwNDQwMGY3ZWE2ICgiZHQtYmluZGluZ3M6IGRybS9w
+YW5lbDogRG9jdW1lbnQgSW5ub2x1eCBUVjEyM1dBTSBwYW5lbAo+ID4gYmluZGluZ3MiKSB3ZXJl
+bid0IGFjdHVhbGx5IGZvciBJbm5vbHV4IFRWMTIzV0FNIGJ1dCB3ZXJlIGFjdHVhbGx5IGZvcgo+
+ID4gSW5ub2x1eCBQMTIwWkRHLUJGMS4KPiA+IAo+ID4gQXMgZmFyIGFzIEkgY2FuIHRlbGwgdGhl
+IElubm9sdXggVFYxMjNXQU0gaXNuJ3QgYSByZWFsIHBhbmVsIGFuZCBidXQKPiA+IGl0J3MgYSBt
+b3NoIGJldHdlZW4gdGhlIFRJIFRWMTIzV0FNIGFuZCB0aGUgSW5ub2x1eCBQMTIwWkRHLUJGMS4K
+PiA+IExldCdzIHVubW9zaC4KPiA+IAo+ID4gSGVyZSdzIG15IGV2aWRlbmNlOgo+ID4gCj4gPiAq
+IFNlYXJjaGluZyBmb3IgVFYxMjNXQU0gb24gdGhlIEludGVybmV0IHR1cm5zIHVwIGEgVEkgcGFu
+ZWwuICBXaGlsZQo+ID4gICBpdCdzIHBvc3NpYmxlIHRoYXQgYW4gSW5ub2x1eCBwYW5lbCBoYXMg
+dGhlIHNhbWUgbW9kZWwgbnVtYmVyIGFzIHRoZQo+ID4gICBUSSBQYW5lbCwgaXQgc2VlbXMgYSBs
+aXR0bGUgZG91YnRmdWwuICBMb29raW5nIHVwIHRoZSBkYXRhc2hlZXQgZnJvbQo+ID4gICB0aGUg
+VEkgUGFuZWwgc2hvd3MgdGhhdCBpdCdzIDE5MjAgeCAxMjgwIGFuZCAyNTkuMiBtbSB4IDE3Mi44
+IG1tLgo+ID4gCj4gPiAqIEFzIGZhciBhcyBJIGtub3csIHRoZSBwYXRjaCBhZGRpbmcgdGhlIElu
+bm9sdXggUGFuZWwgd2FzIHN1cHBvc2VkIHRvCj4gPiAgIGJlIGZvciB0aGUgYm9hcmQgdGhhdCdz
+IHNpdHRpbmcgaW4gZnJvbnQgb2YgbWUgYXMgSSB0eXBlIHRoaXMKPiA+ICAgKHN1cHBvcnQgZm9y
+IHRoYXQgYm9hcmQgaXMgbm90IHlldCB1cHN0cmVhbSkuICBPbiB0aGUgYmFjayBvZiB0aGF0Cj4g
+PiAgIHBhbmVsIEkgc2VlIElubm9sdXggUDEyMFpEWi1FWjEgcmV2IEIxLgo+ID4gCj4gPiAqIFNv
+bWVvbmUgcG9pbnRlZCBtZSBhdCBhIGRhdGFzaGVldCB0aGF0J3Mgc3VwcG9zZWQgdG8gYmUgZm9y
+IHRoZQo+ID4gICBwYW5lbCBpbiBmcm9udCBvZiBtZSAoc29ycnksIEkgY2FuJ3Qgc2hhcmUgdGhl
+IGRhdGFzaGVldCkuICBUaGF0Cj4gPiAgIGRhdGFzaGVldCBoYXMgdGhlIHN0cmluZyAicDEyMHpk
+Zy1iZjEiCj4gPiAKPiA+ICogSWYgSSBzZWFyY2ggZm9yICJQMTIwWkRHLUJGMSIgb24gdGhlIElu
+dGVybmV0IEkgZ2V0IGhpdHMgZm9yIHBhbmVscwo+ID4gICB0aGF0IGFyZSAyMTYweDE0NDAuICBU
+aGV5IGRvbid0IGhhdmUgZGF0YXNoZWV0cywgYnV0IHRoZSBmYWN0IHRoYXQKPiA+ICAgdGhlIHJl
+c29sdXRpb24gbWF0Y2hlcyBpcyBhIGdvb2Qgc2lnbi4KPiA+IAo+ID4gV2hpbGUgd2UgZG9pbmcg
+dGhlIHJlbmFtZSwgYWxzbyBtZW50aW9uIHRoYXQgbm8taHBkIGNhbiBiZSB1c2VkIHdpdGgKPiA+
+IHRoaXMgcGFuZWwuICBTZWUgdGhlIHByZXZpb3VzIHBhdGNoIGluIHRoaXMgc2VyaWVzICgiZHJt
+L3BhbmVsOgo+ID4gc2ltcGxlOiBBZGQgIm5vLWhwZCIgZGVsYXkgZm9yIElubm9sdXggVFYxMjNX
+QU0iKS4KPiA+IAo+ID4gRml4ZXM6IDljMDQ0MDBmN2VhNiAoImR0LWJpbmRpbmdzOiBkcm0vcGFu
+ZWw6IERvY3VtZW50IElubm9sdXggVFYxMjNXQU0gcGFuZWwgYmluZGluZ3MiKQo+ID4gU2lnbmVk
+LW9mZi1ieTogRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPgo+ID4gUmV2
+aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4gCj4gSSBkaWRuJ3Qgc2Vl
+IHlvdXIgdjIgd2hlbiBJIHJlcGxpZWQgdG8gdGhlIHYxIHBhdGNoLCBzbyBmb3IgdGhlIHJlY29y
+ZCwKPiAKPiBSZXZpZXdlZC1ieTogU2VhbiBQYXVsIDxzZWFuQHBvb3JseS5ydW4+Cj4gCj4gQWxz
+byBub3RlIHRvIHdob2V2ZXIgYXBwbGllcyB0aGlzIHRvIC1taXNjLCB2MSBhbHNvIGhhZAo+IAo+
+IFJldmlld2VkLWJ5OiBBYmhpbmF2IEt1bWFyIDxhYmhpbmF2a0Bjb2RlYXVyb3JhLm9yZz4KCkFu
+ZCBJIGp1c3QgcmVhbGl6ZWQgdGhhdCBwYXRjaGVzIDUgJiA2IHdlcmUgc3dhcHBlZCBpbiB2Mi4g
+U28gbmV2ZXJtaW5kIHRoaXMsCkRvdWcncyB2MiB0YWdzIGFyZSBjb3JyZWN0LgoKRGVhciBjb2Zm
+ZWUsIHBsZWFzZSBraWNrIGluIHNvb24uCgpTZWFuCgoKPiAKPiAKPiBTZWFuCj4gCj4gPiBDYzog
+U2FuZGVlcCBQYW5kYSA8c3BhbmRhQGNvZGVhdXJvcmEub3JnPgo+ID4gLS0tCj4gPiAKPiA+IENo
+YW5nZXMgaW4gdjI6IE5vbmUKPiA+IAo+ID4gIC4uLi97aW5ub2x1eCx0djEyM3dhbS50eHQgPT4g
+aW5ub2x1eCxwMTIwemRnLWJmMS50eHR9ICAgICB8IDggKysrKystLS0KPiA+ICAxIGZpbGUgY2hh
+bmdlZCwgNSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+ID4gIHJlbmFtZSBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC97aW5ub2x1eCx0djEyM3dh
+bS50eHQgPT4gaW5ub2x1eCxwMTIwemRnLWJmMS50eHR9ICg3MCUpCj4gPiAKPiA+IGRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5v
+bHV4LHR2MTIzd2FtLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L3BhbmVsL2lubm9sdXgscDEyMHpkZy1iZjEudHh0Cj4gPiBzaW1pbGFyaXR5IGluZGV4IDcw
+JQo+ID4gcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQKPiA+IHJlbmFtZSB0byBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHAxMjB6ZGctYmYxLnR4
+dAo+ID4gaW5kZXggYTliMzUyNjVmYTEzLi41MTNmMDM0NjZhYmEgMTAwNjQ0Cj4gPiAtLS0gYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2
+MTIzd2FtLnR4dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvcGFuZWwvaW5ub2x1eCxwMTIwemRnLWJmMS50eHQKPiA+IEBAIC0xLDIwICsxLDIyIEBA
+Cj4gPiAtSW5ub2x1eCBUVjEyM1dBTSAxMi4zIGluY2ggZURQIDJLIGRpc3BsYXkgcGFuZWwKPiA+
+ICtJbm5vbHV4IFAxMjBaREctQkYxIDEyLjAyIGluY2ggZURQIDJLIGRpc3BsYXkgcGFuZWwKPiA+
+ICAKPiA+ICBUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwg
+YmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkCj4gPiAgaW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0
+aGlzIGRpcmVjdG9yeS4KPiA+ICAKPiA+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4gLS0gY29t
+cGF0aWJsZTogc2hvdWxkIGJlICJpbm5vbHV4LHR2MTIzd2FtIgo+ID4gKy0gY29tcGF0aWJsZTog
+c2hvdWxkIGJlICJpbm5vbHV4LHAxMjB6ZGctYmYxIgo+ID4gIC0gcG93ZXItc3VwcGx5OiByZWd1
+bGF0b3IgdG8gcHJvdmlkZSB0aGUgc3VwcGx5IHZvbHRhZ2UKPiA+ICAKPiA+ICBPcHRpb25hbCBw
+cm9wZXJ0aWVzOgo+ID4gIC0gZW5hYmxlLWdwaW9zOiBHUElPIHBpbiB0byBlbmFibGUgb3IgZGlz
+YWJsZSB0aGUgcGFuZWwKPiA+ICAtIGJhY2tsaWdodDogcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0
+IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKPiA+ICstIG5vLWhwZDogSWYgSFBEIGlzbid0
+IGhvb2tlZCB1cDsgYWRkIHRoaXMgcHJvcGVydHkuCj4gPiAgCj4gPiAgRXhhbXBsZToKPiA+ICAJ
+cGFuZWxfZWRwOiBwYW5lbC1lZHAgewo+ID4gLQkJY29tcGF0aWJsZSA9ICJpbm5vbHV4LHR2MTIz
+d2FtIjsKPiA+ICsJCWNvbXBhdGlibGUgPSAiaW5ub2x1eCxwMTIwemRnLWJmMSI7Cj4gPiAgCQll
+bmFibGUtZ3Bpb3MgPSA8Jm1zbWdwaW8gMzEgR1BJT19BQ1RJVkVfTE9XPjsKPiA+ICAJCXBvd2Vy
+LXN1cHBseSA9IDwmcG04OTE2X2wyPjsKPiA+ICAJCWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsK
+PiA+ICsJCW5vLWhwZDsKPiA+ICAJfTsKPiA+IC0tIAo+ID4gMi4xOS4xLjU2OC5nMTUyYWQ4ZTMz
+Ni1nb29nCj4gPiAKPiAKPiAtLSAKPiBTZWFuIFBhdWwsIFNvZnR3YXJlIEVuZ2luZWVyLCBHb29n
+bGUgLyBDaHJvbWl1bSBPUwoKLS0gClNlYW4gUGF1bCwgU29mdHdhcmUgRW5naW5lZXIsIEdvb2ds
+ZSAvIENocm9taXVtIE9TCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
