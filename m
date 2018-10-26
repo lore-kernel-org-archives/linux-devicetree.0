@@ -1,133 +1,117 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v9 6/9] i3c: master: Add driver for Cadence IP
-Date: Fri, 26 Oct 2018 12:01:52 +0200
-Message-ID: <CAK8P3a0_En6e6ORvNqxprBcsT3+NmFO8nFnQ3nNiv-5Hq2LjrQ@mail.gmail.com>
-References: <20181022133404.2061-1-boris.brezillon@bootlin.com>
- <20181022133404.2061-7-boris.brezillon@bootlin.com> <20181024202048.7e3534f7@bbrezillon>
- <CAK8P3a2DBgfvXs-9KzoDvbQpV+VN96xb7xHG-5=NDDgnt7ViVQ@mail.gmail.com>
- <20181025180720.1790f6a1@bbrezillon> <CAK8P3a02ELWiMB_pe0bzbsMfdqYOG1G0bFnSHzGu3ZbQHatH2w@mail.gmail.com>
- <20181025183005.3c0fa452@bbrezillon> <CAK8P3a0WDRpukjDBm1rGPnZiH2FJRpquWhEknOBg=CphNOYOwg@mail.gmail.com>
- <20181026095707.3cd9b511@bbrezillon>
+From: Dan O'Donovan <dan@emutex.com>
+Subject: Re: [PATCH v3 2/3] iio: adc128s052: add ACPI _HID AANT1280
+Date: Fri, 26 Oct 2018 11:13:01 +0100
+Message-ID: <c17cf6de-846b-aed3-7745-4f635495873e@emutex.com>
+References: <20180423213805.12591-1-javier@emutex.com>
+ <1540481742-23596-1-git-send-email-dan@emutex.com>
+ <1540481742-23596-3-git-send-email-dan@emutex.com>
+ <20181025174638.GB10650@smile.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181026095707.3cd9b511@bbrezillon>
+In-Reply-To: <20181025174638.GB10650@smile.fi.intel.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, gregkh <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@he>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Carlos Iglesias <carlos.iglesias@emutex.com>, Nicola Lunghi <nicola.lunghi@emutex.com>, Javier Arteaga <javier@emutex.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 26, 2018 at 9:57 AM Boris Brezillon
-<boris.brezillon@bootlin.com> wrote:
-> On Fri, 26 Oct 2018 09:43:25 +0200
-> Arnd Bergmann <arnd@arndb.de> wrote:
->
-> > On Thu, Oct 25, 2018 at 6:30 PM Boris Brezillon
-> > <boris.brezillon@bootlin.com> wrote:
-> > > On Thu, 25 Oct 2018 18:13:51 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
-> > > On Thu, Oct 25, 2018 at 6:07 PM Boris Brezillon <boris.brezillon@bootlin.com> wrote:
-> > > > > On Thu, 25 Oct 2018 17:30:26 +0200
-> > Ok. Is i3c_master_send_ccc_cmd_locked() what implements the public
-> > interfaces then, or is this something else?
->
-> i3c_master_send_ccc_cmd_locked() calls master->ops->send_ccc_cmd(), so
-> it's part of the master controller interface.
->
-> >
-> > If you place a buffer on the stack, it is not DMA capable, but
-> > it is guaranteed to be at least 32-bit word aligned, and should
-> > not cause an exception in readsl(), unless it starts with a couple of
-> > (not multiple of four)  extra bytes that are not sent to the devices.
-> > Is that what happens here?
->
-> Here is the report I received from Vitor:
->
-> "
->         Hi Boris,
->
->
->         I'm trying this new patch-set version but I get some issues when use
->         readsl() function.
->
->         Basically the system complain about memory alignment.
->
 
->         > +static int i3c_master_getpid_locked(struct i3c_master_controller *master,
->         > +                                 struct i3c_device_info *info)
->         > +{
->         > +     struct i3c_ccc_getpid getpid;
->
->         at this point the getpid struct it is already unaligned with
->
->         i3c_master_getpid_locked:1129 getpid_add=0x9a249c7a
->
->         > +     struct i3c_ccc_cmd_dest dest = {
->         > +             .addr = info->dyn_addr,
->         > +             .payload.len = sizeof(struct i3c_ccc_getpid),
->         > +             .payload.data = &getpid,
->         > +     };
 
->         > +}
->         > +
->
->         and them when
->
->         static void dw_i3c_master_read_rx_fifo(struct dw_i3c_master *master,
->                                 u8 *bytes, int nbytes)
->         {
->              readsl(master->regs + RX_TX_DATA_PORT, bytes, nbytes / 4);
->         ...
->         }
+On 10/25/2018 06:46 PM, Andy Shevchenko wrote:
+> On Thu, Oct 25, 2018 at 04:35:41PM +0100, Dan O'Donovan wrote:
+>> From: Nicola Lunghi <nicola.lunghi@emutex.com>
+>>
+>> ACPI _HID AANT1280 matches an ADC124S101 present on E3940 SKUs of the UP
+>> Squared board.
+>>
+>> Add it to the driver.
+>>
+>> Signed-off-by: Nicola Lunghi <nicola.lunghi@emutex.com>
+>> [javier@emutex.com: fix up commit message and one checkpatch warning]
+>> Signed-off-by: Javier Arteaga <javier@emutex.com>
+>> Signed-off-by: Dan O'Donovan <dan@emutex.com>
+>> ---
+>>  drivers/iio/adc/ti-adc128s052.c | 18 +++++++++++++++++-
+>>  1 file changed, 17 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
+>> index e6716c3..c2d1453 100644
+>> --- a/drivers/iio/adc/ti-adc128s052.c
+>> +++ b/drivers/iio/adc/ti-adc128s052.c
+>> @@ -12,10 +12,12 @@
+>>   * published by the Free Software Foundation.
+>>   */
+>>  
+>> +#include <linux/acpi.h>
+>>  #include <linux/err.h>
+>>  #include <linux/spi/spi.h>
+>>  #include <linux/module.h>
+>>  #include <linux/iio/iio.h>
+>> +#include <linux/property.h>
+>>  #include <linux/regulator/consumer.h>
+>>  
+>>  struct adc128_configuration {
+>> @@ -135,10 +137,15 @@ static const struct iio_info adc128_info = {
+>>  static int adc128_probe(struct spi_device *spi)
+>>  {
+>>  	struct iio_dev *indio_dev;
+>> +	unsigned int config;
+>>  	struct adc128 *adc;
+>> -	int config = spi_get_device_id(spi)->driver_data;
+>>  	int ret;
+>>  
+>> +	if (dev_fwnode(&spi->dev))
+>> +		config = (unsigned long) device_get_match_data(&spi->dev);
+>> +	else
+>> +		config = spi_get_device_id(spi)->driver_data;
+>> +
+>>  	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*adc));
+>>  	if (!indio_dev)
+>>  		return -ENOMEM;
+>> @@ -207,10 +214,19 @@ static const struct spi_device_id adc128_id[] = {
+>>  };
+>>  MODULE_DEVICE_TABLE(spi, adc128_id);
+>>  
+>> +#ifdef CONFIG_ACPI
+>> +static const struct acpi_device_id adc128_acpi_match[] = {
+> 
+>> +	{ "AANT1280", 2 }, /* ADC124S021 compatible ACPI ID */
+> 
+> Looking how driver is organized and what ACPI can provide I would highly
+> recommend to look forward to PTYP field for utilization of the type of the HW.
+> 
+> Maybe it would not work with published BIOSes, but would be good for the future
+> (in that case anybody can utilize that _HID + PTYP pair on their platforms).
+> 
+Thanks Andy for your review and feedback.  Your _HID + PTYP suggestion sounds
+interesting, but I couldn't find any information in the ACPI spec or elsewhere
+about how/when/where to use it.  It isn't used in the UP Squared ACPI tables.
+Do you have any links or other information you could share about it? Thanks!
 
-Ok, I spent an hour chasing the ARM implementation and finding
-no way this could go wrong here. I see that 'struct i3c_ccc_getpid'
-may be misaligned on the stack (it normally won't be), and that
-the ARM readsl() has a lot of extra code to handle unaligned
-output. However, the dump that Vitor reports
+>> +	{ }
+>> +};
+>> +MODULE_DEVICE_TABLE(acpi, adc128_acpi_match);
+>> +#endif
+>> +
+>>  static struct spi_driver adc128_driver = {
+>>  	.driver = {
+>>  		.name = "adc128s052",
+> 
+>>  		.of_match_table = of_match_ptr(adc128_of_match),
+>> +		.acpi_match_table = ACPI_PTR(adc128_acpi_match),
+>>  	},
+>>  	.probe = adc128_probe,
+>>  	.remove = adc128_remove,
+>> -- 
+>> 2.7.4
+>>
+>>
+>> ------
+>> This email has been scanned for spam and malware by The Email Laundry.
+>>
+> 
 
->         [ECR   ]: 0x00230400 => Misaligned r/w from 0x9a249c7a
->         [EFA   ]: 0x9a249c7a
->        [BLINK ]: dw_i3c_master_irq_handler+0x200/0x2fc [dw_i3c_master]
-
-Is from an arch/arc kernel that uses asm-generic/io.h, and
-that stores the output using a u32 pointer:
-
-static inline void readsl(const volatile void __iomem *addr, void *buffer,
-                          unsigned int count)
-{
-        if (count) {
-                u32 *buf = buffer;
-
-                do {
-                        u32 x = __raw_readl(addr);
-                        *buf++ = x;
-                } while (--count);
-        }
-}
-
-This is apparently not allowed on ARC when 'buffer' is
-unaligned. I think what we need here is to use
-put_unaligned() instead of the pointer dereference.
-For architectures that can do unaligned accesses,
-the result is the same, but for ARC it will fix the problem.
-
-> > One way to address this might be to always bounce any
-> > messages that are less than a cache line through a
-> > (pre-)kmallocated buffer, and require any longer messages
-> > to be cache capable. This could also solve the issue with
-> > readsl(), but it would be a rather confusing user interface.
-> >
-> > Another option might be to have separate interfaces for
-> > "short" and "long" messages at the API level and have
-> > distinct rules for those: short would always be bounced
-> > by the i3c code, and long puts restrictions on the buffer
-> > location.
->
-> Hm, let's keep the API simple. I'll just mandate that all payload bufs
-> passed to i3c_master_send_ccc_cmd_locked() be dynamically allocated.
-
-Ok. What about i2c commands sent to the same i3c controller
-then? Do we need to copy those to satisfy the requirements
-of the i3c layer?
-
-      Arnd
+------
+This email has been scanned for spam and malware by The Email Laundry.
