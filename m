@@ -1,52 +1,52 @@
 From: Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH v1] arm64: dts: qcom: sdm845: Fix pcs_misc region address
- for UNI PHY
-Date: Fri, 26 Oct 2018 10:25:52 -0700
-Message-ID: <CAE=gft5vEfqxXhC+cADYreRGtj68PnwFnXoFknh8mP5UWYHsHQ@mail.gmail.com>
-References: <20181025172318.31353-1-mgautam@codeaurora.org> <CAD=FV=Xk0VDp2mQ9B25XXovabiHAHr=Dm1v3Pavf_iaNGOexnw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH v5 0/5] arm64: dts: qcom: sdm845: Add UFS DT nodes
+Date: Fri, 26 Oct 2018 10:35:39 -0700
+Message-ID: <20181026173544.136037-1-evgreen@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=Xk0VDp2mQ9B25XXovabiHAHr=Dm1v3Pavf_iaNGOexnw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Manu Gautam <mgautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, vivek.gautam@codeaurora.org, linux-arm-msm@vger.kernel.org, David Brown <david.brown@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Douglas Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Can Guo <cang@codeaurora.org>, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Manu Gautam <mgautam@codeaurora.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 25, 2018 at 1:38 PM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
-> On Thu, Oct 25, 2018 at 10:23 AM Manu Gautam <mgautam@codeaurora.org> wrote:
-> >
-> > Correct address for pcs_misc register region of USB3 QMP UNI PHY.
-> > These registers are used during runtime-suspend/resume routines
-> > of phy.
-> >
-> > Fixes: ca4db2b538a1 ("arm64: dts: qcom: sdm845: Add USB-related nodes")
-> > Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > index b72bdb0a31a5..84bee81562a5 100644
-> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > @@ -1156,7 +1156,7 @@
-> >                                 reg = <0x88eb200 0x128>,
-> >                                       <0x88eb400 0x1fc>,
-> >                                       <0x88eb800 0x218>,
-> > -                                     <0x88e9600 0x70>;
-> > +                                     <0x88eb600 0x70>;
->
-> Whoops, sorry for not noticing this earlier.  Thanks for the fix!
->
-> Evan's most recent patch to the bindings [1] should also be fixed
-> eventually too.  It feels like those patches have gone through enough
-> spins though, so maybe we can just post this fix atop those?
->
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
->
-> [1] https://lkml.kernel.org/r/20181024172735.154304-2-evgreen@chromium.org
+Update the device tree bindings for the QMP PHY to properly
+specify the registers for dual-lane PHYs. Update the driver to use
+those new registers. Add the DT nodes for UFS on SDM845 and MTP.
+Finally, fix up the USB3 PHY on SDM845, which also has a dual-lane phy
 
-I'll spin mine. Incoming!
+Andy/Kishon,
+I believe these changes are ready to go.
+Just a heads up that these changes stack on top of each other,
+and if taken through separate trees might break things a little until
+they come back together.
+
+Changes in v5:
+- Fix incorrect register value in example, copied from real life!
+
+Changes in v4:
+- Remove "status" from DT binding example (Rob)
+
+Changes in v3:
+ - Removed erroneous fixup for USB UniPro PHY, which is not dual lane (Doug)
+
+Changes in v2:
+- Added dt bindings change, corresponding driver fixup, and USB PHY fixup
+- Renamed ufsphy to phy (Vivek)
+- Removed #clock-cells (Vivek)
+
+Can Guo (1):
+  arm64: dts: qcom: sdm845: Add UFS nodes for sdm845-mtp
+
+Evan Green (4):
+  dt-bindings: phy-qcom-qmp: Fix register underspecification
+  phy: qcom-qmp: Utilize fully-specified DT registers
+  arm64: dts: qcom: sdm845: add UFS controller
+  arm64: dts: qcom: sdm845: Add USB PHY lane two
+
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 70 ++++++++++++++++++---
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts            | 14 +++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               | 71 +++++++++++++++++++++-
+ drivers/phy/qualcomm/phy-qcom-qmp.c                | 51 ++++++++++++----
+ 4 files changed, 184 insertions(+), 22 deletions(-)
+
+-- 
+2.16.4
