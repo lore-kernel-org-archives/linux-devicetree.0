@@ -1,78 +1,65 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH V2 7/8] dts: fsl: add imx7ulp evk support
-Date: Fri, 26 Oct 2018 12:56:59 +0200
-Message-ID: <20181026105659.yixb64lqia5kisgf@pengutronix.de>
-References: <1540295058-26090-1-git-send-email-aisheng.dong@nxp.com>
- <1540295058-26090-8-git-send-email-aisheng.dong@nxp.com>
- <CAOMZO5C3Fv+s-bLeHGZ6LEB=ZqRxf=gXuzbtwfNS=PvQeVJ1Ag@mail.gmail.com>
- <AM0PR04MB42110E5309341D1626EB6EF980F50@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CAOMZO5BLXGYfvq6GqK66Qe1aTNHmYJOBhKTPKTwNx=tDROKw6Q@mail.gmail.com>
- <AM0PR04MB421195B48BA336AD7078110D80F60@AM0PR04MB4211.eurprd04.prod.outlook.com>
+From: Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH v2 0/2] arm64: Cut rebuild time when changing
+ CONFIG_BLK_DEV_INITRD
+Date: Fri, 26 Oct 2018 12:07:09 +0100
+Message-ID: <20181026110708.GA3814@rapoport-lnx>
+References: <20181024193256.23734-1-f.fainelli@gmail.com>
+ <CAL_Jsq+KCOv6pXXHhHDZ+7-QUrmtMDvSjEVhK15yZ3qbnn61Ag@mail.gmail.com>
+ <20181025093833.GA23607@rapoport-lnx>
+ <CAL_JsqL62ttsGSbE1BS5v-mX3pKE-p_HyvuZD6nB+GUbQyetzg@mail.gmail.com>
+ <20181025172935.GA27364@rapoport-lnx>
+ <CAL_JsqJrMq+QHvuOsqEdCFchmXsd4s2XKUD_TboKzeEQprJvjg@mail.gmail.com>
+ <1bb3bd63-a88e-b668-ea36-f0f985c0e2b1@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <AM0PR04MB421195B48BA336AD7078110D80F60@AM0PR04MB4211.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Dong Aisheng <dongas86@gmail.com>, Fabio Estevam <festevam@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1bb3bd63-a88e-b668-ea36-f0f985c0e2b1@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Olof Johansson <olof@lixom.net>, linux-alpha@vger.kernel.org, arcml <linux-snps-arc@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-c6x-dev@linux-c6x.org, "moderated list:H8/300 ARCHITECTURE" <uclinux-h8-devel@lists.sourceforge.jp>, linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org, Linux-MIPS <linux-mips>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 24, 2018 at 08:14:01AM +0000, A.s. Dong wrote:
-> > -----Original Message-----
-> > From: Fabio Estevam [mailto:festevam@gmail.com]
-> > Sent: Wednesday, October 24, 2018 12:26 AM
-> [...]
-> > On Tue, Oct 23, 2018 at 11:42 AM A.s. Dong <aisheng.dong@nxp.com> wrote:
-> > 
-> > > I'm a bit hesitate to do that as the driver already supports it.
-> > > There's no extra effort to use it. And we probably could take ULP as a
-> > > special case to test generic binding rather then simply drop it and
-> > > drop driver features. Once we get objection from users later, we still can
-> > simply fallback as there's still only official boards using it.
-> > 
-> > We had this same discussion some months ago when we were reviewing
-> > i.MX8 support.
-> >
-> > I don't see the value in doing pinctrl differently on i.MX7ULP.
-> >
-> 
-> I thought the situation is different as ULP actually already supports generic binding
-> before that discussion.
-> 
-> > > Last, it's not correct that there's not only one method for all i.MX devices.
-> > > MX23/28 are different ones and ULP is more like MX23/28.
-> > > And I saw no objections from users for MX23/28.
-> > 
-> > Yes, but these are legacy platforms.
-> > 
-> > For new ones, we should try to keep consistency, just like we discussed during
-> > i.MX8 review.
-> 
-> So the question is whether it's necessary to switch generic binding back to the
-> legacy one for ULP. Personally I'm not strongly against this, but I need some
-> confirmation from Shawn and Sascha.
-> 
-> Shawn & Sascha, would you make a judgement call?
-> If you also strongly request that, I will try to make it patch to test Linus W.
-> Hopefully our agreement could satisfy Linus W.
+On Thu, Oct 25, 2018 at 04:07:13PM -0700, Florian Fainelli wrote:
+> On 10/25/18 2:13 PM, Rob Herring wrote:
+> > On Thu, Oct 25, 2018 at 12:30 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> >>
+> >> On Thu, Oct 25, 2018 at 08:15:15AM -0500, Rob Herring wrote:
+> >>> +Ard
+> >>>
+> >>> On Thu, Oct 25, 2018 at 4:38 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> >>>>
+> >>>> On Wed, Oct 24, 2018 at 02:55:17PM -0500, Rob Herring wrote:
+> >>>>> On Wed, Oct 24, 2018 at 2:33 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+> >>>>>>
+> >>>>>> Hi all,
+> >>>>>>
+> >>>>>> While investigating why ARM64 required a ton of objects to be rebuilt
+> >>>>>> when toggling CONFIG_DEV_BLK_INITRD, it became clear that this was
+> >>>>>> because we define __early_init_dt_declare_initrd() differently and we do
+> >>>>>> that in arch/arm64/include/asm/memory.h which gets included by a fair
+> >>>>>> amount of other header files, and translation units as well.
+> >>>>>
+> >>>> I think arm64 does not have to redefine __early_init_dt_declare_initrd().
+> >>>> Something like this might be just all we need (completely untested,
+> >>>> probably it won't even compile):
 
-For consistency reasons I vote for using the legacy binding for i.MX7ulp
-aswell.
+[ ... ]
+ 
+> FWIW, I am extracting the ARM implementation that parses the initrd
+> early command line parameter and the "setup" code doing the page
+> boundary alignment and memblock checking into a helper into lib/ that
+> other architectures can re-use. So far, this removes the need for
+> unicore32, arc and arm to duplicate essentially the same logic.
 
-Sascha
+Presuming you are going to need asm-generic/initrd.h for that as well,
+using override for __early_init_dt_declare_initrd in arm64 version of
+initrd.h might be the simplest option.
+
+> -- 
+> Florian
+> 
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Sincerely yours,
+Mike.
