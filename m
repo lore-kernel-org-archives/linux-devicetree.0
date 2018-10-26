@@ -1,46 +1,72 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [RFC PATCH v2 01/17] OPP: Allow to request stub voltage
- regulators
-Date: Fri, 26 Oct 2018 17:37:35 +0200
-Message-ID: <1540568255.2245.11.camel@pengutronix.de>
-References: <20181021205501.23943-1-digetx@gmail.com>
-         <20181021205501.23943-2-digetx@gmail.com>
-         <20181022053636.ag62j3rj3vovbz53@vireshk-i7>
-         <e4027793-9436-413d-2a7b-34cf519218c3@gmail.com>
-         <20181022113224.b5fiebgy2aap66nd@vireshk-i7>
-         <29f893be-feed-c4c5-8468-51f7228dd468@gmail.com>
-         <20181024064123.lbpbeervghp35fe7@vireshk-i7>
-         <ba782346-6ac0-7bf3-e187-00d2634b145b@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 2/5] mfd: lochnagar: Add support for the Cirrus Logic
+ Lochnagar
+Date: Fri, 26 Oct 2018 16:47:51 +0100
+Message-ID: <20181026154751.GA27137@sirena.org.uk>
+References: <20181008132542.19775-1-ckeepax@opensource.cirrus.com>
+ <20181008132542.19775-2-ckeepax@opensource.cirrus.com>
+ <20181025074459.GF4939@dell>
+ <20181025082621.GD16508@imbe.wolfsonmicro.main>
+ <b2f85f45-cbe9-5a27-e9e8-ad28f2bd9bd6@opensource.cirrus.com>
+ <20181025114205.GC4870@dell>
+ <20181025124905.GF16508@imbe.wolfsonmicro.main>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ba782346-6ac0-7bf3-e187-00d2634b145b@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20181025124905.GF16508@imbe.wolfsonmicro.main>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Richard Fitzgerald <rf@opensource.cirrus.com>, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 26.10.2018, 15:03 +0300 schrieb Dmitry Osipenko:
-[...]
-> > On the other hand, the tegra20 cpufreq driver is common across a lot of boards.
-> > What will happen if the DT for some of the boards isn't correct and missed the
-> > necessary regulator node ?
-> 
-> AFAIK, there is assumption that bootloader should setup regulators in
-> a way that kernel could work properly at max clock rates. Otherwise
-> things won't work.
 
-This isn't true. The assumption is that the bootloader sets up the
-regulators such that stable operation at the CPU speed used by the
-bootloader is guaranteed.
+--pf9I7BMVVzbSWLtt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Often the bootloader doesn't know about specific SKUs, so drives things
-at a rate/voltage that is safe across all SKUs [1], in which case the
-bootloader is totally unaware of the voltage needed to run the CPU at
-highest possible clock frequency.
+On Thu, Oct 25, 2018 at 01:49:05PM +0100, Charles Keepax wrote:
 
-Regards,
-Lucas
+> I don't think you can sensibly get away with not supplying
+> default values. You say most sane register layouts have zero
+> values, alas again you may not be the biggest fan of our hardware
+> guys. The Lochnagar actually does have mostly zero defaults but
+> that is very much not generally the case with our hardware.
 
-[1] http://git.denx.de/?p=u-boot.git;a=commit;h=2364e151e432b4ccf32dc9e6147121253d4ff86d
+There's large classes of hardware where it's just not generally the
+default over all manufacturers - things like audio CODECs and regulators
+that have to represent continuous ranges of numerical values have to
+decide between a helpful representation of numbers with a non-zero
+default or having a more complicated representation of numbers which
+manage to make zero correspond to whatever the default value is.  It's
+also quite common for booleans you want to default on.
+
+> One of the main aims of regmap is to avoid bus accesses when
+> possible but I guess on the first write/read to any register you
+> could insert a read to pull the default, although I do worry
+> there is some corner case/flexibility that is going to cause
+> headaches later.
+
+It will actually populate the cache from I/O if you don't provide
+defaults but it then can't tell what the physical defaults are, we could
+read back from hardware but then we have to sync that with the hardware
+being reset and if you read the whole thing back that gets super
+expensive with slow buses.
+
+--pf9I7BMVVzbSWLtt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlvTNyQACgkQJNaLcl1U
+h9AgVgf/XQjp7lDEmVFGgiTZTgLJZyMHMn1vB7lgsxxiFxVBlNiZr7Zg8BiK8cT5
+1uTf6Z+Wn344YWwQ/Rx08GaLdcvfRKBPKQi6SGHpZ4pj5BJaOCobq3UlSyA9GXhO
+UPyMpdJa3yzXaF0PV7w6kXkYi0fJe9jVe21b06fJweZmCF0fGaF4WIAUDDn3B947
+Uj+hZywPa3UuH04sE/PybfrKrGtJz73U6tSo/FcXhKdPEfVy8KL0FgWXQiV5BPUi
+xLU92y/gX8mS7L1aVPAoIkTgESA6sS0VKD4YLWjm9/1nWI1mghsTSSYfRqGJurvI
+lXhYY+HkMGRV8jaOE4o/LIYmz+ow/A==
+=EHBh
+-----END PGP SIGNATURE-----
+
+--pf9I7BMVVzbSWLtt--
