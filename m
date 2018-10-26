@@ -1,40 +1,101 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH anybus v1 2/4] dt-bindings: anybus-bridge: document
- devicetree binding.
-Date: Fri, 26 Oct 2018 13:28:39 +0200
-Message-ID: <CACRpkdaprWOr9rpsanLNZUHouWKJDkWAC1si+80zFp423eA3SQ@mail.gmail.com>
-References: <20181025135515.8397-1-TheSven73@googlemail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 1/8] dt-bindings: mfd: document stpmic1
+Date: Fri, 26 Oct 2018 12:46:18 +0100
+Message-ID: <20181026114618.GR4870@dell>
+References: <1539853324-29051-1-git-send-email-p.paillet@st.com>
+ <1539853324-29051-2-git-send-email-p.paillet@st.com>
+ <20181025094430.GQ4939@dell>
+ <CAL_JsqKsp8kTK2v_cBrNm+enzieQSEh2G7KMxsBdidr+XhDwTg@mail.gmail.com>
+ <20181026064614.GG4870@dell>
+ <5BD2E2DB.5090305@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181025135515.8397-1-TheSven73@googlemail.com>
+Content-Disposition: inline
+In-Reply-To: <5BD2E2DB.5090305@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: thesven73@gmail.com
-Cc: svendev@arcx.com, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>, Johan Hovold <johan@kernel.org>, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, Arnd Bergmann <arnd@arndb.de>, Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com, Geert Uytterhoeven <geert+renesas@glider.be>, Robin Murphy <robin.murphy@arm.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>, Icenowy Zheng <icenowy@aosc.io>, yuanzhichang@hisilicon.com, Stuart Yoder <stuyoder@gmai>
+To: Pascal PAILLET-LME <p.paillet@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Enric Balletbo i Serra <eballetbo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 25, 2018 at 3:55 PM <thesven73@gmail.com> wrote:
+On Fri, 26 Oct 2018, Pascal PAILLET-LME wrote:
 
-> >> +               fsl,weim-cs-timing = <0x024400b1 0x00001010 0x20081100
-> >> +                               0x00000000 0xa0000240 0x00000000>;
+> Hello Lee,
+> 
+> Le 10/26/2018 08:46 AM, Lee Jones a écrit :
+> > On Thu, 25 Oct 2018, Rob Herring wrote:
 > >
-> > Is it just a copy/paste from
-> > Documentation/devicetree/bindings/bus/imx-weim.txt
-> > leftover?
->
-> No. We attach the bridge to the i.MX WEIM bus. Every fdt WEIM child node
-> requires a fsl,weim-cs-timing property, which provides the bus timing for
-> that particular chip select. It's the weim driver that requires this,
-> I'm only following its instructions.
->
-> Should I just leave this out in the example? In theory, the bridge can be
-> connected to any parallel bus, so fsl,weim-cs-timing is Too Much Information
-> for the example?
+> >> On Thu, Oct 25, 2018 at 4:44 AM Lee Jones <lee.jones@linaro.org> wrote:
+> >>> Rob: please grep your name for some feedback.
+> > [Moved to the top]
+> >
+> >>> I'm surprised Rob allowed you to add register bits in a DT property?
+> >> Yeah, they are certainly questionable and not something we encourage,
+> >> but the alternative would be dozens of properties which only apply for
+> >> this one device and just get translated back to register values.
+> > I don't see how this device is any different to the 100's of devices
+> > which are already supported in DT.
+> >
+> >>> On Thu, 18 Oct 2018, Pascal PAILLET-LME wrote:
+> >>>
+> >>>> From: pascal paillet <p.paillet@st.com>
+> >>>> +Optional parent device properties:
+> >>>> +- st,main-control-register:
+> >>>> +     -bit 1: Power cycling will be performed on turn OFF condition
+> >>>> +     -bit 2: PWRCTRL is functional
+> >>>> +     -bit 3: PWRCTRL active high
+> >>>> +- st,pads-pull-register:
+> >>>> +     -bit 1: WAKEUP pull down is not active
+> >>>> +     -bit 2: PWRCTRL pull up is active
+> >>>> +     -bit 3: PWRCTRL pull down is active
+> >>>> +     -bit 4: WAKEUP detector is disabled
+> > This should be part of the Pinctrl configuration/driver.
+> >
+> > And Pinctrl probably already has properties for this?
+> I will remove this in the next version.
+> >>>> +- st,vin-control-register:
+> >>>> +     -bit 0: VINLOW monitoring is enabled
+> >>>> +     -bit [1...3]: VINLOW rising threshold
+> >>>> +             000 VINOK_f + 50mV
+> >>>> +             001 VINOK_f + 100mV
+> >>>> +             010 VINOK_f + 150mV
+> >>>> +             011 VINOK_f + 200mV
+> >>>> +             100 VINOK_f + 250mV
+> >>>> +             101 VINOK_f + 300mV
+> >>>> +             110 VINOK_f + 350mV
+> >>>> +             111 VINOK_f + 400mV
+> >>>> +     -bit [4...5]: VINLOW hyst
+> >>>> +             00 100mV
+> >>>> +             01 200mV
+> >>>> +             10 300mV
+> >>>> +             11 400mV
+> >>>> +     -bit 6: SW_OUT detector is disabled
+> >>>> +     -bit 7: SW_IN detector is enabled.
+> > This should be part of the Regulator configuration/driver?
+> I will also remove this in the next version. I think this could be 
+> handled by an hardware monitor future driver.
+> >>>> +- st,usb-control-register:
+> >>>> +     -bit 3: SW_OUT current limit
+> >>>> +             0: 600mA
+> >>>> +             1: 1.1A
+> >>>> +     -bit 4: VBUS_OTG discharge is enabled
+> >>>> +     -bit 5: SW_OUT discharge is enabled
+> >>>> +     -bit 6: VBUS_OTG detection is enabled
+> >>>> +     -bit 7: BOOST_OVP is disabled
+> > This should be part of the USB configuration/driver?
+> >
+> I will also remove this in the next version. And I'm going to add active 
+> discharge ops in the regulator driver.
 
-No it's fine, I understand it now.
+And unless this device is in any way special, these subsystems should
+already have generic bindings to set these hardware configuration
+options.
 
-Whay you can do is write before the example that this example node
-is using the WEIM bindings and reference that binding document.
+I would say that passing raw register values is not the way to go.
 
-Yours,
-Linus Walleij
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
