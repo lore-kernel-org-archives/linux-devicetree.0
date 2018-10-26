@@ -1,101 +1,63 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 1/8] dt-bindings: mfd: document stpmic1
-Date: Fri, 26 Oct 2018 12:46:18 +0100
-Message-ID: <20181026114618.GR4870@dell>
-References: <1539853324-29051-1-git-send-email-p.paillet@st.com>
- <1539853324-29051-2-git-send-email-p.paillet@st.com>
- <20181025094430.GQ4939@dell>
- <CAL_JsqKsp8kTK2v_cBrNm+enzieQSEh2G7KMxsBdidr+XhDwTg@mail.gmail.com>
- <20181026064614.GG4870@dell>
- <5BD2E2DB.5090305@st.com>
+From: Ding Tao <miyatsu@qq.com>
+Subject: [PATCH 2/2] arm64: dts: marvell: armada-37xx: Enable emmc on
+ espressobin
+Date: Fri, 26 Oct 2018 11:50:28 +0000
+Message-ID: <20181026115028.193203-2-miyatsu@qq.com>
+References: <20181026115028.193203-1-miyatsu@qq.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5BD2E2DB.5090305@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pascal PAILLET-LME <p.paillet@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Enric Balletbo i Serra <eballetbo@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181026115028.193203-1-miyatsu@qq.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jason@lakedaemon.net
+Cc: mark.rutland@arm.com, andrew@lunn.ch, devicetree@vger.kernel.org, gregory.clement@bootlin.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, miyatsu@qq.com, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Oct 2018, Pascal PAILLET-LME wrote:
+The ESPRESSObin board has a emmc interface available on U11, let's
+enable it.
 
-> Hello Lee,
-> 
-> Le 10/26/2018 08:46 AM, Lee Jones a écrit :
-> > On Thu, 25 Oct 2018, Rob Herring wrote:
-> >
-> >> On Thu, Oct 25, 2018 at 4:44 AM Lee Jones <lee.jones@linaro.org> wrote:
-> >>> Rob: please grep your name for some feedback.
-> > [Moved to the top]
-> >
-> >>> I'm surprised Rob allowed you to add register bits in a DT property?
-> >> Yeah, they are certainly questionable and not something we encourage,
-> >> but the alternative would be dozens of properties which only apply for
-> >> this one device and just get translated back to register values.
-> > I don't see how this device is any different to the 100's of devices
-> > which are already supported in DT.
-> >
-> >>> On Thu, 18 Oct 2018, Pascal PAILLET-LME wrote:
-> >>>
-> >>>> From: pascal paillet <p.paillet@st.com>
-> >>>> +Optional parent device properties:
-> >>>> +- st,main-control-register:
-> >>>> +     -bit 1: Power cycling will be performed on turn OFF condition
-> >>>> +     -bit 2: PWRCTRL is functional
-> >>>> +     -bit 3: PWRCTRL active high
-> >>>> +- st,pads-pull-register:
-> >>>> +     -bit 1: WAKEUP pull down is not active
-> >>>> +     -bit 2: PWRCTRL pull up is active
-> >>>> +     -bit 3: PWRCTRL pull down is active
-> >>>> +     -bit 4: WAKEUP detector is disabled
-> > This should be part of the Pinctrl configuration/driver.
-> >
-> > And Pinctrl probably already has properties for this?
-> I will remove this in the next version.
-> >>>> +- st,vin-control-register:
-> >>>> +     -bit 0: VINLOW monitoring is enabled
-> >>>> +     -bit [1...3]: VINLOW rising threshold
-> >>>> +             000 VINOK_f + 50mV
-> >>>> +             001 VINOK_f + 100mV
-> >>>> +             010 VINOK_f + 150mV
-> >>>> +             011 VINOK_f + 200mV
-> >>>> +             100 VINOK_f + 250mV
-> >>>> +             101 VINOK_f + 300mV
-> >>>> +             110 VINOK_f + 350mV
-> >>>> +             111 VINOK_f + 400mV
-> >>>> +     -bit [4...5]: VINLOW hyst
-> >>>> +             00 100mV
-> >>>> +             01 200mV
-> >>>> +             10 300mV
-> >>>> +             11 400mV
-> >>>> +     -bit 6: SW_OUT detector is disabled
-> >>>> +     -bit 7: SW_IN detector is enabled.
-> > This should be part of the Regulator configuration/driver?
-> I will also remove this in the next version. I think this could be 
-> handled by an hardware monitor future driver.
-> >>>> +- st,usb-control-register:
-> >>>> +     -bit 3: SW_OUT current limit
-> >>>> +             0: 600mA
-> >>>> +             1: 1.1A
-> >>>> +     -bit 4: VBUS_OTG discharge is enabled
-> >>>> +     -bit 5: SW_OUT discharge is enabled
-> >>>> +     -bit 6: VBUS_OTG detection is enabled
-> >>>> +     -bit 7: BOOST_OVP is disabled
-> > This should be part of the USB configuration/driver?
-> >
-> I will also remove this in the next version. And I'm going to add active 
-> discharge ops in the regulator driver.
+Signed-off-by: Ding Tao <miyatsu@qq.com>
+---
+ .../dts/marvell/armada-3720-espressobin.dts    | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-And unless this device is in any way special, these subsystems should
-already have generic bindings to set these hardware configuration
-options.
-
-I would say that passing raw register values is not the way to go.
-
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+index 3ab25ad402b9..ee05aabbba88 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+@@ -60,6 +60,24 @@
+ 	cd-gpios = <&gpionb 3 GPIO_ACTIVE_LOW>;
+ 	marvell,pad-type = "sd";
+ 	vqmmc-supply = <&vcc_sd_reg1>;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdio_pins>;
++	status = "okay";
++};
++
++/* U11 */
++&sdhci0 {
++	non-removable;
++	bus-width = <8>;
++	mmc-ddr-1_8v;
++	mmc-hs400-1_8v;
++	marvell,xenon-emmc;
++	marvell,xenon-tun-count = <9>;
++	marvell,pad-type = "fixed-1-8v";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc_pins>;
+ 	status = "okay";
+ };
+ 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.17.1
