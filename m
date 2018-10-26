@@ -1,71 +1,44 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH] dt-bindings: arm: Fix cpu capacity mismatch in example
-Date: Fri, 26 Oct 2018 10:30:32 +0200
-Message-ID: <d4d6af05-61f1-4123-c2dc-4ee0946f79e8@linaro.org>
-References: <138600f5d504b41202a29a1e130a7aa4e51f1925.1540451976.git.viresh.kumar@linaro.org>
- <80206cb7-b550-1cf6-abf4-e4b17de4cdb5@linaro.org>
- <20181026041107.4hofhlcubbo5claq@vireshk-i7>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH anybus v1 1/4] mfd: support the Arcx anybus bridge.
+Date: Fri, 26 Oct 2018 09:34:10 +0100
+Message-ID: <20181026083410.GO4870@dell>
+References: <20181024142456.10084-1-svendev@arcx.com>
+ <20181024142456.10084-2-svendev@arcx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181026041107.4hofhlcubbo5claq@vireshk-i7>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181024142456.10084-2-svendev@arcx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: catalin.marinas@arm.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Vincent Guittot <vincent.guittot@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sven Van Asbroeck <svendev@arcx.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, treding@nvidia.com, david@lechnology.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com, andriy.shevchenko@linux.intel.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, yuanzhichang@hisilicon.com, stuyoder@gmail.com, linus.walleij@linaro.org, maxime.ripard@bootlin.com, bogdan.purcareata@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/10/2018 06:11, Viresh Kumar wrote:
-> On 25-10-18, 14:04, Daniel Lezcano wrote:
->> I think it is actually correct. The example is confusing on what the
->> numbers are. IIUC, it is:
->>
->> (after normalizing)
->>
->> dhrystone result on big CPU is 1024 at 1100MHz
->> dhrystone result on little CPU is 446 at 850MHz
->>
->> We have to scale the result of the little for 1100MHz in order to compare.
->>
->> 1100/850 = 1.294
->>
->> dhrystone result on little CPU is 446 * 1.294 = 577 at 1100MHz
->>
->> So we put the normalized values 1024 and 577. The arch_topology will
->> scale 577 back to 446 as it will compute the max capacity based on the
->> max freq which is 850MHz.
->>
->> The *final* capacities are 1024 for cluster0 and 446 for cluster1 (read
->> the cpu max capacity, the ones showed in the sysfs).
->>
->> Did I miss something ?
-> 
-> No. What about making it more clear in the example to save the next idiot (like
-> me) from wasting time :)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> index 9b5685a1d15d..d061e6575bde 100644
-> --- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> @@ -61,7 +61,10 @@ mhz values (normalized w.r.t. the highest value found while parsing the DT).
->  Example 1 (ARM 64-bit, 6-cpu system, two clusters):
->  capacities-dmips-mhz are scaled w.r.t. 1024 (cpu@0 and cpu@1)
->  supposing cluster0@max-freq=1100 and custer1@max-freq=850,
-> -final capacities are 1024 for cluster0 and 446 for cluster1
-> +final capacities are 1024 for cluster0 and 446 for cluster1.
-> +Note that the values mentioned below in the example (1024 and 578)
-> +aren't normalized based on max frequency of each cluster and that is
-> +left for the operating system to do.
+On Wed, 24 Oct 2018, Sven Van Asbroeck wrote:
 
-Yes, it will help but if you want to make things even more clear, I
-suggest to elaborate the text a bit and give the numbers above to
-explain (1100/850=1.294, 446 * 1.294 = 577, ...)
+> Add a driver for the Arcx anybus bridge.
+> 
+> This chip embeds up to two Anybus-S application connectors
+> (slots), and connects to the SoC via the i.MX parallel WEIM bus.
+> There is also a CAN power readout, unrelated to the anybus.
+> 
+> Signed-off-by: Sven Van Asbroeck <svendev@arcx.com>
+> ---
+>  drivers/mfd/Kconfig          |  11 +
+>  drivers/mfd/Makefile         |   1 +
+>  drivers/mfd/anybus-bridge.c  | 441 +++++++++++++++++++++++++++++++++++
+>  include/linux/anybuss-host.h |  28 +++
+>  4 files changed, 481 insertions(+)
+>  create mode 100644 drivers/mfd/anybus-bridge.c
+>  create mode 100644 include/linux/anybuss-host.h
 
+Wow, this driver is going to need a lot of work.
+
+But before we get going, how many sub-devices does this have?
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
