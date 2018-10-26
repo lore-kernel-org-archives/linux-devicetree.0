@@ -1,70 +1,99 @@
-From: Pascal PAILLET-LME <p.paillet@st.com>
-Subject: Re: [PATCH v4 1/8] dt-bindings: mfd: document stpmic1
-Date: Fri, 26 Oct 2018 09:48:11 +0000
-Message-ID: <5BD2E2DB.5090305@st.com>
-References: <1539853324-29051-1-git-send-email-p.paillet@st.com>
- <1539853324-29051-2-git-send-email-p.paillet@st.com>
- <20181025094430.GQ4939@dell>
- <CAL_JsqKsp8kTK2v_cBrNm+enzieQSEh2G7KMxsBdidr+XhDwTg@mail.gmail.com>
- <20181026064614.GG4870@dell>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Peng Ma <peng.ma@nxp.com>
+Subject: [PATCH 1/7] dmaengine: fsldma: Replace DMA_IN/OUT by FSL_DMA_IN/OUT
+Date: Fri, 26 Oct 2018 17:52:34 +0800
+Message-ID: <20181026095240.33668-1-peng.ma@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181026064614.GG4870@dell>
-Content-Language: en-US
-Content-ID: <7D192C7C0414264C938069FC3CDEFFA2@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Enric Balletbo i Serra <eballetbo@gmail.com>
+To: vkoul@kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, dan.j.williams@intel.com, zw@zh-kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Wen He <wen.he_1@nxp.com>, Peng Ma <peng.ma@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gTGVlLA0KDQpMZSAxMC8yNi8yMDE4IDA4OjQ2IEFNLCBMZWUgSm9uZXMgYSDDqWNyaXQg
-Og0KPiBPbiBUaHUsIDI1IE9jdCAyMDE4LCBSb2IgSGVycmluZyB3cm90ZToNCj4NCj4+IE9uIFRo
-dSwgT2N0IDI1LCAyMDE4IGF0IDQ6NDQgQU0gTGVlIEpvbmVzIDxsZWUuam9uZXNAbGluYXJvLm9y
-Zz4gd3JvdGU6DQo+Pj4gUm9iOiBwbGVhc2UgZ3JlcCB5b3VyIG5hbWUgZm9yIHNvbWUgZmVlZGJh
-Y2suDQo+IFtNb3ZlZCB0byB0aGUgdG9wXQ0KPg0KPj4+IEknbSBzdXJwcmlzZWQgUm9iIGFsbG93
-ZWQgeW91IHRvIGFkZCByZWdpc3RlciBiaXRzIGluIGEgRFQgcHJvcGVydHk/DQo+PiBZZWFoLCB0
-aGV5IGFyZSBjZXJ0YWlubHkgcXVlc3Rpb25hYmxlIGFuZCBub3Qgc29tZXRoaW5nIHdlIGVuY291
-cmFnZSwNCj4+IGJ1dCB0aGUgYWx0ZXJuYXRpdmUgd291bGQgYmUgZG96ZW5zIG9mIHByb3BlcnRp
-ZXMgd2hpY2ggb25seSBhcHBseSBmb3INCj4+IHRoaXMgb25lIGRldmljZSBhbmQganVzdCBnZXQg
-dHJhbnNsYXRlZCBiYWNrIHRvIHJlZ2lzdGVyIHZhbHVlcy4NCj4gSSBkb24ndCBzZWUgaG93IHRo
-aXMgZGV2aWNlIGlzIGFueSBkaWZmZXJlbnQgdG8gdGhlIDEwMCdzIG9mIGRldmljZXMNCj4gd2hp
-Y2ggYXJlIGFscmVhZHkgc3VwcG9ydGVkIGluIERULg0KPg0KPj4+IE9uIFRodSwgMTggT2N0IDIw
-MTgsIFBhc2NhbCBQQUlMTEVULUxNRSB3cm90ZToNCj4+Pg0KPj4+PiBGcm9tOiBwYXNjYWwgcGFp
-bGxldCA8cC5wYWlsbGV0QHN0LmNvbT4NCj4+Pj4gK09wdGlvbmFsIHBhcmVudCBkZXZpY2UgcHJv
-cGVydGllczoNCj4+Pj4gKy0gc3QsbWFpbi1jb250cm9sLXJlZ2lzdGVyOg0KPj4+PiArICAgICAt
-Yml0IDE6IFBvd2VyIGN5Y2xpbmcgd2lsbCBiZSBwZXJmb3JtZWQgb24gdHVybiBPRkYgY29uZGl0
-aW9uDQo+Pj4+ICsgICAgIC1iaXQgMjogUFdSQ1RSTCBpcyBmdW5jdGlvbmFsDQo+Pj4+ICsgICAg
-IC1iaXQgMzogUFdSQ1RSTCBhY3RpdmUgaGlnaA0KPj4+PiArLSBzdCxwYWRzLXB1bGwtcmVnaXN0
-ZXI6DQo+Pj4+ICsgICAgIC1iaXQgMTogV0FLRVVQIHB1bGwgZG93biBpcyBub3QgYWN0aXZlDQo+
-Pj4+ICsgICAgIC1iaXQgMjogUFdSQ1RSTCBwdWxsIHVwIGlzIGFjdGl2ZQ0KPj4+PiArICAgICAt
-Yml0IDM6IFBXUkNUUkwgcHVsbCBkb3duIGlzIGFjdGl2ZQ0KPj4+PiArICAgICAtYml0IDQ6IFdB
-S0VVUCBkZXRlY3RvciBpcyBkaXNhYmxlZA0KPiBUaGlzIHNob3VsZCBiZSBwYXJ0IG9mIHRoZSBQ
-aW5jdHJsIGNvbmZpZ3VyYXRpb24vZHJpdmVyLg0KPg0KPiBBbmQgUGluY3RybCBwcm9iYWJseSBh
-bHJlYWR5IGhhcyBwcm9wZXJ0aWVzIGZvciB0aGlzPw0KSSB3aWxsIHJlbW92ZSB0aGlzIGluIHRo
-ZSBuZXh0IHZlcnNpb24uDQo+Pj4+ICstIHN0LHZpbi1jb250cm9sLXJlZ2lzdGVyOg0KPj4+PiAr
-ICAgICAtYml0IDA6IFZJTkxPVyBtb25pdG9yaW5nIGlzIGVuYWJsZWQNCj4+Pj4gKyAgICAgLWJp
-dCBbMS4uLjNdOiBWSU5MT1cgcmlzaW5nIHRocmVzaG9sZA0KPj4+PiArICAgICAgICAgICAgIDAw
-MCBWSU5PS19mICsgNTBtVg0KPj4+PiArICAgICAgICAgICAgIDAwMSBWSU5PS19mICsgMTAwbVYN
-Cj4+Pj4gKyAgICAgICAgICAgICAwMTAgVklOT0tfZiArIDE1MG1WDQo+Pj4+ICsgICAgICAgICAg
-ICAgMDExIFZJTk9LX2YgKyAyMDBtVg0KPj4+PiArICAgICAgICAgICAgIDEwMCBWSU5PS19mICsg
-MjUwbVYNCj4+Pj4gKyAgICAgICAgICAgICAxMDEgVklOT0tfZiArIDMwMG1WDQo+Pj4+ICsgICAg
-ICAgICAgICAgMTEwIFZJTk9LX2YgKyAzNTBtVg0KPj4+PiArICAgICAgICAgICAgIDExMSBWSU5P
-S19mICsgNDAwbVYNCj4+Pj4gKyAgICAgLWJpdCBbNC4uLjVdOiBWSU5MT1cgaHlzdA0KPj4+PiAr
-ICAgICAgICAgICAgIDAwIDEwMG1WDQo+Pj4+ICsgICAgICAgICAgICAgMDEgMjAwbVYNCj4+Pj4g
-KyAgICAgICAgICAgICAxMCAzMDBtVg0KPj4+PiArICAgICAgICAgICAgIDExIDQwMG1WDQo+Pj4+
-ICsgICAgIC1iaXQgNjogU1dfT1VUIGRldGVjdG9yIGlzIGRpc2FibGVkDQo+Pj4+ICsgICAgIC1i
-aXQgNzogU1dfSU4gZGV0ZWN0b3IgaXMgZW5hYmxlZC4NCj4gVGhpcyBzaG91bGQgYmUgcGFydCBv
-ZiB0aGUgUmVndWxhdG9yIGNvbmZpZ3VyYXRpb24vZHJpdmVyPw0KSSB3aWxsIGFsc28gcmVtb3Zl
-IHRoaXMgaW4gdGhlIG5leHQgdmVyc2lvbi4gSSB0aGluayB0aGlzIGNvdWxkIGJlIA0KaGFuZGxl
-ZCBieSBhbiBoYXJkd2FyZSBtb25pdG9yIGZ1dHVyZSBkcml2ZXIuDQo+Pj4+ICstIHN0LHVzYi1j
-b250cm9sLXJlZ2lzdGVyOg0KPj4+PiArICAgICAtYml0IDM6IFNXX09VVCBjdXJyZW50IGxpbWl0
-DQo+Pj4+ICsgICAgICAgICAgICAgMDogNjAwbUENCj4+Pj4gKyAgICAgICAgICAgICAxOiAxLjFB
-DQo+Pj4+ICsgICAgIC1iaXQgNDogVkJVU19PVEcgZGlzY2hhcmdlIGlzIGVuYWJsZWQNCj4+Pj4g
-KyAgICAgLWJpdCA1OiBTV19PVVQgZGlzY2hhcmdlIGlzIGVuYWJsZWQNCj4+Pj4gKyAgICAgLWJp
-dCA2OiBWQlVTX09URyBkZXRlY3Rpb24gaXMgZW5hYmxlZA0KPj4+PiArICAgICAtYml0IDc6IEJP
-T1NUX09WUCBpcyBkaXNhYmxlZA0KPiBUaGlzIHNob3VsZCBiZSBwYXJ0IG9mIHRoZSBVU0IgY29u
-ZmlndXJhdGlvbi9kcml2ZXI/DQo+DQpJIHdpbGwgYWxzbyByZW1vdmUgdGhpcyBpbiB0aGUgbmV4
-dCB2ZXJzaW9uLiBBbmQgSSdtIGdvaW5nIHRvIGFkZCBhY3RpdmUgDQpkaXNjaGFyZ2Ugb3BzIGlu
-IHRoZSByZWd1bGF0b3IgZHJpdmVyLg0KDQpUaGFuayB5b3UgIQ0KcGFzY2FsDQo=
+From: Wen He <wen.he_1@nxp.com>
+
+This patch implement a standard macro call functions is
+used to NXP dma drivers.
+
+Signed-off-by: Wen He <wen.he_1@nxp.com>
+Signed-off-by: Peng Ma <peng.ma@nxp.com>
+---
+change in v10:
+	- no
+
+ drivers/dma/fsldma.c |   16 ++++++++--------
+ drivers/dma/fsldma.h |    4 ++--
+ 2 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
+index 1117b51..39871e0 100644
+--- a/drivers/dma/fsldma.c
++++ b/drivers/dma/fsldma.c
+@@ -53,42 +53,42 @@
+ 
+ static void set_sr(struct fsldma_chan *chan, u32 val)
+ {
+-	DMA_OUT(chan, &chan->regs->sr, val, 32);
++	FSL_DMA_OUT(chan, &chan->regs->sr, val, 32);
+ }
+ 
+ static u32 get_sr(struct fsldma_chan *chan)
+ {
+-	return DMA_IN(chan, &chan->regs->sr, 32);
++	return FSL_DMA_IN(chan, &chan->regs->sr, 32);
+ }
+ 
+ static void set_mr(struct fsldma_chan *chan, u32 val)
+ {
+-	DMA_OUT(chan, &chan->regs->mr, val, 32);
++	FSL_DMA_OUT(chan, &chan->regs->mr, val, 32);
+ }
+ 
+ static u32 get_mr(struct fsldma_chan *chan)
+ {
+-	return DMA_IN(chan, &chan->regs->mr, 32);
++	return FSL_DMA_IN(chan, &chan->regs->mr, 32);
+ }
+ 
+ static void set_cdar(struct fsldma_chan *chan, dma_addr_t addr)
+ {
+-	DMA_OUT(chan, &chan->regs->cdar, addr | FSL_DMA_SNEN, 64);
++	FSL_DMA_OUT(chan, &chan->regs->cdar, addr | FSL_DMA_SNEN, 64);
+ }
+ 
+ static dma_addr_t get_cdar(struct fsldma_chan *chan)
+ {
+-	return DMA_IN(chan, &chan->regs->cdar, 64) & ~FSL_DMA_SNEN;
++	return FSL_DMA_IN(chan, &chan->regs->cdar, 64) & ~FSL_DMA_SNEN;
+ }
+ 
+ static void set_bcr(struct fsldma_chan *chan, u32 val)
+ {
+-	DMA_OUT(chan, &chan->regs->bcr, val, 32);
++	FSL_DMA_OUT(chan, &chan->regs->bcr, val, 32);
+ }
+ 
+ static u32 get_bcr(struct fsldma_chan *chan)
+ {
+-	return DMA_IN(chan, &chan->regs->bcr, 32);
++	return FSL_DMA_IN(chan, &chan->regs->bcr, 32);
+ }
+ 
+ /*
+diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
+index 4787d48..982845b 100644
+--- a/drivers/dma/fsldma.h
++++ b/drivers/dma/fsldma.h
+@@ -223,10 +223,10 @@ static void out_le64(u64 __iomem *addr, u64 val)
+ }
+ #endif
+ 
+-#define DMA_IN(fsl_chan, addr, width)					\
++#define FSL_DMA_IN(fsl_chan, addr, width)				\
+ 		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
+ 			in_be##width(addr) : in_le##width(addr))
+-#define DMA_OUT(fsl_chan, addr, val, width)				\
++#define FSL_DMA_OUT(fsl_chan, addr, val, width)			\
+ 		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
+ 			out_be##width(addr, val) : out_le##width(addr, val))
+ 
+-- 
+1.7.1
