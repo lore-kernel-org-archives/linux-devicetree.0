@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v3 10/25] drm/sun4i: sun6i_mipi_dsi: Fix DSI hbp
- timing value
-Date: Fri, 26 Oct 2018 20:13:29 +0530
-Message-ID: <20181026144344.27778-11-jagan@amarulasolutions.com>
+Subject: [PATCH v3 11/25] drm/sun4i: sun6i_mipi_dsi: Fix DSI
+ hblk timing calculation
+Date: Fri, 26 Oct 2018 20:13:30 +0530
+Message-ID: <20181026144344.27778-12-jagan@amarulasolutions.com>
 References: <20181026144344.27778-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB5OQZTPAKGQEZ4F7UKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB6WQZTPAKGQEX3CTZ3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181026144344.27778-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,32 +20,29 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Current driver is calculating hbp maximum value by subtracting
-hsync_start with hdisplay which is front porch value, but the
-hbp refers to back porch.
+hblk is adding line with all porch timing values, or timings
+values from htotal without sync time.
 
-Back porch value is calculating by subtracting htotal with
-hsync_end as per drm_mode timings, and BSP code from BPI-M64-bsp
-is eventually following the same.
+Current driver is subtracting htotal with hsa, but the hsa
+is bounded with packet overhead. For real hblk calculation
+needed by subtracting htotal with back and front porch values
+and BSP code BPI-M64-bsp is eventually following the same.
 
 BPI-M64-bsp is computing hbp as
 (in drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
-dsi_hbp = (hbp-hspw)*dsi_pixel_bits[format]/8 - (4+2);
-=> (panel->lcd_hbp - timmings->hor_sync_time)
-=> (timmings->hor_back_porch + timmings->hor_sync_time - timmings->hor_sync_time)
-=> timmings->hor_back_porch
-=> mode->htotal - mode->hsync_end
+dsi_hblk = (ht-hspw)*dsi_pixel_bits[format]/8-(4+4+2);
+=> (timmings->hor_total_time - timmings->hor_sync_time)
+=> (mode->htotal - (mode->hsync_end - mode->hsync_start))
 
-So, update the MIPI-DSI hbp value accordingly.
+So, update the DSI hblk timing accordingly.
 
-Tested on 2-lane, 4-lane DSI LCD panels.
+Tested on 2-lane, 4-lane MIPI-DSI LCD panels.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 Tested-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
 Changes for v3:
-- Fixed proper commit message
-- add tested credit
+- new patch
 Changes for v2:
 - none
 
@@ -53,17 +50,17 @@ Changes for v2:
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 6bece492b1f7..78bad71045ca 100644
+index 78bad71045ca..596e560263bf 100644
 --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
 +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -482,7 +482,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+@@ -495,7 +495,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+ 	/*
+ 	 * hblk seems to be the line + porches length.
  	 */
- #define HBP_PACKET_OVERHEAD	6
- 	hbp = max((unsigned int)HBP_PACKET_OVERHEAD,
--		  (mode->hsync_start - mode->hdisplay) * Bpp - HBP_PACKET_OVERHEAD);
-+		  (mode->htotal - mode->hsync_end) * Bpp - HBP_PACKET_OVERHEAD);
+-	hblk = mode->htotal * Bpp - hsa;
++	hblk = (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp;
  
  	/*
- 	 * The frontporch is set using a blanking packet (4 bytes +
+ 	 * And I'm not entirely sure what vblk is about. The driver in
 -- 
 2.18.0.321.gffc6fa0e3
