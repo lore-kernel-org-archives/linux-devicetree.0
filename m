@@ -1,92 +1,48 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 1/8] dt-bindings: mfd: document stpmic1
-Date: Fri, 26 Oct 2018 07:46:14 +0100
-Message-ID: <20181026064614.GG4870@dell>
-References: <1539853324-29051-1-git-send-email-p.paillet@st.com>
- <1539853324-29051-2-git-send-email-p.paillet@st.com>
- <20181025094430.GQ4939@dell>
- <CAL_JsqKsp8kTK2v_cBrNm+enzieQSEh2G7KMxsBdidr+XhDwTg@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 3/6] PCI: layerscape: Add the EP mode support
+Date: Fri, 26 Oct 2018 09:01:19 +0200
+Message-ID: <CAK8P3a3Ty4bRuHiVHY6dh55b1ms8z7RpG2sALM0Dn_8Yd39-xQ@mail.gmail.com>
+References: <20181025110901.5680-1-xiaowei.bao@nxp.com> <20181025110901.5680-3-xiaowei.bao@nxp.com>
+ <20181025215246.GA14861@bogus> <HE1PR04MB149735C7EF2A23AEE982BB9FF5F00@HE1PR04MB1497.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKsp8kTK2v_cBrNm+enzieQSEh2G7KMxsBdidr+XhDwTg@mail.gmail.com>
+In-Reply-To: <HE1PR04MB149735C7EF2A23AEE982BB9FF5F00@HE1PR04MB1497.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Pascal PAILLET-LME <p.paillet@st.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Enric Balletbo i Serra <eballetbo@gmail.com>
+To: Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "cyrille.pitchen@free-electrons.com" <cyrille.pitchen@free-electrons.com>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>, "niklas.cassel@axis.com" <niklas.cassel@axis.com>, "linux-pci@vger.kernel.org" <linux-pci@>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 25 Oct 2018, Rob Herring wrote:
+On 10/26/18, Xiaowei Bao <xiaowei.bao@nxp.com> wrote:
+> From: Rob Herring <robh@kernel.org>
+>> On Thu, Oct 25, 2018 at 07:08:58PM +0800, Xiaowei Bao wrote:
+>>>          "fsl,ls2080a-pcie", "fsl,ls2085a-pcie", "snps,dw-pcie"
+>>>          "fsl,ls2088a-pcie"
+>>>          "fsl,ls1088a-pcie"
+>>>          "fsl,ls1046a-pcie"
+>>>          "fsl,ls1012a-pcie"
+>>> +  EP mode:
+>>> +        "fsl,ls-pcie-ep"
+>>
+> > You need SoC specific compatibles for the same reasons as the RC.
+>
+> [Xiaowei Bao] I want to contains all layerscape platform use one compatible
+> if the PCIe controller work in EP mode.
 
-> On Thu, Oct 25, 2018 at 4:44 AM Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > Rob: please grep your name for some feedback.
+Do you mean only one of the SoCs that support RC mode has EP mode?
+I think you still need a SoC specific compatible as Rob explained, in case
+there will be a second one in the future.
 
-[Moved to the top]
+If you want to ensure that you don't have to update the device driver
+for each new chip that comes in when the EP mode is compatible,
+the way this is handled is to list multiple values in the compatible
+property, listing the first SoC that introduced the specific version of
+that IP block as the most generic type, e.g.
 
-> > I'm surprised Rob allowed you to add register bits in a DT property?
-> 
-> Yeah, they are certainly questionable and not something we encourage,
-> but the alternative would be dozens of properties which only apply for
-> this one device and just get translated back to register values.
+  copatible = "fsl,ls2088a-pcie-ep", "fsl,ls1012a-pcie-ep", "snps,dw-pcie-ep";
 
-I don't see how this device is any different to the 100's of devices
-which are already supported in DT.
+For consistency, it probably is best to match each RC mode value with
+the corresponding EP mode string for each device that can support both
+(if there is more than one).
 
-> > On Thu, 18 Oct 2018, Pascal PAILLET-LME wrote:
-> >
-> > > From: pascal paillet <p.paillet@st.com>
-> 
-> > > +Optional parent device properties:
-> > > +- st,main-control-register:
-> > > +     -bit 1: Power cycling will be performed on turn OFF condition
-> > > +     -bit 2: PWRCTRL is functional
-> > > +     -bit 3: PWRCTRL active high
-> > > +- st,pads-pull-register:
-> > > +     -bit 1: WAKEUP pull down is not active
-> > > +     -bit 2: PWRCTRL pull up is active
-> > > +     -bit 3: PWRCTRL pull down is active
-> > > +     -bit 4: WAKEUP detector is disabled
-
-This should be part of the Pinctrl configuration/driver.
-
-And Pinctrl probably already has properties for this?
-
-> > > +- st,vin-control-register:
-> > > +     -bit 0: VINLOW monitoring is enabled
-> > > +     -bit [1...3]: VINLOW rising threshold
-> > > +             000 VINOK_f + 50mV
-> > > +             001 VINOK_f + 100mV
-> > > +             010 VINOK_f + 150mV
-> > > +             011 VINOK_f + 200mV
-> > > +             100 VINOK_f + 250mV
-> > > +             101 VINOK_f + 300mV
-> > > +             110 VINOK_f + 350mV
-> > > +             111 VINOK_f + 400mV
-> > > +     -bit [4...5]: VINLOW hyst
-> > > +             00 100mV
-> > > +             01 200mV
-> > > +             10 300mV
-> > > +             11 400mV
-> > > +     -bit 6: SW_OUT detector is disabled
-> > > +     -bit 7: SW_IN detector is enabled.
-
-This should be part of the Regulator configuration/driver?
-
-> > > +- st,usb-control-register:
-> > > +     -bit 3: SW_OUT current limit
-> > > +             0: 600mA
-> > > +             1: 1.1A
-> > > +     -bit 4: VBUS_OTG discharge is enabled
-> > > +     -bit 5: SW_OUT discharge is enabled
-> > > +     -bit 6: VBUS_OTG detection is enabled
-> > > +     -bit 7: BOOST_OVP is disabled
-
-This should be part of the USB configuration/driver?
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+      Arnd
