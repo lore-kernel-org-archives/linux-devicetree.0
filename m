@@ -1,52 +1,39 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v3 2/3] iio: adc128s052: add ACPI _HID AANT1280
-Date: Fri, 26 Oct 2018 15:12:28 +0300
-Message-ID: <20181026121228.GE10650@smile.fi.intel.com>
-References: <20180423213805.12591-1-javier@emutex.com>
- <1540481742-23596-1-git-send-email-dan@emutex.com>
- <1540481742-23596-3-git-send-email-dan@emutex.com>
- <20181025174638.GB10650@smile.fi.intel.com>
- <c17cf6de-846b-aed3-7745-4f635495873e@emutex.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH] arm64: dts: qcom: sdm845: Add SCM DT node
+Date: Fri, 26 Oct 2018 17:55:42 +0530
+Message-ID: <20181026122542.4714-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c17cf6de-846b-aed3-7745-4f635495873e@emutex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan O'Donovan <dan@emutex.com>
-Cc: linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Carlos Iglesias <carlos.iglesias@emutex.com>, Nicola Lunghi <nicola.lunghi@emutex.com>, Javier Arteaga <javier@emutex.com>
+To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org
+Cc: bjorn.andersson@linaro.org, dianders@chromium.org, evgreen@chromium.org, benchan@chromium.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 26, 2018 at 11:13:01AM +0100, Dan O'Donovan wrote:
-> On 10/25/2018 06:46 PM, Andy Shevchenko wrote:
-> > On Thu, Oct 25, 2018 at 04:35:41PM +0100, Dan O'Donovan wrote:
+Add SCM DT node to enable SCM functionality on SDM845.
 
-> >> +	{ "AANT1280", 2 }, /* ADC124S021 compatible ACPI ID */
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> > Looking how driver is organized and what ACPI can provide I would highly
-> > recommend to look forward to PTYP field for utilization of the type of the HW.
-
-> > Maybe it would not work with published BIOSes, but would be good for the future
-> > (in that case anybody can utilize that _HID + PTYP pair on their platforms).
-
-> Thanks Andy for your review and feedback.  Your _HID + PTYP suggestion sounds
-> interesting, but I couldn't find any information in the ACPI spec or elsewhere
-> about how/when/where to use it.  
-
-I stand corrected, it's not in the spec, rather de facto use of it in some
-cases, see below.
-
-> It isn't used in the UP Squared ACPI tables.
-> Do you have any links or other information you could share about it? Thanks!
-
-As far as I can find the following code in the kernel and thus real ACPI tables
-in the wild that utilize it.
-
-drivers/acpi/dptf/dptf_power.c:84:      status = acpi_evaluate_integer(acpi_dev->handle, "PTYP", NULL, &ptype);
-drivers/platform/x86/intel_cht_int33fe.c:101:   status = acpi_evaluate_integer(ACPI_HANDLE(dev), "PTYP", NULL, &ptyp);
-drivers/thermal/int340x_thermal/int3403_thermal.c:237:  status = acpi_evaluate_integer(priv->adev->handle, "PTYP",
-
-
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index b72bdb0a31a5..fad22acfda4d 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -221,6 +221,12 @@
+ 		};
+ 	};
+ 
++	firmware {
++		scm {
++			compatible = "qcom,scm-sdm845", "qcom,scm";
++		};
++	};
++
+ 	tcsr_mutex: hwlock {
+ 		compatible = "qcom,tcsr-mutex";
+ 		syscon = <&tcsr_mutex_regs 0 0x1000>;
 -- 
-With Best Regards,
-Andy Shevchenko
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
