@@ -1,50 +1,32 @@
-From: Pramod Kumar <pramod.kumar_1@nxp.com>
-Subject: [PATCH v2] dt-bindings: ls1012a: Add FRWY-LS1012A device tree binding
-Date: Fri, 26 Oct 2018 08:45:26 +0000
-Message-ID: <20181026084554.32290-1-pramod.kumar_1@nxp.com>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: [PATCH V2 0/2] can: flexcan: Add CAN self wakeup support
+Date: Fri, 26 Oct 2018 09:00:31 +0000
+Message-ID: <20181026085814.23370-1-qiangqing.zhang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
+Cc: "wg@grandegger.com" <wg@grandegger.com>, "mkl@pengutronix.de" <mkl@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Joakim Zhang <qiangqing.zhang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-LS1012A-FRWY is an ls1012a based SoC board
-Add device tree binding for LS1012A-FRWY board
+This patch series intends to add CAN self wakeup support. The CAN
+controller can parse stop mode property from device tree to enable self
+wakeup feature.
 
-Signed-off-by: Pramod Kumar <pramod.kumar_1@nxp.com>
----
-Change in v2:
--Change the subject line
+ChangeLog:
+V1->V2:
+	*add a vendor prefix in property (stop-mode -> fsl,stop-mode).
 
- Documentation/devicetree/bindings/arm/fsl.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+Dong Aisheng (2):
+  can: flexcan: Add self wakeup support
+  Documentation: can: flexcan: Add stop mode property to device tree
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-index 8a1baa2b9723..1eda1f79eb43 100644
---- a/Documentation/devicetree/bindings/arm/fsl.txt
-+++ b/Documentation/devicetree/bindings/arm/fsl.txt
-@@ -155,6 +155,10 @@ LS1012A ARMv8 based FRDM Board
- Required root node properties:
-     - compatible = "fsl,ls1012a-frdm", "fsl,ls1012a";
- 
-+LS1012A ARMv8 based FRWY Board
-+Required root node properties:
-+    - compatible = "fsl,ls1012a-frwy", "fsl,ls1012a";
-+
- LS1012A ARMv8 based QDS Board
- Required root node properties:
-     - compatible = "fsl,ls1012a-qds", "fsl,ls1012a";
--- 
+ .../bindings/net/can/fsl-flexcan.txt          |   8 +
+ drivers/net/can/flexcan.c                     | 141 ++++++++++++++++--
+ 2 files changed, 140 insertions(+), 9 deletions(-)
+
+--=20
 2.17.1
