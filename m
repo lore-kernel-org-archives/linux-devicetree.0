@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v3 09/25] drm/sun4i: sun6i_mipi_dsi: Refactor
- vertical video start delay
-Date: Fri, 26 Oct 2018 20:13:28 +0530
-Message-ID: <20181026144344.27778-10-jagan@amarulasolutions.com>
+Subject: [PATCH v3 10/25] drm/sun4i: sun6i_mipi_dsi: Fix DSI hbp
+ timing value
+Date: Fri, 26 Oct 2018 20:13:29 +0530
+Message-ID: <20181026144344.27778-11-jagan@amarulasolutions.com>
 References: <20181026144344.27778-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB36QZTPAKGQEVU6XU3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB5OQZTPAKGQEZ4F7UKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181026144344.27778-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,21 +20,25 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Video start delay can be computed by subtracting total vertical
-timing with front porch timing and with adding 1 delay line for TCON.
+Current driver is calculating hbp maximum value by subtracting
+hsync_start with hdisplay which is front porch value, but the
+hbp refers to back porch.
 
-BSP code form BPI-M64-bsp is computing video start delay as
-(in linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
+Back porch value is calculating by subtracting htotal with
+hsync_end as per drm_mode timings, and BSP code from BPI-M64-bsp
+is eventually following the same.
 
-u32 vfp = panel->lcd_vt - panel->lcd_y - panel->lcd_vbp;
-=> (panel->lcd_vt) - panel->lcd_y - (panel->lcd_vbp)
-=> (timmings->ver_front_porch + panel->lcd_vbp + panel->lcd_y)
-   - panel->lcd_y - (panel->lcd_vbp)
-=> timmings->ver_front_porch + panel->lcd_vbp + panel->lcd_y
-  			     - panel->lcd_y - panel->lcd_vbp
-=> timmings->ver_front_porch
+BPI-M64-bsp is computing hbp as
+(in drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
+dsi_hbp = (hbp-hspw)*dsi_pixel_bits[format]/8 - (4+2);
+=> (panel->lcd_hbp - timmings->hor_sync_time)
+=> (timmings->hor_back_porch + timmings->hor_sync_time - timmings->hor_sync_time)
+=> timmings->hor_back_porch
+=> mode->htotal - mode->hsync_end
 
-So, update the start delay computation accordingly.
+So, update the MIPI-DSI hbp value accordingly.
+
+Tested on 2-lane, 4-lane DSI LCD panels.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 Tested-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
@@ -45,31 +49,21 @@ Changes for v3:
 Changes for v2:
 - none
 
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 8d154cf2e6d6..6bece492b1f7 100644
+index 6bece492b1f7..78bad71045ca 100644
 --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
 +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -358,7 +358,17 @@ static void sun6i_dsi_inst_init(struct sun6i_dsi *dsi,
- static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
- 					   struct drm_display_mode *mode)
- {
--	return mode->vtotal - (mode->vsync_end - mode->vdisplay) + 1;
-+	u32 vfp = mode->vsync_start - mode->vdisplay;
-+	u32 start_delay;
-+
-+	start_delay = mode->vtotal - vfp + 1;
-+	if (start_delay > mode->vtotal)
-+		start_delay -= mode->vtotal;
-+
-+	if (!start_delay)
-+		start_delay = 1;
-+
-+	return start_delay;
- }
+@@ -482,7 +482,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+ 	 */
+ #define HBP_PACKET_OVERHEAD	6
+ 	hbp = max((unsigned int)HBP_PACKET_OVERHEAD,
+-		  (mode->hsync_start - mode->hdisplay) * Bpp - HBP_PACKET_OVERHEAD);
++		  (mode->htotal - mode->hsync_end) * Bpp - HBP_PACKET_OVERHEAD);
  
- static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
+ 	/*
+ 	 * The frontporch is set using a blanking packet (4 bytes +
 -- 
 2.18.0.321.gffc6fa0e3
