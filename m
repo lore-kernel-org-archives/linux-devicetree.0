@@ -1,76 +1,71 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v4 2/7] dt-bindings: ti-lmu: Modify dt bindings for the
- LM3697
-Date: Fri, 26 Oct 2018 10:30:37 +0200
-Message-ID: <20181026083037.GA19434@amd>
-References: <20181023170623.31820-1-dmurphy@ti.com>
- <20181023170623.31820-2-dmurphy@ti.com>
- <20181024090421.GB24997@amd>
- <e8800c2e-8ada-7a0d-c1a6-14ddcbe1576d@ti.com>
- <20181024145434.GC9327@bogus>
- <beb1a6e1-8120-be94-b1a4-60ea6721765d@ti.com>
- <ade3121a-58ab-c0c3-6605-cf7d6a638da0@gmail.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH] dt-bindings: arm: Fix cpu capacity mismatch in example
+Date: Fri, 26 Oct 2018 10:30:32 +0200
+Message-ID: <d4d6af05-61f1-4123-c2dc-4ee0946f79e8@linaro.org>
+References: <138600f5d504b41202a29a1e130a7aa4e51f1925.1540451976.git.viresh.kumar@linaro.org>
+ <80206cb7-b550-1cf6-abf4-e4b17de4cdb5@linaro.org>
+ <20181026041107.4hofhlcubbo5claq@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ade3121a-58ab-c0c3-6605-cf7d6a638da0@gmail.com>
+In-Reply-To: <20181026041107.4hofhlcubbo5claq@vireshk-i7>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Dan Murphy <dmurphy@ti.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, lee.jones@linaro.org, tony@atomide.com
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: catalin.marinas@arm.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Vincent Guittot <vincent.guittot@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 26/10/2018 06:11, Viresh Kumar wrote:
+> On 25-10-18, 14:04, Daniel Lezcano wrote:
+>> I think it is actually correct. The example is confusing on what the
+>> numbers are. IIUC, it is:
+>>
+>> (after normalizing)
+>>
+>> dhrystone result on big CPU is 1024 at 1100MHz
+>> dhrystone result on little CPU is 446 at 850MHz
+>>
+>> We have to scale the result of the little for 1100MHz in order to compare.
+>>
+>> 1100/850 = 1.294
+>>
+>> dhrystone result on little CPU is 446 * 1.294 = 577 at 1100MHz
+>>
+>> So we put the normalized values 1024 and 577. The arch_topology will
+>> scale 577 back to 446 as it will compute the max capacity based on the
+>> max freq which is 850MHz.
+>>
+>> The *final* capacities are 1024 for cluster0 and 446 for cluster1 (read
+>> the cpu max capacity, the ones showed in the sysfs).
+>>
+>> Did I miss something ?
+> 
+> No. What about making it more clear in the example to save the next idiot (like
+> me) from wasting time :)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> index 9b5685a1d15d..d061e6575bde 100644
+> --- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> @@ -61,7 +61,10 @@ mhz values (normalized w.r.t. the highest value found while parsing the DT).
+>  Example 1 (ARM 64-bit, 6-cpu system, two clusters):
+>  capacities-dmips-mhz are scaled w.r.t. 1024 (cpu@0 and cpu@1)
+>  supposing cluster0@max-freq=1100 and custer1@max-freq=850,
+> -final capacities are 1024 for cluster0 and 446 for cluster1
+> +final capacities are 1024 for cluster0 and 446 for cluster1.
+> +Note that the values mentioned below in the example (1024 and 578)
+> +aren't normalized based on max frequency of each cluster and that is
+> +left for the operating system to do.
 
---5mCyUwZo2JvN/JJP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, it will help but if you want to make things even more clear, I
+suggest to elaborate the text a bit and give the numbers above to
+explain (1100/850=1.294, 446 * 1.294 = 577, ...)
 
-Hi!
 
-> >>>>> +Optional child properties:
-> >>>>> +	- runtime-ramp-up-msec: Current ramping from one brightness level=
- to
-> >>>>> +				the a higher brightness level.
-> >>>>> +				Range from 2048 us - 117.44 s
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-> This is this problem with the Device Tree's scope of responsibility.
-> It is defined as a means for "describing the hardware", but often
-> this rule is abused by the properties that fall into "configuration"
-> category. E.g. default-state, retain-state-suspended from leds-gpio.txt
-> or linux-default-trigger from common LED bindings.
-
-I always assumed that ramp-up time is there because hardware (power
-supply?) can not handle "too fast" switching. Missing capacitors or
-something. If so, this needs to be in device tree.
-
-If not, it indeed does not belong to device tree.
-
-> In some cases this is justified. The question is whether it is something
-> that necessarily needs to be configured on driver probing? If not, then
-> I'd go for sysfs interface.
-
-While this would be useful for hardware accelerated patterns, I doubt
-we want to make it configurable without that support.
-
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---5mCyUwZo2JvN/JJP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvS0K0ACgkQMOfwapXb+vIyNwCeK2RsHd75QVAKceaWGKzf+yBd
-iaYAnjGeD0tqO06hau4IIW2z0QdfLLoD
-=hzIb
------END PGP SIGNATURE-----
-
---5mCyUwZo2JvN/JJP--
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
