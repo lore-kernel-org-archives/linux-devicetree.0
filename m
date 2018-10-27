@@ -1,7 +1,7 @@
 From: Yu Chen <chenyu56@huawei.com>
-Subject: [PATCH 09/10] usb: gadget: Add configfs attribuite for controling match_existing_only
-Date: Sat, 27 Oct 2018 17:58:19 +0800
-Message-ID: <20181027095820.40056-10-chenyu56@huawei.com>
+Subject: [PATCH 03/10] dt-bindings: misc: Add bindings for HiSilicon usb hub and data role switch functionality on HiKey960
+Date: Sat, 27 Oct 2018 17:58:13 +0800
+Message-ID: <20181027095820.40056-4-chenyu56@huawei.com>
 References: <20181027095820.40056-1-chenyu56@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,83 +9,51 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181027095820.40056-1-chenyu56@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Yu Chen <chenyu56@huawei.com>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Binghui Wang <wangbinghui@hisilicon.com>
+Cc: suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Yu Chen <chenyu56@huawei.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>, Binghui Wang <wangbinghui@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-Currently the "match_existing_only" of usb_gadget_driver in configfs is
-set to one which is not flexible.
-Dwc3 udc will be removed when usb core switch to host mode. This causes
-failure of writing name of dwc3 udc to configfs's UDC attribuite.
-To fix this we need to add a way to change the config of
-"match_existing_only".
-This patch adds a configfs attribuite for controling match_existing_only
-which allow user to config "match_existing_only".
+This patch adds binding documentation to support usb hub and usb
+data role switch of Hisilicon HiKey&HiKey960 Board.
 
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: John Stultz <john.stultz@linaro.org>
 Cc: Binghui Wang <wangbinghui@hisilicon.com>
 Signed-off-by: Yu Chen <chenyu56@huawei.com>
 ---
- drivers/usb/gadget/configfs.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ .../bindings/misc/hisilicon-hikey-usb.txt          | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
 
-diff --git a/drivers/usb/gadget/configfs.c b/drivers/usb/gadget/configfs.c
-index 025129942894..c82b7bc98dea 100644
---- a/drivers/usb/gadget/configfs.c
-+++ b/drivers/usb/gadget/configfs.c
-@@ -291,6 +291,36 @@ static ssize_t gadget_dev_desc_UDC_store(struct config_item *item,
- 	return ret;
- }
- 
-+static ssize_t gadget_driver_match_existing_only_store(struct config_item *item,
-+		const char *page, size_t len)
-+{
-+	struct usb_gadget_driver *gadget_driver =
-+		&(to_gadget_info(item)->composite.gadget_driver);
-+	bool match_existing_only;
-+	int ret;
+diff --git a/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
+new file mode 100644
+index 000000000000..f94e990362c9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
+@@ -0,0 +1,24 @@
++Support usb hub and usb data role switch of Hisilicon HiKey&HiKey960 Board.
 +
-+	ret = kstrtobool(page, &match_existing_only);
-+	if (ret)
-+		return ret;
++-----------------------------
 +
-+	if (match_existing_only)
-+		gadget_driver->match_existing_only = 1;
-+	else
-+		gadget_driver->match_existing_only = 0;
++Required properties:
++- compatible: "hisilicon,gpio_hubv1","hisilicon,hikey960_usb"
++- typc_vbus_int_gpio,typec-gpios: gpio to control the vbus of typeC port
++- typc_vbus_enable_val: gpio value that enable the vbus of typeC port
++- otg_gpio: gpio to switch DP&DM between the hub and typeC port
++- hub_vdd33_en_gpio: gpio to enable the power of hub
++- pinctrl-0: pinctrl config
 +
-+	return len;
-+}
++Example
++-----
 +
-+static ssize_t gadget_driver_match_existing_only_show(struct config_item *item,
-+		char *page)
-+{
-+	struct usb_gadget_driver *gadget_driver =
-+		&(to_gadget_info(item)->composite.gadget_driver);
-+	bool match_existing_only = !!gadget_driver->match_existing_only;
-+
-+	return sprintf(page, "%s\n", match_existing_only ? "true" : "false");
-+}
-+
- CONFIGFS_ATTR(gadget_dev_desc_, bDeviceClass);
- CONFIGFS_ATTR(gadget_dev_desc_, bDeviceSubClass);
- CONFIGFS_ATTR(gadget_dev_desc_, bDeviceProtocol);
-@@ -300,6 +330,7 @@ CONFIGFS_ATTR(gadget_dev_desc_, idProduct);
- CONFIGFS_ATTR(gadget_dev_desc_, bcdDevice);
- CONFIGFS_ATTR(gadget_dev_desc_, bcdUSB);
- CONFIGFS_ATTR(gadget_dev_desc_, UDC);
-+CONFIGFS_ATTR(gadget_, driver_match_existing_only);
- 
- static struct configfs_attribute *gadget_root_attrs[] = {
- 	&gadget_dev_desc_attr_bDeviceClass,
-@@ -311,6 +342,7 @@ static struct configfs_attribute *gadget_root_attrs[] = {
- 	&gadget_dev_desc_attr_bcdDevice,
- 	&gadget_dev_desc_attr_bcdUSB,
- 	&gadget_dev_desc_attr_UDC,
-+	&gadget_attr_driver_match_existing_only,
- 	NULL,
- };
- 
++	hisi_hikey_usb: hisi_hikey_usb {
++		compatible = "hisilicon,hikey960_usb";
++		typc_vbus_int_gpio,typec-gpios = <&gpio25 2 0>;
++		typc_vbus_enable_val = <1>;
++		otg_gpio = <&gpio25 6 0>;
++		hub_vdd33_en_gpio = <&gpio5 6 0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usbhub5734_pmx_func>;
++	};
 -- 
 2.15.0-rc2
