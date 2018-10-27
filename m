@@ -1,254 +1,140 @@
-From: Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH v4 1/2] arm64: Get rid of __early_init_dt_declare_initrd()
-Date: Sat, 27 Oct 2018 10:13:42 +0100
-Message-ID: <20181027091341.GB6770@rapoport-lnx>
-References: <20181026223951.30936-1-f.fainelli@gmail.com>
- <20181026223951.30936-2-f.fainelli@gmail.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v3 20/25] drm/panel: Add Techstar TS8550B
+ MIPI-DSI LCD panel
+Date: Sat, 27 Oct 2018 15:25:29 +0530
+Message-ID: <CAMty3ZDc84ErYB9LR_Y7OJtUOx+AAhTV1RwC7-Jr1Br8yN6hUw@mail.gmail.com>
+References: <20181026144344.27778-1-jagan@amarulasolutions.com>
+ <20181026144344.27778-21-jagan@amarulasolutions.com> <20181026161324.qbpcpkpwyixi7juk@plaes.org>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181026223951.30936-2-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, moderated list:ARM64 PORT (AARCH64 ARCHITECTUR
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBHPM2DPAKGQEXFZVRBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181026161324.qbpcpkpwyixi7juk-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
+On Fri, Oct 26, 2018 at 9:43 PM Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org> wrote:
+>
+> On Fri, Oct 26, 2018 at 08:13:39PM +0530, Jagan Teki wrote:
+> > Techstar TS8550B MIPI DSI panel is 480x854, 2-lane MIPI DSI
+> > LCD panel. Add panel driver for it.
+> >
+> > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > Tested-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > ---
+> > Changes for v3:
+> > - new patch
+> > Changes for v2:
+> > - none
+> >
+> >  drivers/gpu/drm/panel/Kconfig                 |   9 +
+> >  drivers/gpu/drm/panel/Makefile                |   1 +
+> >  .../gpu/drm/panel/panel-techstar-ts8550b.c    | 346 ++++++++++++++++++
+> >  3 files changed, 356 insertions(+)
+> >  create mode 100644 drivers/gpu/drm/panel/panel-techstar-ts8550b.c
+> >
+> > diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> > index 20b88c275421..d0d4e60f5153 100644
+> > --- a/drivers/gpu/drm/panel/Kconfig
+> > +++ b/drivers/gpu/drm/panel/Kconfig
+> > @@ -195,4 +195,13 @@ config DRM_PANEL_SITRONIX_ST7789V
+> >         Say Y here if you want to enable support for the Sitronix
+> >         ST7789V controller for 240x320 LCD panels
+> >
+> > +config DRM_PANEL_TECHSTAR_TS8550B
+> > +     tristate "Techstar TS8550B MIPI-DSI panel driver"
+> > +     depends on OF
+> > +     depends on DRM_MIPI_DSI
+> > +     depends on BACKLIGHT_CLASS_DEVICE
+> > +     help
+> > +       Say Y if you want to enable support for panels based on the
+> > +       Techstar TS8550B MIPI-DSI interface.
+> > +
+> >  endmenu
+> > diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+> > index 04696bb85218..88011f06edb8 100644
+> > --- a/drivers/gpu/drm/panel/Makefile
+> > +++ b/drivers/gpu/drm/panel/Makefile
+> > @@ -20,3 +20,4 @@ obj-$(CONFIG_DRM_PANEL_SEIKO_43WVF1G) += panel-seiko-43wvf1g.o
+> >  obj-$(CONFIG_DRM_PANEL_SHARP_LQ101R1SX01) += panel-sharp-lq101r1sx01.o
+> >  obj-$(CONFIG_DRM_PANEL_SHARP_LS043T1LE01) += panel-sharp-ls043t1le01.o
+> >  obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7789V) += panel-sitronix-st7789v.o
+> > +obj-$(CONFIG_DRM_PANEL_TECHSTAR_TS8550B) += panel-techstar-ts8550b.o
+> > diff --git a/drivers/gpu/drm/panel/panel-techstar-ts8550b.c b/drivers/gpu/drm/panel/panel-techstar-ts8550b.c
+> > new file mode 100644
+> > index 000000000000..8baca71595a7
+> > --- /dev/null
+> > +++ b/drivers/gpu/drm/panel/panel-techstar-ts8550b.c
+> > @@ -0,0 +1,346 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Copyright (C) 2019, Amarula Solutions.
+> > + * Author: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > + */
+> > +
+> > +#include <linux/backlight.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/device.h>
+> > +#include <linux/err.h>
+> > +#include <linux/errno.h>
+> > +#include <linux/fb.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +
+> > +#include <linux/gpio/consumer.h>
+> > +#include <linux/regulator/consumer.h>
+> > +
+> > +#include <drm/drm_mipi_dsi.h>
+> > +#include <drm/drm_modes.h>
+> > +#include <drm/drm_panel.h>
+> > +
+> > +#include <video/mipi_display.h>
+> > +
+> > +struct ts8550b {
+> > +     struct drm_panel        panel;
+> > +     struct mipi_dsi_device  *dsi;
+> > +
+> > +     struct backlight_device *backlight;
+> > +     struct regulator        *dvdd;
+> > +     struct regulator        *avdd;
+> > +     struct gpio_desc        *reset;
+> > +
+> > +     bool                    is_enabled;
+> > +     bool                    is_prepared;
+> > +};
+> > +
+> > +static inline struct ts8550b *panel_to_ts8550b(struct drm_panel *panel)
+> > +{
+> > +     return container_of(panel, struct ts8550b, panel);
+> > +}
+> > +
+> > +static inline int ts8550b_dcs_write_seq(struct ts8550b *ctx, const void *seq,
+> > +                                     size_t len)
+> > +{
+> > +     return mipi_dsi_dcs_write_buffer(ctx->dsi, seq, len);
+> > +};
+> > +
+> > +#define ts8550b_dcs_write_seq_static(ctx, seq...)            \
+> > +     ({                                                      \
+> > +             static const u8 d[] = { seq };                  \
+> > +             ts8550b_dcs_write_seq(ctx, d, ARRAY_SIZE(d));   \
+> > +     })
+> > +
+> > +static void ts8550b_init_sequence(struct ts8550b *ctx)
+>
+> This seems to be pretty "standard" MIPI-based display, utilizing
+> bunch of manufacturer-specific commands during init sequence.
+>
+> Standard MIPI commands fall between 0x00..0xAF and are defined in <video/mipi.h>
 
-On Fri, Oct 26, 2018 at 03:39:50PM -0700, Florian Fainelli wrote:
-> ARM64 is the only architecture that re-defines
-> __early_init_dt_declare_initrd() in order for that function to populate
-> initrd_start/initrd_end with physical addresses instead of virtual
-> addresses. Instead of having an override, just get rid of that
-> implementation and perform the virtual to physical conversion of these
-> addresses in arm64_memblock_init() where relevant.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  arch/arm64/include/asm/memory.h |  8 --------
->  arch/arm64/mm/init.c            | 26 ++++++++++++++++----------
->  2 files changed, 16 insertions(+), 18 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
-> index b96442960aea..dc3ca21ba240 100644
-> --- a/arch/arm64/include/asm/memory.h
-> +++ b/arch/arm64/include/asm/memory.h
-> @@ -168,14 +168,6 @@
->  #define IOREMAP_MAX_ORDER	(PMD_SHIFT)
->  #endif
->  
-> -#ifdef CONFIG_BLK_DEV_INITRD
-> -#define __early_init_dt_declare_initrd(__start, __end)			\
-> -	do {								\
-> -		initrd_start = (__start);				\
-> -		initrd_end = (__end);					\
-> -	} while (0)
-> -#endif
-> -
->  #ifndef __ASSEMBLY__
->  
->  #include <linux/bitops.h>
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index 3cf87341859f..98ff0f7a0f7a 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -364,6 +364,9 @@ static void __init fdt_enforce_memory_region(void)
->  void __init arm64_memblock_init(void)
->  {
->  	const s64 linear_region_size = -(s64)PAGE_OFFSET;
-> +	unsigned long __maybe_unused phys_initrd_size;
-> +	u64 __maybe_unused phys_initrd_start;
-> +	u64 __maybe_unused base, size;
->  
->  	/* Handle linux,usable-memory-range property */
->  	fdt_enforce_memory_region();
-> @@ -414,8 +417,11 @@ void __init arm64_memblock_init(void)
->  		 * initrd to become inaccessible via the linear mapping.
->  		 * Otherwise, this is a no-op
->  		 */
-> -		u64 base = initrd_start & PAGE_MASK;
-> -		u64 size = PAGE_ALIGN(initrd_end) - base;
-> +		phys_initrd_start = __pa(initrd_start);
-> +		phys_initrd_size = __pa(initrd_end) - phys_initrd_start;
-
-If initrd_{start,end} are defined by the command line they already would be
-physical addresses.
-
-> +
-> +		base = phys_initrd_start & PAGE_MASK;
-> +		size = PAGE_ALIGN(phys_initrd_size);
->  
->  		/*
->  		 * We can only add back the initrd memory if we don't end up
-> @@ -459,15 +465,15 @@ void __init arm64_memblock_init(void)
->  	 * pagetables with memblock.
->  	 */
->  	memblock_reserve(__pa_symbol(_text), _end - _text);
-> -#ifdef CONFIG_BLK_DEV_INITRD
-> -	if (initrd_start) {
-> -		memblock_reserve(initrd_start, initrd_end - initrd_start);
-> -
-> -		/* the generic initrd code expects virtual addresses */
-> -		initrd_start = __phys_to_virt(initrd_start);
-> -		initrd_end = __phys_to_virt(initrd_end);
-> +	if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && initrd_start) {
-> +		memblock_reserve(phys_initrd_start, phys_initrd_size);
-
-this is not needed, as we do memblock_reserve() for the same area earlier.
-
-What do you think of my version (below)?
-
-> +		/*
-> +		 * initrd_below_start_ok can be changed by
-> +		 * __early_init_dt_declare_initrd(), set it back to what
-> +		 * we want here.
-> +		 */
-> +		initrd_below_start_ok = 0;
->  	}
-> -#endif
->  
->  	early_init_fdt_scan_reserved_mem();
->  
-> -- 
-> 2.17.1
-> 
-
->From 0e5661c6f1ac2d4b08a55d38c6bc224c187af14f Mon Sep 17 00:00:00 2001
-From: Florian Fainelli <f.fainelli@gmail.com>
-Date: Sat, 27 Oct 2018 12:04:58 +0300
-Subject: [PATCH] arm64: Get rid of __early_init_dt_declare_initrd()
-
-ARM64 is the only architecture that re-defines
-__early_init_dt_declare_initrd() in order for that function to populate
-initrd_start/initrd_end with physical addresses instead of virtual
-addresses. Instead of having an override, just get rid of that
-implementation and perform the virtual to physical conversion of these
-addresses in arm64_memblock_init() where relevant.
-
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- arch/arm64/include/asm/memory.h |  8 --------
- arch/arm64/mm/init.c            | 40 +++++++++++++++++++++++++---------------
- 2 files changed, 25 insertions(+), 23 deletions(-)
-
-diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
-index b9644296..dc3ca21 100644
---- a/arch/arm64/include/asm/memory.h
-+++ b/arch/arm64/include/asm/memory.h
-@@ -168,14 +168,6 @@
- #define IOREMAP_MAX_ORDER	(PMD_SHIFT)
- #endif
- 
--#ifdef CONFIG_BLK_DEV_INITRD
--#define __early_init_dt_declare_initrd(__start, __end)			\
--	do {								\
--		initrd_start = (__start);				\
--		initrd_end = (__end);					\
--	} while (0)
--#endif
--
- #ifndef __ASSEMBLY__
- 
- #include <linux/bitops.h>
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 9d9582c..dd665be3 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -61,6 +61,8 @@
- s64 memstart_addr __ro_after_init = -1;
- phys_addr_t arm64_dma_phys_limit __ro_after_init;
- 
-+static phys_addr_t phys_initrd_start, phys_initrd_end;
-+
- #ifdef CONFIG_BLK_DEV_INITRD
- static int __init early_initrd(char *p)
- {
-@@ -71,8 +73,8 @@ static int __init early_initrd(char *p)
- 	if (*endp == ',') {
- 		size = memparse(endp + 1, NULL);
- 
--		initrd_start = start;
--		initrd_end = start + size;
-+		phys_initrd_start = start;
-+		phys_initrd_end = start + size;
- 	}
- 	return 0;
- }
-@@ -363,6 +365,7 @@ static void __init fdt_enforce_memory_region(void)
- void __init arm64_memblock_init(void)
- {
- 	const s64 linear_region_size = -(s64)PAGE_OFFSET;
-+	u64 __maybe_unused base, size;
- 
- 	/* Handle linux,usable-memory-range property */
- 	fdt_enforce_memory_region();
-@@ -407,14 +410,23 @@ void __init arm64_memblock_init(void)
- 		memblock_add(__pa_symbol(_text), (u64)(_end - _text));
- 	}
- 
--	if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && initrd_start) {
-+	if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) &&
-+	    (initrd_start || phys_initrd_start)) {
- 		/*
- 		 * Add back the memory we just removed if it results in the
- 		 * initrd to become inaccessible via the linear mapping.
- 		 * Otherwise, this is a no-op
- 		 */
--		u64 base = initrd_start & PAGE_MASK;
--		u64 size = PAGE_ALIGN(initrd_end) - base;
-+		if (phys_initrd_start) {
-+			initrd_start = __phys_to_virt(phys_initrd_start);
-+			initrd_end = __phys_to_virt(phys_initrd_end);
-+		} else if (initrd_start) {
-+			phys_initrd_start = __pa(initrd_start);
-+			phys_initrd_end = __pa(initrd_end);
-+		}
-+
-+		base = phys_initrd_start & PAGE_MASK;
-+		size = PAGE_ALIGN(phys_initrd_end - phys_initrd_start);
- 
- 		/*
- 		 * We can only add back the initrd memory if we don't end up
-@@ -433,6 +445,13 @@ void __init arm64_memblock_init(void)
- 			memblock_remove(base, size); /* clear MEMBLOCK_ flags */
- 			memblock_add(base, size);
- 			memblock_reserve(base, size);
-+
-+			/*
-+			 * initrd_below_start_ok can be changed by
-+			 * __early_init_dt_declare_initrd(), set it back to what
-+			 * we want here.
-+			 */
-+			initrd_below_start_ok = 0;
- 		}
- 	}
- 
-@@ -454,19 +473,10 @@ void __init arm64_memblock_init(void)
- 	}
- 
- 	/*
--	 * Register the kernel text, kernel data, initrd, and initial
-+	 * Register the kernel text, kernel data and initial
- 	 * pagetables with memblock.
- 	 */
- 	memblock_reserve(__pa_symbol(_text), _end - _text);
--#ifdef CONFIG_BLK_DEV_INITRD
--	if (initrd_start) {
--		memblock_reserve(initrd_start, initrd_end - initrd_start);
--
--		/* the generic initrd code expects virtual addresses */
--		initrd_start = __phys_to_virt(initrd_start);
--		initrd_end = __phys_to_virt(initrd_end);
--	}
--#endif
- 
- 	early_init_fdt_scan_reserved_mem();
- 
--- 
-2.7.4
-
--- 
-Sincerely yours,
-Mike.
+Where is this file? we have include/video/mipi_display.h with
+0x00..0xA8. Not all commands in sequence is listed in this, may be I
+will update DCS commands macros and rest as-it-is. what do you think?
