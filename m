@@ -1,140 +1,62 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v3 20/25] drm/panel: Add Techstar TS8550B
- MIPI-DSI LCD panel
-Date: Sat, 27 Oct 2018 15:25:29 +0530
-Message-ID: <CAMty3ZDc84ErYB9LR_Y7OJtUOx+AAhTV1RwC7-Jr1Br8yN6hUw@mail.gmail.com>
-References: <20181026144344.27778-1-jagan@amarulasolutions.com>
- <20181026144344.27778-21-jagan@amarulasolutions.com> <20181026161324.qbpcpkpwyixi7juk@plaes.org>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Yu Chen <chenyu56@huawei.com>
+Subject: [PATCH 00/10] Add support for usb on Hikey960
+Date: Sat, 27 Oct 2018 17:58:10 +0800
+Message-ID: <20181027095820.40056-1-chenyu56@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBHPM2DPAKGQEXFZVRBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181026161324.qbpcpkpwyixi7juk-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Yu Chen <chenyu56@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 26, 2018 at 9:43 PM Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org> wrote:
->
-> On Fri, Oct 26, 2018 at 08:13:39PM +0530, Jagan Teki wrote:
-> > Techstar TS8550B MIPI DSI panel is 480x854, 2-lane MIPI DSI
-> > LCD panel. Add panel driver for it.
-> >
-> > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > Tested-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > ---
-> > Changes for v3:
-> > - new patch
-> > Changes for v2:
-> > - none
-> >
-> >  drivers/gpu/drm/panel/Kconfig                 |   9 +
-> >  drivers/gpu/drm/panel/Makefile                |   1 +
-> >  .../gpu/drm/panel/panel-techstar-ts8550b.c    | 346 ++++++++++++++++++
-> >  3 files changed, 356 insertions(+)
-> >  create mode 100644 drivers/gpu/drm/panel/panel-techstar-ts8550b.c
-> >
-> > diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-> > index 20b88c275421..d0d4e60f5153 100644
-> > --- a/drivers/gpu/drm/panel/Kconfig
-> > +++ b/drivers/gpu/drm/panel/Kconfig
-> > @@ -195,4 +195,13 @@ config DRM_PANEL_SITRONIX_ST7789V
-> >         Say Y here if you want to enable support for the Sitronix
-> >         ST7789V controller for 240x320 LCD panels
-> >
-> > +config DRM_PANEL_TECHSTAR_TS8550B
-> > +     tristate "Techstar TS8550B MIPI-DSI panel driver"
-> > +     depends on OF
-> > +     depends on DRM_MIPI_DSI
-> > +     depends on BACKLIGHT_CLASS_DEVICE
-> > +     help
-> > +       Say Y if you want to enable support for panels based on the
-> > +       Techstar TS8550B MIPI-DSI interface.
-> > +
-> >  endmenu
-> > diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-> > index 04696bb85218..88011f06edb8 100644
-> > --- a/drivers/gpu/drm/panel/Makefile
-> > +++ b/drivers/gpu/drm/panel/Makefile
-> > @@ -20,3 +20,4 @@ obj-$(CONFIG_DRM_PANEL_SEIKO_43WVF1G) += panel-seiko-43wvf1g.o
-> >  obj-$(CONFIG_DRM_PANEL_SHARP_LQ101R1SX01) += panel-sharp-lq101r1sx01.o
-> >  obj-$(CONFIG_DRM_PANEL_SHARP_LS043T1LE01) += panel-sharp-ls043t1le01.o
-> >  obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7789V) += panel-sitronix-st7789v.o
-> > +obj-$(CONFIG_DRM_PANEL_TECHSTAR_TS8550B) += panel-techstar-ts8550b.o
-> > diff --git a/drivers/gpu/drm/panel/panel-techstar-ts8550b.c b/drivers/gpu/drm/panel/panel-techstar-ts8550b.c
-> > new file mode 100644
-> > index 000000000000..8baca71595a7
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/panel/panel-techstar-ts8550b.c
-> > @@ -0,0 +1,346 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Copyright (C) 2019, Amarula Solutions.
-> > + * Author: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > + */
-> > +
-> > +#include <linux/backlight.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/device.h>
-> > +#include <linux/err.h>
-> > +#include <linux/errno.h>
-> > +#include <linux/fb.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +
-> > +#include <linux/gpio/consumer.h>
-> > +#include <linux/regulator/consumer.h>
-> > +
-> > +#include <drm/drm_mipi_dsi.h>
-> > +#include <drm/drm_modes.h>
-> > +#include <drm/drm_panel.h>
-> > +
-> > +#include <video/mipi_display.h>
-> > +
-> > +struct ts8550b {
-> > +     struct drm_panel        panel;
-> > +     struct mipi_dsi_device  *dsi;
-> > +
-> > +     struct backlight_device *backlight;
-> > +     struct regulator        *dvdd;
-> > +     struct regulator        *avdd;
-> > +     struct gpio_desc        *reset;
-> > +
-> > +     bool                    is_enabled;
-> > +     bool                    is_prepared;
-> > +};
-> > +
-> > +static inline struct ts8550b *panel_to_ts8550b(struct drm_panel *panel)
-> > +{
-> > +     return container_of(panel, struct ts8550b, panel);
-> > +}
-> > +
-> > +static inline int ts8550b_dcs_write_seq(struct ts8550b *ctx, const void *seq,
-> > +                                     size_t len)
-> > +{
-> > +     return mipi_dsi_dcs_write_buffer(ctx->dsi, seq, len);
-> > +};
-> > +
-> > +#define ts8550b_dcs_write_seq_static(ctx, seq...)            \
-> > +     ({                                                      \
-> > +             static const u8 d[] = { seq };                  \
-> > +             ts8550b_dcs_write_seq(ctx, d, ARRAY_SIZE(d));   \
-> > +     })
-> > +
-> > +static void ts8550b_init_sequence(struct ts8550b *ctx)
->
-> This seems to be pretty "standard" MIPI-based display, utilizing
-> bunch of manufacturer-specific commands during init sequence.
->
-> Standard MIPI commands fall between 0x00..0xAF and are defined in <video/mipi.h>
+The patchset adds support for usb functionality of Hikey960, includes:
+- dwc3 driver for Hisilicon Kirin Soc hi3660
+- usb driver for HiKey960 board
+- some adjustment in dwc3, usb gadget and typec driver
+- dts for support usb of HiKey960
 
-Where is this file? we have include/video/mipi_display.h with
-0x00..0xA8. Not all commands in sequence is listed in this, may be I
-will update DCS commands macros and rest as-it-is. what do you think?
+Yu Chen (10):
+  dt-bindings: usb: add support for dwc3 controller on HiSilicon SoCs
+  dt-bindings: phy: Add support for HiSilicon's hi3660 USB PHY
+  dt-bindings: misc: Add bindings for HiSilicon usb hub and data role
+    switch functionality on HiKey960
+  usb: dwc3: dwc3-hisi: Add code for dwc3 of Hisilicon Soc Platform
+  usb: dwc3: Add two quirks for Hisilicon Kirin Soc Platform
+  phy: Add usb phy support for hi3660 Soc of Hisilicon
+  hikey960: Support usb functionality of Hikey960
+  usb: typec: Add support for usb role switch in rt1711h driver
+  usb: gadget: Add configfs attribuite for controling
+    match_existing_only
+  dts: hi3660: Add support for usb on Hikey960
+
+ .../bindings/misc/hisilicon-hikey-usb.txt          |  24 ++
+ .../devicetree/bindings/phy/phy-hi3660-usb3.txt    |  21 ++
+ .../devicetree/bindings/usb/dwc3-hisi.txt          |  53 ++++
+ MAINTAINERS                                        |  10 +
+ arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts  |  35 +++
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |  52 ++++
+ drivers/misc/Kconfig                               |   7 +
+ drivers/misc/Makefile                              |   1 +
+ drivers/misc/hisi_hikey_usb.c                      | 319 ++++++++++++++++++++
+ drivers/phy/hisilicon/Kconfig                      |  10 +
+ drivers/phy/hisilicon/Makefile                     |   1 +
+ drivers/phy/hisilicon/phy-hi3660-usb3.c            | 254 ++++++++++++++++
+ drivers/usb/dwc3/Kconfig                           |   8 +
+ drivers/usb/dwc3/Makefile                          |   1 +
+ drivers/usb/dwc3/core.c                            |  43 +++
+ drivers/usb/dwc3/core.h                            |   7 +
+ drivers/usb/dwc3/dwc3-hisi.c                       | 335 +++++++++++++++++++++
+ drivers/usb/dwc3/gadget.c                          |   2 +-
+ drivers/usb/gadget/configfs.c                      |  32 ++
+ drivers/usb/typec/tcpm/tcpci_rt1711h.c             |  15 +
+ 20 files changed, 1229 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+ create mode 100644 drivers/misc/hisi_hikey_usb.c
+ create mode 100644 drivers/phy/hisilicon/phy-hi3660-usb3.c
+ create mode 100644 drivers/usb/dwc3/dwc3-hisi.c
+
+-- 
+2.15.0-rc2
