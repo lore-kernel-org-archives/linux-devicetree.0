@@ -1,59 +1,66 @@
-From: Yu Chen <chenyu56@huawei.com>
-Subject: [PATCH 03/10] dt-bindings: misc: Add bindings for HiSilicon usb hub and data role switch functionality on HiKey960
-Date: Sat, 27 Oct 2018 17:58:13 +0800
-Message-ID: <20181027095820.40056-4-chenyu56@huawei.com>
-References: <20181027095820.40056-1-chenyu56@huawei.com>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Subject: Re: [PATCH 1/3] dt-bindings: new binding for Himax HX8357D display
+ panels
+Date: Sat, 27 Oct 2018 18:10:59 +0200
+Message-ID: <0d208d10-c24b-74a6-c7ce-1c826ded1bde@tronnes.org>
+References: <20181024184313.2967-1-eric@anholt.net>
+ <20181024184313.2967-2-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181027095820.40056-1-chenyu56@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Yu Chen <chenyu56@huawei.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>, Binghui Wang <wangbinghui@hisilicon.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20181024184313.2967-2-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds binding documentation to support usb hub and usb
-data role switch of Hisilicon HiKey&HiKey960 Board.
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Binghui Wang <wangbinghui@hisilicon.com>
-Signed-off-by: Yu Chen <chenyu56@huawei.com>
----
- .../bindings/misc/hisilicon-hikey-usb.txt          | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
-
-diff --git a/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
-new file mode 100644
-index 000000000000..f94e990362c9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
-@@ -0,0 +1,24 @@
-+Support usb hub and usb data role switch of Hisilicon HiKey&HiKey960 Board.
-+
-+-----------------------------
-+
-+Required properties:
-+- compatible: "hisilicon,gpio_hubv1","hisilicon,hikey960_usb"
-+- typc_vbus_int_gpio,typec-gpios: gpio to control the vbus of typeC port
-+- typc_vbus_enable_val: gpio value that enable the vbus of typeC port
-+- otg_gpio: gpio to switch DP&DM between the hub and typeC port
-+- hub_vdd33_en_gpio: gpio to enable the power of hub
-+- pinctrl-0: pinctrl config
-+
-+Example
-+-----
-+
-+	hisi_hikey_usb: hisi_hikey_usb {
-+		compatible = "hisilicon,hikey960_usb";
-+		typc_vbus_int_gpio,typec-gpios = <&gpio25 2 0>;
-+		typc_vbus_enable_val = <1>;
-+		otg_gpio = <&gpio25 6 0>;
-+		hub_vdd33_en_gpio = <&gpio5 6 0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&usbhub5734_pmx_func>;
-+	};
--- 
-2.15.0-rc2
+CkRlbiAyNC4xMC4yMDE4IDIwLjQzLCBza3JldiBFcmljIEFuaG9sdDoKPiBUaGlzIGFkZHMgYSBu
+ZXcgYmluZGluZyBmb3IgSGltYXggSFg4MzU3RCBkaXNwbGF5IHBhbmVscy4gSXQgaW5jbHVkZXMK
+PiBhIGNvbXBhdGlibGUgc3RyaW5nIGZvciBvbmUgZGlzcGxheSAobW9yZSBjYW4gYmUgYWRkZWQg
+aW4gdGhlIGZ1dHVyZSkuCj4KPiBUaGUgWVgzNTBIVjE1IHBhbmVsWzFdIGlzIGZvdW5kIGluIHRo
+ZSBBZGFmcnVpdCBQaVRGVCAzLjUiIFRvdWNoCj4gU2NyZWVuIGZvciBSYXNwYmVycnkgUGkuCj4K
+PiBbMV0gaHR0cHM6Ly9sZWFybi5hZGFmcnVpdC5jb20vYWRhZnJ1aXQtcGl0ZnQtMy1kb3QtNS10
+b3VjaC1zY3JlZW4tZm9yLXJhc3BiZXJyeS1waS9kb3dubG9hZHMKPgo+IFRoaXMgYmluZGluZyBp
+cyBjbG9zZWx5IG1vZGVsZWQgYWZ0ZXIgdGhlIGlsaTkzNDEgYmluZGluZywgZm9yIGEKPiBzaW1p
+bGFyIHByb2R1Y3QgZnJvbSBhZGFmcnVpdC4gIFRoZSBwcmltYXJ5IGRpZmZlcmVuY2UgaXMgdGhh
+dCB0aGUKPiBoeDgzNjdkIGRvZXNuJ3QgaGF2ZSBhIHJlc2V0IGxpbmUgdGhhdCBJIGNhbiBmaW5k
+IGluIHRoZSBzY2hlbWF0aWNzLgoKVHlwbyBzL2h4ODM2N2QvaHg4MzU3ZC8KClRoZSBhZGFmcnVp
+dCBkaXNwbGF5IGhhcyBhbiBBWFA4MDMgdGhhdCByZXNldHMgdGhlIGNvbnRyb2xsZXIuCgpBY2tl
+ZC1ieTogTm9yYWxmIFRyw7hubmVzIDxub3JhbGZAdHJvbm5lcy5vcmc+Cgo+IFNpZ25lZC1vZmYt
+Ynk6IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+Cj4gLS0tCj4gICAuLi4vYmluZGluZ3Mv
+ZGlzcGxheS9oaW1heCxoeDgzNTdkLnR4dCAgICAgICAgfCAyNSArKysrKysrKysrKysrKysrKysr
+Cj4gICAxIGZpbGUgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKQo+ICAgY3JlYXRlIG1vZGUgMTAw
+NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2hpbWF4LGh4ODM1
+N2QudHh0Cj4KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvaGltYXgsaHg4MzU3ZC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9oaW1heCxoeDgzNTdkLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4g
+aW5kZXggMDAwMDAwMDAwMDAwLi40ODU4NmU1NzBiZTAKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaGltYXgsaHg4MzU3ZC50
+eHQKPiBAQCAtMCwwICsxLDI1IEBACj4gK0hpbWF4IEhYODM1N0QgZGlzcGxheSBwYW5lbHMKPiAr
+Cj4gK1RoaXMgYmluZGluZyBpcyBmb3IgZGlzcGxheSBwYW5lbHMgdXNpbmcgYSBIaW1heCBIWDgz
+NTdEIGNvbnRyb2xsZXIgaW4gU1BJCj4gK21vZGUsIHN1Y2ggYXMgdGhlIEFkYWZydWl0IDMuNSIg
+VEZUIGZvciBSYXNwYmVycnkgUGkuCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNv
+bXBhdGlibGU6CSJhZGFmcnVpdCx5eDM1MGh2MTUiLCAiaGltYXgsaHg4MzU3ZCIKPiArLSBkYy1n
+cGlvczoJRC9DIHBpbgo+ICsKPiArVGhlIG5vZGUgZm9yIHRoaXMgZHJpdmVyIG11c3QgYmUgYSBj
+aGlsZCBub2RlIG9mIGEgU1BJIGNvbnRyb2xsZXIsIGhlbmNlCj4gK2FsbCBtYW5kYXRvcnkgcHJv
+cGVydGllcyBkZXNjcmliZWQgaW4gLi4vc3BpL3NwaS1idXMudHh0IG11c3QgYmUgc3BlY2lmaWVk
+Lgo+ICsKPiArT3B0aW9uYWwgcHJvcGVydGllczoKPiArLSByb3RhdGlvbjoJcGFuZWwgcm90YXRp
+b24gaW4gZGVncmVlcyBjb3VudGVyIGNsb2Nrd2lzZSAoMCw5MCwxODAsMjcwKQo+ICstIGJhY2ts
+aWdodDoJcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFu
+ZWwKPiArCj4gK0V4YW1wbGU6Cj4gKwlkaXNwbGF5QDB7Cj4gKwkJY29tcGF0aWJsZSA9ICJhZGFm
+cnVpdCx5eDM1MGh2MTUiLCAiaGltYXgsaHg4MzU3ZCI7Cj4gKwkJcmVnID0gPDA+Owo+ICsJCXNw
+aS1tYXgtZnJlcXVlbmN5ID0gPDMyMDAwMDAwPjsKPiArCQlkYy1ncGlvcyA9IDwmZ3BpbzAgMjUg
+R1BJT19BQ1RJVkVfSElHSD47Cj4gKwkJcm90YXRpb24gPSA8OTA+Owo+ICsJCWJhY2tsaWdodCA9
+IDwmYmFja2xpZ2h0PjsKPiArCX07CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
