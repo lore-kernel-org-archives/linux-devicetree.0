@@ -1,7 +1,7 @@
 From: Yu Chen <chenyu56@huawei.com>
-Subject: [PATCH 06/10] phy: Add usb phy support for hi3660 Soc of Hisilicon
-Date: Sat, 27 Oct 2018 17:58:16 +0800
-Message-ID: <20181027095820.40056-7-chenyu56@huawei.com>
+Subject: [PATCH 08/10] usb: typec: Add support for usb role switch in rt1711h driver
+Date: Sat, 27 Oct 2018 17:58:18 +0800
+Message-ID: <20181027095820.40056-9-chenyu56@huawei.com>
 References: <20181027095820.40056-1-chenyu56@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,338 +9,76 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181027095820.40056-1-chenyu56@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Yu Chen <chenyu56@huawei.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Shawn Guo <shawnguo@kernel.org>, Pengcheng Li <lpc.li@hisilicon.com>, Jianguo Sun <sunjianguo1@huawei.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Jiancheng Xue <xuejiancheng@hisilicon.com>, John Stultz <john.stultz@linaro.org>, Binghui Wang <wangbinghui@hisilicon.com>
+Cc: suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Yu Chen <chenyu56@huawei.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lucas Tsai <lucas_tsai@richtek.com>, shufan_lee <shufan_lee@richtek.com>, John Stultz <john.stultz@linaro.org>, Binghui Wang <wangbinghui@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-This driver handles usb phy power on and shutdown for hi3660 Soc of
-Hisilicon.
+This patch add struct device_connection to rt1711h driver to support
+find "usb-role-switch" in tcpm_register_port.
 
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Pengcheng Li <lpc.li@hisilicon.com>
-Cc: Jianguo Sun <sunjianguo1@huawei.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Jiancheng Xue <xuejiancheng@hisilicon.com>
+Cc: Lucas Tsai <lucas_tsai@richtek.com>
+Cc: shufan_lee <shufan_lee@richtek.com>
 Cc: John Stultz <john.stultz@linaro.org>
 Cc: Binghui Wang <wangbinghui@hisilicon.com>
 Signed-off-by: Yu Chen <chenyu56@huawei.com>
 ---
- MAINTAINERS                             |   2 +
- drivers/phy/hisilicon/Kconfig           |  10 ++
- drivers/phy/hisilicon/Makefile          |   1 +
- drivers/phy/hisilicon/phy-hi3660-usb3.c | 254 ++++++++++++++++++++++++++++++++
- 4 files changed, 267 insertions(+)
- create mode 100644 drivers/phy/hisilicon/phy-hi3660-usb3.c
+ drivers/usb/typec/tcpm/tcpci_rt1711h.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e485449f7811..7adf167588ee 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15294,7 +15294,9 @@ M:	Binghui Wang <wangbinghui@hisilicon.com>
- L:	linux-usb@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/usb/dwc3-hisi.txt
-+F:	Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
- F:	drivers/usb/dwc3/dwc3-hisi.c
-+F:	drivers/phy/hisilicon/phy-hi3660-usb3.c
+diff --git a/drivers/usb/typec/tcpm/tcpci_rt1711h.c b/drivers/usb/typec/tcpm/tcpci_rt1711h.c
+index 017389021b96..5f8b952612fe 100644
+--- a/drivers/usb/typec/tcpm/tcpci_rt1711h.c
++++ b/drivers/usb/typec/tcpm/tcpci_rt1711h.c
+@@ -39,6 +39,7 @@ struct rt1711h_chip {
+ 	struct tcpci_data data;
+ 	struct tcpci *tcpci;
+ 	struct device *dev;
++	struct device_connection dev_conn;
+ };
  
- USB ISP116X DRIVER
- M:	Olav Kongas <ok@artecdesign.ee>
-diff --git a/drivers/phy/hisilicon/Kconfig b/drivers/phy/hisilicon/Kconfig
-index b40ee54a1a50..3c142f08987c 100644
---- a/drivers/phy/hisilicon/Kconfig
-+++ b/drivers/phy/hisilicon/Kconfig
-@@ -12,6 +12,16 @@ config PHY_HI6220_USB
+ static int rt1711h_read16(struct rt1711h_chip *chip, unsigned int reg, u16 *val)
+@@ -237,6 +238,7 @@ static int rt1711h_probe(struct i2c_client *client,
+ {
+ 	int ret;
+ 	struct rt1711h_chip *chip;
++	const char *dev_conn_end;
  
- 	  To compile this driver as a module, choose M here.
+ 	ret = rt1711h_check_revision(client);
+ 	if (ret < 0) {
+@@ -254,6 +256,7 @@ static int rt1711h_probe(struct i2c_client *client,
+ 		return PTR_ERR(chip->data.regmap);
  
-+config PHY_HI3660_USB
-+	tristate "hi3660 USB PHY support"
-+	depends on (ARCH_HISI && ARM64) || COMPILE_TEST
-+	select GENERIC_PHY
-+	select MFD_SYSCON
-+	help
-+	  Enable this to support the HISILICON HI3660 USB PHY.
-+
-+	  To compile this driver as a module, choose M here.
-+
- config PHY_HISTB_COMBPHY
- 	tristate "HiSilicon STB SoCs COMBPHY support"
- 	depends on (ARCH_HISI && ARM64) || COMPILE_TEST
-diff --git a/drivers/phy/hisilicon/Makefile b/drivers/phy/hisilicon/Makefile
-index f662a4fe18d8..75ba64e2faf8 100644
---- a/drivers/phy/hisilicon/Makefile
-+++ b/drivers/phy/hisilicon/Makefile
-@@ -1,4 +1,5 @@
- obj-$(CONFIG_PHY_HI6220_USB)		+= phy-hi6220-usb.o
-+obj-$(CONFIG_PHY_HI3660_USB)		+= phy-hi3660-usb3.o
- obj-$(CONFIG_PHY_HISTB_COMBPHY)		+= phy-histb-combphy.o
- obj-$(CONFIG_PHY_HISI_INNO_USB2)	+= phy-hisi-inno-usb2.o
- obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
-diff --git a/drivers/phy/hisilicon/phy-hi3660-usb3.c b/drivers/phy/hisilicon/phy-hi3660-usb3.c
-new file mode 100644
-index 000000000000..041c542750e2
---- /dev/null
-+++ b/drivers/phy/hisilicon/phy-hi3660-usb3.c
-@@ -0,0 +1,254 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Phy provider for USB 3.0 controller on HiSilicon 3660 platform
-+ *
-+ * Copyright (C) 2017-2018 Hilisicon Electronics Co., Ltd.
-+ *		http://www.huawei.com
-+ *
-+ * Authors: Yu Chen <chenyu56@huawei.com>
-+ *
-+ * This program is free software: you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2  of
-+ * the License as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/phy/phy.h>
-+#include <linux/regmap.h>
-+
-+#define PERI_CRG_CLK_EN4			(0x40)
-+#define PERI_CRG_CLK_DIS4			(0x44)
-+#define GT_CLK_USB3OTG_REF			BIT(0)
-+#define GT_ACLK_USB3OTG				BIT(1)
-+
-+#define PERI_CRG_RSTEN4				(0x90)
-+#define PERI_CRG_RSTDIS4			(0x94)
-+#define IP_RST_USB3OTGPHY_POR			BIT(3)
-+#define IP_RST_USB3OTG				BIT(5)
-+
-+#define PERI_CRG_ISODIS				(0x148)
-+#define USB_REFCLK_ISO_EN			BIT(25)
-+
-+#define PCTRL_PERI_CTRL3			(0x10)
-+#define PCTRL_PERI_CTRL3_MSK_START		(16)
-+#define USB_TCXO_EN				BIT(1)
-+
-+#define PCTRL_PERI_CTRL24			(0x64)
-+#define SC_CLK_USB3PHY_3MUX1_SEL		BIT(25)
-+
-+#define USBOTG3_CTRL0				(0x00)
-+#define SC_USB3PHY_ABB_GT_EN			BIT(15)
-+
-+#define USBOTG3_CTRL2				(0x08)
-+#define USBOTG3CTRL2_POWERDOWN_HSP		BIT(0)
-+#define USBOTG3CTRL2_POWERDOWN_SSP		BIT(1)
-+
-+#define USBOTG3_CTRL3				(0x0C)
-+#define USBOTG3_CTRL3_VBUSVLDEXT		BIT(6)
-+#define USBOTG3_CTRL3_VBUSVLDEXTSEL		BIT(5)
-+
-+#define USBOTG3_CTRL4				(0x10)
-+
-+#define USBOTG3_CTRL7				(0x1c)
-+#define REF_SSP_EN				BIT(16)
-+
-+#define HI3660_USB_DEFAULT_PHY_PARAM		(0x1c466e3)
-+
-+struct hi3660_priv {
-+	struct device *dev;
-+	struct regmap *peri_crg;
-+	struct regmap *pctrl;
-+	struct regmap *otg_bc;
-+	u32 eye_diagram_param;
-+
-+	u32 peri_crg_offset;
-+	u32 pctrl_offset;
-+	u32 otg_bc_offset;
-+};
-+
-+static int hi3660_phy_init(struct phy *phy)
-+{
-+	struct hi3660_priv *priv = phy_get_drvdata(phy);
-+	u32 val, mask;
-+	int ret;
-+
-+	/* usb refclk iso disable */
-+	ret = regmap_write(priv->peri_crg, PERI_CRG_ISODIS, USB_REFCLK_ISO_EN);
-+	if (ret)
-+		goto out;
-+
-+	/* enable usb_tcxo_en */
-+	val = USB_TCXO_EN | (USB_TCXO_EN << PCTRL_PERI_CTRL3_MSK_START);
-+	ret = regmap_write(priv->pctrl, PCTRL_PERI_CTRL3, val);
-+	if (ret)
-+		goto out;
-+
-+	/* select usbphy clk from abb */
-+	mask = SC_CLK_USB3PHY_3MUX1_SEL;
-+	ret = regmap_update_bits(priv->pctrl, PCTRL_PERI_CTRL24, mask, 0);
-+	if (ret)
-+		goto out;
-+
-+	/* assert phy */
-+	val = IP_RST_USB3OTGPHY_POR | IP_RST_USB3OTG;
-+	ret = regmap_write(priv->peri_crg, PERI_CRG_RSTEN4, val);
-+	if (ret)
-+		goto out;
-+
-+	/* enable phy ref clk */
-+	val = SC_USB3PHY_ABB_GT_EN;
-+	mask = val;
-+	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL0, mask, val);
-+	if (ret)
-+		goto out;
-+
-+	val = REF_SSP_EN;
-+	mask = val;
-+	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL7, mask, val);
-+	if (ret)
-+		goto out;
-+
-+	/* exit from IDDQ mode */
-+	mask = USBOTG3CTRL2_POWERDOWN_HSP | USBOTG3CTRL2_POWERDOWN_SSP;
-+	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL2, mask, 0);
-+	if (ret)
-+		goto out;
-+
-+	udelay(100);
-+
-+	/* deassert phy */
-+	val = IP_RST_USB3OTGPHY_POR | IP_RST_USB3OTG;
-+	ret = regmap_write(priv->peri_crg, PERI_CRG_RSTDIS4, val);
-+	if (ret)
-+		goto out;
-+
-+	usleep_range(10000, 15000);
-+
-+	/* fake vbus valid signal */
-+	val = USBOTG3_CTRL3_VBUSVLDEXT | USBOTG3_CTRL3_VBUSVLDEXTSEL;
-+	mask = val;
-+	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL3, mask, val);
-+	if (ret)
-+		goto out;
-+
-+	udelay(100);
-+
-+	ret = regmap_write(priv->otg_bc, USBOTG3_CTRL4,
-+			priv->eye_diagram_param);
-+	if (ret)
-+		goto out;
-+
-+	return 0;
-+out:
-+	dev_err(priv->dev, "failed to init phy ret: %d\n", ret);
-+	return ret;
-+}
-+
-+static int hi3660_phy_exit(struct phy *phy)
-+{
-+	struct hi3660_priv *priv = phy_get_drvdata(phy);
-+	u32 val, mask;
-+	int ret;
-+
-+	/* assert phy */
-+	val = IP_RST_USB3OTGPHY_POR;
-+	ret = regmap_write(priv->peri_crg, PERI_CRG_RSTEN4, val);
-+	if (ret)
-+		goto out;
-+
-+	val = SC_CLK_USB3PHY_3MUX1_SEL;
-+	mask = SC_CLK_USB3PHY_3MUX1_SEL;
-+	ret = regmap_update_bits(priv->pctrl, PCTRL_PERI_CTRL24, mask, val);
-+	if (ret)
-+		goto out;
-+
-+	/* disable usb_tcxo_en */
-+	val = USB_TCXO_EN << PCTRL_PERI_CTRL3_MSK_START;
-+	ret = regmap_write(priv->pctrl, PCTRL_PERI_CTRL3, val);
-+	if (ret)
-+		goto out;
-+
-+	return 0;
-+out:
-+	dev_err(priv->dev, "failed to exit phy ret: %d\n", ret);
-+	return ret;
-+}
-+
-+static struct phy_ops hi3660_phy_ops = {
-+	.init		= hi3660_phy_init,
-+	.exit		= hi3660_phy_exit,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int hi3660_phy_probe(struct platform_device *pdev)
-+{
-+	struct phy_provider *phy_provider;
-+	struct device *dev = &pdev->dev;
-+	struct phy *phy;
-+	struct hi3660_priv *priv;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+	priv->peri_crg = syscon_regmap_lookup_by_phandle(dev->of_node,
-+					"hisilicon,pericrg-syscon");
-+	if (IS_ERR(priv->peri_crg)) {
-+		dev_err(dev, "no hisilicon,pericrg-syscon\n");
-+		return PTR_ERR(priv->peri_crg);
+ 	chip->dev = &client->dev;
++	dev_set_name(chip->dev, "rt1711h");
+ 	i2c_set_clientdata(client, chip);
+ 
+ 	ret = rt1711h_sw_reset(chip);
+@@ -264,6 +267,15 @@ static int rt1711h_probe(struct i2c_client *client,
+ 	if (ret < 0)
+ 		return ret;
+ 
++	ret = device_property_read_string(chip->dev, "dev-conn-end",
++			&dev_conn_end);
++	if (!ret) {
++		chip->dev_conn.endpoint[0] = "rt1711h";
++		chip->dev_conn.endpoint[1] = dev_conn_end;
++		chip->dev_conn.id = "usb-role-switch";
++		device_connection_add(&chip->dev_conn);
 +	}
 +
-+	priv->pctrl = syscon_regmap_lookup_by_phandle(dev->of_node,
-+					"hisilicon,pctrl-syscon");
-+	if (IS_ERR(priv->pctrl)) {
-+		dev_err(dev, "no hisilicon,pctrl-syscon\n");
-+		return PTR_ERR(priv->pctrl);
-+	}
+ 	chip->data.init = rt1711h_init;
+ 	chip->data.set_vconn = rt1711h_set_vconn;
+ 	chip->data.start_drp_toggling = rt1711h_start_drp_toggling;
+@@ -279,6 +291,9 @@ static int rt1711h_remove(struct i2c_client *client)
+ 	struct rt1711h_chip *chip = i2c_get_clientdata(client);
+ 
+ 	tcpci_unregister_port(chip->tcpci);
++	if (chip->dev_conn.id)
++		device_connection_remove(&chip->dev_conn);
 +
-+	priv->otg_bc = syscon_regmap_lookup_by_phandle(dev->of_node,
-+					"hisilicon,usb3-otg-bc-syscon");
-+	if (IS_ERR(priv->otg_bc)) {
-+		dev_err(dev, "no hisilicon,usb3-otg-bc-syscon\n");
-+		return PTR_ERR(priv->otg_bc);
-+	}
-+
-+	if (of_property_read_u32(dev->of_node, "eye-diagram-param",
-+		&(priv->eye_diagram_param)))
-+		priv->eye_diagram_param = HI3660_USB_DEFAULT_PHY_PARAM;
-+
-+	phy = devm_phy_create(dev, NULL, &hi3660_phy_ops);
-+	if (IS_ERR(phy))
-+		return PTR_ERR(phy);
-+
-+	phy_set_drvdata(phy, priv);
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static const struct of_device_id hi3660_phy_of_match[] = {
-+	{.compatible = "hisilicon,hi3660-usb-phy",},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, hi3660_phy_of_match);
-+
-+static struct platform_driver hi3660_phy_driver = {
-+	.probe	= hi3660_phy_probe,
-+	.driver = {
-+		.name	= "hi3660-usb-phy",
-+		.of_match_table	= hi3660_phy_of_match,
-+	}
-+};
-+module_platform_driver(hi3660_phy_driver);
-+
-+MODULE_AUTHOR("Yu Chen <chenyu56@huawei.com>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Hilisicon Hi3660 USB3 PHY Driver");
+ 	return 0;
+ }
+ 
 -- 
 2.15.0-rc2
