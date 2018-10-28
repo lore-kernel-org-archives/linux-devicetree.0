@@ -1,55 +1,60 @@
-Return-Path: <SRS0=Vvmi=NE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from avon.wwwdotorg.org ([104.237.132.123]:55922 "EHLO
-        avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726992AbeJYBeL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Oct 2018 21:34:11 -0400
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH] ARM: dt: relicense two DT binding IRQ headers
-Date: Wed, 24 Oct 2018 11:05:13 -0600
-Message-Id: <20181024170513.25431-1-swarren@wwwdotorg.org>
+Return-Path: <SRS0=Ck17=NI=googlemail.com=martin.blumenstingl@kernel.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 3/7] ARM: dts: meson8: add the temperature calibration data for the SAR ADC
+Date: Sun, 28 Oct 2018 13:26:25 +0100
+Message-Id: <20181028122629.10144-4-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20181028122629.10144-1-martin.blumenstingl@googlemail.com>
+References: <20181028122629.10144-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Li Yang <leoyang.li@nxp.com>, Stephen Warren <swarren@nvidia.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+To: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de, jic23@kernel.org
+Cc: khilman@baylibre.com, carlo@caione.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Stephen Warren <swarren@nvidia.com>
+The SAR ADC can measure the chip temperature of the SoC. This only
+works if the chip is calibrated and if the calibration data is written
+to the correct registers. The calibration data is stored in the upper
+two bytes of eFuse offset 0x1f4.
 
-Files in include/dt-bindings/ may be useful to any OS that uses DT, when
-building the OS binary itself, not just when building DTB files. Since
-some OSs are not GPL, they need non-GPL headers. This change relicenses
-two of the useful files so that they can be used under the MIT license
-when desired. I wrote these files and NVIDIA legal has approved this
-change. Geert also ack'd the change; he fixed some spelling issues in the
-comments.
+This adds the eFuse cell for the temperature calibration data and
+passes it to the SAR ADC. We also need to pass the HHI sysctrl node to
+the SAR ADC because the 4th TSC (temperature sensor calibration
+coefficient) bit is stored in the HHI region (unlike bits [3:0] which
+are stored directly inside the SAR ADC's register area).
 
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
+On boards that have the SAR ADC enabled channel 8 can be used to
+measure the chip temperature.
+
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- include/dt-bindings/interrupt-controller/arm-gic.h | 2 +-
- include/dt-bindings/interrupt-controller/irq.h     | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/meson8.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/include/dt-bindings/interrupt-controller/arm-gic.h b/include/dt-bindings/interrupt-controller/arm-gic.h
-index 0c85f65c81c7..35b6f69b7db6 100644
---- a/include/dt-bindings/interrupt-controller/arm-gic.h
-+++ b/include/dt-bindings/interrupt-controller/arm-gic.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 */
-+/* SPDX-License-Identifier: GPL-2.0 OR MIT */
- /*
-  * This header provides constants for the ARM GIC.
-  */
-diff --git a/include/dt-bindings/interrupt-controller/irq.h b/include/dt-bindings/interrupt-controller/irq.h
-index a8b310555f14..9e3d183e1381 100644
---- a/include/dt-bindings/interrupt-controller/irq.h
-+++ b/include/dt-bindings/interrupt-controller/irq.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 */
-+/* SPDX-License-Identifier: GPL-2.0 OR MIT */
- /*
-  * This header provides constants for most IRQ bindings.
-  *
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index 3e3d9c54cddc..30d4406f63b3 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -304,6 +304,11 @@
+ 	compatible = "amlogic,meson8-efuse";
+ 	clocks = <&clkc CLKID_EFUSE>;
+ 	clock-names = "core";
++
++	temperature_calib: calib@1f4 {
++		/* only the upper two bytes are relevant */
++		reg = <0x1f4 0x4>;
++	};
+ };
+ 
+ &ethmac {
+@@ -364,6 +369,9 @@
+ 	clocks = <&clkc CLKID_XTAL>,
+ 		<&clkc CLKID_SAR_ADC>;
+ 	clock-names = "clkin", "core";
++	amlogic,hhi-sysctrl = <&hhi>;
++	nvmem-cells = <&temperature_calib>;
++	nvmem-cell-names = "temperature_calib";
+ };
+ 
+ &sdio {
 -- 
 2.19.1
