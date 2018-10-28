@@ -1,39 +1,39 @@
-Return-Path: <>
-From: Martin Kelly <martin@martingkelly.com>
-Subject: [PATCH v2 3/4] iio:magnetometer: st_magn: add BDU settings
-Date: Thu, 25 Oct 2018 19:38:11 -0700
-Message-Id: <20181026023812.29720-3-martin@martingkelly.com>
-In-Reply-To: <20181026023812.29720-1-martin@martingkelly.com>
-References: <20181026023812.29720-1-martin@martingkelly.com>
-To: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>, Denis Ciocca <denis.ciocca@st.com>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Martin Kelly <martin@martingkelly.com>
+Return-Path: <SRS0=Ck17=NI=googlemail.com=martin.blumenstingl@kernel.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 6/7] ARM: dts: meson8b: odroidc1: add iio-hwmon for the chip temperature
+Date: Sun, 28 Oct 2018 13:26:28 +0100
+Message-Id: <20181028122629.10144-7-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20181028122629.10144-1-martin.blumenstingl@googlemail.com>
+References: <20181028122629.10144-1-martin.blumenstingl@googlemail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de, jic23@kernel.org
+Cc: khilman@baylibre.com, carlo@caione.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Martin Kelly <martin@martingkelly.com>
+SAR ADC enabled channel 8 can be used to measure the chip temperature.
+This can be made available to the hwmon subsystem by using iio-hwmon.
 
-LIS3MDL and LSM9DS1 are missing BDU settings in their register maps, so add
-them. I don't have a LIS3MDL sensor to test, but this works correctly on
-the LSM9DS1, which has the same register map.
-
-Signed-off-by: Martin Kelly <martin@martingkelly.com>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- drivers/iio/magnetometer/st_magn_core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/meson8b-odroidc1.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/iio/magnetometer/st_magn_core.c b/drivers/iio/magnetometer/st_magn_core.c
-index a186b844d664..370b93db528d 100644
---- a/drivers/iio/magnetometer/st_magn_core.c
-+++ b/drivers/iio/magnetometer/st_magn_core.c
-@@ -316,6 +316,10 @@ static const struct st_sensor_settings st_magn_sensors_settings[] = {
- 				},
- 			},
- 		},
-+		.bdu = {
-+			.addr = 0x24,
-+			.mask = 0x40,
-+		},
- 		.drdy_irq = {
- 			/* drdy line is routed drdy pin */
- 			.stat_drdy = {
+diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
+index 58669abda259..9251dc102fcc 100644
+--- a/arch/arm/boot/dts/meson8b-odroidc1.dts
++++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
+@@ -118,6 +118,11 @@
+ 			  1800000 1>;
+ 	};
+ 
++	iio-hwmon {
++		compatible = "iio-hwmon";
++		io-channels = <&saradc 8>;
++	};
++
+ 	vcc_1v8: regulator-vcc-1v8 {
+ 		/*
+ 		 * RICHTEK RT9179 configured for a fixed output voltage of
 -- 
-2.11.0
+2.19.1
