@@ -1,39 +1,85 @@
-Return-Path: <robherring2@gmail.com>
-Date: Fri, 12 Oct 2018 15:11:28 -0500
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] hwmon: (adm1275): Add device tree param for shunt
- resistor
-Message-ID: <20181012201128.GA13628@bogus>
-References: <20180928195800.153914-1-kunyi@google.com>
+Return-Path: <jic23@kernel.org>
+Date: Sun, 28 Oct 2018 15:20:31 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH V3 2/2] doc:devicetree: Add AD7949 device tree bindings
+ in documentation
+Message-ID: <20181028152016.5b97cc80@archlinux>
+In-Reply-To: <20181023154319.GA17996@bogus>
+References: <20181022210243.837-1-charles-antoine.couret@essensium.com>
+	<20181022210243.837-2-charles-antoine.couret@essensium.com>
+	<20181023154319.GA17996@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180928195800.153914-1-kunyi@google.com>
-To: Kun Yi <kunyi@google.com>
-Cc: linux@roeck-us.net, linux-hwmon@vger.kernel.org, jdelvare@suse.com, mark.rutland@arm.com, devicetree@vger.kernel.org, rlippert@google.com, benjaminfair@google.com, openbmc@lists.ozlabs.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Rob Herring <robh@kernel.org>
+Cc: Charles-Antoine Couret <charles-antoine.couret@essensium.com>, linux-iio@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Sep 28, 2018 at 12:58:00PM -0700, Kun Yi wrote:
-> The ADM series of hotswap controllers support extending
-> the current measurement range by using a sensing resistor
-> value other than the typical 1 mOhm. For example, using a 0.5 mOhm
-> sensing resistor doubles the maximal current can be measured.
+On Tue, 23 Oct 2018 10:43:19 -0500
+Rob Herring <robh@kernel.org> wrote:
+
+> On Mon, Oct 22, 2018 at 11:02:43PM +0200, Charles-Antoine Couret wrote:
+> > Description how to invoke ad7949 driver from device tree file.  
 > 
-> Current driver assumes a shunt resistor value of 1 mOhm in calculation,
-> meaning for other resistor values, hwmon will report scaled
-> current/power measurements. This patch adds a device tree parameter so
-> that individual boards can configure its shunt resistor value.
+> Use subject prefixes that match the subsystem (i.e run git log --oneline 
+> <dir> to see). Something like this would be better:
 > 
-> Signed-off-by: Kun Yi <kunyi@google.com>
-> ---
->  .../devicetree/bindings/hwmon/adm1275.txt     | 25 +++++++++++++++++++
+> dt-bindings: iio: adc: Add Analog Devices AD7949, AD7682 and AD7689
+I've modified this and changed as below in the interests of saving everyone
+time that a V4 and it's review would take!
+Thanks for the review Rob.
 
-This should be a separate patch. In particular, the subject doesn't 
-really reflect that you are adding a new binding.
+Applied to the togreg branch of iio.git and pushed out as testing for the
+autobuilders to play with it.
 
-Otherwise, the binding looks fine.
+Thanks,
+Jonathan
 
->  Documentation/hwmon/adm1275                   |  3 +++
->  drivers/hwmon/pmbus/adm1275.c                 | 15 +++++++++--
->  3 files changed, 41 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/adm1275.txt
+> 
+> > 
+> > Signed-off-by: Charles-Antoine Couret <charles-antoine.couret@essensium.com>
+> > ---
+> > V1 to V3:
+> > * Add prefix vendor
+> > * Improve patch description
+> > 
+> >  .../devicetree/bindings/iio/adc/ad7949.txt     | 18 ++++++++++++++++++
+> >  1 file changed, 18 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/ad7949.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/ad7949.txt b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
+> > new file mode 100644
+> > index 000000000000..f1c3af53f5cc
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
+> > @@ -0,0 +1,18 @@
+> > +* Analog Devices AD7949/AD7682/AD7689
+> > +
+> > +Required properties:
+> > + - compatible: Should be one of
+> > +	* "adi,ad7949"
+> > +	* "adi,ad7682"
+> > +	* "adi,ad7689"
+> > + - reg: spi chip select number for the device
+> > + - vref-supply: The regulator supply for ADC reference voltage
+> > + - spi-max-frequency: Max SPI frequency to use (< 33000000)  
+> 
+> This should be optional and only be needed if the frequency needs to be 
+> limited below what the host and device can support. IOW, a board 
+> limitation. The host and device drivers already need to know their 
+> maximum frequencies to validate this value.
+I dropped this from the binding as it is generic anyway rather than
+device specific.
+
+> 
+> > +
+> > +Example:
+> > +adc@0 {
+> > +	compatible = "adi,ad7949";
+> > +	reg = <0>;
+> > +	vref-supply = <&vdd_supply>;
+> > +	spi-max-frequency = <200000>;
+> > +};
+> > -- 
+> > 2.19.1
+> >   
