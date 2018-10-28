@@ -1,108 +1,96 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: [PATCH V8 3/5] dt-bindings: fsl: scu: update power domain binding
-Date: Sun, 28 Oct 2018 15:19:44 +0000
-Message-ID: <1540739690-23750-4-git-send-email-aisheng.dong@nxp.com>
-References: <1540739690-23750-1-git-send-email-aisheng.dong@nxp.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 1/3] iio: adc128s052: Add pin-compatible IDs
+Date: Sun, 28 Oct 2018 15:35:51 +0000
+Message-ID: <20181028153551.6f2cccac@archlinux>
+References: <20180423213805.12591-1-javier@emutex.com>
+        <1540481742-23596-1-git-send-email-dan@emutex.com>
+        <1540481742-23596-2-git-send-email-dan@emutex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1540739690-23750-1-git-send-email-aisheng.dong@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "khilman@kernel.org" <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1540481742-23596-2-git-send-email-dan@emutex.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan O'Donovan <dan@emutex.com>
+Cc: linux-kernel@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Carlos Iglesias <carlos.iglesias@emutex.com>, Javier Arteaga <javier@emutex.com>
 List-Id: devicetree@vger.kernel.org
 
-Update the power domain binding with #power-domain-cells 1 format.
-The first cell can be a global SCU power domain and the 2nd cell
-the device ID. With this approach, we may remove all the sub power
-domain nodes from device tree which can relief the device tree a lot.
+On Thu, 25 Oct 2018 16:35:40 +0100
+Dan O'Donovan <dan@emutex.com> wrote:
 
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-pm@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Suggested-by: Rob Herring <robh+dt@kernel.org>
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
----
-ChangeLog:
-v7->v8:
- * new patch
----
- .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 37 +++++-----------------
- 1 file changed, 8 insertions(+), 29 deletions(-)
+> From: Javier Arteaga <javier@emutex.com>
+> 
+> The datasheets for ADC122S021 and ADC124S021 list two more
+> pin-compatible alternatives for each device.
+> 
+> Add their IDs as compatible strings.
+> 
+> Suggested-by: Jonathan Cameron <jic23@kernel.org>
+> Signed-off-by: Javier Arteaga <javier@emutex.com>
+> Signed-off-by: Dan O'Donovan <dan@emutex.com>
+> ---
+>  .../devicetree/bindings/iio/adc/ti-adc128s052.txt        |  9 ++++++++-
+>  drivers/iio/adc/ti-adc128s052.c                          | 16 ++++++++++++----
+>  2 files changed, 20 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
+> index daa2b2c..c07ce1a 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
+> @@ -1,7 +1,14 @@
+>  * Texas Instruments' ADC128S052, ADC122S021 and ADC124S021 ADC chip
+>  
+>  Required properties:
+> - - compatible: Should be "ti,adc128s052", "ti,adc122s021" or "ti,adc124s021"
+> + - compatible: Should be one of:
+> +   - "ti,adc128s052"
+Hmm.  Ideally I think these should be in 'alphabetical' order. However
+I can see a certain logic to having the part whose name we are using for
+the driver listed first..
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-index 46d0af1..c20f38e 100644
---- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -58,19 +58,11 @@ This binding for the SCU power domain providers uses the generic power
- domain binding[2].
- 
- Required properties:
--- compatible:		Should be "fsl,scu-pd".
--- #address-cells:	Should be 1.
--- #size-cells:		Should be 0.
--
--Required properties for power domain sub nodes:
--- #power-domain-cells:	Must be 0.
--
--Optional Properties:
--- reg:			Resource ID of this power domain.
--			No exist means uncontrollable by user.
-+- compatible:		Should be "fsl,imx8qxp-scu-pd".
-+- #power-domain-cells:	Must be 1. Contains the Resource ID used by
-+			SCU commands.
- 			See detailed Resource ID list from:
--			include/dt-bindings/power/imx-rsrc.h
--- power-domains:	phandle pointing to the parent power domain.
-+			include/dt-bindings/firmware/imx/rsrc.h
- 
- Clock bindings based on SCU Message Protocol
- ------------------------------------------------------------
-@@ -152,22 +144,9 @@ firmware {
- 			...
- 		};
- 
--		imx8qx-pm {
--			compatible = "fsl,scu-pd";
--			#address-cells = <1>;
--			#size-cells = <0>;
--
--			pd_dma: dma-power-domain {
--				#power-domain-cells = <0>;
--
--				pd_dma_lpuart0: dma-lpuart0@57 {
--					reg = <SC_R_UART_0>;
--					#power-domain-cells = <0>;
--					power-domains = <&pd_dma>;
--				};
--				...
--			};
--			...
-+		pd: imx8qx-pd {
-+			compatible = "fsl,imx8qxp-scu-pd";
-+			#power-domain-cells = <1>;
- 		};
- 	};
- };
-@@ -179,5 +158,5 @@ serial@5a060000 {
- 	clocks = <&clk IMX8QXP_UART0_CLK>,
- 		 <&clk IMX8QXP_UART0_IPG_CLK>;
- 	clock-names = "per", "ipg";
--	power-domains = <&pd_dma_lpuart0>;
-+	power-domains = <&pd IMX_SC_R_UART_0>;
- };
--- 
-2.7.4
+Not important enough to change.
+
+> +   - "ti,adc122s021"
+> +   - "ti,adc122s051"
+> +   - "ti,adc122s101"
+> +   - "ti,adc124s021"
+> +   - "ti,adc124s051"
+> +   - "ti,adc124s101"
+>   - reg: spi chip select number for the device
+>   - vref-supply: The regulator supply for ADC reference voltage
+>  
+> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
+> index 7cf39b3..e6716c3 100644
+> --- a/drivers/iio/adc/ti-adc128s052.c
+> +++ b/drivers/iio/adc/ti-adc128s052.c
+> @@ -186,15 +186,23 @@ static int adc128_remove(struct spi_device *spi)
+>  static const struct of_device_id adc128_of_match[] = {
+>  	{ .compatible = "ti,adc128s052", },
+>  	{ .compatible = "ti,adc122s021", },
+> +	{ .compatible = "ti,adc122s051", },
+> +	{ .compatible = "ti,adc122s101", },
+>  	{ .compatible = "ti,adc124s021", },
+> -	{ /* sentinel */ },
+> +	{ .compatible = "ti,adc124s051", },
+> +	{ .compatible = "ti,adc124s101", },
+> +	{ }
+Dropping then sentinel shouldn't have occurred in this patch.
+I don't really care if it is there or not personally but we shouldn't be
+making changes without clear benefit.  I'll put it back.
+>  };
+>  MODULE_DEVICE_TABLE(of, adc128_of_match);
+>  
+>  static const struct spi_device_id adc128_id[] = {
+> -	{ "adc128s052", 0},	/* index into adc128_config */
+> -	{ "adc122s021",	1},
+> -	{ "adc124s021", 2},
+> +	{ "adc128s052", 0 },	/* index into adc128_config */
+> +	{ "adc122s021",	1 },
+> +	{ "adc122s051",	1 },
+> +	{ "adc122s101",	1 },
+> +	{ "adc124s021", 2 },
+> +	{ "adc124s051", 2 },
+> +	{ "adc124s101", 2 },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(spi, adc128_id);
