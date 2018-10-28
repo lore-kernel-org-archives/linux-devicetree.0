@@ -1,91 +1,48 @@
-Return-Path: <SRS0=SDjf=NF=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 2/2] ARM: dts: r8a77470: Add USB-DMAC device nodes
-Date: Thu, 25 Oct 2018 15:53:38 +0100
-Message-Id: <1540479218-4954-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1540479218-4954-1-git-send-email-biju.das@bp.renesas.com>
-References: <1540479218-4954-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <jic23@kernel.org>
+Date: Sun, 28 Oct 2018 18:51:25 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 3/4] iio:magnetometer: st_magn: add BDU settings
+Message-ID: <20181028185125.2bd8c031@archlinux>
+In-Reply-To: <20181026023812.29720-3-martin@martingkelly.com>
+References: <20181026023812.29720-1-martin@martingkelly.com>
+	<20181026023812.29720-3-martin@martingkelly.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Martin Kelly <martin@martingkelly.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>, Denis Ciocca <denis.ciocca@st.com>, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds USB DMAC nodes.
+On Thu, 25 Oct 2018 19:38:11 -0700
+Martin Kelly <martin@martingkelly.com> wrote:
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-This patch depend upon the below patch.
+> From: Martin Kelly <martin@martingkelly.com>
+> 
+> LIS3MDL and LSM9DS1 are missing BDU settings in their register maps, so add
+> them. I don't have a LIS3MDL sensor to test, but this works correctly on
+> the LSM9DS1, which has the same register map.
+> 
+> Signed-off-by: Martin Kelly <martin@martingkelly.com>
+Applied thanks,
 
-https://patchwork.kernel.org/patch/10655861/
----
- arch/arm/boot/dts/r8a77470.dtsi | 56 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+Jonathan
 
-diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index 935b82b..eec71dd 100644
---- a/arch/arm/boot/dts/r8a77470.dtsi
-+++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -353,6 +353,62 @@
- 			};
- 		};
- 
-+		usb_dmac00: dma-controller@e65a0000 {
-+			compatible = "renesas,r8a77470-usb-dmac",
-+				     "renesas,usb-dmac";
-+			reg = <0 0xe65a0000 0 0x100>;
-+			interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "ch0", "ch1";
-+			clocks = <&cpg CPG_MOD 330>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 330>;
-+			#dma-cells = <1>;
-+			dma-channels = <2>;
-+		};
-+
-+		usb_dmac10: dma-controller@e65b0000 {
-+			compatible = "renesas,r8a77470-usb-dmac",
-+				     "renesas,usb-dmac";
-+			reg = <0 0xe65b0000 0 0x100>;
-+			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "ch0", "ch1";
-+			clocks = <&cpg CPG_MOD 331>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 331>;
-+			#dma-cells = <1>;
-+			dma-channels = <2>;
-+		};
-+
-+		usb_dmac01: dma-controller@e65a8000 {
-+			compatible = "renesas,r8a77470-usb-dmac",
-+				     "renesas,usb-dmac";
-+			reg = <0 0xe65a8000 0 0x100>;
-+			interrupts = <GIC_SPI 293 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 293 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "ch0", "ch1";
-+			clocks = <&cpg CPG_MOD 326>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 326>;
-+			#dma-cells = <1>;
-+			dma-channels = <2>;
-+		};
-+
-+		usb_dmac11: dma-controller@e65b8000 {
-+			compatible = "renesas,r8a77470-usb-dmac",
-+				     "renesas,usb-dmac";
-+			reg = <0 0xe65b8000 0 0x100>;
-+			interrupts = <GIC_SPI 292 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 292 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "ch0", "ch1";
-+			clocks = <&cpg CPG_MOD 327>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 327>;
-+			#dma-cells = <1>;
-+			dma-channels = <2>;
-+		};
-+
- 		dmac0: dma-controller@e6700000 {
- 			compatible = "renesas,dmac-r8a77470",
- 				     "renesas,rcar-dmac";
--- 
-2.7.4
+> ---
+>  drivers/iio/magnetometer/st_magn_core.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/iio/magnetometer/st_magn_core.c b/drivers/iio/magnetometer/st_magn_core.c
+> index a186b844d664..370b93db528d 100644
+> --- a/drivers/iio/magnetometer/st_magn_core.c
+> +++ b/drivers/iio/magnetometer/st_magn_core.c
+> @@ -316,6 +316,10 @@ static const struct st_sensor_settings st_magn_sensors_settings[] = {
+>  				},
+>  			},
+>  		},
+> +		.bdu = {
+> +			.addr = 0x24,
+> +			.mask = 0x40,
+> +		},
+>  		.drdy_irq = {
+>  			/* drdy line is routed drdy pin */
+>  			.stat_drdy = {
