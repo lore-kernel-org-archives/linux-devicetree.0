@@ -1,115 +1,39 @@
-Return-Path: <SRS0=PuHC=M6=cogentembedded.com=sergei.shtylyov@kernel.org>
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] arm64: dts: renesas: condor: switch from EtherAVB to GEther
-References: <fb4eb097-40aa-82df-68c7-9b727c858a8b@cogentembedded.com>
-Message-ID: <4f9e79ca-5d61-8dd4-fe79-42e8f7562f90@cogentembedded.com>
-Date: Thu, 18 Oct 2018 19:48:53 +0300
+Return-Path: <SRS0=Ck17=NI=googlemail.com=martin.blumenstingl@kernel.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 5/7] ARM: dts: meson8b: ec100: add iio-hwmon for the chip temperature
+Date: Sun, 28 Oct 2018 13:26:27 +0100
+Message-Id: <20181028122629.10144-6-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20181028122629.10144-1-martin.blumenstingl@googlemail.com>
+References: <20181028122629.10144-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-In-Reply-To: <fb4eb097-40aa-82df-68c7-9b727c858a8b@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>
+Content-Transfer-Encoding: 8bit
+To: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de, jic23@kernel.org
+Cc: khilman@baylibre.com, carlo@caione.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The "official" Condor boards have always been wired to mount NFS via
-GEther, not EtherAVB -- the boards resoldered for EtherAVB were local
-to Cogent Embedded, so we've been having an unpleasant situation where
-a "normal" Condor board still can't mount NFS (unless an EtherAVB PHY
-extension board is plugged in). Switch from EtherAVB to GEther at last!
+SAR ADC enabled channel 8 can be used to measure the chip temperature.
+This can be made available to the hwmon subsystem by using iio-hwmon.
 
-Fixes: 8091788f3d38 ("arm64: dts: renesas: condor: add EtherAVB support")
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
-The patch is against Linus' 'linux.git' repo -- coulan't find a fitting
-brancxh in Simon Horman's 'renesas.git' repo...
+ arch/arm/boot/dts/meson8b-ec100.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
- arch/arm64/boot/dts/renesas/r8a77980-condor.dts |   47 ++++++++++++------------
- 1 file changed, 24 insertions(+), 23 deletions(-)
-
-Index: linux/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-===================================================================
---- linux.orig/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-+++ linux/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-@@ -15,7 +15,7 @@
- 
- 	aliases {
- 		serial0 = &scif0;
--		ethernet0 = &avb;
-+		ethernet0 = &gether;
+diff --git a/arch/arm/boot/dts/meson8b-ec100.dts b/arch/arm/boot/dts/meson8b-ec100.dts
+index 0872f6e3abf5..0cebe849a920 100644
+--- a/arch/arm/boot/dts/meson8b-ec100.dts
++++ b/arch/arm/boot/dts/meson8b-ec100.dts
+@@ -64,6 +64,11 @@
+ 		timeout-ms = <20000>;
  	};
  
- 	chosen {
-@@ -47,23 +47,6 @@
- 	};
- };
- 
--&avb {
--	pinctrl-0 = <&avb_pins>;
--	pinctrl-names = "default";
--
--	phy-mode = "rgmii-id";
--	phy-handle = <&phy0>;
--	renesas,no-ether-link;
--	status = "okay";
--
--	phy0: ethernet-phy@0 {
--		rxc-skew-ps = <1500>;
--		reg = <0>;
--		interrupt-parent = <&gpio1>;
--		interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
--	};
--};
--
- &canfd {
- 	pinctrl-0 = <&canfd0_pins>;
- 	pinctrl-names = "default";
-@@ -82,6 +65,23 @@
- 	clock-frequency = <32768>;
- };
- 
-+&gether {
-+	pinctrl-0 = <&gether_pins>;
-+	pinctrl-names = "default";
-+
-+	phy-mode = "rgmii-id";
-+	phy-handle = <&phy0>;
-+	renesas,no-ether-link;
-+	status = "okay";
-+
-+	phy0: ethernet-phy@0 {
-+		rxc-skew-ps = <1500>;
-+		reg = <0>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
- &i2c0 {
- 	pinctrl-0 = <&i2c0_pins>;
- 	pinctrl-names = "default";
-@@ -118,16 +118,17 @@
- };
- 
- &pfc {
--	avb_pins: avb {
--		groups = "avb_mdio", "avb_rgmii";
--		function = "avb";
--	};
--
- 	canfd0_pins: canfd0 {
- 		groups = "canfd0_data_a";
- 		function = "canfd0";
- 	};
- 
-+	gether_pins: gether {
-+		groups = "gether_mdio_a", "gether_rgmii",
-+			 "gether_txcrefclk", "gether_txcrefclk_mega";
-+		function = "gether";
++	iio-hwmon {
++		compatible = "iio-hwmon";
++		io-channels = <&saradc 8>;
 +	};
 +
- 	i2c0_pins: i2c0 {
- 		groups = "i2c0";
- 		function = "i2c0";
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+-- 
+2.19.1
