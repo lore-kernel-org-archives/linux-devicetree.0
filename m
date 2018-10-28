@@ -1,47 +1,52 @@
-Return-Path: <SRS0=ZRjc=MY=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:50168 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728104AbeJLRNB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Oct 2018 13:13:01 -0400
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH v2 1/6] dt-bindings: clock: qcom: Add QCOM WCSS GCC clock bindings
-Date: Fri, 12 Oct 2018 15:10:39 +0530
-Message-Id: <1539337244-9505-2-git-send-email-govinds@codeaurora.org>
-In-Reply-To: <1539337244-9505-1-git-send-email-govinds@codeaurora.org>
-References: <1539337244-9505-1-git-send-email-govinds@codeaurora.org>
-Sender: devicetree-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Govind Singh <govinds@codeaurora.org>
+Return-Path: <SRS0=Ck17=NI=googlemail.com=martin.blumenstingl@kernel.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 1/7] dt-bindings: iio: adc: meson-saradc: add temperature sensor support
+Date: Sun, 28 Oct 2018 13:26:23 +0100
+Message-Id: <20181028122629.10144-2-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20181028122629.10144-1-martin.blumenstingl@googlemail.com>
+References: <20181028122629.10144-1-martin.blumenstingl@googlemail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de, jic23@kernel.org
+Cc: khilman@baylibre.com, carlo@caione.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree bindings for WiFi QDSP gcc clock controls found in
-QCS404 soc.
+The 32-bit Meson SoCs Meson8, Meson8b and Meson8m2 can use the SAR ADC
+to read the chip temperature. This requires a few new, optional
+properties:
+- nvmem-cells and nvmem-cell-names are needed because the temperature
+  sensor requires calibration to work correctly. The calibration data is
+  stored in the eFuse.
+- amlogic,hhi-sysctrl is needed on Meson8b and Meson8m2 because the 5th
+  bit of the TSC (temperature sensor calibration coefficient) is stored
+  in the HHI register region (in the scratch register HHI_DPLL_TOP_0 at
+  offset 0x318).
 
-Signed-off-by: Govind Singh <govinds@codeaurora.org>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- include/dt-bindings/clock/qcom,gcc-qcs404.h | 3 +++
- 1 file changed, 3 insertions(+)
+ .../bindings/iio/adc/amlogic,meson-saradc.txt          | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/include/dt-bindings/clock/qcom,gcc-qcs404.h b/include/dt-bindings/clock/qcom,gcc-qcs404.h
-index e2def29..ba6bc55 100644
---- a/include/dt-bindings/clock/qcom,gcc-qcs404.h
-+++ b/include/dt-bindings/clock/qcom,gcc-qcs404.h
-@@ -147,6 +147,8 @@
- #define GCC_MDP_TBU_CLK					138
- #define GCC_QDSS_DAP_CLK				139
- #define GCC_DCC_XO_CLK					140
-+#define GCC_WCSS_Q6_AHB_CBCR_CLK			141
-+#define GCC_WCSS_Q6_AXIM_CBCR_CLK			142
+diff --git a/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt b/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
+index 54b823f3a453..75c775954102 100644
+--- a/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
+@@ -22,6 +22,16 @@ Required properties:
+ - vref-supply:	the regulator supply for the ADC reference voltage
+ - #io-channel-cells: must be 1, see ../iio-bindings.txt
  
- #define GCC_GENI_IR_BCR					0
- #define GCC_USB_HS_BCR					1
-@@ -162,5 +164,6 @@
- #define GCC_PCIE_0_LINK_DOWN_BCR			11
- #define GCC_PCIEPHY_0_PHY_BCR				12
- #define GCC_EMAC_BCR					13
-+#define GCC_WDSP_RESTART				14
- 
- #endif
++Optional properties:
++- amlogic,hhi-sysctrl:	phandle to the syscon which contains the 5th bit
++			of the TSC (temperature sensor coefficient) on
++			Meson8b and Meson8m2 (which used to calibrate the
++			temperature sensor)
++- nvmem-cells:		phandle to the temperature_calib eFuse cells
++- nvmem-cell-names:	if present (to enable the temperature sensor
++			calibration) this must contain "temperature_calib"
++
++
+ Example:
+ 	saradc: adc@8680 {
+ 		compatible = "amlogic,meson-gxl-saradc", "amlogic,meson-saradc";
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.19.1
