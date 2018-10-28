@@ -1,45 +1,98 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/3] mtd: partitions: Add RedBoot FIS DT bindings
-Date: Sun, 28 Oct 2018 20:24:52 +0100
-Message-ID: <CACRpkdbThqKUTvN294iKad0z4or5FAJioR08b9n5UwbF=hCCDQ@mail.gmail.com>
-References: <20181019070622.26661-1-linus.walleij@linaro.org>
- <20181019070622.26661-2-linus.walleij@linaro.org>
- <CACRpkda=1CNzZe1ACGm9nwVDGbHdAxhWzpqcANs-KKBhPpNF-w@mail.gmail.com>
- <20181025190825.GA15870@bogus>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH V3 4/8] dt-bindings: i2c: i2c-imx-lpi2c: add imx8qxp
+ compatible string
+Date: Sun, 28 Oct 2018 22:19:52 +0000
+Message-ID: <20181028221952.GF1882@kunai>
+References: <1539886483-15775-1-git-send-email-aisheng.dong@nxp.com>
+ <1539886483-15775-5-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20181025190825.GA15870@bogus>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>, Mark Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: multipart/mixed; boundary="===============4077184603953680056=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1539886483-15775-5-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 25, 2018 at 9:08 PM Rob Herring <robh@kernel.org> wrote:
 
-> It's all fine for me.
+--===============4077184603953680056==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="gdTfX7fkYsEEjebm"
+Content-Disposition: inline
 
-Thanks.
 
-> I was only going to comment is Redboot still a thing? :)
+--gdTfX7fkYsEEjebm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yep. What I've learned recently is that some of the stuff we
-support has way longer lifecycles than we expected. There are
-brand new devices shipping using the RedBoot partition table
-as we speak. It seems to be coming from places like Taiwan.
+Hi,
 
-Yours,
-Linus Walleij
+On Thu, Oct 18, 2018 at 06:19:29PM +0000, A.s. Dong wrote:
+> Add imx8qxp compatible string
+>=20
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: linux-i2c@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Doesn't apply...
+
+>    - "fsl,imx8dv-lpi2c" for LPI2C compatible with the one integrated on i=
+=2EMX8DV soc
+
+=2E.. I don't have this line in my tree.
+
+Would you maybe volunteer to maintain this driver? To prevent stuff like
+this from happening? :)
+
+Regards,
+
+   Wolfram
+
+
+--gdTfX7fkYsEEjebm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlvWNgcACgkQFA3kzBSg
+KbZoAA//VGgfk7XArEeM6JoAMXTdir7abDgfjRo3hI2zQVF2yrgQXjB1Ew01SIaO
+FL1WOZrCi4oq4pDTLW/v3YBoCFmhsCdbX5PuILrijaI8JaEPI3DmuQCE+3A7zpAV
+5Gy9ImqdVqPYy4P9335CdRr2Y/2cx9a+j+Z8EuanREQ4hZXeYpMn2rpKAhbynzyG
+v8f03vlroD/RSp1mcLvwQ3Ni5fbout/SdEztrqVbISE//te9+vpX4wNNC4/RDled
+wNPvlKsH8853evYv+gHFXmAEhc5S3rnznQysXdGHrirFTLDJ8+0yK7sedb1o7srz
+aWDVr6/Cc3Ia+3gd0nVXd3v2IeG6CSpA2AZ614mOb1F7ROIuMgtH6w5Pd8ZeXl+d
+pr4rlJWdqYMMpBBac0ihI2mskrcrbXffR+R1TgJvEERY9eOuY7uCDXiYN71wjLTJ
+C8w4oKU9FCMZRZz/hFEu5h6qaAEpv1o5WE08eA3VUKovGUVheHzvxeen/a52Cvq9
+PGTJx9qal6hZc3M29sJu3GgA7SxnMi3ejei5EVt0yGvFOhWg8Qf83uv+PvRLvvmZ
+Ubjexd6ozpW0vjoY1LxZAVAq6zhzXRgTnD1sK65wPvdPWpfRcE9dwqlFaZosNhMt
+dhj1jArOmcGM9BSbwje1fg4OQp3lkaHLhjdoiONBA/2fD+KoOzo=
+=CExn
+-----END PGP SIGNATURE-----
+
+--gdTfX7fkYsEEjebm--
+
+
+--===============4077184603953680056==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============4077184603953680056==--
