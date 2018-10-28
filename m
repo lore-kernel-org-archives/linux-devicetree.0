@@ -1,64 +1,118 @@
-Return-Path: <SRS0=2LiM=NH=gmail.com=groeck7@kernel.org>
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sat, 27 Oct 2018 10:27:25 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 2/2] dt-bindings: hwmon: Add adm127x documentation
-Message-ID: <20181027172725.GA24915@roeck-us.net>
-References: <20181017222710.254994-1-kunyi@google.com>
+Return-Path: <jic23@kernel.org>
+Date: Sun, 28 Oct 2018 18:50:57 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 2/4] iio:magnetometer: st_magn: add LSM9DS1 support
+Message-ID: <20181028185057.7bbe97ca@archlinux>
+In-Reply-To: <20181026023812.29720-2-martin@martingkelly.com>
+References: <20181026023812.29720-1-martin@martingkelly.com>
+	<20181026023812.29720-2-martin@martingkelly.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20181017222710.254994-1-kunyi@google.com>
-To: Kun Yi <kunyi@google.com>
-Cc: openbmc@lists.ozlabs.org, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Martin Kelly <martin@martingkelly.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>, Denis Ciocca <denis.ciocca@st.com>, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Oct 17, 2018 at 03:27:09PM -0700, Kun Yi wrote:
-> adm127x are hot-swap controllers that allow a circuit board to be removed from
-> or inserted into a live backplane. This patch adds the device tree
-> bindings documentation.
-> 
-> Signed-off-by: Kun Yi <kunyi@google.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Thu, 25 Oct 2018 19:38:10 -0700
+Martin Kelly <martin@martingkelly.com> wrote:
 
-Applied to hwmon-next.
+> From: Martin Kelly <martin@martingkelly.com>
+> 
+> Update the sensor settings to support the LSM9DS1 sensor. Although the
+> LSM9DS1 accelerometer and gyroscope are coupled together to use the same
+> FIFO, the magnetometer is separate and can be cleanly supported without
+> refactoring the existing driver.
+> 
+> Signed-off-by: Martin Kelly <martin@martingkelly.com>
+Applied.
 
 Thanks,
-Guenter
+
+Jonathan
 
 > ---
->  .../devicetree/bindings/hwmon/adm1275.txt     | 25 +++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/adm1275.txt
+> v2:
+> - Rename lsm9ds1 --> lsm9ds1-magn and lsm9ds1_magn, as this is a multi-device
+>   chip.
+> - Use the register layout of LIS3MDL, as the two chips match.
+> - Add I2C compatibility strings.
 > 
-> diff --git a/Documentation/devicetree/bindings/hwmon/adm1275.txt b/Documentation/devicetree/bindings/hwmon/adm1275.txt
-> new file mode 100644
-> index 000000000000..1ecd03f3da4d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/adm1275.txt
-> @@ -0,0 +1,25 @@
-> +adm1275 properties
-> +
-> +Required properties:
-> +- compatible: Must be one of the supported compatible strings:
-> +	- "adi,adm1075" for adm1075
-> +	- "adi,adm1272" for adm1272
-> +	- "adi,adm1275" for adm1275
-> +	- "adi,adm1276" for adm1276
-> +	- "adi,adm1278" for adm1278
-> +	- "adi,adm1293" for adm1293
-> +	- "adi,adm1294" for adm1294
-> +- reg: I2C address
-> +
-> +Optional properties:
-> +
-> +- shunt-resistor-micro-ohms
-> +	Shunt resistor value in micro-Ohm
-> +
-> +Example:
-> +
-> +adm1272@10 {
-> +	compatible = "adi,adm1272";
-> +	reg = <0x10>;
-> +	shunt-resistor-micro-ohms = <500>;
-> +};
+>  drivers/iio/magnetometer/st_magn.h      | 1 +
+>  drivers/iio/magnetometer/st_magn_core.c | 1 +
+>  drivers/iio/magnetometer/st_magn_i2c.c  | 5 +++++
+>  drivers/iio/magnetometer/st_magn_spi.c  | 5 +++++
+>  4 files changed, 12 insertions(+)
+> 
+> diff --git a/drivers/iio/magnetometer/st_magn.h b/drivers/iio/magnetometer/st_magn.h
+> index 8fe51ce427bd..bc14ad4f1b26 100644
+> --- a/drivers/iio/magnetometer/st_magn.h
+> +++ b/drivers/iio/magnetometer/st_magn.h
+> @@ -20,6 +20,7 @@
+>  #define LIS3MDL_MAGN_DEV_NAME		"lis3mdl"
+>  #define LSM303AGR_MAGN_DEV_NAME		"lsm303agr_magn"
+>  #define LIS2MDL_MAGN_DEV_NAME		"lis2mdl"
+> +#define LSM9DS1_MAGN_DEV_NAME		"lsm9ds1_magn"
+> 
+>  int st_magn_common_probe(struct iio_dev *indio_dev);
+>  void st_magn_common_remove(struct iio_dev *indio_dev);
+> diff --git a/drivers/iio/magnetometer/st_magn_core.c b/drivers/iio/magnetometer/st_magn_core.c
+> index 72f6d1335a04..a186b844d664 100644
+> --- a/drivers/iio/magnetometer/st_magn_core.c
+> +++ b/drivers/iio/magnetometer/st_magn_core.c
+> @@ -267,6 +267,7 @@ static const struct st_sensor_settings st_magn_sensors_settings[] = {
+>  		.wai_addr = ST_SENSORS_DEFAULT_WAI_ADDRESS,
+>  		.sensors_supported = {
+>  			[0] = LIS3MDL_MAGN_DEV_NAME,
+> +			[1] = LSM9DS1_MAGN_DEV_NAME,
+>  		},
+>  		.ch = (struct iio_chan_spec *)st_magn_2_16bit_channels,
+>  		.odr = {
+> diff --git a/drivers/iio/magnetometer/st_magn_i2c.c b/drivers/iio/magnetometer/st_magn_i2c.c
+> index feaa28cf6a77..68650f5f5c19 100644
+> --- a/drivers/iio/magnetometer/st_magn_i2c.c
+> +++ b/drivers/iio/magnetometer/st_magn_i2c.c
+> @@ -44,6 +44,10 @@ static const struct of_device_id st_magn_of_match[] = {
+>  		.compatible = "st,lis2mdl",
+>  		.data = LIS2MDL_MAGN_DEV_NAME,
+>  	},
+> +	{
+> +		.compatible = "st,lsm9ds1-magn",
+> +		.data = LSM9DS1_MAGN_DEV_NAME,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, st_magn_of_match);
+> @@ -90,6 +94,7 @@ static const struct i2c_device_id st_magn_id_table[] = {
+>  	{ LIS3MDL_MAGN_DEV_NAME },
+>  	{ LSM303AGR_MAGN_DEV_NAME },
+>  	{ LIS2MDL_MAGN_DEV_NAME },
+> +	{ LSM9DS1_MAGN_DEV_NAME },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(i2c, st_magn_id_table);
+> diff --git a/drivers/iio/magnetometer/st_magn_spi.c b/drivers/iio/magnetometer/st_magn_spi.c
+> index 15bb09267098..cb05fcd9ddfe 100644
+> --- a/drivers/iio/magnetometer/st_magn_spi.c
+> +++ b/drivers/iio/magnetometer/st_magn_spi.c
+> @@ -39,6 +39,10 @@ static const struct of_device_id st_magn_of_match[] = {
+>  		.compatible = "st,lis2mdl",
+>  		.data = LIS2MDL_MAGN_DEV_NAME,
+>  	},
+> +	{
+> +		.compatible = "st,lsm9ds1-magn",
+> +		.data = LSM9DS1_MAGN_DEV_NAME,
+> +	},
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, st_magn_of_match);
+> @@ -81,6 +85,7 @@ static const struct spi_device_id st_magn_id_table[] = {
+>  	{ LIS3MDL_MAGN_DEV_NAME },
+>  	{ LSM303AGR_MAGN_DEV_NAME },
+>  	{ LIS2MDL_MAGN_DEV_NAME },
+> +	{ LSM9DS1_MAGN_DEV_NAME },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(spi, st_magn_id_table);
+> --
+> 2.11.0
+> 
