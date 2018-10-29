@@ -1,42 +1,131 @@
-From: Vitor soares <vitor.soares@synopsys.com>
-Subject: [PATCH 3/3] MAINTAINERS: Add myself as the dw-i3c-master module maintainer
-Date: Mon, 29 Oct 2018 10:06:58 +0000
-Message-ID: <1540807618-13246-4-git-send-email-soares@synopsys.com>
-References: <1540807618-13246-1-git-send-email-soares@synopsys.com>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: Re: [PATCH 1/2] net:stmmac: dwmac-mediatek: add support for mt2712
+Date: Mon, 29 Oct 2018 11:08:28 +0100
+Message-ID: <20181029100828.GA19103@Red>
+References: <1540782294-27721-1-git-send-email-biao.huang@mediatek.com>
+ <1540782294-27721-2-git-send-email-biao.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1540807618-13246-1-git-send-email-soares@synopsys.com>
+Content-Disposition: inline
+In-Reply-To: <1540782294-27721-2-git-send-email-biao.huang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: boris.brezillon@bootlin.com, wsa@the-dreams.de, linux-i2c@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de
-Cc: psroka@cadence.com, agolec@cadence.com, adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com, alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com, rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vitor.soares@synopsys.com, geert@linux-m68k.org, linus.walleij@linaro.org, Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org, nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se, mshettel@codeaurora.org, swboyd@chromium.org, joao.pinto@synopsys.com, luis.oliveira@synopsys.com, manuel.abreu@synopsys.com, gustavo.pimentel@synopsys.com
+To: Biao Huang <biao.huang@mediatek.com>
+Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, nelson.chang@mediatek.com, andrew@lunn.ch, netdev@vger.kernel.org, sean.wang@mediatek.com, liguo.zhang@mediatek.com, linux-kernel@vger.kernel.org, matthias.bgg@gmail.com, joabreu@synopsys.com, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Vitor soares <soares@synopsys.com>
----
-Change in v2:
--None
+Hello
+I have some minor comments below
 
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+On Mon, Oct 29, 2018 at 11:04:53AM +0800, Biao Huang wrote:
+> Add Ethernet support for MediaTek SoCs from the mt2712 family
+> 
+> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/Kconfig        |    8 +
+>  drivers/net/ethernet/stmicro/stmmac/Makefile       |    1 +
+>  .../net/ethernet/stmicro/stmmac/dwmac-mediatek.c   |  364 ++++++++++++++++++++
+>  3 files changed, 373 insertions(+)
+>  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+> index edf2036..76d779e 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
+> +++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+> @@ -75,6 +75,14 @@ config DWMAC_LPC18XX
+>  	---help---
+>  	  Support for NXP LPC18xx/43xx DWMAC Ethernet.
+>  
+> +config DWMAC_MEDIATEK
+> +	tristate "MediaTek MT27xx GMAC support"
+> +	depends on OF
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 293c863..38c2760 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6930,6 +6930,12 @@ F:	drivers/i3c/
- F:	include/linux/i3c/
- F:	include/dt-bindings/i3c/
- 
-+I3C·DRIVER·FOR·SYNOPSYS·DESIGNWARE
-+M:	Vitor·Soares·<soares@synopsys.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt
-+F:	drivers/i3c/master/dw*
-+
- IA64 (Itanium) PLATFORM
- M:	Tony Luck <tony.luck@intel.com>
- M:	Fenghua Yu <fenghua.yu@intel.com>
--- 
-2.7.4
+You should add something like && (COMPILE_TEST || ARCH_MEDIATEK)
+
+[...]
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
+> new file mode 100644
+> index 0000000..9ccf3a5
+> --- /dev/null
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
+> @@ -0,0 +1,364 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (c) 2018 MediaTek Inc.
+
+Only SPDX can use the // comment style, the rest should use /**/
+
+
+[...]
+> +static int mt2712_set_interface(struct mediatek_dwmac_plat_data *plat)
+> +{
+> +	int rmii_rxc = plat->rmii_rxc ? RMII_CLK_SRC_RXC : 0;
+> +	u32 intf_val = 0;
+> +
+> +	/* select phy interface in top control domain */
+> +	switch (plat->phy_mode) {
+> +	case PHY_INTERFACE_MODE_MII:
+> +		intf_val |= PHY_INTF_MII_GMII;
+> +		break;
+> +	case PHY_INTERFACE_MODE_RMII:
+> +		intf_val |= PHY_INTF_RMII;
+> +		intf_val |= rmii_rxc;
+> +		break;
+> +	case PHY_INTERFACE_MODE_RGMII:
+> +	case PHY_INTERFACE_MODE_RGMII_TXID:
+> +	case PHY_INTERFACE_MODE_RGMII_RXID:
+> +	case PHY_INTERFACE_MODE_RGMII_ID:
+> +		intf_val |= PHY_INTF_RGMII;
+> +		break;
+> +	default:
+> +		pr_err("phy interface not support\n");
+
+I think you could use dev_err() instead.
+And I think it is better spelled "not supported".
+
+
+[...]
+> +static int mediatek_dwmac_probe(struct platform_device *pdev)
+> +{
+> +	int ret = 0;
+> +	struct plat_stmmacenet_data *plat_dat;
+> +	struct stmmac_resources stmmac_res;
+> +	struct mediatek_dwmac_plat_data *priv_plat;
+> +
+> +	priv_plat = devm_kzalloc(&pdev->dev, sizeof(*priv_plat), GFP_KERNEL);
+> +	if (!priv_plat)
+> +		return -ENOMEM;
+> +
+> +	priv_plat->variant = of_device_get_match_data(&pdev->dev);
+> +	if (!priv_plat->variant) {
+> +		dev_err(&pdev->dev, "Missing dwmac-mediatek variant\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	priv_plat->dev = &pdev->dev;
+> +	priv_plat->np = pdev->dev.of_node;
+> +	priv_plat->phy_mode = of_get_phy_mode(priv_plat->np);
+> +
+> +	ret = mediatek_dwmac_config_dt(priv_plat);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = stmmac_get_platform_resources(pdev, &stmmac_res);
+> +	if (ret)
+> +		return ret;
+> +
+> +	plat_dat = stmmac_probe_config_dt(pdev, &stmmac_res.mac);
+> +	if (IS_ERR(plat_dat))
+> +		return PTR_ERR(plat_dat);
+> +
+> +	plat_dat->interface = priv_plat->phy_mode;
+> +	/* clk_csr_i = 250-300MHz & MDC = clk_csr_i/124 */
+> +	plat_dat->clk_csr = 5;
+> +	plat_dat->has_gmac4 = 1;
+> +	plat_dat->has_gmac = 0;
+> +	plat_dat->pmt = 0;
+> +	plat_dat->maxmtu = 1500;
+
+ETH_DATA_LEN ?
+
+Regards
