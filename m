@@ -1,88 +1,59 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH 08/10] usb: typec: Add support for usb role switch in
- rt1711h driver
-Date: Mon, 29 Oct 2018 13:58:13 +0200
-Message-ID: <20181029115813.GA14534@kuha.fi.intel.com>
-References: <20181027095820.40056-1-chenyu56@huawei.com>
- <20181027095820.40056-9-chenyu56@huawei.com>
+From: Manish Narani <manish.narani@xilinx.com>
+Subject: [PATCH v3 0/3] Add Xilinx AMS Driver
+Date: Mon, 29 Oct 2018 17:40:23 +0530
+Message-ID: <1540815026-1012-1-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181027095820.40056-9-chenyu56@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yu Chen <chenyu56@huawei.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lucas Tsai <lucas_tsai@richtek.com>, shufan_lee <shufan_lee@richtek.com>, John Stultz <john.stultz@linaro.org>, Binghui Wang <wangbinghui@hisilicon.com>
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, manish.narani@xilinx.com, amit.kucheria@linaro.org, sudeep.holla@arm.com, olof@lixom.net, broonie@kernel.org, arnaud.pouliquen@st.com, eugen.hristev@microchip.com, linus.walleij@linaro.org, vilhelm.gray@gmail.com, geert@linux-m68k.org, freeman.liu@spreadtrum.com, rdunlap@infradead.org, tglx@linutronix.de, baolin.wang@linaro.org, gregkh@linuxfoundation.org, jdelvare@suse.com, linux@roeck-us.net
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 27, 2018 at 05:58:18PM +0800, Yu Chen wrote:
-> This patch add struct device_connection to rt1711h driver to support
-> find "usb-role-switch" in tcpm_register_port.
-> 
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Lucas Tsai <lucas_tsai@richtek.com>
-> Cc: shufan_lee <shufan_lee@richtek.com>
-> Cc: John Stultz <john.stultz@linaro.org>
-> Cc: Binghui Wang <wangbinghui@hisilicon.com>
-> Signed-off-by: Yu Chen <chenyu56@huawei.com>
-> ---
->  drivers/usb/typec/tcpm/tcpci_rt1711h.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/drivers/usb/typec/tcpm/tcpci_rt1711h.c b/drivers/usb/typec/tcpm/tcpci_rt1711h.c
-> index 017389021b96..5f8b952612fe 100644
-> --- a/drivers/usb/typec/tcpm/tcpci_rt1711h.c
-> +++ b/drivers/usb/typec/tcpm/tcpci_rt1711h.c
-> @@ -39,6 +39,7 @@ struct rt1711h_chip {
->  	struct tcpci_data data;
->  	struct tcpci *tcpci;
->  	struct device *dev;
-> +	struct device_connection dev_conn;
->  };
->  
->  static int rt1711h_read16(struct rt1711h_chip *chip, unsigned int reg, u16 *val)
-> @@ -237,6 +238,7 @@ static int rt1711h_probe(struct i2c_client *client,
->  {
->  	int ret;
->  	struct rt1711h_chip *chip;
-> +	const char *dev_conn_end;
->  
->  	ret = rt1711h_check_revision(client);
->  	if (ret < 0) {
-> @@ -254,6 +256,7 @@ static int rt1711h_probe(struct i2c_client *client,
->  		return PTR_ERR(chip->data.regmap);
->  
->  	chip->dev = &client->dev;
-> +	dev_set_name(chip->dev, "rt1711h");
->  	i2c_set_clientdata(client, chip);
->  
->  	ret = rt1711h_sw_reset(chip);
-> @@ -264,6 +267,15 @@ static int rt1711h_probe(struct i2c_client *client,
->  	if (ret < 0)
->  		return ret;
->  
-> +	ret = device_property_read_string(chip->dev, "dev-conn-end",
-> +			&dev_conn_end);
-> +	if (!ret) {
-> +		chip->dev_conn.endpoint[0] = "rt1711h";
-> +		chip->dev_conn.endpoint[1] = dev_conn_end;
-> +		chip->dev_conn.id = "usb-role-switch";
-> +		device_connection_add(&chip->dev_conn);
-> +	}
+Add Xilinx AMS driver which is used for Xilinx's ZynqMP AMS controller.
+This AMS driver is used to report various interface voltages and temperatures
+across the system.
+This driver will be used by iio-hwmon to repport voltages and temperatures
+across the system by using various channel interfaces.
+This driver handles AMS module including PS-Sysmon & PL-Sysmon. The binding
+documentation is added for understanding of AMS, PS, PL Sysmon Channels.
 
-That is wrong. You should not read name of a device from a property.
+Changes in v2:
+	- Added documentation for sysfs (Patch-2)
+	- Addressed code style review comments
+	- Patch-2 (Now it is Patch-3)
+		- Arranged the includes in alphabetical order
+		- Removed the wrapper 'ams_pl_write_reg()' and used writel
+		  instead
+		- Removed the unnecessary delay of 1ms and used polling of EOC
+		  instead
+		- Removed spin_lock and used mutex only.
+		- Used request_irq() instead of devm_request_irq() and handled
+		  respective error conditions
+		- Moved contents of xilinx-ams.h to inline with xilinx-ams.c
+	- Patch-1
+		- Addressed Documentation style comments
 
-Regardless of that, I don't think this patch is needed at all. You
-need to describe this kind connection with OF device graph
-(Documentation/devicetree/bindings/graph.txt).
+Changes in v3:
+	- Updated bindings document with the suggested modification in v2 review
+	- Removed documentation for sysfs
+	- Removed extended names for channels in the Xilinx AMS driver
+	- Modified dts to use ranges for child nodes
+	- Reduced address and size cells to 32-bit instead of 64-bit
 
-I've prepared a proposal how we should be able handle graphs in the
-device connection API:
-https://lkml.org/lkml/2018/10/24/613
+Manish Narani (3):
+  dt-bindings: iio: adc: Add Xilinx AMS binding documentation
+  iio: adc: Add Xilinx AMS driver
+  arm64: zynqmp: DT: Add Xilinx AMS node
 
-
-thanks,
+ .../devicetree/bindings/iio/adc/xilinx-ams.txt     |  183 +++
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi             |   27 +
+ drivers/iio/adc/Kconfig                            |   10 +
+ drivers/iio/adc/Makefile                           |    1 +
+ drivers/iio/adc/xilinx-ams.c                       | 1343 ++++++++++++++++++++
+ 5 files changed, 1564 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
+ create mode 100644 drivers/iio/adc/xilinx-ams.c
 
 -- 
-heikki
+2.1.1
