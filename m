@@ -1,188 +1,84 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH v2 09/10] irqchip: ti-sci-inta: Add support for Interrupt
- Aggregator driver
-Date: Mon, 29 Oct 2018 18:34:00 +0530
-Message-ID: <81136b74-4b45-f44b-0168-23d191a4fb5e@ti.com>
-References: <20181018154017.7112-1-lokeshvutla@ti.com>
- <20181018154017.7112-10-lokeshvutla@ti.com>
- <b20127dc-be43-3b00-9960-663738df0069@arm.com>
- <9969f24c-cdb0-1f5c-d0f4-b1c1f587325c@ti.com>
- <86va5ssrfm.wl-marc.zyngier@arm.com>
- <b3a71622-7734-04be-0b0c-38e9dc6542d4@ti.com>
- <63ba5353-8470-b4c1-64a8-a1df5bf48614@ti.com>
- <86va5myz7t.wl-marc.zyngier@arm.com>
+From: Quentin Schulz <quentin.schulz@bootlin.com>
+Subject: Re: [PATCH v5 04/11] dt-bindings: iio: adc: add AXP803 ADC bindings
+Date: Mon, 29 Oct 2018 14:07:57 +0100
+Message-ID: <20181029130757.m5okrfvusjl5fu5m@qschulz>
+References: <20181023185330.10472-1-oskari@lemmela.net>
+ <20181023185330.10472-5-oskari@lemmela.net>
+ <20181024135633.GA342@bogus>
+ <20181028154011.04efdecf@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="d247wavwh5lwf5wa"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <86va5myz7t.wl-marc.zyngier@arm.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181028154011.04efdecf@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Nishanth Menon <nm@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, jason@lakedaemon.net, Peter Ujfalusi <peter.ujfalusi@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, tglx@linutronix.de, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+To: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Cc: Rob Herring <robh@kernel.org>, Oskari Lemmela <oskari@lemmela.net>, Linus Walleij <linus.walleij@linaro.org>, Sebastian Reichel <sre@kernel.org>, Lee Jones <lee.jones@linaro.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Vasily Khoruzhick <anarsoul@gmail.com>, Quentin Schulz <quentin.schulz@free-electrons.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
 
-On Sunday 28 October 2018 07:01 PM, Marc Zyngier wrote:
-> Hi Lokesh,
-> 
-> On Fri, 26 Oct 2018 21:19:41 +0100,
-> Lokesh Vutla <lokeshvutla@ti.com> wrote:
->>
->> Hi Marc,
->>
->> [..snip..]
->>>> [...]
->>>>
->>>>>>> +/**
->>>>>>> + * ti_sci_inta_register_event() - Register a event to an interrupt aggregator
->>>>>>> + * @dev:	Device pointer to source generating the event
->>>>>>> + * @src_id:	TISCI device ID of the event source
->>>>>>> + * @src_index:	Event source index within the device.
->>>>>>> + * @virq:	Linux Virtual IRQ number
->>>>>>> + * @flags:	Corresponding IRQ flags
->>>>>>> + * @ack_needed:	If explicit clearing of event is required.
->>>>>>> + *
->>>>>>> + * Creates a new irq and attaches to IA domain if virq is not specified
->>>>>>> + * else attaches the event to vint corresponding to virq.
->>>>>>> + * When using TISCI within the client drivers, source indexes are always
->>>>>>> + * generated dynamically and cannot be represented in DT. So client
->>>>>>> + * drivers should call this API instead of platform_get_irq().
->>>>>>
->>>>>> NAK. Either this fits in the standard model, or we adapt the standard
->>>>>> model to catter for your particular use case. But we don't define a new,
->>>>>> TI specific API.
->>>>>>
->>>>>> I have a hunch that if the IDs are generated dynamically, then the model
->>>>>> we use for MSIs would fit this thing. I also want to understand what
->>>>>
->>>>> hmm..I haven't thought about using MSI. Will try to explore it. But
->>>>> the "struct msi_msg" is not applicable in this case as device does not
->>>>> write to a specific location.
->>>>
->>>> It doesn't need to. You can perfectly ignore the address field and
->>>> only be concerned with the data. We already have MSI users that do not
->>>> need programming of the doorbell address, just the data.
->>>
->>
->> Just one more clarification.
->>
->> First let me explain the IRQ routes a bit deeply. As I said earlier
->> there are three ways in which IRQ can flow in AM65x SoC
->> 1) Device directly connected to GIC
->> 	- Device IRQ --> GIC
->> 2) Device connected to INTR.
->> 	- Device IRQ --> INTR --> GIC
->> 3) Devices connected to INTA.
->> 	- Device IRQ --> INTA --> INTR --> GIC
->>
->> 1 and 2 are straight forward and we use DT for IRQ
->> representation. Coming to 3 the trickier part is that Input to INTA
->> and output from INTA and dynamically managed. To be more specific:
->> - By hardware design there are certain set of physical global
->> events(interrupts) attached to an INTA. Out of which a certain range
->> are assigned to the current linux host that can be queried from
->> system-controller.
->> - Similarly out of all the INTA outputs(referenced as vints) a certain
->> range can be used by the current linux host.
->>
->>
->> So for configuring an IRQ route in case 3, the following steps are needed:
->> - Device id and device resource index for which the interrupt is needed
-> 
-> THat is no different from a PCI device for example, where we need the
-> requester ID and the number of the interrupt in the MSI-X table.
-> 
->> - A free event id from the range assigned to the INTA in this host context
->> - A free vint from the range assigned to the INTA in this host context
->> - A free gic IRQ from the range assigned to the INTR in this host context.
-> 
->  From what I understand of the driver, at least some of that is under
-> the responsibility of the firmware, right? Or is the driver under
-> control of all three parameters? To be honest, it doesn't really
+--d247wavwh5lwf5wa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Driver should control all three parameters.
+Hi Jonathan,
 
-> matter, as the as far as the kernel is concerned, the irqchip drivers
-> are free to deal with the routing anyway they want.
+On Sun, Oct 28, 2018 at 03:40:11PM +0000, Jonathan Cameron wrote:
+> On Wed, 24 Oct 2018 08:56:33 -0500
+> Rob Herring <robh@kernel.org> wrote:
+>=20
+> > On Tue, 23 Oct 2018 21:53:23 +0300, Oskari Lemmela wrote:
+> > > The AXP803 ADC is compatible with AXP813 ADC, but add
+> > > specific compatible for it.
+> > >=20
+> > > Signed-off-by: Oskari Lemmela <oskari@lemmela.net>
+> > > ---
+> > >  Documentation/devicetree/bindings/iio/adc/axp20x_adc.txt | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >  =20
+> >=20
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+>=20
+> This doesn't seem to have any dependencies with the other patches
+> so applied to the togreg branch of iio.git and pushed out as testing
+> for the autobuilders to ignore.  However I am a little curious to know
+> why we would add the ID and then not use it (that I can see)?
+>=20
 
-Correct, that's my understanding as well.
+Sometimes with Allwinner (and X-Powers), two IPs seem identical until we
+discover something that is slightly different. When this happens, we
+have to add a compatible to differentiate both. However, we would also
+need to change the Device Tree to change the compatible. We would need
+to handle the driver behaviour for both Device Trees.
 
-> 
->> With the above information, linux should send a message to
->> system-controller using TISCI protocol. After policing the given
->> information, system-controller does the following:
->> - Attaches the interrupt(INTA input) to the device resource index
->> - Muxes the interrupt(INTA input) to corresponding vint(INTA output)
->> - Muxes the vint(INTR input) to GIC irq(INTR output).
-> 
-> Isn't there a 1:1 mapping between *used* INTR inputs and outputs?
-> Since INTR is a router, there is no real muxing. I assume that the
-> third point above is just a copy-paste error.
+So better anticipate a possible difference so that we don't have to do
+some hacks in the driver to handle the device correctly.
 
-Right, my bad. INTR is just a router and no read muxing.
+As always, Chen-Yu or Maxime may know better so I'm just stating what I
+seem to recall.
 
-> 
->>
->> For grouping of interrupts, the same vint number is to be passed to
->> system-controller for all the requests.
->>
->> Keeping all the above in mind, I see the following as software IRQ
->> Domain Hierarchy:
->>
->> 1) INTA multi MSI --> 2)INTA  -->3) MSI --> 4) INTR  -->5) GIC
->>
->> INTA driver has to set a chained IRQ using virq allocated from its
->> parent MSI. This is to differentiate the grouped interrupts within
->> INTA.
->>
->> Inorder to cover the above two MSI domains, a new bus driver has to be
->> created as I couldn't find a fit with the existing bus drivers.
->>
->> Does the above approach make sense? Please correct me if i am wrong.
-> 
-> I think this can be further simplified, as you seem to assume that
-> dynamic allocation implies MSI. This is not the case. You can
-> perfectly use dynamically allocated interrupts and still not use MSIs.
-> 
-> INTA is indeed a chained interrupt controller, as it may mux several
-> inputs onto a single output. But the output of INTA is not an MSI. It
-> is just a regular interrupt that can allocated when the first mapping
-> gets established.
+Quentin
 
-okay. I guess it can just be done using irq_create_fwspec_mapping().
+--d247wavwh5lwf5wa
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> Also, INTA shouldn't offer any "multi-MSI". This is a PCI-specific
-> concept that doesn't translate on any other type of bus. What you want
-> is something that should behave like MSI-X for its allocation part,
-> where each MSI gets allocated independently.
-> 
-> Hierarchy-wise, you should end-up with something like this:
-> 
->         TISCI-MSI       Chained-intr       SPI
-> Device ---------> INTA ------------> INTR ---> GIC
+-----BEGIN PGP SIGNATURE-----
 
-makes sense. Thanks for the clarification. Will re work the driver using this 
-approach and post it.
+iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAlvXBiwACgkQhLiadT7g
+8aNGohAAqGgoY6iEBWbxr5CUbqS3mda6QQ8HkBcE9EqDT/JpjKiQmRay4qZyJ6pC
+u54eWJFzyZOyOmzhVUhP9TTa6yt0+A/tmyOtEUwkH2rU4IPqmwrjJ4PAnk4aFLw5
+EsPN25o9Zk60y9bhvclDkw1MHldvPJER6ejygP90zOcwqIc5DjrQfY4aPnImnRZ1
++Cs/zct/IVUScTCOMdqvOT5mff/8OkKRmbw6+Ukr/11RPIm2zly61i0XWoyXslkv
+xZhhP+Fs7G3+Zs7cUmxkTNliyJ4wHkHD9p00fSB2DKWB0Xj+SeYziWvLZF/tVV1J
+zhcfRy1yVI3gU5Uvf9kd5/ONHQt06yNVtSusEpmV19WKznoJqrn9IFLmXqJC2ayv
+8mVHDSRP3ci0k4hVC3kpQF3SkVe/kYpxdzea7u+d+Lv6xg2j9QRqsJN/IL9sY0Ss
+JFrQVxrhEolYScRpEoORWU7e5phhrGxK2W9wFO2iHVbH5M3vVZnWa3L4RZf5NiwR
+Zadjk2idbdpn3FBMmOi3QKtT7xlsPHauv8vCr2BVEnQFIJMqvNt9Ny0t+ZDLfw5h
+/JaVZs1pOcKwzvJvtch1wtbrCPTgzHJLEU2gO7bWWXolBnYx28PYKjgtRgl/RLvM
+m0taZizWks/8EqaYlGFYpoUoBYTNnYRivcoJV602PQk1gmzcvYk=
+=YFs6
+-----END PGP SIGNATURE-----
 
-Thanks and regards,
-Lokesh
-
-> 
-> As for the bus, you have two choices:
-> 
-> - You create a new one altogether. See drivers/bus/fsl-mc for
->    an example of something totally over the top. This implies that all
->    your devices are following the exact same programming model for more
->    than just interrupts.
-> 
-> - You use the platform-MSI framework to build your interrupt
->    infrastructure, and you don't have to implement much more than
->    that.
-> 
-> Hope this helps,
-> 
-> 	M.
-> 
+--d247wavwh5lwf5wa--
