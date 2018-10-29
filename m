@@ -1,89 +1,96 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 12/25] drm/sun4i: sun6i_mipi_dsi: Add DSI
- hblk packet overhead
-Date: Mon, 29 Oct 2018 10:22:27 +0100
-Message-ID: <20181029092227.mdxgvg5aqzh22j72@flea>
-References: <20181026144344.27778-1-jagan@amarulasolutions.com>
- <20181026144344.27778-13-jagan@amarulasolutions.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH] dt-bindings: arm: Fix cpu capacity mismatch in example
+Date: Mon, 29 Oct 2018 10:26:57 +0100
+Message-ID: <1297c984-789f-0298-c3b8-8668f5b898de@linaro.org>
+References: <138600f5d504b41202a29a1e130a7aa4e51f1925.1540451976.git.viresh.kumar@linaro.org>
+ <80206cb7-b550-1cf6-abf4-e4b17de4cdb5@linaro.org>
+ <20181026041107.4hofhlcubbo5claq@vireshk-i7>
+ <d4d6af05-61f1-4123-c2dc-4ee0946f79e8@linaro.org>
+ <20181029063450.3o3ay7pazik5tgne@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lllrmm6ipxhi4upc"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBVFC3PPAKGQEDKET3NY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20181026144344.27778-13-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181029063450.3o3ay7pazik5tgne@vireshk-i7>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: catalin.marinas@arm.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Vincent Guittot <vincent.guittot@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---lllrmm6ipxhi4upc
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Fri, Oct 26, 2018 at 08:13:31PM +0530, Jagan Teki wrote:
-> Add 10 bytes packet overhead for hblk where blank is set using
-> a blanking packet like (4 bytes + 4 bytes + payload + 2 bytes)
+On 29/10/2018 07:34, Viresh Kumar wrote:
+> On 26-10-18, 10:30, Daniel Lezcano wrote:
+>> On 26/10/2018 06:11, Viresh Kumar wrote:
+>>> On 25-10-18, 14:04, Daniel Lezcano wrote:
+>>>> I think it is actually correct. The example is confusing on what the
+>>>> numbers are. IIUC, it is:
+>>>>
+>>>> (after normalizing)
+>>>>
+>>>> dhrystone result on big CPU is 1024 at 1100MHz
+>>>> dhrystone result on little CPU is 446 at 850MHz
+>>>>
+>>>> We have to scale the result of the little for 1100MHz in order to compare.
+>>>>
+>>>> 1100/850 = 1.294
+>>>>
+>>>> dhrystone result on little CPU is 446 * 1.294 = 577 at 1100MHz
+>>>>
+>>>> So we put the normalized values 1024 and 577. The arch_topology will
+>>>> scale 577 back to 446 as it will compute the max capacity based on the
+>>>> max freq which is 850MHz.
+>>>>
+>>>> The *final* capacities are 1024 for cluster0 and 446 for cluster1 (read
+>>>> the cpu max capacity, the ones showed in the sysfs).
+>>>>
+>>>> Did I miss something ?
+>>>
+>>> No. What about making it more clear in the example to save the next idiot (like
+>>> me) from wasting time :)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+>>> index 9b5685a1d15d..d061e6575bde 100644
+>>> --- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+>>> +++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+>>> @@ -61,7 +61,10 @@ mhz values (normalized w.r.t. the highest value found while parsing the DT).
+>>>  Example 1 (ARM 64-bit, 6-cpu system, two clusters):
+>>>  capacities-dmips-mhz are scaled w.r.t. 1024 (cpu@0 and cpu@1)
+>>>  supposing cluster0@max-freq=1100 and custer1@max-freq=850,
+>>> -final capacities are 1024 for cluster0 and 446 for cluster1
+>>> +final capacities are 1024 for cluster0 and 446 for cluster1.
+>>> +Note that the values mentioned below in the example (1024 and 578)
+>>> +aren't normalized based on max frequency of each cluster and that is
+>>> +left for the operating system to do.
+>>
+>> Yes, it will help but if you want to make things even more clear, I
+>> suggest to elaborate the text a bit and give the numbers above to
+>> explain (1100/850=1.294, 446 * 1.294 = 577, ...)
 > 
-> This is according to BSP code from BPI-M64-bsp
-> (in drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
-> dsi_hblk = (ht-hspw)*dsi_pixel_bits[format]/8-(4+4+2);
+> I didn't wanted to explain way too much, but how about this..
 > 
-> So, add 10 bytes packet overhead for DSI hblk.
-> 
-> Tested on 2-lane, 4-lane MIPI-DSI LCD panels.
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> Tested-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> ---
-> Changes for v3:
-> - new patch
-> Changes for v2:
-> - none
-> 
->  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> index 596e560263bf..cf42be1f1ba1 100644
-> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> @@ -461,7 +461,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
->  {
->  	struct mipi_dsi_device *device = dsi->device;
->  	unsigned int Bpp = mipi_dsi_pixel_format_to_bpp(device->format) / 8;
-> -	u16 hbp, hfp, hsa, hblk, vblk;
-> +	u16 hbp, hfp, hsa, hblk_max, hblk, vblk;
->  	size_t bytes;
->  	u8 *buffer;
+> diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> index 9b5685a1d15d..84262cdb8d29 100644
+> --- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> @@ -59,9 +59,11 @@ mhz values (normalized w.r.t. the highest value found while parsing the DT).
+>  ===========================================
 >  
-> @@ -494,8 +494,13 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
->  
->  	/*
->  	 * hblk seems to be the line + porches length.
-> +	 * The blank is set using a blanking packet (4 bytes + 4 bytes +
-> +	 * payload + 2 bytes). So minimal size is 10 bytes
->  	 */
-> -	hblk = (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp;
-> +#define HBLK_PACKET_OVERHEAD	10
-> +	hblk_max = (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp;
-> +	hblk_max -= HBLK_PACKET_OVERHEAD;
-> +	hblk = max((unsigned int)HBLK_PACKET_OVERHEAD, hblk_max);
+>  Example 1 (ARM 64-bit, 6-cpu system, two clusters):
+> -capacities-dmips-mhz are scaled w.r.t. 1024 (cpu@0 and cpu@1)
+> -supposing cluster0@max-freq=1100 and custer1@max-freq=850,
+> -final capacities are 1024 for cluster0 and 446 for cluster1
+> +The capacities-dmips-mhz or DMIPS/MHz values (scaled to 1024)
+> +are 1024 and 578 for cluster0 and cluster1. Further normalization
+> +is done by the operating system based on cluster0@max-freq=1100 and
+> +custer1@max-freq=850, final capacities are 1024 for cluster0 and
+> +446 for cluster1 (576*850/1100).
 
-I'd rather use the same convention than the other assignments done
-before in that function.
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-Maxime
 
 -- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---lllrmm6ipxhi4upc--
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
