@@ -1,131 +1,56 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH 1/2] net:stmmac: dwmac-mediatek: add support for mt2712
-Date: Mon, 29 Oct 2018 11:08:28 +0100
-Message-ID: <20181029100828.GA19103@Red>
-References: <1540782294-27721-1-git-send-email-biao.huang@mediatek.com>
- <1540782294-27721-2-git-send-email-biao.huang@mediatek.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 0/9] serial: Add Tegra Combined UART driver
+Date: Mon, 29 Oct 2018 11:11:03 +0100
+Message-ID: <20181029101103.GA26393@ulmo>
+References: <20181026111638.10759-1-thierry.reding@gmail.com>
+ <85092b49-2b62-bd76-05a3-521415835b6e@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="OXfL5xGRrasGEqWY"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1540782294-27721-2-git-send-email-biao.huang@mediatek.com>
+In-Reply-To: <85092b49-2b62-bd76-05a3-521415835b6e@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Biao Huang <biao.huang@mediatek.com>
-Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, nelson.chang@mediatek.com, andrew@lunn.ch, netdev@vger.kernel.org, sean.wang@mediatek.com, liguo.zhang@mediatek.com, linux-kernel@vger.kernel.org, matthias.bgg@gmail.com, joabreu@synopsys.com, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, linux-arm-kernel@lists.infradead.org
+To: Pekka Pessi <ppessi@nvidia.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mikko Perttunen <mperttunen@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, Mika Liljeberg <mliljeberg@nvidia.com>, linux-tegra@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello
-I have some minor comments below
 
-On Mon, Oct 29, 2018 at 11:04:53AM +0800, Biao Huang wrote:
-> Add Ethernet support for MediaTek SoCs from the mt2712 family
-> 
-> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
-> ---
->  drivers/net/ethernet/stmicro/stmmac/Kconfig        |    8 +
->  drivers/net/ethernet/stmicro/stmmac/Makefile       |    1 +
->  .../net/ethernet/stmicro/stmmac/dwmac-mediatek.c   |  364 ++++++++++++++++++++
->  3 files changed, 373 insertions(+)
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> index edf2036..76d779e 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> +++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> @@ -75,6 +75,14 @@ config DWMAC_LPC18XX
->  	---help---
->  	  Support for NXP LPC18xx/43xx DWMAC Ethernet.
->  
-> +config DWMAC_MEDIATEK
-> +	tristate "MediaTek MT27xx GMAC support"
-> +	depends on OF
+--OXfL5xGRrasGEqWY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You should add something like && (COMPILE_TEST || ARCH_MEDIATEK)
+On Mon, Oct 29, 2018 at 11:04:06AM +0200, Pekka Pessi wrote:
+> Hi Thierry,
+>=20
+> What is the use case for the mailbox driver? What kind of entity will be
+> there consuming sent messages and sending messages to kernel?
 
-[...]
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-> new file mode 100644
-> index 0000000..9ccf3a5
-> --- /dev/null
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-> @@ -0,0 +1,364 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (c) 2018 MediaTek Inc.
+This is currently only used for the TCU. I'm sure there could be other
+cases, but we support none of the upstream at the moment. Are you aware
+of any others that we need to take into account?
 
-Only SPDX can use the // comment style, the rest should use /**/
+Thierry
 
+--OXfL5xGRrasGEqWY
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[...]
-> +static int mt2712_set_interface(struct mediatek_dwmac_plat_data *plat)
-> +{
-> +	int rmii_rxc = plat->rmii_rxc ? RMII_CLK_SRC_RXC : 0;
-> +	u32 intf_val = 0;
-> +
-> +	/* select phy interface in top control domain */
-> +	switch (plat->phy_mode) {
-> +	case PHY_INTERFACE_MODE_MII:
-> +		intf_val |= PHY_INTF_MII_GMII;
-> +		break;
-> +	case PHY_INTERFACE_MODE_RMII:
-> +		intf_val |= PHY_INTF_RMII;
-> +		intf_val |= rmii_rxc;
-> +		break;
-> +	case PHY_INTERFACE_MODE_RGMII:
-> +	case PHY_INTERFACE_MODE_RGMII_TXID:
-> +	case PHY_INTERFACE_MODE_RGMII_RXID:
-> +	case PHY_INTERFACE_MODE_RGMII_ID:
-> +		intf_val |= PHY_INTF_RGMII;
-> +		break;
-> +	default:
-> +		pr_err("phy interface not support\n");
+-----BEGIN PGP SIGNATURE-----
 
-I think you could use dev_err() instead.
-And I think it is better spelled "not supported".
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlvW3LcACgkQ3SOs138+
+s6FRIw/+Pw2StMAnCWis5xYWoEvtLTttWYsHVBudkqmZVjFV9kcIODJnsRQU49gr
+7wF4DlLbvPiA0Z+PzYw9wPYLRYNCmURdzY/o8AovrV5Fh6gJ3duWMSTGOt1XvEt4
+17UEFyQKHO27J+IIhLFcLwc+Q+U9CVWX1AFb94o/tFJTdBLp28lkgH+uWR7rkBm5
+L7g0Km2x74VTywGUwiuVof6mRwny7V3OqpluT85Ot6i0PXGfGSAZk1RwU12Pi1dJ
+CcNnRMx0/f2/bY/f4CJF5kg3vgoLpr45hi8mZS4RqTCOXACnehELzTW2tX63t/nt
+o2pp09x//EwgsoXNNKa4FCdbfQw2VgOcl+MbWrmPNXy4XgRp9+N8UX63rNxp3/Nd
+ebyeADdTocSv/1hP0khItpIHvWdvyLCCUgqa3jEVV7+qPv9svgFhJ2rXNEv6j6iC
+jQR1R4BFwrHyHilDJ2v+yjV1iNGn5qqFaDkaqT+4C+KtgQV8VNrCZ3AFgWAeHznp
+biBoVP/1W4vuk46Ssk3JpzQqqrPN29mYPsiU5yKqzrmkPQMLN4UU19q2nY0RPO/i
+7vMMdinA2R9UdtWKfkdumNULkwUGN3hdZqMRMqKO+03wxgKPC2oQPMzxFj31T2Wy
+mjpYgAPX4JOjlWDO15An5iRykhcz4+XcWmHMUHUqnfT3SURKbS8=
+=yi2X
+-----END PGP SIGNATURE-----
 
-
-[...]
-> +static int mediatek_dwmac_probe(struct platform_device *pdev)
-> +{
-> +	int ret = 0;
-> +	struct plat_stmmacenet_data *plat_dat;
-> +	struct stmmac_resources stmmac_res;
-> +	struct mediatek_dwmac_plat_data *priv_plat;
-> +
-> +	priv_plat = devm_kzalloc(&pdev->dev, sizeof(*priv_plat), GFP_KERNEL);
-> +	if (!priv_plat)
-> +		return -ENOMEM;
-> +
-> +	priv_plat->variant = of_device_get_match_data(&pdev->dev);
-> +	if (!priv_plat->variant) {
-> +		dev_err(&pdev->dev, "Missing dwmac-mediatek variant\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	priv_plat->dev = &pdev->dev;
-> +	priv_plat->np = pdev->dev.of_node;
-> +	priv_plat->phy_mode = of_get_phy_mode(priv_plat->np);
-> +
-> +	ret = mediatek_dwmac_config_dt(priv_plat);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = stmmac_get_platform_resources(pdev, &stmmac_res);
-> +	if (ret)
-> +		return ret;
-> +
-> +	plat_dat = stmmac_probe_config_dt(pdev, &stmmac_res.mac);
-> +	if (IS_ERR(plat_dat))
-> +		return PTR_ERR(plat_dat);
-> +
-> +	plat_dat->interface = priv_plat->phy_mode;
-> +	/* clk_csr_i = 250-300MHz & MDC = clk_csr_i/124 */
-> +	plat_dat->clk_csr = 5;
-> +	plat_dat->has_gmac4 = 1;
-> +	plat_dat->has_gmac = 0;
-> +	plat_dat->pmt = 0;
-> +	plat_dat->maxmtu = 1500;
-
-ETH_DATA_LEN ?
-
-Regards
+--OXfL5xGRrasGEqWY--
