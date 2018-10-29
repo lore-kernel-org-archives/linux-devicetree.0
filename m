@@ -1,277 +1,68 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V13 1/4] clocksource: add C-SKY SMP timer
-Date: Tue, 30 Oct 2018 01:27:45 +0800
-Message-ID: <20181029172745.GA3532@guoren-Inspiron-7460>
-References: <7becd836e1477d7ac2d3f8538a6d7f5b9651c389.1539579760.git.ren_guo@c-sky.com>
+From: Jiaying Liang <jliang@xilinx.com>
+Subject: RE: [PATCH v4 2/2] dt-bindings: mailbox: Add Xilinx IPI Mailbox
+Date: Mon, 29 Oct 2018 18:01:06 +0000
+Message-ID: <DM5PR02MB2233AC6A0276887869AF72C9B0F30@DM5PR02MB2233.namprd02.prod.outlook.com>
+References: <1539155912-29760-1-git-send-email-wendy.liang@xilinx.com>
+ <1539155912-29760-3-git-send-email-wendy.liang@xilinx.com>
+ <20181010095741.GA14472@e107155-lin>
+ <CAA07jV_FWxMRq=4hmTdCXJG6e3=-8AejfpKxmh9KUi9KQDH7yQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7becd836e1477d7ac2d3f8538a6d7f5b9651c389.1539579760.git.ren_guo@c-sky.com>
+In-Reply-To: <CAA07jV_FWxMRq=4hmTdCXJG6e3=-8AejfpKxmh9KUi9KQDH7yQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, will.deacon@arm.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Wendy Liang <sunnyliangjy@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Michal Simek <michals@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Daniel,
-
-Csky subsystem is pulled into linux-4.20, ref: [1]
-
-So could you help merge the C-SKY timer drivers' patches into
-linux-4.20? (2 timer drivers and 2 dt-binding-docs)
-
-[1] https://lore.kernel.org/lkml/CAHk-=whq5ebFd2CKE0bybLOY7ttMPxGiXF3WkzFXtkYhAbJqSg@mail.gmail.com/
-
-Best Regards
- Guo Ren
-
-On Mon, Oct 15, 2018 at 01:07:41PM +0800, Guo Ren wrote:
-> The driver is for C-SKY SMP timer. It only support oneshot event
-> and 32bit overflow for clocksource. Per cpu core has one timer and
-> all timers share one clock-counter-input the same clocksource.
-> 
-> This use mfcr&mtcr instructions to access the regs.
-> 
-> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
-> Changelog:
->  - Add COMPILE_TEST
->  - Fixup smp boot error, cpuhp_setup_state must after timer_of_init()
->  - Add rollback for timer_of_cleanup.
->  - Use request_percpu_irq separate from time_of.
->  - Remove #define CPUHP_AP_CSKY_TIMER_STARTING.
->  - Add CPUHP_AP_CSKY_TIMER_STARTING in cpuhotplug.h.
->  - Support csky mp timer alpha version.
->  - Just use low-counter with 32bit width as clocksource.
->  - Coding convention with upstream feed-back.
-> ---
-> ---
->  drivers/clocksource/Kconfig         |  10 +++
->  drivers/clocksource/Makefile        |   1 +
->  drivers/clocksource/timer-mp-csky.c | 173 ++++++++++++++++++++++++++++++++++++
->  include/linux/cpuhotplug.h          |   1 +
->  4 files changed, 185 insertions(+)
->  create mode 100644 drivers/clocksource/timer-mp-csky.c
-> 
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index a11f4ba..591c9a8 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -620,4 +620,14 @@ config RISCV_TIMER
->  	  is accessed via both the SBI and the rdcycle instruction.  This is
->  	  required for all RISC-V systems.
->  
-> +config CSKY_MP_TIMER
-> +	bool "SMP Timer for the C-SKY platform" if COMPILE_TEST
-> +	depends on CSKY
-> +	select TIMER_OF
-> +	help
-> +	  Say yes here to enable C-SKY SMP timer driver used for C-SKY SMP
-> +	  system.
-> +	  csky,mptimer is not only used in SMP system, it also could be used
-> +	  single core system. It's not a mmio reg and it use mtcr/mfcr instruction.
-> +
->  endmenu
-> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-> index db51b24..5ce82d3 100644
-> --- a/drivers/clocksource/Makefile
-> +++ b/drivers/clocksource/Makefile
-> @@ -79,3 +79,4 @@ obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
->  obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
->  obj-$(CONFIG_ATCPIT100_TIMER)		+= timer-atcpit100.o
->  obj-$(CONFIG_RISCV_TIMER)		+= riscv_timer.o
-> +obj-$(CONFIG_CSKY_MP_TIMER)		+= timer-mp-csky.o
-> diff --git a/drivers/clocksource/timer-mp-csky.c b/drivers/clocksource/timer-mp-csky.c
-> new file mode 100644
-> index 0000000..a8acc43
-> --- /dev/null
-> +++ b/drivers/clocksource/timer-mp-csky.c
-> @@ -0,0 +1,173 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
-> +
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/sched_clock.h>
-> +#include <linux/cpu.h>
-> +#include <linux/of_irq.h>
-> +#include <asm/reg_ops.h>
-> +
-> +#include "timer-of.h"
-> +
-> +#define PTIM_CCVR	"cr<3, 14>"
-> +#define PTIM_CTLR	"cr<0, 14>"
-> +#define PTIM_LVR	"cr<6, 14>"
-> +#define PTIM_TSR	"cr<1, 14>"
-> +
-> +static int csky_mptimer_irq;
-> +
-> +static int csky_mptimer_set_next_event(unsigned long delta,
-> +				       struct clock_event_device *ce)
-> +{
-> +	mtcr(PTIM_LVR, delta);
-> +
-> +	return 0;
-> +}
-> +
-> +static int csky_mptimer_shutdown(struct clock_event_device *ce)
-> +{
-> +	mtcr(PTIM_CTLR, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static int csky_mptimer_oneshot(struct clock_event_device *ce)
-> +{
-> +	mtcr(PTIM_CTLR, 1);
-> +
-> +	return 0;
-> +}
-> +
-> +static int csky_mptimer_oneshot_stopped(struct clock_event_device *ce)
-> +{
-> +	mtcr(PTIM_CTLR, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static DEFINE_PER_CPU(struct timer_of, csky_to) = {
-> +	.flags					= TIMER_OF_CLOCK,
-> +	.clkevt = {
-> +		.rating				= 300,
-> +		.features			= CLOCK_EVT_FEAT_PERCPU |
-> +						  CLOCK_EVT_FEAT_ONESHOT,
-> +		.set_state_shutdown		= csky_mptimer_shutdown,
-> +		.set_state_oneshot		= csky_mptimer_oneshot,
-> +		.set_state_oneshot_stopped	= csky_mptimer_oneshot_stopped,
-> +		.set_next_event			= csky_mptimer_set_next_event,
-> +	},
-> +};
-> +
-> +static irqreturn_t csky_timer_interrupt(int irq, void *dev)
-> +{
-> +	struct timer_of *to = this_cpu_ptr(&csky_to);
-> +
-> +	mtcr(PTIM_TSR, 0);
-> +
-> +	to->clkevt.event_handler(&to->clkevt);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +/*
-> + * clock event for percpu
-> + */
-> +static int csky_mptimer_starting_cpu(unsigned int cpu)
-> +{
-> +	struct timer_of *to = per_cpu_ptr(&csky_to, cpu);
-> +
-> +	to->clkevt.cpumask = cpumask_of(cpu);
-> +
-> +	clockevents_config_and_register(&to->clkevt, timer_of_rate(to),
-> +					2, ULONG_MAX);
-> +
-> +	enable_percpu_irq(csky_mptimer_irq, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static int csky_mptimer_dying_cpu(unsigned int cpu)
-> +{
-> +	disable_percpu_irq(csky_mptimer_irq);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * clock source
-> + */
-> +static u64 sched_clock_read(void)
-> +{
-> +	return (u64)mfcr(PTIM_CCVR);
-> +}
-> +
-> +static u64 clksrc_read(struct clocksource *c)
-> +{
-> +	return (u64)mfcr(PTIM_CCVR);
-> +}
-> +
-> +struct clocksource csky_clocksource = {
-> +	.name	= "csky",
-> +	.rating	= 400,
-> +	.mask	= CLOCKSOURCE_MASK(32),
-> +	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
-> +	.read	= clksrc_read,
-> +};
-> +
-> +static int __init csky_mptimer_init(struct device_node *np)
-> +{
-> +	int ret, cpu, cpu_rollback;
-> +	struct timer_of *to = NULL;
-> +
-> +	/*
-> +	 * Csky_mptimer is designed for C-SKY SMP multi-processors and
-> +	 * every core has it's own private irq and regs for clkevt and
-> +	 * clksrc.
-> +	 *
-> +	 * The regs is accessed by cpu instruction: mfcr/mtcr instead of
-> +	 * mmio map style. So we needn't mmio-address in dts, but we still
-> +	 * need to give clk and irq number.
-> +	 *
-> +	 * We use private irq for the mptimer and irq number is the same
-> +	 * for every core. So we use request_percpu_irq() in timer_of_init.
-> +	 */
-> +	csky_mptimer_irq = irq_of_parse_and_map(np, 0);
-> +	if (csky_mptimer_irq <= 0)
-> +		return -EINVAL;
-> +
-> +	ret = request_percpu_irq(csky_mptimer_irq, csky_timer_interrupt,
-> +				 "csky_mp_timer", &csky_to);
-> +	if (ret)
-> +		return -EINVAL;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		to = per_cpu_ptr(&csky_to, cpu);
-> +		ret = timer_of_init(np, to);
-> +		if (ret)
-> +			goto rollback;
-> +	}
-> +
-> +	clocksource_register_hz(&csky_clocksource, timer_of_rate(to));
-> +	sched_clock_register(sched_clock_read, 32, timer_of_rate(to));
-> +
-> +	ret = cpuhp_setup_state(CPUHP_AP_CSKY_TIMER_STARTING,
-> +				"clockevents/csky/timer:starting",
-> +				csky_mptimer_starting_cpu,
-> +				csky_mptimer_dying_cpu);
-> +	if (ret)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +
-> +rollback:
-> +	for_each_possible_cpu(cpu_rollback) {
-> +		if (cpu_rollback == cpu)
-> +			break;
-> +
-> +		to = per_cpu_ptr(&csky_to, cpu_rollback);
-> +		timer_of_cleanup(to);
-> +	}
-> +	return -EINVAL;
-> +}
-> +TIMER_OF_DECLARE(csky_mptimer, "csky,mptimer", csky_mptimer_init);
-> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-> index caf40ad..e0cd2ba 100644
-> --- a/include/linux/cpuhotplug.h
-> +++ b/include/linux/cpuhotplug.h
-> @@ -126,6 +126,7 @@ enum cpuhp_state {
->  	CPUHP_AP_MIPS_GIC_TIMER_STARTING,
->  	CPUHP_AP_ARC_TIMER_STARTING,
->  	CPUHP_AP_RISCV_TIMER_STARTING,
-> +	CPUHP_AP_CSKY_TIMER_STARTING,
->  	CPUHP_AP_KVM_STARTING,
->  	CPUHP_AP_KVM_ARM_VGIC_INIT_STARTING,
->  	CPUHP_AP_KVM_ARM_VGIC_STARTING,
-> -- 
-> 2.7.4
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogV2VuZHkgTGlhbmcgW21h
+aWx0bzpzdW5ueWxpYW5nanlAZ21haWwuY29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIE9jdG9iZXIg
+MTAsIDIwMTggMzo1NCBQTQ0KPiBUbzogU3VkZWVwIEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNv
+bT4NCj4gQ2M6IEppYXlpbmcgTGlhbmcgPGpsaWFuZ0B4aWxpbnguY29tPjsgSmFzc2kgQnJhciA8
+amFzc2lzaW5naGJyYXJAZ21haWwuY29tPjsNCj4gTWljaGFsIFNpbWVrIDxtaWNoYWxzQHhpbGlu
+eC5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsNCj4gTWFyayBSdXRsYW5k
+IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IERldmljZXRyZWUgTGlzdA0KPiA8ZGV2aWNldHJlZUB2
+Z2VyLmtlcm5lbC5vcmc+OyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0IDxsaW51eC0NCj4ga2Vy
+bmVsQHZnZXIua2VybmVsLm9yZz47IGxpbnV4LWFybS1rZXJuZWwgPGxpbnV4LWFybS0NCj4ga2Vy
+bmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjQgMi8yXSBk
+dC1iaW5kaW5nczogbWFpbGJveDogQWRkIFhpbGlueCBJUEkgTWFpbGJveA0KPiANCj4gT24gV2Vk
+LCBPY3QgMTAsIDIwMTggYXQgMjo1OSBBTSBTdWRlZXAgSG9sbGEgPHN1ZGVlcC5ob2xsYUBhcm0u
+Y29tPg0KPiB3cm90ZToNCj4gPg0KPiA+IE9uIFdlZCwgT2N0IDEwLCAyMDE4IGF0IDEyOjE4OjMy
+QU0gLTA3MDAsIFdlbmR5IExpYW5nIHdyb3RlOg0KPiA+ID4gWGlsaW54IFp5bnFNUCBJUEkoSW50
+ZXIgUHJvY2Vzc29yIEludGVycnVwdCkgaXMgYSBoYXJkd2FyZSBibG9jayBpbg0KPiA+ID4gWnlu
+cU1QIFNvQyB1c2VkIGZvciB0aGUgY29tbXVuaWNhdGlvbiBiZXR3ZWVuIHZhcmlvdXMgcHJvY2Vz
+c29yDQo+ID4gPiBzeXN0ZW1zLg0KPiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IFdlbmR5IExp
+YW5nIDx3ZW5keS5saWFuZ0B4aWxpbnguY29tPg0KPiA+DQo+ID4gWy4uLl0NCj4gPg0KPiA+ID4g
+K09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiA+
+ICstIG1ldGhvZDogICAgICAgICAgICAgIFRoZSBtZXRob2Qgb2YgYWNjZXNzaW5nIHRoZSBJUEkg
+YWdlbnQgcmVnaXN0ZXJzLg0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgUGVybWl0dGVk
+IHZhbHVlcyBhcmU6ICJzbWMiIGFuZCAiaHZjIi4gRGVmYXVsdCBpcw0KPiA+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgInNtYyIuDQo+ID4NCj4gPiBZb3UgYXJlIG1peGluZyB0aGUgaGFyZHdh
+cmUgbWVzc2FnaW5nIGJhc2VkIG1haWxib3ggYW5kIHRoZSBzb2Z0d2FyZQ0KPiA+ICJzbWMvaHZj
+IiBiYXNlZCBtYWlsYm94IHRvZ2V0aGVyIGhlcmUuIFBsZWFzZSBrZWVwIHRoZW0gc2VwYXJhdGVk
+Lg0KPiA+IElJVUMgc21jL2h2YyBiYXNlZCBtYWlsY294IGlzIHVzZWQgZm9yICJ0eCIgb3IgdG9v
+IGtlZXAgaXQgc2ltcGxlIGluDQo+ID4gb25lIGRpcmVjdGlvbiBhbmQgaGFyZHdhcmUgYmFzZWQg
+aXMgdXNlZCBmb3IgInJ4IiBvciB0aGUgb3RoZXINCj4gPiBkaXJlY3Rpb24gZm9yIGNvbW11bmlj
+YXRpb24uDQo+ID4NCj4gSGkgU3VkZWVwLA0KPiANCj4gVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRz
+Lg0KPiANCj4gVGhlIElQSSBoYXJkd2FyZSBibG9jayBoYXMgYm90aCBidWZmZXJzIGFuZCByZWdp
+c3RlcnMuIFRoZSBoYXJkd2FyZSBibG9jaw0KPiBoYXMgZGVkaWNhdGVkIGJ1ZmZlcnMgZm9yIGVh
+Y2ggbWFpbGJveGVzLCBhbmQgdGh1cywgaW4gdGhlIGltcGxlbWVudGF0aW9uLA0KPiB3ZSBkaXJl
+Y3RseSBhY2Nlc3MgdGhlIGJ1ZmZlcnMgZnJvbSBJUEkgZHJpdmVyLiBIb3dldmVyLCB0aGUgY29u
+dHJvbGxlcg0KPiByZWdpc3RlcnMgYXJlIHNoYXJlZCBiZXR3ZWVuIG1haWxib3hlcyBpbiB0aGUg
+aGFyZHdhcmUsIGFzIHRoZSBBVEYgd2lsbCBhbHNvDQo+IGFjY2VzcyB0aGUgcmVnaXN0ZXJzLCB3
+ZSBuZWVkIHRvIHVzZSBTTUMvSFZDIHRvIGFjY2VzcyB0aGUgcmVnaXN0ZXJzIChjb250cm9sDQo+
+IG9yIElTUikuIEFuZCB0aGUgU01DL0hWQyBoZXJlIGlzIGZvciB0aGUgcmVnaXN0ZXIgYWNjZXNz
+Lg0KPiANCj4gSSBhbSBub3QgY2xlYXIgb24gc21jL2h2YyBiYXNlZCBtYWlsYm94IGlzIHVzZWQg
+Zm9yIHR4LCBhbmQgaGFyZHdhcmUgYmFzZWQNCj4gaXMgdXNlZCBmb3IgICJyeCIuIEFzIGZvciBi
+b3RoIFRYIGFuZCBSWCwgd2UgbmVlZCB0byB3cml0ZS9yZWFkIHRoZSByZWdpc3RlcnMNCj4gKHRo
+cm91Z2ggU01DKSBhbmQgd3JpdGUvcmVhZCB0aGUgYnVmZmVycyBwcm92aWRlZCBieSB0aGUgSVBJ
+IGhhcmR3YXJlIGJsb2NrDQo+IGRpcmVjdGx5Lg0KW1dlbmR5XSBIaSBTdWRlZXAsDQoNClRoZSBT
+TUMvSFZDIGlzIGZvciBoYXJkd2FyZSByZWdpc3RlcnMgYWNjZXNzIGFzIGJ1dCBub3Qgc2VuZGlu
+ZyBtZXNzYWdlcy4NCkRvIHlvdSBoYXZlIGZ1cnRoZXIgY29tbWVudHMgb3IgYXJlIHlvdSBmaW5l
+IHdpdGggdGhlIGV4cGxhbmF0aW9uPw0KDQpUaGFua3MsDQpXZW5keQ0KDQo+IA0KPiBUaGFua3Ms
+DQo+IFdlbmR5DQo+IA0KPiA+IFlvdSAqc2hvdWxkIG5vdCogbWl4IHRoZW0gYXMgc2luZ2xlIHVu
+aXQuIEFsc28gbG90cyBvZiBvdGhlciB2ZW5kb3INCj4gPiBuZWVkIFNNQy9IVkMgYmFzZWQgbWFp
+bGJveC4gU28gbWFrZSBpdCBnZW5lcmljIGFuZCBrZWVwIGl0IHNlcGFyYXRlLg0KPiA+DQo+ID4g
+LS0NCj4gPiBSZWdhcmRzLA0KPiA+IFN1ZGVlcA0K
