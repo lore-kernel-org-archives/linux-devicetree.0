@@ -1,89 +1,46 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: RE: [PATCH v4 2/4] arm64: Add Mellanox BlueField SoC config option
-Date: Mon, 29 Oct 2018 16:09:07 +0000
-Message-ID: <DB6PR05MB32237D37B4A36453C83FC9BAA1F30@DB6PR05MB3223.eurprd05.prod.outlook.com>
-References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
- <1540403734-137721-1-git-send-email-lsun@mellanox.com>
- <1540403734-137721-2-git-send-email-lsun@mellanox.com>
- <CAK8P3a1jTsvzYhS4CxvmK6tOgPn_g7=1S4xAcca2K4v70vhyEA@mail.gmail.com>
- <AM4PR05MB32204021433BBB853C50FF30A1F00@AM4PR05MB3220.eurprd05.prod.outlook.com>
- <CAK8P3a2=shWVjwrmnNTwwGwN_jhwyb+TmeALz4zzTstho51z8A@mail.gmail.com>
- <DB6PR05MB32236AAD033C20DF6414C464A1F30@DB6PR05MB3223.eurprd05.prod.outlook.com>
- <CAK8P3a2_0mYaJ0NjWSMxpmoF9+tcoHtfhJQJ0Aj9Tds+f7KuEg@mail.gmail.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v3 3/5] nfc: pn533: add UART phy driver
+Date: Mon, 29 Oct 2018 17:13:28 +0100
+Message-ID: <20181029161328.GT27852@localhost>
+References: <20181025132937.24405-1-poeschel@lemonage.de>
+ <20181025132937.24405-3-poeschel@lemonage.de>
+ <20181028102725.GL27852@localhost>
+ <20181029100246.GA5905@lem-wkst-02.lemonage>
+ <20181029110704.GQ27852@localhost>
+ <20181029155110.GA12914@lem-wkst-02.lemonage>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAK8P3a2_0mYaJ0NjWSMxpmoF9+tcoHtfhJQJ0Aj9Tds+f7KuEg@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: DTML <devicetree@vger.kernel.org>, David Woods <dwoods@mellanox.com>, arm-soc <arm@kernel.org>, Olof Johansson <olof@lixom.net>, Robin Murphy <robin.murphy@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181029155110.GA12914@lem-wkst-02.lemonage>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars Poeschel <poeschel@lemonage.de>
+Cc: Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, open list <linux-kernel@vger.kernel.org>, "open list:NFC SUBSYSTEM" <linux-wireless@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Please see my response below.
+On Mon, Oct 29, 2018 at 04:51:10PM +0100, Lars Poeschel wrote:
+> On Mon, Oct 29, 2018 at 12:07:04PM +0100, Johan Hovold wrote:
 
-> -----Original Message-----
-> From: Arnd Bergmann [mailto:arnd@arndb.de]
-> Sent: Monday, October 29, 2018 11:26 AM
-> To: Liming Sun <lsun@mellanox.com>
-> Cc: Olof Johansson <olof@lixom.net>; David Woods
-> <dwoods@mellanox.com>; Robin Murphy <robin.murphy@arm.com>; arm-
-> soc <arm@kernel.org>; DTML <devicetree@vger.kernel.org>; Linux ARM
-> <linux-arm-kernel@lists.infradead.org>
-> Subject: Re: [PATCH v4 2/4] arm64: Add Mellanox BlueField SoC config option
+> > > Wouldn't that be the scope of another later patch then ?
+> > 
+> > Possibly. We have accepted some serdev drivers already taking the lazy
+> > approach of opening the port in probe. Depending on the driver, it may
+> > not be too bad (e.g. for some specific hardware which you know you'll
+> > always use), but it not really nice to have everyone pay a price in
+> > terms of power-consumption for a feature that is rarely used.
 > 
-> On Mon, Oct 29, 2018 at 3:58 PM Liming Sun <lsun@mellanox.com> wrote:
-> > > It would be nice if you could still include the dts sources in the submission.
-> > > Since this is not a classic server hardware, DT is probably more suitable
-> > > here, and there are likely use cases that won't work with ACPI, so it's
-> > > good to have a starting point for your users if they need to override
-> > > the ACPI tables with a DT, or build systems with a simpler boot loader.
-> >
-> > Sure, I'll keep this DT change for reference. A little explanation that
-> > Mellanox BlueField SOC could be PCIe NIC or standalone device (server)
-> form which
-> > can do PXE boot, CentOS installation even on the NIC, etc. The same
-> software/driver
-> > works on both.
-> 
-> Ok, good.
-> 
-> >  DT seems not working well for some requirement/features like
-> > NVDIMM (which requires ACPI DSM).  That's why we switched to ACPI
-> though
-> > DT support is preserved.
-> 
-> This is probably something we need to look at separately, I'm sure we will
-> want
-> to use NVDIMM with DT based systems in the future. Can you explain what
-> the DSM is used for here? Is this something that could be done in software
-> in the NVDIMM hardware specific driver?
+> Is there a way in serdev to close a port, but still occupy it ?
+> I'd like to do the basic chip initialisation in _probe and then close
+> the port for power-consuption reasons. I'd like to have the port still
+> occupied, so that it's not available to other possible users in the
+> meantime. I'd then do a serdev open again in dev_up and really use it
+> from there.
+> dev_down is then for serdev close and also still occupy it.
+> closing and releasing would then be done in _remove.
 
-The DSM is kind of running logic instead of configuration which is provided by 
-system firmware. It's defined in the UEFI spec and supported by Linux. In the
-NVDIMM case here, it's used to do Address Range Scrub (ARS), I2C access (such as
-reading the DIMM SPD information), runtime health check, etc. 
+The serdev device is bound you driver regardless of whether you open the
+port or not, so just use serdev_device_open() and serdev_device_close()
+as necessary at probe() if you need to do some setup and then later at
+dev_up() and dev_down(), respectively.
 
-DSM is kind of requirement by NVDIMM, such as
-https://pmem.io/documents/NVDIMM_DSM_Interface_Example.pdf
-https://docs.microsoft.com/en-us/windows-hardware/drivers/storage/-dsm-interface-for-byte-addressable-energy-backed-function-class--function-interface-1-
-
-By following the ACPI DSM definitions, there is no extra drivers needed in 
-Linux due to the existing ACPI framework.  Since it's 'standard' APIs in UEFI, 
-it has potential to support other OS other than Linux.
-
-Hardware specific driver might be able to do some of the functionality, or
-even 'simulate' some of the ACPI implementation or APIs. I guess it might need 
-a framework for it which I haven't thought a lot of details yet :)
-
-> 
->        Arnd
+Johan
