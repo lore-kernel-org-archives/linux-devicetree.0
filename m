@@ -1,24 +1,21 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Subject: Re: [PATCH 1/2 v5] arm64: Get rid of __early_init_dt_declare_initrd()
-Date: Mon, 29 Oct 2018 14:52:37 -0700
-Message-ID: <e3033413-555e-72ca-be75-e4b566b62480@gmail.com>
-References: <20181029190014.6455-1-f.fainelli@gmail.com>
- <20181029190014.6455-2-f.fainelli@gmail.com>
+Date: Mon, 29 Oct 2018 18:58:09 -0300
+Message-ID: <CAKv+Gu-5vpSJDs3RdTtspO3WmbqTE4YQDWj2us4YOP2zi1PDTg@mail.gmail.com>
+References: <20181029190014.6455-1-f.fainelli@gmail.com> <20181029190014.6455-2-f.fainelli@gmail.com>
  <CAL_JsqL2g69Duhkqd=f09BStoAKeakJz8Wgz3is37YU0+fc80A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <CAL_JsqL2g69Duhkqd=f09BStoAKeakJz8Wgz3is37YU0+fc80A@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, rppt@linux.ibm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, aryabinin@virtuozzo.com, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, ghackmann@android.com, Kristina Martsenko <kristina.martsenko@arm.com>, chandan.vn@samsung.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradea>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, rppt@linux.ibm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, ghackmann@android.com, Kristina Martsenko <kristina.martsenko@arm.com>, chandan.vn@samsung.com, moderated list:ARM/FREE
 List-Id: devicetree@vger.kernel.org
 
-On 10/29/18 12:59 PM, Rob Herring wrote:
+On 29 October 2018 at 16:59, Rob Herring <robh+dt@kernel.org> wrote:
 > +Ard who last touched this.
-> 
+>
 > On Mon, Oct 29, 2018 at 2:23 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
 >>
 >> ARM64 is the only architecture that re-defines
@@ -93,7 +90,7 @@ On 10/29/18 12:59 PM, Rob Herring wrote:
 >> -       if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && initrd_start) {
 >> +       if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) &&
 >> +           (initrd_start || phys_initrd_start)) {
-> 
+>
 > I've tried to explain already that this is broken. The problem is
 > __early_init_dt_declare_initrd using __va() which happens before this
 > function is called. __va() uses PHYS_OFFSET which in turn is defined
@@ -101,19 +98,38 @@ On 10/29/18 12:59 PM, Rob Herring wrote:
 > this hunk, so the earlier conversion to a VA may not be valid at this
 > point. This is explained if you read Ard's commit that added all this
 > mess.
-
-Thanks for explaining this again, looks like I had overlooked that
-explanation in the "other branch" of the thread last time I read it.
-
-> 
+>
 > You could fix this by converting back to a PA before adjusting
 > memstart_addr, but that's 2 wrongs making a right and fragile. The
 > better solution is the other proposal making the DT code set
 > phys_initrd_* (whatever the ARM code calls them).
+>
 
-OK, that sounds reasonable, will cook something doing that. Thanks!
+On arm64, we have
 
-> 
+#define PHYS_OFFSET \
+  ({ VM_BUG_ON(memstart_addr & 1); memstart_addr; })
+
+and
+
+s64 memstart_addr __ro_after_init = -1;
+
+IOW, any attempt to perform PA to VA translations before memstart_addr
+is assigned will BUG() if CONFIG_DEBUG_VM=y, so please enable that
+when playing with this code.
+
+The reason we have this code is because the start of the linear region
+might not coincide with memblock_start_of_DRAM(), which could happen,
+e.g., when running a 39-bit VA kernel on a system with a very sparse
+memory map (which is unfortunately what some silicon vendors think is
+what ARM recommends) and the kernel loaded near the top of that
+memory. The ability to load the kernel anywhere in physical memory was
+introduced to accommodate physical KASLR.
+
+Ideally, we'd fix this by only recording physical addresses for the
+initrd in generic code, and deferring the translation until the point
+where we actually do the access.
+
 >>                 /*
 >>                  * Add back the memory we just removed if it results in the
 >>                  * initrd to become inaccessible via the linear mapping.
@@ -129,12 +145,7 @@ OK, that sounds reasonable, will cook something doing that. Thanks!
 >> +                       /* FDT specified the initrd location */
 >> +                       phys_initrd_start = __pa(initrd_start);
 >> +                       phys_initrd_end = __pa(initrd_end);
-> 
+>
 > Kind of inconsistent to mix __phys_to_virt and __pa flavors.
-> 
+>
 > Rob
-> 
-
-
--- 
-Florian
