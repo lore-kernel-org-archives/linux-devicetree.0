@@ -1,56 +1,89 @@
-From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
-Subject: =?utf-8?B?UmU6IFtSQ0bCoFBBVENILHYyLDIvMl0gcHdtOiBpbXg6IENvbmZpZ3VyZSBv?=
- =?utf-8?Q?utput_to_GPIO_in_disabled_state?=
-Date: Mon, 29 Oct 2018 15:55:12 +0000
-Message-ID: <05f8c6b8-1952-6869-f659-535f04e99b2a@ysoft.com>
-References: <1539163920-9442-3-git-send-email-michal.vokac@ysoft.com>
- <20181012085720.GA9451@taurus.defre.kleine-koenig.org>
- <fa96ae2a-c2cc-b47a-1198-5daffa7c865f@ysoft.com>
- <20181012160854.hmgpokxgsrqdzobx@pengutronix.de>
- <20181014202457.dohwgz3frgcpdpy6@pengutronix.de>
- <20181015084505.GA12357@ulmo>
+From: Liming Sun <lsun@mellanox.com>
+Subject: RE: [PATCH v4 2/4] arm64: Add Mellanox BlueField SoC config option
+Date: Mon, 29 Oct 2018 16:09:07 +0000
+Message-ID: <DB6PR05MB32237D37B4A36453C83FC9BAA1F30@DB6PR05MB3223.eurprd05.prod.outlook.com>
+References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+ <1540403734-137721-1-git-send-email-lsun@mellanox.com>
+ <1540403734-137721-2-git-send-email-lsun@mellanox.com>
+ <CAK8P3a1jTsvzYhS4CxvmK6tOgPn_g7=1S4xAcca2K4v70vhyEA@mail.gmail.com>
+ <AM4PR05MB32204021433BBB853C50FF30A1F00@AM4PR05MB3220.eurprd05.prod.outlook.com>
+ <CAK8P3a2=shWVjwrmnNTwwGwN_jhwyb+TmeALz4zzTstho51z8A@mail.gmail.com>
+ <DB6PR05MB32236AAD033C20DF6414C464A1F30@DB6PR05MB3223.eurprd05.prod.outlook.com>
+ <CAK8P3a2_0mYaJ0NjWSMxpmoF9+tcoHtfhJQJ0Aj9Tds+f7KuEg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181015084505.GA12357@ulmo>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK8P3a2_0mYaJ0NjWSMxpmoF9+tcoHtfhJQJ0Aj9Tds+f7KuEg@mail.gmail.com>
 Content-Language: en-US
-Content-ID: <1BB8DD6F3C77CE408C8901D63F1794D7@eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, =?utf-8?B?TG90aGFyIFdhw59tYW5u?= <LW@karo-electronics.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: DTML <devicetree@vger.kernel.org>, David Woods <dwoods@mellanox.com>, arm-soc <arm@kernel.org>, Olof Johansson <olof@lixom.net>, Robin Murphy <robin.murphy@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTUuMTAuMjAxOCAxMDo0NSwgVGhpZXJyeSBSZWRpbmcgd3JvdGU6DQo+IE9uIFN1biwgT2N0
-IDE0LCAyMDE4IGF0IDEwOjI0OjU3UE0gKzAyMDAsIFV3ZSBLbGVpbmUtS8O2bmlnIHdyb3RlOg0K
-Pj4gSGVsbG8sDQo+Pg0KPj4gT24gRnJpLCBPY3QgMTIsIDIwMTggYXQgMDY6MDg6NTRQTSArMDIw
-MCwgVXdlIEtsZWluZS1Lw7ZuaWcgd3JvdGU6DQo+Pj4+Pj4gKwlpZiAoUFRSX0VSUihpbXhfY2hp
-cC0+cHdtX2dwaW9kKSA9PSAtRVBST0JFX0RFRkVSKSB7DQo+Pj4+Pg0KPj4+Pj4gWW91IG11c3Qg
-bm90IHVzZSBQVFJfRVJSIG9uIGEgdmFsdWUgdGhhdCBtaWdodCBub3QgY29udGFpbiBhbiBlcnJv
-cg0KPj4+Pj4gcG9pbnRlci4NCj4+Pj4NCj4+Pj4gT0ssIHRoYW5rIHlvdSBmb3IgdmFsdWFibGUg
-aW5mby4NCj4+Pj4gU28gaXQgc2VlbXMgbGlrZSB0aGUgSTJDIGZvbGtzIGFyZSBpbiB0cm91Ymxl
-cyBhcyB3ZWxsOg0KPj4+Pg0KPj4+PiAJaHR0cHM6Ly9lbGl4aXIuYm9vdGxpbi5jb20vbGludXgv
-bGF0ZXN0L3NvdXJjZS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLWlteC5jI0w5OTYNCj4+Pg0KPj4+
-IGNvcnJlY3QuIEkgY2Fubm90IGZpbmQgdGhpcyBkb2N1bWVudGVkIHRob3VnaC4NCj4+DQo+PiBJ
-IGZvdW5kIGluIExERDNbMV0sIGNoYXB0ZXIgMTEgb24gcGFnZSAyOTU6DQo+Pg0KPj4gCUlmIHlv
-dSBuZWVkIHRoZSBhY3R1YWwgZXJyb3IgY29kZSwgaXQgY2FuIGJlIGV4dHJhY3RlZCB3aXRoOg0K
-Pj4NCj4+IAkJbG9uZyBQVFJfRVJSKGNvbnN0IHZvaWQgKnB0cik7DQo+Pg0KPj4gCVlvdSBzaG91
-bGQgdXNlIFBUUl9FUlIgb25seSBvbiBhIHZhbHVlIGZvciB3aGljaCBJU19FUlIgcmV0dXJucyBh
-IHRydWUNCj4+IAl2YWx1ZTsgYW55IG90aGVyIHZhbHVlIGlzIGEgdmFsaWQgcG9pbnRlci4NCj4+
-DQo+PiBUaGF0IGlzIHByb2JhYmx5IHdoZXJlIEkgaGF2ZSBteSBjbGFpbSBmcm9tLiBUaGVyZSBp
-cyBubyBmdXJ0aGVyDQo+PiBleHBsYW5hdGlvbiB0aG91Z2gsIHNvIEknbGwgcG9zdCBhIHBhdGNo
-IGFkZGluZyBhIGNvbW1lbnQgdG8gdGhlDQo+PiBkZWZpbml0aW9uIG9mIFBUUl9FUlIgdG8gZmlu
-ZCBvdXQgaWYgdGhlcmUgaXMgYSByZWxldmFudCByZWFzb24uDQoNClRoYW5rcyBmb3IgbWVudGlv
-bmluZyB0aGUgTEREMyBVd2UuIEkgYWxtb3N0IGZvcmdvdCBpdCBleGlzdC4NCkkgd2lsbCBkdXN0
-LW9mZiBteSBlbGVjdHJvbmljIGNvcHkgOykNCg0KPiBNaWNoYWwncyBjb2RlIGFib3ZlIGRvZXMg
-YW4gaW1wbGljaXQgSVNfRVJSKCkgYnkgY29tcGFyaW5nIHRvIGFuIGFjdHVhbA0KPiBlcnJvciBj
-b2RlLiBJdCdzIGNlcnRhaW5seSB0cnVlIHRoYXQgUFRSX0VSUigpIG9uIGFueSBwb2ludGVyIGFu
-ZCB0aGVuDQo+IHVzaW5nIHRoYXQgdmFsdWUgY2FuIGJlIHJpc2t5IGJlY2F1c2UgaXQgbWF5IG5v
-dCBhY3R1YWxseSBiZSBhbiBlcnJvci4NCj4gU28gaWYgeW91IGdvIGFuZCB1bmNvbmRpdGlvbmFs
-bHkgcHJpbnQgdGhhdCBlcnJvciBjb2RlIGV2ZW4gaWYgaXQgaXNuJ3QNCj4gYW4gZXJyb3IgYnV0
-IGEgdmFsaWQgcG9pbnRlciwgeW91J3ZlIGxlYWtlZCBhIGtlcm5lbCBhZGRyZXNzLg0KPiANCj4g
-SG93ZXZlciwgaXQncyBwZXJmZWN0bHkgc2FmZSB0byB1c2UgUFRSX0VSUihwdHIpID09IC1FUFJP
-QkVfREVGRVIgKG9yDQo+IGZvciBhbnkgb3RoZXIgZXJyb3IgY29kZSBmb3IgdGhhdCBtYXR0ZXIp
-Lg0KDQpPSywgSSB3aWxsIGxlYXZlIHRoYXQgYXMgaXMuIEFuZCB0aGFua3MgZm9yIGFsbCB0aGUg
-ZGV0YWlscy4NCkkgYWx3YXlzIGxlYXJuIHNvbWV0aGluZyBuZXcgZnJvbSB0aGUgY29tbWVudHMh
-DQoNCk1pY2hhbA0K
+Please see my response below.
+
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd@arndb.de]
+> Sent: Monday, October 29, 2018 11:26 AM
+> To: Liming Sun <lsun@mellanox.com>
+> Cc: Olof Johansson <olof@lixom.net>; David Woods
+> <dwoods@mellanox.com>; Robin Murphy <robin.murphy@arm.com>; arm-
+> soc <arm@kernel.org>; DTML <devicetree@vger.kernel.org>; Linux ARM
+> <linux-arm-kernel@lists.infradead.org>
+> Subject: Re: [PATCH v4 2/4] arm64: Add Mellanox BlueField SoC config option
+> 
+> On Mon, Oct 29, 2018 at 3:58 PM Liming Sun <lsun@mellanox.com> wrote:
+> > > It would be nice if you could still include the dts sources in the submission.
+> > > Since this is not a classic server hardware, DT is probably more suitable
+> > > here, and there are likely use cases that won't work with ACPI, so it's
+> > > good to have a starting point for your users if they need to override
+> > > the ACPI tables with a DT, or build systems with a simpler boot loader.
+> >
+> > Sure, I'll keep this DT change for reference. A little explanation that
+> > Mellanox BlueField SOC could be PCIe NIC or standalone device (server)
+> form which
+> > can do PXE boot, CentOS installation even on the NIC, etc. The same
+> software/driver
+> > works on both.
+> 
+> Ok, good.
+> 
+> >  DT seems not working well for some requirement/features like
+> > NVDIMM (which requires ACPI DSM).  That's why we switched to ACPI
+> though
+> > DT support is preserved.
+> 
+> This is probably something we need to look at separately, I'm sure we will
+> want
+> to use NVDIMM with DT based systems in the future. Can you explain what
+> the DSM is used for here? Is this something that could be done in software
+> in the NVDIMM hardware specific driver?
+
+The DSM is kind of running logic instead of configuration which is provided by 
+system firmware. It's defined in the UEFI spec and supported by Linux. In the
+NVDIMM case here, it's used to do Address Range Scrub (ARS), I2C access (such as
+reading the DIMM SPD information), runtime health check, etc. 
+
+DSM is kind of requirement by NVDIMM, such as
+https://pmem.io/documents/NVDIMM_DSM_Interface_Example.pdf
+https://docs.microsoft.com/en-us/windows-hardware/drivers/storage/-dsm-interface-for-byte-addressable-energy-backed-function-class--function-interface-1-
+
+By following the ACPI DSM definitions, there is no extra drivers needed in 
+Linux due to the existing ACPI framework.  Since it's 'standard' APIs in UEFI, 
+it has potential to support other OS other than Linux.
+
+Hardware specific driver might be able to do some of the functionality, or
+even 'simulate' some of the ACPI implementation or APIs. I guess it might need 
+a framework for it which I haven't thought a lot of details yet :)
+
+> 
+>        Arnd
