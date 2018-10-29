@@ -1,56 +1,89 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845: Add reserve-memory nodes
-Date: Sun, 28 Oct 2018 18:39:08 -0700
-Message-ID: <20181029013908.GD1855@tuxbook-pro>
-References: <20181026122745.5094-1-sibis@codeaurora.org>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH 0/9] Analogix ANX6345 RGB-(e)DP bridge support
+Date: Sun, 28 Oct 2018 19:20:03 -0700
+Message-ID: <CA+E=qVenpYz3oZC0iiS6ZFxTnkFcBkE0=qB46rvXA30o_AJAYg@mail.gmail.com>
+References: <20181018073327.64942-1-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181026122745.5094-1-sibis@codeaurora.org>
+In-Reply-To: <20181018073327.64942-1-icenowy@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, dianders@chromium.org, evgreen@chromium.org, benchan@chromium.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-sunxi@googlegroups.com, arm-linux <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri 26 Oct 05:27 PDT 2018, Sibi Sankar wrote:
+On Thu, Oct 18, 2018 at 12:35 AM Icenowy Zheng <icenowy@aosc.io> wrote:
+>
+> This patchset brings the support for Analogix ANX6345 RGB-(e)DP bridge,
+> which is used by some Allwinner A64 laptops, such as Pinebook and Olimex
+> TERES-I.
+>
+> It reuses some definitions from the ANX78xx driver that already exists
+> in the kernel tree, but the driver code itself is rewritten, because the
+> big difference between ANX6345 and ANX78xx.
+>
+> This patchset also enables the bridge on Pinebook and TERES-I, and a
+> temporary workaround patch (do not merge) for the dot clock accuracy
+> problem of sun4i-drm.
+>
+> This patchset assumes some fixes ([1], [2] and [3]) are already
+> applied, without them the patchset cannot be tested on the A64 devices
+> mentioned above.
 
-> Add reserve-memory nodes for mpss and mba required for
-> remoteproc mss pil.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+For whole series:
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Tested-by: Vasily Khoruzhick <anarsoul@gmail.com>
 
-Regards,
-Bjorn
-
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index d3fe012ad84e..f74892e447f9 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -88,6 +88,16 @@
->  			reg = <0 0x86200000 0 0x2d00000>;
->  			no-map;
->  		};
-> +
-> +		mpss_region: reserved-memory@8e000000 {
-> +			no-map;
-> +			reg = <0 0x8e000000 0 0x7800000>;
-> +		};
-> +
-> +		mba_region: reserved-memory@96500000 {
-> +			no-map;
-> +			reg = <0 0x96500000 0 0x200000>;
-> +		};
->  	};
->  
->  	cpus {
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+>
+> [1] https://patchwork.kernel.org/patch/10628827/
+> [2] https://patchwork.kernel.org/patch/10628825/
+> [3] https://patchwork.kernel.org/patch/10646791/
+>
+> Chen-Yu Tsai (1):
+>   [DO NOT MERGE] drm/sun4i: rgb: Add 5% tolerance to dot clock frequency
+>     check
+>
+> Icenowy Zheng (8):
+>   drm/bridge: move ANA78xx driver to analogix subdirectory
+>   drm/bridge: split some definitions of ANX78xx to dedicated headers
+>   drm/bridge: extract some Analogix I2C DP common code
+>   dt-bindings: Add ANX6345 DP/eDP transmitter binding
+>   drm/bridge: Add Analogix anx6345 support
+>   arm64: allwinner: a64: add pinmux for RGB666 LCD
+>   arm64: allwinner: a64: enable ANX6345 bridge on Pinebook
+>   arm64: allwinner: a64: enable ANX6345 bridge on TERES-I
+>
+>  .../bindings/display/bridge/anx6345.txt       |  39 +
+>  .../dts/allwinner/sun50i-a64-pinebook.dts     |  43 +
+>  .../boot/dts/allwinner/sun50i-a64-teres-i.dts |  40 +-
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |   9 +
+>  drivers/gpu/drm/bridge/Kconfig                |  10 -
+>  drivers/gpu/drm/bridge/Makefile               |   4 +-
+>  drivers/gpu/drm/bridge/analogix-anx78xx.h     | 719 ---------------
+>  drivers/gpu/drm/bridge/analogix/Kconfig       |  25 +
+>  drivers/gpu/drm/bridge/analogix/Makefile      |   4 +
+>  .../drm/bridge/analogix/analogix-anx6345.c    | 862 ++++++++++++++++++
+>  .../bridge/{ => analogix}/analogix-anx78xx.c  | 146 +--
+>  .../drm/bridge/analogix/analogix-anx78xx.h    | 265 ++++++
+>  .../drm/bridge/analogix/analogix-i2c-dptx.c   | 169 ++++
+>  .../drm/bridge/analogix/analogix-i2c-dptx.h   | 258 ++++++
+>  .../bridge/analogix/analogix-i2c-txcommon.h   | 240 +++++
+>  drivers/gpu/drm/sun4i/sun4i_rgb.c             |   5 +-
+>  16 files changed, 1956 insertions(+), 882 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx6345.txt
+>  delete mode 100644 drivers/gpu/drm/bridge/analogix-anx78xx.h
+>  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+>  rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c (90%)
+>  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
+>  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.c
+>  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.h
+>  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-txcommon.h
+>
+> --
+> 2.18.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
