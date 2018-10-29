@@ -1,112 +1,41 @@
-From: AnilKumar Chimata <anilc@codeaurora.org>
-Subject: Re: [PATCH 3/3] crypto: qce: ice: Add support for Inline Crypto
- Engine
-Date: Mon, 29 Oct 2018 19:01:03 +0530
-Message-ID: <15fe7675-cef7-3e39-cedc-b09fbcf1a4af@codeaurora.org>
-References: <1539789476-6098-4-git-send-email-anilc@codeaurora.org>
- <201810181902.44DQrfDL%fengguang.wu@intel.com>
- <d6f1930a618f6539a4c3e53d239fdd90@codeaurora.org>
- <20181025145841.GB30244@bogus>
+From: Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH 1/3] i3c: master: Add driver for Synopsys DesignWare IP
+Date: Mon, 29 Oct 2018 06:41:00 -0700
+Message-ID: <20181029134100.GD28520@bombadil.infradead.org>
+References: <1540807618-13246-1-git-send-email-soares@synopsys.com>
+ <1540807618-13246-2-git-send-email-soares@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181025145841.GB30244@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1540807618-13246-2-git-send-email-soares@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: kbuild test robot <lkp@intel.com>, kbuild-all@01.org, andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, herbert@gondor.apana.org.au, davem@davemloft.net, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Vitor soares <vitor.soares@synopsys.com>
+Cc: boris.brezillon@bootlin.com, wsa@the-dreams.de, linux-i2c@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de, psroka@cadence.com, agolec@cadence.com, adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com, alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com, rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, linus.walleij@linaro.org, Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org, nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se, mshettel@codeaurora.org, swboyd@chromium.org, joao.pinto@synopsys.com, luis
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Mon, Oct 29, 2018 at 10:06:56AM +0000, Vitor soares wrote:
+> +config DW_I3C_MASTER
+> +	tristate "Synospsys DesignWare I3C master driver"
+> +	depends on I3C
 
-Thanks for the review,
+> +	depends on !(ALPHA || PARISC)
 
-On 2018-10-25 20:28, Rob Herring wrote:
-> On Wed, Oct 24, 2018 at 04:44:37PM +0530, anilc@codeaurora.org wrote:
->> Hi,
->> 
->> Thanks for the comments, response inline.
-> 
-> FYI, this was from a bot.
+why?
 
-I have realized after I sent the mail.
+> +	help
+> +	  Support·for·Synopsys·DesignWare·MIPI·I3C·Controller.
 
-> 
->> 
->> Thanks,
->> AnilKumar
->> 
->> 
->> On 2018-10-18 17:13, kbuild test robot wrote:
->> > Hi AnilKumar,
->> >
->> > Thank you for the patch! Yet something to improve:
->> >
->> > [auto build test ERROR on cryptodev/master]
->> > [also build test ERROR on v4.19-rc8 next-20181018]
->> > [if your patch is applied to the wrong git tree, please drop us a note
->> > to help improve the system]
->> >
->> > url:
->> > https://github.com/0day-ci/linux/commits/AnilKumar-Chimata/firmware-qcom-scm-Update-qcom_scm_call-signature/20181018-182318
->> > base:
->> > https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
->> > master
->> > config: sh-allmodconfig (attached as .config)
->> > compiler: sh4-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
->> > reproduce:
->> >         wget
->> > https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross
->> > -O ~/bin/make.cross
->> >         chmod +x ~/bin/make.cross
->> >         # save the attached .config to linux build tree
->> >         GCC_VERSION=7.2.0 make.cross ARCH=sh
->> >
->> > All errors (new ones prefixed by >>):
->> >
->> > > > drivers/crypto/qce/ice.c:1372:5: error: redefinition of
->> > > > 'qcom_ice_setup_ice_hw'
->> >     int qcom_ice_setup_ice_hw(const char *storage_type, int enable)
->> >         ^~~~~~~~~~~~~~~~~~~~~
->> >    In file included from drivers/crypto/qce/ice.c:25:0:
->> >    include/crypto/ice.h:60:19: note: previous definition of
->> > 'qcom_ice_setup_ice_hw' was here
->> >     static inline int qcom_ice_setup_ice_hw(const char *storage_type,
->> > int enable)
->> >                       ^~~~~~~~~~~~~~~~~~~~~
->> >
->> > vim +/qcom_ice_setup_ice_hw +1372 drivers/crypto/qce/ice.c
->> >
->> >   1371
->> > > 1372	int qcom_ice_setup_ice_hw(const char *storage_type, int enable)
->> >   1373	{
->> >   1374		struct ice_device *ice_dev = NULL;
->> >   1375		int ret = -1;
->> >   1376
->> >   1377		ice_dev = get_ice_device_from_storage_type(storage_type);
->> >   1378		if (ice_dev == ERR_PTR(-EPROBE_DEFER))
->> >   1379			return -EPROBE_DEFER;
->> >   1380
->> >   1381		if (!ice_dev)
->> >   1382			return ret;
->> >   1383
->> >   1384		if (enable)
->> >   1385			return enable_ice_setup(ice_dev);
->> >   1386
->> >   1387		return disable_ice_setup(ice_dev);
->> >   1388	}
->> >   1389
->> 
->> We will check and get back on the compilation. What is the idea behind 
->> for
->> this
->> effort, is this for testing the ICE driver?
-> 
-> The purpose is to make sure changes don't break builds that you likely
-> haven't tested. Either different architectures or configurations.
+These strange characters (displayed as a centred dot on my terminal)
+should probably be spaces.
 
-Got the point, will try to avoid this in future.
+> +static struct dw_i3c_xfer *
+> +dw_i3c_master_alloc_xfer(struct dw_i3c_master *master, unsigned int ncmds)
+> +{
+> +	struct dw_i3c_xfer *xfer;
+> +
+> +	xfer = kzalloc(sizeof(*xfer) + (ncmds * sizeof(*xfer->cmds)),
+> +		       GFP_KERNEL);
 
-> 
-> Rob
+You should be using struct_size() here.
