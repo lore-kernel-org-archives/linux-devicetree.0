@@ -1,58 +1,118 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845: Add SCM DT node
-Date: Mon, 29 Oct 2018 20:24:46 +0530
-Message-ID: <24ab0b3496de7809cc49479ea33c2eab@codeaurora.org>
-References: <20181026122542.4714-1-sibis@codeaurora.org>
- <9fb3d2d2-37b5-27d2-ad27-45c77ebe1df2@linaro.org>
+From: Liming Sun <lsun@mellanox.com>
+Subject: RE: [PATCH v4 2/4] arm64: Add Mellanox BlueField SoC config option
+Date: Mon, 29 Oct 2018 14:58:21 +0000
+Message-ID: <DB6PR05MB32236AAD033C20DF6414C464A1F30@DB6PR05MB3223.eurprd05.prod.outlook.com>
+References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+ <1540403734-137721-1-git-send-email-lsun@mellanox.com>
+ <1540403734-137721-2-git-send-email-lsun@mellanox.com>
+ <CAK8P3a1jTsvzYhS4CxvmK6tOgPn_g7=1S4xAcca2K4v70vhyEA@mail.gmail.com>
+ <AM4PR05MB32204021433BBB853C50FF30A1F00@AM4PR05MB3220.eurprd05.prod.outlook.com>
+ <CAK8P3a2=shWVjwrmnNTwwGwN_jhwyb+TmeALz4zzTstho51z8A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9fb3d2d2-37b5-27d2-ad27-45c77ebe1df2@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, bjorn.andersson@linaro.org, dianders@chromium.org, evgreen@chromium.org, benchan@chromium.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK8P3a2=shWVjwrmnNTwwGwN_jhwyb+TmeALz4zzTstho51z8A@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: DTML <devicetree@vger.kernel.org>, David Woods <dwoods@mellanox.com>, arm-soc <arm@kernel.org>, Olof Johansson <olof@lixom.net>, Robin Murphy <robin.murphy@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stan,
-Thanks for the review!
+Thanks! Please see response inline.
 
-On 2018-10-29 15:02, Stanimir Varbanov wrote:
-> Hi Sibi,
+- Liming
+
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd@arndb.de]
+> Sent: Friday, October 26, 2018 3:32 PM
+> To: Liming Sun <lsun@mellanox.com>
+> Cc: Olof Johansson <olof@lixom.net>; David Woods
+> <dwoods@mellanox.com>; Robin Murphy <robin.murphy@arm.com>; arm-
+> soc <arm@kernel.org>; DTML <devicetree@vger.kernel.org>; Linux ARM
+> <linux-arm-kernel@lists.infradead.org>
+> Subject: Re: [PATCH v4 2/4] arm64: Add Mellanox BlueField SoC config option
 > 
-> On 10/26/2018 03:25 PM, Sibi Sankar wrote:
->> Add SCM DT node to enable SCM functionality on SDM845.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 6 ++++++
->>  1 file changed, 6 insertions(+)
->> 
->> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi 
->> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> index b72bdb0a31a5..fad22acfda4d 100644
->> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> @@ -221,6 +221,12 @@
->>  		};
->>  	};
->> 
->> +	firmware {
->> +		scm {
->> +			compatible = "qcom,scm-sdm845", "qcom,scm";
->> +		};
->> +	};
+> On Fri, Oct 26, 2018 at 9:18 PM Liming Sun <lsun@mellanox.com> wrote:
+> > > -----Original Message-----
+> > > From: arndbergmann@gmail.com [mailto:arndbergmann@gmail.com] On
+> > > Behalf Of Arnd Bergmann
+> > > Sent: Thursday, October 25, 2018 11:38 AM
+> > > To: Liming Sun <lsun@mellanox.com>
+> > > Cc: Olof Johansson <olof@lixom.net>; David Woods
+> > > <dwoods@mellanox.com>; Robin Murphy <robin.murphy@arm.com>;
+> arm-
+> > > soc <arm@kernel.org>; devicetree@vger.kernel.org; linux-arm-
+> > > kernel@lists.infradead.org
+> > > Subject: Re: [PATCH v4 2/4] arm64: Add Mellanox BlueField SoC config
+> option
+> > >
+> > > On 10/24/18, Liming Sun <lsun@mellanox.com> wrote:
+> > > > This commit introduces config option for Mellanox BlueField SoC,
+> > > > which can be used to build the SoC specific drivers, and enables
+> > > > it by default in configs/defconfig.
+> > > >
+> > > > Reviewed-by: David Woods <dwoods@mellanox.com>
+> > > > Signed-off-by: Liming Sun <lsun@mellanox.com>
+> > > > ---
+> > > >  arch/arm64/Kconfig.platforms | 6 ++++++
+> > > >  arch/arm64/configs/defconfig | 1 +
+> > > >  2 files changed, 7 insertions(+)
+> > >
+> > > Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> > >
+> > > I'm sorry for missing your series in the past. We should definitely merge
+> > > the platform support soon. Do you also have device tree files for
+> reference
+> > > systems or even production hardware?
+> >
+> > We have obsoleted the device tree, and mainly support ACPI now
+> > on Reference/Production HW. Below is the TMFIFO definition in the ACPI
+> > DSDT table.
+> >
+> >     // RShim TMFIFO
+> >     Device(RSH0) {
+> >       Name(_HID, "MLNXBF01")
+> >       Name(_UID, Zero)
+> >       Name(_CCA, 1)
+> >       Name(_CRS, ResourceTemplate() {
+> >         Memory32Fixed(ReadWrite, 0x00800a20, 0x00000018)
+> >         Memory32Fixed(ReadWrite, 0x00800a40, 0x00000018)
+> >         Interrupt(ResourceConsumer, Edge, ActiveHigh, Exclusive)
+> >           { BF1_RSH0_TM_HTT_LWM_INT,
+> >             BF1_RSH0_TM_HTT_HWM_INT,
+> >             BF1_RSH0_TM_TTH_LWM_INT,
+> >             BF1_RSH0_TM_TTH_HWM_INT
+> >           }
+> >       })
+> >     }
+> >
+> > The full ACPI implementation can be found in the 1.0 release:
+> > http://www.mellanox.com/downloads/BlueField/BlueField-
+> 1.0.0.10521/BlueField-1.0.0.10521.tar.xz
+> > Inside this tarball, we can see the "src/edk2/" directory which has the edk2
+> patch file including all the ACPI implementation.
 > 
-> What will happen if the platform is without tz firmware? I'd move this
-> DT node in sdm845-mtp.dts or at least make it status = disabled.
+> It would be nice if you could still include the dts sources in the submission.
+> Since this is not a classic server hardware, DT is probably more suitable
+> here, and there are likely use cases that won't work with ACPI, so it's
+> good to have a starting point for your users if they need to override
+> the ACPI tables with a DT, or build systems with a simpler boot loader.
 
-Even in the absence of tz firmware, ATF is expected to implement the 
-necessary
-handlers for the SMC calls so I don't think it is necessary to keep it 
-disabled.
+Sure, I'll keep this DT change for reference. A little explanation that
+Mellanox BlueField SOC could be PCIe NIC or standalone device (server)  form which
+can do PXE boot, CentOS installation even on the NIC, etc. The same software/driver 
+works on both.  DT seems not working well for some requirement/features like 
+NVDIMM (which requires ACPI DSM).  That's why we switched to ACPI though
+DT support is preserved.
 
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+> 
+>        Arnd
