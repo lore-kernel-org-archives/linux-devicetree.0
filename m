@@ -1,140 +1,151 @@
-From: Stefan Popa <stefan.popa@analog.com>
-Subject: [PATCH v3 3/3] dt-bindings: iio: adc: Add docs for ad7124
-Date: Mon, 29 Oct 2018 18:39:30 +0200
-Message-ID: <1540831170-3150-1-git-send-email-stefan.popa@analog.com>
+From: Liming Sun <lsun@mellanox.com>
+Subject: RE: [PATCH v4 3/4] dt-bindings: soc: Add TmFifo binding for Mellanox
+ BlueField SoC
+Date: Mon, 29 Oct 2018 16:48:11 +0000
+Message-ID: <DB6PR05MB3223D0AE812FEDE9BAB39E6BA1F30@DB6PR05MB3223.eurprd05.prod.outlook.com>
+References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+ <1540403734-137721-1-git-send-email-lsun@mellanox.com>
+ <1540403734-137721-3-git-send-email-lsun@mellanox.com>
+ <CAK8P3a1K7BjgZRyBMKFrqWfcr-Bb3HQus+QE7qTpd27voE9e0A@mail.gmail.com>
+ <AM4PR05MB3220F4E5EEB673F0CC97C11DA1F00@AM4PR05MB3220.eurprd05.prod.outlook.com>
+ <CAK8P3a21y1jm+1aZ8is7Rp=Re++BxL3mJM-Zj=_3c-Lq4y_Few@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK8P3a21y1jm+1aZ8is7Rp=Re++BxL3mJM-Zj=_3c-Lq4y_Few@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: DTML <devicetree@vger.kernel.org>, David Woods <dwoods@mellanox.com>, arm-soc <arm@kernel.org>, Olof Johansson <olof@lixom.net>, Robin Murphy <robin.murphy@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Analog Devices AD7124 4-channels and 8-channels ADC.
+Thanks for the comments! Please see my response/questions inline.
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
----
-Changes in v2:
-	- Nothing changed.
-Changes in v3:
-	- Removed the "adi,channels" property.
-	- Used the "reg" property to get the channel number and "adi,diff-channels"
-	  for the differential pins. The "adi,channel-number" property was removed.
-	- adi,bipolar is of boolean type.
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd@arndb.de]
+> Sent: Friday, October 26, 2018 4:34 PM
+> To: Liming Sun <lsun@mellanox.com>
+> Cc: Olof Johansson <olof@lixom.net>; David Woods
+> <dwoods@mellanox.com>; Robin Murphy <robin.murphy@arm.com>; arm-
+> soc <arm@kernel.org>; DTML <devicetree@vger.kernel.org>; Linux ARM
+> <linux-arm-kernel@lists.infradead.org>
+> Subject: Re: [PATCH v4 3/4] dt-bindings: soc: Add TmFifo binding for Mellanox
+> BlueField SoC
+> 
+> On Fri, Oct 26, 2018 at 9:36 PM Liming Sun <lsun@mellanox.com> wrote:
+> > > -----Original Message-----
+> > > From: arndbergmann@gmail.com [mailto:arndbergmann@gmail.com] On
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
+> > > > @@ -0,0 +1,23 @@
+> > > > +* Mellanox BlueField SoC TmFifo
+> > > > +
+> > > > +BlueField TmFifo provides a shared FIFO between the target and the
+> > > > +external host machine, which can be accessed by external host via
+> > > > +USB or PCIe. In the current tmfifo driver, this FIFO has been demuxed
+> > > > +to implement virtual console and network interface based on the virtio
+> > > > +framework.
+> > > > +
+> > > > +Required properties:
+> > > > +
+> > > > +- compatible:      Should be "mellanox,bf-tmfifo"
+> > > > +- reg:             Physical base address and length of Rx/Tx block
+> > > > +- interrupts:      The interrupt number of Rx low water mark, Rx high
+> water
+> > > > mark
+> > > > +           Tx low water mark, Tx high water mark respectively.
+> > >
+> > >
+> > > This sounds like it might fit into the mailbox subsystem, and perhaps
+> > > it should use the mailbox DT bindings. Have you had a look at that?
+> >
+> > This commit of dt-bindings is mainly to solve the warning of checkpatch.pl.
+> > Like the response to patch 2/4, ACPI is actually used now instead of device
+> tree.
+> > The TMFIFO definition in the ACPI DSDT table would be something like
+> below.
+> >
+> >     // RShim TMFIFO
+> >     Device(RSH0) {
+> >       Name(_HID, "MLNXBF01")
+> >       Name(_UID, Zero)
+> >       Name(_CCA, 1)
+> >       Name(_CRS, ResourceTemplate() {
+> >         Memory32Fixed(ReadWrite, 0x00800a20, 0x00000018)
+> >         Memory32Fixed(ReadWrite, 0x00800a40, 0x00000018)
+> >         Interrupt(ResourceConsumer, Edge, ActiveHigh, Exclusive)
+> >           { BF1_RSH0_TM_HTT_LWM_INT,
+> >             BF1_RSH0_TM_HTT_HWM_INT,
+> >             BF1_RSH0_TM_TTH_LWM_INT,
+> >             BF1_RSH0_TM_TTH_HWM_INT
+> >           }
+> >       })
+> >     }
+> >
+> > Any suggestion how it should be added into Linux Documentation, or maybe
+> I
+> > should just remove this commit from this patch series?
+> 
+> Maybe the best way here would be to not use ACPI for the case
+> where bluefin is integrated into a PCIe endpoint, since ACPI is
+> not as flexible here and generally relies on having an SBSA
+> compliant hardware that you no longer have if you require
+> random platform devices for booting from and for your console.
+> 
+> For the case where a bluefin SoC is used in a standalone system,
+> having ACPI makes more sense, as that lets you install Red Hat
+> Linux or other operating systems that rely on SBBR and SBSA.
 
- .../devicetree/bindings/iio/adc/adi,ad7124.txt     | 90 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 91 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
+A little explanation for this SoC:
+In the PCIe case, it's not just an endpoint. It can work in a PCIe "multi-host" mode
+which behaves just like standalone system, such as doing PXE boot and CentOS 
+or other OS installation on the eMMC and boot from it. It can run fully isolated 
+from the x86 host. Below is a link of brief introduction.
+http://www.mellanox.com/related-docs/prod_adapter_cards/PB_BlueField_Smart_NIC.pdf
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
-new file mode 100644
-index 0000000..46a9b71
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
-@@ -0,0 +1,90 @@
-+Analog Devices AD7124 ADC device driver
-+
-+Required properties for the AD7124:
-+	- compatible: Must be one of "adi,ad7124-4" or "adi,ad7124-8"
-+	- reg: SPI chip select number for the device
-+	- spi-max-frequency: Max SPI frequency to use
-+		see: Documentation/devicetree/bindings/spi/spi-bus.txt
-+	- clocks: phandle to the master clock (mclk)
-+		see: Documentation/devicetree/bindings/clock/clock-bindings.txt
-+	- clock-names: Must be "mclk".
-+	- interrupts: IRQ line for the ADC
-+		see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+
-+	  Required properties:
-+		* #address-cells: Must be 1.
-+		* #size-cells: Must be 0.
-+
-+	  Subnode(s) represent the external channels which are connected to the ADC.
-+	  Each subnode represents one channel and has the following properties:
-+		Required properties:
-+			* reg: The channel number. It can have up to 4 channels on ad7124-4
-+			  and 8 channels on ad7124-8, numbered from 0 to 15.
-+			* adi,diff-channels: Pins the channel is connected to. The first value
-+			  specifies the positive input pin, the second value the negative input pin.
-+
-+		Optional properties:
-+			* adi,bipolar: Boolean, if set the channel is used in bipolar mode.
-+			* adi,reference-select: Select the reference source to use when
-+			  converting on the the specific channel. Valid values are:
-+			  0: REFIN1(+)/REFIN1(−).
-+			  1: REFIN2(+)/REFIN2(−).
-+			  3: AVDD
-+			  If this field is left empty, internal reference is selected.
-+			* adi,gain: Select the gain when converting on the specific channel.
-+			  Valid values are: 1, 2, 4, 8, 16, 32, 64, 128.
-+			  If this field is left empty, gain of 1 is selected.
-+			* adi,odr-hz: The output data rate can be programmed from:
-+			  9 to 19200 for full power mode (when the master clock is 614.4 kHz)
-+			  2 to 4800 for mid power mode (when the master clock is 153.6 kHz)
-+			  1 to 2400 for low power mode (when the master clock is 76.8 kHz)
-+			  If this field is left empty, odr of 9 is selected.
-+
-+Optional properties:
-+	- refin1-supply: refin1 supply can be used as reference for conversion.
-+	- refin2-supply: refin2 supply can be used as reference for conversion.
-+	- avdd-supply: avdd supply can be used as reference for conversion.
-+
-+Example:
-+	adc@0 {
-+		compatible = "adi,ad7124-4";
-+		reg = <0>;
-+		spi-max-frequency = <5000000>;
-+		interrupts = <25 2>;
-+		interrupt-parent = <&gpio>;
-+		refin1-supply = <&adc_vref>;
-+		clocks = <&ad7124_mclk>;
-+		clock-names = "mclk";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		channel@0 {
-+			reg = <0>;
-+			adi,diff-channels = <0 1>;
-+			adi,reference-select = <0>;
-+			adi,gain = <2>;
-+			adi,odr-hz = <10>;
-+		};
-+
-+		channel@1 {
-+			reg = <1>;
-+			adi,bipolar;
-+			adi,diff-channels = <2 3>;
-+			adi,reference-select = <0>;
-+			adi,gain = <4>;
-+			adi,odr-hz = <50>;
-+		};
-+
-+		channel@2 {
-+			reg = <2>;
-+			adi,diff-channels = <4 5>;
-+			adi,gain = <128>;
-+			adi,odr-hz = <19200>;
-+		};
-+
-+		channel@3 {
-+			reg = <3>;
-+			adi,diff-channels = <6 7>;
-+		};
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3a1bfcb..f2fa508 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -845,6 +845,7 @@ L:	linux-iio@vger.kernel.org
- W:	http://ez.analog.com/community/linux-device-drivers
- S:	Supported
- F:	drivers/iio/adc/ad7124.c
-+F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
- 
- ANALOG DEVICES INC AD9389B DRIVER
- M:	Hans Verkuil <hans.verkuil@cisco.com>
--- 
-2.7.4
+So for now the same SW with ACPI configuration is used on all the boards for simplicity. 
+But I think DT could definitely be used on customized board or when needed.
+
+> 
+> > As for the sub-component of this driver, the "soc" might be better fit than
+> the mailbox
+> > for some reasons. It's a communication between extern machines and the
+> SoC via
+> > USB / PCIe,  like pushing boot stream, console and network mgmt. Some of
+> the features,
+> > like pushing boot stream, doesn't communicate with the ARM core. The
+> boot stream
+> > is pushed to the SoC HW logic directly. I'll add the host-side virtio-based
+> driver in patch v5.
+> 
+> Right, the drivers/mailbox subsystem was not the right idea here,
+> I noticed that myself after actually reading the driver. Drivers/soc
+> may also not be the best fit, since this is not really about it being
+> a SoC, but rather a way to encapsulate virtual devices. The
+> mic driver I mentioned is in drivers/misc, but I don't like to add stuff
+> there if we can avoid it.
+> 
+> drivers/virtio, drivers/bus or drivers/mfd might also be an option that
+> could fit better than drivers/soc, or you could have your own subdir
+> below drivers/ as some others do. Finally, drivers/platform/mellanox
+> might be a reasonable choice, and it would let you keep both sides
+> of the driver in one place.
+
+We actually have more drivers coming for this SoC, such for I2C, GPIO, PKA, 
+performance counter, L3 cache profile, etc, which could be found at the link below
+https://git.launchpad.net/~dcwoods/ubuntu/+source/linux/+git/cosmic/log/?h=mellanox_bluefield
+
+Since it's not just the FIFO driver, any suggestion which one would be better, 
+the "soc" or still the 'platform' ? Thanks!
+
+> 
+>        Arnd
