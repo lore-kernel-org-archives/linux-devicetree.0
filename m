@@ -1,46 +1,65 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v3 3/5] nfc: pn533: add UART phy driver
-Date: Mon, 29 Oct 2018 17:13:28 +0100
-Message-ID: <20181029161328.GT27852@localhost>
-References: <20181025132937.24405-1-poeschel@lemonage.de>
- <20181025132937.24405-3-poeschel@lemonage.de>
- <20181028102725.GL27852@localhost>
- <20181029100246.GA5905@lem-wkst-02.lemonage>
- <20181029110704.GQ27852@localhost>
- <20181029155110.GA12914@lem-wkst-02.lemonage>
+From: Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH v2 1/6] dt-bindings: drm/panel: simple: Add no-hpd
+ property
+Date: Mon, 29 Oct 2018 12:16:51 -0400
+Message-ID: <20181029161651.GW154160@art_vandelay>
+References: <20181025222134.174583-1-dianders@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181029155110.GA12914@lem-wkst-02.lemonage>
+In-Reply-To: <20181025222134.174583-1-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lars Poeschel <poeschel@lemonage.de>
-Cc: Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, open list <linux-kernel@vger.kernel.org>, "open list:NFC SUBSYSTEM" <linux-wireless@vger.kernel.org>
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Sean Paul <seanpaul@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, Sandeep Panda <spanda@codeaurora.org>, linux-arm-msm@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, jsanka@codeaurora.org, ryandcase@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2018 at 04:51:10PM +0100, Lars Poeschel wrote:
-> On Mon, Oct 29, 2018 at 12:07:04PM +0100, Johan Hovold wrote:
-
-> > > Wouldn't that be the scope of another later patch then ?
-> > 
-> > Possibly. We have accepted some serdev drivers already taking the lazy
-> > approach of opening the port in probe. Depending on the driver, it may
-> > not be too bad (e.g. for some specific hardware which you know you'll
-> > always use), but it not really nice to have everyone pay a price in
-> > terms of power-consumption for a feature that is rarely used.
+On Thu, Oct 25, 2018 at 03:21:29PM -0700, Douglas Anderson wrote:
+> Some eDP panels that are designed to be always connected to a board
+> use their HPD signal to signal that they've finished powering on and
+> they're ready to be talked to.
 > 
-> Is there a way in serdev to close a port, but still occupy it ?
-> I'd like to do the basic chip initialisation in _probe and then close
-> the port for power-consuption reasons. I'd like to have the port still
-> occupied, so that it's not available to other possible users in the
-> meantime. I'd then do a serdev open again in dev_up and really use it
-> from there.
-> dev_down is then for serdev close and also still occupy it.
-> closing and releasing would then be done in _remove.
+> However, for various reasons it's possible that the HPD signal from
+> the panel isn't actually hooked up.  In the case where the HPD isn't
+> hooked up you can look at the timing diagram on the panel datasheet
+> and insert a delay for the maximum amount of time that the HPD might
+> take to come up.
+> 
+> Let's add a property in the device tree for this concept.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-The serdev device is bound you driver regardless of whether you open the
-port or not, so just use serdev_device_open() and serdev_device_close()
-as necessary at probe() if you need to do some setup and then later at
-dev_up() and dev_down(), respectively.
+Thanks for the series, Doug, I've applied it all to drm-misc-next-fixes for
+4.20.
 
-Johan
+Sean
+
+> Reviewed-by: Sean Paul <sean@poorly.run>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> 
+> Changes in v2: None
+> 
+>  .../devicetree/bindings/display/panel/simple-panel.txt         | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/simple-panel.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> index 45a457ad38f0..b2b872c710f2 100644
+> --- a/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> +++ b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> @@ -11,6 +11,9 @@ Optional properties:
+>  - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
+>  - enable-gpios: GPIO pin to enable or disable the panel
+>  - backlight: phandle of the backlight device attached to the panel
+> +- no-hpd: This panel is supposed to communicate that it's ready via HPD
+> +  (hot plug detect) signal, but the signal isn't hooked up so we should
+> +  hardcode the max delay from the panel spec when powering up the panel.
+>  
+>  Example:
+>  
+> -- 
+> 2.19.1.568.g152ad8e336-goog
+> 
+
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
