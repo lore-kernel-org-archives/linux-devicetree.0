@@ -1,89 +1,95 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: Re: [PATCH 0/9] Analogix ANX6345 RGB-(e)DP bridge support
-Date: Sun, 28 Oct 2018 19:20:03 -0700
-Message-ID: <CA+E=qVenpYz3oZC0iiS6ZFxTnkFcBkE0=qB46rvXA30o_AJAYg@mail.gmail.com>
-References: <20181018073327.64942-1-icenowy@aosc.io>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCH 3/6] PCI: layerscape: Add the EP mode support
+Date: Mon, 29 Oct 2018 02:35:12 +0000
+Message-ID: <HE1PR04MB1497239B4B6F8AA48E284F4FF5F30@HE1PR04MB1497.eurprd04.prod.outlook.com>
+References: <20181025110901.5680-1-xiaowei.bao@nxp.com>
+ <20181025110901.5680-3-xiaowei.bao@nxp.com> <20181025215246.GA14861@bogus>
+ <HE1PR04MB149735C7EF2A23AEE982BB9FF5F00@HE1PR04MB1497.eurprd04.prod.outlook.com>
+ <CAK8P3a3Ty4bRuHiVHY6dh55b1ms8z7RpG2sALM0Dn_8Yd39-xQ@mail.gmail.com>
+ <HE1PR04MB14972C9176E68EEDBD3AD64BF5F00@HE1PR04MB1497.eurprd04.prod.outlook.com>
+ <CADRPPNRP5RORVr0O59=O-PhRRerirFkPeOmAcKq3pNumf4Mriw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181018073327.64942-1-icenowy@aosc.io>
+In-Reply-To: <CADRPPNRP5RORVr0O59=O-PhRRerirFkPeOmAcKq3pNumf4Mriw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-sunxi@googlegroups.com, arm-linux <linux-arm-kernel@lists.infradead.org>
+To: Leo Li <leoyang.li@nxp.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, Kate Stewart <kstewart@linuxfoundation.org>, "cyrille.pitchen@free-electrons.com" <cyrille.pitchen@free-electrons.com>, Philippe Ombredanne <pombredanne@nexb.com>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>, "niklas.cassel@axis.com" <niklas.cassel@axis.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, open list:OPEN FIRMWARE AND FLAT
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 18, 2018 at 12:35 AM Icenowy Zheng <icenowy@aosc.io> wrote:
->
-> This patchset brings the support for Analogix ANX6345 RGB-(e)DP bridge,
-> which is used by some Allwinner A64 laptops, such as Pinebook and Olimex
-> TERES-I.
->
-> It reuses some definitions from the ANX78xx driver that already exists
-> in the kernel tree, but the driver code itself is rewritten, because the
-> big difference between ANX6345 and ANX78xx.
->
-> This patchset also enables the bridge on Pinebook and TERES-I, and a
-> temporary workaround patch (do not merge) for the dot clock accuracy
-> problem of sun4i-drm.
->
-> This patchset assumes some fixes ([1], [2] and [3]) are already
-> applied, without them the patchset cannot be tested on the A64 devices
-> mentioned above.
-
-For whole series:
-
-Tested-by: Vasily Khoruzhick <anarsoul@gmail.com>
-
->
-> [1] https://patchwork.kernel.org/patch/10628827/
-> [2] https://patchwork.kernel.org/patch/10628825/
-> [3] https://patchwork.kernel.org/patch/10646791/
->
-> Chen-Yu Tsai (1):
->   [DO NOT MERGE] drm/sun4i: rgb: Add 5% tolerance to dot clock frequency
->     check
->
-> Icenowy Zheng (8):
->   drm/bridge: move ANA78xx driver to analogix subdirectory
->   drm/bridge: split some definitions of ANX78xx to dedicated headers
->   drm/bridge: extract some Analogix I2C DP common code
->   dt-bindings: Add ANX6345 DP/eDP transmitter binding
->   drm/bridge: Add Analogix anx6345 support
->   arm64: allwinner: a64: add pinmux for RGB666 LCD
->   arm64: allwinner: a64: enable ANX6345 bridge on Pinebook
->   arm64: allwinner: a64: enable ANX6345 bridge on TERES-I
->
->  .../bindings/display/bridge/anx6345.txt       |  39 +
->  .../dts/allwinner/sun50i-a64-pinebook.dts     |  43 +
->  .../boot/dts/allwinner/sun50i-a64-teres-i.dts |  40 +-
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |   9 +
->  drivers/gpu/drm/bridge/Kconfig                |  10 -
->  drivers/gpu/drm/bridge/Makefile               |   4 +-
->  drivers/gpu/drm/bridge/analogix-anx78xx.h     | 719 ---------------
->  drivers/gpu/drm/bridge/analogix/Kconfig       |  25 +
->  drivers/gpu/drm/bridge/analogix/Makefile      |   4 +
->  .../drm/bridge/analogix/analogix-anx6345.c    | 862 ++++++++++++++++++
->  .../bridge/{ => analogix}/analogix-anx78xx.c  | 146 +--
->  .../drm/bridge/analogix/analogix-anx78xx.h    | 265 ++++++
->  .../drm/bridge/analogix/analogix-i2c-dptx.c   | 169 ++++
->  .../drm/bridge/analogix/analogix-i2c-dptx.h   | 258 ++++++
->  .../bridge/analogix/analogix-i2c-txcommon.h   | 240 +++++
->  drivers/gpu/drm/sun4i/sun4i_rgb.c             |   5 +-
->  16 files changed, 1956 insertions(+), 882 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx6345.txt
->  delete mode 100644 drivers/gpu/drm/bridge/analogix-anx78xx.h
->  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
->  rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c (90%)
->  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
->  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.c
->  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.h
->  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-txcommon.h
->
-> --
-> 2.18.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBMaSBZYW5nIDxsZW95YW5nLmxp
+QG54cC5jb20+IA0KU2VudDogMjAxOOW5tDEw5pyIMjfml6UgNDoyOQ0KVG86IFhpYW93ZWkgQmFv
+IDx4aWFvd2VpLmJhb0BueHAuY29tPg0KQ2M6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+
+OyBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPjsgQmpvcm4gSGVsZ2FhcyA8YmhlbGdhYXNA
+Z29vZ2xlLmNvbT47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBTaGF3biBH
+dW8gPHNoYXduZ3VvQGtlcm5lbC5vcmc+OyBraXNob25AdGkuY29tOyBsb3JlbnpvLnBpZXJhbGlz
+aUBhcm0uY29tOyBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3Jn
+PjsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2Fp
+Lmh1QG54cC5jb20+OyBSb3kgWmFuZyA8cm95LnphbmdAbnhwLmNvbT47IEthdGUgU3Rld2FydCA8
+a3N0ZXdhcnRAbGludXhmb3VuZGF0aW9uLm9yZz47IGN5cmlsbGUucGl0Y2hlbkBmcmVlLWVsZWN0
+cm9ucy5jb207IFBoaWxpcHBlIE9tYnJlZGFubmUgPHBvbWJyZWRhbm5lQG5leGIuY29tPjsgc2hh
+d24ubGluQHJvY2stY2hpcHMuY29tOyBuaWtsYXMuY2Fzc2VsQGF4aXMuY29tOyBsaW51eC1wY2lA
+dmdlci5rZXJuZWwub3JnOyBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQgRkxBVFRFTkVEIERF
+VklDRSBUUkVFIEJJTkRJTkdTIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IGxrbWwgPGxp
+bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBtb2RlcmF0ZWQgbGlzdDpBUk0vRlJFRVNDQUxF
+IElNWCAvIE1YQyBBUk0gQVJDSElURUNUVVJFIDxsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
+ZGVhZC5vcmc+OyBsaW51eHBwYy1kZXYgPGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnPg0K
+U3ViamVjdDogUmU6IFtQQVRDSCAzLzZdIFBDSTogbGF5ZXJzY2FwZTogQWRkIHRoZSBFUCBtb2Rl
+IHN1cHBvcnQNCg0KT24gRnJpLCBPY3QgMjYsIDIwMTggYXQgMjo0MyBBTSBYaWFvd2VpIEJhbyA8
+eGlhb3dlaS5iYW9AbnhwLmNvbT4gd3JvdGU6DQo+DQo+DQo+DQo+IC0tLS0tT3JpZ2luYWwgTWVz
+c2FnZS0tLS0tDQo+IEZyb206IGFybmRiZXJnbWFubkBnbWFpbC5jb20gPGFybmRiZXJnbWFubkBn
+bWFpbC5jb20+IE9uIEJlaGFsZiBPZiANCj4gQXJuZCBCZXJnbWFubg0KPiBTZW50OiAyMDE45bm0
+MTDmnIgyNuaXpSAxNTowMQ0KPiBUbzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+
+DQo+IENjOiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPjsgYmhlbGdhYXNAZ29vZ2xlLmNv
+bTsgDQo+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkg
+DQo+IDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNob25AdGkuY29tOyBsb3JlbnpvLnBpZXJhbGlz
+aUBhcm0uY29tOyANCj4gZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IE0uaC4gTGlhbiA8bWlu
+Z2h1YW4ubGlhbkBueHAuY29tPjsgTWluZ2thaSANCj4gSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47
+IFJveSBaYW5nIDxyb3kuemFuZ0BueHAuY29tPjsgDQo+IGtzdGV3YXJ0QGxpbnV4Zm91bmRhdGlv
+bi5vcmc7IGN5cmlsbGUucGl0Y2hlbkBmcmVlLWVsZWN0cm9ucy5jb207IA0KPiBwb21icmVkYW5u
+ZUBuZXhiLmNvbTsgc2hhd24ubGluQHJvY2stY2hpcHMuY29tOyANCj4gbmlrbGFzLmNhc3NlbEBh
+eGlzLmNvbTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgDQo+IGRldmljZXRyZWVAdmdlci5r
+ZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyANCj4gbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZw0K
+PiBTdWJqZWN0OiBSZTogW1BBVENIIDMvNl0gUENJOiBsYXllcnNjYXBlOiBBZGQgdGhlIEVQIG1v
+ZGUgc3VwcG9ydA0KPg0KPiBPbiAxMC8yNi8xOCwgWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54
+cC5jb20+IHdyb3RlOg0KPiA+IEZyb206IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQo+
+ID4+IE9uIFRodSwgT2N0IDI1LCAyMDE4IGF0IDA3OjA4OjU4UE0gKzA4MDAsIFhpYW93ZWkgQmFv
+IHdyb3RlOg0KPiA+Pj4gICAgICAgICAgImZzbCxsczIwODBhLXBjaWUiLCAiZnNsLGxzMjA4NWEt
+cGNpZSIsICJzbnBzLGR3LXBjaWUiDQo+ID4+PiAgICAgICAgICAiZnNsLGxzMjA4OGEtcGNpZSIN
+Cj4gPj4+ICAgICAgICAgICJmc2wsbHMxMDg4YS1wY2llIg0KPiA+Pj4gICAgICAgICAgImZzbCxs
+czEwNDZhLXBjaWUiDQo+ID4+PiAgICAgICAgICAiZnNsLGxzMTAxMmEtcGNpZQ0KPiA+Pj4gKyAg
+RVAgbW9kZToNCj4gPj4+ICsgICAgICAgICJmc2wsbHMtcGNpZS1lcCINCj4gPj4NCj4gPiA+IFlv
+dSBuZWVkIFNvQyBzcGVjaWZpYyBjb21wYXRpYmxlcyBmb3IgdGhlIHNhbWUgcmVhc29ucyBhcyB0
+aGUgUkMuDQo+ID4NCj4gPiBbWGlhb3dlaSBCYW9dIEkgd2FudCB0byBjb250YWlucyBhbGwgbGF5
+ZXJzY2FwZSBwbGF0Zm9ybSB1c2Ugb25lIA0KPiA+IGNvbXBhdGlibGUgaWYgdGhlIFBDSWUgY29u
+dHJvbGxlciB3b3JrIGluIEVQIG1vZGUuDQo+DQo+IERvIHlvdSBtZWFuIG9ubHkgb25lIG9mIHRo
+ZSBTb0NzIHRoYXQgc3VwcG9ydCBSQyBtb2RlIGhhcyBFUCBtb2RlPw0KPiBJIHRoaW5rIHlvdSBz
+dGlsbCBuZWVkIGEgU29DIHNwZWNpZmljIGNvbXBhdGlibGUgYXMgUm9iIGV4cGxhaW5lZCwgaW4g
+Y2FzZSB0aGVyZSB3aWxsIGJlIGEgc2Vjb25kIG9uZSBpbiB0aGUgZnV0dXJlLg0KPg0KPiBJZiB5
+b3Ugd2FudCB0byBlbnN1cmUgdGhhdCB5b3UgZG9uJ3QgaGF2ZSB0byB1cGRhdGUgdGhlIGRldmlj
+ZSBkcml2ZXIgZm9yIGVhY2ggbmV3IGNoaXAgdGhhdCBjb21lcyBpbiB3aGVuIHRoZSBFUCBtb2Rl
+IGlzIGNvbXBhdGlibGUsIHRoZSB3YXkgdGhpcyBpcyBoYW5kbGVkIGlzIHRvIGxpc3QgbXVsdGlw
+bGUgdmFsdWVzIGluIHRoZSBjb21wYXRpYmxlIHByb3BlcnR5LCBsaXN0aW5nIHRoZSBmaXJzdCBT
+b0MgdGhhdCBpbnRyb2R1Y2VkIHRoZSBzcGVjaWZpYyB2ZXJzaW9uIG9mIHRoYXQgSVAgYmxvY2sg
+YXMgdGhlIG1vc3QgZ2VuZXJpYyB0eXBlLCBlLmcuDQo+DQo+ICAgY29wYXRpYmxlID0gImZzbCxs
+czIwODhhLXBjaWUtZXAiLCAiZnNsLGxzMTAxMmEtcGNpZS1lcCIsIA0KPiAic25wcyxkdy1wY2ll
+LWVwIjsNCj4NCj4gRm9yIGNvbnNpc3RlbmN5LCBpdCBwcm9iYWJseSBpcyBiZXN0IHRvIG1hdGNo
+IGVhY2ggUkMgbW9kZSB2YWx1ZSB3aXRoIHRoZSBjb3JyZXNwb25kaW5nIEVQIG1vZGUgc3RyaW5n
+IGZvciBlYWNoIGRldmljZSB0aGF0IGNhbiBzdXBwb3J0IGJvdGggKGlmIHRoZXJlIGlzIG1vcmUg
+dGhhbiBvbmUpLg0KPg0KPiAgICAgICBBcm5kDQo+IFtYaWFvd2VpIEJhb10gTXkgbWVhbiBpcyB0
+aGF0IHRoZSBscy1wY2llLWVwIGNvbXBhdGlibGVzIHdpbGwgY29udGFpbiBhbGwgbGF5ZXJzY2Fw
+ZSBTT0NzIG9mIE5YUCwgZS5nOiBsczEwNDZhLXBjaWUtZXAsIGZzbCxsczIwODhhLXBjaWUtZXAs
+IGxzMjA4OGEtcGNpZS1lcCBhbmQgc28gb24sIG90aGVyIGxheWVyc2NhcGUgU09DcyBoYXZlIG5v
+dCB0ZXN0IGV4Y2VwdCB0aGUgbHMxMDQ2YSwgSSB0aGluayBpdCBpcyBjb21wYXRpYmxlIGlmIHRo
+ZSBuZXcgY2hpcCBvciBvdGhlciBTT0NzIHVzZSB0aGUgRFcgY29yZSwgT0ssIEkgd2lsbCBkaXNj
+dXNzIHRoaXMgaXNzdWUgaW50ZXJuYWxseSwgYW5kIHJlcGx5IHRvIHlvdSBsYXRlci4NCg0KWW91
+IGNhbiBkZWZpbmUgYSBnZW5lcmljIGNvbXBhdGlibGUgc3RyaW5nIGZvciB0aGUgRVAgbW9kZSBv
+ZiBhbGwgdGhlc2UgcGxhdGZvcm1zLiAgQnV0IGxpa2UgUm9iIGFuZCBBcm5kIG1lbnRpb25lZCwg
+aXQgaXMgZ29vZCB0byBhbHNvIGRlZmluZSB0aGUgU29DIHNwZWNpZmljIGNvbXBhdGlibGUgc3Ry
+aW5ncyBqdXN0IGluIGNhc2UgdGhhdCB3ZSBuZWVkIHNwZWNpYWwgdHJlYXRtZW50IGZvciBjZXJ0
+YWluIFNvQ3MgaW4gdGhlIGZ1dHVyZS4NCg0KUmVnYXJkcywNCkxlbw0KDQpbWGlhb3dlaSBCYW9d
+IEhpIExlbywgT0ssIEkgd2lsbCBhZGQgdGhlIFNvQyBzcGVjaWZpYyBjb21wYXRpYmxlIHN0cmlu
+Z3MgaW4gcGF0Y2gtdjIsIHRoYW5rcyBhIGxvdC4NCg==
