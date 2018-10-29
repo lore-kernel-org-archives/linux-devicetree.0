@@ -1,130 +1,102 @@
-From: Lars Poeschel <poeschel@lemonage.de>
-Subject: Re: [PATCH v3 3/5] nfc: pn533: add UART phy driver
-Date: Mon, 29 Oct 2018 16:51:10 +0100
-Message-ID: <20181029155110.GA12914@lem-wkst-02.lemonage>
-References: <20181025132937.24405-1-poeschel@lemonage.de>
- <20181025132937.24405-3-poeschel@lemonage.de>
- <20181028102725.GL27852@localhost>
- <20181029100246.GA5905@lem-wkst-02.lemonage>
- <20181029110704.GQ27852@localhost>
+From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
+Subject: =?utf-8?B?UmU6IFtSQ0bCoFBBVENIIHYyIDEvMl0gZHQtYmluZGluZ3M6IHB3bTogaW14?=
+ =?utf-8?B?OiBBbGxvdyBzd2l0Y2hpbmcgUFdNIG91dHB1dCBiZXR3ZWVuIFBXTSBhbmQg?=
+ =?utf-8?Q?GPIO?=
+Date: Mon, 29 Oct 2018 15:52:43 +0000
+Message-ID: <67096945-36dc-5906-1a55-e0934d655311@ysoft.com>
+References: <1539163920-9442-1-git-send-email-michal.vokac@ysoft.com>
+ <1539163920-9442-2-git-send-email-michal.vokac@ysoft.com>
+ <20181010133904.GB21134@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181029110704.GQ27852@localhost>
+In-Reply-To: <20181010133904.GB21134@ulmo>
+Content-Language: en-US
+Content-ID: <9E1FA5BBBF8F5149B11F609792CAFCB3@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, open list <linux-kernel@vger.kernel.org>, "open list:NFC SUBSYSTEM" <linux-wireless@vger.kernel.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, Fabio Estevam <fabio.estevam@nxp.com>, =?utf-8?B?TG90aGFyIFdhw59tYW5u?= <LW@karo-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2018 at 12:07:04PM +0100, Johan Hovold wrote:
-> > > > +static int pn532_uart_probe(struct serdev_device *serdev)
-> > > > +{
-> > > > +	struct pn532_uart_phy *pn532;
-> > > > +	struct pn533 *priv;
-> > > > +	int err;
-> > > > +
-> > > > +	err = -ENOMEM;
-> > > > +	pn532 = kzalloc(sizeof(*pn532), GFP_KERNEL);
-> > > > +	if (pn532 == NULL)
-> > > 
-> > > I'd use !pn532 here (and elsewhere).
-> > 
-> > I will change it.
-> > 
-> > > > +		goto err_exit;
-> > > > +
-> > > > +	pn532->recv_skb = alloc_skb(PN532_UART_SKB_BUFF_LEN, GFP_KERNEL);
-> > > > +	if (pn532->recv_skb == NULL)
-> > > > +		goto err_free;
-> > > > +
-> > > > +	pn532->serdev = serdev;
-> > > > +	priv = pn533_register_device(PN533_DEVICE_PN532,
-> > > > +				     PN533_NO_TYPE_B_PROTOCOLS,
-> > > > +				     PN533_PROTO_REQ_ACK_RESP,
-> > > > +				     pn532, &uart_phy_ops, NULL,
-> > > > +				     &pn532->serdev->dev,
-> > > > +				     &serdev->dev);
-> > > > +
-> > > 
-> > > Stray new line.
-> > 
-> > Ok.
-> > 
-> > > > +	if (IS_ERR(priv)) {
-> > > > +		err = PTR_ERR(priv);
-> > > > +		goto err_skb;
-> > > > +	}
-> > > 
-> > > Should you not set up your device fully before registering it? I'd
-> > > assume you could get callbacks from NFC core here.
-> > 
-> > I did not see any during my tests, but you are right: It feels a bit
-> > odd.
-> > The i2c driver is also requesting irqs after registering.
-> > The pn533_finalize_setup() has to be last.
-> > I could do the serdev_* stuff before, but ...
-> > 
-> > > > +
-> > > > +	pn532->priv = priv;
-> > > > +	serdev_device_set_drvdata(serdev, pn532);
-> > > > +	serdev_device_set_client_ops(serdev, &pn532_serdev_ops);
-> > > > +	err = serdev_device_open(serdev);
-> > > > +	if (err) {
-> > > > +		dev_err(&serdev->dev, "Unable to open device %s\n",
-> > > > +				serdev->dev.init_name);
-> > > 
-> > > dev_err will include the device name so you can drop the init_name bit.
-> > 
-> > Ok, i drop it.
-> > 
-> > > > +		goto err_unregister;
-> > > > +	}
-> > > 
-> > > Keeping the serial device open at all times will prevent low power
-> > > states on some platforms. Wouldn't it be possible to open the device
-> > > when the nfc interface is brought up (and during setup)?
-> > 
-> > ... that would then be contrary to this idea.
-> 
-> Not necessarily, that depends on what callbacks you can expect and at
-> what time.
-> 
-> > Also I don't see how to implement it with what is there today. i2c also
-> > does not do something similar.
-> 
-> But i2c doesn't have the concept of an "open" port consuming power.
-> 
-> > It can be done with adding some callbacks from the core (pn533.c) driver
-> > to it's phy drivers.
-> 
-> Haven't looked at it in any detail, but in general serdev driver should
-> only keep the port open while the device is in use.
-> 
-> I only noticed that nfc core has dev_up/down callbacks which looks like
-> they could be used for something like this.
-
-Yes, this is to the nfc core. But my uart phy driver binds to the pn533
-driver and this does then register to nfc core. So this needs some more
-changes to pn533 driver to be able to be informed of dev_up/down.
-I'll look into this tomorrow.
-
-> > Wouldn't that be the scope of another later patch then ?
-> 
-> Possibly. We have accepted some serdev drivers already taking the lazy
-> approach of opening the port in probe. Depending on the driver, it may
-> not be too bad (e.g. for some specific hardware which you know you'll
-> always use), but it not really nice to have everyone pay a price in
-> terms of power-consumption for a feature that is rarely used.
-
-Is there a way in serdev to close a port, but still occupy it ?
-I'd like to do the basic chip initialisation in _probe and then close
-the port for power-consuption reasons. I'd like to have the port still
-occupied, so that it's not available to other possible users in the
-meantime. I'd then do a serdev open again in dev_up and really use it
-from there.
-dev_down is then for serdev close and also still occupy it.
-closing and releasing would then be done in _remove.
-
-Regards,
-Lars
+T24gMTAuMTAuMjAxOCAxNTozOSwgVGhpZXJyeSBSZWRpbmcgd3JvdGU6DQo+IE9uIFdlZCwgT2N0
+IDEwLCAyMDE4IGF0IDA5OjMzOjI1QU0gKzAwMDAsIFZva8OhxI0gTWljaGFsIHdyb3RlOg0KPj4g
+T3V0cHV0IG9mIHRoZSBQV00gYmxvY2sgb24gaS5NWCBTb0NzIGlzIGFsd2F5cyBsb3cgd2hlbiB0
+aGUgYmxvY2sgaXMNCj4+IGRpc2FibGVkLiBUaGlzIGNhbiBjYXVzZSBpc3N1ZXMgd2hlbiBpbnZl
+cnRlZCBQV00gcG9sYXJpdHkgaXMgbmVlZGVkLg0KPj4gV2l0aCBpbnZlcnRlZCBwb2xhcml0eSBh
+IGR1dHkgY3ljbGUgPSAwJSBjb3JyZXNwb25kcyB0byBoaWdoIGxldmVsIG9uDQo+PiB0aGUgb3V0
+cHV0LiBOb3csIHdoZW4gUFdNIGlzIGRpc2FibGVkIGl0cyBvdXRwdXQgaW5zdGFudGx5IGdvZXMg
+bG93DQo+PiB3aGljaCBjb3JyZXNwb25kcyB0byBkdXR5IGN5Y2xlID0gMTAwJS4NCj4+DQo+PiBU
+byBnZXQgYSB0cnVseSBpbnZlcnRlZCBQV00gb3V0cHV0IHR3byBwaW5jdHJsIHN0YXRlcyBvZiB0
+aGUgUFdNIHBpbg0KPj4gY2FuIGJlIHVzZWQuIENvbmZpZ3VyZSB0aGUgcGluIHRvIEdQSU8gZnVu
+Y3Rpb24gd2hlbiBQV00gaXMgZGlzYWJsZWQNCj4+IGFuZCBzd2l0Y2ggYmFjayB0byBQV00gZnVu
+Y3Rpb24gd2hlbmV2ZXIgbm9uLXplcm8gZHV0eSBjeWNsZSBpcyBuZWVkZWQuDQo+Pg0KPj4gU2ln
+bmVkLW9mZi1ieTogTWljaGFsIFZva8OhxI0gPG1pY2hhbC52b2thY0B5c29mdC5jb20+DQo+PiAt
+LS0NCj4+IENoYW5nZXMgaW4gdjI6DQo+PiAgIC0gRG8gbm90IHVzZSB0aGUgImRlZmF1bHQiIHBp
+bmN0cmwgc3RhdGUgZm9yIEdQSU8uDQo+PiAgIC0gVXNlIHR3byBuZXcgInB3bSIgYW5kICJncGlv
+IiBwaW5jdHJsIHN0YXRlcy4NCj4+ICAgLSBBZGQgYSBuZXcgcHdtLWdwaW9zIHNpZ25hbC4NCj4+
+DQo+PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wd20vaW14LXB3bS50eHQg
+fCA1MSArKysrKysrKysrKysrKysrKysrKysrKw0KPj4gICAxIGZpbGUgY2hhbmdlZCwgNTEgaW5z
+ZXJ0aW9ucygrKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvcHdtL2lteC1wd20udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3B3bS9pbXgtcHdtLnR4dA0KPj4gaW5kZXggYzYxYmRmOC4uYmQ1YjZiZCAxMDA2NDQNCj4+
+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wd20vaW14LXB3bS50eHQN
+Cj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wd20vaW14LXB3bS50
+eHQNCj4+IEBAIC0xNCw2ICsxNCwxNyBAQCBTZWUgdGhlIGNsb2NrIGNvbnN1bWVyIGJpbmRpbmcs
+DQo+PiAgIAlEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2stYmlu
+ZGluZ3MudHh0DQo+PiAgIC0gaW50ZXJydXB0czogVGhlIGludGVycnVwdCBmb3IgdGhlIHB3bSBj
+b250cm9sbGVyDQo+PiAgIA0KPj4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+PiArLSBwaW5jdHJs
+OiBGb3IgaS5NWDI3IGFuZCBuZXdlciBTb0NzLiBVc2UgInB3bSIgYW5kICJncGlvIiBzcGVjaWZp
+YyBwaW5jdHJscw0KPj4gKyAgaW5zdGVhZCBvZiB0aGUgImRlZmF1bHQiIHRvIGNvbmZpZ3VyZSB0
+aGUgUFdNIHBpbiB0byBHUElPIGFuZCBQV00gZnVuY3Rpb24uDQo+PiArICBJdCBhbGxvd3MgY29u
+dHJvbCBvdmVyIHRoZSBwaW4gb3V0cHV0IGxldmVsIHdoZW4gdGhlIFBXTSBibG9jayBpcyBkaXNh
+YmxlZC4NCj4+ICsgIFRoaXMgaXMgdXNlZnVsIGlmIHlvdSB1c2UgdGhlIFBXTSBmb3Igc2luZ2xl
+IHB1cnBvc2UgYW5kIHlvdSBuZWVkIGludmVydGVkDQo+PiArICBwb2xhcml0eSBvZiB0aGUgUFdN
+IHNpZ25hbC4gU2VlICJJbnZlcnRlZCBQV00gb3V0cHV0IiBzZWN0aW9uIGJlbGxvdy4NCj4+ICst
+IHB3bS1ncGlvczogU3BlY2lmeSB0aGUgR1BJTyBwaW4gdGhhdCB3aWxsIGFjdCBhcyB0aGUgUFdN
+IG91dHB1dC4gVGhpcyBzaG91bGQNCj4+ICsgIGJlIHRoZSBzYW1lIHBpbiBhcyBpcyB1c2VkIGZv
+ciBub3JtYWwgUFdNIG91dHB1dC4gRGVmaW5lIHRoZSBwaW4gYXMNCj4+ICsgIEdQSU9fQUNUSVZF
+X0xPVyB0byBnZXQgSElHSCBsZXZlbCBvbiB0aGUgb3V0cHV0IHdoZW4gUFdNIGlzIGRpc2FibGVk
+LiBTZWUNCj4+ICsgICJJbnZlcnRlZCBQV00gb3V0cHV0IiBzZWN0aW9uIGJlbGxvdy4NCj4gDQo+
+IEl0J3Mgc29tZXdoYXQgdW5mb3J0dW5hdGUgdGhhdCB3ZSBoYXZlIHRvIHNwZWNpZnkgdGhpcyBp
+biBEVC4gRm9yIG9uZQ0KPiB0aGluZywgd2UgZG9uJ3QgcmVhbGx5IHdhbnQgdG8gdXNlIHRoZSBw
+aW4gYXMgR1BJTywgd2UgcmVhbGx5IG9ubHkgY2FyZQ0KPiBhYm91dCB3aGV0aGVyIGl0IGlzICJh
+Y3RpdmUiIG9yICJpbmFjdGl2ZSIuIFdlIGFsc28gYWxyZWFkeSBzcGVjaWZ5IHRoZQ0KPiBHUElP
+IGluIHRoZSBwaW5jdHJsIG5vZGVzLCBhbGJlaXQgdmlhIGEgZGlmZmVyZW50IG5hbWUuIFNvIHdl
+J3JlDQo+IGVmZmVjdGl2ZWx5IGR1cGxpY2F0aW5nIGluZm9ybWF0aW9uIGhlcmUuIEl0J2QgYmUg
+bmljZSB0byBhdm9pZCB0aGF0Lg0KDQogRnJvbSByZWFkaW5nIHRoZSBwaW5jdHJsIGJpbmRpbmcg
+ZG9jIEkgdW5kZXJzdGFuZCB0aGF0IHlvdSBjYW4gc3BlY2lmeQ0KYXMgbXVjaCBwaW5jdHJsIHN0
+YXRlcyBhcyB5b3UgbmVlZCB0byBjb25maWd1cmUgYSBwaW4gYXBwcm9wcmlhdGVseSBmb3INCmRp
+ZmZlcmVudCAidXNlIGNhc2VzIi4gRWcuIGluaXQsIHNsZWVwLCBkZWZhdWx0LCB0eCwgcnggLi4u
+IGFzIGFsbCBtaWdodA0KbmVlZCBkaWZmZXJlbnQgcHVsbC11cC9kb3duIGFuZCBEU0UgY29uZmln
+dXJhdGlvbi4NCg0KU28gSSBkaWQgbm90IHRoaW5rIHRoaXMgbWlnaHQgYmUgY29uc2lkZXJlZCAi
+ZHVwbGljYXRpbmcgaW5mb3JtYXRpb24iLg0KDQo+IFR3byBwb3NzaWJpbGl0aWVzIHRoYXQgSSBj
+b3VsZCB0aGluayBhYm91dCBhcmU6DQo+IA0KPiAgICAxKSBEbyBub3QgZXhwbGljaXRseSByZWx5
+IG9uIGRyaXZpbmcgdGhlIEdQSU8gYXMgb3V0cHV0OiBJIGtub3cgdGhpcw0KPiAgICAgICB3YXMg
+ZGlzY3Vzc2VkIGJlZm9yZSBhbmQgaXQgc291bmRzIGxpa2UgdGhpcyBpcyBub3QgYW4gb3B0aW9u
+IGZvcg0KPiAgICAgICBQV00gYmVjYXVzZSB0aGUgR1BJTyBtYXkgYmUgY29uZmlndXJlZCBhcyBv
+dXRwdXQgYnkgdGhlIGZpcm13YXJlLA0KPiAgICAgICBhbmQgaGVuY2Ugc3dpdGNoaW5nIHRvIEdQ
+SU8gbW9kZSBtYXkgbm90IGdpdmUgdGhlIGV4cGVjdGVkIHJlc3VsdC4NCg0KSSB0aGluayBpdCBp
+cyBhY3R1YWxseSBwb3NzaWJsZS4gUHJldmlvdXNseSBJIG9ubHkgc2F3IHR3byBleHRyZW1lcy4N
+Ck5vIEdQSU8gYXQgYWxsIChvbmx5IHRoZSBwaW5jdHJsIHN0YXRlcykgb3IgZnVsbCBHUElPIGNv
+bnRyb2wgaW5jbHVkaW5nDQpkcml2aW5nIHRoZSBvdXRwdXQuIEJ1dCBvbmNlIHdlIHJlcXVlc3Qg
+dGhlIEdQSU8gYXMgYW4gaW5wdXQgd2l0aA0KDQoJZGV2bV9ncGlvZF9nZXRfb3B0aW9uYWwoJnBk
+ZXYtPmRldiwgInB3bSIsIEdQSU9EX0lOKTsNCg0KaXQgd2lsbCBiZSBjb25maWd1cmVkIGFzIGlu
+cHV0IHJlZ2FyZGxlc3Mgd2hhdCBzdGF0ZSBpdCB3YXMgbGVmdCBpbiBmcm9tDQpib290bG9hZGVy
+LiBBbmQgaGVuY2UgdGhlIHB1bGwtdXAvZG93biBzZXR0aW5nIGZyb20gRFRTIHdpbGwgYmUgYXBw
+bGllZC4NCg0KPiAgICAgICBJIHN1cHBvc2Ugb25lIHdheSB0byBzb2x2ZSB0aGlzIGlzIGJ5IHVz
+aW5nIGEgZ3Bpby1ob2cgZW50cnkgZm9yDQo+ICAgICAgIHRoZSBQV00gR1BJTyBzbyB0aGF0IGl0
+IHdpbGwgYXV0b21hdGljYWxseSBnZXQgY29uZmlndXJlZCBhcyBhbg0KPiAgICAgICBpbnB1dCBh
+bmQgYXQgdGhlIHNhbWUgdGltZSBtYXJrZWQgYXMgYnVzeSBzbyB0aGF0IG5vYm9keSBjYW4gZ28N
+Cj4gICAgICAgYW5kIGp1c3QgcmVxdWVzdCBpdCBhZ2FpbiAodmlhIHN5c2ZzIGZvciBleGFtcGxl
+KS4NCg0KSSB0aGluayB0aGlzIGlzIHN0aWxsIHZhbGlkIGluIHRoZSBjYXNlIEkgZGVzY3JpYmVk
+IGFib3ZlIC0gbm9ib2R5IGVsc2UNCmNhbiByZXF1ZXN0IHRoYXQgcGluIG9uY2Ugd2UgYWNxdWly
+ZSBpdCBpbiBwd20taW14Lg0KDQo+ICAgIDIpIERlcml2ZSB0aGUgR1BJTyBmcm9tIHRoZSBwaW4u
+IEknbSBub3Qgc3VyZSB0aGVyZSdzIGFueXRoaW5nIGluIHRoZQ0KPiAgICAgICBwaW5jdHJsIGZy
+YW1ld29yayB0byBkbyB0aGF0LiBUaGUgcmV2ZXJzZSAoR1BJTyAtPiBwaW4pIGNhbiBiZQ0KPiAg
+ICAgICBkb25lLCBzbyBwZXJoYXBzIHRoaXMgaXMgc29tZXRoaW5nIHRoYXQgY291bGQgYmUgYWRk
+ZWQ/DQoNCkkgY2FuIGxvb2sgYXQgdGhhdCBvcHRpb24gaWYgeW91IHJlYWxseSB3YW50IGJ1dCBJ
+IHdvdWxkIGxpa2UgdG8gYXZvaWQNCmRvaW5nIHRoYXQuDQoNCj4gT3RoZXIgdGhhbiB0aGFuIEkg
+dGhpbmsgdGhpcyBsb29rcyB2ZXJ5IG5pY2UuDQoNClRoYW5rcy4gV291bGQgeW91IHByZWZlciBS
+RkMgdjMgb3Igbm9uLVJGQyB2MSB3aGVuIEkgcmVzcGluPw0KDQpCZXN0IHJlZ2FyZHMsDQpNaWNo
+YWwNCg==
