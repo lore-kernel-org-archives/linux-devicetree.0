@@ -1,88 +1,246 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 02/15] clk: sunxi-ng: Add check for
- minimal rate to NKM PLLs
-Date: Mon, 29 Oct 2018 09:58:43 +0100
-Message-ID: <20181029085843.3bslqwktxbp2ywk2@flea>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 04/15] drm/sun4i: sun6i_mipi_dsi: Add Allwinner A64
+ MIPI DSI support
+Date: Mon, 29 Oct 2018 10:00:00 +0100
+Message-ID: <20181029090000.woypmozwc7sbtusk@flea>
 References: <20181023155035.9101-1-jagan@amarulasolutions.com>
- <20181023155035.9101-3-jagan@amarulasolutions.com>
- <20181024180436.5n3i3z6h2yezc4cv@flea>
- <CAMty3ZC2wn-DjR+93yc-n-bAmVCHaEqR_=4XPddoo+7LjebTEg@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+ <20181023155035.9101-5-jagan@amarulasolutions.com>
+ <20181024180632.zrb3lrqsznspmwbk@flea>
+ <CAMty3ZDLd=vbYUut6Cwo9VKFR4T1u1p58FLg9vhN79JS1=0rag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5lt5pgqwghypjetl"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBT4X3PPAKGQEPFEIM2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZC2wn-DjR+93yc-n-bAmVCHaEqR_=4XPddoo+7LjebTEg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============0954495039=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAMty3ZDLd=vbYUut6Cwo9VKFR4T1u1p58FLg9vhN79JS1=0rag@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, linux-sunxi@googlegroups.com, Will Deacon <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Stephen Boyd <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
 
---5lt5pgqwghypjetl
-Content-Type: text/plain; charset="UTF-8"
+--===============0954495039==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2m2feqxvtut5wn62"
 Content-Disposition: inline
 
-On Thu, Oct 25, 2018 at 04:25:59PM +0530, Jagan Teki wrote:
-> On Wed, Oct 24, 2018 at 11:34 PM Maxime Ripard
-> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+
+--2m2feqxvtut5wn62
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Oct 25, 2018 at 04:32:06PM +0530, Jagan Teki wrote:
+> On Wed, Oct 24, 2018 at 11:36 PM Maxime Ripard
+> <maxime.ripard@bootlin.com> wrote:
 > >
-> > On Tue, Oct 23, 2018 at 09:20:22PM +0530, Jagan Teki wrote:
-> > > Some NKM PLLs doesn't work well when their output clock rate is set below
-> > > certain rate.
+> > On Tue, Oct 23, 2018 at 09:20:24PM +0530, Jagan Teki wrote:
+> > > The MIPI DSI controller on Allwinner A64 is similar to
+> > > Allwinner A31 without support of DSI mod clock(CLK_DSI_SCLK)
 > > >
-> > > So, add support for minimal rate for relevant PLLs.
+> > > So, alter has_mod_clk bool via driver data for respective
+> > > SoC's compatible.
 > > >
-> > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 > > > ---
 > > > Changes for v2:
-> > > - new patch
+> > > - none
 > > >
-> > >  drivers/clk/sunxi-ng/ccu_nkm.c | 7 +++++++
-> > >  drivers/clk/sunxi-ng/ccu_nkm.h | 1 +
-> > >  2 files changed, 8 insertions(+)
+> > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 47 ++++++++++++++++++++----=
+--
+> > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  5 +++
+> > >  2 files changed, 41 insertions(+), 11 deletions(-)
 > > >
-> > > diff --git a/drivers/clk/sunxi-ng/ccu_nkm.c b/drivers/clk/sunxi-ng/ccu_nkm.c
-> > > index 841840e35e61..d17539dc88dd 100644
-> > > --- a/drivers/clk/sunxi-ng/ccu_nkm.c
-> > > +++ b/drivers/clk/sunxi-ng/ccu_nkm.c
-> > > @@ -125,6 +125,13 @@ static unsigned long ccu_nkm_round_rate(struct ccu_mux_internal *mux,
-> > >       if (nkm->common.features & CCU_FEATURE_FIXED_POSTDIV)
-> > >               rate *= nkm->fixed_post_div;
+> > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm=
+/sun4i/sun6i_mipi_dsi.c
+> > > index e3b34a345546..8e9c76febca2 100644
+> > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > @@ -10,6 +10,7 @@
+> > >  #include <linux/component.h>
+> > >  #include <linux/crc-ccitt.h>
+> > >  #include <linux/of_address.h>
+> > > +#include <linux/of_device.h>
+> > >  #include <linux/pm_runtime.h>
+> > >  #include <linux/regmap.h>
+> > >  #include <linux/reset.h>
+> > > @@ -981,6 +982,8 @@ static int sun6i_dsi_probe(struct platform_device=
+ *pdev)
+> > >       dsi->host.ops =3D &sun6i_dsi_host_ops;
+> > >       dsi->host.dev =3D dev;
 > > >
-> > > +     if (rate < nkm->min_rate) {
-> > > +             rate = nkm->min_rate;
-> > > +             if (nkm->common.features & CCU_FEATURE_FIXED_POSTDIV)
-> > > +                     rate /= nkm->fixed_post_div;
+> > > +     dsi->variant =3D of_device_get_match_data(dev);
+> > > +
+> > >       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > >       base =3D devm_ioremap_resource(dev, res);
+> > >       if (IS_ERR(base)) {
+> > > @@ -1001,17 +1004,20 @@ static int sun6i_dsi_probe(struct platform_de=
+vice *pdev)
+> > >               return PTR_ERR(dsi->reset);
+> > >       }
+> > >
+> > > -     dsi->mod_clk =3D devm_clk_get(dev, "mod");
+> > > -     if (IS_ERR(dsi->mod_clk)) {
+> > > -             dev_err(dev, "Couldn't get the DSI mod clock\n");
+> > > -             return PTR_ERR(dsi->mod_clk);
+> > > +     if (dsi->variant->has_mod_clk) {
+> > > +             dsi->mod_clk =3D devm_clk_get(dev, "mod");
+> > > +             if (IS_ERR(dsi->mod_clk)) {
+> > > +                     dev_err(dev, "Couldn't get the DSI mod clock\n"=
+);
+> > > +                     return PTR_ERR(dsi->mod_clk);
+> > > +             }
+> > >       }
+> > >
+> > >       /*
+> > >        * In order to operate properly, that clock seems to be always
+> > >        * set to 297MHz.
+> > >        */
+> > > -     clk_set_rate_exclusive(dsi->mod_clk, 297000000);
+> > > +     if (dsi->variant->has_mod_clk)
+> > > +             clk_set_rate_exclusive(dsi->mod_clk, 297000000);
+> > >
+> > >       dphy_node =3D of_parse_phandle(dev->of_node, "phys", 0);
+> > >       ret =3D sun6i_dphy_probe(dsi, dphy_node);
+> > > @@ -1043,7 +1049,8 @@ static int sun6i_dsi_probe(struct platform_devi=
+ce *pdev)
+> > >       pm_runtime_disable(dev);
+> > >       sun6i_dphy_remove(dsi);
+> > >  err_unprotect_clk:
+> > > -     clk_rate_exclusive_put(dsi->mod_clk);
+> > > +     if (dsi->variant->has_mod_clk)
+> > > +             clk_rate_exclusive_put(dsi->mod_clk);
+> > >       return ret;
+> > >  }
+> > >
+> > > @@ -1056,7 +1063,8 @@ static int sun6i_dsi_remove(struct platform_dev=
+ice *pdev)
+> > >       mipi_dsi_host_unregister(&dsi->host);
+> > >       pm_runtime_disable(dev);
+> > >       sun6i_dphy_remove(dsi);
+> > > -     clk_rate_exclusive_put(dsi->mod_clk);
+> > > +     if (dsi->variant->has_mod_clk)
+> > > +             clk_rate_exclusive_put(dsi->mod_clk);
+> > >
+> > >       return 0;
+> > >  }
+> > > @@ -1066,7 +1074,8 @@ static int __maybe_unused sun6i_dsi_runtime_res=
+ume(struct device *dev)
+> > >       struct sun6i_dsi *dsi =3D dev_get_drvdata(dev);
+> > >
+> > >       reset_control_deassert(dsi->reset);
+> > > -     clk_prepare_enable(dsi->mod_clk);
+> > > +     if (dsi->variant->has_mod_clk)
+> > > +             clk_prepare_enable(dsi->mod_clk);
+> > >
+> > >       /*
+> > >        * Enable the DSI block.
+> > > @@ -1094,7 +1103,8 @@ static int __maybe_unused sun6i_dsi_runtime_sus=
+pend(struct device *dev)
+> > >  {
+> > >       struct sun6i_dsi *dsi =3D dev_get_drvdata(dev);
+> > >
+> > > -     clk_disable_unprepare(dsi->mod_clk);
+> > > +     if (dsi->variant->has_mod_clk)
+> > > +             clk_disable_unprepare(dsi->mod_clk);
+> > >       reset_control_assert(dsi->reset);
+> > >
+> > >       return 0;
+> > > @@ -1106,9 +1116,24 @@ static const struct dev_pm_ops sun6i_dsi_pm_op=
+s =3D {
+> > >                          NULL)
+> > >  };
+> > >
+> > > +static const struct sun6i_dsi_variant sun6i_a31_dsi =3D {
+> > > +     .has_mod_clk =3D true,
+> > > +};
+> > > +
+> > > +static const struct sun6i_dsi_variant sun50i_a64_dsi =3D {
+> > > +     .has_mod_clk =3D false,
 > >
-> > I'm not sure this is right. Is the post divider taken into account to
-> > calculate the minimum, or is the minimum on the rate before the fixed
-> > post divider.
-> 
-> Since we are returning from here, we need to take care post div which
-> is actually doing at the end of round_rate.
+> > This is the default already.
+>=20
+> True but we need to assign the .data. how about checking device
+> compatible? I'm thinking of difference in driver data in future
+> between SoC's
 
-That's not my point though. Does the rate needs to be superior to min
-/ post_div, or min?
+That's not my point. You'll need the structure, but has_mod_clk will
+be initialised to false already, so you can drop the explicit
+assignment.
 
 > >
-> > How did you test this?
-> 
-> I've not used this on PLL_MIPI atleast, so I didn't test this.
+> > > +};
+> > > +
+> > >  static const struct of_device_id sun6i_dsi_of_table[] =3D {
+> > > -     { .compatible =3D "allwinner,sun6i-a31-mipi-dsi" },
+> > > -     { }
+> > > +     {
+> > > +             .compatible =3D "allwinner,sun6i-a31-mipi-dsi",
+> > > +             .data =3D &sun6i_a31_dsi,
+> > > +     },
+> > > +     {
+> > > +             .compatible =3D "allwinner,sun50i-a64-mipi-dsi",
+> > > +             .data =3D &sun50i_a64_dsi,
+> > > +     },
+> > > +     { /* sentinel */ }
+> > >  };
+> > >  MODULE_DEVICE_TABLE(of, sun6i_dsi_of_table);
+> > >
+> > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h b/drivers/gpu/drm=
+/sun4i/sun6i_mipi_dsi.h
+> > > index dbbc5b3ecbda..597b62227019 100644
+> > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+> > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+> > > @@ -20,6 +20,10 @@ struct sun6i_dphy {
+> > >       struct reset_control    *reset;
+> > >  };
+> > >
+> > > +struct sun6i_dsi_variant {
+> > > +     bool                    has_mod_clk;
+> > > +};
+> > > +
+> >
+> > This should be part of a separate patch.
+>=20
+> How come, because has_mod_clk is using in driver file?
 
-If you've never tested this, why are you adding that code?
+You're doing two things here: Adding a quirk structure, and adding
+support for an SoC. This should be two patches.
 
 Maxime
 
--- 
+--=20
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---5lt5pgqwghypjetl--
+
+--2m2feqxvtut5wn62
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW9bMDwAKCRDj7w1vZxhR
+xUmXAP4vN8ffjHY6iO11vIeN0E/jNfdln4ZsVJAXWa1MWoBj9AEA8JQFj1Ze5T8u
+vhjk54qPb//J2tuKKz2joVzJADM+2gk=
+=1Tm4
+-----END PGP SIGNATURE-----
+
+--2m2feqxvtut5wn62--
+
+--===============0954495039==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0954495039==--
