@@ -1,54 +1,130 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH] arm: dts: socfpga*.dts*: use SPDX-License-Identifier
-Date: Mon, 29 Oct 2018 10:33:39 -0500
-Message-ID: <b7790735-c797-a5e3-ccf5-01080f652945@kernel.org>
-References: <20181023190853.23252-1-simon.k.r.goldschmidt@gmail.com>
+From: Lars Poeschel <poeschel@lemonage.de>
+Subject: Re: [PATCH v3 3/5] nfc: pn533: add UART phy driver
+Date: Mon, 29 Oct 2018 16:51:10 +0100
+Message-ID: <20181029155110.GA12914@lem-wkst-02.lemonage>
+References: <20181025132937.24405-1-poeschel@lemonage.de>
+ <20181025132937.24405-3-poeschel@lemonage.de>
+ <20181028102725.GL27852@localhost>
+ <20181029100246.GA5905@lem-wkst-02.lemonage>
+ <20181029110704.GQ27852@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181023190853.23252-1-simon.k.r.goldschmidt@gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181029110704.GQ27852@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Vasut <marex@denx.de>, Nobuhiro Iwamatsu <iwamatsu@nigauri.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Graham Moore <grmoore@opensource.altera.com>
+To: Johan Hovold <johan@kernel.org>
+Cc: devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, open list <linux-kernel@vger.kernel.org>, "open list:NFC SUBSYSTEM" <linux-wireless@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
-
-On 10/23/2018 02:08 PM, Simon Goldschmidt wrote:
-> Follow the recent trend for the license description.
+On Mon, Oct 29, 2018 at 12:07:04PM +0100, Johan Hovold wrote:
+> > > > +static int pn532_uart_probe(struct serdev_device *serdev)
+> > > > +{
+> > > > +	struct pn532_uart_phy *pn532;
+> > > > +	struct pn533 *priv;
+> > > > +	int err;
+> > > > +
+> > > > +	err = -ENOMEM;
+> > > > +	pn532 = kzalloc(sizeof(*pn532), GFP_KERNEL);
+> > > > +	if (pn532 == NULL)
+> > > 
+> > > I'd use !pn532 here (and elsewhere).
+> > 
+> > I will change it.
+> > 
+> > > > +		goto err_exit;
+> > > > +
+> > > > +	pn532->recv_skb = alloc_skb(PN532_UART_SKB_BUFF_LEN, GFP_KERNEL);
+> > > > +	if (pn532->recv_skb == NULL)
+> > > > +		goto err_free;
+> > > > +
+> > > > +	pn532->serdev = serdev;
+> > > > +	priv = pn533_register_device(PN533_DEVICE_PN532,
+> > > > +				     PN533_NO_TYPE_B_PROTOCOLS,
+> > > > +				     PN533_PROTO_REQ_ACK_RESP,
+> > > > +				     pn532, &uart_phy_ops, NULL,
+> > > > +				     &pn532->serdev->dev,
+> > > > +				     &serdev->dev);
+> > > > +
+> > > 
+> > > Stray new line.
+> > 
+> > Ok.
+> > 
+> > > > +	if (IS_ERR(priv)) {
+> > > > +		err = PTR_ERR(priv);
+> > > > +		goto err_skb;
+> > > > +	}
+> > > 
+> > > Should you not set up your device fully before registering it? I'd
+> > > assume you could get callbacks from NFC core here.
+> > 
+> > I did not see any during my tests, but you are right: It feels a bit
+> > odd.
+> > The i2c driver is also requesting irqs after registering.
+> > The pn533_finalize_setup() has to be last.
+> > I could do the serdev_* stuff before, but ...
+> > 
+> > > > +
+> > > > +	pn532->priv = priv;
+> > > > +	serdev_device_set_drvdata(serdev, pn532);
+> > > > +	serdev_device_set_client_ops(serdev, &pn532_serdev_ops);
+> > > > +	err = serdev_device_open(serdev);
+> > > > +	if (err) {
+> > > > +		dev_err(&serdev->dev, "Unable to open device %s\n",
+> > > > +				serdev->dev.init_name);
+> > > 
+> > > dev_err will include the device name so you can drop the init_name bit.
+> > 
+> > Ok, i drop it.
+> > 
+> > > > +		goto err_unregister;
+> > > > +	}
+> > > 
+> > > Keeping the serial device open at all times will prevent low power
+> > > states on some platforms. Wouldn't it be possible to open the device
+> > > when the nfc interface is brought up (and during setup)?
+> > 
+> > ... that would then be contrary to this idea.
 > 
-> This is also in an effort to fully sync the devicetrees with U-Boot.
+> Not necessarily, that depends on what callbacks you can expect and at
+> what time.
 > 
-> Signed-off-by: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-> ---
->  arch/arm/boot/dts/socfpga.dtsi                | 16 +------
->  arch/arm/boot/dts/socfpga_arria10.dtsi        | 13 +-----
->  arch/arm/boot/dts/socfpga_arria10_socdk.dtsi  | 14 +-----
->  .../boot/dts/socfpga_arria10_socdk_nand.dts   | 13 +-----
->  .../boot/dts/socfpga_arria10_socdk_qspi.dts   | 13 +-----
->  .../boot/dts/socfpga_arria10_socdk_sdmmc.dts  | 14 +-----
->  arch/arm/boot/dts/socfpga_arria5.dtsi         | 15 +-----
->  arch/arm/boot/dts/socfpga_arria5_socdk.dts    | 16 +------
->  arch/arm/boot/dts/socfpga_cyclone5.dtsi       | 16 +------
->  .../dts/socfpga_cyclone5_de0_nano_soc.dts     | 13 +-----
->  arch/arm/boot/dts/socfpga_cyclone5_mcv.dtsi   | 14 +-----
->  arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts | 14 +-----
->  arch/arm/boot/dts/socfpga_cyclone5_socdk.dts  | 16 +------
->  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts | 16 +------
->  .../boot/dts/socfpga_cyclone5_socrates.dts    | 16 +------
->  arch/arm/boot/dts/socfpga_cyclone5_sodia.dts  | 16 +------
->  .../boot/dts/socfpga_cyclone5_vining_fpga.dts | 46 +------------------
->  arch/arm/boot/dts/socfpga_vt.dts              | 16 +------
->  18 files changed, 28 insertions(+), 269 deletions(-)
+> > Also I don't see how to implement it with what is there today. i2c also
+> > does not do something similar.
 > 
+> But i2c doesn't have the concept of an "open" port consuming power.
+> 
+> > It can be done with adding some callbacks from the core (pn533.c) driver
+> > to it's phy drivers.
+> 
+> Haven't looked at it in any detail, but in general serdev driver should
+> only keep the port open while the device is in use.
+> 
+> I only noticed that nfc core has dev_up/down callbacks which looks like
+> they could be used for something like this.
 
-error: arch/arm/boot/dts/socfpga_cyclone5_de0_nano_soc.dts: does not
-exist in index
+Yes, this is to the nfc core. But my uart phy driver binds to the pn533
+driver and this does then register to nfc core. So this needs some more
+changes to pn533 driver to be able to be informed of dev_up/down.
+I'll look into this tomorrow.
 
-Can you please rebase this patch after v4.20-rc1 has landed? The above
-board filename has been changed.
+> > Wouldn't that be the scope of another later patch then ?
+> 
+> Possibly. We have accepted some serdev drivers already taking the lazy
+> approach of opening the port in probe. Depending on the driver, it may
+> not be too bad (e.g. for some specific hardware which you know you'll
+> always use), but it not really nice to have everyone pay a price in
+> terms of power-consumption for a feature that is rarely used.
 
-Thanks,
-Dinh
+Is there a way in serdev to close a port, but still occupy it ?
+I'd like to do the basic chip initialisation in _probe and then close
+the port for power-consuption reasons. I'd like to have the port still
+occupied, so that it's not available to other possible users in the
+meantime. I'd then do a serdev open again in dev_up and really use it
+from there.
+dev_down is then for serdev close and also still occupy it.
+closing and releasing would then be done in _remove.
+
+Regards,
+Lars
