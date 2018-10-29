@@ -1,93 +1,256 @@
-From: Poonam Aggrwal <poonam.aggrwal@nxp.com>
-Subject: RE: [PATCH v7 2/6] soc/fsl/guts: Add definition for LX2160A
-Date: Mon, 29 Oct 2018 11:09:24 +0000
-Message-ID: <VI1PR04MB4976D4A33E0561D125BE837486F30@VI1PR04MB4976.eurprd04.prod.outlook.com>
-References: <1540759926-3641-1-git-send-email-vabhav.sharma@nxp.com>
- <1540759926-3641-3-git-send-email-vabhav.sharma@nxp.com>
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+Subject: Re: [PATCH v2 2/5] mfd: lochnagar: Add support for the Cirrus Logic
+ Lochnagar
+Date: Mon, 29 Oct 2018 11:52:54 +0000
+Message-ID: <ae1e0de0-ab0f-476a-5612-6f3aa41941fc@opensource.cirrus.com>
+References: <20181008132542.19775-1-ckeepax@opensource.cirrus.com>
+ <20181008132542.19775-2-ckeepax@opensource.cirrus.com>
+ <20181025074459.GF4939@dell> <20181025082621.GD16508@imbe.wolfsonmicro.main>
+ <b2f85f45-cbe9-5a27-e9e8-ad28f2bd9bd6@opensource.cirrus.com>
+ <20181025114205.GC4870@dell>
+ <33ea391c-aa6e-2709-6faf-4905e84229e4@opensource.cirrus.com>
+ <20181026080051.GK4870@dell> <20181026203223.GC27137@sirena.org.uk>
+ <20181029110439.GS4870@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1540759926-3641-3-git-send-email-vabhav.sharma@nxp.com>
+In-Reply-To: <20181029110439.GS4870@dell>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "oss@buserror.net" <oss@buserror.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.or>
-Cc: "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Udit Kumar <udit.kumar@nxp.com>, Pankaj Bansal <pankaj.bansal@nxp.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, Varun Sethi <V.Sethi@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>, Yinbo Zhu <yinbo.zhu@nxp.com>
+To: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>
+Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 29/10/18 11:04, Lee Jones wrote:
+> On Fri, 26 Oct 2018, Mark Brown wrote:
+>> On Fri, Oct 26, 2018 at 09:00:51AM +0100, Lee Jones wrote:
+>>> On Thu, 25 Oct 2018, Richard Fitzgerald wrote:
+>>
+>>>> Largely the point. How long do you think it would take to populate the
+>>>> cache if you had to read thousands of registers over I2C? Boot time matters.
+>>>> Deferring it until it's touched can create various unpredictable and
+>>>> annoying behaviour later, for example if a lot of cache entries are
+>>>> written while the chip is asleep and the initial values weren't known
+>>>> then a suspend/resume cannot filter out writes that are setting the
+>>>> register to its default (which regmap does to avoid unnecessary bus traffic).
+>>>> So the resume could have a large amount of unnecessary overhead writing
+>>>> registers to a value they already have or reading the initial values of
+>>>> those registers.
+>>
+>>> One more register read when initially writing to a register and one
+>>> more when resuming doesn't sound like a vast amount of over-head.
+>>
+>> Especially on resume extra register I/O really adds up - people really
+>> care how long their system takes to come back from suspend, and how
+>> quickly individual devices come back.  For devices that are on slow
+>> buses like I2C this means that every register operation counts.  Boot
+>> can be similarly pressured of course, though it's a less frequent issue
+>> for these devices.
+>>
+>>> Not sure what you think I was suggesting above.  If the default values
+>>> are actually non-zero that's fine - we'll either leave them as they
+>>> are (if they are never changed, in which case Regmap doesn't even need
+>>> to know about them), document only those (non-zero) ones or wait until
+>>> they are read for the first time, then populate the cache.
+>>
+>> You can't assume that the device is in power on reset state unless the
+>> driver reset it itself which may or may not be a good idea or even
+>> possible, sometimes it's what you want but at other times even if it's
+>> possible it can cause user visible disruption during the boot process
+>> which is undesirable.
+>>
+>>> Setting up the cache manually also sounds like a vector for potential
+>>> failure.  At least if you were to cache dynamically on first write
+>>> (either on start-up or after sleep) then the actual value will be
+>>> cached, rather than what a piece of C code says it should be.
+>>
+>> Even where there's no problem getting the hardware into a clean state it
+>> can rapidly get very, very expensive to do this with larger register
+>> sets on slow buses, and at the framework level we can't assume that
+>> readback support is even present on the device (the earliest versions of
+>> cache support were written to support such devices).  Some of the
+>> userspaces that regmap devices get used with end up wanting to apply a
+>> bunch of configuration at startup, if we can cut down on the amount of
+>> I/O that's involved in doing that it can help them quite a bit.  You
+>> also get userspaces that want to enumerate device state at startup,
+>> that's a bit easier to change in userspace but it's not an unreasonable
+>> thing to want to do and can also get very I/O heavy.
+>>
+>> There is some potential for errors to be introduced but equally these
+>> tables can be both generated and verified mechanically, tasks that are
+>> particularly straightforward for the device vendors to do.  There are
+>> also potential risks in doing this at runtime if we didn't get the
+>> device reset, if we don't accurately mark the volatile registers as
+>> volatile or if there's otherwise bugs in the code.
+>>
+>>> Precisely my point.  Lochnagar is a small device yet it's required to
+>>> submit hundreds of lines of Regmap tables.  Imagine what that would
+>>> look like for a large device.
+>>
+>> There's no *requirement* to provide the data even if you're using the
+>> cache (and the cache support is entirely optional), there's just costs
+>> to not providing it in terms of what features you can get from the
+>> regmap API and the performance of the system.  Not every device is going
+>> to be bothered by those costs, many devices don't provide all of the
+>> data they could.
+> 
+> So what do we do in the case where, due to the size of the device, the
+> amount of lines required by these tables go from crazy to grotesque?
+> 
+>> I'm not clear to me that Lochnagar will particularly benefit from
+>> providing the cache defaults but it sounds like you've raised concerns
+>> about other devices which would, and it seems clear that the readability
+>> information is very useful for this device if there's registers that
+>> it's unsafe to try to read from.
+> 
+> Any reduction in lines would be a good thing.  Charles, could you
+> please define what specific benefits you gain from providing providing
+> the pre-cache data please?  With a particular emphasis on whether the
+> trade-off is justified.
+> 
 
+Why so much concern over the number of source lines of a data table?
+If we were talking about removing lines of executable code to make it
+more efficient - yes, that's a good thing.
+Worrying about the number of lines of a data table, I don't see the
+imperative for that.
 
-> -----Original Message-----
-> From: linux-arm-kernel [mailto:linux-arm-kernel-bounces@lists.infradead.o=
-rg]
-> On Behalf Of Vabhav Sharma
-> Sent: Monday, October 29, 2018 2:28 PM
-> To: sudeep.holla@arm.com; oss@buserror.net; linux-kernel@vger.kernel.org;
-> devicetree@vger.kernel.org; robh+dt@kernel.org; mark.rutland@arm.com;
-> linuxppc-dev@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org;
-> mturquette@baylibre.com; sboyd@kernel.org; rjw@rjwysocki.net;
-> viresh.kumar@linaro.org; linux-clk@vger.kernel.org; linux-pm@vger.kernel.=
-org;
-> linux-kernel-owner@vger.kernel.org; catalin.marinas@arm.com;
-> will.deacon@arm.com; gregkh@linuxfoundation.org; arnd@arndb.de;
-> kstewart@linuxfoundation.org; yamada.masahiro@socionext.com; Leo Li
-> <leoyang.li@nxp.com>; shawnguo@kernel.org
-> Cc: ulf.hansson@linaro.org; Udit Kumar <udit.kumar@nxp.com>; Pankaj Bansa=
-l
-> <pankaj.bansal@nxp.com>; linux@armlinux.org.uk; adrian.hunter@intel.com;
-> Varun Sethi <V.Sethi@nxp.com>; Vabhav Sharma <vabhav.sharma@nxp.com>;
-> Yinbo Zhu <yinbo.zhu@nxp.com>
-> Subject: [PATCH v7 2/6] soc/fsl/guts: Add definition for LX2160A
->=20
-> Adding compatible string "lx2160a-dcfg" to initialize guts driver for lx2=
-160 and
-> SoC die attribute definition for LX2160A
->=20
-> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
-> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-> Acked-by: Li Yang <leoyang.li@nxp.com>
-> ---
->  drivers/soc/fsl/guts.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/drivers/soc/fsl/guts.c b/drivers/soc/fsl/guts.c index
-> 302e0c8..bcab1ee 100644
-> --- a/drivers/soc/fsl/guts.c
-> +++ b/drivers/soc/fsl/guts.c
-> @@ -100,6 +100,11 @@ static const struct fsl_soc_die_attr fsl_soc_die[] =
-=3D {
->  	  .svr		=3D 0x87000000,
->  	  .mask		=3D 0xfff70000,
->  	},
-> +	/* Die: LX2160A, SoC: LX2160A/LX2120A/LX2080A */
-> +	{ .die          =3D "LX2160A",
-> +	  .svr          =3D 0x87360000,
-Do all  the threevariants " LX2160A/LX2120A/LX2080A"  have same SVR?
-> +	  .mask         =3D 0xff3f0000,
-> +	},
->  	{ },
->  };
->=20
-> @@ -222,6 +227,7 @@ static const struct of_device_id fsl_guts_of_match[] =
-=3D {
->  	{ .compatible =3D "fsl,ls1088a-dcfg", },
->  	{ .compatible =3D "fsl,ls1012a-dcfg", },
->  	{ .compatible =3D "fsl,ls1046a-dcfg", },
-> +	{ .compatible =3D "fsl,lx2160a-dcfg", },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, fsl_guts_of_match);
-> --
-> 2.7.4
->=20
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> https://emea01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Flists=
-.infr
-> adead.org%2Fmailman%2Flistinfo%2Flinux-arm-
-> kernel&amp;data=3D02%7C01%7Cpoonam.aggrwal%40nxp.com%7Cd9b7c36c786
-> 54cd6dc4008d63d7fee63%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0
-> %7C636764017001504288&amp;sdata=3DpqFMlw6yVrHrvn4YRhqj%2FmoOnSscrZu
-> tcoYn3In8OJc%3D&amp;reserved=3D0
+Since this seems to be a significant part of your objection it would help
+if you could tell us WHY you object so much to lines of tables.
+
+>>>>> Even if it is absolutely critical that you have to supply these to
+>>>>> Regmap up-front, instead of on first use/read, why can't you just
+>>>>> supply the oddball non-zero ones?
+>>
+>> That doesn't work, we need to know both if the register has a default
+>> value and what that value is - there's no great value in only supplying
+>> the defaults for registers with non-zero values.
+> 
+> All registers have a default value.  Why can't we assume that if a
+> register is writable and a default value was omitted then the default
+> is zero?
+> 
+> Ah wait!  As I was typing the above, I just had a thought.  We don't
+> actually provide a list of writable registers do we?  Only a the
+> ability to verify if one is writable (presumably) before a write.
+> 
+> That's frustrating!
+> 
+>>>> If you aren't happy with the regmap subsystem you could send some
+>>>> patches to change it to what you would be happy with (and patch the ~1300
+>>>> drivers that use it)
+>>
+>>> That may well happen.  This is the pre-patch discussion.
+>>
+>>> Apologies that it had to happen on your submission, but this is that
+>>> alerted me to the issue(s).
+>>
+>> The regmap cache API has been this way since it was introduced in 2011
+>> FWIW, we did add range based support later which is purely data driven.
+> 
+> Utilising range support here would certainly help IMHO.
+> 
+>>>> Like any kernel subsystem it has an API that we have to obey to be able to
+>>>> use it.
+>>
+>>> Again, this isn't about Lochnagar.
+>>
+>> I think from the perspective of Richard and Charles who are just trying
+>> to get their driver merged this is something of an abstract distinction.
+>> If the driver were merged and this discussion were happening separately
+>> their perspective would most likely be different.
+> 
+> Charles has already mentioned that he'd take a look at the current
+> *use* (not changing the API, but the way in which Lochnagar
+> *uses/consumes* it).  Actions which would be most welcomed.
+>
+
+Maybe Charles will find an alternative that doesn't affect performance/functionality
+or is an acceptable tradeoff. But still, it seems an odd maintainer requirement
+"please use this other subsystem less effectively to make _my_ subsystem have fewer
+lines of source".
+
+>>>>> The API is obscene and needs a re-work IMHO.
+>>
+>>>>> I really hope we do not really have to list every register, but *if we
+>>>>> absolutely must*, let's do it once:
+>>
+>>>>>     REG_ADDRESS, WRV, INITIAL_VALUE
+>>
+>> There is the option to specify range based access tables instead of a
+>> function, for a lot of devices this is a nice, easy way to specify
+>> things that makes more sense so we support it.  We don't combine the
+>> tables because they're range based and if there is 100% overlap you can
+>> always just point at the same table.
+>>
+>> We allow the functions partly because it lets people handle weird cases
+>> but also because it turned out when I looked at this that a lot of the
+>> time the compiler output for switch statements was pretty efficient with
+>> sparse register maps and it makes the code incredibly simple, much
+>> simpler than trying to parse access tables into a more efficient data
+>> structure and IIRC more compact too.  It's possible that those tradeoffs
+>> have changed since but at the time there was a class of devices where it
+>> wasn't clear that putting more effort in would result in substantially
+>> better outcomes.
+>>
+>>>> To re-iterate, regmap is a standard kernel subsystem. It's not owned by Cirrus,
+>>>> so it's not our responsibility if you don't like it. Mark Brown is the maintainer.
+>>
+>>> Sounds very much like you are saying, "it's not Cirrus' fault,
+>>> therefore it is not my problem"?  Which is a terrible attitude.
+>>
+>> I think from the perspective of Charles and Richard this is sounding an
+>> awful lot like you want them (or someone else) to rewrite a very widely
+>> used kernel API before they can get their driver merged.  To me that
+>> would be a completely disproportionate amount of effort for their goal
+>> but unfortunately people do get asked to do things like that so it's not
+>> an unreasonable fear for them to have.
+> 
+> I would see that as an unreasonable request.
+> 
+> To be clear, that is *not* what I am asking.
+>
+
+It sounded that way, so I apologize if that wasn't what you meant. It just
+read as if you thought we were the owners (or only users) of regmap so we
+can just go and change it as per your suggestion and then resend this patch.
+
+>>> Remember that the Linux kernel is an open community.  Anyone should be
+>>> free to discuss any relevant issue.  If we decide to take this
+>>> off-line, which is likely, then so be it.  In the mean time, as a
+>>> contributor to this community project, it's absolutely your
+>>> responsibly to help discuss and potentially solve wider issues than
+>>> just your lines of code.
+>>
+>> It's also a community of people with differing amounts of ability to
+>> contribute, due to things like time, energy and so on.  Not everyone can
+>> work on everything they want to, let alone other things people ask them
+>> to look at.
+> 
+> I'm not asking for code submission.  Merely contributing to this
+> discussion, or simply allowing it to happen on the back of one of
+> their submission is enough.
+> 
+> Denouncing all responsibility and a lack of care is not okay.
+>
+>>>> As above, if one subsystem owner doesn't like another subsystem then those
+>>>> subsystem owners should talk to each other and sort something out. It shouldn't
+>>>> block patches that are just trying to use the subsystem as it currently exists
+>>>> in the kernel.
+>>
+>>> Again, no one is blocking this patch.
+>>
+>>> This driver was submitted for review/discussion.  We are discussing.
+>>
+>> I kind of said this above but just to be clear this driver seems to me
+>> like an idiomatic user of the regmap API as it is today.  My guess is
+>> that we could probably loose the defaults tables and not suffer too much
+>> but equally well they don't hurt from a regmap point of view.
+> 
+> Perhaps Charles could elaborate on whether this is possible or not?
+> 
+>> Reviwed-by: Mark Brown <broonie@kernel.org>
+> 
+> Thanks.
+> 
