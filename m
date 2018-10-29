@@ -1,37 +1,137 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH 0/3] Add driver for Synopsys DesignWare I3C master IP
-Date: Mon, 29 Oct 2018 14:21:51 +0100
-Message-ID: <20181029142151.19f480b9@bbrezillon>
-References: <1540807618-13246-1-git-send-email-soares@synopsys.com>
-        <20181029115633.GA5881@kunai>
+From: AnilKumar Chimata <anilc@codeaurora.org>
+Subject: Re: [PATCH 2/3] dt-bindings: Add ICE device specific parameters
+Date: Mon, 29 Oct 2018 19:00:41 +0530
+Message-ID: <9ddb1052-e481-022e-e9cb-7a09d75f6667@codeaurora.org>
+References: <1539789476-6098-1-git-send-email-anilc@codeaurora.org>
+ <1539789476-6098-3-git-send-email-anilc@codeaurora.org>
+ <20181025181558.GC30244@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181029115633.GA5881@kunai>
+In-Reply-To: <20181025181558.GC30244@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Vitor soares <vitor.soares@synopsys.com>, linux-i2c@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de, psroka@cadence.com, agolec@cadence.com, adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com, alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com, rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, linus.walleij@linaro.org, Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org, nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se, mshettel@codeaurora.org, swboyd@chromium.org, joao.pinto@synopsys.com, luis.olive
+To: Rob Herring <robh@kernel.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, herbert@gondor.apana.org.au, davem@davemloft.net, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 29 Oct 2018 11:56:34 +0000
-Wolfram Sang <wsa@the-dreams.de> wrote:
+Hi Rob,
 
-> Boris,
+Thanks for the comments,
+
+On 2018-10-25 23:45, Rob Herring wrote:
+> On Wed, Oct 17, 2018 at 08:47:55PM +0530, AnilKumar Chimata wrote:
+>> Add dt parameters information specific to the Inline
+>> Crypto Engine (ICE) device.
+>> 
+>> Signed-off-by: AnilKumar Chimata <anilc@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/crypto/msm/ice.txt         | 34 
+>> ++++++++++++++++++++++
+>>  1 file changed, 34 insertions(+)
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/crypto/msm/ice.txt
+>> 
+>> diff --git a/Documentation/devicetree/bindings/crypto/msm/ice.txt 
+>> b/Documentation/devicetree/bindings/crypto/msm/ice.txt
+>> new file mode 100644
+>> index 0000000..86eed5e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/crypto/msm/ice.txt
+>> @@ -0,0 +1,34 @@
+>> +* Inline Crypto Engine (ICE)
+>> +
+>> +Required properties:
+>> +  - compatible			: should be "qcom,ice"
 > 
-> > This patch series is a proposal for the I3C master driver for Synopsys IP.  
+> Only 1 version ever? Probably not and this needs an SoC specific
+> compatible string. Does this follow any standard or ICE is a QCom 
+> thing?
+
+Yes, currently one version and in future we might have to add if there 
+are any hardware specific changes and this is Qualcomm specific hardware.
+
 > 
-> Any news on the I3C mailing list?
-
-Nope, no news from DaveM so far. I pinged him twice (maybe my emails go
-into his SPAM folder).
-
-> It is not much yet, still I was
-> wondering...
+>> +  - reg 			: <register mapping>
 > 
+> No need to define standard properties. You need to say how many 
+> register
+> ranges.
 
-The plan is to get the framework merged and then we'll have a good
-argument to have the I3C ML created.
+Changed.
 
-Alternatively, I could ask David Woodhouse to create a ML on infradead,
-but I'd really prefer to have it on kernel.org.
+> 
+>> +
+>> +Optional properties:
+>> +  - interrupt-names     	: name describing the interrupts for ICE IRQ
+> 
+> No point to this if there is only 1 IRQ.
+
+There are two IRQ lines which hardware can support one for non-secure 
+operating system and another for secure operating system.
+
+> 
+>> +  - interrupts          	: <interrupt mapping for ICE IRQ>
+>> +  - qcom,enable-ice-clk 	: should enable clocks for ICE HW
+> 
+> This shouldn't be needed.
+
+Changed.
+
+> 
+>> +  - clocks              	: List of phandle and clock specifier pairs
+>> +  - clock-names         	: List of clock input name strings sorted in 
+>> the same
+>> +				  order as the clocks property.
+> 
+> How many?  You need to give the
+
+Currently four clocks are needed, details updated accordingly.
+
+>> +  - qcom,op-freq-hz     	: max clock speed sorted in the same order 
+>> as the clocks
+>> +				  property.
+> 
+> Use the assigned-clocks properties for this.
+
+Actually that is not a max clock speed, its any array of operating 
+frequencies which ICE can support.
+
+> 
+>> +  - qcom,instance-type  	: describe the storage type for which ICE 
+>> node is defined
+>> +				  currently, only "ufs" and "sdcc" are supported storage type
+> 
+> What if there is more than one instance of ufs or SD? Do you need to
+> know which ICE goes with which controller?
+
+That is right, needs to have multiple device node entries which 
+differentiate between storage instances.
+
+> 
+>> +  - power-domains		: regulator supply to be used by ICE HW
+>> +
+>> +Example:
+>> +	ufs_ice: ufsice@1d90000 {
+> 
+> crytpo@...
+> 
+>> +		compatible = "qcom,ice";
+>> +		reg = <0x1d90000 0x8000>;
+>> +		qcom,enable-ice-clk;
+>> +		clock-names = "ufs_core_clk", "bus_clk",
+>> +				"iface_clk", "ice_core_clk";
+>> +		clocks = <&gcc GCC_UFS_PHY_AXI_CLK>,
+>> +			 <&gcc GCC_UFS_MEM_CLKREF_CLK>,
+>> +			 <&gcc GCC_UFS_PHY_AHB_CLK>,
+>> +			 <&gcc GCC_UFS_PHY_ICE_CORE_CLK>;
+>> +		qcom,op-freq-hz = <0>, <0>, <0>, <300000000>;
+>> +		power-domains = <&gcc UFS_PHY_GDSC>;
+>> +		qcom,instance-type = "ufs";
+>> +	};
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+>> 
