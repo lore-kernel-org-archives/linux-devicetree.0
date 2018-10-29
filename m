@@ -1,95 +1,80 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCH 3/6] PCI: layerscape: Add the EP mode support
-Date: Mon, 29 Oct 2018 02:35:12 +0000
-Message-ID: <HE1PR04MB1497239B4B6F8AA48E284F4FF5F30@HE1PR04MB1497.eurprd04.prod.outlook.com>
-References: <20181025110901.5680-1-xiaowei.bao@nxp.com>
- <20181025110901.5680-3-xiaowei.bao@nxp.com> <20181025215246.GA14861@bogus>
- <HE1PR04MB149735C7EF2A23AEE982BB9FF5F00@HE1PR04MB1497.eurprd04.prod.outlook.com>
- <CAK8P3a3Ty4bRuHiVHY6dh55b1ms8z7RpG2sALM0Dn_8Yd39-xQ@mail.gmail.com>
- <HE1PR04MB14972C9176E68EEDBD3AD64BF5F00@HE1PR04MB1497.eurprd04.prod.outlook.com>
- <CADRPPNRP5RORVr0O59=O-PhRRerirFkPeOmAcKq3pNumf4Mriw@mail.gmail.com>
+From: Biao Huang <biao.huang@mediatek.com>
+Subject: [PATCH 2/2] dt-binding: mediatek-dwmac: add binding document for MediaTek MT2712 DWMAC
+Date: Mon, 29 Oct 2018 11:04:54 +0800
+Message-ID: <1540782294-27721-3-git-send-email-biao.huang@mediatek.com>
+References: <1540782294-27721-1-git-send-email-biao.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CADRPPNRP5RORVr0O59=O-PhRRerirFkPeOmAcKq3pNumf4Mriw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1540782294-27721-1-git-send-email-biao.huang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Li <leoyang.li@nxp.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, Kate Stewart <kstewart@linuxfoundation.org>, "cyrille.pitchen@free-electrons.com" <cyrille.pitchen@free-electrons.com>, Philippe Ombredanne <pombredanne@nexb.com>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>, "niklas.cassel@axis.com" <niklas.cassel@axis.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, open list:OPEN FIRMWARE AND FLAT
+To: davem@davemloft.net, robh+dt@kernel.org
+Cc: honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, sean.wang@mediatek.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, biao.huang@mediatek.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, joabreu@synopsys.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBMaSBZYW5nIDxsZW95YW5nLmxp
-QG54cC5jb20+IA0KU2VudDogMjAxOOW5tDEw5pyIMjfml6UgNDoyOQ0KVG86IFhpYW93ZWkgQmFv
-IDx4aWFvd2VpLmJhb0BueHAuY29tPg0KQ2M6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+
-OyBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPjsgQmpvcm4gSGVsZ2FhcyA8YmhlbGdhYXNA
-Z29vZ2xlLmNvbT47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBTaGF3biBH
-dW8gPHNoYXduZ3VvQGtlcm5lbC5vcmc+OyBraXNob25AdGkuY29tOyBsb3JlbnpvLnBpZXJhbGlz
-aUBhcm0uY29tOyBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3Jn
-PjsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2Fp
-Lmh1QG54cC5jb20+OyBSb3kgWmFuZyA8cm95LnphbmdAbnhwLmNvbT47IEthdGUgU3Rld2FydCA8
-a3N0ZXdhcnRAbGludXhmb3VuZGF0aW9uLm9yZz47IGN5cmlsbGUucGl0Y2hlbkBmcmVlLWVsZWN0
-cm9ucy5jb207IFBoaWxpcHBlIE9tYnJlZGFubmUgPHBvbWJyZWRhbm5lQG5leGIuY29tPjsgc2hh
-d24ubGluQHJvY2stY2hpcHMuY29tOyBuaWtsYXMuY2Fzc2VsQGF4aXMuY29tOyBsaW51eC1wY2lA
-dmdlci5rZXJuZWwub3JnOyBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQgRkxBVFRFTkVEIERF
-VklDRSBUUkVFIEJJTkRJTkdTIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IGxrbWwgPGxp
-bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBtb2RlcmF0ZWQgbGlzdDpBUk0vRlJFRVNDQUxF
-IElNWCAvIE1YQyBBUk0gQVJDSElURUNUVVJFIDxsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmc+OyBsaW51eHBwYy1kZXYgPGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnPg0K
-U3ViamVjdDogUmU6IFtQQVRDSCAzLzZdIFBDSTogbGF5ZXJzY2FwZTogQWRkIHRoZSBFUCBtb2Rl
-IHN1cHBvcnQNCg0KT24gRnJpLCBPY3QgMjYsIDIwMTggYXQgMjo0MyBBTSBYaWFvd2VpIEJhbyA8
-eGlhb3dlaS5iYW9AbnhwLmNvbT4gd3JvdGU6DQo+DQo+DQo+DQo+IC0tLS0tT3JpZ2luYWwgTWVz
-c2FnZS0tLS0tDQo+IEZyb206IGFybmRiZXJnbWFubkBnbWFpbC5jb20gPGFybmRiZXJnbWFubkBn
-bWFpbC5jb20+IE9uIEJlaGFsZiBPZiANCj4gQXJuZCBCZXJnbWFubg0KPiBTZW50OiAyMDE45bm0
-MTDmnIgyNuaXpSAxNTowMQ0KPiBUbzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+
-DQo+IENjOiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPjsgYmhlbGdhYXNAZ29vZ2xlLmNv
-bTsgDQo+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkg
-DQo+IDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNob25AdGkuY29tOyBsb3JlbnpvLnBpZXJhbGlz
-aUBhcm0uY29tOyANCj4gZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IE0uaC4gTGlhbiA8bWlu
-Z2h1YW4ubGlhbkBueHAuY29tPjsgTWluZ2thaSANCj4gSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47
-IFJveSBaYW5nIDxyb3kuemFuZ0BueHAuY29tPjsgDQo+IGtzdGV3YXJ0QGxpbnV4Zm91bmRhdGlv
-bi5vcmc7IGN5cmlsbGUucGl0Y2hlbkBmcmVlLWVsZWN0cm9ucy5jb207IA0KPiBwb21icmVkYW5u
-ZUBuZXhiLmNvbTsgc2hhd24ubGluQHJvY2stY2hpcHMuY29tOyANCj4gbmlrbGFzLmNhc3NlbEBh
-eGlzLmNvbTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgDQo+IGRldmljZXRyZWVAdmdlci5r
-ZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyANCj4gbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZw0K
-PiBTdWJqZWN0OiBSZTogW1BBVENIIDMvNl0gUENJOiBsYXllcnNjYXBlOiBBZGQgdGhlIEVQIG1v
-ZGUgc3VwcG9ydA0KPg0KPiBPbiAxMC8yNi8xOCwgWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54
-cC5jb20+IHdyb3RlOg0KPiA+IEZyb206IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQo+
-ID4+IE9uIFRodSwgT2N0IDI1LCAyMDE4IGF0IDA3OjA4OjU4UE0gKzA4MDAsIFhpYW93ZWkgQmFv
-IHdyb3RlOg0KPiA+Pj4gICAgICAgICAgImZzbCxsczIwODBhLXBjaWUiLCAiZnNsLGxzMjA4NWEt
-cGNpZSIsICJzbnBzLGR3LXBjaWUiDQo+ID4+PiAgICAgICAgICAiZnNsLGxzMjA4OGEtcGNpZSIN
-Cj4gPj4+ICAgICAgICAgICJmc2wsbHMxMDg4YS1wY2llIg0KPiA+Pj4gICAgICAgICAgImZzbCxs
-czEwNDZhLXBjaWUiDQo+ID4+PiAgICAgICAgICAiZnNsLGxzMTAxMmEtcGNpZQ0KPiA+Pj4gKyAg
-RVAgbW9kZToNCj4gPj4+ICsgICAgICAgICJmc2wsbHMtcGNpZS1lcCINCj4gPj4NCj4gPiA+IFlv
-dSBuZWVkIFNvQyBzcGVjaWZpYyBjb21wYXRpYmxlcyBmb3IgdGhlIHNhbWUgcmVhc29ucyBhcyB0
-aGUgUkMuDQo+ID4NCj4gPiBbWGlhb3dlaSBCYW9dIEkgd2FudCB0byBjb250YWlucyBhbGwgbGF5
-ZXJzY2FwZSBwbGF0Zm9ybSB1c2Ugb25lIA0KPiA+IGNvbXBhdGlibGUgaWYgdGhlIFBDSWUgY29u
-dHJvbGxlciB3b3JrIGluIEVQIG1vZGUuDQo+DQo+IERvIHlvdSBtZWFuIG9ubHkgb25lIG9mIHRo
-ZSBTb0NzIHRoYXQgc3VwcG9ydCBSQyBtb2RlIGhhcyBFUCBtb2RlPw0KPiBJIHRoaW5rIHlvdSBz
-dGlsbCBuZWVkIGEgU29DIHNwZWNpZmljIGNvbXBhdGlibGUgYXMgUm9iIGV4cGxhaW5lZCwgaW4g
-Y2FzZSB0aGVyZSB3aWxsIGJlIGEgc2Vjb25kIG9uZSBpbiB0aGUgZnV0dXJlLg0KPg0KPiBJZiB5
-b3Ugd2FudCB0byBlbnN1cmUgdGhhdCB5b3UgZG9uJ3QgaGF2ZSB0byB1cGRhdGUgdGhlIGRldmlj
-ZSBkcml2ZXIgZm9yIGVhY2ggbmV3IGNoaXAgdGhhdCBjb21lcyBpbiB3aGVuIHRoZSBFUCBtb2Rl
-IGlzIGNvbXBhdGlibGUsIHRoZSB3YXkgdGhpcyBpcyBoYW5kbGVkIGlzIHRvIGxpc3QgbXVsdGlw
-bGUgdmFsdWVzIGluIHRoZSBjb21wYXRpYmxlIHByb3BlcnR5LCBsaXN0aW5nIHRoZSBmaXJzdCBT
-b0MgdGhhdCBpbnRyb2R1Y2VkIHRoZSBzcGVjaWZpYyB2ZXJzaW9uIG9mIHRoYXQgSVAgYmxvY2sg
-YXMgdGhlIG1vc3QgZ2VuZXJpYyB0eXBlLCBlLmcuDQo+DQo+ICAgY29wYXRpYmxlID0gImZzbCxs
-czIwODhhLXBjaWUtZXAiLCAiZnNsLGxzMTAxMmEtcGNpZS1lcCIsIA0KPiAic25wcyxkdy1wY2ll
-LWVwIjsNCj4NCj4gRm9yIGNvbnNpc3RlbmN5LCBpdCBwcm9iYWJseSBpcyBiZXN0IHRvIG1hdGNo
-IGVhY2ggUkMgbW9kZSB2YWx1ZSB3aXRoIHRoZSBjb3JyZXNwb25kaW5nIEVQIG1vZGUgc3RyaW5n
-IGZvciBlYWNoIGRldmljZSB0aGF0IGNhbiBzdXBwb3J0IGJvdGggKGlmIHRoZXJlIGlzIG1vcmUg
-dGhhbiBvbmUpLg0KPg0KPiAgICAgICBBcm5kDQo+IFtYaWFvd2VpIEJhb10gTXkgbWVhbiBpcyB0
-aGF0IHRoZSBscy1wY2llLWVwIGNvbXBhdGlibGVzIHdpbGwgY29udGFpbiBhbGwgbGF5ZXJzY2Fw
-ZSBTT0NzIG9mIE5YUCwgZS5nOiBsczEwNDZhLXBjaWUtZXAsIGZzbCxsczIwODhhLXBjaWUtZXAs
-IGxzMjA4OGEtcGNpZS1lcCBhbmQgc28gb24sIG90aGVyIGxheWVyc2NhcGUgU09DcyBoYXZlIG5v
-dCB0ZXN0IGV4Y2VwdCB0aGUgbHMxMDQ2YSwgSSB0aGluayBpdCBpcyBjb21wYXRpYmxlIGlmIHRo
-ZSBuZXcgY2hpcCBvciBvdGhlciBTT0NzIHVzZSB0aGUgRFcgY29yZSwgT0ssIEkgd2lsbCBkaXNj
-dXNzIHRoaXMgaXNzdWUgaW50ZXJuYWxseSwgYW5kIHJlcGx5IHRvIHlvdSBsYXRlci4NCg0KWW91
-IGNhbiBkZWZpbmUgYSBnZW5lcmljIGNvbXBhdGlibGUgc3RyaW5nIGZvciB0aGUgRVAgbW9kZSBv
-ZiBhbGwgdGhlc2UgcGxhdGZvcm1zLiAgQnV0IGxpa2UgUm9iIGFuZCBBcm5kIG1lbnRpb25lZCwg
-aXQgaXMgZ29vZCB0byBhbHNvIGRlZmluZSB0aGUgU29DIHNwZWNpZmljIGNvbXBhdGlibGUgc3Ry
-aW5ncyBqdXN0IGluIGNhc2UgdGhhdCB3ZSBuZWVkIHNwZWNpYWwgdHJlYXRtZW50IGZvciBjZXJ0
-YWluIFNvQ3MgaW4gdGhlIGZ1dHVyZS4NCg0KUmVnYXJkcywNCkxlbw0KDQpbWGlhb3dlaSBCYW9d
-IEhpIExlbywgT0ssIEkgd2lsbCBhZGQgdGhlIFNvQyBzcGVjaWZpYyBjb21wYXRpYmxlIHN0cmlu
-Z3MgaW4gcGF0Y2gtdjIsIHRoYW5rcyBhIGxvdC4NCg==
+The commit adds the device tree binding documentation for the MediaTek DWMAC
+found on MediaTek MT2712.
+
+Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+---
+ .../devicetree/bindings/net/mediatek-dwmac.txt     |   49 ++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/mediatek-dwmac.txt
+
+diff --git a/Documentation/devicetree/bindings/net/mediatek-dwmac.txt b/Documentation/devicetree/bindings/net/mediatek-dwmac.txt
+new file mode 100644
+index 0000000..8baf0e4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/mediatek-dwmac.txt
+@@ -0,0 +1,49 @@
++MediaTek DWMAC glue layer controller
++
++This file documents platform glue layer for stmmac.
++Please see stmmac.txt for the other unchanged properties.
++
++The device node has following properties.
++
++Required properties:
++- compatible:  Should be "mediatek,mt2712-gmac" for MT2712 SoC
++- reg:  Address and length of the register set for the device
++- interrupts:  Should contain the MAC interrupts
++- interrupt-names: Should contain a list of interrupt names corresponding to
++	the interrupts in the interrupts property, if available.
++	Should be "macirq" for the main MAC IRQ
++- clocks: Must contain a phandle for each entry in clock-names.
++- clock-names: the name of the clock listed in the clocks property. These are
++	"axi", "apb", "mac_ext", "mac_parent", "ptp_ref", "ptp_parent", "ptp_top"
++	for MT2712 SoC
++- mac-address: See ethernet.txt in the same directory
++- phy-mode: See ethernet.txt in the same directory
++
++Example:
++
++	eth: ethernet@1101c000 {
++		compatible = "mediatek,mt2712-gmac";
++		reg = <0 0x1101c000 0 0x1300>;
++		interrupts = <GIC_SPI 237 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-names = "macirq";
++		phy-mode ="rgmii-id";
++		mac-address = [00 55 7b b5 7d f7];
++		clock-names = "axi",
++			      "apb",
++			      "mac_ext",
++			      "mac_parent",
++			      "ptp_ref",
++			      "ptp_parent",
++			      "ptp_top";
++		clocks = <&pericfg CLK_PERI_GMAC>,
++			 <&pericfg CLK_PERI_GMAC_PCLK>,
++			 <&topckgen CLK_TOP_ETHER_125M_SEL>,
++			 <&topckgen CLK_TOP_ETHERPLL_125M>,
++			 <&topckgen CLK_TOP_ETHER_50M_SEL>,
++			 <&topckgen CLK_TOP_APLL1_D3>,
++			 <&topckgen CLK_TOP_APLL1>;
++		snps,txpbl = <32>;
++		snps,rxpbl = <32>;
++		snps,reset-gpio = <&pio 87 GPIO_ACTIVE_LOW>;
++		snps,reset-active-low;
++	};
+-- 
+1.7.9.5
