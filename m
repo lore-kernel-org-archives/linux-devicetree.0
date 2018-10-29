@@ -1,130 +1,140 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: [PATCH i2c-next v8 5/5] i2c: aspeed: Add bus idle waiting logic for multi-master use cases
-Date: Mon, 29 Oct 2018 14:14:14 -0700
-Message-ID: <20181029211414.20771-6-jae.hyun.yoo@linux.intel.com>
-References: <20181029211414.20771-1-jae.hyun.yoo@linux.intel.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 1/2 v5] arm64: Get rid of __early_init_dt_declare_initrd()
+Date: Mon, 29 Oct 2018 14:52:37 -0700
+Message-ID: <e3033413-555e-72ca-be75-e4b566b62480@gmail.com>
+References: <20181029190014.6455-1-f.fainelli@gmail.com>
+ <20181029190014.6455-2-f.fainelli@gmail.com>
+ <CAL_JsqL2g69Duhkqd=f09BStoAKeakJz8Wgz3is37YU0+fc80A@mail.gmail.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181029211414.20771-1-jae.hyun.yoo@linux.intel.com>
+In-Reply-To: <CAL_JsqL2g69Duhkqd=f09BStoAKeakJz8Wgz3is37YU0+fc80A@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Brendan Higgins <brendanhiggins@google.com>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+To: Rob Herring <robh+dt@kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, rppt@linux.ibm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, aryabinin@virtuozzo.com, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, ghackmann@android.com, Kristina Martsenko <kristina.martsenko@arm.com>, chandan.vn@samsung.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradea>
 List-Id: devicetree@vger.kernel.org
 
-In multi-master environment, this driver's master cannot know
-exactly when a peer master sends data to this driver's slave so a
-case can be happened that this master tries to send data through
-the master_xfer function but slave data from peer master is still
-being processed by this driver.
+On 10/29/18 12:59 PM, Rob Herring wrote:
+> +Ard who last touched this.
+> 
+> On Mon, Oct 29, 2018 at 2:23 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>>
+>> ARM64 is the only architecture that re-defines
+>> __early_init_dt_declare_initrd() in order for that function to populate
+>> initrd_start/initrd_end with physical addresses instead of virtual
+>> addresses. Instead of having an override, just get rid of that
+>> implementation and perform the virtual to physical conversion of these
+>> addresses in arm64_memblock_init() where relevant.
+>>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+>> ---
+>>  arch/arm64/include/asm/memory.h |  8 -------
+>>  arch/arm64/mm/init.c            | 42 +++++++++++++++++++++------------
+>>  2 files changed, 27 insertions(+), 23 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
+>> index b96442960aea..dc3ca21ba240 100644
+>> --- a/arch/arm64/include/asm/memory.h
+>> +++ b/arch/arm64/include/asm/memory.h
+>> @@ -168,14 +168,6 @@
+>>  #define IOREMAP_MAX_ORDER      (PMD_SHIFT)
+>>  #endif
+>>
+>> -#ifdef CONFIG_BLK_DEV_INITRD
+>> -#define __early_init_dt_declare_initrd(__start, __end)                 \
+>> -       do {                                                            \
+>> -               initrd_start = (__start);                               \
+>> -               initrd_end = (__end);                                   \
+>> -       } while (0)
+>> -#endif
+>> -
+>>  #ifndef __ASSEMBLY__
+>>
+>>  #include <linux/bitops.h>
+>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+>> index 3cf87341859f..292570b08f85 100644
+>> --- a/arch/arm64/mm/init.c
+>> +++ b/arch/arm64/mm/init.c
+>> @@ -62,6 +62,8 @@
+>>  s64 memstart_addr __ro_after_init = -1;
+>>  phys_addr_t arm64_dma_phys_limit __ro_after_init;
+>>
+>> +static phys_addr_t phys_initrd_start, phys_initrd_end;
+>> +
+>>  #ifdef CONFIG_BLK_DEV_INITRD
+>>  static int __init early_initrd(char *p)
+>>  {
+>> @@ -72,8 +74,8 @@ static int __init early_initrd(char *p)
+>>         if (*endp == ',') {
+>>                 size = memparse(endp + 1, NULL);
+>>
+>> -               initrd_start = start;
+>> -               initrd_end = start + size;
+>> +               phys_initrd_start = start;
+>> +               phys_initrd_end = start + size;
+>>         }
+>>         return 0;
+>>  }
+>> @@ -364,6 +366,7 @@ static void __init fdt_enforce_memory_region(void)
+>>  void __init arm64_memblock_init(void)
+>>  {
+>>         const s64 linear_region_size = -(s64)PAGE_OFFSET;
+>> +       u64 __maybe_unused base, size;
+>>
+>>         /* Handle linux,usable-memory-range property */
+>>         fdt_enforce_memory_region();
+>> @@ -408,14 +411,25 @@ void __init arm64_memblock_init(void)
+>>                 memblock_add(__pa_symbol(_text), (u64)(_end - _text));
+>>         }
+>>
+>> -       if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && initrd_start) {
+>> +       if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) &&
+>> +           (initrd_start || phys_initrd_start)) {
+> 
+> I've tried to explain already that this is broken. The problem is
+> __early_init_dt_declare_initrd using __va() which happens before this
+> function is called. __va() uses PHYS_OFFSET which in turn is defined
+> as memstart_addr. However, memstart_addr may be changed just above
+> this hunk, so the earlier conversion to a VA may not be valid at this
+> point. This is explained if you read Ard's commit that added all this
+> mess.
 
-To prevent any state corruption in the case, this patch adds
-checking code if any slave operation is ongoing and it waits up to
-the bus timeout duration before starting a master_xfer operation.
+Thanks for explaining this again, looks like I had overlooked that
+explanation in the "other branch" of the thread last time I read it.
 
-Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
----
- drivers/i2c/busses/i2c-aspeed.c | 52 +++++++++++++++++++++++----------
- 1 file changed, 37 insertions(+), 15 deletions(-)
+> 
+> You could fix this by converting back to a PA before adjusting
+> memstart_addr, but that's 2 wrongs making a right and fragile. The
+> better solution is the other proposal making the DT code set
+> phys_initrd_* (whatever the ARM code calls them).
 
-diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
-index 833b6b6a4c7e..4e92a405210b 100644
---- a/drivers/i2c/busses/i2c-aspeed.c
-+++ b/drivers/i2c/busses/i2c-aspeed.c
-@@ -12,6 +12,7 @@
- 
- #include <linux/clk.h>
- #include <linux/completion.h>
-+#include <linux/delay.h>
- #include <linux/err.h>
- #include <linux/errno.h>
- #include <linux/i2c.h>
-@@ -115,6 +116,9 @@
- /* 0x18 : I2CD Slave Device Address Register   */
- #define ASPEED_I2CD_DEV_ADDR_MASK			GENMASK(6, 0)
- 
-+/* Busy checking */
-+#define ASPEED_I2C_BUS_BUSY_CHECK_INTERVAL_US		(10 * 1000)
-+
- enum aspeed_i2c_master_state {
- 	ASPEED_I2C_MASTER_INACTIVE,
- 	ASPEED_I2C_MASTER_START,
-@@ -156,6 +160,8 @@ struct aspeed_i2c_bus {
- 	int				cmd_err;
- 	/* Protected only by i2c_lock_bus */
- 	int				master_xfer_result;
-+	/* Multi-master */
-+	bool				multi_master;
- #if IS_ENABLED(CONFIG_I2C_SLAVE)
- 	struct i2c_client		*slave;
- 	enum aspeed_i2c_slave_state	slave_state;
-@@ -596,27 +602,41 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
- 	return irq_remaining ? IRQ_NONE : IRQ_HANDLED;
- }
- 
-+static int aspeed_i2c_check_bus_busy(struct aspeed_i2c_bus *bus)
-+{
-+	unsigned long check_started;
-+
-+	if (bus->multi_master) {
-+		might_sleep();
-+		check_started = jiffies;
-+	}
-+
-+	for (;;) {
-+		if (!(readl(bus->base + ASPEED_I2C_CMD_REG) &
-+		      ASPEED_I2CD_BUS_BUSY_STS) &&
-+		    bus->slave_state == ASPEED_I2C_SLAVE_STOP)
-+			return 0;
-+		if (!bus->multi_master)
-+			break;
-+		if (time_after(jiffies, check_started + bus->adap.timeout))
-+			break;
-+		usleep_range((ASPEED_I2C_BUS_BUSY_CHECK_INTERVAL_US >> 2) + 1,
-+			     ASPEED_I2C_BUS_BUSY_CHECK_INTERVAL_US);
-+	}
-+
-+	return aspeed_i2c_recover_bus(bus);
-+}
-+
- static int aspeed_i2c_master_xfer(struct i2c_adapter *adap,
- 				  struct i2c_msg *msgs, int num)
- {
- 	struct aspeed_i2c_bus *bus = i2c_get_adapdata(adap);
- 	unsigned long time_left, flags;
--	int ret = 0;
- 
--	spin_lock_irqsave(&bus->lock, flags);
--	bus->cmd_err = 0;
--
--	/* If bus is busy, attempt recovery. We assume a single master
--	 * environment.
--	 */
--	if (readl(bus->base + ASPEED_I2C_CMD_REG) & ASPEED_I2CD_BUS_BUSY_STS) {
--		spin_unlock_irqrestore(&bus->lock, flags);
--		ret = aspeed_i2c_recover_bus(bus);
--		if (ret)
--			return ret;
--		spin_lock_irqsave(&bus->lock, flags);
--	}
-+	if (aspeed_i2c_check_bus_busy(bus))
-+		return -EAGAIN;
- 
-+	spin_lock_irqsave(&bus->lock, flags);
- 	bus->cmd_err = 0;
- 	bus->msgs = msgs;
- 	bus->msgs_index = 0;
-@@ -827,7 +847,9 @@ static int aspeed_i2c_init(struct aspeed_i2c_bus *bus,
- 	if (ret < 0)
- 		return ret;
- 
--	if (!of_property_read_bool(pdev->dev.of_node, "multi-master"))
-+	if (of_property_read_bool(pdev->dev.of_node, "multi-master"))
-+		bus->multi_master = true;
-+	else
- 		fun_ctrl_reg |= ASPEED_I2CD_MULTI_MASTER_DIS;
- 
- 	/* Enable Master Mode */
+OK, that sounds reasonable, will cook something doing that. Thanks!
+
+> 
+>>                 /*
+>>                  * Add back the memory we just removed if it results in the
+>>                  * initrd to become inaccessible via the linear mapping.
+>>                  * Otherwise, this is a no-op
+>>                  */
+>> -               u64 base = initrd_start & PAGE_MASK;
+>> -               u64 size = PAGE_ALIGN(initrd_end) - base;
+>> +               if (phys_initrd_start) {
+>> +                       /* Command line specified the initrd location */
+>> +                       initrd_start = __phys_to_virt(phys_initrd_start);
+>> +                       initrd_end = __phys_to_virt(phys_initrd_end);
+>> +               } else if (initrd_start) {
+>> +                       /* FDT specified the initrd location */
+>> +                       phys_initrd_start = __pa(initrd_start);
+>> +                       phys_initrd_end = __pa(initrd_end);
+> 
+> Kind of inconsistent to mix __phys_to_virt and __pa flavors.
+> 
+> Rob
+> 
+
+
 -- 
-2.19.1
+Florian
