@@ -1,71 +1,58 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 1/4] soc: Add TmFifo driver for Mellanox BlueField Soc
-Date: Mon, 29 Oct 2018 15:52:46 +0100
-Message-ID: <CAK8P3a1_VgAUF4k8RbjOyWBM6F-oXv2WR1GMWF=E8_G0LtidCQ@mail.gmail.com>
-References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
- <1540403734-137721-1-git-send-email-lsun@mellanox.com>
- <CAK8P3a0VJkQgqaq7na1_KTQzVs4-PvxYghv5_LysW7EdeBM7fw@mail.gmail.com>
- <AM4PR05MB322089E21DD27295C1B0A946A1F00@AM4PR05MB3220.eurprd05.prod.outlook.com>
- <CAK8P3a3pi26FJ=vfU3QN=xUS+ktv1W-oqGWkdxc9s_S2HaYf6w@mail.gmail.com>
- <DB6PR05MB322336054C526251D2A3780CA1F30@DB6PR05MB3223.eurprd05.prod.outlook.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845: Add SCM DT node
+Date: Mon, 29 Oct 2018 20:24:46 +0530
+Message-ID: <24ab0b3496de7809cc49479ea33c2eab@codeaurora.org>
+References: <20181026122542.4714-1-sibis@codeaurora.org>
+ <9fb3d2d2-37b5-27d2-ad27-45c77ebe1df2@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <DB6PR05MB322336054C526251D2A3780CA1F30@DB6PR05MB3223.eurprd05.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liming Sun <lsun@mellanox.com>
-Cc: DTML <devicetree@vger.kernel.org>, David Woods <dwoods@mellanox.com>, arm-soc <arm@kernel.org>, Olof Johansson <olof@lixom.net>, Robin Murphy <robin.murphy@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9fb3d2d2-37b5-27d2-ad27-45c77ebe1df2@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, bjorn.andersson@linaro.org, dianders@chromium.org, evgreen@chromium.org, benchan@chromium.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2018 at 3:17 PM Liming Sun <lsun@mellanox.com> wrote:
+Hi Stan,
+Thanks for the review!
 
-> > >> > +/* Interrupt handler. */
-> > >> > +static irqreturn_t tmfifo_irq_handler(int irq, void *dev_id)
-> > >> > +{
-> > >> > +        int i = (uintptr_t)dev_id % sizeof(void *);
-> > >> > +        struct tmfifo *fifo = dev_id - i;
-> > >> > +
-> > >> > +        if (i < TM_IRQ_CNT && !test_and_set_bit(i, &fifo->pend_events))
-> > >> > +                schedule_work(&fifo->work);
-> > >> > +
-> > >> > +        return IRQ_HANDLED;
-> > >> > +}
-> > >>
-> > >> Maybe using a request_threaded_irq() would be a better way to defer
-> > >> the handler into IRQ context.
-> > >
-> > > Not sure if I understand this comment correctly... In this case, the
-> > > implemented handler
-> > > has some mutex_lock() used, which tries to make the logic simple since
-> > > multiple services
-> > > (network & console) are sharing the same fifo. Thus schedule_work() is
-> > > used.
-> >
-> > schedule_work() and threaded IRQs are just two different ways of deferring
-> > into process context where you can do the mutex_lock(). The effect is
-> > almost the same, but work queues can be delayed for a substantial
-> > amount of time depending on what other work functions have been
-> > queued at the same time, and request_threaded_irq() is the more normal
-> > way of doing this specifically for an IRQ handler, probably saving a couple
-> > of lines of source code.
-> >
-> > If you have any kind of real-time requirement, you can also assign a
-> > specific realtime priority to that interrupt thread.
->
-> Good information! Currently this FIFO is mainly for mgmt purpose. I'll try the threaded
-> IRQs approach to see whether it can be easily converted and make it into the v5 patch.
-> If not easily, probably a separate commit to improve it later?
+On 2018-10-29 15:02, Stanimir Varbanov wrote:
+> Hi Sibi,
+> 
+> On 10/26/2018 03:25 PM, Sibi Sankar wrote:
+>> Add SCM DT node to enable SCM functionality on SDM845.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi 
+>> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> index b72bdb0a31a5..fad22acfda4d 100644
+>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> @@ -221,6 +221,12 @@
+>>  		};
+>>  	};
+>> 
+>> +	firmware {
+>> +		scm {
+>> +			compatible = "qcom,scm-sdm845", "qcom,scm";
+>> +		};
+>> +	};
+> 
+> What will happen if the platform is without tz firmware? I'd move this
+> DT node in sdm845-mtp.dts or at least make it status = disabled.
 
-Sure, no problem. This is not an important change, but I also think it should
-be easy to do, in particular as it is meant to simplify the code.
+Even in the absence of tz firmware, ATF is expected to implement the 
+necessary
+handlers for the SMC calls so I don't think it is necessary to keep it 
+disabled.
 
-       Arnd
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
