@@ -1,30 +1,90 @@
-From: James Cameron <quozl@laptop.org>
-Subject: Re: [PATCH 05/11] DT: marvell,mmp2: Add SSP1 and SSP3
-Date: Mon, 29 Oct 2018 16:35:29 +1100
-Message-ID: <20181029053529.GG29685@us.netrek.org>
-References: <20181010170936.316862-1-lkundrak@v3.sk>
- <20181010170936.316862-6-lkundrak@v3.sk>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH] dt-bindings: arm: Fix cpu capacity mismatch in example
+Date: Mon, 29 Oct 2018 12:04:50 +0530
+Message-ID: <20181029063450.3o3ay7pazik5tgne@vireshk-i7>
+References: <138600f5d504b41202a29a1e130a7aa4e51f1925.1540451976.git.viresh.kumar@linaro.org>
+ <80206cb7-b550-1cf6-abf4-e4b17de4cdb5@linaro.org>
+ <20181026041107.4hofhlcubbo5claq@vireshk-i7>
+ <d4d6af05-61f1-4123-c2dc-4ee0946f79e8@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181010170936.316862-6-lkundrak@v3.sk>
+In-Reply-To: <d4d6af05-61f1-4123-c2dc-4ee0946f79e8@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: catalin.marinas@arm.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Vincent Guittot <vincent.guittot@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 10, 2018 at 07:09:30PM +0200, Lubomir Rintel wrote:
-> There seem to be SSP2, SSP4 and perhaps SSP5 too, but Marvel keeps their
-> base addresses secret.
+On 26-10-18, 10:30, Daniel Lezcano wrote:
+> On 26/10/2018 06:11, Viresh Kumar wrote:
+> > On 25-10-18, 14:04, Daniel Lezcano wrote:
+> >> I think it is actually correct. The example is confusing on what the
+> >> numbers are. IIUC, it is:
+> >>
+> >> (after normalizing)
+> >>
+> >> dhrystone result on big CPU is 1024 at 1100MHz
+> >> dhrystone result on little CPU is 446 at 850MHz
+> >>
+> >> We have to scale the result of the little for 1100MHz in order to compare.
+> >>
+> >> 1100/850 = 1.294
+> >>
+> >> dhrystone result on little CPU is 446 * 1.294 = 577 at 1100MHz
+> >>
+> >> So we put the normalized values 1024 and 577. The arch_topology will
+> >> scale 577 back to 446 as it will compute the max capacity based on the
+> >> max freq which is 850MHz.
+> >>
+> >> The *final* capacities are 1024 for cluster0 and 446 for cluster1 (read
+> >> the cpu max capacity, the ones showed in the sysfs).
+> >>
+> >> Did I miss something ?
+> > 
+> > No. What about making it more clear in the example to save the next idiot (like
+> > me) from wasting time :)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> > index 9b5685a1d15d..d061e6575bde 100644
+> > --- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> > +++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> > @@ -61,7 +61,10 @@ mhz values (normalized w.r.t. the highest value found while parsing the DT).
+> >  Example 1 (ARM 64-bit, 6-cpu system, two clusters):
+> >  capacities-dmips-mhz are scaled w.r.t. 1024 (cpu@0 and cpu@1)
+> >  supposing cluster0@max-freq=1100 and custer1@max-freq=850,
+> > -final capacities are 1024 for cluster0 and 446 for cluster1
+> > +final capacities are 1024 for cluster0 and 446 for cluster1.
+> > +Note that the values mentioned below in the example (1024 and 578)
+> > +aren't normalized based on max frequency of each cluster and that is
+> > +left for the operating system to do.
 > 
-> The SSP1 and SSP3 addresses were taken from OLPC 1.75, OpenFirmware and
-> kernel respectively.
+> Yes, it will help but if you want to make things even more clear, I
+> suggest to elaborate the text a bit and give the numbers above to
+> explain (1100/850=1.294, 446 * 1.294 = 577, ...)
 
-Sorry for the delay.  Love your work!  From my notes, SSP2 is
-0xd4036000, and SSP4 is 0xd4039000.  Can be probed by hand in
-OpenFirmware or CForth once clocks are on.
+I didn't wanted to explain way too much, but how about this..
+
+diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+index 9b5685a1d15d..84262cdb8d29 100644
+--- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
++++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+@@ -59,9 +59,11 @@ mhz values (normalized w.r.t. the highest value found while parsing the DT).
+ ===========================================
+ 
+ Example 1 (ARM 64-bit, 6-cpu system, two clusters):
+-capacities-dmips-mhz are scaled w.r.t. 1024 (cpu@0 and cpu@1)
+-supposing cluster0@max-freq=1100 and custer1@max-freq=850,
+-final capacities are 1024 for cluster0 and 446 for cluster1
++The capacities-dmips-mhz or DMIPS/MHz values (scaled to 1024)
++are 1024 and 578 for cluster0 and cluster1. Further normalization
++is done by the operating system based on cluster0@max-freq=1100 and
++custer1@max-freq=850, final capacities are 1024 for cluster0 and
++446 for cluster1 (576*850/1100).
+ 
+ cpus {
+        #address-cells = <2>;
+
 
 -- 
-James Cameron
-http://quozl.netrek.org/
+viresh
