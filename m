@@ -1,60 +1,33 @@
-From: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-Subject: Re: [PATCH] arm: dts: socfpga*.dts*: use SPDX-License-Identifier
-Date: Mon, 29 Oct 2018 19:49:15 +0100
-Message-ID: <941ecf8f-ddf7-01f9-1eb8-4b3e33f71efd@gmail.com>
-References: <20181023190853.23252-1-simon.k.r.goldschmidt@gmail.com>
- <b7790735-c797-a5e3-ccf5-01080f652945@kernel.org>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH 3/3] MAINTAINERS: Add myself as the dw-i3c-master module
+ maintainer
+Date: Mon, 29 Oct 2018 11:58:45 -0700
+Message-ID: <ecd684121963748417a5d0105880ea8d73a20b9b.camel@perches.com>
+References: <1540807618-13246-1-git-send-email-soares@synopsys.com>
+         <1540807618-13246-4-git-send-email-soares@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b7790735-c797-a5e3-ccf5-01080f652945@kernel.org>
-Content-Language: en-US
+In-Reply-To: <1540807618-13246-4-git-send-email-soares@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Vasut <marex@denx.de>, Nobuhiro Iwamatsu <iwamatsu@nigauri.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Graham Moore <grmoore@opensource.altera.com>
+To: Vitor soares <vitor.soares@synopsys.com>, boris.brezillon@bootlin.com, wsa@the-dreams.de, linux-i2c@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de
+Cc: psroka@cadence.com, agolec@cadence.com, adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com, alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com, rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, linus.walleij@linaro.org, Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org, nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se, mshettel@codeaurora.org, swboyd@chromium.org, joao.pinto@synopsys.com, luis.oliveira@synopsys.com, manuel.abreu@synopsys.com, gustavo.pimentel@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On 29.10.2018 16:33, Dinh Nguyen wrote:
-> Hi Simon,
->
-> On 10/23/2018 02:08 PM, Simon Goldschmidt wrote:
->> Follow the recent trend for the license description.
->>
->> This is also in an effort to fully sync the devicetrees with U-Boot.
->>
->> Signed-off-by: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
->> ---
->>   arch/arm/boot/dts/socfpga.dtsi                | 16 +------
->>   arch/arm/boot/dts/socfpga_arria10.dtsi        | 13 +-----
->>   arch/arm/boot/dts/socfpga_arria10_socdk.dtsi  | 14 +-----
->>   .../boot/dts/socfpga_arria10_socdk_nand.dts   | 13 +-----
->>   .../boot/dts/socfpga_arria10_socdk_qspi.dts   | 13 +-----
->>   .../boot/dts/socfpga_arria10_socdk_sdmmc.dts  | 14 +-----
->>   arch/arm/boot/dts/socfpga_arria5.dtsi         | 15 +-----
->>   arch/arm/boot/dts/socfpga_arria5_socdk.dts    | 16 +------
->>   arch/arm/boot/dts/socfpga_cyclone5.dtsi       | 16 +------
->>   .../dts/socfpga_cyclone5_de0_nano_soc.dts     | 13 +-----
->>   arch/arm/boot/dts/socfpga_cyclone5_mcv.dtsi   | 14 +-----
->>   arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts | 14 +-----
->>   arch/arm/boot/dts/socfpga_cyclone5_socdk.dts  | 16 +------
->>   arch/arm/boot/dts/socfpga_cyclone5_sockit.dts | 16 +------
->>   .../boot/dts/socfpga_cyclone5_socrates.dts    | 16 +------
->>   arch/arm/boot/dts/socfpga_cyclone5_sodia.dts  | 16 +------
->>   .../boot/dts/socfpga_cyclone5_vining_fpga.dts | 46 +------------------
->>   arch/arm/boot/dts/socfpga_vt.dts              | 16 +------
->>   18 files changed, 28 insertions(+), 269 deletions(-)
->>
-> error: arch/arm/boot/dts/socfpga_cyclone5_de0_nano_soc.dts: does not
-> exist in index
->
-> Can you please rebase this patch after v4.20-rc1 has landed? The above
-> board filename has been changed.
->
-> Thanks,
-> Dinh
->
+On Mon, 2018-10-29 at 10:06 +0000, Vitor soares wrote:
+> Signed-off-by: Vitor soares <soares@synopsys.com>
+[]
+> diff --git a/MAINTAINERS b/MAINTAINERS
+[]
+> @@ -6930,6 +6930,12 @@ F:	drivers/i3c/
+>  F:	include/linux/i3c/
+>  F:	include/dt-bindings/i3c/
+>  
+> +I3C·DRIVER·FOR·SYNOPSYS·DESIGNWARE
+> +M:	Vitor·Soares·<soares@synopsys.com>
 
-Sure, I'll do that.
+Please do not use the '·' character
+between your names and the email address
 
-Simon
+Please use a standard ascii space instead.
