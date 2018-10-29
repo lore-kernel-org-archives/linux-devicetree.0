@@ -1,48 +1,126 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH V2] dt-bindings: arm: Explain capacities-dmips-mhz calculations in example
-Date: Mon, 29 Oct 2018 15:13:05 +0530
-Message-ID: <1cd2594fff3fb54948dcd2af65ae1867dd1c541a.1540806119.git.viresh.kumar@linaro.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v3 2/7] arm64: dts: rockchip: rock960: Add on-board LED support
+Date: Mon, 29 Oct 2018 15:12:40 +0530
+Message-ID: <20181029094245.7886-3-manivannan.sadhasivam@linaro.org>
+References: <20181029094245.7886-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181029094245.7886-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: catalin.marinas@arm.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, linux-arm-kernel@lists.infradead.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: robh@kernel.org, heiko@sntech.de, ezequiel@collabora.com, xuwei5@hisilicon.com, michal.simek@xilinx.com, pavel@ucw.cz, andy.gross@linaro.org
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, koen.kooi@linaro.org, nicolas.dechesne@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The example contains two values for the capacity currently, 446 in text
-and 578 in code. The numbers are all correct but can confuse some of the
-readers. This patch tries to explain how the numbers are calculated to
-avoid same confusion going forward.
+Add on-board LED support for Rock960 board based on the following
+standard used by rest of the 96Boards:
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+green:user1  default-trigger: heartbeat
+green:user2  default-trigger: mmc0/disk-activity(onboard-storage)
+green:user3  default-trigger: mmc1 (SD-card)
+green:user4  default-trigger: none, panic-indicator
+yellow:wlan  default-trigger: phy0tx
+blue:bt      default-trigger: hci0-power
+
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
-V1->V2:
-- The numbers weren't incorrect in the example, just that it needs a
-  bit more explanation for some people.
+ .../boot/dts/rockchip/rk3399-rock960.dts      | 79 +++++++++++++++++++
+ 1 file changed, 79 insertions(+)
 
- Documentation/devicetree/bindings/arm/cpu-capacity.txt | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-index 9b5685a1d15d..84262cdb8d29 100644
---- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-+++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-@@ -59,9 +59,11 @@ mhz values (normalized w.r.t. the highest value found while parsing the DT).
- ===========================================
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
+index 3c3308daec98..12285c51cceb 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
+@@ -13,6 +13,53 @@
+ 	chosen {
+ 		stdout-path = "serial2:1500000n8";
+ 	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&user_led1>, <&user_led2>, <&user_led3>,
++			    <&user_led4>, <&wlan_led>, <&bt_led>;
++
++		user_led1 {
++			label = "green:user1";
++			gpios = <&gpio4 RK_PC2 0>;
++			linux,default-trigger = "heartbeat";
++		};
++
++		user_led2 {
++			label = "green:user2";
++			gpios = <&gpio4 RK_PC6 0>;
++			linux,default-trigger = "mmc0";
++		};
++
++		user_led3 {
++			label = "green:user3";
++			gpios = <&gpio4 RK_PD0 0>;
++			linux,default-trigger = "mmc1";
++		};
++
++		user_led4 {
++			label = "green:user4";
++			gpios = <&gpio4 RK_PD4 0>;
++			panic-indicator;
++			linux,default-trigger = "none";
++		};
++
++		wlan_active_led {
++			label = "yellow:wlan";
++			gpios = <&gpio4 RK_PD5 0>;
++			linux,default-trigger = "phy0tx";
++			default-state = "off";
++		};
++
++		bt_active_led {
++			label = "blue:bt";
++			gpios = <&gpio4 RK_PD6 0>;
++			linux,default-trigger = "hci0-power";
++			default-state = "off";
++		};
++	};
++
+ };
  
- Example 1 (ARM 64-bit, 6-cpu system, two clusters):
--capacities-dmips-mhz are scaled w.r.t. 1024 (cpu@0 and cpu@1)
--supposing cluster0@max-freq=1100 and custer1@max-freq=850,
--final capacities are 1024 for cluster0 and 446 for cluster1
-+The capacities-dmips-mhz or DMIPS/MHz values (scaled to 1024)
-+are 1024 and 578 for cluster0 and cluster1. Further normalization
-+is done by the operating system based on cluster0@max-freq=1100 and
-+custer1@max-freq=850, final capacities are 1024 for cluster0 and
-+446 for cluster1 (576*850/1100).
+ &pcie0 {
+@@ -20,6 +67,38 @@
+ };
  
- cpus {
- 	#address-cells = <2>;
+ &pinctrl {
++	leds {
++		user_led1: user_led1 {
++			rockchip,pins =
++				<4 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		user_led2: user_led2 {
++			rockchip,pins =
++				<4 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		user_led3: user_led3 {
++			rockchip,pins =
++				<4 RK_PD0 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		user_led4: user_led4 {
++			rockchip,pins =
++				<4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		wlan_led: wlan_led {
++			rockchip,pins =
++				<4 RK_PD5 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		bt_led: bt_led {
++			rockchip,pins =
++				<4 RK_PD6 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
+ 	pcie {
+ 		pcie_drv: pcie-drv {
+ 			rockchip,pins =
 -- 
-2.19.1.568.g152ad8e3369a
+2.17.1
