@@ -1,53 +1,54 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 2/4] arm64: Add Mellanox BlueField SoC config option
-Date: Mon, 29 Oct 2018 16:26:13 +0100
-Message-ID: <CAK8P3a2_0mYaJ0NjWSMxpmoF9+tcoHtfhJQJ0Aj9Tds+f7KuEg@mail.gmail.com>
-References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
- <1540403734-137721-1-git-send-email-lsun@mellanox.com>
- <1540403734-137721-2-git-send-email-lsun@mellanox.com>
- <CAK8P3a1jTsvzYhS4CxvmK6tOgPn_g7=1S4xAcca2K4v70vhyEA@mail.gmail.com>
- <AM4PR05MB32204021433BBB853C50FF30A1F00@AM4PR05MB3220.eurprd05.prod.outlook.com>
- <CAK8P3a2=shWVjwrmnNTwwGwN_jhwyb+TmeALz4zzTstho51z8A@mail.gmail.com>
- <DB6PR05MB32236AAD033C20DF6414C464A1F30@DB6PR05MB3223.eurprd05.prod.outlook.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [PATCH] arm: dts: socfpga*.dts*: use SPDX-License-Identifier
+Date: Mon, 29 Oct 2018 10:33:39 -0500
+Message-ID: <b7790735-c797-a5e3-ccf5-01080f652945@kernel.org>
+References: <20181023190853.23252-1-simon.k.r.goldschmidt@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <DB6PR05MB32236AAD033C20DF6414C464A1F30@DB6PR05MB3223.eurprd05.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liming Sun <lsun@mellanox.com>
-Cc: DTML <devicetree@vger.kernel.org>, David Woods <dwoods@mellanox.com>, arm-soc <arm@kernel.org>, Olof Johansson <olof@lixom.net>, Robin Murphy <robin.murphy@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181023190853.23252-1-simon.k.r.goldschmidt@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Vasut <marex@denx.de>, Nobuhiro Iwamatsu <iwamatsu@nigauri.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Graham Moore <grmoore@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2018 at 3:58 PM Liming Sun <lsun@mellanox.com> wrote:
-> > It would be nice if you could still include the dts sources in the submission.
-> > Since this is not a classic server hardware, DT is probably more suitable
-> > here, and there are likely use cases that won't work with ACPI, so it's
-> > good to have a starting point for your users if they need to override
-> > the ACPI tables with a DT, or build systems with a simpler boot loader.
->
-> Sure, I'll keep this DT change for reference. A little explanation that
-> Mellanox BlueField SOC could be PCIe NIC or standalone device (server)  form which
-> can do PXE boot, CentOS installation even on the NIC, etc. The same software/driver
-> works on both.
+Hi Simon,
 
-Ok, good.
+On 10/23/2018 02:08 PM, Simon Goldschmidt wrote:
+> Follow the recent trend for the license description.
+> 
+> This is also in an effort to fully sync the devicetrees with U-Boot.
+> 
+> Signed-off-by: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+> ---
+>  arch/arm/boot/dts/socfpga.dtsi                | 16 +------
+>  arch/arm/boot/dts/socfpga_arria10.dtsi        | 13 +-----
+>  arch/arm/boot/dts/socfpga_arria10_socdk.dtsi  | 14 +-----
+>  .../boot/dts/socfpga_arria10_socdk_nand.dts   | 13 +-----
+>  .../boot/dts/socfpga_arria10_socdk_qspi.dts   | 13 +-----
+>  .../boot/dts/socfpga_arria10_socdk_sdmmc.dts  | 14 +-----
+>  arch/arm/boot/dts/socfpga_arria5.dtsi         | 15 +-----
+>  arch/arm/boot/dts/socfpga_arria5_socdk.dts    | 16 +------
+>  arch/arm/boot/dts/socfpga_cyclone5.dtsi       | 16 +------
+>  .../dts/socfpga_cyclone5_de0_nano_soc.dts     | 13 +-----
+>  arch/arm/boot/dts/socfpga_cyclone5_mcv.dtsi   | 14 +-----
+>  arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts | 14 +-----
+>  arch/arm/boot/dts/socfpga_cyclone5_socdk.dts  | 16 +------
+>  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts | 16 +------
+>  .../boot/dts/socfpga_cyclone5_socrates.dts    | 16 +------
+>  arch/arm/boot/dts/socfpga_cyclone5_sodia.dts  | 16 +------
+>  .../boot/dts/socfpga_cyclone5_vining_fpga.dts | 46 +------------------
+>  arch/arm/boot/dts/socfpga_vt.dts              | 16 +------
+>  18 files changed, 28 insertions(+), 269 deletions(-)
+> 
 
->  DT seems not working well for some requirement/features like
-> NVDIMM (which requires ACPI DSM).  That's why we switched to ACPI though
-> DT support is preserved.
+error: arch/arm/boot/dts/socfpga_cyclone5_de0_nano_soc.dts: does not
+exist in index
 
-This is probably something we need to look at separately, I'm sure we will want
-to use NVDIMM with DT based systems in the future. Can you explain what
-the DSM is used for here? Is this something that could be done in software
-in the NVDIMM hardware specific driver?
+Can you please rebase this patch after v4.20-rc1 has landed? The above
+board filename has been changed.
 
-       Arnd
+Thanks,
+Dinh
