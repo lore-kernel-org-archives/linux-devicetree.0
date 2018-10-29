@@ -1,58 +1,240 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH 0/8] add generic builtin command line
-Date: Mon, 29 Oct 2018 10:44:41 +0000
-Message-ID: <20181029104441.GF30658@n2100.armlinux.org.uk>
-References: <1538067309-5711-1-git-send-email-maksym.kokhan@globallogic.com>
- <20180929181725.GB27441@fifo99.com>
- <CAMT6-xiQ0vGcKpA+SiWHQWQFwU9Oo9j=Zin+UXDoPqKTz5fbeA@mail.gmail.com>
- <CAMT6-xj1rjVAy1AWFiMHc5wH36eu=TUSMtdKU=-qRtUbwr9bkg@mail.gmail.com>
- <20181023144815.GP30658@n2100.armlinux.org.uk>
- <CAMT6-xhvqy5PeQmkQ8tsLRiML_pNJTxyq7dizRRvZTEqc7uzgg@mail.gmail.com>
- <20181024090732.GS30658@n2100.armlinux.org.uk>
- <20181029102914.GA14127@arm.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 2/5] mfd: lochnagar: Add support for the Cirrus Logic
+ Lochnagar
+Date: Mon, 29 Oct 2018 11:04:39 +0000
+Message-ID: <20181029110439.GS4870@dell>
+References: <20181008132542.19775-1-ckeepax@opensource.cirrus.com>
+ <20181008132542.19775-2-ckeepax@opensource.cirrus.com>
+ <20181025074459.GF4939@dell>
+ <20181025082621.GD16508@imbe.wolfsonmicro.main>
+ <b2f85f45-cbe9-5a27-e9e8-ad28f2bd9bd6@opensource.cirrus.com>
+ <20181025114205.GC4870@dell>
+ <33ea391c-aa6e-2709-6faf-4905e84229e4@opensource.cirrus.com>
+ <20181026080051.GK4870@dell>
+ <20181026203223.GC27137@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181029102914.GA14127@arm.com>
+In-Reply-To: <20181026203223.GC27137@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Maksym Kokhan <maksym.kokhan@globallogic.com>, Daniel Walker <dwalker@fifo99.com>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Daniel Walker <danielwa@cisco.com>, Andrii Bordunov <aborduno@cisco.com>, Ruslan
+To: Mark Brown <broonie@kernel.org>
+Cc: Richard Fitzgerald <rf@opensource.cirrus.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2018 at 10:29:15AM +0000, Will Deacon wrote:
-> On Wed, Oct 24, 2018 at 10:07:32AM +0100, Russell King - ARM Linux wrote:
-> > On Wed, Oct 24, 2018 at 11:57:44AM +0300, Maksym Kokhan wrote:
-> > > Do you mean, that you haven't seen patch for ARM, which I sent on
-> > > September 27 along with cover and patch 1? It is strange, because
-> > > you was the one from recipients. If so, you can see this patch here:
-> > > https://lore.kernel.org/patchwork/patch/992779/
-> > 
-> > It seems that I have received patch 5, _but_ it's not threaded with
-> > the cover message and patch 1.  With 50k messages in my inbox, and 3k
-> > messages since you sent the series, it's virtually impossible to find
-> > it (I only found it by looking at my mail server logs from September
-> > to find the subject, and then searching my mailbox for that subject.)
-> > 
-> > This is unnecessarily difficult.
+On Fri, 26 Oct 2018, Mark Brown wrote:
+> On Fri, Oct 26, 2018 at 09:00:51AM +0100, Lee Jones wrote:
+> > On Thu, 25 Oct 2018, Richard Fitzgerald wrote:
 > 
-> This comes up surprisingly often, and I think part of the issue is that
-> different maintainers have different preferences. I also prefer to receive
-> the entire series and cover-letter, but I've seen people object to being
-> CC'd on the whole series as well (how they manage to review things in
-> isolation is another question...!)
+> > > Largely the point. How long do you think it would take to populate the
+> > > cache if you had to read thousands of registers over I2C? Boot time matters.
+> > > Deferring it until it's touched can create various unpredictable and
+> > > annoying behaviour later, for example if a lot of cache entries are
+> > > written while the chip is asleep and the initial values weren't known
+> > > then a suspend/resume cannot filter out writes that are setting the
+> > > register to its default (which regmap does to avoid unnecessary bus traffic).
+> > > So the resume could have a large amount of unnecessary overhead writing
+> > > registers to a value they already have or reading the initial values of
+> > > those registers.
+> 
+> > One more register read when initially writing to a register and one
+> > more when resuming doesn't sound like a vast amount of over-head.
+> 
+> Especially on resume extra register I/O really adds up - people really
+> care how long their system takes to come back from suspend, and how
+> quickly individual devices come back.  For devices that are on slow
+> buses like I2C this means that every register operation counts.  Boot
+> can be similarly pressured of course, though it's a less frequent issue
+> for these devices.
+> 
+> > Not sure what you think I was suggesting above.  If the default values
+> > are actually non-zero that's fine - we'll either leave them as they
+> > are (if they are never changed, in which case Regmap doesn't even need
+> > to know about them), document only those (non-zero) ones or wait until
+> > they are read for the first time, then populate the cache.
+> 
+> You can't assume that the device is in power on reset state unless the
+> driver reset it itself which may or may not be a good idea or even
+> possible, sometimes it's what you want but at other times even if it's
+> possible it can cause user visible disruption during the boot process
+> which is undesirable.
+> 
+> > Setting up the cache manually also sounds like a vector for potential
+> > failure.  At least if you were to cache dynamically on first write
+> > (either on start-up or after sleep) then the actual value will be
+> > cached, rather than what a piece of C code says it should be.
+> 
+> Even where there's no problem getting the hardware into a clean state it
+> can rapidly get very, very expensive to do this with larger register
+> sets on slow buses, and at the framework level we can't assume that
+> readback support is even present on the device (the earliest versions of
+> cache support were written to support such devices).  Some of the
+> userspaces that regmap devices get used with end up wanting to apply a
+> bunch of configuration at startup, if we can cut down on the amount of
+> I/O that's involved in doing that it can help them quite a bit.  You
+> also get userspaces that want to enumerate device state at startup,
+> that's a bit easier to change in userspace but it's not an unreasonable
+> thing to want to do and can also get very I/O heavy.
+> 
+> There is some potential for errors to be introduced but equally these
+> tables can be both generated and verified mechanically, tasks that are
+> particularly straightforward for the device vendors to do.  There are
+> also potential risks in doing this at runtime if we didn't get the
+> device reset, if we don't accurately mark the volatile registers as
+> volatile or if there's otherwise bugs in the code.
+> 
+> > Precisely my point.  Lochnagar is a small device yet it's required to
+> > submit hundreds of lines of Regmap tables.  Imagine what that would
+> > look like for a large device.
+> 
+> There's no *requirement* to provide the data even if you're using the
+> cache (and the cache support is entirely optional), there's just costs
+> to not providing it in terms of what features you can get from the
+> regmap API and the performance of the system.  Not every device is going
+> to be bothered by those costs, many devices don't provide all of the
+> data they could.
 
-This series has the odd situation where patch 1 is threaded to the
-cover letter, but nothing else is - that makes it inconsistent.
+So what do we do in the case where, due to the size of the device, the
+amount of lines required by these tables go from crazy to grotesque?
 
-Where I've seen people disagree with threading is when sending
-follow-up series - whether that should be threaded to the previous
-series or not - some people want it others hate it.
+> I'm not clear to me that Lochnagar will particularly benefit from
+> providing the cache defaults but it sounds like you've raised concerns
+> about other devices which would, and it seems clear that the readability
+> information is very useful for this device if there's registers that
+> it's unsafe to try to read from.
 
-However, I haven't seen any disagreement is about having the patches
-threaded to the cover.
+Any reduction in lines would be a good thing.  Charles, could you
+please define what specific benefits you gain from providing providing
+the pre-cache data please?  With a particular emphasis on whether the
+trade-off is justified.
+
+> > > > Even if it is absolutely critical that you have to supply these to
+> > > > Regmap up-front, instead of on first use/read, why can't you just
+> > > > supply the oddball non-zero ones?
+> 
+> That doesn't work, we need to know both if the register has a default
+> value and what that value is - there's no great value in only supplying
+> the defaults for registers with non-zero values.
+
+All registers have a default value.  Why can't we assume that if a
+register is writable and a default value was omitted then the default
+is zero?
+
+Ah wait!  As I was typing the above, I just had a thought.  We don't
+actually provide a list of writable registers do we?  Only a the
+ability to verify if one is writable (presumably) before a write.
+
+That's frustrating!
+
+> > > If you aren't happy with the regmap subsystem you could send some
+> > > patches to change it to what you would be happy with (and patch the ~1300
+> > > drivers that use it)
+> 
+> > That may well happen.  This is the pre-patch discussion.
+> 
+> > Apologies that it had to happen on your submission, but this is that
+> > alerted me to the issue(s).
+> 
+> The regmap cache API has been this way since it was introduced in 2011
+> FWIW, we did add range based support later which is purely data driven.
+
+Utilising range support here would certainly help IMHO.
+
+> > > Like any kernel subsystem it has an API that we have to obey to be able to
+> > > use it.
+> 
+> > Again, this isn't about Lochnagar.
+> 
+> I think from the perspective of Richard and Charles who are just trying
+> to get their driver merged this is something of an abstract distinction.
+> If the driver were merged and this discussion were happening separately
+> their perspective would most likely be different.
+
+Charles has already mentioned that he'd take a look at the current
+*use* (not changing the API, but the way in which Lochnagar
+*uses/consumes* it).  Actions which would be most welcomed.
+
+> > > > The API is obscene and needs a re-work IMHO.
+> 
+> > > > I really hope we do not really have to list every register, but *if we
+> > > > absolutely must*, let's do it once:
+> 
+> > > >    REG_ADDRESS, WRV, INITIAL_VALUE
+> 
+> There is the option to specify range based access tables instead of a
+> function, for a lot of devices this is a nice, easy way to specify
+> things that makes more sense so we support it.  We don't combine the
+> tables because they're range based and if there is 100% overlap you can
+> always just point at the same table.
+> 
+> We allow the functions partly because it lets people handle weird cases
+> but also because it turned out when I looked at this that a lot of the
+> time the compiler output for switch statements was pretty efficient with
+> sparse register maps and it makes the code incredibly simple, much
+> simpler than trying to parse access tables into a more efficient data
+> structure and IIRC more compact too.  It's possible that those tradeoffs
+> have changed since but at the time there was a class of devices where it
+> wasn't clear that putting more effort in would result in substantially
+> better outcomes.
+> 
+> > > To re-iterate, regmap is a standard kernel subsystem. It's not owned by Cirrus,
+> > > so it's not our responsibility if you don't like it. Mark Brown is the maintainer.
+> 
+> > Sounds very much like you are saying, "it's not Cirrus' fault,
+> > therefore it is not my problem"?  Which is a terrible attitude.
+> 
+> I think from the perspective of Charles and Richard this is sounding an
+> awful lot like you want them (or someone else) to rewrite a very widely
+> used kernel API before they can get their driver merged.  To me that
+> would be a completely disproportionate amount of effort for their goal
+> but unfortunately people do get asked to do things like that so it's not
+> an unreasonable fear for them to have.
+
+I would see that as an unreasonable request.
+
+To be clear, that is *not* what I am asking.
+
+> > Remember that the Linux kernel is an open community.  Anyone should be
+> > free to discuss any relevant issue.  If we decide to take this
+> > off-line, which is likely, then so be it.  In the mean time, as a
+> > contributor to this community project, it's absolutely your
+> > responsibly to help discuss and potentially solve wider issues than
+> > just your lines of code.
+> 
+> It's also a community of people with differing amounts of ability to
+> contribute, due to things like time, energy and so on.  Not everyone can
+> work on everything they want to, let alone other things people ask them
+> to look at.
+
+I'm not asking for code submission.  Merely contributing to this
+discussion, or simply allowing it to happen on the back of one of
+their submission is enough.
+
+Denouncing all responsibility and a lack of care is not okay.
+
+> > > As above, if one subsystem owner doesn't like another subsystem then those
+> > > subsystem owners should talk to each other and sort something out. It shouldn't
+> > > block patches that are just trying to use the subsystem as it currently exists
+> > > in the kernel.
+> 
+> > Again, no one is blocking this patch.
+> 
+> > This driver was submitted for review/discussion.  We are discussing.
+> 
+> I kind of said this above but just to be clear this driver seems to me
+> like an idiomatic user of the regmap API as it is today.  My guess is
+> that we could probably loose the defaults tables and not suffer too much
+> but equally well they don't hurt from a regmap point of view.
+
+Perhaps Charles could elaborate on whether this is possible or not?
+
+> Reviwed-by: Mark Brown <broonie@kernel.org>
+
+Thanks.
 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
