@@ -1,41 +1,83 @@
-From: Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH 1/3] i3c: master: Add driver for Synopsys DesignWare IP
-Date: Mon, 29 Oct 2018 06:41:00 -0700
-Message-ID: <20181029134100.GD28520@bombadil.infradead.org>
-References: <1540807618-13246-1-git-send-email-soares@synopsys.com>
- <1540807618-13246-2-git-send-email-soares@synopsys.com>
+From: AnilKumar Chimata <anilc@codeaurora.org>
+Subject: Re: [PATCH 3/3] crypto: qce: ice: Add support for Inline Crypto
+ Engine
+Date: Mon, 29 Oct 2018 19:17:02 +0530
+Message-ID: <a00932da-72a5-42f9-bf82-eb3e611c35b5@codeaurora.org>
+References: <1539789476-6098-1-git-send-email-anilc@codeaurora.org>
+ <1539789476-6098-4-git-send-email-anilc@codeaurora.org>
+ <20181025145548.GA30244@bogus> <20181025152856.GD4970@thunk.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1540807618-13246-2-git-send-email-soares@synopsys.com>
+In-Reply-To: <20181025152856.GD4970@thunk.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vitor soares <vitor.soares@synopsys.com>
-Cc: boris.brezillon@bootlin.com, wsa@the-dreams.de, linux-i2c@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de, psroka@cadence.com, agolec@cadence.com, adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com, alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com, rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, linus.walleij@linaro.org, Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org, nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se, mshettel@codeaurora.org, swboyd@chromium.org, joao.pinto@synopsys.com, luis
+To: Rob Herring <robh@kernel.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, herbert@gondor.apana.org.au, davem@davemloft.net, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2018 at 10:06:56AM +0000, Vitor soares wrote:
-> +config DW_I3C_MASTER
-> +	tristate "Synospsys DesignWare I3C master driver"
-> +	depends on I3C
 
-> +	depends on !(ALPHA || PARISC)
+Hi Rob,
 
-why?
+Thanks for the comments,
 
-> +	help
-> +	  Support·for·Synopsys·DesignWare·MIPI·I3C·Controller.
+On 2018-10-25 20:58, Theodore Y. Ts'o wrote:
+> On Thu, Oct 25, 2018 at 09:55:48AM -0500, Rob Herring wrote:
+>> > +Introduction:
+>> > +=============
+>> > +Storage encryption has been one of the most required feature from security
+>> > +point of view. QTI based storage encryption solution uses general purpose
+>> > +crypto engine. While this kind of solution provide a decent amount of
+>> > +performance, it falls short as storage speed is improving significantly
+>> > +continuously. To overcome performance degradation, newer chips are going to
+>> > +have Inline Crypto Engine (ICE) embedded into storage device. ICE is supposed
+>> > +to meet the line speed of storage devices.
+>> 
+>> Is ICE part of the storage device or part of the host as the binding
+>> suggests?
+> 
+> My understanding is that for this particular instantiation, the Inline
+> Crypto Engine is located on the SOC.
 
-These strange characters (displayed as a centred dot on my terminal)
-should probably be spaces.
+This is part of the Storage controller, illustration below
 
-> +static struct dw_i3c_xfer *
-> +dw_i3c_master_alloc_xfer(struct dw_i3c_master *master, unsigned int ncmds)
-> +{
-> +	struct dw_i3c_xfer *xfer;
-> +
-> +	xfer = kzalloc(sizeof(*xfer) + (ncmds * sizeof(*xfer->cmds)),
-> +		       GFP_KERNEL);
+--------------------
+|            !_ICE_!
+|                  |
+|    UFS/SDCC      |
+|   Controller     |
+|                  |
+|                  |
+--------------------
 
-You should be using struct_size() here.
+> 
+> However, from the perspective of generic kernel support, the inline
+> crypto support could be implemented on the SOC, or in the host bus
+> adaptor, or as a "bump in the wire", or on the storage device.  And
+> whatever abstract interface in the block layer should be able to
+> support all of these cases.
+
+As name suggests ICE hardware is inline with the data lines of storage 
+controller that is the reason why throughput is inline with storage 
+speed. Having it out side of the controller kills the purpose of 
+introducing ICE on storage controller. If this ICE hardware is placed 
+outside then its similar to other crypto engines which are used for 
+cryptographic operations. The main reason to keep ICE hardware inline 
+with storage is to avoid extra latency (buffer copy) during read/writes 
+which involves decryption/encryption.
+
+> 
+> I do not believe it would be wise to assume that inline crypto will
+> forever be a mobile-only thing.  I could easily see use cases in the
+> data center; for example, if you believe that Nation State Actors
+> might be trying to create "implants" that attack hard drive firmware,
+> per some of the Snowden leaks, creating an open design ICE engine with
+> auditable firmware and a trusted secure key store, and which sits
+> between the host CPU and the storage device might be one way to
+> mitigate against this threat.
+
+Above comments valid here as well.
+
+> 
+> 					- Ted
