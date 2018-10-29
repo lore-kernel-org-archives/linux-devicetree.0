@@ -1,33 +1,60 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH 3/3] MAINTAINERS: Add myself as the dw-i3c-master module
- maintainer
-Date: Mon, 29 Oct 2018 11:58:45 -0700
-Message-ID: <ecd684121963748417a5d0105880ea8d73a20b9b.camel@perches.com>
-References: <1540807618-13246-1-git-send-email-soares@synopsys.com>
-         <1540807618-13246-4-git-send-email-soares@synopsys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8bit
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH 0/2 v5] arm64: Get rid of __early_init_dt_declare_initrd()
+Date: Mon, 29 Oct 2018 12:00:12 -0700
+Message-ID: <20181029190014.6455-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1540807618-13246-4-git-send-email-soares@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vitor soares <vitor.soares@synopsys.com>, boris.brezillon@bootlin.com, wsa@the-dreams.de, linux-i2c@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de
-Cc: psroka@cadence.com, agolec@cadence.com, adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com, alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com, rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, linus.walleij@linaro.org, Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org, nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se, mshettel@codeaurora.org, swboyd@chromium.org, joao.pinto@synopsys.com, luis.oliveira@synopsys.com, manuel.abreu@synopsys.com, gustavo.pimentel@synopsys.com
+To: linux-kernel@vger.kernel.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-10-29 at 10:06 +0000, Vitor soares wrote:
-> Signed-off-by: Vitor soares <soares@synopsys.com>
-[]
-> diff --git a/MAINTAINERS b/MAINTAINERS
-[]
-> @@ -6930,6 +6930,12 @@ F:	drivers/i3c/
->  F:	include/linux/i3c/
->  F:	include/dt-bindings/i3c/
->  
-> +I3C·DRIVER·FOR·SYNOPSYS·DESIGNWARE
-> +M:	Vitor·Soares·<soares@synopsys.com>
+Hi all,
 
-Please do not use the '·' character
-between your names and the email address
+I numbered this v5 because this is still revolving around the same
+initial desire to cut the build time of an ARM64 kernel when toggling
+CONFIG_BLK_DEV_INITRD. This 4th version is basically the 3rd possible
+way to just get rid of __early_init_dt_declare_initrd() for ARM64.
 
-Please use a standard ascii space instead.
+I previously mentioned that I was working on making
+phys_initrd_start/phys_initrd_size generic across architectures that
+make use of it, which would cover ARM (32-bit), unicore32 and possibly
+arm64, but upon second glance, this does not necessarily help, or rather
+this patch series actually helps make a smoother conversion in the
+future.
+
+Previous discussions/submissions list here:
+
+v3:
+https://www.spinics.net/lists/arm-kernel/msg683566.html
+v2:
+https://lkml.org/lkml/2018/10/25/4
+
+Changes in v5:
+
+- incorporate Mike's version which properly takes care of command-line
+  specified and FDT specified initrd location
+
+Changes in v4:
+
+- perform the physical to virtual initrd conversion straight within
+  arm64_memblock_init() to get the correct memblock reservation to occur
+
+Changes in v3:
+- attempt to change drivers/of/fdt.c to absorb ARM64's specific behavior
+
+Changes in v2:
+
+- put an /* empty */ comment in the asm-generic/initrd.h file
+- trim down the CC list to maximize the chances of people receiving this
+
+Florian Fainelli (2):
+  arm64: Get rid of __early_init_dt_declare_initrd()
+  of/fdt: Remove definition check for __early_init_dt_declare_initrd()
+
+ arch/arm64/include/asm/memory.h |  8 -------
+ arch/arm64/mm/init.c            | 42 +++++++++++++++++++++------------
+ drivers/of/fdt.c                |  2 --
+ 3 files changed, 27 insertions(+), 25 deletions(-)
+
+-- 
+2.17.1
