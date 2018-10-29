@@ -1,246 +1,61 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 04/15] drm/sun4i: sun6i_mipi_dsi: Add Allwinner A64
- MIPI DSI support
-Date: Mon, 29 Oct 2018 10:00:00 +0100
-Message-ID: <20181029090000.woypmozwc7sbtusk@flea>
-References: <20181023155035.9101-1-jagan@amarulasolutions.com>
- <20181023155035.9101-5-jagan@amarulasolutions.com>
- <20181024180632.zrb3lrqsznspmwbk@flea>
- <CAMty3ZDLd=vbYUut6Cwo9VKFR4T1u1p58FLg9vhN79JS1=0rag@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0954495039=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAMty3ZDLd=vbYUut6Cwo9VKFR4T1u1p58FLg9vhN79JS1=0rag@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, linux-sunxi@googlegroups.com, Will Deacon <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Stephen Boyd <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/7] Standardize onboard LED support for 96Boards
+Date: Mon, 29 Oct 2018 14:29:59 +0530
+Message-ID: <20181029090006.4353-1-manivannan.sadhasivam@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh@kernel.org, heiko@sntech.de, ezequiel@collabora.com, xuwei5@hisilicon.com, michal.simek@xilinx.com, pavel@ucw.cz, andy.gross@linaro.org
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, koen.kooi@linaro.org, nicolas.dechesne@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+This patchset standardizes the onboard LEDs on 96Boards by maintaining
+common labels and triggers as below:
 
---===============0954495039==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2m2feqxvtut5wn62"
-Content-Disposition: inline
+green:user1  default-trigger: heartbeat
+green:user2  default-trigger: mmc0/disk-activity (onboard-storage)
+green:user3  default-trigger: mmc1 (SD card)
+green:user4  default-trigger: none, panic-indicator
+yellow:wlan  default-trigger: phy0tx
+blue:bt      default-trigger: hci0-power
 
+This standardization is required to provide a common behaviour of LEDs
+across all mainline supported 96Boards and also making it easier to
+control it using an userspace library like MRAA.
 
---2m2feqxvtut5wn62
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+For Rock960 and Ficus boards, the LED support is added in this patchset.
+Rest of the boards are converted to adopt the standard.
 
-On Thu, Oct 25, 2018 at 04:32:06PM +0530, Jagan Teki wrote:
-> On Wed, Oct 24, 2018 at 11:36 PM Maxime Ripard
-> <maxime.ripard@bootlin.com> wrote:
-> >
-> > On Tue, Oct 23, 2018 at 09:20:24PM +0530, Jagan Teki wrote:
-> > > The MIPI DSI controller on Allwinner A64 is similar to
-> > > Allwinner A31 without support of DSI mod clock(CLK_DSI_SCLK)
-> > >
-> > > So, alter has_mod_clk bool via driver data for respective
-> > > SoC's compatible.
-> > >
-> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > ---
-> > > Changes for v2:
-> > > - none
-> > >
-> > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 47 ++++++++++++++++++++----=
---
-> > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  5 +++
-> > >  2 files changed, 41 insertions(+), 11 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm=
-/sun4i/sun6i_mipi_dsi.c
-> > > index e3b34a345546..8e9c76febca2 100644
-> > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > @@ -10,6 +10,7 @@
-> > >  #include <linux/component.h>
-> > >  #include <linux/crc-ccitt.h>
-> > >  #include <linux/of_address.h>
-> > > +#include <linux/of_device.h>
-> > >  #include <linux/pm_runtime.h>
-> > >  #include <linux/regmap.h>
-> > >  #include <linux/reset.h>
-> > > @@ -981,6 +982,8 @@ static int sun6i_dsi_probe(struct platform_device=
- *pdev)
-> > >       dsi->host.ops =3D &sun6i_dsi_host_ops;
-> > >       dsi->host.dev =3D dev;
-> > >
-> > > +     dsi->variant =3D of_device_get_match_data(dev);
-> > > +
-> > >       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > >       base =3D devm_ioremap_resource(dev, res);
-> > >       if (IS_ERR(base)) {
-> > > @@ -1001,17 +1004,20 @@ static int sun6i_dsi_probe(struct platform_de=
-vice *pdev)
-> > >               return PTR_ERR(dsi->reset);
-> > >       }
-> > >
-> > > -     dsi->mod_clk =3D devm_clk_get(dev, "mod");
-> > > -     if (IS_ERR(dsi->mod_clk)) {
-> > > -             dev_err(dev, "Couldn't get the DSI mod clock\n");
-> > > -             return PTR_ERR(dsi->mod_clk);
-> > > +     if (dsi->variant->has_mod_clk) {
-> > > +             dsi->mod_clk =3D devm_clk_get(dev, "mod");
-> > > +             if (IS_ERR(dsi->mod_clk)) {
-> > > +                     dev_err(dev, "Couldn't get the DSI mod clock\n"=
-);
-> > > +                     return PTR_ERR(dsi->mod_clk);
-> > > +             }
-> > >       }
-> > >
-> > >       /*
-> > >        * In order to operate properly, that clock seems to be always
-> > >        * set to 297MHz.
-> > >        */
-> > > -     clk_set_rate_exclusive(dsi->mod_clk, 297000000);
-> > > +     if (dsi->variant->has_mod_clk)
-> > > +             clk_set_rate_exclusive(dsi->mod_clk, 297000000);
-> > >
-> > >       dphy_node =3D of_parse_phandle(dev->of_node, "phys", 0);
-> > >       ret =3D sun6i_dphy_probe(dsi, dphy_node);
-> > > @@ -1043,7 +1049,8 @@ static int sun6i_dsi_probe(struct platform_devi=
-ce *pdev)
-> > >       pm_runtime_disable(dev);
-> > >       sun6i_dphy_remove(dsi);
-> > >  err_unprotect_clk:
-> > > -     clk_rate_exclusive_put(dsi->mod_clk);
-> > > +     if (dsi->variant->has_mod_clk)
-> > > +             clk_rate_exclusive_put(dsi->mod_clk);
-> > >       return ret;
-> > >  }
-> > >
-> > > @@ -1056,7 +1063,8 @@ static int sun6i_dsi_remove(struct platform_dev=
-ice *pdev)
-> > >       mipi_dsi_host_unregister(&dsi->host);
-> > >       pm_runtime_disable(dev);
-> > >       sun6i_dphy_remove(dsi);
-> > > -     clk_rate_exclusive_put(dsi->mod_clk);
-> > > +     if (dsi->variant->has_mod_clk)
-> > > +             clk_rate_exclusive_put(dsi->mod_clk);
-> > >
-> > >       return 0;
-> > >  }
-> > > @@ -1066,7 +1074,8 @@ static int __maybe_unused sun6i_dsi_runtime_res=
-ume(struct device *dev)
-> > >       struct sun6i_dsi *dsi =3D dev_get_drvdata(dev);
-> > >
-> > >       reset_control_deassert(dsi->reset);
-> > > -     clk_prepare_enable(dsi->mod_clk);
-> > > +     if (dsi->variant->has_mod_clk)
-> > > +             clk_prepare_enable(dsi->mod_clk);
-> > >
-> > >       /*
-> > >        * Enable the DSI block.
-> > > @@ -1094,7 +1103,8 @@ static int __maybe_unused sun6i_dsi_runtime_sus=
-pend(struct device *dev)
-> > >  {
-> > >       struct sun6i_dsi *dsi =3D dev_get_drvdata(dev);
-> > >
-> > > -     clk_disable_unprepare(dsi->mod_clk);
-> > > +     if (dsi->variant->has_mod_clk)
-> > > +             clk_disable_unprepare(dsi->mod_clk);
-> > >       reset_control_assert(dsi->reset);
-> > >
-> > >       return 0;
-> > > @@ -1106,9 +1116,24 @@ static const struct dev_pm_ops sun6i_dsi_pm_op=
-s =3D {
-> > >                          NULL)
-> > >  };
-> > >
-> > > +static const struct sun6i_dsi_variant sun6i_a31_dsi =3D {
-> > > +     .has_mod_clk =3D true,
-> > > +};
-> > > +
-> > > +static const struct sun6i_dsi_variant sun50i_a64_dsi =3D {
-> > > +     .has_mod_clk =3D false,
-> >
-> > This is the default already.
->=20
-> True but we need to assign the .data. how about checking device
-> compatible? I'm thinking of difference in driver data in future
-> between SoC's
+Note: Since there is no UFS trigger available for now, user2 LED trigger
+is set to none on HiKey960.
 
-That's not my point. You'll need the structure, but has_mod_clk will
-be initialised to false already, so you can drop the explicit
-assignment.
+Thanks,
+Mani
 
-> >
-> > > +};
-> > > +
-> > >  static const struct of_device_id sun6i_dsi_of_table[] =3D {
-> > > -     { .compatible =3D "allwinner,sun6i-a31-mipi-dsi" },
-> > > -     { }
-> > > +     {
-> > > +             .compatible =3D "allwinner,sun6i-a31-mipi-dsi",
-> > > +             .data =3D &sun6i_a31_dsi,
-> > > +     },
-> > > +     {
-> > > +             .compatible =3D "allwinner,sun50i-a64-mipi-dsi",
-> > > +             .data =3D &sun50i_a64_dsi,
-> > > +     },
-> > > +     { /* sentinel */ }
-> > >  };
-> > >  MODULE_DEVICE_TABLE(of, sun6i_dsi_of_table);
-> > >
-> > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h b/drivers/gpu/drm=
-/sun4i/sun6i_mipi_dsi.h
-> > > index dbbc5b3ecbda..597b62227019 100644
-> > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> > > @@ -20,6 +20,10 @@ struct sun6i_dphy {
-> > >       struct reset_control    *reset;
-> > >  };
-> > >
-> > > +struct sun6i_dsi_variant {
-> > > +     bool                    has_mod_clk;
-> > > +};
-> > > +
-> >
-> > This should be part of a separate patch.
->=20
-> How come, because has_mod_clk is using in driver file?
+Changes in v2:
 
-You're doing two things here: Adding a quirk structure, and adding
-support for an SoC. This should be two patches.
+* Removed device-name from LED labels as per the suggestion from Simon
+  and Pavel
+* Adopted APQ8016 SBC (Dragonboard410c)
+* Tested the Ficus patch on Ficus V1.1 board
+* CCed LED mailing list
 
-Maxime
+Manivannan Sadhasivam (7):
+  arm64: dts: rockchip: ficus: Add on-board LED support
+  arm64: dts: rockchip: rock960: Add on-board LED support
+  arm64: dts: hisilicon: hikey: Standardize LED labels and triggers
+  arm64: dts: hisilicon: hikey960: Standardize LED labels and triggers
+  arm64: dts: hisilicon: poplar: Standardize LED labels and triggers
+  arm64: dts: xilinx: ultra96: Standardize LED labels and triggers
+  arm64: dts: qcom: apq8016-sbc: Standardize LED labels
 
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+ .../boot/dts/hisilicon/hi3660-hikey960.dts    | 18 ++---
+ .../boot/dts/hisilicon/hi3798cv200-poplar.dts | 13 +--
+ .../arm64/boot/dts/hisilicon/hi6220-hikey.dts | 17 ++--
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi     | 12 +--
+ arch/arm64/boot/dts/rockchip/rk3399-ficus.dts | 78 ++++++++++++++++++
+ .../boot/dts/rockchip/rk3399-rock960.dts      | 79 +++++++++++++++++++
+ .../boot/dts/xilinx/zynqmp-zcu100-revC.dts    | 15 ++--
+ 7 files changed, 196 insertions(+), 36 deletions(-)
 
---2m2feqxvtut5wn62
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW9bMDwAKCRDj7w1vZxhR
-xUmXAP4vN8ffjHY6iO11vIeN0E/jNfdln4ZsVJAXWa1MWoBj9AEA8JQFj1Ze5T8u
-vhjk54qPb//J2tuKKz2joVzJADM+2gk=
-=1Tm4
------END PGP SIGNATURE-----
-
---2m2feqxvtut5wn62--
-
---===============0954495039==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0954495039==--
+-- 
+2.17.1
