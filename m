@@ -1,16 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 00/25] drm/sun4i: Allwinner A64 MIPI-DSI support
-Date: Mon, 29 Oct 2018 10:15:08 +0100
-Message-ID: <20181029091508.gyhn2m5fnbucvb34@flea>
+Subject: Re: [PATCH v3 06/25] drm/sun4i: sun6i_mipi_dsi: Add DSI
+ Generic short write 2 param transfer
+Date: Mon, 29 Oct 2018 10:17:07 +0100
+Message-ID: <20181029091707.shfxcqe5xchoqjqw@flea>
 References: <20181026144344.27778-1-jagan@amarulasolutions.com>
+ <20181026144344.27778-7-jagan@amarulasolutions.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="36y45ohgmtyd7cei"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBJ473PPAKGQE47L6XKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="7gh634hfx5aiabjc"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBFFA3PPAKGQEJAGJ4OA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20181026144344.27778-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <20181026144344.27778-7-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -22,29 +24,21 @@ Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G
 List-Id: devicetree@vger.kernel.org
 
 
---36y45ohgmtyd7cei
+--7gh634hfx5aiabjc
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Fri, Oct 26, 2018 at 08:13:19PM +0530, Jagan Teki wrote:
-> This series fixed the issues related to work DSI on 2-lane panel
-> which is reported on previous version[1].
+On Fri, Oct 26, 2018 at 08:13:25PM +0530, Jagan Teki wrote:
+> Short transfer write support for DCS and Generic transfer types
+> share similar way to process command sequence in DSI block so
+> add generic write 2 param transfer type macro so-that the panels
+> which are requesting similar transfer type may process properly.
 > 
-> Few comments from previous version still in discussion, but I just
-> send this version just to group all working changes together.
-> anyway I will fix in this in next version if any.
-> 
-> PLL_MIPI min rate is still weird, I tried many possible dclock rate
-> from panel driver to satisfy manual suggested min rate 500MHz but
-> none working so eventually moved 300MHz. any inputs on this area
-> are welcome.
-> 
-> All these changes are tested in 2-lane, 4-lane MIPI-DSI panels.
-> 
-> If anyone wants to test, use this repo [2] with WIP-A64-DSI branch.
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> Tested-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-A changelog would be nice here, and usually you shouldn't send a new
-version while there is ongoing discussion on the previous version.
+I'm not sure why you have a Tested-by tag here. Of course we're
+expecting you to test your patches before sending them.
 
 Maxime
 
@@ -52,4 +46,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---36y45ohgmtyd7cei--
+--7gh634hfx5aiabjc--
