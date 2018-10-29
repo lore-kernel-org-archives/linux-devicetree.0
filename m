@@ -1,33 +1,34 @@
-Return-Path: <SRS0=NOhz=NG=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH] dt-bindings: watchdog: renesas-wdt: Document r8a77470 support
-Date: Fri, 26 Oct 2018 09:55:53 +0100
-Message-Id: <1540544153-48098-1-git-send-email-biju.das@bp.renesas.com>
-To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=pxxc=NJ=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v2 0/2] Microchip QT1050 support
+Date: Mon, 29 Oct 2018 14:38:24 +0100
+Message-Id: <20181029133826.30326-1-m.felsch@pengutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, raphaelpereira@gmail.com, voice.shen@atmel.com, linux-input@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-RZ/G1C (R8A77470) watchdog implementation is compatible with R-Car
-Gen2, therefore add relevant documentation.
+Hi,
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-This patch is tested against linux-next
----
- Documentation/devicetree/bindings/watchdog/renesas-wdt.txt | 1 +
- 1 file changed, 1 insertion(+)
+this is my v2 containing the comments made on my v1 [1].
 
-diff --git a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-index a8ee29f..a47bdea 100644
---- a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-@@ -8,6 +8,7 @@ Required properties:
- 		 - "renesas,r8a7743-wdt" (RZ/G1M)
- 		 - "renesas,r8a7744-wdt" (RZ/G1N)
- 		 - "renesas,r8a7745-wdt" (RZ/G1E)
-+		 - "renesas,r8a77470-wdt" (RZ/G1C)
- 		 - "renesas,r8a774a1-wdt" (RZ/G2M)
- 	         - "renesas,r8a7790-wdt" (R-Car H2)
- 	         - "renesas,r8a7791-wdt" (R-Car M2-W)
+I split the dt-bindings according to commit [2].
+
+[1] https://www.spinics.net/lists/devicetree/msg250279.html
+[2] https://www.spinics.net/lists/devicetree/msg253946.html
+
+Marco Felsch (2):
+  dt-bindings: input: add Microchip QT1050 bindings
+  Input: qt1050 - add Microchip AT42QT1050 support
+
+ .../bindings/input/microchip,qt1050.txt       |  74 +++
+ drivers/input/keyboard/Kconfig                |  11 +
+ drivers/input/keyboard/Makefile               |   1 +
+ drivers/input/keyboard/qt1050.c               | 620 ++++++++++++++++++
+ 4 files changed, 706 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/microchip,qt1050.txt
+ create mode 100644 drivers/input/keyboard/qt1050.c
+
 -- 
-2.7.4
+2.19.1
