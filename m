@@ -1,89 +1,65 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC PATCH v2 01/17] OPP: Allow to request stub voltage
- regulators
-Date: Mon, 29 Oct 2018 12:23:28 +0530
-Message-ID: <20181029065328.6vkbwjnq2zzwxric@vireshk-i7>
-References: <20181021205501.23943-1-digetx@gmail.com>
- <20181021205501.23943-2-digetx@gmail.com>
- <20181022053636.ag62j3rj3vovbz53@vireshk-i7>
- <e4027793-9436-413d-2a7b-34cf519218c3@gmail.com>
- <20181022113224.b5fiebgy2aap66nd@vireshk-i7>
- <29f893be-feed-c4c5-8468-51f7228dd468@gmail.com>
- <20181024064123.lbpbeervghp35fe7@vireshk-i7>
- <ba782346-6ac0-7bf3-e187-00d2634b145b@gmail.com>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v5 5/8] ARM: l2x0: add marvell,ecc-enable property for aurora
+Date: Mon, 29 Oct 2018 20:25:32 +1300
+Message-ID: <20181029072535.31667-6-chris.packham@alliedtelesis.co.nz>
+References: <20181029072535.31667-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ba782346-6ac0-7bf3-e187-00d2634b145b@gmail.com>
+In-Reply-To: <20181029072535.31667-1-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux@armlinux.org.uk
+Cc: u.kleine-koenig@pengutronix.de, jlu@pengutronix.de, bp@alien8.de, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 26-10-18, 15:03, Dmitry Osipenko wrote:
-> On 10/24/18 9:41 AM, Viresh Kumar wrote:
-> > On 22-10-18, 15:12, Dmitry Osipenko wrote:
-> >> Because there is one Tegra20 board (tegra20-trimslice) that doesn't declare
-> >> necessary regulators, but we want to have CPU frequency scaling. I couldn't
-> >> find board schematics and so don't know if CPU / CORE voltages are fixed on
-> >> Trim-Slice or it is just preferable not to have DVFS for that board, it is an
-> >> outlet-powered device [0]. Hence tegra20-cpufreq driver will request a dummy
-> >> regulators when appropriate. 
-> > 
-> > We have been using the regulator_get_optional() variant until now in the OPP
-> > core to make sure that we don't do DVFS for the CPU without the mandatory
-> > regulators being present, as that may make things unstable and cause harm to the
-> > SoC if we try to take CPU to frequency range over the currently programmed
-> > regulator can support.
-> > 
-> > Now coming back to tegra-20 SoC, which actually requires a regulator normally by
-> > design. On one of the boards (which is outlet powered), you aren't sure if there
-> > is a programmable regulator or not, or if DVFS should really be done or not.
-> > Isn't it worth checking the same from Tegra maintainers, or whomsoever has
-> > information on that board ?
-> 
-> I'll try to find out more detailed information for the next revision of the patchset.
+The aurora cache on the Marvell Armada-XP SoC supports ECC protection
+for the L2 data arrays. Add a "marvell,ecc-enable" device tree property
+which can be used to enable this.
 
-Thanks Dmitry.
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+[jlu@pengutronix.de: use aurora specific define AURORA_ACR_ECC_EN]
+Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
+---
+=20Documentation/devicetree/bindings/arm/l2c2x0.txt | 2 ++
+=20arch/arm/mm/cache-l2x0.c                         | 7 +++++++
+=202 files changed, 9 insertions(+)
 
->  What would happen if there actually was a regulator
-
-Please preserve the '>' from previous replies at the beginning of the
-lines. Otherwise it looks as if you have written the above line. :)
-
-> > and its default settings aren't good enough for high end frequencies ?
-> 
-> Usually this causes kernel/applications crashes and/or machine hang.
-
-Sure. I also do remember from some guys (maybe TI), where they
-mentioned that such scenarios can harm the hardware as well sometimes.
-Don't remember the details though.
-
->  And because you are moving to regulator_get() API for
-> > the entire SoC (i.e. its cpufreq driver), people will never find the missing
-> > regulator.
-> 
-> Regulators core prints info message when dummy regulator is being used.
-
-Sure, but they are easy to miss and they are only seen by developers
-not regular users of a machine.
-
-> > If we can do it safely for all tegra20 boards, why not migrate to using
-> > regulator_get() instead of regulator_get_optional() in the OPP core API itself
-> > for everyone ?
-> > 
-> 
-> This should be a platform-specific decision. For Tegra we know that regulators should be in a good state at kernel boot time, I don't think that this applies to other platforms.
-
-Based on the other discussion with Lucas on this thread, I don't think
-this is correct any more ?
-
-Don't get me wrong, I am all good for changes and another API change
-doesn't matter much to me. I am just wondering if it would be the
-right approach to fix the issue. Why not rather call
-dev_pm_opp_set_regulators() conditionally and avoid calling it for the
-specific tegra20 board.
-
--- 
-viresh
+diff --git a/Documentation/devicetree/bindings/arm/l2c2x0.txt b/Documenta=
+tion/devicetree/bindings/arm/l2c2x0.txt
+index fbe6cb21f4cf..15a84f0ba9f1 100644
+--- a/Documentation/devicetree/bindings/arm/l2c2x0.txt
++++ b/Documentation/devicetree/bindings/arm/l2c2x0.txt
+@@ -76,6 +76,8 @@ Optional properties:
+=20  specified to indicate that such transforms are precluded.
+=20- arm,parity-enable : enable parity checking on the L2 cache (L220 or =
+PL310).
+=20- arm,parity-disable : disable parity checking on the L2 cache (L220 o=
+r PL310).
++- marvell,ecc-enable : enable ECC protection on the L2 cache
++- marvell,ecc-disable : disable ECC protection on the L2 cache
+=20- arm,outer-sync-disable : disable the outer sync operation on the L2 =
+cache.
+=20  Some core tiles, especially ARM PB11MPCore have a faulty L220 cache =
+that
+=20  will randomly hang unless outer sync operations are disabled.
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index b70bee74750d..644f786e4fa9 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -1505,6 +1505,13 @@ static void __init aurora_of_parse(const struct de=
+vice_node *np,
+=20		mask |=3D AURORA_ACR_FORCE_WRITE_POLICY_MASK;
+=20	}
+=20
++	if (of_property_read_bool(np, "marvell,ecc-enable")) {
++		mask |=3D AURORA_ACR_ECC_EN;
++		val |=3D AURORA_ACR_ECC_EN;
++	} else if (of_property_read_bool(np, "marvell,ecc-disable")) {
++		mask |=3D AURORA_ACR_ECC_EN;
++	}
++
+=20	if (of_property_read_bool(np, "arm,parity-enable")) {
+=20		mask |=3D AURORA_ACR_PARITY_EN;
+=20		val |=3D AURORA_ACR_PARITY_EN;
+--=20
+2.19.1
