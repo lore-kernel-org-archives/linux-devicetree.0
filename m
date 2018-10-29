@@ -1,106 +1,140 @@
-From: Pascal PAILLET-LME <p.paillet@st.com>
-Subject: [PATCH v5 3/8] dt-bindings: regulator: document stpmic1 pmic
- regulators
-Date: Mon, 29 Oct 2018 16:22:05 +0000
-Message-ID: <1540830122-2577-4-git-send-email-p.paillet@st.com>
-References: <1540830122-2577-1-git-send-email-p.paillet@st.com>
+From: Stefan Popa <stefan.popa@analog.com>
+Subject: [PATCH v3 3/3] dt-bindings: iio: adc: Add docs for ad7124
+Date: Mon, 29 Oct 2018 18:39:30 +0200
+Message-ID: <1540831170-3150-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1540830122-2577-1-git-send-email-p.paillet@st.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
-Cc: Pascal PAILLET-LME <p.paillet@st.com>
+To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
 List-Id: devicetree@vger.kernel.org
 
-The STPMIC1 regulators supply power to the application processor as well as
-to the external system peripherals such as DDR, Flash memories and system
-devices.
+Add support for Analog Devices AD7124 4-channels and 8-channels ADC.
 
-Signed-off-by: Pascal Paillet <p.paillet@st.com>
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
 ---
-changes in v5:
-* describe regulator-active-discharge is available for power switches
-* remove interrupt parents
+Changes in v2:
+	- Nothing changed.
+Changes in v3:
+	- Removed the "adi,channels" property.
+	- Used the "reg" property to get the channel number and "adi,diff-channels"
+	  for the differential pins. The "adi,channel-number" property was removed.
+	- adi,bipolar is of boolean type.
 
- .../bindings/regulator/st,stpmic1-regulator.txt    | 67 ++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
+ .../devicetree/bindings/iio/adc/adi,ad7124.txt     | 90 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 91 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
 
-diff --git a/Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt b/Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
 new file mode 100644
-index 0000000..5adc938
+index 0000000..46a9b71
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
-@@ -0,0 +1,67 @@
-+STMicroelectronics STPMIC1 Voltage regulators
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
+@@ -0,0 +1,90 @@
++Analog Devices AD7124 ADC device driver
 +
-+Regulator Nodes are optional depending on needs.
++Required properties for the AD7124:
++	- compatible: Must be one of "adi,ad7124-4" or "adi,ad7124-8"
++	- reg: SPI chip select number for the device
++	- spi-max-frequency: Max SPI frequency to use
++		see: Documentation/devicetree/bindings/spi/spi-bus.txt
++	- clocks: phandle to the master clock (mclk)
++		see: Documentation/devicetree/bindings/clock/clock-bindings.txt
++	- clock-names: Must be "mclk".
++	- interrupts: IRQ line for the ADC
++		see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
 +
-+Available Regulators in STPMIC1 device are:
-+  - buck1 for Buck BUCK1
-+  - buck2 for Buck BUCK2
-+  - buck3 for Buck BUCK3
-+  - buck4 for Buck BUCK4
-+  - ldo1 for LDO LDO1
-+  - ldo2 for LDO LDO2
-+  - ldo3 for LDO LDO3
-+  - ldo4 for LDO LDO4
-+  - ldo5 for LDO LDO5
-+  - ldo6 for LDO LDO6
-+  - vref_ddr for LDO Vref DDR
-+  - boost for Buck BOOST
-+  - pwr_sw1 for VBUS_OTG switch
-+  - pwr_sw2 for SW_OUT switch
++	  Required properties:
++		* #address-cells: Must be 1.
++		* #size-cells: Must be 0.
 +
-+Switches are fixed voltage regulators with only enable/disable capability.
++	  Subnode(s) represent the external channels which are connected to the ADC.
++	  Each subnode represents one channel and has the following properties:
++		Required properties:
++			* reg: The channel number. It can have up to 4 channels on ad7124-4
++			  and 8 channels on ad7124-8, numbered from 0 to 15.
++			* adi,diff-channels: Pins the channel is connected to. The first value
++			  specifies the positive input pin, the second value the negative input pin.
++
++		Optional properties:
++			* adi,bipolar: Boolean, if set the channel is used in bipolar mode.
++			* adi,reference-select: Select the reference source to use when
++			  converting on the the specific channel. Valid values are:
++			  0: REFIN1(+)/REFIN1(−).
++			  1: REFIN2(+)/REFIN2(−).
++			  3: AVDD
++			  If this field is left empty, internal reference is selected.
++			* adi,gain: Select the gain when converting on the specific channel.
++			  Valid values are: 1, 2, 4, 8, 16, 32, 64, 128.
++			  If this field is left empty, gain of 1 is selected.
++			* adi,odr-hz: The output data rate can be programmed from:
++			  9 to 19200 for full power mode (when the master clock is 614.4 kHz)
++			  2 to 4800 for mid power mode (when the master clock is 153.6 kHz)
++			  1 to 2400 for low power mode (when the master clock is 76.8 kHz)
++			  If this field is left empty, odr of 9 is selected.
 +
 +Optional properties:
-+- st,mask-reset: mask reset for this regulator: the regulator configuration
-+  is maintained during pmic reset.
-+- regulator-pull-down: enable high pull down
-+  if not specified light pull down is used
-+- regulator-over-current-protection:
-+    if set, all regulators are switched off in case of over-current detection
-+    on this regulator,
-+    if not set, the driver only sends an over-current event.
-+- interrupt-parent: phandle to the parent interrupt controller
-+- interrupts: index of current limit detection interrupt
-+- <regulator>-supply: phandle to the parent supply/regulator node
-+	each regulator supply can be described except vref_ddr.
-+- regulator-active-discharge: can be used on pwr_sw1 and pwr_sw2.
++	- refin1-supply: refin1 supply can be used as reference for conversion.
++	- refin2-supply: refin2 supply can be used as reference for conversion.
++	- avdd-supply: avdd supply can be used as reference for conversion.
 +
 +Example:
-+regulators {
-+	compatible = "st,stpmic1-regulators";
++	adc@0 {
++		compatible = "adi,ad7124-4";
++		reg = <0>;
++		spi-max-frequency = <5000000>;
++		interrupts = <25 2>;
++		interrupt-parent = <&gpio>;
++		refin1-supply = <&adc_vref>;
++		clocks = <&ad7124_mclk>;
++		clock-names = "mclk";
 +
-+	ldo6-supply = <&v3v3>;
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+	vdd_core: buck1 {
-+		regulator-name = "vdd_core";
-+		interrupts = <IT_CURLIM_BUCK1 0>;
-+		st,mask-reset;
-+		regulator-pull-down;
-+		regulator-min-microvolt = <700000>;
-+		regulator-max-microvolt = <1200000>;
++		channel@0 {
++			reg = <0>;
++			adi,diff-channels = <0 1>;
++			adi,reference-select = <0>;
++			adi,gain = <2>;
++			adi,odr-hz = <10>;
++		};
++
++		channel@1 {
++			reg = <1>;
++			adi,bipolar;
++			adi,diff-channels = <2 3>;
++			adi,reference-select = <0>;
++			adi,gain = <4>;
++			adi,odr-hz = <50>;
++		};
++
++		channel@2 {
++			reg = <2>;
++			adi,diff-channels = <4 5>;
++			adi,gain = <128>;
++			adi,odr-hz = <19200>;
++		};
++
++		channel@3 {
++			reg = <3>;
++			adi,diff-channels = <6 7>;
++		};
 +	};
-+
-+	v3v3: buck4 {
-+		regulator-name = "v3v3";
-+		interrupts = <IT_CURLIM_BUCK4 0>;
-+
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	v1v8: ldo6 {
-+		regulator-name = "v1v8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-over-current-protection;
-+	};
-+};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3a1bfcb..f2fa508 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -845,6 +845,7 @@ L:	linux-iio@vger.kernel.org
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+ F:	drivers/iio/adc/ad7124.c
++F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
+ 
+ ANALOG DEVICES INC AD9389B DRIVER
+ M:	Hans Verkuil <hans.verkuil@cisco.com>
 -- 
-1.9.1
+2.7.4
