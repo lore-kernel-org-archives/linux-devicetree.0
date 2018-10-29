@@ -1,148 +1,93 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v3 3/5] nfc: pn533: add UART phy driver
-Date: Mon, 29 Oct 2018 12:07:04 +0100
-Message-ID: <20181029110704.GQ27852@localhost>
-References: <20181025132937.24405-1-poeschel@lemonage.de>
- <20181025132937.24405-3-poeschel@lemonage.de>
- <20181028102725.GL27852@localhost>
- <20181029100246.GA5905@lem-wkst-02.lemonage>
+From: Poonam Aggrwal <poonam.aggrwal@nxp.com>
+Subject: RE: [PATCH v7 2/6] soc/fsl/guts: Add definition for LX2160A
+Date: Mon, 29 Oct 2018 11:09:24 +0000
+Message-ID: <VI1PR04MB4976D4A33E0561D125BE837486F30@VI1PR04MB4976.eurprd04.prod.outlook.com>
+References: <1540759926-3641-1-git-send-email-vabhav.sharma@nxp.com>
+ <1540759926-3641-3-git-send-email-vabhav.sharma@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181029100246.GA5905@lem-wkst-02.lemonage>
+In-Reply-To: <1540759926-3641-3-git-send-email-vabhav.sharma@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lars Poeschel <poeschel@lemonage.de>
-Cc: Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, open list <linux-kernel@vger.kernel.org>, "open list:NFC SUBSYSTEM" <linux-wireless@vger.kernel.org>
+To: "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "oss@buserror.net" <oss@buserror.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.or>
+Cc: "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Udit Kumar <udit.kumar@nxp.com>, Pankaj Bansal <pankaj.bansal@nxp.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, Varun Sethi <V.Sethi@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>, Yinbo Zhu <yinbo.zhu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2018 at 11:02:46AM +0100, Lars Poeschel wrote:
-> Hi Johan,
-> 
-> thank you very much for the review!
-> 
-> On Sun, Oct 28, 2018 at 11:27:25AM +0100, Johan Hovold wrote:
-> > On Thu, Oct 25, 2018 at 03:29:34PM +0200, Lars Poeschel wrote:
-> > > This adds the UART phy interface for the pn533 driver.
-> > > The pn533 driver can be used through UART interface this way.
-> > > It is implemented as a serdev device.
-> > 
-> > Just a few drive-by comments below.
 
-> > > +/*
-> > > + * Driver for NXP PN532 NFC Chip - UART transport layer
-> > > + *
-> > > + * Copyright (C) 2018 Lemonage Software GmbH
-> > > + * Author: Lars Pöschel <poeschel@lemonage.de>
-> > > + * All rights reserved.
-> > > + */
-> > 
-> > > +#define VERSION "0.1"
-> > 
-> > We don't version kernel drivers individually, so please drop this here
-> > and below.
-> 
-> There was a comment from Marcel about this as well and I read it as: You
-> can do it, but it is not required and nobody really cares.
-> I included this, because the other pn532 phy driver (i2c) is doing it
-> this way, but I don't like it either, so I will drop this, as well as
-> the PN532_UART_DRIVER_NAME define in the next version.
 
-Sounds good.
-
-> > > +static int pn532_uart_probe(struct serdev_device *serdev)
-> > > +{
-> > > +	struct pn532_uart_phy *pn532;
-> > > +	struct pn533 *priv;
-> > > +	int err;
-> > > +
-> > > +	err = -ENOMEM;
-> > > +	pn532 = kzalloc(sizeof(*pn532), GFP_KERNEL);
-> > > +	if (pn532 == NULL)
-> > 
-> > I'd use !pn532 here (and elsewhere).
-> 
-> I will change it.
-> 
-> > > +		goto err_exit;
-> > > +
-> > > +	pn532->recv_skb = alloc_skb(PN532_UART_SKB_BUFF_LEN, GFP_KERNEL);
-> > > +	if (pn532->recv_skb == NULL)
-> > > +		goto err_free;
-> > > +
-> > > +	pn532->serdev = serdev;
-> > > +	priv = pn533_register_device(PN533_DEVICE_PN532,
-> > > +				     PN533_NO_TYPE_B_PROTOCOLS,
-> > > +				     PN533_PROTO_REQ_ACK_RESP,
-> > > +				     pn532, &uart_phy_ops, NULL,
-> > > +				     &pn532->serdev->dev,
-> > > +				     &serdev->dev);
-> > > +
-> > 
-> > Stray new line.
-> 
-> Ok.
-> 
-> > > +	if (IS_ERR(priv)) {
-> > > +		err = PTR_ERR(priv);
-> > > +		goto err_skb;
-> > > +	}
-> > 
-> > Should you not set up your device fully before registering it? I'd
-> > assume you could get callbacks from NFC core here.
-> 
-> I did not see any during my tests, but you are right: It feels a bit
-> odd.
-> The i2c driver is also requesting irqs after registering.
-> The pn533_finalize_setup() has to be last.
-> I could do the serdev_* stuff before, but ...
-> 
-> > > +
-> > > +	pn532->priv = priv;
-> > > +	serdev_device_set_drvdata(serdev, pn532);
-> > > +	serdev_device_set_client_ops(serdev, &pn532_serdev_ops);
-> > > +	err = serdev_device_open(serdev);
-> > > +	if (err) {
-> > > +		dev_err(&serdev->dev, "Unable to open device %s\n",
-> > > +				serdev->dev.init_name);
-> > 
-> > dev_err will include the device name so you can drop the init_name bit.
-> 
-> Ok, i drop it.
-> 
-> > > +		goto err_unregister;
-> > > +	}
-> > 
-> > Keeping the serial device open at all times will prevent low power
-> > states on some platforms. Wouldn't it be possible to open the device
-> > when the nfc interface is brought up (and during setup)?
-> 
-> ... that would then be contrary to this idea.
-
-Not necessarily, that depends on what callbacks you can expect and at
-what time.
-
-> Also I don't see how to implement it with what is there today. i2c also
-> does not do something similar.
-
-But i2c doesn't have the concept of an "open" port consuming power.
-
-> It can be done with adding some callbacks from the core (pn533.c) driver
-> to it's phy drivers.
-
-Haven't looked at it in any detail, but in general serdev driver should
-only keep the port open while the device is in use.
-
-I only noticed that nfc core has dev_up/down callbacks which looks like
-they could be used for something like this.
-
-> Wouldn't that be the scope of another later patch then ?
-
-Possibly. We have accepted some serdev drivers already taking the lazy
-approach of opening the port in probe. Depending on the driver, it may
-not be too bad (e.g. for some specific hardware which you know you'll
-always use), but it not really nice to have everyone pay a price in
-terms of power-consumption for a feature that is rarely used.
-
-Johan
+> -----Original Message-----
+> From: linux-arm-kernel [mailto:linux-arm-kernel-bounces@lists.infradead.o=
+rg]
+> On Behalf Of Vabhav Sharma
+> Sent: Monday, October 29, 2018 2:28 PM
+> To: sudeep.holla@arm.com; oss@buserror.net; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org; robh+dt@kernel.org; mark.rutland@arm.com;
+> linuxppc-dev@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org;
+> mturquette@baylibre.com; sboyd@kernel.org; rjw@rjwysocki.net;
+> viresh.kumar@linaro.org; linux-clk@vger.kernel.org; linux-pm@vger.kernel.=
+org;
+> linux-kernel-owner@vger.kernel.org; catalin.marinas@arm.com;
+> will.deacon@arm.com; gregkh@linuxfoundation.org; arnd@arndb.de;
+> kstewart@linuxfoundation.org; yamada.masahiro@socionext.com; Leo Li
+> <leoyang.li@nxp.com>; shawnguo@kernel.org
+> Cc: ulf.hansson@linaro.org; Udit Kumar <udit.kumar@nxp.com>; Pankaj Bansa=
+l
+> <pankaj.bansal@nxp.com>; linux@armlinux.org.uk; adrian.hunter@intel.com;
+> Varun Sethi <V.Sethi@nxp.com>; Vabhav Sharma <vabhav.sharma@nxp.com>;
+> Yinbo Zhu <yinbo.zhu@nxp.com>
+> Subject: [PATCH v7 2/6] soc/fsl/guts: Add definition for LX2160A
+>=20
+> Adding compatible string "lx2160a-dcfg" to initialize guts driver for lx2=
+160 and
+> SoC die attribute definition for LX2160A
+>=20
+> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+> Acked-by: Li Yang <leoyang.li@nxp.com>
+> ---
+>  drivers/soc/fsl/guts.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>=20
+> diff --git a/drivers/soc/fsl/guts.c b/drivers/soc/fsl/guts.c index
+> 302e0c8..bcab1ee 100644
+> --- a/drivers/soc/fsl/guts.c
+> +++ b/drivers/soc/fsl/guts.c
+> @@ -100,6 +100,11 @@ static const struct fsl_soc_die_attr fsl_soc_die[] =
+=3D {
+>  	  .svr		=3D 0x87000000,
+>  	  .mask		=3D 0xfff70000,
+>  	},
+> +	/* Die: LX2160A, SoC: LX2160A/LX2120A/LX2080A */
+> +	{ .die          =3D "LX2160A",
+> +	  .svr          =3D 0x87360000,
+Do all  the threevariants " LX2160A/LX2120A/LX2080A"  have same SVR?
+> +	  .mask         =3D 0xff3f0000,
+> +	},
+>  	{ },
+>  };
+>=20
+> @@ -222,6 +227,7 @@ static const struct of_device_id fsl_guts_of_match[] =
+=3D {
+>  	{ .compatible =3D "fsl,ls1088a-dcfg", },
+>  	{ .compatible =3D "fsl,ls1012a-dcfg", },
+>  	{ .compatible =3D "fsl,ls1046a-dcfg", },
+> +	{ .compatible =3D "fsl,lx2160a-dcfg", },
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, fsl_guts_of_match);
+> --
+> 2.7.4
+>=20
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> https://emea01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Flists=
+.infr
+> adead.org%2Fmailman%2Flistinfo%2Flinux-arm-
+> kernel&amp;data=3D02%7C01%7Cpoonam.aggrwal%40nxp.com%7Cd9b7c36c786
+> 54cd6dc4008d63d7fee63%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0
+> %7C636764017001504288&amp;sdata=3DpqFMlw6yVrHrvn4YRhqj%2FmoOnSscrZu
+> tcoYn3In8OJc%3D&amp;reserved=3D0
