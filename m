@@ -1,68 +1,60 @@
-From: Jiaying Liang <jliang@xilinx.com>
-Subject: RE: [PATCH v4 2/2] dt-bindings: mailbox: Add Xilinx IPI Mailbox
-Date: Mon, 29 Oct 2018 18:01:06 +0000
-Message-ID: <DM5PR02MB2233AC6A0276887869AF72C9B0F30@DM5PR02MB2233.namprd02.prod.outlook.com>
-References: <1539155912-29760-1-git-send-email-wendy.liang@xilinx.com>
- <1539155912-29760-3-git-send-email-wendy.liang@xilinx.com>
- <20181010095741.GA14472@e107155-lin>
- <CAA07jV_FWxMRq=4hmTdCXJG6e3=-8AejfpKxmh9KUi9KQDH7yQ@mail.gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH linux-next v1 2/4] clk: renesas: Add binding document for AVB
+ Counter Clock
+Date: Mon, 29 Oct 2018 11:29:10 -0700
+Message-ID: <154083775062.98144.11157403961171783929@swboyd.mtv.corp.google.com>
+References: <20181025072349.15173-1-jiada_wang@mentor.com>
+ <20181025072349.15173-3-jiada_wang@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAA07jV_FWxMRq=4hmTdCXJG6e3=-8AejfpKxmh9KUi9KQDH7yQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181025072349.15173-3-jiada_wang@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wendy Liang <sunnyliangjy@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Michal Simek <michals@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: geert+renesas@glider.be, horms@verge.net.au, magnus.damm@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, jiada_wang@mentor.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogV2VuZHkgTGlhbmcgW21h
-aWx0bzpzdW5ueWxpYW5nanlAZ21haWwuY29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIE9jdG9iZXIg
-MTAsIDIwMTggMzo1NCBQTQ0KPiBUbzogU3VkZWVwIEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNv
-bT4NCj4gQ2M6IEppYXlpbmcgTGlhbmcgPGpsaWFuZ0B4aWxpbnguY29tPjsgSmFzc2kgQnJhciA8
-amFzc2lzaW5naGJyYXJAZ21haWwuY29tPjsNCj4gTWljaGFsIFNpbWVrIDxtaWNoYWxzQHhpbGlu
-eC5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsNCj4gTWFyayBSdXRsYW5k
-IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IERldmljZXRyZWUgTGlzdA0KPiA8ZGV2aWNldHJlZUB2
-Z2VyLmtlcm5lbC5vcmc+OyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0IDxsaW51eC0NCj4ga2Vy
-bmVsQHZnZXIua2VybmVsLm9yZz47IGxpbnV4LWFybS1rZXJuZWwgPGxpbnV4LWFybS0NCj4ga2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjQgMi8yXSBk
-dC1iaW5kaW5nczogbWFpbGJveDogQWRkIFhpbGlueCBJUEkgTWFpbGJveA0KPiANCj4gT24gV2Vk
-LCBPY3QgMTAsIDIwMTggYXQgMjo1OSBBTSBTdWRlZXAgSG9sbGEgPHN1ZGVlcC5ob2xsYUBhcm0u
-Y29tPg0KPiB3cm90ZToNCj4gPg0KPiA+IE9uIFdlZCwgT2N0IDEwLCAyMDE4IGF0IDEyOjE4OjMy
-QU0gLTA3MDAsIFdlbmR5IExpYW5nIHdyb3RlOg0KPiA+ID4gWGlsaW54IFp5bnFNUCBJUEkoSW50
-ZXIgUHJvY2Vzc29yIEludGVycnVwdCkgaXMgYSBoYXJkd2FyZSBibG9jayBpbg0KPiA+ID4gWnlu
-cU1QIFNvQyB1c2VkIGZvciB0aGUgY29tbXVuaWNhdGlvbiBiZXR3ZWVuIHZhcmlvdXMgcHJvY2Vz
-c29yDQo+ID4gPiBzeXN0ZW1zLg0KPiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IFdlbmR5IExp
-YW5nIDx3ZW5keS5saWFuZ0B4aWxpbnguY29tPg0KPiA+DQo+ID4gWy4uLl0NCj4gPg0KPiA+ID4g
-K09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiA+
-ICstIG1ldGhvZDogICAgICAgICAgICAgIFRoZSBtZXRob2Qgb2YgYWNjZXNzaW5nIHRoZSBJUEkg
-YWdlbnQgcmVnaXN0ZXJzLg0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgUGVybWl0dGVk
-IHZhbHVlcyBhcmU6ICJzbWMiIGFuZCAiaHZjIi4gRGVmYXVsdCBpcw0KPiA+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgInNtYyIuDQo+ID4NCj4gPiBZb3UgYXJlIG1peGluZyB0aGUgaGFyZHdh
-cmUgbWVzc2FnaW5nIGJhc2VkIG1haWxib3ggYW5kIHRoZSBzb2Z0d2FyZQ0KPiA+ICJzbWMvaHZj
-IiBiYXNlZCBtYWlsYm94IHRvZ2V0aGVyIGhlcmUuIFBsZWFzZSBrZWVwIHRoZW0gc2VwYXJhdGVk
-Lg0KPiA+IElJVUMgc21jL2h2YyBiYXNlZCBtYWlsY294IGlzIHVzZWQgZm9yICJ0eCIgb3IgdG9v
-IGtlZXAgaXQgc2ltcGxlIGluDQo+ID4gb25lIGRpcmVjdGlvbiBhbmQgaGFyZHdhcmUgYmFzZWQg
-aXMgdXNlZCBmb3IgInJ4IiBvciB0aGUgb3RoZXINCj4gPiBkaXJlY3Rpb24gZm9yIGNvbW11bmlj
-YXRpb24uDQo+ID4NCj4gSGkgU3VkZWVwLA0KPiANCj4gVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRz
-Lg0KPiANCj4gVGhlIElQSSBoYXJkd2FyZSBibG9jayBoYXMgYm90aCBidWZmZXJzIGFuZCByZWdp
-c3RlcnMuIFRoZSBoYXJkd2FyZSBibG9jaw0KPiBoYXMgZGVkaWNhdGVkIGJ1ZmZlcnMgZm9yIGVh
-Y2ggbWFpbGJveGVzLCBhbmQgdGh1cywgaW4gdGhlIGltcGxlbWVudGF0aW9uLA0KPiB3ZSBkaXJl
-Y3RseSBhY2Nlc3MgdGhlIGJ1ZmZlcnMgZnJvbSBJUEkgZHJpdmVyLiBIb3dldmVyLCB0aGUgY29u
-dHJvbGxlcg0KPiByZWdpc3RlcnMgYXJlIHNoYXJlZCBiZXR3ZWVuIG1haWxib3hlcyBpbiB0aGUg
-aGFyZHdhcmUsIGFzIHRoZSBBVEYgd2lsbCBhbHNvDQo+IGFjY2VzcyB0aGUgcmVnaXN0ZXJzLCB3
-ZSBuZWVkIHRvIHVzZSBTTUMvSFZDIHRvIGFjY2VzcyB0aGUgcmVnaXN0ZXJzIChjb250cm9sDQo+
-IG9yIElTUikuIEFuZCB0aGUgU01DL0hWQyBoZXJlIGlzIGZvciB0aGUgcmVnaXN0ZXIgYWNjZXNz
-Lg0KPiANCj4gSSBhbSBub3QgY2xlYXIgb24gc21jL2h2YyBiYXNlZCBtYWlsYm94IGlzIHVzZWQg
-Zm9yIHR4LCBhbmQgaGFyZHdhcmUgYmFzZWQNCj4gaXMgdXNlZCBmb3IgICJyeCIuIEFzIGZvciBi
-b3RoIFRYIGFuZCBSWCwgd2UgbmVlZCB0byB3cml0ZS9yZWFkIHRoZSByZWdpc3RlcnMNCj4gKHRo
-cm91Z2ggU01DKSBhbmQgd3JpdGUvcmVhZCB0aGUgYnVmZmVycyBwcm92aWRlZCBieSB0aGUgSVBJ
-IGhhcmR3YXJlIGJsb2NrDQo+IGRpcmVjdGx5Lg0KW1dlbmR5XSBIaSBTdWRlZXAsDQoNClRoZSBT
-TUMvSFZDIGlzIGZvciBoYXJkd2FyZSByZWdpc3RlcnMgYWNjZXNzIGFzIGJ1dCBub3Qgc2VuZGlu
-ZyBtZXNzYWdlcy4NCkRvIHlvdSBoYXZlIGZ1cnRoZXIgY29tbWVudHMgb3IgYXJlIHlvdSBmaW5l
-IHdpdGggdGhlIGV4cGxhbmF0aW9uPw0KDQpUaGFua3MsDQpXZW5keQ0KDQo+IA0KPiBUaGFua3Ms
-DQo+IFdlbmR5DQo+IA0KPiA+IFlvdSAqc2hvdWxkIG5vdCogbWl4IHRoZW0gYXMgc2luZ2xlIHVu
-aXQuIEFsc28gbG90cyBvZiBvdGhlciB2ZW5kb3INCj4gPiBuZWVkIFNNQy9IVkMgYmFzZWQgbWFp
-bGJveC4gU28gbWFrZSBpdCBnZW5lcmljIGFuZCBrZWVwIGl0IHNlcGFyYXRlLg0KPiA+DQo+ID4g
-LS0NCj4gPiBSZWdhcmRzLA0KPiA+IFN1ZGVlcA0K
+Quoting jiada_wang@mentor.com (2018-10-25 00:23:47)
+> From: Jiada Wang <jiada_wang@mentor.com>
+> =
+
+> Add device tree bindings for avb counter clock for Renesas
+> R-Car Socs.
+> =
+
+> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+> ---
+>  .../bindings/clock/renesas,avb-clk.txt        | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/renesas,avb-c=
+lk.txt
+> =
+
+> diff --git a/Documentation/devicetree/bindings/clock/renesas,avb-clk.txt =
+b/Documentation/devicetree/bindings/clock/renesas,avb-clk.txt
+> new file mode 100644
+> index 000000000000..03bf50b5830c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/renesas,avb-clk.txt
+> @@ -0,0 +1,19 @@
+> +* Renesas AVB Counter Clock
+> +
+> +The AVB Counter Clocks are provided by avb_counter8 Clock Generator,
+> +avb_counter8 has dividers which operates with S0D1=CF=95 clock and has
+> +8 output clocks.
+> +
+> +Required Properties:
+> +  - compatible: Must be "renesas,clk-avb"
+> +  - reg: Base address and length of the memory resource used by the AVB
+> +  - #clock-cells: Must be 1
+> +
+> +Example
+> +-------
+> +
+> +       clk_avb: avb-clock@ec5a011c {
+> +               compatible =3D "renesas,clk-avb";
+> +               reg =3D <0 0xec5a011c 0 0x24>;
+
+This is an odd register offset. Is this just one clk inside of a larger
+clk controller?
