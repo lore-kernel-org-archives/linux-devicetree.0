@@ -1,8 +1,10 @@
 From: alex.williams@ettus.com
-Subject: [PATCH net-next 1/2] net: nixge: Separate ctrl and dma resources
-Date: Mon, 29 Oct 2018 16:14:46 -0700
-Message-ID: <20181029231447.3690-1-alex.williams@ettus.com>
+Subject: [PATCH net-next 2/2] net: nixge: Update device-tree bindings with v3.00
+Date: Mon, 29 Oct 2018 16:14:47 -0700
+Message-ID: <20181029231447.3690-2-alex.williams@ettus.com>
+References: <20181029231447.3690-1-alex.williams@ettus.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181029231447.3690-1-alex.williams@ettus.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: netdev@vger.kernel.org
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, mdf@kernel.org, keescook@chromium.org, Alex Williams <alex.williams@ni.com>
@@ -10,123 +12,44 @@ List-Id: devicetree@vger.kernel.org
 
 From: Alex Williams <alex.williams@ni.com>
 
-The DMA engine is a separate entity altogether, and this allows the DMA
-controller's address to float elsewhere in the FPGA's map.
+Now the DMA engine is free to float elsewhere in the system map.
 
 Signed-off-by: Alex Williams <alex.williams@ni.com>
 ---
- drivers/net/ethernet/ni/nixge.c | 74 ++++++++++++++++++++++++++++++++---------
- 1 file changed, 58 insertions(+), 16 deletions(-)
+ Documentation/devicetree/bindings/net/nixge.txt | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/ni/nixge.c b/drivers/net/ethernet/ni/nixge.c
-index 0611f2335b4a..89b4f719a87d 100644
---- a/drivers/net/ethernet/ni/nixge.c
-+++ b/drivers/net/ethernet/ni/nixge.c
-@@ -105,6 +105,12 @@
- #define NIXGE_MAX_JUMBO_FRAME_SIZE \
- 	(NIXGE_JUMBO_MTU + NIXGE_HDR_SIZE + NIXGE_TRL_SIZE)
+diff --git a/Documentation/devicetree/bindings/net/nixge.txt b/Documentation/devicetree/bindings/net/nixge.txt
+index e55af7f0881a..d0f9fb520578 100644
+--- a/Documentation/devicetree/bindings/net/nixge.txt
++++ b/Documentation/devicetree/bindings/net/nixge.txt
+@@ -1,8 +1,14 @@
+ * NI XGE Ethernet controller
  
-+enum nixge_version {
-+	NIXGE_V2,
-+	NIXGE_V3,
-+	NIXGE_VERSION_COUNT
-+};
-+
- struct nixge_hw_dma_bd {
- 	u32 next_lo;
- 	u32 next_hi;
-@@ -1225,11 +1231,59 @@ static void *nixge_get_nvmem_address(struct device *dev)
- 	return mac;
- }
+ Required properties:
+-- compatible: Should be "ni,xge-enet-2.00"
+-- reg: Address and length of the register set for the device
++- compatible: Should be "ni,xge-enet-3.00", but can be "ni,xge-enet-2.00" for
++              older device trees with DMA engines co-located in the address map,
++              with the one reg entry to describe the whole device.
++- reg: Address and length of the register set for the device. It contains the
++       information of registers in the same order as described by reg-names.
++- reg-names: Should contain the reg names
++	"dma":  DMA engine control and status region
++        "ctrl": MDIO and PHY control and status region
+ - interrupts: Should contain tx and rx interrupt
+ - interrupt-names: Should be "rx" and "tx"
+ - phy-mode: See ethernet.txt file in the same directory.
+@@ -13,7 +19,9 @@ Required properties:
+ Examples (10G generic PHY):
+ 	nixge0: ethernet@40000000 {
+ 		compatible = "ni,xge-enet-2.00";
+-		reg = <0x40000000 0x6000>;
++		reg = <0x40000000 0x4000
++		       0x41002000 0x2000>;
++		reg-names = "dma", "ctrl";
  
-+/* Match table for of_platform binding */
-+static const struct of_device_id nixge_dt_ids[] = {
-+	{ .compatible = "ni,xge-enet-2.00", .data = (void *)NIXGE_V2 },
-+	{ .compatible = "ni,xge-enet-3.00", .data = (void *)NIXGE_V3 },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, nixge_dt_ids);
-+
-+static int nixge_of_get_resources(struct platform_device *pdev)
-+{
-+	const struct of_device_id *of_id;
-+	enum nixge_version version;
-+	struct resource *ctrlres;
-+	struct resource *dmares;
-+	struct net_device *ndev;
-+	struct nixge_priv *priv;
-+
-+	ndev = platform_get_drvdata(pdev);
-+	priv = netdev_priv(ndev);
-+	of_id = of_match_node(nixge_dt_ids, pdev->dev.of_node);
-+	if (!of_id)
-+		return -ENODEV;
-+
-+	version = (enum nixge_version)of_id->data;
-+	if (version <= NIXGE_V2)
-+		dmares = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	else
-+		dmares = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+						      "dma");
-+
-+	priv->dma_regs = devm_ioremap_resource(&pdev->dev, dmares);
-+	if (IS_ERR(priv->dma_regs)) {
-+		netdev_err(ndev, "failed to map dma regs\n");
-+		return PTR_ERR(priv->dma_regs);
-+	}
-+	if (version <= NIXGE_V2) {
-+		priv->ctrl_regs = priv->dma_regs + NIXGE_REG_CTRL_OFFSET;
-+	} else {
-+		ctrlres = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+						       "ctrl");
-+		priv->ctrl_regs = devm_ioremap_resource(&pdev->dev, ctrlres);
-+	}
-+	if (IS_ERR(priv->ctrl_regs)) {
-+		netdev_err(ndev, "failed to map ctrl regs\n");
-+		return PTR_ERR(priv->ctrl_regs);
-+	}
-+	return 0;
-+}
-+
- static int nixge_probe(struct platform_device *pdev)
- {
- 	struct nixge_priv *priv;
- 	struct net_device *ndev;
--	struct resource *dmares;
- 	const u8 *mac_addr;
- 	int err;
- 
-@@ -1261,14 +1315,9 @@ static int nixge_probe(struct platform_device *pdev)
- 	priv->dev = &pdev->dev;
- 
- 	netif_napi_add(ndev, &priv->napi, nixge_poll, NAPI_POLL_WEIGHT);
--
--	dmares = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->dma_regs = devm_ioremap_resource(&pdev->dev, dmares);
--	if (IS_ERR(priv->dma_regs)) {
--		netdev_err(ndev, "failed to map dma regs\n");
--		return PTR_ERR(priv->dma_regs);
--	}
--	priv->ctrl_regs = priv->dma_regs + NIXGE_REG_CTRL_OFFSET;
-+	err = nixge_of_get_resources(pdev);
-+	if (err)
-+		return err;
- 	__nixge_hw_set_mac_address(ndev);
- 
- 	priv->tx_irq = platform_get_irq_byname(pdev, "tx");
-@@ -1337,13 +1386,6 @@ static int nixge_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--/* Match table for of_platform binding */
--static const struct of_device_id nixge_dt_ids[] = {
--	{ .compatible = "ni,xge-enet-2.00", },
--	{},
--};
--MODULE_DEVICE_TABLE(of, nixge_dt_ids);
--
- static struct platform_driver nixge_driver = {
- 	.probe		= nixge_probe,
- 	.remove		= nixge_remove,
+ 		nvmem-cells = <&eth1_addr>;
+ 		nvmem-cell-names = "address";
 -- 
 2.14.5
