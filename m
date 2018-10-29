@@ -1,90 +1,89 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH] dt-bindings: arm: Fix cpu capacity mismatch in example
-Date: Mon, 29 Oct 2018 12:04:50 +0530
-Message-ID: <20181029063450.3o3ay7pazik5tgne@vireshk-i7>
-References: <138600f5d504b41202a29a1e130a7aa4e51f1925.1540451976.git.viresh.kumar@linaro.org>
- <80206cb7-b550-1cf6-abf4-e4b17de4cdb5@linaro.org>
- <20181026041107.4hofhlcubbo5claq@vireshk-i7>
- <d4d6af05-61f1-4123-c2dc-4ee0946f79e8@linaro.org>
+Subject: Re: [RFC PATCH v2 01/17] OPP: Allow to request stub voltage
+ regulators
+Date: Mon, 29 Oct 2018 12:23:28 +0530
+Message-ID: <20181029065328.6vkbwjnq2zzwxric@vireshk-i7>
+References: <20181021205501.23943-1-digetx@gmail.com>
+ <20181021205501.23943-2-digetx@gmail.com>
+ <20181022053636.ag62j3rj3vovbz53@vireshk-i7>
+ <e4027793-9436-413d-2a7b-34cf519218c3@gmail.com>
+ <20181022113224.b5fiebgy2aap66nd@vireshk-i7>
+ <29f893be-feed-c4c5-8468-51f7228dd468@gmail.com>
+ <20181024064123.lbpbeervghp35fe7@vireshk-i7>
+ <ba782346-6ac0-7bf3-e187-00d2634b145b@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <d4d6af05-61f1-4123-c2dc-4ee0946f79e8@linaro.org>
+In-Reply-To: <ba782346-6ac0-7bf3-e187-00d2634b145b@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: catalin.marinas@arm.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Vincent Guittot <vincent.guittot@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 26-10-18, 10:30, Daniel Lezcano wrote:
-> On 26/10/2018 06:11, Viresh Kumar wrote:
-> > On 25-10-18, 14:04, Daniel Lezcano wrote:
-> >> I think it is actually correct. The example is confusing on what the
-> >> numbers are. IIUC, it is:
-> >>
-> >> (after normalizing)
-> >>
-> >> dhrystone result on big CPU is 1024 at 1100MHz
-> >> dhrystone result on little CPU is 446 at 850MHz
-> >>
-> >> We have to scale the result of the little for 1100MHz in order to compare.
-> >>
-> >> 1100/850 = 1.294
-> >>
-> >> dhrystone result on little CPU is 446 * 1.294 = 577 at 1100MHz
-> >>
-> >> So we put the normalized values 1024 and 577. The arch_topology will
-> >> scale 577 back to 446 as it will compute the max capacity based on the
-> >> max freq which is 850MHz.
-> >>
-> >> The *final* capacities are 1024 for cluster0 and 446 for cluster1 (read
-> >> the cpu max capacity, the ones showed in the sysfs).
-> >>
-> >> Did I miss something ?
+On 26-10-18, 15:03, Dmitry Osipenko wrote:
+> On 10/24/18 9:41 AM, Viresh Kumar wrote:
+> > On 22-10-18, 15:12, Dmitry Osipenko wrote:
+> >> Because there is one Tegra20 board (tegra20-trimslice) that doesn't declare
+> >> necessary regulators, but we want to have CPU frequency scaling. I couldn't
+> >> find board schematics and so don't know if CPU / CORE voltages are fixed on
+> >> Trim-Slice or it is just preferable not to have DVFS for that board, it is an
+> >> outlet-powered device [0]. Hence tegra20-cpufreq driver will request a dummy
+> >> regulators when appropriate. 
 > > 
-> > No. What about making it more clear in the example to save the next idiot (like
-> > me) from wasting time :)
+> > We have been using the regulator_get_optional() variant until now in the OPP
+> > core to make sure that we don't do DVFS for the CPU without the mandatory
+> > regulators being present, as that may make things unstable and cause harm to the
+> > SoC if we try to take CPU to frequency range over the currently programmed
+> > regulator can support.
 > > 
-> > diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> > index 9b5685a1d15d..d061e6575bde 100644
-> > --- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> > +++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> > @@ -61,7 +61,10 @@ mhz values (normalized w.r.t. the highest value found while parsing the DT).
-> >  Example 1 (ARM 64-bit, 6-cpu system, two clusters):
-> >  capacities-dmips-mhz are scaled w.r.t. 1024 (cpu@0 and cpu@1)
-> >  supposing cluster0@max-freq=1100 and custer1@max-freq=850,
-> > -final capacities are 1024 for cluster0 and 446 for cluster1
-> > +final capacities are 1024 for cluster0 and 446 for cluster1.
-> > +Note that the values mentioned below in the example (1024 and 578)
-> > +aren't normalized based on max frequency of each cluster and that is
-> > +left for the operating system to do.
+> > Now coming back to tegra-20 SoC, which actually requires a regulator normally by
+> > design. On one of the boards (which is outlet powered), you aren't sure if there
+> > is a programmable regulator or not, or if DVFS should really be done or not.
+> > Isn't it worth checking the same from Tegra maintainers, or whomsoever has
+> > information on that board ?
 > 
-> Yes, it will help but if you want to make things even more clear, I
-> suggest to elaborate the text a bit and give the numbers above to
-> explain (1100/850=1.294, 446 * 1.294 = 577, ...)
+> I'll try to find out more detailed information for the next revision of the patchset.
 
-I didn't wanted to explain way too much, but how about this..
+Thanks Dmitry.
 
-diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-index 9b5685a1d15d..84262cdb8d29 100644
---- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-+++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-@@ -59,9 +59,11 @@ mhz values (normalized w.r.t. the highest value found while parsing the DT).
- ===========================================
- 
- Example 1 (ARM 64-bit, 6-cpu system, two clusters):
--capacities-dmips-mhz are scaled w.r.t. 1024 (cpu@0 and cpu@1)
--supposing cluster0@max-freq=1100 and custer1@max-freq=850,
--final capacities are 1024 for cluster0 and 446 for cluster1
-+The capacities-dmips-mhz or DMIPS/MHz values (scaled to 1024)
-+are 1024 and 578 for cluster0 and cluster1. Further normalization
-+is done by the operating system based on cluster0@max-freq=1100 and
-+custer1@max-freq=850, final capacities are 1024 for cluster0 and
-+446 for cluster1 (576*850/1100).
- 
- cpus {
-        #address-cells = <2>;
+>  What would happen if there actually was a regulator
 
+Please preserve the '>' from previous replies at the beginning of the
+lines. Otherwise it looks as if you have written the above line. :)
+
+> > and its default settings aren't good enough for high end frequencies ?
+> 
+> Usually this causes kernel/applications crashes and/or machine hang.
+
+Sure. I also do remember from some guys (maybe TI), where they
+mentioned that such scenarios can harm the hardware as well sometimes.
+Don't remember the details though.
+
+>  And because you are moving to regulator_get() API for
+> > the entire SoC (i.e. its cpufreq driver), people will never find the missing
+> > regulator.
+> 
+> Regulators core prints info message when dummy regulator is being used.
+
+Sure, but they are easy to miss and they are only seen by developers
+not regular users of a machine.
+
+> > If we can do it safely for all tegra20 boards, why not migrate to using
+> > regulator_get() instead of regulator_get_optional() in the OPP core API itself
+> > for everyone ?
+> > 
+> 
+> This should be a platform-specific decision. For Tegra we know that regulators should be in a good state at kernel boot time, I don't think that this applies to other platforms.
+
+Based on the other discussion with Lucas on this thread, I don't think
+this is correct any more ?
+
+Don't get me wrong, I am all good for changes and another API change
+doesn't matter much to me. I am just wondering if it would be the
+right approach to fix the issue. Why not rather call
+dev_pm_opp_set_regulators() conditionally and avoid calling it for the
+specific tegra20 board.
 
 -- 
 viresh
