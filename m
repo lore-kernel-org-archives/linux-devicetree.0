@@ -1,149 +1,293 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v2 12/15] clk: sunxi-ng: a64: Add min and
- max rate for PLL_MIPI
-Date: Mon, 29 Oct 2018 20:38:14 +0530
-Message-ID: <CAMty3ZBcTsoJsCZa=sM9vjWgHjCjEjY2cDordTQcNySQpzyR=Q@mail.gmail.com>
-References: <20181023155035.9101-1-jagan@amarulasolutions.com>
- <20181023155035.9101-13-jagan@amarulasolutions.com> <20181024181334.lul7ta7ijluwfb7v@flea>
- <CAMty3ZBJcH1fz5FyhT1rk9qiJ-aWoQYiH7P1ZyQPLKmVWOCkdA@mail.gmail.com> <20181029090856.yyjnvaruyasgnzyz@flea>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] dts: sun8i-h3: Add DTS for Mapleboard MP130
+Date: Mon, 29 Oct 2018 16:20:52 +0100
+Message-ID: <20181029152052.q75feg6ipsbysvfg@flea>
+References: <20181025195519.hil6o66h4ev2m62q@earth.li>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB26E3TPAKGQEAYNZQAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181029090856.yyjnvaruyasgnzyz@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yufxv5mqeyy3fj6l"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181025195519.hil6o66h4ev2m62q@earth.li>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan McDowell <noodles@earth.li>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2018 at 2:39 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> On Thu, Oct 25, 2018 at 09:21:31PM +0530, Jagan Teki wrote:
-> > On Wed, Oct 24, 2018 at 11:43 PM Maxime Ripard
-> > <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > >
-> > > On Tue, Oct 23, 2018 at 09:20:32PM +0530, Jagan Teki wrote:
-> > > > A64 manual say PLL_MIPI rates are 500MHz to 1.4GHz, but
-> > > > using minimum 500MHz can't release the clock and which
-> > > > is not working.
-> > > >
-> > > > So use working minimum rate as 300MHz which is tested on
-> > > > Bananapi DSI panel.
-> > >
-> > > I'm not quite sure what you mean by that. What do you mean by "500MHz
-> > > can't release the clock"? Why would 300MHz work better then? Should be
-> > > avoid reaching 500MHz if it's a frequency in the valid range?
-> >
-> > PLL_MIPI can't be work with existing nkm where rate set to 270MHz
-> > (from PLL_VIDEO)
-> > /*** round rate call in ccu_nkm.c */
-> > [    2.408356] round: rate = 118800000
-> > [    2.408359] round: parent_rate = 158740688
-> > [    2.408417] round: rate = 148500000
-> > [    2.408420] round: parent_rate = 158740688
-> > [    2.408439] round: rate = 178200000
-> > [    2.408441] round: parent_rate = 158740688
-> > [    2.408460] round: rate = 205615384
-> > [    2.408462] round: parent_rate = 158740688
-> > [    2.408481] round: rate = 237600000
-> > [    2.408483] round: parent_rate = 158740688
-> > [    2.408502] round: rate = 270000000
-> > [    2.408504] round: parent_rate = 158740688
-> > [    2.408523] round: rate = 118800000
-> > [    2.408525] round: parent_rate = 158740560
-> > [    2.408544] round: rate = 148500000
-> > [    2.408546] round: parent_rate = 158740560
-> > [    2.408565] round: rate = 178200000
-> > [    2.408567] round: parent_rate = 158740560
-> > [    2.408586] round: rate = 205615384
-> > [    2.408588] round: parent_rate = 158740560
-> > [    2.408607] round: rate = 237600000
-> > [    2.408609] round: parent_rate = 158740560
-> > [    2.408627] round: rate = 270000000
-> > [    2.408630] round: parent_rate = 158740560
-> > [    2.408648] round: rate = 270000000
-> > [    2.408651] round: parent_rate = 158740640
-> > [    2.408670] round: rate = 270000000
-> > [    2.408672] round: parent_rate = 158740704
-> >
-> > /** set rate call in ccu_nkm **/
-> > [    2.408685] set: rate = 270000000
-> > [    2.408688] set: parent_rate = 297000000
-> >
-> > By using min and max rate as per A64 manual page 94 range of PLL can
-> > be 500MHz~1.4GHz getting 1,2,1 nkm dividers which can't be work.
-> > [    2.423589] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
-> > [    2.423643] ideal = 220000000, rounded = 0
-> > [    2.423647] ideal = 275000000, rounded = 0
-> > [    2.423651] ideal = 330000000, rounded = 0
-> > [    2.423692] ideal = 385000000, rounded = 384000000
-> > [    2.423732] ideal = 440000000, rounded = 440000000
-> > [    2.423736] sun4i_dclk_round_rate: div = 8 rate = 55000000
-> > [    2.423740] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
-> > [    2.423744] ideal = 220000000, rounded = 0
-> > [    2.423748] ideal = 275000000, rounded = 0
-> > [    2.423751] ideal = 330000000, rounded = 0
-> > [    2.423791] ideal = 385000000, rounded = 384000000
-> > [    2.423831] ideal = 440000000, rounded = 440000000
-> > [    2.423834] sun4i_dclk_round_rate: div = 8 rate = 55000000
-> > [    2.423957] sun4i_dclk_recalc_rate: val = 1, rate = 440000000
-> > [    2.423961] sun4i_dclk_recalc_rate: val = 1, rate = 440000000
-> > [    2.424378] ccu_nkm_set_rate: rate = 440000000, parent_rate = 220000000
-> > [    2.424381] ccu_nkm_set_rate: _nkm.n = 1
-> > [    2.424383] ccu_nkm_set_rate: _nkm.k = 2
-> > [    2.424385] ccu_nkm_set_rate: _nkm.m = 1
-> > [    2.424725] sun4i_dclk_set_rate div 8
-> > [    2.424732] sun4i_dclk_recalc_rate: val = 8, rate = 55000000
-> > [    2.561271] usb 3-1: new high-speed USB device number 2 using ehci-platform
-> > [    2.718486] hub 3-1:1.0: USB hub found
-> > [    2.718606] hub 3-1:1.0: 4 ports detected
-> > [    3.437263] ------------[ cut here ]------------
-> > [    3.437270] [CRTC:36:crtc-0] vblank wait timed out
-> >
-> > So, lowering the min rate by 300MHz seems working with bounded nkm
-> > dividers 5, 2, 9. Tested on two different panels.
-> >
-> > [    2.415773] [drm] No driver support for vblank timestamp query.
-> > [    2.424116] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
-> > [    2.424172] ideal = 220000000, rounded = 0
-> > [    2.424176] ideal = 275000000, rounded = 0
-> > [    2.424194] ccu_nkm_round_rate: rate = 330000000
-> > [    2.424197] ideal = 330000000, rounded = 330000000
-> > [    2.424201] sun4i_dclk_round_rate: div = 6 rate = 55000000
-> > [    2.424205] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
-> > [    2.424209] ideal = 220000000, rounded = 0
-> > [    2.424213] ideal = 275000000, rounded = 0
-> > [    2.424230] ccu_nkm_round_rate: rate = 330000000
-> > [    2.424233] ideal = 330000000, rounded = 330000000
-> > [    2.424236] sun4i_dclk_round_rate: div = 6 rate = 55000000
-> > [    2.424253] ccu_nkm_round_rate: rate = 330000000
-> > [    2.424270] ccu_nkm_round_rate: rate = 330000000
-> > [    2.424278] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
-> > [    2.424281] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
-> > [    2.424306] ccu_nkm_set_rate: rate = 330000000, parent_rate = 297000000
-> > [    2.424309] ccu_nkm_set_rate: _nkm.n = 5
-> > [    2.424311] ccu_nkm_set_rate: _nkm.k = 2
-> > [    2.424313] ccu_nkm_set_rate: _nkm.m = 9
-> > [    2.424661] sun4i_dclk_set_rate div 6
-> > [    2.424668] sun4i_dclk_recalc_rate: val = 6, rate = 55000000
-> >
-> > Note: BPI-M64-bsp is setting the rate directly to 180MHz with 297MHz
-> > parent with resulting dividers as 1, 2, 5. ans we can't produce this
-> > 180MHz rate with dclk_round_rate and ccu_nkm.
->
-> I'm still not quite sure what you mean by "500MHz can't release the
-> clock".
->
-> From what you're saying, this seems to be related to the boundaries of
-> the dividers rather than the rate itself.
 
-Yes, with 500MHz rate the boundaries of the dividers never release
-hence it hangs during set_rate and finally after sometime it trigger
-vblank timeout. can't release here means the same, may be I would
-confused, sorry for that.
+--yufxv5mqeyy3fj6l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Jonathan,
+
+Thanks for your patch.
+
+On Thu, Oct 25, 2018 at 08:55:19PM +0100, Jonathan McDowell wrote:
+>=20
+> The Mapleboard MP130 is a single board computer based on the Allwinner
+> H3 SoC, with all schematics freely available. The Lite version includes
+> 1GB main memory and 8GB eMMC.
+>=20
+> https://www.mapleboard.org/en (still mostly in Chinese even when English
+> is selected)
+>=20
+> This DTS is based upon the DTS shipped with the board which uses
+> mapleboard,mp130- prefixes instead of the allwinner,sun8i variants.
+>=20
+> Signed-off-by: Jonathan McDowell <noodles@earth.li>
+
+The prefix of your patch should be "ARM: dts: sun8i-h3: ..."
+
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index b5bd3de87c33..dcf1b9e7f71e 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1035,6 +1035,7 @@ dtb-$(CONFIG_MACH_SUN8I) +=3D \
+>  	sun8i-h3-bananapi-m2-plus.dtb \
+>  	sun8i-h3-beelink-x2.dtb \
+>  	sun8i-h3-libretech-all-h3-cc.dtb \
+> +	sun8i-h3-mapleboard-mp130.dtb \
+>  	sun8i-h3-nanopi-m1.dtb	\
+>  	sun8i-h3-nanopi-m1-plus.dtb \
+>  	sun8i-h3-nanopi-neo.dtb \
+> diff --git a/arch/arm/boot/dts/sun8i-h3-mapleboard-mp130.dts b/arch/arm/b=
+oot/dts/sun8i-h3-mapleboard-mp130.dts
+> new file mode 100644
+> index 000000000000..bf948128af94
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-h3-mapleboard-mp130.dts
+> @@ -0,0 +1,179 @@
+> +/*
+> + * Copyright (C) 2017 Centrum Embedded Systems, Jia-Bin Huang <jb@ces.co=
+m.tw>
+> + * Copyright (C) 2018 Jonathan McDowell <noodles@earth.li>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2. This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+
+You should add a SPDX tag instead of the license.
+
+We're also trying to license the DT under a dual GPL/MIT license,
+since they can be used by projects under a license that is not the
+GPL. But that's your call, obviously.
+
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun8i-h3.dtsi"
+> +#include "sunxi-common-regulators.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +
+> +/ {
+> +	model =3D "MapleBoard MP130 Board";
+> +	compatible =3D "mapleboard,mp130_board", "allwinner,sun8i-h3";
+
+The "board" in both the model and compatible is redundant.
+
+> +
+> +	aliases {
+> +		ethernet0 =3D &emac;
+> +		serial0 =3D &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path =3D "serial0:115200n8";
+> +	};
+> +
+> +	leds {
+> +		compatible =3D "gpio-leds";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&leds_pio>, <&leds_r_pio>;
+
+You can drop those pinctrl nodes
+
+> +		pwr_led {
+> +			label =3D "mp130_board:orange:pwr";
+> +			gpios =3D <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
+> +			default-state =3D "on";
+> +		};
+
+A new line here would be nice
+
+> +		status_led {
+> +			label =3D "mp130_board:orange:status";
+> +			gpios =3D <&pio 0 10 GPIO_ACTIVE_HIGH>;
+> +		};
+> +	};
+> +
+> +	r_gpio_keys {
+> +		compatible =3D "gpio-keys";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&sw_r_pio>;
+
+Samething the pinctrl reference can be dropped
+
+> +		power {
+> +			label =3D "power";
+> +			linux,code =3D <KEY_POWER>;
+> +			gpios =3D <&r_pio 0 3 GPIO_ACTIVE_LOW>; /* PL3 */
+> +		};
+> +
+> +		user {
+> +			label =3D "user";
+> +			linux,code =3D <BTN_0>;
+> +			gpios =3D <&r_pio 0 4 GPIO_ACTIVE_LOW>;
+> +		};
+
+The labels should be under the form "board:color:function"
+
+> +	};
+> +};
+> +
+> +&codec {
+> +	allwinner,audio-routing =3D
+> +		"Line Out", "LINEOUT",
+> +		"LINEIN", "Line In";
+> +	status =3D "okay";
+> +};
+> +
+> +&ehci1 {
+> +	status =3D "okay";
+> +};
+> +
+> +&ehci2 {
+> +	status =3D "okay";
+> +};
+> +
+> +&ehci3 {
+> +	status =3D "okay";
+> +};
+> +
+> +&ir {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&ir_pins_a>;
+> +	status =3D "okay";
+> +};
+> +
+> +&mmc0 {
+> +	vmmc-supply =3D <&reg_vcc3v3>;
+> +	bus-width =3D <4>;
+> +	cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
+> +	cd-inverted;
+> +	status =3D "okay";
+> +};
+> +
+> +&mmc2 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&mmc2_8bit_pins>;
+> +	vmmc-supply =3D <&reg_vcc3v3>;
+> +	bus-width =3D <8>;
+> +	non-removable;
+> +	cap-mmc-hw-reset;
+> +	status =3D "okay";
+> +};
+> +
+> +&ohci1 {
+> +	status =3D "okay";
+> +};
+> +
+> +&ohci2 {
+> +	status =3D "okay";
+> +};
+> +
+> +&ohci3 {
+> +	status =3D "okay";
+> +};
+> +
+> +&pio {
+> +	leds_pio: led_pins {
+> +		pins =3D "PA15";
+> +		function =3D "gpio_out";
+> +	};
+> +};
+> +
+> +&r_pio {
+> +	leds_r_pio: led_pins {
+> +		pins =3D "PL10";
+> +		function =3D "gpio_out";
+> +	};
+> +
+> +	sw_r_pio: key_pins {
+> +		pins =3D "PL3", "PL4";
+> +		function =3D "gpio_in";
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&uart0_pins_a>;
+> +	status =3D "okay";
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&uart1_pins>;
+> +	status =3D "disabled";
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&uart2_pins>;
+> +	status =3D "disabled";
+> +};
+> +
+> +&uart3 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&uart3_pins>;
+> +	status =3D "disabled";
+> +};
+> +
+> +&usb_otg {
+> +	dr_mode =3D "peripheral";
+> +	status =3D "okay";
+> +};
+> +
+> +&usbphy {
+> +	/* USB VBUS is always on */
+> +	status =3D "okay";
+> +};
+> +
+> +&emac {
+> +	phy-handle =3D <&int_mii_phy>;
+> +	phy-mode =3D "mii";
+> +	allwinner,leds-active-low;
+> +	status =3D "okay";
+> +};
+> +
+
+This should be ordered alphabetically
+
+> J.
+>=20
+> --=20
+> Revd Jonathan McDowell, ULC | Do you believe in happy endings?
+
+Please don't send patches through your mailer. git send-email can be
+configured to send the patches directly, this should be your preferred
+option.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--yufxv5mqeyy3fj6l
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW9clVAAKCRDj7w1vZxhR
+xYm1AQDXWuhJJmjONlnQFG7mcYuNZJf2rtFzpCXzxq/QMB7GOAEA8m3v7PxVjOM3
+zZR1Ina5Cb65I6sjWephajNYkGuc6gg=
+=ERbu
+-----END PGP SIGNATURE-----
+
+--yufxv5mqeyy3fj6l--
