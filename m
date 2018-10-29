@@ -1,84 +1,26 @@
-Return-Path: <SRS0=SDjf=NF=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 5/7] ARM: dts: r8a77470: Add USB2.0 Host (EHCI/OHCI) device nodes
-Date: Thu, 25 Oct 2018 14:56:57 +0100
-Message-Id: <1540475819-47950-6-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1540475819-47950-1-git-send-email-biju.das@bp.renesas.com>
-References: <1540475819-47950-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=2O/d=NJ=verge.net.au=horms@kernel.org>
+Date: Mon, 29 Oct 2018 17:25:51 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] ARM: dts: r8a77470: Add USB-DMAC device nodes
+Message-ID: <20181029162551.sqlxagyfipn7cmwz@verge.net.au>
+References: <1540479218-4954-1-git-send-email-biju.das@bp.renesas.com>
+ <1540479218-4954-2-git-send-email-biju.das@bp.renesas.com>
+ <TYXPR01MB1775F46A0CD89FCF22F64692C0F00@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TYXPR01MB1775F46A0CD89FCF22F64692C0F00@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Define the r8a77470 generic part of the USB2.0 Host Controller device
-nodes (ehci[01]/ohci[01]).
+On Fri, Oct 26, 2018 at 09:47:09AM +0000, Fabrizio Castro wrote:
+> > Subject: [PATCH 2/2] ARM: dts: r8a77470: Add USB-DMAC device nodes
+> >
+> > This patch adds USB DMAC nodes.
+> >
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> 
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-This patch is tested against renesas devel.
----
- arch/arm/boot/dts/r8a77470.dtsi | 50 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index 7d20c3b..935b82b 100644
---- a/arch/arm/boot/dts/r8a77470.dtsi
-+++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -528,6 +528,56 @@
- 			status = "disabled";
- 		};
- 
-+		ohci0: usb@ee080000 {
-+			compatible = "generic-ohci";
-+			reg = <0 0xee080000 0 0x100>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 703>;
-+			phys = <&usb0 0>;
-+			phy-names = "usb";
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 703>;
-+			status = "disabled";
-+		};
-+
-+		ohci1: usb@ee0c0000 {
-+			compatible = "generic-ohci";
-+			reg = <0 0xee0c0000 0 0x100>;
-+			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 705>;
-+			phys = <&usb1 0>, <&usb0 1>;
-+			phy-names = "usb";
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 705>;
-+			status = "disabled";
-+		};
-+
-+		ehci0: usb@ee080100 {
-+			compatible = "generic-ehci";
-+			reg = <0 0xee080100 0 0x100>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 703>;
-+			phys = <&usb0 0>;
-+			phy-names = "usb";
-+			companion = <&ohci0>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 703>;
-+			status = "disabled";
-+		};
-+
-+		ehci1: usb@ee0c0100 {
-+			compatible = "generic-ehci";
-+			reg = <0 0xee0c0100 0 0x100>;
-+			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 705>;
-+			phys = <&usb1 0>, <&usb0 1>;
-+			phy-names = "usb";
-+			companion = <&ohci1>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 705>;
-+			status = "disabled";
-+		};
-+
- 		sdhi0: sd@ee100000 {
- 			compatible = "renesas,sdhi-r8a77470",
- 				     "renesas,rcar-gen2-sdhi";
--- 
-2.7.4
+Thanks, applied for v4.21.
