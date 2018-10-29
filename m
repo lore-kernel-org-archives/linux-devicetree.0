@@ -1,158 +1,66 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 12/15] clk: sunxi-ng: a64: Add min and
- max rate for PLL_MIPI
-Date: Mon, 29 Oct 2018 10:08:56 +0100
-Message-ID: <20181029090856.yyjnvaruyasgnzyz@flea>
-References: <20181023155035.9101-1-jagan@amarulasolutions.com>
- <20181023155035.9101-13-jagan@amarulasolutions.com>
- <20181024181334.lul7ta7ijluwfb7v@flea>
- <CAMty3ZBJcH1fz5FyhT1rk9qiJ-aWoQYiH7P1ZyQPLKmVWOCkdA@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v2 5/6] dt-bindings: drm/panel: simple: Innolux TV123WAM
+ is actually P120ZDG-BF1
+Date: Mon, 29 Oct 2018 10:10:52 +0100
+Message-ID: <5b059dbe-efb2-c379-beb6-216a6bcedcba@samsung.com>
+References: <20181025222134.174583-1-dianders@chromium.org>
+        <CGME20181025222234epcas5p49f58ac6ec1f0fa0ef1b5f35162b215a3@epcas5p4.samsung.com>
+        <20181025222134.174583-5-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lcwzkqyl6fqt7dzg"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBNE43PPAKGQE3KP53YI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZBJcH1fz5FyhT1rk9qiJ-aWoQYiH7P1ZyQPLKmVWOCkdA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181025222134.174583-5-dianders@chromium.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Douglas Anderson <dianders@chromium.org>, Sean Paul <seanpaul@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, Sandeep Panda <spanda@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, ryandcase@chromium.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
+On 26.10.2018 00:21, Douglas Anderson wrote:
+> As far as I can tell the bindings that were added in commit
+> 9c04400f7ea6 ("dt-bindings: drm/panel: Document Innolux TV123WAM panel
+> bindings") weren't actually for Innolux TV123WAM but were actually for
+> Innolux P120ZDG-BF1.
+>
+> As far as I can tell the Innolux TV123WAM isn't a real panel and but
+> it's a mosh between the TI TV123WAM and the Innolux P120ZDG-BF1.
+> Let's unmosh.
+>
+> Here's my evidence:
+>
+> * Searching for TV123WAM on the Internet turns up a TI panel.  While
+>   it's possible that an Innolux panel has the same model number as the
+>   TI Panel, it seems a little doubtful.  Looking up the datasheet from
+>   the TI Panel shows that it's 1920 x 1280 and 259.2 mm x 172.8 mm.
+>
+> * As far as I know, the patch adding the Innolux Panel was supposed to
+>   be for the board that's sitting in front of me as I type this
+>   (support for that board is not yet upstream).  On the back of that
+>   panel I see Innolux P120ZDZ-EZ1 rev B1.
+>
+> * Someone pointed me at a datasheet that's supposed to be for the
+>   panel in front of me (sorry, I can't share the datasheet).  That
+>   datasheet has the string "p120zdg-bf1"
+>
+> * If I search for "P120ZDG-BF1" on the Internet I get hits for panels
+>   that are 2160x1440.  They don't have datasheets, but the fact that
+>   the resolution matches is a good sign.
+>
+> While we doing the rename, also mention that no-hpd can be used with
+> this panel.  See the previous patch in this series ("drm/panel:
+> simple: Add "no-hpd" delay for Innolux TV123WAM").
+>
+> Fixes: 9c04400f7ea6 ("dt-bindings: drm/panel: Document Innolux TV123WAM panel bindings")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Cc: Sandeep Panda <spanda@codeaurora.org>
 
---lcwzkqyl6fqt7dzg
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Grats for good deduction.
 
-On Thu, Oct 25, 2018 at 09:21:31PM +0530, Jagan Teki wrote:
-> On Wed, Oct 24, 2018 at 11:43 PM Maxime Ripard
-> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> >
-> > On Tue, Oct 23, 2018 at 09:20:32PM +0530, Jagan Teki wrote:
-> > > A64 manual say PLL_MIPI rates are 500MHz to 1.4GHz, but
-> > > using minimum 500MHz can't release the clock and which
-> > > is not working.
-> > >
-> > > So use working minimum rate as 300MHz which is tested on
-> > > Bananapi DSI panel.
-> >
-> > I'm not quite sure what you mean by that. What do you mean by "500MHz
-> > can't release the clock"? Why would 300MHz work better then? Should be
-> > avoid reaching 500MHz if it's a frequency in the valid range?
-> 
-> PLL_MIPI can't be work with existing nkm where rate set to 270MHz
-> (from PLL_VIDEO)
-> /*** round rate call in ccu_nkm.c */
-> [    2.408356] round: rate = 118800000
-> [    2.408359] round: parent_rate = 158740688
-> [    2.408417] round: rate = 148500000
-> [    2.408420] round: parent_rate = 158740688
-> [    2.408439] round: rate = 178200000
-> [    2.408441] round: parent_rate = 158740688
-> [    2.408460] round: rate = 205615384
-> [    2.408462] round: parent_rate = 158740688
-> [    2.408481] round: rate = 237600000
-> [    2.408483] round: parent_rate = 158740688
-> [    2.408502] round: rate = 270000000
-> [    2.408504] round: parent_rate = 158740688
-> [    2.408523] round: rate = 118800000
-> [    2.408525] round: parent_rate = 158740560
-> [    2.408544] round: rate = 148500000
-> [    2.408546] round: parent_rate = 158740560
-> [    2.408565] round: rate = 178200000
-> [    2.408567] round: parent_rate = 158740560
-> [    2.408586] round: rate = 205615384
-> [    2.408588] round: parent_rate = 158740560
-> [    2.408607] round: rate = 237600000
-> [    2.408609] round: parent_rate = 158740560
-> [    2.408627] round: rate = 270000000
-> [    2.408630] round: parent_rate = 158740560
-> [    2.408648] round: rate = 270000000
-> [    2.408651] round: parent_rate = 158740640
-> [    2.408670] round: rate = 270000000
-> [    2.408672] round: parent_rate = 158740704
-> 
-> /** set rate call in ccu_nkm **/
-> [    2.408685] set: rate = 270000000
-> [    2.408688] set: parent_rate = 297000000
-> 
-> By using min and max rate as per A64 manual page 94 range of PLL can
-> be 500MHz~1.4GHz getting 1,2,1 nkm dividers which can't be work.
-> [    2.423589] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
-> [    2.423643] ideal = 220000000, rounded = 0
-> [    2.423647] ideal = 275000000, rounded = 0
-> [    2.423651] ideal = 330000000, rounded = 0
-> [    2.423692] ideal = 385000000, rounded = 384000000
-> [    2.423732] ideal = 440000000, rounded = 440000000
-> [    2.423736] sun4i_dclk_round_rate: div = 8 rate = 55000000
-> [    2.423740] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
-> [    2.423744] ideal = 220000000, rounded = 0
-> [    2.423748] ideal = 275000000, rounded = 0
-> [    2.423751] ideal = 330000000, rounded = 0
-> [    2.423791] ideal = 385000000, rounded = 384000000
-> [    2.423831] ideal = 440000000, rounded = 440000000
-> [    2.423834] sun4i_dclk_round_rate: div = 8 rate = 55000000
-> [    2.423957] sun4i_dclk_recalc_rate: val = 1, rate = 440000000
-> [    2.423961] sun4i_dclk_recalc_rate: val = 1, rate = 440000000
-> [    2.424378] ccu_nkm_set_rate: rate = 440000000, parent_rate = 220000000
-> [    2.424381] ccu_nkm_set_rate: _nkm.n = 1
-> [    2.424383] ccu_nkm_set_rate: _nkm.k = 2
-> [    2.424385] ccu_nkm_set_rate: _nkm.m = 1
-> [    2.424725] sun4i_dclk_set_rate div 8
-> [    2.424732] sun4i_dclk_recalc_rate: val = 8, rate = 55000000
-> [    2.561271] usb 3-1: new high-speed USB device number 2 using ehci-platform
-> [    2.718486] hub 3-1:1.0: USB hub found
-> [    2.718606] hub 3-1:1.0: 4 ports detected
-> [    3.437263] ------------[ cut here ]------------
-> [    3.437270] [CRTC:36:crtc-0] vblank wait timed out
-> 
-> So, lowering the min rate by 300MHz seems working with bounded nkm
-> dividers 5, 2, 9. Tested on two different panels.
-> 
-> [    2.415773] [drm] No driver support for vblank timestamp query.
-> [    2.424116] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
-> [    2.424172] ideal = 220000000, rounded = 0
-> [    2.424176] ideal = 275000000, rounded = 0
-> [    2.424194] ccu_nkm_round_rate: rate = 330000000
-> [    2.424197] ideal = 330000000, rounded = 330000000
-> [    2.424201] sun4i_dclk_round_rate: div = 6 rate = 55000000
-> [    2.424205] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
-> [    2.424209] ideal = 220000000, rounded = 0
-> [    2.424213] ideal = 275000000, rounded = 0
-> [    2.424230] ccu_nkm_round_rate: rate = 330000000
-> [    2.424233] ideal = 330000000, rounded = 330000000
-> [    2.424236] sun4i_dclk_round_rate: div = 6 rate = 55000000
-> [    2.424253] ccu_nkm_round_rate: rate = 330000000
-> [    2.424270] ccu_nkm_round_rate: rate = 330000000
-> [    2.424278] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
-> [    2.424281] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
-> [    2.424306] ccu_nkm_set_rate: rate = 330000000, parent_rate = 297000000
-> [    2.424309] ccu_nkm_set_rate: _nkm.n = 5
-> [    2.424311] ccu_nkm_set_rate: _nkm.k = 2
-> [    2.424313] ccu_nkm_set_rate: _nkm.m = 9
-> [    2.424661] sun4i_dclk_set_rate div 6
-> [    2.424668] sun4i_dclk_recalc_rate: val = 6, rate = 55000000
-> 
-> Note: BPI-M64-bsp is setting the rate directly to 180MHz with 297MHz
-> parent with resulting dividers as 1, 2, 5. ans we can't produce this
-> 180MHz rate with dclk_round_rate and ccu_nkm.
 
-I'm still not quite sure what you mean by "500MHz can't release the
-clock".
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
 
->From what you're saying, this seems to be related to the boundaries of
-the dividers rather than the rate itself.
-
-Maxime
-
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---lcwzkqyl6fqt7dzg--
+ --
+Regards
+Andrzej
