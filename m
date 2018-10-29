@@ -1,92 +1,186 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v3 12/25] drm/sun4i: sun6i_mipi_dsi: Add DSI
- hblk packet overhead
-Date: Mon, 29 Oct 2018 19:56:27 +0530
-Message-ID: <CAMty3ZBHU5eXRLLJmUroLgSKcF6O9gHOHRM1XBnt9_Lp7B8rEA@mail.gmail.com>
-References: <20181026144344.27778-1-jagan@amarulasolutions.com>
- <20181026144344.27778-13-jagan@amarulasolutions.com> <20181029092227.mdxgvg5aqzh22j72@flea>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Rajan Vaja <RAJANV@xilinx.com>
+Subject: RE: [PATCH v3 0/4] drivers: soc: xilinx: Add support for ZynqMP power
+ domain driver
+Date: Mon, 29 Oct 2018 14:27:18 +0000
+Message-ID: <BYAPR02MB40556D3EDE9892943073662DB7F30@BYAPR02MB4055.namprd02.prod.outlook.com>
+References: <1538688221-9823-1-git-send-email-jollys@xilinx.com>
+ <BL2PR02MB2130719D4A82F429745DDBEEB8E00@BL2PR02MB2130.namprd02.prod.outlook.com>
+ <20181012145251.GA6489@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBINR3TPAKGQE2CGTH7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181029092227.mdxgvg5aqzh22j72@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181012145251.GA6489@bogus>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "andy.gross@linaro.org" <andy.gross@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "sean.wang@mediatek.com" <sean.wang@mediatek.com>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, Michal Simek <michals@xilinx.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jolly Shah <JOLLYS@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2018 at 2:52 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> On Fri, Oct 26, 2018 at 08:13:31PM +0530, Jagan Teki wrote:
-> > Add 10 bytes packet overhead for hblk where blank is set using
-> > a blanking packet like (4 bytes + 4 bytes + payload + 2 bytes)
-> >
-> > This is according to BSP code from BPI-M64-bsp
-> > (in drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
-> > dsi_hblk = (ht-hspw)*dsi_pixel_bits[format]/8-(4+4+2);
-> >
-> > So, add 10 bytes packet overhead for DSI hblk.
-> >
-> > Tested on 2-lane, 4-lane MIPI-DSI LCD panels.
-> >
-> > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > Tested-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > ---
-> > Changes for v3:
-> > - new patch
-> > Changes for v2:
-> > - none
-> >
-> >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 9 +++++++--
-> >  1 file changed, 7 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > index 596e560263bf..cf42be1f1ba1 100644
-> > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > @@ -461,7 +461,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
-> >  {
-> >       struct mipi_dsi_device *device = dsi->device;
-> >       unsigned int Bpp = mipi_dsi_pixel_format_to_bpp(device->format) / 8;
-> > -     u16 hbp, hfp, hsa, hblk, vblk;
-> > +     u16 hbp, hfp, hsa, hblk_max, hblk, vblk;
-> >       size_t bytes;
-> >       u8 *buffer;
-> >
-> > @@ -494,8 +494,13 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
-> >
-> >       /*
-> >        * hblk seems to be the line + porches length.
-> > +      * The blank is set using a blanking packet (4 bytes + 4 bytes +
-> > +      * payload + 2 bytes). So minimal size is 10 bytes
-> >        */
-> > -     hblk = (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp;
-> > +#define HBLK_PACKET_OVERHEAD 10
-> > +     hblk_max = (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp;
-> > +     hblk_max -= HBLK_PACKET_OVERHEAD;
-> > +     hblk = max((unsigned int)HBLK_PACKET_OVERHEAD, hblk_max);
->
-> I'd rather use the same convention than the other assignments done
-> before in that function.
+Hi Rob,
 
-Yes, old code did use hsa. but it's added 10 bytes packet head instead
-of subtracting it.
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: 12 October 2018 08:23 PM
+> To: Jolly Shah <JOLLYS@xilinx.com>
+> Cc: matthias.bgg@gmail.com; andy.gross@linaro.org; shawnguo@kernel.org;
+> geert+renesas@glider.be; bjorn.andersson@linaro.org; sean.wang@mediatek.c=
+om;
+> m.szyprowski@samsung.com; Michal Simek <michals@xilinx.com>;
+> mark.rutland@arm.com; devicetree@vger.kernel.org; Rajan Vaja
+> <RAJANV@xilinx.com>; linux-kernel@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org
+> Subject: Re: [PATCH v3 0/4] drivers: soc: xilinx: Add support for ZynqMP =
+power
+> domain driver
+>=20
+> On Wed, Oct 10, 2018 at 06:41:44PM +0000, Jolly Shah wrote:
+> > Ping for comments
+>=20
+> Please see my comments on other ZynqMP firmware patches. In summary, I
+> need to see a complete binding, not piecemeal additions.
+[Rajan] Based on your suggestion to have complete zynqmp firmware binding, =
+we can
+have two options:
 
-hblk = mode->htotal * Bpp - hsa;
-=> mode->htotal * Bpp - (mode->hsync_end - mode->hsync_start) * Bpp -
-HSA_PACKET_OVERHEAD);
-=> (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp +
-HSA_PACKET_OVERHEAD;
+1. Use firmware node instead of having separate subnodes for dependent
+drivers(genpd, reset, nvmem, etc). In this case, firmware driver
+needs to take care of probing of depedent drivers. We have thought of
+MFD approach to probe depedent drivers. Firmware driver would register
+depedent drivers as MFD child devices from firmware probe.=20
 
-And it should be
-(mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp -
-HSA_PACKET_OVERHEAD;
+	firmware {
+		zynqmp_firmware: zynqmp-firmware {
+			compatible =3D "xlnx,zynqmp-firmware";
+			method =3D "smc";
+			#power-domain-cells =3D <1>;
+		};
+	};
 
-This patch is simply doing the same by explicitly adding packet over
-ahead macro, which again used in hfp.
+	sata {
+		...
+		power-domains =3D <&zynqmp_firmware 2>;
+		...
+	};
+
+drivers/firmware/xilinx/zynqmp.c: zynqmp_firmware_probe(struct platform_dev=
+ice *pdev)
+	static const struct mfd_cell firmware_devs[] =3D {
+		{
+			.name =3D "zynqmp_power_controller",
+		},
+	};
+
+	ret =3D mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE, firmware_devs,
+				ARRAY_SIZE(firmware_devs), NULL, 0, NULL);
+
+2. Keep separate node for each device outside (in parralel to) zynqmp-firmw=
+are node.
+In this case, each firmware driver consumer is independet driver/binding.
+Order of probe can be taken care by -EPROBE defer mechanism.
+
+Example:
+	firmware {
+		zynqmp_firmware: zynqmp-firmware {
+			compatible =3D "xlnx,zynqmp-firmware";
+			method =3D "smc";
+		};
+	};
+	=09
+	zynqmp_power_domains: zynqmp-power-domains {
+		...
+		compatible =3D "xlnx,zynqmp-genpd";
+		#power-domain-cells =3D <1>;
+		...
+	};
+
+	sata {
+		...
+		power-domains =3D <&zynqmp_power_domains 2>;
+		...
+	};
+
+Please let us know your inputs and suggest better approach so we can submit
+changes accordingly.
+
+Thanks,
+Rajan
+>=20
+> Rob
+>=20
+> >
+> > Thanks,
+> > Jolly Shah
+> >
+> > > -----Original Message-----
+> > > From: Jolly Shah [mailto:jolly.shah@xilinx.com]
+> > > Sent: Thursday, October 04, 2018 2:24 PM
+> > > To: matthias.bgg@gmail.com; andy.gross@linaro.org; shawnguo@kernel.or=
+g;
+> > > geert+renesas@glider.be; bjorn.andersson@linaro.org;
+> > > sean.wang@mediatek.com; m.szyprowski@samsung.com; Michal Simek
+> > > <michals@xilinx.com>; robh+dt@kernel.org; mark.rutland@arm.com
+> > > Cc: Rajan Vaja <RAJANV@xilinx.com>; devicetree@vger.kernel.org; linux=
+-arm-
+> > > kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Jolly Shah
+> > > <JOLLYS@xilinx.com>
+> > > Subject: [PATCH v3 0/4] drivers: soc: xilinx: Add support for ZynqMP =
+power
+> > > domain driver
+> > >
+> > > The zynqmp power domain driver communicates the usage requirements fo=
+r
+> > > logical power domains / devices to the platform FW.
+> > > FW is responsible for choosing appropriate power states, taking Linux=
+' usage
+> > > information into account.
+> > >
+> > > This patch series is based on top of Xilinx firmware patch set:
+> > > https://patchwork.kernel.org/cover/10555405/
+> > >
+> > > v3:
+> > >  - Changed binding to have FW node as a power controller as suggested=
+ by Rob
+> > >  - Updated FW driver to register it as mfd child devices from firmwar=
+e probe
+> > >  - Move bindings location as suggested
+> > >
+> > > v2:
+> > >  - Rebased on top of latest firmware driver patch series
+> > >  - Updated driver name from zynqmp-genpd to zynqmp-power-controller
+> > >  - Updated device tree bindings to move power controller node under f=
+irmware
+> > > node
+> > >
+> > > Jolly Shah (1):
+> > >   drivers: soc: xilinx: Add ZynqMP power domain driver
+> > >
+> > > Rajan Vaja (3):
+> > >   dt-bindings: power: Add ZynqMP power domain bindings
+> > >   firmware: xilinx: Add APIs to control node status/power
+> > >   firmware: xilinx: Add node IDs for zynqmp firmware
+> > >
+> > >  .../bindings/power/xlnx,zynqmp-genpd.txt           |  34 ++
+> > >  drivers/firmware/xilinx/Kconfig                    |   1 +
+> > >  drivers/firmware/xilinx/zynqmp.c                   |  73 ++++
+> > >  drivers/soc/xilinx/Kconfig                         |   9 +
+> > >  drivers/soc/xilinx/Makefile                        |   2 +
+> > >  drivers/soc/xilinx/zynqmp_pm_domains.c             | 403
+> > > +++++++++++++++++++++
+> > >  include/dt-bindings/power/xlnx-zynqmp-power.h      |  39 ++
+> > >  include/linux/firmware/xlnx-zynqmp.h               |  98 +++++
+> > >  8 files changed, 659 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/power/xlnx,zynq=
+mp-
+> > > genpd.txt
+> > >  create mode 100644 drivers/soc/xilinx/zynqmp_pm_domains.c
+> > >  create mode 100644 include/dt-bindings/power/xlnx-zynqmp-power.h
+> > >
+> > > --
+> > > 2.7.4
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
