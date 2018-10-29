@@ -1,86 +1,61 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v3 7/7] arm64: dts: qcom: apq8016-sbc: Standardize LED labels
-Date: Mon, 29 Oct 2018 15:12:45 +0530
-Message-ID: <20181029094245.7886-8-manivannan.sadhasivam@linaro.org>
-References: <20181029094245.7886-1-manivannan.sadhasivam@linaro.org>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
+Subject: Re: [PATCH 2/3] crypto: ccree: add dt bindings for ccree 713
+Date: Mon, 29 Oct 2018 11:49:31 +0200
+Message-ID: <CAOtvUMd9W9HvFuXRH=LAyQYLnvL_hmwv703LzE-aA=2OSsVHMQ@mail.gmail.com>
+References: <1539696935-4433-1-git-send-email-gilad@benyossef.com>
+ <1539696935-4433-3-git-send-email-gilad@benyossef.com> <20181025001221.GA12740@bogus>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181029094245.7886-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20181025001221.GA12740@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org, heiko@sntech.de, ezequiel@collabora.com, xuwei5@hisilicon.com, michal.simek@xilinx.com, pavel@ucw.cz, andy.gross@linaro.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, koen.kooi@linaro.org, nicolas.dechesne@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: robh@kernel.org
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Ofir Drang <Ofir.Drang@arm.com>, Yael Chemla <Yael.Chemla@arm.com>, Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux kernel mailing list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-For all 96Boards, the following standard is used for onboard LEDs.
+On Thu, Oct 25, 2018 at 3:12 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Oct 16, 2018 at 02:35:32PM +0100, Gilad Ben-Yossef wrote:
+> > Add device tree bindings associating Arm TrustZone CryptoCell 713 with =
+the
+> > ccree driver.
+>
+> "dt-bindings: crypto: ..." for the subject.
+> >
+> > Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+> > ---
+> >  Documentation/devicetree/bindings/crypto/arm-cryptocell.txt | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/crypto/arm-cryptocell.tx=
+t b/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
+> > index 999fb2a..880de07 100644
+> > --- a/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
+> > +++ b/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
+> > @@ -1,8 +1,9 @@
+> >  Arm TrustZone CryptoCell cryptographic engine
+> >
+> >  Required properties:
+> > -- compatible: Should be one of: "arm,cryptocell-712-ree",
+> > -  "arm,cryptocell-710-ree" or "arm,cryptocell-630p-ree".
+> > +- compatible: Should be one of: "arm,cryptocell-713-ree",
+> > +  "arm,cryptocell-712-ree", "arm,cryptocell-710-ree" or
+> > +  "arm,cryptocell-630p-ree".
+>
+> Please format 1 per line.
+>
 
-green:user1  default-trigger: heartbeat
-green:user2  default-trigger: mmc0/disk-activity(onboard-storage)
-green:user3  default-trigger: mmc1 (SD-card)
-green:user4  default-trigger: none, panic-indicator
-yellow:wlan  default-trigger: phy0tx
-blue:bt      default-trigger: hci0-power
+Will do.
+Thanks for the review.
 
-So lets adopt the same for APQ8016 SBC (Dragonboard410c), which is
-one of the 96Boards CE platform.
+I will send a corrected patch.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Acked-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Gilad
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index 46feedf7c989..35f95154316b 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -300,28 +300,28 @@
- 			compatible = "gpio-leds";
- 
- 			led@1 {
--				label = "apq8016-sbc:green:user1";
-+				label = "green:user1";
- 				gpios = <&msmgpio 21 GPIO_ACTIVE_HIGH>;
- 				linux,default-trigger = "heartbeat";
- 				default-state = "off";
- 			};
- 
- 			led@2 {
--				label = "apq8016-sbc:green:user2";
-+				label = "green:user2";
- 				gpios = <&msmgpio 120 GPIO_ACTIVE_HIGH>;
- 				linux,default-trigger = "mmc0";
- 				default-state = "off";
- 			};
- 
- 			led@3 {
--				label = "apq8016-sbc:green:user3";
-+				label = "green:user3";
- 				gpios = <&pm8916_gpios 1 GPIO_ACTIVE_HIGH>;
- 				linux,default-trigger = "mmc1";
- 				default-state = "off";
- 			};
- 
- 			led@4 {
--				label = "apq8016-sbc:green:user4";
-+				label = "green:user4";
- 				gpios = <&pm8916_gpios 2 GPIO_ACTIVE_HIGH>;
- 				linux,default-trigger = "none";
- 				panic-indicator;
-@@ -329,14 +329,14 @@
- 			};
- 
- 			led@5 {
--				label = "apq8016-sbc:yellow:wlan";
-+				label = "yellow:wlan";
- 				gpios = <&pm8916_mpps 2 GPIO_ACTIVE_HIGH>;
- 				linux,default-trigger = "phy0tx";
- 				default-state = "off";
- 			};
- 
- 			led@6 {
--				label = "apq8016-sbc:blue:bt";
-+				label = "blue:bt";
- 				gpios = <&pm8916_mpps 3 GPIO_ACTIVE_HIGH>;
- 				linux,default-trigger = "bluetooth-power";
- 				default-state = "off";
--- 
-2.17.1
+
+--=20
+Gilad Ben-Yossef
+Chief Coffee Drinker
+
+values of =CE=B2 will give rise to dom!
