@@ -1,151 +1,35 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH 1/2 v5] arm64: Get rid of __early_init_dt_declare_initrd()
-Date: Mon, 29 Oct 2018 18:58:09 -0300
-Message-ID: <CAKv+Gu-5vpSJDs3RdTtspO3WmbqTE4YQDWj2us4YOP2zi1PDTg@mail.gmail.com>
-References: <20181029190014.6455-1-f.fainelli@gmail.com> <20181029190014.6455-2-f.fainelli@gmail.com>
- <CAL_JsqL2g69Duhkqd=f09BStoAKeakJz8Wgz3is37YU0+fc80A@mail.gmail.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH RFC v1 3/8] timer: Export next wakeup time of a CPU
+Date: Mon, 29 Oct 2018 23:36:08 +0100 (CET)
+Message-ID: <alpine.DEB.2.21.1810292334160.5984@nanos.tec.linutronix.de>
+References: <1539206455-29342-1-git-send-email-rplsssn@codeaurora.org> <1539206455-29342-4-git-send-email-rplsssn@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL2g69Duhkqd=f09BStoAKeakJz8Wgz3is37YU0+fc80A@mail.gmail.com>
+In-Reply-To: <1539206455-29342-4-git-send-email-rplsssn@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, rppt@linux.ibm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, ghackmann@android.com, Kristina Martsenko <kristina.martsenko@arm.com>, chandan.vn@samsung.com, moderated list:ARM/FREE
+To: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, ulf.hansson@linaro.org, khilman@kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, ilina@codeaurora.org, Lina Iyer <lina.iyer@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Frederic Weisbecker <fweisbec@gmail.com>, Ingo Molnar <mingo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29 October 2018 at 16:59, Rob Herring <robh+dt@kernel.org> wrote:
-> +Ard who last touched this.
->
-> On Mon, Oct 29, 2018 at 2:23 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->>
->> ARM64 is the only architecture that re-defines
->> __early_init_dt_declare_initrd() in order for that function to populate
->> initrd_start/initrd_end with physical addresses instead of virtual
->> addresses. Instead of having an override, just get rid of that
->> implementation and perform the virtual to physical conversion of these
->> addresses in arm64_memblock_init() where relevant.
->>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
->> ---
->>  arch/arm64/include/asm/memory.h |  8 -------
->>  arch/arm64/mm/init.c            | 42 +++++++++++++++++++++------------
->>  2 files changed, 27 insertions(+), 23 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
->> index b96442960aea..dc3ca21ba240 100644
->> --- a/arch/arm64/include/asm/memory.h
->> +++ b/arch/arm64/include/asm/memory.h
->> @@ -168,14 +168,6 @@
->>  #define IOREMAP_MAX_ORDER      (PMD_SHIFT)
->>  #endif
->>
->> -#ifdef CONFIG_BLK_DEV_INITRD
->> -#define __early_init_dt_declare_initrd(__start, __end)                 \
->> -       do {                                                            \
->> -               initrd_start = (__start);                               \
->> -               initrd_end = (__end);                                   \
->> -       } while (0)
->> -#endif
->> -
->>  #ifndef __ASSEMBLY__
->>
->>  #include <linux/bitops.h>
->> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->> index 3cf87341859f..292570b08f85 100644
->> --- a/arch/arm64/mm/init.c
->> +++ b/arch/arm64/mm/init.c
->> @@ -62,6 +62,8 @@
->>  s64 memstart_addr __ro_after_init = -1;
->>  phys_addr_t arm64_dma_phys_limit __ro_after_init;
->>
->> +static phys_addr_t phys_initrd_start, phys_initrd_end;
->> +
->>  #ifdef CONFIG_BLK_DEV_INITRD
->>  static int __init early_initrd(char *p)
->>  {
->> @@ -72,8 +74,8 @@ static int __init early_initrd(char *p)
->>         if (*endp == ',') {
->>                 size = memparse(endp + 1, NULL);
->>
->> -               initrd_start = start;
->> -               initrd_end = start + size;
->> +               phys_initrd_start = start;
->> +               phys_initrd_end = start + size;
->>         }
->>         return 0;
->>  }
->> @@ -364,6 +366,7 @@ static void __init fdt_enforce_memory_region(void)
->>  void __init arm64_memblock_init(void)
->>  {
->>         const s64 linear_region_size = -(s64)PAGE_OFFSET;
->> +       u64 __maybe_unused base, size;
->>
->>         /* Handle linux,usable-memory-range property */
->>         fdt_enforce_memory_region();
->> @@ -408,14 +411,25 @@ void __init arm64_memblock_init(void)
->>                 memblock_add(__pa_symbol(_text), (u64)(_end - _text));
->>         }
->>
->> -       if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && initrd_start) {
->> +       if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) &&
->> +           (initrd_start || phys_initrd_start)) {
->
-> I've tried to explain already that this is broken. The problem is
-> __early_init_dt_declare_initrd using __va() which happens before this
-> function is called. __va() uses PHYS_OFFSET which in turn is defined
-> as memstart_addr. However, memstart_addr may be changed just above
-> this hunk, so the earlier conversion to a VA may not be valid at this
-> point. This is explained if you read Ard's commit that added all this
-> mess.
->
-> You could fix this by converting back to a PA before adjusting
-> memstart_addr, but that's 2 wrongs making a right and fragile. The
-> better solution is the other proposal making the DT code set
-> phys_initrd_* (whatever the ARM code calls them).
->
+Raju,
 
-On arm64, we have
+On Thu, 11 Oct 2018, Raju P.L.S.S.S.N wrote:
+>  
+> +/**
+> + * tick_nohz_get_next_wakeup - return the next wake up of the CPU
 
-#define PHYS_OFFSET \
-  ({ VM_BUG_ON(memstart_addr & 1); memstart_addr; })
+Lacks documentation of @cpu. Please include kernel docs into your test
+builds.
 
-and
+> + */
+> +ktime_t tick_nohz_get_next_wakeup(int cpu)
+> +{
+> +	struct clock_event_device *dev = per_cpu(tick_cpu_device.evtdev, cpu);
+> +
+> +	return dev->next_event;
+> +}
 
-s64 memstart_addr __ro_after_init = -1;
+Thanks,
 
-IOW, any attempt to perform PA to VA translations before memstart_addr
-is assigned will BUG() if CONFIG_DEBUG_VM=y, so please enable that
-when playing with this code.
-
-The reason we have this code is because the start of the linear region
-might not coincide with memblock_start_of_DRAM(), which could happen,
-e.g., when running a 39-bit VA kernel on a system with a very sparse
-memory map (which is unfortunately what some silicon vendors think is
-what ARM recommends) and the kernel loaded near the top of that
-memory. The ability to load the kernel anywhere in physical memory was
-introduced to accommodate physical KASLR.
-
-Ideally, we'd fix this by only recording physical addresses for the
-initrd in generic code, and deferring the translation until the point
-where we actually do the access.
-
->>                 /*
->>                  * Add back the memory we just removed if it results in the
->>                  * initrd to become inaccessible via the linear mapping.
->>                  * Otherwise, this is a no-op
->>                  */
->> -               u64 base = initrd_start & PAGE_MASK;
->> -               u64 size = PAGE_ALIGN(initrd_end) - base;
->> +               if (phys_initrd_start) {
->> +                       /* Command line specified the initrd location */
->> +                       initrd_start = __phys_to_virt(phys_initrd_start);
->> +                       initrd_end = __phys_to_virt(phys_initrd_end);
->> +               } else if (initrd_start) {
->> +                       /* FDT specified the initrd location */
->> +                       phys_initrd_start = __pa(initrd_start);
->> +                       phys_initrd_end = __pa(initrd_end);
->
-> Kind of inconsistent to mix __phys_to_virt and __pa flavors.
->
-> Rob
+	tglx
