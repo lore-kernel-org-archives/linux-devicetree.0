@@ -1,105 +1,54 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v2 7/7] arm64: dts: qcom: apq8016-sbc: Standardize LED
- labels
-Date: Mon, 29 Oct 2018 15:02:10 +0530
-Message-ID: <20181029093210.GA6110@Mani-XPS-13-9360>
-References: <20181029090006.4353-1-manivannan.sadhasivam@linaro.org>
- <20181029090006.4353-8-manivannan.sadhasivam@linaro.org>
- <CAHLCerM91ukzAJZHaxXxwoHU-6mVUV+X9_y_Rs0zmybNnRJCfA@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 18/25] drm/panel: Add Bananapi
+ S070WV20-CT16 ICN6211 MIPI-DSI to RGB bridge
+Date: Mon, 29 Oct 2018 10:33:06 +0100
+Message-ID: <20181029093306.ysyfgnrozbo2ywcu@flea>
+References: <20181026144344.27778-1-jagan@amarulasolutions.com>
+ <20181026144344.27778-19-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hdtvfuanrelpecuc"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXVH3PPAKGQEW2C3C7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <CAHLCerM91ukzAJZHaxXxwoHU-6mVUV+X9_y_Rs0zmybNnRJCfA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>, ezequiel@collabora.com, Wei Xu <xuwei5@hisilicon.com>, Michal Simek <michal.simek@xilinx.com>, pavel@ucw.cz, Andy Gross <andy.gross@linaro.org>, linux-leds@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, linux-rockchip@lists.infradead.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, koen.kooi@linaro.org, nicolas.dechesne@linaro.org
+In-Reply-To: <20181026144344.27778-19-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2018 at 02:47:11PM +0530, Amit Kucheria wrote:
-> On Mon, Oct 29, 2018 at 2:31 PM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > For all 96Boards, the following standard is used for onboard LEDs.
-> >
-> > green:user1  default-trigger: heartbeat
-> > green:user2  default-trigger: mmc0/disk-activity(onboard-storage)
-> > green:user3  default-trigger: mmc1 (SD-card)
-> > green:user4  default-trigger: none, panic-indicator
-> > yellow:wlan  default-trigger: phy0tx
-> > blue:bt      default-trigger: hci0-power
-> >
-> > So lets adopt the same for APQ8016 SBC (Dragonboard410c), which is
-> > one of the 96Boards CE platform.
+
+--hdtvfuanrelpecuc
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Fri, Oct 26, 2018 at 08:13:37PM +0530, Jagan Teki wrote:
+> Bananapi S070WV20-CT16 ICN6211 is 800x480, 4-lane MIPI-DSI to RGB bridge
+> panel which can be used to connect via DSI port on BPI-M64 board,
+> so add a driver for it.
 > 
-> You are missing a signed-off here :-)
->
-
-ahh, my bad. Will fix it in next revision.
-
-Thanks,
-Mani
-
-> Acked-by: Amit Kucheria <amit.kucheria@linaro.org>
+> The same panel PCB comes with parallel RBG which is supported via
+> panel-simple driver with "bananapi,s070wv20-ct16" compatible.
 > 
-> > ---
-> >  arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 12 ++++++------
-> >  1 file changed, 6 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-> > index 46feedf7c989..35f95154316b 100644
-> > --- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-> > @@ -300,28 +300,28 @@
-> >                         compatible = "gpio-leds";
-> >
-> >                         led@1 {
-> > -                               label = "apq8016-sbc:green:user1";
-> > +                               label = "green:user1";
-> >                                 gpios = <&msmgpio 21 GPIO_ACTIVE_HIGH>;
-> >                                 linux,default-trigger = "heartbeat";
-> >                                 default-state = "off";
-> >                         };
-> >
-> >                         led@2 {
-> > -                               label = "apq8016-sbc:green:user2";
-> > +                               label = "green:user2";
-> >                                 gpios = <&msmgpio 120 GPIO_ACTIVE_HIGH>;
-> >                                 linux,default-trigger = "mmc0";
-> >                                 default-state = "off";
-> >                         };
-> >
-> >                         led@3 {
-> > -                               label = "apq8016-sbc:green:user3";
-> > +                               label = "green:user3";
-> >                                 gpios = <&pm8916_gpios 1 GPIO_ACTIVE_HIGH>;
-> >                                 linux,default-trigger = "mmc1";
-> >                                 default-state = "off";
-> >                         };
-> >
-> >                         led@4 {
-> > -                               label = "apq8016-sbc:green:user4";
-> > +                               label = "green:user4";
-> >                                 gpios = <&pm8916_gpios 2 GPIO_ACTIVE_HIGH>;
-> >                                 linux,default-trigger = "none";
-> >                                 panic-indicator;
-> > @@ -329,14 +329,14 @@
-> >                         };
-> >
-> >                         led@5 {
-> > -                               label = "apq8016-sbc:yellow:wlan";
-> > +                               label = "yellow:wlan";
-> >                                 gpios = <&pm8916_mpps 2 GPIO_ACTIVE_HIGH>;
-> >                                 linux,default-trigger = "phy0tx";
-> >                                 default-state = "off";
-> >                         };
-> >
-> >                         led@6 {
-> > -                               label = "apq8016-sbc:blue:bt";
-> > +                               label = "blue:bt";
-> >                                 gpios = <&pm8916_mpps 3 GPIO_ACTIVE_HIGH>;
-> >                                 linux,default-trigger = "bluetooth-power";
-> >                                 default-state = "off";
-> > --
-> > 2.17.1
-> >
+> BSP dclock of 30MHz is not working with existing sunxi-ng and sun4i
+> sun4i_dclk_recalc, so updated to 55MHz can result proper working
+> nkm dividers.
+> 
+> dclock, 30MHz => PLL_MIPI, 300MHz => set rate 440MHz with 1,2,1 nkm
+> dclock, 55MHz => PLL_MIPI, 300MHz => set rate 330MHz with 5,2,9 nkm
+
+That panel is generic, you don't need those details in your commit log.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--hdtvfuanrelpecuc--
