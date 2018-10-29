@@ -1,66 +1,55 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v2 5/6] dt-bindings: drm/panel: simple: Innolux TV123WAM
- is actually P120ZDG-BF1
-Date: Mon, 29 Oct 2018 10:10:52 +0100
-Message-ID: <5b059dbe-efb2-c379-beb6-216a6bcedcba@samsung.com>
-References: <20181025222134.174583-1-dianders@chromium.org>
-        <CGME20181025222234epcas5p49f58ac6ec1f0fa0ef1b5f35162b215a3@epcas5p4.samsung.com>
-        <20181025222134.174583-5-dianders@chromium.org>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 00/25] drm/sun4i: Allwinner A64 MIPI-DSI support
+Date: Mon, 29 Oct 2018 10:15:08 +0100
+Message-ID: <20181029091508.gyhn2m5fnbucvb34@flea>
+References: <20181026144344.27778-1-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181025222134.174583-5-dianders@chromium.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>, Sean Paul <seanpaul@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, Sandeep Panda <spanda@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, ryandcase@chromium.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="36y45ohgmtyd7cei"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBJ473PPAKGQE47L6XKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20181026144344.27778-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 26.10.2018 00:21, Douglas Anderson wrote:
-> As far as I can tell the bindings that were added in commit
-> 9c04400f7ea6 ("dt-bindings: drm/panel: Document Innolux TV123WAM panel
-> bindings") weren't actually for Innolux TV123WAM but were actually for
-> Innolux P120ZDG-BF1.
->
-> As far as I can tell the Innolux TV123WAM isn't a real panel and but
-> it's a mosh between the TI TV123WAM and the Innolux P120ZDG-BF1.
-> Let's unmosh.
->
-> Here's my evidence:
->
-> * Searching for TV123WAM on the Internet turns up a TI panel.  While
->   it's possible that an Innolux panel has the same model number as the
->   TI Panel, it seems a little doubtful.  Looking up the datasheet from
->   the TI Panel shows that it's 1920 x 1280 and 259.2 mm x 172.8 mm.
->
-> * As far as I know, the patch adding the Innolux Panel was supposed to
->   be for the board that's sitting in front of me as I type this
->   (support for that board is not yet upstream).  On the back of that
->   panel I see Innolux P120ZDZ-EZ1 rev B1.
->
-> * Someone pointed me at a datasheet that's supposed to be for the
->   panel in front of me (sorry, I can't share the datasheet).  That
->   datasheet has the string "p120zdg-bf1"
->
-> * If I search for "P120ZDG-BF1" on the Internet I get hits for panels
->   that are 2160x1440.  They don't have datasheets, but the fact that
->   the resolution matches is a good sign.
->
-> While we doing the rename, also mention that no-hpd can be used with
-> this panel.  See the previous patch in this series ("drm/panel:
-> simple: Add "no-hpd" delay for Innolux TV123WAM").
->
-> Fixes: 9c04400f7ea6 ("dt-bindings: drm/panel: Document Innolux TV123WAM panel bindings")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Cc: Sandeep Panda <spanda@codeaurora.org>
 
-Grats for good deduction.
+--36y45ohgmtyd7cei
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
+On Fri, Oct 26, 2018 at 08:13:19PM +0530, Jagan Teki wrote:
+> This series fixed the issues related to work DSI on 2-lane panel
+> which is reported on previous version[1].
+> 
+> Few comments from previous version still in discussion, but I just
+> send this version just to group all working changes together.
+> anyway I will fix in this in next version if any.
+> 
+> PLL_MIPI min rate is still weird, I tried many possible dclock rate
+> from panel driver to satisfy manual suggested min rate 500MHz but
+> none working so eventually moved 300MHz. any inputs on this area
+> are welcome.
+> 
+> All these changes are tested in 2-lane, 4-lane MIPI-DSI panels.
+> 
+> If anyone wants to test, use this repo [2] with WIP-A64-DSI branch.
 
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+A changelog would be nice here, and usually you shouldn't send a new
+version while there is ongoing discussion on the previous version.
 
- --
-Regards
-Andrzej
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--36y45ohgmtyd7cei--
