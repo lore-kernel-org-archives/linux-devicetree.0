@@ -1,56 +1,49 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 0/9] serial: Add Tegra Combined UART driver
-Date: Mon, 29 Oct 2018 11:11:03 +0100
-Message-ID: <20181029101103.GA26393@ulmo>
-References: <20181026111638.10759-1-thierry.reding@gmail.com>
- <85092b49-2b62-bd76-05a3-521415835b6e@nvidia.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 0/8] add generic builtin command line
+Date: Mon, 29 Oct 2018 10:29:15 +0000
+Message-ID: <20181029102914.GA14127@arm.com>
+References: <1538067309-5711-1-git-send-email-maksym.kokhan@globallogic.com>
+ <20180929181725.GB27441@fifo99.com>
+ <CAMT6-xiQ0vGcKpA+SiWHQWQFwU9Oo9j=Zin+UXDoPqKTz5fbeA@mail.gmail.com>
+ <CAMT6-xj1rjVAy1AWFiMHc5wH36eu=TUSMtdKU=-qRtUbwr9bkg@mail.gmail.com>
+ <20181023144815.GP30658@n2100.armlinux.org.uk>
+ <CAMT6-xhvqy5PeQmkQ8tsLRiML_pNJTxyq7dizRRvZTEqc7uzgg@mail.gmail.com>
+ <20181024090732.GS30658@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="OXfL5xGRrasGEqWY"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <85092b49-2b62-bd76-05a3-521415835b6e@nvidia.com>
+In-Reply-To: <20181024090732.GS30658@n2100.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pekka Pessi <ppessi@nvidia.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mikko Perttunen <mperttunen@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, Mika Liljeberg <mliljeberg@nvidia.com>, linux-tegra@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Maksym Kokhan <maksym.kokhan@globallogic.com>, Daniel Walker <dwalker@fifo99.com>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Daniel Walker <danielwa@cisco.com>, Andrii Bordunov <aborduno@cisco.com>, Ruslan
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Oct 24, 2018 at 10:07:32AM +0100, Russell King - ARM Linux wrote:
+> On Wed, Oct 24, 2018 at 11:57:44AM +0300, Maksym Kokhan wrote:
+> > Do you mean, that you haven't seen patch for ARM, which I sent on
+> > September 27 along with cover and patch 1? It is strange, because
+> > you was the one from recipients. If so, you can see this patch here:
+> > https://lore.kernel.org/patchwork/patch/992779/
+> 
+> It seems that I have received patch 5, _but_ it's not threaded with
+> the cover message and patch 1.  With 50k messages in my inbox, and 3k
+> messages since you sent the series, it's virtually impossible to find
+> it (I only found it by looking at my mail server logs from September
+> to find the subject, and then searching my mailbox for that subject.)
+> 
+> This is unnecessarily difficult.
 
---OXfL5xGRrasGEqWY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This comes up surprisingly often, and I think part of the issue is that
+different maintainers have different preferences. I also prefer to receive
+the entire series and cover-letter, but I've seen people object to being
+CC'd on the whole series as well (how they manage to review things in
+isolation is another question...!)
 
-On Mon, Oct 29, 2018 at 11:04:06AM +0200, Pekka Pessi wrote:
-> Hi Thierry,
->=20
-> What is the use case for the mailbox driver? What kind of entity will be
-> there consuming sent messages and sending messages to kernel?
+I wonder if we could have an entry in MAINTAINERS for this sort of
+preference?
 
-This is currently only used for the TCU. I'm sure there could be other
-cases, but we support none of the upstream at the moment. Are you aware
-of any others that we need to take into account?
+Maksym: in the short term, please just stick me and Russell on CC for the
+entire thing.
 
-Thierry
-
---OXfL5xGRrasGEqWY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlvW3LcACgkQ3SOs138+
-s6FRIw/+Pw2StMAnCWis5xYWoEvtLTttWYsHVBudkqmZVjFV9kcIODJnsRQU49gr
-7wF4DlLbvPiA0Z+PzYw9wPYLRYNCmURdzY/o8AovrV5Fh6gJ3duWMSTGOt1XvEt4
-17UEFyQKHO27J+IIhLFcLwc+Q+U9CVWX1AFb94o/tFJTdBLp28lkgH+uWR7rkBm5
-L7g0Km2x74VTywGUwiuVof6mRwny7V3OqpluT85Ot6i0PXGfGSAZk1RwU12Pi1dJ
-CcNnRMx0/f2/bY/f4CJF5kg3vgoLpr45hi8mZS4RqTCOXACnehELzTW2tX63t/nt
-o2pp09x//EwgsoXNNKa4FCdbfQw2VgOcl+MbWrmPNXy4XgRp9+N8UX63rNxp3/Nd
-ebyeADdTocSv/1hP0khItpIHvWdvyLCCUgqa3jEVV7+qPv9svgFhJ2rXNEv6j6iC
-jQR1R4BFwrHyHilDJ2v+yjV1iNGn5qqFaDkaqT+4C+KtgQV8VNrCZ3AFgWAeHznp
-biBoVP/1W4vuk46Ssk3JpzQqqrPN29mYPsiU5yKqzrmkPQMLN4UU19q2nY0RPO/i
-7vMMdinA2R9UdtWKfkdumNULkwUGN3hdZqMRMqKO+03wxgKPC2oQPMzxFj31T2Wy
-mjpYgAPX4JOjlWDO15An5iRykhcz4+XcWmHMUHUqnfT3SURKbS8=
-=yi2X
------END PGP SIGNATURE-----
-
---OXfL5xGRrasGEqWY--
+Will
