@@ -1,83 +1,95 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 7/7] arm64: dts: qcom: apq8016-sbc: Standardize LED labels
-Date: Mon, 29 Oct 2018 14:30:06 +0530
-Message-ID: <20181029090006.4353-8-manivannan.sadhasivam@linaro.org>
-References: <20181029090006.4353-1-manivannan.sadhasivam@linaro.org>
+From: Pekka Pessi <ppessi@nvidia.com>
+Subject: Re: [PATCH 0/9] serial: Add Tegra Combined UART driver
+Date: Mon, 29 Oct 2018 11:04:06 +0200
+Message-ID: <85092b49-2b62-bd76-05a3-521415835b6e@nvidia.com>
+References: <20181026111638.10759-1-thierry.reding@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181029090006.4353-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20181026111638.10759-1-thierry.reding@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org, heiko@sntech.de, ezequiel@collabora.com, xuwei5@hisilicon.com, michal.simek@xilinx.com, pavel@ucw.cz, andy.gross@linaro.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, koen.kooi@linaro.org, nicolas.dechesne@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Thierry Reding <thierry.reding@gmail.com>, Jassi Brar <jassisinghbrar@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jslaby@suse.com>, Mikko Perttunen <mperttunen@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, Mika Liljeberg <mliljeberg@nvidia.com>, linux-tegra@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-For all 96Boards, the following standard is used for onboard LEDs.
+Hi Thierry,
 
-green:user1  default-trigger: heartbeat
-green:user2  default-trigger: mmc0/disk-activity(onboard-storage)
-green:user3  default-trigger: mmc1 (SD-card)
-green:user4  default-trigger: none, panic-indicator
-yellow:wlan  default-trigger: phy0tx
-blue:bt      default-trigger: hci0-power
+What is the use case for the mailbox driver? What kind of entity will be 
+there consuming sent messages and sending messages to kernel?
 
-So lets adopt the same for APQ8016 SBC (Dragonboard410c), which is
-one of the 96Boards CE platform.
----
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+--Pekka
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index 46feedf7c989..35f95154316b 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -300,28 +300,28 @@
- 			compatible = "gpio-leds";
- 
- 			led@1 {
--				label = "apq8016-sbc:green:user1";
-+				label = "green:user1";
- 				gpios = <&msmgpio 21 GPIO_ACTIVE_HIGH>;
- 				linux,default-trigger = "heartbeat";
- 				default-state = "off";
- 			};
- 
- 			led@2 {
--				label = "apq8016-sbc:green:user2";
-+				label = "green:user2";
- 				gpios = <&msmgpio 120 GPIO_ACTIVE_HIGH>;
- 				linux,default-trigger = "mmc0";
- 				default-state = "off";
- 			};
- 
- 			led@3 {
--				label = "apq8016-sbc:green:user3";
-+				label = "green:user3";
- 				gpios = <&pm8916_gpios 1 GPIO_ACTIVE_HIGH>;
- 				linux,default-trigger = "mmc1";
- 				default-state = "off";
- 			};
- 
- 			led@4 {
--				label = "apq8016-sbc:green:user4";
-+				label = "green:user4";
- 				gpios = <&pm8916_gpios 2 GPIO_ACTIVE_HIGH>;
- 				linux,default-trigger = "none";
- 				panic-indicator;
-@@ -329,14 +329,14 @@
- 			};
- 
- 			led@5 {
--				label = "apq8016-sbc:yellow:wlan";
-+				label = "yellow:wlan";
- 				gpios = <&pm8916_mpps 2 GPIO_ACTIVE_HIGH>;
- 				linux,default-trigger = "phy0tx";
- 				default-state = "off";
- 			};
- 
- 			led@6 {
--				label = "apq8016-sbc:blue:bt";
-+				label = "blue:bt";
- 				gpios = <&pm8916_mpps 3 GPIO_ACTIVE_HIGH>;
- 				linux,default-trigger = "bluetooth-power";
- 				default-state = "off";
--- 
-2.17.1
+On 10/26/2018 02:16 PM, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+>
+> Hi everyone,
+>
+> this is a reworked version of Mikko's earlier proposal[0]. I've reworked
+> the TCU driver itself so that it relies less on global variables as well
+> as added a Kconfig option to allow the console support to be selected. I
+> also fixed a couple of issues that manifested themselves as I was moving
+> towards the IRQ driven mode (TCU was passing a pointer to a local
+> variable which was getting stored in the mailbox's ring buffer and the
+> data pointed at was becoming stale by the time the mailbox got around to
+> dequeue it).
+>
+> The biggest bulk of the changes is in the mailbox driver. This series
+> addresses all of Jassi's comments from back at the time. One notable
+> additional change is that shared mailboxes are now interrupt driven,
+> which removes the need for polling mode.
+>
+> Unfortunately there is still an issue because the TCU uses the mailbox
+> in atomic context for both TTY and console modes, so we get a sleeping-
+> while-atomic BUG when using mbox_client->tx_block = true in order to
+> rate-limit mbox_send_message(). In order to work around this, I added a
+> mechanism to mbox_send_message() that will allow blocking from atomic
+> context if the mailbox controller implements the new ->flush() callback.
+> For Tegra HSP shared mailboxes this is done by spinning on the shared
+> mailbox register until the receiver has marked the mailbox as empty. I
+> have been running this locally for a couple of days now and it works
+> perfectly.
+>
+> Furthermore this series incorporates Mikko's work in progress on
+> splitting up the mailbox controllers and allowing multiple controllers
+> to match on the same device tree node during mbox_request_channel().
+>
+> Last but not least there are no build-time dependencies between the
+> mailbox and serial drivers, so I think the easiest way to merge this is
+> if Jassi picks up patches 1-5, Greg takes patches 6 & 7 and I pick up
+> patches 8-9 into the Tegra tree.
+>
+> Thanks,
+> Thierry
+>
+> [0]: https://lore.kernel.org/patchwork/project/lkml/list/?series=357641
+>
+> Mikko Perttunen (5):
+>    mailbox: Allow multiple controllers per device
+>    dt-bindings: tegra186-hsp: Add shared interrupts
+>    dt-bindings: serial: Add bindings for nvidia,tegra194-tcu
+>    arm64: tegra: Add nodes for TCU on Tegra194
+>    arm64: tegra: Mark TCU as primary serial port on Tegra194 P2888
+>
+> Thierry Reding (4):
+>    mailbox: Support blocking transfers in atomic context
+>    mailbox: tegra-hsp: Add support for shared mailboxes
+>    mailbox: tegra-hsp: Add suspend/resume support
+>    serial: Add Tegra Combined UART driver
+>
+>   .../bindings/mailbox/nvidia,tegra186-hsp.txt  |   3 +
+>   .../bindings/serial/nvidia,tegra194-tcu.txt   |  35 ++
+>   .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |   2 +-
+>   arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  38 +-
+>   drivers/mailbox/mailbox.c                     |  11 +-
+>   drivers/mailbox/tegra-hsp.c                   | 495 +++++++++++++++---
+>   drivers/tty/serial/Kconfig                    |  22 +
+>   drivers/tty/serial/Makefile                   |   1 +
+>   drivers/tty/serial/tegra-tcu.c                | 299 +++++++++++
+>   include/linux/mailbox_controller.h            |   4 +
+>   include/uapi/linux/serial_core.h              |   3 +
+>   11 files changed, 847 insertions(+), 66 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/serial/nvidia,tegra194-tcu.txt
+>   create mode 100644 drivers/tty/serial/tegra-tcu.c
+>
