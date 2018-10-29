@@ -1,65 +1,69 @@
-From: Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH v2 1/6] dt-bindings: drm/panel: simple: Add no-hpd
- property
-Date: Mon, 29 Oct 2018 12:16:51 -0400
-Message-ID: <20181029161651.GW154160@art_vandelay>
-References: <20181025222134.174583-1-dianders@chromium.org>
+From: Pascal PAILLET-LME <p.paillet@st.com>
+Subject: [PATCH v5 0/8] Introduce STPMIC1 PMIC Driver
+Date: Mon, 29 Oct 2018 16:22:04 +0000
+Message-ID: <1540830122-2577-1-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181025222134.174583-1-dianders@chromium.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Sean Paul <seanpaul@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, Sandeep Panda <spanda@codeaurora.org>, linux-arm-msm@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, jsanka@codeaurora.org, ryandcase@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>
+To: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
+Cc: Pascal PAILLET-LME <p.paillet@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 25, 2018 at 03:21:29PM -0700, Douglas Anderson wrote:
-> Some eDP panels that are designed to be always connected to a board
-> use their HPD signal to signal that they've finished powering on and
-> they're ready to be talked to.
-> 
-> However, for various reasons it's possible that the HPD signal from
-> the panel isn't actually hooked up.  In the case where the HPD isn't
-> hooked up you can look at the timing diagram on the panel datasheet
-> and insert a delay for the maximum amount of time that the HPD might
-> take to come up.
-> 
-> Let's add a property in the device tree for this concept.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+The goal of this patch-set is to propose a driver for the STPMIC1 PMIC from 
+STMicroelectronics. 
+The STPMIC1 regulators supply power to an application processor as well as 
+to external system peripherals such as DDR, Flash memories and system
+devices. It also features onkey button input and an hardware watchdog.
+The STPMIC1 is controlled via I2C. 
 
-Thanks for the series, Doug, I've applied it all to drm-misc-next-fixes for
-4.20.
+Main driver is drivers/mfd/stpmic1 that handle I2C regmap configuration and
+irqchip. stpmic1_regulator, stpmic1_onkey and stpmic1_wdt need stpmic1 mfd
+as parent.
 
-Sean
+stpmic1 mfd and regulator drivers maybe mandatory at boot time.
 
-> Reviewed-by: Sean Paul <sean@poorly.run>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> 
-> Changes in v2: None
-> 
->  .../devicetree/bindings/display/panel/simple-panel.txt         | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/simple-panel.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> index 45a457ad38f0..b2b872c710f2 100644
-> --- a/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> +++ b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> @@ -11,6 +11,9 @@ Optional properties:
->  - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
->  - enable-gpios: GPIO pin to enable or disable the panel
->  - backlight: phandle of the backlight device attached to the panel
-> +- no-hpd: This panel is supposed to communicate that it's ready via HPD
-> +  (hot plug detect) signal, but the signal isn't hooked up so we should
-> +  hardcode the max delay from the panel spec when powering up the panel.
->  
->  Example:
->  
-> -- 
-> 2.19.1.568.g152ad8e336-goog
-> 
+Pascal Paillet (8):
+  dt-bindings: mfd: document stpmic1
+  mfd: stpmic1: add stpmic1 driver
+  dt-bindings: regulator: document stpmic1 pmic regulators
+  regulator: stpmic1: add stpmic1 regulator driver
+  dt-bindings: input: document stpmic1 pmic onkey
+  input: stpmic1: add stpmic1 onkey driver
+  dt-bindings: watchdog: document stpmic1 pmic watchdog
+  watchdog: stpmic1: add stpmic1 watchdog driver
+
+ .../devicetree/bindings/input/st,stpmic1-onkey.txt |  28 +
+ .../devicetree/bindings/mfd/st,stpmic1.txt         |  61 ++
+ .../bindings/regulator/st,stpmic1-regulator.txt    |  67 +++
+ .../bindings/watchdog/st,stpmic1-wdt.txt           |  11 +
+ drivers/input/misc/Kconfig                         |  11 +
+ drivers/input/misc/Makefile                        |   2 +
+ drivers/input/misc/stpmic1_onkey.c                 | 198 ++++++
+ drivers/mfd/Kconfig                                |  16 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/stpmic1.c                              | 215 +++++++
+ drivers/regulator/Kconfig                          |  12 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/stpmic1_regulator.c              | 667 +++++++++++++++++++++
+ drivers/watchdog/Kconfig                           |  12 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/stpmic1_wdt.c                     | 139 +++++
+ include/dt-bindings/mfd/st,stpmic1.h               |  50 ++
+ include/linux/mfd/stpmic1.h                        | 212 +++++++
+ 18 files changed, 1704 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
+ create mode 100644 drivers/input/misc/stpmic1_onkey.c
+ create mode 100644 drivers/mfd/stpmic1.c
+ create mode 100644 drivers/regulator/stpmic1_regulator.c
+ create mode 100644 drivers/watchdog/stpmic1_wdt.c
+ create mode 100644 include/dt-bindings/mfd/st,stpmic1.h
+ create mode 100644 include/linux/mfd/stpmic1.h
 
 -- 
-Sean Paul, Software Engineer, Google / Chromium OS
+1.9.1
