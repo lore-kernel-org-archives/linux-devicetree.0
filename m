@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 14/25] drm/sun4i: sun6i_mipi_dsi:
- Increase hfp packet overhead
-Date: Mon, 29 Oct 2018 10:27:54 +0100
-Message-ID: <20181029092754.2tl7i5k5qpbn4557@flea>
+Subject: Re: [PATCH v3 15/25] drm/sun4i: sun6i_mipi_dsi: Set
+ proper vblk timing calculation
+Date: Mon, 29 Oct 2018 10:30:05 +0100
+Message-ID: <20181029093005.6kg7pc5z63gi6lzb@flea>
 References: <20181026144344.27778-1-jagan@amarulasolutions.com>
- <20181026144344.27778-15-jagan@amarulasolutions.com>
+ <20181026144344.27778-16-jagan@amarulasolutions.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="pvlkcstvb3cw6o6f"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBNNF3PPAKGQEABILCAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="b5odkxjnn5rkvxze"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBKFG3PPAKGQEX7KVPRA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20181026144344.27778-15-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <20181026144344.27778-16-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,35 +24,20 @@ Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G
 List-Id: devicetree@vger.kernel.org
 
 
---pvlkcstvb3cw6o6f
+--b5odkxjnn5rkvxze
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Fri, Oct 26, 2018 at 08:13:33PM +0530, Jagan Teki wrote:
-> Increase the hfp packet overhead with another 10 bytes, the extra
-> 10 bytes(which is hblk packet overhead) is adding for hfp packet
-> overhead since hfp depends on hblk.
+On Fri, Oct 26, 2018 at 08:13:34PM +0530, Jagan Teki wrote:
+> Unlike hblk, the vblk timings should follow an equation to compute
+> the desired value for lane 4 devices and rest of devices it would be 0.
 > 
-> This is truely as per BSP code from BPI-M64-bsp.
-> The real computation from BSP is
+> BSP code from BPI-M64-bsp is computing vblk as for 4-lane devices
 > (in drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
-> dsi_hbp = (hbp-hspw)*dsi_pixel_bits[format]/8 - (4+2);
-> dsi_hact = x * dsi_pixel_bits[format]/8;
-> dsi_hblk = (ht-hspw)*dsi_pixel_bits[format]/8-(4+4+2);
-> dsi_hfp = dsi_hblk - (4+dsi_hact+2) - (4+dsi_hbp+2);
+> tmp = (ht*dsi_pixel_bits[format]/8)*vt-(4+dsi_hblk+2);
+> dsi_vblk = (lane-tmp%lane);
 > 
-> Example,
-> u32 fmt = dsi_pixel_bits[format]/8;
-> => ((ht-hspw)*fmt - 10) - (6 + x * fmt) - (6 + (hbp-hspw)*fmt - 6)
-> => (ht - hspw - x - (hbp - hspw)) * fmt - 16
-> => (ht - x - hbp) * fmt - 16
-> => (ht - x - (timmings->hor_total_time - timmings->hor_front_porch - x)
-> * fmt - 16
-> => (timmings->hor_total_time - x - timmings->hor_total_time +
-> timmings->hor_front_porch + x) * fmt - 16
-> => timmings->hor_front_porch * fmt - 16
-> 
-> So, increase the DSI hfp packet overhead by hblk packet overhead.
+> So, update the vblk timing calculation accordingly.
 > 
 > Tested on 2-lane, 4-lane MIPI-DSI LCD panels.
 > 
@@ -64,53 +49,35 @@ On Fri, Oct 26, 2018 at 08:13:33PM +0530, Jagan Teki wrote:
 > Changes for v2:
 > - none
 > 
->  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 22 +++++++++++++---------
->  1 file changed, 13 insertions(+), 9 deletions(-)
+>  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> index 6584b51736a9..20e330186b7f 100644
+> index 20e330186b7f..42bd7506abaf 100644
 > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
 > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> @@ -461,7 +461,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
->  {
->  	struct mipi_dsi_device *device = dsi->device;
->  	unsigned int Bpp = mipi_dsi_pixel_format_to_bpp(device->format) / 8;
-> -	u16 hbp, hfp, hsa, hblk_max, hblk, vblk;
-> +	u16 hbp, hfp_pkt_overhead, hfp, hsa, hblk_max, hblk, vblk;
->  	size_t bytes;
->  	u8 *buffer;
->  
-> @@ -484,14 +484,6 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
->  	hbp = max((unsigned int)HBP_PACKET_OVERHEAD,
->  		  (mode->htotal - mode->hsync_end) * Bpp - HBP_PACKET_OVERHEAD);
->  
-> -	/*
-> -	 * The frontporch is set using a blanking packet (4 bytes +
-> -	 * payload + 2 bytes). Its minimal size is therefore 6 bytes
-> -	 */
-> -#define HFP_PACKET_OVERHEAD	6
-> -	hfp = max((unsigned int)HFP_PACKET_OVERHEAD,
-> -		  (mode->hsync_start - mode->hdisplay) * Bpp - HFP_PACKET_OVERHEAD);
-> -
->  	/*
->  	 * hblk seems to be the line + porches length.
->  	 * The blank is set using a blanking packet (4 bytes + 4 bytes +
-> @@ -502,6 +494,18 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
->  	hblk_max -= HBLK_PACKET_OVERHEAD;
->  	hblk = max((unsigned int)HBLK_PACKET_OVERHEAD, hblk_max);
->  
-> +	/*
-> +	 * The frontporch is set using a blanking packet (4 bytes +
-> +	 * payload + 2 bytes). Its minimal size is therefore 6 bytes
+> @@ -511,8 +511,19 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+>  	 * Allwinner BSP is using a rather convoluted calculation
+>  	 * there only for 4 lanes. However, using 0 (the !4 lanes
+>  	 * case) even with a 4 lanes screen seems to work...
+
+Since you're adding the support for 2 lanes DSI displays, that should
+be removed.
+
 > +	 *
-> +	 * According to BSP code, extra 10 bytes(which is hblk packet overhead)
-> +	 * is adding for hfp packet overhead since hfp depends on hblk.
+> +	 * The vertical blank is set using a blanking packet (4 bytes +
+> +	 * payload + 2 bytes). Its minimal size is therefore 6 bytes
+>  	 */
+> -	vblk = 0;
+> +#define VBLK_PACKET_OVERHEAD	6
+> +	if (device->lanes == 4) {
+> +		int tmp;
+> +
+> +		tmp = (mode->htotal * Bpp) * mode->vtotal - (hblk + VBLK_PACKET_OVERHEAD);
+> +		vblk =(device->lanes - tmp % device->lanes);
 
-"According to the BSP code, another 10 bytes (the HBLK packet
-overhead) need to be added to the front porch overhead."
-
-How has this been verified? Since we have registers to set all the
-parameters, this seems kind of weird.
+This generates a checkpatch warning. You should run all your patches
+through checkpatch before sending them.
 
 Maxime
 
@@ -118,4 +85,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---pvlkcstvb3cw6o6f--
+--b5odkxjnn5rkvxze--
