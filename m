@@ -1,43 +1,37 @@
-Return-Path: <SRS0=pxxc=NJ=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v2 0/6] media: mt9m111 features
-Date: Mon, 29 Oct 2018 19:24:04 +0100
-Message-Id: <20181029182410.18783-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=2O/d=NJ=verge.net.au=horms@kernel.org>
+Date: Mon, 29 Oct 2018 11:24:33 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] arm64: dts: renesas: r8a779{7|8}0: add MSIOF support
+Message-ID: <20181029102433.7tvtvjmoo4z4wqw7@verge.net.au>
+References: <fb4eb097-40aa-82df-68c7-9b727c858a8b@cogentembedded.com>
+ <451b2957-d272-f4e9-8bfc-cb1cdfeb442b@cogentembedded.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: enrico.scholz@sigma-chemnitz.de, akinobu.mita@gmail.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, graphics@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <451b2957-d272-f4e9-8bfc-cb1cdfeb442b@cogentembedded.com>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+On Fri, Oct 19, 2018 at 10:10:44PM +0300, Sergei Shtylyov wrote:
+> Describe MSIOF in the R8A779{7|8}0 device trees.
+> 
+> The DMA props are omitted for R8A77980 as the RT-DMAC isn't supported
+> (yet?)...
+> 
+> Based on the original (and large) patches by Vladimir Barinov.
+> 
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+> This patch is against the 'renesas-devel-20181015-v4.19-rc8' branch of
+> Simon Horman's 'renesas.git' repo.
+> 
+> Changes in version 2:
+> - removed the aliases;
+> - restored the DMA props on R8A77970, updated the description accordingly;
+> - mentioned Vladimir in the description and added his signoff;
+> - refreshed the patch.
 
-this is the v2 of [1]. I fixed some issues I made during converting
-Enrico's and Michael's patches and rebased it on top of
-media-tree/master. Please see commit comments for further information.
-
-The dt-bindings patches are new as result of Sakari's review [2].
-
-[1] https://www.spinics.net/lists/linux-media/msg141975.html
-[2] https://www.spinics.net/lists/linux-media/msg141987.html
-
-Regards,
-Marco
-
-Enrico Scholz (1):
-  media: mt9m111: allow to setup pixclk polarity
-
-Marco Felsch (3):
-  media: mt9m111: add s_stream callback
-  dt-bindings: media: mt9m111: adapt documentation to be more clear
-  dt-bindings: media: mt9m111: add pclk-sample property
-
-Michael Grzeschik (2):
-  media: mt9m111: add streaming check to set_fmt
-  media: mt9m111: add support to select formats and fps for {Q,SXGA}
-
- .../devicetree/bindings/media/i2c/mt9m111.txt |  16 +-
- drivers/media/i2c/mt9m111.c                   | 222 +++++++++++++++++-
- 2 files changed, 233 insertions(+), 5 deletions(-)
-
--- 
-2.19.1
+Thanks, applied for v4.21.
