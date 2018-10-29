@@ -1,21 +1,59 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net-next 1/2] net: nixge: Separate ctrl and dma
- resources
-Date: Mon, 29 Oct 2018 16:37:38 -0700 (PDT)
-Message-ID: <20181029.163738.2228889706351204145.davem@davemloft.net>
-References: <20181029231447.3690-1-alex.williams@ettus.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH 0/6]  arm64: Get rid of __early_init_dt_declare_initrd()
+Date: Mon, 29 Oct 2018 16:52:00 -0700
+Message-ID: <20181029235206.30060-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181029231447.3690-1-alex.williams@ettus.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alex.williams@ettus.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mdf@kernel.org, keescook@chromium.org, alex.williams@ni.com
+To: linux-kernel@vger.kernel.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi all,
 
-The net-next tree is closed, please resubmit this when the net-next tree
-opens back up.
+The numbers no longer make any sense since I either did not correctly
+understand the feedback being given, or dramatically changed the
+approach.
 
-Thank you.
+This version introduces an architecture symbol: ARCH_HAS_PHYS_INITRD
+which indicates whether the architecture cares/supports parsing the
+physical address of the initrd. Currently ARM (32-bit), Unicore32 and
+now ARM64 support that.
+
+When that symbol is defined, we also have the generic FDT code populate
+the initrd physical address and size, and we can later make use of that
+within architecture specific code to populate the memblock regions and
+do the righ physical to virtual address conversion.
+
+Rob, hopefully this is what you had in mind.
+
+Previous discussions/submissions list here:
+
+v3:
+https://www.spinics.net/lists/arm-kernel/msg683566.html
+v2:
+https://lkml.org/lkml/2018/10/25/4
+
+
+Florian Fainelli (6):
+  nds32: Remove phys_initrd_start and phys_initrd_size
+  arch: Make phys_initrd_start and phys_initrd_size global variables
+  arch: Define ARCH_HAS_PHYS_INITRD for ARM and Unicore32
+  of/fdt: Populate phys_initrd_start/phys_initrd_size from FDT
+  arm64: Utilize ARCH_HAS_PHYS_INITRD
+  of/fdt: Remove definition check for __early_init_dt_declare_initrd()
+
+ arch/Kconfig                    |  7 +++++++
+ arch/arm/Kconfig                |  1 +
+ arch/arm/mm/init.c              |  6 +++---
+ arch/arm64/Kconfig              |  1 +
+ arch/arm64/include/asm/memory.h |  8 --------
+ arch/arm64/mm/init.c            | 23 +++++++++++------------
+ arch/nds32/mm/init.c            |  2 --
+ arch/unicore32/Kconfig          |  1 +
+ arch/unicore32/mm/init.c        |  4 ++--
+ drivers/of/fdt.c                |  6 ++++--
+ include/linux/initrd.h          |  3 +++
+ 11 files changed, 33 insertions(+), 29 deletions(-)
+
+-- 
+2.17.1
