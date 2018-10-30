@@ -1,43 +1,111 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 6/6] of/fdt: Remove definition check for __early_init_dt_declare_initrd()
-Date: Mon, 29 Oct 2018 16:52:06 -0700
-Message-ID: <20181029235206.30060-7-f.fainelli@gmail.com>
-References: <20181029235206.30060-1-f.fainelli@gmail.com>
+From: Peng Ma <peng.ma@nxp.com>
+Subject: [v11 2/7] dmaengine: fsldma: Adding macro FSL_DMA_IN/OUT implement for ARM platform
+Date: Tue, 30 Oct 2018 10:35:59 +0800
+Message-ID: <20181030023604.34027-2-peng.ma@nxp.com>
+References: <20181030023604.34027-1-peng.ma@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181029235206.30060-1-f.fainelli@gmail.com>
+In-Reply-To: <20181030023604.34027-1-peng.ma@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, linux-arm-kernel@lists.infradead.org
+To: vkoul@kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, dan.j.williams@intel.com, zw@zh-kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Peng Ma <peng.ma@nxp.com>, Wen He <wen.he_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-With the one and only architecture (ARM64) no longer defining a custom
-__early_init_dt_declare_initrd() function, just get rid of the check for
-that function being already defined.
+This patch add the macro FSL_DMA_IN/OUT implement for ARM platform.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Wen He <wen.he_1@nxp.com>
+Signed-off-by: Peng Ma <peng.ma@nxp.com>
 ---
- drivers/of/fdt.c | 2 --
- 1 file changed, 2 deletions(-)
+change in v11:
+	- no
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 313cd4f24258..3d84fe79eeb4 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -892,7 +892,6 @@ const void * __init of_flat_dt_match_machine(const void *default_match,
- }
+ drivers/dma/fsldma.h |   61 ++++++++++++++++++++++++++++++++++---------------
+ 1 files changed, 42 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
+index 982845b..88db939 100644
+--- a/drivers/dma/fsldma.h
++++ b/drivers/dma/fsldma.h
+@@ -196,39 +196,62 @@ struct fsldma_chan {
+ #define to_fsl_desc(lh) container_of(lh, struct fsl_desc_sw, node)
+ #define tx_to_fsl_desc(tx) container_of(tx, struct fsl_desc_sw, async_tx)
  
- #ifdef CONFIG_BLK_DEV_INITRD
--#ifndef __early_init_dt_declare_initrd
- static void __early_init_dt_declare_initrd(unsigned long start,
- 					   unsigned long end)
++#ifdef	CONFIG_PPC
++#define fsl_ioread32(p)		in_le32(p)
++#define fsl_ioread32be(p)	in_be32(p)
++#define fsl_iowrite32(v, p)	out_le32(p, v)
++#define fsl_iowrite32be(v, p)	out_be32(p, v)
++
+ #ifndef __powerpc64__
+-static u64 in_be64(const u64 __iomem *addr)
++static u64 fsl_ioread64(const u64 __iomem *addr)
  {
-@@ -904,7 +903,6 @@ static void __early_init_dt_declare_initrd(unsigned long start,
- 	phys_initrd_size = end - start;
- #endif
+-	return ((u64)in_be32((u32 __iomem *)addr) << 32) |
+-		(in_be32((u32 __iomem *)addr + 1));
++	u32 fsl_addr = lower_32_bits(addr);
++	u64 fsl_addr_hi = (u64)in_le32((u32 *)(fsl_addr + 1)) << 32;
++
++	return fsl_addr_hi | in_le32((u32 *)fsl_addr);
  }
--#endif
  
- /**
-  * early_init_dt_check_for_initrd - Decode initrd location from flat tree
+-static void out_be64(u64 __iomem *addr, u64 val)
++static void fsl_iowrite64(u64 val, u64 __iomem *addr)
+ {
+-	out_be32((u32 __iomem *)addr, val >> 32);
+-	out_be32((u32 __iomem *)addr + 1, (u32)val);
++	out_le32((u32 __iomem *)addr + 1, val >> 32);
++	out_le32((u32 __iomem *)addr, (u32)val);
+ }
+ 
+-/* There is no asm instructions for 64 bits reverse loads and stores */
+-static u64 in_le64(const u64 __iomem *addr)
++static u64 fsl_ioread64be(const u64 __iomem *addr)
+ {
+-	return ((u64)in_le32((u32 __iomem *)addr + 1) << 32) |
+-		(in_le32((u32 __iomem *)addr));
++	u32 fsl_addr = lower_32_bits(addr);
++	u64 fsl_addr_hi = (u64)in_be32((u32 *)fsl_addr) << 32;
++
++	return fsl_addr_hi | in_be32((u32 *)(fsl_addr + 1));
+ }
+ 
+-static void out_le64(u64 __iomem *addr, u64 val)
++static void fsl_iowrite64be(u64 val, u64 __iomem *addr)
+ {
+-	out_le32((u32 __iomem *)addr + 1, val >> 32);
+-	out_le32((u32 __iomem *)addr, (u32)val);
++	out_be32((u32 __iomem *)addr, val >> 32);
++	out_be32((u32 __iomem *)addr + 1, (u32)val);
+ }
+ #endif
++#endif
+ 
+-#define FSL_DMA_IN(fsl_chan, addr, width)				\
+-		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
+-			in_be##width(addr) : in_le##width(addr))
+-#define FSL_DMA_OUT(fsl_chan, addr, val, width)			\
+-		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
+-			out_be##width(addr, val) : out_le##width(addr, val))
++#if defined(CONFIG_ARM64) || defined(CONFIG_ARM)
++#define fsl_ioread32(p)		ioread32(p)
++#define fsl_ioread32be(p)	ioread32be(p)
++#define fsl_iowrite32(v, p)	iowrite32(v, p)
++#define fsl_iowrite32be(v, p)	iowrite32be(v, p)
++#define fsl_ioread64(p)		ioread64(p)
++#define fsl_ioread64be(p)	ioread64be(p)
++#define fsl_iowrite64(v, p)	iowrite64(v, p)
++#define fsl_iowrite64be(v, p)	iowrite64be(v, p)
++#endif
++
++#define FSL_DMA_IN(fsl_dma, addr, width)			\
++		(((fsl_dma)->feature & FSL_DMA_BIG_ENDIAN) ?	\
++			fsl_ioread##width##be(addr) : fsl_ioread##width(addr))
++
++#define FSL_DMA_OUT(fsl_dma, addr, val, width)			\
++		(((fsl_dma)->feature & FSL_DMA_BIG_ENDIAN) ?	\
++			fsl_iowrite##width##be(val, addr) : fsl_iowrite	\
++		##width(val, addr))
+ 
+ #define DMA_TO_CPU(fsl_chan, d, width)					\
+ 		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
 -- 
-2.17.1
+1.7.1
