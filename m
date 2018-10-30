@@ -1,64 +1,48 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/6] arch: Make phys_initrd_start and phys_initrd_size
- global variables
-Date: Tue, 30 Oct 2018 10:10:59 -0500
-Message-ID: <CAL_JsqKrrmMOQrV62L0QXAPiLGceMbvA7HZ=1U3PW0_MpqtC=w@mail.gmail.com>
-References: <20181029235206.30060-1-f.fainelli@gmail.com> <20181029235206.30060-3-f.fainelli@gmail.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V3 4/8] dt-bindings: i2c: i2c-imx-lpi2c: add imx8qxp
+ compatible string
+Date: Tue, 30 Oct 2018 15:03:57 +0000
+Message-ID: <AM0PR04MB421190D30048AB9AE39FA8C780CC0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1539886483-15775-1-git-send-email-aisheng.dong@nxp.com>
+ <1539886483-15775-5-git-send-email-aisheng.dong@nxp.com>
+ <20181028221952.GF1882@kunai>
+ <AM0PR04MB42110EB0836E9610CDA2746680CC0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <20181030145925.GC2459@kunai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181029235206.30060-3-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, aryabinin@virtuozzo.com, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, ghackmann@android.com, Kristina Martsenko <kristina.martsenko@arm.com>, chandan.vn@samsung.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@v
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181030145925.GC2459@kunai>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2018 at 6:52 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> Make phys_initrd_start and phys_initrd_size global variables that will
-> later be referenced by generic code under drivers/of/fdt.c.
->
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  arch/arm/mm/init.c       | 4 ++--
->  arch/unicore32/mm/init.c | 4 ++--
->  include/linux/initrd.h   | 3 +++
->  3 files changed, 7 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-> index 0cc8e04295a4..8f364aa24172 100644
-> --- a/arch/arm/mm/init.c
-> +++ b/arch/arm/mm/init.c
-> @@ -51,8 +51,8 @@ unsigned long __init __clear_cr(unsigned long mask)
->  }
->  #endif
->
-> -static phys_addr_t phys_initrd_start __initdata = 0;
-> -static unsigned long phys_initrd_size __initdata = 0;
-> +phys_addr_t phys_initrd_start __initdata = 0;
-> +unsigned long phys_initrd_size __initdata = 0;
+[...]
+ 
+> > > Would you maybe volunteer to maintain this driver? To prevent stuff
+> > > like this from happening? :)
+> >
+> > Sure, I will open an eye on this driver patches from now on.
+> 
+> Great, thank you! Can you add an entry to MAINTAINERS and send this as a
+> patch, too?
+> 
 
-I would declare these in common initrd code instead. Then you don't
-need a kconfig symbol.
+Got it. Thanks
 
->  static int __init early_initrd(char *p)
->  {
-> diff --git a/arch/unicore32/mm/init.c b/arch/unicore32/mm/init.c
-> index 8f8699e62bd5..4dd26d6f02e5 100644
-> --- a/arch/unicore32/mm/init.c
-> +++ b/arch/unicore32/mm/init.c
-> @@ -31,8 +31,8 @@
->
->  #include "mm.h"
->
-> -static unsigned long phys_initrd_start __initdata = 0x01000000;
-> -static unsigned long phys_initrd_size __initdata = SZ_8M;
-> +phys_addr_t phys_initrd_start __initdata = 0x01000000;
-> +unsigned long phys_initrd_size __initdata = SZ_8M;
+Regards
+Dong Aisheng
 
-You'll have to set these at runtime though. However, I seem to
-remember that an exact size was needed for decompressing an initrd
-which would make these defaults pointless. Maybe that was only certain
-compression formats.
-
-Rob
+> > And I will resend the patch against your tree.
+> 
+> Thanks!
