@@ -1,97 +1,74 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH 1/7] dt-bindings: mfd: ds90ux9xx: add description of TI
- DS90Ux9xx ICs
-Date: Wed, 31 Oct 2018 01:40:54 +0200
-Message-ID: <8ae609a1-f3ce-e216-d572-bf509ca482f9@mleia.com>
-References: <20181008211205.2900-1-vz@mleia.com>
- <20181008211205.2900-2-vz@mleia.com>
- <fd0a91c9-6e38-5a18-12e5-955fbf81bfce@lucaceresoli.net>
+From: James Cameron <quozl@laptop.org>
+Subject: Re: [PATCH v2 0/8] OLPC 1.75 Keyboard/Touchpad fixes
+Date: Wed, 31 Oct 2018 10:54:30 +1100
+Message-ID: <20181030235430.GF30863@us.netrek.org>
+References: <20181010142504.233467-1-lkundrak@v3.sk>
+ <20181015195612.GB29649@amd>
+ <c4edf9b09e88cd265a0829644aa962c28cbc3d51.camel@v3.sk>
+ <20181030100139.GB21529@amd>
+ <20181030102610.GC21529@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fd0a91c9-6e38-5a18-12e5-955fbf81bfce@lucaceresoli.net>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181030102610.GC21529@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Luca Ceresoli <luca@lucaceresoli.net>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Marek Vasut <marek.vasut@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Sandeep Jain <Sandeep_Jain@mentor.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Lubomir Rintel <lkundrak@v3.sk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Luca,
+G'day Pavel,
 
-thank you for review, please find my comments below.
-
-On 10/30/2018 06:43 PM, Luca Ceresoli wrote:
-> Hi Vladimir,
+On Tue, Oct 30, 2018 at 11:26:10AM +0100, Pavel Machek wrote:
+> Hi!
 > 
-> On 08/10/18 23:11, Vladimir Zapolskiy wrote:
->> From: Sandeep Jain <Sandeep_Jain@mentor.com>
->>
->> The change adds device tree binding description of TI DS90Ux9xx
->> series of serializer and deserializer controllers which support video,
->> audio and control data transmission over FPD-III Link connection.
-> [...]
->> +Example:
->> +
->> +serializer: serializer@c {
->> +	compatible = "ti,ds90ub927q", "ti,ds90ux9xx";
->> +	reg = <0xc>;
->> +	power-gpios = <&gpio5 12 GPIO_ACTIVE_HIGH>;
->> +	ti,backward-compatible-mode = <0>;
->> +	ti,low-frequency-mode = <0>;
->> +	ti,pixel-clock-edge = <0>;
->> +	...
->> +}
->> +
->> +deserializer: deserializer@3c {
->> +	compatible = "ti,ds90ub940q", "ti,ds90ux9xx";
->> +	reg = <0x3c>;
->> +	power-gpios = <&gpio6 31 GPIO_ACTIVE_HIGH>;
->> +	...
->> +}
+> > > https://github.com/hackerspace/olpc-xo175-linux/wiki/How-to-run-an-up-to-date-Linux-on-a-XO-1.75
+> > > 
+> > > I didn't test it yet -- will do when I get home in the evening. But
+> > > chances are it's good enough and I guess you'd be able to get it
+> > > working even if I messed up some details.
 > 
-> Interesting patchset, thanks. At the moment I'm working on a driver for
-> the TI FPD-III camera serdes chips [0]. At very first sight they have
-> many commonalities with the display chipsets [1] you implemented. Did
-> you have a look into them? Do you think they could be implemented by the
-> same driver?
-
-Absolutely, I believe that it should be no more than a matter of adding
-the correspondent data fields to describe IC specifics to the set of the
-published drivers.
-
-In general, and from my experience, there is no big difference between
-camera and display ICs from the series, my understanding is that it's
-just a marketing or common usecase difference.
-
+> Instruction say make, but you really need to do make zImage and make
+> mmp2-olpc-xo-1-75.dtb .
 > 
-> The camera serdes chips lack some features found on the display chips
-> (e.g. audio, white balance). OTOH they have dual or quad input
-> deserializers, which adds complexity.
-
-For what it's worth the shown core drivers support DS90Ux940 (2 mutually
-exclusive links, the support is already added to the series of drivers)
-and DS90UB964 (4 parallel independent links) ICs, both deserializers are
-used in connection to camera sensors.
-
-So, the short answer is that multi-link ICs are also well supported,
-and my intention is to push the essential core drivers firstly, then
-add remarkably more trivial DRM and V4L2 drivers as cell drivers.
-
-> I'm commenting on the details in reply to the following patches
-> documenting the DT bindings.
+> Instructions say "make -j", which is nice way to crash a machine. I
+> suggest "make -j 8" :-).
 > 
-
-Thank you for review, I'm planning to collect more review comments and
-publish v2 in about two weeks, any kind of essential rework is not
-expected, the selected design of having an MFD and the drivers are
-proven to be easily scalable, as usual any additional wanted features
-could be added later on.
-
-> [0] http://www.ti.com/interface/fpd-link-serdes/camera-serdes/overview.html
-> [1] http://www.ti.com/interface/fpd-link-serdes/display-serdes/overview.html
+> Ok, I think I followed the instructions. I am using empty root
+> filesystem, just with /boot -- want to see kernel messages first
+> before I mess with the userland.
 > 
+> But I don't get kernel messages during boot:
+> 
+> OLPC 1B1, 512 MiB memory...
+> OpenFirmware Q4C02 EC Frimware 0.3.02
+> 
+> Type any key to interrupt...
+> (but keys do not interrupt anything, ouch).
+> Warning... partition type is 0xb...
+> Boot device: /usb/disk:\boot\olpc.fth Arguments:
+> Boot device ....
+> Warning... partition type is 0xb...
 
---
-Best wishes,
-Vladimir
+That firmware has problems with USB drives.  Please upgrade to Q4D38.
+Quickest tested method is http://wiki.laptop.org/go/Upgrading_firmware
+
+I'm firmware releaser and signer.
+
+> And that's it, cursor and no kernel messages.
+> 
+> Any ideas?
+> 
+> Could I get prepared binary zImage for testing?
+> 
+> Thanks,
+> 									Pavel
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+
+
+
+-- 
+James Cameron
+http://quozl.netrek.org/
