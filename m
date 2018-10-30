@@ -1,90 +1,49 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: iio: vadc: Update example to include
- unit address for node 'usb-id-nopull'
-Date: Tue, 30 Oct 2018 11:00:16 -0500
-Message-ID: <CAL_JsqJ1KAHg2QR+R7f5Vdx7Z41Y8T1wVarwocjoYiHwqk12pw@mail.gmail.com>
-References: <20181004001432.21218-1-mka@chromium.org> <20181004001432.21218-2-mka@chromium.org>
- <20181005204743.GA17135@bogus> <20181012171523.GQ22824@google.com>
- <20181018194010.GV22824@google.com> <20181021151701.7b9daa41@archlinux>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: [PATCH 1/2] dt-bindings: i2c: i2c-imx-lpi2c: add imx8qxp compatible
+ string
+Date: Tue, 30 Oct 2018 15:28:11 +0000
+Message-ID: <1540913007-28343-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181021151701.7b9daa41@archlinux>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Matthias Kaehlcke <mka@chromium.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Doug Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+Cc: "A.s. Dong" <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "dongas86@gmail.com" <dongas86@gmail.com>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 21, 2018 at 9:17 AM Jonathan Cameron <jic23@kernel.org> wrote:
->
-> On Thu, 18 Oct 2018 12:40:10 -0700
-> Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> > On Fri, Oct 12, 2018 at 10:15:23AM -0700, Matthias Kaehlcke wrote:
-> > > On Fri, Oct 05, 2018 at 03:47:43PM -0500, Rob Herring wrote:
-> > > > On Wed, Oct 03, 2018 at 05:14:31PM -0700, Matthias Kaehlcke wrote:
-> > > > > The node has a reg property, therefore its name should include a unit
-> > > > > address.
-> > > > >
-> > > > > Also change the name from 'usb_id_nopull' to 'usb-id-nopull' to follow
-> > > > > DT conventions.
-> > > >
-> > > > This is ADC channels? If so, then DT convention would really be
-> > > > "adc@...".
-> > >
-> > > Is it really? A grep for 'adc@' in arch/${ARCH}/boot/dts yields
-> > > mostly ADC controller not channel nodes.
-> > >
-> > > I'm totally fine with changing the name to 'adc@...' if that's the
-> > > preference/convention, just want to reconfirm since the actual use is
-> > > a bit ambiguous.
-> >
-> > Could we please reach a conclusion on this?
-> >
-> > Summarizing the options on the table so far are:
-> >
-> > 1. usb-id-nopull@VADC_LR_MUX10_USB_ID
-> > 2. usb-id-nopull@57
-> > 3. adc@VADC_LR_MUX10_USB_ID
-> > 4. adc@57
-> >
-> > My personal preference goes to something <node name>@<define>
-> > since the unit address doesn't just resolve to an ADC channel number
-> > but also includes configuation information. A literal like '57'
-> > conveys less information than the define, it's easier to introduce
-> > errors and these errors are harder to spot.
->
-> I agree that to my mind this is the most sensible option.
+Add imx8qxp compatible string
 
-If you really want the defines, then fine. Of course, that only works
-if the function is fixed. It won't work if the function is defined per
-board.
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-i2c@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+ Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Eventually, examples using defines will have to also include the
-headers. I plan to make the examples build-able.
-
-> > If 'adc@...' really was the convention (or should be) I'd be clearly
-> > in favor of following it. As mentioned above, in practice the use of
-> > the 'adc@...' node name seems to be more prevalent for ADC controllers
-> > than channels, so I'm more inclined towards 'usb-id-nopull@...' or
-> > similar.
-> >
-> > All that said, these are just my preferences for the reasons outlined
-> > above, if DT maintainers really want it to be 'adc@57' or some
-> > variation of that, I'm fine with that too. Please let me know and we
-> > can move forward with this trivial series.
->
-> Rob, what's your view on this?
-
-I want node names that reflect the class of the node (not a specific
-model) and consistency across bindings. What that looks like for
-multi-channel ADCs is really up to you. There was another binding
-recently which mapped sub-nodes to inputs rather than channels. Maybe
-that's needed too if you have more inputs than simultaneous channels.
-
-Also, if your goal is to just quiet dtc warnings, then I'd prefer you
-not. They often point to bigger issues even if they can be fixed with
-trivial changes. Of course, if not fixed someone else will come along
-and try the trivial fix again.
-
-Rob
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
+index 091c8df..b245363 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
+@@ -3,6 +3,7 @@
+ Required properties:
+ - compatible :
+   - "fsl,imx7ulp-lpi2c" for LPI2C compatible with the one integrated on i.MX7ULP soc
++  - "fsl,imx8qxp-lpi2c" for LPI2C compatible with the one integrated on i.MX8QXP soc
+ - reg : address and length of the lpi2c master registers
+ - interrupts : lpi2c interrupt
+ - clocks : lpi2c clock specifier
+-- 
+2.7.4
