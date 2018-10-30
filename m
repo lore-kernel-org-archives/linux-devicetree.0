@@ -1,88 +1,33 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH V3 4/8] dt-bindings: i2c: i2c-imx-lpi2c: add imx8qxp
- compatible string
-Date: Tue, 30 Oct 2018 14:59:25 +0000
-Message-ID: <20181030145925.GC2459@kunai>
-References: <1539886483-15775-1-git-send-email-aisheng.dong@nxp.com>
- <1539886483-15775-5-git-send-email-aisheng.dong@nxp.com>
- <20181028221952.GF1882@kunai>
- <AM0PR04MB42110EB0836E9610CDA2746680CC0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: enable HS200 for eMMC on rock64
+Date: Tue, 30 Oct 2018 15:13:58 +0100
+Message-ID: <2163438.OLGNrv2Hku@phil>
+References: <20181020175756.28072-1-anarsoul@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7434487876617409214=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM0PR04MB42110EB0836E9610CDA2746680CC0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20181020175756.28072-1-anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, Katsuhiro Suzuki <katsuhiro-WKCMddiH/C4xsqv6Oivclw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, Kamil =?utf-8?B?VHJ6Y2nFhHNraQ==?= <ayufan-1nXcilf+G7OHXe+LvDLADg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Am Samstag, 20. Oktober 2018, 19:57:56 CET schrieb Vasily Khoruzhick:
+> eMMC that's sold by Pine64 can do HS200, rk3328 can do it
+> as well, so update DTS to enable it.
+> 
+> Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
---===============7434487876617409214==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="TiqCXmo5T1hvSQQg"
-Content-Disposition: inline
+applied for 4.21 or whatever it will get called
 
-
---TiqCXmo5T1hvSQQg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> > Would you maybe volunteer to maintain this driver? To prevent stuff lik=
-e this
-> > from happening? :)
->=20
-> Sure, I will open an eye on this driver patches from now on.
-
-Great, thank you! Can you add an entry to MAINTAINERS and send this
-as a patch, too?
-
-> And I will resend the patch against your tree.
-
-Thanks!
-
-
---TiqCXmo5T1hvSQQg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlvYcc0ACgkQFA3kzBSg
-KbaZAg/+JbjCC53B1TKB2lmOYugHXqKlx6DhZKzYdxCOtHofvhhWfRN5LQMwW/gZ
-NmvnWXmw2h0hwPeAOxMiPIJwisnA1YX2tGZl8xfYbbALZbJQhb+TmDumW9Nl9Fqz
-7WCSy0jGgXC/inyTevJYjdYxfsNcl5Mw2NP/UtdADWxGV0bQjzALFD7yLUFJ4TGb
-eOXwMaxfXyudzScMy/ncZ3cGXmfr2JPHBGfe8jeR1lQt7Vm2eWwI5y5Nzvq8GFUv
-n0lISU+g7p8Lp7crbNXb2nFCT1FzWG3rtmcw3vDjvxEDaw11IdKyLGKl+Td+MNKR
-dAWQYhWuLgTBih56b6ozy3XuX7LxfnlAug2yp9la1/SbrWJoAaNQZqQCUOuzKt9/
-DbzbDQZ/djSu6vEz2qrTrK3uZMX1rLCm6tpE9gk3oLTrlucHWU28U8KBuFVn743T
-RSpefE1RDecj03b9f0YY0DKlyiCzEnL8NdAytU1OqBW8RNsYo7+M2JOG2TsZQT+K
-ThB0/4G4khZyvxCcLxU0FyvGzTGotp6KDhPM3ewHVzuMxa3muFyNM4rSq3t4Gqpl
-k6qcVbsC0NFN/IaPyeXzYyJtdehU0CAPtbsdpXoFO/tqCz8aqYWx9d8l8gg6tKWg
-cU6Fa5v++BVMPgrrBgQI49F1/iyHbHhsHFkOj4FMfyLvDLrJNHc=
-=Wjw8
------END PGP SIGNATURE-----
-
---TiqCXmo5T1hvSQQg--
-
-
---===============7434487876617409214==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7434487876617409214==--
+Thanks
+Heiko
