@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v2 2/6] arch: Make phys_initrd_start and phys_initrd_size global variables
-Date: Tue, 30 Oct 2018 16:07:17 -0700
-Message-ID: <20181030230721.28429-3-f.fainelli@gmail.com>
+Subject: [PATCH v2 3/6] of/fdt: Populate phys_initrd_start/phys_initrd_size from FDT
+Date: Tue, 30 Oct 2018 16:07:18 -0700
+Message-ID: <20181030230721.28429-4-f.fainelli@gmail.com>
 References: <20181030230721.28429-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181030230721.28429-1-f.fainelli@gmail.com>
@@ -10,105 +10,50 @@ To: linux-kernel@vger.kernel.org
 Cc: Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Make phys_initrd_start and phys_initrd_size global variables declared in
-init/do_mounts_initrd.c such that we can later have generic code in
-drivers/of/fdt.c populate those variables for us.
+Now that we have central and global variables holding the physical
+address and size of the initrd, we can have
+early_init_dt_check_for_initrd() populate
+phys_initrd_start/phys_initrd_size for us.
 
-This requires both the ARM and unicore32 implementations to be properly
-guarded against CONFIG_BLK_DEV_INITRD, and also initialize the variables
-to the expected default values (unicore32).
+This allows us to remove a chunk of code from arch/arm/mm/init.c
+introduced with commit 65939301acdb ("arm: set initrd_start/initrd_end
+for fdt scan").
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/arm/mm/init.c       |  5 ++---
- arch/unicore32/mm/init.c | 10 +++++++---
- include/linux/initrd.h   |  3 +++
- init/do_mounts_initrd.c  |  3 +++
- 4 files changed, 15 insertions(+), 6 deletions(-)
+ arch/arm/mm/init.c | 6 ------
+ drivers/of/fdt.c   | 2 ++
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
 diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index 0cc8e04295a4..87d59a53861d 100644
+index 87d59a53861d..4bfa08e27319 100644
 --- a/arch/arm/mm/init.c
 +++ b/arch/arm/mm/init.c
-@@ -51,9 +51,7 @@ unsigned long __init __clear_cr(unsigned long mask)
- }
- #endif
- 
--static phys_addr_t phys_initrd_start __initdata = 0;
--static unsigned long phys_initrd_size __initdata = 0;
--
-+#ifdef CONFIG_BLK_DEV_INITRD
- static int __init early_initrd(char *p)
- {
+@@ -236,12 +236,6 @@ static void __init arm_initrd_init(void)
  	phys_addr_t start;
-@@ -90,6 +88,7 @@ static int __init parse_tag_initrd2(const struct tag *tag)
- }
+ 	unsigned long size;
  
- __tagtable(ATAG_INITRD2, parse_tag_initrd2);
-+#endif
- 
- static void __init find_limits(unsigned long *min, unsigned long *max_low,
- 			       unsigned long *max_high)
-diff --git a/arch/unicore32/mm/init.c b/arch/unicore32/mm/init.c
-index 8f8699e62bd5..f2f815d46846 100644
---- a/arch/unicore32/mm/init.c
-+++ b/arch/unicore32/mm/init.c
-@@ -31,9 +31,7 @@
- 
- #include "mm.h"
- 
--static unsigned long phys_initrd_start __initdata = 0x01000000;
--static unsigned long phys_initrd_size __initdata = SZ_8M;
+-	/* FDT scan will populate initrd_start */
+-	if (initrd_start && !phys_initrd_size) {
+-		phys_initrd_start = __virt_to_phys(initrd_start);
+-		phys_initrd_size = initrd_end - initrd_start;
+-	}
 -
-+#ifdef CONFIG_BLK_DEV_INITRD
- static int __init early_initrd(char *p)
- {
- 	unsigned long start, size;
-@@ -49,6 +47,7 @@ static int __init early_initrd(char *p)
- 	return 0;
- }
- early_param("initrd", early_initrd);
-+#endif
+ 	initrd_start = initrd_end = 0;
  
- /*
-  * This keeps memory configuration data used by a couple memory
-@@ -157,6 +156,11 @@ void __init uc32_memblock_init(struct meminfo *mi)
- 	memblock_reserve(__pa(_text), _end - _text);
+ 	if (!phys_initrd_size)
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 76c83c1ffeda..e34cb49231b5 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -925,6 +925,8 @@ static void __init early_init_dt_check_for_initrd(unsigned long node)
+ 	end = of_read_number(prop, len/4);
  
- #ifdef CONFIG_BLK_DEV_INITRD
-+	if (!phys_initrd_size) {
-+		phys_initrd_start = 0x01000000;
-+		phys_initrd_size = SZ_8M;
-+	}
-+
- 	if (phys_initrd_size) {
- 		memblock_reserve(phys_initrd_start, phys_initrd_size);
+ 	__early_init_dt_declare_initrd(start, end);
++	phys_initrd_start = start;
++	phys_initrd_size = end - start;
  
-diff --git a/include/linux/initrd.h b/include/linux/initrd.h
-index 84b423044088..14beaff9b445 100644
---- a/include/linux/initrd.h
-+++ b/include/linux/initrd.h
-@@ -21,4 +21,7 @@ extern int initrd_below_start_ok;
- extern unsigned long initrd_start, initrd_end;
- extern void free_initrd_mem(unsigned long, unsigned long);
- 
-+extern phys_addr_t phys_initrd_start;
-+extern unsigned long phys_initrd_size;
-+
- extern unsigned int real_root_dev;
-diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
-index d1a5d885ce13..45865b72f4ea 100644
---- a/init/do_mounts_initrd.c
-+++ b/init/do_mounts_initrd.c
-@@ -16,6 +16,9 @@ int initrd_below_start_ok;
- unsigned int real_root_dev;	/* do_proc_dointvec cannot handle kdev_t */
- static int __initdata mount_initrd = 1;
- 
-+phys_addr_t phys_initrd_start __initdata;
-+unsigned long phys_initrd_size __initdata;
-+
- static int __init no_initrd(char *str)
- {
- 	mount_initrd = 0;
+ 	pr_debug("initrd_start=0x%llx  initrd_end=0x%llx\n",
+ 		 (unsigned long long)start, (unsigned long long)end);
 -- 
 2.17.1
