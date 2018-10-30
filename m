@@ -1,43 +1,64 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 01/21] of: Add cpu node iterator for_each_of_cpu_node()
-Date: Tue, 30 Oct 2018 10:00:17 -0500
-Message-ID: <CABGGisw_bd+bJedZ_T2e-dxmRnXf2N_gGBZj8u+QVGQxj_gc+Q@mail.gmail.com>
-References: <20180905193738.19325-1-robh@kernel.org> <20180905193738.19325-2-robh@kernel.org>
- <874ld3jz6v.fsf@concordia.ellerman.id.au> <871s87jz3g.fsf@concordia.ellerman.id.au>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/6] arch: Make phys_initrd_start and phys_initrd_size
+ global variables
+Date: Tue, 30 Oct 2018 10:10:59 -0500
+Message-ID: <CAL_JsqKrrmMOQrV62L0QXAPiLGceMbvA7HZ=1U3PW0_MpqtC=w@mail.gmail.com>
+References: <20181029235206.30060-1-f.fainelli@gmail.com> <20181029235206.30060-3-f.fainelli@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <871s87jz3g.fsf@concordia.ellerman.id.au>
+In-Reply-To: <20181029235206.30060-3-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org, Frank Rowand <frowand.list@gmail.com>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, aryabinin@virtuozzo.com, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, ghackmann@android.com, Kristina Martsenko <kristina.martsenko@arm.com>, chandan.vn@samsung.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@v
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 30, 2018 at 9:20 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
+On Mon, Oct 29, 2018 at 6:52 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
 >
-> Michael Ellerman <mpe@ellerman.id.au> writes:
-> > Hi Rob,
-> >
-> > Sorry I missed this when you posted it.
-> >
-> > Rob Herring <robh@kernel.org> writes:
-> >> Iterating thru cpu nodes is a common pattern. Create a common iterator
-> >> which can find child nodes either by node name or device_type == cpu.
-> >> Using the former will allow for eventually dropping device_type
-> >> properties which are deprecated for FDT.
-> >
-> > Device trees we see on powerpc generally don't (never?) use "cpu" as the
-> > node name for CPU nodes. And many of those device trees come from
-> > firmware, so we can't update them.
-> >
-> > So dropping support for device_type is a non-starter from our POV.
+> Make phys_initrd_start and phys_initrd_size global variables that will
+> later be referenced by generic code under drivers/of/fdt.c.
 >
-> ps. presumably that's what you meant by deprecated *for FDT*.
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  arch/arm/mm/init.c       | 4 ++--
+>  arch/unicore32/mm/init.c | 4 ++--
+>  include/linux/initrd.h   | 3 +++
+>  3 files changed, 7 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+> index 0cc8e04295a4..8f364aa24172 100644
+> --- a/arch/arm/mm/init.c
+> +++ b/arch/arm/mm/init.c
+> @@ -51,8 +51,8 @@ unsigned long __init __clear_cr(unsigned long mask)
+>  }
+>  #endif
+>
+> -static phys_addr_t phys_initrd_start __initdata = 0;
+> -static unsigned long phys_initrd_size __initdata = 0;
+> +phys_addr_t phys_initrd_start __initdata = 0;
+> +unsigned long phys_initrd_size __initdata = 0;
 
-Right.
+I would declare these in common initrd code instead. Then you don't
+need a kconfig symbol.
 
-> But anyway just wanted to make sure we are on the same page.
+>  static int __init early_initrd(char *p)
+>  {
+> diff --git a/arch/unicore32/mm/init.c b/arch/unicore32/mm/init.c
+> index 8f8699e62bd5..4dd26d6f02e5 100644
+> --- a/arch/unicore32/mm/init.c
+> +++ b/arch/unicore32/mm/init.c
+> @@ -31,8 +31,8 @@
+>
+>  #include "mm.h"
+>
+> -static unsigned long phys_initrd_start __initdata = 0x01000000;
+> -static unsigned long phys_initrd_size __initdata = SZ_8M;
+> +phys_addr_t phys_initrd_start __initdata = 0x01000000;
+> +unsigned long phys_initrd_size __initdata = SZ_8M;
 
-Yes, I was aware at least older powerpc DTs don't use 'cpu' for node names.
+You'll have to set these at runtime though. However, I seem to
+remember that an exact size was needed for decompressing an initrd
+which would make these defaults pointless. Maybe that was only certain
+compression formats.
 
 Rob
