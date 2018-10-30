@@ -1,73 +1,65 @@
-From: Raju P L S S S N <rplsssn@codeaurora.org>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add PSCI cpuidle low power states
-Date: Tue, 30 Oct 2018 21:53:55 +0530
-Message-ID: <5b62572d-9f45-c0ee-776e-1486a9d40862@codeaurora.org>
-References: <1539622953-4188-1-git-send-email-rplsssn@codeaurora.org>
- <CAD=FV=XB9diR_n1TB4+wUjVaRf0VAmCMgkSbtuOSNO5pkrQ8zg@mail.gmail.com>
+From: Luca Ceresoli <luca@lucaceresoli.net>
+Subject: Re: [PATCH 1/7] dt-bindings: mfd: ds90ux9xx: add description of TI
+ DS90Ux9xx ICs
+Date: Tue, 30 Oct 2018 17:43:41 +0100
+Message-ID: <fd0a91c9-6e38-5a18-12e5-955fbf81bfce@lucaceresoli.net>
+References: <20181008211205.2900-1-vz@mleia.com>
+ <20181008211205.2900-2-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=XB9diR_n1TB4+wUjVaRf0VAmCMgkSbtuOSNO5pkrQ8zg@mail.gmail.com>
+In-Reply-To: <20181008211205.2900-2-vz@mleia.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Evan Green <evgreen@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, Lina Iyer <ilina@codeaurora.org>
+To: Vladimir Zapolskiy <vz@mleia.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Marek Vasut <marek.vasut@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Sandeep Jain <Sandeep_Jain@mentor.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Vladimir,
 
+On 08/10/18 23:11, Vladimir Zapolskiy wrote:
+> From: Sandeep Jain <Sandeep_Jain@mentor.com>
+> 
+> The change adds device tree binding description of TI DS90Ux9xx
+> series of serializer and deserializer controllers which support video,
+> audio and control data transmission over FPD-III Link connection.
+[...]
+> +Example:
+> +
+> +serializer: serializer@c {
+> +	compatible = "ti,ds90ub927q", "ti,ds90ux9xx";
+> +	reg = <0xc>;
+> +	power-gpios = <&gpio5 12 GPIO_ACTIVE_HIGH>;
+> +	ti,backward-compatible-mode = <0>;
+> +	ti,low-frequency-mode = <0>;
+> +	ti,pixel-clock-edge = <0>;
+> +	...
+> +}
+> +
+> +deserializer: deserializer@3c {
+> +	compatible = "ti,ds90ub940q", "ti,ds90ux9xx";
+> +	reg = <0x3c>;
+> +	power-gpios = <&gpio6 31 GPIO_ACTIVE_HIGH>;
+> +	...
+> +}
 
-On 10/24/2018 12:06 AM, Doug Anderson wrote:
-> Hi,
-> 
-> On Mon, Oct 15, 2018 at 10:02 AM Raju P.L.S.S.S.N
-> <rplsssn@codeaurora.org> wrote:
->> +               idle-states {
->> +                       entry-method = "psci";
->> +
->> +                       C0_CPU_SPC: c0_spc {
-> 
-> nit: all these nodes should have dashes instead of spaces in the node
-> names (labels can still have spaces).  AKA:
-> 
-> C0_CPU_SPC: c0-spc {
+Interesting patchset, thanks. At the moment I'm working on a driver for
+the TI FPD-III camera serdes chips [0]. At very first sight they have
+many commonalities with the display chipsets [1] you implemented. Did
+you have a look into them? Do you think they could be implemented by the
+same driver?
 
-Sure. I will change this. (However, from device tree specification v0.2, 
-I see that Table 2.1 mentions underscore as valid character for node. 
-Please correct me if I'm missing something)
+The camera serdes chips lack some features found on the display chips
+(e.g. audio, white balance). OTOH they have dual or quad input
+deserializers, which adds complexity.
 
-> 
-> 
->> +                               compatible = "arm,idle-state";
->> +                               arm,psci-suspend-param = <0x40000003>;
->> +                               entry-latency-us = <350>;
->> +                               exit-latency-us = <461>;
->> +                               min-residency-us = <1890>;
->> +                               local-timer-stop;
->> +                               idle-state-name = "pc";
-> 
-> It seems weird that the idle state with the node name "spc" has the
-> name "pc" and the idle state with the node name "pc" has the name
-> "rail pc".  Can this be more consistent or is there a reason why they
-> need to be mismatched?
+I'm commenting on the details in reply to the following patches
+documenting the DT bindings.
 
-Agree. They are confusing. Will change this.
+[0] http://www.ti.com/interface/fpd-link-serdes/camera-serdes/overview.html
+[1] http://www.ti.com/interface/fpd-link-serdes/display-serdes/overview.html
 
-> 
-> Also: AAHTUFSWDKWTM (acronyms are hard to understand for someone who
-> doesn't know what they mean).  If you really need to use an the
-> acronyms "PC" and "SPC" please document them somewhere.  In the very
-> least the commit message, but having a comment in the file is good
-> too.  ...or (even better) don't use the acronym and spell out what
-> you're talking about.  Please correct me if I'm wrong, but I don't
-> think it's obvious what the "PC" and "SPC" idle states mean.
-
-Sure. Will change this.
-
-
-Thanks for feedback Doug.
-
-> 
-> 
-> -Doug
-> 
+Bye,
+-- 
+Luca
