@@ -1,366 +1,106 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH V2 1/2] can: flexcan: Add self wakeup support
-Date: Tue, 30 Oct 2018 14:44:45 +0100
-Message-ID: <ba4fb4bb-c1f2-6033-af02-023719382d36@pengutronix.de>
-References: <20181026085814.23370-1-qiangqing.zhang@nxp.com>
- <20181026085814.23370-2-qiangqing.zhang@nxp.com>
+From: thesven73@gmail.com
+Subject: Re: [PATCH anybus v1 3/4] bus: support HMS Anybus-S bus.
+Date: Tue, 30 Oct 2018 09:50:41 -0400
+Message-ID: <20181030135041.5593-1-TheSven73@googlemail.com>
+References: <CACRpkdYVN-s7shQmPkRjB9sxwi32TiKhmd_vKU+Jm--vGy2dSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="YkG2zGMbIh1v6OzZoI17gLKdRglWKyPjq"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181026085814.23370-2-qiangqing.zhang@nxp.com>
+In-Reply-To: <CACRpkdYVN-s7shQmPkRjB9sxwi32TiKhmd_vKU+Jm--vGy2dSA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joakim Zhang <qiangqing.zhang@nxp.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
-Cc: "wg@grandegger.com" <wg@grandegger.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>
+To: svendev@arcx.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, treding@nvidia.com, david@lechnology.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, stuyoder@gmail.com, linus.walleij@linaro.org, maxime.ripard@bootlin.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---YkG2zGMbIh1v6OzZoI17gLKdRglWKyPjq
-Content-Type: multipart/mixed; boundary="sJuwh9D2cdwW2SVRTx6CKeLEAPTEcw3C4";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Joakim Zhang <qiangqing.zhang@nxp.com>,
- "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
-Cc: "wg@grandegger.com" <wg@grandegger.com>,
- "robh+dt@kernel.org" <robh+dt@kernel.org>,
- "mark.rutland@arm.com" <mark.rutland@arm.com>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- dl-linux-imx <linux-imx@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>
-Message-ID: <ba4fb4bb-c1f2-6033-af02-023719382d36@pengutronix.de>
-Subject: Re: [PATCH V2 1/2] can: flexcan: Add self wakeup support
-References: <20181026085814.23370-1-qiangqing.zhang@nxp.com>
- <20181026085814.23370-2-qiangqing.zhang@nxp.com>
-In-Reply-To: <20181026085814.23370-2-qiangqing.zhang@nxp.com>
+>> struct anybus_s_host *cd = data;
+>> drivers/bus/anybus-s-host.c
+>> include/linux/anybus-s-client.h
+>
+> Hm I think this looks pretty neat actually. Anyways, in the overall
+> architecture explain the three Anybus:es and why things pertaining
+> to Anybus-s are named as they are.
 
---sJuwh9D2cdwW2SVRTx6CKeLEAPTEcw3C4
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
+Ok, so should I rename anybuss -> anybus[_|-]s ?
+Or maybe wait until a future patch iteration?
 
-On 10/26/2018 11:00 AM, Joakim Zhang wrote:
-> From: Dong Aisheng <aisheng.dong@nxp.com>
->=20
-> If wakeup is enabled, enter stop mode, else enter disabled mode.
-> Self wake can only work on stop mode.
->=20
-> Starting from IMX6, the flexcan stop mode control bits is SoC specific,=
+> OK but you also have an atomic_set() going on and the struct completion
+> already contains a waitqueue and I start to worry about overuse of
+> primitives here. How does ps aux look on your system when running this?
 
-> move it out of IP driver and parse it from devicetree.
->=20
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
-> ---
->  drivers/net/can/flexcan.c | 141 +++++++++++++++++++++++++++++++++++---=
+ps -aux only lists a single kernel thread associated with this driver,
+no other theads, as it should:
 
->  1 file changed, 132 insertions(+), 9 deletions(-)
->=20
-> diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c
-> index 3813f6708201..d4708ba28c44 100644
-> --- a/drivers/net/can/flexcan.c
-> +++ b/drivers/net/can/flexcan.c
-> @@ -19,12 +19,17 @@
->  #include <linux/delay.h>
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/list.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/regulator/consumer.h>
-> +#include <linux/regmap.h>
-> =20
->  #define DRV_NAME			"flexcan"
-> =20
-> @@ -132,7 +137,8 @@
->  	(FLEXCAN_ESR_ERR_BUS | FLEXCAN_ESR_ERR_STATE)
->  #define FLEXCAN_ESR_ALL_INT \
->  	(FLEXCAN_ESR_TWRN_INT | FLEXCAN_ESR_RWRN_INT | \
-> -	 FLEXCAN_ESR_BOFF_INT | FLEXCAN_ESR_ERR_INT)
-> +	 FLEXCAN_ESR_BOFF_INT | FLEXCAN_ESR_ERR_INT | \
-> +	 FLEXCAN_ESR_WAK_INT)
-> =20
->  /* FLEXCAN interrupt flag register (IFLAG) bits */
->  /* Errata ERR005829 step7: Reserve first valid MB */
-> @@ -255,6 +261,14 @@ struct flexcan_devtype_data {
->  	u32 quirks;		/* quirks needed for different IP cores */
->  };
-> =20
-> +struct flexcan_stop_mode {
-> +	struct regmap *gpr;
-> +	u8 req_gpr;
-> +	u8 req_bit;
-> +	u8 ack_gpr;
-> +	u8 ack_bit;
-> +};
-> +
->  struct flexcan_priv {
->  	struct can_priv can;
->  	struct can_rx_offload offload;
-> @@ -272,6 +286,7 @@ struct flexcan_priv {
->  	struct clk *clk_per;
->  	const struct flexcan_devtype_data *devtype_data;
->  	struct regulator *reg_xceiver;
-> +	struct flexcan_stop_mode stm;
-> =20
->  	/* Read and Write APIs */
->  	u32 (*read)(void __iomem *addr);
-> @@ -392,6 +407,22 @@ static void flexcan_clks_disable(const struct flex=
-can_priv *priv)
->  	clk_disable_unprepare(priv->clk_per);
->  }
-> =20
-> +static inline void flexcan_enter_stop_mode(struct flexcan_priv *priv)
-> +{
-> +	/* enable stop request */
-> +	if (priv->devtype_data->quirks & FLEXCAN_QUIRK_USE_OFF_TIMESTAMP)
+$ ps
+...
+   78 root     [anybuss-host.0.]
+...
 
-Why do you check the quirk here? This should only be called if the
-device is wakeup capable.
+> It's just that when you do things like this:
+> 
+>    complete(&cd->card_boot);
+>    wake_up(&cd->wq);
+>
+> I start asking: OK so why is that waitqueue not woken up from
+> wherever you are doing wait_for_completion()? I hope it is not
+> because you are waiting for the completion in the very same
+> waitqueue. That would be really messy.
 
-> +		regmap_update_bits(priv->stm.gpr, priv->stm.req_gpr,
-> +			1 << priv->stm.req_bit, 1 << priv->stm.req_bit);
+The two primitives are there because the irq handler is dual purpose, and that
+is because the interrupt is dual purpose:
+- complete card boot while in the initialization stage
+- tell the driver that something has happened while running
 
-Please align with the opening bracket of "regmap_update_bits(".
+You may have a point about the atomic_set(). I'll think about why it's there,
+and move it out if unnecessary. Or document why we need it there.
 
-> +}
-> +
-> +static inline void flexcan_exit_stop_mode(struct flexcan_priv *priv)
-> +{
-> +	/* remove stop request */
-> +	if (priv->devtype_data->quirks & FLEXCAN_QUIRK_USE_OFF_TIMESTAMP)
+> Nah one irq handler is fine, but you can have an optional
+> bottom half:
+>
+> request_threaded_irq(irq, fastpath, slowpath...):
 
-same here
+I don't think any of these abstractions fit :(
+Let's wait for the v2 patch with the architecture doc, and you will see why I
+believe that's the case. We can then take the discussion from there.
 
-> +		regmap_update_bits(priv->stm.gpr, priv->stm.req_gpr,
-> +			1 << priv->stm.req_bit, 0);
+> OK I honestly don't know what is the best way. But what about
+> calling that "task" a "state" instead so we know what is going
+> on (i.e. you are switching between different states in process
+> context).
 
-same here
+Let's wait for the architecture docs in the v2 patch.
 
-> +}
-> +
->  static inline int flexcan_transceiver_enable(const struct flexcan_priv=
- *priv)
->  {
->  	if (!priv->reg_xceiver)
-> @@ -955,6 +986,10 @@ static int flexcan_chip_start(struct net_device *d=
-ev)
->  		reg_mcr |=3D FLEXCAN_MCR_FEN |
->  			FLEXCAN_MCR_MAXMB(priv->tx_mb_idx);
->  	}
-> +
-> +	/* enable self wakeup */
-> +	reg_mcr |=3D FLEXCAN_MCR_WAK_MSK | FLEXCAN_MCR_SLF_WAK;
-> +
->  	netdev_dbg(dev, "%s: writing mcr=3D0x%08x", __func__, reg_mcr);
->  	priv->write(reg_mcr, &regs->mcr);
-> =20
-> @@ -1240,6 +1275,56 @@ static void unregister_flexcandev(struct net_dev=
-ice *dev)
->  	unregister_candev(dev);
->  }
-> =20
-> +static int flexcan_of_parse_stop_mode(struct platform_device *pdev)
-> +{
-> +	struct net_device *dev =3D platform_get_drvdata(pdev);
-> +	struct device_node *np =3D pdev->dev.of_node;
-> +	struct device_node *node;
-> +	struct flexcan_priv *priv;
-> +	phandle phandle;
-> +	u32 out_val[5];
-> +	int ret;
-> +
-> +	if (!np)
-> +		return -EINVAL;
-> +
-> +	/* stop mode property format is:
-> +	 * <&gpr req_gpr req_bit ack_gpr ack_bit>.
-> +	 */
-> +	ret =3D of_property_read_u32_array(np, "fsl,stop-mode", out_val, 5);
-> +	if (ret) {
-> +		dev_dbg(&pdev->dev, "no stop-mode property\n");
-> +		return ret;
-> +	}
-> +	phandle =3D *out_val;
-> +
-> +	node =3D of_find_node_by_phandle(phandle);
-> +	if (!node) {
-> +		dev_dbg(&pdev->dev, "could not find gpr node by phandle\n");
-> +		return PTR_ERR(node);
-> +	}
-> +
-> +	priv =3D netdev_priv(dev);
-> +	priv->stm.gpr =3D syscon_node_to_regmap(node);
-> +	if (IS_ERR(priv->stm.gpr)) {
-> +		dev_dbg(&pdev->dev, "could not find gpr regmap\n");
-> +		return PTR_ERR(priv->stm.gpr);
-> +	}
-> +
-> +	of_node_put(node);
-> +
-> +	priv->stm.req_gpr =3D out_val[1];
-> +	priv->stm.req_bit =3D out_val[2];
-> +	priv->stm.ack_gpr =3D out_val[3];
-> +	priv->stm.ack_bit =3D out_val[4];
-> +
-> +	dev_dbg(&pdev->dev, "gpr %s req_gpr 0x%x req_bit %u ack_gpr 0x%x ack_=
-bit %u\n",
-> +			node->full_name, priv->stm.req_gpr,
-> +			priv->stm.req_bit, priv->stm.ack_gpr,
-> +			priv->stm.ack_bit);
-> +	return 0;
-> +}
-> +
->  static const struct of_device_id flexcan_of_match[] =3D {
->  	{ .compatible =3D "fsl,imx6q-flexcan", .data =3D &fsl_imx6q_devtype_d=
-ata, },
->  	{ .compatible =3D "fsl,imx28-flexcan", .data =3D &fsl_imx28_devtype_d=
-ata, },
-> @@ -1271,6 +1356,7 @@ static int flexcan_probe(struct platform_device *=
-pdev)
->  	struct flexcan_regs __iomem *regs;
->  	int err, irq;
->  	u32 clock_freq =3D 0;
-> +	int wakeup =3D 1;
+> Silly question but why does userspace need to know about
+> this software interrupt? Can't you just hide that?
+> Userspace ABIs should be minimal.
 
-Make it a bool.
-Why is is default enabled?
-See below.
+I agree, but in this case the "s/w interrupt" indicates to the user that
+someone on the network changed the contents of the card's internal memory.
 
-> =20
->  	reg_xceiver =3D devm_regulator_get(&pdev->dev, "xceiver");
->  	if (PTR_ERR(reg_xceiver) =3D=3D -EPROBE_DEFER)
-> @@ -1400,6 +1486,16 @@ static int flexcan_probe(struct platform_device =
-*pdev)
-> =20
->  	devm_can_led_init(dev);
-> =20
-> +	if (priv->devtype_data->quirks & FLEXCAN_QUIRK_USE_OFF_TIMESTAMP) {
+A client application using this driver will typically sit in a loop, running
+poll()/select() on this driver's devnode, waking up when someone modifies
+the internal memory.
 
-Please add another QUIRK.
+Example, imagine the card's internal memory is 10 bytes in size.
+The internal memory is exposed over the network, and anyone may read
+or change it.
 
-> +		err =3D flexcan_of_parse_stop_mode(pdev);
-> +		if (err) {
-> +			wakeup =3D 0;
-> +			dev_dbg(&pdev->dev, "failed to parse stop-mode\n");
-> +		}
-> +	}
-> +
-> +	device_set_wakeup_capable(&pdev->dev, wakeup);
+|T.h.e. .Q.u.i.c.k]	original contents
+				read("/dev/profinet0", 10) => "The Quick"
+				poll("/dev/profinet0", PRI|ERR) blocks
+|T.h.X. .Q.u.i.c.k]	someone on the network changed position 2, interrupt !
+				poll("/dev/profinet0", PRI|ERR) releases
+				read("/dev/profinet0", 10) => "ThX Quick"	
 
-What about moving this into "flexcan_of_parse_stop_mode(pdev);", and
-rename this function into ..._setup_stop_mode() or something similar.
+Perhaps there is a better / clearer abstraction to accomplish this?
 
-> +
->  	pm_runtime_put(&pdev->dev);
-> =20
->  	dev_info(&pdev->dev, "device registered (reg_base=3D%p, irq=3D%d)\n",=
+>> Wait... are you talking about
+>> reset_controller_add_lookup() / devm_reset_control_get_exclusive() ?
+>> That's new to me, and only used in a single driver right now. Would that work?
+>
+> Yeah I think so.
 
-> @@ -1437,10 +1533,18 @@ static int __maybe_unused flexcan_suspend(struc=
-t device *device)
->  	int err =3D 0;
-> =20
->  	if (netif_running(dev)) {
-> -		err =3D flexcan_chip_disable(priv);
-> -		if (err)
-> -			return err;
-> -		err =3D pm_runtime_force_suspend(device);
-> +		/* if wakeup is enabled, enter stop mode
-> +		 * else enter disabled mode.
-> +		 */
-> +		if (device_may_wakeup(device)) {
-> +			enable_irq_wake(dev->irq);
-> +			flexcan_enter_stop_mode(priv);
-> +		} else {
-> +			err =3D flexcan_chip_disable(priv);
-> +			if (err)
-> +				return err;
-> +			err =3D pm_runtime_force_suspend(device);
-> +		}
-> =20
->  		netif_stop_queue(dev);
->  		netif_device_detach(dev);
-> @@ -1461,10 +1565,12 @@ static int __maybe_unused flexcan_resume(struct=
- device *device)
->  		netif_device_attach(dev);
->  		netif_start_queue(dev);
-> =20
-> -		err =3D pm_runtime_force_resume(device);
-> -		if (err)
-> -			return err;
-> -		err =3D flexcan_chip_enable(priv);
-> +		if (!device_may_wakeup(device)) {
-> +			err =3D pm_runtime_force_resume(device);
-> +			if (err)
-> +				return err;
-> +			err =3D flexcan_chip_enable(priv);
-> +		}
->  	}
->  	return err;
->  }
-> @@ -1489,10 +1595,27 @@ static int __maybe_unused flexcan_runtime_resum=
-e(struct device *device)
->  	return 0;
->  }
-> =20
-> +static int __maybe_unused flexcan_noirq_resume(struct device *device)
-> +{
-> +	struct net_device *dev =3D dev_get_drvdata(device);
-> +	struct flexcan_priv *priv =3D netdev_priv(dev);
-> +
-> +	/* exit stop mode during noirq stage avoid continuously entering
-> +	 * wakeup ISR before CAN resume back.
-> +	 */
-> +	if (netif_running(dev) && device_may_wakeup(device)) {
-> +		disable_irq_wake(dev->irq);
-> +		flexcan_exit_stop_mode(priv);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static const struct dev_pm_ops flexcan_pm_ops =3D {
->  	SET_SYSTEM_SLEEP_PM_OPS(flexcan_suspend, flexcan_resume)
->  	SET_RUNTIME_PM_OPS(flexcan_runtime_suspend, flexcan_runtime_resume,
->  						NULL)
-> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(NULL, flexcan_noirq_resume)
->  };
-> =20
->  static struct platform_driver flexcan_driver =3D {
->=20
+Good ! I'll put that mechanism in v2, which should be ready soon.
 
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---sJuwh9D2cdwW2SVRTx6CKeLEAPTEcw3C4--
-
---YkG2zGMbIh1v6OzZoI17gLKdRglWKyPjq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEENrCndlB/VnAEWuH5k9IU1zQoZfEFAlvYYE0ACgkQk9IU1zQo
-ZfEbLAgAlXK7bMDCQX0TBaWReJR+ACwfqt+Qijih6qMMGmjoT8VpB9gLQJ21i+9+
-mEdze1lVXqVIsjGxAEtkDBDwDtZ6r2l5b517tC0RG+UD2g3QVkfxv/WmlWAA3GWX
-aQd65nfkr3LppCk4I75rk6Zey8o/XD6KdTRbuRLoPb85jf/jvrCLLX+nIqZQ663K
-iXFJErceVhNmktjXdtpFDeyUhqxy1Ee81hDJjr2FiBnzxcHpEjutZc6pMazzUS1l
-FOYNJV7vWek9aub1/SfkX/mKhjtKyCwsL0zy5NvLYfDJlCBl3DQIhvjgkgwn/zRp
-jkKYV9Bu25yQjZbJpz+eWMin1777kg==
-=zHc/
------END PGP SIGNATURE-----
-
---YkG2zGMbIh1v6OzZoI17gLKdRglWKyPjq--
+Yours,
+Sven
