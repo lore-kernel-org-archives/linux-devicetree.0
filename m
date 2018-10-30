@@ -1,131 +1,147 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH 07/10] hikey960: Support usb functionality of Hikey960
-Date: Tue, 30 Oct 2018 12:16:35 +0200
-Message-ID: <20181030101635.GC14534@kuha.fi.intel.com>
-References: <20181027095820.40056-1-chenyu56@huawei.com>
- <20181027095820.40056-8-chenyu56@huawei.com>
- <20181029143040.GB14534@kuha.fi.intel.com>
- <33a6ac59-b545-e2c8-2bb7-0a5460fcf5e9@huawei.com>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH] mmc: mmci: add variant property to send stop cmd if a command fail
+Date: Tue, 30 Oct 2018 11:16:29 +0100
+Message-ID: <1540894589-4004-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="YiEDa0DAkWCtVeE4"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <33a6ac59-b545-e2c8-2bb7-0a5460fcf5e9@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen Yu <chenyu56@huawei.com>
-Cc: wangbinghui@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: srinivas.kandagatla@linaro.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Ludovic Barre <ludovic.barre@st.com>
 
---YiEDa0DAkWCtVeE4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The mmc framework follows the requirement of SD_Specification:
+the STOP_TRANSMISSION is sent on multiple write/read commands
+and the stop command (alone), not needed on other ADTC commands.
 
-On Tue, Oct 30, 2018 at 10:50:22AM +0800, Chen Yu wrote:
-> > I think you have too many things integrated into this one driver. IMO
-> > it would at least be better to just let the Type-C port driver take
-> > care of VBUS like I mentioned above. I'm also wondering if it would
-> > make sense to handle the role switch and the "hub" in their own
-> > drivers, but I don't know enough about your platform at this point to
-> > say for sure.
-> 
-> Thanks for your advice! The HiKey 960 development platform is based around the Huawei Kirin 960.
-> The Hikey960 Development Board supports three USB host port via a USB hub (U1803 USB5734).
-> The Hikey960 Development Board also implements a USB2.0 typeC OTG port.??
-> The Dp and Dm of Soc can be switched between the typeC port and the USB hub.
-> If there is no cable on the typeC port, then dwc3 core of Soc will be switch to host mode and the
-> driver of this patch will switch Dp and Dp to the hub. The driver also power on the hub in the meantime.
+But, if an error happens on command or data step, some variants
+require a stop command "STOP_TRANSMISION" to clear the DPSM
+"Data Path State Machine". If it's not done the next data
+command freezes hardware block.
+Needed to support the STM32 sdmmc variant.
 
-Thank you for the explanation. I got the picture now. I realized that
-there is some online information for this board:
-https://www.96boards.org/documentation/consumer/hikey/hikey960/hardware-docs/hardware-user-manual.md.html#usb-ports
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+---
+ drivers/mmc/host/mmci.c | 33 +++++++++++++++++++++++++++++++++
+ drivers/mmc/host/mmci.h |  4 ++++
+ 2 files changed, 37 insertions(+)
 
-So that mux is actually _not_ switching between the host and device
-modes, but instead, it's switching between Type-C and Type-A
-connectors (I'm skipping the hub, as it's irrelevant from the PoW of
-the mux), so I've misunderstood. And yes, you did say that it is
-switching between connectors in the commit message, but I got confused
-because you are registers a role switch.
-
-I don't think you should register a role switch from this driver. This
-driver is not really representing USB role switch. The mux on this
-board is something else. Instead you should register the role switch
-from the dwc3 drd code. That is the part that is representing the role
-switch here. I actually think that we should do that in any case. The
-dwc3 drd code should always register a role switch.
-
-We can solve the problem of getting the role change events in this
-driver by adding notification chain to struct usb_role_switch (check
-the attached diff). You would then just need to call
-usb_role_switch_get() and usb_role_switch_register_notifier(), and
-wait for those notifications. The extcon device does not serve any
-purpose anymore.
-
-This driver would continue to take care of the hub powering and the
-mux, and also the VBUS like before.
-
-
-br,
-
--- 
-heikki
-
---YiEDa0DAkWCtVeE4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="roles.diff"
-
-diff --git a/drivers/usb/common/roles.c b/drivers/usb/common/roles.c
-index bb52e006d203..2881777c16e5 100644
---- a/drivers/usb/common/roles.c
-+++ b/drivers/usb/common/roles.c
-@@ -20,6 +20,7 @@ struct usb_role_switch {
- 	struct device dev;
- 	struct mutex lock; /* device lock*/
- 	enum usb_role role;
-+	struct blocking_notifier_head nh;
+diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+index 19650ed..ecedca3 100644
+--- a/drivers/mmc/host/mmci.c
++++ b/drivers/mmc/host/mmci.c
+@@ -21,6 +21,7 @@
+ #include <linux/err.h>
+ #include <linux/highmem.h>
+ #include <linux/log2.h>
++#include <linux/mmc/mmc.h>
+ #include <linux/mmc/pm.h>
+ #include <linux/mmc/host.h>
+ #include <linux/mmc/card.h>
+@@ -57,6 +58,8 @@ void sdmmc_variant_init(struct mmci_host *host);
+ #else
+ static inline void sdmmc_variant_init(struct mmci_host *host) {}
+ #endif
++static void
++mmci_start_command(struct mmci_host *host, struct mmc_command *cmd, u32 c);
  
- 	/* From descriptor */
- 	struct device *usb2_port;
-@@ -49,8 +50,10 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
- 	mutex_lock(&sw->lock);
+ static unsigned int fmax = 515633;
  
- 	ret = sw->set(sw->dev.parent, role);
--	if (!ret)
-+	if (!ret) {
- 		sw->role = role;
-+		blocking_notifier_call_chain(&sw->nh, role, NULL);
+@@ -274,6 +277,7 @@ static struct variant_data variant_stm32_sdmmc = {
+ 	.cmdreg_lrsp_crc	= MCI_CPSM_STM32_LRSP_CRC,
+ 	.cmdreg_srsp_crc	= MCI_CPSM_STM32_SRSP_CRC,
+ 	.cmdreg_srsp		= MCI_CPSM_STM32_SRSP,
++	.cmdreg_stop		= MCI_CPSM_STM32_CMDSTOP,
+ 	.data_cmd_enable	= MCI_CPSM_STM32_CMDTRANS,
+ 	.irq_pio_mask		= MCI_IRQ_PIO_STM32_MASK,
+ 	.datactrl_first		= true,
+@@ -574,6 +578,24 @@ void mmci_dma_error(struct mmci_host *host)
+ static void
+ mmci_request_end(struct mmci_host *host, struct mmc_request *mrq)
+ {
++	/*
++	 * If an error happens on command or data step, some variants
++	 * require a stop command to reinit the DPSM.
++	 * If it's not done the next data command freeze hardware block.
++	 */
++	if (host->variant->cmdreg_stop) {
++		u32 dpsm;
++
++		dpsm = readl_relaxed(host->base + MMCISTATUS);
++		dpsm &= MCI_STM32_DPSMACTIVE;
++
++		if (dpsm && ((mrq->cmd && mrq->cmd->error) ||
++			     (mrq->data && mrq->data->error))) {
++			mmci_start_command(host, &host->stop_abort, 0);
++			return;
++		}
 +	}
- 
- 	mutex_unlock(&sw->lock);
- 
-@@ -110,6 +113,20 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
- 	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
- }
- 
-+int usb_role_switch_register_notifier(struct usb_role_switch *sw,
-+				      struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_register(&sw->nh, nb);
-+}
-+EXPORT_SYMBOL_GPL(usb_role_switch_register_notifier);
 +
-+int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
-+					struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_unregister(&sw->nh, nb);
-+}
-+EXPORT_SYMBOL_GPL(usb_role_switch_unregister_notifier);
+ 	writel(0, host->base + MMCICOMMAND);
+ 
+ 	BUG_ON(host->data);
+@@ -1106,6 +1128,10 @@ mmci_start_command(struct mmci_host *host, struct mmc_command *cmd, u32 c)
+ 		mmci_reg_delay(host);
+ 	}
+ 
++	if (host->variant->cmdreg_stop &&
++	    cmd->opcode == MMC_STOP_TRANSMISSION)
++		c |= host->variant->cmdreg_stop;
 +
- /**
-  * usb_role_switch_get - Find USB role switch linked with the caller
-  * @dev: The caller device
-@@ -267,6 +284,7 @@ usb_role_switch_register(struct device *parent,
- 		return ERR_PTR(-ENOMEM);
+ 	c |= cmd->opcode | host->variant->cmdreg_cpsm_enable;
+ 	if (cmd->flags & MMC_RSP_PRESENT) {
+ 		if (cmd->flags & MMC_RSP_136)
+@@ -1957,6 +1983,13 @@ static int mmci_probe(struct amba_device *dev,
+ 		mmc->max_busy_timeout = 0;
+ 	}
  
- 	mutex_init(&sw->lock);
-+	BLOCKING_INIT_NOTIFIER_HEAD(&sw->nh);
++	/* prepare the stop command, used to abort and reinitialized the DPSM */
++	if (variant->cmdreg_stop) {
++		host->stop_abort.opcode = MMC_STOP_TRANSMISSION;
++		host->stop_abort.arg = 0;
++		host->stop_abort.flags = MMC_RSP_R1B | MMC_CMD_AC;
++	}
++
+ 	mmc->ops = &mmci_ops;
  
- 	sw->allow_userspace_control = desc->allow_userspace_control;
- 	sw->usb2_port = desc->usb2_port;
-
---YiEDa0DAkWCtVeE4--
+ 	/* We support these PM capabilities. */
+diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+index ec13d90..afb6ec4 100644
+--- a/drivers/mmc/host/mmci.h
++++ b/drivers/mmc/host/mmci.h
+@@ -166,6 +166,7 @@
+ #define MCI_ST_CEATAEND		(1 << 23)
+ #define MCI_ST_CARDBUSY		(1 << 24)
+ /* Extended status bits for the STM32 variants */
++#define MCI_STM32_DPSMACTIVE	BIT(12)
+ #define MCI_STM32_BUSYD0	BIT(20)
+ 
+ #define MMCICLEAR		0x038
+@@ -269,6 +270,7 @@ struct mmci_host;
+  * @cmdreg_lrsp_crc: enable value for long response with crc
+  * @cmdreg_srsp_crc: enable value for short response with crc
+  * @cmdreg_srsp: enable value for short response without crc
++ * @cmdreg_stop: enable value for stop and abort transmission
+  * @datalength_bits: number of bits in the MMCIDATALENGTH register
+  * @fifosize: number of bytes that can be written when MMCI_TXFIFOEMPTY
+  *	      is asserted (likewise for RX)
+@@ -322,6 +324,7 @@ struct variant_data {
+ 	unsigned int		cmdreg_lrsp_crc;
+ 	unsigned int		cmdreg_srsp_crc;
+ 	unsigned int		cmdreg_srsp;
++	unsigned int		cmdreg_stop;
+ 	unsigned int		datalength_bits;
+ 	unsigned int		fifosize;
+ 	unsigned int		fifohalfsize;
+@@ -384,6 +387,7 @@ struct mmci_host {
+ 	void __iomem		*base;
+ 	struct mmc_request	*mrq;
+ 	struct mmc_command	*cmd;
++	struct mmc_command	stop_abort;
+ 	struct mmc_data		*data;
+ 	struct mmc_host		*mmc;
+ 	struct clk		*clk;
+-- 
+2.7.4
