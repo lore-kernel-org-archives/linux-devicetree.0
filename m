@@ -1,69 +1,157 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V3 4/8] dt-bindings: i2c: i2c-imx-lpi2c: add imx8qxp
- compatible string
-Date: Tue, 30 Oct 2018 14:56:41 +0000
-Message-ID: <AM0PR04MB42110EB0836E9610CDA2746680CC0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1539886483-15775-1-git-send-email-aisheng.dong@nxp.com>
- <1539886483-15775-5-git-send-email-aisheng.dong@nxp.com>
- <20181028221952.GF1882@kunai>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt: bindings: add new dt entry to indentify external FEM
+Date: Tue, 30 Oct 2018 10:32:10 -0500
+Message-ID: <CAL_JsqLTxzFSQ6jvZo7CCcxBML6Y5j2AvAOotnVDJGTh-1K7ZA@mail.gmail.com>
+References: <1538653364-1239-1-git-send-email-bperumal@codeaurora.org>
+ <1538653364-1239-2-git-send-email-bperumal@codeaurora.org>
+ <20181015192425.GA19699@bogus> <d617b0c39a2faa7c9b23b884bef3f829@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181028221952.GF1882@kunai>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d617b0c39a2faa7c9b23b884bef3f829-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
-
-[...]
-
-> Hi,
-> 
-> On Thu, Oct 18, 2018 at 06:19:29PM +0000, A.s. Dong wrote:
-> > Add imx8qxp compatible string
+On Tue, Oct 30, 2018 at 3:41 AM <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>
+> On 2018-10-16 00:54, Rob Herring wrote:
+> > On Thu, Oct 04, 2018 at 05:12:43PM +0530, Bhagavathi Perumal S wrote:
+> >> This adds new dt entry ext-fem-name, it is used by ath10k driver
+> >> to select correct timing parameters and configure it in target wifi
+> >> hardware.
+> >> The Front End Module(FEM) normally includes tx power amplifier(PA) and
+> >> rx low noise amplifier(LNA). The default timing parameters like tx end
+> >> to
+> >> PA off timing values were fine tuned for internal FEM used in
+> >> reference
+> >> design. And these timing values can not be same if ODM modifies
+> >> hardware
+> >> design with different external FEM. This DT entry helps to choose
+> >> correct
+> >> timing values in driver if different external FEM hardware used.
 > >
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Wolfram Sang <wsa@the-dreams.de>
-> > Cc: linux-i2c@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> 
-> Doesn't apply...
-> 
-> >    - "fsl,imx8dv-lpi2c" for LPI2C compatible with the one integrated
-> > on i.MX8DV soc
-> 
-> ... I don't have this line in my tree.
-> 
+> > 'dt-bindings: net: ath10k: ...' for the subject please.
+> Sure, I will change and send v2 patch.
+>
+> >
+> >>
+> >> Signed-off-by: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> >> ---
+> >>  .../bindings/net/wireless/qcom,ath10k.txt          | 22
+> >> ++++++++++++++++++++++
+> >>  1 file changed, 22 insertions(+)
+> >>
+> >> diff --git
+> >> a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> >> b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> >> index 7fd4e8c..fbaf309 100644
+> >> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> >> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> >> @@ -56,6 +56,7 @@ Optional properties:
+> >>                                   the length can vary between hw versions.
+> >>  - <supply-name>-supply: handle to the regulator device tree node
+> >>                         optional "supply-name" is "vdd-0.8-cx-mx".
+> >> +- ext-fem-name: name of external front end module used.
+> >
+> > What are valid names? What if the OS doesn't recognize the name?
+> > Perhaps
+> Some valid FEM devices are "microsemi-lx5586", "sky85703-11" and
+> "sky85803" etc.
+> Currently driver accepts only "microsemi-lx5586", Since this FEM
+> requires different timing settings,
 
-It seems to be caused by the following commit during the 4.19 RC2+.
-f6eb89349078 dt-bindings: imx-lpi2c: Remove mx8dv compatible entry
+Assuming you keep this, then you need to enumerate what are valid
+values in the binding. Otherwise, 'ext-fem-name = "rob"' is valid.
 
-> Would you maybe volunteer to maintain this driver? To prevent stuff like this
-> from happening? :)
+> And it can be extended for other FEM devices in future.
+> If OS doesn't recognize the name, it uses predefined default timing
+> settings.
+>
+> > this should be a compatible string for the particular module instead?
+> > Then it could cover any differences, not just the FEM.
+> >
+> No, it is specific to FEM device.
 
-Sure, I will open an eye on this driver patches from now on.
-And I will resend the patch against your tree.
+You will be better off having either a specific compatible string or
+using VID/PID as this is a PCI device. Then you can handle other
+differences you may find between h/w versions without a DT change.
 
-Thanks
+> >>
+> >>  Example (to supply the calibration data alone):
+> >>
+> >> @@ -150,3 +151,24 @@ wifi@18000000 {
+> >>                         <0 141 0 /* CE11 */ >;
+> >>              vdd-0.8-cx-mx-supply = <&pm8998_l5>;
+> >>  };
+> >> +
+> >> +Example (to supply the external front end module name):
+> >> +
+> >> +In this example, the front end module is defined as a property of the
+> >> ath10k
+> >> +device node.
+> >
+> > Really need a whole new example for 1 property?
+> Will add this property in existing example.
+>
+> >
+> >> +
+> >> +pci {
+> >> +    pcie@0 {
+> >> +            reg = <0 0 0 0 0>;
+> >> +            #interrupt-cells = <1>;
+> >> +            #size-cells = <2>;
+> >> +            #address-cells = <3>;
+> >> +            device_type = "pci";
+> >> +
+> >> +            ath10k@0,0 {
+> >
+> > wifi@0,0
+> Added in ath10k@0,0 to make consistent with existing property
+> "qcom,ath10k-calibration-data" below,
+> "
 
-Regards
-Dong Aisheng
+I don't see how that matters.
 
-> 
-> Regards,
-> 
->    Wolfram
+> pci {
+>          pcie@0 {
+>                  reg = <0 0 0 0 0>;
+>                  #interrupt-cells = <1>;
+>                  #size-cells = <2>;
+>                  #address-cells = <3>;
+>                  device_type = "pci";
+>
+>                  ath10k@0,0 {
+>                          reg = <0 0 0 0 0>;
+>                          device_type = "pci";
+>                          qcom,ath10k-calibration-data = [ 01 02 03 ... ];
+>                  };
+>          };
+> };
+> "
+>
+> If wifi@0,0 is preferable, then I will add new entry "wifi@0,0" and add
+> ext-fem-name into it.
+
+Node names are supposed to reflect the class of device, not the model.
+See the DT spec for a list.
+
+>
+> >
+> >> +                    reg = <0 0 0 0 0>;
+> >> +                    device_type = "pci";
+
+Also, this is wrong. Only PCI bridges should have this property. dtc
+will give you a warning on this.
+
+> >> +                    ext-fem-name = "microsemi-lx5586";
+> >> +            };
+> >> +    };
+> >> +};
+> >> --
+> >> 1.9.1
+> >>
+>
+> Thanks, Sorry for the delayed response,
+> Bhagavathi Perumal S.
