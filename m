@@ -1,185 +1,97 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v2 6/6] arch: Move initrd= parsing into do_mounts_initrd.c
-Date: Tue, 30 Oct 2018 16:07:21 -0700
-Message-ID: <20181030230721.28429-7-f.fainelli@gmail.com>
-References: <20181030230721.28429-1-f.fainelli@gmail.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH 1/7] dt-bindings: mfd: ds90ux9xx: add description of TI
+ DS90Ux9xx ICs
+Date: Wed, 31 Oct 2018 01:40:54 +0200
+Message-ID: <8ae609a1-f3ce-e216-d572-bf509ca482f9@mleia.com>
+References: <20181008211205.2900-1-vz@mleia.com>
+ <20181008211205.2900-2-vz@mleia.com>
+ <fd0a91c9-6e38-5a18-12e5-955fbf81bfce@lucaceresoli.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181030230721.28429-1-f.fainelli@gmail.com>
+In-Reply-To: <fd0a91c9-6e38-5a18-12e5-955fbf81bfce@lucaceresoli.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, linux-arm-kernel@lists.infradead.org
+To: Luca Ceresoli <luca@lucaceresoli.net>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Marek Vasut <marek.vasut@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Sandeep Jain <Sandeep_Jain@mentor.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-ARC, ARM, ARM64 and Unicore32 are all capable of parsing the "initrd="
-command line parameter to allow specifying the physical address and size
-of an initrd. Move that parsing into init/do_mounts_initrd.c such that
-we no longer duplicate that logic.
+Hi Luca,
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- arch/arc/mm/init.c       | 25 +++++--------------------
- arch/arm/mm/init.c       | 17 -----------------
- arch/arm64/mm/init.c     | 18 ------------------
- arch/unicore32/mm/init.c | 18 ------------------
- init/do_mounts_initrd.c  | 17 +++++++++++++++++
- 5 files changed, 22 insertions(+), 73 deletions(-)
+thank you for review, please find my comments below.
 
-diff --git a/arch/arc/mm/init.c b/arch/arc/mm/init.c
-index ba145065c579..369d3d699929 100644
---- a/arch/arc/mm/init.c
-+++ b/arch/arc/mm/init.c
-@@ -79,24 +79,6 @@ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
- 		base, TO_MB(size), !in_use ? "Not used":"");
- }
- 
--#ifdef CONFIG_BLK_DEV_INITRD
--static int __init early_initrd(char *p)
--{
--	unsigned long start, size;
--	char *endp;
--
--	start = memparse(p, &endp);
--	if (*endp == ',') {
--		size = memparse(endp + 1, NULL);
--
--		initrd_start = (unsigned long)__va(start);
--		initrd_end = (unsigned long)__va(start + size);
--	}
--	return 0;
--}
--early_param("initrd", early_initrd);
--#endif
--
- /*
-  * First memory setup routine called from setup_arch()
-  * 1. setup swapper's mm @init_mm
-@@ -141,8 +123,11 @@ void __init setup_arch_memory(void)
- 	memblock_reserve(low_mem_start, __pa(_end) - low_mem_start);
- 
- #ifdef CONFIG_BLK_DEV_INITRD
--	if (initrd_start)
--		memblock_reserve(__pa(initrd_start), initrd_end - initrd_start);
-+	if (phys_initrd_size) {
-+		memblock_reserve(phys_initrd_start, phys_initrd_size);
-+		initrd_start = __va(phys_initrd_start);
-+		initrd_end = initrd_start + phys_initrd_size;
-+	}
- #endif
- 
- 	early_init_fdt_reserve_self();
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index 4bfa08e27319..58ec68709606 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -52,23 +52,6 @@ unsigned long __init __clear_cr(unsigned long mask)
- #endif
- 
- #ifdef CONFIG_BLK_DEV_INITRD
--static int __init early_initrd(char *p)
--{
--	phys_addr_t start;
--	unsigned long size;
--	char *endp;
--
--	start = memparse(p, &endp);
--	if (*endp == ',') {
--		size = memparse(endp + 1, NULL);
--
--		phys_initrd_start = start;
--		phys_initrd_size = size;
--	}
--	return 0;
--}
--early_param("initrd", early_initrd);
--
- static int __init parse_tag_initrd(const struct tag *tag)
- {
- 	pr_warn("ATAG_INITRD is deprecated; "
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index e95cee656a55..9045afacd10b 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -62,24 +62,6 @@
- s64 memstart_addr __ro_after_init = -1;
- phys_addr_t arm64_dma_phys_limit __ro_after_init;
- 
--#ifdef CONFIG_BLK_DEV_INITRD
--static int __init early_initrd(char *p)
--{
--	unsigned long start, size;
--	char *endp;
--
--	start = memparse(p, &endp);
--	if (*endp == ',') {
--		size = memparse(endp + 1, NULL);
--
--		phys_initrd_start = start;
--		phys_initrd_size = size;
--	}
--	return 0;
--}
--early_param("initrd", early_initrd);
--#endif
--
- #ifdef CONFIG_KEXEC_CORE
- /*
-  * reserve_crashkernel() - reserves memory for crash kernel
-diff --git a/arch/unicore32/mm/init.c b/arch/unicore32/mm/init.c
-index f2f815d46846..99acdb829a7e 100644
---- a/arch/unicore32/mm/init.c
-+++ b/arch/unicore32/mm/init.c
-@@ -31,24 +31,6 @@
- 
- #include "mm.h"
- 
--#ifdef CONFIG_BLK_DEV_INITRD
--static int __init early_initrd(char *p)
--{
--	unsigned long start, size;
--	char *endp;
--
--	start = memparse(p, &endp);
--	if (*endp == ',') {
--		size = memparse(endp + 1, NULL);
--
--		phys_initrd_start = start;
--		phys_initrd_size = size;
--	}
--	return 0;
--}
--early_param("initrd", early_initrd);
--#endif
--
- /*
-  * This keeps memory configuration data used by a couple memory
-  * initialization functions, as well as show_mem() for the skipping
-diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
-index 45865b72f4ea..732d21f4a637 100644
---- a/init/do_mounts_initrd.c
-+++ b/init/do_mounts_initrd.c
-@@ -27,6 +27,23 @@ static int __init no_initrd(char *str)
- 
- __setup("noinitrd", no_initrd);
- 
-+static int __init early_initrd(char *p)
-+{
-+	phys_addr_t start;
-+	unsigned long size;
-+	char *endp;
-+
-+	start = memparse(p, &endp);
-+	if (*endp == ',') {
-+		size = memparse(endp + 1, NULL);
-+
-+		phys_initrd_start = start;
-+		phys_initrd_size = size;
-+	}
-+	return 0;
-+}
-+early_param("initrd", early_initrd);
-+
- static int init_linuxrc(struct subprocess_info *info, struct cred *new)
- {
- 	ksys_unshare(CLONE_FS | CLONE_FILES);
--- 
-2.17.1
+On 10/30/2018 06:43 PM, Luca Ceresoli wrote:
+> Hi Vladimir,
+> 
+> On 08/10/18 23:11, Vladimir Zapolskiy wrote:
+>> From: Sandeep Jain <Sandeep_Jain@mentor.com>
+>>
+>> The change adds device tree binding description of TI DS90Ux9xx
+>> series of serializer and deserializer controllers which support video,
+>> audio and control data transmission over FPD-III Link connection.
+> [...]
+>> +Example:
+>> +
+>> +serializer: serializer@c {
+>> +	compatible = "ti,ds90ub927q", "ti,ds90ux9xx";
+>> +	reg = <0xc>;
+>> +	power-gpios = <&gpio5 12 GPIO_ACTIVE_HIGH>;
+>> +	ti,backward-compatible-mode = <0>;
+>> +	ti,low-frequency-mode = <0>;
+>> +	ti,pixel-clock-edge = <0>;
+>> +	...
+>> +}
+>> +
+>> +deserializer: deserializer@3c {
+>> +	compatible = "ti,ds90ub940q", "ti,ds90ux9xx";
+>> +	reg = <0x3c>;
+>> +	power-gpios = <&gpio6 31 GPIO_ACTIVE_HIGH>;
+>> +	...
+>> +}
+> 
+> Interesting patchset, thanks. At the moment I'm working on a driver for
+> the TI FPD-III camera serdes chips [0]. At very first sight they have
+> many commonalities with the display chipsets [1] you implemented. Did
+> you have a look into them? Do you think they could be implemented by the
+> same driver?
+
+Absolutely, I believe that it should be no more than a matter of adding
+the correspondent data fields to describe IC specifics to the set of the
+published drivers.
+
+In general, and from my experience, there is no big difference between
+camera and display ICs from the series, my understanding is that it's
+just a marketing or common usecase difference.
+
+> 
+> The camera serdes chips lack some features found on the display chips
+> (e.g. audio, white balance). OTOH they have dual or quad input
+> deserializers, which adds complexity.
+
+For what it's worth the shown core drivers support DS90Ux940 (2 mutually
+exclusive links, the support is already added to the series of drivers)
+and DS90UB964 (4 parallel independent links) ICs, both deserializers are
+used in connection to camera sensors.
+
+So, the short answer is that multi-link ICs are also well supported,
+and my intention is to push the essential core drivers firstly, then
+add remarkably more trivial DRM and V4L2 drivers as cell drivers.
+
+> I'm commenting on the details in reply to the following patches
+> documenting the DT bindings.
+> 
+
+Thank you for review, I'm planning to collect more review comments and
+publish v2 in about two weeks, any kind of essential rework is not
+expected, the selected design of having an MFD and the drivers are
+proven to be easily scalable, as usual any additional wanted features
+could be added later on.
+
+> [0] http://www.ti.com/interface/fpd-link-serdes/camera-serdes/overview.html
+> [1] http://www.ti.com/interface/fpd-link-serdes/display-serdes/overview.html
+> 
+
+--
+Best wishes,
+Vladimir
