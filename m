@@ -1,104 +1,46 @@
-From: Tony Xie <tony.xie@rock-chips.com>
-Subject: [PATCH v6 4/6] dt-bindings: mfd: rk808: Add binding information for RK809 and RK817.
-Date: Tue, 30 Oct 2018 18:07:59 +0800
-Message-ID: <1540894081-31270-5-git-send-email-tony.xie@rock-chips.com>
-References: <1540894081-31270-1-git-send-email-tony.xie@rock-chips.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 00/17] arm64: dts: qcom: qcs404: Add Device tree nodes
+Date: Tue, 30 Oct 2018 15:40:51 +0530
+Message-ID: <20181030101108.11041-1-vkoul@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1540894081-31270-1-git-send-email-tony.xie@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com, tony.xie@rock-chips.com
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings documentation for Rockchip's RK809 & RK817 PMIC.
+This series adds support for various nodes for QCS404-EVB.
 
-Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
----
- Documentation/devicetree/bindings/mfd/rk808.txt | 44 +++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+Based on next-20181030
 
-diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
-index 91b6522..f306fa0 100644
---- a/Documentation/devicetree/bindings/mfd/rk808.txt
-+++ b/Documentation/devicetree/bindings/mfd/rk808.txt
-@@ -3,11 +3,15 @@ RK8XX Power Management Integrated Circuit
- The rk8xx family current members:
- rk805
- rk808
-+rk809
-+rk817
- rk818
- 
- Required properties:
- - compatible: "rockchip,rk805"
- - compatible: "rockchip,rk808"
-+- compatible: "rockchip,rk809"
-+- compatible: "rockchip,rk817"
- - compatible: "rockchip,rk818"
- - reg: I2C slave address
- - interrupt-parent: The parent interrupt controller.
-@@ -46,6 +50,23 @@ Optional RK808 properties:
-   the gpio controller. If DVS GPIOs aren't present, voltage changes will happen
-   very quickly with no slow ramp time.
- 
-+Optional shared RK809 and RK817 properties:
-+- vcc1-supply:  The input supply for DCDC_REG1
-+- vcc2-supply:  The input supply for DCDC_REG2
-+- vcc3-supply:  The input supply for DCDC_REG3
-+- vcc4-supply:  The input supply for DCDC_REG4
-+- vcc5-supply:  The input supply for LDO_REG1, LDO_REG2, LDO_REG3
-+- vcc6-supply:  The input supply for LDO_REG4, LDO_REG5, LDO_REG6
-+- vcc7-supply:  The input supply for LDO_REG7, LDO_REG8, LDO_REG9
-+
-+Optional RK809 properties:
-+- vcc8-supply:  The input supply for SWITCH_REG1
-+- vcc9-supply:  The input supply for DCDC_REG5, SWITCH_REG2
-+
-+Optional RK817 properties:
-+- vcc8-supply:  The input supply for BOOST
-+- vcc9-supply:  The input supply for OTG_SWITCH
-+
- Optional RK818 properties:
- - vcc1-supply:  The input supply for DCDC_REG1
- - vcc2-supply:  The input supply for DCDC_REG2
-@@ -87,6 +108,21 @@ number as described in RK808 datasheet.
- 	- SWITCH_REGn
- 		- valid values for n are 1 to 2
- 
-+Following regulators of the RK809 and RK817 PMIC blocks are supported. Note that
-+the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
-+number as described in RK809 and RK817 datasheets.
-+
-+	- DCDC_REGn
-+		- valid values for n are 1 to 5 for RK809.
-+		- valid values for n are 1 to 4 for RK817.
-+	- LDO_REGn
-+		- valid values for n are 1 to 9 for RK809.
-+		- valid values for n are 1 to 9 for RK817.
-+	- SWITCH_REGn
-+		- valid values for n are 1 to 2 for RK809.
-+	- BOOST for RK817
-+	- OTG_SWITCH for RK817
-+
- Following regulators of the RK818 PMIC block are supported. Note that
- the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
- number as described in RK818 datasheet.
-@@ -99,6 +135,14 @@ number as described in RK818 datasheet.
- 	- HDMI_SWITCH
- 	- OTG_SWITCH
- 
-+It is necessary to configure three pins for both the RK809 and RK817, the three
-+pins are "gpio_ts" "gpio_gt" "gpio_slp".
-+	The gpio_gt and gpio_ts pins support the gpio function.
-+	The gpio_slp pin is for controlling the pmic states, as below:
-+		- reset
-+		- power down
-+		- sleep
-+
- Standard regulator bindings are used inside regulator subnodes. Check
-   Documentation/devicetree/bindings/regulator/regulator.txt
- for more details
+Bjorn Andersson (7):
+  arm64: dts: qcom: qcs404: Add reserved-memory regions
+  arm64: dts: qcom: qcs404: Add RPM GLINK related nodes
+  arm64: dts: qcom: qcs404: Add PMS405 RPM regulators
+  arm64: dts: qcom: qcs404: Add TLMM pinctrl node
+  arm64: dts: qcom: qcs404: Add sdcc1 node
+  arm64: dts: qcom: qcs404: Add scm firmware node
+  arm64: dts: qcom: qcs404: Add remoteproc nodes
+
+Vinod Koul (10):
+  arm64: dts: qcom: qcs404: add base dts files
+  arm64: dts: qcom: qcs404: add smp2p nodes
+  arm64: dts: qcom: pms405: add spmi node
+  arm64: dts: qcom: qcs404: add spmi node
+  arm64: dts: qcom: pms405: add rtc node
+  arm64: dts: qcom: pms405: add gpios
+  arm64: dts: qcom: qcs404: add prng-ee node
+  arm64: dts: qcom: qcs404: Add BAM DMA node
+  arm64: dts: qcom: qcs404: Use BAM DMA for serial uart2
+  arm64: dts: qcom: pms405: Add pon and pwrkey nodes
+
+ arch/arm64/boot/dts/qcom/Makefile       |   1 +
+ arch/arm64/boot/dts/qcom/pms405.dtsi    |  53 ++++
+ arch/arm64/boot/dts/qcom/qcs404-evb.dts | 183 ++++++++++++
+ arch/arm64/boot/dts/qcom/qcs404.dtsi    | 485 ++++++++++++++++++++++++++++++++
+ 4 files changed, 722 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/pms405.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs404-evb.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs404.dtsi
+
 -- 
-1.9.1
+2.14.4
