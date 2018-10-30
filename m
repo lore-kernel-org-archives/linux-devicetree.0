@@ -1,7 +1,7 @@
 From: Tony Xie <tony.xie@rock-chips.com>
-Subject: [PATCH v6 1/6] regmap: add a new macro:REGMAP_IRQ_REG_LINE(_id, _reg_bits)
-Date: Tue, 30 Oct 2018 18:07:56 +0800
-Message-ID: <1540894081-31270-2-git-send-email-tony.xie@rock-chips.com>
+Subject: [PATCH v6 4/6] dt-bindings: mfd: rk808: Add binding information for RK809 and RK817.
+Date: Tue, 30 Oct 2018 18:07:59 +0800
+Message-ID: <1540894081-31270-5-git-send-email-tony.xie@rock-chips.com>
 References: <1540894081-31270-1-git-send-email-tony.xie@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1540894081-31270-1-git-send-email-tony.xie@rock-chips.com>
@@ -10,30 +10,95 @@ To: heiko@sntech.de
 Cc: broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com, tony.xie@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-if there are lots of irqs for a device and the register addresses for these
-irqs is continuous, we can use this macro to initialize regmap_irq value.
+Add device tree bindings documentation for Rockchip's RK809 & RK817 PMIC.
 
 Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 ---
- include/linux/regmap.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/devicetree/bindings/mfd/rk808.txt | 44 +++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index 4f38068..a468b81 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -1047,6 +1047,12 @@ struct regmap_irq {
- #define REGMAP_IRQ_REG(_irq, _off, _mask)		\
- 	[_irq] = { .reg_offset = (_off), .mask = (_mask) }
+diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
+index 91b6522..f306fa0 100644
+--- a/Documentation/devicetree/bindings/mfd/rk808.txt
++++ b/Documentation/devicetree/bindings/mfd/rk808.txt
+@@ -3,11 +3,15 @@ RK8XX Power Management Integrated Circuit
+ The rk8xx family current members:
+ rk805
+ rk808
++rk809
++rk817
+ rk818
  
-+#define REGMAP_IRQ_REG_LINE(_id, _reg_bits) \
-+	[_id] = {				\
-+		.mask = BIT((_id) % (_reg_bits)),	\
-+		.reg_offset = (_id) / (_reg_bits),	\
-+	}
+ Required properties:
+ - compatible: "rockchip,rk805"
+ - compatible: "rockchip,rk808"
++- compatible: "rockchip,rk809"
++- compatible: "rockchip,rk817"
+ - compatible: "rockchip,rk818"
+ - reg: I2C slave address
+ - interrupt-parent: The parent interrupt controller.
+@@ -46,6 +50,23 @@ Optional RK808 properties:
+   the gpio controller. If DVS GPIOs aren't present, voltage changes will happen
+   very quickly with no slow ramp time.
+ 
++Optional shared RK809 and RK817 properties:
++- vcc1-supply:  The input supply for DCDC_REG1
++- vcc2-supply:  The input supply for DCDC_REG2
++- vcc3-supply:  The input supply for DCDC_REG3
++- vcc4-supply:  The input supply for DCDC_REG4
++- vcc5-supply:  The input supply for LDO_REG1, LDO_REG2, LDO_REG3
++- vcc6-supply:  The input supply for LDO_REG4, LDO_REG5, LDO_REG6
++- vcc7-supply:  The input supply for LDO_REG7, LDO_REG8, LDO_REG9
 +
- /**
-  * struct regmap_irq_chip - Description of a generic regmap irq_chip.
-  *
++Optional RK809 properties:
++- vcc8-supply:  The input supply for SWITCH_REG1
++- vcc9-supply:  The input supply for DCDC_REG5, SWITCH_REG2
++
++Optional RK817 properties:
++- vcc8-supply:  The input supply for BOOST
++- vcc9-supply:  The input supply for OTG_SWITCH
++
+ Optional RK818 properties:
+ - vcc1-supply:  The input supply for DCDC_REG1
+ - vcc2-supply:  The input supply for DCDC_REG2
+@@ -87,6 +108,21 @@ number as described in RK808 datasheet.
+ 	- SWITCH_REGn
+ 		- valid values for n are 1 to 2
+ 
++Following regulators of the RK809 and RK817 PMIC blocks are supported. Note that
++the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
++number as described in RK809 and RK817 datasheets.
++
++	- DCDC_REGn
++		- valid values for n are 1 to 5 for RK809.
++		- valid values for n are 1 to 4 for RK817.
++	- LDO_REGn
++		- valid values for n are 1 to 9 for RK809.
++		- valid values for n are 1 to 9 for RK817.
++	- SWITCH_REGn
++		- valid values for n are 1 to 2 for RK809.
++	- BOOST for RK817
++	- OTG_SWITCH for RK817
++
+ Following regulators of the RK818 PMIC block are supported. Note that
+ the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
+ number as described in RK818 datasheet.
+@@ -99,6 +135,14 @@ number as described in RK818 datasheet.
+ 	- HDMI_SWITCH
+ 	- OTG_SWITCH
+ 
++It is necessary to configure three pins for both the RK809 and RK817, the three
++pins are "gpio_ts" "gpio_gt" "gpio_slp".
++	The gpio_gt and gpio_ts pins support the gpio function.
++	The gpio_slp pin is for controlling the pmic states, as below:
++		- reset
++		- power down
++		- sleep
++
+ Standard regulator bindings are used inside regulator subnodes. Check
+   Documentation/devicetree/bindings/regulator/regulator.txt
+ for more details
 -- 
 1.9.1
