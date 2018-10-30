@@ -1,84 +1,127 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH v3 5/5] pinctrl: lochnagar: Add support for the Cirrus
- Logic Lochnagar
-Date: Tue, 30 Oct 2018 13:59:48 +0000
-Message-ID: <20181030135948.GJ16508@imbe.wolfsonmicro.main>
-References: <20181019095003.26046-1-ckeepax@opensource.cirrus.com>
- <20181019095003.26046-5-ckeepax@opensource.cirrus.com>
- <CACRpkdbYtphSk+9E5Wzz4kZvQiT=RANDg_hYqRac7pb0M02oAA@mail.gmail.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH 01/21] of: Add cpu node iterator for_each_of_cpu_node()
+Date: Wed, 31 Oct 2018 01:18:00 +1100
+Message-ID: <874ld3jz6v.fsf@concordia.ellerman.id.au>
+References: <20180905193738.19325-1-robh@kernel.org> <20180905193738.19325-2-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbYtphSk+9E5Wzz4kZvQiT=RANDg_hYqRac7pb0M02oAA@mail.gmail.com>
+In-Reply-To: <20180905193738.19325-2-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 30, 2018 at 02:04:20PM +0100, Linus Walleij wrote:
-> On Fri, Oct 19, 2018 at 11:50 AM Charles Keepax
-> <ckeepax@opensource.cirrus.com> wrote:
-> 
-> > Lochnagar is an evaluation and development board for Cirrus
-> > Logic Smart CODEC and Amp devices. It allows the connection of
-> > most Cirrus Logic devices on mini-cards, as well as allowing
-> > connection of various application processor systems to provide a
-> > full evaluation platform. This driver supports the board
-> > controller chip on the Lochnagar board.
-> >
-> > Lochnagar provides many pins which can generally be used for an
-> > audio function such as an AIF or a PDM interface, but also as
-> > GPIOs.
-> >
-> > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> > ---
-> > +static void lochnagar_gpio_set(struct gpio_chip *chip,
-> > +                              unsigned int offset, int value)
-> > +{
-> > +       struct lochnagar_pin_priv *priv = gpiochip_get_data(chip);
-> > +       struct lochnagar *lochnagar = priv->lochnagar;
-> > +       const struct lochnagar_pin *pin = priv->pins[offset].drv_data;
-> > +       int ret;
-> > +
-> > +       value = !!value;
-> 
-> value = value ? BIT(pin->shift) : 0;
-> 
+Hi Rob,
 
-I think this will end up more complex because...
+Sorry I missed this when you posted it.
 
-> > +       dev_dbg(priv->dev, "Set GPIO %s to %s\n",
-> > +               pin->name, value ? "high" : "low");
-> > +
-> > +       switch (pin->type) {
-> > +       case LN_PTYPE_MUX:
-> > +               value |= LN2_OP_GPIO;
+Rob Herring <robh@kernel.org> writes:
+> Iterating thru cpu nodes is a common pattern. Create a common iterator
+> which can find child nodes either by node name or device_type == cpu.
+> Using the former will allow for eventually dropping device_type
+> properties which are deprecated for FDT.
 
-I want the value to be in the lowest bit for this path.
+Device trees we see on powerpc generally don't (never?) use "cpu" as the
+node name for CPU nodes. And many of those device trees come from
+firmware, so we can't update them.
 
-> > +
-> > +               ret = lochnagar_pin_set_mux(priv, pin, value);
-> > +               break;
-> > +       case LN_PTYPE_GPIO:
-> > +               if (pin->invert)
-> > +                       value = !value;
+So dropping support for device_type is a non-starter from our POV.
 
-And then I need to invert the value here.
+cheers
 
-> > +
-> > +               ret = regmap_update_bits(lochnagar->regmap, pin->reg,
-> > +                                        0x1 << pin->shift,
-> 
-> BIT(pin->shift)
-> 
-> > +                                        value << pin->shift);
-> 
-> Just value provided you used the construction above
-> to construct it.
-> 
-
-All the other comments look good will fixup for the next spin.
-
-Thanks,
-Charles
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  drivers/of/base.c  | 39 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/of.h | 11 +++++++++++
+>  2 files changed, 50 insertions(+)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index a055cd1ef96d..4807db0a35b3 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -741,6 +741,45 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
+>  }
+>  EXPORT_SYMBOL(of_get_next_available_child);
+>
+> +/**
+> + *	of_get_next_cpu_node - Iterate on cpu nodes
+> + *	@prev:	previous child of the /cpus node, or NULL to get first
+> + *
+> + *	Returns a cpu node pointer with refcount incremented, use of_node_put()
+> + *	on it when done. Returns NULL when prev is the last child. Decrements
+> + *	the refcount of prev.
+> + */
+> +struct device_node *of_get_next_cpu_node(struct device_node *prev)
+> +{
+> +	struct device_node *next = NULL;
+> +	unsigned long flags;
+> +	struct device_node *node;
+> +
+> +	if (!prev)
+> +		node = of_find_node_by_path("/cpus");
+> +
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+> +	if (prev)
+> +		next = prev->sibling;
+> +	else if (node) {
+> +		next = node->child;
+> +		of_node_put(node);
+> +	}
+> +	for (; next; next = next->sibling) {
+> +		if (!(of_node_name_eq(next, "cpu") ||
+> +		      (next->type && !of_node_cmp(next->type, "cpu"))))
+> +			continue;
+> +		if (!__of_device_is_available(next))
+> +			continue;
+> +		if (of_node_get(next))
+> +			break;
+> +	}
+> +	of_node_put(prev);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +	return next;
+> +}
+> +EXPORT_SYMBOL(of_get_next_cpu_node);
+> +
+>  /**
+>   * of_get_compatible_child - Find compatible child node
+>   * @parent:	parent node
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 99b0ebf49632..1aca0dbd35df 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -353,6 +353,8 @@ extern const void *of_get_property(const struct device_node *node,
+>  				const char *name,
+>  				int *lenp);
+>  extern struct device_node *of_get_cpu_node(int cpu, unsigned int *thread);
+> +extern struct device_node *of_get_next_cpu_node(struct device_node *prev);
+> +
+>  #define for_each_property_of_node(dn, pp) \
+>  	for (pp = dn->properties; pp != NULL; pp = pp->next)
+>
+> @@ -754,6 +756,11 @@ static inline struct device_node *of_get_cpu_node(int cpu,
+>  	return NULL;
+>  }
+>
+> +static inline struct device_node *of_get_next_cpu_node(struct device_node *prev)
+> +{
+> +	return NULL;
+> +}
+> +
+>  static inline int of_n_addr_cells(struct device_node *np)
+>  {
+>  	return 0;
+> @@ -1217,6 +1224,10 @@ static inline int of_property_read_s32(const struct device_node *np,
+>  	for (child = of_get_next_available_child(parent, NULL); child != NULL; \
+>  	     child = of_get_next_available_child(parent, child))
+>
+> +#define for_each_of_cpu_node(cpu) \
+> +	for (cpu = of_get_next_cpu_node(NULL); cpu != NULL; \
+> +	     cpu = of_get_next_cpu_node(cpu))
+> +
+>  #define for_each_node_with_property(dn, prop_name) \
+>  	for (dn = of_find_node_with_property(NULL, prop_name); dn; \
+>  	     dn = of_find_node_with_property(dn, prop_name))
+> --
+> 2.17.1
