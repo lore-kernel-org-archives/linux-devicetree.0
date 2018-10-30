@@ -1,112 +1,177 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH i2c-next v9 5/5] i2c: aspeed: Add bus idle waiting logic
- for multi-master use cases
-Date: Tue, 30 Oct 2018 16:04:24 -0700
-Message-ID: <f5d3d3a3-daa3-fef7-853a-2b543fce0379@linux.intel.com>
-References: <20181030210917.32711-6-jae.hyun.yoo@linux.intel.com>
- <201810310601.Odxb7qSY%fengguang.wu@intel.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of/platform: Support dynamic device tree on AMBA bus
+Date: Tue, 30 Oct 2018 16:04:52 -0700
+Message-ID: <25f61a9b-af37-18b1-9975-cb4ccbbb3aa7@gmail.com>
+References: <1540485597-12240-1-git-send-email-jaewon02.kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201810310601.Odxb7qSY%fengguang.wu@intel.com>
+In-Reply-To: <1540485597-12240-1-git-send-email-jaewon02.kim@samsung.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: kbuild-all@01.org, Wolfram Sang <wsa@the-dreams.de>, Brendan Higgins <brendanhiggins@google.com>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>
+To: Jaewon Kim <jaewon02.kim@gmail.com>, Rob Herring <robh+dt@kernel.org>, Jaewon Kim <jaewon02.kim@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/30/2018 3:22 PM, kbuild test robot wrote:
-> Hi Jae,
+Hi Jaewon,
+
+On 10/25/18 9:39 AM, Jaewon Kim wrote:
+> This patch supports dynamic device-tree for AMBA device.
+
+Add AMBA devices and buses to of_platform_notify() so that dynamic device-tree
+will support AMBA.
+
+> The AMBA device must be registered on the AMBA bus, not the platform bus.
 > 
-> Thank you for the patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on wsa/i2c/for-next]
-> [also build test WARNING on v4.19 next-20181030]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Jae-Hyun-Yoo/dt-bindings-i2c-Add-bus-timeout-ms-and-retries-properties-as-common-optional/20181031-051152
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-next
-> config: xtensa-allyesconfig (attached as .config)
-> compiler: xtensa-linux-gcc (GCC) 8.1.0
-> reproduce:
->          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->          chmod +x ~/bin/make.cross
->          # save the attached .config to linux build tree
->          GCC_VERSION=8.1.0 make.cross ARCH=xtensa
-> 
-> Note: it may well be a FALSE warning. FWIW you are at least aware of it now.
-> http://gcc.gnu.org/wiki/Better_Uninitialized_Warnings
-> 
-> All warnings (new ones prefixed by >>):
-> 
->     In file included from include/linux/ktime.h:25,
->                      from include/linux/rcutiny.h:28,
->                      from include/linux/rcupdate.h:209,
->                      from include/linux/srcu.h:33,
->                      from include/linux/notifier.h:16,
->                      from include/linux/clk.h:17,
->                      from drivers/i2c/busses/i2c-aspeed.c:13:
->     drivers/i2c/busses/i2c-aspeed.c: In function 'aspeed_i2c_master_xfer':
->>> include/linux/jiffies.h:108:15: warning: 'timeout' may be used uninitialized in this function [-Wmaybe-uninitialized]
->        ((long)((b) - (a)) < 0))
->                    ^
->     drivers/i2c/busses/i2c-aspeed.c:607:16: note: 'timeout' was declared here
->       unsigned long timeout;
->                     ^~~~~~~
-> --
->     In file included from include/linux/ktime.h:25,
->                      from include/linux/rcutiny.h:28,
->                      from include/linux/rcupdate.h:209,
->                      from include/linux/srcu.h:33,
->                      from include/linux/notifier.h:16,
->                      from include/linux/clk.h:17,
->                      from drivers/i2c//busses/i2c-aspeed.c:13:
->     drivers/i2c//busses/i2c-aspeed.c: In function 'aspeed_i2c_master_xfer':
->>> include/linux/jiffies.h:108:15: warning: 'timeout' may be used uninitialized in this function [-Wmaybe-uninitialized]
->        ((long)((b) - (a)) < 0))
->                    ^
->     drivers/i2c//busses/i2c-aspeed.c:607:16: note: 'timeout' was declared here
->       unsigned long timeout;
->                     ^~~~~~~
-> 
-> vim +/timeout +108 include/linux/jiffies.h
-> 
-> ^1da177e Linus Torvalds   2005-04-16   91
-> ^1da177e Linus Torvalds   2005-04-16   92  /*
-> ^1da177e Linus Torvalds   2005-04-16   93   *	These inlines deal with timer wrapping correctly. You are
-> ^1da177e Linus Torvalds   2005-04-16   94   *	strongly encouraged to use them
-> ^1da177e Linus Torvalds   2005-04-16   95   *	1. Because people otherwise forget
-> ^1da177e Linus Torvalds   2005-04-16   96   *	2. Because if the timer wrap changes in future you won't have to
-> ^1da177e Linus Torvalds   2005-04-16   97   *	   alter your driver code.
-> ^1da177e Linus Torvalds   2005-04-16   98   *
-> ^1da177e Linus Torvalds   2005-04-16   99   * time_after(a,b) returns true if the time a is after time b.
-> ^1da177e Linus Torvalds   2005-04-16  100   *
-> ^1da177e Linus Torvalds   2005-04-16  101   * Do this with "<0" and ">=0" to only test the sign of the result. A
-> ^1da177e Linus Torvalds   2005-04-16  102   * good compiler would generate better code (and a really good compiler
-> ^1da177e Linus Torvalds   2005-04-16  103   * wouldn't care). Gcc is currently neither.
-> ^1da177e Linus Torvalds   2005-04-16  104   */
-> ^1da177e Linus Torvalds   2005-04-16  105  #define time_after(a,b)		\
-> ^1da177e Linus Torvalds   2005-04-16  106  	(typecheck(unsigned long, a) && \
-> ^1da177e Linus Torvalds   2005-04-16  107  	 typecheck(unsigned long, b) && \
-> 5a581b36 Paul E. McKenney 2013-07-27 @108  	 ((long)((b) - (a)) < 0))
-> ^1da177e Linus Torvalds   2005-04-16  109  #define time_before(a,b)	time_after(b,a)
-> ^1da177e Linus Torvalds   2005-04-16  110
-> 
-> :::::: The code at line 108 was first introduced by commit
-> :::::: 5a581b367b5df0531265311fc681c2abd377e5e6 jiffies: Avoid undefined behavior from signed overflow
-> 
-> :::::: TO: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-> :::::: CC: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-> 
+> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
 > ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+>  drivers/of/platform.c | 93 ++++++++++++++++++++++++++++++++++++++++-----------
+>  1 file changed, 73 insertions(+), 20 deletions(-)
 > 
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 04ad312..b9ac105 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -286,6 +286,22 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+>  	of_node_clear_flag(node, OF_POPULATED);
+>  	return NULL;
+>  }
+> +
+> +/**
+> + * of_find_amba_device_by_node - Find the amba_device associated with a node
+> + * @np: Pointer to device tree node
+> + *
+> + * Returns amba_device pointer, or NULL if not found
+> + */
+> +struct amba_device *of_find_amba_device_by_node(struct device_node *np)
+> +{
+> +	struct device *dev;
+> +
+> +	dev = bus_find_device(&amba_bustype, NULL, np, of_dev_node_match);
+> +	return dev ? to_amba_device(dev) : NULL;
+> +}
+> +EXPORT_SYMBOL(of_find_amba_device_by_node);
+> +
+>  #else /* CONFIG_ARM_AMBA */
+>  static struct amba_device *of_amba_device_create(struct device_node *node,
+>  						 const char *bus_id,
+> @@ -294,6 +310,12 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+>  {
+>  	return NULL;
+>  }
+> +
+> +struct amba_device *of_find_amba_device_by_node(struct device_node *np)
+> +{
+> +	return NULL;
+> +}
+> +EXPORT_SYMBOL(of_find_amba_device_by_node);
+>  #endif /* CONFIG_ARM_AMBA */
+>  
+>  /**
+> @@ -665,6 +687,7 @@ static int of_platform_notify(struct notifier_block *nb,
+>  {
+>  	struct of_reconfig_data *rd = arg;
+>  	struct platform_device *pdev_parent, *pdev;
+> +	struct amba_device *adev_p, *adev;
+>  	bool children_left;
+>  
+>  	switch (of_reconfig_get_state_change(action, rd)) {
+> @@ -677,17 +700,34 @@ static int of_platform_notify(struct notifier_block *nb,
+>  		if (of_node_check_flag(rd->dn, OF_POPULATED))
+>  			return NOTIFY_OK;
+>  
+> -		/* pdev_parent may be NULL when no bus platform device */
+> -		pdev_parent = of_find_device_by_node(rd->dn->parent);
+> -		pdev = of_platform_device_create(rd->dn, NULL,
+> -				pdev_parent ? &pdev_parent->dev : NULL);
+> -		of_dev_put(pdev_parent);
+> -
+> -		if (pdev == NULL) {
+> -			pr_err("%s: failed to create for '%pOF'\n",
+> -					__func__, rd->dn);
+> -			/* of_platform_device_create tosses the error code */
+> -			return notifier_from_errno(-EINVAL);
+> +		if (of_device_is_compatible(rd->dn, "arm,primecell")) {
+> +			/* adev_p may be NULL when no bus amba device */
+> +			adev_p = of_find_amba_device_by_node(rd->dn->parent);
+> +			adev = of_amba_device_create(rd->dn, NULL, NULL,
+> +					adev_p ? &adev_p->dev : NULL);
+> +
 
-This is a false warning.
+> +			if (adev_p)
+> +				put_device(&adev_p->dev);
 
-The 'timeout' local variable will be initialized properly if it's gonna
-be used when the multi-master property is set.
+Please follow the same model as of_dev_put() here, create a new function
+of_amba_dev_put() to implement these two lines.
 
--Jae
+
+> +
+> +			if (adev == NULL) {
+> +				pr_err("%s: failed to create for '%s'\n",
+> +						__func__, rd->dn->full_name);
+> +				/* of_amba_device_create tosses the error */
+> +				return notifier_from_errno(-EINVAL);
+> +			}
+> +		} else {
+> +			/* pdev_parent may be NULL when no bus platform device*/
+> +			pdev_parent = of_find_device_by_node(rd->dn->parent);
+> +			pdev = of_platform_device_create(rd->dn, NULL,
+> +					pdev_parent ? &pdev_parent->dev : NULL);
+> +			of_dev_put(pdev_parent);
+> +
+> +			if (pdev == NULL) {
+> +				pr_err("%s: failed to create for '%pOF'\n",
+> +						__func__, rd->dn);
+> +				/* of_platform_device_create tosses the error */
+> +				return notifier_from_errno(-EINVAL);
+> +			}
+>  		}
+>  		break;
+>  
+> @@ -698,15 +738,28 @@ static int of_platform_notify(struct notifier_block *nb,
+>  			return NOTIFY_OK;
+>  
+>  		/* find our device by node */
+> -		pdev = of_find_device_by_node(rd->dn);
+> -		if (pdev == NULL)
+> -			return NOTIFY_OK;	/* no? not meant for us */
+> -
+> -		/* unregister takes one ref away */
+> -		of_platform_device_destroy(&pdev->dev, &children_left);
+> -
+> -		/* and put the reference of the find */
+> -		of_dev_put(pdev);
+> +		if (of_device_is_compatible(rd->dn, "arm,primecell")) {
+> +			adev = of_find_amba_device_by_node(rd->dn);
+> +			if (adev == NULL)
+> +				return NOTIFY_OK; /* no? not meant for us */
+> +
+> +			/* unregister takes one ref away */
+> +			of_platform_device_destroy(&adev->dev, &children_left);
+> +
+> +			/* and put the reference of the find */
+
+> +			if (adev)
+> +				put_device(&adev->dev);
+
+of_amba_dev_put() here also
+
+-Frank
+
+
+> +		} else {
+> +			pdev = of_find_device_by_node(rd->dn);
+> +			if (pdev == NULL)
+> +				return NOTIFY_OK; /* no? not meant for us */
+> +
+> +			/* unregister takes one ref away */
+> +			of_platform_device_destroy(&pdev->dev, &children_left);
+> +
+> +			/* and put the reference of the find */
+> +			of_dev_put(pdev);
+> +		}
+>  		break;
+>  	}
+>  
+> 
