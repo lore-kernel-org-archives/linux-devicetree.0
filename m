@@ -1,379 +1,92 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH 07/10] hikey960: Support usb functionality of Hikey960
-Date: Tue, 30 Oct 2018 10:50:22 +0800
-Message-ID: <33a6ac59-b545-e2c8-2bb7-0a5460fcf5e9@huawei.com>
-References: <20181027095820.40056-1-chenyu56@huawei.com>
- <20181027095820.40056-8-chenyu56@huawei.com>
- <20181029143040.GB14534@kuha.fi.intel.com>
+From: Yinbo Zhu <yinbo.zhu@nxp.com>
+Subject: RE: [PATCH v7 2/6] soc/fsl/guts: Add definition for LX2160A
+Date: Tue, 30 Oct 2018 03:39:13 +0000
+Message-ID: <VI1PR04MB41589506EDE16676AB561FBDE9CC0@VI1PR04MB4158.eurprd04.prod.outlook.com>
+References: <1540759926-3641-1-git-send-email-vabhav.sharma@nxp.com>
+ <1540759926-3641-3-git-send-email-vabhav.sharma@nxp.com>
+ <VI1PR04MB4976D4A33E0561D125BE837486F30@VI1PR04MB4976.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181029143040.GB14534@kuha.fi.intel.com>
+In-Reply-To: <VI1PR04MB4976D4A33E0561D125BE837486F30@VI1PR04MB4976.eurprd04.prod.outlook.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: wangbinghui@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>
+To: Poonam Aggrwal <poonam.aggrwal@nxp.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "oss@buserror.net" <oss@buserror.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc: "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Udit Kumar <udit.kumar@nxp.com>, Pankaj Bansal <pankaj.bansal@nxp.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, Varun Sethi <V.Sethi@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi
-
-
-On 2018/10/29 22:30, Heikki Krogerus wrote:
-> Hi,
->
-> On Sat, Oct 27, 2018 at 05:58:17PM +0800, Yu Chen wrote:
->> This driver handles usb hub power on and typeC port event of HiKey960 board:
->> 1)DP&DM switching between usb hub and typeC port base on typeC port
->> state
-> By "hub" do you mean you have some kind of an integrated USB hub on
-> your SoC?
-No. The "hub" is on the board of HiKey960 development platform.
-
->> 2)Control power of usb hub on Hikey960
->> 3)Control vbus of typeC port
->> 4)Handle typeC port event to switch data role
-> Is your role switch a discrete component, or something part of the SoC?
-Yes, the dwc3 usb controller of the SoC needs switch between device and host
-mode based on the typeC port event.
-
->
->> +#define USB_SWITCH_TO_HUB 1
->> +#define USB_SWITCH_TO_TYPEC 0
->> +
->> +#define INVALID_GPIO_VALUE (-1)
->> +
->> +struct hisi_hikey_usb {
->> +	int otg_switch_gpio;
->> +	int typec_vbus_gpio;
->> +	int typec_vbus_enable_val;
->> +	int hub_vbus_gpio;
-> I think you should use struct gpio_desc and gpiod_*() API with the
-> gpios.
-
-You are right, I will fix that. Thanks!
->> +	struct extcon_dev *edev;
->> +	struct usb_role_switch *role_sw;
->> +};
->> +
->> +static const unsigned int usb_extcon_cable[] = {
->> +	EXTCON_USB,
->> +	EXTCON_USB_HOST,
->> +	EXTCON_NONE,
->> +};
->> +
->> +static void hub_power_ctrl(struct hisi_hikey_usb *hisi_hikey_usb, int value)
->> +{
->> +	int gpio = hisi_hikey_usb->hub_vbus_gpio;
->> +
->> +	if (gpio_is_valid(gpio))
->> +		gpio_set_value(gpio, value);
->> +}
->> +
->> +static void usb_switch_ctrl(struct hisi_hikey_usb *hisi_hikey_usb,
->> +		int switch_to)
->> +{
->> +	int gpio = hisi_hikey_usb->otg_switch_gpio;
->> +	const char *switch_to_str = (switch_to == USB_SWITCH_TO_HUB) ?
->> +		"hub" : "typec";
->> +
->> +	if (!gpio_is_valid(gpio)) {
->> +		pr_err("%s: otg_switch_gpio is err\n", __func__);
->> +		return;
->> +	}
->> +
->> +	if (gpio_get_value(gpio) == switch_to) {
->> +		pr_info("%s: already switch to %s\n", __func__, switch_to_str);
-> That kind of prints are really just noise.
->
->> +		return;
->> +	}
->> +
->> +	gpio_direction_output(gpio, switch_to);
->> +	pr_info("%s: switch to %s\n", __func__, switch_to_str);
-> That is also just noise.
->
->> +}
->> +
->> +static void usb_typec_power_ctrl(struct hisi_hikey_usb *hisi_hikey_usb,
->> +		int value)
->> +{
->> +	int gpio = hisi_hikey_usb->typec_vbus_gpio;
->> +
->> +	if (!gpio_is_valid(gpio)) {
->> +		pr_err("%s: typec power gpio is err\n", __func__);
->> +		return;
->> +	}
->> +
->> +	if (gpio_get_value(gpio) == value) {
->> +		pr_info("%s: typec power no change\n", __func__);
-> Ditto.
->
->> +		return;
->> +	}
->> +
->> +	gpio_direction_output(gpio, value);
->> +	pr_info("%s: set typec vbus gpio to %d\n", __func__, value);
-> Ditto.
->
->> +}
->> +
->> +static int extcon_hisi_pd_set_role(struct device *dev, enum usb_role role)
->> +{
->> +	struct hisi_hikey_usb *hisi_hikey_usb = dev_get_drvdata(dev);
->> +
->> +	dev_info(dev, "%s:set usb role to %d\n", __func__, role);
->> +	switch (role) {
->> +	case USB_ROLE_NONE:
->> +		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_HUB);
->> +		usb_typec_power_ctrl(hisi_hikey_usb,
->> +				!hisi_hikey_usb->typec_vbus_enable_val);
->> +		hub_power_ctrl(hisi_hikey_usb, HUB_VBUS_POWER_ON);
->> +		extcon_set_state_sync(hisi_hikey_usb->edev, EXTCON_USB, false);
->> +		extcon_set_state_sync(hisi_hikey_usb->edev, EXTCON_USB_HOST,
->> +				true);
->> +		break;
->> +	case USB_ROLE_HOST:
->> +		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_TYPEC);
->> +		usb_typec_power_ctrl(hisi_hikey_usb,
->> +				hisi_hikey_usb->typec_vbus_enable_val);
->> +		extcon_set_state_sync(hisi_hikey_usb->edev, EXTCON_USB, false);
->> +		extcon_set_state_sync(hisi_hikey_usb->edev, EXTCON_USB_HOST,
->> +				true);
->> +		break;
->> +	case USB_ROLE_DEVICE:
->> +		hub_power_ctrl(hisi_hikey_usb, HUB_VBUS_POWER_OFF);
->> +		usb_typec_power_ctrl(hisi_hikey_usb,
->> +				hisi_hikey_usb->typec_vbus_enable_val);
->> +		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_TYPEC);
->> +		extcon_set_state_sync(hisi_hikey_usb->edev, EXTCON_USB_HOST,
->> +				false);
->> +		extcon_set_state_sync(hisi_hikey_usb->edev, EXTCON_USB, true);
->> +		break;
->> +	}
-> If I understood the above correctly, you are controlling the VBUS
-> based on the data role, right?
-Yes, you are right.
-> With USB Type-C connectors the power and data roles are separate, so
-> you should not be doing that.
->
-> But since you are controlling the VBUS with a single GPIO, wouldn't it
-> be easier to just give the Type-C port controller device that GPIO
-> resources and let the Type-C drivers take care of it? You could add a
-> "set_vbus" callback to struct tcpci_data and take care of the GPIO in
-> tcpci_rt1711h.c, or alternatively, just handle it in tcpci.c.
-I will try to implement the "set_vbus" callback.
-
->> +	return 0;
->> +}
->> +
->> +static enum usb_role extcon_hisi_pd_get_role(struct device *dev)
->> +{
->> +	struct hisi_hikey_usb *hisi_hikey_usb = dev_get_drvdata(dev);
->> +
->> +	return usb_role_switch_get_role(hisi_hikey_usb->role_sw);
->> +}
->> +
->> +static const struct usb_role_switch_desc sw_desc = {
->> +	.set = extcon_hisi_pd_set_role,
->> +	.get = extcon_hisi_pd_get_role,
->> +	.allow_userspace_control = true,
->> +};
->> +
->> +static int hisi_hikey_usb_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct device_node *root = dev->of_node;
->> +	struct hisi_hikey_usb *hisi_hikey_usb;
->> +	int ret;
->> +
->> +	hisi_hikey_usb = devm_kzalloc(dev, sizeof(*hisi_hikey_usb), GFP_KERNEL);
->> +	if (!hisi_hikey_usb)
->> +		return -ENOMEM;
->> +
->> +	dev_set_name(dev, "hisi_hikey_usb");
->> +
->> +	hisi_hikey_usb->hub_vbus_gpio = INVALID_GPIO_VALUE;
->> +	hisi_hikey_usb->otg_switch_gpio = INVALID_GPIO_VALUE;
->> +	hisi_hikey_usb->typec_vbus_gpio = INVALID_GPIO_VALUE;
->> +
->> +	hisi_hikey_usb->hub_vbus_gpio = of_get_named_gpio(root,
->> +			"hub_vdd33_en_gpio", 0);
->> +	if (!gpio_is_valid(hisi_hikey_usb->hub_vbus_gpio)) {
->> +		pr_err("%s: hub_vbus_gpio is err\n", __func__);
->> +		return hisi_hikey_usb->hub_vbus_gpio;
->> +	}
->> +
->> +	ret = gpio_request(hisi_hikey_usb->hub_vbus_gpio, "hub_vbus_int_gpio");
->> +	if (ret) {
->> +		pr_err("%s: request hub_vbus_gpio err\n", __func__);
->> +		hisi_hikey_usb->hub_vbus_gpio = INVALID_GPIO_VALUE;
->> +		return ret;
->> +	}
->> +
->> +	ret = gpio_direction_output(hisi_hikey_usb->hub_vbus_gpio,
->> +			HUB_VBUS_POWER_ON);
->> +	if (ret) {
->> +		pr_err("%s: power on hub vbus err\n", __func__);
->> +		goto free_gpio1;
->> +	}
->> +
->> +	hisi_hikey_usb->typec_vbus_gpio = of_get_named_gpio(root,
->> +		"typc_vbus_int_gpio,typec-gpios", 0);
->> +	if (!gpio_is_valid(hisi_hikey_usb->typec_vbus_gpio)) {
->> +		pr_err("%s: typec_vbus_gpio is err\n", __func__);
->> +		ret = hisi_hikey_usb->typec_vbus_gpio;
->> +		goto free_gpio1;
->> +	}
->> +
->> +	ret = gpio_request(hisi_hikey_usb->typec_vbus_gpio,
->> +			"typc_vbus_int_gpio");
->> +	if (ret) {
->> +		pr_err("%s: request typec_vbus_gpio err\n", __func__);
->> +		hisi_hikey_usb->typec_vbus_gpio = INVALID_GPIO_VALUE;
->> +		goto free_gpio1;
->> +	}
->> +
->> +	ret = of_property_read_u32(root, "typc_vbus_enable_val",
->> +				   &hisi_hikey_usb->typec_vbus_enable_val);
->> +	if (ret) {
->> +		pr_err("%s: typc_vbus_enable_val can't get\n", __func__);
->> +		goto free_gpio2;
->> +	}
->> +
->> +	hisi_hikey_usb->typec_vbus_enable_val =
->> +		!!hisi_hikey_usb->typec_vbus_enable_val;
->> +
->> +	ret = gpio_direction_output(hisi_hikey_usb->typec_vbus_gpio,
->> +				    hisi_hikey_usb->typec_vbus_enable_val);
->> +	if (ret) {
->> +		pr_err("%s: power on typec vbus err", __func__);
->> +		goto free_gpio2;
->> +	}
->> +
->> +	if (of_device_is_compatible(root, "hisilicon,hikey960_usb")) {
-> Instead of that kind of checks, isn't it enough to just use optional
-> gpios?
->
->> +		hisi_hikey_usb->otg_switch_gpio = of_get_named_gpio(root,
->> +				"otg_gpio", 0);
->> +		if (!gpio_is_valid(hisi_hikey_usb->otg_switch_gpio)) {
->> +			pr_info("%s: otg_switch_gpio is err\n", __func__);
->> +			goto free_gpio2;
->> +		}
->> +
->> +		ret = gpio_request(hisi_hikey_usb->otg_switch_gpio,
->> +				"otg_switch_gpio");
->> +		if (ret) {
->> +			hisi_hikey_usb->otg_switch_gpio = INVALID_GPIO_VALUE;
->> +			pr_err("%s: request typec_vbus_gpio err\n", __func__);
->> +			goto free_gpio2;
->> +		}
->> +	}
->> +
->> +	hisi_hikey_usb->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
->> +	if (IS_ERR(hisi_hikey_usb->edev)) {
->> +		dev_err(dev, "failed to allocate extcon device\n");
->> +		goto free_gpio2;
->> +	}
->> +
->> +	ret = devm_extcon_dev_register(dev, hisi_hikey_usb->edev);
->> +	if (ret < 0) {
->> +		dev_err(dev, "failed to register extcon device\n");
->> +		goto free_gpio2;
->> +	}
->> +	extcon_set_state(hisi_hikey_usb->edev, EXTCON_USB_HOST, true);
-> Is the primary purpose for this extcon device to satisfy the DRD code
-> in dwc3 driver?
-Yes. I need it to switch mode of dwc3.
->> +	hisi_hikey_usb->role_sw = usb_role_switch_register(dev, &sw_desc);
->> +	if (IS_ERR(hisi_hikey_usb->role_sw))
->> +		goto free_gpio2;
-> It looks a bit clumsy to me to register both the extcon device and the
-> mux device, but I'm guessing you need to get a notification in dwc3
-> driver when the role changes, right? Perhaps we should simply add
-> notification chain to the role mux structure. That could potentially
-> allow this kind of code to be organized a bit better.
->
->> +	platform_set_drvdata(pdev, hisi_hikey_usb);
->> +
->> +	return 0;
->> +
->> +free_gpio2:
->> +	if (gpio_is_valid(hisi_hikey_usb->typec_vbus_gpio)) {
->> +		gpio_free(hisi_hikey_usb->typec_vbus_gpio);
->> +		hisi_hikey_usb->typec_vbus_gpio = INVALID_GPIO_VALUE;
->> +	}
->> +
->> +free_gpio1:
->> +	if (gpio_is_valid(hisi_hikey_usb->hub_vbus_gpio)) {
->> +		gpio_free(hisi_hikey_usb->hub_vbus_gpio);
->> +		hisi_hikey_usb->hub_vbus_gpio = INVALID_GPIO_VALUE;
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +static int  hisi_hikey_usb_remove(struct platform_device *pdev)
->> +{
->> +	struct hisi_hikey_usb *hisi_hikey_usb = platform_get_drvdata(pdev);
->> +
->> +	if (gpio_is_valid(hisi_hikey_usb->otg_switch_gpio)) {
->> +		gpio_free(hisi_hikey_usb->otg_switch_gpio);
->> +		hisi_hikey_usb->otg_switch_gpio = INVALID_GPIO_VALUE;
->> +	}
->> +
->> +	if (gpio_is_valid(hisi_hikey_usb->typec_vbus_gpio)) {
->> +		gpio_free(hisi_hikey_usb->typec_vbus_gpio);
->> +		hisi_hikey_usb->typec_vbus_gpio = INVALID_GPIO_VALUE;
->> +	}
->> +
->> +	if (gpio_is_valid(hisi_hikey_usb->hub_vbus_gpio)) {
->> +		gpio_free(hisi_hikey_usb->hub_vbus_gpio);
->> +		hisi_hikey_usb->hub_vbus_gpio = INVALID_GPIO_VALUE;
->> +	}
->> +
->> +	usb_role_switch_unregister(hisi_hikey_usb->role_sw);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id id_table_hisi_hikey_usb[] = {
->> +	{.compatible = "hisilicon,gpio_hubv1"},
->> +	{.compatible = "hisilicon,hikey960_usb"},
->> +	{}
->> +};
->> +
->> +static struct platform_driver  hisi_hikey_usb_driver = {
->> +	.probe = hisi_hikey_usb_probe,
->> +	.remove = hisi_hikey_usb_remove,
->> +	.driver = {
->> +		.name = DEVICE_DRIVER_NAME,
->> +		.of_match_table = of_match_ptr(id_table_hisi_hikey_usb),
->> +
->> +	},
->> +};
->> +
->> +module_platform_driver(hisi_hikey_usb_driver);
->> +
->> +MODULE_AUTHOR("Yu Chen <chenyu56@huawei.com>");
->> +MODULE_DESCRIPTION("Driver Support for USB functionality of Hikey");
->> +MODULE_LICENSE("GPL v2");
->> -- 
->> 2.15.0-rc2
-> I think you have too many things integrated into this one driver. IMO
-> it would at least be better to just let the Type-C port driver take
-> care of VBUS like I mentioned above. I'm also wondering if it would
-> make sense to handle the role switch and the "hub" in their own
-> drivers, but I don't know enough about your platform at this point to
-> say for sure.
-
-Thanks for your advice! The HiKey 960 development platform is based around the Huawei Kirin 960.
-The Hikey960 Development Board supports three USB host port via a USB hub (U1803 USB5734).
-The Hikey960 Development Board also implements a USB2.0 typeC OTG port. 
-The Dp and Dm of Soc can be switched between the typeC port and the USB hub.
-If there is no cable on the typeC port, then dwc3 core of Soc will be switch to host mode and the
-driver of this patch will switch Dp and Dp to the hub. The driver also power on the hub in the meantime.
->
-> br,
->
+DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBQb29uYW0gQWdncndhbCANClNl
+bnQ6IDIwMTjE6jEw1MIyOcjVIDE5OjA5DQpUbzogVmFiaGF2IFNoYXJtYSA8dmFiaGF2LnNoYXJt
+YUBueHAuY29tPjsgc3VkZWVwLmhvbGxhQGFybS5jb207IG9zc0BidXNlcnJvci5uZXQ7IGxpbnV4
+LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyByb2Jo
+K2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBsaW51eHBwYy1kZXZAbGlzdHMu
+b3psYWJzLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBtdHVycXVl
+dHRlQGJheWxpYnJlLmNvbTsgc2JveWRAa2VybmVsLm9yZzsgcmp3QHJqd3lzb2NraS5uZXQ7IHZp
+cmVzaC5rdW1hckBsaW5hcm8ub3JnOyBsaW51eC1jbGtAdmdlci5rZXJuZWwub3JnOyBsaW51eC1w
+bUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbC1vd25lckB2Z2VyLmtlcm5lbC5vcmc7IGNh
+dGFsaW4ubWFyaW5hc0Bhcm0uY29tOyB3aWxsLmRlYWNvbkBhcm0uY29tOyBncmVna2hAbGludXhm
+b3VuZGF0aW9uLm9yZzsgYXJuZEBhcm5kYi5kZTsga3N0ZXdhcnRAbGludXhmb3VuZGF0aW9uLm9y
+ZzsgeWFtYWRhLm1hc2FoaXJvQHNvY2lvbmV4dC5jb207IExlbyBMaSA8bGVveWFuZy5saUBueHAu
+Y29tPjsgc2hhd25ndW9Aa2VybmVsLm9yZw0KQ2M6IHVsZi5oYW5zc29uQGxpbmFyby5vcmc7IFVk
+aXQgS3VtYXIgPHVkaXQua3VtYXJAbnhwLmNvbT47IFBhbmthaiBCYW5zYWwgPHBhbmthai5iYW5z
+YWxAbnhwLmNvbT47IGxpbnV4QGFybWxpbnV4Lm9yZy51azsgYWRyaWFuLmh1bnRlckBpbnRlbC5j
+b207IFZhcnVuIFNldGhpIDxWLlNldGhpQG54cC5jb20+OyBWYWJoYXYgU2hhcm1hIDx2YWJoYXYu
+c2hhcm1hQG54cC5jb20+OyBZaW5ibyBaaHUgPHlpbmJvLnpodUBueHAuY29tPg0KU3ViamVjdDog
+UkU6IFtQQVRDSCB2NyAyLzZdIHNvYy9mc2wvZ3V0czogQWRkIGRlZmluaXRpb24gZm9yIExYMjE2
+MEENCg0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtYXJt
+LWtlcm5lbCANCj4gW21haWx0bzpsaW51eC1hcm0ta2VybmVsLWJvdW5jZXNAbGlzdHMuaW5mcmFk
+ZWFkLm9yZ10NCj4gT24gQmVoYWxmIE9mIFZhYmhhdiBTaGFybWENCj4gU2VudDogTW9uZGF5LCBP
+Y3RvYmVyIDI5LCAyMDE4IDI6MjggUE0NCj4gVG86IHN1ZGVlcC5ob2xsYUBhcm0uY29tOyBvc3NA
+YnVzZXJyb3IubmV0OyANCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJl
+ZUB2Z2VyLmtlcm5lbC5vcmc7IA0KPiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBh
+cm0uY29tOyANCj4gbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IGxpbnV4LWFybS1rZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gbXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb207IHNib3lk
+QGtlcm5lbC5vcmc7IHJqd0Byand5c29ja2kubmV0OyANCj4gdmlyZXNoLmt1bWFyQGxpbmFyby5v
+cmc7IGxpbnV4LWNsa0B2Z2VyLmtlcm5lbC5vcmc7IA0KPiBsaW51eC1wbUB2Z2VyLmtlcm5lbC5v
+cmc7IGxpbnV4LWtlcm5lbC1vd25lckB2Z2VyLmtlcm5lbC5vcmc7IA0KPiBjYXRhbGluLm1hcmlu
+YXNAYXJtLmNvbTsgd2lsbC5kZWFjb25AYXJtLmNvbTsgDQo+IGdyZWdraEBsaW51eGZvdW5kYXRp
+b24ub3JnOyBhcm5kQGFybmRiLmRlOyANCj4ga3N0ZXdhcnRAbGludXhmb3VuZGF0aW9uLm9yZzsg
+eWFtYWRhLm1hc2FoaXJvQHNvY2lvbmV4dC5jb207IExlbyBMaSANCj4gPGxlb3lhbmcubGlAbnhw
+LmNvbT47IHNoYXduZ3VvQGtlcm5lbC5vcmcNCj4gQ2M6IHVsZi5oYW5zc29uQGxpbmFyby5vcmc7
+IFVkaXQgS3VtYXIgPHVkaXQua3VtYXJAbnhwLmNvbT47IFBhbmthaiANCj4gQmFuc2FsIDxwYW5r
+YWouYmFuc2FsQG54cC5jb20+OyBsaW51eEBhcm1saW51eC5vcmcudWs7IA0KPiBhZHJpYW4uaHVu
+dGVyQGludGVsLmNvbTsgVmFydW4gU2V0aGkgPFYuU2V0aGlAbnhwLmNvbT47IFZhYmhhdiBTaGFy
+bWEgDQo+IDx2YWJoYXYuc2hhcm1hQG54cC5jb20+OyBZaW5ibyBaaHUgPHlpbmJvLnpodUBueHAu
+Y29tPg0KPiBTdWJqZWN0OiBbUEFUQ0ggdjcgMi82XSBzb2MvZnNsL2d1dHM6IEFkZCBkZWZpbml0
+aW9uIGZvciBMWDIxNjBBDQo+IA0KPiBBZGRpbmcgY29tcGF0aWJsZSBzdHJpbmcgImx4MjE2MGEt
+ZGNmZyIgdG8gaW5pdGlhbGl6ZSBndXRzIGRyaXZlciBmb3IgDQo+IGx4MjE2MCBhbmQgU29DIGRp
+ZSBhdHRyaWJ1dGUgZGVmaW5pdGlvbiBmb3IgTFgyMTYwQQ0KPiANCj4gU2lnbmVkLW9mZi1ieTog
+VmFiaGF2IFNoYXJtYSA8dmFiaGF2LnNoYXJtYUBueHAuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBZ
+aW5ibyBaaHUgPHlpbmJvLnpodUBueHAuY29tPg0KPiBBY2tlZC1ieTogTGkgWWFuZyA8bGVveWFu
+Zy5saUBueHAuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvc29jL2ZzbC9ndXRzLmMgfCA2ICsrKysr
+Kw0KPiAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvc29jL2ZzbC9ndXRzLmMgYi9kcml2ZXJzL3NvYy9mc2wvZ3V0cy5jIGluZGV4IA0K
+PiAzMDJlMGM4Li5iY2FiMWVlIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3NvYy9mc2wvZ3V0cy5j
+DQo+ICsrKyBiL2RyaXZlcnMvc29jL2ZzbC9ndXRzLmMNCj4gQEAgLTEwMCw2ICsxMDAsMTEgQEAg
+c3RhdGljIGNvbnN0IHN0cnVjdCBmc2xfc29jX2RpZV9hdHRyIGZzbF9zb2NfZGllW10gPSB7DQo+
+ICAJICAuc3ZyCQk9IDB4ODcwMDAwMDAsDQo+ICAJICAubWFzawkJPSAweGZmZjcwMDAwLA0KPiAg
+CX0sDQo+ICsJLyogRGllOiBMWDIxNjBBLCBTb0M6IExYMjE2MEEvTFgyMTIwQS9MWDIwODBBICov
+DQo+ICsJeyAuZGllICAgICAgICAgID0gIkxYMjE2MEEiLA0KPiArCSAgLnN2ciAgICAgICAgICA9
+IDB4ODczNjAwMDAsDQo+RG8gYWxsICB0aGUgdGhyZWV2YXJpYW50cyAiIExYMjE2MEEvTFgyMTIw
+QS9MWDIwODBBIiAgaGF2ZSBzYW1lIFNWUj8NCkRlYXIgUG9vbmFtIEFnZ3J3YWwsDQoNCk5vLCBi
+dXQgdGhlIHRocmVldmFyaWFudHMgIiBMWDIxNjBBL0xYMjEyMEEvTFgyMDgwQSIgaGFzIHNhbWUg
+c3ZyIHZhbHVlIGluIHRoaXMgc3RydWN0LA0KQmVjYXVzZSB0aGV5IGFsbCBhcmUgdmFyaWFudHMg
+b2YgbHgyMTYwLCB0aGUgc3ZyIHZhbHVlIGluIHRoaXMgc3RydWN0IGlzIGVxdWFsIHRoZSBzb2Mg
+c3ZyICYmIG1hc2sNCg0KQmVzdCBSZWdhcmRzLA0KWWluYm8gWmh1Lg0KDQo+ICsJICAubWFzayAg
+ICAgICAgID0gMHhmZjNmMDAwMCwNCj4gKwl9LA0KPiAgCXsgfSwNCj4gIH07DQo+IA0KPiBAQCAt
+MjIyLDYgKzIyNyw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGZzbF9ndXRz
+X29mX21hdGNoW10gPSB7DQo+ICAJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMxMDg4YS1kY2ZnIiwg
+fSwNCj4gIAl7IC5jb21wYXRpYmxlID0gImZzbCxsczEwMTJhLWRjZmciLCB9LA0KPiAgCXsgLmNv
+bXBhdGlibGUgPSAiZnNsLGxzMTA0NmEtZGNmZyIsIH0sDQo+ICsJeyAuY29tcGF0aWJsZSA9ICJm
+c2wsbHgyMTYwYS1kY2ZnIiwgfSwNCj4gIAl7fQ0KPiAgfTsNCj4gIE1PRFVMRV9ERVZJQ0VfVEFC
+TEUob2YsIGZzbF9ndXRzX29mX21hdGNoKTsNCj4gLS0NCj4gMi43LjQNCj4gDQo+IA0KPiBfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiBsaW51eC1hcm0t
+a2VybmVsIG1haWxpbmcgbGlzdA0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmcNCj4gaHR0cHM6Ly9lbWVhMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3Vy
+bD1odHRwJTNBJTJGJTJGbGlzdA0KPiBzLmluZnINCj4gYWRlYWQub3JnJTJGbWFpbG1hbiUyRmxp
+c3RpbmZvJTJGbGludXgtYXJtLQ0KPiBrZXJuZWwmYW1wO2RhdGE9MDIlN0MwMSU3Q3Bvb25hbS5h
+Z2dyd2FsJTQwbnhwLmNvbSU3Q2Q5YjdjMzZjNzg2DQo+IDU0Y2Q2ZGM0MDA4ZDYzZDdmZWU2MyU3
+QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzANCj4gJTdDNjM2NzY0MDE3
+MDAxNTA0Mjg4JmFtcDtzZGF0YT1wcUZNbHc2eVZySHJ2bjRZUmhxaiUyRm1vT25Tc2NyWnUNCj4g
+dGNvWW4zSW44T0pjJTNEJmFtcDtyZXNlcnZlZD0wDQo=
