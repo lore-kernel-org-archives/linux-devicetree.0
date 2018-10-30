@@ -1,53 +1,72 @@
-From: Thor Thayer <thor.thayer@linux.intel.com>
-Subject: Re: [PATCHv4 0/2] iommu/arm-smmu: Add Stratix10 SMMU Support
-Date: Tue, 30 Oct 2018 08:38:17 -0500
-Message-ID: <65377977-8534-557a-b77b-f5f8f6962385@linux.intel.com>
-References: <1538773020-27784-1-git-send-email-thor.thayer@linux.intel.com>
-Reply-To: thor.thayer@linux.intel.com
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v4 2/7] dt-bindings: ti-lmu: Modify dt bindings for the
+ LM3697
+Date: Tue, 30 Oct 2018 08:40:04 -0500
+Message-ID: <bdb73aa2-60d9-3356-f934-091f738e20a0@ti.com>
+References: <20181023170623.31820-1-dmurphy@ti.com>
+ <20181023170623.31820-2-dmurphy@ti.com> <20181024090421.GB24997@amd>
+ <e8800c2e-8ada-7a0d-c1a6-14ddcbe1576d@ti.com> <20181024145434.GC9327@bogus>
+ <beb1a6e1-8120-be94-b1a4-60ea6721765d@ti.com>
+ <ade3121a-58ab-c0c3-6605-cf7d6a638da0@gmail.com> <20181026083703.GB19434@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538773020-27784-1-git-send-email-thor.thayer@linux.intel.com>
+In-Reply-To: <20181026083703.GB19434@amd>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, will.deacon@arm.com, robin.murphy@arm.com, joro@8bytes.org, aisheng.dong@nxp.com, sboyd@kernel.org
-Cc: vivek.gautam@codeaurora.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org
+To: Pavel Machek <pavel@ucw.cz>, Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, lee.jones@linaro.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-Gentle ping...
+All
 
-On 10/05/2018 03:56 PM, thor.thayer@linux.intel.com wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
+On 10/26/2018 03:37 AM, Pavel Machek wrote:
+> Hi!
 > 
-> Add SMMU support for the Stratix10 SOCFPGA. This patch requires
-> clock enables for the master TBUs and therefore has a dependency
-> on patches currently being reviewed.
+>>> Do you have an opinion on this?
+>>
+>> This is this problem with the Device Tree's scope of responsibility.
+>> It is defined as a means for "describing the hardware", but often
+>> this rule is abused by the properties that fall into "configuration"
+>> category. E.g. default-state, retain-state-suspended from leds-gpio.txt
+>> or linux-default-trigger from common LED bindings.
 > 
-> This patchset is dependent on the patch series [1]
+> "retain-state-suspended" is actually hardware property. On PCs,
+> (most?) LEDs will go off in suspend. On android phones, LEDs stay on
+> while suspended.
 > 
-> v4  Address Vivek's comment.
->      Abandon dependency on [2] (no recent activity/reviews)
->      Implement device tree parsing of clock on top of [1].
-> v3  Address comment from Robin and change dependency on device
->      tree bulk clock patches [2].
-> v2  Change to dependency on [1].
+> "linux-default-trigger" is actually kind-of hardware property, too. If
+> LED has an icon near it (or on it), you want to use that LED in that
+> meaning.
 > 
-> [1] [v16,0/5] iommu/arm-smmu: Add runtime pm/sleep support
-> https://patchwork.kernel.org/cover/10581891/
+> (Thinkpad X60 has "wifi", "bluetooth", "numlock", "capslock", "hdd",
+> "power", "battery", "ac" and "sleep" leds. Surely we should use them
+> in that meaning?)
 > 
-> [2] [PATCH V6 0/4] clk: new APIs to handle all available clocks
-> https://lkml.org/lkml/2018/8/31/97
+> Now, if someone has leds labeled "user 1..user 4" and uses
+> "linux-default-trigger" there, that is kind of "more interesting".
 > 
-> Thor Thayer (2):
->    arm64: dts: stratix10: Add Stratix10 SMMU support
->    iommu/arm-smmu: Get clock config from device tree
+> "default-state" is similar (subset of "linux-default-trigger"); you
+> don't want power LED to go off during kernel boot...
+
+
+I just want to follow up here and let you know that I have not abandoned this.
+I am trying to rework and fix up the ti lmu binding as asked by Pavel.  Its proving
+to be a bit of a challenge based on looking forward to what will be the implementation.
+
+I also did go offline and speak with Tony.  I have a Droid 4 so I can test all of this on
+production hardware as well.
+
+Updated patchset will take some time to get out.
+
+Dan
+
 > 
->   arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 29 ++++++++++++++++++++++
->   drivers/iommu/arm-smmu.c                          | 30 ++++++++++++++++++++---
->   2 files changed, 56 insertions(+), 3 deletions(-)
+> 								Pavel
 > 
 
-Any comments on this patchset? I realize the dependency still needs to 
-be accepted but the clock portion of the dependency which is what this 
-patch builds on hasn't changed in the last iterations.
+
+-- 
+------------------
+Dan Murphy
