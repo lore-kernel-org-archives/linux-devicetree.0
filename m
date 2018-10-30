@@ -1,127 +1,33 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: [PATCH v2 1/2] dt-bindings/interrupt-controller: rzn1: Add RZ/N1 gpio irq mux binding
-Date: Tue, 30 Oct 2018 10:44:37 +0000
-Message-ID: <20181030104438.27827-2-phil.edworthy@renesas.com>
-References: <20181030104438.27827-1-phil.edworthy@renesas.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 1/2] net:stmmac: dwmac-mediatek: add support for mt2712
+Date: Tue, 30 Oct 2018 12:56:38 +0100
+Message-ID: <20181030115638.GB27873@lunn.ch>
+References: <1540782294-27721-1-git-send-email-biao.huang@mediatek.com>
+ <1540782294-27721-2-git-send-email-biao.huang@mediatek.com>
+ <20181029100828.GA19103@Red>
+ <1540883812.26982.15.camel@mhfsdcap03>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181030104438.27827-1-phil.edworthy@renesas.com>
+Content-Disposition: inline
+In-Reply-To: <1540883812.26982.15.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org
+To: biao huang <biao.huang@mediatek.com>
+Cc: Corentin Labbe <clabbe.montjoie@gmail.com>, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, nelson.chang@mediatek.com, netdev@vger.kernel.org, sean.wang@mediatek.com, liguo.zhang@mediatek.com, linux-kernel@vger.kernel.org, matthias.bgg@gmail.com, joabreu@synopsys.com, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add device binding documentation for the Renesas RZ/N1 GPIO interrupt
-multiplexer.
+> > > +	plat_dat->interface = priv_plat->phy_mode;
+> > > +	/* clk_csr_i = 250-300MHz & MDC = clk_csr_i/124 */
+> > > +	plat_dat->clk_csr = 5;
+> > > +	plat_dat->has_gmac4 = 1;
+> > > +	plat_dat->has_gmac = 0;
+> > > +	plat_dat->pmt = 0;
+> > > +	plat_dat->maxmtu = 1500;
+> > 
+> > ETH_DATA_LEN ?
+> how about getting maxmtu from device tree rather than assignment here?
 
-Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
----
-v2:
- - Use interrupt-map to allow the GPIO controller info to be specified
-   as part of the irq.
- - Don't show status in binding examples.
- - Don't show the soc/board split in binding doc.
----
- .../interrupt-controller/renesas,rzn1-mux.txt | 92 +++++++++++++++++++
- 1 file changed, 92 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt
+Does it vary between devices? I expect it is a constant, determined by
+the DMA hardware design. So no need to make it configurabale.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt
-new file mode 100644
-index 000000000000..0b4ba27c00ef
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt
-@@ -0,0 +1,92 @@
-+* Renesas RZ/N1 GPIO Interrupt Multiplexer
-+
-+On Renesas RZ/N1 devices, there are several GPIO Controllers each with a number
-+of interrupt outputs. All of the interrupts from the GPIO Controllers are passed
-+to the GPIO Interrupt Multiplexer, which selects a sub-set of the interrupts to
-+pass onto the system interrupt controller.
-+
-+A single node in the device tree is used to describe the GPIO IRQ Muxer.
-+
-+Required properties:
-+- compatible: SoC-specific compatible string "renesas,<soc-specific>-gpioirqmux"
-+  followed by "renesas,rzn1-gpioirqmux" as fallback. The SoC-specific compatible
-+  strings must be one of:
-+	"renesas,r9a06g032-gpioirqmux" for RZ/N1D
-+	"renesas,r9a06g033-gpioirqmux" for RZ/N1S
-+- interrupt-controller: Identifies the node as an interrupt controller.
-+- #interrupt-cells: should be <1>. The meaning of the cells is the input
-+   interrupt index, 0 to 95.
-+- reg: Base address and size of GPIO IRQ Muxer registers.
-+- interrupts: This is a list of interrupt specifiers. Each interrupt consists of
-+   three numbers that represent:
-+     - (a) the index of the GPIO Interrupt Multiplexer output interrupt (0..7)
-+     - (b) the index of the GPIO Controller input interrupt (0..2)
-+     - (c) the interrupt index of the GPIO Controller input interrupt (0..31).
-+- interrupt-parent: A phandle for a local node that specifies an interrupt-map.
-+   The interrupt-map node must specify #interrupt-cells = <3>, and an
-+   interrupt-map property. The interrupt-map is used to translate the interrupt
-+   specifier to the output interrupts. It is used in conjunction with an
-+   interrupt-map-mask property to mask (b) and (c) from the interrupt specifier
-+   so that essentially there is a direct map from (a) to the output interrupt.
-+   Therefore (b) and (c) can be used to determine the interrupt source and
-+   configure the hardware accordingly. For information on interrupts,
-+   see Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+
-+Example:
-+
-+	The following is an example for the RZ/N1D SoC.
-+
-+	gpioirqmux: gpioirqmux@51000480 {
-+		compatible = "renesas,r9a06g032-gpioirqmux",
-+				"renesas,rzn1-gpioirqmux";
-+		reg = <0x51000480 0x20>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		interrupt-parent = <&gpioirqmux_map>;
-+		interrupts =
-+			<0 1 17>,	/* gpio1a 17 */
-+			<1 1 24>,	/* gpio1a 24 */
-+			<2 1 26>;	/* gpio1a 26 */
-+
-+		gpioirqmux_map: gpioirqmux-map {
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+			interrupt-map-mask = <7 0 0>;
-+			interrupt-map =
-+				<0 0 0 &gic GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-+				<1 0 0 &gic GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-+				<2 0 0 &gic GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-+				<3 0 0 &gic GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-+				<4 0 0 &gic GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
-+				<5 0 0 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
-+				<6 0 0 &gic GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
-+				<7 0 0 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+	};
-+
-+	gpio1: gpio@5000c000 {
-+		compatible = "snps,dw-apb-gpio";
-+		reg = <0x5000c000 0x80>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clock-names = "bus";
-+		clocks = <&sysctrl R9A06G032_HCLK_GPIO1>;
-+
-+		gpio1a: gpio-controller@0 {
-+			compatible = "snps,dw-apb-gpio-port";
-+			bank-name = "gpio1a";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			snps,nr-gpios = <32>;
-+			reg = <0>;
-+
-+			interrupt-controller;
-+			interrupt-parent = <&gpioirqmux>;
-+			interrupts =   < 0  1  2  3  4  5  6  7
-+					 8  9 10 11 12 13 14 15
-+					16 17 18 19 20 21 22 23
-+					24 25 26 27 28 29 30 31 >;
-+			#interrupt-cells = <2>;
-+		};
-+	};
--- 
-2.17.1
+    Andrew
