@@ -1,27 +1,22 @@
-Return-Path: <SRS0=fPTE=NL=verge.net.au=horms@kernel.org>
-Date: Wed, 31 Oct 2018 13:55:16 +0100
+Return-Path: <SRS0=ocas=NK=verge.net.au=horms@kernel.org>
+Date: Tue, 30 Oct 2018 16:40:22 +0100
 From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH] dt-bindings: timer: renesas, cmt: Document r8a77470 CMT
  support
-Message-ID: <20181031125516.t7ahujfvqmuej5u2@verge.net.au>
+Message-ID: <20181030154022.6od3reuiapd2hqhb@verge.net.au>
 References: <1540542973-15752-1-git-send-email-biju.das@bp.renesas.com>
- <TYXPR01MB1775E03BA074105B92580477C0F00@TYXPR01MB1775.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <TYXPR01MB1775E03BA074105B92580477C0F00@TYXPR01MB1775.jpnprd01.prod.outlook.com>
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+In-Reply-To: <1540542973-15752-1-git-send-email-biju.das@bp.renesas.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Oct 26, 2018 at 09:48:19AM +0000, Fabrizio Castro wrote:
-> > Subject: [PATCH] dt-bindings: timer: renesas, cmt: Document r8a77470 CMT support
-> >
-> > Document SoC specific compatible strings for r8a77470. No driver change
-> > is needed as the fallback strings will activate the right code.
-> >
-> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+On Fri, Oct 26, 2018 at 09:36:13AM +0100, Biju Das wrote:
+> Document SoC specific compatible strings for r8a77470. No driver change
+> is needed as the fallback strings will activate the right code.
 > 
-> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-Thanks, applied for v4.21.
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
