@@ -1,103 +1,61 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v12 1/2] dt-bindings: media: Add Allwinner V3s Camera Sensor Interface (CSI)
-Date: Tue, 30 Oct 2018 15:06:24 +0200
-Message-ID: <308184907.pMD7ZDI2dr@avalon>
-References: <1540887143-27904-1-git-send-email-yong.deng@magewell.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 1/5] mfd: lochnagar: Add initial binding documentation
+Date: Tue, 30 Oct 2018 14:10:30 +0100
+Message-ID: <CACRpkdZGsD2uRmz3XL59KrLij6tFo0pT6rqVR99qFGxvitTUdQ@mail.gmail.com>
+References: <20181019095003.26046-1-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1540887143-27904-1-git-send-email-yong.deng@magewell.com>
+In-Reply-To: <20181019095003.26046-1-ckeepax@opensource.cirrus.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Deng <yong.deng@magewell.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Hans Verkuil <hans.verkuil@cisco.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Neil Armstrong <narmstrong@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Thomas Gleixner <tglx@linutronix.de>, Todor Tomov <todor.tomov@linaro.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Yong,
+On Fri, Oct 19, 2018 at 11:50 AM Charles Keepax
+<ckeepax@opensource.cirrus.com> wrote:
 
-Thank you for the patch.
+> +      gf-aif2-txdat, usb-aif1, usb-aif2, adat-aif, soundcard-aif,
+> +
+> +  - aif-master : Specifies that an AIF group will be used as a master
+> +    interface (either this or aif-slave is required if a group is
+> +    being muxed to an AIF)
+> +  - aif-slave : Specifies that an AIF group will be used as a slave
+> +    interface (either this or aif-master is required if a group is
+> +    being muxed to an AIF)
 
-On Tuesday, 30 October 2018 10:12:23 EET Yong Deng wrote:
-> Add binding documentation for Allwinner V3s CSI.
-> 
-> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Yong Deng <yong.deng@magewell.com>
+This is not properly described as pin config parameters, but that is how
+they are used in the driver. Please describe that this is supposed to
+augment the pin config of the pins.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+But I think it looks bogus. If the pins are already mixed to groups
+like that:
 
-> ---
->  .../devicetree/bindings/media/sun6i-csi.txt        | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> b/Documentation/devicetree/bindings/media/sun6i-csi.txt new file mode
-> 100644
-> index 000000000000..443e18c181b3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> @@ -0,0 +1,56 @@
-> +Allwinner V3s Camera Sensor Interface
-> +-------------------------------------
-> +
-> +Allwinner V3s SoC features a CSI module(CSI1) with parallel interface.
-> +
-> +Required properties:
-> +  - compatible: value must be "allwinner,sun8i-v3s-csi"
-> +  - reg: base address and size of the memory-mapped region.
-> +  - interrupts: interrupt associated to this IP
-> +  - clocks: phandles to the clocks feeding the CSI
-> +    * bus: the CSI interface clock
-> +    * mod: the CSI module clock
-> +    * ram: the CSI DRAM clock
-> +  - clock-names: the clock names mentioned above
-> +  - resets: phandles to the reset line driving the CSI
-> +
-> +The CSI node should contain one 'port' child node with one child 'endpoint'
-> +node, according to the bindings defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Endpoint node properties for CSI
-> +---------------------------------
-> +See the video-interfaces.txt for a detailed description of these
-> properties. +- remote-endpoint	: (required) a phandle to the bus receiver's
-> endpoint +			   node
-> +- bus-width:		: (required) must be 8, 10, 12 or 16
-> +- pclk-sample		: (optional) (default: sample on falling edge)
-> +- hsync-active		: (required; parallel-only)
-> +- vsync-active		: (required; parallel-only)
-> +
-> +Example:
-> +
-> +csi1: csi@1cb4000 {
-> +	compatible = "allwinner,sun8i-v3s-csi";
-> +	reg = <0x01cb4000 0x1000>;
-> +	interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&ccu CLK_BUS_CSI>,
-> +		 <&ccu CLK_CSI1_SCLK>,
-> +		 <&ccu CLK_DRAM_CSI>;
-> +	clock-names = "bus", "mod", "ram";
-> +	resets = <&ccu RST_BUS_CSI>;
-> +
-> +	port {
-> +		/* Parallel bus endpoint */
-> +		csi1_ep: endpoint {
-> +			remote-endpoint = <&adv7611_ep>;
-> +			bus-width = <16>;
-> +
-> +			/* If hsync-active/vsync-active are missing,
-> +			   embedded BT.656 sync is used */
-> +			hsync-active = <0>; /* Active low */
-> +			vsync-active = <0>; /* Active low */
-> +			pclk-sample = <1>;  /* Rising */
-> +		};
-> +	};
-> +};
+> +       pin-settings: pin-settings {
+> +               ap-aif {
+> +                       aif-slave;
+> +                       groups = "gf-aif1";
+> +                       function = "codec-aif3";
+> +               };
+> +               codec-aif {
+> +                       aif-master;
+> +                       groups = "codec-aif3";
+> +                       function = "gf-aif1";
+> +               };
+> +       };
 
+OK so what the "special properties" above indicates is really the
+direction of the pins, whether out (master) or in (slave".
 
--- 
-Regards,
+Just use the standard bool pin config properties:
+input-enable;
+output-enable;
 
-Laurent Pinchart
+Reference
+Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+
+For this. If you want users to see that this is master and slave,
+just /* Write a comment */ in the device tree.
+
+Yours,
+Linus Walleij
