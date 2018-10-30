@@ -1,171 +1,103 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 5/5] pinctrl: lochnagar: Add support for the Cirrus
- Logic Lochnagar
-Date: Tue, 30 Oct 2018 14:04:20 +0100
-Message-ID: <CACRpkdbYtphSk+9E5Wzz4kZvQiT=RANDg_hYqRac7pb0M02oAA@mail.gmail.com>
-References: <20181019095003.26046-1-ckeepax@opensource.cirrus.com> <20181019095003.26046-5-ckeepax@opensource.cirrus.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v12 1/2] dt-bindings: media: Add Allwinner V3s Camera Sensor Interface (CSI)
+Date: Tue, 30 Oct 2018 15:06:24 +0200
+Message-ID: <308184907.pMD7ZDI2dr@avalon>
+References: <1540887143-27904-1-git-send-email-yong.deng@magewell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181019095003.26046-5-ckeepax@opensource.cirrus.com>
+In-Reply-To: <1540887143-27904-1-git-send-email-yong.deng@magewell.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+To: Yong Deng <yong.deng@magewell.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Hans Verkuil <hans.verkuil@cisco.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Neil Armstrong <narmstrong@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Thomas Gleixner <tglx@linutronix.de>, Todor Tomov <todor.tomov@linaro.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 19, 2018 at 11:50 AM Charles Keepax
-<ckeepax@opensource.cirrus.com> wrote:
+Hi Yong,
 
-> Lochnagar is an evaluation and development board for Cirrus
-> Logic Smart CODEC and Amp devices. It allows the connection of
-> most Cirrus Logic devices on mini-cards, as well as allowing
-> connection of various application processor systems to provide a
-> full evaluation platform. This driver supports the board
-> controller chip on the Lochnagar board.
->
-> Lochnagar provides many pins which can generally be used for an
-> audio function such as an AIF or a PDM interface, but also as
-> GPIOs.
->
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Thank you for the patch.
+
+On Tuesday, 30 October 2018 10:12:23 EET Yong Deng wrote:
+> Add binding documentation for Allwinner V3s CSI.
+> 
+> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Yong Deng <yong.deng@magewell.com>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
 > ---
->
-> Changes since v2:
->  - Updated aif-master/aif-slave to use a vendor prefix
->  - Correctly get and put of_node pointer in probe/remove
-
-Looks better and better! Some comments, probably not the last comments:
-
-> +#include <linux/err.h>
-> +#include <linux/errno.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +#include <linux/pinctrl/pinmux.h>
-> +#include <linux/pinctrl/pinconf.h>
-> +#include <linux/pinctrl/pinconf-generic.h>
-
-#include <linux/bits.h>
-
-> +struct lochnagar_aif {
-> +       const char name[16];
+>  .../devicetree/bindings/media/sun6i-csi.txt        | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt
+> b/Documentation/devicetree/bindings/media/sun6i-csi.txt new file mode
+> 100644
+> index 000000000000..443e18c181b3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
+> @@ -0,0 +1,56 @@
+> +Allwinner V3s Camera Sensor Interface
+> +-------------------------------------
 > +
-> +       unsigned int pins[4];
+> +Allwinner V3s SoC features a CSI module(CSI1) with parallel interface.
 > +
-> +       unsigned int src_reg;
-
-u32?
-
-> +       unsigned int src_mask;
-
-u32?
-
+> +Required properties:
+> +  - compatible: value must be "allwinner,sun8i-v3s-csi"
+> +  - reg: base address and size of the memory-mapped region.
+> +  - interrupts: interrupt associated to this IP
+> +  - clocks: phandles to the clocks feeding the CSI
+> +    * bus: the CSI interface clock
+> +    * mod: the CSI module clock
+> +    * ram: the CSI DRAM clock
+> +  - clock-names: the clock names mentioned above
+> +  - resets: phandles to the reset line driving the CSI
 > +
-> +       unsigned int ctrl_reg;
-
-u32?
-
-> +       unsigned int ena_mask;
-
-u32?
-
-> +       unsigned int master_mask;
-
-u32?
-
-> +struct lochnagar_func {
-> +       const char * const name;
+> +The CSI node should contain one 'port' child node with one child 'endpoint'
+> +node, according to the bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
 > +
-> +       enum lochnagar_func_type type;
+> +Endpoint node properties for CSI
+> +---------------------------------
+> +See the video-interfaces.txt for a detailed description of these
+> properties. +- remote-endpoint	: (required) a phandle to the bus receiver's
+> endpoint +			   node
+> +- bus-width:		: (required) must be 8, 10, 12 or 16
+> +- pclk-sample		: (optional) (default: sample on falling edge)
+> +- hsync-active		: (required; parallel-only)
+> +- vsync-active		: (required; parallel-only)
 > +
-> +       int op;
-
-unsigned int? u32?
-
-Looks like u8 actually.
-
-> +struct lochnagar_group {
-> +       const char * const name;
+> +Example:
 > +
-> +       enum lochnagar_func_type type;
+> +csi1: csi@1cb4000 {
+> +	compatible = "allwinner,sun8i-v3s-csi";
+> +	reg = <0x01cb4000 0x1000>;
+> +	interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> +	clocks = <&ccu CLK_BUS_CSI>,
+> +		 <&ccu CLK_CSI1_SCLK>,
+> +		 <&ccu CLK_DRAM_CSI>;
+> +	clock-names = "bus", "mod", "ram";
+> +	resets = <&ccu RST_BUS_CSI>;
 > +
-> +       const unsigned int *pins;
-> +       int npins;
-
-unsigned int npins?
-
-> +struct lochnagar_func_groups {
-> +       const char **groups;
-> +       int ngroups;
-
-unsigned int ngroups?
-
-> +struct lochnagar_pin_priv {
-> +       struct lochnagar *lochnagar;
-> +       struct device *dev;
+> +	port {
+> +		/* Parallel bus endpoint */
+> +		csi1_ep: endpoint {
+> +			remote-endpoint = <&adv7611_ep>;
+> +			bus-width = <16>;
 > +
-> +       const struct lochnagar_func *funcs;
-> +       int nfuncs;
-> +
-> +       const struct pinctrl_pin_desc *pins;
-> +       int npins;
-> +
-> +       const struct lochnagar_group *groups;
-> +       int ngroups;
-> +
-> +       struct lochnagar_func_groups func_groups[LN_FTYPE_COUNT];
-> +
-> +       struct gpio_chip gpio_chip;
+> +			/* If hsync-active/vsync-active are missing,
+> +			   embedded BT.656 sync is used */
+> +			hsync-active = <0>; /* Active low */
+> +			vsync-active = <0>; /* Active low */
+> +			pclk-sample = <1>;  /* Rising */
+> +		};
+> +	};
 > +};
 
-I bet some of these should be unsigned as well.
 
-> +static const struct pinconf_generic_params lochnagar_dt_params[] = {
-> +       {"cirrus,aif-master", PIN_CONFIG_AIFMASTER,  0},
-> +       {"cirrus,aif-slave",  PIN_CONFIG_AIFSLAVE,   0},
-> +};
+-- 
+Regards,
 
-I guess these are documented in the device tree bindings.
-
-They look suspciously like muxing but I guess it is explained
-there.
-
-> +static void lochnagar_gpio_set(struct gpio_chip *chip,
-> +                              unsigned int offset, int value)
-> +{
-> +       struct lochnagar_pin_priv *priv = gpiochip_get_data(chip);
-> +       struct lochnagar *lochnagar = priv->lochnagar;
-> +       const struct lochnagar_pin *pin = priv->pins[offset].drv_data;
-> +       int ret;
-> +
-> +       value = !!value;
-
-value = value ? BIT(pin->shift) : 0;
-
-> +       dev_dbg(priv->dev, "Set GPIO %s to %s\n",
-> +               pin->name, value ? "high" : "low");
-> +
-> +       switch (pin->type) {
-> +       case LN_PTYPE_MUX:
-> +               value |= LN2_OP_GPIO;
-> +
-> +               ret = lochnagar_pin_set_mux(priv, pin, value);
-> +               break;
-> +       case LN_PTYPE_GPIO:
-> +               if (pin->invert)
-> +                       value = !value;
-> +
-> +               ret = regmap_update_bits(lochnagar->regmap, pin->reg,
-> +                                        0x1 << pin->shift,
-
-BIT(pin->shift)
-
-> +                                        value << pin->shift);
-
-Just value provided you used the construction above
-to construct it.
-
-Yours,
-Linus Walleij
+Laurent Pinchart
