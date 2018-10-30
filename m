@@ -1,47 +1,42 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 11/17] arm64: dts: qcom: pms405: add gpios
-Date: Tue, 30 Oct 2018 15:41:02 +0530
-Message-ID: <20181030101108.11041-12-vkoul@kernel.org>
+Subject: [PATCH 12/17] arm64: dts: qcom: qcs404: Add scm firmware node
+Date: Tue, 30 Oct 2018 15:41:03 +0530
+Message-ID: <20181030101108.11041-13-vkoul@kernel.org>
 References: <20181030101108.11041-1-vkoul@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181030101108.11041-1-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the GPIOs present on PMS405 chip.
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
+Add the scm firmware node to QCS404
+
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/pms405.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/pms405.dtsi b/arch/arm64/boot/dts/qcom/pms405.dtsi
-index cdb4547c998b..18410d9f0f8f 100644
---- a/arch/arm64/boot/dts/qcom/pms405.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pms405.dtsi
-@@ -17,5 +17,21 @@
- 			reg-names = "rtc", "alarm";
- 			interrupts = <0x0 0x61 0x1 IRQ_TYPE_NONE>;
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index a448d5206755..6f66327014ae 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -101,6 +101,13 @@
  		};
-+
-+		pms405_gpios: gpios@c000 {
-+			compatible = "qcom,pms405-gpio";
-+			reg = <0xc000>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupts = <0 0xc1 0 IRQ_TYPE_NONE>,
-+				<0 0xc2 0 IRQ_TYPE_NONE>,
-+				<0 0xc3 0 IRQ_TYPE_NONE>,
-+				<0 0xc4 0 IRQ_TYPE_NONE>,
-+				<0 0xc5 0 IRQ_TYPE_NONE>,
-+				<0 0xc6 0 IRQ_TYPE_NONE>,
-+				<0 0xc7 0 IRQ_TYPE_NONE>,
-+				<0 0xca 0 IRQ_TYPE_NONE>,
-+				<0 0xcb 0 IRQ_TYPE_NONE>;
-+		};
  	};
- };
+ 
++	firmware {
++		scm: scm {
++			compatible = "qcom,scm-qcs404", "qcom,scm";
++			#reset-cells = <1>;
++		};
++	};
++
+ 	psci {
+ 		compatible = "arm,psci-1.0";
+ 		method = "smc";
 -- 
 2.14.4
