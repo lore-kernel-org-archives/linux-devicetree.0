@@ -1,56 +1,25 @@
-Return-Path: <SRS0=pxxc=NJ=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v2 5/6] dt-bindings: media: mt9m111: adapt documentation to be more clear
-Date: Mon, 29 Oct 2018 19:24:09 +0100
-Message-Id: <20181029182410.18783-6-m.felsch@pengutronix.de>
-In-Reply-To: <20181029182410.18783-1-m.felsch@pengutronix.de>
-References: <20181029182410.18783-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=ocas=NK=verge.net.au=horms@kernel.org>
+Date: Tue, 30 Oct 2018 16:45:53 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/2] ARM: dts: r8a77470: Add CMT SoC specific support
+Message-ID: <20181030154552.kjcvdvargosrlm5u@verge.net.au>
+References: <1540543709-35959-1-git-send-email-biju.das@bp.renesas.com>
+ <TYXPR01MB17755F6C9C4785DDC0592808C0F00@TYXPR01MB1775.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: enrico.scholz@sigma-chemnitz.de, akinobu.mita@gmail.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, graphics@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TYXPR01MB17755F6C9C4785DDC0592808C0F00@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Replace the vague binding by a more verbose. Remove the remote property
-from the example since the driver don't support such a property. Also
-remove the bus-width property from the endpoint since the driver don't
-take care of it.
+On Fri, Oct 26, 2018 at 09:48:33AM +0000, Fabrizio Castro wrote:
+> > Subject: [PATCH 1/2] ARM: dts: r8a77470: Add CMT SoC specific support
+> >
+> > Add CMT[01] support to r8a77470 SoC DT.
+> >
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> 
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- .../devicetree/bindings/media/i2c/mt9m111.txt         | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/mt9m111.txt b/Documentation/devicetree/bindings/media/i2c/mt9m111.txt
-index 6b910036b57e..921cc48c488b 100644
---- a/Documentation/devicetree/bindings/media/i2c/mt9m111.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/mt9m111.txt
-@@ -9,8 +9,13 @@ Required Properties:
- - clocks: reference to the master clock.
- - clock-names: shall be "mclk".
- 
--For further reading on port node refer to
--Documentation/devicetree/bindings/media/video-interfaces.txt.
-+The device node must contain one 'port' child node with one 'endpoint' child
-+sub-node for its digital output video port, in accordance with the video
-+interface bindings defined in:
-+Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+Required endpoint properties:
-+- remote-endpoint: For information see ../video-interfaces.txt.
- 
- Example:
- 
-@@ -21,10 +26,8 @@ Example:
- 			clocks = <&mclk>;
- 			clock-names = "mclk";
- 
--			remote = <&pxa_camera>;
- 			port {
- 				mt9m111_1: endpoint {
--					bus-width = <8>;
- 					remote-endpoint = <&pxa_camera>;
- 				};
- 			};
--- 
-2.19.1
+Thanks, applied for v4.21.
