@@ -1,50 +1,129 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH 4/6] of/fdt: Populate phys_initrd_start/phys_initrd_size
- from FDT
-Date: Tue, 30 Oct 2018 09:32:39 +0000
-Message-ID: <20181030093239.GJ30658@n2100.armlinux.org.uk>
-References: <20181029235206.30060-1-f.fainelli@gmail.com>
- <20181029235206.30060-5-f.fainelli@gmail.com>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: Crash report: Broken NUMA distance map causes crash on arm64
+ system
+Date: Tue, 30 Oct 2018 09:55:47 +0000
+Message-ID: <d126099d-2698-8e3a-06ca-f229e57c3052@huawei.com>
+References: <b89bf686-05bd-a3de-e7ef-4ab9ab7bdb6c@huawei.com>
+ <20181030092640.GE1459@hirez.programming.kicks-ass.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181029235206.30060-5-f.fainelli@gmail.com>
+In-Reply-To: <20181030092640.GE1459@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Ingo Molnar <mingo@redhat.com>, Linuxarm <linuxarm@huawei.com>, Anshuman Khandual <anshuman.khandual@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2018 at 04:52:04PM -0700, Florian Fainelli wrote:
-> If the architecture implements ARCH_HAS_PHYS_INITRD, make the FDT
-> scanning code populate the physical address of the start of the FDT and
-> its size.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  arch/arm/mm/init.c | 2 +-
->  drivers/of/fdt.c   | 4 ++++
->  2 files changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-> index 8f364aa24172..517e95cfb5d2 100644
-> --- a/arch/arm/mm/init.c
-> +++ b/arch/arm/mm/init.c
-> @@ -237,7 +237,7 @@ static void __init arm_initrd_init(void)
->  	phys_addr_t start;
->  	unsigned long size;
->  
-> -	/* FDT scan will populate initrd_start */
-> +	/* FDT scan will populate initrd_start and phys_initrd_start */
->  	if (initrd_start && !phys_initrd_size) {
->  		phys_initrd_start = __virt_to_phys(initrd_start);
->  		phys_initrd_size = initrd_end - initrd_start;
+On 30/10/2018 09:26, Peter Zijlstra wrote:
+> On Tue, Oct 23, 2018 at 11:30:11AM +0100, John Garry wrote:
+>> Hi all,
+>>
+>> I have stumbled upon this crash on my arm64 system:
+>>
+>> [    7.040874] SMP: Total of 64 processors activated.
+>> [    7.045720] CPU features: detected: GIC system register CPU interface
+>> [    7.052240] CPU features: detected: 32-bit EL0 Support
+>> [    7.144026] CPU: All CPU(s) started at EL2
+>> [    7.148298] alternatives: patching kernel code
+>> [    7.155277] Unable to handle kernel NULL pointer dereference at virtual
+>> address 0000000000000000
+>> [    7.164163] Mem abort info:
+>> [    7.166978]   ESR = 0x96000004
+>> [    7.170061]   Exception class = DABT (current EL), IL = 32 bits
+>> [    7.176043]   SET = 0, FnV = 0
+>> [    7.179121]   EA = 0, S1PTW = 0
+>> [    7.182291] Data abort info:
+>> [    7.185193]   ISV = 0, ISS = 0x00000004
+>> [    7.189066]   CM = 0, WnR = 0
+>> [    7.192056] [0000000000000000] user address but active_mm is swapper
+>> [    7.198480] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+>> [    7.204107] Modules linked in:
+>> [    7.207189] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W
+>> 4.19.0-00002-g3ed52fd-dirty #807
+>> [    7.216596] Hardware name: Hisilicon Hip07 D05 Development Board (DT)
+>> [    7.223102] pstate: 20000005 (nzCv daif -PAN -UAO)
+>> [    7.227946] pc : __ll_sc_atomic_sub_return+0x4/0x20
+>> [    7.232873] lr : free_sched_groups.part.1+0x40/0x98
+>> [    7.237797] sp : ffff00000947bc60
+>> [    7.241138] x29: ffff00000947bc60 x28: ffff801fb49ba000
+>> [    7.246504] x27: ffff000009109b38 x26: ffff801fb4a38000
+>> [    7.251869] x25: ffff801fb48cc000 x24: ffff000009109000
+>> [    7.257235] x23: 0000000000000010 x22: 0000000000000001
+>> [    7.262599] x21: ffff801fb4a0b000 x20: ffff801fb4a65f00
+>> [    7.267964] x19: ffff801fb4a65f80 x18: 0000000000000400
+>> [    7.273329] x17: 00000000ffffffff x16: 0000000000000000
+>> [    7.278694] x15: ffff801ffbffef80 x14: ffff7e007ed14bc0
+>> [    7.284059] x13: 00000000000000c0 x12: 000000000000003f
+>> [    7.289423] x11: ffff801fb62258b8 x10: 0000000000000001
+>> [    7.294788] x9 : ffff801fb44b0100 x8 : 000000000000000f
+>> [    7.300153] x7 : ffff801fb48b1900 x6 : 0000801ff2efb000
+>> [    7.305518] x5 : ffff0000091096f0 x4 : 0000000000000400
+>> [    7.310882] x3 : ffff801fb4a65000 x2 : ffff801fb4a0b000
+>> [    7.316247] x1 : 0000000000000000 x0 : 0000000000000001
+>> [    7.321613] Process swapper/0 (pid: 1, stack limit = 0x(____ptrval____))
+>> [    7.328382] Call trace:
+>> [    7.330847]  __ll_sc_atomic_sub_return+0x4/0x20
+>> [    7.335420]  destroy_sched_domain+0x20/0x70
+>> [    7.339642]  cpu_attach_domain+0xc8/0x2e8
+>> [    7.343687]  build_sched_domains+0xd44/0xde0
+>> [    7.347996]  sched_init_domains+0x68/0x88
+>> [    7.352044]  sched_init_smp+0x2c/0x7c
+>> [    7.355738]  kernel_init_freeable+0xdc/0x244
+>> [    7.360049]  kernel_init+0x10/0x108
+>> [    7.363567]  ret_from_fork+0x10/0x18
+>> [    7.367174] Code: 88107c31 35ffffb0 d65f03c0 f9800031 (885f7c31)
+>> [    7.373400] ---[ end trace 8150af869a14363f ]---
+>> [    7.378076] Kernel panic - not syncing: Attempted to kill init!
+>> exitcode=0x0000000b
+>> [    7.378076]
+>> [    7.387320] SMP: stopping secondary CPUs
+>> [    7.391297] ---[ end Kernel panic - not syncing: Attempted to kill init!
+>> exitcode=0x0000000b
+>> [    7.391297]  ]---
+>>
+>> I will straightaway note that I have been fiddling with my board's device
+>> tree, specifically (breaking!) the NUMA distance map, like this:
+>>
+>> distance-matrix = <0 0 10>,
+>>                    <0 1 15>,
+>>                    <0 2 20>,
+>>                    <0 3 25>,
+>>                    <1 0 15>,
+>>                    <1 1 10>,
+>>                    <1 2 25>,
+>>                    <1 3 30>,
+>>                    <2 0 20>,
+>>                    <2 1 25>,
+>>                    <2 2 10>,
+>>                    <2 3 15>,
+>>                    <3 0 10>,* should be same as 0->3 and > 10
+>>                    <3 1 10>,* should be same as 1->3 and > 10
+>>                    <3 2 15>,
+>>                    <3 3 15>;* should be 10
+>>
+>> However I don't think that this should crash the kernel. I'd say
+>> of_numa_parse_distance_map_v1() should robustly handle broken maps, probably
+>> by erroring and causing NUMA to be disabled.
+>
+> If build with CONFIG_SCHED_DEBUG=y and boot with "sched_debug" I think
+> sched_init_numa() should yell at you for the above 'mistake'.
+>
 
-We should be able to delete the whole if () { } block and comment as
-a result of this series - it was added by Rob in 65939301acdb to
-unify the DT initrd code.
+Right, I have since turned on debug and it was complaining - I'll 
+provide a log.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+>> However I am interested to know if the scheduler crash is a real problem.
+>
+> Ideally we'd not crash of course.. let me see if I can still make sense
+> of that topology code.
+
+JFYI, https://lkml.org/lkml/2018/10/26/527
+
+So it seems to be that setting the distance between separate nodes to 
+LOCAL_DISTANCE causes the problem. x86 NUMA code - like arm64 - allows 
+this. However ACPI SLIT validation rejects this, unlike OF distance map 
+parsing.
+
+Thanks,
+John
