@@ -1,139 +1,38 @@
-From: bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [PATCH 1/2] dt: bindings: add new dt entry to indentify external
- FEM
-Date: Tue, 30 Oct 2018 14:11:06 +0530
-Message-ID: <d617b0c39a2faa7c9b23b884bef3f829@codeaurora.org>
-References: <1538653364-1239-1-git-send-email-bperumal@codeaurora.org>
- <1538653364-1239-2-git-send-email-bperumal@codeaurora.org>
- <20181015192425.GA19699@bogus>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: [PATCH V2 0/3] ARM: dts: sabreauto: Add flexcan support
+Date: Tue, 30 Oct 2018 08:42:33 +0000
+Message-ID: <20181030083954.26440-1-qiangqing.zhang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20181015192425.GA19699@bogus>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Joakim Zhang <qiangqing.zhang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-10-16 00:54, Rob Herring wrote:
-> On Thu, Oct 04, 2018 at 05:12:43PM +0530, Bhagavathi Perumal S wrote:
->> This adds new dt entry ext-fem-name, it is used by ath10k driver
->> to select correct timing parameters and configure it in target wifi 
->> hardware.
->> The Front End Module(FEM) normally includes tx power amplifier(PA) and
->> rx low noise amplifier(LNA). The default timing parameters like tx end 
->> to
->> PA off timing values were fine tuned for internal FEM used in 
->> reference
->> design. And these timing values can not be same if ODM modifies 
->> hardware
->> design with different external FEM. This DT entry helps to choose 
->> correct
->> timing values in driver if different external FEM hardware used.
-> 
-> 'dt-bindings: net: ath10k: ...' for the subject please.
-Sure, I will change and send v2 patch.
+This patch series intends to add flexcan support for IMX6 platforms.
 
-> 
->> 
->> Signed-off-by: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>  .../bindings/net/wireless/qcom,ath10k.txt          | 22 
->> ++++++++++++++++++++++
->>  1 file changed, 22 insertions(+)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt 
->> b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> index 7fd4e8c..fbaf309 100644
->> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> @@ -56,6 +56,7 @@ Optional properties:
->>  				     the length can vary between hw versions.
->>  - <supply-name>-supply: handle to the regulator device tree node
->>  			   optional "supply-name" is "vdd-0.8-cx-mx".
->> +- ext-fem-name: name of external front end module used.
-> 
-> What are valid names? What if the OS doesn't recognize the name? 
-> Perhaps
-Some valid FEM devices are "microsemi-lx5586", "sky85703-11" and 
-"sky85803" etc.
-Currently driver accepts only "microsemi-lx5586", Since this FEM 
-requires different timing settings,
-And it can be extended for other FEM devices in future.
-If OS doesn't recognize the name, it uses predefined default timing 
-settings.
+ChangeLog:
+V1-V2:
+ *using SPDX tag for new files and remove pinctrl-assert-gpios property.
 
-> this should be a compatible string for the particular module instead?
-> Then it could cover any differences, not just the FEM.
-> 
-No, it is specific to FEM device.
+Dong Aisheng (3):
+  ARM: dts: imx6sx-sdb: Add flexcan support
+  ARM: dts: imx6sx-sabreauto: Add flexcan support
+  ARM: dts: sabreauto: Add flexcan support
 
->> 
->>  Example (to supply the calibration data alone):
->> 
->> @@ -150,3 +151,24 @@ wifi@18000000 {
->>  			   <0 141 0 /* CE11 */ >;
->>  		vdd-0.8-cx-mx-supply = <&pm8998_l5>;
->>  };
->> +
->> +Example (to supply the external front end module name):
->> +
->> +In this example, the front end module is defined as a property of the 
->> ath10k
->> +device node.
-> 
-> Really need a whole new example for 1 property?
-Will add this property in existing example.
+ .../boot/dts/imx6dl-sabreauto-flexcan1.dts    | 14 +++++
+ .../arm/boot/dts/imx6q-sabreauto-flexcan1.dts | 14 +++++
+ arch/arm/boot/dts/imx6qdl-sabreauto.dtsi      | 47 +++++++++++++++
+ arch/arm/boot/dts/imx6sx-sabreauto.dts        | 57 +++++++++++++++++++
+ arch/arm/boot/dts/imx6sx-sdb-reva.dts         | 12 ++++
+ arch/arm/boot/dts/imx6sx-sdb.dts              |  5 ++
+ arch/arm/boot/dts/imx6sx-sdb.dtsi             | 42 ++++++++++++++
+ 7 files changed, 191 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-sabreauto-flexcan1.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-sabreauto-flexcan1.dts
 
-> 
->> +
->> +pci {
->> +	pcie@0 {
->> +		reg = <0 0 0 0 0>;
->> +		#interrupt-cells = <1>;
->> +		#size-cells = <2>;
->> +		#address-cells = <3>;
->> +		device_type = "pci";
->> +
->> +		ath10k@0,0 {
-> 
-> wifi@0,0
-Added in ath10k@0,0 to make consistent with existing property 
-"qcom,ath10k-calibration-data" below,
-"
-pci {
-         pcie@0 {
-                 reg = <0 0 0 0 0>;
-                 #interrupt-cells = <1>;
-                 #size-cells = <2>;
-                 #address-cells = <3>;
-                 device_type = "pci";
-
-                 ath10k@0,0 {
-                         reg = <0 0 0 0 0>;
-                         device_type = "pci";
-                         qcom,ath10k-calibration-data = [ 01 02 03 ... ];
-                 };
-         };
-};
-"
-
-If wifi@0,0 is preferable, then I will add new entry "wifi@0,0" and add 
-ext-fem-name into it.
-
-> 
->> +			reg = <0 0 0 0 0>;
->> +			device_type = "pci";
->> +			ext-fem-name = "microsemi-lx5586";
->> +		};
->> +	};
->> +};
->> --
->> 1.9.1
->> 
-
-Thanks, Sorry for the delayed response,
-Bhagavathi Perumal S.
+--=20
+2.17.1
