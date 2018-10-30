@@ -1,13 +1,15 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: fsl: Fix improperly quoted stdout-path values
-Date: Tue, 30 Oct 2018 16:25:28 -0300
-Message-ID: <CAOMZO5BHnzYWPQ4NJmcFUe8NjPYyCR9HEUj2-wJ22zx9g7j=gg@mail.gmail.com>
-References: <20181030190802.20722-1-robh@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V8 1/5] dt-bindings: imx: add scu resource id headfile
+Date: Tue, 30 Oct 2018 14:30:11 -0500
+Message-ID: <20181030193011.GA25741@bogus>
+References: <1540739690-23750-1-git-send-email-aisheng.dong@nxp.com>
+ <1540739690-23750-2-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181030190802.20722-1-robh@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1540739690-23750-2-git-send-email-aisheng.dong@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,27 +19,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Stefan Agner <stefan@agner.ch>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Cc: "A.s. Dong" <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "khilman@kernel.org" <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 30, 2018 at 4:08 PM Rob Herring <robh@kernel.org> wrote:
->
-> A quoted label reference doesn't expand to the node path and is taken as
-> a literal string. Dropping the quotes can fix this unless the baudrate
-> string is appended in which case we have to use the alias.
->
-> At least on VF610, the problem was masked by setting the console in
-> bootargs. Use the alias syntax with baudrate parameter so we can drop
-> setting the console in bootargs.
->
+On Sun, 28 Oct 2018 15:19:35 +0000, "A.s. Dong" wrote:
+> SCU firmware uses resource id to provide services. Every device on
+> a SCU based system has a resource id. Exported it in device tree to
+> allow service bindings to use it. e.g. power domain.
+> 
 > Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
 > Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: NXP Linux Team <linux-imx@nxp.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
 > Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Stefan Agner <stefan@agner.ch>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> ---
+> v7->v8:
+>  * new patch
+> ---
+>  include/dt-bindings/firmware/imx/rsrc.h | 559 ++++++++++++++++++++++++++++++++
+>  1 file changed, 559 insertions(+)
+>  create mode 100644 include/dt-bindings/firmware/imx/rsrc.h
+> 
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
