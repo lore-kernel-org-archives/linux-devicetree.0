@@ -1,63 +1,27 @@
-Return-Path: <SRS0=NOhz=NG=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 1/2] ARM: dts: r8a77470: Add CMT SoC specific support
-Date: Fri, 26 Oct 2018 09:48:28 +0100
-Message-Id: <1540543709-35959-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=ViTF=NK=gmail.com=arndbergmann@kernel.org>
+MIME-Version: 1.0
+Sender: arndbergmann@gmail.com
+In-Reply-To: <caa1cb6121ed7f1e0e4617811561267cb97dc2e5.1540900718.git.ren_guo@c-sky.com>
+References: <d7007cad85bb06e0f4e081bc4daf6f0f79c81861.1540900718.git.ren_guo@c-sky.com>
+ <caa1cb6121ed7f1e0e4617811561267cb97dc2e5.1540900718.git.ren_guo@c-sky.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Tue, 30 Oct 2018 14:35:54 +0100
+Message-ID: <CAK8P3a2LK69GiAU_yyUUZ8m4Bp-V7djEmBX5hvoj=4-3OYVohw@mail.gmail.com>
+Subject: Re: [PATCH V2 2/2] csky: use common dtb build rules
+Content-Type: text/plain; charset="UTF-8"
+To: Guo Ren <ren_guo@c-sky.com>
+Cc: robh@kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add CMT[01] support to r8a77470 SoC DT.
+On 10/30/18, Guo Ren <ren_guo@c-sky.com> wrote:
+> Remove the Kbuild rules in arch/csky and use common dtb build rules.
+>
+> This modification is based on:
+>
+> commit 37c8a5fafa3b ("kbuild: consolidate Devicetree dtb build rules")
+>
+> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-This patch is tested against renesas-dev
----
- arch/arm/boot/dts/r8a77470.dtsi | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index 74ca5d3..e40f5a9 100644
---- a/arch/arm/boot/dts/r8a77470.dtsi
-+++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -710,6 +710,38 @@
- 			compatible = "renesas,prr";
- 			reg = <0 0xff000044 0 4>;
- 		};
-+
-+		cmt0: timer@ffca0000 {
-+			compatible = "renesas,r8a77470-cmt0",
-+				     "renesas,rcar-gen2-cmt0";
-+			reg = <0 0xffca0000 0 0x1004>;
-+			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 124>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 124>;
-+			status = "disabled";
-+		};
-+
-+		cmt1: timer@e6130000 {
-+			compatible = "renesas,r8a77470-cmt1",
-+				     "renesas,rcar-gen2-cmt1";
-+			reg = <0 0xe6130000 0 0x1004>;
-+			interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 329>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 329>;
-+			status = "disabled";
-+		};
- 	};
- 
- 	timer {
--- 
-2.7.4
+Acked-by:  Arnd Bergmann <arnd@arndb.de>
