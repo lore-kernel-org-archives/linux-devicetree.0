@@ -1,7 +1,7 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 02/17] arm64: dts: qcom: qcs404: Add reserved-memory regions
-Date: Tue, 30 Oct 2018 15:40:53 +0530
-Message-ID: <20181030101108.11041-3-vkoul@kernel.org>
+Subject: [PATCH 04/17] arm64: dts: qcom: qcs404: Add PMS405 RPM regulators
+Date: Tue, 30 Oct 2018 15:40:55 +0530
+Message-ID: <20181030101108.11041-5-vkoul@kernel.org>
 References: <20181030101108.11041-1-vkoul@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181030101108.11041-1-vkoul@kernel.org>
@@ -12,65 +12,119 @@ List-Id: devicetree@vger.kernel.org
 
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Add the reserved memory regions in QCS404
+Add the RPM regulators found in PMS405 which is used in qcs404-evb
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 41 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ arch/arm64/boot/dts/qcom/qcs404-evb.dts | 97 +++++++++++++++++++++++++++++++++
+ 1 file changed, 97 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index 1bfc272b70e2..28e066927b50 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -18,6 +18,47 @@
- 		reg = <0 0x0 0 0>;
+diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dts b/arch/arm64/boot/dts/qcom/qcs404-evb.dts
+index 74dc09ddb0d2..5bae7163a093 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404-evb.dts
++++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dts
+@@ -18,4 +18,101 @@
+ 	chosen {
+ 		stdout-path = "serial0";
  	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
 +
-+		memory@85600000 {
-+			reg = <0 0x85600000 0 0x90000>;
-+			no-map;
++	vph_pwr: vph-pwr-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vph_pwr";
++		regulator-always-on;
++		regulator-boot-on;
++	};
++};
++
++&rpm_requests {
++	pms405-regulators {
++		compatible = "qcom,rpm-pms405-regulators";
++
++		vdd_s1-supply = <&vph_pwr>;
++		vdd_s2-supply = <&vph_pwr>;
++		vdd_s3-supply = <&vph_pwr>;
++		vdd_s4-supply = <&vph_pwr>;
++		vdd_s5-supply = <&vph_pwr>;
++		vdd_l1_l2-supply = <&vreg_s5_1p35>;
++		vdd_l3_l8-supply = <&vreg_s5_1p35>;
++		vdd_l4-supply = <&vreg_s5_1p35>;
++		vdd_l5_l6-supply = <&vreg_s4_1p8>;
++		vdd_l7-supply = <&vph_pwr>;
++		vdd_l9-supply = <&vreg_s5_1p35>;
++		vdd_l10_l11_l12_l13-supply = <&vph_pwr>;
++
++		vreg_s4_1p8: s4 {
++			regulator-min-microvolt = <1728000>;
++			regulator-max-microvolt = <1920000>;
 +		};
 +
-+		smem_region: memory@85f00000 {
-+			reg = <0 0x85f00000 0 0x200000>;
-+			no-map;
++		vreg_s5_1p35: s5 {
++			regulator-min-microvolt = <>;
++			regulator-max-microvolt = <>;
 +		};
 +
-+		memory@86100000 {
-+			reg = <0 0x86100000 0 0x300000>;
-+			no-map;
++		vreg_l1_1p3: l1 {
++			regulator-min-microvolt = <1240000>;
++			regulator-max-microvolt = <1352000>;
 +		};
 +
-+		wlan_fw_mem: memory@86400000 {
-+			reg = <0 0x86400000 0 0x1c00000>;
-+			no-map;
++		vreg_l2_1p275: l2 {
++			regulator-min-microvolt = <1048000>;
++			regulator-max-microvolt = <1280000>;
 +		};
 +
-+		adsp_fw_mem: memory@88000000 {
-+			reg = <0 0x88000000 0 0x1a00000>;
-+			no-map;
++		vreg_l3_1p05: l3 {
++			regulator-min-microvolt = <976000>;
++			regulator-max-microvolt = <1160000>;
 +		};
 +
-+		cdsp_fw_mem: memory@89a00000 {
-+			reg = <0 0x89a00000 0 0x600000>;
-+			no-map;
++		vreg_l4_1p2: l4 {
++			regulator-min-microvolt = <1144000>;
++			regulator-max-microvolt = <1256000>;
 +		};
 +
-+		wlan_msa_mem: memory@8a000000 {
-+			reg = <0 0x8a000000 0 0x100000>;
-+			no-map;
++		vreg_l5_1p8: l5 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		vreg_l6_1p8: l6 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-always-on;
++		};
++
++		vreg_l7_1p8: l7 {
++			regulator-min-microvolt = <1616000>;
++			regulator-max-microvolt = <3000000>;
++		};
++
++		vreg_l8_1p2: l8 {
++			regulator-min-microvolt = <1136000>;
++			regulator-max-microvolt = <1352000>;
++		};
++
++		vreg_l10_3p3: l10 {
++			regulator-min-microvolt = <2936000>;
++			regulator-max-microvolt = <3088000>;
++		};
++
++		vreg_l11_sdc2: l11 {
++			regulator-min-microvolt = <2696000>;
++			regulator-max-microvolt = <3304000>;
++		};
++
++		vreg_l12_3p3: l12 {
++			regulator-min-microvolt = <2968000>;
++			regulator-max-microvolt = <3300000>;
++		};
++
++		vreg_l13_3p3: l13 {
++			regulator-min-microvolt = <3000000>;
++			regulator-max-microvolt = <3300000>;
 +		};
 +	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+ };
 -- 
 2.14.4
