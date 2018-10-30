@@ -1,67 +1,82 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 4/4] nvmem: meson-efuse: add peripheral clock
-Date: Tue, 30 Oct 2018 11:22:31 +0100
-Message-ID: <20181030102231.4851-5-jbrunet@baylibre.com>
-References: <20181030102231.4851-1-jbrunet@baylibre.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 0/8] OLPC 1.75 Keyboard/Touchpad fixes
+Date: Tue, 30 Oct 2018 11:26:10 +0100
+Message-ID: <20181030102610.GC21529@amd>
+References: <20181010142504.233467-1-lkundrak@v3.sk>
+ <20181015195612.GB29649@amd>
+ <c4edf9b09e88cd265a0829644aa962c28cbc3d51.camel@v3.sk>
+ <20181030100139.GB21529@amd>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="TiqCXmo5T1hvSQQg"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181030102231.4851-1-jbrunet@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <20181030100139.GB21529@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, James Cameron <quozl@laptop.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Get and enable the peripheral clock required by the efuse device.
-The driver has been handle to work without it so far because the
-clock was left enabled by default but it won't be the case soon.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- drivers/nvmem/meson-efuse.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+--TiqCXmo5T1hvSQQg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/nvmem/meson-efuse.c b/drivers/nvmem/meson-efuse.c
-index 40b9df1d030d..99372768446b 100644
---- a/drivers/nvmem/meson-efuse.c
-+++ b/drivers/nvmem/meson-efuse.c
-@@ -14,6 +14,7 @@
-  * more details.
-  */
- 
-+#include <linux/clk.h>
- #include <linux/module.h>
- #include <linux/nvmem-provider.h>
- #include <linux/of.h>
-@@ -46,7 +47,31 @@ static int meson_efuse_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct nvmem_device *nvmem;
- 	struct nvmem_config *econfig;
-+	struct clk *clk;
- 	unsigned int size;
-+	int ret;
-+
-+	clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(clk)) {
-+		ret = PTR_ERR(clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get efuse gate");
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable gate");
-+		return ret;
-+	}
-+
-+	ret = devm_add_action_or_reset(dev,
-+				       (void(*)(void *))clk_disable_unprepare,
-+				       clk);
-+	if (ret) {
-+		dev_err(dev, "failed to add disable callback");
-+		return ret;
-+	}
- 
- 	if (meson_sm_call(SM_EFUSE_USER_MAX, &size, 0, 0, 0, 0, 0) < 0) {
- 		dev_err(dev, "failed to get max user");
--- 
-2.17.2
+Hi!
+
+> > https://github.com/hackerspace/olpc-xo175-linux/wiki/How-to-run-an-up-t=
+o-date-Linux-on-a-XO-1.75
+> >=20
+> > I didn't test it yet -- will do when I get home in the evening. But
+> > chances are it's good enough and I guess you'd be able to get it
+> > working even if I messed up some details.
+
+Instruction say make, but you really need to do make zImage and make
+mmp2-olpc-xo-1-75.dtb .
+
+Instructions say "make -j", which is nice way to crash a machine. I
+suggest "make -j 8" :-).
+
+Ok, I think I followed the instructions. I am using empty root
+filesystem, just with /boot -- want to see kernel messages first
+before I mess with the userland.
+
+But I don't get kernel messages during boot:
+
+OLPC 1B1, 512 MiB memory...
+OpenFirmware Q4C02 EC Frimware 0.3.02
+
+Type any key to interrupt...
+(but keys do not interrupt anything, ouch).
+Warning... partition type is 0xb...
+Boot device: /usb/disk:\boot\olpc.fth Arguments:
+Boot device ....
+Warning... partition type is 0xb...
+
+And that's it, cursor and no kernel messages.
+
+Any ideas?
+
+Could I get prepared binary zImage for testing?
+
+Thanks,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--TiqCXmo5T1hvSQQg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlvYMcIACgkQMOfwapXb+vKPvgCfaHWdlBokcgCLJ+My3PkuySKa
+JS4AoIe0MQhnBoGuf4cVdPwTwzdstzQE
+=Q4St
+-----END PGP SIGNATURE-----
+
+--TiqCXmo5T1hvSQQg--
