@@ -1,115 +1,84 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH v2 0/8] OLPC 1.75 Keyboard/Touchpad fixes
-Date: Tue, 30 Oct 2018 20:40:38 +0100
-Message-ID: <2761d7e31cf7118492e466a5249303c92f68049b.camel@v3.sk>
-References: <20181010142504.233467-1-lkundrak@v3.sk>
-         <20181015195612.GB29649@amd>
-         <c4edf9b09e88cd265a0829644aa962c28cbc3d51.camel@v3.sk>
-         <20181030100139.GB21529@amd> <20181030102610.GC21529@amd>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V2 4/6] usb: ohci-platform: Add support for Broadcom STB SoC's
+Date: Tue, 30 Oct 2018 21:08:54 +0100
+Message-ID: <CAK8P3a3M5ppNKwthz5NcCrXc74r1aG9aJhQXzaP-Fa5a81U8yw@mail.gmail.com>
+References: <CAOGqxeVfZaJWCVvjNq6_N_eQBvW-8z7NaOmRcQb6hE_c416v6A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181030102610.GC21529@amd>
+In-Reply-To: <CAOGqxeVfZaJWCVvjNq6_N_eQBvW-8z7NaOmRcQb6hE_c416v6A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, James Cameron <quozl@laptop.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Alan Cooper <alcooperx@gmail.com>
+Cc: ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, David Miller <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Dmitry Osipenko <digetx@gmail.com>, gregkh <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>USB list <linu>
 List-Id: devicetree@vger.kernel.org
 
-Hello Pavel,
-
-On Tue, 2018-10-30 at 11:26 +0100, Pavel Machek wrote:
-> Hi!
-> 
-> > > https://github.com/hackerspace/olpc-xo175-linux/wiki/How-to-run-an-up-to-date-Linux-on-a-XO-1.75
-> > > 
-> > > I didn't test it yet -- will do when I get home in the evening.
-> > > But
-> > > chances are it's good enough and I guess you'd be able to get it
-> > > working even if I messed up some details.
-> 
-> Instruction say make, but you really need to do make zImage and make
-> mmp2-olpc-xo-1-75.dtb .
-
-Have you tried? I'm typically doing just a plain "make".
-
-According to "make help", a plain "make" (assuming it's equivalent to
-"make all") includes "zImage" and "dtbs" targets.
-
-> 
-> Instructions say "make -j", which is nice way to crash a machine. I
-> suggest "make -j 8" :-).
-
-Holy... what sort of a machine do you have?
-
-> Ok, I think I followed the instructions. I am using empty root
-> filesystem, just with /boot -- want to see kernel messages first
-> before I mess with the userland.
-> 
-> But I don't get kernel messages during boot:
-> 
-> OLPC 1B1, 512 MiB memory...
-> OpenFirmware Q4C02 EC Frimware 0.3.02
-
-"Frimware" -- I assume you don't have a serial console hooked on? :)
-
-Doesn't matter though, your OF doesn't seem to even get to load the
-kernel anyways. And the framebuffer console (though only by the means
-of a hacked pxa168fb for the time being, no armada drm yet) works.
-
-Here's my bootup banner:
-
-OLPC 1B1, 800 MHz, 512 MiB memory, 4 GB internal storage...
-OpenFirmware  Q4D38   EC Firmware 1.0.01   2018-10-30 19:11:36 UTC
-
-I seem to have a bit newer OF.
-
-> Type any key to interrupt...
-> (but keys do not interrupt anything, ouch).
-
-In my version of the OLPC OF the routine is replaced with one that only
-accepts the Escape key, because kids like to press random keys without
-really wanting a shell. Maybe try that one?
-
-Although my prompt is also a bit different: "Type the Esc key to
-interrupt automatic startup"
-
-> Warning... partition type is 0xb...
-> Boot device: /usb/disk:\boot\olpc.fth Arguments:
-> Boot device ....
-> Warning... partition type is 0xb...
-
-Maybe the older version wouldn't support a VFAT volume, hence the
-complains about the id=0xb volume? Try ext3?
-> 
-> And that's it, cursor and no kernel messages.
-> 
-> Any ideas?
-> 
-> Could I get prepared binary zImage for testing?
-
-https://github.com/hackerspace/olpc-xo175-buildroot/releases
-
-Here's a SD card image that works for me. The topmost commit in the
-same repository is the build configuration that was used to generate
-it:
-
-https://github.com/hackerspace/olpc-xo175-buildroot/commit/71783d599.patch
-
-Note it is only going to boot off the SD card, because the root=
-argument is hardwired in the devicetree. Sorry about that -- I built
-the image before I noticed you're booting off an USB stick and I don't
-have the resources to regenerate the image at the moment.
-
-If this won't boot for you, we may need fixes for older FW. Until then
-it might be a good idea if you just update to the latest one (it is as
-easy as booting the last version of the stock distro with a charged
-battery pack).
-
-> Thanks.							
+On 10/30/18, Alan Cooper <alcooperx@gmail.com> wrote:
+>> On 10/24/18 3:11 AM, Arnd Bergmann wrote:
+>>
+>> On Wed, Oct 17, 2018 at 11:30 PM Al Cooper <alcooperx@gmail.com> wrote:
+>>
+>> Add support for Broadcom STB SoC's to the ohci platform driver.
+>>
+>> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+>> ---
+>>  drivers/usb/host/ohci-platform.c | 35
+>> +++++++++++++++++++++++++++++------
+>>  include/linux/usb/ohci_pdriver.h |  1 +
+>>  2 files changed, 30 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/usb/host/ohci-platform.c
+> b/drivers/usb/host/ohci-platform.c
+>> index 65a1c3fdc88c..363d6fa676a5 100644
+>> --- a/drivers/usb/host/ohci-platform.c
+>> +++ b/drivers/usb/host/ohci-platform.c
+>> @@ -22,6 +22,7 @@
+>>  #include <linux/module.h>
+>>  #include <linux/err.h>
+>>  #include <linux/of.h>
+>> +#include <linux/of_device.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/pm_runtime.h>
+>>  #include <linux/reset.h>
+>> @@ -99,12 +100,24 @@ static int ohci_platform_probe(struct
+> platform_device *dev)
+>>         if (usb_disabled())
+>>                 return -ENODEV;
+>>
+>> -       /*
+>> -        * Use reasonable defaults so platforms don't have to provide
+> these
+>> -        * with DT probing on ARM.
+>> -        */
+>> -       if (!pdata)
+>> -               pdata = &ohci_platform_defaults;
+>> +       if (!pdata) {
+>> +               const struct usb_ohci_pdata *match_pdata;
+>> +
+>> +               match_pdata = of_device_get_match_data(&dev->dev);
+>> +               if (match_pdata) {
+>> +                       pdata = devm_kzalloc(&dev->dev, sizeof(*pdata),
+>> +                                            GFP_KERNEL);
+>> +                       if (!pdata)
+>> +                               return -ENOMEM;
+>> +                       *pdata = *match_pdata;
+>>
+>> It looks like you copy the const pdata to get a non-const version.
+>> Have you tried
+>> propagating the 'const' modifier so that users can rely on that here?
 >
-> 		
-> Pavel
+> The problem is that the const pdata from of_device_get_match() needs to be
+> saved in device->platform_data which is not a const pointer (and can't be
+> changed). How can I propagate the "const" to solve the problem?
 
-Take care
-Lubo
+Ah, I see your problem, and unfortunately don't have an easy answer.
+
+You could split up the structure between a constant part and a non-constant
+part, and have the latter be what gets put into the platform_data, but that
+wouldn't really be much nicer than what you have here.
+
+You could use devm_kmemdup() to save a few lines to simplify your
+code without any other changes maybe, but it doesn't solve the
+fact that the mismatch between platform_data being non-const and
+of_match_data being const is a bit ugly.
+
+        Arnd
