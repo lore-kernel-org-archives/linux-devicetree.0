@@ -1,48 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V8 3/5] dt-bindings: fsl: scu: update power domain binding
-Date: Tue, 30 Oct 2018 14:30:27 -0500
-Message-ID: <20181030193027.GA26215@bogus>
-References: <1540739690-23750-1-git-send-email-aisheng.dong@nxp.com>
- <1540739690-23750-4-git-send-email-aisheng.dong@nxp.com>
+Subject: Re: [PATCH v5 5/8] ARM: l2x0: add marvell,ecc-enable property for
+ aurora
+Date: Tue, 30 Oct 2018 14:31:37 -0500
+Message-ID: <20181030193137.GA28258@bogus>
+References: <20181029072535.31667-1-chris.packham@alliedtelesis.co.nz>
+ <20181029072535.31667-6-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1540739690-23750-4-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "khilman@kernel.org" <khilman@kernel.org>, "hange-folder>?" <toggle-mailboxes@bogus>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20181029072535.31667-6-chris.packham@alliedtelesis.co.nz>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: linux@armlinux.org.uk, u.kleine-koenig@pengutronix.de, jlu@pengutronix.de, bp@alien8.de, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 28 Oct 2018 15:19:44 +0000, "A.s. Dong" wrote:
-> Update the power domain binding with #power-domain-cells 1 format.
-> The first cell can be a global SCU power domain and the 2nd cell
-> the device ID. With this approach, we may remove all the sub power
-> domain nodes from device tree which can relief the device tree a lot.
+On Mon, 29 Oct 2018 20:25:32 +1300, Chris Packham wrote:
+> The aurora cache on the Marvell Armada-XP SoC supports ECC protection
+> for the L2 data arrays. Add a "marvell,ecc-enable" device tree property
+> which can be used to enable this.
 > 
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: linux-pm@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Suggested-by: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> [jlu@pengutronix.de: use aurora specific define AURORA_ACR_ECC_EN]
+> Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
 > ---
-> ChangeLog:
-> v7->v8:
->  * new patch
-> ---
->  .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 37 +++++-----------------
->  1 file changed, 8 insertions(+), 29 deletions(-)
+>  Documentation/devicetree/bindings/arm/l2c2x0.txt | 2 ++
+>  arch/arm/mm/cache-l2x0.c                         | 7 +++++++
+>  2 files changed, 9 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
