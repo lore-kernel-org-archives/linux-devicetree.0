@@ -1,34 +1,38 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 22/25] dt-bindings: sun6i-dsi: Add compatible for A64
- DPHY
-Date: Tue, 30 Oct 2018 15:28:31 -0500
-Message-ID: <20181030202831.GA22352@bogus>
-References: <20181026144344.27778-1-jagan@amarulasolutions.com>
- <20181026144344.27778-23-jagan@amarulasolutions.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] arm64: dts: rockchip: Use default brightness table for gru.
+Date: Tue, 30 Oct 2018 21:35:35 +0100
+Message-ID: <3715364.6vahmuDdgq@phil>
+References: <20181016141304.21984-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181026144344.27778-23-jagan@amarulasolutions.com>
+In-Reply-To: <20181016141304.21984-1-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, linux-clk@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: linux-kernel@vger.kernel.org, kernel@collabora.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Oct 2018 20:13:41 +0530, Jagan Teki wrote:
-> The MIPI DSI PHY HDMI controller on Allwinner A64 is similar
-> on the one on A31.
+Am Dienstag, 16. Oktober 2018, 16:13:04 CET schrieb Enric Balletbo i Serra:
+> After commit 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED
+> linearly to human eye") the pwm_bl driver is able to calculate a default
+> brightness table. The calculated table for this PWM will have more
+> granularity and will be adjusted to change the brightness linearly to
+> the human eye. Use that table instead of have a DT-defined table with
+> less granularity.
 > 
-> Add A64 compatible and append A31 compatible as fallback.
-> 
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > ---
-> Changes for v3:
-> - none
-> Changes for v2:
-> - new patch
+> Hi Heiko,
 > 
->  Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Note that the patch was only tested on a Samsung Chromebook Plus
+> (kevin), will be very interesting if someone can test on other gru-based
+> devices, like Bob, before apply this patch.
 > 
+> Best regards,
+>  Enric
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+gave it a spin on Bob - works as expected - and applied for 4.21
+
+Thanks
+Heiko
