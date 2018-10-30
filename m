@@ -1,51 +1,152 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add PSCI cpuidle low power states
-Date: Tue, 30 Oct 2018 09:52:00 -0700
-Message-ID: <CAD=FV=ViA_0Vpv+oUTHxUFfdoKftMN58wFxcbdYp2mF8SdULew@mail.gmail.com>
-References: <1539622953-4188-1-git-send-email-rplsssn@codeaurora.org>
- <CAD=FV=XB9diR_n1TB4+wUjVaRf0VAmCMgkSbtuOSNO5pkrQ8zg@mail.gmail.com> <5b62572d-9f45-c0ee-776e-1486a9d40862@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+Subject: [PATCH v2] arm64: dts: sdm845: Add PSCI cpuidle low power states
+Date: Tue, 30 Oct 2018 22:53:29 +0530
+Message-ID: <1540920209-28954-1-git-send-email-rplsssn@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5b62572d-9f45-c0ee-776e-1486a9d40862@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Raju P L S S S N <rplsssn@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Evan Green <evgreen@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, Lina Iyer <ilina@codeaurora.org>
+To: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, ilina@codeaurora.org, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Resending since I accidentally clicked back to HTML and lists all bounced.  :(
+Add device bindings for cpuidle states for cpu devices.
 
-On Tue, Oct 30, 2018 at 9:24 AM Raju P L S S S N <rplsssn@codeaurora.org> wrote:
->
-> On 10/24/2018 12:06 AM, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Mon, Oct 15, 2018 at 10:02 AM Raju P.L.S.S.S.N
-> > <rplsssn@codeaurora.org> wrote:
-> >> +               idle-states {
-> >> +                       entry-method = "psci";
-> >> +
-> >> +                       C0_CPU_SPC: c0_spc {
-> >
-> > nit: all these nodes should have dashes instead of spaces in the node
-> > names (labels can still have spaces).  AKA:
-> >
-> > C0_CPU_SPC: c0-spc {
->
-> Sure. I will change this. (However, from device tree specification v0.2,
-> I see that Table 2.1 mentions underscore as valid character for node.
-> Please correct me if I'm missing something)
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
+---
+Changes in v2
+ - Address comments from Doug
+---
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 62 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
-You're right that I don't see it there.  I've always heard that they
-are allowed but discouraged.  One place that mentions this:
-
-https://elinux.org/Device_Tree_Linux
-
-> Linux conventions
-> * node names
->   * use dash "-" instead of underscore "_"
-
-That same site points that the majority of people use dashes in node
-names instead of underscores.
-
--Doug
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 0c9a2aa..3a8381e 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -96,6 +96,7 @@
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_0>;
++			cpu-idle-states = <&C0_CPU_PD &C0_CPU_RPD &CLUSTER_PD>;
+ 			L2_0: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -111,6 +112,7 @@
+ 			reg = <0x0 0x100>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_100>;
++			cpu-idle-states = <&C0_CPU_PD &C0_CPU_RPD &CLUSTER_PD>;
+ 			L2_100: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -123,6 +125,7 @@
+ 			reg = <0x0 0x200>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_200>;
++			cpu-idle-states = <&C0_CPU_PD &C0_CPU_RPD &CLUSTER_PD>;
+ 			L2_200: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -135,6 +138,7 @@
+ 			reg = <0x0 0x300>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_300>;
++			cpu-idle-states = <&C0_CPU_PD &C0_CPU_RPD &CLUSTER_PD>;
+ 			L2_300: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -147,6 +151,7 @@
+ 			reg = <0x0 0x400>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_400>;
++			cpu-idle-states = <&C4_CPU_PD &C4_CPU_RPD &CLUSTER_PD>;
+ 			L2_400: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -159,6 +164,7 @@
+ 			reg = <0x0 0x500>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_500>;
++			cpu-idle-states = <&C4_CPU_PD &C4_CPU_RPD &CLUSTER_PD>;
+ 			L2_500: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -171,6 +177,7 @@
+ 			reg = <0x0 0x600>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_600>;
++			cpu-idle-states = <&C4_CPU_PD &C4_CPU_RPD &CLUSTER_PD>;
+ 			L2_600: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -183,11 +190,66 @@
+ 			reg = <0x0 0x700>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_700>;
++			cpu-idle-states = <&C4_CPU_PD &C4_CPU_RPD &CLUSTER_PD>;
+ 			L2_700: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+ 			};
+ 		};
++
++		idle-states {
++			entry-method = "psci";
++
++			C0_CPU_PD: c0-power-down {
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x40000003>;
++				entry-latency-us = <350>;
++				exit-latency-us = <461>;
++				min-residency-us = <1890>;
++				local-timer-stop;
++				idle-state-name = "power-down";
++			};
++
++			C0_CPU_RPD: c0-rail-power-down {
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x40000004>;
++				entry-latency-us = <360>;
++				exit-latency-us = <531>;
++				min-residency-us = <3934>;
++				local-timer-stop;
++				idle-state-name = "rail-power-down";
++			};
++
++			C4_CPU_PD: c4-power-down {
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x40000003>;
++				entry-latency-us = <264>;
++				exit-latency-us = <621>;
++				min-residency-us = <952>;
++				local-timer-stop;
++				idle-state-name = "power-down";
++			};
++
++			C4_CPU_RPD: c4-rail-power-down {
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x40000004>;
++				entry-latency-us = <702>;
++				exit-latency-us = <1061>;
++				min-residency-us = <4488>;
++				local-timer-stop;
++				idle-state-name = "rail-power-down";
++			};
++
++			CLUSTER_PD: cluster-power-down {
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x400000F4>;
++				entry-latency-us = <3263>;
++				exit-latency-us = <6562>;
++				min-residency-us = <9987>;
++				local-timer-stop;
++				idle-state-name = "cluster-power-down";
++			};
++		};
+ 	};
+ 
+ 	pmu {
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of the Code Aurora Forum, hosted by The Linux Foundation.
