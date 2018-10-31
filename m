@@ -1,175 +1,57 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: [PATCH V3 09/10] dts: fsl: add imx7ulp evk support
-Date: Wed, 31 Oct 2018 14:43:30 +0000
-Message-ID: <1540996688-23681-10-git-send-email-aisheng.dong@nxp.com>
-References: <1540996688-23681-1-git-send-email-aisheng.dong@nxp.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v2 4/4] ARM: dts: imx6sx: Add DISPLAY power domain support
+Date: Wed, 31 Oct 2018 15:05:59 +0000
+Message-ID: <20181031150559.GA20437@e107981-ln.cambridge.arm.com>
+References: <cover.1539020938.git.leonard.crestez@nxp.com>
+ <a3265a84052a7c11ae96e61e39adc988ca980d66.1539020938.git.leonard.crestez@nxp.com>
+ <20181031061134.GB10386@tiger>
+ <AM0PR04MB4290F31234D75AC7029F066FEECD0@AM0PR04MB4290.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1540996688-23681-1-git-send-email-aisheng.dong@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB4290F31234D75AC7029F066FEECD0@AM0PR04MB4290.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Ulf Hansson <ulf.hansson@linaro.org>, Richard Zhu <hongxing.zhu@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Stefan Agner <stefan@agner.ch>, Marek Vasut <marex@denx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The NXP i.MX 7ULP Evaluation Kit (EVK) provides a platform for rapid
-evaluation of the i.MX 7ULP, which features NXP's advanced implementation
-of the Arm Cortex-A7 core, the Arm Cortex-M4 core, as well as a 3D and
-2D Graphics Processing Units (GPUs).
+On Wed, Oct 31, 2018 at 12:17:50PM +0000, Leonard Crestez wrote:
+> On 10/31/2018 8:12 AM, Shawn Guo wrote:
+> > On Mon, Oct 08, 2018 at 06:06:23PM +0000, Leonard Crestez wrote:
+> >> This was implemented in the driver but not actually defined and
+> >> referenced in dts. This makes it always on.
+> >>
+> >>  From reference manual in section "10.4.1.4.1 Power Distribution":
+> >>
+> >> "Display domain - The DISPLAY domain contains GIS, CSI, PXP, LCDIF,
+> >> PCIe, DCIC, and LDB. It is supplied by internal regulator."
+> >>
+> >> The current pd_pcie is actually only for PCIE_PHY, the PCIE ip block is
+> >> actually inside the DISPLAY domain. Handle this by adding the pcie node
+> >> in both power domains.
+> >>
+> >> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> > 
+> > Applied, thanks.
+> 
+> As mentioned in the cover letter this requires multi-PD support in 
+> imx-pci to be implemented, specifically PATCH 3/4 of this series:
+> 
+> 	https://lore.kernel.org/patchwork/patch/996810/
+> 
+> Unless that also gets merged soon via pci I expect issues in linux-next. 
 
-The EVK enables HDMI output for simple out-of-the-box to bring up but
-allows reconfiguration for MIPI displays. The EVK is designed as a
-System-On-Module(SOM) board that connects to an associated baseboard.
-The SOM provides 1 GB LPDDR3, 8 MB Quad SPI flash, Micro SD 3.0 card
-socket, WiFi/ Bluetooth capability, USB 2.0 OTG with Type C connector
-and an NXP PF1550 power management IC (PMIC). The baseboard provides
-additional capabilities including a full SD/MMC 3.0 card socket, audio
-codec, multiple sensors, an HDMI connector, and an alternate MIPI display
-connector. Additionally, the EVK facilitates software development with the
-ultimate goal of faster time to market through the support of both
-Linux OS and AndroidTM rich operating systems, as well as FreeRTOS.
+I do not know what you mean by "issues in linux-next" (I assume you mean
+when Shawn sends the patches to linux-next in preparation for v4.21); we
+have not planned any other PCI pull request for v4.20-rc1 material.
 
-This patch aims to support the preliminary booting up features
-as follows:
-GPIO
-LPUART
-FEC
-SD/MMC
+> The patch already has reviewed-by tags so "merging it soon" is not 
+> unreasonable.
 
-See more board details:
-https://www.nxp.com/products/processors-and-microcontrollers/
-arm-based-processors-and-mcus/i.mx-applications-processors/
-i.mx-7-processors/evaluation-kit-for-the-i.mx-7ulp-applications
--processor:MCIMX7ULP-EVK
+I can ACK it if Shawn wants to pull it, it may take a while to see it
+in -next if it has to go through the PCI tree, I think it is better
+to queue the series without splitting the patches across multiple
+channels though.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
----
-ChangeLog:
-v2->v3:
- * remove "Generic DT based system"
- * add device_type property for memory node
- * back to old pinctrl binding according to SoC maintainer's suggestions
-v1->v2:
- * switch to SPDX license
- * pad name update
- * fix Character '_' not recommended in node name
- * separate from soc.dtsi file
----
- arch/arm/boot/dts/Makefile        |  2 +
- arch/arm/boot/dts/imx7ulp-evk.dts | 77 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 79 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx7ulp-evk.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d7268ae..39eac9c 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -573,6 +573,8 @@ dtb-$(CONFIG_SOC_IMX7D) += \
- 	imx7d-sdb-sht11.dtb \
- 	imx7s-colibri-eval-v3.dtb \
- 	imx7s-warp.dtb
-+dtb-$(CONFIG_SOC_IMX7ULP) += \
-+	imx7ulp-evk.dtb
- dtb-$(CONFIG_SOC_LS1021A) += \
- 	ls1021a-moxa-uc-8410a.dtb \
- 	ls1021a-qds.dtb \
-diff --git a/arch/arm/boot/dts/imx7ulp-evk.dts b/arch/arm/boot/dts/imx7ulp-evk.dts
-new file mode 100644
-index 0000000..07796f3
---- /dev/null
-+++ b/arch/arm/boot/dts/imx7ulp-evk.dts
-@@ -0,0 +1,77 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2016 Freescale Semiconductor, Inc.
-+ * Copyright 2017-2018 NXP
-+ *   Dong Aisheng <aisheng.dong@nxp.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx7ulp.dtsi"
-+
-+/ {
-+	model = "NXP i.MX7ULP EVK";
-+	compatible = "fsl,imx7ulp-evk", "fsl,imx7ulp";
-+
-+	chosen {
-+		stdout-path = &lpuart4;
-+	};
-+
-+	memory@60000000 {
-+		device_type = "memory";
-+		reg = <0x60000000 0x40000000>;
-+	};
-+
-+	reg_vsd_3v3: regulator-vsd-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VSD_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usdhc0_rst>;
-+		gpio = <&gpio_ptd 0 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+};
-+
-+&lpuart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart4>;
-+	status = "okay";
-+};
-+
-+&usdhc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc0>;
-+	cd-gpios = <&gpio_ptc 10 GPIO_ACTIVE_LOW>;
-+	vmmc-supply = <&reg_vsd_3v3>;
-+	status = "okay";
-+};
-+
-+&iomuxc1 {
-+	pinctrl_lpuart4: lpuart4grp {
-+		fsl,pins = <
-+			IMX7ULP_PAD_PTC3__LPUART4_RX	0x1
-+			IMX7ULP_PAD_PTC2__LPUART4_TX	0x1
-+		>;
-+		bias-pull-up;
-+	};
-+
-+	pinctrl_usdhc0: usdhc0grp {
-+		fsl,pins = <
-+			IMX7ULP_PAD_PTD1__SDHC0_CMD	0x41
-+			IMX7ULP_PAD_PTD2__SDHC0_CLK	0x40
-+			IMX7ULP_PAD_PTD7__SDHC0_D3	0x41
-+			IMX7ULP_PAD_PTD8__SDHC0_D2	0x41
-+			IMX7ULP_PAD_PTD9__SDHC0_D1	0x41
-+			IMX7ULP_PAD_PTD10__SDHC0_D0	0x41
-+			IMX7ULP_PAD_PTC10__PTC10	0x1	/* CD */
-+		>;
-+	};
-+
-+	pinctrl_usdhc0_rst: usdhc0-gpio-rst-grp {
-+		fsl,pins = <
-+			IMX7ULP_PAD_PTD0__PTD0		0x1
-+		>;
-+	};
-+};
--- 
-2.7.4
+Lorenzo
