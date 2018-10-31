@@ -1,74 +1,75 @@
-From: James Cameron <quozl@laptop.org>
-Subject: Re: [PATCH v2 0/8] OLPC 1.75 Keyboard/Touchpad fixes
-Date: Wed, 31 Oct 2018 10:54:30 +1100
-Message-ID: <20181030235430.GF30863@us.netrek.org>
-References: <20181010142504.233467-1-lkundrak@v3.sk>
- <20181015195612.GB29649@amd>
- <c4edf9b09e88cd265a0829644aa962c28cbc3d51.camel@v3.sk>
- <20181030100139.GB21529@amd>
- <20181030102610.GC21529@amd>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH v2] ARM: dts: fsl: Fix improperly quoted stdout-path values
+Date: Tue, 30 Oct 2018 20:02:30 -0500
+Message-ID: <20181031010230.6723-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181030102610.GC21529@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Lubomir Rintel <lkundrak@v3.sk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Stefan Agner <stefan@agner.ch>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-G'day Pavel,
+A quoted label reference doesn't expand to the node path and is taken as
+a literal string. Dropping the quotes can fix this unless the baudrate
+string is appended in which case we have to use the alias.
 
-On Tue, Oct 30, 2018 at 11:26:10AM +0100, Pavel Machek wrote:
-> Hi!
-> 
-> > > https://github.com/hackerspace/olpc-xo175-linux/wiki/How-to-run-an-up-to-date-Linux-on-a-XO-1.75
-> > > 
-> > > I didn't test it yet -- will do when I get home in the evening. But
-> > > chances are it's good enough and I guess you'd be able to get it
-> > > working even if I messed up some details.
-> 
-> Instruction say make, but you really need to do make zImage and make
-> mmp2-olpc-xo-1-75.dtb .
-> 
-> Instructions say "make -j", which is nice way to crash a machine. I
-> suggest "make -j 8" :-).
-> 
-> Ok, I think I followed the instructions. I am using empty root
-> filesystem, just with /boot -- want to see kernel messages first
-> before I mess with the userland.
-> 
-> But I don't get kernel messages during boot:
-> 
-> OLPC 1B1, 512 MiB memory...
-> OpenFirmware Q4C02 EC Frimware 0.3.02
-> 
-> Type any key to interrupt...
-> (but keys do not interrupt anything, ouch).
-> Warning... partition type is 0xb...
-> Boot device: /usb/disk:\boot\olpc.fth Arguments:
-> Boot device ....
-> Warning... partition type is 0xb...
+At least on VF610, the problem was masked by setting the console in
+bootargs. Use the alias syntax with baudrate parameter so we can drop
+setting the console in bootargs.
 
-That firmware has problems with USB drives.  Please upgrade to Q4D38.
-Quickest tested method is http://wiki.laptop.org/go/Upgrading_firmware
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Reviewed-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+v2:
+- Fix missing closing quote in vf610m4-colibri.dts
 
-I'm firmware releaser and signer.
+ arch/arm/boot/dts/imx53-ppd.dts       | 2 +-
+ arch/arm/boot/dts/vf610m4-colibri.dts | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-> And that's it, cursor and no kernel messages.
-> 
-> Any ideas?
-> 
-> Could I get prepared binary zImage for testing?
-> 
-> Thanks,
-> 									Pavel
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
-
-
+diff --git a/arch/arm/boot/dts/imx53-ppd.dts b/arch/arm/boot/dts/imx53-ppd.dts
+index cdb90bee7b4a..f202396e3f2a 100644
+--- a/arch/arm/boot/dts/imx53-ppd.dts
++++ b/arch/arm/boot/dts/imx53-ppd.dts
+@@ -55,7 +55,7 @@
+ 	};
+ 
+ 	chosen {
+-		stdout-path = "&uart1:115200n8";
++		stdout-path = "serial0:115200n8";
+ 	};
+ 
+ 	memory@70000000 {
+diff --git a/arch/arm/boot/dts/vf610m4-colibri.dts b/arch/arm/boot/dts/vf610m4-colibri.dts
+index 41ec66a96990..ca6249558760 100644
+--- a/arch/arm/boot/dts/vf610m4-colibri.dts
++++ b/arch/arm/boot/dts/vf610m4-colibri.dts
+@@ -50,8 +50,8 @@
+ 	compatible = "fsl,vf610m4";
+ 
+ 	chosen {
+-		bootargs = "console=ttyLP2,115200 clk_ignore_unused init=/linuxrc rw";
+-		stdout-path = "&uart2";
++		bootargs = "clk_ignore_unused init=/linuxrc rw";
++		stdout-path = "serial2:115200";
+ 	};
+ 
+ 	memory@8c000000 {
 -- 
-James Cameron
-http://quozl.netrek.org/
+2.19.1
