@@ -1,90 +1,90 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 0/8] OLPC 1.75 Keyboard/Touchpad fixes
-Date: Wed, 31 Oct 2018 13:46:09 +0100
-Message-ID: <20181031124609.GA18100@amd>
-References: <20181010142504.233467-1-lkundrak@v3.sk>
- <20181015195612.GB29649@amd>
- <c4edf9b09e88cd265a0829644aa962c28cbc3d51.camel@v3.sk>
- <20181030100139.GB21529@amd>
- <20181030102610.GC21529@amd>
- <2761d7e31cf7118492e466a5249303c92f68049b.camel@v3.sk>
- <20181031033746.GF8698@us.netrek.org>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: NXP P50XX/e5500 secondary CPUs not onlined with current mainline (was [PATCH 20/21] of: use for_each_of_cpu_node iterator)
+Date: Wed, 31 Oct 2018 23:46:39 +1100
+Message-ID: <87r2g6ffm8.fsf@concordia.ellerman.id.au>
+References: <20180905193738.19325-1-robh@kernel.org> <20180905193738.19325-21-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181031033746.GF8698@us.netrek.org>
+In-Reply-To: <20180905193738.19325-21-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: James Cameron <quozl@laptop.org>
-Cc: Lubomir Rintel <lkundrak@v3.sk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Frank Rowand <frowand.list@gmail.com>, Christian Zigotzky <chzigotzky@xenosoft.de>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
---bp/iNruPH9dso1Pn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This change is breaking some powerpc machines, ...
 
-Hi!
+Rob Herring <robh@kernel.org> writes:
+> Use the for_each_of_cpu_node iterator to iterate over cpu nodes. This
+> has the side effect of defaulting to iterating using "cpu" node names in
+> preference to the deprecated (for FDT) device_type == "cpu".
+>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Please ack and I will take via the DT tree. This is dependent on the
+> first 2 patches.
+>
+>  drivers/of/base.c    |  2 +-
+>  drivers/of/of_numa.c | 15 ++-------------
+>  2 files changed, 3 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 6389aeb2f48c..8285c07cab44 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -389,7 +389,7 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
+>  {
+>  	struct device_node *cpun;
+>
+> -	for_each_node_by_type(cpun, "cpu") {
+> +	for_each_of_cpu_node(cpun) {
+>  		if (arch_find_n_match_cpu_physical_id(cpun, cpu, thread))
+>  			return cpun;
+>  	}
 
-> > https://github.com/hackerspace/olpc-xo175-buildroot/releases
-> >=20
-> > Here's a SD card image that works for me. The topmost commit in the
-> > same repository is the build configuration that was used to generate
-> > it:
-> >=20
-> > https://github.com/hackerspace/olpc-xo175-buildroot/commit/71783d599.pa=
-tch
-> >=20
-> > Note it is only going to boot off the SD card, because the root=3D
-> > argument is hardwired in the devicetree. Sorry about that -- I built
-> > the image before I noticed you're booting off an USB stick and I don't
-> > have the resources to regenerate the image at the moment.
->=20
-> Your image does boot for me - after changing features on
-> filesystem.
->=20
-> 	http://dev.laptop.org/~quozl/y/1gHh5m.txt (dmesg)
->=20
-> dumpe2fs of your image filesystem features; has_journal ext_attr
-> resize_inode dir_index filetype flex_bg sparse_super large_file
-> huge_file dir_nlink extra_isize metadata_csum, and flags;
-> signed_directory_hash.
->=20
-> dumpe2fs of my image filesystem features; has_journal ext_attr
-> resize_inode dir_index filetype extent flex_bg sparse_super uninit_bg
-> dir_nlink extra_isize, and flags; unsigned_directory_hash.
->=20
-> Our OLPC OS builder uses "mkfs.ext4 -O dir_index,^huge_file", from
-> e2fsprogs 1.42.5.
->=20
-> I'll look at the microSD card errors; by trying another one.
+Previously we just looked for any node with a type of "cpu", but now
+we're using for_each_of_cpu_node(), which does:
 
-Success, too... after re-doing the filesystem with local mkfs.
+	for (; next; next = next->sibling) {
+		if (!(of_node_name_eq(next, "cpu") ||
+		      (next->type && !of_node_cmp(next->type, "cpu"))))
+			continue;
 
-One thing I noticed: olpc-battery/voltage_max_design is lower than
-voltage normally reported by voltage_now.
+		if (!__of_device_is_available(next))
+			continue;
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-I'll play with it some more
+		if (of_node_get(next))
+			break;
+	}
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
 
---bp/iNruPH9dso1Pn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+ie. the available check is new.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+On this machine the 2nd CPU is not marked as available:
 
-iEYEARECAAYFAlvZpBEACgkQMOfwapXb+vLY3gCguJBhkyJe+LYcAwtJ8cG8aki1
-fukAnR4nEpnSiT8zFDKrrGvH04c9SfzX
-=8caI
------END PGP SIGNATURE-----
+  root@p5020ds:/proc/device-tree/cpus/PowerPC,e5500@1# lsprop status 
+  status           "disabled"
 
---bp/iNruPH9dso1Pn--
+This has the effect of preventing the SMP code from finding the 2nd CPU
+in order to bring it up (in smp_85xx_start_cpu()). And so only the boot
+CPU is onlined.
+
+The device tree is built from a dts:
+
+  arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi
+
+But we don't set the status in there, so presumably u-boot is changing
+the status during boot? (not a u-boot expert).
+
+
+We could work around this in the platform code presumably, but I'm
+worried this might break other things as well. You didn't mention the
+addition of the available check in the change log so I wonder if it was
+deliberate or just seemed like a good idea?
+
+cheers
