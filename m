@@ -1,83 +1,90 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 5/6] of/fdt: Remove custom __early_init_dt_declare_initrd()
- implementation
-Date: Wed, 31 Oct 2018 07:29:47 -0500
-Message-ID: <CAL_JsqKynGpg5fgVes2UQprc0Re7-Yp2_jRYfyGxQdse9zro7g@mail.gmail.com>
-References: <20181030230721.28429-1-f.fainelli@gmail.com> <20181030230721.28429-6-f.fainelli@gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 0/8] OLPC 1.75 Keyboard/Touchpad fixes
+Date: Wed, 31 Oct 2018 13:46:09 +0100
+Message-ID: <20181031124609.GA18100@amd>
+References: <20181010142504.233467-1-lkundrak@v3.sk>
+ <20181015195612.GB29649@amd>
+ <c4edf9b09e88cd265a0829644aa962c28cbc3d51.camel@v3.sk>
+ <20181030100139.GB21529@amd>
+ <20181030102610.GC21529@amd>
+ <2761d7e31cf7118492e466a5249303c92f68049b.camel@v3.sk>
+ <20181031033746.GF8698@us.netrek.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181030230721.28429-6-f.fainelli@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20181031033746.GF8698@us.netrek.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, aryabinin@virtuozzo.com, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, ghackmann@android.com, Kristina Martsenko <kristina.martsenko@arm.com>, chandan.vn@samsung.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@v
+To: James Cameron <quozl@laptop.org>
+Cc: Lubomir Rintel <lkundrak@v3.sk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 30, 2018 at 6:07 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> Now that ARM64 uses phys_initrd_start/phys_initrd_size, we can get rid
-> of its custom __early_init_dt_declare_initrd() which causes a fair
-> amount of objects rebuild when changing CONFIG_BLK_DEV_INITRD. In order
-> to make sure ARM64 does not produce a BUG() when VM debugging is turned
-> on though, we must avoid early calls to __va() which is what
-> __early_init_dt_declare_initrd() does and wrap this around to avoid
-> running that code on ARM64.
->
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  arch/arm64/include/asm/memory.h | 8 --------
->  drivers/of/fdt.c                | 9 +++++++--
->  2 files changed, 7 insertions(+), 10 deletions(-)
->
-> diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
-> index b96442960aea..dc3ca21ba240 100644
-> --- a/arch/arm64/include/asm/memory.h
-> +++ b/arch/arm64/include/asm/memory.h
-> @@ -168,14 +168,6 @@
->  #define IOREMAP_MAX_ORDER      (PMD_SHIFT)
->  #endif
->
-> -#ifdef CONFIG_BLK_DEV_INITRD
-> -#define __early_init_dt_declare_initrd(__start, __end)                 \
-> -       do {                                                            \
-> -               initrd_start = (__start);                               \
-> -               initrd_end = (__end);                                   \
-> -       } while (0)
-> -#endif
-> -
->  #ifndef __ASSEMBLY__
->
->  #include <linux/bitops.h>
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index e34cb49231b5..f2b5becae96a 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -892,15 +892,20 @@ const void * __init of_flat_dt_match_machine(const void *default_match,
->  }
->
->  #ifdef CONFIG_BLK_DEV_INITRD
-> -#ifndef __early_init_dt_declare_initrd
->  static void __early_init_dt_declare_initrd(unsigned long start,
->                                            unsigned long end)
->  {
-> +       /* ARM64 would cause a BUG to occur here when CONFIG_DEBUG_VM is
-> +        * enabled since __va() is called too early. ARM64 does make use
-> +        * of phys_initrd_start/phys_initrd_size so we can skip this
-> +        * conversion.
-> +        */
-> +#if (!IS_ENABLED(CONFIG_ARM64))
 
-Use 'if' not '#if'. Use C code rather than preprocessor whenever possible.
+--bp/iNruPH9dso1Pn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->         initrd_start = (unsigned long)__va(start);
->         initrd_end = (unsigned long)__va(end);
->         initrd_below_start_ok = 1;
-> -}
->  #endif
-> +}
->
->  /**
->   * early_init_dt_check_for_initrd - Decode initrd location from flat tree
-> --
-> 2.17.1
->
+Hi!
+
+> > https://github.com/hackerspace/olpc-xo175-buildroot/releases
+> >=20
+> > Here's a SD card image that works for me. The topmost commit in the
+> > same repository is the build configuration that was used to generate
+> > it:
+> >=20
+> > https://github.com/hackerspace/olpc-xo175-buildroot/commit/71783d599.pa=
+tch
+> >=20
+> > Note it is only going to boot off the SD card, because the root=3D
+> > argument is hardwired in the devicetree. Sorry about that -- I built
+> > the image before I noticed you're booting off an USB stick and I don't
+> > have the resources to regenerate the image at the moment.
+>=20
+> Your image does boot for me - after changing features on
+> filesystem.
+>=20
+> 	http://dev.laptop.org/~quozl/y/1gHh5m.txt (dmesg)
+>=20
+> dumpe2fs of your image filesystem features; has_journal ext_attr
+> resize_inode dir_index filetype flex_bg sparse_super large_file
+> huge_file dir_nlink extra_isize metadata_csum, and flags;
+> signed_directory_hash.
+>=20
+> dumpe2fs of my image filesystem features; has_journal ext_attr
+> resize_inode dir_index filetype extent flex_bg sparse_super uninit_bg
+> dir_nlink extra_isize, and flags; unsigned_directory_hash.
+>=20
+> Our OLPC OS builder uses "mkfs.ext4 -O dir_index,^huge_file", from
+> e2fsprogs 1.42.5.
+>=20
+> I'll look at the microSD card errors; by trying another one.
+
+Success, too... after re-doing the filesystem with local mkfs.
+
+One thing I noticed: olpc-battery/voltage_max_design is lower than
+voltage normally reported by voltage_now.
+
+I'll play with it some more
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--bp/iNruPH9dso1Pn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlvZpBEACgkQMOfwapXb+vLY3gCguJBhkyJe+LYcAwtJ8cG8aki1
+fukAnR4nEpnSiT8zFDKrrGvH04c9SfzX
+=8caI
+-----END PGP SIGNATURE-----
+
+--bp/iNruPH9dso1Pn--
