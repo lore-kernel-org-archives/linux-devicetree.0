@@ -1,61 +1,32 @@
-Return-Path: <SRS0=uEnD=MT=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from saturn.retrosnub.co.uk ([46.235.226.198]:52588 "EHLO
-        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbeJGXqO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 7 Oct 2018 19:46:14 -0400
-Date: Sun, 7 Oct 2018 17:38:22 +0100
-From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Subject: Re: [PATCH 2/2] Add ti,dac7311 device tree bindings in
- documentation
-Message-ID: <20181007173822.71e92f57@archlinux>
-In-Reply-To: <20181006203108.20439-2-charles-antoine.couret@essensium.com>
-References: <20181006203108.20439-1-charles-antoine.couret@essensium.com>
-        <20181006203108.20439-2-charles-antoine.couret@essensium.com>
+Return-Path: <SRS0=fPTE=NL=verge.net.au=horms@kernel.org>
+Date: Wed, 31 Oct 2018 15:25:05 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] dt-bindings: timer: renesas, cmt: Document r8a77470 CMT
+ support
+Message-ID: <20181031142501.dun2rla6mi5vginu@verge.net.au>
+References: <1540542973-15752-1-git-send-email-biju.das@bp.renesas.com>
+ <TYXPR01MB1775E03BA074105B92580477C0F00@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+ <20181031125516.t7ahujfvqmuej5u2@verge.net.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Sender: devicetree-owner@vger.kernel.org
-To: Charles-Antoine Couret <charles-antoine.couret@essensium.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181031125516.t7ahujfvqmuej5u2@verge.net.au>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Sat,  6 Oct 2018 22:31:08 +0200
-Charles-Antoine Couret <charles-antoine.couret@essensium.com> wrote:
-
-> Signed-off-by: Charles-Antoine Couret <charles-antoine.couret@essensium.com>
-+ devicetree list and maintainers.
-
-> ---
->  .../bindings/iio/dac/ti,dac7311.txt           | 20 +++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/dac/ti,dac7311.txt
+On Wed, Oct 31, 2018 at 01:55:16PM +0100, Simon Horman wrote:
+> On Fri, Oct 26, 2018 at 09:48:19AM +0000, Fabrizio Castro wrote:
+> > > Subject: [PATCH] dt-bindings: timer: renesas, cmt: Document r8a77470 CMT support
+> > >
+> > > Document SoC specific compatible strings for r8a77470. No driver change
+> > > is needed as the fallback strings will activate the right code.
+> > >
+> > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > 
+> > Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/dac/ti,dac7311.txt b/Documentation/devicetree/bindings/iio/dac/ti,dac7311.txt
-> new file mode 100644
-> index 000000000000..77fd4370f815
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/dac/ti,dac7311.txt
-> @@ -0,0 +1,20 @@
-> +TI DAC7311 DEVICETREE BINDINGS
+> Thanks, applied for v4.21.
 
-Why all these capitals?
-
-> +
-> +Required properties:
-> +
-> +- compatible: Must be set to "ti,dac7311", "ti,dac6311" or "ti,dac5311"
-> +- reg: spi chip select number for the device
-> +- vref-supply: The regulator supply for ADC reference voltage
-> +- spi-max-frequency: Max SPI frequency to use (< 50000000)
-> +
-> +Example:
-> +
-> +	spi_master {
-> +		dac7311: dac7311@0 {
-> +			compatible = "ti,dac7311";
-> +			reg = <0>; /* CS0 */
-> +			spi-max-frequency = <1000000>;
-> +			vref-supply = <&vdd_supply>;
-> +		};
-> +	};
-> +
+On second thoughts, I think this should either go through
+Daniel's tree or be acked by him.
