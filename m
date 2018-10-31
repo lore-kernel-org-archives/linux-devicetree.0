@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v3 4/6] arm64: Utilize phys_initrd_start/phys_initrd_size
-Date: Wed, 31 Oct 2018 12:28:41 -0700
-Message-ID: <20181031192843.13230-5-f.fainelli@gmail.com>
+Subject: [PATCH v3 6/6] arch: Move initrd= parsing into do_mounts_initrd.c
+Date: Wed, 31 Oct 2018 12:28:43 -0700
+Message-ID: <20181031192843.13230-7-f.fainelli@gmail.com>
 References: <20181031192843.13230-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181031192843.13230-1-f.fainelli@gmail.com>
@@ -10,67 +10,176 @@ To: linux-kernel@vger.kernel.org
 Cc: Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-ARM64 is the only architecture that re-defines
-__early_init_dt_declare_initrd() in order for that function to populate
-initrd_start/initrd_end with physical addresses instead of virtual
-addresses. Instead of having an override we can leverage
-drivers/of/fdt.c populating phys_initrd_start/phys_initrd_size to
-populate those variables for us.
+ARC, ARM, ARM64 and Unicore32 are all capable of parsing the "initrd="
+command line parameter to allow specifying the physical address and size
+of an initrd. Move that parsing into init/do_mounts_initrd.c such that
+we no longer duplicate that logic.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/arm64/mm/init.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ arch/arc/mm/init.c       | 25 +++++--------------------
+ arch/arm/mm/init.c       | 17 -----------------
+ arch/arm64/mm/init.c     | 18 ------------------
+ arch/unicore32/mm/init.c | 18 ------------------
+ init/do_mounts_initrd.c  | 17 +++++++++++++++++
+ 5 files changed, 22 insertions(+), 73 deletions(-)
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 3cf87341859f..00ef2166bb73 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -72,8 +72,8 @@ static int __init early_initrd(char *p)
- 	if (*endp == ',') {
- 		size = memparse(endp + 1, NULL);
- 
--		initrd_start = start;
--		initrd_end = start + size;
-+		phys_initrd_start = start;
-+		phys_initrd_size = size;
- 	}
- 	return 0;
+diff --git a/arch/arc/mm/init.c b/arch/arc/mm/init.c
+index ba145065c579..55879a9dee0d 100644
+--- a/arch/arc/mm/init.c
++++ b/arch/arc/mm/init.c
+@@ -79,24 +79,6 @@ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+ 		base, TO_MB(size), !in_use ? "Not used":"");
  }
-@@ -408,14 +408,14 @@ void __init arm64_memblock_init(void)
- 		memblock_add(__pa_symbol(_text), (u64)(_end - _text));
- 	}
  
--	if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && initrd_start) {
-+	if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {
- 		/*
- 		 * Add back the memory we just removed if it results in the
- 		 * initrd to become inaccessible via the linear mapping.
- 		 * Otherwise, this is a no-op
- 		 */
--		u64 base = initrd_start & PAGE_MASK;
--		u64 size = PAGE_ALIGN(initrd_end) - base;
-+		u64 base = phys_initrd_start & PAGE_MASK;
-+		u64 size = PAGE_ALIGN(phys_initrd_size);
- 
- 		/*
- 		 * We can only add back the initrd memory if we don't end up
-@@ -460,12 +460,11 @@ void __init arm64_memblock_init(void)
- 	 */
- 	memblock_reserve(__pa_symbol(_text), _end - _text);
- #ifdef CONFIG_BLK_DEV_INITRD
--	if (initrd_start) {
--		memblock_reserve(initrd_start, initrd_end - initrd_start);
+-#ifdef CONFIG_BLK_DEV_INITRD
+-static int __init early_initrd(char *p)
+-{
+-	unsigned long start, size;
+-	char *endp;
 -
+-	start = memparse(p, &endp);
+-	if (*endp == ',') {
+-		size = memparse(endp + 1, NULL);
+-
+-		initrd_start = (unsigned long)__va(start);
+-		initrd_end = (unsigned long)__va(start + size);
+-	}
+-	return 0;
+-}
+-early_param("initrd", early_initrd);
+-#endif
+-
+ /*
+  * First memory setup routine called from setup_arch()
+  * 1. setup swapper's mm @init_mm
+@@ -141,8 +123,11 @@ void __init setup_arch_memory(void)
+ 	memblock_reserve(low_mem_start, __pa(_end) - low_mem_start);
+ 
+ #ifdef CONFIG_BLK_DEV_INITRD
+-	if (initrd_start)
+-		memblock_reserve(__pa(initrd_start), initrd_end - initrd_start);
 +	if (phys_initrd_size) {
- 		/* the generic initrd code expects virtual addresses */
--		initrd_start = __phys_to_virt(initrd_start);
--		initrd_end = __phys_to_virt(initrd_end);
-+		initrd_start = __phys_to_virt(phys_initrd_start);
++		memblock_reserve(phys_initrd_start, phys_initrd_size);
++		initrd_start = (unsigned long)__va(phys_initrd_start);
 +		initrd_end = initrd_start + phys_initrd_size;
-+		initrd_below_start_ok = 0;
- 	}
++	}
  #endif
  
+ 	early_init_fdt_reserve_self();
+diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+index 4bfa08e27319..58ec68709606 100644
+--- a/arch/arm/mm/init.c
++++ b/arch/arm/mm/init.c
+@@ -52,23 +52,6 @@ unsigned long __init __clear_cr(unsigned long mask)
+ #endif
+ 
+ #ifdef CONFIG_BLK_DEV_INITRD
+-static int __init early_initrd(char *p)
+-{
+-	phys_addr_t start;
+-	unsigned long size;
+-	char *endp;
+-
+-	start = memparse(p, &endp);
+-	if (*endp == ',') {
+-		size = memparse(endp + 1, NULL);
+-
+-		phys_initrd_start = start;
+-		phys_initrd_size = size;
+-	}
+-	return 0;
+-}
+-early_param("initrd", early_initrd);
+-
+ static int __init parse_tag_initrd(const struct tag *tag)
+ {
+ 	pr_warn("ATAG_INITRD is deprecated; "
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 00ef2166bb73..d95a6cb205b8 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -62,24 +62,6 @@
+ s64 memstart_addr __ro_after_init = -1;
+ phys_addr_t arm64_dma_phys_limit __ro_after_init;
+ 
+-#ifdef CONFIG_BLK_DEV_INITRD
+-static int __init early_initrd(char *p)
+-{
+-	unsigned long start, size;
+-	char *endp;
+-
+-	start = memparse(p, &endp);
+-	if (*endp == ',') {
+-		size = memparse(endp + 1, NULL);
+-
+-		phys_initrd_start = start;
+-		phys_initrd_size = size;
+-	}
+-	return 0;
+-}
+-early_param("initrd", early_initrd);
+-#endif
+-
+ #ifdef CONFIG_KEXEC_CORE
+ /*
+  * reserve_crashkernel() - reserves memory for crash kernel
+diff --git a/arch/unicore32/mm/init.c b/arch/unicore32/mm/init.c
+index f2f815d46846..99acdb829a7e 100644
+--- a/arch/unicore32/mm/init.c
++++ b/arch/unicore32/mm/init.c
+@@ -31,24 +31,6 @@
+ 
+ #include "mm.h"
+ 
+-#ifdef CONFIG_BLK_DEV_INITRD
+-static int __init early_initrd(char *p)
+-{
+-	unsigned long start, size;
+-	char *endp;
+-
+-	start = memparse(p, &endp);
+-	if (*endp == ',') {
+-		size = memparse(endp + 1, NULL);
+-
+-		phys_initrd_start = start;
+-		phys_initrd_size = size;
+-	}
+-	return 0;
+-}
+-early_param("initrd", early_initrd);
+-#endif
+-
+ /*
+  * This keeps memory configuration data used by a couple memory
+  * initialization functions, as well as show_mem() for the skipping
+diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
+index 45865b72f4ea..732d21f4a637 100644
+--- a/init/do_mounts_initrd.c
++++ b/init/do_mounts_initrd.c
+@@ -27,6 +27,23 @@ static int __init no_initrd(char *str)
+ 
+ __setup("noinitrd", no_initrd);
+ 
++static int __init early_initrd(char *p)
++{
++	phys_addr_t start;
++	unsigned long size;
++	char *endp;
++
++	start = memparse(p, &endp);
++	if (*endp == ',') {
++		size = memparse(endp + 1, NULL);
++
++		phys_initrd_start = start;
++		phys_initrd_size = size;
++	}
++	return 0;
++}
++early_param("initrd", early_initrd);
++
+ static int init_linuxrc(struct subprocess_info *info, struct cred *new)
+ {
+ 	ksys_unshare(CLONE_FS | CLONE_FILES);
 -- 
 2.17.1
