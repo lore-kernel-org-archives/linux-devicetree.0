@@ -1,15 +1,15 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3] arm64: dts: add LX2160AQDS board support
-Date: Wed, 31 Oct 2018 14:27:41 +0800
-Message-ID: <20181031062738.GE10386@tiger>
-References: <20181005081053.27105-1-pankaj.bansal@nxp.com>
- <20181017160430.22381-1-pankaj.bansal@nxp.com>
+Subject: Re: [PATCH v2] dt-bindings: ls1012a: Add FRWY-LS1012A device tree
+ binding
+Date: Wed, 31 Oct 2018 14:48:12 +0800
+Message-ID: <20181031064809.GF10386@tiger>
+References: <20181026084554.32290-1-pramod.kumar_1@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20181017160430.22381-1-pankaj.bansal@nxp.com>
+In-Reply-To: <20181026084554.32290-1-pramod.kumar_1@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,15 +19,17 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pankaj Bansal <pankaj.bansal@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Vabhav Sharma <vabhav.sharma@nxp.com>, Sriram Dash <sriram.dash@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Pramod Kumar <pramod.kumar_1@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 17, 2018 at 10:32:45AM +0000, Pankaj Bansal wrote:
-> The LX2160A QorIQ Development System (QDS) is a test, evaluation, and
-> development platform, supporting QorIQ LX2160A processor.
+On Fri, Oct 26, 2018 at 08:45:26AM +0000, Pramod Kumar wrote:
+> LS1012A-FRWY is an ls1012a based SoC board
+> Add device tree binding for LS1012A-FRWY board
 > 
-> Signed-off-by: Sriram Dash <sriram.dash@nxp.com>
-> Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
+> Signed-off-by: Pramod Kumar <pramod.kumar_1@nxp.com>
+
+It should really be sent together with "arm64: dts: ls1012a: Add
+FRWY-LS1012A board support" as a patch series.
 
 Applied, thanks.
