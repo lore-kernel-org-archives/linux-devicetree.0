@@ -1,44 +1,54 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 5/7] arm64: allwinner: h6: Add RTC node
-Date: Thu,  1 Nov 2018 00:06:32 +0530
-Message-ID: <20181031183634.29640-5-jagan@amarulasolutions.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH 6/7] arm64: allwinner: h6: Add RTC clock to
+ phandle 32kHz external oscillator
+Date: Thu,  1 Nov 2018 00:06:33 +0530
+Message-ID: <20181031183634.29640-6-jagan@amarulasolutions.com>
 References: <20181031183634.29640-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181031183634.29640-1-jagan@amarulasolutions.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Cc: Jagan Teki <jagan@openedev.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBYPM47PAKGQEAZNG6YI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181031183634.29640-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan@openedev.com>
+From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 
-RTC controller is similar to A31, so use the same compatible
-for H6 and update interrupt numbers as per manual.
+Outside of SOC few chips need external clock source through RTC example
+Wifi chip. So H6 RTC clock node need to phandle 32kHz external oscillator
+like A64 RTC.
 
-Signed-off-by: Jagan Teki <jagan@openedev.com>
+Add support for it.
+
+prefix rtc- with clock-output-names defined in dt-binding to avoid
+confusion with existing osc32k name.
+
+Signed-off-by: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 3b9da12e65db..c8d2fe76da7e 100644
+index c8d2fe76da7e..028ec286aa0a 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -266,6 +266,13 @@
- 			status = "disabled";
+@@ -271,6 +271,9 @@
+ 			reg = <0x7000000 0x400>;
+ 			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
++			clock-output-names = "rtc-osc32k", "rtc-osc32k-out";
++			clocks = <&osc32k>;
++			#clock-cells = <1>;
  		};
  
-+		rtc: rtc@7000000 {
-+			compatible = "allwinner,sun6i-a31-rtc";
-+			reg = <0x7000000 0x400>;
-+			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
  		r_ccu: clock@7010000 {
- 			compatible = "allwinner,sun50i-h6-r-ccu";
- 			reg = <0x07010000 0x400>;
 -- 
 2.18.0.321.gffc6fa0e3
