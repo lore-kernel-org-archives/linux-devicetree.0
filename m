@@ -1,61 +1,63 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 22/25] dt-bindings: sun6i-dsi: Add
- compatible for A64 DPHY
-Date: Wed, 31 Oct 2018 10:24:32 +0800
-Message-ID: <CAGb2v65a-+-U74QWBvHLJ9e+_dWY3Cy+h9CfAFHqmFnB0GmcBw@mail.gmail.com>
-References: <20181026144344.27778-1-jagan@amarulasolutions.com> <20181026144344.27778-23-jagan@amarulasolutions.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v5 04/11] dt-bindings: iio: adc: add AXP803 ADC bindings
+Date: Wed, 31 Oct 2018 10:29:59 +0800
+Message-ID: <CAGb2v65JKj_7VcEr1KuZVop85hn-3h73NrExprpmLbKZiosD5Q@mail.gmail.com>
+References: <20181023185330.10472-1-oskari@lemmela.net> <20181023185330.10472-5-oskari@lemmela.net>
+ <20181024135633.GA342@bogus> <20181028154011.04efdecf@archlinux> <20181029130757.m5okrfvusjl5fu5m@qschulz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB35E4TPAKGQEBH2XK7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181026144344.27778-23-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181029130757.m5okrfvusjl5fu5m@qschulz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@jic23.retrosnub.co.uk
+Cc: Rob Herring <robh@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-iio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Sebastian Reichel <sre@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Quentin Schulz <quentin.schulz@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, oskari@lemmela.net, linux-gpio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Quentin Schulz <quentin.schulz@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 26, 2018 at 10:46 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+On Mon, Oct 29, 2018 at 9:10 PM Quentin Schulz
+<quentin.schulz@bootlin.com> wrote:
 >
-> The MIPI DSI PHY HDMI controller on Allwinner A64 is similar
-> on the one on A31.
+> Hi Jonathan,
 >
-> Add A64 compatible and append A31 compatible as fallback.
+> On Sun, Oct 28, 2018 at 03:40:11PM +0000, Jonathan Cameron wrote:
+> > On Wed, 24 Oct 2018 08:56:33 -0500
+> > Rob Herring <robh@kernel.org> wrote:
+> >
+> > > On Tue, 23 Oct 2018 21:53:23 +0300, Oskari Lemmela wrote:
+> > > > The AXP803 ADC is compatible with AXP813 ADC, but add
+> > > > specific compatible for it.
+> > > >
+> > > > Signed-off-by: Oskari Lemmela <oskari@lemmela.net>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/iio/adc/axp20x_adc.txt | 2 ++
+> > > >  1 file changed, 2 insertions(+)
+> > > >
+> > >
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> >
+> > This doesn't seem to have any dependencies with the other patches
+> > so applied to the togreg branch of iio.git and pushed out as testing
+> > for the autobuilders to ignore.  However I am a little curious to know
+> > why we would add the ID and then not use it (that I can see)?
+> >
 >
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> ---
-> Changes for v3:
-> - none
-> Changes for v2:
-> - new patch
+> Sometimes with Allwinner (and X-Powers), two IPs seem identical until we
+> discover something that is slightly different. When this happens, we
+> have to add a compatible to differentiate both. However, we would also
+> need to change the Device Tree to change the compatible. We would need
+> to handle the driver behaviour for both Device Trees.
 >
->  Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> So better anticipate a possible difference so that we don't have to do
+> some hacks in the driver to handle the device correctly.
 >
-> diff --git a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-> index 9fa6e7a758ad..704fb31962f2 100644
-> --- a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-> +++ b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-> @@ -36,7 +36,7 @@ D-PHY
->
->  Required properties:
->    - compatible: value must be one of:
-> -    * allwinner,sun6i-a31-mipi-dphy
-> +    * "allwinner,sun50i-a64-mipi-dphy", "allwinner,sun6i-a31-mipi-dphy"
+> As always, Chen-Yu or Maxime may know better so I'm just stating what I
+> seem to recall.
 
-The format for this is one "combination" per line. You need to keep the
-original "allwinner,sun6i-a31-mipi-dphy".
+With Allwinner stuff (X-Powers included), sometimes the documents are
+incomplete or have errors. We tend to add a model-specific compatible
+just in case things turn out not to be so compatible, unless someone
+has triple-checked everything, documents and actual hardware included.
+
+However we don't actually document these, so this patch isn't strictly
+needed. (I suppose this might annoy the device tree binding maintainers.)
 
 ChenYu
-
->    - reg: base address and size of memory-mapped region
->    - clocks: phandles to the clocks feeding the DSI encoder
->      * bus: the DSI interface clock
-> --
-> 2.18.0.321.gffc6fa0e3
->
