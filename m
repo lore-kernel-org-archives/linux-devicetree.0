@@ -1,61 +1,81 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH V2] ARM: dts: imx6qdl-icore: Add missing stdout-path
- property
-Date: Wed, 31 Oct 2018 15:56:31 +0800
-Message-ID: <20181031075630.GN10386@tiger>
-References: <20181018150305.21408-1-shyam.saini@amarulasolutions.com>
- <20181018184532.xe2llbhwjuffgchx@pengutronix.de>
- <CA+drQ_OZHPSXoECX4z7oWEwNV11EUn=DviNa6nmDpWKBs2o8+Q@mail.gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v3 17/25] dt-bindings: panel: Add Bananapi S070WV20-CT16
+ ICN6211 MIPI-DSI to RGB bridge
+Date: Wed, 31 Oct 2018 09:53:09 +0100
+Message-ID: <3c4c8a08-8c1e-1ac6-2b53-81389d69c97b@samsung.com>
+References: <20181026144344.27778-1-jagan@amarulasolutions.com>
+ <CGME20181029111305epcas5p2ee0ca644470de4e036762e000afbb71b@epcas5p2.samsung.com>
+ <20181026144344.27778-18-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CA+drQ_OZHPSXoECX4z7oWEwNV11EUn=DviNa6nmDpWKBs2o8+Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shyam Saini <shyam.saini@amarulasolutions.com>
-Cc: devicetree@vger.kernel.org, s.hauer@pengutronix.de, l.stach@pengutronix.de, Jagan Teki <jagan@amarulasolutions.com>, kernel@pengutronix.de, u.kleine-koenig@pengutronix.de, fabio.estevam@nxp.com, Michael Nazzareno Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20181026144344.27778-18-jagan@amarulasolutions.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jagan Teki <jagan@amarulasolutions.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 23, 2018 at 10:51:59AM +0530, Shyam Saini wrote:
-> On Fri, Oct 19, 2018 at 12:15 AM Uwe Kleine-K=F6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> >
-> > On Thu, Oct 18, 2018 at 08:33:05PM +0530, Shyam Saini wrote:
-> > > This would help us to get early boot logs by passing "earlycon" to
-> > > kernel bootargs.
-> > >
-> > > Further, by adding this we don't have to depend on complex earlyprintk
-> > > configs for early boot logs.
-> > >
-> > > Signed-off-by: Shyam Saini <shyam.saini@amarulasolutions.com>
-> > > Reviewed-by: Fabio Estevam <festevam@gmail.com>
-> >
-> > minor nit: your S-o-b line should be the last thing you write. So it's
-> >
-> >         Signed-off-by: Shyam Saini <shyam.saini@amarulasolutions.com>
-> >         Reviewed-by: Fabio Estevam <festevam@gmail.com>
-> >         Signed-off-by: John Maintainer <john@example.org>
-> >
-> > if John added the Reviewed-by tag and
-> >
-> >         Reviewed-by: Fabio Estevam <festevam@gmail.com>
-> >         Signed-off-by: Shyam Saini <shyam.saini@amarulasolutions.com>
-> >         Signed-off-by: John Maintainer <john@example.org>
-> >
-> > if it was you.
-> =
-
-> Thanks a lot Uwe for your suggestion. I'll take care of this thing next t=
-ime.
-> @Shawn would you please make the minor change as suggested by Uwe.
-
-Applied with the suggested change, thanks.
+T24gMjYuMTAuMjAxOCAxNjo0MywgSmFnYW4gVGVraSB3cm90ZToKPiBCYW5hbmFwaSBTMDcwV1Yy
+MC1DVDE2IElDTjYyMTEgaXMgODAweDQ4MCwgNC1sYW5lIE1JUEktRFNJIHRvIFJHQgo+IGJyaWRn
+ZSBwYW5lbCwgd2hpY2ggaXMgYXZhaWxhYmxlIG9uIHNhbWUgUENCIHdpdGggMjQtYml0IFJHQiBp
+bnRlcmZhY2UuCj4KPiBTbywgdGhpcyBwYXRjaCBhZGRzIERTSSBzcGVjaWZpYyBiaW5kaW5nIGRl
+dGFpbHMgb24gZXhpc3RpbmcKPiBkdC1iaW5kaW5ncyBmaWxlLgo+Cj4gU2lnbmVkLW9mZi1ieTog
+SmFnYW4gVGVraSA8amFnYW5AYW1hcnVsYXNvbHV0aW9ucy5jb20+Cj4gLS0tCj4gQ2hhbmdlcyBm
+b3IgdjM6Cj4gLSBVc2UgZXhpc3RpbmcgYmluZGluZyBkb2MgYW5kIHVwZGF0ZSBkc2kgZGV0YWls
+cwo+IENoYW5nZXMgZm9yIHYyOgo+IC0gbm9uZQo+Cj4gIC4uLi9kaXNwbGF5L3BhbmVsL2JhbmFu
+YXBpLHMwNzB3djIwLWN0MTYudHh0ICB8IDMxICsrKysrKysrKysrKysrKysrLS0KPiAgMSBmaWxl
+IGNoYW5nZWQsIDI5IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4KPiBkaWZmIC0tZ2l0
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYmFuYW5h
+cGksczA3MHd2MjAtY3QxNi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9wYW5lbC9iYW5hbmFwaSxzMDcwd3YyMC1jdDE2LnR4dAo+IGluZGV4IDM1YmMwYzgz
+OWY0OS4uYjc4NTVkYzdjNjZmIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2JhbmFuYXBpLHMwNzB3djIwLWN0MTYudHh0Cj4gKysr
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYmFuYW5h
+cGksczA3MHd2MjAtY3QxNi50eHQKPiBAQCAtMSwxMiArMSwzOSBAQAo+ICBCYW5hbmEgUGkgNyIg
+KFMwNzBXVjIwLUNUMTYpIFRGVCBMQ0QgUGFuZWwKPiAgCj4gK1MwNzBXVjIwLUNUMTYgaXMgNyIg
+ODAweDQ4MCBwYW5lbCBjb25uZWN0ZWQgdGhyb3VnaCBhIDI0LWJpdCBSR0IgaW50ZXJmYWNlLgo+
+ICsKPiArRGVwZW5kaW5nIG9uIHRoZSB2YXJpYW50LCB0aGUgUENCIGF0dGFjaGVkIHRvIHRoZSBw
+YW5lbCBtb2R1bGUgZWl0aGVyCj4gK3N1cHBvcnRzIERTSSwgb3IgRFNJICsgMjQtYml0IFJHQi4g
+RFNJIGlzIGNvbnZlcnRlZCB0byAyNC1iaXQgUkdCIHZpYQo+ICthbiBvbmJvYXJkIElDTjYyMTEg
+TUlQSSBEU0kgLSBSR0IgYnJpZGdlIGNoaXAsIHRoZW4gZmVkIHRvIHRoZSBwYW5lbAo+ICtpdHNl
+bGYKCkFzIEkgdW5kZXJzdGFuZCB0aGlzIGlzIGRpc3BsYXkgYm9hcmQsIHdoaWNoIGNvbnRhaW5z
+ICdwdXJlJyBSR0IgcGFuZWwKUzA3MFdWMjAtQ1QxNiBhbmQgb3B0aW9uYWxseSBJQ042MjExIERT
+SS0+UkdCIGJyaWRnZS4KVGhlc2UgYXJlIHNlcGFyYXRlIGRldmljZXMsIGp1c3QgY29ubmVjdGVk
+IGJ5IHZlbmRvciB0byBzaW1wbGlmeSBpdHMKYXNzZW1ibHkuIFdoeSBkb24ndCB5b3UgY3JlYXRl
+IHRoZW4gYnJpZGdlIGRyaXZlciBmb3IgSUNONjIxMSBhbmQgUkdCCnBhbmVsIGRyaXZlciBmb3Ig
+UzA3MFdWMjAtQ1QxNiAtIGl0IGxvb2tzIG1vcmUgZ2VuZXJpYy4KVGhlbiB5b3UgY2FuIGRlc2Ny
+aWJlIGJvdGggaW4gZHRzIGFuZCB2b2lsYS4KQ3JlYXRpbmcgZHJpdmVycyBmb3IgZXZlcnkgY29t
+Ym8gb2YgZGV2aWNlcyAocGFuZWwgKyBicmlkZ2UpLCBqdXN0CmJlY2F1c2Ugc29tZSB2ZW5kb3Ig
+c2VsbHMgdGhlbSB0b2dldGhlciBzZWVtcyBpbmNvcnJlY3QgLSB3ZSBoYXZlCmRldmljZXRyZWUg
+Zm9yIGl0LgoKUmVnYXJkcwpBbmRyemVqCgoKPiArCj4gIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4g
+LS0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJiYW5hbmFwaSxzMDcwd3YyMC1jdDE2Igo+ICstIGNv
+bXBhdGlibGU6Cj4gKyAgZm9yIDI0LWJpdCBSR0IgaW50ZXJmYWNlLCB1c2UgImJhbmFuYXBpLHMw
+NzB3djIwLWN0MTYiCj4gKyAgZm9yIElDTjYyMTEgTUlQSS1EU0kgdG8gUkdCIGJyaWRnZSwgdXNl
+ICJiYW5hbmFwaSxzMDcwd3YyMC1jdDE2LWljbjYyMTEiCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0
+aWVzIGZvciBSR0I6Cj4gIC0gcG93ZXItc3VwcGx5OiBzZWUgLi9wYW5lbC1jb21tb24udHh0Cj4g
+IAo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciBNSVBJLURTSSB0byBSR0I6Cj4gKy0gcmVnOiBm
+b3IgRFNJIHZpcnR1YWwgY2hhbm5lbCB1c2VkIGJ5IHRoYXQgc2NyZWVuCj4gKy0gYXZkZC1zdXBw
+bHk6IGFuYWxvZyByZWd1bGF0b3IgZGMxIHN3aXRjaAo+ICstIGR2ZGQtc3VwcGx5OiAzdjMgZGln
+aXRhbCByZWd1bGF0b3IKPiArLSByZXNldC1ncGlvczogYSBHUElPIHBoYW5kbGUgZm9yIHRoZSBy
+ZXNldCBwaW4KPiArCj4gIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gLS0gZW5hYmxlLWdwaW9zOiBz
+ZWUgLi9zaW1wbGUtcGFuZWwudHh0Cj4gKy0gZW5hYmxlLWdwaW9zOiBzZWUgLi9zaW1wbGUtcGFu
+ZWwudHh0KG5vdCBhdmFpbGFibGUgaW4gTUlQSS1EU0kgdG8gUkdCIGJyaWRnZSkKPiAgLSBiYWNr
+bGlnaHQ6IHNlZSAuL3NpbXBsZS1wYW5lbC50eHQKPiAgCj4gIFRoaXMgYmluZGluZyBpcyBjb21w
+YXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQK
+PiAgaW4gLi9zaW1wbGUtcGFuZWwudHh0Lgo+ICsKPiArRXhhbXBsZToKPiArcGFuZWxAMCB7Cj4g
+Kwljb21wYXRpYmxlID0gImJhbmFuYXBpLHMwNzB3djIwLWN0MTYtaWNuNjIxMSI7Cj4gKwlyZWcg
+PSA8MD47Cj4gKwlhdmRkLXN1cHBseSA9IDwmcmVnX2RjMXN3PjsKPiArCWR2ZGQtc3VwcGx5ID0g
+PCZyZWdfZGxkbzE+Owo+ICsJcmVzZXQtZ3Bpb3MgPSA8JnBpbyAzIDYgR1BJT19BQ1RJVkVfSElH
+SD47IC8qIFBENiAqLwo+ICsJYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHRfZHNpPjsKPiArfTsKCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
