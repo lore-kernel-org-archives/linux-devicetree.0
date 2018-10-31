@@ -1,90 +1,71 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: NXP P50XX/e5500 secondary CPUs not onlined with current mainline (was [PATCH 20/21] of: use for_each_of_cpu_node iterator)
-Date: Wed, 31 Oct 2018 23:46:39 +1100
-Message-ID: <87r2g6ffm8.fsf@concordia.ellerman.id.au>
-References: <20180905193738.19325-1-robh@kernel.org> <20180905193738.19325-21-robh@kernel.org>
+From: Julien Grall <julien.grall@arm.com>
+Subject: Re: [PATCH v3] devicetree, xen: add xen,
+ shared-memory binding
+Date: Wed, 31 Oct 2018 12:52:27 +0000
+Message-ID: <0951e2a3-78a1-e849-39e9-5980c9c87277@arm.com>
+References: <1540343921-7487-1-git-send-email-sstabellini@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180905193738.19325-21-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Frank Rowand <frowand.list@gmail.com>, Christian Zigotzky <chzigotzky@xenosoft.de>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xenproject.org>
+In-Reply-To: <1540343921-7487-1-git-send-email-sstabellini@kernel.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
+To: Stefano Stabellini <sstabellini@kernel.org>, devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, stefanos@xilinx.com, Wei Liu <wei.liu2@citrix.com>, Ian Jackson <ian.jackson@eu.citrix.com>, xen-devel@lists.xen.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-This change is breaking some powerpc machines, ...
-
-Rob Herring <robh@kernel.org> writes:
-> Use the for_each_of_cpu_node iterator to iterate over cpu nodes. This
-> has the side effect of defaulting to iterating using "cpu" node names in
-> preference to the deprecated (for FDT) device_type == "cpu".
->
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Please ack and I will take via the DT tree. This is dependent on the
-> first 2 patches.
->
->  drivers/of/base.c    |  2 +-
->  drivers/of/of_numa.c | 15 ++-------------
->  2 files changed, 3 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 6389aeb2f48c..8285c07cab44 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -389,7 +389,7 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
->  {
->  	struct device_node *cpun;
->
-> -	for_each_node_by_type(cpun, "cpu") {
-> +	for_each_of_cpu_node(cpun) {
->  		if (arch_find_n_match_cpu_physical_id(cpun, cpu, thread))
->  			return cpun;
->  	}
-
-Previously we just looked for any node with a type of "cpu", but now
-we're using for_each_of_cpu_node(), which does:
-
-	for (; next; next = next->sibling) {
-		if (!(of_node_name_eq(next, "cpu") ||
-		      (next->type && !of_node_cmp(next->type, "cpu"))))
-			continue;
-
-		if (!__of_device_is_available(next))
-			continue;
-                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-		if (of_node_get(next))
-			break;
-	}
-
-
-ie. the available check is new.
-
-On this machine the 2nd CPU is not marked as available:
-
-  root@p5020ds:/proc/device-tree/cpus/PowerPC,e5500@1# lsprop status 
-  status           "disabled"
-
-This has the effect of preventing the SMP code from finding the 2nd CPU
-in order to bring it up (in smp_85xx_start_cpu()). And so only the boot
-CPU is onlined.
-
-The device tree is built from a dts:
-
-  arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi
-
-But we don't set the status in there, so presumably u-boot is changing
-the status during boot? (not a u-boot expert).
-
-
-We could work around this in the platform code presumably, but I'm
-worried this might break other things as well. You didn't mention the
-addition of the available check in the change log so I wonder if it was
-deliberate or just seemed like a good idea?
-
-cheers
+SGksCgpPbiAxMC8yNC8xOCAyOjE4IEFNLCBTdGVmYW5vIFN0YWJlbGxpbmkgd3JvdGU6Cj4gRnJv
+bTogU3RlZmFubyBTdGFiZWxsaW5pIDxzdGVmYW5vc0B4aWxpbnguY29tPgo+IAo+IEludHJvZHVj
+ZSBhIGRldmljZSB0cmVlIGJpbmRpbmcgZm9yIFhlbiByZXNlcnZlZC1tZW1vcnkgcmVnaW9ucy4g
+VGhleQo+IGFyZSB1c2VkIHRvIHNoYXJlIG1lbW9yeSBhY3Jvc3MgVk1zIGZyb20gdGhlIFZNIGNv
+bmZpZyBmaWxlcy4gKFNlZQo+IHN0YXRpY19zaG0gY29uZmlnIG9wdGlvbi4pCj4gCj4gU2lnbmVk
+LW9mZi1ieTogU3RlZmFubyBTdGFiZWxsaW5pIDxzdGVmYW5vc0B4aWxpbnguY29tPgo+IENjOiBq
+dWxpZW4uZ3JhbGxAYXJtLmNvbQo+IC0tLQo+IENoYW5nZXMgaW4gdjM6Cj4gLSByZW1vdmUgZmFs
+bGJhY2sgdmVyc2lvbgo+IAo+IENoYW5nZXMgaW4gdjI6Cj4gLSBmaXggQXV0aG9yIGxpbmUKPiAt
+IGFkZCB2ZXJzaW9uaW5nCj4gLSB4ZW4saWQgaW5zdGVhZCBvZiBpZAo+IC0tLQo+ICAgLi4uL2Jp
+bmRpbmdzL3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50eHQgICB8IDIwICsrKysr
+KysrKysrKysrKysrKysrCj4gICAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKQo+ICAg
+Y3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNl
+cnZlZC1tZW1vcnkveGVuLHNoYXJlZC1tZW1vcnkudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkveGVuLHNoYXJlZC1t
+ZW1vcnkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2VydmVkLW1l
+bW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4
+IDAwMDAwMDAuLjdjODE2ODMKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50eHQK
+PiBAQCAtMCwwICsxLDIwIEBACj4gKyogWGVuIGh5cGVydmlzb3IgcmVzZXJ2ZWQtbWVtb3J5IGJp
+bmRpbmcKPiArCj4gK0V4cG9zZSBvbmUgb3IgbW9yZSBtZW1vcnkgcmVnaW9ucyBhcyByZXNlcnZl
+ZC1tZW1vcnkgdG8gdGhlIGd1ZXN0Cj4gK3ZpcnR1YWwgbWFjaGluZS4gVHlwaWNhbGx5LCBhIHJl
+Z2lvbiBpcyBjb25maWd1cmVkIGF0IFZNIGNyZWF0aW9uIHRpbWUKPiArdG8gYmUgYSBzaGFyZWQg
+bWVtb3J5IGFyZWEgYWNyb3NzIG11bHRpcGxlIHZpcnR1YWwgbWFjaGluZXMgZm9yCj4gK2NvbW11
+bmljYXRpb24gYW1vbmcgdGhlbS4KCkkgbWF5IGhhdmUgbm90aWNlIHNvbWUgaXNzdWUgd2l0aCB0
+aGlzIGJpbmRpbmcuIExvb2tpbmcgYXQgdGhlIGRlc2lnbiAKZG9jdW1lbnQgWzFdLCB0aGUgIm1h
+c3RlciIgZG9tYWluIG1heSBwcm92aWRlIGEgYmlnIGJhY2tpbmcgcmVnaW9uIHRoYXQgCndvdWxk
+IGJlIHNwbGl0IGFuZCBzaGFyZSB3aXRoIG11bHRpcGxlICJzbGF2ZSIuCgpGb3IgdGhlICJtYXN0
+ZXIiIGRvbWFpbiwgdGhpcyBiaW5kaW5nIHdvdWxkIHNwZWNpZnkgdGhlIGZ1bGwgYmFja2luZyAK
+cmVnaW9uLiBUaGUgIm1hc3RlciIgT1Mgd291bGQgbm90IGJlIGFibGUgdG8ga25vdyBob3cgdGhl
+IHJlZ2lvbiB3b3VsZCAKYmUgdXNlZCBoZXJlLgoKRm9yIHRoZSAic2xhdmUiIGRvbWFpbiwgaXQg
+bG9va3MgbGlrZSBpdCBtaWdodCBiZSBwb3NzaWJsZSB0byBtYXAgdGhlIApzYW1lIHJlZ2lvbiAo
+c28gc2FtZSBJRCkgdHdpY2UuIFNvIHdlIHdvdWxkIGVuZCB1cCB0byBjcmVhdGUgdGhlIHNhbWUg
+CmJpbmRpbmdzIHR3aWNlLgoKQW55IG9waW9uaW9uIG9uIGhvdyB3ZSBzaG91bGQgcHJvY2VlZCB3
+aXRoIHRoZXNlIHR3byB1c2UgY2FzZXM/Cgo+ICsKPiArRm9yIGVhY2ggb2YgdGhlc2UgcHJlLXNo
+YXJlZCBtZW1vcnkgcmVnaW9ucywgYSByYW5nZSBpcyBleHBvc2VkIHVuZGVyCj4gK3RoZSAvcmVz
+ZXJ2ZWQtbWVtb3J5IG5vZGUgYXMgYSBjaGlsZCBub2RlLiBFYWNoIHJhbmdlIHN1Yi1ub2RlIGlz
+IG5hbWVkCj4gK3hlbi1zaG1lbUA8YWRkcmVzcz4gYW5kIGhhcyB0aGUgZm9sbG93aW5nIHByb3Bl
+cnRpZXM6Cj4gKwo+ICstIGNvbXBhdGlibGU6Cj4gKwljb21wYXRpYmxlID0gInhlbixzaGFyZWQt
+bWVtb3J5LXYxIgo+ICsKPiArLSByZWc6Cj4gKwl0aGUgYmFzZSBndWVzdCBwaHlzaWNhbCBhZGRy
+ZXNzIGFuZCBzaXplIG9mIHRoZSBzaGFyZWQgbWVtb3J5IHJlZ2lvbgo+ICsKPiArLSB4ZW4saWQ6
+Cj4gKwlhIHN0cmluZyB0aGF0IGlkZW50aWZpZXMgdGhlIHNoYXJlZCBtZW1vcnkgcmVnaW9uIGFz
+IHNwZWNpZmllZCBpbgo+ICsJdGhlIFZNIGNvbmZpZyBmaWxlCj4gCgpDaGVlcnMsCgpbMV0gaHR0
+cHM6Ly9saXN0cy54ZW4ub3JnL2FyY2hpdmVzL2h0bWwveGVuLWRldmVsLzIwMTgtMTAvbXNnMDA3
+MzAuaHRtbAoKLS0gCkp1bGllbiBHcmFsbAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KWGVuLWRldmVsIG1haWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMu
+eGVucHJvamVjdC5vcmcKaHR0cHM6Ly9saXN0cy54ZW5wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL3hlbi1kZXZlbA==
