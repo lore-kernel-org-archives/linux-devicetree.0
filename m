@@ -1,34 +1,54 @@
-Return-Path: <>
-From: Martin Kelly <martin@martingkelly.com>
-Subject: [PATCH v2 4/4] dt-bindings: iio: magn: add LSM9DS1 bindings
-Date: Thu, 25 Oct 2018 19:38:12 -0700
-Message-Id: <20181026023812.29720-4-martin@martingkelly.com>
-In-Reply-To: <20181026023812.29720-1-martin@martingkelly.com>
-References: <20181026023812.29720-1-martin@martingkelly.com>
-To: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>, Denis Ciocca <denis.ciocca@st.com>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Martin Kelly <martin@martingkelly.com>
+Return-Path: <SRS0=DeSZ=NL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:37499 "EHLO
+        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728341AbeJaLDP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 31 Oct 2018 07:03:15 -0400
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: [PATCH V13 0/2] C-SKY(csky) Timer Driver
+Date: Wed, 31 Oct 2018 10:06:46 +0800
+Message-Id: <cover.1540947083.git.ren_guo@c-sky.com>
+Sender: devicetree-owner@vger.kernel.org
+To: daniel.lezcano@linaro.org, tglx@linutronix.de
+Cc: arnd@arndb.de, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Martin Kelly <martin@martingkelly.com>
+Hi Daniel & Thomas,
 
-Add DT binding documentation for the LSM9DS1 magnetometer driver.
+I sent you "PATCH V13" a few days ago, but no-reply:
+https://lkml.org/lkml/2018/10/29/608
+Now I send again.
 
-Signed-off-by: Martin Kelly <martin@martingkelly.com>
----
- Documentation/devicetree/bindings/iio/st-sensors.txt | 1 +
- 1 file changed, 1 insertion(+)
+Although csky subsystem has been merged into linux-4.20, but there is no
+timer drivers for csky. A lot of boards need these timer drivers.
 
-diff --git a/Documentation/devicetree/bindings/iio/st-sensors.txt b/Documentation/devicetree/bindings/iio/st-sensors.txt
-index 6f626f73417e..07f1767c7ee6 100644
---- a/Documentation/devicetree/bindings/iio/st-sensors.txt
-+++ b/Documentation/devicetree/bindings/iio/st-sensors.txt
-@@ -67,6 +67,7 @@ Magnetometers:
- - st,lsm303dlm-magn
- - st,lis3mdl-magn
- - st,lis2mdl
-+- st,lsm9ds1-magn
- 
- Pressure sensors:
- - st,lps001wp-press
+Please help merge them into linux-4.20, wait for you reply.
+
+Thx
+ Guo Ren
+
+Changelog:
+ - Move changelog to end of patch.
+ - Remove the set_irq_createmapping call back in csky-mp-intc.c.
+ - Convert the cpumask to an interrupt-controller specific representation
+   in driver's code, and not the SMP code's, and also modify the related
+   codes in csky kernel patchset.
+ - Add COMPILE_TEST for csky_mp_timer.
+ - Fixup smp boot error, cpuhp_setup_state must after timer_of_init()
+   for csky_mp_timer.
+
+Guo Ren (2):
+  clocksource: add C-SKY SMP timer
+  clocksource: add gx6605s SOC system timer
+
+ drivers/clocksource/Kconfig         |  18 ++++
+ drivers/clocksource/Makefile        |   2 +
+ drivers/clocksource/timer-gx6605s.c | 154 ++++++++++++++++++++++++++++++++
+ drivers/clocksource/timer-mp-csky.c | 173 ++++++++++++++++++++++++++++++++++++
+ include/linux/cpuhotplug.h          |   1 +
+ 5 files changed, 348 insertions(+)
+ create mode 100644 drivers/clocksource/timer-gx6605s.c
+ create mode 100644 drivers/clocksource/timer-mp-csky.c
+
 -- 
-2.11.0
+2.7.4
