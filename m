@@ -1,45 +1,32 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v2] arm64: dts: qcom: sdm845: Add reserve-memory nodes
-Date: Wed, 31 Oct 2018 11:39:21 +0530
-Message-ID: <20181031060921.5890-1-sibis@codeaurora.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 1/4] soc: imx: gpc: Increase GPC_CLK_MAX to 7
+Date: Wed, 31 Oct 2018 14:09:18 +0800
+Message-ID: <20181031060916.GA10386@tiger>
+References: <cover.1539020938.git.leonard.crestez@nxp.com>
+ <be94b872b63e6e0ac6f65ea41a69322d958f4a93.1539020938.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org
-Cc: bjorn.andersson@linaro.org, dianders@chromium.org, evgreen@chromium.org, benchan@chromium.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <be94b872b63e6e0ac6f65ea41a69322d958f4a93.1539020938.git.leonard.crestez@nxp.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Marek Vasut <marex@denx.de>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Richard Zhu <hongxing.zhu@nxp.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add reserve-memory nodes for mpss and mba required for
-remoteproc mss pil.
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index d3fe012ad84e..636c739b2981 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -88,6 +88,16 @@
- 			reg = <0 0x86200000 0 0x2d00000>;
- 			no-map;
- 		};
-+
-+		mpss_region: memory@8e000000 {
-+			reg = <0 0x8e000000 0 0x7800000>;
-+			no-map;
-+		};
-+
-+		mba_region: memory@96500000 {
-+			reg = <0 0x96500000 0 0x200000>;
-+			no-map;
-+		};
- 	};
- 
- 	cpus {
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+T24gTW9uLCBPY3QgMDgsIDIwMTggYXQgMDY6MDY6MTlQTSArMDAwMCwgTGVvbmFyZCBDcmVzdGV6
+IHdyb3RlOgo+IFRoZSBESVNQTEFZIHBvd2VyIGRvbWFpbiBvbiBpbXg2c3ggaGFzIDcgY2xvY2tz
+Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IExlb25hcmQgQ3Jlc3RleiA8bGVvbmFyZC5jcmVzdGV6QG54
+cC5jb20+CgpBcHBsaWVkLCB0aGFua3MuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
