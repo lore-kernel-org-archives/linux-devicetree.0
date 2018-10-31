@@ -1,51 +1,76 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH v2 4/4] ARM: dts: imx6sx: Add DISPLAY power domain support
-Date: Wed, 31 Oct 2018 12:17:50 +0000
-Message-ID: <AM0PR04MB4290F31234D75AC7029F066FEECD0@AM0PR04MB4290.eurprd04.prod.outlook.com>
-References: <cover.1539020938.git.leonard.crestez@nxp.com>
- <a3265a84052a7c11ae96e61e39adc988ca980d66.1539020938.git.leonard.crestez@nxp.com>
- <20181031061134.GB10386@tiger>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 0/8] OLPC 1.75 Keyboard/Touchpad fixes
+Date: Wed, 31 Oct 2018 13:29:19 +0100
+Message-ID: <20181031122919.GA15074@amd>
+References: <20181010142504.233467-1-lkundrak@v3.sk>
+ <20181015195612.GB29649@amd>
+ <c4edf9b09e88cd265a0829644aa962c28cbc3d51.camel@v3.sk>
+ <20181030100139.GB21529@amd>
+ <20181030102610.GC21529@amd>
+ <20181030235430.GF30863@us.netrek.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181030235430.GF30863@us.netrek.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Stefan Agner <stefan@agner.ch>, Marek Vasut <marex@denx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: James Cameron <quozl@laptop.org>
+Cc: Lubomir Rintel <lkundrak@v3.sk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/31/2018 8:12 AM, Shawn Guo wrote:=0A=
-> On Mon, Oct 08, 2018 at 06:06:23PM +0000, Leonard Crestez wrote:=0A=
->> This was implemented in the driver but not actually defined and=0A=
->> referenced in dts. This makes it always on.=0A=
->>=0A=
->>  From reference manual in section "10.4.1.4.1 Power Distribution":=0A=
->>=0A=
->> "Display domain - The DISPLAY domain contains GIS, CSI, PXP, LCDIF,=0A=
->> PCIe, DCIC, and LDB. It is supplied by internal regulator."=0A=
->>=0A=
->> The current pd_pcie is actually only for PCIE_PHY, the PCIE ip block is=
-=0A=
->> actually inside the DISPLAY domain. Handle this by adding the pcie node=
-=0A=
->> in both power domains.=0A=
->>=0A=
->> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
-> =0A=
-> Applied, thanks.=0A=
-=0A=
-As mentioned in the cover letter this requires multi-PD support in =0A=
-imx-pci to be implemented, specifically PATCH 3/4 of this series:=0A=
-=0A=
-	https://lore.kernel.org/patchwork/patch/996810/=0A=
-=0A=
-Unless that also gets merged soon via pci I expect issues in linux-next. =
-=0A=
-The patch already has reviewed-by tags so "merging it soon" is not =0A=
-unreasonable.=0A=
-=0A=
-Link to cover: https://lore.kernel.org/patchwork/cover/996807/=0A=
-=0A=
-There is also an mxsfb dependency but that's already merged in =0A=
-torvalds/master.=0A=
+
+--wRRV7LY7NUeQGEoC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> > But I don't get kernel messages during boot:
+> >=20
+> > OLPC 1B1, 512 MiB memory...
+> > OpenFirmware Q4C02 EC Frimware 0.3.02
+> >=20
+> > Type any key to interrupt...
+> > (but keys do not interrupt anything, ouch).
+> > Warning... partition type is 0xb...
+> > Boot device: /usb/disk:\boot\olpc.fth Arguments:
+> > Boot device ....
+> > Warning... partition type is 0xb...
+>=20
+> That firmware has problems with USB drives.  Please upgrade to Q4D38.
+> Quickest tested method is http://wiki.laptop.org/go/Upgrading_firmware
+
+Let me try that... Upgrading firmware said "USB drive" so I placed
+bootfw.zip on usb drive. It did quite a show, but I believe it said
+that my firmware is up to date?
+
+It all ended with "activation lease not found" message. Let me retry?
+Same result.
+
+Let me try "upgrading firmware" with SD card. It seems to work with SD
+card. Holding down both "yes" and "no" keys during boot results in
+more useful messages... good. I have now updated firmware, and it even
+fixed my previous boot problem. Good.
+
+Thanks!
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--wRRV7LY7NUeQGEoC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlvZoB8ACgkQMOfwapXb+vIpwQCfWH+L06L+O7eJ1zs+wXKhuo3Y
+Y0cAoLRDSdd0TA/ttWF7HfBB4K/daRe+
+=hlkl
+-----END PGP SIGNATURE-----
+
+--wRRV7LY7NUeQGEoC--
