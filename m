@@ -1,70 +1,59 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [RFC PATCH 7/7] arm64: allwinner: h6: orangepi-liet2: Enable AP6356S WiFi support
-Date: Thu,  1 Nov 2018 00:06:34 +0530
-Message-ID: <20181031183634.29640-7-jagan@amarulasolutions.com>
-References: <20181031183634.29640-1-jagan@amarulasolutions.com>
+From: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Subject: Re: [PATCH v2 09/10] irqchip: ti-sci-inta: Add support for Interrupt
+ Aggregator driver
+Date: Wed, 31 Oct 2018 11:38:00 -0700
+Message-ID: <18df8960-9165-ba50-2c25-9f00d32198e8@oracle.com>
+References: <20181018154017.7112-1-lokeshvutla@ti.com>
+ <20181018154017.7112-10-lokeshvutla@ti.com>
+ <b20127dc-be43-3b00-9960-663738df0069@arm.com>
+ <9969f24c-cdb0-1f5c-d0f4-b1c1f587325c@ti.com>
+ <86va5ssrfm.wl-marc.zyngier@arm.com>
+ <2369ea50-55db-c97b-5b43-99d572c97dc9@ti.com>
+ <da27ecc5-db32-cf3a-c194-962c44bc782f@arm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181031183634.29640-1-jagan@amarulasolutions.com>
+In-Reply-To: <da27ecc5-db32-cf3a-c194-962c44bc782f@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Cc: Jagan Teki <jagan@openedev.com>
+To: Marc Zyngier <marc.zyngier@arm.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan@openedev.com>
+On 10/31/2018 11:21 AM, Marc Zyngier wrote:
+> Hi Grygorii,
+> 
 
-Enable AP6356S WiFi/BT combo chip on Orangepi Lite2 board:
-- WiFi SDIO interface is connected to MMC1
-- WiFi WL-PMU-EN pin connected to gpio PM3: attach to mmc-pwrseq
-- WiFi WL-WAKE-AP pin connected to gpio PM0
-- 32kHz external oscillator gate clock from RTC
+[...]
 
-Signed-off-by: Jagan Teki <jagan@openedev.com>
----
-Note:
-- chip detected, but failed to connect
-[  129.084504] brcmfmac: brcmf_sdio_hostmail: mailbox indicates firmware halted
-[  135.906409] brcmfmac: brcmf_sdio_bus_rxctl: resumed on timeout 
+> 
+> Well, I'm convinced that we do not want a networking driver to be tied
+> to an interrupt architecture, and that the two should be completely
+> independent. But that's my own opinion. I can only see two solutions
+> moving forward:
+> 
+> 1) You make the IA a real interrupt controller that exposes real
+> interrupts (one per event), and write your networking driver
+> independently of the underlying interrupt architecture.
+> 
+> 2) you make the IA an integral part of your network driver, not exposing
+> anything outside of it, and limiting the interactions with the IR
+> *through the standard IRQ API*. You duplicate this knowledge throughout
+> the other client drivers.
+> 
+> I believe that (2) would be a massive design mistake as it locks the
+> driver to a single of the HW (and potentially a single revision of the
+> firmware) while (1) gives you the required level of flexibility by
+> hiding the whole event "concept" at a single location.
+> 
+> Yes, (1) makes you rewrite your existing, out of tree drivers. Oh well...
+> 
+My preference is also not tie the network driver with IA. BTW, this is
+very standard functionality with other network drivers too. And this
+is handled using MSI-X.
 
- .../allwinner/sun50i-h6-orangepi-lite2.dts    | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
+So strong NO for 1) from me as well.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dts
-index e098a2475f2d..b8012208c185 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dts
-@@ -8,4 +8,31 @@
- / {
- 	model = "OrangePi Lite2";
- 	compatible = "xunlong,orangepi-lite2", "allwinner,sun50i-h6";
-+
-+	wifi_pwrseq: wifi-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		clocks = <&rtc 1>;
-+		clock-names = "ext_clock";
-+		reset-gpios = <&r_pio 1 3 GPIO_ACTIVE_LOW>; /* WL-REG-ON: PM3 */
-+		post-power-on-delay-ms = <200>;
-+	};
-+};
-+
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	vmmc-supply = <&reg_cldo2>;
-+	vqmmc-supply = <&reg_bldo3>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
-+
-+	brcmf: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+		interrupt-parent = <&r_pio>;
-+		interrupts = <1 0 IRQ_TYPE_LEVEL_LOW>;	/* WL-WAKE-AP: PM0 */
-+		interrupt-names = "host-wake";
-+	};
- };
--- 
-2.18.0.321.gffc6fa0e3
+regards,
+Santosh
