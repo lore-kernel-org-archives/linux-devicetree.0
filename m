@@ -1,169 +1,790 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 5/6] pci: layerscape: Add the EP mode support.
-Date: Wed, 31 Oct 2018 09:45:21 +0530
-Message-ID: <a85a6900-2478-0750-6f33-2e787cf80d1d@ti.com>
-References: <20181025110901.5680-1-xiaowei.bao@nxp.com>
- <20181025110901.5680-5-xiaowei.bao@nxp.com>
- <d9d07e05-556b-a56d-bb7f-eaec9fb739b8@ti.com>
- <HE1PR04MB1497DF7D9428A5C791CB6A03F5F00@HE1PR04MB1497.eurprd04.prod.outlook.com>
- <HE1PR04MB14979058170FA16A7465FF9EF5CD0@HE1PR04MB1497.eurprd04.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <HE1PR04MB14979058170FA16A7465FF9EF5CD0@HE1PR04MB1497.eurprd04.prod.outlook.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "cyrille.pitchen@free-electrons.com" <cyrille.pitchen@free-electrons.com>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>, "niklas.cassel@axis.com" <niklas.cassel@axis.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@v>
-Cc: Jiafei Pan <jiafei.pan@nxp.com>
+From: Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH] arm64: dts: nxp: ls208xa: add more thermal zone support
+Date: Wed, 31 Oct 2018 12:47:42 +0800
+Message-ID: <20181031044742.26327-1-andy.tang@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org
+Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rui.zhang@intel.com, daniel.lezcano@linaro.org, Yuantian Tang <andy.tang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAzMS8xMC8xOCA4OjAzIEFNLCBYaWFvd2VpIEJhbyB3cm90ZToKPiAKPiAKPiAtLS0t
-LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+IEZyb206IFhpYW93ZWkgQmFvIAo+IFNlbnQ6IDIwMTjl
-ubQxMOaciDI25pelIDE3OjE5Cj4gVG86ICdLaXNob24gVmlqYXkgQWJyYWhhbSBJJyA8a2lzaG9u
-QHRpLmNvbT47IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5y
-dXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBu
-eHAuY29tPjsgbG9yZW56by5waWVyYWxpc2lAYXJtLmNvbTsgYXJuZEBhcm5kYi5kZTsgZ3JlZ2to
-QGxpbnV4Zm91bmRhdGlvbi5vcmc7IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsg
-TWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgUm95IFphbmcgPHJveS56YW5nQG54cC5j
-b20+OyBrc3Rld2FydEBsaW51eGZvdW5kYXRpb24ub3JnOyBjeXJpbGxlLnBpdGNoZW5AZnJlZS1l
-bGVjdHJvbnMuY29tOyBwb21icmVkYW5uZUBuZXhiLmNvbTsgc2hhd24ubGluQHJvY2stY2hpcHMu
-Y29tOyBuaWtsYXMuY2Fzc2VsQGF4aXMuY29tOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsg
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMu
-b3psYWJzLm9yZwo+IENjOiBKaWFmZWkgUGFuIDxqaWFmZWkucGFuQG54cC5jb20+Cj4gU3ViamVj
-dDogUkU6IFtQQVRDSCA1LzZdIHBjaTogbGF5ZXJzY2FwZTogQWRkIHRoZSBFUCBtb2RlIHN1cHBv
-cnQuCj4gCj4gCj4gCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPiBGcm9tOiBLaXNob24g
-VmlqYXkgQWJyYWhhbSBJIDxraXNob25AdGkuY29tPgo+IFNlbnQ6IDIwMTjlubQxMOaciDI25pel
-IDEzOjI5Cj4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPjsgYmhlbGdhYXNA
-Z29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hh
-d25ndW9Aa2VybmVsLm9yZzsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBsb3JlbnpvLnBp
-ZXJhbGlzaUBhcm0uY29tOyBhcm5kQGFybmRiLmRlOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9y
-ZzsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2Fp
-Lmh1QG54cC5jb20+OyBSb3kgWmFuZyA8cm95LnphbmdAbnhwLmNvbT47IGtzdGV3YXJ0QGxpbnV4
-Zm91bmRhdGlvbi5vcmc7IGN5cmlsbGUucGl0Y2hlbkBmcmVlLWVsZWN0cm9ucy5jb207IHBvbWJy
-ZWRhbm5lQG5leGIuY29tOyBzaGF3bi5saW5Acm9jay1jaGlwcy5jb207IG5pa2xhcy5jYXNzZWxA
-YXhpcy5jb207IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJu
-ZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCj4gU3ViamVj
-dDogUmU6IFtQQVRDSCA1LzZdIHBjaTogbGF5ZXJzY2FwZTogQWRkIHRoZSBFUCBtb2RlIHN1cHBv
-cnQuCj4gCj4gSGksCj4gCj4gT24gVGh1cnNkYXkgMjUgT2N0b2JlciAyMDE4IDA0OjM5IFBNLCBY
-aWFvd2VpIEJhbyB3cm90ZToKPj4gQWRkIHRoZSBQQ0llIEVQIG1vZGUgc3VwcG9ydCBmb3IgbGF5
-ZXJzY2FwZSBwbGF0Zm9ybS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93
-ZWkuYmFvQG54cC5jb20+Cj4+IC0tLQo+PiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvTWFr
-ZWZpbGUgICAgICAgICAgICB8ICAgIDIgKy0KPj4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdj
-L3BjaS1sYXllcnNjYXBlLWVwLmMgfCAgMTYxCj4+ICsrKysrKysrKysrKysrKysrKysrKysrKwo+
-PiAgMiBmaWxlcyBjaGFuZ2VkLCAxNjIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbnMoLSkgIGNy
-ZWF0ZSBtb2RlCj4+IDEwMDY0NCBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJz
-Y2FwZS1lcC5jCj4+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9N
-YWtlZmlsZQo+PiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL01ha2VmaWxlCj4+IGluZGV4
-IDVkMmNlNzIuLmIyNmQ2MTcgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
-ZHdjL01ha2VmaWxlCj4+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL01ha2VmaWxl
-Cj4+IEBAIC04LDcgKzgsNyBAQCBvYmotJChDT05GSUdfUENJX0VYWU5PUykgKz0gcGNpLWV4eW5v
-cy5vCj4+ICBvYmotJChDT05GSUdfUENJX0lNWDYpICs9IHBjaS1pbXg2Lm8KPj4gIG9iai0kKENP
-TkZJR19QQ0lFX1NQRUFSMTNYWCkgKz0gcGNpZS1zcGVhcjEzeHgubwo+PiAgb2JqLSQoQ09ORklH
-X1BDSV9LRVlTVE9ORSkgKz0gcGNpLWtleXN0b25lLWR3Lm8gcGNpLWtleXN0b25lLm8KPj4gLW9i
-ai0kKENPTkZJR19QQ0lfTEFZRVJTQ0FQRSkgKz0gcGNpLWxheWVyc2NhcGUubwo+PiArb2JqLSQo
-Q09ORklHX1BDSV9MQVlFUlNDQVBFKSArPSBwY2ktbGF5ZXJzY2FwZS5vIHBjaS1sYXllcnNjYXBl
-LWVwLm8KPj4gIG9iai0kKENPTkZJR19QQ0lFX1FDT00pICs9IHBjaWUtcWNvbS5vCj4+ICBvYmot
-JChDT05GSUdfUENJRV9BUk1BREFfOEspICs9IHBjaWUtYXJtYWRhOGsubwo+PiAgb2JqLSQoQ09O
-RklHX1BDSUVfQVJUUEVDNikgKz0gcGNpZS1hcnRwZWM2Lm8gZGlmZiAtLWdpdCAKPj4gYS9kcml2
-ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jCj4+IGIvZHJpdmVycy9w
-Y2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYwo+PiBuZXcgZmlsZSBtb2RlIDEw
-MDY0NAo+PiBpbmRleCAwMDAwMDAwLi4zYjMzYmJjCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIv
-ZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYwo+PiBAQCAtMCww
-ICsxLDE2MSBAQAo+PiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAKPj4gKy8q
-Cj4+ICsgKiBQQ0llIGNvbnRyb2xsZXIgRVAgZHJpdmVyIGZvciBGcmVlc2NhbGUgTGF5ZXJzY2Fw
-ZSBTb0NzCj4+ICsgKgo+PiArICogQ29weXJpZ2h0IChDKSAyMDE4IE5YUCBTZW1pY29uZHVjdG9y
-Lgo+PiArICoKPj4gKyAqIEF1dGhvcjogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+
-ICAqLwo+PiArCj4+ICsjaW5jbHVkZSA8bGludXgva2VybmVsLmg+Cj4+ICsjaW5jbHVkZSA8bGlu
-dXgvaW5pdC5oPgo+PiArI2luY2x1ZGUgPGxpbnV4L29mX3BjaS5oPgo+PiArI2luY2x1ZGUgPGxp
-bnV4L29mX3BsYXRmb3JtLmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvb2ZfYWRkcmVzcy5oPgo+PiAr
-I2luY2x1ZGUgPGxpbnV4L3BjaS5oPgo+PiArI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2Rldmlj
-ZS5oPgo+PiArI2luY2x1ZGUgPGxpbnV4L3Jlc291cmNlLmg+Cj4+ICsKPj4gKyNpbmNsdWRlICJw
-Y2llLWRlc2lnbndhcmUuaCIKPj4gKwo+PiArI2RlZmluZSBQQ0lFX0RCSTJfT0ZGU0VUCQkweDEw
-MDAJLyogREJJMiBiYXNlIGFkZHJlc3MqLwo+IAo+IFRoZSBiYXNlIGFkZHJlc3Mgc2hvdWxkIGNv
-bWUgZnJvbSBkdC4KPj4gKwo+PiArc3RydWN0IGxzX3BjaWVfZXAgewo+PiArCXN0cnVjdCBkd19w
-Y2llCQkqcGNpOwo+PiArfTsKPj4gKwo+PiArI2RlZmluZSB0b19sc19wY2llX2VwKHgpCWRldl9n
-ZXRfZHJ2ZGF0YSgoeCktPmRldikKPj4gKwo+PiArc3RhdGljIGJvb2wgbHNfcGNpZV9pc19icmlk
-Z2Uoc3RydWN0IGxzX3BjaWVfZXAgKnBjaWUpIHsKPj4gKwlzdHJ1Y3QgZHdfcGNpZSAqcGNpID0g
-cGNpZS0+cGNpOwo+PiArCXUzMiBoZWFkZXJfdHlwZTsKPj4gKwo+PiArCWhlYWRlcl90eXBlID0g
-aW9yZWFkOChwY2ktPmRiaV9iYXNlICsgUENJX0hFQURFUl9UWVBFKTsKPj4gKwloZWFkZXJfdHlw
-ZSAmPSAweDdmOwo+PiArCj4+ICsJcmV0dXJuIGhlYWRlcl90eXBlID09IFBDSV9IRUFERVJfVFlQ
-RV9CUklER0U7IH0KPj4gKwo+PiArc3RhdGljIGludCBsc19wY2llX2VzdGFibGlzaF9saW5rKHN0
-cnVjdCBkd19wY2llICpwY2kpIHsKPj4gKwlyZXR1cm4gMDsKPj4gK30KPiAKPiBUaGVyZSBzaG91
-bGQgYmUgc29tZSB3YXkgYnkgd2hpY2ggRVAgc2hvdWxkIHRlbGwgUkMgdGhhdCBpdCBpcyBub3Qg
-Y29uZmlndXJlZCB5ZXQuIEFyZSB0aGVyZSBubyBiaXRzIHRvIGNvbnRyb2wgTFRTU00gc3RhdGUg
-aW5pdGlhbGl6YXRpb24gb3IgQ29uZmlndXJhdGlvbiByZXRyeSBzdGF0dXMgZW5hYmxpbmc/Cj4g
-W1hpYW93ZWkgQmFvXSBUaGVyZSBoYXZlIG5vdCBiaXRzIHRvIGNvbnRyb2wgTFRTU00gc3RhdGUg
-dG8gdGVsbCB0aGUgUkMgaXQgaXMgY29uZmlndXJlZC4gVGhlIHN0YXJ0IGxpbmsgaXMgYXV0byBj
-b21wbGV0ZWQuCj4gW1hpYW93ZWkgQmFvXSBIaSBLaXNob24sIGlzIHRoZXJlIGFueSBhZHZpY2U/
-CgpJZiB0aGVyZSBpcyBubyBIVyBzdXBwb3J0LCBJIGRvbid0IHRoaW5rIGFueXRoaW5nIGNvdWxk
-IGJlIGRvbmUgaGVyZS4gVGhpcwpjb3VsZCByZXN1bHQgaW4gUkMgcmVhZGluZyBjb25maWd1cmF0
-aW9uIHNwYWNlIGV2ZW4gYmVmb3JlIEVQIGlzIGZ1bGx5IGluaXRpYWxpemVkLgo+PiArCj4+ICtz
-dGF0aWMgY29uc3Qgc3RydWN0IGR3X3BjaWVfb3BzIGxzX3BjaWVfZXBfb3BzID0gewo+PiArCS5z
-dGFydF9saW5rID0gbHNfcGNpZV9lc3RhYmxpc2hfbGluaywgfTsKPj4gKwo+PiArc3RhdGljIGNv
-bnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbHNfcGNpZV9lcF9vZl9tYXRjaFtdID0gewo+PiArCXsg
-LmNvbXBhdGlibGUgPSAiZnNsLGxzLXBjaWUtZXAiLH0sCj4+ICsJeyB9LAo+PiArfTsKPj4gKwo+
-PiArc3RhdGljIHZvaWQgbHNfcGNpZV9lcF9pbml0KHN0cnVjdCBkd19wY2llX2VwICplcCkgewo+
-PiArCXN0cnVjdCBkd19wY2llICpwY2kgPSB0b19kd19wY2llX2Zyb21fZXAoZXApOwo+PiArCXN0
-cnVjdCBwY2lfZXBjICplcGMgPSBlcC0+ZXBjOwo+PiArCWVudW0gcGNpX2Jhcm5vIGJhcjsKPj4g
-Kwo+PiArCWZvciAoYmFyID0gQkFSXzA7IGJhciA8PSBCQVJfNTsgYmFyKyspCj4+ICsJCWR3X3Bj
-aWVfZXBfcmVzZXRfYmFyKHBjaSwgYmFyKTsKPj4gKwo+PiArCWVwYy0+ZmVhdHVyZXMgfD0gRVBD
-X0ZFQVRVUkVfTk9fTElOS1VQX05PVElGSUVSOyB9Cj4+ICsKPj4gK3N0YXRpYyBpbnQgbHNfcGNp
-ZV9lcF9yYWlzZV9pcnEoc3RydWN0IGR3X3BjaWVfZXAgKmVwLCB1OCBmdW5jX25vLAo+PiArCQkJ
-CSAgZW51bSBwY2lfZXBjX2lycV90eXBlIHR5cGUsIHUxNiBpbnRlcnJ1cHRfbnVtKSB7Cj4+ICsJ
-c3RydWN0IGR3X3BjaWUgKnBjaSA9IHRvX2R3X3BjaWVfZnJvbV9lcChlcCk7Cj4+ICsKPj4gKwlz
-d2l0Y2ggKHR5cGUpIHsKPj4gKwljYXNlIFBDSV9FUENfSVJRX0xFR0FDWToKPj4gKwkJcmV0dXJu
-IGR3X3BjaWVfZXBfcmFpc2VfbGVnYWN5X2lycShlcCwgZnVuY19ubyk7Cj4+ICsJY2FzZSBQQ0lf
-RVBDX0lSUV9NU0k6Cj4+ICsJCXJldHVybiBkd19wY2llX2VwX3JhaXNlX21zaV9pcnEoZXAsIGZ1
-bmNfbm8sIGludGVycnVwdF9udW0pOwo+PiArCWNhc2UgUENJX0VQQ19JUlFfTVNJWDoKPj4gKwkJ
-cmV0dXJuIGR3X3BjaWVfZXBfcmFpc2VfbXNpeF9pcnEoZXAsIGZ1bmNfbm8sIGludGVycnVwdF9u
-dW0pOwo+PiArCWRlZmF1bHQ6Cj4+ICsJCWRldl9lcnIocGNpLT5kZXYsICJVTktOT1dOIElSUSB0
-eXBlXG4iKTsKPj4gKwl9Cj4+ICsKPj4gKwlyZXR1cm4gMDsKPj4gK30KPj4gKwo+PiArc3RhdGlj
-IHN0cnVjdCBkd19wY2llX2VwX29wcyBwY2llX2VwX29wcyA9IHsKPj4gKwkuZXBfaW5pdCA9IGxz
-X3BjaWVfZXBfaW5pdCwKPj4gKwkucmFpc2VfaXJxID0gbHNfcGNpZV9lcF9yYWlzZV9pcnEsCj4+
-ICt9Owo+PiArCj4+ICtzdGF0aWMgaW50IF9faW5pdCBsc19hZGRfcGNpZV9lcChzdHJ1Y3QgbHNf
-cGNpZV9lcCAqcGNpZSwKPj4gKwkJCQkJc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPj4g
-K3sKPj4gKwlzdHJ1Y3QgZHdfcGNpZSAqcGNpID0gcGNpZS0+cGNpOwo+PiArCXN0cnVjdCBkZXZp
-Y2UgKmRldiA9IHBjaS0+ZGV2Owo+PiArCXN0cnVjdCBkd19wY2llX2VwICplcDsKPj4gKwlzdHJ1
-Y3QgcmVzb3VyY2UgKnJlczsKPj4gKwlpbnQgcmV0Owo+PiArCj4+ICsJZXAgPSAmcGNpLT5lcDsK
-Pj4gKwllcC0+b3BzID0gJnBjaWVfZXBfb3BzOwo+PiArCj4+ICsJcmVzID0gcGxhdGZvcm1fZ2V0
-X3Jlc291cmNlX2J5bmFtZShwZGV2LCBJT1JFU09VUkNFX01FTSwgImFkZHJfc3BhY2UiKTsKPj4g
-KwlpZiAoIXJlcykKPj4gKwkJcmV0dXJuIC1FSU5WQUw7Cj4+ICsKPj4gKwllcC0+cGh5c19iYXNl
-ID0gcmVzLT5zdGFydDsKPj4gKwllcC0+YWRkcl9zaXplID0gcmVzb3VyY2Vfc2l6ZShyZXMpOwo+
-PiArCj4+ICsJcmV0ID0gZHdfcGNpZV9lcF9pbml0KGVwKTsKPj4gKwlpZiAocmV0KSB7Cj4+ICsJ
-CWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIGluaXRpYWxpemUgZW5kcG9pbnRcbiIpOwo+PiArCQly
-ZXR1cm4gcmV0Owo+PiArCX0KPj4gKwo+PiArCXJldHVybiAwOwo+PiArfQo+PiArCj4+ICtzdGF0
-aWMgaW50IF9faW5pdCBsc19wY2llX2VwX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
-ZXYpIHsKPj4gKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Owo+PiArCXN0cnVjdCBk
-d19wY2llICpwY2k7Cj4+ICsJc3RydWN0IGxzX3BjaWVfZXAgKnBjaWU7Cj4+ICsJc3RydWN0IHJl
-c291cmNlICpkYmlfYmFzZTsKPj4gKwlpbnQgcmV0Owo+PiArCj4+ICsJcGNpZSA9IGRldm1fa3ph
-bGxvYyhkZXYsIHNpemVvZigqcGNpZSksIEdGUF9LRVJORUwpOwo+PiArCWlmICghcGNpZSkKPj4g
-KwkJcmV0dXJuIC1FTk9NRU07Cj4+ICsKPj4gKwlwY2kgPSBkZXZtX2t6YWxsb2MoZGV2LCBzaXpl
-b2YoKnBjaSksIEdGUF9LRVJORUwpOwo+PiArCWlmICghcGNpKQo+PiArCQlyZXR1cm4gLUVOT01F
-TTsKPj4gKwo+PiArCWRiaV9iYXNlID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlX2J5bmFtZShwZGV2
-LCBJT1JFU09VUkNFX01FTSwgInJlZ3MiKTsKPj4gKwlwY2ktPmRiaV9iYXNlID0gZGV2bV9wY2lf
-cmVtYXBfY2ZnX3Jlc291cmNlKGRldiwgZGJpX2Jhc2UpOwo+PiArCWlmIChJU19FUlIocGNpLT5k
-YmlfYmFzZSkpCj4+ICsJCXJldHVybiBQVFJfRVJSKHBjaS0+ZGJpX2Jhc2UpOwo+PiArCj4+ICsJ
-cGNpLT5kYmlfYmFzZTIgPSBwY2ktPmRiaV9iYXNlICsgUENJRV9EQkkyX09GRlNFVDsKPj4gKwlw
-Y2ktPmRldiA9IGRldjsKPj4gKwlwY2ktPm9wcyA9ICZsc19wY2llX2VwX29wczsKPj4gKwlwY2ll
-LT5wY2kgPSBwY2k7Cj4+ICsKPj4gKwlpZiAobHNfcGNpZV9pc19icmlkZ2UocGNpZSkpCj4+ICsJ
-CXJldHVybiAtRU5PREVWOwo+IAo+IEZvciBhbiBlbmRwb2ludCB0aGlzIGNvbmRpdGlvbiBzaG91
-bGQgbmV2ZXIgb2NjdXIuIFRoaXMgc2hvdWxkIG9ubHkgbWVhbiwgYSB3cm9uZyBjb21wYXRpYmxl
-IGhhcyBiZWVuIHVzZWQgaW4gZHQuCj4gW1hpYW93ZWkgQmFvXSBUaGlzIGZ1bmN0aW9uIGlzIGEg
-d2F5IHRoYXQgY2FuIGNoZWNrIHRoZSBQQ0kgY29udHJvbGxlciB3aGV0aGVyIHdvcmsgaW4gRVAg
-bW9kZSwgSSB0aGluayBpdCBpcyBtb3JlIHNhZmVyLiBPZiBjb3Vyc2UsIGl0IGNhbiBiZSByZW1v
-dmVkLgo+IFtYaWFvd2VpIEJhb10gSGkgS2lzaG9uLCBpcyB0aGVyZSBhbnkgYWR2aWNlPwoKSU1I
-TyB0aGlzIGNoZWNrIGlzIG5vdCByZXF1aXJlZC4KClRoYW5rcwpLaXNob24KCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Ls208xa has several thermal sensors. Add all the sensor id to dts
+to enable them.
+
+To make the dts cleaner, re-organize the nodes to split out the
+common part so that it can be shared with other SoCs.
+
+Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi  |    8 +-
+ arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi  |    8 +-
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi  |   83 +++-----
+ arch/arm64/boot/dts/freescale/fsl-tmu-map1.dtsi |   99 +++++++++
+ arch/arm64/boot/dts/freescale/fsl-tmu-map2.dtsi |   99 +++++++++
+ arch/arm64/boot/dts/freescale/fsl-tmu-map3.dtsi |   99 +++++++++
+ arch/arm64/boot/dts/freescale/fsl-tmu.dtsi      |  251 +++++++++++++++++++++++
+ 7 files changed, 591 insertions(+), 56 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-tmu-map1.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-tmu-map2.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-tmu-map3.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-tmu.dtsi
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+index f9c1d30..8f9788c 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+@@ -12,7 +12,7 @@
+ #include "fsl-ls208xa.dtsi"
+ 
+ &cpu {
+-	cpu0: cpu@0 {
++	cooling_map0: cpu0: cpu@0 {
+ 		device_type = "cpu";
+ 		compatible = "arm,cortex-a57";
+ 		reg = <0x0>;
+@@ -32,7 +32,7 @@
+ 		#cooling-cells = <2>;
+ 	};
+ 
+-	cpu2: cpu@100 {
++	cooling_map1: cpu2: cpu@100 {
+ 		device_type = "cpu";
+ 		compatible = "arm,cortex-a57";
+ 		reg = <0x100>;
+@@ -52,7 +52,7 @@
+ 		#cooling-cells = <2>;
+ 	};
+ 
+-	cpu4: cpu@200 {
++	cooling_map2: cpu4: cpu@200 {
+ 		device_type = "cpu";
+ 		compatible = "arm,cortex-a57";
+ 		reg = <0x200>;
+@@ -72,7 +72,7 @@
+ 		#cooling-cells = <2>;
+ 	};
+ 
+-	cpu6: cpu@300 {
++	cooling_map3: cpu6: cpu@300 {
+ 		device_type = "cpu";
+ 		compatible = "arm,cortex-a57";
+ 		reg = <0x300>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
+index 7c882da..013fe16 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
+@@ -12,7 +12,7 @@
+ #include "fsl-ls208xa.dtsi"
+ 
+ &cpu {
+-	cpu0: cpu@0 {
++	cooling_map0: cpu0: cpu@0 {
+ 		device_type = "cpu";
+ 		compatible = "arm,cortex-a72";
+ 		reg = <0x0>;
+@@ -32,7 +32,7 @@
+ 		#cooling-cells = <2>;
+ 	};
+ 
+-	cpu2: cpu@100 {
++	cooling_map1: cpu2: cpu@100 {
+ 		device_type = "cpu";
+ 		compatible = "arm,cortex-a72";
+ 		reg = <0x100>;
+@@ -52,7 +52,7 @@
+ 		#cooling-cells = <2>;
+ 	};
+ 
+-	cpu4: cpu@200 {
++	cooling_map2: cpu4: cpu@200 {
+ 		device_type = "cpu";
+ 		compatible = "arm,cortex-a72";
+ 		reg = <0x200>;
+@@ -72,7 +72,7 @@
+ 		#cooling-cells = <2>;
+ 	};
+ 
+-	cpu6: cpu@300 {
++	cooling_map3: cpu6: cpu@300 {
+ 		device_type = "cpu";
+ 		compatible = "arm,cortex-a72";
+ 		reg = <0x300>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+index 8cb78dd..4102317 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+@@ -75,54 +75,7 @@
+ 		mask = <0x2>;
+ 	};
+ 
+-	thermal-zones {
+-		cpu_thermal: cpu-thermal {
+-			polling-delay-passive = <1000>;
+-			polling-delay = <5000>;
+-
+-			thermal-sensors = <&tmu 4>;
+-
+-			trips {
+-				cpu_alert: cpu-alert {
+-					temperature = <75000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-				cpu_crit: cpu-crit {
+-					temperature = <85000>;
+-					hysteresis = <2000>;
+-					type = "critical";
+-				};
+-			};
+-
+-			cooling-maps {
+-				map0 {
+-					trip = <&cpu_alert>;
+-					cooling-device =
+-						<&cpu0 THERMAL_NO_LIMIT
+-						THERMAL_NO_LIMIT>;
+-				};
+-				map1 {
+-					trip = <&cpu_alert>;
+-					cooling-device =
+-						<&cpu2 THERMAL_NO_LIMIT
+-						THERMAL_NO_LIMIT>;
+-				};
+-				map2 {
+-					trip = <&cpu_alert>;
+-					cooling-device =
+-						<&cpu4 THERMAL_NO_LIMIT
+-						THERMAL_NO_LIMIT>;
+-				};
+-				map3 {
+-					trip = <&cpu_alert>;
+-					cooling-device =
+-						<&cpu6 THERMAL_NO_LIMIT
+-						THERMAL_NO_LIMIT>;
+-				};
+-			};
+-		};
+-	};
++	#include "fsl-tmu.dtsi"
+ 
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+@@ -692,6 +645,7 @@
+ 					<0000 0 0 4 &gic 0 0 0 127 4>;
+ 		};
+ 
++
+ 		sata0: sata@3200000 {
+ 			status = "disabled";
+ 			compatible = "fsl,ls2080a-ahci";
+@@ -758,3 +712,36 @@
+ 		};
+ 	};
+ };
++
++#include "fsl-tmu-map1.dtsi"
++#include "fsl-tmu-map2.dtsi"
++#include "fsl-tmu-map3.dtsi"
++&thermal_zones {
++	thermal-zone1 {
++		status = "okay";
++	};
++
++	thermal-zone2{
++		status = "okay";
++	};
++
++	thermal-zone3{
++		status = "okay";
++	};
++
++	thermal-zone4{
++		status = "okay";
++	};
++
++	thermal-zone5{
++		status = "okay";
++	};
++
++	thermal-zone6{
++		status = "okay";
++	};
++
++	thermal-zone7 {
++		status = "okay";
++	};
++};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-tmu-map1.dtsi b/arch/arm64/boot/dts/freescale/fsl-tmu-map1.dtsi
+new file mode 100644
+index 0000000..87e0d2e
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/fsl-tmu-map1.dtsi
+@@ -0,0 +1,99 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Device Tree Include file for Thermal Monitor Unit.
++ *
++ * Copyright 2018 NXP
++ *
++ * Tang Yuantian <andy.tang@nxp.com>
++ *
++ */
++
++&thermal_zones {
++	thermal-zone0 {
++		cooling-maps {
++			map1 {
++				trip = <&alert0>;
++				cooling-device =
++					<&cooling_map1 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone1 {
++		cooling-maps {
++			map1 {
++				trip = <&alert1>;
++				cooling-device =
++					<&cooling_map1 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone2 {
++		cooling-maps {
++			map1 {
++				trip = <&alert2>;
++				cooling-device =
++					<&cooling_map1 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone3 {
++		cooling-maps {
++			map1 {
++				trip = <&alert3>;
++				cooling-device =
++					<&cooling_map1 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone4 {
++		cooling-maps {
++			map1 {
++				trip = <&alert4>;
++				cooling-device =
++					<&cooling_map1 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone5 {
++		cooling-maps {
++			map1 {
++				trip = <&alert5>;
++				cooling-device =
++					<&cooling_map1 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone6 {
++		cooling-maps {
++			map1 {
++				trip = <&alert6>;
++				cooling-device =
++					<&cooling_map1 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone7 {
++		cooling-maps {
++			map1 {
++				trip = <&alert7>;
++				cooling-device =
++					<&cooling_map1 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-tmu-map2.dtsi b/arch/arm64/boot/dts/freescale/fsl-tmu-map2.dtsi
+new file mode 100644
+index 0000000..7e35073
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/fsl-tmu-map2.dtsi
+@@ -0,0 +1,99 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Device Tree Include file for Thermal Monitor Unit.
++ *
++ * Copyright 2018 NXP
++ *
++ * Tang Yuantian <andy.tang@nxp.com>
++ *
++ */
++
++&thermal_zones {
++	thermal-zone0 {
++		cooling-maps {
++			map2 {
++				trip = <&alert0>;
++				cooling-device =
++					<&cooling_map2 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone1 {
++		cooling-maps {
++			map2 {
++				trip = <&alert1>;
++				cooling-device =
++					<&cooling_map2 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone2 {
++		cooling-maps {
++			map2 {
++				trip = <&alert2>;
++				cooling-device =
++					<&cooling_map2 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone3 {
++		cooling-maps {
++			map2 {
++				trip = <&alert3>;
++				cooling-device =
++					<&cooling_map2 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone4 {
++		cooling-maps {
++			map2 {
++				trip = <&alert4>;
++				cooling-device =
++					<&cooling_map2 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone5 {
++		cooling-maps {
++			map2 {
++				trip = <&alert5>;
++				cooling-device =
++					<&cooling_map2 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone6 {
++		cooling-maps {
++			map2 {
++				trip = <&alert6>;
++				cooling-device =
++					<&cooling_map2 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone7 {
++		cooling-maps {
++			map2 {
++				trip = <&alert7>;
++				cooling-device =
++					<&cooling_map2 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-tmu-map3.dtsi b/arch/arm64/boot/dts/freescale/fsl-tmu-map3.dtsi
+new file mode 100644
+index 0000000..dcde943
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/fsl-tmu-map3.dtsi
+@@ -0,0 +1,99 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Device Tree Include file for Thermal Monitor Unit.
++ *
++ * Copyright 2018 NXP
++ *
++ * Tang Yuantian <andy.tang@nxp.com>
++ *
++ */
++
++&thermal_zones {
++	thermal-zone0 {
++		cooling-maps {
++			map3 {
++				trip = <&alert0>;
++				cooling-device =
++					<&cooling_map3 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone1 {
++		cooling-maps {
++			map3 {
++				trip = <&alert1>;
++				cooling-device =
++					<&cooling_map3 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone2 {
++		cooling-maps {
++			map3 {
++				trip = <&alert2>;
++				cooling-device =
++					<&cooling_map3 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone3 {
++		cooling-maps {
++			map3 {
++				trip = <&alert3>;
++				cooling-device =
++					<&cooling_map3 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone4 {
++		cooling-maps {
++			map3 {
++				trip = <&alert4>;
++				cooling-device =
++					<&cooling_map3 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone5 {
++		cooling-maps {
++			map3 {
++				trip = <&alert5>;
++				cooling-device =
++					<&cooling_map3 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone6 {
++		cooling-maps {
++			map3 {
++				trip = <&alert6>;
++				cooling-device =
++					<&cooling_map3 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone7 {
++		cooling-maps {
++			map3 {
++				trip = <&alert7>;
++				cooling-device =
++					<&cooling_map3 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-tmu.dtsi b/arch/arm64/boot/dts/freescale/fsl-tmu.dtsi
+new file mode 100644
+index 0000000..133d2dc
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/fsl-tmu.dtsi
+@@ -0,0 +1,251 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Device Tree Include file for Thermal Monitor Unit.
++ *
++ * Copyright 2018 NXP
++ *
++ * Tang Yuantian <andy.tang@nxp.com>
++ *
++ */
++
++thermal_zones: thermal-zones {
++	thermal_zone0: thermal-zone0 {
++		polling-delay-passive = <1000>;
++		polling-delay = <5000>;
++		thermal-sensors = <&tmu 0>;
++		status = "disabled";
++
++		trips {
++			alert0: alert0 {
++				temperature = <75000>;
++				hysteresis = <2000>;
++				type = "passive";
++			};
++
++			crit0: crit0 {
++				temperature = <85000>;
++				hysteresis = <2000>;
++				type = "critical";
++			};
++		};
++
++		cooling-maps {
++			map0 {
++				trip = <&alert0>;
++				cooling-device =
++					<&cooling_map0 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone1 {
++		polling-delay-passive = <1000>;
++		polling-delay = <5000>;
++		thermal-sensors = <&tmu 1>;
++		status = "disabled";
++
++		trips {
++			alert1: alert1 {
++				temperature = <75000>;
++				hysteresis = <2000>;
++				type = "passive";
++			};
++
++			crit1: crit1 {
++				temperature = <85000>;
++				hysteresis = <2000>;
++				type = "critical";
++			};
++		};
++
++		cooling-maps {
++			map0 {
++				trip = <&alert1>;
++				cooling-device =
++					<&cooling_map0 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone2 {
++		polling-delay-passive = <1000>;
++		polling-delay = <5000>;
++		thermal-sensors = <&tmu 2>;
++		status = "disabled";
++
++		trips {
++			alert2: alert2 {
++				temperature = <75000>;
++				hysteresis = <2000>;
++				type = "passive";
++			};
++
++			crit2: crit2 {
++				temperature = <85000>;
++				hysteresis = <2000>;
++				type = "critical";
++			};
++		};
++
++		cooling-maps {
++			map0 {
++				trip = <&alert2>;
++				cooling-device =
++					<&cooling_map0 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone3 {
++		polling-delay-passive = <1000>;
++		polling-delay = <5000>;
++		thermal-sensors = <&tmu 3>;
++		status = "disabled";
++
++		trips {
++			alert3: alert3 {
++				temperature = <75000>;
++				hysteresis = <2000>;
++				type = "passive";
++			};
++
++			crit3: crit3 {
++				temperature = <85000>;
++				hysteresis = <2000>;
++				type = "critical";
++			};
++		};
++
++		cooling-maps {
++			map0 {
++				trip = <&alert3>;
++				cooling-device =
++					<&cooling_map0 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone4 {
++		polling-delay-passive = <1000>;
++		polling-delay = <5000>;
++		thermal-sensors = <&tmu 4>;
++		status = "disabled";
++
++		trips {
++			alert4: alert4 {
++				temperature = <75000>;
++				hysteresis = <2000>;
++				type = "passive";
++			};
++
++			crit4: crit4 {
++				temperature = <85000>;
++				hysteresis = <2000>;
++				type = "critical";
++			};
++		};
++
++		cooling-maps {
++			map0 {
++				trip = <&alert4>;
++				cooling-device =
++					<&cooling_map0 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone5 {
++		polling-delay-passive = <1000>;
++		polling-delay = <5000>;
++		thermal-sensors = <&tmu 5>;
++		status = "disabled";
++
++		trips {
++			alert5: alert5 {
++				temperature = <75000>;
++				hysteresis = <2000>;
++				type = "passive";
++			};
++
++			crit5: crit5 {
++				temperature = <85000>;
++				hysteresis = <2000>;
++				type = "critical";
++			};
++		};
++
++		cooling-maps {
++			map0 {
++				trip = <&alert5>;
++				cooling-device =
++					<&cooling_map0 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone6 {
++		polling-delay-passive = <1000>;
++		polling-delay = <5000>;
++		thermal-sensors = <&tmu 6>;
++		status = "disabled";
++
++		trips {
++			alert6: alert6 {
++				temperature = <75000>;
++				hysteresis = <2000>;
++				type = "passive";
++			};
++
++			crit6: crit6 {
++				temperature = <85000>;
++				hysteresis = <2000>;
++				type = "critical";
++			};
++		};
++
++		cooling-maps {
++			map0 {
++				trip = <&alert6>;
++				cooling-device =
++					<&cooling_map0 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++
++	thermal-zone7 {
++		polling-delay-passive = <1000>;
++		polling-delay = <5000>;
++		thermal-sensors = <&tmu 7>;
++		status = "disabled";
++
++		trips {
++			alert7: alert7 {
++				temperature = <75000>;
++				hysteresis = <2000>;
++				type = "passive";
++			};
++
++			crit7: crit7 {
++				temperature = <85000>;
++				hysteresis = <2000>;
++				type = "critical";
++			};
++		};
++
++		cooling-maps {
++			map0 {
++				trip = <&alert7>;
++				cooling-device =
++					<&cooling_map0 THERMAL_NO_LIMIT
++					THERMAL_NO_LIMIT>;
++			};
++		};
++	};
++};
+-- 
+1.7.1
