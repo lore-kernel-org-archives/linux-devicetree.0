@@ -1,76 +1,83 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 0/8] OLPC 1.75 Keyboard/Touchpad fixes
-Date: Wed, 31 Oct 2018 13:29:19 +0100
-Message-ID: <20181031122919.GA15074@amd>
-References: <20181010142504.233467-1-lkundrak@v3.sk>
- <20181015195612.GB29649@amd>
- <c4edf9b09e88cd265a0829644aa962c28cbc3d51.camel@v3.sk>
- <20181030100139.GB21529@amd>
- <20181030102610.GC21529@amd>
- <20181030235430.GF30863@us.netrek.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 5/6] of/fdt: Remove custom __early_init_dt_declare_initrd()
+ implementation
+Date: Wed, 31 Oct 2018 07:29:47 -0500
+Message-ID: <CAL_JsqKynGpg5fgVes2UQprc0Re7-Yp2_jRYfyGxQdse9zro7g@mail.gmail.com>
+References: <20181030230721.28429-1-f.fainelli@gmail.com> <20181030230721.28429-6-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181030235430.GF30863@us.netrek.org>
+In-Reply-To: <20181030230721.28429-6-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: James Cameron <quozl@laptop.org>
-Cc: Lubomir Rintel <lkundrak@v3.sk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, aryabinin@virtuozzo.com, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, ghackmann@android.com, Kristina Martsenko <kristina.martsenko@arm.com>, chandan.vn@samsung.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@v
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Oct 30, 2018 at 6:07 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> Now that ARM64 uses phys_initrd_start/phys_initrd_size, we can get rid
+> of its custom __early_init_dt_declare_initrd() which causes a fair
+> amount of objects rebuild when changing CONFIG_BLK_DEV_INITRD. In order
+> to make sure ARM64 does not produce a BUG() when VM debugging is turned
+> on though, we must avoid early calls to __va() which is what
+> __early_init_dt_declare_initrd() does and wrap this around to avoid
+> running that code on ARM64.
+>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  arch/arm64/include/asm/memory.h | 8 --------
+>  drivers/of/fdt.c                | 9 +++++++--
+>  2 files changed, 7 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
+> index b96442960aea..dc3ca21ba240 100644
+> --- a/arch/arm64/include/asm/memory.h
+> +++ b/arch/arm64/include/asm/memory.h
+> @@ -168,14 +168,6 @@
+>  #define IOREMAP_MAX_ORDER      (PMD_SHIFT)
+>  #endif
+>
+> -#ifdef CONFIG_BLK_DEV_INITRD
+> -#define __early_init_dt_declare_initrd(__start, __end)                 \
+> -       do {                                                            \
+> -               initrd_start = (__start);                               \
+> -               initrd_end = (__end);                                   \
+> -       } while (0)
+> -#endif
+> -
+>  #ifndef __ASSEMBLY__
+>
+>  #include <linux/bitops.h>
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index e34cb49231b5..f2b5becae96a 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -892,15 +892,20 @@ const void * __init of_flat_dt_match_machine(const void *default_match,
+>  }
+>
+>  #ifdef CONFIG_BLK_DEV_INITRD
+> -#ifndef __early_init_dt_declare_initrd
+>  static void __early_init_dt_declare_initrd(unsigned long start,
+>                                            unsigned long end)
+>  {
+> +       /* ARM64 would cause a BUG to occur here when CONFIG_DEBUG_VM is
+> +        * enabled since __va() is called too early. ARM64 does make use
+> +        * of phys_initrd_start/phys_initrd_size so we can skip this
+> +        * conversion.
+> +        */
+> +#if (!IS_ENABLED(CONFIG_ARM64))
 
---wRRV7LY7NUeQGEoC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Use 'if' not '#if'. Use C code rather than preprocessor whenever possible.
 
-Hi!
-
-> > But I don't get kernel messages during boot:
-> >=20
-> > OLPC 1B1, 512 MiB memory...
-> > OpenFirmware Q4C02 EC Frimware 0.3.02
-> >=20
-> > Type any key to interrupt...
-> > (but keys do not interrupt anything, ouch).
-> > Warning... partition type is 0xb...
-> > Boot device: /usb/disk:\boot\olpc.fth Arguments:
-> > Boot device ....
-> > Warning... partition type is 0xb...
->=20
-> That firmware has problems with USB drives.  Please upgrade to Q4D38.
-> Quickest tested method is http://wiki.laptop.org/go/Upgrading_firmware
-
-Let me try that... Upgrading firmware said "USB drive" so I placed
-bootfw.zip on usb drive. It did quite a show, but I believe it said
-that my firmware is up to date?
-
-It all ended with "activation lease not found" message. Let me retry?
-Same result.
-
-Let me try "upgrading firmware" with SD card. It seems to work with SD
-card. Holding down both "yes" and "no" keys during boot results in
-more useful messages... good. I have now updated firmware, and it even
-fixed my previous boot problem. Good.
-
-Thanks!
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---wRRV7LY7NUeQGEoC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvZoB8ACgkQMOfwapXb+vIpwQCfWH+L06L+O7eJ1zs+wXKhuo3Y
-Y0cAoLRDSdd0TA/ttWF7HfBB4K/daRe+
-=hlkl
------END PGP SIGNATURE-----
-
---wRRV7LY7NUeQGEoC--
+>         initrd_start = (unsigned long)__va(start);
+>         initrd_end = (unsigned long)__va(end);
+>         initrd_below_start_ok = 1;
+> -}
+>  #endif
+> +}
+>
+>  /**
+>   * early_init_dt_check_for_initrd - Decode initrd location from flat tree
+> --
+> 2.17.1
+>
