@@ -1,81 +1,69 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v3 17/25] dt-bindings: panel: Add Bananapi S070WV20-CT16
- ICN6211 MIPI-DSI to RGB bridge
-Date: Wed, 31 Oct 2018 09:53:09 +0100
-Message-ID: <3c4c8a08-8c1e-1ac6-2b53-81389d69c97b@samsung.com>
-References: <20181026144344.27778-1-jagan@amarulasolutions.com>
- <CGME20181029111305epcas5p2ee0ca644470de4e036762e000afbb71b@epcas5p2.samsung.com>
- <20181026144344.27778-18-jagan@amarulasolutions.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v6 6/6] power: supply: Add Spreadtrum SC27XX fuel gauge
+ unit driver
+Date: Wed, 31 Oct 2018 09:56:24 +0100
+Message-ID: <CACRpkdaDB2f5FTY-sk6Ak49GMtqFzV_5Jkway49zSLA6XJkq0A@mail.gmail.com>
+References: <e7c061535f2dcca54d6498405fdd5ed7098b19f9.1540189330.git.baolin.wang@linaro.org>
+ <6a4c15368e0bf34f8e6aad4d788bc899cfb9d61e.1540189330.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20181026144344.27778-18-jagan@amarulasolutions.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jagan Teki <jagan@amarulasolutions.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6a4c15368e0bf34f8e6aad4d788bc899cfb9d61e.1540189330.git.baolin.wang@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>, Craig Tatlor <ctatlor97@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjYuMTAuMjAxOCAxNjo0MywgSmFnYW4gVGVraSB3cm90ZToKPiBCYW5hbmFwaSBTMDcwV1Yy
-MC1DVDE2IElDTjYyMTEgaXMgODAweDQ4MCwgNC1sYW5lIE1JUEktRFNJIHRvIFJHQgo+IGJyaWRn
-ZSBwYW5lbCwgd2hpY2ggaXMgYXZhaWxhYmxlIG9uIHNhbWUgUENCIHdpdGggMjQtYml0IFJHQiBp
-bnRlcmZhY2UuCj4KPiBTbywgdGhpcyBwYXRjaCBhZGRzIERTSSBzcGVjaWZpYyBiaW5kaW5nIGRl
-dGFpbHMgb24gZXhpc3RpbmcKPiBkdC1iaW5kaW5ncyBmaWxlLgo+Cj4gU2lnbmVkLW9mZi1ieTog
-SmFnYW4gVGVraSA8amFnYW5AYW1hcnVsYXNvbHV0aW9ucy5jb20+Cj4gLS0tCj4gQ2hhbmdlcyBm
-b3IgdjM6Cj4gLSBVc2UgZXhpc3RpbmcgYmluZGluZyBkb2MgYW5kIHVwZGF0ZSBkc2kgZGV0YWls
-cwo+IENoYW5nZXMgZm9yIHYyOgo+IC0gbm9uZQo+Cj4gIC4uLi9kaXNwbGF5L3BhbmVsL2JhbmFu
-YXBpLHMwNzB3djIwLWN0MTYudHh0ICB8IDMxICsrKysrKysrKysrKysrKysrLS0KPiAgMSBmaWxl
-IGNoYW5nZWQsIDI5IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4KPiBkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYmFuYW5h
-cGksczA3MHd2MjAtY3QxNi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9wYW5lbC9iYW5hbmFwaSxzMDcwd3YyMC1jdDE2LnR4dAo+IGluZGV4IDM1YmMwYzgz
-OWY0OS4uYjc4NTVkYzdjNjZmIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2JhbmFuYXBpLHMwNzB3djIwLWN0MTYudHh0Cj4gKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYmFuYW5h
-cGksczA3MHd2MjAtY3QxNi50eHQKPiBAQCAtMSwxMiArMSwzOSBAQAo+ICBCYW5hbmEgUGkgNyIg
-KFMwNzBXVjIwLUNUMTYpIFRGVCBMQ0QgUGFuZWwKPiAgCj4gK1MwNzBXVjIwLUNUMTYgaXMgNyIg
-ODAweDQ4MCBwYW5lbCBjb25uZWN0ZWQgdGhyb3VnaCBhIDI0LWJpdCBSR0IgaW50ZXJmYWNlLgo+
-ICsKPiArRGVwZW5kaW5nIG9uIHRoZSB2YXJpYW50LCB0aGUgUENCIGF0dGFjaGVkIHRvIHRoZSBw
-YW5lbCBtb2R1bGUgZWl0aGVyCj4gK3N1cHBvcnRzIERTSSwgb3IgRFNJICsgMjQtYml0IFJHQi4g
-RFNJIGlzIGNvbnZlcnRlZCB0byAyNC1iaXQgUkdCIHZpYQo+ICthbiBvbmJvYXJkIElDTjYyMTEg
-TUlQSSBEU0kgLSBSR0IgYnJpZGdlIGNoaXAsIHRoZW4gZmVkIHRvIHRoZSBwYW5lbAo+ICtpdHNl
-bGYKCkFzIEkgdW5kZXJzdGFuZCB0aGlzIGlzIGRpc3BsYXkgYm9hcmQsIHdoaWNoIGNvbnRhaW5z
-ICdwdXJlJyBSR0IgcGFuZWwKUzA3MFdWMjAtQ1QxNiBhbmQgb3B0aW9uYWxseSBJQ042MjExIERT
-SS0+UkdCIGJyaWRnZS4KVGhlc2UgYXJlIHNlcGFyYXRlIGRldmljZXMsIGp1c3QgY29ubmVjdGVk
-IGJ5IHZlbmRvciB0byBzaW1wbGlmeSBpdHMKYXNzZW1ibHkuIFdoeSBkb24ndCB5b3UgY3JlYXRl
-IHRoZW4gYnJpZGdlIGRyaXZlciBmb3IgSUNONjIxMSBhbmQgUkdCCnBhbmVsIGRyaXZlciBmb3Ig
-UzA3MFdWMjAtQ1QxNiAtIGl0IGxvb2tzIG1vcmUgZ2VuZXJpYy4KVGhlbiB5b3UgY2FuIGRlc2Ny
-aWJlIGJvdGggaW4gZHRzIGFuZCB2b2lsYS4KQ3JlYXRpbmcgZHJpdmVycyBmb3IgZXZlcnkgY29t
-Ym8gb2YgZGV2aWNlcyAocGFuZWwgKyBicmlkZ2UpLCBqdXN0CmJlY2F1c2Ugc29tZSB2ZW5kb3Ig
-c2VsbHMgdGhlbSB0b2dldGhlciBzZWVtcyBpbmNvcnJlY3QgLSB3ZSBoYXZlCmRldmljZXRyZWUg
-Zm9yIGl0LgoKUmVnYXJkcwpBbmRyemVqCgoKPiArCj4gIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4g
-LS0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJiYW5hbmFwaSxzMDcwd3YyMC1jdDE2Igo+ICstIGNv
-bXBhdGlibGU6Cj4gKyAgZm9yIDI0LWJpdCBSR0IgaW50ZXJmYWNlLCB1c2UgImJhbmFuYXBpLHMw
-NzB3djIwLWN0MTYiCj4gKyAgZm9yIElDTjYyMTEgTUlQSS1EU0kgdG8gUkdCIGJyaWRnZSwgdXNl
-ICJiYW5hbmFwaSxzMDcwd3YyMC1jdDE2LWljbjYyMTEiCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0
-aWVzIGZvciBSR0I6Cj4gIC0gcG93ZXItc3VwcGx5OiBzZWUgLi9wYW5lbC1jb21tb24udHh0Cj4g
-IAo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciBNSVBJLURTSSB0byBSR0I6Cj4gKy0gcmVnOiBm
-b3IgRFNJIHZpcnR1YWwgY2hhbm5lbCB1c2VkIGJ5IHRoYXQgc2NyZWVuCj4gKy0gYXZkZC1zdXBw
-bHk6IGFuYWxvZyByZWd1bGF0b3IgZGMxIHN3aXRjaAo+ICstIGR2ZGQtc3VwcGx5OiAzdjMgZGln
-aXRhbCByZWd1bGF0b3IKPiArLSByZXNldC1ncGlvczogYSBHUElPIHBoYW5kbGUgZm9yIHRoZSBy
-ZXNldCBwaW4KPiArCj4gIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gLS0gZW5hYmxlLWdwaW9zOiBz
-ZWUgLi9zaW1wbGUtcGFuZWwudHh0Cj4gKy0gZW5hYmxlLWdwaW9zOiBzZWUgLi9zaW1wbGUtcGFu
-ZWwudHh0KG5vdCBhdmFpbGFibGUgaW4gTUlQSS1EU0kgdG8gUkdCIGJyaWRnZSkKPiAgLSBiYWNr
-bGlnaHQ6IHNlZSAuL3NpbXBsZS1wYW5lbC50eHQKPiAgCj4gIFRoaXMgYmluZGluZyBpcyBjb21w
-YXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQK
-PiAgaW4gLi9zaW1wbGUtcGFuZWwudHh0Lgo+ICsKPiArRXhhbXBsZToKPiArcGFuZWxAMCB7Cj4g
-Kwljb21wYXRpYmxlID0gImJhbmFuYXBpLHMwNzB3djIwLWN0MTYtaWNuNjIxMSI7Cj4gKwlyZWcg
-PSA8MD47Cj4gKwlhdmRkLXN1cHBseSA9IDwmcmVnX2RjMXN3PjsKPiArCWR2ZGQtc3VwcGx5ID0g
-PCZyZWdfZGxkbzE+Owo+ICsJcmVzZXQtZ3Bpb3MgPSA8JnBpbyAzIDYgR1BJT19BQ1RJVkVfSElH
-SD47IC8qIFBENiAqLwo+ICsJYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHRfZHNpPjsKPiArfTsKCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Mon, Oct 22, 2018 at 9:44 AM Baolin Wang <baolin.wang@linaro.org> wrote:
+
+> This patch adds the Spreadtrum SC27XX serial PMICs fuel gauge support,
+> which is used to calculate the battery capacity.
+>
+> Original-by: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Changes from v5:
+>  - Save the OCV values in micro volts for OCV capacity table.
+>  - Use devm_kmemdup() instead of devm_kzalloc() in sc27xx_fgu_hw_init()
+
+Hi Baolin, you can keep my ACK, just adding some nitpicking:
+
+> +struct sc27xx_fgu_data {
+> +       struct regmap *regmap;
+> +       struct device *dev;
+> +       struct power_supply *battery;
+> +       u32 base;
+> +       struct mutex lock;
+> +       struct gpio_desc *gpiod;
+> +       struct iio_channel *channel;
+> +       bool bat_present;
+> +       int internal_resist;
+> +       int total_cap;
+> +       int init_cap;
+> +       int init_clbcnt;
+> +       int max_volt;
+> +       int table_len;
+
+Can  the above really be negative or should these int:s really
+be unsigned int?
+
+> +static int sc27xx_fgu_adc_to_current(int adc)
+> +{
+> +       return (adc * 1000) / SC27XX_FGU_1000MA_ADC;
+> +}
+> +
+> +static int sc27xx_fgu_adc_to_voltage(int adc)
+> +{
+> +       return (adc * 1000) / SC27XX_FGU_1000MV_ADC;
+> +}
+
+Would you maybe use
+DIV_ROUND_CLOSEST(adc*1000, SC27XX_FGU_1000MV_ADC)
+on these?
+
+Overall this is a very fine driver and really pretty compared to some
+other stuff we have in drivers/power.
+
+Yours,
+Linus Walleij
