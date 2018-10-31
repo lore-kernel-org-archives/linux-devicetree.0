@@ -1,45 +1,73 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] of: Fix cpu node iterator to not ignore disabled cpu nodes
-Date: Wed, 31 Oct 2018 09:42:26 -0500
-Message-ID: <20181031144226.26747-1-robh@kernel.org>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: [PATCH V3 02/10] dt-bindings: fsl: add imx7ulp pm related components
+ bindings
+Date: Wed, 31 Oct 2018 14:42:59 +0000
+Message-ID: <1540996688-23681-3-git-send-email-aisheng.dong@nxp.com>
+References: <1540996688-23681-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Christian Zigotzky <chzigotzky@xenosoft.de>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1540996688-23681-1-git-send-email-aisheng.dong@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-In most cases, nodes with 'status = "disabled";' are treated as if the
-node is not present though it is a common bug to forget to check that.
-However, cpu nodes are different in that "disabled" simply means offline
-and the OS can bring the CPU core online. Commit f1f207e43b8a ("of: Add
-cpu node iterator for_each_of_cpu_node()") followed the common behavior
-of ignoring disabled cpu nodes. This breaks some powerpc systems (at
-least NXP P50XX/e5500). Fix this by dropping the status check.
+Add imx7ulp pm related components bindings
 
-Fixes: 651d44f9679c ("of: use for_each_of_cpu_node iterator")
-Fixes: f1f207e43b8a ("of: Add cpu node iterator for_each_of_cpu_node()")
-Reported-by: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Christian Zigotzky <chzigotzky@xenosoft.de>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
- drivers/of/base.c | 2 --
- 1 file changed, 2 deletions(-)
+ChangeLog:
+v2->v3:
+ * no changes
+v1->v2:
+ * new patch
+---
+ .../bindings/arm/freescale/fsl,imx7ulp-pm.txt      | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.txt
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index cc62da278663..e47c5ce6cd58 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -776,8 +776,6 @@ struct device_node *of_get_next_cpu_node(struct device_node *prev)
- 		if (!(of_node_name_eq(next, "cpu") ||
- 		      (next->type && !of_node_cmp(next->type, "cpu"))))
- 			continue;
--		if (!__of_device_is_available(next))
--			continue;
- 		if (of_node_get(next))
- 			break;
- 	}
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.txt
+new file mode 100644
+index 0000000..75195be
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.txt
+@@ -0,0 +1,23 @@
++Freescale i.MX7ULP Power Management Components
++----------------------------------------------
++
++The Multi-System Mode Controller (MSMC) is responsible for sequencing
++the MCU into and out of all stop and run power modes. Specifically, it
++monitors events to trigger transitions between power modes while
++controlling the power, clocks, and memories of the MCU to achieve the
++power consumption and functionality of that mode.
++
++The WFI or WFE instruction is used to invoke a Sleep, Deep Sleep or
++Standby modes for either Cortex family. Run, Wait, and Stop are the
++common terms used for the primary operating modes of Kinetis
++microcontrollers.
++
++Required properties:
++- compatible:	Should be "fsl,imx7ulp-smc1".
++- reg:		Specifies base physical address and size of the register sets.
++
++Example:
++smc1: smc1@40410000 {
++	compatible = "fsl,imx7ulp-smc1";
++	reg = <0x40410000 0x1000>;
++};
 -- 
-2.19.1
+2.7.4
