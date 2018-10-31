@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v3 1/6] nds32: Remove phys_initrd_start and phys_initrd_size
-Date: Wed, 31 Oct 2018 12:28:38 -0700
-Message-ID: <20181031192843.13230-2-f.fainelli@gmail.com>
+Subject: [PATCH v3 2/6] arch: Make phys_initrd_start and phys_initrd_size global variables
+Date: Wed, 31 Oct 2018 12:28:39 -0700
+Message-ID: <20181031192843.13230-3-f.fainelli@gmail.com>
 References: <20181031192843.13230-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181031192843.13230-1-f.fainelli@gmail.com>
@@ -10,27 +10,105 @@ To: linux-kernel@vger.kernel.org
 Cc: Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This will conflict with a subsequent change making phys_initrd_start and
-phys_initrd_size global variables. nds32 does not make use of those nor
-provides a suitable declarations so just get rid of them.
+Make phys_initrd_start and phys_initrd_size global variables declared in
+init/do_mounts_initrd.c such that we can later have generic code in
+drivers/of/fdt.c populate those variables for us.
+
+This requires both the ARM and unicore32 implementations to be properly
+guarded against CONFIG_BLK_DEV_INITRD, and also initialize the variables
+to the expected default values (unicore32).
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/nds32/mm/init.c | 2 --
- 1 file changed, 2 deletions(-)
+ arch/arm/mm/init.c       |  5 ++---
+ arch/unicore32/mm/init.c | 10 +++++++---
+ include/linux/initrd.h   |  3 +++
+ init/do_mounts_initrd.c  |  3 +++
+ 4 files changed, 15 insertions(+), 6 deletions(-)
 
-diff --git a/arch/nds32/mm/init.c b/arch/nds32/mm/init.c
-index c713d2ad55dc..32f55a24ccbb 100644
---- a/arch/nds32/mm/init.c
-+++ b/arch/nds32/mm/init.c
-@@ -22,8 +22,6 @@
- DEFINE_PER_CPU(struct mmu_gather, mmu_gathers);
- DEFINE_SPINLOCK(anon_alias_lock);
- extern pgd_t swapper_pg_dir[PTRS_PER_PGD];
--extern unsigned long phys_initrd_start;
--extern unsigned long phys_initrd_size;
+diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+index 0cc8e04295a4..87d59a53861d 100644
+--- a/arch/arm/mm/init.c
++++ b/arch/arm/mm/init.c
+@@ -51,9 +51,7 @@ unsigned long __init __clear_cr(unsigned long mask)
+ }
+ #endif
+ 
+-static phys_addr_t phys_initrd_start __initdata = 0;
+-static unsigned long phys_initrd_size __initdata = 0;
+-
++#ifdef CONFIG_BLK_DEV_INITRD
+ static int __init early_initrd(char *p)
+ {
+ 	phys_addr_t start;
+@@ -90,6 +88,7 @@ static int __init parse_tag_initrd2(const struct tag *tag)
+ }
+ 
+ __tagtable(ATAG_INITRD2, parse_tag_initrd2);
++#endif
+ 
+ static void __init find_limits(unsigned long *min, unsigned long *max_low,
+ 			       unsigned long *max_high)
+diff --git a/arch/unicore32/mm/init.c b/arch/unicore32/mm/init.c
+index 8f8699e62bd5..f2f815d46846 100644
+--- a/arch/unicore32/mm/init.c
++++ b/arch/unicore32/mm/init.c
+@@ -31,9 +31,7 @@
+ 
+ #include "mm.h"
+ 
+-static unsigned long phys_initrd_start __initdata = 0x01000000;
+-static unsigned long phys_initrd_size __initdata = SZ_8M;
+-
++#ifdef CONFIG_BLK_DEV_INITRD
+ static int __init early_initrd(char *p)
+ {
+ 	unsigned long start, size;
+@@ -49,6 +47,7 @@ static int __init early_initrd(char *p)
+ 	return 0;
+ }
+ early_param("initrd", early_initrd);
++#endif
  
  /*
-  * empty_zero_page is a special page that is used for
+  * This keeps memory configuration data used by a couple memory
+@@ -157,6 +156,11 @@ void __init uc32_memblock_init(struct meminfo *mi)
+ 	memblock_reserve(__pa(_text), _end - _text);
+ 
+ #ifdef CONFIG_BLK_DEV_INITRD
++	if (!phys_initrd_size) {
++		phys_initrd_start = 0x01000000;
++		phys_initrd_size = SZ_8M;
++	}
++
+ 	if (phys_initrd_size) {
+ 		memblock_reserve(phys_initrd_start, phys_initrd_size);
+ 
+diff --git a/include/linux/initrd.h b/include/linux/initrd.h
+index 84b423044088..14beaff9b445 100644
+--- a/include/linux/initrd.h
++++ b/include/linux/initrd.h
+@@ -21,4 +21,7 @@ extern int initrd_below_start_ok;
+ extern unsigned long initrd_start, initrd_end;
+ extern void free_initrd_mem(unsigned long, unsigned long);
+ 
++extern phys_addr_t phys_initrd_start;
++extern unsigned long phys_initrd_size;
++
+ extern unsigned int real_root_dev;
+diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
+index d1a5d885ce13..45865b72f4ea 100644
+--- a/init/do_mounts_initrd.c
++++ b/init/do_mounts_initrd.c
+@@ -16,6 +16,9 @@ int initrd_below_start_ok;
+ unsigned int real_root_dev;	/* do_proc_dointvec cannot handle kdev_t */
+ static int __initdata mount_initrd = 1;
+ 
++phys_addr_t phys_initrd_start __initdata;
++unsigned long phys_initrd_size __initdata;
++
+ static int __init no_initrd(char *str)
+ {
+ 	mount_initrd = 0;
 -- 
 2.17.1
