@@ -1,71 +1,42 @@
-From: Julien Grall <julien.grall@arm.com>
-Subject: Re: [PATCH v3] devicetree, xen: add xen,
- shared-memory binding
-Date: Wed, 31 Oct 2018 12:52:27 +0000
-Message-ID: <0951e2a3-78a1-e849-39e9-5980c9c87277@arm.com>
-References: <1540343921-7487-1-git-send-email-sstabellini@kernel.org>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v2 0/2] pwm-tiecap: Add support for AM654 SoCs
+Date: Wed, 31 Oct 2018 19:02:23 +0530
+Message-ID: <e3d4afac-edc3-3b2a-3c75-8eb307705dd4@ti.com>
+References: <20181016060402.18756-1-vigneshr@ti.com>
+ <20181016111541.GE8852@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <xen-devel-bounces@lists.xenproject.org>
-In-Reply-To: <1540343921-7487-1-git-send-email-sstabellini@kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181016111541.GE8852@ulmo>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
-List-Post: <mailto:xen-devel@lists.xenproject.org>
-List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
-List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
-Errors-To: xen-devel-bounces@lists.xenproject.org
-Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
-To: Stefano Stabellini <sstabellini@kernel.org>, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, stefanos@xilinx.com, Wei Liu <wei.liu2@citrix.com>, Ian Jackson <ian.jackson@eu.citrix.com>, xen-devel@lists.xen.org, robh+dt@kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Andrew Davis <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAxMC8yNC8xOCAyOjE4IEFNLCBTdGVmYW5vIFN0YWJlbGxpbmkgd3JvdGU6Cj4gRnJv
-bTogU3RlZmFubyBTdGFiZWxsaW5pIDxzdGVmYW5vc0B4aWxpbnguY29tPgo+IAo+IEludHJvZHVj
-ZSBhIGRldmljZSB0cmVlIGJpbmRpbmcgZm9yIFhlbiByZXNlcnZlZC1tZW1vcnkgcmVnaW9ucy4g
-VGhleQo+IGFyZSB1c2VkIHRvIHNoYXJlIG1lbW9yeSBhY3Jvc3MgVk1zIGZyb20gdGhlIFZNIGNv
-bmZpZyBmaWxlcy4gKFNlZQo+IHN0YXRpY19zaG0gY29uZmlnIG9wdGlvbi4pCj4gCj4gU2lnbmVk
-LW9mZi1ieTogU3RlZmFubyBTdGFiZWxsaW5pIDxzdGVmYW5vc0B4aWxpbnguY29tPgo+IENjOiBq
-dWxpZW4uZ3JhbGxAYXJtLmNvbQo+IC0tLQo+IENoYW5nZXMgaW4gdjM6Cj4gLSByZW1vdmUgZmFs
-bGJhY2sgdmVyc2lvbgo+IAo+IENoYW5nZXMgaW4gdjI6Cj4gLSBmaXggQXV0aG9yIGxpbmUKPiAt
-IGFkZCB2ZXJzaW9uaW5nCj4gLSB4ZW4saWQgaW5zdGVhZCBvZiBpZAo+IC0tLQo+ICAgLi4uL2Jp
-bmRpbmdzL3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50eHQgICB8IDIwICsrKysr
-KysrKysrKysrKysrKysrCj4gICAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKQo+ICAg
-Y3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNl
-cnZlZC1tZW1vcnkveGVuLHNoYXJlZC1tZW1vcnkudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkveGVuLHNoYXJlZC1t
-ZW1vcnkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2VydmVkLW1l
-bW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4
-IDAwMDAwMDAuLjdjODE2ODMKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50eHQK
-PiBAQCAtMCwwICsxLDIwIEBACj4gKyogWGVuIGh5cGVydmlzb3IgcmVzZXJ2ZWQtbWVtb3J5IGJp
-bmRpbmcKPiArCj4gK0V4cG9zZSBvbmUgb3IgbW9yZSBtZW1vcnkgcmVnaW9ucyBhcyByZXNlcnZl
-ZC1tZW1vcnkgdG8gdGhlIGd1ZXN0Cj4gK3ZpcnR1YWwgbWFjaGluZS4gVHlwaWNhbGx5LCBhIHJl
-Z2lvbiBpcyBjb25maWd1cmVkIGF0IFZNIGNyZWF0aW9uIHRpbWUKPiArdG8gYmUgYSBzaGFyZWQg
-bWVtb3J5IGFyZWEgYWNyb3NzIG11bHRpcGxlIHZpcnR1YWwgbWFjaGluZXMgZm9yCj4gK2NvbW11
-bmljYXRpb24gYW1vbmcgdGhlbS4KCkkgbWF5IGhhdmUgbm90aWNlIHNvbWUgaXNzdWUgd2l0aCB0
-aGlzIGJpbmRpbmcuIExvb2tpbmcgYXQgdGhlIGRlc2lnbiAKZG9jdW1lbnQgWzFdLCB0aGUgIm1h
-c3RlciIgZG9tYWluIG1heSBwcm92aWRlIGEgYmlnIGJhY2tpbmcgcmVnaW9uIHRoYXQgCndvdWxk
-IGJlIHNwbGl0IGFuZCBzaGFyZSB3aXRoIG11bHRpcGxlICJzbGF2ZSIuCgpGb3IgdGhlICJtYXN0
-ZXIiIGRvbWFpbiwgdGhpcyBiaW5kaW5nIHdvdWxkIHNwZWNpZnkgdGhlIGZ1bGwgYmFja2luZyAK
-cmVnaW9uLiBUaGUgIm1hc3RlciIgT1Mgd291bGQgbm90IGJlIGFibGUgdG8ga25vdyBob3cgdGhl
-IHJlZ2lvbiB3b3VsZCAKYmUgdXNlZCBoZXJlLgoKRm9yIHRoZSAic2xhdmUiIGRvbWFpbiwgaXQg
-bG9va3MgbGlrZSBpdCBtaWdodCBiZSBwb3NzaWJsZSB0byBtYXAgdGhlIApzYW1lIHJlZ2lvbiAo
-c28gc2FtZSBJRCkgdHdpY2UuIFNvIHdlIHdvdWxkIGVuZCB1cCB0byBjcmVhdGUgdGhlIHNhbWUg
-CmJpbmRpbmdzIHR3aWNlLgoKQW55IG9waW9uaW9uIG9uIGhvdyB3ZSBzaG91bGQgcHJvY2VlZCB3
-aXRoIHRoZXNlIHR3byB1c2UgY2FzZXM/Cgo+ICsKPiArRm9yIGVhY2ggb2YgdGhlc2UgcHJlLXNo
-YXJlZCBtZW1vcnkgcmVnaW9ucywgYSByYW5nZSBpcyBleHBvc2VkIHVuZGVyCj4gK3RoZSAvcmVz
-ZXJ2ZWQtbWVtb3J5IG5vZGUgYXMgYSBjaGlsZCBub2RlLiBFYWNoIHJhbmdlIHN1Yi1ub2RlIGlz
-IG5hbWVkCj4gK3hlbi1zaG1lbUA8YWRkcmVzcz4gYW5kIGhhcyB0aGUgZm9sbG93aW5nIHByb3Bl
-cnRpZXM6Cj4gKwo+ICstIGNvbXBhdGlibGU6Cj4gKwljb21wYXRpYmxlID0gInhlbixzaGFyZWQt
-bWVtb3J5LXYxIgo+ICsKPiArLSByZWc6Cj4gKwl0aGUgYmFzZSBndWVzdCBwaHlzaWNhbCBhZGRy
-ZXNzIGFuZCBzaXplIG9mIHRoZSBzaGFyZWQgbWVtb3J5IHJlZ2lvbgo+ICsKPiArLSB4ZW4saWQ6
-Cj4gKwlhIHN0cmluZyB0aGF0IGlkZW50aWZpZXMgdGhlIHNoYXJlZCBtZW1vcnkgcmVnaW9uIGFz
-IHNwZWNpZmllZCBpbgo+ICsJdGhlIFZNIGNvbmZpZyBmaWxlCj4gCgpDaGVlcnMsCgpbMV0gaHR0
-cHM6Ly9saXN0cy54ZW4ub3JnL2FyY2hpdmVzL2h0bWwveGVuLWRldmVsLzIwMTgtMTAvbXNnMDA3
-MzAuaHRtbAoKLS0gCkp1bGllbiBHcmFsbAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KWGVuLWRldmVsIG1haWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMu
-eGVucHJvamVjdC5vcmcKaHR0cHM6Ly9saXN0cy54ZW5wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL3hlbi1kZXZlbA==
+Hi Thierry,
+
+On 16/10/18 4:45 PM, Thierry Reding wrote:
+> On Tue, Oct 16, 2018 at 11:34:00AM +0530, Vignesh R wrote:
+>> Couple of patches to enable pwm-tiecap driver to be used with TI's new
+>> AM654 platforms.
+>>
+>> Vignesh R (2):
+>>   dt-bindings: pwm: tiecap: Add TI AM654 SoC specific compatible
+>>   pwm: Kconfig: Enable TI ECAP driver for ARCH_K3
+>>
+>>  Documentation/devicetree/bindings/pwm/pwm-tiecap.txt | 1 +
+>>  drivers/pwm/Kconfig                                  | 5 ++---
+>>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> Applied, thanks.
+> 
+
+I could not see this patch series in pwm tree here:
+https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git
+Is this queued for v4.20?
+
+-- 
+Regards
+Vignesh
