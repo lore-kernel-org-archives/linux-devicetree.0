@@ -1,59 +1,109 @@
-From: Christian Zigotzky <chzigotzky@xenosoft.de>
-Subject: Re: [PATCH] of: Fix cpu node iterator to not ignore disabled cpu nodes
-Date: Wed, 31 Oct 2018 17:40:12 +0100
-Message-ID: <60687CA2-AD09-46D8-A317-FB6FA5605996@xenosoft.de>
-References: <20181031144226.26747-1-robh@kernel.org>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 4/6] arm64: Utilize phys_initrd_start/phys_initrd_size
+Date: Wed, 31 Oct 2018 10:33:08 -0700
+Message-ID: <ae4cfe6b-8df8-7737-e7e0-9471bd131a67@gmail.com>
+References: <20181030230721.28429-1-f.fainelli@gmail.com>
+ <20181030230721.28429-5-f.fainelli@gmail.com>
+ <20181031070350.GA12503@rapoport-lnx>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181031144226.26747-1-robh@kernel.org>
+In-Reply-To: <20181031070350.GA12503@rapoport-lnx>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
+To: Mike Rapoport <rppt@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, moderated list:ARM64 PORT (AARCH64 ARCHITECTUR
 List-Id: devicetree@vger.kernel.org
 
-Thank you. I will test this patch tomorrow.
+On 10/31/18 12:03 AM, Mike Rapoport wrote:
+> On Tue, Oct 30, 2018 at 04:07:19PM -0700, Florian Fainelli wrote:
+>> ARM64 is the only architecture that re-defines
+>> __early_init_dt_declare_initrd() in order for that function to populate
+>> initrd_start/initrd_end with physical addresses instead of virtual
+>> addresses. Instead of having an override we can leverage
+>> drivers/of/fdt.c populating phys_initrd_start/phys_initrd_size to
+>> populate those variables for us.
+>>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>> ---
+>>  arch/arm64/mm/init.c | 21 +++++++++------------
+>>  1 file changed, 9 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+>> index 3cf87341859f..e95cee656a55 100644
+>> --- a/arch/arm64/mm/init.c
+>> +++ b/arch/arm64/mm/init.c
+>> @@ -72,8 +72,8 @@ static int __init early_initrd(char *p)
+>>  	if (*endp == ',') {
+>>  		size = memparse(endp + 1, NULL);
+>>  
+>> -		initrd_start = start;
+>> -		initrd_end = start + size;
+>> +		phys_initrd_start = start;
+>> +		phys_initrd_size = size;
+>>  	}
+>>  	return 0;
+>>  }
+>> @@ -408,14 +408,14 @@ void __init arm64_memblock_init(void)
+>>  		memblock_add(__pa_symbol(_text), (u64)(_end - _text));
+>>  	}
+>>  
+>> -	if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && initrd_start) {
+>> +	if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {
+>>  		/*
+>>  		 * Add back the memory we just removed if it results in the
+>>  		 * initrd to become inaccessible via the linear mapping.
+>>  		 * Otherwise, this is a no-op
+>>  		 */
+>> -		u64 base = initrd_start & PAGE_MASK;
+>> -		u64 size = PAGE_ALIGN(initrd_end) - base;
+>> +		u64 base = phys_initrd_start & PAGE_MASK;
+>> +		u64 size = PAGE_ALIGN(phys_initrd_size);
+>>  
+>>  		/*
+>>  		 * We can only add back the initrd memory if we don't end up
+>> @@ -460,13 +460,10 @@ void __init arm64_memblock_init(void)
+>>  	 */
+>>  	memblock_reserve(__pa_symbol(_text), _end - _text);
+>>  #ifdef CONFIG_BLK_DEV_INITRD
+>> -	if (initrd_start) {
+> 
+> There may be no initrd at all, so the condition here would rather become
+> 
+> 	if (phys_initrd_start)
 
-=E2=80=94 Christian
+Or use phys_initrd_size, which would be consistent with how other
+architectures typically test for this.
 
-Sent from my iPhone
+> 
+>> -		memblock_reserve(initrd_start, initrd_end - initrd_start);
+>> -
+>> -		/* the generic initrd code expects virtual addresses */
+>> -		initrd_start = __phys_to_virt(initrd_start);
+>> -		initrd_end = __phys_to_virt(initrd_end);
+>> -	}
+>> +	/* the generic initrd code expects virtual addresses */
+>> +	initrd_start = __phys_to_virt(phys_initrd_start);
+>> +	initrd_end = initrd_start + phys_initrd_size;
+>> +	initrd_below_start_ok = 0;
+>>  #endif
+> 
+> I also wonder what is the reason to keep memstart_addr randomization and
+> initrd setup interleaved?
+> 
+> What we have now is roughly:
+> 
+> 1) set memstart_addr
+> 2) enforce memory_limit
+> 3) reserve initrd
+> 4) randomize memstart_addr
+> 5) reserve text + data
+> 6) reserve initrd again and set virtual addresses of initrd_{start,end}
+> 
+> Maybe it's possible to merge (3) into (6) ?
 
-> On 31. Oct 2018, at 15:42, Rob Herring <robh@kernel.org> wrote:
->=20
-> In most cases, nodes with 'status =3D "disabled";' are treated as if the
-> node is not present though it is a common bug to forget to check that.
-> However, cpu nodes are different in that "disabled" simply means offline
-> and the OS can bring the CPU core online. Commit f1f207e43b8a ("of: Add
-> cpu node iterator for_each_of_cpu_node()") followed the common behavior
-> of ignoring disabled cpu nodes. This breaks some powerpc systems (at
-> least NXP P50XX/e5500). Fix this by dropping the status check.
->=20
-> Fixes: 651d44f9679c ("of: use for_each_of_cpu_node iterator")
-> Fixes: f1f207e43b8a ("of: Add cpu node iterator for_each_of_cpu_node()")
-> Reported-by: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Christian Zigotzky <chzigotzky@xenosoft.de>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> drivers/of/base.c | 2 --
-> 1 file changed, 2 deletions(-)
->=20
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index cc62da278663..e47c5ce6cd58 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -776,8 +776,6 @@ struct device_node *of_get_next_cpu_node(struct device=
-_node *prev)
->        if (!(of_node_name_eq(next, "cpu") ||
->              (next->type && !of_node_cmp(next->type, "cpu"))))
->            continue;
-> -        if (!__of_device_is_available(next))
-> -            continue;
->        if (of_node_get(next))
->            break;
->    }
-> --=20
-> 2.19.1
->=20
+That's kind of orthogonal to this patch series, but it's a valid
+question, not sure I would want to tackle that just now though :)
+-- 
+Florian
