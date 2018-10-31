@@ -1,66 +1,83 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH anybus v2 2/5] dt-bindings: anybus-bridge: document
- devicetree binding.
-Date: Thu, 1 Nov 2018 00:29:52 +0100
-Message-ID: <999e50d3-924d-b960-ffb2-b1ee04c08d09@suse.de>
-References: <20181031194425.32132-1-TheSven73@googlemail.com>
- <20181031194425.32132-3-TheSven73@googlemail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 1/2] dt-bindings: i2c: i2c-imx-lpi2c: add imx8qxp
+ compatible string
+Date: Wed, 31 Oct 2018 23:37:47 +0000
+Message-ID: <20181031233747.GC8321@kunai>
+References: <1540913007-28343-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181031194425.32132-3-TheSven73@googlemail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: thesven73@gmail.com, svendev@arcx.com
-Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, treding@nvidia.com, david@lechnology.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, stuyoder@gmail.com, linus.walleij@linaro.org, maxime.ripard@bootlin.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============5042534633932058823=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1540913007-28343-1-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sven,
 
-Am 31.10.18 um 20:44 schrieb thesven73@gmail.com:
-> From: Sven Van Asbroeck <svendev@arcx.com>
-> 
-> This patch adds devicetree binding documentation for the
-> Arcx anybus bridge.
-> 
-> Signed-off-by: Sven Van Asbroeck <svendev@arcx.com>
-> ---
->  .../bindings/misc/arcx,anybus-bridge.txt      | 34 +++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
->  2 files changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/arcx,anybus-bridge.txt
-[...]
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 2c3fc512e746..1bf07b20a8af 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -35,6 +35,7 @@ aptina	Aptina Imaging
->  arasan	Arasan Chip Systems
->  archermind ArcherMind Technology (Nanjing) Co., Ltd.
->  arctic	Arctic Sand
-> +arcx	Arcx/Archronix Inc.
->  aries	Aries Embedded GmbH
->  arm	ARM Ltd.
->  armadeus	ARMadeus Systems SARL
+--===============5042534633932058823==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="VywGB/WGlW4DM4P8"
+Content-Disposition: inline
 
-Please move this to a separate patch, titled "dt-bindings: Add vendor
-prefix for Arcx", with the commit message describing what the company does.
-Also note that subject lines usually do not end with a full stop,
-similar to book titles or news headlines.
-And it is usually preferable to have such a long list of people in CC
-rather than in To, to make it clear whom you expect to handle it and to
-facilitate replies going to you without hand-editing every other To.
 
-I notice that arcx.com spells it ARCX Inc., in upper-case without any
-mention of Archronix in the name. So if that's a previous name you may
-want to write it as "ARCX Inc. (formerly Archronix Inc.)"? Look for
-other examples in that file.
+--VywGB/WGlW4DM4P8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Andreas
+On Tue, Oct 30, 2018 at 03:28:11PM +0000, A.s. Dong wrote:
+> Add imx8qxp compatible string
+>=20
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: linux-i2c@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+Applied to for-current, thanks!
+
+
+--VywGB/WGlW4DM4P8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlvaPMsACgkQFA3kzBSg
+KbbqwA//RsrS7hOpN9Ojuxp/2DxLlMyZpweW6tq7iCvxEe5D2LdsHOFTrcZ13Bot
+fT/WxR9/n3qLzCfUZE7+bfZN1AbgEA9hfrMaTiKdTNblmtYdYFMHdZSu6kxeIHxo
+SBJXtn1QFpqoNko3mRnRgtrNMEpWW5bhS2euBp4kIrZs6NQnZN+rsgirQnvxjbVN
+PJQ6oX1DCXYV/IWav5cK57czeFIcTuByCplBvkn9MI+PkQjnCAAXIdnSiTDTJ6WU
+Oro0IUyJpttm+wKDyZF3Tx7rmPq3blmk8J+eh/Heoq5PrbMhBm+NdY/D0uuwHT5W
+80C/JQQVEFHLkvBfTimvcXHSr3qrNYg+B8jaIPtXwOXu9M5i1zMnrbAu0/NRfhmB
+g6xACPsc+/lYTXnkzkoC4dNf0+4iPQGN/BsAQ4f3E9q0rOILieVxwv95RWrNfdTo
+NgJEeKhSUqcPBrBrEqAEOxJZZ7oIXrAhXy2F6Pvj3qDR5v+GC7XS8Ua0LlXmLyqR
+AGv23wfVGg5ScIWjU2AChHzCEzafXTL/tYwkFKQCnRO0usCUKoIcAj7gEcTfkZ5J
+FYpmX835WCtdHGyZKBjAfYzmU0tR3eMF6snpzssSGf3U1QNcxEEjAgYsRij1HTzk
+rpE9clTCdI6ZatXcNMsZFiFBUN4UpVw4uDMbVkIJxf6V7x25CVU=
+=5xWz
+-----END PGP SIGNATURE-----
+
+--VywGB/WGlW4DM4P8--
+
+
+--===============5042534633932058823==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5042534633932058823==--
