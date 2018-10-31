@@ -1,185 +1,88 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v3 6/6] arch: Move initrd= parsing into do_mounts_initrd.c
-Date: Wed, 31 Oct 2018 12:28:43 -0700
-Message-ID: <20181031192843.13230-7-f.fainelli@gmail.com>
-References: <20181031192843.13230-1-f.fainelli@gmail.com>
+From: thesven73@gmail.com
+Subject: [PATCH anybus v2 0/5] Support HMS Profinet Card over Anybus
+Date: Wed, 31 Oct 2018 15:44:20 -0400
+Message-ID: <20181031194425.32132-1-TheSven73@googlemail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181031192843.13230-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, linux-arm-kernel@lists.infradead.org
+To: svendev@arcx.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, treding@nvidia.com, david@lechnology.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, stuyoder@gmail.com, linus.walleij@linaro.org, maxime.ripard@bootlin.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-ARC, ARM, ARM64 and Unicore32 are all capable of parsing the "initrd="
-command line parameter to allow specifying the physical address and size
-of an initrd. Move that parsing into init/do_mounts_initrd.c such that
-we no longer duplicate that logic.
+From: Sven Van Asbroeck <svendev@arcx.com>
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- arch/arc/mm/init.c       | 25 +++++--------------------
- arch/arm/mm/init.c       | 17 -----------------
- arch/arm64/mm/init.c     | 18 ------------------
- arch/unicore32/mm/init.c | 18 ------------------
- init/do_mounts_initrd.c  | 17 +++++++++++++++++
- 5 files changed, 22 insertions(+), 73 deletions(-)
+This patch set adds support for the HMS Industrial Networks AB Profinet card.
 
-diff --git a/arch/arc/mm/init.c b/arch/arc/mm/init.c
-index ba145065c579..55879a9dee0d 100644
---- a/arch/arc/mm/init.c
-+++ b/arch/arc/mm/init.c
-@@ -79,24 +79,6 @@ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
- 		base, TO_MB(size), !in_use ? "Not used":"");
- }
- 
--#ifdef CONFIG_BLK_DEV_INITRD
--static int __init early_initrd(char *p)
--{
--	unsigned long start, size;
--	char *endp;
--
--	start = memparse(p, &endp);
--	if (*endp == ',') {
--		size = memparse(endp + 1, NULL);
--
--		initrd_start = (unsigned long)__va(start);
--		initrd_end = (unsigned long)__va(start + size);
--	}
--	return 0;
--}
--early_param("initrd", early_initrd);
--#endif
--
- /*
-  * First memory setup routine called from setup_arch()
-  * 1. setup swapper's mm @init_mm
-@@ -141,8 +123,11 @@ void __init setup_arch_memory(void)
- 	memblock_reserve(low_mem_start, __pa(_end) - low_mem_start);
- 
- #ifdef CONFIG_BLK_DEV_INITRD
--	if (initrd_start)
--		memblock_reserve(__pa(initrd_start), initrd_end - initrd_start);
-+	if (phys_initrd_size) {
-+		memblock_reserve(phys_initrd_start, phys_initrd_size);
-+		initrd_start = (unsigned long)__va(phys_initrd_start);
-+		initrd_end = initrd_start + phys_initrd_size;
-+	}
- #endif
- 
- 	early_init_fdt_reserve_self();
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index 4bfa08e27319..58ec68709606 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -52,23 +52,6 @@ unsigned long __init __clear_cr(unsigned long mask)
- #endif
- 
- #ifdef CONFIG_BLK_DEV_INITRD
--static int __init early_initrd(char *p)
--{
--	phys_addr_t start;
--	unsigned long size;
--	char *endp;
--
--	start = memparse(p, &endp);
--	if (*endp == ',') {
--		size = memparse(endp + 1, NULL);
--
--		phys_initrd_start = start;
--		phys_initrd_size = size;
--	}
--	return 0;
--}
--early_param("initrd", early_initrd);
--
- static int __init parse_tag_initrd(const struct tag *tag)
- {
- 	pr_warn("ATAG_INITRD is deprecated; "
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 00ef2166bb73..d95a6cb205b8 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -62,24 +62,6 @@
- s64 memstart_addr __ro_after_init = -1;
- phys_addr_t arm64_dma_phys_limit __ro_after_init;
- 
--#ifdef CONFIG_BLK_DEV_INITRD
--static int __init early_initrd(char *p)
--{
--	unsigned long start, size;
--	char *endp;
--
--	start = memparse(p, &endp);
--	if (*endp == ',') {
--		size = memparse(endp + 1, NULL);
--
--		phys_initrd_start = start;
--		phys_initrd_size = size;
--	}
--	return 0;
--}
--early_param("initrd", early_initrd);
--#endif
--
- #ifdef CONFIG_KEXEC_CORE
- /*
-  * reserve_crashkernel() - reserves memory for crash kernel
-diff --git a/arch/unicore32/mm/init.c b/arch/unicore32/mm/init.c
-index f2f815d46846..99acdb829a7e 100644
---- a/arch/unicore32/mm/init.c
-+++ b/arch/unicore32/mm/init.c
-@@ -31,24 +31,6 @@
- 
- #include "mm.h"
- 
--#ifdef CONFIG_BLK_DEV_INITRD
--static int __init early_initrd(char *p)
--{
--	unsigned long start, size;
--	char *endp;
--
--	start = memparse(p, &endp);
--	if (*endp == ',') {
--		size = memparse(endp + 1, NULL);
--
--		phys_initrd_start = start;
--		phys_initrd_size = size;
--	}
--	return 0;
--}
--early_param("initrd", early_initrd);
--#endif
--
- /*
-  * This keeps memory configuration data used by a couple memory
-  * initialization functions, as well as show_mem() for the skipping
-diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
-index 45865b72f4ea..732d21f4a637 100644
---- a/init/do_mounts_initrd.c
-+++ b/init/do_mounts_initrd.c
-@@ -27,6 +27,23 @@ static int __init no_initrd(char *str)
- 
- __setup("noinitrd", no_initrd);
- 
-+static int __init early_initrd(char *p)
-+{
-+	phys_addr_t start;
-+	unsigned long size;
-+	char *endp;
-+
-+	start = memparse(p, &endp);
-+	if (*endp == ',') {
-+		size = memparse(endp + 1, NULL);
-+
-+		phys_initrd_start = start;
-+		phys_initrd_size = size;
-+	}
-+	return 0;
-+}
-+early_param("initrd", early_initrd);
-+
- static int init_linuxrc(struct subprocess_info *info, struct cred *new)
- {
- 	ksys_unshare(CLONE_FS | CLONE_FILES);
+Profinet is an industry technical standard for data communication over
+Industrial Ethernet, designed for collecting data from, and controlling,
+equipment in industrial systems, with a particular strength in delivering data
+under tight time constraints (on the order of 1ms or less).
+
+The profinet card itself is connected to the system via an industrial bus
+called 'anybus'.
+
+I have followed the bus driver/client driver pattern, and created an anybus
+bus driver, plus a client driver for the profinet card.
+
+In case this patch set gets (eventually) accepted, drivers for other anybus
+client cards may follow: flnet, cc-link, ...
+
+The anybus slot on the host is located on an 'anybus bridge', which is
+custom h/w designed by Arcx. Its driver is modeled as a misc device, which
+exposes a dual reset controller, plus a power readout unrelated to the anybus.
+
+v2:
+	added architecture overview comments to host driver
+	completely reworked anybus-bridge driver, it becomes a reset controller
+	anybuss-host driver now needs devicetree entry, link to reset controller
+	I will hold off on kernel-doc until the overall architecture gets
+		more validation / approval
+	fixed Kconfig, comment-style, document ioctl magic numbers
+	removed redundant pwm dependency
+	renamed enable-gpios to reset-gpios
+	stop driving reset-gpio after unloading driver
+	use interrupt-parent / interrupts method to describe interrupts
+		in the devicetree
+	convert references 'i.MX WEIM parallel bus' to 'parallel bus'
+	replace devicetree functions with more generic platform_get_resource()
+							platform_get_irq()
+	added device unique data to add_device_randomness()
+
+v1:
+	first shot
+
+Sven Van Asbroeck (5):
+  misc: support the Arcx anybus bridge.
+  dt-bindings: anybus-bridge: document devicetree binding.
+  bus: support HMS Anybus-S bus.
+  dt-bindings: anybuss-host: document devicetree binding.
+  misc: support HMS Profinet IRT industrial controller.
+
+ .../bindings/bus/arcx,anybuss-host.txt        |   36 +
+ .../bindings/misc/arcx,anybus-bridge.txt      |   34 +
+ .../devicetree/bindings/vendor-prefixes.txt   |    1 +
+ Documentation/ioctl/ioctl-number.txt          |    1 +
+ drivers/bus/Kconfig                           |   10 +
+ drivers/bus/Makefile                          |    1 +
+ drivers/bus/anybuss-host.c                    | 1498 +++++++++++++++++
+ drivers/misc/Kconfig                          |   19 +
+ drivers/misc/Makefile                         |    2 +
+ drivers/misc/anybus-bridge.c                  |  301 ++++
+ drivers/misc/hms-profinet.c                   |  753 +++++++++
+ include/linux/anybuss-client.h                |  100 ++
+ include/uapi/linux/hms-common.h               |   14 +
+ include/uapi/linux/hms-profinet.h             |  102 ++
+ 14 files changed, 2872 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/arcx,anybuss-host.txt
+ create mode 100644 Documentation/devicetree/bindings/misc/arcx,anybus-bridge.txt
+ create mode 100644 drivers/bus/anybuss-host.c
+ create mode 100644 drivers/misc/anybus-bridge.c
+ create mode 100644 drivers/misc/hms-profinet.c
+ create mode 100644 include/linux/anybuss-client.h
+ create mode 100644 include/uapi/linux/hms-common.h
+ create mode 100644 include/uapi/linux/hms-profinet.h
+
 -- 
 2.17.1
