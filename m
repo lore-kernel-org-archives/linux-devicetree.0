@@ -1,92 +1,103 @@
-Return-Path: <SRS0=6MUZ=MV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:60902 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbeJIUXL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Oct 2018 16:23:11 -0400
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH 3/6] dt-bindings: clock: qcom: Introduce QCOM WCSS Q6DSP clock bindings
-Date: Tue,  9 Oct 2018 18:35:54 +0530
-Message-Id: <1539090357-20853-4-git-send-email-govinds@codeaurora.org>
-In-Reply-To: <1539090357-20853-1-git-send-email-govinds@codeaurora.org>
-References: <1539090357-20853-1-git-send-email-govinds@codeaurora.org>
-Sender: devicetree-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Govind Singh <govinds@codeaurora.org>
+Return-Path: <SRS0=fPTE=NL=verge.net.au=horms@kernel.org>
+Date: Wed, 31 Oct 2018 13:50:28 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] ARM: dts: iwg23s-sbc: Enable cmt0
+Message-ID: <20181031125028.nvirj7btb4sr6qw4@verge.net.au>
+References: <1540543709-35959-1-git-send-email-biju.das@bp.renesas.com>
+ <1540543709-35959-2-git-send-email-biju.das@bp.renesas.com>
+ <20181030155151.7jxqfzvd4y44zuij@verge.net.au>
+ <OSBPR01MB21031B41A3384F13D02E9BDCB8CC0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OSBPR01MB21031B41A3384F13D02E9BDCB8CC0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree bindings for WiFi QDSP subsystem clock controls
-found in OCS405 soc.
+On Tue, Oct 30, 2018 at 04:48:30PM +0000, Biju Das wrote:
+> Hi Simon,
+> 
+> Thanks for the feedback.
+> 
+> > Subject: Re: [PATCH 2/2] ARM: dts: iwg23s-sbc: Enable cmt0
+> >
+> > On Fri, Oct 26, 2018 at 09:48:29AM +0100, Biju Das wrote:
+> > > This patch enables cmt0 support on the iWave iwg23s sbc.
+> > >
+> > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> >
+> > Thanks, I applied this for v4.21, resolving a conflict.
+> > The result is as follows:
+> >
+> > From: Biju Das <biju.das@bp.renesas.com>
+> > Date: Fri, 26 Oct 2018 09:48:29 +0100
+> > Subject: [PATCH] ARM: dts: iwg23s-sbc: Enable cmt0
+> >
+> > This patch enables cmt0 support on the iWave iwg23s sbc.
+> >
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> > ---
+> >  arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
+> > b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
+> > index ffd8216f28c3..295f11afac21 100644
+> > --- a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
+> > +++ b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
+> > @@ -77,6 +77,10 @@
+> >  clock-frequency = <20000000>;
+> >  };
+> >
+> > +&cmt0 {
+> > +status = "okay";
+> > +};
+> 
+> I believe as per our process, the nodes should be in alphabetical order,
+> If it is the case, it should be above  extal_clk
+> 
+> &extal_clk {
+>         clock-frequency = <20000000>;
+> };
+> 
+> >  &pfc {
+> >  mmc_pins_uhs: mmc_uhs {
+> >  groups = "mmc_data8", "mmc_ctrl";
 
-Signed-off-by: Govind Singh <govinds@codeaurora.org>
+Yes, indeed. That was my intention but I messed things up.
+I've updated the patch accordingly.
+
+
+From: Biju Das <biju.das@bp.renesas.com>
+Date: Fri, 26 Oct 2018 09:48:29 +0100
+Subject: [PATCH] ARM: dts: iwg23s-sbc: Enable cmt0
+
+This patch enables cmt0 support on the iWave iwg23s sbc.
+
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 ---
- .../devicetree/bindings/clock/qcom,wcsscc.txt      | 26 ++++++++++++++++++++++
- include/dt-bindings/clock/qcom,wcss-qcs404.h       | 24 ++++++++++++++++++++
- 2 files changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,wcsscc.txt
- create mode 100644 include/dt-bindings/clock/qcom,wcss-qcs404.h
+ arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,wcsscc.txt b/Documentation/devicetree/bindings/clock/qcom,wcsscc.txt
-new file mode 100644
-index 0000000..2b19ef0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,wcsscc.txt
-@@ -0,0 +1,26 @@
-+Qualcomm WCSS Clock Controller Binding
-+-----------------------------------------------
+diff --git a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
+index ffd8216f28c3..18d22631e188 100644
+--- a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
++++ b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
+@@ -73,6 +73,10 @@
+ 	};
+ };
+ 
++&cmt0 {
++	status = "okay";
++};
 +
-+Required properties :
-+- compatible		: shall contain "qcom,qcs404-wcsscc"
-+- #clock-cells		: from common clock binding, shall contain 1.
-+- reg			: shall contain base register address and size,
-+			  in the order
-+			Index-0 maps to WCSS_Q6SSTOP clocks register region
-+			Index-1 maps to WCSS_TCSR register region
-+			Index-2 maps to WCSS_QDSP6SS register region
-+
-+Optional properties :
-+- reg-names	: register names of WCSS domain
-+		 "wcss_q6sstop", "wcnss_tcsr", "wcss_qdsp6ss".
-+
-+Example:
-+The below node has to be defined in the cases where the WCSS peripheral loader
-+would bring the subsystem out of reset.
-+
-+	clock_wcsscc: qcom,wcsscc@7000000 {
-+		compatible = "qcom,qcs404-wcsscc";
-+		reg = <0x07500000 0x4e000>, <0x07550000 0x8012>, <0x07400000 0x104>;
-+		reg-names = "wcss_q6sstop", "wcnss_tcsr", "wcss_qdsp6ss";
-+		#clock-cells = <1>;
-+	};
-diff --git a/include/dt-bindings/clock/qcom,wcss-qcs404.h b/include/dt-bindings/clock/qcom,wcss-qcs404.h
-new file mode 100644
-index 0000000..45dd659
---- /dev/null
-+++ b/include/dt-bindings/clock/qcom,wcss-qcs404.h
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ */
-+
-+#ifndef _DT_BINDINGS_CLK_WCSS_QCS404_H
-+#define _DT_BINDINGS_CLK_WCSS_QCS404_H
-+
-+#define WCSS_AHBFABRIC_CBCR_CLK			0
-+#define WCSS_AHBS_CBCR_CLK			1
-+#define WCSS_TCM_CBCR_CLK			2
-+#define WCSS_AHBM_CBCR_CLK			3
-+#define WCSS_AXIM_CBCR_CLK			4
-+#define WCSS_BCR_CBCR_CLK			5
-+#define WCSS_LCC_CBCR_CLK			6
-+#define WCSS_QDSP6SS_XO_CBCR_CLK		7
-+#define WCSS_QDSP6SS_SLEEP_CBCR_CLK		8
-+#define WCSS_QDSP6SS_GFMMUX_CLK			9
-+
-+#define Q6SSTOP_QDSP6SS_RESET			0
-+#define Q6SSTOP_QDSP6SS_CORE_RESET		1
-+#define Q6SSTOP_QDSP6SS_BUS_RESET		2
-+#define Q6SSTOP_BCR_RESET			3
-+#endif
+ &extal_clk {
+ 	clock-frequency = <20000000>;
+ };
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.11.0
