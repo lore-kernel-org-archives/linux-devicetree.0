@@ -1,42 +1,106 @@
-From: Yuantian Tang <andy.tang@nxp.com>
-Subject: [PATCH 2/2 v3] clk: qoriq: add more compatibles strings
-Date: Wed, 31 Oct 2018 14:57:36 +0800
-Message-ID: <20181031065736.32719-2-andy.tang@nxp.com>
-References: <20181031065736.32719-1-andy.tang@nxp.com>
+From: Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH v2 4/6] arm64: Utilize phys_initrd_start/phys_initrd_size
+Date: Wed, 31 Oct 2018 09:03:50 +0200
+Message-ID: <20181031070350.GA12503@rapoport-lnx>
+References: <20181030230721.28429-1-f.fainelli@gmail.com>
+ <20181030230721.28429-5-f.fainelli@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181031065736.32719-1-andy.tang@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <20181030230721.28429-5-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: oss@buserror.net
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Yuantian Tang <andy.tang@nxp.com>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, moderated list:ARM64 PORT (AARCH64 ARCHITECTUR
 List-Id: devicetree@vger.kernel.org
 
-Add more SoC compatible strings to support more chips.
+On Tue, Oct 30, 2018 at 04:07:19PM -0700, Florian Fainelli wrote:
+> ARM64 is the only architecture that re-defines
+> __early_init_dt_declare_initrd() in order for that function to populate
+> initrd_start/initrd_end with physical addresses instead of virtual
+> addresses. Instead of having an override we can leverage
+> drivers/of/fdt.c populating phys_initrd_start/phys_initrd_size to
+> populate those variables for us.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  arch/arm64/mm/init.c | 21 +++++++++------------
+>  1 file changed, 9 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 3cf87341859f..e95cee656a55 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -72,8 +72,8 @@ static int __init early_initrd(char *p)
+>  	if (*endp == ',') {
+>  		size = memparse(endp + 1, NULL);
+>  
+> -		initrd_start = start;
+> -		initrd_end = start + size;
+> +		phys_initrd_start = start;
+> +		phys_initrd_size = size;
+>  	}
+>  	return 0;
+>  }
+> @@ -408,14 +408,14 @@ void __init arm64_memblock_init(void)
+>  		memblock_add(__pa_symbol(_text), (u64)(_end - _text));
+>  	}
+>  
+> -	if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && initrd_start) {
+> +	if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {
+>  		/*
+>  		 * Add back the memory we just removed if it results in the
+>  		 * initrd to become inaccessible via the linear mapping.
+>  		 * Otherwise, this is a no-op
+>  		 */
+> -		u64 base = initrd_start & PAGE_MASK;
+> -		u64 size = PAGE_ALIGN(initrd_end) - base;
+> +		u64 base = phys_initrd_start & PAGE_MASK;
+> +		u64 size = PAGE_ALIGN(phys_initrd_size);
+>  
+>  		/*
+>  		 * We can only add back the initrd memory if we don't end up
+> @@ -460,13 +460,10 @@ void __init arm64_memblock_init(void)
+>  	 */
+>  	memblock_reserve(__pa_symbol(_text), _end - _text);
+>  #ifdef CONFIG_BLK_DEV_INITRD
+> -	if (initrd_start) {
 
-Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
----
-v3:
-  - undo deleting old bindings
-  - split the dts and driver to different patchset
+There may be no initrd at all, so the condition here would rather become
 
- .../devicetree/bindings/clock/qoriq-clock.txt      |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+	if (phys_initrd_start)
 
-diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-index 97f46ad..c655f28 100644
---- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-@@ -28,6 +28,12 @@ Required properties:
- 	* "fsl,p4080-clockgen"
- 	* "fsl,p5020-clockgen"
- 	* "fsl,p5040-clockgen"
-+	* "fsl,t1023-clockgen"
-+	* "fsl,t1024-clockgen"
-+	* "fsl,t1040-clockgen"
-+	* "fsl,t1042-clockgen"
-+	* "fsl,t2080-clockgen"
-+	* "fsl,t2081-clockgen"
- 	* "fsl,t4240-clockgen"
- 	* "fsl,b4420-clockgen"
- 	* "fsl,b4860-clockgen"
+> -		memblock_reserve(initrd_start, initrd_end - initrd_start);
+> -
+> -		/* the generic initrd code expects virtual addresses */
+> -		initrd_start = __phys_to_virt(initrd_start);
+> -		initrd_end = __phys_to_virt(initrd_end);
+> -	}
+> +	/* the generic initrd code expects virtual addresses */
+> +	initrd_start = __phys_to_virt(phys_initrd_start);
+> +	initrd_end = initrd_start + phys_initrd_size;
+> +	initrd_below_start_ok = 0;
+>  #endif
+
+I also wonder what is the reason to keep memstart_addr randomization and
+initrd setup interleaved?
+
+What we have now is roughly:
+
+1) set memstart_addr
+2) enforce memory_limit
+3) reserve initrd
+4) randomize memstart_addr
+5) reserve text + data
+6) reserve initrd again and set virtual addresses of initrd_{start,end}
+
+Maybe it's possible to merge (3) into (6) ?
+
+>  	early_init_fdt_scan_reserved_mem();
+> -- 
+> 2.17.1
+> 
+
 -- 
-1.7.1
+Sincerely yours,
+Mike.
