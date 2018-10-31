@@ -1,8 +1,8 @@
 From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: [PATCH V3 03/10] dt-bindings: gpio: vf610: add optional clocks
- property
-Date: Wed, 31 Oct 2018 14:43:04 +0000
-Message-ID: <1540996688-23681-4-git-send-email-aisheng.dong@nxp.com>
+Subject: [PATCH V3 05/10] dt-bindings: pinctrl: imx7ulp: back to imx legacy
+ binding for consistency
+Date: Wed, 31 Oct 2018 14:43:13 +0000
+Message-ID: <1540996688-23681-6-git-send-email-aisheng.dong@nxp.com>
 References: <1540996688-23681-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,51 +20,120 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "A.s. Dong" <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, Stefan Agner <stefan@agner.ch>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, Stefan Agner <stefan@agner.ch>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On some SoCs(e.g. MX7ULP), GPIO clock is gatable and maybe
-disabled by default. Users have to make sure it's enabled before
-being able to access controller registers, otherwise an external
-abort error may occur. Let's add the optional clocks property to
-handle this case.
+We already had an earlier conclusion that all new i.MX Socs will keep
+using the legacy i.MX Pinctrl bindings instead of generic pin config.
+However, MX7ULP generic pin config binding support has already been in
+tree before that time. Per SoC maintainers' suggestions, in order to
+get a better consistency for all i.MX devices, we'd like to go back to
+imx legacy binding for MX7ULP as well.
 
-For ULP GPIO clock, it includes two separate clocks: one is for
-GPIO controller Input/Output function clock while another is
-GPIO port control clock for interrupt function.
-
+Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
 Cc: Stefan Agner <stefan@agner.ch>
+Cc: Sascha Hauer <kernel@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
 Cc: linux-gpio@vger.kernel.org
 Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
-v2->v3:
- * no changes
-v1->v2:
- * new patch
+ChangeLog:
+ v3: new patch
 ---
- Documentation/devicetree/bindings/gpio/gpio-vf610.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../bindings/pinctrl/fsl,imx7ulp-pinctrl.txt       | 66 ++++++++++------------
+ 1 file changed, 29 insertions(+), 37 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.txt b/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
-index 0ccbae4..ae254aa 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
-@@ -24,6 +24,12 @@ Required properties for GPIO node:
-       4 = active high level-sensitive.
-       8 = active low level-sensitive.
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.txt
+index 44ad670a..bfa3703 100644
+--- a/Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.txt
+@@ -7,55 +7,47 @@ Note:
+ This binding doc is only for the IOMUXC1 support in A7 Domain and it only
+ supports generic pin config.
  
-+Optional properties:
-+-clocks:	Must contain an entry for each entry in clock-names.
-+		See common clock-bindings.txt for details.
-+-clock-names:	A list of clock names. For imx7ulp, it must contain
-+		"gpio", "port".
+-Please also refer pinctrl-bindings.txt in this directory for generic pinctrl
+-binding.
+-
+-=== Pin Controller Node ===
++Please refer to fsl,imx-pinctrl.txt in this directory for common binding
++part and usage.
+ 
+ Required properties:
+-- compatible:	"fsl,imx7ulp-iomuxc1"
+-- reg:		Should contain the base physical address and size of the iomuxc
+-		registers.
+-
+-=== Pin Configuration Node ===
+-- pinmux: One integers array, represents a group of pins mux setting.
+-	The format is pinmux = <PIN_FUNC_ID>, PIN_FUNC_ID is a pin working on
+-	a specific function.
+-
+-	NOTE: i.MX7ULP PIN_FUNC_ID consists of 4 integers as it shares one mux
+-	and config register as follows:
+-	<mux_conf_reg input_reg mux_mode input_val>
+-
+-	Refer to imx7ulp-pinfunc.h in in device tree source folder for all
+-	available imx7ulp PIN_FUNC_ID.
+-
+-Optional Properties:
+-- drive-strength		Integer. Controls Drive Strength
+-					0: Standard
+-					1: Hi Driver
+-- drive-push-pull		Bool. Enable Pin Push-pull
+-- drive-open-drain		Bool. Enable Pin Open-drian
+-- slew-rate:			Integer. Controls Slew Rate
+-					0: Standard
+-					1: Slow
+-- bias-disable:			Bool. Pull disabled
+-- bias-pull-down:		Bool. Pull down on pin
+-- bias-pull-up:			Bool. Pull up on pin
++- compatible:	"fsl,imx7ulp-iomuxc1".
++- fsl,pins:	Each entry consists of 5 integers which represents the mux
++		and config setting for one pin. The first 4 integers
++		<mux_conf_reg input_reg mux_mode input_val> are specified
++		using a PIN_FUNC_ID macro, which can be found in
++		imx7ulp-pinfunc.h in the device tree source folder.
++		The last integer CONFIG is the pad setting value like
++		pull-up on this pin.
 +
- Note: Each GPIO port should have an alias correctly numbered in "aliases"
- node.
++		Please refer to i.MX7ULP Reference Manual for detailed
++		CONFIG settings.
++
++CONFIG bits definition:
++PAD_CTL_OBE		(1 << 17)
++PAD_CTL_IBE		(1 << 16)
++PAD_CTL_LK		(1 << 16)
++PAD_CTL_DSE_HI		(1 << 6)
++PAD_CTL_DSE_STD		(0 << 6)
++PAD_CTL_ODE		(1 << 5)
++PAD_CTL_PUSH_PULL	(0 << 5)
++PAD_CTL_SRE_SLOW	(1 << 2)
++PAD_CTL_SRE_STD		(0 << 2)
++PAD_CTL_PE		(1 << 0)
  
+ Examples:
+ #include "imx7ulp-pinfunc.h"
+ 
+ /* Pin Controller Node */
+-iomuxc1: iomuxc@40ac0000 {
++iomuxc1: pinctrl@40ac0000 {
+ 	compatible = "fsl,imx7ulp-iomuxc1";
+ 	reg = <0x40ac0000 0x1000>;
+ 
+ 	/* Pin Configuration Node */
+ 	pinctrl_lpuart4: lpuart4grp {
+-		pinmux = <
+-			IMX7ULP_PAD_PTC3__LPUART4_RX
+-			IMX7ULP_PAD_PTC2__LPUART4_TX
++		fsl,pins = <
++			IMX7ULP_PAD_PTC3__LPUART4_RX	0x1
++			IMX7ULP_PAD_PTC2__LPUART4_TX	0x1
+ 		>;
+-		bias-pull-up;
+ 	};
+ };
 -- 
 2.7.4
