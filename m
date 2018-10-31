@@ -1,379 +1,179 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: [PATCH V3 08/10] dts: imx: add common imx7ulp dtsi support
-Date: Wed, 31 Oct 2018 14:43:26 +0000
-Message-ID: <1540996688-23681-9-git-send-email-aisheng.dong@nxp.com>
-References: <1540996688-23681-1-git-send-email-aisheng.dong@nxp.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] mmc: mmci: add variant property to send stop cmd if a
+ command fail
+Date: Wed, 31 Oct 2018 16:16:28 +0100
+Message-ID: <CAPDyKFoyvKeFFwvJppg=NFDQNnDmL83+BR0fhkX=5DwpsGZ11g@mail.gmail.com>
+References: <1540894589-4004-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1540996688-23681-1-git-send-email-aisheng.dong@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1540894589-4004-1-git-send-email-ludovic.Barre@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ludovic Barre <ludovic.Barre@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-The i.MX 7ULP family of processors features NXP's advanced implementation
-of the Arm Cortex-A7 core, the Arm Cortex-M4 core, as well as a 3D and 2D
-Graphics Processing Units (GPUs).
+On 30 October 2018 at 11:16, Ludovic Barre <ludovic.Barre@st.com> wrote:
+> From: Ludovic Barre <ludovic.barre@st.com>
+>
+> The mmc framework follows the requirement of SD_Specification:
+> the STOP_TRANSMISSION is sent on multiple write/read commands
+> and the stop command (alone), not needed on other ADTC commands.
 
-This patch aims to add the initial support including:
-1) CLK
-2) GPIO PTC, PTD, PTE, PTF
-3) uSDHC 1/2
-4) LPUART 4/5/6/7
-5) LPI2C 6/7
+Well, there is a bit more to it than that.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
----
-ChangeLog:
-v2->v3:
- * change to generic node names
- * remove arch timer due to:
-   1) arch timer is fixed to 1Mhz which is lower accurate than TPM timer (3Mhz).
-   2) no firmware progrem CNTFREQ
-   3) cpuidle driver is still not in tree will may cause system hang
-v1->v2:
- * update clk part due to binding change
- * separate soc.dtsi from board.dts
----
- arch/arm/boot/dts/imx7ulp.dtsi | 314 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 314 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx7ulp.dtsi
+Host drivers may set MMC_CAP_CMD23 support, which means pre-defined
+multi-block transfers, becomes preferable to open-ended ones.
 
-diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
-new file mode 100644
-index 0000000..c06fd3e
---- /dev/null
-+++ b/arch/arm/boot/dts/imx7ulp.dtsi
-@@ -0,0 +1,314 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2016 Freescale Semiconductor, Inc.
-+ * Copyright 2017-2018 NXP
-+ *   Dong Aisheng <aisheng.dong@nxp.com>
-+ */
-+
-+#include <dt-bindings/clock/imx7ulp-clock.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+#include "imx7ulp-pinfunc.h"
-+
-+/ {
-+	interrupt-parent = <&intc>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	aliases {
-+		gpio0 = &gpio_ptc;
-+		gpio1 = &gpio_ptd;
-+		gpio2 = &gpio_pte;
-+		gpio3 = &gpio_ptf;
-+		i2c0 = &lpi2c6;
-+		i2c1 = &lpi2c7;
-+		mmc0 = &usdhc0;
-+		mmc1 = &usdhc1;
-+		serial0 = &lpuart4;
-+		serial1 = &lpuart5;
-+		serial2 = &lpuart6;
-+		serial3 = &lpuart7;
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			compatible = "arm,cortex-a7";
-+			device_type = "cpu";
-+			reg = <0>;
-+		};
-+	};
-+
-+	intc: interrupt-controller@40021000 {
-+		compatible = "arm,cortex-a7-gic";
-+		#interrupt-cells = <3>;
-+		interrupt-controller;
-+		reg = <0x40021000 0x1000>,
-+		      <0x40022000 0x1000>;
-+	};
-+
-+	rosc: clock-rosc {
-+		compatible = "fixed-clock";
-+		clock-frequency = <32768>;
-+		clock-output-names = "rosc";
-+		#clock-cells = <0>;
-+	};
-+
-+	sosc: clock-sosc {
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+		clock-output-names = "sosc";
-+		#clock-cells = <0>;
-+	};
-+
-+	sirc: clock-sirc {
-+		compatible = "fixed-clock";
-+		clock-frequency = <16000000>;
-+		clock-output-names = "sirc";
-+		#clock-cells = <0>;
-+	};
-+
-+	firc: clock-firc {
-+		compatible = "fixed-clock";
-+		clock-frequency = <48000000>;
-+		clock-output-names = "firc";
-+		#clock-cells = <0>;
-+	};
-+
-+	upll: clock-upll {
-+		compatible = "fixed-clock";
-+		clock-frequency = <480000000>;
-+		clock-output-names = "upll";
-+		#clock-cells = <0>;
-+	};
-+
-+	mpll: clock-mpll {
-+		compatible = "fixed-clock";
-+		clock-frequency = <480000000>;
-+		clock-output-names = "mpll";
-+		#clock-cells = <0>;
-+	};
-+
-+	ahbbridge0: bus@40000000 {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x40000000 0x800000>;
-+		ranges;
-+
-+		lpuart4: serial@402d0000 {
-+			compatible = "fsl,imx7ulp-lpuart";
-+			reg = <0x402d0000 0x1000>;
-+			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&pcc2 IMX7ULP_CLK_LPUART4>;
-+			clock-names = "ipg";
-+			assigned-clocks = <&pcc2 IMX7ULP_CLK_LPUART4>;
-+			assigned-clock-parents = <&scg1 IMX7ULP_CLK_SOSC_BUS_CLK>;
-+			assigned-clock-rates = <24000000>;
-+			status = "disabled";
-+		};
-+
-+		lpuart5: serial@402e0000 {
-+			compatible = "fsl,imx7ulp-lpuart";
-+			reg = <0x402e0000 0x1000>;
-+			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&pcc2 IMX7ULP_CLK_LPUART5>;
-+			clock-names = "ipg";
-+			assigned-clocks = <&pcc2 IMX7ULP_CLK_LPUART5>;
-+			assigned-clock-parents = <&scg1 IMX7ULP_CLK_FIRC>;
-+			assigned-clock-rates = <48000000>;
-+			status = "disabled";
-+		};
-+
-+		tpm5: tpm@40260000 {
-+			compatible = "fsl,imx7ulp-tpm";
-+			reg = <0x40260000 0x1000>;
-+			interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&scg1 IMX7ULP_CLK_NIC1_BUS_DIV>,
-+				 <&pcc2 IMX7ULP_CLK_LPTPM5>;
-+			clock-names = "ipg", "per";
-+		};
-+
-+		usdhc0: mmc@40370000 {
-+			compatible = "fsl,imx7ulp-usdhc", "fsl,imx6sx-usdhc";
-+			reg = <0x40370000 0x10000>;
-+			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&scg1 IMX7ULP_CLK_NIC1_BUS_DIV>,
-+				 <&scg1 IMX7ULP_CLK_NIC1_DIV>,
-+				 <&pcc2 IMX7ULP_CLK_USDHC0>;
-+			clock-names ="ipg", "ahb", "per";
-+			assigned-clocks = <&pcc2 IMX7ULP_CLK_USDHC0>;
-+			assigned-clock-parents = <&scg1 IMX7ULP_CLK_NIC1_DIV>;
-+			bus-width = <4>;
-+			fsl,tuning-start-tap = <20>;
-+			fsl,tuning-step= <2>;
-+			status = "disabled";
-+		};
-+
-+		usdhc1: mmc@40380000 {
-+			compatible = "fsl,imx7ulp-usdhc", "fsl,imx6sx-usdhc";
-+			reg = <0x40380000 0x10000>;
-+			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&scg1 IMX7ULP_CLK_NIC1_BUS_DIV>,
-+				 <&scg1 IMX7ULP_CLK_NIC1_DIV>,
-+				 <&pcc2 IMX7ULP_CLK_USDHC1>;
-+			clock-names ="ipg", "ahb", "per";
-+			assigned-clocks = <&pcc2 IMX7ULP_CLK_USDHC1>;
-+			assigned-clock-parents = <&scg1 IMX7ULP_CLK_NIC1_DIV>;
-+			bus-width = <4>;
-+			fsl,tuning-start-tap = <20>;
-+			fsl,tuning-step= <2>;
-+			status = "disabled";
-+		};
-+
-+		scg1: clock-controller@403e0000 {
-+			compatible = "fsl,imx7ulp-scg1";
-+			reg = <0x403e0000 0x10000>;
-+			clocks = <&rosc>, <&sosc>, <&sirc>,
-+				 <&firc>, <&upll>, <&mpll>;
-+			clock-names = "rosc", "sosc", "sirc",
-+				      "firc", "upll", "mpll";
-+			#clock-cells = <1>;
-+		};
-+
-+		pcc2: clock-controller@403f0000 {
-+			compatible = "fsl,imx7ulp-pcc2";
-+			reg = <0x403f0000 0x10000>;
-+			#clock-cells = <1>;
-+			assigned-clocks = <&pcc2 IMX7ULP_CLK_LPTPM5>;
-+			assigned-clock-parents = <&scg1 IMX7ULP_CLK_SOSC_BUS_CLK>;
-+		};
-+
-+		smc1: smc1@40410000 {
-+			compatible = "fsl,imx7ulp-smc1";
-+			reg = <0x40410000 0x1000>;
-+		};
-+
-+		pcc3: clock-controller@40b30000 {
-+			compatible = "fsl,imx7ulp-pcc3";
-+			reg = <0x40b30000 0x10000>;
-+			#clock-cells = <1>;
-+		};
-+	};
-+
-+	ahbbridge1: bus@40800000 {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x40800000 0x800000>;
-+		ranges;
-+
-+		lpi2c6: i2c@40a40000 {
-+			compatible = "fsl,imx7ulp-lpi2c";
-+			reg = <0x40a40000 0x10000>;
-+			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&pcc3 IMX7ULP_CLK_LPI2C6>;
-+			clock-names = "ipg";
-+			assigned-clocks = <&pcc3 IMX7ULP_CLK_LPI2C6>;
-+			assigned-clock-parents = <&scg1 IMX7ULP_CLK_FIRC>;
-+			assigned-clock-rates = <48000000>;
-+			status = "disabled";
-+		};
-+
-+		lpi2c7: i2c@40a50000 {
-+			compatible = "fsl,imx7ulp-lpi2c";
-+			reg = <0x40a50000 0x10000>;
-+			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&pcc3 IMX7ULP_CLK_LPI2C7>;
-+			clock-names = "ipg";
-+			assigned-clocks = <&pcc3 IMX7ULP_CLK_LPI2C7>;
-+			assigned-clock-parents = <&scg1 IMX7ULP_CLK_FIRC>;
-+			assigned-clock-rates = <48000000>;
-+			status = "disabled";
-+		};
-+
-+		lpuart6: serial@40a60000 {
-+			compatible = "fsl,imx7ulp-lpuart";
-+			reg = <0x40a60000 0x1000>;
-+			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&pcc3 IMX7ULP_CLK_LPUART6>;
-+			clock-names = "ipg";
-+			assigned-clocks = <&pcc3 IMX7ULP_CLK_LPUART6>;
-+			assigned-clock-parents = <&scg1 IMX7ULP_CLK_FIRC>;
-+			assigned-clock-rates = <48000000>;
-+			status = "disabled";
-+		};
-+
-+		lpuart7: serial@40a70000 {
-+			compatible = "fsl,imx7ulp-lpuart";
-+			reg = <0x40a70000 0x1000>;
-+			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&pcc3  IMX7ULP_CLK_LPUART7>;
-+			clock-names = "ipg";
-+			assigned-clocks = <&pcc3 IMX7ULP_CLK_LPUART7>;
-+			assigned-clock-parents = <&scg1 IMX7ULP_CLK_FIRC>;
-+			assigned-clock-rates = <48000000>;
-+			status = "disabled";
-+		};
-+
-+		iomuxc1: pinctrl@40ac0000 {
-+			compatible = "fsl,imx7ulp-iomuxc1";
-+			reg = <0x40ac0000 0x1000>;
-+		};
-+
-+		gpio_ptc: gpio@40ae0000 {
-+			compatible = "fsl,imx7ulp-gpio", "fsl,vf610-gpio";
-+			reg = <0x40ae0000 0x1000 0x400f0000 0x40>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
-+				 <&pcc3 IMX7ULP_CLK_PCTLC>;
-+			clock-names = "gpio", "port";
-+			gpio-ranges = <&iomuxc1 0 0 32>;
-+		};
-+
-+		gpio_ptd: gpio@40af0000 {
-+			compatible = "fsl,imx7ulp-gpio", "fsl,vf610-gpio";
-+			reg = <0x40af0000 0x1000 0x400f0040 0x40>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
-+				 <&pcc3 IMX7ULP_CLK_PCTLD>;
-+			clock-names = "gpio", "port";
-+			gpio-ranges = <&iomuxc1 0 32 32>;
-+		};
-+
-+		gpio_pte: gpio@40b00000 {
-+			compatible = "fsl,imx7ulp-gpio", "fsl,vf610-gpio";
-+			reg = <0x40b00000 0x1000 0x400f0080 0x40>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
-+				 <&pcc3 IMX7ULP_CLK_PCTLE>;
-+			clock-names = "gpio", "port";
-+			gpio-ranges = <&iomuxc1 0 64 32>;
-+		};
-+
-+		gpio_ptf: gpio@40b10000 {
-+			compatible = "fsl,imx7ulp-gpio", "fsl,vf610-gpio";
-+			reg = <0x40b10000 0x1000 0x400f00c0 0x40>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
-+				 <&pcc3 IMX7ULP_CLK_PCTLF>;
-+			clock-names = "gpio", "port";
-+			gpio-ranges = <&iomuxc1 0 96 32>;
-+		};
-+	};
-+};
--- 
-2.7.4
+However, even for pre-defined transfers, a CM12 (stop transmission)
+should be sent, in case of data transfer errors. At least if I
+understand the specs correctly.
+
+By looking at the code in mmci_data_irq(), I realize that it's not
+considering this case - so I think that need to be fixed as to start
+with.
+
+>
+> But, if an error happens on command or data step, some variants
+> require a stop command "STOP_TRANSMISION" to clear the DPSM
+> "Data Path State Machine". If it's not done the next data
+> command freezes hardware block.
+> Needed to support the STM32 sdmmc variant.
+
+I don't really follow this, sorry. Could you start by clarifying what
+you mean by "data step", according to the above?
+
+As far as I understand, you need to send a CMD12 to clear the DPSM, in
+case of any errors happening during a data transfer (which includes
+ADTC commands as well), right?
+
+Or is there anything else to it?
+
+Kind regards
+Uffe
+
+>
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> ---
+>  drivers/mmc/host/mmci.c | 33 +++++++++++++++++++++++++++++++++
+>  drivers/mmc/host/mmci.h |  4 ++++
+>  2 files changed, 37 insertions(+)
+>
+> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> index 19650ed..ecedca3 100644
+> --- a/drivers/mmc/host/mmci.c
+> +++ b/drivers/mmc/host/mmci.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/err.h>
+>  #include <linux/highmem.h>
+>  #include <linux/log2.h>
+> +#include <linux/mmc/mmc.h>
+>  #include <linux/mmc/pm.h>
+>  #include <linux/mmc/host.h>
+>  #include <linux/mmc/card.h>
+> @@ -57,6 +58,8 @@ void sdmmc_variant_init(struct mmci_host *host);
+>  #else
+>  static inline void sdmmc_variant_init(struct mmci_host *host) {}
+>  #endif
+> +static void
+> +mmci_start_command(struct mmci_host *host, struct mmc_command *cmd, u32 c);
+>
+>  static unsigned int fmax = 515633;
+>
+> @@ -274,6 +277,7 @@ static struct variant_data variant_stm32_sdmmc = {
+>         .cmdreg_lrsp_crc        = MCI_CPSM_STM32_LRSP_CRC,
+>         .cmdreg_srsp_crc        = MCI_CPSM_STM32_SRSP_CRC,
+>         .cmdreg_srsp            = MCI_CPSM_STM32_SRSP,
+> +       .cmdreg_stop            = MCI_CPSM_STM32_CMDSTOP,
+>         .data_cmd_enable        = MCI_CPSM_STM32_CMDTRANS,
+>         .irq_pio_mask           = MCI_IRQ_PIO_STM32_MASK,
+>         .datactrl_first         = true,
+> @@ -574,6 +578,24 @@ void mmci_dma_error(struct mmci_host *host)
+>  static void
+>  mmci_request_end(struct mmci_host *host, struct mmc_request *mrq)
+>  {
+> +       /*
+> +        * If an error happens on command or data step, some variants
+> +        * require a stop command to reinit the DPSM.
+> +        * If it's not done the next data command freeze hardware block.
+> +        */
+> +       if (host->variant->cmdreg_stop) {
+> +               u32 dpsm;
+> +
+> +               dpsm = readl_relaxed(host->base + MMCISTATUS);
+> +               dpsm &= MCI_STM32_DPSMACTIVE;
+> +
+> +               if (dpsm && ((mrq->cmd && mrq->cmd->error) ||
+> +                            (mrq->data && mrq->data->error))) {
+> +                       mmci_start_command(host, &host->stop_abort, 0);
+> +                       return;
+> +               }
+> +       }
+> +
+>         writel(0, host->base + MMCICOMMAND);
+>
+>         BUG_ON(host->data);
+> @@ -1106,6 +1128,10 @@ mmci_start_command(struct mmci_host *host, struct mmc_command *cmd, u32 c)
+>                 mmci_reg_delay(host);
+>         }
+>
+> +       if (host->variant->cmdreg_stop &&
+> +           cmd->opcode == MMC_STOP_TRANSMISSION)
+> +               c |= host->variant->cmdreg_stop;
+> +
+>         c |= cmd->opcode | host->variant->cmdreg_cpsm_enable;
+>         if (cmd->flags & MMC_RSP_PRESENT) {
+>                 if (cmd->flags & MMC_RSP_136)
+> @@ -1957,6 +1983,13 @@ static int mmci_probe(struct amba_device *dev,
+>                 mmc->max_busy_timeout = 0;
+>         }
+>
+> +       /* prepare the stop command, used to abort and reinitialized the DPSM */
+> +       if (variant->cmdreg_stop) {
+> +               host->stop_abort.opcode = MMC_STOP_TRANSMISSION;
+> +               host->stop_abort.arg = 0;
+> +               host->stop_abort.flags = MMC_RSP_R1B | MMC_CMD_AC;
+> +       }
+> +
+>         mmc->ops = &mmci_ops;
+>
+>         /* We support these PM capabilities. */
+> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+> index ec13d90..afb6ec4 100644
+> --- a/drivers/mmc/host/mmci.h
+> +++ b/drivers/mmc/host/mmci.h
+> @@ -166,6 +166,7 @@
+>  #define MCI_ST_CEATAEND                (1 << 23)
+>  #define MCI_ST_CARDBUSY                (1 << 24)
+>  /* Extended status bits for the STM32 variants */
+> +#define MCI_STM32_DPSMACTIVE   BIT(12)
+>  #define MCI_STM32_BUSYD0       BIT(20)
+>
+>  #define MMCICLEAR              0x038
+> @@ -269,6 +270,7 @@ struct mmci_host;
+>   * @cmdreg_lrsp_crc: enable value for long response with crc
+>   * @cmdreg_srsp_crc: enable value for short response with crc
+>   * @cmdreg_srsp: enable value for short response without crc
+> + * @cmdreg_stop: enable value for stop and abort transmission
+>   * @datalength_bits: number of bits in the MMCIDATALENGTH register
+>   * @fifosize: number of bytes that can be written when MMCI_TXFIFOEMPTY
+>   *           is asserted (likewise for RX)
+> @@ -322,6 +324,7 @@ struct variant_data {
+>         unsigned int            cmdreg_lrsp_crc;
+>         unsigned int            cmdreg_srsp_crc;
+>         unsigned int            cmdreg_srsp;
+> +       unsigned int            cmdreg_stop;
+>         unsigned int            datalength_bits;
+>         unsigned int            fifosize;
+>         unsigned int            fifohalfsize;
+> @@ -384,6 +387,7 @@ struct mmci_host {
+>         void __iomem            *base;
+>         struct mmc_request      *mrq;
+>         struct mmc_command      *cmd;
+> +       struct mmc_command      stop_abort;
+>         struct mmc_data         *data;
+>         struct mmc_host         *mmc;
+>         struct clk              *clk;
+> --
+> 2.7.4
+>
