@@ -1,57 +1,379 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v2 4/4] ARM: dts: imx6sx: Add DISPLAY power domain support
-Date: Wed, 31 Oct 2018 15:05:59 +0000
-Message-ID: <20181031150559.GA20437@e107981-ln.cambridge.arm.com>
-References: <cover.1539020938.git.leonard.crestez@nxp.com>
- <a3265a84052a7c11ae96e61e39adc988ca980d66.1539020938.git.leonard.crestez@nxp.com>
- <20181031061134.GB10386@tiger>
- <AM0PR04MB4290F31234D75AC7029F066FEECD0@AM0PR04MB4290.eurprd04.prod.outlook.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: [PATCH V3 08/10] dts: imx: add common imx7ulp dtsi support
+Date: Wed, 31 Oct 2018 14:43:26 +0000
+Message-ID: <1540996688-23681-9-git-send-email-aisheng.dong@nxp.com>
+References: <1540996688-23681-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <AM0PR04MB4290F31234D75AC7029F066FEECD0@AM0PR04MB4290.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Ulf Hansson <ulf.hansson@linaro.org>, Richard Zhu <hongxing.zhu@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Stefan Agner <stefan@agner.ch>, Marek Vasut <marex@denx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1540996688-23681-1-git-send-email-aisheng.dong@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 31, 2018 at 12:17:50PM +0000, Leonard Crestez wrote:
-> On 10/31/2018 8:12 AM, Shawn Guo wrote:
-> > On Mon, Oct 08, 2018 at 06:06:23PM +0000, Leonard Crestez wrote:
-> >> This was implemented in the driver but not actually defined and
-> >> referenced in dts. This makes it always on.
-> >>
-> >>  From reference manual in section "10.4.1.4.1 Power Distribution":
-> >>
-> >> "Display domain - The DISPLAY domain contains GIS, CSI, PXP, LCDIF,
-> >> PCIe, DCIC, and LDB. It is supplied by internal regulator."
-> >>
-> >> The current pd_pcie is actually only for PCIE_PHY, the PCIE ip block is
-> >> actually inside the DISPLAY domain. Handle this by adding the pcie node
-> >> in both power domains.
-> >>
-> >> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-> > 
-> > Applied, thanks.
-> 
-> As mentioned in the cover letter this requires multi-PD support in 
-> imx-pci to be implemented, specifically PATCH 3/4 of this series:
-> 
-> 	https://lore.kernel.org/patchwork/patch/996810/
-> 
-> Unless that also gets merged soon via pci I expect issues in linux-next. 
+The i.MX 7ULP family of processors features NXP's advanced implementation
+of the Arm Cortex-A7 core, the Arm Cortex-M4 core, as well as a 3D and 2D
+Graphics Processing Units (GPUs).
 
-I do not know what you mean by "issues in linux-next" (I assume you mean
-when Shawn sends the patches to linux-next in preparation for v4.21); we
-have not planned any other PCI pull request for v4.20-rc1 material.
+This patch aims to add the initial support including:
+1) CLK
+2) GPIO PTC, PTD, PTE, PTF
+3) uSDHC 1/2
+4) LPUART 4/5/6/7
+5) LPI2C 6/7
 
-> The patch already has reviewed-by tags so "merging it soon" is not 
-> unreasonable.
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: Sascha Hauer <kernel@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+ChangeLog:
+v2->v3:
+ * change to generic node names
+ * remove arch timer due to:
+   1) arch timer is fixed to 1Mhz which is lower accurate than TPM timer (3Mhz).
+   2) no firmware progrem CNTFREQ
+   3) cpuidle driver is still not in tree will may cause system hang
+v1->v2:
+ * update clk part due to binding change
+ * separate soc.dtsi from board.dts
+---
+ arch/arm/boot/dts/imx7ulp.dtsi | 314 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 314 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx7ulp.dtsi
 
-I can ACK it if Shawn wants to pull it, it may take a while to see it
-in -next if it has to go through the PCI tree, I think it is better
-to queue the series without splitting the patches across multiple
-channels though.
-
-Lorenzo
+diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
+new file mode 100644
+index 0000000..c06fd3e
+--- /dev/null
++++ b/arch/arm/boot/dts/imx7ulp.dtsi
+@@ -0,0 +1,314 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright (C) 2016 Freescale Semiconductor, Inc.
++ * Copyright 2017-2018 NXP
++ *   Dong Aisheng <aisheng.dong@nxp.com>
++ */
++
++#include <dt-bindings/clock/imx7ulp-clock.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++#include "imx7ulp-pinfunc.h"
++
++/ {
++	interrupt-parent = <&intc>;
++
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	aliases {
++		gpio0 = &gpio_ptc;
++		gpio1 = &gpio_ptd;
++		gpio2 = &gpio_pte;
++		gpio3 = &gpio_ptf;
++		i2c0 = &lpi2c6;
++		i2c1 = &lpi2c7;
++		mmc0 = &usdhc0;
++		mmc1 = &usdhc1;
++		serial0 = &lpuart4;
++		serial1 = &lpuart5;
++		serial2 = &lpuart6;
++		serial3 = &lpuart7;
++	};
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <0>;
++		};
++	};
++
++	intc: interrupt-controller@40021000 {
++		compatible = "arm,cortex-a7-gic";
++		#interrupt-cells = <3>;
++		interrupt-controller;
++		reg = <0x40021000 0x1000>,
++		      <0x40022000 0x1000>;
++	};
++
++	rosc: clock-rosc {
++		compatible = "fixed-clock";
++		clock-frequency = <32768>;
++		clock-output-names = "rosc";
++		#clock-cells = <0>;
++	};
++
++	sosc: clock-sosc {
++		compatible = "fixed-clock";
++		clock-frequency = <24000000>;
++		clock-output-names = "sosc";
++		#clock-cells = <0>;
++	};
++
++	sirc: clock-sirc {
++		compatible = "fixed-clock";
++		clock-frequency = <16000000>;
++		clock-output-names = "sirc";
++		#clock-cells = <0>;
++	};
++
++	firc: clock-firc {
++		compatible = "fixed-clock";
++		clock-frequency = <48000000>;
++		clock-output-names = "firc";
++		#clock-cells = <0>;
++	};
++
++	upll: clock-upll {
++		compatible = "fixed-clock";
++		clock-frequency = <480000000>;
++		clock-output-names = "upll";
++		#clock-cells = <0>;
++	};
++
++	mpll: clock-mpll {
++		compatible = "fixed-clock";
++		clock-frequency = <480000000>;
++		clock-output-names = "mpll";
++		#clock-cells = <0>;
++	};
++
++	ahbbridge0: bus@40000000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0x40000000 0x800000>;
++		ranges;
++
++		lpuart4: serial@402d0000 {
++			compatible = "fsl,imx7ulp-lpuart";
++			reg = <0x402d0000 0x1000>;
++			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&pcc2 IMX7ULP_CLK_LPUART4>;
++			clock-names = "ipg";
++			assigned-clocks = <&pcc2 IMX7ULP_CLK_LPUART4>;
++			assigned-clock-parents = <&scg1 IMX7ULP_CLK_SOSC_BUS_CLK>;
++			assigned-clock-rates = <24000000>;
++			status = "disabled";
++		};
++
++		lpuart5: serial@402e0000 {
++			compatible = "fsl,imx7ulp-lpuart";
++			reg = <0x402e0000 0x1000>;
++			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&pcc2 IMX7ULP_CLK_LPUART5>;
++			clock-names = "ipg";
++			assigned-clocks = <&pcc2 IMX7ULP_CLK_LPUART5>;
++			assigned-clock-parents = <&scg1 IMX7ULP_CLK_FIRC>;
++			assigned-clock-rates = <48000000>;
++			status = "disabled";
++		};
++
++		tpm5: tpm@40260000 {
++			compatible = "fsl,imx7ulp-tpm";
++			reg = <0x40260000 0x1000>;
++			interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&scg1 IMX7ULP_CLK_NIC1_BUS_DIV>,
++				 <&pcc2 IMX7ULP_CLK_LPTPM5>;
++			clock-names = "ipg", "per";
++		};
++
++		usdhc0: mmc@40370000 {
++			compatible = "fsl,imx7ulp-usdhc", "fsl,imx6sx-usdhc";
++			reg = <0x40370000 0x10000>;
++			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&scg1 IMX7ULP_CLK_NIC1_BUS_DIV>,
++				 <&scg1 IMX7ULP_CLK_NIC1_DIV>,
++				 <&pcc2 IMX7ULP_CLK_USDHC0>;
++			clock-names ="ipg", "ahb", "per";
++			assigned-clocks = <&pcc2 IMX7ULP_CLK_USDHC0>;
++			assigned-clock-parents = <&scg1 IMX7ULP_CLK_NIC1_DIV>;
++			bus-width = <4>;
++			fsl,tuning-start-tap = <20>;
++			fsl,tuning-step= <2>;
++			status = "disabled";
++		};
++
++		usdhc1: mmc@40380000 {
++			compatible = "fsl,imx7ulp-usdhc", "fsl,imx6sx-usdhc";
++			reg = <0x40380000 0x10000>;
++			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&scg1 IMX7ULP_CLK_NIC1_BUS_DIV>,
++				 <&scg1 IMX7ULP_CLK_NIC1_DIV>,
++				 <&pcc2 IMX7ULP_CLK_USDHC1>;
++			clock-names ="ipg", "ahb", "per";
++			assigned-clocks = <&pcc2 IMX7ULP_CLK_USDHC1>;
++			assigned-clock-parents = <&scg1 IMX7ULP_CLK_NIC1_DIV>;
++			bus-width = <4>;
++			fsl,tuning-start-tap = <20>;
++			fsl,tuning-step= <2>;
++			status = "disabled";
++		};
++
++		scg1: clock-controller@403e0000 {
++			compatible = "fsl,imx7ulp-scg1";
++			reg = <0x403e0000 0x10000>;
++			clocks = <&rosc>, <&sosc>, <&sirc>,
++				 <&firc>, <&upll>, <&mpll>;
++			clock-names = "rosc", "sosc", "sirc",
++				      "firc", "upll", "mpll";
++			#clock-cells = <1>;
++		};
++
++		pcc2: clock-controller@403f0000 {
++			compatible = "fsl,imx7ulp-pcc2";
++			reg = <0x403f0000 0x10000>;
++			#clock-cells = <1>;
++			assigned-clocks = <&pcc2 IMX7ULP_CLK_LPTPM5>;
++			assigned-clock-parents = <&scg1 IMX7ULP_CLK_SOSC_BUS_CLK>;
++		};
++
++		smc1: smc1@40410000 {
++			compatible = "fsl,imx7ulp-smc1";
++			reg = <0x40410000 0x1000>;
++		};
++
++		pcc3: clock-controller@40b30000 {
++			compatible = "fsl,imx7ulp-pcc3";
++			reg = <0x40b30000 0x10000>;
++			#clock-cells = <1>;
++		};
++	};
++
++	ahbbridge1: bus@40800000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0x40800000 0x800000>;
++		ranges;
++
++		lpi2c6: i2c@40a40000 {
++			compatible = "fsl,imx7ulp-lpi2c";
++			reg = <0x40a40000 0x10000>;
++			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&pcc3 IMX7ULP_CLK_LPI2C6>;
++			clock-names = "ipg";
++			assigned-clocks = <&pcc3 IMX7ULP_CLK_LPI2C6>;
++			assigned-clock-parents = <&scg1 IMX7ULP_CLK_FIRC>;
++			assigned-clock-rates = <48000000>;
++			status = "disabled";
++		};
++
++		lpi2c7: i2c@40a50000 {
++			compatible = "fsl,imx7ulp-lpi2c";
++			reg = <0x40a50000 0x10000>;
++			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&pcc3 IMX7ULP_CLK_LPI2C7>;
++			clock-names = "ipg";
++			assigned-clocks = <&pcc3 IMX7ULP_CLK_LPI2C7>;
++			assigned-clock-parents = <&scg1 IMX7ULP_CLK_FIRC>;
++			assigned-clock-rates = <48000000>;
++			status = "disabled";
++		};
++
++		lpuart6: serial@40a60000 {
++			compatible = "fsl,imx7ulp-lpuart";
++			reg = <0x40a60000 0x1000>;
++			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&pcc3 IMX7ULP_CLK_LPUART6>;
++			clock-names = "ipg";
++			assigned-clocks = <&pcc3 IMX7ULP_CLK_LPUART6>;
++			assigned-clock-parents = <&scg1 IMX7ULP_CLK_FIRC>;
++			assigned-clock-rates = <48000000>;
++			status = "disabled";
++		};
++
++		lpuart7: serial@40a70000 {
++			compatible = "fsl,imx7ulp-lpuart";
++			reg = <0x40a70000 0x1000>;
++			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&pcc3  IMX7ULP_CLK_LPUART7>;
++			clock-names = "ipg";
++			assigned-clocks = <&pcc3 IMX7ULP_CLK_LPUART7>;
++			assigned-clock-parents = <&scg1 IMX7ULP_CLK_FIRC>;
++			assigned-clock-rates = <48000000>;
++			status = "disabled";
++		};
++
++		iomuxc1: pinctrl@40ac0000 {
++			compatible = "fsl,imx7ulp-iomuxc1";
++			reg = <0x40ac0000 0x1000>;
++		};
++
++		gpio_ptc: gpio@40ae0000 {
++			compatible = "fsl,imx7ulp-gpio", "fsl,vf610-gpio";
++			reg = <0x40ae0000 0x1000 0x400f0000 0x40>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
++				 <&pcc3 IMX7ULP_CLK_PCTLC>;
++			clock-names = "gpio", "port";
++			gpio-ranges = <&iomuxc1 0 0 32>;
++		};
++
++		gpio_ptd: gpio@40af0000 {
++			compatible = "fsl,imx7ulp-gpio", "fsl,vf610-gpio";
++			reg = <0x40af0000 0x1000 0x400f0040 0x40>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
++				 <&pcc3 IMX7ULP_CLK_PCTLD>;
++			clock-names = "gpio", "port";
++			gpio-ranges = <&iomuxc1 0 32 32>;
++		};
++
++		gpio_pte: gpio@40b00000 {
++			compatible = "fsl,imx7ulp-gpio", "fsl,vf610-gpio";
++			reg = <0x40b00000 0x1000 0x400f0080 0x40>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
++				 <&pcc3 IMX7ULP_CLK_PCTLE>;
++			clock-names = "gpio", "port";
++			gpio-ranges = <&iomuxc1 0 64 32>;
++		};
++
++		gpio_ptf: gpio@40b10000 {
++			compatible = "fsl,imx7ulp-gpio", "fsl,vf610-gpio";
++			reg = <0x40b10000 0x1000 0x400f00c0 0x40>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
++				 <&pcc3 IMX7ULP_CLK_PCTLF>;
++			clock-names = "gpio", "port";
++			gpio-ranges = <&iomuxc1 0 96 32>;
++		};
++	};
++};
+-- 
+2.7.4
