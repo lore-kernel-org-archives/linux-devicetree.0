@@ -1,493 +1,319 @@
-From: Alan Douglas <adouglas@cadence.com>
-Subject: [PATCH v2 2/2] phy: cadence: Add driver for Sierra PHY
-Date: Wed, 31 Oct 2018 16:34:19 +0000
-Message-ID: <1541003659-26890-1-git-send-email-adouglas@cadence.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v2 09/10] irqchip: ti-sci-inta: Add support for Interrupt
+ Aggregator driver
+Date: Wed, 31 Oct 2018 11:39:04 -0500
+Message-ID: <2369ea50-55db-c97b-5b43-99d572c97dc9@ti.com>
+References: <20181018154017.7112-1-lokeshvutla@ti.com>
+ <20181018154017.7112-10-lokeshvutla@ti.com>
+ <b20127dc-be43-3b00-9960-663738df0069@arm.com>
+ <9969f24c-cdb0-1f5c-d0f4-b1c1f587325c@ti.com>
+ <86va5ssrfm.wl-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <86va5ssrfm.wl-marc.zyngier@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org
-Cc: Alan Douglas <adouglas@cadence.com>
+To: Marc Zyngier <marc.zyngier@arm.com>, Lokesh Vutla <lokeshvutla@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a Sierra PHY driver with PCIe and USB support.
+Hi Marc,
 
-The PHY has multiple lanes, which can be configured into
-groups, and a generic PHY device is created for each group.
+On 10/23/18 8:50 AM, Marc Zyngier wrote:
+> On Mon, 22 Oct 2018 15:35:41 +0100,
+> Lokesh Vutla <lokeshvutla@ti.com> wrote:
+>> On Friday 19 October 2018 08:52 PM, Marc Zyngier wrote:
+>>> On 18/10/18 16:40, Lokesh Vutla wrote:
+>>>> Texas Instruments' K3 generation SoCs has an IP Interrupt Aggregator
+>>>> which is an interrupt controller that does the following:
+>>>> - Converts events to interrupts that can be understood by
+>>>>     an interrupt router.
+>>>> - Allows for multiplexing of events to interrupts.
+>>>> - Allows for grouping of multiple events to a single interrupt.
+>>>
+>>> Aren't the last two points the same thing? Also, can you please define
+>>> what an "event" is? What is its semantic? If they look like interrupts,
+>>> can we just name them as such?
+>>
+>> Event is actually a message sent by a master via an Event transport
+>> lane. Based on the id within the message, each message is directed to
+>> corresponding Interrupt Aggregator(IA). In turn IA raises a
+>> corresponding interrupt as configured for this event.
+> 
+> Ergo, this is an interrupt, and there is nothing more to it. HW folks
+> may want to give it a sexy name, but as far as SW is concerned, it has
+> the properties of an interrupt and should be modelled as such.
+> 
+> [...]
+> 
+>>>> +	for_each_set_bit(bit, vint_desc->event_map, MAX_EVENTS_PER_VINT) {
+>>>> +		val = 1 << bit;
+>>>> +		__raw_writeq(val, inta->base + data->hwirq * 0x1000 +
+>>>> +			     VINT_ENABLE_CLR_OFFSET);
+>>>> +	}
+>>>
+>>> If you need an ack callback, why is this part of the eoi? We have
+>>> interrupt flows that allow you to combine both, so why don't you use that?
+>>
+>> Actually I started with ack_irq. But I did not see this callback being
+>> triggered when interrupt is raised. Then I was suggested to use
+>> irq_roi. Will see why ack_irq is not being triggered and  update it in
+>> next version.
+> 
+> It is probably because you're not using the right interrupt flow.
+> 
+>>> Also, the __raw_writeq call is probably wrong, as it assumes that both
+>>> the CPU and the INTA have the same endianness.
+>>
+>> hmm.. May I know what is the right call to use here?
+> 
+> writeq_relaxed is most probably what you want. I assume this code will
+> never run on a 32bit platform, right?
+> 
+> [...]
+> 
+>>>> +/**
+>>>> + * ti_sci_inta_irq_domain_free() - Free an IRQ from the IRQ domain
+>>>> + * @domain:	Domain to which the irqs belong
+>>>> + * @virq:	base linux virtual IRQ to be freed.
+>>>> + * @nr_irqs:	Number of continuous irqs to be freed
+>>>> + */
+>>>> +static void ti_sci_inta_irq_domain_free(struct irq_domain *domain,
+>>>> +					unsigned int virq, unsigned int nr_irqs)
+>>>> +{
+>>>> +	struct ti_sci_inta_irq_domain *inta = domain->host_data;
+>>>> +	struct ti_sci_inta_vint_desc *vint_desc;
+>>>> +	struct irq_data *data, *gic_data;
+>>>> +	int event_index;
+>>>> +
+>>>> +	data = irq_domain_get_irq_data(domain, virq);
+>>>> +	gic_data = irq_domain_get_irq_data(domain->parent->parent, virq);
+>>>
+>>> That's absolutely horrid...
+>>
+>> I agree. But I need to get GIC irq for sending TISCI message. Can you
+>> suggest a better way of doing it?
+> 
+> I'd say "fix the firmware to have a layered approach". But I guess
+> that's not an option, right?
+> 
+> [...]
+> 
+>>>> +/**
+>>>> + * ti_sci_allocate_event_irq() - Allocate an event to a IA vint.
+>>>> + * @inta:	Pointer to Interrupt Aggregator IRQ domain
+>>>> + * @vint_desc:	Virtual interrupt descriptor to which the event gets attached.
+>>>> + * @src_id:	TISCI device id of the event source
+>>>> + * @src_index:	Event index with in the device.
+>>>> + * @dst_irq:	Destination host irq
+>>>> + * @vint:	Interrupt number within interrupt aggregator.
+>>>> + *
+>>>> + * Return 0 if all went ok else appropriate error value.
+>>>> + */
+>>>> +static int ti_sci_allocate_event_irq(struct ti_sci_inta_irq_domain *inta,
+>>>> +				     struct ti_sci_inta_vint_desc *vint_desc,
+>>>> +				     u16 src_id, u16 src_index, u16 dst_irq,
+>>>> +				     u16 vint)
+>>>> +{
+>>>> +	struct ti_sci_inta_event_desc *event;
+>>>> +	unsigned long flags;
+>>>> +	u32 free_bit;
+>>>> +	int err;
+>>>> +
+>>>> +	raw_spin_lock_irqsave(&vint_desc->lock, flags);
+>>>> +	free_bit = find_first_zero_bit(vint_desc->event_map,
+>>>> +				       MAX_EVENTS_PER_VINT);
+>>>> +	if (free_bit != MAX_EVENTS_PER_VINT)
+>>>> +		set_bit(free_bit, vint_desc->event_map);
+>>>> +	raw_spin_unlock_irqrestore(&vint_desc->lock, flags);
+>>>
+>>> Why disabling the interrupts? Do you expect to take this lock
+>>> concurrently with an interrupt? Why isn't it enough to just have a mutex
+>>> instead?
+>>
+>> I have thought about this while coding. We are attaching multiple
+>> events to the same interrupt. Technically the events from different
+>> IPs can be attached to the same interrupt or events from the same IP
+>> can be registered at different times. So I thought it is possible that
+>> when an event is being allocated to an interrupt, an event can be
+>> raised that belongs to the same interrupt.
+> 
+> I strongly dispute this. Events are interrupts, and we're not
+> requesting an interrupt from an interrupt handler. That would be just
+> crazy.
+> 
+> [...]
+> 
+>>>> +/**
+>>>> + * ti_sci_inta_register_event() - Register a event to an interrupt aggregator
+>>>> + * @dev:	Device pointer to source generating the event
+>>>> + * @src_id:	TISCI device ID of the event source
+>>>> + * @src_index:	Event source index within the device.
+>>>> + * @virq:	Linux Virtual IRQ number
+>>>> + * @flags:	Corresponding IRQ flags
+>>>> + * @ack_needed:	If explicit clearing of event is required.
+>>>> + *
+>>>> + * Creates a new irq and attaches to IA domain if virq is not specified
+>>>> + * else attaches the event to vint corresponding to virq.
+>>>> + * When using TISCI within the client drivers, source indexes are always
+>>>> + * generated dynamically and cannot be represented in DT. So client
+>>>> + * drivers should call this API instead of platform_get_irq().
+>>>
+>>> NAK. Either this fits in the standard model, or we adapt the standard
+>>> model to catter for your particular use case. But we don't define a new,
+>>> TI specific API.
+>>>
+>>> I have a hunch that if the IDs are generated dynamically, then the model
+>>> we use for MSIs would fit this thing. I also want to understand what
+>>
+>> hmm..I haven't thought about using MSI. Will try to explore it. But
+>> the "struct msi_msg" is not applicable in this case as device does not
+>> write to a specific location.
+> 
+> It doesn't need to. You can perfectly ignore the address field and
+> only be concerned with the data. We already have MSI users that do not
+> need programming of the doorbell address, just the data.
+> 
+>>
+>>> this event is, and how drivers get notified that such an event has fired.
+>>
+>> As said above, Event is a message being sent by a device using a
+>> hardware protocol. This message is sent over an Event Transport
+>> Lane(ETL) that understands this protocol. Based on the message ETL re
+>> directs the message to a specificed target(In our case it is interrupt
+>> Aggregator).
+>>
+>>  From a client drivers(that generates this event) prespective, the
+>> following needs to be done:
+>> - Get an index that is free and allocate it to a particular task.
+>> - Request INTA driver to assign an irq for this index.
+>> - do a request_irq baseed on the return value from the above step.
+> 
+> All of that can be done in the using the current MSI framework. You
+> can either implement your own bus framework or use the platform MSI
+> stuff. You can then rewrite the INTA driver to be what it really is,
+> an interrupt multiplexer.
+> 
+>> In case of grouping events, the client drivers has its own mechanism
+>> to identify the index that caused an interrupt(at least that is the
+>> case for the existing user).
+> 
+> This simply isn't acceptable. Each event must be the result of a
+> single interrupt allocation from the point of view of the driver. If
+> events are shared, they should be modelled as a shared interrupt.
+> 
+> Overall, I'm extremely concerned that you're reinventing the wheel and
+> coming up with a new "concept" that seems incredibly similar to what
+> we already have everywhere else, just offering an incompatible
+> API. This means that your drivers become specialised for your new API,
+> and this isn't going to fly.
+> 
+> I can only urge you to reconsider the way you provide these events,
+> and make sure that you use the existing API to its full potential. If
+> something is not up to the task, we can then fix it in core code.
 
-There are two resets controlling the overall PHY block, one
-to enable the APB interface for programming registers, and
-another to enable the PHY itself.  Additionally there are
-resets for each PHY lane.
+I'd try to provide some additional information here.
+(Sry, I'll still use term "events")
 
-The PHY can be configured in hardware to read register
-settings from ROM, or they can be written by the driver.
+As Lokesh explained in other mail on K3 SoC everything is generic and most
+of resources allocated dynamicaly:
+- generic DMA channels
+- generic HW rings (used by DMA channel)
+- generic events (assigned to the rings) and muxed to different cores/hosts
 
-The sequence of operation on startup is to enable the APB
-bus, write the PHY registers (if required)  for each lane
-group, and then enable the PHY.  Each group of lanes
-can then be individually controlled using the power_on()/
-power_off() function for that generic PHY
+So, when some driver would like to perform DMA transaction It's
+required to build (configure) DMA channel by allocating different type of
+resources and link them together to get finally working Data Movement path
+(situation complicated by ti-sci firmware which policies resources between cores/hosts):
+- get UDMA channel from available range
+- get HW rings and attach them to the UDMA channel
+- get event, assign it to the ring and mux it to the core/host through IA->IR-> chain
+   (and this step is done by ti_sci_inta_register_event() - no DT as everything is dynamic).
 
-Signed-off-by: Alan Douglas <adouglas@cadence.com>
----
- drivers/phy/Kconfig                   |   1 +
- drivers/phy/Makefile                  |   1 +
- drivers/phy/cadence/Kconfig           |   9 +
- drivers/phy/cadence/Makefile          |   2 +
- drivers/phy/cadence/phy-cdns-sierra.c | 395 ++++++++++++++++++++++++++++++++++
- 5 files changed, 408 insertions(+)
- create mode 100644 drivers/phy/cadence/Kconfig
- create mode 100644 drivers/phy/cadence/Makefile
- create mode 100644 drivers/phy/cadence/phy-cdns-sierra.c
+Next, how this is working now - ti_sci_inta_register_event():
+- first call does similar things as regular DT irq mapping (end up calling irq_create_fwspec_mapping()
+   and builds IRQ chain as below:
+   linux_virq = ti_sci_inta_register_event(dev, <ringacc tisci_dev_id>,
+				<ringacc id>, 0, IRQF_TRIGGER_HIGH, false);
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 5c8d452..cc47f85 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -43,6 +43,7 @@ config PHY_XGENE
- source "drivers/phy/allwinner/Kconfig"
- source "drivers/phy/amlogic/Kconfig"
- source "drivers/phy/broadcom/Kconfig"
-+source "drivers/phy/cadence/Kconfig"
- source "drivers/phy/hisilicon/Kconfig"
- source "drivers/phy/lantiq/Kconfig"
- source "drivers/phy/marvell/Kconfig"
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 84e3bd9..ba48acd 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_ARCH_RENESAS)		+= renesas/
- obj-$(CONFIG_ARCH_ROCKCHIP)		+= rockchip/
- obj-$(CONFIG_ARCH_TEGRA)		+= tegra/
- obj-y					+= broadcom/	\
-+					   cadence/	\
- 					   hisilicon/	\
- 					   marvell/	\
- 					   motorola/	\
-diff --git a/drivers/phy/cadence/Kconfig b/drivers/phy/cadence/Kconfig
-new file mode 100644
-index 0000000..098df0f
---- /dev/null
-+++ b/drivers/phy/cadence/Kconfig
-@@ -0,0 +1,9 @@
-+#
-+# Phy drivers for Cadence PHYs
-+#
-+config CDNS_SIERRA_PHY
-+	tristate "Cadence Sierra PHY Driver"
-+	depends on OF && HAS_IOMEM && RESET_CONTROLLER
-+	select GENERIC_PHY
-+	help
-+	  Enable this to support the Cadence Sierra PHY driver
-diff --git a/drivers/phy/cadence/Makefile b/drivers/phy/cadence/Makefile
-new file mode 100644
-index 0000000..0ef6752
---- /dev/null
-+++ b/drivers/phy/cadence/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_CDNS_SIERRA_PHY)		+= phy-cdns-sierra.o
-diff --git a/drivers/phy/cadence/phy-cdns-sierra.c b/drivers/phy/cadence/phy-cdns-sierra.c
-new file mode 100644
-index 0000000..de10402
---- /dev/null
-+++ b/drivers/phy/cadence/phy-cdns-sierra.c
-@@ -0,0 +1,395 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Cadence Sierra PHY Driver
-+ *
-+ * Copyright (c) 2018 Cadence Design Systems
-+ * Author: Alan Douglas <adouglas@cadence.com>
-+ *
-+ */
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+#include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <dt-bindings/phy/phy.h>
-+
-+/* PHY register offsets */
-+#define SIERRA_PHY_PLL_CFG		(0xc00e << 2)
-+#define SIERRA_DET_STANDEC_A		(0x4000 << 2)
-+#define SIERRA_DET_STANDEC_B		(0x4001 << 2)
-+#define SIERRA_DET_STANDEC_C		(0x4002 << 2)
-+#define SIERRA_DET_STANDEC_D		(0x4003 << 2)
-+#define SIERRA_DET_STANDEC_E		(0x4004 << 2)
-+#define SIERRA_PSM_LANECAL		(0x4008 << 2)
-+#define SIERRA_PSM_DIAG			(0x4015 << 2)
-+#define SIERRA_PSC_TX_A0		(0x4028 << 2)
-+#define SIERRA_PSC_TX_A1		(0x4029 << 2)
-+#define SIERRA_PSC_TX_A2		(0x402A << 2)
-+#define SIERRA_PSC_TX_A3		(0x402B << 2)
-+#define SIERRA_PSC_RX_A0		(0x4030 << 2)
-+#define SIERRA_PSC_RX_A1		(0x4031 << 2)
-+#define SIERRA_PSC_RX_A2		(0x4032 << 2)
-+#define SIERRA_PSC_RX_A3		(0x4033 << 2)
-+#define SIERRA_PLLCTRL_SUBRATE		(0x403A << 2)
-+#define SIERRA_PLLCTRL_GEN_D		(0x403E << 2)
-+#define SIERRA_DRVCTRL_ATTEN		(0x406A << 2)
-+#define SIERRA_CLKPATHCTRL_TMR		(0x4081 << 2)
-+#define SIERRA_RX_CREQ_FLTR_A_MODE1	(0x4087 << 2)
-+#define SIERRA_RX_CREQ_FLTR_A_MODE0	(0x4088 << 2)
-+#define SIERRA_CREQ_CCLKDET_MODE01	(0x408E << 2)
-+#define SIERRA_RX_CTLE_MAINTENANCE	(0x4091 << 2)
-+#define SIERRA_CREQ_FSMCLK_SEL		(0x4092 << 2)
-+#define SIERRA_CTLELUT_CTRL		(0x4098 << 2)
-+#define SIERRA_DFE_ECMP_RATESEL		(0x40C0 << 2)
-+#define SIERRA_DFE_SMP_RATESEL		(0x40C1 << 2)
-+#define SIERRA_DEQ_VGATUNE_CTRL		(0x40E1 << 2)
-+#define SIERRA_TMRVAL_MODE3		(0x416E << 2)
-+#define SIERRA_TMRVAL_MODE2		(0x416F << 2)
-+#define SIERRA_TMRVAL_MODE1		(0x4170 << 2)
-+#define SIERRA_TMRVAL_MODE0		(0x4171 << 2)
-+#define SIERRA_PICNT_MODE1		(0x4174 << 2)
-+#define SIERRA_CPI_OUTBUF_RATESEL	(0x417C << 2)
-+#define SIERRA_LFPSFILT_NS		(0x418A << 2)
-+#define SIERRA_LFPSFILT_RD		(0x418B << 2)
-+#define SIERRA_LFPSFILT_MP		(0x418C << 2)
-+#define SIERRA_SDFILT_H2L_A		(0x4191 << 2)
-+
-+#define SIERRA_MACRO_ID			0x00007364
-+#define SIERRA_MAX_LANES		4
-+
-+struct cdns_sierra_inst {
-+	struct phy *phy;
-+	u32 phy_type;
-+	u32 num_lanes;
-+	u32 mlane;
-+	struct reset_control *lnk_rst;
-+};
-+
-+struct cdns_reg_pairs {
-+	u16 val;
-+	u32 off;
-+};
-+
-+struct cdns_sierra_data {
-+		u32 id_value;
-+		u32 pcie_regs;
-+		u32 usb_regs;
-+		struct cdns_reg_pairs *pcie_vals;
-+		struct cdns_reg_pairs  *usb_vals;
-+};
-+
-+struct cdns_sierra_phy {
-+	struct device *dev;
-+	void __iomem *base;
-+	struct cdns_sierra_data *init_data;
-+	struct cdns_sierra_inst phys[SIERRA_MAX_LANES];
-+	struct reset_control *phy_rst;
-+	struct reset_control *apb_rst;
-+	struct clk *clk;
-+	int nsubnodes;
-+	bool autoconf;
-+};
-+
-+static void cdns_sierra_phy_init(struct phy *gphy)
-+{
-+	struct cdns_sierra_inst *ins = phy_get_drvdata(gphy);
-+	struct cdns_sierra_phy *phy = dev_get_drvdata(gphy->dev.parent);
-+	int i, j;
-+	struct cdns_reg_pairs *vals;
-+	u32 num_regs;
-+
-+	if (ins->phy_type == PHY_TYPE_PCIE) {
-+		num_regs = phy->init_data->pcie_regs;
-+		vals = phy->init_data->pcie_vals;
-+	} else if (ins->phy_type == PHY_TYPE_USB3) {
-+		num_regs = phy->init_data->usb_regs;
-+		vals = phy->init_data->usb_vals;
-+	} else {
-+		return;
-+	}
-+	for (i = 0; i < ins->num_lanes; i++)
-+		for (j = 0; j < num_regs ; j++)
-+			writel(vals[j].val, phy->base +
-+				vals[j].off + (i + ins->mlane) * 0x800);
-+}
-+
-+static int cdns_sierra_phy_on(struct phy *gphy)
-+{
-+	struct cdns_sierra_inst *ins = phy_get_drvdata(gphy);
-+
-+	/* Take the PHY lane group out of reset */
-+	return reset_control_deassert(ins->lnk_rst);
-+}
-+
-+static int cdns_sierra_phy_off(struct phy *gphy)
-+{
-+	struct cdns_sierra_inst *ins = phy_get_drvdata(gphy);
-+
-+	return reset_control_assert(ins->lnk_rst);
-+}
-+
-+static const struct phy_ops ops = {
-+	.power_on	= cdns_sierra_phy_on,
-+	.power_off	= cdns_sierra_phy_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int cdns_sierra_get_optional(struct cdns_sierra_inst *inst,
-+				    struct device_node *child)
-+{
-+	if (of_property_read_u32(child, "reg", &inst->mlane))
-+		return -EINVAL;
-+
-+	if (of_property_read_u32(child, "cdns,num-lanes", &inst->num_lanes))
-+		return -EINVAL;
-+
-+	if (of_property_read_u32(child, "cdns,phy-type", &inst->phy_type))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id cdns_sierra_id_table[];
-+
-+static int cdns_sierra_phy_probe(struct platform_device *pdev)
-+{
-+	struct cdns_sierra_phy *sp;
-+	struct phy_provider *phy_provider;
-+	struct device *dev = &pdev->dev;
-+	const struct of_device_id *match;
-+	struct resource *res;
-+	int i, ret, node = 0;
-+	struct device_node *dn = dev->of_node, *child;
-+
-+	if (of_get_child_count(dn) == 0)
-+		return -ENODEV;
-+
-+	sp = devm_kzalloc(dev, sizeof(*sp), GFP_KERNEL);
-+	if (!sp)
-+		return -ENOMEM;
-+	dev_set_drvdata(dev, sp);
-+	sp->dev = dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	sp->base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(sp->base)) {
-+		dev_err(dev, "missing \"reg\"\n");
-+		return PTR_ERR(sp->base);
-+	}
-+
-+	/* Get init data for this PHY */
-+	match = of_match_device(cdns_sierra_id_table, dev);
-+	if (!match)
-+		return -EINVAL;
-+	sp->init_data = (struct cdns_sierra_data *)match->data;
-+
-+	platform_set_drvdata(pdev, sp);
-+
-+	sp->clk = devm_clk_get(dev, "phy_clk");
-+	if (IS_ERR(sp->clk)) {
-+		dev_err(dev, "failed to get clock phy_clk\n");
-+		return PTR_ERR(sp->clk);
-+	}
-+
-+	sp->phy_rst = devm_reset_control_get(dev, "sierra_reset");
-+	if (IS_ERR(sp->phy_rst)) {
-+		dev_err(dev, "failed to get reset\n");
-+		return PTR_ERR(sp->phy_rst);
-+	}
-+
-+	sp->apb_rst = devm_reset_control_get(dev, "sierra_apb");
-+	if (IS_ERR(sp->apb_rst)) {
-+		dev_err(dev, "failed to get apb reset\n");
-+		return PTR_ERR(sp->apb_rst);
-+	}
-+
-+	ret = clk_prepare_enable(sp->clk);
-+	if (ret)
-+		return ret;
-+
-+	/* Enable APB */
-+	reset_control_deassert(sp->apb_rst);
-+
-+	/* Check that PHY is present */
-+	if  (sp->init_data->id_value != readl(sp->base)) {
-+		ret = -EINVAL;
-+		goto clk_disable;
-+	}
-+
-+	sp->autoconf = of_property_read_bool(dn, "cdns,autoconf");
-+
-+	for_each_available_child_of_node(dn, child) {
-+		struct phy *gphy;
-+
-+		sp->phys[node].lnk_rst =
-+			of_reset_control_get_exclusive_by_index(child, 0);
-+
-+		if (IS_ERR(sp->phys[node].lnk_rst)) {
-+			dev_err(dev, "failed to get reset %s\n",
-+				child->full_name);
-+			ret = PTR_ERR(sp->phys[node].lnk_rst);
-+			goto put_child2;
-+		}
-+
-+		if (!sp->autoconf) {
-+			ret = cdns_sierra_get_optional(&sp->phys[node], child);
-+			if (ret) {
-+				dev_err(dev, "missing property in node %s\n",
-+					child->name);
-+				goto put_child;
-+			}
-+		}
-+
-+		gphy = devm_phy_create(dev, child, &ops);
-+
-+		if (IS_ERR(gphy)) {
-+			ret = PTR_ERR(gphy);
-+			goto put_child;
-+		}
-+		sp->phys[node].phy = gphy;
-+		phy_set_drvdata(gphy, &sp->phys[node]);
-+
-+		/* Initialise the PHY registers, unless auto configured */
-+		if (!sp->autoconf)
-+			cdns_sierra_phy_init(gphy);
-+
-+		node++;
-+	}
-+	sp->nsubnodes = node;
-+
-+	/* If more than one subnode, configure the PHY as multilink */
-+	if (!sp->autoconf && sp->nsubnodes > 1)
-+		writel(2, sp->base + SIERRA_PHY_PLL_CFG);
-+
-+	pm_runtime_enable(dev);
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+	reset_control_deassert(sp->phy_rst);
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+
-+put_child:
-+	node++;
-+put_child2:
-+	for (i = 0; i < node; i++)
-+		reset_control_put(sp->phys[i].lnk_rst);
-+	of_node_put(child);
-+clk_disable:
-+	clk_disable_unprepare(sp->clk);
-+	reset_control_assert(sp->apb_rst);
-+	return ret;
-+}
-+
-+static int cdns_sierra_phy_remove(struct platform_device *pdev)
-+{
-+	struct cdns_sierra_phy *phy = dev_get_drvdata(pdev->dev.parent);
-+	int i;
-+
-+	reset_control_assert(phy->phy_rst);
-+	reset_control_assert(phy->apb_rst);
-+	pm_runtime_disable(&pdev->dev);
-+
-+	/*
-+	 * The device level resets will be put automatically.
-+	 * Need to put the subnode resets here though.
-+	 */
-+	for (i = 0; i < phy->nsubnodes; i++) {
-+		reset_control_assert(phy->phys[i].lnk_rst);
-+		reset_control_put(phy->phys[i].lnk_rst);
-+	}
-+	return 0;
-+}
-+
-+static struct cdns_reg_pairs cdns_usb_regs[] = {
-+	/*
-+	 * Write USB configuration parameters to the PHY.
-+	 * These values are specific to this specific hardware
-+	 * configuration.
-+	 */
-+	{0xFE0A, SIERRA_DET_STANDEC_A},
-+	{0x000F, SIERRA_DET_STANDEC_B},
-+	{0x55A5, SIERRA_DET_STANDEC_C},
-+	{0x69AD, SIERRA_DET_STANDEC_D},
-+	{0x0241, SIERRA_DET_STANDEC_E},
-+	{0x0110, SIERRA_PSM_LANECAL},
-+	{0xCF00, SIERRA_PSM_DIAG},
-+	{0x001F, SIERRA_PSC_TX_A0},
-+	{0x0007, SIERRA_PSC_TX_A1},
-+	{0x0003, SIERRA_PSC_TX_A2},
-+	{0x0003, SIERRA_PSC_TX_A3},
-+	{0x0FFF, SIERRA_PSC_RX_A0},
-+	{0x0003, SIERRA_PSC_RX_A1},
-+	{0x0003, SIERRA_PSC_RX_A2},
-+	{0x0001, SIERRA_PSC_RX_A3},
-+	{0x0001, SIERRA_PLLCTRL_SUBRATE},
-+	{0x0406, SIERRA_PLLCTRL_GEN_D},
-+	{0x0000, SIERRA_DRVCTRL_ATTEN},
-+	{0x823E, SIERRA_CLKPATHCTRL_TMR},
-+	{0x078F, SIERRA_RX_CREQ_FLTR_A_MODE1},
-+	{0x078F, SIERRA_RX_CREQ_FLTR_A_MODE0},
-+	{0x7B3C, SIERRA_CREQ_CCLKDET_MODE01},
-+	{0x023C, SIERRA_RX_CTLE_MAINTENANCE},
-+	{0x3232, SIERRA_CREQ_FSMCLK_SEL},
-+	{0x8452, SIERRA_CTLELUT_CTRL},
-+	{0x4121, SIERRA_DFE_ECMP_RATESEL},
-+	{0x4121, SIERRA_DFE_SMP_RATESEL},
-+	{0x9999, SIERRA_DEQ_VGATUNE_CTRL},
-+	{0x0330, SIERRA_TMRVAL_MODE0},
-+	{0x01FF, SIERRA_PICNT_MODE1},
-+	{0x0009, SIERRA_CPI_OUTBUF_RATESEL},
-+	{0x000F, SIERRA_LFPSFILT_NS},
-+	{0x0009, SIERRA_LFPSFILT_RD},
-+	{0x0001, SIERRA_LFPSFILT_MP},
-+	{0x8013, SIERRA_SDFILT_H2L_A},
-+	{0x0400, SIERRA_TMRVAL_MODE1},
-+};
-+
-+static struct cdns_reg_pairs cdns_pcie_regs[] = {
-+	/*
-+	 * Write PCIe configuration parameters to the PHY.
-+	 * These values are specific to this specific hardware
-+	 * configuration.
-+	 */
-+	{0x891f, SIERRA_DET_STANDEC_D},
-+	{0x0053, SIERRA_DET_STANDEC_E},
-+	{0x0400, SIERRA_TMRVAL_MODE2},
-+	{0x0200, SIERRA_TMRVAL_MODE3},
-+};
-+
-+static const struct cdns_sierra_data cdns_map_sierra = {
-+	SIERRA_MACRO_ID,
-+	ARRAY_SIZE(cdns_pcie_regs),
-+	ARRAY_SIZE(cdns_usb_regs),
-+	cdns_pcie_regs,
-+	cdns_usb_regs
-+};
-+
-+static const struct of_device_id cdns_sierra_id_table[] = {
-+	{
-+		.compatible = "cdns,sierra-phy-t0",
-+		.data = &cdns_map_sierra,
-+	},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, cdns_sierra_id_table);
-+
-+static struct platform_driver cdns_sierra_driver = {
-+	.probe		= cdns_sierra_phy_probe,
-+	.remove		= cdns_sierra_phy_remove,
-+	.driver		= {
-+		.name	= "cdns-sierra-phy",
-+		.of_match_table = cdns_sierra_id_table,
-+	},
-+};
-+module_platform_driver(cdns_sierra_driver);
-+
-+MODULE_ALIAS("platform:cdns_sierra");
-+MODULE_AUTHOR("Cadence Design Systems");
-+MODULE_DESCRIPTION("CDNS sierra phy driver");
-+MODULE_LICENSE("GPL v2");
+              +---------------------+
+              |         IA          |
++--------+   |            +------+ |        +--------+         +------+
+| ring 1 +----->evtA+----->VintX +---------->   IR   +--------->  GIC +-->
++--------+   |            +------+ |        +--------+         +------+  Linux IRQ Y
+    evtA      |                     |
+              |                     |
+              +---------------------+
+
+- second call updates only IA input part while keeping other parts of IRQ chain the same
+   if valid <linux_virq> passed as input parameter:
+   linux_virq = ti_sci_inta_register_event(dev, <ringacc tisci_dev_id>,
+				<ringacc id>, linux_virq, IRQF_TRIGGER_HIGH, false);
+              +---------------------+
+              |         IA          |
++--------+   |            +------+ |        +--------+         +------+
+| ring 1 +----->evtA+--^-->VintX +---------->   IR   +--------->  GIC +-->
++--------+   |         |  +------+ |        +--------+         +------+  Linux IRQ Y
+              |         |           |
++--------+   |         |           |
+| ring 2 +----->evtB+--+           |
++--------+   |                     |
+              +---------------------+
+
+   As per above, irq-ti-sci-inta and tisci fw creates shared IRQ on HW layer by attaching
+   events to already established IA->IR->GIC IRQ chain. Any Rings events will trigger
+   Linux IRQ Y line and keep it active until Rings are not empty.
+
+Now why this was done this way?
+Note. I'm not saying this is right, but it is the way we've done it as of now. And I hope MSI
+will help to move forward, but I'm not very familiar with it.
+
+The consumer of this approach is K3 Networking driver, first of all, and
+this approach allows to eliminate runtime overhead in Networking hot path and
+provides possibility to implement driver's specific queues/rings handling policies
+- like round-robin vs priority.
+
+CPSW networking driver doesn't need to know exact ring generated IRQ - it
+need to know if there is packet for processing, so current IRQ handling sequence we have (simplified):
+- any ring evt -> IA -> IR -> GIC -> Linux IRQ Y
+   handle_fasteoi_irq() -> cpsw_irq_handler -> disable_irq() -> napi_schedule()
+   ...
+   soft_irq() -> cpsw_poll():
+	- [1] for each ring from Hi prio to Low prio
+	      [2] get packet
+	      [3] if (packet) process packet & goto [2]
+	          else goto [1]
+	       if (no more packets) goto [4]
+	  [4] enable_irq()
+
+As can be seen there is no intermediate IRQ dispatchers on IA/IR levels and no IRQs-per-rings,
+and NAPI poll cycle allows to implement driver's specific rings handling policy.
+
+Next: depending on the use case following optimizations are possible:
+1) throughput: split all TX (or RX) rings on X groups, where X = num_cpus
+and allocate assign IRQ to each group for Networking XPS/RPS/RSS.
+For example, CPSW2G has 8 TX channels and so 8 completion rings, 4 CPUs:
+  rings[0,1] -(IA/IR) - Linux IRQ 1
+  rings[2,3] -(IA/IR) - Linux IRQ 2
+  rings[4,5] -(IA/IR) - Linux IRQ 3
+  rings[6,7] -(IA/IR) - Linux IRQ 4
+each Linux IRQ assigned to separate CPU.
+
+2) min latency:
+  Ring X is used by RT application for TX/RX some traffic (using AF_XDP sockets for example)
+  Ring X can be assigned with separate IRQ while other rings still grouped to
+  produce 1 IRQ
+  rings[0,6] - (IA/IR) - Linux IRQ 1
+  rings[7] - (IA/IR) - Linux IRQ 2
+  Linux IRQ 2 assigned to separate CPU where RT application is running.
+
+Hope above will help to clarify some K3 AM6 IRQ generation questions and
+find the way to move forward.
+
+Thanks a lot for you review and comments.
+
 -- 
-1.9.0
+regards,
+-grygorii
