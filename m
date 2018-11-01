@@ -1,49 +1,37 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 0/8] OLPC 1.75 Keyboard/Touchpad fixes
-Date: Thu, 1 Nov 2018 22:56:20 +0100
-Message-ID: <20181101215620.GA27132@amd>
-References: <20180910112654.42061-1-lkundrak@v3.sk>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
+From: Atish Patra <atish.patra@wdc.com>
+Subject: [RFC 0/2] Add RISC-V cpu topology
+Date: Thu,  1 Nov 2018 16:04:26 -0700
+Message-ID: <1541113468-22097-1-git-send-email-atish.patra@wdc.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180910112654.42061-1-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+To: linux-riscv@lists.infradead.org
+Cc: palmer@sifive.com, anup@brainfault.org, hch@infradead.org, Damien.LeMoal@wdc.com, tglx@linutronix.de, mark.rutland@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, alankao@andestech.com, zong@andestech.com
 List-Id: devicetree@vger.kernel.org
 
+This patch series adds the cpu topology for RISC-V. It contains
+both the DT binding and actual source code. It has been tested on
+QEMU & Unleashed board. 
 
---WIyZ46R2i8wDzkSu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The idea is based on cpu-map in ARM with changes related to how
+we define SMT systems. The reason for adopting a similar approach
+to ARM as I feel it provides a very clear way of defining the
+topology compared to parsing cache nodes to figure out which cpus
+share the same package or core.  I am open to any other idea to
+implement cpu-topology as well.
 
-Hi!
+Atish Patra (2):
+  dt-bindings: topology: Add RISC-V cpu topology.
+  RISC-V: Introduce cpu topology.
 
-> This makes keyboard/touchpad work on a DT MMP2 platform.
+ .../devicetree/bindings/riscv/topology.txt         | 154 ++++++++++++++++
+ arch/riscv/include/asm/topology.h                  |  28 +++
+ arch/riscv/kernel/Makefile                         |   1 +
+ arch/riscv/kernel/smpboot.c                        |   5 +-
+ arch/riscv/kernel/topology.c                       | 194 +++++++++++++++++++++
+ 5 files changed, 381 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/riscv/topology.txt
+ create mode 100644 arch/riscv/include/asm/topology.h
+ create mode 100644 arch/riscv/kernel/topology.c
 
-For the series:
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Tested-by: Pavel Machek <pavel@ucw.cz>
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---WIyZ46R2i8wDzkSu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvbdoQACgkQMOfwapXb+vKvvACdFat/8nxUf3OehRXRrYhNy7wN
-j7MAnApc09buUM+ssljf3sdPv2F8LwkN
-=iuWR
------END PGP SIGNATURE-----
-
---WIyZ46R2i8wDzkSu--
+-- 
+2.7.4
