@@ -1,81 +1,107 @@
-From: skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [PATCH v2 2/3] drm/msm/dpu: Integrate interconnect
- API in MDSS
-Date: Thu, 01 Nov 2018 13:08:53 +0530
-Message-ID: <15faacdbde81194192e5aac8dd44f7d9@codeaurora.org>
-References: <20181010092434.853-1-skolluku@codeaurora.org>
- <20181010092434.853-3-skolluku@codeaurora.org>
- <20181024163923.GX22824@google.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH] ARM: dtsi: sun8i-r40: add mali node
+Date: Thu, 01 Nov 2018 08:52:17 +0100
+Message-ID: <1868657.3A2CuZcRV2@jernej-laptop>
+References: <20181101073833.2936-1-lothar.felten@gmail.com>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181024163923.GX22824-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBNHB5LPAKGQEJUJ6QMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181101073833.2936-1-lothar.felten-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Lothar Felten <lothar.felten-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0xMC0yNCAyMjowOSwgTWF0dGhpYXMgS2FlaGxja2Ugd3JvdGU6Cj4gSGkgU3JhdmFu
-dGhpLAo+IAo+IE9uIFdlZCwgT2N0IDEwLCAyMDE4IGF0IDAyOjU0OjMzUE0gKzA1MzAsIFNyYXZh
-bnRoaSBLb2xsdWt1ZHVydSB3cm90ZToKPj4gVGhlIGludGVyY29ubmVjdCBmcmFtZXdvcmsgaXMg
-ZGVzaWduZWQgdG8gcHJvdmlkZSBhCj4+IHN0YW5kYXJkIGtlcm5lbCBpbnRlcmZhY2UgdG8gY29u
-dHJvbCB0aGUgc2V0dGluZ3Mgb2YKPj4gdGhlIGludGVyY29ubmVjdHMgb24gYSBTb0MuCj4+IAo+
-PiBUaGUgaW50ZXJjb25uZWN0IEFQSSB1c2VzIGEgY29uc3VtZXIvcHJvdmlkZXItYmFzZWQgbW9k
-ZWwsCj4+IHdoZXJlIHRoZSBwcm92aWRlcnMgYXJlIHRoZSBpbnRlcmNvbm5lY3QgYnVzZXMgYW5k
-IHRoZQo+PiBjb25zdW1lcnMgY291bGQgYmUgdmFyaW91cyBkcml2ZXJzLgo+PiAKPj4gTURTUyBp
-cyBvbmUgb2YgdGhlIGludGVyY29ubmVjdCBjb25zdW1lcnMgd2hpY2ggdXNlcyB0aGUKPj4gaW50
-ZXJjb25uZWN0IEFQSXMgdG8gZ2V0IHRoZSBwYXRoIGJldHdlZW4gZW5kcG9pbnRzIGFuZAo+PiBz
-ZXQgaXRzIGJhbmR3aWR0aC9sYXRlbmN5L1FvUyByZXF1aXJlbWVudHMgZm9yIHRoZSBnaXZlbgo+
-PiBpbnRlcmNvbm5lY3RlZCBwYXRoLgo+PiAKPj4gQ2hhbmdlcyBpbiB2MjoKPj4gCS0gUmVtb3Zl
-IGVycm9yIGxvZyBhbmQgdW5uZWNlc3NhcnkgY2hlY2sgKEpvcmRhbiBDcm91c2UpCj4+IAo+PiBT
-aWduZWQtb2ZmLWJ5OiBTcmF2YW50aGkgS29sbHVrdWR1cnUgPHNrb2xsdWt1QGNvZGVhdXJvcmEu
-b3JnPgo+PiAtLS0KPj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMg
-fCA1MCAKPj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0KPj4gIDEgZmlsZSBjaGFu
-Z2VkLCA0NiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQo+PiAKPj4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMgCj4+IGIvZHJpdmVycy9n
-cHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3MuYwo+PiBpbmRleCAyMjM1ZWY4MTI5ZjQuLjI3
-YzI1OTRlNTEzMyAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEv
-ZHB1X21kc3MuYwo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRz
-cy5jCj4+IEBAIC00LDYgKzQsNyBAQAo+PiAgICovCj4+IAo+PiAgI2luY2x1ZGUgImRwdV9rbXMu
-aCIKPj4gKyNpbmNsdWRlIDxsaW51eC9pbnRlcmNvbm5lY3QuaD4KPj4gCj4+ICAjZGVmaW5lIHRv
-X2RwdV9tZHNzKHgpIGNvbnRhaW5lcl9vZih4LCBzdHJ1Y3QgZHB1X21kc3MsIGJhc2UpCj4+IAo+
-PiBAQCAtMTYsOCArMTcsMzMgQEAgc3RydWN0IGRwdV9tZHNzIHsKPj4gIAl1MzIgaHd2ZXJzaW9u
-Owo+PiAgCXN0cnVjdCBkc3NfbW9kdWxlX3Bvd2VyIG1wOwo+PiAgCXN0cnVjdCBkcHVfaXJxX2Nv
-bnRyb2xsZXIgaXJxX2NvbnRyb2xsZXI7Cj4+ICsJc3RydWN0IGljY19wYXRoICpwYXRoWzJdOwo+
-PiArCXUzMiBudW1fcGF0aHM7Cj4+ICB9Owo+PiAKPj4gK3N0YXRpYyBpbnQgZHB1X21kc3NfcGFy
-c2VfZGF0YV9idXNfaWNjX3BhdGgoCj4+ICsJCXN0cnVjdCBkcm1fZGV2aWNlICpkZXYsIHN0cnVj
-dCBkcHVfbWRzcyAqZHB1X21kc3MpCj4+ICt7Cj4+ICsJc3RydWN0IGljY19wYXRoICpwYXRoMCA9
-IG9mX2ljY19nZXQoZGV2LT5kZXYsICJwb3J0MCIpOwo+PiArCXN0cnVjdCBpY2NfcGF0aCAqcGF0
-aDEgPSBvZl9pY2NfZ2V0KGRldi0+ZGV2LCAicG9ydDEiKTsKPj4gKwlpbnQgdG90YWxfbnVtX3Bh
-dGhzICA9IDA7Cj4gCj4gaW5pdGlhbGl6YXRpb24gaXMgbm90IG5lZWRlZAo+IAo+IG5pdDogdGhl
-ICd0b3RhbF8nIHByZWZpeCBkb2Vzbid0IGFkZCBhbnkgdmFsdWUgaGVyZSwganVzdCAnbnVtX3Bh
-dGhzJwo+IHdvdWxkIGJlIGVhc2llciB0byBwYXJzZS4gQWN0dWFsbHkgeW91IGNvdWxkIGdldCBy
-aWQgb2YgdGhlIHZhcmlhYmxlCj4gY29tcGxldGVseSBieSBqdXN0IGluaXRpYWxpemluZyBhbmQg
-aW5jcmVtZW50aW5nIGRwdV9tZHNzLT5udW1fcGF0aHMuCj4gCk9rYXkuCj4+ICBzdGF0aWMgaXJx
-cmV0dXJuX3QgZHB1X21kc3NfaXJxKGludCBpcnEsIHZvaWQgKmFyZykKPj4gIHsKPj4gIAlzdHJ1
-Y3QgZHB1X21kc3MgKmRwdV9tZHNzID0gYXJnOwo+PiBAQCAtMTI3LDcgKzE1MywxMiBAQCBzdGF0
-aWMgaW50IGRwdV9tZHNzX2VuYWJsZShzdHJ1Y3QgbXNtX21kc3MgKm1kc3MpCj4+ICB7Cj4+ICAJ
-c3RydWN0IGRwdV9tZHNzICpkcHVfbWRzcyA9IHRvX2RwdV9tZHNzKG1kc3MpOwo+PiAgCXN0cnVj
-dCBkc3NfbW9kdWxlX3Bvd2VyICptcCA9ICZkcHVfbWRzcy0+bXA7Cj4+IC0JaW50IHJldDsKPj4g
-KwlpbnQgcmV0LCBpOwo+PiArCXU2NCBhYiA9IChkcHVfbWRzcy0+bnVtX3BhdGhzKSA/IDY4MDAw
-MDAwMDAvZHB1X21kc3MtPm51bV9wYXRocyA6IDA7Cj4gCj4gcGFyZW50aGVzZXMgYXJlIG5vdCBu
-ZWVkZWQKPiAKPj4gKwl1NjQgaWIgPSA2ODAwMDAwMDAwOwo+IAo+IFRoZXJlIHNob3VsZCBwcm9i
-YWJseSBiZSBhIGRlZmluZSBmb3IgNjgwMDAwMDAwMC4KPiAKT2theS4KPiBuaXQ6IG5hbWVzIGxp
-a2UgYXZnX2J3IGFuZCBwZWFrX3B3IHdvdWxkIGJlIGNsZWFyZXIgdGhhbiBhYiBhbmQgaWIsCj4g
-d2l0aG91dCBiZWluZyBleGNlc3NpdmVseSB2ZXJib3NlLgo+IApTdXJlLCB3aWxsIG1ha2UgdGhl
-IGNoYW5nZXMuCgo+IENoZWVycwo+IAo+IE1hdHRoaWFzCj4gX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KPiBGcmVlZHJlbm8gbWFpbGluZyBsaXN0Cj4gRnJl
-ZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2ZyZWVkcmVubwo=
+Dne =C4=8Detrtek, 01. november 2018 ob 08:38:33 CET je Lothar Felten napisa=
+l(a):
+> This patch adds a node for the mali 400 GPU of the R40/V40 SoC
+>=20
+> Signed-off-by: Lothar Felten <lothar.felten-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-r40.dtsi | 28 +++++++++++++++++++++++++++-
+>  1 file changed, 27 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi
+> b/arch/arm/boot/dts/sun8i-r40.dtsi index 6f4c9ca5a3ee..ddf765e931f3 10064=
+4
+> --- a/arch/arm/boot/dts/sun8i-r40.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+> @@ -542,6 +542,31 @@
+>=20
+>  		};
+>=20
+> +		mali: gpu@1c40000 {
+> +			compatible =3D "allwinner,sun7i-a20-mali", "arm,mali-400";
+> +			reg =3D <0x01c40000 0x10000>;
+> +			interrupts =3D <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names =3D "gp",
+> +					  "gpmmu",
+> +					  "pp0",
+> +					  "ppmmu0",
+> +					  "pp1",
+> +					  "ppmmu1",
+> +					  "pmu";
+> +			clocks =3D <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
+> +			clock-names =3D "bus", "core";
+> +			resets =3D <&ccu RST_BUS_GPU>;
+> +
+> +			assigned-clocks =3D <&ccu CLK_GPU>;
+> +			assigned-clock-rates =3D <384000000>;
+
+In previous e-mail I already stated that above 2 lines doesn't belong here.=
+=20
+Driver is responsible for clock rate management.
+
+> +		};
+> +
+>  		gmac: ethernet@1c50000 {
+>  			compatible =3D "allwinner,sun8i-r40-gmac";
+>  			syscon =3D <&ccu>;
+> @@ -813,7 +838,8 @@
+>  		};
+>=20
+>  		hdmi_phy: hdmi-phy@1ef0000 {
+> -			compatible =3D "allwinner,sun8i-r40-hdmi-phy";
+> +			compatible =3D "allwinner,sun8i-r40-hdmi-phy",
+> +				     "allwinner,sun50i-a64-hdmi-phy";
+
+In previous e-mail I also stated that above changes are not related to GPU=
+=20
+node and they are also not needed, since HDMI on R40 works without this.
+
+>  			reg =3D <0x01ef0000 0x10000>;
+>  			clocks =3D <&ccu CLK_BUS_HDMI1>, <&ccu CLK_HDMI_SLOW>,
+>  				 <&ccu 7>, <&ccu 16>;
+
+You cleary didn't read rules for patch submission. When you are sending new=
+=20
+version of the patch, you have to state which version is it in subject line=
+=20
+and write a changelog below "---" line.
+
+Best regards,
+Jernej
+
+
+
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
