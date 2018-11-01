@@ -1,20 +1,16 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V3 09/10] dts: fsl: add imx7ulp evk support
-Date: Thu, 1 Nov 2018 16:46:33 +0000
-Message-ID: <VI1PR04MB422294CC7108B7EF0F74BC3E80CE0@VI1PR04MB4222.eurprd04.prod.outlook.com>
-References: <1540996688-23681-1-git-send-email-aisheng.dong@nxp.com>
- <1540996688-23681-10-git-send-email-aisheng.dong@nxp.com>
- <CAOMZO5AZejEAHeB0hQ9T5U2ZJ7MXK=BYm8jY+yyZjbDHo4utGA@mail.gmail.com>
- <CAOMZO5CGsVYX_xYud_JDTikWAR6guW8-pfPhsBTG7MFbjdUtiw@mail.gmail.com>
- <VI1PR04MB422271C6CA5F7E000BFDE1A580CE0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CAOMZO5CSLC+Pntt=Y5MaOD_=Va__v+KSgQ2kNSizVJt3i829dg@mail.gmail.com>
- <VI1PR04MB42223D6930DA633E106340FD80CE0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+From: Liming Sun <lsun@mellanox.com>
+Subject: [PATCH v6 3/9] dt-bindings: soc: Add TmFifo binding for Mellanox
+ BlueField SoC
+Date: Thu,  1 Nov 2018 12:25:32 -0400
+Message-ID: <1541089538-175682-3-git-send-email-lsun@mellanox.com>
+References: <1541089538-175682-1-git-send-email-lsun@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <VI1PR04MB42223D6930DA633E106340FD80CE0@VI1PR04MB4222.eurprd04.prod.outlook.com>
-Content-Language: en-US
+In-Reply-To: <1541089538-175682-1-git-send-email-lsun@mellanox.com>
+In-Reply-To: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,49 +20,49 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE
- BINDINGS" <devicetree@vger.kernel.org>, Dong Aisheng <dongas86@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, David Woods <dwoods@mellanox.com>, Robin Murphy <robin.murphy@arm.com>, arm-soc <arm@kernel.org>
+Cc: devicetree@vger.kernel.org, Liming Sun <lsun@mellanox.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-[...]
+Add devicetree bindings for the TmFifo which is found on Mellanox
+BlueField SoCs.
 
-> > -----Original Message-----
-> > From: Fabio Estevam [mailto:festevam@gmail.com]
-> > Sent: Friday, November 2, 2018 12:01 AM
-> [...]
-> >
-> > On Thu, Nov 1, 2018 at 12:53 PM A.s. Dong <aisheng.dong@nxp.com>
-> wrote:
-> >
-> > > Can you tell which version were you looking at?
-> > > From my version SPF-29163_A1, it's populated by default.
-> >
-> > Mine is sch-29163-b and it shows both micro SD card and eMMC on the
-> > schematics.
-> >
-> 
-> I will check it later. But Rev B may be supported later if changed.
-> 
-> > On my board I see only the micro SD card populated, not the eMMC.
-> >
-> > Also, if you are describing the eMMC then why do you pass the card
-> > detect property and only 4 data lines?
-> >
-> > SD0_nRST is only connected to the eMMC card.
-> >
-> > eMMC does not have card detect signal and it uses 8 data lines, so
-> > clearly there is something inconsistent in your dts.
-> >
-> > What exactly do you want to describe: the SD card or the eMMC?
-> 
-> I guess we're talking about different schematic versions.
-> The patch is supposed to support Rev A.
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: David Woods <dwoods@mellanox.com>
+Signed-off-by: Liming Sun <lsun@mellanox.com>
+---
+ .../devicetree/bindings/soc/mellanox/tmfifo.txt    | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
 
-I just checked RevB schematic and SD card circuit seems the same
-as Rev A that SD0_nRST is used to control the SD power and there's CD pin.
-So the SD binding should work for both.
-
-Regards
-Dong Aisheng
+diff --git a/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt b/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
+new file mode 100644
+index 0000000..8a13fa6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
+@@ -0,0 +1,23 @@
++* Mellanox BlueField SoC TmFifo
++
++BlueField TmFifo provides a shared FIFO between the target and the
++external host machine, which can be accessed by external host via
++USB or PCIe. In the current tmfifo driver, this FIFO has been demuxed
++to implement virtual console and network interface based on the virtio
++framework.
++
++Required properties:
++
++- compatible:	Should be "mellanox,bf-tmfifo"
++- reg:		Physical base address and length of Rx/Tx block
++- interrupts:	The interrupt number of Rx low water mark, Rx high water mark
++		Tx low water mark, Tx high water mark respectively.
++
++Example:
++
++tmfifo@800a20 {
++	compatible = "mellanox,bf-tmfifo";
++	reg = <0x00800a20 0x00000018
++	       0x00800a40 0x00000018>;
++	interrupts = <41, 42, 43, 44>;
++};
+-- 
+1.8.3.1
