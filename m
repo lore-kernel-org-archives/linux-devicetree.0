@@ -1,63 +1,58 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v2 09/10] irqchip: ti-sci-inta: Add support for Interrupt
- Aggregator driver
-Date: Thu, 1 Nov 2018 09:55:12 +0200
-Message-ID: <49029695-79a0-141b-a9da-9764cb0ed60f@ti.com>
-References: <20181018154017.7112-1-lokeshvutla@ti.com>
- <20181018154017.7112-10-lokeshvutla@ti.com>
- <b20127dc-be43-3b00-9960-663738df0069@arm.com>
- <9969f24c-cdb0-1f5c-d0f4-b1c1f587325c@ti.com>
- <86va5ssrfm.wl-marc.zyngier@arm.com>
- <b3a71622-7734-04be-0b0c-38e9dc6542d4@ti.com>
- <63ba5353-8470-b4c1-64a8-a1df5bf48614@ti.com>
- <86va5myz7t.wl-marc.zyngier@arm.com>
- <81136b74-4b45-f44b-0168-23d191a4fb5e@ti.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [RFC PATCH 7/7] arm64: allwinner: h6:
+ orangepi-liet2: Enable AP6356S WiFi support
+Date: Thu, 1 Nov 2018 15:58:13 +0800
+Message-ID: <CAGb2v67xCnH20Hga2P2Ekk3vhhOWUSgtOmRVAte+HDuodjsjkw@mail.gmail.com>
+References: <20181031183634.29640-1-jagan@amarulasolutions.com>
+ <20181031183634.29640-7-jagan@amarulasolutions.com> <CAMty3ZCeZzXYy4XRwTeQjYfpB6KKjEVRWyhjoca9Os4foLYL4g@mail.gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <81136b74-4b45-f44b-0168-23d191a4fb5e@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Nishanth Menon <nm@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, jason@lakedaemon.net, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, tglx@linutronix.de, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBJHE5LPAKGQERZKEROQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAMty3ZCeZzXYy4XRwTeQjYfpB6KKjEVRWyhjoca9Os4foLYL4g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Lokesh,
+On Thu, Nov 1, 2018 at 3:35 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+>
+> On Thu, Nov 1, 2018 at 12:07 AM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> >
+> > From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+> >
+> > Enable AP6356S WiFi/BT combo chip on Orangepi Lite2 board:
+> > - WiFi SDIO interface is connected to MMC1
+> > - WiFi WL-PMU-EN pin connected to gpio PM3: attach to mmc-pwrseq
+> > - WiFi WL-WAKE-AP pin connected to gpio PM0
+> > - 32kHz external oscillator gate clock from RTC
 
-On 10/29/18 3:04 PM, Lokesh Vutla wrote:
->>> With the above information, linux should send a message to
->>> system-controller using TISCI protocol. After policing the given
->>> information, system-controller does the following:
->>> - Attaches the interrupt(INTA input) to the device resource index
->>> - Muxes the interrupt(INTA input) to corresponding vint(INTA output)
->>> - Muxes the vint(INTR input) to GIC irq(INTR output).
->>
->> Isn't there a 1:1 mapping between *used* INTR inputs and outputs?
->> Since INTR is a router, there is no real muxing. I assume that the
->> third point above is just a copy-paste error.
-> 
-> Right, my bad. INTR is just a router and no read muxing.
+You never specified a clock rate for it, so it might actually be wrong.
+The default clock rate would be something "around" 32 kHz, but not very
+accurate. Meanwhile the WiFi module would have very specific requirements
+on frequency and accuracy of this clock. The WiFi part doesn't seem to
+care that much, but the Bluetooth part cares very much. It doesn't work
+or it would seem to work but you don't get anything off the radio if the
+frequency is off (as in off-frequency).
 
-INTR can mux M interrupt inputs to N interrupt outputs.
-One selects which interrupt input is outputted on the given interrupt
-output.
-It is perfectly valid (but not sane) to select the same interrupt input
-to be routed to _all_ interrupt output for example.
+> >
+> > Signed-off-by: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+> > ---
+> > Note:
+> > - chip detected, but failed to connect
+> > [  129.084504] brcmfmac: brcmf_sdio_hostmail: mailbox indicates firmware halted
+> > [  135.906409] brcmfmac: brcmf_sdio_bus_rxctl: resumed on timeout
+>
+> This got fixed. Will send next version.
 
-Not sure if we are going to use this for anything but 1:1 mapping, but
-might worth keeping in mind...
+Could you wait until I get my RTC changes out? I also have some Bluetooth
+patches for AP621x, which is what started all this RTC work, which you might
+find interesting.
 
-
-- Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+ChenYu
