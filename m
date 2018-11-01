@@ -1,58 +1,77 @@
-From: Doug Anderson <dianders@google.com>
-Subject: Re: [PATCH V3 1/2] dt-bindings: mmc: sdhci-msm: Add new compatible
- string for SDM845 SOC
-Date: Thu, 1 Nov 2018 13:29:54 -0700
-Message-ID: <CAD=FV=V9AdCgOSonb0tu==DgKRKeZxto+aGwxmdbHAqrmfMrDQ@mail.gmail.com>
-References: <1541073999-11752-1-git-send-email-vbadigan@codeaurora.org> <1541073999-11752-2-git-send-email-vbadigan@codeaurora.org>
+From: Stefano Stabellini <sstabellini@kernel.org>
+Subject: Re: [PATCH v3] devicetree, xen: add xen,
+ shared-memory binding
+Date: Thu, 1 Nov 2018 13:31:12 -0700 (PDT)
+Message-ID: <alpine.DEB.2.10.1811011328540.7220@sstabellini-ThinkPad-X260>
+References: <1540343921-7487-1-git-send-email-sstabellini@kernel.org>
+ <0951e2a3-78a1-e849-39e9-5980c9c87277@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541073999-11752-2-git-send-email-vbadigan@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vbadigan@codeaurora.org
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Evan Green <evgreen@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, riteshh@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xenproject.org>
+In-Reply-To: <0951e2a3-78a1-e849-39e9-5980c9c87277@arm.com>
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
+To: Julien Grall <julien.grall@arm.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Stefano Stabellini <sstabellini@kernel.org>, Wei Liu <wei.liu2@citrix.com>, stefanos@xilinx.com, Ian Jackson <ian.jackson@eu.citrix.com>, xen-devel@lists.xen.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thu, Nov 1, 2018 at 5:07 AM Veerabhadrarao Badiganti
-<vbadigan@codeaurora.org> wrote:
->
-> For SDM845 SOC, new compatible string  "qcom,sdm845-sdhci" is added.
->
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> index 502b3b8..f2ffbeb 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> @@ -7,6 +7,7 @@ Required properties:
->  - compatible: Should contain:
->                 "qcom,sdhci-msm-v4" for sdcc versions less than 5.0
->                 "qcom,sdhci-msm-v5" for sdcc versions >= 5.0
-> +               "qcom,sdm845-sdhci" for sdm845 SOC
-
-It's up to Rob of course, but IMO it seems a nicer way forward to
-include both the SoC-specific string and the "version" string in all
-cases.  I'd write this for the full text:
-
- - compatible: Should contain a SoC-specific string and a IP version string:
-      version strings:
-           "qcom,sdhci-msm-v4" for sdcc versions less than 5.0
-           "qcom,sdhci-msm-v5" for sdcc version 5.0
-      full compatible strings with SoC and version:
-           "qcom,apq8084", "qcom,sdhci-msm-v4"
-           "qcom,msm8974", "qcom,sdhci-msm-v4"
-           "qcom,msm8916", "qcom,sdhci-msm-v4"
-           "qcom,msm8992", "qcom,sdhci-msm-v4"
-           "qcom,msm8996", "qcom,sdhci-msm-v4"
-           "qcom,sdm845-sdhci", "qcom,sdhci-msm-v5"
-
-   NOTE that some old device tree files may be floating around that only
-   have the string "qcom,sdhci-msm-v4" without the SoC compatible string
-   but doing that should be considered a deprecated practice.
-
--Doug
+T24gV2VkLCAzMSBPY3QgMjAxOCwgSnVsaWVuIEdyYWxsIHdyb3RlOgo+IEhpLAo+IAo+IE9uIDEw
+LzI0LzE4IDI6MTggQU0sIFN0ZWZhbm8gU3RhYmVsbGluaSB3cm90ZToKPiA+IEZyb206IFN0ZWZh
+bm8gU3RhYmVsbGluaSA8c3RlZmFub3NAeGlsaW54LmNvbT4KPiA+IAo+ID4gSW50cm9kdWNlIGEg
+ZGV2aWNlIHRyZWUgYmluZGluZyBmb3IgWGVuIHJlc2VydmVkLW1lbW9yeSByZWdpb25zLiBUaGV5
+Cj4gPiBhcmUgdXNlZCB0byBzaGFyZSBtZW1vcnkgYWNyb3NzIFZNcyBmcm9tIHRoZSBWTSBjb25m
+aWcgZmlsZXMuIChTZWUKPiA+IHN0YXRpY19zaG0gY29uZmlnIG9wdGlvbi4pCj4gPiAKPiA+IFNp
+Z25lZC1vZmYtYnk6IFN0ZWZhbm8gU3RhYmVsbGluaSA8c3RlZmFub3NAeGlsaW54LmNvbT4KPiA+
+IENjOiBqdWxpZW4uZ3JhbGxAYXJtLmNvbQo+ID4gLS0tCj4gPiBDaGFuZ2VzIGluIHYzOgo+ID4g
+LSByZW1vdmUgZmFsbGJhY2sgdmVyc2lvbgo+ID4gCj4gPiBDaGFuZ2VzIGluIHYyOgo+ID4gLSBm
+aXggQXV0aG9yIGxpbmUKPiA+IC0gYWRkIHZlcnNpb25pbmcKPiA+IC0geGVuLGlkIGluc3RlYWQg
+b2YgaWQKPiA+IC0tLQo+ID4gICAuLi4vYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hlbixzaGFy
+ZWQtbWVtb3J5LnR4dCAgIHwgMjAKPiA+ICsrKysrKysrKysrKysrKysrKysrCj4gPiAgIDEgZmls
+ZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspCj4gPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NAo+ID4g
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hh
+cmVkLW1lbW9yeS50eHQKPiA+IAo+ID4gZGlmZiAtLWdpdAo+ID4gYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hlbixzaGFyZWQtbWVtb3J5LnR4dAo+
+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hl
+bixzaGFyZWQtbWVtb3J5LnR4dAo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+IGluZGV4IDAw
+MDAwMDAuLjdjODE2ODMKPiA+IC0tLSAvZGV2L251bGwKPiA+ICsrKwo+ID4gYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hlbixzaGFyZWQtbWVtb3J5
+LnR4dAo+ID4gQEAgLTAsMCArMSwyMCBAQAo+ID4gKyogWGVuIGh5cGVydmlzb3IgcmVzZXJ2ZWQt
+bWVtb3J5IGJpbmRpbmcKPiA+ICsKPiA+ICtFeHBvc2Ugb25lIG9yIG1vcmUgbWVtb3J5IHJlZ2lv
+bnMgYXMgcmVzZXJ2ZWQtbWVtb3J5IHRvIHRoZSBndWVzdAo+ID4gK3ZpcnR1YWwgbWFjaGluZS4g
+VHlwaWNhbGx5LCBhIHJlZ2lvbiBpcyBjb25maWd1cmVkIGF0IFZNIGNyZWF0aW9uIHRpbWUKPiA+
+ICt0byBiZSBhIHNoYXJlZCBtZW1vcnkgYXJlYSBhY3Jvc3MgbXVsdGlwbGUgdmlydHVhbCBtYWNo
+aW5lcyBmb3IKPiA+ICtjb21tdW5pY2F0aW9uIGFtb25nIHRoZW0uCj4gCj4gSSBtYXkgaGF2ZSBu
+b3RpY2Ugc29tZSBpc3N1ZSB3aXRoIHRoaXMgYmluZGluZy4gTG9va2luZyBhdCB0aGUgZGVzaWdu
+IGRvY3VtZW50Cj4gWzFdLCB0aGUgIm1hc3RlciIgZG9tYWluIG1heSBwcm92aWRlIGEgYmlnIGJh
+Y2tpbmcgcmVnaW9uIHRoYXQgd291bGQgYmUgc3BsaXQKPiBhbmQgc2hhcmUgd2l0aCBtdWx0aXBs
+ZSAic2xhdmUiLgo+IAo+IEZvciB0aGUgIm1hc3RlciIgZG9tYWluLCB0aGlzIGJpbmRpbmcgd291
+bGQgc3BlY2lmeSB0aGUgZnVsbCBiYWNraW5nIHJlZ2lvbi4KPiBUaGUgIm1hc3RlciIgT1Mgd291
+bGQgbm90IGJlIGFibGUgdG8ga25vdyBob3cgdGhlIHJlZ2lvbiB3b3VsZCBiZSB1c2VkIGhlcmUu
+Cj4gCj4gRm9yIHRoZSAic2xhdmUiIGRvbWFpbiwgaXQgbG9va3MgbGlrZSBpdCBtaWdodCBiZSBw
+b3NzaWJsZSB0byBtYXAgdGhlIHNhbWUKPiByZWdpb24gKHNvIHNhbWUgSUQpIHR3aWNlLiBTbyB3
+ZSB3b3VsZCBlbmQgdXAgdG8gY3JlYXRlIHRoZSBzYW1lIGJpbmRpbmdzCj4gdHdpY2UuCj4gCj4g
+QW55IG9waW9uaW9uIG9uIGhvdyB3ZSBzaG91bGQgcHJvY2VlZCB3aXRoIHRoZXNlIHR3byB1c2Ug
+Y2FzZXM/CgpKdWxpZW4gYW5kIEkgZGlzY3Vzc2VkIHRoaXMgbW9ybmluZyB0byBjbGFyaWZ5IHRo
+YXQgcmVnaW9ucyBzaG91bGRuJ3QgYmUKbWFwcGVkIHR3aWNlIGluIHRoZSBYZW4gZG9jcywgYW5k
+IGFkZGluZyBhbiAib2Zmc2V0IiBwcm9wZXJ0eSB0byB0aGlzCmJpbmRpbmcuCgpJJ2xsIHNlbmQg
+YW4gdXBkYXRlIHRvIHRoaXMgcHJvcG9zYWwgYWRkaW5nIHRoZSBvZmZzZXQuCgo+ID4gKwo+ID4g
+K0ZvciBlYWNoIG9mIHRoZXNlIHByZS1zaGFyZWQgbWVtb3J5IHJlZ2lvbnMsIGEgcmFuZ2UgaXMg
+ZXhwb3NlZCB1bmRlcgo+ID4gK3RoZSAvcmVzZXJ2ZWQtbWVtb3J5IG5vZGUgYXMgYSBjaGlsZCBu
+b2RlLiBFYWNoIHJhbmdlIHN1Yi1ub2RlIGlzIG5hbWVkCj4gPiAreGVuLXNobWVtQDxhZGRyZXNz
+PiBhbmQgaGFzIHRoZSBmb2xsb3dpbmcgcHJvcGVydGllczoKPiA+ICsKPiA+ICstIGNvbXBhdGli
+bGU6Cj4gPiArCWNvbXBhdGlibGUgPSAieGVuLHNoYXJlZC1tZW1vcnktdjEiCj4gPiArCj4gPiAr
+LSByZWc6Cj4gPiArCXRoZSBiYXNlIGd1ZXN0IHBoeXNpY2FsIGFkZHJlc3MgYW5kIHNpemUgb2Yg
+dGhlIHNoYXJlZCBtZW1vcnkgcmVnaW9uCj4gPiArCj4gPiArLSB4ZW4saWQ6Cj4gPiArCWEgc3Ry
+aW5nIHRoYXQgaWRlbnRpZmllcyB0aGUgc2hhcmVkIG1lbW9yeSByZWdpb24gYXMgc3BlY2lmaWVk
+IGluCj4gPiArCXRoZSBWTSBjb25maWcgZmlsZQo+ID4gCj4gCj4gQ2hlZXJzLAo+IAo+IFsxXSBo
+dHRwczovL2xpc3RzLnhlbi5vcmcvYXJjaGl2ZXMvaHRtbC94ZW4tZGV2ZWwvMjAxOC0xMC9tc2cw
+MDczMC5odG1sCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KWGVuLWRldmVsIG1haWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMueGVucHJvamVjdC5vcmcK
+aHR0cHM6Ly9saXN0cy54ZW5wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL3hlbi1kZXZlbA==
