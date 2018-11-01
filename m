@@ -1,89 +1,74 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 3/4] ARM: dts: r8a77470: Add QSPI support
-Date: Thu,  1 Nov 2018 12:35:04 +0000
-Message-ID: <1541075705-1333-4-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1541075705-1333-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Christian Zigotzky <chzigotzky@xenosoft.de>
+Subject: Re: [PATCH] of: Fix cpu node iterator to not ignore disabled cpu
+ nodes
+Date: Thu, 1 Nov 2018 13:45:48 +0100
+Message-ID: <1055f6ae-a25b-117a-e9e4-44dd4f978803@xenosoft.de>
+References: <20181031144226.26747-1-robh@kernel.org>
+ <87o9b9dphd.fsf@concordia.ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1541075705-1333-1-git-send-email-fabrizio.castro@bp.renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Mark Rutland <mark.rutland@arm.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, Mark Brown <broonie@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, linux-spi@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Biju Das <biju.das@bp.renesas.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87o9b9dphd.fsf@concordia.ellerman.id.au>
+Content-Language: de-DE
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Ellerman <mpe@ellerman.id.au>, Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add QSPI[01] support to the RZ/G1C SoC specific device tree.
+On 01 November 2018 at 12:08PM, Michael Ellerman wrote:
+> Rob Herring <robh@kernel.org> writes:
+>
+>> In most cases, nodes with 'status = "disabled";' are treated as if the
+>> node is not present though it is a common bug to forget to check that.
+>> However, cpu nodes are different in that "disabled" simply means offline
+>> and the OS can bring the CPU core online. Commit f1f207e43b8a ("of: Add
+>> cpu node iterator for_each_of_cpu_node()") followed the common behavior
+>> of ignoring disabled cpu nodes. This breaks some powerpc systems (at
+>> least NXP P50XX/e5500). Fix this by dropping the status check.
+>>
+>> Fixes: 651d44f9679c ("of: use for_each_of_cpu_node iterator")
+>> Fixes: f1f207e43b8a ("of: Add cpu node iterator for_each_of_cpu_node()")
+>> Reported-by: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Christian Zigotzky <chzigotzky@xenosoft.de>
+>> Cc: Frank Rowand <frowand.list@gmail.com>
+>> Signed-off-by: Rob Herring <robh@kernel.org>
+>> ---
+>>   drivers/of/base.c | 2 --
+>>   1 file changed, 2 deletions(-)
+> This fixes my machine, thanks.
+>
+> Tested-by: Michael Ellerman <mpe@ellerman.id.au>
+>
+> It was actually originally reported to me by Christian, so also:
+>
+> Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+>
+>
+> cheers
+>
+>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>> index cc62da278663..e47c5ce6cd58 100644
+>> --- a/drivers/of/base.c
+>> +++ b/drivers/of/base.c
+>> @@ -776,8 +776,6 @@ struct device_node *of_get_next_cpu_node(struct device_node *prev)
+>>   		if (!(of_node_name_eq(next, "cpu") ||
+>>   		      (next->type && !of_node_cmp(next->type, "cpu"))))
+>>   			continue;
+>> -		if (!__of_device_is_available(next))
+>> -			continue;
+>>   		if (of_node_get(next))
+>>   			break;
+>>   	}
+>> -- 
+>> 2.19.1
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- arch/arm/boot/dts/r8a77470.dtsi | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+Hi All,
 
-diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index e6407e5..04a8877 100644
---- a/arch/arm/boot/dts/r8a77470.dtsi
-+++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -20,6 +20,8 @@
- 		i2c2 = &i2c2;
- 		i2c3 = &i2c3;
- 		i2c4 = &i2c4;
-+		spi0 = &qspi0;
-+		spi1 = &qspi1;
- 	};
- 
- 	cpus {
-@@ -460,6 +462,38 @@
- 			status = "disabled";
- 		};
- 
-+		qspi0: spi@e6b10000 {
-+			compatible = "renesas,qspi-r8a77470", "renesas,qspi";
-+			reg = <0 0xe6b10000 0 0x2c>;
-+			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 918>;
-+			dmas = <&dmac0 0x17>, <&dmac0 0x18>,
-+			       <&dmac1 0x17>, <&dmac1 0x18>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			num-cs = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			resets = <&cpg 918>;
-+			status = "disabled";
-+		};
-+
-+		qspi1: spi@ee200000 {
-+			compatible = "renesas,qspi-r8a77470", "renesas,qspi";
-+			reg = <0 0xee200000 0 0x2c>;
-+			interrupts = <GIC_SPI 239 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 917>;
-+			dmas = <&dmac0 0xd1>, <&dmac0 0xd2>,
-+			       <&dmac1 0xd1>, <&dmac1 0xd2>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			num-cs = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			resets = <&cpg 917>;
-+			status = "disabled";
-+		};
-+
- 		scif0: serial@e6e60000 {
- 			compatible = "renesas,scif-r8a77470",
- 				     "renesas,rcar-gen2-scif", "renesas,scif";
--- 
-2.7.4
+Many thanks for your help! This patch fixes my P5020 board (dual core) 
+and my virtual QEMU ppce500 machine (quad core).
 
+Have a nice day!
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Cheers,
+Christian
