@@ -1,87 +1,42 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v6 6/6] power: supply: Add Spreadtrum SC27XX fuel gauge
- unit driver
-Date: Thu, 1 Nov 2018 14:42:13 +0800
-Message-ID: <CAMz4kuLwmk+F8w=3QKTn29OArMfCpZc-429m_nFn8bqFVQekgA@mail.gmail.com>
-References: <e7c061535f2dcca54d6498405fdd5ed7098b19f9.1540189330.git.baolin.wang@linaro.org>
- <6a4c15368e0bf34f8e6aad4d788bc899cfb9d61e.1540189330.git.baolin.wang@linaro.org>
- <CACRpkdaDB2f5FTY-sk6Ak49GMtqFzV_5Jkway49zSLA6XJkq0A@mail.gmail.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 2/7] arm64: allwinner: h6: Add common
+ orangepi nodes into dtsi
+Date: Thu, 1 Nov 2018 12:43:01 +0530
+Message-ID: <CAMty3ZCv9z=uALo-PShS-RegNt2cOwOHWE=6vsRVgPm9oOQ_Fw@mail.gmail.com>
+References: <20181031183634.29640-1-jagan@amarulasolutions.com>
+ <20181031183634.29640-2-jagan@amarulasolutions.com> <CAGb2v66ALW1EL5+buporX8cPjkfpNdwGJEVUrC9Xpcmt3-NX7g@mail.gmail.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaDB2f5FTY-sk6Ak49GMtqFzV_5Jkway49zSLA6XJkq0A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>, Craig Tatlor <ctatlor97@gmail.com>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBCOP5LPAKGQELDHEUBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v66ALW1EL5+buporX8cPjkfpNdwGJEVUrC9Xpcmt3-NX7g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, zhaoyifan <zhao_steven-Y9sIeH5OGRo@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 31 October 2018 at 16:56, Linus Walleij <linus.walleij@linaro.org> wrote=
-:
-> On Mon, Oct 22, 2018 at 9:44 AM Baolin Wang <baolin.wang@linaro.org> wrot=
-e:
+On Thu, Nov 1, 2018 at 8:23 AM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
 >
->> This patch adds the Spreadtrum SC27XX serial PMICs fuel gauge support,
->> which is used to calculate the battery capacity.
->>
->> Original-by: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
->> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
->> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->> ---
->> Changes from v5:
->>  - Save the OCV values in micro volts for OCV capacity table.
->>  - Use devm_kmemdup() instead of devm_kzalloc() in sc27xx_fgu_hw_init()
+> On Thu, Nov 1, 2018 at 2:37 AM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> >
+> > Orangepi H6 boards, One Plus and Lite2 shares common
+> > nodes like axp805, uart, mmc0 etc and the common differences
+> > between them is Ethernet is available in One Plus where
+> > as Wifi, USB3, CSI port is available in Lite2.
 >
-> Hi Baolin, you can keep my ACK, just adding some nitpicking:
-
-Thanks.
-
+> You can claim this for pretty much all Allwinner boards, because they mostly
+> derive from the reference designs Allwinner's design houses put out. Yet we
+> don't do this for all of them. We do this for boards that are clearly derived
+> or extended from one another. One example would be the Orange Pi PC and PC Plus.
 >
->> +struct sc27xx_fgu_data {
->> +       struct regmap *regmap;
->> +       struct device *dev;
->> +       struct power_supply *battery;
->> +       u32 base;
->> +       struct mutex lock;
->> +       struct gpio_desc *gpiod;
->> +       struct iio_channel *channel;
->> +       bool bat_present;
->> +       int internal_resist;
->> +       int total_cap;
->> +       int init_cap;
->> +       int init_clbcnt;
->> +       int max_volt;
->> +       int table_len;
->
-> Can  the above really be negative or should these int:s really
-> be unsigned int?
+> Do you have any evidence to suggest so? This is not about common device nodes,
+> but a common hardware design.
 
- I think the table_len can be changed to u32, but for others, I'd like
-to keep consistency with the power supply battery information=E3=80=82
-
->
->> +static int sc27xx_fgu_adc_to_current(int adc)
->> +{
->> +       return (adc * 1000) / SC27XX_FGU_1000MA_ADC;
->> +}
->> +
->> +static int sc27xx_fgu_adc_to_voltage(int adc)
->> +{
->> +       return (adc * 1000) / SC27XX_FGU_1000MV_ADC;
->> +}
->
-> Would you maybe use
-> DIV_ROUND_CLOSEST(adc*1000, SC27XX_FGU_1000MV_ADC)
-> on these?
-
-Good point. Will change in next version. Thanks for your comments.
-
->
-> Overall this is a very fine driver and really pretty compared to some
-> other stuff we have in drivers/power.
-
-Thanks.
-
---=20
-Baolin Wang
-Best Regards
+I got this information from hardware schematics and from Steven (added
+in to list), he too claimed the same.
