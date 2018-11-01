@@ -1,139 +1,61 @@
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-Subject: Re: [PATCH v2 2/5] mfd: lochnagar: Add support for the Cirrus Logic
- Lochnagar
-Date: Thu, 1 Nov 2018 11:40:01 +0000
-Message-ID: <71938ce2-00da-8ee0-c010-58c2670ee327@opensource.cirrus.com>
-References: <20181008132542.19775-1-ckeepax@opensource.cirrus.com>
- <20181008132542.19775-2-ckeepax@opensource.cirrus.com>
- <20181025074459.GF4939@dell> <20181025082621.GD16508@imbe.wolfsonmicro.main>
- <b2f85f45-cbe9-5a27-e9e8-ad28f2bd9bd6@opensource.cirrus.com>
- <20181025114205.GC4870@dell>
- <33ea391c-aa6e-2709-6faf-4905e84229e4@opensource.cirrus.com>
- <20181026080051.GK4870@dell> <20181026203223.GC27137@sirena.org.uk>
- <20181029110439.GS4870@dell> <20181101102828.GM16508@imbe.wolfsonmicro.main>
+From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Subject: Re: [PATCH V2 1/2] dt-bindings: mmc: sdhci-msm: Add new compatible
+ string for sdcdc10 DLL
+Date: Thu, 1 Nov 2018 17:24:36 +0530
+Message-ID: <d4dfd853-d926-3e83-ff9d-8f44b66eb521@codeaurora.org>
+References: <1539005138-32560-1-git-send-email-vbadigan@codeaurora.org>
+ <1539005138-32560-2-git-send-email-vbadigan@codeaurora.org>
+ <20181012204848.GA30953@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181101102828.GM16508@imbe.wolfsonmicro.main>
+In-Reply-To: <20181012204848.GA30953@bogus>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>, Lee Jones <lee.jones@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, evgreen@chromium.org, dianders@google.com, asutoshd@codeaurora.org, riteshh@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/11/18 10:28, Charles Keepax wrote:
-> On Mon, Oct 29, 2018 at 11:04:39AM +0000, Lee Jones wrote:
->> On Fri, 26 Oct 2018, Mark Brown wrote:
->>> On Fri, Oct 26, 2018 at 09:00:51AM +0100, Lee Jones wrote:
->>>> On Thu, 25 Oct 2018, Richard Fitzgerald wrote:
-> 
-> I have re-ordered some of the quotes here for the benefit
-> of clarity. I will start with the Lochnagar focused bits
-> and then cover some of the more general regmap discussion.
-> Apologies for the wall of text towards the end but it seemed
-> wise to explore some of the why for parts of the current regmap
-> implementation and some of the implications for changing it.
-> 
->>> I think from the perspective of Richard and Charles who are just trying
->>> to get their driver merged this is something of an abstract distinction.
->>> If the driver were merged and this discussion were happening separately
->>> their perspective would most likely be different.
->>
->> Charles has already mentioned that he'd take a look at the current
->> *use* (not changing the API, but the way in which Lochnagar
->> *uses/consumes* it).  Actions which would be most welcomed.
->>
->>> I kind of said this above but just to be clear this driver seems to me
->>> like an idiomatic user of the regmap API as it is today.  My guess is
->>> that we could probably loose the defaults tables and not suffer too much
->>> but equally well they don't hurt from a regmap point of view.
->>
->> Perhaps Charles could elaborate on whether this is possible or not?
-> 
-> So on this front I have had a look through and we can drop the
-> defaults tables for Lochnagar, although as I shall cover later
-> Lochnagar is the exceptional case with respect to our normal
-> devices.
-> 
->> Utilising range support here would certainly help IMHO.
->>
-> 
-> I am rather hesitant to switch to the range API. Whilst it is
-> significantly more clear in certain situations, such as say
-> mapping out the memory for a DSP, where there exist large
-> amorphis blobs of identical function registers. I am really
-> not convinced it really suits something like the register map
-> that controls Lochnagar. You have an intertwinned mix of
-> various purpose registers, each with a clearly defined name
-> and potentially with quite fine grained properties.
-> 
-> Certainly when working with the driver I want to be able to
-> fairly quickly see what registers are marked as by name. The
-> callbacks are very simple and I don't need to look up where
-> register are in the regmap to be able check their attributes.
-> But perhaps I have just got too used to seeing these callbacks,
-> things do have a way of becoming normal after being exposed to
-> them for a while.
-> 
-> What I will try for the next spin is to try to use as much:
-> 
->    case REG1...REG2:
-> 
-> As I can without totally sacrificing grepability/clarity and
-> hopefully that will get us to a compromise we can all live
-> with at least for now. Lochnagar is a fairly small part so it
-> feels like this should be doable.
-> 
->>>>> +       ret = devm_of_platform_populate(dev);
->>>>> +       if (ret < 0) {
->>>>> +               dev_err(dev, "Failed to populate child
->>>>> nodes:
->>>>> %d\n", ret);
->>>>> +               return ret;
->>>>> +       }
->>>>
->>>> Please do not mix OF and MFD device registration
->>>> strategies.
->>>>
->>>> Pick one and register all devices through your chosen
->>>> method.
->>>
->>> Hmmm we use this to do things like register some fixed
->>> regulators
->>> and clocks that don't need any control but do need to be
->>> associated
->>> with the device. I could do that through the MFD although it
->>> is in
->>> direct conflict with the feedback on the clock patches I
->>> received
->>> to move the fixed clocks into devicetree rather than
->>> registering
->>> them manually (see v2 of the patch chain).
->>
->> The I suggest moving everything to DT.
-> 
-> So pulling this out from earlier discussions in this thread,
-> it seems I can happily move all the child device registration
-> into device tree. I will also try this for the next version of
-> the patch, unless anyone wants to object? But it does change
-> the DT binding quite a lot as the individual sub drivers now
-> each require their own node rather than one single unified
-> Lochnagar node.
-> 
 
-We went through this discussion with the Madera MFD patches. I had
-originally implemented it using DT to register the child drivers and
-it was nice in some ways each driver having its own node. But Mark
-and Rob didn't like it so I went back to non-DT child registration with
-all sharing the parent MFD node. It would be nice if we could stick to
-one way of doing it so that Cirrus drivers don't flip-flop between
-different styles of DT binding.
 
-With the Madera MFD, since it now uses non-DT registration of children
-if there was a reason we need to be able to register DT-defined children
-(and there are potential uses like adding platform-specific virtual
-regulators that are treated as a child) the bindings are now fixed so we
-would end up having a mixed non-DT and DT registration.
+On 10/13/2018 2:18 AM, Rob Herring wrote:
+> On Mon, Oct 08, 2018 at 06:55:37PM +0530, Veerabhadrarao Badiganti wrote:
+>> On the SDHC-MSM controllers which makes use of sdcdc10 variant DLLs,
+>> the DLL configuration needs to be restored whenever controller clocks
+>> are gated. This new compatible string denotes the sdhc-msm controller
+>> variant which uses sdcdc10 DLL.
+> What is sdcdc10 DLL?
+>
+> Seems like a work-around to not having SoC specific compatible strings.
 
-<snip>
+Will update this to SOC specific compatible string.
+
+>> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+>> ---
+>>   Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> index 3720385..49b0a43 100644
+>> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> @@ -6,7 +6,11 @@ and the properties used by the sdhci-msm driver.
+>>   Required properties:
+>>   - compatible: Should contain:
+>>   		"qcom,sdhci-msm-v4" for sdcc versions less than 5.0
+>> +		"qcom,sdhci-msm-v4-sdcdc10" for sdcc versions < 5.0 and
+>> +		which makes use of sdcdc10 variant DLLs.
+>>   		"qcom,sdhci-msm-v5" for sdcc versions >= 5.0
+>> +		"qcom,sdhci-msm-v5-sdcdc10" for sdcc versions >= 5.0 and
+>> +		which makes use of sdcdc10 variant DLLs.
+>>   		For SDCC version 5.0.0, MCI registers are removed from SDCC
+>>   		interface and some registers are moved to HC. New compatible
+>>   		string is added to support this change - "qcom,sdhci-msm-v5".
+>> -- 
+>> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+>> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+>>
+
+Thanks
+Veera
