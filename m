@@ -1,65 +1,81 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [RFC PATCH 7/7] arm64: allwinner: h6:
- orangepi-liet2: Enable AP6356S WiFi support
-Date: Thu, 1 Nov 2018 14:38:21 +0530
-Message-ID: <CAMty3ZBNdg43nL-HviyHufwQtTbC4wv20JVYBBT8LDpWiV0wTQ@mail.gmail.com>
-References: <20181031183634.29640-1-jagan@amarulasolutions.com>
- <20181031183634.29640-7-jagan@amarulasolutions.com> <CAMty3ZCeZzXYy4XRwTeQjYfpB6KKjEVRWyhjoca9Os4foLYL4g@mail.gmail.com>
- <CAGb2v67xCnH20Hga2P2Ekk3vhhOWUSgtOmRVAte+HDuodjsjkw@mail.gmail.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v2 09/10] irqchip: ti-sci-inta: Add support for Interrupt
+ Aggregator driver
+Date: Thu, 1 Nov 2018 11:09:24 +0200
+Message-ID: <2a869e38-47c1-0f11-8f4e-176d0d895a45@ti.com>
+References: <20181018154017.7112-1-lokeshvutla@ti.com>
+ <20181018154017.7112-10-lokeshvutla@ti.com>
+ <b20127dc-be43-3b00-9960-663738df0069@arm.com>
+ <9969f24c-cdb0-1f5c-d0f4-b1c1f587325c@ti.com>
+ <86va5ssrfm.wl-marc.zyngier@arm.com>
+ <2369ea50-55db-c97b-5b43-99d572c97dc9@ti.com>
+ <da27ecc5-db32-cf3a-c194-962c44bc782f@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBEUF5PPAKGQEZB7A4YY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v67xCnH20Hga2P2Ekk3vhhOWUSgtOmRVAte+HDuodjsjkw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <da27ecc5-db32-cf3a-c194-962c44bc782f@arm.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, jason@lakedaemon.net, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, tglx@linutronix.de, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 1, 2018 at 1:28 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->
-> On Thu, Nov 1, 2018 at 3:35 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
-> >
-> > On Thu, Nov 1, 2018 at 12:07 AM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
-> > >
-> > > From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-> > >
-> > > Enable AP6356S WiFi/BT combo chip on Orangepi Lite2 board:
-> > > - WiFi SDIO interface is connected to MMC1
-> > > - WiFi WL-PMU-EN pin connected to gpio PM3: attach to mmc-pwrseq
-> > > - WiFi WL-WAKE-AP pin connected to gpio PM0
-> > > - 32kHz external oscillator gate clock from RTC
->
-> You never specified a clock rate for it, so it might actually be wrong.
-> The default clock rate would be something "around" 32 kHz, but not very
-> accurate. Meanwhile the WiFi module would have very specific requirements
-> on frequency and accuracy of this clock. The WiFi part doesn't seem to
-> care that much, but the Bluetooth part cares very much. It doesn't work
-> or it would seem to work but you don't get anything off the radio if the
-> frequency is off (as in off-frequency).
+Hi Marc,
 
-True, but why it's not 32K which is stated in manual and schematics do
-we need to measure the actual rate with oscilloscope?
+On 10/31/18 8:21 PM, Marc Zyngier wrote:
+> Well, I'm convinced that we do not want a networking driver to be tied
+> to an interrupt architecture, and that the two should be completely
+> independent. But that's my own opinion. I can only see two solutions
+> moving forward:
+> 
+> 1) You make the IA a real interrupt controller that exposes real
+> interrupts (one per event), and write your networking driver
+> independently of the underlying interrupt architecture.
+> 
+> 2) you make the IA an integral part of your network driver, not exposing
+> anything outside of it, and limiting the interactions with the IR
+> *through the standard IRQ API*. You duplicate this knowledge throughout
+> the other client drivers.
+> 
+> I believe that (2) would be a massive design mistake as it locks the
+> driver to a single of the HW (and potentially a single revision of the
+> firmware) while (1) gives you the required level of flexibility by
+> hiding the whole event "concept" at a single location.
+> 
+> Yes, (1) makes you rewrite your existing, out of tree drivers. Oh well...
 
->
-> > >
-> > > Signed-off-by: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-> > > ---
-> > > Note:
-> > > - chip detected, but failed to connect
-> > > [  129.084504] brcmfmac: brcmf_sdio_hostmail: mailbox indicates firmware halted
-> > > [  135.906409] brcmfmac: brcmf_sdio_bus_rxctl: resumed on timeout
-> >
-> > This got fixed. Will send next version.
->
-> Could you wait until I get my RTC changes out? I also have some Bluetooth
-> patches for AP621x, which is what started all this RTC work, which you might
-> find interesting.
+We need to have generic support for INTA within the NAVSS for Linux. The
+UDMA (also part of the NAVSS) is used as system DMA and for the
+DMAengine driver we need to have ability to handle the events from Rings
+and from the UDMA itself.
 
-Yes, my intention is the same.
+Option 2 is not really an option as other components need to configure
+INTA to get interrupts from the Events flying within NAVSS.
+
+In the past with Keystone II we did have similar PacketDMA engine but it
+was dedicated to service networking and crypto. For all other
+peripherals we had EDMA as generic system DMA.
+
+With AM654 this is no longer the case as we no longer have EDMA and the
+NAVSS is tasked to service all peripherals, like networking and the ones
+we used to use EDMA.
+
+> 
+> Thanks,
+> 	
+> 	M.
+> 
+
+- Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
