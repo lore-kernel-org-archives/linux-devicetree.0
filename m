@@ -1,107 +1,67 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: [PATCH] ARM: dtsi: sun8i-r40: add mali node
-Date: Thu, 01 Nov 2018 08:52:17 +0100
-Message-ID: <1868657.3A2CuZcRV2@jernej-laptop>
-References: <20181101073833.2936-1-lothar.felten@gmail.com>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 5/7] arm64: allwinner: h6: Add RTC node
+Date: Thu, 1 Nov 2018 15:53:36 +0800
+Message-ID: <CAGb2v67WZmG7qPqf_UoR4v=Zm2AbS8pcOQsWJPRVHr-i2NvRPA@mail.gmail.com>
+References: <20181031183634.29640-1-jagan@amarulasolutions.com>
+ <20181031183634.29640-5-jagan@amarulasolutions.com> <CAGb2v64fnpCh_rCy-9m8xgXmAZQGab1==f7cr332QfgueyuRNw@mail.gmail.com>
+ <CAMty3ZAW5KndyJj81obK49MKczdbk4SoUncmiiE_OhH1g7qFUA@mail.gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBNHB5LPAKGQEJUJ6QMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBEHC5LPAKGQED7CMXZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181101073833.2936-1-lothar.felten-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAMty3ZAW5KndyJj81obK49MKczdbk4SoUncmiiE_OhH1g7qFUA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Lothar Felten <lothar.felten-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dne =C4=8Detrtek, 01. november 2018 ob 08:38:33 CET je Lothar Felten napisa=
-l(a):
-> This patch adds a node for the mali 400 GPU of the R40/V40 SoC
->=20
-> Signed-off-by: Lothar Felten <lothar.felten-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-r40.dtsi | 28 +++++++++++++++++++++++++++-
->  1 file changed, 27 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi
-> b/arch/arm/boot/dts/sun8i-r40.dtsi index 6f4c9ca5a3ee..ddf765e931f3 10064=
-4
-> --- a/arch/arm/boot/dts/sun8i-r40.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-> @@ -542,6 +542,31 @@
->=20
->  		};
->=20
-> +		mali: gpu@1c40000 {
-> +			compatible =3D "allwinner,sun7i-a20-mali", "arm,mali-400";
-> +			reg =3D <0x01c40000 0x10000>;
-> +			interrupts =3D <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names =3D "gp",
-> +					  "gpmmu",
-> +					  "pp0",
-> +					  "ppmmu0",
-> +					  "pp1",
-> +					  "ppmmu1",
-> +					  "pmu";
-> +			clocks =3D <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
-> +			clock-names =3D "bus", "core";
-> +			resets =3D <&ccu RST_BUS_GPU>;
-> +
-> +			assigned-clocks =3D <&ccu CLK_GPU>;
-> +			assigned-clock-rates =3D <384000000>;
+On Thu, Nov 1, 2018 at 3:33 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+>
+> On Thu, Nov 1, 2018 at 8:25 AM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> >
+> > On Thu, Nov 1, 2018 at 2:37 AM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> > >
+> > > From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+> > >
+> > > RTC controller is similar to A31, so use the same compatible
+> > > for H6 and update interrupt numbers as per manual.
+> >
+> > No. Unfortunately they are not that compatible. The A31 does not have
+> > the RTC clock output. So everyone got it wrong. :( Plus the clock rate
+> > of the internal RC oscillator varies between SoCs. I'm working on a
+> > series of patches to correct this. Stay tuned.
+>
+> 4 bit, EXT_LOSC_EN of LOSC_CTRL_REG (0x00) seem available in H6. I can
+> see external clock working with WIFI for A31 compatible.
 
-In previous e-mail I already stated that above 2 lines doesn't belong here.=
-=20
-Driver is responsible for clock rate management.
+That bit turns on the external crystal, i.e. X32KIN and X32KOUT pins.
 
-> +		};
-> +
->  		gmac: ethernet@1c50000 {
->  			compatible =3D "allwinner,sun8i-r40-gmac";
->  			syscon =3D <&ccu>;
-> @@ -813,7 +838,8 @@
->  		};
->=20
->  		hdmi_phy: hdmi-phy@1ef0000 {
-> -			compatible =3D "allwinner,sun8i-r40-hdmi-phy";
-> +			compatible =3D "allwinner,sun8i-r40-hdmi-phy",
-> +				     "allwinner,sun50i-a64-hdmi-phy";
+I'm talking about the X32KFOUT pin, which feeds the WiFi module the
+LPO clock in typical Allwinner designs. That is controlled by register
+0x60, and is not present on the A31. That is the clock you say is
+working. You have the two confused.
 
-In previous e-mail I also stated that above changes are not related to GPU=
-=20
-node and they are also not needed, since HDMI on R40 works without this.
+The clock tree looks like this:
 
->  			reg =3D <0x01ef0000 0x10000>;
->  			clocks =3D <&ccu CLK_BUS_HDMI1>, <&ccu CLK_HDMI_SLOW>,
->  				 <&ccu 7>, <&ccu 16>;
+IOSC -----------------------------\
+                                   SUN6I_LOSC_CTRL_EXT_OSC mux ---->
+LOSC --> (to CCU)
+32k crystal --> EXT_LOSC_EN gate -/                              \
+                                                                  \
+                                                                  /
+      (to WiFi) <-- X32KFOUT pin <-- LOSC_OUT_GATING_EN gate <---/
 
-You cleary didn't read rules for patch submission. When you are sending new=
-=20
-version of the patch, you have to state which version is it in subject line=
-=20
-and write a changelog below "---" line.
+The bottom part does not exist in the A31. Meanwhile we've been claiming that
+all later RTC modules that actually have that part are compatible with the A31.
+Also the IOSC part has different clock rates for different chips.
 
-Best regards,
-Jernej
+Do you see the problem?
 
 
-
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+ChenYu
