@@ -1,10 +1,9 @@
 From: Mark Brown <broonie@kernel.org>
 Subject: Re: [PATCH v2 2/5] mfd: lochnagar: Add support for the Cirrus Logic
  Lochnagar
-Date: Thu, 1 Nov 2018 12:01:32 +0000
-Message-ID: <20181101120132.GB6425@sirena.org.uk>
-References: <20181008132542.19775-2-ckeepax@opensource.cirrus.com>
- <20181025074459.GF4939@dell>
+Date: Thu, 1 Nov 2018 12:04:33 +0000
+Message-ID: <20181101120433.GC6425@sirena.org.uk>
+References: <20181025074459.GF4939@dell>
  <20181025082621.GD16508@imbe.wolfsonmicro.main>
  <b2f85f45-cbe9-5a27-e9e8-ad28f2bd9bd6@opensource.cirrus.com>
  <20181025114205.GC4870@dell>
@@ -13,66 +12,62 @@ References: <20181008132542.19775-2-ckeepax@opensource.cirrus.com>
  <20181026203223.GC27137@sirena.org.uk>
  <20181029110439.GS4870@dell>
  <20181101102828.GM16508@imbe.wolfsonmicro.main>
+ <71938ce2-00da-8ee0-c010-58c2670ee327@opensource.cirrus.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="b5gNqxB1S1yM7hjW"
+        protocol="application/pgp-signature"; boundary="TYecfFk8j8mZq+dy"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181101102828.GM16508@imbe.wolfsonmicro.main>
+In-Reply-To: <71938ce2-00da-8ee0-c010-58c2670ee327@opensource.cirrus.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Richard Fitzgerald <rf@opensource.cirrus.com>, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+To: Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, Lee Jones <lee.jones@linaro.org>, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---b5gNqxB1S1yM7hjW
+--TYecfFk8j8mZq+dy
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Nov 01, 2018 at 10:28:28AM +0000, Charles Keepax wrote:
+On Thu, Nov 01, 2018 at 11:40:01AM +0000, Richard Fitzgerald wrote:
+> On 01/11/18 10:28, Charles Keepax wrote:
 
->      1.2) Read all the registers from the device on boot
->           + Uses less memory
->           - Potentially very slow boot time
->      1.3) Only read values as you touch registers
->           + Uses less memory
->           + Usually no significant impact on boot time
->           - Can't do read or read/write/modify operations on
->             previously untouched registers whilst chip is off
+> > So pulling this out from earlier discussions in this thread,
+> > it seems I can happily move all the child device registration
+> > into device tree. I will also try this for the next version of
+> > the patch, unless anyone wants to object? But it does change
+> > the DT binding quite a lot as the individual sub drivers now
+> > each require their own node rather than one single unified
+> > Lochnagar node.
 
-Both of these options also require that you be able to reset the device
-which isn't possible with all devices and systems.
+> We went through this discussion with the Madera MFD patches. I had
+> originally implemented it using DT to register the child drivers and
+> it was nice in some ways each driver having its own node. But Mark
+> and Rob didn't like it so I went back to non-DT child registration with
+> all sharing the parent MFD node. It would be nice if we could stick to
+> one way of doing it so that Cirrus drivers don't flip-flop between
+> different styles of DT binding.
 
-> I think this really the crux of my concerns here about updating
-> the regmap API are that it feels like almost any path we take
-> from here results in worse runtime performance and probably
-> equal or worse memory usage. In return we gain a reduction of
-> some, whilst admittedly large, very simple data tables from
-> the driver. Which is a trade it feels hard to get invested in.
+The basic concern I have is encoding the current Linux idea of how to
+split the subfunctions up into drivers into an ABI - the clocks in CODEC
+drivers is the obvious example, they might want to be in the clock API
+in future.  If there's a very direct mapping onto individual hardware
+blocks that worries me a lot less since it's more obviously reflecting
+how the hardware is designed.
 
-Right, I don't see an urgent problem either - if the tables were
-complicated to think about it'd be a bit different but they aren't
-particularly and like you say there's tradeoffs both at runtime and
-at development time for trying to make the source code smaller.
-
-Equally if there are useful things we can add to the API for some use
-cases I'm all for that so long as they don't get in the way of other
-users, most of the extensions in the API have come from someone having
-problems and coming up with a fix that meets their needs.
-
---b5gNqxB1S1yM7hjW
+--TYecfFk8j8mZq+dy
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlva6xsACgkQJNaLcl1U
-h9AUYwf+IUmDzPcdlodvzcs+ZOUhcBjC7S/MICFtj7twgXZi+BO5NgW1PaM8h7Lf
-AS37zt9SaHAuEIiSjUMx4NCrVxyJde5vXCIpTgMSZDtcRcIkZupkoXhK7Wsugdou
-gNPlXZTCn05PUocMgD+krPxt82X5mvaFwIQN82YATqZ35FAdGGAX60r+aJUIfqdQ
-Qdk0TpfiAbbigxC9r440lOdx0SD96GNrOhNF8bpF97AyGUQbwDMrgDWMxYewjxKI
-hdY8rsQjteyNl9OrD8efCfTsMzdv3Oc+ttdOqWuC7sLtEO60FCvwUWc48cDw1KOl
-oKDtYPqeEHWjNjT6JMzsjsrH8w2FqQ==
-=w1Pu
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlva69EACgkQJNaLcl1U
+h9CNKQf+IE/F7jz5M6NjKEd2X3SqqJcqEP1+CXLXM3Ny1yMI272FpSrV6BiQczlY
+Xjy0PP+Y+YsAHtyfaybjuf1s5E8iq8SN5XJk5Tw1pobUGjIKAnESL/0h3bf+jHtM
+xXAxmCfZP8QjJ/Gy42AgUf7+UWjycAmBlwqecvsViEUWRVctxsGYRh7ZrYrs7kEz
+/pjPMF2QG8mMkqSVGvMQuPtQrKL3Thd/IMlzUmMCF8hpKKjEYe6Yj3mKvOD4X7lx
+dnxvYEnH5tlkHiaVQ7K3JIJKTftVPwxdXiTDj0RePWR9mMdbKXe6kn8f272Yyer2
+fkAY/Ak3PYDPAH7NkXmYVp2xz1naAg==
+=l5Yg
 -----END PGP SIGNATURE-----
 
---b5gNqxB1S1yM7hjW--
+--TYecfFk8j8mZq+dy--
