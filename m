@@ -1,64 +1,31 @@
-From: Sven Van Asbroeck <thesven73@gmail.com>
-Subject: Re: [PATCH anybus v2 1/5] misc: support the Arcx anybus bridge.
-Date: Thu, 1 Nov 2018 13:17:22 -0400
-Message-ID: <CAGngYiVorxYY+8e75068i4=PJi1gEvnGkgvBfi0+9H+c1qD-oQ@mail.gmail.com>
-References: <20181031194425.32132-1-TheSven73@googlemail.com>
- <20181031194425.32132-2-TheSven73@googlemail.com> <CACRpkdai-6iNbz4EGuHNHkQYyR+yhTEJdRXP4G6fUKpA+XApjQ@mail.gmail.com>
+From: Evan Green <evgreen@chromium.org>
+Subject: Re: [PATCH v2] arm64: dts: sdm845: Add PSCI cpuidle low power states
+Date: Thu, 1 Nov 2018 10:21:27 -0700
+Message-ID: <CAE=gft59UWM4=WhLkcLR3+FCEeD5OVwaJjZ8w_t=Fgtt=vFFpA@mail.gmail.com>
+References: <1540920209-28954-1-git-send-email-rplsssn@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdai-6iNbz4EGuHNHkQYyR+yhTEJdRXP4G6fUKpA+XApjQ@mail.gmail.com>
+In-Reply-To: <1540920209-28954-1-git-send-email-rplsssn@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Sven Van Asbroeck <svendev@arcx.com>, Lee Jones <lee.jones@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, treding@nvidia.com, David Lechner <david@lechnology.com>, noralf@tronnes.org, johan@kernel.org, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+To: rplsssn@codeaurora.org
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sboyd@kernel.org, Doug Anderson <dianders@chromium.org>, mka@chromium.org, Lina Iyer <ilina@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-> This is fun :)
-
-It sure is ! It's fascinating to see how the kernel abstractions are designed,
-and how code is reviewed here.
-
->> +static DEVICE_ATTR_RO(version);
+On Tue, Oct 30, 2018 at 10:23 AM Raju P.L.S.S.S.N
+<rplsssn@codeaurora.org> wrote:
 >
-> Do you need this in userspace really?
+> Add device bindings for cpuidle states for cpu devices.
 >
->> +static DEVICE_ATTR_RO(design_number);
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
+> ---
+> Changes in v2
+>  - Address comments from Doug
+> ---
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 62 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
 >
-> And this?
 
-Unfortunately, I do :(
-The application software reads these out and displays them in an UI. It's
-important to be able to see these on a running device.
-Perhaps there is another kernel abstraction I could use?
-
-> This:
->>
->> +       cd->reset_gpio = of_get_named_gpio(np, "reset-gpios", 0);
->> +       if (!gpio_is_valid(cd->reset_gpio)) {
->> +               dev_err(dev, "reset-gpios not found\n");
->> +               return -EINVAL;
->> +       }
->> +       devm_gpio_request(dev, cd->reset_gpio, NULL);
->> +       gpio_direction_output(cd->reset_gpio, 0);
->
-> Should be:
->
-> cd->reset_gpiod = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-> if (IS_ERR(cd->reset_gpiod))
->     return PTR_ERR(cd->reset_gpiod);
-
-That's actually pretty neat !
-Now we have nothing that explicitly refers to the devicetree (except the
-device binding, of course). I now see the point you made earlier:
-resets, gpios, interrupts etc are associated with "struct device" and
-not necessarily with the devicetree.
-
-The rest of your suggestions have already gone in.
-
-I hope you'll have some time later to look at the architecture description
-in the bus driver. Looking forward to your feedback and to the next iteration !
-
-Cheers,
-Sven
+Reviewed-by: Evan Green <evgreen@chromium.org>
