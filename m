@@ -1,74 +1,64 @@
-From: Christian Zigotzky <chzigotzky@xenosoft.de>
-Subject: Re: [PATCH] of: Fix cpu node iterator to not ignore disabled cpu
- nodes
-Date: Thu, 1 Nov 2018 13:45:48 +0100
-Message-ID: <1055f6ae-a25b-117a-e9e4-44dd4f978803@xenosoft.de>
-References: <20181031144226.26747-1-robh@kernel.org>
- <87o9b9dphd.fsf@concordia.ellerman.id.au>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 0/8] OLPC 1.75 Keyboard/Touchpad fixes
+Date: Thu, 1 Nov 2018 14:47:18 +0100
+Message-ID: <20181101134717.GA11465@amd>
+References: <20181010142504.233467-1-lkundrak@v3.sk>
+ <20181015195612.GB29649@amd>
+ <c4edf9b09e88cd265a0829644aa962c28cbc3d51.camel@v3.sk>
+ <20181030100139.GB21529@amd>
+ <20181030102610.GC21529@amd>
+ <2761d7e31cf7118492e466a5249303c92f68049b.camel@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87o9b9dphd.fsf@concordia.ellerman.id.au>
-Content-Language: de-DE
+Content-Disposition: inline
+In-Reply-To: <2761d7e31cf7118492e466a5249303c92f68049b.camel@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>, Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, James Cameron <quozl@laptop.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01 November 2018 at 12:08PM, Michael Ellerman wrote:
-> Rob Herring <robh@kernel.org> writes:
->
->> In most cases, nodes with 'status = "disabled";' are treated as if the
->> node is not present though it is a common bug to forget to check that.
->> However, cpu nodes are different in that "disabled" simply means offline
->> and the OS can bring the CPU core online. Commit f1f207e43b8a ("of: Add
->> cpu node iterator for_each_of_cpu_node()") followed the common behavior
->> of ignoring disabled cpu nodes. This breaks some powerpc systems (at
->> least NXP P50XX/e5500). Fix this by dropping the status check.
->>
->> Fixes: 651d44f9679c ("of: use for_each_of_cpu_node iterator")
->> Fixes: f1f207e43b8a ("of: Add cpu node iterator for_each_of_cpu_node()")
->> Reported-by: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Christian Zigotzky <chzigotzky@xenosoft.de>
->> Cc: Frank Rowand <frowand.list@gmail.com>
->> Signed-off-by: Rob Herring <robh@kernel.org>
->> ---
->>   drivers/of/base.c | 2 --
->>   1 file changed, 2 deletions(-)
-> This fixes my machine, thanks.
->
-> Tested-by: Michael Ellerman <mpe@ellerman.id.au>
->
-> It was actually originally reported to me by Christian, so also:
->
-> Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
->
->
-> cheers
->
->> diff --git a/drivers/of/base.c b/drivers/of/base.c
->> index cc62da278663..e47c5ce6cd58 100644
->> --- a/drivers/of/base.c
->> +++ b/drivers/of/base.c
->> @@ -776,8 +776,6 @@ struct device_node *of_get_next_cpu_node(struct device_node *prev)
->>   		if (!(of_node_name_eq(next, "cpu") ||
->>   		      (next->type && !of_node_cmp(next->type, "cpu"))))
->>   			continue;
->> -		if (!__of_device_is_available(next))
->> -			continue;
->>   		if (of_node_get(next))
->>   			break;
->>   	}
->> -- 
->> 2.19.1
 
-Hi All,
+--2fHTh5uZTiUOsy+g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Many thanks for your help! This patch fixes my P5020 board (dual core) 
-and my virtual QEMU ppce500 machine (quad core).
+Hi!
 
-Have a nice day!
+> > > > https://github.com/hackerspace/olpc-xo175-linux/wiki/How-to-run-an-=
+up-to-date-Linux-on-a-XO-1.75
+> > > >=20
 
-Cheers,
-Christian
+Huh. You see that crazy sed magic script?
+
+sed "s/^\(0*20: .... .... .... .... .... ....\) $BEFORE/\1 $AFTER/" |
+
+Do this with the regular expression. My xxd actually has different
+number of leading zeros, and so fails...
+
+And with that fixed, I have self-compiled kernel that actually
+boots. Yuppie!
+
+Thanks!
+								Pavel
+							=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--2fHTh5uZTiUOsy+g
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlvbA+UACgkQMOfwapXb+vKgKwCdGm+6mvwJoGwO7bGawC6sSRae
+UY8AnRt4ntT2EDG4tbBvoIwr/REnDDlX
+=IVtm
+-----END PGP SIGNATURE-----
+
+--2fHTh5uZTiUOsy+g--
