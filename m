@@ -1,41 +1,39 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V3 09/10] dts: fsl: add imx7ulp evk support
-Date: Thu, 1 Nov 2018 12:56:42 -0300
-Message-ID: <CAOMZO5BmqQE4wohBwE65f667cxF8LOcSJ=jECDXLADXbK9OEZQ@mail.gmail.com>
-References: <1540996688-23681-1-git-send-email-aisheng.dong@nxp.com>
- <1540996688-23681-10-git-send-email-aisheng.dong@nxp.com>
- <CAOMZO5AZejEAHeB0hQ9T5U2ZJ7MXK=BYm8jY+yyZjbDHo4utGA@mail.gmail.com>
- <VI1PR04MB422242A027713CC447446D6780CE0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 01/21] of: Add cpu node iterator for_each_of_cpu_node()
+Date: Thu, 1 Nov 2018 10:57:31 -0500
+Message-ID: <CAL_JsqJmx_vjQfYMTFc5K4Sy4hEVXJi5p2PNL8uCpiyTdSir3A@mail.gmail.com>
+References: <20180905193738.19325-1-robh@kernel.org> <20180905193738.19325-2-robh@kernel.org>
+ <874ld3jz6v.fsf@concordia.ellerman.id.au> <871s87jz3g.fsf@concordia.ellerman.id.au>
+ <CABGGisw_bd+bJedZ_T2e-dxmRnXf2N_gGBZj8u+QVGQxj_gc+Q@mail.gmail.com>
+ <87tvl1dq7q.fsf@concordia.ellerman.id.au> <20181101151201.GJ5994@gate.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <VI1PR04MB422242A027713CC447446D6780CE0@VI1PR04MB4222.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dong Aisheng <aisheng.dong@nxp.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Dong Aisheng <dongas86@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181101151201.GJ5994@gate.crashing.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: segher@kernel.crashing.org
+Cc: Michael Ellerman <mpe@ellerman.id.au>, devicetree@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 1, 2018 at 12:49 PM A.s. Dong <aisheng.dong@nxp.com> wrote:
+On Thu, Nov 1, 2018 at 10:12 AM Segher Boessenkool
+<segher@kernel.crashing.org> wrote:
+>
+> On Thu, Nov 01, 2018 at 09:52:57PM +1100, Michael Ellerman wrote:
+> > Rob Herring <robh@kernel.org> writes:
+> > > Yes, I was aware at least older powerpc DTs don't use 'cpu' for node names.
+> >
+> > Actually newer ones too, see below :)
+>
+> Good, because that is required by the Open Firmware standard (the PowerPC
+> binding, to be exact):
+>
+> http://www.openbios.org/data/docs/ppc-2_1.ps
+>
+> (see 5.1.4, "name").
 
-> This seems a bit confusing to me.
-> That GPIO is used to control the SD card power on/off. So it's naturally a
-> GPIO regulator. Looking at exist IMX dts, you will find all similar board doing
-> like this. Pwrseq seems more like to be used for WiFi/eMMC card.
-> Am I missed something?
+Yes. I should say I only expect systems following ePAPR (3.7) or DT
+Spec will use 'cpu' node names. Those specs also require 'device_type'
+which is supposed to indicate what OF methods are available for a node
+which doesn't exist on FDT.
 
-As per the board schematics the name of the signal is SD0_nRST, where
-RST means "reset".
-
-There is even this note in the schematics: "ROM Code will reset the SD
-power during boot up through SD_RST".
-
-eMMC reset is better handled by 'reset-gpios' property from pwrseq.
+Rob
