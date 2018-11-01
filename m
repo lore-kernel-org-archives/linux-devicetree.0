@@ -1,145 +1,108 @@
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: [PATCH v6 1/3] clk: meson: add emmc sub clock phase delay driver
-Date: Fri, 2 Nov 2018 00:30:53 +0800
-Message-ID: <1541089855-19356-2-git-send-email-jianxin.pan@amlogic.com>
-References: <1541089855-19356-1-git-send-email-jianxin.pan@amlogic.com>
+From: Robin Murphy <Robin.Murphy@arm.com>
+Subject: Re: [PATCH v2 04/14] iommu/io-pgtable-arm-v7s: Add paddr_to_iopte and
+ iopte_to_paddr helpers
+Date: Thu, 1 Nov 2018 16:34:21 +0000
+Message-ID: <d24bd2a4-1030-e255-b339-d02eadc93f28@arm.com>
+References: <1537779534-23575-1-git-send-email-yong.wu@mediatek.com>
+ <1537779534-23575-5-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541089855-19356-1-git-send-email-jianxin.pan@amlogic.com>
+In-Reply-To: <1537779534-23575-5-git-send-email-yong.wu@mediatek.com>
+Content-Language: en-US
+Content-ID: <5DDAA7D9DB79C44FB3F9453451D57CBC@eurprd08.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Yixun Lan <yixun.lan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: "youlin.pei@mediatek.com" <youlin.pei@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tomasz Figa <tfiga@google.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "yingjoe.chen@mediatek.com" <yingjoe.chen@mediatek.com>, Daniel Kurtz <djkurtz@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, nd <nd@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Yixun Lan <yixun.lan@amlogic.com>
-
-Export the emmc sub clock phase delay ops which will be used
-by the emmc sub clock driver itself.
-
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
----
- drivers/clk/meson/Makefile          |  2 +-
- drivers/clk/meson/clk-phase-delay.c | 66 +++++++++++++++++++++++++++++++++++++
- drivers/clk/meson/clkc.h            | 13 ++++++++
- 3 files changed, 80 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/meson/clk-phase-delay.c
-
-diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
-index 72ec8c4..39ce566 100644
---- a/drivers/clk/meson/Makefile
-+++ b/drivers/clk/meson/Makefile
-@@ -2,7 +2,7 @@
- # Makefile for Meson specific clk
- #
- 
--obj-$(CONFIG_COMMON_CLK_AMLOGIC) += clk-pll.o clk-mpll.o clk-phase.o
-+obj-$(CONFIG_COMMON_CLK_AMLOGIC) += clk-pll.o clk-mpll.o clk-phase.o clk-phase-delay.o
- obj-$(CONFIG_COMMON_CLK_AMLOGIC_AUDIO)	+= clk-triphase.o sclk-div.o
- obj-$(CONFIG_COMMON_CLK_MESON_AO) += meson-aoclk.o
- obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o
-diff --git a/drivers/clk/meson/clk-phase-delay.c b/drivers/clk/meson/clk-phase-delay.c
-new file mode 100644
-index 0000000..83e74ed
---- /dev/null
-+++ b/drivers/clk/meson/clk-phase-delay.c
-@@ -0,0 +1,66 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Amlogic Meson MMC Sub Clock Controller Driver
-+ *
-+ * Copyright (c) 2017 Baylibre SAS.
-+ * Author: Jerome Brunet <jbrunet@baylibre.com>
-+ *
-+ * Copyright (c) 2018 Amlogic, inc.
-+ * Author: Yixun Lan <yixun.lan@amlogic.com>
-+ * Author: Jianxin Pan <jianxin.pan@amlogic.com>
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include "clkc.h"
-+
-+static int meson_clk_phase_delay_get_phase(struct clk_hw *hw)
-+{
-+	struct clk_regmap *clk = to_clk_regmap(hw);
-+	struct meson_clk_phase_delay_data *ph =
-+		meson_clk_get_phase_delay_data(clk);
-+	unsigned long period_ps, p, d;
-+	int degrees;
-+
-+	p = meson_parm_read(clk->map, &ph->phase);
-+	degrees = p * 360 / (1 << (ph->phase.width));
-+
-+	period_ps = DIV_ROUND_UP((unsigned long)NSEC_PER_SEC * 1000,
-+				 clk_hw_get_rate(hw));
-+
-+	d = meson_parm_read(clk->map, &ph->delay);
-+	degrees += d * ph->delay_step_ps * 360 / period_ps;
-+	degrees %= 360;
-+
-+	return degrees;
-+}
-+
-+static int meson_clk_phase_delay_set_phase(struct clk_hw *hw, int degrees)
-+{
-+	struct clk_regmap *clk = to_clk_regmap(hw);
-+	struct meson_clk_phase_delay_data *ph =
-+		meson_clk_get_phase_delay_data(clk);
-+	unsigned long period_ps, d = 0, r;
-+	u64 p;
-+
-+	p = degrees % 360;
-+	period_ps = DIV_ROUND_UP((unsigned long)NSEC_PER_SEC * 1000,
-+				 clk_hw_get_rate(hw));
-+
-+	/* First compute the phase index (p), the remainder (r) is the
-+	 * part we'll try to acheive using the delays (d).
-+	 */
-+	r = do_div(p, 360 / (1 << (ph->phase.width)));
-+	d = DIV_ROUND_CLOSEST(r * period_ps,
-+			      360 * ph->delay_step_ps);
-+	d = min(d, PMASK(ph->delay.width));
-+
-+	meson_parm_write(clk->map, &ph->phase, p);
-+	meson_parm_write(clk->map, &ph->delay, d);
-+	return 0;
-+}
-+
-+const struct clk_ops meson_clk_phase_delay_ops = {
-+	.get_phase = meson_clk_phase_delay_get_phase,
-+	.set_phase = meson_clk_phase_delay_set_phase,
-+};
-+EXPORT_SYMBOL_GPL(meson_clk_phase_delay_ops);
-diff --git a/drivers/clk/meson/clkc.h b/drivers/clk/meson/clkc.h
-index 6b96d55..30470c6 100644
---- a/drivers/clk/meson/clkc.h
-+++ b/drivers/clk/meson/clkc.h
-@@ -105,6 +105,18 @@ struct clk_regmap _name = {						\
- 	},								\
- };
- 
-+struct meson_clk_phase_delay_data {
-+	struct parm			phase;
-+	struct parm			delay;
-+	unsigned int			delay_step_ps;
-+};
-+
-+static inline struct meson_clk_phase_delay_data *
-+meson_clk_get_phase_delay_data(struct clk_regmap *clk)
-+{
-+	return clk->data;
-+}
-+
- /* clk_ops */
- extern const struct clk_ops meson_clk_pll_ro_ops;
- extern const struct clk_ops meson_clk_pll_ops;
-@@ -112,5 +124,6 @@ struct clk_regmap _name = {						\
- extern const struct clk_ops meson_clk_mpll_ro_ops;
- extern const struct clk_ops meson_clk_mpll_ops;
- extern const struct clk_ops meson_clk_phase_ops;
-+extern const struct clk_ops meson_clk_phase_delay_ops;
- 
- #endif /* __CLKC_H */
--- 
-1.9.1
+WyBhcG9sb2dpZXMgaWYgYW55b25lIGdldHMgdGhpcyB0d2ljZSwgbG9va3MgbGlrZSBvdXIgZW1h
+aWwncyBlYXRlbiANCml0c2VsZiBhZ2Fpbi4uLiBdDQoNCk9uIDI0LzA5LzIwMTggMDk6NTgsIFlv
+bmcgV3Ugd3JvdGU6DQo+IEFkZCB0d28gaGVscGVyIGZ1bmN0aW9uczogcGFkZHJfdG9faW9wdGUg
+YW5kIGlvcHRlX3RvX3BhZGRyLg0KDQpOaWNlIGFuZCB0aWR5ISAoYWx0aG91Z2ggaXQgd2lsbCBu
+ZWVkIHJlYmFzaW5nIG5vdywgYnV0IEkgdGhpbmsgdGhhdCdzIA0KanVzdCBjb250ZXh0IGNvbmZs
+aWN0cykNCg0KPiBTaWduZWQtb2ZmLWJ5OiBZb25nIFd1IDx5b25nLnd1QG1lZGlhdGVrLmNvbT4N
+Cj4gLS0tDQo+ICAgZHJpdmVycy9pb21tdS9pby1wZ3RhYmxlLWFybS12N3MuYyB8IDQ1ICsrKysr
+KysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDMz
+IGluc2VydGlvbnMoKyksIDEyIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvaW9tbXUvaW8tcGd0YWJsZS1hcm0tdjdzLmMgYi9kcml2ZXJzL2lvbW11L2lvLXBndGFibGUt
+YXJtLXY3cy5jDQo+IGluZGV4IGI1OTQ4YmEuLmZhM2I5ZWMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZl
+cnMvaW9tbXUvaW8tcGd0YWJsZS1hcm0tdjdzLmMNCj4gKysrIGIvZHJpdmVycy9pb21tdS9pby1w
+Z3RhYmxlLWFybS12N3MuYw0KPiBAQCAtMTczLDE4ICsxNzMsMzggQEAgc3RydWN0IGFybV92N3Nf
+aW9fcGd0YWJsZSB7DQo+ICAgCXNwaW5sb2NrX3QJCXNwbGl0X2xvY2s7DQo+ICAgfTsNCj4gICAN
+Cj4gK3N0YXRpYyBib29sIGFybV92N3NfcHRlX2lzX2NvbnQoYXJtX3Y3c19pb3B0ZSBwdGUsIGlu
+dCBsdmwpOw0KPiArDQo+ICAgc3RhdGljIGRtYV9hZGRyX3QgX19hcm1fdjdzX2RtYV9hZGRyKHZv
+aWQgKnBhZ2VzKQ0KPiAgIHsNCj4gICAJcmV0dXJuIChkbWFfYWRkcl90KXZpcnRfdG9fcGh5cyhw
+YWdlcyk7DQo+ICAgfQ0KPiAgIA0KPiAtc3RhdGljIGFybV92N3NfaW9wdGUgKmlvcHRlX2RlcmVm
+KGFybV92N3NfaW9wdGUgcHRlLCBpbnQgbHZsKQ0KPiArc3RhdGljIGFybV92N3NfaW9wdGUgcGFk
+ZHJfdG9faW9wdGUocGh5c19hZGRyX3QgcGFkZHIsIGludCBsdmwsDQo+ICsJCQkJICAgIHN0cnVj
+dCBhcm1fdjdzX2lvX3BndGFibGUgKmRhdGEpDQoNCk5pdDogaXQgc2VlbXMgdG8gd29yayBvdXQg
+YSBsaXR0bGUgY2xlYW5lciBpZiB3ZSBwYXNzIHRoZSBpb19wZ3RhYmxlX2NmZyANCnRvIHRoZXNl
+IGhlbHBlcnMgZGlyZWN0bHksIHJhdGhlciB0aGFuIHJlLWRlcml2aW5nIGl0IGZyb20gZGF0YSBl
+YWNoIHRpbWUuDQoNCk90aGVyd2lzZSwgdGhvdWdoLA0KDQpSZXZpZXdlZC1ieTogUm9iaW4gTXVy
+cGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4NCg0KPiAgIHsNCj4gKwlyZXR1cm4gcGFkZHIgJiBB
+Uk1fVjdTX0xWTF9NQVNLKGx2bCk7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBwaHlzX2FkZHJfdCBp
+b3B0ZV90b19wYWRkcihhcm1fdjdzX2lvcHRlIHB0ZSwgaW50IGx2bCwNCj4gKwkJCQkgIHN0cnVj
+dCBhcm1fdjdzX2lvX3BndGFibGUgKmRhdGEpDQo+ICt7DQo+ICsJYXJtX3Y3c19pb3B0ZSBtYXNr
+Ow0KPiArDQo+ICAgCWlmIChBUk1fVjdTX1BURV9JU19UQUJMRShwdGUsIGx2bCkpDQo+IC0JCXB0
+ZSAmPSBBUk1fVjdTX1RBQkxFX01BU0s7DQo+ICsJCW1hc2sgPSBBUk1fVjdTX1RBQkxFX01BU0s7
+DQo+ICsJZWxzZSBpZiAoYXJtX3Y3c19wdGVfaXNfY29udChwdGUsIGx2bCkpDQo+ICsJCW1hc2sg
+PSBBUk1fVjdTX0xWTF9NQVNLKGx2bCkgKiBBUk1fVjdTX0NPTlRfUEFHRVM7DQo+ICAgCWVsc2UN
+Cj4gLQkJcHRlICY9IEFSTV9WN1NfTFZMX01BU0sobHZsKTsNCj4gLQlyZXR1cm4gcGh5c190b192
+aXJ0KHB0ZSk7DQo+ICsJCW1hc2sgPSBBUk1fVjdTX0xWTF9NQVNLKGx2bCk7DQo+ICsNCj4gKwly
+ZXR1cm4gcHRlICYgbWFzazsNCj4gK30NCj4gKw0KPiArc3RhdGljIGFybV92N3NfaW9wdGUgKmlv
+cHRlX2RlcmVmKGFybV92N3NfaW9wdGUgcHRlLCBpbnQgbHZsLA0KPiArCQkJCSAgc3RydWN0IGFy
+bV92N3NfaW9fcGd0YWJsZSAqZGF0YSkNCj4gK3sNCj4gKwlyZXR1cm4gcGh5c190b192aXJ0KGlv
+cHRlX3RvX3BhZGRyKHB0ZSwgbHZsLCBkYXRhKSk7DQo+ICAgfQ0KPiAgIA0KPiAgIHN0YXRpYyB2
+b2lkICpfX2FybV92N3NfYWxsb2NfdGFibGUoaW50IGx2bCwgZ2ZwX3QgZ2ZwLA0KPiBAQCAtMzk2
+LDcgKzQxNiw3IEBAIHN0YXRpYyBpbnQgYXJtX3Y3c19pbml0X3B0ZShzdHJ1Y3QgYXJtX3Y3c19p
+b19wZ3RhYmxlICpkYXRhLA0KPiAgIAlpZiAobnVtX2VudHJpZXMgPiAxKQ0KPiAgIAkJcHRlID0g
+YXJtX3Y3c19wdGVfdG9fY29udChwdGUsIGx2bCk7DQo+ICAgDQo+IC0JcHRlIHw9IHBhZGRyICYg
+QVJNX1Y3U19MVkxfTUFTSyhsdmwpOw0KPiArCXB0ZSB8PSBwYWRkcl90b19pb3B0ZShwYWRkciwg
+bHZsLCBkYXRhKTsNCj4gICANCj4gICAJX19hcm1fdjdzX3NldF9wdGUocHRlcCwgcHRlLCBudW1f
+ZW50cmllcywgY2ZnKTsNCj4gICAJcmV0dXJuIDA7DQo+IEBAIC00NjIsNyArNDgyLDcgQEAgc3Rh
+dGljIGludCBfX2FybV92N3NfbWFwKHN0cnVjdCBhcm1fdjdzX2lvX3BndGFibGUgKmRhdGEsIHVu
+c2lnbmVkIGxvbmcgaW92YSwNCj4gICAJfQ0KPiAgIA0KPiAgIAlpZiAoQVJNX1Y3U19QVEVfSVNf
+VEFCTEUocHRlLCBsdmwpKSB7DQo+IC0JCWNwdGVwID0gaW9wdGVfZGVyZWYocHRlLCBsdmwpOw0K
+PiArCQljcHRlcCA9IGlvcHRlX2RlcmVmKHB0ZSwgbHZsLCBkYXRhKTsNCj4gICAJfSBlbHNlIGlm
+IChwdGUpIHsNCj4gICAJCS8qIFdlIHJlcXVpcmUgYW4gdW5tYXAgZmlyc3QgKi8NCj4gICAJCVdB
+Uk5fT04oIXNlbGZ0ZXN0X3J1bm5pbmcpOw0KPiBAQCAtNTEyLDcgKzUzMiw4IEBAIHN0YXRpYyB2
+b2lkIGFybV92N3NfZnJlZV9wZ3RhYmxlKHN0cnVjdCBpb19wZ3RhYmxlICppb3ApDQo+ICAgCQlh
+cm1fdjdzX2lvcHRlIHB0ZSA9IGRhdGEtPnBnZFtpXTsNCj4gICANCj4gICAJCWlmIChBUk1fVjdT
+X1BURV9JU19UQUJMRShwdGUsIDEpKQ0KPiAtCQkJX19hcm1fdjdzX2ZyZWVfdGFibGUoaW9wdGVf
+ZGVyZWYocHRlLCAxKSwgMiwgZGF0YSk7DQo+ICsJCQlfX2FybV92N3NfZnJlZV90YWJsZShpb3B0
+ZV9kZXJlZihwdGUsIDEsIGRhdGEpLA0KPiArCQkJCQkgICAgIDIsIGRhdGEpOw0KPiAgIAl9DQo+
+ICAgCV9fYXJtX3Y3c19mcmVlX3RhYmxlKGRhdGEtPnBnZCwgMSwgZGF0YSk7DQo+ICAgCWttZW1f
+Y2FjaGVfZGVzdHJveShkYXRhLT5sMl90YWJsZXMpOw0KPiBAQCAtNTgyLDcgKzYwMyw3IEBAIHN0
+YXRpYyBzaXplX3QgYXJtX3Y3c19zcGxpdF9ibGtfdW5tYXAoc3RydWN0IGFybV92N3NfaW9fcGd0
+YWJsZSAqZGF0YSwNCj4gICAJCWlmICghQVJNX1Y3U19QVEVfSVNfVEFCTEUocHRlLCAxKSkNCj4g
+ICAJCQlyZXR1cm4gMDsNCj4gICANCj4gLQkJdGFibGVwID0gaW9wdGVfZGVyZWYocHRlLCAxKTsN
+Cj4gKwkJdGFibGVwID0gaW9wdGVfZGVyZWYocHRlLCAxLCBkYXRhKTsNCj4gICAJCXJldHVybiBf
+X2FybV92N3NfdW5tYXAoZGF0YSwgaW92YSwgc2l6ZSwgMiwgdGFibGVwKTsNCj4gICAJfQ0KPiAg
+IA0KPiBAQCAtNjQwLDcgKzY2MSw3IEBAIHN0YXRpYyBzaXplX3QgX19hcm1fdjdzX3VubWFwKHN0
+cnVjdCBhcm1fdjdzX2lvX3BndGFibGUgKmRhdGEsDQo+ICAgCQkJCWlvX3BndGFibGVfdGxiX2Fk
+ZF9mbHVzaChpb3AsIGlvdmEsIGJsa19zaXplLA0KPiAgIAkJCQkJQVJNX1Y3U19CTE9DS19TSVpF
+KGx2bCArIDEpLCBmYWxzZSk7DQo+ICAgCQkJCWlvX3BndGFibGVfdGxiX3N5bmMoaW9wKTsNCj4g
+LQkJCQlwdGVwID0gaW9wdGVfZGVyZWYocHRlW2ldLCBsdmwpOw0KPiArCQkJCXB0ZXAgPSBpb3B0
+ZV9kZXJlZihwdGVbaV0sIGx2bCwgZGF0YSk7DQo+ICAgCQkJCV9fYXJtX3Y3c19mcmVlX3RhYmxl
+KHB0ZXAsIGx2bCArIDEsIGRhdGEpOw0KPiAgIAkJCX0gZWxzZSB7DQo+ICAgCQkJCWlvX3BndGFi
+bGVfdGxiX2FkZF9mbHVzaChpb3AsIGlvdmEsIGJsa19zaXplLA0KPiBAQCAtNjU4LDcgKzY3OSw3
+IEBAIHN0YXRpYyBzaXplX3QgX19hcm1fdjdzX3VubWFwKHN0cnVjdCBhcm1fdjdzX2lvX3BndGFi
+bGUgKmRhdGEsDQo+ICAgCX0NCj4gICANCj4gICAJLyogS2VlcCBvbiB3YWxraW4nICovDQo+IC0J
+cHRlcCA9IGlvcHRlX2RlcmVmKHB0ZVswXSwgbHZsKTsNCj4gKwlwdGVwID0gaW9wdGVfZGVyZWYo
+cHRlWzBdLCBsdmwsIGRhdGEpOw0KPiAgIAlyZXR1cm4gX19hcm1fdjdzX3VubWFwKGRhdGEsIGlv
+dmEsIHNpemUsIGx2bCArIDEsIHB0ZXApOw0KPiAgIH0NCj4gICANCj4gQEAgLTY4NCw3ICs3MDUs
+NyBAQCBzdGF0aWMgcGh5c19hZGRyX3QgYXJtX3Y3c19pb3ZhX3RvX3BoeXMoc3RydWN0IGlvX3Bn
+dGFibGVfb3BzICpvcHMsDQo+ICAgCWRvIHsNCj4gICAJCXB0ZXAgKz0gQVJNX1Y3U19MVkxfSURY
+KGlvdmEsICsrbHZsKTsNCj4gICAJCXB0ZSA9IFJFQURfT05DRSgqcHRlcCk7DQo+IC0JCXB0ZXAg
+PSBpb3B0ZV9kZXJlZihwdGUsIGx2bCk7DQo+ICsJCXB0ZXAgPSBpb3B0ZV9kZXJlZihwdGUsIGx2
+bCwgZGF0YSk7DQo+ICAgCX0gd2hpbGUgKEFSTV9WN1NfUFRFX0lTX1RBQkxFKHB0ZSwgbHZsKSk7
+DQo+ICAgDQo+ICAgCWlmICghQVJNX1Y3U19QVEVfSVNfVkFMSUQocHRlKSkNCj4gQEAgLTY5Myw3
+ICs3MTQsNyBAQCBzdGF0aWMgcGh5c19hZGRyX3QgYXJtX3Y3c19pb3ZhX3RvX3BoeXMoc3RydWN0
+IGlvX3BndGFibGVfb3BzICpvcHMsDQo+ICAgCW1hc2sgPSBBUk1fVjdTX0xWTF9NQVNLKGx2bCk7
+DQo+ICAgCWlmIChhcm1fdjdzX3B0ZV9pc19jb250KHB0ZSwgbHZsKSkNCj4gICAJCW1hc2sgKj0g
+QVJNX1Y3U19DT05UX1BBR0VTOw0KPiAtCXJldHVybiAocHRlICYgbWFzaykgfCAoaW92YSAmIH5t
+YXNrKTsNCj4gKwlyZXR1cm4gaW9wdGVfdG9fcGFkZHIocHRlLCBsdmwsIGRhdGEpIHwgKGlvdmEg
+JiB+bWFzayk7DQo+ICAgfQ0KPiAgIA0KPiAgIHN0YXRpYyBzdHJ1Y3QgaW9fcGd0YWJsZSAqYXJt
+X3Y3c19hbGxvY19wZ3RhYmxlKHN0cnVjdCBpb19wZ3RhYmxlX2NmZyAqY2ZnLA0KPiANCg==
