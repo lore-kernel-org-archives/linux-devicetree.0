@@ -1,82 +1,31 @@
-From: Julien Grall <julien.grall@arm.com>
-Subject: Re: [PATCH v3] devicetree, xen: add xen,
- shared-memory binding
-Date: Thu, 1 Nov 2018 21:06:34 +0000
-Message-ID: <2cef49bf-2928-5966-fd97-7aef5b563699@arm.com>
-References: <1540343921-7487-1-git-send-email-sstabellini@kernel.org>
- <0951e2a3-78a1-e849-39e9-5980c9c87277@arm.com>
- <alpine.DEB.2.10.1811011328540.7220@sstabellini-ThinkPad-X260>
- <0fae152c-c301-11ae-86f6-60d77e83519b@arm.com>
- <alpine.DEB.2.10.1811011338250.7220@sstabellini-ThinkPad-X260>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH] ARM: dts: i.MX25: add the clocks for the EPIT blocks
+Date: Thu, 1 Nov 2018 23:19:13 +0200
+Message-ID: <a253c416-44c2-23c6-65db-6d89d7f430a8@mleia.com>
+References: <1541093567-29205-1-git-send-email-martin@kaiser.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <xen-devel-bounces@lists.xenproject.org>
-In-Reply-To: <alpine.DEB.2.10.1811011338250.7220@sstabellini-ThinkPad-X260>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1541093567-29205-1-git-send-email-martin@kaiser.cx>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
-List-Post: <mailto:xen-devel@lists.xenproject.org>
-List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
-List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
-Errors-To: xen-devel-bounces@lists.xenproject.org
-Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
-To: Stefano Stabellini <sstabellini@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Wei Liu <wei.liu2@citrix.com>, stefanos@xilinx.com, Ian Jackson <ian.jackson@eu.citrix.com>, xen-devel@lists.xen.org, robh+dt@kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martin Kaiser <martin@kaiser.cx>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAxMS8xLzE4IDg6NDAgUE0sIFN0ZWZhbm8gU3RhYmVsbGluaSB3cm90ZToKPiBPbiBU
-aHUsIDEgTm92IDIwMTgsIEp1bGllbiBHcmFsbCB3cm90ZToKPj4gSGksCj4+Cj4+IE9uIDExLzEv
-MTggODozMSBQTSwgU3RlZmFubyBTdGFiZWxsaW5pIHdyb3RlOgo+Pj4gT24gV2VkLCAzMSBPY3Qg
-MjAxOCwgSnVsaWVuIEdyYWxsIHdyb3RlOgo+Pj4+IEhpLAo+Pj4+Cj4+Pj4gT24gMTAvMjQvMTgg
-MjoxOCBBTSwgU3RlZmFubyBTdGFiZWxsaW5pIHdyb3RlOgo+Pj4+PiBGcm9tOiBTdGVmYW5vIFN0
-YWJlbGxpbmkgPHN0ZWZhbm9zQHhpbGlueC5jb20+Cj4+Pj4+Cj4+Pj4+IEludHJvZHVjZSBhIGRl
-dmljZSB0cmVlIGJpbmRpbmcgZm9yIFhlbiByZXNlcnZlZC1tZW1vcnkgcmVnaW9ucy4gVGhleQo+
-Pj4+PiBhcmUgdXNlZCB0byBzaGFyZSBtZW1vcnkgYWNyb3NzIFZNcyBmcm9tIHRoZSBWTSBjb25m
-aWcgZmlsZXMuIChTZWUKPj4+Pj4gc3RhdGljX3NobSBjb25maWcgb3B0aW9uLikKPj4+Pj4KPj4+
-Pj4gU2lnbmVkLW9mZi1ieTogU3RlZmFubyBTdGFiZWxsaW5pIDxzdGVmYW5vc0B4aWxpbnguY29t
-Pgo+Pj4+PiBDYzoganVsaWVuLmdyYWxsQGFybS5jb20KPj4+Pj4gLS0tCj4+Pj4+IENoYW5nZXMg
-aW4gdjM6Cj4+Pj4+IC0gcmVtb3ZlIGZhbGxiYWNrIHZlcnNpb24KPj4+Pj4KPj4+Pj4gQ2hhbmdl
-cyBpbiB2MjoKPj4+Pj4gLSBmaXggQXV0aG9yIGxpbmUKPj4+Pj4gLSBhZGQgdmVyc2lvbmluZwo+
-Pj4+PiAtIHhlbixpZCBpbnN0ZWFkIG9mIGlkCj4+Pj4+IC0tLQo+Pj4+PiAgICAgLi4uL2JpbmRp
-bmdzL3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50eHQgICB8IDIwCj4+Pj4+ICsr
-KysrKysrKysrKysrKysrKysrCj4+Pj4+ICAgICAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9u
-cygrKQo+Pj4+PiAgICAgY3JlYXRlIG1vZGUgMTAwNjQ0Cj4+Pj4+IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkveGVuLHNoYXJlZC1tZW1vcnkudHh0Cj4+
-Pj4+Cj4+Pj4+IGRpZmYgLS1naXQKPj4+Pj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hlbixzaGFyZWQtbWVtb3J5LnR4dAo+Pj4+PiBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkveGVuLHNoYXJlZC1t
-ZW1vcnkudHh0Cj4+Pj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+Pj4+IGluZGV4IDAwMDAwMDAu
-LjdjODE2ODMKPj4+Pj4gLS0tIC9kZXYvbnVsbAo+Pj4+PiArKysKPj4+Pj4gYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hlbixzaGFyZWQtbWVtb3J5
-LnR4dAo+Pj4+PiBAQCAtMCwwICsxLDIwIEBACj4+Pj4+ICsqIFhlbiBoeXBlcnZpc29yIHJlc2Vy
-dmVkLW1lbW9yeSBiaW5kaW5nCj4+Pj4+ICsKPj4+Pj4gK0V4cG9zZSBvbmUgb3IgbW9yZSBtZW1v
-cnkgcmVnaW9ucyBhcyByZXNlcnZlZC1tZW1vcnkgdG8gdGhlIGd1ZXN0Cj4+Pj4+ICt2aXJ0dWFs
-IG1hY2hpbmUuIFR5cGljYWxseSwgYSByZWdpb24gaXMgY29uZmlndXJlZCBhdCBWTSBjcmVhdGlv
-biB0aW1lCj4+Pj4+ICt0byBiZSBhIHNoYXJlZCBtZW1vcnkgYXJlYSBhY3Jvc3MgbXVsdGlwbGUg
-dmlydHVhbCBtYWNoaW5lcyBmb3IKPj4+Pj4gK2NvbW11bmljYXRpb24gYW1vbmcgdGhlbS4KPj4+
-Pgo+Pj4+IEkgbWF5IGhhdmUgbm90aWNlIHNvbWUgaXNzdWUgd2l0aCB0aGlzIGJpbmRpbmcuIExv
-b2tpbmcgYXQgdGhlIGRlc2lnbgo+Pj4+IGRvY3VtZW50Cj4+Pj4gWzFdLCB0aGUgIm1hc3RlciIg
-ZG9tYWluIG1heSBwcm92aWRlIGEgYmlnIGJhY2tpbmcgcmVnaW9uIHRoYXQgd291bGQgYmUKPj4+
-PiBzcGxpdAo+Pj4+IGFuZCBzaGFyZSB3aXRoIG11bHRpcGxlICJzbGF2ZSIuCj4+Pj4KPj4+PiBG
-b3IgdGhlICJtYXN0ZXIiIGRvbWFpbiwgdGhpcyBiaW5kaW5nIHdvdWxkIHNwZWNpZnkgdGhlIGZ1
-bGwgYmFja2luZwo+Pj4+IHJlZ2lvbi4KPj4+PiBUaGUgIm1hc3RlciIgT1Mgd291bGQgbm90IGJl
-IGFibGUgdG8ga25vdyBob3cgdGhlIHJlZ2lvbiB3b3VsZCBiZSB1c2VkCj4+Pj4gaGVyZS4KPj4+
-Pgo+Pj4+IEZvciB0aGUgInNsYXZlIiBkb21haW4sIGl0IGxvb2tzIGxpa2UgaXQgbWlnaHQgYmUg
-cG9zc2libGUgdG8gbWFwIHRoZSBzYW1lCj4+Pj4gcmVnaW9uIChzbyBzYW1lIElEKSB0d2ljZS4g
-U28gd2Ugd291bGQgZW5kIHVwIHRvIGNyZWF0ZSB0aGUgc2FtZSBiaW5kaW5ncwo+Pj4+IHR3aWNl
-Lgo+Pj4+Cj4+Pj4gQW55IG9waW9uaW9uIG9uIGhvdyB3ZSBzaG91bGQgcHJvY2VlZCB3aXRoIHRo
-ZXNlIHR3byB1c2UgY2FzZXM/Cj4+Pgo+Pj4gSnVsaWVuIGFuZCBJIGRpc2N1c3NlZCB0aGlzIG1v
-cm5pbmcgdG8gY2xhcmlmeSB0aGF0IHJlZ2lvbnMgc2hvdWxkbid0IGJlCj4+PiBtYXBwZWQgdHdp
-Y2UgaW4gdGhlIFhlbiBkb2NzLCBhbmQgYWRkaW5nIGFuICJvZmZzZXQiIHByb3BlcnR5IHRvIHRo
-aXMKPj4+IGJpbmRpbmcuCj4+Cj4+IFdlbGwsIHdoeSB3b3VsZCB5b3UgZm9yYmlkIHRoZSBtYXBw
-aW5ncyB0d2ljZSBpZiB0aGUgb2Zmc2V0IGlzIHByZXNlbnQ/Cj4gCj4gIEZyb20gdGhlIERUIGJp
-bmRpbmcgcG9pbnQgb2YgdmlldywgaXQgd291bGQgYmUgZmluZS4gQ29uY2VwdHVhbGx5IGl0Cj4g
-d291bGQgYWxzbyBiZSBmaW5lLiBIb3dldmVyLCBJIGRvdWJ0IHRoYXQgdGhlIGN1cnJlbnQgbGli
-eGwKPiBpbXBsZW1lbnRhdGlvbiB3b3VsZCB3b3JrIHdpdGggbXVsdGlwbGUgbWFwcGluZ3MuCgpJ
-IGNhbid0IHNlZSB3aHkgaXQgd291bGQgbm90IHdvcmsuIEkgdGhpbmsgd2UgZGVzaWduZWQgdGhl
-IHJlZmNvdW50IGZvciAKdGhpcyBwdXJwb3NlLgoKQ2hlZXJzLAoKLS0gCkp1bGllbiBHcmFsbAoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KWGVuLWRldmVs
-IG1haWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMueGVucHJvamVjdC5vcmcKaHR0cHM6Ly9saXN0
-cy54ZW5wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL3hlbi1kZXZlbA==
+Hi Martin,
+
+On 11/01/2018 07:32 PM, Martin Kaiser wrote:
+> The i.MX25 contains two EPIT (Enhanced Periodic Interrupt Timer)
+> function blocks. Add their ipg and per clocks to the device tree.
+> 
+> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+
+the change is obviously correct.
+
+Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
+
+--
+Best wishes,
+Vladimir
