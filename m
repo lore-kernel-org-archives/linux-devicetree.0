@@ -1,38 +1,69 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v3 0/7] Standardize onboard LED support for 96Boards
-Date: Thu, 01 Nov 2018 11:49:08 +0100
-Message-ID: <1590147.nMxYQPWRVN@diego>
-References: <20181029094245.7886-1-manivannan.sadhasivam@linaro.org> <CAHTX3dJTXtuA0i-ffPjoiWuxEcF_5JY55VJtWd9zxW4HxK1K3w@mail.gmail.com> <CACRpkdarkLuErC_F4ALqOB5Wuf7TnDXmWZVKvfR7iGvOy=j++g@mail.gmail.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH 01/21] of: Add cpu node iterator for_each_of_cpu_node()
+Date: Thu, 01 Nov 2018 21:52:57 +1100
+Message-ID: <87tvl1dq7q.fsf@concordia.ellerman.id.au>
+References: <20180905193738.19325-1-robh@kernel.org> <20180905193738.19325-2-robh@kernel.org> <874ld3jz6v.fsf@concordia.ellerman.id.au> <871s87jz3g.fsf@concordia.ellerman.id.au> <CABGGisw_bd+bJedZ_T2e-dxmRnXf2N_gGBZj8u+QVGQxj_gc+Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdarkLuErC_F4ALqOB5Wuf7TnDXmWZVKvfR7iGvOy=j++g@mail.gmail.com>
+In-Reply-To: <CABGGisw_bd+bJedZ_T2e-dxmRnXf2N_gGBZj8u+QVGQxj_gc+Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Michal Simek <monstr@monstr.eu>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Xu Wei <xuwei5@hisilicon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Koen Kooi <koen.kooi@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Pavel Machek <pavel@ucw.cz>, Andy Gross <andy.gross@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, ezequiel@col
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org, Frank Rowand <frowand.list@gmail.com>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 31. Oktober 2018, 22:17:29 CET schrieb Linus Walleij:
-> On Wed, Oct 31, 2018 at 4:47 PM Michal Simek <monstr@monstr.eu> wrote:
-> > No doubt about it that this is good. If this is there from day 1 all will
-> > be good. I am just saying that we are all the time
-> > saying that we shouldn't break userspace. Right now if there is single
-> > application which uses existing names we are breaking it.
-> 
-> Yeah that's the problem, the approach is usually that if a tree falls
-> in the forest and noone is there to hear it, then it doesn't make a
-> sound.
-> 
-> But we can't assume someone is there as the safe default either.
-> 
-> I'd say apply it and see what happens, people are supposed to test.
+Rob Herring <robh@kernel.org> writes:
+> On Tue, Oct 30, 2018 at 9:20 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
+>>
+>> Michael Ellerman <mpe@ellerman.id.au> writes:
+>> > Hi Rob,
+>> >
+>> > Sorry I missed this when you posted it.
+>> >
+>> > Rob Herring <robh@kernel.org> writes:
+>> >> Iterating thru cpu nodes is a common pattern. Create a common iterator
+>> >> which can find child nodes either by node name or device_type == cpu.
+>> >> Using the former will allow for eventually dropping device_type
+>> >> properties which are deprecated for FDT.
+>> >
+>> > Device trees we see on powerpc generally don't (never?) use "cpu" as the
+>> > node name for CPU nodes. And many of those device trees come from
+>> > firmware, so we can't update them.
+>> >
+>> > So dropping support for device_type is a non-starter from our POV.
+>>
+>> ps. presumably that's what you meant by deprecated *for FDT*.
+>
+> Right.
+>
+>> But anyway just wanted to make sure we are on the same page.
+>
+> Yes, I was aware at least older powerpc DTs don't use 'cpu' for node names.
 
-At least for the Rockchip boards I'm somewhat confident, that they should
-be new enough to not have anybody building cludges - especially as I think
-LEDs might not be the most interesting device on such boards :-) .
+Actually newer ones too, see below :)
 
-So while I can apply the Rockchip patches, I'm still hoping for some
-kind of consensus beforehand, least we roll it back after the fact  ;-) .
+And there's code out there that expects this, so we can't realistically
+change it any time soon :/
 
-Heiko
+  https://github.com/ibm-power-utilities/powerpc-utils/blob/master/src/drmgr/common_cpu.c#L186
+  https://github.com/ibm-power-utilities/powerpc-utils/blob/master/src/ppc64_cpu.c#L344
+
+cheers
+
+$ ls -d1 /proc/device-tree/cpus/PowerPC\,POWER9@*
+/proc/device-tree/cpus/PowerPC,POWER9@14
+/proc/device-tree/cpus/PowerPC,POWER9@1c
+/proc/device-tree/cpus/PowerPC,POWER9@34
+/proc/device-tree/cpus/PowerPC,POWER9@3c
+/proc/device-tree/cpus/PowerPC,POWER9@4
+/proc/device-tree/cpus/PowerPC,POWER9@48
+/proc/device-tree/cpus/PowerPC,POWER9@54
+/proc/device-tree/cpus/PowerPC,POWER9@804
+/proc/device-tree/cpus/PowerPC,POWER9@80c
+/proc/device-tree/cpus/PowerPC,POWER9@814
+/proc/device-tree/cpus/PowerPC,POWER9@81c
+/proc/device-tree/cpus/PowerPC,POWER9@834
+/proc/device-tree/cpus/PowerPC,POWER9@83c
+/proc/device-tree/cpus/PowerPC,POWER9@844
+/proc/device-tree/cpus/PowerPC,POWER9@84c
+/proc/device-tree/cpus/PowerPC,POWER9@c
