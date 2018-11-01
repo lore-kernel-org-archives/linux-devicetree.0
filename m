@@ -1,36 +1,64 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V3 09/10] dts: fsl: add imx7ulp evk support
-Date: Thu, 1 Nov 2018 15:14:52 -0300
-Message-ID: <CAOMZO5Air0Mdb_jt=JqJA718yOH5bwrgOe1yQH9YHzazTOrH_g@mail.gmail.com>
-References: <1540996688-23681-1-git-send-email-aisheng.dong@nxp.com>
- <1540996688-23681-10-git-send-email-aisheng.dong@nxp.com>
- <CAOMZO5AZejEAHeB0hQ9T5U2ZJ7MXK=BYm8jY+yyZjbDHo4utGA@mail.gmail.com>
- <VI1PR04MB422242A027713CC447446D6780CE0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CAOMZO5BmqQE4wohBwE65f667cxF8LOcSJ=jECDXLADXbK9OEZQ@mail.gmail.com>
- <VI1PR04MB42220F5E1D5864555F4248DF80CE0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 13/36] dt-bindings: arm: Convert PMU binding to json-schema
+Date: Thu, 1 Nov 2018 14:32:14 -0500
+Message-ID: <CAL_JsqJh08wZCyGxg7HMbtKjOJTZKMoQcNOB_hPuSfJKQQK8JA@mail.gmail.com>
+References: <20181005165848.3474-1-robh@kernel.org> <20181005165848.3474-14-robh@kernel.org>
+ <20181009115713.GE6248@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <VI1PR04MB42220F5E1D5864555F4248DF80CE0@VI1PR04MB4222.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dong Aisheng <aisheng.dong@nxp.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Dong Aisheng <dongas86@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181009115713.GE6248@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 1, 2018 at 1:21 PM A.s. Dong <aisheng.dong@nxp.com> wrote:
+On Tue, Oct 9, 2018 at 6:57 AM Will Deacon <will.deacon@arm.com> wrote:
+>
+> Hi Rob,
+>
+> On Fri, Oct 05, 2018 at 11:58:25AM -0500, Rob Herring wrote:
+> > Convert ARM PMU binding to DT schema format using json-schema.
+> >
+> > Cc: Will Deacon <will.deacon@arm.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/arm/pmu.txt | 70 --------------
+> >  .../devicetree/bindings/arm/pmu.yaml          | 96 +++++++++++++++++++
+> >  2 files changed, 96 insertions(+), 70 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/arm/pmu.txt
+> >  create mode 100644 Documentation/devicetree/bindings/arm/pmu.yaml
+>
+> [...]
+>
+> > -- interrupts : 1 combined interrupt or 1 per core. If the interrupt is a per-cpu
+> > -               interrupt (PPI) then 1 interrupt should be specified.
+>
+> [...]
+>
+> > +  interrupts:
+> > +    oneOf:
+> > +      - maxItems: 1
+> > +      - minItems: 2
+> > +        maxItems: 8
+> > +        description: 1 interrupt per core.
+> > +
+> > +  interrupts-extended:
+> > +    $ref: '#/properties/interrupts'
+>
+> This seems like a semantic different between the two representations, or am
+> I missing something here? Specifically, both the introduction of
+> interrupts-extended and also dropping any mention of using a single per-cpu
+> interrupt (the single combined case is no longer support by Linux; not sure
+> if you want to keep it in the binding).
 
-> But for SD card with a single supply, GPIO regulator seems enough to me.
-> That's also the using in past years. Are things changed?
+In regards to no support for the single combined interrupt, it looks
+like Marvell Armada SoCs at least (armada-375 is what I'm looking at)
+have only a single interrupt. Though the interrupt gets routed to MPIC
+which then has a GIC PPI. So it isn't supported or happens to work
+still since it is a PPI?
 
-Ok, now it clear you are describing the micro SD port and not the eMMC, so:
-
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Rob
