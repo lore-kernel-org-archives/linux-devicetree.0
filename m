@@ -1,1428 +1,1744 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: [PATCH v6 1/9] soc: Add TmFifo driver for Mellanox BlueField Soc
-Date: Thu,  1 Nov 2018 12:25:30 -0400
-Message-ID: <1541089538-175682-1-git-send-email-lsun@mellanox.com>
-References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+From: sundeep subbaraya <sundeep.lkml@gmail.com>
+Subject: Re: [PATCH v3 1/2] phy: zynqmp: Add phy driver for xilinx zynqmp phy core
+Date: Thu, 1 Nov 2018 22:31:19 +0530
+Message-ID: <CALHRZurBk6mRFcGXhYHvdAsU0uarGS1Zrkpg96grnZd41PJJ5Q@mail.gmail.com>
+References: <1536165747-6405-1-git-send-email-anurag.kumar.vulisha@xilinx.com> <1536165747-6405-2-git-send-email-anurag.kumar.vulisha@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, David Woods <dwoods@mellanox.com>, Robin Murphy <robin.murphy@arm.com>, arm-soc <arm@kernel.org>
-Cc: devicetree@vger.kernel.org, Liming Sun <lsun@mellanox.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1536165747-6405-2-git-send-email-anurag.kumar.vulisha@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: anurag.kumar.vulisha@xilinx.com
+Cc: kishon@ti.com, michal.simek@xilinx.com, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, vivek.gautam@codeaurora.org, v.anuragkumar@gmail.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the TmFifo driver for Mellanox BlueField Soc.
-TmFifo is a shared FIFO which enables external host machine to
-exchange data with the SoC via USB or PCIe. The driver is based on
-virtio framework and has console and network access enabled.
+Hi Anurag,
 
-Reviewed-by: David Woods <dwoods@mellanox.com>
-Signed-off-by: Liming Sun <lsun@mellanox.com>
----
- drivers/soc/Kconfig                |    1 +
- drivers/soc/Makefile               |    1 +
- drivers/soc/mellanox/Kconfig       |   18 +
- drivers/soc/mellanox/Makefile      |    5 +
- drivers/soc/mellanox/tmfifo.c      | 1236 ++++++++++++++++++++++++++++++++++++
- drivers/soc/mellanox/tmfifo_regs.h |   76 +++
- 6 files changed, 1337 insertions(+)
- create mode 100644 drivers/soc/mellanox/Kconfig
- create mode 100644 drivers/soc/mellanox/Makefile
- create mode 100644 drivers/soc/mellanox/tmfifo.c
- create mode 100644 drivers/soc/mellanox/tmfifo_regs.h
+On Wed, Sep 5, 2018 at 10:14 PM Anurag Kumar Vulisha
+<anurag.kumar.vulisha@xilinx.com> wrote:
+>
+> ZynqMP SoC has a Gigabit Transceiver with four lanes. All the high speed
+> peripherals such as USB, SATA, PCIE, Display Port and Ethernet SGMII can
+> rely on any of the four GT lanes for PHY layer. This patch adds driver
+> for that ZynqMP GT core.
+>
+> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> ---
+> Changes in v3:
+>         1. Corrected the Documentation as suggested by Vivek Gautam
+>
+> Changes in v2:
+>         1. Fixed the compilation error when compiled phy-zynqmp.c as a module
+>         2. Added CONFIG_PM macro in phy-zynqmp.c driver
+> ---
+>  drivers/phy/Kconfig            |    8 +
+>  drivers/phy/Makefile           |    1 +
+>  drivers/phy/phy-zynqmp.c       | 1581 ++++++++++++++++++++++++++++++++++++++++
+>  include/dt-bindings/phy/phy.h  |    2 +
+>  include/linux/phy/phy-zynqmp.h |   52 ++
+>  5 files changed, 1644 insertions(+)
+>  create mode 100644 drivers/phy/phy-zynqmp.c
+>  create mode 100644 include/linux/phy/phy-zynqmp.h
+>
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index 5c8d452..14cf3330 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -40,6 +40,14 @@ config PHY_XGENE
+>         help
+>           This option enables support for APM X-Gene SoC multi-purpose PHY.
+>
+> +config PHY_XILINX_ZYNQMP
+> +       tristate "Xilinx ZynqMP PHY driver"
+> +       depends on ARCH_ZYNQMP
+> +       select GENERIC_PHY
+> +       help
+> +         Enable this to support ZynqMP High Speed Gigabit Transceiver
+> +         that is part of ZynqMP SoC.
+> +
+>  source "drivers/phy/allwinner/Kconfig"
+>  source "drivers/phy/amlogic/Kconfig"
+>  source "drivers/phy/broadcom/Kconfig"
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index 84e3bd9..f2a8d27 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -7,6 +7,7 @@ obj-$(CONFIG_GENERIC_PHY)               += phy-core.o
+>  obj-$(CONFIG_PHY_LPC18XX_USB_OTG)      += phy-lpc18xx-usb-otg.o
+>  obj-$(CONFIG_PHY_XGENE)                        += phy-xgene.o
+>  obj-$(CONFIG_PHY_PISTACHIO_USB)                += phy-pistachio-usb.o
+> +obj-$(CONFIG_PHY_XILINX_ZYNQMP)                += phy-zynqmp.o
+>  obj-$(CONFIG_ARCH_SUNXI)               += allwinner/
+>  obj-$(CONFIG_ARCH_MESON)               += amlogic/
+>  obj-$(CONFIG_LANTIQ)                   += lantiq/
+> diff --git a/drivers/phy/phy-zynqmp.c b/drivers/phy/phy-zynqmp.c
+> new file mode 100644
+> index 0000000..84efc3d
+> --- /dev/null
+> +++ b/drivers/phy/phy-zynqmp.c
+> @@ -0,0 +1,1581 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * phy-zynqmp.c - PHY driver for Xilinx ZynqMP GT.
+> + *
+> + * Copyright (C) 2018 Xilinx Inc.
+> + *
+> + * Author: Anurag Kumar Vulisha <anuragku@xilinx.com>
 
-diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
-index c07b4a8..fa87dc8 100644
---- a/drivers/soc/Kconfig
-+++ b/drivers/soc/Kconfig
-@@ -7,6 +7,7 @@ source "drivers/soc/bcm/Kconfig"
- source "drivers/soc/fsl/Kconfig"
- source "drivers/soc/imx/Kconfig"
- source "drivers/soc/mediatek/Kconfig"
-+source "drivers/soc/mellanox/Kconfig"
- source "drivers/soc/qcom/Kconfig"
- source "drivers/soc/renesas/Kconfig"
- source "drivers/soc/rockchip/Kconfig"
-diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-index 113e884..93052d0 100644
---- a/drivers/soc/Makefile
-+++ b/drivers/soc/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_ARCH_GEMINI)	+= gemini/
- obj-$(CONFIG_ARCH_MXC)		+= imx/
- obj-$(CONFIG_SOC_XWAY)		+= lantiq/
- obj-y				+= mediatek/
-+obj-$(CONFIG_SOC_MLNX)		+= mellanox/
- obj-$(CONFIG_ARCH_MESON)	+= amlogic/
- obj-y				+= qcom/
- obj-y				+= renesas/
-diff --git a/drivers/soc/mellanox/Kconfig b/drivers/soc/mellanox/Kconfig
-new file mode 100644
-index 0000000..d88efa1
---- /dev/null
-+++ b/drivers/soc/mellanox/Kconfig
-@@ -0,0 +1,18 @@
-+menuconfig SOC_MLNX
-+	bool "Mellanox SoC drivers"
-+	default y if ARCH_MLNX_BLUEFIELD
-+
-+if ARCH_MLNX_BLUEFIELD || COMPILE_TEST
-+
-+config MLNX_BLUEFIELD_TMFIFO
-+	tristate "Mellanox BlueField SoC TmFifo driver"
-+	depends on ARM64
-+	default m
-+	select VIRTIO_CONSOLE
-+	select VIRTIO_NET
-+	help
-+	  Say y here to enable TmFifo support. The TmFifo driver provides the
-+	  virtio driver framework for the TMFIFO of Mellanox BlueField SoC and
-+	  the implementation of a console and network driver.
-+
-+endif # ARCH_MLNX_BLUEFIELD
-diff --git a/drivers/soc/mellanox/Makefile b/drivers/soc/mellanox/Makefile
-new file mode 100644
-index 0000000..c44c0e2
---- /dev/null
-+++ b/drivers/soc/mellanox/Makefile
-@@ -0,0 +1,5 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile for Mellanox SoC drivers.
-+#
-+obj-$(CONFIG_MLNX_BLUEFIELD_TMFIFO)	+= tmfifo.o
-diff --git a/drivers/soc/mellanox/tmfifo.c b/drivers/soc/mellanox/tmfifo.c
-new file mode 100644
-index 0000000..d5e3550
---- /dev/null
-+++ b/drivers/soc/mellanox/tmfifo.c
-@@ -0,0 +1,1236 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018, Mellanox Technologies. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/bitfield.h>
-+#include <linux/cache.h>
-+#include <linux/device.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/efi.h>
-+#include <linux/io.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/kernel.h>
-+#include <linux/math64.h>
-+#include <linux/module.h>
-+#include <linux/moduleparam.h>
-+#include <linux/mutex.h>
-+#include <linux/platform_device.h>
-+#include <linux/resource.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+#include <linux/version.h>
-+#include <linux/virtio.h>
-+#include <linux/virtio_config.h>
-+#include <linux/virtio_console.h>
-+#include <linux/virtio_ids.h>
-+#include <linux/virtio_net.h>
-+#include <linux/virtio_ring.h>
-+#include <asm/byteorder.h>
-+
-+#include "tmfifo_regs.h"
-+
-+/* Vring size. */
-+#define TMFIFO_VRING_SIZE			1024
-+
-+/* Console Tx buffer size. */
-+#define TMFIFO_CONS_TX_BUF_SIZE			(32 * 1024)
-+
-+/* House-keeping timer interval. */
-+static int tmfifo_timer_interval = HZ / 10;
-+module_param(tmfifo_timer_interval, int, 0644);
-+MODULE_PARM_DESC(tmfifo_timer_interval, "timer interval");
-+
-+/* Global lock. */
-+static DEFINE_MUTEX(tmfifo_lock);
-+
-+/* Virtio ring size. */
-+static int tmfifo_vring_size = TMFIFO_VRING_SIZE;
-+module_param(tmfifo_vring_size, int, 0444);
-+MODULE_PARM_DESC(tmfifo_vring_size, "Size of the vring");
-+
-+/* Struct declaration. */
-+struct tmfifo;
-+
-+/* Virtual devices sharing the TM FIFO. */
-+#define TMFIFO_VDEV_MAX		(VIRTIO_ID_CONSOLE + 1)
-+
-+/* Structure to maintain the ring state. */
-+struct tmfifo_vring {
-+	void *va;			/* virtual address */
-+	dma_addr_t dma;			/* dma address */
-+	struct virtqueue *vq;		/* virtqueue pointer */
-+	struct vring_desc *desc;	/* current desc */
-+	struct vring_desc *desc_head;	/* current desc head */
-+	int cur_len;			/* processed len in current desc */
-+	int rem_len;			/* remaining length to be processed */
-+	int size;			/* vring size */
-+	int align;			/* vring alignment */
-+	int id;				/* vring id */
-+	int vdev_id;			/* TMFIFO_VDEV_xxx */
-+	u32 pkt_len;			/* packet total length */
-+	__virtio16 next_avail;		/* next avail desc id */
-+	struct tmfifo *fifo;		/* pointer back to the tmfifo */
-+};
-+
-+/* Interrupt types. */
-+enum {
-+	TM_RX_LWM_IRQ,			/* Rx low water mark irq */
-+	TM_RX_HWM_IRQ,			/* Rx high water mark irq */
-+	TM_TX_LWM_IRQ,			/* Tx low water mark irq */
-+	TM_TX_HWM_IRQ,			/* Tx high water mark irq */
-+	TM_IRQ_CNT
-+};
-+
-+/* Ring types (Rx & Tx). */
-+enum {
-+	TMFIFO_VRING_RX,		/* Rx ring */
-+	TMFIFO_VRING_TX,		/* Tx ring */
-+	TMFIFO_VRING_NUM
-+};
-+
-+struct tmfifo_vdev {
-+	struct virtio_device vdev;	/* virtual device */
-+	u8 status;
-+	u64 features;
-+	union {				/* virtio config space */
-+		struct virtio_console_config cons;
-+		struct virtio_net_config net;
-+	} config;
-+	struct tmfifo_vring vrings[TMFIFO_VRING_NUM];
-+	u8 *tx_buf;			/* tx buffer */
-+	u32 tx_head;			/* tx buffer head */
-+	u32 tx_tail;			/* tx buffer tail */
-+};
-+
-+/* TMFIFO device structure */
-+struct tmfifo {
-+	struct tmfifo_vdev *vdev[TMFIFO_VDEV_MAX];	/* virtual devices */
-+	struct platform_device *pdev;	/* platform device */
-+	struct mutex lock;
-+	void __iomem *rx_base;		/* mapped register base */
-+	void __iomem *tx_base;		/* mapped register base */
-+	int tx_fifo_size;		/* number of entries of the Tx FIFO */
-+	int rx_fifo_size;		/* number of entries of the Rx FIFO */
-+	unsigned long pend_events;	/* pending bits for deferred process */
-+	int irq[TM_IRQ_CNT];		/* irq numbers */
-+	struct work_struct work;	/* work struct for deferred process */
-+	struct timer_list timer;	/* keepalive timer */
-+	struct tmfifo_vring *vring[2];	/* current Tx/Rx ring */
-+	bool is_ready;			/* ready flag */
-+	spinlock_t spin_lock;		/* spin lock */
-+};
-+
-+union tmfifo_msg_hdr {
-+	struct {
-+		u8 type;		/* message type */
-+		__be16 len;		/* payload length */
-+		u8 unused[5];		/* reserved, set to 0 */
-+	} __packed;
-+	u64 data;
-+};
-+
-+/*
-+ * Default MAC.
-+ * This MAC address will be read from EFI persistent variable if configured.
-+ * It can also be reconfigured with standard Linux tools.
-+ */
-+static u8 tmfifo_net_default_mac[6] = {0x00, 0x1A, 0xCA, 0xFF, 0xFF, 0x01};
-+
-+/* MTU setting of the virtio-net interface. */
-+#define TMFIFO_NET_MTU		1500
-+
-+/* Supported virtio-net features. */
-+#define TMFIFO_NET_FEATURES	((1UL << VIRTIO_NET_F_MTU) | \
-+				 (1UL << VIRTIO_NET_F_STATUS) | \
-+				 (1UL << VIRTIO_NET_F_MAC))
-+
-+/* Return the available Tx buffer space. */
-+static inline int tmfifo_vdev_tx_buf_avail(struct tmfifo_vdev *vdev)
-+{
-+	return ((vdev->tx_tail >= vdev->tx_head) ?
-+		(TMFIFO_CONS_TX_BUF_SIZE - 8 - (vdev->tx_tail -
-+		vdev->tx_head)) : (vdev->tx_head - vdev->tx_tail - 8));
-+}
-+
-+/* Update Tx buffer pointer after pushing data. */
-+static inline void tmfifo_vdev_tx_buf_push(struct tmfifo_vdev *vdev, u32 len)
-+{
-+	vdev->tx_tail += len;
-+	if (vdev->tx_tail >= TMFIFO_CONS_TX_BUF_SIZE)
-+		vdev->tx_tail -= TMFIFO_CONS_TX_BUF_SIZE;
-+}
-+
-+/* Update Tx buffer pointer after popping data. */
-+static inline void tmfifo_vdev_tx_buf_pop(struct tmfifo_vdev *vdev, u32 len)
-+{
-+	vdev->tx_head += len;
-+	if (vdev->tx_head >= TMFIFO_CONS_TX_BUF_SIZE)
-+		vdev->tx_head -= TMFIFO_CONS_TX_BUF_SIZE;
-+}
-+
-+/* Allocate vrings for the fifo. */
-+static int tmfifo_alloc_vrings(struct tmfifo *fifo,
-+			       struct tmfifo_vdev *tm_vdev, int vdev_id)
-+{
-+	dma_addr_t dma;
-+	void *va;
-+	int i, size;
-+	struct tmfifo_vring *vring;
-+
-+	for (i = 0; i < ARRAY_SIZE(tm_vdev->vrings); i++) {
-+		vring = &tm_vdev->vrings[i];
-+		vring->fifo = fifo;
-+		vring->size = tmfifo_vring_size;
-+		vring->align = SMP_CACHE_BYTES;
-+		vring->id = i;
-+		vring->vdev_id = vdev_id;
-+
-+		size = PAGE_ALIGN(vring_size(vring->size, vring->align));
-+		va = dma_alloc_coherent(tm_vdev->vdev.dev.parent, size, &dma,
-+					GFP_KERNEL);
-+		if (!va) {
-+			dev_err(tm_vdev->vdev.dev.parent,
-+				"vring allocation failed\n");
-+			return -EINVAL;
-+		}
-+
-+		vring->va = va;
-+		vring->dma = dma;
-+	}
-+
-+	return 0;
-+}
-+
-+/* Free vrings of the fifo device. */
-+static void tmfifo_free_vrings(struct tmfifo *fifo, int vdev_id)
-+{
-+	int i, size;
-+	struct tmfifo_vring *vring;
-+	struct tmfifo_vdev *tm_vdev = fifo->vdev[vdev_id];
-+
-+	for (i = 0; i < ARRAY_SIZE(tm_vdev->vrings); i++) {
-+		vring = &tm_vdev->vrings[i];
-+
-+		size = PAGE_ALIGN(vring_size(vring->size, vring->align));
-+		if (vring->va) {
-+			dma_free_coherent(tm_vdev->vdev.dev.parent, size,
-+					  vring->va, vring->dma);
-+			vring->va = NULL;
-+			if (vring->vq) {
-+				vring_del_virtqueue(vring->vq);
-+				vring->vq = NULL;
-+			}
-+		}
-+	}
-+}
-+
-+/* Free interrupts of the fifo device. */
-+static void tmfifo_free_irqs(struct tmfifo *fifo)
-+{
-+	int i, irq;
-+
-+	for (i = 0; i < TM_IRQ_CNT; i++) {
-+		irq = fifo->irq[i];
-+		if (irq) {
-+			fifo->irq[i] = 0;
-+			disable_irq(irq);
-+			free_irq(irq, (u8 *)fifo + i);
-+		}
-+	}
-+}
-+
-+/* Interrupt handler. */
-+static irqreturn_t tmfifo_irq_handler(int irq, void *dev_id)
-+{
-+	int i = (uintptr_t)dev_id % sizeof(void *);
-+	struct tmfifo *fifo = dev_id - i;
-+
-+	if (i < TM_IRQ_CNT && !test_and_set_bit(i, &fifo->pend_events))
-+		schedule_work(&fifo->work);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/* Nothing to do for now. */
-+static void tmfifo_virtio_dev_release(struct device *dev)
-+{
-+}
-+
-+/* Get the next packet descriptor from the vring. */
-+static inline struct vring_desc *
-+tmfifo_virtio_get_next_desc(struct virtqueue *vq)
-+{
-+	unsigned int idx, head;
-+	struct vring *vr = (struct vring *)virtqueue_get_vring(vq);
-+	struct tmfifo_vring *vring = (struct tmfifo_vring *)vq->priv;
-+
-+	if (!vr || vring->next_avail == vr->avail->idx)
-+		return NULL;
-+
-+	idx = vring->next_avail % vr->num;
-+	head = vr->avail->ring[idx];
-+	BUG_ON(head >= vr->num);
-+	vring->next_avail++;
-+	return &vr->desc[head];
-+}
-+
-+static inline void tmfifo_virtio_release_desc(struct virtio_device *vdev,
-+					      struct vring *vr,
-+					      struct vring_desc *desc, u32 len)
-+{
-+	unsigned int idx;
-+
-+	idx = vr->used->idx % vr->num;
-+	vr->used->ring[idx].id = desc - vr->desc;
-+	vr->used->ring[idx].len = cpu_to_virtio32(vdev, len);
-+
-+	/* Virtio could poll and check the 'idx' to decide
-+	 * whether the desc is done or not. Add a memory
-+	 * barrier here to make sure the update above completes
-+	 * before updating the idx.
-+	 */
-+	mb();
-+	vr->used->idx++;
-+}
-+
-+/* Get the total length of a descriptor chain. */
-+static inline u32 tmfifo_virtio_get_pkt_len(struct virtio_device *vdev,
-+			struct vring_desc *desc, struct vring *vr)
-+{
-+	u32 len = 0, idx;
-+
-+	while (desc) {
-+		len += virtio32_to_cpu(vdev, desc->len);
-+		if (!(virtio16_to_cpu(vdev, desc->flags) & VRING_DESC_F_NEXT))
-+			break;
-+		idx = virtio16_to_cpu(vdev, desc->next);
-+		desc = &vr->desc[idx];
-+	}
-+
-+	return len;
-+}
-+
-+static void tmfifo_release_pkt(struct virtio_device *vdev,
-+			       struct tmfifo_vring *vring,
-+			       struct vring_desc **desc)
-+{
-+	struct vring *vr = (struct vring *)virtqueue_get_vring(vring->vq);
-+	struct vring_desc *desc_head;
-+	uint32_t pkt_len = 0;
-+
-+	if (!vr)
-+		return;
-+
-+	if (desc != NULL && *desc != NULL && vring->desc_head != NULL) {
-+		desc_head = vring->desc_head;
-+		pkt_len = vring->pkt_len;
-+	} else {
-+		desc_head = tmfifo_virtio_get_next_desc(vring->vq);
-+		if (desc_head != NULL) {
-+			pkt_len = tmfifo_virtio_get_pkt_len(vdev,
-+							desc_head, vr);
-+		}
-+	}
-+
-+	if (desc_head != NULL)
-+		tmfifo_virtio_release_desc(vdev, vr, desc_head, pkt_len);
-+
-+	if (desc != NULL)
-+		*desc = NULL;
-+	vring->pkt_len = 0;
-+}
-+
-+/* House-keeping timer. */
-+static void tmfifo_timer(struct timer_list *arg)
-+{
-+	struct tmfifo *fifo = container_of(arg, struct tmfifo, timer);
-+
-+	/*
-+	 * Wake up the work handler to poll the Rx FIFO in case interrupt
-+	 * missing or any leftover bytes stuck in the FIFO.
-+	 */
-+	test_and_set_bit(TM_RX_HWM_IRQ, &fifo->pend_events);
-+
-+	/*
-+	 * Wake up Tx handler in case virtio has queued too many packets
-+	 * and are waiting for buffer return.
-+	 */
-+	test_and_set_bit(TM_TX_LWM_IRQ, &fifo->pend_events);
-+
-+	schedule_work(&fifo->work);
-+
-+	mod_timer(&fifo->timer, jiffies + tmfifo_timer_interval);
-+}
-+
-+/* Buffer the console output. */
-+static void tmfifo_console_output(struct tmfifo_vdev *cons,
-+				  struct virtqueue *vq)
-+{
-+	u32 len, pkt_len, idx;
-+	struct vring_desc *head_desc, *desc = NULL;
-+	struct vring *vr = (struct vring *)virtqueue_get_vring(vq);
-+	struct virtio_device *vdev = &cons->vdev;
-+	void *addr;
-+	union tmfifo_msg_hdr *hdr;
-+
-+	for (;;) {
-+		head_desc = tmfifo_virtio_get_next_desc(vq);
-+		if (head_desc == NULL)
-+			break;
-+
-+		/* Release the packet if no more space. */
-+		pkt_len = tmfifo_virtio_get_pkt_len(vdev, head_desc, vr);
-+		if (pkt_len + sizeof(*hdr) > tmfifo_vdev_tx_buf_avail(cons)) {
-+			tmfifo_virtio_release_desc(vdev, vr, head_desc,
-+						   pkt_len);
-+			break;
-+		}
-+
-+		hdr = (union tmfifo_msg_hdr *)&cons->tx_buf[cons->tx_tail];
-+		hdr->data = 0;
-+		hdr->type = VIRTIO_ID_CONSOLE;
-+		hdr->len = htons(pkt_len);
-+
-+		tmfifo_vdev_tx_buf_push(cons, sizeof(*hdr));
-+		desc = head_desc;
-+
-+		while (desc != NULL) {
-+			addr = phys_to_virt(virtio64_to_cpu(vdev, desc->addr));
-+			len = virtio32_to_cpu(vdev, desc->len);
-+
-+			if (len <= TMFIFO_CONS_TX_BUF_SIZE - cons->tx_tail) {
-+				memcpy(cons->tx_buf + cons->tx_tail, addr, len);
-+			} else {
-+				u32 seg;
-+
-+				seg = TMFIFO_CONS_TX_BUF_SIZE - cons->tx_tail;
-+				memcpy(cons->tx_buf + cons->tx_tail, addr, seg);
-+				addr += seg;
-+				memcpy(cons->tx_buf, addr, len - seg);
-+			}
-+			tmfifo_vdev_tx_buf_push(cons, len);
-+
-+			if (!(virtio16_to_cpu(vdev, desc->flags) &
-+			    VRING_DESC_F_NEXT))
-+				break;
-+			idx = virtio16_to_cpu(vdev, desc->next);
-+			desc = &vr->desc[idx];
-+		}
-+
-+		/* Make each packet 8-byte aligned. */
-+		tmfifo_vdev_tx_buf_push(cons, ((pkt_len + 7) & -8) - pkt_len);
-+
-+		tmfifo_virtio_release_desc(vdev, vr, head_desc, pkt_len);
-+	}
-+}
-+
-+/* Rx & Tx processing of a virtual queue. */
-+static void tmfifo_virtio_rxtx(struct virtqueue *vq, bool is_rx)
-+{
-+	struct tmfifo_vring *vring;
-+	struct tmfifo *fifo;
-+	struct vring *vr;
-+	struct virtio_device *vdev;
-+	u64 sts, data;
-+	int num_avail = 0, hdr_len, tx_reserve;
-+	void *addr;
-+	u32 len, idx;
-+	struct vring_desc *desc;
-+	unsigned long flags;
-+	struct tmfifo_vdev *cons;
-+
-+	if (!vq)
-+		return;
-+
-+	vring = (struct tmfifo_vring *)vq->priv;
-+	fifo = vring->fifo;
-+	vr = (struct vring *)virtqueue_get_vring(vq);
-+
-+	if (!fifo->vdev[vring->vdev_id])
-+		return;
-+	vdev = &fifo->vdev[vring->vdev_id]->vdev;
-+	cons = fifo->vdev[VIRTIO_ID_CONSOLE];
-+
-+	/* Don't continue if another vring is running. */
-+	if (fifo->vring[is_rx] != NULL && fifo->vring[is_rx] != vring)
-+		return;
-+
-+	/* tx_reserve is used to reserved some room in FIFO for console. */
-+	if (vring->vdev_id == VIRTIO_ID_NET) {
-+		hdr_len = sizeof(struct virtio_net_hdr);
-+		tx_reserve = fifo->tx_fifo_size / 16;
-+	} else {
-+		BUG_ON(vring->vdev_id != VIRTIO_ID_CONSOLE);
-+		hdr_len = 0;
-+		tx_reserve = 1;
-+	}
-+
-+	desc = vring->desc;
-+
-+again:
-+	while (1) {
-+		/* Get available FIFO space. */
-+		if (num_avail == 0) {
-+			if (is_rx) {
-+				/* Get the number of available words in FIFO. */
-+				sts = readq(fifo->rx_base + TMFIFO_RX_STS);
-+				num_avail = FIELD_GET(
-+					TMFIFO_RX_STS__COUNT_MASK, sts);
-+
-+				/* Don't continue if nothing in FIFO. */
-+				if (num_avail <= 0)
-+					break;
-+			} else {
-+				/* Get available space in FIFO. */
-+				sts = readq(fifo->tx_base + TMFIFO_TX_STS);
-+				num_avail = fifo->tx_fifo_size - tx_reserve -
-+					FIELD_GET(
-+						TMFIFO_TX_STS__COUNT_MASK, sts);
-+
-+				if (num_avail <= 0)
-+					break;
-+			}
-+		}
-+
-+		/* Console output always comes from the Tx buffer. */
-+		if (!is_rx && vring->vdev_id == VIRTIO_ID_CONSOLE &&
-+		    cons != NULL && cons->tx_buf != NULL) {
-+			for (;;) {
-+				spin_lock_irqsave(&fifo->spin_lock, flags);
-+				if (cons->tx_head == cons->tx_tail) {
-+					spin_unlock_irqrestore(
-+						&fifo->spin_lock, flags);
-+					return;
-+				}
-+				addr = cons->tx_buf + cons->tx_head;
-+				writeq(cpu_to_le64(*(u64 *)addr),
-+				       fifo->tx_base + TMFIFO_TX_DATA);
-+				tmfifo_vdev_tx_buf_pop(cons, sizeof(u64));
-+				spin_unlock_irqrestore(&fifo->spin_lock,
-+						       flags);
-+				if (--num_avail <= 0)
-+					goto again;
-+			}
-+		}
-+
-+		/* Get the desc of next packet. */
-+		if (!desc) {
-+			/* Save the head desc of the chain. */
-+			vring->desc_head = tmfifo_virtio_get_next_desc(vq);
-+			if (!vring->desc_head) {
-+				vring->desc = NULL;
-+				return;
-+			}
-+			desc = vring->desc_head;
-+			vring->desc = desc;
-+
-+			if (is_rx && vring->vdev_id == VIRTIO_ID_NET) {
-+				struct virtio_net_hdr *net_hdr;
-+
-+				/* Initialize the packet header. */
-+				net_hdr = (struct virtio_net_hdr *)
-+					phys_to_virt(virtio64_to_cpu(
-+						vdev, desc->addr));
-+				memset(net_hdr, 0, sizeof(*net_hdr));
-+			}
-+		}
-+
-+		/* Beginning of each packet. */
-+		if (vring->pkt_len == 0) {
-+			int vdev_id, vring_change = 0;
-+			union tmfifo_msg_hdr hdr;
-+
-+			num_avail--;
-+
-+			/* Read/Write packet length. */
-+			if (is_rx) {
-+				hdr.data = readq(fifo->rx_base +
-+						 TMFIFO_RX_DATA);
-+				hdr.data = le64_to_cpu(hdr.data);
-+
-+				/* Skip the length 0 packet (keepalive). */
-+				if (hdr.len == 0)
-+					continue;
-+
-+				/* Check packet type. */
-+				if (hdr.type == VIRTIO_ID_NET) {
-+					vdev_id = VIRTIO_ID_NET;
-+					hdr_len = sizeof(struct virtio_net_hdr);
-+				} else if (hdr.type == VIRTIO_ID_CONSOLE) {
-+					vdev_id = VIRTIO_ID_CONSOLE;
-+					hdr_len = 0;
-+				} else {
-+					continue;
-+				}
-+
-+				/*
-+				 * Check whether the new packet still belongs
-+				 * to this vring or not. If not, update the
-+				 * pkt_len of the new vring and return.
-+				 */
-+				if (vdev_id != vring->vdev_id) {
-+					struct tmfifo_vdev *dev2 =
-+						fifo->vdev[vdev_id];
-+
-+					if (!dev2)
-+						break;
-+					vring->desc = desc;
-+					vring = &dev2->vrings[TMFIFO_VRING_RX];
-+					vring_change = 1;
-+				}
-+				vring->pkt_len = ntohs(hdr.len) + hdr_len;
-+			} else {
-+				vring->pkt_len = tmfifo_virtio_get_pkt_len(
-+					vdev, desc, vr);
-+
-+				hdr.data = 0;
-+				hdr.type = (vring->vdev_id == VIRTIO_ID_NET) ?
-+					VIRTIO_ID_NET :
-+					VIRTIO_ID_CONSOLE;
-+				hdr.len = htons(vring->pkt_len - hdr_len);
-+				writeq(cpu_to_le64(hdr.data),
-+				       fifo->tx_base + TMFIFO_TX_DATA);
-+			}
-+
-+			vring->cur_len = hdr_len;
-+			vring->rem_len = vring->pkt_len;
-+			fifo->vring[is_rx] = vring;
-+
-+			if (vring_change)
-+				return;
-+			continue;
-+		}
-+
-+		/* Check available space in this desc. */
-+		len = virtio32_to_cpu(vdev, desc->len);
-+		if (len > vring->rem_len)
-+			len = vring->rem_len;
-+
-+		/* Check if the current desc is already done. */
-+		if (vring->cur_len == len)
-+			goto check_done;
-+
-+		addr = phys_to_virt(virtio64_to_cpu(vdev, desc->addr));
-+
-+		/* Read a word from FIFO for Rx. */
-+		if (is_rx) {
-+			data = readq(fifo->rx_base + TMFIFO_RX_DATA);
-+			data = le64_to_cpu(data);
-+		}
-+
-+		if (vring->cur_len + sizeof(u64) <= len) {
-+			/* The whole word. */
-+			if (is_rx) {
-+				memcpy(addr + vring->cur_len, &data,
-+				       sizeof(u64));
-+			} else {
-+				memcpy(&data, addr + vring->cur_len,
-+				       sizeof(u64));
-+			}
-+			vring->cur_len += sizeof(u64);
-+		} else {
-+			/* Leftover bytes. */
-+			BUG_ON(vring->cur_len > len);
-+			if (is_rx) {
-+				memcpy(addr + vring->cur_len, &data,
-+				       len - vring->cur_len);
-+			} else {
-+				memcpy(&data, addr + vring->cur_len,
-+				       len - vring->cur_len);
-+			}
-+			vring->cur_len = len;
-+		}
-+
-+		/* Write the word into FIFO for Tx. */
-+		if (!is_rx) {
-+			writeq(cpu_to_le64(data),
-+			       fifo->tx_base + TMFIFO_TX_DATA);
-+		}
-+
-+		num_avail--;
-+
-+check_done:
-+		/* Check whether this desc is full or completed. */
-+		if (vring->cur_len == len) {
-+			vring->cur_len = 0;
-+			vring->rem_len -= len;
-+
-+			/* Get the next desc on the chain. */
-+			if (vring->rem_len > 0 &&
-+			    (virtio16_to_cpu(vdev, desc->flags) &
-+						VRING_DESC_F_NEXT)) {
-+				idx = virtio16_to_cpu(vdev, desc->next);
-+				desc = &vr->desc[idx];
-+				continue;
-+			}
-+
-+			/* Done and release the desc. */
-+			tmfifo_release_pkt(vdev, vring, &desc);
-+			fifo->vring[is_rx] = NULL;
-+
-+			/* Notify upper layer that packet is done. */
-+			spin_lock_irqsave(&fifo->spin_lock, flags);
-+			vring_interrupt(0, vq);
-+			spin_unlock_irqrestore(&fifo->spin_lock, flags);
-+			continue;
-+		}
-+	}
-+
-+	/* Save the current desc. */
-+	vring->desc = desc;
-+}
-+
-+/* The notify function is called when new buffers are posted. */
-+static bool tmfifo_virtio_notify(struct virtqueue *vq)
-+{
-+	struct tmfifo_vring *vring = (struct tmfifo_vring *)vq->priv;
-+	struct tmfifo *fifo = vring->fifo;
-+	unsigned long flags;
-+
-+	/*
-+	 * Virtio maintains vrings in pairs, even number ring for Rx
-+	 * and odd number ring for Tx.
-+	 */
-+	if (!(vring->id & 1)) {
-+		/* Set the RX HWM bit to start Rx. */
-+		if (!test_and_set_bit(TM_RX_HWM_IRQ, &fifo->pend_events))
-+			schedule_work(&fifo->work);
-+	} else {
-+		/*
-+		 * Console could make blocking call with interrupts disabled.
-+		 * In such case, the vring needs to be served right away. For
-+		 * other cases, just set the TX LWM bit to start Tx in the
-+		 * worker handler.
-+		 */
-+		if (vring->vdev_id == VIRTIO_ID_CONSOLE) {
-+			spin_lock_irqsave(&fifo->spin_lock, flags);
-+			tmfifo_console_output(fifo->vdev[VIRTIO_ID_CONSOLE],
-+					      vq);
-+			spin_unlock_irqrestore(&fifo->spin_lock, flags);
-+			schedule_work(&fifo->work);
-+		} else if (!test_and_set_bit(TM_TX_LWM_IRQ, &fifo->pend_events))
-+			schedule_work(&fifo->work);
-+	}
-+
-+	return true;
-+}
-+
-+/* Work handler for Rx, Tx or activity monitoring. */
-+static void tmfifo_work_handler(struct work_struct *work)
-+{
-+	int i;
-+	struct tmfifo_vdev *tm_vdev;
-+	struct tmfifo *fifo = container_of(work, struct tmfifo, work);
-+
-+	if (!fifo->is_ready)
-+		return;
-+
-+	mutex_lock(&fifo->lock);
-+
-+	/* Tx. */
-+	if (test_and_clear_bit(TM_TX_LWM_IRQ, &fifo->pend_events) &&
-+		       fifo->irq[TM_TX_LWM_IRQ]) {
-+		for (i = 0; i < TMFIFO_VDEV_MAX; i++) {
-+			tm_vdev = fifo->vdev[i];
-+			if (tm_vdev != NULL) {
-+				tmfifo_virtio_rxtx(
-+					tm_vdev->vrings[TMFIFO_VRING_TX].vq,
-+					false);
-+			}
-+		}
-+	}
-+
-+	/* Rx. */
-+	if (test_and_clear_bit(TM_RX_HWM_IRQ, &fifo->pend_events) &&
-+		       fifo->irq[TM_RX_HWM_IRQ]) {
-+		for (i = 0; i < TMFIFO_VDEV_MAX; i++) {
-+			tm_vdev = fifo->vdev[i];
-+			if (tm_vdev != NULL) {
-+				tmfifo_virtio_rxtx(
-+					tm_vdev->vrings[TMFIFO_VRING_RX].vq,
-+					true);
-+			}
-+		}
-+	}
-+
-+	mutex_unlock(&fifo->lock);
-+}
-+
-+/* Get the array of feature bits for this device. */
-+static u64 tmfifo_virtio_get_features(struct virtio_device *vdev)
-+{
-+	struct tmfifo_vdev *tm_vdev = container_of(vdev, struct tmfifo_vdev,
-+						   vdev);
-+
-+	return tm_vdev->features;
-+}
-+
-+/* Confirm device features to use. */
-+static int tmfifo_virtio_finalize_features(struct virtio_device *vdev)
-+{
-+	struct tmfifo_vdev *tm_vdev = container_of(vdev, struct tmfifo_vdev,
-+						   vdev);
-+
-+	tm_vdev->features = vdev->features;
-+	return 0;
-+}
-+
-+/* Free virtqueues found by find_vqs(). */
-+static void tmfifo_virtio_del_vqs(struct virtio_device *vdev)
-+{
-+	int i;
-+	struct tmfifo_vring *vring;
-+	struct virtqueue *vq;
-+	struct tmfifo_vdev *tm_vdev = container_of(vdev, struct tmfifo_vdev,
-+						   vdev);
-+
-+	for (i = 0; i < ARRAY_SIZE(tm_vdev->vrings); i++) {
-+		vring = &tm_vdev->vrings[i];
-+
-+		/* Release the pending packet. */
-+		if (vring->desc != NULL)
-+			tmfifo_release_pkt(&tm_vdev->vdev, vring, &vring->desc);
-+
-+		vq = vring->vq;
-+		if (vq) {
-+			vring->vq = NULL;
-+			vring_del_virtqueue(vq);
-+		}
-+	}
-+}
-+
-+/* Create and initialize the virtual queues. */
-+static int tmfifo_virtio_find_vqs(struct virtio_device *vdev,
-+				  unsigned int nvqs,
-+				  struct virtqueue *vqs[],
-+				  vq_callback_t *callbacks[],
-+				  const char * const names[],
-+				  const bool *ctx,
-+				  struct irq_affinity *desc)
-+{
-+	int i, ret = -EINVAL, size;
-+	struct tmfifo_vring *vring;
-+	struct virtqueue *vq;
-+	struct tmfifo_vdev *tm_vdev = container_of(vdev, struct tmfifo_vdev,
-+						   vdev);
-+
-+	if (nvqs > ARRAY_SIZE(tm_vdev->vrings))
-+		return -EINVAL;
-+
-+	for (i = 0; i < nvqs; ++i) {
-+		if (!names[i])
-+			goto error;
-+		vring = &tm_vdev->vrings[i];
-+
-+		/* zero vring */
-+		size = vring_size(vring->size, vring->align);
-+		memset(vring->va, 0, size);
-+		vq = vring_new_virtqueue(i, vring->size, vring->align, vdev,
-+					 false, false, vring->va,
-+					 tmfifo_virtio_notify,
-+					 callbacks[i], names[i]);
-+		if (!vq) {
-+			dev_err(&vdev->dev, "vring_new_virtqueue failed\n");
-+			ret = -ENOMEM;
-+			goto error;
-+		}
-+
-+		vqs[i] = vq;
-+		vring->vq = vq;
-+		vq->priv = vring;
-+	}
-+
-+	return 0;
-+
-+error:
-+	tmfifo_virtio_del_vqs(vdev);
-+	return ret;
-+}
-+
-+/* Read the status byte. */
-+static u8 tmfifo_virtio_get_status(struct virtio_device *vdev)
-+{
-+	struct tmfifo_vdev *tm_vdev = container_of(vdev, struct tmfifo_vdev,
-+						   vdev);
-+
-+	return tm_vdev->status;
-+}
-+
-+/* Write the status byte. */
-+static void tmfifo_virtio_set_status(struct virtio_device *vdev, u8 status)
-+{
-+	struct tmfifo_vdev *tm_vdev = container_of(vdev, struct tmfifo_vdev,
-+						   vdev);
-+
-+	tm_vdev->status = status;
-+}
-+
-+/* Reset the device. Not much here for now. */
-+static void tmfifo_virtio_reset(struct virtio_device *vdev)
-+{
-+	struct tmfifo_vdev *tm_vdev = container_of(vdev, struct tmfifo_vdev,
-+						   vdev);
-+
-+	tm_vdev->status = 0;
-+}
-+
-+/* Read the value of a configuration field. */
-+static void tmfifo_virtio_get(struct virtio_device *vdev,
-+			      unsigned int offset,
-+			      void *buf,
-+			      unsigned int len)
-+{
-+	struct tmfifo_vdev *tm_vdev = container_of(vdev, struct tmfifo_vdev,
-+						   vdev);
-+
-+	if (offset + len > sizeof(tm_vdev->config) || offset + len < len) {
-+		dev_err(vdev->dev.parent, "virtio_get access out of bounds\n");
-+		return;
-+	}
-+
-+	memcpy(buf, (u8 *)&tm_vdev->config + offset, len);
-+}
-+
-+/* Write the value of a configuration field. */
-+static void tmfifo_virtio_set(struct virtio_device *vdev,
-+				 unsigned int offset,
-+				 const void *buf,
-+				 unsigned int len)
-+{
-+	struct tmfifo_vdev *tm_vdev = container_of(vdev, struct tmfifo_vdev,
-+						   vdev);
-+
-+	if (offset + len > sizeof(tm_vdev->config) || offset + len < len) {
-+		dev_err(vdev->dev.parent, "virtio_get access out of bounds\n");
-+		return;
-+	}
-+
-+	memcpy((u8 *)&tm_vdev->config + offset, buf, len);
-+}
-+
-+/* Virtio config operations. */
-+static const struct virtio_config_ops tmfifo_virtio_config_ops = {
-+	.get_features = tmfifo_virtio_get_features,
-+	.finalize_features = tmfifo_virtio_finalize_features,
-+	.find_vqs = tmfifo_virtio_find_vqs,
-+	.del_vqs = tmfifo_virtio_del_vqs,
-+	.reset = tmfifo_virtio_reset,
-+	.set_status = tmfifo_virtio_set_status,
-+	.get_status = tmfifo_virtio_get_status,
-+	.get = tmfifo_virtio_get,
-+	.set = tmfifo_virtio_set,
-+};
-+
-+/* Create vdev type in a tmfifo. */
-+int tmfifo_create_vdev(struct tmfifo *fifo, int vdev_id, u64 features,
-+		       void *config, u32 size)
-+{
-+	struct tmfifo_vdev *tm_vdev;
-+	int ret = 0;
-+
-+	mutex_lock(&fifo->lock);
-+
-+	tm_vdev = fifo->vdev[vdev_id];
-+	if (tm_vdev != NULL) {
-+		pr_err("vdev %d already exists\n", vdev_id);
-+		ret = -EEXIST;
-+		goto already_exist;
-+	}
-+
-+	tm_vdev = kzalloc(sizeof(*tm_vdev), GFP_KERNEL);
-+	if (!tm_vdev) {
-+		ret = -ENOMEM;
-+		goto already_exist;
-+	}
-+
-+	tm_vdev->vdev.id.device = vdev_id;
-+	tm_vdev->vdev.config = &tmfifo_virtio_config_ops;
-+	tm_vdev->vdev.dev.parent = &fifo->pdev->dev;
-+	tm_vdev->vdev.dev.release = tmfifo_virtio_dev_release;
-+	tm_vdev->features = features;
-+	if (config)
-+		memcpy(&tm_vdev->config, config, size);
-+	if (tmfifo_alloc_vrings(fifo, tm_vdev, vdev_id)) {
-+		pr_err("Unable to allocate vring\n");
-+		ret = -ENOMEM;
-+		goto alloc_vring_fail;
-+	}
-+	if (vdev_id == VIRTIO_ID_CONSOLE) {
-+		tm_vdev->tx_buf = kmalloc(TMFIFO_CONS_TX_BUF_SIZE,
-+					  GFP_KERNEL);
-+	}
-+	fifo->vdev[vdev_id] = tm_vdev;
-+
-+	/* Register the virtio device. */
-+	ret = register_virtio_device(&tm_vdev->vdev);
-+	if (ret) {
-+		dev_err(&fifo->pdev->dev, "register_virtio_device() failed\n");
-+		goto register_fail;
-+	}
-+
-+	mutex_unlock(&fifo->lock);
-+	return 0;
-+
-+register_fail:
-+	tmfifo_free_vrings(fifo, vdev_id);
-+	fifo->vdev[vdev_id] = NULL;
-+alloc_vring_fail:
-+	kfree(tm_vdev);
-+already_exist:
-+	mutex_unlock(&fifo->lock);
-+	return ret;
-+}
-+
-+/* Delete vdev type from a tmfifo. */
-+int tmfifo_delete_vdev(struct tmfifo *fifo, int vdev_id)
-+{
-+	struct tmfifo_vdev *tm_vdev;
-+
-+	mutex_lock(&fifo->lock);
-+
-+	/* Unregister vdev. */
-+	tm_vdev = fifo->vdev[vdev_id];
-+	if (tm_vdev) {
-+		unregister_virtio_device(&tm_vdev->vdev);
-+		tmfifo_free_vrings(fifo, vdev_id);
-+		kfree(tm_vdev->tx_buf);
-+		kfree(tm_vdev);
-+		fifo->vdev[vdev_id] = NULL;
-+	}
-+
-+	mutex_unlock(&fifo->lock);
-+
-+	return 0;
-+}
-+
-+/* Device remove function. */
-+static int tmfifo_remove(struct platform_device *pdev)
-+{
-+	int i;
-+	struct tmfifo *fifo = platform_get_drvdata(pdev);
-+	struct resource *rx_res, *tx_res;
-+
-+	if (fifo) {
-+		mutex_lock(&tmfifo_lock);
-+
-+		fifo->is_ready = false;
-+
-+		/* Stop the timer. */
-+		del_timer_sync(&fifo->timer);
-+
-+		/* Release interrupts. */
-+		tmfifo_free_irqs(fifo);
-+
-+		/* Cancel the pending work. */
-+		cancel_work_sync(&fifo->work);
-+
-+		for (i = 0; i < TMFIFO_VDEV_MAX; i++)
-+			tmfifo_delete_vdev(fifo, i);
-+
-+		/* Release IO resources. */
-+		if (fifo->rx_base)
-+			iounmap(fifo->rx_base);
-+		if (fifo->tx_base)
-+			iounmap(fifo->tx_base);
-+
-+		platform_set_drvdata(pdev, NULL);
-+		kfree(fifo);
-+
-+		mutex_unlock(&tmfifo_lock);
-+	}
-+
-+	rx_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (rx_res)
-+		release_mem_region(rx_res->start, resource_size(rx_res));
-+	tx_res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	if (tx_res)
-+		release_mem_region(tx_res->start, resource_size(tx_res));
-+
-+	return 0;
-+}
-+
-+/* Read the configured network MAC address from efi variable. */
-+static void tmfifo_get_cfg_mac(u8 *mac)
-+{
-+	u8 buf[6];
-+	efi_status_t status;
-+	unsigned long size = sizeof(buf);
-+	efi_char16_t name[] = { 'R', 's', 'h', 'i', 'm', 'M', 'a', 'c',
-+				'A', 'd', 'd', 'r', 0 };
-+	efi_guid_t guid = EFI_GLOBAL_VARIABLE_GUID;
-+
-+	status = efi.get_variable(name, &guid, NULL, &size, buf);
-+	if (status == EFI_SUCCESS && size == sizeof(buf))
-+		memcpy(mac, buf, sizeof(buf));
-+}
-+
-+/* Probe the TMFIFO. */
-+static int tmfifo_probe(struct platform_device *pdev)
-+{
-+	u64 ctl;
-+	struct tmfifo *fifo;
-+	struct resource *rx_res, *tx_res;
-+	struct virtio_net_config net_config;
-+	int i, ret;
-+
-+	/* Get the resource of the Rx & Tx FIFO. */
-+	rx_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	tx_res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	if (!rx_res || !tx_res) {
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+	if (request_mem_region(rx_res->start,
-+			       resource_size(rx_res), "bf-tmfifo") == NULL) {
-+		ret = -EBUSY;
-+		goto early_err;
-+	}
-+
-+	if (request_mem_region(tx_res->start,
-+			       resource_size(tx_res), "bf-tmfifo") == NULL) {
-+		release_mem_region(rx_res->start, resource_size(rx_res));
-+		ret = -EBUSY;
-+		goto early_err;
-+	}
-+
-+	ret = -ENOMEM;
-+	fifo = kzalloc(sizeof(struct tmfifo), GFP_KERNEL);
-+	if (!fifo)
-+		goto err;
-+
-+	fifo->pdev = pdev;
-+	platform_set_drvdata(pdev, fifo);
-+
-+	spin_lock_init(&fifo->spin_lock);
-+	INIT_WORK(&fifo->work, tmfifo_work_handler);
-+
-+	timer_setup(&fifo->timer, tmfifo_timer, 0);
-+	fifo->timer.function = tmfifo_timer;
-+
-+	for (i = 0; i < TM_IRQ_CNT; i++) {
-+		fifo->irq[i] = platform_get_irq(pdev, i);
-+		ret = request_irq(fifo->irq[i], tmfifo_irq_handler, 0,
-+				  "tmfifo", (u8 *)fifo + i);
-+		if (ret) {
-+			pr_err("Unable to request irq\n");
-+			fifo->irq[i] = 0;
-+			goto err;
-+		}
-+	}
-+
-+	fifo->rx_base = ioremap(rx_res->start, resource_size(rx_res));
-+	if (!fifo->rx_base)
-+		goto err;
-+
-+	fifo->tx_base = ioremap(tx_res->start, resource_size(tx_res));
-+	if (!fifo->tx_base)
-+		goto err;
-+
-+	/* Get Tx FIFO size and set the low/high watermark. */
-+	ctl = readq(fifo->tx_base + TMFIFO_TX_CTL);
-+	fifo->tx_fifo_size =
-+		FIELD_GET(TMFIFO_TX_CTL__MAX_ENTRIES_MASK, ctl);
-+	ctl = (ctl & ~TMFIFO_TX_CTL__LWM_MASK) |
-+		FIELD_PREP(TMFIFO_TX_CTL__LWM_MASK, fifo->tx_fifo_size / 2);
-+	ctl = (ctl & ~TMFIFO_TX_CTL__HWM_MASK) |
-+		FIELD_PREP(TMFIFO_TX_CTL__HWM_MASK, fifo->tx_fifo_size - 1);
-+	writeq(ctl, fifo->tx_base + TMFIFO_TX_CTL);
-+
-+	/* Get Rx FIFO size and set the low/high watermark. */
-+	ctl = readq(fifo->rx_base + TMFIFO_RX_CTL);
-+	fifo->rx_fifo_size =
-+		FIELD_GET(TMFIFO_RX_CTL__MAX_ENTRIES_MASK, ctl);
-+	ctl = (ctl & ~TMFIFO_RX_CTL__LWM_MASK) |
-+		FIELD_PREP(TMFIFO_RX_CTL__LWM_MASK, 0);
-+	ctl = (ctl & ~TMFIFO_RX_CTL__HWM_MASK) |
-+		FIELD_PREP(TMFIFO_RX_CTL__HWM_MASK, 1);
-+	writeq(ctl, fifo->rx_base + TMFIFO_RX_CTL);
-+
-+	mutex_init(&fifo->lock);
-+
-+	/* Create the console vdev. */
-+	ret = tmfifo_create_vdev(fifo, VIRTIO_ID_CONSOLE, 0, NULL, 0);
-+	if (ret)
-+		goto err;
-+
-+	/* Create the network vdev. */
-+	memset(&net_config, 0, sizeof(net_config));
-+	net_config.mtu = TMFIFO_NET_MTU;
-+	net_config.status = VIRTIO_NET_S_LINK_UP;
-+	memcpy(net_config.mac, tmfifo_net_default_mac, 6);
-+	tmfifo_get_cfg_mac(net_config.mac);
-+	ret = tmfifo_create_vdev(fifo, VIRTIO_ID_NET, TMFIFO_NET_FEATURES,
-+				 &net_config, sizeof(net_config));
-+	if (ret)
-+		goto err;
-+
-+	mod_timer(&fifo->timer, jiffies + tmfifo_timer_interval);
-+
-+	fifo->is_ready = true;
-+
-+	return 0;
-+
-+err:
-+	tmfifo_remove(pdev);
-+early_err:
-+	dev_err(&pdev->dev, "Probe Failed\n");
-+	return ret;
-+}
-+
-+static const struct of_device_id tmfifo_match[] = {
-+	{ .compatible = "mellanox,bf-tmfifo" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, tmfifo_match);
-+
-+static const struct acpi_device_id bf_tmfifo_acpi_match[] = {
-+	{ "MLNXBF01", 0 },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(acpi, bf_tmfifo_acpi_match);
-+
-+static struct platform_driver tmfifo_driver = {
-+	.probe = tmfifo_probe,
-+	.remove = tmfifo_remove,
-+	.driver = {
-+		.name = "bf-tmfifo",
-+		.of_match_table = tmfifo_match,
-+		.acpi_match_table = ACPI_PTR(bf_tmfifo_acpi_match),
-+	},
-+};
-+
-+static int __init tmfifo_init(void)
-+{
-+	int ret;
-+
-+	ret = platform_driver_register(&tmfifo_driver);
-+	if (ret)
-+		pr_err("Failed to register tmfifo driver.\n");
-+
-+	return ret;
-+}
-+
-+static void __exit tmfifo_exit(void)
-+{
-+	platform_driver_unregister(&tmfifo_driver);
-+}
-+
-+module_init(tmfifo_init);
-+module_exit(tmfifo_exit);
-+
-+MODULE_DESCRIPTION("Mellanox BlueField SoC TMFIFO Driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Mellanox Technologies");
-diff --git a/drivers/soc/mellanox/tmfifo_regs.h b/drivers/soc/mellanox/tmfifo_regs.h
-new file mode 100644
-index 0000000..9f21764
---- /dev/null
-+++ b/drivers/soc/mellanox/tmfifo_regs.h
-@@ -0,0 +1,76 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2018, Mellanox Technologies. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __TMFIFO_REGS_H__
-+#define __TMFIFO_REGS_H__
-+
-+#include <linux/types.h>
-+
-+#define TMFIFO_TX_DATA 0x0
-+
-+#define TMFIFO_TX_STS 0x8
-+#define TMFIFO_TX_STS__LENGTH 0x0001
-+#define TMFIFO_TX_STS__COUNT_SHIFT 0
-+#define TMFIFO_TX_STS__COUNT_WIDTH 9
-+#define TMFIFO_TX_STS__COUNT_RESET_VAL 0
-+#define TMFIFO_TX_STS__COUNT_RMASK 0x1ff
-+#define TMFIFO_TX_STS__COUNT_MASK  0x1ff
-+
-+#define TMFIFO_TX_CTL 0x10
-+#define TMFIFO_TX_CTL__LENGTH 0x0001
-+#define TMFIFO_TX_CTL__LWM_SHIFT 0
-+#define TMFIFO_TX_CTL__LWM_WIDTH 8
-+#define TMFIFO_TX_CTL__LWM_RESET_VAL 128
-+#define TMFIFO_TX_CTL__LWM_RMASK 0xff
-+#define TMFIFO_TX_CTL__LWM_MASK  0xff
-+#define TMFIFO_TX_CTL__HWM_SHIFT 8
-+#define TMFIFO_TX_CTL__HWM_WIDTH 8
-+#define TMFIFO_TX_CTL__HWM_RESET_VAL 128
-+#define TMFIFO_TX_CTL__HWM_RMASK 0xff
-+#define TMFIFO_TX_CTL__HWM_MASK  0xff00
-+#define TMFIFO_TX_CTL__MAX_ENTRIES_SHIFT 32
-+#define TMFIFO_TX_CTL__MAX_ENTRIES_WIDTH 9
-+#define TMFIFO_TX_CTL__MAX_ENTRIES_RESET_VAL 256
-+#define TMFIFO_TX_CTL__MAX_ENTRIES_RMASK 0x1ff
-+#define TMFIFO_TX_CTL__MAX_ENTRIES_MASK  0x1ff00000000ULL
-+
-+#define TMFIFO_RX_DATA 0x0
-+
-+#define TMFIFO_RX_STS 0x8
-+#define TMFIFO_RX_STS__LENGTH 0x0001
-+#define TMFIFO_RX_STS__COUNT_SHIFT 0
-+#define TMFIFO_RX_STS__COUNT_WIDTH 9
-+#define TMFIFO_RX_STS__COUNT_RESET_VAL 0
-+#define TMFIFO_RX_STS__COUNT_RMASK 0x1ff
-+#define TMFIFO_RX_STS__COUNT_MASK  0x1ff
-+
-+#define TMFIFO_RX_CTL 0x10
-+#define TMFIFO_RX_CTL__LENGTH 0x0001
-+#define TMFIFO_RX_CTL__LWM_SHIFT 0
-+#define TMFIFO_RX_CTL__LWM_WIDTH 8
-+#define TMFIFO_RX_CTL__LWM_RESET_VAL 128
-+#define TMFIFO_RX_CTL__LWM_RMASK 0xff
-+#define TMFIFO_RX_CTL__LWM_MASK  0xff
-+#define TMFIFO_RX_CTL__HWM_SHIFT 8
-+#define TMFIFO_RX_CTL__HWM_WIDTH 8
-+#define TMFIFO_RX_CTL__HWM_RESET_VAL 128
-+#define TMFIFO_RX_CTL__HWM_RMASK 0xff
-+#define TMFIFO_RX_CTL__HWM_MASK  0xff00
-+#define TMFIFO_RX_CTL__MAX_ENTRIES_SHIFT 32
-+#define TMFIFO_RX_CTL__MAX_ENTRIES_WIDTH 9
-+#define TMFIFO_RX_CTL__MAX_ENTRIES_RESET_VAL 256
-+#define TMFIFO_RX_CTL__MAX_ENTRIES_RMASK 0x1ff
-+#define TMFIFO_RX_CTL__MAX_ENTRIES_MASK  0x1ff00000000ULL
-+
-+#endif /* !defined(__TMFIFO_REGS_H__) */
--- 
-1.8.3.1
+This driver was initially written by me and sent for review till v2:
+https://lore.kernel.org/patchwork/patch/635317/
+I remember there was no support for reset that time and could not
+test DP.
+I guess you should add my name too.
+Subbaraya Sundeep <sundeep.lkml@gmail.com>.
+
+Thanks,
+Sundeep
+
+> + *
+> + * This driver is tested for USB, SATA and Display Port currently.
+> + * Other controllers PCIe and SGMII should also work but that is
+> + * experimental as of now.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_address.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/phy/phy-zynqmp.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/delay.h>
+> +#include <dt-bindings/phy/phy.h>
+> +#include <linux/reset.h>
+> +#include <linux/list.h>
+> +#include <linux/slab.h>
+> +
+> +/* Inter Connect Matrix parameters */
+> +#define ICM_CFG0                       0x10010
+> +#define ICM_CFG1                       0x10014
+> +#define ICM_CFG0_L0_MASK               0x07
+> +#define ICM_CFG0_L1_MASK               0x70
+> +#define ICM_CFG1_L2_MASK               0x07
+> +#define ICM_CFG2_L3_MASK               0x70
+> +#define ICM_CFG_SHIFT                  4
+> +
+> +/* Inter Connect Matrix allowed protocols */
+> +#define ICM_PROTOCOL_PD                        0x0
+> +#define ICM_PROTOCOL_PCIE              0x1
+> +#define ICM_PROTOCOL_SATA              0x2
+> +#define ICM_PROTOCOL_USB               0x3
+> +#define ICM_PROTOCOL_DP                        0x4
+> +#define ICM_PROTOCOL_SGMII             0x5
+> +
+> +/* Test Mode common reset control  parameters */
+> +#define TM_CMN_RST                     0x10018
+> +#define TM_CMN_RST_EN                  0x1
+> +#define TM_CMN_RST_SET                 0x2
+> +#define TM_CMN_RST_MASK                        0x3
+> +
+> +/* Refclk selection parameters */
+> +#define PLL_REF_SEL0                   0x10000
+> +#define PLL_REF_OFFSET                 0x4
+> +#define PLL_FREQ_MASK                  0x1F
+> +#define PLL_STATUS_READ_OFFSET         0x4000
+> +#define PLL_STATUS_LOCKED              0x10
+> +
+> +/* PLL SSC step size offsets */
+> +#define L0_L0_REF_CLK_SEL              0x2860
+> +#define L0_PLL_SS_STEPS_0_LSB          0x2368
+> +#define L0_PLL_SS_STEPS_1_MSB          0x236C
+> +#define L0_PLL_SS_STEP_SIZE_0_LSB      0x2370
+> +#define L0_PLL_SS_STEP_SIZE_1          0x2374
+> +#define L0_PLL_SS_STEP_SIZE_2          0x2378
+> +#define L0_PLL_SS_STEP_SIZE_3_MSB      0x237C
+> +#define L0_PLL_STATUS_READ_1           0x23E4
+> +
+> +/* SSC step size parameters */
+> +#define STEP_SIZE_OFFSET               0x4000
+> +#define STEP_SIZE_0_MASK               0xFF
+> +#define STEP_SIZE_1_MASK               0xFF
+> +#define STEP_SIZE_2_MASK               0xFF
+> +#define STEP_SIZE_3_MASK               0x3
+> +#define STEP_SIZE_SHIFT                        8
+> +#define FORCE_STEP_SIZE                        0x10
+> +#define FORCE_STEPS                    0x20
+> +#define STEPS_OFFSET                   0x4000
+> +#define STEPS_0_MASK                   0xFF
+> +#define STEPS_1_MASK                   0x07
+> +
+> +/* BG calibration parameters */
+> +#define BGCAL_REF_SEL                  0x10028
+> +#define BGCAL_REF_VALUE                        0x0C
+> +
+> +/* Calibration digital logic parameters */
+> +#define L3_TM_CALIB_DIG19              0xEC4C
+> +#define L3_CALIB_DONE_STATUS           0xEF14
+> +#define L3_TM_CALIB_DIG18              0xEC48
+> +#define L3_TM_CALIB_DIG19_NSW          0x07
+> +#define L3_TM_CALIB_DIG18_NSW          0xE0
+> +#define L3_TM_OVERRIDE_NSW_CODE         0x20
+> +#define L3_CALIB_DONE                  0x02
+> +#define L3_NSW_SHIFT                   5
+> +#define L3_NSW_PIPE_SHIFT              4
+> +#define L3_NSW_CALIB_SHIFT             3
+> +
+> +/* DN Resistor calibration code parameters */
+> +#define L0_TXPMA_ST_3                  0x0B0C
+> +#define L0_DN_CALIB_CODE               0x3F
+> +
+> +/* PLL Test Mode register parameters */
+> +#define L0_TM_PLL_DIG_37               0x2094
+> +#define L0_TM_PLL_DIG_37_OFFSET                0x4000
+> +#define L0_TM_COARSE_CODE_LIMIT                0x10
+> +
+> +/* PCS control parameters */
+> +#define L0_TM_DIG_6                    0x106C
+> +#define L0_TX_DIG_61                   0x00F4
+> +#define L0_TM_DIG_6_OFFSET             0x4000
+> +#define L0_TX_DIG_61_OFFSET            0x4000
+> +#define L0_TM_DIS_DESCRAMBLE_DECODER   0x0F
+> +#define L0_TM_DISABLE_SCRAMBLE_ENCODER 0x0F
+> +
+> +/* TX De-emphasis parameters */
+> +#define L0_TX_ANA_TM_18                        0x0048
+> +#define L0_TX_ANA_TM_118               0x01D8
+> +#define L0_TX_ANA_TM_18_OFFSET         0x4000
+> +#define L0_TX_ANA_TM_118_OFFSET                0x4000
+> +#define L0_TX_ANA_TM_118_FORCE_17_0    BIT(0)
+> +
+> +/* PMA control parameters */
+> +#define L0_TXPMD_TM_45                 0x0CB4
+> +#define L0_TXPMD_TM_48                 0x0CC0
+> +#define L0_TXPMD_TM_45_OFFSET          0x4000
+> +#define L0_TXPMD_TM_48_OFFSET          0x4000
+> +#define L0_TXPMD_TM_45_OVER_DP_MAIN    BIT(0)
+> +#define L0_TXPMD_TM_45_ENABLE_DP_MAIN  BIT(1)
+> +#define L0_TXPMD_TM_45_OVER_DP_POST1   BIT(2)
+> +#define L0_TXPMD_TM_45_ENABLE_DP_POST1 BIT(3)
+> +#define L0_TXPMD_TM_45_OVER_DP_POST2   BIT(4)
+> +#define L0_TXPMD_TM_45_ENABLE_DP_POST2 BIT(5)
+> +
+> +/* Bus width parameters */
+> +#define TX_PROT_BUS_WIDTH              0x10040
+> +#define RX_PROT_BUS_WIDTH              0x10044
+> +#define PROT_BUS_WIDTH_10              0x0
+> +#define PROT_BUS_WIDTH_20              0x1
+> +#define PROT_BUS_WIDTH_40              0x2
+> +#define PROT_BUS_WIDTH_SHIFT           2
+> +
+> +/* Max number of GT lanes */
+> +#define MAX_LANES                      4
+> +
+> +/* Max Allowed refclk frequencies */
+> +#define MAX_REFCLK                     13
+> +
+> +/* Lane CLK sharing mask */
+> +#define LANE_CLK_SHARE_MASK            0x8F
+> +
+> +/* SIOU SATA control register */
+> +#define SATA_CONTROL_OFFSET            0x0100
+> +
+> +/* Total number of controllers */
+> +#define CONTROLLERS_PER_LANE           5
+> +
+> +/* USB pipe control parameters */
+> +#define PIPE_CLK_OFFSET                        0x7c
+> +#define PIPE_POWER_OFFSET              0x80
+> +#define PIPE_CLK_ON                    1
+> +#define PIPE_CLK_OFF                   0
+> +#define PIPE_POWER_ON                  1
+> +#define PIPE_POWER_OFF                 0
+> +
+> +/* Protocol Type Pparameters */
+> +#define XPSGTR_TYPE_USB0               0  /* USB controller 0 */
+> +#define XPSGTR_TYPE_USB1               1  /* USB controller 1 */
+> +#define XPSGTR_TYPE_SATA_0             2  /* SATA controller lane 0 */
+> +#define XPSGTR_TYPE_SATA_1             3  /* SATA controller lane 1 */
+> +#define XPSGTR_TYPE_PCIE_0             4  /* PCIe controller lane 0 */
+> +#define XPSGTR_TYPE_PCIE_1             5  /* PCIe controller lane 1 */
+> +#define XPSGTR_TYPE_PCIE_2             6  /* PCIe controller lane 2 */
+> +#define XPSGTR_TYPE_PCIE_3             7  /* PCIe controller lane 3 */
+> +#define XPSGTR_TYPE_DP_0               8  /* Display Port controller lane 0 */
+> +#define XPSGTR_TYPE_DP_1               9  /* Display Port controller lane 1 */
+> +#define XPSGTR_TYPE_SGMII0             10 /* Ethernet SGMII controller 0 */
+> +#define XPSGTR_TYPE_SGMII1             11 /* Ethernet SGMII controller 1 */
+> +#define XPSGTR_TYPE_SGMII2             12 /* Ethernet SGMII controller 2 */
+> +#define XPSGTR_TYPE_SGMII3             13 /* Ethernet SGMII controller 3 */
+> +
+> +/* Timeout values */
+> +#define RST_TIMEOUT_MS                 1000
+> +#define TIMEOUT_US                     1000
+> +
+> +/*
+> + * This table holds the valid combinations of controllers and
+> + * lanes(Interconnect Matrix).
+> + */
+> +static unsigned int icm_matrix[MAX_LANES][CONTROLLERS_PER_LANE] = {
+> +       { XPSGTR_TYPE_PCIE_0, XPSGTR_TYPE_SATA_0, XPSGTR_TYPE_USB0,
+> +               XPSGTR_TYPE_DP_1, XPSGTR_TYPE_SGMII0 },
+> +       { XPSGTR_TYPE_PCIE_1, XPSGTR_TYPE_SATA_1, XPSGTR_TYPE_USB0,
+> +               XPSGTR_TYPE_DP_0, XPSGTR_TYPE_SGMII1 },
+> +       { XPSGTR_TYPE_PCIE_2, XPSGTR_TYPE_SATA_0, XPSGTR_TYPE_USB0,
+> +               XPSGTR_TYPE_DP_1, XPSGTR_TYPE_SGMII2 },
+> +       { XPSGTR_TYPE_PCIE_3, XPSGTR_TYPE_SATA_1, XPSGTR_TYPE_USB1,
+> +               XPSGTR_TYPE_DP_0, XPSGTR_TYPE_SGMII3 }
+> +};
+> +
+> +/* Allowed PLL reference clock frequencies */
+> +enum pll_frequencies {
+> +       REF_19_2M = 0,
+> +       REF_20M,
+> +       REF_24M,
+> +       REF_26M,
+> +       REF_27M,
+> +       REF_38_4M,
+> +       REF_40M,
+> +       REF_52M,
+> +       REF_100M,
+> +       REF_108M,
+> +       REF_125M,
+> +       REF_135M,
+> +       REF_150M,
+> +};
+> +
+> +/**
+> + * struct xpsgtr_phy - representation of a lane
+> + * @phy: pointer to the kernel PHY device
+> + * @type: controller which uses this lane
+> + * @lane: lane number
+> + * @protocol: protocol in which the lane operates
+> + * @ref_clk: enum of allowed ref clock rates for this lane PLL
+> + * @pll_lock: PLL status
+> + * @skip_phy_init: skip phy_init() if true
+> + * @data: pointer to hold private data
+> + * @refclk_rate: PLL reference clock frequency
+> + * @share_laneclk: lane number of the clock to be shared
+> + */
+> +struct xpsgtr_phy {
+> +       struct phy *phy;
+> +       u8 type;
+> +       u8 lane;
+> +       u8 protocol;
+> +       enum pll_frequencies ref_clk;
+> +       bool pll_lock;
+> +       bool skip_phy_init;
+> +       void *data;
+> +       u32 refclk_rate;
+> +       u32 share_laneclk;
+> +};
+> +
+> +/**
+> + * struct xpsgtr_ssc - structure to hold SSC settings for a lane
+> + * @refclk_rate: PLL reference clock frequency
+> + * @pll_ref_clk: value to be written to register for corresponding ref clk rate
+> + * @steps: number of steps of SSC (Spread Spectrum Clock)
+> + * @step_size: step size of each step
+> + */
+> +struct xpsgtr_ssc {
+> +       u32 refclk_rate;
+> +       u8  pll_ref_clk;
+> +       u32 steps;
+> +       u32 step_size;
+> +};
+> +
+> +/* lookup table to hold all settings needed for a ref clock frequency */
+> +static struct xpsgtr_ssc ssc_lookup[MAX_REFCLK] = {
+> +       {19200000, 0x05, 608, 264020},
+> +       {20000000, 0x06, 634, 243454},
+> +       {24000000, 0x07, 760, 168973},
+> +       {26000000, 0x08, 824, 143860},
+> +       {27000000, 0x09, 856, 86551},
+> +       {38400000, 0x0A, 1218, 65896},
+> +       {40000000, 0x0B, 634, 243454},
+> +       {52000000, 0x0C, 824, 143860},
+> +       {100000000, 0x0D, 1058, 87533},
+> +       {108000000, 0x0E, 856, 86551},
+> +       {125000000, 0x0F, 992, 119497},
+> +       {135000000, 0x10, 1070, 55393},
+> +       {150000000, 0x11, 792, 187091}
+> +};
+> +
+> +/**
+> + * struct xpsgtr_dev - representation of a ZynMP GT device
+> + * @dev: pointer to device
+> + * @serdes: serdes base address
+> + * @siou: siou base address
+> + * @gtr_mutex: mutex for locking
+> + * @phys: pointer to all the lanes
+> + * @tx_term_fix: fix for GT issue
+> + * @saved_icm_cfg0: stored value of ICM CFG0 register
+> + * @saved_icm_cfg1: stored value of ICM CFG1 register
+> + * @sata_rst: a reset control for SATA
+> + * @dp_rst: a reset control for DP
+> + * @usb0_crst: a reset control for usb0 core
+> + * @usb1_crst: a reset control for usb1 core
+> + * @usb0_hibrst: a reset control for usb0 hibernation module
+> + * @usb1_hibrst: a reset control for usb1 hibernation module
+> + * @usb0_apbrst: a reset control for usb0 apb bus
+> + * @usb1_apbrst: a reset control for usb1 apb bus
+> + * @gem0_rst: a reset control for gem0
+> + * @gem1_rst: a reset control for gem1
+> + * @gem2_rst: a reset control for gem2
+> + * @gem3_rst: a reset control for gem3
+> + */
+> +struct xpsgtr_dev {
+> +       struct device *dev;
+> +       void __iomem *serdes;
+> +       void __iomem *siou;
+> +       struct mutex gtr_mutex; /* mutex for locking */
+> +       struct xpsgtr_phy **phys;
+> +       bool tx_term_fix;
+> +       unsigned int saved_icm_cfg0;
+> +       unsigned int saved_icm_cfg1;
+> +       struct reset_control *sata_rst;
+> +       struct reset_control *dp_rst;
+> +       struct reset_control *usb0_crst;
+> +       struct reset_control *usb1_crst;
+> +       struct reset_control *usb0_hibrst;
+> +       struct reset_control *usb1_hibrst;
+> +       struct reset_control *usb0_apbrst;
+> +       struct reset_control *usb1_apbrst;
+> +       struct reset_control *gem0_rst;
+> +       struct reset_control *gem1_rst;
+> +       struct reset_control *gem2_rst;
+> +       struct reset_control *gem3_rst;
+> +};
+> +
+> +/**
+> + * xpsgtr_override_deemph - override PIPE TX de-emphasis
+> + * @phy: pointer to phy
+> + * @plvl: pre-emphasis level
+> + * @vlvl: voltage swing level
+> + *
+> + * Return: None
+> + */
+> +void xpsgtr_override_deemph(struct phy *phy, u8 plvl, u8 vlvl)
+> +{
+> +       struct xpsgtr_phy *gtr_phy = phy_get_drvdata(phy);
+> +       struct xpsgtr_dev *gtr_dev = gtr_phy->data;
+> +       static u8 pe[4][4] = { { 0x2, 0x2, 0x2, 0x2 },
+> +                              { 0x1, 0x1, 0x1, 0xFF },
+> +                              { 0x0, 0x0, 0xFF, 0xFF },
+> +                              { 0xFF, 0xFF, 0xFF, 0xFF } };
+> +
+> +       writel(pe[plvl][vlvl],
+> +              gtr_dev->serdes + gtr_phy->lane * L0_TX_ANA_TM_18_OFFSET +
+> +              L0_TX_ANA_TM_18);
+> +}
+> +EXPORT_SYMBOL_GPL(xpsgtr_override_deemph);
+> +
+> +/**
+> + * xpsgtr_margining_factor - adjust margining factor value
+> + * @phy: pointer to phy
+> + * @plvl: pre-emphasis level
+> + * @vlvl: voltage swing level
+> + *
+> + * Return: None
+> + */
+> +void xpsgtr_margining_factor(struct phy *phy, u8 plvl, u8 vlvl)
+> +{
+> +       struct xpsgtr_phy *gtr_phy = phy_get_drvdata(phy);
+> +       struct xpsgtr_dev *gtr_dev = gtr_phy->data;
+> +       static u8 vs[4][4] = { { 0x2a, 0x27, 0x24, 0x20 },
+> +                              { 0x27, 0x23, 0x20, 0xFF },
+> +                              { 0x24, 0x20, 0xFF, 0xFF },
+> +                              { 0xFF, 0xFF, 0xFF, 0xFF } };
+> +
+> +       writel(vs[plvl][vlvl],
+> +              gtr_dev->serdes + gtr_phy->lane * L0_TXPMD_TM_48_OFFSET +
+> +              L0_TXPMD_TM_48);
+> +}
+> +EXPORT_SYMBOL_GPL(xpsgtr_margining_factor);
+> +
+> +/**
+> + * xpsgtr_configure_pll - configures SSC settings for a lane
+> + * @gtr_phy: pointer to lane
+> + *
+> + * Return: None
+> + */
+> +static void xpsgtr_configure_pll(struct xpsgtr_phy *gtr_phy)
+> +{
+> +       struct xpsgtr_dev *gtr_dev = gtr_phy->data;
+> +       u32 reg;
+> +       u32 offset;
+> +       u32 steps;
+> +       u32 size;
+> +       u8 pll_ref_clk;
+> +
+> +       steps = ssc_lookup[gtr_phy->ref_clk].steps;
+> +       size = ssc_lookup[gtr_phy->ref_clk].step_size;
+> +       pll_ref_clk = ssc_lookup[gtr_phy->ref_clk].pll_ref_clk;
+> +
+> +       offset = gtr_phy->lane * PLL_REF_OFFSET + PLL_REF_SEL0;
+> +       reg = readl(gtr_dev->serdes + offset);
+> +       reg = (reg & ~PLL_FREQ_MASK) | pll_ref_clk;
+> +       writel(reg, gtr_dev->serdes + offset);
+> +
+> +       /* Enable lane clock sharing, if required */
+> +       if (gtr_phy->share_laneclk != gtr_phy->lane) {
+> +               /* Lane3 Ref Clock Selection Register */
+> +               offset = gtr_phy->lane * PLL_REF_OFFSET + L0_L0_REF_CLK_SEL;
+> +               reg = readl(gtr_dev->serdes + offset);
+> +               reg = (reg & ~LANE_CLK_SHARE_MASK) |
+> +                               (1 << gtr_phy->share_laneclk);
+> +               writel(reg, gtr_dev->serdes + offset);
+> +       }
+> +
+> +       /* SSC step size [7:0] */
+> +       offset = gtr_phy->lane * STEP_SIZE_OFFSET + L0_PLL_SS_STEP_SIZE_0_LSB;
+> +       reg = readl(gtr_dev->serdes + offset);
+> +       reg = (reg & ~STEP_SIZE_0_MASK) |
+> +               (size & STEP_SIZE_0_MASK);
+> +       writel(reg, gtr_dev->serdes + offset);
+> +
+> +       /* SSC step size [15:8] */
+> +       size = size >> STEP_SIZE_SHIFT;
+> +       offset = gtr_phy->lane * STEP_SIZE_OFFSET + L0_PLL_SS_STEP_SIZE_1;
+> +       reg = readl(gtr_dev->serdes + offset);
+> +       reg = (reg & ~STEP_SIZE_1_MASK) |
+> +               (size & STEP_SIZE_1_MASK);
+> +       writel(reg, gtr_dev->serdes + offset);
+> +
+> +       /* SSC step size [23:16] */
+> +       size = size >> STEP_SIZE_SHIFT;
+> +       offset = gtr_phy->lane * STEP_SIZE_OFFSET + L0_PLL_SS_STEP_SIZE_2;
+> +       reg = readl(gtr_dev->serdes + offset);
+> +       reg = (reg & ~STEP_SIZE_2_MASK) |
+> +               (size & STEP_SIZE_2_MASK);
+> +       writel(reg, gtr_dev->serdes + offset);
+> +
+> +       /* SSC steps [7:0] */
+> +       offset = gtr_phy->lane * STEPS_OFFSET + L0_PLL_SS_STEPS_0_LSB;
+> +       reg = readl(gtr_dev->serdes + offset);
+> +       reg = (reg & ~STEPS_0_MASK) |
+> +               (steps & STEPS_0_MASK);
+> +       writel(reg, gtr_dev->serdes + offset);
+> +
+> +       /* SSC steps [10:8] */
+> +       steps = steps >> STEP_SIZE_SHIFT;
+> +       offset = gtr_phy->lane * STEPS_OFFSET + L0_PLL_SS_STEPS_1_MSB;
+> +       reg = readl(gtr_dev->serdes + offset);
+> +       reg = (reg & ~STEPS_1_MASK) |
+> +               (steps & STEPS_1_MASK);
+> +       writel(reg, gtr_dev->serdes + offset);
+> +
+> +       /* SSC step size [24:25] */
+> +       size = size >> STEP_SIZE_SHIFT;
+> +       offset = gtr_phy->lane * STEP_SIZE_OFFSET + L0_PLL_SS_STEP_SIZE_3_MSB;
+> +       reg = readl(gtr_dev->serdes + offset);
+> +       reg = (reg & ~STEP_SIZE_3_MASK) |
+> +               (size & STEP_SIZE_3_MASK);
+> +       reg |= FORCE_STEP_SIZE | FORCE_STEPS;
+> +       writel(reg, gtr_dev->serdes + offset);
+> +}
+> +
+> +/**
+> + * xpsgtr_lane_setprotocol - sets required protocol in ICM registers
+> + * @gtr_phy: pointer to lane
+> + *
+> + * Return: None
+> + */
+> +static void xpsgtr_lane_setprotocol(struct xpsgtr_phy *gtr_phy)
+> +{
+> +       struct xpsgtr_dev *gtr_dev = gtr_phy->data;
+> +       u32 reg;
+> +       u8 protocol = gtr_phy->protocol;
+> +
+> +       switch (gtr_phy->lane) {
+> +       case 0:
+> +               reg = readl(gtr_dev->serdes + ICM_CFG0);
+> +               reg = (reg & ~ICM_CFG0_L0_MASK) | protocol;
+> +               writel(reg, gtr_dev->serdes + ICM_CFG0);
+> +               break;
+> +       case 1:
+> +               reg = readl(gtr_dev->serdes + ICM_CFG0);
+> +               reg = (reg & ~ICM_CFG0_L1_MASK) | (protocol << ICM_CFG_SHIFT);
+> +               writel(reg, gtr_dev->serdes + ICM_CFG0);
+> +               break;
+> +       case 2:
+> +               reg = readl(gtr_dev->serdes + ICM_CFG1);
+> +               reg = (reg & ~ICM_CFG0_L0_MASK) | protocol;
+> +               writel(reg, gtr_dev->serdes + ICM_CFG1);
+> +               break;
+> +       case 3:
+> +               reg = readl(gtr_dev->serdes + ICM_CFG1);
+> +               reg = (reg & ~ICM_CFG0_L1_MASK) | (protocol << ICM_CFG_SHIFT);
+> +               writel(reg, gtr_dev->serdes + ICM_CFG1);
+> +               break;
+> +       default:
+> +               /* We already checked 0 <= lane <= 3 */
+> +               break;
+> +       }
+> +}
+> +
+> +/**
+> + * xpsgtr_get_ssc - gets the required ssc settings based on clk rate
+> + * @gtr_phy: pointer to lane
+> + *
+> + * Return: 0 on success or error on failure
+> + */
+> +static int xpsgtr_get_ssc(struct xpsgtr_phy *gtr_phy)
+> +{
+> +       u32 i;
+> +
+> +       /*
+> +        * Assign the required spread spectrum(SSC) settings
+> +        * from lane refernce clk rate
+> +        */
+> +       for (i = 0 ; i < ARRAY_SIZE(ssc_lookup); i++) {
+> +               if (gtr_phy->refclk_rate == ssc_lookup[i].refclk_rate) {
+> +                       gtr_phy->ref_clk = i;
+> +                       return 0;
+> +               }
+> +       }
+> +
+> +       /* Did not get valid ssc settings*/
+> +       return -EINVAL;
+> +}
+> +
+> +/**
+> + * xpsgtr_configure_lane - configures SSC settings for a lane
+> + * @gtr_phy: pointer to lane
+> + *
+> + * Return: 0 on success or error on failure
+> + */
+> +static int xpsgtr_configure_lane(struct xpsgtr_phy *gtr_phy)
+> +{
+> +       switch (gtr_phy->type) {
+> +       case XPSGTR_TYPE_USB0:
+> +       case XPSGTR_TYPE_USB1:
+> +               gtr_phy->protocol = ICM_PROTOCOL_USB;
+> +               break;
+> +       case XPSGTR_TYPE_SATA_0:
+> +       case XPSGTR_TYPE_SATA_1:
+> +               gtr_phy->protocol = ICM_PROTOCOL_SATA;
+> +               break;
+> +       case XPSGTR_TYPE_DP_0:
+> +       case XPSGTR_TYPE_DP_1:
+> +               gtr_phy->protocol = ICM_PROTOCOL_DP;
+> +               break;
+> +       case XPSGTR_TYPE_PCIE_0:
+> +       case XPSGTR_TYPE_PCIE_1:
+> +       case XPSGTR_TYPE_PCIE_2:
+> +       case XPSGTR_TYPE_PCIE_3:
+> +               gtr_phy->protocol = ICM_PROTOCOL_PCIE;
+> +               break;
+> +       case XPSGTR_TYPE_SGMII0:
+> +       case XPSGTR_TYPE_SGMII1:
+> +       case XPSGTR_TYPE_SGMII2:
+> +       case XPSGTR_TYPE_SGMII3:
+> +               gtr_phy->protocol = ICM_PROTOCOL_SGMII;
+> +               break;
+> +       default:
+> +               gtr_phy->protocol = ICM_PROTOCOL_PD;
+> +               break;
+> +       }
+> +
+> +       /* Get SSC settinsg for refernce clk rate */
+> +       if (xpsgtr_get_ssc(gtr_phy) < 0)
+> +               return -EINVAL;
+> +
+> +       return 0;
+> +}
+> +
+> +/**
+> + * xpsgtr_config_usbpipe - configures the PIPE3 signals for USB
+> + * @gtr_phy: pointer to gtr phy device
+> + *
+> + * Return: None
+> + */
+> +static void xpsgtr_config_usbpipe(struct xpsgtr_phy *gtr_phy)
+> +{
+> +       struct phy *phy = gtr_phy->phy;
+> +       struct xpsgtr_dev *gtr_dev = gtr_phy->data;
+> +       void __iomem *regs = dev_get_platdata(&phy->dev);
+> +
+> +       if (regs) {
+> +               /* Set PIPE power present signal */
+> +               writel(PIPE_POWER_ON, regs + PIPE_POWER_OFFSET);
+> +
+> +               /* Clear PIPE CLK signal */
+> +               writel(PIPE_CLK_OFF, regs + PIPE_CLK_OFFSET);
+> +       } else {
+> +               dev_info(gtr_dev->dev,
+> +                        "%s: No valid Platform_data found\n", __func__);
+> +       }
+> +}
+> +
+> +/**
+> + * xpsgtr_reset_assert - asserts reset using reset framework
+> + * @rstc: pointer to reset_control
+> + *
+> + * Return: 0 on success or error on failure
+> + */
+> +static int xpsgtr_reset_assert(struct reset_control *rstc)
+> +{
+> +       unsigned long loop_time = msecs_to_jiffies(RST_TIMEOUT_MS);
+> +       unsigned long timeout;
+> +
+> +       reset_control_assert(rstc);
+> +
+> +       /* wait until reset is asserted or timeout */
+> +       timeout = jiffies + loop_time;
+> +
+> +       while (!time_after_eq(jiffies, timeout)) {
+> +               if (reset_control_status(rstc) > 0)
+> +                       return 0;
+> +
+> +               cpu_relax();
+> +       }
+> +
+> +       return -ETIMEDOUT;
+> +}
+> +
+> +/**
+> + * xpsgtr_reset_release - de-asserts reset using reset framework
+> + * @rstc: pointer to reset_control
+> + *
+> + * Return: 0 on success or error on failure
+> + */
+> +static int xpsgtr_reset_release(struct reset_control *rstc)
+> +{
+> +       unsigned long loop_time = msecs_to_jiffies(RST_TIMEOUT_MS);
+> +       unsigned long timeout;
+> +
+> +       reset_control_deassert(rstc);
+> +
+> +       /* wait until reset is de-asserted or timeout */
+> +       timeout = jiffies + loop_time;
+> +       while (!time_after_eq(jiffies, timeout)) {
+> +               if (!reset_control_status(rstc))
+> +                       return 0;
+> +
+> +               cpu_relax();
+> +       }
+> +
+> +       return -ETIMEDOUT;
+> +}
+> +
+> +/**
+> + * xpsgtr_controller_reset - puts controller in reset
+> + * @gtr_phy: pointer to lane
+> + *
+> + * Return: 0 on success or error on failure
+> + */
+> +static int xpsgtr_controller_reset(struct xpsgtr_phy *gtr_phy)
+> +{
+> +       struct xpsgtr_dev *gtr_dev = gtr_phy->data;
+> +       int ret;
+> +
+> +       switch (gtr_phy->type) {
+> +       case XPSGTR_TYPE_USB0:
+> +               ret = xpsgtr_reset_assert(gtr_dev->usb0_crst);
+> +               if (ret != 0)
+> +                       break;
+> +
+> +               ret = xpsgtr_reset_assert(gtr_dev->usb0_hibrst);
+> +               if (ret != 0)
+> +                       break;
+> +
+> +               ret = xpsgtr_reset_assert(gtr_dev->usb0_apbrst);
+> +               break;
+> +       case XPSGTR_TYPE_USB1:
+> +               ret = xpsgtr_reset_assert(gtr_dev->usb1_crst);
+> +               if (ret != 0)
+> +                       break;
+> +
+> +               ret = xpsgtr_reset_assert(gtr_dev->usb1_hibrst);
+> +               if (ret != 0)
+> +                       break;
+> +
+> +               ret = xpsgtr_reset_assert(gtr_dev->usb1_apbrst);
+> +               break;
+> +       case XPSGTR_TYPE_SATA_0:
+> +       case XPSGTR_TYPE_SATA_1:
+> +               ret = xpsgtr_reset_assert(gtr_dev->sata_rst);
+> +               break;
+> +       case XPSGTR_TYPE_DP_0:
+> +       case XPSGTR_TYPE_DP_1:
+> +               ret = xpsgtr_reset_assert(gtr_dev->dp_rst);
+> +               break;
+> +       case XPSGTR_TYPE_SGMII0:
+> +               ret = xpsgtr_reset_assert(gtr_dev->gem0_rst);
+> +               break;
+> +       case XPSGTR_TYPE_SGMII1:
+> +               ret = xpsgtr_reset_assert(gtr_dev->gem1_rst);
+> +               break;
+> +       case XPSGTR_TYPE_SGMII2:
+> +               ret = xpsgtr_reset_assert(gtr_dev->gem2_rst);
+> +               break;
+> +       case XPSGTR_TYPE_SGMII3:
+> +               ret = xpsgtr_reset_assert(gtr_dev->gem3_rst);
+> +               break;
+> +       default:
+> +               ret = -EINVAL;
+> +               break;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +/**
+> + * xpsgtr_controller_release_reset - releases controller from reset
+> + * @gtr_phy: pointer to lane
+> + *
+> + * Return: 0 on success or error on failure
+> + */
+> +static int xpsgtr_controller_release_reset(struct xpsgtr_phy *gtr_phy)
+> +{
+> +       struct xpsgtr_dev *gtr_dev = gtr_phy->data;
+> +       int ret;
+> +
+> +       switch (gtr_phy->type) {
+> +       case XPSGTR_TYPE_USB0:
+> +               ret = xpsgtr_reset_release(gtr_dev->usb0_apbrst);
+> +               if (ret != 0)
+> +                       break;
+> +
+> +               /* Config PIPE3 signals after releasing APB reset */
+> +               xpsgtr_config_usbpipe(gtr_phy);
+> +
+> +               ret = xpsgtr_reset_release(gtr_dev->usb0_crst);
+> +               if (ret != 0)
+> +                       break;
+> +
+> +               ret = xpsgtr_reset_release(gtr_dev->usb0_hibrst);
+> +               break;
+> +       case XPSGTR_TYPE_USB1:
+> +               ret = xpsgtr_reset_release(gtr_dev->usb1_apbrst);
+> +               if (ret != 0)
+> +                       break;
+> +
+> +               /* Config PIPE3 signals after releasing APB reset */
+> +               xpsgtr_config_usbpipe(gtr_phy);
+> +
+> +               ret = xpsgtr_reset_release(gtr_dev->usb1_crst);
+> +               if (ret != 0)
+> +                       break;
+> +
+> +               ret = xpsgtr_reset_release(gtr_dev->usb1_hibrst);
+> +               break;
+> +       case XPSGTR_TYPE_SATA_0:
+> +       case XPSGTR_TYPE_SATA_1:
+> +               ret = xpsgtr_reset_release(gtr_dev->sata_rst);
+> +               break;
+> +       case XPSGTR_TYPE_DP_0:
+> +       case XPSGTR_TYPE_DP_1:
+> +               ret = xpsgtr_reset_release(gtr_dev->dp_rst);
+> +               break;
+> +       case XPSGTR_TYPE_SGMII0:
+> +               ret = xpsgtr_reset_release(gtr_dev->gem0_rst);
+> +               break;
+> +       case XPSGTR_TYPE_SGMII1:
+> +               ret = xpsgtr_reset_release(gtr_dev->gem1_rst);
+> +               break;
+> +       case XPSGTR_TYPE_SGMII2:
+> +               ret = xpsgtr_reset_release(gtr_dev->gem2_rst);
+> +               break;
+> +       case XPSGTR_TYPE_SGMII3:
+> +               ret = xpsgtr_reset_release(gtr_dev->gem3_rst);
+> +               break;
+> +       default:
+> +               ret = -EINVAL;
+> +               break;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +/**
+> + * xpsgtr_usb_rst_assert - assert USB core reset
+> + * @phy: pointer to phy
+> + *
+> + * Return: 0 on success or error on failure
+> + */
+> +int xpsgtr_usb_crst_assert(struct phy *phy)
+> +{
+> +       struct xpsgtr_phy *gtr_phy = phy_get_drvdata(phy);
+> +       struct xpsgtr_dev *gtr_dev = gtr_phy->data;
+> +       int ret;
+> +
+> +       switch (gtr_phy->type) {
+> +       case XPSGTR_TYPE_USB0:
+> +               ret = xpsgtr_reset_assert(gtr_dev->usb0_crst);
+> +               break;
+> +       case XPSGTR_TYPE_USB1:
+> +               ret = xpsgtr_reset_assert(gtr_dev->usb1_crst);
+> +               break;
+> +       default:
+> +               ret = -EINVAL;
+> +               break;
+> +       }
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL(xpsgtr_usb_crst_assert);
+> +
+> +/**
+> + * xpsgtr_usb_rst_release - release USB core reset
+> + * @phy: pointer to phy
+> + *
+> + * Return: 0 on success or error on failure
+> + */
+> +int xpsgtr_usb_crst_release(struct phy *phy)
+> +{
+> +       struct xpsgtr_phy *gtr_phy = phy_get_drvdata(phy);
+> +       struct xpsgtr_dev *gtr_dev = gtr_phy->data;
+> +       int ret;
+> +
+> +       switch (gtr_phy->type) {
+> +       case XPSGTR_TYPE_USB0:
+> +               ret = xpsgtr_reset_release(gtr_dev->usb0_crst);
+> +               break;
+> +       case XPSGTR_TYPE_USB1:
+> +               ret = xpsgtr_reset_release(gtr_dev->usb1_crst);
+> +               break;
+> +       default:
+> +               ret = -EINVAL;
+> +               break;
+> +       }
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL(xpsgtr_usb_crst_release);
+> +
+> +/**
+> + * xpsgtr_wait_pll_lock - Waits until PLL is locked or timedout
+> + * @phy: pointer to phy
+> + *
+> + * Return: 0 on success or error on failure
+> + */
+> +int xpsgtr_wait_pll_lock(struct phy *phy)
+> +{
+> +       struct xpsgtr_phy *gtr_phy = phy_get_drvdata(phy);
+> +       struct xpsgtr_dev *gtr_dev = gtr_phy->data;
+> +       u32 offset, reg;
+> +       u32 timeout = TIMEOUT_US;
+> +       int ret = 0;
+> +
+> +       /* Check pll is locked */
+> +       offset = gtr_phy->lane * PLL_STATUS_READ_OFFSET + L0_PLL_STATUS_READ_1;
+> +       dev_dbg(gtr_dev->dev, "Waiting for PLL lock...\n");
+> +
+> +       do {
+> +               reg = readl(gtr_dev->serdes + offset);
+> +               if ((reg & PLL_STATUS_LOCKED) == PLL_STATUS_LOCKED)
+> +                       break;
+> +
+> +               if (!--timeout) {
+> +                       dev_err(gtr_dev->dev, "PLL lock time out\n");
+> +                       ret = -ETIMEDOUT;
+> +                       break;
+> +               }
+> +
+> +               udelay(1);
+> +       } while (timeout > 0);
+> +
+> +       if (ret == 0)
+> +               gtr_phy->pll_lock = true;
+> +
+> +       dev_info(gtr_dev->dev, "Lane:%d type:%d protocol:%d pll_locked:%s\n",
+> +                gtr_phy->lane, gtr_phy->type, gtr_phy->protocol,
+> +                gtr_phy->pll_lock ? "yes" : "no");
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(xpsgtr_wait_pll_lock);
+> +
+> +/**
+> + * xpsgtr_set_txwidth - This function sets the tx bus width of the lane
+> + * @gtr_phy: pointer to lane
+> + * @width: tx bus width size
+> + *
+> + * Return: None
+> + */
+> +static void xpsgtr_set_txwidth(struct xpsgtr_phy *gtr_phy, u32 width)
+> +{
+> +       struct xpsgtr_dev *gtr_dev = gtr_phy->data;
+> +
+> +       writel(gtr_phy->lane * PROT_BUS_WIDTH_SHIFT >> width,
+> +              gtr_dev->serdes + TX_PROT_BUS_WIDTH);
+> +}
+> +
+> +/**
+> + * xpsgtr_set_rxwidth - This function sets the rx bus width of the lane
+> + * @gtr_phy: pointer to lane
+> + * @width: rx bus width size
+> + *
+> + * Return: None
+> + */
+> +static void xpsgtr_set_rxwidth(struct xpsgtr_phy *gtr_phy, u32 width)
+> +{
+> +       struct xpsgtr_dev *gtr_dev = gtr_phy->data;
+> +
+> +       writel(gtr_phy->lane * PROT_BUS_WIDTH_SHIFT >> width,
+> +              gtr_dev->serdes + RX_PROT_BUS_WIDTH);
+> +}
+> +
+> +/**
+> + * xpsgtr_bypass_scramenc - This bypasses scrambler and 8b/10b encoder feature
+> + * @gtr_phy: pointer to lane
+> + *
+> + * Return: None
+> + */
+> +static void xpsgtr_bypass_scramenc(struct xpsgtr_phy *gtr_phy)
+> +{
+> +       u32 offset;
+> +       struct xpsgtr_dev *gtr_dev = gtr_phy->data;
+> +
+> +       /* bypass Scrambler and 8b/10b Encoder */
+> +       offset = gtr_phy->lane * L0_TX_DIG_61_OFFSET + L0_TX_DIG_61;
+> +       writel(L0_TM_DISABLE_SCRAMBLE_ENCODER, gtr_dev->serdes + offset);
+> +}
+> +
+> +/**
+> + * xpsgtr_bypass_descramdec - bypasses descrambler and 8b/10b encoder feature
+> + * @gtr_phy: pointer to lane
+> + *
+> + * Return: None
+> + */
+> +static void xpsgtr_bypass_descramdec(struct xpsgtr_phy *gtr_phy)
+> +{
+> +       u32 offset;
+> +       struct xpsgtr_dev *gtr_dev = gtr_phy->data;
+> +
+> +       /* bypass Descrambler and 8b/10b decoder */
+> +       offset = gtr_phy->lane * L0_TM_DIG_6_OFFSET + L0_TM_DIG_6;
+> +       writel(L0_TM_DIS_DESCRAMBLE_DECODER, gtr_dev->serdes + offset);
+> +}
+> +
+> +/**
+> + * xpsgtr_misc_sgmii - miscellaneous settings for SGMII
+> + * @gtr_phy: pointer to lane
+> + *
+> + * Return: None
+> + */
+> +static void xpsgtr_misc_sgmii(struct xpsgtr_phy *gtr_phy)
+> +{
+> +       /* Set SGMII protocol tx bus width 10 bits */
+> +       xpsgtr_set_txwidth(gtr_phy, PROT_BUS_WIDTH_10);
+> +
+> +       /* Set SGMII protocol rx bus width 10 bits */
+> +       xpsgtr_set_rxwidth(gtr_phy, PROT_BUS_WIDTH_10);
+> +
+> +       /* bypass Descrambler and 8b/10b decoder */
+> +       xpsgtr_bypass_descramdec(gtr_phy);
+> +
+> +       /* bypass Scrambler and 8b/10b Encoder */
+> +       xpsgtr_bypass_scramenc(gtr_phy);
+> +}
+> +
+> +/**
+> + * xpsgtr_misc_sata - miscellaneous settings for SATA
+> + * @gtr_phy: pointer to lane
+> + *
+> + * Return: None
+> + */
+> +static void xpsgtr_misc_sata(struct xpsgtr_phy *gtr_phy)
+> +{
+> +       struct xpsgtr_dev *gtr_dev = gtr_phy->data;
+> +
+> +       /* bypass Descrambler and 8b/10b decoder */
+> +       xpsgtr_bypass_descramdec(gtr_phy);
+> +
+> +       /* bypass Scrambler and 8b/10b Encoder */
+> +       xpsgtr_bypass_scramenc(gtr_phy);
+> +
+> +       writel(gtr_phy->lane, gtr_dev->siou + SATA_CONTROL_OFFSET);
+> +}
+> +
+> +/**
+> + * xpsgtr_phyinit_required - check if phy_init for the lane can be skipped
+> + * @gtr_phy: pointer to the phy lane
+> + *
+> + * Return: true if phy_init can be skipped or false
+> + */
+> +static bool xpsgtr_phyinit_required(struct xpsgtr_phy *gtr_phy)
+> +{
+> +       /*
+> +        * As USB may save the snapshot of the states during hibernation, doing
+> +        * phy_init() will put the USB controller into reset, resulting in the
+> +        * losing of the saved snapshot. So try to avoid phy_init() for USB
+> +        * except when gtr_phy->skip_phy_init is false (this happens when FPD is
+> +        * shutdown during suspend or when gt lane is changed from current one)
+> +        */
+> +       if (gtr_phy->protocol == ICM_PROTOCOL_USB && gtr_phy->skip_phy_init)
+> +               return true;
+> +       else
+> +               return false;
+> +}
+> +
+> +/**
+> + * xpsgtr_phy_init - initializes a lane
+> + * @phy: pointer to kernel PHY device
+> + *
+> + * Return: 0 on success or error on failure
+> + */
+> +static int xpsgtr_phy_init(struct phy *phy)
+> +{
+> +       struct xpsgtr_phy *gtr_phy = phy_get_drvdata(phy);
+> +       struct xpsgtr_dev *gtr_dev = gtr_phy->data;
+> +       int ret = 0;
+> +       u32 offset;
+> +       u32 reg;
+> +       u32 nsw;
+> +       u32 timeout = TIMEOUT_US;
+> +
+> +       mutex_lock(&gtr_dev->gtr_mutex);
+> +
+> +       /* Check if phy_init() is required  */
+> +       if (xpsgtr_phyinit_required(gtr_phy))
+> +               goto out;
+> +
+> +       /* Put controller in reset */
+> +       ret = xpsgtr_controller_reset(gtr_phy);
+> +       if (ret != 0) {
+> +               dev_err(gtr_dev->dev, "Failed to assert reset\n");
+> +               goto out;
+> +       }
+> +
+> +       /*
+> +        * There is a functional issue in the GT. The TX termination resistance
+> +        * can be out of spec due to a issue in the calibration logic. Below is
+> +        * the workaround to fix it. This below is required for XCZU9EG silicon.
+> +        */
+> +       if (gtr_dev->tx_term_fix) {
+> +               /* Enabling Test Mode control for CMN Rest */
+> +               reg = readl(gtr_dev->serdes + TM_CMN_RST);
+> +               reg = (reg & ~TM_CMN_RST_MASK) | TM_CMN_RST_SET;
+> +               writel(reg, gtr_dev->serdes + TM_CMN_RST);
+> +
+> +               /* Set Test Mode reset */
+> +               reg = readl(gtr_dev->serdes + TM_CMN_RST);
+> +               reg = (reg & ~TM_CMN_RST_MASK) | TM_CMN_RST_EN;
+> +               writel(reg, gtr_dev->serdes + TM_CMN_RST);
+> +
+> +               writel(0x00, gtr_dev->serdes + L3_TM_CALIB_DIG18);
+> +               writel(L3_TM_OVERRIDE_NSW_CODE, gtr_dev->serdes +
+> +                               L3_TM_CALIB_DIG19);
+> +
+> +               /* As a part of work around sequence for PMOS calibration fix,
+> +                * we need to configure any lane ICM_CFG to valid protocol. This
+> +                * will deassert the CMN_Resetn signal.
+> +                */
+> +               xpsgtr_lane_setprotocol(gtr_phy);
+> +
+> +               /* Clear Test Mode reset */
+> +               reg = readl(gtr_dev->serdes + TM_CMN_RST);
+> +               reg = (reg & ~TM_CMN_RST_MASK) | TM_CMN_RST_SET;
+> +               writel(reg, gtr_dev->serdes + TM_CMN_RST);
+> +
+> +               dev_dbg(gtr_dev->dev, "calibrating...\n");
+> +
+> +               do {
+> +                       reg = readl(gtr_dev->serdes + L3_CALIB_DONE_STATUS);
+> +                       if ((reg & L3_CALIB_DONE) == L3_CALIB_DONE)
+> +                               break;
+> +
+> +                       if (!--timeout) {
+> +                               dev_err(gtr_dev->dev, "calibration time out\n");
+> +                               ret = -ETIMEDOUT;
+> +                               goto out;
+> +                       }
+> +                       udelay(1);
+> +               } while (timeout > 0);
+> +
+> +               dev_dbg(gtr_dev->dev, "calibration done\n");
+> +
+> +               /* Reading NMOS Register Code */
+> +               nsw = readl(gtr_dev->serdes + L0_TXPMA_ST_3);
+> +
+> +               /* Set Test Mode reset */
+> +               reg = readl(gtr_dev->serdes + TM_CMN_RST);
+> +               reg = (reg & ~TM_CMN_RST_MASK) | TM_CMN_RST_EN;
+> +               writel(reg, gtr_dev->serdes + TM_CMN_RST);
+> +
+> +               nsw = nsw & L0_DN_CALIB_CODE;
+> +
+> +               /* Writing NMOS register values back [5:3] */
+> +               reg = nsw >> L3_NSW_CALIB_SHIFT;
+> +               writel(reg, gtr_dev->serdes + L3_TM_CALIB_DIG19);
+> +
+> +               /* Writing NMOS register value [2:0] */
+> +               reg = ((nsw & L3_TM_CALIB_DIG19_NSW) << L3_NSW_SHIFT) |
+> +                                               (1 << L3_NSW_PIPE_SHIFT);
+> +               writel(reg, gtr_dev->serdes + L3_TM_CALIB_DIG18);
+> +
+> +               /* Clear Test Mode reset */
+> +               reg = readl(gtr_dev->serdes + TM_CMN_RST);
+> +               reg = (reg & ~TM_CMN_RST_MASK) | TM_CMN_RST_SET;
+> +               writel(reg, gtr_dev->serdes + TM_CMN_RST);
+> +
+> +               gtr_dev->tx_term_fix = false;
+> +       }
+> +
+> +       /* Enable coarse code saturation limiting logic */
+> +       offset = gtr_phy->lane * L0_TM_PLL_DIG_37_OFFSET + L0_TM_PLL_DIG_37;
+> +       writel(L0_TM_COARSE_CODE_LIMIT, gtr_dev->serdes + offset);
+> +
+> +       xpsgtr_configure_pll(gtr_phy);
+> +       xpsgtr_lane_setprotocol(gtr_phy);
+> +
+> +       if (gtr_phy->protocol == ICM_PROTOCOL_SATA)
+> +               xpsgtr_misc_sata(gtr_phy);
+> +
+> +       if (gtr_phy->protocol == ICM_PROTOCOL_SGMII)
+> +               xpsgtr_misc_sgmii(gtr_phy);
+> +
+> +       /* Bring controller out of reset */
+> +       ret = xpsgtr_controller_release_reset(gtr_phy);
+> +       if (ret != 0) {
+> +               dev_err(gtr_dev->dev, "Failed to release reset\n");
+> +               goto out;
+> +       }
+> +
+> +       /* Wait till pll is locked for all protocols except DP. For DP
+> +        * pll locking function will be called from driver.
+> +        */
+> +       if (gtr_phy->protocol != ICM_PROTOCOL_DP) {
+> +               ret = xpsgtr_wait_pll_lock(phy);
+> +               if (ret != 0)
+> +                       goto out;
+> +       } else {
+> +               offset = gtr_phy->lane * L0_TXPMD_TM_45_OFFSET + L0_TXPMD_TM_45;
+> +               reg = L0_TXPMD_TM_45_OVER_DP_MAIN |
+> +                     L0_TXPMD_TM_45_ENABLE_DP_MAIN |
+> +                     L0_TXPMD_TM_45_OVER_DP_POST1 |
+> +                     L0_TXPMD_TM_45_OVER_DP_POST2 |
+> +                     L0_TXPMD_TM_45_ENABLE_DP_POST2;
+> +               writel(reg, gtr_dev->serdes + offset);
+> +               offset = gtr_phy->lane * L0_TX_ANA_TM_118_OFFSET +
+> +                        L0_TX_ANA_TM_118;
+> +               writel(L0_TX_ANA_TM_118_FORCE_17_0,
+> +                      gtr_dev->serdes + offset);
+> +       }
+> +
+> +out:
+> +       mutex_unlock(&gtr_dev->gtr_mutex);
+> +       return ret;
+> +}
+> +
+> +/**
+> + * xpsgtr_set_lanetype - derives lane type from dts arguments
+> + * @gtr_phy: pointer to lane
+> + * @controller: type of controller
+> + * @instance_num: instance number of the controller in case multilane controller
+> + *
+> + * Return: 0 on success or error on failure
+> + */
+> +static int xpsgtr_set_lanetype(struct xpsgtr_phy *gtr_phy, u8 controller,
+> +                              u8 instance_num)
+> +{
+> +       switch (controller) {
+> +       case PHY_TYPE_SATA:
+> +               if (!instance_num)
+> +                       gtr_phy->type = XPSGTR_TYPE_SATA_0;
+> +               else if (instance_num == 1)
+> +                       gtr_phy->type = XPSGTR_TYPE_SATA_1;
+> +               else
+> +                       return -EINVAL;
+> +               break;
+> +       case PHY_TYPE_USB3:
+> +               if (!instance_num)
+> +                       gtr_phy->type = XPSGTR_TYPE_USB0;
+> +               else if (instance_num == 1)
+> +                       gtr_phy->type = XPSGTR_TYPE_USB1;
+> +               else
+> +                       return -EINVAL;
+> +               break;
+> +       case PHY_TYPE_DP:
+> +               if (!instance_num)
+> +                       gtr_phy->type = XPSGTR_TYPE_DP_0;
+> +               else if (instance_num == 1)
+> +                       gtr_phy->type = XPSGTR_TYPE_DP_1;
+> +               else
+> +                       return -EINVAL;
+> +               break;
+> +       case PHY_TYPE_PCIE:
+> +               if (!instance_num)
+> +                       gtr_phy->type = XPSGTR_TYPE_PCIE_0;
+> +               else if (instance_num == 1)
+> +                       gtr_phy->type = XPSGTR_TYPE_PCIE_1;
+> +               else if (instance_num == 2)
+> +                       gtr_phy->type = XPSGTR_TYPE_PCIE_2;
+> +               else if (instance_num == 3)
+> +                       gtr_phy->type = XPSGTR_TYPE_PCIE_3;
+> +               else
+> +                       return -EINVAL;
+> +               break;
+> +       case PHY_TYPE_SGMII:
+> +               if (!instance_num)
+> +                       gtr_phy->type = XPSGTR_TYPE_SGMII0;
+> +               else if (instance_num == 1)
+> +                       gtr_phy->type = XPSGTR_TYPE_SGMII1;
+> +               else if (instance_num == 2)
+> +                       gtr_phy->type = XPSGTR_TYPE_SGMII2;
+> +               else if (instance_num == 3)
+> +                       gtr_phy->type = XPSGTR_TYPE_SGMII3;
+> +               else
+> +                       return -EINVAL;
+> +               break;
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +/**
+> + * xpsgtr_xlate - provides a PHY specific to a controller
+> + * @dev: pointer to device
+> + * @args: arguments from dts
+> + *
+> + * Return: pointer to kernel PHY device or error on failure
+> + */
+> +static struct phy *xpsgtr_xlate(struct device *dev,
+> +                               struct of_phandle_args *args)
+> +{
+> +       struct xpsgtr_dev *gtr_dev = dev_get_drvdata(dev);
+> +       struct xpsgtr_phy *gtr_phy = NULL;
+> +       struct device_node *phynode = args->np;
+> +       int index;
+> +       int i;
+> +       u8 controller;
+> +       u8 instance_num;
+> +
+> +       if (args->args_count != 4) {
+> +               dev_err(dev, "Invalid number of cells in 'phy' property\n");
+> +               return ERR_PTR(-EINVAL);
+> +       }
+> +       if (!of_device_is_available(phynode)) {
+> +               dev_warn(dev, "requested PHY is disabled\n");
+> +               return ERR_PTR(-ENODEV);
+> +       }
+> +       for (index = 0; index < of_get_child_count(dev->of_node); index++) {
+> +               if (phynode == gtr_dev->phys[index]->phy->dev.of_node) {
+> +                       gtr_phy = gtr_dev->phys[index];
+> +                       break;
+> +               }
+> +       }
+> +       if (!gtr_phy) {
+> +               dev_err(dev, "failed to find appropriate phy\n");
+> +               return ERR_PTR(-EINVAL);
+> +       }
+> +
+> +       /* get type of controller from phys */
+> +       controller = args->args[0];
+> +
+> +       /* get controller instance number */
+> +       instance_num = args->args[1];
+> +
+> +       /* Check if lane sharing is required */
+> +       gtr_phy->share_laneclk = args->args[2];
+> +
+> +       /* get the required clk rate for controller from phys */
+> +       gtr_phy->refclk_rate = args->args[3];
+> +
+> +       /* derive lane type */
+> +       if (xpsgtr_set_lanetype(gtr_phy, controller, instance_num) < 0) {
+> +               dev_err(gtr_dev->dev, "Invalid lane type\n");
+> +               return ERR_PTR(-EINVAL);
+> +       }
+> +
+> +       /* configures SSC settings for a lane */
+> +       if (xpsgtr_configure_lane(gtr_phy) < 0) {
+> +               dev_err(gtr_dev->dev, "Invalid clock rate: %d\n",
+> +                       gtr_phy->refclk_rate);
+> +               return ERR_PTR(-EINVAL);
+> +       }
+> +
+> +       /*
+> +        * Check Interconnect Matrix is obeyed i.e, given lane type
+> +        * is allowed to operate on the lane.
+> +        */
+> +       for (i = 0; i < CONTROLLERS_PER_LANE; i++) {
+> +               if (icm_matrix[index][i] == gtr_phy->type)
+> +                       return gtr_phy->phy;
+> +       }
+> +
+> +       /* Should not reach here */
+> +       return ERR_PTR(-EINVAL);
+> +}
+> +
+> +/**
+> + * xpsgtr_phy_exit - clears previous initialized variables
+> + * @phy: pointer to kernel PHY device
+> + *
+> + * Return: 0 on success or error value on failure
+> + */
+> +static int xpsgtr_phy_exit(struct phy *phy)
+> +{
+> +       struct xpsgtr_phy *gtr_phy = phy_get_drvdata(phy);
+> +
+> +       if (!gtr_phy)
+> +               return -EINVAL;
+> +
+> +       /* As we are exiting, clear skip_phy_init flag */
+> +       gtr_phy->skip_phy_init = false;
+> +
+> +       return 0;
+> +}
+> +
+> +static struct phy_ops xpsgtr_phyops = {
+> +       .init           = xpsgtr_phy_init,
+> +       .exit           = xpsgtr_phy_exit,
+> +       .owner          = THIS_MODULE,
+> +};
+> +
+> +/*
+> + * xpsgtr_get_resets - Gets reset signals based on reset-names property
+> + * @gtr_dev: pointer to structure which stores reset information
+> + *
+> + * Return: 0 on success or error value on failure
+> + */
+> +static int xpsgtr_get_resets(struct xpsgtr_dev *gtr_dev)
+> +{
+> +       char *name;
+> +       struct reset_control *rst_temp;
+> +
+> +       gtr_dev->sata_rst = devm_reset_control_get(gtr_dev->dev, "sata_rst");
+> +       if (IS_ERR(gtr_dev->sata_rst)) {
+> +               name = "sata_rst";
+> +               rst_temp = gtr_dev->sata_rst;
+> +               goto error;
+> +       }
+> +
+> +       gtr_dev->dp_rst = devm_reset_control_get(gtr_dev->dev, "dp_rst");
+> +       if (IS_ERR(gtr_dev->dp_rst)) {
+> +               name = "dp_rst";
+> +               rst_temp = gtr_dev->dp_rst;
+> +               goto error;
+> +       }
+> +
+> +       gtr_dev->usb0_crst = devm_reset_control_get(gtr_dev->dev, "usb0_crst");
+> +       if (IS_ERR(gtr_dev->usb0_crst)) {
+> +               name = "usb0_crst";
+> +               rst_temp = gtr_dev->usb0_crst;
+> +               goto error;
+> +       }
+> +
+> +       gtr_dev->usb1_crst = devm_reset_control_get(gtr_dev->dev, "usb1_crst");
+> +       if (IS_ERR(gtr_dev->usb1_crst)) {
+> +               name = "usb1_crst";
+> +               rst_temp = gtr_dev->usb1_crst;
+> +               goto error;
+> +       }
+> +
+> +       gtr_dev->usb0_hibrst = devm_reset_control_get(gtr_dev->dev,
+> +                                                     "usb0_hibrst");
+> +       if (IS_ERR(gtr_dev->usb0_hibrst)) {
+> +               name = "usb0_hibrst";
+> +               rst_temp = gtr_dev->usb0_hibrst;
+> +               goto error;
+> +       }
+> +
+> +       gtr_dev->usb1_hibrst = devm_reset_control_get(gtr_dev->dev,
+> +                                                     "usb1_hibrst");
+> +       if (IS_ERR(gtr_dev->usb1_hibrst)) {
+> +               name = "usb1_hibrst";
+> +               rst_temp = gtr_dev->usb1_hibrst;
+> +               goto error;
+> +       }
+> +
+> +       gtr_dev->usb0_apbrst = devm_reset_control_get(gtr_dev->dev,
+> +                                                     "usb0_apbrst");
+> +       if (IS_ERR(gtr_dev->usb0_apbrst)) {
+> +               name = "usb0_apbrst";
+> +               rst_temp = gtr_dev->usb0_apbrst;
+> +               goto error;
+> +       }
+> +
+> +       gtr_dev->usb1_apbrst = devm_reset_control_get(gtr_dev->dev,
+> +                                                     "usb1_apbrst");
+> +       if (IS_ERR(gtr_dev->usb1_apbrst)) {
+> +               name = "usb1_apbrst";
+> +               rst_temp = gtr_dev->usb1_apbrst;
+> +               goto error;
+> +       }
+> +
+> +       gtr_dev->gem0_rst = devm_reset_control_get(gtr_dev->dev, "gem0_rst");
+> +       if (IS_ERR(gtr_dev->gem0_rst)) {
+> +               name = "gem0_rst";
+> +               rst_temp = gtr_dev->gem0_rst;
+> +               goto error;
+> +       }
+> +
+> +       gtr_dev->gem1_rst = devm_reset_control_get(gtr_dev->dev, "gem1_rst");
+> +       if (IS_ERR(gtr_dev->gem1_rst)) {
+> +               name = "gem1_rst";
+> +               rst_temp = gtr_dev->gem1_rst;
+> +               goto error;
+> +       }
+> +
+> +       gtr_dev->gem2_rst = devm_reset_control_get(gtr_dev->dev, "gem2_rst");
+> +       if (IS_ERR(gtr_dev->gem2_rst)) {
+> +               name = "gem2_rst";
+> +               rst_temp = gtr_dev->gem2_rst;
+> +               goto error;
+> +       }
+> +
+> +       gtr_dev->gem3_rst = devm_reset_control_get(gtr_dev->dev, "gem3_rst");
+> +       if (IS_ERR(gtr_dev->gem3_rst)) {
+> +               name = "gem3_rst";
+> +               rst_temp = gtr_dev->gem3_rst;
+> +               goto error;
+> +       }
+> +
+> +       return 0;
+> +error:
+> +       dev_err(gtr_dev->dev, "failed to get %s reset signal\n", name);
+> +       return PTR_ERR(rst_temp);
+> +}
+> +
+> +/**
+> + * xpsgtr_probe - The device probe function for driver initialization.
+> + * @pdev: pointer to the platform device structure.
+> + *
+> + * Return: 0 for success and error value on failure
+> + */
+> +static int xpsgtr_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *child, *np = pdev->dev.of_node;
+> +       struct xpsgtr_dev *gtr_dev;
+> +       struct phy_provider *provider;
+> +       struct phy *phy;
+> +       struct resource *res;
+> +       int lanecount, port = 0, index = 0;
+> +       int err;
+> +
+> +       gtr_dev = devm_kzalloc(&pdev->dev, sizeof(*gtr_dev), GFP_KERNEL);
+> +       if (!gtr_dev)
+> +               return -ENOMEM;
+> +
+> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "serdes");
+> +       gtr_dev->serdes = devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(gtr_dev->serdes))
+> +               return PTR_ERR(gtr_dev->serdes);
+> +
+> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "siou");
+> +       gtr_dev->siou = devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(gtr_dev->siou))
+> +               return PTR_ERR(gtr_dev->siou);
+> +
+> +       lanecount = of_get_child_count(np);
+> +       if (lanecount > MAX_LANES || lanecount == 0)
+> +               return -EINVAL;
+> +
+> +       gtr_dev->phys = devm_kzalloc(&pdev->dev, sizeof(phy) * lanecount,
+> +                                    GFP_KERNEL);
+> +       if (!gtr_dev->phys)
+> +               return -ENOMEM;
+> +
+> +       gtr_dev->dev = &pdev->dev;
+> +       platform_set_drvdata(pdev, gtr_dev);
+> +       mutex_init(&gtr_dev->gtr_mutex);
+> +
+> +       if (of_device_is_compatible(np, "xlnx,zynqmp-psgtr"))
+> +               gtr_dev->tx_term_fix =
+> +                       of_property_read_bool(np, "xlnx,tx_termination_fix");
+> +
+> +       err = xpsgtr_get_resets(gtr_dev);
+> +       if (err) {
+> +               dev_err(&pdev->dev, "failed to get resets: %d\n", err);
+> +               return err;
+> +       }
+> +
+> +       for_each_child_of_node(np, child) {
+> +               struct xpsgtr_phy *gtr_phy;
+> +
+> +               gtr_phy = devm_kzalloc(&pdev->dev, sizeof(*gtr_phy),
+> +                                      GFP_KERNEL);
+> +               if (!gtr_phy)
+> +                       return -ENOMEM;
+> +
+> +               /* Assign lane number to gtr_phy instance */
+> +               gtr_phy->lane = index;
+> +
+> +               /* Disable lane sharing as default */
+> +               gtr_phy->share_laneclk = -1;
+> +
+> +               gtr_dev->phys[port] = gtr_phy;
+> +               phy = devm_phy_create(&pdev->dev, child, &xpsgtr_phyops);
+> +               if (IS_ERR(phy)) {
+> +                       dev_err(&pdev->dev, "failed to create PHY\n");
+> +                       return PTR_ERR(phy);
+> +               }
+> +               gtr_dev->phys[port]->phy = phy;
+> +               phy_set_drvdata(phy, gtr_dev->phys[port]);
+> +               gtr_phy->data = gtr_dev;
+> +               port++;
+> +               index++;
+> +       }
+> +       provider = devm_of_phy_provider_register(&pdev->dev, xpsgtr_xlate);
+> +       if (IS_ERR(provider)) {
+> +               dev_err(&pdev->dev, "registering provider failed\n");
+> +                       return PTR_ERR(provider);
+> +       }
+> +       return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM
+> +/**
+> + * xpsgtr_suspend - The function for driver suspend.
+> + * @dev: pointer to the device structure.
+> + *
+> + * Return: 0 for success and error value on failure
+> + */
+> +static int xpsgtr_suspend(struct device *dev)
+> +{
+> +       struct xpsgtr_dev *gtr_dev = dev_get_drvdata(dev);
+> +
+> +       if (!gtr_dev)
+> +               return -EINVAL;
+> +
+> +       /* Save the snapshot ICM_CFG registers */
+> +       gtr_dev->saved_icm_cfg0 = readl(gtr_dev->serdes + ICM_CFG0);
+> +       gtr_dev->saved_icm_cfg1 = readl(gtr_dev->serdes + ICM_CFG1);
+> +
+> +       return 0;
+> +}
+> +
+> +/**
+> + * xpsgtr_resume - The function for driver resume.
+> + * @dev: pointer to the device structure.
+> + *
+> + * Return: 0 for success and error value on failure
+> + */
+> +static int xpsgtr_resume(struct device *dev)
+> +{
+> +       unsigned int icm_cfg0, icm_cfg1, index;
+> +       bool skip_phy_init;
+> +       struct xpsgtr_phy *gtr_phy;
+> +       struct xpsgtr_dev *gtr_dev = dev_get_drvdata(dev);
+> +
+> +       if (!gtr_dev)
+> +               return -EINVAL;
+> +
+> +       icm_cfg0 = readl(gtr_dev->serdes + ICM_CFG0);
+> +       icm_cfg1 = readl(gtr_dev->serdes + ICM_CFG1);
+> +
+> +       /* Return if no gt lanes got configured before suspend */
+> +       if (!gtr_dev->saved_icm_cfg0 && !gtr_dev->saved_icm_cfg1)
+> +               return 0;
+> +
+> +       /* Check if the ICM configurations changed after suspend */
+> +       if (icm_cfg0 == gtr_dev->saved_icm_cfg0 &&
+> +           icm_cfg1 == gtr_dev->saved_icm_cfg1)
+> +               skip_phy_init = true;
+> +       else
+> +               skip_phy_init = false;
+> +
+> +       /* This below updates the skip_phy_init for all gtr_phy instances */
+> +       for (index = 0; index < of_get_child_count(dev->of_node); index++) {
+> +               gtr_phy = gtr_dev->phys[index];
+> +               gtr_phy->skip_phy_init = skip_phy_init;
+> +       }
+> +
+> +       return 0;
+> +}
+> +#endif /* CONFIG_PM */
+> +
+> +/* device PM ops */
+> +static const struct dev_pm_ops xpsgtr_pm_ops = {
+> +       SET_SYSTEM_SLEEP_PM_OPS(xpsgtr_suspend, xpsgtr_resume)
+> +};
+> +
+> +/* Match table for of_platform binding */
+> +static const struct of_device_id xpsgtr_of_match[] = {
+> +       { .compatible = "xlnx,zynqmp-psgtr", },
+> +       { .compatible = "xlnx,zynqmp-psgtr-v1.1", },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, xpsgtr_of_match);
+> +
+> +static struct platform_driver xpsgtr_driver = {
+> +       .probe = xpsgtr_probe,
+> +       .driver = {
+> +               .name = "xilinx-psgtr",
+> +               .of_match_table = xpsgtr_of_match,
+> +               .pm =  &xpsgtr_pm_ops,
+> +       },
+> +};
+> +
+> +module_platform_driver(xpsgtr_driver);
+> +
+> +MODULE_AUTHOR("Xilinx Inc.");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("Xilinx ZynqMP High speed Gigabit Transceiver");
+> diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
+> index d16e875..09cc0a6 100644
+> --- a/include/dt-bindings/phy/phy.h
+> +++ b/include/dt-bindings/phy/phy.h
+> @@ -16,5 +16,7 @@
+>  #define PHY_TYPE_USB2          3
+>  #define PHY_TYPE_USB3          4
+>  #define PHY_TYPE_UFS           5
+> +#define PHY_TYPE_DP            6
+> +#define PHY_TYPE_SGMII         7
+>
+>  #endif /* _DT_BINDINGS_PHY */
+> diff --git a/include/linux/phy/phy-zynqmp.h b/include/linux/phy/phy-zynqmp.h
+> new file mode 100644
+> index 0000000..8dfd73f
+> --- /dev/null
+> +++ b/include/linux/phy/phy-zynqmp.h
+> @@ -0,0 +1,52 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Xilinx ZynqMP PHY header
+> + *
+> + * Copyright (C) 2018 Xilinx, Inc.
+> + *
+> + * Author: Anurag Kumar Vulisha <anuragku@xilinx.com>
+> + * Author: Hyun Woo Kwon <hyunk@xilinx.com>
+> + *
+> + */
+> +
+> +#ifndef _PHY_ZYNQMP_H_
+> +#define _PHY_ZYNQMP_H_
+> +
+> +#include <linux/phy/phy.h>
+> +
+> +#if IS_ENABLED(CONFIG_PHY_XILINX_ZYNQMP)
+> +void xpsgtr_override_deemph(struct phy *phy, u8 plvl, u8 vlvl);
+> +void xpsgtr_margining_factor(struct phy *phy, u8 plvl, u8 vlvl);
+> +int xpsgtr_wait_pll_lock(struct phy *phy);
+> +int xpsgtr_usb_crst_assert(struct phy *phy);
+> +int xpsgtr_usb_crst_release(struct phy *phy);
+> +#else
+> +
+> +static inline int xpsgtr_override_deemph(struct phy *base, u8 plvl, u8 vlvl)
+> +{
+> +       return -ENODEV;
+> +}
+> +
+> +static inline int xpsgtr_margining_factor(struct phy *base, u8 plvl, u8 vlvl)
+> +{
+> +       return -ENODEV;
+> +}
+> +
+> +extern inline int xpsgtr_wait_pll_lock(struct phy *phy)
+> +{
+> +       return -ENODEV;
+> +}
+> +
+> +extern inline int xpsgtr_usb_crst_assert(struct phy *phy)
+> +{
+> +       return -ENODEV;
+> +}
+> +
+> +extern inline int xpsgtr_usb_crst_release(struct phy *phy)
+> +{
+> +       return -ENODEV;
+> +}
+> +
+> +#endif
+> +
+> +#endif /* _PHY_ZYNQMP_H_ */
+> --
+> 2.1.1
+>
