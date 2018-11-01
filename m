@@ -1,62 +1,65 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFC 1/2] dt-bindings: topology: Add RISC-V cpu topology.
-Date: Fri, 2 Nov 2018 15:50:38 +0000
-Message-ID: <20181102155038.GA21067@e107155-lin>
-References: <1541113468-22097-1-git-send-email-atish.patra@wdc.com>
- <1541113468-22097-2-git-send-email-atish.patra@wdc.com>
- <CAL_Jsq+wProNynprMjQnrz1jmbZT9TmmA-_=vPUxCEED_8xONg@mail.gmail.com>
- <20181102133100.GA13130@e107155-lin>
- <CAL_JsqLO+cOcHkr41ebPtONwrzOWGhksH1ypph+tihsuOVDOug@mail.gmail.com>
+From: Brian Dodge <bdodge09@gmail.com>
+Subject: [PATCH] backlight/arcxcnn user proper vendor prefix in device tree
+ bindings
+Date: Thu,  1 Nov 2018 18:35:29 -0400
+Message-ID: <1541111729-26492-1-git-send-email-bdodge09@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLO+cOcHkr41ebPtONwrzOWGhksH1ypph+tihsuOVDOug@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Atish Patra <atish.patra@wdc.com>, linux-riscv@lists.infradead.org, Palmer Dabbelt <palmer@sifive.com>, Anup Patel <anup@brainfault.org>, Christoph Hellwig <hch@infradead.org>, Damien.LeMoal@wdc.com, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, alankao@andestech.com, Sudeep Holla <sudeep.holla@arm.com>, Zong Li <zong@andestech.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kern
+Cc: Brian Dodge <bdodge09@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 02, 2018 at 10:11:38AM -0500, Rob Herring wrote:
-> On Fri, Nov 2, 2018 at 8:31 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> >
-> > On Fri, Nov 02, 2018 at 08:09:39AM -0500, Rob Herring wrote:
-> > > On Thu, Nov 1, 2018 at 6:04 PM Atish Patra <atish.patra@wdc.com> wrote:
-> > > >
-> > > > Define a RISC-V cpu topology. This is based on cpu-map in ARM world.
-> > > > But it doesn't need a separate thread node for defining SMT systems.
-> > > > Multiple cpu phandle properties can be parsed to identify the sibling
-> > > > hardware threads. Moreover, we do not have cluster concept in RISC-V.
-> > > > So package is a better word choice than cluster for RISC-V.
-> > >
-> > > There was a proposal to add package info for ARM recently. Not sure
-> > > what happened to that, but we don't need 2 different ways.
-> > >
-> >
-> > We still need that, I can brush it up and post what Lorenzo had previously
-> > proposed[1]. We want to keep both DT and ACPI CPU topology story aligned.
->
-> Frankly, I don't care what the ACPI story is. I care whether each cpu
-
-Sorry I meant feature parity with ACPI and didn't refer to the mechanics.
-
-> arch does its own thing in DT or not. If a package prop works for
-> RISC-V folks and that happens to align with ACPI, then okay. Though I
-> tend to prefer a package represented as a node rather than a property
-> as I think that's more consistent.
->
-
-Sounds good. One of the reason for making it *optional* property is for
-backward compatibility. But we should be able to deal with that even with
-node.
-
-> Any comments on the thread aspect (whether it has ever been used)?
-> Though I think thread as a node level is more consistent with each
-> topology level being a node (same with package).
->
-Not 100% sure, the only multi threaded core in the market I know is
-Cavium TX2 which is ACPI.
-
---
-Regards,
-Sudeep
+VGhlIHZlbmRvci1wcmVmaXhlcy50eHQgZmlsZSBwcm9wZXJseSByZWZlcnMgdG8gQXJjdGljU2Fu
+ZAphcyAiYXJjdGljIiB3aGlsZSB0aGUgYWN0dWFsIGJhY2tsaWdodCBkcml2ZXIgYW5kIHRoZQpk
+ZXZpY2UgdHJlZSBiaW5kaW5ncyBmb3IgaXQgaW1wcm9wZXJseSB1c2UgImFyYyIuIFRoZQpiaW5k
+aW5ncyBhcmUgYWxzbyBtb2RpZmllZCB0byBzdXBwb3J0IG5ld2VyIGJhY2tsaWdodCBjaGlwcwpp
+biB0aGUgYXJjeGNubiBmYW1pbHkKClNpZ25lZC1vZmYtYnk6IEJyaWFuIERvZGdlIDxiZG9kZ2Uw
+OUBnbWFpbC5jb20+Ci0tLQogLi4uL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0L2FyY3hjbm5fYmwu
+dHh0ICAgICAgICAgICB8IDIwICsrKysrKysrKystLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwg
+MTAgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0L2FyY3hjbm5fYmwudHh0IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0L2FyY3hjbm5f
+YmwudHh0CmluZGV4IDIzMGFiZGUuLmRjYWEyMzkgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2JhY2tsaWdodC9hcmN4Y25uX2JsLnR4dAorKysgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvYXJjeGNubl9i
+bC50eHQKQEAgLTEsOCArMSw4IEBACi1CaW5kaW5nIGZvciBBcmN0aWNTYW5kIGFyYzJjMDYwOCBM
+RUQgZHJpdmVyCitCaW5kaW5nIGZvciBBcmN0aWNTYW5kIGFyYyBmYW1pbHkgTEVEIGRyaXZlcnMK
+IAogUmVxdWlyZWQgcHJvcGVydGllczoKLS0gY29tcGF0aWJsZToJCXNob3VsZCBiZSAiYXJjLGFy
+YzJjMDYwOCIKLS0gcmVnOgkJCXNsYXZlIGFkZHJlc3MKKy0gY29tcGF0aWJsZToJImFyY3RpYyxh
+cmMxYzA2MDgiLCAiYXJjdGljLGFyYzJjMDYwOCIsICJhcmN0aWMsYXJjM2MwODQ1IgorLSByZWc6
+CQlzbGF2ZSBhZGRyZXNzCiAKIE9wdGlvbmFsIHByb3BlcnRpZXM6CiAtIGRlZmF1bHQtYnJpZ2h0
+bmVzczoJYnJpZ2h0bmVzcyB2YWx1ZSBvbiBib290LCB2YWx1ZSBmcm9tOiAwLTQwOTUKQEAgLTEx
+LDE5ICsxMSwxOSBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgogLSBsZWQtc291cmNlczoJCUxpc3Qg
+b2YgZW5hYmxlZCBjaGFubmVscyBmcm9tIDAgdG8gNS4KIAkJCVNlZSBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvbGVkcy9jb21tb24udHh0CiAKLS0gYXJjLGxlZC1jb25maWctMDoJ
+c2V0dGluZyBmb3IgcmVnaXN0ZXIgSUxFRF9DT05GSUdfMAotLSBhcmMsbGVkLWNvbmZpZy0xOglz
+ZXR0aW5nIGZvciByZWdpc3RlciBJTEVEX0NPTkZJR18xCi0tIGFyYyxkaW0tZnJlcToJCVBXTSBt
+b2RlIGZyZXF1ZW5jZSBzZXR0aW5nIChiaXRzIFszOjBdIHVzZWQpCi0tIGFyYyxjb21wLWNvbmZp
+ZzoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgQ09ORklHX0NPTVAKLS0gYXJjLGZpbHRlci1jb25maWc6
+CXNldHRpbmcgZm9yIHJlZ2lzdGVyIEZJTFRFUl9DT05GSUcKLS0gYXJjLHRyaW0tY29uZmlnOglz
+ZXR0aW5nIGZvciByZWdpc3RlciBJTUFYVFVORQorLSBhcmN0aWMsbGVkLWNvbmZpZy0wOglzZXR0
+aW5nIGZvciByZWdpc3RlciBJTEVEX0NPTkZJR18wCistIGFyY3RpYyxsZWQtY29uZmlnLTE6CXNl
+dHRpbmcgZm9yIHJlZ2lzdGVyIElMRURfQ09ORklHXzEKKy0gYXJjdGljLGRpbS1mcmVxOgkJUFdN
+IG1vZGUgZnJlcXVlbmNlIHNldHRpbmcgKGJpdHMgWzM6MF0gdXNlZCkKKy0gYXJjdGljLGNvbXAt
+Y29uZmlnOglzZXR0aW5nIGZvciByZWdpc3RlciBDT05GSUdfQ09NUAorLSBhcmN0aWMsZmlsdGVy
+LWNvbmZpZzoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgRklMVEVSX0NPTkZJRworLSBhcmN0aWMsdHJp
+bS1jb25maWc6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIElNQVhUVU5FCiAKIE5vdGU6IE9wdGlvbmFs
+IHByb3BlcnRpZXMgbm90IHNwZWNpZmllZCB3aWxsIGRlZmF1bHQgdG8gdmFsdWVzIGluIElDIEVQ
+Uk9NCiAKIEV4YW1wbGU6CiAKIGFyYzJjMDYwOEAzMCB7Ci0JY29tcGF0aWJsZSA9ICJhcmMsYXJj
+MmMwNjA4IjsKKwljb21wYXRpYmxlID0gImFyY3RpYyxhcmMyYzA2MDgiOwogCXJlZyA9IDwweDMw
+PjsKIAlkZWZhdWx0LWJyaWdodG5lc3MgPSA8NTAwPjsKIAlsYWJlbCA9ICJsY2QtYmFja2xpZ2h0
+IjsKLS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwK
