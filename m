@@ -1,137 +1,30 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v2 09/10] irqchip: ti-sci-inta: Add support for Interrupt
- Aggregator driver
-Date: Thu, 1 Nov 2018 14:52:12 +0000
-Message-ID: <8bd930f3-a5c9-0490-d676-fb1e0f2f3ad8@arm.com>
-References: <20181018154017.7112-1-lokeshvutla@ti.com>
- <20181018154017.7112-10-lokeshvutla@ti.com>
- <b20127dc-be43-3b00-9960-663738df0069@arm.com>
- <9969f24c-cdb0-1f5c-d0f4-b1c1f587325c@ti.com>
- <86va5ssrfm.wl-marc.zyngier@arm.com>
- <2369ea50-55db-c97b-5b43-99d572c97dc9@ti.com>
- <da27ecc5-db32-cf3a-c194-962c44bc782f@arm.com>
- <ae3c35e0-6d92-10e3-c268-eb4338fbb233@ti.com>
+From: Segher Boessenkool <segher@kernel.crashing.org>
+Subject: Re: [PATCH 01/21] of: Add cpu node iterator for_each_of_cpu_node()
+Date: Thu, 1 Nov 2018 10:12:02 -0500
+Message-ID: <20181101151201.GJ5994@gate.crashing.org>
+References: <20180905193738.19325-1-robh@kernel.org> <20180905193738.19325-2-robh@kernel.org> <874ld3jz6v.fsf@concordia.ellerman.id.au> <871s87jz3g.fsf@concordia.ellerman.id.au> <CABGGisw_bd+bJedZ_T2e-dxmRnXf2N_gGBZj8u+QVGQxj_gc+Q@mail.gmail.com> <87tvl1dq7q.fsf@concordia.ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ae3c35e0-6d92-10e3-c268-eb4338fbb233@ti.com>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <87tvl1dq7q.fsf@concordia.ellerman.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 31/10/18 20:33, Grygorii Strashko wrote:
+On Thu, Nov 01, 2018 at 09:52:57PM +1100, Michael Ellerman wrote:
+> Rob Herring <robh@kernel.org> writes:
+> > Yes, I was aware at least older powerpc DTs don't use 'cpu' for node names.
 > 
-> 
-> On 10/31/18 1:21 PM, Marc Zyngier wrote:
->> Hi Grygorii,
->>
->> On 31/10/18 16:39, Grygorii Strashko wrote:
->>
->> [...]
->>
->>> I'd try to provide some additional information here.
->>> (Sry, I'll still use term "events")
->>>
->>> As Lokesh explained in other mail on K3 SoC everything is generic and most
->>> of resources allocated dynamicaly:
->>> - generic DMA channels
->>> - generic HW rings (used by DMA channel)
->>> - generic events (assigned to the rings) and muxed to different cores/hosts
->>>
->>> So, when some driver would like to perform DMA transaction It's
->>> required to build (configure) DMA channel by allocating different type of
->>> resources and link them together to get finally working Data Movement path
->>> (situation complicated by ti-sci firmware which policies resources between cores/hosts):
->>> - get UDMA channel from available range
->>> - get HW rings and attach them to the UDMA channel
->>> - get event, assign it to the ring and mux it to the core/host through IA->IR-> chain
->>>     (and this step is done by ti_sci_inta_register_event() - no DT as everything is dynamic).
->>>
->>> Next, how this is working now - ti_sci_inta_register_event():
->>> - first call does similar things as regular DT irq mapping (end up calling irq_create_fwspec_mapping()
->>>     and builds IRQ chain as below:
->>>     linux_virq = ti_sci_inta_register_event(dev, <ringacc tisci_dev_id>,
->>> 				<ringacc id>, 0, IRQF_TRIGGER_HIGH, false);
->>>
->>>                +---------------------+
->>>                |         IA          |
->>> +--------+   |            +------+ |        +--------+         +------+
->>> | ring 1 +----->evtA+----->VintX +---------->   IR   +--------->  GIC +-->
->>> +--------+   |            +------+ |        +--------+         +------+  Linux IRQ Y
->>>      evtA      |                     |
->>>                |                     |
->>>                +---------------------+
->>>
->>> - second call updates only IA input part while keeping other parts of IRQ chain the same
->>>     if valid <linux_virq> passed as input parameter:
->>>     linux_virq = ti_sci_inta_register_event(dev, <ringacc tisci_dev_id>,
->>> 				<ringacc id>, linux_virq, IRQF_TRIGGER_HIGH, false);
->>>                +---------------------+
->>>                |         IA          |
->>> +--------+   |            +------+ |        +--------+         +------+
->>> | ring 1 +----->evtA+--^-->VintX +---------->   IR   +--------->  GIC +-->
->>> +--------+   |         |  +------+ |        +--------+         +------+  Linux IRQ Y
->>>                |         |           |
->>> +--------+   |         |           |
->>> | ring 2 +----->evtB+--+           |
->>> +--------+   |                     |
->>>                +---------------------+
->>
->> This is basically equivalent requesting a bunch of MSIs for a single
->> device, and obtaining a set of corresponding interrupts. The fact that
->> you end-up muxing them in the IA block is an implementation detail.
->>
->>>
->>>     As per above, irq-ti-sci-inta and tisci fw creates shared IRQ on HW layer by attaching
->>>     events to already established IA->IR->GIC IRQ chain. Any Rings events will trigger
->>>     Linux IRQ Y line and keep it active until Rings are not empty.
->>>
->>> Now why this was done this way?
->>> Note. I'm not saying this is right, but it is the way we've done it as of now. And I hope MSI
->>> will help to move forward, but I'm not very familiar with it.
->>>
->>> The consumer of this approach is K3 Networking driver, first of all, and
->>> this approach allows to eliminate runtime overhead in Networking hot path and
->>> provides possibility to implement driver's specific queues/rings handling policies
->>> - like round-robin vs priority.
->>>
->>> CPSW networking driver doesn't need to know exact ring generated IRQ - it
->>
->> Well, to fit the Linux model, you'll have to know. Events needs to be
->> signalled as individual IRQs.
-> 
-> "
-> NAK. Either this fits in the standard model, or we adapt the standard
-> model to catter for your particular use case. But we don't define a new,
-> TI specific API.
-> "
+> Actually newer ones too, see below :)
 
-And I stand by what I've written.
+Good, because that is required by the Open Firmware standard (the PowerPC
+binding, to be exact):
 
->>> need to know if there is packet for processing, so current IRQ handling sequence we have (simplified):
->>> - any ring evt -> IA -> IR -> GIC -> Linux IRQ Y
->>>     handle_fasteoi_irq() -> cpsw_irq_handler -> disable_irq() -> napi_schedule()
->>
->> Here, disable_irq() will only affect a single "event".
-> 
-> No. It will disable "Linux IRQ Y". On IA level there is no mask/unmask/ack functions for ring's events.
-> sum of rings events keeps "Linux IRQ Y" line physically active until all rings are serviced - empty.
-> once ring empty - corresponding event auto cleared.
+http://www.openbios.org/data/docs/ppc-2_1.ps
 
-You're missing the point I'm trying to make: either you can and we fit
-it into the Linux model of an interrupt controller, or this thing is not
-an interrupt controller at all. Either event can be individually masked,
-and this can be modelled as an interrupt controller, and they cannot.
+(see 5.1.4, "name").
 
-So if the IA cannot be represented as an interrupt controller and is so
-specific to a particular device, move it out of the interrupt subsystem
-and keep it private to your networking device.
 
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Segher
