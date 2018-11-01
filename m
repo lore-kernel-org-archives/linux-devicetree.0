@@ -1,77 +1,102 @@
-From: Stefano Stabellini <sstabellini@kernel.org>
-Subject: Re: [PATCH v3] devicetree, xen: add xen,
- shared-memory binding
-Date: Thu, 1 Nov 2018 13:31:12 -0700 (PDT)
-Message-ID: <alpine.DEB.2.10.1811011328540.7220@sstabellini-ThinkPad-X260>
-References: <1540343921-7487-1-git-send-email-sstabellini@kernel.org>
- <0951e2a3-78a1-e849-39e9-5980c9c87277@arm.com>
+From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Subject: Re: [PATCH v2 0/7] BL035-RGB-002 3.5" LCD sunxi DRM support
+Date: Thu, 01 Nov 2018 21:33:26 +0100
+Message-ID: <1e9757dd782ffb187efd26582881db019609493c.camel@paulk.fr>
+References: <20181101200045.6078-1-contact@paulk.fr>
+Reply-To: contact-W9ppeneeCTY@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <xen-devel-bounces@lists.xenproject.org>
-In-Reply-To: <0951e2a3-78a1-e849-39e9-5980c9c87277@arm.com>
-List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
-List-Post: <mailto:xen-devel@lists.xenproject.org>
-List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
-List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
-Errors-To: xen-devel-bounces@lists.xenproject.org
-Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
-To: Julien Grall <julien.grall@arm.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Stefano Stabellini <sstabellini@kernel.org>, Wei Liu <wei.liu2@citrix.com>, stefanos@xilinx.com, Ian Jackson <ian.jackson@eu.citrix.com>, xen-devel@lists.xen.org, robh+dt@kernel.org
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-nescmB2mFvrj1/wsvbDg"
+Return-path: <linux-sunxi+bncBC75HK6WUAEBB3GF5XPAKGQERQWRAHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181101200045.6078-1-contact-W9ppeneeCTY@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAzMSBPY3QgMjAxOCwgSnVsaWVuIEdyYWxsIHdyb3RlOgo+IEhpLAo+IAo+IE9uIDEw
-LzI0LzE4IDI6MTggQU0sIFN0ZWZhbm8gU3RhYmVsbGluaSB3cm90ZToKPiA+IEZyb206IFN0ZWZh
-bm8gU3RhYmVsbGluaSA8c3RlZmFub3NAeGlsaW54LmNvbT4KPiA+IAo+ID4gSW50cm9kdWNlIGEg
-ZGV2aWNlIHRyZWUgYmluZGluZyBmb3IgWGVuIHJlc2VydmVkLW1lbW9yeSByZWdpb25zLiBUaGV5
-Cj4gPiBhcmUgdXNlZCB0byBzaGFyZSBtZW1vcnkgYWNyb3NzIFZNcyBmcm9tIHRoZSBWTSBjb25m
-aWcgZmlsZXMuIChTZWUKPiA+IHN0YXRpY19zaG0gY29uZmlnIG9wdGlvbi4pCj4gPiAKPiA+IFNp
-Z25lZC1vZmYtYnk6IFN0ZWZhbm8gU3RhYmVsbGluaSA8c3RlZmFub3NAeGlsaW54LmNvbT4KPiA+
-IENjOiBqdWxpZW4uZ3JhbGxAYXJtLmNvbQo+ID4gLS0tCj4gPiBDaGFuZ2VzIGluIHYzOgo+ID4g
-LSByZW1vdmUgZmFsbGJhY2sgdmVyc2lvbgo+ID4gCj4gPiBDaGFuZ2VzIGluIHYyOgo+ID4gLSBm
-aXggQXV0aG9yIGxpbmUKPiA+IC0gYWRkIHZlcnNpb25pbmcKPiA+IC0geGVuLGlkIGluc3RlYWQg
-b2YgaWQKPiA+IC0tLQo+ID4gICAuLi4vYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hlbixzaGFy
-ZWQtbWVtb3J5LnR4dCAgIHwgMjAKPiA+ICsrKysrKysrKysrKysrKysrKysrCj4gPiAgIDEgZmls
-ZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspCj4gPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NAo+ID4g
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hh
-cmVkLW1lbW9yeS50eHQKPiA+IAo+ID4gZGlmZiAtLWdpdAo+ID4gYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hlbixzaGFyZWQtbWVtb3J5LnR4dAo+
-ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hl
-bixzaGFyZWQtbWVtb3J5LnR4dAo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+IGluZGV4IDAw
-MDAwMDAuLjdjODE2ODMKPiA+IC0tLSAvZGV2L251bGwKPiA+ICsrKwo+ID4gYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hlbixzaGFyZWQtbWVtb3J5
-LnR4dAo+ID4gQEAgLTAsMCArMSwyMCBAQAo+ID4gKyogWGVuIGh5cGVydmlzb3IgcmVzZXJ2ZWQt
-bWVtb3J5IGJpbmRpbmcKPiA+ICsKPiA+ICtFeHBvc2Ugb25lIG9yIG1vcmUgbWVtb3J5IHJlZ2lv
-bnMgYXMgcmVzZXJ2ZWQtbWVtb3J5IHRvIHRoZSBndWVzdAo+ID4gK3ZpcnR1YWwgbWFjaGluZS4g
-VHlwaWNhbGx5LCBhIHJlZ2lvbiBpcyBjb25maWd1cmVkIGF0IFZNIGNyZWF0aW9uIHRpbWUKPiA+
-ICt0byBiZSBhIHNoYXJlZCBtZW1vcnkgYXJlYSBhY3Jvc3MgbXVsdGlwbGUgdmlydHVhbCBtYWNo
-aW5lcyBmb3IKPiA+ICtjb21tdW5pY2F0aW9uIGFtb25nIHRoZW0uCj4gCj4gSSBtYXkgaGF2ZSBu
-b3RpY2Ugc29tZSBpc3N1ZSB3aXRoIHRoaXMgYmluZGluZy4gTG9va2luZyBhdCB0aGUgZGVzaWdu
-IGRvY3VtZW50Cj4gWzFdLCB0aGUgIm1hc3RlciIgZG9tYWluIG1heSBwcm92aWRlIGEgYmlnIGJh
-Y2tpbmcgcmVnaW9uIHRoYXQgd291bGQgYmUgc3BsaXQKPiBhbmQgc2hhcmUgd2l0aCBtdWx0aXBs
-ZSAic2xhdmUiLgo+IAo+IEZvciB0aGUgIm1hc3RlciIgZG9tYWluLCB0aGlzIGJpbmRpbmcgd291
-bGQgc3BlY2lmeSB0aGUgZnVsbCBiYWNraW5nIHJlZ2lvbi4KPiBUaGUgIm1hc3RlciIgT1Mgd291
-bGQgbm90IGJlIGFibGUgdG8ga25vdyBob3cgdGhlIHJlZ2lvbiB3b3VsZCBiZSB1c2VkIGhlcmUu
-Cj4gCj4gRm9yIHRoZSAic2xhdmUiIGRvbWFpbiwgaXQgbG9va3MgbGlrZSBpdCBtaWdodCBiZSBw
-b3NzaWJsZSB0byBtYXAgdGhlIHNhbWUKPiByZWdpb24gKHNvIHNhbWUgSUQpIHR3aWNlLiBTbyB3
-ZSB3b3VsZCBlbmQgdXAgdG8gY3JlYXRlIHRoZSBzYW1lIGJpbmRpbmdzCj4gdHdpY2UuCj4gCj4g
-QW55IG9waW9uaW9uIG9uIGhvdyB3ZSBzaG91bGQgcHJvY2VlZCB3aXRoIHRoZXNlIHR3byB1c2Ug
-Y2FzZXM/CgpKdWxpZW4gYW5kIEkgZGlzY3Vzc2VkIHRoaXMgbW9ybmluZyB0byBjbGFyaWZ5IHRo
-YXQgcmVnaW9ucyBzaG91bGRuJ3QgYmUKbWFwcGVkIHR3aWNlIGluIHRoZSBYZW4gZG9jcywgYW5k
-IGFkZGluZyBhbiAib2Zmc2V0IiBwcm9wZXJ0eSB0byB0aGlzCmJpbmRpbmcuCgpJJ2xsIHNlbmQg
-YW4gdXBkYXRlIHRvIHRoaXMgcHJvcG9zYWwgYWRkaW5nIHRoZSBvZmZzZXQuCgo+ID4gKwo+ID4g
-K0ZvciBlYWNoIG9mIHRoZXNlIHByZS1zaGFyZWQgbWVtb3J5IHJlZ2lvbnMsIGEgcmFuZ2UgaXMg
-ZXhwb3NlZCB1bmRlcgo+ID4gK3RoZSAvcmVzZXJ2ZWQtbWVtb3J5IG5vZGUgYXMgYSBjaGlsZCBu
-b2RlLiBFYWNoIHJhbmdlIHN1Yi1ub2RlIGlzIG5hbWVkCj4gPiAreGVuLXNobWVtQDxhZGRyZXNz
-PiBhbmQgaGFzIHRoZSBmb2xsb3dpbmcgcHJvcGVydGllczoKPiA+ICsKPiA+ICstIGNvbXBhdGli
-bGU6Cj4gPiArCWNvbXBhdGlibGUgPSAieGVuLHNoYXJlZC1tZW1vcnktdjEiCj4gPiArCj4gPiAr
-LSByZWc6Cj4gPiArCXRoZSBiYXNlIGd1ZXN0IHBoeXNpY2FsIGFkZHJlc3MgYW5kIHNpemUgb2Yg
-dGhlIHNoYXJlZCBtZW1vcnkgcmVnaW9uCj4gPiArCj4gPiArLSB4ZW4saWQ6Cj4gPiArCWEgc3Ry
-aW5nIHRoYXQgaWRlbnRpZmllcyB0aGUgc2hhcmVkIG1lbW9yeSByZWdpb24gYXMgc3BlY2lmaWVk
-IGluCj4gPiArCXRoZSBWTSBjb25maWcgZmlsZQo+ID4gCj4gCj4gQ2hlZXJzLAo+IAo+IFsxXSBo
-dHRwczovL2xpc3RzLnhlbi5vcmcvYXJjaGl2ZXMvaHRtbC94ZW4tZGV2ZWwvMjAxOC0xMC9tc2cw
-MDczMC5odG1sCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KWGVuLWRldmVsIG1haWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMueGVucHJvamVjdC5vcmcK
-aHR0cHM6Ly9saXN0cy54ZW5wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL3hlbi1kZXZlbA==
+
+--=-nescmB2mFvrj1/wsvbDg
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+Le jeudi 01 novembre 2018 =C3=A0 21:00 +0100, Paul Kocialkowski a =C3=A9cri=
+t :
+> The series adds support for the BL035-RGB-002 LCD panel and the required
+> device-tree bindings for using it on the BananaPi M1.
+>=20
+> Only the changes related to the DRM driver and the panel are submitted
+> for merge, which does not include the two final commits.
+>=20
+> Changes since v1:
+> * Used the full name of the panel for dt bindings;
+> * Removed helper to match flags in order to only retrieve the connector
+>   once, as it was already done.
+> * Made the bus flags checking possible without a panel;
+
+I forgot to mention that the last patch (not for merge) was untested.
+
+> Paul Kocialkowski (7):
+>   drm/sun4i: tcon: Pass encoder instead of using panel for RGB setup
+>   drm/sun4i: tcon: Support an active-low DE signal with RGB interface
+>   dt-bindings: Add vendor prefix for LeMaker
+>   dt-bindings: Add bindings for the LeMaker BL035-RGB-002 LCD panel
+>   drm/panel: simple: Add support for the LeMaker BL035-RGB-002 3.5" LCD
+>   ARM: dts: sun7i: Add pinmux configuration for LCD0 RGB888 pins
+>   ARM: dts: sun7i-a20-bananapi: Add bindings for the LeMaker 3.5" LCD
+>=20
+>  .../display/panel/lemaker,bl035-rgb-002.txt   |  7 ++
+>  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
+>  arch/arm/boot/dts/sun7i-a20-bananapi.dts      | 89 +++++++++++++++++++
+>  arch/arm/boot/dts/sun7i-a20.dtsi              | 11 +++
+>  drivers/gpu/drm/panel/panel-simple.c          | 27 ++++++
+>  drivers/gpu/drm/sun4i/sun4i_tcon.c            | 29 +++---
+>  drivers/gpu/drm/sun4i/sun4i_tcon.h            |  1 +
+>  7 files changed, 151 insertions(+), 14 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/lemak=
+er,bl035-rgb-002.txt
+>=20
+--=20
+Developer of free digital technology and hardware support.
+
+Website: https://www.paulk.fr/
+Coding blog: https://code.paulk.fr/
+Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--=-nescmB2mFvrj1/wsvbDg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAlvbYxYACgkQhP3B6o/u
+lQztqA/9F3LAbSiY2mt2B0sZ9nERrkFSTvDYy604wlkGQioMm+eYgAs86MEeJtMf
+ur4zV7X6CmNYcyTsYqwFboC7dTOt6XkeHVDuaX24J9vQjwcciucB9Ig//N38CZFD
+Wi8P+WMXJPBr6u7TKd4BTnUN/j0010AEycfRbjfLH8fFlc/mDrsMqAQ36FiG/DqW
+VYdGA9ppQZc1Ygijv9EO1JOiIB4j79urxpJrQxDeKMsqKR8FNARy0jySXqk+ykjJ
+5iTPoMSciAj4Ad3w13RAm0kiOYfEh4wz71y3GTkAtT8sVtnh+B8Hs4h/YezC+1R9
+FANZqYd4tUw3G6z1J8OpPdGlGPs2YqmGbptIvUplBgk2CNa4UkOKwAfDiXLtDju8
+OAuOfuaPcSxj2q7N8vPSb3pC+Xncgz+a/couVBUZhwaJOxHBedqmd6QZlqymbUnn
+qNIuk8gpzF/+v7m5NK58DmTbOLp9FeqXKf/slEtCKf/XA7DdJu9131+wiSn6/o8r
+Swy/eZ/fAaWLBRSv2ox6SW+iVVTXSR1qs0UY18cvM/FN69u98SFvpXavm06foZmw
+f9EWsC2rpcY4VXQqVTpjuMowT26Y8dI2bJjZdJtvT6Wm7jIKpgBl9sGZaUCueTnu
+2Tupg2l383anF7XVLTbTm+CTJEazBQA3DzmSV2TSjsImUWajfww=
+=jHHy
+-----END PGP SIGNATURE-----
+
+--=-nescmB2mFvrj1/wsvbDg--
