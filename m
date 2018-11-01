@@ -1,153 +1,58 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: [PATCH NOT FOR MERGE v2 7/7] ARM: dts:
- sun7i-a20-bananapi: Add bindings for the LeMaker 3.5" LCD
-Date: Thu,  1 Nov 2018 21:00:45 +0100
-Message-ID: <20181101200045.6078-8-contact@paulk.fr>
-References: <20181101200045.6078-1-contact@paulk.fr>
-Reply-To: contact-W9ppeneeCTY@public.gmane.org
+From: Doug Anderson <dianders@google.com>
+Subject: Re: [PATCH V3 1/2] dt-bindings: mmc: sdhci-msm: Add new compatible
+ string for SDM845 SOC
+Date: Thu, 1 Nov 2018 13:29:54 -0700
+Message-ID: <CAD=FV=V9AdCgOSonb0tu==DgKRKeZxto+aGwxmdbHAqrmfMrDQ@mail.gmail.com>
+References: <1541073999-11752-1-git-send-email-vbadigan@codeaurora.org> <1541073999-11752-2-git-send-email-vbadigan@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBC75HK6WUAEBBY5X5XPAKGQESJSTOVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181101200045.6078-1-contact-W9ppeneeCTY@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1541073999-11752-2-git-send-email-vbadigan@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vbadigan@codeaurora.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Evan Green <evgreen@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, riteshh@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the backlight panel, power, pwm and tcon0 device-tree bindings
-required for supporting the 3.5" LCD from LeMaker on the BananaPi M1.
+Hi,
 
-Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20-bananapi.dts | 89 ++++++++++++++++++++++++
- 1 file changed, 89 insertions(+)
+On Thu, Nov 1, 2018 at 5:07 AM Veerabhadrarao Badiganti
+<vbadigan@codeaurora.org> wrote:
+>
+> For SDM845 SOC, new compatible string  "qcom,sdm845-sdhci" is added.
+>
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> index 502b3b8..f2ffbeb 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> @@ -7,6 +7,7 @@ Required properties:
+>  - compatible: Should contain:
+>                 "qcom,sdhci-msm-v4" for sdcc versions less than 5.0
+>                 "qcom,sdhci-msm-v5" for sdcc versions >= 5.0
+> +               "qcom,sdm845-sdhci" for sdm845 SOC
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-index 70dfc4ac0bb5..dd2f8bc41fae 100644
---- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-@@ -48,6 +48,7 @@
- 
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/pwm/pwm.h>
- 
- / {
- 	model = "LeMaker Banana Pi";
-@@ -63,6 +64,75 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 50000 0>;
-+		brightness-levels = <  0   1   1   1   1   2   2   2
-+				       2   3   3   3   3   4   4   4
-+				       5   5   5   6   6   6   7   7
-+				       8   8   8   9   9   9  10  10
-+				      10  11  11  12  12  12  13  13
-+				      14  14  14  15  15  16  16  17
-+				      17  17  18  18  19  19  20  20
-+				      21  21  21  22  22  23  23  24
-+				      24  25  25  26  26  27  27  28
-+				      28  29  30  30  31  31  32  32
-+				      33  33  34  35  35  36  36  37
-+				      38  38  39  39  40  41  41  42
-+				      43  43  44  44  45  46  47  47
-+				      48  49  49  50  51  51  52  53
-+				      54  54  55  56  57  57  58  59
-+				      60  61  61  62  63  64  65  65
-+				      66  67  68  69  70  71  71  72
-+				      73  74  75  76  77  78  79  80
-+				      81  82  83  84  85  86  87  88
-+				      89  90  91  92  93  94  95  96
-+				      97  98  99 101 102 103 104 105
-+				     106 108 109 110 111 112 114 115
-+				     116 117 119 120 121 123 124 125
-+				     127 128 129 131 132 133 135 136
-+				     138 139 141 142 144 145 147 148
-+				     150 151 153 154 156 157 159 161
-+				     162 164 166 167 169 171 173 174
-+				     176 178 180 181 183 185 187 189
-+				     191 192 194 196 198 200 202 204
-+				     206 208 210 212 214 216 219 221
-+				     223 225 227 229 232 234 236 238
-+				     241 242 244 246 248 250 253 255>;
-+		default-brightness-level = <128>;
-+		enable-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
-+	};
-+
-+	panel: panel {
-+		compatible = "lemaker,bl035";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		power-supply = <&panel_power>;
-+		backlight = <&backlight>;
-+
-+		port@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			panel_input: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&tcon0_out_panel>;
-+			};
-+		};
-+	};
-+
-+	panel_power: panel_power {
-+		compatible = "regulator-fixed";
-+		regulator-name = "panel-power";
-+		regulator-min-microvolt = <10400000>;
-+		regulator-max-microvolt = <10400000>;
-+		gpio = <&pio 7 12 GPIO_ACTIVE_HIGH>; /* PH12 */
-+		enable-active-high;
-+		regulator-boot-on;
-+	};
-+
- 	hdmi-connector {
- 		compatible = "hdmi-connector";
- 		type = "a";
-@@ -275,6 +345,12 @@
- 	};
- };
- 
-+&pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm0_pins_a>;
-+	status = "okay";
-+};
-+
- #include "axp209.dtsi"
- 
- &reg_dcdc2 {
-@@ -322,6 +398,19 @@
- 	status = "okay";
- };
- 
-+&tcon0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd0_rgb888_pins>;
-+	status = "okay";
-+};
-+
-+&tcon0_out {
-+	tcon0_out_panel: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&panel_input>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
--- 
-2.19.1
+It's up to Rob of course, but IMO it seems a nicer way forward to
+include both the SoC-specific string and the "version" string in all
+cases.  I'd write this for the full text:
+
+ - compatible: Should contain a SoC-specific string and a IP version string:
+      version strings:
+           "qcom,sdhci-msm-v4" for sdcc versions less than 5.0
+           "qcom,sdhci-msm-v5" for sdcc version 5.0
+      full compatible strings with SoC and version:
+           "qcom,apq8084", "qcom,sdhci-msm-v4"
+           "qcom,msm8974", "qcom,sdhci-msm-v4"
+           "qcom,msm8916", "qcom,sdhci-msm-v4"
+           "qcom,msm8992", "qcom,sdhci-msm-v4"
+           "qcom,msm8996", "qcom,sdhci-msm-v4"
+           "qcom,sdm845-sdhci", "qcom,sdhci-msm-v5"
+
+   NOTE that some old device tree files may be floating around that only
+   have the string "qcom,sdhci-msm-v4" without the SoC compatible string
+   but doing that should be considered a deprecated practice.
+
+-Doug
