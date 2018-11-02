@@ -1,55 +1,52 @@
-From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 2/2] drm/msm/dsi: Get PHY ref clock from the DT
-Date: Fri,  2 Nov 2018 14:45:34 -0700
-Message-ID: <20181102214534.184593-2-mka@chromium.org>
-References: <20181102214534.184593-1-mka@chromium.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 6/8] Input: olpc_apsp: check FIFO status on open(), not
+ probe()
+Date: Fri, 2 Nov 2018 23:16:09 +0100
+Message-ID: <20181102221609.GA5322@amd>
+References: <20180910112654.42061-1-lkundrak@v3.sk>
+ <20180910112654.42061-7-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181102214534.184593-1-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180910112654.42061-7-lkundrak@v3.sk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-R2V0IHRoZSBQSFkgcmVmIGNsb2NrIGZyb20gdGhlIGRldmljZSB0cmVlIGluc3RlYWQgb2YgaGFy
-ZGNvZGluZwppdHMgbmFtZSBhbmQgcmF0ZS4KClNpZ25lZC1vZmYtYnk6IE1hdHRoaWFzIEthZWhs
-Y2tlIDxta2FAY2hyb21pdW0ub3JnPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZHNpL3BsbC9k
-c2lfcGxsXzEwbm0uYyB8IDExICsrKysrKysrKystCiAxIGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0
-aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20v
-ZHNpL3BsbC9kc2lfcGxsXzEwbm0uYyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZHNpL3BsbC9kc2lf
-cGxsXzEwbm0uYwppbmRleCA0YzAzZjBiNzM0M2VkLi4xMDE2ZWI1MGRmOGY1IDEwMDY0NAotLS0g
-YS9kcml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9wbGwvZHNpX3BsbF8xMG5tLmMKKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL21zbS9kc2kvcGxsL2RzaV9wbGxfMTBubS5jCkBAIC05MSw2ICs5MSw4IEBAIHN0
-cnVjdCBkc2lfcGxsXzEwbm0gewogCXZvaWQgX19pb21lbSAqcGh5X2Ntbl9tbWlvOwogCXZvaWQg
-X19pb21lbSAqbW1pbzsKIAorCXN0cnVjdCBjbGsgKnZjb19yZWZfY2xrOworCiAJdTY0IHZjb19y
-ZWZfY2xrX3JhdGU7CiAJdTY0IHZjb19jdXJyZW50X3JhdGU7CiAKQEAgLTYzMCw3ICs2MzIsOCBA
-QCBzdGF0aWMgaW50IHBsbF8xMG5tX3JlZ2lzdGVyKHN0cnVjdCBkc2lfcGxsXzEwbm0gKnBsbF8x
-MG5tKQogCWNoYXIgY2xrX25hbWVbMzJdLCBwYXJlbnRbMzJdLCB2Y29fbmFtZVszMl07CiAJY2hh
-ciBwYXJlbnQyWzMyXSwgcGFyZW50M1szMl0sIHBhcmVudDRbMzJdOwogCXN0cnVjdCBjbGtfaW5p
-dF9kYXRhIHZjb19pbml0ID0gewotCQkucGFyZW50X25hbWVzID0gKGNvbnN0IGNoYXIgKltdKXsg
-InhvIiB9LAorCQkucGFyZW50X25hbWVzID0gKGNvbnN0IGNoYXIgKltdKXsKKwkJCV9fY2xrX2dl
-dF9uYW1lKHBsbF8xMG5tLT52Y29fcmVmX2NsaykgfSwKIAkJLm51bV9wYXJlbnRzID0gMSwKIAkJ
-Lm5hbWUgPSB2Y29fbmFtZSwKIAkJLmZsYWdzID0gQ0xLX0lHTk9SRV9VTlVTRUQsCkBAIC03ODYs
-NiArNzg5LDEyIEBAIHN0cnVjdCBtc21fZHNpX3BsbCAqbXNtX2RzaV9wbGxfMTBubV9pbml0KHN0
-cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsIGludCBpZCkKIAlwbGxfMTBubS0+aWQgPSBpZDsK
-IAlwbGxfMTBubV9saXN0W2lkXSA9IHBsbF8xMG5tOwogCisJcGxsXzEwbm0tPnZjb19yZWZfY2xr
-ID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsICJyZWYiKTsKKwlpZiAoSVNfRVJSKHBsbF8xMG5t
-LT52Y29fcmVmX2NsaykpIHsKKwkJZGV2X2VycigmcGRldi0+ZGV2LCAiY291bGRuJ3QgZ2V0ICdy
-ZWYnIGNsb2NrXG4iKTsKKwkJcmV0dXJuICh2b2lkICopcGxsXzEwbm0tPnZjb19yZWZfY2xrOwor
-CX0KKwogCXBsbF8xMG5tLT5waHlfY21uX21taW8gPSBtc21faW9yZW1hcChwZGV2LCAiZHNpX3Bo
-eSIsICJEU0lfUEhZIik7CiAJaWYgKElTX0VSUl9PUl9OVUxMKHBsbF8xMG5tLT5waHlfY21uX21t
-aW8pKSB7CiAJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byBtYXAgQ01OIFBIWSBiYXNl
-XG4iKTsKLS0gCjIuMTkuMS45MzAuZzQ1NjNhMGQ5ZDAtZ29vZwoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVl
-ZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+
+--k+w/mQv8wyuph6w0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon 2018-09-10 13:26:52, Lubomir Rintel wrote:
+> Let's defer the FIFO status checking until open().
+>=20
+> When we'll get a clk handle, this will allow us to defer clock enablement
+> until the device is actually used.
+>=20
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--k+w/mQv8wyuph6w0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlvczKkACgkQMOfwapXb+vITPwCggk6ezBBtegkYFh2J6ErUWagC
+FbwAn2iRysWVzLxqHqsq3oCGgSpUk8lR
+=11n9
+-----END PGP SIGNATURE-----
+
+--k+w/mQv8wyuph6w0--
