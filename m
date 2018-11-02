@@ -1,54 +1,54 @@
-From: Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [[DPU PATCH]] drm/msm/dpu: Correct dpu destroy and
- disable order
-Date: Thu, 01 Nov 2018 23:50:20 -0700
-Message-ID: <135fdbc20f5feab7a2231d8e3005d391@codeaurora.org>
-References: <1541139427-25842-1-git-send-email-jshekhar@codeaurora.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [RFC PATCH 13/40] dt-bindings: PCI: keystone: Add "reg-names"
+ binding information
+Date: Fri, 2 Nov 2018 12:49:22 +0530
+Message-ID: <ba9f2c1d-c1e0-b920-fdf1-22445fb6eb5a@ti.com>
+References: <20180921102155.22839-1-kishon@ti.com>
+ <20180921102155.22839-14-kishon@ti.com>
+ <5baa1b0e.1c69fb81.4f57b.32f7@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1541139427-25842-1-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5baa1b0e.1c69fb81.4f57b.32f7@mx.google.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Gustavo.Pimentel@synopsys.com, Mark Rutland <mark.rutland@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0xMS0wMSAyMzoxNywgSmF5YW50IFNoZWtoYXIgd3JvdGU6Cj4gSW4gY2FzZSBvZiBt
-c20gZHJtIGJpbmQgZmFpbHVyZSwgZHB1X21kc3NfZGVzdHJveSBpcyB0cmlnZ2VyZWQuCj4gSW4g
-dGhpcyBmdW5jdGlvbiwgcmVzb3VyY2VzIGFyZSBmcmVlZCBhbmQgcG0gcnVudGltZSBkaXNhYmxl
-IGlzCj4gY2FsbGVkLCB3aGljaCB0cmlnZ2VycyBkcHVfbWRzc19kaXNhYmxlLiBOb3cgaW4gZHB1
-X21kc3NfZGlzYWJsZSwKPiBkcml2ZXIgdHJpZXMgdG8gYWNjZXNzIGEgbWVtb3J5IHdoaWNoIGlz
-IGFscmVhZHkgZnJlZWQuIFRoaXMKPiByZXN1bHRzIGluIGtlcm5lbCBwYW5pYy4gRml4IHRoaXMg
-YnkgZW5zdXJpbmcgcHJvcGVyIHNlcXVlbmNlCj4gb2YgZHB1IGRlc3Ryb3kgYW5kIGRpc2FibGUg
-Y2FsbHMuCj4gCj4gQ2hhbmdlLUlkOiBJZDZlMDFhNTM3YWU5YzQwNzg5YzU3NTJkYzI4YzM5NzM5
-MWFiN2RmZQpQbGVhc2Ugc3RyaXAgZG93biBDaGFuZ2UtSWQgYmVmb3JlIHBvc3RpbmcgdGhlIHBh
-dGNoLgo+IFNpZ25lZC1vZmYtYnk6IEpheWFudCBTaGVraGFyIDxqc2hla2hhckBjb2RlYXVyb3Jh
-Lm9yZz4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3MuYyB8
-IDMgKystCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkK
-PiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3Mu
-Ywo+IGIvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3MuYwo+IGluZGV4IGZk
-OWM4OTMuLmNkOWE2YmQgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2Rw
-dTEvZHB1X21kc3MuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9t
-ZHNzLmMKPiBAQCAtMTU2LDYgKzE1Niw4IEBAIHN0YXRpYyB2b2lkIGRwdV9tZHNzX2Rlc3Ryb3ko
-c3RydWN0IGRybV9kZXZpY2UgCj4gKmRldikKPiAgCXN0cnVjdCBkcHVfbWRzcyAqZHB1X21kc3Mg
-PSB0b19kcHVfbWRzcyhwcml2LT5tZHNzKTsKPiAgCXN0cnVjdCBkc3NfbW9kdWxlX3Bvd2VyICpt
-cCA9ICZkcHVfbWRzcy0+bXA7Cj4gCj4gKwlwbV9ydW50aW1lX2Rpc2FibGUoZGV2LT5kZXYpOwo+
-ICsKPiAgCV9kcHVfbWRzc19pcnFfZG9tYWluX2ZpbmkoZHB1X21kc3MpOwo+IAo+ICAJZnJlZV9p
-cnEocGxhdGZvcm1fZ2V0X2lycShwZGV2LCAwKSwgZHB1X21kc3MpOwo+IEBAIC0xNjcsNyArMTY5
-LDYgQEAgc3RhdGljIHZvaWQgZHB1X21kc3NfZGVzdHJveShzdHJ1Y3QgZHJtX2RldmljZSAKPiAq
-ZGV2KQo+ICAJCWRldm1faW91bm1hcCgmcGRldi0+ZGV2LCBkcHVfbWRzcy0+bW1pbyk7Cj4gIAlk
-cHVfbWRzcy0+bW1pbyA9IE5VTEw7Cj4gCkxvdHMgb2YgZG91YmxlIGxpbmUgc3BhY2luZy4gR2V0
-IHJpZCBvZiB0aGVtLgo+IC0JcG1fcnVudGltZV9kaXNhYmxlKGRldi0+ZGV2KTsKPiAgCXByaXYt
-Pm1kc3MgPSBOVUxMOwo+ICB9CkFsc28gZHJvcCAiRFBVIFBBVENIIiBwcmVmaXguCi0tIApKZXlr
-dW1hciBzCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZy
-ZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+Hi Rob,
+
+On 25/09/18 4:30 AM, Rob Herring wrote:
+> On Fri, Sep 21, 2018 at 03:51:28PM +0530, Kishon Vijay Abraham I wrote:
+>> Add "reg-names" binding information in order for device tree node
+>> to be populated with the correct register strings.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/pci/pci-keystone.txt | 6 ++++--
+>>  1 file changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/pci-keystone.txt b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+>> index 2030ee0dc4f9..3a551687cfa2 100644
+>> --- a/Documentation/devicetree/bindings/pci/pci-keystone.txt
+>> +++ b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+>> @@ -12,8 +12,10 @@ described here as well as properties that are not applicable.
+>>  Required Properties:-
+>>  
+>>  compatibility: "ti,keystone-pcie"
+>> -reg:	index 1 is the base address and length of DW application registers.
+>> -	index 2 is the base address and length of PCI device ID register.
+>> +reg: Three register ranges as listed in the reg-names property
+>> +reg-names: "dbics" for the DesignWare PCIe registers, "app" for the
+>> +	   TI specific application registers, "config" for the
+>> +	   configuration space address
+> 
+> This doesn't doesn't look like a compatible change.
+
+The pcie-keystone driver hasn't worked in mainline because of lack of serdes
+support. Since the same driver is used for am654 SoC (which has serdes support
+included in this series), I'm trying to cleanup the binding.
+
+Thanks
+Kishon
