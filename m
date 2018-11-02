@@ -1,56 +1,45 @@
-From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
-Subject: [PATCH fbdev-for-next 1/2] dt-bindings: display: ssd1307fb: Add
- reset-active-low property
-Date: Fri, 2 Nov 2018 14:56:32 +0000
-Message-ID: <1541170556-75032-1-git-send-email-michal.vokac@ysoft.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC 1/2] dt-bindings: topology: Add RISC-V cpu topology.
+Date: Fri, 2 Nov 2018 10:11:38 -0500
+Message-ID: <CAL_JsqLO+cOcHkr41ebPtONwrzOWGhksH1ypph+tihsuOVDOug@mail.gmail.com>
+References: <1541113468-22097-1-git-send-email-atish.patra@wdc.com>
+ <1541113468-22097-2-git-send-email-atish.patra@wdc.com> <CAL_Jsq+wProNynprMjQnrz1jmbZT9TmmA-_=vPUxCEED_8xONg@mail.gmail.com>
+ <20181102133100.GA13130@e107155-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Content-ID: <180BA1B53F1D93458920604DE1CA8E09@eurprd04.prod.outlook.com>
+In-Reply-To: <20181102133100.GA13130@e107155-lin>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Atish Patra <atish.patra@wdc.com>, linux-riscv@lists.infradead.org, Palmer Dabbelt <palmer@sifive.com>, Anup Patel <anup@brainfault.org>, Christoph Hellwig <hch@infradead.org>, Damien.LeMoal@wdc.com, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, alankao@andestech.com, Zong Li <zong@andestech.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyByZXZlcnRzIGNvbW1pdCA1MTliNGRiYTU4NjE5OGVlZDhmNzJiYTA3YmM3MTgwOGFmMmUw
-ZTMyLg0KSXQgaXMgdHJ1ZSB0aGF0IHRoZSBhY3R1YWwgaW1wbGVtZW50YXRpb24gaGFzIG5ldmVy
-IGJlZW4gdGhlcmUuIEJ1dA0KY29udHJhcnkgdG8gd2hhdCB0aGUgcmV2ZXJ0ZWQgY29tbWl0IG1l
-c3NhZ2Ugc2F5cyBpdCBkb2VzIG1ha2Ugc2Vuc2UNCnRvIGFkZCBpdC4NCg0KQ3VycmVudCBpbXBs
-ZW1lbnRhdGlvbiBvZiB0aGUgcmVzZXQgc2lnbmFsIGlzIGhhcmQtY29kZWQgdG8gYWN0aXZlIGxv
-dw0Kd2l0aCB0aGUgYXNzdW1wdGlvbiB0aGF0IHJlc2V0LWdwaW9zIGlzIHNwZWNpZmllZCBhcyBH
-UElPX0FDVElWRV9ISUdILg0KVGhhdCBpcyB0ZWNobmljYWxseSB3cm9uZyBhcyB0aGUgRFRTIGF1
-dGhvcnMgc2hvdWxkIGtub3cgdGhhdCBTU0QxMzB4DQpkaXNwbGF5cyBuZWVkIGFjdGl2ZSBsb3cg
-cmVzZXQgYW5kIGhlbmNlIHRoZXkgYXJlIHRlbXBlZCB0byB1c2UNCkdQSU9fQUNUSVZFX0xPVy4g
-QnV0IHdpdGggdGhhdCB0aGUgcmVzZXQgaXMgYnJva2VuLiBTbyByZXNldC1hY2l2ZS1sb3cNCnBy
-b3BlcnR5IGNhbiBiZSB1c2VkIHRvIGludmVydCB0aGUgc2lnbmFsIG9uY2UgYWdhaW4gdG8gZml4
-IHRoaXMuDQoNClNpZ25lZC1vZmYtYnk6IE1pY2hhbCBWb2vDocSNIDxtaWNoYWwudm9rYWNAeXNv
-ZnQuY29tPg0KLS0tDQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-c3NkMTMwN2ZiLnR4dCB8IDYgKysrKy0tDQogMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygr
-KSwgMiBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3NzZDEzMDdmYi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9zc2QxMzA3ZmIudHh0DQppbmRleCAyMDlkOTMxLi5hNWVhZDEw
-IDEwMDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-c3NkMTMwN2ZiLnR4dA0KKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvc3NkMTMwN2ZiLnR4dA0KQEAgLTE2LDYgKzE2LDggQEAgUmVxdWlyZWQgcHJvcGVydGll
-czoNCiBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KICAgLSByZXNldC1ncGlvczogVGhlIEdQSU8gdXNl
-ZCB0byByZXNldCB0aGUgT0xFRCBkaXNwbGF5LCBpZiBhdmFpbGFibGUuIFNlZQ0KICAgICAgICAg
-ICAgICAgICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8vZ3Bpby50eHQg
-Zm9yIGRldGFpbHMuDQorICAtIHJlc2V0LWFjdGl2ZS1sb3c6IEJvb2wgZmxhZyB0byBpbmRpY2F0
-ZSB0aGUgR1BJTyBzcGVjaWZpZWQgaW4gInJlc2V0LWdwaW9zIg0KKyAgICAgICAgICAgICAgICAg
-ICAgICBwcm9wZXJ0eSBpcyBhY3RpdmUgbG93Lg0KICAgLSB2YmF0LXN1cHBseTogVGhlIHN1cHBs
-eSBmb3IgVkJBVA0KICAgLSBzb2xvbW9uLHNlZ21lbnQtbm8tcmVtYXA6IERpc3BsYXkgbmVlZHMg
-bm9ybWFsIChub24taW52ZXJ0ZWQpIGRhdGEgY29sdW1uDQogICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgdG8gc2VnbWVudCBtYXBwaW5nDQpAQCAtMzUsNyArMzcsNyBAQCBzc2QxMzA3OiBv
-bGVkQDNjIHsNCiAgICAgICAgIGNvbXBhdGlibGUgPSAic29sb21vbixzc2QxMzA3ZmItaTJjIjsN
-CiAgICAgICAgIHJlZyA9IDwweDNjPjsNCiAgICAgICAgIHB3bXMgPSA8JnB3bSA0IDMwMDA+Ow0K
-LSAgICAgICAgcmVzZXQtZ3Bpb3MgPSA8JmdwaW8yIDc+Ow0KKyAgICAgICAgcmVzZXQtZ3Bpb3Mg
-PSA8JmdwaW8yIDcgR1BJT19BQ1RJVkVfTE9XPjsNCiAgICAgICAgIHJlc2V0LWFjdGl2ZS1sb3c7
-DQogfTsNCiANCkBAIC00Myw3ICs0NSw3IEBAIHNzZDEzMDY6IG9sZWRAM2Mgew0KICAgICAgICAg
-Y29tcGF0aWJsZSA9ICJzb2xvbW9uLHNzZDEzMDZmYi1pMmMiOw0KICAgICAgICAgcmVnID0gPDB4
-M2M+Ow0KICAgICAgICAgcHdtcyA9IDwmcHdtIDQgMzAwMD47DQotICAgICAgICByZXNldC1ncGlv
-cyA9IDwmZ3BpbzIgNz47DQorICAgICAgICByZXNldC1ncGlvcyA9IDwmZ3BpbzIgNyBHUElPX0FD
-VElWRV9MT1c+Ow0KICAgICAgICAgcmVzZXQtYWN0aXZlLWxvdzsNCiAgICAgICAgIHNvbG9tb24s
-Y29tLWxycmVtYXA7DQogICAgICAgICBzb2xvbW9uLGNvbS1pbnZkaXI7DQotLSANCjIuMS40DQoN
-Cg==
+On Fri, Nov 2, 2018 at 8:31 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> On Fri, Nov 02, 2018 at 08:09:39AM -0500, Rob Herring wrote:
+> > On Thu, Nov 1, 2018 at 6:04 PM Atish Patra <atish.patra@wdc.com> wrote:
+> > >
+> > > Define a RISC-V cpu topology. This is based on cpu-map in ARM world.
+> > > But it doesn't need a separate thread node for defining SMT systems.
+> > > Multiple cpu phandle properties can be parsed to identify the sibling
+> > > hardware threads. Moreover, we do not have cluster concept in RISC-V.
+> > > So package is a better word choice than cluster for RISC-V.
+> >
+> > There was a proposal to add package info for ARM recently. Not sure
+> > what happened to that, but we don't need 2 different ways.
+> >
+>
+> We still need that, I can brush it up and post what Lorenzo had previously
+> proposed[1]. We want to keep both DT and ACPI CPU topology story aligned.
+
+Frankly, I don't care what the ACPI story is. I care whether each cpu
+arch does its own thing in DT or not. If a package prop works for
+RISC-V folks and that happens to align with ACPI, then okay. Though I
+tend to prefer a package represented as a node rather than a property
+as I think that's more consistent.
+
+Any comments on the thread aspect (whether it has ever been used)?
+Though I think thread as a node level is more consistent with each
+topology level being a node (same with package).
+
+Rob
