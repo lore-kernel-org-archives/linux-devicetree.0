@@ -1,58 +1,70 @@
-From: Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>
-Subject: Re: [PATCH v2] drm/msm/dpu: Correct dpu destroy and
- disable order
-Date: Fri, 2 Nov 2018 09:15:31 -0400
-Message-ID: <20181102131531.GG154160@art_vandelay>
-References: <1541162957-12796-1-git-send-email-jshekhar@codeaurora.org>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: connector: Add self-powered property
+Date: Fri, 2 Nov 2018 15:27:58 +0200
+Message-ID: <20181102132758.GA6543@kuha.fi.intel.com>
+References: <20181001194501.58338-1-badhri@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1541162957-12796-1-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+In-Reply-To: <20181001194501.58338-1-badhri@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Badhri Jagan Sridharan <badhri@google.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Chanwoo Choi <cw00.choi@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Li Jun <jun.li@nxp.com>, linux@roeck-us.net, jackp@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBOb3YgMDIsIDIwMTggYXQgMDY6MTk6MTdQTSArMDUzMCwgSmF5YW50IFNoZWtoYXIg
-d3JvdGU6Cj4gSW4gY2FzZSBvZiBtc20gZHJtIGJpbmQgZmFpbHVyZSwgZHB1X21kc3NfZGVzdHJv
-eSBpcyB0cmlnZ2VyZWQuCj4gSW4gdGhpcyBmdW5jdGlvbiwgcmVzb3VyY2VzIGFyZSBmcmVlZCBh
-bmQgcG0gcnVudGltZSBkaXNhYmxlIGlzCj4gY2FsbGVkLCB3aGljaCB0cmlnZ2VycyBkcHVfbWRz
-c19kaXNhYmxlLiBOb3cgaW4gZHB1X21kc3NfZGlzYWJsZSwKPiBkcml2ZXIgdHJpZXMgdG8gYWNj
-ZXNzIGEgbWVtb3J5IHdoaWNoIGlzIGFscmVhZHkgZnJlZWQuIFRoaXMKPiByZXN1bHRzIGluIGtl
-cm5lbCBwYW5pYy4gRml4IHRoaXMgYnkgZW5zdXJpbmcgcHJvcGVyIHNlcXVlbmNlCj4gb2YgZHB1
-IGRlc3Ryb3kgYW5kIGRpc2FibGUgY2FsbHMuCj4gCj4gQ2hhbmdlcyBpbiB2MjoKPiAgICAtIFJl
-bW92ZWQgZG91YmxlIHNwYWNpbmdzIFtKZXlrdW1hcl0KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKYXlh
-bnQgU2hla2hhciA8anNoZWtoYXJAY29kZWF1cm9yYS5vcmc+CgpSZXZpZXdlZC1ieTogU2VhbiBQ
-YXVsIDxzZWFuQHBvb3JseS5ydW4+Cgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3Av
-ZHB1MS9kcHVfbWRzcy5jIHwgNSArLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24o
-KyksIDQgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20v
-ZGlzcC9kcHUxL2RwdV9tZHNzLmMgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVf
-bWRzcy5jCj4gaW5kZXggZmQ5Yzg5My4uOTAyYmI0YyAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21z
-bS9kaXNwL2RwdTEvZHB1X21kc3MuYwo+IEBAIC0xNTYsMTggKzE1NiwxNSBAQCBzdGF0aWMgdm9p
-ZCBkcHVfbWRzc19kZXN0cm95KHN0cnVjdCBkcm1fZGV2aWNlICpkZXYpCj4gIAlzdHJ1Y3QgZHB1
-X21kc3MgKmRwdV9tZHNzID0gdG9fZHB1X21kc3MocHJpdi0+bWRzcyk7Cj4gIAlzdHJ1Y3QgZHNz
-X21vZHVsZV9wb3dlciAqbXAgPSAmZHB1X21kc3MtPm1wOwo+ICAKPiArCXBtX3J1bnRpbWVfZGlz
-YWJsZShkZXYtPmRldik7Cj4gIAlfZHB1X21kc3NfaXJxX2RvbWFpbl9maW5pKGRwdV9tZHNzKTsK
-PiAtCj4gIAlmcmVlX2lycShwbGF0Zm9ybV9nZXRfaXJxKHBkZXYsIDApLCBkcHVfbWRzcyk7Cj4g
-LQo+ICAJbXNtX2Rzc19wdXRfY2xrKG1wLT5jbGtfY29uZmlnLCBtcC0+bnVtX2Nsayk7Cj4gIAlk
-ZXZtX2tmcmVlKCZwZGV2LT5kZXYsIG1wLT5jbGtfY29uZmlnKTsKPiAgCj4gIAlpZiAoZHB1X21k
-c3MtPm1taW8pCj4gIAkJZGV2bV9pb3VubWFwKCZwZGV2LT5kZXYsIGRwdV9tZHNzLT5tbWlvKTsK
-PiAgCWRwdV9tZHNzLT5tbWlvID0gTlVMTDsKPiAtCj4gLQlwbV9ydW50aW1lX2Rpc2FibGUoZGV2
-LT5kZXYpOwo+ICAJcHJpdi0+bWRzcyA9IE5VTEw7Cj4gIH0KPiAgCj4gLS0gCj4gVGhlIFF1YWxj
-b21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9y
-YSBGb3J1bSwKPiBhIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cj4gCgot
-LSAKU2VhbiBQYXVsLCBTb2Z0d2FyZSBFbmdpbmVlciwgR29vZ2xlIC8gQ2hyb21pdW0gT1MKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1h
-aWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+On Mon, Oct 01, 2018 at 12:44:59PM -0700, Badhri Jagan Sridharan wrote:
+> >From USB_PD_R3_0
+> 7.1.5 Response to Hard Resets
+> Device operation during and after a Hard Reset is defined as follows:
+> Self-powered devices Should Not disconnect from USB during a Hard Reset
+> (see Section 9.1.2).
+> Bus powered devices will disconnect from USB during a Hard Reset due to the
+> loss of their power source.
+> 
+> Therefore it is necessary to know whether the port belongs to
+> a device which is self powered or bus powered. This change
+> adds "self-powered" flag to the connector class which present indicates
+> that the port belongs to a device that is self powered. Else it is
+> bus powered usb device.
+> 
+> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
+
+Rob, I can see you acked one of the patches modifying tcpm.c in this
+series, but did you mean to put the tag to this patch instead?
+
+FWIW:
+
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+
+> -------
+> Changes is v3:
+> - Rebase on top of usb-next
+> - no change w.r.t to this patch. Same as previous versions.
+> 
+> No v2 version as the patch was introduced there.
+> 
+> ---
+>  Documentation/devicetree/bindings/connector/usb-connector.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> index d90e17e2428b..a9a2f2fc44f2 100644
+> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
+> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> @@ -14,6 +14,8 @@ Optional properties:
+>  - label: symbolic name for the connector,
+>  - type: size of the connector, should be specified in case of USB-A, USB-B
+>    non-fullsize connectors: "mini", "micro".
+> +- self-powered: Set this property if the usb device that has its own power
+> +  source.
+>  
+>  Optional properties for usb-c-connector:
+>  - power-role: should be one of "source", "sink" or "dual"(DRP) if typec
+> -- 
+> 2.19.0.605.g01d371f741-goog
+
+thanks,
+
+-- 
+heikki
