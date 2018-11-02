@@ -1,38 +1,42 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFC 1/2] dt-bindings: topology: Add RISC-V cpu topology.
-Date: Fri, 2 Nov 2018 13:31:00 +0000
-Message-ID: <20181102133100.GA13130@e107155-lin>
-References: <1541113468-22097-1-git-send-email-atish.patra@wdc.com>
- <1541113468-22097-2-git-send-email-atish.patra@wdc.com>
- <CAL_Jsq+wProNynprMjQnrz1jmbZT9TmmA-_=vPUxCEED_8xONg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: connector: Add self-powered property
+Date: Fri, 2 Nov 2018 08:44:50 -0500
+Message-ID: <CABGGiszdDau0ohsXb_SROAJU6AFcvx=7ucTAEXzC0dWzbZ3rAw@mail.gmail.com>
+References: <20181001194501.58338-1-badhri@google.com> <20181102132758.GA6543@kuha.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+wProNynprMjQnrz1jmbZT9TmmA-_=vPUxCEED_8xONg@mail.gmail.com>
+In-Reply-To: <20181102132758.GA6543@kuha.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Atish Patra <atish.patra@wdc.com>, linux-riscv@lists.infradead.org, Palmer Dabbelt <palmer@sifive.com>, Anup Patel <anup@brainfault.org>, Christoph Hellwig <hch@infradead.org>, Damien.LeMoal@wdc.com, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, alankao@andestech.com, Zong Li <zong@andestech.com>
+To: heikki.krogerus@linux.intel.com
+Cc: badhri@google.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, cw00.choi@samsung.com, a.hajda@samsung.com, jun.li@nxp.com, Guenter Roeck <linux@roeck-us.net>, jackp@codeaurora.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 02, 2018 at 08:09:39AM -0500, Rob Herring wrote:
-> On Thu, Nov 1, 2018 at 6:04 PM Atish Patra <atish.patra@wdc.com> wrote:
+On Fri, Nov 2, 2018 at 8:28 AM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
+>
+> On Mon, Oct 01, 2018 at 12:44:59PM -0700, Badhri Jagan Sridharan wrote:
+> > >From USB_PD_R3_0
+> > 7.1.5 Response to Hard Resets
+> > Device operation during and after a Hard Reset is defined as follows:
+> > Self-powered devices Should Not disconnect from USB during a Hard Reset
+> > (see Section 9.1.2).
+> > Bus powered devices will disconnect from USB during a Hard Reset due to the
+> > loss of their power source.
 > >
-> > Define a RISC-V cpu topology. This is based on cpu-map in ARM world.
-> > But it doesn't need a separate thread node for defining SMT systems.
-> > Multiple cpu phandle properties can be parsed to identify the sibling
-> > hardware threads. Moreover, we do not have cluster concept in RISC-V.
-> > So package is a better word choice than cluster for RISC-V.
+> > Therefore it is necessary to know whether the port belongs to
+> > a device which is self powered or bus powered. This change
+> > adds "self-powered" flag to the connector class which present indicates
+> > that the port belongs to a device that is self powered. Else it is
+> > bus powered usb device.
+> >
+> > Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
 >
-> There was a proposal to add package info for ARM recently. Not sure
-> what happened to that, but we don't need 2 different ways.
->
+> Rob, I can see you acked one of the patches modifying tcpm.c in this
+> series, but did you mean to put the tag to this patch instead?
 
-We still need that, I can brush it up and post what Lorenzo had previously
-proposed[1]. We want to keep both DT and ACPI CPU topology story aligned.
+Hum, indeed. Looks like a scripting fail in my reply. The R-by was for this one.
 
---
-Regards,
-Sudeep
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-[1] https://marc.info/?l=devicetree&m=151817774202854&w=2
+Rob
