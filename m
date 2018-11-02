@@ -1,125 +1,326 @@
-From: Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v3] arm64: dts: qcom: sdm845: Add dpu to sdm845
- dts file
-Date: Thu,  1 Nov 2018 19:25:23 -0700
-Message-ID: <1541125523-28358-2-git-send-email-jsanka@codeaurora.org>
-References: <1541125523-28358-1-git-send-email-jsanka@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1541125523-28358-1-git-send-email-jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH] arm64: dts: nxp: add more thermal zone support
+Date: Fri,  2 Nov 2018 11:11:15 +0800
+Message-ID: <20181102031115.3818-1-andy.tang@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org
+Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rui.zhang@intel.com, daniel.lezcano@linaro.org, Yuantian Tang <andy.tang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-RFBVIGlzIHNob3J0IGZvciB0aGUgRGlzcGxheSBQcm9jZXNzaW5nIFVuaXQuIEl0IGlzIHRoZSBk
-aXNwbGF5CmNvbnRyb2xsZXIgb24gUXVhbGNvbW0gU0RNODQ1IGNoaXBzLgoKVGhpcyBjaGFuZ2Ug
-YWRkcyBNRFNTIGFuZCBEU0kgbm9kZXMgdG8gZW5hYmxlIGRpc3BsYXkgb24gdGhlCnRhcmdldCBk
-ZXZpY2UuCgpDaGFuZ2VzIGluIHYyOgoJIC0gQmVlZmVkIHVwIGNvbW1pdCBtZXNzYWdlCgkgLSBV
-c2UgU29DIHNwZWNpZmljIGNvbXBhdGlibGVzIGZvciBtZHNzIGFuZCBkcHUgKFJvYiBIKQoJIC0g
-VXNlIGFzc2lnbmVkLWNsb2NrcyB0byBzZXQgaW5pdGlhbCBjbG9jayBmcmVxdWVuY3koUm9iIEgp
-CkNoYW5nZXMgaW4gdjM6CgkgLSBhZGRlZCBJT01NVSBub2RlCgkgLSBGaXggZGV2aWNlIG5hbWlu
-ZyAocmVtb3ZlIF9waHlzKQoJIC0gVXNlIGNvcnJlY3QgSVJRX1RZUEUgaW4gaW50ZXJydXB0IHNw
-ZWNpZmllcnMKClNpZ25lZC1vZmYtYnk6IEpleWt1bWFyIFNhbmthcmFuIDxqc2Fua2FAY29kZWF1
-cm9yYS5vcmc+ClNpZ25lZC1vZmYtYnk6IFNlYW4gUGF1bCA8c2VhbnBhdWxAY2hyb21pdW0ub3Jn
-PgotLS0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaSB8IDE5MSArKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDE5MSBpbnNlcnRp
-b25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNp
-IGIvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpCmluZGV4IDBjOWEyYWEuLmRk
-NjEyYWMgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQor
-KysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKQEAgLTk3OCw2ICs5Nzgs
-MTk3IEBACiAJCQkjdGhlcm1hbC1zZW5zb3ItY2VsbHMgPSA8MT47CiAJCX07CiAKKwkJbWRzczog
-bWRzc0BhZTAwMDAwIHsKKwkJCWNvbXBhdGlibGUgPSAicWNvbSxzZG04NDUtbWRzcyI7CisJCQly
-ZWcgPSA8MHhhZTAwMDAwIDB4MTAwMD47CisJCQlyZWctbmFtZXMgPSAibWRzcyI7CisKKwkJCXBv
-d2VyLWRvbWFpbnMgPSA8JmRpc3BjYyAwPjsKKworCQkJY2xvY2tzID0gPCZnY2MgR0NDX0RJU1Bf
-QUhCX0NMSz4sCisJCQkJIDwmZ2NjIEdDQ19ESVNQX0FYSV9DTEs+LAorCQkJCSA8JmRpc3BjYyBE
-SVNQX0NDX01EU1NfTURQX0NMSz47CisJCQljbG9jay1uYW1lcyA9ICJpZmFjZSIsICJidXMiLCAi
-Y29yZSI7CisKKwkJCWFzc2lnbmVkLWNsb2NrcyA9IDwmZGlzcGNjIERJU1BfQ0NfTURTU19NRFBf
-Q0xLPjsKKwkJCWFzc2lnbmVkLWNsb2NrLXJhdGVzID0gPDMwMDAwMDAwMD47CisKKwkJCWludGVy
-cnVwdHMgPSA8R0lDX1NQSSA4MyBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKwkJCWludGVycnVwdC1j
-b250cm9sbGVyOworCQkJI2ludGVycnVwdC1jZWxscyA9IDwxPjsKKworCQkJaW9tbXVzID0gPCZh
-cHBzX3NtbXUgMHg4ODAgMHg4PiwKKwkJCSAgICAgICAgIDwmYXBwc19zbW11IDB4YzgwIDB4OD47
-CisKKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJI3NpemUtY2VsbHMgPSA8MT47CisJCQly
-YW5nZXM7CisKKwkJCW1kc3NfbWRwOiBtZHBAYWUwMTAwMCB7CisJCQkJY29tcGF0aWJsZSA9ICJx
-Y29tLHNkbTg0NS1kcHUiOworCQkJCXJlZyA9IDwweDBhZTAxMDAwIDB4OGYwMDA+LAorCQkJCSAg
-ICAgIDwweDBhZWIwMDAwIDB4MjAwOD47CisJCQkJcmVnLW5hbWVzID0gIm1kcCIsICJ2YmlmIjsK
-KworCQkJCWNsb2NrcyA9IDwmZGlzcGNjIERJU1BfQ0NfTURTU19BSEJfQ0xLPiwKKwkJCQkJIDwm
-ZGlzcGNjIERJU1BfQ0NfTURTU19BWElfQ0xLPiwKKwkJCQkJIDwmZGlzcGNjIERJU1BfQ0NfTURT
-U19NRFBfQ0xLPiwKKwkJCQkJIDwmZGlzcGNjIERJU1BfQ0NfTURTU19WU1lOQ19DTEs+OworCQkJ
-CWNsb2NrLW5hbWVzID0gImlmYWNlIiwgImJ1cyIsICJjb3JlIiwgInZzeW5jIjsKKworCQkJCWFz
-c2lnbmVkLWNsb2NrcyA9IDwmZGlzcGNjIERJU1BfQ0NfTURTU19NRFBfQ0xLPiwKKwkJCQkJCSAg
-PCZkaXNwY2MgRElTUF9DQ19NRFNTX1ZTWU5DX0NMSz47CisJCQkJYXNzaWduZWQtY2xvY2stcmF0
-ZXMgPSA8MzAwMDAwMDAwPiwKKwkJCQkJCSAgICAgICA8MTkyMDAwMDA+OworCisJCQkJaW50ZXJy
-dXB0LXBhcmVudCA9IDwmbWRzcz47CisJCQkJaW50ZXJydXB0cyA9IDwwIElSUV9UWVBFX0xFVkVM
-X0hJR0g+OworCisJCQkJcG9ydHMgeworCQkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCQkJ
-I3NpemUtY2VsbHMgPSA8MD47CisKKwkJCQkJcG9ydEAwIHsKKwkJCQkJCXJlZyA9IDwwPjsKKwkJ
-CQkJCWRwdV9pbnRmMV9vdXQ6IGVuZHBvaW50IHsKKwkJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8
-JmRzaTBfaW4+OworCQkJCQkJfTsKKwkJCQkJfTsKKworCQkJCQlwb3J0QDEgeworCQkJCQkJcmVn
-ID0gPDE+OworCQkJCQkJZHB1X2ludGYyX291dDogZW5kcG9pbnQgeworCQkJCQkJCXJlbW90ZS1l
-bmRwb2ludCA9IDwmZHNpMV9pbj47CisJCQkJCQl9OworCQkJCQl9OworCQkJCX07CisJCQl9Owor
-CisJCQlkc2kwOiBkc2lAYWU5NDAwMCB7CisJCQkJY29tcGF0aWJsZSA9ICJxY29tLG1kc3MtZHNp
-LWN0cmwiOworCQkJCXJlZyA9IDwweGFlOTQwMDAgMHg0MDA+OworCQkJCXJlZy1uYW1lcyA9ICJk
-c2lfY3RybCI7CisKKwkJCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZtZHNzPjsKKwkJCQlpbnRlcnJ1
-cHRzID0gPDQgSVJRX1RZUEVfTEVWRUxfSElHSD47CisKKwkJCQljbG9ja3MgPSA8JmRpc3BjYyBE
-SVNQX0NDX01EU1NfQllURTBfQ0xLPiwKKwkJCQkJIDwmZGlzcGNjIERJU1BfQ0NfTURTU19CWVRF
-MF9JTlRGX0NMSz4sCisJCQkJCSA8JmRpc3BjYyBESVNQX0NDX01EU1NfUENMSzBfQ0xLPiwKKwkJ
-CQkJIDwmZGlzcGNjIERJU1BfQ0NfTURTU19FU0MwX0NMSz4sCisJCQkJCSA8JmRpc3BjYyBESVNQ
-X0NDX01EU1NfQUhCX0NMSz4sCisJCQkJCSA8JmRpc3BjYyBESVNQX0NDX01EU1NfQVhJX0NMSz47
-CisJCQkJY2xvY2stbmFtZXMgPSAiYnl0ZV9jbGsiLAorCQkJCQkgICAgICAiYnl0ZV9pbnRmX2Ns
-ayIsCisJCQkJCSAgICAgICJwaXhlbF9jbGsiLAorCQkJCQkgICAgICAiY29yZV9jbGsiLAorCQkJ
-CQkgICAgICAiaWZhY2VfY2xrIiwKKwkJCQkJICAgICAgImJ1c19jbGsiOworCisJCQkJcGh5cyA9
-IDwmZHNpMF9waHk+OworCQkJCXBoeS1uYW1lcyA9ICJkc2ktcGh5IjsKKworCQkJCSNhZGRyZXNz
-LWNlbGxzID0gPDE+OworCQkJCSNzaXplLWNlbGxzID0gPDA+OworCisJCQkJcG9ydHMgeworCQkJ
-CQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCQkJI3NpemUtY2VsbHMgPSA8MD47CisKKwkJCQkJ
-cG9ydEAwIHsKKwkJCQkJCXJlZyA9IDwwPjsKKwkJCQkJCWRzaTBfaW46IGVuZHBvaW50IHsKKwkJ
-CQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRwdV9pbnRmMV9vdXQ+OworCQkJCQkJfTsKKwkJCQkJ
-fTsKKworCQkJCQlwb3J0QDEgeworCQkJCQkJcmVnID0gPDE+OworCQkJCQkJZHNpMF9vdXQ6IGVu
-ZHBvaW50IHsKKwkJCQkJCX07CisJCQkJCX07CisJCQkJfTsKKwkJCX07CisKKwkJCWRzaTBfcGh5
-OiBkc2ktcGh5QGFlOTQ0MDAgeworCQkJCWNvbXBhdGlibGUgPSAicWNvbSxkc2ktcGh5LTEwbm0i
-OworCQkJCXJlZyA9IDwweGFlOTQ0MDAgMHgyMDA+LAorCQkJCSAgICAgIDwweGFlOTRhMDAgMHgx
-ZTA+LAorCQkJCSAgICAgIDwweGFlOTQ2MDAgMHgyODA+OworCQkJCXJlZy1uYW1lcyA9ICJkc2lf
-cGh5IiwKKwkJCQkJICAgICJkc2lfcGxsIiwKKwkJCQkJICAgICJkc2lfcGh5X2xhbmUiOworCisJ
-CQkJI2Nsb2NrLWNlbGxzID0gPDE+OworCQkJCSNwaHktY2VsbHMgPSA8MD47CisKKwkJCQljbG9j
-a3MgPSA8JmRpc3BjYyBESVNQX0NDX01EU1NfQUhCX0NMSz47CisJCQkJY2xvY2stbmFtZXMgPSAi
-aWZhY2VfY2xrIjsKKwkJCX07CisKKwkJCWRzaTE6IGRzaUBhZTk2MDAwIHsKKwkJCQljb21wYXRp
-YmxlID0gInFjb20sbWRzcy1kc2ktY3RybCI7CisJCQkJcmVnID0gPDB4YWU5NjAwMCAweDQwMD47
-CisJCQkJcmVnLW5hbWVzID0gImRzaV9jdHJsIjsKKworCQkJCWludGVycnVwdC1wYXJlbnQgPSA8
-Jm1kc3M+OworCQkJCWludGVycnVwdHMgPSA8NSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKworCQkJ
-CWNsb2NrcyA9IDwmZGlzcGNjIERJU1BfQ0NfTURTU19CWVRFMV9DTEs+LAorCQkJCQkgPCZkaXNw
-Y2MgRElTUF9DQ19NRFNTX0JZVEUxX0lOVEZfQ0xLPiwKKwkJCQkJIDwmZGlzcGNjIERJU1BfQ0Nf
-TURTU19QQ0xLMV9DTEs+LAorCQkJCQkgPCZkaXNwY2MgRElTUF9DQ19NRFNTX0VTQzFfQ0xLPiwK
-KwkJCQkJIDwmZGlzcGNjIERJU1BfQ0NfTURTU19BSEJfQ0xLPiwKKwkJCQkJIDwmZGlzcGNjIERJ
-U1BfQ0NfTURTU19BWElfQ0xLPjsKKwkJCQljbG9jay1uYW1lcyA9ICJieXRlX2NsayIsCisJCQkJ
-CSAgICAgICJieXRlX2ludGZfY2xrIiwKKwkJCQkJICAgICAgInBpeGVsX2NsayIsCisJCQkJCSAg
-ICAgICJjb3JlX2NsayIsCisJCQkJCSAgICAgICJpZmFjZV9jbGsiLAorCQkJCQkgICAgICAiYnVz
-X2NsayI7CisKKwkJCQlwaHlzID0gPCZkc2kxX3BoeT47CisJCQkJcGh5LW5hbWVzID0gImRzaS1w
-aHkiOworCisJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCQkJI3NpemUtY2VsbHMgPSA8MD47
-CisKKwkJCQlwb3J0cyB7CisJCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJCQkjc2l6ZS1j
-ZWxscyA9IDwwPjsKKworCQkJCQlwb3J0QDAgeworCQkJCQkJcmVnID0gPDA+OworCQkJCQkJZHNp
-MV9pbjogZW5kcG9pbnQgeworCQkJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHB1X2ludGYyX291
-dD47CisJCQkJCQl9OworCQkJCQl9OworCisJCQkJCXBvcnRAMSB7CisJCQkJCQlyZWcgPSA8MT47
-CisJCQkJCQlkc2kxX291dDogZW5kcG9pbnQgeworCQkJCQkJfTsKKwkJCQkJfTsKKwkJCQl9Owor
-CQkJfTsKKworCQkJZHNpMV9waHk6IGRzaS1waHlAYWU5NjQwMCB7CisJCQkJY29tcGF0aWJsZSA9
-ICJxY29tLGRzaS1waHktMTBubSI7CisJCQkJcmVnID0gPDB4YWU5NjQwMCAweDIwMD4sCisJCQkJ
-ICAgICAgPDB4YWU5NmEwMCAweDEwZT4sCisJCQkJICAgICAgPDB4YWU5NjYwMCAweDI4MD47CisJ
-CQkJcmVnLW5hbWVzID0gImRzaV9waHkiLAorCQkJCQkgICAgImRzaV9wbGwiLAorCQkJCQkgICAg
-ImRzaV9waHlfbGFuZSI7CisKKwkJCQkjY2xvY2stY2VsbHMgPSA8MT47CisJCQkJI3BoeS1jZWxs
-cyA9IDwwPjsKKworCQkJCWNsb2NrcyA9IDwmZGlzcGNjIERJU1BfQ0NfTURTU19BSEJfQ0xLPjsK
-KwkJCQljbG9jay1uYW1lcyA9ICJpZmFjZV9jbGsiOworCQkJfTsKKwkJfTsKKwogCQlzcG1pX2J1
-czogc3BtaUBjNDQwMDAwIHsKIAkJCWNvbXBhdGlibGUgPSAicWNvbSxzcG1pLXBtaWMtYXJiIjsK
-IAkJCXJlZyA9IDwweGM0NDAwMDAgMHgxMTAwPiwKLS0gClRoZSBRdWFsY29tbSBJbm5vdmF0aW9u
-IENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGlu
-dXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2plY3QKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRy
-ZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+To enable all the supported thermal sensors, add sensor id information
+to thermal zone node.
+Dts for ls1012a, ls1046a, ls1043a, ls1088a are updated.
+
+Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi |   39 +++------------
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |   59 +++++++++++------------
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |   55 ++++++++++------------
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   54 ++++++----------------
+ 4 files changed, 75 insertions(+), 132 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+index 68ac78c..9526b66 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+@@ -28,7 +28,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		cpu0: cpu@0 {
++		cooling_map0: cpu0: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x0>;
+@@ -100,36 +100,7 @@
+ 		mask = <0x02>;
+ 	};
+ 
+-	thermal-zones {
+-		cpu_thermal: cpu-thermal {
+-			polling-delay-passive = <1000>;
+-			polling-delay = <5000>;
+-			thermal-sensors = <&tmu 0>;
+-
+-			trips {
+-				cpu_alert: cpu-alert {
+-					temperature = <85000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				cpu_crit: cpu-crit {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "critical";
+-				};
+-			};
+-
+-			cooling-maps {
+-				map0 {
+-					trip = <&cpu_alert>;
+-					cooling-device =
+-						<&cpu0 THERMAL_NO_LIMIT
+-						THERMAL_NO_LIMIT>;
+-				};
+-			};
+-		};
+-	};
++	#include "fsl-tmu.dtsi"
+ 
+ 	soc {
+ 		compatible = "simple-bus";
+@@ -506,3 +477,9 @@
+ 		};
+ 	};
+ };
++
++&thermal_zones {
++	thermal-zone0 {
++		status = "okay";
++	};
++};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 7881e3d..3afc6d4 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -37,7 +37,7 @@
+ 		 *
+ 		 * Currently supported enable-method is psci v0.2
+ 		 */
+-		cpu0: cpu@0 {
++		cooling_map0: cpu0: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x0>;
+@@ -146,36 +146,7 @@
+ 		mask = <0x02>;
+ 	};
+ 
+-	thermal-zones {
+-		cpu_thermal: cpu-thermal {
+-			polling-delay-passive = <1000>;
+-			polling-delay = <5000>;
+-
+-			thermal-sensors = <&tmu 3>;
+-
+-			trips {
+-				cpu_alert: cpu-alert {
+-					temperature = <85000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-				cpu_crit: cpu-crit {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "critical";
+-				};
+-			};
+-
+-			cooling-maps {
+-				map0 {
+-					trip = <&cpu_alert>;
+-					cooling-device =
+-						<&cpu0 THERMAL_NO_LIMIT
+-						THERMAL_NO_LIMIT>;
+-				};
+-			};
+-		};
+-	};
++	#include "fsl-tmu.dtsi"
+ 
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+@@ -747,3 +718,29 @@
+ 
+ #include "qoriq-qman-portals.dtsi"
+ #include "qoriq-bman-portals.dtsi"
++
++&thermal_zones {
++	thermal-zone0 {
++		status = "okay";
++	};
++
++	thermal-zone1 {
++		status = "okay";
++	};
++
++	thermal-zone2 {
++		status = "okay";
++	};
++
++	thermal-zone3 {
++		status = "okay";
++	};
++
++	thermal-zone4 {
++		status = "okay";
++	};
++
++	thermal-zone5 {
++		status = "okay";
++	};
++};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+index ef83786..11793ca 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+@@ -33,7 +33,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		cpu0: cpu@0 {
++		cooling_map0: cpu0: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			reg = <0x0>;
+@@ -115,36 +115,7 @@
+ 		mask = <0x02>;
+ 	};
+ 
+-	thermal-zones {
+-		cpu_thermal: cpu-thermal {
+-			polling-delay-passive = <1000>;
+-			polling-delay = <5000>;
+-			thermal-sensors = <&tmu 3>;
+-
+-			trips {
+-				cpu_alert: cpu-alert {
+-					temperature = <85000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				cpu_crit: cpu-crit {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "critical";
+-				};
+-			};
+-
+-			cooling-maps {
+-				map0 {
+-					trip = <&cpu_alert>;
+-					cooling-device =
+-						<&cpu0 THERMAL_NO_LIMIT
+-						THERMAL_NO_LIMIT>;
+-				};
+-			};
+-		};
+-	};
++	#include "fsl-tmu.dtsi"
+ 
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+@@ -743,3 +714,25 @@
+ 
+ #include "qoriq-qman-portals.dtsi"
+ #include "qoriq-bman-portals.dtsi"
++
++&thermal_zones {
++	thermal-zone0 {
++		status = "okay";
++	};
++
++	thermal-zone1 {
++		status = "okay";
++	};
++
++	thermal-zone2 {
++		status = "okay";
++	};
++
++	thermal-zone3 {
++		status = "okay";
++	};
++
++	thermal-zone4 {
++		status = "okay";
++	};
++};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index a07f612..d47f1a0 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -25,7 +25,7 @@
+ 		#size-cells = <0>;
+ 
+ 		/* We have 2 clusters having 4 Cortex-A53 cores each */
+-		cpu0: cpu@0 {
++		cooling_map0: cpu0: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x0>;
+@@ -61,7 +61,7 @@
+ 			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu4: cpu@100 {
++		cooling_map1: cpu4: cpu@100 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x100>;
+@@ -128,43 +128,7 @@
+ 		};
+ 	};
+ 
+-	thermal-zones {
+-		cpu_thermal: cpu-thermal {
+-			polling-delay-passive = <1000>;
+-			polling-delay = <5000>;
+-			thermal-sensors = <&tmu 0>;
+-
+-			trips {
+-				cpu_alert: cpu-alert {
+-					temperature = <85000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				cpu_crit: cpu-crit {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "critical";
+-				};
+-			};
+-
+-			cooling-maps {
+-				map0 {
+-					trip = <&cpu_alert>;
+-					cooling-device =
+-						<&cpu0 THERMAL_NO_LIMIT
+-						THERMAL_NO_LIMIT>;
+-				};
+-
+-				map1 {
+-					trip = <&cpu_alert>;
+-					cooling-device =
+-						<&cpu4 THERMAL_NO_LIMIT
+-						THERMAL_NO_LIMIT>;
+-				};
+-			};
+-		};
+-	};
++	#include "fsl-tmu.dtsi"
+ 
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+@@ -648,3 +612,15 @@
+ 	};
+ 
+ };
++
++#include "fsl-tmu-map1.dtsi"
++
++&thermal_zones {
++	thermal-zone0 {
++		status = "okay";
++	};
++
++	thermal-zone1 {
++		status = "okay";
++	};
++};
+-- 
+1.7.1
