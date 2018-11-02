@@ -1,91 +1,58 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC 1/2] dt-bindings: topology: Add RISC-V cpu topology.
-Date: Fri, 2 Nov 2018 08:09:39 -0500
-Message-ID: <CAL_Jsq+wProNynprMjQnrz1jmbZT9TmmA-_=vPUxCEED_8xONg@mail.gmail.com>
-References: <1541113468-22097-1-git-send-email-atish.patra@wdc.com> <1541113468-22097-2-git-send-email-atish.patra@wdc.com>
+From: Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>
+Subject: Re: [PATCH v2] drm/msm/dpu: Correct dpu destroy and
+ disable order
+Date: Fri, 2 Nov 2018 09:15:31 -0400
+Message-ID: <20181102131531.GG154160@art_vandelay>
+References: <1541162957-12796-1-git-send-email-jshekhar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541113468-22097-2-git-send-email-atish.patra@wdc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: linux-riscv@lists.infradead.org, Palmer Dabbelt <palmer@sifive.com>, Anup Patel <anup@brainfault.org>, Christoph Hellwig <hch@infradead.org>, Damien.LeMoal@wdc.com, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, alankao@andestech.com, Zong Li <zong@andestech.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1541162957-12796-1-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 1, 2018 at 6:04 PM Atish Patra <atish.patra@wdc.com> wrote:
->
-> Define a RISC-V cpu topology. This is based on cpu-map in ARM world.
-> But it doesn't need a separate thread node for defining SMT systems.
-> Multiple cpu phandle properties can be parsed to identify the sibling
-> hardware threads. Moreover, we do not have cluster concept in RISC-V.
-> So package is a better word choice than cluster for RISC-V.
-
-There was a proposal to add package info for ARM recently. Not sure
-what happened to that, but we don't need 2 different ways.
-
-There's never going to be clusters for RISC-V? What prevents that?
-Seems shortsighted to me.
-
->
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> ---
->  .../devicetree/bindings/riscv/topology.txt         | 154 +++++++++++++++++++++
->  1 file changed, 154 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/riscv/topology.txt
->
-> diff --git a/Documentation/devicetree/bindings/riscv/topology.txt b/Documentation/devicetree/bindings/riscv/topology.txt
-> new file mode 100644
-> index 00000000..96039ed3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/riscv/topology.txt
-> @@ -0,0 +1,154 @@
-> +===========================================
-> +RISC-V cpu topology binding description
-> +===========================================
-> +
-> +===========================================
-> +1 - Introduction
-> +===========================================
-> +
-> +In a RISC-V system, the hierarchy of CPUs can be defined through following nodes that
-> +are used to describe the layout of physical CPUs in the system:
-> +
-> +- packages
-> +- core
-> +
-> +The cpu nodes (bindings defined in [1]) represent the devices that
-> +correspond to physical CPUs and are to be mapped to the hierarchy levels.
-> +Simultaneous multi-threading (SMT) systems can also represent their topology
-> +by defining multiple cpu phandles inside core node. The details are explained
-> +in paragraph 3.
-
-I don't see a reason to do this differently than ARM. That said, I
-don't think the thread part is in use on ARM, so it could possibly be
-changed.
-
-> +
-> +The remainder of this document provides the topology bindings for ARM, based
-
-for ARM?
-
-> +on the Devicetree Specification, available from:
-> +
-> +https://www.devicetree.org/specifications/
-> +
-> +If not stated otherwise, whenever a reference to a cpu node phandle is made its
-> +value must point to a cpu node compliant with the cpu node bindings as
-> +documented in [1].
-> +A topology description containing phandles to cpu nodes that are not compliant
-> +with bindings standardized in [1] is therefore considered invalid.
-> +
-> +This cpu topology binding description is mostly based on the topology defined
-> +in ARM [2].
-> +===========================================
-> +2 - cpu-topology node
-
-cpu-map. Why change this?
-
-What I would like to see is the ARM topology binding reworked to be
-common or some good reasons why it doesn't work for RISC-V as-is.
-
-Rob
+T24gRnJpLCBOb3YgMDIsIDIwMTggYXQgMDY6MTk6MTdQTSArMDUzMCwgSmF5YW50IFNoZWtoYXIg
+d3JvdGU6Cj4gSW4gY2FzZSBvZiBtc20gZHJtIGJpbmQgZmFpbHVyZSwgZHB1X21kc3NfZGVzdHJv
+eSBpcyB0cmlnZ2VyZWQuCj4gSW4gdGhpcyBmdW5jdGlvbiwgcmVzb3VyY2VzIGFyZSBmcmVlZCBh
+bmQgcG0gcnVudGltZSBkaXNhYmxlIGlzCj4gY2FsbGVkLCB3aGljaCB0cmlnZ2VycyBkcHVfbWRz
+c19kaXNhYmxlLiBOb3cgaW4gZHB1X21kc3NfZGlzYWJsZSwKPiBkcml2ZXIgdHJpZXMgdG8gYWNj
+ZXNzIGEgbWVtb3J5IHdoaWNoIGlzIGFscmVhZHkgZnJlZWQuIFRoaXMKPiByZXN1bHRzIGluIGtl
+cm5lbCBwYW5pYy4gRml4IHRoaXMgYnkgZW5zdXJpbmcgcHJvcGVyIHNlcXVlbmNlCj4gb2YgZHB1
+IGRlc3Ryb3kgYW5kIGRpc2FibGUgY2FsbHMuCj4gCj4gQ2hhbmdlcyBpbiB2MjoKPiAgICAtIFJl
+bW92ZWQgZG91YmxlIHNwYWNpbmdzIFtKZXlrdW1hcl0KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKYXlh
+bnQgU2hla2hhciA8anNoZWtoYXJAY29kZWF1cm9yYS5vcmc+CgpSZXZpZXdlZC1ieTogU2VhbiBQ
+YXVsIDxzZWFuQHBvb3JseS5ydW4+Cgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3Av
+ZHB1MS9kcHVfbWRzcy5jIHwgNSArLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24o
+KyksIDQgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20v
+ZGlzcC9kcHUxL2RwdV9tZHNzLmMgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVf
+bWRzcy5jCj4gaW5kZXggZmQ5Yzg5My4uOTAyYmI0YyAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dw
+dS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21z
+bS9kaXNwL2RwdTEvZHB1X21kc3MuYwo+IEBAIC0xNTYsMTggKzE1NiwxNSBAQCBzdGF0aWMgdm9p
+ZCBkcHVfbWRzc19kZXN0cm95KHN0cnVjdCBkcm1fZGV2aWNlICpkZXYpCj4gIAlzdHJ1Y3QgZHB1
+X21kc3MgKmRwdV9tZHNzID0gdG9fZHB1X21kc3MocHJpdi0+bWRzcyk7Cj4gIAlzdHJ1Y3QgZHNz
+X21vZHVsZV9wb3dlciAqbXAgPSAmZHB1X21kc3MtPm1wOwo+ICAKPiArCXBtX3J1bnRpbWVfZGlz
+YWJsZShkZXYtPmRldik7Cj4gIAlfZHB1X21kc3NfaXJxX2RvbWFpbl9maW5pKGRwdV9tZHNzKTsK
+PiAtCj4gIAlmcmVlX2lycShwbGF0Zm9ybV9nZXRfaXJxKHBkZXYsIDApLCBkcHVfbWRzcyk7Cj4g
+LQo+ICAJbXNtX2Rzc19wdXRfY2xrKG1wLT5jbGtfY29uZmlnLCBtcC0+bnVtX2Nsayk7Cj4gIAlk
+ZXZtX2tmcmVlKCZwZGV2LT5kZXYsIG1wLT5jbGtfY29uZmlnKTsKPiAgCj4gIAlpZiAoZHB1X21k
+c3MtPm1taW8pCj4gIAkJZGV2bV9pb3VubWFwKCZwZGV2LT5kZXYsIGRwdV9tZHNzLT5tbWlvKTsK
+PiAgCWRwdV9tZHNzLT5tbWlvID0gTlVMTDsKPiAtCj4gLQlwbV9ydW50aW1lX2Rpc2FibGUoZGV2
+LT5kZXYpOwo+ICAJcHJpdi0+bWRzcyA9IE5VTEw7Cj4gIH0KPiAgCj4gLS0gCj4gVGhlIFF1YWxj
+b21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9y
+YSBGb3J1bSwKPiBhIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cj4gCgot
+LSAKU2VhbiBQYXVsLCBTb2Z0d2FyZSBFbmdpbmVlciwgR29vZ2xlIC8gQ2hyb21pdW0gT1MKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1h
+aWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
