@@ -1,69 +1,62 @@
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Subject: [PATCH v4 0/4] MAX9286 GMSL Support
-Date: Fri,  2 Nov 2018 15:47:19 +0000
-Message-ID: <20181102154723.23662-1-kieran.bingham@ideasonboard.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [RFC 1/2] dt-bindings: topology: Add RISC-V cpu topology.
+Date: Fri, 2 Nov 2018 15:50:38 +0000
+Message-ID: <20181102155038.GA21067@e107155-lin>
+References: <1541113468-22097-1-git-send-email-atish.patra@wdc.com>
+ <1541113468-22097-2-git-send-email-atish.patra@wdc.com>
+ <CAL_Jsq+wProNynprMjQnrz1jmbZT9TmmA-_=vPUxCEED_8xONg@mail.gmail.com>
+ <20181102133100.GA13130@e107155-lin>
+ <CAL_JsqLO+cOcHkr41ebPtONwrzOWGhksH1ypph+tihsuOVDOug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLO+cOcHkr41ebPtONwrzOWGhksH1ypph+tihsuOVDOug@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@iki.fi
-Cc: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, linux-kernel@vger.kernel.org, Kieran Bingham <kieran.bingham@ideasonboard.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Atish Patra <atish.patra@wdc.com>, linux-riscv@lists.infradead.org, Palmer Dabbelt <palmer@sifive.com>, Anup Patel <anup@brainfault.org>, Christoph Hellwig <hch@infradead.org>, Damien.LeMoal@wdc.com, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, alankao@andestech.com, Sudeep Holla <sudeep.holla@arm.com>, Zong Li <zong@andestech.com>
 List-Id: devicetree@vger.kernel.org
 
-This series provides a pair of drivers for GMSL cameras on the R-Car
-ADAS platforms.
+On Fri, Nov 02, 2018 at 10:11:38AM -0500, Rob Herring wrote:
+> On Fri, Nov 2, 2018 at 8:31 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
+> > On Fri, Nov 02, 2018 at 08:09:39AM -0500, Rob Herring wrote:
+> > > On Thu, Nov 1, 2018 at 6:04 PM Atish Patra <atish.patra@wdc.com> wrote:
+> > > >
+> > > > Define a RISC-V cpu topology. This is based on cpu-map in ARM world.
+> > > > But it doesn't need a separate thread node for defining SMT systems.
+> > > > Multiple cpu phandle properties can be parsed to identify the sibling
+> > > > hardware threads. Moreover, we do not have cluster concept in RISC-V.
+> > > > So package is a better word choice than cluster for RISC-V.
+> > >
+> > > There was a proposal to add package info for ARM recently. Not sure
+> > > what happened to that, but we don't need 2 different ways.
+> > >
+> >
+> > We still need that, I can brush it up and post what Lorenzo had previously
+> > proposed[1]. We want to keep both DT and ACPI CPU topology story aligned.
+>
+> Frankly, I don't care what the ACPI story is. I care whether each cpu
 
-These drivers originate from Cogent Embedded, and have been refactored
-to split the MAX9286 away from the RDACM20 drivers which were once very
-tightly coupled.
+Sorry I meant feature parity with ACPI and didn't refer to the mechanics.
 
-This posting is the culmination of ~100 changesets spread across Jacopo,
-Niklas, Laurent and myself - thus they contain all of our SoB tags.
+> arch does its own thing in DT or not. If a package prop works for
+> RISC-V folks and that happens to align with ACPI, then okay. Though I
+> tend to prefer a package represented as a node rather than a property
+> as I think that's more consistent.
+>
 
-This series makes use of Sakari's VC developments and is based upon the
-most recent rebase of this series by Niklas at:
-  git://git.ragnatech.se/linux/ v4l2/mux
+Sounds good. One of the reason for making it *optional* property is for
+backward compatibility. But we should be able to deal with that even with
+node.
 
-Thanks to the VC developments, this driver is capable of streaming from
-all 4 input ports simultaneously through the RCar-VIN capture system.
+> Any comments on the thread aspect (whether it has ever been used)?
+> Though I think thread as a node level is more consistent with each
+> topology level being a node (same with package).
+>
+Not 100% sure, the only multi threaded core in the market I know is
+Cavium TX2 which is ACPI.
 
-This driver along with the associated platform support for the Renesas
-R-Car Salvator-X, and the Eagle-V3M can be found at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kbingham/rcar.git gmsl/v4
-
-
-Further anticipated work in this area includes supporting the RDACM21
-camera, at which point the RDACM20 will be adapted to separate out the
-MAX9271 and the OV10635 sensor components.
-
-
-Jacopo Mondi (1):
-  dt-bindings: media: i2c: Add bindings for IMI RDACM20
-
-Kieran Bingham (2):
-  media: i2c: Add MAX9286 driver
-  media: i2c: Add RDACM20 driver
-
-Laurent Pinchart (1):
-  dt-bindings: media: i2c: Add bindings for Maxim Integrated MAX9286
-
- .../bindings/media/i2c/imi,rdacm20.txt        |   65 +
- .../bindings/media/i2c/maxim,max9286.txt      |  182 +++
- .../devicetree/bindings/vendor-prefixes.txt   |    1 +
- MAINTAINERS                                   |   20 +
- drivers/media/i2c/Kconfig                     |   22 +
- drivers/media/i2c/Makefile                    |    2 +
- drivers/media/i2c/max9286.c                   | 1189 +++++++++++++++++
- drivers/media/i2c/rdacm20-ov10635.h           |  953 +++++++++++++
- drivers/media/i2c/rdacm20.c                   |  635 +++++++++
- 9 files changed, 3069 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/imi,rdacm20.txt
- create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max9286.txt
- create mode 100644 drivers/media/i2c/max9286.c
- create mode 100644 drivers/media/i2c/rdacm20-ov10635.h
- create mode 100644 drivers/media/i2c/rdacm20.c
-
--- 
-2.17.1
+--
+Regards,
+Sudeep
