@@ -1,102 +1,52 @@
-From: John Garry <john.garry@huawei.com>
-Subject: Re: Crash report: Broken NUMA distance map causes crash on arm64
- system
-Date: Fri, 2 Nov 2018 10:10:48 +0000
-Message-ID: <d6d7485a-a7c9-5327-fb47-f279d260ec44@huawei.com>
-References: <b89bf686-05bd-a3de-e7ef-4ab9ab7bdb6c@huawei.com>
- <20181030092640.GE1459@hirez.programming.kicks-ass.net>
- <d126099d-2698-8e3a-06ca-f229e57c3052@huawei.com>
- <ae352fe1-3c59-dcde-fd00-2c03b4491dc6@huawei.com>
- <20181031204622.GB3141@hirez.programming.kicks-ass.net>
- <bf2b890a-4ce7-d0f6-0663-84a1a6e8dbd2@huawei.com>
- <20181102093904.GJ3178@hirez.programming.kicks-ass.net>
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Subject: [PATCH v2 bus+gpio 4/4] dt-bindings: gpio: Document GPIOs via Moxtet bus
+Date: Fri,  2 Nov 2018 11:35:39 +0100
+Message-ID: <20181102103539.6077-4-marek.behun@nic.cz>
+References: <20181102103539.6077-1-marek.behun@nic.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181102093904.GJ3178@hirez.programming.kicks-ass.net>
+In-Reply-To: <20181102103539.6077-1-marek.behun@nic.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Linuxarm <linuxarm@huawei.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Ingo Molnar <mingo@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, suravee.suthikulpanit@amd.com
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Tony Lindgren <tony@atomide.com>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
->>
->> static void free_sched_groups(struct sched_group *sg, int free_sgc)
->> {
->> ...
->>     do {
->>         tmp = sg->next;
->>
->>         if (free_sgc && atomic_dec_and_test(&sg->sgc->ref))***
->>             kfree(sg->sgc);
->>
->> ...
->> }
->>
->> *** crash occurs when free_sgc is non-zero and sg->sgc is NULL
->
-> Yeah, turns out to be random memory corruption; I've had the crash in a
-> number of weird places; also GCC version dependent.
->
-> KASAN is awesome and pinpointed the problem though.
->
->> And, as I mentioned earlier, I bisected this problem to 58d5af59d55b.
->
-> You mean:
->
->   051f3ca02e46 ("sched/topology: Introduce NUMA identity node sched domain")
->
-> right? and yes indeed! The below fixes my reproducer:
->
+This patch adds documentation of the device tree bindings for GPIOs
+on the devices connected via Moxtet bus.
 
-Yes, that's the one.
+Signed-off-by: Marek Behún <marek.behun@nic.cz>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+---
+ .../devicetree/bindings/gpio/gpio-moxtet.txt   | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-moxtet.txt
 
->
-> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> index 9d74371e4aad..039578429c25 100644
-> --- a/kernel/sched/topology.c
-> +++ b/kernel/sched/topology.c
-> @@ -1337,7 +1348,7 @@ void sched_init_numa(void)
->  	int level = 0;
->  	int i, j, k;
->
-> -	sched_domains_numa_distance = kzalloc(sizeof(int) * nr_node_ids, GFP_KERNEL);
-> +	sched_domains_numa_distance = kzalloc(sizeof(int) * (nr_node_ids + 1), GFP_KERNEL);
-
-Good find.
-
->  	if (!sched_domains_numa_distance)
->  		return;
->
->
-
-So what about this:
- >>> I also note that if I apply the patch, below, to reject the invalid 
-NUMA
- >>> distance, we're still getting a warning/error:
- >>>
- >>> [    7.144407] CPU: All CPU(s) started at EL2
- >>> [    7.148678] alternatives: patching kernel code
- >>> [    7.153557] ERROR: Node-0 not representative
- >>> [    7.153557]
- >>> [    7.159365]   10 15 20 25
- >>> [    7.162097]   15 10 25 30
- >>> [    7.164832]   20 25 10 15
- >>> [    7.167562]   25 30 15 10
- >>
- >> Yeah, that's an 'obviously' broken topology too.
- >>
- >
- > AFAICT, this conforms to ACPI spec SLIT rules, and the kernel SLIT
- > validation allows this also. So maybe we should shout louder here or
- > even mark the SLIT as invalid if totally broken.
- >
-
-I plan to fix up OF map parsing to reject invalid distance maps.
-
-However is this distance map so broken for the scheduler that it's 
-better to reject this "valid" distance map also? If not, it may be nice 
-for the user to know about it without having to enable scheduler debugging.
-
-Thanks,
-John
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-moxtet.txt b/Documentation/devicetree/bindings/gpio/gpio-moxtet.txt
+new file mode 100644
+index 000000000000..7e9b5770585d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-moxtet.txt
+@@ -0,0 +1,18 @@
++Turris Mox Moxtet GPIO expander via Moxtet bus
++
++Required properties:
++ - compatible		: Should be "cznic,moxtet-gpio".
++ - gpio-controller	: Marks the device node as a GPIO controller.
++ - #gpio-cells		: Should be two. For consumer use see gpio.txt.
++
++Other properties are required for a Moxtet bus device, please refer to
++Documentation/devicetree/bindings/bus/moxtet.txt.
++
++Example:
++
++	moxtet_sfp: moxtet-sfp@0 {
++		compatible = "cznic,moxtet-gpio";
++		gpio-controller;
++		#gpio-cells = <2>;
++		reg = <0>;
++	}
+-- 
+2.18.1
