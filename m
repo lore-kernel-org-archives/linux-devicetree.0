@@ -1,45 +1,73 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v3 0/2] dt-bindings: uniphier: two trivial DT bindings
- patches
-Date: Fri, 2 Nov 2018 11:33:25 -0700
-Message-ID: <20181102183325.awq7auc7qwn4amlz@localhost>
-References: <1539945019-24950-1-git-send-email-yamada.masahiro@socionext.com>
+From: Nick Kossifidis <mick@ics.forth.gr>
+Subject: Re: [RFC 0/2] Add RISC-V cpu topology
+Date: Fri, 02 Nov 2018 20:58:39 +0200
+Message-ID: <866dedbc78ab4fa0e3b040697e112106@mailhost.ics.forth.gr>
+References: <1541113468-22097-1-git-send-email-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1539945019-24950-1-git-send-email-yamada.masahiro@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, arm@kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1541113468-22097-1-git-send-email-atish.patra@wdc.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Atish Patra <atish.patra@wdc.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Damien.LeMoal@wdc.com, alankao@andestech.com, hch@infradead.org, anup@brainfault.org, palmer@sifive.com, linux-kernel@vger.kernel.org, zong@andestech.com, robh+dt@kernel.org, linux-riscv@lists.infradead.org, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 19, 2018 at 07:30:16PM +0900, Masahiro Yamada wrote:
-> 
-> Arnd, Olof,
-> 
-> I know it is very late in this development cycle.
-> 
-> If possible, could you directly apply these two patches
-> to your ARM-SoC, aiming for the upcoming v4.20-rc1 MW?
-> 
-> If not, I can wait for v4.21-rc1.
-
-Hi,
-
-As you've noticed by now, this didn't make it in but we'll be happy to take it
-if you resend after -rc1.
-
-Thanks!
-
-
--Olof
+SGVsbG8gQWxsLAoKzqPPhM65z4IgMjAxOC0xMS0wMiAwMTowNCwgQXRpc2ggUGF0cmEgzq3Os8+B
+zrHPiM61Ogo+IFRoaXMgcGF0Y2ggc2VyaWVzIGFkZHMgdGhlIGNwdSB0b3BvbG9neSBmb3IgUklT
+Qy1WLiBJdCBjb250YWlucwo+IGJvdGggdGhlIERUIGJpbmRpbmcgYW5kIGFjdHVhbCBzb3VyY2Ug
+Y29kZS4gSXQgaGFzIGJlZW4gdGVzdGVkIG9uCj4gUUVNVSAmIFVubGVhc2hlZCBib2FyZC4KPiAK
+PiBUaGUgaWRlYSBpcyBiYXNlZCBvbiBjcHUtbWFwIGluIEFSTSB3aXRoIGNoYW5nZXMgcmVsYXRl
+ZCB0byBob3cKPiB3ZSBkZWZpbmUgU01UIHN5c3RlbXMuIFRoZSByZWFzb24gZm9yIGFkb3B0aW5n
+IGEgc2ltaWxhciBhcHByb2FjaAo+IHRvIEFSTSBhcyBJIGZlZWwgaXQgcHJvdmlkZXMgYSB2ZXJ5
+IGNsZWFyIHdheSBvZiBkZWZpbmluZyB0aGUKPiB0b3BvbG9neSBjb21wYXJlZCB0byBwYXJzaW5n
+IGNhY2hlIG5vZGVzIHRvIGZpZ3VyZSBvdXQgd2hpY2ggY3B1cwo+IHNoYXJlIHRoZSBzYW1lIHBh
+Y2thZ2Ugb3IgY29yZS4gIEkgYW0gb3BlbiB0byBhbnkgb3RoZXIgaWRlYSB0bwo+IGltcGxlbWVu
+dCBjcHUtdG9wb2xvZ3kgYXMgd2VsbC4KPiAKCkkgd2FzIGFsc28gYWJvdXQgdG8gc3RhcnQgYSBk
+aXNjdXNzaW9uIGFib3V0IENQVSB0b3BvbG9neSBvbiBSSVNDLVYKYWZ0ZXIgdGhlIGxhc3Qgc3d0
+b29scyBncm91cCBtZWV0aW5nLiBUaGUgZ29hbCBpcyB0byBwcm92aWRlIHRoZQpzY2hlZHVsZXIg
+d2l0aCBoaW50cyBvbiBob3cgdG8gZGlzdHJpYnV0ZSB0YXNrcyBtb3JlIGVmZmljaWVudGx5CmJl
+dHdlZW4gaGFydHMsIGJ5IHBvcHVsYXRpbmcgdGhlIHNjaGVkdWxpbmcgZG9tYWluIHRvcG9sb2d5
+IGxldmVscwooaHR0cHM6Ly9lbGl4aXIuYm9vdGxpbi5jb20vbGludXgvdjQuMTkvaWRlbnQvc2No
+ZWRfZG9tYWluX3RvcG9sb2d5X2xldmVsKS4KV2hhdCB3ZSB3YW50IHRvIGRvIGlzIGRlZmluZSBj
+cHUgZ3JvdXBzIGFuZCBhc3NpZ24gdGhlbSB0bwpzY2hlZHVsaW5nIGRvbWFpbnMgd2l0aCB0aGUg
+YXBwcm9wcmlhdGUgU0RfIGZsYWdzCihodHRwczovL2dpdGh1Yi5jb20vdG9ydmFsZHMvbGludXgv
+YmxvYi9tYXN0ZXIvaW5jbHVkZS9saW51eC9zY2hlZC90b3BvbG9neS5oI0wxNikuCgpTbyB0aGUg
+Y29yZXMgdGhhdCBiZWxvbmcgdG8gYSBzY2hlZHVsaW5nIGRvbWFpbiBtYXkgc2hhcmU6CkNQVSBj
+YXBhY2l0eSAoU0RfU0hBUkVfQ1BVQ0FQQUNJVFkgLyBTRF9BU1lNX0NQVUNBUEFDSVRZKQpQYWNr
+YWdlIHJlc291cmNlcyAtZS5nLiBjYWNoZXMsIHVuaXRzIGV0Yy0gKFNEX1NIQVJFX1BLR19SRVNP
+VVJDRVMpClBvd2VyIGRvbWFpbiAoU0RfU0hBUkVfUE9XRVJET01BSU4pCgpJbiB0aGlzIGNvbnRl
+eHQgSSBiZWxpZXZlIHVzaW5nIHdvcmRzIGxpa2UgImNvcmUiLCAicGFja2FnZSIsCiJzb2NrZXQi
+IGV0YyBjYW4gYmUgbWlzbGVhZGluZy4gRm9yIGV4YW1wbGUgdGhlIHNhbXBsZSB0b3BvbG9neSB5
+b3UKdXNlIG9uIHRoZSBkb2N1bWVudGF0aW9uIHNheXMgdGhhdCB0aGVyZSBhcmUgNCBjb3JlcyB0
+aGF0IGFyZSBwYXJ0Cm9mIGEgcGFja2FnZSwgaG93ZXZlciAicGFja2FnZSIgaGFzIGEgZGlmZmVy
+ZW50IG1lYW5pbmcgdG8gdGhlCnNjaGVkdWxlci4gQWxzbyB3ZSBkb24ndCBzYXkgYW55dGhpbmcg
+aW4gY2FzZSB0aGV5IHNoYXJlIGEgcG93ZXIKZG9tYWluIG9yIGlmIHRoZXkgaGF2ZSB0aGUgc2Ft
+ZSBjYXBhY2l0eSBvciBub3QuIFRoaXMgbWFwcGluZyBkZWFscwpvbmx5IHdpdGggY2FjaGUgaGll
+cmFyY2h5IG9yIG90aGVyIHNoYXJlZCByZXNvdXJjZXMuCgpIb3cgYWJvdXQgZGVmaW5pbmcgYSBk
+dCBzY2hlbWUgdG8gZGVzY3JpYmUgdGhlIHNjaGVkdWxlciBkb21haW4KdG9wb2xvZ3kgbGV2ZWxz
+IGluc3RlYWQgPyBlLmc6CgoyIHNldHMgKG9yIGNsdXN0ZXJzIGlmIHlvdSBwcmVmZXIpIG9mIDIg
+U01UIGNvcmVzLCBlYWNoIHNldCB3aXRoCmEgZGlmZmVyZW50IGNhcGFjaXR5IGFuZCBwb3dlciBk
+b21haW46CgpzY2hlZF90b3BvbG9neSB7CiAgbGV2ZWwwIHsgLy8gU01UCiAgIHNoYXJlZCA9ICJw
+b3dlciIsICJjYXBhY2l0eSIsICJyZXNvdXJjZXMiOwogICBncm91cDAgewogICAgbWVtYmVycyA9
+IDwmaGFydDA+LCA8JmhhcnQxPjsKICAgfQogICBncm91cDEgewogICAgbWVtYmVycyA9IDwmaGFy
+dDI+LCA8JmhhcnQzPjsKICAgfQogICBncm91cDIgewogICAgbWVtYmVycyA9IDwmaGFydDQ+LCA8
+JmhhcnQ1PjsKICAgfQogICBncm91cDMgewogICAgbWVtYmVycyA9IDwmaGFydDY+LCA8JmhhcnQ3
+PjsKICAgfQogIH0KICBsZXZlbDEgeyAvLyBNQwogICBzaGFyZWQgPSAicG93ZXIiLCAiY2FwYWNp
+dHkiCiAgIGdyb3VwMCB7CiAgICBtZW1iZXJzID0gPCZoYXJ0MD4sIDwmaGFydDE+LCA8JmhhcnQy
+PiwgPCZoYXJ0Mz47CiAgIH0KICAgZ3JvdXAxIHsKICAgIG1lbWJlcnMgPSA8JmhhcnQ0PiwgPCZo
+YXJ0NT4sIDwmaGFydDY+LCA8JmhhcnQ3PjsKICAgfQogIH0KICB0b3BfbGV2ZWwgeyAvLyBBIGdy
+b3VwIHdpdGggYWxsIGhhcnRzIGluIGl0CiAgIHNoYXJlZCA9ICIiIC8vIFRoZXJlIGlzIG5vdGhp
+bmcgY29tbW9uIGZvciBBTEwgaGFydHMsIHdlIGNvdWxkIGhhdmUgCmNhcGFjaXR5IGhlcmUKICB9
+Cn0KClJlZ2FyZHMsCk5pY2sKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmxpbnV4LXJpc2N2IG1haWxpbmcgbGlzdApsaW51eC1yaXNjdkBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtcmlzY3YK
