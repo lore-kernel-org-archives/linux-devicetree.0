@@ -1,379 +1,160 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: [PATCH V4 08/10] dts: imx: add common imx7ulp dtsi support
-Date: Fri, 2 Nov 2018 09:13:11 +0000
-Message-ID: <1541149669-10857-9-git-send-email-aisheng.dong@nxp.com>
-References: <1541149669-10857-1-git-send-email-aisheng.dong@nxp.com>
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: Re: [PATCH v4 3/3] iio: magnetometer: Add driver support for PNI
+ RM3100
+Date: Fri, 2 Nov 2018 09:24:11 +0000
+Message-ID: <20181102092411.00003cb5@huawei.com>
+References: <20181002143812.3661-1-songqiang1304521@gmail.com>
+        <20181012073536.20339-1-songqiang1304521@gmail.com>
+        <20181012073536.20339-4-songqiang1304521@gmail.com>
+        <20181013111935.00a2e1af@archlinux>
+        <e1715942-8fd8-152f-49c8-2a9e081d8a2a@gmail.com>
+        <20181021151427.5b3dbb9b@archlinux>
+        <b7078a05-c40b-eba5-73f6-d5e3940d88f2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1541149669-10857-1-git-send-email-aisheng.dong@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b7078a05-c40b-eba5-73f6-d5e3940d88f2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Song Qiang <songqiang1304521@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, preid@electromag.com.au, himanshujha199640@gmail.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The i.MX 7ULP family of processors features NXP's advanced implementation
-of the Arm Cortex-A7 core, the Arm Cortex-M4 core, as well as a 3D and 2D
-Graphics Processing Units (GPUs).
+On Fri, 2 Nov 2018 15:55:27 +0800
+Song Qiang <songqiang1304521@gmail.com> wrote:
 
-This patch aims to add the initial support including:
-1) CLK
-2) GPIO PTC, PTD, PTE, PTF
-3) uSDHC 1/2
-4) LPUART 4/5/6/7
-5) LPI2C 6/7
+> On 2018/10/21 下午10:14, Jonathan Cameron wrote:
+> > On Thu, 18 Oct 2018 16:24:15 +0800
+> > Song Qiang <songqiang1304521@gmail.com> wrote:
+> >
+> > ...  
+> >>>> +static irqreturn_t rm3100_trigger_handler(int irq, void *p)
+> >>>> +{
+> >>>> +	struct iio_poll_func *pf = p;
+> >>>> +	struct iio_dev *indio_dev = pf->indio_dev;
+> >>>> +	unsigned long scan_mask = *indio_dev->active_scan_mask;
+> >>>> +	unsigned int mask_len = indio_dev->masklength;
+> >>>> +	struct rm3100_data *data = iio_priv(indio_dev);
+> >>>> +	struct regmap *regmap = data->regmap;
+> >>>> +	int ret, i, bit;
+> >>>> +
+> >>>> +	mutex_lock(&data->lock);
+> >>>> +	switch (scan_mask) {
+> >>>> +	case BIT(0) | BIT(1) | BIT(2):
+> >>>> +		ret = regmap_bulk_read(regmap, RM3100_REG_MX2, data->buffer, 9);
+> >>>> +		mutex_unlock(&data->lock);
+> >>>> +		if (ret < 0)
+> >>>> +			goto done;
+> >>>> +	break;
+> >>>> +	case BIT(0) | BIT(1):
+> >>>> +		ret = regmap_bulk_read(regmap, RM3100_REG_MX2, data->buffer, 6);
+> >>>> +		mutex_unlock(&data->lock);
+> >>>> +		if (ret < 0)
+> >>>> +			goto done;
+> >>>> +	break;
+> >>>> +	case BIT(1) | BIT(2):
+> >>>> +		ret = regmap_bulk_read(regmap, RM3100_REG_MY2, data->buffer, 6);
+> >>>> +		mutex_unlock(&data->lock);
+> >>>> +		if (ret < 0)
+> >>>> +			goto done;
+> >>>> +	break;  
+> >>> What about BIT(0) | BIT(2)?
+> >>>
+> >>> Now you can do it like you have here and on that one corner case let the iio core
+> >>> demux code take care of it, but then you will need to provide available_scan_masks
+> >>> so the core knows it needs to handle this case.
+> >>>     
+> >> This confused me a little. The available_scan_masks I was using is {BIT(0) |
+> >> BIT(1) | BIT(2), 0x0}. Apparently in this version of patch I would like it to
+> >> handle every circumstances like BIT(0), BIT(0) | BIT(2), BIT(1) | BIT(2), etc.
+> >> Since Phil mentioned he would like this to reduce bus usage as much as we can
+> >> and I want it, too, I think these three circumstances can be read consecutively
+> >> while others can be read one axis at a time. So I plan to let  BIT(0) | BIT(2)
+> >> fall into the 'default' section, which reads axis one by one.
+> >>
+> >> My question is, since this handles every possible combination, do I still need
+> >> to list every available scan masks in available_scan_masks?  
+> > Ah. I see, I'd missed that the default was picking up that case as well as the
+> > single axes.   It would be interesting to sanity check if it is quicker on
+> > a 'typical' platform to do the all axis read for the BIT(0) | BIT(2) case
+> > and drop the middle value (which would be done using available scan_masks)
+> > or to just do two independent reads.
+> >
+> > (I would guess it is worth reading the 'dead' axis).
+> >  
+> >>
+> >> All other problems will be fixed in the next patch.
+> >>
+> >> yours,
+> >>
+> >> Song Qiang
+> >>
+> >>
+> >> ...  
+> > Thanks,
+> >
+> > Jonathan  
+> 
+> I tested this two ways of getting data with the following code snippet:
+> 
+> 
+>      u8 buffer[9];
+>      struct timeval timebefore, timeafter;
+> 
+>      do_gettimeofday(&timebefore);
+>      ret = regmap_bulk_read(regmap, RM3100_REG_MX2, buffer, 9);
+>      if (ret < 0)
+>          goto unlock_return;
+>      do_gettimeofday(&timeafter);
+>      printk(KERN_INFO "read with dead axis time: %ld",
+>             timeafter.tv_sec * 1000000 + timeafter.tv_usec -
+>             timebefore.tv_sec * 1000000 - timebefore.tv_usec);
+>      do_gettimeofday(&timebefore);
+> 
+>      ret = regmap_bulk_read(regmap, RM3100_REG_MX2, buffer, 3);
+>      if (ret < 0)
+>          goto unlock_return;
+>      ret = regmap_bulk_read(regmap, RM3100_REG_MZ2, buffer + 6, 3);
+>      if (ret < 0)
+>          goto unlock_return;
+>      do_gettimeofday(&timeafter);
+>      printk(KERN_INFO "read two single axis time: %ld",
+>             timeafter.tv_sec * 1000000 + timeafter.tv_usec -
+>             timebefore.tv_sec * 1000000 - timebefore.tv_usec);
+> 
+> 
+> And get this result:
+> 
+> [  161.264777] read with dead axis time: 883
+> [  161.270621] read two single axis time: 1359
+> [  161.575134] read with dead axis time: 852
+> [  161.580973] read two single axis time: 1356
+> [  161.895704] read with dead axis time: 854
+> [  161.903744] read two single axis time: 3540
+> [  162.223600] read with dead axis time: 853
+> [  162.229451] read two single axis time: 1363
+> [  162.591227] read with dead axis time: 850
+> [  162.597630] read two single axis time: 1555
+> [  162.920102] read with dead axis time: 852
+> [  162.926467] read two single axis time: 1534
+> [  163.303121] read with dead axis time: 881
+> [  163.308997] read two single axis time: 1390
+> [  163.711004] read with dead axis time: 861
+> 
+> 
+> It seems like you're right! Reading consecutively 9 bytes does save a lot time 
+> compared to read 3 bytes twice.
+> 
+I've done this stuff before ;)  We had this on the adis16365 parts back
+in the early days of IIO.  A worse case as it has a lot more channels,
+but otherwise similar from what I recall.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
----
-ChangeLog:
-v2->v3:
- * change to generic node names
- * remove arch timer due to:
-   1) arch timer is fixed to 1Mhz which is lower accurate than TPM timer (3Mhz).
-   2) no firmware progrem CNTFREQ
-   3) cpuidle driver is still not in tree will may cause system hang
-v1->v2:
- * update clk part due to binding change
- * separate soc.dtsi from board.dts
----
- arch/arm/boot/dts/imx7ulp.dtsi | 314 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 314 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx7ulp.dtsi
+It would be an interesting exercise to trace those paths and find out the
+balance between real hardware stuff we can't change and potential software
+overheads.
 
-diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
-new file mode 100644
-index 0000000..c06fd3e
---- /dev/null
-+++ b/arch/arm/boot/dts/imx7ulp.dtsi
-@@ -0,0 +1,314 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2016 Freescale Semiconductor, Inc.
-+ * Copyright 2017-2018 NXP
-+ *   Dong Aisheng <aisheng.dong@nxp.com>
-+ */
-+
-+#include <dt-bindings/clock/imx7ulp-clock.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+#include "imx7ulp-pinfunc.h"
-+
-+/ {
-+	interrupt-parent = <&intc>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	aliases {
-+		gpio0 = &gpio_ptc;
-+		gpio1 = &gpio_ptd;
-+		gpio2 = &gpio_pte;
-+		gpio3 = &gpio_ptf;
-+		i2c0 = &lpi2c6;
-+		i2c1 = &lpi2c7;
-+		mmc0 = &usdhc0;
-+		mmc1 = &usdhc1;
-+		serial0 = &lpuart4;
-+		serial1 = &lpuart5;
-+		serial2 = &lpuart6;
-+		serial3 = &lpuart7;
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			compatible = "arm,cortex-a7";
-+			device_type = "cpu";
-+			reg = <0>;
-+		};
-+	};
-+
-+	intc: interrupt-controller@40021000 {
-+		compatible = "arm,cortex-a7-gic";
-+		#interrupt-cells = <3>;
-+		interrupt-controller;
-+		reg = <0x40021000 0x1000>,
-+		      <0x40022000 0x1000>;
-+	};
-+
-+	rosc: clock-rosc {
-+		compatible = "fixed-clock";
-+		clock-frequency = <32768>;
-+		clock-output-names = "rosc";
-+		#clock-cells = <0>;
-+	};
-+
-+	sosc: clock-sosc {
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+		clock-output-names = "sosc";
-+		#clock-cells = <0>;
-+	};
-+
-+	sirc: clock-sirc {
-+		compatible = "fixed-clock";
-+		clock-frequency = <16000000>;
-+		clock-output-names = "sirc";
-+		#clock-cells = <0>;
-+	};
-+
-+	firc: clock-firc {
-+		compatible = "fixed-clock";
-+		clock-frequency = <48000000>;
-+		clock-output-names = "firc";
-+		#clock-cells = <0>;
-+	};
-+
-+	upll: clock-upll {
-+		compatible = "fixed-clock";
-+		clock-frequency = <480000000>;
-+		clock-output-names = "upll";
-+		#clock-cells = <0>;
-+	};
-+
-+	mpll: clock-mpll {
-+		compatible = "fixed-clock";
-+		clock-frequency = <480000000>;
-+		clock-output-names = "mpll";
-+		#clock-cells = <0>;
-+	};
-+
-+	ahbbridge0: bus@40000000 {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x40000000 0x800000>;
-+		ranges;
-+
-+		lpuart4: serial@402d0000 {
-+			compatible = "fsl,imx7ulp-lpuart";
-+			reg = <0x402d0000 0x1000>;
-+			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&pcc2 IMX7ULP_CLK_LPUART4>;
-+			clock-names = "ipg";
-+			assigned-clocks = <&pcc2 IMX7ULP_CLK_LPUART4>;
-+			assigned-clock-parents = <&scg1 IMX7ULP_CLK_SOSC_BUS_CLK>;
-+			assigned-clock-rates = <24000000>;
-+			status = "disabled";
-+		};
-+
-+		lpuart5: serial@402e0000 {
-+			compatible = "fsl,imx7ulp-lpuart";
-+			reg = <0x402e0000 0x1000>;
-+			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&pcc2 IMX7ULP_CLK_LPUART5>;
-+			clock-names = "ipg";
-+			assigned-clocks = <&pcc2 IMX7ULP_CLK_LPUART5>;
-+			assigned-clock-parents = <&scg1 IMX7ULP_CLK_FIRC>;
-+			assigned-clock-rates = <48000000>;
-+			status = "disabled";
-+		};
-+
-+		tpm5: tpm@40260000 {
-+			compatible = "fsl,imx7ulp-tpm";
-+			reg = <0x40260000 0x1000>;
-+			interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&scg1 IMX7ULP_CLK_NIC1_BUS_DIV>,
-+				 <&pcc2 IMX7ULP_CLK_LPTPM5>;
-+			clock-names = "ipg", "per";
-+		};
-+
-+		usdhc0: mmc@40370000 {
-+			compatible = "fsl,imx7ulp-usdhc", "fsl,imx6sx-usdhc";
-+			reg = <0x40370000 0x10000>;
-+			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&scg1 IMX7ULP_CLK_NIC1_BUS_DIV>,
-+				 <&scg1 IMX7ULP_CLK_NIC1_DIV>,
-+				 <&pcc2 IMX7ULP_CLK_USDHC0>;
-+			clock-names ="ipg", "ahb", "per";
-+			assigned-clocks = <&pcc2 IMX7ULP_CLK_USDHC0>;
-+			assigned-clock-parents = <&scg1 IMX7ULP_CLK_NIC1_DIV>;
-+			bus-width = <4>;
-+			fsl,tuning-start-tap = <20>;
-+			fsl,tuning-step= <2>;
-+			status = "disabled";
-+		};
-+
-+		usdhc1: mmc@40380000 {
-+			compatible = "fsl,imx7ulp-usdhc", "fsl,imx6sx-usdhc";
-+			reg = <0x40380000 0x10000>;
-+			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&scg1 IMX7ULP_CLK_NIC1_BUS_DIV>,
-+				 <&scg1 IMX7ULP_CLK_NIC1_DIV>,
-+				 <&pcc2 IMX7ULP_CLK_USDHC1>;
-+			clock-names ="ipg", "ahb", "per";
-+			assigned-clocks = <&pcc2 IMX7ULP_CLK_USDHC1>;
-+			assigned-clock-parents = <&scg1 IMX7ULP_CLK_NIC1_DIV>;
-+			bus-width = <4>;
-+			fsl,tuning-start-tap = <20>;
-+			fsl,tuning-step= <2>;
-+			status = "disabled";
-+		};
-+
-+		scg1: clock-controller@403e0000 {
-+			compatible = "fsl,imx7ulp-scg1";
-+			reg = <0x403e0000 0x10000>;
-+			clocks = <&rosc>, <&sosc>, <&sirc>,
-+				 <&firc>, <&upll>, <&mpll>;
-+			clock-names = "rosc", "sosc", "sirc",
-+				      "firc", "upll", "mpll";
-+			#clock-cells = <1>;
-+		};
-+
-+		pcc2: clock-controller@403f0000 {
-+			compatible = "fsl,imx7ulp-pcc2";
-+			reg = <0x403f0000 0x10000>;
-+			#clock-cells = <1>;
-+			assigned-clocks = <&pcc2 IMX7ULP_CLK_LPTPM5>;
-+			assigned-clock-parents = <&scg1 IMX7ULP_CLK_SOSC_BUS_CLK>;
-+		};
-+
-+		smc1: smc1@40410000 {
-+			compatible = "fsl,imx7ulp-smc1";
-+			reg = <0x40410000 0x1000>;
-+		};
-+
-+		pcc3: clock-controller@40b30000 {
-+			compatible = "fsl,imx7ulp-pcc3";
-+			reg = <0x40b30000 0x10000>;
-+			#clock-cells = <1>;
-+		};
-+	};
-+
-+	ahbbridge1: bus@40800000 {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x40800000 0x800000>;
-+		ranges;
-+
-+		lpi2c6: i2c@40a40000 {
-+			compatible = "fsl,imx7ulp-lpi2c";
-+			reg = <0x40a40000 0x10000>;
-+			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&pcc3 IMX7ULP_CLK_LPI2C6>;
-+			clock-names = "ipg";
-+			assigned-clocks = <&pcc3 IMX7ULP_CLK_LPI2C6>;
-+			assigned-clock-parents = <&scg1 IMX7ULP_CLK_FIRC>;
-+			assigned-clock-rates = <48000000>;
-+			status = "disabled";
-+		};
-+
-+		lpi2c7: i2c@40a50000 {
-+			compatible = "fsl,imx7ulp-lpi2c";
-+			reg = <0x40a50000 0x10000>;
-+			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&pcc3 IMX7ULP_CLK_LPI2C7>;
-+			clock-names = "ipg";
-+			assigned-clocks = <&pcc3 IMX7ULP_CLK_LPI2C7>;
-+			assigned-clock-parents = <&scg1 IMX7ULP_CLK_FIRC>;
-+			assigned-clock-rates = <48000000>;
-+			status = "disabled";
-+		};
-+
-+		lpuart6: serial@40a60000 {
-+			compatible = "fsl,imx7ulp-lpuart";
-+			reg = <0x40a60000 0x1000>;
-+			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&pcc3 IMX7ULP_CLK_LPUART6>;
-+			clock-names = "ipg";
-+			assigned-clocks = <&pcc3 IMX7ULP_CLK_LPUART6>;
-+			assigned-clock-parents = <&scg1 IMX7ULP_CLK_FIRC>;
-+			assigned-clock-rates = <48000000>;
-+			status = "disabled";
-+		};
-+
-+		lpuart7: serial@40a70000 {
-+			compatible = "fsl,imx7ulp-lpuart";
-+			reg = <0x40a70000 0x1000>;
-+			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&pcc3  IMX7ULP_CLK_LPUART7>;
-+			clock-names = "ipg";
-+			assigned-clocks = <&pcc3 IMX7ULP_CLK_LPUART7>;
-+			assigned-clock-parents = <&scg1 IMX7ULP_CLK_FIRC>;
-+			assigned-clock-rates = <48000000>;
-+			status = "disabled";
-+		};
-+
-+		iomuxc1: pinctrl@40ac0000 {
-+			compatible = "fsl,imx7ulp-iomuxc1";
-+			reg = <0x40ac0000 0x1000>;
-+		};
-+
-+		gpio_ptc: gpio@40ae0000 {
-+			compatible = "fsl,imx7ulp-gpio", "fsl,vf610-gpio";
-+			reg = <0x40ae0000 0x1000 0x400f0000 0x40>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
-+				 <&pcc3 IMX7ULP_CLK_PCTLC>;
-+			clock-names = "gpio", "port";
-+			gpio-ranges = <&iomuxc1 0 0 32>;
-+		};
-+
-+		gpio_ptd: gpio@40af0000 {
-+			compatible = "fsl,imx7ulp-gpio", "fsl,vf610-gpio";
-+			reg = <0x40af0000 0x1000 0x400f0040 0x40>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
-+				 <&pcc3 IMX7ULP_CLK_PCTLD>;
-+			clock-names = "gpio", "port";
-+			gpio-ranges = <&iomuxc1 0 32 32>;
-+		};
-+
-+		gpio_pte: gpio@40b00000 {
-+			compatible = "fsl,imx7ulp-gpio", "fsl,vf610-gpio";
-+			reg = <0x40b00000 0x1000 0x400f0080 0x40>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
-+				 <&pcc3 IMX7ULP_CLK_PCTLE>;
-+			clock-names = "gpio", "port";
-+			gpio-ranges = <&iomuxc1 0 64 32>;
-+		};
-+
-+		gpio_ptf: gpio@40b10000 {
-+			compatible = "fsl,imx7ulp-gpio", "fsl,vf610-gpio";
-+			reg = <0x40b10000 0x1000 0x400f00c0 0x40>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
-+				 <&pcc3 IMX7ULP_CLK_PCTLF>;
-+			clock-names = "gpio", "port";
-+			gpio-ranges = <&iomuxc1 0 96 32>;
-+		};
-+	};
-+};
--- 
-2.7.4
+Chances are this is mostly 'real' stuff though but would be great to
+confirm this. It's been on my list of things to do for years (not on
+this driver obviously but in general)...
+
+Jonathan
