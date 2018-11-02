@@ -1,84 +1,137 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC 1/2] dt-bindings: topology: Add RISC-V cpu topology.
-Date: Fri, 2 Nov 2018 16:08:17 -0500
-Message-ID: <CABGGisyMM1hrRp5Cv5UPx6U+m5cQGYmDUTHJ0PeA9nE7vLqyLQ@mail.gmail.com>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [RFC 0/2] Add RISC-V cpu topology
+Date: Fri, 2 Nov 2018 14:14:30 -0700
+Message-ID: <9385b2eb-4729-8247-b0ae-1540793d078b@wdc.com>
 References: <1541113468-22097-1-git-send-email-atish.patra@wdc.com>
- <1541113468-22097-2-git-send-email-atish.patra@wdc.com> <CAL_Jsq+wProNynprMjQnrz1jmbZT9TmmA-_=vPUxCEED_8xONg@mail.gmail.com>
- <20181102133100.GA13130@e107155-lin> <CAL_JsqLO+cOcHkr41ebPtONwrzOWGhksH1ypph+tihsuOVDOug@mail.gmail.com>
- <20181102155038.GA21067@e107155-lin> <0c94f752-cc18-ae0c-36e7-7e0dd6b1d307@wdc.com>
+ <866dedbc78ab4fa0e3b040697e112106@mailhost.ics.forth.gr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0c94f752-cc18-ae0c-36e7-7e0dd6b1d307@wdc.com>
+In-Reply-To: <866dedbc78ab4fa0e3b040697e112106@mailhost.ics.forth.gr>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: atish.patra@wdc.com
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-riscv@lists.infradead.org, palmer@sifive.com, Anup Patel <anup@brainfault.org>, hch@infradead.org, Damien.LeMoal@wdc.com, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, alankao@andestech.com, Zong Li <zong@andestech.com>
+To: Nick Kossifidis <mick@ics.forth.gr>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Damien Le Moal <Damien.LeMoal@wdc.com>, "alankao@andestech.com" <alankao@andestech.com>, "hch@infradead.org" <hch@infradead.org>, "anup@brainfault.org" <anup@brainfault.org>, "palmer@sifive.com" <palmer@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "zong@andestech.com" <zong@andestech.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "tglx@linutronix.de" <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 2, 2018 at 3:53 PM Atish Patra <atish.patra@wdc.com> wrote:
->
-> On 11/2/18 8:50 AM, Sudeep Holla wrote:
-> > On Fri, Nov 02, 2018 at 10:11:38AM -0500, Rob Herring wrote:
-> >> On Fri, Nov 2, 2018 at 8:31 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> >>>
-> >>> On Fri, Nov 02, 2018 at 08:09:39AM -0500, Rob Herring wrote:
-> >>>> On Thu, Nov 1, 2018 at 6:04 PM Atish Patra <atish.patra@wdc.com> wrote:
-> >>>>>
-> >>>>> Define a RISC-V cpu topology. This is based on cpu-map in ARM world.
-> >>>>> But it doesn't need a separate thread node for defining SMT systems.
-> >>>>> Multiple cpu phandle properties can be parsed to identify the sibling
-> >>>>> hardware threads. Moreover, we do not have cluster concept in RISC-V.
-> >>>>> So package is a better word choice than cluster for RISC-V.
-> >>>>
-> >>>> There was a proposal to add package info for ARM recently. Not sure
-> >>>> what happened to that, but we don't need 2 different ways.
-> >>>>
-> >>>
-> >>> We still need that, I can brush it up and post what Lorenzo had previously
-> >>> proposed[1]. We want to keep both DT and ACPI CPU topology story aligned.
-> >>
-> >> Frankly, I don't care what the ACPI story is. I care whether each cpu
-> >
-> > Sorry I meant feature parity with ACPI and didn't refer to the mechanics.
-> >
-> >> arch does its own thing in DT or not. If a package prop works for
-> >> RISC-V folks and that happens to align with ACPI, then okay. Though I
-> >> tend to prefer a package represented as a node rather than a property
-> >> as I think that's more consistent.
-> >>
-> >
-> > Sounds good. One of the reason for making it *optional* property is for
-> > backward compatibility. But we should be able to deal with that even with
-> > node.
-> >
->
-> If you are introducing a package node, can we make cluster node
-> optional? I feel it is a redundant node for use cases where one doesn't
-> have a different grouped cpus in a package.
+On 11/2/18 11:59 AM, Nick Kossifidis wrote:
+> Hello All,
+> 
+> Στις 2018-11-02 01:04, Atish Patra έγραψε:
+>> This patch series adds the cpu topology for RISC-V. It contains
+>> both the DT binding and actual source code. It has been tested on
+>> QEMU & Unleashed board.
+>>
+>> The idea is based on cpu-map in ARM with changes related to how
+>> we define SMT systems. The reason for adopting a similar approach
+>> to ARM as I feel it provides a very clear way of defining the
+>> topology compared to parsing cache nodes to figure out which cpus
+>> share the same package or core.  I am open to any other idea to
+>> implement cpu-topology as well.
+>>
+> 
+> I was also about to start a discussion about CPU topology on RISC-V
+> after the last swtools group meeting. The goal is to provide the
+> scheduler with hints on how to distribute tasks more efficiently
+> between harts, by populating the scheduling domain topology levels
+> (https://elixir.bootlin.com/linux/v4.19/ident/sched_domain_topology_level).
+> What we want to do is define cpu groups and assign them to
+> scheduling domains with the appropriate SD_ flags
+> (https://github.com/torvalds/linux/blob/master/include/linux/sched/topology.h#L16).
+> 
 
-Certainly not. A common doc can make every level optional and each
-arch can define what's mandatory.
+Scheduler domain topology is already getting all the hints in the 
+following way.
 
-> We may have some architecture that requires cluster, it can be added to
-> the DT at that time, I believe.
->
-> >> Any comments on the thread aspect (whether it has ever been used)?
-> >> Though I think thread as a node level is more consistent with each
-> >> topology level being a node (same with package).
-> >>
-> > Not 100% sure, the only multi threaded core in the market I know is
-> > Cavium TX2 which is ACPI.
-> >
->
-> Any advantages of keeping thread node if it's not being used. If I am
-> not wrong, we can always use multiple cpuN phandles to represent SMT
-> nodes. It will result in less code and DT documentation as well.
+static struct sched_domain_topology_level default_topology[] = {
+#ifdef CONFIG_SCHED_SMT
+         { cpu_smt_mask, cpu_smt_flags, SD_INIT_NAME(SMT) },
+#endif
+#ifdef CONFIG_SCHED_MC
+         { cpu_coregroup_mask, cpu_core_flags, SD_INIT_NAME(MC) },
+#endif
+         { cpu_cpu_mask, SD_INIT_NAME(DIE) },
+         { NULL, },
+};
 
-It's more consistent to make each level a node IMO and we've already
-discussed and defined it this way. I don't see how it's really less
-code or documentation.
+#ifdef CONFIG_SCHED_SMT
+static inline const struct cpumask *cpu_smt_mask(int cpu)
+{
+         return topology_sibling_cpumask(cpu);
+}
+#endif
 
-BTW, powerpc defined threads with multiple reg entries in the cpu
-nodes. You could do that if you wanted.
+const struct cpumask *cpu_coregroup_mask(int cpu)
+{
+         return &cpu_topology[cpu].core_sibling;
+}
 
-Rob
+
+> So the cores that belong to a scheduling domain may share:
+> CPU capacity (SD_SHARE_CPUCAPACITY / SD_ASYM_CPUCAPACITY)
+> Package resources -e.g. caches, units etc- (SD_SHARE_PKG_RESOURCES)
+> Power domain (SD_SHARE_POWERDOMAIN)
+> 
+> In this context I believe using words like "core", "package",
+> "socket" etc can be misleading. For example the sample topology you
+> use on the documentation says that there are 4 cores that are part
+> of a package, however "package" has a different meaning to the
+> scheduler. Also we don't say anything in case they share a power
+> domain or if they have the same capacity or not. This mapping deals
+> only with cache hierarchy or other shared resources.
+> 
+> How about defining a dt scheme to describe the scheduler domain
+> topology levels instead ? e.g:
+> 
+> 2 sets (or clusters if you prefer) of 2 SMT cores, each set with
+> a different capacity and power domain:
+> 
+> sched_topology {
+>    level0 { // SMT
+>     shared = "power", "capacity", "resources";
+>     group0 {
+>      members = <&hart0>, <&hart1>;
+>     }
+>     group1 {
+>      members = <&hart2>, <&hart3>;
+>     }
+>     group2 {
+>      members = <&hart4>, <&hart5>;
+>     }
+>     group3 {
+>      members = <&hart6>, <&hart7>;
+>     }
+>    }
+>    level1 { // MC
+>     shared = "power", "capacity"
+>     group0 {
+>      members = <&hart0>, <&hart1>, <&hart2>, <&hart3>;
+>     }
+>     group1 {
+>      members = <&hart4>, <&hart5>, <&hart6>, <&hart7>;
+>     }
+>    }
+>    top_level { // A group with all harts in it
+>     shared = "" // There is nothing common for ALL harts, we could have
+> capacity here
+>    }
+> }
+> 
+
+I agree that naming could have been better in the past. But it is what 
+it is now. I don't see any big advantages in this approach compared to 
+the existing approach where DT specifies what hardware looks like and 
+scheduler sets up it's domain based on different cpumasks.
+
+
+Regards,
+Atish
+> Regards,
+> Nick
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> 
