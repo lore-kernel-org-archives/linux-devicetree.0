@@ -1,226 +1,56 @@
-From: Peter Zijlstra <peterz@infradead.org>
-Subject: Re: Crash report: Broken NUMA distance map causes crash on arm64
- system
-Date: Fri, 2 Nov 2018 11:50:03 +0100
-Message-ID: <20181102105003.GK3178@hirez.programming.kicks-ass.net>
-References: <b89bf686-05bd-a3de-e7ef-4ab9ab7bdb6c@huawei.com>
- <20181030092640.GE1459@hirez.programming.kicks-ass.net>
- <d126099d-2698-8e3a-06ca-f229e57c3052@huawei.com>
- <ae352fe1-3c59-dcde-fd00-2c03b4491dc6@huawei.com>
- <20181031204622.GB3141@hirez.programming.kicks-ass.net>
- <bf2b890a-4ce7-d0f6-0663-84a1a6e8dbd2@huawei.com>
+From: "Koskinen, Aaro (Nokia - FI/Espoo)" <aaro.koskinen@nokia.com>
+Subject: [PATCH] arm64: dts: stratix10: fix multicast filtering
+Date: Fri, 2 Nov 2018 10:54:13 +0000
+Message-ID: <20181102105355.18654-1-aaro.koskinen@nokia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <bf2b890a-4ce7-d0f6-0663-84a1a6e8dbd2@huawei.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: John Garry <john.garry@huawei.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linuxarm <linuxarm@huawei.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Ingo Molnar <mingo@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dinh Nguyen <dinguyen@kernel.org>, Thor Thayer <thor.thayer@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "Koskinen, Aaro (Nokia - FI/Espoo)" <aaro.koskinen@nokia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 01, 2018 at 10:01:05AM +0000, John Garry wrote:
-> On 31/10/2018 20:46, Peter Zijlstra wrote:
+On Stratix 10, the EMAC has 256 hash buckets for multicast filtering. This
+needs to be specified in DTS, otherwise the stmmac driver defaults to 64
+buckets and initializes the filter incorrectly. As a result, e.g. valid
+IPv6 multicast traffic ends up being dropped.
 
-> > > I also note that if I apply the patch, below, to reject the invalid NUMA
-> > > distance, we're still getting a warning/error:
-> > > 
-> > > [    7.144407] CPU: All CPU(s) started at EL2
-> > > [    7.148678] alternatives: patching kernel code
-> > > [    7.153557] ERROR: Node-0 not representative
-> > > [    7.153557]
-> > > [    7.159365]   10 15 20 25
-> > > [    7.162097]   15 10 25 30
-> > > [    7.164832]   20 25 10 15
-> > > [    7.167562]   25 30 15 10
-> > 
-> > Yeah, that's an 'obviously' broken topology too.
-> > 
-> 
-> AFAICT, this conforms to ACPI spec SLIT rules, and the kernel SLIT
-> validation allows this also. So maybe we should shout louder here or even
-> mark the SLIT as invalid if totally broken.
-
-Right. Part of the problem is that I only have a few necessary
-conditions (symmetry, trace-identity, node0-complete-distance) for the
-distance table, but together they are not sufficient to determine if a
-topology is 'good'.
-
-(also, strictly speaking, non-symmetric topologies are possible -- think
-uni-directional mesh links -- we've just not ever seen and validated
-those)
-
-That said; I can certainly make this code give up and warn harder on
-those conditions.
-
-How is something like the below?
-
+Fixes: 78cd6a9d8e15 ("arm64: dts: Add base stratix 10 dtsi")
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
 ---
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 9d74371e4aad..41e703dd875f 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1207,6 +1218,11 @@ sd_init(struct sched_domain_topology_level *tl,
- 	return sd;
- }
- 
-+static const struct cpumask *cpu_system_mask(int cpu)
-+{
-+	return cpu_online_mask;
-+}
-+
- /*
-  * Topology list, bottom-up.
-  */
-@@ -1337,7 +1353,7 @@ void sched_init_numa(void)
- 	int level = 0;
- 	int i, j, k;
- 
--	sched_domains_numa_distance = kzalloc(sizeof(int) * nr_node_ids, GFP_KERNEL);
-+	sched_domains_numa_distance = kzalloc(sizeof(int) * (nr_node_ids + 1), GFP_KERNEL);
- 	if (!sched_domains_numa_distance)
- 		return;
- 
-@@ -1353,39 +1369,22 @@ void sched_init_numa(void)
- 	 * node_distance(i,j) in order to avoid cubic time.
- 	 */
- 	next_distance = curr_distance;
-+
- 	for (i = 0; i < nr_node_ids; i++) {
- 		for (j = 0; j < nr_node_ids; j++) {
--			for (k = 0; k < nr_node_ids; k++) {
--				int distance = node_distance(i, k);
--
--				if (distance > curr_distance &&
--				    (distance < next_distance ||
--				     next_distance == curr_distance))
--					next_distance = distance;
--
--				/*
--				 * While not a strong assumption it would be nice to know
--				 * about cases where if node A is connected to B, B is not
--				 * equally connected to A.
--				 */
--				if (sched_debug() && node_distance(k, i) != distance)
--					sched_numa_warn("Node-distance not symmetric");
--
--				if (sched_debug() && i && !find_numa_distance(distance))
--					sched_numa_warn("Node-0 not representative");
--			}
--			if (next_distance != curr_distance) {
--				sched_domains_numa_distance[level++] = next_distance;
--				sched_domains_numa_levels = level;
--				curr_distance = next_distance;
--			} else break;
--		}
-+			int distance = node_distance(0, j);
- 
--		/*
--		 * In case of sched_debug() we verify the above assumption.
--		 */
--		if (!sched_debug())
--			break;
-+			if (distance > curr_distance &&
-+			    (distance < next_distance ||
-+			     next_distance == curr_distance))
-+				next_distance = distance;
-+
-+		}
-+		if (next_distance != curr_distance) {
-+			sched_domains_numa_distance[level++] = next_distance;
-+			sched_domains_numa_levels = level;
-+			curr_distance = next_distance;
-+		} else break;
- 	}
- 
- 	/*
-@@ -1428,7 +1427,24 @@ void sched_init_numa(void)
- 			sched_domains_numa_masks[i][j] = mask;
- 
- 			for_each_node(k) {
--				if (node_distance(j, k) > sched_domains_numa_distance[i])
-+				int distance = node_distance(j, k);
-+
-+				if (!i && j != k) {
-+					sched_numa_warn("Non-trace locality\n");
-+					goto fail;
-+				}
-+
-+				if (distance > curr_distance) {
-+					sched_numa_warn("Node-0 not complete\n");
-+					goto fail;
-+				}
-+
-+				if (distance != node_distance(k, j)) {
-+					sched_numa_warn("Non symmetric\n");
-+					goto fail;
-+				}
-+
-+				if (distance > sched_domains_numa_distance[i])
- 					continue;
- 
- 				cpumask_or(mask, mask, cpumask_of_node(k));
-@@ -1437,9 +1453,10 @@ void sched_init_numa(void)
- 	}
- 
- 	/* Compute default topology size */
--	for (i = 0; sched_domain_topology[i].mask; i++);
-+	for (k = 0; sched_domain_topology[k].mask; k++)
-+		;
- 
--	tl = kzalloc((i + level + 1) *
-+	tl = kzalloc((k + level + 1) *
- 			sizeof(struct sched_domain_topology_level), GFP_KERNEL);
- 	if (!tl)
- 		return;
-@@ -1447,7 +1464,7 @@ void sched_init_numa(void)
- 	/*
- 	 * Copy the default topology bits..
- 	 */
--	for (i = 0; sched_domain_topology[i].mask; i++)
-+	for (i = 0; i < k; i++)
- 		tl[i] = sched_domain_topology[i];
- 
- 	/*
-@@ -1478,6 +1495,31 @@ void sched_init_numa(void)
- 	sched_max_numa_distance = sched_domains_numa_distance[level - 1];
- 
- 	init_numa_topology_type();
-+
-+	return;
-+
-+fail:
-+	/* Compute default topology size */
-+	for (k = 0; sched_domain_topology[k].mask; k++)
-+		;
-+
-+	tl = kzalloc((k + 2) *
-+			sizeof(struct sched_domain_topology_level), GFP_KERNEL);
-+	if (!tl)
-+		return;
-+
-+	/*
-+	 * Copy the default topology bits..
-+	 */
-+	for (i = 0; i < k; i++)
-+		tl[i] = sched_domain_topology[i];
-+
-+	tl[i] = (struct sched_domain_topology_level){
-+		.mask = cpu_system_mask,
-+		SD_INIT_NAME(SYSTEM)
-+	};
-+
-+	sched_domain_topology = tl;
- }
- 
- void sched_domains_numa_masks_set(unsigned int cpu)
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64=
+/boot/dts/altera/socfpga_stratix10.dtsi
+index 8253a1a9e985..fef7351e9f67 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -139,6 +139,7 @@
+ 			clock-names =3D "stmmaceth";
+ 			tx-fifo-depth =3D <16384>;
+ 			rx-fifo-depth =3D <16384>;
++			snps,multicast-filter-bins =3D <256>;
+ 			status =3D "disabled";
+ 		};
+=20
+@@ -154,6 +155,7 @@
+ 			clock-names =3D "stmmaceth";
+ 			tx-fifo-depth =3D <16384>;
+ 			rx-fifo-depth =3D <16384>;
++			snps,multicast-filter-bins =3D <256>;
+ 			status =3D "disabled";
+ 		};
+=20
+@@ -169,6 +171,7 @@
+ 			clock-names =3D "stmmaceth";
+ 			tx-fifo-depth =3D <16384>;
+ 			rx-fifo-depth =3D <16384>;
++			snps,multicast-filter-bins =3D <256>;
+ 			status =3D "disabled";
+ 		};
+=20
+--=20
+2.11.0
