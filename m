@@ -1,36 +1,51 @@
-From: Peter Zijlstra <peterz@infradead.org>
-Subject: Re: Crash report: Broken NUMA distance map causes crash on arm64
- system
-Date: Fri, 2 Nov 2018 13:19:58 +0100
-Message-ID: <20181102121958.GL3178@hirez.programming.kicks-ass.net>
-References: <b89bf686-05bd-a3de-e7ef-4ab9ab7bdb6c@huawei.com>
- <20181030092640.GE1459@hirez.programming.kicks-ass.net>
- <d126099d-2698-8e3a-06ca-f229e57c3052@huawei.com>
- <ae352fe1-3c59-dcde-fd00-2c03b4491dc6@huawei.com>
- <20181031204622.GB3141@hirez.programming.kicks-ass.net>
- <bf2b890a-4ce7-d0f6-0663-84a1a6e8dbd2@huawei.com>
- <20181102105003.GK3178@hirez.programming.kicks-ass.net>
- <be3f2f03-6d19-2c6a-e859-c946594e3af1@huawei.com>
+From: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v2] drm/msm/dpu: Correct dpu destroy and disable
+ order
+Date: Fri,  2 Nov 2018 18:19:17 +0530
+Message-ID: <1541162957-12796-1-git-send-email-jshekhar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <be3f2f03-6d19-2c6a-e859-c946594e3af1@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linuxarm <linuxarm@huawei.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Ingo Molnar <mingo@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 02, 2018 at 12:08:53PM +0000, John Garry wrote:
-> > @@ -1337,7 +1353,7 @@ void sched_init_numa(void)
-> >  	int level = 0;
-> >  	int i, j, k;
-> > 
-> > -	sched_domains_numa_distance = kzalloc(sizeof(int) * nr_node_ids, GFP_KERNEL);
-> > +	sched_domains_numa_distance = kzalloc(sizeof(int) * (nr_node_ids + 1), GFP_KERNEL);
-> 
-> Ahhhh, unfortuately this change in isolation is not fixing the crash for me.
-> I'm still crashing in the same place repeatedly.
-
-Hurm.. sadness, means my reproduces doesn't reproduce quite enough :/
-I'll see if I can somehow get something better going.
+SW4gY2FzZSBvZiBtc20gZHJtIGJpbmQgZmFpbHVyZSwgZHB1X21kc3NfZGVzdHJveSBpcyB0cmln
+Z2VyZWQuCkluIHRoaXMgZnVuY3Rpb24sIHJlc291cmNlcyBhcmUgZnJlZWQgYW5kIHBtIHJ1bnRp
+bWUgZGlzYWJsZSBpcwpjYWxsZWQsIHdoaWNoIHRyaWdnZXJzIGRwdV9tZHNzX2Rpc2FibGUuIE5v
+dyBpbiBkcHVfbWRzc19kaXNhYmxlLApkcml2ZXIgdHJpZXMgdG8gYWNjZXNzIGEgbWVtb3J5IHdo
+aWNoIGlzIGFscmVhZHkgZnJlZWQuIFRoaXMKcmVzdWx0cyBpbiBrZXJuZWwgcGFuaWMuIEZpeCB0
+aGlzIGJ5IGVuc3VyaW5nIHByb3BlciBzZXF1ZW5jZQpvZiBkcHUgZGVzdHJveSBhbmQgZGlzYWJs
+ZSBjYWxscy4KCkNoYW5nZXMgaW4gdjI6CiAgIC0gUmVtb3ZlZCBkb3VibGUgc3BhY2luZ3MgW0pl
+eWt1bWFyXQoKU2lnbmVkLW9mZi1ieTogSmF5YW50IFNoZWtoYXIgPGpzaGVraGFyQGNvZGVhdXJv
+cmEub3JnPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMgfCA1
+ICstLS0tCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDQgZGVsZXRpb25zKC0pCgpk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3MuYyBiL2Ry
+aXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMKaW5kZXggZmQ5Yzg5My4uOTAy
+YmI0YyAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3Mu
+YworKysgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jCkBAIC0xNTYs
+MTggKzE1NiwxNSBAQCBzdGF0aWMgdm9pZCBkcHVfbWRzc19kZXN0cm95KHN0cnVjdCBkcm1fZGV2
+aWNlICpkZXYpCiAJc3RydWN0IGRwdV9tZHNzICpkcHVfbWRzcyA9IHRvX2RwdV9tZHNzKHByaXYt
+Pm1kc3MpOwogCXN0cnVjdCBkc3NfbW9kdWxlX3Bvd2VyICptcCA9ICZkcHVfbWRzcy0+bXA7CiAK
+KwlwbV9ydW50aW1lX2Rpc2FibGUoZGV2LT5kZXYpOwogCV9kcHVfbWRzc19pcnFfZG9tYWluX2Zp
+bmkoZHB1X21kc3MpOwotCiAJZnJlZV9pcnEocGxhdGZvcm1fZ2V0X2lycShwZGV2LCAwKSwgZHB1
+X21kc3MpOwotCiAJbXNtX2Rzc19wdXRfY2xrKG1wLT5jbGtfY29uZmlnLCBtcC0+bnVtX2Nsayk7
+CiAJZGV2bV9rZnJlZSgmcGRldi0+ZGV2LCBtcC0+Y2xrX2NvbmZpZyk7CiAKIAlpZiAoZHB1X21k
+c3MtPm1taW8pCiAJCWRldm1faW91bm1hcCgmcGRldi0+ZGV2LCBkcHVfbWRzcy0+bW1pbyk7CiAJ
+ZHB1X21kc3MtPm1taW8gPSBOVUxMOwotCi0JcG1fcnVudGltZV9kaXNhYmxlKGRldi0+ZGV2KTsK
+IAlwcml2LT5tZHNzID0gTlVMTDsKIH0KIAotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2Vu
+dGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBG
+b3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdAoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9A
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
