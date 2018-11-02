@@ -1,64 +1,78 @@
-From: Brian Dodge <bdodge09@gmail.com>
-Subject: [PATCH] backlight/arcxcnn support newer chips in arcxcnn family and
- fix vendor prefix
-Date: Thu,  1 Nov 2018 18:49:01 -0400
-Message-ID: <1541112541-27046-1-git-send-email-bdodge09@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Brian Dodge <bdodge09@gmail.com>
+From: thesven73@gmail.com
+Subject: [PATCH v1] regulator: pfuze100-regulator: add coin support for pfuze100
+Date: Fri,  2 Nov 2018 13:12:08 -0400
+Message-ID: <20181102171208.29658-1-TheSven73@googlemail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: svendev@arcx.com, broonie@kernel.org, robh+dt@kernel.org
+Cc: lgirdwood@gmail.com, mark.rutland@arm.com, george.mccollister@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-U3VwcG9ydCBmb3IgQXJjdGljU2FuZCBhcmMxIGFuZCBhcmMzIHNoaXBzIGlzIGFkZGVkLiBTb21l
-IHJhbmdlcwphbmQgY29udHJvbCBwYXRocyBhcmUgbW9kaWZpZWQgYmFzZWQgb24gdGhlIGNoaXAg
-aWQgcHJvYmVkIHZpYQppMmMuIEFsc28gdXBkYXRlcyB2ZW5kb3IgcHJlZml4IHRvIGFyY3RpYyBm
-cm9tIGFyYyB3aGljaCB3YXMgYQptaXN0YWtlIGluIHRoZSBvcmlnaW5hbCBkcml2ZXIgc3VibWlz
-c2lvbgoKU2lnbmVkLW9mZi1ieTogQnJpYW4gRG9kZ2UgPGJkb2RnZTA5QGdtYWlsLmNvbT4KLS0t
-CiAuLi4vYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvYXJjeGNubl9ibC50eHQgICAgICAgICAgIHwg
-MjAgKysrKysrKysrKy0tLS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCsp
-LCAxMCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvYXJjeGNubl9ibC50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvYXJjeGNubl9ibC50eHQKaW5kZXggZGNh
-YTIzOS4uMjMwYWJkZSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2xlZHMvYmFja2xpZ2h0L2FyY3hjbm5fYmwudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9sZWRzL2JhY2tsaWdodC9hcmN4Y25uX2JsLnR4dApAQCAtMSw4ICsx
-LDggQEAKLUJpbmRpbmcgZm9yIEFyY3RpY1NhbmQgYXJjIGZhbWlseSBMRUQgZHJpdmVycworQmlu
-ZGluZyBmb3IgQXJjdGljU2FuZCBhcmMyYzA2MDggTEVEIGRyaXZlcgogCiBSZXF1aXJlZCBwcm9w
-ZXJ0aWVzOgotLSBjb21wYXRpYmxlOgkiYXJjdGljLGFyYzFjMDYwOCIsICJhcmN0aWMsYXJjMmMw
-NjA4IiwgImFyY3RpYyxhcmMzYzA4NDUiCi0tIHJlZzoJCXNsYXZlIGFkZHJlc3MKKy0gY29tcGF0
-aWJsZToJCXNob3VsZCBiZSAiYXJjLGFyYzJjMDYwOCIKKy0gcmVnOgkJCXNsYXZlIGFkZHJlc3MK
-IAogT3B0aW9uYWwgcHJvcGVydGllczoKIC0gZGVmYXVsdC1icmlnaHRuZXNzOglicmlnaHRuZXNz
-IHZhbHVlIG9uIGJvb3QsIHZhbHVlIGZyb206IDAtNDA5NQpAQCAtMTEsMTkgKzExLDE5IEBAIE9w
-dGlvbmFsIHByb3BlcnRpZXM6CiAtIGxlZC1zb3VyY2VzOgkJTGlzdCBvZiBlbmFibGVkIGNoYW5u
-ZWxzIGZyb20gMCB0byA1LgogCQkJU2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9sZWRzL2NvbW1vbi50eHQKIAotLSBhcmN0aWMsbGVkLWNvbmZpZy0wOglzZXR0aW5nIGZvciBy
-ZWdpc3RlciBJTEVEX0NPTkZJR18wCi0tIGFyY3RpYyxsZWQtY29uZmlnLTE6CXNldHRpbmcgZm9y
-IHJlZ2lzdGVyIElMRURfQ09ORklHXzEKLS0gYXJjdGljLGRpbS1mcmVxOgkJUFdNIG1vZGUgZnJl
-cXVlbmNlIHNldHRpbmcgKGJpdHMgWzM6MF0gdXNlZCkKLS0gYXJjdGljLGNvbXAtY29uZmlnOglz
-ZXR0aW5nIGZvciByZWdpc3RlciBDT05GSUdfQ09NUAotLSBhcmN0aWMsZmlsdGVyLWNvbmZpZzoJ
-c2V0dGluZyBmb3IgcmVnaXN0ZXIgRklMVEVSX0NPTkZJRwotLSBhcmN0aWMsdHJpbS1jb25maWc6
-CXNldHRpbmcgZm9yIHJlZ2lzdGVyIElNQVhUVU5FCistIGFyYyxsZWQtY29uZmlnLTA6CXNldHRp
-bmcgZm9yIHJlZ2lzdGVyIElMRURfQ09ORklHXzAKKy0gYXJjLGxlZC1jb25maWctMToJc2V0dGlu
-ZyBmb3IgcmVnaXN0ZXIgSUxFRF9DT05GSUdfMQorLSBhcmMsZGltLWZyZXE6CQlQV00gbW9kZSBm
-cmVxdWVuY2Ugc2V0dGluZyAoYml0cyBbMzowXSB1c2VkKQorLSBhcmMsY29tcC1jb25maWc6CXNl
-dHRpbmcgZm9yIHJlZ2lzdGVyIENPTkZJR19DT01QCistIGFyYyxmaWx0ZXItY29uZmlnOglzZXR0
-aW5nIGZvciByZWdpc3RlciBGSUxURVJfQ09ORklHCistIGFyYyx0cmltLWNvbmZpZzoJc2V0dGlu
-ZyBmb3IgcmVnaXN0ZXIgSU1BWFRVTkUKIAogTm90ZTogT3B0aW9uYWwgcHJvcGVydGllcyBub3Qg
-c3BlY2lmaWVkIHdpbGwgZGVmYXVsdCB0byB2YWx1ZXMgaW4gSUMgRVBST00KIAogRXhhbXBsZToK
-IAogYXJjMmMwNjA4QDMwIHsKLQljb21wYXRpYmxlID0gImFyY3RpYyxhcmMyYzA2MDgiOworCWNv
-bXBhdGlibGUgPSAiYXJjLGFyYzJjMDYwOCI7CiAJcmVnID0gPDB4MzA+OwogCWRlZmF1bHQtYnJp
-Z2h0bmVzcyA9IDw1MDA+OwogCWxhYmVsID0gImxjZC1iYWNrbGlnaHQiOwotLSAKMi43LjQKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Add support for PF0100 coin cell/super capacitor charger which works as
+a current limited voltage source via the LICELL pin. When VIN goes below
+a certain threshold LICELL is used to provide power for VSNVS which is
+usually used to hold up secure non-volatile storage and the real-time
+clock on the SoC.
+
+This extends a previous commit, where coin support was added for PF0200
+only.
+
+Signed-off-by: Sven Van Asbroeck <svendev@arcx.com>
+References: c6182ac9609 ("regulator: pfuze100-regulator: add coin support")
+---
+ Documentation/devicetree/bindings/regulator/pfuze100.txt | 4 ++++
+ drivers/regulator/pfuze100-regulator.c                   | 2 ++
+ include/linux/regulator/pfuze100.h                       | 3 ++-
+ 3 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/regulator/pfuze100.txt b/Documentation/devicetree/bindings/regulator/pfuze100.txt
+index c7610718adff..a69f7626e650 100644
+--- a/Documentation/devicetree/bindings/regulator/pfuze100.txt
++++ b/Documentation/devicetree/bindings/regulator/pfuze100.txt
+@@ -127,6 +127,10 @@ Example 1: PFUZE100
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+ 			};
++			coin_reg: coin {
++				regulator-min-microvolt = <2500000>;
++				regulator-max-microvolt = <3300000>;
++			};
+ 		};
+ 	};
+ 
+diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
+index 31c3a236120a..d8eb59fe3ab6 100644
+--- a/drivers/regulator/pfuze100-regulator.c
++++ b/drivers/regulator/pfuze100-regulator.c
+@@ -357,6 +357,7 @@ static struct pfuze_regulator pfuze100_regulators[] = {
+ 	PFUZE100_VGEN_REG(PFUZE100, VGEN4, PFUZE100_VGEN4VOL, 1800000, 3300000, 100000),
+ 	PFUZE100_VGEN_REG(PFUZE100, VGEN5, PFUZE100_VGEN5VOL, 1800000, 3300000, 100000),
+ 	PFUZE100_VGEN_REG(PFUZE100, VGEN6, PFUZE100_VGEN6VOL, 1800000, 3300000, 100000),
++	PFUZE100_COIN_REG(PFUZE100, COIN, PFUZE100_COINVOL, 0x7, pfuze100_coin),
+ };
+ 
+ static struct pfuze_regulator pfuze200_regulators[] = {
+@@ -423,6 +424,7 @@ static struct of_regulator_match pfuze100_matches[] = {
+ 	{ .name = "vgen4",	},
+ 	{ .name = "vgen5",	},
+ 	{ .name = "vgen6",	},
++	{ .name = "coin",	},
+ };
+ 
+ /* PFUZE200 */
+diff --git a/include/linux/regulator/pfuze100.h b/include/linux/regulator/pfuze100.h
+index cb5aecd40f07..331d7d940c7a 100644
+--- a/include/linux/regulator/pfuze100.h
++++ b/include/linux/regulator/pfuze100.h
+@@ -33,7 +33,8 @@
+ #define PFUZE100_VGEN4		12
+ #define PFUZE100_VGEN5		13
+ #define PFUZE100_VGEN6		14
+-#define PFUZE100_MAX_REGULATOR	15
++#define PFUZE100_COIN		15
++#define PFUZE100_MAX_REGULATOR	16
+ 
+ #define PFUZE200_SW1AB		0
+ #define PFUZE200_SW2		1
+-- 
+2.17.1
