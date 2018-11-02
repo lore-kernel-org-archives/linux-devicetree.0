@@ -1,86 +1,50 @@
-From: Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>
-Subject: RE: [PATCH v2 1/2] arm64: dts: Add support for NXP LS1028A SoC
-Date: Fri, 2 Nov 2018 09:51:49 +0000
-Message-ID: <AM6PR04MB4407CDF0EC1DE0442CF205508CCF0@AM6PR04MB4407.eurprd04.prod.outlook.com>
-References: <1539760132-3386-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
- <20181031071413.GI10386@tiger>
+From: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [[DPU PATCH]] drm/msm/dpu: Correct dpu destroy and
+ disable order
+Date: Fri,  2 Nov 2018 11:47:07 +0530
+Message-ID: <1541139427-25842-1-git-send-email-jshekhar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181031071413.GI10386@tiger>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudhanshu Gupta <sudhanshu.gupta@nxp.com>, Harninder Rai <harninder.rai@nxp.com>, Rajesh Bhagat <rajesh.bhagat@nxp.com>, Leo Li <leoyang.li@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
->-----Original Message-----
->From: Shawn Guo <shawnguo@kernel.org>
->Sent: Wednesday, October 31, 2018 12:44 PM
->To: Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>
->Cc: devicetree@vger.kernel.org; Harninder Rai <harninder.rai@nxp.com>;
->Sudhanshu Gupta <sudhanshu.gupta@nxp.com>; Rajesh Bhagat
-><rajesh.bhagat@nxp.com>; linux-arm-kernel@lists.infradead.org; Leo Li
-><leoyang.li@nxp.com>
->Subject: Re: [PATCH v2 1/2] arm64: dts: Add support for NXP LS1028A SoC
->> +	compatible = "fsl,ls1028a";
->> +	interrupt-parent = <&gic>;
->> +	#address-cells = <2>;
->> +	#size-cells = <2>;
->> +
->> +	cpus {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		cpu0: cpu@0 {
->> +			device_type = "cpu";
->> +			compatible = "arm,cortex-a72";
->> +			reg = <0x0>;
->> +			enable-method = "psci";
->> +			clocks = <&clockgen 1 0>;
->> +			next-level-cache = <&l2>;
->> +			cpu-idle-states = <&CPU_PH20>;
->> +		};
->> +
->> +		cpu1: cpu@1 {
->> +			device_type = "cpu";
->> +			compatible = "arm,cortex-a72";
->> +			reg = <0x1>;
->> +			enable-method = "psci";
->> +			clocks = <&clockgen 1 0>;
->> +			next-level-cache = <&l2>;
->> +			cpu-idle-states = <&CPU_PH20>;
->> +		};
->> +
->> +		l2: l2-cache {
->> +			compatible = "cache";
->> +		};
->
->Not sure what's the point of this node without any properties.
-
-Shawn, I looked into the NXP and non-NXP platforms, but all are creating cache nodes with "compatible" being the only property.
-
-Below are example code of how other platforms are creating cache nodes.
-
-1 # xgene_L2_3: l2-cache-3 {
-                        compatible = "cache";
-                };
-
-2 # L3_0: l3-cache {
-                                      compatible = "cache";
-                               };
-
-3 # cluster0_l2: l2-cache0 {
-                compatible = "cache";
-        };
+SW4gY2FzZSBvZiBtc20gZHJtIGJpbmQgZmFpbHVyZSwgZHB1X21kc3NfZGVzdHJveSBpcyB0cmln
+Z2VyZWQuCkluIHRoaXMgZnVuY3Rpb24sIHJlc291cmNlcyBhcmUgZnJlZWQgYW5kIHBtIHJ1bnRp
+bWUgZGlzYWJsZSBpcwpjYWxsZWQsIHdoaWNoIHRyaWdnZXJzIGRwdV9tZHNzX2Rpc2FibGUuIE5v
+dyBpbiBkcHVfbWRzc19kaXNhYmxlLApkcml2ZXIgdHJpZXMgdG8gYWNjZXNzIGEgbWVtb3J5IHdo
+aWNoIGlzIGFscmVhZHkgZnJlZWQuIFRoaXMKcmVzdWx0cyBpbiBrZXJuZWwgcGFuaWMuIEZpeCB0
+aGlzIGJ5IGVuc3VyaW5nIHByb3BlciBzZXF1ZW5jZQpvZiBkcHUgZGVzdHJveSBhbmQgZGlzYWJs
+ZSBjYWxscy4KCkNoYW5nZS1JZDogSWQ2ZTAxYTUzN2FlOWM0MDc4OWM1NzUyZGMyOGMzOTczOTFh
+YjdkZmUKU2lnbmVkLW9mZi1ieTogSmF5YW50IFNoZWtoYXIgPGpzaGVraGFyQGNvZGVhdXJvcmEu
+b3JnPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMgfCAzICsr
+LQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMgYi9kcml2ZXJz
+L2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jCmluZGV4IGZkOWM4OTMuLmNkOWE2YmQg
+MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMKKysr
+IGIvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3MuYwpAQCAtMTU2LDYgKzE1
+Niw4IEBAIHN0YXRpYyB2b2lkIGRwdV9tZHNzX2Rlc3Ryb3koc3RydWN0IGRybV9kZXZpY2UgKmRl
+dikKIAlzdHJ1Y3QgZHB1X21kc3MgKmRwdV9tZHNzID0gdG9fZHB1X21kc3MocHJpdi0+bWRzcyk7
+CiAJc3RydWN0IGRzc19tb2R1bGVfcG93ZXIgKm1wID0gJmRwdV9tZHNzLT5tcDsKIAorCXBtX3J1
+bnRpbWVfZGlzYWJsZShkZXYtPmRldik7CisKIAlfZHB1X21kc3NfaXJxX2RvbWFpbl9maW5pKGRw
+dV9tZHNzKTsKIAogCWZyZWVfaXJxKHBsYXRmb3JtX2dldF9pcnEocGRldiwgMCksIGRwdV9tZHNz
+KTsKQEAgLTE2Nyw3ICsxNjksNiBAQCBzdGF0aWMgdm9pZCBkcHVfbWRzc19kZXN0cm95KHN0cnVj
+dCBkcm1fZGV2aWNlICpkZXYpCiAJCWRldm1faW91bm1hcCgmcGRldi0+ZGV2LCBkcHVfbWRzcy0+
+bW1pbyk7CiAJZHB1X21kc3MtPm1taW8gPSBOVUxMOwogCi0JcG1fcnVudGltZV9kaXNhYmxlKGRl
+di0+ZGV2KTsKIAlwcml2LT5tZHNzID0gTlVMTDsKIH0KIAotLSAKVGhlIFF1YWxjb21tIElubm92
+YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwK
+YSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdAoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApG
+cmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
