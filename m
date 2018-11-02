@@ -1,51 +1,91 @@
-From: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v2] drm/msm/dpu: Correct dpu destroy and disable
- order
-Date: Fri,  2 Nov 2018 18:19:17 +0530
-Message-ID: <1541162957-12796-1-git-send-email-jshekhar@codeaurora.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC 1/2] dt-bindings: topology: Add RISC-V cpu topology.
+Date: Fri, 2 Nov 2018 08:09:39 -0500
+Message-ID: <CAL_Jsq+wProNynprMjQnrz1jmbZT9TmmA-_=vPUxCEED_8xONg@mail.gmail.com>
+References: <1541113468-22097-1-git-send-email-atish.patra@wdc.com> <1541113468-22097-2-git-send-email-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1541113468-22097-2-git-send-email-atish.patra@wdc.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Atish Patra <atish.patra@wdc.com>
+Cc: linux-riscv@lists.infradead.org, Palmer Dabbelt <palmer@sifive.com>, Anup Patel <anup@brainfault.org>, Christoph Hellwig <hch@infradead.org>, Damien.LeMoal@wdc.com, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, alankao@andestech.com, Zong Li <zong@andestech.com>
 List-Id: devicetree@vger.kernel.org
 
-SW4gY2FzZSBvZiBtc20gZHJtIGJpbmQgZmFpbHVyZSwgZHB1X21kc3NfZGVzdHJveSBpcyB0cmln
-Z2VyZWQuCkluIHRoaXMgZnVuY3Rpb24sIHJlc291cmNlcyBhcmUgZnJlZWQgYW5kIHBtIHJ1bnRp
-bWUgZGlzYWJsZSBpcwpjYWxsZWQsIHdoaWNoIHRyaWdnZXJzIGRwdV9tZHNzX2Rpc2FibGUuIE5v
-dyBpbiBkcHVfbWRzc19kaXNhYmxlLApkcml2ZXIgdHJpZXMgdG8gYWNjZXNzIGEgbWVtb3J5IHdo
-aWNoIGlzIGFscmVhZHkgZnJlZWQuIFRoaXMKcmVzdWx0cyBpbiBrZXJuZWwgcGFuaWMuIEZpeCB0
-aGlzIGJ5IGVuc3VyaW5nIHByb3BlciBzZXF1ZW5jZQpvZiBkcHUgZGVzdHJveSBhbmQgZGlzYWJs
-ZSBjYWxscy4KCkNoYW5nZXMgaW4gdjI6CiAgIC0gUmVtb3ZlZCBkb3VibGUgc3BhY2luZ3MgW0pl
-eWt1bWFyXQoKU2lnbmVkLW9mZi1ieTogSmF5YW50IFNoZWtoYXIgPGpzaGVraGFyQGNvZGVhdXJv
-cmEub3JnPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMgfCA1
-ICstLS0tCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDQgZGVsZXRpb25zKC0pCgpk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3MuYyBiL2Ry
-aXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMKaW5kZXggZmQ5Yzg5My4uOTAy
-YmI0YyAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3Mu
-YworKysgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jCkBAIC0xNTYs
-MTggKzE1NiwxNSBAQCBzdGF0aWMgdm9pZCBkcHVfbWRzc19kZXN0cm95KHN0cnVjdCBkcm1fZGV2
-aWNlICpkZXYpCiAJc3RydWN0IGRwdV9tZHNzICpkcHVfbWRzcyA9IHRvX2RwdV9tZHNzKHByaXYt
-Pm1kc3MpOwogCXN0cnVjdCBkc3NfbW9kdWxlX3Bvd2VyICptcCA9ICZkcHVfbWRzcy0+bXA7CiAK
-KwlwbV9ydW50aW1lX2Rpc2FibGUoZGV2LT5kZXYpOwogCV9kcHVfbWRzc19pcnFfZG9tYWluX2Zp
-bmkoZHB1X21kc3MpOwotCiAJZnJlZV9pcnEocGxhdGZvcm1fZ2V0X2lycShwZGV2LCAwKSwgZHB1
-X21kc3MpOwotCiAJbXNtX2Rzc19wdXRfY2xrKG1wLT5jbGtfY29uZmlnLCBtcC0+bnVtX2Nsayk7
-CiAJZGV2bV9rZnJlZSgmcGRldi0+ZGV2LCBtcC0+Y2xrX2NvbmZpZyk7CiAKIAlpZiAoZHB1X21k
-c3MtPm1taW8pCiAJCWRldm1faW91bm1hcCgmcGRldi0+ZGV2LCBkcHVfbWRzcy0+bW1pbyk7CiAJ
-ZHB1X21kc3MtPm1taW8gPSBOVUxMOwotCi0JcG1fcnVudGltZV9kaXNhYmxlKGRldi0+ZGV2KTsK
-IAlwcml2LT5tZHNzID0gTlVMTDsKIH0KIAotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2Vu
-dGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBG
-b3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdAoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9A
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+On Thu, Nov 1, 2018 at 6:04 PM Atish Patra <atish.patra@wdc.com> wrote:
+>
+> Define a RISC-V cpu topology. This is based on cpu-map in ARM world.
+> But it doesn't need a separate thread node for defining SMT systems.
+> Multiple cpu phandle properties can be parsed to identify the sibling
+> hardware threads. Moreover, we do not have cluster concept in RISC-V.
+> So package is a better word choice than cluster for RISC-V.
+
+There was a proposal to add package info for ARM recently. Not sure
+what happened to that, but we don't need 2 different ways.
+
+There's never going to be clusters for RISC-V? What prevents that?
+Seems shortsighted to me.
+
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  .../devicetree/bindings/riscv/topology.txt         | 154 +++++++++++++++++++++
+>  1 file changed, 154 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/riscv/topology.txt
+>
+> diff --git a/Documentation/devicetree/bindings/riscv/topology.txt b/Documentation/devicetree/bindings/riscv/topology.txt
+> new file mode 100644
+> index 00000000..96039ed3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/riscv/topology.txt
+> @@ -0,0 +1,154 @@
+> +===========================================
+> +RISC-V cpu topology binding description
+> +===========================================
+> +
+> +===========================================
+> +1 - Introduction
+> +===========================================
+> +
+> +In a RISC-V system, the hierarchy of CPUs can be defined through following nodes that
+> +are used to describe the layout of physical CPUs in the system:
+> +
+> +- packages
+> +- core
+> +
+> +The cpu nodes (bindings defined in [1]) represent the devices that
+> +correspond to physical CPUs and are to be mapped to the hierarchy levels.
+> +Simultaneous multi-threading (SMT) systems can also represent their topology
+> +by defining multiple cpu phandles inside core node. The details are explained
+> +in paragraph 3.
+
+I don't see a reason to do this differently than ARM. That said, I
+don't think the thread part is in use on ARM, so it could possibly be
+changed.
+
+> +
+> +The remainder of this document provides the topology bindings for ARM, based
+
+for ARM?
+
+> +on the Devicetree Specification, available from:
+> +
+> +https://www.devicetree.org/specifications/
+> +
+> +If not stated otherwise, whenever a reference to a cpu node phandle is made its
+> +value must point to a cpu node compliant with the cpu node bindings as
+> +documented in [1].
+> +A topology description containing phandles to cpu nodes that are not compliant
+> +with bindings standardized in [1] is therefore considered invalid.
+> +
+> +This cpu topology binding description is mostly based on the topology defined
+> +in ARM [2].
+> +===========================================
+> +2 - cpu-topology node
+
+cpu-map. Why change this?
+
+What I would like to see is the ARM topology binding reworked to be
+common or some good reasons why it doesn't work for RISC-V as-is.
+
+Rob
