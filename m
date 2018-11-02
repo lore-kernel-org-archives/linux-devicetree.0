@@ -1,139 +1,113 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: [PATCH V4 05/10] dt-bindings: pinctrl: imx7ulp: back to imx legacy
- binding for consistency
-Date: Fri, 2 Nov 2018 09:12:58 +0000
-Message-ID: <1541149669-10857-6-git-send-email-aisheng.dong@nxp.com>
-References: <1541149669-10857-1-git-send-email-aisheng.dong@nxp.com>
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: iio: vadc: Update example to
+ include unit address for node 'usb-id-nopull'
+Date: Fri, 2 Nov 2018 09:28:52 +0000
+Message-ID: <20181102092852.000038a2@huawei.com>
+References: <20181004001432.21218-1-mka@chromium.org>
+        <20181004001432.21218-2-mka@chromium.org>
+        <20181005204743.GA17135@bogus>
+        <20181012171523.GQ22824@google.com>
+        <20181018194010.GV22824@google.com>
+        <20181021151701.7b9daa41@archlinux>
+        <CAL_JsqJ1KAHg2QR+R7f5Vdx7Z41Y8T1wVarwocjoYiHwqk12pw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1541149669-10857-1-git-send-email-aisheng.dong@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, Stefan Agner <stefan@agner.ch>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJ1KAHg2QR+R7f5Vdx7Z41Y8T1wVarwocjoYiHwqk12pw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Doug Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-We already had an earlier conclusion that all new i.MX Socs will keep
-using the legacy i.MX Pinctrl bindings instead of generic pin config.
-However, MX7ULP generic pin config binding support has already been in
-tree before that time. Per SoC maintainers' suggestions, in order to
-get a better consistency for all i.MX devices, we'd like to go back to
-imx legacy binding for MX7ULP as well.
+On Tue, 30 Oct 2018 11:00:16 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Stefan Agner <stefan@agner.ch>
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-gpio@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
----
-ChangeLog:
- v3: new patch
----
- .../bindings/pinctrl/fsl,imx7ulp-pinctrl.txt       | 66 ++++++++++------------
- 1 file changed, 29 insertions(+), 37 deletions(-)
+> On Sun, Oct 21, 2018 at 9:17 AM Jonathan Cameron <jic23@kernel.org> wrote:
+> >
+> > On Thu, 18 Oct 2018 12:40:10 -0700
+> > Matthias Kaehlcke <mka@chromium.org> wrote:
+> >  
+> > > On Fri, Oct 12, 2018 at 10:15:23AM -0700, Matthias Kaehlcke wrote:  
+> > > > On Fri, Oct 05, 2018 at 03:47:43PM -0500, Rob Herring wrote:  
+> > > > > On Wed, Oct 03, 2018 at 05:14:31PM -0700, Matthias Kaehlcke wrote:  
+> > > > > > The node has a reg property, therefore its name should include a unit
+> > > > > > address.
+> > > > > >
+> > > > > > Also change the name from 'usb_id_nopull' to 'usb-id-nopull' to follow
+> > > > > > DT conventions.  
+> > > > >
+> > > > > This is ADC channels? If so, then DT convention would really be
+> > > > > "adc@...".  
+> > > >
+> > > > Is it really? A grep for 'adc@' in arch/${ARCH}/boot/dts yields
+> > > > mostly ADC controller not channel nodes.
+> > > >
+> > > > I'm totally fine with changing the name to 'adc@...' if that's the
+> > > > preference/convention, just want to reconfirm since the actual use is
+> > > > a bit ambiguous.  
+> > >
+> > > Could we please reach a conclusion on this?
+> > >
+> > > Summarizing the options on the table so far are:
+> > >
+> > > 1. usb-id-nopull@VADC_LR_MUX10_USB_ID
+> > > 2. usb-id-nopull@57
+> > > 3. adc@VADC_LR_MUX10_USB_ID
+> > > 4. adc@57
+> > >
+> > > My personal preference goes to something <node name>@<define>
+> > > since the unit address doesn't just resolve to an ADC channel number
+> > > but also includes configuation information. A literal like '57'
+> > > conveys less information than the define, it's easier to introduce
+> > > errors and these errors are harder to spot.  
+> >
+> > I agree that to my mind this is the most sensible option.  
+> 
+> If you really want the defines, then fine. Of course, that only works
+> if the function is fixed. It won't work if the function is defined per
+> board.
+> 
+> Eventually, examples using defines will have to also include the
+> headers. I plan to make the examples build-able.
+> 
+> > > If 'adc@...' really was the convention (or should be) I'd be clearly
+> > > in favor of following it. As mentioned above, in practice the use of
+> > > the 'adc@...' node name seems to be more prevalent for ADC controllers
+> > > than channels, so I'm more inclined towards 'usb-id-nopull@...' or
+> > > similar.
+> > >
+> > > All that said, these are just my preferences for the reasons outlined
+> > > above, if DT maintainers really want it to be 'adc@57' or some
+> > > variation of that, I'm fine with that too. Please let me know and we
+> > > can move forward with this trivial series.  
+> >
+> > Rob, what's your view on this?  
+> 
+> I want node names that reflect the class of the node (not a specific
+> model) and consistency across bindings. What that looks like for
+> multi-channel ADCs is really up to you. There was another binding
+> recently which mapped sub-nodes to inputs rather than channels. Maybe
+> that's needed too if you have more inputs than simultaneous channels.
+>From a DT point of view the simultaneous channels vs inputs isn't meant
+to be currently visible. It's a userspace problem and from IIO point
+of view a 'channel' is an input (you just might not be able to enable
+all channels at once!)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.txt
-index 44ad670a..bfa3703 100644
---- a/Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.txt
-@@ -7,55 +7,47 @@ Note:
- This binding doc is only for the IOMUXC1 support in A7 Domain and it only
- supports generic pin config.
- 
--Please also refer pinctrl-bindings.txt in this directory for generic pinctrl
--binding.
--
--=== Pin Controller Node ===
-+Please refer to fsl,imx-pinctrl.txt in this directory for common binding
-+part and usage.
- 
- Required properties:
--- compatible:	"fsl,imx7ulp-iomuxc1"
--- reg:		Should contain the base physical address and size of the iomuxc
--		registers.
--
--=== Pin Configuration Node ===
--- pinmux: One integers array, represents a group of pins mux setting.
--	The format is pinmux = <PIN_FUNC_ID>, PIN_FUNC_ID is a pin working on
--	a specific function.
--
--	NOTE: i.MX7ULP PIN_FUNC_ID consists of 4 integers as it shares one mux
--	and config register as follows:
--	<mux_conf_reg input_reg mux_mode input_val>
--
--	Refer to imx7ulp-pinfunc.h in in device tree source folder for all
--	available imx7ulp PIN_FUNC_ID.
--
--Optional Properties:
--- drive-strength		Integer. Controls Drive Strength
--					0: Standard
--					1: Hi Driver
--- drive-push-pull		Bool. Enable Pin Push-pull
--- drive-open-drain		Bool. Enable Pin Open-drian
--- slew-rate:			Integer. Controls Slew Rate
--					0: Standard
--					1: Slow
--- bias-disable:			Bool. Pull disabled
--- bias-pull-down:		Bool. Pull down on pin
--- bias-pull-up:			Bool. Pull up on pin
-+- compatible:	"fsl,imx7ulp-iomuxc1".
-+- fsl,pins:	Each entry consists of 5 integers which represents the mux
-+		and config setting for one pin. The first 4 integers
-+		<mux_conf_reg input_reg mux_mode input_val> are specified
-+		using a PIN_FUNC_ID macro, which can be found in
-+		imx7ulp-pinfunc.h in the device tree source folder.
-+		The last integer CONFIG is the pad setting value like
-+		pull-up on this pin.
-+
-+		Please refer to i.MX7ULP Reference Manual for detailed
-+		CONFIG settings.
-+
-+CONFIG bits definition:
-+PAD_CTL_OBE		(1 << 17)
-+PAD_CTL_IBE		(1 << 16)
-+PAD_CTL_LK		(1 << 16)
-+PAD_CTL_DSE_HI		(1 << 6)
-+PAD_CTL_DSE_STD		(0 << 6)
-+PAD_CTL_ODE		(1 << 5)
-+PAD_CTL_PUSH_PULL	(0 << 5)
-+PAD_CTL_SRE_SLOW	(1 << 2)
-+PAD_CTL_SRE_STD		(0 << 2)
-+PAD_CTL_PE		(1 << 0)
- 
- Examples:
- #include "imx7ulp-pinfunc.h"
- 
- /* Pin Controller Node */
--iomuxc1: iomuxc@40ac0000 {
-+iomuxc1: pinctrl@40ac0000 {
- 	compatible = "fsl,imx7ulp-iomuxc1";
- 	reg = <0x40ac0000 0x1000>;
- 
- 	/* Pin Configuration Node */
- 	pinctrl_lpuart4: lpuart4grp {
--		pinmux = <
--			IMX7ULP_PAD_PTC3__LPUART4_RX
--			IMX7ULP_PAD_PTC2__LPUART4_TX
-+		fsl,pins = <
-+			IMX7ULP_PAD_PTC3__LPUART4_RX	0x1
-+			IMX7ULP_PAD_PTC2__LPUART4_TX	0x1
- 		>;
--		bias-pull-up;
- 	};
- };
--- 
-2.7.4
+channel@ would work for me, though that might then match other types
+of device where this has a different meaning.  Perhaps
+adc_chan@ ?
+
+> 
+> Also, if your goal is to just quiet dtc warnings, then I'd prefer you
+> not. They often point to bigger issues even if they can be fixed with
+> trivial changes. Of course, if not fixed someone else will come along
+> and try the trivial fix again.
+
+Agreed.  Would be good to have these consistent however as it is a fairly
+common thing to represent.
+
+Jonathan
+
+> 
+> Rob
