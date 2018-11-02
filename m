@@ -1,50 +1,102 @@
-From: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [[DPU PATCH]] drm/msm/dpu: Correct dpu destroy and
- disable order
-Date: Fri,  2 Nov 2018 11:47:07 +0530
-Message-ID: <1541139427-25842-1-git-send-email-jshekhar@codeaurora.org>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: Crash report: Broken NUMA distance map causes crash on arm64
+ system
+Date: Fri, 2 Nov 2018 10:10:48 +0000
+Message-ID: <d6d7485a-a7c9-5327-fb47-f279d260ec44@huawei.com>
+References: <b89bf686-05bd-a3de-e7ef-4ab9ab7bdb6c@huawei.com>
+ <20181030092640.GE1459@hirez.programming.kicks-ass.net>
+ <d126099d-2698-8e3a-06ca-f229e57c3052@huawei.com>
+ <ae352fe1-3c59-dcde-fd00-2c03b4491dc6@huawei.com>
+ <20181031204622.GB3141@hirez.programming.kicks-ass.net>
+ <bf2b890a-4ce7-d0f6-0663-84a1a6e8dbd2@huawei.com>
+ <20181102093904.GJ3178@hirez.programming.kicks-ass.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181102093904.GJ3178@hirez.programming.kicks-ass.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Linuxarm <linuxarm@huawei.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Ingo Molnar <mingo@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, suravee.suthikulpanit@amd.com
 List-Id: devicetree@vger.kernel.org
 
-SW4gY2FzZSBvZiBtc20gZHJtIGJpbmQgZmFpbHVyZSwgZHB1X21kc3NfZGVzdHJveSBpcyB0cmln
-Z2VyZWQuCkluIHRoaXMgZnVuY3Rpb24sIHJlc291cmNlcyBhcmUgZnJlZWQgYW5kIHBtIHJ1bnRp
-bWUgZGlzYWJsZSBpcwpjYWxsZWQsIHdoaWNoIHRyaWdnZXJzIGRwdV9tZHNzX2Rpc2FibGUuIE5v
-dyBpbiBkcHVfbWRzc19kaXNhYmxlLApkcml2ZXIgdHJpZXMgdG8gYWNjZXNzIGEgbWVtb3J5IHdo
-aWNoIGlzIGFscmVhZHkgZnJlZWQuIFRoaXMKcmVzdWx0cyBpbiBrZXJuZWwgcGFuaWMuIEZpeCB0
-aGlzIGJ5IGVuc3VyaW5nIHByb3BlciBzZXF1ZW5jZQpvZiBkcHUgZGVzdHJveSBhbmQgZGlzYWJs
-ZSBjYWxscy4KCkNoYW5nZS1JZDogSWQ2ZTAxYTUzN2FlOWM0MDc4OWM1NzUyZGMyOGMzOTczOTFh
-YjdkZmUKU2lnbmVkLW9mZi1ieTogSmF5YW50IFNoZWtoYXIgPGpzaGVraGFyQGNvZGVhdXJvcmEu
-b3JnPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMgfCAzICsr
-LQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMgYi9kcml2ZXJz
-L2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jCmluZGV4IGZkOWM4OTMuLmNkOWE2YmQg
-MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMKKysr
-IGIvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3MuYwpAQCAtMTU2LDYgKzE1
-Niw4IEBAIHN0YXRpYyB2b2lkIGRwdV9tZHNzX2Rlc3Ryb3koc3RydWN0IGRybV9kZXZpY2UgKmRl
-dikKIAlzdHJ1Y3QgZHB1X21kc3MgKmRwdV9tZHNzID0gdG9fZHB1X21kc3MocHJpdi0+bWRzcyk7
-CiAJc3RydWN0IGRzc19tb2R1bGVfcG93ZXIgKm1wID0gJmRwdV9tZHNzLT5tcDsKIAorCXBtX3J1
-bnRpbWVfZGlzYWJsZShkZXYtPmRldik7CisKIAlfZHB1X21kc3NfaXJxX2RvbWFpbl9maW5pKGRw
-dV9tZHNzKTsKIAogCWZyZWVfaXJxKHBsYXRmb3JtX2dldF9pcnEocGRldiwgMCksIGRwdV9tZHNz
-KTsKQEAgLTE2Nyw3ICsxNjksNiBAQCBzdGF0aWMgdm9pZCBkcHVfbWRzc19kZXN0cm95KHN0cnVj
-dCBkcm1fZGV2aWNlICpkZXYpCiAJCWRldm1faW91bm1hcCgmcGRldi0+ZGV2LCBkcHVfbWRzcy0+
-bW1pbyk7CiAJZHB1X21kc3MtPm1taW8gPSBOVUxMOwogCi0JcG1fcnVudGltZV9kaXNhYmxlKGRl
-di0+ZGV2KTsKIAlwcml2LT5tZHNzID0gTlVMTDsKIH0KIAotLSAKVGhlIFF1YWxjb21tIElubm92
-YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwK
-YSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdAoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApG
-cmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+>>
+>> static void free_sched_groups(struct sched_group *sg, int free_sgc)
+>> {
+>> ...
+>>     do {
+>>         tmp = sg->next;
+>>
+>>         if (free_sgc && atomic_dec_and_test(&sg->sgc->ref))***
+>>             kfree(sg->sgc);
+>>
+>> ...
+>> }
+>>
+>> *** crash occurs when free_sgc is non-zero and sg->sgc is NULL
+>
+> Yeah, turns out to be random memory corruption; I've had the crash in a
+> number of weird places; also GCC version dependent.
+>
+> KASAN is awesome and pinpointed the problem though.
+>
+>> And, as I mentioned earlier, I bisected this problem to 58d5af59d55b.
+>
+> You mean:
+>
+>   051f3ca02e46 ("sched/topology: Introduce NUMA identity node sched domain")
+>
+> right? and yes indeed! The below fixes my reproducer:
+>
+
+Yes, that's the one.
+
+>
+> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+> index 9d74371e4aad..039578429c25 100644
+> --- a/kernel/sched/topology.c
+> +++ b/kernel/sched/topology.c
+> @@ -1337,7 +1348,7 @@ void sched_init_numa(void)
+>  	int level = 0;
+>  	int i, j, k;
+>
+> -	sched_domains_numa_distance = kzalloc(sizeof(int) * nr_node_ids, GFP_KERNEL);
+> +	sched_domains_numa_distance = kzalloc(sizeof(int) * (nr_node_ids + 1), GFP_KERNEL);
+
+Good find.
+
+>  	if (!sched_domains_numa_distance)
+>  		return;
+>
+>
+
+So what about this:
+ >>> I also note that if I apply the patch, below, to reject the invalid 
+NUMA
+ >>> distance, we're still getting a warning/error:
+ >>>
+ >>> [    7.144407] CPU: All CPU(s) started at EL2
+ >>> [    7.148678] alternatives: patching kernel code
+ >>> [    7.153557] ERROR: Node-0 not representative
+ >>> [    7.153557]
+ >>> [    7.159365]   10 15 20 25
+ >>> [    7.162097]   15 10 25 30
+ >>> [    7.164832]   20 25 10 15
+ >>> [    7.167562]   25 30 15 10
+ >>
+ >> Yeah, that's an 'obviously' broken topology too.
+ >>
+ >
+ > AFAICT, this conforms to ACPI spec SLIT rules, and the kernel SLIT
+ > validation allows this also. So maybe we should shout louder here or
+ > even mark the SLIT as invalid if totally broken.
+ >
+
+I plan to fix up OF map parsing to reject invalid distance maps.
+
+However is this distance map so broken for the scheduler that it's 
+better to reject this "valid" distance map also? If not, it may be nice 
+for the user to know about it without having to enable scheduler debugging.
+
+Thanks,
+John
