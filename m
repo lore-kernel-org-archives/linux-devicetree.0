@@ -1,119 +1,130 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: Re: [RFC 1/2] dt-bindings: topology: Add RISC-V cpu topology.
-Date: Fri, 2 Nov 2018 13:34:06 -0700
-Message-ID: <954ec7be-f7ba-4e00-70fe-130cb4b84e61@wdc.com>
-References: <1541113468-22097-1-git-send-email-atish.patra@wdc.com>
- <1541113468-22097-2-git-send-email-atish.patra@wdc.com>
- <CAL_Jsq+wProNynprMjQnrz1jmbZT9TmmA-_=vPUxCEED_8xONg@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add display nodes to MTP dts
+Date: Fri, 2 Nov 2018 13:33:58 -0700
+Message-ID: <CAD=FV=VKYin0bs5sycvnkJXG0nvzjPyn3Qi_8i8Zsp6dacbR+Q@mail.gmail.com>
+References: <1541187725-24325-1-git-send-email-jsanka@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+wProNynprMjQnrz1jmbZT9TmmA-_=vPUxCEED_8xONg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Palmer Dabbelt <palmer@sifive.com>, Anup Patel <anup@brainfault.org>, Christoph Hellwig <hch@infradead.org>, Damien Le Moal <Damien.LeMoal@wdc.com>, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alankao@andestech.com" <alankao@andestech.com>, Zong Li <zong@andestech.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1541187725-24325-1-git-send-email-jsanka@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jeykumar Sankaran <jsanka@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Matthias Kaehlcke <mka@chromium.org>, Sean Paul <seanpaul@chromium.org>, Kristian Kristensen <hoegsberg@google.com>, freedreno <freedreno@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/2/18 6:09 AM, Rob Herring wrote:
-> On Thu, Nov 1, 2018 at 6:04 PM Atish Patra <atish.patra@wdc.com> wrote:
->>
->> Define a RISC-V cpu topology. This is based on cpu-map in ARM world.
->> But it doesn't need a separate thread node for defining SMT systems.
->> Multiple cpu phandle properties can be parsed to identify the sibling
->> hardware threads. Moreover, we do not have cluster concept in RISC-V.
->> So package is a better word choice than cluster for RISC-V.
-> 
-> There was a proposal to add package info for ARM recently. Not sure
-> what happened to that, but we don't need 2 different ways.
-> 
-> There's never going to be clusters for RISC-V? What prevents that?
-> Seems shortsighted to me.
-> 
-
-Agreed. My intention was to keep it simple at first go.
-If package node is added, that would work for us as well.
-
->>
->> Signed-off-by: Atish Patra <atish.patra@wdc.com>
->> ---
->>   .../devicetree/bindings/riscv/topology.txt         | 154 +++++++++++++++++++++
->>   1 file changed, 154 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/riscv/topology.txt
->>
->> diff --git a/Documentation/devicetree/bindings/riscv/topology.txt b/Documentation/devicetree/bindings/riscv/topology.txt
->> new file mode 100644
->> index 00000000..96039ed3
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/riscv/topology.txt
->> @@ -0,0 +1,154 @@
->> +===========================================
->> +RISC-V cpu topology binding description
->> +===========================================
->> +
->> +===========================================
->> +1 - Introduction
->> +===========================================
->> +
->> +In a RISC-V system, the hierarchy of CPUs can be defined through following nodes that
->> +are used to describe the layout of physical CPUs in the system:
->> +
->> +- packages
->> +- core
->> +
->> +The cpu nodes (bindings defined in [1]) represent the devices that
->> +correspond to physical CPUs and are to be mapped to the hierarchy levels.
->> +Simultaneous multi-threading (SMT) systems can also represent their topology
->> +by defining multiple cpu phandles inside core node. The details are explained
->> +in paragraph 3.
-> 
-> I don't see a reason to do this differently than ARM. That said, I
-> don't think the thread part is in use on ARM, so it could possibly be
-> changed.
-> 
->> +
->> +The remainder of this document provides the topology bindings for ARM, based
-> 
-> for ARM?
-> 
-
-Sorry for the typo.
-
->> +on the Devicetree Specification, available from:
->> +
->> +https://www.devicetree.org/specifications/
->> +
->> +If not stated otherwise, whenever a reference to a cpu node phandle is made its
->> +value must point to a cpu node compliant with the cpu node bindings as
->> +documented in [1].
->> +A topology description containing phandles to cpu nodes that are not compliant
->> +with bindings standardized in [1] is therefore considered invalid.
->> +
->> +This cpu topology binding description is mostly based on the topology defined
->> +in ARM [2].
->> +===========================================
->> +2 - cpu-topology node
-> 
-> cpu-map. Why change this?
-> 
-To my ears, it felt a better name. But I don't mind dropping it in favor 
-of cpu-map if we are going to standardize cpu-map for both ARM & RISC-V.
-
-> What I would like to see is the ARM topology binding reworked to be
-> common or some good reasons why it doesn't work for RISC-V as-is.
-> 
-
-IMHO, ARM topology can be reworked and put it in a common place so that 
-RISC-V can leverage that.
-
-My intention for this RFC patch was to start the ball rolling on cpu 
-topology in RISC-V and see if DT approach is fine with everybody. I 
-would be happy to see ARM code to move it to a common code base where 
-RISC-V can reuse it.
-
-
-Regards,
-Atish
-> Rob
-> 
+SGksCgpPbiBGcmksIE5vdiAyLCAyMDE4IGF0IDEyOjQyIFBNIEpleWt1bWFyIFNhbmthcmFuIDxq
+c2Fua2FAY29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+Cj4gQWRkIG1kc3MsIGRzaSwgZHNpX3BoeSwg
+ZHNpIHBpbmN0cmwgIGFuZCB0cnVseSBudDM1NTk3IHBhbmVsIG5vZGVzIHRvCj4gc2RtODQ1IE1U
+UCBib2FyZCBkdHNpLgo+Cj4gU2lnbmVkLW9mZi1ieTogSmV5a3VtYXIgU2Fua2FyYW4gPGpzYW5r
+YUBjb2RlYXVyb3JhLm9yZz4KPiAtLS0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0
+NS1tdHAuZHRzIHwgMTI0ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmls
+ZSBjaGFuZ2VkLCAxMjQgaW5zZXJ0aW9ucygrKQoKQSBmZXcgbml0cyBiZWxvdyBhYm91dCB0cnlp
+bmcgdG8ga2VlcCB0aGUgc29ydCBvcmRlcmluZyByaWdodCBpbiB0aGlzCmZpbGUuICBJJ20gbm90
+IGFuIGV4cGVydCBvbiBkZXZpY2UgdHJlZSBwcm9wZXJ0aWVzIGZvciBkaXNwbGF5LCBidXQKb3Ro
+ZXIgdGhhbiB0aGVzZSBuaXRzIHRoaW5ncyBoZXJlIGxvb2sgZ29vZCB0byBtZS4KCk5PVEUgYWxz
+byB0aGF0IEknZCBwcm9iYWJseSBwdXQgYWxsIDMgb2YgeW91ciByZWNlbnQgcGF0Y2hlcyBpbiBh
+CjMtcGFydCBzZXJpZXMgc2luY2UgdGhleSBhbGwgZGVwZW5kIG9uIGVhY2ggb3RoZXIsIGRvbid0
+IHRoZXk/ICBBS0EKSSdkIHRvIHNlZSBuZXh0IHRpbWU6CgpbUEFUQ0ggdjQgMS8zXSBhcm02NDog
+ZHRzOiBxY29tOiBzZG04NDU6IEFkZCBkcHUgdG8gc2RtODQ1IGR0cyBmaWxlCltQQVRDSCB2NCAy
+LzNdIGFybTY0OiBkdHM6IHNkbTg0NTogQWRkIGRzaSBwaW5jdHJsIG5vZGVzCltQQVRDSCB2NCAz
+LzNdIGFybTY0OiBkdHM6IHNkbTg0NTogQWRkIGRpc3BsYXkgbm9kZXMgdG8gTVRQIGR0cwoKLi4u
+eW91IGNhbiBjYWxsIHRoZW0gYWxsIHY0IGp1c3QgdG8gbWFrZSBpdCBlYXNpZXIgdG8gdHJhY2su
+Li4KCgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LW10cC5k
+dHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LW10cC5kdHMKPiBpbmRleCA2ZDY1
+MWYzLi42ZTk4YWU4IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04
+NDUtbXRwLmR0cwo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUtbXRwLmR0
+cwo+IEBAIC04LDYgKzgsNyBAQAo+ICAvZHRzLXYxLzsKPgo+ICAjaW5jbHVkZSAic2RtODQ1LmR0
+c2kiCj4gKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9ncGlvL2dwaW8uaD4KCkdlbmVyYWxseSBpbmNs
+dWRlcyBzaG91bGQgaGF2ZSA8IGluY2x1ZGVzIGFib3ZlICIgaW5jbHVkZXMuCgouLi5hbHNvOiBw
+bGVhc2UgcmViYXNlIGF0b3AgQW5keSdzIHRyZWUuICBUaGVuIHlvdSdsbCBoYXZlIHRoZSBsaW5l
+OgoKI2luY2x1ZGUgPGR0LWJpbmRpbmdzL3JlZ3VsYXRvci9xY29tLHJwbWgtcmVndWxhdG9yLmg+
+CgouLi4iZ3BpbyIgaXMgYWxwaGFiZXRpY2FsbHkgYmVmb3JlICJyZWd1bGF0b3IiIHNvIHlvdXIg
+aW5jbHVkZSBzaG91bGQKYmUgX2Fib3ZlXyB0aGF0IG9uZS4KCj4KPiAgLyB7Cj4gICAgICAgICBt
+b2RlbCA9ICJRdWFsY29tbSBUZWNobm9sb2dpZXMsIEluYy4gU0RNODQ1IE1UUCI7Cj4gQEAgLTIy
+LDYgKzIzLDExMyBAQAo+ICAgICAgICAgfTsKPiAgfTsKPgo+ICsmZHNpMCB7Cj4gKyAgICAgICBz
+dGF0dXMgPSAib2theSI7Cj4gKyAgICAgICBxY29tLGR1YWwtZHNpLW1vZGU7Cj4gKyAgICAgICBx
+Y29tLG1hc3Rlci1kc2k7Cj4gKyAgICAgICBxY29tLHN5bmMtZHVhbC1kc2k7Cj4gKwo+ICsgICAg
+ICAgdmRkYS1zdXBwbHkgPSA8JnZkZGFfbWlwaV9kc2kwXzFwMj47Cj4gKwo+ICsgICAgICAgcGFu
+ZWxAMCB7Cj4gKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAidHJ1bHksbnQzNTU5Ny0ySy1k
+aXNwbGF5IjsKPiArICAgICAgICAgICAgICAgcmVnID0gPDA+Owo+ICsKPiArICAgICAgICAgICAg
+ICAgdmRkYS1zdXBwbHkgPSA8JnZyZWdfbDE0YV8xcDg4PjsKPiArICAgICAgICAgICAgICAgdmRp
+c3BwLXN1cHBseSA9IDwmbGFiX3JlZ3VsYXRvcj47Cj4gKyAgICAgICAgICAgICAgIHZkaXNwbi1z
+dXBwbHkgPSA8JmliYl9yZWd1bGF0b3I+Owo+ICsKPiArICAgICAgICAgICAgICAgcGluY3RybC1u
+YW1lcyA9ICJkZWZhdWx0IiwgInN1c3BlbmQiOwo+ICsgICAgICAgICAgICAgICBwaW5jdHJsLTAg
+PSA8JmRwdV9kc2lfYWN0aXZlPjsKPiArICAgICAgICAgICAgICAgcGluY3RybC0xID0gPCZkcHVf
+ZHNpX3N1c3BlbmQ+Owo+ICsKPiArICAgICAgICAgICAgICAgcmVzZXQtZ3Bpb3MgPSA8JnRsbW0g
+NiBHUElPX0FDVElWRV9ISUdIPjsKPiArICAgICAgICAgICAgICAgbW9kZS1ncGlvcyA9IDwmdGxt
+bSA1MiBHUElPX0FDVElWRV9ISUdIPjsKPiArCj4gKyAgICAgICAgICAgICAgIGRpc3BsYXktdGlt
+aW5ncyB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgdGltaW5nMDogdGltaW5nLTAgewo+ICsg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLyogb3JpZ2luYWxseQo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICogMjY4MzE2MTYwIE1oeiwKPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAqIGJ1dCB2YWx1ZSBiZWxvdyBmaXRzCj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgKiBiZXR0ZXIgdy8gZG93bnN0cmVhbQo+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICovCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBj
+bG9jay1mcmVxdWVuY3kgPSA8MjY4MzE2MTM4PjsKPiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIGhhY3RpdmUgPSA8MTQ0MD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB2YWN0aXZlID0gPDI1NjA+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaGZy
+b250LXBvcmNoID0gPDIwMD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBoYmFj
+ay1wb3JjaCA9IDw2ND47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBoc3luYy1s
+ZW4gPSA8MzI+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmZyb250LXBvcmNo
+ID0gPDg+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmJhY2stcG9yY2ggPSA8
+Nz47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2c3luYy1sZW4gPSA8MT47Cj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgfTsKPiArICAgICAgICAgICAgICAgfTsKPiArCj4gKyAg
+ICAgICAgICAgICAgIHBvcnRzIHsKPiArICAgICAgICAgICAgICAgICAgICAgICAjYWRkcmVzcy1j
+ZWxscyA9IDwxPjsKPiArICAgICAgICAgICAgICAgICAgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsK
+PiArICAgICAgICAgICAgICAgICAgICAgICBwb3J0QDAgewo+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgcmVnID0gPDA+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+cGFuZWwwX2luOiBlbmRwb2ludCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmZHNpMF9vdXQ+Owo+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgfTsKPiArICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICsKPiArICAg
+ICAgICAgICAgICAgICAgICAgICBwb3J0QDEgewo+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgcmVnID0gPDE+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGFuZWwx
+X2luOiBlbmRwb2ludCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHJlbW90ZS1lbmRwb2ludCA9IDwmZHNpMV9vdXQ+Owo+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgfTsKPiArICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgICAgICAg
+ICB9Owo+ICsgICAgICAgfTsKPiArCj4gKyAgICAgICBwb3J0cyB7Cj4gKyAgICAgICAgICAgICAg
+IHBvcnRAMSB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgZW5kcG9pbnQgewo+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZwYW5lbDBfaW4+Owo+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGF0YS1sYW5lcyA9IDwwIDEgMiAzPjsK
+PiArICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgICAgICAgICB9Owo+ICsgICAg
+ICAgfTsKPiArfTsKPiArCj4gKyZkc2kwX3BoeSB7Cj4gKyAgICAgICBzdGF0dXMgPSAib2theSI7
+Cj4gKyAgICAgICB2ZGRzLXN1cHBseSA9IDwmdmRkYV9taXBpX2RzaTBfcGxsPjsKPiArfTsKPiAr
+Cj4gKyZkc2kxIHsKPiArICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPiArCj4gKyAgICAgICBxY29t
+LGR1YWwtZHNpLW1vZGU7Cj4gKyAgICAgICBxY29tLHN5bmMtZHVhbC1kc2k7Cj4gKwo+ICsgICAg
+ICAgdmRkYS1zdXBwbHkgPSA8JnZkZGFfbWlwaV9kc2kxXzFwMj47Cj4gKwo+ICsgICAgICAgcG9y
+dHMgewo+ICsgICAgICAgICAgICAgICBwb3J0QDEgewo+ICsgICAgICAgICAgICAgICAgICAgICAg
+IGVuZHBvaW50IHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRw
+b2ludCA9IDwmcGFuZWwxX2luPjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRh
+dGEtbGFuZXMgPSA8MCAxIDIgMz47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsKPiArICAg
+ICAgICAgICAgICAgfTsKPiArICAgICAgIH07Cj4gK307Cj4gKwo+ICsmZHNpMV9waHkgewo+ICsg
+ICAgICAgc3RhdHVzID0gIm9rYXkiOwo+ICsgICAgICAgdmRkcy1zdXBwbHkgPSA8JnZkZGFfbWlw
+aV9kc2kxX3BsbD47Cj4gK307Cj4gKwo+ICsmbWRzcyB7Cj4gKyAgICAgICBzdGF0dXMgPSAib2th
+eSI7Cj4gK307Cj4gKwo+ICsmbWRzc19tZHAgewo+ICsgICAgICAgc3RhdHVzID0gIm9rYXkiOwo+
+ICt9OwoKUGxlYXNlIGtlZXAgdGhlc2Ugbm9kZXMgc29ydGVkIGFscGhhYmV0aWNhbGx5IGV2ZW4g
+aWYgaXQgbWVhbnMgeW91CmRvbid0IGtlZXAgYWxsIHRoZSBkaXNwbGF5IG5vZGVzIHRvZ2V0aGVy
+LiAgVGh1cyAibWRzcyIgYW5kICJtZHNzX21kcCIKc2hvdWxkIGJlIGJlbG93ICJpMmMxMCIgYW5k
+IGFib3ZlICJxdXB2M19pZF8xIi4KCgo+ICsKPiAgJmkyYzEwIHsKPiAgICAgICAgIHN0YXR1cyA9
+ICJva2F5IjsKPiAgICAgICAgIGNsb2NrLWZyZXF1ZW5jeSA9IDw0MDAwMDA+Owo+IEBAIC01OCwz
+ICsxNjYsMTkgQEAKPiAgICAgICAgICAgICAgICAgYmlhcy1wdWxsLXVwOwo+ICAgICAgICAgfTsK
+PiAgfTsKPiArCj4gKyZkcHVfZHNpX2FjdGl2ZSB7Cj4gKyAgICAgICBwaW5jb25mIHsKPiArICAg
+ICAgICAgICAgICAgcGlucyA9ICJncGlvNiIsICJncGlvNTIiOwo+ICsgICAgICAgICAgICAgICBk
+cml2ZS1zdHJlbmd0aCA9IDw4PjsKPiArICAgICAgICAgICAgICAgYmlhcy1kaXNhYmxlOwo+ICsg
+ICAgICAgfTsKPiArfTsKPiArCj4gKyZkcHVfZHNpX3N1c3BlbmQgewo+ICsgICAgICAgcGluY29u
+ZiB7Cj4gKyAgICAgICAgICAgICAgIHBpbnMgPSAiZ3BpbzYiLCAiZ3BpbzUyIjsKPiArICAgICAg
+ICAgICAgICAgZHJpdmUtc3RyZW5ndGggPSA8Mj47Cj4gKyAgICAgICAgICAgICAgIGJpYXMtcHVs
+bC1kb3duOwo+ICsgICAgICAgfTsKPiArfTsKClRoZXNlIHR3byB0aGluZ3Mgc2hvdWxkIHNvcnRl
+ZCBhbHBoYWJldGljYWxseSBpbiB0aGUgIlBJTkNUUkwgLQphZGRpdGlvbnMgdG8gbm9kZXMgZGVm
+aW5lZCBpbiBzZG04NDUuZHRzaSIgc2VjdGlvbi4gIFNvIHBsZWFzZSBwbGFjZQp0aGVtIGJvdGgg
+YWJvdmUgdGhlICJxdXBfaTJjMTBfZGVmYXVsdCIgbm9kZS4KX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
