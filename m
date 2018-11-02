@@ -1,83 +1,35 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4 03/10] phy: sun4i-usb: add support for H6 USB2 PHY
-Date: Fri, 2 Nov 2018 14:13:38 +0530
-Message-ID: <bf2ec3ca-b823-4861-2d40-04227db61e49@ti.com>
-References: <20181004122855.22981-1-icenowy@aosc.io>
- <20181004122855.22981-4-icenowy@aosc.io>
- <9cca3453d646f38793df411c4471d062769b4f72.camel@aosc.io>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v10 0/6] EDAC: Enhancements to Synopsys EDAC driver
+Date: Fri, 2 Nov 2018 09:58:24 +0100
+Message-ID: <20181102085824.GA14602@zn.tnic>
+References: <1540447621-22870-1-git-send-email-manish.narani@xilinx.com>
+ <DM6PR02MB52271A9C7D7829CA1467B657C1CF0@DM6PR02MB5227.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <9cca3453d646f38793df411c4471d062769b4f72.camel@aosc.io>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <DM6PR02MB52271A9C7D7829CA1467B657C1CF0@DM6PR02MB5227.namprd02.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manish Narani <MNARANI@xilinx.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwMi8xMS8xOCAyOjExIFBNLCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+IOWcqCAyMDE4LTEw
-LTA05Zub55qEIDIwOjI4ICswODAw77yMSWNlbm93eSBaaGVuZ+WGmemBk++8mgo+PiBUaGUgVVNC
-IDIuMCBQSFkgb24gQWxsd2lubmVyIEg2IFNvQyBpcyBzaW1pbGFyIHRvIG9sZGVyIEFsbHdpbm5l
-cgo+PiBTb0NzLAo+PiB3aXRoIHNvbWUgVVNCMCBxdWlyayBsaWtlIEE4M1QgYW5kIFBIWSBpbmRl
-eCAxLzIgbWlzc2luZy4KPj4KPj4gQWRkIHN1cHBvcnQgZm9yIGl0Lgo+Pgo+PiBTaWduZWQtb2Zm
-LWJ5OiBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFvc2MuaW8+Cj4+IFJldmlld2VkLWJ5OiBDaGVu
-LVl1IFRzYWkgPHdlbnNAY3NpZS5vcmc+Cj4gCj4gRXhjdXNlIG1lLgo+IAo+IEtpc2hvbiwgY291
-bGQgeW91IGNoZWNrIFBBVENIIDF+MyBhbmQgcXVldWUgdGhlbT8KPiAKPiBFdmVuIGlmIFVTQjMg
-c3VwcG9ydCBpcyBwZW5kaW5nLCBVU0IyIHN1cHBvcnQgd2lsbCBzdGlsbCBiZSB1c2VmdWwsIGFu
-ZAo+IHRoZXkncmUgaW5kZXBlbmRlbnQuCgpJJ2xsIHF1ZXVlIG9uY2UgLXJjMSBpcyB0YWdnZWQu
-CgpUaGFua3MKS2lzaG9uCgo+IAo+PiAtLS0KPj4gTm8gY2hhbmdlcyBpbiB2NC4KPj4KPj4gQ2hh
-bmdlcyBpbiB2MzoKPj4gLSBBZGRlZCBDaGVuLVl1J3MgUmV2aWV3IHRhZy4KPj4KPj4gIGRyaXZl
-cnMvcGh5L2FsbHdpbm5lci9waHktc3VuNGktdXNiLmMgfCAxOSArKysrKysrKysrKysrKysrKy0t
-Cj4+ICAxIGZpbGUgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPj4K
-Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGh5L2FsbHdpbm5lci9waHktc3VuNGktdXNiLmMKPj4g
-Yi9kcml2ZXJzL3BoeS9hbGx3aW5uZXIvcGh5LXN1bjRpLXVzYi5jCj4+IGluZGV4IDg4MTA3OGZm
-NzNmNi4uYWUxNjg1NGE3NzBhIDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL3BoeS9hbGx3aW5uZXIv
-cGh5LXN1bjRpLXVzYi5jCj4+ICsrKyBiL2RyaXZlcnMvcGh5L2FsbHdpbm5lci9waHktc3VuNGkt
-dXNiLmMKPj4gQEAgLTExNSw2ICsxMTUsNyBAQCBlbnVtIHN1bjRpX3VzYl9waHlfdHlwZSB7Cj4+
-ICAJc3VuOGlfcjQwX3BoeSwKPj4gIAlzdW44aV92M3NfcGh5LAo+PiAgCXN1bjUwaV9hNjRfcGh5
-LAo+PiArCXN1bjUwaV9oNl9waHksCj4+ICB9Owo+PiAgCj4+ICBzdHJ1Y3Qgc3VuNGlfdXNiX3Bo
-eV9jZmcgewo+PiBAQCAtMjk1LDcgKzI5Niw4IEBAIHN0YXRpYyBpbnQgc3VuNGlfdXNiX3BoeV9p
-bml0KHN0cnVjdCBwaHkgKl9waHkpCj4+ICAJCXJldHVybiByZXQ7Cj4+ICAJfQo+PiAgCj4+IC0J
-aWYgKGRhdGEtPmNmZy0+dHlwZSA9PSBzdW44aV9hODN0X3BoeSkgewo+PiArCWlmIChkYXRhLT5j
-ZmctPnR5cGUgPT0gc3VuOGlfYTgzdF9waHkgfHwKPj4gKwkgICAgZGF0YS0+Y2ZnLT50eXBlID09
-IHN1bjUwaV9oNl9waHkpIHsKPj4gIAkJaWYgKHBoeS0+aW5kZXggPT0gMCkgewo+PiAgCQkJdmFs
-ID0gcmVhZGwoZGF0YS0+YmFzZSArIGRhdGEtPmNmZy0KPj4+IHBoeWN0bF9vZmZzZXQpOwo+PiAg
-CQkJdmFsIHw9IFBIWV9DVExfVkJVU1ZMREVYVDsKPj4gQEAgLTM0NCw3ICszNDYsOCBAQCBzdGF0
-aWMgaW50IHN1bjRpX3VzYl9waHlfZXhpdChzdHJ1Y3QgcGh5ICpfcGh5KQo+PiAgCXN0cnVjdCBz
-dW40aV91c2JfcGh5X2RhdGEgKmRhdGEgPSB0b19zdW40aV91c2JfcGh5X2RhdGEocGh5KTsKPj4g
-IAo+PiAgCWlmIChwaHktPmluZGV4ID09IDApIHsKPj4gLQkJaWYgKGRhdGEtPmNmZy0+dHlwZSA9
-PSBzdW44aV9hODN0X3BoeSkgewo+PiArCQlpZiAoZGF0YS0+Y2ZnLT50eXBlID09IHN1bjhpX2E4
-M3RfcGh5IHx8Cj4+ICsJCSAgICBkYXRhLT5jZmctPnR5cGUgPT0gc3VuNTBpX2g2X3BoeSkgewo+
-PiAgCQkJdm9pZCBfX2lvbWVtICpwaHljdGwgPSBkYXRhLT5iYXNlICsKPj4gIAkJCQlkYXRhLT5j
-ZmctPnBoeWN0bF9vZmZzZXQ7Cj4+ICAKPj4gQEAgLTk1OSw2ICs5NjIsMTcgQEAgc3RhdGljIGNv
-bnN0IHN0cnVjdCBzdW40aV91c2JfcGh5X2NmZwo+PiBzdW41MGlfYTY0X2NmZyA9IHsKPj4gIAku
-cGh5MF9kdWFsX3JvdXRlID0gdHJ1ZSwKPj4gIH07Cj4+ICAKPj4gK3N0YXRpYyBjb25zdCBzdHJ1
-Y3Qgc3VuNGlfdXNiX3BoeV9jZmcgc3VuNTBpX2g2X2NmZyA9IHsKPj4gKwkubnVtX3BoeXMgPSA0
-LAo+PiArCS50eXBlID0gc3VuNTBpX2g2X3BoeSwKPj4gKwkuZGlzY190aHJlc2ggPSAzLAo+PiAr
-CS5waHljdGxfb2Zmc2V0ID0gUkVHX1BIWUNUTF9BMzMsCj4+ICsJLmRlZGljYXRlZF9jbG9ja3Mg
-PSB0cnVlLAo+PiArCS5lbmFibGVfcG11X3VuazEgPSB0cnVlLAo+PiArCS5waHkwX2R1YWxfcm91
-dGUgPSB0cnVlLAo+PiArCS5taXNzaW5nX3BoeXMgPSBCSVQoMSkgfCBCSVQoMiksCj4+ICt9Owo+
-PiArCj4+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBzdW40aV91c2JfcGh5X29m
-X21hdGNoW10gPSB7Cj4+ICAJeyAuY29tcGF0aWJsZSA9ICJhbGx3aW5uZXIsc3VuNGktYTEwLXVz
-Yi1waHkiLCAuZGF0YSA9Cj4+ICZzdW40aV9hMTBfY2ZnIH0sCj4+ICAJeyAuY29tcGF0aWJsZSA9
-ICJhbGx3aW5uZXIsc3VuNWktYTEzLXVzYi1waHkiLCAuZGF0YSA9Cj4+ICZzdW41aV9hMTNfY2Zn
-IH0sCj4+IEBAIC05NzIsNiArOTg2LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2Vf
-aWQKPj4gc3VuNGlfdXNiX3BoeV9vZl9tYXRjaFtdID0gewo+PiAgCXsgLmNvbXBhdGlibGUgPSAi
-YWxsd2lubmVyLHN1bjhpLXYzcy11c2ItcGh5IiwgLmRhdGEgPQo+PiAmc3VuOGlfdjNzX2NmZyB9
-LAo+PiAgCXsgLmNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjUwaS1hNjQtdXNiLXBoeSIsCj4+
-ICAJICAuZGF0YSA9ICZzdW41MGlfYTY0X2NmZ30sCj4+ICsJeyAuY29tcGF0aWJsZSA9ICJhbGx3
-aW5uZXIsc3VuNTBpLWg2LXVzYi1waHkiLCAuZGF0YSA9Cj4+ICZzdW41MGlfaDZfY2ZnIH0sCj4+
-ICAJeyB9LAo+PiAgfTsKPj4gIE1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIHN1bjRpX3VzYl9waHlf
-b2ZfbWF0Y2gpOwo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8vbGludXgtYXJtLWtlcm5lbAo=
+On Fri, Nov 02, 2018 at 08:38:52AM +0000, Manish Narani wrote:
+> Ping!
+
+Let me paste to you what I replied to a similar ping during the merge
+window:
+
+You do realize that we're right in the merge window right now, right?
+
+And people are busy sending pull requests and fixing fallout.
+
+So sending new stuff during the two weeks of the merge window, will
+kinda put you on the backburner. Try to remember that next time and be
+patient.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
