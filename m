@@ -1,35 +1,60 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v10 0/6] EDAC: Enhancements to Synopsys EDAC driver
-Date: Fri, 2 Nov 2018 09:58:24 +0100
-Message-ID: <20181102085824.GA14602@zn.tnic>
-References: <1540447621-22870-1-git-send-email-manish.narani@xilinx.com>
- <DM6PR02MB52271A9C7D7829CA1467B657C1CF0@DM6PR02MB5227.namprd02.prod.outlook.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: [PATCH V4 01/10] dt-bindings: fsl: add compatible for imx7ulp evk
+Date: Fri, 2 Nov 2018 09:12:37 +0000
+Message-ID: <1541149669-10857-2-git-send-email-aisheng.dong@nxp.com>
+References: <1541149669-10857-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <DM6PR02MB52271A9C7D7829CA1467B657C1CF0@DM6PR02MB5227.namprd02.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manish Narani <MNARANI@xilinx.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1541149669-10857-1-git-send-email-aisheng.dong@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 02, 2018 at 08:38:52AM +0000, Manish Narani wrote:
-> Ping!
+Cc: devicetree@vger.kernel.org
+Cc: Shawn Guo <shawnguo@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+ Documentation/devicetree/bindings/arm/fsl.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Let me paste to you what I replied to a similar ping during the merge
-window:
-
-You do realize that we're right in the merge window right now, right?
-
-And people are busy sending pull requests and fixing fallout.
-
-So sending new stuff during the two weeks of the merge window, will
-kinda put you on the backburner. Try to remember that next time and be
-patient.
-
+diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+index 7b964d8..9c7c788 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.txt
++++ b/Documentation/devicetree/bindings/arm/fsl.txt
+@@ -101,6 +101,10 @@ i.MX7 SabreSD Board
+ Required root node properties:
+     - compatible = "fsl,imx7d-sdb", "fsl,imx7d";
+ 
++i.MX7ULP Evaluation Kit
++Required root node properties:
++    - compatible = "fsl,imx7ulp-evk", "fsl,imx7ulp";
++
+ Generic i.MX boards
+ -------------------
+ 
+@@ -123,6 +127,10 @@ i.MX6q generic board
+ Required root node properties:
+     - compatible = "fsl,imx6q";
+ 
++i.MX7ULP generic board
++Required root node properties:
++    - compatible = "fsl,imx7ulp";
++
+ Freescale Vybrid Platform Device Tree Bindings
+ ----------------------------------------------
+ 
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+2.7.4
