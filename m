@@ -1,181 +1,45 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 3/3] dt-bindings: iio: adc: Add docs for ad7124
-Date: Sat, 3 Nov 2018 11:58:19 +0000
-Message-ID: <20181103115819.1aa65a6c@archlinux>
-References: <1540831170-3150-1-git-send-email-stefan.popa@analog.com>
-        <20181030205615.GA13185@bogus>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v2 0/3] Allwinner H6 Ethernet support
+Date: Sat,  3 Nov 2018 20:32:35 +0800
+Message-ID: <20181103123238.4665-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181030205615.GA13185@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Stefan Popa <stefan.popa@analog.com>, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRB6VK63PAKGQERCJP4PI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Corentin Labbe <clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 30 Oct 2018 15:56:15 -0500
-Rob Herring <robh@kernel.org> wrote:
+This patchset introduces Allwinner H6 Ethernet support with code already
+available for A64.
 
-> On Mon, Oct 29, 2018 at 06:39:30PM +0200, Stefan Popa wrote:
-> > Add support for Analog Devices AD7124 4-channels and 8-channels ADC.
-> >=20
-> > Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-> > ---
-> > Changes in v2:
-> > 	- Nothing changed.
-> > Changes in v3:
-> > 	- Removed the "adi,channels" property.
-> > 	- Used the "reg" property to get the channel number and "adi,diff-chan=
-nels"
-> > 	  for the differential pins. The "adi,channel-number" property was rem=
-oved.
-> > 	- adi,bipolar is of boolean type.
-> >=20
-> >  .../devicetree/bindings/iio/adc/adi,ad7124.txt     | 90 ++++++++++++++=
-++++++++
-> >  MAINTAINERS                                        |  1 +
-> >  2 files changed, 91 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad712=
-4.txt
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt b=
-/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
-> > new file mode 100644
-> > index 0000000..46a9b71
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
-> > @@ -0,0 +1,90 @@
-> > +Analog Devices AD7124 ADC device driver
-> > +
-> > +Required properties for the AD7124:
-> > +	- compatible: Must be one of "adi,ad7124-4" or "adi,ad7124-8"
-> > +	- reg: SPI chip select number for the device
-> > +	- spi-max-frequency: Max SPI frequency to use
-> > +		see: Documentation/devicetree/bindings/spi/spi-bus.txt
-> > +	- clocks: phandle to the master clock (mclk)
-> > +		see: Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > +	- clock-names: Must be "mclk".
-> > +	- interrupts: IRQ line for the ADC
-> > +		see: Documentation/devicetree/bindings/interrupt-controller/interrup=
-ts.txt
-> > +
-> > +	  Required properties:
-> > +		* #address-cells: Must be 1.
-> > +		* #size-cells: Must be 0.
-> > +
-> > +	  Subnode(s) represent the external channels which are connected to t=
-he ADC.
-> > +	  Each subnode represents one channel and has the following propertie=
-s:
-> > +		Required properties:
-> > +			* reg: The channel number. It can have up to 4 channels on ad7124-4
-> > +			  and 8 channels on ad7124-8, numbered from 0 to 15.
-> > +			* adi,diff-channels: Pins the channel is connected to. The first va=
-lue
-> > +			  specifies the positive input pin, the second value the negative i=
-nput pin.
-> > +
-> > +		Optional properties:
-> > +			* adi,bipolar: Boolean, if set the channel is used in bipolar mode.=
- =20
->=20
-> Both this and Xilinx AMS which I just reviewed are defining a bipolar=20
-> property. Can we come up with a common property please.
-Sometimes it's implicit given particular channel selects but agreed
-for this particular simple case, lets just put it in the generic
-binding as
+As the EMAC on H6 is similar to A64 ones, support for them are directly
+reused, by using fallback compatible strings.
 
-bipolar.
+Patches about system controller in v1 is sent by Jernej Skabrec as part
+of his H6 display patchset, and already gets applied.
 
-Now the tricky question ;).. Where to document it. Only really applies to
-ADCs but we don't have a specific adc.txt binding doc. I guess we'll need
-one to start defining properties.
+NOTE: This patchset targets the final version of Pine H64, and also
+supports the early sample of Pine H64 model B. However, it's not
+compatible with the early sample of Pine H64 model A. Please DO NOT test
+this patchset on the Pine H64 model A samples.
 
-This also doesn't actually obey the documented naming for channels
-in the top level binding.  I'm not adverse to changing that (as it's
-not actually user visible and we don't enforce it anyway) but we should
-discuss that in a separate thread so as to get more eyes on it.
+Icenowy Zheng (3):
+  dt-binding: dwmac-sun8i: add H6 compatible string (w/ A64 fallback)
+  arm64: allwinner: h6: add EMAC device nodes
+  arm64: allwinner: h6: add support for the Ethernet on Pine H64
 
->=20
-> > +			* adi,reference-select: Select the reference source to use when
-> > +			  converting on the the specific channel. Valid values are:
-> > +			  0: REFIN1(+)/REFIN1(=E2=88=92).
-> > +			  1: REFIN2(+)/REFIN2(=E2=88=92).
-> > +			  3: AVDD
-> > +			  If this field is left empty, internal reference is selected.
-> > +			* adi,gain: Select the gain when converting on the specific channel.
-> > +			  Valid values are: 1, 2, 4, 8, 16, 32, 64, 128.
-> > +			  If this field is left empty, gain of 1 is selected.
-> > +			* adi,odr-hz: The output data rate can be programmed from:
-> > +			  9 to 19200 for full power mode (when the master clock is 614.4 kH=
-z)
-> > +			  2 to 4800 for mid power mode (when the master clock is 153.6 kHz)
-> > +			  1 to 2400 for low power mode (when the master clock is 76.8 kHz)
-> > +			  If this field is left empty, odr of 9 is selected.
-> > +
-> > +Optional properties:
-> > +	- refin1-supply: refin1 supply can be used as reference for conversio=
-n.
-> > +	- refin2-supply: refin2 supply can be used as reference for conversio=
-n.
-> > +	- avdd-supply: avdd supply can be used as reference for conversion.
-> > +
-> > +Example:
-> > +	adc@0 {
-> > +		compatible =3D "adi,ad7124-4";
-> > +		reg =3D <0>;
-> > +		spi-max-frequency =3D <5000000>;
-> > +		interrupts =3D <25 2>;
-> > +		interrupt-parent =3D <&gpio>;
-> > +		refin1-supply =3D <&adc_vref>;
-> > +		clocks =3D <&ad7124_mclk>;
-> > +		clock-names =3D "mclk";
-> > +
-> > +		#address-cells =3D <1>;
-> > +		#size-cells =3D <0>;
-> > +
-> > +		channel@0 {
-> > +			reg =3D <0>;
-> > +			adi,diff-channels =3D <0 1>;
-> > +			adi,reference-select =3D <0>;
-> > +			adi,gain =3D <2>;
-> > +			adi,odr-hz =3D <10>;
-> > +		};
-> > +
-> > +		channel@1 {
-> > +			reg =3D <1>;
-> > +			adi,bipolar;
-> > +			adi,diff-channels =3D <2 3>;
-> > +			adi,reference-select =3D <0>;
-> > +			adi,gain =3D <4>;
-> > +			adi,odr-hz =3D <50>;
-> > +		};
-> > +
-> > +		channel@2 {
-> > +			reg =3D <2>;
-> > +			adi,diff-channels =3D <4 5>;
-> > +			adi,gain =3D <128>;
-> > +			adi,odr-hz =3D <19200>;
-> > +		};
-> > +
-> > +		channel@3 {
-> > +			reg =3D <3>;
-> > +			adi,diff-channels =3D <6 7>;
-> > +		};
-> > +	};
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 3a1bfcb..f2fa508 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -845,6 +845,7 @@ L:	linux-iio@vger.kernel.org
-> >  W:	http://ez.analog.com/community/linux-device-drivers
-> >  S:	Supported
-> >  F:	drivers/iio/adc/ad7124.c
-> > +F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
-> > =20
-> >  ANALOG DEVICES INC AD9389B DRIVER
-> >  M:	Hans Verkuil <hans.verkuil@cisco.com>
-> > --=20
-> > 2.7.4
-> >  =20
+ .../devicetree/bindings/net/dwmac-sun8i.txt   |  1 +
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts | 20 +++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 28 +++++++++++++++++++
+ 3 files changed, 49 insertions(+)
+
+-- 
+2.18.1
