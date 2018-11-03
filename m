@@ -1,67 +1,82 @@
 From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 3/4] ARM: mmp2: initialize clocks before the timer
-Date: Sat, 3 Nov 2018 20:15:47 +0100
-Message-ID: <20181103191547.GI31179@amd>
+Subject: Re: [PATCH 4/4] ARM: mmp/mmp2: dt: enable the clock
+Date: Sat, 3 Nov 2018 20:17:04 +0100
+Message-ID: <20181103191703.GJ31179@amd>
 References: <20180918205455.25464-1-lkundrak@v3.sk>
- <20180918205455.25464-4-lkundrak@v3.sk>
+ <20180918205455.25464-5-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="+ZmrHH5cGjskQnY1"
+        protocol="application/pgp-signature"; boundary="YPJ8CVbwFUtL7OFW"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180918205455.25464-4-lkundrak@v3.sk>
+In-Reply-To: <20180918205455.25464-5-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Lubomir Rintel <lkundrak@v3.sk>
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
 
---+ZmrHH5cGjskQnY1
+--YPJ8CVbwFUtL7OFW
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue 2018-09-18 22:54:54, Lubomir Rintel wrote:
-> The timer shall enable its clock.
+On Tue 2018-09-18 22:54:55, Lubomir Rintel wrote:
+> The device-tree booted MMP2 needs to enable the timer clock, otherwise
+> the it would stop ticking when the boot finishes.
+
+"the it" -> "it"
+
+> It can also use the clock rate from the clk, the non-DT boards need to
+> keep using the hardcoded rates.
 >=20
 > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
 Acked-by: Pavel Machek <pavel@ucw.cz>
-=20
-> ---
->  arch/arm/mach-mmp/mmp2-dt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/mach-mmp/mmp2-dt.c b/arch/arm/mach-mmp/mmp2-dt.c
-> index 0341359b24a4..50c5e8b5be3d 100644
-> --- a/arch/arm/mach-mmp/mmp2-dt.c
-> +++ b/arch/arm/mach-mmp/mmp2-dt.c
-> @@ -26,8 +26,8 @@ static void __init mmp_init_time(void)
->  #ifdef CONFIG_CACHE_TAUROS2
->  	tauros2_init(0);
->  #endif
-> -	mmp_dt_init_timer();
->  	of_clk_init(NULL);
-> +	mmp_dt_init_timer();
->  }
-> =20
->  static const char *const mmp2_dt_board_compat[] __initconst =3D {
+
+> +	clk =3D of_clk_get(np, 0);
+> +	if (!IS_ERR(clk)) {
+> +		ret =3D clk_prepare_enable(clk);
+> +		if (ret)
+> +			goto out;
+> +		rate =3D clk_get_rate(clk) / 2;
+> +	} else if (cpu_is_pj4 ()) {
+
+extra space.
+
+> +		rate =3D 6500000;
+> +	} else {
+> +		rate =3D 3250000;
+> +	}
+> +
+>  	irq =3D irq_of_parse_and_map(np, 0);
+>  	if (!irq) {
+>  		ret =3D -EINVAL;
+> @@ -231,7 +239,7 @@ void __init mmp_dt_init_timer(void)
+>  		ret =3D -ENOMEM;
+>  		goto out;
+>  	}
+> -	timer_init(irq);
+> +	timer_init(irq, rate);
+>  	return;
+>  out:
+>  	pr_err("Failed to get timer from device tree with error:%d\n", ret);
 
 --=20
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---+ZmrHH5cGjskQnY1
+--YPJ8CVbwFUtL7OFW
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iEYEARECAAYFAlvd8+MACgkQMOfwapXb+vKB8wCfR6iixVLOwKITRqelci8noeHb
-Iz8An1Rs/FWPLM/Vhb6ccbVfDvqTmmjF
-=PBu+
+iEYEARECAAYFAlvd9C8ACgkQMOfwapXb+vIdJwCfaeay0bWti/7I3s5Da2HuEjld
+ldcAni2viteHFI690zWRwhuWJGUu3Kq6
+=3oi8
 -----END PGP SIGNATURE-----
 
---+ZmrHH5cGjskQnY1--
+--YPJ8CVbwFUtL7OFW--
