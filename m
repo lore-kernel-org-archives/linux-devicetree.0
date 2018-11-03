@@ -1,35 +1,75 @@
-Return-Path: <SRS0=+b+s=NN=verge.net.au=horms@kernel.org>
-Date: Fri, 2 Nov 2018 12:25:32 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: renesas: condor: switch from EtherAVB to
- GEther
-Message-ID: <20181102112532.6hosjv7ycz6ibji3@verge.net.au>
-References: <fb4eb097-40aa-82df-68c7-9b727c858a8b@cogentembedded.com>
- <4f9e79ca-5d61-8dd4-fe79-42e8f7562f90@cogentembedded.com>
- <20181031143042.3j4ohumfpxmn7xdu@verge.net.au>
- <0070b215-cd49-edcb-8abc-79e7150589ec@cogentembedded.com>
+Return-Path: <SRS0=EYTz=NO=googlemail.com=martin.blumenstingl@kernel.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 0/2] meson-saradc: add chip temperature support
+Date: Sun,  4 Nov 2018 00:10:22 +0100
+Message-Id: <20181103231024.659-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0070b215-cd49-edcb-8abc-79e7150589ec@cogentembedded.com>
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>
+Content-Transfer-Encoding: 8bit
+To: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de, jic23@kernel.org
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Oct 31, 2018 at 08:29:50PM +0300, Sergei Shtylyov wrote:
-> On 10/31/2018 5:30 PM, Simon Horman wrote:
-> 
-> > > The "official" Condor boards have always been wired to mount NFS via
-> > > GEther, not EtherAVB -- the boards resoldered for EtherAVB were local
-> > > to Cogent Embedded, so we've been having an unpleasant situation where
-> > > a "normal" Condor board still can't mount NFS (unless an EtherAVB PHY
-> > > extension board is plugged in). Switch from EtherAVB to GEther at last!
-> > > 
-> > > Fixes: 8091788f3d38 ("arm64: dts: renesas: condor: add EtherAVB support")
-> > > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> > 
-> > Thanks, applied for v4.21.
-> 
->    Wait, this was intended as a fix for 4.20...
+The meson-saradc allows switching the input of channel #6 between an
+actual ADC pad and the SoC's internal temperature sensor.
 
-Thanks, I have re-queued this as a fix for v4.20.
+On the 64-bit SoCs the SCPI firmware reads the chip temperature using
+the SAR ADC. Thus the 64-bit SoCs simply expose the temperature through
+the "arm,scpi-sensors" interface (and so Linux doesn't have to program
+the SAR ADC for temperature readings).
+
+The 32-bit SoCs however don't have any SCPI firmware. Thus we need to
+configure the SAR ADC in Linux to get the chip temperature. To make it
+work we need two changes to the existing dt-bindings:
+- we have to get the TSC (temperature sensor calibration coefficient)
+  from the eFuse (where it has been programmed to the correct value in
+  the manufacturing process). the SAR ADC needs the TSC value, otherwise
+  it returns only garbage readings
+- we need to get a phandle to the new HHI syscon region because on
+  Meson8b and Meson8m2 the TSC is five bits wide (on Meson8 it's only
+  four bits wide) but only four bits are stored inside the SAR ADC's
+  memory region. The upper most bit (not all five bits, only one out of
+  five) is stored at a seemingly random register HHI_DPLL_TOP_0) in the
+  HHI register area.
+  This also requires changes to the clock controller where we don't have
+  a solution where everyone's happy with the dt-bindings (see the
+  discussion in [0]) - so this will be added in a future series.
+
+
+changes since v1 at [1]:
+- (many thanks to Peter Meerwald-Stadler and Jonathan Cameron for taking
+  the time to review my patches)
+- use "MESON_SAR_ADC_" as naming schema for two new #defines
+- remove .indexed = 0 (because it's already the default) from
+  MESON_SAR_ADC_TEMP_CHAN
+- simplify setting MESON_SAR_ADC_DELTA_10_TEMP_SEL in
+  meson_sar_adc_enable_channel
+- remove IIO_CHAN_INFO_ENABLE (abuse) from MESON_SAR_ADC_TEMP_CHAN
+- register the channel set depending on whether the temperature sensor
+  can be used or not (instead of exposing the info whether it can be
+  used through the "ENABLE" element)
+- shorten check for MESON_SAR_ADC_EFUSE_BYTE3_IS_CALIBRATED
+- dropped Meson8b and Meson8m2 support for now (see the HHI register
+  discussion mentioned above). I still plan to add support for these
+  SoCs, but I don't want to add any code to the SAR ADC driver before
+  we have a decision on the dt-bindings of the clock driver (where we
+  need to write one bit from the SAR ADC driver for the temperature
+  sensor calibration coefficient).
+- dropped the .dts changes for now since the useful part was adding
+  iio-hwmon on Meson8b and Meson8m2 boards. now that support for these
+  two SoCs is postponed we can wait with the .dts changes as well.
+
+
+[0] https://patchwork.kernel.org/cover/10658527/
+[1] https://patchwork.kernel.org/cover/10658551/
+
+
+Martin Blumenstingl (2):
+  dt-bindings: iio: adc: meson-saradc: add temperature sensor support
+  iio: adc: meson-saradc: add support for the chip's temperature sensor
+
+ .../bindings/iio/adc/amlogic,meson-saradc.txt |   6 +
+ drivers/iio/adc/meson_saradc.c                | 229 ++++++++++++++++--
+ 2 files changed, 209 insertions(+), 26 deletions(-)
+
+-- 
+2.19.1
