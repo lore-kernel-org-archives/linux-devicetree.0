@@ -1,86 +1,71 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v2 3/3] arm64: allwinner: h6: add support for
- the Ethernet on Pine H64
-Date: Sat,  3 Nov 2018 20:32:38 +0800
-Message-ID: <20181103123238.4665-4-icenowy@aosc.io>
-References: <20181103123238.4665-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Sergey Suloev <ssuloev@orpaltech.com>
+Subject: Re: [PATCH 01/10] drm/sun4i: sun6i_mipi_dsi: Compute burst mode loop
+ N1 instruction delay
+Date: Sat, 3 Nov 2018 18:23:20 +0300
+Message-ID: <8365df14-3397-b395-48eb-3070da3b65fc@orpaltech.com>
+References: <20181103100900.30313-1-jagan@amarulasolutions.com>
+ <20181103100900.30313-2-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBJFL63PAKGQENBCNP3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181103123238.4665-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Corentin Labbe <clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181103100900.30313-2-jagan@amarulasolutions.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jagan Teki <jagan@amarulasolutions.com>, Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michael Trimarchi <michael@amarulasolutions.com>, TL Lim <tllim@pine64.org>, linux-sunxi@googlegroups.com
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-The Pine H64 board has an Ethernet port, which is connected to a
-RTL8211E PHY, then the PHY is connected to the MAC on H6 SoC.
+Hi, Jagan,
 
-Add support for the Ethernet port.
+On 11/3/18 1:08 PM, Jagan Teki wrote:
+> Loop N1 instruction delay for burst mode lcd panel are
+> computed as per BSP code.
+>
+> Reference code is available in BSP
+> (in drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
+> dsi_dev[sel]->dsi_inst_loop_num.bits.loop_n1=
+> (panel->lcd_ht-panel->lcd_x)*(150)/(panel->lcd_dclk_freq*8) - 50;
+> => (((mode->htotal - mode->hdisplay) * 150) / ((mode->clock / 1000) * 8)) - 50;
+>
+> So use the similar computation for loop N1 delay.
+>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+>   drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 9 ++++++++-
+>   1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> index 86430efd9054..da152c21ec62 100644
+> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> @@ -394,7 +394,14 @@ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
+>   static void sun6i_dsi_setup_inst_loop(struct sun6i_dsi *dsi,
+>   				      struct drm_display_mode *mode)
+>   {
+> -	u16 delay = 50 - 1;
+> +	struct mipi_dsi_device *device = dsi->device;
+> +	u16 delay;
+> +
+> +	if (device->mode_flags == MIPI_DSI_MODE_VIDEO_BURST)
+> +		delay = (((mode->htotal - mode->hdisplay) * 150) /
+> +			((mode->clock / 1000) * 8)) - 50;
+> +	else
+> +		delay = 50 - 1;
+>   
+>   	regmap_write(dsi->regs, SUN6I_DSI_INST_LOOP_NUM_REG(0),
+>   		     SUN6I_DSI_INST_LOOP_NUM_N0(50 - 1) |
 
-The PHY needs some time to start up, and the time is modelled as enable
-ramp delay of the regulator.
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
-Changes in v2:
-- Adapted the decision by Pine64 on the final version of Pine H64 (the
-  current scheme on model B's).
+is this patch series comes in addition to the previous MIPI DSI series 
+or in its stead?
 
- .../boot/dts/allwinner/sun50i-h6-pine-h64.dts | 20 +++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index 48daec7f78ba..fcf3c1de4aa2 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -14,6 +14,7 @@
- 	compatible = "pine64,pine-h64", "allwinner,sun50i-h6";
- 
- 	aliases {
-+		ethernet0 = &emac;
- 		serial0 = &uart0;
- 	};
- 
-@@ -41,6 +42,24 @@
- 	};
- };
- 
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ext_rgmii_pins>;
-+	phy-mode = "rgmii";
-+	phy-handle = <&ext_rgmii_phy>;
-+	phy-supply = <&reg_aldo2>;
-+	allwinner,rx-delay-ps = <200>;
-+	allwinner,tx-delay-ps = <200>;
-+	status = "okay";
-+};
-+
-+&mdio {
-+	ext_rgmii_phy: ethernet-phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins>;
-@@ -85,6 +104,7 @@
- 				regulator-min-microvolt = <3300000>;
- 				regulator-max-microvolt = <3300000>;
- 				regulator-name = "vcc-ac200";
-+				regulator-enable-ramp-delay = <100000>;
- 			};
- 
- 			reg_aldo3: aldo3 {
--- 
-2.18.1
+Thanks
