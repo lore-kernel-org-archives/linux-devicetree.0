@@ -1,82 +1,31 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 4/4] ARM: mmp/mmp2: dt: enable the clock
-Date: Sat, 3 Nov 2018 20:17:04 +0100
-Message-ID: <20181103191703.GJ31179@amd>
-References: <20180918205455.25464-1-lkundrak@v3.sk>
- <20180918205455.25464-5-lkundrak@v3.sk>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 5/6] dt-bindings: can: can-transceiver: Remove legacy
+ binding documentation
+Date: Sat, 3 Nov 2018 23:12:25 +0300
+Message-ID: <a923f4a5-5b90-512d-a9e2-af6f72acff8e@cogentembedded.com>
+References: <20181102192616.28291-1-faiz_abbas@ti.com>
+ <20181102192616.28291-6-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="YPJ8CVbwFUtL7OFW"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180918205455.25464-5-lkundrak@v3.sk>
+In-Reply-To: <20181102192616.28291-6-faiz_abbas@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Russell King <linux@armlinux.org.uk>
+To: Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org
+Cc: wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
+On 11/2/2018 10:26 PM, Faiz Abbas wrote:
 
---YPJ8CVbwFUtL7OFW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> With the transceiver node being implemented as a phy, remove the legacy
+> dcoumentation. Don't remove the code implementing it to maintain dt
 
-On Tue 2018-09-18 22:54:55, Lubomir Rintel wrote:
-> The device-tree booted MMP2 needs to enable the timer clock, otherwise
-> the it would stop ticking when the boot finishes.
+    Documentation.
 
-"the it" -> "it"
+> compatibility.
+> 
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+[...]
 
-> It can also use the clock rate from the clk, the non-DT boards need to
-> keep using the hardcoded rates.
->=20
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
-
-> +	clk =3D of_clk_get(np, 0);
-> +	if (!IS_ERR(clk)) {
-> +		ret =3D clk_prepare_enable(clk);
-> +		if (ret)
-> +			goto out;
-> +		rate =3D clk_get_rate(clk) / 2;
-> +	} else if (cpu_is_pj4 ()) {
-
-extra space.
-
-> +		rate =3D 6500000;
-> +	} else {
-> +		rate =3D 3250000;
-> +	}
-> +
->  	irq =3D irq_of_parse_and_map(np, 0);
->  	if (!irq) {
->  		ret =3D -EINVAL;
-> @@ -231,7 +239,7 @@ void __init mmp_dt_init_timer(void)
->  		ret =3D -ENOMEM;
->  		goto out;
->  	}
-> -	timer_init(irq);
-> +	timer_init(irq, rate);
->  	return;
->  out:
->  	pr_err("Failed to get timer from device tree with error:%d\n", ret);
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---YPJ8CVbwFUtL7OFW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvd9C8ACgkQMOfwapXb+vIdJwCfaeay0bWti/7I3s5Da2HuEjld
-ldcAni2viteHFI690zWRwhuWJGUu3Kq6
-=3oi8
------END PGP SIGNATURE-----
-
---YPJ8CVbwFUtL7OFW--
+MBR, Sergei
