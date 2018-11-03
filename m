@@ -1,75 +1,183 @@
-From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Subject: Re: [PATCH v5 04/11] dt-bindings: iio: adc: add AXP803 ADC bindings
-Date: Sat, 3 Nov 2018 10:21:53 +0000
-Message-ID: <20181103102153.4f0481ad@archlinux>
-References: <20181023185330.10472-1-oskari@lemmela.net>
-        <20181023185330.10472-5-oskari@lemmela.net>
-        <20181024135633.GA342@bogus>
-        <20181028154011.04efdecf@archlinux>
-        <20181029130757.m5okrfvusjl5fu5m@qschulz>
-        <CAGb2v65JKj_7VcEr1KuZVop85hn-3h73NrExprpmLbKZiosD5Q@mail.gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: iio: pressure: Add support for
+ Honeywell HSC SPI sensors
+Date: Sat, 3 Nov 2018 10:36:19 +0000
+Message-ID: <20181103103619.7c4addd3@archlinux>
+References: <20181026181406.14545-1-carlos.iglesias@emutex.com>
+        <20181026181406.14545-2-carlos.iglesias@emutex.com>
+        <20181028173842.580ba1d4@archlinux>
+        <0dbb2254-8035-b498-6302-26bc3a2219ca@emutex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v65JKj_7VcEr1KuZVop85hn-3h73NrExprpmLbKZiosD5Q@mail.gmail.com>
+In-Reply-To: <0dbb2254-8035-b498-6302-26bc3a2219ca@emutex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Rob Herring <robh@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-iio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Sebastian Reichel <sre@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Quentin Schulz <quentin.schulz@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, oskari@lemmela.net, linux-gpio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Quentin Schulz <quentin.schulz@bootlin.com>
+To: Carlos Iglesias <carlos.iglesias@emutex.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dan O'Donovan <dan.odonovan@emutex.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 31 Oct 2018 10:29:59 +0800
-Chen-Yu Tsai <wens@csie.org> wrote:
+Rob, just to draw your attention, some discussion around
+spi-max-frequency that you might want to look at below.
 
-> On Mon, Oct 29, 2018 at 9:10 PM Quentin Schulz
-> <quentin.schulz@bootlin.com> wrote:
-> >
-> > Hi Jonathan,
-> >
-> > On Sun, Oct 28, 2018 at 03:40:11PM +0000, Jonathan Cameron wrote:  
-> > > On Wed, 24 Oct 2018 08:56:33 -0500
-> > > Rob Herring <robh@kernel.org> wrote:
-> > >  
-> > > > On Tue, 23 Oct 2018 21:53:23 +0300, Oskari Lemmela wrote:  
-> > > > > The AXP803 ADC is compatible with AXP813 ADC, but add
-> > > > > specific compatible for it.
-> > > > >
-> > > > > Signed-off-by: Oskari Lemmela <oskari@lemmela.net>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/iio/adc/axp20x_adc.txt | 2 ++
-> > > > >  1 file changed, 2 insertions(+)
-> > > > >  
-> > > >
-> > > > Reviewed-by: Rob Herring <robh@kernel.org>  
-> > >
-> > > This doesn't seem to have any dependencies with the other patches
-> > > so applied to the togreg branch of iio.git and pushed out as testing
-> > > for the autobuilders to ignore.  However I am a little curious to know
-> > > why we would add the ID and then not use it (that I can see)?
-> > >  
-> >
-> > Sometimes with Allwinner (and X-Powers), two IPs seem identical until we
-> > discover something that is slightly different. When this happens, we
-> > have to add a compatible to differentiate both. However, we would also
-> > need to change the Device Tree to change the compatible. We would need
-> > to handle the driver behaviour for both Device Trees.
-> >
-> > So better anticipate a possible difference so that we don't have to do
-> > some hacks in the driver to handle the device correctly.
-> >
-> > As always, Chen-Yu or Maxime may know better so I'm just stating what I
-> > seem to recall.  
+
+On Tue, 30 Oct 2018 15:56:58 +0000
+Carlos Iglesias <carlos.iglesias@emutex.com> wrote:
+
+> Please see comments inline below.
+Hi Carlos,
+
+Please try to use an email client (or configure yours to do it)
+that adds indentation to each level of reply.  It's somewhat
+fiddly to separate the different parts of the conversation!
+
 > 
-> With Allwinner stuff (X-Powers included), sometimes the documents are
-> incomplete or have errors. We tend to add a model-specific compatible
-> just in case things turn out not to be so compatible, unless someone
-> has triple-checked everything, documents and actual hardware included.
+> On 10/28/18 5:38 PM, Jonathan Cameron wrote:
 > 
-> However we don't actually document these, so this patch isn't strictly
-> needed. (I suppose this might annoy the device tree binding maintainers.)
+> On Fri, 26 Oct 2018 18:14:36 +0000
+> Carlos Iglesias <carlos.iglesias@emutex.com><mailto:carlos.iglesias@emutex.com> wrote:
 > 
-> ChenYu
-I don't think it does any harm so I'll leave it in place.  Thanks for
-the explanations.
+> 
+> 
+> Add device tree bindings for the HSC pressure sensors.
+> 
+> Signed-off-by: Carlos Iglesias <carlos.iglesias@emutex.com><mailto:carlos.iglesias@emutex.com>
+> ---
+>  .../bindings/iio/pressure/hsc_spi.txt         | 85 +++++++++++++++++++
+>  1 file changed, 85 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/pressure/hsc_spi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/pressure/hsc_spi.txt b/Documentation/devicetree/bindings/iio/pressure/hsc_spi.txt
+> new file mode 100644
+> index 000000000000..2302d6eef7c7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/pressure/hsc_spi.txt
+> @@ -0,0 +1,85 @@
+> +Honeywell HSC Series of Pressure Sensors
+> +
+> +Pressure sensors from Honeywell with analog, I2C and SPI interfaces
+> +
+> +Required properties:
+> +- compatible: selects the sensor model; must be one of the following
+> +       "honeywell,hsc001baa"
+> +       "honeywell,hsc001bab"
+> +       "honeywell,hsc001bac"
+> +       "honeywell,hsc001baf"
+> +       "honeywell,hsc1_6baa"
+> +       "honeywell,hsc1_6bab"
+> +       "honeywell,hsc1_6bac"
+> +       "honeywell,hsc1_6baf"
+> +       "honeywell,hsc2_5baa"
+> +       "honeywell,hsc2_5bab"
+> +       "honeywell,hsc2_5bac"
+> +       "honeywell,hsc2_5baf"
+> +       "honeywell,hsc004baa"
+> +       "honeywell,hsc004bab"
+> +       "honeywell,hsc004bac"
+> +       "honeywell,hsc004baf"
+> +       "honeywell,hsc006baa"
+> +       "honeywell,hsc006bab"
+> +       "honeywell,hsc006bac"
+> +       "honeywell,hsc006baf"
+> +       "honeywell,hsc010baa"
+> +       "honeywell,hsc010bab"
+> +       "honeywell,hsc010bac"
+> +       "honeywell,hsc010baf"
+> +       "honeywell,hsc100kaa"
+> +       "honeywell,hsc100kab"
+> +       "honeywell,hsc100kac"
+> +       "honeywell,hsc100kaf"
+> +       "honeywell,hsc160kaa"
+> +       "honeywell,hsc160kab"
+> +       "honeywell,hsc160kac"
+> +       "honeywell,hsc160kaf"
+> +       "honeywell,hsc250kaa"
+> +       "honeywell,hsc250kab"
+> +       "honeywell,hsc250kac"
+> +       "honeywell,hsc250kaf"
+> +       "honeywell,hsc400kaa"
+> +       "honeywell,hsc400kab"
+> +       "honeywell,hsc400kac"
+> +       "honeywell,hsc400kaf"
+> +       "honeywell,hsc600kaa"
+> +       "honeywell,hsc600kab"
+> +       "honeywell,hsc600kac"
+> +       "honeywell,hsc600kaf"
+> +       "honeywell,hsc001gaa"
+> +       "honeywell,hsc001gab"
+> +       "honeywell,hsc001gac"
+> +       "honeywell,hsc001gaf"
+> +       "honeywell,hsc015paa"
+> +       "honeywell,hsc015pab"
+> +       "honeywell,hsc015pac"
+> +       "honeywell,hsc015paf"
+> +       "honeywell,hsc030paa"
+> +       "honeywell,hsc030pab"
+> +       "honeywell,hsc030pac"
+> +       "honeywell,hsc030paf"
+> +       "honeywell,hsc060paa"
+> +       "honeywell,hsc060pab"
+> +       "honeywell,hsc060pac"
+> +       "honeywell,hsc060paf"
+> +       "honeywell,hsc100paa"
+> +       "honeywell,hsc100pab"
+> +       "honeywell,hsc100pac"
+> +       "honeywell,hsc100paf"
+> +       "honeywell,hsc150paa"
+> +       "honeywell,hsc150pab"
+> +       "honeywell,hsc150pac"
+> +       "honeywell,hsc150paf"
+> +- reg: the SPI chip select number used by the sensor.
+> +- spi-max-frequency: maximum clock frequency (Hz) used for the SPI bus.
+> +  The maximum value supported by the sensors is 400000.
+> 
+> 
+> As Rob pointed out in a few reviews this week, the devicetree binding
+> for this should only be applying a tighter bound than either the
+> device or the bus master. So something introduced by the board
+> layout for example, or a level convertor..
+> 
+> Jonathan
+> 
+> Checking the devicetree bindings files of other spi sensors I see a frequent approach is to include a reference to Documentation/devicetree/bindings/spi/spi-bus.txt, for example:
+> 
+> Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt apply. In particular, "reg" and "spi-max-frequency" properties must be given.
+The point is that spi-max-frequency doesn't actually need to be given.  If the
+fine with which ever is lower of that supported by the device and that supported
+by the master then it will use that without spi-max-frequency being provided.
+
+I agree this wasn't previously my understanding but it does make sense. No
+obvious reason why this value would need providing by DT unless there is
+a board issue that neither of the 'ends' can see.
+
+We might want to look at cleaning this up in general through the bindings
+(and making sure device drivers apply there own maximums).  Rob
+is this a worthwhile cleanup?
+
+> 
+> Maybe it would be a better option to place such a note instead of the "reg" and "spi-max-frequency" points. What do you think?
+> 
+> Sorry, I was not aware of Rob Herring's previous comments on this topic, I am not subscribed to the LKML.
+
+Sure, I wasn't aware of them until that day anyway ;)
+
+Thanks,
 
 Jonathan
+
+> 
+> 
+> 
+> 
+> +
+> +Example:
+> +
+> +       hsc_spi0: hsc@0 {
+> +               compatible = "honeywell,hsc010baa";
+> +               reg = <0>;
+> +               spi-max-frequency = <400000>;
+> +       };
+> 
+> 
+> 
+> 
