@@ -1,82 +1,75 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 10/10] [DO NOT MERGE] arm64: allwinner: a64: pine64-lts: Enable Feiyang FY07024DI26A30-D DSI panel
-Date: Sat,  3 Nov 2018 15:39:00 +0530
-Message-ID: <20181103100900.30313-11-jagan@amarulasolutions.com>
-References: <20181103100900.30313-1-jagan@amarulasolutions.com>
+From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Subject: Re: [PATCH v5 04/11] dt-bindings: iio: adc: add AXP803 ADC bindings
+Date: Sat, 3 Nov 2018 10:21:53 +0000
+Message-ID: <20181103102153.4f0481ad@archlinux>
+References: <20181023185330.10472-1-oskari@lemmela.net>
+        <20181023185330.10472-5-oskari@lemmela.net>
+        <20181024135633.GA342@bogus>
+        <20181028154011.04efdecf@archlinux>
+        <20181029130757.m5okrfvusjl5fu5m@qschulz>
+        <CAGb2v65JKj_7VcEr1KuZVop85hn-3h73NrExprpmLbKZiosD5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181103100900.30313-1-jagan@amarulasolutions.com>
+In-Reply-To: <CAGb2v65JKj_7VcEr1KuZVop85hn-3h73NrExprpmLbKZiosD5Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michael Trimarchi <michael@amarulasolutions.com>, TL Lim <tllim@pine64.org>, linux-sunxi@googlegroups.com
-Cc: Jagan Teki <jagan@amarulasolutions.com>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Rob Herring <robh@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-iio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Sebastian Reichel <sre@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Quentin Schulz <quentin.schulz@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, oskari@lemmela.net, linux-gpio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Quentin Schulz <quentin.schulz@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Feiyang FY07024DI26A30-D MIPI_DSI panel is desiged to attach with
-DSI connector on pine64 boards, enable the same for pine64 LTS.
+On Wed, 31 Oct 2018 10:29:59 +0800
+Chen-Yu Tsai <wens@csie.org> wrote:
 
-DSI panel connected via board DSI port with,
-- DC1SW as AVDD supply
-- DLDO2 as DVDD supply
-- DLDO1 as VCC-DSI supply
-- PD24 gpio for reset pin
-- PH10 gpio for backlight enable pin
+> On Mon, Oct 29, 2018 at 9:10 PM Quentin Schulz
+> <quentin.schulz@bootlin.com> wrote:
+> >
+> > Hi Jonathan,
+> >
+> > On Sun, Oct 28, 2018 at 03:40:11PM +0000, Jonathan Cameron wrote:  
+> > > On Wed, 24 Oct 2018 08:56:33 -0500
+> > > Rob Herring <robh@kernel.org> wrote:
+> > >  
+> > > > On Tue, 23 Oct 2018 21:53:23 +0300, Oskari Lemmela wrote:  
+> > > > > The AXP803 ADC is compatible with AXP813 ADC, but add
+> > > > > specific compatible for it.
+> > > > >
+> > > > > Signed-off-by: Oskari Lemmela <oskari@lemmela.net>
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/iio/adc/axp20x_adc.txt | 2 ++
+> > > > >  1 file changed, 2 insertions(+)
+> > > > >  
+> > > >
+> > > > Reviewed-by: Rob Herring <robh@kernel.org>  
+> > >
+> > > This doesn't seem to have any dependencies with the other patches
+> > > so applied to the togreg branch of iio.git and pushed out as testing
+> > > for the autobuilders to ignore.  However I am a little curious to know
+> > > why we would add the ID and then not use it (that I can see)?
+> > >  
+> >
+> > Sometimes with Allwinner (and X-Powers), two IPs seem identical until we
+> > discover something that is slightly different. When this happens, we
+> > have to add a compatible to differentiate both. However, we would also
+> > need to change the Device Tree to change the compatible. We would need
+> > to handle the driver behaviour for both Device Trees.
+> >
+> > So better anticipate a possible difference so that we don't have to do
+> > some hacks in the driver to handle the device correctly.
+> >
+> > As always, Chen-Yu or Maxime may know better so I'm just stating what I
+> > seem to recall.  
+> 
+> With Allwinner stuff (X-Powers included), sometimes the documents are
+> incomplete or have errors. We tend to add a model-specific compatible
+> just in case things turn out not to be so compatible, unless someone
+> has triple-checked everything, documents and actual hardware included.
+> 
+> However we don't actually document these, so this patch isn't strictly
+> needed. (I suppose this might annoy the device tree binding maintainers.)
+> 
+> ChenYu
+I don't think it does any harm so I'll leave it in place.  Thanks for
+the explanations.
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- .../dts/allwinner/sun50i-a64-pine64-lts.dts   | 37 +++++++++++++++++++
- 1 file changed, 37 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
-index 72d6961dc312..a5097cf7a8dc 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
-@@ -5,9 +5,46 @@
-  */
- 
- #include "sun50i-a64-sopine-baseboard.dts"
-+#include <dt-bindings/pwm/pwm.h>
- 
- / {
- 	model = "Pine64 LTS";
- 	compatible = "pine64,pine64-lts", "allwinner,sun50i-r18",
- 		     "allwinner,sun50i-a64";
-+
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
-+		brightness-levels = <1 2 4 8 16 32 64 128 512>;
-+		default-brightness-level = <8>;
-+		enable-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PH10 */
-+	};
-+};
-+
-+&de {
-+	status = "okay";
-+};
-+
-+&dphy {
-+	status = "okay";
-+};
-+
-+&dsi {
-+	vcc-dsi-supply = <&reg_dldo1>;
-+	status = "okay";
-+
-+	panel@0 {
-+		compatible = "feiyang,fy07024di26a30d";
-+		reg = <0>;
-+		avdd-supply = <&reg_dc1sw>;
-+		dvdd-supply = <&reg_dldo2>;
-+		reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
-+		backlight = <&backlight>;
-+	};
-+};
-+
-+&r_pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&r_pwm_pin>;
-+	status = "okay";
- };
--- 
-2.18.0.321.gffc6fa0e3
+Jonathan
