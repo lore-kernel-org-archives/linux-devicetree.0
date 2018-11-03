@@ -1,325 +1,113 @@
-From: frowand.list@gmail.com
-Subject: [PATCH v4] of: overlay: user space synchronization
-Date: Fri,  2 Nov 2018 22:40:23 -0700
-Message-ID: <1541223623-1910-1-git-send-email-frowand.list@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] clk: qcom: smd: Add support for QCS404 rpm clocks
+Date: Sat,  3 Nov 2018 00:00:02 -0700
+Message-ID: <20181103070002.19106-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, Alan Tull <atull@kernel.org>
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+From: Taniya Das <tdas@codeaurora.org>
 
-When an overlay is applied or removed, the live devicetree visible in
-/proc/device-tree/, aka /sys/firmware/devicetree/base/, reflects the
-changes.  There is no method for user space to determine whether the
-live devicetree was modified by overlay actions.
+Add rpm smd clocks, PMIC and bus clocks which are required on QCS404
+for clients to vote on.
 
-Provide a sysfs file, /sys/firmware/devicetree/tree_version,  to allow
-user space to determine if the live devicetree has remained unchanged
-while a series of one or more accesses of /proc/device-tree/ occur.
-
-The use of both (1) dynamic devicetree modifications and (2) overlay
-apply and removal are not supported during the same boot cycle.  Thus
-non-overlay dynamic modifications are not reflected in the value of
-tree_version.
-
-Example shell use:
-
-	# set done false (1)
-	done=1
-
-	# keep trying until we can make it through the loop without
-	# live tree being changed by an overlay changeset during the
-	# 'critical region'
-	while [ $done = 1 ] ; do
-
-	   pre_version=$(cat /sys/firmware/devicetree/tree_version)
-
-	   # 'critical region'
-	   # access /proc/device-tree/ one or more times
-
-	   # check that overlay did not change DT during critical region
-	   post_version=$(cat /sys/firmware/devicetree/tree_version)
-	   if [ ${post_version} = ${pre_version} ] ; then
-	      # set done true (0)
-	      done=0
-	   fi
-
-	done
-
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
+[bjorn: Dropped cxo, voter clocks and static initialization]
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
+ .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
+ drivers/clk/qcom/clk-smd-rpm.c                | 45 +++++++++++++++++++
+ include/dt-bindings/clock/qcom,rpmcc.h        |  4 ++
+ 3 files changed, 50 insertions(+)
 
-changes since version 3:
-   - Use mutex in sysfs show function for tree_version.  The mutex
-     provides the required synchronization.  This also removes the
-     need to increment tree_version twice per overlay apply or
-     remove, simplifying the use of tree_version in user space.
-   - Update documentation to reflect code changes.
-   - Update documentation to show simpler user space usage.
-   - Change tree_version from 32 bit to 64 bit to prevent problems
-     with excessively rapid overlay applies and removes.  This
-     problem should not occur on a system that is using overlays
-     as intended, but the cost of prevention is negligible.
-
- Documentation/ABI/testing/sysfs-firmware-ofw | 91 +++++++++++++++++++++++++---
- drivers/of/base.c                            | 75 +++++++++++++++++++++++
- drivers/of/of_private.h                      |  2 +
- drivers/of/overlay.c                         |  6 ++
- 4 files changed, 167 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-firmware-ofw b/Documentation/ABI/testing/sysfs-firmware-ofw
-index edcab3ccfcc0..c441d54b721c 100644
---- a/Documentation/ABI/testing/sysfs-firmware-ofw
-+++ b/Documentation/ABI/testing/sysfs-firmware-ofw
-@@ -1,4 +1,10 @@
--What:		/sys/firmware/devicetree/*
-+What:		/sys/firmware/devicetree/
-+Date:		November 2013
-+Contact:	Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
-+Description:
-+		Top level Open Firmware, aka devicetree, sysfs directory.
-+
-+What:		/sys/firmware/devicetree/base
- Date:		November 2013
- Contact:	Grant Likely <grant.likely@arm.com>, devicetree@vger.kernel.org
- Description:
-@@ -6,11 +12,6 @@ Description:
- 		hardware, the device tree structure will be exposed in this
- 		directory.
+diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+index 4491d1c104aa..87b4949e9bc8 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
++++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+@@ -16,6 +16,7 @@ Required properties :
+ 			"qcom,rpmcc-msm8974", "qcom,rpmcc"
+ 			"qcom,rpmcc-apq8064", "qcom,rpmcc"
+ 			"qcom,rpmcc-msm8996", "qcom,rpmcc"
++			"qcom,rpmcc-qcs404", "qcom,rpmcc"
  
--		It is possible for multiple device-tree directories to exist.
--		Some device drivers use a separate detached device tree which
--		have no attachment to the system tree and will appear in a
--		different subdirectory under /sys/firmware/devicetree.
--
- 		Userspace must not use the /sys/firmware/devicetree/base
- 		path directly, but instead should follow /proc/device-tree
- 		symlink. It is possible that the absolute path will change
-@@ -20,13 +21,89 @@ Description:
- 		filesystem support, and has largely the same semantics and
- 		should be compatible with existing userspace.
+ - #clock-cells : shall contain 1
  
--		The contents of /sys/firmware/devicetree/ is a
-+		The /sys/firmware/devicetree/base directory is the root
-+		node of the devicetree.
-+
-+		The contents of /sys/firmware/devicetree/base is a
- 		hierarchy of directories, one per device tree node. The
- 		directory name is the resolved path component name (node
- 		name plus address). Properties are represented as files
- 		in the directory. The contents of each file is the exact
- 		binary data from the device tree.
+diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
+index 850c02a52248..d3aadaeb2903 100644
+--- a/drivers/clk/qcom/clk-smd-rpm.c
++++ b/drivers/clk/qcom/clk-smd-rpm.c
+@@ -611,10 +611,55 @@ static const struct rpm_smd_clk_desc rpm_clk_msm8996 = {
+ 	.num_clks = ARRAY_SIZE(msm8996_clks),
+ };
  
-+What:		/sys/firmware/devicetree/tree_version
-+Date:		October 2018
-+KernelVersion:	4.20
-+Contact:	Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
-+Description:
-+		When an overlay is applied or removed, the live devicetree
-+		visible in /proc/device-tree/, aka
-+		/sys/firmware/devicetree/base/, reflects the changes.
++/* QCS404 */
++DEFINE_CLK_SMD_RPM_QDSS(qcs404, qdss_clk, qdss_a_clk, QCOM_SMD_RPM_MISC_CLK, 1);
 +
-+		tree_version provides a way for user space to determine if the
-+		live devicetree has remained unchanged while a series of one
-+		or more accesses of /proc/device-tree/ occur.
++DEFINE_CLK_SMD_RPM(qcs404, pnoc_clk, pnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
++DEFINE_CLK_SMD_RPM(qcs404, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
 +
-+		Details about the value of tree_version:
++DEFINE_CLK_SMD_RPM(qcs404, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0);
++DEFINE_CLK_SMD_RPM(qcs404, bimc_gpu_clk, bimc_gpu_a_clk, QCOM_SMD_RPM_MEM_CLK, 2);
 +
-+		   - tree_version is never decremented
++DEFINE_CLK_SMD_RPM(qcs404, qpic_clk, qpic_a_clk, QCOM_SMD_RPM_QPIC_CLK, 0);
++DEFINE_CLK_SMD_RPM(qcs404, ce1_clk, ce1_a_clk, QCOM_SMD_RPM_CE_CLK, 0);
 +
-+		   - tree_version is incremented for each overlay changeset
-+		     that is applied or removed
++DEFINE_CLK_SMD_RPM_XO_BUFFER(qcs404, rf_clk1, rf_clk1_a, 4);
++DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(qcs404, rf_clk1_pin, rf_clk1_a_pin, 4);
 +
-+		   - when the tree is locked to apply or remove an overlay
-+		     changeset, tree_version is incremented
++DEFINE_CLK_SMD_RPM_XO_BUFFER(qcs404, ln_bb_clk, ln_bb_a_clk, 8);
++DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(qcs404, ln_bb_clk_pin, ln_bb_clk_a_pin, 8);
 +
-+		   - while the tree is locked, all reads of tree_version
-+		     will block
++static struct clk_smd_rpm *qcs404_clks[] = {
++	[RPM_SMD_QDSS_CLK] = &qcs404_qdss_clk,
++	[RPM_SMD_QDSS_A_CLK] = &qcs404_qdss_a_clk,
++	[RPM_SMD_PNOC_CLK] = &qcs404_pnoc_clk,
++	[RPM_SMD_PNOC_A_CLK] = &qcs404_pnoc_a_clk,
++	[RPM_SMD_SNOC_CLK] = &qcs404_snoc_clk,
++	[RPM_SMD_SNOC_A_CLK] = &qcs404_snoc_a_clk,
++	[RPM_SMD_BIMC_CLK] = &qcs404_bimc_clk,
++	[RPM_SMD_BIMC_A_CLK] = &qcs404_bimc_a_clk,
++	[RPM_SMD_BIMC_GPU_CLK] = &qcs404_bimc_gpu_clk,
++	[RPM_SMD_BIMC_GPU_A_CLK] = &qcs404_bimc_gpu_a_clk,
++	[RPM_SMD_QPIC_CLK] = &qcs404_qpic_clk,
++	[RPM_SMD_QPIC_CLK_A] = &qcs404_qpic_a_clk,
++	[RPM_SMD_CE1_CLK] = &qcs404_ce1_clk,
++	[RPM_SMD_CE1_A_CLK] = &qcs404_ce1_a_clk,
++	[RPM_SMD_RF_CLK1] = &qcs404_rf_clk1,
++	[RPM_SMD_RF_CLK1_A] = &qcs404_rf_clk1_a,
++	[RPM_SMD_LN_BB_CLK] = &qcs404_ln_bb_clk,
++	[RPM_SMD_LN_BB_A_CLK] = &qcs404_ln_bb_a_clk,
++};
 +
-+		   - when the overlay changeset apply or remove is completed
-+		     (or an error aborts the overlay changeset apply or
-+		     remove), the tree is unlocked
++static const struct rpm_smd_clk_desc rpm_clk_qcs404 = {
++	.clks = qcs404_clks,
++	.num_clks = ARRAY_SIZE(qcs404_clks),
++};
 +
-+		   - the granularity of tree_version is based on overlay
-+		     changesets; it will never be smaller than a changeset,
-+		     but may in the future be extended to cover apply and
-+		     remove of non-overlay changesets
-+
-+		   - the value of tree_version is initially 0 at the start
-+		     of kernel boot, but may increase during the boot process,
-+		     for example due to devicetree unittest activity
-+
-+		   - tree_version is the ascii representation of a kernel
-+		     unsigned 64 bit int variable, and when incremented
-+		     from maximum value, it wraps around to 0
-+
-+		The use of both dynamic devicetree modifications and overlay
-+		apply and removal are not supported during the same boot
-+		cycle.  Thus non-overlay dynamic modifications are not
-+		reflected in the value of tree_version.
-+
-+		Example shell use of tree_version:
-+
-+		# set done false (1)
-+		done=1
-+
-+		# keep trying until we can make it through the loop without
-+		# live tree being changed by an overlay changeset during the
-+		# 'critical region'
-+		while [ $done = 1 ] ; do
-+
-+		   pre_version=$(cat /sys/firmware/devicetree/tree_version)
-+
-+		   # 'critical region'
-+		   # access /proc/device-tree/ one or more times
-+
-+		   # check that overlay did not change DT during critical region
-+		   post_version=$(cat /sys/firmware/devicetree/tree_version)
-+		   if [ ${post_version} = ${pre_version} ] ; then
-+		      # set done true (0)
-+		      done=0
-+		   fi
-+
-+		done
-+
-+
- What:		/sys/firmware/fdt
- Date:		February 2015
- KernelVersion:	3.19
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 466e3c8582f0..75a651db4976 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -151,9 +151,80 @@ int of_free_phandle_cache(void)
- late_initcall_sync(of_free_phandle_cache);
+ static const struct of_device_id rpm_smd_clk_match_table[] = {
+ 	{ .compatible = "qcom,rpmcc-msm8916", .data = &rpm_clk_msm8916 },
+ 	{ .compatible = "qcom,rpmcc-msm8974", .data = &rpm_clk_msm8974 },
+ 	{ .compatible = "qcom,rpmcc-msm8996", .data = &rpm_clk_msm8996 },
++	{ .compatible = "qcom,rpmcc-qcs404",  .data = &rpm_clk_qcs404  },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, rpm_smd_clk_match_table);
+diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
+index c585b82b9c05..3658b0c14966 100644
+--- a/include/dt-bindings/clock/qcom,rpmcc.h
++++ b/include/dt-bindings/clock/qcom,rpmcc.h
+@@ -123,5 +123,9 @@
+ #define RPM_SMD_DIV_A_CLK3			73
+ #define RPM_SMD_LN_BB_CLK			74
+ #define RPM_SMD_LN_BB_A_CLK			75
++#define RPM_SMD_BIMC_GPU_CLK			76
++#define RPM_SMD_BIMC_GPU_A_CLK			77
++#define RPM_SMD_QPIC_CLK			78
++#define RPM_SMD_QPIC_CLK_A			79
+ 
  #endif
- 
-+#define show_one_under_of_mutex(object)					\
-+	static ssize_t show_##object					\
-+	(struct kobject *kobj, struct attribute *attr, char *buf)	\
-+	{								\
-+		ssize_t ret;						\
-+									\
-+		mutex_lock(&of_mutex);					\
-+		ret = sprintf(buf, "%llu\n", object);			\
-+		mutex_unlock(&of_mutex);				\
-+		return ret;						\
-+	}
-+
-+struct global_attr {
-+	struct attribute attr;
-+	ssize_t (*show)(struct kobject *kobj,
-+			struct attribute *attr, char *buf);
-+	ssize_t (*store)(struct kobject *a, struct attribute *b,
-+			 const char *c, size_t count);
-+};
-+
-+#define define_one_global_ro(_name)		\
-+static struct global_attr attr_##_name =	\
-+__ATTR(_name, 0444, show_##_name, NULL)
-+
-+/*
-+ * unsigned so it will wrap from maximum value to zero.
-+ *
-+ * If 32 bit, then continuously applying and removing an overlay at the
-+ * rate of once per millisecond would cause a wrap in slightly over
-+ * one hour.  This rate is not realistic, except possibly in a test
-+ * system.  None the less, prevent this (extremely remote) possibility
-+ * by using an unsigned 64 bit.
-+ */
-+static u64 tree_version;
-+
-+show_one_under_of_mutex(tree_version);
-+
-+define_one_global_ro(tree_version);
-+
-+static struct attribute *of_attributes[] = {
-+	&attr_tree_version.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group of_attr_group = {
-+	.attrs = of_attributes,
-+};
-+
-+/*
-+ * internal documentation
-+ * tree_version_increment() - increment base version
-+ *
-+ * Before an overlay apply or overlay remove modifies the live devicetree,
-+ * call this function while holding of_mutex.  The mutex must be held until
-+ * all modifications to the live devicetree are completed.
-+ *
-+ * Userspace can use the value of this variable to determine whether the
-+ * devicetree has changed while accessing the devicetree.  The sysfs show
-+ * function acquires of_mutex to ensure that user space access of tree_version
-+ * will block while an overlay apply or remove is in progress.
-+ *
-+ * The use of both (1) dynamic devicetree modifications and (2) overlay apply
-+ * and removal are not supported during the same boot cycle.  Thus non-overlay
-+ * dynamic modifications are not reflected in the value of tree_version.
-+ */
-+void tree_version_increment(void)
-+{
-+	tree_version++;
-+}
-+
- void __init of_core_init(void)
- {
- 	struct device_node *np;
-+	int ret;
- 
- 	of_populate_phandle_cache();
- 
-@@ -172,6 +243,10 @@ void __init of_core_init(void)
- 	/* Symlink in /proc as required by userspace ABI */
- 	if (of_root)
- 		proc_symlink("device-tree", NULL, "/sys/firmware/devicetree/base");
-+
-+	ret = sysfs_create_group(&of_kset->kobj, &of_attr_group);
-+	if (ret)
-+		pr_err("sysfs_create_group of_attr_group failed: %d\n", ret);
- }
- 
- static struct property *__of_find_property(const struct device_node *np,
-diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index 216175d11d3d..adf89f6bad81 100644
---- a/drivers/of/of_private.h
-+++ b/drivers/of/of_private.h
-@@ -31,6 +31,8 @@ struct alias_prop {
- extern struct list_head aliases_lookup;
- extern struct kset *of_kset;
- 
-+void tree_version_increment(void);
-+
- #if defined(CONFIG_OF_DYNAMIC)
- extern int of_property_notify(int action, struct device_node *np,
- 			      struct property *prop, struct property *old_prop);
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index eda57ef12fd0..77ae643d91b8 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -770,6 +770,9 @@ static int of_overlay_apply(const void *fdt, struct device_node *tree,
- 	of_overlay_mutex_lock();
- 	mutex_lock(&of_mutex);
- 
-+	/* live tree may change after this point, user space synchronization */
-+	tree_version_increment();
-+
- 	ret = of_resolve_phandles(tree);
- 	if (ret)
- 		goto err_free_tree;
-@@ -1028,6 +1031,9 @@ int of_overlay_remove(int *ovcs_id)
- 
- 	mutex_lock(&of_mutex);
- 
-+	/* live tree may change after this point, user space synchronization */
-+	tree_version_increment();
-+
- 	ovcs = idr_find(&ovcs_idr, *ovcs_id);
- 	if (!ovcs) {
- 		ret = -ENODEV;
 -- 
-Frank Rowand <frank.rowand@sony.com>
+2.18.0
