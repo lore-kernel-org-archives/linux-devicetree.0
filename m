@@ -1,153 +1,161 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
- driver
-Date: Sat, 3 Nov 2018 08:36:00 +0530
-Message-ID: <0c51a12e-38d3-2df5-4f5f-6a687727e9bf@codeaurora.org>
-References: <1539257761-23023-1-git-send-email-tdas@codeaurora.org>
- <1539257761-23023-3-git-send-email-tdas@codeaurora.org>
- <153981915373.5275.15971019914218464179@swboyd.mtv.corp.google.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v3] of: overlay: user space synchronization
+Date: Fri, 2 Nov 2018 21:54:40 -0700
+Message-ID: <918df992-d21f-b237-1ff3-f0b410b32112@gmail.com>
+References: <1539736466-28638-1-git-send-email-frowand.list@gmail.com>
+ <20181018193216.GA9971@bogus>
+ <2f99d700-6276-cfa4-8878-4eb161126330@gmail.com>
+ <CAL_Jsq+=OiXTSSEr4QuiyqCzyrKdH0M8HhmOjVha3SWM5Y62Gw@mail.gmail.com>
+ <399b1ed0-ac64-d962-5eea-23a99011aada@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <153981915373.5275.15971019914218464179@swboyd.mtv.corp.google.com>
+In-Reply-To: <399b1ed0-ac64-d962-5eea-23a99011aada@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
+To: Rob Herring <robh@kernel.org>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Alan Tull <atull@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Stephen,
+Hi Rob,
 
-On 10/18/2018 5:02 AM, Stephen Boyd wrote:
-> Quoting Taniya Das (2018-10-11 04:36:01)
->> --- a/drivers/cpufreq/Kconfig.arm
->> +++ b/drivers/cpufreq/Kconfig.arm
->> @@ -121,6 +121,17 @@ config ARM_QCOM_CPUFREQ_KRYO
+First, the point of this patch was to provide a way for userspace (program,
+command line interface, whatever -- that is orthogonal) to ensure that its
+view of the devicetree via /proc/device-tree/ is consistent since an overlay
+apply or remove can alter the devicetree.
+
+For in-kernel use, typically some sort of lock or rcu would be used to
+provide this type of functionality.
+
+
+On 10/22/18 12:30 AM, Frank Rowand wrote:
+> On 10/19/18 9:06 AM, Rob Herring wrote:
+>> On Thu, Oct 18, 2018 at 7:06 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>>>
+>>> On 10/18/18 12:32, Rob Herring wrote:
+>>>> On Tue, Oct 16, 2018 at 05:34:26PM -0700, frowand.list@gmail.com wrote:
+>>>>> From: Frank Rowand <frank.rowand@sony.com>
+>>>>>
+>>>>> When an overlay is applied or removed, the live devicetree visible in
+>>>>> /proc/device-tree/, aka /sys/firmware/devicetree/base/, reflects the
+>>>>> changes.  There is no method for user space to determine whether the
+>>>>> live devicetree was modified by overlay actions.
+>>>>
+>>>> Because userspace has no way to modify the DT and the ways the kernel
+>>>> can do modifications is limited.
+>>>>
+>>>> Do you have an actually need for this outside of testing/development?
+>>>
+>>> I do not know if anyone uses /proc/device-tree for anything outside of
+>>> testing/development.  If we believe that there is no other use of
+>>> /proc/device-tree we can simply document that there is no expectation
+>>> that accessors will see a consistent, unchanging /proc/device-tree.
 >>
->>            If in doubt, say N.
+>> I didn't mean whether /proc/device-tree is used outside of testing. It
+>> is. The question is whether any users care if there are changes
+>> happening. If so what is the use case?
+> 
+> What is the point of looking at a devicetree if you don't know if it
+> is in a consistent state or part way through a change?
+> 
+>  
+>> kexec used to be one of the main users, but I think it has switched
+>> over to the exported FDT which matches what the kernel was originally
+>> passed.
+> 
+> Yes, last I checked kexec was using FDT from /sys/firmware/fdt.
+> 
+> 
+>>>
+>>> That would be a much smaller patch.
+>>>
+>>>
+>>>>> Provide a sysfs file, /sys/firmware/devicetree/tree_version,  to allow
+>>>>> user space to determine if the live devicetree has remained unchanged
+>>>>> while a series of one or more accesses of /proc/device-tree/ occur.
+>>>>>
+>>>>> The use of both (1) dynamic devicetree modifications and (2) overlay
+>>>>> apply and removal are not supported during the same boot cycle.  Thus
+>>>>> non-overlay dynamic modifications are not reflected in the value of
+>>>>> tree_version.
+>>>>
+>>>> I'd prefer to see some sort of information on overlays exported and user
+>>>> space can check if that changed. IIRC, Pantelis had a series to do that
+>>>> along with a kill switch to prevent further modifications. At least some
+>>>> of that series only had minor issues to fix.
+>>>
+>>> The kill switch addresses a different concern, which was from the security
+>>> community.  The kill switch is on my todo list.
 >>
->> +config ARM_QCOM_CPUFREQ_HW
->> +       bool "QCOM CPUFreq HW driver"
+>> Yes, but there could be other uses. It's not a big step from wanting
+>> to know if the DT has changed to wanting to control it changing or
+>> not.
+>>
+>> Perhaps the kill switch needs 2 levels: a temporary freeze and a
+>> permanent freeze. In any case, they don't seem completely unrelated
+>> and I don't really want to see userspace ABI added bit by bit.
 > 
-> Is there any reason this can't be a module?
+> I can add a kill switch patch.
+
+The point behind the kill switch is to allow a way to disable modification
+of the devicetree from userspace via an overlay manager.  Since there is
+no userspace overlay manager, there is no need for a kill switch.  The
+kill switch (or equivalent functionality) should be added as part of
+adding the overlay manager, when that occurs.
+
+Addressing adding userspace ABI bit by bit, any discussion of what the userspace
+overlay manager interface will look like is purely conjecture.  I do not want
+to wait till the overlay manager to be added before the current problem of
+user space synchronization is addressed.
+
+
+>>> I don't remember exactly what info the overlay information export patch
+>>> provided.  I'll have to go find it and re-read it.
+>>>
+>>>
+>>>> Also, shouldn't we get uevents if the tree changes? Maybe that's not
+>>>
+>>> Yes (off the top of my head).  But a shell script accessing /proc/device-tree
+>>> is not going to get uevents.
+>>
+>> No, but userspace can get them. Accessible from a shell script is not
+>> a requirement of kernel interfaces.
 > 
-
-We do not have any use cases where we need to support it as module.
-
->> +       depends on ARCH_QCOM || COMPILE_TEST
->> +       help
->> +         Support for the CPUFreq HW driver.
->> +         Some QCOM chipsets have a HW engine to offload the steps
->> +         necessary for changing the frequency of the CPUs. Firmware loaded
->> +         in this engine exposes a programming interface to the OS.
->> +         The driver implements the cpufreq interface for this HW engine.
->> +         Say Y if you want to support CPUFreq HW.
->> +
->>   config ARM_S3C_CPUFREQ
->>          bool
->>          help
->> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
->> new file mode 100644
->> index 0000000..fe1c264
->> --- /dev/null
->> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
->> @@ -0,0 +1,354 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#include <linux/cpufreq.h>
->> +#include <linux/init.h>
->> +#include <linux/kernel.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_platform.h>
->> +
->> +#define LUT_MAX_ENTRIES                        40U
->> +#define CORE_COUNT_VAL(val)            (((val) & (GENMASK(18, 16))) >> 16)
->> +#define LUT_ROW_SIZE                   32
->> +#define CLK_HW_DIV                     2
->> +
->> +enum {
->> +       REG_ENABLE,
->> +       REG_LUT_TABLE,
->> +       REG_PERF_STATE,
->> +
->> +       REG_ARRAY_SIZE,
->> +};
->> +
->> +struct cpufreq_qcom {
->> +       struct cpufreq_frequency_table *table;
->> +       void __iomem *reg_bases[REG_ARRAY_SIZE];
->> +       cpumask_t related_cpus;
->> +       unsigned int max_cores;
->> +       unsigned long xo_rate;
->> +       unsigned long cpu_hw_rate;
->> +};
->> +
->> +static const u16 cpufreq_qcom_std_offsets[REG_ARRAY_SIZE] = {
+> OK for now.  I haven't thought that concept through, but it is not key to
+> whether this feature is useful.  The same functionality is also needed
+> by programs.
 > 
-> Is this going to change in the future?
+> I'll have to dig into the uevent implementation and architecture to see
+> whether uevents are a possible solution.  This patch can wait for me to
+> finish this.
+
+Getting a uevent does not provide the information needed to ensure that
+the devicetree is in a consistent state over a set of accesses to
+/proc/device-tree (that is, a "critical section").
+
+
 > 
+> If the current patch ends up being the best method, I still need to
+> re-work to add memory barriers (or somehow convince myself that they
+> are not needed).
 
-Yes, they could change and that was the reason to introduce the offsets. 
-This was discussed earlier too with Sudeep and was to add them.
+In the current version of the patch, I was reluctant to provide the
+synchronization via a lock in the sysfs show function because I did
+not find any documentation or discussion that assured me that a lock
+was legal in that context.  I have since asked Greg KH if using a
+lock for synchronization in the show function is ok and he assured
+me that it is.  Based on that, I have a new version of the patch that
+is conceptually cleaner, easier to understand, and easier to use.
 
->> +       [REG_ENABLE]            = 0x0,
->> +       [REG_LUT_TABLE]         = 0x110,
->> +       [REG_PERF_STATE]        = 0x920,
->> +};
->> +
->> +static struct cpufreq_qcom *qcom_freq_domain_map[NR_CPUS];
->> +
->> +static int
->> +qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
->> +                            unsigned int index)
->> +{
->> +       struct cpufreq_qcom *c = policy->driver_data;
->> +
->> +       writel_relaxed(index, c->reg_bases[REG_PERF_STATE]);
+-Frank
+
 > 
-> Why can't we avoid the indirection here and store the perf_state pointer
-> in probe? Then we don't have to indirect through a table to perform the
-> register write.
+> -Frank
 > 
-
-As the offsets could change and that was the reason to add this.
-
->> +
->> +       return 0;
->> +}
->> +
-> [..]
->> +static int qcom_resources_init(struct platform_device *pdev)
->> +{
->> +       struct device_node *cpu_np;
->> +       struct of_phandle_args args;
->> +       struct clk *clk;
->> +       unsigned int cpu;
->> +       unsigned long xo_rate, cpu_hw_rate;
->> +       int ret;
->> +
->> +       clk = clk_get(&pdev->dev, "xo");
->> +       if (IS_ERR(clk))
->> +               return PTR_ERR(clk);
->> +
->> +       xo_rate = clk_get_rate(clk);
->> +
->> +       clk_put(clk);
->> +
->> +       clk = clk_get(&pdev->dev, "cpu_clk");
 > 
-> Sad that the name is cpu_clk, instead of something like 'backup' or
-> whatever the name really is in hardware.
+>>
+>> Rob
+>>
 > 
-
-Sure, would update it.
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+> 
