@@ -1,83 +1,66 @@
-From: Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v4 3/3] arm64: dts: sdm845: Add display nodes to
- MTP dts
-Date: Fri,  2 Nov 2018 15:26:16 -0700
-Message-ID: <1541197576-19730-4-git-send-email-jsanka@codeaurora.org>
-References: <1541197576-19730-1-git-send-email-jsanka@codeaurora.org>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: [PATCH] arm64: dts: msm8916: remove bogus argument to the cpu clock
+Date: Sat,  3 Nov 2018 01:57:34 +0100
+Message-ID: <20181103005734.15545-1-niklas.cassel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1541197576-19730-1-git-send-email-jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: bjorn.andersson@linaro.org, Niklas Cassel <niklas.cassel@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIG1kc3MsIGRzaSwgZHNpX3BoeSwgZHNpIHBpbmN0cmwgIGFuZCB0cnVseSBudDM1NTk3IHBh
-bmVsIG5vZGVzIHRvCnNkbTg0NSBNVFAgYm9hcmQgZHRzaS4KCkNoYW5nZXMgaW4gdjQ6CgktIHBh
-dGNoIGludHJvZHVjZWQgaW4gdGhlIHNlcmllcwoJLSBtb3ZlIGFyb3VuZCBhZGRlZCBub2RlcyB0
-byBwcmVzZXJ2ZSBhbHBoYWJldGljYWwgb3JkZXIgKERvdWcgQW5kZXJzb24pCgpTaWduZWQtb2Zm
-LWJ5OiBKZXlrdW1hciBTYW5rYXJhbiA8anNhbmthQGNvZGVhdXJvcmEub3JnPgotLS0KIGFyY2gv
-YXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUtbXRwLmR0cyB8IDEyNCArKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDEyNCBpbnNlcnRpb25zKCspCgpkaWZm
-IC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS1tdHAuZHRzIGIvYXJjaC9h
-cm02NC9ib290L2R0cy9xY29tL3NkbTg0NS1tdHAuZHRzCmluZGV4IGVlZGZhZjguLmViMmEwNWIg
-MTAwNjQ0Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUtbXRwLmR0cworKysg
-Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LW10cC5kdHMKQEAgLTcsNiArNyw3IEBA
-CiAKIC9kdHMtdjEvOwogCisjaW5jbHVkZSA8ZHQtYmluZGluZ3MvZ3Bpby9ncGlvLmg+CiAjaW5j
-bHVkZSA8ZHQtYmluZGluZ3MvcmVndWxhdG9yL3Fjb20scnBtaC1yZWd1bGF0b3IuaD4KICNpbmNs
-dWRlICJzZG04NDUuZHRzaSIKIApAQCAtMzQzLDExICszNDQsMTE4IEBACiAJfTsKIH07CiAKKyZk
-c2kwIHsKKwlzdGF0dXMgPSAib2theSI7CisJcWNvbSxkdWFsLWRzaS1tb2RlOworCXFjb20sbWFz
-dGVyLWRzaTsKKwlxY29tLHN5bmMtZHVhbC1kc2k7CisKKwl2ZGRhLXN1cHBseSA9IDwmdmRkYV9t
-aXBpX2RzaTBfMXAyPjsKKworCXBhbmVsQDAgeworCQljb21wYXRpYmxlID0gInRydWx5LG50MzU1
-OTctMkstZGlzcGxheSI7CisJCXJlZyA9IDwwPjsKKworCQl2ZGRhLXN1cHBseSA9IDwmdnJlZ19s
-MTRhXzFwODg+OworCQl2ZGlzcHAtc3VwcGx5ID0gPCZsYWJfcmVndWxhdG9yPjsKKwkJdmRpc3Bu
-LXN1cHBseSA9IDwmaWJiX3JlZ3VsYXRvcj47CisKKwkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0
-IiwgInN1c3BlbmQiOworCQlwaW5jdHJsLTAgPSA8JmRwdV9kc2lfYWN0aXZlPjsKKwkJcGluY3Ry
-bC0xID0gPCZkcHVfZHNpX3N1c3BlbmQ+OworCisJCXJlc2V0LWdwaW9zID0gPCZ0bG1tIDYgR1BJ
-T19BQ1RJVkVfSElHSD47CisJCW1vZGUtZ3Bpb3MgPSA8JnRsbW0gNTIgR1BJT19BQ1RJVkVfSElH
-SD47CisKKwkJZGlzcGxheS10aW1pbmdzIHsKKwkJCXRpbWluZzA6IHRpbWluZy0wIHsKKwkJCQkv
-KiBvcmlnaW5hbGx5CisJCQkJICogMjY4MzE2MTYwIE1oeiwKKwkJCQkgKiBidXQgdmFsdWUgYmVs
-b3cgZml0cworCQkJCSAqIGJldHRlciB3LyBkb3duc3RyZWFtCisJCQkJICovCisJCQkJY2xvY2st
-ZnJlcXVlbmN5ID0gPDI2ODMxNjEzOD47CisJCQkJaGFjdGl2ZSA9IDwxNDQwPjsKKwkJCQl2YWN0
-aXZlID0gPDI1NjA+OworCQkJCWhmcm9udC1wb3JjaCA9IDwyMDA+OworCQkJCWhiYWNrLXBvcmNo
-ID0gPDY0PjsKKwkJCQloc3luYy1sZW4gPSA8MzI+OworCQkJCXZmcm9udC1wb3JjaCA9IDw4PjsK
-KwkJCQl2YmFjay1wb3JjaCA9IDw3PjsKKwkJCQl2c3luYy1sZW4gPSA8MT47CisJCQl9OworCQl9
-OworCisJCXBvcnRzIHsKKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJI3NpemUtY2VsbHMg
-PSA8MD47CisJCQlwb3J0QDAgeworCQkJCXJlZyA9IDwwPjsKKwkJCQlwYW5lbDBfaW46IGVuZHBv
-aW50IHsKKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkc2kwX291dD47CisJCQkJfTsKKwkJCX07
-CisKKwkJCXBvcnRAMSB7CisJCQkJcmVnID0gPDE+OworCQkJCXBhbmVsMV9pbjogZW5kcG9pbnQg
-eworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaTFfb3V0PjsKKwkJCQl9OworCQkJfTsKKwkJ
-fTsKKwl9OworCisJcG9ydHMgeworCQlwb3J0QDEgeworCQkJZW5kcG9pbnQgeworCQkJCXJlbW90
-ZS1lbmRwb2ludCA9IDwmcGFuZWwwX2luPjsKKwkJCQlkYXRhLWxhbmVzID0gPDAgMSAyIDM+Owor
-CQkJfTsKKwkJfTsKKwl9OworfTsKKworJmRzaTBfcGh5IHsKKwlzdGF0dXMgPSAib2theSI7CisJ
-dmRkcy1zdXBwbHkgPSA8JnZkZGFfbWlwaV9kc2kwX3BsbD47Cit9OworCismZHNpMSB7CisJc3Rh
-dHVzID0gIm9rYXkiOworCisJcWNvbSxkdWFsLWRzaS1tb2RlOworCXFjb20sc3luYy1kdWFsLWRz
-aTsKKworCXZkZGEtc3VwcGx5ID0gPCZ2ZGRhX21pcGlfZHNpMV8xcDI+OworCisJcG9ydHMgewor
-CQlwb3J0QDEgeworCQkJZW5kcG9pbnQgeworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmcGFuZWwx
-X2luPjsKKwkJCQlkYXRhLWxhbmVzID0gPDAgMSAyIDM+OworCQkJfTsKKwkJfTsKKwl9OworfTsK
-KworJmRzaTFfcGh5IHsKKwlzdGF0dXMgPSAib2theSI7CisJdmRkcy1zdXBwbHkgPSA8JnZkZGFf
-bWlwaV9kc2kxX3BsbD47Cit9OworCiAmaTJjMTAgewogCXN0YXR1cyA9ICJva2F5IjsKIAljbG9j
-ay1mcmVxdWVuY3kgPSA8NDAwMDAwPjsKIH07CiAKKyZtZHNzIHsKKwlzdGF0dXMgPSAib2theSI7
-Cit9OworCismbWRzc19tZHAgeworCXN0YXR1cyA9ICJva2F5IjsKK307CisKICZxdXB2M19pZF8x
-IHsKIAlzdGF0dXMgPSAib2theSI7CiB9OwpAQCAtNDE5LDYgKzUyNywyMiBAQAogCiAvKiBQSU5D
-VFJMIC0gYWRkaXRpb25zIHRvIG5vZGVzIGRlZmluZWQgaW4gc2RtODQ1LmR0c2kgKi8KIAorJmRw
-dV9kc2lfYWN0aXZlIHsKKwlwaW5jb25mIHsKKwkJcGlucyA9ICJncGlvNiIsICJncGlvNTIiOwor
-CQlkcml2ZS1zdHJlbmd0aCA9IDw4PjsKKwkJYmlhcy1kaXNhYmxlOworCX07Cit9OworCismZHB1
-X2RzaV9zdXNwZW5kIHsKKwlwaW5jb25mIHsKKwkJcGlucyA9ICJncGlvNiIsICJncGlvNTIiOwor
-CQlkcml2ZS1zdHJlbmd0aCA9IDwyPjsKKwkJYmlhcy1wdWxsLWRvd247CisJfTsKK307CisKICZx
-dXBfaTJjMTBfZGVmYXVsdCB7CiAJcGluY29uZiB7CiAJCXBpbnMgPSAiZ3BpbzU1IiwgImdwaW81
-NiI7Ci0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIg
-b2YgdGhlIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2
-ZSBQcm9qZWN0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+The apcs node has #clock-cells = <0>, which means that those who
+references it should specify 0 arguments.
+
+The apcs reference in the cpu node incorrectly specifies an argument,
+remove this bogus argument.
+
+Fixes: 65afdf458360 ("arm64: dts: qcom: msm8916: Add CPU frequency scaling support")
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index d302d8d639a1..e4bfd47178b1 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -111,7 +111,7 @@
+ 			next-level-cache = <&L2_0>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SPC>;
+-			clocks = <&apcs 0>;
++			clocks = <&apcs>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>;
+ 		};
+@@ -123,7 +123,7 @@
+ 			next-level-cache = <&L2_0>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SPC>;
+-			clocks = <&apcs 0>;
++			clocks = <&apcs>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>;
+ 		};
+@@ -135,7 +135,7 @@
+ 			next-level-cache = <&L2_0>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SPC>;
+-			clocks = <&apcs 0>;
++			clocks = <&apcs>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>;
+ 		};
+@@ -147,7 +147,7 @@
+ 			next-level-cache = <&L2_0>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SPC>;
+-			clocks = <&apcs 0>;
++			clocks = <&apcs>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>;
+ 		};
+-- 
+2.19.1
