@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH 07/10] drm/sun4i: sun6i_mipi_dsi: Enable burst
- mode HBP, HSA_HSE
-Date: Sat,  3 Nov 2018 15:38:57 +0530
-Message-ID: <20181103100900.30313-8-jagan@amarulasolutions.com>
+Subject: [PATCH 08/10] dt-bindings: panel: Add Feiyang
+ FY07024DI26A30-D MIPI-DSI LCD panel
+Date: Sat,  3 Nov 2018 15:38:58 +0530
+Message-ID: <20181103100900.30313-9-jagan@amarulasolutions.com>
 References: <20181103100900.30313-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBBPI6XPAKGQEMTR5G7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBDPI6XPAKGQEJQGEY4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181103100900.30313-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,47 +20,41 @@ To: Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Horizontal back porch, sync active and sync end bits are
-needed to enable for burst mode panel operations.
+Feiyang FY07024DI26A30-D is 1024x600, 4-lane MIPI-DSI LCD panel.
 
-So, enable them via dsi base control register.
+Add dt-bingings for it.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ .../display/panel/feiyang,fy07024di26a30d.txt | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
 
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 2d34e5f48d29..feb8c54c5146 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -518,6 +518,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
- 	u16 hbp, hfp_pkt_overhead, hfp, hsa, hblk, vblk;
- 	size_t bytes;
- 	u8 *buffer;
-+	u32 val = 0;
- 
- 	/* Do all timing calculations up front to allocate buffer space */
- 
-@@ -527,6 +528,10 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
- 		hblk = mode->hdisplay * Bpp;
- 		hfp = 0;
- 		vblk = 0;
+diff --git a/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt b/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
+new file mode 100644
+index 000000000000..82caa7b65ae8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
+@@ -0,0 +1,20 @@
++Feiyang FY07024DI26A30-D 7" MIPI-DSI LCD Panel
 +
-+		regmap_read(dsi->regs, SUN6I_DSI_BASIC_CTL_REG, &val);
-+		val |= SUN6I_DSI_BASIC_CTL_HBP_DIS;
-+		val |= SUN6I_DSI_BASIC_CTL_HSA_HSE_DIS;
- 	} else {
- 		/*
- 		 * A sync period is composed of a blanking packet (4 bytes +
-@@ -594,7 +599,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
- 	if (WARN_ON(!buffer))
- 		return;
- 
--	regmap_write(dsi->regs, SUN6I_DSI_BASIC_CTL_REG, 0);
-+	regmap_write(dsi->regs, SUN6I_DSI_BASIC_CTL_REG, val);
- 
- 	regmap_write(dsi->regs, SUN6I_DSI_SYNC_HSS_REG,
- 		     sun6i_dsi_build_sync_pkt(MIPI_DSI_H_SYNC_START,
++Required properties:
++- compatible: must be "feiyang,fy07024di26a30d"
++- reg: DSI virtual channel used by that screen
++- avdd-supply: analog regulator dc1 switch
++- dvdd-supply: 3v3 digital regulator
++- reset-gpios: a GPIO phandle for the reset pin
++
++Optional properties:
++- backlight: phandle for the backlight control.
++
++panel@0 {
++	compatible = "feiyang,fy07024di26a30d";
++	reg = <0>;
++	avdd-supply = <&reg_dc1sw>;
++	dvdd-supply = <&reg_dldo2>;
++	reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
++	backlight = <&backlight>;
++};
 -- 
 2.18.0.321.gffc6fa0e3
