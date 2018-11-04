@@ -1,72 +1,70 @@
-From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v3 17/28] drm/sun4i: dw-hdmi: Add quirk for
- setting TMDS clock
-Date: Sun,  4 Nov 2018 19:26:54 +0100
-Message-ID: <20181104182705.18047-18-jernej.skrabec@siol.net>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [PATCH v3 18/28] dt-bindings: display: sunxi: add DT binding for Allwinner H6 DW HDMI
+Date: Sun,  4 Nov 2018 19:26:55 +0100
+Message-ID: <20181104182705.18047-19-jernej.skrabec@siol.net>
 References: <20181104182705.18047-1-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBRHU7TPAKGQEK6IYZEI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181104182705.18047-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181104182705.18047-1-jernej.skrabec@siol.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: maxime.ripard@bootlin.com, wens@csie.org
+Cc: robh+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, airlied@linux.ie, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, jernej.skrabec@siol.net, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-It turns out that H6 HDMI BSP kernel driver doesn't change TMDS rate at
-all. At this point it is not clear whether it is just not necessary or
-it would cause some kind of issues.
+From: Icenowy Zheng <icenowy@aosc.io>
 
-Add a quirk for it.
+The Allwinner H6 SoC uses a v2.12a DesignWare HDMI controller, with
+dedicated CEC and HDCP clocks added; the PHY connected is a standard
+DesignWare HDMI PHY.
 
-Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Add binding for it.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+[added HDCP clock and reset]
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 ---
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 4 +++-
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h | 1 +
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/display/sunxi/sun4i-drm.txt   | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-index ec122136ee9d..99b878e380e1 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-@@ -21,7 +21,8 @@ static void sun8i_dw_hdmi_encoder_mode_set(struct drm_encoder *encoder,
- {
- 	struct sun8i_dw_hdmi *hdmi = encoder_to_sun8i_dw_hdmi(encoder);
- 
--	clk_set_rate(hdmi->clk_tmds, mode->crtc_clock * 1000);
-+	if (hdmi->quirks->set_rate)
-+		clk_set_rate(hdmi->clk_tmds, mode->crtc_clock * 1000);
- }
- 
- static const struct drm_encoder_helper_funcs
-@@ -235,6 +236,7 @@ static int sun8i_dw_hdmi_remove(struct platform_device *pdev)
- 
- static const struct sun8i_dw_hdmi_quirks sun8i_a83t_quirks = {
- 	.mode_valid = sun8i_dw_hdmi_mode_valid_a83t,
-+	.set_rate = true,
- };
- 
- static const struct of_device_id sun8i_dw_hdmi_dt_ids[] = {
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-index a645b8bc9f58..49c9e80c46ea 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-@@ -173,6 +173,7 @@ struct sun8i_hdmi_phy {
- struct sun8i_dw_hdmi_quirks {
- 	enum drm_mode_status (*mode_valid)(struct drm_connector *connector,
- 					   const struct drm_display_mode *mode);
-+	unsigned int set_rate : 1;
- };
- 
- struct sun8i_dw_hdmi {
--- 
+diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.tx=
+t b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+index 62c83b351344..478b288eebd9 100644
+--- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
++++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+@@ -79,6 +79,7 @@ Required properties:
+   - compatible: value must be one of:
+     * "allwinner,sun8i-a83t-dw-hdmi"
+     * "allwinner,sun50i-a64-dw-hdmi", "allwinner,sun8i-a83t-dw-hdmi"
++    * "allwinner,sun50i-h6-dw-hdmi"
+   - reg: base address and size of memory-mapped region
+   - reg-io-width: See dw_hdmi.txt. Shall be 1.
+   - interrupts: HDMI interrupt number
+@@ -86,9 +87,14 @@ Required properties:
+     * iahb: the HDMI bus clock
+     * isfr: the HDMI register clock
+     * tmds: TMDS clock
++    * cec: HDMI CEC clock (H6 only)
++    * hdcp: HDCP clock (H6 only)
++    * hdcp-bus: HDCP bus clock (H6 only)
+   - clock-names: the clock names mentioned above
+-  - resets: phandle to the reset controller
+-  - reset-names: must be "ctrl"
++  - resets:
++    * ctrl: HDMI controller reset
++    * hdcp: HDCP reset (H6 only)
++  - reset-names: reset names mentioned above
+   - phys: phandle to the DWC HDMI PHY
+   - phy-names: must be "phy"
+=20
+@@ -109,6 +115,7 @@ Required properties:
+     * allwinner,sun8i-h3-hdmi-phy
+     * allwinner,sun8i-r40-hdmi-phy
+     * allwinner,sun50i-a64-hdmi-phy
++    * allwinner,sun50i-h6-hdmi-phy
+   - reg: base address and size of memory-mapped region
+   - clocks: phandles to the clocks feeding the HDMI PHY
+     * bus: the HDMI PHY interface clock
+--=20
 2.19.1
