@@ -1,400 +1,72 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Subject: Re: [PATCH v7 4/5] clocksource: add driver for i.MX EPIT timer
-Date: Sun, 4 Nov 2018 17:07:37 +0100
-Message-ID: <CAJiuCcftA0EmmXueNw60ScLZMuxJVUSaZji0KFfSWAdgnR2OXw@mail.gmail.com>
-References: <20180611155001.3506-1-peron.clem@gmail.com> <20180611155001.3506-5-peron.clem@gmail.com>
- <27e8d6f0-b415-f31e-ae89-0b35397d0cf2@linaro.org>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 01/10] drm/sun4i: sun6i_mipi_dsi: Compute
+ burst mode loop N1 instruction delay
+Date: Sun, 4 Nov 2018 22:15:12 +0530
+Message-ID: <CAMty3ZBGR9bgoN2cidcFMhCTinOcGP11332CgCvi_UhvQBOQjw@mail.gmail.com>
+References: <20181103100900.30313-1-jagan@amarulasolutions.com>
+ <20181103100900.30313-2-jagan@amarulasolutions.com> <8365df14-3397-b395-48eb-3070da3b65fc@orpaltech.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <27e8d6f0-b415-f31e-ae89-0b35397d0cf2@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, Thomas Gleixner <tglx@linutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBJOE7TPAKGQEFD2HKZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <8365df14-3397-b395-48eb-3070da3b65fc-RHPENKW2UW+1Z/+hSey0Gg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Sergey Suloev <ssuloev-RHPENKW2UW+1Z/+hSey0Gg@public.gmane.org>
+Cc: Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, TL Lim <tllim-F7SikzrIcFYdnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
-
-Thanks for the review and sorry for the delay.
-
-On Tue, 10 Jul 2018 at 18:20, Daniel Lezcano <daniel.lezcano@linaro.org> wr=
-ote:
+On Sat, Nov 3, 2018 at 8:53 PM Sergey Suloev <ssuloev-RHPENKW2UW+1Z/+hSey0Gg@public.gmane.org> wrote:
 >
-> On 11/06/2018 17:50, Cl=C3=A9ment P=C3=A9ron wrote:
-> > From: Colin Didier <colin.didier@devialet.com>
+> Hi, Jagan,
+>
+> On 11/3/18 1:08 PM, Jagan Teki wrote:
+> > Loop N1 instruction delay for burst mode lcd panel are
+> > computed as per BSP code.
 > >
-> > Add driver for NXP's EPIT timer used in i.MX SoC.
->
-> Give a description on how works this timer.
-Ok,
-
->
->
-> > Signed-off-by: Colin Didier <colin.didier@devialet.com>
-> > Signed-off-by: Cl=C3=A9ment Peron <clement.peron@devialet.com>
-> > Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
-> > Tested-by: Vladimir Zapolskiy <vz@mleia.com>
+> > Reference code is available in BSP
+> > (in drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
+> > dsi_dev[sel]->dsi_inst_loop_num.bits.loop_n1=
+> > (panel->lcd_ht-panel->lcd_x)*(150)/(panel->lcd_dclk_freq*8) - 50;
+> > => (((mode->htotal - mode->hdisplay) * 150) / ((mode->clock / 1000) * 8)) - 50;
+> >
+> > So use the similar computation for loop N1 delay.
+> >
+> > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 > > ---
-> >  drivers/clocksource/Kconfig          |  11 ++
-> >  drivers/clocksource/Makefile         |   1 +
-> >  drivers/clocksource/timer-imx-epit.c | 265 +++++++++++++++++++++++++++
-> >  3 files changed, 277 insertions(+)
-> >  create mode 100644 drivers/clocksource/timer-imx-epit.c
+> >   drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 9 ++++++++-
+> >   1 file changed, 8 insertions(+), 1 deletion(-)
 > >
-> > diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> > index 8e8a09755d10..790478afd02c 100644
-> > --- a/drivers/clocksource/Kconfig
-> > +++ b/drivers/clocksource/Kconfig
-> > @@ -576,6 +576,17 @@ config H8300_TPU
-> >         This enables the clocksource for the H8300 platform with the
-> >         H8S2678 cpu.
+> > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > index 86430efd9054..da152c21ec62 100644
+> > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > @@ -394,7 +394,14 @@ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
+> >   static void sun6i_dsi_setup_inst_loop(struct sun6i_dsi *dsi,
+> >                                     struct drm_display_mode *mode)
+> >   {
+> > -     u16 delay = 50 - 1;
+> > +     struct mipi_dsi_device *device = dsi->device;
+> > +     u16 delay;
+> > +
+> > +     if (device->mode_flags == MIPI_DSI_MODE_VIDEO_BURST)
+> > +             delay = (((mode->htotal - mode->hdisplay) * 150) /
+> > +                     ((mode->clock / 1000) * 8)) - 50;
+> > +     else
+> > +             delay = 50 - 1;
 > >
-> > +config CLKSRC_IMX_EPIT
-> > +     bool "Clocksource using i.MX EPIT"
-> > +     depends on CLKDEV_LOOKUP && (ARCH_MXC || COMPILE_TEST)
-> > +     select CLKSRC_MMIO
-> > +     help
-> > +       This enables EPIT support available on some i.MX platforms.
-> > +       Normally you don't have a reason to do so as the EPIT has
-> > +       the same features and uses the same clocks as the GPT.
-> > +       Anyway, on some systems the GPT may be in use for other
-> > +       purposes.
-> > +
-> >  config CLKSRC_IMX_GPT
-> >       bool "Clocksource using i.MX GPT" if COMPILE_TEST
-> >       depends on ARM && CLKDEV_LOOKUP
-> > diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefil=
-e
-> > index 00caf37e52f9..d9426f69ec69 100644
-> > --- a/drivers/clocksource/Makefile
-> > +++ b/drivers/clocksource/Makefile
-> > @@ -69,6 +69,7 @@ obj-$(CONFIG_INTEGRATOR_AP_TIMER)   +=3D timer-integr=
-ator-ap.o
-> >  obj-$(CONFIG_CLKSRC_VERSATILE)               +=3D versatile.o
-> >  obj-$(CONFIG_CLKSRC_MIPS_GIC)                +=3D mips-gic-timer.o
-> >  obj-$(CONFIG_CLKSRC_TANGO_XTAL)              +=3D tango_xtal.o
-> > +obj-$(CONFIG_CLKSRC_IMX_EPIT)                +=3D timer-imx-epit.o
-> >  obj-$(CONFIG_CLKSRC_IMX_GPT)         +=3D timer-imx-gpt.o
-> >  obj-$(CONFIG_CLKSRC_IMX_TPM)         +=3D timer-imx-tpm.o
-> >  obj-$(CONFIG_ASM9260_TIMER)          +=3D asm9260_timer.o
-> > diff --git a/drivers/clocksource/timer-imx-epit.c b/drivers/clocksource=
-/timer-imx-epit.c
-> > new file mode 100644
-> > index 000000000000..7f1c8e2e00aa
-> > --- /dev/null
-> > +++ b/drivers/clocksource/timer-imx-epit.c
-> > @@ -0,0 +1,265 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * i.MX EPIT Timer
-> > + *
-> > + * Copyright (C) 2010 Sascha Hauer <s.hauer@pengutronix.de>
-> > + * Copyright (C) 2018 Colin Didier <colin.didier@devialet.com>
-> > + * Copyright (C) 2018 Cl=C3=A9ment P=C3=A9ron <clement.peron@devialet.=
-com>
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/clockchips.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/sched_clock.h>
-> > +#include <linux/slab.h>
-> > +
-> > +#define EPITCR                               0x00
-> > +#define EPITSR                               0x04
-> > +#define EPITLR                               0x08
-> > +#define EPITCMPR                     0x0c
-> > +#define EPITCNR                              0x10
-> > +
-> > +#define EPITCR_EN                    BIT(0)
-> > +#define EPITCR_ENMOD                 BIT(1)
-> > +#define EPITCR_OCIEN                 BIT(2)
-> > +#define EPITCR_RLD                   BIT(3)
-> > +#define EPITCR_PRESC(x)                      (((x) & 0xfff) << 4)
-> > +#define EPITCR_SWR                   BIT(16)
-> > +#define EPITCR_IOVW                  BIT(17)
-> > +#define EPITCR_DBGEN                 BIT(18)
-> > +#define EPITCR_WAITEN                        BIT(19)
-> > +#define EPITCR_RES                   BIT(20)
-> > +#define EPITCR_STOPEN                        BIT(21)
-> > +#define EPITCR_OM_DISCON             (0 << 22)
-> > +#define EPITCR_OM_TOGGLE             (1 << 22)
-> > +#define EPITCR_OM_CLEAR                      (2 << 22)
-> > +#define EPITCR_OM_SET                        (3 << 22)
-> > +#define EPITCR_CLKSRC_OFF            (0 << 24)
-> > +#define EPITCR_CLKSRC_PERIPHERAL     (1 << 24)
-> > +#define EPITCR_CLKSRC_REF_HIGH               (2 << 24)
-> > +#define EPITCR_CLKSRC_REF_LOW                (3 << 24)
-> > +
-> > +#define EPITSR_OCIF                  BIT(0)
-> > +
-> > +struct epit_timer {
-> > +     void __iomem *base;
-> > +     int irq;
-> > +     struct clk *clk;
-> > +     struct clock_event_device ced;
-> > +     struct irqaction act;
-> > +};
-> > +
-> > +static void __iomem *sched_clock_reg;
-> > +
-> > +static inline struct epit_timer *to_epit_timer(struct clock_event_devi=
-ce *ced)
-> > +{
-> > +     return container_of(ced, struct epit_timer, ced);
-> > +}
-> > +
-> > +static inline void epit_irq_disable(struct epit_timer *epittm)
-> > +{
-> > +     u32 val;
-> > +
-> > +     val =3D readl_relaxed(epittm->base + EPITCR);
-> > +     writel_relaxed(val & ~EPITCR_OCIEN, epittm->base + EPITCR);
-> > +}
-> > +
-> > +static inline void epit_irq_enable(struct epit_timer *epittm)
-> > +{
-> > +     u32 val;
-> > +
-> > +     val =3D readl_relaxed(epittm->base + EPITCR);
-> > +     writel_relaxed(val | EPITCR_OCIEN, epittm->base + EPITCR);
-> > +}
-> > +
-> > +static void epit_irq_acknowledge(struct epit_timer *epittm)
-> > +{
-> > +     writel_relaxed(EPITSR_OCIF, epittm->base + EPITSR);
-> > +}
-> > +
-> > +static u64 notrace epit_read_sched_clock(void)
-> > +{
-> > +     return ~readl_relaxed(sched_clock_reg);
-> > +}
-> > +
-> > +static int epit_set_next_event(unsigned long cycles,
-> > +                            struct clock_event_device *ced)
-> > +{
-> > +     struct epit_timer *epittm =3D to_epit_timer(ced);
-> > +     unsigned long tcmp;
-> > +
-> > +     tcmp =3D readl_relaxed(epittm->base + EPITCNR) - cycles;
-> > +     writel_relaxed(tcmp, epittm->base + EPITCMPR);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +/* Left event sources disabled, no more interrupts appear */
-> > +static int epit_shutdown(struct clock_event_device *ced)
-> > +{
-> > +     struct epit_timer *epittm =3D to_epit_timer(ced);
-> > +     unsigned long flags;
-> > +
-> > +     /*
-> > +      * The timer interrupt generation is disabled at least
-> > +      * for enough time to call epit_set_next_event()
-> > +      */
-> > +     local_irq_save(flags);
+> >       regmap_write(dsi->regs, SUN6I_DSI_INST_LOOP_NUM_REG(0),
+> >                    SUN6I_DSI_INST_LOOP_NUM_N0(50 - 1) |
 >
-> This is not necessary. This function is called with interrupt disabled.
+>
+> is this patch series comes in addition to the previous MIPI DSI series
+> or in its stead?
 
-I took this from the i.MX GPT Timer :
-https://elixir.bootlin.com/linux/latest/source/drivers/clocksource/timer-im=
-x-gpt.c#L208
-
-Do you think i should also fix on the imx gpt timer ?
-
->
-> > +     /* Disable interrupt in EPIT module */
-> > +     epit_irq_disable(epittm);
-> > +
-> > +     /* Clear pending interrupt */
-> > +     epit_irq_acknowledge(epittm);
->
-> No irq ack is needed here. Neither disabling the interrupt.
-Is it done by the framework ?
-
-I took also this from the IMX GPT driver
-
->
-> Why not just stop the counter ?
-I will check the datasheet.
->
-> > +     local_irq_restore(flags);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int epit_set_oneshot(struct clock_event_device *ced)
-> > +{
-> > +     struct epit_timer *epittm =3D to_epit_timer(ced);
-> > +     unsigned long flags;
-> > +
-> > +     /*
-> > +      * The timer interrupt generation is disabled at least
-> > +      * for enough time to call epit_set_next_event()
-> > +      */
-> > +     local_irq_save(flags);
->
-> This is not necessary. This function is called with interrupt disabled.
->
-> > +     /* Disable interrupt in EPIT module */
-> > +     epit_irq_disable(epittm);
-> > +
-> > +     /* Clear pending interrupt, only while switching mode */
-> > +     if (!clockevent_state_oneshot(ced))
-> > +             epit_irq_acknowledge(epittm);
->
-> Why do you need to ack the interrupt here ?
->
-> > +     /*
-> > +      * Do not put overhead of interrupt enable/disable into
-> > +      * epit_set_next_event(), the core has about 4 minutes
-> > +      * to call epit_set_next_event() or shutdown clock after
-> > +      * mode switching
-> > +      */
-> > +     epit_irq_enable(epittm);
-> > +     local_irq_restore(flags);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static irqreturn_t epit_timer_interrupt(int irq, void *dev_id)
-> > +{
-> > +     struct clock_event_device *ced =3D dev_id;
-> > +     struct epit_timer *epittm =3D to_epit_timer(ced);
-> > +
-> > +     epit_irq_acknowledge(epittm);
-> > +
-> > +     ced->event_handler(ced);
-> > +
-> > +     return IRQ_HANDLED;
-> > +}
-> > +
-> > +static int __init epit_clocksource_init(struct epit_timer *epittm)
-> > +{
-> > +     unsigned int c =3D clk_get_rate(epittm->clk);
-> > +
-> > +     sched_clock_reg =3D epittm->base + EPITCNR;
-> > +     sched_clock_register(epit_read_sched_clock, 32, c);
-> > +
-> > +     return clocksource_mmio_init(epittm->base + EPITCNR, "epit", c, 2=
-00, 32,
-> > +                                  clocksource_mmio_readl_down);
-> > +}
-> > +
-> > +static int __init epit_clockevent_init(struct epit_timer *epittm)
-> > +{
-> > +     struct clock_event_device *ced =3D &epittm->ced;
-> > +     struct irqaction *act =3D &epittm->act;
-> > +
-> > +     ced->name =3D "epit";
-> > +     ced->features =3D CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_DYNIRQ;
-> > +     ced->set_state_shutdown =3D epit_shutdown;
-> > +     ced->tick_resume =3D epit_shutdown;
-> > +     ced->set_state_oneshot =3D epit_set_oneshot;
-> > +     ced->set_next_event =3D epit_set_next_event;
-> > +     ced->rating =3D 200;
-> > +     ced->cpumask =3D cpumask_of(0);
-> > +     ced->irq =3D epittm->irq;
-> > +     clockevents_config_and_register(ced, clk_get_rate(epittm->clk),
-> > +                                     0xff, 0xfffffffe);
-> > +
-> > +     act->name =3D "i.MX EPIT Timer Tick",
-> > +     act->flags =3D IRQF_TIMER | IRQF_IRQPOLL;
-> > +     act->handler =3D epit_timer_interrupt;
-> > +     act->dev_id =3D ced;
-> > +
-> > +     /* Make irqs happen */
-> > +     return setup_irq(epittm->irq, act);
-> > +}
-> > +
-> > +static int __init epit_timer_init(struct device_node *np)
-> > +{
-> > +     struct epit_timer *epittm;
-> > +     int ret;
-> > +
-> > +     epittm =3D kzalloc(sizeof(*epittm), GFP_KERNEL);
-> > +     if (!epittm)
-> > +             return -ENOMEM;
-> > +
-> > +     epittm->base =3D of_iomap(np, 0);
-> > +     if (!epittm->base) {
-> > +             ret =3D -ENXIO;
-> > +             goto out_kfree;
-> > +     }
-> > +
-> > +     epittm->irq =3D irq_of_parse_and_map(np, 0);
-> > +     if (!epittm->irq) {
-> > +             ret =3D -EINVAL;
-> > +             goto out_iounmap;
-> > +     }
-> > +
-> > +     /* Get EPIT clock */
-> > +     epittm->clk =3D of_clk_get(np, 0);
-> > +     if (IS_ERR(epittm->clk)) {
-> > +             pr_err("i.MX EPIT: unable to get clk\n");
-> > +             ret =3D PTR_ERR(epittm->clk);
-> > +             goto out_iounmap;
-> > +     }
-> > +
-> > +     ret =3D clk_prepare_enable(epittm->clk);
-> > +     if (ret) {
-> > +             pr_err("i.MX EPIT: unable to prepare+enable clk\n");
-> > +             goto out_iounmap;
-> > +     }
->
-> Please replace all the above with the timer-of API as:
-Ok I will,
-
-Thanks
-Clement
-
->
-> https://patchwork.kernel.org/patch/10510443/
->
->
-> > +     /* Initialise to a known state (all timers off, and timing reset)=
- */
-> > +     writel_relaxed(0x0, epittm->base + EPITCR);
-> > +     writel_relaxed(0xffffffff, epittm->base + EPITLR);
-> > +     writel_relaxed(EPITCR_EN | EPITCR_CLKSRC_REF_HIGH | EPITCR_WAITEN=
-,
-> > +                    epittm->base + EPITCR);
-> > +
-> > +     ret =3D epit_clocksource_init(epittm);
-> > +     if (ret) {
-> > +             pr_err("i.MX EPIT: failed to init clocksource\n");
-> > +             goto out_clk_disable;
-> > +     }
-> > +
-> > +     ret =3D epit_clockevent_init(epittm);
-> > +     if (ret) {
-> > +             pr_err("i.MX EPIT: failed to init clockevent\n");
-> > +             goto out_clk_disable;
-> > +     }
-> > +
-> > +     return 0;
-> > +
-> > +out_clk_disable:
-> > +     clk_disable_unprepare(epittm->clk);
-> > +out_iounmap:
-> > +     iounmap(epittm->base);
-> > +out_kfree:
-> > +     kfree(epittm);
-> > +
-> > +     return ret;
-> > +}
-> > +TIMER_OF_DECLARE(epit_timer, "fsl,imx31-epit", epit_timer_init);
-> >
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
+Yes, all changes were added on top of previous MIPI DSI series(ie what
+I mentioned in cover-letter) since it require clock patches from
+previous version.
