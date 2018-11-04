@@ -1,51 +1,80 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 4/4] ARM: dts: imx6sx: Add DISPLAY power domain support
-Date: Sun, 4 Nov 2018 11:54:55 +0800
-Message-ID: <20181104035453.GA6093@tiger>
-References: <cover.1539020938.git.leonard.crestez@nxp.com>
- <a3265a84052a7c11ae96e61e39adc988ca980d66.1539020938.git.leonard.crestez@nxp.com>
- <20181031061134.GB10386@tiger>
- <AM0PR04MB4290F31234D75AC7029F066FEECD0@AM0PR04MB4290.eurprd04.prod.outlook.com>
+Subject: Re: [PATCH v2 1/2] arm64: dts: Add support for NXP LS1028A SoC
+Date: Sun, 4 Nov 2018 12:19:34 +0800
+Message-ID: <20181104041931.GB6093@tiger>
+References: <1539760132-3386-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
+ <20181031071413.GI10386@tiger>
+ <AM6PR04MB4407CDF0EC1DE0442CF205508CCF0@AM6PR04MB4407.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <AM0PR04MB4290F31234D75AC7029F066FEECD0@AM0PR04MB4290.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Richard Zhu <hongxing.zhu@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Stefan Agner <stefan@agner.ch>, Marek Vasut <marex@denx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <AM6PR04MB4407CDF0EC1DE0442CF205508CCF0@AM6PR04MB4407.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudhanshu Gupta <sudhanshu.gupta@nxp.com>, Harninder Rai <harninder.rai@nxp.com>, Rajesh Bhagat <rajesh.bhagat@nxp.com>, Leo Li <leoyang.li@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 31, 2018 at 12:17:50PM +0000, Leonard Crestez wrote:
-> On 10/31/2018 8:12 AM, Shawn Guo wrote:
-> > On Mon, Oct 08, 2018 at 06:06:23PM +0000, Leonard Crestez wrote:
-> >> This was implemented in the driver but not actually defined and
-> >> referenced in dts. This makes it always on.
-> >>
-> >>  From reference manual in section "10.4.1.4.1 Power Distribution":
-> >>
-> >> "Display domain - The DISPLAY domain contains GIS, CSI, PXP, LCDIF,
-> >> PCIe, DCIC, and LDB. It is supplied by internal regulator."
-> >>
-> >> The current pd_pcie is actually only for PCIE_PHY, the PCIE ip block is
-> >> actually inside the DISPLAY domain. Handle this by adding the pcie node
-> >> in both power domains.
-> >>
-> >> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-> > 
-> > Applied, thanks.
+On Fri, Nov 02, 2018 at 09:51:49AM +0000, Bhaskar Upadhaya wrote:
 > 
-> As mentioned in the cover letter this requires multi-PD support in 
-> imx-pci to be implemented, specifically PATCH 3/4 of this series:
 > 
-> 	https://lore.kernel.org/patchwork/patch/996810/
+> >-----Original Message-----
+> >From: Shawn Guo <shawnguo@kernel.org>
+> >Sent: Wednesday, October 31, 2018 12:44 PM
+> >To: Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>
+> >Cc: devicetree@vger.kernel.org; Harninder Rai <harninder.rai@nxp.com>;
+> >Sudhanshu Gupta <sudhanshu.gupta@nxp.com>; Rajesh Bhagat
+> ><rajesh.bhagat@nxp.com>; linux-arm-kernel@lists.infradead.org; Leo Li
+> ><leoyang.li@nxp.com>
+> >Subject: Re: [PATCH v2 1/2] arm64: dts: Add support for NXP LS1028A SoC
+> >> +	compatible = "fsl,ls1028a";
+> >> +	interrupt-parent = <&gic>;
+> >> +	#address-cells = <2>;
+> >> +	#size-cells = <2>;
+> >> +
+> >> +	cpus {
+> >> +		#address-cells = <1>;
+> >> +		#size-cells = <0>;
+> >> +
+> >> +		cpu0: cpu@0 {
+> >> +			device_type = "cpu";
+> >> +			compatible = "arm,cortex-a72";
+> >> +			reg = <0x0>;
+> >> +			enable-method = "psci";
+> >> +			clocks = <&clockgen 1 0>;
+> >> +			next-level-cache = <&l2>;
+> >> +			cpu-idle-states = <&CPU_PH20>;
+> >> +		};
+> >> +
+> >> +		cpu1: cpu@1 {
+> >> +			device_type = "cpu";
+> >> +			compatible = "arm,cortex-a72";
+> >> +			reg = <0x1>;
+> >> +			enable-method = "psci";
+> >> +			clocks = <&clockgen 1 0>;
+> >> +			next-level-cache = <&l2>;
+> >> +			cpu-idle-states = <&CPU_PH20>;
+> >> +		};
+> >> +
+> >> +		l2: l2-cache {
+> >> +			compatible = "cache";
+> >> +		};
+> >
+> >Not sure what's the point of this node without any properties.
 > 
-> Unless that also gets merged soon via pci I expect issues in linux-next. 
-> The patch already has reviewed-by tags so "merging it soon" is not 
-> unreasonable.
+> Shawn, I looked into the NXP and non-NXP platforms, but all are creating cache nodes with "compatible" being the only property.
 
-Oops, I overlooked the notes in cover-letter.  Let's use the approach as
-suggested there - applying the dts change after all driver dependencies
-are landed.
+Okay, just noticed that the node is referred by next-level-cache
+property of cpu node.  So I guess this 'dummy' cache node is there only
+for architectural integrity/sanity check or something.
 
-Patch dropped, sorry.
+Shawn
