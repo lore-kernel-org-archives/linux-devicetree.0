@@ -1,33 +1,44 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] arm64: dts: sdm845-mtp: Reserve reserved gpios
-Date: Sun, 4 Nov 2018 16:56:48 +0100
-Message-ID: <CACRpkdaynN0hfHukkxd55VZj4a4qZY-GrTjVDjv8_N3dJ679-g@mail.gmail.com>
-References: <20181102214532.17661-1-bjorn.andersson@linaro.org>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH anybus v3 2/6] dt-bindings: Add vendor prefix for arcx /
+ Archronix
+Date: Sun, 4 Nov 2018 16:57:49 +0100
+Message-ID: <f97852ab-cba5-2f0f-f859-111ea4fda08b@suse.de>
+References: <20181104155501.14767-1-TheSven73@googlemail.com>
+ <20181104155501.14767-3-TheSven73@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181102214532.17661-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20181104155501.14767-3-TheSven73@googlemail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
+To: thesven73@gmail.com, svendev@arcx.com
+Cc: robh+dt@kernel.org, linus.walleij@linaro.org, lee.jones@linaro.org, mark.rutland@arm.com, treding@nvidia.com, david@lechnology.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, stuyoder@gmail.com, maxime.ripard@bootlin.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 2, 2018 at 10:42 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
+Am 04.11.18 um 16:54 schrieb thesven73@gmail.com:
+> From: Sven Van Asbroeck <svendev@arcx.com>
+> 
+> arcx Inc. is an engineering company which provides advanced
+> embedded systems and consulting services.
+> 
+> Archronix is a technology design and product engineering firm
+> specializing in hardware control systems and enabling software.
+> Clients include OEM's in the transportation, aerospace,
+> medical and commercial sectors.
+> 
+> Websites:
+> 	http://www.arcx.com/
+> 	http://www.archronix.com/
+> 
+> Signed-off-by: Sven Van Asbroeck <svendev@arcx.com>
 
-> With the introduction of commit 3edfb7bd76bd ("gpiolib: Show correct
-> direction from the beginning") the gpiolib will attempt to read the
-> direction of all pins, which triggers a read from protected register
-> regions.
->
-> The pins 0 through 3 and 81 through 84 are protected, so mark these as
-> reserved.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Andreas Färber <afaerber@suse.de>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Thanks,
+Andreas
 
-Thanks for fixing this up so elegantly.
-
-Yours,
-Linus Walleij
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
