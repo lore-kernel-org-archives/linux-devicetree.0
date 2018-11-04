@@ -1,80 +1,113 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 1/2] arm64: dts: Add support for NXP LS1028A SoC
-Date: Sun, 4 Nov 2018 12:19:34 +0800
-Message-ID: <20181104041931.GB6093@tiger>
-References: <1539760132-3386-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
- <20181031071413.GI10386@tiger>
- <AM6PR04MB4407CDF0EC1DE0442CF205508CCF0@AM6PR04MB4407.eurprd04.prod.outlook.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW driver
+Date: Sat, 03 Nov 2018 21:20:32 -0700
+Message-ID: <154130523254.88331.12609105382114756048@swboyd.mtv.corp.google.com>
+References: <1539257761-23023-1-git-send-email-tdas@codeaurora.org>
+ <1539257761-23023-3-git-send-email-tdas@codeaurora.org>
+ <153981915373.5275.15971019914218464179@swboyd.mtv.corp.google.com>
+ <0c51a12e-38d3-2df5-4f5f-6a687727e9bf@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <AM6PR04MB4407CDF0EC1DE0442CF205508CCF0@AM6PR04MB4407.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudhanshu Gupta <sudhanshu.gupta@nxp.com>, Harninder Rai <harninder.rai@nxp.com>, Rajesh Bhagat <rajesh.bhagat@nxp.com>, Leo Li <leoyang.li@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0c51a12e-38d3-2df5-4f5f-6a687727e9bf@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Taniya Das <tdas@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 02, 2018 at 09:51:49AM +0000, Bhaskar Upadhaya wrote:
-> 
-> 
-> >-----Original Message-----
-> >From: Shawn Guo <shawnguo@kernel.org>
-> >Sent: Wednesday, October 31, 2018 12:44 PM
-> >To: Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>
-> >Cc: devicetree@vger.kernel.org; Harninder Rai <harninder.rai@nxp.com>;
-> >Sudhanshu Gupta <sudhanshu.gupta@nxp.com>; Rajesh Bhagat
-> ><rajesh.bhagat@nxp.com>; linux-arm-kernel@lists.infradead.org; Leo Li
-> ><leoyang.li@nxp.com>
-> >Subject: Re: [PATCH v2 1/2] arm64: dts: Add support for NXP LS1028A SoC
-> >> +	compatible = "fsl,ls1028a";
-> >> +	interrupt-parent = <&gic>;
-> >> +	#address-cells = <2>;
-> >> +	#size-cells = <2>;
-> >> +
-> >> +	cpus {
-> >> +		#address-cells = <1>;
-> >> +		#size-cells = <0>;
-> >> +
-> >> +		cpu0: cpu@0 {
-> >> +			device_type = "cpu";
-> >> +			compatible = "arm,cortex-a72";
-> >> +			reg = <0x0>;
-> >> +			enable-method = "psci";
-> >> +			clocks = <&clockgen 1 0>;
-> >> +			next-level-cache = <&l2>;
-> >> +			cpu-idle-states = <&CPU_PH20>;
-> >> +		};
-> >> +
-> >> +		cpu1: cpu@1 {
-> >> +			device_type = "cpu";
-> >> +			compatible = "arm,cortex-a72";
-> >> +			reg = <0x1>;
-> >> +			enable-method = "psci";
-> >> +			clocks = <&clockgen 1 0>;
-> >> +			next-level-cache = <&l2>;
-> >> +			cpu-idle-states = <&CPU_PH20>;
-> >> +		};
-> >> +
-> >> +		l2: l2-cache {
-> >> +			compatible = "cache";
-> >> +		};
-> >
-> >Not sure what's the point of this node without any properties.
-> 
-> Shawn, I looked into the NXP and non-NXP platforms, but all are creating cache nodes with "compatible" being the only property.
+Quoting Taniya Das (2018-11-02 20:06:00)
+> Hello Stephen,
+> =
 
-Okay, just noticed that the node is referred by next-level-cache
-property of cpu node.  So I guess this 'dummy' cache node is there only
-for architectural integrity/sanity check or something.
+> On 10/18/2018 5:02 AM, Stephen Boyd wrote:
+> > Quoting Taniya Das (2018-10-11 04:36:01)
+> >> --- a/drivers/cpufreq/Kconfig.arm
+> >> +++ b/drivers/cpufreq/Kconfig.arm
+> >> @@ -121,6 +121,17 @@ config ARM_QCOM_CPUFREQ_KRYO
+> >>
+> >>            If in doubt, say N.
+> >>
+> >> +config ARM_QCOM_CPUFREQ_HW
+> >> +       bool "QCOM CPUFreq HW driver"
+> > =
 
-Shawn
+> > Is there any reason this can't be a module?
+> > =
+
+> =
+
+> We do not have any use cases where we need to support it as module.
+
+Ok, so it could easily be tristate then? Why not allow it?
+
+> =
+
+> >> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-=
+cpufreq-hw.c
+> >> new file mode 100644
+> >> index 0000000..fe1c264
+> >> --- /dev/null
+> >> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+> >> @@ -0,0 +1,354 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +/*
+> >> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> >> + */
+[...]
+> >> +
+> >> +static const u16 cpufreq_qcom_std_offsets[REG_ARRAY_SIZE] =3D {
+> > =
+
+> > Is this going to change in the future?
+> > =
+
+> =
+
+> Yes, they could change and that was the reason to introduce the offsets. =
+
+> This was discussed earlier too with Sudeep and was to add them.
+> =
+
+> >> +       [REG_ENABLE]            =3D 0x0,
+
+This is only used once? Maybe it could be removed.
+
+> >> +       [REG_LUT_TABLE]         =3D 0x110,
+
+And this is only used during probe to figure out the supported
+frequencies. So we definitely don't need to store around the registers
+after probe in an array of iomem pointers. The only one that we need
+after probe is the one below.
+
+> >> +       [REG_PERF_STATE]        =3D 0x920,
+> >> +};
+> >> +
+> >> +static struct cpufreq_qcom *qcom_freq_domain_map[NR_CPUS];
+> >> +
+> >> +static int
+> >> +qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
+> >> +                            unsigned int index)
+> >> +{
+> >> +       struct cpufreq_qcom *c =3D policy->driver_data;
+> >> +
+> >> +       writel_relaxed(index, c->reg_bases[REG_PERF_STATE]);
+> > =
+
+> > Why can't we avoid the indirection here and store the perf_state pointer
+> > in probe? Then we don't have to indirect through a table to perform the
+> > register write.
+> > =
+
+> =
+
+> As the offsets could change and that was the reason to add this.
+
+With fast switching we can avoid incurring any extra instructions, so
+please make another iomem pointer in the cpufreq_qcom struct just for
+writing the index or if possible, just pass the iomem pointer that
+points to the REG_PERF_STATE as the policy->driver_data variable here.
+Then we have the address in hand without any extra load. If my
+understanding is correct, we don't need to keep around anything besides
+this register address anyway so we should be able to just load it and
+write it immediately.
