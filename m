@@ -1,36 +1,66 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: Add flexcan nodes in LX2160A
-Date: Sun, 4 Nov 2018 16:34:37 +0800
-Message-ID: <20181104083435.GE26016@tiger>
-References: <20181024161509.14200-1-pankaj.bansal@nxp.com>
+Subject: Re: [RFC] arm64: dts: lx2160aqds: Add mdio mux nodes
+Date: Sun, 4 Nov 2018 16:45:43 +0800
+Message-ID: <20181104084541.GF26016@tiger>
+References: <20181024183017.15142-1-pankaj.bansal@nxp.com>
+ <HE1PR0402MB3323371C130088B2A26F1627F1F60@HE1PR0402MB3323.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181024161509.14200-1-pankaj.bansal@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+In-Reply-To: <HE1PR0402MB3323371C130088B2A26F1627F1F60@HE1PR0402MB3323.eurprd04.prod.outlook.com>
+Sender: netdev-owner@vger.kernel.org
 To: Pankaj Bansal <pankaj.bansal@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Oliver Hartkopp <socketcan@hartkopp.net>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Leo Li <leoyang.li@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Leo Li <leoyang.li@nxp.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 24, 2018 at 10:49:20AM +0000, Pankaj Bansal wrote:
-> The FlexCAN module in LX2160A is a communication controller implementing
-> the CAN protocol according to the ISO 11898-1 standard and CAN 2.0 B
-> protocol specifications.
+On Wed, Oct 24, 2018 at 01:18:32PM +0000, Pankaj Bansal wrote:
+> Hi All,
 > 
-> -Flexible mailboxes configurable to store 0 to 8, 16, 32 or 64 bytes
-> data length
-> -Each mailbox configurable as receive or transmit, all supporting
-> standard and extended messages
+> As per the device tree ePappr https://elinux.org/images/c/cf/Power_ePAPR_APPROVED_v1.1.pdf
+> section 2.2.1
+> 
+> Each node in the device tree is named according to the following convention:
+> node-name@unit-address 
+> 
+> The node-name shall start with a lower or uppercase character and should describe the general class of device.
+> The unit-address component of the name is specific to the bus type on which the node sits. It consists of one or more ASCII characters from the set of characters in Table 2-1. The unit-address must match the first address specified in the reg property of the node. If the node has no reg property, the @ and unit-address must be omitted and the node-name alone differentiates the node from other nodes at the same level in the tree.
+> 
+> I am having a hard time following this convention when defining mdio-mux nodes for LX2160AQDS.
+> The mdio-mux in LX2160AQDS is controlled by same register in fpga. Only some bits are different for the two buses' mux.
+> How to differentiate between the node names for two buses' muxes?
+> 
+> For now I have made their names as mdio-mux@54_f8 and mdio-mux@54_07.
+> The first number is register address and second number indicates the bit mask that is used to select the bits from that register for a bus.
+
+No.  DTC will report warnings against that, because unit-address has to
+match 'reg' property.  I would suggest mdio-mux-1@54, mdio-mux-2@54 etc.
+
+Shawn
+
+> 
+> Any better alternatives?
+> 
+> Regards,
+> Pankaj Bansal
+> 
+> -----Original Message-----
+> From: Pankaj Bansal
+> Sent: Wednesday, October 24, 2018 6:35 PM
+> To: Pankaj Bansal <pankaj.bansal@nxp.com>
+> Subject: [RFC] arm64: dts: lx2160aqds: Add mdio mux nodes
+> 
+> The two external MDIO buses used to communicate with phy devices that
+> are external to SOC are muxed in LX2160AQDS board.
+> 
+> These buses can be routed to any one of the eight IO slots on LX2160AQDS
+> board depending on value in fpga register 0x54.
+> 
+> Additionally the external MDIO1 is used to communicate to the onboard
+> RGMII phy devices.
+> 
+> The mdio1 is controlled by bits 4-7 of fpga register and mdio2 is controlled by
+> bits 0-3 of fpga register.
 > 
 > Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
 > ---
@@ -39,92 +69,174 @@ On Wed, Oct 24, 2018 at 10:49:20AM +0000, Pankaj Bansal wrote:
 >     This patch depends on below patches:
 >     [1] https://lore.kernel.org/patchwork/project/lkml/list/?series=369563
 >     [2] https://patchwork.kernel.org/patch/10645287/
->     
+> 
 >     This patch is used by below patches:
->     [1] https://www.spinics.net/lists/linux-can/msg00348.html
+>     [1]https://patchwork.ozlabs.org/project/netdev/list/?series=69426&state=%2A&archive=both
 > 
->  .../boot/dts/freescale/fsl-lx2160a-qds.dts   |  8 ++++++++
->  .../boot/dts/freescale/fsl-lx2160a-rdb.dts   |  8 ++++++++
->  .../boot/dts/freescale/fsl-lx2160a.dtsi      | 18 ++++++++++++++++++
->  3 files changed, 34 insertions(+)
+>  .../boot/dts/freescale/fsl-lx2160a-qds.dts   | 115 +++++++++++++++++
+>  .../boot/dts/freescale/fsl-lx2160a.dtsi      |  22 ++++
+>  2 files changed, 137 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-> index 99a22abbe725..8a0305a2b778 100644
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
+> b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
+> index 99a22abbe725..4b282bf6c36a 100644
 > --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
 > +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-> @@ -31,6 +31,14 @@
->  	};
->  };
->  
-> +&can0 {
-> +	status = "okay";
-> +};
-> +
-> +&can1 {
-> +	status = "okay";
-> +};
-> +
->  &crypto {
+> @@ -46,6 +46,121 @@
+>  &i2c0 {
 >  	status = "okay";
->  };
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-> index 6481e5f20e69..f8c95fc6de27 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-> @@ -31,6 +31,14 @@
->  	};
->  };
->  
-> +&can0 {
-> +	status = "okay";
-> +};
+> 
+> +	fpga@66 {
+> +		compatible = "fsl,lx2160aqds-fpga", "fsl,fpga-qixis-i2c";
+> +		reg = <0x66>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
 > +
-> +&can1 {
-> +	status = "okay";
-> +};
+> +		mdio-mux@54_f8 {
+> +			mdio-parent-bus = <&emdio1>;
+> +			reg = <0x54>;		 /* BRDCFG4 */
+> +			mux-mask = <0xf8>;      /* EMI1_MDIO */
+> +			#address-cells=<1>;
+> +			#size-cells = <0>;
 > +
->  &crypto {
->  	status = "okay";
->  };
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> index 56f846c55812..23ea8776b55a 100644
+> +			mdio@0 {
+> +				reg = <0x00>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +			mdio@40 {
+> +				reg = <0x40>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +			mdio@c0 {
+> +				reg = <0xc0>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +			mdio@c8 {
+> +				reg = <0xc8>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +			mdio@d0 {
+> +				reg = <0xd0>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +			mdio@d8 {
+> +				reg = <0xd8>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +			mdio@e0 {
+> +				reg = <0xe0>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +			mdio@e8 {
+> +				reg = <0xe8>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +			mdio@f0 {
+> +				reg = <0xf0>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +			mdio@f8 {
+> +				reg = <0xf8>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +		};
+> +
+> +		mdio-mux@54_07 {
+> +			mdio-parent-bus = <&emdio2>;
+> +			reg = <0x54>;		 /* BRDCFG4 */
+> +			mux-mask = <0x07>;      /* EMI2_MDIO */
+> +			#address-cells=<1>;
+> +			#size-cells = <0>;
+> +
+> +			mdio@0 {
+> +				reg = <0x00>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +			mdio@1 {
+> +				reg = <0x01>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +			mdio@2 {
+> +				reg = <0x02>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +			mdio@3 {
+> +				reg = <0x03>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +			mdio@4 {
+> +				reg = <0x04>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +			mdio@5 {
+> +				reg = <0x05>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +			mdio@6 {
+> +				reg = <0x06>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +			mdio@7 {
+> +				reg = <0x07>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +		};
+> +	};
+> +
+>  	i2c-mux@77 {
+>  		compatible = "nxp,pca9547";
+>  		reg = <0x77>;
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> index 56f846c55812..e16b1643595b 100644
 > --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
 > +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> @@ -566,6 +566,24 @@
->  			status = "disabled";
+> @@ -761,5 +761,27 @@
+>  				     <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
+>  			dma-coherent;
 >  		};
->  
-> +		can0: can@2180000 {
-> +			compatible = "fsl,lx2160ar1-flexcan";
-
-Is the compatible documented somewhere?
-
-Shawn
-
-> +			reg = <0x0 0x2180000 0x0 0x10000>;
-> +			interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clockgen 4 7>, <&clockgen 4 7>;
-> +			clock-names = "ipg", "per";
-> +			status = "disabled";
+> +
+> +		/* TODO: WRIOP (CCSR?) */
+> +		emdio1: mdio@0x8B96000 { /* WRIOP0: 0x8B8_0000, E-MDIO1: 0x1_6000 */
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8B96000 0x0 0x1000>;
+> +			device_type = "mdio";			/* TODO: is this necessary? */
+> +			little-endian;	/* force the driver in LE mode */
+> +
+> +			/* Not necessary on the QDS, but needed on the RDB*/
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
 > +		};
 > +
-> +		can1: can@2190000 {
-> +			compatible = "fsl,lx2160ar1-flexcan";
-> +			reg = <0x0 0x2190000 0x0 0x10000>;
-> +			interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clockgen 4 7>, <&clockgen 4 7>;
-> +			clock-names = "ipg", "per";
-> +			status = "disabled";
-> +		};
+> +		emdio2: mdio@0x8B97000 { /* WRIOP0: 0x8B8_0000, E-MDIO2: 0x1_7000 */
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8B97000 0x0 0x1000>;
+> +			device_type = "mdio";			/* TODO: is this necessary? */
+> +			little-endian;	/* force the driver in LE mode */
 > +
->  		uart0: serial@21c0000 {
->  			compatible = "arm,sbsa-uart","arm,pl011";
->  			reg = <0x0 0x21c0000 0x0 0x1000>;
-> -- 
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+>  	};
+>  };
+> --
 > 2.17.1
 > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
