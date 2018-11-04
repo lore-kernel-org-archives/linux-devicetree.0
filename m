@@ -1,75 +1,137 @@
-From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Subject: Re: [PATCH 01/10] drm/sun4i: sun6i_mipi_dsi: Compute
- burst mode loop N1 instruction delay
-Date: Sun, 4 Nov 2018 17:57:13 +0000
-Message-ID: <20181104175713.cpiygzkq2tw2ygwk@plaes.org>
-References: <20181103100900.30313-1-jagan@amarulasolutions.com>
- <20181103100900.30313-2-jagan@amarulasolutions.com>
-Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
+From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: [PATCH v3 00/28] Allwinner H6 DE3 and HDMI support
+Date: Sun,  4 Nov 2018 19:26:37 +0100
+Message-ID: <20181104182705.18047-1-jernej.skrabec@siol.net>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDB4J47M7YERB67F7TPAKGQEFO64HGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBFPU7TPAKGQEDLGGSMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20181103100900.30313-2-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, TL Lim <tllim-F7SikzrIcFYdnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 03, 2018 at 03:38:51PM +0530, Jagan Teki wrote:
-> Loop N1 instruction delay for burst mode lcd panel are
-> computed as per BSP code.
-> 
-> Reference code is available in BSP
-> (in drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
-> dsi_dev[sel]->dsi_inst_loop_num.bits.loop_n1=
-> (panel->lcd_ht-panel->lcd_x)*(150)/(panel->lcd_dclk_freq*8) - 50;
-> => (((mode->htotal - mode->hdisplay) * 150) / ((mode->clock / 1000) * 8)) - 50;
-> 
-> So use the similar computation for loop N1 delay.
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> ---
->  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> index 86430efd9054..da152c21ec62 100644
-> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> @@ -394,7 +394,14 @@ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
->  static void sun6i_dsi_setup_inst_loop(struct sun6i_dsi *dsi,
->  				      struct drm_display_mode *mode)
->  {
-> -	u16 delay = 50 - 1;
-> +	struct mipi_dsi_device *device = dsi->device;
-> +	u16 delay;
-> +
-> +	if (device->mode_flags == MIPI_DSI_MODE_VIDEO_BURST)
+This series adds support for Display Engine 3.0 and HDMI 2.0a, which
+can be found on H6 SoC.
 
-This looks fishy, as mode_flags is supposedly bitfield.
+Display Engine 3.0 in comparison to 2.0 mostly adds features needed for
+displaying and processing 10-bit and AFBC formats, which are not yet
+supported by this series.
 
-I guess you actually want mode_flags & MIPI_DSI_MODE_VIDEO_BURST. Other
-patches are also affected by this.
+H6 is also the first SoC which supports IOMMU, but support for it is
+not yet added.
 
+This series is based on linux-next at next-20181102.
 
-> +		delay = (((mode->htotal - mode->hdisplay) * 150) /
-> +			((mode->clock / 1000) * 8)) - 50;
-> +	else
-> +		delay = 50 - 1;
->  
->  	regmap_write(dsi->regs, SUN6I_DSI_INST_LOOP_NUM_REG(0),
->  		     SUN6I_DSI_INST_LOOP_NUM_N0(50 - 1) |
-> -- 
-> 2.18.0.321.gffc6fa0e3
-> 
-> -- 
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+I suggest all patches go through allwinner tree, except DRM patches,
+which should go through drm-misc tree.
+
+Last detail, PineH64 model A schematic has DDC_EN signal, which enables
+DDC voltage level shifter. TL Lim, PINE64 founder, said that this
+signal is not actually present on PineH64 model A board. It is, however
+present on PineH64 model B engineering samples, but it will be removed
+in production version. Because of that, I didn't include any code for
+it.
+
+Please take a look.
+
+Best regards,
+Jernej
+
+Changes from v2:
+- Collected tags
+- Removed patch which renames all DE2 macros
+- Converted bool struct members in header files to unsigned int bitfield.
+  This issue was reported by checkpatch.pl --strict.
+- Fixed code style in tcon top driver and removed unnecessary initialization
+- Moved set_rate quirk check in dw-hdmi driver to more appropriate place
+- Fixed compatible for H6 DE3 bus compatible
+
+Changes from v1:
+- Collected tags
+- Reworked some commit messages and titles
+- Remove two patches which were already merged
+- Added new patches (10, 11, 12, 21)
+- Lowered max. supported HDMI pixel clock to 594 MHz
+- Reordered compatibles and quirks by family name
+- Fixed kbuild test robot warnings
+- renamed CLK_NUMBER to CLK_NUMBER_WITHOUT_ROT and introduced
+  CLK_NUMBER_WITH_ROT
+- removed "inline" from functions in c file
+- used regmap_bulk_write() for writing DE3 CSC table
+- DE3 specific macros have "DE3_" prefix now
+- reworked DE2/3 mixer registers initialization
+- removed writing to edge detection registers because
+  functionality is not used
+
+Icenowy Zheng (5):
+  dt-bindings: bus: add H6 DE3 bus binding
+  dt-bindings: display: sunxi: add DT binding for Allwinner H6 DW HDMI
+  drm: sun4i: add quirks for TCON TOP
+  dt-bindings: display: sun4i-drm: document H6 TCON TOP
+  drm: sun4i: add support for H6 TCON TOP
+
+Jernej Skrabec (23):
+  clk: sunxi-ng: Adjust MP clock parent rate when allowed
+  clk: sunxi-ng: Use u64 for calculation of NM rate
+  clk: sunxi-ng: h6: Set video PLLs limits
+  dt-bindings: clock: sun8i-de2: Add H6 DE3 clock description
+  clk: sunxi-ng: Add support for H6 DE3 clocks
+  dt-bindings: display: sun4i-drm: Add H6 display engine compatibles
+  drm/sun4i: Add compatible for H6 display engine
+  drm/sun4i: Rework DE2 register defines
+  drm/sun4i: Fix DE2 mixer size
+  drm/sun4i: Disable unused DE2 sub-engines
+  drm/sun4i: Add basic support for DE3
+  drm/sun4i: Add support for H6 DE3 mixer 0
+  drm/bridge/synopsys: dw-hdmi: Enable workaround for v2.12a
+  drm/sun4i: Not all DW HDMI controllers has scrambled addresses
+  drm/sun4i: dw-hdmi: Make mode_valid function configurable
+  drm/sun4i: dw-hdmi: Add quirk for setting TMDS clock
+  drm/sun4i: Add support for H6 DW HDMI controller
+  drm/sun4i: dw-hdmi-phy: Reorder quirks by family
+  drm/sun4i: Add support for Synopsys HDMI PHY
+  drm/sun4i: Add support for H6 HDMI PHY
+  drm/sun4i: Initialize registers in tcon-top driver
+  arm64: dts: allwinner: h6: Add HDMI pipeline
+  arm64: dts: allwinner: h6: Enable HDMI output on Pine H64 board
+
+ .../bindings/bus/sun50i-de2-bus.txt           |   9 +-
+ .../devicetree/bindings/clock/sun8i-de2.txt   |   5 +-
+ .../bindings/display/sunxi/sun4i-drm.txt      |  30 ++-
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  25 +++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 201 ++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun50i-h6.c          |   4 +
+ drivers/clk/sunxi-ng/ccu-sun8i-de2.c          |  71 ++++++-
+ drivers/clk/sunxi-ng/ccu-sun8i-de2.h          |   4 +-
+ drivers/clk/sunxi-ng/ccu_mp.c                 |  64 +++++-
+ drivers/clk/sunxi-ng/ccu_nm.c                 |  18 +-
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c     |   1 +
+ drivers/gpu/drm/sun4i/sun4i_drv.c             |   1 +
+ drivers/gpu/drm/sun4i/sun8i_csc.c             |  83 ++++++++
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         |  45 +++-
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |  14 +-
+ drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c        | 201 ++++++++++++++++--
+ drivers/gpu/drm/sun4i/sun8i_mixer.c           |  57 ++++-
+ drivers/gpu/drm/sun4i/sun8i_mixer.h           |  80 +++++--
+ drivers/gpu/drm/sun4i/sun8i_tcon_top.c        |  52 ++++-
+ drivers/gpu/drm/sun4i/sun8i_ui_layer.c        |  47 ++--
+ drivers/gpu/drm/sun4i/sun8i_ui_layer.h        |  37 ++--
+ drivers/gpu/drm/sun4i/sun8i_ui_scaler.c       |  47 ++--
+ drivers/gpu/drm/sun4i/sun8i_ui_scaler.h       |  28 +--
+ drivers/gpu/drm/sun4i/sun8i_vi_layer.c        |  55 +++--
+ drivers/gpu/drm/sun4i/sun8i_vi_layer.h        |  25 ++-
+ drivers/gpu/drm/sun4i/sun8i_vi_scaler.c       |  70 ++++--
+ drivers/gpu/drm/sun4i/sun8i_vi_scaler.h       |  68 +++---
+ include/dt-bindings/clock/sun8i-de2.h         |   3 +
+ include/dt-bindings/reset/sun8i-de2.h         |   1 +
+ 29 files changed, 1120 insertions(+), 226 deletions(-)
+
+-- 
+2.19.1
