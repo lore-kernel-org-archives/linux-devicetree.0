@@ -1,12 +1,12 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v3 24/28] drm: sun4i: add quirks for TCON TOP
-Date: Sun,  4 Nov 2018 19:27:01 +0100
-Message-ID: <20181104182705.18047-25-jernej.skrabec@siol.net>
+Subject: [PATCH v3 26/28] drm: sun4i: add support for H6 TCON TOP
+Date: Sun,  4 Nov 2018 19:27:03 +0100
+Message-ID: <20181104182705.18047-27-jernej.skrabec@siol.net>
 References: <20181104182705.18047-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBVXU7TPAKGQE2VLKPLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBW7U7TPAKGQEPFJPBPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181104182705.18047-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,98 +21,37 @@ List-Id: devicetree@vger.kernel.org
 
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
-Some SoCs, such as H6, doesn't have a full-featured TCON TOP.
+The TCON TOP on Allwinner H6 SoC is a cut down version of the R40 TCON
+TOP, which dropped TCON_TV1 and DSI (which do not exist on H6).
 
-Add quirks support for TCON TOP.
+Add support for it.
 
-Currently the presence of TCON_TV1 and DSI is controlled via the quirks
-structure.
-
-Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-[Fixed code style and removed unnecessary initialization]
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 37 +++++++++++++++++++-------
- 1 file changed, 28 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-index 37158548b447..e94e3fb1736b 100644
+index e94e3fb1736b..fc36e0c10a37 100644
 --- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
 +++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-@@ -9,11 +9,17 @@
- #include <linux/component.h>
- #include <linux/device.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
- #include <linux/of_graph.h>
- #include <linux/platform_device.h>
+@@ -273,12 +273,20 @@ const struct sun8i_tcon_top_quirks sun8i_r40_tcon_top_quirks = {
+ 	.has_dsi	= true,
+ };
  
- #include "sun8i_tcon_top.h"
- 
-+struct sun8i_tcon_top_quirks {
-+	bool has_tcon_tv1;
-+	bool has_dsi;
-+};
-+
- static bool sun8i_tcon_top_node_is_tcon_top(struct device_node *node)
- {
- 	return !!of_match_node(sun8i_tcon_top_of_table, node);
-@@ -121,10 +127,13 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct clk_hw_onecell_data *clk_data;
- 	struct sun8i_tcon_top *tcon_top;
-+	const struct sun8i_tcon_top_quirks *quirks;
- 	struct resource *res;
- 	void __iomem *regs;
- 	int ret, i;
- 
-+	quirks = of_device_get_match_data(&pdev->dev);
-+
- 	tcon_top = devm_kzalloc(dev, sizeof(*tcon_top), GFP_KERNEL);
- 	if (!tcon_top)
- 		return -ENOMEM;
-@@ -187,15 +196,17 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
- 					     &tcon_top->reg_lock,
- 					     TCON_TOP_TCON_TV0_GATE, 0);
- 
--	clk_data->hws[CLK_TCON_TOP_TV1] =
--		sun8i_tcon_top_register_gate(dev, "tcon-tv1", regs,
--					     &tcon_top->reg_lock,
--					     TCON_TOP_TCON_TV1_GATE, 1);
-+	if (quirks->has_tcon_tv1)
-+		clk_data->hws[CLK_TCON_TOP_TV1] =
-+			sun8i_tcon_top_register_gate(dev, "tcon-tv1", regs,
-+						     &tcon_top->reg_lock,
-+						     TCON_TOP_TCON_TV1_GATE, 1);
- 
--	clk_data->hws[CLK_TCON_TOP_DSI] =
--		sun8i_tcon_top_register_gate(dev, "dsi", regs,
--					     &tcon_top->reg_lock,
--					     TCON_TOP_TCON_DSI_GATE, 2);
-+	if (quirks->has_dsi)
-+		clk_data->hws[CLK_TCON_TOP_DSI] =
-+			sun8i_tcon_top_register_gate(dev, "dsi", regs,
-+						     &tcon_top->reg_lock,
-+						     TCON_TOP_TCON_DSI_GATE, 2);
- 
- 	for (i = 0; i < CLK_NUM; i++)
- 		if (IS_ERR(clk_data->hws[i])) {
-@@ -257,9 +268,17 @@ static int sun8i_tcon_top_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+const struct sun8i_tcon_top_quirks sun8i_r40_tcon_top_quirks = {
-+	.has_tcon_tv1	= true,
-+	.has_dsi	= true,
++const struct sun8i_tcon_top_quirks sun50i_h6_tcon_top_quirks = {
++	/* Nothing special */
 +};
 +
  /* sun4i_drv uses this list to check if a device node is a TCON TOP */
  const struct of_device_id sun8i_tcon_top_of_table[] = {
--	{ .compatible = "allwinner,sun8i-r40-tcon-top" },
+ 	{
+ 		.compatible = "allwinner,sun8i-r40-tcon-top",
+ 		.data = &sun8i_r40_tcon_top_quirks
+ 	},
 +	{
-+		.compatible = "allwinner,sun8i-r40-tcon-top",
-+		.data = &sun8i_r40_tcon_top_quirks
++		.compatible = "allwinner,sun50i-h6-tcon-top",
++		.data = &sun50i_h6_tcon_top_quirks
 +	},
  	{ /* sentinel */ }
  };
