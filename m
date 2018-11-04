@@ -1,47 +1,85 @@
-Return-Path: <SRS0=8PKZ=NY=the-dreams.de=wsa@kernel.org>
-Date: Tue, 13 Nov 2018 13:13:32 +0100
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH/RFT 1/2] dt-bindings: thermal: rcar-thermal: add R8A77990
- support
-Message-ID: <20181113121331.krvvn6txtgfkyhh6@ninjato>
-References: <1539612719-9650-1-git-send-email-ykaneko0929@gmail.com>
- <1539612719-9650-2-git-send-email-ykaneko0929@gmail.com>
+Return-Path: <SRS0=Nr/5=NP=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-it1-f196.google.com ([209.85.166.196]:37743 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731285AbeKECqC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 4 Nov 2018 21:46:02 -0500
+Received: by mail-it1-f196.google.com with SMTP id e74-v6so9504678ita.2
+        for <devicetree@vger.kernel.org>; Sun, 04 Nov 2018 09:30:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="tzgsyurnlb27erju"
-Content-Disposition: inline
-In-Reply-To: <1539612719-9650-2-git-send-email-ykaneko0929@gmail.com>
-To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+References: <cover.1541341926.git.lorenzo.bianconi@redhat.com>
+ <71f6b6a308a74c863926a9de28cf51d42d26b859.1541341926.git.lorenzo.bianconi@redhat.com>
+ <20181104171250.2279744a@archlinux>
+In-Reply-To: <20181104171250.2279744a@archlinux>
+From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Date: Sun, 4 Nov 2018 18:30:07 +0100
+Message-ID: <CAJ0CqmVi+iHhHDPuTYJvFJth=nBo6=quuHm6FQNxr369+c6QOw@mail.gmail.com>
+Subject: Re: [PATCH 2/7] iio: imu: st_lsm6dsx: reboot memory content after reset
+Content-Type: text/plain; charset="UTF-8"
+Sender: devicetree-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+>
+> On Sun,  4 Nov 2018 15:39:01 +0100
+> Lorenzo Bianconi <lorenzo.bianconi@redhat.com> wrote:
+>
+> > Perform a memory content reboot after device reset
+> >
+> > Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+> > ---
+> >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 16 +++++++++++++---
+> >  1 file changed, 13 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> > index c8b993bea757..e3ebd04d8078 100644
+> > --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> > +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> > @@ -56,6 +56,7 @@
+> >  #define ST_LSM6DSX_REG_WHOAMI_ADDR           0x0f
+> >  #define ST_LSM6DSX_REG_RESET_ADDR            0x12
+> >  #define ST_LSM6DSX_REG_RESET_MASK            BIT(0)
+> > +#define ST_LSM6DSX_REG_BOOT_MASK             BIT(7)
+> >  #define ST_LSM6DSX_REG_BDU_ADDR                      0x12
+> >  #define ST_LSM6DSX_REG_BDU_MASK                      BIT(6)
+> >  #define ST_LSM6DSX_REG_INT2_ON_INT1_ADDR     0x13
+> > @@ -778,12 +779,21 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
+> >       u8 drdy_int_reg;
+> >       int err;
+> >
+> > -     err = regmap_write(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
+> > -                        ST_LSM6DSX_REG_RESET_MASK);
+> > +     err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
+> > +                              ST_LSM6DSX_REG_RESET_MASK,
+> > +                              FIELD_PREP(ST_LSM6DSX_REG_RESET_MASK, 1));
+> >       if (err < 0)
+> >               return err;
+> >
+> > -     msleep(200);
+> > +     msleep(50);
+> > +
+> > +     err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
+> > +                              ST_LSM6DSX_REG_BOOT_MASK,
+> > +                              FIELD_PREP(ST_LSM6DSX_REG_BOOT_MASK, 1));
+> > +     if (err < 0)
+> > +             return err;
+> > +
+> > +     msleep(50);
+> This change in the timing needs an explanatory comment in the patch
+> description.
+>
+>
+> >
+> >       /* enable Block Data Update */
+> >       err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_BDU_ADDR,
+>
 
---tzgsyurnlb27erju
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Jonathan,
 
+This patch reloads the trimming parameters to perform a complete reset
+of the device. Full explanation can be read here:
+https://www.st.com/resource/en/application_note/dm00517282.pdf, section 5.7.
+I will add a proper description in v2, thx
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-
-
---tzgsyurnlb27erju
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlvqv+YACgkQFA3kzBSg
-KbaI/A//Rk8Ta+zUAwxTzQFXtx0dN4vMdiY1EQT+TaC3n3OoI6ld7Cj72ZVDsiDF
-UYfsOlU3FKPjNOaXNGM+zO+DOwNvvnJpugtLDkuCy2GawRIClKXG8FYawPO7w8Xf
-MvmN98pNBwVJa9luXl6PJTCK/QGOOSmYlIMr56PmDdM8HkuiLbe/CZOVoSoLWIuU
-EvgqSbeWuECvvD3xYkwNPSUxbfeSrC/mTx84SBYPhEo0MCzdIyG9USglEP9TBTbp
-yeaow7UZt65Q+cH18BCsnE9wIjViGm/Cj3CNGl6wit1qDm+BadOMO4GJ+OZpcdzI
-e+SqmabPG2MOkab7M9v/xIJmUK0I1bKJH7KLgznvuAsOPGZrxiIeKdu3Bhui/gS0
-Rr8erjONpK4a2f3ZpUkVWr31s8QANmPWUhG7b0EmeCOGgp/oXysU9331FOV5JVFN
-q4Ket/iWTyApHiA+Z/e+AWXDW4BgbAeGTzmo4/vvVCW35vJBL+wVduTrtiGlm4Ux
-aEAHlF+YA6oKi0MXyCFePUIiRo54+GFtbH2oTGS8F/tJAZifN2FKg32mjpwpYowT
-fnvD5k19L2IUWCphzDwc4zpQZ9kEpyMZWxA4po7/+rfXavq1bvX/9HK9JbIYh7ol
-2yiZros/liEwOtzqZscv3/JVeTC4oW440qe/WpiHIntcJinn5Oc=
-=9p4x
------END PGP SIGNATURE-----
-
---tzgsyurnlb27erju--
+Regards,
+Lorenzo
