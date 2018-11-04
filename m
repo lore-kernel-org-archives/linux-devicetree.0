@@ -1,122 +1,102 @@
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: Re: [PATCH v6 1/3] clk: meson: add emmc sub clock phase delay driver
-Date: Sun, 4 Nov 2018 23:12:17 +0800
-Message-ID: <efb9f8e2-8937-2a0a-6f13-2c4ed66fd6e4@amlogic.com>
-References: <1541089855-19356-1-git-send-email-jianxin.pan@amlogic.com>
- <1541089855-19356-2-git-send-email-jianxin.pan@amlogic.com>
- <154130056376.88331.17004780065573288593@swboyd.mtv.corp.google.com>
+From: thesven73@gmail.com
+Subject: [PATCH anybus v3 0/6] Support HMS Profinet Card over Anybus
+Date: Sun,  4 Nov 2018 10:54:55 -0500
+Message-ID: <20181104155501.14767-1-TheSven73@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154130056376.88331.17004780065573288593@swboyd.mtv.corp.google.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Yixun Lan <yixun.lan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: svendev@arcx.com, robh+dt@kernel.org, linus.walleij@linaro.org
+Cc: lee.jones@linaro.org, mark.rutland@arm.com, afaerber@suse.de, treding@nvidia.com, david@lechnology.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, stuyoder@gmail.com, maxime.ripard@bootlin.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+From: Sven Van Asbroeck <svendev@arcx.com>
 
-Thanks for your review. 
-Please see me comments below.
+This patch set adds support for the HMS Industrial Networks AB Profinet card.
 
-On 2018/11/4 11:02, Stephen Boyd wrote:
-> Quoting Jianxin Pan (2018-11-01 09:30:53)
->> diff --git a/drivers/clk/meson/clk-phase-delay.c b/drivers/clk/meson/clk-phase-delay.c
->> new file mode 100644
->> index 0000000..83e74ed
->> --- /dev/null
->> +++ b/drivers/clk/meson/clk-phase-delay.c
->> @@ -0,0 +1,66 @@
->> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> +/*
->> + * Amlogic Meson MMC Sub Clock Controller Driver
->> + *
->> + * Copyright (c) 2017 Baylibre SAS.
->> + * Author: Jerome Brunet <jbrunet@baylibre.com>
->> + *
->> + * Copyright (c) 2018 Amlogic, inc.
->> + * Author: Yixun Lan <yixun.lan@amlogic.com>
->> + * Author: Jianxin Pan <jianxin.pan@amlogic.com>
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include "clkc.h"
->> +
->> +static int meson_clk_phase_delay_get_phase(struct clk_hw *hw)
->> +{
->> +       struct clk_regmap *clk = to_clk_regmap(hw);
->> +       struct meson_clk_phase_delay_data *ph =
->> +               meson_clk_get_phase_delay_data(clk);
-> 
-> Nitpick: Do this after declaring variables because it splits a line.
-OK. I will split the assignment into another line. Thank you.
-> 
->> +       unsigned long period_ps, p, d;
->> +       int degrees;
->> +
->> +       p = meson_parm_read(clk->map, &ph->phase);
->> +       degrees = p * 360 / (1 << (ph->phase.width));
-> 
-> Nitpick: Remove useless parenthesis.
-OK. I will remove them.
-> 
->> +
->> +       period_ps = DIV_ROUND_UP((unsigned long)NSEC_PER_SEC * 1000,
-> 
-> Is the cast necessary?
-Yes, the cast can be droped. NSEC_PER_SEC is already defined wit type long.
-> 
->> +                                clk_hw_get_rate(hw));
->> +
->> +       d = meson_parm_read(clk->map, &ph->delay);
->> +       degrees += d * ph->delay_step_ps * 360 / period_ps;
->> +       degrees %= 360;
->> +
->> +       return degrees;
->> +}
->> +
->> +static int meson_clk_phase_delay_set_phase(struct clk_hw *hw, int degrees)
->> +{
->> +       struct clk_regmap *clk = to_clk_regmap(hw);
->> +       struct meson_clk_phase_delay_data *ph =
->> +               meson_clk_get_phase_delay_data(clk);
->> +       unsigned long period_ps, d = 0, r;
->> +       u64 p;
->> +
->> +       p = degrees % 360;
-> 
-> We don't allow phase to be larger than 360 so this isn't needed.
-OK, Thank you.
-> 
->> +       period_ps = DIV_ROUND_UP((unsigned long)NSEC_PER_SEC * 1000,
-> 
-> Drop the cast?
-OK.
-> 
->> +                                clk_hw_get_rate(hw));
->> +
->> +       /* First compute the phase index (p), the remainder (r) is the
-> 
-> Nitpick: Please leave /* on it's own line.
-OK.
-> 
->> +        * part we'll try to acheive using the delays (d).
->> +        */
->> +       r = do_div(p, 360 / (1 << (ph->phase.width)));
-> 
-> Drop useless parenthesis please.
-OK, I will fix it. Thank you.
-> 
->> +       d = DIV_ROUND_CLOSEST(r * period_ps,
->> +                             360 * ph->delay_step_ps);
->> +       d = min(d, PMASK(ph->delay.width));
->> +
->> +       meson_parm_write(clk->map, &ph->phase, p);
->> +       meson_parm_write(clk->map, &ph->delay, d);
->> +       return 0;
->> +}
-> 
-> .
-> 
+Profinet is an industry technical standard for data communication over
+Industrial Ethernet, designed for collecting data from, and controlling,
+equipment in industrial systems, with a particular strength in delivering data
+under tight time constraints (on the order of 1ms or less).
+
+The profinet card itself is connected to the system via an industrial bus
+called 'anybus'.
+
+I have followed the bus driver/client driver pattern, and created an anybus
+bus driver, plus a client driver for the profinet card.
+
+In case this patch set gets (eventually) accepted, drivers for other anybus
+client cards may follow: flnet, cc-link, ...
+
+The anybus slot on the host is located on an 'anybus bridge', which is
+custom h/w designed by arcx. Its driver is modeled as a misc device, which
+exposes a dual reset controller, plus a power readout unrelated to the anybus.
+
+v3:
+	devicetree-bindings
+		adding the vendor prefix is now a separate commit
+	anybus-bridge:
+		moved misc driver to drivers/bus/
+		converted of_gpio_* to gpiod_* abstractions
+		can power readout is now a fixed-voltage regulator
+	anybuss-host:
+		converted refcounts from atomic_t to refcount_t
+		fixed potential use-after-free
+	hms-profinet:
+		applied minor kernel build robot suggestion
+
+v2:
+	added architecture overview comments to host driver
+	completely reworked anybus-bridge driver, it becomes a reset controller
+	anybuss-host driver now needs devicetree entry, link to reset controller
+	I will hold off on kernel-doc until the overall architecture gets
+		more validation / approval
+	fixed Kconfig, comment-style, document ioctl magic numbers
+	removed redundant pwm dependency
+	renamed enable-gpios to reset-gpios
+	stop driving reset-gpio after unloading driver
+	use interrupt-parent / interrupts method to describe interrupts
+		in the devicetree
+	convert references 'i.MX WEIM parallel bus' to 'parallel bus'
+	replace devicetree functions with more generic platform_get_resource()
+							platform_get_irq()
+	added device unique data to add_device_randomness()
+
+v1:
+	first shot
+
+Sven Van Asbroeck (6):
+  misc: support the Arcx anybus bridge
+  dt-bindings: Add vendor prefix for arcx / Archronix
+  dt-bindings: anybus-bridge: document devicetree binding
+  bus: support HMS Anybus-S bus
+  dt-bindings: anybuss-host: document devicetree binding
+  misc: support HMS Profinet IRT industrial controller
+
+ .../bindings/bus/arcx,anybuss-host.txt        |   36 +
+ .../bindings/misc/arcx,anybus-bridge.txt      |   34 +
+ .../devicetree/bindings/vendor-prefixes.txt   |    1 +
+ Documentation/ioctl/ioctl-number.txt          |    1 +
+ drivers/bus/Kconfig                           |   20 +
+ drivers/bus/Makefile                          |    2 +
+ drivers/bus/anybus-bridge.c                   |  321 ++++
+ drivers/bus/anybuss-host.c                    | 1503 +++++++++++++++++
+ drivers/misc/Kconfig                          |   10 +
+ drivers/misc/Makefile                         |    1 +
+ drivers/misc/hms-profinet.c                   |  753 +++++++++
+ include/linux/anybuss-client.h                |  100 ++
+ include/uapi/linux/hms-common.h               |   14 +
+ include/uapi/linux/hms-profinet.h             |  102 ++
+ 14 files changed, 2898 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/arcx,anybuss-host.txt
+ create mode 100644 Documentation/devicetree/bindings/misc/arcx,anybus-bridge.txt
+ create mode 100644 drivers/bus/anybus-bridge.c
+ create mode 100644 drivers/bus/anybuss-host.c
+ create mode 100644 drivers/misc/hms-profinet.c
+ create mode 100644 include/linux/anybuss-client.h
+ create mode 100644 include/uapi/linux/hms-common.h
+ create mode 100644 include/uapi/linux/hms-profinet.h
+
+-- 
+2.17.1
