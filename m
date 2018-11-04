@@ -1,58 +1,74 @@
-From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v3 04/28] clk: sunxi-ng: h6: Set video PLLs limits
-Date: Sun,  4 Nov 2018 19:26:41 +0100
-Message-ID: <20181104182705.18047-5-jernej.skrabec@siol.net>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [PATCH v3 05/28] dt-bindings: clock: sun8i-de2: Add H6 DE3 clock description
+Date: Sun,  4 Nov 2018 19:26:42 +0100
+Message-ID: <20181104182705.18047-6-jernej.skrabec@siol.net>
 References: <20181104182705.18047-1-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBHXU7TPAKGQE4KEM3WQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181104182705.18047-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181104182705.18047-1-jernej.skrabec@siol.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: maxime.ripard@bootlin.com, wens@csie.org
+Cc: robh+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, airlied@linux.ie, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, jernej.skrabec@siol.net
 List-Id: devicetree@vger.kernel.org
 
-Video PLL factors can be set in a way that final PLL rate is outside
-stable range. H6 user manual specifically says that N factor should not
-be below 12. While it doesn't says anything about maximum stable rate, it
-is clear that PLL doesn't work at 6.096 GHz (254 * 24 MHz).
+This commit adds necessary description and dt includes for H6 DE3 clock.
+It is very similar to others, but memory region has some additional
+registers not found in DE2.
 
-Set minimum allowed PLL video rate to 288 MHz (12 * 24 MHz) and maximum
-to 2.4 GHz, which is maximum in BSP driver.
-
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 ---
- drivers/clk/sunxi-ng/ccu-sun50i-h6.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/clock/sun8i-de2.txt | 5 +++--
+ include/dt-bindings/clock/sun8i-de2.h                 | 3 +++
+ include/dt-bindings/reset/sun8i-de2.h                 | 1 +
+ 3 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-index 2193e1495086..19ff09f610e4 100644
---- a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-@@ -120,6 +120,8 @@ static struct ccu_nm pll_video0_clk = {
- 	.n		= _SUNXI_CCU_MULT_MIN(8, 8, 12),
- 	.m		= _SUNXI_CCU_DIV(1, 1), /* input divider */
- 	.fixed_post_div	= 4,
-+	.min_rate	= 288000000,
-+	.max_rate	= 2400000000UL,
- 	.common		= {
- 		.reg		= 0x040,
- 		.features	= CCU_FEATURE_FIXED_POSTDIV,
-@@ -136,6 +138,8 @@ static struct ccu_nm pll_video1_clk = {
- 	.n		= _SUNXI_CCU_MULT_MIN(8, 8, 12),
- 	.m		= _SUNXI_CCU_DIV(1, 1), /* input divider */
- 	.fixed_post_div	= 4,
-+	.min_rate	= 288000000,
-+	.max_rate	= 2400000000UL,
- 	.common		= {
- 		.reg		= 0x048,
- 		.features	= CCU_FEATURE_FIXED_POSTDIV,
--- 
+diff --git a/Documentation/devicetree/bindings/clock/sun8i-de2.txt b/Docu=
+mentation/devicetree/bindings/clock/sun8i-de2.txt
+index e94582e8b8a9..41a52c2acffd 100644
+--- a/Documentation/devicetree/bindings/clock/sun8i-de2.txt
++++ b/Documentation/devicetree/bindings/clock/sun8i-de2.txt
+@@ -1,5 +1,5 @@
+-Allwinner Display Engine 2.0 Clock Control Binding
+---------------------------------------------------
++Allwinner Display Engine 2.0/3.0 Clock Control Binding
++------------------------------------------------------
+=20
+ Required properties :
+ - compatible: must contain one of the following compatibles:
+@@ -8,6 +8,7 @@ Required properties :
+ 		- "allwinner,sun8i-v3s-de2-clk"
+ 		- "allwinner,sun50i-a64-de2-clk"
+ 		- "allwinner,sun50i-h5-de2-clk"
++		- "allwinner,sun50i-h6-de3-clk"
+=20
+ - reg: Must contain the registers base address and length
+ - clocks: phandle to the clocks feeding the display engine subsystem.
+diff --git a/include/dt-bindings/clock/sun8i-de2.h b/include/dt-bindings/=
+clock/sun8i-de2.h
+index 3bed63b524aa..7768f73b051e 100644
+--- a/include/dt-bindings/clock/sun8i-de2.h
++++ b/include/dt-bindings/clock/sun8i-de2.h
+@@ -15,4 +15,7 @@
+ #define CLK_MIXER1		7
+ #define CLK_WB			8
+=20
++#define CLK_BUS_ROT		9
++#define CLK_ROT			10
++
+ #endif /* _DT_BINDINGS_CLOCK_SUN8I_DE2_H_ */
+diff --git a/include/dt-bindings/reset/sun8i-de2.h b/include/dt-bindings/=
+reset/sun8i-de2.h
+index 9526017432f0..1c36a6ac86d6 100644
+--- a/include/dt-bindings/reset/sun8i-de2.h
++++ b/include/dt-bindings/reset/sun8i-de2.h
+@@ -10,5 +10,6 @@
+ #define RST_MIXER0	0
+ #define RST_MIXER1	1
+ #define RST_WB		2
++#define RST_ROT		3
+=20
+ #endif /* _DT_BINDINGS_RESET_SUN8I_DE2_H_ */
+--=20
 2.19.1
