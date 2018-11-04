@@ -1,49 +1,125 @@
-From: Richard Leitner <richard.leitner@skidata.com>
-Subject: Re: [PATCH v2 0/7] Input: sx8654 - reset-gpio, sx865[056] support,
- etc.
-Date: Sun, 4 Nov 2018 22:38:18 +0100
-Message-ID: <67d1308f-8371-3bfe-7961-807e1e18c807@skidata.com>
-References: <20181017125116.20077-1-richard.leitner@skidata.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Brian Masney <masneyb@onstation.org>
+Subject: [PATCH] ARM: dts: qcom: msm8974-hammerhead: add WiFi support
+Date: Sun,  4 Nov 2018 16:50:34 -0500
+Message-ID: <20181104215034.3677-1-masneyb@onstation.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181017125116.20077-1-richard.leitner@skidata.com>
-Content-Language: de-AT
 Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jonathan Marek <jonathan@marek.ca>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-friendly question for the status of this patchset of mine.
+From: Jonathan Marek <jonathan@marek.ca>
 
-thanks&regards;Richard.L
+This patch adds WiFi support to the LG Nexus 5 (hammerhead) phone.
 
-On 10/17/18 2:51 PM, Richard Leitner wrote:
-> Add reset-gpio, sx8654[056] and common of_touchscreen functions support
-> for the sx8654 driver.
-> 
-> Changes v2:
-> 	- use devm_gpiod_get_optional in probe instead of in #ifdef CONFIG_OF
-> 	- convert flags to BIT() in a separate patch
-> 	- replace hrtimer with "regular" timer
-> 	- use of_device_get_match_data instead of of_match_device
-> 	- add driver data to i2c_device_id table for non-DT fallback
-> 	- fix sequence of common touchscreen initialization
-> 	- div. minor stlye changes
-> 
-> Richard Leitner (8):
->    dt-bindings: input: touchscreen: sx8654: add reset-gpio property
->    Input: sx8654 - add reset-gpio support
->    dt-bindings: input: touchscreen: sx8654: add compatible models
->    Input: sx8654 - add sx8655 and sx8656 to compatibles
->    dt-bindings: input: touchscreen: sx8654: add sx8650 to comatibles
->    Input: sx8654 - add sx8650 support
->    Input: sx8654 - use common of_touchscreen functions
->    Input: sx8654 - convert #defined flags to BIT(x)
-> 
->   .../bindings/input/touchscreen/sx8654.txt          |  10 +-
->   drivers/input/touchscreen/sx8654.c                 | 245 ++++++++++++++++++---
->   2 files changed, 229 insertions(+), 26 deletions(-)
-> 
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+[masneyb@onstation.org: Enabled wlan_regulator_pin and wlan_sleep_clk_pin]
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+---
+ .../qcom-msm8974-lge-nexus5-hammerhead.dts    | 70 +++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+
+diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+index fe2b5524a679..7fad5a48d4a3 100644
+--- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
++++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+@@ -221,6 +221,20 @@
+ 			};
+ 		};
+ 	};
++
++	vreg_wlan: wlan-regulator {
++		compatible = "regulator-fixed";
++
++		regulator-name = "wl-reg";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpio = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&wlan_regulator_pin>;
++	};
+ };
+ 
+ &soc {
+@@ -253,6 +267,20 @@
+ 			};
+ 		};
+ 
++		sdhc2_pin_a: sdhc2-pin-active {
++			clk {
++				pins = "sdc2_clk";
++				drive-strength = <6>;
++				bias-disable;
++			};
++
++			cmd-data {
++				pins = "sdc2_cmd", "sdc2_data";
++				drive-strength = <6>;
++				bias-pull-up;
++			};
++		};
++
+ 		i2c3_pins: i2c3 {
+ 			mux {
+ 				pins = "gpio10", "gpio11";
+@@ -324,6 +352,32 @@
+ 		pinctrl-0 = <&sdhc1_pin_a>;
+ 	};
+ 
++	sdhci@f98a4900 {
++		status = "ok";
++
++		max-frequency = <100000000>;
++		bus-width = <4>;
++		non-removable;
++		vmmc-supply = <&vreg_wlan>;
++		vqmmc-supply = <&pm8941_s3>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&sdhc2_pin_a>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		bcrmf@1 {
++			compatible = "brcm,bcm4339-fmac", "brcm,bcm4329-fmac";
++			reg = <1>;
++
++			brcm,drive-strength = <10>;
++
++			pinctrl-names = "default";
++			pinctrl-0 = <&wlan_sleep_clk_pin>;
++		};
++	};
++
+ 	gpio-keys {
+ 		compatible = "gpio-keys";
+ 		input-name = "gpio-keys";
+@@ -463,6 +517,22 @@
+ 				output-high;
+ 				line-name = "otg-gpio";
+ 			};
++
++			wlan_sleep_clk_pin: wl-sleep-clk {
++				pins = "gpio16";
++				function = "func2";
++
++				output-high;
++				power-source = <PM8941_GPIO_S3>;
++			};
++
++			wlan_regulator_pin: wl-reg-active {
++				pins = "gpio17";
++				function = "normal";
++
++				bias-disable;
++				power-source = <PM8941_GPIO_S3>;
++			};
+ 		};
+ 	};
+ };
+-- 
+2.17.2
