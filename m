@@ -1,75 +1,383 @@
-Return-Path: <SRS0=F/qE=NQ=kontron.de=frieder.schrempf@kernel.org>
-From: Schrempf Frieder <frieder.schrempf@kontron.De>
-Subject: Re: [PATCH v2 1/4] usb: chipidea: add flag for imx hsic
- implementation
-Date: Mon, 5 Nov 2018 08:52:26 +0000
-Message-ID: <38c1da4a-6fa7-783a-b600-3be7f8ea42a4@kontron.de>
-References: <20181022054031.14027-1-peter.chen@nxp.com>
- <20181022054031.14027-2-peter.chen@nxp.com>
-In-Reply-To: <20181022054031.14027-2-peter.chen@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1E6C4A214E97344C82397CEEABC24E49@snt-world.com>
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=Nr/5=NP=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:56292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387397AbeKEDeD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 4 Nov 2018 22:34:03 -0500
+Date: Sun, 4 Nov 2018 18:18:07 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 4/7] iio: imu: st_lsm6dsx: introduce ST_LSM6DSX_ID_EXT
+ sensor ids
+Message-ID: <20181104181807.3e87bd87@archlinux>
+In-Reply-To: <CAJ0CqmW+fP4sati08vJxjrJuYnaVFjK5zHCoUhdoauyZJUtTEg@mail.gmail.com>
+References: <cover.1541341926.git.lorenzo.bianconi@redhat.com>
+        <425182cdf3fc096dabe330788222a2d59457b7fd.1541341926.git.lorenzo.bianconi@redhat.com>
+        <20181104171837.7a9d1365@archlinux>
+        <CAJ0CqmW+fP4sati08vJxjrJuYnaVFjK5zHCoUhdoauyZJUtTEg@mail.gmail.com>
 MIME-Version: 1.0
-To: Peter Chen <peter.chen@nxp.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-T24gMjIuMTAuMTggMDc6NDIsIFBldGVyIENoZW4gd3JvdGU6DQo+IE5YUCAoRnJlZWNhbGUpIGlt
-eCBIU0lDIGRlc2lnbiBoYXMgc29tZSBzcGVjaWFsIHJlcXVpcmVtZW50cywgYWRkDQo+IHNvbWUg
-ZmxhZ3MgYXQgaG9zdCBjb2RlIHRvIGhhbmRsZSB0aGVtLg0KPiANCj4gU2lnbmVkLW9mZi1ieTog
-UGV0ZXIgQ2hlbiA8cGV0ZXIuY2hlbkBueHAuY29tPg0KPiAtLS0NCj4gICBkcml2ZXJzL3VzYi9j
-aGlwaWRlYS9ob3N0LmMgIHwgMjQgKysrKysrKysrKysrKysrKysrKysrKysrDQo+ICAgaW5jbHVk
-ZS9saW51eC91c2IvY2hpcGlkZWEuaCB8ICAzICsrKw0KPiAgIDIgZmlsZXMgY2hhbmdlZCwgMjcg
-aW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2NoaXBpZGVhL2hv
-c3QuYyBiL2RyaXZlcnMvdXNiL2NoaXBpZGVhL2hvc3QuYw0KPiBpbmRleCBkODU4YTgyYzRmNDQu
-LmQ3NGExM2Q3YzIxYyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy91c2IvY2hpcGlkZWEvaG9zdC5j
-DQo+ICsrKyBiL2RyaXZlcnMvdXNiL2NoaXBpZGVhL2hvc3QuYw0KPiBAQCAtMjgsNiArMjgsMjAg
-QEAgc3RydWN0IGVoY2lfY2lfcHJpdiB7DQo+ICAgCXN0cnVjdCByZWd1bGF0b3IgKnJlZ192YnVz
-Ow0KPiAgIH07DQo+ICAgDQo+ICsvKiBUaGlzIGZ1bmN0aW9uIGlzIHVzZWQgdG8gb3ZlcnJpZGUg
-V0tDTiwgV0tETiwgYW5kIFdLT0MgKi8NCj4gK3N0YXRpYyB2b2lkIGNpX2VoY2lfb3ZlcnJpZGVf
-d2FrZXVwX2ZsYWcoc3RydWN0IGVoY2lfaGNkICplaGNpLA0KDQpJIHRoaW5rIGl0IHdvdWxkIGJl
-IGJldHRlciB0byByZW5hbWUgdGhpcyBmdW5jdGlvbiB0byBzb21ldGhpbmcgbGlrZSANCmNpX2Vo
-Y2lfY2xlYXJfcmVnX2JpdHMoKSBhcyBpdCBpcyBjb21wbGV0ZWx5IGdlbmVyaWMgYW5kIGp1c3Qg
-Y2xlYXJzIA0Kc29tZSBiaXRzIGluIHJlZy4NCg0KQW5kIGFsc28gcmVtb3ZlIHRoZSBhcmd1bWVu
-dCAic2V0IiwgYXMgY3VycmVudGx5IHRoZSBvbmx5IHVzYWdlIG9mIHRoaXMgDQpmdW5jdGlvbiBp
-cyB3aXRoIHNldD1mYWxzZS4NCg0KPiArCQl1MzIgX19pb21lbSAqcmVnLCB1MzIgZmxhZ3MsIGJv
-b2wgc2V0KQ0KPiArew0KPiArCXUzMiB2YWwgPSBlaGNpX3JlYWRsKGVoY2ksIHJlZyk7DQo+ICsN
-Cj4gKwlpZiAoc2V0KQ0KPiArCQl2YWwgfD0gZmxhZ3M7DQo+ICsJZWxzZQ0KPiArCQl2YWwgJj0g
-fmZsYWdzOw0KPiArDQo+ICsJZWhjaV93cml0ZWwoZWhjaSwgdmFsLCByZWcpOw0KPiArfQ0KPiAr
-DQo+ICAgc3RhdGljIGludCBlaGNpX2NpX3BvcnRwb3dlcihzdHJ1Y3QgdXNiX2hjZCAqaGNkLCBp
-bnQgcG9ydG51bSwgYm9vbCBlbmFibGUpDQo+ICAgew0KPiAgIAlzdHJ1Y3QgZWhjaV9oY2QgKmVo
-Y2kgPSBoY2RfdG9fZWhjaShoY2QpOw0KPiBAQCAtMTcwLDYgKzE4NCwxMSBAQCBzdGF0aWMgaW50
-IGhvc3Rfc3RhcnQoc3RydWN0IGNpX2hkcmMgKmNpKQ0KPiAgIAkJCW90Zy0+aG9zdCA9ICZoY2Qt
-PnNlbGY7DQo+ICAgCQkJaGNkLT5zZWxmLm90Z19wb3J0ID0gMTsNCj4gICAJCX0NCj4gKw0KPiAr
-CQlpZiAoY2ktPnBsYXRkYXRhLT5ub3RpZnlfZXZlbnQgJiYNCj4gKwkJCShjaS0+cGxhdGRhdGEt
-PmZsYWdzICYgQ0lfSERSQ19JTVhfSVNfSFNJQykpDQo+ICsJCQljaS0+cGxhdGRhdGEtPm5vdGlm
-eV9ldmVudA0KPiArCQkJCShjaSwgQ0lfSERSQ19JTVhfSFNJQ19BQ1RJVkVfRVZFTlQpOw0KPiAg
-IAl9DQo+ICAgDQo+ICAgCXJldHVybiByZXQ7DQo+IEBAIC0yMTgsNiArMjM3LDggQEAgdm9pZCBj
-aV9oZHJjX2hvc3RfZGVzdHJveShzdHJ1Y3QgY2lfaGRyYyAqY2kpDQo+ICAgc3RhdGljIGludCBj
-aV9laGNpX2J1c19zdXNwZW5kKHN0cnVjdCB1c2JfaGNkICpoY2QpDQo+ICAgew0KPiAgIAlzdHJ1
-Y3QgZWhjaV9oY2QgKmVoY2kgPSBoY2RfdG9fZWhjaShoY2QpOw0KPiArCXN0cnVjdCBkZXZpY2Ug
-KmRldiA9IGhjZC0+c2VsZi5jb250cm9sbGVyOw0KPiArCXN0cnVjdCBjaV9oZHJjICpjaSA9IGRl
-dl9nZXRfZHJ2ZGF0YShkZXYpOw0KPiAgIAlpbnQgcG9ydDsNCj4gICAJdTMyIHRtcDsNCj4gICAN
-Cj4gQEAgLTI0OSw2ICsyNzAsOSBAQCBzdGF0aWMgaW50IGNpX2VoY2lfYnVzX3N1c3BlbmQoc3Ry
-dWN0IHVzYl9oY2QgKmhjZCkNCj4gICAJCQkgKiBJdCBuZWVkcyBhIHNob3J0IGRlbGF5IGJldHdl
-ZW4gc2V0IFJTIGJpdCBhbmQgUEhDRC4NCj4gICAJCQkgKi8NCj4gICAJCQl1c2xlZXBfcmFuZ2Uo
-MTUwLCAyMDApOw0KPiArCQkJaWYgKGNpLT5wbGF0ZGF0YS0+ZmxhZ3MgJiBDSV9IRFJDX0lNWF9J
-U19IU0lDKQ0KPiArCQkJCWNpX2VoY2lfb3ZlcnJpZGVfd2FrZXVwX2ZsYWcoZWhjaSwgcmVnLA0K
-PiArCQkJCQlQT1JUX1dLRElTQ19FIHwgUE9SVF9XS0NPTk5fRSwgZmFsc2UpOw0KPiAgIAkJCWJy
-ZWFrOw0KPiAgIAkJfQ0KPiAgIAl9DQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3VzYi9j
-aGlwaWRlYS5oIGIvaW5jbHVkZS9saW51eC91c2IvY2hpcGlkZWEuaA0KPiBpbmRleCA2Mzc1OGMz
-OTllNGUuLjkxMWUwNWFmNjcxZSAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC91c2IvY2hp
-cGlkZWEuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L3VzYi9jaGlwaWRlYS5oDQo+IEBAIC02MCw5
-ICs2MCwxMiBAQCBzdHJ1Y3QgY2lfaGRyY19wbGF0Zm9ybV9kYXRhIHsNCj4gICAjZGVmaW5lIENJ
-X0hEUkNfT1ZFUlJJREVfUlhfQlVSU1QJQklUKDExKQ0KPiAgICNkZWZpbmUgQ0lfSERSQ19PVkVS
-UklERV9QSFlfQ09OVFJPTAlCSVQoMTIpIC8qIEdsdWUgbGF5ZXIgbWFuYWdlcyBwaHkgKi8NCj4g
-ICAjZGVmaW5lIENJX0hEUkNfUkVRVUlSRVNfQUxJR05FRF9ETUEJQklUKDEzKQ0KPiArI2RlZmlu
-ZSBDSV9IRFJDX0lNWF9JU19IU0lDCQlCSVQoMTQpDQo+ICAgCWVudW0gdXNiX2RyX21vZGUJZHJf
-bW9kZTsNCj4gICAjZGVmaW5lIENJX0hEUkNfQ09OVFJPTExFUl9SRVNFVF9FVkVOVAkJMA0KPiAg
-ICNkZWZpbmUgQ0lfSERSQ19DT05UUk9MTEVSX1NUT1BQRURfRVZFTlQJMQ0KPiArI2RlZmluZSBD
-SV9IRFJDX0lNWF9IU0lDX0FDVElWRV9FVkVOVAkJMg0KPiArI2RlZmluZSBDSV9IRFJDX0lNWF9I
-U0lDX1NVU1BFTkRfRVZFTlQJCTMNCj4gICAJaW50CSgqbm90aWZ5X2V2ZW50KSAoc3RydWN0IGNp
-X2hkcmMgKmNpLCB1bnNpZ25lZCBldmVudCk7DQo+ICAgCXN0cnVjdCByZWd1bGF0b3IJKnJlZ192
-YnVzOw0KPiAgIAlzdHJ1Y3QgdXNiX290Z19jYXBzCWNpX290Z19jYXBzOw0K
+On Sun, 4 Nov 2018 18:47:04 +0100
+Lorenzo Bianconi <lorenzo.bianconi@redhat.com> wrote:
+
+> >
+> > On Sun,  4 Nov 2018 15:39:03 +0100
+> > Lorenzo Bianconi <lorenzo.bianconi@redhat.com> wrote:
+> >  
+> > > Add ST_LSM6DSX_ID_EXT{0,1,2} sensor ids as reference for slave devices
+> > > connected to st_lsm6dsx i2c controller. Moreover introduce odr dependency
+> > > between accel and ext devices since accelerometer is used as trigger for
+> > > i2c master controller read/write operations
+> > >
+> > > Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>  
+> >
+> > Hi Lorenzo,
+> >
+> > There looks to be an unrelated cleanup in here around set_enable so
+> > please pull that out as a separate patch.
+> >
+> > Also, it seems the odr dependency is not as simple as they should be
+> > the same?  Perhaps you could add more here on what that dependency is?
+> >  
+> 
+> I added the odr change in this patch since external sensors need to
+> use accelerometer
+> device as trigger for i2c operations, in other words the accelerometer
+> sensor needs to
+> be powered up in order to enable i2c master (I was thinking to a
+> logical dependency here :)).
+> Anyway I am fine to add just ext_id definitions in this patch and add
+> odr dependency in a
+> separate patch.
+
+I was mostly just looking for some more explanation of the contraint
+in the description rather than any splitting of the ODR change
+and the ext_id part.
+
+(the enable stuff does want to be a separate patch however!)
+
+> Just one comment inline.
+> 
+> Regards,
+> Lorenzo
+> 
+> 
+> > Thanks,
+> >
+> > Jonathan
+> >  
+> > > ---
+> > >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h       |   9 +-
+> > >  .../iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c    |  27 +++--
+> > >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c  | 101 ++++++++++++------
+> > >  3 files changed, 95 insertions(+), 42 deletions(-)
+> > >
+> > > diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> > > index ac4cbbb0b3fb..2beb4f563892 100644
+> > > --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> > > +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> > > @@ -105,8 +105,11 @@ struct st_lsm6dsx_settings {
+> > >  };
+> > >
+> > >  enum st_lsm6dsx_sensor_id {
+> > > -     ST_LSM6DSX_ID_ACC,
+> > >       ST_LSM6DSX_ID_GYRO,
+> > > +     ST_LSM6DSX_ID_ACC,
+> > > +     ST_LSM6DSX_ID_EXT0,
+> > > +     ST_LSM6DSX_ID_EXT1,
+> > > +     ST_LSM6DSX_ID_EXT2,
+> > >       ST_LSM6DSX_ID_MAX,
+> > >  };
+> > >
+> > > @@ -182,8 +185,8 @@ extern const struct dev_pm_ops st_lsm6dsx_pm_ops;
+> > >
+> > >  int st_lsm6dsx_probe(struct device *dev, int irq, int hw_id, const char *name,
+> > >                    struct regmap *regmap);
+> > > -int st_lsm6dsx_sensor_enable(struct st_lsm6dsx_sensor *sensor);
+> > > -int st_lsm6dsx_sensor_disable(struct st_lsm6dsx_sensor *sensor);
+> > > +int st_lsm6dsx_sensor_set_enable(struct st_lsm6dsx_sensor *sensor,
+> > > +                              bool enable);  
+> > Unrelated change?
+> >  
+> > >  int st_lsm6dsx_fifo_setup(struct st_lsm6dsx_hw *hw);
+> > >  int st_lsm6dsx_set_watermark(struct iio_dev *iio_dev, unsigned int val);
+> > >  int st_lsm6dsx_update_watermark(struct st_lsm6dsx_sensor *sensor,
+> > > diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> > > index 4b3ba0956b5a..96f7d56d3b6d 100644
+> > > --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> > > +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> > > @@ -102,6 +102,9 @@ static void st_lsm6dsx_get_max_min_odr(struct st_lsm6dsx_hw *hw,
+> > >
+> > >       *max_odr = 0, *min_odr = ~0;
+> > >       for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
+> > > +             if (!hw->iio_devs[i])
+> > > +                     continue;
+> > > +
+> > >               sensor = iio_priv(hw->iio_devs[i]);
+> > >
+> > >               if (!(hw->enable_mask & BIT(sensor->id)))
+> > > @@ -125,6 +128,9 @@ static int st_lsm6dsx_update_decimators(struct st_lsm6dsx_hw *hw)
+> > >       for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
+> > >               const struct st_lsm6dsx_reg *dec_reg;
+> > >
+> > > +             if (!hw->iio_devs[i])
+> > > +                     continue;
+> > > +
+> > >               sensor = iio_priv(hw->iio_devs[i]);
+> > >               /* update fifo decimators and sample in pattern */
+> > >               if (hw->enable_mask & BIT(sensor->id)) {
+> > > @@ -232,6 +238,9 @@ int st_lsm6dsx_update_watermark(struct st_lsm6dsx_sensor *sensor, u16 watermark)
+> > >               return 0;
+> > >
+> > >       for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
+> > > +             if (!hw->iio_devs[i])
+> > > +                     continue;
+> > > +
+> > >               cur_sensor = iio_priv(hw->iio_devs[i]);
+> > >
+> > >               if (!(hw->enable_mask & BIT(cur_sensor->id)))
+> > > @@ -278,6 +287,9 @@ static int st_lsm6dsx_reset_hw_ts(struct st_lsm6dsx_hw *hw)
+> > >               return err;
+> > >
+> > >       for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
+> > > +             if (!hw->iio_devs[i])
+> > > +                     continue;
+> > > +
+> > >               sensor = iio_priv(hw->iio_devs[i]);
+> > >               /*
+> > >                * store enable buffer timestamp as reference for
+> > > @@ -562,15 +574,9 @@ static int st_lsm6dsx_update_fifo(struct iio_dev *iio_dev, bool enable)
+> > >                       goto out;
+> > >       }
+> > >
+> > > -     if (enable) {
+> > > -             err = st_lsm6dsx_sensor_enable(sensor);
+> > > -             if (err < 0)
+> > > -                     goto out;
+> > > -     } else {
+> > > -             err = st_lsm6dsx_sensor_disable(sensor);
+> > > -             if (err < 0)
+> > > -                     goto out;
+> > > -     }
+> > > +     err = st_lsm6dsx_sensor_set_enable(sensor, enable);
+> > > +     if (err < 0)
+> > > +             goto out;  
+> >
+> > Another block of unrelated.
+> >  
+> > >
+> > >       err = st_lsm6dsx_set_fifo_odr(sensor, enable);
+> > >       if (err < 0)
+> > > @@ -690,6 +696,9 @@ int st_lsm6dsx_fifo_setup(struct st_lsm6dsx_hw *hw)
+> > >       }
+> > >
+> > >       for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
+> > > +             if (!hw->iio_devs[i])
+> > > +                     continue;
+> > > +
+> > >               buffer = devm_iio_kfifo_allocate(hw->dev);
+> > >               if (!buffer)
+> > >                       return -ENOMEM;
+> > > diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> > > index 3433a5b6bf4d..f2549ddfee20 100644
+> > > --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> > > +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> > > @@ -450,7 +450,7 @@ int st_lsm6dsx_check_odr(struct st_lsm6dsx_sensor *sensor, u16 odr, u8 *val)
+> > >       int i;
+> > >
+> > >       for (i = 0; i < ST_LSM6DSX_ODR_LIST_SIZE; i++)
+> > > -             if (st_lsm6dsx_odr_table[sensor->id].odr_avl[i].hz == odr)
+> > > +             if (st_lsm6dsx_odr_table[sensor->id].odr_avl[i].hz >= odr)  
+> >
+> > Not sure why this change from the description...  
+> 
+> here st_lsm6dsx_odr_table is for lsm6dso accel sensor, while odr can
+> be from external sensors and
+> they can differ (e.g. lsm6dso accel device and lis2mdl conncted to i2c
+> controller)
+
+ah, I found the bit in the datasheet after sending this which says it is capped
+by the lowest of the on chip devices so this makes more sense.
+
+> 
+> >  
+> > >                       break;
+> > >
+> > >       if (i == ST_LSM6DSX_ODR_LIST_SIZE)
+> > > @@ -461,50 +461,82 @@ int st_lsm6dsx_check_odr(struct st_lsm6dsx_sensor *sensor, u16 odr, u8 *val)
+> > >       return 0;
+> > >  }
+> > >
+> > > -static int st_lsm6dsx_set_odr(struct st_lsm6dsx_sensor *sensor, u16 odr)
+> > > +static u16 st_lsm6dsx_check_odr_dependency(struct st_lsm6dsx_hw *hw, u16 odr,
+> > > +                                        enum st_lsm6dsx_sensor_id id)
+> > >  {
+> > > +     struct st_lsm6dsx_sensor *ref = iio_priv(hw->iio_devs[id]);
+> > > +     u16 ret;
+> > > +
+> > > +     if (odr > 0) {
+> > > +             if (hw->enable_mask & BIT(id))
+> > > +                     ret = max_t(u16, ref->odr, odr);
+> > > +             else
+> > > +                     ret = odr;
+> > > +     } else {
+> > > +             ret = (hw->enable_mask & BIT(id)) ? ref->odr : 0;
+> > > +     }
+> > > +     return ret;  
+> >
+> > Cleaner just to return at all the places you set ret?  
+> 
+> ack fine, will do in v2
+> 
+> >  
+> > > +}
+> > > +
+> > > +static int st_lsm6dsx_set_odr(struct st_lsm6dsx_sensor *sensor, u16 req_odr)
+> > > +{
+> > > +     struct st_lsm6dsx_sensor *ref_sensor = sensor;
+> > >       struct st_lsm6dsx_hw *hw = sensor->hw;
+> > >       const struct st_lsm6dsx_reg *reg;
+> > >       unsigned int data;
+> > > +     u8 val = 0;
+> > >       int err;
+> > > -     u8 val;
+> > >
+> > > -     err = st_lsm6dsx_check_odr(sensor, odr, &val);
+> > > -     if (err < 0)
+> > > -             return err;
+> > > +     switch (sensor->id) {
+> > > +     case ST_LSM6DSX_ID_EXT0:
+> > > +     case ST_LSM6DSX_ID_EXT1:
+> > > +     case ST_LSM6DSX_ID_EXT2:
+> > > +     case ST_LSM6DSX_ID_ACC: {
+> > > +             u16 odr;
+> > > +             int i;
+> > > +
+> > > +             /* use acc as trigger for ext devices */
+> > > +             ref_sensor = iio_priv(hw->iio_devs[ST_LSM6DSX_ID_ACC]);
+> > > +             for (i = ST_LSM6DSX_ID_ACC; i < ST_LSM6DSX_ID_MAX; i++) {
+> > > +                     if (!hw->iio_devs[i] || i == sensor->id)
+> > > +                             continue;
+> > > +                     odr = st_lsm6dsx_check_odr_dependency(hw, req_odr, i);
+> > > +                     if (odr != req_odr)
+> > > +                             /* device already configured */
+> > > +                             return 0;
+> > > +             }
+> > > +             break;
+> > > +     }
+> > > +     default:
+> > > +             break;
+> > > +     }
+> > > +
+> > > +     if (req_odr > 0) {
+> > > +             err = st_lsm6dsx_check_odr(ref_sensor, req_odr, &val);
+> > > +             if (err < 0)
+> > > +                     return err;
+> > > +     }
+> > >
+> > > -     reg = &st_lsm6dsx_odr_table[sensor->id].reg;
+> > > +     reg = &st_lsm6dsx_odr_table[ref_sensor->id].reg;
+> > >       data = ST_LSM6DSX_SHIFT_VAL(val, reg->mask);
+> > >       return st_lsm6dsx_update_bits_locked(hw, reg->addr, reg->mask, data);
+> > >  }
+> > >
+> > > -int st_lsm6dsx_sensor_enable(struct st_lsm6dsx_sensor *sensor)
+> > > -{
+> > > -     int err;
+> > > -
+> > > -     err = st_lsm6dsx_set_odr(sensor, sensor->odr);
+> > > -     if (err < 0)
+> > > -             return err;
+> > > -
+> > > -     sensor->hw->enable_mask |= BIT(sensor->id);
+> > > -
+> > > -     return 0;
+> > > -}
+> > > -
+> > > -int st_lsm6dsx_sensor_disable(struct st_lsm6dsx_sensor *sensor)
+> > > +int st_lsm6dsx_sensor_set_enable(struct st_lsm6dsx_sensor *sensor,
+> > > +                              bool enable)
+> > >  {
+> > >       struct st_lsm6dsx_hw *hw = sensor->hw;
+> > > -     const struct st_lsm6dsx_reg *reg;
+> > > -     unsigned int data;
+> > > +     u16 odr = enable ? sensor->odr : 0;
+> > >       int err;
+> > >
+> > > -     reg = &st_lsm6dsx_odr_table[sensor->id].reg;
+> > > -     data = ST_LSM6DSX_SHIFT_VAL(0, reg->mask);
+> > > -     err = st_lsm6dsx_update_bits_locked(hw, reg->addr, reg->mask, data);
+> > > +     err = st_lsm6dsx_set_odr(sensor, odr);
+> > >       if (err < 0)
+> > >               return err;
+> > >
+> > > -     sensor->hw->enable_mask &= ~BIT(sensor->id);
+> > > +     if (enable)
+> > > +             hw->enable_mask |= BIT(sensor->id);
+> > > +     else
+> > > +             hw->enable_mask &= ~BIT(sensor->id);
+> > >
+> > >       return 0;
+> > >  }
+> > > @@ -516,7 +548,7 @@ static int st_lsm6dsx_read_oneshot(struct st_lsm6dsx_sensor *sensor,
+> > >       int err, delay;
+> > >       __le16 data;
+> > >
+> > > -     err = st_lsm6dsx_sensor_enable(sensor);
+> > > +     err = st_lsm6dsx_sensor_set_enable(sensor, true);
+> > >       if (err < 0)
+> > >               return err;
+> > >
+> > > @@ -527,7 +559,7 @@ static int st_lsm6dsx_read_oneshot(struct st_lsm6dsx_sensor *sensor,
+> > >       if (err < 0)
+> > >               return err;
+> > >
+> > > -     st_lsm6dsx_sensor_disable(sensor);
+> > > +     st_lsm6dsx_sensor_set_enable(sensor, false);
+> > >
+> > >       *val = (s16)le16_to_cpu(data);
+> > >
+> > > @@ -892,7 +924,7 @@ int st_lsm6dsx_probe(struct device *dev, int irq, int hw_id, const char *name,
+> > >       if (err < 0)
+> > >               return err;
+> > >
+> > > -     for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
+> > > +     for (i = 0; i < ST_LSM6DSX_ID_EXT0; i++) {
+> > >               hw->iio_devs[i] = st_lsm6dsx_alloc_iiodev(hw, i, name);
+> > >               if (!hw->iio_devs[i])
+> > >                       return -ENOMEM;
+> > > @@ -909,6 +941,9 @@ int st_lsm6dsx_probe(struct device *dev, int irq, int hw_id, const char *name,
+> > >       }
+> > >
+> > >       for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
+> > > +             if (!hw->iio_devs[i])
+> > > +                     continue;
+> > > +
+> > >               err = devm_iio_device_register(hw->dev, hw->iio_devs[i]);
+> > >               if (err)
+> > >                       return err;
+> > > @@ -927,6 +962,9 @@ static int __maybe_unused st_lsm6dsx_suspend(struct device *dev)
+> > >       int i, err = 0;
+> > >
+> > >       for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
+> > > +             if (!hw->iio_devs[i])
+> > > +                     continue;
+> > > +
+> > >               sensor = iio_priv(hw->iio_devs[i]);
+> > >               if (!(hw->enable_mask & BIT(sensor->id)))
+> > >                       continue;
+> > > @@ -952,6 +990,9 @@ static int __maybe_unused st_lsm6dsx_resume(struct device *dev)
+> > >       int i, err = 0;
+> > >
+> > >       for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
+> > > +             if (!hw->iio_devs[i])
+> > > +                     continue;
+> > > +
+> > >               sensor = iio_priv(hw->iio_devs[i]);
+> > >               if (!(hw->enable_mask & BIT(sensor->id)))
+> > >                       continue;  
+> >  
