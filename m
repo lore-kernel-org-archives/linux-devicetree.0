@@ -1,113 +1,152 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW driver
-Date: Sat, 03 Nov 2018 21:20:32 -0700
-Message-ID: <154130523254.88331.12609105382114756048@swboyd.mtv.corp.google.com>
-References: <1539257761-23023-1-git-send-email-tdas@codeaurora.org>
- <1539257761-23023-3-git-send-email-tdas@codeaurora.org>
- <153981915373.5275.15971019914218464179@swboyd.mtv.corp.google.com>
- <0c51a12e-38d3-2df5-4f5f-6a687727e9bf@codeaurora.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 1/1] ARM: dts: imx6sx-sdb: Add flexcan support
+Date: Sun, 4 Nov 2018 15:27:38 +0800
+Message-ID: <20181104072734.GA26016@tiger>
+References: <20181020023318.21663-1-qiangqing.zhang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0c51a12e-38d3-2df5-4f5f-6a687727e9bf@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20181020023318.21663-1-qiangqing.zhang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Taniya Das <tdas@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
+To: Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc: "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Taniya Das (2018-11-02 20:06:00)
-> Hello Stephen,
-> =
+On Sat, Oct 20, 2018 at 02:35:36AM +0000, Joakim Zhang wrote:
+> From: Dong Aisheng <aisheng.dong@nxp.com>
+> 
+> CAN transceiver is different on RevA and RevB board.
+> It's active high on RevA while active low on Rev B.
+> 
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+> ---
+>  arch/arm/boot/dts/imx6sx-sdb-reva.dts | 12 ++++++++
+>  arch/arm/boot/dts/imx6sx-sdb.dts      |  5 ++++
+>  arch/arm/boot/dts/imx6sx-sdb.dtsi     | 42 +++++++++++++++++++++++++++
+>  3 files changed, 59 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+> index 9cc6ff206aea..d98dcf00b9c4 100644
+> --- a/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+> +++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+> @@ -10,6 +10,18 @@
+>  
+>  / {
+>  	model = "Freescale i.MX6 SoloX SDB RevA Board";
+> +
+> +	/* Transceiver EN/STBY is active high on RevA board */
+> +	reg_can_en: regulator-can-en {
+> +		gpio = <&gpio4 25 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
 
-> On 10/18/2018 5:02 AM, Stephen Boyd wrote:
-> > Quoting Taniya Das (2018-10-11 04:36:01)
-> >> --- a/drivers/cpufreq/Kconfig.arm
-> >> +++ b/drivers/cpufreq/Kconfig.arm
-> >> @@ -121,6 +121,17 @@ config ARM_QCOM_CPUFREQ_KRYO
-> >>
-> >>            If in doubt, say N.
-> >>
-> >> +config ARM_QCOM_CPUFREQ_HW
-> >> +       bool "QCOM CPUFreq HW driver"
-> > =
+Please use label node to make it easier for both yourself and readers.
 
-> > Is there any reason this can't be a module?
-> > =
+&reg_can_en {
+	...
+};
 
-> =
+Shawn
 
-> We do not have any use cases where we need to support it as module.
-
-Ok, so it could easily be tristate then? Why not allow it?
-
-> =
-
-> >> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-=
-cpufreq-hw.c
-> >> new file mode 100644
-> >> index 0000000..fe1c264
-> >> --- /dev/null
-> >> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-> >> @@ -0,0 +1,354 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> >> + */
-[...]
-> >> +
-> >> +static const u16 cpufreq_qcom_std_offsets[REG_ARRAY_SIZE] =3D {
-> > =
-
-> > Is this going to change in the future?
-> > =
-
-> =
-
-> Yes, they could change and that was the reason to introduce the offsets. =
-
-> This was discussed earlier too with Sudeep and was to add them.
-> =
-
-> >> +       [REG_ENABLE]            =3D 0x0,
-
-This is only used once? Maybe it could be removed.
-
-> >> +       [REG_LUT_TABLE]         =3D 0x110,
-
-And this is only used during probe to figure out the supported
-frequencies. So we definitely don't need to store around the registers
-after probe in an array of iomem pointers. The only one that we need
-after probe is the one below.
-
-> >> +       [REG_PERF_STATE]        =3D 0x920,
-> >> +};
-> >> +
-> >> +static struct cpufreq_qcom *qcom_freq_domain_map[NR_CPUS];
-> >> +
-> >> +static int
-> >> +qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
-> >> +                            unsigned int index)
-> >> +{
-> >> +       struct cpufreq_qcom *c =3D policy->driver_data;
-> >> +
-> >> +       writel_relaxed(index, c->reg_bases[REG_PERF_STATE]);
-> > =
-
-> > Why can't we avoid the indirection here and store the perf_state pointer
-> > in probe? Then we don't have to indirect through a table to perform the
-> > register write.
-> > =
-
-> =
-
-> As the offsets could change and that was the reason to add this.
-
-With fast switching we can avoid incurring any extra instructions, so
-please make another iomem pointer in the cpufreq_qcom struct just for
-writing the index or if possible, just pass the iomem pointer that
-points to the REG_PERF_STATE as the policy->driver_data variable here.
-Then we have the address in hand without any extra load. If my
-understanding is correct, we don't need to keep around anything besides
-this register address anyway so we should be able to just load it and
-write it immediately.
+> +
+> +	reg_can_stby: regulator-can-stby {
+> +		gpio = <&gpio4 27 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +		vin-supply = <&reg_can_en>;
+> +	};
+>  };
+>  
+>  &i2c1 {
+> diff --git a/arch/arm/boot/dts/imx6sx-sdb.dts b/arch/arm/boot/dts/imx6sx-sdb.dts
+> index 6dd9bebfe027..092b8de142a8 100644
+> --- a/arch/arm/boot/dts/imx6sx-sdb.dts
+> +++ b/arch/arm/boot/dts/imx6sx-sdb.dts
+> @@ -10,6 +10,11 @@
+>  
+>  / {
+>  	model = "Freescale i.MX6 SoloX SDB RevB Board";
+> +
+> +	/* Transceiver EN/STBY is active low on RevB board */
+> +	reg_can_stby: regulator-can-stby {
+> +		gpio = <&gpio4 27 GPIO_ACTIVE_LOW>;
+> +	};
+>  };
+>  
+>  &i2c1 {
+> diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+> index f8f31872fa14..e37ec4b396a2 100644
+> --- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
+> +++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+> @@ -136,6 +136,20 @@
+>  		regulator-max-microvolt = <5000000>;
+>  	};
+>  
+> +	reg_can_en: regulator-can-en {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "can-en";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+> +	reg_can_stby: regulator-can-stby {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "can-stby";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+>  	sound {
+>  		compatible = "fsl,imx6sx-sdb-wm8962", "fsl,imx-audio-wm8962";
+>  		model = "wm8962-audio";
+> @@ -202,6 +216,20 @@
+>  	status = "okay";
+>  };
+>  
+> +&flexcan1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_flexcan1>;
+> +	xceiver-supply = <&reg_can_stby>;
+> +	status = "okay";
+> +};
+> +
+> +&flexcan2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_flexcan2>;
+> +	xceiver-supply = <&reg_can_stby>;
+> +	status = "okay";
+> +};
+> +
+>  &i2c3 {
+>  	clock-frequency = <100000>;
+>  	pinctrl-names = "default";
+> @@ -397,6 +425,20 @@
+>  			>;
+>  		};
+>  
+> +		pinctrl_flexcan1: flexcan1grp {
+> +			fsl,pins = <
+> +				MX6SX_PAD_QSPI1B_DQS__CAN1_TX		0x1b020
+> +				MX6SX_PAD_QSPI1A_SS1_B__CAN1_RX		0x1b020
+> +			>;
+> +		};
+> +
+> +		pinctrl_flexcan2: flexcan2grp {
+> +			fsl,pins = <
+> +				MX6SX_PAD_QSPI1B_SS1_B__CAN2_RX		0x1b020
+> +				MX6SX_PAD_QSPI1A_DQS__CAN2_TX		0x1b020
+> +			>;
+> +		};
+> +
+>  		pinctrl_gpio_keys: gpio_keysgrp {
+>  			fsl,pins = <
+>  				MX6SX_PAD_CSI_DATA04__GPIO1_IO_18 0x17059
+> -- 
+> 2.17.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
