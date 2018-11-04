@@ -1,58 +1,106 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v5 1/5] dt-bindings: phy-qcom-qmp: Fix register underspecification
-Date: Sat, 03 Nov 2018 19:40:18 -0700
-Message-ID: <154129921872.88331.15831802252403117971@swboyd.mtv.corp.google.com>
-References: <20181026173544.136037-1-evgreen@chromium.org>
- <20181026173544.136037-2-evgreen@chromium.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v6 1/3] clk: meson: add emmc sub clock phase delay driver
+Date: Sat, 03 Nov 2018 20:02:43 -0700
+Message-ID: <154130056376.88331.17004780065573288593@swboyd.mtv.corp.google.com>
+References: <1541089855-19356-1-git-send-email-jianxin.pan@amlogic.com>
+ <1541089855-19356-2-git-send-email-jianxin.pan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181026173544.136037-2-evgreen@chromium.org>
+In-Reply-To: <1541089855-19356-2-git-send-email-jianxin.pan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>
-Cc: Douglas Anderson <dianders@chromium.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, Can Guo <cang@codeaurora.org>, linux-kernel@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: Yixun Lan <yixun.lan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Evan Green (2018-10-26 10:35:40)
->                         (or)
-> @@ -150,3 +153,54 @@ Example:
->                 ...
->                 ...
->         };
+Quoting Jianxin Pan (2018-11-01 09:30:53)
+> diff --git a/drivers/clk/meson/clk-phase-delay.c b/drivers/clk/meson/clk-=
+phase-delay.c
+> new file mode 100644
+> index 0000000..83e74ed
+> --- /dev/null
+> +++ b/drivers/clk/meson/clk-phase-delay.c
+> @@ -0,0 +1,66 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Amlogic Meson MMC Sub Clock Controller Driver
+> + *
+> + * Copyright (c) 2017 Baylibre SAS.
+> + * Author: Jerome Brunet <jbrunet@baylibre.com>
+> + *
+> + * Copyright (c) 2018 Amlogic, inc.
+> + * Author: Yixun Lan <yixun.lan@amlogic.com>
+> + * Author: Jianxin Pan <jianxin.pan@amlogic.com>
+> + */
 > +
-> +       phy@88eb000 {
-> +               compatible =3D "qcom,sdm845-qmp-usb3-uni-phy";
-> +               reg =3D <0x88eb000 0x18c>;
-> +               #clock-cells =3D <1>;
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <1>;
-> +               ranges;
+> +#include <linux/clk-provider.h>
+> +#include "clkc.h"
 > +
-> +               clocks =3D <&gcc GCC_USB3_SEC_PHY_AUX_CLK>,
-> +                        <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-> +                        <&gcc GCC_USB3_SEC_CLKREF_CLK>,
-> +                        <&gcc GCC_USB3_SEC_PHY_COM_AUX_CLK>;
-> +               clock-names =3D "aux", "cfg_ahb", "ref", "com_aux";
-> +
-> +               resets =3D <&gcc GCC_USB3PHY_PHY_SEC_BCR>,
-> +                        <&gcc GCC_USB3_PHY_SEC_BCR>;
-> +               reset-names =3D "phy", "common";
-> +
-> +               lane@88eb200 {
-> +                       reg =3D <0x88eb200 0x128>,
-> +                             <0x88eb400 0x1fc>,
-> +                             <0x88eb800 0x218>,
-> +                             <0x88eb600 0x70>;
-> +                       #phy-cells =3D <0>;
-> +                       clocks =3D <&gcc GCC_USB3_SEC_PHY_PIPE_CLK>;
-> +                       clock-names =3D "pipe0";
-> +                       clock-output-names =3D "usb3_uni_phy_pipe_clk_src=
-";
+> +static int meson_clk_phase_delay_get_phase(struct clk_hw *hw)
+> +{
+> +       struct clk_regmap *clk =3D to_clk_regmap(hw);
+> +       struct meson_clk_phase_delay_data *ph =3D
+> +               meson_clk_get_phase_delay_data(clk);
 
-If this has clock-output-names then I would expect to see a #clock-cells
-property, but that isn't here in this node. Are we relying on the same
-property in the parent node?
+Nitpick: Do this after declaring variables because it splits a line.
 
-> +               };
-> +       };
+> +       unsigned long period_ps, p, d;
+> +       int degrees;
+> +
+> +       p =3D meson_parm_read(clk->map, &ph->phase);
+> +       degrees =3D p * 360 / (1 << (ph->phase.width));
+
+Nitpick: Remove useless parenthesis.
+
+> +
+> +       period_ps =3D DIV_ROUND_UP((unsigned long)NSEC_PER_SEC * 1000,
+
+Is the cast necessary?
+
+> +                                clk_hw_get_rate(hw));
+> +
+> +       d =3D meson_parm_read(clk->map, &ph->delay);
+> +       degrees +=3D d * ph->delay_step_ps * 360 / period_ps;
+> +       degrees %=3D 360;
+> +
+> +       return degrees;
+> +}
+> +
+> +static int meson_clk_phase_delay_set_phase(struct clk_hw *hw, int degree=
+s)
+> +{
+> +       struct clk_regmap *clk =3D to_clk_regmap(hw);
+> +       struct meson_clk_phase_delay_data *ph =3D
+> +               meson_clk_get_phase_delay_data(clk);
+> +       unsigned long period_ps, d =3D 0, r;
+> +       u64 p;
+> +
+> +       p =3D degrees % 360;
+
+We don't allow phase to be larger than 360 so this isn't needed.
+
+> +       period_ps =3D DIV_ROUND_UP((unsigned long)NSEC_PER_SEC * 1000,
+
+Drop the cast?
+
+> +                                clk_hw_get_rate(hw));
+> +
+> +       /* First compute the phase index (p), the remainder (r) is the
+
+Nitpick: Please leave /* on it's own line.
+
+> +        * part we'll try to acheive using the delays (d).
+> +        */
+> +       r =3D do_div(p, 360 / (1 << (ph->phase.width)));
+
+Drop useless parenthesis please.
+
+> +       d =3D DIV_ROUND_CLOSEST(r * period_ps,
+> +                             360 * ph->delay_step_ps);
+> +       d =3D min(d, PMASK(ph->delay.width));
+> +
+> +       meson_parm_write(clk->map, &ph->phase, p);
+> +       meson_parm_write(clk->map, &ph->delay, d);
+> +       return 0;
+> +}
