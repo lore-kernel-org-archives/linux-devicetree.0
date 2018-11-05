@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2 2/3] arm64: allwinner: h6: Add common
- orangepi nodes into dtsi
-Date: Mon,  5 Nov 2018 13:18:41 +0530
-Message-ID: <20181105074842.21988-2-jagan@amarulasolutions.com>
+Subject: [PATCH v2 3/3] arm64: allwinner: h6: Add OrangePi Lite2
+ initial support
+Date: Mon,  5 Nov 2018 13:18:42 +0530
+Message-ID: <20181105074842.21988-3-jagan@amarulasolutions.com>
 References: <20181105074842.21988-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB4HL77PAKGQEJ6OSVJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB5XL77PAKGQEWGGZG5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181105074842.21988-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -17,338 +17,59 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, zhaoyifan <zhao_steven-Y9sIeH5OGRo@public.gmane.org>
+Cc: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Based on the information from hardware schematics and orangepi
-vendor orangepi H6 boards, One Plus and Lite2 shares common nodes
-like axp805, uart, mmc0 etc. The common differences between them is
-- One Plus, has Ethernet
-- Lite2, has Wifi, USB3, CSI port.
+From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 
-So, add common orangepi nodes into sun50i-h6-orangepi.dtsi so-that
-it case use on respective orangepi h6 board dts files.
+OrangePi Lite2 is Allwinner H6 based open-source SBC,
+which support:
+- Allwinner H6 Quad-core 64-bit ARM Cortex-A53
+- GPU Mali-T720
+- 1GB LPDDR3 RAM
+- AXP805 PMIC
+- AP6356S Wifi/BT
+- USB 2.0, USB 3.0 Host, OTG
+- HDMI port
+- 5V/2A DC power supply
 
-Cc: zhaoyifan <zhao_steven-Y9sIeH5OGRo@public.gmane.org>
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 ---
 Changes for v2:
-- Add proper commit message about vendor intention on
-  board differences.
+- none
 
- .../allwinner/sun50i-h6-orangepi-one-plus.dts | 140 +---------------
- .../dts/allwinner/sun50i-h6-orangepi.dtsi     | 150 ++++++++++++++++++
- 2 files changed, 151 insertions(+), 139 deletions(-)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+ arch/arm64/boot/dts/allwinner/Makefile                |  1 +
+ .../boot/dts/allwinner/sun50i-h6-orangepi-lite2.dts   | 11 +++++++++++
+ 2 files changed, 12 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dts
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
-index 0612c19cd994..12e17567ab56 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
-@@ -4,147 +4,9 @@
-  * Author: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-  */
- 
--/dts-v1/;
--
--#include "sun50i-h6.dtsi"
--
--#include <dt-bindings/gpio/gpio.h>
-+#include "sun50i-h6-orangepi.dtsi"
- 
- / {
- 	model = "OrangePi One Plus";
- 	compatible = "xunlong,orangepi-one-plus", "allwinner,sun50i-h6";
--
--	aliases {
--		serial0 = &uart0;
--	};
--
--	chosen {
--		stdout-path = "serial0:115200n8";
--	};
--};
--
--&mmc0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins>;
--	vmmc-supply = <&reg_cldo1>;
--	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
--	bus-width = <4>;
--	status = "okay";
--};
--
--&r_i2c {
--	status = "okay";
--
--	axp805: pmic@36 {
--		compatible = "x-powers,axp805", "x-powers,axp806";
--		reg = <0x36>;
--		interrupt-parent = <&r_intc>;
--		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
--		interrupt-controller;
--		#interrupt-cells = <1>;
--		x-powers,self-working-mode;
--
--		regulators {
--			reg_aldo1: aldo1 {
--				regulator-always-on;
--				regulator-min-microvolt = <3300000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-name = "vcc-pl";
--			};
--
--			reg_aldo2: aldo2 {
--				regulator-min-microvolt = <3300000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-name = "vcc-ac200";
--			};
--
--			reg_aldo3: aldo3 {
--				regulator-always-on;
--				regulator-min-microvolt = <3300000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-name = "vcc25-dram";
--			};
--
--			reg_bldo1: bldo1 {
--				regulator-always-on;
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <1800000>;
--				regulator-name = "vcc-bias-pll";
--			};
--
--			reg_bldo2: bldo2 {
--				regulator-always-on;
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <1800000>;
--				regulator-name = "vcc-efuse-pcie-hdmi-io";
--			};
--
--			reg_bldo3: bldo3 {
--				regulator-always-on;
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <1800000>;
--				regulator-name = "vcc-dcxoio";
--			};
--
--			bldo4 {
--				/* unused */
--			};
--
--			reg_cldo1: cldo1 {
--				regulator-always-on;
--				regulator-min-microvolt = <3300000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-name = "vcc-3v3";
--			};
--
--			reg_cldo2: cldo2 {
--				regulator-min-microvolt = <3300000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-name = "vcc-wifi-1";
--			};
--
--			reg_cldo3: cldo3 {
--				regulator-min-microvolt = <3300000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-name = "vcc-wifi-2";
--			};
--
--			reg_dcdca: dcdca {
--				regulator-always-on;
--				regulator-min-microvolt = <810000>;
--				regulator-max-microvolt = <1080000>;
--				regulator-name = "vdd-cpu";
--			};
--
--			reg_dcdcc: dcdcc {
--				regulator-min-microvolt = <810000>;
--				regulator-max-microvolt = <1080000>;
--				regulator-name = "vdd-gpu";
--			};
--
--			reg_dcdcd: dcdcd {
--				regulator-always-on;
--				regulator-min-microvolt = <960000>;
--				regulator-max-microvolt = <960000>;
--				regulator-name = "vdd-sys";
--			};
--
--			reg_dcdce: dcdce {
--				regulator-always-on;
--				regulator-min-microvolt = <1200000>;
--				regulator-max-microvolt = <1200000>;
--				regulator-name = "vcc-dram";
--			};
--
--			sw {
--				/* unused */
--			};
--		};
--	};
--};
--
--&uart0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&uart0_ph_pins>;
--	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+index 8d4f97f279e0..38f4a015637c 100644
+--- a/arch/arm64/boot/dts/allwinner/Makefile
++++ b/arch/arm64/boot/dts/allwinner/Makefile
+@@ -18,5 +18,6 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-pc2.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-prime.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-zero-plus.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-zero-plus2.dtb
++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-lite2.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-one-plus.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64.dtb
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dts
 new file mode 100644
-index 000000000000..0612c19cd994
+index 000000000000..e098a2475f2d
 --- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-@@ -0,0 +1,150 @@
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dts
+@@ -0,0 +1,11 @@
 +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
 +/*
-+ * Copyright (C) 2018 Amarula Solutions
-+ * Author: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
++ * Copyright (C) 2018 Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 + */
 +
-+/dts-v1/;
-+
-+#include "sun50i-h6.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
++#include "sun50i-h6-orangepi.dtsi"
 +
 +/ {
-+	model = "OrangePi One Plus";
-+	compatible = "xunlong,orangepi-one-plus", "allwinner,sun50i-h6";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins>;
-+	vmmc-supply = <&reg_cldo1>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
-+&r_i2c {
-+	status = "okay";
-+
-+	axp805: pmic@36 {
-+		compatible = "x-powers,axp805", "x-powers,axp806";
-+		reg = <0x36>;
-+		interrupt-parent = <&r_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		x-powers,self-working-mode;
-+
-+		regulators {
-+			reg_aldo1: aldo1 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc-pl";
-+			};
-+
-+			reg_aldo2: aldo2 {
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc-ac200";
-+			};
-+
-+			reg_aldo3: aldo3 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc25-dram";
-+			};
-+
-+			reg_bldo1: bldo1 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc-bias-pll";
-+			};
-+
-+			reg_bldo2: bldo2 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc-efuse-pcie-hdmi-io";
-+			};
-+
-+			reg_bldo3: bldo3 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc-dcxoio";
-+			};
-+
-+			bldo4 {
-+				/* unused */
-+			};
-+
-+			reg_cldo1: cldo1 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc-3v3";
-+			};
-+
-+			reg_cldo2: cldo2 {
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc-wifi-1";
-+			};
-+
-+			reg_cldo3: cldo3 {
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc-wifi-2";
-+			};
-+
-+			reg_dcdca: dcdca {
-+				regulator-always-on;
-+				regulator-min-microvolt = <810000>;
-+				regulator-max-microvolt = <1080000>;
-+				regulator-name = "vdd-cpu";
-+			};
-+
-+			reg_dcdcc: dcdcc {
-+				regulator-min-microvolt = <810000>;
-+				regulator-max-microvolt = <1080000>;
-+				regulator-name = "vdd-gpu";
-+			};
-+
-+			reg_dcdcd: dcdcd {
-+				regulator-always-on;
-+				regulator-min-microvolt = <960000>;
-+				regulator-max-microvolt = <960000>;
-+				regulator-name = "vdd-sys";
-+			};
-+
-+			reg_dcdce: dcdce {
-+				regulator-always-on;
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-name = "vcc-dram";
-+			};
-+
-+			sw {
-+				/* unused */
-+			};
-+		};
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_ph_pins>;
-+	status = "okay";
++	model = "OrangePi Lite2";
++	compatible = "xunlong,orangepi-lite2", "allwinner,sun50i-h6";
 +};
 -- 
 2.18.0.321.gffc6fa0e3
