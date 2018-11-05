@@ -1,46 +1,68 @@
-From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH] ASoC: imx-audmux: complete dt-bindings for imx6
-Date: Mon,  5 Nov 2018 14:58:02 +0100
-Message-ID: <20181105135802.30486-1-peron.clem@gmail.com>
+From: Maxime Jourdan <mjourdan@baylibre.com>
+Subject: Re: [PATCH 0/2] drm/meson: Allow using optional canvas provider
+Date: Mon, 5 Nov 2018 15:02:28 +0100
+Message-ID: <CAMO6nax_Q4kbDkeBmYQezo9dpMztD4DMFh+1dewax4p6d_S7mw@mail.gmail.com>
+References: <20181105104508.23090-1-mjourdan@baylibre.com> <1a3d3b7a-5050-7b4c-bda6-8ef532403d01@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1a3d3b7a-5050-7b4c-bda6-8ef532403d01@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: NXP Linux Team <linux-imx@nxp.com>
-Cc: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Colin Didier <colin.didier@devialet.com>, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-From: Colin Didier <colin.didier@devialet.com>
+Hi Neil,
 
-The MX6 Audmux differs from MX51.
+On Mon, Nov 5, 2018 at 1:51 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Hi Maxime,
+>
+> On 05/11/2018 11:45, Maxime Jourdan wrote:
+> > The meson DRM driver currently uses constant, static canvas indexes.
+> >
+> > This is not optimal and could conflict with other drivers also using
+> > canvases.
+>
+> Indeed, it's now time to use the canvas provider merged in 4.20-rc1 !
+>
+> >
+> > This patch series allows the driver to optionnally use a canvas provider
+> > module that is able to dispatch canvases, on demand and free of conflict.
+> >
+> > In the future, the current way of doing things will be deprecated.
+>
+> Do you confirm you will send a patch to remove the legacy canvas code when
+> everything is merged (including DT changes) ?
+>
+> I'll wait until the bindings are reviewed, then I'll push the serie to drm-misc-next.
+>
 
-This patch adds the audmux for i.MX6 family.
+Yes, ultimately it will be removed.
 
-Signed-off-by: Colin Didier <colin.didier@devialet.com>
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- include/dt-bindings/sound/fsl-imx-audmux.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
+The plan is:
 
-diff --git a/include/dt-bindings/sound/fsl-imx-audmux.h b/include/dt-bindings/sound/fsl-imx-audmux.h
-index 15f138bebe16..a1d0741d9ed1 100644
---- a/include/dt-bindings/sound/fsl-imx-audmux.h
-+++ b/include/dt-bindings/sound/fsl-imx-audmux.h
-@@ -25,6 +25,14 @@
- #define MX51_AUDMUX_PORT6		5
- #define MX51_AUDMUX_PORT7		6
- 
-+#define MX6_AUDMUX_PORT1_SSI1		0
-+#define MX6_AUDMUX_PORT2_SSI2		1
-+#define MX6_AUDMUX_PORT3		2
-+#define MX6_AUDMUX_PORT4		3
-+#define MX6_AUDMUX_PORT5		4
-+#define MX6_AUDMUX_PORT6		5
-+#define MX6_AUDMUX_PORT7_SSI3		6
-+
- /*
-  * TFCSEL/RFCSEL (i.MX27) or TFSEL/TCSEL/RFSEL/RCSEL (i.MX31/51/53/6Q)
-  * can be sourced from Rx/Tx.
--- 
-2.19.1
+4.21: allow using both modes, add the "amlogic,canvas" property to the dts files
+4.22: remove the old way and change the amlogic,canvas property to mandatory
+
+This should allow for a nice transition.
+
+Maxime
+
+> Thanks,
+> Neil
+>
+> >
+> > Maxime Jourdan (2):
+> >   dt-bindings: display: amlogic, meson-vpu: Add optional canvas provider
+> >     node
+> >   drm/meson: Use optional canvas provider
+> >
+> >  .../bindings/display/amlogic,meson-vpu.txt    |  2 +
+> >  drivers/gpu/drm/meson/Kconfig                 |  1 +
+> >  drivers/gpu/drm/meson/meson_crtc.c            | 14 ++++--
+> >  drivers/gpu/drm/meson/meson_drv.c             | 46 ++++++++++++-------
+> >  drivers/gpu/drm/meson/meson_drv.h             |  4 ++
+> >  drivers/gpu/drm/meson/meson_plane.c           |  8 +++-
+> >  6 files changed, 53 insertions(+), 22 deletions(-)
+> >
