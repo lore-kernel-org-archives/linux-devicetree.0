@@ -1,16 +1,16 @@
-Return-Path: <robherring2@gmail.com>
-Date: Mon, 5 Nov 2018 17:06:52 -0600
-From: Rob Herring <robh@kernel.org>
+Return-Path: <SRS0=UXaX=NQ=linux.intel.com=andriy.shevchenko@kernel.org>
+Date: Mon, 5 Nov 2018 16:23:36 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Subject: Re: [PATCH v1 1/2] dt-bindings: dmaengine: dw-dmac: add protection
  control property
-Message-ID: <20181105230652.GA22828@bogus>
+Message-ID: <20181105142336.GH10650@smile.fi.intel.com>
 References: <6b18bcf33d6473c166b607a5fa31ba63727cf6bb.1541350844.git.chunkeey@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <6b18bcf33d6473c166b607a5fa31ba63727cf6bb.1541350844.git.chunkeey@gmail.com>
 To: Christian Lamparter <chunkeey@gmail.com>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vkoul@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Viresh Kumar <vireshk@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
 On Sun, Nov 04, 2018 at 06:01:38PM +0100, Christian Lamparter wrote:
@@ -24,6 +24,9 @@ On Sun, Nov 04, 2018 at 06:01:38PM +0100, Christian Lamparter wrote:
 > the AHB HPROT[1:3] signals.  The HPROT0 (Data Access) is
 > always hardwired to 1 for this controller.
 > 
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
 > Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
 > ---
 >  .../devicetree/bindings/dma/snps-dma.txt      |  4 ++++
@@ -43,23 +46,8 @@ On Sun, Nov 04, 2018 at 06:01:38PM +0100, Christian Lamparter wrote:
 > +- snps,dma-protection-control: Channel's AHB HPROT[3:1] protection setting.
 > +  Array property with one cell per channel. The default value for a channel
 > +  is 0 (for non-cacheable, strongly ordered, unprivileged data access).
-
-IIRC, 'strongly ordered' is outside the scope of AHB (and AXI) 
-definitions. There is a mapping of SO page table entries to bus control 
-signals, but that's part of the cpu and outside the scope of this doc.
-
 > +  Refer to include/dt-bindings/dma/dw-dmac.h for possible values.
-
-Do you really need this to be per channel rather than just per platform? 
-If anything, the optimal setting is probably based on the memory address 
-(device, on-chip RAM, or DRAM), not the channel. 
-
-I'd expect for most platforms, bufferable works without any s/w issue
-(and should be more correct in that coherent allocations are bufferable 
-(at least for ARM). Cacheable probably has no effect as most systems 
-don't have coherent i/o (again, at least for ARM).
-
-
+>  
 >  Example:
 >  
 > diff --git a/MAINTAINERS b/MAINTAINERS
@@ -94,9 +82,6 @@ don't have coherent i/o (again, at least for ARM).
 > +#define DW_DMAC_CHAN_ALLOCATION_DESCENDING      1       /* seven to zero */
 > +#define DW_DMAC_CHAN_PRIORITY_ASCENDING         0       /* chan0 highest */
 > +#define DW_DMAC_CHAN_PRIORITY_DESCENDING        1       /* chan7 highest */
-
-These seem unrelated?
-
 > +
 > +/*
 > + * Protection Control bits provide protection against illegal transactions.
@@ -111,3 +96,7 @@ These seem unrelated?
 > -- 
 > 2.19.1
 > 
+
+-- 
+With Best Regards,
+Andy Shevchenko
