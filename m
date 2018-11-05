@@ -1,55 +1,50 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH] arm64: dts: zynqmp: replace gpio-key,wakeup with
- wakeup-source property
-Date: Mon, 5 Nov 2018 13:43:28 +0100
-Message-ID: <e91087c5-ba88-1d0d-e84e-ef126811fb41@xilinx.com>
-References: <20181024114540.5196-1-sudeep.holla@arm.com>
- <20181024114540.5196-2-sudeep.holla@arm.com>
- <5f430204-9c97-0351-ff63-e64e8d42da69@xilinx.com>
- <1a3fb47c-1427-d79e-9cb4-4476fd6a1cfb@arm.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 0/2] drm/meson: Allow using optional canvas provider
+Date: Mon, 5 Nov 2018 13:51:46 +0100
+Message-ID: <1a3d3b7a-5050-7b4c-bda6-8ef532403d01@baylibre.com>
+References: <20181105104508.23090-1-mjourdan@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1a3fb47c-1427-d79e-9cb4-4476fd6a1cfb@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20181105104508.23090-1-mjourdan@baylibre.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>, Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Jourdan <mjourdan@baylibre.com>
+Cc: devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05. 11. 18 12:47, Sudeep Holla wrote:
-> 
-> 
-> 
-> On 05/11/2018 09:32, Michal Simek wrote:
->> On 24. 10. 18 13:45, Sudeep Holla wrote:
->>> Most of the legacy "gpio-key,wakeup" boolean property is already
->>> replaced with "wakeup-source". However few occurrences of old property
->>> has popped up again, probably from the remnants in downstream trees.
->>>
->>> This patch replaces the legacy properties with the unified
->>> "wakeup-source" property.
->>>
->>
->> Will be good to point to 700a38b27eefc which introduced but that's fine.
->>
-> 
-> If you prefer, you can add the reference as you have already applied.
-> I am fine with that. Are you fine with 32-bit change ? I have posted
-> single patch covering multiple platforms so that I can ask ARM SoC to
-> pick it. If you can Ack it, I will ask them to pick directly.
-> 
-
-32bit version should go directly via arm-soc guys. I have sent you my
-review. Also I have updated that commit message to match with sha1 above.
-
-Thanks,
-Michal
+SGkgTWF4aW1lLAoKT24gMDUvMTEvMjAxOCAxMTo0NSwgTWF4aW1lIEpvdXJkYW4gd3JvdGU6Cj4g
+VGhlIG1lc29uIERSTSBkcml2ZXIgY3VycmVudGx5IHVzZXMgY29uc3RhbnQsIHN0YXRpYyBjYW52
+YXMgaW5kZXhlcy4KPiAKPiBUaGlzIGlzIG5vdCBvcHRpbWFsIGFuZCBjb3VsZCBjb25mbGljdCB3
+aXRoIG90aGVyIGRyaXZlcnMgYWxzbyB1c2luZwo+IGNhbnZhc2VzLgoKSW5kZWVkLCBpdCdzIG5v
+dyB0aW1lIHRvIHVzZSB0aGUgY2FudmFzIHByb3ZpZGVyIG1lcmdlZCBpbiA0LjIwLXJjMSAhCgo+
+IAo+IFRoaXMgcGF0Y2ggc2VyaWVzIGFsbG93cyB0aGUgZHJpdmVyIHRvIG9wdGlvbm5hbGx5IHVz
+ZSBhIGNhbnZhcyBwcm92aWRlcgo+IG1vZHVsZSB0aGF0IGlzIGFibGUgdG8gZGlzcGF0Y2ggY2Fu
+dmFzZXMsIG9uIGRlbWFuZCBhbmQgZnJlZSBvZiBjb25mbGljdC4KPiAKPiBJbiB0aGUgZnV0dXJl
+LCB0aGUgY3VycmVudCB3YXkgb2YgZG9pbmcgdGhpbmdzIHdpbGwgYmUgZGVwcmVjYXRlZC4KCkRv
+IHlvdSBjb25maXJtIHlvdSB3aWxsIHNlbmQgYSBwYXRjaCB0byByZW1vdmUgdGhlIGxlZ2FjeSBj
+YW52YXMgY29kZSB3aGVuCmV2ZXJ5dGhpbmcgaXMgbWVyZ2VkIChpbmNsdWRpbmcgRFQgY2hhbmdl
+cykgPwoKSSdsbCB3YWl0IHVudGlsIHRoZSBiaW5kaW5ncyBhcmUgcmV2aWV3ZWQsIHRoZW4gSSds
+bCBwdXNoIHRoZSBzZXJpZSB0byBkcm0tbWlzYy1uZXh0LgoKVGhhbmtzLApOZWlsCgo+IAo+IE1h
+eGltZSBKb3VyZGFuICgyKToKPiAgIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBhbWxvZ2ljLCBtZXNv
+bi12cHU6IEFkZCBvcHRpb25hbCBjYW52YXMgcHJvdmlkZXIKPiAgICAgbm9kZQo+ICAgZHJtL21l
+c29uOiBVc2Ugb3B0aW9uYWwgY2FudmFzIHByb3ZpZGVyCj4gCj4gIC4uLi9iaW5kaW5ncy9kaXNw
+bGF5L2FtbG9naWMsbWVzb24tdnB1LnR4dCAgICB8ICAyICsKPiAgZHJpdmVycy9ncHUvZHJtL21l
+c29uL0tjb25maWcgICAgICAgICAgICAgICAgIHwgIDEgKwo+ICBkcml2ZXJzL2dwdS9kcm0vbWVz
+b24vbWVzb25fY3J0Yy5jICAgICAgICAgICAgfCAxNCArKysrLS0KPiAgZHJpdmVycy9ncHUvZHJt
+L21lc29uL21lc29uX2Rydi5jICAgICAgICAgICAgIHwgNDYgKysrKysrKysrKysrLS0tLS0tLQo+
+ICBkcml2ZXJzL2dwdS9kcm0vbWVzb24vbWVzb25fZHJ2LmggICAgICAgICAgICAgfCAgNCArKwo+
+ICBkcml2ZXJzL2dwdS9kcm0vbWVzb24vbWVzb25fcGxhbmUuYyAgICAgICAgICAgfCAgOCArKyst
+Cj4gIDYgZmlsZXMgY2hhbmdlZCwgNTMgaW5zZXJ0aW9ucygrKSwgMjIgZGVsZXRpb25zKC0pCj4g
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
