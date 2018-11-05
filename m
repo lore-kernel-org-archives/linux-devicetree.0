@@ -1,202 +1,222 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH v2 09/10] irqchip: ti-sci-inta: Add support for Interrupt
- Aggregator driver
-Date: Mon, 5 Nov 2018 21:50:36 +0530
-Message-ID: <a7e3095f-0ceb-838b-d8dc-b2e864c02d20@ti.com>
-References: <20181018154017.7112-1-lokeshvutla@ti.com>
- <20181018154017.7112-10-lokeshvutla@ti.com>
- <b20127dc-be43-3b00-9960-663738df0069@arm.com>
- <9969f24c-cdb0-1f5c-d0f4-b1c1f587325c@ti.com>
- <86va5ssrfm.wl-marc.zyngier@arm.com>
- <b3a71622-7734-04be-0b0c-38e9dc6542d4@ti.com>
- <63ba5353-8470-b4c1-64a8-a1df5bf48614@ti.com>
- <86va5myz7t.wl-marc.zyngier@arm.com>
- <81136b74-4b45-f44b-0168-23d191a4fb5e@ti.com>
- <c8778f4a-148a-2b4d-6dd9-7b7ca89b20a9@ti.com>
- <c2e7c31d-95c7-5ae2-fea3-ed4fcbb73746@arm.com>
+From: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] dt: bindings: add missing dt properties for WCN3990 wifi
+ node
+Date: Mon, 05 Nov 2018 08:33:02 -0800
+Message-ID: <154143558212.88331.5337286842567829007@swboyd.mtv.corp.google.com>
+References: <1539172376-19269-1-git-send-email-govinds@codeaurora.org>
+ <1539172376-19269-2-git-send-email-govinds@codeaurora.org>
+ <153976208916.5275.15753381614937010537@swboyd.mtv.corp.google.com>
+ <20181102184315.GA130458@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c2e7c31d-95c7-5ae2-fea3-ed4fcbb73746@arm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Nishanth Menon <nm@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, jason@lakedaemon.net, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, tglx@linutronix.de, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20181102184315.GA130458-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
+Quoting Brian Norris (2018-11-02 11:43:17)
+> Hi Stephen and Govind,
+> =
 
-On Monday 05 November 2018 09:06 PM, Marc Zyngier wrote:
-> On 05/11/18 08:08, Lokesh Vutla wrote:
->> Hi Marc,
->>
->> On Monday 29 October 2018 06:34 PM, Lokesh Vutla wrote:
->>> Hi Marc,
->>>
->>> On Sunday 28 October 2018 07:01 PM, Marc Zyngier wrote:
->>>> Hi Lokesh,
->>>>
->>>> On Fri, 26 Oct 2018 21:19:41 +0100,
->>>> Lokesh Vutla <lokeshvutla@ti.com> wrote:
->>>>>
->>>>> Hi Marc,
->>>>>
->>>>> [..snip..]
->>>>>>> [...]
->>>>>>>
->>>>>>>>>> +/**
->>>>>>>>>> + * ti_sci_inta_register_event() - Register a event to an interrupt aggregator
->>>>>>>>>> + * @dev:	Device pointer to source generating the event
->>>>>>>>>> + * @src_id:	TISCI device ID of the event source
->>>>>>>>>> + * @src_index:	Event source index within the device.
->>>>>>>>>> + * @virq:	Linux Virtual IRQ number
->>>>>>>>>> + * @flags:	Corresponding IRQ flags
->>>>>>>>>> + * @ack_needed:	If explicit clearing of event is required.
->>>>>>>>>> + *
->>>>>>>>>> + * Creates a new irq and attaches to IA domain if virq is not specified
->>>>>>>>>> + * else attaches the event to vint corresponding to virq.
->>>>>>>>>> + * When using TISCI within the client drivers, source indexes are always
->>>>>>>>>> + * generated dynamically and cannot be represented in DT. So client
->>>>>>>>>> + * drivers should call this API instead of platform_get_irq().
->>>>>>>>>
->>>>>>>>> NAK. Either this fits in the standard model, or we adapt the standard
->>>>>>>>> model to catter for your particular use case. But we don't define a new,
->>>>>>>>> TI specific API.
->>>>>>>>>
->>>>>>>>> I have a hunch that if the IDs are generated dynamically, then the model
->>>>>>>>> we use for MSIs would fit this thing. I also want to understand what
->>>>>>>>
->>>>>>>> hmm..I haven't thought about using MSI. Will try to explore it. But
->>>>>>>> the "struct msi_msg" is not applicable in this case as device does not
->>>>>>>> write to a specific location.
->>>>>>>
->>>>>>> It doesn't need to. You can perfectly ignore the address field and
->>>>>>> only be concerned with the data. We already have MSI users that do not
->>>>>>> need programming of the doorbell address, just the data.
->>>>>>
->>>>>
->>>>> Just one more clarification.
->>>>>
->>>>> First let me explain the IRQ routes a bit deeply. As I said earlier
->>>>> there are three ways in which IRQ can flow in AM65x SoC
->>>>> 1) Device directly connected to GIC
->>>>> 	- Device IRQ --> GIC
->>>>> 2) Device connected to INTR.
->>>>> 	- Device IRQ --> INTR --> GIC
->>>>> 3) Devices connected to INTA.
->>>>> 	- Device IRQ --> INTA --> INTR --> GIC
->>>>>
->>>>> 1 and 2 are straight forward and we use DT for IRQ
->>>>> representation. Coming to 3 the trickier part is that Input to INTA
->>>>> and output from INTA and dynamically managed. To be more specific:
->>>>> - By hardware design there are certain set of physical global
->>>>> events(interrupts) attached to an INTA. Out of which a certain range
->>>>> are assigned to the current linux host that can be queried from
->>>>> system-controller.
->>>>> - Similarly out of all the INTA outputs(referenced as vints) a certain
->>>>> range can be used by the current linux host.
->>>>>
->>>>>
->>>>> So for configuring an IRQ route in case 3, the following steps are needed:
->>>>> - Device id and device resource index for which the interrupt is needed
->>>>
->>>> THat is no different from a PCI device for example, where we need the
->>>> requester ID and the number of the interrupt in the MSI-X table.
->>>>
->>>>> - A free event id from the range assigned to the INTA in this host context
->>>>> - A free vint from the range assigned to the INTA in this host context
->>>>> - A free gic IRQ from the range assigned to the INTR in this host context.
->>>>
->>>>    From what I understand of the driver, at least some of that is under
->>>> the responsibility of the firmware, right? Or is the driver under
->>>> control of all three parameters? To be honest, it doesn't really
->>>
->>> Driver should control all three parameters.
->>>
->>>> matter, as the as far as the kernel is concerned, the irqchip drivers
->>>> are free to deal with the routing anyway they want.
->>>
->>> Correct, that's my understanding as well.
->>>
->>>>
->>>>> With the above information, linux should send a message to
->>>>> system-controller using TISCI protocol. After policing the given
->>>>> information, system-controller does the following:
->>>>> - Attaches the interrupt(INTA input) to the device resource index
->>>>> - Muxes the interrupt(INTA input) to corresponding vint(INTA output)
->>>>> - Muxes the vint(INTR input) to GIC irq(INTR output).
->>>>
->>>> Isn't there a 1:1 mapping between *used* INTR inputs and outputs?
->>>> Since INTR is a router, there is no real muxing. I assume that the
->>>> third point above is just a copy-paste error.
->>>
->>> Right, my bad. INTR is just a router and no read muxing.
->>>
->>>>
->>>>>
->>>>> For grouping of interrupts, the same vint number is to be passed to
->>>>> system-controller for all the requests.
->>>>>
->>>>> Keeping all the above in mind, I see the following as software IRQ
->>>>> Domain Hierarchy:
->>>>>
->>>>> 1) INTA multi MSI --> 2)INTA  -->3) MSI --> 4) INTR  -->5) GIC
->>>>>
->>>>> INTA driver has to set a chained IRQ using virq allocated from its
->>>>> parent MSI. This is to differentiate the grouped interrupts within
->>>>> INTA.
->>>>>
->>>>> Inorder to cover the above two MSI domains, a new bus driver has to be
->>>>> created as I couldn't find a fit with the existing bus drivers.
->>>>>
->>>>> Does the above approach make sense? Please correct me if i am wrong.
->>>>
->>>> I think this can be further simplified, as you seem to assume that
->>>> dynamic allocation implies MSI. This is not the case. You can
->>>> perfectly use dynamically allocated interrupts and still not use MSIs.
->>>>
->>>> INTA is indeed a chained interrupt controller, as it may mux several
->>>> inputs onto a single output. But the output of INTA is not an MSI. It
->>>> is just a regular interrupt that can allocated when the first mapping
->>>> gets established.
->>>
->>> okay. I guess it can just be done using irq_create_fwspec_mapping().
->>>
->>
->> I am facing an issue with this approach as I am trying to call
->> irq_create_fwspec_mapping() from alloc callback of INTA driver. During
->> allocation the function call flow looks like:
->>
->> inta_msi_domain_alloc_irqs()
->> 	msi_domain_alloc_irqs()
->> 		__irq_domain_alloc_irqs()
->> 			*mutex_lock(&irq_domain_mutex);*
->> 			irq_domain_alloc_irqs_hierarchy()
->> 				ti_sci_inta_irq_domain_alloc()
->> 					if (first event in group)
->> 							irq_create_fwspec_mapping()
->> 								irq_find_matching_fwspec()
->> 									*mutex_lock(&irq_domain_mutex);*
->> 									
->>
->> The mutex_lock is called again if INTR IRQ gets allocated in alloc callback of
->> INTA driver. So I am clearly calling irq_create_fwspec_mapping() from a wrong place.
-> 
-> The real issue is that you're are calling irq_create_fwspec_mapping at
-> all. This is only supposed to be called by the high level code, not an
-> irqchip driver in the middle of its own allocation.
-> 
-> The right API to use is irq_domain_alloc_irqs_parent(), which calls into
-> the parent domain allocation. See the multiple uses in the tree already.
+> I was chatting with Govind, and he seemed to be a bit stalled on this.
+> I'd encourage him to reply with whatever knowledge he has, because it's
+> a bit hard to give definitive answers when I don't know all the inner
+> workings here. (In fact, you, Stephen, probably know more than me about
+> how Qualcomm MSM chips work.)
+> =
 
-But irq_domain_alloc_irqs_parent() doesn't create a new IRQ mapping. Or your 
-suggestion is that when first event mapping gets established in the group, use 
-the same Linux virq number to allocate the parent interrupts?
+> First of all, I'll explain the limited bits I do know, and see how they
+> fit in below. I may be wrong.
+> =
 
-If yes, then wouldn't it be a problem during free irqs? client driver should 
-make sure that first event that gets allocated in the group should be the last 
-to be freed.
+> WCN3990 is an external module, for supporting BT and Wifi RF components.
+> It has a host interface for the Wifi, but it's not something the host
+> knows how to talk to directly at all -- it's an "Analog IQ" interface,
+> between an internal SoC MAC and PHY processor. Instead, we talk to this
+> module via the System NOC (?). So while there are basically 2 distinct
+> hardware components (on-SoC coprocessors, various internal communication
+> buses, various shared memory regions, etc.; and the external WCN3990
+> module), there is almost no way for the main processor to "talk" to the
+> WCN3990 directly.
+> =
 
-Thanks and regards,
-Lokesh
+> Another data point to throw into the mix: WCN3990 can apparently be used
+> on multiple different SoCs -- I see public announcments about SDM835
+> (and 660?), and I'm currently playing with it on SDM845. So perhaps
+> there is some value in understanding "WCN3990" as being distinct from
+> "WiFi MAC/PHY hardware and communication logic found on a MSM SoC." But
+> they do seem to be very tightly coupled...
+> =
+
+> Side note: there is also a BT component on the WCN3990 module, and we
+> *can* talk to that directly over UART. There's a separate binding going
+> in for that, and it's a much clearer separation to divide "UART
+> controller" and "BT/UART interface on WCN3990."
+
+Thanks for the background. I wasn't aware of much about this driver but
+taking this information and skimming the driver makes my mental model
+believe that the register space here is a custom I/O region in the SoC
+used to read/write to the BT/WiFi chip that's outside the SoC. Similar
+to i2c, SPI, or even PCI, in the way that the I/O region in the SoC is
+essentially the controller that is connected to the external chip. It's
+like the hardware engineers stuck the PCI hardware blob inside the SoC
+and then made special pins and wires for the thing the PCI device used
+to do internally. Or is that completely wrong still?
+
+> =
+
+> On Wed, Oct 17, 2018 at 12:41:29AM -0700, Stephen Boyd wrote:
+> > Quoting Govind Singh (2018-10-10 04:52:54)
+> > > --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> > > +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> =
+
+> > > @@ -55,7 +63,8 @@ Optional properties:
+> > >  - qcom,ath10k-pre-calibration-data : pre calibration data as an arra=
+y,
+> > >                                      the length can vary between hw v=
+ersions.
+> > >  - <supply-name>-supply: handle to the regulator device tree node
+> > > -                          optional "supply-name" is "vdd-0.8-cx-mx".
+> > > +                          optional "supply-name" are "vdd-0.8-cx-mx",
+> > > +                          "vdd-1.8-xo", "vdd-1.3-rfa" and "vdd-3.3-c=
+h0".
+> > =
+
+> > Why can't the wifi firmware manage these regulators itself?
+> =
+
+> In my understanding:
+> At least 3 of those (all the supplies Govind is adding) are external
+> pins on the RF module. Why do you assume these are something the
+> firmware can control? In the schematics I'm looking at, this seems to be
+> connected to a PMIC. While it's certainly possible this is something the
+> Q6 processor (running modem and Wifi firmware) can control, it doesn't
+> seem obvious to me that they *must* be able to.
+> =
+
+> So I guess I'd say: why not represent these regulators in the device
+> tree? It seems like a valid hardware description (like I said, 3 power
+> rail pins on an external module).
+
+Agreed. I want to specify the regulators in DT. I'm mostly asking if
+there is firmware that runs and can control these regulators itself. If
+so, then I'm lost why that firmware can't manage these itself and let us
+ignore these requirements and never specify them in DT. Presumably there
+isn't firmware that can manage it?
+
+> =
+
+> Now, your *next* paragraph might have hairier points :)
+> =
+
+> > And these names don't seem to match any sort of schematic or really
+> =
+
+> Which names? I see these pin names on the WCN3990 datasheets I see:
+> =
+
+>  VDD18_IO
+>  VDD18_XO
+>  VDD33_CH0
+>  VDD33_CH1
+>  VDD13_RFA
+> =
+
+> 3 of those match the 3 Govind is adding, and they appear to line up with
+> what I see in schematics.
+
+Yes those three match up, but the other one, vdd-0.8-cx-mx, looks like
+the CX and MX power supplies that are typical of Qualcomm designs so
+maybe those regulators are used for the I/O region inside the SoC
+instead of the off-SoC chip?
+
+> =
+
+> > describe what this device is. From what I can tell, we've combined the
+> =
+
+> I've described "waht the device is" above to the best of my knowledge.
+> If you're just looking at schematics, you might possibly be thrown by
+> the fact that WCN3990 is packaged in a module provided by other vendors,
+> so it might be labeled by that vendor on the schematic, not by the
+> Qualcomm WCN3990 name.
+
+Thanks!
+
+> =
+
+> > there's something in the SoC, and there's something outside the SoC, and
+> > these two things are connected by having two nodes and a phandle between
+> > them?
+> =
+
+> Why phandle? Under what bus would you place the WCN3990? As per my
+> description above, there is really no way to talk to it directly. So if
+> anything, it seems like it would be a subnode of the node we're
+> describing here.
+
+I'm not tied to having a phandle at all. I'm mostly trying to make the
+following distinction in DT. If a node is under the soc node, it has a
+reg property and represents a hardware block inside the SoC. Any
+regulators or clocks that the node uses should also either be provided
+inside the SoC, or be pins on the SoC that the device can be connected
+to. Otherwise, if those regulators aren't going to pins for the SoC,
+then it means we have a mash-up of two devices in one place in the DT
+hierarchy. This is what doesn't look proper to me, and it's why we would
+want to split the node into two nodes, the SoC part and the module part
+for the off-SoC WCN chip.
+
+And yes, from what you've told me here it would make sense to make the
+WCN chip a subnode of this SoC node instead of a phandle connecting the
+two.
+ =
+
+> =
+
+> In favor of your separation though: there are many ways to utilize
+> WCN3990 apparently, and I'd imagine the binding might change a bit
+> depending on the SoC (e.g., different clocks?). So there might be value
+> in describing the SDM{835,845,...whatever}-wifi-soc-components vs.
+> external WCN3990. Additionally, I don't know if it's even possible to
+> utilize a different RF module with the same SoC (is there a possibility
+> of a, e.g., WCN3991 that can use the same SoC logic?).
+
+Sure. Does it matter though? Even one-off solutions would be better off
+if we described what's going on at the board-level so that it isn't
+confusing to readers of the schematic and the dts file. Plus, it would
+allow the module creator to deliver a dts file for the module without
+having to involve the SoC bits and clearly split things so that the SoC
+dts file can be written without board assumptions.
+
+> =
+
+> But I'm still not totally convinced that splitting this up really makes
+> much sense. Is there other precedent for splitting out a separate node
+> for something that we don't talk to at all (no digital interface)? Or do
+> we just need a more accurate compatible property, that describes the
+> fact that this is a SDM845+WCN3990 combination? The only thing that
+> software would ever do with the separate node is look it up to find the
+> regulators to power it on.
+> =
+
+
+Agreed, it may seem like overkill, but I'll argue that this part allows
+us to easily see where the division of clocks and regulators is, instead
+of having to mentally untangle the external module from the internal SoC
+bits. I started to compare the AHB and the SNOC bus types in the ath10k
+driver but then I decided they were just a little bit different from
+each other to where this split wouldn't help that code.
+
+So like you say, if in the future the same SNOC hardware block will be
+used with a different WCN chip that has different clock and power
+requirements it would be very easy to integrate that by writing a new
+sub-device node and driver and doing this split. I admit that there
+would be some new work in the ath10k driver to support sub-device
+drivers that the bus layer communicates with and it may conflict with
+the way the PCI designs are implemented, but I would still argue this is
+better from a DT implementer perspective because we can see what things
+are on the board and what things are in the SoC.
