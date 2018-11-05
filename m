@@ -1,185 +1,77 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v4 6/6] arch: Move initrd= parsing into do_mounts_initrd.c
-Date: Mon,  5 Nov 2018 14:54:31 -0800
-Message-ID: <20181105225431.24485-7-f.fainelli@gmail.com>
-References: <20181105225431.24485-1-f.fainelli@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH] dt-bindings: opp: Extend qcom-opp bindings with
+ properties needed for CPR
+Date: Mon, 5 Nov 2018 17:17:45 -0600
+Message-ID: <20181105231745.GA25883@bogus>
+References: <20180627045234.27403-3-rnayak@codeaurora.org>
+ <20181015124749.27276-1-niklas.cassel@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181105225431.24485-1-f.fainelli@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20181015124749.27276-1-niklas.cassel@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, linux-arm-kernel@lists.infradead.org
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-ARC, ARM, ARM64 and Unicore32 are all capable of parsing the "initrd="
-command line parameter to allow specifying the physical address and size
-of an initrd. Move that parsing into init/do_mounts_initrd.c such that
-we no longer duplicate that logic.
+On Mon, Oct 15, 2018 at 02:47:49PM +0200, Niklas Cassel wrote:
+> Extend qcom-opp bindings with properties needed for Core Power Reduction
+> (CPR).
+> 
+> CPR is included in a great variety of Qualcomm SoC, e.g. msm8916 and
+> msm8996, and was first introduced in msm8974.
+> 
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> ---
+> Hello Rob, Rajendra,
+> 
+> Sorry for not replying sooner.
+> Since Rob wanted the binding to be complete before merging,
+> this is my proposal to extend the OPP binding with properties
+> needed to support CPR (both for msm8916 and msm8996).
+> I've discussed the proposal with Viresh, and this proposal
+> seems better than what I previously suggested here:
+> https://lore.kernel.org/lkml/20181005204424.GA29500@centauri.lan/
+> 
+>  .../devicetree/bindings/opp/qcom-opp.txt      | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/opp/qcom-opp.txt b/Documentation/devicetree/bindings/opp/qcom-opp.txt
+> index db4d970c7ec7..3ab5dd84de86 100644
+> --- a/Documentation/devicetree/bindings/opp/qcom-opp.txt
+> +++ b/Documentation/devicetree/bindings/opp/qcom-opp.txt
+> @@ -23,3 +23,22 @@ Required properties:
+>  representing a corner/level that's communicated with a remote microprocessor
+>  (usually called the RPM) which then translates it into a certain voltage on
+>  a voltage rail.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- arch/arc/mm/init.c       | 25 +++++--------------------
- arch/arm/mm/init.c       | 17 -----------------
- arch/arm64/mm/init.c     | 18 ------------------
- arch/unicore32/mm/init.c | 18 ------------------
- init/do_mounts_initrd.c  | 17 +++++++++++++++++
- 5 files changed, 22 insertions(+), 73 deletions(-)
+I've lost the context here. Please send this all together.
 
-diff --git a/arch/arc/mm/init.c b/arch/arc/mm/init.c
-index f8fe5668b30f..43bf4c3a1290 100644
---- a/arch/arc/mm/init.c
-+++ b/arch/arc/mm/init.c
-@@ -78,24 +78,6 @@ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
- 		base, TO_MB(size), !in_use ? "Not used":"");
- }
- 
--#ifdef CONFIG_BLK_DEV_INITRD
--static int __init early_initrd(char *p)
--{
--	unsigned long start, size;
--	char *endp;
--
--	start = memparse(p, &endp);
--	if (*endp == ',') {
--		size = memparse(endp + 1, NULL);
--
--		initrd_start = (unsigned long)__va(start);
--		initrd_end = (unsigned long)__va(start + size);
--	}
--	return 0;
--}
--early_param("initrd", early_initrd);
--#endif
--
- /*
-  * First memory setup routine called from setup_arch()
-  * 1. setup swapper's mm @init_mm
-@@ -140,8 +122,11 @@ void __init setup_arch_memory(void)
- 	memblock_reserve(low_mem_start, __pa(_end) - low_mem_start);
- 
- #ifdef CONFIG_BLK_DEV_INITRD
--	if (initrd_start)
--		memblock_reserve(__pa(initrd_start), initrd_end - initrd_start);
-+	if (phys_initrd_size) {
-+		memblock_reserve(phys_initrd_start, phys_initrd_size);
-+		initrd_start = (unsigned long)__va(phys_initrd_start);
-+		initrd_end = initrd_start + phys_initrd_size;
-+	}
- #endif
- 
- 	early_init_fdt_reserve_self();
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index a3b6f1f1cbaf..478ea8b7db87 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -51,23 +51,6 @@ unsigned long __init __clear_cr(unsigned long mask)
- #endif
- 
- #ifdef CONFIG_BLK_DEV_INITRD
--static int __init early_initrd(char *p)
--{
--	phys_addr_t start;
--	unsigned long size;
--	char *endp;
--
--	start = memparse(p, &endp);
--	if (*endp == ',') {
--		size = memparse(endp + 1, NULL);
--
--		phys_initrd_start = start;
--		phys_initrd_size = size;
--	}
--	return 0;
--}
--early_param("initrd", early_initrd);
--
- static int __init parse_tag_initrd(const struct tag *tag)
- {
- 	pr_warn("ATAG_INITRD is deprecated; "
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index a66ffcde5f13..7474093363bc 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -61,24 +61,6 @@
- s64 memstart_addr __ro_after_init = -1;
- phys_addr_t arm64_dma_phys_limit __ro_after_init;
- 
--#ifdef CONFIG_BLK_DEV_INITRD
--static int __init early_initrd(char *p)
--{
--	unsigned long start, size;
--	char *endp;
--
--	start = memparse(p, &endp);
--	if (*endp == ',') {
--		size = memparse(endp + 1, NULL);
--
--		phys_initrd_start = start;
--		phys_initrd_size = size;
--	}
--	return 0;
--}
--early_param("initrd", early_initrd);
--#endif
--
- #ifdef CONFIG_KEXEC_CORE
- /*
-  * reserve_crashkernel() - reserves memory for crash kernel
-diff --git a/arch/unicore32/mm/init.c b/arch/unicore32/mm/init.c
-index 02aa2c0b295e..85ef2c624090 100644
---- a/arch/unicore32/mm/init.c
-+++ b/arch/unicore32/mm/init.c
-@@ -30,24 +30,6 @@
- 
- #include "mm.h"
- 
--#ifdef CONFIG_BLK_DEV_INITRD
--static int __init early_initrd(char *p)
--{
--	unsigned long start, size;
--	char *endp;
--
--	start = memparse(p, &endp);
--	if (*endp == ',') {
--		size = memparse(endp + 1, NULL);
--
--		phys_initrd_start = start;
--		phys_initrd_size = size;
--	}
--	return 0;
--}
--early_param("initrd", early_initrd);
--#endif
--
- /*
-  * This keeps memory configuration data used by a couple memory
-  * initialization functions, as well as show_mem() for the skipping
-diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
-index 45865b72f4ea..732d21f4a637 100644
---- a/init/do_mounts_initrd.c
-+++ b/init/do_mounts_initrd.c
-@@ -27,6 +27,23 @@ static int __init no_initrd(char *str)
- 
- __setup("noinitrd", no_initrd);
- 
-+static int __init early_initrd(char *p)
-+{
-+	phys_addr_t start;
-+	unsigned long size;
-+	char *endp;
-+
-+	start = memparse(p, &endp);
-+	if (*endp == ',') {
-+		size = memparse(endp + 1, NULL);
-+
-+		phys_initrd_start = start;
-+		phys_initrd_size = size;
-+	}
-+	return 0;
-+}
-+early_param("initrd", early_initrd);
-+
- static int init_linuxrc(struct subprocess_info *info, struct cred *new)
- {
- 	ksys_unshare(CLONE_FS | CLONE_FILES);
--- 
-2.17.1
+> +
+> +Optional properties:
+> +- opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. Even
+> +  though a power domain doesn't need a opp-hz, there can be devices in the
+> +  power domain that need to know the highest supported frequency for each
+> +  corner/level (e.g. CPR), in order to properly initialize the hardware.
+> +
+> +- qcom,fuse-level: A positive value representing the fuse corner/level
+> +  associated with this OPP node. Sometimes several corners/levels shares
+> +  a certain fuse corner/level. A fuse corner/level contains e.g. ref uV,
+> +  min uV, and max uV.
+> +
+> +- qcom,fuse-level-<name>: Named qcom,fuse-level property. This is exactly
+> +  similar to the above qcom,fuse-level property, but allows multiple
+> +  fuse corners/levels to be provided for the same OPP. At runtime, the
+> +  platform can pick a <name> and matching qcom,fuse-level-<name> property
+> +  will be enabled for all OPPs. If the platform doesn't pick a specific
+> +  <name> or the <name> doesn't match with any qcom,fuse-level-<name>
+> +  properties, then qcom,fuse-level property shall be used, if present.
+
+We've generally moved away from having variable property names (gpio and 
+regulators are the big exceptions) as they are harder to parse.
+
+I'm not clear why you'd need this. Just make qcom,fuse-level an array 
+and search each 'qcom,fuse-level' for the matching level number.
+
+Rob
