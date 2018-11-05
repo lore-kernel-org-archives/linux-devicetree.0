@@ -1,162 +1,32 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH v2 2/2] ARM: dts: imx53: Fix memory node duplicaton
-Date: Mon,  5 Nov 2018 19:14:46 -0200
-Message-ID: <1541452486-26597-2-git-send-email-festevam@gmail.com>
-References: <1541452486-26597-1-git-send-email-festevam@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH anybus v3 1/6] misc: support the Arcx anybus bridge
+Date: Mon, 5 Nov 2018 15:20:49 -0600
+Message-ID: <20181105212049.GA320@bogus>
+References: <20181104155501.14767-1-TheSven73@googlemail.com>
+ <20181104155501.14767-2-TheSven73@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1541452486-26597-1-git-send-email-festevam@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org
-Cc: robh@kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181104155501.14767-2-TheSven73@googlemail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: thesven73@gmail.com
+Cc: svendev@arcx.com, linus.walleij@linaro.org, lee.jones@linaro.org, mark.rutland@arm.com, afaerber@suse.de, treding@nvidia.com, david@lechnology.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, stuyoder@gmail.com, maxime.ripard@bootlin.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Boards based on imx53 have duplicate memory nodes:
+On Sun, Nov 04, 2018 at 10:54:56AM -0500, thesven73@gmail.com wrote:
+> From: Sven Van Asbroeck <svendev@arcx.com>
+> 
+> Add a driver for the Arcx anybus bridge.
+> 
+> This chip embeds up to two Anybus-S application connectors
+> (slots), and connects to the SoC via a parallel memory bus.
+> There is also a CAN power readout, unrelated to the Anybus,
+> modelled as a regulator.
 
-- One coming from the board dts file: memory@
+bridge vs. host are confusing me as those are often the same thing. But 
+here bridge is just some auxilliary controls for the bus and the host is 
+the actual bus with devices? I'm not sure why you split this into 2 DT 
+nodes? How many devices are connected to the host processor (i.MX) bus?
 
-- One coming from the imx53.dtsi file.
-
-Fix the duplication by removing the memory node from the dtsi file
-and by adding 'device_type = "memory";' in the board dts.
-
-Reported-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
-Changes since v1:
-- Also change imx53-ard.dts
-
- arch/arm/boot/dts/imx53-ard.dts         | 1 +
- arch/arm/boot/dts/imx53-cx9020.dts      | 1 +
- arch/arm/boot/dts/imx53-m53.dtsi        | 1 +
- arch/arm/boot/dts/imx53-qsb-common.dtsi | 1 +
- arch/arm/boot/dts/imx53-smd.dts         | 1 +
- arch/arm/boot/dts/imx53-tqma53.dtsi     | 1 +
- arch/arm/boot/dts/imx53-tx53.dtsi       | 1 +
- arch/arm/boot/dts/imx53-usbarmory.dts   | 1 +
- arch/arm/boot/dts/imx53.dtsi            | 2 --
- 9 files changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx53-ard.dts b/arch/arm/boot/dts/imx53-ard.dts
-index 117bd00..7d5a482 100644
---- a/arch/arm/boot/dts/imx53-ard.dts
-+++ b/arch/arm/boot/dts/imx53-ard.dts
-@@ -19,6 +19,7 @@
- 	compatible = "fsl,imx53-ard", "fsl,imx53";
- 
- 	memory@70000000 {
-+		device_type = "memory";
- 		reg = <0x70000000 0x40000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx53-cx9020.dts b/arch/arm/boot/dts/imx53-cx9020.dts
-index cf70ebc..c875e23 100644
---- a/arch/arm/boot/dts/imx53-cx9020.dts
-+++ b/arch/arm/boot/dts/imx53-cx9020.dts
-@@ -22,6 +22,7 @@
- 	};
- 
- 	memory@70000000 {
-+		device_type = "memory";
- 		reg = <0x70000000 0x20000000>,
- 		      <0xb0000000 0x20000000>;
- 	};
-diff --git a/arch/arm/boot/dts/imx53-m53.dtsi b/arch/arm/boot/dts/imx53-m53.dtsi
-index ce45f08..db2e5bc 100644
---- a/arch/arm/boot/dts/imx53-m53.dtsi
-+++ b/arch/arm/boot/dts/imx53-m53.dtsi
-@@ -16,6 +16,7 @@
- 	compatible = "aries,imx53-m53", "denx,imx53-m53", "fsl,imx53";
- 
- 	memory@70000000 {
-+		device_type = "memory";
- 		reg = <0x70000000 0x20000000>,
- 		      <0xb0000000 0x20000000>;
- 	};
-diff --git a/arch/arm/boot/dts/imx53-qsb-common.dtsi b/arch/arm/boot/dts/imx53-qsb-common.dtsi
-index 50dde84..f00dda3 100644
---- a/arch/arm/boot/dts/imx53-qsb-common.dtsi
-+++ b/arch/arm/boot/dts/imx53-qsb-common.dtsi
-@@ -11,6 +11,7 @@
- 	};
- 
- 	memory@70000000 {
-+		device_type = "memory";
- 		reg = <0x70000000 0x20000000>,
- 		      <0xb0000000 0x20000000>;
- 	};
-diff --git a/arch/arm/boot/dts/imx53-smd.dts b/arch/arm/boot/dts/imx53-smd.dts
-index 462071c..09071ca 100644
---- a/arch/arm/boot/dts/imx53-smd.dts
-+++ b/arch/arm/boot/dts/imx53-smd.dts
-@@ -12,6 +12,7 @@
- 	compatible = "fsl,imx53-smd", "fsl,imx53";
- 
- 	memory@70000000 {
-+		device_type = "memory";
- 		reg = <0x70000000 0x40000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx53-tqma53.dtsi b/arch/arm/boot/dts/imx53-tqma53.dtsi
-index a72b898..c77d58f 100644
---- a/arch/arm/boot/dts/imx53-tqma53.dtsi
-+++ b/arch/arm/boot/dts/imx53-tqma53.dtsi
-@@ -17,6 +17,7 @@
- 	compatible = "tq,tqma53", "fsl,imx53";
- 
- 	memory@70000000 {
-+		device_type = "memory";
- 		reg = <0x70000000 0x40000000>; /* Up to 1GiB */
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx53-tx53.dtsi b/arch/arm/boot/dts/imx53-tx53.dtsi
-index 54cf3e6..4ab1359 100644
---- a/arch/arm/boot/dts/imx53-tx53.dtsi
-+++ b/arch/arm/boot/dts/imx53-tx53.dtsi
-@@ -51,6 +51,7 @@
- 
- 	/* Will be filled by the bootloader */
- 	memory@70000000 {
-+		device_type = "memory";
- 		reg = <0x70000000 0>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx53-usbarmory.dts b/arch/arm/boot/dts/imx53-usbarmory.dts
-index f6268d0..ee6263d 100644
---- a/arch/arm/boot/dts/imx53-usbarmory.dts
-+++ b/arch/arm/boot/dts/imx53-usbarmory.dts
-@@ -58,6 +58,7 @@
- 	};
- 
- 	memory@70000000 {
-+		device_type = "memory";
- 		reg = <0x70000000 0x20000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index 207eb55..930e2e1 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -23,10 +23,8 @@
- 	 * The decompressor and also some bootloaders rely on a
- 	 * pre-existing /chosen node to be available to insert the
- 	 * command line and merge other ATAGS info.
--	 * Also for U-Boot there must be a pre-existing /memory node.
- 	 */
- 	chosen {};
--	memory { device_type = "memory"; };
- 
- 	aliases {
- 		ethernet0 = &fec;
--- 
-2.7.4
+Rob
