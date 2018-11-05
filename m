@@ -1,64 +1,56 @@
-Return-Path: <robherring2@gmail.com>
-Message-ID: <5bea0e95.1c69fb81.88799.a282@mx.google.com>
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH net-next 2/2] net: nixge: Update device-tree bindings
- with v3.00
-References: <20181029231447.3690-1-alex.williams@ettus.com>
- <20181029231447.3690-2-alex.williams@ettus.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20181029231447.3690-2-alex.williams@ettus.com>
-Date: Mon, 12 Nov 2018 10:24:30 -0600
-To: alex.williams@ettus.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, mark.rutland@arm.com, mdf@kernel.org, keescook@chromium.org, Alex Williams <alex.williams@ni.com>
+Return-Path: <SRS0=bxXA=NQ=pengutronix.de=l.stach@kernel.org>
+Message-ID: <1541438355.2508.7.camel@pengutronix.de>
+Subject: Re: [PATCH 1/4] Input: egalax_ts - clean up capability
+ initialization
+From: Lucas Stach <l.stach@pengutronix.de>
+Date: Mon, 05 Nov 2018 18:19:15 +0100
+In-Reply-To: <20180920142256.2788-1-l.stach@pengutronix.de>
+References: <20180920142256.2788-1-l.stach@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, patchwork-lst@pengutronix.de, Chris Healy <cphealy@gmail.com>, kernel@pengutronix.de, linux-input@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Oct 29, 2018 at 04:14:47PM -0700, alex.williams@ettus.com wrote:
-> From: Alex Williams <alex.williams@ni.com>
+Hi all,
+
+we can drop this whole series. I realized that all I need is already
+implemented in the EXC3000 driver.
+
+Regards,
+Lucas
+
+Am Donnerstag, den 20.09.2018, 16:22 +0200 schrieb Lucas Stach:
+> Just provide the proper flags to input_mt_init_slots(), which will
+> so the right thing and set the proper capability bits.
 > 
-> Now the DMA engine is free to float elsewhere in the system map.
-> 
-> Signed-off-by: Alex Williams <alex.williams@ni.com>
+> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 > ---
->  Documentation/devicetree/bindings/net/nixge.txt | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
+>  drivers/input/touchscreen/egalax_ts.c | 9 ++-------
+>  1 file changed, 2 insertions(+), 7 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/nixge.txt b/Documentation/devicetree/bindings/net/nixge.txt
-> index e55af7f0881a..d0f9fb520578 100644
-> --- a/Documentation/devicetree/bindings/net/nixge.txt
-> +++ b/Documentation/devicetree/bindings/net/nixge.txt
-> @@ -1,8 +1,14 @@
->  * NI XGE Ethernet controller
->  
->  Required properties:
-> -- compatible: Should be "ni,xge-enet-2.00"
-> -- reg: Address and length of the register set for the device
-> +- compatible: Should be "ni,xge-enet-3.00", but can be "ni,xge-enet-2.00" for
-> +              older device trees with DMA engines co-located in the address map,
-> +              with the one reg entry to describe the whole device.
-> +- reg: Address and length of the register set for the device. It contains the
-> +       information of registers in the same order as described by reg-names.
-> +- reg-names: Should contain the reg names
-> +	"dma":  DMA engine control and status region
-> +        "ctrl": MDIO and PHY control and status region
->  - interrupts: Should contain tx and rx interrupt
->  - interrupt-names: Should be "rx" and "tx"
->  - phy-mode: See ethernet.txt file in the same directory.
-> @@ -13,7 +19,9 @@ Required properties:
->  Examples (10G generic PHY):
->  	nixge0: ethernet@40000000 {
->  		compatible = "ni,xge-enet-2.00";
-
-Shouldn't the compatible change here?
-
-> -		reg = <0x40000000 0x6000>;
-> +		reg = <0x40000000 0x4000
-> +		       0x41002000 0x2000>;
-> +		reg-names = "dma", "ctrl";
->  
->  		nvmem-cells = <&eth1_addr>;
->  		nvmem-cell-names = "address";
-> -- 
-> 2.14.5
-> 
+> diff --git a/drivers/input/touchscreen/egalax_ts.c b/drivers/input/touchscreen/egalax_ts.c
+> index 80e69bb8283e..5e7a60089c3d 100644
+> --- a/drivers/input/touchscreen/egalax_ts.c
+> +++ b/drivers/input/touchscreen/egalax_ts.c
+> @@ -199,17 +199,12 @@ static int egalax_ts_probe(struct i2c_client *client,
+> >  	input_dev->name = "EETI eGalax Touch Screen";
+> >  	input_dev->id.bustype = BUS_I2C;
+>  
+> > -	__set_bit(EV_ABS, input_dev->evbit);
+> > -	__set_bit(EV_KEY, input_dev->evbit);
+> > -	__set_bit(BTN_TOUCH, input_dev->keybit);
+> -
+> > -	input_set_abs_params(input_dev, ABS_X, 0, EGALAX_MAX_X, 0, 0);
+> > -	input_set_abs_params(input_dev, ABS_Y, 0, EGALAX_MAX_Y, 0, 0);
+> >  	input_set_abs_params(input_dev,
+> >  			     ABS_MT_POSITION_X, 0, EGALAX_MAX_X, 0, 0);
+> >  	input_set_abs_params(input_dev,
+> >  			     ABS_MT_POSITION_Y, 0, EGALAX_MAX_Y, 0, 0);
+> > -	input_mt_init_slots(input_dev, MAX_SUPPORT_POINTS, 0);
+> > +	input_mt_init_slots(input_dev, MAX_SUPPORT_POINTS,
+> > +			    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
+>  
+> >  	error = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+> >  					  egalax_ts_interrupt,
