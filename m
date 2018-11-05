@@ -1,83 +1,73 @@
-From: Sean Paul <sean@poorly.run>
-Subject: Re: [Freedreno] [PATCH 2/2] drm/msm/dsi: Get PHY ref clock from the
- DT
-Date: Mon, 5 Nov 2018 12:33:04 -0500
-Message-ID: <20181105173304.GJ154160@art_vandelay>
-References: <20181102214534.184593-1-mka@chromium.org>
- <20181102214534.184593-2-mka@chromium.org>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH] ARM: dts: imx6: add thermal sensor and cooling cells
+Date: Mon,  5 Nov 2018 18:34:02 +0100
+Message-ID: <20181105173402.30431-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181102214534.184593-2-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, Rajesh Yadav <ryadav@codeaurora.org>, linux-arm-msm@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, Stephen Boyd <swboyd@chromium.org>, Sean Paul <seanpaul@chromium.org>, freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 02, 2018 at 02:45:34PM -0700, Matthias Kaehlcke wrote:
-> Get the PHY ref clock from the device tree instead of hardcoding
-> its name and rate.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
-> index 4c03f0b7343ed..1016eb50df8f5 100644
-> --- a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
-> +++ b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
-> @@ -91,6 +91,8 @@ struct dsi_pll_10nm {
->  	void __iomem *phy_cmn_mmio;
->  	void __iomem *mmio;
->  
-> +	struct clk *vco_ref_clk;
-> +
->  	u64 vco_ref_clk_rate;
->  	u64 vco_current_rate;
->  
-> @@ -630,7 +632,8 @@ static int pll_10nm_register(struct dsi_pll_10nm *pll_10nm)
->  	char clk_name[32], parent[32], vco_name[32];
->  	char parent2[32], parent3[32], parent4[32];
->  	struct clk_init_data vco_init = {
-> -		.parent_names = (const char *[]){ "xo" },
-> +		.parent_names = (const char *[]){
-> +			__clk_get_name(pll_10nm->vco_ref_clk) },
->  		.num_parents = 1,
+This allows a board to specify a custom thermal zone configuration
+involving the SoC internal sensor, CPU and GPU nodes without having
+to change those nodes.
 
-You should check the return of __clk_get_name() since you're setting num_parents
-to 1. Also, you should revert the patch that hardcodes 19.2MHz as part of this
-set.
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+---
+ arch/arm/boot/dts/imx6q.dtsi   | 1 +
+ arch/arm/boot/dts/imx6qdl.dtsi | 3 +++
+ 2 files changed, 4 insertions(+)
 
->  		.name = vco_name,
->  		.flags = CLK_IGNORE_UNUSED,
-> @@ -786,6 +789,12 @@ struct msm_dsi_pll *msm_dsi_pll_10nm_init(struct platform_device *pdev, int id)
->  	pll_10nm->id = id;
->  	pll_10nm_list[id] = pll_10nm;
->  
-> +	pll_10nm->vco_ref_clk = devm_clk_get(&pdev->dev, "ref");
-> +	if (IS_ERR(pll_10nm->vco_ref_clk)) {
-> +		dev_err(&pdev->dev, "couldn't get 'ref' clock\n");
-
-Please print the error message
-
-> +		return (void *)pll_10nm->vco_ref_clk;
-
-Use ERR_CAST here
-
-> +	}
-> +
->  	pll_10nm->phy_cmn_mmio = msm_ioremap(pdev, "dsi_phy", "DSI_PHY");
->  	if (IS_ERR_OR_NULL(pll_10nm->phy_cmn_mmio)) {
->  		dev_err(&pdev->dev, "failed to map CMN PHY base\n");
-> -- 
-> 2.19.1.930.g4563a0d9d0-goog
-> 
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
-
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index 0193ee6fe964..01afef23efd9 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -202,6 +202,7 @@
+ 				 <&clks IMX6QDL_CLK_GPU2D_CORE>;
+ 			clock-names = "bus", "core";
+ 			power-domains = <&pd_pu>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		ipu2: ipu@2800000 {
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 61d2d26afbf4..81e9147e877c 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -77,6 +77,7 @@
+ 		fsl,tempmon = <&anatop>;
+ 		fsl,tempmon-data = <&ocotp>;
+ 		clocks = <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
++		#thermal-sensor-cells = <0>;
+ 	};
+ 
+ 	ldb: ldb {
+@@ -216,6 +217,7 @@
+ 				 <&clks IMX6QDL_CLK_GPU3D_SHADER>;
+ 			clock-names = "bus", "core", "shader";
+ 			power-domains = <&pd_pu>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		gpu_2d: gpu@134000 {
+@@ -226,6 +228,7 @@
+ 				 <&clks IMX6QDL_CLK_GPU2D_CORE>;
+ 			clock-names = "bus", "core";
+ 			power-domains = <&pd_pu>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		timer@a00600 {
 -- 
-Sean Paul, Software Engineer, Google / Chromium OS
+2.19.1
