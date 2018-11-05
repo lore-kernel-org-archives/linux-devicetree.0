@@ -1,76 +1,78 @@
-Return-Path: <SRS0=lXjp=OG=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 03/22] ARM: dts: r8a7744: Add SDHI nodes
-Date: Tue, 27 Nov 2018 11:56:16 +0000
-Message-Id: <1543319795-48325-4-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
-References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=HAag=NQ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr60074.outbound.protection.outlook.com ([40.107.6.74]:27868
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727290AbeKESt7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 5 Nov 2018 13:49:59 -0500
+From: Peter Chen <peter.chen@nxp.com>
+Subject: RE: [PATCH v2 1/4] usb: chipidea: add flag for imx hsic
+ implementation
+Date: Mon, 5 Nov 2018 09:31:04 +0000
+Message-ID: <VI1PR04MB532767CCE7618D9950FBC0418BCA0@VI1PR04MB5327.eurprd04.prod.outlook.com>
+References: <20181022054031.14027-1-peter.chen@nxp.com>
+ <20181022054031.14027-2-peter.chen@nxp.com>
+ <38c1da4a-6fa7-783a-b600-3be7f8ea42a4@kontron.de>
+In-Reply-To: <38c1da4a-6fa7-783a-b600-3be7f8ea42a4@kontron.de>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Schrempf Frieder <frieder.schrempf@kontron.De>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add SDHI nodes to the DT of the r8a7744 SoC.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm/boot/dts/r8a7744.dtsi | 39 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 37 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index 6505ebd..660747d 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -880,14 +880,49 @@
- 			/* placeholder */
- 		};
- 
-+		sdhi0: sd@ee100000 {
-+			compatible = "renesas,sdhi-r8a7744",
-+				     "renesas,rcar-gen2-sdhi";
-+			reg = <0 0xee100000 0 0x328>;
-+			interrupts = <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 314>;
-+			dmas = <&dmac0 0xcd>, <&dmac0 0xce>,
-+			       <&dmac1 0xcd>, <&dmac1 0xce>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			max-frequency = <195000000>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 314>;
-+			status = "disabled";
-+		};
-+
- 		sdhi1: sd@ee140000 {
-+			compatible = "renesas,sdhi-r8a7744",
-+				     "renesas,rcar-gen2-sdhi";
- 			reg = <0 0xee140000 0 0x100>;
--			/* placeholder */
-+			interrupts = <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 312>;
-+			dmas = <&dmac0 0xc1>, <&dmac0 0xc2>,
-+			       <&dmac1 0xc1>, <&dmac1 0xc2>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			max-frequency = <97500000>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 312>;
-+			status = "disabled";
- 		};
- 
- 		sdhi2: sd@ee160000 {
-+			compatible = "renesas,sdhi-r8a7744",
-+				     "renesas,rcar-gen2-sdhi";
- 			reg = <0 0xee160000 0 0x100>;
--			/* placeholder */
-+			interrupts = <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 311>;
-+			dmas = <&dmac0 0xd3>, <&dmac0 0xd4>,
-+			       <&dmac1 0xd3>, <&dmac1 0xd4>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			max-frequency = <97500000>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 311>;
-+			status = "disabled";
- 		};
- 
- 		gic: interrupt-controller@f1001000 {
--- 
-2.7.4
+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9jaGlwaWRlYS9ob3N0LmMgYi9kcml2ZXJz
+L3VzYi9jaGlwaWRlYS9ob3N0LmMNCj4gPiBpbmRleCBkODU4YTgyYzRmNDQuLmQ3NGExM2Q3YzIx
+YyAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3VzYi9jaGlwaWRlYS9ob3N0LmMNCj4gPiArKysg
+Yi9kcml2ZXJzL3VzYi9jaGlwaWRlYS9ob3N0LmMNCj4gPiBAQCAtMjgsNiArMjgsMjAgQEAgc3Ry
+dWN0IGVoY2lfY2lfcHJpdiB7DQo+ID4gICAJc3RydWN0IHJlZ3VsYXRvciAqcmVnX3ZidXM7DQo+
+ID4gICB9Ow0KPiA+DQo+ID4gKy8qIFRoaXMgZnVuY3Rpb24gaXMgdXNlZCB0byBvdmVycmlkZSBX
+S0NOLCBXS0ROLCBhbmQgV0tPQyAqLyBzdGF0aWMNCj4gPiArdm9pZCBjaV9laGNpX292ZXJyaWRl
+X3dha2V1cF9mbGFnKHN0cnVjdCBlaGNpX2hjZCAqZWhjaSwNCj4gDQo+IEkgdGhpbmsgaXQgd291
+bGQgYmUgYmV0dGVyIHRvIHJlbmFtZSB0aGlzIGZ1bmN0aW9uIHRvIHNvbWV0aGluZyBsaWtlDQo+
+IGNpX2VoY2lfY2xlYXJfcmVnX2JpdHMoKSBhcyBpdCBpcyBjb21wbGV0ZWx5IGdlbmVyaWMgYW5k
+IGp1c3QgY2xlYXJzIHNvbWUgYml0cyBpbiByZWcuDQo+IA0KPiBBbmQgYWxzbyByZW1vdmUgdGhl
+IGFyZ3VtZW50ICJzZXQiLCBhcyBjdXJyZW50bHkgdGhlIG9ubHkgdXNhZ2Ugb2YgdGhpcyBmdW5j
+dGlvbiBpcw0KPiB3aXRoIHNldD1mYWxzZS4NCj4gDQoNCkFncmVlLg0KDQpQZXRlcg0KDQo+ID4g
+KwkJdTMyIF9faW9tZW0gKnJlZywgdTMyIGZsYWdzLCBib29sIHNldCkgew0KPiA+ICsJdTMyIHZh
+bCA9IGVoY2lfcmVhZGwoZWhjaSwgcmVnKTsNCj4gPiArDQo+ID4gKwlpZiAoc2V0KQ0KPiA+ICsJ
+CXZhbCB8PSBmbGFnczsNCj4gPiArCWVsc2UNCj4gPiArCQl2YWwgJj0gfmZsYWdzOw0KPiA+ICsN
+Cj4gPiArCWVoY2lfd3JpdGVsKGVoY2ksIHZhbCwgcmVnKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiAg
+IHN0YXRpYyBpbnQgZWhjaV9jaV9wb3J0cG93ZXIoc3RydWN0IHVzYl9oY2QgKmhjZCwgaW50IHBv
+cnRudW0sIGJvb2wgZW5hYmxlKQ0KPiA+ICAgew0KPiA+ICAgCXN0cnVjdCBlaGNpX2hjZCAqZWhj
+aSA9IGhjZF90b19laGNpKGhjZCk7IEBAIC0xNzAsNiArMTg0LDExIEBADQo+ID4gc3RhdGljIGlu
+dCBob3N0X3N0YXJ0KHN0cnVjdCBjaV9oZHJjICpjaSkNCj4gPiAgIAkJCW90Zy0+aG9zdCA9ICZo
+Y2QtPnNlbGY7DQo+ID4gICAJCQloY2QtPnNlbGYub3RnX3BvcnQgPSAxOw0KPiA+ICAgCQl9DQo+
+ID4gKw0KPiA+ICsJCWlmIChjaS0+cGxhdGRhdGEtPm5vdGlmeV9ldmVudCAmJg0KPiA+ICsJCQko
+Y2ktPnBsYXRkYXRhLT5mbGFncyAmIENJX0hEUkNfSU1YX0lTX0hTSUMpKQ0KPiA+ICsJCQljaS0+
+cGxhdGRhdGEtPm5vdGlmeV9ldmVudA0KPiA+ICsJCQkJKGNpLCBDSV9IRFJDX0lNWF9IU0lDX0FD
+VElWRV9FVkVOVCk7DQo+ID4gICAJfQ0KPiA+DQo+ID4gICAJcmV0dXJuIHJldDsNCj4gPiBAQCAt
+MjE4LDYgKzIzNyw4IEBAIHZvaWQgY2lfaGRyY19ob3N0X2Rlc3Ryb3koc3RydWN0IGNpX2hkcmMg
+KmNpKQ0KPiA+ICAgc3RhdGljIGludCBjaV9laGNpX2J1c19zdXNwZW5kKHN0cnVjdCB1c2JfaGNk
+ICpoY2QpDQo+ID4gICB7DQo+ID4gICAJc3RydWN0IGVoY2lfaGNkICplaGNpID0gaGNkX3RvX2Vo
+Y2koaGNkKTsNCj4gPiArCXN0cnVjdCBkZXZpY2UgKmRldiA9IGhjZC0+c2VsZi5jb250cm9sbGVy
+Ow0KPiA+ICsJc3RydWN0IGNpX2hkcmMgKmNpID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQo+ID4g
+ICAJaW50IHBvcnQ7DQo+ID4gICAJdTMyIHRtcDsNCj4gPg0KPiA+IEBAIC0yNDksNiArMjcwLDkg
+QEAgc3RhdGljIGludCBjaV9laGNpX2J1c19zdXNwZW5kKHN0cnVjdCB1c2JfaGNkICpoY2QpDQo+
+ID4gICAJCQkgKiBJdCBuZWVkcyBhIHNob3J0IGRlbGF5IGJldHdlZW4gc2V0IFJTIGJpdCBhbmQg
+UEhDRC4NCj4gPiAgIAkJCSAqLw0KPiA+ICAgCQkJdXNsZWVwX3JhbmdlKDE1MCwgMjAwKTsNCj4g
+PiArCQkJaWYgKGNpLT5wbGF0ZGF0YS0+ZmxhZ3MgJiBDSV9IRFJDX0lNWF9JU19IU0lDKQ0KPiA+
+ICsJCQkJY2lfZWhjaV9vdmVycmlkZV93YWtldXBfZmxhZyhlaGNpLCByZWcsDQo+ID4gKwkJCQkJ
+UE9SVF9XS0RJU0NfRSB8IFBPUlRfV0tDT05OX0UsDQo+IGZhbHNlKTsNCj4gPiAgIAkJCWJyZWFr
+Ow0KPiA+ICAgCQl9DQo+ID4gICAJfQ0KPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3Vz
+Yi9jaGlwaWRlYS5oDQo+ID4gYi9pbmNsdWRlL2xpbnV4L3VzYi9jaGlwaWRlYS5oIGluZGV4IDYz
+NzU4YzM5OWU0ZS4uOTExZTA1YWY2NzFlIDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUvbGludXgv
+dXNiL2NoaXBpZGVhLmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L3VzYi9jaGlwaWRlYS5oDQo+
+ID4gQEAgLTYwLDkgKzYwLDEyIEBAIHN0cnVjdCBjaV9oZHJjX3BsYXRmb3JtX2RhdGEgew0KPiA+
+ICAgI2RlZmluZSBDSV9IRFJDX09WRVJSSURFX1JYX0JVUlNUCUJJVCgxMSkNCj4gPiAgICNkZWZp
+bmUgQ0lfSERSQ19PVkVSUklERV9QSFlfQ09OVFJPTAlCSVQoMTIpIC8qIEdsdWUgbGF5ZXINCj4g
+bWFuYWdlcyBwaHkgKi8NCj4gPiAgICNkZWZpbmUgQ0lfSERSQ19SRVFVSVJFU19BTElHTkVEX0RN
+QQlCSVQoMTMpDQo+ID4gKyNkZWZpbmUgQ0lfSERSQ19JTVhfSVNfSFNJQwkJQklUKDE0KQ0KPiA+
+ICAgCWVudW0gdXNiX2RyX21vZGUJZHJfbW9kZTsNCj4gPiAgICNkZWZpbmUgQ0lfSERSQ19DT05U
+Uk9MTEVSX1JFU0VUX0VWRU5UCQkwDQo+ID4gICAjZGVmaW5lIENJX0hEUkNfQ09OVFJPTExFUl9T
+VE9QUEVEX0VWRU5UCTENCj4gPiArI2RlZmluZSBDSV9IRFJDX0lNWF9IU0lDX0FDVElWRV9FVkVO
+VAkJMg0KPiA+ICsjZGVmaW5lIENJX0hEUkNfSU1YX0hTSUNfU1VTUEVORF9FVkVOVAkJMw0KPiA+
+ICAgCWludAkoKm5vdGlmeV9ldmVudCkgKHN0cnVjdCBjaV9oZHJjICpjaSwgdW5zaWduZWQgZXZl
+bnQpOw0KPiA+ICAgCXN0cnVjdCByZWd1bGF0b3IJKnJlZ192YnVzOw0KPiA+ICAgCXN0cnVjdCB1
+c2Jfb3RnX2NhcHMJY2lfb3RnX2NhcHM7DQo=
