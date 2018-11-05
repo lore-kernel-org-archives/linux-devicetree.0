@@ -1,139 +1,40 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 06/11] [media] marvell-ccic: drop ctlr_reset()
-Date: Mon, 5 Nov 2018 10:11:35 +0100
-Message-ID: <20181105091135.GB3004@amd>
-References: <20181105073054.24407-1-lkundrak@v3.sk>
- <20181105073054.24407-7-lkundrak@v3.sk>
+From: Martin Kaiser <martin@kaiser.cx>
+Subject: Re: [PATCH] ARM: dts: i.MX25: add the clocks for the EPIT blocks
+Date: Mon, 5 Nov 2018 10:12:30 +0100
+Message-ID: <20181105091230.z2ooz7olbdpopxyd@viti.kaiser.cx>
+References: <1541093567-29205-1-git-send-email-martin@kaiser.cx>
+ <20181104144614.GJ26016@tiger>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="LpQ9ahxlCli8rRTG"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181105073054.24407-7-lkundrak@v3.sk>
+In-Reply-To: <20181104144614.GJ26016@tiger>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---LpQ9ahxlCli8rRTG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thus wrote Shawn Guo (shawnguo@kernel.org):
 
-On Mon 2018-11-05 08:30:49, Lubomir Rintel wrote:
-> This accesses the clock registers directly and thus is not too
-> devicetree friendly. If it's actually needed it needs to be done
-> differently.
+> On Thu, Nov 01, 2018 at 06:32:47PM +0100, Martin Kaiser wrote:
+> > The i.MX25 contains two EPIT (Enhanced Periodic Interrupt Timer)
+> > function blocks. Add their ipg and per clocks to the device tree.
 
-Device-tree unfriendly is bad, but you still don't want to cause
-regression to people needing this.
+> > Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 
-(Perhaps noone uses this, but...)
+> Are these EPIT devices actually used in upstream kernel, or just
+> somewhere else?
 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Until I saw Vladimir's mail this morning, I wasn't aware of any mainline
+driver that's using the EPIT devices. I found that the clocks are
+missing when I tried to use EPIT with a company-internal driver that's
+not suitable for mainline integration.
 
-Git blame says: 7c269f454 . Perhaps its authors should be Cced here,
-too?
-								Pavel
+Still, I think that merging this patch does no harm. If the EPIT devices
+are present in the DT, we should add all resources they're using.
 
-> ---
->  .../media/platform/marvell-ccic/mcam-core.c   |  6 -----
->  .../media/platform/marvell-ccic/mcam-core.h   |  1 -
->  .../media/platform/marvell-ccic/mmp-driver.c  | 23 -------------------
->  3 files changed, 30 deletions(-)
->=20
-> diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/me=
-dia/platform/marvell-ccic/mcam-core.c
-> index d24e5b7a3bc5..1b879035948c 100644
-> --- a/drivers/media/platform/marvell-ccic/mcam-core.c
-> +++ b/drivers/media/platform/marvell-ccic/mcam-core.c
-> @@ -1154,12 +1154,6 @@ static void mcam_vb_stop_streaming(struct vb2_queu=
-e *vq)
->  	if (cam->state !=3D S_STREAMING)
->  		return;
->  	mcam_ctlr_stop_dma(cam);
-> -	/*
-> -	 * Reset the CCIC PHY after stopping streaming,
-> -	 * otherwise, the CCIC may be unstable.
-> -	 */
-> -	if (cam->ctlr_reset)
-> -		cam->ctlr_reset(cam);
->  	/*
->  	 * VB2 reclaims the buffers, so we need to forget
->  	 * about them.
-> diff --git a/drivers/media/platform/marvell-ccic/mcam-core.h b/drivers/me=
-dia/platform/marvell-ccic/mcam-core.h
-> index ad8955f9f0a1..f93f23faf364 100644
-> --- a/drivers/media/platform/marvell-ccic/mcam-core.h
-> +++ b/drivers/media/platform/marvell-ccic/mcam-core.h
-> @@ -137,7 +137,6 @@ struct mcam_camera {
->  	int (*plat_power_up) (struct mcam_camera *cam);
->  	void (*plat_power_down) (struct mcam_camera *cam);
->  	void (*calc_dphy) (struct mcam_camera *cam);
-> -	void (*ctlr_reset) (struct mcam_camera *cam);
-> =20
->  	/*
->  	 * Everything below here is private to the mcam core and
-> diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/m=
-edia/platform/marvell-ccic/mmp-driver.c
-> index 70a2833db0d1..92a79ad8a12c 100644
-> --- a/drivers/media/platform/marvell-ccic/mmp-driver.c
-> +++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
-> @@ -183,28 +183,6 @@ static void mmpcam_power_down(struct mcam_camera *mc=
-am)
->  	mcam_clk_disable(mcam);
->  }
-> =20
-> -static void mcam_ctlr_reset(struct mcam_camera *mcam)
-> -{
-> -	unsigned long val;
-> -	struct mmp_camera *cam =3D mcam_to_cam(mcam);
-> -
-> -	if (mcam->ccic_id) {
-> -		/*
-> -		 * Using CCIC2
-> -		 */
-> -		val =3D ioread32(cam->power_regs + REG_CCIC2_CRCR);
-> -		iowrite32(val & ~0x2, cam->power_regs + REG_CCIC2_CRCR);
-> -		iowrite32(val | 0x2, cam->power_regs + REG_CCIC2_CRCR);
-> -	} else {
-> -		/*
-> -		 * Using CCIC1
-> -		 */
-> -		val =3D ioread32(cam->power_regs + REG_CCIC_CRCR);
-> -		iowrite32(val & ~0x2, cam->power_regs + REG_CCIC_CRCR);
-> -		iowrite32(val | 0x2, cam->power_regs + REG_CCIC_CRCR);
-> -	}
-> -}
-> -
->  /*
->   * calc the dphy register values
->   * There are three dphy registers being used.
-> @@ -352,7 +330,6 @@ static int mmpcam_probe(struct platform_device *pdev)
->  	mcam =3D &cam->mcam;
->  	mcam->plat_power_up =3D mmpcam_power_up;
->  	mcam->plat_power_down =3D mmpcam_power_down;
-> -	mcam->ctlr_reset =3D mcam_ctlr_reset;
->  	mcam->calc_dphy =3D mmpcam_calc_dphy;
->  	mcam->dev =3D &pdev->dev;
->  	mcam->use_smbus =3D 0;
+Thanks & best regards,
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---LpQ9ahxlCli8rRTG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvgCUcACgkQMOfwapXb+vL/EQCfTvq7om7dzfYtQC4RLAqHwqtQ
-8fsAn3V2YfVKotiBeGNyzlUwTMaD++aK
-=fPCW
------END PGP SIGNATURE-----
-
---LpQ9ahxlCli8rRTG--
+   Martin
