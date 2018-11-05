@@ -1,106 +1,97 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH] arm64: dts: zynqmp: replace gpio-key,wakeup with
- wakeup-source property
-Date: Mon, 5 Nov 2018 10:32:12 +0100
-Message-ID: <5f430204-9c97-0351-ff63-e64e8d42da69@xilinx.com>
-References: <20181024114540.5196-1-sudeep.holla@arm.com>
- <20181024114540.5196-2-sudeep.holla@arm.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH 1/6] phy: Add max_bitrate attribute &
+ phy_get_max_bitrate()
+Date: Mon, 5 Nov 2018 10:37:56 +0100
+Message-ID: <0c0885c4-f5ae-a29c-7176-f67fe546cfd8@pengutronix.de>
+References: <20181102192616.28291-1-faiz_abbas@ti.com>
+ <20181102192616.28291-2-faiz_abbas@ti.com>
+ <5e1a0b67-510a-5512-d477-0b363e4733fe@pengutronix.de>
+ <d75c9e3c-e12b-e0b8-832c-ad117dcbe990@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181024114540.5196-2-sudeep.holla@arm.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michal Simek <michal.simek@xilinx.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="6AARXZWAuJ8EhVUM6hntMrHvTaIVOZrPu"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d75c9e3c-e12b-e0b8-832c-ad117dcbe990@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org
+Cc: wg@grandegger.com, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 24. 10. 18 13:45, Sudeep Holla wrote:
-> Most of the legacy "gpio-key,wakeup" boolean property is already
-> replaced with "wakeup-source". However few occurrences of old property
-> has popped up again, probably from the remnants in downstream trees.
-> 
-> This patch replaces the legacy properties with the unified
-> "wakeup-source" property.
-> 
-> Cc: Michal Simek <michal.simek@xilinx.com>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts | 2 +-
->  arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts | 2 +-
->  arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts | 2 +-
->  arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-> index eb5e8bddb610..527b4d0f88e2 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-> @@ -49,7 +49,7 @@
->  			label = "sw4";
->  			gpios = <&gpio 23 GPIO_ACTIVE_LOW>;
->  			linux,code = <KEY_POWER>;
-> -			gpio-key,wakeup;
-> +			wakeup-source;
->  			autorepeat;
->  		};
->  	};
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-> index 25dd57485323..0397bf66b2e7 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-> @@ -46,7 +46,7 @@
->  			label = "sw19";
->  			gpios = <&gpio 22 GPIO_ACTIVE_HIGH>;
->  			linux,code = <KEY_DOWN>;
-> -			gpio-key,wakeup;
-> +			wakeup-source;
->  			autorepeat;
->  		};
->  	};
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
-> index 259f21b0c001..7238f022a671 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
-> @@ -46,7 +46,7 @@
->  			label = "sw19";
->  			gpios = <&gpio 22 GPIO_ACTIVE_HIGH>;
->  			linux,code = <KEY_DOWN>;
-> -			gpio-key,wakeup;
-> +			wakeup-source;
->  			autorepeat;
->  		};
->  	};
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
-> index a61b3cc6f4c9..fa055e718d4b 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
-> @@ -46,7 +46,7 @@
->  			label = "sw19";
->  			gpios = <&gpio 22 GPIO_ACTIVE_HIGH>;
->  			linux,code = <KEY_DOWN>;
-> -			gpio-key,wakeup;
-> +			wakeup-source;
->  			autorepeat;
->  		};
->  	};
-> --
-> 2.17.1
-> 
-> 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--6AARXZWAuJ8EhVUM6hntMrHvTaIVOZrPu
+Content-Type: multipart/mixed; boundary="a6ssr4tU7M1AjNaXKpOf9FyUhJjakeWFP";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org
+Cc: wg@grandegger.com, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com
+Message-ID: <0c0885c4-f5ae-a29c-7176-f67fe546cfd8@pengutronix.de>
+Subject: Re: [PATCH 1/6] phy: Add max_bitrate attribute &
+ phy_get_max_bitrate()
+References: <20181102192616.28291-1-faiz_abbas@ti.com>
+ <20181102192616.28291-2-faiz_abbas@ti.com>
+ <5e1a0b67-510a-5512-d477-0b363e4733fe@pengutronix.de>
+ <d75c9e3c-e12b-e0b8-832c-ad117dcbe990@ti.com>
+In-Reply-To: <d75c9e3c-e12b-e0b8-832c-ad117dcbe990@ti.com>
 
-Will be good to point to 700a38b27eefc which introduced but that's fine.
+--a6ssr4tU7M1AjNaXKpOf9FyUhJjakeWFP
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
 
-Applied.
+On 11/05/2018 07:27 AM, Faiz Abbas wrote:
+> I remove the transceiver child node binding documentation in patch 5/6.=
 
-Thanks,
-Michal
+>=20
+> The existing implementation is pretty limiting as it just has a child
+> node with no associated device. What if a transceiver requires its own
+> configurations before it can start sending/receiving messages (for
+> example, my usecase requires it to pull the standby line low)?
+>=20
+> I think that can be solved by implementing the transceiver as a phy and=
+
+> exposing a generic get_max_bitrate API. That way, the transceiver devic=
+e
+> can do all its startup configuration in the phy probe function.
+>=20
+> In any case, do suggest if you have a better idea on how to implement
+> pull gpio low requirement.
+
+As long as we don't have any proper transceiver/phy driver, that does
+more than swtich on/off a GPIO, please add a "xceiver" regulator to your
+driver. Look for:
+
+> devm_regulator_get(&pdev->dev, "xceiver");
+
+in the flexcan driver.
+
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--a6ssr4tU7M1AjNaXKpOf9FyUhJjakeWFP--
+
+--6AARXZWAuJ8EhVUM6hntMrHvTaIVOZrPu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEENrCndlB/VnAEWuH5k9IU1zQoZfEFAlvgD3QACgkQk9IU1zQo
+ZfFSzwf+ORdSazr3ZdB5Ij/Ju2/oA2lKRHQoR/eKydjg7k/xtO4pHcV/91BB3OAf
+iJLYQ06kq5uO98L9qnzcArdEi6xG7JEH4sSQwBMdIksMEw29nsXhPgmB/oXoLQr9
+/x/U8gbQSjw6MmY0EOLD1qG7lVM6vFPTbo12VpcPQ3rkvoi4PGxG9Ef92lMe+GvX
+VT3vEWXHgub0B6kirdKVuJzta+p8HmK9qPz8FRBfttq7umIr99jFDiQvf1FoixAP
+okGrmB+0IiousOMtPKAhI4O/YRizXaeWgJzp5ZAqM7R2/2THLRFy3qyt3CLPdGag
+jPtqKS8D2rvQ4NUCzcm7idxIjKThnQ==
+=tWLD
+-----END PGP SIGNATURE-----
+
+--6AARXZWAuJ8EhVUM6hntMrHvTaIVOZrPu--
