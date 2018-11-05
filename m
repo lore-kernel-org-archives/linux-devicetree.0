@@ -1,191 +1,119 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH v2 09/10] irqchip: ti-sci-inta: Add support for Interrupt
- Aggregator driver
-Date: Mon, 5 Nov 2018 13:38:42 +0530
-Message-ID: <c8778f4a-148a-2b4d-6dd9-7b7ca89b20a9@ti.com>
-References: <20181018154017.7112-1-lokeshvutla@ti.com>
- <20181018154017.7112-10-lokeshvutla@ti.com>
- <b20127dc-be43-3b00-9960-663738df0069@arm.com>
- <9969f24c-cdb0-1f5c-d0f4-b1c1f587325c@ti.com>
- <86va5ssrfm.wl-marc.zyngier@arm.com>
- <b3a71622-7734-04be-0b0c-38e9dc6542d4@ti.com>
- <63ba5353-8470-b4c1-64a8-a1df5bf48614@ti.com>
- <86va5myz7t.wl-marc.zyngier@arm.com>
- <81136b74-4b45-f44b-0168-23d191a4fb5e@ti.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 12/25] drm/sun4i: sun6i_mipi_dsi: Add DSI
+ hblk packet overhead
+Date: Mon, 5 Nov 2018 09:31:25 +0100
+Message-ID: <20181105083125.xyfwdrkrjzrltfzf@flea>
+References: <20181026144344.27778-1-jagan@amarulasolutions.com>
+ <20181026144344.27778-13-jagan@amarulasolutions.com>
+ <20181029092227.mdxgvg5aqzh22j72@flea>
+ <CAMty3ZBHU5eXRLLJmUroLgSKcF6O9gHOHRM1XBnt9_Lp7B8rEA@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <81136b74-4b45-f44b-0168-23d191a4fb5e@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Nishanth Menon <nm@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, jason@lakedaemon.net, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, tglx@linutronix.de, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ci7q6bhdxh7l4w2f"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2H777PAKGQE5TN4LZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZBHU5eXRLLJmUroLgSKcF6O9gHOHRM1XBnt9_Lp7B8rEA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
 
-On Monday 29 October 2018 06:34 PM, Lokesh Vutla wrote:
-> Hi Marc,
-> 
-> On Sunday 28 October 2018 07:01 PM, Marc Zyngier wrote:
->> Hi Lokesh,
->>
->> On Fri, 26 Oct 2018 21:19:41 +0100,
->> Lokesh Vutla <lokeshvutla@ti.com> wrote:
->>>
->>> Hi Marc,
->>>
->>> [..snip..]
->>>>> [...]
->>>>>
->>>>>>>> +/**
->>>>>>>> + * ti_sci_inta_register_event() - Register a event to an interrupt aggregator
->>>>>>>> + * @dev:	Device pointer to source generating the event
->>>>>>>> + * @src_id:	TISCI device ID of the event source
->>>>>>>> + * @src_index:	Event source index within the device.
->>>>>>>> + * @virq:	Linux Virtual IRQ number
->>>>>>>> + * @flags:	Corresponding IRQ flags
->>>>>>>> + * @ack_needed:	If explicit clearing of event is required.
->>>>>>>> + *
->>>>>>>> + * Creates a new irq and attaches to IA domain if virq is not specified
->>>>>>>> + * else attaches the event to vint corresponding to virq.
->>>>>>>> + * When using TISCI within the client drivers, source indexes are always
->>>>>>>> + * generated dynamically and cannot be represented in DT. So client
->>>>>>>> + * drivers should call this API instead of platform_get_irq().
->>>>>>>
->>>>>>> NAK. Either this fits in the standard model, or we adapt the standard
->>>>>>> model to catter for your particular use case. But we don't define a new,
->>>>>>> TI specific API.
->>>>>>>
->>>>>>> I have a hunch that if the IDs are generated dynamically, then the model
->>>>>>> we use for MSIs would fit this thing. I also want to understand what
->>>>>>
->>>>>> hmm..I haven't thought about using MSI. Will try to explore it. But
->>>>>> the "struct msi_msg" is not applicable in this case as device does not
->>>>>> write to a specific location.
->>>>>
->>>>> It doesn't need to. You can perfectly ignore the address field and
->>>>> only be concerned with the data. We already have MSI users that do not
->>>>> need programming of the doorbell address, just the data.
->>>>
->>>
->>> Just one more clarification.
->>>
->>> First let me explain the IRQ routes a bit deeply. As I said earlier
->>> there are three ways in which IRQ can flow in AM65x SoC
->>> 1) Device directly connected to GIC
->>> 	- Device IRQ --> GIC
->>> 2) Device connected to INTR.
->>> 	- Device IRQ --> INTR --> GIC
->>> 3) Devices connected to INTA.
->>> 	- Device IRQ --> INTA --> INTR --> GIC
->>>
->>> 1 and 2 are straight forward and we use DT for IRQ
->>> representation. Coming to 3 the trickier part is that Input to INTA
->>> and output from INTA and dynamically managed. To be more specific:
->>> - By hardware design there are certain set of physical global
->>> events(interrupts) attached to an INTA. Out of which a certain range
->>> are assigned to the current linux host that can be queried from
->>> system-controller.
->>> - Similarly out of all the INTA outputs(referenced as vints) a certain
->>> range can be used by the current linux host.
->>>
->>>
->>> So for configuring an IRQ route in case 3, the following steps are needed:
->>> - Device id and device resource index for which the interrupt is needed
->>
->> THat is no different from a PCI device for example, where we need the
->> requester ID and the number of the interrupt in the MSI-X table.
->>
->>> - A free event id from the range assigned to the INTA in this host context
->>> - A free vint from the range assigned to the INTA in this host context
->>> - A free gic IRQ from the range assigned to the INTR in this host context.
->>
->>   From what I understand of the driver, at least some of that is under
->> the responsibility of the firmware, right? Or is the driver under
->> control of all three parameters? To be honest, it doesn't really
-> 
-> Driver should control all three parameters.
-> 
->> matter, as the as far as the kernel is concerned, the irqchip drivers
->> are free to deal with the routing anyway they want.
-> 
-> Correct, that's my understanding as well.
-> 
->>
->>> With the above information, linux should send a message to
->>> system-controller using TISCI protocol. After policing the given
->>> information, system-controller does the following:
->>> - Attaches the interrupt(INTA input) to the device resource index
->>> - Muxes the interrupt(INTA input) to corresponding vint(INTA output)
->>> - Muxes the vint(INTR input) to GIC irq(INTR output).
->>
->> Isn't there a 1:1 mapping between *used* INTR inputs and outputs?
->> Since INTR is a router, there is no real muxing. I assume that the
->> third point above is just a copy-paste error.
-> 
-> Right, my bad. INTR is just a router and no read muxing.
-> 
->>
->>>
->>> For grouping of interrupts, the same vint number is to be passed to
->>> system-controller for all the requests.
->>>
->>> Keeping all the above in mind, I see the following as software IRQ
->>> Domain Hierarchy:
->>>
->>> 1) INTA multi MSI --> 2)INTA  -->3) MSI --> 4) INTR  -->5) GIC
->>>
->>> INTA driver has to set a chained IRQ using virq allocated from its
->>> parent MSI. This is to differentiate the grouped interrupts within
->>> INTA.
->>>
->>> Inorder to cover the above two MSI domains, a new bus driver has to be
->>> created as I couldn't find a fit with the existing bus drivers.
->>>
->>> Does the above approach make sense? Please correct me if i am wrong.
->>
->> I think this can be further simplified, as you seem to assume that
->> dynamic allocation implies MSI. This is not the case. You can
->> perfectly use dynamically allocated interrupts and still not use MSIs.
->>
->> INTA is indeed a chained interrupt controller, as it may mux several
->> inputs onto a single output. But the output of INTA is not an MSI. It
->> is just a regular interrupt that can allocated when the first mapping
->> gets established.
-> 
-> okay. I guess it can just be done using irq_create_fwspec_mapping().
-> 
+--ci7q6bhdxh7l4w2f
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-I am facing an issue with this approach as I am trying to call 
-irq_create_fwspec_mapping() from alloc callback of INTA driver. During 
-allocation the function call flow looks like:
+On Mon, Oct 29, 2018 at 07:56:27PM +0530, Jagan Teki wrote:
+> On Mon, Oct 29, 2018 at 2:52 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> >
+> > On Fri, Oct 26, 2018 at 08:13:31PM +0530, Jagan Teki wrote:
+> > > Add 10 bytes packet overhead for hblk where blank is set using
+> > > a blanking packet like (4 bytes + 4 bytes + payload + 2 bytes)
+> > >
+> > > This is according to BSP code from BPI-M64-bsp
+> > > (in drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
+> > > dsi_hblk = (ht-hspw)*dsi_pixel_bits[format]/8-(4+4+2);
+> > >
+> > > So, add 10 bytes packet overhead for DSI hblk.
+> > >
+> > > Tested on 2-lane, 4-lane MIPI-DSI LCD panels.
+> > >
+> > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > Tested-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > ---
+> > > Changes for v3:
+> > > - new patch
+> > > Changes for v2:
+> > > - none
+> > >
+> > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 9 +++++++--
+> > >  1 file changed, 7 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > index 596e560263bf..cf42be1f1ba1 100644
+> > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > @@ -461,7 +461,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+> > >  {
+> > >       struct mipi_dsi_device *device = dsi->device;
+> > >       unsigned int Bpp = mipi_dsi_pixel_format_to_bpp(device->format) / 8;
+> > > -     u16 hbp, hfp, hsa, hblk, vblk;
+> > > +     u16 hbp, hfp, hsa, hblk_max, hblk, vblk;
+> > >       size_t bytes;
+> > >       u8 *buffer;
+> > >
+> > > @@ -494,8 +494,13 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+> > >
+> > >       /*
+> > >        * hblk seems to be the line + porches length.
+> > > +      * The blank is set using a blanking packet (4 bytes + 4 bytes +
+> > > +      * payload + 2 bytes). So minimal size is 10 bytes
+> > >        */
+> > > -     hblk = (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp;
+> > > +#define HBLK_PACKET_OVERHEAD 10
+> > > +     hblk_max = (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp;
+> > > +     hblk_max -= HBLK_PACKET_OVERHEAD;
+> > > +     hblk = max((unsigned int)HBLK_PACKET_OVERHEAD, hblk_max);
+> >
+> > I'd rather use the same convention than the other assignments done
+> > before in that function.
+> 
+> Yes, old code did use hsa. but it's added 10 bytes packet head instead
+> of subtracting it.
+> 
+> hblk = mode->htotal * Bpp - hsa;
+> => mode->htotal * Bpp - (mode->hsync_end - mode->hsync_start) * Bpp -
+> HSA_PACKET_OVERHEAD);
+> => (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp +
+> HSA_PACKET_OVERHEAD;
+> 
+> And it should be
+> (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp -
+> HSA_PACKET_OVERHEAD;
+> 
+> This patch is simply doing the same by explicitly adding packet over
+> ahead macro, which again used in hfp.
 
-inta_msi_domain_alloc_irqs()
-	msi_domain_alloc_irqs()
-		__irq_domain_alloc_irqs()
-			*mutex_lock(&irq_domain_mutex);*
-			irq_domain_alloc_irqs_hierarchy()
-				ti_sci_inta_irq_domain_alloc()
-					if (first event in group)
-							irq_create_fwspec_mapping()
-								irq_find_matching_fwspec()
-									*mutex_lock(&irq_domain_mutex);*
-									
+That's not my point.
 
-The mutex_lock is called again if INTR IRQ gets allocated in alloc callback of 
-INTA driver. So I am clearly calling irq_create_fwspec_mapping() from a wrong place.
+The rest of the driver uses a construct that would be:
 
-To avoid this problem, some other msi domain ops should be used to allocate INTR 
-irq. I see msi_prepare() might be a good place to allocate parent interrupt for 
-each group. But there is no similar callback available while freeing. Is it okay 
-to add msi_unprepare callback?
+hblk = max((unsigned int)HBLK_PACKET_OVERHEAD,
+           (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp - HBLK_PACKET_OVERHEAD);
 
-Also I would like to get the parent(INTR) IRQ to get established first as we 
-need the gic_irq, vint_id while configuring the IRQ route using system-controller.
+We want to remain consistent.
 
-Any help on avoiding this problem?
+Maxime
 
-Thanks and regards,
-Lokesh
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--ci7q6bhdxh7l4w2f--
