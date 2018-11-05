@@ -1,161 +1,81 @@
 From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCHv2 1/6] arm64: dts: Add the status property disable PCIe
-Date: Mon,  5 Nov 2018 16:46:48 +0800
-Message-ID: <20181105084653.26597-1-xiaowei.bao@nxp.com>
+Subject: [PATCHv2 4/6] arm64: dts: Add the PCIE EP node in dts
+Date: Mon,  5 Nov 2018 16:46:51 +0800
+Message-ID: <20181105084653.26597-4-xiaowei.bao@nxp.com>
+References: <20181105084653.26597-1-xiaowei.bao@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181105084653.26597-1-xiaowei.bao@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org, cyrille.pitchen@free-electrons.com, pombredanne@nexb.com, shawn.lin@rock-chips.com, niklas.cassel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Cc: Bao Xiaowei <xiaowei.bao@nxp.com>
+Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Bao Xiaowei <xiaowei.bao@nxp.com>
+Add the PCIE EP node in dts for ls1046a.
 
-Add the status property disable the PCIe, the property will be enable
-by bootloader.
-
-Signed-off-by: Bao Xiaowei <xiaowei.bao@nxp.com>
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 ---
 v2:
- - no change
+ - Add the SoC specific compatibles. 
 
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi |    1 +
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |    3 +++
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |    3 +++
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |    3 +++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi |    4 ++++
- 5 files changed, 14 insertions(+), 0 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |   32 ++++++++++++++++++++++++
+ 1 files changed, 32 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-index 5da732f..21f2b3b 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -496,6 +496,7 @@
- 					<0000 0 0 2 &gic 0 111 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 3 &gic 0 112 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 4 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
- 		};
- 	};
- 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 3fed504..760d510 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -683,6 +683,7 @@
- 					<0000 0 0 2 &gic 0 111 0x4>,
- 					<0000 0 0 3 &gic 0 112 0x4>,
- 					<0000 0 0 4 &gic 0 113 0x4>;
-+			status = "disabled";
- 		};
- 
- 		pcie@3500000 {
-@@ -708,6 +709,7 @@
- 					<0000 0 0 2 &gic 0 121 0x4>,
- 					<0000 0 0 3 &gic 0 122 0x4>,
- 					<0000 0 0 4 &gic 0 123 0x4>;
-+			status = "disabled";
- 		};
- 
- 		pcie@3600000 {
-@@ -733,6 +735,7 @@
- 					<0000 0 0 2 &gic 0 155 0x4>,
- 					<0000 0 0 3 &gic 0 156 0x4>,
- 					<0000 0 0 4 &gic 0 157 0x4>;
-+			status = "disabled";
- 		};
- 	};
- 
 diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 51cbd50..64d334c 100644
+index 64d334c..544b3e5 100644
 --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
 +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -652,6 +652,7 @@
- 					<0000 0 0 2 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 3 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 4 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
+@@ -655,6 +655,17 @@
+ 			status = "disabled";
  		};
  
++		pcie_ep@3400000 {
++			compatible = "fsl,ls1046a-pcie-ep","fsl,ls-pcie-ep";
++			reg = <0x00 0x03400000 0x0 0x00100000
++				0x40 0x00000000 0x8 0x00000000>;
++			reg-names = "regs", "addr_space";
++			num-ib-windows = <6>;
++			num-ob-windows = <6>;
++			num-lanes = <2>;
++			status = "disabled";
++		};
++
  		pcie@3500000 {
-@@ -677,6 +678,7 @@
- 					<0000 0 0 2 &gic GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 3 &gic GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 4 &gic GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
+ 			compatible = "fsl,ls1046a-pcie", "snps,dw-pcie";
+ 			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
+@@ -681,6 +692,17 @@
+ 			status = "disabled";
  		};
  
++		pcie_ep@3500000 {
++			compatible = "fsl,ls1046a-pcie-ep","fsl,ls-pcie-ep";
++			reg = <0x00 0x03500000 0x0 0x00100000
++				0x48 0x00000000 0x8 0x00000000>;
++			reg-names = "regs", "addr_space";
++			num-ib-windows = <6>;
++			num-ob-windows = <6>;
++			num-lanes = <2>;
++			status = "disabled";
++		};
++
  		pcie@3600000 {
-@@ -702,6 +704,7 @@
- 					<0000 0 0 2 &gic GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 3 &gic GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 4 &gic GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
+ 			compatible = "fsl,ls1046a-pcie", "snps,dw-pcie";
+ 			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
+@@ -707,6 +729,16 @@
+ 			status = "disabled";
  		};
  
++		pcie_ep@3600000 {
++			compatible = "fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep";
++			reg = <0x00 0x03600000 0x0 0x00100000
++				0x50 0x00000000 0x8 0x00000000>;
++			reg-names = "regs", "addr_space";
++			num-ib-windows = <6>;
++			num-ob-windows = <6>;
++			num-lanes = <2>;
++			status = "disabled";
++		};
  	};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index a07f612..9deb9cb 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -533,6 +533,7 @@
- 					<0000 0 0 2 &gic 0 0 0 110 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 3 &gic 0 0 0 111 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 4 &gic 0 0 0 112 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
- 		};
  
- 		pcie@3500000 {
-@@ -557,6 +558,7 @@
- 					<0000 0 0 2 &gic 0 0 0 115 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 3 &gic 0 0 0 116 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 4 &gic 0 0 0 117 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
- 		};
- 
- 		pcie@3600000 {
-@@ -581,6 +583,7 @@
- 					<0000 0 0 2 &gic 0 0 0 120 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 3 &gic 0 0 0 121 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 4 &gic 0 0 0 122 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
- 		};
- 
- 		cluster1_core0_watchdog: wdt@c000000 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index d188774..5732e3b 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -648,6 +648,7 @@
- 					<0000 0 0 2 &gic 0 0 0 110 4>,
- 					<0000 0 0 3 &gic 0 0 0 111 4>,
- 					<0000 0 0 4 &gic 0 0 0 112 4>;
-+			status = "disabled";
- 		};
- 
- 		pcie2: pcie@3500000 {
-@@ -669,6 +670,7 @@
- 					<0000 0 0 2 &gic 0 0 0 115 4>,
- 					<0000 0 0 3 &gic 0 0 0 116 4>,
- 					<0000 0 0 4 &gic 0 0 0 117 4>;
-+			status = "disabled";
- 		};
- 
- 		pcie3: pcie@3600000 {
-@@ -690,6 +692,7 @@
- 					<0000 0 0 2 &gic 0 0 0 120 4>,
- 					<0000 0 0 3 &gic 0 0 0 121 4>,
- 					<0000 0 0 4 &gic 0 0 0 122 4>;
-+			status = "disabled";
- 		};
- 
- 		pcie4: pcie@3700000 {
-@@ -711,6 +714,7 @@
- 					<0000 0 0 2 &gic 0 0 0 125 4>,
- 					<0000 0 0 3 &gic 0 0 0 126 4>,
- 					<0000 0 0 4 &gic 0 0 0 127 4>;
-+			status = "disabled";
- 		};
- 
- 		sata0: sata@3200000 {
+ 	reserved-memory {
 -- 
 1.7.1
