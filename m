@@ -1,71 +1,137 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v10 5/6] arm64: zynqmp: Add DDRC node
-Date: Mon, 5 Nov 2018 20:47:21 +0100
-Message-ID: <20181105194721.GB26868@zn.tnic>
-References: <1540447621-22870-1-git-send-email-manish.narani@xilinx.com>
- <1540447621-22870-6-git-send-email-manish.narani@xilinx.com>
- <20181105125644.GA7937@zn.tnic>
- <41c5ca53-ed4b-38d0-c612-e1229004293e@xilinx.com>
- <20181105132007.GB7937@zn.tnic>
- <a81f47e0-1778-a6ac-4cd8-634502661d6f@xilinx.com>
- <20181105134218.GD7937@zn.tnic>
- <CAOesGMj=EbWgcYF2Mhh6TFMCdn1ub1Ze6fbXJnFFdsttWByXYg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/4] dt-bindings: media: i2c: Add bindings for Maxim
+ Integrated MAX9286
+Date: Mon, 5 Nov 2018 14:02:38 -0600
+Message-ID: <20181105200238.GA12435@bogus>
+References: <20181102154723.23662-1-kieran.bingham@ideasonboard.com>
+ <20181102154723.23662-2-kieran.bingham@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAOesGMj=EbWgcYF2Mhh6TFMCdn1ub1Ze6fbXJnFFdsttWByXYg@mail.gmail.com>
+In-Reply-To: <20181102154723.23662-2-kieran.bingham@ideasonboard.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Michal Simek <michal.simek@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, manish.narani@xilinx.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, Li Yang <leoyang.li@nxp.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-edac@vger.kernel.org
+To: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@iki.fi, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, linux-kernel@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
+On Fri, Nov 02, 2018 at 03:47:20PM +0000, Kieran Bingham wrote:
+> From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> 
+> The MAX9286 deserializes video data received on up to 4 Gigabit
+> Multimedia Serial Links (GMSL) and outputs them on a CSI-2 port using up
+> to 4 data lanes.
+> 
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> 
+> ---
+> v3:
+>  - Update binding descriptions
+> 
+> v4:
+>  - Define the use of a CSI2 D-PHY
+>  - Rename pwdn-gpios to enable-gpios (with inverted polarity)
+>  - Remove clock-lanes mapping support
+>  - rewrap text blocks
+>  - Fix typos
+> ---
+>  .../bindings/media/i2c/maxim,max9286.txt      | 182 ++++++++++++++++++
+>  1 file changed, 182 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max9286.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max9286.txt b/Documentation/devicetree/bindings/media/i2c/maxim,max9286.txt
+> new file mode 100644
+> index 000000000000..672f6a4d417d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max9286.txt
+> @@ -0,0 +1,182 @@
+> +Maxim Integrated Quad GMSL Deserializer
+> +---------------------------------------
+> +
+> +The MAX9286 deserializer receives video data on up to 4 Gigabit Multimedia
+> +Serial Links (GMSL) and outputs them on a CSI-2 D-PHY port using up to 4 data
+> +lanes.
+> +
+> +In addition to video data, the GMSL links carry a bidirectional control channel
+> +that encapsulates I2C messages. The MAX9286 forwards all I2C traffic not
+> +addressed to itself to the other side of the links, where a GMSL serializer
+> +will output it on a local I2C bus. In the other direction all I2C traffic
+> +received over GMSL by the MAX9286 is output on the local I2C bus.
+> +
+> +Required Properties:
+> +
+> +- compatible: Shall be "maxim,max9286"
+> +- reg: I2C device address
+> +
+> +Optional Properties:
+> +
+> +- poc-supply: Regulator providing Power over Coax to the cameras
+> +- enable-gpios: GPIO connected to the #PWDN pin with inverted polarity
+> +
+> +Required endpoint nodes:
+> +-----------------------
+> +
+> +The connections to the MAX9286 GMSL and its endpoint nodes are modeled using
+> +the OF graph bindings in accordance with the video interface bindings defined
+> +in Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +The following table lists the port number corresponding to each device port.
+> +
+> +        Port            Description
+> +        ----------------------------------------
+> +        Port 0          GMSL Input 0
+> +        Port 1          GMSL Input 1
+> +        Port 2          GMSL Input 2
+> +        Port 3          GMSL Input 3
+> +        Port 4          CSI-2 Output
+> +
+> +Optional Endpoint Properties for GMSL Input Ports (Port [0-3]):
+> +
+> +- remote-endpoint: phandle to the remote GMSL source endpoint subnode in the
+> +  remote node port.
+> +
+> +Required Endpoint Properties for CSI-2 Output Port (Port 4):
+> +
+> +- remote-endpoint: phandle to the remote CSI-2 sink endpoint node.
+> +- data-lanes: array of physical CSI-2 data lane indexes.
+> +
+> +Required i2c-mux nodes:
+> +----------------------
+> +
+> +Each GMSL link is modeled as a child bus of an i2c bus multiplexer/switch, in
+> +accordance with bindings described in
+> +Documentation/devicetree/bindings/i2c/i2c-mux.txt. The serializer device on the
+> +remote end of the GMSL link shall be modelled as a child node of the
+> +corresponding I2C bus.
+> +
+> +Required i2c child bus properties:
+> +- all properties described as required i2c child bus nodes properties in
+> +  Documentation/devicetree/bindings/i2c/i2c-mux.txt.
+> +
+> +Example:
+> +-------
+> +
+> +	gmsl-deserializer@2c {
+> +		compatible = "maxim,max9286";
+> +		reg = <0x2c>;
+> +		poc-supply = <&camera_poc_12v>;
+> +		enable-gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
 
-On Mon, Nov 05, 2018 at 06:51:26AM -0800, Olof Johansson wrote:
-> In general, for new functionality where needing both the driver change
-> and a DT change to enable it (or a driver change and a config change
-> to enable it), we have been merging the changes separately between
-> driver trees and arm-soc. I.e. things will be in place, but not
-> enabled, until both sides land. Main reason for doing so is to cut
-> down on arbitrary dependencies between the trees, since there can
-> sometimes end up being a lot of them.
+> +
+> +		i2c@0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
 
-Well, makes sense too and it is the least problematic approach. :-)
+It's better to not have a mixture of nodes at a level with and without 
+unit-addresses. So I'd move all the i2c nodes under an 'i2c-mux' node.
 
-> Since DT should strive for being backwards compatible (i.e, a driver
-> change shouldn't require a DT change for the kernel to not regress
-> functionally), this has been working pretty well.
-
-Ok.
-
-> However, if there's some other reason to share a base between the two
-> trees, we can do that. For most cases we've found that it's not needed
-> though. So let us know what you prefer here.
-
-No, I just wanted to make sure drivers can still function when they go
-to linux-next. But I certainly can get on board with keeping drivers and
-DT changes separate as it requires no sync and the short period of time
-when they don't load in linux-next, is perfectly ok.
-
-So can I assume you guys are going to pick up:
-
-https://lkml.kernel.org/r/1538667328-9465-7-git-send-email-manish.narani@xilinx.com
-https://lkml.kernel.org/r/1540447621-22870-6-git-send-email-manish.narani@xilinx.com
-
-?
-
-I can then pick up the rest.
-
-And I'll be ignoring DT stuff sent to me from now on and concentrate on
-the EDAC drivers, assuming former will go through your tree.
-
-Sounds good?
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Rob
