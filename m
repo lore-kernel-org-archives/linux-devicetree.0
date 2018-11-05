@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 08/11] [media] marvell-ccic/mmp: enable clock before accessing registers
-Date: Mon,  5 Nov 2018 08:30:51 +0100
-Message-ID: <20181105073054.24407-9-lkundrak@v3.sk>
+Subject: [PATCH 03/11] media: dt-bindings: marvell,mmp2-ccic: Add Marvell MMP2 camera
+Date: Mon,  5 Nov 2018 08:30:46 +0100
+Message-ID: <20181105073054.24407-4-lkundrak@v3.sk>
 References: <20181105073054.24407-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -12,35 +12,51 @@ To: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>
 List-Id: devicetree@vger.kernel.org
 
-The access to REG_CLKCTRL or REG_CTRL1 without the clock enabled hangs
-the machine. Enable the clock first.
+Add Marvell MMP2 camera host interface.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- drivers/media/platform/marvell-ccic/mmp-driver.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ .../bindings/media/marvell,mmp2-ccic.txt      | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-=
+ccic.txt
 
-diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/m=
-edia/platform/marvell-ccic/mmp-driver.c
-index 9e988e527b0d..9c0238f72c40 100644
---- a/drivers/media/platform/marvell-ccic/mmp-driver.c
-+++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
-@@ -145,6 +145,7 @@ static int mmpcam_power_up(struct mcam_camera *mcam)
-  * Turn on power and clocks to the controller.
-  */
- 	mmpcam_power_up_ctlr(cam);
-+	mcam_clk_enable(mcam);
- /*
-  * Provide power to the sensor.
-  */
-@@ -158,8 +159,6 @@ static int mmpcam_power_up(struct mcam_camera *mcam)
- 	gpio_set_value(pdata->sensor_reset_gpio, 1); /* reset is active low */
- 	mdelay(5);
-=20
--	mcam_clk_enable(mcam);
--
- 	return 0;
- }
-=20
+diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.tx=
+t b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
+new file mode 100644
+index 000000000000..a9c536e58dda
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
+@@ -0,0 +1,30 @@
++Marvell MMP2 camera host interface
++
++Required properties:
++ - compatible: Should be "marvell,mmp2-ccic"
++ - reg: register base and size
++ - interrupts: the interrupt number
++ - any required generic properties defined in video-interfaces.txt
++
++Optional properties:
++ - clocks: input clock (see clock-bindings.txt)
++ - clock-output-names: should contain the name of the clock driving the
++                       sensor master clock MCLK
++
++Example:
++
++	camera0: camera@d420a000 {
++		compatible =3D "marvell,mmp2-ccic";
++		reg =3D <0xd420a000 0x800>;
++		interrupts =3D <42>;
++		clocks =3D <&soc_clocks MMP2_CLK_CCIC0>;
++		clock-names =3D "CCICAXICLK";
++		#clock-cells =3D <0>;
++		clock-output-names =3D "mclk";
++
++		port {
++			camera0_0: endpoint {
++				remote-endpoint =3D <&ov7670_0>;
++			};
++		};
++	};
 --=20
 2.19.1
