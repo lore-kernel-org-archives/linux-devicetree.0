@@ -1,72 +1,36 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v4 0/6] arm64: Get rid of __early_init_dt_declare_initrd()
-Date: Mon,  5 Nov 2018 14:54:25 -0800
-Message-ID: <20181105225431.24485-1-f.fainelli@gmail.com>
+Subject: [PATCH v4 1/6] nds32: Remove phys_initrd_start and phys_initrd_size
+Date: Mon,  5 Nov 2018 14:54:26 -0800
+Message-ID: <20181105225431.24485-2-f.fainelli@gmail.com>
+References: <20181105225431.24485-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181105225431.24485-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+This will conflict with a subsequent change making phys_initrd_start and
+phys_initrd_size global variables. nds32 does not make use of those nor
+provides a suitable declarations so just get rid of them.
 
-Changes in v4:
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ arch/nds32/mm/init.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-- dropped initrd_below_start_ok assignment in ARM64, not necessary at
-  all (Ard)
-- replace #ifdef CONFIG_BLK_DEV_INITRD with if
-  (IS_ENABLED(CONFIG_BLK_DEV_INITRD) for consistency with other parts
-  of arm64_memblock_init() (Rob)
-
-Changes in v3:
-
-- use C conditionals in drivers/of/fdt.c
-- added check on phys_initrd_size in arch/arm64/mm/init.c to determine
-  whether initrd_start must be populated
-- fixed a build warning with ARC that was just missing an (unsigned
-  long) cast
-
-Changes in v2:
-
-- get rid of ARCH_HAS_PHYS_INITRD and instead define
-  phys_initrd_start/phys_initrd_size in init/do_mounts_initrd.c
-
-- make __early_init_dt_declare_initrd() account for ARM64 specific
-  behavior with __va() when having CONFIG_DEBUG_VM enabled
-
-- consolidate early_initrd() command line parsing into
-  init/do_mounts_initrd.c
-
-Because phys_initrd_start/phys_initrd_size are now compiled in
-ini/do_mounts_initrd.c which is only built with CONFIG_BLK_DEV_INITRD=y,
-we need to be a bit careful about the uses throughout architecture
-specific code.
-
-Previous discussions/submissions list here:
-
-v3:
-https://www.spinics.net/lists/arm-kernel/msg683566.html
-v2:
-https://lkml.org/lkml/2018/10/25/4
-
-Florian Fainelli (6):
-  nds32: Remove phys_initrd_start and phys_initrd_size
-  arch: Make phys_initrd_start and phys_initrd_size global variables
-  of/fdt: Populate phys_initrd_start/phys_initrd_size from FDT
-  arm64: Utilize phys_initrd_start/phys_initrd_size
-  of/fdt: Remove custom __early_init_dt_declare_initrd() implementation
-  arch: Move initrd= parsing into do_mounts_initrd.c
-
- arch/arc/mm/init.c              | 25 +++++-------------------
- arch/arm/mm/init.c              | 28 ++-------------------------
- arch/arm64/include/asm/memory.h |  8 --------
- arch/arm64/mm/init.c            | 34 ++++++---------------------------
- arch/nds32/mm/init.c            |  2 --
- arch/unicore32/mm/init.c        | 24 +++++------------------
- drivers/of/fdt.c                | 17 ++++++++++++-----
- include/linux/initrd.h          |  3 +++
- init/do_mounts_initrd.c         | 20 +++++++++++++++++++
- 9 files changed, 53 insertions(+), 108 deletions(-)
-
+diff --git a/arch/nds32/mm/init.c b/arch/nds32/mm/init.c
+index 131104bd2538..253f79fc7196 100644
+--- a/arch/nds32/mm/init.c
++++ b/arch/nds32/mm/init.c
+@@ -21,8 +21,6 @@
+ DEFINE_PER_CPU(struct mmu_gather, mmu_gathers);
+ DEFINE_SPINLOCK(anon_alias_lock);
+ extern pgd_t swapper_pg_dir[PTRS_PER_PGD];
+-extern unsigned long phys_initrd_start;
+-extern unsigned long phys_initrd_size;
+ 
+ /*
+  * empty_zero_page is a special page that is used for
 -- 
 2.17.1
