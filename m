@@ -1,58 +1,54 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/1] drm/panel: Add support for Olimex LCD-OLinuXino
- panel
-Date: Mon, 5 Nov 2018 16:03:22 -0600
-Message-ID: <20181105220322.GA10583@bogus>
-References: <1531383729-13932-1-git-send-email-stefan@olimex.com>
- <20180716150836.GA16895@rob-hp-laptop>
- <e677488e-34e0-512c-db13-15ccf78c5ea0@olimex.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] arm64: dts: rockchip: add Gru Scarlet devicetrees
+Date: Mon, 5 Nov 2018 16:06:18 -0600
+Message-ID: <20181105220618.GA20928@bogus>
+References: <20181101123639.15560-1-heiko@sntech.de>
+ <20181101123639.15560-2-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <e677488e-34e0-512c-db13-15ccf78c5ea0@olimex.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Mavrodiev <stefan@olimex.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+In-Reply-To: <20181101123639.15560-2-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 01, 2018 at 04:34:42PM +0200, Stefan Mavrodiev wrote:
-> On 7/16/18 6:08 PM, Rob Herring wrote:
-> > On Thu, Jul 12, 2018 at 11:21:53AM +0300, Stefan Mavrodiev wrote:
-> > > This patch adds Olimex Ltd. LCD-OLinuXino bridge panel driver. The
-> > > panel is used with different LCDs (currently from 480x272 to 1280x800).
-> > > Small EEPROM chip is used for identification, which holds some
-> > > factory data and timing requirements.
-> > > 
-> > > Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
-> > > ---
-> > > Changes for v3:
-> > >    - Change module license from "GPL v2" to "GPL"
-> > >    - Make use of backlight_enable()/backlight_disable() helpers
-> > >    - Rework backlight device request
-> > >    - Remove drm_panel_detach()
-> > >    - Use module_i2c_driver() for initialization
-> > >    - Make the first mode preferred
-> > >    - If num_modes value is invalid, overwrite it with 4, which is the maximum
-> > >    - Some variable types optimizations
-> > > 
-> > > Changes for v2:
-> > >    - Changed lcd_olinuxino_funcs to static const
-> > > 
-> > >   .../display/panel/olimex,lcd-olinuxino.txt         |  42 +++
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > 
-> > >   MAINTAINERS                                        |   6 +
-> > >   drivers/gpu/drm/panel/Kconfig                      |  10 +
-> > >   drivers/gpu/drm/panel/Makefile                     |   1 +
-> > >   drivers/gpu/drm/panel/panel-olimex-lcd-olinuxino.c | 331 +++++++++++++++++++++
-> > >   5 files changed, 390 insertions(+)
-> > >   create mode 100644 Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt
-> > >   create mode 100644 drivers/gpu/drm/panel/panel-olimex-lcd-olinuxino.c
+On Thu,  1 Nov 2018 13:36:39 +0100, Heiko Stuebner wrote:
+> Gru-Scarlet is a tablet device using ChomeOS, dual-dsi display
+> and Wacom touchscreen with stylus.
 > 
-> I would like to ask if there will be any progress on this patch?
+> There exist two variants in the market using different displays
+> that are differentiated via their sku-id.
+> The bootloader on them also determines the correct devicetree to
+> load via the sku-id.
+> 
+> So add a common scarlet dtsi and two minimal board devicetrees
+> for the two display variants.
+> 
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> ---
+> changes in v2:
+> - drop coreboot param override
+> - rebase against current master state so it will apply against 4.20-rc1
+> 
+>  .../devicetree/bindings/arm/rockchip.txt      |  34 +
+>  arch/arm64/boot/dts/rockchip/Makefile         |   2 +
+>  .../dts/rockchip/rk3399-gru-scarlet-inx.dts   |  33 +
+>  .../dts/rockchip/rk3399-gru-scarlet-kd.dts    |  33 +
+>  .../boot/dts/rockchip/rk3399-gru-scarlet.dtsi | 594 ++++++++++++++++++
+>  5 files changed, 696 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dts
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dts
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet.dtsi
+> 
 
-Thierry needs to pick this one up. At this point you need to re-send. No 
-one is going to look at patches 4 months old.
-
-Rob
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
