@@ -1,86 +1,68 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 4/6] arm64: Utilize phys_initrd_start/phys_initrd_size
-Date: Mon, 5 Nov 2018 14:33:42 -0600
-Message-ID: <20181105203342.GB21852@bogus>
-References: <20181031192843.13230-1-f.fainelli@gmail.com>
- <20181031192843.13230-5-f.fainelli@gmail.com>
+Subject: Re: [PATCH V3 1/2] dt-bindings: mmc: sdhci-msm: Add new compatible
+ string for SDM845 SOC
+Date: Mon, 5 Nov 2018 14:36:57 -0600
+Message-ID: <20181105203657.GA32282@bogus>
+References: <1541073999-11752-1-git-send-email-vbadigan@codeaurora.org>
+ <1541073999-11752-2-git-send-email-vbadigan@codeaurora.org>
+ <CAD=FV=V9AdCgOSonb0tu==DgKRKeZxto+aGwxmdbHAqrmfMrDQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181031192843.13230-5-f.fainelli@gmail.com>
+In-Reply-To: <CAD=FV=V9AdCgOSonb0tu==DgKRKeZxto+aGwxmdbHAqrmfMrDQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infra>
+To: Doug Anderson <dianders@google.com>
+Cc: vbadigan@codeaurora.org, Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Evan Green <evgreen@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, riteshh@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 31, 2018 at 12:28:41PM -0700, Florian Fainelli wrote:
-> ARM64 is the only architecture that re-defines
-> __early_init_dt_declare_initrd() in order for that function to populate
-> initrd_start/initrd_end with physical addresses instead of virtual
-> addresses. Instead of having an override we can leverage
-> drivers/of/fdt.c populating phys_initrd_start/phys_initrd_size to
-> populate those variables for us.
+On Thu, Nov 01, 2018 at 01:29:54PM -0700, Doug Anderson wrote:
+> Hi,
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  arch/arm64/mm/init.c | 19 +++++++++----------
->  1 file changed, 9 insertions(+), 10 deletions(-)
+> On Thu, Nov 1, 2018 at 5:07 AM Veerabhadrarao Badiganti
+> <vbadigan@codeaurora.org> wrote:
+> >
+> > For SDM845 SOC, new compatible string  "qcom,sdm845-sdhci" is added.
+> >
+> > Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> > ---
+> >  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> > index 502b3b8..f2ffbeb 100644
+> > --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> > +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> > @@ -7,6 +7,7 @@ Required properties:
+> >  - compatible: Should contain:
+> >                 "qcom,sdhci-msm-v4" for sdcc versions less than 5.0
+> >                 "qcom,sdhci-msm-v5" for sdcc versions >= 5.0
+> > +               "qcom,sdm845-sdhci" for sdm845 SOC
 > 
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index 3cf87341859f..00ef2166bb73 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -72,8 +72,8 @@ static int __init early_initrd(char *p)
->  	if (*endp == ',') {
->  		size = memparse(endp + 1, NULL);
->  
-> -		initrd_start = start;
-> -		initrd_end = start + size;
-> +		phys_initrd_start = start;
-> +		phys_initrd_size = size;
->  	}
->  	return 0;
->  }
-> @@ -408,14 +408,14 @@ void __init arm64_memblock_init(void)
->  		memblock_add(__pa_symbol(_text), (u64)(_end - _text));
->  	}
->  
-> -	if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && initrd_start) {
-> +	if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {
->  		/*
->  		 * Add back the memory we just removed if it results in the
->  		 * initrd to become inaccessible via the linear mapping.
->  		 * Otherwise, this is a no-op
->  		 */
-> -		u64 base = initrd_start & PAGE_MASK;
-> -		u64 size = PAGE_ALIGN(initrd_end) - base;
-> +		u64 base = phys_initrd_start & PAGE_MASK;
-> +		u64 size = PAGE_ALIGN(phys_initrd_size);
->  
->  		/*
->  		 * We can only add back the initrd memory if we don't end up
-> @@ -460,12 +460,11 @@ void __init arm64_memblock_init(void)
->  	 */
->  	memblock_reserve(__pa_symbol(_text), _end - _text);
->  #ifdef CONFIG_BLK_DEV_INITRD
-> -	if (initrd_start) {
-> -		memblock_reserve(initrd_start, initrd_end - initrd_start);
-> -
-> +	if (phys_initrd_size) {
+> It's up to Rob of course, but IMO it seems a nicer way forward to
+> include both the SoC-specific string and the "version" string in all
+> cases.  I'd write this for the full text:
 
-Since we're touching the if anyways, perhaps convert the #ifdef to a C 
-IS_ENABLED().
+Fine by me if you update all the dts files.
 
->  		/* the generic initrd code expects virtual addresses */
-> -		initrd_start = __phys_to_virt(initrd_start);
-> -		initrd_end = __phys_to_virt(initrd_end);
-> +		initrd_start = __phys_to_virt(phys_initrd_start);
-> +		initrd_end = initrd_start + phys_initrd_size;
-> +		initrd_below_start_ok = 0;
->  	}
->  #endif
->  
-> -- 
-> 2.17.1
 > 
+>  - compatible: Should contain a SoC-specific string and a IP version string:
+>       version strings:
+>            "qcom,sdhci-msm-v4" for sdcc versions less than 5.0
+>            "qcom,sdhci-msm-v5" for sdcc version 5.0
+>       full compatible strings with SoC and version:
+>            "qcom,apq8084", "qcom,sdhci-msm-v4"
+>            "qcom,msm8974", "qcom,sdhci-msm-v4"
+>            "qcom,msm8916", "qcom,sdhci-msm-v4"
+>            "qcom,msm8992", "qcom,sdhci-msm-v4"
+>            "qcom,msm8996", "qcom,sdhci-msm-v4"
+
+I assume you meant to append '-sdhci' here?
+
+>            "qcom,sdm845-sdhci", "qcom,sdhci-msm-v5"
+> 
+>    NOTE that some old device tree files may be floating around that only
+>    have the string "qcom,sdhci-msm-v4" without the SoC compatible string
+>    but doing that should be considered a deprecated practice.
+> 
+> -Doug
