@@ -1,89 +1,39 @@
-Return-Path: <SRS0=YodY=NP=gmail.com=chunkeey@kernel.org>
-From: Christian Lamparter <chunkeey@gmail.com>
-Subject: [PATCH v1 1/2] dt-bindings: dmaengine: dw-dmac: add protection control property
-Date: Sun,  4 Nov 2018 18:01:38 +0100
-Message-Id: <6b18bcf33d6473c166b607a5fa31ba63727cf6bb.1541350844.git.chunkeey@gmail.com>
+Return-Path: <SRS0=zp4P=NQ=jmondi.org=jacopo+renesas@kernel.org>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH 3/6] media: dt-bindings: rcar-csi2: Add R8A77990
+Date: Mon,  5 Nov 2018 12:19:08 +0100
+Message-Id: <1541416751-19810-4-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <1541416751-19810-1-git-send-email-jacopo+renesas@jmondi.org>
+References: <1541416751-19810-1-git-send-email-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To: dmaengine@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vkoul@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Viresh Kumar <vireshk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds the per-channel dma protection control
-prop-encoded-array and dt-binding definitions (including
-definitions for the existing channel allocation and priority
-order values based on include/linux/platform_data/dma-dw.h)
-for the DesignWare AHB Central Direct Memory Access Controller.
+Add compatible string for R-Car E3 R8A77990 to the list of supported SoCs.
 
-Note: The protection control signals are one-to-one mapped to
-the AHB HPROT[1:3] signals.  The HPROT0 (Data Access) is
-always hardwired to 1 for this controller.
-
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 ---
- .../devicetree/bindings/dma/snps-dma.txt      |  4 ++++
- MAINTAINERS                                   |  4 +++-
- include/dt-bindings/dma/dw-dmac.h             | 20 +++++++++++++++++++
- 3 files changed, 27 insertions(+), 1 deletion(-)
- create mode 100644 include/dt-bindings/dma/dw-dmac.h
+ Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/snps-dma.txt b/Documentation/devicetree/bindings/dma/snps-dma.txt
-index 39e2b26be344..72b4984a4c18 100644
---- a/Documentation/devicetree/bindings/dma/snps-dma.txt
-+++ b/Documentation/devicetree/bindings/dma/snps-dma.txt
-@@ -27,6 +27,10 @@ Optional properties:
-   general purpose DMA channel allocator. False if not passed.
- - multi-block: Multi block transfers supported by hardware. Array property with
-   one cell per channel. 0: not supported, 1 (default): supported.
-+- snps,dma-protection-control: Channel's AHB HPROT[3:1] protection setting.
-+  Array property with one cell per channel. The default value for a channel
-+  is 0 (for non-cacheable, strongly ordered, unprivileged data access).
-+  Refer to include/dt-bindings/dma/dw-dmac.h for possible values.
- 
- Example:
- 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index dacba23b80b4..c35998e20e9d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14107,9 +14107,11 @@ SYNOPSYS DESIGNWARE DMAC DRIVER
- M:	Viresh Kumar <vireshk@kernel.org>
- R:	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
- S:	Maintained
-+F:	Documentation/devicetree/bindings/dma/snps-dma.txt
-+F:	drivers/dma/dw/
-+F:	include/dt-bindings/dma/dw-dmac.h
- F:	include/linux/dma/dw.h
- F:	include/linux/platform_data/dma-dw.h
--F:	drivers/dma/dw/
- 
- SYNOPSYS DESIGNWARE ENTERPRISE ETHERNET DRIVER
- M:	Jose Abreu <Jose.Abreu@synopsys.com>
-diff --git a/include/dt-bindings/dma/dw-dmac.h b/include/dt-bindings/dma/dw-dmac.h
-new file mode 100644
-index 000000000000..9152a6e2406c
---- /dev/null
-+++ b/include/dt-bindings/dma/dw-dmac.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-+
-+#ifndef __DT_BINDINGS_DMA_DW_DMAC_H__
-+#define __DT_BINDINGS_DMA_DW_DMAC_H__
-+
-+#define DW_DMAC_CHAN_ALLOCATION_ASCENDING       0       /* zero to seven */
-+#define DW_DMAC_CHAN_ALLOCATION_DESCENDING      1       /* seven to zero */
-+#define DW_DMAC_CHAN_PRIORITY_ASCENDING         0       /* chan0 highest */
-+#define DW_DMAC_CHAN_PRIORITY_DESCENDING        1       /* chan7 highest */
-+
-+/*
-+ * Protection Control bits provide protection against illegal transactions.
-+ * The protection bits[0:2] are one-to-one mapped to AHB HPROT[3:1] signals.
-+ * The AHB HPROT[0] bit is hardwired to 1: Data Access.
-+ */
-+#define DW_DMAC_HPROT1_PRIVILEGED_MODE	(1 << 0)	/* Privileged Mode */
-+#define DW_DMAC_HPROT2_BUFFERABLE	(1 << 1)	/* DMA is bufferable */
-+#define DW_DMAC_HPROT3_CACHEABLE	(1 << 2)	/* DMA is cacheable */
-+
-+#endif /* __DT_BINDINGS_DMA_DW_DMAC_H__ */
--- 
-2.19.1
+diff --git a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+index 2d385b6..2824489 100644
+--- a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
++++ b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+@@ -12,6 +12,7 @@ Mandatory properties
+    - "renesas,r8a7796-csi2" for the R8A7796 device.
+    - "renesas,r8a77965-csi2" for the R8A77965 device.
+    - "renesas,r8a77970-csi2" for the R8A77970 device.
++   - "renesas,r8a77990-csi2" for the R8A77990 device.
+
+  - reg: the register base and size for the device registers
+  - interrupts: the interrupt for the device
+--
+2.7.4
