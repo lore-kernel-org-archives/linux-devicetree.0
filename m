@@ -1,45 +1,47 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/4] dt-bindings: media: i2c: Add bindings for IMI
- RDACM20
-Date: Mon, 5 Nov 2018 14:13:12 -0600
-Message-ID: <20181105201312.GA30170@bogus>
-References: <20181102154723.23662-1-kieran.bingham@ideasonboard.com>
- <20181102154723.23662-3-kieran.bingham@ideasonboard.com>
+From: Daniel Mack <daniel@zonque.org>
+Subject: [PATCH] ARM: dts: pxa3xx: add gcu node
+Date: Mon,  5 Nov 2018 20:18:27 +0100
+Message-ID: <20181105191827.3860-1-daniel@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181102154723.23662-3-kieran.bingham@ideasonboard.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@iki.fi, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, linux-kernel@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robert.jarzmik@free.fr, haojian.zhuang@gmail.com
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, Daniel Mack <daniel@zonque.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  2 Nov 2018 15:47:21 +0000, Kieran Bingham wrote:
-> From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> 
-> The IMI RDACM20 is a Gigabit Multimedia Serial Link (GMSL) camera
-> capable of transmitting video and I2C control messages on a coax cable
-> physical link for automotive applications.
-> 
-> Document its device tree binding interface.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> ---
-> v2:
->  - Provide imi vendor prefix
->  - Fix minor spelling
-> 
-> v3:
->  - update binding descriptions
-> ---
->  .../bindings/media/i2c/imi,rdacm20.txt        | 65 +++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
->  2 files changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/imi,rdacm20.txt
-> 
+Add a device node for hardware graphic acceleration.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+---
+ arch/arm/boot/dts/pxa3xx.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm/boot/dts/pxa3xx.dtsi b/arch/arm/boot/dts/pxa3xx.dtsi
+index 3a8f0edc3af9..264f681bebd9 100644
+--- a/arch/arm/boot/dts/pxa3xx.dtsi
++++ b/arch/arm/boot/dts/pxa3xx.dtsi
+@@ -300,4 +300,12 @@
+ 		clocks = <&clks CLK_OSTIMER>;
+ 		status = "okay";
+ 	};
++
++	gcu: display-controller@54000000 {
++		compatible = "marvell,pxa300-gcu";
++		reg = <0x54000000 0x1000>;
++		interrupts = <39>;
++		clocks = <&clks CLK_PXA300_GCU>;
++		status = "disabled";
++	};
+ };
+-- 
+2.17.2
