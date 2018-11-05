@@ -1,77 +1,78 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 2/2] arm64: dts: qcom: Add SoC-specific string for sdhci-msm-v4 nodes
-Date: Mon,  5 Nov 2018 13:09:21 -0800
-Message-ID: <20181105210921.253707-2-dianders@chromium.org>
-References: <20181105210921.253707-1-dianders@chromium.org>
+From: Doug Anderson <dianders@google.com>
+Subject: Re: [PATCH V3 1/2] dt-bindings: mmc: sdhci-msm: Add new compatible
+ string for SDM845 SOC
+Date: Mon, 5 Nov 2018 13:11:31 -0800
+Message-ID: <CAD=FV=VitZ4dyYGxinQ=nsrfM+U7duGbxeN3bdbRxfx-2AWxyQ@mail.gmail.com>
+References: <1541073999-11752-1-git-send-email-vbadigan@codeaurora.org>
+ <1541073999-11752-2-git-send-email-vbadigan@codeaurora.org>
+ <CAD=FV=V9AdCgOSonb0tu==DgKRKeZxto+aGwxmdbHAqrmfMrDQ@mail.gmail.com> <20181105203657.GA32282@bogus>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181105210921.253707-1-dianders@chromium.org>
+In-Reply-To: <20181105203657.GA32282@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: vbadigan@codeaurora.org, Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Evan Green <evgreen@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, riteshh@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-As per upstream discussion [1], we should have an SoC-specific
-compatible string for Qualcomm's SDHCI nodes.  Let's add it.
+Hi,
 
-[1] https://lkml.kernel.org/r/20181105203657.GA32282@bogus
+On Mon, Nov 5, 2018 at 12:37 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Thu, Nov 01, 2018 at 01:29:54PM -0700, Doug Anderson wrote:
+> > Hi,
+> >
+> > On Thu, Nov 1, 2018 at 5:07 AM Veerabhadrarao Badiganti
+> > <vbadigan@codeaurora.org> wrote:
+> > >
+> > > For SDM845 SOC, new compatible string  "qcom,sdm845-sdhci" is added.
+> > >
+> > > Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> > > index 502b3b8..f2ffbeb 100644
+> > > --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> > > +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> > > @@ -7,6 +7,7 @@ Required properties:
+> > >  - compatible: Should contain:
+> > >                 "qcom,sdhci-msm-v4" for sdcc versions less than 5.0
+> > >                 "qcom,sdhci-msm-v5" for sdcc versions >= 5.0
+> > > +               "qcom,sdm845-sdhci" for sdm845 SOC
+> >
+> > It's up to Rob of course, but IMO it seems a nicer way forward to
+> > include both the SoC-specific string and the "version" string in all
+> > cases.  I'd write this for the full text:
+>
+> Fine by me if you update all the dts files.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+Done and done.
 
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 4 ++--
- arch/arm64/boot/dts/qcom/msm8992.dtsi | 2 +-
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+https://lkml.kernel.org/r/20181105210921.253707-1-dianders@chromium.org
+https://lkml.kernel.org/r/20181105210921.253707-2-dianders@chromium.org
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index d302d8d639a1..0a7335526063 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -587,7 +587,7 @@
-                 };
- 
- 		sdhc_1: sdhci@7824000 {
--			compatible = "qcom,sdhci-msm-v4";
-+			compatible = "qcom,msm8916-sdhci", "qcom,sdhci-msm-v4";
- 			reg = <0x07824900 0x11c>, <0x07824000 0x800>;
- 			reg-names = "hc_mem", "core_mem";
- 
-@@ -604,7 +604,7 @@
- 		};
- 
- 		sdhc_2: sdhci@7864000 {
--			compatible = "qcom,sdhci-msm-v4";
-+			compatible = "qcom,msm8916-sdhci", "qcom,sdhci-msm-v4";
- 			reg = <0x07864900 0x11c>, <0x07864000 0x800>;
- 			reg-names = "hc_mem", "core_mem";
- 
-diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-index cf5cacdd624d..09d0234cfd99 100644
---- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-@@ -203,7 +203,7 @@
- 		};
- 
- 		sdhci1: mmc@f9824900 {
--			compatible = "qcom,sdhci-msm-v4";
-+			compatible = "qcom,msm8992-sdhci", "qcom,sdhci-msm-v4";
- 			reg = <0xf9824900 0x1a0>, <0xf9824000 0x800>;
- 			reg-names = "hc_mem", "core_mem";
- 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index b29fe80d7288..5e19f87df020 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -535,7 +535,7 @@
- 
- 		sdhc2: sdhci@74a4900 {
- 			 status = "disabled";
--			 compatible = "qcom,sdhci-msm-v4";
-+			 compatible = "qcom,msm8996-sdhci", "qcom,sdhci-msm-v4";
- 			 reg = <0x74a4900 0x314>, <0x74a4000 0x800>;
- 			 reg-names = "hc_mem", "core_mem";
- 
--- 
-2.19.1.930.g4563a0d9d0-goog
+
+> >  - compatible: Should contain a SoC-specific string and a IP version string:
+> >       version strings:
+> >            "qcom,sdhci-msm-v4" for sdcc versions less than 5.0
+> >            "qcom,sdhci-msm-v5" for sdcc version 5.0
+> >       full compatible strings with SoC and version:
+> >            "qcom,apq8084", "qcom,sdhci-msm-v4"
+> >            "qcom,msm8974", "qcom,sdhci-msm-v4"
+> >            "qcom,msm8916", "qcom,sdhci-msm-v4"
+> >            "qcom,msm8992", "qcom,sdhci-msm-v4"
+> >            "qcom,msm8996", "qcom,sdhci-msm-v4"
+>
+> I assume you meant to append '-sdhci' here?
+
+Oops, yes!
+
+           "qcom,apq8084-sdhci", "qcom,sdhci-msm-v4"
+           "qcom,msm8974-sdhci", "qcom,sdhci-msm-v4"
+           "qcom,msm8916-sdhci", "qcom,sdhci-msm-v4"
+           "qcom,msm8992-sdhci", "qcom,sdhci-msm-v4"
+           "qcom,msm8996-sdhci", "qcom,sdhci-msm-v4"
+
+-Doug
