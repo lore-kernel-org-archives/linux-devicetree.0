@@ -1,62 +1,64 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 03/11] media: dt-bindings: marvell,mmp2-ccic: Add Marvell MMP2 camera
-Date: Mon,  5 Nov 2018 08:30:46 +0100
-Message-ID: <20181105073054.24407-4-lkundrak@v3.sk>
-References: <20181105073054.24407-1-lkundrak@v3.sk>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH v7 1/6] dt-bindings: power: Introduce one property to present the battery internal resistance
+Date: Mon,  5 Nov 2018 15:39:06 +0800
+Message-ID: <5640f29e0b7f46f9ee77d80745f8c93eda355c34.1541393063.git.baolin.wang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181105073054.24407-1-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>
+To: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, baolin.wang@linaro.org, broonie@kernel.org, ctatlor97@gmail.com, linus.walleij@linaro.org, quentin.schulz@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-Add Marvell MMP2 camera host interface.
+The internal resistance of a battery is not a constant in its life cycle,
+this varies over the age of the battery or temperature and so on. But we
+just want use one constant battery internal resistance to estimate the
+battery capacity. Thus this patch introduces one property to present
+the battery factory internal resistance for battery information.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- .../bindings/media/marvell,mmp2-ccic.txt      | 30 +++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-=
-ccic.txt
+Changes from v6:
+ - None.
 
-diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.tx=
-t b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-new file mode 100644
-index 000000000000..a9c536e58dda
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-@@ -0,0 +1,30 @@
-+Marvell MMP2 camera host interface
-+
-+Required properties:
-+ - compatible: Should be "marvell,mmp2-ccic"
-+ - reg: register base and size
-+ - interrupts: the interrupt number
-+ - any required generic properties defined in video-interfaces.txt
-+
-+Optional properties:
-+ - clocks: input clock (see clock-bindings.txt)
-+ - clock-output-names: should contain the name of the clock driving the
-+                       sensor master clock MCLK
-+
-+Example:
-+
-+	camera0: camera@d420a000 {
-+		compatible =3D "marvell,mmp2-ccic";
-+		reg =3D <0xd420a000 0x800>;
-+		interrupts =3D <42>;
-+		clocks =3D <&soc_clocks MMP2_CLK_CCIC0>;
-+		clock-names =3D "CCICAXICLK";
-+		#clock-cells =3D <0>;
-+		clock-output-names =3D "mclk";
-+
-+		port {
-+			camera0_0: endpoint {
-+				remote-endpoint =3D <&ov7670_0>;
-+			};
-+		};
-+	};
---=20
-2.19.1
+Changes from v5:
+ - None.
+
+Changes from v4:
+ - None.
+
+Changes from v3:
+ - Split binding into one separate patch.
+ - Add LinusW reviewed tag.
+
+Changes from v2:
+ - Rename the property.
+ - Improve the commit message.
+
+Changes from v1:
+ - New patch in v2.
+---
+ .../devicetree/bindings/power/supply/battery.txt   |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+index f4d3b4a..938d027 100644
+--- a/Documentation/devicetree/bindings/power/supply/battery.txt
++++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+@@ -22,6 +22,7 @@ Optional Properties:
+  - charge-term-current-microamp: current for charge termination phase
+  - constant-charge-current-max-microamp: maximum constant input current
+  - constant-charge-voltage-max-microvolt: maximum constant input voltage
++ - factory-internal-resistance-micro-ohms: battery factory internal resistance
+ 
+ Battery properties are named, where possible, for the corresponding
+ elements in enum power_supply_property, defined in
+@@ -42,6 +43,7 @@ Example:
+ 		charge-term-current-microamp = <128000>;
+ 		constant-charge-current-max-microamp = <900000>;
+ 		constant-charge-voltage-max-microvolt = <4200000>;
++		factory-internal-resistance-micro-ohms = <250000>;
+ 	};
+ 
+ 	charger: charger@11 {
+-- 
+1.7.9.5
