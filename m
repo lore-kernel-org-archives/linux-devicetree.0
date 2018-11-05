@@ -1,17 +1,18 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: uniphier: re-add addressing properties" to the spi tree
-Date: Mon,  5 Nov 2018 12:01:53 +0000 (GMT)
-Message-ID: <20181105120153.EB1181124D98@debutante.sirena.org.uk>
-References: <1540533525-1816-3-git-send-email-hayashibara.keiji@socionext.com>
+Subject: Applied "spi: mediatek: add spi support for mt8183 IC" to the spi tree
+Date: Mon,  5 Nov 2018 12:05:51 +0000 (GMT)
+Message-ID: <20181105120551.59AF31124D98@debutante.sirena.org.uk>
+References: <1541052139-8845-3-git-send-email-leilk.liu@mediatek.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1540533525-1816-3-git-send-email-hayashibara.keiji@socionext.com>
+In-Reply-To: <1541052139-8845-3-git-send-email-leilk.liu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, yamada.masahiro@socionext.com, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, stable@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, linux-kernel@vger.kernel.org, hayashibara.keiji@socionext.comlinux-spi@vger.kernel.org
+To: Leilk Liu <leilk.liu@mediatek.com>
+Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.orglinux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   spi: uniphier: re-add addressing properties
+   spi: mediatek: add spi support for mt8183 IC
 
 has been applied to the spi tree at
 
@@ -36,43 +37,45 @@ to this mail.
 Thanks,
 Mark
 
->From 2a35a643f138a97e3bfee0c599c72e5ca80ebe7c Mon Sep 17 00:00:00 2001
-From: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Date: Fri, 26 Oct 2018 14:58:45 +0900
-Subject: [PATCH] spi: uniphier: re-add addressing properties
+>From b654aa6f2bbb00508ea0abc1cdc98ba8baa13682 Mon Sep 17 00:00:00 2001
+From: Leilk Liu <leilk.liu@mediatek.com>
+Date: Thu, 1 Nov 2018 14:02:19 +0800
+Subject: [PATCH] spi: mediatek: add spi support for mt8183 IC
 
-In commit 7662d1dc17d4 ("spi: uniphier: fix incorrect property items")
-addressing properties of #address-cells and #size-cells were removed.
-Since it is not necessary to remove them, they are back again.
+this patch add support for mt8183 IC.
 
-Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/spi/spi-uniphier.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/spi/spi-mt65xx.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-uniphier.txt b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
-index b04e66a52de5..e1201573a29a 100644
---- a/Documentation/devicetree/bindings/spi/spi-uniphier.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
-@@ -5,6 +5,8 @@ UniPhier SoCs have SCSSI which supports SPI single channel.
- Required properties:
-  - compatible: should be "socionext,uniphier-scssi"
-  - reg: address and length of the spi master registers
-+ - #address-cells: must be <1>, see spi-bus.txt
-+ - #size-cells: must be <0>, see spi-bus.txt
-  - interrupts: a single interrupt specifier
-  - pinctrl-names: should be "default"
-  - pinctrl-0: pin control state for the default mode
-@@ -16,6 +18,8 @@ Example:
- spi0: spi@54006000 {
- 	compatible = "socionext,uniphier-scssi";
- 	reg = <0x54006000 0x100>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	interrupts = <0 39 4>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_spi0>;
+diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+index 3dc31627c655..f3119d82150e 100644
+--- a/drivers/spi/spi-mt65xx.c
++++ b/drivers/spi/spi-mt65xx.c
+@@ -120,6 +120,12 @@ static const struct mtk_spi_compatible mt8173_compat = {
+ 	.must_tx = true,
+ };
+ 
++static const struct mtk_spi_compatible mt8183_compat = {
++	.need_pad_sel = true,
++	.must_tx = true,
++	.enhance_timing = true,
++};
++
+ /*
+  * A piece of default chip info unless the platform
+  * supplies it.
+@@ -150,6 +156,9 @@ static const struct of_device_id mtk_spi_of_match[] = {
+ 	{ .compatible = "mediatek,mt8173-spi",
+ 		.data = (void *)&mt8173_compat,
+ 	},
++	{ .compatible = "mediatek,mt8183-spi",
++		.data = (void *)&mt8183_compat,
++	},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, mtk_spi_of_match);
 -- 
 2.19.0.rc2
