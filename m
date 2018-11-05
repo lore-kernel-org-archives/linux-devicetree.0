@@ -1,39 +1,65 @@
-Return-Path: <SRS0=zp4P=NQ=jmondi.org=jacopo+renesas@kernel.org>
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH 3/6] media: dt-bindings: rcar-csi2: Add R8A77990
-Date: Mon,  5 Nov 2018 12:19:08 +0100
-Message-Id: <1541416751-19810-4-git-send-email-jacopo+renesas@jmondi.org>
-In-Reply-To: <1541416751-19810-1-git-send-email-jacopo+renesas@jmondi.org>
-References: <1541416751-19810-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 5 Nov 2018 14:39:09 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: adv748x: make data-lanes property
+ mandatory for CSI-2 endpoints
+Message-ID: <20181105203909.GA5500@bogus>
+References: <20181102160009.17267-1-niklas.soderlund+renesas@ragnatech.se>
+ <20181102160009.17267-2-niklas.soderlund+renesas@ragnatech.se>
+ <20181105084106.GE20885@w540>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-To: niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20181105084106.GE20885@w540>
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add compatible string for R-Car E3 R8A77990 to the list of supported SoCs.
+On Mon, Nov 05, 2018 at 09:41:06AM +0100, jacopo mondi wrote:
+> Hi Niklas,
+> 
+> On Fri, Nov 02, 2018 at 05:00:06PM +0100, Niklas S�derlund wrote:
+> > The CSI-2 transmitters can use a different number of lanes to transmit
+> > data. Make the data-lanes mandatory for the endpoints that describe the
+> > transmitters as no good default can be set to fallback on.
+> >
+> > Signed-off-by: Niklas S�derlund <niklas.soderlund+renesas@ragnatech.se>
+> >
+> > ---
+> > * Changes since v2
+> > - Update paragraph according to Laurents comments.
+> > ---
+> >  Documentation/devicetree/bindings/media/i2c/adv748x.txt | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> > index 5dddc95f9cc46084..bffbabc879efd86c 100644
+> > --- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> > +++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> > @@ -48,7 +48,9 @@ are numbered as follows.
+> >  	  TXA		source		10
+> >  	  TXB		source		11
+> >
+> > -The digital output port nodes must contain at least one endpoint.
+> > +The digital output port nodes, when present, shall contain at least one
+> > +endpoint. Each of those endpoints shall contain the data-lanes property as
+> > +described in video-interfaces.txt.
+> >
+> >  Ports are optional if they are not connected to anything at the hardware level.
+> >
+> 
+> Re-vamping my ignored comment on v2, I still think you should list here the
+> accepted values for each TX as they're actually a property of the hw
+> device itself.
+> 
+>  Required endpoint properties:
+> - data-lanes: See "video-interfaces.txt" for description. The property
+>   is mandatory for CSI-2 output endpoints and the accepted value
+>   depends on which endpoint the property is applied to:
+>   - TXA: accepted values are <1>, <2>, <4>
+>   - TXB: accepted value is <1>
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
----
- Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt | 1 +
- 1 file changed, 1 insertion(+)
++1
 
-diff --git a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-index 2d385b6..2824489 100644
---- a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-+++ b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-@@ -12,6 +12,7 @@ Mandatory properties
-    - "renesas,r8a7796-csi2" for the R8A7796 device.
-    - "renesas,r8a77965-csi2" for the R8A77965 device.
-    - "renesas,r8a77970-csi2" for the R8A77970 device.
-+   - "renesas,r8a77990-csi2" for the R8A77990 device.
-
-  - reg: the register base and size for the device registers
-  - interrupts: the interrupt for the device
---
-2.7.4
+Rob
