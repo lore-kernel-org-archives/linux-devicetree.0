@@ -1,54 +1,77 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH RESEND] arm: dts: socfpga*.dts*: use
- SPDX-License-Identifier
-Date: Mon, 5 Nov 2018 14:30:15 -0600
-Message-ID: <37965331-4b5e-fb95-6a88-b51669128853@kernel.org>
-References: <20181105202727.23602-1-simon.k.r.goldschmidt@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 0/6] arm64: Get rid of __early_init_dt_declare_initrd()
+Date: Mon, 5 Nov 2018 14:31:39 -0600
+Message-ID: <20181105203139.GA21852@bogus>
+References: <20181031192843.13230-1-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181105202727.23602-1-simon.k.r.goldschmidt@gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181031192843.13230-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Vasut <marex@denx.de>, Nobuhiro Iwamatsu <iwamatsu@nigauri.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Graham Moore <grmoore@opensource.altera.com>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infra>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/5/18 2:27 PM, Simon Goldschmidt wrote:
-> Follow the recent trend for the license description.
+On Wed, Oct 31, 2018 at 12:28:37PM -0700, Florian Fainelli wrote:
+> Hi all,
 > 
-> This is also in an effort to fully sync the devicetrees with U-Boot.
+> Changes in v3:
 > 
-> Signed-off-by: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-> ---
-> Resending this as requested by Dinh. It still applies on top of
-> 4.20-rc1 as it only touches the file headers and nothing has changed
-> there.
-> ---
->  arch/arm/boot/dts/socfpga.dtsi                | 16 +------
->  arch/arm/boot/dts/socfpga_arria10.dtsi        | 13 +-----
->  arch/arm/boot/dts/socfpga_arria10_socdk.dtsi  | 14 +-----
->  .../boot/dts/socfpga_arria10_socdk_nand.dts   | 13 +-----
->  .../boot/dts/socfpga_arria10_socdk_qspi.dts   | 13 +-----
->  .../boot/dts/socfpga_arria10_socdk_sdmmc.dts  | 14 +-----
->  arch/arm/boot/dts/socfpga_arria5.dtsi         | 15 +-----
->  arch/arm/boot/dts/socfpga_arria5_socdk.dts    | 16 +------
->  arch/arm/boot/dts/socfpga_cyclone5.dtsi       | 16 +------
->  .../dts/socfpga_cyclone5_de0_nano_soc.dts     | 13 +-----
->  arch/arm/boot/dts/socfpga_cyclone5_mcv.dtsi   | 14 +-----
->  arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts | 14 +-----
->  arch/arm/boot/dts/socfpga_cyclone5_socdk.dts  | 16 +------
->  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts | 16 +------
->  .../boot/dts/socfpga_cyclone5_socrates.dts    | 16 +------
->  arch/arm/boot/dts/socfpga_cyclone5_sodia.dts  | 16 +------
->  .../boot/dts/socfpga_cyclone5_vining_fpga.dts | 46 +------------------
->  arch/arm/boot/dts/socfpga_vt.dts              | 16 +------
->  18 files changed, 28 insertions(+), 269 deletions(-)
+> - use C conditionals in drivers/of/fdt.c
+> - added check on phys_initrd_size in arch/arm64/mm/init.c to determine
+>   whether initrd_start must be populated
+> - fixed a build warning with ARC that was just missing an (unsigned
+>   long) cast
+> 
+> Changes in v2:
+> 
+> - get rid of ARCH_HAS_PHYS_INITRD and instead define
+>   phys_initrd_start/phys_initrd_size in init/do_mounts_initrd.c
+> 
+> - make __early_init_dt_declare_initrd() account for ARM64 specific
+>   behavior with __va() when having CONFIG_DEBUG_VM enabled
+> 
+> - consolidate early_initrd() command line parsing into
+>   init/do_mounts_initrd.c
+> 
+> Because phys_initrd_start/phys_initrd_size are now compiled in
+> ini/do_mounts_initrd.c which is only built with CONFIG_BLK_DEV_INITRD=y,
+> we need to be a bit careful about the uses throughout architecture
+> specific code.
+> 
+> Previous discussions/submissions list here:
+> 
+> v3:
+> https://www.spinics.net/lists/arm-kernel/msg683566.html
+> v2:
+> https://lkml.org/lkml/2018/10/25/4
+> 
+> Florian Fainelli (6):
+>   nds32: Remove phys_initrd_start and phys_initrd_size
+>   arch: Make phys_initrd_start and phys_initrd_size global variables
+>   of/fdt: Populate phys_initrd_start/phys_initrd_size from FDT
+>   arm64: Utilize phys_initrd_start/phys_initrd_size
+>   of/fdt: Remove custom __early_init_dt_declare_initrd() implementation
+>   arch: Move initrd= parsing into do_mounts_initrd.c
 
-Applied!
+This all looks good to me. I can take it via the DT if you want. I'll 
+give folks some more time to review though.
 
-Thanks,
-Dinh
+Rob
+
+> 
+>  arch/arc/mm/init.c              | 25 +++++--------------------
+>  arch/arm/mm/init.c              | 28 ++--------------------------
+>  arch/arm64/include/asm/memory.h |  8 --------
+>  arch/arm64/mm/init.c            | 33 +++++++--------------------------
+>  arch/nds32/mm/init.c            |  2 --
+>  arch/unicore32/mm/init.c        | 24 +++++-------------------
+>  drivers/of/fdt.c                | 17 ++++++++++++-----
+>  include/linux/initrd.h          |  3 +++
+>  init/do_mounts_initrd.c         | 20 ++++++++++++++++++++
+>  9 files changed, 54 insertions(+), 106 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
