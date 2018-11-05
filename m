@@ -1,84 +1,47 @@
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH v4 2/3] dts: arm64/sdm845: Add WCN3990 WLAN module device node
-Date: Mon,  5 Nov 2018 18:38:37 +0530
-Message-ID: <1541423318-19312-3-git-send-email-govinds@codeaurora.org>
+From: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v4 3/3] dt: bindings: add bindings for wifi iommu node
+Date: Mon,  5 Nov 2018 18:38:38 +0530
+Message-ID: <1541423318-19312-4-git-send-email-govinds@codeaurora.org>
 References: <1541423318-19312-1-git-send-email-govinds@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541423318-19312-1-git-send-email-govinds@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: briannorris@chromium.org, andy.gross@linaro.org, ath10k@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-wireless@vger.kernel.org, robh+dt@kernel.org, sboyd@kernel.org, dianders@chromium.org, linux-kernel@vger.kernel.org
-Cc: Govind Singh <govinds@codeaurora.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1541423318-19312-1-git-send-email-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device node for the ath10k SNOC platform driver probe
-and add resources required for WCN3990 on SDM845 soc.
+WCN3990 wifi module can optionally make use of the IOMMU.
+Add binding documentation for phandle to the IOMMU and
+the stream id of wifi iommu block.
 
-Signed-off-by: Govind Singh <govinds@codeaurora.org>
-Reviewed-by: Brian Norris <briannorris@chromium.org>
-Tested-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Tested-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts |  8 ++++++++
- arch/arm64/boot/dts/qcom/sdm845.dtsi    | 26 ++++++++++++++++++++++++++
- 2 files changed, 34 insertions(+)
+ Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-index eedfaf8..c062c5c 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-@@ -440,3 +440,11 @@
- 		bias-pull-up;
- 	};
- };
-+
-+&wifi {
-+	status = "okay";
-+	vdd-0.8-cx-mx-supply = <&vreg_l5a_0p8>;
-+	vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
-+	vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
-+	vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
-+};
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index b72bdb0..324be5b 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -87,6 +87,11 @@
- 			reg = <0 0x86200000 0 0x2d00000>;
- 			no-map;
- 		};
-+
-+		wlan_msa_mem: memory@96700000 {
-+			reg = <0 0x96700000 0 0x100000>;
-+			no-map;
-+		};
- 	};
+diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+index 55d255c..78fb56a 100644
+--- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
++++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+@@ -66,6 +66,10 @@ Optional properties:
+ - <supply-name>-supply: handle to the regulator device tree node
+ 			   optional "supply-name" are "vdd-0.8-cx-mx",
+ 			   "vdd-1.8-xo", "vdd-1.3-rfa" and "vdd-3.3-ch0".
++- iommus:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: A list of phandle and IOMMU specifier pairs.
  
- 	cpus {
-@@ -1403,5 +1408,26 @@
- 				status = "disabled";
- 			};
- 		};
-+
-+		wifi: wifi@18800000 {
-+			compatible = "qcom,wcn3990-wifi";
-+			status = "disabled";
-+			reg = <0x18800000 0x800000>;
-+			reg-names = "membase";
-+			memory-region = <&wlan_msa_mem>;
-+			interrupts =
-+				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
+ Example (to supply the calibration data alone):
+ 
+@@ -162,4 +166,5 @@ wifi@18000000 {
+ 		vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
+ 		vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
+ 		vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
++		iommus = <&apps_smmu 0x0040 0x1>;
  };
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
