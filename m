@@ -1,55 +1,37 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v2 17/17] arm64: dts: qcom: pms405: Add pon and pwrkey nodes
-Date: Mon,  5 Nov 2018 21:15:29 +0530
-Message-ID: <20181105154529.7614-18-vkoul@kernel.org>
-References: <20181105154529.7614-1-vkoul@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181105154529.7614-1-vkoul@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] clk: sunxi-ng: sun50i: h6: Fix MMC
+ clock mux width
+Date: Tue, 6 Nov 2018 00:11:36 +0800
+Message-ID: <CAGb2v65aJ0LVq8ic1Ru65qhoOHVw21eH8r4p_0Vxzz_83Xgi2Q@mail.gmail.com>
+References: <20181105074842.21988-1-jagan@amarulasolutions.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBRWXQHPQKGQEIJJDKZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181105074842.21988-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PMS405 also features PON block, so add PON and PWRKEY nodes
+On Mon, Nov 5, 2018 at 3:49 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+>
+> MUX bits for MMC clock register range are 25:24 where 24 is shift
+> and 2 is width So fix the width number from 3 to 2.
+>
+> Fixes: 524353ea480b ("clk: sunxi-ng: add support for the Allwinner H6 CCU")
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- arch/arm64/boot/dts/qcom/pms405.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-diff --git a/arch/arm64/boot/dts/qcom/pms405.dtsi b/arch/arm64/boot/dts/qcom/pms405.dtsi
-index 18410d9f0f8f..2c7cc1e94ff4 100644
---- a/arch/arm64/boot/dts/qcom/pms405.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pms405.dtsi
-@@ -2,6 +2,7 @@
- // Copyright (c) 2018, Linaro Limited
- 
- #include <dt-bindings/spmi/spmi.h>
-+#include <dt-bindings/input/linux-event-codes.h>
- 
- &spmi_bus {
- 
-@@ -18,6 +19,21 @@
- 			interrupts = <0x0 0x61 0x1 IRQ_TYPE_NONE>;
- 		};
- 
-+		pon@800 {
-+			compatible = "qcom,pms405-pon";
-+			reg = <0x800>;
-+			mode-bootloader = <0x2>;
-+			mode-recovery = <0x1>;
-+
-+			pwrkey {
-+				compatible = "qcom,pm8941-pwrkey";
-+				interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
-+				debounce = <15625>;
-+				bias-pull-up;
-+				linux,code = <KEY_POWER>;
-+			};
-+		};
-+
- 		pms405_gpios: gpios@c000 {
- 			compatible = "qcom,pms405-gpio";
- 			reg = <0xc000>;
--- 
-2.14.4
+However, given that most of the other module clocks have bits 26:24 as
+their mux bits, and the mmc clocks use 3 bits to denote the values and
+corresponding clock parents, I would have appreciated you actually doing
+tests to confirm which of these errors is the actual error, and not just
+say "the user manual says so", because it is not always completely correct.
