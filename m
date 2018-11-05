@@ -1,75 +1,70 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCHv2] ARM: dts: sun8i-h3: Add dts for the Mapleboard MP130
-Date: Mon, 5 Nov 2018 10:05:47 +0100
-Message-ID: <20181105090547.yuiblwnnpffykilg@flea>
-References: <20181030221430.wu5cxicyf4ub2boa@earth.li>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: dtsi: sun8i-r40: add mali node
+Date: Mon, 5 Nov 2018 10:07:31 +0100
+Message-ID: <20181105090731.vkcdwde5zmkxjzmc@flea>
+References: <20181101085710.15774-1-lothar.felten@gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="k2b2il23thni6h4h"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="hmehpeleewvssyd5"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBX4QQDPQKGQELAKBCYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20181030221430.wu5cxicyf4ub2boa@earth.li>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan McDowell <noodles@earth.li>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>
+In-Reply-To: <20181101085710.15774-1-lothar.felten-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Lothar Felten <lothar.felten-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---k2b2il23thni6h4h
-Content-Type: text/plain; charset=us-ascii
+--hmehpeleewvssyd5
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 30, 2018 at 10:14:30PM +0000, Jonathan McDowell wrote:
-> +	r_gpio_keys {
-> +		compatible =3D "gpio-keys";
-> +		pinctrl-names =3D "default";
-> +
-> +		power {
-> +			label =3D "mp130:power";
+Hi,x
 
-That was my mistake, but it was correct in your first version.
+On Thu, Nov 01, 2018 at 09:57:10AM +0100, Lothar Felten wrote:
+> This patch adds a node for the mali 400 GPU of the R40/V40 SoC
+> 
+> Signed-off-by: Lothar Felten <lothar.felten-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> Changes v2->v3:
+> - remove mali clock rates
+> - drop hdmi-phy sun50i-a64 compatibility  
+> - patch version, change log added
+> 
+> Changes v1->v2:
+> - commit message uppercase ARM prefix
+> - wrong patch submitted by mistake
+> ---
+> 
+>  arch/arm/boot/dts/sun8i-r40.dtsi | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+> index 6f4c9ca5a3ee..136c248cc7d1 100644
+> --- a/arch/arm/boot/dts/sun8i-r40.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+> @@ -542,6 +542,28 @@
+>  
+>  		};
+>  
+> +		mali: gpu@1c40000 {
+> +			compatible = "allwinner,sun7i-a20-mali", "arm,mali-400";
 
-> +&pio {
-> +	leds_pio: led_pins {
-> +		pins =3D "PA15";
-> +		function =3D "gpio_out";
-> +	};
-> +};
-> +
-> +&r_pio {
-> +	leds_r_pio: led_pins {
-> +		pins =3D "PL10";
-> +		function =3D "gpio_out";
-> +	};
-> +
-> +	sw_r_pio: key_pins {
-> +		pins =3D "PL3", "PL4";
-> +		function =3D "gpio_in";
-> +	};
-> +};
-
-You don't need these nodes at all.
-
-I've fixed both issues and applied your patch for 4.21
+You should have an r40 compatible here. You can have a look at the
+A23-A33 DTSI compatible for an example if you want.
 
 Thanks!
 Maxime
 
---=20
+-- 
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
-
---k2b2il23thni6h4h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW+AH6wAKCRDj7w1vZxhR
-xZ1pAP99wHV8qJxv2Oqx5ONDlA3iBdyvnogejYVSfpKcT4j84gEAgAdQrQHd+Ghm
-wnTwRrnoU5bumSWH4LV7xz5EV4iq0gI=
-=TqgV
------END PGP SIGNATURE-----
-
---k2b2il23thni6h4h--
+--hmehpeleewvssyd5--
