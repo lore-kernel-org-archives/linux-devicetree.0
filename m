@@ -1,28 +1,49 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv2 3/6] PCI: layerscape: Add the EP mode support
-Date: Mon, 5 Nov 2018 16:17:27 -0600
-Message-ID: <20181105221727.GA7729@bogus>
-References: <20181105084653.26597-1-xiaowei.bao@nxp.com>
- <20181105084653.26597-3-xiaowei.bao@nxp.com>
+From: Wendy Liang <wendy.liang@xilinx.com>
+Subject: [PATCH v5 0/2] Xilinx ZynqMP IPI Mailbox Controller Driver
+Date: Mon, 5 Nov 2018 14:36:59 -0800
+Message-ID: <1541457421-14820-1-git-send-email-wendy.liang@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181105084653.26597-3-xiaowei.bao@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org, cyrille.pitchen@free-electrons.com, pombredanne@nexb.com, shawn.lin@rock-chips.com, niklas.cassel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Xiaowei Bao <xiaowei.bao@nxp.com>
+To: jassisinghbrar@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Wendy Liang <wendy.liang@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon,  5 Nov 2018 16:46:50 +0800, Xiaowei Bao wrote:
-> Add the EP mode support.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
-> v2:
->  - Add the SoC specific compatibles.
-> 
->  .../devicetree/bindings/pci/layerscape-pci.txt     |    3 +++
->  1 files changed, 3 insertions(+), 0 deletions(-)
-> 
+Introduce mailbox controller driver for ZynqMP IPI(Inter-processor
+interrupt) IP core.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+As the device tree bindings have been updated. Do not have "Reviewed-by"
+nor "Acked-by" in the dt-bindings commit.
+
+v5:
+ - fix check patch warning on write a paragraph to describe the kconfig
+   symbol.
+
+v4:
+ - make IPI mailboxes as subnodes to the IPI agent device node to properly
+   describe the hardware.
+
+v3:
+ - add NULL entry to of_device_id of IPI controller
+
+v2:
+ - change SPDX-License-Identifier license text style in .c file
+ - replace xlnx-ipi-ids with xlnx,ipi-ids
+
+Wendy Liang (2):
+  mailbox: ZynqMP IPI mailbox controller
+  dt-bindings: mailbox: Add Xilinx IPI Mailbox
+
+ .../bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt   | 128 ++++
+ drivers/mailbox/Kconfig                            |   9 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/zynqmp-ipi-mailbox.c               | 762 +++++++++++++++++++++
+ include/linux/mailbox/zynqmp-ipi-message.h         |  24 +
+ 5 files changed, 925 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
+ create mode 100644 drivers/mailbox/zynqmp-ipi-mailbox.c
+ create mode 100644 include/linux/mailbox/zynqmp-ipi-message.h
+
+-- 
+2.7.4
