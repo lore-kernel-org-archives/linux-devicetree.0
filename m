@@ -1,88 +1,40 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v3 4/6] arm64: Utilize phys_initrd_start/phys_initrd_size
-Date: Mon, 5 Nov 2018 12:41:10 -0800
-Message-ID: <537b8384-629a-770b-e506-f4d49b92e758@gmail.com>
-References: <20181031192843.13230-1-f.fainelli@gmail.com>
- <20181031192843.13230-5-f.fainelli@gmail.com>
- <CAKv+Gu85kRVos-z+1WuV5J8bTHpLDDdUu0hVD2NmZ-w-ry5f4g@mail.gmail.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v10 5/6] arm64: zynqmp: Add DDRC node
+Date: Mon, 5 Nov 2018 21:43:22 +0100
+Message-ID: <20181105204322.GE26868@zn.tnic>
+References: <1540447621-22870-1-git-send-email-manish.narani@xilinx.com>
+ <1540447621-22870-6-git-send-email-manish.narani@xilinx.com>
+ <20181105125644.GA7937@zn.tnic>
+ <41c5ca53-ed4b-38d0-c612-e1229004293e@xilinx.com>
+ <20181105132007.GB7937@zn.tnic>
+ <a81f47e0-1778-a6ac-4cd8-634502661d6f@xilinx.com>
+ <20181105134218.GD7937@zn.tnic>
+ <CAOesGMj=EbWgcYF2Mhh6TFMCdn1ub1Ze6fbXJnFFdsttWByXYg@mail.gmail.com>
+ <20181105194721.GB26868@zn.tnic>
+ <CAOesGMjsPWeRZEeBH37uLQFBKwAWNMh5yCvuKNYrOUDfRSSYog@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKv+Gu85kRVos-z+1WuV5J8bTHpLDDdUu0hVD2NmZ-w-ry5f4g@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAOesGMjsPWeRZEeBH37uLQFBKwAWNMh5yCvuKNYrOUDfRSSYog@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, moderated list:ARM
+To: Olof Johansson <olof@lixom.net>
+Cc: Michal Simek <michal.simek@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, manish.narani@xilinx.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, Li Yang <leoyang.li@nxp.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/5/18 12:39 PM, Ard Biesheuvel wrote:
-> Hi Florian,
-> 
-> On 31 October 2018 at 20:28, Florian Fainelli <f.fainelli@gmail.com> wrote:
->> ARM64 is the only architecture that re-defines
->> __early_init_dt_declare_initrd() in order for that function to populate
->> initrd_start/initrd_end with physical addresses instead of virtual
->> addresses. Instead of having an override we can leverage
->> drivers/of/fdt.c populating phys_initrd_start/phys_initrd_size to
->> populate those variables for us.
->>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->> ---
->>  arch/arm64/mm/init.c | 19 +++++++++----------
->>  1 file changed, 9 insertions(+), 10 deletions(-)
->>
->> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->> index 3cf87341859f..00ef2166bb73 100644
->> --- a/arch/arm64/mm/init.c
->> +++ b/arch/arm64/mm/init.c
->> @@ -72,8 +72,8 @@ static int __init early_initrd(char *p)
->>         if (*endp == ',') {
->>                 size = memparse(endp + 1, NULL);
->>
->> -               initrd_start = start;
->> -               initrd_end = start + size;
->> +               phys_initrd_start = start;
->> +               phys_initrd_size = size;
->>         }
->>         return 0;
->>  }
->> @@ -408,14 +408,14 @@ void __init arm64_memblock_init(void)
->>                 memblock_add(__pa_symbol(_text), (u64)(_end - _text));
->>         }
->>
->> -       if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && initrd_start) {
->> +       if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {
->>                 /*
->>                  * Add back the memory we just removed if it results in the
->>                  * initrd to become inaccessible via the linear mapping.
->>                  * Otherwise, this is a no-op
->>                  */
->> -               u64 base = initrd_start & PAGE_MASK;
->> -               u64 size = PAGE_ALIGN(initrd_end) - base;
->> +               u64 base = phys_initrd_start & PAGE_MASK;
->> +               u64 size = PAGE_ALIGN(phys_initrd_size);
->>
->>                 /*
->>                  * We can only add back the initrd memory if we don't end up
->> @@ -460,12 +460,11 @@ void __init arm64_memblock_init(void)
->>          */
->>         memblock_reserve(__pa_symbol(_text), _end - _text);
->>  #ifdef CONFIG_BLK_DEV_INITRD
->> -       if (initrd_start) {
->> -               memblock_reserve(initrd_start, initrd_end - initrd_start);
->> -
->> +       if (phys_initrd_size) {
->>                 /* the generic initrd code expects virtual addresses */
->> -               initrd_start = __phys_to_virt(initrd_start);
->> -               initrd_end = __phys_to_virt(initrd_end);
->> +               initrd_start = __phys_to_virt(phys_initrd_start);
->> +               initrd_end = initrd_start + phys_initrd_size;
->> +               initrd_below_start_ok = 0;
-> 
-> Where is this assignment coming from?
+On Mon, Nov 05, 2018 at 12:38:05PM -0800, Olof Johansson wrote:
+> Yeah, that's the way we've been trying to do for various subsystems
+> and it's been working pretty well. Of course, if there's need to
+> coordinate more closely for something in the future we'll be happy to
+> do so.
 
-__early_init_dt_declare_initrd() sets initrd_below_start_ok to 1 though
-after patch #5 this is not necessary any more.
+Goodie. Let's do that for now and we can always revisit when there's
+real need.
+
+Thx!
+
 -- 
-Florian
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
