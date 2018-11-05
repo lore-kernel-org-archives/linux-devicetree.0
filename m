@@ -1,31 +1,111 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH anybus v3 3/6] dt-bindings: anybus-bridge: document
- devicetree binding
-Date: Mon, 5 Nov 2018 14:45:52 -0600
-Message-ID: <20181105204552.GA19286@bogus>
-References: <20181104155501.14767-1-TheSven73@googlemail.com>
- <20181104155501.14767-4-TheSven73@googlemail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v3 4/6] arm64: Utilize phys_initrd_start/phys_initrd_size
+Date: Mon, 5 Nov 2018 12:51:23 -0800
+Message-ID: <0257ee07-8b85-5295-1490-72c7aa14943d@gmail.com>
+References: <20181031192843.13230-1-f.fainelli@gmail.com>
+ <20181031192843.13230-5-f.fainelli@gmail.com>
+ <CAKv+Gu85kRVos-z+1WuV5J8bTHpLDDdUu0hVD2NmZ-w-ry5f4g@mail.gmail.com>
+ <537b8384-629a-770b-e506-f4d49b92e758@gmail.com>
+ <CAKv+Gu88HHe-ZpVS3w+0Eu+Q-zYaN3sKDK4uaG+eecVtr-C9PA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181104155501.14767-4-TheSven73@googlemail.com>
+In-Reply-To: <CAKv+Gu88HHe-ZpVS3w+0Eu+Q-zYaN3sKDK4uaG+eecVtr-C9PA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: thesven73@gmail.com
-Cc: svendev@arcx.com, robh+dt@kernel.org, linus.walleij@linaro.org, lee.jones@linaro.org, mark.rutland@arm.com, afaerber@suse.de, treding@nvidia.com, david@lechnology.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, stuyoder@gmail.com, maxime.ripard@bootlin.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, moderated list:ARM
 List-Id: devicetree@vger.kernel.org
 
-On Sun,  4 Nov 2018 10:54:58 -0500, thesven73@gmail.com wrote:
-> From: Sven Van Asbroeck <svendev@arcx.com>
+On 11/5/18 12:44 PM, Ard Biesheuvel wrote:
+> On 5 November 2018 at 21:41, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>> On 11/5/18 12:39 PM, Ard Biesheuvel wrote:
+>>> Hi Florian,
+>>>
+>>> On 31 October 2018 at 20:28, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>>>> ARM64 is the only architecture that re-defines
+>>>> __early_init_dt_declare_initrd() in order for that function to populate
+>>>> initrd_start/initrd_end with physical addresses instead of virtual
+>>>> addresses. Instead of having an override we can leverage
+>>>> drivers/of/fdt.c populating phys_initrd_start/phys_initrd_size to
+>>>> populate those variables for us.
+>>>>
+>>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>>>> ---
+>>>>  arch/arm64/mm/init.c | 19 +++++++++----------
+>>>>  1 file changed, 9 insertions(+), 10 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+>>>> index 3cf87341859f..00ef2166bb73 100644
+>>>> --- a/arch/arm64/mm/init.c
+>>>> +++ b/arch/arm64/mm/init.c
+>>>> @@ -72,8 +72,8 @@ static int __init early_initrd(char *p)
+>>>>         if (*endp == ',') {
+>>>>                 size = memparse(endp + 1, NULL);
+>>>>
+>>>> -               initrd_start = start;
+>>>> -               initrd_end = start + size;
+>>>> +               phys_initrd_start = start;
+>>>> +               phys_initrd_size = size;
+>>>>         }
+>>>>         return 0;
+>>>>  }
+>>>> @@ -408,14 +408,14 @@ void __init arm64_memblock_init(void)
+>>>>                 memblock_add(__pa_symbol(_text), (u64)(_end - _text));
+>>>>         }
+>>>>
+>>>> -       if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && initrd_start) {
+>>>> +       if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {
+>>>>                 /*
+>>>>                  * Add back the memory we just removed if it results in the
+>>>>                  * initrd to become inaccessible via the linear mapping.
+>>>>                  * Otherwise, this is a no-op
+>>>>                  */
+>>>> -               u64 base = initrd_start & PAGE_MASK;
+>>>> -               u64 size = PAGE_ALIGN(initrd_end) - base;
+>>>> +               u64 base = phys_initrd_start & PAGE_MASK;
+>>>> +               u64 size = PAGE_ALIGN(phys_initrd_size);
+>>>>
+>>>>                 /*
+>>>>                  * We can only add back the initrd memory if we don't end up
+>>>> @@ -460,12 +460,11 @@ void __init arm64_memblock_init(void)
+>>>>          */
+>>>>         memblock_reserve(__pa_symbol(_text), _end - _text);
+>>>>  #ifdef CONFIG_BLK_DEV_INITRD
+>>>> -       if (initrd_start) {
+>>>> -               memblock_reserve(initrd_start, initrd_end - initrd_start);
+>>>> -
+>>>> +       if (phys_initrd_size) {
+>>>>                 /* the generic initrd code expects virtual addresses */
+>>>> -               initrd_start = __phys_to_virt(initrd_start);
+>>>> -               initrd_end = __phys_to_virt(initrd_end);
+>>>> +               initrd_start = __phys_to_virt(phys_initrd_start);
+>>>> +               initrd_end = initrd_start + phys_initrd_size;
+>>>> +               initrd_below_start_ok = 0;
+>>>
+>>> Where is this assignment coming from?
+>>
+>> __early_init_dt_declare_initrd() sets initrd_below_start_ok to 1 though
+>> after patch #5 this is not necessary any more.
 > 
-> This patch adds devicetree binding documentation for the
-> Arcx anybus bridge.
+> Yes, but why? The original arm64 version of
+> __early_init_dt_declare_initrd() does not set it but now you set to 1
+> in the IS_ENABLED(CONFIG_ARM64) section in the generic code and set it
+> back to 0 here.
+
+Humm, it is an if (!IS_ENABLED(CONFIG_ARM64)) condition, so we would not
+be taking that branch on an ARM64 kernel.
+
+If you are saying the assignment is not necessary anymore after patch #5
+, that is true, though this can only be done a part of part #5, not as
+part of patch #4 in order not to break initrd functionality in-between
+patches.
+
 > 
-> Signed-off-by: Sven Van Asbroeck <svendev@arcx.com>
-> ---
->  .../bindings/misc/arcx,anybus-bridge.txt      | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/arcx,anybus-bridge.txt
+> Or am I missing something?
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Not sure, I could be too, it's Monday after all :)
+-- 
+Florian
