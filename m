@@ -1,7 +1,7 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v2 02/17] arm64: dts: qcom: qcs404: Add reserved-memory regions
-Date: Mon,  5 Nov 2018 21:15:14 +0530
-Message-ID: <20181105154529.7614-3-vkoul@kernel.org>
+Subject: [PATCH v2 03/17] arm64: dts: qcom: qcs404: Add RPM GLINK related nodes
+Date: Mon,  5 Nov 2018 21:15:15 +0530
+Message-ID: <20181105154529.7614-4-vkoul@kernel.org>
 References: <20181105154529.7614-1-vkoul@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181105154529.7614-1-vkoul@kernel.org>
@@ -12,65 +12,89 @@ List-Id: devicetree@vger.kernel.org
 
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Add the reserved memory regions in QCS404
+Add RPM GLINK node and the RPM message ram, hwspinlock, APCS apps global
+and smem nodes it depends on.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 41 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 44 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index 99efde1bbce9..ba7cd707299c 100644
+index ba7cd707299c..c749c61225b4 100644
 --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
 +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -18,6 +18,47 @@
- 		reg = <0 0x0 0 0>;
+@@ -106,6 +106,34 @@
+ 		method = "smc";
  	};
  
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
++	rpm-glink {
++		compatible = "qcom,glink-rpm";
 +
-+		memory@85600000 {
-+			reg = <0 0x85600000 0 0x90000>;
-+			no-map;
-+		};
++		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
++		qcom,rpm-msg-ram = <&rpm_msg_ram>;
++		mboxes = <&apcs_glb 0>;
 +
-+		smem_region: memory@85f00000 {
-+			reg = <0 0x85f00000 0 0x200000>;
-+			no-map;
-+		};
-+
-+		memory@86100000 {
-+			reg = <0 0x86100000 0 0x300000>;
-+			no-map;
-+		};
-+
-+		wlan_fw_mem: memory@86400000 {
-+			reg = <0 0x86400000 0 0x1c00000>;
-+			no-map;
-+		};
-+
-+		adsp_fw_mem: memory@88000000 {
-+			reg = <0 0x88000000 0 0x1a00000>;
-+			no-map;
-+		};
-+
-+		cdsp_fw_mem: memory@89a00000 {
-+			reg = <0 0x89a00000 0 0x600000>;
-+			no-map;
-+		};
-+
-+		wlan_msa_mem: memory@8a000000 {
-+			reg = <0 0x8a000000 0 0x100000>;
-+			no-map;
++		rpm_requests: glink-channel {
++			compatible = "qcom,rpm-qcs404";
++			qcom,glink-channels = "rpm_requests";
 +		};
 +	};
 +
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
++	smem {
++		compatible = "qcom,smem";
++
++		memory-region = <&smem_region>;
++		qcom,rpm-msg-ram = <&rpm_msg_ram>;
++
++		hwlocks = <&tcsr_mutex 3>;
++	};
++
++	tcsr_mutex: hwlock {
++		compatible = "qcom,tcsr-mutex";
++		syscon = <&tcsr_mutex_regs 0 0x1000>;
++		#hwlock-cells = <1>;
++	};
++
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupts = <GIC_PPI 2 0xff08>,
+@@ -128,6 +156,11 @@
+ 		ranges = <0 0 0 0xffffffff>;
+ 		compatible = "simple-bus";
+ 
++		rpm_msg_ram: memory@60000 {
++			compatible = "qcom,rpm-msg-ram";
++			reg = <0x60000 0x6000>;
++		};
++
+ 		intc: interrupt-controller@b000000 {
+ 			compatible = "qcom,msm-qgic2";
+ 			interrupt-controller;
+@@ -145,6 +178,11 @@
+ 			assigned-clock-rates = <19200000>;
+ 		};
+ 
++		tcsr_mutex_regs: syscon@1905000 {
++			compatible = "syscon";
++			reg = <0x1905000 0x20000>;
++		};
++
+ 		timer@b120000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+@@ -212,5 +250,11 @@
+ 			clock-names = "core", "iface";
+ 			status = "okay";
+ 		};
++
++		apcs_glb: mailbox@b011000 {
++			compatible = "qcom,qcs404-apcs-apps-global", "syscon";
++			reg = <0xb011000 0x1000>;
++			#mbox-cells = <1>;
++		};
+ 	};
+ };
 -- 
 2.14.4
