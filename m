@@ -1,52 +1,85 @@
-From: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-Subject: [PATCH] ARM: dts: socfpga: use tabs for indentation
-Date: Mon,  5 Nov 2018 21:39:00 +0100
-Message-ID: <20181105203900.23788-1-simon.k.r.goldschmidt@gmail.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH v3 4/6] arm64: Utilize phys_initrd_start/phys_initrd_size
+Date: Mon, 5 Nov 2018 21:39:44 +0100
+Message-ID: <CAKv+Gu85kRVos-z+1WuV5J8bTHpLDDdUu0hVD2NmZ-w-ry5f4g@mail.gmail.com>
+References: <20181031192843.13230-1-f.fainelli@gmail.com> <20181031192843.13230-5-f.fainelli@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181031192843.13230-5-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Vasut <marex@denx.de>, Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, moderated list:ARM
 List-Id: devicetree@vger.kernel.org
 
-In two of the gen5 socfpga devicetree files, there are some lines
-indented using spaces instead of tabs.
+Hi Florian,
 
-Fix this by correctly indenting them with tabs.
+On 31 October 2018 at 20:28, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> ARM64 is the only architecture that re-defines
+> __early_init_dt_declare_initrd() in order for that function to populate
+> initrd_start/initrd_end with physical addresses instead of virtual
+> addresses. Instead of having an override we can leverage
+> drivers/of/fdt.c populating phys_initrd_start/phys_initrd_size to
+> populate those variables for us.
+>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  arch/arm64/mm/init.c | 19 +++++++++----------
+>  1 file changed, 9 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 3cf87341859f..00ef2166bb73 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -72,8 +72,8 @@ static int __init early_initrd(char *p)
+>         if (*endp == ',') {
+>                 size = memparse(endp + 1, NULL);
+>
+> -               initrd_start = start;
+> -               initrd_end = start + size;
+> +               phys_initrd_start = start;
+> +               phys_initrd_size = size;
+>         }
+>         return 0;
+>  }
+> @@ -408,14 +408,14 @@ void __init arm64_memblock_init(void)
+>                 memblock_add(__pa_symbol(_text), (u64)(_end - _text));
+>         }
+>
+> -       if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && initrd_start) {
+> +       if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {
+>                 /*
+>                  * Add back the memory we just removed if it results in the
+>                  * initrd to become inaccessible via the linear mapping.
+>                  * Otherwise, this is a no-op
+>                  */
+> -               u64 base = initrd_start & PAGE_MASK;
+> -               u64 size = PAGE_ALIGN(initrd_end) - base;
+> +               u64 base = phys_initrd_start & PAGE_MASK;
+> +               u64 size = PAGE_ALIGN(phys_initrd_size);
+>
+>                 /*
+>                  * We can only add back the initrd memory if we don't end up
+> @@ -460,12 +460,11 @@ void __init arm64_memblock_init(void)
+>          */
+>         memblock_reserve(__pa_symbol(_text), _end - _text);
+>  #ifdef CONFIG_BLK_DEV_INITRD
+> -       if (initrd_start) {
+> -               memblock_reserve(initrd_start, initrd_end - initrd_start);
+> -
+> +       if (phys_initrd_size) {
+>                 /* the generic initrd code expects virtual addresses */
+> -               initrd_start = __phys_to_virt(initrd_start);
+> -               initrd_end = __phys_to_virt(initrd_end);
+> +               initrd_start = __phys_to_virt(phys_initrd_start);
+> +               initrd_end = initrd_start + phys_initrd_size;
+> +               initrd_below_start_ok = 0;
 
-Signed-off-by: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
----
- arch/arm/boot/dts/socfpga.dtsi               | 2 +-
- arch/arm/boot/dts/socfpga_cyclone5_sodia.dts | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Where is this assignment coming from?
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 2458d6707dc5..0a028254b14e 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -759,7 +759,7 @@
- 
- 		qspi: spi@ff705000 {
- 			compatible = "cdns,qspi-nor";
--                        #address-cells = <1>;
-+			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <0xff705000 0x1000>,
- 			      <0xffa00000 0x1000>;
-diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sodia.dts b/arch/arm/boot/dts/socfpga_cyclone5_sodia.dts
-index e54b5f2af74f..99a71757cdf4 100644
---- a/arch/arm/boot/dts/socfpga_cyclone5_sodia.dts
-+++ b/arch/arm/boot/dts/socfpga_cyclone5_sodia.dts
-@@ -111,9 +111,9 @@
- };
- 
- &qspi {
--        status = "okay";
-+	status = "okay";
- 
--        flash0: n25q512a@0 {
-+	flash0: n25q512a@0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		compatible = "n25q512a";
--- 
-2.17.1
+>         }
+>  #endif
+>
+> --
+> 2.17.1
+>
