@@ -1,7 +1,7 @@
 From: Xiaowei Bao <xiaowei.bao@nxp.com>
 Subject: RE: [PATCH 5/6] pci: layerscape: Add the EP mode support.
 Date: Mon, 5 Nov 2018 09:15:22 +0000
-Message-ID: <HE1PR04MB1497DABC689F9A4A97FD4DF0F5CA0__40442.8551941693$1541409227$gmane$org@HE1PR04MB1497.eurprd04.prod.outlook.com>
+Message-ID: <HE1PR04MB1497DABC689F9A4A97FD4DF0F5CA0__45216.1758243621$1541409312$gmane$org@HE1PR04MB1497.eurprd04.prod.outlook.com>
 References: <20181025110901.5680-1-xiaowei.bao@nxp.com>
  <20181025110901.5680-5-xiaowei.bao@nxp.com>
  <d9d07e05-556b-a56d-bb7f-eaec9fb739b8@ti.com>
@@ -13,18 +13,19 @@ References: <20181025110901.5680-1-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 In-Reply-To: <8ec7f502-e058-2c28-9140-5d125e4af6ff@ti.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 To: Kishon Vijay Abraham I <kishon@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "cyrille.pitchen@free-electrons.com" <cyrille.pitchen@free-electrons.com>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>, "niklas.cassel@axis.com" <niklas.cassel@axis.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicet>
 Cc: Jiafei Pan <jiafei.pan@nxp.com>
 List-Id: devicetree@vger.kernel.org
@@ -220,7 +221,4 @@ IHRoaW5rIGl0IGlzIG1vcmUgc2FmZXIuIE9mIGNvdXJzZSwgaXQgY2FuIGJlIHJlbW92ZWQuDQo+
 PiBbWGlhb3dlaSBCYW9dIEhpIEtpc2hvbiwgaXMgdGhlcmUgYW55IGFkdmljZT8NCj4gDQo+IElN
 SE8gdGhpcyBjaGVjayBpcyBub3QgcmVxdWlyZWQuDQo+IFtYaWFvd2VpIEJhb10gT0ssIEkgd2ls
 bCByZW1vdmUgdGhpcyBmdW5jdGlvbiBpbiBwYXRjaC12Mi4NCj4gDQo+IFRoYW5rcw0KPiBLaXNo
-b24NCj4gDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
-aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
-eC1hcm0ta2VybmVsCg==
+b24NCj4gDQo=
