@@ -1,7 +1,7 @@
 From: Al Cooper <alcooperx@gmail.com>
-Subject: [PATCH V3 1/6] dt-bindings: Add Broadcom STB OHCI, EHCI and XHCI binding document
-Date: Mon,  5 Nov 2018 16:31:28 -0500
-Message-ID: <1541453493-34981-2-git-send-email-alcooperx@gmail.com>
+Subject: [PATCH V3 2/6] usb: core: Add ability to skip phy exit on suspend and init on resume
+Date: Mon,  5 Nov 2018 16:31:29 -0500
+Message-ID: <1541453493-34981-3-git-send-email-alcooperx@gmail.com>
 References: <1541453493-34981-1-git-send-email-alcooperx@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1541453493-34981-1-git-send-email-alcooperx@gmail.com>
@@ -10,103 +10,173 @@ To: linux-kernel@vger.kernel.org
 Cc: Al Cooper <alcooperx@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>, linux-usb@
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings document for Broadcom STB USB OHCI, EHCI and
-XHCI drivers.
+Add the ability to skip calling the PHY's exit routine on suspend
+and the PHY's init routine on resume. This is to handle a USB PHY
+that should have it's power_off function called on suspend but cannot
+have it's exit function called because on exit it will disable the
+PHY to the point where register accesses to the Host Controllers
+using the PHY will be disabled and the host drivers will crash.
+
+This is enabled with the HCD flag "suspend_without_phy_exit" which
+can be set from any HCD driver.
 
 Signed-off-by: Al Cooper <alcooperx@gmail.com>
 ---
- .../devicetree/bindings/usb/brcm,bcm7445-ehci.txt  | 22 +++++++++++++++++++++
- .../devicetree/bindings/usb/brcm,bcm7445-ohci.txt  | 22 +++++++++++++++++++++
- .../devicetree/bindings/usb/brcm,bcm7445-xhci.txt  | 23 ++++++++++++++++++++++
- 3 files changed, 67 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.txt
- create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ohci.txt
- create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-xhci.txt
+ drivers/usb/core/hcd.c  |  8 ++++----
+ drivers/usb/core/phy.c  | 18 ++++++++++++------
+ drivers/usb/core/phy.h  |  9 ++++++---
+ include/linux/usb/hcd.h |  3 +++
+ 4 files changed, 25 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.txt b/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.txt
-new file mode 100644
-index 000000000000..824f4bf5d07c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.txt
-@@ -0,0 +1,22 @@
-+Broadcom STB USB EHCI controller
+diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+index 487025d31d44..5ebc82a69403 100644
+--- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -2249,7 +2249,7 @@ int hcd_bus_suspend(struct usb_device *rhdev, pm_message_t msg)
+ 		hcd->state = HC_STATE_SUSPENDED;
+ 
+ 		if (!PMSG_IS_AUTO(msg))
+-			usb_phy_roothub_suspend(hcd->self.sysdev,
++			usb_phy_roothub_suspend(hcd,
+ 						hcd->phy_roothub);
+ 
+ 		/* Did we race with a root-hub wakeup event? */
+@@ -2290,7 +2290,7 @@ int hcd_bus_resume(struct usb_device *rhdev, pm_message_t msg)
+ 	}
+ 
+ 	if (!PMSG_IS_AUTO(msg)) {
+-		status = usb_phy_roothub_resume(hcd->self.sysdev,
++		status = usb_phy_roothub_resume(hcd,
+ 						hcd->phy_roothub);
+ 		if (status)
+ 			return status;
+@@ -2333,7 +2333,7 @@ int hcd_bus_resume(struct usb_device *rhdev, pm_message_t msg)
+ 		}
+ 	} else {
+ 		hcd->state = old_state;
+-		usb_phy_roothub_suspend(hcd->self.sysdev, hcd->phy_roothub);
++		usb_phy_roothub_suspend(hcd, hcd->phy_roothub);
+ 		dev_dbg(&rhdev->dev, "bus %s fail, err %d\n",
+ 				"resume", status);
+ 		if (status != -ESHUTDOWN)
+@@ -2730,7 +2730,7 @@ int usb_add_hcd(struct usb_hcd *hcd,
+ 	struct usb_device *rhdev;
+ 
+ 	if (!hcd->skip_phy_initialization && usb_hcd_is_primary_hcd(hcd)) {
+-		hcd->phy_roothub = usb_phy_roothub_alloc(hcd->self.sysdev);
++		hcd->phy_roothub = usb_phy_roothub_alloc(hcd);
+ 		if (IS_ERR(hcd->phy_roothub))
+ 			return PTR_ERR(hcd->phy_roothub);
+ 
+diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
+index 38b2c776c4b4..308d716304da 100644
+--- a/drivers/usb/core/phy.c
++++ b/drivers/usb/core/phy.c
+@@ -46,10 +46,11 @@ static int usb_phy_roothub_add_phy(struct device *dev, int index,
+ 	return 0;
+ }
+ 
+-struct usb_phy_roothub *usb_phy_roothub_alloc(struct device *dev)
++struct usb_phy_roothub *usb_phy_roothub_alloc(struct usb_hcd *hcd)
+ {
+ 	struct usb_phy_roothub *phy_roothub;
+ 	int i, num_phys, err;
++	struct device *dev = hcd->self.sysdev;
+ 
+ 	if (!IS_ENABLED(CONFIG_GENERIC_PHY))
+ 		return NULL;
+@@ -162,26 +163,30 @@ void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub)
+ }
+ EXPORT_SYMBOL_GPL(usb_phy_roothub_power_off);
+ 
+-int usb_phy_roothub_suspend(struct device *controller_dev,
++int usb_phy_roothub_suspend(struct usb_hcd *hcd,
+ 			    struct usb_phy_roothub *phy_roothub)
+ {
++	struct device *controller_dev = hcd->self.sysdev;
 +
-+Required properties:
-+- compatible: should be "brcm,bcm7445-ehci"
-+- reg: should contain one register range i.e. start and length
-+- interrupts: description of the interrupt line
-+- phys: phandle + phy specifier pair
-+  The specifier should be 0 for the OHCI/EHCI PHY
+ 	usb_phy_roothub_power_off(phy_roothub);
+ 
+ 	/* keep the PHYs initialized so the device can wake up the system */
+-	if (device_may_wakeup(controller_dev))
++	if (device_may_wakeup(controller_dev) || hcd->suspend_without_phy_exit)
+ 		return 0;
+ 
+ 	return usb_phy_roothub_exit(phy_roothub);
+ }
+ EXPORT_SYMBOL_GPL(usb_phy_roothub_suspend);
+ 
+-int usb_phy_roothub_resume(struct device *controller_dev,
++int usb_phy_roothub_resume(struct usb_hcd *hcd,
+ 			   struct usb_phy_roothub *phy_roothub)
+ {
++	struct device *controller_dev = hcd->self.sysdev;
+ 	int err;
+ 
+ 	/* if the device can't wake up the system _exit was called */
+-	if (!device_may_wakeup(controller_dev)) {
++	if (!device_may_wakeup(controller_dev) &&
++	    !hcd->suspend_without_phy_exit) {
+ 		err = usb_phy_roothub_init(phy_roothub);
+ 		if (err)
+ 			return err;
+@@ -190,7 +195,8 @@ int usb_phy_roothub_resume(struct device *controller_dev,
+ 	err = usb_phy_roothub_power_on(phy_roothub);
+ 
+ 	/* undo _init if _power_on failed */
+-	if (err && !device_may_wakeup(controller_dev))
++	if (err && !device_may_wakeup(controller_dev)
++	    && !hcd->suspend_without_phy_exit)
+ 		usb_phy_roothub_exit(phy_roothub);
+ 
+ 	return err;
+diff --git a/drivers/usb/core/phy.h b/drivers/usb/core/phy.h
+index 88a3c037e9df..34293e11a917 100644
+--- a/drivers/usb/core/phy.h
++++ b/drivers/usb/core/phy.h
+@@ -5,13 +5,16 @@
+  * Copyright (C) 2018 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+  */
+ 
++#include <linux/usb.h>
++#include <linux/usb/hcd.h>
 +
-+Optional properties:
-+- clocks: A phandle for the EHCI clock
+ #ifndef __USB_CORE_PHY_H_
+ #define __USB_CORE_PHY_H_
+ 
+ struct device;
+ struct usb_phy_roothub;
+ 
+-struct usb_phy_roothub *usb_phy_roothub_alloc(struct device *dev);
++struct usb_phy_roothub *usb_phy_roothub_alloc(struct usb_hcd *hcd);
+ 
+ int usb_phy_roothub_init(struct usb_phy_roothub *phy_roothub);
+ int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub);
+@@ -19,9 +22,9 @@
+ int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub);
+ void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub);
+ 
+-int usb_phy_roothub_suspend(struct device *controller_dev,
++int usb_phy_roothub_suspend(struct usb_hcd *hcd,
+ 			    struct usb_phy_roothub *phy_roothub);
+-int usb_phy_roothub_resume(struct device *controller_dev,
++int usb_phy_roothub_resume(struct usb_hcd *hcd,
+ 			   struct usb_phy_roothub *phy_roothub);
+ 
+ #endif /* __USB_CORE_PHY_H_ */
+diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
+index 97e2ddec18b1..87a104055b5e 100644
+--- a/include/linux/usb/hcd.h
++++ b/include/linux/usb/hcd.h
+@@ -157,6 +157,9 @@ struct usb_hcd {
+ 	 */
+ 	unsigned		skip_phy_initialization:1;
+ 
++	/* Some phys don't want the phy's exit/init called on suspend/resume */
++	unsigned		suspend_without_phy_exit:1;
 +
-+Example:
-+
-+ehci@f0b00300 {
-+	compatible = "brcm,bcm7445-ehci";
-+	reg = <0xf0b00300 0xa8>;
-+	interrupts = <0x0 0x5a 0x0>;
-+	interrupt-names = "usb0_ehci_0";
-+	phys = <&usbphy_0 0x0>;
-+	clocks = <&usb20>
-+};
-diff --git a/Documentation/devicetree/bindings/usb/brcm,bcm7445-ohci.txt b/Documentation/devicetree/bindings/usb/brcm,bcm7445-ohci.txt
-new file mode 100644
-index 000000000000..de5a22b3d138
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/brcm,bcm7445-ohci.txt
-@@ -0,0 +1,22 @@
-+Broadcom STB USB OHCI controller
-+
-+Required properties:
-+- compatible: should be "brcm,bcm7445-ohci"
-+- reg: should contain one register range i.e. start and length
-+- interrupts: description of the interrupt line
-+- phys: phandle + phy specifier pair
-+  The specifier should be 0 for the OHCI/EHCI PHY
-+
-+Optional properties:
-+- clocks: A phandle for the OHCI clock
-+
-+Example:
-+
-+ohci@f0b00400 {
-+	compatible = "brcm,bcm7445-ohci";
-+	reg = <0xf0b00400 0x58>;
-+	interrupts = <0x0 0x5b 0x0>;
-+	interrupt-names = "usb0_ohci_0";
-+	phys = <&usbphy_0 0x0>;
-+	clocks = <&usb20>;
-+};
-diff --git a/Documentation/devicetree/bindings/usb/brcm,bcm7445-xhci.txt b/Documentation/devicetree/bindings/usb/brcm,bcm7445-xhci.txt
-new file mode 100644
-index 000000000000..c41f3f8d836d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/brcm,bcm7445-xhci.txt
-@@ -0,0 +1,23 @@
-+Broadcom STB USB XHCI controller
-+
-+Required properties:
-+- compatible: should be "brcm,bcm7445-xhci"
-+- reg: should contain one register range i.e. start and length
-+- interrupts: description of the interrupt line
-+- phys: phandle + phy specifier pair
-+  The specifier should be 1 for the XHCI PHY
-+
-+Optional properties:
-+- clocks: A phandle for the XHCI clock
-+- usb3-lpm-capable: determines if platform is USB3 LPM capable
-+
-+Example:
-+
-+xhci_0_0: xhci@f0b01000 {
-+	compatible = "brcm,bcm7445-xhci";
-+	reg = <0xf0b01000 0x1000>;
-+	interrupts = <0x0 0x5c 0x0>;
-+	interrupt-names = "usb0_xhci_0";
-+	phys = <&usbphy_0 0x1>;
-+	clocks = <&usb30>;
-+};
+ 	/* The next flag is a stopgap, to be removed when all the HCDs
+ 	 * support the new root-hub polling mechanism. */
+ 	unsigned		uses_new_polling:1;
 -- 
 1.9.0.138.g2de3478
