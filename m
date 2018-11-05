@@ -1,77 +1,42 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: Re: [PATCH 1/6] phy: Add max_bitrate attribute &
- phy_get_max_bitrate()
-Date: Mon, 5 Nov 2018 18:52:22 +0530
-Message-ID: <f795a2ab-ef1e-9ad8-b763-f95bcb0d6d48@ti.com>
-References: <20181102192616.28291-1-faiz_abbas@ti.com>
- <20181102192616.28291-2-faiz_abbas@ti.com>
- <5e1a0b67-510a-5512-d477-0b363e4733fe@pengutronix.de>
- <d75c9e3c-e12b-e0b8-832c-ad117dcbe990@ti.com>
- <0c0885c4-f5ae-a29c-7176-f67fe546cfd8@pengutronix.de>
- <5685cb49-a6bf-3696-f984-020847633e5e@ti.com>
- <1e708b81-ed63-7dbf-3120-d256c0ec76c6@pengutronix.de>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v10 5/6] arm64: zynqmp: Add DDRC node
+Date: Mon, 5 Nov 2018 14:20:07 +0100
+Message-ID: <20181105132007.GB7937@zn.tnic>
+References: <1540447621-22870-1-git-send-email-manish.narani@xilinx.com>
+ <1540447621-22870-6-git-send-email-manish.narani@xilinx.com>
+ <20181105125644.GA7937@zn.tnic>
+ <41c5ca53-ed4b-38d0-c612-e1229004293e@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1e708b81-ed63-7dbf-3120-d256c0ec76c6@pengutronix.de>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org
-Cc: wg@grandegger.com, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <41c5ca53-ed4b-38d0-c612-e1229004293e@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Manish Narani <manish.narani@xilinx.com>, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, amit.kucheria@linaro.org, sudeep.holla@arm.com, leoyang.li@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
+On Mon, Nov 05, 2018 at 02:06:11PM +0100, Michal Simek wrote:
+> I don't think that driver will be broken. You can build them, use them
+> on out of tree HW. And when this patch is merged to mainline it will be
+> enabled for xilinx soc.
 
-On Monday 05 November 2018 05:17 PM, Marc Kleine-Budde wrote:
-> On 11/05/2018 12:14 PM, Faiz Abbas wrote:
->> Hi,
->>
->> On Monday 05 November 2018 03:07 PM, Marc Kleine-Budde wrote:
->>> On 11/05/2018 07:27 AM, Faiz Abbas wrote:
->>>> I remove the transceiver child node binding documentation in patch 5/6.
->>>>
->>>> The existing implementation is pretty limiting as it just has a child
->>>> node with no associated device. What if a transceiver requires its own
->>>> configurations before it can start sending/receiving messages (for
->>>> example, my usecase requires it to pull the standby line low)?
->>>>
->>>> I think that can be solved by implementing the transceiver as a phy and
->>>> exposing a generic get_max_bitrate API. That way, the transceiver device
->>>> can do all its startup configuration in the phy probe function.
->>>>
->>>> In any case, do suggest if you have a better idea on how to implement
->>>> pull gpio low requirement.
->>>
->>> As long as we don't have any proper transceiver/phy driver, that does
->>> more than swtich on/off a GPIO, please add a "xceiver" regulator to your
->>> driver. Look for:
->>>
->>>> devm_regulator_get(&pdev->dev, "xceiver");
->>>
->>
->> The transceiver is not specific to m_can. The pull down would be
->> required even if it were connected to some other controller.
-> 
-> Ok, this is a quite common pattern. For the fsl/nxp boards we add the
-> regulator to the board dts. See "imx28-evk.dts" for example:
-> 
->>                         can0: can@80032000 {
->>                                 pinctrl-names = "default";
->>                                 pinctrl-0 = <&can0_pins_a>;
->>                                 xceiver-supply = <&reg_can_3v3>;
->>                                 status = "okay";
->>                         };
->>
->>                         can1: can@80034000 {
->>                                 pinctrl-names = "default";
->>                                 pinctrl-0 = <&can1_pins_a>;
->>                                 xceiver-supply = <&reg_can_3v3>;
->>                                 status = "okay";
->>                         };
-> 
+But if the DT entries are missing, the driver won't load, would it?
 
-Ok. Will implement that in v2.
+> TBH I can't see any reason to do merges but if you want to do that way
+> we can also do it.
 
-Thanks,
-Faiz
+The reason is because there's a separate DT tree and all those arm
+drivers need DT.
+
+I have already acked EDAC patches to go through other trees too, FWIW.
+Which is not optimal either if someone sends fixes ontop but I cannot
+apply them yet because the dependent patches are in a different tree.
+
+So yes, there are at least two good reasons for merging a shared branch.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
