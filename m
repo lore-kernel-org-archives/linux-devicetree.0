@@ -1,61 +1,54 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v10 5/6] arm64: zynqmp: Add DDRC node
-Date: Mon, 5 Nov 2018 06:51:26 -0800
-Message-ID: <CAOesGMj=EbWgcYF2Mhh6TFMCdn1ub1Ze6fbXJnFFdsttWByXYg@mail.gmail.com>
-References: <1540447621-22870-1-git-send-email-manish.narani@xilinx.com>
- <1540447621-22870-6-git-send-email-manish.narani@xilinx.com>
- <20181105125644.GA7937@zn.tnic> <41c5ca53-ed4b-38d0-c612-e1229004293e@xilinx.com>
- <20181105132007.GB7937@zn.tnic> <a81f47e0-1778-a6ac-4cd8-634502661d6f@xilinx.com>
- <20181105134218.GD7937@zn.tnic>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] arm64: allwinner: h6: Add OrangePi
+ Lite2 initial support
+Date: Mon, 5 Nov 2018 16:23:03 +0100
+Message-ID: <20181105152303.pcpq4btw5ecwzs2y@flea>
+References: <20181105074842.21988-1-jagan@amarulasolutions.com>
+ <20181105074842.21988-3-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181105134218.GD7937@zn.tnic>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Michal Simek <michal.simek@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, manish.narani@xilinx.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, Li Yang <leoyang.li@nxp.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-edac@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="jnzi6de2xx25sdpp"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBYWAQHPQKGQEQ3WITJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20181105074842.21988-3-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 5, 2018 at 5:42 AM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Mon, Nov 05, 2018 at 02:32:55PM +0100, Michal Simek wrote:
-> > you don't have that HW anyway.
->
-> Grrr, I'm not talking about me - I'm talking about people testing
-> linux-next. And perhaps in this particular case it won't matter because
-> this hw is not shipping yet or whatever but the question is about the
-> principle of the whole thing.
->
-> > I looked at v10 and I can't see your ack there. Can you please give me
-> > a link?
->
-> I'm talking about *other* patches for another driver.
->
-> Please note that I'm replying to this thread as an example - the
-> procedural question I have is not only related to the synopsys changes
-> but the synopsys changes are a good example for the problem of EDAC
-> changes being sent to me along with DT additions.
->
-> As such, the question was aimed more at arm-soc people - that's why they
-> were in To: - not at you.
 
-Hi Boris,
+--jnzi6de2xx25sdpp
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-In general, for new functionality where needing both the driver change
-and a DT change to enable it (or a driver change and a config change
-to enable it), we have been merging the changes separately between
-driver trees and arm-soc. I.e. things will be in place, but not
-enabled, until both sides land. Main reason for doing so is to cut
-down on arbitrary dependencies between the trees, since there can
-sometimes end up being a lot of them.
+On Mon, Nov 05, 2018 at 01:18:42PM +0530, Jagan Teki wrote:
+> From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+> 
+> OrangePi Lite2 is Allwinner H6 based open-source SBC,
+> which support:
+> - Allwinner H6 Quad-core 64-bit ARM Cortex-A53
+> - GPU Mali-T720
+> - 1GB LPDDR3 RAM
+> - AXP805 PMIC
+> - AP6356S Wifi/BT
+> - USB 2.0, USB 3.0 Host, OTG
+> - HDMI port
+> - 5V/2A DC power supply
+> 
+> Signed-off-by: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 
-Since DT should strive for being backwards compatible (i.e, a driver
-change shouldn't require a DT change for the kernel to not regress
-functionally), this has been working pretty well.
+Applied patch 2 and 3, thanks!
+Maxime
 
-However, if there's some other reason to share a base between the two
-trees, we can do that. For most cases we've found that it's not needed
-though. So let us know what you prefer here.
-
-
--Olof
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--jnzi6de2xx25sdpp--
