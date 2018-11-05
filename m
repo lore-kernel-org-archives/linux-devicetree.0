@@ -1,70 +1,82 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: dtsi: sun8i-r40: add mali node
-Date: Mon, 5 Nov 2018 10:07:31 +0100
-Message-ID: <20181105090731.vkcdwde5zmkxjzmc@flea>
-References: <20181101085710.15774-1-lothar.felten@gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 05/11] [media] marvell-ccic: don't generate EOF on
+ parallel bus
+Date: Mon, 5 Nov 2018 10:07:45 +0100
+Message-ID: <20181105090745.GA3004@amd>
+References: <20181105073054.24407-1-lkundrak@v3.sk>
+ <20181105073054.24407-6-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hmehpeleewvssyd5"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBX4QQDPQKGQELAKBCYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181101085710.15774-1-lothar.felten-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Lothar Felten <lothar.felten-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+In-Reply-To: <20181105073054.24407-6-lkundrak@v3.sk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>
 List-Id: devicetree@vger.kernel.org
 
 
---hmehpeleewvssyd5
-Content-Type: text/plain; charset="UTF-8"
+--2oS5YaxWCcQjTEyO
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi,x
+On Mon 2018-11-05 08:30:48, Lubomir Rintel wrote:
+> The commit 05fed81625bf ("[media] marvell-ccic: add MIPI support for
+> marvell-ccic driver") that claimed to add CSI2 turned on C0_EOF_VSYNC for
+> parallel bus without a very good explanation.
+>=20
+> That broke camera on OLPC XO-1.75 which precisely uses a sensor on a
+> parallel bus. Revert that chunk.
+>=20
+> Tested on an OLPC XO-1.75.
+>=20
+> Fixes: 05fed81625bf755cc67c5864cdfd18b69ea828d1
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-On Thu, Nov 01, 2018 at 09:57:10AM +0100, Lothar Felten wrote:
-> This patch adds a node for the mali 400 GPU of the R40/V40 SoC
-> 
-> Signed-off-by: Lothar Felten <lothar.felten-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> Changes v2->v3:
-> - remove mali clock rates
-> - drop hdmi-phy sun50i-a64 compatibility  
-> - patch version, change log added
-> 
-> Changes v1->v2:
-> - commit message uppercase ARM prefix
-> - wrong patch submitted by mistake
-> ---
-> 
->  arch/arm/boot/dts/sun8i-r40.dtsi | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-> index 6f4c9ca5a3ee..136c248cc7d1 100644
-> --- a/arch/arm/boot/dts/sun8i-r40.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-> @@ -542,6 +542,28 @@
->  
->  		};
->  
-> +		mali: gpu@1c40000 {
-> +			compatible = "allwinner,sun7i-a20-mali", "arm,mali-400";
+You should really Cc original author and people that signed off on
+that patch.
+									Pavel
+	=09
 
-You should have an r40 compatible here. You can have a look at the
-A23-A33 DTSI compatible for an example if you want.
+>  drivers/media/platform/marvell-ccic/mcam-core.c | 6 ------
+>  1 file changed, 6 deletions(-)
+>=20
+> diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/me=
+dia/platform/marvell-ccic/mcam-core.c
+> index d97f39bde9bd..d24e5b7a3bc5 100644
+> --- a/drivers/media/platform/marvell-ccic/mcam-core.c
+> +++ b/drivers/media/platform/marvell-ccic/mcam-core.c
+> @@ -792,12 +792,6 @@ static void mcam_ctlr_image(struct mcam_camera *cam)
+>  	 * Make sure it knows we want to use hsync/vsync.
+>  	 */
+>  	mcam_reg_write_mask(cam, REG_CTRL0, C0_SIF_HVSYNC, C0_SIFM_MASK);
+> -	/*
+> -	 * This field controls the generation of EOF(DVP only)
+> -	 */
+> -	if (cam->bus_type !=3D V4L2_MBUS_CSI2_DPHY)
+> -		mcam_reg_set_bit(cam, REG_CTRL0,
+> -				C0_EOF_VSYNC | C0_VEDGE_CTRL);
+>  }
+> =20
+> =20
 
-Thanks!
-Maxime
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---hmehpeleewvssyd5--
+--2oS5YaxWCcQjTEyO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlvgCGEACgkQMOfwapXb+vI9WgCgsEqx2RQdGs9oaavW+qRbZ4CA
+V0oAniu36udRA2sfIBY2IWDen8lMUPfq
+=Ntxd
+-----END PGP SIGNATURE-----
+
+--2oS5YaxWCcQjTEyO--
