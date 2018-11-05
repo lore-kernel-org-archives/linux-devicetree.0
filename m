@@ -1,23 +1,77 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/3] dt-bindings: Add PNI to the vendor prefixes.
-Date: Mon, 5 Nov 2018 13:26:30 -0600
-Message-ID: <20181105192630.GA8881@bogus>
-References: <20181102074209.12620-1-songqiang1304521@gmail.com>
- <20181102074209.12620-2-songqiang1304521@gmail.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2] drm/msm/dpu: Correct dpu destroy and
+ disable order
+Date: Mon, 5 Nov 2018 11:31:16 -0800
+Message-ID: <CAD=FV=UfKFDcWo1CAH+o6BMO+YCodg5YhnOKF6efDAPzoVNRsQ@mail.gmail.com>
+References: <1541162957-12796-1-git-send-email-jshekhar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181102074209.12620-2-songqiang1304521@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, preid@electromag.com.au, himanshujha199640@gmail.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Song Qiang <songqiang1304521@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <1541162957-12796-1-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Abhinav Kumar <abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chandan Uddaraju <chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  2 Nov 2018 15:42:07 +0800, Song Qiang wrote:
-> Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+SGksCgpPbiBGcmksIE5vdiAyLCAyMDE4IGF0IDU6NDkgQU0gSmF5YW50IFNoZWtoYXIgPGpzaGVr
+aGFyQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPgo+IEluIGNhc2Ugb2YgbXNtIGRybSBiaW5kIGZh
+aWx1cmUsIGRwdV9tZHNzX2Rlc3Ryb3kgaXMgdHJpZ2dlcmVkLgo+IEluIHRoaXMgZnVuY3Rpb24s
+IHJlc291cmNlcyBhcmUgZnJlZWQgYW5kIHBtIHJ1bnRpbWUgZGlzYWJsZSBpcwo+IGNhbGxlZCwg
+d2hpY2ggdHJpZ2dlcnMgZHB1X21kc3NfZGlzYWJsZS4gTm93IGluIGRwdV9tZHNzX2Rpc2FibGUs
+Cj4gZHJpdmVyIHRyaWVzIHRvIGFjY2VzcyBhIG1lbW9yeSB3aGljaCBpcyBhbHJlYWR5IGZyZWVk
+LiBUaGlzCj4gcmVzdWx0cyBpbiBrZXJuZWwgcGFuaWMuIEZpeCB0aGlzIGJ5IGVuc3VyaW5nIHBy
+b3BlciBzZXF1ZW5jZQo+IG9mIGRwdSBkZXN0cm95IGFuZCBkaXNhYmxlIGNhbGxzLgo+Cj4gQ2hh
+bmdlcyBpbiB2MjoKPiAgICAtIFJlbW92ZWQgZG91YmxlIHNwYWNpbmdzIFtKZXlrdW1hcl0KPgo+
+IFNpZ25lZC1vZmYtYnk6IEpheWFudCBTaGVraGFyIDxqc2hla2hhckBjb2RlYXVyb3JhLm9yZz4K
+PiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3MuYyB8IDUgKy0t
+LS0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCA0IGRlbGV0aW9ucygtKQoKSSBj
+YW4gY29uZmlybSB0aGF0IHRoaXMgZml4ZXMgYSBjcmFzaCBJIHdhcyBydW5uaW5nIGludG8uClNw
+ZWNpZmljYWxseSBpdCBsb29rZWQgbGlrZSB0aGlzOgoKLS0tCgptc21fZHNpIGFlOTQwMDAuZHNp
+OiBhZTk0MDAwLmRzaSBzdXBwbHkgZ2RzYyBub3QgZm91bmQsIHVzaW5nIGR1bW15IHJlZ3VsYXRv
+cgptc21fZHNpIGFlOTQwMDAuZHNpOiBMaW5rZWQgYXMgYSBjb25zdW1lciB0byByZWd1bGF0b3Iu
+MAptc21fZHNpIGFlOTQwMDAuZHNpOiBEcm9wcGluZyB0aGUgbGluayB0byByZWd1bGF0b3IuMApt
+c21fZHNpIGFlOTQwMDAuZHNpOiBMaW5rZWQgYXMgYSBjb25zdW1lciB0byByZWd1bGF0b3IuMzUK
+bXNtX2RzaV9tYW5hZ2VyX3JlZ2lzdGVyOiBmYWlsZWQgdG8gcmVnaXN0ZXIgbWlwaSBkc2kgaG9z
+dCBmb3IgRFNJIDAKbXNtX2RzaSBhZTk0MDAwLmRzaTogRHJvcHBpbmcgdGhlIGxpbmsgdG8gcmVn
+dWxhdG9yLjM1Cm1zbSBhZTAwMDAwLm1kc3M6IGZhaWxlZCB0byBiaW5kIGFlOTQwMDAuZHNpIChv
+cHMgZHNpX29wcyk6IC01MTcKVW5hYmxlIHRvIGhhbmRsZSBrZXJuZWwgcGFnaW5nIHJlcXVlc3Qg
+YXQgdmlydHVhbCBhZGRyZXNzIDAwNmI2YjZiNmI2YjZiNmIKLi4uCldvcmtxdWV1ZTogcG0gcG1f
+cnVudGltZV93b3JrCi4uLgpDYWxsIHRyYWNlOgogY2xrX2Rpc2FibGUrMHgyNC8weDRjCiBtc21f
+ZHNzX2VuYWJsZV9jbGsrMHhlYy8weDE2NAogZHB1X21kc3NfZGlzYWJsZSsweDJjLzB4ODQKIG1z
+bV9ydW50aW1lX3N1c3BlbmQrMHg1MC8weDVjCiBwbV9nZW5lcmljX3J1bnRpbWVfc3VzcGVuZCsw
+eDNjLzB4NDgKIGdlbnBkX3J1bnRpbWVfc3VzcGVuZCsweGY0LzB4MWNjCiBfX3JwbV9jYWxsYmFj
+aysweDEyOC8weDFhNAogcnBtX2NhbGxiYWNrKzB4NzAvMHg5MAogcnBtX3N1c3BlbmQrMHgyZjQv
+MHg1NjQKIHJwbV9pZGxlKzB4M2MwLzB4M2Q4CiBwbV9ydW50aW1lX3dvcmsrMHg2Yy8weGEwCiBw
+cm9jZXNzX29uZV93b3JrKzB4MzhjLzB4NjM0CiB3b3JrZXJfdGhyZWFkKzB4MjE4LzB4MzYwCiBr
+dGhyZWFkKzB4MTMwLzB4MTM4CiByZXRfZnJvbV9mb3JrKzB4MTAvMHgxOAoKLS0tCgpUaHVzOgoK
+VGVzdGVkLWJ5OiBEb3VnbGFzIEFuZGVyc29uIDxkaWFuZGVyc0BjaHJvbWl1bS5vcmc+CgoKPgo+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jIGIv
+ZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3MuYwo+IGluZGV4IGZkOWM4OTMu
+LjkwMmJiNGMgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1
+X21kc3MuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMK
+PiBAQCAtMTU2LDE4ICsxNTYsMTUgQEAgc3RhdGljIHZvaWQgZHB1X21kc3NfZGVzdHJveShzdHJ1
+Y3QgZHJtX2RldmljZSAqZGV2KQo+ICAgICAgICAgc3RydWN0IGRwdV9tZHNzICpkcHVfbWRzcyA9
+IHRvX2RwdV9tZHNzKHByaXYtPm1kc3MpOwo+ICAgICAgICAgc3RydWN0IGRzc19tb2R1bGVfcG93
+ZXIgKm1wID0gJmRwdV9tZHNzLT5tcDsKPgo+ICsgICAgICAgcG1fcnVudGltZV9kaXNhYmxlKGRl
+di0+ZGV2KTsKPiAgICAgICAgIF9kcHVfbWRzc19pcnFfZG9tYWluX2ZpbmkoZHB1X21kc3MpOwo+
+IC0KPiAgICAgICAgIGZyZWVfaXJxKHBsYXRmb3JtX2dldF9pcnEocGRldiwgMCksIGRwdV9tZHNz
+KTsKPiAtCj4gICAgICAgICBtc21fZHNzX3B1dF9jbGsobXAtPmNsa19jb25maWcsIG1wLT5udW1f
+Y2xrKTsKPiAgICAgICAgIGRldm1fa2ZyZWUoJnBkZXYtPmRldiwgbXAtPmNsa19jb25maWcpOwo+
+Cj4gICAgICAgICBpZiAoZHB1X21kc3MtPm1taW8pCj4gICAgICAgICAgICAgICAgIGRldm1faW91
+bm1hcCgmcGRldi0+ZGV2LCBkcHVfbWRzcy0+bW1pbyk7Cj4gICAgICAgICBkcHVfbWRzcy0+bW1p
+byA9IE5VTEw7Cj4gLQo+IC0gICAgICAgcG1fcnVudGltZV9kaXNhYmxlKGRldi0+ZGV2KTsKPiAg
+ICAgICAgIHByaXYtPm1kc3MgPSBOVUxMOwo+ICB9Cj4KPiAtLQo+IFRoZSBRdWFsY29tbSBJbm5v
+dmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0s
+Cj4gYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdAo+Cl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxp
+c3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
