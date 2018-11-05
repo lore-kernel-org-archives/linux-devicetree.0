@@ -1,135 +1,104 @@
-From: Damian Kos <dkos-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v6 0/6] drm: add support for Cadence MHDP DPI/DP bridge.
-Date: Mon, 5 Nov 2018 09:44:53 +0000
-Message-ID: <CY1PR0701MB166434BBB71DB76593E0F513CDCA0@CY1PR0701MB1664.namprd07.prod.outlook.com>
-References: <1539034953-11274-1-git-send-email-dkos@cadence.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Re: [PATCH v2 02/15] clk: sunxi-ng: Add check for
+ minimal rate to NKM PLLs
+Date: Mon, 5 Nov 2018 11:11:10 +0100
+Message-ID: <20181105101110.agfik3oppd6ck25c@flea>
+References: <20181023155035.9101-1-jagan@amarulasolutions.com>
+ <20181023155035.9101-3-jagan@amarulasolutions.com>
+ <20181024180436.5n3i3z6h2yezc4cv@flea>
+ <CAMty3ZC2wn-DjR+93yc-n-bAmVCHaEqR_=4XPddoo+7LjebTEg@mail.gmail.com>
+ <20181029085843.3bslqwktxbp2ywk2@flea>
+ <e7566001-8933-adbb-4c30-7a3f66ebae4e@openedev.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1539034953-11274-1-git-send-email-dkos-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?utf-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Piotr Sroka <piotrs-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: "jbergsagel-l0cyMroinI0@public.gmane.org" <jbergsagel-l0cyMroinI0@public.gmane.org>, Rafal Ciepiela <rafalc-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Damian Kos <dkos-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, "quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org" <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="24qnld42rl357a2y"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBP5OQDPQKGQE2GRFWKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <e7566001-8933-adbb-4c30-7a3f66ebae4e-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR3V5cywNCg0KSSdtIHdvbmRlcmluZyBpZiB0aGlzIHRpbWUgcGF0Y2ggaXMgc28gZ29vZCB0
-aGF0IHRoZXJlJ3JlIG5vIGNoYW5nZSByZXF1ZXN0cywgb3IgaXMgaXQgc28gYmFkIHRoYXQgaXQg
-d2FzIHJlamVjdGVkIHdpdGhvdXQgYSBjb21tZW50IDogKQ0KUGxlYXNlIGxldCBtZSBrbm93IGlm
-IHRoaXMgcGF0Y2ggaXMgYmVpbmcgaW4gcmV2aWV3IG9yIHdhcyByZWplY3RlZCBhbmQsIGlmIHNv
-LCB3aGF0IG5lZWRzIHRvIGJlIGNoYW5nZWQuDQoNClJlZ2FyZHMsDQpEYW1pYW4NCg0KLS0tLS1P
-cmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IERhbWlhbiBLb3MgPGRrb3NAY2FkZW5jZS5jb20+
-IA0KU2VudDogTW9uZGF5LCBPY3RvYmVyIDgsIDIwMTggMjM6NDINClRvOiBEYXZpZCBBaXJsaWUg
-PGFpcmxpZWRAbGludXguaWU+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFy
-ayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IEFyY2hpdCBUYW5lamEgPGFyY2hpdHRA
-Y29kZWF1cm9yYS5vcmc+OyBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPjsgTGF1
-cmVudCBQaW5jaGFydCA8TGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPjsgR3VzdGF2
-byBQYWRvdmFuIDxndXN0YXZvQHBhZG92YW4ub3JnPjsgTWFhcnRlbiBMYW5raG9yc3QgPG1hYXJ0
-ZW4ubGFua2hvcnN0QGxpbnV4LmludGVsLmNvbT47IFNlYW4gUGF1bCA8c2VhbkBwb29ybHkucnVu
-PjsgU2FuZHkgSHVhbmcgPGhqY0Byb2NrLWNoaXBzLmNvbT47IEhlaWtvIFN0w7xibmVyIDxoZWlr
-b0BzbnRlY2guZGU+OyBRdWVudGluIFNjaHVseiA8cXVlbnRpbi5zY2h1bHpAZnJlZS1lbGVjdHJv
-bnMuY29tPjsgRGFtaWFuIEtvcyA8ZGtvc0BjYWRlbmNlLmNvbT47IFBpb3RyIFNyb2thIDxwaW90
-cnNAY2FkZW5jZS5jb20+OyBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnOyBkZXZpY2V0
-cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZy
-YWRlYWQub3JnDQpDYzogUmFmYWwgQ2llcGllbGEgPHJhZmFsY0BjYWRlbmNlLmNvbT47IHF1ZW50
-aW4uc2NodWx6QGJvb3RsaW4uY29tOyBqYmVyZ3NhZ2VsQHRpLmNvbQ0KU3ViamVjdDogW1BBVENI
-IHY2IDAvNl0gZHJtOiBhZGQgc3VwcG9ydCBmb3IgQ2FkZW5jZSBNSERQIERQSS9EUCBicmlkZ2Uu
-DQoNCkhlbGxvIQ0KDQpUaGlzIGlzIHRoZSBzZXJpZXMgb2YgcGF0Y2hlcyB0aGF0IHdpbGwgYWRk
-IHN1cHBvcnQgZm9yIHRoZSBDYWRlbmNlJ3MgRFBJL0RQIGJyaWRnZS4gUGxlYXNlIG5vdGUgdGhh
-dCB0aGlzIGlzIGEgcHJlbGltaW5hcnkgdmVyc2lvbiBvZiB0aGUgZHJpdmVyIGFuZCB0aGVyZSB3
-aWxsIGJlIG1vcmUgcGF0Y2hlcyBpbiB0aGUgZnV0dXJlIHdpdGggdXBkYXRlcywgZml4ZXMgYW5k
-IGltcHJvdmVtZW50cy4NClBsZWFzZSBrZWVwIHRoYXQgaW4gbWluZCB3aGVuIGxvb2tpbmcgYXQg
-RklYTUUvVE9ETy9YWFggY29tbWVudHMuDQoNCkluaXRpYWxseSwgTUhEUCBkcml2ZXIgd2FzIGRl
-dmVsb3BlZCBhcyBhIERSTSBicmlkZ2UgZHJpdmVyIGFuZCB3YXMgcGxhbmVkIHRvIGJlIHBsYWNl
-ZCBpbiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL21oZHAuYy4gIEhvd2V2ZXIsIHRoZXJlIHdhcyBh
-bHJlYWR5IGEgZHJpdmVyIGZvciBDYWRlbmNlJ3MgRFAgY29udHJvbGxlciBkZXZlbG9wZWQgYnkg
-Um9ja0NoaXAsIGJ1dCB0aGF0IGRyaXZlciB1c2VzIHRoZSBkaWZmZXJlbnQgRFJNIGZyYW1ld29y
-ayBhbmQgbG9va3MgbGlrZSBhIHBhcnQgb2YgYSBiaWdnZXIgc3lzdGVtLg0KQm90aCBjb250cm9s
-bGVycyAoaW5jbHVkaW5nIGZpcm13YXJlKSBhcmUgcXVpdGUgZGlmZmVyZW50IGludGVybmFsbHkg
-KE1TVC9GRUMvRFNDIHN1cHBvcnQsIGxpbmsgdHJhaW5pbmcgZG9uZSBieSBkcml2ZXIsIGFkZGl0
-aW9uYWwgY29tbWFuZHMsIElSUSdzDQpldGMuKSBidXQgdGhleSBoYXZlIHNpbWlsYXIgcmVnaXN0
-ZXIgbWFwLCBleGNlcHQgZm9yIEZyYW1lci9TdHJlYW1lciAod2hpY2ggaXMgbm90aWNlYWJseSBk
-aWZmZXJlbnQpLCBzbyB0aGV5IGFwcGVhciBzaW1pbGFyLg0KDQpUaGUgZm9sbG93aW5nIHBhdGNo
-ZXMgY29udGFpbjoNCi0gTW92aW5nIGNvbW1vbiBjb2RlIHRvIGRyaXZlcnMvZ3B1L2RybS9icmlk
-Z2UvY2Rucy1taGRwLWNvbW1vbi4qIGFuZA0KICBtb2RpZnlpbmcgaXQgYSBiaXQgKG1vc3RseSBu
-ZXcgcHJlZml4ZXMgZm9yIGZ1bmN0aW9ucyBhbmQgZGF0YSB0eXBlcykgc28gaXQNCiAgY2FuIGJl
-IHVzZWQgYnkgdHdvLCBoaWdoZXIgbGV2ZWwsIGRyaXZlcnMuDQotIE1vZGlmeWluZyBleGlzdGlu
-ZyBSb2NrQ2hpcCdzIERQIGRyaXZlciB0byB1c2UgdGhlIGNvbW1vbiBjb2RlIGFmdGVyIGNoYW5n
-ZXMNCiAgbWFkZSB0byBpdCAodXNlIHRoZSBuZXcgY2Ruc19taGRwX2RldmljZSBzdHJ1Y3R1cmUg
-YW5kIG5ldyBmdW5jdGlvbiBuYW1lcykuDQotIE1vZGlmeWluZyBEUk0gaGVscGVycyBhIGJpdC4g
-U29tZSBhcmUgcmVxdWlyZWQgZm9yIG5ldyBkcml2ZXIsIHNvbWUgYXJlDQogIHVwZGF0ZXMgZnJv
-bSBEUCAxLjIgdG8gMS4zIG9yIDEuNC4NCi0gQWRkaW5nIGRvY3VtZW50YXRpb24gZm9yIGRldmlj
-ZSB0cmVlIGJpbmRpbmdzLg0KLSBBZGRpbmcgcHJlbGltaW5hcnkgQ2FkZW5jZSBEUEkvRFAgYnJp
-ZGdlIGRyaXZlci4NCg0KU29tZSBvZiB0aGUgdGhpbmdzIHRoYXQgd2lsbCBiZSBhZGRlZCBsYXRl
-ciBvbiBpbmNsdWRlIChidXQgYXJlIG5vdCBsaW1pdGVkDQp0byk6DQotIERTQyBzdXBwb3J0DQot
-IEZFQyBzdXBwb3J0DQotIEhEQ1Agc3VwcG9ydA0KDQpDaGFuZ2VzIGluIHYyOg0KLSBBZGRlZCBh
-Y3R1YWwgZGVzY3JpcHRpb24gb2Ygd2hhdCB0aGUgcGF0Y2ggY29udGFpbnMsIHdoYXQgaXMgaXQg
-Zm9yIGFuZA0KICB3aGF0J3MgZ29pbmcgb24gaGVyZSBpbiBnZW5lcmFsLg0KLSBOZXcgc3RydWN0
-dXJlLiBOb3cgd2UgaGF2ZSBvbmUgY29tbW9uIGxvdyBsZXZlbCBkcml2ZXIgKyB0d28gaGlnaCBs
-ZXZlbA0KICBkcml2ZXJzIC0gb25lIGZvciBSb2NrQ2hpcCB3aXRoIG1pbmltdW0gY2hhbmdlcyBh
-bmQgb25lLCBtb3JlIGdlbmVyYWwsIGZvcg0KICBDYWRlbmNlLg0KLSBEcm9wcGVkIHNvbWUgY2hh
-bmdlcyBtYWRlIHRvIERSTSBoZWxwZXJzLg0KLSBVcGRhdGVkIHRoZSBkZXZpY2UgdHJlZSBiaW5k
-aW5ncyBkb2N1bWVudC4NCg0KQ2hhbmdlcyBpbiB2MzoNCi0gQ29ycmVjdGVkIGR0LWJpbmRpbmdz
-IGRvY3VtZW50DQotIEVuYWJsZWQgc29tZSBjbG9ja3MgYXQgc3RhcnR1cCAoc2luY2UgRlcgZG9l
-c24ndCBkbyB0aGF0IGFueW1vcmUpLg0KLSBDaGFuZ2VkIEZpcm13YXJlIGZpbGUgbmFtZSB0byBt
-YXRjaCB0aGUgZmlsZSBvbiBMaW51eCBGaXJtd2FyZSByZXBvLg0KLSBBZGRlZCBTU1QgYXVkaW8g
-c3VwcG9ydA0KLSBNYWRlIGNvbW1vbiBmdW5jdGlvbnMgKGluIGNkbnMtbWhkcC1jb21tb24uKikg
-cHVibGljLg0KDQpDaGFuZ2VzIGluIHY0Og0KLSBGaXhlZCBLY29uZmlnIGluIGRybS9yb2NrY2hp
-cA0KLSBGaXhlZCBTaWduZWQtb2Zmcw0KLSBkcF9saW5rX3N0YXR1cygpIGlzIG5vIGxvbmdlciBw
-dWJsaWMgc2luY2UgaXQncyB1c2VkIG9ubHkgaW4gZHJtX2RwX2hlbHBlci5jDQotIFJlcGxhY2Vk
-IEVYVFJBX0NGTEFHUyB3aXRoIGNjZmxhZ3MteSBpbiBkcm0vcm9ja2NoaXAgTWFrZWZpbGUNCg0K
-Q2hhbmdlcyBpbiB2NToNCi0gRml4ZWQgS2NvbmZpZyBpbiBkcm0vcm9ja2NoaXAgYWdhaW4NCi0g
-TW92ZWQgY2RuLWRwLXJlZy5oIChjZG5zLW1oZHAtY29tbW9uLmgpIHRvIGluY2x1ZGUvZHJtL2Jy
-aWRnZSBpbnN0ZWFkIG9mDQogICAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS8NCi0gVXBkYXRlZCB0
-aGUgbWhkcF92YWxpZGF0ZV9jciBmdW5jdGlvbg0KDQpDaGFuZ2VzIGluIHY2Og0KLSBBZGRlZCBS
-ZXZpZXdlZC1ieXMgZm9yIGFscmVhZHkgcmV2aWV3ZWQgcGF0Y2hlcw0KLSBEcm9wcGVkIHBhdGNo
-IHY1LTAwMDMgKHRoYXQgbWFkZSBkcF9nZXRfbGFuZV9zdGF0dXMgaGVscGVyIHB1YmxpYykNCi0g
-QWRkZWQgcGF0Y2ggd2l0aCBNU1Qgc3VwcG9ydA0KLSBBZGRlZCBwYXRjaCB3aXRoIENhZGVuY2Ug
-U0QwODAxIFBIWSBpbml0DQoNCg0KRGFtaWFuIEtvcyAoMik6DQogIGRybS9yb2NrY2hpcDogcHJl
-cGFyZSBjb21tb24gY29kZSBmb3IgY2RucyBhbmQgcmsgZHBpL2RwIGRyaXZlcg0KICBkcm0vYnJp
-ZGdlOiBhZGQgUEhZIGluaXRpYWxpemF0aW9uIGluIG1oZHA4NTQ2IGRyaXZlci4NCg0KUGlvdHIg
-U3Jva2EgKDEpOg0KICBkcm0vYnJpZGdlOiBhZGQgc3VwcG9ydCBmb3IgTVNUIGluIG1oZHA4NTQ2
-IGRyaXZlcg0KDQpRdWVudGluIFNjaHVseiAoMyk6DQogIGRybS9kcDogZml4IGxpbmsgcHJvYmlu
-ZyBmb3IgZGV2aWNlcyBzdXBwb3J0aW5nIERQIDEuNCsNCiAgZHQtYmluZGluZ3M6IGRybS9icmlk
-Z2U6IERvY3VtZW50IENhZGVuY2UgTUhEUCBicmlkZ2UgYmluZGluZ3MNCiAgZHJtOiBicmlkZ2U6
-IGFkZCBzdXBwb3J0IGZvciBDYWRlbmNlIE1IRFAgRFBJL0RQIGJyaWRnZQ0KDQogLi4uL2JpbmRp
-bmdzL2Rpc3BsYXkvYnJpZGdlL2NkbnMsbWhkcC50eHQgICAgIHwgICA0MyArDQogZHJpdmVycy9n
-cHUvZHJtL2JyaWRnZS9LY29uZmlnICAgICAgICAgICAgICAgIHwgICAgOSArDQogZHJpdmVycy9n
-cHUvZHJtL2JyaWRnZS9NYWtlZmlsZSAgICAgICAgICAgICAgIHwgICAgMyArDQogZHJpdmVycy9n
-cHUvZHJtL2JyaWRnZS9jZG5zLW1oZHAtY29tbW9uLmMgICAgIHwgMTEwNyArKysrKysrKysrKysr
-DQogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9jZG5zLW1oZHAtbXN0LmMgICAgICAgIHwgIDU5NCAr
-KysrKysrDQogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9jZG5zLW1oZHAuYyAgICAgICAgICAgIHwg
-MTM3MSArKysrKysrKysrKysrKysrKw0KIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvY2Rucy1taGRw
-LmggICAgICAgICAgICB8ICAyMDkgKysrDQogZHJpdmVycy9ncHUvZHJtL2RybV9kcF9oZWxwZXIu
-YyAgICAgICAgICAgICAgIHwgICAzMCArLQ0KIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9LY29u
-ZmlnICAgICAgICAgICAgICB8ICAgIDQgKy0NCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvTWFr
-ZWZpbGUgICAgICAgICAgICAgfCAgICAyICstDQogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nk
-bi1kcC1jb3JlLmMgICAgICAgIHwgIDIzNCArLS0NCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAv
-Y2RuLWRwLWNvcmUuaCAgICAgICAgfCAgIDQzICstDQogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlw
-L2Nkbi1kcC1yZWcuYyAgICAgICAgIHwgIDk2OSAtLS0tLS0tLS0tLS0NCiBpbmNsdWRlL2RybS9i
-cmlkZ2UvY2Rucy1taGRwLWNicy5oICAgICAgICAgICAgfCAgIDI3ICsNCiAuLi4vZHJtL2JyaWRn
-ZS9jZG5zLW1oZHAtY29tbW9uLmggICAgICAgICAgICAgfCAgMTc0ICsrLQ0KIDE1IGZpbGVzIGNo
-YW5nZWQsIDM2NjkgaW5zZXJ0aW9ucygrKSwgMTE1MCBkZWxldGlvbnMoLSkgIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
-Y2RucyxtaGRwLnR4dA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdl
-L2NkbnMtbWhkcC1jb21tb24uYw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
-YnJpZGdlL2NkbnMtbWhkcC1tc3QuYw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
-cm0vYnJpZGdlL2NkbnMtbWhkcC5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
-bS9icmlkZ2UvY2Rucy1taGRwLmgNCiBkZWxldGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJt
-L3JvY2tjaGlwL2Nkbi1kcC1yZWcuYw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2RybS9i
-cmlkZ2UvY2Rucy1taGRwLWNicy5oDQogcmVuYW1lIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9j
-ZG4tZHAtcmVnLmggPT4gaW5jbHVkZS9kcm0vYnJpZGdlL2NkbnMtbWhkcC1jb21tb24uaCAoNzcl
-KQ0KDQotLQ0KMi4xNy4xDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCkxpbnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdApMaW51eC1yb2NrY2hpcEBsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8vbGludXgtcm9ja2NoaXAK
+
+--24qnld42rl357a2y
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Mon, Oct 29, 2018 at 06:10:47PM +0530, Jagan Teki wrote:
+> On 29/10/18 2:28 PM, Maxime Ripard wrote:
+> > On Thu, Oct 25, 2018 at 04:25:59PM +0530, Jagan Teki wrote:
+> > > On Wed, Oct 24, 2018 at 11:34 PM Maxime Ripard
+> > > <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > > > 
+> > > > On Tue, Oct 23, 2018 at 09:20:22PM +0530, Jagan Teki wrote:
+> > > > > Some NKM PLLs doesn't work well when their output clock rate is set below
+> > > > > certain rate.
+> > > > > 
+> > > > > So, add support for minimal rate for relevant PLLs.
+> > > > > 
+> > > > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > > > ---
+> > > > > Changes for v2:
+> > > > > - new patch
+> > > > > 
+> > > > >   drivers/clk/sunxi-ng/ccu_nkm.c | 7 +++++++
+> > > > >   drivers/clk/sunxi-ng/ccu_nkm.h | 1 +
+> > > > >   2 files changed, 8 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/clk/sunxi-ng/ccu_nkm.c b/drivers/clk/sunxi-ng/ccu_nkm.c
+> > > > > index 841840e35e61..d17539dc88dd 100644
+> > > > > --- a/drivers/clk/sunxi-ng/ccu_nkm.c
+> > > > > +++ b/drivers/clk/sunxi-ng/ccu_nkm.c
+> > > > > @@ -125,6 +125,13 @@ static unsigned long ccu_nkm_round_rate(struct ccu_mux_internal *mux,
+> > > > >        if (nkm->common.features & CCU_FEATURE_FIXED_POSTDIV)
+> > > > >                rate *= nkm->fixed_post_div;
+> > > > > 
+> > > > > +     if (rate < nkm->min_rate) {
+> > > > > +             rate = nkm->min_rate;
+> > > > > +             if (nkm->common.features & CCU_FEATURE_FIXED_POSTDIV)
+> > > > > +                     rate /= nkm->fixed_post_div;
+> > > > 
+> > > > I'm not sure this is right. Is the post divider taken into account to
+> > > > calculate the minimum, or is the minimum on the rate before the fixed
+> > > > post divider.
+> > > 
+> > > Since we are returning from here, we need to take care post div which
+> > > is actually doing at the end of round_rate.
+> > 
+> > That's not my point though. Does the rate needs to be superior to min
+> > / post_div, or min?
+> 
+> ie what I'm trying to say, since it's common code min or max should /
+> post_div and PLL_MIPI doesn't use any post_div.
+> 
+> We need to take care post_div though the current test (PLL_MIPI) in not used
+> since it's common code. just like nkmp, nm etc.
+> 
+> > 
+> > > > 
+> > > > How did you test this?
+> > > 
+> > > I've not used this on PLL_MIPI atleast, so I didn't test this.
+> > 
+> > If you've never tested this, why are you adding that code?
+> 
+> Like above, it's common code. otherwise might effect.
+
+Adding untested, unverified and unneeded code is just bloat, nothing
+else.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--24qnld42rl357a2y--
