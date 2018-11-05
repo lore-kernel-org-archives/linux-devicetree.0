@@ -1,51 +1,29 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH V4 05/10] dt-bindings: pinctrl: imx7ulp: back to imx
- legacy binding for consistency
-Date: Mon, 5 Nov 2018 13:46:48 -0600
-Message-ID: <CAL_JsqJN-RqxLzchCUJbCm3uxY22VZMZHVdqXAJSzhLzsBgHZg@mail.gmail.com>
-References: <1541149669-10857-1-git-send-email-aisheng.dong@nxp.com>
- <1541149669-10857-6-git-send-email-aisheng.dong@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2 v3] clk: qoriq: add more compatibles strings
+Date: Mon, 5 Nov 2018 14:27:45 -0600
+Message-ID: <20181105202745.GA21644@bogus>
+References: <20181031065736.32719-1-andy.tang@nxp.com>
+ <20181031065736.32719-2-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1541149669-10857-6-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dong Aisheng <aisheng.dong@nxp.com>
-Cc: devicetree@vger.kernel.org, Dong Aisheng <dongas86@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@armlinux.org.uk>, Stefan Agner <stefan@agner.ch>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181031065736.32719-2-andy.tang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: oss@buserror.net, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Yuantian Tang <andy.tang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 2, 2018 at 4:13 AM A.s. Dong <aisheng.dong@nxp.com> wrote:
->
-> We already had an earlier conclusion that all new i.MX Socs will keep
-> using the legacy i.MX Pinctrl bindings instead of generic pin config.
-> However, MX7ULP generic pin config binding support has already been in
-> tree before that time. Per SoC maintainers' suggestions, in order to
-> get a better consistency for all i.MX devices, we'd like to go back to
-> imx legacy binding for MX7ULP as well.
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Stefan Agner <stefan@agner.ch>
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+On Wed, 31 Oct 2018 14:57:36 +0800, Yuantian Tang wrote:
+> Add more SoC compatible strings to support more chips.
+> 
+> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
 > ---
-> ChangeLog:
->  v3: new patch
-> ---
->  .../bindings/pinctrl/fsl,imx7ulp-pinctrl.txt       | 66 ++++++++++------------
->  1 file changed, 29 insertions(+), 37 deletions(-)
+> v3:
+>   - undo deleting old bindings
+>   - split the dts and driver to different patchset
+> 
+>  .../devicetree/bindings/clock/qoriq-clock.txt      |    6 ++++++
+>  1 files changed, 6 insertions(+), 0 deletions(-)
+> 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
