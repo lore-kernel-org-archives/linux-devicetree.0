@@ -1,63 +1,106 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 09/11] [media] marvell-ccic/mmp: add devicetree support
-Date: Mon, 5 Nov 2018 10:20:16 +0100
-Message-ID: <20181105092016.GM4439@amd>
-References: <20181105073054.24407-1-lkundrak@v3.sk>
- <20181105073054.24407-10-lkundrak@v3.sk>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH] arm64: dts: zynqmp: replace gpio-key,wakeup with
+ wakeup-source property
+Date: Mon, 5 Nov 2018 10:32:12 +0100
+Message-ID: <5f430204-9c97-0351-ff63-e64e8d42da69@xilinx.com>
+References: <20181024114540.5196-1-sudeep.holla@arm.com>
+ <20181024114540.5196-2-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="EOHJn1TVIJfeVXv2"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181105073054.24407-10-lkundrak@v3.sk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181024114540.5196-2-sudeep.holla@arm.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michal Simek <michal.simek@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
+On 24. 10. 18 13:45, Sudeep Holla wrote:
+> Most of the legacy "gpio-key,wakeup" boolean property is already
+> replaced with "wakeup-source". However few occurrences of old property
+> has popped up again, probably from the remnants in downstream trees.
+> 
+> This patch replaces the legacy properties with the unified
+> "wakeup-source" property.
+> 
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts | 2 +-
+>  arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts | 2 +-
+>  arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts | 2 +-
+>  arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts | 2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+> index eb5e8bddb610..527b4d0f88e2 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+> @@ -49,7 +49,7 @@
+>  			label = "sw4";
+>  			gpios = <&gpio 23 GPIO_ACTIVE_LOW>;
+>  			linux,code = <KEY_POWER>;
+> -			gpio-key,wakeup;
+> +			wakeup-source;
+>  			autorepeat;
+>  		};
+>  	};
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+> index 25dd57485323..0397bf66b2e7 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+> @@ -46,7 +46,7 @@
+>  			label = "sw19";
+>  			gpios = <&gpio 22 GPIO_ACTIVE_HIGH>;
+>  			linux,code = <KEY_DOWN>;
+> -			gpio-key,wakeup;
+> +			wakeup-source;
+>  			autorepeat;
+>  		};
+>  	};
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
+> index 259f21b0c001..7238f022a671 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
+> @@ -46,7 +46,7 @@
+>  			label = "sw19";
+>  			gpios = <&gpio 22 GPIO_ACTIVE_HIGH>;
+>  			linux,code = <KEY_DOWN>;
+> -			gpio-key,wakeup;
+> +			wakeup-source;
+>  			autorepeat;
+>  		};
+>  	};
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
+> index a61b3cc6f4c9..fa055e718d4b 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
+> @@ -46,7 +46,7 @@
+>  			label = "sw19";
+>  			gpios = <&gpio 22 GPIO_ACTIVE_HIGH>;
+>  			linux,code = <KEY_DOWN>;
+> -			gpio-key,wakeup;
+> +			wakeup-source;
+>  			autorepeat;
+>  		};
+>  	};
+> --
+> 2.17.1
+> 
+> 
 
---EOHJn1TVIJfeVXv2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Will be good to point to 700a38b27eefc which introduced but that's fine.
 
-On Mon 2018-11-05 08:30:52, Lubomir Rintel wrote:
-> The platform data is actually not used anywhere (along with the CSI
-> support) and should be safe to remove.
->=20
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Applied.
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
-
-
-> +	} else {
-> +		/*
-> +		 * This are values that used to be hardcoded in mcam-core and
-
-"These are values"? "and it"?
-
-> +		 * work well on a OLPC XO 1.75 with a parallel bus sensor.
-> +		 * If it turns out other setups make sense, the values should
-> +		 * be obtained from the device tree.
-> +		 */
-> +		mcam->mclk_src =3D 3;
-> +		mcam->mclk_div =3D 2;
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---EOHJn1TVIJfeVXv2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvgC1AACgkQMOfwapXb+vL+1ACfSJLXt+lTZ7EuD71lKBgEC2aY
-CmUAniSv4VHkCgne0aAYDEZY3hFeFunz
-=JHwO
------END PGP SIGNATURE-----
-
---EOHJn1TVIJfeVXv2--
+Thanks,
+Michal
