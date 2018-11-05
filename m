@@ -1,47 +1,54 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/7] ARM: rockchip: add power-domains for Cortex-A9 socs
-Date: Mon, 05 Nov 2018 13:35:01 +0100
-Message-ID: <6192722.1hSScp9ivE@phil>
-References: <20181023103820.6464-1-heiko@sntech.de>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH] ARM: dts: replace gpio-key,wakeup with wakeup-source
+ property
+Date: Mon, 5 Nov 2018 13:40:53 +0100
+Message-ID: <71a26287-1c64-ba4a-50da-d058d8ab0bb6@xilinx.com>
+References: <20181024114540.5196-1-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20181023103820.6464-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181024114540.5196-1-sudeep.holla@arm.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michal Simek <michal.simek@xilinx.com>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 23. Oktober 2018, 12:38:13 CET schrieb Heiko Stuebner:
-> Domain values are done by the book (aka soc documentation for pmu and
-> power-domain <-> ip block connections) and tested with the gpu and the
-> wip lima kernel driver as well as te new vop support on rk3188.
+On 24. 10. 18 13:45, Sudeep Holla wrote:
+> Most of the legacy "gpio-key,wakeup" and "enable-sdio-wakeup" boolean
+> properties are already replaced with "wakeup-source". However few
+> occurrences of old property has popped up again, probably from the
+> remnants in downstream trees.
 > 
-> changes in v3:
-> - added spdx license header to dt-binding headers
-> - added Rob's Review for the added compatibles in patch 3
-> changes in v2:
-> - fix typos found by Julien
-> - adapt to changes happening in the power-domain driver since v1
-> - add vop power-domain links for rk3188
-> - drop already applied clock fixes
+> This patch replaces the legacy properties with the unified
+> "wakeup-source" property.
 > 
-> Heiko Stuebner (7):
->   dt-bindings: add power-domain header for RK3188 SoCs
->   dt-bindings: add power-domain header for RK3066 SoCs
->   dt-bindings: add compatibles for rk3066/rk3188 power controllers
->   soc: rockchip: power-domain: add rk3188 powerdomains
->   soc: rockchip: power-domain: add rk3066 powerdomains
->   ARM: dts: rockchip: add qos nodes found on rk3066 and rk3188
->   ARM: dts: rockchip: add rk3066/rk3188 power-domains
+> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Peter Rosin <peda@axentia.se>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  arch/arm/boot/dts/at91-nattis-2-natte-2.dts | 2 +-
+>  arch/arm/boot/dts/at91-wb45n.dts            | 2 +-
+>  arch/arm/boot/dts/at91-wb50n.dts            | 4 ++--
+>  arch/arm/boot/dts/imx6q-pistachio.dts       | 2 +-
+>  arch/arm/boot/dts/imx6sll-evk.dts           | 2 +-
+>  arch/arm/boot/dts/zynq-zturn.dts            | 2 +-
 
-applied for 4.21
+Reviewed-by: Michal Simek <michal.simek@xilinx.com>
+
+Thanks,
+Michal
