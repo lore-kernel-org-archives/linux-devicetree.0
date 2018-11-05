@@ -1,45 +1,68 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
- driver
-Date: Mon, 5 Nov 2018 10:38:07 +0000
-Message-ID: <20181105103807.GA12647@e107155-lin>
-References: <1539257761-23023-1-git-send-email-tdas@codeaurora.org>
- <1539257761-23023-3-git-send-email-tdas@codeaurora.org>
- <153981915373.5275.15971019914218464179@swboyd.mtv.corp.google.com>
- <0c51a12e-38d3-2df5-4f5f-6a687727e9bf@codeaurora.org>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 02/10] drm/sun4i: sun6i_mipi_dsi: Support
+ instruction loop selection
+Date: Mon, 5 Nov 2018 11:38:57 +0100
+Message-ID: <20181105103857.lp7ayw3p6dbthehg@flea>
+References: <20181103100900.30313-1-jagan@amarulasolutions.com>
+ <20181103100900.30313-3-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2mml74iousjnfa23"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBYV3QDPQKGQEGUZO7VI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <0c51a12e-38d3-2df5-4f5f-6a687727e9bf@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: Stephen Boyd <swboyd@chromium.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com, Sudeep Holla <sudeep.holla@arm.com>
+In-Reply-To: <20181103100900.30313-3-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, TL Lim <tllim-F7SikzrIcFYdnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 03, 2018 at 08:36:00AM +0530, Taniya Das wrote:
-> Hello Stephen,
->
-> On 10/18/2018 5:02 AM, Stephen Boyd wrote:
-> > Quoting Taniya Das (2018-10-11 04:36:01)
-> > > --- a/drivers/cpufreq/Kconfig.arm
-> > > +++ b/drivers/cpufreq/Kconfig.arm
 
-[...]
+--2mml74iousjnfa23
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-> > > +static const u16 cpufreq_qcom_std_offsets[REG_ARRAY_SIZE] = {
-> >
-> > Is this going to change in the future?
-> >
->
-> Yes, they could change and that was the reason to introduce the offsets.
-> This was discussed earlier too with Sudeep and was to add them.
+On Sat, Nov 03, 2018 at 03:38:52PM +0530, Jagan Teki wrote:
+> Instruction loop selection would require before writing
+> loop number registers, so enable idle, LP11 bits on
+> loop selection register.
+> 
+> Reference code available in BSP
+> (in drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
+> (dsi_dev[sel]->dsi_inst_loop_sel.dwval = 2<<(4*DSI_INST_ID_LP11) |
+> 	3<<(4*DSI_INST_ID_DLY);
+> 
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> ---
+>  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> index da152c21ec62..077b57ec964c 100644
+> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> @@ -397,6 +397,10 @@ static void sun6i_dsi_setup_inst_loop(struct sun6i_dsi *dsi,
+>  	struct mipi_dsi_device *device = dsi->device;
+>  	u16 delay;
+>  
+> +	regmap_write(dsi->regs, SUN6I_DSI_INST_LOOP_SEL_REG,
+> +		     DSI_INST_ID_HSC  << (4 * DSI_INST_ID_LP11) |
+> +		     DSI_INST_ID_HSD  << (4 * DSI_INST_ID_DLY));
+> +
 
-Sorry, I didn't like these registers to be coming from DT and I had the
-same question: will this keep changing ? And IIRC, the answer was yes.
-But I agree with Stephen, if and when we see the change, you can
-introduce the array and keep it simple until then.
+Please put this with the other instructions settings below.
 
---
-Regards,
-Sudeep
+hanks!
+Maxime
+ 
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--2mml74iousjnfa23--
