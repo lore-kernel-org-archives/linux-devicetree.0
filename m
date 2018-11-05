@@ -1,68 +1,61 @@
-From: Maxime Jourdan <mjourdan@baylibre.com>
-Subject: Re: [PATCH 0/2] drm/meson: Allow using optional canvas provider
-Date: Mon, 5 Nov 2018 15:02:28 +0100
-Message-ID: <CAMO6nax_Q4kbDkeBmYQezo9dpMztD4DMFh+1dewax4p6d_S7mw@mail.gmail.com>
-References: <20181105104508.23090-1-mjourdan@baylibre.com> <1a3d3b7a-5050-7b4c-bda6-8ef532403d01@baylibre.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v10 5/6] arm64: zynqmp: Add DDRC node
+Date: Mon, 5 Nov 2018 06:51:26 -0800
+Message-ID: <CAOesGMj=EbWgcYF2Mhh6TFMCdn1ub1Ze6fbXJnFFdsttWByXYg@mail.gmail.com>
+References: <1540447621-22870-1-git-send-email-manish.narani@xilinx.com>
+ <1540447621-22870-6-git-send-email-manish.narani@xilinx.com>
+ <20181105125644.GA7937@zn.tnic> <41c5ca53-ed4b-38d0-c612-e1229004293e@xilinx.com>
+ <20181105132007.GB7937@zn.tnic> <a81f47e0-1778-a6ac-4cd8-634502661d6f@xilinx.com>
+ <20181105134218.GD7937@zn.tnic>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1a3d3b7a-5050-7b4c-bda6-8ef532403d01@baylibre.com>
+In-Reply-To: <20181105134218.GD7937@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: Michal Simek <michal.simek@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, manish.narani@xilinx.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, Li Yang <leoyang.li@nxp.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
+On Mon, Nov 5, 2018 at 5:42 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Mon, Nov 05, 2018 at 02:32:55PM +0100, Michal Simek wrote:
+> > you don't have that HW anyway.
+>
+> Grrr, I'm not talking about me - I'm talking about people testing
+> linux-next. And perhaps in this particular case it won't matter because
+> this hw is not shipping yet or whatever but the question is about the
+> principle of the whole thing.
+>
+> > I looked at v10 and I can't see your ack there. Can you please give me
+> > a link?
+>
+> I'm talking about *other* patches for another driver.
+>
+> Please note that I'm replying to this thread as an example - the
+> procedural question I have is not only related to the synopsys changes
+> but the synopsys changes are a good example for the problem of EDAC
+> changes being sent to me along with DT additions.
+>
+> As such, the question was aimed more at arm-soc people - that's why they
+> were in To: - not at you.
 
-On Mon, Nov 5, 2018 at 1:51 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Hi Maxime,
->
-> On 05/11/2018 11:45, Maxime Jourdan wrote:
-> > The meson DRM driver currently uses constant, static canvas indexes.
-> >
-> > This is not optimal and could conflict with other drivers also using
-> > canvases.
->
-> Indeed, it's now time to use the canvas provider merged in 4.20-rc1 !
->
-> >
-> > This patch series allows the driver to optionnally use a canvas provider
-> > module that is able to dispatch canvases, on demand and free of conflict.
-> >
-> > In the future, the current way of doing things will be deprecated.
->
-> Do you confirm you will send a patch to remove the legacy canvas code when
-> everything is merged (including DT changes) ?
->
-> I'll wait until the bindings are reviewed, then I'll push the serie to drm-misc-next.
->
+Hi Boris,
 
-Yes, ultimately it will be removed.
+In general, for new functionality where needing both the driver change
+and a DT change to enable it (or a driver change and a config change
+to enable it), we have been merging the changes separately between
+driver trees and arm-soc. I.e. things will be in place, but not
+enabled, until both sides land. Main reason for doing so is to cut
+down on arbitrary dependencies between the trees, since there can
+sometimes end up being a lot of them.
 
-The plan is:
+Since DT should strive for being backwards compatible (i.e, a driver
+change shouldn't require a DT change for the kernel to not regress
+functionally), this has been working pretty well.
 
-4.21: allow using both modes, add the "amlogic,canvas" property to the dts files
-4.22: remove the old way and change the amlogic,canvas property to mandatory
+However, if there's some other reason to share a base between the two
+trees, we can do that. For most cases we've found that it's not needed
+though. So let us know what you prefer here.
 
-This should allow for a nice transition.
 
-Maxime
-
-> Thanks,
-> Neil
->
-> >
-> > Maxime Jourdan (2):
-> >   dt-bindings: display: amlogic, meson-vpu: Add optional canvas provider
-> >     node
-> >   drm/meson: Use optional canvas provider
-> >
-> >  .../bindings/display/amlogic,meson-vpu.txt    |  2 +
-> >  drivers/gpu/drm/meson/Kconfig                 |  1 +
-> >  drivers/gpu/drm/meson/meson_crtc.c            | 14 ++++--
-> >  drivers/gpu/drm/meson/meson_drv.c             | 46 ++++++++++++-------
-> >  drivers/gpu/drm/meson/meson_drv.h             |  4 ++
-> >  drivers/gpu/drm/meson/meson_plane.c           |  8 +++-
-> >  6 files changed, 53 insertions(+), 22 deletions(-)
-> >
+-Olof
