@@ -1,78 +1,160 @@
-From: Doug Anderson <dianders@google.com>
-Subject: Re: [PATCH V3 1/2] dt-bindings: mmc: sdhci-msm: Add new compatible
- string for SDM845 SOC
-Date: Mon, 5 Nov 2018 13:11:31 -0800
-Message-ID: <CAD=FV=VitZ4dyYGxinQ=nsrfM+U7duGbxeN3bdbRxfx-2AWxyQ@mail.gmail.com>
-References: <1541073999-11752-1-git-send-email-vbadigan@codeaurora.org>
- <1541073999-11752-2-git-send-email-vbadigan@codeaurora.org>
- <CAD=FV=V9AdCgOSonb0tu==DgKRKeZxto+aGwxmdbHAqrmfMrDQ@mail.gmail.com> <20181105203657.GA32282@bogus>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH v2 1/2] ARM: dts: imx51: Fix memory node duplicaton
+Date: Mon,  5 Nov 2018 19:14:45 -0200
+Message-ID: <1541452486-26597-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181105203657.GA32282@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: vbadigan@codeaurora.org, Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Evan Green <evgreen@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, riteshh@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: robh@kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Boards based on imx51 have duplicate memory nodes:
 
-On Mon, Nov 5, 2018 at 12:37 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Thu, Nov 01, 2018 at 01:29:54PM -0700, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Thu, Nov 1, 2018 at 5:07 AM Veerabhadrarao Badiganti
-> > <vbadigan@codeaurora.org> wrote:
-> > >
-> > > For SDM845 SOC, new compatible string  "qcom,sdm845-sdhci" is added.
-> > >
-> > > Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> > > index 502b3b8..f2ffbeb 100644
-> > > --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> > > +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> > > @@ -7,6 +7,7 @@ Required properties:
-> > >  - compatible: Should contain:
-> > >                 "qcom,sdhci-msm-v4" for sdcc versions less than 5.0
-> > >                 "qcom,sdhci-msm-v5" for sdcc versions >= 5.0
-> > > +               "qcom,sdm845-sdhci" for sdm845 SOC
-> >
-> > It's up to Rob of course, but IMO it seems a nicer way forward to
-> > include both the SoC-specific string and the "version" string in all
-> > cases.  I'd write this for the full text:
->
-> Fine by me if you update all the dts files.
+- One coming from the board dts file: memory@
 
-Done and done.
+- One coming from the imx51.dtsi file.
 
-https://lkml.kernel.org/r/20181105210921.253707-1-dianders@chromium.org
-https://lkml.kernel.org/r/20181105210921.253707-2-dianders@chromium.org
+Fix the duplication by removing the memory node from the dtsi file
+and by adding 'device_type = "memory";' in the board dts.
 
+Reported-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+---
+Changes since v1:
+- None
 
-> >  - compatible: Should contain a SoC-specific string and a IP version string:
-> >       version strings:
-> >            "qcom,sdhci-msm-v4" for sdcc versions less than 5.0
-> >            "qcom,sdhci-msm-v5" for sdcc version 5.0
-> >       full compatible strings with SoC and version:
-> >            "qcom,apq8084", "qcom,sdhci-msm-v4"
-> >            "qcom,msm8974", "qcom,sdhci-msm-v4"
-> >            "qcom,msm8916", "qcom,sdhci-msm-v4"
-> >            "qcom,msm8992", "qcom,sdhci-msm-v4"
-> >            "qcom,msm8996", "qcom,sdhci-msm-v4"
->
-> I assume you meant to append '-sdhci' here?
+ arch/arm/boot/dts/imx51-apf51.dts                 | 1 +
+ arch/arm/boot/dts/imx51-babbage.dts               | 1 +
+ arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi | 1 +
+ arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi      | 1 +
+ arch/arm/boot/dts/imx51-ts4800.dts                | 1 +
+ arch/arm/boot/dts/imx51-zii-rdu1.dts              | 1 +
+ arch/arm/boot/dts/imx51-zii-scu2-mezz.dts         | 1 +
+ arch/arm/boot/dts/imx51-zii-scu3-esb.dts          | 1 +
+ arch/arm/boot/dts/imx51.dtsi                      | 2 --
+ 9 files changed, 8 insertions(+), 2 deletions(-)
 
-Oops, yes!
-
-           "qcom,apq8084-sdhci", "qcom,sdhci-msm-v4"
-           "qcom,msm8974-sdhci", "qcom,sdhci-msm-v4"
-           "qcom,msm8916-sdhci", "qcom,sdhci-msm-v4"
-           "qcom,msm8992-sdhci", "qcom,sdhci-msm-v4"
-           "qcom,msm8996-sdhci", "qcom,sdhci-msm-v4"
-
--Doug
+diff --git a/arch/arm/boot/dts/imx51-apf51.dts b/arch/arm/boot/dts/imx51-apf51.dts
+index 79d8003..1eddf29 100644
+--- a/arch/arm/boot/dts/imx51-apf51.dts
++++ b/arch/arm/boot/dts/imx51-apf51.dts
+@@ -22,6 +22,7 @@
+ 	compatible = "armadeus,imx51-apf51", "fsl,imx51";
+ 
+ 	memory@90000000 {
++		device_type = "memory";
+ 		reg = <0x90000000 0x20000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
+index 35ee1b4..ed6a3ce 100644
+--- a/arch/arm/boot/dts/imx51-babbage.dts
++++ b/arch/arm/boot/dts/imx51-babbage.dts
+@@ -15,6 +15,7 @@
+ 	};
+ 
+ 	memory@90000000 {
++		device_type = "memory";
+ 		reg = <0x90000000 0x20000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi b/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi
+index 5761a66..82d8df0 100644
+--- a/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi
++++ b/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi
+@@ -17,6 +17,7 @@
+ 	compatible = "digi,connectcore-ccxmx51-som", "fsl,imx51";
+ 
+ 	memory@90000000 {
++		device_type = "memory";
+ 		reg = <0x90000000 0x08000000>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi b/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
+index f8902a3..2e31253 100644
+--- a/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
++++ b/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
+@@ -23,6 +23,7 @@
+ 	compatible = "eukrea,cpuimx51", "fsl,imx51";
+ 
+ 	memory@90000000 {
++		device_type = "memory";
+ 		reg = <0x90000000 0x10000000>; /* 256M */
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx51-ts4800.dts b/arch/arm/boot/dts/imx51-ts4800.dts
+index 39eb067..4344632 100644
+--- a/arch/arm/boot/dts/imx51-ts4800.dts
++++ b/arch/arm/boot/dts/imx51-ts4800.dts
+@@ -18,6 +18,7 @@
+ 	};
+ 
+ 	memory@90000000 {
++		device_type = "memory";
+ 		reg = <0x90000000 0x10000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+index e45a15c..3ca4f9b 100644
+--- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
++++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+@@ -53,6 +53,7 @@
+ 
+ 	/* Will be filled by the bootloader */
+ 	memory@90000000 {
++		device_type = "memory";
+ 		reg = <0x90000000 0>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx51-zii-scu2-mezz.dts b/arch/arm/boot/dts/imx51-zii-scu2-mezz.dts
+index 243d1c8..aa91e5d 100644
+--- a/arch/arm/boot/dts/imx51-zii-scu2-mezz.dts
++++ b/arch/arm/boot/dts/imx51-zii-scu2-mezz.dts
+@@ -18,6 +18,7 @@
+ 
+ 	/* Will be filled by the bootloader */
+ 	memory@90000000 {
++		device_type = "memory";
+ 		reg = <0x90000000 0>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx51-zii-scu3-esb.dts b/arch/arm/boot/dts/imx51-zii-scu3-esb.dts
+index 14b2077..875b10a 100644
+--- a/arch/arm/boot/dts/imx51-zii-scu3-esb.dts
++++ b/arch/arm/boot/dts/imx51-zii-scu3-esb.dts
+@@ -18,6 +18,7 @@
+ 
+ 	/* Will be filled by the bootloader */
+ 	memory@90000000 {
++		device_type = "memory";
+ 		reg = <0x90000000 0>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
+index 67d4627..7651bed 100644
+--- a/arch/arm/boot/dts/imx51.dtsi
++++ b/arch/arm/boot/dts/imx51.dtsi
+@@ -16,10 +16,8 @@
+ 	 * The decompressor and also some bootloaders rely on a
+ 	 * pre-existing /chosen node to be available to insert the
+ 	 * command line and merge other ATAGS info.
+-	 * Also for U-Boot there must be a pre-existing /memory node.
+ 	 */
+ 	chosen {};
+-	memory { device_type = "memory"; };
+ 
+ 	aliases {
+ 		ethernet0 = &fec;
+-- 
+2.7.4
