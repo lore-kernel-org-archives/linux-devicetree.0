@@ -1,80 +1,60 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v5 04/11] dt-bindings: iio: adc: add AXP803 ADC bindings
-Date: Mon, 5 Nov 2018 13:47:50 +0800
-Message-ID: <CAGb2v66mH5_J0K4ArFduvvQ2aE7mZxcyLORNPODj79-xhiKapQ@mail.gmail.com>
-References: <20181023185330.10472-1-oskari@lemmela.net> <20181023185330.10472-5-oskari@lemmela.net>
- <20181024135633.GA342@bogus> <20181028154011.04efdecf@archlinux>
- <20181029130757.m5okrfvusjl5fu5m@qschulz> <CAGb2v65JKj_7VcEr1KuZVop85hn-3h73NrExprpmLbKZiosD5Q@mail.gmail.com>
- <20181103102153.4f0481ad@archlinux>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: Re: [PATCH 1/6] phy: Add max_bitrate attribute &
+ phy_get_max_bitrate()
+Date: Mon, 5 Nov 2018 11:57:41 +0530
+Message-ID: <d75c9e3c-e12b-e0b8-832c-ad117dcbe990@ti.com>
+References: <20181102192616.28291-1-faiz_abbas@ti.com>
+ <20181102192616.28291-2-faiz_abbas@ti.com>
+ <5e1a0b67-510a-5512-d477-0b363e4733fe@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181103102153.4f0481ad@archlinux>
+In-Reply-To: <5e1a0b67-510a-5512-d477-0b363e4733fe@pengutronix.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@jic23.retrosnub.co.uk
-Cc: Rob Herring <robh@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-iio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Sebastian Reichel <sre@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Quentin Schulz <quentin.schulz@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, oskari@lemmela.net, linux-gpio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Quentin Schulz <quentin.schulz@bootlin.com>
+To: Marc Kleine-Budde <mkl@pengutronix.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org
+Cc: wg@grandegger.com, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 3, 2018 at 6:22 PM Jonathan Cameron
-<jic23@jic23.retrosnub.co.uk> wrote:
->
-> On Wed, 31 Oct 2018 10:29:59 +0800
-> Chen-Yu Tsai <wens@csie.org> wrote:
->
-> > On Mon, Oct 29, 2018 at 9:10 PM Quentin Schulz
-> > <quentin.schulz@bootlin.com> wrote:
-> > >
-> > > Hi Jonathan,
-> > >
-> > > On Sun, Oct 28, 2018 at 03:40:11PM +0000, Jonathan Cameron wrote:
-> > > > On Wed, 24 Oct 2018 08:56:33 -0500
-> > > > Rob Herring <robh@kernel.org> wrote:
-> > > >
-> > > > > On Tue, 23 Oct 2018 21:53:23 +0300, Oskari Lemmela wrote:
-> > > > > > The AXP803 ADC is compatible with AXP813 ADC, but add
-> > > > > > specific compatible for it.
-> > > > > >
-> > > > > > Signed-off-by: Oskari Lemmela <oskari@lemmela.net>
-> > > > > > ---
-> > > > > >  Documentation/devicetree/bindings/iio/adc/axp20x_adc.txt | 2 ++
-> > > > > >  1 file changed, 2 insertions(+)
-> > > > > >
-> > > > >
-> > > > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > >
-> > > > This doesn't seem to have any dependencies with the other patches
-> > > > so applied to the togreg branch of iio.git and pushed out as testing
-> > > > for the autobuilders to ignore.  However I am a little curious to know
-> > > > why we would add the ID and then not use it (that I can see)?
-> > > >
-> > >
-> > > Sometimes with Allwinner (and X-Powers), two IPs seem identical until we
-> > > discover something that is slightly different. When this happens, we
-> > > have to add a compatible to differentiate both. However, we would also
-> > > need to change the Device Tree to change the compatible. We would need
-> > > to handle the driver behaviour for both Device Trees.
-> > >
-> > > So better anticipate a possible difference so that we don't have to do
-> > > some hacks in the driver to handle the device correctly.
-> > >
-> > > As always, Chen-Yu or Maxime may know better so I'm just stating what I
-> > > seem to recall.
-> >
-> > With Allwinner stuff (X-Powers included), sometimes the documents are
-> > incomplete or have errors. We tend to add a model-specific compatible
-> > just in case things turn out not to be so compatible, unless someone
-> > has triple-checked everything, documents and actual hardware included.
-> >
-> > However we don't actually document these, so this patch isn't strictly
-> > needed. (I suppose this might annoy the device tree binding maintainers.)
-> >
-> > ChenYu
-> I don't think it does any harm so I'll leave it in place.  Thanks for
-> the explanations.
+Hi Marc,
 
-It might cause a bit of confusion though. We are not targetting these
-compatibles in terms of driver support, and they should not be used
-individually. IMO dropping this patch altogether is better. In the
-device tree we would use the tuplet axp803 + axp813.
+On Saturday 03 November 2018 03:06 PM, Marc Kleine-Budde wrote:
+> On 11/02/2018 08:26 PM, Faiz Abbas wrote:
+>> In some subsystems (eg. CAN) the physical layer capabilities are
+>> the limiting factor in the datarate of the device. Typically, the
+>> physical layer transceiver does not provide a way to discover this
+>> limitation at runtime. Thus this information needs to be represented as
+>> a phy attribute which is read from the device tree.
+>>
+>> Therefore, add an optional max_bitrate attribute to the generic phy
+>> sybsystem. Also add the complementary API which enables the consumer
+>> to get max_bitrate.
+>>
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> 
+> NACK - We already have such a functionality in the CAN subsystem.
+> Please have a look at the patches:
+> 
+> e759c626d826 can: m_can: Support higher speed CAN-FD bitrates
+> b54f9eea7667 dt-bindings: can: m_can: Document new can transceiver binding
+> 2290aefa2e90 can: dev: Add support for limiting configured bitrate
+> 54a7fbcc17bc dt-bindings: can: can-transceiver: Document new binding
+> 
 
-ChenYu
+I remove the transceiver child node binding documentation in patch 5/6.
+
+The existing implementation is pretty limiting as it just has a child
+node with no associated device. What if a transceiver requires its own
+configurations before it can start sending/receiving messages (for
+example, my usecase requires it to pull the standby line low)?
+
+I think that can be solved by implementing the transceiver as a phy and
+exposing a generic get_max_bitrate API. That way, the transceiver device
+can do all its startup configuration in the phy probe function.
+
+In any case, do suggest if you have a better idea on how to implement
+pull gpio low requirement.
+
+Thanks,
+Faiz
