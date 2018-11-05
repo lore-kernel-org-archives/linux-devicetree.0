@@ -1,77 +1,24 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH] dt-bindings: opp: Extend qcom-opp bindings with
- properties needed for CPR
-Date: Mon, 5 Nov 2018 17:17:45 -0600
-Message-ID: <20181105231745.GA25883@bogus>
-References: <20180627045234.27403-3-rnayak@codeaurora.org>
- <20181015124749.27276-1-niklas.cassel@linaro.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 2/2 v3] clk: qoriq: add more compatibles strings
+Date: Mon, 05 Nov 2018 15:20:02 -0800
+Message-ID: <154146000223.88331.842879133964597851@swboyd.mtv.corp.google.com>
+References: <20181031065736.32719-1-andy.tang@nxp.com>
+ <20181031065736.32719-2-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181015124749.27276-1-niklas.cassel@linaro.org>
+In-Reply-To: <20181031065736.32719-2-andy.tang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@linaro.org>
-Cc: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: oss@buserror.net
+Cc: mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Yuantian Tang <andy.tang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 15, 2018 at 02:47:49PM +0200, Niklas Cassel wrote:
-> Extend qcom-opp bindings with properties needed for Core Power Reduction
-> (CPR).
-> 
-> CPR is included in a great variety of Qualcomm SoC, e.g. msm8916 and
-> msm8996, and was first introduced in msm8974.
-> 
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Quoting Yuantian Tang (2018-10-30 23:57:36)
+> Add more SoC compatible strings to support more chips.
+> =
+
+> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
 > ---
-> Hello Rob, Rajendra,
-> 
-> Sorry for not replying sooner.
-> Since Rob wanted the binding to be complete before merging,
-> this is my proposal to extend the OPP binding with properties
-> needed to support CPR (both for msm8916 and msm8996).
-> I've discussed the proposal with Viresh, and this proposal
-> seems better than what I previously suggested here:
-> https://lore.kernel.org/lkml/20181005204424.GA29500@centauri.lan/
-> 
->  .../devicetree/bindings/opp/qcom-opp.txt      | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/opp/qcom-opp.txt b/Documentation/devicetree/bindings/opp/qcom-opp.txt
-> index db4d970c7ec7..3ab5dd84de86 100644
-> --- a/Documentation/devicetree/bindings/opp/qcom-opp.txt
-> +++ b/Documentation/devicetree/bindings/opp/qcom-opp.txt
-> @@ -23,3 +23,22 @@ Required properties:
->  representing a corner/level that's communicated with a remote microprocessor
->  (usually called the RPM) which then translates it into a certain voltage on
->  a voltage rail.
 
-I've lost the context here. Please send this all together.
-
-> +
-> +Optional properties:
-> +- opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. Even
-> +  though a power domain doesn't need a opp-hz, there can be devices in the
-> +  power domain that need to know the highest supported frequency for each
-> +  corner/level (e.g. CPR), in order to properly initialize the hardware.
-> +
-> +- qcom,fuse-level: A positive value representing the fuse corner/level
-> +  associated with this OPP node. Sometimes several corners/levels shares
-> +  a certain fuse corner/level. A fuse corner/level contains e.g. ref uV,
-> +  min uV, and max uV.
-> +
-> +- qcom,fuse-level-<name>: Named qcom,fuse-level property. This is exactly
-> +  similar to the above qcom,fuse-level property, but allows multiple
-> +  fuse corners/levels to be provided for the same OPP. At runtime, the
-> +  platform can pick a <name> and matching qcom,fuse-level-<name> property
-> +  will be enabled for all OPPs. If the platform doesn't pick a specific
-> +  <name> or the <name> doesn't match with any qcom,fuse-level-<name>
-> +  properties, then qcom,fuse-level property shall be used, if present.
-
-We've generally moved away from having variable property names (gpio and 
-regulators are the big exceptions) as they are harder to parse.
-
-I'm not clear why you'd need this. Just make qcom,fuse-level an array 
-and search each 'qcom,fuse-level' for the matching level number.
-
-Rob
+Acked-by: Stephen Boyd <sboyd@kernel.org>
