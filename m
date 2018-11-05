@@ -1,60 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 bus+gpio 4/4] dt-bindings: gpio: Document GPIOs via
- Moxtet bus
-Date: Mon, 5 Nov 2018 16:14:46 -0600
-Message-ID: <20181105221446.GA825@bogus>
-References: <20181102103539.6077-1-marek.behun@nic.cz>
- <20181102103539.6077-4-marek.behun@nic.cz>
+Subject: Re: [PATCHv2 3/6] PCI: layerscape: Add the EP mode support
+Date: Mon, 5 Nov 2018 16:17:27 -0600
+Message-ID: <20181105221727.GA7729@bogus>
+References: <20181105084653.26597-1-xiaowei.bao@nxp.com>
+ <20181105084653.26597-3-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181102103539.6077-4-marek.behun@nic.cz>
+In-Reply-To: <20181105084653.26597-3-xiaowei.bao@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Tony Lindgren <tony@atomide.com>, Shawn Guo <shawnguo@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org, cyrille.pitchen@free-electrons.com, pombredanne@nexb.com, shawn.lin@rock-chips.com, niklas.cassel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 02, 2018 at 11:35:39AM +0100, Marek Behún wrote:
-> This patch adds documentation of the device tree bindings for GPIOs
-> on the devices connected via Moxtet bus.
+On Mon,  5 Nov 2018 16:46:50 +0800, Xiaowei Bao wrote:
+> Add the EP mode support.
 > 
-> Signed-off-by: Marek Behún <marek.behun@nic.cz>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 > ---
->  .../devicetree/bindings/gpio/gpio-moxtet.txt   | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-moxtet.txt
+> v2:
+>  - Add the SoC specific compatibles.
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-moxtet.txt b/Documentation/devicetree/bindings/gpio/gpio-moxtet.txt
-> new file mode 100644
-> index 000000000000..7e9b5770585d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-moxtet.txt
-> @@ -0,0 +1,18 @@
-> +Turris Mox Moxtet GPIO expander via Moxtet bus
-> +
-> +Required properties:
-> + - compatible		: Should be "cznic,moxtet-gpio".
-> + - gpio-controller	: Marks the device node as a GPIO controller.
-> + - #gpio-cells		: Should be two. For consumer use see gpio.txt.
-> +
-> +Other properties are required for a Moxtet bus device, please refer to
-> +Documentation/devicetree/bindings/bus/moxtet.txt.
-> +
-> +Example:
-> +
-> +	moxtet_sfp: moxtet-sfp@0 {
-
-gpio@0
-
-> +		compatible = "cznic,moxtet-gpio";
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		reg = <0>;
-> +	}
-> -- 
-> 2.18.1
+>  .../devicetree/bindings/pci/layerscape-pci.txt     |    3 +++
+>  1 files changed, 3 insertions(+), 0 deletions(-)
 > 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
