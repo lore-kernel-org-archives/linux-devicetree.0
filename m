@@ -1,50 +1,27 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v6 00/18] of: overlay: validation checks, subsequent fixes
-Date: Mon, 5 Nov 2018 13:55:10 -0800
-Message-ID: <bf1be459-22d7-6b23-7b1f-847dad5e028f@gmail.com>
-References: <1541431515-25197-1-git-send-email-frowand.list@gmail.com>
- <CAL_JsqJ6fJcqH4+YHrEZRb+8-KFEmL8WSTSE_XSyrtO=2+JQBA@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/7] dt-bindings: power: supply: bq24190_charger: add
+ bq24192 and usb-otg-vbus
+Date: Mon, 5 Nov 2018 15:59:16 -0600
+Message-ID: <20181105215916.GA9820@bogus>
+References: <20181101001149.13453-1-masneyb@onstation.org>
+ <20181101001149.13453-2-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ6fJcqH4+YHrEZRb+8-KFEmL8WSTSE_XSyrtO=2+JQBA@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181101001149.13453-2-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
+Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, bjorn.andersson@linaro.org, linus.walleij@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-gpio@vger.kernel.org, jonathan@marek.ca, masneyb@onstation.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Michael, Ben, Paul,
-
-Do you know if anyone has tried this series on PowerPC?
-
-Thanks,
-
--Frank
-
-
-On 11/5/18 11:24 AM, Rob Herring wrote:
-> On Mon, Nov 5, 2018 at 9:26 AM <frowand.list@gmail.com> wrote:
->>
->> From: Frank Rowand <frank.rowand@sony.com>
->>
->> Add checks to (1) overlay apply process and (2) memory freeing
->> triggered by overlay release.  The checks are intended to detect
->> possible memory leaks and invalid overlays.
->>
->> The checks revealed bugs in existing code.  Fixed the bugs.
->>
->> While fixing bugs, noted other issues, which are fixed in
->> separate patches.
->>
->> *****  Powerpc folks: I was not able to test the patches that
->> *****  directly impact Powerpc systems that use dynamic
->> *****  devicetree.  Please review that code carefully and
->> *****  test.  The specific patches are: 03/16, 04/16, 07/16
+On Wed, 31 Oct 2018 20:11:43 -0400, Brian Masney wrote:
+> Add support for the ti,bq24192 variant and a child node for the
+> usb-otg-vbus regulator.
 > 
-> I'm waiting for this to happen. Send me a pull req when it does or
-> when you give up waiting for a response.
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+>  .../devicetree/bindings/power/supply/bq24190.txt         | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> Rob
-> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
