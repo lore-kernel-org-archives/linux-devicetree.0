@@ -1,100 +1,61 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v3 0/6] New QuadSPI driver for Atmel SAMA5D2
-Date: Mon, 5 Nov 2018 12:02:19 +0100
-Message-ID: <20181105120219.03ab3b4c@bbrezillon>
-References: <20181105103625.9644-1-bugalski.piotr@gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v6 0/6] drm: add support for Cadence MHDP DPI/DP bridge.
+Date: Mon, 5 Nov 2018 12:09:35 +0100
+Message-ID: <d6db03aa-6f61-f902-85f6-2245547186bc@samsung.com>
+References: <1539034953-11274-1-git-send-email-dkos@cadence.com>
+ <CY1PR0701MB166434BBB71DB76593E0F513CDCA0@CY1PR0701MB1664.namprd07.prod.outlook.com>
+ <3056496.a8qoricJmv@avalon>
+ <CGME20181105103448epcas1p29a9889a9a19fc56629dcc7e24785556c@epcas1p2.samsung.com>
+ <CY1PR0701MB16644A2C7EF670F5AC732BF8CDCA0@CY1PR0701MB1664.namprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181105103625.9644-1-bugalski.piotr@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Piotr Bugalski <bugalski.piotr@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Cyrille Pitchen <cyrille.pitchen@microchip.com>, Tudor Ambarus <tudor.ambarus@microchip.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CY1PR0701MB16644A2C7EF670F5AC732BF8CDCA0@CY1PR0701MB1664.namprd07.prod.outlook.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Damian Kos <dkos@cadence.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "quentin.schulz@bootlin.com" <quentin.schulz@bootlin.com>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, David Airlie <airlied@linux.ie>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Quentin Schulz <quentin.schulz@free-electrons.com>, Rafal Ciepiela <rafalc@cadence.com>, Rob Herring <robh+dt@kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, Sean Paul <sean@poorly.run>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Piotr Sroka <piotrs@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Piotr,
-
-On Mon,  5 Nov 2018 11:36:19 +0100
-Piotr Bugalski <bugalski.piotr@gmail.com> wrote:
-
-> Hello,
-> 
-> Atmel SAMA5D2 is equipped with two QSPI interfaces. These interfaces can
-> work as in SPI-compatible mode or use two / four lines to improve
-> communication speed. At the moment there is QSPI driver strongly tied to
-> NOR-flash memory and MTD subsystem.
-> Intention of this change is to provide new driver which will not be tied
-> to MTD and allows using QSPI with NAND-flash memory or other peripherals
-> New spi-mem API provides abstraction layer which can disconnect QSPI
-> from MTD. This driver doesn't support regular SPI interface, it should
-> be used with spi-mem interface only.
-> Unfortunately SAMA5D2 hardware by default supports only NOR-flash
-> memory. It allows 24- and 32-bit addressing while NAND-flash requires
-> 16-bit long. To workaround hardware limitation driver is a bit more
-> complicated.
-> 
-> Request to spi-mem contains three fiels: opcode (command), address,
-> dummy bytes. SAMA5D2 QSPI hardware supports opcode, address, dummy and
-> option byte where address field can only be 24- or 32- bytes long.
-> Handling 8-bits long addresses is done using option field. For 16-bits
-> address behaviour depends of number of requested dummy bits. If there
-> are 8 or more dummy cycles, address is shifted and sent with first dummy
-> byte. Otherwise opcode is disabled and first byte of address contains
-> command opcode (works only if opcode and address use the same buswidth).
-> The limitation is when 16-bit address is used without enough dummy
-> cycles and opcode is using different buswidth than address. Other modes
-> are supported with described workaround.
-> 
-> It looks like hardware has some limitation in performance. The same issue
-> exists in current QSPI driver (MTD/nor-flash) and soft-pack (bare-metal
-> library from Atmel). Without using DMA read speed is much worse than
-> maximum bandwidth (efficiency 30-40%). Any help with performance
-> improvement is highly welcome, especially for NAND-flash memories which
-> offers higher capacity than NOR-flash used with previous driver.
-
-I think you can try to implement the dirmap interface proposed here [1]
-and use DMA+TRSFR_READ/WRITE_MEMORY for such direct mappings. This
-should optimize path where we really matter about perfs.
-
-> 
-> Best Regards,
-> Piotr
-> 
-> v3 changes:
->  - add get_name implementation
->  - email address fix
-> 
-> v2 changes:
->  - driver is now replacement of existing atmel-quadspi
->  - code was re-written to follow original code structure
->  - deinitialization order fixed
->  - empty atmel_qspi_adjust_op_size function removed
->  - code formatting fixes
->  - use spi_device->max_speed_hz to get spi speed
->  - spi freqency set in spi_controller->setup() hook
->  - address range checkng for 4-bytes addressing
->  - use timeout to avoid infinite waiting
-> 
-> Piotr Bugalski (6):
->   mtd: spi-nor: atmel-quaspi: Typo fix
->   mtd: spi-nor: atmel-quadspi: Add spi-mem support to atmel-quadspi
->   mtd: spi-nor: atmel-quadspi: Use spi-mem interface for atmel-quadspi
->     driver
->   mtd: spi-nor: atmel-quadspi: Remove unused code from atmel-quadspi
->     driver
->   spi: Add QuadSPI driver for Atmel SAMA5D2
->   dt-bindings: spi: QuadSPI driver for Atmel SAMA5D2
-
-The patch series is
-
-Acked-by: Boris Brezillon <boris.brezillon@bootlin.com>
-
-Mark, if you're okay with the new implementation, would you mind taking
-those patches in the spi tree?
-
-Thanks,
-
-Boris
-
-[1]http://patchwork.ozlabs.org/project/linux-mtd/list/?series=73235
+T24gMDUuMTEuMjAxOCAxMTozMywgRGFtaWFuIEtvcyB3cm90ZToKPiBIaSBMYXVyZW50LAo+Cj4g
+VW5kZXJzdG9vZC4gVGhhbmtzLgoKCkkgd2lsbCBsb29rIGF0IGl0IHRvZGF5IG9yIHRvbW9ycm93
+LgoKClJlZ2FyZHMKCkFuZHJ6ZWoKCgo+Cj4gRGFtaWFuCj4KPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
+Z2UtLS0tLQo+IEZyb206IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNv
+bmJvYXJkLmNvbT4gCj4gU2VudDogTW9uZGF5LCBOb3ZlbWJlciA1LCAyMDE4IDExOjMwCj4gVG86
+IERhbWlhbiBLb3MgPGRrb3NAY2FkZW5jZS5jb20+Cj4gQ2M6IERhdmlkIEFpcmxpZSA8YWlybGll
+ZEBsaW51eC5pZT47IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxh
+bmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgQXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVy
+b3JhLm9yZz47IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+OyBHdXN0YXZvIFBh
+ZG92YW4gPGd1c3Rhdm9AcGFkb3Zhbi5vcmc+OyBNYWFydGVuIExhbmtob3JzdCA8bWFhcnRlbi5s
+YW5raG9yc3RAbGludXguaW50ZWwuY29tPjsgU2VhbiBQYXVsIDxzZWFuQHBvb3JseS5ydW4+OyBT
+YW5keSBIdWFuZyA8aGpjQHJvY2stY2hpcHMuY29tPjsgSGVpa28gU3TDvGJuZXIgPGhlaWtvQHNu
+dGVjaC5kZT47IFF1ZW50aW4gU2NodWx6IDxxdWVudGluLnNjaHVsekBmcmVlLWVsZWN0cm9ucy5j
+b20+OyBQaW90ciBTcm9rYSA8cGlvdHJzQGNhZGVuY2UuY29tPjsgZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2
+Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGlu
+dXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZzsgUmFmYWwgQ2llcGllbGEgPHJhZmFsY0Bj
+YWRlbmNlLmNvbT47IHF1ZW50aW4uc2NodWx6QGJvb3RsaW4uY29tOyBqYmVyZ3NhZ2VsQHRpLmNv
+bQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjYgMC82XSBkcm06IGFkZCBzdXBwb3J0IGZvciBDYWRl
+bmNlIE1IRFAgRFBJL0RQIGJyaWRnZS4KPgo+IEVYVEVSTkFMIE1BSUwKPgo+Cj4gSGkgRGFtaWFu
+LAo+Cj4gT24gTW9uZGF5LCA1IE5vdmVtYmVyIDIwMTggMTE6NDQ6NTMgRUVUIERhbWlhbiBLb3Mg
+d3JvdGU6Cj4+IEhpIEd1eXMsCj4+Cj4+IEknbSB3b25kZXJpbmcgaWYgdGhpcyB0aW1lIHBhdGNo
+IGlzIHNvIGdvb2QgdGhhdCB0aGVyZSdyZSBubyBjaGFuZ2UgCj4+IHJlcXVlc3RzLCBvciBpcyBp
+dCBzbyBiYWQgdGhhdCBpdCB3YXMgcmVqZWN0ZWQgd2l0aG91dCBhIGNvbW1lbnQgOiApIAo+PiBQ
+bGVhc2UgbGV0IG1lIGtub3cgaWYgdGhpcyBwYXRjaCBpcyBiZWluZyBpbiByZXZpZXcgb3Igd2Fz
+IHJlamVjdGVkIAo+PiBhbmQsIGlmIHNvLCB3aGF0IG5lZWRzIHRvIGJlIGNoYW5nZWQuCj4gSSB1
+bmZvcnR1bmF0ZWx5IGRvbid0IGhhdmUgdGltZSB0byByZXZpZXcgeW91ciBzZXJpZXMgZm9yIHRo
+ZSB0aW1lIGJlaW5nLiAKPiBIb3BlZnVsbHkgc29tZW9uZSBlbHNlIHdpbGwgaGF2ZSBhIGJldHRl
+ciByZXZpZXcgYmFuZHdpZHRoIDotKSBTb3JyeSBhYm91dCB0aGF0Lgo+Cj4gLS0KPiBSZWdhcmRz
+LAo+Cj4gTGF1cmVudCBQaW5jaGFydAo+Cj4KPgo+Cj4KCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
