@@ -1,7 +1,7 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v2 08/17] arm64: dts: qcom: pms405: add spmi node
-Date: Mon,  5 Nov 2018 21:15:20 +0530
-Message-ID: <20181105154529.7614-9-vkoul@kernel.org>
+Subject: [PATCH v2 09/17] arm64: dts: qcom: qcs404: add spmi node
+Date: Mon,  5 Nov 2018 21:15:21 +0530
+Message-ID: <20181105154529.7614-10-vkoul@kernel.org>
 References: <20181105154529.7614-1-vkoul@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181105154529.7614-1-vkoul@kernel.org>
@@ -10,34 +10,54 @@ To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the pms405 DT file with spmi node.
+PMS405 is used in QCS405-EVB so include that with SPMI nodes
 
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/pms405.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/pms405.dtsi
+ arch/arm64/boot/dts/qcom/qcs404-evb.dts |  1 +
+ arch/arm64/boot/dts/qcom/qcs404.dtsi    | 18 ++++++++++++++++++
+ 2 files changed, 19 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/pms405.dtsi b/arch/arm64/boot/dts/qcom/pms405.dtsi
-new file mode 100644
-index 000000000000..8a585180f102
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/pms405.dtsi
-@@ -0,0 +1,15 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2018, Linaro Limited
+diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dts b/arch/arm64/boot/dts/qcom/qcs404-evb.dts
+index b79969153fba..10ad05ba5ca9 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404-evb.dts
++++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dts
+@@ -6,6 +6,7 @@
+ /dts-v1/;
+ 
+ #include "qcs404.dtsi"
++#include "pms405.dtsi"
+ 
+ / {
+ 	model = "Qualcomm Technologies, Inc. QCS404 EVB 1000";
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index 970ca9a62530..4d47d5e11a5a 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -242,6 +242,24 @@
+ 			};
+ 		};
+ 
++		spmi_bus: spmi@200f000 {
++			compatible = "qcom,spmi-pmic-arb";
++			reg = <0x200f000 0x001000>,
++			      <0x2400000 0x800000>,
++			      <0x2c00000 0x800000>,
++			      <0x3800000 0x200000>,
++			      <0x200a000 0x002100>;
++			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
++			interrupt-names = "periph_irq";
++			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
++			qcom,ee = <0>;
++			qcom,channel = <0>;
++			#address-cells = <2>;
++			#size-cells = <0>;
++			interrupt-controller;
++			#interrupt-cells = <4>;
++		};
 +
-+#include <dt-bindings/spmi/spmi.h>
-+
-+&spmi_bus {
-+
-+	pms405_0: pms405@0 {
-+		compatible = "qcom,spmi-pmic";
-+		reg = <0x0 SPMI_USID>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+	};
-+};
+ 		blsp1_uart2: serial@78b1000 {
+ 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+ 			reg = <0x78b1000 0x200>;
 -- 
 2.14.4
