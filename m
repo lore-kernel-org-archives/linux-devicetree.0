@@ -1,135 +1,66 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH v2 03/17] dt-bindings: cpufreq: Add binding for
- NVIDIA Tegra20/30
-Date: Mon, 5 Nov 2018 15:30:00 -0600
-Message-ID: <20181105213000.GA13425@bogus>
-References: <20181021205501.23943-1-digetx@gmail.com>
- <20181021205501.23943-4-digetx@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Al Cooper <alcooperx@gmail.com>
+Subject: [PATCH V3 0/6] Add XHCI, EHCI and OHCI support for Broadcom STB SoS's
+Date: Mon,  5 Nov 2018 16:31:27 -0500
+Message-ID: <1541453493-34981-1-git-send-email-alcooperx@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181021205501.23943-4-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Al Cooper <alcooperx@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>, linux-usb@
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 21, 2018 at 11:54:47PM +0300, Dmitry Osipenko wrote:
-> Add device-tree binding that describes CPU frequency-scaling hardware
-> found on NVIDIA Tegra20/30 SoC's.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  .../cpufreq/nvidia,tegra20-cpufreq.txt        | 96 +++++++++++++++++++
->  1 file changed, 96 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
-> new file mode 100644
-> index 000000000000..a8023ea7a99f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
-> @@ -0,0 +1,96 @@
-> +Binding for NVIDIA Tegra20 CPUFreq
-> +==================================
-> +
-> +Required properties:
-> +- clocks: Must contain an entry for each entry in clock-names.
-> +  See ../clocks/clock-bindings.txt for details.
-> +- clock-names: Must include the following entries:
-> +  - pll_x: main-parent for CPU clock, must be the first entry
-> +  - intermediate: intermediate-parent for CPU clock
-> +  - cclk: the CPU clock
-> +- operating-points-v2: See ../bindings/opp/opp.txt for details.
-> +- #cooling-cells: Should be 2. See ../thermal/thermal.txt for details.
-> +
-> +For each opp entry in 'operating-points-v2' table:
-> +- opp-supported-hw: Two bitfields indicating:
-> +	On Tegra20:
-> +	1. CPU process ID mask
-> +	2. SoC speedo ID mask
-> +
-> +	On Tegra30:
-> +	1. CPU process ID mask
-> +	2. CPU speedo ID mask
-> +
-> +	A bitwise AND is performed against these values and if any bit
-> +	matches, the OPP gets enabled.
-> +
-> +- opp-microvolt: CPU voltage triplet.
-> +
-> +Optional properties:
-> +- cpu-supply: Phandle to the CPU power supply.
-> +- core-supply: Phandle to the CORE power supply.
-> +- rtc-supply: Phandle to the RTC power supply, required only for Tegra20.
-> +
-> +Voltage supply requirements:
-> +- Tegra20:
-> +	CORE and RTC regulators must be coupled using the regulator-coupled-with
-> +	property and regulator-coupled-max-spread property must be set to no
-> +	more than 170mV.
-> +
-> +	See ../regulator/regulator.txt for more detail about the properties.
-> +
-> +- Tegra30:
-> +	CORE and CPU regulators must be coupled using the regulator-coupled-with
-> +	property and regulator-coupled-max-spread property must be set to no
-> +	more than 300mV. Each of CORE and CPU regulators must set
-> +	regulator-max-step-microvolt property to no more than 100mV.
-> +
-> +	See ../regulator/regulator.txt for more detail about the properties.
-> +
-> +
-> +Example:
-> +	regulators {
-> +		cpu_reg: regulator0 {
-> +			regulator-name = "vdd_cpu";
-> +		};
-> +
-> +		core_reg: regulator1 {
-> +			regulator-name = "vdd_core";
-> +			regulator-coupled-with = <&rtc_reg>;
-> +			regulator-coupled-max-spread = <170000>;
-> +		};
-> +
-> +		rtc_reg: regulator2 {
-> +			regulator-name = "vdd_rtc";
-> +			regulator-coupled-with = <&core_reg>;
-> +			regulator-coupled-max-spread = <170000>;
-> +		};
-> +	};
-> +
-> +	cpu0_opp_table: opp_table0 {
-> +		compatible = "operating-points-v2";
-> +
-> +		opp@456000000 {
-> +			clock-latency-ns = <125000>;
-> +			opp-microvolt = <825000 825000 1125000>;
-> +			opp-supported-hw = <0x03 0x0001>;
-> +			opp-hz = /bits/ 64 <456000000>;
-> +		};
-> +
-> +		...
-> +	};
-> +
-> +	cpus {
-> +		cpu@0 {
-> +			compatible = "arm,cortex-a9";
-> +			clocks = <&tegra_car TEGRA20_CLK_PLL_X>,
-> +				 <&tegra_car TEGRA20_CLK_PLL_P>,
-> +				 <&tegra_car TEGRA20_CLK_CCLK>;
-> +			clock-names = "pll_x", "intermediate", "cclk";
+V3 - Based on feedback
+   - Patch 3/6
+     In xhci-brcm.h, fixed incorrect function name when
+     CONFIG_USB_XHCI_BRCM is not defined. Found by kbuild test robot.
+   - Patch 4/6
+     In ohci-platform.c, use devm_kmemdup() instead of demv_kzalloc().
+   - Patch 5/6
+     In ehci-platform.c, use dma_coerce_mask_and_coherent()
+     instead of dma_coerce_mask_and_coherent(). Remove unneeded
+     #ifdef CONFIG_OF.
 
-I still object to having clocks (and supplies) which don't reflect the 
-h/w and are documented in the CA9 TRM.
+V2 - Based on feedback, the functionality for XHCI and OHCI was
+     moved from Broadcom platform drivers into the standard XHCI
+     and OHCI platform drivers. The EHCI functionality still uses
+     a Broadcom EHCI driver because of the workarounds needed for
+     bugs in the EHCI controller.
 
-> +			operating-points-v2 = <&cpu0_opp_table>;
-> +			cpu-supply = <&cpu_reg>;
-> +			core-supply = <&core_reg>;
-> +			rtc-supply = <&rtc_reg>;
+This adds support for the XHCI, EHCI and OHCI host controllers found
+in Broadcom STB SoC's. These drivers depend on getting access to the
+new Broadcom STB USB PHY driver through a device-tree phandle and
+will fail if the driver is not available.
 
-Supplies are suspect too, but perhaps supplies and power domains are 
-beyond the scope of the TRM and part of the physical design.
+Al Cooper (6):
+  dt-bindings: Add Broadcom STB OHCI, EHCI and XHCI binding document
+  usb: core: Add ability to skip phy exit on suspend and init on resume
+  usb: xhci: xhci-plat: Add support for Broadcom STB SoC's
+  usb: ohci-platform: Add support for Broadcom STB SoC's
+  usb: ehci: Add new EHCI driver for Broadcom STB SoC's
+  usb: host: Add ability to build new Broadcom STB USB drivers
 
-Rob
+ .../devicetree/bindings/usb/brcm,bcm7445-ehci.txt  |  22 ++
+ .../devicetree/bindings/usb/brcm,bcm7445-ohci.txt  |  22 ++
+ .../devicetree/bindings/usb/brcm,bcm7445-xhci.txt  |  23 ++
+ MAINTAINERS                                        |   9 +
+ drivers/usb/core/hcd.c                             |   8 +-
+ drivers/usb/core/phy.c                             |  18 +-
+ drivers/usb/core/phy.h                             |   9 +-
+ drivers/usb/host/Kconfig                           |  29 +++
+ drivers/usb/host/Makefile                          |  18 +-
+ drivers/usb/host/ehci-brcm.c                       | 287 +++++++++++++++++++++
+ drivers/usb/host/ohci-platform.c                   |  34 ++-
+ drivers/usb/host/xhci-brcm.c                       |  17 ++
+ drivers/usb/host/xhci-brcm.h                       |  16 ++
+ drivers/usb/host/xhci-plat.c                       |   8 +
+ include/linux/usb/hcd.h                            |   3 +
+ include/linux/usb/ohci_pdriver.h                   |   1 +
+ 16 files changed, 499 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ohci.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-xhci.txt
+ create mode 100644 drivers/usb/host/ehci-brcm.c
+ create mode 100644 drivers/usb/host/xhci-brcm.c
+ create mode 100644 drivers/usb/host/xhci-brcm.h
+
+-- 
+1.9.0.138.g2de3478
