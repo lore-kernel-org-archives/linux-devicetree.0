@@ -1,83 +1,41 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v10 5/6] arm64: zynqmp: Add DDRC node
-Date: Mon, 5 Nov 2018 14:06:11 +0100
-Message-ID: <41c5ca53-ed4b-38d0-c612-e1229004293e@xilinx.com>
-References: <1540447621-22870-1-git-send-email-manish.narani@xilinx.com>
- <1540447621-22870-6-git-send-email-manish.narani@xilinx.com>
- <20181105125644.GA7937@zn.tnic>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181105125644.GA7937@zn.tnic>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Manish Narani <manish.narani@xilinx.com>, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, mchehab@kernel.org, amit.kucheria@linaro.org, sudeep.holla@arm.com, leoyang.li@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+From: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v4 0/3] Enable ath10k wcn3990 wifi driver support on sdm845
+Date: Mon,  5 Nov 2018 18:38:35 +0530
+Message-ID: <1541423318-19312-1-git-send-email-govinds@codeaurora.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+This series enables ath10k wifi driver support for WCN3990 target
+on sdm845 SOC. This series also updates the missing dt binding documentation
+and adds optional iommu property.
 
-On 05. 11. 18 13:56, Borislav Petkov wrote:
-> On Thu, Oct 25, 2018 at 11:37:00AM +0530, Manish Narani wrote:
->> Add ddrc memory controller node in dts. The size mentioned in dts is
->> 0x30000, because we need to access DDR_QOS INTR registers located at
->> 0xFD090208 from this driver.
->>
->> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
->> ---
->>  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
->> index 29ce234..a81d3b16 100644
->> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
->> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
->> @@ -355,6 +355,13 @@
->>  			xlnx,bus-width = <64>;
->>  		};
->>  
->> +		mc: memory-controller@fd070000 {
->> +			compatible = "xlnx,zynqmp-ddrc-2.40a";
->> +			reg = <0x0 0xfd070000 0x0 0x30000>;
->> +			interrupt-parent = <&gic>;
->> +			interrupts = <0 112 4>;
->> +		};
->> +
->>  		gem0: ethernet@ff0b0000 {
->>  			compatible = "cdns,zynqmp-gem", "cdns,gem";
->>  			status = "disabled";
->> -- 
-> 
-> Ok, talking to Mark on IRC, he says those DT changes normally go through
-> the arm-soc tree.
-> 
-> And I'm fine with that except if we do that, then the EDAC changes
-> go through my tree and those drivers could end up temporarily broken
-> depending on the merge order and timing.
+Changes since v3:
+    Moved interrupt/reg/reg-name to required property.
+    Removed unused clocks.
+    Corrected interrupt no's.
 
-I don't think that driver will be broken. You can build them, use them
-on out of tree HW. And when this patch is merged to mainline it will be
-enabled for xilinx soc.
+Changes since v2:
+    dropped [v2,4/4] dts: arm64/sdm845: Enable iommu for WCN3990 wifi module
+    device node patch from the series as dependent patch is not yet merged.
+    Enabled status flag from sdm845-mtp.dts.
 
-> 
-> So should we perhaps make an arm-soc shared, immutable branch which you
-> guys export for me with those DT changes applied, which I can merge into
-> my tree and apply the EDAC changes ontop.
-> 
-> This is what we've been doing with the tip tree until now and it has
-> proven successful.
-> 
-> Thoughts?
+Changes since v1:
+    Listed no of interrupts/clocks for each set of compatible.
+    Added missing 'wifi' label to sdm845.dtsi.
 
-Normally driver is merged via appropriate subsystem with DT binding doc
-and enabled for the soc/platform later.
-Also in connection to process which you have described above.
-DT node should match binding which is in your tree and should go first
-and then enabling for certain SoC on the top.
+Govind Singh (3):
+  dt: bindings: add missing dt properties for WCN3990 wifi node
+  dts: arm64/sdm845: Add WCN3990 WLAN module device node
+  dt: bindings: add bindings for wifi iommu node
 
-TBH I can't see any reason to do merges but if you want to do that way
-we can also do it.
+ .../bindings/net/wireless/qcom,ath10k.txt          | 62 ++++++++++++++--------
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts            |  8 +++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               | 26 +++++++++
+ 3 files changed, 74 insertions(+), 22 deletions(-)
 
-Thanks,
-Michal
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
