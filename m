@@ -1,114 +1,79 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH v3 4/6] arm64: Utilize phys_initrd_start/phys_initrd_size
-Date: Mon, 5 Nov 2018 22:07:32 +0100
-Message-ID: <CAKv+Gu9YKmMCF5YnCRcsZMBjjAc1L+phtO2=y+5K7Ja385Mx1A@mail.gmail.com>
-References: <20181031192843.13230-1-f.fainelli@gmail.com> <20181031192843.13230-5-f.fainelli@gmail.com>
- <CAKv+Gu85kRVos-z+1WuV5J8bTHpLDDdUu0hVD2NmZ-w-ry5f4g@mail.gmail.com>
- <537b8384-629a-770b-e506-f4d49b92e758@gmail.com> <CAKv+Gu88HHe-ZpVS3w+0Eu+Q-zYaN3sKDK4uaG+eecVtr-C9PA@mail.gmail.com>
- <0257ee07-8b85-5295-1490-72c7aa14943d@gmail.com> <CAKv+Gu8-ZbNx+oQPfHRVbWrBi4K+sa7JA_5KKSMn2QbStc8kNQ@mail.gmail.com>
- <7de7d83b-fcd4-a11f-a10d-1e20a871caa4@gmail.com>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH 1/2] ARM: dts: qcom: Add SoC-specific string for sdhci-msm-v4 nodes
+Date: Mon,  5 Nov 2018 13:09:20 -0800
+Message-ID: <20181105210921.253707-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7de7d83b-fcd4-a11f-a10d-1e20a871caa4@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, moderated list:ARM
+To: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 5 November 2018 at 22:05, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> On 11/5/18 1:00 PM, Ard Biesheuvel wrote:
->> On 5 November 2018 at 21:51, Florian Fainelli <f.fainelli@gmail.com> wrote:
->>> On 11/5/18 12:44 PM, Ard Biesheuvel wrote:
->>>> On 5 November 2018 at 21:41, Florian Fainelli <f.fainelli@gmail.com> wrote:
->>>>> On 11/5/18 12:39 PM, Ard Biesheuvel wrote:
->>>>>> Hi Florian,
->>>>>>
->>>>>> On 31 October 2018 at 20:28, Florian Fainelli <f.fainelli@gmail.com> wrote:
->>>>>>> ARM64 is the only architecture that re-defines
->>>>>>> __early_init_dt_declare_initrd() in order for that function to populate
->>>>>>> initrd_start/initrd_end with physical addresses instead of virtual
->>>>>>> addresses. Instead of having an override we can leverage
->>>>>>> drivers/of/fdt.c populating phys_initrd_start/phys_initrd_size to
->>>>>>> populate those variables for us.
->>>>>>>
->>>>>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->>>>>>> ---
->>>>>>>  arch/arm64/mm/init.c | 19 +++++++++----------
->>>>>>>  1 file changed, 9 insertions(+), 10 deletions(-)
->>>>>>>
->>>>>>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->>>>>>> index 3cf87341859f..00ef2166bb73 100644
->>>>>>> --- a/arch/arm64/mm/init.c
->>>>>>> +++ b/arch/arm64/mm/init.c
->>>>>>> @@ -72,8 +72,8 @@ static int __init early_initrd(char *p)
->>>>>>>         if (*endp == ',') {
->>>>>>>                 size = memparse(endp + 1, NULL);
->>>>>>>
->>>>>>> -               initrd_start = start;
->>>>>>> -               initrd_end = start + size;
->>>>>>> +               phys_initrd_start = start;
->>>>>>> +               phys_initrd_size = size;
->>>>>>>         }
->>>>>>>         return 0;
->>>>>>>  }
->>>>>>> @@ -408,14 +408,14 @@ void __init arm64_memblock_init(void)
->>>>>>>                 memblock_add(__pa_symbol(_text), (u64)(_end - _text));
->>>>>>>         }
->>>>>>>
->>>>>>> -       if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && initrd_start) {
->>>>>>> +       if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {
->>>>>>>                 /*
->>>>>>>                  * Add back the memory we just removed if it results in the
->>>>>>>                  * initrd to become inaccessible via the linear mapping.
->>>>>>>                  * Otherwise, this is a no-op
->>>>>>>                  */
->>>>>>> -               u64 base = initrd_start & PAGE_MASK;
->>>>>>> -               u64 size = PAGE_ALIGN(initrd_end) - base;
->>>>>>> +               u64 base = phys_initrd_start & PAGE_MASK;
->>>>>>> +               u64 size = PAGE_ALIGN(phys_initrd_size);
->>>>>>>
->>>>>>>                 /*
->>>>>>>                  * We can only add back the initrd memory if we don't end up
->>>>>>> @@ -460,12 +460,11 @@ void __init arm64_memblock_init(void)
->>>>>>>          */
->>>>>>>         memblock_reserve(__pa_symbol(_text), _end - _text);
->>>>>>>  #ifdef CONFIG_BLK_DEV_INITRD
->>>>>>> -       if (initrd_start) {
->>>>>>> -               memblock_reserve(initrd_start, initrd_end - initrd_start);
->>>>>>> -
->>>>>>> +       if (phys_initrd_size) {
->>>>>>>                 /* the generic initrd code expects virtual addresses */
->>>>>>> -               initrd_start = __phys_to_virt(initrd_start);
->>>>>>> -               initrd_end = __phys_to_virt(initrd_end);
->>>>>>> +               initrd_start = __phys_to_virt(phys_initrd_start);
->>>>>>> +               initrd_end = initrd_start + phys_initrd_size;
->>>>>>> +               initrd_below_start_ok = 0;
->>>>>>
->>>>>> Where is this assignment coming from?
->>>>>
->>>>> __early_init_dt_declare_initrd() sets initrd_below_start_ok to 1 though
->>>>> after patch #5 this is not necessary any more.
->>>>
->>>> Yes, but why? The original arm64 version of
->>>> __early_init_dt_declare_initrd() does not set it but now you set to 1
->>>> in the IS_ENABLED(CONFIG_ARM64) section in the generic code and set it
->>>> back to 0 here.
->>>
->>> Humm, it is an if (!IS_ENABLED(CONFIG_ARM64)) condition, so we would not
->>> be taking that branch on an ARM64 kernel.
->>>
->>
->> Right. So now that we are not setting it to 1 on arm64, there is no
->> longer a reason to set it to 0 again, no?
->
-> Correct, and in fact, this is not a problem either at patch #4 (which
-> has the custom __early_init_dt_declare_initrd()) or #5 (which removes
-> it), any other feedback you would like me to address before addressing
-> Rob's suggestion?
->
+As per upstream discussion [1], we should have an SoC-specific
+compatible string for Qualcomm's SDHCI nodes.  Let's add it.
 
-No, I think this is ok. The conditional on arm64 in generic code is a
-bit nasty, and it would be nicer generally if we only have to record a
-single memory range, but if this fixes the issue you were addressing
-originally, I'm fine with it.
+[1] https://lkml.kernel.org/r/20181105203657.GA32282@bogus
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ arch/arm/boot/dts/qcom-apq8084.dtsi | 4 ++--
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 6 +++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
+index 0e1e98707e3f..899f28533ed7 100644
+--- a/arch/arm/boot/dts/qcom-apq8084.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
+@@ -412,7 +412,7 @@
+ 		};
+ 
+ 		sdhci@f9824900 {
+-			compatible = "qcom,sdhci-msm-v4";
++			compatible = "qcom,apq8084-sdhci", "qcom,sdhci-msm-v4";
+ 			reg = <0xf9824900 0x11c>, <0xf9824000 0x800>;
+ 			reg-names = "hc_mem", "core_mem";
+ 			interrupts = <0 123 0>, <0 138 0>;
+@@ -425,7 +425,7 @@
+ 		};
+ 
+ 		sdhci@f98a4900 {
+-			compatible = "qcom,sdhci-msm-v4";
++			compatible = "qcom,apq8084-sdhci", "qcom,sdhci-msm-v4";
+ 			reg = <0xf98a4900 0x11c>, <0xf98a4000 0x800>;
+ 			reg-names = "hc_mem", "core_mem";
+ 			interrupts = <0 125 0>, <0 221 0>;
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index aba159d5a95a..891990c0d0b4 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -602,7 +602,7 @@
+ 		};
+ 
+ 		sdhci@f9824900 {
+-			compatible = "qcom,sdhci-msm-v4";
++			compatible = "qcom,msm8974-sdhci", "qcom,sdhci-msm-v4";
+ 			reg = <0xf9824900 0x11c>, <0xf9824000 0x800>;
+ 			reg-names = "hc_mem", "core_mem";
+ 			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
+@@ -616,7 +616,7 @@
+ 		};
+ 
+ 		sdhci@f9864900 {
+-			compatible = "qcom,sdhci-msm-v4";
++			compatible = "qcom,msm8974-sdhci", "qcom,sdhci-msm-v4";
+ 			reg = <0xf9864900 0x11c>, <0xf9864000 0x800>;
+ 			reg-names = "hc_mem", "core_mem";
+ 			interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>,
+@@ -630,7 +630,7 @@
+ 		};
+ 
+ 		sdhci@f98a4900 {
+-			compatible = "qcom,sdhci-msm-v4";
++			compatible = "qcom,msm8974-sdhci", "qcom,sdhci-msm-v4";
+ 			reg = <0xf98a4900 0x11c>, <0xf98a4000 0x800>;
+ 			reg-names = "hc_mem", "core_mem";
+ 			interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
+-- 
+2.19.1.930.g4563a0d9d0-goog
