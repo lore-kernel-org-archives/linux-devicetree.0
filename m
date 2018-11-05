@@ -1,20 +1,20 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 12/25] drm/sun4i: sun6i_mipi_dsi: Add DSI
- hblk packet overhead
-Date: Mon, 5 Nov 2018 09:31:25 +0100
-Message-ID: <20181105083125.xyfwdrkrjzrltfzf@flea>
+Subject: Re: [PATCH v3 14/25] drm/sun4i: sun6i_mipi_dsi:
+ Increase hfp packet overhead
+Date: Mon, 5 Nov 2018 09:33:07 +0100
+Message-ID: <20181105083307.ambogsg4fopjfrda@flea>
 References: <20181026144344.27778-1-jagan@amarulasolutions.com>
- <20181026144344.27778-13-jagan@amarulasolutions.com>
- <20181029092227.mdxgvg5aqzh22j72@flea>
- <CAMty3ZBHU5eXRLLJmUroLgSKcF6O9gHOHRM1XBnt9_Lp7B8rEA@mail.gmail.com>
+ <20181026144344.27778-15-jagan@amarulasolutions.com>
+ <20181029092754.2tl7i5k5qpbn4557@flea>
+ <CAMty3ZC6B-o1Oij_FLpotjN_900kF6OikK323y=bQ9VPzSPDgg@mail.gmail.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ci7q6bhdxh7l4w2f"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2H777PAKGQE5TN4LZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="iazds3sud6k36fef"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBT4AQDPQKGQEVZZG4JA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <CAMty3ZBHU5eXRLLJmUroLgSKcF6O9gHOHRM1XBnt9_Lp7B8rEA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAMty3ZC6B-o1Oij_FLpotjN_900kF6OikK323y=bQ9VPzSPDgg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -26,22 +26,38 @@ Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G
 List-Id: devicetree@vger.kernel.org
 
 
---ci7q6bhdxh7l4w2f
+--iazds3sud6k36fef
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Mon, Oct 29, 2018 at 07:56:27PM +0530, Jagan Teki wrote:
-> On Mon, Oct 29, 2018 at 2:52 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+On Mon, Oct 29, 2018 at 07:57:56PM +0530, Jagan Teki wrote:
+> On Mon, Oct 29, 2018 at 2:58 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
 > >
-> > On Fri, Oct 26, 2018 at 08:13:31PM +0530, Jagan Teki wrote:
-> > > Add 10 bytes packet overhead for hblk where blank is set using
-> > > a blanking packet like (4 bytes + 4 bytes + payload + 2 bytes)
+> > On Fri, Oct 26, 2018 at 08:13:33PM +0530, Jagan Teki wrote:
+> > > Increase the hfp packet overhead with another 10 bytes, the extra
+> > > 10 bytes(which is hblk packet overhead) is adding for hfp packet
+> > > overhead since hfp depends on hblk.
 > > >
-> > > This is according to BSP code from BPI-M64-bsp
+> > > This is truely as per BSP code from BPI-M64-bsp.
+> > > The real computation from BSP is
 > > > (in drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
+> > > dsi_hbp = (hbp-hspw)*dsi_pixel_bits[format]/8 - (4+2);
+> > > dsi_hact = x * dsi_pixel_bits[format]/8;
 > > > dsi_hblk = (ht-hspw)*dsi_pixel_bits[format]/8-(4+4+2);
+> > > dsi_hfp = dsi_hblk - (4+dsi_hact+2) - (4+dsi_hbp+2);
 > > >
-> > > So, add 10 bytes packet overhead for DSI hblk.
+> > > Example,
+> > > u32 fmt = dsi_pixel_bits[format]/8;
+> > > => ((ht-hspw)*fmt - 10) - (6 + x * fmt) - (6 + (hbp-hspw)*fmt - 6)
+> > > => (ht - hspw - x - (hbp - hspw)) * fmt - 16
+> > > => (ht - x - hbp) * fmt - 16
+> > > => (ht - x - (timmings->hor_total_time - timmings->hor_front_porch - x)
+> > > * fmt - 16
+> > > => (timmings->hor_total_time - x - timmings->hor_total_time +
+> > > timmings->hor_front_porch + x) * fmt - 16
+> > > => timmings->hor_front_porch * fmt - 16
+> > >
+> > > So, increase the DSI hfp packet overhead by hblk packet overhead.
 > > >
 > > > Tested on 2-lane, 4-lane MIPI-DSI LCD panels.
 > > >
@@ -53,62 +69,64 @@ On Mon, Oct 29, 2018 at 07:56:27PM +0530, Jagan Teki wrote:
 > > > Changes for v2:
 > > > - none
 > > >
-> > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 9 +++++++--
-> > >  1 file changed, 7 insertions(+), 2 deletions(-)
+> > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 22 +++++++++++++---------
+> > >  1 file changed, 13 insertions(+), 9 deletions(-)
 > > >
 > > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > index 596e560263bf..cf42be1f1ba1 100644
+> > > index 6584b51736a9..20e330186b7f 100644
 > > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
 > > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
 > > > @@ -461,7 +461,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
 > > >  {
 > > >       struct mipi_dsi_device *device = dsi->device;
 > > >       unsigned int Bpp = mipi_dsi_pixel_format_to_bpp(device->format) / 8;
-> > > -     u16 hbp, hfp, hsa, hblk, vblk;
-> > > +     u16 hbp, hfp, hsa, hblk_max, hblk, vblk;
+> > > -     u16 hbp, hfp, hsa, hblk_max, hblk, vblk;
+> > > +     u16 hbp, hfp_pkt_overhead, hfp, hsa, hblk_max, hblk, vblk;
 > > >       size_t bytes;
 > > >       u8 *buffer;
 > > >
-> > > @@ -494,8 +494,13 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+> > > @@ -484,14 +484,6 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+> > >       hbp = max((unsigned int)HBP_PACKET_OVERHEAD,
+> > >                 (mode->htotal - mode->hsync_end) * Bpp - HBP_PACKET_OVERHEAD);
 > > >
+> > > -     /*
+> > > -      * The frontporch is set using a blanking packet (4 bytes +
+> > > -      * payload + 2 bytes). Its minimal size is therefore 6 bytes
+> > > -      */
+> > > -#define HFP_PACKET_OVERHEAD  6
+> > > -     hfp = max((unsigned int)HFP_PACKET_OVERHEAD,
+> > > -               (mode->hsync_start - mode->hdisplay) * Bpp - HFP_PACKET_OVERHEAD);
+> > > -
 > > >       /*
 > > >        * hblk seems to be the line + porches length.
-> > > +      * The blank is set using a blanking packet (4 bytes + 4 bytes +
-> > > +      * payload + 2 bytes). So minimal size is 10 bytes
-> > >        */
-> > > -     hblk = (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp;
-> > > +#define HBLK_PACKET_OVERHEAD 10
-> > > +     hblk_max = (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp;
-> > > +     hblk_max -= HBLK_PACKET_OVERHEAD;
-> > > +     hblk = max((unsigned int)HBLK_PACKET_OVERHEAD, hblk_max);
+> > >        * The blank is set using a blanking packet (4 bytes + 4 bytes +
+> > > @@ -502,6 +494,18 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+> > >       hblk_max -= HBLK_PACKET_OVERHEAD;
+> > >       hblk = max((unsigned int)HBLK_PACKET_OVERHEAD, hblk_max);
+> > >
+> > > +     /*
+> > > +      * The frontporch is set using a blanking packet (4 bytes +
+> > > +      * payload + 2 bytes). Its minimal size is therefore 6 bytes
+> > > +      *
+> > > +      * According to BSP code, extra 10 bytes(which is hblk packet overhead)
+> > > +      * is adding for hfp packet overhead since hfp depends on hblk.
 > >
-> > I'd rather use the same convention than the other assignments done
-> > before in that function.
+> > "According to the BSP code, another 10 bytes (the HBLK packet
+> > overhead) need to be added to the front porch overhead."
+> >
+> > How has this been verified? Since we have registers to set all the
+> > parameters, this seems kind of weird.
 > 
-> Yes, old code did use hsa. but it's added 10 bytes packet head instead
-> of subtracting it.
-> 
-> hblk = mode->htotal * Bpp - hsa;
-> => mode->htotal * Bpp - (mode->hsync_end - mode->hsync_start) * Bpp -
-> HSA_PACKET_OVERHEAD);
-> => (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp +
-> HSA_PACKET_OVERHEAD;
-> 
-> And it should be
-> (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp -
-> HSA_PACKET_OVERHEAD;
-> 
-> This patch is simply doing the same by explicitly adding packet over
-> ahead macro, which again used in hfp.
+> Verified based on the BSP calculation which I explained in commit
+> message and tested by validating these numbers with mainline vs bsp
+> code.
 
-That's not my point.
+So, not verified?
 
-The rest of the driver uses a construct that would be:
-
-hblk = max((unsigned int)HBLK_PACKET_OVERHEAD,
-           (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp - HBLK_PACKET_OVERHEAD);
-
-We want to remain consistent.
+Did you have a panel that was broken due to this? Have you found that
+the timings output on the DSI bus were wrong using an oscilloscope or
+an analyzer? What makes you say that the Allwinner code is more
+correct than we are?
 
 Maxime
 
@@ -116,4 +134,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---ci7q6bhdxh7l4w2f--
+--iazds3sud6k36fef--
