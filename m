@@ -1,69 +1,37 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 17/17] arm64: dts: qcom: pms405: Add pon and pwrkey
- nodes
-Date: Mon, 5 Nov 2018 11:13:40 -0800
-Message-ID: <20181105191340.GV2523@minitux>
-References: <20181105154529.7614-1-vkoul@kernel.org>
- <20181105154529.7614-18-vkoul@kernel.org>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [PATCH v3] arm64: dts: stratix10: fix multicast filtering
+Date: Mon, 5 Nov 2018 13:14:27 -0600
+Message-ID: <863ba5a2-0d4b-96a9-19c2-c4f08aa7d395@kernel.org>
+References: <20181102191048.22657-1-aaro.koskinen@iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181105154529.7614-18-vkoul@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20181102191048.22657-1-aaro.koskinen@iki.fi>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Aaro Koskinen <aaro.koskinen@iki.fi>, Thor Thayer <thor.thayer@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 05 Nov 07:45 PST 2018, Vinod Koul wrote:
 
-> PMS405 also features PON block, so add PON and PWRKEY nodes
+
+On 11/2/18 2:10 PM, Aaro Koskinen wrote:
+> From: Aaro Koskinen <aaro.koskinen@nokia.com>
 > 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
+> On Stratix 10, the EMAC has 256 hash buckets for multicast filtering. This
+> needs to be specified in DTS, otherwise the stmmac driver defaults to 64
+> buckets and initializes the filter incorrectly. As a result, e.g. valid
+> IPv6 multicast traffic ends up being dropped.
+> 
+> Fixes: 78cd6a9d8e15 ("arm64: dts: Add base stratix 10 dtsi")
+> Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
 > ---
->  arch/arm64/boot/dts/qcom/pms405.dtsi | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/pms405.dtsi b/arch/arm64/boot/dts/qcom/pms405.dtsi
-> index 18410d9f0f8f..2c7cc1e94ff4 100644
-> --- a/arch/arm64/boot/dts/qcom/pms405.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/pms405.dtsi
-> @@ -2,6 +2,7 @@
->  // Copyright (c) 2018, Linaro Limited
->  
->  #include <dt-bindings/spmi/spmi.h>
-> +#include <dt-bindings/input/linux-event-codes.h>
->  
->  &spmi_bus {
->  
-> @@ -18,6 +19,21 @@
->  			interrupts = <0x0 0x61 0x1 IRQ_TYPE_NONE>;
->  		};
->  
-> +		pon@800 {
-> +			compatible = "qcom,pms405-pon";
-> +			reg = <0x800>;
-> +			mode-bootloader = <0x2>;
-> +			mode-recovery = <0x1>;
-> +
-> +			pwrkey {
-> +				compatible = "qcom,pm8941-pwrkey";
-> +				interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
-> +				debounce = <15625>;
-> +				bias-pull-up;
-> +				linux,code = <KEY_POWER>;
-> +			};
-> +		};
-> +
->  		pms405_gpios: gpios@c000 {
->  			compatible = "qcom,pms405-gpio";
->  			reg = <0xc000>;
-> -- 
-> 2.14.4
-> 
+
+Applied!
+
+Thanks,
+Dinh
