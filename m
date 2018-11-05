@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v6 17/18] of: unittest: find overlays[] entry by name instead of index
-Date: Mon,  5 Nov 2018 07:25:14 -0800
-Message-ID: <1541431515-25197-18-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v6 14/18] of: unittest: remove unused of_unittest_apply_overlay() argument
+Date: Mon,  5 Nov 2018 07:25:11 -0800
+Message-ID: <1541431515-25197-15-git-send-email-frowand.list@gmail.com>
 References: <1541431515-25197-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1541431515-25197-1-git-send-email-frowand.list@gmail.com>
@@ -12,71 +12,46 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-One accessor of overlays[] was using a hard coded index value to
-find the correct array entry instead of searching for the entry
-containing the correct name.
+Argument unittest_nr is not used in of_unittest_apply_overlay(),
+remove it.
 
 Tested-by: Alan Tull <atull@kernel.org>
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/unittest.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ drivers/of/unittest.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index d625a91a7f60..fe01c5869b0f 100644
+index f0139d1e8b63..14838b21ec6a 100644
 --- a/drivers/of/unittest.c
 +++ b/drivers/of/unittest.c
-@@ -2192,7 +2192,7 @@ struct overlay_info {
- OVERLAY_INFO_EXTERN(overlay_bad_phandle);
- OVERLAY_INFO_EXTERN(overlay_bad_symbol);
+@@ -1433,8 +1433,7 @@ static void of_unittest_destroy_tracked_overlays(void)
+ 	} while (defers > 0);
+ }
  
--/* order of entries is hard-coded into users of overlays[] */
-+/* entries found by name */
- static struct overlay_info overlays[] = {
- 	OVERLAY_INFO(overlay_base, -9999),
- 	OVERLAY_INFO(overlay, 0),
-@@ -2215,7 +2215,8 @@ struct overlay_info {
- 	OVERLAY_INFO(overlay_bad_add_dup_prop, -EINVAL),
- 	OVERLAY_INFO(overlay_bad_phandle, -EINVAL),
- 	OVERLAY_INFO(overlay_bad_symbol, -EINVAL),
--	{}
-+	/* end marker */
-+	{.dtb_begin = NULL, .dtb_end = NULL, .expected_result = 0, .name = NULL}
- };
- 
- static struct device_node *overlay_base_root;
-@@ -2245,6 +2246,19 @@ void __init unittest_unflatten_overlay_base(void)
- 	u32 data_size;
- 	void *new_fdt;
- 	u32 size;
-+	int found = 0;
-+	const char *overlay_name = "overlay_base";
-+
-+	for (info = overlays; info && info->name; info++) {
-+		if (!strcmp(overlay_name, info->name)) {
-+			found = 1;
-+			break;
-+		}
-+	}
-+	if (!found) {
-+		pr_err("no overlay data for %s\n", overlay_name);
-+		return;
-+	}
- 
- 	info = &overlays[0];
- 
-@@ -2292,11 +2306,10 @@ static int __init overlay_data_apply(const char *overlay_name, int *overlay_id)
+-static int __init of_unittest_apply_overlay(int overlay_nr, int unittest_nr,
+-		int *overlay_id)
++static int __init of_unittest_apply_overlay(int overlay_nr, int *overlay_id)
  {
- 	struct overlay_info *info;
- 	int found = 0;
--	int k;
- 	int ret;
- 	u32 size;
+ 	const char *overlay_name;
  
--	for (k = 0, info = overlays; info && info->name; info++, k++) {
-+	for (info = overlays; info && info->name; info++) {
- 		if (!strcmp(overlay_name, info->name)) {
- 			found = 1;
- 			break;
+@@ -1467,7 +1466,7 @@ static int __init of_unittest_apply_overlay_check(int overlay_nr,
+ 	}
+ 
+ 	ovcs_id = 0;
+-	ret = of_unittest_apply_overlay(overlay_nr, unittest_nr, &ovcs_id);
++	ret = of_unittest_apply_overlay(overlay_nr, &ovcs_id);
+ 	if (ret != 0) {
+ 		/* of_unittest_apply_overlay already called unittest() */
+ 		return ret;
+@@ -1503,7 +1502,7 @@ static int __init of_unittest_apply_revert_overlay_check(int overlay_nr,
+ 
+ 	/* apply the overlay */
+ 	ovcs_id = 0;
+-	ret = of_unittest_apply_overlay(overlay_nr, unittest_nr, &ovcs_id);
++	ret = of_unittest_apply_overlay(overlay_nr, &ovcs_id);
+ 	if (ret != 0) {
+ 		/* of_unittest_apply_overlay already called unittest() */
+ 		return ret;
 -- 
 Frank Rowand <frank.rowand@sony.com>
