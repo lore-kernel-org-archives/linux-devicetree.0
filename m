@@ -1,69 +1,71 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH 2/2] clk: qcom: Support 'protected-clocks' property
-Date: Mon,  5 Nov 2018 11:40:11 -0800
-Message-ID: <20181105194011.43770-3-swboyd@chromium.org>
-References: <20181105194011.43770-1-swboyd@chromium.org>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v10 5/6] arm64: zynqmp: Add DDRC node
+Date: Mon, 5 Nov 2018 20:47:21 +0100
+Message-ID: <20181105194721.GB26868@zn.tnic>
+References: <1540447621-22870-1-git-send-email-manish.narani@xilinx.com>
+ <1540447621-22870-6-git-send-email-manish.narani@xilinx.com>
+ <20181105125644.GA7937@zn.tnic>
+ <41c5ca53-ed4b-38d0-c612-e1229004293e@xilinx.com>
+ <20181105132007.GB7937@zn.tnic>
+ <a81f47e0-1778-a6ac-4cd8-634502661d6f@xilinx.com>
+ <20181105134218.GD7937@zn.tnic>
+ <CAOesGMj=EbWgcYF2Mhh6TFMCdn1ub1Ze6fbXJnFFdsttWByXYg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181105194011.43770-1-swboyd@chromium.org>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMj=EbWgcYF2Mhh6TFMCdn1ub1Ze6fbXJnFFdsttWByXYg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Taniya Das <tdas@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+To: Olof Johansson <olof@lixom.net>
+Cc: Michal Simek <michal.simek@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, manish.narani@xilinx.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, Li Yang <leoyang.li@nxp.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Certain firmware configurations "protect" clks and cause the entire
-system to reboot when a non-secure OS such as Linux tries to read or
-write protected clk registers. But other firmware configurations allow
-reading or writing the same registers, and they may actually require
-that the OS use the otherwise locked down clks. Support the
-'protected-clocks' property by never registering these protected clks
-with the common clk framework. This way, when firmware is protecting
-these clks we won't have the chance to ever read or write these
-registers and take down the entire system.
+Hi Olof,
 
-Cc: Taniya Das <tdas@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/clk/qcom/common.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+On Mon, Nov 05, 2018 at 06:51:26AM -0800, Olof Johansson wrote:
+> In general, for new functionality where needing both the driver change
+> and a DT change to enable it (or a driver change and a config change
+> to enable it), we have been merging the changes separately between
+> driver trees and arm-soc. I.e. things will be in place, but not
+> enabled, until both sides land. Main reason for doing so is to cut
+> down on arbitrary dependencies between the trees, since there can
+> sometimes end up being a lot of them.
 
-diff --git a/drivers/clk/qcom/common.c b/drivers/clk/qcom/common.c
-index db9b2471ac40..0a48ed56833b 100644
---- a/drivers/clk/qcom/common.c
-+++ b/drivers/clk/qcom/common.c
-@@ -191,6 +191,22 @@ int qcom_cc_register_sleep_clk(struct device *dev)
- }
- EXPORT_SYMBOL_GPL(qcom_cc_register_sleep_clk);
- 
-+/* Drop 'protected-clocks' from the list of clocks to register */
-+static void qcom_cc_drop_protected(struct device *dev, struct qcom_cc *cc)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct property *prop;
-+	const __be32 *p;
-+	u32 i;
-+
-+	of_property_for_each_u32(np, "protected-clocks", prop, p, i) {
-+		if (i >= cc->num_rclks)
-+			continue;
-+
-+		cc->rclks[i] = NULL;
-+	}
-+}
-+
- static struct clk_hw *qcom_cc_clk_hw_get(struct of_phandle_args *clkspec,
- 					 void *data)
- {
-@@ -251,6 +267,8 @@ int qcom_cc_really_probe(struct platform_device *pdev,
- 	cc->rclks = rclks;
- 	cc->num_rclks = num_clks;
- 
-+	qcom_cc_drop_protected(dev, cc);
-+
- 	for (i = 0; i < num_clks; i++) {
- 		if (!rclks[i])
- 			continue;
+Well, makes sense too and it is the least problematic approach. :-)
+
+> Since DT should strive for being backwards compatible (i.e, a driver
+> change shouldn't require a DT change for the kernel to not regress
+> functionally), this has been working pretty well.
+
+Ok.
+
+> However, if there's some other reason to share a base between the two
+> trees, we can do that. For most cases we've found that it's not needed
+> though. So let us know what you prefer here.
+
+No, I just wanted to make sure drivers can still function when they go
+to linux-next. But I certainly can get on board with keeping drivers and
+DT changes separate as it requires no sync and the short period of time
+when they don't load in linux-next, is perfectly ok.
+
+So can I assume you guys are going to pick up:
+
+https://lkml.kernel.org/r/1538667328-9465-7-git-send-email-manish.narani@xilinx.com
+https://lkml.kernel.org/r/1540447621-22870-6-git-send-email-manish.narani@xilinx.com
+
+?
+
+I can then pick up the rest.
+
+And I'll be ignoring DT stuff sent to me from now on and concentrate on
+the EDAC drivers, assuming former will go through your tree.
+
+Sounds good?
+
+Thx.
+
 -- 
-Sent by a computer through tubes
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
