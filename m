@@ -1,32 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] of: Documentation: remove unmaintained todo file
-Date: Mon, 5 Nov 2018 13:17:51 -0600
-Message-ID: <20181105191751.GA18970@bogus>
-References: <1539573739-2108-1-git-send-email-frowand.list@gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v6 00/18] of: overlay: validation checks, subsequent fixes
+Date: Mon, 5 Nov 2018 13:24:31 -0600
+Message-ID: <CAL_JsqJ6fJcqH4+YHrEZRb+8-KFEmL8WSTSE_XSyrtO=2+JQBA@mail.gmail.com>
+References: <1541431515-25197-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1539573739-2108-1-git-send-email-frowand.list@gmail.com>
+In-Reply-To: <1541431515-25197-1-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com
-Cc: pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 14, 2018 at 08:22:19PM -0700, frowand.list@gmail.com wrote:
+On Mon, Nov 5, 2018 at 9:26 AM <frowand.list@gmail.com> wrote:
+>
 > From: Frank Rowand <frank.rowand@sony.com>
-> 
-> The todo.txt file was created by a previous maintainer and has
-> never been updated by the current OPEN FIRMWARE AND FLATTENED
-> DEVICE TREE maintainers.  Remove the out of date file.
-> 
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
->  Documentation/devicetree/todo.txt | 10 ----------
->  1 file changed, 10 deletions(-)
->  delete mode 100644 Documentation/devicetree/todo.txt
+>
+> Add checks to (1) overlay apply process and (2) memory freeing
+> triggered by overlay release.  The checks are intended to detect
+> possible memory leaks and invalid overlays.
+>
+> The checks revealed bugs in existing code.  Fixed the bugs.
+>
+> While fixing bugs, noted other issues, which are fixed in
+> separate patches.
+>
+> *****  Powerpc folks: I was not able to test the patches that
+> *****  directly impact Powerpc systems that use dynamic
+> *****  devicetree.  Please review that code carefully and
+> *****  test.  The specific patches are: 03/16, 04/16, 07/16
 
-Some of this stuff I'd say is still todo, but having this file present 
-isn't serving any purpose towards getting them done. So I've applied.
+I'm waiting for this to happen. Send me a pull req when it does or
+when you give up waiting for a response.
 
 Rob
