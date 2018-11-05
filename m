@@ -1,181 +1,110 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 03/10] drm/sun4i: sun6i_mipi_dsi: Setup
- burst mode timings
-Date: Mon, 5 Nov 2018 11:40:13 +0100
-Message-ID: <20181105104013.lvijeim57vojjfip@flea>
-References: <20181103100900.30313-1-jagan@amarulasolutions.com>
- <20181103100900.30313-4-jagan@amarulasolutions.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Alex Gonzalez <alex.gonzalez@digi.com>
+Subject: [PATCH v2] ARM: dts: imx6ul: ccimx6ulsom: Add support for wireless SOM variant
+Date: Mon, 5 Nov 2018 11:43:42 +0100
+Message-ID: <1541414622-18795-2-git-send-email-alex.gonzalez@digi.com>
+References: <1541414622-18795-1-git-send-email-alex.gonzalez@digi.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="oxno3av5f5bcb3xw"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBJF4QDPQKGQE6HZMQLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20181103100900.30313-4-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, TL Lim <tllim-F7SikzrIcFYdnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1541414622-18795-1-git-send-email-alex.gonzalez@digi.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alex.gonzalez@digi.com
 List-Id: devicetree@vger.kernel.org
 
+The wireless variants of the ConnecCore 6UL SOM include a Qualcomm
+QCA6564 wireless chip with dual WiFi and Bluetooth.
 
---oxno3av5f5bcb3xw
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Both the ConnectCore 6UL SBC Express and Pro boards fit a wireless SOM.
 
-On Sat, Nov 03, 2018 at 03:38:53PM +0530, Jagan Teki wrote:
-> Burst mode display timings are different from convectional
-> video mode so update the horizontal and vertical timings.
-> 
-> Reference code taken from BSP
-> (in drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
-> dsi_hsa  = 0;
-> dsi_hbp  = 0;
-> dsi_hact = x*dsi_pixel_bits[format]/8;
-> dsi_hblk = dsi_hact;
-> dsi_hfp  = 0;
-> dsi_vblk = 0;
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> ---
->  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 108 ++++++++++++++-----------
->  1 file changed, 60 insertions(+), 48 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> index 077b57ec964c..4965b2c71e4c 100644
-> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> @@ -479,59 +479,71 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
->  
->  	/* Do all timing calculations up front to allocate buffer space */
->  
-> -	/*
-> -	 * A sync period is composed of a blanking packet (4 bytes +
-> -	 * payload + 2 bytes) and a sync event packet (4 bytes). Its
-> -	 * minimal size is therefore 10 bytes
-> -	 */
-> +	if (device->mode_flags == MIPI_DSI_MODE_VIDEO_BURST) {
-> +		hsa = 0;
-> +		hbp = 0;
-> +		hblk = mode->hdisplay * Bpp;
-> +		hfp = 0;
-> +		vblk = 0;
-> +	} else {
-> +		/*
-> +		 * A sync period is composed of a blanking packet (4 bytes +
-> +		 * payload + 2 bytes) and a sync event packet (4 bytes). Its
-> +		 * minimal size is therefore 10 bytes
-> +		 */
->  #define HSA_PACKET_OVERHEAD	10
-> -	hsa = max((unsigned int)HSA_PACKET_OVERHEAD,
-> -		  (mode->hsync_end - mode->hsync_start) * Bpp - HSA_PACKET_OVERHEAD);
-> -
-> -	/*
-> -	 * The backporch is set using a blanking packet (4 bytes +
-> -	 * payload + 2 bytes). Its minimal size is therefore 6 bytes
-> -	 */
-> +		hsa = max((unsigned int)HSA_PACKET_OVERHEAD,
-> +			  (mode->hsync_end - mode->hsync_start) * Bpp -
-> +			  HSA_PACKET_OVERHEAD);
-> +
-> +		/*
-> +		 * The backporch is set using a blanking packet (4 bytes +
-> +		 * payload + 2 bytes). Its minimal size is therefore 6 bytes
-> +		 */
->  #define HBP_PACKET_OVERHEAD	6
-> -	hbp = max((unsigned int)HBP_PACKET_OVERHEAD,
-> -		  (mode->htotal - mode->hsync_end) * Bpp - HBP_PACKET_OVERHEAD);
-> -
-> -	/*
-> -	 * hblk seems to be the line + porches length.
-> -	 * The blank is set using a blanking packet (4 bytes + 4 bytes +
-> -	 * payload + 2 bytes). So minimal size is 10 bytes
-> -	 */
-> +		hbp = max((unsigned int)HBP_PACKET_OVERHEAD,
-> +			  (mode->htotal - mode->hsync_end) * Bpp -
-> +			  HBP_PACKET_OVERHEAD);
-> +
-> +		/*
-> +		 * hblk seems to be the line + porches length.
-> +		 * The blank is set using a blanking packet (4 bytes + 4 bytes
-> +		 * + payload + 2 bytes). So minimal size is 10 bytes
-> +		 */
->  #define HBLK_PACKET_OVERHEAD	10
-> -	hblk_max = (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp;
-> -	hblk_max -= HBLK_PACKET_OVERHEAD;
-> -	hblk = max_t(unsigned int, HBLK_PACKET_OVERHEAD, hblk_max);
-> -
-> -	/*
-> -	 * The frontporch is set using a blanking packet (4 bytes +
-> -	 * payload + 2 bytes). Its minimal size is therefore 6 bytes
-> -	 *
-> -	 * According to BSP code, extra 10 bytes(which is hblk packet overhead)
-> -	 * is adding for hfp packet overhead since hfp depends on hblk.
-> -	 */
-> +		hblk_max = (mode->htotal -
-> +			   (mode->hsync_end - mode->hsync_start)) * Bpp;
-> +		hblk_max -= HBLK_PACKET_OVERHEAD;
-> +		hblk = max_t(unsigned int, HBLK_PACKET_OVERHEAD, hblk_max);
-> +
-> +		/*
-> +		 * The frontporch is set using a blanking packet (4 bytes +
-> +		 * payload + 2 bytes). Its minimal size is therefore 6 bytes
-> +		 *
-> +		 * According to BSP code, extra 10 bytes(which is hblk packet
-> +		 * overhead) is adding for hfp packet overhead since hfp
-> +		 * depends on hblk.
-> +		 */
->  #define HFP_PACKET_OVERHEAD	6
-> -	hfp_pkt_overhead = (HFP_PACKET_OVERHEAD + HBLK_PACKET_OVERHEAD);
-> -	hfp = max((unsigned int)hfp_pkt_overhead,
-> -		  (mode->hsync_start - mode->hdisplay) * Bpp -
-> -		  hfp_pkt_overhead);
-> -
-> -	/*
-> -	 * The vertical blank is set using a blanking packet (4 bytes +
-> -	 * payload + 2 bytes). Its minimal size is therefore 6 bytes
-> -	 */
-> +		hfp_pkt_overhead = (HFP_PACKET_OVERHEAD + HBLK_PACKET_OVERHEAD);
-> +		hfp = max((unsigned int)hfp_pkt_overhead,
-> +			  (mode->hsync_start - mode->hdisplay) * Bpp -
-> +			  hfp_pkt_overhead);
-> +
-> +		/*
-> +		 * The vertical blank is set using a blanking packet (4 bytes +
-> +		 * payload + 2 bytes). Its minimal size is therefore 6 bytes
-> +		 */
->  #define VBLK_PACKET_OVERHEAD	6
-> -	if (device->lanes == 4) {
-> -		int tmp;
-> -
-> -		tmp = (mode->htotal * Bpp) * mode->vtotal -
-> -		      (hblk + VBLK_PACKET_OVERHEAD);
-> -		vblk = (device->lanes - tmp % device->lanes);
-> -	} else {
-> -		vblk = 0;
-> +		if (device->lanes == 4) {
-> +			int tmp;
-> +
-> +			tmp = (mode->htotal * Bpp) * mode->vtotal -
-> +			      (hblk + VBLK_PACKET_OVERHEAD);
-> +			vblk = (device->lanes - tmp % device->lanes);
-> +		} else {
-> +			vblk = 0;
-> +		}
->  	}
+The Wifi is connected through the SDIO interface on usdhc1 and the
+Bluetooth is connected via uart1.
 
-We should make this a couple of functions to make things more
-readable.
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Alex Gonzalez <alex.gonzalez@digi.com>
+---
+ arch/arm/boot/dts/imx6ul-ccimx6ulsom.dtsi | 64 +++++++++++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
 
-Maxime
-
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---oxno3av5f5bcb3xw--
+diff --git a/arch/arm/boot/dts/imx6ul-ccimx6ulsom.dtsi b/arch/arm/boot/dts/imx6ul-ccimx6ulsom.dtsi
+index c71a84da1af0..ef26b2389c8f 100644
+--- a/arch/arm/boot/dts/imx6ul-ccimx6ulsom.dtsi
++++ b/arch/arm/boot/dts/imx6ul-ccimx6ulsom.dtsi
+@@ -161,6 +161,25 @@
+ 	};
+ };
+ 
++/* UART1 (Bluetooth) */
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	uart-has-rtscts;
++	status = "okay";
++};
++
++/* USDHC1 (Wireless) */
++&usdhc1 {
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_wifibt_ctrl>;
++	pinctrl-1 = <&pinctrl_usdhc1_sleep &pinctrl_wifibt_ctrl_sleep>;
++	non-removable;
++	no-1-8-v;
++	bus-width = <4>;
++	status = "okay";
++};
++
+ &iomuxc {
+ 	pinctrl_gpmi_nand: gpmigrp {
+ 		fsl,pins = <
+@@ -188,6 +207,51 @@
+ 			MX6UL_PAD_UART4_RX_DATA__I2C1_SDA 0x4001b8b0
+ 			>;
+ 		};
++
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX   0x1b0b1
++			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX   0x1b0b1
++			MX6UL_PAD_UART1_RTS_B__UART1_DCE_RTS    0x1b0b1
++			MX6UL_PAD_UART1_CTS_B__UART1_DCE_CTS    0x1b0b1
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX6UL_PAD_SD1_CMD__USDHC1_CMD           0x17059
++			MX6UL_PAD_SD1_CLK__USDHC1_CLK           0x17051
++			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0       0x17059
++			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1       0x17059
++			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2       0x17059
++			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3       0x17059
++		>;
++	};
++
++	pinctrl_usdhc1_sleep: usdhc1grp-sleep {
++		fsl,pins = <
++			MX6UL_PAD_SD1_CMD__GPIO2_IO16           0x3000
++			MX6UL_PAD_SD1_CLK__GPIO2_IO17           0x3000
++			MX6UL_PAD_SD1_DATA0__GPIO2_IO18         0x3000
++			MX6UL_PAD_SD1_DATA1__GPIO2_IO19         0x3000
++			MX6UL_PAD_SD1_DATA2__GPIO2_IO20         0x3000
++			MX6UL_PAD_SD1_DATA3__GPIO2_IO21         0x3000
++		>;
++	};
++
++	pinctrl_wifibt_ctrl: wifibt-ctrl-grp {
++		fsl,pins = <
++			MX6UL_PAD_SNVS_TAMPER0__GPIO5_IO00      0x08a0
++			MX6UL_PAD_SNVS_TAMPER9__GPIO5_IO09      0x08a0
++		>;
++	};
++
++	pinctrl_wifibt_ctrl_sleep: wifibt-ctrl-grp-sleep {
++		fsl,pins = <
++			MX6UL_PAD_SNVS_TAMPER0__GPIO5_IO00      0x3000
++			MX6UL_PAD_SNVS_TAMPER9__GPIO5_IO09      0x3000
++		>;
++	};
+ };
+ 
+ &reg_arm {
