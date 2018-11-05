@@ -1,73 +1,49 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH] ARM: dts: imx6: add thermal sensor and cooling cells
-Date: Mon,  5 Nov 2018 18:34:02 +0100
-Message-ID: <20181105173402.30431-1-l.stach@pengutronix.de>
+From: Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: msm/dsi: Add ref clock for
+ 10nm PHY
+Date: Mon, 5 Nov 2018 12:34:56 -0500
+Message-ID: <20181105173456.GK154160@art_vandelay>
+References: <20181102214534.184593-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20181102214534.184593-1-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This allows a board to specify a custom thermal zone configuration
-involving the SoC internal sensor, CPU and GPU nodes without having
-to change those nodes.
-
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
----
- arch/arm/boot/dts/imx6q.dtsi   | 1 +
- arch/arm/boot/dts/imx6qdl.dtsi | 3 +++
- 2 files changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-index 0193ee6fe964..01afef23efd9 100644
---- a/arch/arm/boot/dts/imx6q.dtsi
-+++ b/arch/arm/boot/dts/imx6q.dtsi
-@@ -202,6 +202,7 @@
- 				 <&clks IMX6QDL_CLK_GPU2D_CORE>;
- 			clock-names = "bus", "core";
- 			power-domains = <&pd_pu>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		ipu2: ipu@2800000 {
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 61d2d26afbf4..81e9147e877c 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -77,6 +77,7 @@
- 		fsl,tempmon = <&anatop>;
- 		fsl,tempmon-data = <&ocotp>;
- 		clocks = <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
-+		#thermal-sensor-cells = <0>;
- 	};
- 
- 	ldb: ldb {
-@@ -216,6 +217,7 @@
- 				 <&clks IMX6QDL_CLK_GPU3D_SHADER>;
- 			clock-names = "bus", "core", "shader";
- 			power-domains = <&pd_pu>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		gpu_2d: gpu@134000 {
-@@ -226,6 +228,7 @@
- 				 <&clks IMX6QDL_CLK_GPU2D_CORE>;
- 			clock-names = "bus", "core";
- 			power-domains = <&pd_pu>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		timer@a00600 {
--- 
-2.19.1
+T24gRnJpLCBOb3YgMDIsIDIwMTggYXQgMDI6NDU6MzNQTSAtMDcwMCwgTWF0dGhpYXMgS2FlaGxj
+a2Ugd3JvdGU6Cj4gQWxsb3cgdGhlIDEwbm0gUEhZIGRyaXZlciB0byBnZXQgdGhlIHJlZiBjbG9j
+ayBmcm9tIHRoZSBEVC4KPiAKCk1pZ2h0IGJlIG5pY2UgdG8gc3RhdGUgdGhhdCB0aGVyZSBhcmUg
+bm8gY3VycmVudCB1c2VycyBvZiB0aGUgMTBubSBwaHkgaW4geW91cgpjb21taXQgbWVzc2FnZS4K
+ClNlYW4KCj4gU2lnbmVkLW9mZi1ieTogTWF0dGhpYXMgS2FlaGxja2UgPG1rYUBjaHJvbWl1bS5v
+cmc+Cj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21z
+bS9kc2kudHh0IHwgNCArKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykKPiAK
+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+bXNtL2RzaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9t
+c20vZHNpLnR4dAo+IGluZGV4IGRmYzc0MzIxOWJkODguLmQwZDIwNDZjZWZmNjkgMTAwNjQ0Cj4g
+LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50
+eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20v
+ZHNpLnR4dAo+IEBAIC0xMDUsNiArMTA1LDEwIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gIC0g
+cG93ZXItZG9tYWluczogU2hvdWxkIGJlIDwmbW1jYyBNRFNTX0dEU0M+Lgo+ICAtIGNsb2Nrczog
+UGhhbmRsZXMgdG8gZGV2aWNlIGNsb2Nrcy4gU2VlIFsxXSBmb3IgZGV0YWlscyBvbiBjbG9jayBi
+aW5kaW5ncy4KPiAgLSBjbG9jay1uYW1lczogdGhlIGZvbGxvd2luZyBjbG9ja3MgYXJlIHJlcXVp
+cmVkOgo+ICsgIEZvciAxMG5tIFBIWToKPiArICAqICJpZmFjZSIKPiArICAqICJyZWYiCj4gKyAg
+Rm9yIG90aGVyIFBIWXM6Cj4gICAgKiAiaWZhY2UiCj4gICAgRm9yIDI4bm0gSFBNL0xQLCAyOG5t
+IDg5NjAgUEhZczoKPiAgLSB2ZGRpby1zdXBwbHk6IHBoYW5kbGUgdG8gdmRkLWlvIHJlZ3VsYXRv
+ciBkZXZpY2Ugbm9kZQo+IC0tIAo+IDIuMTkuMS45MzAuZzQ1NjNhMGQ5ZDAtZ29vZwo+IAoKLS0g
+ClNlYW4gUGF1bCwgU29mdHdhcmUgRW5naW5lZXIsIEdvb2dsZSAvIENocm9taXVtIE9TCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWls
+aW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
