@@ -1,96 +1,71 @@
-From: Badhri Jagan Sridharan <badhri@google.com>
-Subject: Re: [PATCH v3 3/3] usb: typec: tcpm: charge current handling for sink
- during hard reset
-Date: Mon, 5 Nov 2018 16:15:24 -0800
-Message-ID: <CAPTae5K7o31eFJxaW=_6UCyLgiagSz45O6iDhgfqh2vu3QMQsg@mail.gmail.com>
-References: <20181001194501.58338-1-badhri@google.com> <20181001194501.58338-3-badhri@google.com>
- <20181102132847.GC6543@kuha.fi.intel.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: clk: Introduce 'protected-clocks'
+ property
+Date: Mon, 5 Nov 2018 17:04:26 -0800
+Message-ID: <20181106010426.GX2523@minitux>
+References: <20181105194011.43770-1-swboyd@chromium.org>
+ <20181105194011.43770-2-swboyd@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181102132847.GC6543@kuha.fi.intel.com>
+Content-Disposition: inline
+In-Reply-To: <20181105194011.43770-2-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, cw00.choi@samsung.com, a.hajda@samsung.com, jun.li@nxp.com, Guenter Roeck <linux@roeck-us.net>, jackp@codeaurora.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, USB <linux-usb@vger.kernel.org>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heikki, Rob,
+On Mon 05 Nov 11:40 PST 2018, Stephen Boyd wrote:
 
-Thanks for reviewing !
-Should I update the patchset with the Reviewed-by tag and bumpup the
-patchset version ?
-Or is that not necessary?
+> Add a generic clk property for clks which are not intended to be used by
+> the OS due to security restrictions put in place by firmware. For
+> example, on some Qualcomm firmwares reading or writing certain clk
+> registers causes the entire system to reboot, but on other firmwares
+> reading and writing those same registers is required to make devices
+> like QSPI work. Rather than adding one-off properties each time a new
+> set of clks appears to be protected, let's add a generic clk property to
+> describe any set of clks that shouldn't be touched by the OS. This way
+> we never need to register the clks or use them in certain firmware
+> configurations.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Thanks,
-Badhri.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-On Fri, Nov 2, 2018 at 6:28 AM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> On Mon, Oct 01, 2018 at 12:45:01PM -0700, Badhri Jagan Sridharan wrote:
-> > During the initial connect to a non-pd port, sink would hard reset
-> > twice before deeming that the port partner is non-pd. TCPM sets the
-> > the charge path to false during the hard reset. This causes unnecessary
-> > connects/disconnects of charge path and makes port take longer to
-> > charge from the non-pd ports. Avoid this by not setting the charge path
-> > to false unless the partner has already identified to be pd capable.
-> >
-> > When partner is a pd port, set the charge path to false in
-> > SNK_HARD_RESET_SINK_OFF. Set the current limits to default value based
-> > of CC pull up and resume the charge path when port enters
-> > SNK_HARD_RESET_SINK_ON.
-> >
-> > Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
->
-> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->
-> > --------
-> > Changes in V3:
-> > Rebase on top of usb-next
-> >
-> > Changes in V2:
-> > Based on feedback of jackp@codeaurora.org
-> > - vsafe_5v_hard_reset flag from tcpc_config is removed
-> > - Patch only differentiates between pd port partner and non-pd port
-> > partner
-> >
-> > V1 version of the patch is here:
-> > https://lkml.org/lkml/2018/9/14/11
-> > ---
-> >  drivers/usb/typec/tcpm/tcpm.c | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-> > index c3ac0e46106b..c25a69922ee6 100644
-> > --- a/drivers/usb/typec/tcpm/tcpm.c
-> > +++ b/drivers/usb/typec/tcpm/tcpm.c
-> > @@ -3273,7 +3273,8 @@ static void run_state_machine(struct tcpm_port *port)
-> >       case SNK_HARD_RESET_SINK_OFF:
-> >               memset(&port->pps_data, 0, sizeof(port->pps_data));
-> >               tcpm_set_vconn(port, false);
-> > -             tcpm_set_charge(port, false);
-> > +             if (port->pd_capable)
-> > +                     tcpm_set_charge(port, false);
-> >               tcpm_set_roles(port, port->self_powered, TYPEC_SINK,
-> >                              TYPEC_DEVICE);
-> >               /*
-> > @@ -3305,6 +3306,12 @@ static void run_state_machine(struct tcpm_port *port)
-> >                * Similar, dual-mode ports in source mode should transition
-> >                * to PE_SNK_Transition_to_default.
-> >                */
-> > +             if (port->pd_capable) {
-> > +                     tcpm_set_current_limit(port,
-> > +                                            tcpm_get_current_limit(port),
-> > +                                            5000);
-> > +                     tcpm_set_charge(port, true);
-> > +             }
-> >               tcpm_set_attached_state(port, true);
-> >               tcpm_set_state(port, SNK_STARTUP, 0);
-> >               break;
-> > --
-> > 2.19.0.605.g01d371f741-goog
->
-> thanks,
->
-> --
-> heikki
+Regards,
+Bjorn
+
+> Cc: Taniya Das <tdas@codeaurora.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  .../devicetree/bindings/clock/clock-bindings.txt | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> index 2ec489eebe72..b646bbcf7f92 100644
+> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> @@ -168,3 +168,19 @@ a shared clock is forbidden.
+>  
+>  Configuration of common clocks, which affect multiple consumer devices can
+>  be similarly specified in the clock provider node.
+> +
+> +==Protected clocks==
+> +
+> +Some platforms or firmwares may not fully expose all the clocks to the OS, such
+> +as in situations where those clks are used by drivers running in ARM secure
+> +execution levels. Such a configuration can be specified in device tree with the
+> +protected-clocks property in the form of a clock specifier list. This property should
+> +only be specified in the node that is providing the clocks being protected:
+> +
+> +   clock-controller@a000f000 {
+> +        compatible = "vendor,clk95;
+> +        reg = <0xa000f000 0x1000>
+> +        #clocks-cells = <1>;
+> +        ...
+> +        protected-clocks = <UART3_CLK>, <SPI5_CLK>;
+> +   };
+> -- 
+> Sent by a computer through tubes
+> 
