@@ -1,189 +1,231 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCH 5/6] pci: layerscape: Add the EP mode support.
-Date: Tue, 6 Nov 2018 06:48:26 +0000
-Message-ID: <HE1PR04MB14972FA5A46885370788B9B7F5CB0@HE1PR04MB1497.eurprd04.prod.outlook.com>
-References: <20181025110901.5680-1-xiaowei.bao@nxp.com>
- <20181025110901.5680-5-xiaowei.bao@nxp.com>
- <d9d07e05-556b-a56d-bb7f-eaec9fb739b8@ti.com>
- <HE1PR04MB1497DF7D9428A5C791CB6A03F5F00@HE1PR04MB1497.eurprd04.prod.outlook.com>
- <HE1PR04MB14979058170FA16A7465FF9EF5CD0@HE1PR04MB1497.eurprd04.prod.outlook.com>
- <a85a6900-2478-0750-6f33-2e787cf80d1d@ti.com>
- <HE1PR04MB1497DF7378927C9BB5DF3E15F5CD0@HE1PR04MB1497.eurprd04.prod.outlook.com>
- <8ec7f502-e058-2c28-9140-5d125e4af6ff@ti.com>
- <HE1PR04MB1497DABC689F9A4A97FD4DF0F5CA0@HE1PR04MB1497.eurprd04.prod.outlook.com>
- <dfedeaec-9a3b-632e-af37-cb1963dcae7c@ti.com>
+From: Maxime Jourdan <mjourdan@baylibre.com>
+Subject: [PATCH v4 0/3] Add Amlogic video decoder driver
+Date: Tue,  6 Nov 2018 08:59:23 +0100
+Message-ID: <20181106075926.19269-1-mjourdan@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <dfedeaec-9a3b-632e-af37-cb1963dcae7c@ti.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "cyrille.pitchen@free-electrons.com" <cyrille.pitchen@free-electrons.com>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>"linux-pci@vger.kernel.org" <l>
-Cc: Jiafei Pan <jiafei.pan@nxp.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgS2lzaG9u77yMDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBLaXNob24g
-VmlqYXkgQWJyYWhhbSBJIDxraXNob25AdGkuY29tPiANClNlbnQ6IDIwMTjlubQxMeaciDbml6Ug
-MTQ6MDcNClRvOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT47IGJoZWxnYWFzQGdv
-b2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IHNoYXdu
-Z3VvQGtlcm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgbG9yZW56by5waWVy
-YWxpc2lAYXJtLmNvbTsgYXJuZEBhcm5kYi5kZTsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7
-IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgTWluZ2thaSBIdSA8bWluZ2thaS5o
-dUBueHAuY29tPjsgUm95IFphbmcgPHJveS56YW5nQG54cC5jb20+OyBrc3Rld2FydEBsaW51eGZv
-dW5kYXRpb24ub3JnOyBjeXJpbGxlLnBpdGNoZW5AZnJlZS1lbGVjdHJvbnMuY29tOyBwb21icmVk
-YW5uZUBuZXhiLmNvbTsgc2hhd24ubGluQHJvY2stY2hpcHMuY29tOyBsaW51eC1wY2lAdmdlci5r
-ZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIu
-a2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eHBw
-Yy1kZXZAbGlzdHMub3psYWJzLm9yZw0KQ2M6IEppYWZlaSBQYW4gPGppYWZlaS5wYW5AbnhwLmNv
-bT4NClN1YmplY3Q6IFJlOiBbUEFUQ0ggNS82XSBwY2k6IGxheWVyc2NhcGU6IEFkZCB0aGUgRVAg
-bW9kZSBzdXBwb3J0Lg0KDQooUmVtb3ZlZCBOaWtsYXMgYXMgbWFpbHMgdG8gaGltIGlzIGJvdW5j
-aW5nKQ0KDQpIaSwNCg0KUGxlYXNlIGZpeCB5b3VyIGVtYWlsIGNsaWVudC4gUmVmZXIgRG9jdW1l
-bnRhdGlvbi9wcm9jZXNzL2VtYWlsLWNsaWVudHMucnN0DQoNCk9uIDA1LzExLzE4IDI6NDUgUE0s
-IFhpYW93ZWkgQmFvIHdyb3RlOg0KPiANCj4gDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
-DQo+IEZyb206IEtpc2hvbiBWaWpheSBBYnJhaGFtIEkgPGtpc2hvbkB0aS5jb20+DQo+IFNlbnQ6
-IDIwMTjlubQxMeaciDXml6UgMTY6NTcNCj4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0Bu
-eHAuY29tPjsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsgDQo+IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFy
-ay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaSANCj4gPGxlb3lh
-bmcubGlAbnhwLmNvbT47IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IGFybmRAYXJuZGIuZGU7
-IA0KPiBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFu
-QG54cC5jb20+OyBNaW5na2FpIA0KPiBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgUm95IFphbmcg
-PHJveS56YW5nQG54cC5jb20+OyANCj4ga3N0ZXdhcnRAbGludXhmb3VuZGF0aW9uLm9yZzsgY3ly
-aWxsZS5waXRjaGVuQGZyZWUtZWxlY3Ryb25zLmNvbTsgDQo+IHBvbWJyZWRhbm5lQG5leGIuY29t
-OyBzaGF3bi5saW5Acm9jay1jaGlwcy5jb207IA0KPiBuaWtsYXMuY2Fzc2VsQGF4aXMuY29tOyBs
-aW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyANCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
-IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IA0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnDQo+IENjOiBKaWFm
-ZWkgUGFuIDxqaWFmZWkucGFuQG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggNS82XSBw
-Y2k6IGxheWVyc2NhcGU6IEFkZCB0aGUgRVAgbW9kZSBzdXBwb3J0Lg0KPiANCj4gSGksDQo+IA0K
-PiBPbiAzMS8xMC8xOCA0OjA4IFBNLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4+DQo+Pg0KPj4gLS0t
-LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4+IEZyb206IEtpc2hvbiBWaWpheSBBYnJhaGFtIEkg
-PGtpc2hvbkB0aS5jb20+DQo+PiBTZW50OiAyMDE45bm0MTDmnIgzMeaXpSAxMjoxNQ0KPj4gVG86
-IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPjsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsN
-Cj4+IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtl
-cm5lbC5vcmc7IExlbyBMaQ0KPj4gPGxlb3lhbmcubGlAbnhwLmNvbT47IGxvcmVuem8ucGllcmFs
-aXNpQGFybS5jb207IGFybmRAYXJuZGIuZGU7IA0KPj4gZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5v
-cmc7IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgDQo+PiBNaW5na2FpIEh1IDxt
-aW5na2FpLmh1QG54cC5jb20+OyBSb3kgWmFuZyA8cm95LnphbmdAbnhwLmNvbT47IA0KPj4ga3N0
-ZXdhcnRAbGludXhmb3VuZGF0aW9uLm9yZzsgY3lyaWxsZS5waXRjaGVuQGZyZWUtZWxlY3Ryb25z
-LmNvbTsNCj4+IHBvbWJyZWRhbm5lQG5leGIuY29tOyBzaGF3bi5saW5Acm9jay1jaGlwcy5jb207
-IA0KPj4gbmlrbGFzLmNhc3NlbEBheGlzLmNvbTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsg
-DQo+PiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVs
-Lm9yZzsgDQo+PiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4cHBj
-LWRldkBsaXN0cy5vemxhYnMub3JnDQo+PiBDYzogSmlhZmVpIFBhbiA8amlhZmVpLnBhbkBueHAu
-Y29tPg0KPj4gU3ViamVjdDogUmU6IFtQQVRDSCA1LzZdIHBjaTogbGF5ZXJzY2FwZTogQWRkIHRo
-ZSBFUCBtb2RlIHN1cHBvcnQuDQo+Pg0KPj4gSGksDQo+Pg0KPj4gT24gMzEvMTAvMTggODowMyBB
-TSwgWGlhb3dlaSBCYW8gd3JvdGU6DQo+Pj4NCj4+Pg0KPj4+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
-ZS0tLS0tDQo+Pj4gRnJvbTogWGlhb3dlaSBCYW8NCj4+PiBTZW50OiAyMDE45bm0MTDmnIgyNuaX
-pSAxNzoxOQ0KPj4+IFRvOiAnS2lzaG9uIFZpamF5IEFicmFoYW0gSScgPGtpc2hvbkB0aS5jb20+
-OyBiaGVsZ2Fhc0Bnb29nbGUuY29tOw0KPj4+IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRs
-YW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyANCj4+PiByb2JoK0xpDQo+Pj4g
-PGxlb3lhbmcubGlAbnhwLmNvbT47IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IGFybmRAYXJu
-ZGIuZGU7IA0KPj4+IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyBNLmguIExpYW4gPG1pbmdo
-dWFuLmxpYW5AbnhwLmNvbT47IA0KPj4+IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47
-IFJveSBaYW5nIDxyb3kuemFuZ0BueHAuY29tPjsgDQo+Pj4ga3N0ZXdhcnRAbGludXhmb3VuZGF0
-aW9uLm9yZzsgY3lyaWxsZS5waXRjaGVuQGZyZWUtZWxlY3Ryb25zLmNvbTsNCj4+PiBwb21icmVk
-YW5uZUBuZXhiLmNvbTsgc2hhd24ubGluQHJvY2stY2hpcHMuY29tOyANCj4+PiBuaWtsYXMuY2Fz
-c2VsQGF4aXMuY29tOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyANCj4+PiBkZXZpY2V0cmVl
-QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgDQo+Pj4gbGlu
-dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3ps
-YWJzLm9yZw0KPj4+IENjOiBKaWFmZWkgUGFuIDxqaWFmZWkucGFuQG54cC5jb20+DQo+Pj4gU3Vi
-amVjdDogUkU6IFtQQVRDSCA1LzZdIHBjaTogbGF5ZXJzY2FwZTogQWRkIHRoZSBFUCBtb2RlIHN1
-cHBvcnQuDQo+Pj4NCj4+Pg0KPj4+DQo+Pj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4+
-PiBGcm9tOiBLaXNob24gVmlqYXkgQWJyYWhhbSBJIDxraXNob25AdGkuY29tPg0KPj4+IFNlbnQ6
-IDIwMTjlubQxMOaciDI25pelIDEzOjI5DQo+Pj4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJh
-b0BueHAuY29tPjsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsNCj4+PiByb2JoK2R0QGtlcm5lbC5vcmc7
-IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gDQo+Pj4gcm9i
-aCtMaQ0KPj4+IDxsZW95YW5nLmxpQG54cC5jb20+OyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29t
-OyBhcm5kQGFybmRiLmRlOyANCj4+PiBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsgTS5oLiBM
-aWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyANCj4+PiBNaW5na2FpIEh1IDxtaW5na2FpLmh1
-QG54cC5jb20+OyBSb3kgWmFuZyA8cm95LnphbmdAbnhwLmNvbT47IA0KPj4+IGtzdGV3YXJ0QGxp
-bnV4Zm91bmRhdGlvbi5vcmc7IGN5cmlsbGUucGl0Y2hlbkBmcmVlLWVsZWN0cm9ucy5jb207DQo+
-Pj4gcG9tYnJlZGFubmVAbmV4Yi5jb207IHNoYXduLmxpbkByb2NrLWNoaXBzLmNvbTsgDQo+Pj4g
-bmlrbGFzLmNhc3NlbEBheGlzLmNvbTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgDQo+Pj4g
-ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
-IA0KPj4+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXhwcGMtZGV2
-QGxpc3RzLm96bGFicy5vcmcNCj4+PiBTdWJqZWN0OiBSZTogW1BBVENIIDUvNl0gcGNpOiBsYXll
-cnNjYXBlOiBBZGQgdGhlIEVQIG1vZGUgc3VwcG9ydC4NCj4+Pg0KPj4+IEhpLA0KPj4+DQo+Pj4g
-T24gVGh1cnNkYXkgMjUgT2N0b2JlciAyMDE4IDA0OjM5IFBNLCBYaWFvd2VpIEJhbyB3cm90ZToN
-Cj4+Pj4gQWRkIHRoZSBQQ0llIEVQIG1vZGUgc3VwcG9ydCBmb3IgbGF5ZXJzY2FwZSBwbGF0Zm9y
-bS4NCj4+Pj4NCj4+Pj4gU2lnbmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54
-cC5jb20+DQo+Pj4+IC0tLQ0KPj4+PiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvTWFrZWZp
-bGUgICAgICAgICAgICB8ICAgIDIgKy0NCj4+Pj4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdj
-L3BjaS1sYXllcnNjYXBlLWVwLmMgfCAgMTYxDQo+Pj4+ICsrKysrKysrKysrKysrKysrKysrKysr
-Kw0KPj4+PiAgMiBmaWxlcyBjaGFuZ2VkLCAxNjIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbnMo
-LSkgIGNyZWF0ZSBtb2RlDQo+Pj4+IDEwMDY0NCBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9w
-Y2ktbGF5ZXJzY2FwZS1lcC5jDQo+Pj4+DQo+Pj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9j
-b250cm9sbGVyL2R3Yy9NYWtlZmlsZQ0KPj4+PiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdj
-L01ha2VmaWxlDQo+Pj4+IGluZGV4IDVkMmNlNzIuLmIyNmQ2MTcgMTAwNjQ0DQo+Pj4+IC0tLSBh
-L2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL01ha2VmaWxlDQo+Pj4+ICsrKyBiL2RyaXZlcnMv
-cGNpL2NvbnRyb2xsZXIvZHdjL01ha2VmaWxlDQo+Pj4+IEBAIC04LDcgKzgsNyBAQCBvYmotJChD
-T05GSUdfUENJX0VYWU5PUykgKz0gcGNpLWV4eW5vcy5vDQo+Pj4+ICBvYmotJChDT05GSUdfUENJ
-X0lNWDYpICs9IHBjaS1pbXg2Lm8NCj4+Pj4gIG9iai0kKENPTkZJR19QQ0lFX1NQRUFSMTNYWCkg
-Kz0gcGNpZS1zcGVhcjEzeHgubw0KPj4+PiAgb2JqLSQoQ09ORklHX1BDSV9LRVlTVE9ORSkgKz0g
-cGNpLWtleXN0b25lLWR3Lm8gcGNpLWtleXN0b25lLm8NCj4+Pj4gLW9iai0kKENPTkZJR19QQ0lf
-TEFZRVJTQ0FQRSkgKz0gcGNpLWxheWVyc2NhcGUubw0KPj4+PiArb2JqLSQoQ09ORklHX1BDSV9M
-QVlFUlNDQVBFKSArPSBwY2ktbGF5ZXJzY2FwZS5vIA0KPj4+PiArcGNpLWxheWVyc2NhcGUtZXAu
-bw0KPj4+PiAgb2JqLSQoQ09ORklHX1BDSUVfUUNPTSkgKz0gcGNpZS1xY29tLm8NCj4+Pj4gIG9i
-ai0kKENPTkZJR19QQ0lFX0FSTUFEQV84SykgKz0gcGNpZS1hcm1hZGE4ay5vDQo+Pj4+ICBvYmot
-JChDT05GSUdfUENJRV9BUlRQRUM2KSArPSBwY2llLWFydHBlYzYubyBkaWZmIC0tZ2l0IA0KPj4+
-PiBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMNCj4+Pj4g
-Yi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+Pj4+IG5l
-dyBmaWxlIG1vZGUgMTAwNjQ0DQo+Pj4+IGluZGV4IDAwMDAwMDAuLjNiMzNiYmMNCj4+Pj4gLS0t
-IC9kZXYvbnVsbA0KPj4+PiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5
-ZXJzY2FwZS1lcC5jDQo+Pj4+IEBAIC0wLDAgKzEsMTYxIEBADQo+Pj4+ICsvLyBTUERYLUxpY2Vu
-c2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPj4+PiArLyoNCj4+Pj4gKyAqIFBDSWUgY29udHJvbGxl
-ciBFUCBkcml2ZXIgZm9yIEZyZWVzY2FsZSBMYXllcnNjYXBlIFNvQ3MNCj4+Pj4gKyAqDQo+Pj4+
-ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTggTlhQIFNlbWljb25kdWN0b3IuDQo+Pj4+ICsgKg0KPj4+
-PiArICogQXV0aG9yOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4gICovDQo+Pj4+
-ICsNCj4+Pj4gKyNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4NCj4+Pj4gKyNpbmNsdWRlIDxsaW51
-eC9pbml0Lmg+DQo+Pj4+ICsjaW5jbHVkZSA8bGludXgvb2ZfcGNpLmg+DQo+Pj4+ICsjaW5jbHVk
-ZSA8bGludXgvb2ZfcGxhdGZvcm0uaD4NCj4+Pj4gKyNpbmNsdWRlIDxsaW51eC9vZl9hZGRyZXNz
-Lmg+DQo+Pj4+ICsjaW5jbHVkZSA8bGludXgvcGNpLmg+DQo+Pj4+ICsjaW5jbHVkZSA8bGludXgv
-cGxhdGZvcm1fZGV2aWNlLmg+ICNpbmNsdWRlIDxsaW51eC9yZXNvdXJjZS5oPg0KPj4+PiArDQo+
-Pj4+ICsjaW5jbHVkZSAicGNpZS1kZXNpZ253YXJlLmgiDQo+Pj4+ICsNCj4+Pj4gKyNkZWZpbmUg
-UENJRV9EQkkyX09GRlNFVAkJMHgxMDAwCS8qIERCSTIgYmFzZSBhZGRyZXNzKi8NCj4+Pg0KPj4+
-IFRoZSBiYXNlIGFkZHJlc3Mgc2hvdWxkIGNvbWUgZnJvbSBkdC4NCj4+Pj4gKw0KPj4+PiArc3Ry
-dWN0IGxzX3BjaWVfZXAgew0KPj4+PiArCXN0cnVjdCBkd19wY2llCQkqcGNpOw0KPj4+PiArfTsN
-Cj4+Pj4gKw0KPj4+PiArI2RlZmluZSB0b19sc19wY2llX2VwKHgpCWRldl9nZXRfZHJ2ZGF0YSgo
-eCktPmRldikNCj4+Pj4gKw0KPj4+PiArc3RhdGljIGJvb2wgbHNfcGNpZV9pc19icmlkZ2Uoc3Ry
-dWN0IGxzX3BjaWVfZXAgKnBjaWUpIHsNCj4+Pj4gKwlzdHJ1Y3QgZHdfcGNpZSAqcGNpID0gcGNp
-ZS0+cGNpOw0KPj4+PiArCXUzMiBoZWFkZXJfdHlwZTsNCj4+Pj4gKw0KPj4+PiArCWhlYWRlcl90
-eXBlID0gaW9yZWFkOChwY2ktPmRiaV9iYXNlICsgUENJX0hFQURFUl9UWVBFKTsNCj4+Pj4gKwlo
-ZWFkZXJfdHlwZSAmPSAweDdmOw0KPj4+PiArDQo+Pj4+ICsJcmV0dXJuIGhlYWRlcl90eXBlID09
-IFBDSV9IRUFERVJfVFlQRV9CUklER0U7IH0NCj4+Pj4gKw0KPj4+PiArc3RhdGljIGludCBsc19w
-Y2llX2VzdGFibGlzaF9saW5rKHN0cnVjdCBkd19wY2llICpwY2kpIHsNCj4+Pj4gKwlyZXR1cm4g
-MDsNCj4+Pj4gK30NCj4+Pg0KPj4+IFRoZXJlIHNob3VsZCBiZSBzb21lIHdheSBieSB3aGljaCBF
-UCBzaG91bGQgdGVsbCBSQyB0aGF0IGl0IGlzIG5vdCBjb25maWd1cmVkIHlldC4gQXJlIHRoZXJl
-IG5vIGJpdHMgdG8gY29udHJvbCBMVFNTTSBzdGF0ZSBpbml0aWFsaXphdGlvbiBvciBDb25maWd1
-cmF0aW9uIHJldHJ5IHN0YXR1cyBlbmFibGluZz8NCj4+PiBbWGlhb3dlaSBCYW9dIFRoZXJlIGhh
-dmUgbm90IGJpdHMgdG8gY29udHJvbCBMVFNTTSBzdGF0ZSB0byB0ZWxsIHRoZSBSQyBpdCBpcyBj
-b25maWd1cmVkLiBUaGUgc3RhcnQgbGluayBpcyBhdXRvIGNvbXBsZXRlZC4NCj4+PiBbWGlhb3dl
-aSBCYW9dIEhpIEtpc2hvbiwgaXMgdGhlcmUgYW55IGFkdmljZT8NCj4+DQo+PiBJZiB0aGVyZSBp
-cyBubyBIVyBzdXBwb3J0LCBJIGRvbid0IHRoaW5rIGFueXRoaW5nIGNvdWxkIGJlIGRvbmUgaGVy
-ZS4gVGhpcyBjb3VsZCByZXN1bHQgaW4gUkMgcmVhZGluZyBjb25maWd1cmF0aW9uIHNwYWNlIGV2
-ZW4gYmVmb3JlIEVQIGlzIGZ1bGx5IGluaXRpYWxpemVkLg0KPj4gW1hpYW93ZWkgQmFvXSBUaGUg
-Ym9vdGxvYWRlciBoYXZlIGluaXRpYWxpemVkIHRoZSBFUCBkZXZpY2UgYW5kIHNldCB0aGUgY29u
-ZmlnIHJlYWR5IGJpdCwgYW5kIHRoZSBrZXJuZWwgZG9uJ3QgbmVlZCB0byBkbyBhbnl0aGluZy4N
-Cj4gDQo+IFdoYXQgZG9lcyBib290bG9hZGVyIGluaXRhbGl6ZT8gVGhlIEVQIGRyaXZlciBoZXJl
-IHdpbGwgcmVpbml0aWFsaXplIGV2ZXJ5dGhpbmcgcmlnaHQ/DQo+IFtYaWFvd2VpIEJhb10gVGhl
-IGJvb3Rsb2FkZXIgaW5pdGlhbGl6ZSBCQVIgc2l6ZSwgb3V0Ym91bmQgd2luZG93LCBpbmJvdW5k
-IHdpbmRvdyBhbmQgc2V0IHRoZSBjb25maWcgcmVhZHkgYml0Lg0KDQpIb3cgd2lsbCBib290bG9h
-ZGVyIGtub3cgdGhlIEJBUiBzaXplPyBUaGUgQkFSIHNpemUgaXMgYmFzZWQgb24gdGhlIGZ1bmN0
-aW9uIGRyaXZlci4gSG93IGRvZXMgYm9vdGxvYWRlciBjb25maWd1cmUgdGhlIE9CIHdpbmRvdz8g
-VGhlIE9CIHdpbmRvdyBpcyBjb25maWd1cmVkIGJhc2VkIG9uIHRoZSBzaXplIGFuZCBhZGRyZXNz
-IGdpdmVuIGJ5IHRoZSBob3N0IGR5bmFtaWNhbGx5IGF0IHJ1bnRpbWUuDQoNClRoYW5rcw0KS2lz
-aG9uDQpbWGlhb3dlaSBCYW9dIFdlIHVzZSB0aGUgYm9vdGxvYWRlciBpcyB1LWJvb3QsIHdlIGlt
-cGxlbWVudCB0aGUgRVAgYmFzZSBmZWF0dXJlIGluIHRoZSB1LWJvb3QsIGUuZy4oTUVNIHNwYWNl
-IGFjY2VzcyhSQzw9PkVQKSwgQ09ORklHIHNwYWNlIGFjY2VzcyhSQz0+RVApKSwgd2Ugc2V0IHRo
-ZSBFUCBCQVIgc2l6ZSBsaWtlIGtlcm5lbChzZXQgdGhlIFBDSV9CQVNFX0FERFJFU1NfbiByZWdp
-c3RlciwgYnV0IGRpZmZlcmVudCBzaXplKSwgYW5kIHRoZSBvdXRib3VuZCB3aW5kb3dzIGFsc28g
-YmUgc2V0LCBhbmQgdGhlIGJhciBzaXplIHdpbGwgYmUgY292ZXIgYnkgdGhlIEVQIGZyYW1ld29y
-ayBkcml2ZXIgd2hlbiBrZXJuZWwgc3RhcnQgdXAuDQpJIGhhdmUgdG8gc2V0IHRoZSBkd19wY2ll
-X29wcywgaWYgZG9uJ3QgY29uZmlnIHRoZSBkd19wY2llX29wcyB0aGVyZSB3aWxsIGhhdmUgY2Fs
-bCB0cmFjZSwgYmVjYXVzZSB0aGUgRFcgZHJpdmVyIHdpbGwgY2FsbCB0aGUgd3JpdGVfZGJpIG9y
-IHJlYWRfZGJpIGZ1bmN0aW9uIGRpcmVjdGx5IGJ1dCBub3QgY2hlY2sgdGhlIGR3X3BjaWVfb3Bz
-IHdoZXRoZXIgaXMgbnVsbC4gSSByZWZlciB0byB0aGUgcGNpZS1kZXNpZ253YXJlLXBsYXQuYyB0
-byBpbXBsZW1lbnQgaXQuIEkgZG9uJ3Qga25vdyB3aGF0IHlvdSBzYWlkIGFib3V0IHRoaXMsIGNv
-dWxkIHlvdSB0ZWxsIG1lIHRoZSBlZmZlY3QsIFRoYW5rcyBhIGxvdC4NCg0KVGhhbmtzDQpYaWFv
-d2VpDQoNCg==
+Hi everyone,
+
+This patch series adds support for the Amlogic video decoder,
+as well as the corresponding dt bindings for GXBB/GXL/GXM chips.
+
+It features decoding for the following formats:
+- MPEG 1
+- MPEG 2
+
+The following formats will be added in future patches:
+- MJPEG
+- MPEG 4 (incl. Xvid, H.263)
+- H.264
+- HEVC (incl. 10-bit)
+
+The following formats' development has still not started, but they are
+supported by the hardware:
+- VC1
+- VP9
+
+The code was made in such a way to allow easy inclusion of those formats
+in the future.
+
+The decoder is single instance.
+
+Files:
+ - vdec.c handles the V4L2 M2M logic
+ - esparser.c manages the hardware bitstream parser
+ - vdec_helpers.c provides helpers to DONE the dst buffers as well as
+ various common code used by the codecs
+ - vdec_1.c manages the VDEC_1 block of the vdec IP
+ - codec_mpeg12.c enables decoding for MPEG 1/2.
+ - vdec_platform.c links codec units with vdec units
+ (e.g vdec_1 with codec_mpeg12) and lists all the available
+ src/dst formats and requirements (max width/height, etc.),
+ per compatible chip.
+
+Firmwares are necessary to run the vdec. They can currently be found at:
+https://github.com/chewitt/meson-firmware
+There is an ongoing effort to bring those firmwares to linux-firmware
+but they're not in yet, currently blocked by licensing issues.
+
+It was tested primarily with ffmpeg's v4l2-m2m implementation. For instance:
+$ ffmpeg -c:v mpeg2_v4l2m2m -i sample_mpeg2.mkv -f null -
+
+The v4l2-compliance results are available below the patch diff.
+
+Changes since v3 [2]:
+ - strlcpy -> strscpy
+ - queue_setup: account for existing buffers when clamping *num_buffers
+ - removed support for CREATE_BUFS. This caused issues with gstreamer and allowed
+ userspace to alloc more buffers than the decoder can handle in its fixed list.
+ So for now we just disable it and only allow allocating via REQBUFS.
+ - rebased & tested with 4.20-rc1
+
+Changes since v2 [1]:
+ - Override capture queue's min_buffers_needed in queue_setup
+ The HW needs the full buffer list to be available when doing start_streaming
+ - Fix the draining sequence
+ The blob that we write to the ESPARSER to trigger drain is codec-dependent.
+ The one that was sent in v1 is specific to H.264 and isn't guaranteed to
+ trigger drain for MPEG2. For the latter, a simple MPEG2 EOS code
+ should be sent to the ESPARSER instead.
+ - Slight enhancements to the way we do vififo offset<=>timestamp matching
+
+Changes since v1 [0]:
+ - use named interrupts in the bindings
+ - rewrite description in the bindings doc
+ - don't include the dts changes in the patch series
+ - fill the vb2 queues locks
+ - fill the video_device lock
+ - use helpers for wait_prepare and wait_finish vb2_ops
+ - remove unnecessary usleep in between esparser writes.
+ Extensive testing of every codec on GXBB/GXL didn't reveal
+ any fails without it, so just remove it.
+ - compile v4l2_compliance inside the git repo
+ - Check for plane number/plane size to pass the latest v4l2-compliance test
+ - Moved the single instance check (returning -EBUSY) to start/stop streaming
+ The check was previously in queue_setup but there was no great location to
+ clear it except for .close().
+ - Slight rework of the way CAPTURE frames are timestamped for better accuracy
+ - Implement PAR reporting via VIDIOC_CROPCAP
+
+[2] https://lore.kernel.org/patchwork/cover/993093/
+[1] https://patchwork.kernel.org/cover/10595803/
+[0] https://patchwork.kernel.org/cover/10583391/
+
+Maxime Jourdan (3):
+  dt-bindings: media: add Amlogic Video Decoder Bindings
+  media: meson: add v4l2 m2m video decoder driver
+  MAINTAINERS: Add meson video decoder
+
+ .../bindings/media/amlogic,vdec.txt           |   71 ++
+ MAINTAINERS                                   |    8 +
+ drivers/media/platform/Kconfig                |   10 +
+ drivers/media/platform/meson/Makefile         |    1 +
+ drivers/media/platform/meson/vdec/Makefile    |    8 +
+ .../media/platform/meson/vdec/codec_mpeg12.c  |  209 ++++
+ .../media/platform/meson/vdec/codec_mpeg12.h  |   14 +
+ drivers/media/platform/meson/vdec/dos_regs.h  |   98 ++
+ drivers/media/platform/meson/vdec/esparser.c  |  322 +++++
+ drivers/media/platform/meson/vdec/esparser.h  |   32 +
+ drivers/media/platform/meson/vdec/vdec.c      | 1034 +++++++++++++++++
+ drivers/media/platform/meson/vdec/vdec.h      |  251 ++++
+ drivers/media/platform/meson/vdec/vdec_1.c    |  231 ++++
+ drivers/media/platform/meson/vdec/vdec_1.h    |   14 +
+ .../media/platform/meson/vdec/vdec_helpers.c  |  412 +++++++
+ .../media/platform/meson/vdec/vdec_helpers.h  |   48 +
+ .../media/platform/meson/vdec/vdec_platform.c |  101 ++
+ .../media/platform/meson/vdec/vdec_platform.h |   30 +
+ 18 files changed, 2894 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/amlogic,vdec.txt
+ create mode 100644 drivers/media/platform/meson/vdec/Makefile
+ create mode 100644 drivers/media/platform/meson/vdec/codec_mpeg12.c
+ create mode 100644 drivers/media/platform/meson/vdec/codec_mpeg12.h
+ create mode 100644 drivers/media/platform/meson/vdec/dos_regs.h
+ create mode 100644 drivers/media/platform/meson/vdec/esparser.c
+ create mode 100644 drivers/media/platform/meson/vdec/esparser.h
+ create mode 100644 drivers/media/platform/meson/vdec/vdec.c
+ create mode 100644 drivers/media/platform/meson/vdec/vdec.h
+ create mode 100644 drivers/media/platform/meson/vdec/vdec_1.c
+ create mode 100644 drivers/media/platform/meson/vdec/vdec_1.h
+ create mode 100644 drivers/media/platform/meson/vdec/vdec_helpers.c
+ create mode 100644 drivers/media/platform/meson/vdec/vdec_helpers.h
+ create mode 100644 drivers/media/platform/meson/vdec/vdec_platform.c
+ create mode 100644 drivers/media/platform/meson/vdec/vdec_platform.h
+
+root@libretech-cc:~/v4l-utils# v4l2-compliance -d /dev/video0 
+v4l2-compliance SHA: 0aa28f4293ee3306b34ea2866ef5f26fa75d2ed0, 64 bits
+
+Compliance test for device /dev/video0:
+
+Driver Info:
+	Driver name      : meson-vdec
+	Card type        : Amlogic Video Decoder
+	Bus info         : platform:meson-vdec
+	Driver version   : 4.20.0
+	Capabilities     : 0x84204000
+		Video Memory-to-Memory Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04204000
+		Video Memory-to-Memory Multiplanar
+		Streaming
+		Extended Pix Format
+
+Required ioctls:
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video0 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK
+
+Buffer ioctls:
+		warn: v4l2-test-buffers.cpp(504): VIDIOC_CREATE_BUFS not supported
+		warn: v4l2-test-buffers.cpp(504): VIDIOC_CREATE_BUFS not supported
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+	test VIDIOC_EXPBUF: OK
+
+Total: 43, Succeeded: 43, Failed: 0, Warnings: 2
+
+-- 
+2.19.1
