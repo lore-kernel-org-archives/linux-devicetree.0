@@ -1,240 +1,97 @@
-From: Al Cooper <al.cooper@broadcom.com>
-Subject: Re: [PATCH V3 4/6] usb: ohci-platform: Add support for Broadcom STB
- SoC's
-Date: Tue, 6 Nov 2018 16:40:55 -0500
-Message-ID: <d077971c-d7ef-d630-2d89-5a06fb481b28@broadcom.com>
-References: <Pine.LNX.4.44L0.1811061105120.1450-100000@iolanthe.rowland.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: [PATCH 00/24] Add generic support for composing LED class device name
+Date: Tue,  6 Nov 2018 23:07:08 +0100
+Message-ID: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.44L0.1811061105120.1450-100000@iolanthe.rowland.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Stern <stern@rowland.harvard.edu>, Al Cooper <alcooperx@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>, linux-usb@vger.kernel.org, Lu Baolu <baolu.lu@linux.i>
+To: linux-leds@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, jacek.anaszewski@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/6/18 11:08 AM, Alan Stern wrote:
-> On Mon, 5 Nov 2018, Al Cooper wrote:
-> 
->> Add support for Broadcom STB SoC's to the ohci platform driver.
->>
->> Signed-off-by: Al Cooper <alcooperx@gmail.com>
->> ---
-> 
->> @@ -177,6 +189,8 @@ static int ohci_platform_probe(struct platform_device *dev)
->>   		ohci->flags |= OHCI_QUIRK_FRAME_NO;
->>   	if (pdata->num_ports)
->>   		ohci->num_ports = pdata->num_ports;
->> +	if (pdata->suspend_without_phy_exit)
->> +		hcd->suspend_without_phy_exit = 1;
-> 
-> Sorry if I missed this in the earlier discussions...  Is there any
-> possibility of adding a DT binding that could express this requirement,
-> instead of putting it in the platform data?
-> 
-> Alan Stern
-> 
+LED class device naming pattern included devicename section, which had
+unpleasant effect of varying userspace interface dependent on underlaying
+hardware. Moreover, this information was redundant in the LED name, since
+the LED controller name could have been obtained from sysfs device group
 
-Alan,
+This patch set introduces a led_compose_name() function in the LED core,
+which unifies and simplifies LED class device name composition. This
+change is accompanied by the improvements in the common LED DT bindings
+where two new properties are introduced: "function" and "color" . The two
+deprecate the old "label" property which was leaving too much room for
+interpretation, leading to inconsistent LED naming.
 
-That was my original approach but internal review suggested that I use 
-pdata instead. Below is my original patch for:
-[PATCH V3 2/6] usb: core: Add ability to skip phy exit on suspend and 
-init on resume
-With this patch I can then use ohci_platform.c without any 
-modifications. Could you let me know what you think?
+There are also changes in LED DT node naming, which are in line with
+DT maintainer's request from [0].
 
-Thanks
-Al
+Since some DT LED naming unification, related to not including devicename
+section in "label" DT property, is being requested during reviews of new
+LED class drivers for almost a year now, then those drivers are the first
+candidates for optimalization and the first users of the new
+led_compose_name() API. The modifications were tested with Qemu,
+by stubbing the driver internals where hardware interaction was needed
+for proper probing.
 
-Add the ability to skip calling the PHY's exit routine on suspend
-and the PHY's init routine on resume. This is to handle a USB PHY
-that should have it's power_off function called on suspend but cannot
-have it's exit function called because on exit it will disable the
-PHY to the point where register accesses to the Host Controllers
-using the PHY will be disabled and the host drivers will crash.
+Thanks,
+Jacek Anaszewski
 
-This is enabled with the HCD flag "suspend_without_phy_exit" which
-can be set from any HCD driver or from the device-tree property
-"suspend-without-phy-exit".
+[0] https://lore.kernel.org/patchwork/patch/858993/
 
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
----
-  drivers/usb/core/hcd.c  |  8 ++++----
-  drivers/usb/core/phy.c  | 21 +++++++++++++++------
-  drivers/usb/core/phy.h  |  9 ++++++---
-  include/linux/usb/hcd.h |  3 +++
-  4 files changed, 28 insertions(+), 13 deletions(-)
+Jacek Anaszewski (24):
+  leds: class: Improve LED and LED flash class registration API
+  leds: core: Add support for composing LED class device names
+  leds: dt-bindings: Add LED_FUNCTION definitions
+  dt-bindings: leds: Add function and color properties
+  dt-bindings: sc27xx-blt: Add function and color properties
+  leds: sc27xx-blt: Use led_compose_name()
+  dt-bindings: lt3593: Add function and color properties
+  leds: lt3593: Use led_compose_name()
+  dt-bindings: lp8860: Add function and color properties
+  leds: lp8860: Use led_compose_name()
+  dt-bindings: lm3692x: Add function and color properties
+  leds: lm3692x: Use led_compose_name()
+  dt-bindings: lm36010: Add function and color properties
+  leds: lm3601x: Use led_compose_name()
+  dt-bindings: cr0014114: Add function and color properties
+  leds: cr0014114: Use led_compose_name()
+  dt-bindings: aat1290: Add function and color properties
+  leds: aat1290: Use led_compose_name()
+  dt-bindings: as3645a: Add function and color properties
+  leds: as3645a: Use led_compose_name()
+  dt-bindings: leds-gpio: Add function and color properties
+  leds: gpio: Use led_compose_name()
+  dt-bindings: an30259a: Add function and color properties
+  leds: an30259a: Use led_compose_name()
 
-diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-index 1c21955fe7c0..e67e4d6b3d21 100644
---- a/drivers/usb/core/hcd.c
-+++ b/drivers/usb/core/hcd.c
-@@ -2263,7 +2263,7 @@ int hcd_bus_suspend(struct usb_device *rhdev, 
-pm_message_t msg)
-  		hcd->state = HC_STATE_SUSPENDED;
+ .../devicetree/bindings/leds/ams,as3645a.txt       |  22 +++--
+ Documentation/devicetree/bindings/leds/common.txt  |  52 +++++++++--
+ .../devicetree/bindings/leds/leds-aat1290.txt      |  12 ++-
+ .../devicetree/bindings/leds/leds-an30259a.txt     |  22 ++++-
+ .../devicetree/bindings/leds/leds-cr0014114.txt    |  26 ++++--
+ .../devicetree/bindings/leds/leds-gpio.txt         |  22 +++--
+ .../devicetree/bindings/leds/leds-lm3601x.txt      |  10 +-
+ .../devicetree/bindings/leds/leds-lm3692x.txt      |   9 +-
+ .../devicetree/bindings/leds/leds-lp8860.txt       |   9 +-
+ .../devicetree/bindings/leds/leds-lt3593.txt       |  11 ++-
+ .../devicetree/bindings/leds/leds-sc27xx-bltc.txt  |  10 +-
+ Documentation/leds/leds-class.txt                  |   2 +-
+ drivers/leds/led-class-flash.c                     |   9 +-
+ drivers/leds/led-class.c                           |  34 ++++---
+ drivers/leds/led-core.c                            |  71 +++++++++++++++
+ drivers/leds/leds-aat1290.c                        |  17 ++--
+ drivers/leds/leds-an30259a.c                       |  26 +++---
+ drivers/leds/leds-as3645a.c                        |  65 ++++++-------
+ drivers/leds/leds-cr0014114.c                      |  30 ++----
+ drivers/leds/leds-gpio.c                           |  27 +++---
+ drivers/leds/leds-lm3601x.c                        |  45 ++++-----
+ drivers/leds/leds-lm3692x.c                        |  39 ++++----
+ drivers/leds/leds-lp8860.c                         |  38 ++++----
+ drivers/leds/leds-lt3593.c                         |  19 ++--
+ drivers/leds/leds-sc27xx-bltc.c                    |  23 ++---
+ include/dt-bindings/leds/functions.h               | 101 +++++++++++++++++++++
+ include/linux/led-class-flash.h                    |  13 ++-
+ include/linux/leds.h                               |  61 +++++++++++--
+ 28 files changed, 571 insertions(+), 254 deletions(-)
+ create mode 100644 include/dt-bindings/leds/functions.h
 
-  		if (!PMSG_IS_AUTO(msg))
--			usb_phy_roothub_suspend(hcd->self.sysdev,
-+			usb_phy_roothub_suspend(hcd,
-  						hcd->phy_roothub);
-
-  		/* Did we race with a root-hub wakeup event? */
-@@ -2304,7 +2304,7 @@ int hcd_bus_resume(struct usb_device *rhdev, 
-pm_message_t msg)
-  	}
-
-  	if (!PMSG_IS_AUTO(msg)) {
--		status = usb_phy_roothub_resume(hcd->self.sysdev,
-+		status = usb_phy_roothub_resume(hcd,
-  						hcd->phy_roothub);
-  		if (status)
-  			return status;
-@@ -2347,7 +2347,7 @@ int hcd_bus_resume(struct usb_device *rhdev, 
-pm_message_t msg)
-  		}
-  	} else {
-  		hcd->state = old_state;
--		usb_phy_roothub_suspend(hcd->self.sysdev, hcd->phy_roothub);
-+		usb_phy_roothub_suspend(hcd, hcd->phy_roothub);
-  		dev_dbg(&rhdev->dev, "bus %s fail, err %d\n",
-  				"resume", status);
-  		if (status != -ESHUTDOWN)
-@@ -2744,7 +2744,7 @@ int usb_add_hcd(struct usb_hcd *hcd,
-  	struct usb_device *rhdev;
-
-  	if (!hcd->skip_phy_initialization && usb_hcd_is_primary_hcd(hcd)) {
--		hcd->phy_roothub = usb_phy_roothub_alloc(hcd->self.sysdev);
-+		hcd->phy_roothub = usb_phy_roothub_alloc(hcd);
-  		if (IS_ERR(hcd->phy_roothub))
-  			return PTR_ERR(hcd->phy_roothub);
-
-diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
-index 9879767452a2..0eb12566f1c3 100644
---- a/drivers/usb/core/phy.c
-+++ b/drivers/usb/core/phy.c
-@@ -45,10 +45,11 @@ static int usb_phy_roothub_add_phy(struct device 
-*dev, int index,
-  	return 0;
-  }
-
--struct usb_phy_roothub *usb_phy_roothub_alloc(struct device *dev)
-+struct usb_phy_roothub *usb_phy_roothub_alloc(struct usb_hcd *hcd)
-  {
-  	struct usb_phy_roothub *phy_roothub;
-  	int i, num_phys, err;
-+	struct device *dev = hcd->self.sysdev;
-
-  	if (!IS_ENABLED(CONFIG_GENERIC_PHY))
-  		return NULL;
-@@ -58,6 +59,9 @@ struct usb_phy_roothub *usb_phy_roothub_alloc(struct 
-device *dev)
-  	if (num_phys <= 0)
-  		return NULL;
-
-+	if (device_property_read_bool(dev, "suspend-without-phy-exit"))
-+		hcd->suspend_without_phy_exit = 1;
-+
-  	phy_roothub = devm_kzalloc(dev, sizeof(*phy_roothub), GFP_KERNEL);
-  	if (!phy_roothub)
-  		return ERR_PTR(-ENOMEM);
-@@ -161,26 +165,30 @@ void usb_phy_roothub_power_off(struct 
-usb_phy_roothub *phy_roothub)
-  }
-  EXPORT_SYMBOL_GPL(usb_phy_roothub_power_off);
-
--int usb_phy_roothub_suspend(struct device *controller_dev,
-+int usb_phy_roothub_suspend(struct usb_hcd *hcd,
-  			    struct usb_phy_roothub *phy_roothub)
-  {
-+	struct device *controller_dev = hcd->self.sysdev;
-+
-  	usb_phy_roothub_power_off(phy_roothub);
-
-  	/* keep the PHYs initialized so the device can wake up the system */
--	if (device_may_wakeup(controller_dev))
-+	if (device_may_wakeup(controller_dev) || hcd->suspend_without_phy_exit)
-  		return 0;
-
-  	return usb_phy_roothub_exit(phy_roothub);
-  }
-  EXPORT_SYMBOL_GPL(usb_phy_roothub_suspend);
-
--int usb_phy_roothub_resume(struct device *controller_dev,
-+int usb_phy_roothub_resume(struct usb_hcd *hcd,
-  			   struct usb_phy_roothub *phy_roothub)
-  {
-+	struct device *controller_dev = hcd->self.sysdev;
-  	int err;
-
-  	/* if the device can't wake up the system _exit was called */
--	if (!device_may_wakeup(controller_dev)) {
-+	if (!device_may_wakeup(controller_dev) &&
-+	    !hcd->suspend_without_phy_exit) {
-  		err = usb_phy_roothub_init(phy_roothub);
-  		if (err)
-  			return err;
-@@ -189,7 +197,8 @@ int usb_phy_roothub_resume(struct device 
-*controller_dev,
-  	err = usb_phy_roothub_power_on(phy_roothub);
-
-  	/* undo _init if _power_on failed */
--	if (err && !device_may_wakeup(controller_dev))
-+	if (err && !device_may_wakeup(controller_dev)
-+	    && !hcd->suspend_without_phy_exit)
-  		usb_phy_roothub_exit(phy_roothub);
-
-  	return err;
-diff --git a/drivers/usb/core/phy.h b/drivers/usb/core/phy.h
-index 88a3c037e9df..34293e11a917 100644
---- a/drivers/usb/core/phy.h
-+++ b/drivers/usb/core/phy.h
-@@ -5,13 +5,16 @@
-   * Copyright (C) 2018 Martin Blumenstingl 
-<martin.blumenstingl@googlemail.com>
-   */
-
-+#include <linux/usb.h>
-+#include <linux/usb/hcd.h>
-+
-  #ifndef __USB_CORE_PHY_H_
-  #define __USB_CORE_PHY_H_
-
-  struct device;
-  struct usb_phy_roothub;
-
--struct usb_phy_roothub *usb_phy_roothub_alloc(struct device *dev);
-+struct usb_phy_roothub *usb_phy_roothub_alloc(struct usb_hcd *hcd);
-
-  int usb_phy_roothub_init(struct usb_phy_roothub *phy_roothub);
-  int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub);
-@@ -19,9 +22,9 @@
-  int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub);
-  void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub);
-
--int usb_phy_roothub_suspend(struct device *controller_dev,
-+int usb_phy_roothub_suspend(struct usb_hcd *hcd,
-  			    struct usb_phy_roothub *phy_roothub);
--int usb_phy_roothub_resume(struct device *controller_dev,
-+int usb_phy_roothub_resume(struct usb_hcd *hcd,
-  			   struct usb_phy_roothub *phy_roothub);
-
-  #endif /* __USB_CORE_PHY_H_ */
-diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
-index 97e2ddec18b1..87a104055b5e 100644
---- a/include/linux/usb/hcd.h
-+++ b/include/linux/usb/hcd.h
-@@ -157,6 +157,9 @@ struct usb_hcd {
-  	 */
-  	unsigned		skip_phy_initialization:1;
-
-+	/* Some phys don't want the phy's exit/init called on suspend/resume */
-+	unsigned		suspend_without_phy_exit:1;
-+
-  	/* The next flag is a stopgap, to be removed when all the HCDs
-  	 * support the new root-hub polling mechanism. */
-  	unsigned		uses_new_polling:1;
 -- 
-1.9.0.138.g2de3478
+2.1.4
