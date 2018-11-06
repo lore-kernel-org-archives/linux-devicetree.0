@@ -1,135 +1,240 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: pressure: Add support for
- Honeywell HSC SPI sensors
-Date: Tue, 6 Nov 2018 15:29:40 -0600
-Message-ID: <20181106212940.GA13434@bogus>
-References: <20181026181406.14545-1-carlos.iglesias@emutex.com>
- <20181026181406.14545-2-carlos.iglesias@emutex.com>
+From: Al Cooper <al.cooper@broadcom.com>
+Subject: Re: [PATCH V3 4/6] usb: ohci-platform: Add support for Broadcom STB
+ SoC's
+Date: Tue, 6 Nov 2018 16:40:55 -0500
+Message-ID: <d077971c-d7ef-d630-2d89-5a06fb481b28@broadcom.com>
+References: <Pine.LNX.4.44L0.1811061105120.1450-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181026181406.14545-2-carlos.iglesias@emutex.com>
+In-Reply-To: <Pine.LNX.4.44L0.1811061105120.1450-100000@iolanthe.rowland.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Carlos Iglesias <carlos.iglesias@emutex.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jic23@kernel.org" <jic23@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dan O'Donovan <dan.odonovan@emutex.com>
+To: Alan Stern <stern@rowland.harvard.edu>, Al Cooper <alcooperx@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>, linux-usb@vger.kernel.org, Lu Baolu <baolu.lu@linux.i>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 26, 2018 at 06:14:36PM +0000, Carlos Iglesias wrote:
-> Add device tree bindings for the HSC pressure sensors.
+On 11/6/18 11:08 AM, Alan Stern wrote:
+> On Mon, 5 Nov 2018, Al Cooper wrote:
 > 
-> Signed-off-by: Carlos Iglesias <carlos.iglesias@emutex.com>
-> ---
->  .../bindings/iio/pressure/hsc_spi.txt         | 85 +++++++++++++++++++
->  1 file changed, 85 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/pressure/hsc_spi.txt
+>> Add support for Broadcom STB SoC's to the ohci platform driver.
+>>
+>> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+>> ---
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/pressure/hsc_spi.txt b/Documentation/devicetree/bindings/iio/pressure/hsc_spi.txt
-> new file mode 100644
-> index 000000000000..2302d6eef7c7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/pressure/hsc_spi.txt
-> @@ -0,0 +1,85 @@
-> +Honeywell HSC Series of Pressure Sensors
-> +
-> +Pressure sensors from Honeywell with analog, I2C and SPI interfaces
-
-But you named the file with 'spi'. You expect 
-> +
-> +Required properties:
-> +- compatible: selects the sensor model; must be one of the following
-> +	"honeywell,hsc001baa"
-> +	"honeywell,hsc001bab"
-> +	"honeywell,hsc001bac"
-> +	"honeywell,hsc001baf"
-
-I normally tell people to imply things from compatible strings, but this 
-may be a good case where some properties make sense. The last letter 
-appears to be 'transfer function'. Maybe even the pressure range should 
-be a property. I think it depends if there's any other s/w visible 
-differences.
-
-Plus this list doesn't even include the differential or gage parts and 
-those lists are longer.
-
-> +	"honeywell,hsc1_6baa"
-> +	"honeywell,hsc1_6bab"
-> +	"honeywell,hsc1_6bac"
-> +	"honeywell,hsc1_6baf"
-> +	"honeywell,hsc2_5baa"
-> +	"honeywell,hsc2_5bab"
-> +	"honeywell,hsc2_5bac"
-> +	"honeywell,hsc2_5baf"
-> +	"honeywell,hsc004baa"
-> +	"honeywell,hsc004bab"
-> +	"honeywell,hsc004bac"
-> +	"honeywell,hsc004baf"
-> +	"honeywell,hsc006baa"
-> +	"honeywell,hsc006bab"
-> +	"honeywell,hsc006bac"
-> +	"honeywell,hsc006baf"
-> +	"honeywell,hsc010baa"
-> +	"honeywell,hsc010bab"
-> +	"honeywell,hsc010bac"
-> +	"honeywell,hsc010baf"
-> +	"honeywell,hsc100kaa"
-> +	"honeywell,hsc100kab"
-> +	"honeywell,hsc100kac"
-> +	"honeywell,hsc100kaf"
-> +	"honeywell,hsc160kaa"
-> +	"honeywell,hsc160kab"
-> +	"honeywell,hsc160kac"
-> +	"honeywell,hsc160kaf"
-> +	"honeywell,hsc250kaa"
-> +	"honeywell,hsc250kab"
-> +	"honeywell,hsc250kac"
-> +	"honeywell,hsc250kaf"
-> +	"honeywell,hsc400kaa"
-> +	"honeywell,hsc400kab"
-> +	"honeywell,hsc400kac"
-> +	"honeywell,hsc400kaf"
-> +	"honeywell,hsc600kaa"
-> +	"honeywell,hsc600kab"
-> +	"honeywell,hsc600kac"
-> +	"honeywell,hsc600kaf"
-> +	"honeywell,hsc001gaa"
-> +	"honeywell,hsc001gab"
-> +	"honeywell,hsc001gac"
-> +	"honeywell,hsc001gaf"
-> +	"honeywell,hsc015paa"
-> +	"honeywell,hsc015pab"
-> +	"honeywell,hsc015pac"
-> +	"honeywell,hsc015paf"
-> +	"honeywell,hsc030paa"
-> +	"honeywell,hsc030pab"
-> +	"honeywell,hsc030pac"
-> +	"honeywell,hsc030paf"
-> +	"honeywell,hsc060paa"
-> +	"honeywell,hsc060pab"
-> +	"honeywell,hsc060pac"
-> +	"honeywell,hsc060paf"
-> +	"honeywell,hsc100paa"
-> +	"honeywell,hsc100pab"
-> +	"honeywell,hsc100pac"
-> +	"honeywell,hsc100paf"
-> +	"honeywell,hsc150paa"
-> +	"honeywell,hsc150pab"
-> +	"honeywell,hsc150pac"
-> +	"honeywell,hsc150paf"
-> +- reg: the SPI chip select number used by the sensor.
-> +- spi-max-frequency: maximum clock frequency (Hz) used for the SPI bus.
-> +  The maximum value supported by the sensors is 400000.
-> +
-> +Example:
-> +
-> +	hsc_spi0: hsc@0 {
-
-pressure-sensor@0
-
-> +		compatible = "honeywell,hsc010baa";
-> +		reg = <0>;
-> +		spi-max-frequency = <400000>;
-> +	};
-> -- 
-> 2.19.1
+>> @@ -177,6 +189,8 @@ static int ohci_platform_probe(struct platform_device *dev)
+>>   		ohci->flags |= OHCI_QUIRK_FRAME_NO;
+>>   	if (pdata->num_ports)
+>>   		ohci->num_ports = pdata->num_ports;
+>> +	if (pdata->suspend_without_phy_exit)
+>> +		hcd->suspend_without_phy_exit = 1;
 > 
+> Sorry if I missed this in the earlier discussions...  Is there any
+> possibility of adding a DT binding that could express this requirement,
+> instead of putting it in the platform data?
+> 
+> Alan Stern
+> 
+
+Alan,
+
+That was my original approach but internal review suggested that I use 
+pdata instead. Below is my original patch for:
+[PATCH V3 2/6] usb: core: Add ability to skip phy exit on suspend and 
+init on resume
+With this patch I can then use ohci_platform.c without any 
+modifications. Could you let me know what you think?
+
+Thanks
+Al
+
+Add the ability to skip calling the PHY's exit routine on suspend
+and the PHY's init routine on resume. This is to handle a USB PHY
+that should have it's power_off function called on suspend but cannot
+have it's exit function called because on exit it will disable the
+PHY to the point where register accesses to the Host Controllers
+using the PHY will be disabled and the host drivers will crash.
+
+This is enabled with the HCD flag "suspend_without_phy_exit" which
+can be set from any HCD driver or from the device-tree property
+"suspend-without-phy-exit".
+
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+---
+  drivers/usb/core/hcd.c  |  8 ++++----
+  drivers/usb/core/phy.c  | 21 +++++++++++++++------
+  drivers/usb/core/phy.h  |  9 ++++++---
+  include/linux/usb/hcd.h |  3 +++
+  4 files changed, 28 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+index 1c21955fe7c0..e67e4d6b3d21 100644
+--- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -2263,7 +2263,7 @@ int hcd_bus_suspend(struct usb_device *rhdev, 
+pm_message_t msg)
+  		hcd->state = HC_STATE_SUSPENDED;
+
+  		if (!PMSG_IS_AUTO(msg))
+-			usb_phy_roothub_suspend(hcd->self.sysdev,
++			usb_phy_roothub_suspend(hcd,
+  						hcd->phy_roothub);
+
+  		/* Did we race with a root-hub wakeup event? */
+@@ -2304,7 +2304,7 @@ int hcd_bus_resume(struct usb_device *rhdev, 
+pm_message_t msg)
+  	}
+
+  	if (!PMSG_IS_AUTO(msg)) {
+-		status = usb_phy_roothub_resume(hcd->self.sysdev,
++		status = usb_phy_roothub_resume(hcd,
+  						hcd->phy_roothub);
+  		if (status)
+  			return status;
+@@ -2347,7 +2347,7 @@ int hcd_bus_resume(struct usb_device *rhdev, 
+pm_message_t msg)
+  		}
+  	} else {
+  		hcd->state = old_state;
+-		usb_phy_roothub_suspend(hcd->self.sysdev, hcd->phy_roothub);
++		usb_phy_roothub_suspend(hcd, hcd->phy_roothub);
+  		dev_dbg(&rhdev->dev, "bus %s fail, err %d\n",
+  				"resume", status);
+  		if (status != -ESHUTDOWN)
+@@ -2744,7 +2744,7 @@ int usb_add_hcd(struct usb_hcd *hcd,
+  	struct usb_device *rhdev;
+
+  	if (!hcd->skip_phy_initialization && usb_hcd_is_primary_hcd(hcd)) {
+-		hcd->phy_roothub = usb_phy_roothub_alloc(hcd->self.sysdev);
++		hcd->phy_roothub = usb_phy_roothub_alloc(hcd);
+  		if (IS_ERR(hcd->phy_roothub))
+  			return PTR_ERR(hcd->phy_roothub);
+
+diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
+index 9879767452a2..0eb12566f1c3 100644
+--- a/drivers/usb/core/phy.c
++++ b/drivers/usb/core/phy.c
+@@ -45,10 +45,11 @@ static int usb_phy_roothub_add_phy(struct device 
+*dev, int index,
+  	return 0;
+  }
+
+-struct usb_phy_roothub *usb_phy_roothub_alloc(struct device *dev)
++struct usb_phy_roothub *usb_phy_roothub_alloc(struct usb_hcd *hcd)
+  {
+  	struct usb_phy_roothub *phy_roothub;
+  	int i, num_phys, err;
++	struct device *dev = hcd->self.sysdev;
+
+  	if (!IS_ENABLED(CONFIG_GENERIC_PHY))
+  		return NULL;
+@@ -58,6 +59,9 @@ struct usb_phy_roothub *usb_phy_roothub_alloc(struct 
+device *dev)
+  	if (num_phys <= 0)
+  		return NULL;
+
++	if (device_property_read_bool(dev, "suspend-without-phy-exit"))
++		hcd->suspend_without_phy_exit = 1;
++
+  	phy_roothub = devm_kzalloc(dev, sizeof(*phy_roothub), GFP_KERNEL);
+  	if (!phy_roothub)
+  		return ERR_PTR(-ENOMEM);
+@@ -161,26 +165,30 @@ void usb_phy_roothub_power_off(struct 
+usb_phy_roothub *phy_roothub)
+  }
+  EXPORT_SYMBOL_GPL(usb_phy_roothub_power_off);
+
+-int usb_phy_roothub_suspend(struct device *controller_dev,
++int usb_phy_roothub_suspend(struct usb_hcd *hcd,
+  			    struct usb_phy_roothub *phy_roothub)
+  {
++	struct device *controller_dev = hcd->self.sysdev;
++
+  	usb_phy_roothub_power_off(phy_roothub);
+
+  	/* keep the PHYs initialized so the device can wake up the system */
+-	if (device_may_wakeup(controller_dev))
++	if (device_may_wakeup(controller_dev) || hcd->suspend_without_phy_exit)
+  		return 0;
+
+  	return usb_phy_roothub_exit(phy_roothub);
+  }
+  EXPORT_SYMBOL_GPL(usb_phy_roothub_suspend);
+
+-int usb_phy_roothub_resume(struct device *controller_dev,
++int usb_phy_roothub_resume(struct usb_hcd *hcd,
+  			   struct usb_phy_roothub *phy_roothub)
+  {
++	struct device *controller_dev = hcd->self.sysdev;
+  	int err;
+
+  	/* if the device can't wake up the system _exit was called */
+-	if (!device_may_wakeup(controller_dev)) {
++	if (!device_may_wakeup(controller_dev) &&
++	    !hcd->suspend_without_phy_exit) {
+  		err = usb_phy_roothub_init(phy_roothub);
+  		if (err)
+  			return err;
+@@ -189,7 +197,8 @@ int usb_phy_roothub_resume(struct device 
+*controller_dev,
+  	err = usb_phy_roothub_power_on(phy_roothub);
+
+  	/* undo _init if _power_on failed */
+-	if (err && !device_may_wakeup(controller_dev))
++	if (err && !device_may_wakeup(controller_dev)
++	    && !hcd->suspend_without_phy_exit)
+  		usb_phy_roothub_exit(phy_roothub);
+
+  	return err;
+diff --git a/drivers/usb/core/phy.h b/drivers/usb/core/phy.h
+index 88a3c037e9df..34293e11a917 100644
+--- a/drivers/usb/core/phy.h
++++ b/drivers/usb/core/phy.h
+@@ -5,13 +5,16 @@
+   * Copyright (C) 2018 Martin Blumenstingl 
+<martin.blumenstingl@googlemail.com>
+   */
+
++#include <linux/usb.h>
++#include <linux/usb/hcd.h>
++
+  #ifndef __USB_CORE_PHY_H_
+  #define __USB_CORE_PHY_H_
+
+  struct device;
+  struct usb_phy_roothub;
+
+-struct usb_phy_roothub *usb_phy_roothub_alloc(struct device *dev);
++struct usb_phy_roothub *usb_phy_roothub_alloc(struct usb_hcd *hcd);
+
+  int usb_phy_roothub_init(struct usb_phy_roothub *phy_roothub);
+  int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub);
+@@ -19,9 +22,9 @@
+  int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub);
+  void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub);
+
+-int usb_phy_roothub_suspend(struct device *controller_dev,
++int usb_phy_roothub_suspend(struct usb_hcd *hcd,
+  			    struct usb_phy_roothub *phy_roothub);
+-int usb_phy_roothub_resume(struct device *controller_dev,
++int usb_phy_roothub_resume(struct usb_hcd *hcd,
+  			   struct usb_phy_roothub *phy_roothub);
+
+  #endif /* __USB_CORE_PHY_H_ */
+diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
+index 97e2ddec18b1..87a104055b5e 100644
+--- a/include/linux/usb/hcd.h
++++ b/include/linux/usb/hcd.h
+@@ -157,6 +157,9 @@ struct usb_hcd {
+  	 */
+  	unsigned		skip_phy_initialization:1;
+
++	/* Some phys don't want the phy's exit/init called on suspend/resume */
++	unsigned		suspend_without_phy_exit:1;
++
+  	/* The next flag is a stopgap, to be removed when all the HCDs
+  	 * support the new root-hub polling mechanism. */
+  	unsigned		uses_new_polling:1;
+-- 
+1.9.0.138.g2de3478
