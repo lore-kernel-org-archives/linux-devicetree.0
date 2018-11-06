@@ -1,33 +1,32 @@
-Return-Path: <SRS0=gwt/=N5=linaro.org=daniel.lezcano@kernel.org>
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 6 Nov 2018 09:57:31 -0600
+From: Rob Herring <robh@kernel.org>
 Subject: Re: [PATCH] dt-bindings: timer: renesas, cmt: Document r8a7796 CMT
  support
+Message-ID: <20181106155731.GA28763@bogus>
 References: <1540540904-26131-1-git-send-email-biju.das@bp.renesas.com>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <48dcbb24-7192-9157-420b-a3465bb26022@linaro.org>
-Date: Sun, 18 Nov 2018 03:28:24 +0100
+ <20181106155452.GA26787@bogus>
 MIME-Version: 1.0
-In-Reply-To: <1540540904-26131-1-git-send-email-biju.das@bp.renesas.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-To: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181106155452.GA26787@bogus>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 26/10/2018 10:01, Biju Das wrote:
-> Document SoC specific bindings for R-Car M3-W (r8a7796) SoC.
+On Tue, Nov 06, 2018 at 09:54:52AM -0600, Rob Herring wrote:
+> On Fri, Oct 26, 2018 at 09:01:44AM +0100, Biju Das wrote:
+> > Document SoC specific bindings for R-Car M3-W (r8a7796) SoC.
+> > 
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > ---
+> > This patch is tested against linu-next
+> > ---
+> >  Documentation/devicetree/bindings/timer/renesas,cmt.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
 > 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> ---
-> This patch is tested against linu-next
-> ---
+> Applied.
 
-Applied, thanks!
+Nevermind. I see there's another timer patch. Daniel should apply.
 
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Reviewed-by: Rob Herring <robh@kernel.org>
