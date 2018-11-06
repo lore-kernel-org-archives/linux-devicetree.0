@@ -1,77 +1,86 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH anybus v3 1/6] misc: support the Arcx anybus bridge
-Date: Tue, 6 Nov 2018 12:30:55 -0600
-Message-ID: <CAL_Jsq+YeW+BtVh=L8PBjXYLj9sp91BcUQrJJrwnmChRnXoK_w@mail.gmail.com>
-References: <20181104155501.14767-1-TheSven73@googlemail.com>
- <20181104155501.14767-2-TheSven73@googlemail.com> <20181105212049.GA320@bogus>
- <CAGngYiUZTm-r0KJ07tKsPmgKCUWcqAOx2S82iLPRjkcDiw0R3g@mail.gmail.com>
- <CAL_JsqLgz9Z3J0x+QFU6jHOoHn6A1KASc+HbVLnW1=ow0RHv6w@mail.gmail.com> <CAGngYiXczK6dsfyDGxe1ym-vQQfH5XS0jeEkuWW_og23JmTAZg@mail.gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 1/4] of/device: Add a way to probe drivers by match data
+Date: Tue,  6 Nov 2018 10:36:06 -0800
+Message-ID: <20181106183609.207702-2-sboyd@kernel.org>
+References: <20181106183609.207702-1-sboyd@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGngYiXczK6dsfyDGxe1ym-vQQfH5XS0jeEkuWW_og23JmTAZg@mail.gmail.com>
+In-Reply-To: <20181106183609.207702-1-sboyd@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sven Van Asbroeck <thesven73@gmail.com>
-Cc: Sven Van Asbroeck <svendev@arcx.com>, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>, Johan Hovold <johan@kernel.org>, Michal Simek <monstr@monstr.eu>, =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Garry <john.garry@huawei.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Robin Murphy <robin.murphy@arm.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux>
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 6, 2018 at 8:46 AM Sven Van Asbroeck <thesven73@gmail.com> wrote:
->
-> On Tue, Nov 6, 2018 at 8:58 AM Rob Herring <robh@kernel.org> wrote:
->
-> > It doesn't really sound like the host should be in DT. The bridge
-> > should register itself as an anybus provider and that should in turn
-> > enable the anybus host protocol.
->
-> Very good point. Just to make sure we're on the same page, could you point
-> me to a relevant example where something registers as a provider?
+We have a handful of clk drivers that have a collection of slightly
+variant device support keyed off of the compatible string. In each of
+these drivers, we demux the variant and then call the "real" probe
+function based on whatever is stored in the match data for that
+compatible string. Let's generalize this function so that it can be
+re-used as the platform_driver probe function directly.
 
-Not sure exactly. Perhaps I2C SMBus functions that implement the
-register access protocol on top of I2C bus.
+Cc: Ryder Lee <ryder.lee@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
+ drivers/of/device.c       | 31 +++++++++++++++++++++++++++++++
+ include/linux/of_device.h |  1 +
+ 2 files changed, 32 insertions(+)
 
-> v1 of this patch did not have the host in DT. The host just required platform
-> data with a regmap and a reset (the interrupt was passed via resources):
->
-> struct anybuss_host_pdata {
->     struct regmap *regmap;
->     void (*reset)(struct device *dev, bool reset);
-> };
->
-> But there were problems with this approach.
-
-A block diagram would help. Something that shows the host SoC, your
-CPLD, reset, irq, etc.
-
-> The review feedback told me that my self-rolled reset callback should really
-> be a reset controller. I looked for ways to pass a handle to a reset controller
-> via platform data. This has recently been introduced via:
-
-Maybe an overkill for 1 reset.
-
->
-> reset_controller_add_lookup()
->
-> This binds a client device to a reset controller, without using the devicetree,
-> so the device can grab its controller via (devm_)reset_control_get*. Great!
-> But... to make the binding, you have to specify the full device names of the
-> controllers and client devices. See this example from psc-da850.c:
->
-> static struct reset_control_lookup da850_psc0_reset_lookup_table[] = {
->     RESET_LOOKUP("da850-psc0", 15, "davinci-rproc.0", NULL),
-> };
->
-> I very quickly found myself in ida_simple_get() hell, trying to second-guess
-> what the devices I was creating, would be called !
->
-> So instead I put the host in DT, then I could easily connect the reset
-> controller. This also greatly simplified the bridge driver, a lot of boilerplate
-> would simply disappear.
-
-If the host is not a h/w component, but just a s/w protocol then it
-doesn't belong in DT. Perhaps it could be a library which the bridge
-driver can call into.
-
-What are the resets connected to? The slots? Maybe you should model
-the slots in DT.
-
-Rob
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index 0f27fad9fe94..8381f33ed2d8 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -195,6 +195,37 @@ const void *of_device_get_match_data(const struct device *dev)
+ }
+ EXPORT_SYMBOL(of_device_get_match_data);
+ 
++/**
++ * platform_driver_probe_by_of_match_data - Probe a platform device using match data
++ * @pdev: platform device to probe
++ *
++ * For use by device drivers that multiplex their probe function through DT
++ * match data. Drivers can use this function to call their platform
++ * device probe directly without having to implement a wrapper function.
++ *
++ * static const struct of_device_id probe_funcs[] = {
++ *      { .compatible = "compat,foo", .data = foo_probe },
++ *      {}
++ * };
++ *
++ * struct platform_driver foo_driver = {
++ *      .probe = platform_driver_probe_by_of_match_data,
++ *      .driver = {
++ *            of_match_table = probe_funcs,
++ *      },
++ * };
++ *
++ */
++int platform_driver_probe_by_of_match_data(struct platform_device *pdev)
++{
++	int (*probe_func)(struct platform_device *pdev);
++
++	probe_func = of_device_get_match_data(&pdev->dev);
++
++	return probe_func(pdev);
++}
++EXPORT_SYMBOL_GPL(platform_driver_probe_by_of_match_data);
++
+ static ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
+ {
+ 	const char *compat;
+diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+index 8d31e39dd564..4de84691d1c6 100644
+--- a/include/linux/of_device.h
++++ b/include/linux/of_device.h
+@@ -33,6 +33,7 @@ extern int of_device_add(struct platform_device *pdev);
+ extern int of_device_register(struct platform_device *ofdev);
+ extern void of_device_unregister(struct platform_device *ofdev);
+ 
++extern int platform_driver_probe_by_of_match_data(struct platform_device *pdev);
+ extern const void *of_device_get_match_data(const struct device *dev);
+ 
+ extern ssize_t of_device_modalias(struct device *dev, char *str, ssize_t len);
+-- 
+Sent by a computer through tubes
