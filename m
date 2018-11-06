@@ -1,52 +1,77 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3 6/6] usb: host: Add ability to build new Broadcom STB
- USB drivers
-Date: Tue, 6 Nov 2018 19:22:44 +0100
-Message-ID: <CAK8P3a2Xuq77sXKy4QX1YhStOEhm+oAM_AErEGuwqB115pHB_w@mail.gmail.com>
-References: <1541453493-34981-1-git-send-email-alcooperx@gmail.com>
- <1541453493-34981-7-git-send-email-alcooperx@gmail.com> <CAK8P3a0AoHuaiPsMTqhWm3a4X95NpPTPUHkt9vS9Z2ow8NobhA@mail.gmail.com>
- <CAOGqxeX1FckLz7XEm-doh_AHUjvRtn00yZfir6dRNMYNOMY5_g@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH anybus v3 1/6] misc: support the Arcx anybus bridge
+Date: Tue, 6 Nov 2018 12:30:55 -0600
+Message-ID: <CAL_Jsq+YeW+BtVh=L8PBjXYLj9sp91BcUQrJJrwnmChRnXoK_w@mail.gmail.com>
+References: <20181104155501.14767-1-TheSven73@googlemail.com>
+ <20181104155501.14767-2-TheSven73@googlemail.com> <20181105212049.GA320@bogus>
+ <CAGngYiUZTm-r0KJ07tKsPmgKCUWcqAOx2S82iLPRjkcDiw0R3g@mail.gmail.com>
+ <CAL_JsqLgz9Z3J0x+QFU6jHOoHn6A1KASc+HbVLnW1=ow0RHv6w@mail.gmail.com> <CAGngYiXczK6dsfyDGxe1ym-vQQfH5XS0jeEkuWW_og23JmTAZg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOGqxeX1FckLz7XEm-doh_AHUjvRtn00yZfir6dRNMYNOMY5_g@mail.gmail.com>
+In-Reply-To: <CAGngYiXczK6dsfyDGxe1ym-vQQfH5XS0jeEkuWW_og23JmTAZg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Cooper <alcooperx@gmail.com>
-Cc: ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, chunfeng yun <chunfeng.yun@mediatek.com>, "David S. Miller" <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>
+To: Sven Van Asbroeck <thesven73@gmail.com>
+Cc: Sven Van Asbroeck <svendev@arcx.com>, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>, Johan Hovold <johan@kernel.org>, Michal Simek <monstr@monstr.eu>, =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Garry <john.garry@huawei.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Robin Murphy <robin.murphy@arm.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux>
 List-Id: devicetree@vger.kernel.org
 
-On 11/6/18, Alan Cooper <alcooperx@gmail.com> wrote:
-> On Tue, Nov 6, 2018 at 6:09 AM Arnd Bergmann <arnd@arndb.de> wrote:
->>
->> On 11/5/18, Al Cooper <alcooperx@gmail.com> wrote:
->>
->> > +
->> > +config USB_BRCM
->> > +     tristate "Broadcom STB USB support"
->> > +     depends on ARCH_BRCMSTB
->> > +     select USB_OHCI_HCD_PLATFORM if USB_OHCI_HCD
->> > +     select USB_EHCI_BRCM if USB_EHCI_HCD
->> > +     select USB_XHCI_BRCM if USB_XHCI_HCD
->> > +     select USB_XHCI_PLATFORM if USB_XHCI_HCD
->> > +     select BRCM_USB_PHY if USB_OHCI_HCD || USB_EHCI_HCD ||
->> > USB_XHCI_HCD
->> > +     select GENERIC_PHY if BRCM_USB_PHY
->> > +     default ARCH_BRCMSTB
->>
->> Is there a build time dependency on the PHY layer? If not, I would
->> suggest
->> dropping the last two 'select' statements. I would also suggest
->> making the dependency 'depends on ARCH_BRCMSTB || COMPILE_TEST'
->> to allow building it on other architecture for better build testing, and
->> dropping the 'default' line. Just add this to the defconfig like the
->> other
->> drivers you have.
+On Tue, Nov 6, 2018 at 8:46 AM Sven Van Asbroeck <thesven73@gmail.com> wrote:
 >
-> I added COMPILE_TEST and dropped the last 2 select lines.
-> Most of our other drivers default to "y" for "ARCH_BRCMSTB", would it
-> be better if I changed it to "default y"?
+> On Tue, Nov 6, 2018 at 8:58 AM Rob Herring <robh@kernel.org> wrote:
+>
+> > It doesn't really sound like the host should be in DT. The bridge
+> > should register itself as an anybus provider and that should in turn
+> > enable the anybus host protocol.
+>
+> Very good point. Just to make sure we're on the same page, could you point
+> me to a relevant example where something registers as a provider?
 
-No, "default ARCH_BRCMSTB" is better than "default y", but I'd recommend
-to just not have non-essential drivers default-on.
+Not sure exactly. Perhaps I2C SMBus functions that implement the
+register access protocol on top of I2C bus.
 
-      Arnd
+> v1 of this patch did not have the host in DT. The host just required platform
+> data with a regmap and a reset (the interrupt was passed via resources):
+>
+> struct anybuss_host_pdata {
+>     struct regmap *regmap;
+>     void (*reset)(struct device *dev, bool reset);
+> };
+>
+> But there were problems with this approach.
+
+A block diagram would help. Something that shows the host SoC, your
+CPLD, reset, irq, etc.
+
+> The review feedback told me that my self-rolled reset callback should really
+> be a reset controller. I looked for ways to pass a handle to a reset controller
+> via platform data. This has recently been introduced via:
+
+Maybe an overkill for 1 reset.
+
+>
+> reset_controller_add_lookup()
+>
+> This binds a client device to a reset controller, without using the devicetree,
+> so the device can grab its controller via (devm_)reset_control_get*. Great!
+> But... to make the binding, you have to specify the full device names of the
+> controllers and client devices. See this example from psc-da850.c:
+>
+> static struct reset_control_lookup da850_psc0_reset_lookup_table[] = {
+>     RESET_LOOKUP("da850-psc0", 15, "davinci-rproc.0", NULL),
+> };
+>
+> I very quickly found myself in ida_simple_get() hell, trying to second-guess
+> what the devices I was creating, would be called !
+>
+> So instead I put the host in DT, then I could easily connect the reset
+> controller. This also greatly simplified the bridge driver, a lot of boilerplate
+> would simply disappear.
+
+If the host is not a h/w component, but just a s/w protocol then it
+doesn't belong in DT. Perhaps it could be a library which the bridge
+driver can call into.
+
+What are the resets connected to? The slots? Maybe you should model
+the slots in DT.
+
+Rob
