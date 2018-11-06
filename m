@@ -1,149 +1,63 @@
-From: Florinel Iordache <florinel.iordache@nxp.com>
-Subject: [bindings][PATCH] bindings/net: DPAA Backplane Device Bindings
-Date: Tue, 6 Nov 2018 11:48:30 +0000
-Message-ID: <1541504900-30091-1-git-send-email-florinel.iordache@nxp.com>
-Reply-To: Florinel Iordache <florinel.iordache@nxp.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH] of/device: Really only set bus DMA mask when appropriate
+Date: Tue,  6 Nov 2018 11:54:15 +0000
+Message-ID: <b06321ac25a1211e572e650a630e5e1aa9f8173f.1541504601.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "broonie@kernel.org" <broonie@kernel.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Florinel Iordache <florinel.iordache@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: hch-jcswGhMUV9g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Device Tree Bindings for DPAA backplane available on Layerscape
- communications processors.
+of_dma_configure() was *supposed* to be following the same logic as
+acpi_dma_configure() and only setting bus_dma_mask if some range was
+specified by the firmware. However, it seems that subtlety got lost in
+the process of fitting it into the differently-shaped control flow, and
+as a result the force_dma==true case ends up always setting the bus mask
+to the 32-bit default, which is not what anyone wants.
 
-Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
+Make sure we only touch it if the DT actually said so.
+
+Fixes: 6c2fb2ea7636 ("of/device: Set bus DMA mask as appropriate")
+Reported-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Reported-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 ---
- .../devicetree/bindings/net/dpaa-backplane.txt     | 105 +++++++++++++++++=
-++++
- 1 file changed, 105 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/dpaa-backplane.tx=
-t
 
-diff --git a/Documentation/devicetree/bindings/net/dpaa-backplane.txt b/Doc=
-umentation/devicetree/bindings/net/dpaa-backplane.txt
-new file mode 100644
-index 0000000..f147c84
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/dpaa-backplane.txt
-@@ -0,0 +1,105 @@
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-+DPAA Backplane Device Bindings
-+
-+CONTENTS
-+  - SerDes Node
-+  - PCS Phy Node
-+
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-+SerDes Node
-+
-+DESCRIPTION
-+
-+SerDes (Serializer/Deserializer) HW peripheral
-+
-+PROPERTIES
-+
-+- compatible
-+		Usage: required
-+		Value type: <stringlist>
-+		Definition: Specifies the type of SerDes.
-+		Must include the prefix "fsl,serdes"
-+		SerDes can be of different types:
-+		- 10G SerDes must be specified as: "fsl,serdes-10g"
-+		- 28G SerDes must be specified as: "fsl,serdes-28g"
-+
-+- reg
-+		Usage: required
-+		Value type: <prop-encoded-array>
-+		Definition: Specifies the offset of the SerDes configuration registers
-+
-+- little-endian
-+		Usage: optional
-+		Value type: <Boolean>
-+		Definition: Specifies endianness access to SerDes registers.
-+		If omitted, big-endian will be used
-+		See common-properties.txt for complete definition
-+
-+EXAMPLE
-+
-+Example of 10G SerDes node:
-+
-+serdes1: serdes@1ea0000 {
-+		compatible =3D "fsl,serdes-10g";
-+		reg =3D <0x0 0x1ea0000 0 0x00002000>;
-+		little-endian;
-+};
-+
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-+PCS Phy Node
-+
-+DESCRIPTION
-+
-+PCS Phy (Physical Coding Sublayer / Physical layer) node
-+
-+PROPERTIES
-+
-+- compatible
-+		Usage: required
-+		Value type: <stringlist>
-+		Definition: A standard property. Specifies the IEEE 802.3 Clause
-+		Different IEEE 802.3 Clauses can be specified:
-+		- Clause 22 must be specified as: "ethernet-phy-ieee802.3-c22"
-+		- Clause 45 must be specified as: "ethernet-phy-ieee802.3-c45"
-+		For complete definition see:
-+		Documentation/devicetree/bindings/net/phy.txt
-+
-+- reg
-+		Usage: required
-+		Value type: <prop-encoded-array>
-+		Definition: A standard property.
-+		Specifies the offset of the PCS Phy configuration registers
-+		For complete definition see:
-+		Documentation/devicetree/bindings/net/phy.txt
-+
-+- backplane-mode
-+		Usage: required
-+		Value type: <stringlist>
-+		Definition: Specifies the speed and type of the protocol used
-+		Different speeds and backplane protocol types can be used:
-+		- 10GBase-KR must be specified as: "10gbase-kr"
-+		- 40GBase-KR must be specified as: "40gbase-kr"
-+
-+- fsl,lane-handle
-+		Usage: required
-+		Value type: <phandle>
-+		Definition: Specifies the reference to a node representing the SerDes
-+		device
-+
-+- fsl,lane-reg
-+		Usage: required
-+		Value type: <prop-encoded-array>
-+		Definition: Specifies the offsets of the SerDes lanes configuration
-+		registers
-+
-+EXAMPLE
-+
-+Example of pcs phy node for 10GBase-KR:
-+
-+pcs_phy1: ethernet-phy@0 {
-+	compatible =3D "ethernet-phy-ieee802.3-c45";
-+	backplane-mode =3D "10gbase-kr";
-+	reg =3D <0x0>;
-+	fsl,lane-handle =3D <&serdes1>;
-+	fsl,lane-reg =3D <0xE00>; /* lane G */
-+};
---=20
-1.9.1
+Sorry about that... I guess I only have test setups that either have
+dma-ranges or where a 32-bit bus mask goes unnoticed :(
+
+The Octeon and SMMU issues sound like they're purely down to this, and
+it's probably related to at least one of John's Hikey woes.
+
+Robin.
+
+ drivers/of/device.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index 0f27fad9fe94..757ae867674f 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -149,7 +149,8 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
+ 	 * set by the driver.
+ 	 */
+ 	mask = DMA_BIT_MASK(ilog2(dma_addr + size - 1) + 1);
+-	dev->bus_dma_mask = mask;
++	if (!ret)
++		dev->bus_dma_mask = mask;
+ 	dev->coherent_dma_mask &= mask;
+ 	*dev->dma_mask &= mask;
+ 
+-- 
+2.19.1.dirty
