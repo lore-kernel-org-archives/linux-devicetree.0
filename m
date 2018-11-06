@@ -1,131 +1,109 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFC 0/2] Add RISC-V cpu topology
-Date: Tue, 6 Nov 2018 15:50:00 +0000
-Message-ID: <20181106155000.GA25372@e107155-lin>
-References: <1541113468-22097-1-git-send-email-atish.patra@wdc.com>
- <866dedbc78ab4fa0e3b040697e112106@mailhost.ics.forth.gr>
- <20181106141331.GA28458@e107155-lin>
- <969fc2a5198984e0dfe8c3f585dc65f9@mailhost.ics.forth.gr>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 02/10] drm/sun4i: sun6i_mipi_dsi: Support instruction
+ loop selection
+Date: Tue, 6 Nov 2018 16:52:07 +0100
+Message-ID: <20181106155207.kysq2crszzqv45ib@flea>
+References: <20181103100900.30313-1-jagan@amarulasolutions.com>
+ <20181103100900.30313-3-jagan@amarulasolutions.com>
+ <20181105103857.lp7ayw3p6dbthehg@flea>
+ <CAMty3ZBje8F4YEfWC4qoxADhgdFjbcwZBKJwak633pUAwKAftA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <969fc2a5198984e0dfe8c3f585dc65f9@mailhost.ics.forth.gr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nick Kossifidis <mick@ics.forth.gr>
-Cc: Atish Patra <atish.patra@wdc.com>, linux-riscv@lists.infradead.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Damien.LeMoal@wdc.com, alankao@andestech.com, zong@andestech.com, anup@brainfault.org, palmer@sifive.com, linux-kernel@vger.kernel.org, hch@infradead.org, robh+dt@kernel.org, tglx@linutronix.de
+Content-Type: multipart/mixed; boundary="===============1742209865=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAMty3ZBje8F4YEfWC4qoxADhgdFjbcwZBKJwak633pUAwKAftA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, David Airlie <airlied@linux.ie>, linux-sunxi@googlegroups.com, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, TL Lim <tllim@pine64.org>, Michael Trimarchi <michael@amarulasolutions.com>, Sean Paul <sean@poorly.run>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 06, 2018 at 05:26:01PM +0200, Nick Kossifidis wrote:
-> Στις 2018-11-06 16:13, Sudeep Holla έγραψε:
-> > On Fri, Nov 02, 2018 at 08:58:39PM +0200, Nick Kossifidis wrote:
-> > > Hello All,
+
+--===============1742209865==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="iwk7rx7z5npid6ud"
+Content-Disposition: inline
+
+
+--iwk7rx7z5npid6ud
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Nov 05, 2018 at 04:56:35PM +0530, Jagan Teki wrote:
+> On Mon, Nov 5, 2018 at 4:09 PM Maxime Ripard <maxime.ripard@bootlin.com> =
+wrote:
+> >
+> > On Sat, Nov 03, 2018 at 03:38:52PM +0530, Jagan Teki wrote:
+> > > Instruction loop selection would require before writing
+> > > loop number registers, so enable idle, LP11 bits on
+> > > loop selection register.
 > > >
-> > > Στις 2018-11-02 01:04, Atish Patra έγραψε:
-> > > > This patch series adds the cpu topology for RISC-V. It contains
-> > > > both the DT binding and actual source code. It has been tested on
-> > > > QEMU & Unleashed board.
-> > > >
-> > > > The idea is based on cpu-map in ARM with changes related to how
-> > > > we define SMT systems. The reason for adopting a similar approach
-> > > > to ARM as I feel it provides a very clear way of defining the
-> > > > topology compared to parsing cache nodes to figure out which cpus
-> > > > share the same package or core.  I am open to any other idea to
-> > > > implement cpu-topology as well.
-> > > >
+> > > Reference code available in BSP
+> > > (in drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
+> > > (dsi_dev[sel]->dsi_inst_loop_sel.dwval =3D 2<<(4*DSI_INST_ID_LP11) |
+> > >       3<<(4*DSI_INST_ID_DLY);
 > > >
-> > > I was also about to start a discussion about CPU topology on RISC-V
-> > > after the last swtools group meeting. The goal is to provide the
-> > > scheduler with hints on how to distribute tasks more efficiently
-> > > between harts, by populating the scheduling domain topology levels
-> > > (https://elixir.bootlin.com/linux/v4.19/ident/sched_domain_topology_level).
-> > > What we want to do is define cpu groups and assign them to
-> > > scheduling domains with the appropriate SD_ flags
-> > > (https://github.com/torvalds/linux/blob/master/include/linux/sched/topology.h#L16).
+> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > ---
+> > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 4 ++++
+> > >  1 file changed, 4 insertions(+)
 > > >
-> >
-> > OK are we defining a CPU topology binding for Linux scheduler ?
-> > NACK for all the approaches that assumes any knowledge of OS scheduler.
-> >
->
-> Is there any standard regarding CPU topology on the device tree spec ? As
-> far as I know there is none. We are talking about a Linux-specific Device
-> Tree binding so I don't see why defining a binding for the Linux scheduler
-> is out of scope.
-
-There may not be much on CPU topology in device tree spec, but that
-doesn't mean we are defining something Linux specific here just because
-there's bunch of LKML are cc-ed. We do have dedicated device tree ML for
-a reason.
-
-> Do you have cpu-map on other OSes as well ?
->
-
-Nothing prevents them not to. I have seen increase in the projects
-relying on DT these days.
-
-> > > So the cores that belong to a scheduling domain may share:
-> > > CPU capacity (SD_SHARE_CPUCAPACITY / SD_ASYM_CPUCAPACITY)
-> > > Package resources -e.g. caches, units etc- (SD_SHARE_PKG_RESOURCES)
-> > > Power domain (SD_SHARE_POWERDOMAIN)
+> > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm=
+/sun4i/sun6i_mipi_dsi.c
+> > > index da152c21ec62..077b57ec964c 100644
+> > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > @@ -397,6 +397,10 @@ static void sun6i_dsi_setup_inst_loop(struct sun=
+6i_dsi *dsi,
+> > >       struct mipi_dsi_device *device =3D dsi->device;
+> > >       u16 delay;
 > > >
+> > > +     regmap_write(dsi->regs, SUN6I_DSI_INST_LOOP_SEL_REG,
+> > > +                  DSI_INST_ID_HSC  << (4 * DSI_INST_ID_LP11) |
+> > > +                  DSI_INST_ID_HSD  << (4 * DSI_INST_ID_DLY));
+> > > +
 > >
-> > Too Linux kernel/scheduler specific to be part of $subject
-> >
->
-> All lists on the cc list are Linux specific, again I don't see your point
-> here are we talking about defining a standard CPU topology scheme for the
-> device tree spec or a Linux-specific CPU topology binding such as cpu-map ?
->
+> > Please put this with the other instructions settings below.
+>=20
+> Does that mean after computation delay code?
 
-See above.
+Yes
 
-> Even on this case your point is not valid, the information of two harts
-> sharing a common power domain or having the same or not capacity/max
-> frequency (or maybe capabilities/extensions in the future), is not Linux
-> specific. I just used the Linux specific macros used by the Linux scheduler
-> to point out the code path.
+Maxime
 
-The CPU topology can be different from the frequency or the power domains
-and we do have specific bindings to provide those information. So let's
-try to keep that out of this discussion.
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-> Even on other OSes we still need a way to include this information on the
-> CPU topology, and currently cpu-map doesn't. Also the Linux implementation
-> of cpu-map ignores multiple levels of shared resources, we only get one
-> level for SMT and one level for MC last time I checked.
->
+--iwk7rx7z5npid6ud
+Content-Type: application/pgp-signature; name="signature.asc"
 
-But that doesn't make it any easy if you influence the bindings based on
-Linux scheduler. So just define how hardware is and allow each OS to
-choose it's own way to utilise that information. That's how most of the
-generic DT bindings are defined.
+-----BEGIN PGP SIGNATURE-----
 
-> > > In this context I believe using words like "core", "package",
-> > > "socket" etc can be misleading. For example the sample topology you
-> > > use on the documentation says that there are 4 cores that are part
-> > > of a package, however "package" has a different meaning to the
-> > > scheduler. Also we don't say anything in case they share a power
-> > > domain or if they have the same capacity or not. This mapping deals
-> > > only with cache hierarchy or other shared resources.
-> > >
-> >
-> > {Un,}fortunately those are terms used by hardware people.
-> >
->
-> And they are wrong, how the harts are physically packed doesn't imply
-> their actual topology. In general the "translation" is not always straight
-> forward, there are assumptions in place. We could use "cluster" of harts or
-> "group" of harts instead, they are more abstract.
->
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW+G4pwAKCRDj7w1vZxhR
+xf5zAP9MQRhh1/DVKTUy1CqpnOzbp3XS5XFbEMEfhyXA3L304wD8Cd2d61VUgcPW
+CDWVIgkkHip3nkRAC0rM4ZNrgH29zwA=
+=Q/5+
+-----END PGP SIGNATURE-----
 
-Indeed. I agree those terminologies may not be best, but they are already
-used one. We need to map on to those generic ones, though the translations
-may not be simple. We do have the same issues on ARM. If we try to build
-in such information into DT, then it becomes more configuration file for
-OS than platform description IMO.
+--iwk7rx7z5npid6ud--
 
---
-Regards,
-Sudeep
+--===============1742209865==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1742209865==--
