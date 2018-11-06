@@ -1,36 +1,39 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v3 3/3] usb: typec: tcpm: charge current handling for
- sink during hard reset
-Date: Tue, 6 Nov 2018 11:10:45 +0200
-Message-ID: <20181106091045.GB13048@kuha.fi.intel.com>
-References: <20181001194501.58338-1-badhri@google.com>
- <20181001194501.58338-3-badhri@google.com>
- <20181102132847.GC6543@kuha.fi.intel.com>
- <CAPTae5K7o31eFJxaW=_6UCyLgiagSz45O6iDhgfqh2vu3QMQsg@mail.gmail.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH] ARM: dts: imx6sll: remove unused property in gpc node
+Date: Tue, 6 Nov 2018 09:19:36 +0000
+Message-ID: <1541495675-14706-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPTae5K7o31eFJxaW=_6UCyLgiagSz45O6iDhgfqh2vu3QMQsg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Badhri Jagan Sridharan <badhri@google.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, cw00.choi@samsung.com, a.hajda@samsung.com, jun.li@nxp.com, Guenter Roeck <linux@roeck-us.net>, jackp@codeaurora.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, USB <linux-usb@vger.kernel.org>
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 05, 2018 at 04:15:24PM -0800, Badhri Jagan Sridharan wrote:
-> Hi Heikki, Rob,
-> 
-> Thanks for reviewing !
-> Should I update the patchset with the Reviewed-by tag and bumpup the
-> patchset version ?
-> Or is that not necessary?
+The "fsl,mf-mix-wakeup-irq" is ONLY used as a temporary
+solution in NXP's internal tree for Mega/Fast Mix off
+feature after suspend, upstream kernel does NOT need it,
+remove it.
 
-No it's not necessary. Greg will eventually pick these to his queue
-(assuming there are no other comments before that), and he'll take
-care of adding the tags.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6sll.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-
-thanks,
-
--- 
-heikki
+diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dts=
+i
+index 5ff4b99..62847c6 100644
+--- a/arch/arm/boot/dts/imx6sll.dtsi
++++ b/arch/arm/boot/dts/imx6sll.dtsi
+@@ -593,7 +593,6 @@
+ 				#interrupt-cells =3D <3>;
+ 				interrupts =3D <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+ 				interrupt-parent =3D <&intc>;
+-				fsl,mf-mix-wakeup-irq =3D <0x7c00000 0x7d00 0x0 0x1400640>;
+ 			};
+=20
+ 			iomuxc: pinctrl@20e0000 {
+--=20
+2.7.4
