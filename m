@@ -1,56 +1,59 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH 2/2] drm/msm/dsi: Get PHY ref clock from the DT
-Date: Tue, 06 Nov 2018 15:11:48 -0800
-Message-ID: <154154590845.88331.13649449650347478513@swboyd.mtv.corp.google.com>
-References: <20181102214534.184593-1-mka@chromium.org>
- <20181102214534.184593-2-mka@chromium.org>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH] of/device: Really only set bus DMA mask when appropriate
+Date: Tue, 6 Nov 2018 15:16:11 -0800
+Message-ID: <CALAqxLWif1wjRHx5X136sBqdg0KJ8itqXPk9G6NJ70Z_QFavzQ@mail.gmail.com>
+References: <b06321ac25a1211e572e650a630e5e1aa9f8173f.1541504601.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181102214534.184593-2-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Archit Taneja <architt@codeaurora.org>, Sean Paul <seanpaul@chromium.org>, Rajesh Yadav <ryadav@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <b06321ac25a1211e572e650a630e5e1aa9f8173f.1541504601.git.robin.murphy@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, aaro.koskinen@iki.fi, jean-philippe.brucker@arm.com, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, linux-mips@linux-mips.org, hch@lst.de, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Matthias Kaehlcke (2018-11-02 14:45:34)
-> @@ -630,7 +632,8 @@ static int pll_10nm_register(struct dsi_pll_10nm *pll=
-_10nm)
->         char clk_name[32], parent[32], vco_name[32];
->         char parent2[32], parent3[32], parent4[32];
->         struct clk_init_data vco_init =3D {
-> -               .parent_names =3D (const char *[]){ "xo" },
-> +               .parent_names =3D (const char *[]){
-> +                       __clk_get_name(pll_10nm->vco_ref_clk) },
+On Tue, Nov 6, 2018 at 3:54 AM, Robin Murphy <robin.murphy@arm.com> wrote:
+> of_dma_configure() was *supposed* to be following the same logic as
+> acpi_dma_configure() and only setting bus_dma_mask if some range was
+> specified by the firmware. However, it seems that subtlety got lost in
+> the process of fitting it into the differently-shaped control flow, and
+> as a result the force_dma==true case ends up always setting the bus mask
+> to the 32-bit default, which is not what anyone wants.
+>
+> Make sure we only touch it if the DT actually said so.
+>
+> Fixes: 6c2fb2ea7636 ("of/device: Set bus DMA mask as appropriate")
+> Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+> Reported-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> ---
+>
+> Sorry about that... I guess I only have test setups that either have
+> dma-ranges or where a 32-bit bus mask goes unnoticed :(
+>
+> The Octeon and SMMU issues sound like they're purely down to this, and
+> it's probably related to at least one of John's Hikey woes.
 
-I find this syntax odd, in addition to needing to check for NULL here as
-Sean pointed out. Preferably just have it be the address of the
-character pointer instead of making an anonymous array and then casting
-that inline, i.e
+Yep! This does seem to resolve the mali bifrost dma address warn-ons I
+was seeing, and makes the board seem to function more consistently, so
+that's great!
 
-		.parent_names =3D &ref_clk_name,
+Tested-by: John Stultz <john.stultz@linaro.org>
 
->                 .num_parents =3D 1,
->                 .name =3D vco_name,
->                 .flags =3D CLK_IGNORE_UNUSED,
-> @@ -786,6 +789,12 @@ struct msm_dsi_pll *msm_dsi_pll_10nm_init(struct pla=
-tform_device *pdev, int id)
->         pll_10nm->id =3D id;
->         pll_10nm_list[id] =3D pll_10nm;
->  =
+Though I still find I have to revert "swiotlb: use swiotlb_map_page in
+swiotlb_map_sg_attrs" still to boot to UI successfully with AOSP.
+Still not sure whats going on there (its sort of soft hangs where some
+userland runs ok, but other bits seem to jam up, even console commands
+sometimes hang - almost seems like io stalls).
 
-> +       pll_10nm->vco_ref_clk =3D devm_clk_get(&pdev->dev, "ref");
-> +       if (IS_ERR(pll_10nm->vco_ref_clk)) {
-> +               dev_err(&pdev->dev, "couldn't get 'ref' clock\n");
-
-This might be because of probe defer, which may be annoying to see this
-failure many times.
-
-> +               return (void *)pll_10nm->vco_ref_clk;
-> +       }
-> +
->         pll_10nm->phy_cmn_mmio =3D msm_ioremap(pdev, "dsi_phy", "DSI_PHY"=
-);
->         if (IS_ERR_OR_NULL(pll_10nm->phy_cmn_mmio)) {
->                 dev_err(&pdev->dev, "failed to map CMN PHY base\n");
+Anyway, thanks so much again for this one!
+-john
