@@ -1,71 +1,81 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: clk: Introduce 'protected-clocks'
- property
-Date: Mon, 5 Nov 2018 17:04:26 -0800
-Message-ID: <20181106010426.GX2523@minitux>
+Subject: Re: [PATCH 2/2] clk: qcom: Support 'protected-clocks' property
+Date: Mon, 5 Nov 2018 17:05:07 -0800
+Message-ID: <20181106010507.GY2523@minitux>
 References: <20181105194011.43770-1-swboyd@chromium.org>
- <20181105194011.43770-2-swboyd@chromium.org>
+ <20181105194011.43770-3-swboyd@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181105194011.43770-2-swboyd@chromium.org>
+In-Reply-To: <20181105194011.43770-3-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Boyd <swboyd@chromium.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Taniya Das <tdas@codeaurora.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
 On Mon 05 Nov 11:40 PST 2018, Stephen Boyd wrote:
 
-> Add a generic clk property for clks which are not intended to be used by
-> the OS due to security restrictions put in place by firmware. For
-> example, on some Qualcomm firmwares reading or writing certain clk
-> registers causes the entire system to reboot, but on other firmwares
-> reading and writing those same registers is required to make devices
-> like QSPI work. Rather than adding one-off properties each time a new
-> set of clks appears to be protected, let's add a generic clk property to
-> describe any set of clks that shouldn't be touched by the OS. This way
-> we never need to register the clks or use them in certain firmware
-> configurations.
+> Certain firmware configurations "protect" clks and cause the entire
+> system to reboot when a non-secure OS such as Linux tries to read or
+> write protected clk registers. But other firmware configurations allow
+> reading or writing the same registers, and they may actually require
+> that the OS use the otherwise locked down clks. Support the
+> 'protected-clocks' property by never registering these protected clks
+> with the common clk framework. This way, when firmware is protecting
+> these clks we won't have the chance to ever read or write these
+> registers and take down the entire system.
 > 
-> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Taniya Das <tdas@codeaurora.org>
 > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
 Bjorn
 
-> Cc: Taniya Das <tdas@codeaurora.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 > ---
->  .../devicetree/bindings/clock/clock-bindings.txt | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  drivers/clk/qcom/common.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> index 2ec489eebe72..b646bbcf7f92 100644
-> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> @@ -168,3 +168,19 @@ a shared clock is forbidden.
+> diff --git a/drivers/clk/qcom/common.c b/drivers/clk/qcom/common.c
+> index db9b2471ac40..0a48ed56833b 100644
+> --- a/drivers/clk/qcom/common.c
+> +++ b/drivers/clk/qcom/common.c
+> @@ -191,6 +191,22 @@ int qcom_cc_register_sleep_clk(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(qcom_cc_register_sleep_clk);
 >  
->  Configuration of common clocks, which affect multiple consumer devices can
->  be similarly specified in the clock provider node.
+> +/* Drop 'protected-clocks' from the list of clocks to register */
+> +static void qcom_cc_drop_protected(struct device *dev, struct qcom_cc *cc)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	struct property *prop;
+> +	const __be32 *p;
+> +	u32 i;
 > +
-> +==Protected clocks==
+> +	of_property_for_each_u32(np, "protected-clocks", prop, p, i) {
+> +		if (i >= cc->num_rclks)
+> +			continue;
 > +
-> +Some platforms or firmwares may not fully expose all the clocks to the OS, such
-> +as in situations where those clks are used by drivers running in ARM secure
-> +execution levels. Such a configuration can be specified in device tree with the
-> +protected-clocks property in the form of a clock specifier list. This property should
-> +only be specified in the node that is providing the clocks being protected:
+> +		cc->rclks[i] = NULL;
+> +	}
+> +}
 > +
-> +   clock-controller@a000f000 {
-> +        compatible = "vendor,clk95;
-> +        reg = <0xa000f000 0x1000>
-> +        #clocks-cells = <1>;
-> +        ...
-> +        protected-clocks = <UART3_CLK>, <SPI5_CLK>;
-> +   };
+>  static struct clk_hw *qcom_cc_clk_hw_get(struct of_phandle_args *clkspec,
+>  					 void *data)
+>  {
+> @@ -251,6 +267,8 @@ int qcom_cc_really_probe(struct platform_device *pdev,
+>  	cc->rclks = rclks;
+>  	cc->num_rclks = num_clks;
+>  
+> +	qcom_cc_drop_protected(dev, cc);
+> +
+>  	for (i = 0; i < num_clks; i++) {
+>  		if (!rclks[i])
+>  			continue;
 > -- 
 > Sent by a computer through tubes
 > 
