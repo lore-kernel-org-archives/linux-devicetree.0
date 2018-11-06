@@ -1,15 +1,14 @@
 From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: r8a77990: ebisu: Enable SDHI interfaces
-Date: Tue, 6 Nov 2018 10:18:01 +0100
-Message-ID: <3e933acf-33d1-ca27-e463-57345c79396a@gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: r8a77990: Add SDHI device nodes
+Date: Tue, 6 Nov 2018 10:42:11 +0100
+Message-ID: <7ab702f0-e78c-94c5-b74f-bac1803fb513@gmail.com>
 References: <20181105214117.11734-1-marek.vasut+renesas@gmail.com>
- <20181105214117.11734-2-marek.vasut+renesas@gmail.com>
- <20181106083450.GB1054@kunai>
+ <OSBPR01MB229351FF35C839C4E9A7F19CD8CB0@OSBPR01MB2293.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181106083450.GB1054@kunai>
+In-Reply-To: <OSBPR01MB229351FF35C839C4E9A7F19CD8CB0@OSBPR01MB2293.jpnprd01.prod.outlook.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -20,28 +19,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: devicetree@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, linux-arm-kernel@lists.infradead.org, Marek Vasut <marek.vasut+renesas@gmail.com>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: TAKESHI KIHARA <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/06/2018 09:34 AM, Wolfram Sang wrote:
-> 
->> +	sdhi3_pins: sd3 {
->> +		groups = "sdhi3_data8", "sdhi3_ctrl";
->> +		function = "sdhi3";
->> +		power-source = <1800>;
->> +	};
->> +
->> +	sdhi3_pins_uhs: sd3_uhs {
->> +		groups = "sdhi3_data8", "sdhi3_ctrl";
->> +		function = "sdhi3";
->> +		power-source = <1800>;
->> +	};
-> 
-> Shouldn't we have only one pinctrl config here, like you did recently
-> for the other Gen3 SoCs?
+On 11/06/2018 06:26 AM, Yoshihiro Shimoda wrote:
+> Hello Marek-san,
 
-We should, thanks for pointing it out, fixed in V2.
+Hello Shimoda-san,
+
+>> From: Marek Vasut, Sent: Tuesday, November 6, 2018 6:41 AM
+>>
+>> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>>
+>> This patch adds SDHI{0,1,3} device nodes for the r8a77990 SoC.
+>>
+>> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+>> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+>> Cc: Simon Horman <horms+renesas@verge.net.au>
+>> Cc: Wolfram Sang <wsa@the-dreams.de>
+>> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>> Cc: linux-renesas-soc@vger.kernel.org
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> ---
+> 
+> Thank you for the patch!
+> 
+> Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> 
+> I guess this patch and the 2/2 patch for ebisu have to be merged into a patch though.
+
+I wonder about that, 1/2 is adding SDHI DT nodes for an SoC, 2/2 is
+enabling SDHI on a particular board, which I think should be separate.
 
 -- 
 Best regards,
