@@ -1,47 +1,93 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: clk: add documentation for the SiFive PRCI
- driver
-Date: Tue, 06 Nov 2018 09:33:32 -0800
-Message-ID: <154152561238.88331.13239370518226908068@swboyd.mtv.corp.google.com>
-References: <20181020135024.28573-1-paul.walmsley@sifive.com>
- <20181020135024.28573-3-paul.walmsley@sifive.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v2 01/17] arm64: dts: qcom: qcs404: add base dts files
+Date: Tue, 6 Nov 2018 23:05:43 +0530
+Message-ID: <20181106173543.GZ12092@vkoul-mobl>
+References: <20181105154529.7614-1-vkoul@kernel.org>
+ <20181105154529.7614-2-vkoul@kernel.org>
+ <20181105185648.GL2523@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181020135024.28573-3-paul.walmsley@sifive.com>
+Content-Disposition: inline
+In-Reply-To: <20181105185648.GL2523@minitux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Megan Wachs <megan@sifive.com>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Paul Walmsley (2018-10-20 06:50:23)
-> diff --git a/Documentation/devicetree/bindings/clock/sifive/fu540-prci.tx=
-t b/Documentation/devicetree/bindings/clock/sifive/fu540-prci.txt
-> new file mode 100644
-> index 000000000000..d7c1e83fa5ed
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/sifive/fu540-prci.txt
-> @@ -0,0 +1,43 @@
-> +SiFive FU540 PRCI bindings
-> +
-> +On the FU540 family of SoCs, most system-wide clock and reset integration
-> +is via the PRCI IP block.
-> +
-> +Required properties:
-> +- compatible: Should be "sifive,<chip>-prci<version>".  As of the time t=
-his
-> +              file was written, only one value is supported:
+Thanks for the review Bjorn,
 
-I don't think we need the "As of the time" sentence. It will become out
-of date almost immediately so why not just say "The list of supported
-values is:"?
+On 05-11-18, 10:56, Bjorn Andersson wrote:
+> On Mon 05 Nov 07:45 PST 2018, Vinod Koul wrote:
+> 
+> > diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dts b/arch/arm64/boot/dts/qcom/qcs404-evb.dts
+> > new file mode 100644
+> > index 000000000000..74dc09ddb0d2
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dts
+> > @@ -0,0 +1,21 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +// Copyright (c) 2018, Linaro Limited
+> > +
+> > +// QCS EVB DTS
+> 
+> This can be read from the filename and the model a few lines down. So
+> please drop.
 
-> +             "sifive,fu540-c000-prci0"
-> +- reg: Should describe the PRCI's register target physical address region
-> +- clocks: Should point to the hfclk device tree node and the rtcclk
-> +          device tree node.  The RTC clock here is not a time-of-day clo=
-ck,
-> +         but is instead a high-stability clock source for system timers
-> +         and cycle counters.
-> +- #clock-cells: Should be <1>
+Sure
+
+> 
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "qcs404.dtsi"
+> > +
+> > +/ {
+> > +	model = "Qualcomm Technologies, Inc. QCS404 EVB 1000";
+> > +	compatible = "qcom,qcs404-evb";
+> > +
+> > +	aliases {
+> > +		serial0 = &blsp1_uart2;
+> > +	};
+> > +
+> > +	chosen {
+> > +		stdout-path = "serial0";
+> > +	};
+> > +};
+> > diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> [..]
+> > +	timer {
+> > +		compatible = "arm,armv8-timer";
+> > +		interrupts = <GIC_PPI 2 0xff08>,
+> > +			     <GIC_PPI 3 0xff08>,
+> > +			     <GIC_PPI 4 0xff08>,
+> > +			     <GIC_PPI 1 0xff08>;
+> > +	};
+> > +
+> > +	clocks {
+> 
+> Please sort these nodes alphabetically.
+
+Will do and also while adding subsequent nodes
+
+> > +		xo_board: xo_board {
+> > +			compatible = "fixed-clock";
+> > +			#clock-cells = <0>;
+> > +			clock-frequency = <19200000>;
+> > +		};
+> > +	};
+> > +
+> > +	soc: soc@0 {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		ranges = <0 0 0 0xffffffff>;
+> > +		compatible = "simple-bus";
+> > +
+> 
+> Please pad the address in reg to 8 digits and sort these nodes by
+> address.
+
+Sure
+
+-- 
+~Vinod
