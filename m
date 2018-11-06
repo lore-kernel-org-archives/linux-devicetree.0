@@ -1,59 +1,253 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH] of/device: Really only set bus DMA mask when appropriate
-Date: Tue, 6 Nov 2018 15:16:11 -0800
-Message-ID: <CALAqxLWif1wjRHx5X136sBqdg0KJ8itqXPk9G6NJ70Z_QFavzQ@mail.gmail.com>
-References: <b06321ac25a1211e572e650a630e5e1aa9f8173f.1541504601.git.robin.murphy@arm.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH V3 4/6] usb: ohci-platform: Add support for Broadcom STB
+ SoC's
+Date: Tue, 6 Nov 2018 15:44:21 -0800
+Message-ID: <674c3275-de47-57f4-84aa-58b318aef67b@gmail.com>
+References: <Pine.LNX.4.44L0.1811061105120.1450-100000@iolanthe.rowland.org>
+ <d077971c-d7ef-d630-2d89-5a06fb481b28@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <b06321ac25a1211e572e650a630e5e1aa9f8173f.1541504601.git.robin.murphy@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, aaro.koskinen@iki.fi, jean-philippe.brucker@arm.com, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, linux-mips@linux-mips.org, hch@lst.de, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d077971c-d7ef-d630-2d89-5a06fb481b28@broadcom.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Al Cooper <al.cooper@broadcom.com>, Alan Stern <stern@rowland.harvard.edu>, Al Cooper <alcooperx@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>, linux-usb@vger.kernel.org, Lu Baolu <baolu.lu@linux.i>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 6, 2018 at 3:54 AM, Robin Murphy <robin.murphy@arm.com> wrote:
-> of_dma_configure() was *supposed* to be following the same logic as
-> acpi_dma_configure() and only setting bus_dma_mask if some range was
-> specified by the firmware. However, it seems that subtlety got lost in
-> the process of fitting it into the differently-shaped control flow, and
-> as a result the force_dma==true case ends up always setting the bus mask
-> to the 32-bit default, which is not what anyone wants.
->
-> Make sure we only touch it if the DT actually said so.
->
-> Fixes: 6c2fb2ea7636 ("of/device: Set bus DMA mask as appropriate")
-> Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-> Reported-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+On 11/6/18 1:40 PM, Al Cooper wrote:
+> On 11/6/18 11:08 AM, Alan Stern wrote:
+>> On Mon, 5 Nov 2018, Al Cooper wrote:
+>>
+>>> Add support for Broadcom STB SoC's to the ohci platform driver.
+>>>
+>>> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+>>> ---
+>>
+>>> @@ -177,6 +189,8 @@ static int ohci_platform_probe(struct
+>>> platform_device *dev)
+>>>           ohci->flags |= OHCI_QUIRK_FRAME_NO;
+>>>       if (pdata->num_ports)
+>>>           ohci->num_ports = pdata->num_ports;
+>>> +    if (pdata->suspend_without_phy_exit)
+>>> +        hcd->suspend_without_phy_exit = 1;
+>>
+>> Sorry if I missed this in the earlier discussions...  Is there any
+>> possibility of adding a DT binding that could express this requirement,
+>> instead of putting it in the platform data?
+>>
+>> Alan Stern
+>>
+> 
+> Alan,
+> 
+> That was my original approach but internal review suggested that I use
+> pdata instead. Below is my original patch for:
+
+And the reason for that suggestion was really because it was percevied
+as encoding a driver behavior as a Device Tree property as opposed to
+describing something that was inherently and strictly a hardware
+behavior (therefore suitable for Device Tree).
+
+> [PATCH V3 2/6] usb: core: Add ability to skip phy exit on suspend and
+> init on resume
+> With this patch I can then use ohci_platform.c without any
+> modifications. Could you let me know what you think?
+> 
+> Thanks
+> Al
+> 
+> Add the ability to skip calling the PHY's exit routine on suspend
+> and the PHY's init routine on resume. This is to handle a USB PHY
+> that should have it's power_off function called on suspend but cannot
+> have it's exit function called because on exit it will disable the
+> PHY to the point where register accesses to the Host Controllers
+> using the PHY will be disabled and the host drivers will crash.
+> 
+> This is enabled with the HCD flag "suspend_without_phy_exit" which
+> can be set from any HCD driver or from the device-tree property
+> "suspend-without-phy-exit".
+> 
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
 > ---
->
-> Sorry about that... I guess I only have test setups that either have
-> dma-ranges or where a 32-bit bus mask goes unnoticed :(
->
-> The Octeon and SMMU issues sound like they're purely down to this, and
-> it's probably related to at least one of John's Hikey woes.
+>  drivers/usb/core/hcd.c  |  8 ++++----
+>  drivers/usb/core/phy.c  | 21 +++++++++++++++------
+>  drivers/usb/core/phy.h  |  9 ++++++---
+>  include/linux/usb/hcd.h |  3 +++
+>  4 files changed, 28 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+> index 1c21955fe7c0..e67e4d6b3d21 100644
+> --- a/drivers/usb/core/hcd.c
+> +++ b/drivers/usb/core/hcd.c
+> @@ -2263,7 +2263,7 @@ int hcd_bus_suspend(struct usb_device *rhdev,
+> pm_message_t msg)
+>          hcd->state = HC_STATE_SUSPENDED;
+> 
+>          if (!PMSG_IS_AUTO(msg))
+> -            usb_phy_roothub_suspend(hcd->self.sysdev,
+> +            usb_phy_roothub_suspend(hcd,
+>                          hcd->phy_roothub);
+> 
+>          /* Did we race with a root-hub wakeup event? */
+> @@ -2304,7 +2304,7 @@ int hcd_bus_resume(struct usb_device *rhdev,
+> pm_message_t msg)
+>      }
+> 
+>      if (!PMSG_IS_AUTO(msg)) {
+> -        status = usb_phy_roothub_resume(hcd->self.sysdev,
+> +        status = usb_phy_roothub_resume(hcd,
+>                          hcd->phy_roothub);
+>          if (status)
+>              return status;
+> @@ -2347,7 +2347,7 @@ int hcd_bus_resume(struct usb_device *rhdev,
+> pm_message_t msg)
+>          }
+>      } else {
+>          hcd->state = old_state;
+> -        usb_phy_roothub_suspend(hcd->self.sysdev, hcd->phy_roothub);
+> +        usb_phy_roothub_suspend(hcd, hcd->phy_roothub);
+>          dev_dbg(&rhdev->dev, "bus %s fail, err %d\n",
+>                  "resume", status);
+>          if (status != -ESHUTDOWN)
+> @@ -2744,7 +2744,7 @@ int usb_add_hcd(struct usb_hcd *hcd,
+>      struct usb_device *rhdev;
+> 
+>      if (!hcd->skip_phy_initialization && usb_hcd_is_primary_hcd(hcd)) {
+> -        hcd->phy_roothub = usb_phy_roothub_alloc(hcd->self.sysdev);
+> +        hcd->phy_roothub = usb_phy_roothub_alloc(hcd);
+>          if (IS_ERR(hcd->phy_roothub))
+>              return PTR_ERR(hcd->phy_roothub);
+> 
+> diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
+> index 9879767452a2..0eb12566f1c3 100644
+> --- a/drivers/usb/core/phy.c
+> +++ b/drivers/usb/core/phy.c
+> @@ -45,10 +45,11 @@ static int usb_phy_roothub_add_phy(struct device
+> *dev, int index,
+>      return 0;
+>  }
+> 
+> -struct usb_phy_roothub *usb_phy_roothub_alloc(struct device *dev)
+> +struct usb_phy_roothub *usb_phy_roothub_alloc(struct usb_hcd *hcd)
+>  {
+>      struct usb_phy_roothub *phy_roothub;
+>      int i, num_phys, err;
+> +    struct device *dev = hcd->self.sysdev;
+> 
+>      if (!IS_ENABLED(CONFIG_GENERIC_PHY))
+>          return NULL;
+> @@ -58,6 +59,9 @@ struct usb_phy_roothub *usb_phy_roothub_alloc(struct
+> device *dev)
+>      if (num_phys <= 0)
+>          return NULL;
+> 
+> +    if (device_property_read_bool(dev, "suspend-without-phy-exit"))
+> +        hcd->suspend_without_phy_exit = 1;
+> +
+>      phy_roothub = devm_kzalloc(dev, sizeof(*phy_roothub), GFP_KERNEL);
+>      if (!phy_roothub)
+>          return ERR_PTR(-ENOMEM);
+> @@ -161,26 +165,30 @@ void usb_phy_roothub_power_off(struct
+> usb_phy_roothub *phy_roothub)
+>  }
+>  EXPORT_SYMBOL_GPL(usb_phy_roothub_power_off);
+> 
+> -int usb_phy_roothub_suspend(struct device *controller_dev,
+> +int usb_phy_roothub_suspend(struct usb_hcd *hcd,
+>                  struct usb_phy_roothub *phy_roothub)
+>  {
+> +    struct device *controller_dev = hcd->self.sysdev;
+> +
+>      usb_phy_roothub_power_off(phy_roothub);
+> 
+>      /* keep the PHYs initialized so the device can wake up the system */
+> -    if (device_may_wakeup(controller_dev))
+> +    if (device_may_wakeup(controller_dev) ||
+> hcd->suspend_without_phy_exit)
+>          return 0;
+> 
+>      return usb_phy_roothub_exit(phy_roothub);
+>  }
+>  EXPORT_SYMBOL_GPL(usb_phy_roothub_suspend);
+> 
+> -int usb_phy_roothub_resume(struct device *controller_dev,
+> +int usb_phy_roothub_resume(struct usb_hcd *hcd,
+>                 struct usb_phy_roothub *phy_roothub)
+>  {
+> +    struct device *controller_dev = hcd->self.sysdev;
+>      int err;
+> 
+>      /* if the device can't wake up the system _exit was called */
+> -    if (!device_may_wakeup(controller_dev)) {
+> +    if (!device_may_wakeup(controller_dev) &&
+> +        !hcd->suspend_without_phy_exit) {
+>          err = usb_phy_roothub_init(phy_roothub);
+>          if (err)
+>              return err;
+> @@ -189,7 +197,8 @@ int usb_phy_roothub_resume(struct device
+> *controller_dev,
+>      err = usb_phy_roothub_power_on(phy_roothub);
+> 
+>      /* undo _init if _power_on failed */
+> -    if (err && !device_may_wakeup(controller_dev))
+> +    if (err && !device_may_wakeup(controller_dev)
+> +        && !hcd->suspend_without_phy_exit)
+>          usb_phy_roothub_exit(phy_roothub);
+> 
+>      return err;
+> diff --git a/drivers/usb/core/phy.h b/drivers/usb/core/phy.h
+> index 88a3c037e9df..34293e11a917 100644
+> --- a/drivers/usb/core/phy.h
+> +++ b/drivers/usb/core/phy.h
+> @@ -5,13 +5,16 @@
+>   * Copyright (C) 2018 Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com>
+>   */
+> 
+> +#include <linux/usb.h>
+> +#include <linux/usb/hcd.h>
+> +
+>  #ifndef __USB_CORE_PHY_H_
+>  #define __USB_CORE_PHY_H_
+> 
+>  struct device;
+>  struct usb_phy_roothub;
+> 
+> -struct usb_phy_roothub *usb_phy_roothub_alloc(struct device *dev);
+> +struct usb_phy_roothub *usb_phy_roothub_alloc(struct usb_hcd *hcd);
+> 
+>  int usb_phy_roothub_init(struct usb_phy_roothub *phy_roothub);
+>  int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub);
+> @@ -19,9 +22,9 @@
+>  int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub);
+>  void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub);
+> 
+> -int usb_phy_roothub_suspend(struct device *controller_dev,
+> +int usb_phy_roothub_suspend(struct usb_hcd *hcd,
+>                  struct usb_phy_roothub *phy_roothub);
+> -int usb_phy_roothub_resume(struct device *controller_dev,
+> +int usb_phy_roothub_resume(struct usb_hcd *hcd,
+>                 struct usb_phy_roothub *phy_roothub);
+> 
+>  #endif /* __USB_CORE_PHY_H_ */
+> diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
+> index 97e2ddec18b1..87a104055b5e 100644
+> --- a/include/linux/usb/hcd.h
+> +++ b/include/linux/usb/hcd.h
+> @@ -157,6 +157,9 @@ struct usb_hcd {
+>       */
+>      unsigned        skip_phy_initialization:1;
+> 
+> +    /* Some phys don't want the phy's exit/init called on
+> suspend/resume */
+> +    unsigned        suspend_without_phy_exit:1;
+> +
+>      /* The next flag is a stopgap, to be removed when all the HCDs
+>       * support the new root-hub polling mechanism. */
+>      unsigned        uses_new_polling:1;
 
-Yep! This does seem to resolve the mali bifrost dma address warn-ons I
-was seeing, and makes the board seem to function more consistently, so
-that's great!
 
-Tested-by: John Stultz <john.stultz@linaro.org>
-
-Though I still find I have to revert "swiotlb: use swiotlb_map_page in
-swiotlb_map_sg_attrs" still to boot to UI successfully with AOSP.
-Still not sure whats going on there (its sort of soft hangs where some
-userland runs ok, but other bits seem to jam up, even console commands
-sometimes hang - almost seems like io stalls).
-
-Anyway, thanks so much again for this one!
--john
+-- 
+Florian
