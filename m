@@ -1,47 +1,55 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCHv10 3/8] firmware: add Intel Stratix10 service layer driver
-Date: Tue, 6 Nov 2018 09:03:23 -0800
-Message-ID: <595b853f-6a8c-d608-e716-95ef1c84d0b9@infradead.org>
-References: <1541523172-5171-1-git-send-email-richard.gong@linux.intel.com>
- <1541523172-5171-4-git-send-email-richard.gong@linux.intel.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH v3 00/28] Allwinner H6 DE3 and HDMI support
+Date: Tue, 06 Nov 2018 18:20:39 +0100
+Message-ID: <3766119.46PGZN2PQn@jernej-laptop>
+References: <20181104182705.18047-1-jernej.skrabec@siol.net> <20181105094341.qedt7jvnxooiojki@flea>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541523172-5171-4-git-send-email-richard.gong@linux.intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: richard.gong@linux.intel.com, gregkh@linuxfoundation.org, catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, corbet@lwn.net
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, linux-doc@vger.kernel.org, todd.riffel@intel.com, richard.gong@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERB2U2Q7PQKGQEAKMCQNI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181105094341.qedt7jvnxooiojki@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/6/18 8:52 AM, richard.gong@linux.intel.com wrote:
-> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-> index 7273e50..b6813bc 100644
-> --- a/drivers/firmware/Kconfig
-> +++ b/drivers/firmware/Kconfig
-> @@ -216,6 +216,18 @@ config FW_CFG_SYSFS_CMDLINE
->  	  WARNING: Using incorrect parameters (base address in particular)
->  	  may crash your system.
->  
-> +config INTEL_STRATIX10_SERVICE
-> +       tristate "Intel Stratix10 Service Layer"
-> +       depends on HAVE_ARM_SMCCC
-> +       default n
-> +       help
-> +        Intel Stratix10 service layer runs at privileged exception level,
-> +	interfaces with the service providers (FPGA manager is one of them) and
-> +	manages secure monitor call to communicate with secure monitor software
-> +	at secure monitor exception level.
-> +
-> +        Say Y here if you want Stratix10 service layer support.
+Dne ponedeljek, 05. november 2018 ob 10:43:41 CET je Maxime Ripard napisal(a):
+> On Sun, Nov 04, 2018 at 07:26:37PM +0100, Jernej Skrabec wrote:
+> > This series adds support for Display Engine 3.0 and HDMI 2.0a, which
+> > can be found on H6 SoC.
+> > 
+> > Display Engine 3.0 in comparison to 2.0 mostly adds features needed for
+> > displaying and processing 10-bit and AFBC formats, which are not yet
+> > supported by this series.
+> > 
+> > H6 is also the first SoC which supports IOMMU, but support for it is
+> > not yet added.
+> > 
+> > This series is based on linux-next at next-20181102.
+> > 
+> > I suggest all patches go through allwinner tree, except DRM patches,
+> > which should go through drm-misc tree.
+> 
+> Applied all patches up to the 26. The two last one however should not
+> use the clk bindings define you added in the first clk patches, since
+> clk and dt patches are going through different tree.
 
-from Documentation/process/coding-style.rst:
+I went over clock defines again, but I don't think I use anything new. New 
+defines are:
 
-Lines under a ``config`` definition are indented with one tab,
-while help text is indented an additional two spaces.
+#define CLK_BUS_ROT            9
+#define CLK_ROT                        10
+#define RST_ROT                3
 
+but none of them are actually used in DT.
 
-thanks.
--- 
-~Randy
+Did I miss anything?
+
+Best regards,
+Jernej
