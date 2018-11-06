@@ -1,52 +1,62 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v10 5/6] arm64: zynqmp: Add DDRC node
-Date: Tue, 6 Nov 2018 12:54:07 +0100
-Message-ID: <2da1ff15-1064-3fac-750e-3b0f006ee1af@xilinx.com>
-References: <1540447621-22870-1-git-send-email-manish.narani@xilinx.com>
- <1540447621-22870-6-git-send-email-manish.narani@xilinx.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/2] arm64: dts: r8a77990: Add SDHI device nodes
+Date: Tue, 6 Nov 2018 13:17:49 +0100
+Message-ID: <20181106121748.k64k6ks3lafetaku@verge.net.au>
+References: <20181105214117.11734-1-marek.vasut+renesas@gmail.com>
+ <OSBPR01MB229351FF35C839C4E9A7F19CD8CB0@OSBPR01MB2293.jpnprd01.prod.outlook.com>
+ <7ab702f0-e78c-94c5-b74f-bac1803fb513@gmail.com>
+ <CAMuHMdWkbqizvAtP=ka9tiirNqb=CzhRxGdWY3VcTT_8-UrG+Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1540447621-22870-6-git-send-email-manish.narani@xilinx.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manish Narani <manish.narani@xilinx.com>, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, bp@alien8.de, mchehab@kernel.org, amit.kucheria@linaro.org, sudeep.holla@arm.com, leoyang.li@nxp.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWkbqizvAtP=ka9tiirNqb=CzhRxGdWY3VcTT_8-UrG+Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 25. 10. 18 8:07, Manish Narani wrote:
-> Add ddrc memory controller node in dts. The size mentioned in dts is
-> 0x30000, because we need to access DDR_QOS INTR registers located at
-> 0xFD090208 from this driver.
+On Tue, Nov 06, 2018 at 11:35:13AM +0100, Geert Uytterhoeven wrote:
+> Hi Marek,
 > 
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> ---
->  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
+> On Tue, Nov 6, 2018 at 11:32 AM Marek Vasut <marek.vasut@gmail.com> wrote:
+> > On 11/06/2018 06:26 AM, Yoshihiro Shimoda wrote:
+> > >> From: Marek Vasut, Sent: Tuesday, November 6, 2018 6:41 AM
+> > >>
+> > >> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> > >>
+> > >> This patch adds SDHI{0,1,3} device nodes for the r8a77990 SoC.
+> > >>
+> > >> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> > >> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> > >> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> > >> Cc: Simon Horman <horms+renesas@verge.net.au>
+> > >> Cc: Wolfram Sang <wsa@the-dreams.de>
+> > >> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > >> Cc: linux-renesas-soc@vger.kernel.org
+> > >> Cc: linux-arm-kernel@lists.infradead.org
+> > >> ---
+> > >
+> > > Thank you for the patch!
+> > >
+> > > Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > >
+> > > I guess this patch and the 2/2 patch for ebisu have to be merged into a patch though.
+> >
+> > I wonder about that, 1/2 is adding SDHI DT nodes for an SoC, 2/2 is
+> > enabling SDHI on a particular board, which I think should be separate.
 > 
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> index 29ce234..a81d3b16 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> @@ -355,6 +355,13 @@
->  			xlnx,bus-width = <64>;
->  		};
->  
-> +		mc: memory-controller@fd070000 {
-> +			compatible = "xlnx,zynqmp-ddrc-2.40a";
-> +			reg = <0x0 0xfd070000 0x0 0x30000>;
-> +			interrupt-parent = <&gic>;
-> +			interrupts = <0 112 4>;
-> +		};
-> +
->  		gem0: ethernet@ff0b0000 {
->  			compatible = "cdns,zynqmp-gem", "cdns,gem";
->  			status = "disabled";
-> 
+> The arm-soc maintainers tend to disagree, that's why Shimoda-san asked
+> to combine them.
 
-Applied with changed subject "arm64: dts: zynqmp: Add DDRC node"
-to zynqmp/dt branch.
-
-Thanks,
-Michal
+That is also my understanding.
+Please consider combining these patches.
