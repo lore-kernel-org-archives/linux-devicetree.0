@@ -1,67 +1,52 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/2] arm64: dts: r8a77990: Add SDHI device nodes
-Date: Tue, 6 Nov 2018 11:35:13 +0100
-Message-ID: <CAMuHMdWkbqizvAtP=ka9tiirNqb=CzhRxGdWY3VcTT_8-UrG+Q@mail.gmail.com>
-References: <20181105214117.11734-1-marek.vasut+renesas@gmail.com>
- <OSBPR01MB229351FF35C839C4E9A7F19CD8CB0@OSBPR01MB2293.jpnprd01.prod.outlook.com>
- <7ab702f0-e78c-94c5-b74f-bac1803fb513@gmail.com>
+From: Manish Narani <MNARANI@xilinx.com>
+Subject: RE: [PATCH v10 0/6] EDAC: Enhancements to Synopsys EDAC driver
+Date: Tue, 6 Nov 2018 10:42:09 +0000
+Message-ID: <DM6PR02MB52278C1B02960DD084D5A25BC1CB0@DM6PR02MB5227.namprd02.prod.outlook.com>
+References: <1540447621-22870-1-git-send-email-manish.narani@xilinx.com>
+ <20181106100329.GC13712@zn.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <7ab702f0-e78c-94c5-b74f-bac1803fb513@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181106100329.GC13712@zn.tnic>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
-
-On Tue, Nov 6, 2018 at 11:32 AM Marek Vasut <marek.vasut@gmail.com> wrote:
-> On 11/06/2018 06:26 AM, Yoshihiro Shimoda wrote:
-> >> From: Marek Vasut, Sent: Tuesday, November 6, 2018 6:41 AM
-> >>
-> >> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> >>
-> >> This patch adds SDHI{0,1,3} device nodes for the r8a77990 SoC.
-> >>
-> >> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> >> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> >> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> >> Cc: Simon Horman <horms+renesas@verge.net.au>
-> >> Cc: Wolfram Sang <wsa@the-dreams.de>
-> >> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> >> Cc: linux-renesas-soc@vger.kernel.org
-> >> Cc: linux-arm-kernel@lists.infradead.org
-> >> ---
-> >
-> > Thank you for the patch!
-> >
-> > Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> >
-> > I guess this patch and the 2/2 patch for ebisu have to be merged into a patch though.
->
-> I wonder about that, 1/2 is adding SDHI DT nodes for an SoC, 2/2 is
-> enabling SDHI on a particular board, which I think should be separate.
-
-The arm-soc maintainers tend to disagree, that's why Shimoda-san asked
-to combine them.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgQm9yaXMsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQm9yaXNs
+YXYgUGV0a292IFttYWlsdG86YnBAYWxpZW44LmRlXQ0KPiBTZW50OiBUdWVzZGF5LCBOb3ZlbWJl
+ciA2LCAyMDE4IDM6MzQgUE0NCj4gVG86IE1hbmlzaCBOYXJhbmkgPE1OQVJBTklAeGlsaW54LmNv
+bT4NCj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IE1pY2hh
+bCBTaW1law0KPiA8bWljaGFsc0B4aWxpbnguY29tPjsgbWNoZWhhYkBrZXJuZWwub3JnOyBhbWl0
+Lmt1Y2hlcmlhQGxpbmFyby5vcmc7DQo+IHN1ZGVlcC5ob2xsYUBhcm0uY29tOyBsZW95YW5nLmxp
+QG54cC5jb207IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdl
+ci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4
+LQ0KPiBlZGFjQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYxMCAwLzZd
+IEVEQUM6IEVuaGFuY2VtZW50cyB0byBTeW5vcHN5cyBFREFDIGRyaXZlcg0KPiANCj4gT24gVGh1
+LCBPY3QgMjUsIDIwMTggYXQgMTE6MzY6NTVBTSArMDUzMCwgTWFuaXNoIE5hcmFuaSB3cm90ZToN
+Cj4gPiBDaGFuZ2UgaW4gdjEwOg0KPiA+IAktIE1vdmVkIHRoZSBjaGVja2luZyBmb3IgY2VfY250
+IGFuZCB1ZV9jbnQgYmVmb3JlIHRoZSByZWFkbCgpIGNhbGwNCj4gPiAJLSBBbGlnbmVkIGFyZ3Vt
+ZW50cyBvbiB0aGUgb3BlbmluZyBicmFjZSBpbiBzZXR1cF9pcnEoKQ0KPiA+DQo+ID4gTWFuaXNo
+IE5hcmFuaSAoNik6DQo+ID4gICBlZGFjOiBzeW5vcHN5czogQWRkIGVycm9yIGhhbmRsaW5nIGZv
+ciBOVUxMIGluIHByb2JlKCkNCj4gPiAgIGR0OiBiaW5kaW5nczogRG9jdW1lbnQgWnlucU1QIERE
+UkMgaW4gU3lub3BzeXMgZG9jdW1lbnRhdGlvbg0KPiA+ICAgZWRhYzogc3lub3BzeXM6IEFkZCBt
+YWNybyBkZWZpbmVzIGZvciBaeW5xTVAgRERSQw0KPiA+ICAgZWRhYzogc3lub3BzeXM6IEFkZCBF
+REFDIEVDQyBzdXBwb3J0IGZvciBaeW5xTVAgRERSQw0KPiA+ICAgYXJtNjQ6IHp5bnFtcDogQWRk
+IEREUkMgbm9kZQ0KPiA+ICAgZWRhYzogc3lub3BzeXM6IEFkZCBFcnJvciBJbmplY3Rpb24gc3Vw
+cG9ydCBmb3IgWnlucU1QIEREUkMNCj4gPg0KPiA+ICAuLi4vYmluZGluZ3MvbWVtb3J5LWNvbnRy
+b2xsZXJzL3N5bm9wc3lzLnR4dCAgICAgICB8ICAyNyArLQ0KPiA+ICBhcmNoL2FybTY0L2Jvb3Qv
+ZHRzL3hpbGlueC96eW5xbXAuZHRzaSAgICAgICAgICAgICB8ICAgNyArDQo+ID4gIGRyaXZlcnMv
+ZWRhYy9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICstDQo+ID4g
+IGRyaXZlcnMvZWRhYy9zeW5vcHN5c19lZGFjLmMgICAgICAgICAgICAgICAgICAgICAgIHwgOTEx
+ICsrKysrKysrKysrKysrKysrKysrLQ0KPiA+ICA0IGZpbGVzIGNoYW5nZWQsIDkxOCBpbnNlcnRp
+b25zKCspLCAyOSBkZWxldGlvbnMoLSkNCj4gDQo+IE9rLCBwYXRjaGVzIHB1c2hlZCBoZXJlOg0K
+PiANCj4gKG1pbnVzIGh0dHBzOi8vbGttbC5rZXJuZWwub3JnL3IvMTU0MDQ0NzYyMS0yMjg3MC02
+LWdpdC1zZW5kLWVtYWlsLQ0KPiBtYW5pc2gubmFyYW5pQHhpbGlueC5jb20pDQo+IA0KPiBodHRw
+czovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9icC9icC5naXQvbG9n
+Lz9oPWVkYWMtZm9yLTQuMjEtDQo+IHN5bnBzDQo+IA0KVGhhbmtzIGEgbG90IGZvciB5b3VyIHN1
+cHBvcnQuDQoNCj4gUGxlYXNlIHJ1biB0aGlzIG9uIHRoZSBodyBiZWZvcmUgSSBxdWV1ZSBpdCBm
+b3IgbGludXgtbmV4dC4NCkkgaGF2ZSB0ZXN0ZWQgdGhpcyBhbmQgdmVyaWZpZWQgYXMgd29ya2lu
+ZyBmaW5lIG9uIGhhcmR3YXJlLiBZb3UgY2FuIGdvIGFoZWFkIGFuZCBxdWV1ZSBpdCBmb3IgbGlu
+dXgtbmV4dC4NCg0KVGhhbmtzLA0KTWFuaXNoDQo=
