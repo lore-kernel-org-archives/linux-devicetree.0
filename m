@@ -1,86 +1,45 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 1/4] of/device: Add a way to probe drivers by match data
-Date: Tue,  6 Nov 2018 10:36:06 -0800
-Message-ID: <20181106183609.207702-2-sboyd@kernel.org>
-References: <20181106183609.207702-1-sboyd@kernel.org>
+Subject: [PATCH 0/4] Simplify mediatek clk driver probes
+Date: Tue,  6 Nov 2018 10:36:05 -0800
+Message-ID: <20181106183609.207702-1-sboyd@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181106183609.207702-1-sboyd@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-We have a handful of clk drivers that have a collection of slightly
-variant device support keyed off of the compatible string. In each of
-these drivers, we demux the variant and then call the "real" probe
-function based on whatever is stored in the match data for that
-compatible string. Let's generalize this function so that it can be
-re-used as the platform_driver probe function directly.
+I suggested this some time ago but nobody has gotten around to doing it
+so far. Well now I have! Here's a patch series that cuts down the
+boiler-plate code that Mediatek clk drivers have to multiplex probe
+amongst the device match data.
+
+Rob/Frank, I'd prefer to take the first patch via clk tree so I can
+merge it all in the next release. Otherwise, I can pull a stable commit
+and merge it that way in case you want to take it through your tree.
 
 Cc: Ryder Lee <ryder.lee@mediatek.com>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Frank Rowand <frowand.list@gmail.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
----
- drivers/of/device.c       | 31 +++++++++++++++++++++++++++++++
- include/linux/of_device.h |  1 +
- 2 files changed, 32 insertions(+)
 
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index 0f27fad9fe94..8381f33ed2d8 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -195,6 +195,37 @@ const void *of_device_get_match_data(const struct device *dev)
- }
- EXPORT_SYMBOL(of_device_get_match_data);
- 
-+/**
-+ * platform_driver_probe_by_of_match_data - Probe a platform device using match data
-+ * @pdev: platform device to probe
-+ *
-+ * For use by device drivers that multiplex their probe function through DT
-+ * match data. Drivers can use this function to call their platform
-+ * device probe directly without having to implement a wrapper function.
-+ *
-+ * static const struct of_device_id probe_funcs[] = {
-+ *      { .compatible = "compat,foo", .data = foo_probe },
-+ *      {}
-+ * };
-+ *
-+ * struct platform_driver foo_driver = {
-+ *      .probe = platform_driver_probe_by_of_match_data,
-+ *      .driver = {
-+ *            of_match_table = probe_funcs,
-+ *      },
-+ * };
-+ *
-+ */
-+int platform_driver_probe_by_of_match_data(struct platform_device *pdev)
-+{
-+	int (*probe_func)(struct platform_device *pdev);
-+
-+	probe_func = of_device_get_match_data(&pdev->dev);
-+
-+	return probe_func(pdev);
-+}
-+EXPORT_SYMBOL_GPL(platform_driver_probe_by_of_match_data);
-+
- static ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
- {
- 	const char *compat;
-diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-index 8d31e39dd564..4de84691d1c6 100644
---- a/include/linux/of_device.h
-+++ b/include/linux/of_device.h
-@@ -33,6 +33,7 @@ extern int of_device_add(struct platform_device *pdev);
- extern int of_device_register(struct platform_device *ofdev);
- extern void of_device_unregister(struct platform_device *ofdev);
- 
-+extern int platform_driver_probe_by_of_match_data(struct platform_device *pdev);
- extern const void *of_device_get_match_data(const struct device *dev);
- 
- extern ssize_t of_device_modalias(struct device *dev, char *str, ssize_t len);
+Stephen Boyd (4):
+  of/device: Add a way to probe drivers by match data
+  clk: mediatek: Convert to platform_driver_probe_by_match_data()
+  clk: mediatek: Drop THIS_MODULE from platform_driver
+  clk: mediatek: Simplify single driver probes
+
+ drivers/clk/mediatek/clk-mt2701-g3d.c | 28 +++---------------------
+ drivers/clk/mediatek/clk-mt2701.c     | 20 +----------------
+ drivers/clk/mediatek/clk-mt2712.c     | 21 +-----------------
+ drivers/clk/mediatek/clk-mt6797.c     | 20 +----------------
+ drivers/clk/mediatek/clk-mt7622-aud.c | 28 +++---------------------
+ drivers/clk/mediatek/clk-mt7622-eth.c | 20 +----------------
+ drivers/clk/mediatek/clk-mt7622-hif.c | 20 +----------------
+ drivers/clk/mediatek/clk-mt7622.c     | 20 +----------------
+ drivers/of/device.c                   | 31 +++++++++++++++++++++++++++
+ include/linux/of_device.h             |  1 +
+ 10 files changed, 44 insertions(+), 165 deletions(-)
+
 -- 
 Sent by a computer through tubes
