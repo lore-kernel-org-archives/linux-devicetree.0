@@ -1,93 +1,58 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v2 01/17] arm64: dts: qcom: qcs404: add base dts files
-Date: Tue, 6 Nov 2018 23:05:43 +0530
-Message-ID: <20181106173543.GZ12092@vkoul-mobl>
+Subject: Re: [PATCH v2 11/17] arm64: dts: qcom: pms405: add gpios
+Date: Tue, 6 Nov 2018 23:07:29 +0530
+Message-ID: <20181106173729.GA12092@vkoul-mobl>
 References: <20181105154529.7614-1-vkoul@kernel.org>
- <20181105154529.7614-2-vkoul@kernel.org>
- <20181105185648.GL2523@minitux>
+ <20181105154529.7614-12-vkoul@kernel.org>
+ <20181105190802.GQ2523@minitux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181105185648.GL2523@minitux>
+In-Reply-To: <20181105190802.GQ2523@minitux>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review Bjorn,
-
-On 05-11-18, 10:56, Bjorn Andersson wrote:
+On 05-11-18, 11:08, Bjorn Andersson wrote:
 > On Mon 05 Nov 07:45 PST 2018, Vinod Koul wrote:
 > 
-> > diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dts b/arch/arm64/boot/dts/qcom/qcs404-evb.dts
-> > new file mode 100644
-> > index 000000000000..74dc09ddb0d2
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dts
-> > @@ -0,0 +1,21 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +// Copyright (c) 2018, Linaro Limited
+> > Add the GPIOs present on PMS405 chip.
+> > 
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/pms405.dtsi | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/pms405.dtsi b/arch/arm64/boot/dts/qcom/pms405.dtsi
+> > index cdb4547c998b..18410d9f0f8f 100644
+> > --- a/arch/arm64/boot/dts/qcom/pms405.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/pms405.dtsi
+> > @@ -17,5 +17,21 @@
+> >  			reg-names = "rtc", "alarm";
+> >  			interrupts = <0x0 0x61 0x1 IRQ_TYPE_NONE>;
+> >  		};
 > > +
-> > +// QCS EVB DTS
+> > +		pms405_gpios: gpios@c000 {
+> > +			compatible = "qcom,pms405-gpio";
+> > +			reg = <0xc000>;
+> > +			gpio-controller;
+> > +			#gpio-cells = <2>;
+> > +			interrupts = <0 0xc1 0 IRQ_TYPE_NONE>,
+> > +				<0 0xc2 0 IRQ_TYPE_NONE>,
+> > +				<0 0xc3 0 IRQ_TYPE_NONE>,
+> > +				<0 0xc4 0 IRQ_TYPE_NONE>,
+> > +				<0 0xc5 0 IRQ_TYPE_NONE>,
+> > +				<0 0xc6 0 IRQ_TYPE_NONE>,
+> > +				<0 0xc7 0 IRQ_TYPE_NONE>,
+> > +				<0 0xca 0 IRQ_TYPE_NONE>,
+> > +				<0 0xcb 0 IRQ_TYPE_NONE>;
 > 
-> This can be read from the filename and the model a few lines down. So
-> please drop.
+> Is there a reason why gpio 1, 8 and 9 are omitted from this list?
 
-Sure
-
-> 
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "qcs404.dtsi"
-> > +
-> > +/ {
-> > +	model = "Qualcomm Technologies, Inc. QCS404 EVB 1000";
-> > +	compatible = "qcom,qcs404-evb";
-> > +
-> > +	aliases {
-> > +		serial0 = &blsp1_uart2;
-> > +	};
-> > +
-> > +	chosen {
-> > +		stdout-path = "serial0";
-> > +	};
-> > +};
-> > diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> [..]
-> > +	timer {
-> > +		compatible = "arm,armv8-timer";
-> > +		interrupts = <GIC_PPI 2 0xff08>,
-> > +			     <GIC_PPI 3 0xff08>,
-> > +			     <GIC_PPI 4 0xff08>,
-> > +			     <GIC_PPI 1 0xff08>;
-> > +	};
-> > +
-> > +	clocks {
-> 
-> Please sort these nodes alphabetically.
-
-Will do and also while adding subsequent nodes
-
-> > +		xo_board: xo_board {
-> > +			compatible = "fixed-clock";
-> > +			#clock-cells = <0>;
-> > +			clock-frequency = <19200000>;
-> > +		};
-> > +	};
-> > +
-> > +	soc: soc@0 {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		ranges = <0 0 0 0xffffffff>;
-> > +		compatible = "simple-bus";
-> > +
-> 
-> Please pad the address in reg to 8 digits and sort these nodes by
-> address.
-
-Sure
+I think I saw something in downstream code / documentation for this, I
+will check again to be sure
 
 -- 
 ~Vinod
