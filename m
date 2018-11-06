@@ -1,51 +1,71 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] of/property: Introduce of_fwnode_name()
-Date: Tue, 6 Nov 2018 07:18:14 -0600
-Message-ID: <CAL_Jsq+kspp1GYrMjG1cC=CyCa2_jO1suFdD9fn+gOwKRYdhtw@mail.gmail.com>
-References: <20181105091727.25544-1-heikki.krogerus@linux.intel.com>
- <20181105091727.25544-4-heikki.krogerus@linux.intel.com> <CAL_Jsq+aRAv+9gDKwVi9xYQPYzXK4NMPjzfkuYB08+K6KTYXFg@mail.gmail.com>
- <20181106105803.GS10650@smile.fi.intel.com> <20181106122734.GC13048@kuha.fi.intel.com>
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: [PATCH 00/23] PCI: refactor the Mobiveil driver and add PCIe support
+ for NXP LX SoCs
+Date: Tue, 6 Nov 2018 13:19:03 +0000
+Message-ID: <20181106131807.29951-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181106122734.GC13048@kuha.fi.intel.com>
+Content-Language: en-US
+Content-ID: <49EC5FCA622C5144B1E825412F41A7AD@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+Cc: Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "Z.q. Hou" <zhiqiang.hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 6, 2018 at 6:27 AM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> On Tue, Nov 06, 2018 at 12:58:03PM +0200, Andy Shevchenko wrote:
-> > On Mon, Nov 05, 2018 at 12:50:02PM -0600, Rob Herring wrote:
-> > > On Mon, Nov 5, 2018 at 3:17 AM Heikki Krogerus
-> > > <heikki.krogerus@linux.intel.com> wrote:
-> >
-> > > > +static const char *of_fwnode_name(const struct fwnode_handle *fwnode)
-> > > > +{
-> > > > +       return to_of_node(fwnode)->name;
-> > >
-> > > I'm trying to get rid of the DT name ptr, so please don't add one. You
-> > > can use of_node_full_name() here instead if "<name>@<unit-address>"
-> > > instead of <name> is fine. Otherwise, you've got to allocate your own
-> > > storage and use "%pOFn" printf specifier.
-> >
-> > If we do this here, we will change a behaviour of the entire set of
-> > of_fwnode_get_named_child_node() users.
-> >
-> > I think this is out of scope of the series.
-
-No, because you are adding a firmware op for something that's going away.
-
-> You have a point. We must use the same member that was used in
-> of_fwnode_get_named_child_node().
->
-> The goal of this series if most likely not clear from this patch
-> alone, so I'll send a second version and make sure to CC the DT list
-> and Rob.
-
-Looking at patch 4, if matching the name is what you want to do, then
-use the DT name matching functions. They were added in 4.19.
-
-Rob
+RnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCg0KVGhpcyBwYXRjaCBz
+ZXQgaXMgYWltIHRvIHJlZmFjdG9yIHRoZSBNb2JpdmVpbCBkcml2ZXIgYW5kIGFkZA0KUENJZSBz
+dXBwb3J0IGZvciBOWFAgTFggc2VyaWVzIFNvQ3MuDQoNCkhvdSBaaGlxaWFuZyAoMjMpOg0KICBQ
+Q0k6IG1vYml2ZWlsOiB1bmlmb3JtIHRoZSByZWdpc3RlciBhY2Nlc3NvcnMNCiAgUENJOiBtb2Jp
+dmVpbDogZm9ybWF0IHRoZSBjb2RlIHdpdGhvdXQgZnVuY3Rpb24gY2hhbmdlDQogIFBDSTogbW9i
+aXZlaWw6IGNvcnJlY3QgdGhlIHJldHVybmVkIGVycm9yIG51bWJlcg0KICBQQ0k6IG1vYml2ZWls
+OiByZW1vdmUgZmxhZyBNU0lfRkxBR19NVUxUSV9QQ0lfTVNJDQogIFBDSTogbW9iaXZlaWw6IGNv
+cnJlY3QgUENJIGJhc2UgYWRkcmVzcyBpbiBNRU0vSU8gb3V0Ym91bmQgd2luZG93cw0KICBQQ0k6
+IG1vYml2ZWlsOiByZXBsYWNlIHRoZSByZXNvdXJjZSBsaXN0IGl0ZXJhdGlvbiBmdW5jdGlvbg0K
+ICBQQ0k6IG1vYml2ZWlsOiB1c2UgV0lOX05VTV8wIGV4cGxpY2l0bHkgZm9yIENGRyBvdXRib3Vu
+ZCB3aW5kb3cNCiAgUENJOiBtb2JpdmVpbDogdXNlIHRoZSAxc3QgaW5ib3VuZCB3aW5kb3cgZm9y
+IE1FTSBpbmJvdW5kIHRyYW5zYWN0aW9ucw0KICBQQ0k6IG1vYml2ZWlsOiBjb3JyZWN0IHRoZSBp
+bmJvdW5kL291dGJvdW5kIHdpbmRvdyBzZXR1cCByb3V0aW5lDQogIFBDSTogbW9iaXZlaWw6IGZp
+eCB0aGUgSU5UeCBwcm9jZXNzIGVycm9yDQogIFBDSTogbW9iaXZlaWw6IG9ubHkgZml4dXAgdGhl
+IENsYXNzIENvZGUgZmllbGQNCiAgUENJOiBtb2JpdmVpbDogbW92ZSBvdXQgdGhlIGxpbmsgdXAg
+d2FpdGluZyBmcm9tIG1vYml2ZWlsX2hvc3RfaW5pdA0KICBQQ0k6IG1vYml2ZWlsOiBtb3ZlIGly
+cSBjaGFpbmVkIGhhbmRsZXIgc2V0dXAgb3V0IG9mIERUIHBhcnNlDQogIFBDSTogbW9iaXZlaWw6
+IGluaXRpYWxpemUgUHJpbWFyeS9TZWNvbmRhcnkvU3Vib3JkaW5hdGUgYnVzIG51bWJlcg0KICBk
+dC1iaW5kaW5nczogcGNpOiBtb2JpdmVpbDogY2hhbmdlIGdwaW9fc2xhdmUgYW5kIGFwYl9jc3Ig
+dG8gb3B0aW9uYWwNCiAgUENJOiBtb2JpdmVpbDogcmVmYWN0b3IgdGhlIE1vYml2ZWlsIGRyaXZl
+cg0KICBQQ0k6IG1vYml2ZWlsOiBjb250aW51ZSB0byBpbml0aWFsaXplIHRoZSBob3N0IHVwb24g
+bm8gUENJZSBsaW5rDQogIFBDSTogbW9iaXZlaWw6IGRpc2FibGVkIElCIGFuZCBPQiB3aW5kb3dz
+IHNldCBieSBib290bG9hZGVyDQogIFBDSTogbW9iaXZlaWw6IGFkZCBCeXRlIGFuZCBIYWxmLVdv
+cmQgd2lkdGggcmVnaXN0ZXIgYWNjZXNzb3JzDQogIFBDSTogbW9iaXZlaWw6IGNoYW5nZSBwcm90
+b3R5cGUgb2YgZnVuY3Rpb24gbW9iaXZlaWxfaG9zdF9pbml0DQogIGR0LWJpbmRpbmdzOiBwY2k6
+IEFkZCBOWFAgTFggU29DcyBQQ0llIGNvbnRyb2xsZXINCiAgUENJOiBtb2JpdmVpbDogYWRkIFBD
+SWUgUkMgZHJpdmVyIGZvciBOWFAgTFggc2VyaWVzIFNvQ3MNCiAgYXJtNjQ6IGR0czogZnJlZXNj
+YWxlOiBseDIxNjBhOiBhZGQgcGNpZSBEVCBub2Rlcw0KDQogLi4uL2RldmljZXRyZWUvYmluZGlu
+Z3MvcGNpL2x4LXBjaS50eHQgICAgICAgIHwgIDUyICsrDQogLi4uL2RldmljZXRyZWUvYmluZGlu
+Z3MvcGNpL21vYml2ZWlsLXBjaWUudHh0IHwgICAyICsNCiBNQUlOVEFJTkVSUyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTAgKy0NCiAuLi4vYXJtNjQvYm9vdC9kdHMvZnJl
+ZXNjYWxlL2ZzbC1seDIxNjBhLmR0c2kgfCAxNTcgKysrKw0KIGRyaXZlcnMvcGNpL2NvbnRyb2xs
+ZXIvS2NvbmZpZyAgICAgICAgICAgICAgICB8ICAxMSArLQ0KIGRyaXZlcnMvcGNpL2NvbnRyb2xs
+ZXIvTWFrZWZpbGUgICAgICAgICAgICAgICB8ICAgMiArLQ0KIGRyaXZlcnMvcGNpL2NvbnRyb2xs
+ZXIvbW9iaXZlaWwvS2NvbmZpZyAgICAgICB8ICAzNCArDQogZHJpdmVycy9wY2kvY29udHJvbGxl
+ci9tb2JpdmVpbC9NYWtlZmlsZSAgICAgIHwgICA1ICsNCiBkcml2ZXJzL3BjaS9jb250cm9sbGVy
+L21vYml2ZWlsL3BjaS1seC5jICAgICAgfCAyMjIgKysrKysNCiAuLi4vY29udHJvbGxlci9tb2Jp
+dmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYyAgfCA2MjIgKysrKysrKysrKysrKw0KIC4uLi9jb250
+cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwtcGxhdC5jICB8ICA1NCArKw0KIC4uLi9wY2kv
+Y29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLmMgICB8IDI0NSArKysrKw0KIC4uLi9w
+Y2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLmggICB8IDIyMSArKysrKw0KIGRy
+aXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jICAgICAgICB8IDg2MSAtLS0tLS0t
+LS0tLS0tLS0tLS0NCiAxNCBmaWxlcyBjaGFuZ2VkLCAxNjI1IGluc2VydGlvbnMoKyksIDg3MyBk
+ZWxldGlvbnMoLSkNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3BjaS9seC1wY2kudHh0DQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGNp
+L2NvbnRyb2xsZXIvbW9iaXZlaWwvS2NvbmZpZw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L3BjaS9jb250cm9sbGVyL21vYml2ZWlsL01ha2VmaWxlDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
+aXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpLWx4LmMNCiBjcmVhdGUgbW9kZSAxMDA2
+NDQgZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYw0K
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUt
+bW9iaXZlaWwtcGxhdC5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGNpL2NvbnRyb2xs
+ZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+cGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC5oDQogZGVsZXRlIG1vZGUgMTAw
+NjQ0IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jDQoNCi0tIA0KMi4xNy4x
+DQoNCg==
