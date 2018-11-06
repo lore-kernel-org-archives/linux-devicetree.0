@@ -1,43 +1,46 @@
-Return-Path: <SRS0=EYTz=NO=googlemail.com=martin.blumenstingl@kernel.org>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 1/2] dt-bindings: iio: adc: meson-saradc: add temperature sensor support
-Date: Sun,  4 Nov 2018 00:10:23 +0100
-Message-Id: <20181103231024.659-2-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20181103231024.659-1-martin.blumenstingl@googlemail.com>
-References: <20181103231024.659-1-martin.blumenstingl@googlemail.com>
+Return-Path: <SRS0=GiHI=NR=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from kirsty.vergenet.net ([202.4.237.240]:43133 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726976AbeKFVjw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 6 Nov 2018 16:39:52 -0500
+Date: Tue, 6 Nov 2018 13:14:52 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH V2] arm64: dts: renesas: Switch eMMC bus to 1V8 on
+ Salvator-X and ULCB
+Message-ID: <20181106121451.4sjiceqkrnfuhhvt@verge.net.au>
+References: <20181104203707.20996-1-marek.vasut+renesas@gmail.com>
+ <20181106105717.bdrvfwbry4ci6pii@ninjato>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de, jic23@kernel.org
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181106105717.bdrvfwbry4ci6pii@ninjato>
+Sender: devicetree-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Marek Vasut <marek.vasut@gmail.com>, devicetree@vger.kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-renesas-soc@vger.kernel.org, linux-mmc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The 32-bit Meson8 SoC can use the SAR ADC to read the chip temperature.
-This requires setting the correct TSC (temperature sensor coefficient),
-which is programmed into the eFuse during the manufacturing process.
-Meson8b and Meson8m2 are not supported yet because they have a 5-bit TSC
-and only the first four bits are stored inside the SAR ADC registers.
+On Tue, Nov 06, 2018 at 11:57:17AM +0100, Wolfram Sang wrote:
+> On Sun, Nov 04, 2018 at 09:37:07PM +0100, Marek Vasut wrote:
+> > The eMMC card has two supplies, VCC and VCCQ. The VCC supplies the NAND
+> > array and the VCCQ supplies the bus. On Salvator-X and ULCB, the VCC is
+> > connected to 3.3V rail, while the VCCQ is connected to 1.8V rail. Adjust
+> > the pinmux to match the bus, which is always operating in 1.8V mode.
+> > 
+> > While at it, deduplicate the pinmux entries, which are now the same for
+> > both default and UHS modes. We still need the two pinctrl entries to
+> > match the bindings though.
+> > 
+> > Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> > Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Cc: Simon Horman <horms+renesas@verge.net.au>
+> > Cc: Wolfram Sang <wsa@the-dreams.de>
+> > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > Cc: linux-renesas-soc@vger.kernel.org
+> > Cc: linux-mmc@vger.kernel.org
+> 
+> Tested on M3-N and H3 ES2.0 with HS400 enabled eMMC:
+> 
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- .../devicetree/bindings/iio/adc/amlogic,meson-saradc.txt    | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt b/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
-index 54b823f3a453..325090e43ce6 100644
---- a/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
-@@ -22,6 +22,12 @@ Required properties:
- - vref-supply:	the regulator supply for the ADC reference voltage
- - #io-channel-cells: must be 1, see ../iio-bindings.txt
- 
-+Optional properties:
-+- nvmem-cells:		phandle to the temperature_calib eFuse cells
-+- nvmem-cell-names:	if present (to enable the temperature sensor
-+			calibration) this must contain "temperature_calib"
-+
-+
- Example:
- 	saradc: adc@8680 {
- 		compatible = "amlogic,meson-gxl-saradc", "amlogic,meson-saradc";
--- 
-2.19.1
+Thanks, applied for v4.21.
