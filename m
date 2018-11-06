@@ -1,37 +1,41 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3 6/6] usb: host: Add ability to build new Broadcom STB
- USB drivers
-Date: Tue, 6 Nov 2018 12:09:47 +0100
-Message-ID: <CAK8P3a0AoHuaiPsMTqhWm3a4X95NpPTPUHkt9vS9Z2ow8NobhA@mail.gmail.com>
-References: <1541453493-34981-1-git-send-email-alcooperx@gmail.com> <1541453493-34981-7-git-send-email-alcooperx@gmail.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] arm64: dts: rockchip: add Gru Scarlet devicetrees
+Date: Tue, 06 Nov 2018 12:31:01 +0100
+Message-ID: <55055985.ydjp5xQfPl@phil>
+References: <20181101123639.15560-1-heiko@sntech.de>
+ <20181101123639.15560-2-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541453493-34981-7-git-send-email-alcooperx@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Al Cooper <alcooperx@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>, linux-usb@vger.kernel.org, Lu Baolu <baolu.l>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20181101123639.15560-2-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/5/18, Al Cooper <alcooperx@gmail.com> wrote:
+Am Donnerstag, 1. November 2018, 13:36:39 CET schrieb Heiko Stuebner:
+> Gru-Scarlet is a tablet device using ChomeOS, dual-dsi display
+> and Wacom touchscreen with stylus.
+> 
+> There exist two variants in the market using different displays
+> that are differentiated via their sku-id.
+> The bootloader on them also determines the correct devicetree to
+> load via the sku-id.
+> 
+> So add a common scarlet dtsi and two minimal board devicetrees
+> for the two display variants.
+> 
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 
-> +
-> +config USB_BRCM
-> +	tristate "Broadcom STB USB support"
-> +	depends on ARCH_BRCMSTB
-> +	select USB_OHCI_HCD_PLATFORM if USB_OHCI_HCD
-> +	select USB_EHCI_BRCM if USB_EHCI_HCD
-> +	select USB_XHCI_BRCM if USB_XHCI_HCD
-> +	select USB_XHCI_PLATFORM if USB_XHCI_HCD
-> +	select BRCM_USB_PHY if USB_OHCI_HCD || USB_EHCI_HCD || USB_XHCI_HCD
-> +	select GENERIC_PHY if BRCM_USB_PHY
-> +	default ARCH_BRCMSTB
-
-Is there a build time dependency on the PHY layer? If not, I would suggest
-dropping the last two 'select' statements. I would also suggest
-making the dependency 'depends on ARCH_BRCMSTB || COMPILE_TEST'
-to allow building it on other architecture for better build testing, and
-dropping the 'default' line. Just add this to the defconfig like the other
-drivers you have.
-
-      Arnd
+looks like I already applied patch1 in time for 4.20
+(and forgot about it), but have now also applied this patch2
+for 4.21 with Rob's review.
