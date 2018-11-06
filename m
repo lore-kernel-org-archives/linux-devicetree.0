@@ -1,52 +1,39 @@
-From: Manish Narani <MNARANI@xilinx.com>
-Subject: RE: [PATCH v10 0/6] EDAC: Enhancements to Synopsys EDAC driver
-Date: Tue, 6 Nov 2018 10:42:09 +0000
-Message-ID: <DM6PR02MB52278C1B02960DD084D5A25BC1CB0@DM6PR02MB5227.namprd02.prod.outlook.com>
-References: <1540447621-22870-1-git-send-email-manish.narani@xilinx.com>
- <20181106100329.GC13712@zn.tnic>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 3/4] of/property: Introduce of_fwnode_name()
+Date: Tue, 6 Nov 2018 12:58:03 +0200
+Message-ID: <20181106105803.GS10650@smile.fi.intel.com>
+References: <20181105091727.25544-1-heikki.krogerus@linux.intel.com>
+ <20181105091727.25544-4-heikki.krogerus@linux.intel.com>
+ <CAL_Jsq+aRAv+9gDKwVi9xYQPYzXK4NMPjzfkuYB08+K6KTYXFg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181106100329.GC13712@zn.tnic>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+aRAv+9gDKwVi9xYQPYzXK4NMPjzfkuYB08+K6KTYXFg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQm9yaXMsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQm9yaXNs
-YXYgUGV0a292IFttYWlsdG86YnBAYWxpZW44LmRlXQ0KPiBTZW50OiBUdWVzZGF5LCBOb3ZlbWJl
-ciA2LCAyMDE4IDM6MzQgUE0NCj4gVG86IE1hbmlzaCBOYXJhbmkgPE1OQVJBTklAeGlsaW54LmNv
-bT4NCj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IE1pY2hh
-bCBTaW1law0KPiA8bWljaGFsc0B4aWxpbnguY29tPjsgbWNoZWhhYkBrZXJuZWwub3JnOyBhbWl0
-Lmt1Y2hlcmlhQGxpbmFyby5vcmc7DQo+IHN1ZGVlcC5ob2xsYUBhcm0uY29tOyBsZW95YW5nLmxp
-QG54cC5jb207IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4
-LQ0KPiBlZGFjQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYxMCAwLzZd
-IEVEQUM6IEVuaGFuY2VtZW50cyB0byBTeW5vcHN5cyBFREFDIGRyaXZlcg0KPiANCj4gT24gVGh1
-LCBPY3QgMjUsIDIwMTggYXQgMTE6MzY6NTVBTSArMDUzMCwgTWFuaXNoIE5hcmFuaSB3cm90ZToN
-Cj4gPiBDaGFuZ2UgaW4gdjEwOg0KPiA+IAktIE1vdmVkIHRoZSBjaGVja2luZyBmb3IgY2VfY250
-IGFuZCB1ZV9jbnQgYmVmb3JlIHRoZSByZWFkbCgpIGNhbGwNCj4gPiAJLSBBbGlnbmVkIGFyZ3Vt
-ZW50cyBvbiB0aGUgb3BlbmluZyBicmFjZSBpbiBzZXR1cF9pcnEoKQ0KPiA+DQo+ID4gTWFuaXNo
-IE5hcmFuaSAoNik6DQo+ID4gICBlZGFjOiBzeW5vcHN5czogQWRkIGVycm9yIGhhbmRsaW5nIGZv
-ciBOVUxMIGluIHByb2JlKCkNCj4gPiAgIGR0OiBiaW5kaW5nczogRG9jdW1lbnQgWnlucU1QIERE
-UkMgaW4gU3lub3BzeXMgZG9jdW1lbnRhdGlvbg0KPiA+ICAgZWRhYzogc3lub3BzeXM6IEFkZCBt
-YWNybyBkZWZpbmVzIGZvciBaeW5xTVAgRERSQw0KPiA+ICAgZWRhYzogc3lub3BzeXM6IEFkZCBF
-REFDIEVDQyBzdXBwb3J0IGZvciBaeW5xTVAgRERSQw0KPiA+ICAgYXJtNjQ6IHp5bnFtcDogQWRk
-IEREUkMgbm9kZQ0KPiA+ICAgZWRhYzogc3lub3BzeXM6IEFkZCBFcnJvciBJbmplY3Rpb24gc3Vw
-cG9ydCBmb3IgWnlucU1QIEREUkMNCj4gPg0KPiA+ICAuLi4vYmluZGluZ3MvbWVtb3J5LWNvbnRy
-b2xsZXJzL3N5bm9wc3lzLnR4dCAgICAgICB8ICAyNyArLQ0KPiA+ICBhcmNoL2FybTY0L2Jvb3Qv
-ZHRzL3hpbGlueC96eW5xbXAuZHRzaSAgICAgICAgICAgICB8ICAgNyArDQo+ID4gIGRyaXZlcnMv
-ZWRhYy9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICstDQo+ID4g
-IGRyaXZlcnMvZWRhYy9zeW5vcHN5c19lZGFjLmMgICAgICAgICAgICAgICAgICAgICAgIHwgOTEx
-ICsrKysrKysrKysrKysrKysrKysrLQ0KPiA+ICA0IGZpbGVzIGNoYW5nZWQsIDkxOCBpbnNlcnRp
-b25zKCspLCAyOSBkZWxldGlvbnMoLSkNCj4gDQo+IE9rLCBwYXRjaGVzIHB1c2hlZCBoZXJlOg0K
-PiANCj4gKG1pbnVzIGh0dHBzOi8vbGttbC5rZXJuZWwub3JnL3IvMTU0MDQ0NzYyMS0yMjg3MC02
-LWdpdC1zZW5kLWVtYWlsLQ0KPiBtYW5pc2gubmFyYW5pQHhpbGlueC5jb20pDQo+IA0KPiBodHRw
-czovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9icC9icC5naXQvbG9n
-Lz9oPWVkYWMtZm9yLTQuMjEtDQo+IHN5bnBzDQo+IA0KVGhhbmtzIGEgbG90IGZvciB5b3VyIHN1
-cHBvcnQuDQoNCj4gUGxlYXNlIHJ1biB0aGlzIG9uIHRoZSBodyBiZWZvcmUgSSBxdWV1ZSBpdCBm
-b3IgbGludXgtbmV4dC4NCkkgaGF2ZSB0ZXN0ZWQgdGhpcyBhbmQgdmVyaWZpZWQgYXMgd29ya2lu
-ZyBmaW5lIG9uIGhhcmR3YXJlLiBZb3UgY2FuIGdvIGFoZWFkIGFuZCBxdWV1ZSBpdCBmb3IgbGlu
-dXgtbmV4dC4NCg0KVGhhbmtzLA0KTWFuaXNoDQo=
+On Mon, Nov 05, 2018 at 12:50:02PM -0600, Rob Herring wrote:
+> On Mon, Nov 5, 2018 at 3:17 AM Heikki Krogerus
+> <heikki.krogerus@linux.intel.com> wrote:
+
+> > +static const char *of_fwnode_name(const struct fwnode_handle *fwnode)
+> > +{
+> > +       return to_of_node(fwnode)->name;
+> 
+> I'm trying to get rid of the DT name ptr, so please don't add one. You
+> can use of_node_full_name() here instead if "<name>@<unit-address>"
+> instead of <name> is fine. Otherwise, you've got to allocate your own
+> storage and use "%pOFn" printf specifier.
+
+If we do this here, we will change a behaviour of the entire set of
+of_fwnode_get_named_child_node() users.
+
+I think this is out of scope of the series.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
