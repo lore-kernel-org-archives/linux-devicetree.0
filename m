@@ -1,29 +1,37 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v10 0/6] EDAC: Enhancements to Synopsys EDAC driver
-Date: Tue, 6 Nov 2018 11:58:55 +0100
-Message-ID: <20181106105855.GD13712@zn.tnic>
-References: <1540447621-22870-1-git-send-email-manish.narani@xilinx.com>
- <20181106100329.GC13712@zn.tnic>
- <DM6PR02MB52278C1B02960DD084D5A25BC1CB0@DM6PR02MB5227.namprd02.prod.outlook.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 6/6] usb: host: Add ability to build new Broadcom STB
+ USB drivers
+Date: Tue, 6 Nov 2018 12:09:47 +0100
+Message-ID: <CAK8P3a0AoHuaiPsMTqhWm3a4X95NpPTPUHkt9vS9Z2ow8NobhA@mail.gmail.com>
+References: <1541453493-34981-1-git-send-email-alcooperx@gmail.com> <1541453493-34981-7-git-send-email-alcooperx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <DM6PR02MB52278C1B02960DD084D5A25BC1CB0@DM6PR02MB5227.namprd02.prod.outlook.com>
+In-Reply-To: <1541453493-34981-7-git-send-email-alcooperx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manish Narani <MNARANI@xilinx.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+To: Al Cooper <alcooperx@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>, linux-usb@vger.kernel.org, Lu Baolu <baolu.l>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 06, 2018 at 10:42:09AM +0000, Manish Narani wrote:
-> I have tested this and verified as working fine on hardware. You can
-> go ahead and queue it for linux-next.
+On 11/5/18, Al Cooper <alcooperx@gmail.com> wrote:
 
-Pushed,
-Thanks.
+> +
+> +config USB_BRCM
+> +	tristate "Broadcom STB USB support"
+> +	depends on ARCH_BRCMSTB
+> +	select USB_OHCI_HCD_PLATFORM if USB_OHCI_HCD
+> +	select USB_EHCI_BRCM if USB_EHCI_HCD
+> +	select USB_XHCI_BRCM if USB_XHCI_HCD
+> +	select USB_XHCI_PLATFORM if USB_XHCI_HCD
+> +	select BRCM_USB_PHY if USB_OHCI_HCD || USB_EHCI_HCD || USB_XHCI_HCD
+> +	select GENERIC_PHY if BRCM_USB_PHY
+> +	default ARCH_BRCMSTB
 
--- 
-Regards/Gruss,
-    Boris.
+Is there a build time dependency on the PHY layer? If not, I would suggest
+dropping the last two 'select' statements. I would also suggest
+making the dependency 'depends on ARCH_BRCMSTB || COMPILE_TEST'
+to allow building it on other architecture for better build testing, and
+dropping the 'default' line. Just add this to the defconfig like the other
+drivers you have.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+      Arnd
