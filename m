@@ -1,33 +1,46 @@
 From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v10 5/6] arm64: zynqmp: Add DDRC node
-Date: Tue, 6 Nov 2018 10:22:51 +0100
-Message-ID: <20181106092251.GB13712@zn.tnic>
-References: <20181105125644.GA7937@zn.tnic>
- <41c5ca53-ed4b-38d0-c612-e1229004293e@xilinx.com>
- <20181105132007.GB7937@zn.tnic>
- <a81f47e0-1778-a6ac-4cd8-634502661d6f@xilinx.com>
- <20181105134218.GD7937@zn.tnic>
- <CAOesGMj=EbWgcYF2Mhh6TFMCdn1ub1Ze6fbXJnFFdsttWByXYg@mail.gmail.com>
- <20181105194721.GB26868@zn.tnic>
- <CAOesGMjsPWeRZEeBH37uLQFBKwAWNMh5yCvuKNYrOUDfRSSYog@mail.gmail.com>
- <20181105204322.GE26868@zn.tnic>
- <38dc38b6-25f4-194c-9ba9-577d35e92700@xilinx.com>
+Subject: Re: [PATCH v10 0/6] EDAC: Enhancements to Synopsys EDAC driver
+Date: Tue, 6 Nov 2018 11:03:30 +0100
+Message-ID: <20181106100329.GC13712@zn.tnic>
+References: <1540447621-22870-1-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <38dc38b6-25f4-194c-9ba9-577d35e92700@xilinx.com>
+In-Reply-To: <1540447621-22870-1-git-send-email-manish.narani@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, manish.narani@xilinx.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, Li Yang <leoyang.li@nxp.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-edac@vger.kernel.org
+To: Manish Narani <manish.narani@xilinx.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, mchehab@kernel.org, amit.kucheria@linaro.org, sudeep.holla@arm.com, leoyang.li@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 06, 2018 at 07:46:55AM +0100, Michal Simek wrote:
-> I think Boris should take also this one (dt binding doc change) because
-> it is aligned with changes in the driver.
-> https://lkml.kernel.org/r/1538667328-9465-7-git-send-email-manish.narani@xilinx.com
+On Thu, Oct 25, 2018 at 11:36:55AM +0530, Manish Narani wrote:
+> Change in v10:
+> 	- Moved the checking for ce_cnt and ue_cnt before the readl() call
+> 	- Aligned arguments on the opening brace in setup_irq()
+> 
+> Manish Narani (6):
+>   edac: synopsys: Add error handling for NULL in probe()
+>   dt: bindings: Document ZynqMP DDRC in Synopsys documentation
+>   edac: synopsys: Add macro defines for ZynqMP DDRC
+>   edac: synopsys: Add EDAC ECC support for ZynqMP DDRC
+>   arm64: zynqmp: Add DDRC node
+>   edac: synopsys: Add Error Injection support for ZynqMP DDRC
+> 
+>  .../bindings/memory-controllers/synopsys.txt       |  27 +-
+>  arch/arm64/boot/dts/xilinx/zynqmp.dtsi             |   7 +
+>  drivers/edac/Kconfig                               |   2 +-
+>  drivers/edac/synopsys_edac.c                       | 911 ++++++++++++++++++++-
+>  4 files changed, 918 insertions(+), 29 deletions(-)
 
-Ok, done.
+Ok, patches pushed here:
+
+(minus https://lkml.kernel.org/r/1540447621-22870-6-git-send-email-manish.narani@xilinx.com)
+
+https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=edac-for-4.21-synps
+
+Please run this on the hw before I queue it for linux-next.
+
+Thx.
 
 -- 
 Regards/Gruss,
