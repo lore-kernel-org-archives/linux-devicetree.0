@@ -1,8 +1,8 @@
 From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCH 14/23] PCI: mobiveil: initialize Primary/Secondary/Subordinate
- bus number
-Date: Tue, 6 Nov 2018 13:20:35 +0000
-Message-ID: <20181106131807.29951-15-Zhiqiang.Hou@nxp.com>
+Subject: [PATCH 15/23] dt-bindings: pci: mobiveil: change gpio_slave and
+ apb_csr to optional
+Date: Tue, 6 Nov 2018 13:20:41 +0000
+Message-ID: <20181106131807.29951-16-Zhiqiang.Hou@nxp.com>
 References: <20181106131807.29951-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -17,32 +17,30 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-The reset value is all zero, so set a workable value for Primary,
-Secondary and Subordinate bus numbers.
+Change the "gpio_slave" and "apb_csr" to optional, the "gpio_slave"
+is not used in current code, and "apb_csr" is not used by some
+platorms.
 
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 ---
- drivers/pci/controller/pcie-mobiveil.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/devicetree/bindings/pci/mobiveil-pcie.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controlle=
-r/pcie-mobiveil.c
-index 3da924bb6b3c..8d6a1e98f655 100644
---- a/drivers/pci/controller/pcie-mobiveil.c
-+++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -581,6 +581,12 @@ static int mobiveil_host_init(struct mobiveil_pcie *pc=
-ie)
- 	u32 value, pab_ctrl, type;
- 	struct resource_entry *win;
+diff --git a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt b/Docu=
+mentation/devicetree/bindings/pci/mobiveil-pcie.txt
+index a618d4787dd7..64156993e052 100644
+--- a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+@@ -10,8 +10,10 @@ Required properties:
+ 	interrupt source. The value must be 1.
+ - compatible: Should contain "mbvl,gpex40-pcie"
+ - reg: Should contain PCIe registers location and length
++	Mandatory:
+ 	"config_axi_slave": PCIe controller registers
+ 	"csr_axi_slave"	  : Bridge config registers
++	Optional:
+ 	"gpio_slave"	  : GPIO registers to control slot power
+ 	"apb_csr"	  : MSI registers
 =20
-+	/* setup bus numbers */
-+	value =3D csr_readl(pcie, PCI_PRIMARY_BUS);
-+	value &=3D 0xff000000;
-+	value |=3D 0x00ff0100;
-+	csr_writel(pcie, value, PCI_PRIMARY_BUS);
-+
- 	/*
- 	 * program Bus Master Enable Bit in Command Register in PAB Config
- 	 * Space
 --=20
 2.17.1
