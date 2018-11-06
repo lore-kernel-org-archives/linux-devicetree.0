@@ -1,63 +1,29 @@
-From: Sven Van Asbroeck <thesven73@gmail.com>
-Subject: Re: [PATCH anybus v3 1/6] misc: support the Arcx anybus bridge
-Date: Tue, 6 Nov 2018 15:05:24 -0500
-Message-ID: <CAGngYiXfmD-EVKcN-L1fBOgyX4JrMqRx295F1p90shygL7zccg@mail.gmail.com>
-References: <20181104155501.14767-1-TheSven73@googlemail.com>
- <20181104155501.14767-2-TheSven73@googlemail.com> <20181105212049.GA320@bogus>
- <CAGngYiUZTm-r0KJ07tKsPmgKCUWcqAOx2S82iLPRjkcDiw0R3g@mail.gmail.com>
- <CAL_JsqLgz9Z3J0x+QFU6jHOoHn6A1KASc+HbVLnW1=ow0RHv6w@mail.gmail.com>
- <CAGngYiXczK6dsfyDGxe1ym-vQQfH5XS0jeEkuWW_og23JmTAZg@mail.gmail.com> <CAL_Jsq+YeW+BtVh=L8PBjXYLj9sp91BcUQrJJrwnmChRnXoK_w@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/4] of/device: Add a way to probe drivers by match data
+Date: Tue, 6 Nov 2018 14:44:52 -0600
+Message-ID: <CAL_JsqLvKWcJUYDyWOg3rMeEWv7JV4zw7-YkOUWiL5rfXgVRvQ@mail.gmail.com>
+References: <20181106183609.207702-1-sboyd@kernel.org> <20181106183609.207702-2-sboyd@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+YeW+BtVh=L8PBjXYLj9sp91BcUQrJJrwnmChRnXoK_w@mail.gmail.com>
+In-Reply-To: <20181106183609.207702-2-sboyd@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Sven Van Asbroeck <svendev@arcx.com>, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, treding@nvidia.com, David Lechner <david@lechnology.com>, noralf@tronnes.org, johan@kernel.org, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 6, 2018 at 1:31 PM Rob Herring <robh@kernel.org> wrote:
-
-> If the host is not a h/w component, but just a s/w protocol then it
-> doesn't belong in DT. Perhaps it could be a library which the bridge
-> driver can call into.
-
-Anybus cards have an id register, which identifies what they are, so
-that the appropriate client driver may be instantiated.
-In that sense anybus is very suited to the bus/client abstraction of
-pci/usb/etc.
-
-> What are the resets connected to? The slots? Maybe you should model
-> the slots in DT.
+On Tue, Nov 6, 2018 at 12:36 PM Stephen Boyd <sboyd@kernel.org> wrote:
 >
+> We have a handful of clk drivers that have a collection of slightly
+> variant device support keyed off of the compatible string. In each of
+> these drivers, we demux the variant and then call the "real" probe
+> function based on whatever is stored in the match data for that
+> compatible string. Let's generalize this function so that it can be
+> re-used as the platform_driver probe function directly.
 
-Yes, the resets are ultimately connected to the slots.
-I'm happy to model the slots in DT. It makes sense, they are physical,
-hardware components.
+This looks really hacky to me. It sounds kind of general, but really
+only works if we have match data that's a single function and we lose
+any type checking on the function. What about things other than
+platform devices?
 
->
-> A block diagram would help. Something that shows the host SoC, your
-> CPLD, reset, irq, etc.
->
-
-  +------------------------------------------------------------------------+
-  |                                  SOC (i.MX6)                           |
-  |------------------------------------------------------------------------|
-  |     i.MX WEIM bus                                   | i.MX GPIO        |
-  +------------------------------------------------------------------------+
-                ^                                              ^ ^
-                | parallel bus                                 | | irq x2
-                v                                              | |
-  +------------------------------------------------------------------------+
-  |                                     CPLD                               |
-  |------------------------------------------------------------------------|
-  |             anybus slot 1             ||            anybus slot 2      |
-  |------------------------------------------------------------------------|
-  | memory bus               | irq| reset || memory bus       | irq| reset |
-  +------------------------------------------------------------------------+
-                ^                                               ^
-                |                                               |
-                v                                               v
-  +--------------------------------------+ +-------------------------------+
-  |          anybus card                 | |           anybus card         |
-  +--------------------------------------+ +-------------------------------+
+Rob
