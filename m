@@ -1,166 +1,131 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 3/3] ARM: dts: imx7: Fix memory node duplicaton
-Date: Tue,  6 Nov 2018 13:40:47 -0200
-Message-ID: <1541518847-5640-3-git-send-email-festevam@gmail.com>
-References: <1541518847-5640-1-git-send-email-festevam@gmail.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [RFC 0/2] Add RISC-V cpu topology
+Date: Tue, 6 Nov 2018 15:50:00 +0000
+Message-ID: <20181106155000.GA25372@e107155-lin>
+References: <1541113468-22097-1-git-send-email-atish.patra@wdc.com>
+ <866dedbc78ab4fa0e3b040697e112106@mailhost.ics.forth.gr>
+ <20181106141331.GA28458@e107155-lin>
+ <969fc2a5198984e0dfe8c3f585dc65f9@mailhost.ics.forth.gr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1541518847-5640-1-git-send-email-festevam@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org
-Cc: robh@kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <969fc2a5198984e0dfe8c3f585dc65f9@mailhost.ics.forth.gr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nick Kossifidis <mick@ics.forth.gr>
+Cc: Atish Patra <atish.patra@wdc.com>, linux-riscv@lists.infradead.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Damien.LeMoal@wdc.com, alankao@andestech.com, zong@andestech.com, anup@brainfault.org, palmer@sifive.com, linux-kernel@vger.kernel.org, hch@infradead.org, robh+dt@kernel.org, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Boards based on imx7 have duplicate memory nodes:
+On Tue, Nov 06, 2018 at 05:26:01PM +0200, Nick Kossifidis wrote:
+> Στις 2018-11-06 16:13, Sudeep Holla έγραψε:
+> > On Fri, Nov 02, 2018 at 08:58:39PM +0200, Nick Kossifidis wrote:
+> > > Hello All,
+> > >
+> > > Στις 2018-11-02 01:04, Atish Patra έγραψε:
+> > > > This patch series adds the cpu topology for RISC-V. It contains
+> > > > both the DT binding and actual source code. It has been tested on
+> > > > QEMU & Unleashed board.
+> > > >
+> > > > The idea is based on cpu-map in ARM with changes related to how
+> > > > we define SMT systems. The reason for adopting a similar approach
+> > > > to ARM as I feel it provides a very clear way of defining the
+> > > > topology compared to parsing cache nodes to figure out which cpus
+> > > > share the same package or core.  I am open to any other idea to
+> > > > implement cpu-topology as well.
+> > > >
+> > >
+> > > I was also about to start a discussion about CPU topology on RISC-V
+> > > after the last swtools group meeting. The goal is to provide the
+> > > scheduler with hints on how to distribute tasks more efficiently
+> > > between harts, by populating the scheduling domain topology levels
+> > > (https://elixir.bootlin.com/linux/v4.19/ident/sched_domain_topology_level).
+> > > What we want to do is define cpu groups and assign them to
+> > > scheduling domains with the appropriate SD_ flags
+> > > (https://github.com/torvalds/linux/blob/master/include/linux/sched/topology.h#L16).
+> > >
+> >
+> > OK are we defining a CPU topology binding for Linux scheduler ?
+> > NACK for all the approaches that assumes any knowledge of OS scheduler.
+> >
+>
+> Is there any standard regarding CPU topology on the device tree spec ? As
+> far as I know there is none. We are talking about a Linux-specific Device
+> Tree binding so I don't see why defining a binding for the Linux scheduler
+> is out of scope.
 
-- One coming from the board dts file: memory@
+There may not be much on CPU topology in device tree spec, but that
+doesn't mean we are defining something Linux specific here just because
+there's bunch of LKML are cc-ed. We do have dedicated device tree ML for
+a reason.
 
-- One coming from the imx7s.dtsi file.
+> Do you have cpu-map on other OSes as well ?
+>
 
-Fix the duplication by removing the memory node from the dtsi file
-and by adding 'device_type = "memory";' in the board dts.
+Nothing prevents them not to. I have seen increase in the projects
+relying on DT these days.
 
-Reported-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts   | 3 ++-
- arch/arm/boot/dts/imx7d-colibri-emmc.dtsi | 1 +
- arch/arm/boot/dts/imx7d-colibri.dtsi      | 1 +
- arch/arm/boot/dts/imx7d-nitrogen7.dts     | 1 +
- arch/arm/boot/dts/imx7d-pico.dtsi         | 1 +
- arch/arm/boot/dts/imx7d-sdb.dts           | 1 +
- arch/arm/boot/dts/imx7s-colibri.dtsi      | 1 +
- arch/arm/boot/dts/imx7s-warp.dts          | 1 +
- arch/arm/boot/dts/imx7s.dtsi              | 2 --
- 9 files changed, 9 insertions(+), 3 deletions(-)
+> > > So the cores that belong to a scheduling domain may share:
+> > > CPU capacity (SD_SHARE_CPUCAPACITY / SD_ASYM_CPUCAPACITY)
+> > > Package resources -e.g. caches, units etc- (SD_SHARE_PKG_RESOURCES)
+> > > Power domain (SD_SHARE_POWERDOMAIN)
+> > >
+> >
+> > Too Linux kernel/scheduler specific to be part of $subject
+> >
+>
+> All lists on the cc list are Linux specific, again I don't see your point
+> here are we talking about defining a standard CPU topology scheme for the
+> device tree spec or a Linux-specific CPU topology binding such as cpu-map ?
+>
 
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index 8bf365d..e615674 100644
---- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -19,6 +19,7 @@
- 	compatible = "compulab,cl-som-imx7", "fsl,imx7d";
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x10000000>; /* 256 MB - minimal configuration */
- 	};
- 
-@@ -284,4 +285,4 @@
- 			MX7D_PAD_LPSR_GPIO1_IO05__GPIO1_IO5	0x14 /* OTG PWREN */
- 		>;
- 	};
--};
-\ No newline at end of file
-+};
-diff --git a/arch/arm/boot/dts/imx7d-colibri-emmc.dtsi b/arch/arm/boot/dts/imx7d-colibri-emmc.dtsi
-index 04d24ee..898f4b8 100644
---- a/arch/arm/boot/dts/imx7d-colibri-emmc.dtsi
-+++ b/arch/arm/boot/dts/imx7d-colibri-emmc.dtsi
-@@ -8,6 +8,7 @@
- 
- / {
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x40000000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx7d-colibri.dtsi b/arch/arm/boot/dts/imx7d-colibri.dtsi
-index d9f8fb6..e2e327f 100644
---- a/arch/arm/boot/dts/imx7d-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7d-colibri.dtsi
-@@ -45,6 +45,7 @@
- 
- / {
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x20000000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx7d-nitrogen7.dts b/arch/arm/boot/dts/imx7d-nitrogen7.dts
-index d8aac4a..4fb7e84 100644
---- a/arch/arm/boot/dts/imx7d-nitrogen7.dts
-+++ b/arch/arm/boot/dts/imx7d-nitrogen7.dts
-@@ -12,6 +12,7 @@
- 	compatible = "boundary,imx7d-nitrogen7", "fsl,imx7d";
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x40000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx7d-pico.dtsi b/arch/arm/boot/dts/imx7d-pico.dtsi
-index 21973eb..4846df0 100644
---- a/arch/arm/boot/dts/imx7d-pico.dtsi
-+++ b/arch/arm/boot/dts/imx7d-pico.dtsi
-@@ -49,6 +49,7 @@
- 	compatible = "technexion,imx7d-pico", "fsl,imx7d";
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x80000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
-index f1bafda..b1b613b 100644
---- a/arch/arm/boot/dts/imx7d-sdb.dts
-+++ b/arch/arm/boot/dts/imx7d-sdb.dts
-@@ -15,6 +15,7 @@
- 	};
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x80000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx7s-colibri.dtsi b/arch/arm/boot/dts/imx7s-colibri.dtsi
-index fe8344c..1fb1ec5 100644
---- a/arch/arm/boot/dts/imx7s-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7s-colibri.dtsi
-@@ -45,6 +45,7 @@
- 
- / {
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x10000000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
-index f7ba2c0..23431fa 100644
---- a/arch/arm/boot/dts/imx7s-warp.dts
-+++ b/arch/arm/boot/dts/imx7s-warp.dts
-@@ -14,6 +14,7 @@
- 	compatible = "warp,imx7s-warp", "fsl,imx7s";
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x20000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index aa8df7d..477901c 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -17,10 +17,8 @@
- 	 * The decompressor and also some bootloaders rely on a
- 	 * pre-existing /chosen node to be available to insert the
- 	 * command line and merge other ATAGS info.
--	 * Also for U-Boot there must be a pre-existing /memory node.
- 	 */
- 	chosen {};
--	memory { device_type = "memory"; };
- 
- 	aliases {
- 		gpio0 = &gpio1;
--- 
-2.7.4
+See above.
+
+> Even on this case your point is not valid, the information of two harts
+> sharing a common power domain or having the same or not capacity/max
+> frequency (or maybe capabilities/extensions in the future), is not Linux
+> specific. I just used the Linux specific macros used by the Linux scheduler
+> to point out the code path.
+
+The CPU topology can be different from the frequency or the power domains
+and we do have specific bindings to provide those information. So let's
+try to keep that out of this discussion.
+
+> Even on other OSes we still need a way to include this information on the
+> CPU topology, and currently cpu-map doesn't. Also the Linux implementation
+> of cpu-map ignores multiple levels of shared resources, we only get one
+> level for SMT and one level for MC last time I checked.
+>
+
+But that doesn't make it any easy if you influence the bindings based on
+Linux scheduler. So just define how hardware is and allow each OS to
+choose it's own way to utilise that information. That's how most of the
+generic DT bindings are defined.
+
+> > > In this context I believe using words like "core", "package",
+> > > "socket" etc can be misleading. For example the sample topology you
+> > > use on the documentation says that there are 4 cores that are part
+> > > of a package, however "package" has a different meaning to the
+> > > scheduler. Also we don't say anything in case they share a power
+> > > domain or if they have the same capacity or not. This mapping deals
+> > > only with cache hierarchy or other shared resources.
+> > >
+> >
+> > {Un,}fortunately those are terms used by hardware people.
+> >
+>
+> And they are wrong, how the harts are physically packed doesn't imply
+> their actual topology. In general the "translation" is not always straight
+> forward, there are assumptions in place. We could use "cluster" of harts or
+> "group" of harts instead, they are more abstract.
+>
+
+Indeed. I agree those terminologies may not be best, but they are already
+used one. We need to map on to those generic ones, though the translations
+may not be simple. We do have the same issues on ARM. If we try to build
+in such information into DT, then it becomes more configuration file for
+OS than platform description IMO.
+
+--
+Regards,
+Sudeep
