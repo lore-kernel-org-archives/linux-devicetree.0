@@ -1,11 +1,13 @@
 From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 1/3] ARM: dts: imx31: Fix memory node duplicaton
-Date: Tue,  6 Nov 2018 13:40:45 -0200
-Message-ID: <1541518847-5640-1-git-send-email-festevam@gmail.com>
+Subject: [PATCH 2/3] ARM: dts: imx35: Fix memory node duplicaton
+Date: Tue,  6 Nov 2018 13:40:46 -0200
+Message-ID: <1541518847-5640-2-git-send-email-festevam@gmail.com>
+References: <1541518847-5640-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1541518847-5640-1-git-send-email-festevam@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,11 +21,11 @@ To: shawnguo@kernel.org
 Cc: robh@kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Boards based on imx31 have duplicate memory nodes:
+Boards based on imx35 have duplicate memory nodes:
 
 - One coming from the board dts file: memory@
 
-- One coming from the imx31.dtsi file.
+- One coming from the imx35.dtsi file.
 
 Fix the duplication by removing the memory node from the dtsi file
 and by adding 'device_type = "memory";' in the board dts.
@@ -31,40 +33,40 @@ and by adding 'device_type = "memory";' in the board dts.
 Reported-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Fabio Estevam <festevam@gmail.com>
 ---
- arch/arm/boot/dts/imx31-bug.dts  | 1 +
- arch/arm/boot/dts/imx31-lite.dts | 1 +
- arch/arm/boot/dts/imx31.dtsi     | 2 --
+ arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi | 1 +
+ arch/arm/boot/dts/imx35-pdk.dts              | 1 +
+ arch/arm/boot/dts/imx35.dtsi                 | 2 --
  3 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx31-bug.dts b/arch/arm/boot/dts/imx31-bug.dts
-index 6ee4ff8..9eb960c 100644
---- a/arch/arm/boot/dts/imx31-bug.dts
-+++ b/arch/arm/boot/dts/imx31-bug.dts
-@@ -17,6 +17,7 @@
- 	compatible = "buglabs,imx31-bug", "fsl,imx31";
+diff --git a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
+index ba39d93..5f8a47a 100644
+--- a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
++++ b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
+@@ -18,6 +18,7 @@
+ 	compatible = "eukrea,cpuimx35", "fsl,imx35";
  
  	memory@80000000 {
 +		device_type = "memory";
  		reg = <0x80000000 0x8000000>; /* 128M */
  	};
  };
-diff --git a/arch/arm/boot/dts/imx31-lite.dts b/arch/arm/boot/dts/imx31-lite.dts
-index db52ddc..d17abdf 100644
---- a/arch/arm/boot/dts/imx31-lite.dts
-+++ b/arch/arm/boot/dts/imx31-lite.dts
-@@ -18,6 +18,7 @@
- 	};
+diff --git a/arch/arm/boot/dts/imx35-pdk.dts b/arch/arm/boot/dts/imx35-pdk.dts
+index df613e8..ddce0a8 100644
+--- a/arch/arm/boot/dts/imx35-pdk.dts
++++ b/arch/arm/boot/dts/imx35-pdk.dts
+@@ -11,6 +11,7 @@
+ 	compatible = "fsl,imx35-pdk", "fsl,imx35";
  
  	memory@80000000 {
 +		device_type = "memory";
- 		reg = <0x80000000 0x8000000>;
+ 		reg = <0x80000000 0x8000000>,
+ 		      <0x90000000 0x8000000>;
  	};
- 
-diff --git a/arch/arm/boot/dts/imx31.dtsi b/arch/arm/boot/dts/imx31.dtsi
-index af7afcc..d7f6fb7 100644
---- a/arch/arm/boot/dts/imx31.dtsi
-+++ b/arch/arm/boot/dts/imx31.dtsi
-@@ -10,10 +10,8 @@
+diff --git a/arch/arm/boot/dts/imx35.dtsi b/arch/arm/boot/dts/imx35.dtsi
+index a1c3d28..59cadee 100644
+--- a/arch/arm/boot/dts/imx35.dtsi
++++ b/arch/arm/boot/dts/imx35.dtsi
+@@ -13,10 +13,8 @@
  	 * The decompressor and also some bootloaders rely on a
  	 * pre-existing /chosen node to be available to insert the
  	 * command line and merge other ATAGS info.
@@ -74,6 +76,6 @@ index af7afcc..d7f6fb7 100644
 -	memory { device_type = "memory"; };
  
  	aliases {
- 		gpio0 = &gpio1;
+ 		ethernet0 = &fec;
 -- 
 2.7.4
