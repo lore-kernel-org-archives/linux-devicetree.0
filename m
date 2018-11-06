@@ -1,199 +1,162 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCH 23/23] arm64: dts: freescale: lx2160a: add pcie DT nodes
-Date: Tue, 6 Nov 2018 13:21:31 +0000
-Message-ID: <20181106131807.29951-24-Zhiqiang.Hou@nxp.com>
-References: <20181106131807.29951-1-Zhiqiang.Hou@nxp.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [bindings][PATCH] bindings/net: DPAA Backplane Device Bindings
+Date: Tue, 6 Nov 2018 14:29:08 +0100
+Message-ID: <20181106132908.GA30774@lunn.ch>
+References: <1541504900-30091-1-git-send-email-florinel.iordache@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181106131807.29951-1-Zhiqiang.Hou@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1541504900-30091-1-git-send-email-florinel.iordache@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-Cc: Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To: Florinel Iordache <florinel.iordache@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "broonie@kernel.org" <broonie@kernel.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On Tue, Nov 06, 2018 at 11:48:30AM +0000, Florinel Iordache wrote:
+> Device Tree Bindings for DPAA backplane available on Layerscape
+>  communications processors.
+> 
+> Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
+> ---
+>  .../devicetree/bindings/net/dpaa-backplane.txt     | 105 +++++++++++++++++++++
+>  1 file changed, 105 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/dpaa-backplane.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/dpaa-backplane.txt b/Documentation/devicetree/bindings/net/dpaa-backplane.txt
+> new file mode 100644
+> index 0000000..f147c84
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/dpaa-backplane.txt
+> @@ -0,0 +1,105 @@
+> +=============================================================================
+> +DPAA Backplane Device Bindings
+> +
+> +CONTENTS
+> +  - SerDes Node
+> +  - PCS Phy Node
+> +
+> +=============================================================================
+> +SerDes Node
+> +
+> +DESCRIPTION
+> +
+> +SerDes (Serializer/Deserializer) HW peripheral
+> +
 
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
----
- .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 157 ++++++++++++++++++
- 1 file changed, 157 insertions(+)
+Hi Florinel
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-lx2160a.dtsi
-index 6ba722e373ee..49dfaaf7560d 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-@@ -953,5 +953,162 @@
- 			clock-names =3D "fspi_en", "fspi";
- 			status =3D "disabled";
- 		};
-+
-+		pcie@3400000 {
-+			compatible =3D "fsl,lx2160a-pcie";
-+			reg =3D <0x00 0x03400000 0x0 0x00100000   /* controller registers */
-+			       0x80 0x00000000 0x0 0x00001000>; /* configuration space */
-+			reg-names =3D "csr_axi_slave", "config_axi_slave";
-+			interrupts =3D <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-+				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-+				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-+			interrupt-names =3D "aer", "pme", "intr";
-+			#address-cells =3D <3>;
-+			#size-cells =3D <2>;
-+			device_type =3D "pci";
-+			dma-coherent;
-+			apio-wins =3D <8>;
-+			ppio-wins =3D <8>;
-+			bus-range =3D <0x0 0xff>;
-+			ranges =3D <0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>; =
-/* non-prefetchable memory */
-+			msi-parent =3D <&its>;
-+			#interrupt-cells =3D <1>;
-+			interrupt-map-mask =3D <0 0 0 7>;
-+			interrupt-map =3D <0000 0 0 1 &gic 0 0 0 109 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 2 &gic 0 0 0 110 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 3 &gic 0 0 0 111 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 4 &gic 0 0 0 112 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		pcie@3500000 {
-+			compatible =3D "fsl,lx2160a-pcie";
-+			reg =3D <0x00 0x03500000 0x0 0x00100000   /* controller registers */
-+			       0x88 0x00000000 0x0 0x00001000>; /* configuration space */
-+			reg-names =3D "csr_axi_slave", "config_axi_slave";
-+			interrupts =3D <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-+				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-+				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-+			interrupt-names =3D "aer", "pme", "intr";
-+			#address-cells =3D <3>;
-+			#size-cells =3D <2>;
-+			device_type =3D "pci";
-+			dma-coherent;
-+			apio-wins =3D <8>;
-+			ppio-wins =3D <8>;
-+			bus-range =3D <0x0 0xff>;
-+			ranges =3D <0x82000000 0x0 0x40000000 0x88 0x40000000 0x0 0x40000000>; =
-/* non-prefetchable memory */
-+			msi-parent =3D <&its>;
-+			#interrupt-cells =3D <1>;
-+			interrupt-map-mask =3D <0 0 0 7>;
-+			interrupt-map =3D <0000 0 0 1 &gic 0 0 0 114 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 2 &gic 0 0 0 115 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 3 &gic 0 0 0 116 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 4 &gic 0 0 0 117 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		pcie@3600000 {
-+			compatible =3D "fsl,lx2160a-pcie";
-+			reg =3D <0x00 0x03600000 0x0 0x00100000   /* controller registers */
-+			       0x90 0x00000000 0x0 0x00001000>; /* configuration space */
-+			reg-names =3D "csr_axi_slave", "config_axi_slave";
-+			interrupts =3D <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-+				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-+				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-+			interrupt-names =3D "aer", "pme", "intr";
-+			#address-cells =3D <3>;
-+			#size-cells =3D <2>;
-+			device_type =3D "pci";
-+			dma-coherent;
-+			apio-wins =3D <8>;
-+			ppio-wins =3D <8>;
-+			bus-range =3D <0x0 0xff>;
-+			ranges =3D <0x82000000 0x0 0x40000000 0x90 0x40000000 0x0 0x40000000>; =
-/* non-prefetchable memory */
-+			msi-parent =3D <&its>;
-+			#interrupt-cells =3D <1>;
-+			interrupt-map-mask =3D <0 0 0 7>;
-+			interrupt-map =3D <0000 0 0 1 &gic 0 0 0 119 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 2 &gic 0 0 0 120 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 3 &gic 0 0 0 121 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 4 &gic 0 0 0 122 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		pcie@3700000 {
-+			compatible =3D "fsl,lx2160a-pcie";
-+			reg =3D <0x00 0x03700000 0x0 0x00100000   /* controller registers */
-+			       0x98 0x00000000 0x0 0x00001000>; /* configuration space */
-+			reg-names =3D "csr_axi_slave", "config_axi_slave";
-+			interrupts =3D <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-+				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-+				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-+			interrupt-names =3D "aer", "pme", "intr";
-+			#address-cells =3D <3>;
-+			#size-cells =3D <2>;
-+			device_type =3D "pci";
-+			dma-coherent;
-+			apio-wins =3D <8>;
-+			ppio-wins =3D <8>;
-+			bus-range =3D <0x0 0xff>;
-+			ranges =3D <0x82000000 0x0 0x40000000 0x98 0x40000000 0x0 0x40000000>; =
-/* non-prefetchable memory */
-+			msi-parent =3D <&its>;
-+			#interrupt-cells =3D <1>;
-+			interrupt-map-mask =3D <0 0 0 7>;
-+			interrupt-map =3D <0000 0 0 1 &gic 0 0 0 124 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 2 &gic 0 0 0 125 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 3 &gic 0 0 0 126 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 4 &gic 0 0 0 127 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		pcie@3800000 {
-+			compatible =3D "fsl,lx2160a-pcie";
-+			reg =3D <0x00 0x03800000 0x0 0x00100000   /* controller registers */
-+			       0xa0 0x00000000 0x0 0x00001000>; /* configuration space */
-+			reg-names =3D "csr_axi_slave", "config_axi_slave";
-+			interrupts =3D <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-+				     <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-+				     <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-+			interrupt-names =3D "aer", "pme", "intr";
-+			#address-cells =3D <3>;
-+			#size-cells =3D <2>;
-+			device_type =3D "pci";
-+			dma-coherent;
-+			apio-wins =3D <8>;
-+			ppio-wins =3D <8>;
-+			bus-range =3D <0x0 0xff>;
-+			ranges =3D <0x82000000 0x0 0x40000000 0xa0 0x40000000 0x0 0x40000000>; =
-/* non-prefetchable memory */
-+			msi-parent =3D <&its>;
-+			#interrupt-cells =3D <1>;
-+			interrupt-map-mask =3D <0 0 0 7>;
-+			interrupt-map =3D <0000 0 0 1 &gic 0 0 0 129 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 2 &gic 0 0 0 130 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 3 &gic 0 0 0 131 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 4 &gic 0 0 0 132 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		pcie@3900000 {
-+			compatible =3D "fsl,lx2160a-pcie";
-+			reg =3D <0x00 0x03900000 0x0 0x00100000   /* controller registers */
-+			       0xa8 0x00000000 0x0 0x00001000>; /* configuration space */
-+			reg-names =3D "csr_axi_slave", "config_axi_slave";
-+			interrupts =3D <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-+				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-+				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-+			interrupt-names =3D "aer", "pme", "intr";
-+			#address-cells =3D <3>;
-+			#size-cells =3D <2>;
-+			device_type =3D "pci";
-+			dma-coherent;
-+			apio-wins =3D <8>;
-+			ppio-wins =3D <8>;
-+			bus-range =3D <0x0 0xff>;
-+			ranges =3D <0x82000000 0x0 0x40000000 0xa8 0x40000000 0x0 0x40000000>; =
-/* non-prefetchable memory */
-+			msi-parent =3D <&its>;
-+			#interrupt-cells =3D <1>;
-+			interrupt-map-mask =3D <0 0 0 7>;
-+			interrupt-map =3D <0000 0 0 1 &gic 0 0 0 104 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 2 &gic 0 0 0 105 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 3 &gic 0 0 0 106 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 4 &gic 0 0 0 107 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
- 	};
- };
---=20
-2.17.1
+It is normal to indicate which properties are required, and which are
+optional using the section headers. There is a defacto standard for
+the format of a device tree binding, and this text does not follow it.
+
+> +PROPERTIES
+> +
+> +- compatible
+> +		Usage: required
+> +		Value type: <stringlist>
+> +		Definition: Specifies the type of SerDes.
+> +		Must include the prefix "fsl,serdes"
+> +		SerDes can be of different types:
+> +		- 10G SerDes must be specified as: "fsl,serdes-10g"
+> +		- 28G SerDes must be specified as: "fsl,serdes-28g"
+
+Does a different driver get loaded depending on the compatible? I'm
+just wondering if there should be one compatible string, and a speed
+property.
+
+> +
+> +- reg
+> +		Usage: required
+> +		Value type: <prop-encoded-array>
+> +		Definition: Specifies the offset of the SerDes configuration registers
+> +
+> +- little-endian
+> +		Usage: optional
+> +		Value type: <Boolean>
+> +		Definition: Specifies endianness access to SerDes registers.
+> +		If omitted, big-endian will be used
+> +		See common-properties.txt for complete definition
+> +
+> +EXAMPLE
+> +
+> +Example of 10G SerDes node:
+> +
+> +serdes1: serdes@1ea0000 {
+> +		compatible = "fsl,serdes-10g";
+> +		reg = <0x0 0x1ea0000 0 0x00002000>;
+> +		little-endian;
+> +};
+> +
+> +=============================================================================
+> +PCS Phy Node
+> +
+> +DESCRIPTION
+> +
+> +PCS Phy (Physical Coding Sublayer / Physical layer) node
+> +
+> +PROPERTIES
+> +
+> +- compatible
+> +		Usage: required
+
+This is normally optional, and defaults to c22 if not present.
+
+> +		Value type: <stringlist>
+> +		Definition: A standard property. Specifies the IEEE 802.3 Clause
+> +		Different IEEE 802.3 Clauses can be specified:
+> +		- Clause 22 must be specified as: "ethernet-phy-ieee802.3-c22"
+> +		- Clause 45 must be specified as: "ethernet-phy-ieee802.3-c45"
+> +		For complete definition see:
+> +		Documentation/devicetree/bindings/net/phy.txt
+> +
+> +- reg
+> +		Usage: required
+> +		Value type: <prop-encoded-array>
+> +		Definition: A standard property.
+> +		Specifies the offset of the PCS Phy configuration registers
+> +		For complete definition see:
+> +		Documentation/devicetree/bindings/net/phy.txt
+
+Rather than state what is already in phy.txt, just say that the
+following additional properties can be used:
+
+> +
+> +- backplane-mode
+> +		Usage: required
+
+So your PHYs can only be used in backplane-mode? Base-T is never
+supported?
+
+> +		Value type: <stringlist>
+> +		Definition: Specifies the speed and type of the protocol used
+> +		Different speeds and backplane protocol types can be used:
+> +		- 10GBase-KR must be specified as: "10gbase-kr"
+> +		- 40GBase-KR must be specified as: "40gbase-kr"
+
+I don't see why this is needed. The PHY driver should know what speeds
+the PHY supports. You might want to make use of the standard max-speed
+property to prevent it doing a high speed, because of layout issues,
+etc.
+
+> +
+> +- fsl,lane-handle
+> +		Usage: required
+> +		Value type: <phandle>
+> +		Definition: Specifies the reference to a node representing the SerDes
+> +		device
+> +
+> +- fsl,lane-reg
+> +		Usage: required
+> +		Value type: <prop-encoded-array>
+> +		Definition: Specifies the offsets of the SerDes lanes configuration
+> +		registers
+
+No other PHY driver we have needs such properties. Why are these
+needed?
+
+It is also a bit ununsed to post a binding without the code. Maybe the
+code for these two drivers will help me understand.
+
+     Thanks
+	Andrew
