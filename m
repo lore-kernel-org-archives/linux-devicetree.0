@@ -1,102 +1,86 @@
-From: Maxime Jourdan <mjourdan@baylibre.com>
-Subject: [PATCH v4 1/3] dt-bindings: media: add Amlogic Video Decoder Bindings
-Date: Tue,  6 Nov 2018 08:59:24 +0100
-Message-ID: <20181106075926.19269-2-mjourdan@baylibre.com>
-References: <20181106075926.19269-1-mjourdan@baylibre.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 2/2] arm64: dts: r8a77990: ebisu: Enable SDHI interfaces
+Date: Tue, 6 Nov 2018 09:34:50 +0100
+Message-ID: <20181106083450.GB1054@kunai>
+References: <20181105214117.11734-1-marek.vasut+renesas@gmail.com>
+ <20181105214117.11734-2-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181106075926.19269-1-mjourdan@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============1485217372663093840=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181105214117.11734-2-marek.vasut+renesas@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: devicetree@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, linux-arm-kernel@lists.infradead.org, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the meson vdec dts node.
 
-Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/media/amlogic,vdec.txt           | 71 +++++++++++++++++++
- 1 file changed, 71 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/amlogic,vdec.txt
+--===============1485217372663093840==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7ZAtKRhVyVSsbBD2"
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/media/amlogic,vdec.txt b/Documentation/devicetree/bindings/media/amlogic,vdec.txt
-new file mode 100644
-index 000000000000..aabdd01bcf32
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/amlogic,vdec.txt
-@@ -0,0 +1,71 @@
-+Amlogic Video Decoder
-+================================
-+
-+The video decoding IP lies within the DOS memory region,
-+except for the hardware bitstream parser that makes use of an undocumented
-+region.
-+
-+It makes use of the following blocks:
-+
-+- ESPARSER is a bitstream parser that outputs to a VIFIFO. Further VDEC blocks
-+then feed from this VIFIFO.
-+- VDEC_1 can decode MPEG-1, MPEG-2, MPEG-4 part 2, MJPEG, H.263, H.264, VC-1.
-+- VDEC_HEVC can decode HEVC and VP9.
-+
-+Both VDEC_1 and VDEC_HEVC share the "vdec" IRQ and as such cannot run
-+concurrently.
-+
-+Device Tree Bindings:
-+---------------------
-+
-+VDEC: Video Decoder
-+--------------------------
-+
-+Required properties:
-+- compatible: value should be different for each SoC family as :
-+	- GXBB (S905) : "amlogic,gxbb-vdec"
-+	- GXL (S905X, S905D) : "amlogic,gxl-vdec"
-+	- GXM (S912) : "amlogic,gxm-vdec"
-+- reg: base address and size of he following memory-mapped regions :
-+	- dos
-+	- esparser
-+- reg-names: should contain the names of the previous memory regions
-+- interrupts: should contain the following IRQs:
-+	- vdec
-+	- esparser
-+- interrupt-names: should contain the names of the previous interrupts
-+- amlogic,ao-sysctrl: should point to the AOBUS sysctrl node
-+- amlogic,canvas: should point to a canvas provider node
-+- clocks: should contain the following clocks :
-+	- dos_parser
-+	- dos
-+	- vdec_1
-+	- vdec_hevc
-+- clock-names: should contain the names of the previous clocks
-+- resets: should contain the parser reset
-+- reset-names: should be "esparser"
-+
-+Example:
-+
-+vdec: video-decoder@c8820000 {
-+	compatible = "amlogic,gxbb-vdec";
-+	reg = <0x0 0xc8820000 0x0 0x10000>,
-+	      <0x0 0xc110a580 0x0 0xe4>;
-+	reg-names = "dos", "esparser";
-+
-+	interrupts = <GIC_SPI 44 IRQ_TYPE_EDGE_RISING>,
-+		     <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
-+	interrupt-names = "vdec", "esparser";
-+
-+	amlogic,ao-sysctrl = <&sysctrl_AO>;
-+	amlogic,canvas = <&canvas>;
-+
-+	clocks = <&clkc CLKID_DOS_PARSER>,
-+		 <&clkc CLKID_DOS>,
-+		 <&clkc CLKID_VDEC_1>,
-+		 <&clkc CLKID_VDEC_HEVC>;
-+	clock-names = "dos_parser", "dos", "vdec_1", "vdec_hevc";
-+
-+	resets = <&reset RESET_PARSER>;
-+	reset-names = "esparser";
-+};
--- 
-2.19.1
+
+--7ZAtKRhVyVSsbBD2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+
+> +	sdhi3_pins: sd3 {
+> +		groups = "sdhi3_data8", "sdhi3_ctrl";
+> +		function = "sdhi3";
+> +		power-source = <1800>;
+> +	};
+> +
+> +	sdhi3_pins_uhs: sd3_uhs {
+> +		groups = "sdhi3_data8", "sdhi3_ctrl";
+> +		function = "sdhi3";
+> +		power-source = <1800>;
+> +	};
+
+Shouldn't we have only one pinctrl config here, like you did recently
+for the other Gen3 SoCs?
+
+
+--7ZAtKRhVyVSsbBD2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlvhUiUACgkQFA3kzBSg
+KbZd+g/9EOLzVUWAHVct5mpBvkpBeHY5MUG0Yx8AD3BqbAf1ANDQUgQc/3PnJT9n
+PQrqmX+paUPJOQRLsXiuaDpXIRS9POrKCV13js7KuSAzOy1YP+ahQIVVPbOAtHo3
+PwY5DeV5CIsdgq8aXV44JRqnDYAMi+/BS7vJG8/XhfYVNQCtDJ2EgkV89KJJCMEX
+YE1sQzTZBURdRURPpAo4JawpkCAXKs3RXfdW3XCRdfrcABXJDz90k6hXulnryaOL
+jf+Z5eKKWdfwnNE8FisfYNFOszTBlgo1eiB2A4JEWmtldczGADh7iBMXOKSQZyw+
+iQA9EUeVKW1lltWQSwYRcZcPFPI3uT13gHCZLbXwj52v9aaL55g4os4ZBVWkTs+G
+1XaIcD0Jl6ZvSj1sz04OZQNxfh2iddPpOY1NoS3vieRhkULX/1TyVJg/sVcFQtrD
+Ek7mVRM9Alep6tFv4fjqraxXQpRxMWZJiFQXGR9iDIYYv7trfidUTW75B2rUA71A
+6RmhXFO2IdFzfDq16jpuh13tEXpp839I+AQK7QPYylMg0E6e5dH7Hi0Mu0DYpeJs
+0fX5dO82bP/dWk6aU5TkwS4Qdx1x53MwVhzJxVkBTBOHc0ELLBLUHfAP7Mwvn2YK
+pLcUUeddS/tjpmPLFV0/TneEtWNID+GghLswHoVJ5dG4elcpbPo=
+=zhfs
+-----END PGP SIGNATURE-----
+
+--7ZAtKRhVyVSsbBD2--
+
+
+--===============1485217372663093840==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1485217372663093840==--
