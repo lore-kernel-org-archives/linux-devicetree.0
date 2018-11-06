@@ -1,48 +1,48 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: [PATCH v3 00/28] Allwinner H6 DE3 and HDMI support
-Date: Tue, 06 Nov 2018 16:54:56 +0100
-Message-ID: <4663462.5OBby1Icb2@jernej-laptop>
-References: <20181104182705.18047-1-jernej.skrabec@siol.net> <20181105094341.qedt7jvnxooiojki@flea>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Alan Cooper <alcooperx@gmail.com>
+Subject: Re: [PATCH V3 6/6] usb: host: Add ability to build new Broadcom STB
+ USB drivers
+Date: Tue, 6 Nov 2018 10:55:31 -0500
+Message-ID: <CAOGqxeX1FckLz7XEm-doh_AHUjvRtn00yZfir6dRNMYNOMY5_g@mail.gmail.com>
+References: <1541453493-34981-1-git-send-email-alcooperx@gmail.com>
+ <1541453493-34981-7-git-send-email-alcooperx@gmail.com> <CAK8P3a0AoHuaiPsMTqhWm3a4X95NpPTPUHkt9vS9Z2ow8NobhA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBVHSQ3PQKGQEDAATBRY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181105094341.qedt7jvnxooiojki@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a0AoHuaiPsMTqhWm3a4X95NpPTPUHkt9vS9Z2ow8NobhA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, chunfeng yun <chunfeng.yun@mediatek.com>, "David S. Miller" <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Dne ponedeljek, 05. november 2018 ob 10:43:41 CET je Maxime Ripard napisal(a):
-> On Sun, Nov 04, 2018 at 07:26:37PM +0100, Jernej Skrabec wrote:
-> > This series adds support for Display Engine 3.0 and HDMI 2.0a, which
-> > can be found on H6 SoC.
-> > 
-> > Display Engine 3.0 in comparison to 2.0 mostly adds features needed for
-> > displaying and processing 10-bit and AFBC formats, which are not yet
-> > supported by this series.
-> > 
-> > H6 is also the first SoC which supports IOMMU, but support for it is
-> > not yet added.
-> > 
-> > This series is based on linux-next at next-20181102.
-> > 
-> > I suggest all patches go through allwinner tree, except DRM patches,
-> > which should go through drm-misc tree.
-> 
-> Applied all patches up to the 26. The two last one however should not
-> use the clk bindings define you added in the first clk patches, since
-> clk and dt patches are going through different tree.
+On Tue, Nov 6, 2018 at 6:09 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On 11/5/18, Al Cooper <alcooperx@gmail.com> wrote:
+>
+> > +
+> > +config USB_BRCM
+> > +     tristate "Broadcom STB USB support"
+> > +     depends on ARCH_BRCMSTB
+> > +     select USB_OHCI_HCD_PLATFORM if USB_OHCI_HCD
+> > +     select USB_EHCI_BRCM if USB_EHCI_HCD
+> > +     select USB_XHCI_BRCM if USB_XHCI_HCD
+> > +     select USB_XHCI_PLATFORM if USB_XHCI_HCD
+> > +     select BRCM_USB_PHY if USB_OHCI_HCD || USB_EHCI_HCD || USB_XHCI_HCD
+> > +     select GENERIC_PHY if BRCM_USB_PHY
+> > +     default ARCH_BRCMSTB
+>
+> Is there a build time dependency on the PHY layer? If not, I would suggest
+> dropping the last two 'select' statements. I would also suggest
+> making the dependency 'depends on ARCH_BRCMSTB || COMPILE_TEST'
+> to allow building it on other architecture for better build testing, and
+> dropping the 'default' line. Just add this to the defconfig like the other
+> drivers you have.
 
-Thanks!
+I added COMPILE_TEST and dropped the last 2 select lines.
+Most of our other drivers default to "y" for "ARCH_BRCMSTB", would it
+be better if I changed it to "default y"?
 
-Should I send remaining 2 patches as v4 or can be send separately?
+Thanks
+Al
 
-Best regards,
-Jernej
+>
+>       Arnd
