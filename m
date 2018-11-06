@@ -1,101 +1,82 @@
-From: Nick Kossifidis <mick@ics.forth.gr>
-Subject: Re: [RFC 1/2] dt-bindings: topology: Add RISC-V cpu topology.
-Date: Tue, 06 Nov 2018 12:03:17 +0200
-Message-ID: <9e77989d6b868d914bc328401cd64557@mailhost.ics.forth.gr>
-References: <mhng-799bd6f4-e4af-481e-90d8-bdc0e30f2530@palmer-si-x1c4>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: r8a77990: ebisu: Enable SDHI interfaces
+Date: Tue, 6 Nov 2018 10:17:41 +0100
+Message-ID: <cf18a8e6-e550-d7d0-c66c-fb5874b7a65c@gmail.com>
+References: <20181105214117.11734-1-marek.vasut+renesas@gmail.com>
+ <20181105214117.11734-2-marek.vasut+renesas@gmail.com>
+ <OSBPR01MB2293D944698EE5776B23B00DD8CB0@OSBPR01MB2293.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <mhng-799bd6f4-e4af-481e-90d8-bdc0e30f2530@palmer-si-x1c4>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Palmer Dabbelt <palmer@sifive.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Damien.LeMoal@wdc.com, alankao@andestech.com, Christoph Hellwig <hch@infradead.org>, anup@brainfault.org, linux-kernel@vger.kernel.org, zong@andestech.com, atish.patra@wdc.com, robh+dt@kernel.org, linux-riscv@lists.infradead.org, tglx@linutronix.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <OSBPR01MB2293D944698EE5776B23B00DD8CB0@OSBPR01MB2293.jpnprd01.prod.outlook.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: TAKESHI KIHARA <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-zqPPhM65z4IgMjAxOC0xMS0wNSAyMTozOCwgUGFsbWVyIERhYmJlbHQgzq3Os8+BzrHPiM61Ogo+
-IE9uIEZyaSwgMDIgTm92IDIwMTggMDY6MDk6MzkgUERUICgtMDcwMCksIHJvYmgrZHRAa2VybmVs
-Lm9yZyB3cm90ZToKPj4gT24gVGh1LCBOb3YgMSwgMjAxOCBhdCA2OjA0IFBNIEF0aXNoIFBhdHJh
-IDxhdGlzaC5wYXRyYUB3ZGMuY29tPiAKPj4gd3JvdGU6Cj4+PiAKPj4+IERlZmluZSBhIFJJU0Mt
-ViBjcHUgdG9wb2xvZ3kuIFRoaXMgaXMgYmFzZWQgb24gY3B1LW1hcCBpbiBBUk0gd29ybGQuCj4+
-PiBCdXQgaXQgZG9lc24ndCBuZWVkIGEgc2VwYXJhdGUgdGhyZWFkIG5vZGUgZm9yIGRlZmluaW5n
-IFNNVCBzeXN0ZW1zLgo+Pj4gTXVsdGlwbGUgY3B1IHBoYW5kbGUgcHJvcGVydGllcyBjYW4gYmUg
-cGFyc2VkIHRvIGlkZW50aWZ5IHRoZSBzaWJsaW5nCj4+PiBoYXJkd2FyZSB0aHJlYWRzLiBNb3Jl
-b3Zlciwgd2UgZG8gbm90IGhhdmUgY2x1c3RlciBjb25jZXB0IGluIFJJU0MtVi4KPj4+IFNvIHBh
-Y2thZ2UgaXMgYSBiZXR0ZXIgd29yZCBjaG9pY2UgdGhhbiBjbHVzdGVyIGZvciBSSVNDLVYuCj4+
-IAo+PiBUaGVyZSB3YXMgYSBwcm9wb3NhbCB0byBhZGQgcGFja2FnZSBpbmZvIGZvciBBUk0gcmVj
-ZW50bHkuIE5vdCBzdXJlCj4+IHdoYXQgaGFwcGVuZWQgdG8gdGhhdCwgYnV0IHdlIGRvbid0IG5l
-ZWQgMiBkaWZmZXJlbnQgd2F5cy4KPj4gCj4+IFRoZXJlJ3MgbmV2ZXIgZ29pbmcgdG8gYmUgY2x1
-c3RlcnMgZm9yIFJJU0MtVj8gV2hhdCBwcmV2ZW50cyB0aGF0Pwo+PiBTZWVtcyBzaG9ydHNpZ2h0
-ZWQgdG8gbWUuCj4+IAo+Pj4gCj4+PiBTaWduZWQtb2ZmLWJ5OiBBdGlzaCBQYXRyYSA8YXRpc2gu
-cGF0cmFAd2RjLmNvbT4KPj4+IC0tLQo+Pj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jpc2N2
-L3RvcG9sb2d5LnR4dCAgICAgICAgIHwgMTU0IAo+Pj4gKysrKysrKysrKysrKysrKysrKysrCj4+
-PiAgMSBmaWxlIGNoYW5nZWQsIDE1NCBpbnNlcnRpb25zKCspCj4+PiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IAo+Pj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jpc2N2L3RvcG9sb2d5
-LnR4dAo+Pj4gCj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3Jpc2N2L3RvcG9sb2d5LnR4dCAKPj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3Jpc2N2L3RvcG9sb2d5LnR4dAo+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4+IGlu
-ZGV4IDAwMDAwMDAwLi45NjAzOWVkMwo+Pj4gLS0tIC9kZXYvbnVsbAo+Pj4gKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jpc2N2L3RvcG9sb2d5LnR4dAo+Pj4gQEAgLTAs
-MCArMSwxNTQgQEAKPj4+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09Cj4+PiArUklTQy1WIGNwdSB0b3BvbG9neSBiaW5kaW5nIGRlc2NyaXB0aW9uCj4+PiArPT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+Pj4gKwo+Pj4gKz09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KPj4+ICsxIC0gSW50cm9kdWN0
-aW9uCj4+PiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+Pj4g
-Kwo+Pj4gK0luIGEgUklTQy1WIHN5c3RlbSwgdGhlIGhpZXJhcmNoeSBvZiBDUFVzIGNhbiBiZSBk
-ZWZpbmVkIHRocm91Z2ggCj4+PiBmb2xsb3dpbmcgbm9kZXMgdGhhdAo+Pj4gK2FyZSB1c2VkIHRv
-IGRlc2NyaWJlIHRoZSBsYXlvdXQgb2YgcGh5c2ljYWwgQ1BVcyBpbiB0aGUgc3lzdGVtOgo+Pj4g
-Kwo+Pj4gKy0gcGFja2FnZXMKPj4+ICstIGNvcmUKPj4+ICsKPj4+ICtUaGUgY3B1IG5vZGVzIChi
-aW5kaW5ncyBkZWZpbmVkIGluIFsxXSkgcmVwcmVzZW50IHRoZSBkZXZpY2VzIHRoYXQKPj4+ICtj
-b3JyZXNwb25kIHRvIHBoeXNpY2FsIENQVXMgYW5kIGFyZSB0byBiZSBtYXBwZWQgdG8gdGhlIGhp
-ZXJhcmNoeSAKPj4+IGxldmVscy4KPj4+ICtTaW11bHRhbmVvdXMgbXVsdGktdGhyZWFkaW5nIChT
-TVQpIHN5c3RlbXMgY2FuIGFsc28gcmVwcmVzZW50IHRoZWlyIAo+Pj4gdG9wb2xvZ3kKPj4+ICti
-eSBkZWZpbmluZyBtdWx0aXBsZSBjcHUgcGhhbmRsZXMgaW5zaWRlIGNvcmUgbm9kZS4gVGhlIGRl
-dGFpbHMgYXJlIAo+Pj4gZXhwbGFpbmVkCj4+PiAraW4gcGFyYWdyYXBoIDMuCj4+IAo+PiBJIGRv
-bid0IHNlZSBhIHJlYXNvbiB0byBkbyB0aGlzIGRpZmZlcmVudGx5IHRoYW4gQVJNLiBUaGF0IHNh
-aWQsIEkKPj4gZG9uJ3QgdGhpbmsgdGhlIHRocmVhZCBwYXJ0IGlzIGluIHVzZSBvbiBBUk0sIHNv
-IGl0IGNvdWxkIHBvc3NpYmx5IGJlCj4+IGNoYW5nZWQuCj4+IAo+Pj4gKwo+Pj4gK1RoZSByZW1h
-aW5kZXIgb2YgdGhpcyBkb2N1bWVudCBwcm92aWRlcyB0aGUgdG9wb2xvZ3kgYmluZGluZ3MgZm9y
-IAo+Pj4gQVJNLCBiYXNlZAo+PiAKPj4gZm9yIEFSTT8KPj4gCj4+PiArb24gdGhlIERldmljZXRy
-ZWUgU3BlY2lmaWNhdGlvbiwgYXZhaWxhYmxlIGZyb206Cj4+PiArCj4+PiAraHR0cHM6Ly93d3cu
-ZGV2aWNldHJlZS5vcmcvc3BlY2lmaWNhdGlvbnMvCj4+PiArCj4+PiArSWYgbm90IHN0YXRlZCBv
-dGhlcndpc2UsIHdoZW5ldmVyIGEgcmVmZXJlbmNlIHRvIGEgY3B1IG5vZGUgcGhhbmRsZSAKPj4+
-IGlzIG1hZGUgaXRzCj4+PiArdmFsdWUgbXVzdCBwb2ludCB0byBhIGNwdSBub2RlIGNvbXBsaWFu
-dCB3aXRoIHRoZSBjcHUgbm9kZSBiaW5kaW5ncyAKPj4+IGFzCj4+PiArZG9jdW1lbnRlZCBpbiBb
-MV0uCj4+PiArQSB0b3BvbG9neSBkZXNjcmlwdGlvbiBjb250YWluaW5nIHBoYW5kbGVzIHRvIGNw
-dSBub2RlcyB0aGF0IGFyZSBub3QgCj4+PiBjb21wbGlhbnQKPj4+ICt3aXRoIGJpbmRpbmdzIHN0
-YW5kYXJkaXplZCBpbiBbMV0gaXMgdGhlcmVmb3JlIGNvbnNpZGVyZWQgaW52YWxpZC4KPj4+ICsK
-Pj4+ICtUaGlzIGNwdSB0b3BvbG9neSBiaW5kaW5nIGRlc2NyaXB0aW9uIGlzIG1vc3RseSBiYXNl
-ZCBvbiB0aGUgCj4+PiB0b3BvbG9neSBkZWZpbmVkCj4+PiAraW4gQVJNIFsyXS4KPj4+ICs9PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4+PiArMiAtIGNwdS10b3Bv
-bG9neSBub2RlCj4+IAo+PiBjcHUtbWFwLiBXaHkgY2hhbmdlIHRoaXM/Cj4+IAo+PiBXaGF0IEkg
-d291bGQgbGlrZSB0byBzZWUgaXMgdGhlIEFSTSB0b3BvbG9neSBiaW5kaW5nIHJld29ya2VkIHRv
-IGJlCj4+IGNvbW1vbiBvciBzb21lIGdvb2QgcmVhc29ucyB3aHkgaXQgZG9lc24ndCB3b3JrIGZv
-ciBSSVNDLVYgYXMtaXMuCj4gCj4gSSB0aGluayBpdCB3b3VsZCBiZSBncmVhdCBpZiBDUFUgdG9w
-b2xvZ2llcyB3ZXJlIG5vdCBhIFJJU0MtViBzcGVjaWZpYwo+IHRoaW5nLiAgV2UgZG9uJ3QgcmVh
-bGx5IGRvIGFueXRoaW5nIGRpZmZlcmVudCB0aGFuIGFueW9uZSBlbHNlLCBzbwo+IGl0J2QgYmUg
-Z3JlYXQgaWYgd2UgY291bGQgYWxsIHNoYXJlIHRoZSBzYW1lIHNwZWMgYW5kIGNvZGUuICBMb29r
-aW5nCj4gcXVpY2tseSBhdCB0aGUgQVJNIGNwdS1tYXAgYmluZGluZ3MsIEkgZG9uJ3Qgc2VlIGFu
-eSByZWFzb24gd2h5IHdlCj4gY2FuJ3QganVzdCB1c2UgdGhlIHNhbWUgdGhpbmcgb24gUklTQy1W
-IC0tIGl0J3Mgbm90IHF1aXRlIGhvdyBJJ2QgZG8KPiBpdCwgYnV0IEkgZG9uJ3QgdGhpbmsgdGhl
-IGRpZmZlcmVuY2VzIGFyZSB3b3J0aCBoYXZpbmcgYW5vdGhlcgo+IGltcGxlbWVudGF0aW9uLiAg
-TWVjaGFuaWNhbGx5IEknbSBub3Qgc3VyZSBob3cgdG8gZG8gdGhpczogc2hvdWxkCj4gdGhlcmUg
-anVzdCBiZSBhICJEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY3B1LW1hcC50eHQi
-Pwo+IAo+IElmIGV2ZXJ5b25lIGlzIE9LIHdpdGggdGhhdCB0aGVuIEkgdm90ZSB3ZSBqdXN0IGdv
-IGFoZWFkIGFuZAo+IGdlbmVyaWNpc2UgdGhlIEFSTSAiY3B1LW1hcCIgc3R1ZmYgZm9yIENQVSB0
-b3BvbG9neS4gIFNoYXJpbmcgdGhlCj4gaW1wbGVtZW50YXRpb24gbG9va3MgZmFpcmx5IHN0cmFp
-Z2h0LWZvcndhcmQgYXMgd2VsbC4KPiAKClBsZWFzZSBjaGVjayB0aGlzIG91dC4uLgpodHRwczov
-L2xrbWwub3JnL2xrbWwvMjAxOC8xMS8zLzk5CgpJdCdzIGFsc28gbm9uIGFyY2gtZGVwZW5kZW50
-IGFuZCBpdCBjYW4gaGFuZGxlIHRoZSBzY2hlZHVsZXIncyAKY2FwYWJpbGl0aWVzCmJldHRlciB0
-aGFuIGNwdS1tYXAuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpsaW51eC1yaXNjdiBtYWlsaW5nIGxpc3QKbGludXgtcmlzY3ZAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJp
-c2N2Cg==
+On 11/06/2018 06:29 AM, Yoshihiro Shimoda wrote:
+> Hello Marek-san,
+
+Hello Shimoda-san,
+
+>> From: Marek Vasut, Sent: Tuesday, November 6, 2018 6:41 AM
+>>
+>> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>>
+>> This patch enables SD card slot connected to SDHI0, micro SD card slot
+>> connected to SDHI1 and eMMC connected to SDHI3 on the Ebisu board using
+>> the R8A77990 SoC.
+>>
+>> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+>> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+>> Cc: Simon Horman <horms+renesas@verge.net.au>
+>> Cc: Wolfram Sang <wsa@the-dreams.de>
+>> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>> Cc: linux-renesas-soc@vger.kernel.org
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> ---
+> 
+> Thank you for the patch!
+> 
+> Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> 
+> I have a few nit comments below.
+> 
+>>  .../arm64/boot/dts/renesas/r8a77990-ebisu.dts | 136 ++++++++++++++++++
+>>  1 file changed, 136 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+>> index 611f0265fcc5..bda1765dcdbd 100644
+>> --- a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+>> +++ b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+> <snip>
+>> +	sdhi3_pins: sd3 {
+>> +		groups = "sdhi3_data8", "sdhi3_ctrl";
+>> +		function = "sdhi3";
+>> +		power-source = <1800>;
+>> +	};
+>> +
+>> +	sdhi3_pins_uhs: sd3_uhs {
+>> +		groups = "sdhi3_data8", "sdhi3_ctrl";
+>> +		function = "sdhi3";
+>> +		power-source = <1800>;
+>> +	};
+> 
+> I assumed that we will add "sdhi3_ds" into these groups when we add support for HS400 mode.
+
+That's a good point, I think we can add it right away, so added in V2.
+
+-- 
+Best regards,
+Marek Vasut
