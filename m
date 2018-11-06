@@ -1,72 +1,79 @@
-From: Moritz Fischer <mdf@kernel.org>
-Subject: Re: [PATCHv10 4/8] dt-bindings: fpga: add Stratix10 SoC FPGA manager
- binding
-Date: Tue, 6 Nov 2018 11:07:47 -0800
-Message-ID: <20181106190747.GA5690@archbook>
-References: <1541523172-5171-1-git-send-email-richard.gong@linux.intel.com>
- <1541523172-5171-5-git-send-email-richard.gong@linux.intel.com>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
+Subject: Re: [PATCH] of/device: Really only set bus DMA mask when appropriate
+Date: Tue, 6 Nov 2018 21:16:56 +0200
+Message-ID: <20181106191655.GB14958@darkstar.musicnaut.iki.fi>
+References: <b06321ac25a1211e572e650a630e5e1aa9f8173f.1541504601.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1541523172-5171-5-git-send-email-richard.gong@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: richard.gong@linux.intel.com
-Cc: gregkh@linuxfoundation.org, catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, corbet@lwn.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, linux-doc@vger.kernel.org, todd.riffel@intel.com, richard.gong@intel.com
+In-Reply-To: <b06321ac25a1211e572e650a630e5e1aa9f8173f.1541504601.git.robin.murphy@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: devicetree@vger.kernel.org, linux-mips@linux-mips.org, jean-philippe.brucker@arm.com, iommu@lists.linux-foundation.org, robh+dt@kernel.org, john.stultz@linaro.org, hch@lst.de, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Richard,
+Hi,
 
-On Tue, Nov 06, 2018 at 10:52:48AM -0600, richard.gong@linux.intel.com wrote:
-> From: Alan Tull <atull@kernel.org>
+On Tue, Nov 06, 2018 at 11:54:15AM +0000, Robin Murphy wrote:
+> of_dma_configure() was *supposed* to be following the same logic as
+> acpi_dma_configure() and only setting bus_dma_mask if some range was
+> specified by the firmware. However, it seems that subtlety got lost in
+> the process of fitting it into the differently-shaped control flow, and
+> as a result the force_dma==true case ends up always setting the bus mask
+> to the 32-bit default, which is not what anyone wants.
 > 
-> Add a Device Tree binding for the Intel Stratix10 SoC FPGA manager.
+> Make sure we only touch it if the DT actually said so.
 > 
-> Signed-off-by: Alan Tull <atull@kernel.org>
-> Signed-off-by: Richard Gong <richard.gong@intel.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Moritz Fischer <mdf@kernel.org>
-> ---
-> v2: this patch is added in patch set version 2
-> v3: change to put fpga_mgr node under firmware/svc node
-> v4: s/fpga-mgr@0/fpga-mgr/ to remove unit_address
->     add Richard's signed-off-by
-> v5: add Reviewed-by Rob Herring
-> v6: no change
-> v7: no change
-> v8: no change
-> v9: no change
-> v10: no change
-> ---
->  .../bindings/fpga/intel-stratix10-soc-fpga-mgr.txt      | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
-> new file mode 100644
-> index 0000000..6e03f79
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
-> @@ -0,0 +1,17 @@
-> +Intel Stratix10 SoC FPGA Manager
-> +
-> +Required properties:
-> +The fpga_mgr node has the following mandatory property, must be located under
-> +firmware/svc node.
-> +
-> +- compatible : should contain "intel,stratix10-soc-fpga-mgr"
-> +
-> +Example:
-> +
-> +	firmware {
-> +		svc {
-> +			fpga_mgr: fpga-mgr {
-> +				compatible = "intel,stratix10-soc-fpga-mgr";
-> +			};
-> +		};
-> +	};
-> -- 
-> 2.7.4
-> 
+> Fixes: 6c2fb2ea7636 ("of/device: Set bus DMA mask as appropriate")
+> Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+> Reported-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+
+Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+
+This fixes the MMC driver DMA mask issue on OCTEON.
+
 Thanks,
-Moritz
+
+A.
+
+> ---
+> 
+> Sorry about that... I guess I only have test setups that either have
+> dma-ranges or where a 32-bit bus mask goes unnoticed :(
+> 
+> The Octeon and SMMU issues sound like they're purely down to this, and
+> it's probably related to at least one of John's Hikey woes.
+> 
+> Robin.
+> 
+>  drivers/of/device.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index 0f27fad9fe94..757ae867674f 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -149,7 +149,8 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
+>  	 * set by the driver.
+>  	 */
+>  	mask = DMA_BIT_MASK(ilog2(dma_addr + size - 1) + 1);
+> -	dev->bus_dma_mask = mask;
+> +	if (!ret)
+> +		dev->bus_dma_mask = mask;
+>  	dev->coherent_dma_mask &= mask;
+>  	*dev->dma_mask &= mask;
+>  
+> -- 
+> 2.19.1.dirty
+> 
