@@ -1,65 +1,88 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] of/property: Introduce of_fwnode_name()
-Date: Tue, 6 Nov 2018 12:17:52 -0600
-Message-ID: <CAL_JsqKOC40uEHCrFDMkj_yGDG5VOSOymmJNQ5aSPv9K_W0=3w@mail.gmail.com>
-References: <20181105091727.25544-1-heikki.krogerus@linux.intel.com>
- <20181105091727.25544-4-heikki.krogerus@linux.intel.com> <CAL_Jsq+aRAv+9gDKwVi9xYQPYzXK4NMPjzfkuYB08+K6KTYXFg@mail.gmail.com>
- <20181106105803.GS10650@smile.fi.intel.com> <20181106122734.GC13048@kuha.fi.intel.com>
- <CAL_Jsq+kspp1GYrMjG1cC=CyCa2_jO1suFdD9fn+gOwKRYdhtw@mail.gmail.com> <20181106142810.GX10650@smile.fi.intel.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v3 0/4] Improve VCHIQ cache line size handling
+Date: Tue, 6 Nov 2018 19:20:45 +0100 (CET)
+Message-ID: <644039949.222891.1541528445168@email.ionos.de>
+References: <1537172544-104852-1-git-send-email-phil@raspberrypi.org>
+ <f1e38c0c-0702-5df2-7f7c-40bbb93115b2@i2se.com>
+ <1ffe9824-d254-6dfb-7bd6-e146d6c9eada@raspberrypi.org>
+ <13b74c54-d115-8ff1-3c1d-a8888b43578c@gmail.com>
+ <46c44e8f-8208-191c-c93b-f2f75ab8c67a@raspberrypi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181106142810.GX10650@smile.fi.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <46c44e8f-8208-191c-c93b-f2f75ab8c67a@raspberrypi.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Phil Elwell <phil@raspberrypi.org>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devel@driverdev.osuosl.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 6, 2018 at 8:28 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Nov 06, 2018 at 07:18:14AM -0600, Rob Herring wrote:
-> > On Tue, Nov 6, 2018 at 6:27 AM Heikki Krogerus
-> > <heikki.krogerus@linux.intel.com> wrote:
-> > >
-> > > On Tue, Nov 06, 2018 at 12:58:03PM +0200, Andy Shevchenko wrote:
-> > > > On Mon, Nov 05, 2018 at 12:50:02PM -0600, Rob Herring wrote:
-> > > > > On Mon, Nov 5, 2018 at 3:17 AM Heikki Krogerus
-> > > > > <heikki.krogerus@linux.intel.com> wrote:
-> > > >
-> > > > > > +static const char *of_fwnode_name(const struct fwnode_handle *fwnode)
-> > > > > > +{
-> > > > > > +       return to_of_node(fwnode)->name;
-> > > > >
-> > > > > I'm trying to get rid of the DT name ptr, so please don't add one. You
-> > > > > can use of_node_full_name() here instead if "<name>@<unit-address>"
-> > > > > instead of <name> is fine. Otherwise, you've got to allocate your own
-> > > > > storage and use "%pOFn" printf specifier.
-> > > >
-> > > > If we do this here, we will change a behaviour of the entire set of
-> > > > of_fwnode_get_named_child_node() users.
-> > > >
-> > > > I think this is out of scope of the series.
-> >
-> > No, because you are adding a firmware op for something that's going away.
->
-> W/o your below explanation it wasn't obvious.
->
-> >
-> > > You have a point. We must use the same member that was used in
-> > > of_fwnode_get_named_child_node().
-> > >
-> > > The goal of this series if most likely not clear from this patch
-> > > alone, so I'll send a second version and make sure to CC the DT list
-> > > and Rob.
-> >
-> > Looking at patch 4, if matching the name is what you want to do, then
-> > use the DT name matching functions. They were added in 4.19.
->
-> Do you mean of_node_name_eq()?
+> Phil Elwell <phil@raspberrypi.org> hat am 17. September 2018 um 20:01 geschrieben:
+> 
+> 
+> On 17/09/2018 18:51, Florian Fainelli wrote:
+> > On 09/17/2018 04:47 AM, Phil Elwell wrote:
+> >> Hi Stefan,
+> >>
+> >> On 17/09/2018 12:39, Stefan Wahren wrote:
+> >>> Hi Phil,
+> >>>
+> >>> Am 17.09.2018 um 10:22 schrieb Phil Elwell:
+> >>>> Both sides of the VCHIQ communications mechanism need to agree on the cache
+> >>>> line size. Using an incorrect value can lead to data corruption, but having the
+> >>>> two sides using different values is usually worse.
+> >>>>
+> >>>> In the absence of an obvious convenient run-time method to determine the
+> >>>> correct value in the ARCH=arm world, the downstream Raspberry Pi trees used a
+> >>>> Device Tree property, written by the firmware, to configure the kernel driver.
+> >>>> This method was vetoed during the upstreaming process, so a fixed value of 32
+> >>>> was used instead, and some corruptions ensued. This is take 2 at arriving at
+> >>>> the correct value.
+> >>>>
+> >>>> Add a new compatible string - "brcm,bcm2836-vchiq" - to indicate an SoC with
+> >>>> a 64-byte cache line. Document the new string in the binding, and use it on
+> >>>> the appropriate platforms.
+> >>>>
+> >>>> The final patch is a (seemingly cosmetic) correction of the Device Tree "reg"
+> >>>> declaration for the device node, but it doubles as an indication to the
+> >>>> Raspberry Pi firmware that the kernel driver is running a recent kernel driver
+> >>>> that chooses the correct value. As such it would help if the DT patches are
+> >>>> not merged before the driver patch.
+> >>>>
+> >>>> v3: Builds without errors, tested on multiple Raspberry Pi models.
+> >>>> v2: Replaced ARM-specific logic used to determine cache line size with
+> >>>>      a new compatible string for BCM2836 and BCM2837.
+> >>>>
+> >>>> Phil Elwell (4):
+> >>>>    staging/vc04_services: Use correct cache line size
+> >>>>    dt-bindings: soc: Document "brcm,bcm2836-vchiq"
+> >>>>    ARM: dts: bcm283x: Correct vchiq compatible string
+> >>>>    ARM: dts: bcm283x: Correct mailbox register sizes
+> >>>
+> >>> since my pull requests are out, would it be okay to apply patch #1 for
+> >>> 4.20 and the DT stuff for 4.21 (with the assumption Rob is okay with
+> >>> these patches)?
+> >>
+> >> Patch 4 is the only one I'd like to be delayed, but delaying 2-4 is fine with me.
+> > 
+> > Humm, did you mean you would like not to be delayed? In any case Stefan,
+> > you can send an additional pull request, and I will merge it and send a
+> > second pull request towards ARM SoC maintainers, that's not a problem.
+> 
+> No, I meant what I wrote - I would prefer patch 1 to be merged before patch 4 (or at least
+> in the same release) to avoid the need for another firmware change, hence delaying patch
+> 4 is good. It makes sense for the other commits to be merged in that order, but the
+> normal compatible-string fallback mechanism means there is no hard dependency there.
+> 
+> Phil
 
-Yes or maybe move further up and just retrieve child nodes by name.
-There's a recent function Johan added for that too.
-of_find_child_node_by_name IIRC.
+Patches #2 - #4 applied to bcm2835-dt-next
 
-Rob
+Thanks
