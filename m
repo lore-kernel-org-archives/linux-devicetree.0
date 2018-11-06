@@ -1,7 +1,7 @@
 From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v3 06/13] dt-bindings: irqchip: Introduce TISCI Interrupt router bindings
-Date: Tue, 6 Nov 2018 14:10:58 +0530
-Message-ID: <20181106084105.32483-7-lokeshvutla@ti.com>
+Subject: [RFC PATCH v3 09/13] genirq/msi: Add support for .msi_unprepare callback
+Date: Tue, 6 Nov 2018 14:11:01 +0530
+Message-ID: <20181106084105.32483-10-lokeshvutla@ti.com>
 References: <20181106084105.32483-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -13,120 +13,59 @@ To: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Her
 Cc: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the DT binding documentation for Interrupt router driver.
+Add an optional callback .msi_unprepare to struct msi_domain_ops.
+This is used to clear any effect that is done by .msi_prepare callback.
 
 Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 ---
 Changes since v2:
-- Dropped interrupt-parent from reqired properties description
-- Updated the interrupt cells to 4.
+- New patch
 
- .../interrupt-controller/ti,sci-intr.txt      | 84 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 85 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+ include/linux/msi.h |  3 +++
+ kernel/irq/msi.c    | 10 ++++++++++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
-new file mode 100644
-index 000000000000..06e69f8c812c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
-@@ -0,0 +1,84 @@
-+Texas Instruments K3 Interrupt Router
-+=====================================
-+
-+The Interrupt Router (INTR) module provides a mechanism to mux M
-+interrupt inputs to N interrupt outputs, where all M inputs are selectable
-+to be driven per N output. There is one register per output (MUXCNTL_N) that
-+controls the selection.
-+
-+
-+                                 Interrupt Router
-+                             +----------------------+
-+                             |  Inputs     Outputs  |
-+        +-------+            | +------+             |
-+        | GPIO  |----------->| | irq0 |             |       Host IRQ
-+        +-------+            | +------+             |      controller
-+                             |    .        +-----+  |      +-------+
-+        +-------+            |    .        |  0  |  |----->|  IRQ  |
-+        | INTA  |----------->|    .        +-----+  |      +-------+
-+        +-------+            |    .          .      |
-+                             | +------+      .      |
-+                             | | irqM |    +-----+  |
-+                             | +------+    |  N  |  |
-+                             |             +-----+  |
-+                             +----------------------+
-+
-+Configuration of these MUXCNTL_N registers is done by a system controller
-+(like the Device Memory and Security Controller on K3 AM654 SoC). System
-+controller will keep track of the used and unused registers within the Router.
-+Driver should request the system controller to get the range of GIC IRQs
-+assigned to the requesting hosts. It is the drivers responsibility to keep
-+track of Host IRQs.
-+
-+Communication between the host processor running an OS and the system
-+controller happens through a protocol called TI System Control Interface
-+(TISCI protocol). For more details refer:
-+Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-+
-+TISCI Interrupt Router Node:
-+----------------------------
-+- compatible:		Must be "ti,sci-intr".
-+- interrupt-controller:	Identifies the node as an interrupt controller
-+- #interrupt-cells:	Specifies the number of cells needed to encode an
-+			interrupt source. The value should be 4.
-+			First cell should contain the TISCI device ID of source
-+			Second cell should contain the interrupt source offset
-+			within the device
-+			Third cell specifies the trigger type as defined
-+			in interrupts.txt in this directory.
-+			Fourth cell should be 1 if the irq is coming from
-+			interrupt aggregator else 0.
-+- ti,sci:		Phandle to TI-SCI compatible System controller node.
-+- ti,sci-dst-id:	TISCI device ID of the destination IRQ controller.
-+- ti,sci-rm-range-girq:	TISCI subtype id representing the host irqs assigned
-+			to this interrupt router.
-+
-+For more details on TISCI IRQ resource management refer:
-+http://downloads.ti.com/tisci/esd/latest/2_tisci_msgs/rm/rm_irq.html
-+
-+Example:
-+--------
-+The following example demonstrates both interrupt router node and the consumer
-+node(main gpio) on the AM654 SoC:
-+
-+main_intr: interrupt-controller@1 {
-+	compatible = "ti,sci-intr";
-+	interrupt-controller;
-+	interrupt-parent = <&gic>;
-+	#interrupt-cells = <4>;
-+	ti,sci = <&dmsc>;
-+	ti,sci-dst-id = <56>;
-+	ti,sci-rm-range-girq = <0x1>;
-+};
-+
-+main_gpio0: gpio@600000 {
-+	...
-+	interrupt-parent = <&main_intr>;
-+	interrupts = <57 256 IRQ_TYPE_EDGE_RISING 0>,
-+			<57 257 IRQ_TYPE_EDGE_RISING 0>,
-+			<57 258 IRQ_TYPE_EDGE_RISING 0>,
-+			<57 259 IRQ_TYPE_EDGE_RISING 0>,
-+			<57 260 IRQ_TYPE_EDGE_RISING 0>,
-+			<57 261 IRQ_TYPE_EDGE_RISING 0>;
-+	...
-+};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 88b28f6dec45..0e3aa3386287 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14739,6 +14739,7 @@ F:	Documentation/devicetree/bindings/reset/ti,sci-reset.txt
- F:	Documentation/devicetree/bindings/clock/ti,sci-clk.txt
- F:	drivers/clk/keystone/sci-clk.c
- F:	drivers/reset/reset-ti-sci.c
-+F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+diff --git a/include/linux/msi.h b/include/linux/msi.h
+index 021f789226b5..1e37aa569a3c 100644
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -237,6 +237,8 @@ struct msi_domain_ops {
+ 	int		(*msi_prepare)(struct irq_domain *domain,
+ 				       struct device *dev, int nvec,
+ 				       msi_alloc_info_t *arg);
++	void		(*msi_unprepare)(struct irq_domain *domain, int nvec,
++					 void *data);
+ 	void		(*msi_finish)(msi_alloc_info_t *arg, int retval);
+ 	void		(*set_desc)(msi_alloc_info_t *arg,
+ 				    struct msi_desc *desc);
+@@ -317,6 +319,7 @@ void platform_msi_domain_free_irqs(struct device *dev);
+ /* When an MSI domain is used as an intermediate domain */
+ int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
+ 			    int nvec, msi_alloc_info_t *args);
++void msi_domain_unprepare_irqs(struct irq_domain *domain, int nvec, void *data);
+ int msi_domain_populate_irqs(struct irq_domain *domain, struct device *dev,
+ 			     int virq, int nvec, msi_alloc_info_t *args);
+ struct irq_domain *
+diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+index e37238317fab..87ce5a5d0c6d 100644
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -312,6 +312,16 @@ int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
+ 	return ret;
+ }
  
- THANKO'S RAREMONO AM/FM/SW RADIO RECEIVER USB DRIVER
- M:	Hans Verkuil <hverkuil@xs4all.nl>
++void msi_domain_unprepare_irqs(struct irq_domain *domain, int nvec,
++			       void *data)
++{
++	struct msi_domain_info *info = domain->host_data;
++	struct msi_domain_ops *ops = info->ops;
++
++	if (ops->msi_unprepare)
++		ops->msi_unprepare(domain, nvec, data);
++}
++
+ int msi_domain_populate_irqs(struct irq_domain *domain, struct device *dev,
+ 			     int virq, int nvec, msi_alloc_info_t *arg)
+ {
 -- 
 2.19.1
