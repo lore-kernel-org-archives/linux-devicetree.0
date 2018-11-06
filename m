@@ -1,58 +1,63 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v2 11/17] arm64: dts: qcom: pms405: add gpios
-Date: Tue, 6 Nov 2018 23:07:29 +0530
-Message-ID: <20181106173729.GA12092@vkoul-mobl>
+Subject: Re: [PATCH v2 13/17] arm64: dts: qcom: qcs404: Add remoteproc nodes
+Date: Tue, 6 Nov 2018 23:17:01 +0530
+Message-ID: <20181106174701.GB12092@vkoul-mobl>
 References: <20181105154529.7614-1-vkoul@kernel.org>
- <20181105154529.7614-12-vkoul@kernel.org>
- <20181105190802.GQ2523@minitux>
+ <20181105154529.7614-14-vkoul@kernel.org>
+ <20181105191035.GR2523@minitux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181105190802.GQ2523@minitux>
+In-Reply-To: <20181105191035.GR2523@minitux>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05-11-18, 11:08, Bjorn Andersson wrote:
+On 05-11-18, 11:10, Bjorn Andersson wrote:
 > On Mon 05 Nov 07:45 PST 2018, Vinod Koul wrote:
 > 
-> > Add the GPIOs present on PMS405 chip.
+> > From: Bjorn Andersson <bjorn.andersson@linaro.org>
 > > 
+> > Add the TrustZone based remoteproc nodes and their glink edges for
+> > adsp, cdsp and wcss.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
 > > ---
-> >  arch/arm64/boot/dts/qcom/pms405.dtsi | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
+> >  arch/arm64/boot/dts/qcom/qcs404.dtsi | 87 ++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 87 insertions(+)
 > > 
-> > diff --git a/arch/arm64/boot/dts/qcom/pms405.dtsi b/arch/arm64/boot/dts/qcom/pms405.dtsi
-> > index cdb4547c998b..18410d9f0f8f 100644
-> > --- a/arch/arm64/boot/dts/qcom/pms405.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/pms405.dtsi
-> > @@ -17,5 +17,21 @@
-> >  			reg-names = "rtc", "alarm";
-> >  			interrupts = <0x0 0x61 0x1 IRQ_TYPE_NONE>;
+> > diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> > index 8e207a25ddf0..b560ab6e49ff 100644
+> > --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> > @@ -373,4 +373,91 @@
+> >  			#interrupt-cells = <2>;
 > >  		};
+> >  	};
 > > +
-> > +		pms405_gpios: gpios@c000 {
-> > +			compatible = "qcom,pms405-gpio";
-> > +			reg = <0xc000>;
-> > +			gpio-controller;
-> > +			#gpio-cells = <2>;
-> > +			interrupts = <0 0xc1 0 IRQ_TYPE_NONE>,
-> > +				<0 0xc2 0 IRQ_TYPE_NONE>,
-> > +				<0 0xc3 0 IRQ_TYPE_NONE>,
-> > +				<0 0xc4 0 IRQ_TYPE_NONE>,
-> > +				<0 0xc5 0 IRQ_TYPE_NONE>,
-> > +				<0 0xc6 0 IRQ_TYPE_NONE>,
-> > +				<0 0xc7 0 IRQ_TYPE_NONE>,
-> > +				<0 0xca 0 IRQ_TYPE_NONE>,
-> > +				<0 0xcb 0 IRQ_TYPE_NONE>;
+> > +	remoteproc-adsp {
+> > +		compatible = "qcom,qcs404-adsp-pas";
+> > +
+> > +		interrupts-extended = <&intc GIC_SPI 293 IRQ_TYPE_EDGE_RISING>,
+> > +				      <&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+> > +				      <&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+> > +				      <&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+> > +				      <&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
+> > +		interrupt-names = "wdog", "fatal", "ready",
+> > +				  "handover", "stop-ack";
+> > +
+> > +		clocks = <&xo_board>;
+> > +		clock-names = "xo";
+> > +
 > 
-> Is there a reason why gpio 1, 8 and 9 are omitted from this list?
+> As the TZ-backed remoteproc drivers will not be used on all variation of
+> products on this platform please add status = "disabled"; to these nodes
+> and enable them in the evb.
 
-I think I saw something in downstream code / documentation for this, I
-will check again to be sure
+Sure will update this one
 
 -- 
 ~Vinod
