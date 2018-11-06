@@ -1,49 +1,77 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: r8a77990: ebisu: Add serial console pins
-Date: Tue, 6 Nov 2018 13:29:10 +0100
-Message-ID: <20181106122909.zx3lkfkq4pancvxf@verge.net.au>
-References: <20181105213859.11408-1-marek.vasut+renesas@gmail.com>
- <OSBPR01MB2293633CF9C7102B8251D261D8CB0@OSBPR01MB2293.jpnprd01.prod.outlook.com>
+From: John Garry <john.garry@huawei.com>
+Subject: [PATCH] of, numa: Validate some distance map rules
+Date: Tue, 6 Nov 2018 20:39:33 +0800
+Message-ID: <1541507973-149965-1-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <OSBPR01MB2293633CF9C7102B8251D261D8CB0@OSBPR01MB2293.jpnprd01.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, TAKESHI KIHARA <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, frowand.list@gmail.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com, will.deacon@arm.com, anshuman.khandual@arm.com, peterz@infradead.org, John Garry <john.garry@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 06, 2018 at 05:22:35AM +0000, Yoshihiro Shimoda wrote:
-> Hello Marek-san,
-> 
-> > From: Marek Vasut, Sent: Tuesday, November 6, 2018 6:39 AM
-> > 
-> > From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> > 
-> > This patch adds pin control for SCIF2 on R8A77990 E3 Ebisu.
-> > 
-> > Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> > Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> > Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> > Cc: Simon Horman <horms+renesas@verge.net.au>
-> > Cc: Wolfram Sang <wsa@the-dreams.de>
-> > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > Cc: linux-renesas-soc@vger.kernel.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > ---
-> 
-> Thank you for the patch!
-> 
-> Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Currently the NUMA distance map parsing does not validate the distance
+table for the distance-matrix rules 1-2 in [1].
 
-Thanks, applied for v4.21.
+However the arch NUMA code may enforce some of these rules, but not all.
+Such is the case for the arm64 port, which does not enforce the rule that
+the distance between separates nodes cannot equal LOCAL_DISTANCE.
+
+The patch adds the following rules validation:
+- distance of node to self equals LOCAL_DISTANCE
+- distance of separate nodes > LOCAL_DISTANCE
+
+A note on dealing with symmetrical distances between nodes:
+
+Validating symmetrical distances between nodes is difficult. If it were
+mandated in the bindings that every distance must be recorded in the
+table, validating symmetrical distances would be straightforward. However,
+it isn't.
+
+In addition to this, it is also possible to record [b, a] distance only
+(and not [a, b]). So, when processing the table for [b, a], we cannot
+assert that current distance of [a, b] != [b, a] as invalid, as [a, b]
+distance may not be present in the table and current distance would be
+default at REMOTE_DISTANCE.
+
+As such, we maintain the policy that we overwrite distance [a, b] = [b, a]
+for b > a. This policy is different to kernel ACPI SLIT validation, which
+allows non-symmetrical distances (ACPI spec SLIT rules allow it). However,
+the debug message is dropped as it may be misleading (for a distance which
+is later overwritten).
+
+Some final notes on semantics:
+
+- It is implied that it is the responsibility of the arch NUMA code to
+  reset the NUMA distance map for an error in distance map parsing.
+
+- It is the responsibility of the FW NUMA topology parsing (whether OF or
+  ACPI) to enforce NUMA distance rules, and not arch NUMA code.
+
+[1] Documents/devicetree/bindings/numa.txt
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+
+diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+index 35c64a4295e0..fe6b13608e51 100644
+--- a/drivers/of/of_numa.c
++++ b/drivers/of/of_numa.c
+@@ -104,9 +104,14 @@ static int __init of_numa_parse_distance_map_v1(struct device_node *map)
+ 		distance = of_read_number(matrix, 1);
+ 		matrix++;
+ 
++		if ((nodea == nodeb && distance != LOCAL_DISTANCE) ||
++		    (nodea != nodeb && distance <= LOCAL_DISTANCE)) {
++			pr_err("Invalid distance[node%d -> node%d] = %d\n",
++			       nodea, nodeb, distance);
++			return -EINVAL;
++		}
++
+ 		numa_set_distance(nodea, nodeb, distance);
+-		pr_debug("distance[node%d -> node%d] = %d\n",
+-			 nodea, nodeb, distance);
+ 
+ 		/* Set default distance of node B->A same as A->B */
+ 		if (nodeb > nodea)
+-- 
+1.9.1
