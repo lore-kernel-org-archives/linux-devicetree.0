@@ -1,57 +1,51 @@
-Return-Path: <SRS0=Wk9p=NS=babblebit.net=cmc@kernel.org>
-Date: Wed, 7 Nov 2018 09:05:50 +0000
-From: Chris Coffey <cmc@babblebit.net>
+Return-Path: <SRS0=GiHI=NR=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr70122.outbound.protection.outlook.com ([40.107.7.122]:6016
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725958AbeKGFf1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 7 Nov 2018 00:35:27 -0500
+From: Peter Rosin <peda@axentia.se>
 Subject: Re: [PATCH] iio: potentiometer: Add driver for Microchip
  MCP41xxx/42xxx
-Message-ID: <20181107090550.ubwqr4sd2mo3sqwn@deb-660>
+Date: Tue, 6 Nov 2018 20:08:15 +0000
+Message-ID: <afc9d11f-b4bf-fe74-bb9d-417c6f29ea9a@axentia.se>
 References: <20181106113130.9612-1-cmc@babblebit.net>
- <20181106154806.GB20842@himanshu-Vostro-3559>
+ <6f3ead94-b1ed-900d-b675-3822d67dbfd7@axentia.se>
+In-Reply-To: <6f3ead94-b1ed-900d-b675-3822d67dbfd7@axentia.se>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FB9F97B1B11CBD41B6EAF466B8C656DF@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20181106154806.GB20842@himanshu-Vostro-3559>
-To: Himanshu Jha <himanshujha199640@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Peter Rosin <peda@axentia.se>, Slawomir Stepien <sst@poczta.fm>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Sender: devicetree-owner@vger.kernel.org
+To: Chris Coffey <cmc@babblebit.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc: Slawomir Stepien <sst@poczta.fm>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Thank you for the review. I have a question inline.
-
-On Tue, Nov 06, 2018 at 09:18:06PM +0530, Himanshu Jha wrote:
-> On Tue, Nov 06, 2018 at 11:31:30AM +0000, Chris Coffey wrote:
-> > This patch adds driver support for the Microchip MCP41xxx/42xxx family
-> > of digital potentiometers:
-> > 
-> > DEVICE      Wipers  Positions   Resistance (kOhm)
-> > MCP41010    1       256         10
-> > MCP41050    1       256         50
-> > MCP41100    1       256         100
-> > MCP42010    2       256         10
-> > MCP42050    2       256         50
-> > MCP42100    2       256         100
-> > 
-> > Datasheet: http://ww1.microchip.com/downloads/en/devicedoc/11195c.pdf
-> > 
-> > Signed-off-by: Chris Coffey <cmc@babblebit.net>
-> > ---
-> >  .../bindings/iio/potentiometer/mcp41010.txt        |  29 +++
-> 
-> WARNING: DT binding docs and includes should be a separate patch. 
-> See: Documentation/devicetree/bindings/submitting-patches.txt
-> 
-> Please run checkpatch.pl on this patch once.
-> 
-
-Oops. I ran checkpatch.pl on the individual files, but neglected to run
-it on the patch file itself. I'll split the patch in v2.
-
-checkpatch.pl also reports a warning about the MAINTAINERS file:
-WARNING: added, moved or deleted file(s), does MAINTAINERS need
-updating?
-
-... but looking through the tree, many IIO drivers don't have
-corresponding entries in MAINTAINERS; is this one of those checkpatch
-warnings that can be safely ignored? Or should all new drivers have a
-corresponding entry in MAINTAINERS?
-
-Thanks again,
-Chris
+T24gMjAxOC0xMS0wNiAxNzozNywgUGV0ZXIgUm9zaW4gd3JvdGU6DQo+IEhpIQ0KPiANCj4gU29t
+ZSBjb21tZW50cyBpbmxpbmUuLi4NCj4gDQo+PiArDQo+PiArc3RhdGljIGludCBtY3A0MTAxMF93
+cml0ZV9yYXcoc3RydWN0IGlpb19kZXYgKmluZGlvX2RldiwNCj4+ICsJCQkgICAgIHN0cnVjdCBp
+aW9fY2hhbl9zcGVjIGNvbnN0ICpjaGFuLA0KPj4gKwkJCSAgICAgaW50IHZhbCwgaW50IHZhbDIs
+IGxvbmcgbWFzaykNCj4+ICt7DQo+PiArCWludCBlcnI7DQo+PiArCXN0cnVjdCBtY3A0MTAxMF9k
+YXRhICpkYXRhID0gaWlvX3ByaXYoaW5kaW9fZGV2KTsNCj4+ICsJaW50IGNoYW5uZWwgPSBjaGFu
+LT5jaGFubmVsOw0KPj4gKw0KPj4gKwlzd2l0Y2ggKG1hc2spIHsNCj4+ICsJY2FzZSBJSU9fQ0hB
+Tl9JTkZPX1JBVzoNCj4+ICsJCWlmICh2YWwgPiBNQ1A0MTAxMF9XSVBFUl9NQVggfHwgdmFsIDwg
+MCkNCj4+ICsJCQlyZXR1cm4gLUVJTlZBTDsNCj4+ICsJCWJyZWFrOw0KPj4gKw0KPj4gKwlkZWZh
+dWx0Og0KPj4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+PiArCX0NCj4+ICsNCj4+ICsJbXV0ZXhfbG9j
+aygmZGF0YS0+bG9jayk7DQo+PiArDQo+PiArCWRhdGEtPmJ1ZlswXSA9IE1DUDQxMDEwX1dJUEVS
+X0VOQUJMRSA8PCBjaGFubmVsOw0KPj4gKwlkYXRhLT5idWZbMF0gfD0gTUNQNDEwMTBfV1JJVEU7
+DQo+IA0KPiBXaWxsIHRoaXMgbm90IGNsb2JiZXIgdGhlIG90aGVyIGNoYW5uZWwgZm9yIG1jcDQy
+eHh4IGNoaXBzPz8/DQoNCg0KSSBoYWQgYSBwZWFrIGluIHRoZSBkYXRhc2hlZXQsIGFuZCBubywg
+aXQgd2lsbCBub3QuIEl0IHdhcyBqdXN0IHRoZSBuYW1pbmcNCndpdGggLi4uX1dJUEVSX0VOQUJM
+RSB0aGF0IHRocmV3IG1lIG9mZi4gSXQgYXNzdW1lZCwgZnJvbSB0aGUgbmFtaW5nLCB0aGF0DQpl
+YWNoIGNoYW5uZWwgaGFzIGEgc2VwYXJhdGUgZW5hYmxlIGJpdCBpbiB0aGUgY29tbWFuZCBieXRl
+IGFuZCB0aGF0IHlvdQ0Kd2VyZSByZXF1aXJlZCB0byBrZWVwIHRoZSBzdGF0ZSBvZiB0aG9zZSBp
+bnRhY3QgZm9yIGVhY2ggYW5kIGV2ZXJ5IGNvbW1hbmQNCnlvdSBzZW50LiBBZnRlciBsb29raW5n
+IGF0IHRoZSBkYXRhc2hlZXQsIHRoYXQgaXMgb2J2aW91c2x5IG5vdCB0aGUgY2FzZSwNCmFuZCB0
+aGUgY29kZSBpcyBmaW5lLiBCdXQgbWF5IEkgYXNrIGZvciBhIGNoYW5nZSBpbiBuYW1pbmcgaGVy
+ZT8NCg0KTUNQNDEwMTBfV0lQRVJfQ0hBTk5FTCBpbnN0ZWFkIG9mIE1DUDQxMDEwX1dJUEVSX0VO
+QUJMRSBwZXJoYXBzPw0KDQpDaGVlcnMsDQpQZXRlcg0KDQo+IA0KPj4gKwlkYXRhLT5idWZbMV0g
+PSB2YWwgJiAweGZmOw0KPj4gKw0KPj4gKwllcnIgPSBzcGlfd3JpdGUoZGF0YS0+c3BpLCBkYXRh
+LT5idWYsIDIpOw0KPj4gKwlpZiAoIWVycikNCj4+ICsJCWRhdGEtPnZhbHVlW2NoYW5uZWxdID0g
+dmFsOw0KPj4gKw0KPj4gKwltdXRleF91bmxvY2soJmRhdGEtPmxvY2spOw0KPj4gKw0KPj4gKwly
+ZXR1cm4gZXJyOw0KPj4gK30NCg==
