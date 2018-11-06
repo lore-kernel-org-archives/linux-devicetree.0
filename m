@@ -1,63 +1,74 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/4] spi: rspi: Add r8a77470 to the compatible list
-Date: Tue, 6 Nov 2018 15:09:05 +0100
-Message-ID: <20181106140905.yfhr7fayi6decjzz@verge.net.au>
-References: <1541075705-1333-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1541075705-1333-2-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [RFC 0/2] Add RISC-V cpu topology
+Date: Tue, 6 Nov 2018 14:13:49 +0000
+Message-ID: <20181106141331.GA28458@e107155-lin>
+References: <1541113468-22097-1-git-send-email-atish.patra@wdc.com>
+ <866dedbc78ab4fa0e3b040697e112106@mailhost.ics.forth.gr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1541075705-1333-2-git-send-email-fabrizio.castro@bp.renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Mark Brown <broonie@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Biju Das <biju.das@bp.renesas.com>
+In-Reply-To: <866dedbc78ab4fa0e3b040697e112106@mailhost.ics.forth.gr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nick Kossifidis <mick@ics.forth.gr>
+Cc: Atish Patra <atish.patra@wdc.com>, linux-riscv@lists.infradead.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Damien.LeMoal@wdc.com, alankao@andestech.com, zong@andestech.com, anup@brainfault.org, palmer@sifive.com, linux-kernel@vger.kernel.org, hch@infradead.org, robh+dt@kernel.org, tglx@linutronix.de, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 01, 2018 at 12:35:02PM +0000, Fabrizio Castro wrote:
-> Add r8a77470 to the list of examples with soctypes.
-> No driver change is needed as "renesas,qspi" will activate
-> the right code within the corresponding driver.
+On Fri, Nov 02, 2018 at 08:58:39PM +0200, Nick Kossifidis wrote:
+> Hello All,
 > 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Στις 2018-11-02 01:04, Atish Patra έγραψε:
+> > This patch series adds the cpu topology for RISC-V. It contains
+> > both the DT binding and actual source code. It has been tested on
+> > QEMU & Unleashed board.
+> > 
+> > The idea is based on cpu-map in ARM with changes related to how
+> > we define SMT systems. The reason for adopting a similar approach
+> > to ARM as I feel it provides a very clear way of defining the
+> > topology compared to parsing cache nodes to figure out which cpus
+> > share the same package or core.  I am open to any other idea to
+> > implement cpu-topology as well.
+> > 
+> 
+> I was also about to start a discussion about CPU topology on RISC-V
+> after the last swtools group meeting. The goal is to provide the
+> scheduler with hints on how to distribute tasks more efficiently
+> between harts, by populating the scheduling domain topology levels
+> (https://elixir.bootlin.com/linux/v4.19/ident/sched_domain_topology_level).
+> What we want to do is define cpu groups and assign them to
+> scheduling domains with the appropriate SD_ flags
+> (https://github.com/torvalds/linux/blob/master/include/linux/sched/topology.h#L16).
+>
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+OK are we defining a CPU topology binding for Linux scheduler ?
+NACK for all the approaches that assumes any knowledge of OS scheduler.
 
-> 
-> ---
-> 
-> As per Mark Brown's comment on patch "dt-bindings: spi: rspi: Add
-> r8a7744 to the compatible list", this patch doesn't come with the
-> "dt-bindings" prefix in the title.
-> 
->  Documentation/devicetree/bindings/spi/spi-rspi.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-rspi.txt b/Documentation/devicetree/bindings/spi/spi-rspi.txt
-> index fc97ad6..421722b 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-rspi.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
-> @@ -15,6 +15,7 @@ Required properties:
->  			- "renesas,qspi-r8a7743" (RZ/G1M)
->  			- "renesas,qspi-r8a7744" (RZ/G1N)
->  			- "renesas,qspi-r8a7745" (RZ/G1E)
-> +			- "renesas,qspi-r8a77470" (RZ/G1C)
->  			- "renesas,qspi-r8a7790" (R-Car H2)
->  			- "renesas,qspi-r8a7791" (R-Car M2-W)
->  			- "renesas,qspi-r8a7792" (R-Car V2H)
-> -- 
-> 2.7.4
+> So the cores that belong to a scheduling domain may share:
+> CPU capacity (SD_SHARE_CPUCAPACITY / SD_ASYM_CPUCAPACITY)
+> Package resources -e.g. caches, units etc- (SD_SHARE_PKG_RESOURCES)
+> Power domain (SD_SHARE_POWERDOMAIN)
 > 
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Too Linux kernel/scheduler specific to be part of $subject
+
+> In this context I believe using words like "core", "package",
+> "socket" etc can be misleading. For example the sample topology you
+> use on the documentation says that there are 4 cores that are part
+> of a package, however "package" has a different meaning to the
+> scheduler. Also we don't say anything in case they share a power
+> domain or if they have the same capacity or not. This mapping deals
+> only with cache hierarchy or other shared resources.
+>
+
+{Un,}fortunately those are terms used by hardware people.
+
+> How about defining a dt scheme to describe the scheduler domain
+> topology levels instead ? e.g:
+>
+
+NACK as already mentioned above.
+
+--
+Regards,
+Sudeep
