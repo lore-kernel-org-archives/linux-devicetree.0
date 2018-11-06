@@ -1,74 +1,64 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFC 0/2] Add RISC-V cpu topology
-Date: Tue, 6 Nov 2018 14:13:49 +0000
-Message-ID: <20181106141331.GA28458@e107155-lin>
-References: <1541113468-22097-1-git-send-email-atish.patra@wdc.com>
- <866dedbc78ab4fa0e3b040697e112106@mailhost.ics.forth.gr>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 3/4] of/property: Introduce of_fwnode_name()
+Date: Tue, 6 Nov 2018 16:28:10 +0200
+Message-ID: <20181106142810.GX10650@smile.fi.intel.com>
+References: <20181105091727.25544-1-heikki.krogerus@linux.intel.com>
+ <20181105091727.25544-4-heikki.krogerus@linux.intel.com>
+ <CAL_Jsq+aRAv+9gDKwVi9xYQPYzXK4NMPjzfkuYB08+K6KTYXFg@mail.gmail.com>
+ <20181106105803.GS10650@smile.fi.intel.com>
+ <20181106122734.GC13048@kuha.fi.intel.com>
+ <CAL_Jsq+kspp1GYrMjG1cC=CyCa2_jO1suFdD9fn+gOwKRYdhtw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <866dedbc78ab4fa0e3b040697e112106@mailhost.ics.forth.gr>
+In-Reply-To: <CAL_Jsq+kspp1GYrMjG1cC=CyCa2_jO1suFdD9fn+gOwKRYdhtw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nick Kossifidis <mick@ics.forth.gr>
-Cc: Atish Patra <atish.patra@wdc.com>, linux-riscv@lists.infradead.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Damien.LeMoal@wdc.com, alankao@andestech.com, zong@andestech.com, anup@brainfault.org, palmer@sifive.com, linux-kernel@vger.kernel.org, hch@infradead.org, robh+dt@kernel.org, tglx@linutronix.de, Sudeep Holla <sudeep.holla@arm.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 02, 2018 at 08:58:39PM +0200, Nick Kossifidis wrote:
-> Hello All,
+On Tue, Nov 06, 2018 at 07:18:14AM -0600, Rob Herring wrote:
+> On Tue, Nov 6, 2018 at 6:27 AM Heikki Krogerus
+> <heikki.krogerus@linux.intel.com> wrote:
+> >
+> > On Tue, Nov 06, 2018 at 12:58:03PM +0200, Andy Shevchenko wrote:
+> > > On Mon, Nov 05, 2018 at 12:50:02PM -0600, Rob Herring wrote:
+> > > > On Mon, Nov 5, 2018 at 3:17 AM Heikki Krogerus
+> > > > <heikki.krogerus@linux.intel.com> wrote:
+> > >
+> > > > > +static const char *of_fwnode_name(const struct fwnode_handle *fwnode)
+> > > > > +{
+> > > > > +       return to_of_node(fwnode)->name;
+> > > >
+> > > > I'm trying to get rid of the DT name ptr, so please don't add one. You
+> > > > can use of_node_full_name() here instead if "<name>@<unit-address>"
+> > > > instead of <name> is fine. Otherwise, you've got to allocate your own
+> > > > storage and use "%pOFn" printf specifier.
+> > >
+> > > If we do this here, we will change a behaviour of the entire set of
+> > > of_fwnode_get_named_child_node() users.
+> > >
+> > > I think this is out of scope of the series.
 > 
-> Στις 2018-11-02 01:04, Atish Patra έγραψε:
-> > This patch series adds the cpu topology for RISC-V. It contains
-> > both the DT binding and actual source code. It has been tested on
-> > QEMU & Unleashed board.
-> > 
-> > The idea is based on cpu-map in ARM with changes related to how
-> > we define SMT systems. The reason for adopting a similar approach
-> > to ARM as I feel it provides a very clear way of defining the
-> > topology compared to parsing cache nodes to figure out which cpus
-> > share the same package or core.  I am open to any other idea to
-> > implement cpu-topology as well.
-> > 
+> No, because you are adding a firmware op for something that's going away.
+
+W/o your below explanation it wasn't obvious.
+
 > 
-> I was also about to start a discussion about CPU topology on RISC-V
-> after the last swtools group meeting. The goal is to provide the
-> scheduler with hints on how to distribute tasks more efficiently
-> between harts, by populating the scheduling domain topology levels
-> (https://elixir.bootlin.com/linux/v4.19/ident/sched_domain_topology_level).
-> What we want to do is define cpu groups and assign them to
-> scheduling domains with the appropriate SD_ flags
-> (https://github.com/torvalds/linux/blob/master/include/linux/sched/topology.h#L16).
->
-
-OK are we defining a CPU topology binding for Linux scheduler ?
-NACK for all the approaches that assumes any knowledge of OS scheduler.
-
-> So the cores that belong to a scheduling domain may share:
-> CPU capacity (SD_SHARE_CPUCAPACITY / SD_ASYM_CPUCAPACITY)
-> Package resources -e.g. caches, units etc- (SD_SHARE_PKG_RESOURCES)
-> Power domain (SD_SHARE_POWERDOMAIN)
+> > You have a point. We must use the same member that was used in
+> > of_fwnode_get_named_child_node().
+> >
+> > The goal of this series if most likely not clear from this patch
+> > alone, so I'll send a second version and make sure to CC the DT list
+> > and Rob.
 > 
+> Looking at patch 4, if matching the name is what you want to do, then
+> use the DT name matching functions. They were added in 4.19.
 
-Too Linux kernel/scheduler specific to be part of $subject
+Do you mean of_node_name_eq()?
 
-> In this context I believe using words like "core", "package",
-> "socket" etc can be misleading. For example the sample topology you
-> use on the documentation says that there are 4 cores that are part
-> of a package, however "package" has a different meaning to the
-> scheduler. Also we don't say anything in case they share a power
-> domain or if they have the same capacity or not. This mapping deals
-> only with cache hierarchy or other shared resources.
->
 
-{Un,}fortunately those are terms used by hardware people.
-
-> How about defining a dt scheme to describe the scheduler domain
-> topology levels instead ? e.g:
->
-
-NACK as already mentioned above.
-
---
-Regards,
-Sudeep
+-- 
+With Best Regards,
+Andy Shevchenko
