@@ -1,81 +1,81 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 2/2] clk: qcom: Support 'protected-clocks' property
-Date: Mon, 5 Nov 2018 17:05:07 -0800
-Message-ID: <20181106010507.GY2523@minitux>
-References: <20181105194011.43770-1-swboyd@chromium.org>
- <20181105194011.43770-3-swboyd@chromium.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH] arm64: dts: r8a77990: ebisu: Add serial console pins
+Date: Tue, 6 Nov 2018 05:22:35 +0000
+Message-ID: <OSBPR01MB2293633CF9C7102B8251D261D8CB0@OSBPR01MB2293.jpnprd01.prod.outlook.com>
+References: <20181105213859.11408-1-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181105194011.43770-3-swboyd@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181105213859.11408-1-marek.vasut+renesas@gmail.com>
+Content-Language: ja-JP
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: TAKESHI KIHARA <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 05 Nov 11:40 PST 2018, Stephen Boyd wrote:
+Hello Marek-san,
 
-> Certain firmware configurations "protect" clks and cause the entire
-> system to reboot when a non-secure OS such as Linux tries to read or
-> write protected clk registers. But other firmware configurations allow
-> reading or writing the same registers, and they may actually require
-> that the OS use the otherwise locked down clks. Support the
-> 'protected-clocks' property by never registering these protected clks
-> with the common clk framework. This way, when firmware is protecting
-> these clks we won't have the chance to ever read or write these
-> registers and take down the entire system.
+> From: Marek Vasut, Sent: Tuesday, November 6, 2018 6:39 AM
 > 
-> Cc: Taniya Das <tdas@codeaurora.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
+> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> 
+> This patch adds pin control for SCIF2 on R8A77990 E3 Ebisu.
+> 
+> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Simon Horman <horms+renesas@verge.net.au>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Cc: linux-renesas-soc@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
 > ---
->  drivers/clk/qcom/common.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+
+Thank you for the patch!
+
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Best regards,
+Yoshihiro Shimoda
+
+
+>  arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> diff --git a/drivers/clk/qcom/common.c b/drivers/clk/qcom/common.c
-> index db9b2471ac40..0a48ed56833b 100644
-> --- a/drivers/clk/qcom/common.c
-> +++ b/drivers/clk/qcom/common.c
-> @@ -191,6 +191,22 @@ int qcom_cc_register_sleep_clk(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(qcom_cc_register_sleep_clk);
->  
-> +/* Drop 'protected-clocks' from the list of clocks to register */
-> +static void qcom_cc_drop_protected(struct device *dev, struct qcom_cc *cc)
-> +{
-> +	struct device_node *np = dev->of_node;
-> +	struct property *prop;
-> +	const __be32 *p;
-> +	u32 i;
-> +
-> +	of_property_for_each_u32(np, "protected-clocks", prop, p, i) {
-> +		if (i >= cc->num_rclks)
-> +			continue;
-> +
-> +		cc->rclks[i] = NULL;
-> +	}
-> +}
-> +
->  static struct clk_hw *qcom_cc_clk_hw_get(struct of_phandle_args *clkspec,
->  					 void *data)
->  {
-> @@ -251,6 +267,8 @@ int qcom_cc_really_probe(struct platform_device *pdev,
->  	cc->rclks = rclks;
->  	cc->num_rclks = num_clks;
->  
-> +	qcom_cc_drop_protected(dev, cc);
-> +
->  	for (i = 0; i < num_clks; i++) {
->  		if (!rclks[i])
->  			continue;
-> -- 
-> Sent by a computer through tubes
+> diff --git a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+> index f342dd85b152..611f0265fcc5 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+> +++ b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+> @@ -321,6 +321,11 @@
+>  		function = "pwm5";
+>  	};
 > 
+> +	scif2_pins: scif2 {
+> +		groups = "scif2_data_a";
+> +		function = "scif2";
+> +	};
+> +
+>  	usb0_pins: usb {
+>  		groups = "usb0_b";
+>  		function = "usb0";
+> @@ -352,6 +357,9 @@
+>  };
+> 
+>  &scif2 {
+> +	pinctrl-0 = <&scif2_pins>;
+> +	pinctrl-names = "default";
+> +
+>  	status = "okay";
+>  };
+> 
+> --
+> 2.18.0
