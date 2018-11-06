@@ -1,152 +1,149 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC 1/2] dt-bindings: topology: Add RISC-V cpu topology.
-Date: Tue, 6 Nov 2018 11:37:23 +0000
-Message-ID: <20181106113723.j5k5f7ovehiupyid@lakrids.cambridge.arm.com>
-References: <mhng-799bd6f4-e4af-481e-90d8-bdc0e30f2530@palmer-si-x1c4>
- <9e77989d6b868d914bc328401cd64557@mailhost.ics.forth.gr>
+From: Florinel Iordache <florinel.iordache@nxp.com>
+Subject: [bindings][PATCH] bindings/net: DPAA Backplane Device Bindings
+Date: Tue, 6 Nov 2018 11:48:30 +0000
+Message-ID: <1541504900-30091-1-git-send-email-florinel.iordache@nxp.com>
+Reply-To: Florinel Iordache <florinel.iordache@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9e77989d6b868d914bc328401cd64557@mailhost.ics.forth.gr>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nick Kossifidis <mick@ics.forth.gr>
-Cc: Palmer Dabbelt <palmer@sifive.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, Damien.LeMoal@wdc.com, alankao@andestech.com, zong@andestech.com, anup@brainfault.org, linux-kernel@vger.kernel.org, Christoph Hellwig <hch@infradead.org>, atish.patra@wdc.com, linux-riscv@lists.infradead.org, tglx@linutronix.de
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "broonie@kernel.org" <broonie@kernel.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Florinel Iordache <florinel.iordache@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 06, 2018 at 12:03:17PM +0200, Nick Kossifidis wrote:
-> Στις 2018-11-05 21:38, Palmer Dabbelt έγραψε:
-> > On Fri, 02 Nov 2018 06:09:39 PDT (-0700), robh+dt@kernel.org wrote:
-> > > On Thu, Nov 1, 2018 at 6:04 PM Atish Patra <atish.patra@wdc.com>
-> > > wrote:
-> > > > 
-> > > > Define a RISC-V cpu topology. This is based on cpu-map in ARM world.
-> > > > But it doesn't need a separate thread node for defining SMT systems.
-> > > > Multiple cpu phandle properties can be parsed to identify the sibling
-> > > > hardware threads. Moreover, we do not have cluster concept in RISC-V.
-> > > > So package is a better word choice than cluster for RISC-V.
-> > > 
-> > > There was a proposal to add package info for ARM recently. Not sure
-> > > what happened to that, but we don't need 2 different ways.
-> > > 
-> > > There's never going to be clusters for RISC-V? What prevents that?
-> > > Seems shortsighted to me.
-> > > 
-> > > > 
-> > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > > > ---
-> > > >  .../devicetree/bindings/riscv/topology.txt         | 154
-> > > > +++++++++++++++++++++
-> > > >  1 file changed, 154 insertions(+)
-> > > >  create mode 100644
-> > > > Documentation/devicetree/bindings/riscv/topology.txt
-> > > > 
-> > > > diff --git
-> > > > a/Documentation/devicetree/bindings/riscv/topology.txt
-> > > > b/Documentation/devicetree/bindings/riscv/topology.txt
-> > > > new file mode 100644
-> > > > index 00000000..96039ed3
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/riscv/topology.txt
-> > > > @@ -0,0 +1,154 @@
-> > > > +===========================================
-> > > > +RISC-V cpu topology binding description
-> > > > +===========================================
-> > > > +
-> > > > +===========================================
-> > > > +1 - Introduction
-> > > > +===========================================
-> > > > +
-> > > > +In a RISC-V system, the hierarchy of CPUs can be defined
-> > > > through following nodes that
-> > > > +are used to describe the layout of physical CPUs in the system:
-> > > > +
-> > > > +- packages
-> > > > +- core
-> > > > +
-> > > > +The cpu nodes (bindings defined in [1]) represent the devices that
-> > > > +correspond to physical CPUs and are to be mapped to the
-> > > > hierarchy levels.
-> > > > +Simultaneous multi-threading (SMT) systems can also represent
-> > > > their topology
-> > > > +by defining multiple cpu phandles inside core node. The details
-> > > > are explained
-> > > > +in paragraph 3.
-> > > 
-> > > I don't see a reason to do this differently than ARM. That said, I
-> > > don't think the thread part is in use on ARM, so it could possibly be
-> > > changed.
-> > > 
-> > > > +
-> > > > +The remainder of this document provides the topology bindings
-> > > > for ARM, based
-> > > 
-> > > for ARM?
-> > > 
-> > > > +on the Devicetree Specification, available from:
-> > > > +
-> > > > +https://www.devicetree.org/specifications/
-> > > > +
-> > > > +If not stated otherwise, whenever a reference to a cpu node
-> > > > phandle is made its
-> > > > +value must point to a cpu node compliant with the cpu node
-> > > > bindings as
-> > > > +documented in [1].
-> > > > +A topology description containing phandles to cpu nodes that
-> > > > are not compliant
-> > > > +with bindings standardized in [1] is therefore considered invalid.
-> > > > +
-> > > > +This cpu topology binding description is mostly based on the
-> > > > topology defined
-> > > > +in ARM [2].
-> > > > +===========================================
-> > > > +2 - cpu-topology node
-> > > 
-> > > cpu-map. Why change this?
-> > > 
-> > > What I would like to see is the ARM topology binding reworked to be
-> > > common or some good reasons why it doesn't work for RISC-V as-is.
-> > 
-> > I think it would be great if CPU topologies were not a RISC-V specific
-> > thing.  We don't really do anything different than anyone else, so
-> > it'd be great if we could all share the same spec and code.  Looking
-> > quickly at the ARM cpu-map bindings, I don't see any reason why we
-> > can't just use the same thing on RISC-V -- it's not quite how I'd do
-> > it, but I don't think the differences are worth having another
-> > implementation.  Mechanically I'm not sure how to do this: should
-> > there just be a "Documentation/devicetree/bindings/cpu-map.txt"?
-> > 
-> > If everyone is OK with that then I vote we just go ahead and
-> > genericise the ARM "cpu-map" stuff for CPU topology.  Sharing the
-> > implementation looks fairly straight-forward as well.
-> > 
-> 
-> Please check this out...
-> https://lkml.org/lkml/2018/11/3/99
-> 
-> It's also non arch-dependent and it can handle the scheduler's capabilities
-> better than cpu-map.
+Device Tree Bindings for DPAA backplane available on Layerscape
+ communications processors.
 
-Could you elaborate on what this does better than cpu-map? I'd be
-curious to see if we could/should augment cpu-map to cater for those
-details.
+Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
+---
+ .../devicetree/bindings/net/dpaa-backplane.txt     | 105 +++++++++++++++++=
+++++
+ 1 file changed, 105 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/dpaa-backplane.tx=
+t
 
-Generally, we deliberately avoid placing software abstractions in the DT
-(e.g. scheduler domains), because the design of these abstractions are
-specific to a given software stack rather than the hardware, and even in
-the context of that specific software stack these abstractions change
-over time.
-
-Placing software abstractions in the DT may seem simpler initially, but
-longer term it ends up requiring translation anyway as abstractions
-change, and typically it involves placing some policy in the DT, which
-restricts the ability of software to do something better.
-
-Having some translation between the DT and the Linux-internal
-abstraction is how we expect things to work generally, and allows for a
-more natural representation in the DT (which may be more or less
-powerful than the current Linux abstraction).
-
-Thanks,
-Mark.
+diff --git a/Documentation/devicetree/bindings/net/dpaa-backplane.txt b/Doc=
+umentation/devicetree/bindings/net/dpaa-backplane.txt
+new file mode 100644
+index 0000000..f147c84
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/dpaa-backplane.txt
+@@ -0,0 +1,105 @@
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
++DPAA Backplane Device Bindings
++
++CONTENTS
++  - SerDes Node
++  - PCS Phy Node
++
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
++SerDes Node
++
++DESCRIPTION
++
++SerDes (Serializer/Deserializer) HW peripheral
++
++PROPERTIES
++
++- compatible
++		Usage: required
++		Value type: <stringlist>
++		Definition: Specifies the type of SerDes.
++		Must include the prefix "fsl,serdes"
++		SerDes can be of different types:
++		- 10G SerDes must be specified as: "fsl,serdes-10g"
++		- 28G SerDes must be specified as: "fsl,serdes-28g"
++
++- reg
++		Usage: required
++		Value type: <prop-encoded-array>
++		Definition: Specifies the offset of the SerDes configuration registers
++
++- little-endian
++		Usage: optional
++		Value type: <Boolean>
++		Definition: Specifies endianness access to SerDes registers.
++		If omitted, big-endian will be used
++		See common-properties.txt for complete definition
++
++EXAMPLE
++
++Example of 10G SerDes node:
++
++serdes1: serdes@1ea0000 {
++		compatible =3D "fsl,serdes-10g";
++		reg =3D <0x0 0x1ea0000 0 0x00002000>;
++		little-endian;
++};
++
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
++PCS Phy Node
++
++DESCRIPTION
++
++PCS Phy (Physical Coding Sublayer / Physical layer) node
++
++PROPERTIES
++
++- compatible
++		Usage: required
++		Value type: <stringlist>
++		Definition: A standard property. Specifies the IEEE 802.3 Clause
++		Different IEEE 802.3 Clauses can be specified:
++		- Clause 22 must be specified as: "ethernet-phy-ieee802.3-c22"
++		- Clause 45 must be specified as: "ethernet-phy-ieee802.3-c45"
++		For complete definition see:
++		Documentation/devicetree/bindings/net/phy.txt
++
++- reg
++		Usage: required
++		Value type: <prop-encoded-array>
++		Definition: A standard property.
++		Specifies the offset of the PCS Phy configuration registers
++		For complete definition see:
++		Documentation/devicetree/bindings/net/phy.txt
++
++- backplane-mode
++		Usage: required
++		Value type: <stringlist>
++		Definition: Specifies the speed and type of the protocol used
++		Different speeds and backplane protocol types can be used:
++		- 10GBase-KR must be specified as: "10gbase-kr"
++		- 40GBase-KR must be specified as: "40gbase-kr"
++
++- fsl,lane-handle
++		Usage: required
++		Value type: <phandle>
++		Definition: Specifies the reference to a node representing the SerDes
++		device
++
++- fsl,lane-reg
++		Usage: required
++		Value type: <prop-encoded-array>
++		Definition: Specifies the offsets of the SerDes lanes configuration
++		registers
++
++EXAMPLE
++
++Example of pcs phy node for 10GBase-KR:
++
++pcs_phy1: ethernet-phy@0 {
++	compatible =3D "ethernet-phy-ieee802.3-c45";
++	backplane-mode =3D "10gbase-kr";
++	reg =3D <0x0>;
++	fsl,lane-handle =3D <&serdes1>;
++	fsl,lane-reg =3D <0xE00>; /* lane G */
++};
+--=20
+1.9.1
