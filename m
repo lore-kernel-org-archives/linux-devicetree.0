@@ -1,87 +1,63 @@
-From: Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH v4 0/6] arm64: Get rid of __early_init_dt_declare_initrd()
-Date: Tue, 6 Nov 2018 16:06:42 +0200
-Message-ID: <20181106140642.GA19280@rapoport-lnx>
-References: <20181105225431.24485-1-f.fainelli@gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/4] spi: rspi: Add r8a77470 to the compatible list
+Date: Tue, 6 Nov 2018 15:09:05 +0100
+Message-ID: <20181106140905.yfhr7fayi6decjzz@verge.net.au>
+References: <1541075705-1333-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1541075705-1333-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20181105225431.24485-1-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, moderated list:ARM64 PORT (AARCH64 ARCHITECTUR
+In-Reply-To: <1541075705-1333-2-git-send-email-fabrizio.castro@bp.renesas.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Mark Brown <broonie@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 05, 2018 at 02:54:25PM -0800, Florian Fainelli wrote:
-> Hi all,
+On Thu, Nov 01, 2018 at 12:35:02PM +0000, Fabrizio Castro wrote:
+> Add r8a77470 to the list of examples with soctypes.
+> No driver change is needed as "renesas,qspi" will activate
+> the right code within the corresponding driver.
 > 
-> Changes in v4:
-> 
-> - dropped initrd_below_start_ok assignment in ARM64, not necessary at
->   all (Ard)
-> - replace #ifdef CONFIG_BLK_DEV_INITRD with if
->   (IS_ENABLED(CONFIG_BLK_DEV_INITRD) for consistency with other parts
->   of arm64_memblock_init() (Rob)
-> 
-> Changes in v3:
-> 
-> - use C conditionals in drivers/of/fdt.c
-> - added check on phys_initrd_size in arch/arm64/mm/init.c to determine
->   whether initrd_start must be populated
-> - fixed a build warning with ARC that was just missing an (unsigned
->   long) cast
-> 
-> Changes in v2:
-> 
-> - get rid of ARCH_HAS_PHYS_INITRD and instead define
->   phys_initrd_start/phys_initrd_size in init/do_mounts_initrd.c
-> 
-> - make __early_init_dt_declare_initrd() account for ARM64 specific
->   behavior with __va() when having CONFIG_DEBUG_VM enabled
-> 
-> - consolidate early_initrd() command line parsing into
->   init/do_mounts_initrd.c
-> 
-> Because phys_initrd_start/phys_initrd_size are now compiled in
-> ini/do_mounts_initrd.c which is only built with CONFIG_BLK_DEV_INITRD=y,
-> we need to be a bit careful about the uses throughout architecture
-> specific code.
-> 
-> Previous discussions/submissions list here:
-> 
-> v3:
-> https://www.spinics.net/lists/arm-kernel/msg683566.html
-> v2:
-> https://lkml.org/lkml/2018/10/25/4
-> 
-> Florian Fainelli (6):
->   nds32: Remove phys_initrd_start and phys_initrd_size
->   arch: Make phys_initrd_start and phys_initrd_size global variables
->   of/fdt: Populate phys_initrd_start/phys_initrd_size from FDT
->   arm64: Utilize phys_initrd_start/phys_initrd_size
->   of/fdt: Remove custom __early_init_dt_declare_initrd() implementation
->   arch: Move initrd= parsing into do_mounts_initrd.c
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-For the series:
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
- 
->  arch/arc/mm/init.c              | 25 +++++-------------------
->  arch/arm/mm/init.c              | 28 ++-------------------------
->  arch/arm64/include/asm/memory.h |  8 --------
->  arch/arm64/mm/init.c            | 34 ++++++---------------------------
->  arch/nds32/mm/init.c            |  2 --
->  arch/unicore32/mm/init.c        | 24 +++++------------------
->  drivers/of/fdt.c                | 17 ++++++++++++-----
->  include/linux/initrd.h          |  3 +++
->  init/do_mounts_initrd.c         | 20 +++++++++++++++++++
->  9 files changed, 53 insertions(+), 108 deletions(-)
 > 
+> ---
+> 
+> As per Mark Brown's comment on patch "dt-bindings: spi: rspi: Add
+> r8a7744 to the compatible list", this patch doesn't come with the
+> "dt-bindings" prefix in the title.
+> 
+>  Documentation/devicetree/bindings/spi/spi-rspi.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-rspi.txt b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+> index fc97ad6..421722b 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-rspi.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+> @@ -15,6 +15,7 @@ Required properties:
+>  			- "renesas,qspi-r8a7743" (RZ/G1M)
+>  			- "renesas,qspi-r8a7744" (RZ/G1N)
+>  			- "renesas,qspi-r8a7745" (RZ/G1E)
+> +			- "renesas,qspi-r8a77470" (RZ/G1C)
+>  			- "renesas,qspi-r8a7790" (R-Car H2)
+>  			- "renesas,qspi-r8a7791" (R-Car M2-W)
+>  			- "renesas,qspi-r8a7792" (R-Car V2H)
 > -- 
-> 2.17.1
+> 2.7.4
 > 
 
--- 
-Sincerely yours,
-Mike.
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
