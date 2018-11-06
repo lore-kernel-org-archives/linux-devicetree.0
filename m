@@ -1,189 +1,199 @@
 From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCH 22/23] PCI: mobiveil: add PCIe RC driver for NXP LX series
- SoCs
-Date: Tue, 6 Nov 2018 13:21:25 +0000
-Message-ID: <20181106131807.29951-23-Zhiqiang.Hou@nxp.com>
+Subject: [PATCH 23/23] arm64: dts: freescale: lx2160a: add pcie DT nodes
+Date: Tue, 6 Nov 2018 13:21:31 +0000
+Message-ID: <20181106131807.29951-24-Zhiqiang.Hou@nxp.com>
 References: <20181106131807.29951-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181106131807.29951-1-Zhiqiang.Hou@nxp.com>
 Content-Language: en-US
-Content-ID: <C7510C8BDA7C05449494D3434100A1D0@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
 Cc: Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "Z.q. Hou" <zhiqiang.hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCg0KVGhpcyBQQ0llIGNv
-bnRyb2xsZXIgaXMgYmFzZWQgb24gdGhlIE1vYml2ZWlsIEdQRVggSVAsIHdoaWNoIGlzDQpjb21w
-YXRpYmxlIHdpdGggdGhlIFBDSSBFeHByZXNz4oSiIEJhc2UgU3BlY2lmaWNhdGlvbiwgUmV2aXNp
-b24gNC4wLg0KDQpTaWduZWQtb2ZmLWJ5OiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAu
-Y29tPg0KLS0tDQogZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9LY29uZmlnICAgICAg
-IHwgIDEwICsNCiBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL01ha2VmaWxlICAgICAg
-fCAgIDEgKw0KIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpLWx4LmMgICAgICB8
-IDIyMiArKysrKysrKysrKysrKysrKysNCiAuLi4vY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1v
-Yml2ZWlsLWhvc3QuYyAgfCAgIDUgKy0NCiAuLi4vcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNp
-ZS1tb2JpdmVpbC5oICAgfCAgMTUgKy0NCiA1IGZpbGVzIGNoYW5nZWQsIDI0OSBpbnNlcnRpb25z
-KCspLCA0IGRlbGV0aW9ucygtKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BjaS9jb250
-cm9sbGVyL21vYml2ZWlsL3BjaS1seC5jDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250
-cm9sbGVyL21vYml2ZWlsL0tjb25maWcgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWls
-L0tjb25maWcNCmluZGV4IDY0MzQzYzA3YmZlZC4uMTAyNTQ0OGY2ZDBjIDEwMDY0NA0KLS0tIGEv
-ZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9LY29uZmlnDQorKysgYi9kcml2ZXJzL3Bj
-aS9jb250cm9sbGVyL21vYml2ZWlsL0tjb25maWcNCkBAIC0yMSw0ICsyMSwxNCBAQCBjb25maWcg
-UENJRV9NT0JJVkVJTF9QTEFUDQogCSAgU29mdCBJUC4gSXQgaGFzIHVwIHRvIDggb3V0Ym91bmQg
-YW5kIGluYm91bmQgd2luZG93cw0KIAkgIGZvciBhZGRyZXNzIHRyYW5zbGF0aW9uIGFuZCBpdCBp
-cyBhIFBDSWUgR2VuNCBJUC4NCiANCitjb25maWcgUENJX0xYDQorCWJvb2wgIkZyZWVzY2FsZSBM
-WCBQQ0llIGNvbnRyb2xsZXIiDQorCWRlcGVuZHMgb24gUENJDQorCWRlcGVuZHMgb24gT0YgJiYg
-KEFSTTY0IHx8IEFSQ0hfTEFZRVJTQ0FQRSkNCisJZGVwZW5kcyBvbiBQQ0lfTVNJX0lSUV9ET01B
-SU4NCisJc2VsZWN0IFBDSUVfTU9CSVZFSUxfSE9TVA0KKwloZWxwDQorCSAgU2F5IFkgaGVyZSBp
-ZiB5b3Ugd2FudCBQQ0llIGNvbnRyb2xsZXIgc3VwcG9ydCBvbiBMWCBTb0NzLg0KKwkgIFRoZSBQ
-Q0llIGNvbnRyb2xsZXIgY2FuIHdvcmsgaW4gUkMgb3IgRVAgbW9kZSBhY2NvcmRpbmcgdG8NCisJ
-ICBSQ1dbSE9TVF9BR1RfUEVYXSBzZXR0aW5nLg0KIGVuZG1lbnUNCmRpZmYgLS1naXQgYS9kcml2
-ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL01ha2VmaWxlIGIvZHJpdmVycy9wY2kvY29udHJv
-bGxlci9tb2JpdmVpbC9NYWtlZmlsZQ0KaW5kZXggOWZiNmQxYzY1MDRkLi5lNTMxOGEzMzQxNDkg
-MTAwNjQ0DQotLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL01ha2VmaWxlDQor
-KysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL01ha2VmaWxlDQpAQCAtMiwzICsy
-LDQgQEANCiBvYmotJChDT05GSUdfUENJRV9NT0JJVkVJTCkgKz0gcGNpZS1tb2JpdmVpbC5vDQog
-b2JqLSQoQ09ORklHX1BDSUVfTU9CSVZFSUxfSE9TVCkgKz0gcGNpZS1tb2JpdmVpbC1ob3N0Lm8N
-CiBvYmotJChDT05GSUdfUENJRV9NT0JJVkVJTF9QTEFUKSArPSBwY2llLW1vYml2ZWlsLXBsYXQu
-bw0KK29iai0kKENPTkZJR19QQ0lfTFgpICs9IHBjaS1seC5vDQpkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2ktbHguYyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xs
-ZXIvbW9iaXZlaWwvcGNpLWx4LmMNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAw
-MDAwMDAuLjUzMDgyNTVkYzcyNQ0KLS0tIC9kZXYvbnVsbA0KKysrIGIvZHJpdmVycy9wY2kvY29u
-dHJvbGxlci9tb2JpdmVpbC9wY2ktbHguYw0KQEAgLTAsMCArMSwyMjIgQEANCisvLyBTUERYLUxp
-Y2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KKy8qDQorICogUENJZSBob3N0IGNvbnRyb2xsZXIg
-ZHJpdmVyIGZvciBOWFAgTFggU29Dcw0KKyAqDQorICogQ29weXJpZ2h0IDIwMTggTlhQDQorICoN
-CisgKiBBdXRob3I6IFpoaXFpYW5nIEhvdSA8WmhpcWlhbmcuSG91QG54cC5jb20+DQorICovDQor
-DQorI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPg0KKyNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1cHQu
-aD4NCisjaW5jbHVkZSA8bGludXgvaW5pdC5oPg0KKyNpbmNsdWRlIDxsaW51eC9vZl9wY2kuaD4N
-CisjaW5jbHVkZSA8bGludXgvb2ZfcGxhdGZvcm0uaD4NCisjaW5jbHVkZSA8bGludXgvb2ZfaXJx
-Lmg+DQorI2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4NCisjaW5jbHVkZSA8bGludXgvcGNp
-Lmg+DQorI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KKyNpbmNsdWRlIDxsaW51
-eC9yZXNvdXJjZS5oPg0KKyNpbmNsdWRlIDxsaW51eC9tZmQvc3lzY29uLmg+DQorI2luY2x1ZGUg
-PGxpbnV4L3JlZ21hcC5oPg0KKw0KKyNpbmNsdWRlICJwY2llLW1vYml2ZWlsLmgiDQorDQorLyog
-TFVUIGFuZCBQRiBjb250cm9sIHJlZ2lzdGVycyAqLw0KKyNkZWZpbmUgUENJRV9MVVRfT0ZGCQkJ
-KDB4ODAwMDApDQorI2RlZmluZSBQQ0lFX1BGX09GRgkJCSgweGMwMDAwKQ0KKyNkZWZpbmUgUENJ
-RV9QRl9JTlRfU1RBVAkJKDB4MTgpDQorI2RlZmluZSBQRl9JTlRfU1RBVF9QQUJSU1QJCSgzMSkN
-CisNCisjZGVmaW5lIFBDSUVfUEZfREJHCQkJKDB4N2ZjKQ0KKyNkZWZpbmUgUEZfREJHX0xUU1NN
-X01BU0sJCSgweDNmKQ0KKyNkZWZpbmUgUEZfREJHX1dFCQkJKDMxKQ0KKyNkZWZpbmUgUEZfREJH
-X1BBQlIJCQkoMjcpDQorDQorI2RlZmluZSBMWF9QQ0lFX0xUU1NNX0wwCQkweDJkIC8qIEwwIHN0
-YXRlICovDQorDQorc3RydWN0IGx4X3BjaWUgew0KKwlzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNp
-Ow0KKwlpbnQgaXJxOw0KK307DQorDQorI2RlZmluZSB0b19seF9wY2llKHgpCXBsYXRmb3JtX2dl
-dF9kcnZkYXRhKCh4KS0+cGRldikNCisNCitzdGF0aWMgaW5saW5lIHUzMiBseF9wY2llX2x1dF9y
-ZWFkbChzdHJ1Y3QgbHhfcGNpZSAqcGNpZSwgdTMyIG9mZikNCit7DQorCXJldHVybiBpb3JlYWQz
-MihwY2llLT5wY2ktPmNzcl9heGlfc2xhdmVfYmFzZSArIFBDSUVfTFVUX09GRiArIG9mZik7DQor
-fQ0KKw0KK3N0YXRpYyBpbmxpbmUgdm9pZCBseF9wY2llX2x1dF93cml0ZWwoc3RydWN0IGx4X3Bj
-aWUgKnBjaWUsIHUzMiBvZmYsIHUzMiB2YWwpDQorew0KKwlpb3dyaXRlMzIodmFsLCBwY2llLT5w
-Y2ktPmNzcl9heGlfc2xhdmVfYmFzZSArIFBDSUVfTFVUX09GRiArIG9mZik7DQorfQ0KKw0KK3N0
-YXRpYyBpbmxpbmUgdTMyIGx4X3BjaWVfcGZfcmVhZGwoc3RydWN0IGx4X3BjaWUgKnBjaWUsIHUz
-MiBvZmYpDQorew0KKwlyZXR1cm4gaW9yZWFkMzIocGNpZS0+cGNpLT5jc3JfYXhpX3NsYXZlX2Jh
-c2UgKyBQQ0lFX1BGX09GRiArIG9mZik7DQorfQ0KKw0KK3N0YXRpYyBpbmxpbmUgdm9pZCBseF9w
-Y2llX3BmX3dyaXRlbChzdHJ1Y3QgbHhfcGNpZSAqcGNpZSwgdTMyIG9mZiwgdTMyIHZhbCkNCit7
-DQorCWlvd3JpdGUzMih2YWwsIHBjaWUtPnBjaS0+Y3NyX2F4aV9zbGF2ZV9iYXNlICsgUENJRV9Q
-Rl9PRkYgKyBvZmYpOw0KK30NCisNCitzdGF0aWMgYm9vbCBseF9wY2llX2lzX2JyaWRnZShzdHJ1
-Y3QgbHhfcGNpZSAqcGNpZSkNCit7DQorCXN0cnVjdCBtb2JpdmVpbF9wY2llICptdl9wY2kgPSBw
-Y2llLT5wY2k7DQorCXUzMiBoZWFkZXJfdHlwZTsNCisNCisJaGVhZGVyX3R5cGUgPSBjc3JfcmVh
-ZGIobXZfcGNpLCBQQ0lfSEVBREVSX1RZUEUpOw0KKwloZWFkZXJfdHlwZSAmPSAweDdmOw0KKw0K
-KwlyZXR1cm4gaGVhZGVyX3R5cGUgPT0gUENJX0hFQURFUl9UWVBFX0JSSURHRTsNCit9DQorDQor
-c3RhdGljIGludCBseF9wY2llX2xpbmtfdXAoc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaSkNCit7
-DQorCXN0cnVjdCBseF9wY2llICpwY2llID0gdG9fbHhfcGNpZShwY2kpOw0KKwl1MzIgc3RhdGU7
-DQorDQorCXN0YXRlID0gbHhfcGNpZV9wZl9yZWFkbChwY2llLCBQQ0lFX1BGX0RCRyk7DQorCXN0
-YXRlID0Jc3RhdGUgJiBQRl9EQkdfTFRTU01fTUFTSzsNCisNCisJaWYgKHN0YXRlID09IExYX1BD
-SUVfTFRTU01fTDApDQorCQlyZXR1cm4gMTsNCisNCisJcmV0dXJuIDA7DQorfQ0KKw0KK3N0YXRp
-YyBpbnQgbHhfcGNpZV9pbnRlcnJ1cHRfaW5pdChzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNpZSkN
-Cit7DQorCXJldHVybiAwOw0KK30NCisNCitzdGF0aWMgc3RydWN0IG1vYml2ZWlsX3JwX29wcyBs
-eF9wY2llX3JwX29wcyA9IHsNCisJLmludGVycnVwdF9pbml0ID0gbHhfcGNpZV9pbnRlcnJ1cHRf
-aW5pdCwNCit9Ow0KKw0KK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbW9iaXZlaWxfcGFiX29wcyBseF9w
-Y2llX3BhYl9vcHMgPSB7DQorCS5saW5rX3VwID0gbHhfcGNpZV9saW5rX3VwLA0KK307DQorDQor
-c3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbHhfcGNpZV9vZl9tYXRjaFtdID0gew0K
-Kwl7IC5jb21wYXRpYmxlID0gImZzbCxseDIxNjBhLXBjaWUiLCB9LA0KKwl7IH0sDQorfTsNCisN
-CitzdGF0aWMgdm9pZCBseF9wY2llX3JlaW5pdF9odyhzdHJ1Y3QgbHhfcGNpZSAqcGNpZSkNCit7
-DQorCXN0cnVjdCBtb2JpdmVpbF9wY2llICptdl9wY2kgPSBwY2llLT5wY2k7DQorCXUzMiB2YWws
-IGFjdF9zdGF0Ow0KKw0KKwkvKiBQb2xsIGZvciBwYWJfY3NiX3Jlc2V0IHRvIGNsZWFyICwgUEFC
-IGFjdGl2aXR5IHRvIHNldCAqLw0KKwlkbyB7DQorCQl2YWwgPSBseF9wY2llX3BmX3JlYWRsKHBj
-aWUsIFBDSUVfUEZfSU5UX1NUQVQpOw0KKwkJYWN0X3N0YXQgPSBjc3JfcmVhZGwobXZfcGNpLCBQ
-QUJfQUNUSVZJVFlfU1RBVCk7DQorDQorCX0gd2hpbGUgKCgodmFsICYgKDEgPDwgUEZfSU5UX1NU
-QVRfUEFCUlNUKSkgPT0gMCkgfHwgYWN0X3N0YXQpOw0KKw0KKwl3aGlsZSAoIWx4X3BjaWVfbGlu
-a191cChtdl9wY2kpKQ0KKwkJOw0KKw0KKwkvKiBjbGVhciBQRVhfUkVTRVQgYml0IGluIFBFWF9Q
-RjBfREJHIHJlZ2lzdGVyICovDQorCXZhbCA9IGx4X3BjaWVfcGZfcmVhZGwocGNpZSwgUENJRV9Q
-Rl9EQkcpOw0KKwl2YWwgfD0gMSA8PCBQRl9EQkdfV0U7DQorCWx4X3BjaWVfcGZfd3JpdGVsKHBj
-aWUsIFBDSUVfUEZfREJHLCB2YWwpOw0KKw0KKwl2YWwgPSBseF9wY2llX3BmX3JlYWRsKHBjaWUs
-IFBDSUVfUEZfREJHKTsNCisJdmFsIHw9IDEgPDwgUEZfREJHX1BBQlI7DQorCWx4X3BjaWVfcGZf
-d3JpdGVsKHBjaWUsIFBDSUVfUEZfREJHLCB2YWwpOw0KKw0KKwl2YWwgPSBseF9wY2llX3BmX3Jl
-YWRsKHBjaWUsIFBDSUVfUEZfREJHKTsNCisJdmFsICY9IH4oMSA8PCBQRl9EQkdfV0UpOw0KKwls
-eF9wY2llX3BmX3dyaXRlbChwY2llLCBQQ0lFX1BGX0RCRywgdmFsKTsNCisNCisJbW9iaXZlaWxf
-aG9zdF9pbml0KG12X3BjaSwgdHJ1ZSk7DQorfQ0KKw0KK3N0YXRpYyBpcnFyZXR1cm5fdCBseF9w
-Y2llX2hhbmRsZXIoaW50IGlycSwgdm9pZCAqZGV2X2lkKQ0KK3sNCisJc3RydWN0IGx4X3BjaWUg
-KnBjaWUgPSAoc3RydWN0IGx4X3BjaWUgKilkZXZfaWQ7DQorCXN0cnVjdCBtb2JpdmVpbF9wY2ll
-ICptdl9wY2kgPSBwY2llLT5wY2k7DQorCXUzMiB2YWw7DQorCXUxNiBjdHJsOw0KKw0KKwl2YWwg
-PSBjc3JfcmVhZGwobXZfcGNpLCBQQUJfSU5UUF9BTUJBX01JU0NfU1RBVCk7DQorCWlmICghdmFs
-KQ0KKwkJcmV0dXJuIElSUV9OT05FOw0KKw0KKwlpZiAodmFsICYgUEFCX0lOVFBfUkVTRVQpIHsN
-CisJCWN0cmwgPSBjc3JfcmVhZHcobXZfcGNpLCBQQ0lfQlJJREdFX0NPTlRST0wpOw0KKwkJY3Ry
-bCAmPSB+UENJX0JSSURHRV9DVExfQlVTX1JFU0VUOw0KKwkJY3NyX3dyaXRldyhtdl9wY2ksIGN0
-cmwsIFBDSV9CUklER0VfQ09OVFJPTCk7DQorCQlseF9wY2llX3JlaW5pdF9odyhwY2llKTsNCisJ
-fQ0KKw0KKwljc3Jfd3JpdGVsKG12X3BjaSwgdmFsLCBQQUJfSU5UUF9BTUJBX01JU0NfU1RBVCk7
-DQorDQorCXJldHVybiBJUlFfSEFORExFRDsNCit9DQorDQorc3RhdGljIGludCBfX2luaXQgbHhf
-cGNpZV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KK3sNCisJc3RydWN0IGRl
-dmljZSAqZGV2ID0gJnBkZXYtPmRldjsNCisJc3RydWN0IG1vYml2ZWlsX3BjaWUgKm12X3BjaTsN
-CisJc3RydWN0IGx4X3BjaWUgKnBjaWU7DQorCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBkZXYt
-Pm9mX25vZGU7DQorCWludCByZXQ7DQorDQorCWlmICghb2ZfcGFyc2VfcGhhbmRsZShucCwgIm1z
-aS1wYXJlbnQiLCAwKSkgew0KKwkJZGV2X2VycihkZXYsICJmYWlsZWQgdG8gZmluZCBtc2ktcGFy
-ZW50XG4iKTsNCisJCXJldHVybiAtRUlOVkFMOw0KKwl9DQorDQorCXBjaWUgPSBkZXZtX2t6YWxs
-b2MoZGV2LCBzaXplb2YoKnBjaWUpLCBHRlBfS0VSTkVMKTsNCisJaWYgKCFwY2llKQ0KKwkJcmV0
-dXJuIC1FTk9NRU07DQorDQorCW12X3BjaSA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqbXZf
-cGNpKSwgR0ZQX0tFUk5FTCk7DQorCWlmICghbXZfcGNpKQ0KKwkJcmV0dXJuIC1FTk9NRU07DQor
-DQorCW12X3BjaS0+cGRldiA9IHBkZXY7DQorCW12X3BjaS0+b3BzID0gJmx4X3BjaWVfcGFiX29w
-czsNCisJbXZfcGNpLT5ycC5vcHMgPSAmbHhfcGNpZV9ycF9vcHM7DQorCXBjaWUtPnBjaSA9IG12
-X3BjaTsNCisNCisJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgcGNpZSk7DQorDQorCXBjaWUt
-PmlycSA9IHBsYXRmb3JtX2dldF9pcnFfYnluYW1lKHBkZXYsICJpbnRyIik7DQorCWlmIChwY2ll
-LT5pcnEgPCAwKSB7DQorCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJDYW4ndCBnZXQgaW50ciBpcnEu
-XG4iKTsNCisJCXJldHVybiBwY2llLT5pcnE7DQorCX0NCisJcmV0ID0gZGV2bV9yZXF1ZXN0X2ly
-cShkZXYsIHBjaWUtPmlycSwgbHhfcGNpZV9oYW5kbGVyLA0KKwkJCSAgICAgICBJUlFGX1NIQVJF
-RCwgcGRldi0+bmFtZSwgcGNpZSk7DQorCWlmIChyZXQpIHsNCisJCWRldl9lcnIoZGV2LCAiQ2Fu
-J3QgcmVnaXN0ZXIgTFggUENJZSBJUlEuXG4iKTsNCisJCXJldHVybiAgcmV0Ow0KKwl9DQorDQor
-CXJldCA9IG1vYml2ZWlsX3BjaWVfaG9zdF9wcm9iZShtdl9wY2kpOw0KKwlpZiAocmV0KSB7DQor
-CQlkZXZfZXJyKGRldiwgInBjaS1seDogZmFpbCB0byBwcm9iZSFcbiIpOw0KKwkJcmV0dXJuICBy
-ZXQ7DQorCX0NCisNCisJaWYgKCFseF9wY2llX2lzX2JyaWRnZShwY2llKSkNCisJCXJldHVybiAt
-RU5PREVWOw0KKw0KKwlyZXR1cm4gMDsNCit9DQorDQorc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9k
-cml2ZXIgbHhfcGNpZV9kcml2ZXIgPSB7DQorCS5kcml2ZXIgPSB7DQorCQkubmFtZSA9ICJseC1w
-Y2llIiwNCisJCS5vZl9tYXRjaF90YWJsZSA9IGx4X3BjaWVfb2ZfbWF0Y2gsDQorCQkuc3VwcHJl
-c3NfYmluZF9hdHRycyA9IHRydWUsDQorCX0sDQorfTsNCisNCitidWlsdGluX3BsYXRmb3JtX2Ry
-aXZlcl9wcm9iZShseF9wY2llX2RyaXZlciwgbHhfcGNpZV9wcm9iZSk7DQpkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYyBiL2Ry
-aXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC1ob3N0LmMNCmluZGV4
-IGIxZDY3YTY5N2VjYy4uZWFkZTVhODAwMmQxIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9wY2kvY29u
-dHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYw0KKysrIGIvZHJpdmVycy9wY2kv
-Y29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYw0KQEAgLTI0OSw4ICsyNDks
-OSBAQCBpbnQgbW9iaXZlaWxfaG9zdF9pbml0KHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llLCBi
-b29sIHJlaW5pdCkNCiAJcGFiX2N0cmwgfD0gKDEgPDwgQU1CQV9QSU9fRU5BQkxFX1NISUZUKSB8
-ICgxIDw8IFBFWF9QSU9fRU5BQkxFX1NISUZUKTsNCiAJY3NyX3dyaXRlbChwY2llLCBwYWJfY3Ry
-bCwgUEFCX0NUUkwpOw0KIA0KLQljc3Jfd3JpdGVsKHBjaWUsIChQQUJfSU5UUF9JTlRYX01BU0sg
-fCBQQUJfSU5UUF9NU0lfTUFTSyksDQotCQkgICBQQUJfSU5UUF9BTUJBX01JU0NfRU5CKTsNCisJ
-dmFsdWUgPSBQQUJfSU5UUF9JTlRYX01BU0sgfCBQQUJfSU5UUF9NU0kgfCBQQUJfSU5UUF9SRVNF
-VCB8DQorCQlQQUJfSU5UUF9QQ0lFX1VFIHwgUEFCX0lOVFBfSUVfUE1SRURJIHwgUEFCX0lOVFBf
-SUVfRUM7DQorCWNzcl93cml0ZWwocGNpZSwgdmFsdWUsIFBBQl9JTlRQX0FNQkFfTUlTQ19FTkIp
-Ow0KIA0KIAkvKg0KIAkgKiBwcm9ncmFtIFBJTyBFbmFibGUgQml0IHRvIDEgYW5kIENvbmZpZyBX
-aW5kb3cgRW5hYmxlIEJpdCB0byAxIGluDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJv
-bGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLmggYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21v
-Yml2ZWlsL3BjaWUtbW9iaXZlaWwuaA0KaW5kZXggNTExOTVkYjA5MzQ3Li5kZGQ3MzZmYTIwNDIg
-MTAwNjQ0DQotLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZl
-aWwuaA0KKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWls
-LmgNCkBAIC00MSw2ICs0MSw4IEBADQogI2RlZmluZSAgUEFHRV9MT19NQVNLCQkJMHgzZmYNCiAj
-ZGVmaW5lICBQQUdFX1NFTF9PRkZTRVRfU0hJRlQJCTEwDQogDQorI2RlZmluZSBQQUJfQUNUSVZJ
-VFlfU1RBVAkJMHg4MWMNCisNCiAjZGVmaW5lIFBBQl9BWElfUElPX0NUUkwJCTB4MDg0MA0KICNk
-ZWZpbmUgIEFQSU9fRU5fTUFTSwkJCTB4Zg0KIA0KQEAgLTQ5LDggKzUxLDE3IEBADQogDQogI2Rl
-ZmluZSBQQUJfSU5UUF9BTUJBX01JU0NfRU5CCQkweDBiMGMNCiAjZGVmaW5lIFBBQl9JTlRQX0FN
-QkFfTUlTQ19TVEFUCQkweDBiMWMNCi0jZGVmaW5lICBQQUJfSU5UUF9JTlRYX01BU0sJCTB4MDFl
-MA0KLSNkZWZpbmUgIFBBQl9JTlRQX01TSV9NQVNLCQkweDgNCisjZGVmaW5lICBQQUJfSU5UUF9S
-RVNFVAkJCSgweDEgPDwgMSkNCisjZGVmaW5lICBQQUJfSU5UUF9NU0kJCQkoMHgxIDw8IDMpDQor
-I2RlZmluZSAgUEFCX0lOVFBfSU5UQQkJCSgweDEgPDwgNSkNCisjZGVmaW5lICBQQUJfSU5UUF9J
-TlRCCQkJKDB4MSA8PCA2KQ0KKyNkZWZpbmUgIFBBQl9JTlRQX0lOVEMJCQkoMHgxIDw8IDcpDQor
-I2RlZmluZSAgUEFCX0lOVFBfSU5URAkJCSgweDEgPDwgOCkNCisjZGVmaW5lICBQQUJfSU5UUF9Q
-Q0lFX1VFCQkoMHgxIDw8IDkpDQorI2RlZmluZSAgUEFCX0lOVFBfSUVfUE1SRURJCQkoMHgxIDw8
-IDI5KQ0KKyNkZWZpbmUgIFBBQl9JTlRQX0lFX0VDCQkJKDB4MSA8PCAzMCkNCisjZGVmaW5lICBQ
-QUJfSU5UUF9JTlRYX01BU0sJCShQQUJfSU5UUF9JTlRBIHwgUEFCX0lOVFBfSU5UQiB8XA0KKwkJ
-CQkJUEFCX0lOVFBfSU5UQyB8IFBBQl9JTlRQX0lOVEQpDQogDQogI2RlZmluZSBQQUJfQVhJX0FN
-QVBfQ1RSTCh3aW4pCQlQQUJfUkVHX0FERFIoMHgwYmEwLCB3aW4pDQogI2RlZmluZSAgV0lOX0VO
-QUJMRV9TSElGVAkJMA0KLS0gDQoyLjE3LjENCg0K
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+---
+ .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 157 ++++++++++++++++++
+ 1 file changed, 157 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/bo=
+ot/dts/freescale/fsl-lx2160a.dtsi
+index 6ba722e373ee..49dfaaf7560d 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -953,5 +953,162 @@
+ 			clock-names =3D "fspi_en", "fspi";
+ 			status =3D "disabled";
+ 		};
++
++		pcie@3400000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03400000 0x0 0x00100000   /* controller registers */
++			       0x80 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 0 109 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 2 &gic 0 0 0 110 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 0 111 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 0 112 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		pcie@3500000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03500000 0x0 0x00100000   /* controller registers */
++			       0x88 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0x88 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 0 114 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 2 &gic 0 0 0 115 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 0 116 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 0 117 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		pcie@3600000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03600000 0x0 0x00100000   /* controller registers */
++			       0x90 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0x90 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 0 119 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 2 &gic 0 0 0 120 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 0 121 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 0 122 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		pcie@3700000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03700000 0x0 0x00100000   /* controller registers */
++			       0x98 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0x98 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 0 124 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 2 &gic 0 0 0 125 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 0 126 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 0 127 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		pcie@3800000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03800000 0x0 0x00100000   /* controller registers */
++			       0xa0 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0xa0 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 0 129 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 2 &gic 0 0 0 130 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 0 131 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 0 132 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		pcie@3900000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03900000 0x0 0x00100000   /* controller registers */
++			       0xa8 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0xa8 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 0 104 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 2 &gic 0 0 0 105 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 0 106 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 0 107 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
+ 	};
+ };
+--=20
+2.17.1
