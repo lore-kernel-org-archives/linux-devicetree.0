@@ -1,85 +1,111 @@
-Return-Path: <SRS0=ytGm=NT=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-os2jpn01on0120.outbound.protection.outlook.com ([104.47.92.120]:62345
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726027AbeKHQ7P (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 8 Nov 2018 11:59:15 -0500
-From: Gaku Inami <gaku.inami.xh@renesas.com>
-Subject: [PATCH v2 0/2] Optimization with aware of cpu capacity for R-Car Gen3
-Date: Thu,  8 Nov 2018 16:24:53 +0900
-Message-Id: <1541661895-7064-1-git-send-email-gaku.inami.xh@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Gaku Inami <gaku.inami.xh@renesas.com>
+Return-Path: <SRS0=Pg3K=NR=linuxtv.org=mchehab@kernel.org>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Date: Tue, 06 Nov 2018 12:13:14 +0000
+Subject: [git:media_tree/master] media: imx214: device tree binding
+Reply-to: linux-media@vger.kernel.org
+Message-Id: <E1gK0Ic-00067I-4L@www.linuxtv.org>
+To: linuxtv-commits@linuxtv.org
+Cc: devicetree@vger.kernel.org, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The commit 05484e098448 ("sched/topology: Add SD_ASYM_CPUCAPACITY
-flag detection") to automatically detect asymmetric CPU capacity
-has been merged into v4.20-rc1, so I will post this patch series
-as v2 again.
+This is an automatic generated email to let you know that the following patch were queued:
 
-These add the scheduler information to be aware cpu capacity. Some
-R-Car SoCs have big LITTLE architecture(e.g. CA57/CA53). It has a
-difference performance/power consumption for each CPUs.
+Subject: media: imx214: device tree binding
+Author:  Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Date:    Fri Oct 5 18:50:11 2018 -0400
 
-As the scheduler will be aware the capacity of CPU, the scheduler is
-balancing so that the free capacity of each CPU is even. This means
-that it aggressively migrates tasks to big CPUs(e.g. CA57) with large
-capacity in case of the system load is low and middle, the performance
-of user application is improved than before.
+Document bindings for imx214 camera sensor
 
-Since most users for IVI are using CPU with performance oriented than
-power consumption, this change will benefit for their use-cases. Some
-benchmark is improved as an example below.
+[Sakari Ailus: Move MAINTAINERS entry here, fix DT binding filename]
 
-UnixBench (1 parallel) on r8a7796 SoC (CA57x2 + CA53x4) :
-                                            before      after
- - Dhrystone 2 using register variables    4777159   11353624   +58%
- - Double-Precision Whetstone                  866       1218   +29%
- - Execl Throughput                            728        920   +21%
- - File Copy 1024 bufsize 2000 maxblocks     69405     115962   +40%
- - File Copy 256 bufsize 500 maxblocks       21404      28685   +25%
- - File Copy 4096 bufsize 8000 maxblocks    102749     159978   +36%
- - Pipe Throughput                           93876     150848   +38%
- - Pipe-based Context Switching              27257      25317    -8%
- - Process Creation                           1885       2292   +18%
- - Shell Scripts (1 concurrent)                135        137    +1%
- - Shell Scripts (8 concurrent)                 35         34    -3%
- - System Call Overhead                      99169     140146   +29%
- - System Benchmarks Index Score               112        152   +26%
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-UnixBench (8 parallel) on r8a7795 SoC (CA57x4 + CA53x4) :
-                                            before      after
- - Dhrystone 2 using register variables   64686060   64472624     0%
- - Double-Precision Whetstone                 8380       8423    +1%
- - Execl Throughput                           5856       6147    +5%
- - File Copy 1024 bufsize 2000 maxblocks    142923     164482   +13%
- - File Copy 256 bufsize 500 maxblocks       46257      51344   +10%
- - File Copy 4096 bufsize 8000 maxblocks    360398     393339    +8%
- - Pipe Throughput                          974106     972545     0%
- - Pipe-based Context Switching             162455     146567   -11%
- - Process Creation                          10164       9659    -5%
- - Shell Scripts (1 concurrent)                317        317     0%
- - Shell Scripts (8 concurrent)                 30         31    +3%
- - System Call Overhead                     897596     899274     0%
- - System Benchmarks Index Score               523        534    +2%
+ .../devicetree/bindings/media/i2c/sony,imx214.txt  | 53 ++++++++++++++++++++++
+ MAINTAINERS                                        |  8 ++++
+ 2 files changed, 61 insertions(+)
 
-based on renesas-devel-20181105-v4.20-rc1
+---
 
-v1 -> v2:
- - Consolidate two patches for r8a7795 and r8a7796 into one patch
- - Add the formula for capacity-dmips-mhz into description
- - Remove the static setting of SD_ASYM_CPUCAPACITY for R-Car
-
-Gaku Inami (2):
-  arm64: dts: renesas: Add CPU topology on R-Car Gen3 SoCs
-  arm64: dts: renesas: Add CPU capacity-dmips-mhz
-
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 40 ++++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/renesas/r8a7796.dtsi | 32 +++++++++++++++++++++++++
- 2 files changed, 72 insertions(+)
-
--- 
-2.7.4
+diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt b/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+new file mode 100644
+index 000000000000..f11f28a5fda4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+@@ -0,0 +1,53 @@
++* Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
++
++The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
++an active array size of 4224H x 3200V. It is programmable through an I2C
++interface.
++Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a maximum
++throughput of 1.2Gbps/lane.
++
++
++Required Properties:
++- compatible: Shall be "sony,imx214".
++- reg: I2C bus address of the device. Depending on how the sensor is wired,
++       it shall be <0x10> or <0x1a>;
++- enable-gpios: GPIO descriptor for the enable pin.
++- vdddo-supply: Chip digital IO regulator (1.8V).
++- vdda-supply: Chip analog regulator (2.7V).
++- vddd-supply: Chip digital core regulator (1.12V).
++- clocks: Reference to the xclk clock.
++- clock-frequency: Frequency of the xclk clock.
++
++Optional Properties:
++- flash-leds: See ../video-interfaces.txt
++- lens-focus: See ../video-interfaces.txt
++
++The imx214 device node shall contain one 'port' child node with
++an 'endpoint' subnode. For further reading on port node refer to
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Required Properties on endpoint:
++- data-lanes: check ../video-interfaces.txt
++- link-frequencies: check ../video-interfaces.txt
++- remote-endpoint: check ../video-interfaces.txt
++
++Example:
++
++	camera-sensor@1a {
++		compatible = "sony,imx214";
++		reg = <0x1a>;
++		vdddo-supply = <&pm8994_lvs1>;
++		vddd-supply = <&camera_vddd_1v12>;
++		vdda-supply = <&pm8994_l17>;
++		lens-focus = <&ad5820>;
++		enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
++		clocks = <&mmcc CAMSS_MCLK0_CLK>;
++		clock-frequency = <24000000>;
++		port {
++			imx214_ep: endpoint {
++				data-lanes = <1 2 3 4>;
++				link-frequencies = /bits/ 64 <480000000>;
++				remote-endpoint = <&csiphy0_ep>;
++			};
++		};
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f4855974f325..a8588dedc683 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13823,6 +13823,14 @@ S:	Maintained
+ F:	drivers/ssb/
+ F:	include/linux/ssb/
+ 
++SONY IMX214 SENSOR DRIVER
++M:	Ricardo Ribalda <ricardo.ribalda@gmail.com>
++L:	linux-media@vger.kernel.org
++T:	git git://linuxtv.org/media_tree.git
++S:	Maintained
++F:	drivers/media/i2c/imx214.c
++F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
++
+ SONY IMX258 SENSOR DRIVER
+ M:	Sakari Ailus <sakari.ailus@linux.intel.com>
+ L:	linux-media@vger.kernel.org
