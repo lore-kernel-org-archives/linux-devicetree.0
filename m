@@ -1,31 +1,28 @@
-Return-Path: <SRS0=Rvx3=OI=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 6 Nov 2018 09:58:22 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: watchdog: renesas-wdt: Document r8a77470
+ support
+Message-ID: <20181106155822.GA2181@bogus>
 References: <1540544153-48098-1-git-send-email-biju.das@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <1540544153-48098-1-git-send-email-biju.das@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 29 Nov 2018 13:26:36 +0100
-Message-ID: <CAMuHMdWaa+FHYD=4OeRzFJPepqqM5ffSepeZ4ej8ERZCM9aDFg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: watchdog: renesas-wdt: Document r8a77470 support
-Content-Type: text/plain; charset="UTF-8"
 To: Biju Das <biju.das@bp.renesas.com>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Oct 26, 2018 at 11:03 AM Biju Das <biju.das@bp.renesas.com> wrote:
+On Fri, 26 Oct 2018 09:55:53 +0100, Biju Das wrote:
 > RZ/G1C (R8A77470) watchdog implementation is compatible with R-Car
 > Gen2, therefore add relevant documentation.
->
+> 
 > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> ---
+> This patch is tested against linux-next
+> ---
+>  Documentation/devicetree/bindings/watchdog/renesas-wdt.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Reviewed-by: Rob Herring <robh@kernel.org>
