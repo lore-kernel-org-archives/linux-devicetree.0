@@ -1,88 +1,52 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v3 0/4] Improve VCHIQ cache line size handling
-Date: Tue, 6 Nov 2018 19:20:45 +0100 (CET)
-Message-ID: <644039949.222891.1541528445168@email.ionos.de>
-References: <1537172544-104852-1-git-send-email-phil@raspberrypi.org>
- <f1e38c0c-0702-5df2-7f7c-40bbb93115b2@i2se.com>
- <1ffe9824-d254-6dfb-7bd6-e146d6c9eada@raspberrypi.org>
- <13b74c54-d115-8ff1-3c1d-a8888b43578c@gmail.com>
- <46c44e8f-8208-191c-c93b-f2f75ab8c67a@raspberrypi.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 6/6] usb: host: Add ability to build new Broadcom STB
+ USB drivers
+Date: Tue, 6 Nov 2018 19:22:44 +0100
+Message-ID: <CAK8P3a2Xuq77sXKy4QX1YhStOEhm+oAM_AErEGuwqB115pHB_w@mail.gmail.com>
+References: <1541453493-34981-1-git-send-email-alcooperx@gmail.com>
+ <1541453493-34981-7-git-send-email-alcooperx@gmail.com> <CAK8P3a0AoHuaiPsMTqhWm3a4X95NpPTPUHkt9vS9Z2ow8NobhA@mail.gmail.com>
+ <CAOGqxeX1FckLz7XEm-doh_AHUjvRtn00yZfir6dRNMYNOMY5_g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <46c44e8f-8208-191c-c93b-f2f75ab8c67a@raspberrypi.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Phil Elwell <phil@raspberrypi.org>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devel@driverdev.osuosl.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOGqxeX1FckLz7XEm-doh_AHUjvRtn00yZfir6dRNMYNOMY5_g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Cooper <alcooperx@gmail.com>
+Cc: ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, chunfeng yun <chunfeng.yun@mediatek.com>, "David S. Miller" <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-> Phil Elwell <phil@raspberrypi.org> hat am 17. September 2018 um 20:01 geschrieben:
-> 
-> 
-> On 17/09/2018 18:51, Florian Fainelli wrote:
-> > On 09/17/2018 04:47 AM, Phil Elwell wrote:
-> >> Hi Stefan,
-> >>
-> >> On 17/09/2018 12:39, Stefan Wahren wrote:
-> >>> Hi Phil,
-> >>>
-> >>> Am 17.09.2018 um 10:22 schrieb Phil Elwell:
-> >>>> Both sides of the VCHIQ communications mechanism need to agree on the cache
-> >>>> line size. Using an incorrect value can lead to data corruption, but having the
-> >>>> two sides using different values is usually worse.
-> >>>>
-> >>>> In the absence of an obvious convenient run-time method to determine the
-> >>>> correct value in the ARCH=arm world, the downstream Raspberry Pi trees used a
-> >>>> Device Tree property, written by the firmware, to configure the kernel driver.
-> >>>> This method was vetoed during the upstreaming process, so a fixed value of 32
-> >>>> was used instead, and some corruptions ensued. This is take 2 at arriving at
-> >>>> the correct value.
-> >>>>
-> >>>> Add a new compatible string - "brcm,bcm2836-vchiq" - to indicate an SoC with
-> >>>> a 64-byte cache line. Document the new string in the binding, and use it on
-> >>>> the appropriate platforms.
-> >>>>
-> >>>> The final patch is a (seemingly cosmetic) correction of the Device Tree "reg"
-> >>>> declaration for the device node, but it doubles as an indication to the
-> >>>> Raspberry Pi firmware that the kernel driver is running a recent kernel driver
-> >>>> that chooses the correct value. As such it would help if the DT patches are
-> >>>> not merged before the driver patch.
-> >>>>
-> >>>> v3: Builds without errors, tested on multiple Raspberry Pi models.
-> >>>> v2: Replaced ARM-specific logic used to determine cache line size with
-> >>>>      a new compatible string for BCM2836 and BCM2837.
-> >>>>
-> >>>> Phil Elwell (4):
-> >>>>    staging/vc04_services: Use correct cache line size
-> >>>>    dt-bindings: soc: Document "brcm,bcm2836-vchiq"
-> >>>>    ARM: dts: bcm283x: Correct vchiq compatible string
-> >>>>    ARM: dts: bcm283x: Correct mailbox register sizes
-> >>>
-> >>> since my pull requests are out, would it be okay to apply patch #1 for
-> >>> 4.20 and the DT stuff for 4.21 (with the assumption Rob is okay with
-> >>> these patches)?
-> >>
-> >> Patch 4 is the only one I'd like to be delayed, but delaying 2-4 is fine with me.
-> > 
-> > Humm, did you mean you would like not to be delayed? In any case Stefan,
-> > you can send an additional pull request, and I will merge it and send a
-> > second pull request towards ARM SoC maintainers, that's not a problem.
-> 
-> No, I meant what I wrote - I would prefer patch 1 to be merged before patch 4 (or at least
-> in the same release) to avoid the need for another firmware change, hence delaying patch
-> 4 is good. It makes sense for the other commits to be merged in that order, but the
-> normal compatible-string fallback mechanism means there is no hard dependency there.
-> 
-> Phil
+On 11/6/18, Alan Cooper <alcooperx@gmail.com> wrote:
+> On Tue, Nov 6, 2018 at 6:09 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>>
+>> On 11/5/18, Al Cooper <alcooperx@gmail.com> wrote:
+>>
+>> > +
+>> > +config USB_BRCM
+>> > +     tristate "Broadcom STB USB support"
+>> > +     depends on ARCH_BRCMSTB
+>> > +     select USB_OHCI_HCD_PLATFORM if USB_OHCI_HCD
+>> > +     select USB_EHCI_BRCM if USB_EHCI_HCD
+>> > +     select USB_XHCI_BRCM if USB_XHCI_HCD
+>> > +     select USB_XHCI_PLATFORM if USB_XHCI_HCD
+>> > +     select BRCM_USB_PHY if USB_OHCI_HCD || USB_EHCI_HCD ||
+>> > USB_XHCI_HCD
+>> > +     select GENERIC_PHY if BRCM_USB_PHY
+>> > +     default ARCH_BRCMSTB
+>>
+>> Is there a build time dependency on the PHY layer? If not, I would
+>> suggest
+>> dropping the last two 'select' statements. I would also suggest
+>> making the dependency 'depends on ARCH_BRCMSTB || COMPILE_TEST'
+>> to allow building it on other architecture for better build testing, and
+>> dropping the 'default' line. Just add this to the defconfig like the
+>> other
+>> drivers you have.
+>
+> I added COMPILE_TEST and dropped the last 2 select lines.
+> Most of our other drivers default to "y" for "ARCH_BRCMSTB", would it
+> be better if I changed it to "default y"?
 
-Patches #2 - #4 applied to bcm2835-dt-next
+No, "default ARCH_BRCMSTB" is better than "default y", but I'd recommend
+to just not have non-essential drivers default-on.
 
-Thanks
+      Arnd
