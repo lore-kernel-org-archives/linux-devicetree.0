@@ -1,59 +1,59 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v6 07/18] of: dynamic: change type of
- of_{at,de}tach_node() to void
-Date: Wed, 7 Nov 2018 06:55:14 -0800
-Message-ID: <6bc78502-7587-eb9c-237f-d3f031979d42@gmail.com>
-References: <1541431515-25197-1-git-send-email-frowand.list@gmail.com>
- <1541431515-25197-8-git-send-email-frowand.list@gmail.com>
- <87tvktqedf.fsf@concordia.ellerman.id.au>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 10/12] soc: qcom: ipa: data path
+Date: Wed, 7 Nov 2018 15:55:22 +0100
+Message-ID: <CAK8P3a0nkfwFCCVHaTJ+kJGWxO+qFTzTLnRgB-NG0AyMEsv3bA@mail.gmail.com>
+References: <20181107003250.5832-1-elder@linaro.org> <20181107003250.5832-11-elder@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87tvktqedf.fsf@concordia.ellerman.id.au>
-Content-Language: en-US
+In-Reply-To: <20181107003250.5832-11-elder@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
+To: Alex Elder <elder@linaro.org>
+Cc: David Miller <davem@davemloft.net>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, syadagir@codeaurora.org, mjavid@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/7/18 4:08 AM, Michael Ellerman wrote:
-> frowand.list@gmail.com writes:
-> 
->> From: Frank Rowand <frank.rowand@sony.com>
->>
->> of_attach_node() and of_detach_node() always return zero, so
->> their return value is meaningless.
-> 
-> But should they always return zero?
-> 
-> At least __of_attach_node_sysfs() can fail in several ways.
+On Wed, Nov 7, 2018 at 1:33 AM Alex Elder <elder@linaro.org> wrote:
+>
+> This patch contains "ipa_dp.c", which includes the bulk of the data
+> path code.  There is an overview in the code of how things operate,
+> but there are already plans to rework this portion of the driver.
+>
+> In particular:
+>   - Interrupt handling will be replaced with a threaded interrupt
+>     handler.  Currently handling occurs in a combination of
+>     interrupt and workqueue context, and this requires locking
+>     and atomic operations for proper synchronization.
 
-Sigh.  And of_reconfig_notify() can fail.  And at one point in the
-history the return value of of_reconfig_notify() was returned by
-of_attach_node() if of_reconfig_notify() failed.
+You probably don't want to use just a threaded IRQ handler to
+start the poll function, that would still require an extra indirection.
 
+However, you can probably use the top half of the threaded
+handler to request the poll function if necessary but use
+the bottom half for anything that does not go through poll.
 
-> And there's also this in __of_detach_node() which should probably be
-> returning an error:
-> 
-> 	if (WARN_ON(of_node_check_flag(np, OF_DETACHED)))
->         	return;
-> 
-> 
-> Seems to me we should instead be fixing these to propagate errors,
-> rather than hiding them?
+>   - Currently, only receive endpoints use NAPI.  Transmit
+>     completion interrupts are disabled, and are handled in batches
+>     by periodically scheduling an interrupting no-op request.
+>     The plan is to arrange for transmit requests to generate
+>     interrupts, and their completion will be processed with other
+>     completions in the NAPI poll function.  This will also allow
+>     accurate feedback about packet sojourn time to be provided to
+>     queue limiting mechanisms.
 
-The history of how of_attach_node() stopped propagating errors is
-a bit more complex than I want to dig into at the moment.  So I'll
-drop this patch from the series and add investigating this onto
-my todo list.  I suspect that the result of investigating will be
-that error return values should not be ignored in of_attach_node()
-and of_detach_node(), but should instead be propagated to the
-callers, as you suggest.
+Right, that is definitely required here. I also had a look at
+the gsi_channel_queue() function, which sits in the middle of
+the transmit function and is rather unoptimized. I'd suggest moving
+that into the caller so we can see what is going on, and then
+optimizing it from there.
 
--Frank
+>   - Not all receive endpoints use NAPI.  The plan is for *all*
+>     endpoints to use NAPI.  And because all endpoints share a
+>     common GSI interrupt, a single NAPI structure will used to
+>     managing the processing for all completions on all endpoints.
+>   - Receive buffers are posted to the hardware by a workqueue
+>     function.  Instead, the plan is to have this done by the
+>     NAPI poll routine.
 
-> 
-> cheers
-> 
+Makes sense, yes.
+
+      Arnd
