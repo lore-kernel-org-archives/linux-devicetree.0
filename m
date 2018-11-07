@@ -1,47 +1,38 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 00/12] net: introduce Qualcomm IPA driver
-Date: Wed, 7 Nov 2018 16:46:47 +0100
-Message-ID: <CAK8P3a15nTnL0tD4TJgtPVEKFwZRcyNy=m6_Pi3+8Nd0W6FQtQ@mail.gmail.com>
-References: <20181107003250.5832-1-elder@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH] dt-bindings: hwmon: tmp108: add optional interrupts and #thermal-sensor-cells
+Date: Wed,  7 Nov 2018 16:47:08 +0100
+Message-ID: <20181107154708.422-1-heiko@sntech.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181107003250.5832-1-elder@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Elder <elder@linaro.org>
-Cc: David Miller <davem@davemloft.net>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, syadagir@codeaurora.org, mjavid@codeaurora.org
+To: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heiko@sntech.de, Heiko Stuebner <heiko.stuebner@bq.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 7, 2018 at 1:33 AM Alex Elder <elder@linaro.org> wrote:
-> The code has undergone considerable rework to prepare it for
-> incorporation into upstream Linux.  Parts of it bear little
-> resemblance to the original driver.  Still, some work remains
-> to be done.  The current code and its design had a preliminary
-> review, and some changes to the data path implementation were
-> recommended.   These have not yet been addressed:
-> - Use NAPI for all interfaces, not just RX (and WAN data) endpoints.
-> - Do more work in the NAPI poll function, including collecting
->   completed TX requests and posting buffers for RX.
-> - Do not use periodic NOP requests as a way to avoid TX interrupts.
-> - The NAPI context should be associated with the hardware interrupt
->   (it is now associated with something abstracted from the hardware).
-> - Use threaded interrupts, to avoid the need for using spinlocks and
->   atomic variables for synchronizing between workqueue and interrupt
->   context.
-> - Have runtime power management enable and disable IPA clock and
->   interconnects.
-> Many thanks to Arnd Bergmann, Ilias Apalodimas, and Bjorn Andersson
-> for their early feedback.
+From: Heiko Stuebner <heiko.stuebner@bq.com>
 
-Thanks for getting the current version out even with the long TODO
-list. I've had my first deeper look at some of the patches and found
-a few more things that likely require substantial rework. I also think
-there is still significant room for simplifying it further, and getting
-better performance out of it in the process.
+The tmp108 does have an alert output that can be used as interrupt source
+and can of course also be used as part of a thermal sensor setup for things
+like thermal-based cpu frequencies, so document the necessary properties.
 
-Also, despite the criticism in my patch review, I have to say you've
-done a great job at cutting out a lot of the things that were present
-in the past, it's good to see that you have come this far with the
-cleanup!
+Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
+---
+ Documentation/devicetree/bindings/hwmon/tmp108.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-      Arnd
+diff --git a/Documentation/devicetree/bindings/hwmon/tmp108.txt b/Documentation/devicetree/bindings/hwmon/tmp108.txt
+index 8c4b10df86d9..54d4beed4ee5 100644
+--- a/Documentation/devicetree/bindings/hwmon/tmp108.txt
++++ b/Documentation/devicetree/bindings/hwmon/tmp108.txt
+@@ -7,6 +7,10 @@ Requires node properties:
+ - compatible : "ti,tmp108"
+ - reg : the I2C address of the device. This is 0x48, 0x49, 0x4a, or 0x4b.
+ 
++Optional properties:
++- interrupts: Reference to the TMP108 alert interrupt.
++- #thermal-sensor-cells: should be set to 0.
++
+ Example:
+ 	tmp108@48 {
+ 		compatible = "ti,tmp108";
+-- 
+2.18.0
