@@ -1,180 +1,118 @@
-From: Sean Wang <sean.wang@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: pinctrl: update bindings for MT7629 SoC
-Date: Wed, 7 Nov 2018 02:07:46 -0800
-Message-ID: <CAGp9Lzp65DVT4vjwG=EerP5puXSLVz2ePJvbsoa2kK8QU4_WMw@mail.gmail.com>
-References: <6fe4c5fbed14391b6b7fb7d44e42e133e718d6f9.1541143226.git.ryder.lee@mediatek.com>
- <85278445c65854dca6d4f9993a0ca2d048b9e5d8.1541143226.git.ryder.lee@mediatek.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 00/15] ARM: sunxi: Enable Broadcom-based
+ Bluetooth controllers
+Date: Wed,  7 Nov 2018 18:12:53 +0800
+Message-ID: <20181107101308.7626-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <85278445c65854dca6d4f9993a0ca2d048b9e5d8.1541143226.git.ryder.lee@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ryder.lee@mediatek.com
-Cc: Linus Walleij <linus.walleij@linaro.org>, robh+dt@kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-gpio@vger.kernel.org, weijie.gao@mediatek.com, cheng-hao.luo@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBPXVRLPQKGQEZFPTSPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 5, 2018 at 12:43 AM Ryder Lee <ryder.lee@mediatek.com> wrote:
->
-> This updates bindings for MT7629 pinctrl driver.
->
-> Cc: Sean Wang <sean.wang@kernel.org>
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
->  .../devicetree/bindings/pinctrl/pinctrl-mt7622.txt | 128 +++++++++++++++++++++
->  1 file changed, 128 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
-> index 3b69513..4dedce4 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
-> @@ -3,6 +3,7 @@
->  Required properties for the root node:
->   - compatible: Should be one of the following
->                "mediatek,mt7622-pinctrl" for MT7622 SoC
-> +              "mediatek,mt7629-pinctrl" for MT7629 SoC
->   - reg: offset and length of the pinctrl space
->
->   - gpio-controller: Marks the device node as a GPIO controller.
-> @@ -324,6 +325,133 @@ group.
->         "uart4_2_rts_cts"               "uart"          95, 96
->         "watchdog"                      "watchdog"      78
->
-> +
-> +== Valid values for pins, function and groups on MT7629 ==
-> +
-> +       Pin #:  Valid values for pins
-> +       -----------------------------
-> +       PIN 0: "TOP_5G_CLK"
-> +       PIN 1: "TOP_5G_DATA"
-> +       PIN 2: "WF0_5G_HB0"
-> +       PIN 3: "WF0_5G_HB1"
-> +       PIN 4: "WF0_5G_HB2"
-> +       PIN 5: "WF0_5G_HB3"
-> +       PIN 6: "WF0_5G_HB4"
-> +       PIN 7: "WF0_5G_HB5"
-> +       PIN 8: "WF0_5G_HB6"
-> +       PIN 9: "XO_REQ"
-> +       PIN 10: "TOP_RST_N"
-> +       PIN 11: "SYS_WATCHDOG"
-> +       PIN 12: "EPHY_LED0_N_JTDO"
-> +       PIN 13: "EPHY_LED1_N_JTDI"
-> +       PIN 14: "EPHY_LED2_N_JTMS"
-> +       PIN 15: "EPHY_LED3_N_JTCLK"
-> +       PIN 16: "EPHY_LED4_N_JTRST_N"
-> +       PIN 17: "WF2G_LED_N"
-> +       PIN 18: "WF5G_LED_N"
-> +       PIN 19: "I2C_SDA"
-> +       PIN 20: "I2C_SCL"
-> +       PIN 21: "GPIO_9"
-> +       PIN 22: "GPIO_10"
-> +       PIN 23: "GPIO_11"
-> +       PIN 24: "GPIO_12"
-> +       PIN 25: "UART1_TXD"
-> +       PIN 26: "UART1_RXD"
-> +       PIN 27: "UART1_CTS"
-> +       PIN 28: "UART1_RTS"
-> +       PIN 29: "UART2_TXD"
-> +       PIN 30: "UART2_RXD"
-> +       PIN 31: "UART2_CTS"
-> +       PIN 32: "UART2_RTS"
-> +       PIN 33: "MDI_TP_P1"
-> +       PIN 34: "MDI_TN_P1"
-> +       PIN 35: "MDI_RP_P1"
-> +       PIN 36: "MDI_RN_P1"
-> +       PIN 37: "MDI_RP_P2"
-> +       PIN 38: "MDI_RN_P2"
-> +       PIN 39: "MDI_TP_P2"
-> +       PIN 40: "MDI_TN_P2"
-> +       PIN 41: "MDI_TP_P3"
-> +       PIN 42: "MDI_TN_P3"
-> +       PIN 43: "MDI_RP_P3"
-> +       PIN 44: "MDI_RN_P3"
-> +       PIN 45: "MDI_RP_P4"
-> +       PIN 46: "MDI_RN_P4"
-> +       PIN 47: "MDI_TP_P4"
-> +       PIN 48: "MDI_TN_P4"
-> +       PIN 49: "SMI_MDC"
-> +       PIN 50: "SMI_MDIO"
-> +       PIN 51: "PCIE_PERESET_N"
-> +       PIN 52: "PWM_0"
-> +       PIN 53: "GPIO_0"
-> +       PIN 54: "GPIO_1"
-> +       PIN 55: "GPIO_2"
-> +       PIN 56: "GPIO_3"
-> +       PIN 57: "GPIO_4"
-> +       PIN 58: "GPIO_5"
-> +       PIN 59: "GPIO_6"
-> +       PIN 60: "GPIO_7"
-> +       PIN 61: "GPIO_8"
-> +       PIN 62: "SPI_CLK"
-> +       PIN 63: "SPI_CS"
-> +       PIN 64: "SPI_MOSI"
-> +       PIN 65: "SPI_MISO"
-> +       PIN 66: "SPI_WP"
-> +       PIN 67: "SPI_HOLD"
-> +       PIN 68: "UART0_TXD"
-> +       PIN 69: "UART0_RXD"
-> +       PIN 70: "TOP_2G_CLK"
-> +       PIN 71: "TOP_2G_DATA"
-> +       PIN 72: "WF0_2G_HB0"
-> +       PIN 73: "WF0_2G_HB1"
-> +       PIN 74: "WF0_2G_HB2"
-> +       PIN 75: "WF0_2G_HB3"
-> +       PIN 76: "WF0_2G_HB4"
-> +       PIN 77: "WF0_2G_HB5"
-> +       PIN 78: "WF0_2G_HB6"
-> +
-> +Valid values for function are:
-> +       "eth", "i2c", "led", "flash", "pcie", "pwm", "spi", "uart", "watchdog"
+Hi everyone,
 
-Should we add "ext" as the function and its related groups explaining
-in the below?
+On many Allwinner SBCs / developer boards, there is a WiFi+BT combo
+module from AMPAK. Inside is either one or two Broadcom chips, depending
+on the model. This series enables the Bluetooth controllers for AMPAK
+AP6210, AP6212, and AP6330 found on several boards. More will come later
+as other SoCs require changes to some other parts. I did not cover the
+SCO PCM connections from the controller to the SoC's I2S interface. It
+seems no one is actually doing this, so I was not sure how to proceed.
+Any suggestions?
 
-It seems a missing line happens here, that is
-Valid values for groups are:
-> +
-> +       Valid value                     function        pins (in pin#)
-> +       -------------------------------------------------------------------------
-> +       "wf0_2g"                        "eth"           70, 71, 72, 73, 74, 75,
-> +                                                       76, 77, 78
-> +       "wf0_5g"                        "eth"           0, 1, 2, 3, 4, 5, 6, 7
-> +                                                       8, 9, 10
-> +       "mdc_mdio"                      "eth"           23, 24
-> +       "i2c_0"                         "i2c"           19, 20
-> +       "i2c_1"                         "i2c"           53, 54
-> +       "ephy_leds"                     "led"           12, 13, 14, 15, 16, 17, 18
-> +       "ephy0_led"                     "led"           12
-> +       "ephy1_led"                     "led"           13
-> +       "ephy2_led"                     "led"           14
-> +       "ephy3_led"                     "led"           15
-> +       "ephy4_led"                     "led"           16
-> +       "wf2g_led"                      "led"           17
-> +       "wf5g_led"                      "led"           18
-> +       "snfi"                          "flash"         62, 63, 64, 65, 66, 67
-> +       "spi_nor"                       "flash"         62, 63, 64, 65, 66, 67
-> +       "pcie_pereset"                  "pcie"          51
-> +       "pcie_wake"                     "pcie"          55
-> +       "pcie_clkreq"                   "pcie"          56
-> +       "pwm_0"                         "pwm"           52
-> +       "pwm_1"                         "pwm"           61
-> +       "spi_0"                         "spi"           21, 22, 23, 24
-> +       "spi_1"                         "spi"           62, 63, 64, 65
-> +       "spi_wp"                        "spi"           66
-> +       "spi_hold"                      "spi"           67
-> +       "uart0_txd_rxd"                 "uart"          68, 69
-> +       "uart1_0_txd_rxd"               "uart"          25, 26
-> +       "uart1_0_cts_rts"               "uart"          27, 28
-> +       "uart1_1_txd_rxd"               "uart"          53, 54
-> +       "uart1_1_cts_rts"               "uart"          55, 56
-> +       "uart2_0_txd_rxd"               "uart"          29, 30
-> +       "uart2_0_cts_rts"               "uart"          31, 32
-> +       "uart2_1_txd_rxd"               "uart"          57, 58
-> +       "uart2_1_cts_rts"               "uart"          59, 60
-> +       "watchdog"                      "watchdog"      11
-> +
->  Example:
->
->         pio: pinctrl@10211000 {
-> --
-> 1.9.1
->
+I deliberately left out the netdev mailing list and Dave Miller, as the
+only thing that is under net is the binding document. Maybe we should
+move that out of Documentation/devicetree/bindings/net/ ?
+
+Also, I'm not subscribed to the linux-bluetooth ML, so please CC me for
+any discussions.
+
+Patches 1 through 4 are device tree binding changes:
+
+1 - Make the external clock name unambiguous, and add a second entry for
+    the LPO clock.
+
+2 - Add regulator supply properties for the VBAT and VDDIO power pins.
+
+3 - Add a compatible string for BCM20702A1.
+
+4 - Add a compatible string for BCM4330.
+
+Patches 5 through 13 are changes to the driver, either improvements,
+or updates to handle the updated device tree binding.
+
+5 - Make the driver handle deferred probing for the external clock.
+
+6 - Simplify clock error checking for subsequent clk API calls.
+
+7 - Handle clock-names for the main external clock.
+
+8 - Support a new external clock, the LPO.
+
+9 - Support regulator supplies.
+
+10 - Wait a small amount of time after toggling the GPIO for the device
+     to settle.
+
+11 - Add support for BCM20702A1, including its default address.
+
+12 - Add BCM4330 compatible string to the driver.
+
+13 - Handle default address for BCM43430A0.
+
+14 - Enable Broadcom-based serdev Bluetooth for multiple Allwinner ARMv7
+     boards.
+
+15 - Enable Broadcom-based serdev Bluetooth for the Bananapi M64.
+
+checkpatch reports an error for both patch 11 and patch 13:
+
+    ERROR: space required after that close brace '}'
+
+I followed the existing code's style. If this is undesirable, I can send
+a follow-up patch fixing the entire code block.
+
+The first 13 patches should go through the Bluetooth tree, while we, the
+sunxi maintainers, will take the last 2.
+
+Chen-Yu Tsai (14):
+  dt-bindings: net: broadcom-bluetooth: Fix external clock names
+  dt-bindings: net: broadcom-bluetooth: Add VBAT and VDDIO supplies
+  dt-bindings: net: broadcom-bluetooth: Add BCM20702A1 compatible string
+  dt-bindings: net: broadcom-bluetooth: Add BCM4330 compatible string
+  Bluetooth: hci_bcm: Handle deferred probing for the clock supply
+  Bluetooth: hci_bcm: Simplify clk_get error handling
+  Bluetooth: hci_bcm: Use "txco" and "extclk" to get clock reference
+  Bluetooth: hci_bcm: Add support for LPO clock
+  Bluetooth: hci_bcm: Add support for regulator supplies
+  Bluetooth: hci_bcm: Wait for device to come out of reset after power
+    on
+  Bluetooth: hci_bcm: Add compatible string for BCM4330
+  Bluetooth: btbcm: Add default address for BCM43430A0
+  ARM: dts: sunxi: Enable Broadcom-based Bluetooth for multiple boards
+  arm64: dts: allwinner: a64: bananapi-m64: Add Bluetooth device node
+
+Maxime Ripard (1):
+  Bluetooth: hci_bcm: Add BCM20702A1 variant
+
+ .../bindings/net/broadcom-bluetooth.txt       |   9 +-
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts    |  22 ++++
+ arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts  |  18 +++
+ .../boot/dts/sun8i-a83t-cubietruck-plus.dts   |  18 +++
+ arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts  |  14 +++
+ .../dts/allwinner/sun50i-a64-bananapi-m64.dts |  14 +++
+ drivers/bluetooth/btbcm.c                     |  13 +-
+ drivers/bluetooth/hci_bcm.c                   | 112 +++++++++++++++---
+ 8 files changed, 204 insertions(+), 16 deletions(-)
+
+-- 
+2.19.1
