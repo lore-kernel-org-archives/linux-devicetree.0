@@ -1,36 +1,31 @@
-Return-Path: <SRS0=2x8e=OA=grinn-global.com=m.niestroj@kernel.org>
-From: Marcin Niestroj <m.niestroj@grinn-global.com>
-Subject: [PATCH] ARM: dts: am335x-chiliboard: Add stdout-path property
-Date: Wed, 21 Nov 2018 22:05:15 +0100
-Message-Id: <20181121210515.22182-1-m.niestroj@grinn-global.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Tony Lindgren <tony@atomide.com>
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Marcin Niestroj <m.niestroj@grinn-global.com>
+Return-Path: <SRS0=CMYu=NS=qq.com=miyatsu@kernel.org>
+From: Ding Tao <miyatsu@qq.com>
+Subject: [PATCH] dt-bindings: input: Fix a typo in file input-reset.txt
+Date: Wed,  7 Nov 2018 05:58:19 +0000
+Message-Id: <20181107055819.7527-1-miyatsu@qq.com>
+To: dmitry.torokhov@gmail.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ding Tao <miyatsu@qq.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add stdout-path property in /chosen node so that earlycon can be
-used by just adding earlycon in bootargs.
+Replace sysrq-reset-seq with keyset.
 
-Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
+Signed-off-by: Ding Tao <miyatsu@qq.com>
 ---
- arch/arm/boot/dts/am335x-chiliboard.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/input/input-reset.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/am335x-chiliboard.dts b/arch/arm/boot/dts/am335x-chiliboard.dts
-index 9c2a947aacf5..b50d5d2e71ff 100644
---- a/arch/arm/boot/dts/am335x-chiliboard.dts
-+++ b/arch/arm/boot/dts/am335x-chiliboard.dts
-@@ -14,6 +14,10 @@
- 	compatible = "grinn,am335x-chiliboard", "grinn,am335x-chilisom",
- 		     "ti,am33xx";
+diff --git a/Documentation/devicetree/bindings/input/input-reset.txt b/Documentation/devicetree/bindings/input/input-reset.txt
+index 2bb2626fdb78..1ca6cc5ebf8e 100644
+--- a/Documentation/devicetree/bindings/input/input-reset.txt
++++ b/Documentation/devicetree/bindings/input/input-reset.txt
+@@ -12,7 +12,7 @@ The /chosen node should contain a 'linux,sysrq-reset-seq' child node to define
+ a set of keys.
  
-+	chosen {
-+		stdout-path = &uart0;
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
+ Required property:
+-sysrq-reset-seq: array of Linux keycodes, one keycode per cell.
++keyset: array of Linux keycodes, one keycode per cell.
+ 
+ Optional property:
+ timeout-ms: duration keys must be pressed together in milliseconds before
 -- 
-2.19.1
+2.17.1
