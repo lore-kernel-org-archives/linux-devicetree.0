@@ -1,47 +1,66 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH RESEND v3 2/2] dt-bindings/interrupt-controller: pdc: fix example to match actual bindings
-Date: Wed,  7 Nov 2018 14:51:09 -0700
-Message-ID: <20181107215109.10720-2-ilina@codeaurora.org>
-References: <20181107215109.10720-1-ilina@codeaurora.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v5 0/3] Stingray thermal driver support
+Date: Wed, 7 Nov 2018 14:15:23 -0800
+Message-ID: <b6e02875-784f-4908-a985-5ee7e3df3ac6@gmail.com>
+References: <1539702680-3746-1-git-send-email-srinath.mannam@broadcom.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181107215109.10720-1-ilina@codeaurora.org>
+In-Reply-To: <1539702680-3746-1-git-send-email-srinath.mannam@broadcom.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, bjorn.andersson@linaro.org
-Cc: rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>
+To: Srinath Mannam <srinath.mannam@broadcom.com>, daniel.lezcano@linaro.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-The PDC map should use the GIC SPI port and not the vector. GIC
-internally adds 32 to SPI hwirq numbers.
 
-Fixes: 1ae8862e27e ("dt-bindings/interrupt-controller: pdc: Describe PDC device binding")
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
----
- .../devicetree/bindings/interrupt-controller/qcom,pdc.txt     | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-index 8e0797cb1487..803831479aec 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-@@ -55,13 +55,13 @@ Example:
- 	pdc: interrupt-controller@b220000 {
- 		compatible = "qcom,sdm845-pdc";
- 		reg = <0xb220000 0x30000>;
--		qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
-+		qcom,pdc-ranges = <0 480 94>, <94 609 15>, <115 630 7>;
- 		#interrupt-cells = <2>;
- 		interrupt-parent = <&intc>;
- 		interrupt-controller;
- 	};
- 
--DT binding of a device that wants to use the GIC SPI 514 as a wakeup
-+DT binding of a device that wants to use the GIC SPI 482 as a wakeup
- interrupt, must do -
- 
- 	wake-device {
+On 10/16/2018 8:11 AM, Srinath Mannam wrote:
+> These patches adds the stingray thermal driver and its
+> corresponding DT nodes with documentation.
+
+Can we get feedback from the thermal maintains whether this is
+acceptable or not?
+
+> 
+> Changes from v4
+>   - Addressed Rob Herring comments on DT parameters and
+>     thermal driver architecture.
+>   - Removed brcm,max-crit-temp DT parameter
+>   - Changed driver to thermal sensor registration model.
+>   - Added trip DT properties.
+> 
+> Changes from v3
+>   - Addressed Daniel lezcano comments.
+>   - Elaborated commit description of thermal driver patch.
+>   - Added brcm,max-crit-temp DT parameter.
+> 
+> Changes from v2:
+>   - All stingray TMON DT nodes are combine together into single.
+>     Temperature registers are combined into one mem resource.
+>     brcm,tmon-mask parameter has available TMONs mask value.
+>   - All available TMONs are initialized together in single
+>     instance of driver probe call.
+> 
+> Changes from v1:
+>   - Fixed auto build sparce warning.
+> 
+> Pramod Kumar (3):
+>   dt-bindings: thermal: Add binding document for SR thermal
+>   thermal: broadcom: Add Stingray thermal driver
+>   arm64: dts: stingray: Add Stingray Thermal DT support.
+> 
+>  .../bindings/thermal/brcm,sr-thermal.txt           | 105 ++++++++++++++++
+>  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  89 +++++++++++++
+>  drivers/thermal/Kconfig                            |   3 +-
+>  drivers/thermal/broadcom/Kconfig                   |   9 ++
+>  drivers/thermal/broadcom/Makefile                  |   1 +
+>  drivers/thermal/broadcom/sr-thermal.c              | 138 +++++++++++++++++++++
+>  6 files changed, 344 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>  create mode 100644 drivers/thermal/broadcom/sr-thermal.c
+> 
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Florian
