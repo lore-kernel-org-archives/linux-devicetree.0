@@ -1,95 +1,154 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] arm64: dts: sdm845: Add dsi pinctrl
- nodes
-Date: Tue, 6 Nov 2018 16:31:32 -0800
-Message-ID: <CAD=FV=WGFCNo6_qbvb3mXFMiTyUkq8gRjHZ_N2oVBwM=0+nHrA@mail.gmail.com>
-References: <1541197576-19730-1-git-send-email-jsanka@codeaurora.org>
- <1541197576-19730-3-git-send-email-jsanka@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1541197576-19730-3-git-send-email-jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kristian Kristensen <hoegsberg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+From: Alex Elder <elder@linaro.org>
+Subject: [RFC PATCH 00/12] net: introduce Qualcomm IPA driver
+Date: Tue,  6 Nov 2018 18:32:38 -0600
+Message-ID: <20181107003250.5832-1-elder@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org, ilias.apalodimas@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, syadagir@codeaurora.org, mjavid@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgKHNlbmRpbmcgYWdhaW4gc2luY2UgSSBzY3Jld2VkIHVwIG15IHByZXZpb3VzIHJlcGx5KSwK
-Ck9uIEZyaSwgTm92IDIsIDIwMTggYXQgMzoyNiBQTSBKZXlrdW1hciBTYW5rYXJhbiA8anNhbmth
-QGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPgo+IEFkZCBkc2kgYWN0aXZlL3N1c3BlbmQgcGluY3Ry
-bCBub2RlcyB0byBzZG04NDUgU29DIGR0cy4KPgo+IENoYW5nZXMgaW4gdjQ6Cj4gICAgICAgICAt
-IHBhdGNoIGludHJvZHVjZWQgaW4gdGhlIHNlcmllcwo+Cj4gU2lnbmVkLW9mZi1ieTogSmV5a3Vt
-YXIgU2Fua2FyYW4gPGpzYW5rYUBjb2RlYXVyb3JhLm9yZz4KPiAtLS0KPiAgYXJjaC9hcm02NC9i
-b290L2R0cy9xY29tL3NkbTg0NS5kdHNpIHwgMTQgKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNo
-YW5nZWQsIDE0IGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL3Fjb20vc2RtODQ1LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0
-c2kKPiBpbmRleCA1NzI4YjRjLi4zNWRmNWQyIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvcWNvbS9zZG04NDUuZHRzaQo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9z
-ZG04NDUuZHRzaQo+IEBAIC04MjIsNiArODIyLDIwIEBACj4gICAgICAgICAgICAgICAgICAgICAg
-ICAgaW50ZXJydXB0LWNvbnRyb2xsZXI7Cj4gICAgICAgICAgICAgICAgICAgICAgICAgI2ludGVy
-cnVwdC1jZWxscyA9IDwyPjsKPgo+ICsgICAgICAgICAgICAgICAgICAgICAgIGRwdV9kc2lfYWN0
-aXZlOiBkcHUtZHNpLWFjdGl2ZSB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBw
-aW5tdXggewo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwaW5zID0g
-ImdwaW82IiwgImdwaW81MiI7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIGZ1bmN0aW9uID0gImdwaW8iOwo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-fTsKPiArICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICsKPiArICAgICAgICAgICAgICAgICAg
-ICAgICBkcHVfZHNpX3N1c3BlbmQ6IGRwdS1kc2ktc3VzcGVuZCB7Cj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBwaW5tdXggewo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBwaW5zID0gImdwaW82IiwgImdwaW81MiI7Cj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIGZ1bmN0aW9uID0gImdwaW8iOwo+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgfTsKPiArICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICsKClVn
-aCwgSSBzaG91bGQgaGF2ZSBub3RpY2VkIHRoaXMgaW4gbXkgcHJldmlvdXMgcmVwbHkuICBTb3Jy
-eSEKCi4uLmxvb2tpbmcgY2xvc2VyIEkgc2VlIHRoYXQgdGhlc2UgdHdvIHBpbnMgYXJlIE1UUC1z
-cGVjaWZpYy4gIFRoZXkKYmVsb25nIGZ1bGx5IGluIHRoZSBNVFAgZGV2aWNlIHRyZWUgZmlsZS4g
-IE90aGVyIHNkbTg0NSBib2FyZHMgd29uJ3QKbmVjZXNzYXJpbHkgaGF2ZSB0aGUgc2FtZSBmdW5j
-dGlvbnMgb24gdGhlIHNhbWUgcGlucyBzbyB0aGV5IGRvbid0CmJlbG9uZyBoZXJlIGluIHRoZSBT
-b0MgZmlsZS4KCkFsc28gYXMgYSBub3RlOiBvbmNlIHlvdSBtb3ZlIHRoZW0gdGhlcmUgdGhleSBz
-aG91bGQgbm8gbG9uZ2VyIGdvIGluCnRoZSBzZWN0aW9uICJQSU5DVFJMIC0gYWRkaXRpb25zIHRv
-IG5vZGVzIGRlZmluZWQgaW4gc2RtODQ1LmR0c2kiLgpUaGV5IHNob3VsZCBnbyB1bmRlciB0aGUg
-dGxtbSBpbiB0aGUgc2VjdGlvbiAiUElOQ1RSTCAtIGJvYXJkLXNwZWNpZmljCnBpbmN0cmwiLiAg
-UGxlYXNlIG1ha2Ugc3VyZSB0aGV5IGFyZSBhbHBoYWJldGljYWwgdGhlcmUuCgpTaW5jZSB0aGVz
-ZSBhcmUgYm9hcmQgc3BlY2lmaWMsIG5vZGUgbmFtZXMgc2hvdWxkIGJlIGJhc2VkIG9uIHRoZQpz
-Y2hlbWF0aWMgbmFtZS4gIC4uLmFuZCBpbiB0aGlzIGNhc2Ugc2luY2UgdGhleSBhcmUgdHdvIGRp
-c3RpbmN0IG5hbWVkCnBpbnMgSSdkIHByb2JhYmx5IGhhdmUgYSBzZXBhcmF0ZSBub2RlIGZvciBl
-YWNoIG9uZS4gIFNvIEkgdGhpbmsgeW91CndhbnQgc29tZXRoaW5nIGxpa2UgdGhpcyBpbiB0aGUg
-bXRwIGZpbGU6ICh1bnRlc3RlZCkKCmRpc3BfbW9kZV9zZWxfYWN0aXZlOiBkaXNwLW1vZGUtc2Vs
-LWFjdGl2ZSB7CiAgcGlubXV4IHsKICAgIHBpbnMgPSAiZ3BpbzUyIjsKICAgIGZ1bmN0aW9uID0g
-ImdwaW8iOwogIH07CiAgcGluY29uZiB7CiAgICBwaW5zID0gImdwaW81MiI7CiAgICBkcml2ZS1z
-dHJlbmd0aCA9IDw4PjsKICAgIGJpYXMtZGlzYWJsZTsKfTsKCmRpc3BfbW9kZV9zZWxfc2xlZXA6
-IGRpc3AtbW9kZS1zZWwtc2xlZXAgewogIHBpbm11eCB7CiAgICBwaW5zID0gImdwaW81MiI7CiAg
-ICBmdW5jdGlvbiA9ICJncGlvIjsKICB9OwogIHBpbmNvbmYgewogICAgcGlucyA9ICJncGlvNTIi
-OwogICAgZHJpdmUtc3RyZW5ndGggPSA8Mj47CiAgICBiaWFzLXB1bGwtZG93bjsKfTsKCi4uLmFu
-ZCB0aGVuIG9uZSBmb3IgZ3BpbzY6CgpsY2QwX3Jlc2V0X25fYWN0aXZlOiBsY2QwLXJlc2V0LW4t
-YWN0aXZlIHsKICAuLi4KfTsKCi0tLQoKSSdtIGtpbmRhIGN1cmlvdXMgaWYgdGhlIHNsZWVwIHN0
-dWZmIGlzIGFsbCB0cnVseSBuZWNlc3NhcnkgdGhvdWdoLgpTcGVjaWZpY2FsbHkgSSBkb24ndCBf
-dGhpbmtfIHRoYXQgdGhlIHB1bGxzIGFyZSBhZmZlY3RlZCBieSB0aGUgZHJpdmUKc3RyZW5ndGgu
-ICBTbyBlaXRoZXIgd2UgY29udGludWUgZHJpdmluZyB0aGlzIHBpbiB3aGlsZSB3ZSdyZSBzbGVl
-cGluZwppbiB3aGljaCBjYXNlIHRoZSBkcml2ZSBzdHJlbmd0aCBtYXR0ZXJzIGFuZCB0aGUgcHVs
-bCBkb2Vzbid0LiAgLi4ub3IKd2UgYXJlbid0IGRyaXZpbmcgaXQgaW4gc2xlZXAgYW5kIHRoZSBw
-dWxsIG1pZ2h0IG1hdHRlciBidXQgdGhlIGRyaXZlCnN0cmVuZ3RoIGRvZXNuJ3QuCgpJIGRlZmlu
-aXRlbHkgc2VlIGEgbG90IG9mIHRoaXMgY3J1ZnQgY29taW5nIGZyb20gdGhlIFF1YWxjb21tCmRv
-d25zdHJlYW0gd2l0aG91dCBhbnlvbmUgd2hvIGNhbiBleHBsYWluIHRvIG1lIHRoYXQgaXQncyB1
-c2VmdWwuICBJdApzZWVtcyBsaWtlIGV2ZXJ5b25lIGp1c3QgYmxpbmRseSBjb3BpZXMgaXQgZnJv
-bSBzb21lb25lIGVsc2UuICBBcwpmdXJ0aGVyIGV2aWRlbmNlIHRoYXQgdGhpcyBpc24ndCBjdXJy
-ZW50bHkgZG9pbmcgYW55dGhpbmcsIGFzIGZhciBhcyBJCmNhbiB0ZWxsIHRoZSB2MTAgcGFuZWwg
-ZHJpdmVyIGZvciB0aGlzIHBhbmVsIGRvZXNuJ3QgYWN0dWFsbHkgZXZlbgpzZWxlY3QgdGhlIHN1
-c3BlbmQgc3RhdGUuCgpNYXliZSB3ZSBjYW4ganVzdCBkcm9wIHRoZSB3aG9sZSAiYWN0aXZlIiB2
-cy4gInNsZWVwIiBmb3Igbm93IGFuZCB3ZQpjYW4gaW50cm9kdWNlIGl0IGxhdGVyIHdoZW4gd2Ug
-c2hvdyB0aGF0IGl0J3MgdXNlZnVsIGZvciBzb21ldGhpbmcuClRoZW4gd2UgY2FuIGNvbmZpcm0g
-aWYgaXQncyB0aGUgZHJpdmUgc3RyZW5ndGggdGhhdCdzIHVzZWZ1bCBvciB0aGUKcHVsbCBkb3du
-IGFuZCB3ZSBjYW4gYWxzbyBjb25maXJtIHRoYXQgd2UgZG9uJ3QgZW5kIHVwIGdvaW5nIHRvIHNs
-ZWVwCndpdGggdGhlIHBpbiBiZWluZyBkcml2ZW4gaW4gdGhlIG9wcG9zaXRlIGRpcmVjdGlvbiBv
-ZiB0aGUgcHVsbC4KCk1heWJlICtCam9ybiBvciArU3RlcGhlbiBoYXMgYSBkaWZmZXJlbnQgb3Bp
-bmlvbiB0aG91Z2guLi4KCi1Eb3VnCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2ZyZWVkcmVubwo=
+This series presents the driver for the Qualcomm IP Accelerator (IPA).
+The IPA is a hardware component present in some Qualcomm SoCs that
+allows network functions--such as routing, filtering, network address
+translation and aggregation--to be performed without active involvement
+of the main application processor (AP).
+
+Initially, these advanced features are not supported; the IPA driver
+simply provides a network interface that makes the modem's LTE
+network available to the AP.  In addition, support is only provided
+for the IPA found in the Qualcomm SDM845 SoC.
+
+This code is derived from a driver developed internally by Qualcomm.
+A version of the original source can be seen here:
+    https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree
+in the "drivers/platform/msm/ipa" directory.  Many were involved in
+developing this, but the following individuals deserve explicit
+acknowledgement for their substantial contributions:
+
+    Abhishek Choubey
+    Ady Abraham
+    Chaitanya Pratapa
+    David Arinzon
+    Ghanim Fodi
+    Gidon Studinski
+    Ravi Gummadidala
+    Shihuan Liu
+    Skylar Chang
+
+The code has undergone considerable rework to prepare it for
+incorporation into upstream Linux.  Parts of it bear little
+resemblance to the original driver.  Still, some work remains
+to be done.  The current code and its design had a preliminary
+review, and some changes to the data path implementation were
+recommended.   These have not yet been addressed:
+- Use NAPI for all interfaces, not just RX (and WAN data) endpoints.
+- Do more work in the NAPI poll function, including collecting
+  completed TX requests and posting buffers for RX.
+- Do not use periodic NOP requests as a way to avoid TX interrupts.
+- The NAPI context should be associated with the hardware interrupt
+  (it is now associated with something abstracted from the hardware).
+- Use threaded interrupts, to avoid the need for using spinlocks and
+  atomic variables for synchronizing between workqueue and interrupt
+  context.
+- Have runtime power management enable and disable IPA clock and
+  interconnects.
+Many thanks to Arnd Bergmann, Ilias Apalodimas, and Bjorn Andersson
+for their early feedback.
+
+While there clearly remains work to do on this, we felt that things
+are far enough along that it would be helpful to solicit broader
+input on the code.  Major issues are best addressed as soon as
+possible, and even minor issues when identified help in setting
+priorities.
+
+This code is dependent on the following two sets of code, which have
+been posted for review but are not yet accepted upstream:
+- Interconnect framework:  https://lkml.org/lkml/2018/8/31/444
+- SDM845 interconnect provider driver:  https://lkml.org/lkml/2018/8/24/25
+
+In addition, it depends on four more bits of code that have not yet
+been posted for upstream review, but are expected to be available soon:
+- clk-rpmh support for IPA from David Dai <daidavid1@codeaurora.org>
+- SDM845 reserved memory from Bjorn Andersson <bjorn.andersson@linaro.org>
+- list_cut_end() from Alex Elder <elder@linaro.org>
+- FIELD_MAX() in "bitfield.h" from Alex Elder <elder@linaro.org>
+
+This code (including its dependencies) is available in buildable
+form here, based on kernel v4.19:
+    remote: ssh://git@git.linaro.org/people/alex.elder/linux.git
+    branch: qualcomm_ipa-v1
+	    59562facd61a arm64: dts: sdm845: add IPA information
+
+					-Alex
+
+Alex Elder (12):
+  dt-bindings: soc: qcom: add IPA bindings
+  soc: qcom: ipa: DMA helpers
+  soc: qcom: ipa: generic software interface
+  soc: qcom: ipa: immediate commands
+  soc: qcom: ipa: IPA interrupts and the microcontroller
+  soc: qcom: ipa: QMI modem communication
+  soc: qcom: ipa: IPA register abstraction
+  soc: qcom: ipa: utility functions
+  soc: qcom: ipa: main IPA source file
+  soc: qcom: ipa: data path
+  soc: qcom: ipa: IPA rmnet interface
+  soc: qcom: ipa: build and "ipa_i.h"
+
+ .../devicetree/bindings/soc/qcom/qcom,ipa.txt |  136 ++
+ .../bindings/soc/qcom/qcom,rmnet-ipa.txt      |   15 +
+ drivers/net/ipa/Kconfig                       |   30 +
+ drivers/net/ipa/Makefile                      |    7 +
+ drivers/net/ipa/gsi.c                         | 1685 ++++++++++++++
+ drivers/net/ipa/gsi.h                         |  195 ++
+ drivers/net/ipa/gsi_reg.h                     |  563 +++++
+ drivers/net/ipa/ipa_dma.c                     |   61 +
+ drivers/net/ipa/ipa_dma.h                     |   61 +
+ drivers/net/ipa/ipa_dp.c                      | 1994 +++++++++++++++++
+ drivers/net/ipa/ipa_i.h                       |  573 +++++
+ drivers/net/ipa/ipa_interrupts.c              |  307 +++
+ drivers/net/ipa/ipa_main.c                    | 1400 ++++++++++++
+ drivers/net/ipa/ipa_qmi.c                     |  406 ++++
+ drivers/net/ipa/ipa_qmi.h                     |   12 +
+ drivers/net/ipa/ipa_qmi_msg.c                 |  587 +++++
+ drivers/net/ipa/ipa_qmi_msg.h                 |  233 ++
+ drivers/net/ipa/ipa_reg.c                     |  972 ++++++++
+ drivers/net/ipa/ipa_reg.h                     |  614 +++++
+ drivers/net/ipa/ipa_uc.c                      |  336 +++
+ drivers/net/ipa/ipa_utils.c                   | 1035 +++++++++
+ drivers/net/ipa/ipahal.c                      |  541 +++++
+ drivers/net/ipa/ipahal.h                      |  253 +++
+ drivers/net/ipa/msm_rmnet.h                   |  120 +
+ drivers/net/ipa/rmnet_config.h                |   31 +
+ drivers/net/ipa/rmnet_ipa.c                   |  805 +++++++
+ 26 files changed, 12972 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,ipa.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,rmnet-ipa.txt
+ create mode 100644 drivers/net/ipa/Kconfig
+ create mode 100644 drivers/net/ipa/Makefile
+ create mode 100644 drivers/net/ipa/gsi.c
+ create mode 100644 drivers/net/ipa/gsi.h
+ create mode 100644 drivers/net/ipa/gsi_reg.h
+ create mode 100644 drivers/net/ipa/ipa_dma.c
+ create mode 100644 drivers/net/ipa/ipa_dma.h
+ create mode 100644 drivers/net/ipa/ipa_dp.c
+ create mode 100644 drivers/net/ipa/ipa_i.h
+ create mode 100644 drivers/net/ipa/ipa_interrupts.c
+ create mode 100644 drivers/net/ipa/ipa_main.c
+ create mode 100644 drivers/net/ipa/ipa_qmi.c
+ create mode 100644 drivers/net/ipa/ipa_qmi.h
+ create mode 100644 drivers/net/ipa/ipa_qmi_msg.c
+ create mode 100644 drivers/net/ipa/ipa_qmi_msg.h
+ create mode 100644 drivers/net/ipa/ipa_reg.c
+ create mode 100644 drivers/net/ipa/ipa_reg.h
+ create mode 100644 drivers/net/ipa/ipa_uc.c
+ create mode 100644 drivers/net/ipa/ipa_utils.c
+ create mode 100644 drivers/net/ipa/ipahal.c
+ create mode 100644 drivers/net/ipa/ipahal.h
+ create mode 100644 drivers/net/ipa/msm_rmnet.h
+ create mode 100644 drivers/net/ipa/rmnet_config.h
+ create mode 100644 drivers/net/ipa/rmnet_ipa.c
+
+-- 
+2.17.1
