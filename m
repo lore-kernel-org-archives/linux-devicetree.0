@@ -1,44 +1,123 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH 2/2] arm64: dts: mt7622: fix console output issue on BPI-R64 board
-Date: Wed, 7 Nov 2018 12:59:44 +0800
-Message-ID: <7f72b1c73c98e88fb9d5f4b40968aab9807041f9.1541566473.git.ryder.lee@mediatek.com>
-References: <8043d487e7bd20a11b14d832702bda214a9a694f.1541566473.git.ryder.lee@mediatek.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 1/2] dt-bindings: hwmon: add binding documentation for
+ adt7475
+Date: Tue, 6 Nov 2018 21:07:57 -0800
+Message-ID: <213614fb-1b7a-a06c-6f9f-f3d497750ca6@roeck-us.net>
+References: <20181107040010.27436-1-chris.packham@alliedtelesis.co.nz>
+ <20181107040010.27436-2-chris.packham@alliedtelesis.co.nz>
+ <64720b73-dddf-783c-a3a4-3f32a748bf5d@roeck-us.net>
+ <1ed7434bfded41bfba3b739f58f69102@svr-chch-ex1.atlnz.lc>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <8043d487e7bd20a11b14d832702bda214a9a694f.1541566473.git.ryder.lee@mediatek.com>
-Sender: stable-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1ed7434bfded41bfba3b739f58f69102@svr-chch-ex1.atlnz.lc>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jdelvare@suse.com" <jdelvare@suse.com>
+Cc: "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Fix this by using a 'stdout-path' property that points to the device.
+On 11/6/18 8:27 PM, Chris Packham wrote:
+> On 7/11/18 5:24 PM, Guenter Roeck wrote:
+>> On 11/6/18 8:00 PM, Chris Packham wrote:
+>>> With the addition of the invert-pwm property the adt7475 needs its own
+>>> binding documentation rather being captured under trivial-devices.txt.
+>>>
+>>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+>>> ---
+>>>     .../devicetree/bindings/hwmon/adt7475.txt     | 22 +++++++++++++++++++
+>>>     .../devicetree/bindings/trivial-devices.txt   |  4 ----
+>>>     2 files changed, 22 insertions(+), 4 deletions(-)
+>>>     create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.txt b/Documentation/devicetree/bindings/hwmon/adt7475.txt
+>>> new file mode 100644
+>>> index 000000000000..79255439e157
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.txt
+>>> @@ -0,0 +1,22 @@
+>>> +*ADT7475 hwmon sensor.
+>>> +
+>>> +Required properties:
+>>> +- compatible: One of
+>>> +	"adi,adt7473"
+>>> +	"adi,adt7475"
+>>> +	"adi,adt7476"
+>>> +	"adi,adt7490"
+>>> +
+>>> +- reg: I2C address
+>>> +
+>>> +optional properties:
+>>> +
+>>> +- invert-pwm: This configures the PWM to use logic low for 100% duty cycle.
+>>> +
+>>> +Example:
+>>> +
+>>> +hwmon@2e {
+>>> +	compatible = ;
+>>> +	reg = <0x2e>;
+>>> +	invert-pwm;
+>>
+>> If I understand correctly, the flag is set per pwm channel. A single global
+>> property seems inappropriate.
+> 
+> Yes it is per-channel. But I was having a hard time imagining a hardware
+> design that would use both inverted and non-inverted at the same time.
+> 
 
-Fixes: 0b6286dd96c0 ("arm64: dts: mt7622: add bananapi BPI-R64 board")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+People can be inventive. Sometimes too much so.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
-index 5d6005c..710c5c3 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
-@@ -16,8 +16,13 @@
- 	model = "Bananapi BPI-R64";
- 	compatible = "bananapi,bpi-r64", "mediatek,mt7622";
- 
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
- 	chosen {
--		bootargs = "earlycon=uart8250,mmio32,0x11002000 console=ttyS0,115200n1 swiotlb=512";
-+		stdout-path = "serial0:115200n8";
-+		bootargs = "earlycon=uart8250,mmio32,0x11002000 swiotlb=512";
- 	};
- 
- 	cpus {
--- 
-1.9.1
+> Do you have a preference for how the properties should look?
+> 
+>     invert-pwm[123]?
+> 
+>     invert-pwm = <0x7>;?
+>
+Ultimately we'll have to find a generic way of defining devicetree properties for
+hardware monitoring devices, not just for pwm but for all sensor types. A sub-node
+per channel seems to be the most likely answer, but I think that is a long way off
+(and will require lengthy discussions about acceptable properties).
+
+I was looking into pwm DT properties, but they define a set of flags
+(PWM_POLARITY_INVERTED, PWM_POLARITY_NORMAL).
+
+The g762 driver uses "pwm_polarity". Underscore - hmm. Other drivers use module
+parameters, sysfs attributes (pwmX_invert in asc7621 driver), or platform data
+(g762, max6639).
+
+Maybe pwm-polarity = <PWM_POLARITY_NORMAL | PWM_POLARITY_INVERTED> ?
+No idea if that makes sense. Or just a boolean pwm-polarity-inverted.
+
+Thinking about it per channel vs. per chip ... other drivers also seem to
+use a single property / attribute for the entire chip, so that is fine here
+as well. We can always extend it if needed.
+
+Anyway, I am fine with whatever Rob accepts.
+
+Guenter
+
+>>
+>> Guenter
+>>
+>>> +};
+>>> diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
+>>> index 69c934aec13b..4f29100d6bbf 100644
+>>> --- a/Documentation/devicetree/bindings/trivial-devices.txt
+>>> +++ b/Documentation/devicetree/bindings/trivial-devices.txt
+>>> @@ -14,10 +14,6 @@ ad,ad7414		SMBus/I2C Digital Temperature Sensor in 6-Pin SOT with SMBus Alert an
+>>>     ad,adm9240		ADM9240:  Complete System Hardware Monitor for uProcessor-Based Systems
+>>>     adi,adt7461		+/-1C TDM Extended Temp Range I.C
+>>>     adt7461			+/-1C TDM Extended Temp Range I.C
+>>> -adi,adt7473		+/-1C TDM Extended Temp Range I.C
+>>> -adi,adt7475		+/-1C TDM Extended Temp Range I.C
+>>> -adi,adt7476		+/-1C TDM Extended Temp Range I.C
+>>> -adi,adt7490		+/-1C TDM Extended Temp Range I.C
+>>>     adi,adxl345		Three-Axis Digital Accelerometer
+>>>     adi,adxl346		Three-Axis Digital Accelerometer (backward-compatibility value "adi,adxl345" must be listed too)
+>>>     ams,iaq-core		AMS iAQ-Core VOC Sensor
+>>>
+>>
+>>
+> 
+> 
