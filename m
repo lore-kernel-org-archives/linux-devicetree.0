@@ -1,13 +1,12 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 06/15] Bluetooth: hci_bcm: Simplify clk_get
- error handling
-Date: Wed,  7 Nov 2018 18:12:59 +0800
-Message-ID: <20181107101308.7626-7-wens@csie.org>
+Subject: [PATCH 13/15] Bluetooth: btbcm: Add default address for BCM43430A0
+Date: Wed,  7 Nov 2018 18:13:06 +0800
+Message-ID: <20181107101308.7626-14-wens@csie.org>
 References: <20181107101308.7626-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBQ7VRLPQKGQESG4PGZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBRHVRLPQKGQEBPBIW6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181107101308.7626-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,62 +19,48 @@ To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Johan Hedb
 Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The driver currently checks the clk pointer for an error condition, as
-returned by clk_get, before every invocation of the clk consumer API.
-This is redundant if the goal is simply to ignore the errors, thereby
-making the clk optional. The clk consumer API already checks if the
-pointer is NULL or not.
+The BCM43430A0 has the default MAC address 43:43:A0:12:1F:AC if none
+is given. This address was found when enabling Bluetooth on a bunch of
+boards with the AMPAK AP6210 module, all sharing the same address. It
+also contains the sequence 4343A0, which is suspicious as that is also
+the name the chip identifies itself as.
 
-Simplify the code a bit by assigning NULL to the clk pointer if the
-error condition is one we want to ignore, which is every error except
-deferred probing.
+Add this to the list of default MAC addresses and leave it to the user
+to configure a valid one.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/bluetooth/hci_bcm.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/bluetooth/btbcm.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-index 0a20ad48b511..7f21d9ab5029 100644
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -214,7 +214,7 @@ static int bcm_gpio_set_power(struct bcm_device *dev, bool powered)
- {
- 	int err;
+diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
+index 22d4b530da03..08e1f3dd4e03 100644
+--- a/drivers/bluetooth/btbcm.c
++++ b/drivers/bluetooth/btbcm.c
+@@ -34,6 +34,7 @@
  
--	if (powered && !IS_ERR(dev->clk) && !dev->clk_enabled) {
-+	if (powered && !dev->clk_enabled) {
- 		err = clk_prepare_enable(dev->clk);
- 		if (err)
- 			return err;
-@@ -228,7 +228,7 @@ static int bcm_gpio_set_power(struct bcm_device *dev, bool powered)
- 	if (err)
- 		goto err_revert_shutdown;
+ #define BDADDR_BCM20702A0 (&(bdaddr_t) {{0x00, 0xa0, 0x02, 0x70, 0x20, 0x00}})
+ #define BDADDR_BCM20702A1 (&(bdaddr_t) {{0x00, 0x00, 0xa0, 0x02, 0x70, 0x20}})
++#define BDADDR_BCM43430A0 (&(bdaddr_t) {{0xac, 0x1f, 0x12, 0xa0, 0x43, 0x43}})
+ #define BDADDR_BCM4324B3 (&(bdaddr_t) {{0x00, 0x00, 0x00, 0xb3, 0x24, 0x43}})
+ #define BDADDR_BCM4330B1 (&(bdaddr_t) {{0x00, 0x00, 0x00, 0xb1, 0x30, 0x43}})
  
--	if (!powered && !IS_ERR(dev->clk) && dev->clk_enabled)
-+	if (!powered && dev->clk_enabled)
- 		clk_disable_unprepare(dev->clk);
- 
- 	dev->clk_enabled = powered;
-@@ -238,7 +238,7 @@ static int bcm_gpio_set_power(struct bcm_device *dev, bool powered)
- err_revert_shutdown:
- 	dev->set_shutdown(dev, !powered);
- err_clk_disable:
--	if (powered && !IS_ERR(dev->clk) && !dev->clk_enabled)
-+	if (powered && !dev->clk_enabled)
- 		clk_disable_unprepare(dev->clk);
- 	return err;
- }
-@@ -911,6 +911,10 @@ static int bcm_get_resources(struct bcm_device *dev)
- 	if (IS_ERR(dev->clk) && PTR_ERR(dev->clk) == -EPROBE_DEFER)
- 		return PTR_ERR(dev->clk);
- 
-+	/* Ignore all other errors as before */
-+	if (IS_ERR(dev->clk))
-+		dev->clk = NULL;
-+
- 	dev->device_wakeup = devm_gpiod_get_optional(dev->dev, "device-wakeup",
- 						     GPIOD_OUT_LOW);
- 	if (IS_ERR(dev->device_wakeup))
+@@ -73,11 +74,15 @@ int btbcm_check_bdaddr(struct hci_dev *hdev)
+ 	 *
+ 	 * The address 43:30:B1:00:00:00 indicates a BCM4330B1 controller
+ 	 * with waiting for configuration state.
++	 *
++	 * The address 43:43:A0:12:1F:AC indicates a BCM43430A0 controller
++	 * with no configured address.
+ 	 */
+ 	if (!bacmp(&bda->bdaddr, BDADDR_BCM20702A0) ||
+ 	    !bacmp(&bda->bdaddr, BDADDR_BCM20702A1) ||
+ 	    !bacmp(&bda->bdaddr, BDADDR_BCM4324B3) ||
+-	    !bacmp(&bda->bdaddr, BDADDR_BCM4330B1)) {
++	    !bacmp(&bda->bdaddr, BDADDR_BCM4330B1) ||
++	    !bacmp(&bda->bdaddr, BDADDR_BCM43430A0)) {
+ 		bt_dev_info(hdev, "BCM: Using default device address (%pMR)",
+ 			    &bda->bdaddr);
+ 		set_bit(HCI_QUIRK_INVALID_BDADDR, &hdev->quirks);
 -- 
 2.19.1
