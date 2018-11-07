@@ -1,32 +1,57 @@
-Return-Path: <SRS0=7Z3r=NS=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v3 0/2] pinctrl: Add RZ/A2 pin and gpio driver
-Date: Wed,  7 Nov 2018 13:20:07 -0500
-Message-Id: <20181107182009.61718-1-chris.brandt@renesas.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: jacopo mondi <jacopo@jmondi.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=GM37=NS=ti.com=j-keerthy@kernel.org>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 6/6] ARM: dts: am437x-gp-evm: Add sleep state for beeper pins
+Date: Wed, 7 Nov 2018 10:34:20 +0530
+Message-ID: <1541567060-5671-7-git-send-email-j-keerthy@ti.com>
+In-Reply-To: <1541567060-5671-1-git-send-email-j-keerthy@ti.com>
+References: <1541567060-5671-1-git-send-email-j-keerthy@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: tony@atomide.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, d-gerlach@ti.com, t-kristo@ti.com, j-keerthy@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-The pin controller in the RZ/A2 is nothing like the pin controller in
-the RZ/A1. That's a good thing! This pin controller is much more simple
-and easier to configure.
+Add sleep state for beeper pins. Without this there was a power
+increase during the suspend and standby states on V3_3D domain.
 
-So, this driver is faily simple (I hope).
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+---
+ arch/arm/boot/dts/am437x-gp-evm.dts | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-
-Chris Brandt (2):
-  pinctrl: Add RZ/A2 pin and gpio controller
-  dt-bindings: pinctrl: Add RZ/A2 pinctrl and GPIO
-
- .../bindings/pinctrl/renesas,rza2-pinctrl.txt      |  88 ++++
- drivers/pinctrl/Kconfig                            |  11 +
- drivers/pinctrl/Makefile                           |   1 +
- drivers/pinctrl/pinctrl-rza2.c                     | 530 +++++++++++++++++++++
- include/dt-bindings/pinctrl/r7s9210-pinctrl.h      |  47 ++
- 5 files changed, 677 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
- create mode 100644 drivers/pinctrl/pinctrl-rza2.c
- create mode 100644 include/dt-bindings/pinctrl/r7s9210-pinctrl.h
-
+diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
+index 0127d11..f4a20ca 100644
+--- a/arch/arm/boot/dts/am437x-gp-evm.dts
++++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+@@ -161,7 +161,8 @@
+ 	beeper: beeper {
+ 		compatible = "gpio-beeper";
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&beeper_pins>;
++		pinctrl-0 = <&beeper_pins_default>;
++		pinctrl-1 = <&beeper_pins_sleep>;
+ 		gpios = <&gpio4 12 GPIO_ACTIVE_HIGH>;
+ 	};
+ };
+@@ -523,12 +524,18 @@
+ 		>;
+ 	};
+ 
+-	beeper_pins: beeper_pins {
++	beeper_pins_default: beeper_pins_default {
+ 		pinctrl-single,pins = <
+ 			AM4372_IOPAD(0x9e0, PIN_OUTPUT_PULLUP | MUX_MODE7)	/* cam1_field.gpio4_12 */
+ 		>;
+ 	};
+ 
++	beeper_pins_sleep: beeper_pins_sleep {
++		pinctrl-single,pins = <
++			AM4372_IOPAD(0x9e0, PIN_INPUT_PULLDOWN | MUX_MODE7)	/* cam1_field.gpio4_12 */
++		>;
++	};
++
+ 	unused_pins: unused_pins {
+ 		pinctrl-single,pins = <
+ 			AM4372_IOPAD(0x854, PIN_INPUT_PULLDOWN | MUX_MODE7)
 -- 
-2.16.1
+1.9.1
