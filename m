@@ -1,71 +1,87 @@
-From: Parthiban Nallathambi <pn@denx.de>
-Subject: [PATCH v7 2/2] iio: light: Add device tree binding for vishay vcnl4035
-Date: Wed,  7 Nov 2018 18:08:21 +0100
-Message-ID: <20181107170821.1171886-2-pn@denx.de>
-References: <20181107170821.1171886-1-pn@denx.de>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v2 00/11] thermal: add new flag irq-mode for trip point
+Date: Wed,  7 Nov 2018 18:09:42 +0100
+Message-ID: <1541610593-28542-1-git-send-email-l.luba@partner.samsung.com>
+References: <CGME20181107171019eucas1p1fcb1f44e00265434548d901479f2ea94@eucas1p1.samsung.com>
+Content-Type: text/plain; charset="utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181107170821.1171886-1-pn@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, andy.shevchenko@gmail.com
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, matthias.bgg@gmail.com, Parthiban Nallathambi <pn@denx.de>
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, b.zolnierkie@samsung.com, krzk@kernel.org, Lukasz Luba <l.luba@partner.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Adding device tree binding for vcnl4035 and vendor
-prefix for Vishay Intertechnology
+Hi all,
 
-Signed-off-by: Parthiban Nallathambi <pn@denx.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
+This patch set adds a new flag and mechanism in thermal trip points in
+DT.  The old implementation in thermal zone in DT sets the same
+configuration for all internal trip points. It does not work for all
+HW.  There are SoCs which support IRQs for some trip points (i.e.
+Exynos 4 has 4 trip points with IRQs). For additional one defined
+inside the thermal zone there is a need of 'polling'. When developer
+adds polling mode settings inside the thermal zone, all the trip
+points will be registered for polling, even those supporting IRQs,
+which does not make sense. Thus, developers create workarounds, which
+are confusing for some other developers.  To workaround, 
+people declare some trip points as 'active' (those with IRQ support).
+It allows to bypass polling mode in thermal framework applied for 
+all thermal zone's trip points.
 
-Notes:
-    Changelog in v4:
-    - commit message fix
-    - same indexing/space in binding
-    
-    Changelog in v3:
-    - removed interrupt-parent property reference in documentation
-    - renamed vcnl4035 to light-sensor
+Thermal framework defines 4 types of trip points. The 'passive' means
+passive cooling using DVFS, 'active' is designed for fan and other
+devices actively changing the outside conditions. Therefore, a workaround
+mentioned earlier is confusing when someone does not know about the
+framework limitations.
 
- .../devicetree/bindings/iio/light/vcnl4035.txt | 18 ++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt    |  1 +
- 2 files changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4035.txt
+This patch set tries to solve the issue by adding one flag inside the
+trip point: 'irq-mode;'.  The trip point 'passive' declared in DT with
+explicit flag 'irq-mode;' will not register itself as polling mode.
+Thermal framework will skip it during scheduling next read out work.
+The old global-polling-mode-configuration-inside-thermal-zone is still
+valid.  Patch set does not break existing design for trip points which
+do not have 'irq-mode' flag - they will use polling.
 
-diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4035.txt b/Documentation/devicetree/bindings/iio/light/vcnl4035.txt
-new file mode 100644
-index 000000000000..c07c7f052556
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/vcnl4035.txt
-@@ -0,0 +1,18 @@
-+VISHAY VCNL4035 -  Ambient Light and proximity sensor
-+
-+Link to datasheet: https://www.vishay.com/docs/84251/vcnl4035x01.pdf
-+
-+Required properties:
-+
-+	-compatible: should be "vishay,vcnl4035"
-+	-reg: I2C address of the sensor, should be 0x60
-+	-interrupts: interrupt mapping for GPIO IRQ (level active low)
-+
-+Example:
-+
-+light-sensor@60 {
-+	compatible = "vishay,vcnl4035";
-+	reg = <0x60>;
-+	interrupt-parent = <&gpio4>;
-+	interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-+};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 4b1a2a8fcc16..3c5e0c6f6cee 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -415,6 +415,7 @@ vamrs	Vamrs Ltd.
- variscite	Variscite Ltd.
- via	VIA Technologies, Inc.
- virtio	Virtual I/O Device Specification, developed by the OASIS consortium
-+vishay	Vishay Intertechnology, Inc
- vitesse	Vitesse Semiconductor Corporation
- vivante	Vivante Corporation
- vocore VoCore Studio
+As an example please check patch #10 for Exynos4 SoC family, where there
+is 4 HW supported trip points and there is a need of 6. The rest 2 are
+declared as 'passive' without 'irq-mode;' flag, which means polling
+mode needed for them.
+
+Patch #1 is a small cleanup in thermal framework.
+
+Change log:
+v2
+- changed description in cover letter
+- change commit messages according to Krzysztof comments
+- rebase on top of current mainline (v4.20-rc1)
+
+Regards,
+Lukasz Luba
+
+Lukasz Luba (11):
+  thermal: remove unused function parameter
+  thermal: add irq-mode configuration for trip point
+  thermal: add new sysfs file for irq-mode
+  Doc: thermal: new irq-mode for trip point
+  Doc: DT: thermal: new irq-mode for trip point
+  arm64: dts: exynos5433: add support for thermal trip irq-mode
+  arm64: dts: exynos7: add support for thermal trip irq-mode
+  arm: dts: exynos4: add support for thermal trip irq-mode
+  arm: dts: exynos5420: add support for thermal trip irq-mode
+  arm: dts: exynos5422: add support for thermal trip irq-mode
+  arm: dts: exynos5410: add support for thermal trip irq-mode
+
+ .../devicetree/bindings/thermal/thermal.txt        |   7 ++
+ Documentation/thermal/sysfs-api.txt                |   9 ++
+ arch/arm/boot/dts/exynos4-cpu-thermal.dtsi         |  10 +-
+ arch/arm/boot/dts/exynos5410-odroidxu.dts          |  10 +-
+ arch/arm/boot/dts/exynos5420-trip-points.dtsi      |  10 +-
+ arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |  40 +++++---
+ arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi     | 105 ++++++++++++++-------
+ .../arm64/boot/dts/exynos/exynos7-trip-points.dtsi |   8 ++
+ drivers/thermal/of-thermal.c                       |  17 ++++
+ drivers/thermal/thermal_core.c                     |  16 ++--
+ drivers/thermal/thermal_sysfs.c                    |  53 ++++++++++-
+ include/linux/thermal.h                            |   5 +
+ 12 files changed, 226 insertions(+), 64 deletions(-)
+
 -- 
-2.17.2
+2.7.4
