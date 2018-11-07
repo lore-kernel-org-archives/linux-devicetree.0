@@ -1,38 +1,35 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH] dt-bindings: hwmon: tmp108: add optional interrupts and #thermal-sensor-cells
-Date: Wed,  7 Nov 2018 16:47:08 +0100
-Message-ID: <20181107154708.422-1-heiko@sntech.de>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 1/2] arm64: dts: mt7622: fix console output issue on rfb1
+Date: Wed, 07 Nov 2018 07:48:45 -0800
+Message-ID: <7hr2fwevmq.fsf@baylibre.com>
+References: <8043d487e7bd20a11b14d832702bda214a9a694f.1541566473.git.ryder.lee@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8043d487e7bd20a11b14d832702bda214a9a694f.1541566473.git.ryder.lee@mediatek.com>
+        (Ryder Lee's message of "Wed, 7 Nov 2018 12:59:43 +0800")
 Sender: linux-kernel-owner@vger.kernel.org
-To: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heiko@sntech.de, Heiko Stuebner <heiko.stuebner@bq.com>
+To: Ryder Lee <ryder.lee@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@bq.com>
+Ryder Lee <ryder.lee@mediatek.com> writes:
 
-The tmp108 does have an alert output that can be used as interrupt source
-and can of course also be used as part of a thermal sensor setup for things
-like thermal-based cpu frequencies, so document the necessary properties.
+> The issue was introduced by Kernel CI:
+> https://kernelci.org/boot/id/5bbdcbad59b5146fc5b43592/
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
----
- Documentation/devicetree/bindings/hwmon/tmp108.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+The issue was *found* by kernelCI, not introduced by kernelCI. ;)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/tmp108.txt b/Documentation/devicetree/bindings/hwmon/tmp108.txt
-index 8c4b10df86d9..54d4beed4ee5 100644
---- a/Documentation/devicetree/bindings/hwmon/tmp108.txt
-+++ b/Documentation/devicetree/bindings/hwmon/tmp108.txt
-@@ -7,6 +7,10 @@ Requires node properties:
- - compatible : "ti,tmp108"
- - reg : the I2C address of the device. This is 0x48, 0x49, 0x4a, or 0x4b.
- 
-+Optional properties:
-+- interrupts: Reference to the TMP108 alert interrupt.
-+- #thermal-sensor-cells: should be set to 0.
-+
- Example:
- 	tmp108@48 {
- 		compatible = "ti,tmp108";
--- 
-2.18.0
+> Fix this by using a 'stdout-path' property that points to the device.
+>
+> Fixes: c0d9f9ad4f76 ("arm64: dts: mt7622: add earlycon to mt7622-rfb1 board")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+
+Tested-by: Kevin Hilman <khilman@baylibre.com>
+
+Note that this patch fixes the problem where there is no more console
+output, but current mainline still doesn't boot as there's another
+crash: http://termbin.com/zitb
+
+Kevin
