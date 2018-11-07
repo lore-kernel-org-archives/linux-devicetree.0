@@ -1,43 +1,66 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH] arm64: dts: k3-am65-wakeup: Fix wakeup_uart reg address
-Date: Wed, 7 Nov 2018 15:00:59 -0600
-Message-ID: <20181107210059.j2wd4v2uawsjniol@kahuna>
-References: <20180927050146.17847-1-vigneshr@ti.com>
- <8dc7a5d5-3e21-c2be-fde1-3f2bc6396bec@ti.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH] dt-bindings: hwmon: tmp108: add optional interrupts and #thermal-sensor-cells
+Date: Wed, 07 Nov 2018 22:33:12 +0100
+Message-ID: <5910167.PXNgySJWA7@diego>
+References: <20181107154708.422-1-heiko@sntech.de> <20181107183958.GB5468@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8dc7a5d5-3e21-c2be-fde1-3f2bc6396bec@ti.com>
+In-Reply-To: <20181107183958.GB5468@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Vutla, Lokesh" <lokeshvutla@ti.com>
-Cc: "R, Vignesh" <vigneshr@ti.com>, "Kristo, Tero" <t-kristo@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10:10-20181005, Vutla, Lokesh wrote:
-> 
-> 
-> On Thursday 27 September 2018 10:31 AM, Vignesh R wrote:
-> > cbass_wakeup interconnect which is the parent of wakeup_uart node
-> > defines address-cells=1 and size-cells=1, therefore fix up reg property
-> > of wakeup_uart node accordingly. Otherwise, this UART instance fails to
-> > probe if enabled.
+Hi Guenter,
+
+Am Mittwoch, 7. November 2018, 19:39:58 CET schrieb Guenter Roeck:
+> On Wed, Nov 07, 2018 at 04:47:08PM +0100, Heiko Stuebner wrote:
+> > From: Heiko Stuebner <heiko.stuebner@bq.com>
 > > 
-> > Fixes: 4201af2544b3 ("arm64: dts: ti: am654: Add uart nodes")
-> > Signed-off-by: Vignesh R <vigneshr@ti.com>
+> > The tmp108 does have an alert output that can be used as interrupt source
+> > and can of course also be used as part of a thermal sensor setup for
+> > things
+> > like thermal-based cpu frequencies, so document the necessary properties.
+> > 
+> > Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
 > 
-> Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+> Do you also plan to actually implement interrupt support in the driver ?
 
-Tero:
+Not right now but I'm hoping down the road.
 
-Could we pick this up for rc2? looks like $subject might be good to fix
-up to:
-arm64: dts: ti: k3-am65-wakeup: Fix wakeup_uart reg address
-instead of
-arm64: dts: k3-am65-wakeup: Fix wakeup_uart reg address
+The main argument for including this standard property is that
+the dt-binding is of course a description of the hardware and not the
+state of the linux driver and the tmp108 obviously has that alert output
+pin, hence I'd really like to already have it in the new board-dts I'm
+currently working on so it simply magically works once the driver can
+use it :-) .
 
-could be fixed locally.
 
--- 
-Regards,
-Nishanth Menon
+Heiko
+
+> > ---
+> > 
+> >  Documentation/devicetree/bindings/hwmon/tmp108.txt | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/hwmon/tmp108.txt
+> > b/Documentation/devicetree/bindings/hwmon/tmp108.txt index
+> > 8c4b10df86d9..54d4beed4ee5 100644
+> > --- a/Documentation/devicetree/bindings/hwmon/tmp108.txt
+> > +++ b/Documentation/devicetree/bindings/hwmon/tmp108.txt
+> > 
+> > @@ -7,6 +7,10 @@ Requires node properties:
+> >  - compatible : "ti,tmp108"
+> >  - reg : the I2C address of the device. This is 0x48, 0x49, 0x4a, or 0x4b.
+> > 
+> > +Optional properties:
+> > +- interrupts: Reference to the TMP108 alert interrupt.
+> > +- #thermal-sensor-cells: should be set to 0.
+> > +
+> > 
+> >  Example:
+> >  	tmp108@48 {
+> >  	
+> >  		compatible = "ti,tmp108";
