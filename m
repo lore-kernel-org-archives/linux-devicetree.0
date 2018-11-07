@@ -1,96 +1,64 @@
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH V3 4/6] usb: ohci-platform: Add support for Broadcom STB
- SoC's
-Date: Wed, 7 Nov 2018 11:27:26 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1811071124260.1542-100000@iolanthe.rowland.org>
-References: <e4f2a868-c265-58c8-7b7b-91de91f2cf0b@broadcom.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v2] of/device: Really only set bus DMA mask when appropriate
+Date: Wed,  7 Nov 2018 16:30:32 +0000
+Message-ID: <43b231d67abf2dc589af1c3b9d4f01211cda0b89.1541608043.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e4f2a868-c265-58c8-7b7b-91de91f2cf0b@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Al Cooper <al.cooper@broadcom.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 7 Nov 2018, Al Cooper wrote:
+of_dma_configure() was *supposed* to be following the same logic as
+acpi_dma_configure() and only setting bus_dma_mask if some range was
+specified by the firmware. However, it seems that subtlety got lost in
+the process of fitting it into the differently-shaped control flow, and
+as a result the force_dma==true case ends up always setting the bus mask
+to the 32-bit default, which is not what anyone wants.
 
-> On 11/7/18 10:23 AM, Alan Stern wrote:
-> > On Tue, 6 Nov 2018, Florian Fainelli wrote:
-> > 
-> >> On 11/6/18 1:40 PM, Al Cooper wrote:
-> >>> On 11/6/18 11:08 AM, Alan Stern wrote:
-> >>>> On Mon, 5 Nov 2018, Al Cooper wrote:
-> >>>>
-> >>>>> Add support for Broadcom STB SoC's to the ohci platform driver.
-> >>>>>
-> >>>>> Signed-off-by: Al Cooper <alcooperx@gmail.com>
-> >>>>> ---
-> >>>>
-> >>>>> @@ -177,6 +189,8 @@ static int ohci_platform_probe(struct
-> >>>>> platform_device *dev)
-> >>>>>            ohci->flags |= OHCI_QUIRK_FRAME_NO;
-> >>>>>        if (pdata->num_ports)
-> >>>>>            ohci->num_ports = pdata->num_ports;
-> >>>>> +    if (pdata->suspend_without_phy_exit)
-> >>>>> +        hcd->suspend_without_phy_exit = 1;
-> >>>>
-> >>>> Sorry if I missed this in the earlier discussions...  Is there any
-> >>>> possibility of adding a DT binding that could express this requirement,
-> >>>> instead of putting it in the platform data?
-> >>>>
-> >>>> Alan Stern
-> >>>>
-> >>>
-> >>> Alan,
-> >>>
-> >>> That was my original approach but internal review suggested that I use
-> >>> pdata instead. Below is my original patch for:
-> >>
-> >> And the reason for that suggestion was really because it was percevied
-> >> as encoding a driver behavior as a Device Tree property as opposed to
-> >> describing something that was inherently and strictly a hardware
-> >> behavior (therefore suitable for Device Tree).
-> > 
-> > Right.  The best way to approach this problem is to identify and
-> > characterize the hardware behavior which makes this override necessary.
-> > Then _that_ can be added to DT, since it will be a property of the
-> > hardware rather than of the driver.
-> > 
-> >>> Add the ability to skip calling the PHY's exit routine on suspend
-> >>> and the PHY's init routine on resume. This is to handle a USB PHY
-> >>> that should have it's power_off function called on suspend but cannot
-> >>> have it's exit function called because on exit it will disable the
-> >>> PHY to the point where register accesses to the Host Controllers
-> >>> using the PHY will be disabled and the host drivers will crash.
-> > 
-> > What's special about this PHY?  Why does the exit function mess the PHY
-> > up?  Or to put it another way, why doesn't the exit function mess up
-> > other PHYs in the same way?
-> > 
-> > For that matter, can we change the code so that suspend doesn't call
-> > the exit function for _any_ PHY?  Will just calling the power_off
-> > function be good enough?  If not, then why not?
-> > 
-> > Alan Stern
-> > 
-> 
-> In our USB hardware the USB PHY supplies a clock for the EHCI/OHCI and 
-> XHCI host controllers and if the PHY is totally shut down the EHCI, OHCI 
-> and XHCI registers will cause an exception if accessed and cause the 
-> EHCI, OHCI and XHCI drivers to crash. There is always talk of fixing 
-> this in the hardware by adding an aux clock that will takeover when the 
-> PHY clock is shut down, but this hasn't happened yet. It seems like 
-> "exit on suspend" still makes sense on systems that don't have this 
-> problem (additional power savings?) so removing the exit on suspend for 
-> all systems is not a good idea.
+Make sure we only touch it if the DT actually said so.
 
-Then in theory you should be able to add a Device Tree property which
-says that the PHY provides a clock for the USB host controller.  That
-is strictly a property of the hardware; it has nothing to do with the
-driver.  Therefore it is appropriate for DT.
+Fixes: 6c2fb2ea7636 ("of/device: Set bus DMA mask as appropriate")
+Reported-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Reported-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Tested-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Tested-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Tested-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Tested-by: Robert Richter <robert.richter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+---
 
-Wouldn't this solve your issue?
+ v2: Add comment, collect tested-by tags
 
-Alan Stern
+ drivers/of/device.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index 0f27fad9fe94..5592437bb3d1 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -149,9 +149,11 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
+ 	 * set by the driver.
+ 	 */
+ 	mask = DMA_BIT_MASK(ilog2(dma_addr + size - 1) + 1);
+-	dev->bus_dma_mask = mask;
+ 	dev->coherent_dma_mask &= mask;
+ 	*dev->dma_mask &= mask;
++	/* ...but only set bus mask if we found valid dma-ranges earlier */
++	if (!ret)
++		dev->bus_dma_mask = mask;
+ 
+ 	coherent = of_dma_is_coherent(np);
+ 	dev_dbg(dev, "device is%sdma coherent\n",
+-- 
+2.19.1.dirty
