@@ -1,46 +1,60 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v6 00/18] of: overlay: validation checks, subsequent fixes
-Date: Wed, 7 Nov 2018 06:59:53 -0800
-Message-ID: <8d2d4bcb-1349-7bfb-7007-151cb9f19c1b@gmail.com>
-References: <1541431515-25197-1-git-send-email-frowand.list@gmail.com>
- <CAL_JsqJ6fJcqH4+YHrEZRb+8-KFEmL8WSTSE_XSyrtO=2+JQBA@mail.gmail.com>
- <bf1be459-22d7-6b23-7b1f-847dad5e028f@gmail.com>
- <87sh0dqec5.fsf@concordia.ellerman.id.au>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 07/12] soc: qcom: ipa: IPA register abstraction
+Date: Wed, 7 Nov 2018 16:00:58 +0100
+Message-ID: <CAK8P3a2FsgR=SYAWsgFURVni1ReiCugKs1iUAfQzZhPkbW8aOA@mail.gmail.com>
+References: <20181107003250.5832-1-elder@linaro.org> <20181107003250.5832-8-elder@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87sh0dqec5.fsf@concordia.ellerman.id.au>
-Content-Language: en-US
+In-Reply-To: <20181107003250.5832-8-elder@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
+To: Alex Elder <elder@linaro.org>
+Cc: David Miller <davem@davemloft.net>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, syadagir@codeaurora.org, mjavid@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/7/18 4:09 AM, Michael Ellerman wrote:
-> Frank Rowand <frowand.list@gmail.com> writes:
-> 
->> Hi Michael, Ben, Paul,
->>
->> Do you know if anyone has tried this series on PowerPC?
-> 
-> I have. No obvious breakage.
-> 
-> My test does a loop of adding and removing multiple CPUs multiple times,
-> and in the past that has uncovered refcounting bugs. So I don't think
-> we're leaking any with this series applied.
-> 
-> I used the tracepoint patch to keep an eye on the refcounts :)
-> 
->   https://patchwork.ozlabs.org/patch/751602/
-> 
-> 
-> I'm happy for this series to go into linux-next where it should get some
-> more testing.
-> 
-> cheers
-> 
+On Wed, Nov 7, 2018 at 1:33 AM Alex Elder <elder@linaro.org> wrote:
+> diff --git a/drivers/net/ipa/ipa_reg.c b/drivers/net/ipa/ipa_reg.c
+> new file mode 100644
+> index 000000000000..5e0aa6163235
+> --- /dev/null
+> +++ b/drivers/net/ipa/ipa_reg.c
+> @@ -0,0 +1,972 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
+> + * Copyright (C) 2018 Linaro Ltd.
+> + */
+> +
+> +#include <linux/types.h>
+> +#include <linux/io.h>
+> +#include <linux/bitfield.h>
+> +
+> +#include "ipa_reg.h"
+> +
+> +/* I/O remapped base address of IPA register space */
+> +static void __iomem *ipa_reg_virt;
 
-Thanks for the reviews and testing.
+This should of course be part of the device structure.
 
--Frank
+> +/* struct ipa_reg_desc - descriptor for an abstracted hardware register
+> + *
+> + * @construct - fn to construct the register value from its field structure
+> + * @parse - function to parse register field values into its field structure
+> + * @offset - register offset relative to base address
+> + * @n_ofst - size multiplier for "N-parameterized" registers
+> + */
+> +struct ipa_reg_desc {
+> +       u32 (*construct)(enum ipa_reg reg, const void *fields);
+> +       void (*parse)(enum ipa_reg reg, void *fields, u32 val);
+> +       u32 offset;
+> +       u16 n_ofst;
+> +};
+
+Indirect function pointers can be a bit expensive in the post-spectre
+days. It's probably not overly important if these are always part of
+an MMIO access function, but you should be careful about using
+these in the data path.
+
+How many different versions do we have to support in practice?
+
+       Arnd
