@@ -1,81 +1,46 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] dt-bindings: hwmon: tmp108: add optional interrupts and
- #thermal-sensor-cells
-Date: Wed, 7 Nov 2018 13:38:32 -0800
-Message-ID: <20181107213831.GA14140@roeck-us.net>
-References: <20181107154708.422-1-heiko@sntech.de>
- <20181107183958.GB5468@roeck-us.net>
- <5910167.PXNgySJWA7@diego>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH V3] arm64: dts: r8a77990: ebisu: Add and enable SDHI
+ device nodes
+Date: Wed, 7 Nov 2018 21:35:51 +0100
+Message-ID: <b94ce89b-af37-4270-a7ad-1447a88f69fb@gmail.com>
+References: <20181106204647.18051-1-marek.vasut+renesas@gmail.com>
+ <20181107085056.GB31092@kunai>
+ <7154affe-751a-7cb4-48ea-3d4d6f467ac8@gmail.com>
+ <20181107130810.GA18223@kunai>
+ <f7d99456-f68f-7880-f22e-8bd47a546e82@gmail.com>
+ <20181107192345.6cq6hzpqzl6j535b@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5910167.PXNgySJWA7@diego>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181107192345.6cq6hzpqzl6j535b@ninjato>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: devicetree@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-renesas-soc@vger.kernel.org, =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>, Simon Horman <horms+renesas@verge.net.au>, linux-arm-kernel@lists.infradead.org, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 07, 2018 at 10:33:12PM +0100, Heiko Stübner wrote:
-> Hi Guenter,
+On 11/07/2018 08:23 PM, Wolfram Sang wrote:
 > 
-> Am Mittwoch, 7. November 2018, 19:39:58 CET schrieb Guenter Roeck:
-> > On Wed, Nov 07, 2018 at 04:47:08PM +0100, Heiko Stuebner wrote:
-> > > From: Heiko Stuebner <heiko.stuebner@bq.com>
-> > > 
-> > > The tmp108 does have an alert output that can be used as interrupt source
-> > > and can of course also be used as part of a thermal sensor setup for
-> > > things
-> > > like thermal-based cpu frequencies, so document the necessary properties.
-> > > 
-> > > Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
-> > 
-> > Do you also plan to actually implement interrupt support in the driver ?
+>> We discussed this on IRC already, which is why I need to look into that.
+>> The HS200 works well on the M3N though.
 > 
-> Not right now but I'm hoping down the road.
-> 
-> The main argument for including this standard property is that
-> the dt-binding is of course a description of the hardware and not the
-> state of the linux driver and the tmp108 obviously has that alert output
-> pin, hence I'd really like to already have it in the new board-dts I'm
-> currently working on so it simply magically works once the driver can
-> use it :-) .
-> 
-NP, just asking. Let's wait for Rob's review, then I'll apply the patch
-unless he has issues.
+> Can you push the branch you used somewhere? I retested the branch from
+> Dunbar with my M3N and it works fine with my tests.
 
-Thanks,
-Guenter
+Sure.
 
-> 
-> Heiko
-> 
-> > > ---
-> > > 
-> > >  Documentation/devicetree/bindings/hwmon/tmp108.txt | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/hwmon/tmp108.txt
-> > > b/Documentation/devicetree/bindings/hwmon/tmp108.txt index
-> > > 8c4b10df86d9..54d4beed4ee5 100644
-> > > --- a/Documentation/devicetree/bindings/hwmon/tmp108.txt
-> > > +++ b/Documentation/devicetree/bindings/hwmon/tmp108.txt
-> > > 
-> > > @@ -7,6 +7,10 @@ Requires node properties:
-> > >  - compatible : "ti,tmp108"
-> > >  - reg : the I2C address of the device. This is 0x48, 0x49, 0x4a, or 0x4b.
-> > > 
-> > > +Optional properties:
-> > > +- interrupts: Reference to the TMP108 alert interrupt.
-> > > +- #thermal-sensor-cells: should be set to 0.
-> > > +
-> > > 
-> > >  Example:
-> > >  	tmp108@48 {
-> > >  	
-> > >  		compatible = "ti,tmp108";
-> 
-> 
-> 
-> 
+btw I think this might even have something to do with ATF 1.0.24 or
+mainline U-Boot, which switches the eMMC card to HS200 mode.
+
+-- 
+Best regards,
+Marek Vasut
