@@ -1,12 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 08/15] Bluetooth: hci_bcm: Add support for LPO clock
-Date: Wed,  7 Nov 2018 18:13:01 +0800
-Message-ID: <20181107101308.7626-9-wens@csie.org>
+Subject: [PATCH 06/15] Bluetooth: hci_bcm: Simplify clk_get
+ error handling
+Date: Wed,  7 Nov 2018 18:12:59 +0800
+Message-ID: <20181107101308.7626-7-wens@csie.org>
 References: <20181107101308.7626-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBQXVRLPQKGQE3KSA5XY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBQ7VRLPQKGQESG4PGZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181107101308.7626-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,107 +20,59 @@ To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Johan Hedb
 Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Broadcom Bluetooth controllers support a secondary LPO clock at
-32.768 kHz. This external clock provides low power timing, and also
-a way to detect the frequency of the main reference clock. On many
-designs without NVRAM and a non-default reference clock, this must
-be used or the controller will not function correctly.
+The driver currently checks the clk pointer for an error condition, as
+returned by clk_get, before every invocation of the clk consumer API.
+This is redundant if the goal is simply to ignore the errors, thereby
+making the clk optional. The clk consumer API already checks if the
+pointer is NULL or not.
+
+Simplify the code a bit by assigning NULL to the clk pointer if the
+error condition is one we want to ignore, which is every error except
+deferred probing.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/bluetooth/hci_bcm.c | 41 ++++++++++++++++++++++++++++++++-----
- 1 file changed, 36 insertions(+), 5 deletions(-)
+ drivers/bluetooth/hci_bcm.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-index 7556f8fac8aa..ab6e527952a9 100644
+index 0a20ad48b511..7f21d9ab5029 100644
 --- a/drivers/bluetooth/hci_bcm.c
 +++ b/drivers/bluetooth/hci_bcm.c
-@@ -72,7 +72,8 @@
-  * @btpu: Apple ACPI method to drive BT_REG_ON pin high ("Bluetooth Power Up")
-  * @btpd: Apple ACPI method to drive BT_REG_ON pin low ("Bluetooth Power Down")
-  * @txco_clk: external reference frequency clock used by Bluetooth device
-- * @clk_enabled: whether @txco_clk is prepared and enabled
-+ * @lpo_clk: external LPO clock used by Bluetooth device
-+ * @clk_enabled: whether clocks are prepared and enabled
-  * @init_speed: default baudrate of Bluetooth device;
-  *	the host UART is initially set to this baudrate so that
-  *	it can configure the Bluetooth device for @oper_speed
-@@ -103,6 +104,7 @@ struct bcm_device {
- #endif
- 
- 	struct clk		*txco_clk;
-+	struct clk		*lpo_clk;
- 	bool			clk_enabled;
- 
- 	u32			init_speed;
-@@ -215,21 +217,34 @@ static int bcm_gpio_set_power(struct bcm_device *dev, bool powered)
+@@ -214,7 +214,7 @@ static int bcm_gpio_set_power(struct bcm_device *dev, bool powered)
+ {
  	int err;
  
- 	if (powered && !dev->clk_enabled) {
--		err = clk_prepare_enable(dev->txco_clk);
-+		/* LPO clock needs to be 32.768 kHz */
-+		err = clk_set_rate(dev->lpo_clk, 32768);
-+		if (err) {
-+			dev_err(dev->dev, "Could not set LPO clock rate\n");
-+			return err;
-+		}
-+
-+		err = clk_prepare_enable(dev->lpo_clk);
+-	if (powered && !IS_ERR(dev->clk) && !dev->clk_enabled) {
++	if (powered && !dev->clk_enabled) {
+ 		err = clk_prepare_enable(dev->clk);
  		if (err)
  			return err;
-+
-+		err = clk_prepare_enable(dev->txco_clk);
-+		if (err)
-+			goto err_lpo_clk_disable;
- 	}
- 
- 	err = dev->set_shutdown(dev, powered);
- 	if (err)
--		goto err_clk_disable;
-+		goto err_txco_clk_disable;
- 
- 	err = dev->set_device_wakeup(dev, powered);
+@@ -228,7 +228,7 @@ static int bcm_gpio_set_power(struct bcm_device *dev, bool powered)
  	if (err)
  		goto err_revert_shutdown;
  
--	if (!powered && dev->clk_enabled)
-+	if (!powered && dev->clk_enabled) {
- 		clk_disable_unprepare(dev->txco_clk);
-+		clk_disable_unprepare(dev->lpo_clk);
-+	}
+-	if (!powered && !IS_ERR(dev->clk) && dev->clk_enabled)
++	if (!powered && dev->clk_enabled)
+ 		clk_disable_unprepare(dev->clk);
  
  	dev->clk_enabled = powered;
- 
-@@ -237,9 +252,12 @@ static int bcm_gpio_set_power(struct bcm_device *dev, bool powered)
- 
+@@ -238,7 +238,7 @@ static int bcm_gpio_set_power(struct bcm_device *dev, bool powered)
  err_revert_shutdown:
  	dev->set_shutdown(dev, !powered);
--err_clk_disable:
-+err_txco_clk_disable:
- 	if (powered && !dev->clk_enabled)
- 		clk_disable_unprepare(dev->txco_clk);
-+err_lpo_clk_disable:
+ err_clk_disable:
+-	if (powered && !IS_ERR(dev->clk) && !dev->clk_enabled)
 +	if (powered && !dev->clk_enabled)
-+		clk_disable_unprepare(dev->lpo_clk);
+ 		clk_disable_unprepare(dev->clk);
  	return err;
  }
+@@ -911,6 +911,10 @@ static int bcm_get_resources(struct bcm_device *dev)
+ 	if (IS_ERR(dev->clk) && PTR_ERR(dev->clk) == -EPROBE_DEFER)
+ 		return PTR_ERR(dev->clk);
  
-@@ -934,6 +952,19 @@ static int bcm_get_resources(struct bcm_device *dev)
- 	if (IS_ERR(dev->txco_clk))
- 		dev->txco_clk = NULL;
- 
-+	dev->lpo_clk = devm_clk_get(dev->dev, "lpo");
-+	if (IS_ERR(dev->lpo_clk) && PTR_ERR(dev->lpo_clk) == -EPROBE_DEFER)
-+		return PTR_ERR(dev->lpo_clk);
-+
-+	if (IS_ERR(dev->lpo_clk))
-+		dev->lpo_clk = NULL;
-+
-+	/* Check if we accidentally fetched the lpo clock twice */
-+	if (dev->lpo_clk && clk_is_match(dev->lpo_clk, dev->txco_clk)) {
-+		devm_clk_put(dev->dev, dev->txco_clk);
-+		dev->txco_clk = NULL;
-+	}
++	/* Ignore all other errors as before */
++	if (IS_ERR(dev->clk))
++		dev->clk = NULL;
 +
  	dev->device_wakeup = devm_gpiod_get_optional(dev->dev, "device-wakeup",
  						     GPIOD_OUT_LOW);
