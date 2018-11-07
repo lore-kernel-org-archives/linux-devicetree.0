@@ -1,56 +1,60 @@
-Return-Path: <SRS0=dUsd=NW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40256 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728235AbeKLAEe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 11 Nov 2018 19:04:34 -0500
-Received: by mail-wr1-f67.google.com with SMTP id w14-v6so1102579wrt.7
-        for <devicetree@vger.kernel.org>; Sun, 11 Nov 2018 06:15:52 -0800 (PST)
-From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Subject: [PATCH v2 3/9] iio: imu: st_lsm6dsx: remove static from st_lsm6dsx_set_watermark
-Date: Sun, 11 Nov 2018 15:15:30 +0100
-Message-Id: <19b4dfa76bb6e06ccd7aa219d7867ccfca1e9c82.1541945612.git.lorenzo.bianconi@redhat.com>
-In-Reply-To: <cover.1541945612.git.lorenzo.bianconi@redhat.com>
-References: <cover.1541945612.git.lorenzo.bianconi@redhat.com>
+Return-Path: <SRS0=GM37=NS=ti.com=j-keerthy@kernel.org>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 3/6] ARM: dts: am437x-gp-evm: Add pinctrl for debugss pins
+Date: Wed, 7 Nov 2018 10:34:17 +0530
+Message-ID: <1541567060-5671-4-git-send-email-j-keerthy@ti.com>
+In-Reply-To: <1541567060-5671-1-git-send-email-j-keerthy@ti.com>
+References: <1541567060-5671-1-git-send-email-j-keerthy@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+To: tony@atomide.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, d-gerlach@ti.com, t-kristo@ti.com, j-keerthy@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-Remove static qualifier from st_lsm6dsx_set_watermark routine in
-order to be reused supporting st_lsm6dsx i2c controller
+From: Dave Gerlach <d-gerlach@ti.com>
 
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+The pins used by debugss are not configued by default, place pulldowns
+on the pins for maximum power savings during sleep.
+
+Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+[t-kristo@ti.com: converted to use AM4372_IOPAD macro]
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Keerthy <j-keerthy@ti.com>
 ---
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      | 1 +
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/am437x-gp-evm.dts | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-index ec204d3b4b1f..ac4cbbb0b3fb 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-@@ -185,6 +185,7 @@ int st_lsm6dsx_probe(struct device *dev, int irq, int hw_id, const char *name,
- int st_lsm6dsx_sensor_enable(struct st_lsm6dsx_sensor *sensor);
- int st_lsm6dsx_sensor_disable(struct st_lsm6dsx_sensor *sensor);
- int st_lsm6dsx_fifo_setup(struct st_lsm6dsx_hw *hw);
-+int st_lsm6dsx_set_watermark(struct iio_dev *iio_dev, unsigned int val);
- int st_lsm6dsx_update_watermark(struct st_lsm6dsx_sensor *sensor,
- 				u16 watermark);
- int st_lsm6dsx_flush_fifo(struct st_lsm6dsx_hw *hw);
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-index 961ce9d65d82..d703fcd8706a 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -600,7 +600,7 @@ static int st_lsm6dsx_write_raw(struct iio_dev *iio_dev,
- 	return err;
- }
+diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
+index ae6b24e..9c5e969 100644
+--- a/arch/arm/boot/dts/am437x-gp-evm.dts
++++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+@@ -162,7 +162,7 @@
  
--static int st_lsm6dsx_set_watermark(struct iio_dev *iio_dev, unsigned int val)
-+int st_lsm6dsx_set_watermark(struct iio_dev *iio_dev, unsigned int val)
- {
- 	struct st_lsm6dsx_sensor *sensor = iio_priv(iio_dev);
- 	struct st_lsm6dsx_hw *hw = sensor->hw;
+ &am43xx_pinmux {
+ 	pinctrl-names = "default", "sleep";
+-	pinctrl-0 = <&wlan_pins_default &ddr3_vtt_toggle_default &unused_pins>;
++	pinctrl-0 = <&wlan_pins_default &ddr3_vtt_toggle_default &unused_pins &debugss_pins>;
+ 	pinctrl-1 = <&wlan_pins_sleep>;
+ 
+ 	ddr3_vtt_toggle_default: ddr_vtt_toggle_default {
+@@ -580,6 +580,18 @@
+ 			AM4372_IOPAD(0xb18, PIN_INPUT_PULLDOWN | MUX_MODE7)
+ 		>;
+ 	};
++
++	debugss_pins: pinmux_debugss_pins {
++		pinctrl-single,pins = <
++			AM4372_IOPAD(0xa90, PIN_INPUT_PULLDOWN)
++			AM4372_IOPAD(0xa94, PIN_INPUT_PULLDOWN)
++			AM4372_IOPAD(0xa98, PIN_INPUT_PULLDOWN)
++			AM4372_IOPAD(0xa9c, PIN_INPUT_PULLDOWN)
++			AM4372_IOPAD(0xaa0, PIN_INPUT_PULLDOWN)
++			AM4372_IOPAD(0xaa4, PIN_INPUT_PULLDOWN)
++			AM4372_IOPAD(0xaa8, PIN_INPUT_PULLDOWN)
++		>;
++	};
+ };
+ 
+ &uart0 {
 -- 
-2.19.1
+1.9.1
