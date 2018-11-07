@@ -1,53 +1,98 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] builddeb: Fix inclusion of dtbs in debian package
-Date: Wed,  7 Nov 2018 08:36:46 -0600
-Message-ID: <20181107143646.27675-1-robh@kernel.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 04/12] soc: qcom: ipa: immediate commands
+Date: Wed, 7 Nov 2018 15:36:50 +0100
+Message-ID: <CAK8P3a3iKshE3yCG477AeZbKbLtpDwMhn5mfLySFRLOLmUv5AQ@mail.gmail.com>
+References: <20181107003250.5832-1-elder@linaro.org> <20181107003250.5832-5-elder@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <michal.lkml@markovi.net>, linux-kbuild@vger.kernel.org, =?UTF-8?q?Nuno=20Gon=C3=A7alves?= <nunojpg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20181107003250.5832-5-elder@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: Alex Elder <elder@linaro.org>
+Cc: David Miller <davem@davemloft.net>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, syadagir@codeaurora.org, mjavid@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Commit 37c8a5fafa3b ("kbuild: consolidate Devicetree dtb build rules")
-moved the location of 'dtbs_install' target which caused dtbs to not be
-installed when building debian package with 'bindeb-pkg' target. Update
-the builddeb script to use the same logic that determines if there's a
-'dtbs_install' target which is presence of the arch dts directory. Also,
-use CONFIG_OF_EARLY_FLATTREE instead of CONFIG_OF as that's a better
-indication of whether we are building dtbs.
+On Wed, Nov 7, 2018 at 1:33 AM Alex Elder <elder@linaro.org> wrote:
+>
+> +/**
+> + * struct ipahal_context - HAL global context data
+> + * @empty_fltrt_tbl:   Empty table to be used for table initialization
+> + */
+> +static struct ipahal_context {
+> +       struct ipa_dma_mem empty_fltrt_tbl;
+> +} ipahal_ctx_struct;
+> +static struct ipahal_context *ipahal_ctx = &ipahal_ctx_struct;
 
-This commit will also have the side effect of installing dtbs on any
-arch that has dts files. Previously, it was dependent on whether the
-arch defined 'dtbs_install'.
+Remove the global variables here
 
-Fixes: 37c8a5fafa3b ("kbuild: consolidate Devicetree dtb build rules")
-Reported-by: Nuno Gonçalves <nunojpg@gmail.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michal Marek <michal.lkml@markovi.net>
-Cc: linux-kbuild@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- scripts/package/builddeb | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> +/* Immediate commands H/W structures */
+> +
+> +/* struct ipa_imm_cmd_hw_ip_fltrt_init - IP_V*_FILTER_INIT/IP_V*_ROUTING_INIT
+> + * command payload in H/W format.
+> + * Inits IPv4/v6 routing or filter block.
+> + * @hash_rules_addr: Addr in system mem where hashable flt/rt rules starts
+> + * @hash_rules_size: Size in bytes of the hashable tbl to cpy to local mem
+> + * @hash_local_addr: Addr in shared mem where hashable flt/rt tbl should
+> + *  be copied to
+> + * @nhash_rules_size: Size in bytes of the non-hashable tbl to cpy to local mem
+> + * @nhash_local_addr: Addr in shared mem where non-hashable flt/rt tbl should
+> + *  be copied to
+> + * @rsvd: reserved
+> + * @nhash_rules_addr: Addr in sys mem where non-hashable flt/rt tbl starts
+> + */
+> +struct ipa_imm_cmd_hw_ip_fltrt_init {
+> +       u64 hash_rules_addr;
+> +       u64 hash_rules_size     : 12,
+> +           hash_local_addr     : 16,
+> +           nhash_rules_size    : 12,
+> +           nhash_local_addr    : 16,
+> +           rsvd                : 8;
+> +       u64 nhash_rules_addr;
+> +};
 
-diff --git a/scripts/package/builddeb b/scripts/package/builddeb
-index 90c9a8ac7adb..594b626d83d6 100755
---- a/scripts/package/builddeb
-+++ b/scripts/package/builddeb
-@@ -83,9 +83,9 @@ else
- fi
- cp "$($MAKE -s image_name)" "$tmpdir/$installed_image_path"
- 
--if grep -q "^CONFIG_OF=y" $KCONFIG_CONFIG ; then
-+if grep -q "^CONFIG_OF_EARLY_FLATTREE=y" $KCONFIG_CONFIG ; then
- 	# Only some architectures with OF support have this target
--	if grep -q dtbs_install "${srctree}/arch/$SRCARCH/Makefile"; then
-+	if [ -d "${srctree}/arch/$SRCARCH/boot/dts" ]; then
- 		$MAKE KBUILD_SRC= INSTALL_DTBS_PATH="$tmpdir/usr/lib/$packagename" dtbs_install
- 	fi
- fi
--- 
-2.19.1
+In hardware structures, you should not use bit fields, as the ordering
+of the bits is not well-defined in C. The only portable way to do this
+is to use shifts and masks unfortunately.
+
+> +struct ipa_imm_cmd_hw_hdr_init_local {
+> +       u64 hdr_table_addr;
+> +       u32 size_hdr_table      : 12,
+> +           hdr_addr            : 16,
+> +           rsvd                : 4;
+> +};
+
+I would also add a 'u32 pad' member at the end to make the padding
+explicit here, or mark the first member as '__aligned(4) __packed'
+if you want to avoid the padding.
+
+> +void *ipahal_dma_shared_mem_write_pyld(struct ipa_dma_mem *mem, u32 offset)
+> +{
+> +       struct ipa_imm_cmd_hw_dma_shared_mem *data;
+> +
+> +       ipa_assert(mem->size < 1 << 16);        /* size is 16 bits wide */
+> +       ipa_assert(offset < 1 << 16);           /* local_addr is 16 bits wide */
+> +
+> +       data = kzalloc(sizeof(*data), GFP_KERNEL);
+> +       if (!data)
+> +               return NULL;
+> +
+> +       data->size = mem->size;
+> +       data->local_addr = offset;
+> +       data->direction = 0;    /* 0 = write to IPA; 1 = read from IPA */
+> +       data->skip_pipeline_clear = 0;
+> +       data->pipeline_clear_options = IPAHAL_HPS_CLEAR;
+> +       data->system_addr = mem->phys;
+> +
+> +       return data;
+> +}
+
+The 'void *' return looks odd here, and also the dynamic allocation.
+It looks to me like all these functions could be better done the
+other way round, basically putting the
+ipa_imm_cmd_hw_dma_shared_mem etc structures on the stack
+of the caller. At least for this one, the dynamic allocation
+doesn't help at all because the caller is the same that
+frees it again after the command. I suspect the same is
+true for a lot of those commands.
+
+       Arnd
