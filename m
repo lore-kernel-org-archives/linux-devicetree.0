@@ -1,29 +1,25 @@
-Return-Path: <SRS0=70sl=NS=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 0/2] Replace magic numbers in RZ/G2M dtsi
-Date: Wed,  7 Nov 2018 15:24:25 +0000
-Message-Id: <1541604267-4652-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Return-Path: <SRS0=7Z3r=NS=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH 0/3] usb: renesas: rcar-gen3-usb2: Add support for RZ/A2
+Date: Wed,  7 Nov 2018 12:35:55 -0500
+Message-Id: <20181107173558.54481-1-chris.brandt@renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Dear All,
+Add support for RZ/A2. Basically has the same IP as R-Car Gen3.
 
-We were waiting for v4.20 RC1 to be out for replacing clock and
-power magic numbers within r8a774a1.dtsi as there was a dependency
-with the corresponding bindings.
-This series takes care of the magic numbers now that the bindings
-are available by replacing them with the corresponding macros.
 
-Thanks,
-Fab
+Chris Brandt (3):
+  clk: renesas: r7s9210: Add USB clocks
+  phy: renesas: rcar-gen3-usb2: Add support for R7S9210
+  dt-bindings: rcar-gen3-phy-usb2: Add r7s9210 support
 
-Fabrizio Castro (2):
-  arm64: dts: renesas: r8a774a1: Replace power magic numbers
-  arm64: dts: renesas: r8a774a1: Replace clock magic numbers
-
- arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 239 +++++++++++++++---------------
- 1 file changed, 120 insertions(+), 119 deletions(-)
+ Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 10 ++++++----
+ drivers/clk/renesas/r7s9210-cpg-mssr.c                       |  2 ++
+ drivers/phy/renesas/Kconfig                                  |  2 +-
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c                     | 12 ++++++++++++
+ 4 files changed, 21 insertions(+), 5 deletions(-)
 
 -- 
-2.7.4
+2.16.1
