@@ -1,66 +1,74 @@
-Return-Path: <SRS0=HAag=NQ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:47245 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728094AbeKEWci (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 5 Nov 2018 17:32:38 -0500
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v2] arm64: dts: renesas: r8a77990: Fix VIN endpoint numbering
-Date: Mon,  5 Nov 2018 14:12:43 +0100
-Message-Id: <1541423563-790-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: devicetree-owner@vger.kernel.org
-To: horms@verge.net.au, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Koji Matsuoka <koji.matsuoka.xm@renesas.com>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
+Return-Path: <SRS0=GM37=NS=ti.com=j-keerthy@kernel.org>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 5/6] ARM: dts: am437x-gp-evm: Add pinmux for gpio0 wake
+Date: Wed, 7 Nov 2018 10:34:19 +0530
+Message-ID: <1541567060-5671-6-git-send-email-j-keerthy@ti.com>
+In-Reply-To: <1541567060-5671-1-git-send-email-j-keerthy@ti.com>
+References: <1541567060-5671-1-git-send-email-j-keerthy@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: tony@atomide.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, d-gerlach@ti.com, t-kristo@ti.com, j-keerthy@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-The VIN driver bindings dictates fixed numbering for VIN endpoints connected
-to CSI-2 endpoints, even when a single endpoint exists.
+From: Dave Gerlach <d-gerlach@ti.com>
 
-Without proper endpoint numbering the VIN driver fails to probe.
+Add pinctrl settings so that gpio0 wake from suspend will be supported
+using buttons SW4 and SW7. Also, add pinctrl configuration for 0x954,
+spi0_d0, which is an unused pin brought out to a header on the board
+that in it's default state also connects to the gpio used for wakeup,
+gpio0_3, which affects the state of the pin and prevents a working
+wakeup unless we set the mux to a different state.
 
-Based on a patch in BSP from Koji Matsuoka <koji.matsuoka.xm@renesas.com>
-
-Fixes: ec70407ae7d7 ("arm64: dts: renesas: r8a77990: Add VIN and CSI-2 device nodes")
-Signed-off-by: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
-Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+Signed-off-by: Keerthy <j-keerthy@ti.com>
 ---
- arch/arm64/boot/dts/renesas/r8a77990.dtsi | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/am437x-gp-evm.dts | 26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77990.dtsi b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-index 9509dc0..106a574 100644
---- a/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-@@ -745,9 +745,13 @@
- 				#size-cells = <0>;
-
- 				port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
+diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
+index e52b013..0127d11 100644
+--- a/arch/arm/boot/dts/am437x-gp-evm.dts
++++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+@@ -67,7 +67,13 @@
+ 		debounce-delay-ms = <5>;
+ 		col-scan-delay-us = <2>;
+ 
+-		row-gpios = <&gpio3 21 GPIO_ACTIVE_HIGH /* Bank3, pin21 */
++		pinctrl-names = "default", "sleep";
++		pinctrl-0 = <&matrix_keypad_default>;
++		pinctrl-1 = <&matrix_keypad_sleep>;
 +
- 					reg = <1>;
-
--					vin4csi40: endpoint {
-+					vin4csi40: endpoint@2 {
-+						reg = <2>;
- 						remote-endpoint= <&csi40vin4>;
- 					};
- 				};
-@@ -769,9 +773,13 @@
- 				#size-cells = <0>;
-
- 				port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
++		linux,wakeup;
 +
- 					reg = <1>;
-
--					vin5csi40: endpoint {
-+					vin5csi40: endpoint@2 {
-+						reg = <2>;
- 						remote-endpoint= <&csi40vin5>;
- 					};
- 				};
---
-2.7.4
++		row-gpios = <&gpio0 3 GPIO_ACTIVE_HIGH /* Bank0, pin3 */
+ 				&gpio4 3 GPIO_ACTIVE_HIGH /* Bank4, pin3 */
+ 				&gpio4 2 GPIO_ACTIVE_HIGH>; /* Bank4, pin2 */
+ 
+@@ -601,6 +607,24 @@
+ 			AM4372_IOPAD(0x974, PIN_INPUT_PULLDOWN | SLEWCTRL_FAST | DS0_PULL_UP_DOWN_EN | MUX_MODE0) /* uart0_txd.uart0_txd */
+ 		>;
+ 	};
++
++	matrix_keypad_default: matrix_keypad_default {
++		pinctrl-single,pins = <
++			AM4372_IOPAD(0x9a4, PIN_OUTPUT | MUX_MODE7)
++			AM4372_IOPAD(0x9a8, PIN_OUTPUT | MUX_MODE7)
++			AM4372_IOPAD(0x9ac, PIN_INPUT | PULL_DISABLE | MUX_MODE9)
++			AM4372_IOPAD(0x954, PIN_INPUT_PULLDOWN | MUX_MODE0)
++		>;
++	};
++
++	matrix_keypad_sleep: matrix_keypad_sleep {
++		pinctrl-single,pins = <
++			AM4372_IOPAD(0x9a4, PULL_UP | MUX_MODE7)
++			AM4372_IOPAD(0x9a8, PULL_UP | MUX_MODE7)
++			AM4372_IOPAD(0x9ac, PIN_INPUT | PULL_DISABLE | MUX_MODE9)
++			AM4372_IOPAD(0x954, PIN_INPUT_PULLDOWN | MUX_MODE0)
++		>;
++	};
+ };
+ 
+ &uart0 {
+-- 
+1.9.1
