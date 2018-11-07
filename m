@@ -1,38 +1,38 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH 2/2] spi: Kconfig: Enable McSPI driver for K3 platforms
-Date: Wed, 7 Nov 2018 16:09:26 +0530
-Message-ID: <20181107103926.32550-3-vigneshr@ti.com>
-References: <20181107103926.32550-1-vigneshr@ti.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v7 05/12] media: dt-bindings: add bindings for i.MX7
+ media driver
+Date: Wed, 7 Nov 2018 12:41:13 +0200
+Message-ID: <20181107104113.mxqd7m6ffdgp7egb@mara.localdomain>
+References: <20180810142045.27657-1-rui.silva@linaro.org>
+ <20180810142045.27657-6-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181107103926.32550-1-vigneshr@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vignesh R <vigneshr@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <20180810142045.27657-6-rui.silva@linaro.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable McSPI driver to be built for K3 platforms, to support McSPI on
-AM654 SoC of K3 family.
+On Fri, Aug 10, 2018 at 03:20:38PM +0100, Rui Miguel Silva wrote:
+> Add bindings documentation for i.MX7 media drivers.
+> The imx7 MIPI CSI2 and imx7 CMOS Sensor Interface.
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
----
- drivers/spi/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>-
 
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 7d3a5c94727e..51e620264b62 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -435,7 +435,7 @@ config SPI_OMAP_UWIRE
- 
- config SPI_OMAP24XX
- 	tristate "McSPI driver for OMAP"
--	depends on ARCH_OMAP2PLUS || COMPILE_TEST
-+	depends on ARCH_OMAP2PLUS || ARCH_K3 || COMPILE_TEST
- 	select SG_SPLIT
- 	help
- 	  SPI master controller for OMAP24XX and later Multichannel SPI
 -- 
-2.19.1
+Sakari Ailus
+sakari.ailus@linux.intel.com
