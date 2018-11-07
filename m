@@ -1,79 +1,118 @@
-From: Luca Ceresoli <luca@lucaceresoli.net>
-Subject: Re: [PATCH v4 3/4] media: i2c: Add MAX9286 driver
-Date: Wed, 7 Nov 2018 18:24:18 +0100
-Message-ID: <898b4698-c3c3-9d38-e117-6a4274ba2ca4@lucaceresoli.net>
-References: <20181102154723.23662-1-kieran.bingham@ideasonboard.com>
- <20181102154723.23662-4-kieran.bingham@ideasonboard.com>
- <bfae74db-aa54-32b3-966b-b8d17f2e366b@ideasonboard.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH V3 4/6] usb: ohci-platform: Add support for Broadcom STB
+ SoC's
+Date: Wed, 7 Nov 2018 09:29:42 -0800
+Message-ID: <16a80878-58f7-1584-058e-0e0e49da61cb@gmail.com>
+References: <Pine.LNX.4.44L0.1811071124260.1542-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bfae74db-aa54-32b3-966b-b8d17f2e366b@ideasonboard.com>
+In-Reply-To: <Pine.LNX.4.44L0.1811071124260.1542-100000@iolanthe.rowland.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: kieran.bingham+renesas@ideasonboard.com, Kieran Bingham <kieran.bingham@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, sakari.ailus@iki.fi, =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-kernel@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+To: Alan Stern <stern@rowland.harvard.edu>, Al Cooper <al.cooper@broadcom.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <kee>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kieran,
+On 11/7/18 8:27 AM, Alan Stern wrote:
+> On Wed, 7 Nov 2018, Al Cooper wrote:
+> 
+>> On 11/7/18 10:23 AM, Alan Stern wrote:
+>>> On Tue, 6 Nov 2018, Florian Fainelli wrote:
+>>>
+>>>> On 11/6/18 1:40 PM, Al Cooper wrote:
+>>>>> On 11/6/18 11:08 AM, Alan Stern wrote:
+>>>>>> On Mon, 5 Nov 2018, Al Cooper wrote:
+>>>>>>
+>>>>>>> Add support for Broadcom STB SoC's to the ohci platform driver.
+>>>>>>>
+>>>>>>> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+>>>>>>> ---
+>>>>>>
+>>>>>>> @@ -177,6 +189,8 @@ static int ohci_platform_probe(struct
+>>>>>>> platform_device *dev)
+>>>>>>>            ohci->flags |= OHCI_QUIRK_FRAME_NO;
+>>>>>>>        if (pdata->num_ports)
+>>>>>>>            ohci->num_ports = pdata->num_ports;
+>>>>>>> +    if (pdata->suspend_without_phy_exit)
+>>>>>>> +        hcd->suspend_without_phy_exit = 1;
+>>>>>>
+>>>>>> Sorry if I missed this in the earlier discussions...  Is there any
+>>>>>> possibility of adding a DT binding that could express this requirement,
+>>>>>> instead of putting it in the platform data?
+>>>>>>
+>>>>>> Alan Stern
+>>>>>>
+>>>>>
+>>>>> Alan,
+>>>>>
+>>>>> That was my original approach but internal review suggested that I use
+>>>>> pdata instead. Below is my original patch for:
+>>>>
+>>>> And the reason for that suggestion was really because it was percevied
+>>>> as encoding a driver behavior as a Device Tree property as opposed to
+>>>> describing something that was inherently and strictly a hardware
+>>>> behavior (therefore suitable for Device Tree).
+>>>
+>>> Right.  The best way to approach this problem is to identify and
+>>> characterize the hardware behavior which makes this override necessary.
+>>> Then _that_ can be added to DT, since it will be a property of the
+>>> hardware rather than of the driver.
+>>>
+>>>>> Add the ability to skip calling the PHY's exit routine on suspend
+>>>>> and the PHY's init routine on resume. This is to handle a USB PHY
+>>>>> that should have it's power_off function called on suspend but cannot
+>>>>> have it's exit function called because on exit it will disable the
+>>>>> PHY to the point where register accesses to the Host Controllers
+>>>>> using the PHY will be disabled and the host drivers will crash.
+>>>
+>>> What's special about this PHY?  Why does the exit function mess the PHY
+>>> up?  Or to put it another way, why doesn't the exit function mess up
+>>> other PHYs in the same way?
+>>>
+>>> For that matter, can we change the code so that suspend doesn't call
+>>> the exit function for _any_ PHY?  Will just calling the power_off
+>>> function be good enough?  If not, then why not?
+>>>
+>>> Alan Stern
+>>>
+>>
+>> In our USB hardware the USB PHY supplies a clock for the EHCI/OHCI and 
+>> XHCI host controllers and if the PHY is totally shut down the EHCI, OHCI 
+>> and XHCI registers will cause an exception if accessed and cause the 
+>> EHCI, OHCI and XHCI drivers to crash. There is always talk of fixing 
+>> this in the hardware by adding an aux clock that will takeover when the 
+>> PHY clock is shut down, but this hasn't happened yet. It seems like 
+>> "exit on suspend" still makes sense on systems that don't have this 
+>> problem (additional power savings?) so removing the exit on suspend for 
+>> all systems is not a good idea.
+> 
+> Then in theory you should be able to add a Device Tree property which
+> says that the PHY provides a clock for the USB host controller.  That
+> is strictly a property of the hardware; it has nothing to do with the
+> driver.  Therefore it is appropriate for DT.
 
-thanks for the clarification. One additional note below.
+The very compatible string that is being allocated/defined for this
+controller carries that information already, that is, if you probe a
+"brcm,bcm7445-ohci" compatible then that means the controller has a
+dependency on the PHY to supply its clock.
 
-On 07/11/18 16:06, Kieran Bingham wrote:
-> Hi Luca
-> 
-> <Top posting for new topic>
-> 
->> <lucaceresoli> kbingham: hi, I'm looking at your GMSL v4 patches
->> <lucaceresoli> kbingham: jmondi helped me in understanding parts of it, but I still have a question
->> <lucaceresoli> kbingham: are the drivers waiting for the established link before the remote chips are accessed? where?
-> 
-> I'm replying here rather than spam the IRC channel with a big paste.
-> It's also a useful description to the probe sequence, so I've kept it
-> with the driver posting.
-> 
-> I hope the following helps illustrate the sequences which are involved:
-> 
-> max9286_probe()
->  - max9286_i2c_mux_close() # Disable all links
->  - max9286_configure_i2c # Configure early communication settings
->  - max9286_init():
->    - regulator_enable() # Power up all cameras
->    - max9286_setup() # Most link setup is done here.
->    ... Set up v4l2/async/media-controller endpoints
->    - max9286_i2c_mux_init() # Start configuring cameras:
->      - i2c_mux_alloc() # Create our mux device
->      - for_each_source(dev, source)
->            i2c_mux_add_adapter() # This is where sensors get probed.
-> 
-> So yes sensors are only communicated with once the link is brought up as
-> much as possible.
+Adding a property vs. keying on the compatible string makes sense if you
+know there is at least a second consumer of that property (unless we
+make it a broadcom specific property, in which case, it really is
+redundant with the compatible string).
 
-For the records, an additional bit of explanation I got from Kieran via IRC.
+Anyway, my grudge with that property was the name chosen initially,
+which included an action to be performed by an implementation as opposed
+to something purely descriptive. E.g: 'phy-supplies-clock' might be okay.
 
-The fact that link is already up when the sensors are probed is due to
-the fact that the power regulator has a delay of *8 seconds*. This is
-intended, because there's an MCU on the camera modules that talks on the
-I2C bus during that time, and thus the drivers need to wait after it's done.
+> 
+> Wouldn't this solve your issue?
 
-This delay happens before max9286_setup() is called.
-
-> Because the sensors are i2c devices on the i2c_mux - they are not probed
-> until their adapters are created and added.
-> 
-> At this stage the i2c-mux core framework will iterate all the devices
-> described by the DT for that adapter.
-> 
-> As each one is probed - the i2c_mux framework will call
-> max9286_i2c_mux_select() and enable only the single link.
-> 
-> This allows us to configure each camera independently
-> 
-> (which is essential because they are all configured to the same i2c
-> address by default at power on)
-> 
-> 
-> Hope this helps, and feel free to ask if you have any more questions.
+It would not change much except that there is no need to much with
+ohci-platform.c anymore, but ultimately that property needs to be read
+by ohci-hcd.c and acted on, which would likely lead to the same amount
+of changes as those present in patch #2 currently.
 -- 
-Luca
+Florian
