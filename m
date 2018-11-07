@@ -1,123 +1,163 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 1/2] dt-bindings: hwmon: add binding documentation for
- adt7475
-Date: Tue, 6 Nov 2018 21:07:57 -0800
-Message-ID: <213614fb-1b7a-a06c-6f9f-f3d497750ca6@roeck-us.net>
-References: <20181107040010.27436-1-chris.packham@alliedtelesis.co.nz>
- <20181107040010.27436-2-chris.packham@alliedtelesis.co.nz>
- <64720b73-dddf-783c-a3a4-3f32a748bf5d@roeck-us.net>
- <1ed7434bfded41bfba3b739f58f69102@svr-chch-ex1.atlnz.lc>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH] ARM: dts: imx7d-sdb: add rev-a board support
+Date: Wed, 7 Nov 2018 05:18:47 +0000
+Message-ID: <1541567625-11812-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1ed7434bfded41bfba3b739f58f69102@svr-chch-ex1.atlnz.lc>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jdelvare@suse.com" <jdelvare@suse.com>
-Cc: "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/6/18 8:27 PM, Chris Packham wrote:
-> On 7/11/18 5:24 PM, Guenter Roeck wrote:
->> On 11/6/18 8:00 PM, Chris Packham wrote:
->>> With the addition of the invert-pwm property the adt7475 needs its own
->>> binding documentation rather being captured under trivial-devices.txt.
->>>
->>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
->>> ---
->>>     .../devicetree/bindings/hwmon/adt7475.txt     | 22 +++++++++++++++++++
->>>     .../devicetree/bindings/trivial-devices.txt   |  4 ----
->>>     2 files changed, 22 insertions(+), 4 deletions(-)
->>>     create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.txt b/Documentation/devicetree/bindings/hwmon/adt7475.txt
->>> new file mode 100644
->>> index 000000000000..79255439e157
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.txt
->>> @@ -0,0 +1,22 @@
->>> +*ADT7475 hwmon sensor.
->>> +
->>> +Required properties:
->>> +- compatible: One of
->>> +	"adi,adt7473"
->>> +	"adi,adt7475"
->>> +	"adi,adt7476"
->>> +	"adi,adt7490"
->>> +
->>> +- reg: I2C address
->>> +
->>> +optional properties:
->>> +
->>> +- invert-pwm: This configures the PWM to use logic low for 100% duty cycle.
->>> +
->>> +Example:
->>> +
->>> +hwmon@2e {
->>> +	compatible = ;
->>> +	reg = <0x2e>;
->>> +	invert-pwm;
->>
->> If I understand correctly, the flag is set per pwm channel. A single global
->> property seems inappropriate.
-> 
-> Yes it is per-channel. But I was having a hard time imagining a hardware
-> design that would use both inverted and non-inverted at the same time.
-> 
+Current imx7d-sdb.dts has some incorrect settings about
+Rev-A and Rev-B boards, some of the settings are based on
+Rev-A board but some are based on Rev-B board, clean up it
+by adding i.MX7D SDB Rev-A board support, make default
+imx7d-sdb.dts for Rev-B board as usual, and introduce
+imx7d-sdb-reva.dts for Rev-A board. Below are the affected
+differences of Rev-A and Rev-B board:
 
-People can be inventive. Sometimes too much so.
+                Rev-A           Rev-B
+USB_OTG2_PWR:   UART3_CTS_B     GPIO1_IO07
+ENET_EN_B:      None            GPIO1_IO04
+TP_INT_B:       EPDC_DATA13     EPDC_BDR1
 
-> Do you have a preference for how the properties should look?
-> 
->     invert-pwm[123]?
-> 
->     invert-pwm = <0x7>;?
->
-Ultimately we'll have to find a generic way of defining devicetree properties for
-hardware monitoring devices, not just for pwm but for all sensor types. A sub-node
-per channel seems to be the most likely answer, but I think that is a long way off
-(and will require lengthy discussions about acceptable properties).
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/Makefile           |  1 +
+ arch/arm/boot/dts/imx7d-sdb-reva.dts | 40 ++++++++++++++++++++++++++++++++=
+++++
+ arch/arm/boot/dts/imx7d-sdb.dts      | 21 ++++++++++++++++---
+ 3 files changed, 59 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx7d-sdb-reva.dts
 
-I was looking into pwm DT properties, but they define a set of flags
-(PWM_POLARITY_INVERTED, PWM_POLARITY_NORMAL).
-
-The g762 driver uses "pwm_polarity". Underscore - hmm. Other drivers use module
-parameters, sysfs attributes (pwmX_invert in asc7621 driver), or platform data
-(g762, max6639).
-
-Maybe pwm-polarity = <PWM_POLARITY_NORMAL | PWM_POLARITY_INVERTED> ?
-No idea if that makes sense. Or just a boolean pwm-polarity-inverted.
-
-Thinking about it per channel vs. per chip ... other drivers also seem to
-use a single property / attribute for the entire chip, so that is fine here
-as well. We can always extend it if needed.
-
-Anyway, I am fine with whatever Rob accepts.
-
-Guenter
-
->>
->> Guenter
->>
->>> +};
->>> diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
->>> index 69c934aec13b..4f29100d6bbf 100644
->>> --- a/Documentation/devicetree/bindings/trivial-devices.txt
->>> +++ b/Documentation/devicetree/bindings/trivial-devices.txt
->>> @@ -14,10 +14,6 @@ ad,ad7414		SMBus/I2C Digital Temperature Sensor in 6-Pin SOT with SMBus Alert an
->>>     ad,adm9240		ADM9240:  Complete System Hardware Monitor for uProcessor-Based Systems
->>>     adi,adt7461		+/-1C TDM Extended Temp Range I.C
->>>     adt7461			+/-1C TDM Extended Temp Range I.C
->>> -adi,adt7473		+/-1C TDM Extended Temp Range I.C
->>> -adi,adt7475		+/-1C TDM Extended Temp Range I.C
->>> -adi,adt7476		+/-1C TDM Extended Temp Range I.C
->>> -adi,adt7490		+/-1C TDM Extended Temp Range I.C
->>>     adi,adxl345		Three-Axis Digital Accelerometer
->>>     adi,adxl346		Three-Axis Digital Accelerometer (backward-compatibility value "adi,adxl345" must be listed too)
->>>     ams,iaq-core		AMS iAQ-Core VOC Sensor
->>>
->>
->>
-> 
-> 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index ef9ffa4..6d133b9 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -572,6 +572,7 @@ dtb-$(CONFIG_SOC_IMX7D) +=3D \
+ 	imx7d-pico-pi.dtb \
+ 	imx7d-sbc-imx7.dtb \
+ 	imx7d-sdb.dtb \
++	imx7d-sdb-reva.dtb \
+ 	imx7d-sdb-sht11.dtb \
+ 	imx7s-colibri-eval-v3.dtb \
+ 	imx7s-warp.dtb
+diff --git a/arch/arm/boot/dts/imx7d-sdb-reva.dts b/arch/arm/boot/dts/imx7d=
+-sdb-reva.dts
+new file mode 100644
+index 0000000..c57c13d
+--- /dev/null
++++ b/arch/arm/boot/dts/imx7d-sdb-reva.dts
+@@ -0,0 +1,40 @@
++// SPDX-License-Identifier: GPL-2.0+ OR MIT
++//
++// Copyright (C) 2015 Freescale Semiconductor, Inc.
++
++/dts-v1/;
++
++#include "imx7d-sdb.dts"
++
++/ {
++	reg_usb_otg2_vbus: regulator-usb-otg2-vbus {
++		gpio =3D <&gpio4 7 GPIO_ACTIVE_HIGH>;
++	};
++};
++
++&fec2 {
++	pinctrl-0 =3D <&pinctrl_enet2>;
++	/delete-property/pinctrl-assert-gpios;
++};
++
++&iomuxc {
++	imx7d-sdb {
++		pinctrl_tsc2046_pendown: tsc2046_pendown {
++			fsl,pins =3D <
++				MX7D_PAD_EPDC_DATA13__GPIO2_IO13	0x59
++			>;
++		};
++
++		pinctrl_hog: hoggrp {
++			fsl,pins =3D <
++				MX7D_PAD_UART3_CTS_B__GPIO4_IO7		0x14
++				MX7D_PAD_ECSPI2_SS0__GPIO4_IO23		0x34  /* bt reg on */
++			>;
++		};
++	};
++};
++
++&iomuxc_lpsr {
++	/delete-property/pinctrl-names;
++	/delete-property/pinctrl-0;
++};
+diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.=
+dts
+index f1bafda..b89d9f6 100644
+--- a/arch/arm/boot/dts/imx7d-sdb.dts
++++ b/arch/arm/boot/dts/imx7d-sdb.dts
+@@ -73,7 +73,7 @@
+ 		regulator-name =3D "usb_otg2_vbus";
+ 		regulator-min-microvolt =3D <5000000>;
+ 		regulator-max-microvolt =3D <5000000>;
+-		gpio =3D <&gpio4 7 GPIO_ACTIVE_HIGH>;
++		gpio =3D <&gpio1 7 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
+ 	};
+=20
+@@ -203,7 +203,8 @@
+=20
+ &fec2 {
+ 	pinctrl-names =3D "default";
+-	pinctrl-0 =3D <&pinctrl_enet2>;
++	pinctrl-0 =3D <&pinctrl_enet2 &pinctrl_enet2_epdc0_en>;
++	pinctrl-assert-gpios =3D <&gpio1 4 GPIO_ACTIVE_LOW>;
+ 	assigned-clocks =3D <&clks IMX7D_ENET2_TIME_ROOT_SRC>,
+ 			  <&clks IMX7D_ENET2_TIME_ROOT_CLK>;
+ 	assigned-clock-parents =3D <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
+@@ -491,6 +492,12 @@
+ 			>;
+ 		};
+=20
++		pinctrl_enet2_epdc0_en: enet2_epdc0_grp {
++			fsl,pins =3D <
++				MX7D_PAD_LPSR_GPIO1_IO04__GPIO1_IO4	0x14
++			>;
++		};
++
+ 		pinctrl_flexcan2: flexcan2grp {
+ 			fsl,pins =3D <
+ 				MX7D_PAD_GPIO1_IO14__FLEXCAN2_RX	0x59
+@@ -513,7 +520,6 @@
+=20
+ 		pinctrl_hog: hoggrp {
+ 			fsl,pins =3D <
+-				MX7D_PAD_UART3_CTS_B__GPIO4_IO7		0x14
+ 				MX7D_PAD_ECSPI2_SS0__GPIO4_IO23		0x34  /* bt reg on */
+ 			>;
+ 		};
+@@ -724,6 +730,9 @@
+ };
+=20
+ &iomuxc_lpsr {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_hog_2>;
++
+ 	pinctrl_wdog: wdoggrp {
+ 		fsl,pins =3D <
+ 			MX7D_PAD_LPSR_GPIO1_IO00__WDOG1_WDOG_B		0x74
+@@ -735,4 +744,10 @@
+ 			MX7D_PAD_LPSR_GPIO1_IO01__PWM1_OUT		0x30
+ 		>;
+ 	};
++
++	pinctrl_hog_2: hoggrp-2 {
++		fsl,pins =3D <
++			MX7D_PAD_LPSR_GPIO1_IO07__GPIO1_IO7	  0x14
++		>;
++	};
+ };
+--=20
+2.7.4
