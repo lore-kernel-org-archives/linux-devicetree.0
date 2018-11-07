@@ -1,47 +1,47 @@
 From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH RESEND v3 1/2] arm64: dts: msm: add PDC device bindings for sdm845
-Date: Wed,  7 Nov 2018 14:51:08 -0700
-Message-ID: <20181107215109.10720-1-ilina@codeaurora.org>
+Subject: [PATCH RESEND v3 2/2] dt-bindings/interrupt-controller: pdc: fix example to match actual bindings
+Date: Wed,  7 Nov 2018 14:51:09 -0700
+Message-ID: <20181107215109.10720-2-ilina@codeaurora.org>
+References: <20181107215109.10720-1-ilina@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181107215109.10720-1-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, bjorn.andersson@linaro.org
 Cc: rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add PDC interrupt controller device bindings for SDM845.
+The PDC map should use the GIC SPI port and not the vector. GIC
+internally adds 32 to SPI hwirq numbers.
 
+Fixes: 1ae8862e27e ("dt-bindings/interrupt-controller: pdc: Describe PDC device binding")
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 ---
-Changes in v3:
-	- Fix PDC map, use GIC SPI port number for hwirq
-Changes in v2:
-	- Order by address
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ .../devicetree/bindings/interrupt-controller/qcom,pdc.txt     | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index b72bdb0a31a5..09f26ae9f803 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1256,6 +1256,15 @@
- 			#power-domain-cells = <1>;
- 		};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+index 8e0797cb1487..803831479aec 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+@@ -55,13 +55,13 @@ Example:
+ 	pdc: interrupt-controller@b220000 {
+ 		compatible = "qcom,sdm845-pdc";
+ 		reg = <0xb220000 0x30000>;
+-		qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
++		qcom,pdc-ranges = <0 480 94>, <94 609 15>, <115 630 7>;
+ 		#interrupt-cells = <2>;
+ 		interrupt-parent = <&intc>;
+ 		interrupt-controller;
+ 	};
  
-+		pdc: interrupt-controller@b220000 {
-+			compatible = "qcom,sdm845-pdc";
-+			reg = <0xb220000 0x30000>;
-+			qcom,pdc-ranges = <0 480 94>, <94 609 15>, <115 630 7>;
-+			#interrupt-cells = <2>;
-+			interrupt-parent = <&intc>;
-+			interrupt-controller;
-+		};
-+
- 		tsens0: thermal-sensor@c263000 {
- 			compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
- 			reg = <0xc263000 0x1ff>, /* TM */
+-DT binding of a device that wants to use the GIC SPI 514 as a wakeup
++DT binding of a device that wants to use the GIC SPI 482 as a wakeup
+ interrupt, must do -
+ 
+ 	wake-device {
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
