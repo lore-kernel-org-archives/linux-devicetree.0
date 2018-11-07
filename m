@@ -1,87 +1,107 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH V3] arm64: dts: r8a77990: ebisu: Add and enable SDHI
- device nodes
-Date: Wed, 7 Nov 2018 09:50:57 +0100
-Message-ID: <20181107085056.GB31092@kunai>
-References: <20181106204647.18051-1-marek.vasut+renesas@gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v3 17/25] dt-bindings: panel: Add Bananapi S070WV20-CT16
+ ICN6211 MIPI-DSI to RGB bridge
+Date: Wed, 7 Nov 2018 10:11:38 +0100
+Message-ID: <25c24350-4acd-68b8-ef5d-75a60094f0b6@samsung.com>
+References: <20181026144344.27778-1-jagan@amarulasolutions.com>
+        <CGME20181029111305epcas5p2ee0ca644470de4e036762e000afbb71b@epcas5p2.samsung.com>
+        <20181026144344.27778-18-jagan@amarulasolutions.com>
+        <3c4c8a08-8c1e-1ac6-2b53-81389d69c97b@samsung.com>
+        <CAGb2v66ENhmNXPz4PfdRJjNUNdpDNZYX2a3SH8AD6SMe9g2zLA@mail.gmail.com>
+        <bfe28e8d-3786-d35d-a589-abed9ee8e7d5@samsung.com>
+        <CAMty3ZAWkX8YSRzFs_GS2O4+=pf68e4EuSMym+_XpCe3_4-2yw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6892887542076259819=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181106204647.18051-1-marek.vasut+renesas@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: devicetree@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, linux-arm-kernel@lists.infradead.org, Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMty3ZAWkX8YSRzFs_GS2O4+=pf68e4EuSMym+_XpCe3_4-2yw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.co
 List-Id: devicetree@vger.kernel.org
 
+On 06.11.2018 19:08, Jagan Teki wrote:
+> On Wed, Oct 31, 2018 at 2:45 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
+>> On 31.10.2018 09:58, Chen-Yu Tsai wrote:
+>>> On Wed, Oct 31, 2018 at 4:53 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
+>>>> On 26.10.2018 16:43, Jagan Teki wrote:
+>>>>> Bananapi S070WV20-CT16 ICN6211 is 800x480, 4-lane MIPI-DSI to RGB
+>>>>> bridge panel, which is available on same PCB with 24-bit RGB interface.
+>>>>>
+>>>>> So, this patch adds DSI specific binding details on existing
+>>>>> dt-bindings file.
+>>>>>
+>>>>> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+>>>>> ---
+>>>>> Changes for v3:
+>>>>> - Use existing binding doc and update dsi details
+>>>>> Changes for v2:
+>>>>> - none
+>>>>>
+>>>>>  .../display/panel/bananapi,s070wv20-ct16.txt  | 31 +++++++++++++++++--
+>>>>>  1 file changed, 29 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
+>>>>> index 35bc0c839f49..b7855dc7c66f 100644
+>>>>> --- a/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
+>>>>> +++ b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
+>>>>> @@ -1,12 +1,39 @@
+>>>>>  Banana Pi 7" (S070WV20-CT16) TFT LCD Panel
+>>>>>
+>>>>> +S070WV20-CT16 is 7" 800x480 panel connected through a 24-bit RGB interface.
+>>>>> +
+>>>>> +Depending on the variant, the PCB attached to the panel module either
+>>>>> +supports DSI, or DSI + 24-bit RGB. DSI is converted to 24-bit RGB via
+>>>>> +an onboard ICN6211 MIPI DSI - RGB bridge chip, then fed to the panel
+>>>>> +itself
+>>>> As I understand this is display board, which contains 'pure' RGB panel
+>>>> S070WV20-CT16 and optionally ICN6211 DSI->RGB bridge.
+>>>> These are separate devices, just connected by vendor to simplify its
+>>>> assembly. Why don't you create then bridge driver for ICN6211 and RGB
+>>>> panel driver for S070WV20-CT16 - it looks more generic.
+>>>> Then you can describe both in dts and voila.
+>>>> Creating drivers for every combo of devices (panel + bridge), just
+>>>> because some vendor sells them together seems incorrect - we have
+>>>> devicetree for it.
+>>> Rob suggested this, and also the opposite: using the same
+>>> "bananapi,s070wv20-ct16"
+>>> compatible string for both types of connections, and have the driver deal with
+>>> detecting the bus type.
+>>>
+>>> The thing about the bridge chip is that there's no available datasheet that
+>>> describes all the parts of the init sequence, in fact none at all. I managed
+>>> to work out some bits, but the others remain a mystery and must be hard-coded
+>>> to match the panel. That would work against having a generic bridge driver.
+>>
+>> But it is common for many chips - 1st version of the driver is developed
+>> on one platform and it supports only one configuration, if next platform
+>> with the same cheap appears the driver is augmented if necessary.
+> At-least few of the commands from panel initialization code, the
+> respective opcode data values are based on panel timings and even
+> clock value is different in DSI. I think it look hard to try bridge
+> driver for these restrictions, do you have any suggestions?
 
---===============6892887542076259819==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="+g7M9IMkV8truYOl"
-Content-Disposition: inline
+
+Where do you see an issue? Since panel is RGB it should have no
+initialization sequence (beside regulator/gpio power on/off), so the
+only thing to do is to figure out which regulators/gpios belongs to
+which component - with publicly available specs it should be doable.
+
+The whole initialization sequence is for the bridge, so you put it into
+bridge driver, for starters it can be hardcoded.
+
+Then you can:
+
+1. Try to find other users of this ICN6211 chip and compare
+initialization sequences to guess purpose of registers.
+
+2. Try to get specs of the chip (ask vendor, distributor, grep Internet).
+
+3. Do nothing - if there will be other users of the bridge they will do
+this work.
 
 
---+g7M9IMkV8truYOl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Regards
 
-On Tue, Nov 06, 2018 at 09:46:47PM +0100, Marek Vasut wrote:
-> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
->=20
-> This patch adds SDHI{0,1,3} device nodes for the r8a77990 SoC
-> and enables SD card slot connected to SDHI0, micro SD card slot
-> connected to SDHI1 and eMMC connected to SDHI3 on the Ebisu board
-> using the R8A77990 SoC.
->=20
-> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-
-Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-
-Out of curiosity: have you tested HS400 on that board based on Niklas'
-recent patches as well?
-
-
---+g7M9IMkV8truYOl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlvip3AACgkQFA3kzBSg
-KbZ2wQ//VQfyMFYhpGLx15tChKnrGHzKDVXGUSYrLY6zaqii0TdRlj3ycnUrNk8U
-tsg1d9hTQhzs666oFAGkaQgAogz/SFO8/Q2jZ7QMb9FL402lGKRjAOAsGkPBuGaK
-XfgmOS521yaP3mwaTlgU6t1Y47S6jcIJgIcKoRRymLUO4SoNtvn9FTdWbq2kQuyl
-r9J/4U/gYBx8/gIr4bUDambhJc+xAr8Iydv7CNrRZGGXy9I2hOqL12/tEGcN6s8G
-RdoJkLKMOVdLutHz1HNkhfJVttxkfX7Lz7118MMJ+yP6RvWY4AGOE+FxkY84687C
-oe/yH2yBql8u/MujYTBsF0k6544VkhOK/grhp3lRM/12HhY2Z6OkW11UlAUG3uTE
-RqbiT65IFbvqMqvrQrpHzkWjiz4+85LYvs2lt5+vEd+5ReiDYDAk7zsqAhvk5w8H
-E4C9XFUJN073ZVtGDfcibO3VzsWCfB4TVkSLx8cliFRRGRuzDlmXCxbWuhQWy+7+
-eyVLPs06YgyTOQw5i12Me3AQ8tGpMonzhvxJnNhRPGd8JkRY4byg0aQQpHNPCXzc
-+V6VY1X1XIGvMvW8o1+QMLL3n1MpHpc2NV3B2DxyavXV26kvppifcNBt2qsLPRuo
-3+XR4R4nBPXEO6+AzmfkkBJvmPj3XX6WNt3c5XeCgheFsf+XQmA=
-=U6XU
------END PGP SIGNATURE-----
-
---+g7M9IMkV8truYOl--
-
-
---===============6892887542076259819==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============6892887542076259819==--
+Andrzej
