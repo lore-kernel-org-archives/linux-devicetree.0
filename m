@@ -1,50 +1,79 @@
-From: vitor <vitor.soares@synopsys.com>
-Subject: Re: [PATCH 1/3] i3c: master: Add driver for Synopsys DesignWare IP
-Date: Wed, 7 Nov 2018 17:16:01 +0000
-Message-ID: <4e05e568-c010-a6db-92b1-4c26ad503333@synopsys.com>
-References: <1540807618-13246-1-git-send-email-soares@synopsys.com>
- <1540807618-13246-2-git-send-email-soares@synopsys.com>
- <20181029134100.GD28520@bombadil.infradead.org>
- <8a71cb94-ccf5-8ec0-446a-37a29405f585@synopsys.com>
- <CAMuHMdUO5_-TsGiu3otuLqNtLNgdnw=1QdKjTzPmSxHp9QotxQ@mail.gmail.com>
+From: Luca Ceresoli <luca@lucaceresoli.net>
+Subject: Re: [PATCH v4 3/4] media: i2c: Add MAX9286 driver
+Date: Wed, 7 Nov 2018 18:24:18 +0100
+Message-ID: <898b4698-c3c3-9d38-e117-6a4274ba2ca4@lucaceresoli.net>
+References: <20181102154723.23662-1-kieran.bingham@ideasonboard.com>
+ <20181102154723.23662-4-kieran.bingham@ideasonboard.com>
+ <bfae74db-aa54-32b3-966b-b8d17f2e366b@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUO5_-TsGiu3otuLqNtLNgdnw=1QdKjTzPmSxHp9QotxQ@mail.gmail.com>
+In-Reply-To: <bfae74db-aa54-32b3-966b-b8d17f2e366b@ideasonboard.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Vitor Soares <vitor.soares@synopsys.com>
-Cc: Matthew Wilcox <willy@infradead.org>, Boris Brezillon <boris.brezillon@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>Rob Herring <r>
+To: kieran.bingham+renesas@ideasonboard.com, Kieran Bingham <kieran.bingham@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, sakari.ailus@iki.fi, =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-kernel@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hi Kieran,
 
-On 07/11/18 15:34, Geert Uytterhoeven wrote:
-> Hi Vitor,
->
-> On Wed, Nov 7, 2018 at 4:15 PM vitor <vitor.soares@synopsys.com> wrote:
->> On 29/10/18 13:41, Matthew Wilcox wrote:
->>> On Mon, Oct 29, 2018 at 10:06:56AM +0000, Vitor soares wrote:
->>>> +config DW_I3C_MASTER
->>>> +    tristate "Synospsys DesignWare I3C master driver"
->>>> +    depends on I3C
->>>> +    depends on !(ALPHA || PARISC)
->>> why?
->> Please check this email thread: https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lkml_2018_10_8_393&d=DwIBaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=qVuU64u9x77Y0Kd0PhDK_lpxFgg6PK9PateHwjb_DY0&m=dVPXOATdi751iTXEXYcWuChJA6hcIkXr8tF-i9hrv4E&s=Nk3lXNpRMzhvKMnlXUsFySTr5VYAr2228vXaZfiGBgM&e=
-> Hence this deserves a comment, so we know when/what to do to drop the
-> dependency:
->
->      depends on  !(ALPHA || PARISC) # needs {read,write}sl()
->
-> Gr{oetje,eeting}s,
->
->                          Geert
->
-I agree with you, I just didn't know if I should comment or not. I will 
-do that next version.
+thanks for the clarification. One additional note below.
 
+On 07/11/18 16:06, Kieran Bingham wrote:
+> Hi Luca
+> 
+> <Top posting for new topic>
+> 
+>> <lucaceresoli> kbingham: hi, I'm looking at your GMSL v4 patches
+>> <lucaceresoli> kbingham: jmondi helped me in understanding parts of it, but I still have a question
+>> <lucaceresoli> kbingham: are the drivers waiting for the established link before the remote chips are accessed? where?
+> 
+> I'm replying here rather than spam the IRC channel with a big paste.
+> It's also a useful description to the probe sequence, so I've kept it
+> with the driver posting.
+> 
+> I hope the following helps illustrate the sequences which are involved:
+> 
+> max9286_probe()
+>  - max9286_i2c_mux_close() # Disable all links
+>  - max9286_configure_i2c # Configure early communication settings
+>  - max9286_init():
+>    - regulator_enable() # Power up all cameras
+>    - max9286_setup() # Most link setup is done here.
+>    ... Set up v4l2/async/media-controller endpoints
+>    - max9286_i2c_mux_init() # Start configuring cameras:
+>      - i2c_mux_alloc() # Create our mux device
+>      - for_each_source(dev, source)
+>            i2c_mux_add_adapter() # This is where sensors get probed.
+> 
+> So yes sensors are only communicated with once the link is brought up as
+> much as possible.
 
-Best regards,
+For the records, an additional bit of explanation I got from Kieran via IRC.
 
-Vitor Soares
+The fact that link is already up when the sensors are probed is due to
+the fact that the power regulator has a delay of *8 seconds*. This is
+intended, because there's an MCU on the camera modules that talks on the
+I2C bus during that time, and thus the drivers need to wait after it's done.
+
+This delay happens before max9286_setup() is called.
+
+> Because the sensors are i2c devices on the i2c_mux - they are not probed
+> until their adapters are created and added.
+> 
+> At this stage the i2c-mux core framework will iterate all the devices
+> described by the DT for that adapter.
+> 
+> As each one is probed - the i2c_mux framework will call
+> max9286_i2c_mux_select() and enable only the single link.
+> 
+> This allows us to configure each camera independently
+> 
+> (which is essential because they are all configured to the same i2c
+> address by default at power on)
+> 
+> 
+> Hope this helps, and feel free to ask if you have any more questions.
+-- 
+Luca
