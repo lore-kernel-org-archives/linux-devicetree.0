@@ -1,61 +1,46 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: [PATCH v3 0/8] BL035-RGB-002 3.5" LCD sunxi DRM support
-Date: Wed,  7 Nov 2018 19:18:35 +0100
-Message-ID: <20181107181843.27628-1-contact@paulk.fr>
-Reply-To: contact-W9ppeneeCTY@public.gmane.org
+From: Paul Kocialkowski <contact@paulk.fr>
+Subject: [PATCH v3 1/8] drm/sun4i: tcon: Pass encoder to RGB setup function
+Date: Wed,  7 Nov 2018 19:18:36 +0100
+Message-ID: <20181107181843.27628-2-contact@paulk.fr>
+References: <20181107181843.27628-1-contact@paulk.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBC75HK6WUAEBBY6YRTPQKGQEUCPIEHA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mark Van den Borre <mark-8Ycg9RsmSNMdnm+yROfE0A@public.gmane.org>, Gerry Demaret <gerry-8Ycg9RsmSNMdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20181107181843.27628-1-contact@paulk.fr>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Mark Van den Borre <mark@fosdem.org>, Gerry Demaret <gerry@fosdem.org>, David Airlie <airlied@linux.ie>, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Paul Kocialkowski <contact@paulk.fr>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The series adds support for the BL035-RGB-002 LCD panel and the required
-device-tree bindings for using it on the BananaPi M1.
-
-Only the changes related to the DRM driver and the panel are submitted
-for merge, which does not include the two final commits.
-
-Changes since v2:
-* Split the commit using the encoder instead of panel;
-* Mentionned that the lemaker prefix was already used;
-* Included all properties in the panel binding documentation;
-* Fixed panel binding in BananaPi device-tree;
-* Switched backlight levels to a 1.8-gamma-corrected table.
-
-Changes since v1:
-* Rebased on drm-misc next;
-* Used the full name of the panel for dt bindings;
-* Removed helper to match flags in order to only retrieve the connector
-  once, as it was already done.
-* Made the bus flags checking possible without a panel;
-
-Paul Kocialkowski (8):
-  drm/sun4i: tcon: Pass encoder to RGB setup function
-  drm/sun4i: tcon: Get the connector from the encoder in RGB setup
-  drm/sun4i: tcon: Support an active-low DE signal with RGB interface
-  dt-bindings: Add vendor prefix for LeMaker
-  dt-bindings: Add bindings for the LeMaker BL035-RGB-002 LCD panel
-  drm/panel: simple: Add support for the LeMaker BL035-RGB-002 3.5" LCD
-  ARM: dts: sun7i: Add pinmux configuration for LCD0 RGB888 pins
-  ARM: dts: sun7i-a20-bananapi: Add bindings for the LeMaker 3.5" LCD
-
- .../display/panel/lemaker,bl035-rgb-002.txt   | 12 ++++
- .../devicetree/bindings/vendor-prefixes.txt   |  1 +
- arch/arm/boot/dts/sun7i-a20-bananapi.dts      | 71 +++++++++++++++++++
- arch/arm/boot/dts/sun7i-a20.dtsi              | 11 +++
- drivers/gpu/drm/panel/panel-simple.c          | 27 +++++++
- drivers/gpu/drm/sun4i/sun4i_tcon.c            | 29 ++++----
- drivers/gpu/drm/sun4i/sun4i_tcon.h            |  1 +
- 7 files changed, 138 insertions(+), 14 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/panel/lemaker,bl035-rgb-002.txt
-
--- 
-2.19.1
+UGFzc2luZyB0aGUgZW5jb2RlciB0byB0aGUgVENPTiBSR0Igc2V0dXAgZnVuY3Rpb25zIGFsbG93
+cyBhY2Nlc3NpbmcgdGhlCmNvbm5lY3RvciBmcm9tIHRoZSBlbmNvZGVyIGRpcmVjdGx5IGluc3Rl
+YWQgb2YgcmVseWluZyBvbiB0aGUgcGFuZWwuCgpTaWduZWQtb2ZmLWJ5OiBQYXVsIEtvY2lhbGtv
+d3NraSA8Y29udGFjdEBwYXVsay5mcj4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlf
+dGNvbi5jIHwgMyArKy0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDEgZGVsZXRp
+b24oLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5jIGIv
+ZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYwppbmRleCBmOTQ5Mjg3ZDkyNmMuLjVl
+MWY3NjJmYzNkYiAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24u
+YworKysgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5jCkBAIC00NzgsNiArNDc4
+LDcgQEAgc3RhdGljIHZvaWQgc3VuNGlfdGNvbjBfbW9kZV9zZXRfbHZkcyhzdHJ1Y3Qgc3VuNGlf
+dGNvbiAqdGNvbiwKIH0KIAogc3RhdGljIHZvaWQgc3VuNGlfdGNvbjBfbW9kZV9zZXRfcmdiKHN0
+cnVjdCBzdW40aV90Y29uICp0Y29uLAorCQkJCSAgICAgY29uc3Qgc3RydWN0IGRybV9lbmNvZGVy
+ICplbmNvZGVyLAogCQkJCSAgICAgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUp
+CiB7CiAJdW5zaWduZWQgaW50IGJwLCBoc3luYywgdnN5bmM7CkBAIC02ODQsNyArNjg1LDcgQEAg
+dm9pZCBzdW40aV90Y29uX21vZGVfc2V0KHN0cnVjdCBzdW40aV90Y29uICp0Y29uLAogCQlzdW40
+aV90Y29uMF9tb2RlX3NldF9sdmRzKHRjb24sIGVuY29kZXIsIG1vZGUpOwogCQlicmVhazsKIAlj
+YXNlIERSTV9NT0RFX0VOQ09ERVJfTk9ORToKLQkJc3VuNGlfdGNvbjBfbW9kZV9zZXRfcmdiKHRj
+b24sIG1vZGUpOworCQlzdW40aV90Y29uMF9tb2RlX3NldF9yZ2IodGNvbiwgZW5jb2RlciwgbW9k
+ZSk7CiAJCXN1bjRpX3Rjb25fc2V0X211eCh0Y29uLCAwLCBlbmNvZGVyKTsKIAkJYnJlYWs7CiAJ
+Y2FzZSBEUk1fTU9ERV9FTkNPREVSX1RWREFDOgotLSAKMi4xOS4xCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
