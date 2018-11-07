@@ -1,121 +1,65 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: =?iso-8859-1?B?W1JDRqBQQVRDSCx2Miwy?= =?iso-8859-1?B?LzJd?= pwm:
- imx: Configure output to GPIO in disabled state
-Date: Wed, 7 Nov 2018 16:01:25 +0100
-Message-ID: <20181107150125.7cpd4v5t7yi2254c@pengutronix.de>
-References: <1539163920-9442-3-git-send-email-michal.vokac@ysoft.com>
- <20181012085720.GA9451@taurus.defre.kleine-koenig.org>
- <fa96ae2a-c2cc-b47a-1198-5daffa7c865f@ysoft.com>
- <20181012160854.hmgpokxgsrqdzobx@pengutronix.de>
- <e4289ee5-3fc1-2848-1cae-77d29b5ed93c@ysoft.com>
- <20181107093355.e4n3irrnkybqsjvc@pengutronix.de>
- <eb4e7a42-bd5c-3ae2-ccb7-d1a73d5ae99c@ysoft.com>
+From: <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH 1/2] regulator: act8945: Implement PM functionalities
+Date: Wed, 7 Nov 2018 15:03:17 +0000
+Message-ID: <b17eeca5-e517-393e-d9a9-bfb4121c5857@microchip.com>
+References: <1540570753-16370-1-git-send-email-claudiu.beznea@microchip.com>
+ <1540570753-16370-2-git-send-email-claudiu.beznea@microchip.com>
+ <20181107145349.GA6809@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <eb4e7a42-bd5c-3ae2-ccb7-d1a73d5ae99c@ysoft.com>
+In-Reply-To: <20181107145349.GA6809@sirena.org.uk>
+Content-Language: en-US
+Content-ID: <D9FAE817086E4342B007D8321A94E347@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, Fabio Estevam <fabio.estevam@nxp.com>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@karo-electronics.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+To: broonie@kernel.org
+Cc: lgirdwood@gmail.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, boris.brezillon@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Michal,
 
-On Wed, Nov 07, 2018 at 01:32:10PM +0000, Vokáč Michal wrote:
-> On 7.11.2018 10:33, Uwe Kleine-König wrote:
-> > Hello Michal,
-> > 
-> > just to state it more explicitly, I think the following patch (not even
-> > compile tested) is much preferable over your approach:
-> 
-> Interesting idea. I just wonder why nobody else did not come up with such
-> a simple solution before.
 
-I think I mentioned it already in this thread, but it went unnoticed :-)
+On 07.11.2018 16:53, Mark Brown wrote:
+> On Fri, Oct 26, 2018 at 04:19:48PM +0000, Claudiu.Beznea@microchip.com wr=
+ote:
+>=20
+>> +static unsigned int act8945a_of_map_mode(unsigned int mode)
+>> +{
+>> +	if (mode =3D=3D ACT8945A_DCDC_MODE_POWER_SAVING)
+>> +		return REGULATOR_MODE_STANDBY;
+>> +
+>> +	return REGULATOR_MODE_NORMAL;
+>> +}
+>=20
+> This should error out if it gets an unknown value rather than silently
+> mapping it to normal - we don't know what the user intended to set here.
+> There should also be some binding documentation updates saying what the
+> values that can be set are.
 
-> > diff --git a/drivers/pwm/pwm-imx.c b/drivers/pwm/pwm-imx.c
-> > index 1d5242c9cde0..af88644b5efb 100644
-> > --- a/drivers/pwm/pwm-imx.c
-> > +++ b/drivers/pwm/pwm-imx.c
-> > @@ -216,7 +216,14 @@ static int imx_pwm_apply_v2(struct pwm_chip *chip, struct pwm_device *pwm,
-> >   			cr |= MX3_PWMCR_POUTC;
-> >   
-> >   		writel(cr, imx->mmio_base + MX3_PWMCR);
-> > -	} else if (cstate.enabled) {
-> > +	} else if (cstate.enabled && state->polarity == PWM_POLARITY_NORMAL) {
-> > +		/*
-> > +		 * When disabled in hardware the output pin goes to 0
-> > +		 * independant of the polarity setting. The expectation of some
-> > +		 * people however is that after disabling the pin goes to the
-> > +		 * inactive level which isn't given for an inversed pwm, so
-> > +		 * only disable for normal polarity.
-> > +		 */
-> >   		writel(0, imx->mmio_base + MX3_PWMCR);
-> >   
-> >   		clk_disable_unprepare(imx->clk_per);
-> 
-> I tested your patch. It does not work as you expected.
-> 
-> In v4.20-rc1 the pwm-backlight driver has been converted to atomic API.
-> So the pwm_apply_v2 function is called only once to set new period/duty
-> and state. With your patch that means that "echo 0 > brightness" has no
-> visible effect. It leaves the PWM chip enabled with period/duty set to
-> however it was. But the core thinks it was reconfigured:
+Sure, I will update it on next version.
 
-Then the patch isn't correct yet. The idea is always keep the hardware
-running and only disable it if it's uninverted.
-> 
-> # cat /sys/class/backlight/backight/brightness
-> 0
-> 
-> # cat /sys/kernel/debug/pwm
-> platform/2080000.pwm, 1 PWM device
->   pwm-0   (backlight           ): requested period: 500000 ns duty: 0 ns polarity: inverse
-> 
-> > I think it solves most if not all problems you want to address with the
-> > pinctrl stuff.
-> 
-> Unfortunately not. I also tested your patch on v4.19. It works as you
-> probably intended - it is possible to disable backlight without the PWM
-> chip being disabled. But it does not solve the time frame between
-> imx_pwm_probe() and imx_pwm_apply_v2().
+>=20
+>> +static void act8945a_pmic_shutdown(struct platform_device *pdev)
+>> +{
+>> +	struct act8945a_pmic *act8945a =3D platform_get_drvdata(pdev);
+>> +	struct regmap *regmap =3D act8945a->regmap;
+>> +
+>> +	/*
+>> +	 * Ask the PMIC to shutdown everything on the next PWRHLD transition.
+>> +	 */
+>> +	regmap_write(regmap, ACT8945A_SYS_CTRL, 0x0);
+>>  }
+>> =20
+>=20
+> This shutdown function appears to be independant of the mode setting and
+> would be better split out as a separate patch (you could have one patch
+> adding the regmap stuff, one for this and one for the mode setting).
+> It makes review a lot simpler if each patch does a minimal set of
+> changes.
 
-In imx_pwm_probe it's not yet known what the polarity is supposed to be,
-right? So the right thing to do there is to not touch the configuration
-of the pwm. I think all states that are problematic then are also
-problematic with the gpio/pinmux approach. (I might be wrong here, so
-feel free to invest some brain cycles to prove me wrong. But I'd be
-surprised if there are problems that are relevant.)
- 
-> In probe you do not have any users yet. So you do not know the requested
-> output polarity. With "default" pinctrl the PWM output would be muxed to
-> the selected pin and since the PWM chip is most probably disabled
-> (unless you enabled it in bootloader) you would get low level on the pin.
-> That means your backlight is fully enabled until the first call to
-> imx_pwm_apply_v2(). On my system this is 2 seconds.
+Ok, I will split them in next version.
 
-With the gpio/pinmux approach you don't know the intended polarity
-either and maybe enable the display, too. For both the solution is to
-let the bootloader enable the pwm with the right output level.
-Am I missing something?
+Thank you,
+Claudiu Beznea
 
-> It might not be a big issue for backlight but for motor control it is
-> not the right thing to do.
-> 
-> The other thing is I would prefer to make the change optional. With your
-> approach you are changing the behavior for all current users of inverted
-> PWM. I do not think all imx6 users are aware of the problem so they might
-> not be OK with the sudden change in the behavior.
-
-Isn't my change an improvement for all users? What state do you have in
-mind that make things worse than they are now?
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+>=20
