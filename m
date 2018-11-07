@@ -1,8 +1,8 @@
 From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: [PATCH v3 6/8] drm/panel: simple: Add support for the
- LeMaker BL035-RGB-002 3.5" LCD
-Date: Wed,  7 Nov 2018 19:18:41 +0100
-Message-ID: <20181107181843.27628-7-contact@paulk.fr>
+Subject: [PATCH v3 5/8] dt-bindings: Add bindings for the
+ LeMaker BL035-RGB-002 LCD panel
+Date: Wed,  7 Nov 2018 19:18:40 +0100
+Message-ID: <20181107181843.27628-6-contact@paulk.fr>
 References: <20181107181843.27628-1-contact@paulk.fr>
 Reply-To: contact-W9ppeneeCTY@public.gmane.org
 Mime-Version: 1.0
@@ -20,59 +20,32 @@ To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79u
 Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mark Van den Borre <mark-8Ycg9RsmSNMdnm+yROfE0A@public.gmane.org>, Gerry Demaret <gerry-8Ycg9RsmSNMdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the 3.5" LCD panel from LeMaker, sold for use with
-BananaPi boards. It comes with a 24-bit RGB888 parallel interface and
-requires an active-low DE signal
+This adds the device-tree bindings for the LeMaker BL035-RGB-002 3.5"
+QVGA TFT LCD panel, compatible with simple-panel.
 
 Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
 ---
- drivers/gpu/drm/panel/panel-simple.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ .../bindings/display/panel/lemaker,bl035-rgb-002.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/lemaker,bl035-rgb-002.txt
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 07d576d99475..a259874f6039 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1562,6 +1562,30 @@ static const struct panel_desc kyo_tcg121xglp = {
- 	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
- };
- 
-+static const struct drm_display_mode lemaker_bl035_rgb_002_mode = {
-+	.clock = 7000,
-+	.hdisplay = 320,
-+	.hsync_start = 320 + 20,
-+	.hsync_end = 320 + 20 + 30,
-+	.htotal = 320 + 20 + 30 + 38,
-+	.vdisplay = 240,
-+	.vsync_start = 240 + 4,
-+	.vsync_end = 240 + 4 + 3,
-+	.vtotal = 240 + 4 + 3 + 15,
-+	.vrefresh = 60,
-+};
+diff --git a/Documentation/devicetree/bindings/display/panel/lemaker,bl035-rgb-002.txt b/Documentation/devicetree/bindings/display/panel/lemaker,bl035-rgb-002.txt
+new file mode 100644
+index 000000000000..74ee7ea6b493
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/lemaker,bl035-rgb-002.txt
+@@ -0,0 +1,12 @@
++LeMaker BL035-RGB-002 3.5" QVGA TFT LCD panel
 +
-+static const struct panel_desc lemaker_bl035_rgb_002 = {
-+	.modes = &lemaker_bl035_rgb_002_mode,
-+	.num_modes = 1,
-+	.size = {
-+		.width = 70,
-+		.height = 52,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-+	.bus_flags = DRM_BUS_FLAG_DE_LOW,
-+};
++Required properties:
++- compatible: should be "lemaker,bl035-rgb-002"
++- power-supply: as specified in the base binding
 +
- static const struct drm_display_mode lg_lb070wv8_mode = {
- 	.clock = 33246,
- 	.hdisplay = 800,
-@@ -2599,6 +2623,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "kyo,tcg121xglp",
- 		.data = &kyo_tcg121xglp,
-+	}, {
-+		.compatible = "lemaker,bl035-rgb-002",
-+		.data = &lemaker_bl035_rgb_002,
- 	}, {
- 		.compatible = "lg,lb070wv8",
- 		.data = &lg_lb070wv8,
++Optional properties:
++- backlight: as specified in the base binding
++- enable-gpios: as specified in the base binding
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
 -- 
 2.19.1
