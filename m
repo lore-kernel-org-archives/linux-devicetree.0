@@ -1,10 +1,10 @@
 Return-Path: <SRS0=7Z3r=NS=renesas.com=chris.brandt@kernel.org>
 From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v4 1/2] pinctrl: Add RZ/A2 pin and gpio controller
-Date: Wed,  7 Nov 2018 13:27:32 -0500
-Message-Id: <20181107182733.62155-2-chris.brandt@renesas.com>
-In-Reply-To: <20181107182733.62155-1-chris.brandt@renesas.com>
-References: <20181107182733.62155-1-chris.brandt@renesas.com>
+Subject: [PATCH v3 1/2] pinctrl: Add RZ/A2 pin and gpio controller
+Date: Wed,  7 Nov 2018 13:20:08 -0500
+Message-Id: <20181107182009.61718-2-chris.brandt@renesas.com>
+In-Reply-To: <20181107182009.61718-1-chris.brandt@renesas.com>
+References: <20181107182009.61718-1-chris.brandt@renesas.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
 Cc: jacopo mondi <jacopo@jmondi.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
