@@ -1,137 +1,61 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH V3 4/6] usb: ohci-platform: Add support for Broadcom STB
- SoC's
-Date: Wed, 7 Nov 2018 10:11:59 -0800
-Message-ID: <c551a2e2-c494-04d3-53cf-f027b02906ed@gmail.com>
-References: <Pine.LNX.4.44L0.1811071124260.1542-100000@iolanthe.rowland.org>
- <16a80878-58f7-1584-058e-0e0e49da61cb@gmail.com>
- <45134862-4b72-be72-533c-942c2bf70400@broadcom.com>
+From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Subject: [PATCH v3 0/8] BL035-RGB-002 3.5" LCD sunxi DRM support
+Date: Wed,  7 Nov 2018 19:18:35 +0100
+Message-ID: <20181107181843.27628-1-contact@paulk.fr>
+Reply-To: contact-W9ppeneeCTY@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <45134862-4b72-be72-533c-942c2bf70400@broadcom.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Al Cooper <al.cooper@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Alan Stern <stern@rowland.harvard.edu>
-Cc: Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBC75HK6WUAEBBY6YRTPQKGQEUCPIEHA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mark Van den Borre <mark-8Ycg9RsmSNMdnm+yROfE0A@public.gmane.org>, Gerry Demaret <gerry-8Ycg9RsmSNMdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/7/2018 9:40 AM, Al Cooper wrote:
-> On 11/7/18 12:29 PM, Florian Fainelli wrote:
->> On 11/7/18 8:27 AM, Alan Stern wrote:
->>> On Wed, 7 Nov 2018, Al Cooper wrote:
->>>
->>>> On 11/7/18 10:23 AM, Alan Stern wrote:
->>>>> On Tue, 6 Nov 2018, Florian Fainelli wrote:
->>>>>
->>>>>> On 11/6/18 1:40 PM, Al Cooper wrote:
->>>>>>> On 11/6/18 11:08 AM, Alan Stern wrote:
->>>>>>>> On Mon, 5 Nov 2018, Al Cooper wrote:
->>>>>>>>
->>>>>>>>> Add support for Broadcom STB SoC's to the ohci platform driver.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Al Cooper <alcooperx@gmail.com>
->>>>>>>>> ---
->>>>>>>>
->>>>>>>>> @@ -177,6 +189,8 @@ static int ohci_platform_probe(struct
->>>>>>>>> platform_device *dev)
->>>>>>>>>             ohci->flags |= OHCI_QUIRK_FRAME_NO;
->>>>>>>>>         if (pdata->num_ports)
->>>>>>>>>             ohci->num_ports = pdata->num_ports;
->>>>>>>>> +    if (pdata->suspend_without_phy_exit)
->>>>>>>>> +        hcd->suspend_without_phy_exit = 1;
->>>>>>>>
->>>>>>>> Sorry if I missed this in the earlier discussions...  Is there any
->>>>>>>> possibility of adding a DT binding that could express this
->>>>>>>> requirement,
->>>>>>>> instead of putting it in the platform data?
->>>>>>>>
->>>>>>>> Alan Stern
->>>>>>>>
->>>>>>>
->>>>>>> Alan,
->>>>>>>
->>>>>>> That was my original approach but internal review suggested that
->>>>>>> I use
->>>>>>> pdata instead. Below is my original patch for:
->>>>>>
->>>>>> And the reason for that suggestion was really because it was
->>>>>> percevied
->>>>>> as encoding a driver behavior as a Device Tree property as opposed to
->>>>>> describing something that was inherently and strictly a hardware
->>>>>> behavior (therefore suitable for Device Tree).
->>>>>
->>>>> Right.  The best way to approach this problem is to identify and
->>>>> characterize the hardware behavior which makes this override
->>>>> necessary.
->>>>> Then _that_ can be added to DT, since it will be a property of the
->>>>> hardware rather than of the driver.
->>>>>
->>>>>>> Add the ability to skip calling the PHY's exit routine on suspend
->>>>>>> and the PHY's init routine on resume. This is to handle a USB PHY
->>>>>>> that should have it's power_off function called on suspend but
->>>>>>> cannot
->>>>>>> have it's exit function called because on exit it will disable the
->>>>>>> PHY to the point where register accesses to the Host Controllers
->>>>>>> using the PHY will be disabled and the host drivers will crash.
->>>>>
->>>>> What's special about this PHY?  Why does the exit function mess the
->>>>> PHY
->>>>> up?  Or to put it another way, why doesn't the exit function mess up
->>>>> other PHYs in the same way?
->>>>>
->>>>> For that matter, can we change the code so that suspend doesn't call
->>>>> the exit function for _any_ PHY?  Will just calling the power_off
->>>>> function be good enough?  If not, then why not?
->>>>>
->>>>> Alan Stern
->>>>>
->>>>
->>>> In our USB hardware the USB PHY supplies a clock for the EHCI/OHCI and
->>>> XHCI host controllers and if the PHY is totally shut down the EHCI,
->>>> OHCI
->>>> and XHCI registers will cause an exception if accessed and cause the
->>>> EHCI, OHCI and XHCI drivers to crash. There is always talk of fixing
->>>> this in the hardware by adding an aux clock that will takeover when the
->>>> PHY clock is shut down, but this hasn't happened yet. It seems like
->>>> "exit on suspend" still makes sense on systems that don't have this
->>>> problem (additional power savings?) so removing the exit on suspend for
->>>> all systems is not a good idea.
->>>
->>> Then in theory you should be able to add a Device Tree property which
->>> says that the PHY provides a clock for the USB host controller.  That
->>> is strictly a property of the hardware; it has nothing to do with the
->>> driver.  Therefore it is appropriate for DT.
->>
->> The very compatible string that is being allocated/defined for this
->> controller carries that information already, that is, if you probe a
->> "brcm,bcm7445-ohci" compatible then that means the controller has a
->> dependency on the PHY to supply its clock.
->>
->> Adding a property vs. keying on the compatible string makes sense if you
->> know there is at least a second consumer of that property (unless we
->> make it a broadcom specific property, in which case, it really is
->> redundant with the compatible string).
->>
->> Anyway, my grudge with that property was the name chosen initially,
->> which included an action to be performed by an implementation as opposed
->> to something purely descriptive. E.g: 'phy-supplies-clock' might be okay.
->>
->>>
->>> Wouldn't this solve your issue?
->>
->> It would not change much except that there is no need to much with
->> ohci-platform.c anymore, but ultimately that property needs to be read
->> by ohci-hcd.c and acted on, which would likely lead to the same amount
->> of changes as those present in patch #2 currently.
->>
-> We also need this functionality in the EHCI and XHCI drivers and it's
-> not the ohci-hcd.c module that needs to know, it's the core/phy.c module
-> called from core/hcd.c.
+The series adds support for the BL035-RGB-002 LCD panel and the required
+device-tree bindings for using it on the BananaPi M1.
 
-So in that regard the Device Tree property would actually scale a bit
-better in that you would no longer need to modify the various
-*hci-plat*.c files, if that is the way to go, then sure.
+Only the changes related to the DRM driver and the panel are submitted
+for merge, which does not include the two final commits.
+
+Changes since v2:
+* Split the commit using the encoder instead of panel;
+* Mentionned that the lemaker prefix was already used;
+* Included all properties in the panel binding documentation;
+* Fixed panel binding in BananaPi device-tree;
+* Switched backlight levels to a 1.8-gamma-corrected table.
+
+Changes since v1:
+* Rebased on drm-misc next;
+* Used the full name of the panel for dt bindings;
+* Removed helper to match flags in order to only retrieve the connector
+  once, as it was already done.
+* Made the bus flags checking possible without a panel;
+
+Paul Kocialkowski (8):
+  drm/sun4i: tcon: Pass encoder to RGB setup function
+  drm/sun4i: tcon: Get the connector from the encoder in RGB setup
+  drm/sun4i: tcon: Support an active-low DE signal with RGB interface
+  dt-bindings: Add vendor prefix for LeMaker
+  dt-bindings: Add bindings for the LeMaker BL035-RGB-002 LCD panel
+  drm/panel: simple: Add support for the LeMaker BL035-RGB-002 3.5" LCD
+  ARM: dts: sun7i: Add pinmux configuration for LCD0 RGB888 pins
+  ARM: dts: sun7i-a20-bananapi: Add bindings for the LeMaker 3.5" LCD
+
+ .../display/panel/lemaker,bl035-rgb-002.txt   | 12 ++++
+ .../devicetree/bindings/vendor-prefixes.txt   |  1 +
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts      | 71 +++++++++++++++++++
+ arch/arm/boot/dts/sun7i-a20.dtsi              | 11 +++
+ drivers/gpu/drm/panel/panel-simple.c          | 27 +++++++
+ drivers/gpu/drm/sun4i/sun4i_tcon.c            | 29 ++++----
+ drivers/gpu/drm/sun4i/sun4i_tcon.h            |  1 +
+ 7 files changed, 138 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/lemaker,bl035-rgb-002.txt
+
 -- 
-Florian
+2.19.1
