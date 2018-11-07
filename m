@@ -1,8 +1,8 @@
 Return-Path: <SRS0=7Z3r=NS=renesas.com=chris.brandt@kernel.org>
 From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v4 0/2] pinctrl: Add RZ/A2 pin and gpio driver
-Date: Wed,  7 Nov 2018 13:27:31 -0500
-Message-Id: <20181107182733.62155-1-chris.brandt@renesas.com>
+Subject: [PATCH v3 0/2] pinctrl: Add RZ/A2 pin and gpio driver
+Date: Wed,  7 Nov 2018 13:20:07 -0500
+Message-Id: <20181107182009.61718-1-chris.brandt@renesas.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
 Cc: jacopo mondi <jacopo@jmondi.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
@@ -12,9 +12,6 @@ the RZ/A1. That's a good thing! This pin controller is much more simple
 and easier to configure.
 
 So, this driver is faily simple (I hope).
-
-
-  V3 -> V4: Sorry...I forgot Rob's Reviewed-by !!
 
 
 Chris Brandt (2):
