@@ -1,70 +1,57 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v6 04/18] powerpc/pseries: add of_node_put() in dlpar_detach_node()
-Date: Wed, 07 Nov 2018 23:23:27 +1100
-Message-ID: <87muqlqdog.fsf@concordia.ellerman.id.au>
-References: <1541431515-25197-1-git-send-email-frowand.list@gmail.com> <1541431515-25197-5-git-send-email-frowand.list@gmail.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v2 2/3] mtd: rawnand: stm32_fmc2: add STM32 FMC2 NAND
+ flash controller driver
+Date: Wed, 7 Nov 2018 13:23:42 +0100
+Message-ID: <20181107132342.33790247@bbrezillon>
+References: <1538732520-2800-1-git-send-email-christophe.kerello@st.com>
+        <1538732520-2800-3-git-send-email-christophe.kerello@st.com>
+        <20181105173905.385dd06e@bbrezillon>
+        <70f99d79-a9d8-0651-d464-2d81b334dbfb@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541431515-25197-5-git-send-email-frowand.list@gmail.com>
+In-Reply-To: <70f99d79-a9d8-0651-d464-2d81b334dbfb@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
+To: Christophe Kerello <christophe.kerello@st.com>
+Cc: miquel.raynal@bootlin.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-frowand.list@gmail.com writes:
+On Wed, 7 Nov 2018 12:08:58 +0100
+Christophe Kerello <christophe.kerello@st.com> wrote:
 
-> From: Frank Rowand <frank.rowand@sony.com>
->
-> "of: overlay: add missing of_node_get() in __of_attach_node_sysfs"
+> >> +
+> >> +write_8bit:
+> >> +	for (i = 0; i < len; i++)
+> >> +		writeb_relaxed(p[i], io_addr_w);  
+> > 
+> > Is 8bit access really enforced by the byte accessor? In this case, how
+> > can you be sure 32-bit accesses are doing the right thing? Isn't there
+> > a bit somewhere in the config reg to configure the bus width?
+> >   
+> 
+> I have checked the framework after Miquèl comment sent on v1 => "If you 
+> selected BOUNCE_BUFFER in the options, buf is supposedly
+> aligned, or am I missing something?".
+> 
+> After checking the framework, my understanding was:
+>   - In case of 8-bit access is requested, the framework provides no 
+> guarantee on buf. To avoid any issue, I write byte per byte.
+>   - In case of 8-bit access is not requested, it means that the 
+> framework will try to write data in the page or in the oob. When writing 
+> to oob, chip->oob_poi will be used and this buffer is aligned. When 
+> writing to the page, as the driver enables NAND_USE_BOUNCE_BUFFER 
+> option, buf is guarantee aligned.
 
-It would be clearer if you said 'The previous commit "of: overlay ..."
+It's probably what happens right now, but there's no guarantee that all
+non-8-bit accesses will be provided a 32-bit aligned buffer. The only
+guarantee we provide is on buffer passed to the
+chip->ecc.read/write_xxx() hooks, and ->exec_op() can be used outside
+of the "page access" path.
 
-> added a missing of_node_get() to __of_attach_node_sysfs().  This
-> results in a refcount imbalance for nodes attached with
-> dlpar_attach_node().  The calling sequence from dlpar_attach_node()
-> to __of_attach_node_sysfs() is:
->
->    dlpar_attach_node()
->       of_attach_node()
->          __of_attach_node_sysfs()
->
-> Tested-by: Alan Tull <atull@kernel.org>
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
->
-> ***** UNTESTED.  I need people with the affected PowerPC systems
-> *****            (systems that dynamically allocate and deallocate
-> *****            devicetree nodes) to test this patch.
+> 
+> But, I agree that it would be safe to reconfigure the bus width in 8-bit 
+> before writing byte per byte in case of a 16-bit NAND is used.
 
-This looks OK to me in light of the previous patch.
-
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
-
-It also means dlpar_detach_node() is again behaving as described in the
-comment to of_detach_node().
-
-It would be good to make mention of:
-
-  Fixes: 68baf692c435 ("powerpc/pseries: Fix of_node_put() underflow during DLPAR remove")
-
-Which removed an of_node_put() in the exact same place for different
-reasons.
-
-cheers
-
-> diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
-> index 7625546caefd..17958043e7f7 100644
-> --- a/arch/powerpc/platforms/pseries/dlpar.c
-> +++ b/arch/powerpc/platforms/pseries/dlpar.c
-> @@ -270,6 +270,8 @@ int dlpar_detach_node(struct device_node *dn)
->  	if (rc)
->  		return rc;
->  
-> +	of_node_put(dn);
-> +
->  	return 0;
->  }
->  
-> -- 
-> Frank Rowand <frank.rowand@sony.com>
+Yes, and I also think you should not base your is-aligned check on the
+force_8bit value. Use IS_ALIGNED() instead.
