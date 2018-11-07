@@ -1,51 +1,45 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: [PATCH v3 5/8] dt-bindings: Add bindings for the
- LeMaker BL035-RGB-002 LCD panel
-Date: Wed,  7 Nov 2018 19:18:40 +0100
-Message-ID: <20181107181843.27628-6-contact@paulk.fr>
+From: Paul Kocialkowski <contact@paulk.fr>
+Subject: [PATCH NOT FOR MERGE v3 7/8] ARM: dts: sun7i: Add pinmux
+ configuration for LCD0 RGB888 pins
+Date: Wed,  7 Nov 2018 19:18:42 +0100
+Message-ID: <20181107181843.27628-8-contact@paulk.fr>
 References: <20181107181843.27628-1-contact@paulk.fr>
-Reply-To: contact-W9ppeneeCTY@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBC75HK6WUAEBBQWZRTPQKGQEFAEIE6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181107181843.27628-1-contact-W9ppeneeCTY@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mark Van den Borre <mark-8Ycg9RsmSNMdnm+yROfE0A@public.gmane.org>, Gerry Demaret <gerry-8Ycg9RsmSNMdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20181107181843.27628-1-contact@paulk.fr>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Mark Van den Borre <mark@fosdem.org>, Gerry Demaret <gerry@fosdem.org>, David Airlie <airlied@linux.ie>, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Paul Kocialkowski <contact@paulk.fr>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the device-tree bindings for the LeMaker BL035-RGB-002 3.5"
-QVGA TFT LCD panel, compatible with simple-panel.
-
-Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
----
- .../bindings/display/panel/lemaker,bl035-rgb-002.txt | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/lemaker,bl035-rgb-002.txt
-
-diff --git a/Documentation/devicetree/bindings/display/panel/lemaker,bl035-rgb-002.txt b/Documentation/devicetree/bindings/display/panel/lemaker,bl035-rgb-002.txt
-new file mode 100644
-index 000000000000..74ee7ea6b493
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/lemaker,bl035-rgb-002.txt
-@@ -0,0 +1,12 @@
-+LeMaker BL035-RGB-002 3.5" QVGA TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "lemaker,bl035-rgb-002"
-+- power-supply: as specified in the base binding
-+
-+Optional properties:
-+- backlight: as specified in the base binding
-+- enable-gpios: as specified in the base binding
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
--- 
-2.19.1
+VGhpcyBhZGRzIHRoZSBwaW4gbXV4aW5nIGRlZmluaXRpb24gZm9yIGNvbmZpZ3VyaW5nIHRoZSBQ
+RCBwaW5zIGluIExDRDAKbW9kZSBmb3IgYSBSR0I4ODggZm9ybWF0IHRvIHRoZSBzdW43aSBkZXZp
+Y2UtdHJlZS4KClNpZ25lZC1vZmYtYnk6IFBhdWwgS29jaWFsa293c2tpIDxjb250YWN0QHBhdWxr
+LmZyPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL3N1bjdpLWEyMC5kdHNpIHwgMTEgKysrKysrKysr
+KysKIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9h
+cm0vYm9vdC9kdHMvc3VuN2ktYTIwLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9zdW43aS1hMjAu
+ZHRzaQppbmRleCA5YzUyNzEyYWYyNDEuLjI2ZjM3MTRlYWFkMCAxMDA2NDQKLS0tIGEvYXJjaC9h
+cm0vYm9vdC9kdHMvc3VuN2ktYTIwLmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuN2kt
+YTIwLmR0c2kKQEAgLTgxMSw2ICs4MTEsMTcgQEAKIAkJCQlmdW5jdGlvbiA9ICJpcjEiOwogCQkJ
+fTsKIAorCQkJbGNkMF9yZ2I4ODhfcGluczogbGNkMC1yZ2I4ODggeworCQkJCXBpbnMgPSAiUEQw
+IiwgIlBEMSIsICJQRDIiLCAiUEQzIiwKKwkJCQkgICAgICAgIlBENCIsICJQRDUiLCAiUEQ2Iiwg
+IlBENyIsCisJCQkJICAgICAgICJQRDgiLCAiUEQ5IiwgIlBEMTAiLCAiUEQxMSIsCisJCQkJICAg
+ICAgICJQRDEyIiwgIlBEMTMiLCAiUEQxNCIsICJQRDE1IiwKKwkJCQkgICAgICAgIlBEMTYiLCAi
+UEQxNyIsICJQRDE4IiwgIlBEMTkiLAorCQkJCSAgICAgICAiUEQyMCIsICJQRDIxIiwgIlBEMjIi
+LCAiUEQyMyIsCisJCQkJICAgICAgICJQRDI0IiwgIlBEMjUiLCAiUEQyNiIsICJQRDI3IjsKKwkJ
+CQlmdW5jdGlvbiA9ICJsY2QwIjsKKwkJCX07CisKIAkJCW1tYzBfcGluc19hOiBtbWMwQDAgewog
+CQkJCXBpbnMgPSAiUEYwIiwgIlBGMSIsICJQRjIiLAogCQkJCSAgICAgICAiUEYzIiwgIlBGNCIs
+ICJQRjUiOwotLSAKMi4xOS4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
