@@ -1,105 +1,66 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH 1/2] dt-bindings: hwmon: add binding documentation for
- adt7475
-Date: Wed, 7 Nov 2018 04:27:27 +0000
-Message-ID: <1ed7434bfded41bfba3b739f58f69102@svr-chch-ex1.atlnz.lc>
-References: <20181107040010.27436-1-chris.packham@alliedtelesis.co.nz>
- <20181107040010.27436-2-chris.packham@alliedtelesis.co.nz>
- <64720b73-dddf-783c-a3a4-3f32a748bf5d@roeck-us.net>
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCH v2 3/4] dts/arm/ls1021a: Clean PCIe controller compatible
+ strings
+Date: Wed, 7 Nov 2018 04:29:19 +0000
+Message-ID: <AM6PR04MB5781A4335A41AF4DC9D1D87884C40@AM6PR04MB5781.eurprd04.prod.outlook.com>
+References: <20181025094929.29481-1-Zhiqiang.Hou@nxp.com>
+ <20181025094929.29481-4-Zhiqiang.Hou@nxp.com>
+ <CADRPPNQRofR6Upe6_pTNm-bqt0HMVWBOXyYSH8xGvD2g7_nwCA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CADRPPNQRofR6Upe6_pTNm-bqt0HMVWBOXyYSH8xGvD2g7_nwCA@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jdelvare@suse.com" <jdelvare@suse.com>
-Cc: "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Leo Li <leoyang.li@nxp.com>
+Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 7/11/18 5:24 PM, Guenter Roeck wrote:=0A=
-> On 11/6/18 8:00 PM, Chris Packham wrote:=0A=
->> With the addition of the invert-pwm property the adt7475 needs its own=
-=0A=
->> binding documentation rather being captured under trivial-devices.txt.=
-=0A=
->>=0A=
->> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
->> ---=0A=
->>    .../devicetree/bindings/hwmon/adt7475.txt     | 22 ++++++++++++++++++=
-+=0A=
->>    .../devicetree/bindings/trivial-devices.txt   |  4 ----=0A=
->>    2 files changed, 22 insertions(+), 4 deletions(-)=0A=
->>    create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.tx=
-t=0A=
->>=0A=
->> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.txt b/Docum=
-entation/devicetree/bindings/hwmon/adt7475.txt=0A=
->> new file mode 100644=0A=
->> index 000000000000..79255439e157=0A=
->> --- /dev/null=0A=
->> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.txt=0A=
->> @@ -0,0 +1,22 @@=0A=
->> +*ADT7475 hwmon sensor.=0A=
->> +=0A=
->> +Required properties:=0A=
->> +- compatible: One of=0A=
->> +	"adi,adt7473"=0A=
->> +	"adi,adt7475"=0A=
->> +	"adi,adt7476"=0A=
->> +	"adi,adt7490"=0A=
->> +=0A=
->> +- reg: I2C address=0A=
->> +=0A=
->> +optional properties:=0A=
->> +=0A=
->> +- invert-pwm: This configures the PWM to use logic low for 100% duty cy=
-cle.=0A=
->> +=0A=
->> +Example:=0A=
->> +=0A=
->> +hwmon@2e {=0A=
->> +	compatible =3D ;=0A=
->> +	reg =3D <0x2e>;=0A=
->> +	invert-pwm;=0A=
-> =0A=
-> If I understand correctly, the flag is set per pwm channel. A single glob=
-al=0A=
-> property seems inappropriate.=0A=
-=0A=
-Yes it is per-channel. But I was having a hard time imagining a hardware =
-=0A=
-design that would use both inverted and non-inverted at the same time.=0A=
-=0A=
-Do you have a preference for how the properties should look?=0A=
-=0A=
-   invert-pwm[123]?=0A=
-=0A=
-   invert-pwm =3D <0x7>;?=0A=
-=0A=
-> =0A=
-> Guenter=0A=
-> =0A=
->> +};=0A=
->> diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Doc=
-umentation/devicetree/bindings/trivial-devices.txt=0A=
->> index 69c934aec13b..4f29100d6bbf 100644=0A=
->> --- a/Documentation/devicetree/bindings/trivial-devices.txt=0A=
->> +++ b/Documentation/devicetree/bindings/trivial-devices.txt=0A=
->> @@ -14,10 +14,6 @@ ad,ad7414		SMBus/I2C Digital Temperature Sensor in 6-=
-Pin SOT with SMBus Alert an=0A=
->>    ad,adm9240		ADM9240:  Complete System Hardware Monitor for uProcessor=
--Based Systems=0A=
->>    adi,adt7461		+/-1C TDM Extended Temp Range I.C=0A=
->>    adt7461			+/-1C TDM Extended Temp Range I.C=0A=
->> -adi,adt7473		+/-1C TDM Extended Temp Range I.C=0A=
->> -adi,adt7475		+/-1C TDM Extended Temp Range I.C=0A=
->> -adi,adt7476		+/-1C TDM Extended Temp Range I.C=0A=
->> -adi,adt7490		+/-1C TDM Extended Temp Range I.C=0A=
->>    adi,adxl345		Three-Axis Digital Accelerometer=0A=
->>    adi,adxl346		Three-Axis Digital Accelerometer (backward-compatibility=
- value "adi,adxl345" must be listed too)=0A=
->>    ams,iaq-core		AMS iAQ-Core VOC Sensor=0A=
->>=0A=
-> =0A=
-> =0A=
-=0A=
+SGkgTGVvLA0KDQpUaGFua3MgYSBsb3QgZm9yIHlvdXIgY29tbWVudHMhDQoNCj4gLS0tLS1Pcmln
+aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGkgWWFuZyA8bGVveWFuZy5saUBueHAuY29tPg0K
+PiBTZW50OiAyMDE45bm0MTDmnIgyN+aXpSA0OjU4DQo+IFRvOiBaLnEuIEhvdSA8emhpcWlhbmcu
+aG91QG54cC5jb20+DQo+IENjOiBtb2RlcmF0ZWQgbGlzdDpBUk0vRlJFRVNDQUxFIElNWCAvIE1Y
+QyBBUk0gQVJDSElURUNUVVJFDQo+IDxsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmc+OyBsa21sIDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsNCj4gbGludXgtcGNpQHZn
+ZXIua2VybmVsLm9yZzsgb3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUgQU5EIEZMQVRURU5FRA0KPiBE
+RVZJQ0UgVFJFRSBCSU5ESU5HUyA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBSb2IgSGVy
+cmluZw0KPiA8cm9iaCtkdEBrZXJuZWwub3JnPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwu
+b3JnPjsgTWFyayBSdXRsYW5kDQo+IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IEJqb3JuIEhlbGdh
+YXMgPGJoZWxnYWFzQGdvb2dsZS5jb20+OyBNaW5na2FpDQo+IEh1IDxtaW5na2FpLmh1QG54cC5j
+b20+OyBNLmguIExpYW4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQ
+QVRDSCB2MiAzLzRdIGR0cy9hcm0vbHMxMDIxYTogQ2xlYW4gUENJZSBjb250cm9sbGVyDQo+IGNv
+bXBhdGlibGUgc3RyaW5ncw0KPiANCj4gT24gVGh1LCBPY3QgMjUsIDIwMTggYXQgNDo1MiBBTSBa
+LnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+IHdyb3RlOg0KPiANCj4gVGhlIGNvcnJlY3Qg
+cHJlZml4IGZvciBhcm0gZHRzIHBhdGNoZXMgc2hvdWxkIGJlOiAiQVJNOiBkdHM6IGxzMTAyMWE6
+DQo+IC4uLiIsIGFuZCBpdCBzaG91bGQgYmUgYmV0dGVyIHRvIG1lbnRpb24gdGhlIHN0cmluZyBy
+ZW1vdmVkIGluIHRoZSB0aXRsZSB0b28uDQoNCldpbGwgY29ycmVjdCBpdCBpbiB2My4NCg0KPiAN
+Cj4gPg0KPiA+IEZyb206IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+ID4N
+Cj4gPiBSZW1vdmVkIHRoZSB3cm9uZyBjb21wYXRpYmxlIHN0cmluZyAic25wcyxkdy1wY2llIiwg
+aW4gY2FzZSBtYXRjaA0KPiA+IGluY29ycmVjdCBkcml2ZXIuDQo+ID4NCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+IFYy
+Og0KPiA+ICAtIG5vIGNoYW5nZQ0KPiA+DQo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEu
+ZHRzaSB8IDQgKystLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRl
+bGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAy
+MWEuZHRzaQ0KPiA+IGIvYXJjaC9hcm0vYm9vdC9kdHMvbHMxMDIxYS5kdHNpIGluZGV4IGJkZDZl
+NjZhNzlhZC4uMWFhYTMyODhhNDUwDQo+ID4gMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9v
+dC9kdHMvbHMxMDIxYS5kdHNpDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvbHMxMDIxYS5k
+dHNpDQo+ID4gQEAgLTcxNiw3ICs3MTYsNyBAQA0KPiA+ICAgICAgICAgICAgICAgICB9Ow0KPiA+
+DQo+ID4gICAgICAgICAgICAgICAgIHBjaWVAMzQwMDAwMCB7DQo+ID4gLSAgICAgICAgICAgICAg
+ICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHMxMDIxYS1wY2llIiwNCj4gInNucHMsZHctcGNp
+ZSI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHMxMDIx
+YS1wY2llIjsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgwMCAweDAzNDAw
+MDAwIDB4MCAweDAwMDEwMDAwDQo+IC8qIGNvbnRyb2xsZXIgcmVnaXN0ZXJzICovDQo+ID4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4NDAgMHgwMDAwMDAwMCAweDAgMHgwMDAwMjAw
+MD47DQo+IC8qIGNvbmZpZ3VyYXRpb24gc3BhY2UgKi8NCj4gPiAgICAgICAgICAgICAgICAgICAg
+ICAgICByZWctbmFtZXMgPSAicmVncyIsICJjb25maWciOyBAQCAtNzM5LDcNCj4gKzczOSw3DQo+
+ID4gQEANCj4gPiAgICAgICAgICAgICAgICAgfTsNCj4gPg0KPiA+ICAgICAgICAgICAgICAgICBw
+Y2llQDM1MDAwMDAgew0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAi
+ZnNsLGxzMTAyMWEtcGNpZSIsDQo+ICJzbnBzLGR3LXBjaWUiOw0KPiA+ICsgICAgICAgICAgICAg
+ICAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGxzMTAyMWEtcGNpZSI7DQo+ID4gICAgICAgICAg
+ICAgICAgICAgICAgICAgcmVnID0gPDB4MDAgMHgwMzUwMDAwMCAweDAgMHgwMDAxMDAwMA0KPiAv
+KiBjb250cm9sbGVyIHJlZ2lzdGVycyAqLw0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAweDQ4IDB4MDAwMDAwMDAgMHgwIDB4MDAwMDIwMDA+Ow0KPiAvKiBjb25maWd1cmF0aW9u
+IHNwYWNlICovDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgcmVnLW5hbWVzID0gInJlZ3Mi
+LCAiY29uZmlnIjsNCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQoNClRoYW5rcywNClpoaXFpYW5n
+DQo=
