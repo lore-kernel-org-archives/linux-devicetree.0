@@ -1,343 +1,84 @@
-From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v12 3/5] clk: imx: Add SCCG PLL type
-Date: Wed, 7 Nov 2018 12:38:08 +0000
-Message-ID: <1541594266-16712-4-git-send-email-abel.vesa@nxp.com>
-References: <1541594266-16712-1-git-send-email-abel.vesa@nxp.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 12/12] soc: qcom: ipa: build and "ipa_i.h"
+Date: Wed, 7 Nov 2018 13:34:56 +0100
+Message-ID: <CAK8P3a2X1zstSWP89uDxyf+rvyzzDY98_cvE4fzc-ZGbyVz23w@mail.gmail.com>
+References: <20181107003250.5832-1-elder@linaro.org> <20181107003250.5832-13-elder@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541594266-16712-1-git-send-email-abel.vesa@nxp.com>
-Content-Language: en-US
+In-Reply-To: <20181107003250.5832-13-elder@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>
+To: Alex Elder <elder@linaro.org>
+Cc: David Miller <davem@davemloft.net>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, syadagir@codeaurora.org, mjavid@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+On Wed, Nov 7, 2018 at 1:33 AM Alex Elder <elder@linaro.org> wrote:
+> +config IPA_ASSERT
+> +       bool "Enable IPA assertions"
+> +       depends on IPA
+> +       default y
+> +       help
+> +        Incorporate IPA assertion verification in the build.  This
+> +        cause various design assumptions to be checked at runtime,
+> +        generating a report (and a crash) if any assumed condition
+> +        does not hold.  You may wish to disable this to avoid the
+> +        overhead of checking.
 
-The SCCG is a new PLL type introduced on i.MX8.
+Maybe remove this from the submission.
 
-The description of this SCCG clock can be found here:
+> +#define ipa_debug(fmt, args...)        dev_dbg(ipa_ctx->dev, fmt, ## args)
+> +#define ipa_err(fmt, args...)  dev_err(ipa_ctx->dev, fmt, ## args)
 
-https://www.nxp.com/docs/en/reference-manual/IMX8MDQLQRM.pdf#page=3D834
+These macros refer to variables in the caller that are not passed as arguments,
+which is generally a bad idea. They also trivially wrap a standard kernel
+interface, so better just that directly.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-Reviewed-by: Sascha Hauer <s.hauer@pengutronix.de>
----
- drivers/clk/imx/Makefile       |   3 +-
- drivers/clk/imx/clk-sccg-pll.c | 256 +++++++++++++++++++++++++++++++++++++=
-++++
- drivers/clk/imx/clk.h          |   9 ++
- 3 files changed, 267 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/imx/clk-sccg-pll.c
+> +#define ipa_bug() \
+> +       do {                                                            \
+> +               ipa_err("an unrecoverable error has occurred\n");       \
+> +               BUG();                                                  \
+> +       } while (0)
+> +
+> +#define ipa_bug_on(condition)                                          \
+> +       do {                                                            \
+> +               if (condition) {                                \
+> +                       ipa_err("ipa_bug_on(%s) failed!\n", #condition); \
+> +                       ipa_bug();                                      \
+> +               }                                                       \
+> +       } while (0)
 
-diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
-index 4893c1f..b87513c 100644
---- a/drivers/clk/imx/Makefile
-+++ b/drivers/clk/imx/Makefile
-@@ -12,7 +12,8 @@ obj-y +=3D \
- 	clk-pllv1.o \
- 	clk-pllv2.o \
- 	clk-pllv3.o \
--	clk-pfd.o
-+	clk-pfd.o \
-+	clk-sccg-pll.o
-=20
- obj-$(CONFIG_SOC_IMX1)   +=3D clk-imx1.o
- obj-$(CONFIG_SOC_IMX21)  +=3D clk-imx21.o
-diff --git a/drivers/clk/imx/clk-sccg-pll.c b/drivers/clk/imx/clk-sccg-pll.=
-c
-new file mode 100644
-index 0000000..4666b96
---- /dev/null
-+++ b/drivers/clk/imx/clk-sccg-pll.c
-@@ -0,0 +1,256 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright 2018 NXP.
-+ *
-+ * This driver supports the SCCG plls found in the imx8m SOCs
-+ *
-+ * Documentation for this SCCG pll can be found at:
-+ *   https://www.nxp.com/docs/en/reference-manual/IMX8MDQLQRM.pdf#page=3D8=
-34
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/err.h>
-+#include <linux/iopoll.h>
-+#include <linux/slab.h>
-+#include <linux/bitfield.h>
-+
-+#include "clk.h"
-+
-+/* PLL CFGs */
-+#define PLL_CFG0		0x0
-+#define PLL_CFG1		0x4
-+#define PLL_CFG2		0x8
-+
-+#define PLL_DIVF1_MASK		GENMASK(18, 13)
-+#define PLL_DIVF2_MASK		GENMASK(12, 7)
-+#define PLL_DIVR1_MASK		GENMASK(27, 25)
-+#define PLL_DIVR2_MASK		GENMASK(24, 19)
-+#define PLL_REF_MASK		GENMASK(2, 0)
-+
-+#define PLL_LOCK_MASK		BIT(31)
-+#define PLL_PD_MASK		BIT(7)
-+
-+#define OSC_25M			25000000
-+#define OSC_27M			27000000
-+
-+#define PLL_SCCG_LOCK_TIMEOUT	70
-+
-+struct clk_sccg_pll {
-+	struct clk_hw	hw;
-+	void __iomem	*base;
-+};
-+
-+#define to_clk_sccg_pll(_hw) container_of(_hw, struct clk_sccg_pll, hw)
-+
-+static int clk_pll_wait_lock(struct clk_sccg_pll *pll)
-+{
-+	u32 val;
-+
-+	return readl_poll_timeout(pll->base, val, val & PLL_LOCK_MASK, 0,
-+					PLL_SCCG_LOCK_TIMEOUT);
-+}
-+
-+static int clk_pll1_is_prepared(struct clk_hw *hw)
-+{
-+	struct clk_sccg_pll *pll =3D to_clk_sccg_pll(hw);
-+	u32 val;
-+
-+	val =3D readl_relaxed(pll->base + PLL_CFG0);
-+	return (val & PLL_PD_MASK) ? 0 : 1;
-+}
-+
-+static unsigned long clk_pll1_recalc_rate(struct clk_hw *hw,
-+					 unsigned long parent_rate)
-+{
-+	struct clk_sccg_pll *pll =3D to_clk_sccg_pll(hw);
-+	u32 val, divf;
-+
-+	val =3D readl_relaxed(pll->base + PLL_CFG2);
-+	divf =3D FIELD_GET(PLL_DIVF1_MASK, val);
-+
-+	return parent_rate * 2 * (divf + 1);
-+}
-+
-+static long clk_pll1_round_rate(struct clk_hw *hw, unsigned long rate,
-+			       unsigned long *prate)
-+{
-+	unsigned long parent_rate =3D *prate;
-+	u32 div;
-+
-+	if (!parent_rate)
-+		return 0;
-+
-+	div =3D rate / (parent_rate * 2);
-+
-+	return parent_rate * div * 2;
-+}
-+
-+static int clk_pll1_set_rate(struct clk_hw *hw, unsigned long rate,
-+			    unsigned long parent_rate)
-+{
-+	struct clk_sccg_pll *pll =3D to_clk_sccg_pll(hw);
-+	u32 val;
-+	u32 divf;
-+
-+	if (!parent_rate)
-+		return -EINVAL;
-+
-+	divf =3D rate / (parent_rate * 2);
-+
-+	val =3D readl_relaxed(pll->base + PLL_CFG2);
-+	val &=3D ~PLL_DIVF1_MASK;
-+	val |=3D FIELD_PREP(PLL_DIVF1_MASK, divf - 1);
-+	writel_relaxed(val, pll->base + PLL_CFG2);
-+
-+	return clk_pll_wait_lock(pll);
-+}
-+
-+static int clk_pll1_prepare(struct clk_hw *hw)
-+{
-+	struct clk_sccg_pll *pll =3D to_clk_sccg_pll(hw);
-+	u32 val;
-+
-+	val =3D readl_relaxed(pll->base + PLL_CFG0);
-+	val &=3D ~PLL_PD_MASK;
-+	writel_relaxed(val, pll->base + PLL_CFG0);
-+
-+	return clk_pll_wait_lock(pll);
-+}
-+
-+static void clk_pll1_unprepare(struct clk_hw *hw)
-+{
-+	struct clk_sccg_pll *pll =3D to_clk_sccg_pll(hw);
-+	u32 val;
-+
-+	val =3D readl_relaxed(pll->base + PLL_CFG0);
-+	val |=3D PLL_PD_MASK;
-+	writel_relaxed(val, pll->base + PLL_CFG0);
-+
-+}
-+
-+static unsigned long clk_pll2_recalc_rate(struct clk_hw *hw,
-+					 unsigned long parent_rate)
-+{
-+	struct clk_sccg_pll *pll =3D to_clk_sccg_pll(hw);
-+	u32 val, ref, divr1, divf1, divr2, divf2;
-+	u64 temp64;
-+
-+	val =3D readl_relaxed(pll->base + PLL_CFG0);
-+	switch (FIELD_GET(PLL_REF_MASK, val)) {
-+	case 0:
-+		ref =3D OSC_25M;
-+		break;
-+	case 1:
-+		ref =3D OSC_27M;
-+		break;
-+	default:
-+		ref =3D OSC_25M;
-+		break;
-+	}
-+
-+	val =3D readl_relaxed(pll->base + PLL_CFG2);
-+	divr1 =3D FIELD_GET(PLL_DIVR1_MASK, val);
-+	divr2 =3D FIELD_GET(PLL_DIVR2_MASK, val);
-+	divf1 =3D FIELD_GET(PLL_DIVF1_MASK, val);
-+	divf2 =3D FIELD_GET(PLL_DIVF2_MASK, val);
-+
-+	temp64 =3D ref * 2;
-+	temp64 *=3D (divf1 + 1) * (divf2 + 1);
-+
-+	do_div(temp64, (divr1 + 1) * (divr2 + 1));
-+
-+	return temp64;
-+}
-+
-+static long clk_pll2_round_rate(struct clk_hw *hw, unsigned long rate,
-+			       unsigned long *prate)
-+{
-+	u32 div;
-+	unsigned long parent_rate =3D *prate;
-+
-+	if (!parent_rate)
-+		return 0;
-+
-+	div =3D rate / parent_rate;
-+
-+	return parent_rate * div;
-+}
-+
-+static int clk_pll2_set_rate(struct clk_hw *hw, unsigned long rate,
-+			    unsigned long parent_rate)
-+{
-+	u32 val;
-+	u32 divf;
-+	struct clk_sccg_pll *pll =3D to_clk_sccg_pll(hw);
-+
-+	if (!parent_rate)
-+		return -EINVAL;
-+
-+	divf =3D rate / parent_rate;
-+
-+	val =3D readl_relaxed(pll->base + PLL_CFG2);
-+	val &=3D ~PLL_DIVF2_MASK;
-+	val |=3D FIELD_PREP(PLL_DIVF2_MASK, divf - 1);
-+	writel_relaxed(val, pll->base + PLL_CFG2);
-+
-+	return clk_pll_wait_lock(pll);
-+}
-+
-+static const struct clk_ops clk_sccg_pll1_ops =3D {
-+	.is_prepared	=3D clk_pll1_is_prepared,
-+	.recalc_rate	=3D clk_pll1_recalc_rate,
-+	.round_rate	=3D clk_pll1_round_rate,
-+	.set_rate	=3D clk_pll1_set_rate,
-+};
-+
-+static const struct clk_ops clk_sccg_pll2_ops =3D {
-+	.prepare	=3D clk_pll1_prepare,
-+	.unprepare	=3D clk_pll1_unprepare,
-+	.recalc_rate	=3D clk_pll2_recalc_rate,
-+	.round_rate	=3D clk_pll2_round_rate,
-+	.set_rate	=3D clk_pll2_set_rate,
-+};
-+
-+struct clk *imx_clk_sccg_pll(const char *name,
-+				const char *parent_name,
-+				void __iomem *base,
-+				enum imx_sccg_pll_type pll_type)
-+{
-+	struct clk_sccg_pll *pll;
-+	struct clk_init_data init;
-+	struct clk_hw *hw;
-+	int ret;
-+
-+	switch (pll_type) {
-+	case SCCG_PLL1:
-+		init.ops =3D &clk_sccg_pll1_ops;
-+		break;
-+	case SCCG_PLL2:
-+		init.ops =3D &clk_sccg_pll2_ops;
-+		break;
-+	default:
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	pll =3D kzalloc(sizeof(*pll), GFP_KERNEL);
-+	if (!pll)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name =3D name;
-+	init.flags =3D 0;
-+	init.parent_names =3D &parent_name;
-+	init.num_parents =3D 1;
-+
-+	pll->base =3D base;
-+	pll->hw.init =3D &init;
-+
-+	hw =3D &pll->hw;
-+
-+	ret =3D clk_hw_register(NULL, hw);
-+	if (ret) {
-+		kfree(pll);
-+		return ERR_CAST(hw);
-+	}
-+
-+	return hw->clk;
-+}
-diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-index 44a1f14..864cd8a 100644
---- a/drivers/clk/imx/clk.h
-+++ b/drivers/clk/imx/clk.h
-@@ -21,6 +21,11 @@ enum imx_pllv1_type {
- 	IMX_PLLV1_IMX35,
- };
-=20
-+enum imx_sccg_pll_type {
-+	SCCG_PLL1,
-+	SCCG_PLL2,
-+};
-+
- struct clk *imx_clk_pllv1(enum imx_pllv1_type type, const char *name,
- 		const char *parent, void __iomem *base);
-=20
-@@ -30,6 +35,10 @@ struct clk *imx_clk_pllv2(const char *name, const char *=
-parent,
- struct clk *imx_clk_frac_pll(const char *name, const char *parent_name,
- 			     void __iomem *base);
-=20
-+struct clk *imx_clk_sccg_pll(const char *name, const char *parent_name,
-+			     void __iomem *base,
-+			     enum imx_sccg_pll_type pll_type);
-+
- enum imx_pllv3_type {
- 	IMX_PLLV3_GENERIC,
- 	IMX_PLLV3_SYS,
---=20
-2.7.4
+According to a discussion at the kernel summit, we should generally
+try to avoid BUG() as it rarely does anything useful: it crashes the
+current task, but in a network driver that usually means killing the
+entire kernel since you are not in process context.
+
+Try questioning each one to see if it can possibly happen, or if the
+code can be rewritten in a way to guarantee that it cannot.
+
+If continuing after the bug was detected does not cause a security
+hole or permanent data corruption, you can also use WARN_ON()
+or WARN_ONCE() (without a wrapper).
+
+> +int ipa_wwan_init(void);
+> +void ipa_wwan_cleanup(void);
+> +
+> +int ipa_stop_gsi_channel(u32 ep_id);
+> +
+> +void ipa_cfg_ep(u32 ep_id);
+> +
+> +int ipa_tx_dp(enum ipa_client_type dst, struct sk_buff *skb);
+> +
+> +bool ipa_endp_aggr_support(u32 ep_id);
+> +enum ipa_seq_type ipa_endp_seq_type(u32 ep_id);
+> +
+> +void ipa_endp_init_hdr_cons(u32 ep_id, u32 header_size,
+> +                           u32 metadata_offset, u32 length_offset);
+> +void ipa_endp_init_hdr_prod(u32 ep_id, u32 header_size,
+> +                           u32 metadata_offset, u32 length_offset);
+
+I'm surprised to see many functions that don't take a pointer
+to an instance as the first argument, which often indicates
+that you have global state variables and the driver won't
+work with multiple hardware instances.
+
+      Arnd
