@@ -1,52 +1,94 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/device: Really only set bus DMA mask when appropriate
-Date: Wed, 7 Nov 2018 09:52:35 -0600
-Message-ID: <20181107155235.GA18618@bogus>
-References: <b06321ac25a1211e572e650a630e5e1aa9f8173f.1541504601.git.robin.murphy@arm.com>
-	<20181107080335.GA24511@lst.de>
-	<22cbe798-612f-8c88-90e7-388202f603cf@arm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] of, numa: Validate some distance map rules
+Date: Wed, 7 Nov 2018 09:55:52 -0600
+Message-ID: <20181107155552.GB18618@bogus>
+References: <1541507973-149965-1-git-send-email-john.garry@huawei.com>
+ <20181107154430.GA9996@brain-police>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <22cbe798-612f-8c88-90e7-388202f603cf-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20181107154430.GA9996@brain-police>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>, John Garry <john.garry@huawei.com>
+Cc: frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com, anshuman.khandual@arm.com, peterz@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 07, 2018 at 12:56:49PM +0000, Robin Murphy wrote:
-> On 2018-11-07 8:03 am, Christoph Hellwig wrote:
-> > On Tue, Nov 06, 2018 at 11:54:15AM +0000, Robin Murphy wrote:
-> > > of_dma_configure() was *supposed* to be following the same logic as
-> > > acpi_dma_configure() and only setting bus_dma_mask if some range was
-> > > specified by the firmware. However, it seems that subtlety got lost in
-> > > the process of fitting it into the differently-shaped control flow, and
-> > > as a result the force_dma==true case ends up always setting the bus mask
-> > > to the 32-bit default, which is not what anyone wants.
-> > > 
-> > > Make sure we only touch it if the DT actually said so.
+On Wed, Nov 07, 2018 at 03:44:31PM +0000, Will Deacon wrote:
+> Hi John,
+> 
+> On Tue, Nov 06, 2018 at 08:39:33PM +0800, John Garry wrote:
+> > Currently the NUMA distance map parsing does not validate the distance
+> > table for the distance-matrix rules 1-2 in [1].
 > > 
-> > This looks good, but I think it could really use a comment as the use
-> > of ret all the way down the function isn't exactly obvious.
+> > However the arch NUMA code may enforce some of these rules, but not all.
+> > Such is the case for the arm64 port, which does not enforce the rule that
+> > the distance between separates nodes cannot equal LOCAL_DISTANCE.
+> > 
+> > The patch adds the following rules validation:
+> > - distance of node to self equals LOCAL_DISTANCE
+> > - distance of separate nodes > LOCAL_DISTANCE
+> > 
+> > A note on dealing with symmetrical distances between nodes:
+> > 
+> > Validating symmetrical distances between nodes is difficult. If it were
+> > mandated in the bindings that every distance must be recorded in the
+> > table, validating symmetrical distances would be straightforward. However,
+> > it isn't.
+> > 
+> > In addition to this, it is also possible to record [b, a] distance only
+> > (and not [a, b]). So, when processing the table for [b, a], we cannot
+> > assert that current distance of [a, b] != [b, a] as invalid, as [a, b]
+> > distance may not be present in the table and current distance would be
+> > default at REMOTE_DISTANCE.
+> > 
+> > As such, we maintain the policy that we overwrite distance [a, b] = [b, a]
+> > for b > a. This policy is different to kernel ACPI SLIT validation, which
+> > allows non-symmetrical distances (ACPI spec SLIT rules allow it). However,
+> > the debug message is dropped as it may be misleading (for a distance which
+> > is later overwritten).
+> > 
+> > Some final notes on semantics:
+> > 
+> > - It is implied that it is the responsibility of the arch NUMA code to
+> >   reset the NUMA distance map for an error in distance map parsing.
+> > 
+> > - It is the responsibility of the FW NUMA topology parsing (whether OF or
+> >   ACPI) to enforce NUMA distance rules, and not arch NUMA code.
+> > 
+> > [1] Documents/devicetree/bindings/numa.txt
+> > 
+> > Signed-off-by: John Garry <john.garry@huawei.com>
 > 
-> Fair point.
-> 
-> > Let me now if you want this picked up through the OF or DMA trees.
-> 
-> I don't mind either way; I figure I'll wait a bit longer to see if Rob has
-> any preference, then resend with the comment and the tags picked up so it
-> can hopefully make rc2.
+> Is it worth mentioning that the lack of this check was leading to a kernel
+> crash with a malformed DT entry?
 
-I have other fixes to send, so I can take it.
+So should be marked for stable too?
+
+> 
+> > diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+> > index 35c64a4295e0..fe6b13608e51 100644
+> > --- a/drivers/of/of_numa.c
+> > +++ b/drivers/of/of_numa.c
+> > @@ -104,9 +104,14 @@ static int __init of_numa_parse_distance_map_v1(struct device_node *map)
+> >  		distance = of_read_number(matrix, 1);
+> >  		matrix++;
+> >  
+> > +		if ((nodea == nodeb && distance != LOCAL_DISTANCE) ||
+> > +		    (nodea != nodeb && distance <= LOCAL_DISTANCE)) {
+> > +			pr_err("Invalid distance[node%d -> node%d] = %d\n",
+> > +			       nodea, nodeb, distance);
+> > +			return -EINVAL;
+> > +		}
+> > +
+> >  		numa_set_distance(nodea, nodeb, distance);
+> > -		pr_debug("distance[node%d -> node%d] = %d\n",
+> > -			 nodea, nodeb, distance);
+> 
+> Looks good to me, although I'm not sure which tree this should go through.
+> 
+> Acked-by: Will Deacon <will.deacon@arm.com>
+
+I'll take it. Please resend with the comment Will asked for.
 
 Rob
