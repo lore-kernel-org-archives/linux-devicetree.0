@@ -1,66 +1,52 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v5 0/3] Stingray thermal driver support
-Date: Wed, 7 Nov 2018 14:15:23 -0800
-Message-ID: <b6e02875-784f-4908-a985-5ee7e3df3ac6@gmail.com>
-References: <1539702680-3746-1-git-send-email-srinath.mannam@broadcom.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v6 07/18] of: dynamic: change type of of_{at,de}tach_node() to void
+Date: Thu, 08 Nov 2018 10:48:33 +1100
+Message-ID: <87h8gsqwj2.fsf@concordia.ellerman.id.au>
+References: <1541431515-25197-1-git-send-email-frowand.list@gmail.com> <1541431515-25197-8-git-send-email-frowand.list@gmail.com> <87tvktqedf.fsf@concordia.ellerman.id.au> <6bc78502-7587-eb9c-237f-d3f031979d42@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539702680-3746-1-git-send-email-srinath.mannam@broadcom.com>
-Content-Language: en-US
+In-Reply-To: <6bc78502-7587-eb9c-237f-d3f031979d42@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinath Mannam <srinath.mannam@broadcom.com>, daniel.lezcano@linaro.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+To: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, nfont@linux.vnet.ibm.com, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
+Frank Rowand <frowand.list@gmail.com> writes:
+> On 11/7/18 4:08 AM, Michael Ellerman wrote:
+>> frowand.list@gmail.com writes:
+>> 
+>>> From: Frank Rowand <frank.rowand@sony.com>
+>>>
+>>> of_attach_node() and of_detach_node() always return zero, so
+>>> their return value is meaningless.
+>> 
+>> But should they always return zero?
+>> 
+>> At least __of_attach_node_sysfs() can fail in several ways.
+>
+> Sigh.  And of_reconfig_notify() can fail.  And at one point in the
+> history the return value of of_reconfig_notify() was returned by
+> of_attach_node() if of_reconfig_notify() failed.
+>
+>> And there's also this in __of_detach_node() which should probably be
+>> returning an error:
+>> 
+>> 	if (WARN_ON(of_node_check_flag(np, OF_DETACHED)))
+>>         	return;
+>> 
+>> 
+>> Seems to me we should instead be fixing these to propagate errors,
+>> rather than hiding them?
+>
+> The history of how of_attach_node() stopped propagating errors is
+> a bit more complex than I want to dig into at the moment.  So I'll
+> drop this patch from the series and add investigating this onto
+> my todo list.  I suspect that the result of investigating will be
+> that error return values should not be ignored in of_attach_node()
+> and of_detach_node(), but should instead be propagated to the
+> callers, as you suggest.
 
+Thanks.
 
-On 10/16/2018 8:11 AM, Srinath Mannam wrote:
-> These patches adds the stingray thermal driver and its
-> corresponding DT nodes with documentation.
-
-Can we get feedback from the thermal maintains whether this is
-acceptable or not?
-
-> 
-> Changes from v4
->   - Addressed Rob Herring comments on DT parameters and
->     thermal driver architecture.
->   - Removed brcm,max-crit-temp DT parameter
->   - Changed driver to thermal sensor registration model.
->   - Added trip DT properties.
-> 
-> Changes from v3
->   - Addressed Daniel lezcano comments.
->   - Elaborated commit description of thermal driver patch.
->   - Added brcm,max-crit-temp DT parameter.
-> 
-> Changes from v2:
->   - All stingray TMON DT nodes are combine together into single.
->     Temperature registers are combined into one mem resource.
->     brcm,tmon-mask parameter has available TMONs mask value.
->   - All available TMONs are initialized together in single
->     instance of driver probe call.
-> 
-> Changes from v1:
->   - Fixed auto build sparce warning.
-> 
-> Pramod Kumar (3):
->   dt-bindings: thermal: Add binding document for SR thermal
->   thermal: broadcom: Add Stingray thermal driver
->   arm64: dts: stingray: Add Stingray Thermal DT support.
-> 
->  .../bindings/thermal/brcm,sr-thermal.txt           | 105 ++++++++++++++++
->  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  89 +++++++++++++
->  drivers/thermal/Kconfig                            |   3 +-
->  drivers/thermal/broadcom/Kconfig                   |   9 ++
->  drivers/thermal/broadcom/Makefile                  |   1 +
->  drivers/thermal/broadcom/sr-thermal.c              | 138 +++++++++++++++++++++
->  6 files changed, 344 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
->  create mode 100644 drivers/thermal/broadcom/sr-thermal.c
-> 
-
--- 
-Florian
+cheers
