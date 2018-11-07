@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 12/15] Bluetooth: hci_bcm: Add compatible string
- for BCM4330
-Date: Wed,  7 Nov 2018 18:13:05 +0800
-Message-ID: <20181107101308.7626-13-wens@csie.org>
+Subject: [PATCH 01/15] dt-bindings: net: broadcom-bluetooth: Fix
+ external clock names
+Date: Wed,  7 Nov 2018 18:12:54 +0800
+Message-ID: <20181107101308.7626-2-wens@csie.org>
 References: <20181107101308.7626-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBQXVRLPQKGQE3KSA5XY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBQHVRLPQKGQENWDCX2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181107101308.7626-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,26 +20,39 @@ To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Johan Hedb
 Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The BCM4330 chip is a 802.11 a/b/g/n + Bluetooth 4.0 + HS controller.
-This patch adds a compatible string match to the serdev driver for the
-Bluetooth part of the chip.
+The Broadcom Bluetooth controllers can take up to two external clocks:
+an external frequency reference, substituting the main crystal, and a
+LPO clock at 32.768 kHz substituting the internal LPO clock.
+
+In particular, the external LPO clock must be used when the controller
+does not have NVRAM connected, and the main reference frequency is not
+the default 20 MHz. This is described in detail in the datasheet.
+
+The original "extclk" clock name is ambiguous as to which of these it
+refers to, and some designs might even require both.
+
+This patch deprecates the existing name, and adds "txco" and "lpo".
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/bluetooth/hci_bcm.c | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-index 73b520622a24..b6b0b2139892 100644
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -1397,6 +1397,7 @@ static void bcm_serdev_remove(struct serdev_device *serdev)
- #ifdef CONFIG_OF
- static const struct of_device_id bcm_bluetooth_of_match[] = {
- 	{ .compatible = "brcm,bcm20702a1" },
-+	{ .compatible = "brcm,bcm4330-bt" },
- 	{ .compatible = "brcm,bcm43438-bt" },
- 	{ },
- };
+diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+index 4194ff7e6ee6..2535e54219af 100644
+--- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
++++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+@@ -18,7 +18,10 @@ Optional properties:
+  - shutdown-gpios: GPIO specifier, used to enable the BT module
+  - device-wakeup-gpios: GPIO specifier, used to wakeup the controller
+  - host-wakeup-gpios: GPIO specifier, used to wakeup the host processor
+- - clocks: clock specifier if external clock provided to the controller
++ - clocks and clock-names: clock specifier if external clocks are provided
++   - "txco": external reference clock
++   - "extclk": deprecated, replaced by "txco"
++   - "lpo": external low power 32.768 kHz clock
+  - clock-names: should be "extclk"
+ 
+ 
 -- 
 2.19.1
