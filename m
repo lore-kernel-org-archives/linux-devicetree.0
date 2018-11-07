@@ -1,50 +1,56 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 11/15] Bluetooth: hci_bcm: Add BCM20702A1 variant
-Date: Wed, 7 Nov 2018 21:36:08 +0100
-Message-ID: <20181107203608.ff32gmb4u54kcvep@flea>
-References: <20181107101308.7626-1-wens@csie.org>
- <20181107101308.7626-12-wens@csie.org>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Richard Gong <richard.gong@linux.intel.com>
+Subject: Re: [PATCHv10 3/8] firmware: add Intel Stratix10 service layer driver
+Date: Wed, 7 Nov 2018 14:47:13 -0600
+Message-ID: <f266e76a-6222-252e-dc79-c13044602a98@linux.intel.com>
+References: <1541523172-5171-1-git-send-email-richard.gong@linux.intel.com>
+ <1541523172-5171-4-git-send-email-richard.gong@linux.intel.com>
+ <595b853f-6a8c-d608-e716-95ef1c84d0b9@infradead.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mf6se6s5b6tdxb5f"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBOUZRXPQKGQE7TZHHLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20181107101308.7626-12-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <595b853f-6a8c-d608-e716-95ef1c84d0b9@infradead.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Randy Dunlap <rdunlap@infradead.org>, gregkh@linuxfoundation.org, catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, corbet@lwn.net
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, linux-doc@vger.kernel.org, todd.riffel@intel.com, richard.gong@intel.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Randy,
 
---mf6se6s5b6tdxb5f
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-Hi!
-
-On Wed, Nov 07, 2018 at 06:13:04PM +0800, Chen-Yu Tsai wrote:
-> From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On 11/6/18 11:03 AM, Randy Dunlap wrote:
+> On 11/6/18 8:52 AM, richard.gong@linux.intel.com wrote:
+>> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+>> index 7273e50..b6813bc 100644
+>> --- a/drivers/firmware/Kconfig
+>> +++ b/drivers/firmware/Kconfig
+>> @@ -216,6 +216,18 @@ config FW_CFG_SYSFS_CMDLINE
+>>   	  WARNING: Using incorrect parameters (base address in particular)
+>>   	  may crash your system.
+>>   
+>> +config INTEL_STRATIX10_SERVICE
+>> +       tristate "Intel Stratix10 Service Layer"
+>> +       depends on HAVE_ARM_SMCCC
+>> +       default n
+>> +       help
+>> +        Intel Stratix10 service layer runs at privileged exception level,
+>> +	interfaces with the service providers (FPGA manager is one of them) and
+>> +	manages secure monitor call to communicate with secure monitor software
+>> +	at secure monitor exception level.
+>> +
+>> +        Say Y here if you want Stratix10 service layer support.
 > 
-> The BCM20702A1 chip is a single-chip Bluetooth 4.0 controller and
-> transceiver. It is found in the AMPAK AP6210 WiFi+BT package.
+> from Documentation/process/coding-style.rst:
 > 
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Lines under a ``config`` definition are indented with one tab,
+> while help text is indented an additional two spaces.
+> 
+>
 
-if you resubmit it, could you do s/free-electrons/bootlin/ ?
+I will correct that in the next submission.
 
-Thanks!
-Maxime
+> thanks.
+> 
 
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---mf6se6s5b6tdxb5f--
+Regards,
+Richard
