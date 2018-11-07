@@ -1,71 +1,57 @@
 Return-Path: <SRS0=Wk9p=NS=babblebit.net=cmc@kernel.org>
-Date: Wed, 7 Nov 2018 09:18:44 +0000
+Date: Wed, 7 Nov 2018 09:05:50 +0000
 From: Chris Coffey <cmc@babblebit.net>
 Subject: Re: [PATCH] iio: potentiometer: Add driver for Microchip
  MCP41xxx/42xxx
-Message-ID: <20181107091844.v4mnwus4h7s4rbwg@deb-660>
+Message-ID: <20181107090550.ubwqr4sd2mo3sqwn@deb-660>
 References: <20181106113130.9612-1-cmc@babblebit.net>
- <6f3ead94-b1ed-900d-b675-3822d67dbfd7@axentia.se>
+ <20181106154806.GB20842@himanshu-Vostro-3559>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6f3ead94-b1ed-900d-b675-3822d67dbfd7@axentia.se>
-To: Peter Rosin <peda@axentia.se>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Slawomir Stepien <sst@poczta.fm>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <20181106154806.GB20842@himanshu-Vostro-3559>
+To: Himanshu Jha <himanshujha199640@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Peter Rosin <peda@axentia.se>, Slawomir Stepien <sst@poczta.fm>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Thank you for the review! A few comments inline.
+Thank you for the review. I have a question inline.
 
-On Tue, Nov 06, 2018 at 04:37:11PM +0000, Peter Rosin wrote:
-> Hi!
-> 
-> Some comments inline...
-> 
-> On 2018-11-06 12:31, Chris Coffey wrote:
+On Tue, Nov 06, 2018 at 09:18:06PM +0530, Himanshu Jha wrote:
+> On Tue, Nov 06, 2018 at 11:31:30AM +0000, Chris Coffey wrote:
 > > This patch adds driver support for the Microchip MCP41xxx/42xxx family
 > > of digital potentiometers:
 > > 
-
-[snip]
-
-> > +
-> > +	data->buf[0] = MCP41010_WIPER_ENABLE << channel;
-> > +	data->buf[0] |= MCP41010_WRITE;
+> > DEVICE      Wipers  Positions   Resistance (kOhm)
+> > MCP41010    1       256         10
+> > MCP41050    1       256         50
+> > MCP41100    1       256         100
+> > MCP42010    2       256         10
+> > MCP42050    2       256         50
+> > MCP42100    2       256         100
+> > 
+> > Datasheet: http://ww1.microchip.com/downloads/en/devicedoc/11195c.pdf
+> > 
+> > Signed-off-by: Chris Coffey <cmc@babblebit.net>
+> > ---
+> >  .../bindings/iio/potentiometer/mcp41010.txt        |  29 +++
 > 
-> Will this not clobber the other channel for mcp42xxx chips???
+> WARNING: DT binding docs and includes should be a separate patch. 
+> See: Documentation/devicetree/bindings/submitting-patches.txt
 > 
-
-I see you followed up on this in another message, so I'll respond there.
-
-[snip]
-
-> > +static int mcp41010_probe(struct spi_device *spi)
-> > +{
-> > +	int err;
-> > +	struct device *dev = &spi->dev;
-> > +	unsigned long devid = spi_get_device_id(spi)->driver_data;
-> > +	struct mcp41010_data *data;
-> > +	struct iio_dev *indio_dev;
-> > +
-> > +	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
-> > +	if (!indio_dev)
-> > +		return -ENOMEM;
-> > +
-> > +	data = iio_priv(indio_dev);
-> > +	spi_set_drvdata(spi, indio_dev);
-> > +	data->spi = spi;
-> > +	data->cfg = &mcp41010_cfg[devid];
-> 
-> I'm missing a "of_device_get_match_data(dev)" call somewhere in here, see e.g. the
-> max5481.c file in this directory. Yes, that's missing from the mcp4131 driver as
-> well, but that's not a valid reason for not doing it here AFAICT...
-> 
-> Cheers,
-> Peter
+> Please run checkpatch.pl on this patch once.
 > 
 
-Ah, interesting; I was unaware of of_device_get_match_data(). I'll add
-that for v2.
+Oops. I ran checkpatch.pl on the individual files, but neglected to run
+it on the patch file itself. I'll split the patch in v2.
+
+checkpatch.pl also reports a warning about the MAINTAINERS file:
+WARNING: added, moved or deleted file(s), does MAINTAINERS need
+updating?
+
+... but looking through the tree, many IIO drivers don't have
+corresponding entries in MAINTAINERS; is this one of those checkpatch
+warnings that can be safely ignored? Or should all new drivers have a
+corresponding entry in MAINTAINERS?
 
 Thanks again,
 Chris
