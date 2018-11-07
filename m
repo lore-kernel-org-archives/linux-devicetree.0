@@ -1,7 +1,7 @@
 From: Alex Elder <elder@linaro.org>
-Subject: [RFC PATCH 09/12] soc: qcom: ipa: main IPA source file
-Date: Tue,  6 Nov 2018 18:32:47 -0600
-Message-ID: <20181107003250.5832-10-elder@linaro.org>
+Subject: [RFC PATCH 10/12] soc: qcom: ipa: data path
+Date: Tue,  6 Nov 2018 18:32:48 -0600
+Message-ID: <20181107003250.5832-11-elder@linaro.org>
 References: <20181107003250.5832-1-elder@linaro.org>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20181107003250.5832-1-elder@linaro.org>
@@ -10,49 +10,43 @@ To: davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org, ilias.apalod
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, syadagir@codeaurora.org, mjavid@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-This patch includes "ipa_main.c", which consists mostly of the
-initialization code.
+This patch contains "ipa_dp.c", which includes the bulk of the data
+path code.  There is an overview in the code of how things operate,
+but there are already plans to rework this portion of the driver.
 
-The IPA is a hardware resource shared by multiple independent
-execution environments (currently, the AP and the modem).  In some
-cases, initialization must be performed by only one of these.  As an
-example, the AP must initialize some filter table data structures
-that are only used by the modem.  (And in general, some initialization
-of IPA hardware is required regardless of whether it will be used.)
-
-There are two phases of IPA initialization.  The first phase is
-triggered by the probe of the driver.  It involves setting up
-operating system resources, and doing some basic initialization
-of IPA memory resources using register and DMA access.
-
-The second phase involves configuration of enpoints used, and this
-phase requires access to the GSI layer.  However the GSI layer is
-requires some firmware to be loaded before it can be used.  So
-the second stage (in ipa_post_init()) only occurs after it is known
-firmware is loaded.
-
-The GSI firmware can be loaded in two ways:  the modem can load it;
-or Trust Zone code running on the AP can load it.  If the modem
-loads the firmware, it will send an SMP2P interrupt to the AP to
-signal that GSI firmware is loaded and the AP can proceed with its
-second stage IPA initialization.  If Trust Zone is responsible for
-loading the firmware, the IPA driver requests the firmware blob
-from the file system and passes the result via an SMC to Trust Zone
-to load and activate the GSI firmware.  When that has completed
-successfully, the second stage of initialization can proceed.
+In particular:
+  - Interrupt handling will be replaced with a threaded interrupt
+    handler.  Currently handling occurs in a combination of
+    interrupt and workqueue context, and this requires locking
+    and atomic operations for proper synchronization.
+  - Currently, only receive endpoints use NAPI.  Transmit
+    completion interrupts are disabled, and are handled in batches
+    by periodically scheduling an interrupting no-op request.
+    The plan is to arrange for transmit requests to generate
+    interrupts, and their completion will be processed with other
+    completions in the NAPI poll function.  This will also allow
+    accurate feedback about packet sojourn time to be provided to
+    queue limiting mechanisms.
+  - Not all receive endpoints use NAPI.  The plan is for *all*
+    endpoints to use NAPI.  And because all endpoints share a
+    common GSI interrupt, a single NAPI structure will used to
+    managing the processing for all completions on all endpoints.
+  - Receive buffers are posted to the hardware by a workqueue
+    function.  Instead, the plan is to have this done by the
+    NAPI poll routine.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/ipa_main.c | 1400 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 1400 insertions(+)
- create mode 100644 drivers/net/ipa/ipa_main.c
+ drivers/net/ipa/ipa_dp.c | 1994 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 1994 insertions(+)
+ create mode 100644 drivers/net/ipa/ipa_dp.c
 
-diff --git a/drivers/net/ipa/ipa_main.c b/drivers/net/ipa/ipa_main.c
+diff --git a/drivers/net/ipa/ipa_dp.c b/drivers/net/ipa/ipa_dp.c
 new file mode 100644
-index 000000000000..3d7c59177388
+index 000000000000..c16ac74765b8
 --- /dev/null
-+++ b/drivers/net/ipa/ipa_main.c
-@@ -0,0 +1,1400 @@
++++ b/drivers/net/ipa/ipa_dp.c
+@@ -0,0 +1,1994 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
 +/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
@@ -60,1398 +54,1992 @@ index 000000000000..3d7c59177388
 + */
 +
 +#include <linux/types.h>
-+#include <linux/atomic.h>
-+#include <linux/spinlock.h>
-+#include <linux/mutex.h>
++#include <linux/delay.h>
 +#include <linux/device.h>
-+#include <linux/firmware.h>
-+#include <linux/workqueue.h>
-+#include <linux/bug.h>
-+#include <linux/io.h>
-+#include <linux/clk.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+#include <linux/interrupt.h>
-+#include <linux/notifier.h>
-+#include <linux/remoteproc.h>
-+#include <linux/pm_wakeup.h>
-+#include <linux/kconfig.h>
-+#include <linux/qcom_scm.h>
-+#include <linux/soc/qcom/mdt_loader.h>
-+#include <linux/soc/qcom/smem.h>
-+#include <linux/soc/qcom/smem_state.h>
-+#include <linux/module.h>
++#include <linux/list.h>
++#include <linux/slab.h>
++#include <linux/netdevice.h>
 +
-+#include "ipa_i.h"
-+#include "ipa_dma.h"
++#include "ipa_i.h"	/* ipa_err() */
 +#include "ipahal.h"
++#include "ipa_dma.h"
 +
-+#define	IPA_CORE_CLOCK_RATE	(75UL * 1000 * 1000)
-+
-+/* The name of the main firmware file relative to /lib/firmware */
-+#define IPA_FWS_PATH		"ipa_fws.mdt"
-+#define IPA_PAS_ID		15
-+
-+#define IPA_APPS_CMD_PROD_RING_COUNT	256
-+#define IPA_APPS_LAN_CONS_RING_COUNT	256
-+
-+/* Details of the initialization sequence are determined by who is
-+ * responsible for doing some early IPA hardware initialization.
-+ * The Device Tree compatible string defines what to expect.
++/**
++ * DOC:  The IPA Data Path
++ *
++ * The IPA is used to transmit data between execution environments.
++ * The data path code uses functions and structures supplied by the
++ * GSI to interact with the IPA hardware.  A packet to be transmitted
++ * or received is held in a socket buffer.  Each has a "wrapper"
++ * structure associated with it.  A GSI transfer request refers to
++ * the packet wrapper, and when queued to the hardware the packet
++ * wrapper is added to a list of outstanding requests for an endpoint
++ * (maintained in the head_desc_list in the endpoint's system context).
++ * When the GSI transfer completes, a callback function is provided
++ * the packet wrapper pointer, allowing it to be released after the
++ * received socket buffer has been passed up the stack, or a buffer
++ * whose data has been transmitted has been freed.
++ *
++ * Producer (PROD) endpoints are used to send data from the AP toward
++ * the IPA.  The common function for sending data on producer endpoints
++ * is ipa_send().  It takes a system context and an array of IPA
++ * descriptors as arguments.  Each descriptor is given a TX packet
++ * wrapper, and its content is translated into an equivalent GSI
++ * transfer element  structure after its memory address is mapped for
++ * DMA.  The GSI transfer element array is finally passed to the GSI
++ * layer using gsi_channel_queue().
++ *
++ * The code provides a "no_intr" feature, allowing endpoints to have
++ * their transmit completions not produce an interrupt.  (This
++ * behavior is used only for the modem producer.)  In this case, a
++ * no-op request is generated every 200 milliseconds while transmit
++ * requests are outstanding.  The no-op will generate an interrupt
++ * when it's complete, and its completion implies the completion of
++ * all transmit requests issued before it.  The GSI will call
++ * ipa_gsi_irq_tx_notify_cb() in response to interrupts on a producer
++ * endpoint.
++ *
++ * Receive buffers are passed to consumer (CONS) channels to be
++ * available to hold incoming data.  Arriving data is placed
++ * in these buffers, leading to events being generated on the event
++ * ring assciated with a channel.  When an interrupt occurs on a
++ * consumer endpoint, the GSI layer calls ipa_gsi_irq_rx_notify_cb().
++ * This causes the endpoint to switch to polling mode.  The
++ * completion of a receive also leads to ipa_replenish_rx_cache()
++ * being called, to replace the consumed buffer.
++ *
++ * Consumer enpoints optionally use NAPI (only the modem consumer,
++ * WWAN_CONS, does currently).  An atomic variable records whether
++ * the endpoint is in polling mode or not.  This is needed because
++ * switching to polling mode is currently done in a workqueue.  Once
++ * NAPI polling completes, and endpoint switches back to interrupt
++ * mode.
 + */
-+enum ipa_init_type {
-+	ipa_undefined_init = 0,
-+	ipa_tz_init,
-+	ipa_modem_init,
-+};
 +
-+struct ipa_match_data {
-+	enum ipa_init_type init_type;
-+};
-+
-+static void ipa_client_remove_deferred(struct work_struct *work);
-+static DECLARE_WORK(ipa_client_remove_work, ipa_client_remove_deferred);
-+
-+static struct ipa_context ipa_ctx_struct;
-+struct ipa_context *ipa_ctx = &ipa_ctx_struct;
-+
-+static int hdr_init_local_cmd(u32 offset, u32 size)
-+{
-+	struct ipa_desc desc = { };
++/**
++ * struct ipa_tx_pkt_wrapper - IPA transmit packet wrapper
++ * @type:	type of descriptor
++ * @sys:	Corresponding IPA sys context
++ * @mem:	Memory buffer used by this packet
++ * @callback:	IPA client provided callback
++ * @user1:	Cookie1 for above callback
++ * @user2:	Cookie2 for above callback
++ * @link:	Links for the endpoint's sys->head_desc_list
++ * @cnt:	Number of descriptors in request
++ * @done_work:	Work structure used when complete
++ */
++struct ipa_tx_pkt_wrapper {
++	enum ipa_desc_type type;
++	struct ipa_sys_context *sys;
 +	struct ipa_dma_mem mem;
-+	void *payload;
-+	int ret;
-+
-+	if (ipa_dma_alloc(&mem, size, GFP_KERNEL))
-+		return -ENOMEM;
-+
-+	offset += ipa_ctx->smem_offset;
-+
-+	payload = ipahal_hdr_init_local_pyld(&mem, offset);
-+	if (!payload) {
-+		ret = -ENOMEM;
-+		goto err_dma_free;
-+	}
-+
-+	desc.type = IPA_IMM_CMD_DESC;
-+	desc.len_opcode = IPA_IMM_CMD_HDR_INIT_LOCAL;
-+	desc.payload = payload;
-+
-+	ret = ipa_send_cmd(&desc);
-+
-+	ipahal_payload_free(payload);
-+err_dma_free:
-+	ipa_dma_free(&mem);
-+
-+	return ret;
-+}
-+
-+static int dma_shared_mem_zero_cmd(u32 offset, u32 size)
-+{
-+	struct ipa_desc desc = { };
-+	struct ipa_dma_mem mem;
-+	void *payload;
-+	int ret;
-+
-+	ipa_assert(size > 0);
-+
-+	if (ipa_dma_alloc(&mem, size, GFP_KERNEL))
-+		return -ENOMEM;
-+
-+	offset += ipa_ctx->smem_offset;
-+
-+	payload = ipahal_dma_shared_mem_write_pyld(&mem, offset);
-+	if (!payload) {
-+		ret = -ENOMEM;
-+		goto err_dma_free;
-+	}
-+
-+	desc.type = IPA_IMM_CMD_DESC;
-+	desc.len_opcode = IPA_IMM_CMD_DMA_SHARED_MEM;
-+	desc.payload = payload;
-+
-+	ret = ipa_send_cmd(&desc);
-+
-+	ipahal_payload_free(payload);
-+err_dma_free:
-+	ipa_dma_free(&mem);
-+
-+	return ret;
-+}
-+
-+/**
-+ * ipa_modem_smem_init() - Initialize modem general memory and header memory
-+ */
-+int ipa_modem_smem_init(void)
-+{
-+	int ret;
-+
-+	ret = dma_shared_mem_zero_cmd(IPA_MEM_MODEM_OFST, IPA_MEM_MODEM_SIZE);
-+	if (ret)
-+		return ret;
-+
-+	ret = dma_shared_mem_zero_cmd(IPA_MEM_MODEM_HDR_OFST,
-+				      IPA_MEM_MODEM_HDR_SIZE);
-+	if (ret)
-+		return ret;
-+
-+	return dma_shared_mem_zero_cmd(IPA_MEM_MODEM_HDR_PROC_CTX_OFST,
-+				       IPA_MEM_MODEM_HDR_PROC_CTX_SIZE);
-+}
-+
-+static int ipa_ep_apps_cmd_prod_setup(void)
-+{
-+	enum ipa_client_type dst_client;
-+	enum ipa_client_type client;
-+	u32 channel_count;
-+	u32 ep_id;
-+	int ret;
-+
-+	if (ipa_ctx->cmd_prod_ep_id != IPA_EP_ID_BAD)
-+		ret = -EBUSY;
-+
-+	client = IPA_CLIENT_APPS_CMD_PROD;
-+	dst_client = IPA_CLIENT_APPS_LAN_CONS;
-+	channel_count = IPA_APPS_CMD_PROD_RING_COUNT;
-+
-+	ret = ipa_ep_alloc(client);
-+	if (ret < 0)
-+		return ret;
-+	ep_id = ret;
-+
-+
-+	ipa_endp_init_mode_prod(ep_id, IPA_DMA, dst_client);
-+	ipa_endp_init_seq_prod(ep_id);
-+	ipa_endp_init_deaggr_prod(ep_id);
-+
-+	ret = ipa_ep_setup(ep_id, channel_count, 2, 0, NULL, NULL);
-+	if (ret)
-+		ipa_ep_free(ep_id);
-+	else
-+		ipa_ctx->cmd_prod_ep_id = ep_id;
-+
-+	return ret;
-+}
-+
-+/* Only used for IPA_MEM_UC_EVENT_RING_OFST, which must be 1KB aligned */
-+static __always_inline void sram_set_canary(u32 *sram_mmio, u32 offset)
-+{
-+	BUILD_BUG_ON(offset < sizeof(*sram_mmio));
-+	BUILD_BUG_ON(offset % 1024);
-+
-+	sram_mmio += offset / sizeof(*sram_mmio);
-+	*--sram_mmio = IPA_MEM_CANARY_VAL;
-+}
-+
-+static __always_inline void sram_set_canaries(u32 *sram_mmio, u32 offset)
-+{
-+	BUILD_BUG_ON(offset < 2 * sizeof(*sram_mmio));
-+	BUILD_BUG_ON(offset % 8);
-+
-+	sram_mmio += offset / sizeof(*sram_mmio);
-+	*--sram_mmio = IPA_MEM_CANARY_VAL;
-+	*--sram_mmio = IPA_MEM_CANARY_VAL;
-+}
-+
-+/**
-+ * ipa_init_sram() - Initialize IPA local SRAM.
-+ *
-+ * Return:	0 if successful, or a negative error code
-+ */
-+static int ipa_init_sram(void)
-+{
-+	phys_addr_t phys_addr;
-+	u32 *ipa_sram_mmio;
-+
-+	phys_addr = ipa_ctx->ipa_phys;
-+	phys_addr += ipa_reg_n_offset(IPA_SRAM_DIRECT_ACCESS_N, 0);
-+	phys_addr += ipa_ctx->smem_offset;
-+
-+	ipa_sram_mmio = ioremap(phys_addr, ipa_ctx->smem_size);
-+	if (!ipa_sram_mmio) {
-+		ipa_err("fail to ioremap IPA SRAM\n");
-+		return -ENOMEM;
-+	}
-+
-+	sram_set_canaries(ipa_sram_mmio, IPA_MEM_V4_FLT_HASH_OFST);
-+	sram_set_canaries(ipa_sram_mmio, IPA_MEM_V4_FLT_NHASH_OFST);
-+	sram_set_canaries(ipa_sram_mmio, IPA_MEM_V6_FLT_HASH_OFST);
-+	sram_set_canaries(ipa_sram_mmio, IPA_MEM_V6_FLT_NHASH_OFST);
-+	sram_set_canaries(ipa_sram_mmio, IPA_MEM_V4_RT_HASH_OFST);
-+	sram_set_canaries(ipa_sram_mmio, IPA_MEM_V4_RT_NHASH_OFST);
-+	sram_set_canaries(ipa_sram_mmio, IPA_MEM_V6_RT_HASH_OFST);
-+	sram_set_canaries(ipa_sram_mmio, IPA_MEM_V6_RT_NHASH_OFST);
-+	sram_set_canaries(ipa_sram_mmio, IPA_MEM_MODEM_HDR_OFST);
-+	sram_set_canaries(ipa_sram_mmio, IPA_MEM_MODEM_HDR_PROC_CTX_OFST);
-+	sram_set_canaries(ipa_sram_mmio, IPA_MEM_MODEM_OFST);
-+
-+	/* Only one canary precedes the microcontroller ring */
-+	sram_set_canary(ipa_sram_mmio, IPA_MEM_UC_EVENT_RING_OFST);
-+
-+	iounmap(ipa_sram_mmio);
-+
-+	return 0;
-+}
-+
-+/**
-+ * ipa_init_hdr() - Initialize IPA header block.
-+ *
-+ * Return:	0 if successful, or a negative error code
-+ */
-+static int ipa_init_hdr(void)
-+{
-+	int ret;
-+
-+	if (IPA_MEM_MODEM_HDR_SIZE) {
-+		ret = hdr_init_local_cmd(IPA_MEM_MODEM_HDR_OFST,
-+					 IPA_MEM_MODEM_HDR_SIZE);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (IPA_MEM_APPS_HDR_SIZE) {
-+		BUILD_BUG_ON(IPA_MEM_APPS_HDR_OFST % 8);
-+		ret = hdr_init_local_cmd(IPA_MEM_APPS_HDR_OFST,
-+					 IPA_MEM_APPS_HDR_SIZE);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (IPA_MEM_MODEM_HDR_PROC_CTX_SIZE) {
-+		ret = dma_shared_mem_zero_cmd(IPA_MEM_MODEM_HDR_PROC_CTX_OFST,
-+					      IPA_MEM_MODEM_HDR_PROC_CTX_SIZE);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (IPA_MEM_APPS_HDR_PROC_CTX_SIZE) {
-+		BUILD_BUG_ON(IPA_MEM_APPS_HDR_PROC_CTX_OFST % 8);
-+		ret = dma_shared_mem_zero_cmd(IPA_MEM_APPS_HDR_PROC_CTX_OFST,
-+					      IPA_MEM_APPS_HDR_PROC_CTX_SIZE);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ipa_write_reg(IPA_LOCAL_PKT_PROC_CNTXT_BASE,
-+		      ipa_ctx->smem_offset + IPA_MEM_MODEM_HDR_PROC_CTX_OFST);
-+
-+	return 0;
-+}
-+
-+/**
-+ * ipa_init_rt4() - Initialize IPA routing block for IPv4.
-+ *
-+ * Return:	0 if successful, or a negative error code
-+ */
-+static int ipa_init_rt4(struct ipa_dma_mem *mem)
-+{
-+	struct ipa_desc desc = { };
-+	u32 nhash_offset;
-+	u32 hash_offset;
-+	void *payload;
-+	int ret;
-+
-+	hash_offset = ipa_ctx->smem_offset + IPA_MEM_V4_RT_HASH_OFST;
-+	nhash_offset = ipa_ctx->smem_offset + IPA_MEM_V4_RT_NHASH_OFST;
-+	payload = ipahal_ip_v4_routing_init_pyld(mem, hash_offset,
-+						 nhash_offset);
-+	if (!payload)
-+		return -ENOMEM;
-+
-+	desc.type = IPA_IMM_CMD_DESC;
-+	desc.len_opcode = IPA_IMM_CMD_IP_V4_ROUTING_INIT;
-+	desc.payload = payload;
-+
-+	ret = ipa_send_cmd(&desc);
-+
-+	ipahal_payload_free(payload);
-+
-+	return ret;
-+}
-+
-+/**
-+ * ipa_init_rt6() - Initialize IPA routing block for IPv6.
-+ *
-+ * Return:	0 if successful, or a negative error code
-+ */
-+static int ipa_init_rt6(struct ipa_dma_mem *mem)
-+{
-+	struct ipa_desc desc = { };
-+	u32 nhash_offset;
-+	u32 hash_offset;
-+	void *payload;
-+	int ret;
-+
-+	hash_offset = ipa_ctx->smem_offset + IPA_MEM_V6_RT_HASH_OFST;
-+	nhash_offset = ipa_ctx->smem_offset + IPA_MEM_V6_RT_NHASH_OFST;
-+	payload = ipahal_ip_v6_routing_init_pyld(mem, hash_offset,
-+						 nhash_offset);
-+	if (!payload)
-+		return -ENOMEM;
-+
-+	desc.type = IPA_IMM_CMD_DESC;
-+	desc.len_opcode = IPA_IMM_CMD_IP_V6_ROUTING_INIT;
-+	desc.payload = payload;
-+
-+	ret = ipa_send_cmd(&desc);
-+
-+	ipahal_payload_free(payload);
-+
-+	return ret;
-+}
-+
-+/**
-+ * ipa_init_flt4() - Initialize IPA filtering block for IPv4.
-+ *
-+ * Return:	0 if successful, or a negative error code
-+ */
-+static int ipa_init_flt4(struct ipa_dma_mem *mem)
-+{
-+	struct ipa_desc desc = { };
-+	u32 nhash_offset;
-+	u32 hash_offset;
-+	void *payload;
-+	int ret;
-+
-+	hash_offset = ipa_ctx->smem_offset + IPA_MEM_V4_FLT_HASH_OFST;
-+	nhash_offset = ipa_ctx->smem_offset + IPA_MEM_V4_FLT_NHASH_OFST;
-+	payload = ipahal_ip_v4_filter_init_pyld(mem, hash_offset,
-+						nhash_offset);
-+	if (!payload)
-+		return -ENOMEM;
-+
-+	desc.type = IPA_IMM_CMD_DESC;
-+	desc.len_opcode = IPA_IMM_CMD_IP_V4_FILTER_INIT;
-+	desc.payload = payload;
-+
-+	ret = ipa_send_cmd(&desc);
-+
-+	ipahal_payload_free(payload);
-+
-+	return ret;
-+}
-+
-+/**
-+ * ipa_init_flt6() - Initialize IPA filtering block for IPv6.
-+ *
-+ * Return:	0 if successful, or a negative error code
-+ */
-+static int ipa_init_flt6(struct ipa_dma_mem *mem)
-+{
-+	struct ipa_desc desc = { };
-+	u32 nhash_offset;
-+	u32 hash_offset;
-+	void *payload;
-+	int ret;
-+
-+	hash_offset = ipa_ctx->smem_offset + IPA_MEM_V6_FLT_HASH_OFST;
-+	nhash_offset = ipa_ctx->smem_offset + IPA_MEM_V6_FLT_NHASH_OFST;
-+	payload = ipahal_ip_v6_filter_init_pyld(mem, hash_offset,
-+						nhash_offset);
-+	if (!payload)
-+		return -ENOMEM;
-+
-+	desc.type = IPA_IMM_CMD_DESC;
-+	desc.len_opcode = IPA_IMM_CMD_IP_V6_FILTER_INIT;
-+	desc.payload = payload;
-+
-+	ret = ipa_send_cmd(&desc);
-+
-+	ipahal_payload_free(payload);
-+
-+	return ret;
-+}
-+
-+static void ipa_setup_flt_hash_tuple(void)
-+{
-+	u32 ep_mask = ipa_ctx->filter_bitmap;
-+
-+	while (ep_mask) {
-+		u32 i = __ffs(ep_mask);
-+
-+		ep_mask ^= BIT(i);
-+		if (!ipa_is_modem_ep(i))
-+			ipa_set_flt_tuple_mask(i);
-+	}
-+}
-+
-+static void ipa_setup_rt_hash_tuple(void)
-+{
-+	u32 route_mask;
-+	u32 modem_mask;
-+
-+	BUILD_BUG_ON(!IPA_MEM_MODEM_RT_COUNT);
-+	BUILD_BUG_ON(IPA_MEM_RT_COUNT < IPA_MEM_MODEM_RT_COUNT);
-+
-+	/* Compute a mask representing non-modem route table entries */
-+	route_mask = GENMASK(IPA_MEM_RT_COUNT - 1, 0);
-+	modem_mask = GENMASK(IPA_MEM_MODEM_RT_INDEX_MAX,
-+			     IPA_MEM_MODEM_RT_INDEX_MIN);
-+	route_mask &= ~modem_mask;
-+
-+	while (route_mask) {
-+		u32 i = __ffs(route_mask);
-+
-+		route_mask ^= BIT(i);
-+		ipa_set_rt_tuple_mask(i);
-+	}
-+}
-+
-+static int ipa_ep_apps_lan_cons_setup(void)
-+{
-+	enum ipa_client_type client;
-+	u32 rx_buffer_size;
-+	u32 channel_count;
-+	u32 aggr_count;
-+	u32 aggr_bytes;
-+	u32 aggr_size;
-+	u32 ep_id;
-+	int ret;
-+
-+	client = IPA_CLIENT_APPS_LAN_CONS;
-+	channel_count = IPA_APPS_LAN_CONS_RING_COUNT;
-+	aggr_count = IPA_GENERIC_AGGR_PKT_LIMIT;
-+	aggr_bytes = IPA_GENERIC_AGGR_BYTE_LIMIT;
-+
-+	if (aggr_bytes > ipa_reg_aggr_max_byte_limit())
-+		return -EINVAL;
-+
-+	if (aggr_count > ipa_reg_aggr_max_packet_limit())
-+		return -EINVAL;
-+
-+	if (ipa_ctx->lan_cons_ep_id != IPA_EP_ID_BAD)
-+		return -EBUSY;
-+
-+	/* Compute the buffer size required to handle the requested
-+	 * aggregation byte limit.  The aggr_byte_limit value is
-+	 * expressed as a number of KB, but we derive that value
-+	 * after computing the buffer size to use (in bytes).  The
-+	 * buffer must be sufficient to hold one IPA_MTU-sized
-+	 * packet *after* the limit is reached.
-+	 *
-+	 * (Note that the rx_buffer_size value reflects only the
-+	 * space for data, not any standard metadata or headers.)
-+	 */
-+	rx_buffer_size = ipa_aggr_byte_limit_buf_size(aggr_bytes);
-+
-+	/* Account for the extra IPA_MTU past the limit in the
-+	 * buffer, and convert the result to the KB units the
-+	 * aggr_byte_limit uses.
-+	 */
-+	aggr_size = (rx_buffer_size - IPA_MTU) / SZ_1K;
-+
-+	ret = ipa_ep_alloc(client);
-+	if (ret < 0)
-+		return ret;
-+	ep_id = ret;
-+
-+	ipa_endp_init_hdr_cons(ep_id, IPA_LAN_RX_HEADER_LENGTH, 0, 0);
-+	ipa_endp_init_hdr_ext_cons(ep_id, ilog2(sizeof(u32)), false);
-+	ipa_endp_init_aggr_cons(ep_id, aggr_size, aggr_count, false);
-+	ipa_endp_init_cfg_cons(ep_id, IPA_CS_OFFLOAD_DL);
-+	ipa_endp_init_hdr_metadata_mask_cons(ep_id, 0x0);
-+	ipa_endp_status_cons(ep_id, true);
-+
-+	ret = ipa_ep_setup(ep_id, channel_count, 1, rx_buffer_size,
-+			   ipa_lan_rx_cb, NULL);
-+	if (ret)
-+		ipa_ep_free(ep_id);
-+	else
-+		ipa_ctx->lan_cons_ep_id = ep_id;
-+
-+	return ret;
-+}
-+
-+static int ipa_ep_apps_setup(void)
-+{
-+	struct ipa_dma_mem mem;	/* Empty table */
-+	int ret;
-+
-+	/* CMD OUT (AP->IPA) */
-+	ret = ipa_ep_apps_cmd_prod_setup();
-+	if (ret < 0)
-+		return ret;
-+
-+	ipa_init_sram();
-+	ipa_init_hdr();
-+
-+	ret = ipahal_rt_generate_empty_img(IPA_MEM_RT_COUNT, &mem);
-+	ipa_assert(!ret);
-+	ipa_init_rt4(&mem);
-+	ipa_init_rt6(&mem);
-+	ipahal_free_empty_img(&mem);
-+
-+	ret = ipahal_flt_generate_empty_img(ipa_ctx->filter_bitmap, &mem);
-+	ipa_assert(!ret);
-+	ipa_init_flt4(&mem);
-+	ipa_init_flt6(&mem);
-+	ipahal_free_empty_img(&mem);
-+
-+	ipa_setup_flt_hash_tuple();
-+	ipa_setup_rt_hash_tuple();
-+
-+	/* LAN IN (IPA->AP)
-+	 *
-+	 * Even without supporting LAN traffic, we use the LAN consumer
-+	 * endpoint for receiving some information from the IPA.  If we issue
-+	 * a tagged command, we arrange to be notified of its completion
-+	 * through this endpoint.  In addition, we arrange for this endpoint
-+	 * to be used as the IPA's default route; the IPA will notify the AP
-+	 * of exceptions (unroutable packets, but other events as well)
-+	 * through this endpoint.
-+	 */
-+	ret = ipa_ep_apps_lan_cons_setup();
-+	if (ret < 0)
-+		goto fail_flt_hash_tuple;
-+
-+	ipa_cfg_default_route(IPA_CLIENT_APPS_LAN_CONS);
-+
-+	return 0;
-+
-+fail_flt_hash_tuple:
-+	ipa_ep_teardown(ipa_ctx->cmd_prod_ep_id);
-+	ipa_ctx->cmd_prod_ep_id = IPA_EP_ID_BAD;
-+
-+	return ret;
-+}
-+
-+static int ipa_clock_init(struct device *dev)
-+{
-+	struct clk *clk;
-+	int ret;
-+
-+	clk = clk_get(dev, "core");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	ret = clk_set_rate(clk, IPA_CORE_CLOCK_RATE);
-+	if (ret) {
-+		clk_put(clk);
-+		return ret;
-+	}
-+
-+	ipa_ctx->core_clock = clk;
-+
-+	return 0;
-+}
-+
-+static void ipa_clock_exit(void)
-+{
-+	clk_put(ipa_ctx->core_clock);
-+	ipa_ctx->core_clock = NULL;
-+}
-+
-+/**
-+ * ipa_enable_clks() - Turn on IPA clocks
-+ */
-+static void ipa_enable_clks(void)
-+{
-+	if (WARN_ON(ipa_interconnect_enable()))
-+		return;
-+
-+	if (WARN_ON(clk_prepare_enable(ipa_ctx->core_clock)))
-+		ipa_interconnect_disable();
-+}
-+
-+/**
-+ * ipa_disable_clks() - Turn off IPA clocks
-+ */
-+static void ipa_disable_clks(void)
-+{
-+	clk_disable_unprepare(ipa_ctx->core_clock);
-+	WARN_ON(ipa_interconnect_disable());
-+}
-+
-+/* Add an IPA client under protection of the mutex.  This is called
-+ * for the first client, but a race could mean another caller gets
-+ * the first reference.  When the first reference is taken, IPA
-+ * clocks are enabled endpoints are resumed.  A positive reference count
-+ * means the endpoints are active; this doesn't set the first reference
-+ * until after this is complete (and the mutex, not the atomic
-+ * count, is what protects this).
-+ */
-+static void ipa_client_add_first(void)
-+{
-+	mutex_lock(&ipa_ctx->active_clients_mutex);
-+
-+	/* A reference might have been added while awaiting the mutex. */
-+	if (!atomic_inc_not_zero(&ipa_ctx->active_clients_count)) {
-+		ipa_enable_clks();
-+		ipa_ep_resume_all();
-+		atomic_inc(&ipa_ctx->active_clients_count);
-+	} else {
-+		ipa_assert(atomic_read(&ipa_ctx->active_clients_count) > 1);
-+	}
-+
-+	mutex_unlock(&ipa_ctx->active_clients_mutex);
-+}
-+
-+/* Attempt to add an IPA client reference, but only if this does not
-+ * represent the initiaal reference.  Returns true if the reference
-+ * was taken, false otherwise.
-+ */
-+static bool ipa_client_add_not_first(void)
-+{
-+	return !!atomic_inc_not_zero(&ipa_ctx->active_clients_count);
-+}
-+
-+/* Add an IPA client, but only if the reference count is already
-+ * non-zero.  (This is used to avoid blocking.)  Returns true if the
-+ * additional reference was added successfully, or false otherwise.
-+ */
-+bool ipa_client_add_additional(void)
-+{
-+	return ipa_client_add_not_first();
-+}
-+
-+/* Add an IPA client.  If this is not the first client, the
-+ * reference count is updated and return is immediate.  Otherwise
-+ * ipa_client_add_first() will safely add the first client, enabling
-+ * clocks and setting up (resuming) endpoints before returning.
-+ */
-+void ipa_client_add(void)
-+{
-+	/* There's nothing more to do if this isn't the first reference */
-+	if (!ipa_client_add_not_first())
-+		ipa_client_add_first();
-+}
-+
-+/* Remove an IPA client under protection of the mutex.  This is
-+ * called for the last remaining client, but a race could mean
-+ * another caller gets an additional reference before the mutex
-+ * is acquired.  When the final reference is dropped, endpoints are
-+ * suspended and IPA clocks disabled.
-+ */
-+static void ipa_client_remove_final(void)
-+{
-+	mutex_lock(&ipa_ctx->active_clients_mutex);
-+
-+	/* A reference might have been removed while awaiting the mutex. */
-+	if (!atomic_dec_return(&ipa_ctx->active_clients_count)) {
-+		ipa_ep_suspend_all();
-+		ipa_disable_clks();
-+	}
-+
-+	mutex_unlock(&ipa_ctx->active_clients_mutex);
-+}
-+
-+/* Decrement the active clients reference count, and if the result
-+ * is 0, suspend the endpoints and disable clocks.
-+ *
-+ * This function runs in work queue context, scheduled to run whenever
-+ * the last reference would be dropped in ipa_client_remove().
-+ */
-+static void ipa_client_remove_deferred(struct work_struct *work)
-+{
-+	ipa_client_remove_final();
-+}
-+
-+/* Attempt to remove a client reference, but only if this is not the
-+ * only reference remaining.  Returns true if the reference was
-+ * removed, or false if doing so would produce a zero reference
-+ * count.
-+ */
-+static bool ipa_client_remove_not_final(void)
-+{
-+	return !!atomic_add_unless(&ipa_ctx->active_clients_count, -1, 1);
-+}
-+
-+/* Attempt to remove an IPA client reference.  If this represents
-+ * the last reference arrange for ipa_client_remove_final() to be
-+ * called in workqueue context, dropping the last reference under
-+ * protection of the mutex.
-+ */
-+void ipa_client_remove(void)
-+{
-+	if (!ipa_client_remove_not_final())
-+		queue_work(ipa_ctx->power_mgmt_wq, &ipa_client_remove_work);
-+}
-+
-+/** ipa_inc_acquire_wakelock() - Increase active clients counter, and
-+ * acquire wakelock if necessary
-+ */
-+void ipa_inc_acquire_wakelock(void)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&ipa_ctx->wakeup_lock, flags);
-+
-+	ipa_ctx->wakeup_count++;
-+	if (ipa_ctx->wakeup_count == 1)
-+		__pm_stay_awake(&ipa_ctx->wakeup);
-+
-+	spin_unlock_irqrestore(&ipa_ctx->wakeup_lock, flags);
-+}
-+
-+/** ipa_dec_release_wakelock() - Decrease active clients counter
-+ *
-+ * In case if the ref count is 0, release the wakelock.
-+ */
-+void ipa_dec_release_wakelock(void)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&ipa_ctx->wakeup_lock, flags);
-+
-+	ipa_ctx->wakeup_count--;
-+	if (ipa_ctx->wakeup_count == 0)
-+		__pm_relax(&ipa_ctx->wakeup);
-+
-+	spin_unlock_irqrestore(&ipa_ctx->wakeup_lock, flags);
-+}
-+
-+/** ipa_suspend_handler() - Handle the suspend interrupt
-+ * @interrupt:	Interrupt type
-+ * @endpoints:	Interrupt specific information data
-+ */
-+static void ipa_suspend_handler(enum ipa_irq_type interrupt, u32 interrupt_data)
-+{
-+	u32 endpoints = interrupt_data;
-+
-+	while (endpoints) {
-+		enum ipa_client_type client;
-+		u32 i = __ffs(endpoints);
-+
-+		endpoints ^= BIT(i);
-+
-+		if (!ipa_ctx->ep[i].allocated)
-+			continue;
-+
-+		client = ipa_ctx->ep[i].client;
-+		if (!ipa_ap_consumer(client))
-+			continue;
-+
-+		/* endpoint will be unsuspended by enabling IPA clocks */
-+		mutex_lock(&ipa_ctx->transport_pm.transport_pm_mutex);
-+		if (!atomic_read(&ipa_ctx->transport_pm.dec_clients)) {
-+			ipa_client_add();
-+
-+			atomic_set(&ipa_ctx->transport_pm.dec_clients, 1);
-+		}
-+		mutex_unlock(&ipa_ctx->transport_pm.transport_pm_mutex);
-+	}
-+}
-+
-+/**
-+ * ipa_init_interrupts() - Initialize IPA interrupts
-+ */
-+static int ipa_init_interrupts(void)
-+{
-+	int ret;
-+
-+	ret = ipa_interrupts_init();
-+	if (!ret)
-+		return ret;
-+
-+	ipa_add_interrupt_handler(IPA_TX_SUSPEND_IRQ, ipa_suspend_handler);
-+
-+	return 0;
-+}
-+
-+static void ipa_freeze_clock_vote_and_notify_modem(void)
-+{
-+	u32 value;
-+	u32 mask;
-+
-+	if (ipa_ctx->smp2p_info.res_sent)
-+		return;
-+
-+	if (!ipa_ctx->smp2p_info.enabled_state) {
-+		ipa_err("smp2p out gpio not assigned\n");
-+		return;
-+	}
-+
-+	ipa_ctx->smp2p_info.ipa_clk_on = ipa_client_add_additional();
-+
-+	/* Signal whether the clock is enabled */
-+	mask = BIT(ipa_ctx->smp2p_info.enabled_bit);
-+	value = ipa_ctx->smp2p_info.ipa_clk_on ? mask : 0;
-+	qcom_smem_state_update_bits(ipa_ctx->smp2p_info.enabled_state, mask,
-+				    value);
-+
-+	/* Now indicate that the enabled flag is valid */
-+	mask = BIT(ipa_ctx->smp2p_info.valid_bit);
-+	value = mask;
-+	qcom_smem_state_update_bits(ipa_ctx->smp2p_info.valid_state, mask,
-+				    value);
-+
-+	ipa_ctx->smp2p_info.res_sent = true;
-+}
-+
-+void ipa_reset_freeze_vote(void)
-+{
-+	u32 mask;
-+
-+	if (!ipa_ctx->smp2p_info.res_sent)
-+		return;
-+
-+	if (ipa_ctx->smp2p_info.ipa_clk_on)
-+		ipa_client_remove();
-+
-+	/* Reset the clock enabled valid flag */
-+	mask = BIT(ipa_ctx->smp2p_info.valid_bit);
-+	qcom_smem_state_update_bits(ipa_ctx->smp2p_info.valid_state, mask, 0);
-+
-+	/* Mark the clock disabled for good measure... */
-+	mask = BIT(ipa_ctx->smp2p_info.enabled_bit);
-+	qcom_smem_state_update_bits(ipa_ctx->smp2p_info.enabled_state, mask, 0);
-+
-+	ipa_ctx->smp2p_info.res_sent = false;
-+	ipa_ctx->smp2p_info.ipa_clk_on = false;
-+}
-+
-+static int
-+ipa_panic_notifier(struct notifier_block *this, unsigned long event, void *ptr)
-+{
-+	ipa_freeze_clock_vote_and_notify_modem();
-+	ipa_uc_panic_notifier();
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static struct notifier_block ipa_panic_blk = {
-+	.notifier_call = ipa_panic_notifier,
-+	/* IPA panic handler needs to run before modem shuts down */
-+	.priority = INT_MAX,
++	void (*callback)(void *user1, int user2);
++	void *user1;
++	int user2;
++	struct list_head link;
++	u32 cnt;
++	struct work_struct done_work;
 +};
 +
-+static void ipa_register_panic_hdlr(void)
-+{
-+	atomic_notifier_chain_register(&panic_notifier_list, &ipa_panic_blk);
-+}
++/** struct ipa_rx_pkt_wrapper - IPA Rx packet wrapper
++ * @link:	Links for the endpoint's sys->head_desc_list
++ * @skb:	Socket buffer containing the received packet
++ * @len:	How many bytes are copied into skb's buffer
++ */
++struct ipa_rx_pkt_wrapper {
++	struct list_head link;
++	struct sk_buff *skb;
++	dma_addr_t dma_addr;
++};
 +
-+/* Remoteproc callbacks for SSR events: prepare, start, stop, unprepare */
-+int ipa_ssr_prepare(struct rproc_subdev *subdev)
-+{
-+	printk("======== SSR prepare received ========\n");
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(ipa_ssr_prepare);
++/** struct ipa_sys_context - IPA GPI endpoint context
++ * @len:	The number of entries in @head_desc_list
++ * @tx:		Details related to AP->IPA endpoints
++ * @rx:		Details related to IPA->AP endpoints
++ * @ep:		Associated endpoint
++ * @head_desc_list: List of packets
++ * @spinlock:	Lock protecting the descriptor list
++ * @workqueue:	Workqueue used for this endpoint
++ */
++struct ipa_sys_context {
++	u32 len;
++	union {
++		struct {	/* Consumer endpoints only */
++			u32 len_pending_xfer;
++			atomic_t curr_polling_state;
++			struct delayed_work switch_to_intr_work; /* sys->wq */
++			void (*pyld_hdlr)(struct sk_buff *,
++					  struct ipa_sys_context *);
++			u32 buff_sz;
++			u32 pool_sz;
++			struct sk_buff *prev_skb;
++			unsigned int len_rem;
++			unsigned int len_pad;		/* APPS_LAN only */
++			unsigned int len_partial;	/* APPS_LAN only */
++			bool drop_packet;		/* APPS_LAN only */
 +
-+int ipa_ssr_start(struct rproc_subdev *subdev)
-+{
-+	printk("======== SSR start received ========\n");
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(ipa_ssr_start);
++			struct work_struct work; /* sys->wq */
++			struct delayed_work replenish_work; /* sys->wq */
++		} rx;
++		struct {	/* Producer endpoints only */
++			/* no_intr/nop is APPS_WAN_PROD only */
++			bool no_intr;
++			atomic_t nop_pending;
++			struct hrtimer nop_timer;
++			struct work_struct nop_work; /* sys->wq */
++		} tx;
++	};
 +
-+void ipa_ssr_stop(struct rproc_subdev *subdev, bool crashed)
-+{
-+	printk("======== SSR stop received ========\n");
-+}
-+EXPORT_SYMBOL_GPL(ipa_ssr_stop);
-+
-+void ipa_ssr_unprepare(struct rproc_subdev *subdev)
-+{
-+	printk("======== SSR unprepare received ========\n");
-+}
-+EXPORT_SYMBOL_GPL(ipa_ssr_unprepare);
++	/* ordering is important - mutable fields go above */
++	struct ipa_ep_context *ep;
++	struct list_head head_desc_list; /* contains len entries */
++	spinlock_t spinlock;		/* protects head_desc list */
++	struct workqueue_struct *wq;
++	/* ordering is important - other immutable fields go below */
++};
 +
 +/**
-+ * ipa_post_init() - Initialize the IPA Driver (Part II).
-+ *
-+ * Perform initialization that requires interaction with IPA hardware.
++ * struct ipa_dp - IPA data path information
++ * @tx_pkt_wrapper_cache:	Tx packets cache
++ * @rx_pkt_wrapper_cache:	Rx packets cache
 + */
-+static void ipa_post_init(void)
-+{
-+	int ret;
++struct ipa_dp {
++	struct kmem_cache *tx_pkt_wrapper_cache;
++	struct kmem_cache *rx_pkt_wrapper_cache;
++};
 +
-+	ipa_debug("ipa_post_init() started\n");
-+
-+	ret = gsi_device_init(ipa_ctx->gsi);
-+	if (ret) {
-+		ipa_err(":gsi register error - %d\n", ret);
-+		return;
-+	}
-+
-+	/* setup the AP-IPA endpoints */
-+	if (ipa_ep_apps_setup()) {
-+		ipa_err(":failed to setup IPA-Apps endpoints\n");
-+		gsi_device_exit(ipa_ctx->gsi);
-+
-+		return;
-+	}
-+
-+	ipa_ctx->uc_ctx = ipa_uc_init(ipa_ctx->ipa_phys);
-+	if (!ipa_ctx->uc_ctx)
-+		ipa_err("microcontroller init failed\n");
-+
-+	ipa_register_panic_hdlr();
-+
-+	ipa_ctx->modem_clk_vote_valid = true;
-+
-+	if (ipa_wwan_init())
-+		ipa_err("WWAN init failed (ignoring)\n");
-+
-+	dev_info(ipa_ctx->dev, "IPA driver initialization was successful.\n");
-+}
-+
-+/** ipa_pre_init() - Initialize the IPA Driver.
-+ *
-+ * Perform initialization which doesn't require access to IPA hardware.
++/**
++ * struct ipa_tag_completion - Reference counted completion object
++ * @comp:	Completion when last reference is dropped
++ * @cnt:	Reference count
 + */
-+static int ipa_pre_init(void)
++struct ipa_tag_completion {
++	struct completion comp;
++	atomic_t cnt;
++};
++
++#define CHANNEL_RESET_AGGR_RETRY_COUNT	3
++#define CHANNEL_RESET_DELAY		1	/* milliseconds */
++
++#define IPA_QMAP_HEADER_LENGTH		4
++
++#define IPA_WAN_AGGR_PKT_CNT		5
++#define POLLING_INACTIVITY_RX		40
++#define POLLING_MIN_SLEEP_RX		1010	/* microseconds */
++#define POLLING_MAX_SLEEP_RX		1050	/* microseconds */
++
++#define IPA_RX_BUFFER_ORDER	1	/* Default RX buffer is 2^1 pages */
++#define IPA_RX_BUFFER_SIZE	(1 << (IPA_RX_BUFFER_ORDER + PAGE_SHIFT))
++
++/* The amount of RX buffer space consumed by standard skb overhead */
++#define IPA_RX_BUFFER_RESERVED \
++	(IPA_RX_BUFFER_SIZE - SKB_MAX_ORDER(NET_SKB_PAD, IPA_RX_BUFFER_ORDER))
++
++/* RX buffer space remaining after standard overhead is consumed */
++#define IPA_RX_BUFFER_AVAILABLE(X)	((X) - IPA_RX_BUFFER_RESERVED)
++
++#define IPA_RX_BUFF_CLIENT_HEADROOM	256
++
++#define IPA_SIZE_DL_CSUM_META_TRAILER	8
++
++#define IPA_REPL_XFER_THRESH		10
++
++/* How long before sending an interrupting no-op to handle TX completions */
++#define IPA_TX_NOP_DELAY_NS		(2 * 1000 * 1000)	/* 2 msec */
++
++static void ipa_rx_switch_to_intr_mode(struct ipa_sys_context *sys);
++
++static void ipa_replenish_rx_cache(struct ipa_sys_context *sys);
++static void ipa_replenish_rx_work_func(struct work_struct *work);
++static void ipa_wq_handle_rx(struct work_struct *work);
++static void ipa_rx_common(struct ipa_sys_context *sys, u32 size);
++static void ipa_cleanup_rx(struct ipa_sys_context *sys);
++static int ipa_poll_gsi_pkt(struct ipa_sys_context *sys);
++
++static void ipa_tx_complete(struct ipa_tx_pkt_wrapper *tx_pkt)
 +{
-+	int ret = 0;
++	struct device *dev = ipa_ctx->dev;
 +
-+	/* enable IPA clocks explicitly to allow the initialization */
-+	ipa_enable_clks();
-+
-+	ipa_init_hw();
-+
-+	ipa_ctx->ep_count = ipa_get_ep_count();
-+	ipa_debug("ep_count %u\n", ipa_get_ep_count());
-+	ipa_assert(ipa_ctx->ep_count <= IPA_EP_COUNT_MAX);
-+
-+	ipa_sram_settings_read();
-+	if (ipa_ctx->smem_size < IPA_MEM_END_OFST) {
-+		ipa_err("insufficient memory: %hu bytes available, need %u\n",
-+			ipa_ctx->smem_size, IPA_MEM_END_OFST);
-+		ret = -ENOMEM;
-+		goto err_disable_clks;
++	/* If DMA memory was mapped, unmap it */
++	if (tx_pkt->mem.virt) {
++		if (tx_pkt->type == IPA_DATA_DESC_SKB_PAGED)
++			dma_unmap_page(dev, tx_pkt->mem.phys,
++				       tx_pkt->mem.size, DMA_TO_DEVICE);
++		else
++			dma_unmap_single(dev, tx_pkt->mem.phys,
++					 tx_pkt->mem.size, DMA_TO_DEVICE);
 +	}
 +
-+	mutex_init(&ipa_ctx->active_clients_mutex);
-+	atomic_set(&ipa_ctx->active_clients_count, 1);
++	if (tx_pkt->callback)
++		tx_pkt->callback(tx_pkt->user1, tx_pkt->user2);
 +
-+	/* Create workqueues for power management */
-+	ipa_ctx->power_mgmt_wq =
-+		create_singlethread_workqueue("ipa_power_mgmt");
-+	if (!ipa_ctx->power_mgmt_wq) {
-+		ipa_err("failed to create power mgmt wq\n");
-+		ret = -ENOMEM;
-+		goto err_disable_clks;
-+	}
-+
-+	mutex_init(&ipa_ctx->transport_pm.transport_pm_mutex);
-+
-+	/* init the lookaside cache */
-+
-+	ipa_ctx->dp = ipa_dp_init();
-+	if (!ipa_ctx->dp)
-+		goto err_destroy_pm_wq;
-+
-+	/* allocate memory for DMA_TASK workaround */
-+	ret = ipa_gsi_dma_task_alloc();
-+	if (ret)
-+		goto err_dp_exit;
-+
-+	/* Create a wakeup source. */
-+	wakeup_source_init(&ipa_ctx->wakeup, "IPA_WS");
-+	spin_lock_init(&ipa_ctx->wakeup_lock);
-+
-+	/* Note enabling dynamic clock division must not be
-+	 * attempted for IPA hardware versions prior to 3.5.
-+	 */
-+	ipa_enable_dcd();
-+
-+	/* Assign resource limitation to each group */
-+	ipa_set_resource_groups_min_max_limits();
-+
-+	ret = ipa_init_interrupts();
-+	if (!ret)
-+		return 0;	/* Success! */
-+
-+	ipa_err("ipa initialization of interrupts failed\n");
-+err_dp_exit:
-+	ipa_dp_exit(ipa_ctx->dp);
-+	ipa_ctx->dp = NULL;
-+err_destroy_pm_wq:
-+	destroy_workqueue(ipa_ctx->power_mgmt_wq);
-+err_disable_clks:
-+	ipa_disable_clks();
-+
-+	return ret;
-+}
-+
-+static int ipa_firmware_load(struct device *dev)
-+{
-+	const struct firmware *fw;
-+	struct device_node *node;
-+	struct resource res;
-+	phys_addr_t phys;
-+	ssize_t size;
-+	void *virt;
-+	int ret;
-+
-+	ret = request_firmware(&fw, IPA_FWS_PATH, dev);
-+	if (ret)
-+		return ret;
-+
-+	node = of_parse_phandle(dev->of_node, "memory-region", 0);
-+	if (!node) {
-+		dev_err(dev, "memory-region not specified\n");
-+		ret = -EINVAL;
-+		goto out_release_firmware;
-+	}
-+
-+	ret = of_address_to_resource(node, 0, &res);
-+	if (ret)
-+		goto out_release_firmware;
-+
-+	phys = res.start,
-+	size = (size_t)resource_size(&res);
-+	virt = memremap(phys, size, MEMREMAP_WC);
-+	if (!virt) {
-+		ret = -ENOMEM;
-+		goto out_release_firmware;
-+	}
-+
-+	ret = qcom_mdt_load(dev, fw, IPA_FWS_PATH, IPA_PAS_ID,
-+			    virt, phys, size, NULL);
-+	if (!ret)
-+		ret = qcom_scm_pas_auth_and_reset(IPA_PAS_ID);
-+
-+	memunmap(virt);
-+out_release_firmware:
-+	release_firmware(fw);
-+
-+	return ret;
-+}
-+
-+/* Threaded IRQ handler for modem "ipa-clock-query" SMP2P interrupt */
-+static irqreturn_t ipa_smp2p_modem_clk_query_isr(int irq, void *ctxt)
-+{
-+	ipa_freeze_clock_vote_and_notify_modem();
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/* Threaded IRQ handler for modem "ipa-post-init" SMP2P interrupt */
-+static irqreturn_t ipa_smp2p_modem_post_init_isr(int irq, void *ctxt)
-+{
-+	ipa_post_init();
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int
-+ipa_smp2p_irq_init(struct device *dev, const char *name, irq_handler_t handler)
-+{
-+	struct device_node *node = dev->of_node;
-+	unsigned int irq;
-+	int ret;
-+
-+	ret = of_irq_get_byname(node, name);
-+	if (ret < 0)
-+		return ret;
-+	if (!ret)
-+		return -EINVAL;		/* IRQ mapping failure */
-+	irq = ret;
-+
-+	ret = devm_request_threaded_irq(dev, irq, NULL, handler, 0, name, dev);
-+	if (ret)
-+		return ret;
-+
-+	return irq;
++	kmem_cache_free(ipa_ctx->dp->tx_pkt_wrapper_cache, tx_pkt);
 +}
 +
 +static void
-+ipa_smp2p_irq_exit(struct device *dev, unsigned int irq)
++ipa_wq_write_done_common(struct ipa_sys_context *sys,
++			 struct ipa_tx_pkt_wrapper *tx_pkt)
 +{
-+	devm_free_irq(dev, irq, dev);
++	struct ipa_tx_pkt_wrapper *next_pkt;
++	int cnt;
++	int i;
++
++	cnt = tx_pkt->cnt;
++	for (i = 0; i < cnt; i++) {
++		ipa_assert(!list_empty(&sys->head_desc_list));
++
++		spin_lock_bh(&sys->spinlock);
++
++		next_pkt = list_next_entry(tx_pkt, link);
++		list_del(&tx_pkt->link);
++		sys->len--;
++
++		spin_unlock_bh(&sys->spinlock);
++
++		ipa_tx_complete(tx_pkt);
++
++		tx_pkt = next_pkt;
++	}
 +}
 +
-+static int ipa_smp2p_init(struct device *dev, bool modem_init)
++/**
++ * ipa_wq_write_done() - Work function executed when TX completes
++ * * @done_work:	work_struct used by the work queue
++ */
++static void ipa_wq_write_done(struct work_struct *done_work)
 +{
-+	struct qcom_smem_state *enabled_state;
-+	struct qcom_smem_state *valid_state;
-+	struct device_node *node;
-+	unsigned int enabled_bit;
-+	unsigned int valid_bit;
-+	unsigned int clock_irq;
-+	int ret;
++	struct ipa_tx_pkt_wrapper *this_pkt;
++	struct ipa_tx_pkt_wrapper *tx_pkt;
++	struct ipa_sys_context *sys;
 +
-+	node = dev->of_node;
-+
-+	valid_state = qcom_smem_state_get(dev, "ipa-clock-enabled-valid",
-+					  &valid_bit);
-+	if (IS_ERR(valid_state))
-+		return PTR_ERR(valid_state);
-+
-+	enabled_state = qcom_smem_state_get(dev, "ipa-clock-enabled",
-+					    &enabled_bit);
-+	if (IS_ERR(enabled_state)) {
-+		ret = PTR_ERR(enabled_state);
-+		ipa_err("error %d getting ipa-clock-enabled state\n", ret);
-+
-+		return ret;
++	tx_pkt = container_of(done_work, struct ipa_tx_pkt_wrapper, done_work);
++	sys = tx_pkt->sys;
++	spin_lock_bh(&sys->spinlock);
++	this_pkt = list_first_entry(&sys->head_desc_list,
++				    struct ipa_tx_pkt_wrapper, link);
++	while (tx_pkt != this_pkt) {
++		spin_unlock_bh(&sys->spinlock);
++		ipa_wq_write_done_common(sys, this_pkt);
++		spin_lock_bh(&sys->spinlock);
++		this_pkt = list_first_entry(&sys->head_desc_list,
++					    struct ipa_tx_pkt_wrapper, link);
 +	}
++	spin_unlock_bh(&sys->spinlock);
++	ipa_wq_write_done_common(sys, tx_pkt);
++}
 +
-+	ret = ipa_smp2p_irq_init(dev, "ipa-clock-query",
-+				 ipa_smp2p_modem_clk_query_isr);
-+	if (ret < 0)
-+		return ret;
-+	clock_irq = ret;
++/**
++ * ipa_rx_poll() - Poll the rx packets from IPA hardware
++ * @ep_id:	Endpoint to poll
++ * @weight:	NAPI poll weight
++ *
++ * Return:	The number of received packets.
++ */
++int ipa_rx_poll(u32 ep_id, int weight)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++	static int total_cnt;
++	int cnt = 0;
 +
-+	if (modem_init) {
-+		/* Result will be non-zero (negative for error) */
-+		ret = ipa_smp2p_irq_init(dev, "ipa-post-init",
-+					 ipa_smp2p_modem_post_init_isr);
-+		if (ret < 0) {
-+			ipa_smp2p_irq_exit(dev, clock_irq);
++	while (cnt < weight && ipa_ep_polling(ep)) {
++		int ret;
 +
-+			return ret;
++		ret = ipa_poll_gsi_pkt(ep->sys);
++		if (ret < 0)
++			break;
++
++		ipa_rx_common(ep->sys, (u32)ret);
++		cnt += IPA_WAN_AGGR_PKT_CNT;
++		total_cnt++;
++
++		/* Force switch back to interrupt mode if no more packets */
++		if (!ep->sys->len || total_cnt >= ep->sys->rx.pool_sz) {
++			total_cnt = 0;
++			cnt--;
++			break;
 +		}
 +	}
 +
-+	/* Success.  Record our smp2p information */
-+	ipa_ctx->smp2p_info.valid_state = valid_state;
-+	ipa_ctx->smp2p_info.valid_bit = valid_bit;
-+	ipa_ctx->smp2p_info.enabled_state = enabled_state;
-+	ipa_ctx->smp2p_info.enabled_bit = enabled_bit;
-+	ipa_ctx->smp2p_info.clock_query_irq = clock_irq;
-+	ipa_ctx->smp2p_info.post_init_irq = modem_init ? ret : 0;
++	if (cnt < weight) {
++		ep->client_notify(ep->priv, IPA_CLIENT_COMP_NAPI, 0);
++		ipa_rx_switch_to_intr_mode(ep->sys);
 +
-+	return 0;
++		/* Matching enable is in ipa_gsi_irq_rx_notify_cb() */
++		ipa_client_remove();
++	}
++
++	return cnt;
 +}
 +
-+static void ipa_smp2p_exit(struct device *dev)
++/**
++ * ipa_send_nop() - Send an interrupting no-op request to a producer endpoint.
++ * @sys:	System context for the endpoint
++ *
++ * Normally an interrupt is generated upon completion of every transfer
++ * performed by an endpoint, but a producer endpoint can be configured
++ * to avoid getting these interrupts.  Instead, once a transfer has been
++ * initiated, a no-op is scheduled to be sent after a short delay.  This
++ * no-op request will interrupt when it is complete, and in handling that
++ * interrupt, previously-completed transfers will be handled as well.  If
++ * a no-op is already scheduled, another is not initiated (there's only
++ * one pending at a time).
++ */
++static bool ipa_send_nop(struct ipa_sys_context *sys)
 +{
-+	if (ipa_ctx->smp2p_info.post_init_irq)
-+		ipa_smp2p_irq_exit(dev, ipa_ctx->smp2p_info.post_init_irq);
-+	ipa_smp2p_irq_exit(dev, ipa_ctx->smp2p_info.clock_query_irq);
++	struct gsi_xfer_elem nop_xfer = { };
++	struct ipa_tx_pkt_wrapper *nop_pkt;
++	u32 channel_id;
 +
-+	memset(&ipa_ctx->smp2p_info, 0, sizeof(ipa_ctx->smp2p_info));
++	nop_pkt = kmem_cache_zalloc(ipa_ctx->dp->tx_pkt_wrapper_cache,
++				    GFP_KERNEL);
++	if (!nop_pkt)
++		return false;
++
++	nop_pkt->type = IPA_DATA_DESC;
++	/* No-op packet uses no memory for data */
++	INIT_WORK(&nop_pkt->done_work, ipa_wq_write_done);
++	nop_pkt->sys = sys;
++	nop_pkt->cnt = 1;
++
++	nop_xfer.type = GSI_XFER_ELEM_NOP;
++	nop_xfer.flags = GSI_XFER_FLAG_EOT;
++	nop_xfer.user_data = nop_pkt;
++
++	spin_lock_bh(&sys->spinlock);
++	list_add_tail(&nop_pkt->link, &sys->head_desc_list);
++	spin_unlock_bh(&sys->spinlock);
++
++	channel_id = sys->ep->channel_id;
++	if (!gsi_channel_queue(ipa_ctx->gsi, channel_id, 1, &nop_xfer, true))
++		return true;	/* Success */
++
++	spin_lock_bh(&sys->spinlock);
++	list_del(&nop_pkt->link);
++	spin_unlock_bh(&sys->spinlock);
++
++	kmem_cache_free(ipa_ctx->dp->tx_pkt_wrapper_cache, nop_pkt);
++
++	return false;
 +}
 +
-+static const struct ipa_match_data tz_init = {
-+	.init_type = ipa_tz_init,
-+};
-+
-+static const struct ipa_match_data modem_init = {
-+	.init_type = ipa_modem_init,
-+};
-+
-+static const struct of_device_id ipa_plat_drv_match[] = {
-+	{
-+		.compatible = "qcom,ipa-sdm845-tz_init",
-+		.data = &tz_init,
-+	},
-+	{
-+		.compatible = "qcom,ipa-sdm845-modem_init",
-+		.data = &modem_init,
-+	},
-+	{}
-+};
-+
-+static int ipa_plat_drv_probe(struct platform_device *pdev)
++/**
++ * ipa_send_nop_work() - Work function for sending a no-op request
++ * nop_work:	Work structure for the request
++ *
++ * Try to send the no-op request.  If it fails, arrange to try again.
++ */
++static void ipa_send_nop_work(struct work_struct *nop_work)
 +{
-+	const struct ipa_match_data *match_data;
-+	struct resource *res;
-+	struct device *dev;
-+	bool modem_init;
++	struct ipa_sys_context *sys;
++
++	sys = container_of(nop_work, struct ipa_sys_context, tx.nop_work);
++
++	/* If sending a no-op request fails, schedule another try */
++	if (!ipa_send_nop(sys))
++		queue_work(sys->wq, nop_work);
++}
++
++/**
++ * ipa_nop_timer_expiry() - Timer function to schedule a no-op request
++ * @timer:	High-resolution timer structure
++ *
++ * The delay before sending the no-op request is implemented by a
++ * high resolution timer, which will call this in interrupt context.
++ * Arrange to send the no-op in workqueue context when it expires.
++ */
++static enum hrtimer_restart ipa_nop_timer_expiry(struct hrtimer *timer)
++{
++	struct ipa_sys_context *sys;
++
++	sys = container_of(timer, struct ipa_sys_context, tx.nop_timer);
++	atomic_set(&sys->tx.nop_pending, 0);
++	queue_work(sys->wq, &sys->tx.nop_work);
++
++	return HRTIMER_NORESTART;
++}
++
++static void ipa_nop_timer_schedule(struct ipa_sys_context *sys)
++{
++	ktime_t time;
++
++	if (atomic_xchg(&sys->tx.nop_pending, 1))
++		return;
++
++	time = ktime_set(0, IPA_TX_NOP_DELAY_NS);
++	hrtimer_start(&sys->tx.nop_timer, time, HRTIMER_MODE_REL);
++}
++
++/**
++ * ipa_no_intr_init() - Configure endpoint point for no-op requests
++ * @prod_ep_id:	Endpoint that will use interrupting no-ops
++ *
++ * For some producer endpoints we don't interrupt on completions.
++ * Instead we schedule an interrupting NOP command to be issued on
++ * the endpoint after a short delay (if one is not already scheduled).
++ * When the NOP completes it signals all preceding transfers have
++ * completed also.
++ */
++void ipa_no_intr_init(u32 prod_ep_id)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[prod_ep_id];
++
++	INIT_WORK(&ep->sys->tx.nop_work, ipa_send_nop_work);
++	atomic_set(&ep->sys->tx.nop_pending, 0);
++	hrtimer_init(&ep->sys->tx.nop_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	ep->sys->tx.nop_timer.function = ipa_nop_timer_expiry;
++	ep->sys->tx.no_intr = true;
++}
++
++/**
++ * ipa_send() - Send descriptors to hardware as a single transaction
++ * @sys:	System context for endpoint
++ * @num_desc:	Number of descriptors
++ * @desc:	Transfer descriptors to send
++ *
++ * Return:	0 iff successful, or a negative error code.
++ */
++static int
++ipa_send(struct ipa_sys_context *sys, u32 num_desc, struct ipa_desc *desc)
++{
++	struct ipa_tx_pkt_wrapper *tx_pkt;
++	struct ipa_tx_pkt_wrapper *first;
++	struct ipa_tx_pkt_wrapper *next;
++	struct gsi_xfer_elem *xfer_elem;
++	LIST_HEAD(pkt_list);
 +	int ret;
++	int i;
 +
-+	/* We assume we're working on 64-bit hardware */
-+	BUILD_BUG_ON(!IS_ENABLED(CONFIG_64BIT));
++	ipa_assert(num_desc);
++	ipa_assert(num_desc <= ipa_client_tlv_count(sys->ep->client));
 +
-+	dev = &pdev->dev;
++	xfer_elem = kcalloc(num_desc, sizeof(*xfer_elem), GFP_ATOMIC);
++	if (!xfer_elem)
++		return -ENOMEM;
 +
-+	match_data = of_device_get_match_data(dev);
-+	modem_init = match_data->init_type == ipa_modem_init;
++	/* Within loop, all errors are allocation or DMA mapping */
++	ret = -ENOMEM;
++	first = NULL;
++	for (i = 0; i < num_desc; i++) {
++		dma_addr_t phys;
 +
-+	/* If we need Trust Zone, make sure it's ready */
-+	if (!modem_init)
-+		if (!qcom_scm_is_available())
-+			return -EPROBE_DEFER;
++		tx_pkt = kmem_cache_zalloc(ipa_ctx->dp->tx_pkt_wrapper_cache,
++					   GFP_ATOMIC);
++		if (!tx_pkt)
++			goto err_unwind;
 +
-+	/* Initialize the smp2p driver early.  It might not be ready
-+	 * when we're probed, so it might return -EPROBE_DEFER.
-+	 */
-+	ret = ipa_smp2p_init(dev, modem_init);
-+	if (ret)
-+		return ret;
++		if (!first)
++			first = tx_pkt;
 +
-+	/* Initialize the interconnect driver early too.  It might
-+	 * also return -EPROBE_DEFER.
-+	 */
-+	ret = ipa_interconnect_init(dev);
-+	if (ret)
-+		goto out_smp2p_exit;
++		if (desc[i].type == IPA_DATA_DESC_SKB_PAGED)
++			phys = skb_frag_dma_map(ipa_ctx->dev, desc[i].payload,
++						0, desc[i].len_opcode,
++						DMA_TO_DEVICE);
++		else
++			phys = dma_map_single(ipa_ctx->dev, desc[i].payload,
++					      desc[i].len_opcode,
++					      DMA_TO_DEVICE);
++		if (dma_mapping_error(ipa_ctx->dev, phys)) {
++			ipa_err("dma mapping error on descriptor\n");
++			kmem_cache_free(ipa_ctx->dp->tx_pkt_wrapper_cache,
++					tx_pkt);
++			goto err_unwind;
++		}
 +
-+	ret = ipa_clock_init(dev);
-+	if (ret)
-+		goto err_interconnect_exit;
++		tx_pkt->type = desc[i].type;
++		tx_pkt->sys = sys;
++		tx_pkt->mem.virt = desc[i].payload;
++		tx_pkt->mem.phys = phys;
++		tx_pkt->mem.size = desc[i].len_opcode;
++		tx_pkt->callback = desc[i].callback;
++		tx_pkt->user1 = desc[i].user1;
++		tx_pkt->user2 = desc[i].user2;
++		list_add_tail(&tx_pkt->link, &pkt_list);
 +
-+	ipa_ctx->dev = dev;	/* Set early for ipa_err()/ipa_debug() */
-+
-+	/* Compute a bitmask representing which endpoints support filtering */
-+	ipa_ctx->filter_bitmap = ipa_filter_bitmap_init();
-+	ipa_debug("filter_bitmap 0x%08x\n", ipa_ctx->filter_bitmap);
-+	if (!ipa_ctx->filter_bitmap)
-+		goto err_clock_exit;
-+
-+	ret = platform_get_irq_byname(pdev, "ipa");
-+	if (ret < 0)
-+		goto err_clear_filter_bitmap;
-+	ipa_ctx->ipa_irq = ret;
-+
-+	/* Get IPA memory range */
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ipa");
-+	if (!res) {
-+		ret = -ENODEV;
-+		goto err_clear_ipa_irq;
++		xfer_elem[i].addr = tx_pkt->mem.phys;
++		if (desc[i].type == IPA_IMM_CMD_DESC)
++			xfer_elem[i].type = GSI_XFER_ELEM_IMME_CMD;
++		else
++			xfer_elem[i].type = GSI_XFER_ELEM_DATA;
++		xfer_elem[i].len_opcode = desc[i].len_opcode;
++		if (i < num_desc - 1)
++			xfer_elem[i].flags = GSI_XFER_FLAG_CHAIN;
 +	}
 +
-+	/* Setup IPA register access */
-+	ret = ipa_reg_init(res->start, (size_t)resource_size(res));
-+	if (ret)
-+		goto err_clear_ipa_irq;
-+	ipa_ctx->ipa_phys = res->start;
++	/* Fill in extra fields in the first TX packet */
++	first->cnt = num_desc;
++	INIT_WORK(&first->done_work, ipa_wq_write_done);
 +
-+	ipa_ctx->gsi = gsi_init(pdev);
-+	if (IS_ERR(ipa_ctx->gsi)) {
-+		ret = PTR_ERR(ipa_ctx->gsi);
-+		goto err_clear_gsi;
++	/* Fill in extra fields in the last transfer element */
++	if (!sys->tx.no_intr) {
++		xfer_elem[num_desc - 1].flags = GSI_XFER_FLAG_EOT;
++		xfer_elem[num_desc - 1].flags |= GSI_XFER_FLAG_BEI;
 +	}
++	xfer_elem[num_desc - 1].user_data = first;
 +
-+	ret = ipa_dma_init(dev, IPA_HW_TBL_SYSADDR_ALIGN);
++	spin_lock_bh(&sys->spinlock);
++
++	list_splice_tail_init(&pkt_list, &sys->head_desc_list);
++	ret = gsi_channel_queue(ipa_ctx->gsi, sys->ep->channel_id, num_desc,
++				xfer_elem, true);
 +	if (ret)
-+		goto err_clear_gsi;
++		list_cut_end(&pkt_list, &sys->head_desc_list, &first->link);
 +
-+	ret = ipahal_init();
-+	if (ret)
-+		goto err_dma_exit;
++	spin_unlock_bh(&sys->spinlock);
 +
-+	ipa_ctx->cmd_prod_ep_id = IPA_EP_ID_BAD;
-+	ipa_ctx->lan_cons_ep_id = IPA_EP_ID_BAD;
++	kfree(xfer_elem);
 +
-+	/* Proceed to real initialization */
-+	ret = ipa_pre_init();
-+	if (ret)
-+		goto err_clear_dev;
-+
-+	/* If the modem is not verifying and loading firmware we need to
-+	 * get it loaded ourselves.  Only then can we proceed with the
-+	 * second stage of IPA initialization.  If the modem is doing it,
-+	 * it will send an SMP2P interrupt to signal this has been done,
-+	 * and that will trigger the "post init".
-+	 */
-+	if (!modem_init) {
-+		ret = ipa_firmware_load(dev);
-+		if (ret)
-+			goto err_clear_dev;
-+
-+		/* Now we can proceed to stage two initialization */
-+		ipa_post_init();
++	if (!ret) {
++		if (sys->tx.no_intr)
++			ipa_nop_timer_schedule(sys);
++		return 0;
 +	}
-+
-+	return 0;	/* Success */
-+
-+err_clear_dev:
-+	ipa_ctx->lan_cons_ep_id = 0;
-+	ipa_ctx->cmd_prod_ep_id = 0;
-+	ipahal_exit();
-+err_dma_exit:
-+	ipa_dma_exit();
-+err_clear_gsi:
-+	ipa_ctx->gsi = NULL;
-+	ipa_ctx->ipa_phys = 0;
-+	ipa_reg_exit();
-+err_clear_ipa_irq:
-+	ipa_ctx->ipa_irq = 0;
-+err_clear_filter_bitmap:
-+	ipa_ctx->filter_bitmap = 0;
-+err_interconnect_exit:
-+	ipa_interconnect_exit();
-+err_clock_exit:
-+	ipa_clock_exit();
-+	ipa_ctx->dev = NULL;
-+out_smp2p_exit:
-+	ipa_smp2p_exit(dev);
++err_unwind:
++	list_for_each_entry_safe(tx_pkt, next, &pkt_list, link) {
++		list_del(&tx_pkt->link);
++		tx_pkt->callback = NULL; /* Avoid doing the callback */
++		ipa_tx_complete(tx_pkt);
++	}
 +
 +	return ret;
 +}
 +
-+static int ipa_plat_drv_remove(struct platform_device *pdev)
++/**
++ * ipa_send_cmd_timeout_complete() - Command completion callback
++ * @user1:	Opaque value carried by the command
++ * @ignored:	Second opaque value (ignored)
++ *
++ * Schedule a completion to signal that a command is done.  Free the
++ * tag_completion structure if its reference count reaches zero.
++ */
++static void ipa_send_cmd_timeout_complete(void *user1, int ignored)
 +{
-+	struct device *dev = &pdev->dev;
++	struct ipa_tag_completion *comp = user1;
 +
-+	ipa_ctx->dev = NULL;
-+	ipahal_exit();
-+	ipa_dma_exit();
-+	ipa_ctx->gsi = NULL;	/* XXX ipa_gsi_exit() */
-+	ipa_reg_exit();
++	complete(&comp->comp);
++	if (!atomic_dec_return(&comp->cnt))
++		kfree(comp);
++}
 +
-+	ipa_ctx->ipa_phys = 0;
++/**
++ * ipa_send_cmd_timeout() - Send an immediate command with timeout
++ * @desc:	descriptor structure
++ * @timeout:	milliseconds to wait (or 0 to wait indefinitely)
++ *
++ * Send an immediate command, and wait for it to complete.  If
++ * timeout is non-zero it indicates the number of milliseconds to
++ * wait to receive the acknowledgment from the hardware before
++ * timing out.  If 0 is supplied, wait will not time out.
++ *
++ * Return:	0 if successful, or a negative error code
++ */
++int ipa_send_cmd_timeout(struct ipa_desc *desc, u32 timeout)
++{
++	struct ipa_tag_completion *comp;
++	unsigned long timeout_jiffies;
++	struct ipa_ep_context *ep;
++	int ret;
 +
-+	if (ipa_ctx->lan_cons_ep_id != IPA_EP_ID_BAD) {
-+		ipa_ep_free(ipa_ctx->lan_cons_ep_id);
-+		ipa_ctx->lan_cons_ep_id = IPA_EP_ID_BAD;
++	comp = kzalloc(sizeof(*comp), GFP_KERNEL);
++	if (!comp)
++		return -ENOMEM;
++
++	/* The reference count is decremented both here and in ack
++	 * callback.  Whichever reaches 0 frees the structure.
++	 */
++	atomic_set(&comp->cnt, 2);
++	init_completion(&comp->comp);
++
++	/* Fill in the callback info (the sole descriptor is the last) */
++	desc->callback = ipa_send_cmd_timeout_complete;
++	desc->user1 = comp;
++
++	ep = &ipa_ctx->ep[ipa_client_ep_id(IPA_CLIENT_APPS_CMD_PROD)];
++	ret = ipa_send(ep->sys, 1, desc);
++	if (ret) {
++		/* Callback won't run; drop reference on its behalf */
++		atomic_dec(&comp->cnt);
++		goto out;
 +	}
-+	if (ipa_ctx->cmd_prod_ep_id != IPA_EP_ID_BAD) {
-+		ipa_ep_free(ipa_ctx->cmd_prod_ep_id);
-+		ipa_ctx->cmd_prod_ep_id = IPA_EP_ID_BAD;
++
++	timeout_jiffies = msecs_to_jiffies(timeout);
++	if (!timeout_jiffies) {
++		wait_for_completion(&comp->comp);
++	} else if (!wait_for_completion_timeout(&comp->comp, timeout_jiffies)) {
++		ret = -ETIMEDOUT;
++		ipa_err("command timed out\n");
 +	}
-+	ipa_ctx->ipa_irq = 0;	/* XXX Need to de-initialize? */
-+	ipa_ctx->filter_bitmap = 0;
-+	ipa_interconnect_exit();
-+	ipa_smp2p_exit(dev);
++out:
++	if (!atomic_dec_return(&comp->cnt))
++		kfree(comp);
++
++	return ret;
++}
++
++/**
++ * ipa_handle_rx_core() - Core packet reception handling
++ * @sys:	System context for endpoint receiving packets
++ *
++ * Return:	The number of packets processed, or a negative error code
++ */
++static int ipa_handle_rx_core(struct ipa_sys_context *sys)
++{
++	int cnt;
++
++	/* Stop if the endpoint leaves polling state */
++	cnt = 0;
++	while (ipa_ep_polling(sys->ep)) {
++		int ret = ipa_poll_gsi_pkt(sys);
++
++		if (ret < 0)
++			break;
++
++		ipa_rx_common(sys, (u32)ret);
++
++		cnt++;
++	}
++
++	return cnt;
++}
++
++/**
++ * ipa_rx_switch_to_intr_mode() - Switch from polling to interrupt mode
++ * @sys:	System context for endpoint switching mode
++ */
++static void ipa_rx_switch_to_intr_mode(struct ipa_sys_context *sys)
++{
++	if (!atomic_xchg(&sys->rx.curr_polling_state, 0)) {
++		ipa_err("already in intr mode\n");
++		queue_delayed_work(sys->wq, &sys->rx.switch_to_intr_work,
++				   msecs_to_jiffies(1));
++		return;
++	}
++	ipa_dec_release_wakelock();
++	gsi_channel_intr_enable(ipa_ctx->gsi, sys->ep->channel_id);
++}
++
++void ipa_rx_switch_to_poll_mode(struct ipa_sys_context *sys)
++{
++	if (atomic_xchg(&sys->rx.curr_polling_state, 1))
++		return;
++	gsi_channel_intr_disable(ipa_ctx->gsi, sys->ep->channel_id);
++	ipa_inc_acquire_wakelock();
++	queue_work(sys->wq, &sys->rx.work);
++}
++
++/**
++ * ipa_handle_rx() - Handle packet reception.
++ * @sys:	System context for endpoint receiving packets
++ */
++static void ipa_handle_rx(struct ipa_sys_context *sys)
++{
++	int inactive_cycles = 0;
++	int cnt;
++
++	ipa_client_add();
++	do {
++		cnt = ipa_handle_rx_core(sys);
++		if (cnt == 0)
++			inactive_cycles++;
++		else
++			inactive_cycles = 0;
++
++		usleep_range(POLLING_MIN_SLEEP_RX, POLLING_MAX_SLEEP_RX);
++
++		/* if endpoint is out of buffers there is no point polling for
++		 * completed descs; release the worker so delayed work can
++		 * run in a timely manner
++		 */
++		if (sys->len - sys->rx.len_pending_xfer == 0)
++			break;
++
++	} while (inactive_cycles <= POLLING_INACTIVITY_RX);
++
++	ipa_rx_switch_to_intr_mode(sys);
++	ipa_client_remove();
++}
++
++static void ipa_switch_to_intr_rx_work_func(struct work_struct *work)
++{
++	struct delayed_work *dwork = to_delayed_work(work);
++	struct ipa_sys_context *sys;
++
++	sys = container_of(dwork, struct ipa_sys_context,
++			   rx.switch_to_intr_work);
++
++	/* For NAPI, interrupt mode is done in ipa_rx_poll context */
++	ipa_assert(!sys->ep->napi_enabled);
++
++	ipa_handle_rx(sys);
++}
++
++static struct ipa_sys_context *ipa_ep_sys_create(enum ipa_client_type client)
++{
++	const unsigned int wq_flags = WQ_MEM_RECLAIM | WQ_UNBOUND;
++	struct ipa_sys_context *sys;
++
++	/* Caller will zero all "mutable" fields; we fill in the rest */
++	sys = kmalloc(sizeof(*sys), GFP_KERNEL);
++	if (!sys)
++		return NULL;
++
++	sys->wq = alloc_workqueue("ipawq%u", wq_flags, 1, (u32)client);
++	if (!sys->wq) {
++		kfree(sys);
++		return NULL;
++	}
++
++	/* Caller assigns sys->ep = ep */
++	INIT_LIST_HEAD(&sys->head_desc_list);
++	spin_lock_init(&sys->spinlock);
++
++	return sys;
++}
++
++/**
++ * ipa_tx_dp_complete() - Transmit complete callback
++ * @user1:	Caller-supplied pointer value
++ * @user2:	Caller-supplied integer value
++ *
++ * Calls the endpoint's client_notify function if it exists;
++ * otherwise just frees the socket buffer (supplied in user1).
++ */
++static void ipa_tx_dp_complete(void *user1, int user2)
++{
++	struct sk_buff *skb = user1;
++	int ep_id = user2;
++
++	if (ipa_ctx->ep[ep_id].client_notify) {
++		unsigned long data;
++		void *priv;
++
++		priv = ipa_ctx->ep[ep_id].priv;
++		data = (unsigned long)skb;
++		ipa_ctx->ep[ep_id].client_notify(priv, IPA_WRITE_DONE, data);
++	} else {
++		dev_kfree_skb_any(skb);
++	}
++}
++
++/**
++ * ipa_tx_dp() - Transmit a socket buffer for APPS_WAN_PROD
++ * @client:	IPA client that is sending packets (WAN producer)
++ * @skb:	The socket buffer to send
++ *
++ * Returns:	0 if successful, or a negative error code
++ */
++int ipa_tx_dp(enum ipa_client_type client, struct sk_buff *skb)
++{
++	struct ipa_desc _desc = { };	/* Used for common case */
++	struct ipa_desc *desc;
++	u32 tlv_count;
++	int data_idx;
++	u32 nr_frags;
++	u32 ep_id;
++	int ret;
++	u32 f;
++
++	if (!skb->len)
++		return -EINVAL;
++
++	ep_id = ipa_client_ep_id(client);
++
++	/* Make sure source endpoint's TLV FIFO has enough entries to
++	 * hold the linear portion of the skb and all its frags.
++	 * If not, see if we can linearize it before giving up.
++	 */
++	nr_frags = skb_shinfo(skb)->nr_frags;
++	tlv_count = ipa_client_tlv_count(client);
++	if (1 + nr_frags > tlv_count) {
++		if (skb_linearize(skb))
++			return -ENOMEM;
++		nr_frags = 0;
++	}
++	if (nr_frags) {
++		desc = kcalloc(1 + nr_frags, sizeof(*desc), GFP_ATOMIC);
++		if (!desc)
++			return -ENOMEM;
++	} else {
++		desc = &_desc;	/* Default, linear case */
++	}
++
++	/* Fill in the IPA request descriptors--one for the linear
++	 * data in the skb, one each for each of its fragments.
++	 */
++	data_idx = 0;
++	desc[data_idx].payload = skb->data;
++	desc[data_idx].len_opcode = skb_headlen(skb);
++	desc[data_idx].type = IPA_DATA_DESC_SKB;
++	for (f = 0; f < nr_frags; f++) {
++		data_idx++;
++		desc[data_idx].payload = &skb_shinfo(skb)->frags[f];
++		desc[data_idx].type = IPA_DATA_DESC_SKB_PAGED;
++		desc[data_idx].len_opcode =
++				skb_frag_size(desc[data_idx].payload);
++	}
++
++	/* Have the skb be freed after the last descriptor completes. */
++	desc[data_idx].callback = ipa_tx_dp_complete;
++	desc[data_idx].user1 = skb;
++	desc[data_idx].user2 = ep_id;
++
++	ret = ipa_send(ipa_ctx->ep[ep_id].sys, data_idx + 1, desc);
++
++	if (nr_frags)
++		kfree(desc);
++
++	return ret;
++}
++
++static void ipa_wq_handle_rx(struct work_struct *work)
++{
++	struct ipa_sys_context *sys;
++
++	sys = container_of(work, struct ipa_sys_context, rx.work);
++
++	if (sys->ep->napi_enabled) {
++		ipa_client_add();
++		sys->ep->client_notify(sys->ep->priv, IPA_CLIENT_START_POLL, 0);
++	} else {
++		ipa_handle_rx(sys);
++	}
++}
++
++static int
++queue_rx_cache(struct ipa_sys_context *sys, struct ipa_rx_pkt_wrapper *rx_pkt)
++{
++	struct gsi_xfer_elem gsi_xfer_elem;
++	bool ring_doorbell;
++	int ret;
++
++	/* Don't bother zeroing this; we fill all fields */
++	gsi_xfer_elem.addr = rx_pkt->dma_addr;
++	gsi_xfer_elem.len_opcode = sys->rx.buff_sz;
++	gsi_xfer_elem.flags = GSI_XFER_FLAG_EOT;
++	gsi_xfer_elem.flags |= GSI_XFER_FLAG_EOB;
++	gsi_xfer_elem.type = GSI_XFER_ELEM_DATA;
++	gsi_xfer_elem.user_data = rx_pkt;
++
++	/* Doorbell is expensive; only ring it when a batch is queued */
++	ring_doorbell = sys->rx.len_pending_xfer++ >= IPA_REPL_XFER_THRESH;
++
++	ret = gsi_channel_queue(ipa_ctx->gsi, sys->ep->channel_id,
++				1, &gsi_xfer_elem, ring_doorbell);
++	if (ret)
++		return ret;
++
++	if (ring_doorbell)
++		sys->rx.len_pending_xfer = 0;
 +
 +	return 0;
 +}
 +
 +/**
-+ * ipa_ap_suspend() - suspend callback for runtime_pm
-+ * @dev:	IPA device structure
++ * ipa_replenish_rx_cache() - Replenish the Rx packets cache.
++ * @sys:	System context for IPA->AP endpoint
 + *
-+ * This callback will be invoked by the runtime_pm framework when an AP suspend
-+ * operation is invoked, usually by pressing a suspend button.
-+ *
-+ * Return: 	0 if successful, -EAGAIN if IPA is in use
++ * Allocate RX packet wrapper structures with maximal socket buffers
++ * for an endpoint.  These are supplied to the hardware, which fills
++ * them with incoming data.
 + */
-+int ipa_ap_suspend(struct device *dev)
++static void ipa_replenish_rx_cache(struct ipa_sys_context *sys)
 +{
-+	u32 i;
++	struct ipa_rx_pkt_wrapper *rx_pkt;
++	struct device *dev = ipa_ctx->dev;
++	u32 rx_len_cached = sys->len;
 +
-+	/* In case there is a tx/rx handler in polling mode fail to suspend */
-+	for (i = 0; i < ipa_ctx->ep_count; i++) {
-+		if (ipa_ctx->ep[i].sys && ipa_ep_polling(&ipa_ctx->ep[i])) {
-+			ipa_err("EP %d is in polling state, do not suspend\n",
-+				i);
-+			return -EAGAIN;
++	while (rx_len_cached < sys->rx.pool_sz) {
++		gfp_t flag = GFP_NOWAIT | __GFP_NOWARN;
++		void *ptr;
++		int ret;
++
++		rx_pkt = kmem_cache_zalloc(ipa_ctx->dp->rx_pkt_wrapper_cache,
++					   flag);
++		if (!rx_pkt)
++			goto fail_kmem_cache_alloc;
++
++		INIT_LIST_HEAD(&rx_pkt->link);
++
++		rx_pkt->skb = __dev_alloc_skb(sys->rx.buff_sz, flag);
++		if (!rx_pkt->skb) {
++			ipa_err("failed to alloc skb\n");
++			goto fail_skb_alloc;
++		}
++		ptr = skb_put(rx_pkt->skb, sys->rx.buff_sz);
++		rx_pkt->dma_addr = dma_map_single(dev, ptr, sys->rx.buff_sz,
++						  DMA_FROM_DEVICE);
++		if (dma_mapping_error(dev, rx_pkt->dma_addr)) {
++			ipa_err("dma_map_single failure %p for %p\n",
++				(void *)rx_pkt->dma_addr, ptr);
++			goto fail_dma_mapping;
++		}
++
++		list_add_tail(&rx_pkt->link, &sys->head_desc_list);
++		rx_len_cached = ++sys->len;
++
++		ret = queue_rx_cache(sys, rx_pkt);
++		if (ret)
++			goto fail_provide_rx_buffer;
++	}
++
++	return;
++
++fail_provide_rx_buffer:
++	list_del(&rx_pkt->link);
++	rx_len_cached = --sys->len;
++	dma_unmap_single(dev, rx_pkt->dma_addr, sys->rx.buff_sz,
++			 DMA_FROM_DEVICE);
++fail_dma_mapping:
++	dev_kfree_skb_any(rx_pkt->skb);
++fail_skb_alloc:
++	kmem_cache_free(ipa_ctx->dp->rx_pkt_wrapper_cache, rx_pkt);
++fail_kmem_cache_alloc:
++	if (rx_len_cached - sys->rx.len_pending_xfer == 0)
++		queue_delayed_work(sys->wq, &sys->rx.replenish_work,
++				   msecs_to_jiffies(1));
++}
++
++static void ipa_replenish_rx_work_func(struct work_struct *work)
++{
++	struct delayed_work *dwork = to_delayed_work(work);
++	struct ipa_sys_context *sys;
++
++	sys = container_of(dwork, struct ipa_sys_context, rx.replenish_work);
++	ipa_client_add();
++	ipa_replenish_rx_cache(sys);
++	ipa_client_remove();
++}
++
++/** ipa_cleanup_rx() - release RX queue resources */
++static void ipa_cleanup_rx(struct ipa_sys_context *sys)
++{
++	struct ipa_rx_pkt_wrapper *rx_pkt;
++	struct ipa_rx_pkt_wrapper *r;
++
++	list_for_each_entry_safe(rx_pkt, r, &sys->head_desc_list, link) {
++		list_del(&rx_pkt->link);
++		dma_unmap_single(ipa_ctx->dev, rx_pkt->dma_addr,
++				 sys->rx.buff_sz, DMA_FROM_DEVICE);
++		dev_kfree_skb_any(rx_pkt->skb);
++		kmem_cache_free(ipa_ctx->dp->rx_pkt_wrapper_cache, rx_pkt);
++	}
++}
++
++static struct sk_buff *ipa_skb_copy_for_client(struct sk_buff *skb, int len)
++{
++	struct sk_buff *skb2;
++
++	skb2 = __dev_alloc_skb(len + IPA_RX_BUFF_CLIENT_HEADROOM, GFP_KERNEL);
++	if (likely(skb2)) {
++		/* Set the data pointer */
++		skb_reserve(skb2, IPA_RX_BUFF_CLIENT_HEADROOM);
++		memcpy(skb2->data, skb->data, len);
++		skb2->len = len;
++		skb_set_tail_pointer(skb2, len);
++	}
++
++	return skb2;
++}
++
++static struct sk_buff *ipa_join_prev_skb(struct sk_buff *prev_skb,
++					 struct sk_buff *skb, unsigned int len)
++{
++	struct sk_buff *skb2;
++
++	skb2 = skb_copy_expand(prev_skb, 0, len, GFP_KERNEL);
++	if (likely(skb2))
++		memcpy(skb_put(skb2, len), skb->data, len);
++	else
++		ipa_err("copy expand failed\n");
++	dev_kfree_skb_any(prev_skb);
++
++	return skb2;
++}
++
++static bool ipa_status_opcode_supported(enum ipahal_pkt_status_opcode opcode)
++{
++	return opcode == IPAHAL_PKT_STATUS_OPCODE_PACKET ||
++		opcode == IPAHAL_PKT_STATUS_OPCODE_DROPPED_PACKET ||
++		opcode == IPAHAL_PKT_STATUS_OPCODE_SUSPENDED_PACKET ||
++		opcode == IPAHAL_PKT_STATUS_OPCODE_PACKET_2ND_PASS;
++}
++
++static void
++ipa_lan_rx_pyld_hdlr(struct sk_buff *skb, struct ipa_sys_context *sys)
++{
++	struct ipahal_pkt_status status;
++	struct sk_buff *skb2;
++	unsigned long unused;
++	unsigned int align;
++	unsigned int used;
++	unsigned char *buf;
++	u32 pkt_status_sz;
++	int pad_len_byte;
++	u32 ep_id;
++	int len;
++	int len2;
++
++	pkt_status_sz = ipahal_pkt_status_get_size();
++	used = *(unsigned int *)skb->cb;
++	align = ALIGN(used, 32);
++	unused = IPA_RX_BUFFER_SIZE - used;
++
++	ipa_assert(skb->len);
++
++	if (sys->rx.len_partial) {
++		buf = skb_push(skb, sys->rx.len_partial);
++		memcpy(buf, sys->rx.prev_skb->data, sys->rx.len_partial);
++		sys->rx.len_partial = 0;
++		dev_kfree_skb_any(sys->rx.prev_skb);
++		sys->rx.prev_skb = NULL;
++		goto begin;
++	}
++
++	/* this endpoint has TX comp (status only) + mux-ed LAN RX data
++	 * (status+data)
++	 */
++	if (sys->rx.len_rem) {
++		if (sys->rx.len_rem <= skb->len) {
++			if (sys->rx.prev_skb) {
++				skb2 = skb_copy_expand(sys->rx.prev_skb, 0,
++						       sys->rx.len_rem,
++						       GFP_KERNEL);
++				if (likely(skb2)) {
++					memcpy(skb_put(skb2, sys->rx.len_rem),
++					       skb->data, sys->rx.len_rem);
++					skb_trim(skb2,
++						 skb2->len - sys->rx.len_pad);
++					skb2->truesize = skb2->len +
++						sizeof(struct sk_buff);
++					if (sys->rx.drop_packet)
++						dev_kfree_skb_any(skb2);
++					else
++						sys->ep->client_notify(
++							sys->ep->priv,
++							IPA_RECEIVE,
++							(unsigned long)(skb2));
++				} else {
++					ipa_err("copy expand failed\n");
++				}
++				dev_kfree_skb_any(sys->rx.prev_skb);
++			}
++			skb_pull(skb, sys->rx.len_rem);
++			sys->rx.prev_skb = NULL;
++			sys->rx.len_rem = 0;
++			sys->rx.len_pad = 0;
++		} else {
++			if (sys->rx.prev_skb) {
++				skb2 = ipa_join_prev_skb(sys->rx.prev_skb, skb,
++							 skb->len);
++				dev_kfree_skb_any(sys->rx.prev_skb);
++				sys->rx.prev_skb = skb2;
++			}
++			sys->rx.len_rem -= skb->len;
++			return;
 +		}
 +	}
 +
-+	return 0;
++begin:
++	while (skb->len) {
++		sys->rx.drop_packet = false;
++
++		if (skb->len < pkt_status_sz) {
++			WARN_ON(sys->rx.prev_skb);
++			sys->rx.prev_skb = skb_copy(skb, GFP_KERNEL);
++			sys->rx.len_partial = skb->len;
++			return;
++		}
++
++		ipahal_pkt_status_parse(skb->data, &status);
++
++		if (!ipa_status_opcode_supported(status.status_opcode)) {
++			ipa_err("unsupported opcode(%d)\n",
++				status.status_opcode);
++			skb_pull(skb, pkt_status_sz);
++			continue;
++		}
++
++		if (status.pkt_len == 0) {
++			skb_pull(skb, pkt_status_sz);
++			continue;
++		}
++
++		if (status.endp_dest_idx == (sys->ep - ipa_ctx->ep)) {
++			/* RX data */
++			ep_id = status.endp_src_idx;
++
++			/* A packet which is received back to the AP after
++			 * there was no route match.
++			 */
++
++			if (status.exception ==
++				IPAHAL_PKT_STATUS_EXCEPTION_NONE &&
++			    status.rt_miss)
++				sys->rx.drop_packet = true;
++			if (skb->len == pkt_status_sz &&
++			    status.exception ==
++					IPAHAL_PKT_STATUS_EXCEPTION_NONE) {
++				WARN_ON(sys->rx.prev_skb);
++				sys->rx.prev_skb = skb_copy(skb, GFP_KERNEL);
++				sys->rx.len_partial = skb->len;
++				return;
++			}
++
++			pad_len_byte = ((status.pkt_len + 3) & ~3) -
++					status.pkt_len;
++
++			len = status.pkt_len + pad_len_byte +
++				IPA_SIZE_DL_CSUM_META_TRAILER;
++
++			if (status.exception ==
++					IPAHAL_PKT_STATUS_EXCEPTION_DEAGGR) {
++				sys->rx.drop_packet = true;
++			}
++
++			len2 = min(status.pkt_len + pkt_status_sz, skb->len);
++			skb2 = ipa_skb_copy_for_client(skb, len2);
++			if (likely(skb2)) {
++				if (skb->len < len + pkt_status_sz) {
++					sys->rx.prev_skb = skb2;
++					sys->rx.len_rem = len - skb->len +
++						pkt_status_sz;
++					sys->rx.len_pad = pad_len_byte;
++					skb_pull(skb, skb->len);
++				} else {
++					skb_trim(skb2, status.pkt_len +
++							pkt_status_sz);
++					if (sys->rx.drop_packet) {
++						dev_kfree_skb_any(skb2);
++					} else {
++						skb2->truesize =
++							skb2->len +
++							sizeof(struct sk_buff) +
++							(ALIGN(len +
++							pkt_status_sz, 32) *
++							unused / align);
++						sys->ep->client_notify(
++							sys->ep->priv,
++							IPA_RECEIVE,
++							(unsigned long)(skb2));
++					}
++					skb_pull(skb, len + pkt_status_sz);
++				}
++			} else {
++				ipa_err("fail to alloc skb\n");
++				if (skb->len < len) {
++					sys->rx.prev_skb = NULL;
++					sys->rx.len_rem = len - skb->len +
++						pkt_status_sz;
++					sys->rx.len_pad = pad_len_byte;
++					skb_pull(skb, skb->len);
++				} else {
++					skb_pull(skb, len + pkt_status_sz);
++				}
++			}
++		} else {
++			skb_pull(skb, pkt_status_sz);
++		}
++	}
++}
++
++static void
++ipa_wan_rx_handle_splt_pyld(struct sk_buff *skb, struct ipa_sys_context *sys)
++{
++	struct sk_buff *skb2;
++
++	if (sys->rx.len_rem <= skb->len) {
++		if (sys->rx.prev_skb) {
++			skb2 = ipa_join_prev_skb(sys->rx.prev_skb, skb,
++						 sys->rx.len_rem);
++			if (likely(skb2)) {
++				skb_pull(skb2, ipahal_pkt_status_get_size());
++				skb2->truesize = skb2->len +
++					sizeof(struct sk_buff);
++				sys->ep->client_notify(sys->ep->priv,
++						       IPA_RECEIVE,
++						       (unsigned long)skb2);
++			}
++		}
++		skb_pull(skb, sys->rx.len_rem);
++		sys->rx.prev_skb = NULL;
++		sys->rx.len_rem = 0;
++	} else {
++		if (sys->rx.prev_skb) {
++			skb2 = ipa_join_prev_skb(sys->rx.prev_skb, skb,
++						 skb->len);
++			sys->rx.prev_skb = skb2;
++		}
++		sys->rx.len_rem -= skb->len;
++		skb_pull(skb, skb->len);
++	}
++}
++
++static void
++ipa_wan_rx_pyld_hdlr(struct sk_buff *skb, struct ipa_sys_context *sys)
++{
++	struct ipahal_pkt_status status;
++	unsigned char *skb_data;
++	struct sk_buff *skb2;
++	u16 pkt_len_with_pad;
++	unsigned long unused;
++	unsigned int align;
++	unsigned int used;
++	u32 pkt_status_sz;
++	int frame_len;
++	u32 qmap_hdr;
++	int checksum;
++	int ep_id;
++
++	used = *(unsigned int *)skb->cb;
++	align = ALIGN(used, 32);
++	unused = IPA_RX_BUFFER_SIZE - used;
++
++	ipa_assert(skb->len);
++
++	if (ipa_ctx->ipa_client_apps_wan_cons_agg_gro) {
++		sys->ep->client_notify(sys->ep->priv, IPA_RECEIVE,
++				       (unsigned long)(skb));
++		return;
++	}
++
++	/* payload splits across 2 buff or more,
++	 * take the start of the payload from rx.prev_skb
++	 */
++	if (sys->rx.len_rem)
++		ipa_wan_rx_handle_splt_pyld(skb, sys);
++
++	pkt_status_sz = ipahal_pkt_status_get_size();
++	while (skb->len) {
++		u32 status_mask;
++
++		if (skb->len < pkt_status_sz) {
++			ipa_err("status straddles buffer\n");
++			WARN_ON(1);
++			goto bail;
++		}
++		ipahal_pkt_status_parse(skb->data, &status);
++		skb_data = skb->data;
++
++		if (!ipa_status_opcode_supported(status.status_opcode) ||
++		    status.status_opcode ==
++				IPAHAL_PKT_STATUS_OPCODE_SUSPENDED_PACKET) {
++			ipa_err("unsupported opcode(%d)\n",
++				status.status_opcode);
++			skb_pull(skb, pkt_status_sz);
++			continue;
++		}
++
++		if (status.endp_dest_idx >= ipa_ctx->ep_count ||
++		    status.endp_src_idx >= ipa_ctx->ep_count ||
++		    status.pkt_len > IPA_GENERIC_AGGR_BYTE_LIMIT) {
++			ipa_err("status fields invalid\n");
++			WARN_ON(1);
++			goto bail;
++		}
++		if (status.pkt_len == 0) {
++			skb_pull(skb, pkt_status_sz);
++			continue;
++		}
++		ep_id = ipa_client_ep_id(IPA_CLIENT_APPS_WAN_CONS);
++		if (status.endp_dest_idx != ep_id) {
++			ipa_err("expected endp_dest_idx %d received %d\n",
++				ep_id, status.endp_dest_idx);
++			WARN_ON(1);
++			goto bail;
++		}
++		/* RX data */
++		if (skb->len == pkt_status_sz) {
++			ipa_err("Ins header in next buffer\n");
++			WARN_ON(1);
++			goto bail;
++		}
++		qmap_hdr = *(u32 *)(skb_data + pkt_status_sz);
++
++		/* Take the pkt_len_with_pad from the last 2 bytes of the QMAP
++		 * header
++		 */
++		/*QMAP is BE: convert the pkt_len field from BE to LE*/
++		pkt_len_with_pad = ntohs((qmap_hdr >> 16) & 0xffff);
++		/*get the CHECKSUM_PROCESS bit*/
++		status_mask = status.status_mask;
++		checksum = status_mask & IPAHAL_PKT_STATUS_MASK_CKSUM_PROCESS;
++
++		frame_len = pkt_status_sz + IPA_QMAP_HEADER_LENGTH +
++			    pkt_len_with_pad;
++		if (checksum)
++			frame_len += IPA_DL_CHECKSUM_LENGTH;
++
++		skb2 = skb_clone(skb, GFP_ATOMIC);
++		if (likely(skb2)) {
++			/* the len of actual data is smaller than expected
++			 * payload split across 2 buff
++			 */
++			if (skb->len < frame_len) {
++				sys->rx.prev_skb = skb2;
++				sys->rx.len_rem = frame_len - skb->len;
++				skb_pull(skb, skb->len);
++			} else {
++				skb_trim(skb2, frame_len);
++				skb_pull(skb2, pkt_status_sz);
++				skb2->truesize = skb2->len +
++					sizeof(struct sk_buff) +
++					(ALIGN(frame_len, 32) *
++					 unused / align);
++				sys->ep->client_notify(sys->ep->priv,
++						       IPA_RECEIVE,
++						       (unsigned long)(skb2));
++				skb_pull(skb, frame_len);
++			}
++		} else {
++			ipa_err("fail to clone\n");
++			if (skb->len < frame_len) {
++				sys->rx.prev_skb = NULL;
++				sys->rx.len_rem = frame_len - skb->len;
++				skb_pull(skb, skb->len);
++			} else {
++				skb_pull(skb, frame_len);
++			}
++		}
++	}
++bail:
++	dev_kfree_skb_any(skb);
++}
++
++void ipa_lan_rx_cb(void *priv, enum ipa_dp_evt_type evt, unsigned long data)
++{
++	struct sk_buff *rx_skb = (struct sk_buff *)data;
++	struct ipahal_pkt_status status;
++	struct ipa_ep_context *ep;
++	u32 pkt_status_size;
++	u32 metadata;
++	u32 ep_id;
++
++	pkt_status_size = ipahal_pkt_status_get_size();
++
++	ipa_assert(rx_skb->len >= pkt_status_size);
++
++	ipahal_pkt_status_parse(rx_skb->data, &status);
++	ep_id = status.endp_src_idx;
++	metadata = status.metadata;
++	ep = &ipa_ctx->ep[ep_id];
++	if (ep_id >= ipa_ctx->ep_count || !ep->allocated ||
++	    !ep->client_notify) {
++		ipa_err("drop endpoint=%u allocated=%s client_notify=%p\n",
++			ep_id, ep->allocated ? "true" : "false",
++			ep->client_notify);
++		dev_kfree_skb_any(rx_skb);
++		return;
++	}
++
++	/* Consume the status packet, and if no exception, the header */
++	skb_pull(rx_skb, pkt_status_size);
++	if (status.exception == IPAHAL_PKT_STATUS_EXCEPTION_NONE)
++		skb_pull(rx_skb, IPA_LAN_RX_HEADER_LENGTH);
++
++	/* Metadata Info
++	 *  ------------------------------------------
++	 *  |	3     |	  2	|    1	      |	 0   |
++	 *  | fw_desc | vdev_id | qmap mux id | Resv |
++	 *  ------------------------------------------
++	 */
++	*(u16 *)rx_skb->cb = ((metadata >> 16) & 0xffff);
++
++	ep->client_notify(ep->priv, IPA_RECEIVE, (unsigned long)rx_skb);
++}
++
++static void ipa_rx_common(struct ipa_sys_context *sys, u32 size)
++{
++	struct ipa_rx_pkt_wrapper *rx_pkt;
++	struct sk_buff *rx_skb;
++
++	ipa_assert(!list_empty(&sys->head_desc_list));
++
++	spin_lock_bh(&sys->spinlock);
++
++	rx_pkt = list_first_entry(&sys->head_desc_list,
++				  struct ipa_rx_pkt_wrapper, link);
++	list_del(&rx_pkt->link);
++	sys->len--;
++
++	spin_unlock_bh(&sys->spinlock);
++
++	rx_skb = rx_pkt->skb;
++	dma_unmap_single(ipa_ctx->dev, rx_pkt->dma_addr, sys->rx.buff_sz,
++			 DMA_FROM_DEVICE);
++
++	skb_trim(rx_skb, size);
++
++	*(unsigned int *)rx_skb->cb = rx_skb->len;
++	rx_skb->truesize = size + sizeof(struct sk_buff);
++
++	sys->rx.pyld_hdlr(rx_skb, sys);
++	kmem_cache_free(ipa_ctx->dp->rx_pkt_wrapper_cache, rx_pkt);
++	ipa_replenish_rx_cache(sys);
 +}
 +
 +/**
-+ * ipa_ap_resume() - resume callback for runtime_pm
-+ * @dev:	IPA device structure
++ * ipa_aggr_byte_limit_buf_size()
++ * @byte_limit:	Desired limit (in bytes) for aggregation
 + *
-+ * This callback will be invoked by the runtime_pm framework when an AP resume
-+ * operation is invoked.
++ * Compute the buffer size required to support a requested aggregation
++ * byte limit.  Aggregration will close when *more* than the configured
++ * number of bytes have been added to an aggregation frame.  Our
++ * buffers therefore need to to be big enough to receive one complete
++ * packet once the configured byte limit has been consumed.
 + *
-+ * Return:	Zero
++ * An incoming packet can have as much as IPA_MTU of data in it, but
++ * the buffer also needs to be large enough to accomodate the standard
++ * socket buffer overhead (NET_SKB_PAD of headroom, plus an implied
++ * skb_shared_info structure at the end).
++ *
++ * So we compute the required buffer size by adding the standard
++ * socket buffer overhead and MTU to the requested size.  We round
++ * that down to a power of 2 in an effort to avoid fragmentation due
++ * to unaligned buffer sizes.
++ *
++ * After accounting for all of this, we return the number of bytes
++ * of buffer space the IPA hardware will know is available to hold
++ * received data (without any overhead).
++ *
++ * Return:	The computes size of buffer space available
 + */
-+int ipa_ap_resume(struct device *dev)
++u32 ipa_aggr_byte_limit_buf_size(u32 byte_limit)
 +{
-+	return 0;
++	/* Account for one additional packet, including overhead */
++	byte_limit += IPA_RX_BUFFER_RESERVED;
++	byte_limit += IPA_MTU;
++
++	/* Convert this size to a nearby power-of-2.  We choose one
++	 * that's *less than* the limit we seek--so we start by
++	 * subracting 1.  The highest set bit in that is used to
++	 * compute the power of 2.
++	 *
++	 * XXX Why is this *less than* and not possibly equal?
++	 */
++	byte_limit = 1 << __fls(byte_limit - 1);
++
++	/* Given that size, figure out how much buffer space that
++	 * leaves us for received data.
++	 */
++	return IPA_RX_BUFFER_AVAILABLE(byte_limit);
 +}
 +
-+static const struct dev_pm_ops ipa_pm_ops = {
-+	.suspend_noirq = ipa_ap_suspend,
-+	.resume_noirq = ipa_ap_resume,
-+};
++void ipa_gsi_irq_tx_notify_cb(void *xfer_data)
++{
++	struct ipa_tx_pkt_wrapper *tx_pkt = xfer_data;
 +
-+static struct platform_driver ipa_plat_drv = {
-+	.probe = ipa_plat_drv_probe,
-+	.remove = ipa_plat_drv_remove,
-+	.driver = {
-+		.name = "ipa",
-+		.owner = THIS_MODULE,
-+		.pm = &ipa_pm_ops,
-+		.of_match_table = ipa_plat_drv_match,
-+	},
-+};
++	queue_work(tx_pkt->sys->wq, &tx_pkt->done_work);
++}
 +
-+builtin_platform_driver(ipa_plat_drv);
++void ipa_gsi_irq_rx_notify_cb(void *chan_data, u16 count)
++{
++	struct ipa_sys_context *sys = chan_data;
 +
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("IPA HW device driver");
++	sys->ep->bytes_xfered_valid = true;
++	sys->ep->bytes_xfered = count;
++
++	ipa_rx_switch_to_poll_mode(sys);
++}
++
++static int ipa_gsi_setup_channel(struct ipa_ep_context *ep, u32 channel_count,
++				 u32 evt_ring_mult)
++{
++	u32 channel_id = ipa_client_channel_id(ep->client);
++	u32 tlv_count = ipa_client_tlv_count(ep->client);
++	bool from_ipa = ipa_consumer(ep->client);
++	bool moderation;
++	bool priority;
++	int ret;
++
++	priority = ep->client == IPA_CLIENT_APPS_CMD_PROD;
++	moderation = !ep->sys->tx.no_intr;
++
++	ret = gsi_channel_alloc(ipa_ctx->gsi, channel_id, channel_count,
++				from_ipa, priority, evt_ring_mult, moderation,
++				ep->sys);
++	if (ret)
++		return ret;
++	ep->channel_id = channel_id;
++
++	gsi_channel_scratch_write(ipa_ctx->gsi, ep->channel_id, tlv_count);
++
++	ret = gsi_channel_start(ipa_ctx->gsi, ep->channel_id);
++	if (ret)
++		gsi_channel_free(ipa_ctx->gsi, ep->channel_id);
++
++	return ret;
++}
++
++void ipa_endp_init_hdr_cons(u32 ep_id, u32 header_size,
++			    u32 metadata_offset, u32 length_offset)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++
++	ipa_reg_endp_init_hdr_cons(&ep->init_hdr, header_size, metadata_offset,
++				   length_offset);
++}
++
++void ipa_endp_init_hdr_prod(u32 ep_id, u32 header_size,
++			    u32 metadata_offset, u32 length_offset)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++
++	ipa_reg_endp_init_hdr_prod(&ep->init_hdr, header_size, metadata_offset,
++				   length_offset);
++}
++
++void
++ipa_endp_init_hdr_ext_cons(u32 ep_id, u32 pad_align, bool pad_included)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++
++	ipa_reg_endp_init_hdr_ext_cons(&ep->hdr_ext, pad_align, pad_included);
++}
++
++void ipa_endp_init_hdr_ext_prod(u32 ep_id, u32 pad_align)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++
++	ipa_reg_endp_init_hdr_ext_prod(&ep->hdr_ext, pad_align);
++}
++
++void
++ipa_endp_init_aggr_cons(u32 ep_id, u32 size, u32 count, bool close_on_eof)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++
++	ipa_reg_endp_init_aggr_cons(&ep->init_aggr, size, count, close_on_eof);
++}
++
++void ipa_endp_init_aggr_prod(u32 ep_id, enum ipa_aggr_en aggr_en,
++			     enum ipa_aggr_type aggr_type)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++
++	ipa_reg_endp_init_aggr_prod(&ep->init_aggr, aggr_en, aggr_type);
++}
++
++void ipa_endp_init_cfg_cons(u32 ep_id, enum ipa_cs_offload_en offload_type)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++
++	ipa_reg_endp_init_cfg_cons(&ep->init_cfg, offload_type);
++}
++
++void ipa_endp_init_cfg_prod(u32 ep_id, enum ipa_cs_offload_en offload_type,
++			    u32 metadata_offset)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++
++	ipa_reg_endp_init_cfg_prod(&ep->init_cfg, offload_type,
++				   metadata_offset);
++}
++
++void ipa_endp_init_hdr_metadata_mask_cons(u32 ep_id, u32 mask)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++
++	ipa_reg_endp_init_hdr_metadata_mask_cons(&ep->metadata_mask, mask);
++}
++
++void ipa_endp_init_hdr_metadata_mask_prod(u32 ep_id)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++
++	ipa_reg_endp_init_hdr_metadata_mask_prod(&ep->metadata_mask);
++}
++
++void ipa_endp_status_cons(u32 ep_id, bool enable)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++
++	ipa_reg_endp_status_cons(&ep->status, enable);
++}
++
++void ipa_endp_status_prod(u32 ep_id, bool enable,
++			  enum ipa_client_type status_client)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++	u32 status_ep_id;
++
++	status_ep_id = ipa_client_ep_id(status_client);
++
++	ipa_reg_endp_status_prod(&ep->status, enable, status_ep_id);
++}
++
++
++/* Note that the mode setting is not valid for consumer endpoints */
++void ipa_endp_init_mode_cons(u32 ep_id)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++
++	ipa_reg_endp_init_mode_cons(&ep->init_mode);
++}
++
++void ipa_endp_init_mode_prod(u32 ep_id, enum ipa_mode mode,
++			     enum ipa_client_type dst_client)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++	u32 dst_ep_id;
++
++	dst_ep_id = ipa_client_ep_id(dst_client);
++
++	ipa_reg_endp_init_mode_prod(&ep->init_mode, mode, dst_ep_id);
++}
++
++/* XXX The sequencer setting seems not to be valid for consumer endpoints */
++void ipa_endp_init_seq_cons(u32 ep_id)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++
++	ipa_reg_endp_init_seq_cons(&ep->init_seq);
++}
++
++void ipa_endp_init_seq_prod(u32 ep_id)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++	u32 seq_type;
++
++	seq_type = (u32)ipa_endp_seq_type(ep_id);
++
++	ipa_reg_endp_init_seq_prod(&ep->init_seq, seq_type);
++}
++
++/* XXX The deaggr setting seems not to be valid for consumer endpoints */
++void ipa_endp_init_deaggr_cons(u32 ep_id)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++
++	ipa_reg_endp_init_deaggr_cons(&ep->init_deaggr);
++}
++
++void ipa_endp_init_deaggr_prod(u32 ep_id)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++
++	ipa_reg_endp_init_deaggr_prod(&ep->init_deaggr);
++}
++
++int ipa_ep_alloc(enum ipa_client_type client)
++{
++	u32 ep_id = ipa_client_ep_id(client);
++	struct ipa_sys_context *sys;
++	struct ipa_ep_context *ep;
++
++	ep = &ipa_ctx->ep[ep_id];
++
++	ipa_assert(!ep->allocated);
++
++	/* Reuse the endpoint's sys pointer if it is initialized */
++	sys = ep->sys;
++	if (!sys) {
++		sys = ipa_ep_sys_create(client);
++		if (!sys)
++			return -ENOMEM;
++		sys->ep = ep;
++	}
++
++	/* Zero the "mutable" part of the system context */
++	memset(sys, 0, offsetof(struct ipa_sys_context, ep));
++
++	/* Initialize the endpoint context */
++	memset(ep, 0, sizeof(*ep));
++	ep->sys = sys;
++	ep->client = client;
++	ep->allocated = true;
++
++	return ep_id;
++}
++
++void ipa_ep_free(u32 ep_id)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++
++	ipa_assert(ep->allocated);
++
++	ep->allocated = false;
++}
++
++/**
++ * ipa_ep_setup() - Set up an IPA endpoint
++ * @ep_id:		Endpoint to set up
++ * @channel_count:	Number of transfer elements in the channel
++ * @evt_ring_mult:	Used to determine number of elements in event ring
++ * @rx_buffer_size:	Receive buffer size to use (or 0 for TX endpoitns)
++ * @client_notify:	Notify function to call on completion
++ * @priv:		Value supplied to the notify function
++ *
++ * Returns:	0 if successful, or a negative error code
++ */
++int ipa_ep_setup(u32 ep_id, u32 channel_count, u32 evt_ring_mult,
++		 u32 rx_buffer_size,
++		 void (*client_notify)(void *priv, enum ipa_dp_evt_type type,
++				       unsigned long data),
++		 void *priv)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++	int ret;
++
++	if (ipa_consumer(ep->client)) {
++		atomic_set(&ep->sys->rx.curr_polling_state, 0);
++		INIT_DELAYED_WORK(&ep->sys->rx.switch_to_intr_work,
++				  ipa_switch_to_intr_rx_work_func);
++		if (ep->client == IPA_CLIENT_APPS_LAN_CONS)
++			ep->sys->rx.pyld_hdlr = ipa_lan_rx_pyld_hdlr;
++		else
++			ep->sys->rx.pyld_hdlr = ipa_wan_rx_pyld_hdlr;
++		ep->sys->rx.buff_sz = rx_buffer_size;
++		ep->sys->rx.pool_sz = IPA_GENERIC_RX_POOL_SZ;
++		INIT_WORK(&ep->sys->rx.work, ipa_wq_handle_rx);
++		INIT_DELAYED_WORK(&ep->sys->rx.replenish_work,
++				  ipa_replenish_rx_work_func);
++	}
++
++	ep->client_notify = client_notify;
++	ep->priv = priv;
++	ep->napi_enabled = ep->client == IPA_CLIENT_APPS_WAN_CONS;
++
++	ipa_client_add();
++
++	ipa_cfg_ep(ep_id);
++
++	ret = ipa_gsi_setup_channel(ep, channel_count, evt_ring_mult);
++	if (ret)
++		goto err_client_remove;
++
++	if (ipa_consumer(ep->client))
++		ipa_replenish_rx_cache(ep->sys);
++err_client_remove:
++	ipa_client_remove();
++
++	return ret;
++}
++
++/**
++ * ipa_channel_reset_aggr() - Reset with aggregation active
++ * @ep_id:	Endpoint on which reset is performed
++ *
++ * If aggregation is active on a channel when a reset is performed,
++ * a special sequence of actions must be taken.  This is a workaround
++ * for a hardware limitation.
++ *
++ * Return:	0 if successful, or a negative error code.
++ */
++static int ipa_channel_reset_aggr(u32 ep_id)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++	struct ipa_reg_aggr_force_close force_close;
++	struct ipa_reg_endp_init_ctrl init_ctrl;
++	struct gsi_xfer_elem xfer_elem = { };
++	struct ipa_dma_mem dma_byte;
++	int aggr_active_bitmap = 0;
++	bool ep_suspended = false;
++	int ret;
++	int i;
++
++	ipa_reg_aggr_force_close(&force_close, BIT(ep_id));
++	ipa_write_reg_fields(IPA_AGGR_FORCE_CLOSE, &force_close);
++
++	/* Reset channel */
++	ret = gsi_channel_reset(ipa_ctx->gsi, ep->channel_id);
++	if (ret)
++		return ret;
++
++	/* Turn off the doorbell engine.  We're going to poll until
++	 * we know aggregation isn't active.
++	 */
++	gsi_channel_config(ipa_ctx->gsi, ep->channel_id, false);
++
++	ipa_read_reg_n_fields(IPA_ENDP_INIT_CTRL_N, ep_id, &init_ctrl);
++	if (init_ctrl.endp_suspend) {
++		ep_suspended = true;
++		ipa_reg_endp_init_ctrl(&init_ctrl, false);
++		ipa_write_reg_n_fields(IPA_ENDP_INIT_CTRL_N, ep_id, &init_ctrl);
++	}
++
++	/* Start channel and put 1 Byte descriptor on it */
++	ret = gsi_channel_start(ipa_ctx->gsi, ep->channel_id);
++	if (ret)
++		goto out_suspend_again;
++
++	if (ipa_dma_alloc(&dma_byte, 1, GFP_KERNEL)) {
++		ret = -ENOMEM;
++		goto err_stop_channel;
++	}
++
++	xfer_elem.addr = dma_byte.phys;
++	xfer_elem.len_opcode = 1;	/* = dma_byte.size; */
++	xfer_elem.flags = GSI_XFER_FLAG_EOT;
++	xfer_elem.type = GSI_XFER_ELEM_DATA;
++
++	ret = gsi_channel_queue(ipa_ctx->gsi, ep->channel_id, 1, &xfer_elem,
++				true);
++	if (ret)
++		goto err_dma_free;
++
++	/* Wait for aggregation frame to be closed */
++	for (i = 0; i < CHANNEL_RESET_AGGR_RETRY_COUNT; i++) {
++		aggr_active_bitmap = ipa_read_reg(IPA_STATE_AGGR_ACTIVE);
++		if (!(aggr_active_bitmap & BIT(ep_id)))
++			break;
++		msleep(CHANNEL_RESET_DELAY);
++	}
++	ipa_bug_on(aggr_active_bitmap & BIT(ep_id));
++
++	ipa_dma_free(&dma_byte);
++
++	ret = ipa_stop_gsi_channel(ep_id);
++	if (ret)
++		goto out_suspend_again;
++
++	/* Reset the channel.  If successful we need to sleep for 1
++	 * msec to complete the GSI channel reset sequence.  Either
++	 * way we finish by suspending the channel again (if necessary)
++	 * and re-enabling its doorbell engine.
++	 */
++	ret = gsi_channel_reset(ipa_ctx->gsi, ep->channel_id);
++	if (!ret)
++		msleep(CHANNEL_RESET_DELAY);
++	goto out_suspend_again;
++
++err_dma_free:
++	ipa_dma_free(&dma_byte);
++err_stop_channel:
++	ipa_stop_gsi_channel(ep_id);
++out_suspend_again:
++	if (ep_suspended) {
++		ipa_reg_endp_init_ctrl(&init_ctrl, true);
++		ipa_write_reg_n_fields(IPA_ENDP_INIT_CTRL_N, ep_id, &init_ctrl);
++	}
++	/* Turn on the doorbell engine again */
++	gsi_channel_config(ipa_ctx->gsi, ep->channel_id, true);
++
++	return ret;
++}
++
++static void ipa_reset_gsi_channel(u32 ep_id)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++	u32 aggr_active_bitmap = 0;
++
++	/* For consumer endpoints, a hardware limitation prevents us
++	 * from issuing a channel reset if aggregation is active.
++	 * Check for this case, and if detected, perform a special
++	 * reset sequence.  Otherwise just do a "normal" reset.
++	 */
++	if (ipa_consumer(ep->client))
++		aggr_active_bitmap = ipa_read_reg(IPA_STATE_AGGR_ACTIVE);
++
++	if (aggr_active_bitmap & BIT(ep_id)) {
++		ipa_bug_on(ipa_channel_reset_aggr(ep_id));
++	} else {
++		/* In case the reset follows stop, need to wait 1 msec */
++		msleep(CHANNEL_RESET_DELAY);
++		ipa_bug_on(gsi_channel_reset(ipa_ctx->gsi, ep->channel_id));
++	}
++}
++
++/**
++ * ipa_ep_teardown() - Tear down an endpoint
++ * @ep_id:	The endpoint to tear down
++ */
++void ipa_ep_teardown(u32 ep_id)
++{
++	struct ipa_ep_context *ep = &ipa_ctx->ep[ep_id];
++	int empty;
++	int ret;
++	int i;
++
++	if (ep->napi_enabled) {
++		do {
++			usleep_range(95, 105);
++		} while (ipa_ep_polling(ep));
++	}
++
++	if (ipa_producer(ep->client)) {
++		do {
++			spin_lock_bh(&ep->sys->spinlock);
++			empty = list_empty(&ep->sys->head_desc_list);
++			spin_unlock_bh(&ep->sys->spinlock);
++			if (!empty)
++				usleep_range(95, 105);
++			else
++				break;
++		} while (1);
++	}
++
++	if (ipa_consumer(ep->client))
++		cancel_delayed_work_sync(&ep->sys->rx.replenish_work);
++	flush_workqueue(ep->sys->wq);
++	/* channel stop might fail on timeout if IPA is busy */
++	for (i = 0; i < IPA_GSI_CHANNEL_STOP_MAX_RETRY; i++) {
++		ret = ipa_stop_gsi_channel(ep_id);
++		if (!ret)
++			break;
++		ipa_bug_on(ret != -EAGAIN && ret != -ETIMEDOUT);
++	}
++
++	ipa_reset_gsi_channel(ep_id);
++	gsi_channel_free(ipa_ctx->gsi, ep->channel_id);
++
++	if (ipa_consumer(ep->client))
++		ipa_cleanup_rx(ep->sys);
++
++	ipa_ep_free(ep_id);
++}
++
++static int ipa_poll_gsi_pkt(struct ipa_sys_context *sys)
++{
++	if (sys->ep->bytes_xfered_valid) {
++		sys->ep->bytes_xfered_valid = false;
++
++		return (int)sys->ep->bytes_xfered;
++	}
++
++	return gsi_channel_poll(ipa_ctx->gsi, sys->ep->channel_id);
++}
++
++bool ipa_ep_polling(struct ipa_ep_context *ep)
++{
++	ipa_assert(ipa_consumer(ep->client));
++
++	return !!atomic_read(&ep->sys->rx.curr_polling_state);
++}
++
++struct ipa_dp *ipa_dp_init(void)
++{
++	struct kmem_cache *cache;
++	struct ipa_dp *dp;
++
++	dp = kzalloc(sizeof(*dp), GFP_KERNEL);
++	if (!dp)
++		return NULL;
++
++	cache = kmem_cache_create("IPA_TX_PKT_WRAPPER",
++				  sizeof(struct ipa_tx_pkt_wrapper),
++				  0, 0, NULL);
++	if (!cache) {
++		kfree(dp);
++		return NULL;
++	}
++	dp->tx_pkt_wrapper_cache = cache;
++
++	cache = kmem_cache_create("IPA_RX_PKT_WRAPPER",
++				  sizeof(struct ipa_rx_pkt_wrapper),
++				  0, 0, NULL);
++	if (!cache) {
++		kmem_cache_destroy(dp->tx_pkt_wrapper_cache);
++		kfree(dp);
++		return NULL;
++	}
++	dp->rx_pkt_wrapper_cache = cache;
++
++	return dp;
++}
++
++void ipa_dp_exit(struct ipa_dp *dp)
++{
++	kmem_cache_destroy(dp->rx_pkt_wrapper_cache);
++	kmem_cache_destroy(dp->tx_pkt_wrapper_cache);
++	kfree(dp);
++}
 -- 
 2.17.1
