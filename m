@@ -1,139 +1,101 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: [PATCH NOT FOR MERGE v3 8/8] ARM: dts:
- sun7i-a20-bananapi: Add bindings for the LeMaker 3.5" LCD
-Date: Wed,  7 Nov 2018 19:18:43 +0100
-Message-ID: <20181107181843.27628-9-contact@paulk.fr>
-References: <20181107181843.27628-1-contact@paulk.fr>
-Reply-To: contact-W9ppeneeCTY@public.gmane.org
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 1/4] of/device: Add a way to probe drivers by match data
+Date: Wed, 07 Nov 2018 10:37:31 -0800
+Message-ID: <154161585170.88331.1822872519370217248@swboyd.mtv.corp.google.com>
+References: <20181106183609.207702-1-sboyd@kernel.org>
+ <20181106183609.207702-2-sboyd@kernel.org>
+ <CAL_JsqLvKWcJUYDyWOg3rMeEWv7JV4zw7-YkOUWiL5rfXgVRvQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBC75HK6WUAEBB4OZRTPQKGQESJK2JTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181107181843.27628-1-contact-W9ppeneeCTY@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mark Van den Borre <mark-8Ycg9RsmSNMdnm+yROfE0A@public.gmane.org>, Gerry Demaret <gerry-8Ycg9RsmSNMdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLvKWcJUYDyWOg3rMeEWv7JV4zw7-YkOUWiL5rfXgVRvQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the backlight panel, power, pwm and tcon0 device-tree bindings
-required for supporting the 3.5" LCD from LeMaker on the BananaPi M1.
+Quoting Rob Herring (2018-11-06 12:44:52)
+> On Tue, Nov 6, 2018 at 12:36 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > We have a handful of clk drivers that have a collection of slightly
+> > variant device support keyed off of the compatible string. In each of
+> > these drivers, we demux the variant and then call the "real" probe
+> > function based on whatever is stored in the match data for that
+> > compatible string. Let's generalize this function so that it can be
+> > re-used as the platform_driver probe function directly.
+> =
 
-The brightness levels are adjusted with a gamma curve using a 1.8 power,
-with indices from 0 to 100 and values ranging from 0 to 255, such as:
-level = (index / 100)^1.8 * 255
+> This looks really hacky to me. It sounds kind of general, but really
+> only works if we have match data that's a single function and we lose
+> any type checking on the function.
 
-Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20-bananapi.dts | 71 ++++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
+I don't know what this means. Are you saying that we lose the ability to
+type check the function pointer stored in the data member? I don't have
+a good answer for this besides it's not any worse than the status quo
+for the mediatek drivers.
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-index 70dfc4ac0bb5..ac6c3e988203 100644
---- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-@@ -48,6 +48,7 @@
- 
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/pwm/pwm.h>
- 
- / {
- 	model = "LeMaker Banana Pi";
-@@ -63,6 +64,57 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 50000 0>;
-+		/* This table uses a gamma curve with a 1.8 power. */
-+		brightness-levels = <  0   1   1   1   1   1   2   2
-+				       3   3   4   5   6   6   7   8
-+				       9  11  12  13  14  15  17  18
-+				      20  21  23  24  26  27  29  31
-+				      33  35  37  39  41  43  45  47
-+				      49  51  54  56  58  61  63  66
-+				      68  71  73  76  79  81  84  87
-+				      90  93  96  99 102 105 108 111
-+				     114 117 121 124 127 131 134 138
-+				     141 145 148 152 156 159 163 167
-+				     171 175 178 182 186 190 194 198
-+				     203 207 211 215 219 224 228 233
-+				     237 241 246 250 255>;
-+		default-brightness-level = <50>;
-+		enable-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
-+	};
-+
-+	panel: panel {
-+		compatible = "lemaker,bl035-rgb-002";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		power-supply = <&panel_power>;
-+		backlight = <&backlight>;
-+
-+		port@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			panel_input: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&tcon0_out_panel>;
-+			};
-+		};
-+	};
-+
-+	panel_power: panel_power {
-+		compatible = "regulator-fixed";
-+		regulator-name = "panel-power";
-+		regulator-min-microvolt = <10400000>;
-+		regulator-max-microvolt = <10400000>;
-+		gpio = <&pio 7 12 GPIO_ACTIVE_HIGH>; /* PH12 */
-+		enable-active-high;
-+		regulator-boot-on;
-+	};
-+
- 	hdmi-connector {
- 		compatible = "hdmi-connector";
- 		type = "a";
-@@ -275,6 +327,12 @@
- 	};
- };
- 
-+&pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm0_pins_a>;
-+	status = "okay";
-+};
-+
- #include "axp209.dtsi"
- 
- &reg_dcdc2 {
-@@ -322,6 +380,19 @@
- 	status = "okay";
- };
- 
-+&tcon0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd0_rgb888_pins>;
-+	status = "okay";
-+};
-+
-+&tcon0_out {
-+	tcon0_out_panel: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&panel_input>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
--- 
-2.19.1
+One alternative is to add a DT only array to the platform_driver struct
+that has the platform driver probe function type and matches the index
+in the of_device_id table. Then we can add some logic into
+platform_drv_probe() to look for this table being set and find the probe
+function to call. Then we still have match data for anything that wants
+that (maybe it could be passed in to the probe function) at the cost of
+having another array. I don't have a use-case for this right now so I'm
+not sure this is a great idea.
+
+  struct of_platform_driver_probe_func {
+  	int (*probe)(struct platform_device *pdev);
+  };
+
+  struct of_platform_driver_probe_func mtk_probes[] =3D {
+  	mtk_probe1,
+	mtk_probe2,
+	mtk_probe3,
+  };
+
+  struct platform_driver mtk_driver =3D {
+  	.of_probes =3D &mtk_probes;
+  	.driver =3D {
+		.name =3D "mtk-foo";
+		.of_match_table =3D mtk_match_table,
+	},
+  };
+
+> What about things other than
+> platform devices?
+> =
+
+
+I suppose those would need similar functions that take the right struct
+type and match the driver probe function signature. To make the above
+more generic we could try to figure out a way to put the 'of_probes'
+array inside struct device_driver. That would require dropping
+platform_device specifically from the probe functions and having those
+take a plain 'struct device' that those probe functions turn into the
+appropriate structure with to_platform_device() or to_i2c_client()?
+
+So the example would become
+
+  struct of_driver_probe_func {
+  	int (*probe)(struct device *dev);
+  };
+
+  struct of_driver_probe_func mtk_probes[] =3D {
+  	mtk_probe1,
+	mtk_probe2,
+	mtk_probe3,
+  };
+
+  struct platform_driver mtk_driver =3D {
+  	.driver =3D {
+		.name =3D "mtk-foo";
+		.of_match_table =3D mtk_match_table,
+		.of_probes =3D &mtk_probes;
+	},
+  };
+
+And the probe functions might need to container_of() the device pointer
+to get the struct they know they need. The probe function could also be
+added to of_device_id and then we would have to look and see if that
+pointer is populated when the device is matched in generic device code.
