@@ -1,7 +1,7 @@
 From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v12 2/5] clk: imx: add fractional PLL output clock
-Date: Wed, 7 Nov 2018 12:38:07 +0000
-Message-ID: <1541594266-16712-3-git-send-email-abel.vesa@nxp.com>
+Subject: [PATCH v12 4/5] clk: imx: Add imx composite clock
+Date: Wed, 7 Nov 2018 12:38:09 +0000
+Message-ID: <1541594266-16712-5-git-send-email-abel.vesa@nxp.com>
 References: <1541594266-16712-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -14,281 +14,246 @@ To: Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, 
 Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+Since a lot of clocks on imx8m are formed by a mux, gate, predivider and
+divider, the idea here is to combine all of those into one composite clock,
+but we need to deal with both predivider and divider at the same time and
+therefore we add the imx8m_clk_composite_divider_ops and register
+the composite clock with those.
 
-This is a new fractional clock type introduced on i.MX8.
-
-The description of this fractional clock can be found here:
-
-https://www.nxp.com/docs/en/reference-manual/IMX8MDQLQRM.pdf#page=3D834
-
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+Suggested-by: Sascha Hauer <s.hauer@pengutronix.de>
 Reviewed-by: Sascha Hauer <s.hauer@pengutronix.de>
 ---
- drivers/clk/imx/Makefile       |   1 +
- drivers/clk/imx/clk-frac-pll.c | 221 +++++++++++++++++++++++++++++++++++++=
+ drivers/clk/imx/Makefile           |   1 +
+ drivers/clk/imx/clk-composite-8m.c | 178 +++++++++++++++++++++++++++++++++=
 ++++
- drivers/clk/imx/clk.h          |   3 +
- 3 files changed, 225 insertions(+)
- create mode 100644 drivers/clk/imx/clk-frac-pll.c
+ drivers/clk/imx/clk.h              |  16 ++++
+ 3 files changed, 195 insertions(+)
+ create mode 100644 drivers/clk/imx/clk-composite-8m.c
 
 diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
-index 8c3baa7..4893c1f 100644
+index b87513c..237444b 100644
 --- a/drivers/clk/imx/Makefile
 +++ b/drivers/clk/imx/Makefile
-@@ -6,6 +6,7 @@ obj-y +=3D \
+@@ -3,6 +3,7 @@
+ obj-y +=3D \
+ 	clk.o \
+ 	clk-busy.o \
++	clk-composite-8m.o \
  	clk-cpu.o \
  	clk-fixup-div.o \
  	clk-fixup-mux.o \
-+	clk-frac-pll.o \
- 	clk-gate-exclusive.o \
- 	clk-gate2.o \
- 	clk-pllv1.o \
-diff --git a/drivers/clk/imx/clk-frac-pll.c b/drivers/clk/imx/clk-frac-pll.=
-c
+diff --git a/drivers/clk/imx/clk-composite-8m.c b/drivers/clk/imx/clk-compo=
+site-8m.c
 new file mode 100644
-index 0000000..a800093
+index 0000000..bcd31d8
 --- /dev/null
-+++ b/drivers/clk/imx/clk-frac-pll.c
-@@ -0,0 +1,221 @@
++++ b/drivers/clk/imx/clk-composite-8m.c
+@@ -0,0 +1,178 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright 2018 NXP.
-+ *
-+ * This driver supports the fractional plls found in the imx8m SOCs
-+ *
-+ * Documentation for this fractional pll can be found at:
-+ *   https://www.nxp.com/docs/en/reference-manual/IMX8MDQLQRM.pdf#page=3D8=
-34
++ * Copyright 2018 NXP
 + */
 +
-+#include <linux/clk-provider.h>
-+#include <linux/err.h>
-+#include <linux/iopoll.h>
++#include <linux/errno.h>
 +#include <linux/slab.h>
-+#include <linux/bitfield.h>
++#include <linux/clk-provider.h>
 +
-+#define PLL_CFG0		0x0
-+#define PLL_CFG1		0x4
++#include "clk.h"
 +
-+#define PLL_LOCK_STATUS		BIT(31)
-+#define PLL_PD_MASK		BIT(19)
-+#define PLL_BYPASS_MASK		BIT(14)
-+#define PLL_NEWDIV_VAL		BIT(12)
-+#define PLL_NEWDIV_ACK		BIT(11)
-+#define PLL_FRAC_DIV_MASK	GENMASK(30, 7)
-+#define PLL_INT_DIV_MASK	GENMASK(6, 0)
-+#define PLL_OUTPUT_DIV_MASK	GENMASK(4, 0)
-+#define PLL_FRAC_DENOM		0x1000000
++#define PCG_PREDIV_SHIFT	16
++#define PCG_PREDIV_WIDTH	3
++#define PCG_PREDIV_MAX		8
 +
-+#define PLL_FRAC_LOCK_TIMEOUT	10000
-+#define PLL_FRAC_ACK_TIMEOUT	500000
++#define PCG_DIV_SHIFT		0
++#define PCG_DIV_WIDTH		6
++#define PCG_DIV_MAX		64
 +
-+struct clk_frac_pll {
-+	struct clk_hw	hw;
-+	void __iomem	*base;
-+};
++#define PCG_PCS_SHIFT		24
++#define PCG_PCS_MASK		0x7
 +
-+#define to_clk_frac_pll(_hw) container_of(_hw, struct clk_frac_pll, hw)
++#define PCG_CGC_SHIFT		28
 +
-+static int clk_wait_lock(struct clk_frac_pll *pll)
++static unsigned long imx8m_clk_composite_divider_recalc_rate(struct clk_hw=
+ *hw,
++						unsigned long parent_rate)
 +{
++	struct clk_divider *divider =3D to_clk_divider(hw);
++	unsigned long prediv_rate;
++	unsigned int prediv_value;
++	unsigned int div_value;
++
++	prediv_value =3D readl(divider->reg) >> divider->shift;
++	prediv_value &=3D clk_div_mask(divider->width);
++
++	prediv_rate =3D divider_recalc_rate(hw, parent_rate, prediv_value,
++						NULL, divider->flags,
++						divider->width);
++
++	div_value =3D readl(divider->reg) >> PCG_DIV_SHIFT;
++	div_value &=3D clk_div_mask(PCG_DIV_WIDTH);
++
++	return divider_recalc_rate(hw, prediv_rate, div_value, NULL,
++				   divider->flags, PCG_DIV_WIDTH);
++}
++
++static int imx8m_clk_composite_compute_dividers(unsigned long rate,
++						unsigned long parent_rate,
++						int *prediv, int *postdiv)
++{
++	int div1, div2;
++	int error =3D INT_MAX;
++	int ret =3D -EINVAL;
++
++	*prediv =3D 1;
++	*postdiv =3D 1;
++
++	for (div1 =3D 1; div1 <=3D PCG_PREDIV_MAX; div1++) {
++		for (div2 =3D 1; div2 <=3D PCG_DIV_MAX; div2++) {
++			int new_error =3D ((parent_rate / div1) / div2) - rate;
++
++			if (abs(new_error) < abs(error)) {
++				*prediv =3D div1;
++				*postdiv =3D div2;
++				error =3D new_error;
++				ret =3D 0;
++			}
++		}
++	}
++	return ret;
++}
++
++static long imx8m_clk_composite_divider_round_rate(struct clk_hw *hw,
++						unsigned long rate,
++						unsigned long *prate)
++{
++	int prediv_value;
++	int div_value;
++
++	imx8m_clk_composite_compute_dividers(rate, *prate,
++						&prediv_value, &div_value);
++	rate =3D DIV_ROUND_UP(*prate, prediv_value);
++
++	return DIV_ROUND_UP(rate, div_value);
++
++}
++
++static int imx8m_clk_composite_divider_set_rate(struct clk_hw *hw,
++					unsigned long rate,
++					unsigned long parent_rate)
++{
++	struct clk_divider *divider =3D to_clk_divider(hw);
++	unsigned long flags =3D 0;
++	int prediv_value;
++	int div_value;
++	int ret =3D 0;
 +	u32 val;
 +
-+	return readl_poll_timeout(pll->base, val, val & PLL_LOCK_STATUS, 0,
-+					PLL_FRAC_LOCK_TIMEOUT);
-+}
++	ret =3D imx8m_clk_composite_compute_dividers(rate, parent_rate,
++						&prediv_value, &div_value);
++	if (ret)
++		return -EINVAL;
 +
-+static int clk_wait_ack(struct clk_frac_pll *pll)
-+{
-+	u32 val;
++	spin_lock_irqsave(divider->lock, flags);
 +
-+	/* return directly if the pll is in powerdown or in bypass */
-+	if (readl_relaxed(pll->base) & (PLL_PD_MASK | PLL_BYPASS_MASK))
-+		return 0;
++	val =3D readl(divider->reg);
++	val &=3D ~((clk_div_mask(divider->width) << divider->shift) |
++			(clk_div_mask(PCG_DIV_WIDTH) << PCG_DIV_SHIFT));
 +
-+	/* Wait for the pll's divfi and divff to be reloaded */
-+	return readl_poll_timeout(pll->base, val, val & PLL_NEWDIV_ACK, 0,
-+					PLL_FRAC_ACK_TIMEOUT);
-+}
++	val |=3D (u32)(prediv_value  - 1) << divider->shift;
++	val |=3D (u32)(div_value - 1) << PCG_DIV_SHIFT;
++	writel(val, divider->reg);
 +
-+static int clk_pll_prepare(struct clk_hw *hw)
-+{
-+	struct clk_frac_pll *pll =3D to_clk_frac_pll(hw);
-+	u32 val;
-+
-+	val =3D readl_relaxed(pll->base + PLL_CFG0);
-+	val &=3D ~PLL_PD_MASK;
-+	writel_relaxed(val, pll->base + PLL_CFG0);
-+
-+	return clk_wait_lock(pll);
-+}
-+
-+static void clk_pll_unprepare(struct clk_hw *hw)
-+{
-+	struct clk_frac_pll *pll =3D to_clk_frac_pll(hw);
-+	u32 val;
-+
-+	val =3D readl_relaxed(pll->base + PLL_CFG0);
-+	val |=3D PLL_PD_MASK;
-+	writel_relaxed(val, pll->base + PLL_CFG0);
-+}
-+
-+static int clk_pll_is_prepared(struct clk_hw *hw)
-+{
-+	struct clk_frac_pll *pll =3D to_clk_frac_pll(hw);
-+	u32 val;
-+
-+	val =3D readl_relaxed(pll->base + PLL_CFG0);
-+	return (val & PLL_PD_MASK) ? 0 : 1;
-+}
-+
-+static unsigned long clk_pll_recalc_rate(struct clk_hw *hw,
-+					 unsigned long parent_rate)
-+{
-+	struct clk_frac_pll *pll =3D to_clk_frac_pll(hw);
-+	u32 val, divff, divfi, divq;
-+	u64 temp64 =3D parent_rate;
-+
-+	val =3D readl_relaxed(pll->base + PLL_CFG0);
-+	divq =3D ((val & PLL_OUTPUT_DIV_MASK) + 1) * 2;
-+	val =3D readl_relaxed(pll->base + PLL_CFG1);
-+	divff =3D FIELD_GET(PLL_FRAC_DIV_MASK, val);
-+	divfi =3D val & PLL_INT_DIV_MASK;
-+
-+	temp64 *=3D 8;
-+	temp64 *=3D divff;
-+	do_div(temp64, PLL_FRAC_DENOM);
-+	temp64 /=3D divq;
-+
-+	return parent_rate * 8 * (divfi + 1) / divq + (unsigned long)temp64;
-+}
-+
-+static long clk_pll_round_rate(struct clk_hw *hw, unsigned long rate,
-+			       unsigned long *prate)
-+{
-+	u64 parent_rate =3D *prate;
-+	u32 divff, divfi;
-+	u64 temp64;
-+
-+	parent_rate *=3D 8;
-+	rate *=3D 2;
-+	divfi =3D rate / parent_rate;
-+	temp64 =3D rate - divfi * parent_rate;
-+	temp64 *=3D PLL_FRAC_DENOM;
-+	do_div(temp64, parent_rate);
-+	divff =3D temp64;
-+
-+	temp64 =3D parent_rate;
-+	temp64 *=3D divff;
-+	do_div(temp64, PLL_FRAC_DENOM);
-+
-+	return (parent_rate * divfi + temp64) / 2;
-+}
-+
-+/*
-+ * To simplify the clock calculation, we can keep the 'PLL_OUTPUT_VAL' at =
-zero
-+ * (means the PLL output will be divided by 2). So the PLL output can use
-+ * the below formula:
-+ * pllout =3D parent_rate * 8 / 2 * DIVF_VAL;
-+ * where DIVF_VAL =3D 1 + DIVFI + DIVFF / 2^24.
-+ */
-+static int clk_pll_set_rate(struct clk_hw *hw, unsigned long rate,
-+			    unsigned long parent_rate)
-+{
-+	struct clk_frac_pll *pll =3D to_clk_frac_pll(hw);
-+	u32 val, divfi, divff;
-+	u64 temp64 =3D parent_rate;
-+	int ret;
-+
-+	parent_rate *=3D 8;
-+	rate *=3D 2;
-+	divfi =3D rate / parent_rate;
-+	temp64 *=3D rate - divfi;
-+	temp64 *=3D PLL_FRAC_DENOM;
-+	do_div(temp64, parent_rate);
-+	divff =3D temp64;
-+
-+	val =3D readl_relaxed(pll->base + PLL_CFG1);
-+	val &=3D ~(PLL_FRAC_DIV_MASK | PLL_INT_DIV_MASK);
-+	val |=3D (divff << 7) | (divfi - 1);
-+	writel_relaxed(val, pll->base + PLL_CFG1);
-+
-+	val =3D readl_relaxed(pll->base + PLL_CFG0);
-+	val &=3D ~0x1f;
-+	writel_relaxed(val, pll->base + PLL_CFG0);
-+
-+	/* Set the NEV_DIV_VAL to reload the DIVFI and DIVFF */
-+	val =3D readl_relaxed(pll->base + PLL_CFG0);
-+	val |=3D PLL_NEWDIV_VAL;
-+	writel_relaxed(val, pll->base + PLL_CFG0);
-+
-+	ret =3D clk_wait_ack(pll);
-+
-+	/* clear the NEV_DIV_VAL */
-+	val =3D readl_relaxed(pll->base + PLL_CFG0);
-+	val &=3D ~PLL_NEWDIV_VAL;
-+	writel_relaxed(val, pll->base + PLL_CFG0);
++	spin_unlock_irqrestore(divider->lock, flags);
 +
 +	return ret;
 +}
 +
-+static const struct clk_ops clk_frac_pll_ops =3D {
-+	.prepare	=3D clk_pll_prepare,
-+	.unprepare	=3D clk_pll_unprepare,
-+	.is_prepared	=3D clk_pll_is_prepared,
-+	.recalc_rate	=3D clk_pll_recalc_rate,
-+	.round_rate	=3D clk_pll_round_rate,
-+	.set_rate	=3D clk_pll_set_rate,
++static const struct clk_ops imx8m_clk_composite_divider_ops =3D {
++	.recalc_rate =3D imx8m_clk_composite_divider_recalc_rate,
++	.round_rate =3D imx8m_clk_composite_divider_round_rate,
++	.set_rate =3D imx8m_clk_composite_divider_set_rate,
 +};
 +
-+struct clk *imx_clk_frac_pll(const char *name, const char *parent_name,
-+			     void __iomem *base)
++struct clk *imx8m_clk_composite_flags(const char *name,
++					const char **parent_names,
++					int num_parents, void __iomem *reg,
++					unsigned long flags)
 +{
-+	struct clk_init_data init;
-+	struct clk_frac_pll *pll;
-+	struct clk_hw *hw;
-+	int ret;
++	struct clk_hw *hw =3D NULL, *mux_hw =3D NULL;
++	struct clk_hw *div_hw =3D NULL, *gate_hw =3D NULL;
++	struct clk_divider *div =3D NULL;
++	struct clk_gate *gate =3D NULL;
++	struct clk_mux *mux =3D NULL;
 +
-+	pll =3D kzalloc(sizeof(*pll), GFP_KERNEL);
-+	if (!pll)
-+		return ERR_PTR(-ENOMEM);
++	mux =3D kzalloc(sizeof(*mux), GFP_KERNEL);
++	if (!mux)
++		goto fail;
 +
-+	init.name =3D name;
-+	init.ops =3D &clk_frac_pll_ops;
-+	init.flags =3D 0;
-+	init.parent_names =3D &parent_name;
-+	init.num_parents =3D 1;
++	mux_hw =3D &mux->hw;
++	mux->reg =3D reg;
++	mux->shift =3D PCG_PCS_SHIFT;
++	mux->mask =3D PCG_PCS_MASK;
 +
-+	pll->base =3D base;
-+	pll->hw.init =3D &init;
++	div =3D kzalloc(sizeof(*div), GFP_KERNEL);
++	if (!div)
++		goto fail;
 +
-+	hw =3D &pll->hw;
++	div_hw =3D &div->hw;
++	div->reg =3D reg;
++	div->shift =3D PCG_PREDIV_SHIFT;
++	div->width =3D PCG_PREDIV_WIDTH;
++	div->lock =3D &imx_ccm_lock;
++	div->flags =3D CLK_DIVIDER_ROUND_CLOSEST;
 +
-+	ret =3D clk_hw_register(NULL, hw);
-+	if (ret) {
-+		kfree(pll);
-+		return ERR_CAST(hw);
-+	}
++	gate =3D kzalloc(sizeof(*gate), GFP_KERNEL);
++	if (!gate)
++		goto fail;
++
++	gate_hw =3D &gate->hw;
++	gate->reg =3D reg;
++	gate->bit_idx =3D PCG_CGC_SHIFT;
++
++	hw =3D clk_hw_register_composite(NULL, name, parent_names, num_parents,
++			mux_hw, &clk_mux_ops, div_hw,
++			&imx8m_clk_composite_divider_ops,
++			gate_hw, &clk_gate_ops, flags);
++	if (IS_ERR(hw))
++		goto fail;
 +
 +	return hw->clk;
++
++fail:
++	kfree(gate);
++	kfree(div);
++	kfree(mux);
++	return ERR_CAST(hw);
 +}
 diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-index 5895e223..44a1f14 100644
+index 864cd8a..cb3e92c 100644
 --- a/drivers/clk/imx/clk.h
 +++ b/drivers/clk/imx/clk.h
-@@ -27,6 +27,9 @@ struct clk *imx_clk_pllv1(enum imx_pllv1_type type, const=
- char *name,
- struct clk *imx_clk_pllv2(const char *name, const char *parent,
- 		void __iomem *base);
+@@ -239,4 +239,20 @@ struct clk *imx_clk_cpu(const char *name, const char *=
+parent_name,
+ 		struct clk *div, struct clk *mux, struct clk *pll,
+ 		struct clk *step);
 =20
-+struct clk *imx_clk_frac_pll(const char *name, const char *parent_name,
-+			     void __iomem *base);
++struct clk *imx8m_clk_composite_flags(const char *name,
++					const char **parent_names,
++					int num_parents, void __iomem *reg,
++					unsigned long flags);
 +
- enum imx_pllv3_type {
- 	IMX_PLLV3_GENERIC,
- 	IMX_PLLV3_SYS,
++#define __imx8m_clk_composite(name, parent_names, reg, flags) \
++	imx8m_clk_composite_flags(name, parent_names, \
++		ARRAY_SIZE(parent_names), reg, \
++		flags | CLK_SET_RATE_NO_REPARENT | CLK_OPS_PARENT_ENABLE)
++
++#define imx8m_clk_composite(name, parent_names, reg) \
++	__imx8m_clk_composite(name, parent_names, reg, 0)
++
++#define imx8m_clk_composite_critical(name, parent_names, reg) \
++	__imx8m_clk_composite(name, parent_names, reg, CLK_IS_CRITICAL)
++
+ #endif
 --=20
 2.7.4
