@@ -1,12 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 13/15] Bluetooth: btbcm: Add default address for BCM43430A0
-Date: Wed,  7 Nov 2018 18:13:06 +0800
-Message-ID: <20181107101308.7626-14-wens@csie.org>
+Subject: [PATCH 15/15] arm64: dts: allwinner: a64: bananapi-m64:
+ Add Bluetooth device node
+Date: Wed,  7 Nov 2018 18:13:08 +0800
+Message-ID: <20181107101308.7626-16-wens@csie.org>
 References: <20181107101308.7626-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBRHVRLPQKGQEBPBIW6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBQ7VRLPQKGQESG4PGZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181107101308.7626-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,48 +20,55 @@ To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Johan Hedb
 Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The BCM43430A0 has the default MAC address 43:43:A0:12:1F:AC if none
-is given. This address was found when enabling Bluetooth on a bunch of
-boards with the AMPAK AP6210 module, all sharing the same address. It
-also contains the sequence 4343A0, which is suspicious as that is also
-the name the chip identifies itself as.
+The AP6212 is based on the Broadcom BCM43430 or BCM43438. The WiFi side
+identifies as BCM43430, while the Bluetooth side identifies as BCM43438.
 
-Add this to the list of default MAC addresses and leave it to the user
-to configure a valid one.
+The Bluetooth side is connected to UART1 in a 4 wire configuration. Same
+as the WiFi side, due to being the same chip and package, DLDO2 provides
+overall power via VBAT, and DLDO4 provides I/O power via VDDIO. The RTC
+clock output provides the LPO low power clock at 32.768 kHz.
+
+This patch enables Bluetooth on this board, and also adds the missing
+LPO clock on the WiFi side. There is also a PCM connection for Bluetooth,
+but this is not covered here.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/bluetooth/btbcm.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ .../boot/dts/allwinner/sun50i-a64-bananapi-m64.dts | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
-index 22d4b530da03..08e1f3dd4e03 100644
---- a/drivers/bluetooth/btbcm.c
-+++ b/drivers/bluetooth/btbcm.c
-@@ -34,6 +34,7 @@
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+index ef1c90401bb2..beca5c4979cf 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+@@ -94,6 +94,8 @@
+ 	wifi_pwrseq: wifi_pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+ 		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
++		clocks = <&rtc 1>;
++		clock-names = "ext_clock";
+ 	};
+ };
  
- #define BDADDR_BCM20702A0 (&(bdaddr_t) {{0x00, 0xa0, 0x02, 0x70, 0x20, 0x00}})
- #define BDADDR_BCM20702A1 (&(bdaddr_t) {{0x00, 0x00, 0xa0, 0x02, 0x70, 0x20}})
-+#define BDADDR_BCM43430A0 (&(bdaddr_t) {{0xac, 0x1f, 0x12, 0xa0, 0x43, 0x43}})
- #define BDADDR_BCM4324B3 (&(bdaddr_t) {{0x00, 0x00, 0x00, 0xb3, 0x24, 0x43}})
- #define BDADDR_BCM4330B1 (&(bdaddr_t) {{0x00, 0x00, 0x00, 0xb1, 0x30, 0x43}})
+@@ -335,7 +337,19 @@
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
++	uart-has-rtscts;
+ 	status = "okay";
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		clocks = <&rtc 1>;
++		clock-names = "lpo";
++		vbat-supply = <&reg_dldo2>;
++		vddio-supply = <&reg_dldo4>;
++		device-wakeup-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
++		host-wakeup-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
++		shutdown-gpios = <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 */
++	};
+ };
  
-@@ -73,11 +74,15 @@ int btbcm_check_bdaddr(struct hci_dev *hdev)
- 	 *
- 	 * The address 43:30:B1:00:00:00 indicates a BCM4330B1 controller
- 	 * with waiting for configuration state.
-+	 *
-+	 * The address 43:43:A0:12:1F:AC indicates a BCM43430A0 controller
-+	 * with no configured address.
- 	 */
- 	if (!bacmp(&bda->bdaddr, BDADDR_BCM20702A0) ||
- 	    !bacmp(&bda->bdaddr, BDADDR_BCM20702A1) ||
- 	    !bacmp(&bda->bdaddr, BDADDR_BCM4324B3) ||
--	    !bacmp(&bda->bdaddr, BDADDR_BCM4330B1)) {
-+	    !bacmp(&bda->bdaddr, BDADDR_BCM4330B1) ||
-+	    !bacmp(&bda->bdaddr, BDADDR_BCM43430A0)) {
- 		bt_dev_info(hdev, "BCM: Using default device address (%pMR)",
- 			    &bda->bdaddr);
- 		set_bit(HCI_QUIRK_INVALID_BDADDR, &hdev->quirks);
+ &usb_otg {
 -- 
 2.19.1
