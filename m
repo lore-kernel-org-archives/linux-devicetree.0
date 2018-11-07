@@ -1,31 +1,70 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 02/12] soc: qcom: ipa: DMA helpers
-Date: Wed, 7 Nov 2018 13:17:29 +0100
-Message-ID: <CAK8P3a3Hur9Kn=QLrn7XDn-Kpgfta1xTxvuwcBze4n2v7fsULw@mail.gmail.com>
-References: <20181107003250.5832-1-elder@linaro.org> <20181107003250.5832-3-elder@linaro.org>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v6 04/18] powerpc/pseries: add of_node_put() in dlpar_detach_node()
+Date: Wed, 07 Nov 2018 23:23:27 +1100
+Message-ID: <87muqlqdog.fsf@concordia.ellerman.id.au>
+References: <1541431515-25197-1-git-send-email-frowand.list@gmail.com> <1541431515-25197-5-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181107003250.5832-3-elder@linaro.org>
+In-Reply-To: <1541431515-25197-5-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Elder <elder@linaro.org>
-Cc: David Miller <davem@davemloft.net>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, syadagir@codeaurora.org, mjavid@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: frowand.list@gmail.com, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 7, 2018 at 1:33 AM Alex Elder <elder@linaro.org> wrote:
+frowand.list@gmail.com writes:
+
+> From: Frank Rowand <frank.rowand@sony.com>
 >
-> This patch includes code implementing the IPA DMA module, which
-> defines a structure to represent a DMA allocation for the IPA device.
-> It's used throughout the IPA code.
+> "of: overlay: add missing of_node_get() in __of_attach_node_sysfs"
+
+It would be clearer if you said 'The previous commit "of: overlay ..."
+
+> added a missing of_node_get() to __of_attach_node_sysfs().  This
+> results in a refcount imbalance for nodes attached with
+> dlpar_attach_node().  The calling sequence from dlpar_attach_node()
+> to __of_attach_node_sysfs() is:
 >
-> Signed-off-by: Alex Elder <elder@linaro.org>
+>    dlpar_attach_node()
+>       of_attach_node()
+>          __of_attach_node_sysfs()
+>
+> Tested-by: Alan Tull <atull@kernel.org>
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> ---
+>
+> ***** UNTESTED.  I need people with the affected PowerPC systems
+> *****            (systems that dynamically allocate and deallocate
+> *****            devicetree nodes) to test this patch.
 
-I looked through all the users of this and couldn't fine one that actually
-benefits from it. I'd say better drop this patch entirely and open-code
-the contents in the callers. That will help readability since the dma
-API is well understood by many people.
+This looks OK to me in light of the previous patch.
 
-Generally speaking, try not to wrap Linux interfaces into driver specific
-helper functions.
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
 
-      Arnd
+It also means dlpar_detach_node() is again behaving as described in the
+comment to of_detach_node().
+
+It would be good to make mention of:
+
+  Fixes: 68baf692c435 ("powerpc/pseries: Fix of_node_put() underflow during DLPAR remove")
+
+Which removed an of_node_put() in the exact same place for different
+reasons.
+
+cheers
+
+> diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
+> index 7625546caefd..17958043e7f7 100644
+> --- a/arch/powerpc/platforms/pseries/dlpar.c
+> +++ b/arch/powerpc/platforms/pseries/dlpar.c
+> @@ -270,6 +270,8 @@ int dlpar_detach_node(struct device_node *dn)
+>  	if (rc)
+>  		return rc;
+>  
+> +	of_node_put(dn);
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> Frank Rowand <frank.rowand@sony.com>
