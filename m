@@ -1,73 +1,59 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: act8945: Implement PM functionalities
-Date: Wed, 7 Nov 2018 14:53:49 +0000
-Message-ID: <20181107145349.GA6809@sirena.org.uk>
-References: <1540570753-16370-1-git-send-email-claudiu.beznea@microchip.com>
- <1540570753-16370-2-git-send-email-claudiu.beznea@microchip.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v6 07/18] of: dynamic: change type of
+ of_{at,de}tach_node() to void
+Date: Wed, 7 Nov 2018 06:55:14 -0800
+Message-ID: <6bc78502-7587-eb9c-237f-d3f031979d42@gmail.com>
+References: <1541431515-25197-1-git-send-email-frowand.list@gmail.com>
+ <1541431515-25197-8-git-send-email-frowand.list@gmail.com>
+ <87tvktqedf.fsf@concordia.ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1540570753-16370-2-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <87tvktqedf.fsf@concordia.ellerman.id.au>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu.Beznea@microchip.com
-Cc: lgirdwood@gmail.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, boris.brezillon@bootlin.com
+To: Michael Ellerman <mpe@ellerman.id.au>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 11/7/18 4:08 AM, Michael Ellerman wrote:
+> frowand.list@gmail.com writes:
+> 
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> of_attach_node() and of_detach_node() always return zero, so
+>> their return value is meaningless.
+> 
+> But should they always return zero?
+> 
+> At least __of_attach_node_sysfs() can fail in several ways.
 
---UugvWAfsgieZRqgk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sigh.  And of_reconfig_notify() can fail.  And at one point in the
+history the return value of of_reconfig_notify() was returned by
+of_attach_node() if of_reconfig_notify() failed.
 
-On Fri, Oct 26, 2018 at 04:19:48PM +0000, Claudiu.Beznea@microchip.com wrot=
-e:
 
-> +static unsigned int act8945a_of_map_mode(unsigned int mode)
-> +{
-> +	if (mode =3D=3D ACT8945A_DCDC_MODE_POWER_SAVING)
-> +		return REGULATOR_MODE_STANDBY;
-> +
-> +	return REGULATOR_MODE_NORMAL;
-> +}
+> And there's also this in __of_detach_node() which should probably be
+> returning an error:
+> 
+> 	if (WARN_ON(of_node_check_flag(np, OF_DETACHED)))
+>         	return;
+> 
+> 
+> Seems to me we should instead be fixing these to propagate errors,
+> rather than hiding them?
 
-This should error out if it gets an unknown value rather than silently
-mapping it to normal - we don't know what the user intended to set here.
-There should also be some binding documentation updates saying what the
-values that can be set are.
+The history of how of_attach_node() stopped propagating errors is
+a bit more complex than I want to dig into at the moment.  So I'll
+drop this patch from the series and add investigating this onto
+my todo list.  I suspect that the result of investigating will be
+that error return values should not be ignored in of_attach_node()
+and of_detach_node(), but should instead be propagated to the
+callers, as you suggest.
 
-> +static void act8945a_pmic_shutdown(struct platform_device *pdev)
-> +{
-> +	struct act8945a_pmic *act8945a =3D platform_get_drvdata(pdev);
-> +	struct regmap *regmap =3D act8945a->regmap;
-> +
-> +	/*
-> +	 * Ask the PMIC to shutdown everything on the next PWRHLD transition.
-> +	 */
-> +	regmap_write(regmap, ACT8945A_SYS_CTRL, 0x0);
->  }
-> =20
+-Frank
 
-This shutdown function appears to be independant of the mode setting and
-would be better split out as a separate patch (you could have one patch
-adding the regmap stuff, one for this and one for the mode setting).
-It makes review a lot simpler if each patch does a minimal set of
-changes.
-
---UugvWAfsgieZRqgk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlvi/HwACgkQJNaLcl1U
-h9AjUAf/X+WZCSFnCaLptlSyx3bSbfDqjwhXcTHPCFdi8kpE9K91VD6YjpHdWeU6
-BjGcASumUktHi1Hd0wFAxlvzoA683OTmS9tEWmKdI/FtsqpzjqZqmJG9OYfQ2HtP
-juwAYFduRaswN6CP9RS7G4DniYJSO1VnC6UfPfKWbicqDaByyDYvQ7v1IT2qOGjC
-N8YCI7v0fnZ270y78XWFsW8iDDfIIw8nGaZAuUN5bgOcOcLlHAF0jiHLAByebYO4
-P344faEDGfWchNWjmIqdhGR2Gtsk6J3QGcQJFM5mb0BXMxMSLq8LBXCUruYzj63N
-O+9S5CbneOG3tdWhfICkGBcoY3gOQA==
-=OI5M
------END PGP SIGNATURE-----
-
---UugvWAfsgieZRqgk--
+> 
+> cheers
+> 
