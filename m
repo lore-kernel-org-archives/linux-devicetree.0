@@ -1,71 +1,52 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [RFC PATCH 12/12] soc: qcom: ipa: build and "ipa_i.h"
-Date: Tue, 6 Nov 2018 16:40:20 -0800
-Message-ID: <cebe0d3c-4a24-60a4-88c8-5195a5d0da4b@infradead.org>
-References: <20181107003250.5832-1-elder@linaro.org>
- <20181107003250.5832-13-elder@linaro.org>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: clk: add documentation for the SiFive
+ PRCI driver
+Date: Wed, 7 Nov 2018 02:00:30 +0000 (UTC)
+Message-ID: <alpine.DEB.2.21.999.1811070159350.29982@utopia.booyaka.com>
+References: <20181020135024.28573-1-paul.walmsley@sifive.com>
+ <20181020135024.28573-3-paul.walmsley@sifive.com>
+ <154152561238.88331.13239370518226908068@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181107003250.5832-13-elder@linaro.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alex Elder <elder@linaro.org>, davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org, ilias.apalodimas@linaro.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, syadagir@codeaurora.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, mjavid@codeaurora.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <154152561238.88331.13239370518226908068@swboyd.mtv.corp.google.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, paul@pwsan.com, Megan Wachs <megan@sifive.com>, Michael Turquette <mturquette@baylibre.com>, Palmer Dabbelt <palmer@sifive.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi-
+On Tue, 6 Nov 2018, Stephen Boyd wrote:
 
-On 11/6/18 4:32 PM, Alex Elder wrote:
-> diff --git a/drivers/net/ipa/Kconfig b/drivers/net/ipa/Kconfig
-> new file mode 100644
-> index 000000000000..f8ea9363f532
-> --- /dev/null
-> +++ b/drivers/net/ipa/Kconfig
-> @@ -0,0 +1,30 @@
-> +config IPA
-> +	tristate "Qualcomm IPA support"
-> +	depends on NET
-> +	select QCOM_QMI_HELPERS
-> +	select QCOM_MDT_LOADER
-> +	default n
-> +	help
-> +	  Choose Y here to include support for the Qualcomm IP
-> +	  Accelerator (IPA), a hardware block present in some
-> +	  Qualcomm SoCs.  The IPA is a programmable protocol
-> +	  processor that is capable of generic hardware handling
-> +	  of IP packets, including routing, filtering, and NAT.
-> +	  Currently the IPA driver supports only basic transport
-> +	  of network traffic between the AP and modem, on the
-> +	  Qualcomm SDM845 SoC.
-> +
-> +	  If unsure, say N.
-> +
-> +config IPA_ASSERT
-> +	bool "Enable IPA assertions"
-> +	depends on IPA
-> +	default y
-> +	help
-> +	 Incorporate IPA assertion verification in the build.  This
-> +	 cause various design assumptions to be checked at runtime,
+> Quoting Paul Walmsley (2018-10-20 06:50:23)
+> > diff --git a/Documentation/devicetree/bindings/clock/sifive/fu540-prci.txt b/Documentation/devicetree/bindings/clock/sifive/fu540-prci.txt
+> > new file mode 100644
+> > index 000000000000..d7c1e83fa5ed
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/sifive/fu540-prci.txt
+> > @@ -0,0 +1,43 @@
+> > +SiFive FU540 PRCI bindings
+> > +
+> > +On the FU540 family of SoCs, most system-wide clock and reset integration
+> > +is via the PRCI IP block.
+> > +
+> > +Required properties:
+> > +- compatible: Should be "sifive,<chip>-prci<version>".  As of the time this
+> > +              file was written, only one value is supported:
+> 
+> I don't think we need the "As of the time" sentence. It will become out
+> of date almost immediately so why not just say "The list of supported
+> values is:"?
 
-	 causes
-
-> +	 generating a report (and a crash) if any assumed condition
-> +	 does not hold.  You may wish to disable this to avoid the
-> +	 overhead of checking.
-> +
-> +	 If unsure doubt, say "Y" here.
+Adopted this change.  Thanks for the review.
 
 
--- 
-~Randy
+- Paul
