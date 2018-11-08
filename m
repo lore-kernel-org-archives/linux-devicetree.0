@@ -1,94 +1,89 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 1/4] of/device: Add a way to probe drivers by match data
-Date: Thu, 8 Nov 2018 09:29:46 +0100
-Message-ID: <efa13e0b-0daf-3bf3-27ba-ed90f15c7dfe@gmail.com>
-References: <20181106183609.207702-1-sboyd@kernel.org>
- <20181106183609.207702-2-sboyd@kernel.org>
+From: Daniel Mack <daniel@zonque.org>
+Subject: Re: [PATCH 08/24] leds: lt3593: Use led_compose_name()
+Date: Thu, 8 Nov 2018 09:33:21 +0100
+Message-ID: <b7deca0c-bb4f-0ec6-8b73-aec6617d2b8e@zonque.org>
+References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
+ <1541542052-10081-9-git-send-email-jacek.anaszewski@gmail.com>
+ <42d68eae-6905-e787-3797-f0f16b0dfb84@zonque.org>
+ <6666ef06-c19d-b0d8-a32b-44cecb8bc4b3@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181106183609.207702-2-sboyd@kernel.org>
+In-Reply-To: <6666ef06-c19d-b0d8-a32b-44cecb8bc4b3@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 06/11/2018 19:36, Stephen Boyd wrote:
-> We have a handful of clk drivers that have a collection of slightly
-> variant device support keyed off of the compatible string. In each of
-> these drivers, we demux the variant and then call the "real" probe
-> function based on whatever is stored in the match data for that
-> compatible string. Let's generalize this function so that it can be
-> re-used as the platform_driver probe function directly.
+On 7/11/2018 8:49 PM, Jacek Anaszewski wrote:
+> On 11/07/2018 08:37 PM, Daniel Mack wrote:
+>> On 6/11/2018 11:07 PM, Jacek Anaszewski wrote:
+>>> Switch to using generic LED support for composing LED class
+>>> device name.
+>>
+>> Thanks for the rework!
+>>
+>>> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>>> ---
+>>>    drivers/leds/leds-lt3593.c | 19 ++++++++-----------
+>>>    1 file changed, 8 insertions(+), 11 deletions(-)
+>>>
+>>> diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
+>>> index de3623e..d005abc 100644
+>>> --- a/drivers/leds/leds-lt3593.c
+>>> +++ b/drivers/leds/leds-lt3593.c
+>>> @@ -10,10 +10,10 @@
+>>>    #include <linux/slab.h>
+>>>    #include <linux/module.h>
+>>>    #include <linux/of.h>
+>>> -#include <uapi/linux/uleds.h>
+>>> +
+>>> +#define LED_LT3593_NAME "lt3593"
+>>>      struct lt3593_led_data {
+>>> -    char name[LED_MAX_NAME_SIZE];
+>>>        struct led_classdev cdev;
+>>>        struct gpio_desc *gpiod;
+>>>    };
+>>> @@ -111,6 +111,7 @@ static int lt3593_led_probe(struct platform_device
+>>> *pdev)
+>>>        struct fwnode_handle *child;
+>>>        int ret, state = LEDS_GPIO_DEFSTATE_OFF;
+>>>        enum gpiod_flags flags = GPIOD_OUT_LOW;
+>>> +    struct led_init_data init_data;
+>>>        const char *tmp;
+>>>          if (dev_get_platdata(dev)) {
+>>> @@ -138,14 +139,11 @@ static int lt3593_led_probe(struct
+>>> platform_device *pdev)
+>>>            return PTR_ERR(led_data->gpiod);
+>>>          child = device_get_next_child_node(dev, NULL);
+>>> +    init_data.fwnode = child;
+>>
+>> Not quite following. `fwnode' is the only member of that struct that is
+>> initialized?
+>>
+>>>    -    ret = fwnode_property_read_string(child, "label", &tmp);
+>>> -    if (ret < 0)
+>>> -        snprintf(led_data->name, sizeof(led_data->name),
+>>> -             "lt3593::");
+>>> -    else
+>>> -        snprintf(led_data->name, sizeof(led_data->name),
+>>> -             "lt3593:%s", tmp);
+>>> +    ret = led_compose_name(child, LED_LT3593_NAME, ":", init_data.name);
+>>
+>> ... and here, a member that wasn't written before is used? What am I
+>> missing?
 > 
-> Cc: Ryder Lee <ryder.lee@mediatek.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-> ---
->  drivers/of/device.c       | 31 +++++++++++++++++++++++++++++++
->  include/linux/of_device.h |  1 +
->  2 files changed, 32 insertions(+)
-> 
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 0f27fad9fe94..8381f33ed2d8 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -195,6 +195,37 @@ const void *of_device_get_match_data(const struct device *dev)
->  }
->  EXPORT_SYMBOL(of_device_get_match_data);
->  
-> +/**
-> + * platform_driver_probe_by_of_match_data - Probe a platform device using match data
-> + * @pdev: platform device to probe
-> + *
-> + * For use by device drivers that multiplex their probe function through DT
-> + * match data. Drivers can use this function to call their platform
-> + * device probe directly without having to implement a wrapper function.
-> + *
-> + * static const struct of_device_id probe_funcs[] = {
-> + *      { .compatible = "compat,foo", .data = foo_probe },
-> + *      {}
-> + * };
-> + *
-> + * struct platform_driver foo_driver = {
-> + *      .probe = platform_driver_probe_by_of_match_data,
-> + *      .driver = {
-> + *            of_match_table = probe_funcs,
-> + *      },
-> + * };
-> + *
-> + */
-> +int platform_driver_probe_by_of_match_data(struct platform_device *pdev)
-> +{
-> +	int (*probe_func)(struct platform_device *pdev);
-> +
-> +	probe_func = of_device_get_match_data(&pdev->dev);
+> init_data.name pointer is passed to led_compose_name(), which fills
+> this array with the composed name.
 
-Shouldn't we check if probe_func is not NULL?
+Ah, that's the target. Stupid me!
 
-> +
-> +	return probe_func(pdev);
-> +}
-> +EXPORT_SYMBOL_GPL(platform_driver_probe_by_of_match_data);
-> +
->  static ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
->  {
->  	const char *compat;
-> diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-> index 8d31e39dd564..4de84691d1c6 100644
-> --- a/include/linux/of_device.h
-> +++ b/include/linux/of_device.h
-> @@ -33,6 +33,7 @@ extern int of_device_add(struct platform_device *pdev);
->  extern int of_device_register(struct platform_device *ofdev);
->  extern void of_device_unregister(struct platform_device *ofdev);
->  
-> +extern int platform_driver_probe_by_of_match_data(struct platform_device *pdev);
->  extern const void *of_device_get_match_data(const struct device *dev);
->  
->  extern ssize_t of_device_modalias(struct device *dev, char *str, ssize_t len);
-> 
+With this:
+
+Acked-by: Daniel Mack <daniel@zonque.org>
+
+
+Thanks,
+Daniel
