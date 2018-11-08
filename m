@@ -1,189 +1,37 @@
-From: John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v2] of, numa: Validate some distance map rules
-Date: Thu, 8 Nov 2018 15:01:16 +0000
-Message-ID: <ec84abdd-ad11-329c-e859-20bfe71d5771@huawei.com>
-References: <1541672223-131326-1-git-send-email-john.garry@huawei.com>
- <ee4cc102-6602-9f4f-d00c-d07ad7567401@arm.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v3 3/3] MAINTAINERS: Add entry for i2c-omap driver
+Date: Thu, 8 Nov 2018 07:02:31 -0800
+Message-ID: <20181108150231.GF56134@atomide.com>
+References: <20181108091931.3342-1-vigneshr@ti.com>
+ <20181108091931.3342-4-vigneshr@ti.com>
+ <20181108092320.GC951@kunai>
+ <d57ace5e-d42a-0a0e-2813-4a25cc6b37bb@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ee4cc102-6602-9f4f-d00c-d07ad7567401@arm.com>
+Content-Disposition: inline
+In-Reply-To: <d57ace5e-d42a-0a0e-2813-4a25cc6b37bb@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anshuman Khandual <anshuman.khandual@arm.com>, robh+dt@kernel.org, frowand.list@gmail.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com, will.deacon@arm.com, peterz@infradead.org
+To: Vignesh R <vigneshr@ti.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, "Strashko, Grygorii" <grygorii.strashko@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/11/2018 13:41, Anshuman Khandual wrote:
-> On 11/08/2018 03:47 PM, John Garry wrote:
->> Currently the NUMA distance map parsing does not validate the distance
->> table for the distance-matrix rules 1-2 in [1].
->
-> Right.
->
->>
->> However the arch NUMA code may enforce some of these rules, but not all.
->
-> Either it does enforce all these rules again or it does not. What is the
-> purpose it serves when enforcing parts of it ! Rather it should focus on
-> looking for boundary conditions (e.g maximum number of nodes supported
-> on a platform against whats present on the table) which are important
-> from kernel point of view.
->
->> Such is the case for the arm64 port, which does not enforce the rule that
->> the distance between separates nodes cannot equal LOCAL_DISTANCE.
->>
->> The patch adds the following rules validation:
->> - distance of node to self equals LOCAL_DISTANCE
->> - distance of separate nodes > LOCAL_DISTANCE
->
-> Which exactly corresponds to first two rules as mentioned in the DT doc
-> (Documents/devicetree/bindings/numa.txt)
->
->         1. Each entry represents distance from first node to second node.
->         The distances are equal in either direction.
->         2. The distance from a node to self (local distance) is represented
->         with value 10 and all internode distance should be represented with
->         a value greater than 10.
->
->>
+* Vignesh R <vigneshr@ti.com> [181108 12:28]:
+> 
+> 
+> On 08/11/18 2:53 PM, Wolfram Sang wrote:
+> > On Thu, Nov 08, 2018 at 02:49:31PM +0530, Vignesh R wrote:
+> >> Add separate entry for i2c-omap and add my name as reviewer for this
+> >> driver.
+> > 
+> > Thanks for stepping up, yet out of curiosity: why not maintainer?
+> > 
+> 
+> I wasn't sure whether the convention is to add Reviewer or Maintainer
+> entry for individual driver. I would be glad to change entry to maintainer.
 
-Not exactly. As you know, it does not add validation of distance 
-equality in either direction (for values present in the table).
+Great, yes please do!
 
->> This change avoids a yet-unresolved crash reported in [2].
->>
->> A note on dealing with symmetrical distances between nodes:
->>
->> Validating symmetrical distances between nodes is difficult. If it were
->> mandated in the bindings that every distance must be recorded in the
->> table, then it would be easy. However, it isn't.
->
-> But if [a, b] and [b, a] both are present, they must be equal.
->
->>
->> In addition to this, it is also possible to record [b, a] distance only
->> (and not [a, b]). So, when processing the table for [b, a], we cannot
->> assert that current distance of [a, b] != [b, a] as invalid, as [a, b]
->> distance may not be present in the table and current distance would be
->> default at REMOTE_DISTANCE.
->
-> Falling back to REMOTE_DISTANCE is right in case one of the symmetrical
-> distances is not present. But it must abort if they are present and not
-> identical. That rule should be enforced here while processing DT.
+Regards,
 
-Do you really think it's worth the effort?
-
-For this, we would need something considerably more complicated than 
-what we have today. Maybe similar to the arm64 NUMA code does, in 
-allocating a memblock and then doing some 2-phase table parsing. But 
-then we're just replicated this same functionality.
-
-On this point, I will also note that there is another problem with the 
-DT NUMA bindings (first problem being that both distance entries are not 
-required to be present in the table).
-
-That is, it's inconsistency with ACPI SLIT. ACPI SLIT allows 
-asymmetrical distance. So that's why I'm not too hung up on this issue 
-of validating equality of distances.
-
-This patch does not change the current kernel policy: if the table has 
-entries with unequal distances, then it's not rejected nor fixed up.
-
->
->>
->> As such, we maintain the policy that we overwrite distance [a, b] = [b, a]
->> for b > a. This policy is different to kernel ACPI SLIT validation, which
->> allows non-symmetrical distances (ACPI spec SLIT rules allow it). However,
->> the distance debug message is dropped as it may be misleading (for a distance
->> which is later overwritten).
->
-> We could override but if the DT passed table is inconsistent then it must
-> abort as non-symmetrical distance is not supported. Hence overriding the
-> distance should happen only in case the inverse set is absent (probably
-> outside the first loop).
->
->>
->> Some final notes on semantics:
->>
->> - It is implied that it is the responsibility of the arch NUMA code to
->>   reset the NUMA distance map for an error in distance map parsing.
->
-> Right.
->
->>
->> - It is the responsibility of the FW NUMA topology parsing (whether OF or
->>   ACPI) to enforce NUMA distance rules, and not arch NUMA code.
->
-> This is where we still have some inconsistencies. Arch NUMA code on arm64
-> should either enforce rule 1 and 2 as stated above or should not at all.
-
-It was implied that any validation can be later dropped from the arch 
-NUMA code.
-
-  As
-> discussed previously numa_set_distance() enforces first part of rule 2
-> (self distance should be 10) but not the second part of rule 2 (internode
-> distance > 10). So either the following condition should be dropped from
->
-> (from == to && distance != LOCAL_DISTANCE)
->
-> or the following condition should be added to
->
-> (from != to && distance <= LOCAL_DISTANCE)
->
-> numa_set_distance() in order to conform to the semantics described above.
-> But thats for a separate discussion how much and what should be enforced
-> in any given DT compatible arch NUMA node. May not be part of this patch.
->
->>
->> [1] Documents/devicetree/bindings/numa.txt
->> [2] https://www.spinics.net/lists/arm-kernel/msg683304.html
->>
->> Cc: stable@vger.kernel.org # 4.7
->> Signed-off-by: John Garry <john.garry@huawei.com>
->> Acked-by: Will Deacon <will.deacon@arm.com>
->> ---
->> Changes from v1:
->> - Add note on masking crash reported
->> - Add Will's tag
->> - Add cc stable
->>
->> diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
->> index 35c64a4295e0..fe6b13608e51 100644
->> --- a/drivers/of/of_numa.c
->> +++ b/drivers/of/of_numa.c
->> @@ -104,9 +104,14 @@ static int __init of_numa_parse_distance_map_v1(struct device_node *map)
->>  		distance = of_read_number(matrix, 1);
->>  		matrix++;
->>
->> +		if ((nodea == nodeb && distance != LOCAL_DISTANCE) ||
->> +		    (nodea != nodeb && distance <= LOCAL_DISTANCE)) {
->> +			pr_err("Invalid distance[node%d -> node%d] = %d\n",
->> +			       nodea, nodeb, distance);
->> +			return -EINVAL;
->> +		}
->> +
->>  		numa_set_distance(nodea, nodeb, distance);
->> -		pr_debug("distance[node%d -> node%d] = %d\n",
->> -			 nodea, nodeb, distance);
->
-> It makes sense to go through the table and print the finalized values
-> (being passed to arch NUMA) out side of this loop after any identical
-> replacement is done.
->>
->>  		/* Set default distance of node B->A same as A->B */
->>  		if (nodeb > nodea)
->>
->
-> As mentioned before it should invalidate the table [a, b] != [b, a] in
-> case they are present and not equal.
->
-
-I think that most of these comments are related to earlier points.
-
-> .
->
-
-Thanks,
-John
+Tony
