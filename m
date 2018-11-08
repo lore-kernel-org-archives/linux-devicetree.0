@@ -1,55 +1,63 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/4] of/property: Add of_fwnode_name()
-Date: Thu, 8 Nov 2018 12:23:51 -0600
-Message-ID: <CAL_Jsq+4momJb6EoXrAg2LRKzpXMFB30yhBigOiEJ16EjZ05pg@mail.gmail.com>
-References: <20181108165156.60073-1-heikki.krogerus@linux.intel.com> <20181108165156.60073-4-heikki.krogerus@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v4 00/18] arm64: dts: qcom: qcs404: Add Device tree nodes
+Date: Fri,  9 Nov 2018 00:09:51 +0530
+Message-ID: <20181108184009.18430-1-vkoul@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181108165156.60073-4-heikki.krogerus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 8, 2018 at 10:52 AM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> This implements get_name fwnode op for DT.
->
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> ---
->  drivers/of/property.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index f46828e3b082..9bc8fe136fa3 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -823,6 +823,16 @@ static void of_fwnode_put(struct fwnode_handle *fwnode)
->         of_node_put(to_of_node(fwnode));
->  }
->
-> +static int of_fwnode_get_name(const struct fwnode_handle *fwnode, char *buf)
-> +{
-> +       const char *name = kbasename(to_of_node(fwnode)->full_name);
-> +       size_t len = strchrnul(name, '@') - name;
-> +
-> +       snprintf(buf, len + 1, "%s", name);
+This series adds support for various nodes for QCS404-EVB.
 
-This can be simplified to:
+Based on v4.20-rc1
 
-snprintf(..., "%pOFn", to_of_node(fwnode))
+Changes in v4:
+ - correct the v3 post (sent wrong branch)
 
-But that presents a problem with knowing the length. Not passing in
-the buf length is not good design because you can't tell if you
-overflow the buffer. Either you can pass in the length of buf or do
-the allocation here. In the latter case, then you can use kasnprintf.
-The downside to doing the allocation here is then get_name() has side
-effect of allocating memory that the caller needs to be aware of.
+Changes in v3:
+ - Make the DTS files sorted alphabetcially and by node addresses
+ - Add reviewed by from Bjorn
+ - Split out the DTS files for EVB 1000 and EVB 4000 boards and add common
+   evb dts files for common part
 
-However, I think the current API is better. It leaves low-level
-details up to the firmware implementation. But as long as .get_name()
-is not exposed to drivers I don't really care that much.
+Changes in v2:
+ Fix cpu binding
 
-Rob
+Bjorn Andersson (7):
+  arm64: dts: qcom: qcs404: Add reserved-memory regions
+  arm64: dts: qcom: qcs404: Add RPM GLINK related nodes
+  arm64: dts: qcom: qcs404: Add PMS405 RPM regulators
+  arm64: dts: qcom: qcs404: Add TLMM pinctrl node
+  arm64: dts: qcom: qcs404: Add sdcc1 node
+  arm64: dts: qcom: qcs404: Add scm firmware node
+  arm64: dts: qcom: qcs404: Add remoteproc nodes
+
+Vinod Koul (11):
+  arm64: dts: qcom: qcs404: add base dts files
+  arm64: dts: qcom: qcs404-evb: add dts files for EVBs
+  arm64: dts: qcom: qcs404: add smp2p nodes
+  arm64: dts: qcom: pms405: add spmi node
+  arm64: dts: qcom: qcs404: add spmi node
+  arm64: dts: qcom: pms405: add rtc node
+  arm64: dts: qcom: pms405: add gpios
+  arm64: dts: qcom: qcs404: add prng-ee node
+  arm64: dts: qcom: qcs404: Add BAM DMA node
+  arm64: dts: qcom: qcs404: Use BAM DMA for serial uart2
+  arm64: dts: qcom: pms405: Add pon and pwrkey nodes
+
+ arch/arm64/boot/dts/qcom/Makefile            |   2 +
+ arch/arm64/boot/dts/qcom/pms405.dtsi         |  55 +++
+ arch/arm64/boot/dts/qcom/qcs404-evb-1000.dts |  11 +
+ arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts |  11 +
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi     | 188 ++++++++++
+ arch/arm64/boot/dts/qcom/qcs404.dtsi         | 490 +++++++++++++++++++++++++++
+ 6 files changed, 757 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/pms405.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs404-evb-1000.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs404.dtsi
+
+-- 
+2.14.4
