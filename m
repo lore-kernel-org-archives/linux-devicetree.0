@@ -1,59 +1,118 @@
-Return-Path: <SRS0=ZvLY=NX=linaro.org=ulf.hansson@kernel.org>
+Return-Path: <SRS0=LF7i=NT=linaro.org=viresh.kumar@kernel.org>
+Date: Thu, 8 Nov 2018 10:15:41 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH] dt-bindings: cpufreq: remove stale arm_big_little_dt
+ entry
+Message-ID: <20181108044541.vxry3vgbtconb3rb@vireshk-i7>
+References: <20181107174058.4131-1-sudeep.holla@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20181024222301.21455-4-chris.brandt@renesas.com>
-References: <20181024222301.21455-1-chris.brandt@renesas.com> <20181024222301.21455-4-chris.brandt@renesas.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 12 Nov 2018 12:05:15 +0100
-Message-ID: <CAPDyKFoTa4mUQmKrn+T_Qu5sbWCFxZZWYL1U9daA+bTJMYU3nw@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] dt-bindings: mmc: tmio_mmc: Document Renesas R7S9210
-Content-Type: text/plain; charset="UTF-8"
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107174058.4131-1-sudeep.holla@arm.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 25 October 2018 at 00:23, Chris Brandt <chris.brandt@renesas.com> wrote:
-> Document support for the RZ/A2 (R7S9210) SoC.
->
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-
-Applied for next, thanks!
-
-Kind regards
-Uffe
-
+On 07-11-18, 17:40, Sudeep Holla wrote:
+> Most of the ARM platforms used v2 OPP bindings to support big-little
+> configurations. This arm_big_little_dt binding is incomplete and was
+> never used.
+> 
+> Commit f174e49e4906 ("cpufreq: remove unused arm_big_little_dt driver")
+> removes the driver supporting this binding. However the binding was left
+> unnoticed, so let's get rid of it now.
+> 
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 > ---
-> v3:
->  * Added Reviewed-by from Rob and Simon
-> v2:
->  * Documented that R7S9210 has 2 clocks
-> ---
->  Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-> index 27f2eab2981d..9391ae9a1d9d 100644
-> --- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-> @@ -13,6 +13,7 @@ Required properties:
->  - compatible: should contain one or more of the following:
->                 "renesas,sdhi-sh73a0" - SDHI IP on SH73A0 SoC
->                 "renesas,sdhi-r7s72100" - SDHI IP on R7S72100 SoC
-> +               "renesas,sdhi-r7s9210" - SDHI IP on R7S9210 SoC
->                 "renesas,sdhi-r8a73a4" - SDHI IP on R8A73A4 SoC
->                 "renesas,sdhi-r8a7740" - SDHI IP on R8A7740 SoC
->                 "renesas,sdhi-r8a7743" - SDHI IP on R8A7743 SoC
-> @@ -56,7 +57,7 @@ Required properties:
->           "core" and "cd". If the controller only has 1 clock, naming is not
->           required.
->           Devices which have more than 1 clock are listed below:
-> -         2: R7S72100
-> +         2: R7S72100, R7S9210
->
->  Optional properties:
->  - pinctrl-names: should be "default", "state_uhs"
-> --
-> 2.16.1
->
+>  .../bindings/cpufreq/arm_big_little_dt.txt    | 65 -------------------
+>  1 file changed, 65 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/cpufreq/arm_big_little_dt.txt
+> 
+> Hi,
+> 
+> For some reason, I didn't expect the driver to have an entry in the
+> DT bindings and didn't look at it before. While I was searching references
+> to big-little that can be removed, I spotted this. Sorry for that.
+> 
+> Regards,
+> Sudeep
+> 
+> diff --git a/Documentation/devicetree/bindings/cpufreq/arm_big_little_dt.txt b/Documentation/devicetree/bindings/cpufreq/arm_big_little_dt.txt
+> deleted file mode 100644
+> index 2aa06ac0fac5..000000000000
+> --- a/Documentation/devicetree/bindings/cpufreq/arm_big_little_dt.txt
+> +++ /dev/null
+> @@ -1,65 +0,0 @@
+> -Generic ARM big LITTLE cpufreq driver's DT glue
+> ------------------------------------------------
+> -
+> -This is DT specific glue layer for generic cpufreq driver for big LITTLE
+> -systems.
+> -
+> -Both required and optional properties listed below must be defined
+> -under node /cpus/cpu@x. Where x is the first cpu inside a cluster.
+> -
+> -FIXME: Cpus should boot in the order specified in DT and all cpus for a cluster
+> -must be present contiguously. Generic DT driver will check only node 'x' for
+> -cpu:x.
+> -
+> -Required properties:
+> -- operating-points: Refer to Documentation/devicetree/bindings/opp/opp.txt
+> -  for details
+> -
+> -Optional properties:
+> -- clock-latency: Specify the possible maximum transition latency for clock,
+> -  in unit of nanoseconds.
+> -
+> -Examples:
+> -
+> -cpus {
+> -	#address-cells = <1>;
+> -	#size-cells = <0>;
+> -
+> -	cpu@0 {
+> -		compatible = "arm,cortex-a15";
+> -		reg = <0>;
+> -		next-level-cache = <&L2>;
+> -		operating-points = <
+> -			/* kHz    uV */
+> -			792000  1100000
+> -			396000  950000
+> -			198000  850000
+> -		>;
+> -		clock-latency = <61036>; /* two CLK32 periods */
+> -	};
+> -
+> -	cpu@1 {
+> -		compatible = "arm,cortex-a15";
+> -		reg = <1>;
+> -		next-level-cache = <&L2>;
+> -	};
+> -
+> -	cpu@100 {
+> -		compatible = "arm,cortex-a7";
+> -		reg = <100>;
+> -		next-level-cache = <&L2>;
+> -		operating-points = <
+> -			/* kHz    uV */
+> -			792000  950000
+> -			396000  750000
+> -			198000  450000
+> -		>;
+> -		clock-latency = <61036>; /* two CLK32 periods */
+> -	};
+> -
+> -	cpu@101 {
+> -		compatible = "arm,cortex-a7";
+> -		reg = <101>;
+> -		next-level-cache = <&L2>;
+> -	};
+> -};
+
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+
+-- 
+viresh
