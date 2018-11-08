@@ -1,141 +1,146 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH v2 2/3] dt-bindings: can: rcar_can: Add r8a774a1 support
-Date: Thu, 8 Nov 2018 14:05:29 +0000
-Message-ID: <TY1PR01MB1770EA27994C36DD1595BEAFC0C50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1536576195-11520-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1536576195-11520-3-git-send-email-fabrizio.castro@bp.renesas.com>
- <TY1PR01MB17709C158FEAC53383231CB7C0C50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <20181108124632.fd52533ws7l7j2r2@verge.net.au>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH anybus v3 4/6] bus: support HMS Anybus-S bus
+Date: Thu, 8 Nov 2018 15:07:24 +0100
+Message-ID: <CAK8P3a3DnKcRxL5dG_pvBVTngFh5eDL2JdEqZzgL0RXJy5dZGw@mail.gmail.com>
+References: <20181104155501.14767-1-TheSven73@googlemail.com> <20181104155501.14767-5-TheSven73@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181108124632.fd52533ws7l7j2r2@verge.net.au>
-Content-Language: en-US
+In-Reply-To: <20181104155501.14767-5-TheSven73@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+To: thesven73@gmail.com
+Cc: svendev@arcx.com, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, noralf@tronnes.org, Johan Hovold <johan@kernel.org>, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, gregkh <gregkh@linuxfoundation.org>, John Garry <john.garry@huawei.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Robin Murphy <robin.murphy@arm.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>, Icenowy Zheng <icenowy@aosc.io>, Stuart Yoder <stuyoder@gmail.com>, Maxime Ripard <maxime.r>
 List-Id: devicetree@vger.kernel.org
 
-Thank you Simon for getting back to me.
+On Sun, Nov 4, 2018 at 4:55 PM <thesven73@gmail.com> wrote:
+> From: Sven Van Asbroeck <svendev@arcx.com>
 
-Marc, does this patch look ok to you?
+> +struct anybus_mbox_hdr {
+> +       u16 id;
+> +       u16 info;
+> +       u16 cmd_num;
+> +       u16 data_size;
+> +       u16 frame_count;
+> +       u16 frame_num;
+> +       u16 offset_high;
+> +       u16 offset_low;
+> +       u16 extended[8];
+> +} __packed;
 
-Thanks,
-Fab
+I don't think you want this to be __packed, it won't change the layout
+but instead force byte accesses on architectures that don't have
+fast unaligned load/store instructions.
 
-> Subject: Re: [PATCH v2 2/3] dt-bindings: can: rcar_can: Add r8a774a1 supp=
-ort
->
-> On Thu, Nov 08, 2018 at 11:25:23AM +0000, Fabrizio Castro wrote:
-> > Dear All,
-> >
-> > Who is the best person to take this patch?
->
-> I believe this one is for Marc.
->
-> > Thanks,
-> > Fab
-> >
-> > > From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > Sent: 10 September 2018 11:43
-> > > Subject: [PATCH v2 2/3] dt-bindings: can: rcar_can: Add r8a774a1 supp=
-ort
-> > >
-> > > Document RZ/G2M (r8a774a1) SoC specific bindings.
-> > >
-> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > Signed-off-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> > > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-> > > ---
-> > > v1->v2:
-> > > * dropped "renesas,rzg-gen2-can" and fixed "clocks" property descript=
-ion
-> > >   as per Geert's comments.
-> > >
-> > > This patch applies on top of next-20180910.
-> > >
-> > >  Documentation/devicetree/bindings/net/can/rcar_can.txt | 18 ++++++++=
-+++++-----
-> > >  1 file changed, 13 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> > > index 94a7f33..f3b160c 100644
-> > > --- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> > > +++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> > > @@ -4,6 +4,7 @@ Renesas R-Car CAN controller Device Tree Bindings
-> > >  Required properties:
-> > >  - compatible: "renesas,can-r8a7743" if CAN controller is a part of R=
-8A7743 SoC.
-> > >        "renesas,can-r8a7745" if CAN controller is a part of R8A7745 S=
-oC.
-> > > +      "renesas,can-r8a774a1" if CAN controller is a part of R8A774A1=
- SoC.
-> > >        "renesas,can-r8a7778" if CAN controller is a part of R8A7778 S=
-oC.
-> > >        "renesas,can-r8a7779" if CAN controller is a part of R8A7779 S=
-oC.
-> > >        "renesas,can-r8a7790" if CAN controller is a part of R8A7790 S=
-oC.
-> > > @@ -16,15 +17,21 @@ Required properties:
-> > >        "renesas,rcar-gen1-can" for a generic R-Car Gen1 compatible de=
-vice.
-> > >        "renesas,rcar-gen2-can" for a generic R-Car Gen2 or RZ/G1
-> > >        compatible device.
-> > > -      "renesas,rcar-gen3-can" for a generic R-Car Gen3 compatible de=
-vice.
-> > > +      "renesas,rcar-gen3-can" for a generic R-Car Gen3 or RZ/G2
-> > > +      compatible device.
-> > >        When compatible with the generic version, nodes must list the
-> > >        SoC-specific version corresponding to the platform first
-> > >        followed by the generic version.
-> > >
-> > >  - reg: physical base address and size of the R-Car CAN register map.
-> > >  - interrupts: interrupt specifier for the sole interrupt.
-> > > -- clocks: phandles and clock specifiers for 3 CAN clock inputs.
-> > > -- clock-names: 3 clock input name strings: "clkp1", "clkp2", "can_cl=
-k".
-> > > +- clocks: phandles and clock specifiers for 2 CAN clock inputs for R=
-Z/G2
-> > > +  devices.
-> > > +  phandles and clock specifiers for 3 CAN clock inputs for every oth=
-er
-> > > +  SoC.
-> > > +- clock-names: 2 clock input name strings for RZ/G2: "clkp1", "can_c=
-lk".
-> > > +       3 clock input name strings for every other SoC: "clkp1", "clk=
-p2",
-> > > +       "can_clk".
-> > >  - pinctrl-0: pin control group to be used for this controller.
-> > >  - pinctrl-names: must be "default".
-> > >
-> > > @@ -41,8 +48,9 @@ using the below properties:
-> > >  Optional properties:
-> > >  - renesas,can-clock-select: R-Car CAN Clock Source Select. Valid val=
-ues are:
-> > >      <0x0> (default) : Peripheral clock (clkp1)
-> > > -    <0x1> : Peripheral clock (clkp2)
-> > > -    <0x3> : Externally input clock
-> > > +    <0x1> : Peripheral clock (clkp2) (not supported by
-> > > +    RZ/G2 devices)
-> > > +    <0x3> : External input clock
-> > >
-> > >  Example
-> > >  -------
-> > > --
-> > > 2.7.4
-> >
-> >
-> >
-> >
-> > Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne En=
-d, Buckinghamshire, SL8 5FH, UK. Registered in England
-> & Wales under Registered No. 04586709.
-> >
+Instead of the __packed, it's almost always better to ensure that
+the structure itself is aligned to a 16-bit address.
 
+> +static struct ab_task *ab_task_create_get(struct kmem_cache *cache,
+> +                       ab_task_fn_t task_fn)
+> +{
+> +       struct ab_task *t;
+> +
+> +       t = kmem_cache_alloc(cache, GFP_KERNEL);
+> +       if (!t)
+> +               return NULL;
+> +       t->cache = cache;
+> +       refcount_set(&t->refcnt, 1);
+> +       t->task_fn = task_fn;
+> +       t->done_fn = NULL;
+> +       t->result = 0;
+> +       init_completion(&t->done);
+> +       return t;
+> +}
 
+It looks like you build your own object management here. Maybe
+use kobject, or at least kref instead of the refcount_t based
+low-level implementation?
 
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+> +struct anybuss_host {
+> +       struct device *dev;
+> +       struct anybuss_client *client;
+> +       struct reset_control *reset;
+> +       struct regmap *regmap;
+> +       int irq;
+> +       struct task_struct *qthread;
+> +       wait_queue_head_t wq;
+> +       struct completion card_boot;
+> +       atomic_t ind_ab;
+> +       spinlock_t qlock;
+> +       struct kmem_cache *qcache;
+> +       struct kfifo qs[3];
+> +       struct kfifo *powerq;
+> +       struct kfifo *mboxq;
+> +       struct kfifo *areaq;
+> +       bool power_on;
+> +       bool softint_pending;
+> +       atomic_t dc_event;
+> +       wait_queue_head_t dc_wq;
+> +       atomic_t fieldbus_online;
+> +       struct kernfs_node *fieldbus_online_sd;
+> +};
+
+Similarly, should that anybuss_host sturcture maybe be based on
+a 'struct device' itself? What is the hierarchy of devices in sysfs?
+
+> +
+> +static int read_ind_ab(struct regmap *regmap)
+> +{
+> +       unsigned long timeout = jiffies + HZ/2;
+> +       unsigned int a, b;
+> +
+> +       while (time_before_eq(jiffies, timeout)) {
+> +               regmap_read(regmap, REG_IND_AB, &a);
+> +               regmap_read(regmap, REG_IND_AB, &b);
+> +               if (likely(a == b))
+> +                       return (int)a;
+> +               cpu_relax();
+> +       }
+> +       WARN(1, "IND_AB register not stable");
+> +       return -ETIMEDOUT;
+> +}
+
+500ms is an awfully long time for a busy loop. Can you change the
+cpu_relax() into a msleep() or usleep_range() to let other processes
+get some time?
+
+I see this is called from the interrupt handler at the moment, which
+means you cannot call sleeping functions, but it also means that
+the timeout may never happen because the timer tick IRQ cannot
+get through. That means you may have to change the irq handler
+logic, e.g. to try this a few times but then defer to a bottom half
+if it fails for a long time.
+
+> +/* -------------------------- mailbox tasks ----------------------- */
+> +
+> +struct msgAnybusInit {
+> +       u16 input_io_len;
+> +       u16 input_dpram_len;
+> +       u16 input_total_len;
+> +       u16 output_io_len;
+> +       u16 output_dpram_len;
+> +       u16 output_total_len;
+> +       u16 op_mode;
+> +       u16 notif_config;
+> +       u16 wd_val;
+> +} __packed;
+
+Again, probably not __packed here.
+
+> +static int task_fn_mbox_2(struct anybuss_host *cd, struct ab_task *t)
+> +{
+> +       struct mbox_priv *pd = &t->mbox_pd;
+> +       unsigned int ind_ap;
+> +
+> +       if (!cd->power_on)
+> +               return -EIO;
+> +       regmap_read(cd->regmap, REG_IND_AP, &ind_ap);
+> +       if (((atomic_read(&cd->ind_ab) ^ ind_ap) & IND_AX_MOUT) == 0) {
+> +               /* output message not here */
+> +               if (time_after(jiffies, t->start_jiffies + TIMEOUT))
+> +                       return -ETIMEDOUT;
+> +               return -EINPROGRESS;
+> +       }
+
+Again, avoid busy loops with long timeouts like this.
+
+       Arnd
