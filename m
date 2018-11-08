@@ -1,64 +1,30 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH V2 2/6] usb: core: Add ability to skip phy exit on
- suspend and init on resume
-Date: Thu, 8 Nov 2018 09:43:52 +0800
-Message-ID: <1541641432.32173.71.camel@mhfsdcap03>
-References: <CAOGqxeWBmAahswHp+b_PzkyGs-9sOx3COpJnFVsbKhx14KLuUw@mail.gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx7d-sdb: add rev-a board support
+Date: Thu, 8 Nov 2018 00:20:45 -0200
+Message-ID: <CAOMZO5DiTbEsVXTCfE8fJ=4+yU4oXR1gex7Bj-k=FowKHWJaxw@mail.gmail.com>
+References: <1541567625-11812-1-git-send-email-Anson.Huang@nxp.com>
+ <CAOMZO5AL03yy6Vj_eC=h7scSDnuja1G8rsWER+r7w3FEVaceDg@mail.gmail.com> <DB3PR0402MB3916B318947B803BC5ADF4A6F5C50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOGqxeWBmAahswHp+b_PzkyGs-9sOx3COpJnFVsbKhx14KLuUw@mail.gmail.com>
+In-Reply-To: <DB3PR0402MB3916B318947B803BC5ADF4A6F5C50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Cooper <alcooperx@gmail.com>
-Cc: ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, "David S. Miller" <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>, US
+To: Yongcai Huang <anson.huang@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-hi,
-On Tue, 2018-10-30 at 18:30 -0400, Alan Cooper wrote:
-> On 10/17/18 9:46 PM, Chunfeng Yun wrote:> hi,
-> >
-> > On Wed, 2018-10-17 at 18:29 -0400, Al Cooper wrote:
-> >> Add the ability to skip calling the PHY's exit routine on suspend
-> >> and the PHY's init routine on resume. This is to handle a USB PHY
-> >> that should have it's power_off function called on suspend but
-> cannot
-> >> have it's exit function called because on exit it will disable the
-> >> PHY to the point where register accesses to the Host Controllers
-> >> using the PHY will be disabled and the host drivers will crash.
-> >>
-> >> This is enabled with the HCD flag "suspend_without_phy_exit" which
-> >> can be set from any HCD driver.
-> >>
-> >> Signed-off-by: Al Cooper<alcooperx@gmail.com>
-> >> ---
-> >>   drivers/usb/core/hcd.c  |  8 ++++----
-> >>   drivers/usb/core/phy.c  | 18 ++++++++++++------
-> >>   drivers/usb/core/phy.h  |  9 ++++++---
-> >>   include/linux/usb/hcd.h |  3 +++
-> >>   4 files changed, 25 insertions(+), 13 deletions(-)
-> >>
+Hi Anson,
 
+On Wed, Nov 7, 2018 at 11:24 PM Anson Huang <anson.huang@nxp.com> wrote:
 
-> >>       unsigned        skip_phy_initialization:1;
-> >>  
-> >> +    /* Some phys don't want the phy's exit/init called on
-> suspend/resume */
-> >> +    unsigned        suspend_without_phy_exit:1;
-> > As suggested before, you can skip phy's exit/init during
-> suspend/resume
-> > by enabling wakeup of hcd, so needn't add a new variable for it.
-> 
-> I still need to be able to enable and disable wakeup for this driver.
-Just use device_init_wakeup(dev, true) instead of
-device_wakeup_enable(dev) for your controller driver, you can try it.
+> Regarding the fec2 settings in imx7d-sdb.dts, originally it uses Rev-A board (but some nodes are
+> using Rev-B board), in this patch, I clean up all the settings in imx7d-sdb.dts using Rev-B board,
+> so below is added to imx7d-sdb.dts for Rev-B board, and in imx7d-sdb-reva.dts I have to
+> delete it, since Rev-A board has no this pin.
+>
+> -       pinctrl-0 = <&pinctrl_enet2>;
+> +       pinctrl-0 = <&pinctrl_enet2 &pinctrl_enet2_epdc0_en>;
+> +       pinctrl-assert-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
 
-Sorry for the late replay
-> 
-> >
-> >> +
-> >>       /* The next flag is a stopgap, to be removed when all the
-> HCDs
-> >>        * support the new root-hub polling mechanism. */
-> >>       unsigned        uses_new_polling:1;
-> >
+"pinctrl-assert-gpios" only exists in the NXP vendor kernel, so you
+cannot use such property in mainline.
