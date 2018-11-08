@@ -1,108 +1,154 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/4] of/property: Add of_fwnode_name()
-Date: Thu, 8 Nov 2018 15:18:21 -0600
-Message-ID: <CAL_JsqLMuiUc8FW=X_OAd5P_tcfPSTOox9Vh6faEwK+Z=S2mjw@mail.gmail.com>
-References: <20181108165156.60073-1-heikki.krogerus@linux.intel.com>
- <20181108165156.60073-4-heikki.krogerus@linux.intel.com> <CAL_Jsq+4momJb6EoXrAg2LRKzpXMFB30yhBigOiEJ16EjZ05pg@mail.gmail.com>
- <20181108192509.GW10650@smile.fi.intel.com>
+From: Leo Li <leoyang.li@nxp.com>
+Subject: RE: [PATCH 21/23] dt-bindings: pci: Add NXP LX SoCs PCIe controller
+Date: Thu, 8 Nov 2018 21:29:04 +0000
+Message-ID: <AM6PR04MB58639AF03E732FCF491113728FC50@AM6PR04MB5863.eurprd04.prod.outlook.com>
+References: <20181106131807.29951-1-Zhiqiang.Hou@nxp.com>
+ <20181106131807.29951-22-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181108192509.GW10650@smile.fi.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181106131807.29951-22-Zhiqiang.Hou@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+Cc: "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 8, 2018 at 1:25 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Nov 08, 2018 at 12:23:51PM -0600, Rob Herring wrote:
-> > On Thu, Nov 8, 2018 at 10:52 AM Heikki Krogerus
-> > <heikki.krogerus@linux.intel.com> wrote:
-> > >
-> > > This implements get_name fwnode op for DT.
-> > >
-> > > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > > ---
-> > >  drivers/of/property.c | 11 +++++++++++
-> > >  1 file changed, 11 insertions(+)
-> > >
-> > > diff --git a/drivers/of/property.c b/drivers/of/property.c
-> > > index f46828e3b082..9bc8fe136fa3 100644
-> > > --- a/drivers/of/property.c
-> > > +++ b/drivers/of/property.c
-> > > @@ -823,6 +823,16 @@ static void of_fwnode_put(struct fwnode_handle *fwnode)
-> > >         of_node_put(to_of_node(fwnode));
-> > >  }
-> > >
-> > > +static int of_fwnode_get_name(const struct fwnode_handle *fwnode, char *buf)
-> > > +{
-> > > +       const char *name = kbasename(to_of_node(fwnode)->full_name);
-> > > +       size_t len = strchrnul(name, '@') - name;
-> > > +
-> > > +       snprintf(buf, len + 1, "%s", name);
-> >
-> > This can be simplified to:
-> >
-> > snprintf(..., "%pOFn", to_of_node(fwnode))
-> >
-> > But that presents a problem with knowing the length. Not passing in
-> > the buf length is not good design because you can't tell if you
-> > overflow the buffer. Either you can pass in the length of buf or do
-> > the allocation here. In the latter case, then you can use kasnprintf.
-> > The downside to doing the allocation here is then get_name() has side
-> > effect of allocating memory that the caller needs to be aware of.
->
-> Agree on matter of potential overflow.
->
-> I wouldn't limit users with 32 characters for node name if it's not by both
-> ACPI and DT specifications.
 
-While the DT spec says 31 characters, this has never been enforced. As
-you might guess, we have node names longer than 31 characters. There's
-been some discussion about what to do and the consensus seems to be
-change the spec.
 
-> OTOH allocating and freeing memory in a loop each
-> time when we would like to go through the child nodes sounds much worse
-> scenario to me.
+> -----Original Message-----
+> From: Z.q. Hou
+> Sent: Tuesday, November 6, 2018 7:21 AM
+> To: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+> l.subrahmanya@mobiveil.co.in; shawnguo@kernel.org; Leo Li
+> <leoyang.li@nxp.com>; lorenzo.pieralisi@arm.com
+> Cc: Mingkai Hu <mingkai.hu@nxp.com>; M.h. Lian
+> <minghuan.lian@nxp.com>; Xiaowei Bao <xiaowei.bao@nxp.com>; Z.q. Hou
+> <zhiqiang.hou@nxp.com>
+> Subject: [PATCH 21/23] dt-bindings: pci: Add NXP LX SoCs PCIe controller
+> 
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> Add PCIe controller DT bindings of NXP LX series SoCs.
 
-Yes, I wrote that before looking at how you were using it... Of
-course, if you want efficient, then you shouldn't use sprintf either
-and use of_node_name_eq() as I've suggested.
+I'm not sure if this is a good idea to name this controller LX PCIe controller.  Right now, it could be true that it is only used on LX series SoCs.  But I'm not sure if the LS series will not use this controller or LX series will only use this controller in the future.
 
-> Thus, giving a length of the buffer is a good enough compromise.
->
-> > However, I think the current API is better. It leaves low-level
-> > details up to the firmware implementation. But as long as .get_name()
-> > is not exposed to drivers I don't really care that much.
->
-> I don't think this concept is changed by Heikki's patch series. It provides a
-> common abstract function on top of more low-level firmware implementation which
-> I consider a good approach.
+Since the LX series is still using the layerscape branding, so probably we should keep using the layerscape-pci.txt and define the PCIe Gen4 variant?
 
-Generally, I would agree that's a worthwhile goal. However, in this
-case you aren't saving anything. We still have at least a DT version
-of the same thing (of_get_child_by_name). Maybe there's some dream
-that the fwnode API will become the only one for both drivers and
-non-drivers, but I really don't see that happening. As long as both DT
-and fwnode APIs are in use, it is best to keep the APIs aligned.
+Same comment for other places using the LX naming in this driver.
 
-There's another aspect that the node name comparison is case
-insensitive on powerpc (and until 4.20, was for everything but Sparc).
-I changed it in 4.20 and hopefully don't have to revert. Patch 4 does
-a case sensitive compare. That probably is fine (as lots of powerpc
-code already does case sensitive name compares), but no one really
-knows until we break users.
-
-Another issue is how are disabled nodes dealt with by different
-firmwares? It's a frequent bug that we don't honor the 'status'
-property (such as in the very code we're discussing). But then there
-are some cases were want to ignore it so we can't just go add that
-check in and we end up needing 2 flavors of everything. You're
-probably okay though. Most devices with child nodes are
-enabled/disabled only in the parent device node.
-
-Rob
-Rob
+> 
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+>  .../devicetree/bindings/pci/lx-pci.txt        | 52 +++++++++++++++++++
+>  MAINTAINERS                                   |  8 +++
+>  2 files changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/lx-pci.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/lx-pci.txt
+> b/Documentation/devicetree/bindings/pci/lx-pci.txt
+> new file mode 100644
+> index 000000000000..dc602fef93b0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/lx-pci.txt
+> @@ -0,0 +1,52 @@
+> +NXP LX PCIe controller
+> +
+> +This PCIe controller is based on the Mobiveil PCIe IP and thus inherits
+> +all the common properties defined in mobiveil-pcie.txt.
+> +
+> +Required properties:
+> +- compatible: should contain the platform identifier such as:
+> +  "fsl,lx2160a-pcie"
+> +- reg: base addresses and lengths of the PCIe controller register blocks.
+> +  "config_axi_slave": PCIe controller registers
+> +  "csr_axi_slave": Bridge config registers
+> +- interrupts: A list of interrupt outputs of the controller. Must
+> +contain an
+> +  entry for each entry in the interrupt-names property.
+> +- interrupt-names: It could include the following entries:
+> +  "intr": The interrupt that is asserted for controller interrupts
+> +  "aer": Asserted for aer interrupt when chip support the aer interrupt with
+> +		 none MSI/MSI-X/INTx mode,but there is interrupt line for
+> aer.
+> +  "pme": Asserted for pme interrupt when chip support the pme interrupt
+> with
+> +		 none MSI/MSI-X/INTx mode,but there is interrupt line for
+> pme.
+> +- dma-coherent: Indicates that the hardware IP block can ensure the
+> +coherency
+> +  of the data transferred from/to the IP block. This can avoid the
+> +software
+> +  cache flush/invalid actions, and improve the performance significantly.
+> +- msi-parent : See the generic MSI binding described in
+> +  Documentation/devicetree/bindings/interrupt-controller/msi.txt.
+> +
+> +Example:
+> +
+> +	pcie@3400000 {
+> +		compatible = "fsl,lx2160a-pcie";
+> +		reg = <0x00 0x03400000 0x0 0x00100000   /* controller
+> registers */
+> +		       0x80 0x00000000 0x0 0x00001000>; /* configuration
+> space */
+> +		reg-names = "csr_axi_slave", "config_axi_slave";
+> +		interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* AER
+> interrupt */
+> +			     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME
+> interrupt */
+> +			     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>; /*
+> controller interrupt */
+> +		interrupt-names = "aer", "pme", "intr";
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		device_type = "pci";
+> +		apio-wins = <8>;
+> +		ppio-wins = <8>;
+> +		dma-coherent;
+> +		bus-range = <0x0 0xff>;
+> +		msi-parent = <&its>;
+> +		ranges = <0x82000000 0x0 0x40000000 0x80 0x40000000 0x0
+> 0x40000000>;
+> +		#interrupt-cells = <1>;
+> +		interrupt-map-mask = <0 0 0 7>;
+> +		interrupt-map = <0000 0 0 1 &gic GIC_SPI 109
+> IRQ_TYPE_LEVEL_HIGH>,
+> +				<0000 0 0 2 &gic GIC_SPI 110
+> IRQ_TYPE_LEVEL_HIGH>,
+> +				<0000 0 0 3 &gic GIC_SPI 111
+> IRQ_TYPE_LEVEL_HIGH>,
+> +				<0000 0 0 4 &gic GIC_SPI 112
+> IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0c57ccff3188..7da555c8e2f5 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11252,6 +11252,14 @@ L:	linux-arm-kernel@lists.infradead.org
+>  S:	Maintained
+>  F:	drivers/pci/controller/dwc/*layerscape*
+> 
+> +PCI DRIVER FOR NXP LX
+> +M:	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> +L:	linux-pci@vger.kernel.org
+> +L:	linux-arm-kernel@lists.infradead.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/pci/lx-pci.txt
+> +F:	drivers/pci/controller/mobibeil/pci-lx.c
+> +
+>  PCI DRIVER FOR GENERIC OF HOSTS
+>  M:	Will Deacon <will.deacon@arm.com>
+>  L:	linux-pci@vger.kernel.org
+> --
+> 2.17.1
