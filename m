@@ -1,65 +1,69 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH 1/2] dt-bindings: clk: Introduce 'protected-clocks' property
-Date: Thu, 08 Nov 2018 10:11:46 -0800
-Message-ID: <154170070630.88331.10123917683941164429@swboyd.mtv.corp.google.com>
-References: <20181105194011.43770-1-swboyd@chromium.org>
- <20181105194011.43770-2-swboyd@chromium.org>
- <20181106010426.GX2523@minitux> <20181108054452.GD2337@tuxbook-pro>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH 11/24] dt-bindings: lm3692x: Add function and color
+ properties
+Date: Thu, 8 Nov 2018 12:12:47 -0600
+Message-ID: <7924d38c-bdde-6c1e-d79c-fa1a9d13ed8b@ti.com>
+References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
+ <1541542052-10081-12-git-send-email-jacek.anaszewski@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181108054452.GD2337@tuxbook-pro>
+In-Reply-To: <1541542052-10081-12-git-send-email-jacek.anaszewski@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Taniya Das <tdas@codeaurora.org>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Bjorn Andersson (2018-11-07 21:44:52)
-> On Mon 05 Nov 17:04 PST 2018, Bjorn Andersson wrote:
-> =
+On 11/06/2018 04:07 PM, Jacek Anaszewski wrote:
+> Refer to new "function" and "color" properties and mark "label"
+> as deprecated.
+> 
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> ---
 
-> > On Mon 05 Nov 11:40 PST 2018, Stephen Boyd wrote:
-> > =
+Acked-by: Dan Murphy <dmurphy@ti.com>
 
-> > > Add a generic clk property for clks which are not intended to be used=
- by
-> > > the OS due to security restrictions put in place by firmware. For
-> > > example, on some Qualcomm firmwares reading or writing certain clk
-> > > registers causes the entire system to reboot, but on other firmwares
-> > > reading and writing those same registers is required to make devices
-> > > like QSPI work. Rather than adding one-off properties each time a new
-> > > set of clks appears to be protected, let's add a generic clk property=
- to
-> > > describe any set of clks that shouldn't be touched by the OS. This way
-> > > we never need to register the clks or use them in certain firmware
-> > > configurations.
-> > > =
+>  Documentation/devicetree/bindings/leds/leds-lm3692x.txt | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+> index 08b3528..62c8fe5 100644
+> --- a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+> +++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+> @@ -26,12 +26,16 @@ Required child properties:
+>  		3 - Will enable the LED3 sync (LM36923 only)
+>  
+>  Optional child properties:
+> -	- label : see Documentation/devicetree/bindings/leds/common.txt
+> +	- function : see Documentation/devicetree/bindings/leds/common.txt
+> +	- color : see Documentation/devicetree/bindings/leds/common.txt
+> +	- label : see Documentation/devicetree/bindings/leds/common.txt (deprecated)
+>  	- linux,default-trigger :
+>  	   see Documentation/devicetree/bindings/leds/common.txt
+>  
+>  Example:
+>  
+> +#include <dt-bindings/leds/functions.h>
+> +
+>  led-controller@36 {
+>  	compatible = "ti,lm3692x";
+>  	reg = <0x36>;
+> @@ -43,7 +47,8 @@ led-controller@36 {
+>  
+>  	led@0 {
+>  		reg = <0>;
+> -		label = "white:backlight_cluster";
+> +		function = LED_BACKLIGHT_CLUSTER;
+> +		color = "white";
+>  		linux,default-trigger = "backlight";
+>  	};
+>  }
+> 
 
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > =
 
-> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > =
-
-> =
-
-> Gave this some additional thought. The way this is blacklisting
-> protected clocks makes it impossible to be backwards compatible with an
-> older DT while adding new protected clocks to an existing driver.
-> =
-
-> I don't have better suggestion for handling this and the problem should
-> primarily be isolated to the beginning of the upstream life of a
-> platform, so perhaps we can just ignore this issue?
-> =
-
-
-I don't have a better suggestion either besides listing all possible
-clks in the binding and header file to start and then specifying any
-clks that are known to not work when merging the dts bits. In the future
-I think we can move dts and drivers in lockstep if certain drivers add
-new clks and those cause problems on locked down systems. The
-alternative seems worse, i.e. listing clks that should be added on the
-unaffected platforms, so ignoring this issue sounds good for now.
+-- 
+------------------
+Dan Murphy
