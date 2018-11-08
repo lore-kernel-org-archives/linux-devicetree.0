@@ -1,44 +1,33 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] builddeb: Fix inclusion of dtbs in debian package
-Date: Fri, 9 Nov 2018 00:26:07 +0900
-Message-ID: <CAK7LNATcs4bZv6Q1BEkb+V_SdiBek-fawO1RWKuh68uPN7ymUA@mail.gmail.com>
-References: <20181107143646.27675-1-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH 1/3] dt-bindings: Add vendor prefix for Smartlabs
+Date: Thu,  8 Nov 2018 19:33:20 +0400
+Message-ID: <1541691207-24768-1-git-send-email-christianshewitt@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181107143646.27675-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michal Marek <michal.lkml@markovi.net>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, nunojpg@gmail.com
+Cc: christianshewitt@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 7, 2018 at 11:37 PM Rob Herring <robh@kernel.org> wrote:
->
-> Commit 37c8a5fafa3b ("kbuild: consolidate Devicetree dtb build rules")
-> moved the location of 'dtbs_install' target which caused dtbs to not be
-> installed when building debian package with 'bindeb-pkg' target. Update
-> the builddeb script to use the same logic that determines if there's a
-> 'dtbs_install' target which is presence of the arch dts directory. Also,
-> use CONFIG_OF_EARLY_FLATTREE instead of CONFIG_OF as that's a better
-> indication of whether we are building dtbs.
->
-> This commit will also have the side effect of installing dtbs on any
-> arch that has dts files. Previously, it was dependent on whether the
-> arch defined 'dtbs_install'.
->
-> Fixes: 37c8a5fafa3b ("kbuild: consolidate Devicetree dtb build rules")
-> Reported-by: Nuno Gon=C3=A7alves <nunojpg@gmail.com>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Michal Marek <michal.lkml@markovi.net>
-> Cc: linux-kbuild@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
+Smartlabs are a professional integrator of Interactive TV solutions
+and IPTV/VOD devices.
 
-Applied to linux-kbuild/fixes.
-Thanks!
+[1] (https://www.smartlabs.tv/en/about/)
 
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
---=20
-Best Regards
-Masahiro Yamada
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 4b1a2a8..4e087f9 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -357,6 +357,7 @@ sirf	SiRF Technology, Inc.
+ sis	Silicon Integrated Systems Corp.
+ sitronix	Sitronix Technology Corporation
+ skyworks	Skyworks Solutions, Inc.
++smartlabs	Smartlabs
+ smsc	Standard Microsystems Corporation
+ snps	Synopsys, Inc.
+ socionext	Socionext Inc.
+-- 
+2.7.4
