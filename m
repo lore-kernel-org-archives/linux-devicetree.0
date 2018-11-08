@@ -1,40 +1,220 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 11/15] Bluetooth: hci_bcm: Add BCM20702A1 variant
-Date: Thu, 8 Nov 2018 14:53:33 +0800
-Message-ID: <CAGb2v64asgNbYch6gwj0BTTz84=Jfbmu9th0Dyfdx_o8N5tNXg@mail.gmail.com>
-References: <20181107101308.7626-1-wens@csie.org> <20181107101308.7626-12-wens@csie.org>
- <20181107203608.ff32gmb4u54kcvep@flea>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 5/5] hwspinlock: Add test module
+Date: Wed, 7 Nov 2018 23:06:04 -0800
+Message-ID: <20181108070604.GE12063@builder>
+References: <20181031093032.20386-1-benjamin.gaignard@st.com>
+ <20181031093032.20386-6-benjamin.gaignard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB7N2R7PQKGQEKUYXT5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181107203608.ff32gmb4u54kcvep@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181031093032.20386-6-benjamin.gaignard@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 8, 2018 at 4:36 AM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> Hi!
->
-> On Wed, Nov 07, 2018 at 06:13:04PM +0800, Chen-Yu Tsai wrote:
-> > From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >
-> > The BCM20702A1 chip is a single-chip Bluetooth 4.0 controller and
-> > transceiver. It is found in the AMPAK AP6210 WiFi+BT package.
-> >
-> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->
-> if you resubmit it, could you do s/free-electrons/bootlin/ ?
+On Wed 31 Oct 02:30 PDT 2018, Benjamin Gaignard wrote:
 
-OK. And for the author as well?
+> Create a test module to perform simple unitary tests on hwspinlock.
+> It doesn't cover all the possibles cases but at least allow to test
+> that very basic features are working.
+> 
 
-ChenYu
+I like the idea of making these things testable, but I would like to
+hear from others how useful this module would be to them before merging
+it.
+
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  drivers/hwspinlock/Kconfig           |   9 +++
+>  drivers/hwspinlock/Makefile          |   1 +
+>  drivers/hwspinlock/hwspinlock_test.c | 132 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 142 insertions(+)
+>  create mode 100644 drivers/hwspinlock/hwspinlock_test.c
+> 
+> diff --git a/drivers/hwspinlock/Kconfig b/drivers/hwspinlock/Kconfig
+> index e1a20b460590..f340ebb4d1f7 100644
+> --- a/drivers/hwspinlock/Kconfig
+> +++ b/drivers/hwspinlock/Kconfig
+> @@ -68,3 +68,12 @@ config HWSPINLOCK_STM32
+>  	  Say y here to support the STM32 Hardware Spinlock device.
+>  
+>  	  If unsure, say N.
+> +
+> +config HWSPINLOCK_TEST
+> +	tristate "hwspinlock test module"
+> +	depends on HWSPINLOCK && m
+> +	default n
+> +	help
+> +	  Select M here if you want to build hwspinlock test module
+> +
+> +	  If unsure, say N.
+> diff --git a/drivers/hwspinlock/Makefile b/drivers/hwspinlock/Makefile
+> index c0a9505b4dcf..e6b3d0212fe0 100644
+> --- a/drivers/hwspinlock/Makefile
+> +++ b/drivers/hwspinlock/Makefile
+> @@ -10,3 +10,4 @@ obj-$(CONFIG_HWSPINLOCK_SIRF)		+= sirf_hwspinlock.o
+>  obj-$(CONFIG_HWSPINLOCK_SPRD)		+= sprd_hwspinlock.o
+>  obj-$(CONFIG_HSEM_U8500)		+= u8500_hsem.o
+>  obj-$(CONFIG_HWSPINLOCK_STM32)		+= stm32_hwspinlock.o
+> +obj-$(CONFIG_HWSPINLOCK_TEST) 		+= hwspinlock_test.o
+> diff --git a/drivers/hwspinlock/hwspinlock_test.c b/drivers/hwspinlock/hwspinlock_test.c
+> new file mode 100644
+> index 000000000000..75819337e45a
+> --- /dev/null
+> +++ b/drivers/hwspinlock/hwspinlock_test.c
+> @@ -0,0 +1,132 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) STMicroelectronics SA 2018
+> + * Author: Benjamin Gaignard <benjamin.gaignard@st.com> for STMicroelectronics.
+> + * License terms:  GNU General Public License (GPL), version 2
+> + */
+> +
+> +#include <linux/hwspinlock.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +
+> +#define TIMEOUT	50 /* ms */
+> +
+> +static void hwspin_lock_test_twice_request_specific(void)
+> +{
+> +	struct hwspinlock *lock0 = hwspin_lock_request_specific(0);
+> +	struct hwspinlock *lock1 = hwspin_lock_request_specific(1);
+
+In a platform with more than one hwspinlock this will test the
+implementation that was first probed and it will assume that there's no
+issues with messing with the first two locks from this provider.
+
+> +
+> +	int ret;
+> +
+> +	if (!lock0 || !lock1) {
+> +		pr_warn("Can't request twice hwspin_lock\n");
+> +		return;
+> +	}
+> +
+> +	ret = hwspin_trylock(lock0);
+> +	if (ret)
+> +		pr_warn("Can't trylock requested hwspin_lock 0 (%d)\n", ret);
+> +
+> +	ret = hwspin_trylock(lock1);
+> +	if (ret)
+> +		pr_warn("Can't trylock requested hwspin_lock 1 (%d)\n", ret);
+> +
+> +	hwspin_unlock(lock0);
+> +	hwspin_unlock(lock1);
+
+As described in the kerneldoc for these it's a bug to attempt to unlock
+a unlocked lock. I believe this should be interpreted as it being
+invalid to unlock unless hwspin_trylock() returned successfully.
+
+> +
+> +	ret = hwspin_lock_free(lock0);
+> +	if (ret)
+> +		pr_warn("Can't free requested hwspin_lock 0\n");
+> +
+> +	ret = hwspin_lock_free(lock1);
+> +	if (ret)
+> +		pr_warn("Can't free requested hwspin_lock 0\n");
+> +}
+> +
+> +static void hwspin_lock_test_trylock(void)
+> +{
+> +	struct hwspinlock *lock = hwspin_lock_request();
+> +	int ret;
+> +
+> +	if (!lock) {
+> +		pr_warn("Can't request hwspin_lock\n");
+> +		return;
+> +	}
+> +
+> +	ret = hwspin_trylock(lock);
+> +	if (ret)
+> +		pr_warn("Can't trylock requested hwspin_lock (%d)\n", ret);
+> +
+> +	/* Try to lock a second time, this should failed */
+> +	ret = hwspin_trylock(lock);
+> +	if (ret != -EBUSY)
+> +		pr_warn("Getting twice the same lock ! (%d)\n", ret);
+
+This shouldn't be a warning, as this is a test failure.
+
+> +
+> +	hwspin_unlock(lock);
+> +	ret = hwspin_lock_free(lock);
+> +	if (ret)
+> +		pr_warn("Can't free requested hwspin_lock 0\n");
+> +}
+> +
+> +static void hwspin_lock_test_request_specific(void)
+> +{
+> +	/*
+> +	 * Let's assume that any hwspin_lock driver would at least have one
+> +	 * lock at index 0
+> +	 */
+> +	struct hwspinlock *lock = hwspin_lock_request_specific(0);
+> +	int ret;
+> +
+> +	if (!lock) {
+> +		pr_warn("Can't request hwspin_lock 0\n");
+> +		return;
+> +	}
+> +
+> +	ret = hwspin_lock_timeout(lock, TIMEOUT);
+> +	if (ret)
+> +		pr_warn("Can't lock requested hwspin_lock 0 (%d)\n", ret);
+> +
+> +	hwspin_unlock(lock);
+> +	ret = hwspin_lock_free(lock);
+> +	if (ret)
+> +		pr_warn("Can't free requested hwspin_lock 0\n");
+> +}
+> +
+> +static void hwspin_lock_test_request(void)
+
+I would suggest that your test cases test one thing each; so request and
+request_specific should test just that.
+
+> +{
+> +	struct hwspinlock *lock = hwspin_lock_request();
+> +	int ret;
+> +
+> +	if (!lock) {
+> +		pr_warn("Can't request hwspin_lock\n");
+> +		return;
+> +	}
+> +
+> +	ret = hwspin_lock_timeout(lock, TIMEOUT);
+> +	if (ret)
+> +		pr_warn("Can't lock requested hwspin_lock (%d)\n", ret);
+
+Testing lock-timeout seems useful, but you probably want to elaborate it
+to ensure that it both can lock a lock but that it times out properly
+when trying to grab a taken lock.
+
+> +
+> +	hwspin_unlock(lock);
+> +	ret = hwspin_lock_free(lock);
+> +	if (ret)
+> +		pr_warn("Can't free requested hwspin_lock\n");
+> +}
+> +
+> +/*
+> + * Test hwspinlock user API when module is loaded
+> + */
+> +static int __init hwspin_lock_test_init(void)
+> +{
+> +	pr_warn("Loading hwspinlock test module\n");
+> +	hwspin_lock_test_request();
+> +	hwspin_lock_test_request_specific();
+> +	hwspin_lock_test_trylock();
+> +	hwspin_lock_test_twice_request_specific();
+> +
+> +	return 0;
+> +}
+> +
+
+Regards,
+Bjorn
