@@ -1,60 +1,49 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v2 1/3] dt-bindings: Add vendor prefix for Smartlabs
-Date: Thu, 8 Nov 2018 18:07:13 +0100
-Message-ID: <c3c6ecbb-13c3-79ac-7587-c41b1d49bc42@suse.de>
-References: <1541691207-24768-1-git-send-email-christianshewitt@gmail.com>
- <1541696475-27454-1-git-send-email-christianshewitt@gmail.com>
- <1541696475-27454-2-git-send-email-christianshewitt@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Vitor soares <vitor.soares@synopsys.com>
+Subject: [PATCH v3 0/3] Add driver for Synopsys DesignWare I3C master IP
+Date: Thu,  8 Nov 2018 17:14:08 +0000
+Message-ID: <1541697251-20392-1-git-send-email-soares@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541696475-27454-2-git-send-email-christianshewitt@gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Hewitt <christianshewitt@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+To: boris.brezillon@bootlin.com, wsa@the-dreams.de, linux-i2c@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de
+Cc: psroka@cadence.com, agolec@cadence.com, adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com, alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com, rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vitor.soares@synopsys.com, geert@linux-m68k.org, linus.walleij@linaro.org, Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org, nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se, mshettel@codeaurora.org, swboyd@chromium.org, joao.pinto@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-Am 08.11.18 um 18:01 schrieb Christian Hewitt:
-> Smartlabs are a professional integrator of Interactive TV solutions
-> and IPTV/VOD devices.
-> 
-> [1] (https://www.smartlabs.tv/en/about/)
+This patch series is a proposal for the I3C master driver for Synopsys IP.
+This patch is to be applied on top of I3C subsystem RFC V10 submitted by
+Boris Brezillon.
 
-"[1]" is not referenced anywhere, so you could just as well use a plain
-link?
+Supported features:
+  Regular CCC commands.
+  I3C private transfers.
+  I2C transfers.
 
-> 
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 4b1a2a8..4e087f9 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -357,6 +357,7 @@ sirf	SiRF Technology, Inc.
->  sis	Silicon Integrated Systems Corp.
->  sitronix	Sitronix Technology Corporation
->  skyworks	Skyworks Solutions, Inc.
-> +smartlabs	Smartlabs
+Missing functionalities:
+  Support DMA interface.
+  Support for I3C_BUS_MODE_MIXED_SLOW.
+  Hot-join.
+  IBI.
 
-"SmartLabs LLC" according to your link above!
+Main change between v2 and v3:
+- Minor fixes. They are described in each patch
 
-Otherwise looks okay.
+Main change between v1 and v2:
+- Add controller version on dt-binding
+- The driver now calls writesl/readsl() instead readl/writel
+- Rename some variables in the driver
 
-Regards,
-Andreas
+Vitor soares (3):
+  i3c: master: Add driver for Synopsys DesignWare IP
+  dt-bindings: i3c: Document Synopsys DesignWare I3C master bindings
+  MAINTAINERS: Add myself as the dw-i3c-master module maintainer
 
->  smsc	Standard Microsystems Corporation
->  snps	Synopsys, Inc.
->  socionext	Socionext Inc.
-> 
-
+ .../devicetree/bindings/i3c/snps,dw-i3c-master.txt |   42 +
+ MAINTAINERS                                        |    6 +
+ drivers/i3c/master/Kconfig                         |   15 +
+ drivers/i3c/master/Makefile                        |    1 +
+ drivers/i3c/master/dw-i3c-master.c                 | 1216 ++++++++++++++++++++
+ 5 files changed, 1280 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt
+ create mode 100644 drivers/i3c/master/dw-i3c-master.c
 
 -- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+2.7.4
