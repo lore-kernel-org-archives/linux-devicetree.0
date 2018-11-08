@@ -1,339 +1,160 @@
-From: Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH v3 3/3] ARM64: dts: meson-gxl: Add support for the Smartlabs SML-5442TW
-Date: Thu,  8 Nov 2018 23:43:53 +0400
-Message-ID: <1541706240-30036-4-git-send-email-christianshewitt@gmail.com>
-References: <1541691207-24768-1-git-send-email-christianshewitt@gmail.com>
- <1541706240-30036-1-git-send-email-christianshewitt@gmail.com>
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH 1/2] dt-bindings: hwmon: add binding documentation for
+ adt7475
+Date: Thu, 8 Nov 2018 19:55:39 +0000
+Message-ID: <46001dee3a224ac3b01ceb11421af83d@svr-chch-ex1.atlnz.lc>
+References: <20181107040010.27436-1-chris.packham@alliedtelesis.co.nz>
+ <20181107040010.27436-2-chris.packham@alliedtelesis.co.nz>
+ <64720b73-dddf-783c-a3a4-3f32a748bf5d@roeck-us.net>
+ <1ed7434bfded41bfba3b739f58f69102@svr-chch-ex1.atlnz.lc>
+ <213614fb-1b7a-a06c-6f9f-f3d497750ca6@roeck-us.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541706240-30036-1-git-send-email-christianshewitt@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: christianshewitt@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+To: Guenter Roeck <linux@roeck-us.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jdelvare@suse.com" <jdelvare@suse.com>
+Cc: "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The Smartlabs SML-5442TW is broadly similar to the P231 reference design
-but with the following differences:
-
-- Yellow and Blue front-panel LEDs are available but disabled
-- Red/Green LED is used to signal off/on status
-- GPIOX_17 is set high to enable the QCA9377 wireless module
-- uart_AO can be accessed after opening the case; soldered pins exist
-
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- arch/arm64/boot/dts/amlogic/Makefile               |   1 +
- .../boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts | 292 +++++++++++++++++++++
- 2 files changed, 293 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts
-
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index c31f29d6..37d7dbd 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -18,6 +18,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-nexbox-a95x.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-p212.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-sml5442tw.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s805x-p241.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-p281.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-tx3-mini.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts
-new file mode 100644
-index 0000000..44d02c2
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts
-@@ -0,0 +1,292 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2016 Endless Computers, Inc.
-+ * Author: Carlo Caione <carlo@endlessm.com>
-+ * Copyright (c) 2018 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-gxl-s905d.dtsi"
-+
-+/ {
-+	compatible = "smartlabs,sml5442tw", "amlogic,s905d", "amlogic,meson-gxl";
-+	model = "Smartlabs SML-5442TW";
-+
-+	aliases {
-+		serial0 = &uart_AO;
-+		serial1 = &uart_A;
-+		ethernet0 = &ethmac;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x80000000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		yellow {
-+			label = "sml5442tw:yellow";
-+			gpios = <&gpio_ao GPIOAO_6 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		blue {
-+			label = "sml5442tw:blue";
-+			gpios = <&gpio GPIODV_28 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		green {
-+			label = "sml5442tw:green";
-+			gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+
-+		red {
-+			label = "sml5442tw:red";
-+			gpios = <&gpio GPIODV_27 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+	};
-+
-+	hdmi_5v: regulator-hdmi-5v {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "HDMI_5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+
-+		gpio = <&gpio GPIOH_3 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	vddio_ao18: regulator-vddio_ao18 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_AO18";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+
-+	vddio_boot: regulator-vddio_boot {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_BOOT";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+
-+	vddao_3v3: regulator-vddao_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDAO_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	vcc_3v3: regulator-vcc_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	wifi32k: wifi32k {
-+		compatible = "pwm-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
-+		clocks = <&wifi32k>;
-+		clock-names = "ext_clock";
-+	};
-+
-+	cvbs-connector {
-+		compatible = "composite-video-connector";
-+
-+		port {
-+			cvbs_connector_in: endpoint {
-+				remote-endpoint = <&cvbs_vdac_out>;
-+			};
-+		};
-+	};
-+
-+	hdmi-connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_tx_tmds_out>;
-+			};
-+		};
-+	};
-+};
-+
-+&cec_AO {
-+	status = "okay";
-+	pinctrl-0 = <&ao_cec_pins>;
-+	pinctrl-names = "default";
-+	hdmi-phandle = <&hdmi_tx>;
-+};
-+
-+&cvbs_vdac_port {
-+	cvbs_vdac_out: endpoint {
-+		remote-endpoint = <&cvbs_connector_in>;
-+	};
-+};
-+
-+&ethmac {
-+	status = "okay";
-+	phy-mode = "rmii";
-+	phy-handle = <&internal_phy>;
-+};
-+
-+/* This will enable the bluetooth module */
-+&gpio {
-+	bt-en {
-+		gpio-hog;
-+		gpios = <GPIOX_17 GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "bt-en";
-+	};
-+};
-+
-+&hdmi_tx {
-+	status = "okay";
-+	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
-+	pinctrl-names = "default";
-+	hdmi-supply = <&hdmi_5v>;
-+};
-+
-+&hdmi_tx_tmds_port {
-+	hdmi_tx_tmds_out: endpoint {
-+		remote-endpoint = <&hdmi_connector_in>;
-+	};
-+};
-+
-+&i2c_A {
-+	status = "okay";
-+	pinctrl-0 = <&i2c_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&internal_phy {
-+	pinctrl-0 = <&eth_link_led_pins>, <&eth_act_led_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&ir {
-+	status = "okay";
-+	pinctrl-0 = <&remote_input_ao_pins>;
-+	pinctrl-names = "default";
-+	linux,rc-map-name = "rc-o2cz-khamsin";
-+};
-+
-+&pwm_ef {
-+	status = "okay";
-+	pinctrl-0 = <&pwm_e_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&clkc CLKID_FCLK_DIV4>;
-+	clock-names = "clkin0";
-+};
-+
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vddio_ao18>;
-+};
-+
-+/* Wireless SDIO Module */
-+&sd_emmc_a {
-+	status = "okay";
-+	pinctrl-0 = <&sdio_pins>;
-+	pinctrl-1 = <&sdio_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	max-frequency = <100000000>;
-+
-+	non-removable;
-+	disable-wp;
-+
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+
-+	vmmc-supply = <&vddao_3v3>;
-+	vqmmc-supply = <&vddio_boot>;
-+};
-+
-+/* SD card */
-+&sd_emmc_b {
-+	status = "okay";
-+	pinctrl-0 = <&sdcard_pins>;
-+	pinctrl-1 = <&sdcard_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	max-frequency = <100000000>;
-+	disable-wp;
-+
-+	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-+	cd-inverted;
-+
-+	vmmc-supply = <&vddao_3v3>;
-+	vqmmc-supply = <&vddio_boot>;
-+};
-+
-+/* eMMC */
-+&sd_emmc_c {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	max-frequency = <100000000>;
-+	non-removable;
-+	disable-wp;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	vmmc-supply = <&vcc_3v3>;
-+	vqmmc-supply = <&vddio_boot>;
-+};
-+
-+/* This is connected to the Bluetooth module: */
-+&uart_A {
-+	status = "okay";
-+	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-+	pinctrl-names = "default";
-+	uart-has-rtscts;
-+};
-+
-+/* This UART is brought out to the debug header */
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+};
--- 
-2.7.4
+On 7/11/18 6:08 PM, Guenter Roeck wrote:=0A=
+> On 11/6/18 8:27 PM, Chris Packham wrote:=0A=
+>> On 7/11/18 5:24 PM, Guenter Roeck wrote:=0A=
+>>> On 11/6/18 8:00 PM, Chris Packham wrote:=0A=
+>>>> With the addition of the invert-pwm property the adt7475 needs its own=
+=0A=
+>>>> binding documentation rather being captured under trivial-devices.txt.=
+=0A=
+>>>>=0A=
+>>>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
+>>>> ---=0A=
+>>>>      .../devicetree/bindings/hwmon/adt7475.txt     | 22 ++++++++++++++=
++++++=0A=
+>>>>      .../devicetree/bindings/trivial-devices.txt   |  4 ----=0A=
+>>>>      2 files changed, 22 insertions(+), 4 deletions(-)=0A=
+>>>>      create mode 100644 Documentation/devicetree/bindings/hwmon/adt747=
+5.txt=0A=
+>>>>=0A=
+>>>> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.txt b/Doc=
+umentation/devicetree/bindings/hwmon/adt7475.txt=0A=
+>>>> new file mode 100644=0A=
+>>>> index 000000000000..79255439e157=0A=
+>>>> --- /dev/null=0A=
+>>>> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.txt=0A=
+>>>> @@ -0,0 +1,22 @@=0A=
+>>>> +*ADT7475 hwmon sensor.=0A=
+>>>> +=0A=
+>>>> +Required properties:=0A=
+>>>> +- compatible: One of=0A=
+>>>> +	"adi,adt7473"=0A=
+>>>> +	"adi,adt7475"=0A=
+>>>> +	"adi,adt7476"=0A=
+>>>> +	"adi,adt7490"=0A=
+>>>> +=0A=
+>>>> +- reg: I2C address=0A=
+>>>> +=0A=
+>>>> +optional properties:=0A=
+>>>> +=0A=
+>>>> +- invert-pwm: This configures the PWM to use logic low for 100% duty =
+cycle.=0A=
+>>>> +=0A=
+>>>> +Example:=0A=
+>>>> +=0A=
+>>>> +hwmon@2e {=0A=
+>>>> +	compatible =3D ;=0A=
+>>>> +	reg =3D <0x2e>;=0A=
+>>>> +	invert-pwm;=0A=
+>>>=0A=
+>>> If I understand correctly, the flag is set per pwm channel. A single gl=
+obal=0A=
+>>> property seems inappropriate.=0A=
+>>=0A=
+>> Yes it is per-channel. But I was having a hard time imagining a hardware=
+=0A=
+>> design that would use both inverted and non-inverted at the same time.=
+=0A=
+>>=0A=
+> =0A=
+> People can be inventive. Sometimes too much so.=0A=
+> =0A=
+>> Do you have a preference for how the properties should look?=0A=
+>>=0A=
+>>      invert-pwm[123]?=0A=
+>>=0A=
+>>      invert-pwm =3D <0x7>;?=0A=
+>>=0A=
+> Ultimately we'll have to find a generic way of defining devicetree proper=
+ties for=0A=
+> hardware monitoring devices, not just for pwm but for all sensor types. A=
+ sub-node=0A=
+> per channel seems to be the most likely answer, but I think that is a lon=
+g way off=0A=
+> (and will require lengthy discussions about acceptable properties).=0A=
+> =0A=
+> I was looking into pwm DT properties, but they define a set of flags=0A=
+> (PWM_POLARITY_INVERTED, PWM_POLARITY_NORMAL).=0A=
+> =0A=
+> The g762 driver uses "pwm_polarity". Underscore - hmm. Other drivers use =
+module=0A=
+> parameters, sysfs attributes (pwmX_invert in asc7621 driver), or platform=
+ data=0A=
+> (g762, max6639).=0A=
+> =0A=
+> Maybe pwm-polarity =3D <PWM_POLARITY_NORMAL | PWM_POLARITY_INVERTED> ?=0A=
+> No idea if that makes sense. Or just a boolean pwm-polarity-inverted.=0A=
+=0A=
+That would allow undoing an earlier invert which is something my initial =
+=0A=
+implementation lacked.=0A=
+=0A=
+In the future we could also make this a list of values to deal with =0A=
+multiple pwm outputs=0A=
+=0A=
+e.g. pwm-polarity =3D <PWM_POLARITY_NORMAL>, <PWM_POLARITY_NORMAL> =0A=
+<PWM_POLARITY_INVERTED>;=0A=
+=0A=
+I'll look at a v2 that does the first part for now.=0A=
+=0A=
+> =0A=
+> Thinking about it per channel vs. per chip ... other drivers also seem to=
+=0A=
+> use a single property / attribute for the entire chip, so that is fine he=
+re=0A=
+> as well. We can always extend it if needed.=0A=
+> =0A=
+> Anyway, I am fine with whatever Rob accepts.=0A=
+> =0A=
+> Guenter=0A=
+> =0A=
+>>>=0A=
+>>> Guenter=0A=
+>>>=0A=
+>>>> +};=0A=
+>>>> diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/D=
+ocumentation/devicetree/bindings/trivial-devices.txt=0A=
+>>>> index 69c934aec13b..4f29100d6bbf 100644=0A=
+>>>> --- a/Documentation/devicetree/bindings/trivial-devices.txt=0A=
+>>>> +++ b/Documentation/devicetree/bindings/trivial-devices.txt=0A=
+>>>> @@ -14,10 +14,6 @@ ad,ad7414		SMBus/I2C Digital Temperature Sensor in =
+6-Pin SOT with SMBus Alert an=0A=
+>>>>      ad,adm9240		ADM9240:  Complete System Hardware Monitor for uProce=
+ssor-Based Systems=0A=
+>>>>      adi,adt7461		+/-1C TDM Extended Temp Range I.C=0A=
+>>>>      adt7461			+/-1C TDM Extended Temp Range I.C=0A=
+>>>> -adi,adt7473		+/-1C TDM Extended Temp Range I.C=0A=
+>>>> -adi,adt7475		+/-1C TDM Extended Temp Range I.C=0A=
+>>>> -adi,adt7476		+/-1C TDM Extended Temp Range I.C=0A=
+>>>> -adi,adt7490		+/-1C TDM Extended Temp Range I.C=0A=
+>>>>      adi,adxl345		Three-Axis Digital Accelerometer=0A=
+>>>>      adi,adxl346		Three-Axis Digital Accelerometer (backward-compatibi=
+lity value "adi,adxl345" must be listed too)=0A=
+>>>>      ams,iaq-core		AMS iAQ-Core VOC Sensor=0A=
+>>>>=0A=
+>>>=0A=
+>>>=0A=
+>>=0A=
+>>=0A=
+> =0A=
+> =0A=
+=0A=
