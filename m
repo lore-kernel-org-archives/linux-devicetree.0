@@ -1,152 +1,168 @@
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH v2] of, numa: Validate some distance map rules
-Date: Thu, 8 Nov 2018 19:11:05 +0530
-Message-ID: <ee4cc102-6602-9f4f-d00c-d07ad7567401@arm.com>
-References: <1541672223-131326-1-git-send-email-john.garry@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH] arm64: dts: zynqmp: Fix node names which contain "_"
+Date: Thu,  8 Nov 2018 14:43:14 +0100
+Message-ID: <73038a438592d806874920f6680f2f3c7e20c0ad.1541684554.git.michal.simek@xilinx.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541672223-131326-1-git-send-email-john.garry@huawei.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>, robh+dt@kernel.org, frowand.list@gmail.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com, will.deacon@arm.com, peterz@infradead.org
+To: Rob Herring <robh@kernel.org>, Rob Herring <robherring2@gmail.com>, devicetree@vger.kernel.org
+Cc: monstr@monstr.eu, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Will Deacon <will.deacon@arm.com>, Manish Narani <manish.narani@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/08/2018 03:47 PM, John Garry wrote:
-> Currently the NUMA distance map parsing does not validate the distance
-> table for the distance-matrix rules 1-2 in [1].
+s/_/-/ for node names.
 
-Right. 
+It fixes warnings like this:
+... Warning (node_name_chars_strict): /cpu_opp_table:
+Character '_' not recommended in node name ...
 
-> 
-> However the arch NUMA code may enforce some of these rules, but not all.
+Issues reported by make dtbs W=12
 
-Either it does enforce all these rules again or it does not. What is the
-purpose it serves when enforcing parts of it ! Rather it should focus on
-looking for boundary conditions (e.g maximum number of nodes supported
-on a platform against whats present on the table) which are important
-from kernel point of view.
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
-> Such is the case for the arm64 port, which does not enforce the rule that
-> the distance between separates nodes cannot equal LOCAL_DISTANCE.
-> 
-> The patch adds the following rules validation:
-> - distance of node to self equals LOCAL_DISTANCE
-> - distance of separate nodes > LOCAL_DISTANCE
+dr_mode property is also reported but it is not fixed because code needs
+to fixed first.
 
-Which exactly corresponds to first two rules as mentioned in the DT doc
-(Documents/devicetree/bindings/numa.txt)
+---
+ arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi        |  4 ++--
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts |  4 ++--
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts | 10 +++++-----
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts |  2 +-
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts |  2 +-
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi            |  4 ++--
+ 6 files changed, 13 insertions(+), 13 deletions(-)
 
-        1. Each entry represents distance from first node to second node.
-        The distances are equal in either direction.
-        2. The distance from a node to self (local distance) is represented
-        with value 10 and all internode distance should be represented with
-        a value greater than 10.
-
-> 
-> This change avoids a yet-unresolved crash reported in [2].
-> 
-> A note on dealing with symmetrical distances between nodes:
-> 
-> Validating symmetrical distances between nodes is difficult. If it were
-> mandated in the bindings that every distance must be recorded in the
-> table, then it would be easy. However, it isn't.
-
-But if [a, b] and [b, a] both are present, they must be equal.
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi
+index 9c09baca7dd7..306ad2157c98 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi
+@@ -58,13 +58,13 @@
+ 		clock-accuracy = <100>;
+ 	};
  
-> 
-> In addition to this, it is also possible to record [b, a] distance only
-> (and not [a, b]). So, when processing the table for [b, a], we cannot
-> assert that current distance of [a, b] != [b, a] as invalid, as [a, b]
-> distance may not be present in the table and current distance would be
-> default at REMOTE_DISTANCE.
-
-Falling back to REMOTE_DISTANCE is right in case one of the symmetrical
-distances is not present. But it must abort if they are present and not
-identical. That rule should be enforced here while processing DT.
-
-> 
-> As such, we maintain the policy that we overwrite distance [a, b] = [b, a]
-> for b > a. This policy is different to kernel ACPI SLIT validation, which
-> allows non-symmetrical distances (ACPI spec SLIT rules allow it). However,
-> the distance debug message is dropped as it may be misleading (for a distance
-> which is later overwritten).
-
-We could override but if the DT passed table is inconsistent then it must
-abort as non-symmetrical distance is not supported. Hence overriding the
-distance should happen only in case the inverse set is absent (probably
-outside the first loop).
-
-> 
-> Some final notes on semantics:
-> 
-> - It is implied that it is the responsibility of the arch NUMA code to
->   reset the NUMA distance map for an error in distance map parsing.
-
-Right.
-
-> 
-> - It is the responsibility of the FW NUMA topology parsing (whether OF or
->   ACPI) to enforce NUMA distance rules, and not arch NUMA code.
-
-This is where we still have some inconsistencies. Arch NUMA code on arm64
-should either enforce rule 1 and 2 as stated above or should not at all. As
-discussed previously numa_set_distance() enforces first part of rule 2
-(self distance should be 10) but not the second part of rule 2 (internode
-distance > 10). So either the following condition should be dropped from
-
-(from == to && distance != LOCAL_DISTANCE)
-
-or the following condition should be added to
-
-(from != to && distance <= LOCAL_DISTANCE)
-
-numa_set_distance() in order to conform to the semantics described above.
-But thats for a separate discussion how much and what should be enforced
-in any given DT compatible arch NUMA node. May not be part of this patch.
-
-> 
-> [1] Documents/devicetree/bindings/numa.txt
-> [2] https://www.spinics.net/lists/arm-kernel/msg683304.html
-> 
-> Cc: stable@vger.kernel.org # 4.7
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> Acked-by: Will Deacon <will.deacon@arm.com>
-> ---
-> Changes from v1:
-> - Add note on masking crash reported
-> - Add Will's tag
-> - Add cc stable
-> 
-> diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
-> index 35c64a4295e0..fe6b13608e51 100644
-> --- a/drivers/of/of_numa.c
-> +++ b/drivers/of/of_numa.c
-> @@ -104,9 +104,14 @@ static int __init of_numa_parse_distance_map_v1(struct device_node *map)
->  		distance = of_read_number(matrix, 1);
->  		matrix++;
->  
-> +		if ((nodea == nodeb && distance != LOCAL_DISTANCE) ||
-> +		    (nodea != nodeb && distance <= LOCAL_DISTANCE)) {
-> +			pr_err("Invalid distance[node%d -> node%d] = %d\n",
-> +			       nodea, nodeb, distance);
-> +			return -EINVAL;
-> +		}
-> +
->  		numa_set_distance(nodea, nodeb, distance);
-> -		pr_debug("distance[node%d -> node%d] = %d\n",
-> -			 nodea, nodeb, distance);
-
-It makes sense to go through the table and print the finalized values
-(being passed to arch NUMA) out side of this loop after any identical
-replacement is done.
-
->  
->  		/* Set default distance of node B->A same as A->B */
->  		if (nodeb > nodea)
-> 
-
-As mentioned before it should invalidate the table [a, b] != [b, a] in
-case they are present and not equal.
+-	dpdma_clk: dpdma_clk {
++	dpdma_clk: dpdma-clk {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0x0>;
+ 		clock-frequency = <533000000>;
+ 	};
+ 
+-	drm_clock: drm_clock {
++	drm_clock: drm-clock {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0x0>;
+ 		clock-frequency = <262750000>;
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+index 527b4d0f88e2..13a0a028df98 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+@@ -82,7 +82,7 @@
+ 			linux,default-trigger = "bluetooth-power";
+ 		};
+ 
+-		vbus_det { /* U5 USB5744 VBUS detection via MIO25 */
++		vbus-det { /* U5 USB5744 VBUS detection via MIO25 */
+ 			label = "vbus_det";
+ 			gpios = <&gpio 25 GPIO_ACTIVE_HIGH>;
+ 			default-state = "on";
+@@ -98,7 +98,7 @@
+ 		regulator-boot-on;
+ 	};
+ 
+-	sdio_pwrseq: sdio_pwrseq {
++	sdio_pwrseq: sdio-pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+ 		reset-gpios = <&gpio 7 GPIO_ACTIVE_LOW>; /* WIFI_EN */
+ 	};
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+index 0397bf66b2e7..cef81671f3ab 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+@@ -53,7 +53,7 @@
+ 
+ 	leds {
+ 		compatible = "gpio-leds";
+-		heartbeat_led {
++		heartbeat-led {
+ 			label = "heartbeat";
+ 			gpios = <&gpio 23 GPIO_ACTIVE_HIGH>;
+ 			linux,default-trigger = "heartbeat";
+@@ -139,25 +139,25 @@
+ 		 * 7, 10 - 17 - not connected
+ 		 */
+ 
+-		gtr_sel0 {
++		gtr-sel0 {
+ 			gpio-hog;
+ 			gpios = <0 0>;
+ 			output-low; /* PCIE = 0, DP = 1 */
+ 			line-name = "sel0";
+ 		};
+-		gtr_sel1 {
++		gtr-sel1 {
+ 			gpio-hog;
+ 			gpios = <1 0>;
+ 			output-high; /* PCIE = 0, DP = 1 */
+ 			line-name = "sel1";
+ 		};
+-		gtr_sel2 {
++		gtr-sel2 {
+ 			gpio-hog;
+ 			gpios = <2 0>;
+ 			output-high; /* PCIE = 0, USB0 = 1 */
+ 			line-name = "sel2";
+ 		};
+-		gtr_sel3 {
++		gtr-sel3 {
+ 			gpio-hog;
+ 			gpios = <3 0>;
+ 			output-high; /* PCIE = 0, SATA = 1 */
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
+index 7238f022a671..94cf5094df64 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
+@@ -53,7 +53,7 @@
+ 
+ 	leds {
+ 		compatible = "gpio-leds";
+-		heartbeat_led {
++		heartbeat-led {
+ 			label = "heartbeat";
+ 			gpios = <&gpio 23 GPIO_ACTIVE_HIGH>;
+ 			linux,default-trigger = "heartbeat";
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
+index fa055e718d4b..460adc378295 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
+@@ -53,7 +53,7 @@
+ 
+ 	leds {
+ 		compatible = "gpio-leds";
+-		heartbeat_led {
++		heartbeat-led {
+ 			label = "heartbeat";
+ 			gpios = <&gpio 23 GPIO_ACTIVE_HIGH>;
+ 			linux,default-trigger = "heartbeat";
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+index ae3c1b929648..fa4fd777d90e 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+@@ -71,7 +71,7 @@
+ 		};
+ 	};
+ 
+-	cpu_opp_table: cpu_opp_table {
++	cpu_opp_table: cpu-opp-table {
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 		opp00 {
+@@ -124,7 +124,7 @@
+ 			     <1 10 0xf08>;
+ 	};
+ 
+-	amba_apu: amba_apu@0 {
++	amba_apu: amba-apu@0 {
+ 		compatible = "simple-bus";
+ 		#address-cells = <2>;
+ 		#size-cells = <1>;
+-- 
+1.9.1
