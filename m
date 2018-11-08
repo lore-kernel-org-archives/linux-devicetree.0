@@ -1,68 +1,72 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/2] drm/msm/dsi: Get PHY ref clock from the
- DT
-Date: Thu, 8 Nov 2018 14:04:31 -0800
-Message-ID: <CAD=FV=Vyv5sRhJNgpP6Gnn3+6zRjGsT8RozCY6xx51Tr_hRoeg@mail.gmail.com>
-References: <20181102214534.184593-1-mka@chromium.org>
- <20181102214534.184593-2-mka@chromium.org>
+From: Alan Cooper <alcooperx@gmail.com>
+Subject: Re: [PATCH V2 2/6] usb: core: Add ability to skip phy exit on suspend
+ and init on resume
+Date: Thu, 8 Nov 2018 17:50:49 -0500
+Message-ID: <CAOGqxeXmMWK53pAmjeUtpdXNeTa7UH7=VA6pAJyhxg_BsmU5+w@mail.gmail.com>
+References: <CAOGqxeWBmAahswHp+b_PzkyGs-9sOx3COpJnFVsbKhx14KLuUw@mail.gmail.com>
+ <1541641432.32173.71.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181102214534.184593-2-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1541641432.32173.71.camel@mhfsdcap03>
+Sender: linux-kernel-owner@vger.kernel.org
+To: chunfeng yun <chunfeng.yun@mediatek.com>
+Cc: ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, "David S. Miller" <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>, USB
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBGcmksIE5vdiAyLCAyMDE4IGF0IDI6NDUgUE0gTWF0dGhpYXMgS2FlaGxja2UgPG1r
-YUBjaHJvbWl1bS5vcmc+IHdyb3RlOgo+Cj4gR2V0IHRoZSBQSFkgcmVmIGNsb2NrIGZyb20gdGhl
-IGRldmljZSB0cmVlIGluc3RlYWQgb2YgaGFyZGNvZGluZwo+IGl0cyBuYW1lIGFuZCByYXRlLgo+
-Cj4gU2lnbmVkLW9mZi1ieTogTWF0dGhpYXMgS2FlaGxja2UgPG1rYUBjaHJvbWl1bS5vcmc+Cj4g
-LS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vZHNpL3BsbC9kc2lfcGxsXzEwbm0uYyB8IDExICsr
-KysrKysrKystCj4gIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9u
-KC0pCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvcGxsL2RzaV9wbGxf
-MTBubS5jIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvcGxsL2RzaV9wbGxfMTBubS5jCj4gaW5k
-ZXggNGMwM2YwYjczNDNlZC4uMTAxNmViNTBkZjhmNSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vbXNtL2RzaS9wbGwvZHNpX3BsbF8xMG5tLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0v
-bXNtL2RzaS9wbGwvZHNpX3BsbF8xMG5tLmMKPiBAQCAtOTEsNiArOTEsOCBAQCBzdHJ1Y3QgZHNp
-X3BsbF8xMG5tIHsKPiAgICAgICAgIHZvaWQgX19pb21lbSAqcGh5X2Ntbl9tbWlvOwo+ICAgICAg
-ICAgdm9pZCBfX2lvbWVtICptbWlvOwo+Cj4gKyAgICAgICBzdHJ1Y3QgY2xrICp2Y29fcmVmX2Ns
-azsKPiArCj4gICAgICAgICB1NjQgdmNvX3JlZl9jbGtfcmF0ZTsKPiAgICAgICAgIHU2NCB2Y29f
-Y3VycmVudF9yYXRlOwo+Cj4gQEAgLTYzMCw3ICs2MzIsOCBAQCBzdGF0aWMgaW50IHBsbF8xMG5t
-X3JlZ2lzdGVyKHN0cnVjdCBkc2lfcGxsXzEwbm0gKnBsbF8xMG5tKQo+ICAgICAgICAgY2hhciBj
-bGtfbmFtZVszMl0sIHBhcmVudFszMl0sIHZjb19uYW1lWzMyXTsKPiAgICAgICAgIGNoYXIgcGFy
-ZW50MlszMl0sIHBhcmVudDNbMzJdLCBwYXJlbnQ0WzMyXTsKPiAgICAgICAgIHN0cnVjdCBjbGtf
-aW5pdF9kYXRhIHZjb19pbml0ID0gewo+IC0gICAgICAgICAgICAgICAucGFyZW50X25hbWVzID0g
-KGNvbnN0IGNoYXIgKltdKXsgInhvIiB9LAo+ICsgICAgICAgICAgICAgICAucGFyZW50X25hbWVz
-ID0gKGNvbnN0IGNoYXIgKltdKXsKPiArICAgICAgICAgICAgICAgICAgICAgICBfX2Nsa19nZXRf
-bmFtZShwbGxfMTBubS0+dmNvX3JlZl9jbGspIH0sCj4gICAgICAgICAgICAgICAgIC5udW1fcGFy
-ZW50cyA9IDEsCj4gICAgICAgICAgICAgICAgIC5uYW1lID0gdmNvX25hbWUsCj4gICAgICAgICAg
-ICAgICAgIC5mbGFncyA9IENMS19JR05PUkVfVU5VU0VELAo+IEBAIC03ODYsNiArNzg5LDEyIEBA
-IHN0cnVjdCBtc21fZHNpX3BsbCAqbXNtX2RzaV9wbGxfMTBubV9pbml0KHN0cnVjdCBwbGF0Zm9y
-bV9kZXZpY2UgKnBkZXYsIGludCBpZCkKPiAgICAgICAgIHBsbF8xMG5tLT5pZCA9IGlkOwo+ICAg
-ICAgICAgcGxsXzEwbm1fbGlzdFtpZF0gPSBwbGxfMTBubTsKPgo+ICsgICAgICAgcGxsXzEwbm0t
-PnZjb19yZWZfY2xrID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsICJyZWYiKTsKPiArICAgICAg
-IGlmIChJU19FUlIocGxsXzEwbm0tPnZjb19yZWZfY2xrKSkgewo+ICsgICAgICAgICAgICAgICBk
-ZXZfZXJyKCZwZGV2LT5kZXYsICJjb3VsZG4ndCBnZXQgJ3JlZicgY2xvY2tcbiIpOwo+ICsgICAg
-ICAgICAgICAgICByZXR1cm4gKHZvaWQgKilwbGxfMTBubS0+dmNvX3JlZl9jbGs7Cj4gKyAgICAg
-ICB9CgpTbywgdW1tbW0uICBDYW4geW91IGZvbGxvdyB0aGUgc2FtZSBwYXR0ZXJuIGZvciBhbGwg
-dGhlIG90aGVyIGNsb2NrcwppbiB0aGlzIGZpbGUgdG9vPyAgQWxsIHBhcmVudHMgc2hvdWxkIGdl
-dCB0aGVpciBuYW1lIGJhc2VkIG9uCnJlZmVyZW5jZXMgaW4gdGhlIGRldmljZSB0cmVlLgoKSXQg
-dHVybnMgb3V0IHRoYXQgcmlnaHQgbm93IHdlIGhhdmUgYSBtaXNtYXRjaCBiZWNhdXNlCiJkcml2
-ZXJzL2Nsay9xY29tL2Rpc3BjYy1zZG04NDUuYyIgY2FsbHMgImRzaTBwbGxieXRlIgoiZHNpMF9w
-aHlfcGxsX291dF9ieXRlY2xrIiBhbmQgY2FsbHMgImRzaTBwbGwiCiJkc2kwX3BoeV9wbGxfb3V0
-X2RzaWNsayIuICBXZSBtaWdodCB3YW50IHRvIGNoYW5nZSB0aGUgbmFtZXMgaW4KZGlzcGNjLXNk
-bTg0NS5jLCBidXQgaXQgd291bGRuJ3QgbWF0dGVyIGlmIHdlIHNpbXBseSBkaWRuJ3QgaGFyZGNv
-ZGUKdGhlbSBoZXJlLgoKLURvdWcKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZnJlZWRyZW5vCg==
+On Wed, Nov 7, 2018 at 8:43 PM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+>
+> hi,
+> On Tue, 2018-10-30 at 18:30 -0400, Alan Cooper wrote:
+> > On 10/17/18 9:46 PM, Chunfeng Yun wrote:> hi,
+> > >
+> > > On Wed, 2018-10-17 at 18:29 -0400, Al Cooper wrote:
+> > >> Add the ability to skip calling the PHY's exit routine on suspend
+> > >> and the PHY's init routine on resume. This is to handle a USB PHY
+> > >> that should have it's power_off function called on suspend but
+> > cannot
+> > >> have it's exit function called because on exit it will disable the
+> > >> PHY to the point where register accesses to the Host Controllers
+> > >> using the PHY will be disabled and the host drivers will crash.
+> > >>
+> > >> This is enabled with the HCD flag "suspend_without_phy_exit" which
+> > >> can be set from any HCD driver.
+> > >>
+> > >> Signed-off-by: Al Cooper<alcooperx@gmail.com>
+> > >> ---
+> > >>   drivers/usb/core/hcd.c  |  8 ++++----
+> > >>   drivers/usb/core/phy.c  | 18 ++++++++++++------
+> > >>   drivers/usb/core/phy.h  |  9 ++++++---
+> > >>   include/linux/usb/hcd.h |  3 +++
+> > >>   4 files changed, 25 insertions(+), 13 deletions(-)
+> > >>
+>
+>
+> > >>       unsigned        skip_phy_initialization:1;
+> > >>
+> > >> +    /* Some phys don't want the phy's exit/init called on
+> > suspend/resume */
+> > >> +    unsigned        suspend_without_phy_exit:1;
+> > > As suggested before, you can skip phy's exit/init during
+> > suspend/resume
+> > > by enabling wakeup of hcd, so needn't add a new variable for it.
+> >
+> > I still need to be able to enable and disable wakeup for this driver.
+> Just use device_init_wakeup(dev, true) instead of
+> device_wakeup_enable(dev) for your controller driver, you can try it.
+>
+> Sorry for the late replay
+
+What about the case where sysfs is used to disable wakeup?
+
+Al
+> >
+> > >
+> > >> +
+> > >>       /* The next flag is a stopgap, to be removed when all the
+> > HCDs
+> > >>        * support the new root-hub polling mechanism. */
+> > >>       unsigned        uses_new_polling:1;
+> > >
+>
+>
