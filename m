@@ -1,86 +1,120 @@
-From: John Garry <john.garry@huawei.com>
-Subject: [PATCH v2] of, numa: Validate some distance map rules
-Date: Thu, 8 Nov 2018 18:17:03 +0800
-Message-ID: <1541672223-131326-1-git-send-email-john.garry@huawei.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 3/4] ARM: dts: r8a77470: Add QSPI support
+Date: Thu, 8 Nov 2018 10:21:49 +0000
+Message-ID: <TY1PR01MB1770FA3764370E7AEA5D30C6C0C50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1541075705-1333-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1541075705-1333-4-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20181102114946.5tqk2lyisaey475w@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, frowand.list@gmail.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com, will.deacon@arm.com, anshuman.khandual@arm.com, peterz@infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20181102114946.5tqk2lyisaey475w@verge.net.au>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, Mark Brown <broonie@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Currently the NUMA distance map parsing does not validate the distance
-table for the distance-matrix rules 1-2 in [1].
+Hello Simon,
 
-However the arch NUMA code may enforce some of these rules, but not all.
-Such is the case for the arm64 port, which does not enforce the rule that
-the distance between separates nodes cannot equal LOCAL_DISTANCE.
+Thank you for your feedback!
 
-The patch adds the following rules validation:
-- distance of node to self equals LOCAL_DISTANCE
-- distance of separate nodes > LOCAL_DISTANCE
+> From: Simon Horman <horms@verge.net.au>
+> Sent: 02 November 2018 11:50
+> Subject: Re: [PATCH 3/4] ARM: dts: r8a77470: Add QSPI support
+>
+> On Thu, Nov 01, 2018 at 12:35:04PM +0000, Fabrizio Castro wrote:
+> > Add QSPI[01] support to the RZ/G1C SoC specific device tree.
+> >
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > ---
+> >  arch/arm/boot/dts/r8a77470.dtsi | 34 ++++++++++++++++++++++++++++++++++
+> >  1 file changed, 34 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
+> > index e6407e5..04a8877 100644
+> > --- a/arch/arm/boot/dts/r8a77470.dtsi
+> > +++ b/arch/arm/boot/dts/r8a77470.dtsi
+> > @@ -20,6 +20,8 @@
+> >  i2c2 = &i2c2;
+> >  i2c3 = &i2c3;
+> >  i2c4 = &i2c4;
+> > +spi0 = &qspi0;
+> > +spi1 = &qspi1;
+> >  };
+>
+> Geert can comment but I believe we are moving away from using aliases
+> in this way and that it would be best if the above hunk was dropped
+> from this patch.
+>
+> https://patchwork.kernel.org/patch/10644159/
 
-This change avoids a yet-unresolved crash reported in [2].
+Geert, what do you want me to do here?
 
-A note on dealing with symmetrical distances between nodes:
+Thanks,
+Fab
 
-Validating symmetrical distances between nodes is difficult. If it were
-mandated in the bindings that every distance must be recorded in the
-table, then it would be easy. However, it isn't.
+>
+> The rest of the patch looks fine to me.
+>
+> >
+> >  cpus {
+> > @@ -460,6 +462,38 @@
+> >  status = "disabled";
+> >  };
+> >
+> > +qspi0: spi@e6b10000 {
+> > +compatible = "renesas,qspi-r8a77470", "renesas,qspi";
+> > +reg = <0 0xe6b10000 0 0x2c>;
+> > +interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
+> > +clocks = <&cpg CPG_MOD 918>;
+> > +dmas = <&dmac0 0x17>, <&dmac0 0x18>,
+> > +       <&dmac1 0x17>, <&dmac1 0x18>;
+> > +dma-names = "tx", "rx", "tx", "rx";
+> > +power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
+> > +num-cs = <1>;
+> > +#address-cells = <1>;
+> > +#size-cells = <0>;
+> > +resets = <&cpg 918>;
+> > +status = "disabled";
+> > +};
+> > +
+> > +qspi1: spi@ee200000 {
+> > +compatible = "renesas,qspi-r8a77470", "renesas,qspi";
+> > +reg = <0 0xee200000 0 0x2c>;
+> > +interrupts = <GIC_SPI 239 IRQ_TYPE_LEVEL_HIGH>;
+> > +clocks = <&cpg CPG_MOD 917>;
+> > +dmas = <&dmac0 0xd1>, <&dmac0 0xd2>,
+> > +       <&dmac1 0xd1>, <&dmac1 0xd2>;
+> > +dma-names = "tx", "rx", "tx", "rx";
+> > +power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
+> > +num-cs = <1>;
+> > +#address-cells = <1>;
+> > +#size-cells = <0>;
+> > +resets = <&cpg 917>;
+> > +status = "disabled";
+> > +};
+> > +
+> >  scif0: serial@e6e60000 {
+> >  compatible = "renesas,scif-r8a77470",
+> >       "renesas,rcar-gen2-scif", "renesas,scif";
+> > --
+> > 2.7.4
+> >
 
-In addition to this, it is also possible to record [b, a] distance only
-(and not [a, b]). So, when processing the table for [b, a], we cannot
-assert that current distance of [a, b] != [b, a] as invalid, as [a, b]
-distance may not be present in the table and current distance would be
-default at REMOTE_DISTANCE.
 
-As such, we maintain the policy that we overwrite distance [a, b] = [b, a]
-for b > a. This policy is different to kernel ACPI SLIT validation, which
-allows non-symmetrical distances (ACPI spec SLIT rules allow it). However,
-the distance debug message is dropped as it may be misleading (for a distance
-which is later overwritten).
 
-Some final notes on semantics:
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered No. 04586709.
 
-- It is implied that it is the responsibility of the arch NUMA code to
-  reset the NUMA distance map for an error in distance map parsing.
-
-- It is the responsibility of the FW NUMA topology parsing (whether OF or
-  ACPI) to enforce NUMA distance rules, and not arch NUMA code.
-
-[1] Documents/devicetree/bindings/numa.txt
-[2] https://www.spinics.net/lists/arm-kernel/msg683304.html
-
-Cc: stable@vger.kernel.org # 4.7
-Signed-off-by: John Garry <john.garry@huawei.com>
-Acked-by: Will Deacon <will.deacon@arm.com>
----
-Changes from v1:
-- Add note on masking crash reported
-- Add Will's tag
-- Add cc stable
-
-diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
-index 35c64a4295e0..fe6b13608e51 100644
---- a/drivers/of/of_numa.c
-+++ b/drivers/of/of_numa.c
-@@ -104,9 +104,14 @@ static int __init of_numa_parse_distance_map_v1(struct device_node *map)
- 		distance = of_read_number(matrix, 1);
- 		matrix++;
- 
-+		if ((nodea == nodeb && distance != LOCAL_DISTANCE) ||
-+		    (nodea != nodeb && distance <= LOCAL_DISTANCE)) {
-+			pr_err("Invalid distance[node%d -> node%d] = %d\n",
-+			       nodea, nodeb, distance);
-+			return -EINVAL;
-+		}
-+
- 		numa_set_distance(nodea, nodeb, distance);
--		pr_debug("distance[node%d -> node%d] = %d\n",
--			 nodea, nodeb, distance);
- 
- 		/* Set default distance of node B->A same as A->B */
- 		if (nodeb > nodea)
--- 
-1.9.1
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
