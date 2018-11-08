@@ -1,25 +1,23 @@
 Return-Path: <SRS0=+CEJ=NT=verge.net.au=horms@kernel.org>
-Date: Thu, 8 Nov 2018 15:09:32 +0100
+Date: Thu, 8 Nov 2018 15:08:53 +0100
 From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH 1/5] media: dt-bindings: media: rcar-csi2: Add r8a774a1
  support
-Message-ID: <20181108140932.nxyjigvrwiei7jii@verge.net.au>
+Message-ID: <20181108140852.2qngb3qlhpbpjs6e@verge.net.au>
 References: <1536589878-26218-1-git-send-email-biju.das@bp.renesas.com>
  <1536589878-26218-2-git-send-email-biju.das@bp.renesas.com>
+ <TY1PR01MB17709220C776F7617FAF36AAC0C50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1536589878-26218-2-git-send-email-biju.das@bp.renesas.com>
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+In-Reply-To: <TY1PR01MB17709220C776F7617FAF36AAC0C50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Sep 10, 2018 at 03:31:14PM +0100, Biju Das wrote:
-> Document RZ/G2M (R8A774A1) SoC bindings.
+On Thu, Nov 08, 2018 at 12:50:22PM +0000, Fabrizio Castro wrote:
+> Dear All,
 > 
-> The RZ/G2M SoC is similar to R-Car M3-W (R8A7796).
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Who is the best person to take this patch?
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+I believe this patch is for Mauro.
