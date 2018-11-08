@@ -1,67 +1,62 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH anybus v3 5/6] dt-bindings: anybuss-host: document
- devicetree binding
-Date: Thu, 8 Nov 2018 15:11:22 +0100
-Message-ID: <CAK8P3a1ZUaxJzfzYoqAK+_ZBazHzF6nG1V2aiZSoiQr6nDhiSQ@mail.gmail.com>
-References: <20181104155501.14767-1-TheSven73@googlemail.com> <20181104155501.14767-6-TheSven73@googlemail.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 4/6] dt-bindings: dmaengine: usb-dmac: Add binding for
+ r8a774a1
+Date: Thu, 8 Nov 2018 14:12:59 +0000
+Message-ID: <TY1PR01MB17701846C753070EE6D572B6C0C50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1535097375-5561-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1535097375-5561-5-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181104155501.14767-6-TheSven73@googlemail.com>
+In-Reply-To: <1535097375-5561-5-git-send-email-fabrizio.castro@bp.renesas.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: thesven73@gmail.com
-Cc: svendev@arcx.com, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, noralf@tronnes.org, Johan Hovold <johan@kernel.org>, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, gregkh <gregkh@linuxfoundation.org>, John Garry <john.garry@huawei.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Robin Murphy <robin.murphy@arm.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>, Icenowy Zheng <icenowy@aosc.io>, Stuart Yoder <stuyoder@gmail.com>, Maxime Ripard <maxime.r>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 4, 2018 at 4:55 PM <thesven73@gmail.com> wrote:
+Hello Vinod,
 
+Do you think you can take this patch?
 
-> ---
->  .../bindings/bus/arcx,anybuss-host.txt        | 36 +++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/arcx,anybuss-host.txt
+Thanks,
+Fab
+
+> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Sent: 24 August 2018 08:56
+> Subject: [PATCH 4/6] dt-bindings: dmaengine: usb-dmac: Add binding for r8=
+a774a1
 >
-> diff --git a/Documentation/devicetree/bindings/bus/arcx,anybuss-host.txt b/Documentation/devicetree/bindings/bus/arcx,anybuss-host.txt
-> new file mode 100644
-> index 000000000000..5c28e4e09bb2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/arcx,anybuss-host.txt
-> @@ -0,0 +1,36 @@
-> +* Arcx Anybus-S host
-> +
-> +This host communicates with the SoC over a parallel bus. It is
-> +expected that its Device Tree node is specified as the child of a node
-> +corresponding to the parallel bus used for communication.
-> +
-> +Required properties:
-> +
-> +  - compatible : The following string:
-> +        "arcx,anybuss-host"
-> +
-> +  - reg : bus memory area where the Anybus-S host dpram is located.
-> +
-> +  - interrupts : interrupt connected to the Anybus-S host interrupt line.
-> +       Generic interrupt client node bindings are described in
-> +               interrupt-controller/interrupts.txt
-> +
-> +  - resets : the reset line associated with the Anybus-S host.
-> +
-> +Example of usage:
-> +
-> +This example places the Anybus-S host on top of the i.MX WEIM parallel bus, see:
-> +Documentation/devicetree/bindings/bus/imx-weim.txt
+> From: Biju Das <biju.das@bp.renesas.com>
+>
+> This patch adds binding for r8a774a1 (RZ/G2M).
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+> b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+> index 482e543..417ca90 100644
+> --- a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+> +++ b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+> @@ -5,6 +5,7 @@ Required Properties:
+>  Examples with soctypes are:
+>    - "renesas,r8a7743-usb-dmac" (RZ/G1M)
+>    - "renesas,r8a7745-usb-dmac" (RZ/G1E)
+> +  - "renesas,r8a774a1-usb-dmac" (RZ/G2M)
+>    - "renesas,r8a7790-usb-dmac" (R-Car H2)
+>    - "renesas,r8a7791-usb-dmac" (R-Car M2-W)
+>    - "renesas,r8a7793-usb-dmac" (R-Car M2-N)
+> --
+> 2.7.4
 
-To allow describing connected devices, I think we need a #address-cells
-and #size-cells property here, with fixed values. If a device is attached by
-a single 32-bit integer, then
 
- #address-cells = <1>;
- #size-cells = <0>;
 
-should be enough, otherwise you might need additional address cells.
-Actually listing the device(s) can be optional, but we do need the
-adress in order
-to let the bus code associate a device_node pointer with the child
-device structure to let a driver read the properties.
 
-       Arnd
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
