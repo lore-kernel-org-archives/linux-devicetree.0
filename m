@@ -1,160 +1,238 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH 1/2] dt-bindings: hwmon: add binding documentation for
- adt7475
-Date: Thu, 8 Nov 2018 19:55:39 +0000
-Message-ID: <46001dee3a224ac3b01ceb11421af83d@svr-chch-ex1.atlnz.lc>
-References: <20181107040010.27436-1-chris.packham@alliedtelesis.co.nz>
- <20181107040010.27436-2-chris.packham@alliedtelesis.co.nz>
- <64720b73-dddf-783c-a3a4-3f32a748bf5d@roeck-us.net>
- <1ed7434bfded41bfba3b739f58f69102@svr-chch-ex1.atlnz.lc>
- <213614fb-1b7a-a06c-6f9f-f3d497750ca6@roeck-us.net>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 02/24] leds: core: Add support for composing LED class
+ device names
+Date: Thu, 8 Nov 2018 21:47:30 +0100
+Message-ID: <3a5ca343-5c48-b257-4ba4-5a7e223efbf8@gmail.com>
+References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
+ <1541542052-10081-3-git-send-email-jacek.anaszewski@gmail.com>
+ <CAMz4ku+K=Jw56C2YczFMcVGRPUHMpSw4_iWEsNmKDBQgWjmEqQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMz4ku+K=Jw56C2YczFMcVGRPUHMpSw4_iWEsNmKDBQgWjmEqQ@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jdelvare@suse.com" <jdelvare@suse.com>
-Cc: "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>, Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-On 7/11/18 6:08 PM, Guenter Roeck wrote:=0A=
-> On 11/6/18 8:27 PM, Chris Packham wrote:=0A=
->> On 7/11/18 5:24 PM, Guenter Roeck wrote:=0A=
->>> On 11/6/18 8:00 PM, Chris Packham wrote:=0A=
->>>> With the addition of the invert-pwm property the adt7475 needs its own=
-=0A=
->>>> binding documentation rather being captured under trivial-devices.txt.=
-=0A=
->>>>=0A=
->>>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
->>>> ---=0A=
->>>>      .../devicetree/bindings/hwmon/adt7475.txt     | 22 ++++++++++++++=
-+++++=0A=
->>>>      .../devicetree/bindings/trivial-devices.txt   |  4 ----=0A=
->>>>      2 files changed, 22 insertions(+), 4 deletions(-)=0A=
->>>>      create mode 100644 Documentation/devicetree/bindings/hwmon/adt747=
-5.txt=0A=
->>>>=0A=
->>>> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.txt b/Doc=
-umentation/devicetree/bindings/hwmon/adt7475.txt=0A=
->>>> new file mode 100644=0A=
->>>> index 000000000000..79255439e157=0A=
->>>> --- /dev/null=0A=
->>>> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.txt=0A=
->>>> @@ -0,0 +1,22 @@=0A=
->>>> +*ADT7475 hwmon sensor.=0A=
->>>> +=0A=
->>>> +Required properties:=0A=
->>>> +- compatible: One of=0A=
->>>> +	"adi,adt7473"=0A=
->>>> +	"adi,adt7475"=0A=
->>>> +	"adi,adt7476"=0A=
->>>> +	"adi,adt7490"=0A=
->>>> +=0A=
->>>> +- reg: I2C address=0A=
->>>> +=0A=
->>>> +optional properties:=0A=
->>>> +=0A=
->>>> +- invert-pwm: This configures the PWM to use logic low for 100% duty =
-cycle.=0A=
->>>> +=0A=
->>>> +Example:=0A=
->>>> +=0A=
->>>> +hwmon@2e {=0A=
->>>> +	compatible =3D ;=0A=
->>>> +	reg =3D <0x2e>;=0A=
->>>> +	invert-pwm;=0A=
->>>=0A=
->>> If I understand correctly, the flag is set per pwm channel. A single gl=
-obal=0A=
->>> property seems inappropriate.=0A=
->>=0A=
->> Yes it is per-channel. But I was having a hard time imagining a hardware=
-=0A=
->> design that would use both inverted and non-inverted at the same time.=
-=0A=
->>=0A=
-> =0A=
-> People can be inventive. Sometimes too much so.=0A=
-> =0A=
->> Do you have a preference for how the properties should look?=0A=
->>=0A=
->>      invert-pwm[123]?=0A=
->>=0A=
->>      invert-pwm =3D <0x7>;?=0A=
->>=0A=
-> Ultimately we'll have to find a generic way of defining devicetree proper=
-ties for=0A=
-> hardware monitoring devices, not just for pwm but for all sensor types. A=
- sub-node=0A=
-> per channel seems to be the most likely answer, but I think that is a lon=
-g way off=0A=
-> (and will require lengthy discussions about acceptable properties).=0A=
-> =0A=
-> I was looking into pwm DT properties, but they define a set of flags=0A=
-> (PWM_POLARITY_INVERTED, PWM_POLARITY_NORMAL).=0A=
-> =0A=
-> The g762 driver uses "pwm_polarity". Underscore - hmm. Other drivers use =
-module=0A=
-> parameters, sysfs attributes (pwmX_invert in asc7621 driver), or platform=
- data=0A=
-> (g762, max6639).=0A=
-> =0A=
-> Maybe pwm-polarity =3D <PWM_POLARITY_NORMAL | PWM_POLARITY_INVERTED> ?=0A=
-> No idea if that makes sense. Or just a boolean pwm-polarity-inverted.=0A=
-=0A=
-That would allow undoing an earlier invert which is something my initial =
-=0A=
-implementation lacked.=0A=
-=0A=
-In the future we could also make this a list of values to deal with =0A=
-multiple pwm outputs=0A=
-=0A=
-e.g. pwm-polarity =3D <PWM_POLARITY_NORMAL>, <PWM_POLARITY_NORMAL> =0A=
-<PWM_POLARITY_INVERTED>;=0A=
-=0A=
-I'll look at a v2 that does the first part for now.=0A=
-=0A=
-> =0A=
-> Thinking about it per channel vs. per chip ... other drivers also seem to=
-=0A=
-> use a single property / attribute for the entire chip, so that is fine he=
-re=0A=
-> as well. We can always extend it if needed.=0A=
-> =0A=
-> Anyway, I am fine with whatever Rob accepts.=0A=
-> =0A=
-> Guenter=0A=
-> =0A=
->>>=0A=
->>> Guenter=0A=
->>>=0A=
->>>> +};=0A=
->>>> diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/D=
-ocumentation/devicetree/bindings/trivial-devices.txt=0A=
->>>> index 69c934aec13b..4f29100d6bbf 100644=0A=
->>>> --- a/Documentation/devicetree/bindings/trivial-devices.txt=0A=
->>>> +++ b/Documentation/devicetree/bindings/trivial-devices.txt=0A=
->>>> @@ -14,10 +14,6 @@ ad,ad7414		SMBus/I2C Digital Temperature Sensor in =
-6-Pin SOT with SMBus Alert an=0A=
->>>>      ad,adm9240		ADM9240:  Complete System Hardware Monitor for uProce=
-ssor-Based Systems=0A=
->>>>      adi,adt7461		+/-1C TDM Extended Temp Range I.C=0A=
->>>>      adt7461			+/-1C TDM Extended Temp Range I.C=0A=
->>>> -adi,adt7473		+/-1C TDM Extended Temp Range I.C=0A=
->>>> -adi,adt7475		+/-1C TDM Extended Temp Range I.C=0A=
->>>> -adi,adt7476		+/-1C TDM Extended Temp Range I.C=0A=
->>>> -adi,adt7490		+/-1C TDM Extended Temp Range I.C=0A=
->>>>      adi,adxl345		Three-Axis Digital Accelerometer=0A=
->>>>      adi,adxl346		Three-Axis Digital Accelerometer (backward-compatibi=
-lity value "adi,adxl345" must be listed too)=0A=
->>>>      ams,iaq-core		AMS iAQ-Core VOC Sensor=0A=
->>>>=0A=
->>>=0A=
->>>=0A=
->>=0A=
->>=0A=
-> =0A=
-> =0A=
-=0A=
+Hi Baolin,
+
+Thanks for the review.
+
+On 11/07/2018 08:20 AM, Baolin Wang wrote:
+> Hi Jacek,
+> 
+> On 7 November 2018 at 06:07, Jacek Anaszewski
+> <jacek.anaszewski@gmail.com> wrote:
+>> Add public led_compose_name() API for composing LED class device
+>> name basing on fwnode_handle data. The function composes device name
+>> according to either a new <color:function> pattern or the legacy
+>> <devicename:color:function> pattern. The decision on using the
+>> particular pattern is made basing on whether fwnode contains new
+>> "function" and "color" properties, or the legacy "label" proeprty.
+>>
+>> Backwards compatibility with in-driver hard-coded LED class device
+>> names is assured thanks to the default_desc argument.
+>>
+>> In case none of the aformentioned properties was found, then, for OF
+>> nodes, the node name is adopted for LED class device name.
+>>
+>> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>> Cc: Baolin Wang <baolin.wang@linaro.org>
+>> Cc: Daniel Mack <daniel@zonque.org>
+>> Cc: Dan Murphy <dmurphy@ti.com>
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+>> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> Cc: Simon Shields <simon@lineageos.org>
+>> Cc: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+>> ---
+>>  Documentation/leds/leds-class.txt |  2 +-
+>>  drivers/leds/led-core.c           | 71 +++++++++++++++++++++++++++++++++++++++
+>>  include/linux/leds.h              | 32 ++++++++++++++++++
+>>  3 files changed, 104 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/leds/leds-class.txt b/Documentation/leds/leds-class.txt
+>> index 836cb16..e9009c4 100644
+>> --- a/Documentation/leds/leds-class.txt
+>> +++ b/Documentation/leds/leds-class.txt
+>> @@ -43,7 +43,7 @@ LED Device Naming
+>>
+>>  Is currently of the form:
+>>
+>> -"devicename:colour:function"
+>> +"colour:function"
+>>
+>>  There have been calls for LED properties such as colour to be exported as
+>>  individual led class attributes. As a solution which doesn't incur as much
+>> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+>> index ede4fa0..f7371fc 100644
+>> --- a/drivers/leds/led-core.c
+>> +++ b/drivers/leds/led-core.c
+>> @@ -16,6 +16,8 @@
+>>  #include <linux/list.h>
+>>  #include <linux/module.h>
+>>  #include <linux/mutex.h>
+>> +#include <linux/of.h>
+>> +#include <linux/property.h>
+>>  #include <linux/rwsem.h>
+>>  #include "leds.h"
+>>
+>> @@ -327,3 +329,72 @@ void led_sysfs_enable(struct led_classdev *led_cdev)
+>>         led_cdev->flags &= ~LED_SYSFS_DISABLE;
+>>  }
+>>  EXPORT_SYMBOL_GPL(led_sysfs_enable);
+>> +
+>> +static void led_parse_properties(struct fwnode_handle *fwnode,
+>> +                                struct led_properties *props)
+>> +{
+>> +       int ret;
+>> +
+>> +       if (!fwnode)
+>> +               return;
+>> +
+>> +       ret = fwnode_property_read_string(fwnode, "label", &props->label);
+>> +       if (!ret)
+>> +               return;
+>> +
+>> +       ret = fwnode_property_read_string(fwnode, "function", &props->function);
+>> +       if (ret)
+>> +               pr_info("Failed to parse function property\n");
+>> +
+>> +       ret = fwnode_property_read_string(fwnode, "color", &props->color);
+>> +       if (ret)
+>> +               pr_info("Failed to parse color property\n");
+> 
+> Now the color and function properties can be optional, so we should
+> deal with different return errors.
+> -EINVAL means we have not set color or function property, which means
+> we should not give failure message for users (maybe "not supply color
+> property\n") and return 0 as success.
+
+The lack of any of these properties is not critical, therefore this
+function does not return the error code, but only prints the status.
+Please note that I'm not using pr_error(), but pr_info().
+Related to the message text - I agree, I will change it to e.g.
+"color property not found"
+
+> For other errors, we should not ignore them, instead we should give
+> failure messages and return errors.
+
+I've skimmed through other kernel drivers and vast majority of
+them don't check exact failure code in case of non-zero return,
+but assume that property is missing, and eventually report
+error code. I'd do the same here.
+
+> Tested-by: Baolin Wang <baolin.wang@linaro.org>
+> 
+>> +}
+>> +
+>> +int led_compose_name(struct fwnode_handle *fwnode, const char *led_hw_name,
+>> +                    const char *default_desc, char *led_classdev_name)
+>> +{
+>> +       struct led_properties props = {};
+>> +
+>> +       if (!led_classdev_name)
+>> +               return -EINVAL;
+>> +
+>> +       led_parse_properties(fwnode, &props);
+>> +
+>> +       if (props.label) {
+>> +               /*
+>> +                * Presence of 'label' DT property implies legacy LED name,
+>> +                * formatted as <devicename:color:function>, with possible
+>> +                * section omission if doesn't apply to given device.
+>> +                *
+>> +                * If no led_hw_name has been passed, then it indicates that
+>> +                * DT label should be used as-is for LED class device name.
+>> +                * Otherwise the label is prepended with led_hw_name to compose
+>> +                * the final LED class device name.
+>> +                */
+>> +               if (!led_hw_name) {
+>> +                       strncpy(led_classdev_name, props.label,
+>> +                               LED_MAX_NAME_SIZE);
+>> +               } else {
+>> +                       snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
+>> +                                led_hw_name, props.label);
+>> +               }
+>> +       } else if (props.function || props.color) {
+>> +               snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
+>> +                        props.color ?: "", props.function ?: "");
+>> +       } else if (default_desc) {
+>> +               if (!led_hw_name) {
+>> +                       pr_err("Legacy LED naming requires devicename segment");
+>> +                       return -EINVAL;
+>> +               }
+>> +               snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
+>> +                        led_hw_name, default_desc);
+>> +       } else if (is_of_node(fwnode)) {
+>> +               strncpy(led_classdev_name, to_of_node(fwnode)->name,
+>> +                       LED_MAX_NAME_SIZE);
+>> +       } else
+>> +               return -EINVAL;
+>> +
+>> +       return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(led_compose_name);
+>> diff --git a/include/linux/leds.h b/include/linux/leds.h
+>> index 646c49a..ddb4001 100644
+>> --- a/include/linux/leds.h
+>> +++ b/include/linux/leds.h
+>> @@ -238,6 +238,32 @@ extern void led_sysfs_disable(struct led_classdev *led_cdev);
+>>  extern void led_sysfs_enable(struct led_classdev *led_cdev);
+>>
+>>  /**
+>> + * led_compose_name - compose LED class device name
+>> + * @child: child fwnode_handle describing a LED,
+>> + *        or a group of synchronized LEDs.
+>> + * @led_hw_name: name of the LED controller, used when falling back to legacy
+>> + *              LED naming; it should be set to NULL in new LED class drivers
+>> + * @default_desc: default <color:function> tuple, for backwards compatibility
+>> + *               with in-driver hard-coded LED names used as a fallback when
+>> + *               "label" DT property was absent; it should be set to NULL
+>> + *               in new LED class drivers
+>> + * @led_classdev_name: composed LED class device name
+>> + *
+>> + * Create LED class device name basing on the configuration provided by the
+>> + * board firmware. The name can have a legacy form <devicename:color:function>,
+>> + * or a new form <color:function>. The latter is chosen if at least one of
+>> + * "color" or "function" properties is present in the fwnode, leaving the
+>> + * section blank if the related property is absent. The former is applied
+>> + * when legacy "label" property is present in the fwnode. In case none of the
+>> + * aformentioned properties was found, then, for OF nodes, the node name
+>> + * is adopted for LED class device name.
+>> + *
+>> + * Returns: 0 on success or negative error value on failure
+>> + */
+>> +extern int led_compose_name(struct fwnode_handle *child, const char *led_hw_name,
+>> +                           const char *default_desc, char *led_classdev_name);
+>> +
+>> +/**
+>>   * led_sysfs_is_disabled - check if LED sysfs interface is disabled
+>>   * @led_cdev: the LED to query
+>>   *
+>> @@ -414,6 +440,12 @@ struct led_platform_data {
+>>         struct led_info *leds;
+>>  };
+>>
+>> +struct led_properties {
+>> +       const char *color;
+>> +       const char *function;
+>> +       const char *label;
+>> +};
+>> +
+>>  struct gpio_desc;
+>>  typedef int (*gpio_blink_set_t)(struct gpio_desc *desc, int state,
+>>                                 unsigned long *delay_on,
+>> --
+>> 2.1.4
+>>
+> 
+> 
+> 
+
+-- 
+Best regards,
+Jacek Anaszewski
