@@ -1,45 +1,59 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 00/36] Devicetree schema
-Date: Thu, 8 Nov 2018 15:32:49 -0600
-Message-ID: <CAL_JsqL+7=zB3ze8cPNC1wZHX_FhP6wF9Xvrb_rTDgH90PDXzQ@mail.gmail.com>
-References: <CAApg2=QtTWxi6rhC-r971-HXPP2QEP=ZRRwS7nHQjKRMLGct7g@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 12/18] arm64: dts: qcom: pms405: add gpios
+Date: Thu, 8 Nov 2018 15:42:02 -0600
+Message-ID: <CAL_JsqJSszvQ0QC0LLT4ho+xMgiMJRVJyrM93OgH21Neu6xMqw@mail.gmail.com>
+References: <20181108184009.18430-1-vkoul@kernel.org> <20181108184009.18430-13-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAApg2=QtTWxi6rhC-r971-HXPP2QEP=ZRRwS7nHQjKRMLGct7g@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: rybczynska@gmail.com
-Cc: devicetree@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Grant Likely <glikely@secretlab.ca>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181108184009.18430-13-vkoul@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod <vkoul@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 8, 2018 at 1:54 PM Marta Rybczynska <rybczynska@gmail.com> wrote:
+On Thu, Nov 8, 2018 at 12:41 PM Vinod Koul <vkoul@kernel.org> wrote:
 >
-> Rob,
-> The patch set does convert the documentation files. Could you explain
-> the workflow of verifying a DTS? From what I can understand we can
-> validate YAML devicetrees, and the schema files against the
-> meta-schemas, but I see no tool for DTS to YAML conversion in your
-> tools. Do you use https://github.com/pantoniou/yamldt ?
+> Add the GPIOs present on PMS405 chip.
+>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  arch/arm64/boot/dts/qcom/pms405.dtsi | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/pms405.dtsi b/arch/arm64/boot/dts/qcom/pms405.dtsi
+> index 2b275bbdafa3..85a3228abaf9 100644
+> --- a/arch/arm64/boot/dts/qcom/pms405.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/pms405.dtsi
+> @@ -10,6 +10,25 @@
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+>
+> +               pms405_gpios: gpios@c000 {
 
-No, I'm not using that. dtc supports yaml output now. The kernel copy
-of dtc has this support in 4.20. You need libyaml headers installed to
-enable the support. The output format is intended only for validation
-and could possibly change.
+gpio@...
 
-The 'dtbs_check' target will do a dts->dt.yaml pass of all targets in
-$(dtb-y) with dtc and then run the .dt.yaml files through the schema
-validation.
-
-There's also a presentation here:
-https://connect.linaro.org/resources/yvr18/yvr18-404/
-
-Rob
+> +                       compatible = "qcom,pms405-gpio";
+> +                       reg = <0xc000>;
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       interrupts = <0 0xc0 0 IRQ_TYPE_NONE>,
+> +                               <0 0xc1 0 IRQ_TYPE_NONE>,
+> +                               <0 0xc2 0 IRQ_TYPE_NONE>,
+> +                               <0 0xc3 0 IRQ_TYPE_NONE>,
+> +                               <0 0xc4 0 IRQ_TYPE_NONE>,
+> +                               <0 0xc5 0 IRQ_TYPE_NONE>,
+> +                               <0 0xc6 0 IRQ_TYPE_NONE>,
+> +                               <0 0xc7 0 IRQ_TYPE_NONE>,
+> +                               <0 0xc8 0 IRQ_TYPE_NONE>,
+> +                               <0 0xc9 0 IRQ_TYPE_NONE>,
+> +                               <0 0xca 0 IRQ_TYPE_NONE>,
+> +                               <0 0xcb 0 IRQ_TYPE_NONE>;
+> +               };
+> +
+>                 rtc@6000 {
+>                         compatible = "qcom,pm8941-rtc";
+>                         reg = <0x6000>;
+> --
+> 2.14.4
+>
