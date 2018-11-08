@@ -1,57 +1,122 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 3/5] ARM: dts: stm32: Add hwspinlock node for stm32mp157
- SoC
-Date: Wed, 7 Nov 2018 22:51:03 -0800
-Message-ID: <20181108065103.GD12063@builder>
-References: <20181031093032.20386-1-benjamin.gaignard@st.com>
- <20181031093032.20386-4-benjamin.gaignard@st.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v6 1/3] arm64: dts: allwinner: a64: add nodes necessary
+ for analog sound support
+Date: Thu, 8 Nov 2018 14:52:19 +0800
+Message-ID: <CAGb2v65NQHZ5k8626+cH_kM5==y0yHHWinsyvU8utu6ywKwDJg@mail.gmail.com>
+References: <20181108063929.29720-1-anarsoul@gmail.com> <20181108063929.29720-2-anarsoul@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181031093032.20386-4-benjamin.gaignard@st.com>
+In-Reply-To: <20181108063929.29720-2-anarsoul@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 31 Oct 02:30 PDT 2018, Benjamin Gaignard wrote:
-
-> Declare hwspinlock device for stm32mp157 SoC
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-
-Pending the clock-names question,
-
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
+On Thu, Nov 8, 2018 at 2:42 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+>
+> Add nodes for i2s, digital and analog parts of audiocodec on A64
+>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
 > ---
->  arch/arm/boot/dts/stm32mp157c.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-> index 185541a5b69f..9b16c28f8ac3 100644
-> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-> @@ -803,6 +803,15 @@
->  			status = "disabled";
->  		};
->  
-> +		hsem: hwspinlock@4c000000 {
-> +			compatible = "st,stm32-hwspinlock";
-> +			#hwlock-cells = <1>;
-> +			reg = <0x4c000000 0x400>;
-> +			clocks = <&rcc HSEM>;
-> +			clock-names = "hwspinlock";
-> +			status = "disabled";
-> +		};
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 58 +++++++++++++++++++
+>  1 file changed, 58 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> index f3a66f888205..53796a3e6bf3 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -173,6 +173,34 @@
+>                 compatible = "linux,spdif-dit";
+>         };
+>
+> +       sound: sound {
+> +               compatible = "simple-audio-card";
+> +               simple-audio-card,name = "sun50i-a64-audio";
+> +               simple-audio-card,format = "i2s";
+> +               simple-audio-card,frame-master = <&cpudai>;
+> +               simple-audio-card,bitclock-master = <&cpudai>;
+> +               simple-audio-card,mclk-fs = <512>;
+> +               simple-audio-card,aux-devs = <&codec_analog>;
+> +               simple-audio-card,routing =
+> +                               "Left DAC", "AIF1 Slot 0 Left",
+> +                               "Right DAC", "AIF1 Slot 0 Right",
+> +                               "AIF1 Slot 0 Left ADC", "Left ADC",
+> +                               "AIF1 Slot 0 Right ADC", "Right ADC",
+> +                               "Left ADC", "ADC",
+> +                               "Right ADC", "ADC",
+
+The ADC widget is an overall enable control for the digital part of
+the codec's ADC.
+It is modeled as a supply widget in sun8i-codec. The routing should be internal
+to sun8i-codec. See the following for the DAC routing:
+
+    https://elixir.bootlin.com/linux/v4.20-rc1/source/sound/soc/sunxi/sun8i-codec.c#L474
+
+> +                               "MIC1", "Mic",
+> +                               "MIC2", "Headset Mic";
+
+Drop the last two. These belong at the board level. And as previously mentioned,
+these two widgets from the sun8i-codec driver are bogus.
+
+> +               status = "disabled";
 > +
->  		rcc: rcc@50000000 {
->  			compatible = "st,stm32mp1-rcc", "syscon";
->  			reg = <0x50000000 0x1000>;
-> -- 
-> 2.15.0
-> 
+> +               cpudai: simple-audio-card,cpu {
+> +                       sound-dai = <&dai>;
+> +               };
+> +
+> +               link_codec: simple-audio-card,codec {
+> +                       sound-dai = <&codec>;
+> +               };
+> +       };
+> +
+>         timer {
+>                 compatible = "arm,armv8-timer";
+>                 interrupts = <GIC_PPI 13
+> @@ -665,6 +693,30 @@
+>                         status = "disabled";
+>                 };
+>
+> +               dai: dai@1c22c00 {
+> +                       #sound-dai-cells = <0>;
+> +                       compatible = "allwinner,sun50i-a64-codec-i2s";
+> +                       reg = <0x01c22c00 0x200>;
+> +                       interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&ccu CLK_BUS_CODEC>, <&ccu CLK_AC_DIG>;
+> +                       clock-names = "apb", "mod";
+> +                       resets = <&ccu RST_BUS_CODEC>;
+> +                       reset-names = "rst";
+> +                       dmas = <&dma 15>, <&dma 15>;
+> +                       dma-names = "rx", "tx";
+> +                       status = "disabled";
+> +               };
+> +
+> +               codec: codec@1c22e00 {
+> +                       #sound-dai-cells = <0>;
+> +                       compatible = "allwinner,sun8i-a33-codec";
+> +                       reg = <0x01c22e00 0x600>;
+> +                       interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&ccu CLK_BUS_CODEC>, <&ccu CLK_AC_DIG>;
+> +                       clock-names = "bus", "mod";
+> +                       status = "disabled";
+> +               };
+> +
+>                 uart0: serial@1c28000 {
+>                         compatible = "snps,dw-apb-uart";
+>                         reg = <0x01c28000 0x400>;
+> @@ -902,6 +954,12 @@
+>                         #reset-cells = <1>;
+>                 };
+>
+> +               codec_analog: codec-analog@1f015c0 {
+> +                       compatible = "allwinner,sun50i-a64-codec-analog";
+> +                       reg = <0x01f015c0 0x4>;
+> +                       status = "disabled";
+> +               };
+> +
+>                 r_i2c: i2c@1f02400 {
+>                         compatible = "allwinner,sun50i-a64-i2c",
+>                                      "allwinner,sun6i-a31-i2c";
+> --
+> 2.19.1
+>
