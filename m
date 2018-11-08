@@ -1,7 +1,7 @@
 From: John Garry <john.garry@huawei.com>
 Subject: [PATCH v2] of, numa: Validate some distance map rules
-Date: Thu, 8 Nov 2018 18:16:42 +0800
-Message-ID: <1541672202-131229-1-git-send-email-john.garry@huawei.com>
+Date: Thu, 8 Nov 2018 18:17:03 +0800
+Message-ID: <1541672223-131326-1-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
