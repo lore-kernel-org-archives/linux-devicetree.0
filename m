@@ -1,62 +1,56 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 4/6] dt-bindings: dmaengine: usb-dmac: Add binding for
- r8a774a1
-Date: Thu, 8 Nov 2018 14:12:59 +0000
-Message-ID: <TY1PR01MB17701846C753070EE6D572B6C0C50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1535097375-5561-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1535097375-5561-5-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Subject: Re: [PATCH V3 2/3] dt-bindings: mmc: sdhci-msm: Add entries for
+ passing load values
+Date: Thu, 8 Nov 2018 19:43:00 +0530
+Message-ID: <a0781e8c-2448-eecf-2736-150fa5ea8d4f@codeaurora.org>
+References: <1539004739-32060-1-git-send-email-vbadigan@codeaurora.org>
+ <1539004739-32060-3-git-send-email-vbadigan@codeaurora.org>
+ <20181012145516.GA10205@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535097375-5561-5-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <20181012145516.GA10205@bogus>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, evgreen@chromium.org, dianders@google.com, asutoshd@codeaurora.org, riteshh@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vijay Viswanath <vviswana@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Vinod,
 
-Do you think you can take this patch?
+
+On 10/12/2018 8:25 PM, Rob Herring wrote:
+> On Mon, Oct 08, 2018 at 06:48:58PM +0530, Veerabhadrarao Badiganti wrote:
+>> From: Vijay Viswanath <vviswana@codeaurora.org>
+>>
+>> The load a particular sdhc controller should request from a regulator
+>> is device specific and hence each device should individually vote for
+>> the required load.
+>>
+>> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
+>> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+>> ---
+>>   Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> index 502b3b8..cb22178 100644
+>> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> @@ -25,6 +25,10 @@ Required properties:
+>>   	"xo"	- TCXO clock (optional)
+>>   	"cal"	- reference clock for RCLK delay calibration (optional)
+>>   	"sleep"	- sleep clock for RCLK delay calibration (optional)
+>> +- qcom,<supply>-current-level-microamp - specifies load levels for supply during BUS_ON and
+>> +					BUS_OFF states in power irq. Should be specified in
+>> +					pairs (lpm, hpm), for BUS_OFF and BUS_ON respectively.
+>> +					Units uA.
+> Seems like something that should be common?
+
+Hi Rob,
+Can you please little elaborate your comment?
+Do mean this should be common for all vendors, not specific to qcom-mmc?
+
 
 Thanks,
-Fab
-
-> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Sent: 24 August 2018 08:56
-> Subject: [PATCH 4/6] dt-bindings: dmaengine: usb-dmac: Add binding for r8=
-a774a1
->
-> From: Biju Das <biju.das@bp.renesas.com>
->
-> This patch adds binding for r8a774a1 (RZ/G2M).
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-> b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-> index 482e543..417ca90 100644
-> --- a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-> +++ b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-> @@ -5,6 +5,7 @@ Required Properties:
->  Examples with soctypes are:
->    - "renesas,r8a7743-usb-dmac" (RZ/G1M)
->    - "renesas,r8a7745-usb-dmac" (RZ/G1E)
-> +  - "renesas,r8a774a1-usb-dmac" (RZ/G2M)
->    - "renesas,r8a7790-usb-dmac" (R-Car H2)
->    - "renesas,r8a7791-usb-dmac" (R-Car M2-W)
->    - "renesas,r8a7793-usb-dmac" (R-Car M2-N)
-> --
-> 2.7.4
-
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+Veera
