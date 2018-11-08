@@ -1,86 +1,43 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: clk: Introduce 'protected-clocks'
- property
-Date: Wed, 7 Nov 2018 21:44:52 -0800
-Message-ID: <20181108054452.GD2337@tuxbook-pro>
-References: <20181105194011.43770-1-swboyd@chromium.org>
- <20181105194011.43770-2-swboyd@chromium.org>
- <20181106010426.GX2523@minitux>
+From: Roy Im <roy.im.opensource@diasemi.com>
+Subject: [RESEND PATCH V7 0/3]  da7280: haptic driver submission
+Date: Thu, 8 Nov 2018 14:54:10 +0900
+Message-ID: <cover.1541656450.git.Roy.Im@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181106010426.GX2523@minitux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Taniya Das <tdas@codeaurora.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Support Opensource <support.opensource@diasemi.com>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 05 Nov 17:04 PST 2018, Bjorn Andersson wrote:
+This patch adds support for the Dialog DA7280 Haptic driver IC.
 
-> On Mon 05 Nov 11:40 PST 2018, Stephen Boyd wrote:
-> 
-> > Add a generic clk property for clks which are not intended to be used by
-> > the OS due to security restrictions put in place by firmware. For
-> > example, on some Qualcomm firmwares reading or writing certain clk
-> > registers causes the entire system to reboot, but on other firmwares
-> > reading and writing those same registers is required to make devices
-> > like QSPI work. Rather than adding one-off properties each time a new
-> > set of clks appears to be protected, let's add a generic clk property to
-> > describe any set of clks that shouldn't be touched by the OS. This way
-> > we never need to register the clks or use them in certain firmware
-> > configurations.
-> > 
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> 
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> 
+In this patch set the following is provided:
 
-Gave this some additional thought. The way this is blacklisting
-protected clocks makes it impossible to be backwards compatible with an
-older DT while adding new protected clocks to an existing driver.
+[PATCH V7 1/3] MAINTAINERS file update for DA7280
+[PATCH V7 2/3] DA7280 DT Binding
+[PATCH V7 3/3] DA7280 Driver
 
-I don't have better suggestion for handling this and the problem should
-primarily be isolated to the beginning of the upstream life of a
-platform, so perhaps we can just ignore this issue?
+This patch applies against linux-next and v4.19-rc6
 
-Regards,
-Bjorn
+Thank you,
+Roy Im, Dialog Semiconductor Ltd.
 
-> Regards,
-> Bjorn
-> 
-> > Cc: Taniya Das <tdas@codeaurora.org>
-> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> > ---
-> >  .../devicetree/bindings/clock/clock-bindings.txt | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > index 2ec489eebe72..b646bbcf7f92 100644
-> > --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > @@ -168,3 +168,19 @@ a shared clock is forbidden.
-> >  
-> >  Configuration of common clocks, which affect multiple consumer devices can
-> >  be similarly specified in the clock provider node.
-> > +
-> > +==Protected clocks==
-> > +
-> > +Some platforms or firmwares may not fully expose all the clocks to the OS, such
-> > +as in situations where those clks are used by drivers running in ARM secure
-> > +execution levels. Such a configuration can be specified in device tree with the
-> > +protected-clocks property in the form of a clock specifier list. This property should
-> > +only be specified in the node that is providing the clocks being protected:
-> > +
-> > +   clock-controller@a000f000 {
-> > +        compatible = "vendor,clk95;
-> > +        reg = <0xa000f000 0x1000>
-> > +        #clocks-cells = <1>;
-> > +        ...
-> > +        protected-clocks = <UART3_CLK>, <SPI5_CLK>;
-> > +   };
-> > -- 
-> > Sent by a computer through tubes
-> > 
+Roy Im (3):
+  MAINTAINERS: da7280 updates to the Dialog Semiconductor search terms
+  dt-bindings: input: Add document bindings for DA7280
+  Input: new da7280 haptic driver
+
+ .../devicetree/bindings/input/dlg,da7280.txt       |  105 ++
+ MAINTAINERS                                        |    2 +
+ drivers/input/misc/Kconfig                         |   13 +
+ drivers/input/misc/Makefile                        |    1 +
+ drivers/input/misc/da7280.c                        | 1409 ++++++++++++++++++++
+ drivers/input/misc/da7280.h                        |  412 ++++++
+ 6 files changed, 1942 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
+ create mode 100644 drivers/input/misc/da7280.c
+ create mode 100644 drivers/input/misc/da7280.h
+
+-- 
+end-of-patch for RESEND PATCH V7
