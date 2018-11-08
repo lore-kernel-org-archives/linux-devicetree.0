@@ -1,45 +1,64 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH] ARM: dts: imx7d-sdb: add rev-a board support
-Date: Thu, 8 Nov 2018 01:24:51 +0000
-Message-ID: <DB3PR0402MB3916B318947B803BC5ADF4A6F5C50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1541567625-11812-1-git-send-email-Anson.Huang@nxp.com>
- <CAOMZO5AL03yy6Vj_eC=h7scSDnuja1G8rsWER+r7w3FEVaceDg@mail.gmail.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH V2 2/6] usb: core: Add ability to skip phy exit on
+ suspend and init on resume
+Date: Thu, 8 Nov 2018 09:43:52 +0800
+Message-ID: <1541641432.32173.71.camel@mhfsdcap03>
+References: <CAOGqxeWBmAahswHp+b_PzkyGs-9sOx3COpJnFVsbKhx14KLuUw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5AL03yy6Vj_eC=h7scSDnuja1G8rsWER+r7w3FEVaceDg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <CAOGqxeWBmAahswHp+b_PzkyGs-9sOx3COpJnFVsbKhx14KLuUw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Alan Cooper <alcooperx@gmail.com>
+Cc: ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, "David S. Miller" <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>, US
 List-Id: devicetree@vger.kernel.org
 
-SGksIEZhYmlvDQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5h
-bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRmFiaW8gRXN0ZXZhbSBbbWFpbHRvOmZlc3RldmFtQGdt
-YWlsLmNvbV0NCj4gU2VudDogMjAxOOW5tDEx5pyIN+aXpSAxODowMw0KPiBUbzogQW5zb24gSHVh
-bmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IENjOiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJu
-ZWwub3JnPjsgTWFyayBSdXRsYW5kDQo+IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFNoYXduIEd1
-byA8c2hhd25ndW9Aa2VybmVsLm9yZz47IFNhc2NoYQ0KPiBIYXVlciA8cy5oYXVlckBwZW5ndXRy
-b25peC5kZT47IFNhc2NoYSBIYXVlciA8a2VybmVsQHBlbmd1dHJvbml4LmRlPjsNCj4gRmFiaW8g
-RXN0ZXZhbSA8ZmFiaW8uZXN0ZXZhbUBueHAuY29tPjsgb3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUg
-QU5EDQo+IEZMQVRURU5FRCBERVZJQ0UgVFJFRSBCSU5ESU5HUyA8ZGV2aWNldHJlZUB2Z2VyLmtl
-cm5lbC5vcmc+OyBsaW51eC1rZXJuZWwNCj4gPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+
-OyBtb2RlcmF0ZWQgbGlzdDpBUk0vRlJFRVNDQUxFIElNWCAvIE1YQw0KPiBBUk0gQVJDSElURUNU
-VVJFIDxsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBkbC1saW51eC1pbXgN
-Cj4gPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBBUk06IGR0czog
-aW14N2Qtc2RiOiBhZGQgcmV2LWEgYm9hcmQgc3VwcG9ydA0KPiANCj4gSGkgQW5zb24sDQo+IA0K
-PiBPbiBXZWQsIE5vdiA3LCAyMDE4IGF0IDM6MTkgQU0gQW5zb24gSHVhbmcgPGFuc29uLmh1YW5n
-QG54cC5jb20+DQo+IHdyb3RlOg0KPiANCj4gPiArJmZlYzIgew0KPiA+ICsgICAgICAgcGluY3Ry
-bC0wID0gPCZwaW5jdHJsX2VuZXQyPjsNCj4gPiArICAgICAgIC9kZWxldGUtcHJvcGVydHkvcGlu
-Y3RybC1hc3NlcnQtZ3Bpb3M7DQo+IA0KPiAicGluY3RybC1hc3NlcnQtZ3Bpb3MiIGRvZXMgbm90
-IGV4aXN0IGluIG1haW5saW5lLCBzbyBub3Qgc3VyZSB3aHkgeW91IGFyZQ0KPiBkZWxldGluZyBp
-dC4NCg0KUmVnYXJkaW5nIHRoZSBmZWMyIHNldHRpbmdzIGluIGlteDdkLXNkYi5kdHMsIG9yaWdp
-bmFsbHkgaXQgdXNlcyBSZXYtQSBib2FyZCAoYnV0IHNvbWUgbm9kZXMgYXJlDQp1c2luZyBSZXYt
-QiBib2FyZCksIGluIHRoaXMgcGF0Y2gsIEkgY2xlYW4gdXAgYWxsIHRoZSBzZXR0aW5ncyBpbiBp
-bXg3ZC1zZGIuZHRzIHVzaW5nIFJldi1CIGJvYXJkLA0Kc28gYmVsb3cgaXMgYWRkZWQgdG8gaW14
-N2Qtc2RiLmR0cyBmb3IgUmV2LUIgYm9hcmQsIGFuZCBpbiBpbXg3ZC1zZGItcmV2YS5kdHMgSSBo
-YXZlIHRvDQpkZWxldGUgaXQsIHNpbmNlIFJldi1BIGJvYXJkIGhhcyBubyB0aGlzIHBpbi4NCg0K
-LQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfZW5ldDI+Ow0KKwlwaW5jdHJsLTAgPSA8JnBpbmN0cmxf
-ZW5ldDIgJnBpbmN0cmxfZW5ldDJfZXBkYzBfZW4+Ow0KKwlwaW5jdHJsLWFzc2VydC1ncGlvcyA9
-IDwmZ3BpbzEgNCBHUElPX0FDVElWRV9MT1c+Ow0KIA0KQW5zb24uDQoNCg==
+hi,
+On Tue, 2018-10-30 at 18:30 -0400, Alan Cooper wrote:
+> On 10/17/18 9:46 PM, Chunfeng Yun wrote:> hi,
+> >
+> > On Wed, 2018-10-17 at 18:29 -0400, Al Cooper wrote:
+> >> Add the ability to skip calling the PHY's exit routine on suspend
+> >> and the PHY's init routine on resume. This is to handle a USB PHY
+> >> that should have it's power_off function called on suspend but
+> cannot
+> >> have it's exit function called because on exit it will disable the
+> >> PHY to the point where register accesses to the Host Controllers
+> >> using the PHY will be disabled and the host drivers will crash.
+> >>
+> >> This is enabled with the HCD flag "suspend_without_phy_exit" which
+> >> can be set from any HCD driver.
+> >>
+> >> Signed-off-by: Al Cooper<alcooperx@gmail.com>
+> >> ---
+> >>   drivers/usb/core/hcd.c  |  8 ++++----
+> >>   drivers/usb/core/phy.c  | 18 ++++++++++++------
+> >>   drivers/usb/core/phy.h  |  9 ++++++---
+> >>   include/linux/usb/hcd.h |  3 +++
+> >>   4 files changed, 25 insertions(+), 13 deletions(-)
+> >>
+
+
+> >>       unsigned        skip_phy_initialization:1;
+> >>  
+> >> +    /* Some phys don't want the phy's exit/init called on
+> suspend/resume */
+> >> +    unsigned        suspend_without_phy_exit:1;
+> > As suggested before, you can skip phy's exit/init during
+> suspend/resume
+> > by enabling wakeup of hcd, so needn't add a new variable for it.
+> 
+> I still need to be able to enable and disable wakeup for this driver.
+Just use device_init_wakeup(dev, true) instead of
+device_wakeup_enable(dev) for your controller driver, you can try it.
+
+Sorry for the late replay
+> 
+> >
+> >> +
+> >>       /* The next flag is a stopgap, to be removed when all the
+> HCDs
+> >>        * support the new root-hub polling mechanism. */
+> >>       unsigned        uses_new_polling:1;
+> >
