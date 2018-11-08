@@ -1,173 +1,108 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 12/24] leds: lm3692x: Use led_compose_name()
-Date: Thu, 8 Nov 2018 15:11:05 -0600
-Message-ID: <8584e8a2-44df-33b1-4d9e-9fb3fb2cb98d@ti.com>
-References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
- <1541542052-10081-13-git-send-email-jacek.anaszewski@gmail.com>
- <d1267477-e000-f392-290f-2546f8ee379c@ti.com>
- <a58cdce3-3d15-0ab4-de98-01e526a142a1@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/4] of/property: Add of_fwnode_name()
+Date: Thu, 8 Nov 2018 15:18:21 -0600
+Message-ID: <CAL_JsqLMuiUc8FW=X_OAd5P_tcfPSTOox9Vh6faEwK+Z=S2mjw@mail.gmail.com>
+References: <20181108165156.60073-1-heikki.krogerus@linux.intel.com>
+ <20181108165156.60073-4-heikki.krogerus@linux.intel.com> <CAL_Jsq+4momJb6EoXrAg2LRKzpXMFB30yhBigOiEJ16EjZ05pg@mail.gmail.com>
+ <20181108192509.GW10650@smile.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a58cdce3-3d15-0ab4-de98-01e526a142a1@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181108192509.GW10650@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Jacek
+On Thu, Nov 8, 2018 at 1:25 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Nov 08, 2018 at 12:23:51PM -0600, Rob Herring wrote:
+> > On Thu, Nov 8, 2018 at 10:52 AM Heikki Krogerus
+> > <heikki.krogerus@linux.intel.com> wrote:
+> > >
+> > > This implements get_name fwnode op for DT.
+> > >
+> > > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > > ---
+> > >  drivers/of/property.c | 11 +++++++++++
+> > >  1 file changed, 11 insertions(+)
+> > >
+> > > diff --git a/drivers/of/property.c b/drivers/of/property.c
+> > > index f46828e3b082..9bc8fe136fa3 100644
+> > > --- a/drivers/of/property.c
+> > > +++ b/drivers/of/property.c
+> > > @@ -823,6 +823,16 @@ static void of_fwnode_put(struct fwnode_handle *fwnode)
+> > >         of_node_put(to_of_node(fwnode));
+> > >  }
+> > >
+> > > +static int of_fwnode_get_name(const struct fwnode_handle *fwnode, char *buf)
+> > > +{
+> > > +       const char *name = kbasename(to_of_node(fwnode)->full_name);
+> > > +       size_t len = strchrnul(name, '@') - name;
+> > > +
+> > > +       snprintf(buf, len + 1, "%s", name);
+> >
+> > This can be simplified to:
+> >
+> > snprintf(..., "%pOFn", to_of_node(fwnode))
+> >
+> > But that presents a problem with knowing the length. Not passing in
+> > the buf length is not good design because you can't tell if you
+> > overflow the buffer. Either you can pass in the length of buf or do
+> > the allocation here. In the latter case, then you can use kasnprintf.
+> > The downside to doing the allocation here is then get_name() has side
+> > effect of allocating memory that the caller needs to be aware of.
+>
+> Agree on matter of potential overflow.
+>
+> I wouldn't limit users with 32 characters for node name if it's not by both
+> ACPI and DT specifications.
 
-On 11/08/2018 02:48 PM, Jacek Anaszewski wrote:
-> Dan,
-> 
-> On 11/08/2018 07:14 PM, Dan Murphy wrote:
->> On 11/06/2018 04:07 PM, Jacek Anaszewski wrote:
->>> Switch to using generic LED support for composing LED class
->>> device name.
->>>
->>> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->>> Cc: Dan Murphy <dmurphy@ti.com>
->>> ---
->>>  drivers/leds/leds-lm3692x.c | 39 ++++++++++++++++++++-------------------
->>>  1 file changed, 20 insertions(+), 19 deletions(-)
->>>
->>> diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
->>> index 4f413a7..9dfc0f2 100644
->>> --- a/drivers/leds/leds-lm3692x.c
->>> +++ b/drivers/leds/leds-lm3692x.c
->>> @@ -13,7 +13,6 @@
->>>  #include <linux/regmap.h>
->>>  #include <linux/regulator/consumer.h>
->>>  #include <linux/slab.h>
->>> -#include <uapi/linux/uleds.h>
->>>  
->>>  #define LM36922_MODEL	0
->>>  #define LM36923_MODEL	1
->>> @@ -95,6 +94,9 @@
->>>  #define LM3692X_FAULT_FLAG_SHRT BIT(3)
->>>  #define LM3692X_FAULT_FLAG_OPEN BIT(4)
->>>  
->>> +#define LM36922_NAME "lm36922"
->>> +#define LM36923_NAME "lm36923"
->>> +
->>>  /**
->>>   * struct lm3692x_led -
->>>   * @lock - Lock for reading/writing the device
->>> @@ -103,7 +105,6 @@
->>>   * @regmap - Devices register map
->>>   * @enable_gpio - VDDIO/EN gpio to enable communication interface
->>>   * @regulator - LED supply regulator pointer
->>> - * @label - LED label
->>>   * @led_enable - LED sync to be enabled
->>>   * @model_id - Current device model ID enumerated
->>>   */
->>> @@ -114,7 +115,6 @@ struct lm3692x_led {
->>>  	struct regmap *regmap;
->>>  	struct gpio_desc *enable_gpio;
->>>  	struct regulator *regulator;
->>> -	char label[LED_MAX_NAME_SIZE];
->>>  	int led_enable;
->>>  	int model_id;
->>>  };
->>> @@ -325,7 +325,8 @@ static int lm3692x_init(struct lm3692x_led *led)
->>>  static int lm3692x_probe_dt(struct lm3692x_led *led)
->>>  {
->>>  	struct fwnode_handle *child = NULL;
->>> -	const char *name;
->>> +	struct led_init_data init_data;
->>> +	char *model_name;
->>>  	int ret;
->>>  
->>>  	led->enable_gpio = devm_gpiod_get_optional(&led->client->dev,
->>> @@ -346,17 +347,20 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
->>>  		dev_err(&led->client->dev, "No LED Child node\n");
->>>  		return -ENODEV;
->>>  	}
->>> +	init_data.fwnode = child;
->>>  
->>> -	fwnode_property_read_string(child, "linux,default-trigger",
->>> -				    &led->led_dev.default_trigger);
->>> +	if (led->model_id == LM36922_MODEL)
->>> +		model_name =  LM36922_NAME;
->>> +	else
->>> +		model_name =  LM36923_NAME;
->>>  
->>> -	ret = fwnode_property_read_string(child, "label", &name);
->>> +	ret = led_compose_name(child, model_name, ":backlight_cluster",
->>> +			       init_data.name);
->>>  	if (ret)
->>> -		snprintf(led->label, sizeof(led->label),
->>> -			"%s::", led->client->name);
->>> -	else
->>> -		snprintf(led->label, sizeof(led->label),
->>> -			 "%s:%s", led->client->name, name);
->>> +		return ret;
->>> +
->>> +	fwnode_property_read_string(child, "linux,default-trigger",
->>> +				    &led->led_dev.default_trigger);
->>>  
->>>  	ret = fwnode_property_read_u32(child, "reg", &led->led_enable);
->>>  	if (ret) {
->>> @@ -364,16 +368,13 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
->>>  		return ret;
->>>  	}
->>>  
->>> -	led->led_dev.name = led->label;
->>> -
->>> -	ret = devm_led_classdev_register(&led->client->dev, &led->led_dev);
->>> +	ret = devm_led_classdev_register_ext(&led->client->dev, &led->led_dev,
->>> +					     &init_data);
->>>  	if (ret) {
->>>  		dev_err(&led->client->dev, "led register err: %d\n", ret);
->>>  		return ret;
->>>  	}
->>>  
->>> -	led->led_dev.dev->of_node = to_of_node(child);
->>> -
->>>  	return 0;
->>>  }
->>>  
->>> @@ -439,8 +440,8 @@ static int lm3692x_remove(struct i2c_client *client)
->>>  }
->>>  
->>>  static const struct i2c_device_id lm3692x_id[] = {
->>> -	{ "lm36922", LM36922_MODEL },
->>> -	{ "lm36923", LM36923_MODEL },
->>> +	{ LM36922_NAME, LM36922_MODEL },
->>> +	{ LM36923_NAME, LM36923_MODEL },
->>
->> How is this change relevant?
->> No mention in the comments about this change.
-> 
-> Unrelated. It is a remnant from the stage of development, where I had
-> an impression that i2c_client name is taken from this array
-> somehow. Only later I learned that it is taken from OF compatible
-> property after removing vendor prefix with comma.
-> 
-> Afterwards I decide to abide by this change since it seems to be
-> just an improvement - if I'm adding the string definition anyway,
-> then why not replace other matching literals?
-> 
-> I will add the explanation if the commit message if there are no
-> other objections.
+While the DT spec says 31 characters, this has never been enforced. As
+you might guess, we have node names longer than 31 characters. There's
+been some discussion about what to do and the consensus seems to be
+change the spec.
 
-That works for me.  Just did not want the change to be "hidden" even without
-the intent of hiding it.
+> OTOH allocating and freeing memory in a loop each
+> time when we would like to go through the child nodes sounds much worse
+> scenario to me.
 
-Dan
+Yes, I wrote that before looking at how you were using it... Of
+course, if you want efficient, then you shouldn't use sprintf either
+and use of_node_name_eq() as I've suggested.
 
-> 
->>>  	{ }
->>>  };
->>>  MODULE_DEVICE_TABLE(i2c, lm3692x_id);
->>>
->>
->>
-> 
+> Thus, giving a length of the buffer is a good enough compromise.
+>
+> > However, I think the current API is better. It leaves low-level
+> > details up to the firmware implementation. But as long as .get_name()
+> > is not exposed to drivers I don't really care that much.
+>
+> I don't think this concept is changed by Heikki's patch series. It provides a
+> common abstract function on top of more low-level firmware implementation which
+> I consider a good approach.
 
+Generally, I would agree that's a worthwhile goal. However, in this
+case you aren't saving anything. We still have at least a DT version
+of the same thing (of_get_child_by_name). Maybe there's some dream
+that the fwnode API will become the only one for both drivers and
+non-drivers, but I really don't see that happening. As long as both DT
+and fwnode APIs are in use, it is best to keep the APIs aligned.
 
--- 
-------------------
-Dan Murphy
+There's another aspect that the node name comparison is case
+insensitive on powerpc (and until 4.20, was for everything but Sparc).
+I changed it in 4.20 and hopefully don't have to revert. Patch 4 does
+a case sensitive compare. That probably is fine (as lots of powerpc
+code already does case sensitive name compares), but no one really
+knows until we break users.
+
+Another issue is how are disabled nodes dealt with by different
+firmwares? It's a frequent bug that we don't honor the 'status'
+property (such as in the very code we're discussing). But then there
+are some cases were want to ignore it so we can't just go add that
+check in and we end up needing 2 flavors of everything. You're
+probably okay though. Most devices with child nodes are
+enabled/disabled only in the parent device node.
+
+Rob
+Rob
