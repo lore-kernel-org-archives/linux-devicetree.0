@@ -1,199 +1,72 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: =?iso-8859-1?B?W1JDRqBQQVRDSCx2Miwy?= =?iso-8859-1?B?LzJd?= pwm:
- imx: Configure output to GPIO in disabled state
-Date: Thu, 8 Nov 2018 20:18:55 +0100
-Message-ID: <20181108191855.zuon3ecv4yjfbs7g@pengutronix.de>
-References: <1539163920-9442-3-git-send-email-michal.vokac@ysoft.com>
- <20181012085720.GA9451@taurus.defre.kleine-koenig.org>
- <fa96ae2a-c2cc-b47a-1198-5daffa7c865f@ysoft.com>
- <20181012160854.hmgpokxgsrqdzobx@pengutronix.de>
- <e4289ee5-3fc1-2848-1cae-77d29b5ed93c@ysoft.com>
- <20181107093355.e4n3irrnkybqsjvc@pengutronix.de>
- <eb4e7a42-bd5c-3ae2-ccb7-d1a73d5ae99c@ysoft.com>
- <20181107150125.7cpd4v5t7yi2254c@pengutronix.de>
- <4fbb7307-df01-d7bd-f2e2-e05e6d17807d@ysoft.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v2 3/4] of/property: Add of_fwnode_name()
+Date: Thu, 8 Nov 2018 21:25:09 +0200
+Message-ID: <20181108192509.GW10650@smile.fi.intel.com>
+References: <20181108165156.60073-1-heikki.krogerus@linux.intel.com>
+ <20181108165156.60073-4-heikki.krogerus@linux.intel.com>
+ <CAL_Jsq+4momJb6EoXrAg2LRKzpXMFB30yhBigOiEJ16EjZ05pg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4fbb7307-df01-d7bd-f2e2-e05e6d17807d@ysoft.com>
+In-Reply-To: <CAL_Jsq+4momJb6EoXrAg2LRKzpXMFB30yhBigOiEJ16EjZ05pg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@karo-electronics.de>
+To: Rob Herring <robh@kernel.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 08, 2018 at 03:21:44PM +0000, Vokáč Michal wrote:
-> Hi Uwe,
+On Thu, Nov 08, 2018 at 12:23:51PM -0600, Rob Herring wrote:
+> On Thu, Nov 8, 2018 at 10:52 AM Heikki Krogerus
+> <heikki.krogerus@linux.intel.com> wrote:
+> >
+> > This implements get_name fwnode op for DT.
+> >
+> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > ---
+> >  drivers/of/property.c | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> >
+> > diff --git a/drivers/of/property.c b/drivers/of/property.c
+> > index f46828e3b082..9bc8fe136fa3 100644
+> > --- a/drivers/of/property.c
+> > +++ b/drivers/of/property.c
+> > @@ -823,6 +823,16 @@ static void of_fwnode_put(struct fwnode_handle *fwnode)
+> >         of_node_put(to_of_node(fwnode));
+> >  }
+> >
+> > +static int of_fwnode_get_name(const struct fwnode_handle *fwnode, char *buf)
+> > +{
+> > +       const char *name = kbasename(to_of_node(fwnode)->full_name);
+> > +       size_t len = strchrnul(name, '@') - name;
+> > +
+> > +       snprintf(buf, len + 1, "%s", name);
 > 
-> On 7.11.2018 16:01, Uwe Kleine-König wrote:
-> >> Interesting idea. I just wonder why nobody else did not come up with such
-> >> a simple solution before.
-> > 
-> > I think I mentioned it already in this thread, but it went unnoticed :-)
+> This can be simplified to:
 > 
-> I meant it like "How happened this was not invented years ago, when people
-> first noticed the issue with using inverted PWM for backlight on i.MX6."
-> In our project, this issue dates back to 2015 :(
+> snprintf(..., "%pOFn", to_of_node(fwnode))
 > 
-> > Then the patch isn't correct yet. The idea is always keep the hardware
-> > running and only disable it if it's uninverted.
-> 
-> OK, I got the point.
-> 
-> > In imx_pwm_probe it's not yet known what the polarity is supposed to be,
-> > right?
-> 
-> Not really. It can already be known but currently there is no way how to
-> pass the information to the probe function. I, as a creator of the device
-> (and author of a DTS file) know that the circuit needs inverted PWM signal.
-> And I know that the circuit needs to be disabled until I say it can be
-> enabled. How I say that can warry. It may be default brightness level > 0
-> in DTS file or from a userspace program using PWM sysfs interface.
-> 
-> > So the right thing to do there is to not touch the configuration
-> > of the pwm. I think all states that are problematic then are also
-> > problematic with the gpio/pinmux approach.
-> 
-> I think my use-case I already presented before is an example where
-> involving pinctrl solves the problem while the "leave PWM enabled
-> for inverted users" does not. That is all the time between
-> imx_pwm_probe() and imx_pwm_apply_v2().
+> But that presents a problem with knowing the length. Not passing in
+> the buf length is not good design because you can't tell if you
+> overflow the buffer. Either you can pass in the length of buf or do
+> the allocation here. In the latter case, then you can use kasnprintf.
+> The downside to doing the allocation here is then get_name() has side
+> effect of allocating memory that the caller needs to be aware of.
 
-You're doing in probe:
+Agree on matter of potential overflow.
 
-  if (pwm_is_running()):
-    mux(pin, function=pwm)
-  else:
-    gpio_set_value(gpio, 0)
-    mux(pin, function=gpio)
+I wouldn't limit users with 32 characters for node name if it's not by both
+ACPI and DT specifications. OTOH allocating and freeing memory in a loop each
+time when we would like to go through the child nodes sounds much worse
+scenario to me. Thus, giving a length of the buffer is a good enough compromise.
 
-This gives you the right level assuming the gpio specification uses the
-right flag (GPIO_ACTIVE_HIGH or GPIO_ACTIVE_LOW).
+> However, I think the current API is better. It leaves low-level
+> details up to the firmware implementation. But as long as .get_name()
+> is not exposed to drivers I don't really care that much.
 
-Taking your example with the backlight device you specify an "init" and
-a "default" pinctrl and only "default" contains the muxing for the PWM
-pin everything should be as smooth as necessary: The pwm is only muxed
-when the backlight device is successfully bound. The probe function (of
-the backlight) should have initialized the PWM with the right polarity.
-Until then nothing happens on the pin (either because it's not muxed as
-PWM or because the PWM is already initialized by the bootloader).
-
-The only thing that is (maybe) needed on top of my change is that the
-pwm isn't stopped in pwm-imx's .probe.
-
-> >> In probe you do not have any users yet. So you do not know the requested
-> >> output polarity. With "default" pinctrl the PWM output would be muxed to
-> >> the selected pin and since the PWM chip is most probably disabled
-> >> (unless you enabled it in bootloader) you would get low level on the pin.
-> >> That means your backlight is fully enabled until the first call to
-> >> imx_pwm_apply_v2(). On my system this is 2 seconds.
-> > 
-> > With the gpio/pinmux approach you don't know the intended polarity
-> > either and maybe enable the display, too.
-> 
-> You know it because the pinctrl solution is optional. So if you use it,
-> you use it on purpose to override the default PWM output level in PWM
-> disabled state. It is very useful in cases where you need inverted and
-> disabled PWM signal from power-up to userspace. Or until some kernel
-> driver (backlight, led, fan..) enables it. For this it is the only
-> solution I think.
-> 
-> It allows you to boot with disabled PWM that has normal polarity set
-> by default. Later on from your userspace program you configure the PWM
-> to desired period/duty, set PWM output to inversed and enable it.
-> Until this point the circuit is disabled with my solution.
-> 
-> > For both the solution is to let the bootloader enable the pwm with
-> > the right output level. Am I missing something?
-> 
-> Bootloader is only a small part of the whole solution I think. And I
-> suppose you meant: "enable the *GPIO* with the right output level".
-
-No I meant the pwm. Well, it's as easy as that: Whenever with your
-approach you configure the pin as GPIO with the output set to low,
-instead configure the pwm with duty_cycle to zero (or disable it).
-Whenever with your approach you configure the pin as GPIO with the
-output set to high, configure the pwm with duty_cycle to 100%. (Keeping
-out inverted PWMs for the ease of discussion, but the procedure can be
-adapted accordingly.) The only difference then is that with your
-approach you already "know" in pwm-imx's .probe the idle level and can
-configure the GPIO accordingly. With my approach you just have to wait
-until the first pwm_apply which (as described above) works just as well.
- 
->   - Even if you use GPIO in bootloader to set the required level the
->     time frame from imx_pwm_probe to imx_pwm_apply is not covered.
-> 
->   - Currently there is no support in Linux pwm-imx driver to detect
->     the PWM chip is already enabled at probe time. I actually send
->     patches for this a month ago [1]. No response yet.
-> 
->   - Inverted PWM does not work in U-Boot (on imx at least). And it
->     does not seam like it can be fixed easily. I do not know what is
->     the situation in other bootloaders.
-> 
-> So my current bootloader solution is one of:
->   - Set the pin to the appropriate (HIGH) level using GPIO.
->   - Do not touch the pin at all, it has 100k pull-up by default.
-> 
-> >> The other thing is I would prefer to make the change optional. With your
-> >> approach you are changing the behavior for all current users of inverted
-> >> PWM. I do not think all imx6 users are aware of the problem so they might
-> >> not be OK with the sudden change in the behavior.
-> > 
-> > Isn't my change an improvement for all users? What state do you have in
-> > mind that make things worse than they are now?
-> 
-> Lets say that the user:
-> - Needs inverted PWM signal.
-> - Needs it to be disabled all the time unless he enable it.
-
-I don't see why anybody should care if the PWM is "disabled". A user
-should only care about the output level, how the pwm-imx driver
-implements this is out of scope. As backlight-pwm user/author you
-shouldn't even care which PWM driver is in use. It might be even an
-implementation that cannot be disabled (like the bcm-kona one).
-
-> What you propose (for all users of inverted PWM):
-> H|____________________                                     _____________
-> L|                    \___________________________________/
->   +-------+------------+-----------------+-----------------+-------------+
->   | reset | bootloader | default pinctrl | PWM enable 100% | PWM disable |
-> 
-> My solution (for those who want it):
-> H|______________________________________                   _____________
-> L|                                      \_________________/
->   +-------+------------+-----------------+-----------------+-------------+
->   | reset | bootloader | default pinctrl | PWM enable 100% | PWM disable |
-> 
-
-With the above changes there is no relevant difference between your and
-my approach. I save your and my time to repeat this once more with these
-nice pictures. (If you don't believe me, I can do this later if you
-wish.) The nice upside of my approach however is that the pwm-imx driver
-stays simpler and the dts author doesn't need to care to add a gpio
-specifier and two pinmux configurations instead of one.
- 
-> So your solution at least allows the user to really disable the circuit.
-> I can not really think of cases where this might not be good for current
-> users. Maybe that they simply expect that no matter what polarity is set,
-> the output in disabled state is always low. And they may have HW that
-> get already used to that and does not like the change :)
-> 
-> And it reminds me of something similar I have done for OLED display reset
-> recently [2]. I tried to fix active-low reset sequence that is hardcoded
-> in the driver. So you are supposed to use GPIO_ACTIVE_HIGH in DT to make
-> the active-low reset work. It was rejected. The reason was backward DTB
-> compatibility [3]. In other words: "Users of newer kernels expect that
-> the reset still work the same if they do not update DTBs on their boards".
-> I think this is kind of similar?
-
-I don't see a compatibility issue here.
-
-Best regards
-Uwe
+I don't think this concept is changed by Heikki's patch series. It provides a
+common abstract function on top of more low-level firmware implementation which
+I consider a good approach.
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+With Best Regards,
+Andy Shevchenko
