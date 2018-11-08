@@ -1,34 +1,32 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH anybus v3 4/6] bus: support HMS Anybus-S bus
-Date: Thu, 8 Nov 2018 17:54:10 +0100
-Message-ID: <CAK8P3a1q-09=5z4KZPWdpT-T=Tg244HpyN1Cd5=0pDGkQV7aPA@mail.gmail.com>
-References: <20181104155501.14767-1-TheSven73@googlemail.com>
- <20181104155501.14767-5-TheSven73@googlemail.com> <CAK8P3a3DnKcRxL5dG_pvBVTngFh5eDL2JdEqZzgL0RXJy5dZGw@mail.gmail.com>
- <CAGngYiXEsg-6MXK60s8gOq2d8LGq+USTk1FC3GYqy2TQheaxHg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH v2 0/3] ARM64: dts: meson-gxl: Add dts and bindings for Smartlabs SML-5442TW
+Date: Thu,  8 Nov 2018 21:01:06 +0400
+Message-ID: <1541696475-27454-1-git-send-email-christianshewitt@gmail.com>
+References: <1541691207-24768-1-git-send-email-christianshewitt@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGngYiXEsg-6MXK60s8gOq2d8LGq+USTk1FC3GYqy2TQheaxHg@mail.gmail.com>
+In-Reply-To: <1541691207-24768-1-git-send-email-christianshewitt@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: thesven73@gmail.com
-Cc: svendev@arcx.com, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, noralf@tronnes.org, Johan Hovold <johan@kernel.org>, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, gregkh <gregkh@linuxfoundation.org>, John Garry <john.garry@huawei.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Robin Murphy <robin.murphy@arm.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>, Icenowy Zheng <icenowy@aosc.io>, Stuart Yoder <stuyoder@gmail.com>, Maxime Ripard <maxime.r>
+Cc: christianshewitt@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 8, 2018 at 4:47 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
-> On Thu, Nov 8, 2018 at 9:07 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> > I see this is called from the interrupt handler at the moment, which
-> > means you cannot call sleeping functions, but it also means that
-> > the timeout may never happen because the timer tick IRQ cannot
-> > get through. That means you may have to change the irq handler
-> > logic, e.g. to try this a few times but then defer to a bottom half
-> > if it fails for a long time.
->
-> Touche ! Yes, this is very likely a big problem.
->
-> What if I converted the interrupt handler into a threaded interrupt handler?
-> That would allow the timer tick to get through, correct?
+This series adds new bindings and a device-tree file for the Smartlabs
+SML-5442TW set-top box.
 
-Yes, with a threaded IRQ handler, the tick comes through, and you can
-use a sleeping function to back off between the retries.
+v2 - removed audio nodes
+   - changes soundcard name to "meson-gx-audio"
+   - added missing uart-has-rtscts;
 
-        Arnd
+Christian Hewitt (3):
+  dt-bindings: Add vendor prefix for Smartlabs
+  dt-bindings: arm: amlogic: Add support for the Smartlabs SML-5442TW
+  ARM64: dts: meson-gxl: Add support for the Smartlabs SML-5442TW
+
+ Documentation/devicetree/bindings/arm/amlogic.txt  |   1 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+ .../boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts | 316 +++++++++++++++++++++
+ 4 files changed, 319 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts
+
+-- 
+2.7.4
