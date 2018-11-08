@@ -1,97 +1,65 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 3/4] ARM: dts: r8a77470: Add QSPI support
-Date: Thu, 8 Nov 2018 11:37:12 +0100
-Message-ID: <CAMuHMdWiDM8LprsjBpj0uOKSta1mMpn61tTo8SCxtC6RquSVbw@mail.gmail.com>
-References: <1541075705-1333-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1541075705-1333-4-git-send-email-fabrizio.castro@bp.renesas.com>
- <20181102114946.5tqk2lyisaey475w@verge.net.au>
- <TY1PR01MB1770FA3764370E7AEA5D30C6C0C50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <CAMuHMdX=L9d=1dq24WErcjYLv987=yKL2K7hxnS7hhsZpbKEBA@mail.gmail.com>
- <TY1PR01MB1770AD277B0A1C5DF1776F60C0C50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/4] ARM: dts: meson: set pinmux bias
+Date: Thu,  8 Nov 2018 11:44:22 +0100
+Message-ID: <20181108104426.1877-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <TY1PR01MB1770AD277B0A1C5DF1776F60C0C50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Mark Brown <broonie@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Boris Brezillon <boris.brezillon@bootlin.com>, Simon Horman <horms@verge.net.au>, MTD Maling List <linux-mtd@lists.infradead.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Biju Das <biju.das@bp.renesas.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio,
+On Amlogic chipsets, the bias set through pinconf applies to the pad
+itself, not only the GPIO function. This means that even when we change
+the function of the pad from GPIO to anything else, the bias previously
+set still applies.
 
-On Thu, Nov 8, 2018 at 11:31 AM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> > On Thu, Nov 8, 2018 at 11:22 AM Fabrizio Castro
-> > <fabrizio.castro@bp.renesas.com> wrote:
-> > > > From: Simon Horman <horms@verge.net.au>
-> > > > Sent: 02 November 2018 11:50
-> > > > Subject: Re: [PATCH 3/4] ARM: dts: r8a77470: Add QSPI support
-> > > >
-> > > > On Thu, Nov 01, 2018 at 12:35:04PM +0000, Fabrizio Castro wrote:
-> > > > > Add QSPI[01] support to the RZ/G1C SoC specific device tree.
-> > > > >
-> > > > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > > > ---
-> > > > >  arch/arm/boot/dts/r8a77470.dtsi | 34 ++++++++++++++++++++++++++++++++++
-> > > > >  1 file changed, 34 insertions(+)
-> > > > >
-> > > > > diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-> > > > > index e6407e5..04a8877 100644
-> > > > > --- a/arch/arm/boot/dts/r8a77470.dtsi
-> > > > > +++ b/arch/arm/boot/dts/r8a77470.dtsi
-> > > > > @@ -20,6 +20,8 @@
-> > > > >  i2c2 = &i2c2;
-> > > > >  i2c3 = &i2c3;
-> > > > >  i2c4 = &i2c4;
-> > > > > +spi0 = &qspi0;
-> > > > > +spi1 = &qspi1;
-> > > > >  };
-> > > >
-> > > > Geert can comment but I believe we are moving away from using aliases
-> > > > in this way and that it would be best if the above hunk was dropped
-> > > > from this patch.
-> > > >
-> > > > https://patchwork.kernel.org/patch/10644159/
-> > >
-> > > Geert, what do you want me to do here?
-> >
-> > Please drop the aliases. Thanks!
->
-> Will do, will send a new version without the additional aliases.
+While trying to boot from SPI, I noticed the eMMC was not working anymore.
+Even if the related eMMC pad are not used by the SPI, the ROM code sets a
+pull-down on the eMMC pad and leaves it that way. This breaks the eMMC
+later on, in both u-boot and Linux.
 
-Thanks!
+The underlying issue is that we inherit whatever was left by previous user
+of the pad (pinconf, u-boot or the ROM code). As a consequence, the actual
+setup we get is undefined.
 
-> My understanding is that your personal preference is to only leave debug console and ethernet,
+There is nothing mentioned in the documentation about pad bias and pinmux
+function, however leaving it undefined is not an option.
 
-Labeled serial ports and primary Ethernet, so U-Boot knows which MAC address
-property to update.
+This patchset consistently disable the pad bias for every pinmux functions.
+It seems to work well, we can only assume that the necessary bias (if any)
+is already provided by the pin function itself.
 
-> shall I also  get rid of what was already upstreamed for RZ/G related boards that is not in line
-> with the new policy?
+I can't really test every pinmux configuration and it is fairly possible
+I missed something so it would be nice if more people could confirm if
+nothing (new) is broken after applying this series.
 
-I believe these are all serial ports, using aliases that match the documented
-and/or labeled port names? So they don't have to be removed.
+One things could be the i2c. Usually the i2c pull-ups are physically
+present on the board but, if they are missing on platform, we may define
+a special pinmux setting with pull-up enabled.
 
-Gr{oetje,eeting}s,
+One last gotcha, I recently posted fixups around bias setting to pinctrl
+which have been merged: [0] [1]. These must be applied before applying this
+series, otherwise when requesting 'bias-disable' you'll probably get a
+pull-down instead.
 
-                        Geert
+[0]: https://lkml.kernel.org/r/20181023160319.27003-1-jbrunet@baylibre.com
+[1]: https://lkml.kernel.org/r/20181029151340.9087-1-jbrunet@baylibre.com
+
+Jerome Brunet (4):
+  arm64: dts: meson: remove extra subnode in mmc clk_gate pinmux
+  arm64: dts: meson: disable pad bias for mmc pinmuxes
+  arm64: dts: meson: consistently disable pin bias
+  ARM: dts: meson: consistently disable pin bias
+
+ arch/arm/boot/dts/meson8.dtsi               |  12 +++
+ arch/arm/boot/dts/meson8b.dtsi              |   9 ++
+ arch/arm/boot/dts/meson8m2.dtsi             |   1 +
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi  | 111 ++++++++++++++++++--
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi |  60 +++++++++--
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  |  62 +++++++++--
+ 6 files changed, 231 insertions(+), 24 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+2.19.1
