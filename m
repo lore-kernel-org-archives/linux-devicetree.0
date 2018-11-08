@@ -1,92 +1,42 @@
-Return-Path: <SRS0=Nr/5=NP=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46576 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbeKEFxd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 5 Nov 2018 00:53:33 -0500
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: [PATCH V2] arm64: dts: renesas: Switch eMMC bus to 1V8 on Salvator-X and ULCB
-Date: Sun,  4 Nov 2018 21:37:07 +0100
-Message-Id: <20181104203707.20996-1-marek.vasut+renesas@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa@the-dreams.de>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-renesas-soc@vger.kernel.org, linux-mmc@vger.kernel.org
+Return-Path: <SRS0=9/dT=NT=synopsys.com=thinh.nguyen@kernel.org>
+Date: Wed, 7 Nov 2018 19:51:15 -0800
+Message-ID: <49d57899abea493e72f1b516650a60ef25cdc06c.1541648784.git.thinhn@synopsys.com>
+In-Reply-To: <cover.1541648784.git.thinhn@synopsys.com>
+References: <cover.1541648784.git.thinhn@synopsys.com>
+From: Thinh Nguyen <thinh.nguyen@synopsys.com>
+Subject: [PATCH v5 2/3] usb: dwc3: Add disabling of start_transfer failure quirk
+MIME-Version: 1.0
+Content-Type: text/plain
+To: Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: John Youn <john.youn@synopsys.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The eMMC card has two supplies, VCC and VCCQ. The VCC supplies the NAND
-array and the VCCQ supplies the bus. On Salvator-X and ULCB, the VCC is
-connected to 3.3V rail, while the VCCQ is connected to 1.8V rail. Adjust
-the pinmux to match the bus, which is always operating in 1.8V mode.
+DWC_usb31 peripheral v1.70a-ea06 and prior needs a SW workaround for
+isoc START TRANSFER command failure. However, some affected versions may
+have RTL patches to fix this without a SW workaround. Add this quirk to
+disable the SW workaround when it is not needed.
 
-While at it, deduplicate the pinmux entries, which are now the same for
-both default and UHS modes. We still need the two pinctrl entries to
-match the bindings though.
+Synopsys STAR 9001202023: Wrong microframe number for isochronous IN
+endpoints.
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms+renesas@verge.net.au>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org
-Cc: linux-mmc@vger.kernel.org
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
 ---
-V2: - Squash patches for multiple boards together
-    - Deduplicate pinmux entries
----
- arch/arm64/boot/dts/renesas/salvator-common.dtsi | 8 +-------
- arch/arm64/boot/dts/renesas/ulcb.dtsi            | 8 +-------
- 2 files changed, 2 insertions(+), 14 deletions(-)
+ Documentation/devicetree/bindings/usb/dwc3.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-index 7f91ff524109..69775a201b4d 100644
---- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-+++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-@@ -605,12 +605,6 @@
- 	};
- 
- 	sdhi2_pins: sd2 {
--		groups = "sdhi2_data8", "sdhi2_ctrl", "sdhi2_ds";
--		function = "sdhi2";
--		power-source = <3300>;
--	};
--
--	sdhi2_pins_uhs: sd2_uhs {
- 		groups = "sdhi2_data8", "sdhi2_ctrl", "sdhi2_ds";
- 		function = "sdhi2";
- 		power-source = <1800>;
-@@ -760,7 +754,7 @@
- &sdhi2 {
- 	/* used for on-board 8bit eMMC */
- 	pinctrl-0 = <&sdhi2_pins>;
--	pinctrl-1 = <&sdhi2_pins_uhs>;
-+	pinctrl-1 = <&sdhi2_pins>;
- 	pinctrl-names = "default", "state_uhs";
- 
- 	vmmc-supply = <&reg_3p3v>;
-diff --git a/arch/arm64/boot/dts/renesas/ulcb.dtsi b/arch/arm64/boot/dts/renesas/ulcb.dtsi
-index 89daca7356df..de694fdae067 100644
---- a/arch/arm64/boot/dts/renesas/ulcb.dtsi
-+++ b/arch/arm64/boot/dts/renesas/ulcb.dtsi
-@@ -330,12 +330,6 @@
- 	};
- 
- 	sdhi2_pins: sd2 {
--		groups = "sdhi2_data8", "sdhi2_ctrl", "sdhi2_ds";
--		function = "sdhi2";
--		power-source = <3300>;
--	};
--
--	sdhi2_pins_uhs: sd2_uhs {
- 		groups = "sdhi2_data8", "sdhi2_ctrl", "sdhi2_ds";
- 		function = "sdhi2";
- 		power-source = <1800>;
-@@ -426,7 +420,7 @@
- &sdhi2 {
- 	/* used for on-board 8bit eMMC */
- 	pinctrl-0 = <&sdhi2_pins>;
--	pinctrl-1 = <&sdhi2_pins_uhs>;
-+	pinctrl-1 = <&sdhi2_pins>;
- 	pinctrl-names = "default", "state_uhs";
- 
- 	vmmc-supply = <&reg_3p3v>;
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 636630fb92d7..fc64db0a7a0a 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -37,6 +37,9 @@ Optional properties:
+  - phy-names: from the *Generic PHY* bindings; supported names are "usb2-phy"
+ 	or "usb3-phy".
+  - resets: a single pair of phandle and reset specifier
++ - snps,dis-start-transfer-quirk: when set, disable isoc START TRANSFER command
++			failure SW work-around for DWC_usb31 version 1.70a-ea06
++			and prior.
+  - snps,usb3_lpm_capable: determines if platform is USB3 LPM capable
+  - snps,disable_scramble_quirk: true when SW should disable data scrambling.
+ 	Only really useful for FPGA builds.
 -- 
-2.18.0
+2.11.0
