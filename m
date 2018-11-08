@@ -1,77 +1,38 @@
-Return-Path: <SRS0=9rGL=NN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39444 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbeKBUXc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 2 Nov 2018 16:23:32 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r10-v6so1587795wrv.6
-        for <devicetree@vger.kernel.org>; Fri, 02 Nov 2018 04:16:43 -0700 (PDT)
-Subject: Re: [PATCH V13 0/2] C-SKY(csky) Timer Driver
-References: <cover.1540947083.git.ren_guo@c-sky.com>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <8ce6d07f-6608-dcb2-6394-00a18d726988@linaro.org>
-Date: Fri, 2 Nov 2018 12:16:39 +0100
+Return-Path: <SRS0=9/dT=NT=synopsys.com=thinh.nguyen@kernel.org>
+Date: Wed, 7 Nov 2018 19:51:02 -0800
+Message-ID: <cover.1541648784.git.thinhn@synopsys.com>
+From: Thinh Nguyen <thinh.nguyen@synopsys.com>
+Subject: [PATCH v5 0/3] usb: dwc3: Workaround isoc start_transfer failure
 MIME-Version: 1.0
-In-Reply-To: <cover.1540947083.git.ren_guo@c-sky.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>, tglx@linutronix.de
-Cc: arnd@arndb.de, linux-arch@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+To: Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: John Youn <john.youn@synopsys.com>
 List-ID: <devicetree@vger.kernel.org>
 
+DWC_usb31 peripheral v1.70a-ea06 and prior needs a SW workaround for isoc START
+TRANSFER command failure. This patch series implements that workaround
 
-Hi Guo,
-
-On 31/10/2018 03:06, Guo Ren wrote:
-> Hi Daniel & Thomas,
-> 
-> I sent you "PATCH V13" a few days ago, but no-reply:
-> https://lkml.org/lkml/2018/10/29/608
-> Now I send again.
-
-Where are the DT bindings ?
-
-please (cc lkml when sending patches)
-
+Change in v5:
+ - Splited and resent from an old patch series
+ - Cleanup and fixed review issues
+Change in v4:
+ - None
+Change in v3:
+ - None
+Change in v2:
+ - None
 
 
-> Although csky subsystem has been merged into linux-4.20, but there is no
-> timer drivers for csky. A lot of boards need these timer drivers.
-> 
-> Please help merge them into linux-4.20, wait for you reply.
-> 
-> Thx
->  Guo Ren
-> 
-> Changelog:
->  - Move changelog to end of patch.
->  - Remove the set_irq_createmapping call back in csky-mp-intc.c.
->  - Convert the cpumask to an interrupt-controller specific representation
->    in driver's code, and not the SMP code's, and also modify the related
->    codes in csky kernel patchset.
->  - Add COMPILE_TEST for csky_mp_timer.
->  - Fixup smp boot error, cpuhp_setup_state must after timer_of_init()
->    for csky_mp_timer.
-> 
-> Guo Ren (2):
->   clocksource: add C-SKY SMP timer
->   clocksource: add gx6605s SOC system timer
-> 
->  drivers/clocksource/Kconfig         |  18 ++++
->  drivers/clocksource/Makefile        |   2 +
->  drivers/clocksource/timer-gx6605s.c | 154 ++++++++++++++++++++++++++++++++
->  drivers/clocksource/timer-mp-csky.c | 173 ++++++++++++++++++++++++++++++++++++
->  include/linux/cpuhotplug.h          |   1 +
->  5 files changed, 348 insertions(+)
->  create mode 100644 drivers/clocksource/timer-gx6605s.c
->  create mode 100644 drivers/clocksource/timer-mp-csky.c
-> 
+Thinh Nguyen (3):
+  usb: dwc3: Track DWC_usb31 VERSIONTYPE
+  usb: dwc3: Add disabling of start_transfer failure quirk
+  usb: dwc3: Add workaround for isoc start transfer failure
 
+ Documentation/devicetree/bindings/usb/dwc3.txt |   3 +
+ drivers/usb/dwc3/core.c                        |   3 +
+ drivers/usb/dwc3/core.h                        |  19 ++++
+ drivers/usb/dwc3/gadget.c                      | 132 +++++++++++++++++++++++++
+ 4 files changed, 157 insertions(+)
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.11.0
