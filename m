@@ -1,33 +1,51 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH] arm64: dts: Add missing gpio-controller to ps gpio
-Date: Thu,  8 Nov 2018 14:35:46 +0100
-Message-ID: <74a9934eab231714e65f74e442ad79cab0475267.1541684144.git.michal.simek@xilinx.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH anybus v3 1/6] misc: support the Arcx anybus bridge
+Date: Thu, 8 Nov 2018 14:40:00 +0100
+Message-ID: <CAK8P3a3uS5wbNwmGGdYqEFdVi0ErzG7_6yaMheAACh6Tta+DZQ@mail.gmail.com>
+References: <20181104155501.14767-1-TheSven73@googlemail.com>
+ <20181104155501.14767-2-TheSven73@googlemail.com> <20181105212049.GA320@bogus>
+ <CAGngYiUZTm-r0KJ07tKsPmgKCUWcqAOx2S82iLPRjkcDiw0R3g@mail.gmail.com>
+ <CAL_JsqLgz9Z3J0x+QFU6jHOoHn6A1KASc+HbVLnW1=ow0RHv6w@mail.gmail.com>
+ <CAGngYiXczK6dsfyDGxe1ym-vQQfH5XS0jeEkuWW_og23JmTAZg@mail.gmail.com>
+ <CAL_Jsq+YeW+BtVh=L8PBjXYLj9sp91BcUQrJJrwnmChRnXoK_w@mail.gmail.com> <CAGngYiXfmD-EVKcN-L1fBOgyX4JrMqRx295F1p90shygL7zccg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGngYiXfmD-EVKcN-L1fBOgyX4JrMqRx295F1p90shygL7zccg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Rob Herring <robherring2@gmail.com>
-Cc: monstr@monstr.eu, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Will Deacon <will.deacon@arm.com>, Manish Narani <manish.narani@xilinx.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: thesven73@gmail.com
+Cc: Rob Herring <robh@kernel.org>, svendev@arcx.com, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, noralf@tronnes.org, Johan Hovold <johan@kernel.org>, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, gregkh <gregkh@linuxfoundation.org>, John Garry <john.garry@huawei.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Robin Murphy <robin.murphy@arm.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>, Icenowy Zheng <icenowy@aosc.io>, Stuart Yoder <stuyoder@gmail.com>, Maxime Ripard <maxime.ripa>
 List-Id: devicetree@vger.kernel.org
 
-Add missing gpio-controller property to ps gpio.
-This was found via DT schema validation.
+On Tue, Nov 6, 2018 at 9:05 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
+> On Tue, Nov 6, 2018 at 1:31 PM Rob Herring <robh@kernel.org> wrote:
+>
+> > If the host is not a h/w component, but just a s/w protocol then it
+> > doesn't belong in DT. Perhaps it could be a library which the bridge
+> > driver can call into.
+>
+> Anybus cards have an id register, which identifies what they are, so
+> that the appropriate client driver may be instantiated.
+> In that sense anybus is very suited to the bus/client abstraction of
+> pci/usb/etc.
+>
+> > What are the resets connected to? The slots? Maybe you should model
+> > the slots in DT.
+> >
+>
+> Yes, the resets are ultimately connected to the slots.
+> I'm happy to model the slots in DT. It makes sense, they are physical,
+> hardware components.
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+It may also be necessary to have a way to add more DT properties to
+a device in the slot that can not be probed by looking at the ID
+register. Ideally it should not be needed, but we have added this
+to most buses anyway: USB, PCI, MMC and others can all be
+probed automatically for many devices, but there are some devices
+that need a place where extra information can be stored, e.g.
+an ethernet MAC address (in the absence of a PROM), an
+external clock or reset line that is not part of the normal protocol,
+or a more specific identification when two devices accidentally
+have the same ID.
 
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index 07f2dd13ab33..ae3c1b929648 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -410,6 +410,7 @@
- 			compatible = "xlnx,zynqmp-gpio-1.0";
- 			status = "disabled";
- 			#gpio-cells = <0x2>;
-+			gpio-controller;
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 16 4>;
- 			interrupt-controller;
--- 
-1.9.1
+       Arnd
