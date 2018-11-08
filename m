@@ -1,56 +1,110 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: [PATCH] arm: dts: socfpga: remove dma-mask property
-Date: Thu,  8 Nov 2018 10:22:26 -0600
-Message-ID: <20181108162226.5648-1-dinguyen@kernel.org>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH v6 3/3] arm64: dts: allwinner: a64: enable sound on Pinebook
+Date: Thu, 8 Nov 2018 08:28:07 -0800
+Message-ID: <CA+E=qVeG0g1axC1YhAhMOo2xcM3_5RupkiJEu3Aebaomx_7Gww@mail.gmail.com>
+References: <20181108063929.29720-1-anarsoul@gmail.com> <20181108063929.29720-4-anarsoul@gmail.com>
+ <CAGb2v65zb4rXJJv018AfDC-YQgAAmahmQ=-Bb5CyU3kA6wBAqg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: dinguyen@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v65zb4rXJJv018AfDC-YQgAAmahmQ=-Bb5CyU3kA6wBAqg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, arm-linux <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The dma-mask property has been removed from the NAND driver. Remove the
-property from the DTS files.
+On Wed, Nov 7, 2018 at 11:30 PM Chen-Yu Tsai <wens@csie.org> wrote:
+>
+> On Thu, Nov 8, 2018 at 2:42 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+> >
+> > This commit enables I2S, digital and analog parts of audiocodec on
+> > Pinebook
+> >
+> > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> > ---
+> >  .../dts/allwinner/sun50i-a64-pinebook.dts     | 42 +++++++++++++++++++
+> >  1 file changed, 42 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> > index 77fac84797e9..73f171f4ba9b 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> > @@ -64,6 +64,23 @@
+> >                 compatible = "mmc-pwrseq-simple";
+> >                 reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
+> >         };
+> > +
+> > +       speaker_amp: speaker_amp {
+> > +               compatible = "simple-audio-amplifier";
+> > +               enable-gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
+>
+> You might want to add a sound-name-prefix property. See
 
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
----
- arch/arm/boot/dts/socfpga.dtsi         | 1 -
- arch/arm/boot/dts/socfpga_arria10.dtsi | 1 -
- 2 files changed, 2 deletions(-)
+No need, there's only speaker amplifier in Pinebook.
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 77dbb3cda496..c25dede54398 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -753,7 +753,6 @@
- 			      <0xffb80000 0x10000>;
- 			reg-names = "nand_data", "denali_reg";
- 			interrupts = <0x0 0x90 0x4>;
--			dma-mask = <0xffffffff>;
- 			clocks = <&nand_clk>, <&nand_x_clk>, <&nand_ecc_clk>;
- 			clock-names = "nand", "nand_x", "ecc";
- 			status = "disabled";
-diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-index 0b1ab88b4039..e41fa23481c3 100644
---- a/arch/arm/boot/dts/socfpga_arria10.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-@@ -653,7 +653,6 @@
- 			      <0xffb80000 0x10000>;
- 			reg-names = "nand_data", "denali_reg";
- 			interrupts = <0 99 4>;
--			dma-mask = <0xffffffff>;
- 			clocks = <&nand_clk>, <&nand_x_clk>, <&nand_ecc_clk>;
- 			clock-names = "nand", "nand_x", "ecc";
- 			status = "disabled";
--- 
-2.17.1
+>
+>     Documentation/devicetree/bindings/sound/name-prefix.txt
+>
+> Also this should have a reference to its power supply regulator.
+
+It's powered from V5P0_USB according to schematics, which comes out of
+5V BOOST USB HOST MODE POWER - and it's not controlled by software. So
+there's nothing to reference.
+
+>
+> > +       };
+> > +};
+> > +
+> > +&codec {
+> > +       status = "okay";
+> > +};
+> > +
+> > +&codec_analog {
+> > +       status = "okay";
+> > +};
+> > +
+> > +&dai {
+> > +       status = "okay";
+> >  };
+> >
+> >  &ehci0 {
+> > @@ -267,6 +284,31 @@
+> >         vcc-hdmi-supply = <&reg_dldo1>;
+> >  };
+> >
+> > +&sound {
+> > +       status = "okay";
+> > +       simple-audio-card,widgets = "Microphone", "Internal Microphone Left",
+> > +                                   "Microphone", "Internal Microphone Right",
+> > +                                   "Headphone", "Headphone Jack",
+> > +                                   "Speaker", "Internal Speaker";
+> > +       simple-audio-card,aux-devs = <&codec_analog>, <&speaker_amp>;
+> > +       simple-audio-card,routing =
+> > +                       "Left DAC", "AIF1 Slot 0 Left",
+> > +                       "Right DAC", "AIF1 Slot 0 Right",
+> > +                       "INL", "LINEOUT",
+> > +                       "INR", "LINEOUT",
+> > +                       "Internal Speaker", "OUTL",
+> > +                       "Internal Speaker", "OUTR",
+> > +                       "Headphone Jack", "HP",
+> > +                       "AIF1 Slot 0 Left ADC", "Left ADC",
+> > +                       "AIF1 Slot 0 Right ADC", "Right ADC",
+> > +                       "Left ADC", "ADC",
+> > +                       "Right ADC", "ADC",
+> > +                       "Internal Microphone Left", "MBIAS",
+> > +                       "MIC1", "Internal Microphone Left",
+> > +                       "Internal Microphone Right", "HBIAS",
+> > +                       "MIC2", "Internal Microphone Right";
+>
+> The schematics is missing the actual jack, but this looks to be correct.
+>
+> ChenYu
+>
+> > +};
+> > +
+> >  &uart0 {
+> >         pinctrl-names = "default";
+> >         pinctrl-0 = <&uart0_pb_pins>;
+> > --
+> > 2.19.1
+> >
