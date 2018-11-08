@@ -1,31 +1,30 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v3 00/18] arm64: dts: qcom: qcs404: Add Device tree nodes
-Date: Thu, 8 Nov 2018 23:27:39 +0530
-Message-ID: <20181108175739.GG12092@vkoul-mobl>
-References: <20181108175049.7090-1-vkoul@kernel.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 1/4] of/device: Add a way to probe drivers by match data
+Date: Thu, 08 Nov 2018 09:58:59 -0800
+Message-ID: <154169993998.88331.10494065577891939152@swboyd.mtv.corp.google.com>
+References: <20181106183609.207702-1-sboyd@kernel.org>
+ <20181106183609.207702-2-sboyd@kernel.org>
+ <efa13e0b-0daf-3bf3-27ba-ed90f15c7dfe@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181108175049.7090-1-vkoul@kernel.org>
+In-Reply-To: <efa13e0b-0daf-3bf3-27ba-ed90f15c7dfe@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Michael Turquette <mturquette@baylibre.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08-11-18, 23:20, Vinod Koul wrote:
-> This series adds support for various nodes for QCS404-EVB.
-> 
-> Based on v4.20-rc1
-> 
-> Changes in v3:
->  - Make the DTS files sorted alphabetcially and by node addresses
->  - Add reviewed by from Bjorn
->  - Split out the DTS files for EVB 1000 and EVB 4000 boards and add common
->    evb dts files for common part
+Quoting Matthias Brugger (2018-11-08 00:29:46)
+> On 06/11/2018 19:36, Stephen Boyd wrote:
+> > +int platform_driver_probe_by_of_match_data(struct platform_device *pde=
+v)
+> > +{
+> > +     int (*probe_func)(struct platform_device *pdev);
+> > +
+> > +     probe_func =3D of_device_get_match_data(&pdev->dev);
+> =
 
-Sorry I sent out the wrong branch :( will send updated one shortly,
-apologies for the noise
+> Shouldn't we check if probe_func is not NULL?
 
--- 
-~Vinod
+Is the oops from the NULL pointer deref insufficient?
