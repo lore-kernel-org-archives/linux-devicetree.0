@@ -1,63 +1,44 @@
-From: jbrunet@baylibre.com
-Subject: Re: [PATCH 3/4] Documentation: bindings: Add missing Amlogic SCPI
- sensor bindings
-Date: Thu, 08 Nov 2018 17:29:47 +0100
-Message-ID: <a52c64d6159c73e1cb97089ed051321f121f0467.camel@baylibre.com>
-References: <20181108135352.8459-1-jbrunet@baylibre.com>
-         <20181108135352.8459-4-jbrunet@baylibre.com>
-         <20181108160457.GA10953@e107155-lin>
+From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 6/7] iommu/virtio: Add probe request
+Date: Thu, 8 Nov 2018 16:46:15 +0000
+Message-ID: <52102adc-ed06-da8a-9c1b-ce8ea0d31ad9@arm.com>
+References: <20181012145917.6840-1-jean-philippe.brucker@arm.com>
+	<20181012145917.6840-7-jean-philippe.brucker@arm.com>
+	<295d30bb-5aef-2727-01c0-ec10c7a8fa8c@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181108160457.GA10953@e107155-lin>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <295d30bb-5aef-2727-01c0-ec10c7a8fa8c-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, tnowicki-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-11-08 at 16:04 +0000, Sudeep Holla wrote:
-> On Thu, Nov 08, 2018 at 02:53:51PM +0100, Jerome Brunet wrote:
-> > amlogic,meson-gxbb-scpi-sensors is both the driver and DT but is not
-> > documented. Just add it to amlogic's scpi documentation
-> > 
-> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> > ---
-> >  Documentation/devicetree/bindings/arm/amlogic,scpi.txt | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/amlogic,scpi.txt
-> > b/Documentation/devicetree/bindings/arm/amlogic,scpi.txt
-> > index 7b9a861e9306..5ab59da052df 100644
-> > --- a/Documentation/devicetree/bindings/arm/amlogic,scpi.txt
-> > +++ b/Documentation/devicetree/bindings/arm/amlogic,scpi.txt
-> > @@ -17,4 +17,11 @@ Required sub-node properties:
-> >  - compatible : should be "amlogic,meson-gxbb-scp-shmem" for SRAM based
-> > shared
-> >  		memory on Amlogic GXBB SoC.
-> >  
-> > +Sensor bindings for the sensors based on SCPI Message Protocol
-> > +--------------------------------------------------------------
-> > +SCPI provides an API to access the various sensors on the SoC.
-> > +
-> > +Required properties:
-> > +- compatible : should be "amlogic,meson-gxbb-scpi-sensors".
-> > +
-> 
-> Not sure if it's worth mentioning the reason for being able to identify
-> amlogic,meson-gxbb sensors from generic scpi ones. IIRC it was for the
-> unit values of these sensors are different ? But I will leave that to
-> DT or platform maintainers' taste.
+On 08/11/2018 14:48, Auger Eric wrote:
+>> +struct virtio_iommu_probe_property {
+>> +	__le16					type;
+>> +	__le16					length;
+> the value[] field has disappeared but still is documented in the v0.8 spec.
 
-Yes Sudeep, the unit are different.
-If we probe on the generic one, it will "work" but the result is just not
-good. 
+Good catch. I removed value[] when reworking the
+virtio_iommu_probe_resv_mem definition, because embedding a struct with
+a flexible array into another violates the C99 standard, even though GCC
+accepts it.
 
-BTW, the point of this patch is merely to remove an existing issue.
-The scpi driver and meson-gx.dtsi are both refering to an undocumented
-compatible.
+I'll remove it from the spec as well, but I probably won't publish a new
+version for this change alone. The virtio spec itself has similar uses
+of flexible arrays, that are given for explanation but aren't valid C
+(and those wouldn't even compile).
 
-> 
-> --
-> Regards,
-> Sudeep
+Thanks,
+Jean
