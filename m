@@ -1,176 +1,86 @@
-From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v2] PCI: mediatek: Use devm_of_pci_get_host_bridge_resources() to parse DT
-Date: Thu, 8 Nov 2018 10:56:55 +0800
-Message-ID: <1541645815-30340-1-git-send-email-honghui.zhang@mediatek.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: clk: Introduce 'protected-clocks'
+ property
+Date: Wed, 7 Nov 2018 21:44:52 -0800
+Message-ID: <20181108054452.GD2337@tuxbook-pro>
+References: <20181105194011.43770-1-swboyd@chromium.org>
+ <20181105194011.43770-2-swboyd@chromium.org>
+ <20181106010426.GX2523@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181106010426.GX2523@minitux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com
-Cc: devicetree@vger.kernel.org, honghui.zhang@mediatek.com, youlin.pei@mediatek.com, jianjun.wang@mediatek.com
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Honghui Zhang <honghui.zhang@mediatek.com>
+On Mon 05 Nov 17:04 PST 2018, Bjorn Andersson wrote:
 
-Use the devm_of_pci_get_host_bridge_resources() API in place of the PCI OF
-DT parser.
+> On Mon 05 Nov 11:40 PST 2018, Stephen Boyd wrote:
+> 
+> > Add a generic clk property for clks which are not intended to be used by
+> > the OS due to security restrictions put in place by firmware. For
+> > example, on some Qualcomm firmwares reading or writing certain clk
+> > registers causes the entire system to reboot, but on other firmwares
+> > reading and writing those same registers is required to make devices
+> > like QSPI work. Rather than adding one-off properties each time a new
+> > set of clks appears to be protected, let's add a generic clk property to
+> > describe any set of clks that shouldn't be touched by the OS. This way
+> > we never need to register the clks or use them in certain firmware
+> > configurations.
+> > 
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> 
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> 
 
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
----
- drivers/pci/controller/pcie-mediatek.c | 98 +++++++++-------------------------
- 1 file changed, 24 insertions(+), 74 deletions(-)
+Gave this some additional thought. The way this is blacklisting
+protected clocks makes it impossible to be backwards compatible with an
+older DT while adding new protected clocks to an existing driver.
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 2a1f97c..0590a93 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -197,11 +197,7 @@ struct mtk_pcie_port {
-  * @dev: pointer to PCIe device
-  * @base: IO mapped register base
-  * @free_ck: free-run reference clock
-- * @io: IO resource
-- * @pio: PIO resource
-  * @mem: non-prefetchable memory resource
-- * @busn: bus range
-- * @offset: IO / Memory offset
-  * @ports: pointer to PCIe port information
-  * @soc: pointer to SoC-dependent operations
-  */
-@@ -210,14 +206,7 @@ struct mtk_pcie {
- 	void __iomem *base;
- 	struct clk *free_ck;
- 
--	struct resource io;
--	struct resource pio;
- 	struct resource mem;
--	struct resource busn;
--	struct {
--		resource_size_t mem;
--		resource_size_t io;
--	} offset;
- 	struct list_head ports;
- 	const struct mtk_pcie_soc *soc;
- };
-@@ -1045,55 +1034,43 @@ static int mtk_pcie_setup(struct mtk_pcie *pcie)
- {
- 	struct device *dev = pcie->dev;
- 	struct device_node *node = dev->of_node, *child;
--	struct of_pci_range_parser parser;
--	struct of_pci_range range;
--	struct resource res;
- 	struct mtk_pcie_port *port, *tmp;
-+	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
-+	struct list_head *windows = &host->windows;
-+	struct resource_entry *win, *tmp_win;
-+	resource_size_t io_base;
- 	int err;
- 
--	if (of_pci_range_parser_init(&parser, node)) {
--		dev_err(dev, "missing \"ranges\" property\n");
--		return -EINVAL;
--	}
-+	err = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
-+						    windows, &io_base);
-+	if (err)
-+		return err;
- 
--	for_each_of_pci_range(&parser, &range) {
--		err = of_pci_range_to_resource(&range, node, &res);
--		if (err < 0)
--			return err;
-+	err = devm_request_pci_bus_resources(dev, windows);
-+	if (err < 0)
-+		return err;
- 
--		switch (res.flags & IORESOURCE_TYPE_BITS) {
-+	/* Get the I/O and memory ranges from DT */
-+	resource_list_for_each_entry_safe(win, tmp_win, windows) {
-+		switch (resource_type(win->res)) {
- 		case IORESOURCE_IO:
--			pcie->offset.io = res.start - range.pci_addr;
--
--			memcpy(&pcie->pio, &res, sizeof(res));
--			pcie->pio.name = node->full_name;
--
--			pcie->io.start = range.cpu_addr;
--			pcie->io.end = range.cpu_addr + range.size - 1;
--			pcie->io.flags = IORESOURCE_MEM;
--			pcie->io.name = "I/O";
--
--			memcpy(&res, &pcie->io, sizeof(res));
-+			err = devm_pci_remap_iospace(dev, win->res, io_base);
-+			if (err) {
-+				dev_warn(dev, "error %d: failed to map resource %pR\n",
-+					 err, win->res);
-+				resource_list_destroy_entry(win);
-+			}
- 			break;
--
- 		case IORESOURCE_MEM:
--			pcie->offset.mem = res.start - range.pci_addr;
--
--			memcpy(&pcie->mem, &res, sizeof(res));
-+			memcpy(&pcie->mem, win->res, sizeof(*win->res));
- 			pcie->mem.name = "non-prefetchable";
- 			break;
-+		case IORESOURCE_BUS:
-+			host->busnr = win->res->start;
-+			break;
- 		}
- 	}
- 
--	err = of_pci_parse_bus_range(node, &pcie->busn);
--	if (err < 0) {
--		dev_err(dev, "failed to parse bus ranges property: %d\n", err);
--		pcie->busn.name = node->name;
--		pcie->busn.start = 0;
--		pcie->busn.end = 0xff;
--		pcie->busn.flags = IORESOURCE_BUS;
--	}
--
- 	for_each_available_child_of_node(node, child) {
- 		int slot;
- 
-@@ -1125,28 +1102,6 @@ static int mtk_pcie_setup(struct mtk_pcie *pcie)
- 	return 0;
- }
- 
--static int mtk_pcie_request_resources(struct mtk_pcie *pcie)
--{
--	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
--	struct list_head *windows = &host->windows;
--	struct device *dev = pcie->dev;
--	int err;
--
--	pci_add_resource_offset(windows, &pcie->pio, pcie->offset.io);
--	pci_add_resource_offset(windows, &pcie->mem, pcie->offset.mem);
--	pci_add_resource(windows, &pcie->busn);
--
--	err = devm_request_pci_bus_resources(dev, windows);
--	if (err < 0)
--		return err;
--
--	err = devm_pci_remap_iospace(dev, &pcie->pio, pcie->io.start);
--	if (err < 0)
--		return err;
--
--	return 0;
--}
--
- static int mtk_pcie_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -1169,11 +1124,6 @@ static int mtk_pcie_probe(struct platform_device *pdev)
- 	if (err)
- 		return err;
- 
--	err = mtk_pcie_request_resources(pcie);
--	if (err)
--		goto put_resources;
--
--	host->busnr = pcie->busn.start;
- 	host->dev.parent = pcie->dev;
- 	host->ops = pcie->soc->ops;
- 	host->map_irq = of_irq_parse_and_map_pci;
--- 
-2.6.4
+I don't have better suggestion for handling this and the problem should
+primarily be isolated to the beginning of the upstream life of a
+platform, so perhaps we can just ignore this issue?
+
+Regards,
+Bjorn
+
+> Regards,
+> Bjorn
+> 
+> > Cc: Taniya Das <tdas@codeaurora.org>
+> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > ---
+> >  .../devicetree/bindings/clock/clock-bindings.txt | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > index 2ec489eebe72..b646bbcf7f92 100644
+> > --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > @@ -168,3 +168,19 @@ a shared clock is forbidden.
+> >  
+> >  Configuration of common clocks, which affect multiple consumer devices can
+> >  be similarly specified in the clock provider node.
+> > +
+> > +==Protected clocks==
+> > +
+> > +Some platforms or firmwares may not fully expose all the clocks to the OS, such
+> > +as in situations where those clks are used by drivers running in ARM secure
+> > +execution levels. Such a configuration can be specified in device tree with the
+> > +protected-clocks property in the form of a clock specifier list. This property should
+> > +only be specified in the node that is providing the clocks being protected:
+> > +
+> > +   clock-controller@a000f000 {
+> > +        compatible = "vendor,clk95;
+> > +        reg = <0xa000f000 0x1000>
+> > +        #clocks-cells = <1>;
+> > +        ...
+> > +        protected-clocks = <UART3_CLK>, <SPI5_CLK>;
+> > +   };
+> > -- 
+> > Sent by a computer through tubes
+> > 
