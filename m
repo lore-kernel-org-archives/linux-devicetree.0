@@ -1,72 +1,35 @@
-From: Alan Cooper <alcooperx@gmail.com>
-Subject: Re: [PATCH V2 2/6] usb: core: Add ability to skip phy exit on suspend
- and init on resume
-Date: Thu, 8 Nov 2018 17:50:49 -0500
-Message-ID: <CAOGqxeXmMWK53pAmjeUtpdXNeTa7UH7=VA6pAJyhxg_BsmU5+w@mail.gmail.com>
-References: <CAOGqxeWBmAahswHp+b_PzkyGs-9sOx3COpJnFVsbKhx14KLuUw@mail.gmail.com>
- <1541641432.32173.71.camel@mhfsdcap03>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v2 0/2] hwmon: (adt7475): inverted PWM output
+Date: Fri,  9 Nov 2018 11:56:05 +1300
+Message-ID: <20181108225607.7521-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541641432.32173.71.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: chunfeng yun <chunfeng.yun@mediatek.com>
-Cc: ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, "David S. Miller" <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>, USB
+To: linux@roeck-us.net, robh+dt@kernel.org, jdelvare@suse.com
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 7, 2018 at 8:43 PM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
->
-> hi,
-> On Tue, 2018-10-30 at 18:30 -0400, Alan Cooper wrote:
-> > On 10/17/18 9:46 PM, Chunfeng Yun wrote:> hi,
-> > >
-> > > On Wed, 2018-10-17 at 18:29 -0400, Al Cooper wrote:
-> > >> Add the ability to skip calling the PHY's exit routine on suspend
-> > >> and the PHY's init routine on resume. This is to handle a USB PHY
-> > >> that should have it's power_off function called on suspend but
-> > cannot
-> > >> have it's exit function called because on exit it will disable the
-> > >> PHY to the point where register accesses to the Host Controllers
-> > >> using the PHY will be disabled and the host drivers will crash.
-> > >>
-> > >> This is enabled with the HCD flag "suspend_without_phy_exit" which
-> > >> can be set from any HCD driver.
-> > >>
-> > >> Signed-off-by: Al Cooper<alcooperx@gmail.com>
-> > >> ---
-> > >>   drivers/usb/core/hcd.c  |  8 ++++----
-> > >>   drivers/usb/core/phy.c  | 18 ++++++++++++------
-> > >>   drivers/usb/core/phy.h  |  9 ++++++---
-> > >>   include/linux/usb/hcd.h |  3 +++
-> > >>   4 files changed, 25 insertions(+), 13 deletions(-)
-> > >>
->
->
-> > >>       unsigned        skip_phy_initialization:1;
-> > >>
-> > >> +    /* Some phys don't want the phy's exit/init called on
-> > suspend/resume */
-> > >> +    unsigned        suspend_without_phy_exit:1;
-> > > As suggested before, you can skip phy's exit/init during
-> > suspend/resume
-> > > by enabling wakeup of hcd, so needn't add a new variable for it.
-> >
-> > I still need to be able to enable and disable wakeup for this driver.
-> Just use device_init_wakeup(dev, true) instead of
-> device_wakeup_enable(dev) for your controller driver, you can try it.
->
-> Sorry for the late replay
+Hi,
 
-What about the case where sysfs is used to disable wakeup?
+I have a hardware design that requires logic low PWM output. The adt7475
+supports this but the current driver does not have any way of configuring=
+=20this.
+I've gone with a device-tree property as this is an artifact of the hardw=
+are
+design and not something that might be configured via sysfs.
 
-Al
-> >
-> > >
-> > >> +
-> > >>       /* The next flag is a stopgap, to be removed when all the
-> > HCDs
-> > >>        * support the new root-hub polling mechanism. */
-> > >>       unsigned        uses_new_polling:1;
-> > >
->
->
+Chris Packham (2):
+=20 dt-bindings: hwmon: add binding documentation for adt7475
+=20 hwmon: (adt7475): add support for inverting the pwm output
+
+=20.../devicetree/bindings/hwmon/adt7475.txt     | 24 ++++++++++++++++
+=20.../devicetree/bindings/trivial-devices.txt   |  4 ---
+=20drivers/hwmon/adt7475.c                       | 28 +++++++++++++++++++=
+
+=203 files changed, 52 insertions(+), 4 deletions(-)
+=20create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.txt=
+
+
+--=20
+2.19.1
