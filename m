@@ -1,66 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] of, numa: Validate some distance map rules
-Date: Thu, 8 Nov 2018 07:08:26 -0600
-Message-ID: <20181108130826.GA18544@bogus>
-References: <1541672223-131326-1-git-send-email-john.garry@huawei.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] arm64: dts: r8a77990: ebisu: Add serial console pins
+Date: Thu, 8 Nov 2018 14:11:44 +0100
+Message-ID: <20181108131143.on5j7w4bhlfloy7d@verge.net.au>
+References: <20181105213859.11408-1-marek.vasut+renesas@gmail.com>
+ <CAMuHMdX19CmPCVpyhkq0Szjaj=Q24sT1BGT+_TtwUw2FvSAZsQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1541672223-131326-1-git-send-email-john.garry@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>
-Cc: frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com, will.deacon@arm.com, anshuman.khandual@arm.com, peterz@infradead.org
+In-Reply-To: <CAMuHMdX19CmPCVpyhkq0Szjaj=Q24sT1BGT+_TtwUw2FvSAZsQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 08, 2018 at 06:17:03PM +0800, John Garry wrote:
-> Currently the NUMA distance map parsing does not validate the distance
-> table for the distance-matrix rules 1-2 in [1].
+On Thu, Nov 08, 2018 at 01:01:08PM +0100, Geert Uytterhoeven wrote:
+> On Mon, Nov 5, 2018 at 10:39 PM Marek Vasut <marek.vasut@gmail.com> wrote:
+> > Subject: [PATCH] arm64: dts: r8a77990: ebisu: Add serial console pins
 > 
-> However the arch NUMA code may enforce some of these rules, but not all.
-> Such is the case for the arm64 port, which does not enforce the rule that
-> the distance between separates nodes cannot equal LOCAL_DISTANCE.
-> 
-> The patch adds the following rules validation:
-> - distance of node to self equals LOCAL_DISTANCE
-> - distance of separate nodes > LOCAL_DISTANCE
-> 
-> This change avoids a yet-unresolved crash reported in [2].
-> 
-> A note on dealing with symmetrical distances between nodes:
-> 
-> Validating symmetrical distances between nodes is difficult. If it were
-> mandated in the bindings that every distance must be recorded in the
-> table, then it would be easy. However, it isn't.
-> 
-> In addition to this, it is also possible to record [b, a] distance only
-> (and not [a, b]). So, when processing the table for [b, a], we cannot
-> assert that current distance of [a, b] != [b, a] as invalid, as [a, b]
-> distance may not be present in the table and current distance would be
-> default at REMOTE_DISTANCE.
-> 
-> As such, we maintain the policy that we overwrite distance [a, b] = [b, a]
-> for b > a. This policy is different to kernel ACPI SLIT validation, which
-> allows non-symmetrical distances (ACPI spec SLIT rules allow it). However,
-> the distance debug message is dropped as it may be misleading (for a distance
-> which is later overwritten).
-> 
-> Some final notes on semantics:
-> 
-> - It is implied that it is the responsibility of the arch NUMA code to
->   reset the NUMA distance map for an error in distance map parsing.
-> 
-> - It is the responsibility of the FW NUMA topology parsing (whether OF or
->   ACPI) to enforce NUMA distance rules, and not arch NUMA code.
-> 
-> [1] Documents/devicetree/bindings/numa.txt
-> [2] https://www.spinics.net/lists/arm-kernel/msg683304.html
-> 
-> Cc: stable@vger.kernel.org # 4.7
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> Acked-by: Will Deacon <will.deacon@arm.com>
-> ---
+> arm64: dts: renesas: r8a77990: ebisu: Add serial console pins
 
-Applied, thanks.
-
-Rob
+Thanks, fixed.
