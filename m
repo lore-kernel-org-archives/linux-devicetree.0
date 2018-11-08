@@ -1,219 +1,41 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 01/18] arm64: dts: qcom: qcs404: add base dts files
-Date: Thu, 8 Nov 2018 15:45:28 -0600
-Message-ID: <CAL_JsqKsCpofdsP_TojGxeCkv59r5Ce7-4Sz1B1V_QCL1eQDVg@mail.gmail.com>
-References: <20181108184009.18430-1-vkoul@kernel.org> <20181108184009.18430-2-vkoul@kernel.org>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH 2/6] regulator: lochnagar: Move driver to binding from DT
+Date: Thu, 8 Nov 2018 21:59:41 +0000
+Message-ID: <20181108215941.GU16508@imbe.wolfsonmicro.main>
+References: <20181108101405.14062-1-ckeepax@opensource.cirrus.com>
+ <20181108101405.14062-3-ckeepax@opensource.cirrus.com>
+ <20181108121629.GD6675@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181108184009.18430-2-vkoul@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181108121629.GD6675@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: lee.jones@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 8, 2018 at 12:40 PM Vinod Koul <vkoul@kernel.org> wrote:
->
-> Add base dts files for QCS404 chipset along with cpu, timer,
-> gcc and uart2 nodes.
->
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  arch/arm64/boot/dts/qcom/qcs404.dtsi | 175 +++++++++++++++++++++++++++++++++++
->  1 file changed, 175 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/qcs404.dtsi
->
-> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> new file mode 100644
-> index 000000000000..b77d1198ba79
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> @@ -0,0 +1,175 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2018, Linaro Limited
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/qcom,gcc-qcs404.h>
-> +
-> +/ {
-> +       interrupt-parent = <&intc>;
-> +
-> +       #address-cells = <2>;
-> +       #size-cells = <2>;
-> +
-> +       chosen { };
-> +
-> +       clocks {
-> +               xo_board: xo_board {
+On Thu, Nov 08, 2018 at 12:16:29PM +0000, Mark Brown wrote:
+> On Thu, Nov 08, 2018 at 10:14:01AM +0000, Charles Keepax wrote:
+> 
+> > +static const struct of_device_id lochnagar_of_match[] = {
+> > +	{ .compatible = "cirrus,lochnagar-regulator" },
+> > +	{},
+> > +};
+> 
+> This is obviously just dumping the Linux driver model into the DT, the
+> regulators are clearly different.  If you want to explicitly list the
+> regulators in DT it'd be better to reflect the hardware and enumerate
+> the regulators individually - you can use one driver for all the MICVDDs
+> and a separate one for VDDCORE for example.
 
-Build your dtbs with "W=12" and fix any warnings. You should get a
-warning about '_'.
+Agreed, would be relatively doable for regulators, might be a bit
+verbose for the clock, but I really don't see how to handle
+pinctrl.
 
-> +                       compatible = "fixed-clock";
-> +                       #clock-cells = <0>;
-> +                       clock-frequency = <19200000>;
-> +               };
-> +       };
-> +
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               CPU0: cpu@0 {
+I guess I will wait and see what the other maintainers think but
+personally I would really be inclined to keep the binding the
+same as the last version if we can.
 
-unit address is wrong.
-
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a53";
-> +                       reg = <0x100>;
-> +                       enable-method = "psci";
-> +                       next-level-cache = <&L2_0>;
-> +               };
-> +
-> +               CPU1: cpu@1 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a53";
-> +                       reg = <0x101>;
-> +                       enable-method = "psci";
-> +                       next-level-cache = <&L2_0>;
-> +               };
-> +
-> +               CPU2: cpu@2 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a53";
-> +                       reg = <0x102>;
-> +                       enable-method = "psci";
-> +                       next-level-cache = <&L2_0>;
-> +               };
-> +
-> +               CPU3: cpu@3 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a53";
-> +                       reg = <0x103>;
-> +                       enable-method = "psci";
-> +                       next-level-cache = <&L2_0>;
-> +               };
-> +
-> +               L2_0: l2-cache {
-> +                       compatible = "cache";
-> +                       cache-level = <2>;
-> +               };
-> +       };
-> +
-> +       memory@80000000 {
-> +               device_type = "memory";
-> +               /* We expect the bootloader to fill in the reg */
-
-Can't you put in a default or base address at least.
-
-> +               reg = <0 0x0 0 0>;
-> +       };
-> +
-> +       psci {
-> +               compatible = "arm,psci-1.0";
-> +               method = "smc";
-> +       };
-> +
-> +       soc: soc@0 {
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               ranges = <0 0 0 0xffffffff>;
-> +               compatible = "simple-bus";
-> +
-> +               gcc: clock-controller@1800000 {
-> +                       compatible = "qcom,gcc-qcs404";
-> +                       reg = <0x01800000 0x80000>;
-> +                       #clock-cells = <1>;
-> +
-> +                       assigned-clocks = <&gcc GCC_APSS_AHB_CLK_SRC>;
-> +                       assigned-clock-rates = <19200000>;
-> +               };
-> +
-> +               blsp1_uart2: serial@78b1000 {
-> +                       compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-> +                       reg = <0x078b1000 0x200>;
-> +                       interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>, <&gcc GCC_BLSP1_AHB_CLK>;
-> +                       clock-names = "core", "iface";
-> +                       status = "okay";
-> +               };
-> +
-> +               intc: interrupt-controller@b000000 {
-> +                       compatible = "qcom,msm-qgic2";
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <3>;
-> +                       reg = <0x0b000000 0x1000>,
-> +                             <0x0b002000 0x1000>;
-> +               };
-> +
-> +               timer@b120000 {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       ranges;
-> +                       compatible = "arm,armv7-timer-mem";
-> +                       reg = <0x0b120000 0x1000>;
-> +                       clock-frequency = <19200000>;
-> +
-> +                       frame@b121000 {
-> +                               frame-number = <0>;
-> +                               interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-> +                                            <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +                               reg = <0x0b121000 0x1000>,
-> +                                     <0x0b122000 0x1000>;
-> +                       };
-> +
-> +                       frame@b123000 {
-> +                               frame-number = <1>;
-> +                               interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +                               reg = <0x0b123000 0x1000>;
-> +                               status = "disabled";
-> +                       };
-> +
-> +                       frame@b124000 {
-> +                               frame-number = <2>;
-> +                               interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-> +                               reg = <0x0b124000 0x1000>;
-> +                               status = "disabled";
-> +                       };
-> +
-> +                       frame@b125000 {
-> +                               frame-number = <3>;
-> +                               interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> +                               reg = <0x0b125000 0x1000>;
-> +                               status = "disabled";
-> +                       };
-> +
-> +                       frame@b126000 {
-> +                               frame-number = <4>;
-> +                               interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-> +                               reg = <0x0b126000 0x1000>;
-> +                               status = "disabled";
-> +                       };
-> +
-> +                       frame@b127000 {
-> +                               frame-number = <5>;
-> +                               interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> +                               reg = <0xb127000 0x1000>;
-> +                               status = "disabled";
-> +                       };
-> +
-> +                       frame@b128000 {
-> +                               frame-number = <6>;
-> +                               interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-> +                               reg = <0x0b128000 0x1000>;
-> +                               status = "disabled";
-> +                       };
-> +               };
-> +       };
-> +
-> +       timer {
-> +               compatible = "arm,armv8-timer";
-> +               interrupts = <GIC_PPI 2 0xff08>,
-> +                            <GIC_PPI 3 0xff08>,
-> +                            <GIC_PPI 4 0xff08>,
-> +                            <GIC_PPI 1 0xff08>;
-> +       };
-> +};
-> --
-> 2.14.4
->
+Thanks,
+Charles
