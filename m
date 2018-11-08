@@ -1,91 +1,49 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v4 06/18] arm64: dts: qcom: qcs404: add smp2p nodes
-Date: Fri,  9 Nov 2018 00:09:57 +0530
-Message-ID: <20181108184009.18430-7-vkoul@kernel.org>
+Subject: [PATCH v4 07/18] arm64: dts: qcom: qcs404: Add TLMM pinctrl node
+Date: Fri,  9 Nov 2018 00:09:58 +0530
+Message-ID: <20181108184009.18430-8-vkoul@kernel.org>
 References: <20181108184009.18430-1-vkoul@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181108184009.18430-1-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the smp2p-adsp, smp2p-cdsp and smp2p-wcss nodes found in QCS404.
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Add the QCS404 TLMM pinctrl node with its three tiles.
+
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 60 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index e21b4a549e75..cc4dd3186ae9 100644
+index cc4dd3186ae9..3b6e659e3d1f 100644
 --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
 +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -257,4 +257,64 @@
- 			     <GIC_PPI 4 0xff08>,
- 			     <GIC_PPI 1 0xff08>;
- 	};
-+
-+	smp2p-adsp {
-+		compatible = "qcom,smp2p";
-+		qcom,smem = <443>, <429>;
-+		interrupts = <GIC_SPI 291 IRQ_TYPE_EDGE_RISING>;
-+		mboxes = <&apcs_glb 10>;
-+		qcom,local-pid = <0>;
-+		qcom,remote-pid = <2>;
-+
-+		adsp_smp2p_out: master-kernel {
-+			qcom,entry-name = "master-kernel";
-+			#qcom,smem-state-cells = <1>;
-+		};
-+
-+		adsp_smp2p_in: slave-kernel {
-+			qcom,entry-name = "slave-kernel";
+@@ -153,6 +153,20 @@
+ 			reg = <0x00060000 0x6000>;
+ 		};
+ 
++		tlmm: pinctrl@1000000 {
++			compatible = "qcom,qcs404-pinctrl";
++			reg = <0x01000000 0x200000>,
++			      <0x01300000 0x200000>,
++			      <0x07b00000 0x200000>;
++			reg-names = "south", "north", "east";
++			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
++			gpio-ranges = <&tlmm 0 0 120>;
++			gpio-controller;
++			#gpio-cells = <2>;
 +			interrupt-controller;
 +			#interrupt-cells = <2>;
 +		};
-+	};
 +
-+	smp2p-cdsp {
-+		compatible = "qcom,smp2p";
-+		qcom,smem = <94>, <432>;
-+		interrupts = <GIC_SPI 143 IRQ_TYPE_EDGE_RISING>;
-+		mboxes = <&apcs_glb 14>;
-+		qcom,local-pid = <0>;
-+		qcom,remote-pid = <5>;
-+
-+		cdsp_smp2p_out: master-kernel {
-+			qcom,entry-name = "master-kernel";
-+			#qcom,smem-state-cells = <1>;
-+		};
-+
-+		cdsp_smp2p_in: slave-kernel {
-+			qcom,entry-name = "slave-kernel";
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+	};
-+
-+	smp2p-wcss {
-+		compatible = "qcom,smp2p";
-+		qcom,smem = <435>, <428>;
-+		interrupts = <GIC_SPI 158 IRQ_TYPE_EDGE_RISING>;
-+		mboxes = <&apcs_glb 18>;
-+		qcom,local-pid = <0>;
-+		qcom,remote-pid = <1>;
-+
-+		wcss_smp2p_out: master-kernel {
-+			qcom,entry-name = "master-kernel";
-+			#qcom,smem-state-cells = <1>;
-+		};
-+
-+		wcss_smp2p_in: slave-kernel {
-+			qcom,entry-name = "slave-kernel";
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+	};
- };
+ 		gcc: clock-controller@1800000 {
+ 			compatible = "qcom,gcc-qcs404";
+ 			reg = <0x01800000 0x80000>;
 -- 
 2.14.4
