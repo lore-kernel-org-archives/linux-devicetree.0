@@ -1,37 +1,178 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH 15/15] arm64: dts: allwinner: a64: bananapi-m64: Add
- Bluetooth device node
-Date: Thu, 8 Nov 2018 09:35:57 +0100
-Message-ID: <BB1D82EC-3F84-4C02-B230-32B331887F08@holtmann.org>
-References: <20181107101308.7626-1-wens@csie.org>
- <20181107101308.7626-16-wens@csie.org>
-Mime-Version: 1.0 (Mac OS X Mail 12.1 \(3445.101.1\))
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v4 02/10] dt-bindings: spi: Move the bindings for the
+ FSL QSPI driver
+Date: Thu, 8 Nov 2018 09:37:51 +0100
+Message-ID: <20181108093751.39f43e8d@bbrezillon>
+References: <1541601809-16950-1-git-send-email-frieder.schrempf@kontron.de>
+        <1541601809-16950-3-git-send-email-frieder.schrempf@kontron.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181107101308.7626-16-wens@csie.org>
+In-Reply-To: <1541601809-16950-3-git-send-email-frieder.schrempf@kontron.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-sunxi@googlegroups.com, Loic Poulain <loic.poulain@gmail.com>, linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Frieder Schrempf <frieder.schrempf@kontron.de>
+Cc: linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, miquel.raynal@bootlin.com, broonie@kernel.org, david.wolfe@nxp.com, fabio.estevam@nxp.com, prabhakar.kushwaha@nxp.com, yogeshnarayan.gaur@nxp.com, han.xu@nxp.com, shawnguo@kernel.org, Frieder Schrempf <frieder.schrempf@exceet.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chen-Yu,
+On Wed,  7 Nov 2018 15:43:19 +0100
+Frieder Schrempf <frieder.schrempf@kontron.de> wrote:
 
-> The AP6212 is based on the Broadcom BCM43430 or BCM43438. The WiFi side
-> identifies as BCM43430, while the Bluetooth side identifies as BCM43438.
+> From: Frieder Schrempf <frieder.schrempf@exceet.de>
 > 
-> The Bluetooth side is connected to UART1 in a 4 wire configuration. Same
-> as the WiFi side, due to being the same chip and package, DLDO2 provides
-> overall power via VBAT, and DLDO4 provides I/O power via VDDIO. The RTC
-> clock output provides the LPO low power clock at 32.768 kHz.
+> Move the documentation of the old SPI NOR driver to the place of the new
+> SPI memory interface based driver.
 > 
-> This patch enables Bluetooth on this board, and also adds the missing
-> LPO clock on the WiFi side. There is also a PCM connection for Bluetooth,
-> but this is not covered here.
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
+> ---
+>  .../devicetree/bindings/mtd/fsl-quadspi.txt     | 65 --------------------
+>  .../devicetree/bindings/spi/spi-fsl-qspi.txt    | 65 ++++++++++++++++++++
 
-we need to figure out on how we want to describe the Bluetooth PCM settings in DT and how things are wired up. For the Bluetooth driver, we just have to send a few Broadcom commands to set up the Bluetooth side correctly.
+Did you use -M when you generated patches with git format-patch?
+Normally, when you move a file without changing anything, the diff is
+smaller than that.
 
-Regards
-
-Marcel
+>  2 files changed, 65 insertions(+), 65 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
+> deleted file mode 100644
+> index 483e9cf..0000000
+> --- a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
+> +++ /dev/null
+> @@ -1,65 +0,0 @@
+> -* Freescale Quad Serial Peripheral Interface(QuadSPI)
+> -
+> -Required properties:
+> -  - compatible : Should be "fsl,vf610-qspi", "fsl,imx6sx-qspi",
+> -		 "fsl,imx7d-qspi", "fsl,imx6ul-qspi",
+> -		 "fsl,ls1021a-qspi"
+> -		 or
+> -		 "fsl,ls2080a-qspi" followed by "fsl,ls1021a-qspi",
+> -		 "fsl,ls1043a-qspi" followed by "fsl,ls1021a-qspi"
+> -  - reg : the first contains the register location and length,
+> -          the second contains the memory mapping address and length
+> -  - reg-names: Should contain the reg names "QuadSPI" and "QuadSPI-memory"
+> -  - interrupts : Should contain the interrupt for the device
+> -  - clocks : The clocks needed by the QuadSPI controller
+> -  - clock-names : Should contain the name of the clocks: "qspi_en" and "qspi".
+> -
+> -Optional properties:
+> -  - fsl,qspi-has-second-chip: The controller has two buses, bus A and bus B.
+> -                              Each bus can be connected with two NOR flashes.
+> -			      Most of the time, each bus only has one NOR flash
+> -			      connected, this is the default case.
+> -			      But if there are two NOR flashes connected to the
+> -			      bus, you should enable this property.
+> -			      (Please check the board's schematic.)
+> -  - big-endian : That means the IP register is big endian
+> -
+> -Example:
+> -
+> -qspi0: quadspi@40044000 {
+> -	compatible = "fsl,vf610-qspi";
+> -	reg = <0x40044000 0x1000>, <0x20000000 0x10000000>;
+> -	reg-names = "QuadSPI", "QuadSPI-memory";
+> -	interrupts = <0 24 IRQ_TYPE_LEVEL_HIGH>;
+> -	clocks = <&clks VF610_CLK_QSPI0_EN>,
+> -		<&clks VF610_CLK_QSPI0>;
+> -	clock-names = "qspi_en", "qspi";
+> -
+> -	flash0: s25fl128s@0 {
+> -		....
+> -	};
+> -};
+> -
+> -Example showing the usage of two SPI NOR devices:
+> -
+> -&qspi2 {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&pinctrl_qspi2>;
+> -	status = "okay";
+> -
+> -	flash0: n25q256a@0 {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -		compatible = "micron,n25q256a", "jedec,spi-nor";
+> -		spi-max-frequency = <29000000>;
+> -		reg = <0>;
+> -	};
+> -
+> -	flash1: n25q256a@1 {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -		compatible = "micron,n25q256a", "jedec,spi-nor";
+> -		spi-max-frequency = <29000000>;
+> -		reg = <1>;
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
+> new file mode 100644
+> index 0000000..483e9cf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
+> @@ -0,0 +1,65 @@
+> +* Freescale Quad Serial Peripheral Interface(QuadSPI)
+> +
+> +Required properties:
+> +  - compatible : Should be "fsl,vf610-qspi", "fsl,imx6sx-qspi",
+> +		 "fsl,imx7d-qspi", "fsl,imx6ul-qspi",
+> +		 "fsl,ls1021a-qspi"
+> +		 or
+> +		 "fsl,ls2080a-qspi" followed by "fsl,ls1021a-qspi",
+> +		 "fsl,ls1043a-qspi" followed by "fsl,ls1021a-qspi"
+> +  - reg : the first contains the register location and length,
+> +          the second contains the memory mapping address and length
+> +  - reg-names: Should contain the reg names "QuadSPI" and "QuadSPI-memory"
+> +  - interrupts : Should contain the interrupt for the device
+> +  - clocks : The clocks needed by the QuadSPI controller
+> +  - clock-names : Should contain the name of the clocks: "qspi_en" and "qspi".
+> +
+> +Optional properties:
+> +  - fsl,qspi-has-second-chip: The controller has two buses, bus A and bus B.
+> +                              Each bus can be connected with two NOR flashes.
+> +			      Most of the time, each bus only has one NOR flash
+> +			      connected, this is the default case.
+> +			      But if there are two NOR flashes connected to the
+> +			      bus, you should enable this property.
+> +			      (Please check the board's schematic.)
+> +  - big-endian : That means the IP register is big endian
+> +
+> +Example:
+> +
+> +qspi0: quadspi@40044000 {
+> +	compatible = "fsl,vf610-qspi";
+> +	reg = <0x40044000 0x1000>, <0x20000000 0x10000000>;
+> +	reg-names = "QuadSPI", "QuadSPI-memory";
+> +	interrupts = <0 24 IRQ_TYPE_LEVEL_HIGH>;
+> +	clocks = <&clks VF610_CLK_QSPI0_EN>,
+> +		<&clks VF610_CLK_QSPI0>;
+> +	clock-names = "qspi_en", "qspi";
+> +
+> +	flash0: s25fl128s@0 {
+> +		....
+> +	};
+> +};
+> +
+> +Example showing the usage of two SPI NOR devices:
+> +
+> +&qspi2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_qspi2>;
+> +	status = "okay";
+> +
+> +	flash0: n25q256a@0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "micron,n25q256a", "jedec,spi-nor";
+> +		spi-max-frequency = <29000000>;
+> +		reg = <0>;
+> +	};
+> +
+> +	flash1: n25q256a@1 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "micron,n25q256a", "jedec,spi-nor";
+> +		spi-max-frequency = <29000000>;
+> +		reg = <1>;
+> +	};
+> +};
