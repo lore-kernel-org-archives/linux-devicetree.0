@@ -1,128 +1,89 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v4 05/18] arm64: dts: qcom: qcs404: Add PMS405 RPM regulators
-Date: Fri,  9 Nov 2018 00:09:56 +0530
-Message-ID: <20181108184009.18430-6-vkoul@kernel.org>
+Subject: [PATCH v4 06/18] arm64: dts: qcom: qcs404: add smp2p nodes
+Date: Fri,  9 Nov 2018 00:09:57 +0530
+Message-ID: <20181108184009.18430-7-vkoul@kernel.org>
 References: <20181108184009.18430-1-vkoul@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181108184009.18430-1-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Add the smp2p-adsp, smp2p-cdsp and smp2p-wcss nodes found in QCS404.
 
-Add the RPM regulators found in PMS405 which is used in qcs404-evb
-
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 97 ++++++++++++++++++++++++++++++++
- 1 file changed, 97 insertions(+)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 60 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index 91ecbdf0ecda..fc83e935aaa1 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -11,4 +11,101 @@
- 	chosen {
- 		stdout-path = "serial0";
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index e21b4a549e75..cc4dd3186ae9 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -257,4 +257,64 @@
+ 			     <GIC_PPI 4 0xff08>,
+ 			     <GIC_PPI 1 0xff08>;
  	};
 +
-+	vph_pwr: vph-pwr-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vph_pwr";
-+		regulator-always-on;
-+		regulator-boot-on;
++	smp2p-adsp {
++		compatible = "qcom,smp2p";
++		qcom,smem = <443>, <429>;
++		interrupts = <GIC_SPI 291 IRQ_TYPE_EDGE_RISING>;
++		mboxes = <&apcs_glb 10>;
++		qcom,local-pid = <0>;
++		qcom,remote-pid = <2>;
++
++		adsp_smp2p_out: master-kernel {
++			qcom,entry-name = "master-kernel";
++			#qcom,smem-state-cells = <1>;
++		};
++
++		adsp_smp2p_in: slave-kernel {
++			qcom,entry-name = "slave-kernel";
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
 +	};
-+};
 +
-+&rpm_requests {
-+	pms405-regulators {
-+		compatible = "qcom,rpm-pms405-regulators";
++	smp2p-cdsp {
++		compatible = "qcom,smp2p";
++		qcom,smem = <94>, <432>;
++		interrupts = <GIC_SPI 143 IRQ_TYPE_EDGE_RISING>;
++		mboxes = <&apcs_glb 14>;
++		qcom,local-pid = <0>;
++		qcom,remote-pid = <5>;
 +
-+		vdd_s1-supply = <&vph_pwr>;
-+		vdd_s2-supply = <&vph_pwr>;
-+		vdd_s3-supply = <&vph_pwr>;
-+		vdd_s4-supply = <&vph_pwr>;
-+		vdd_s5-supply = <&vph_pwr>;
-+		vdd_l1_l2-supply = <&vreg_s5_1p35>;
-+		vdd_l3_l8-supply = <&vreg_s5_1p35>;
-+		vdd_l4-supply = <&vreg_s5_1p35>;
-+		vdd_l5_l6-supply = <&vreg_s4_1p8>;
-+		vdd_l7-supply = <&vph_pwr>;
-+		vdd_l9-supply = <&vreg_s5_1p35>;
-+		vdd_l10_l11_l12_l13-supply = <&vph_pwr>;
-+
-+		vreg_s4_1p8: s4 {
-+			regulator-min-microvolt = <1728000>;
-+			regulator-max-microvolt = <1920000>;
++		cdsp_smp2p_out: master-kernel {
++			qcom,entry-name = "master-kernel";
++			#qcom,smem-state-cells = <1>;
 +		};
 +
-+		vreg_s5_1p35: s5 {
-+			regulator-min-microvolt = <>;
-+			regulator-max-microvolt = <>;
++		cdsp_smp2p_in: slave-kernel {
++			qcom,entry-name = "slave-kernel";
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++	};
++
++	smp2p-wcss {
++		compatible = "qcom,smp2p";
++		qcom,smem = <435>, <428>;
++		interrupts = <GIC_SPI 158 IRQ_TYPE_EDGE_RISING>;
++		mboxes = <&apcs_glb 18>;
++		qcom,local-pid = <0>;
++		qcom,remote-pid = <1>;
++
++		wcss_smp2p_out: master-kernel {
++			qcom,entry-name = "master-kernel";
++			#qcom,smem-state-cells = <1>;
 +		};
 +
-+		vreg_l1_1p3: l1 {
-+			regulator-min-microvolt = <1240000>;
-+			regulator-max-microvolt = <1352000>;
-+		};
-+
-+		vreg_l2_1p275: l2 {
-+			regulator-min-microvolt = <1048000>;
-+			regulator-max-microvolt = <1280000>;
-+		};
-+
-+		vreg_l3_1p05: l3 {
-+			regulator-min-microvolt = <976000>;
-+			regulator-max-microvolt = <1160000>;
-+		};
-+
-+		vreg_l4_1p2: l4 {
-+			regulator-min-microvolt = <1144000>;
-+			regulator-max-microvolt = <1256000>;
-+		};
-+
-+		vreg_l5_1p8: l5 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		vreg_l6_1p8: l6 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+
-+		vreg_l7_1p8: l7 {
-+			regulator-min-microvolt = <1616000>;
-+			regulator-max-microvolt = <3000000>;
-+		};
-+
-+		vreg_l8_1p2: l8 {
-+			regulator-min-microvolt = <1136000>;
-+			regulator-max-microvolt = <1352000>;
-+		};
-+
-+		vreg_l10_3p3: l10 {
-+			regulator-min-microvolt = <2936000>;
-+			regulator-max-microvolt = <3088000>;
-+		};
-+
-+		vreg_l11_sdc2: l11 {
-+			regulator-min-microvolt = <2696000>;
-+			regulator-max-microvolt = <3304000>;
-+		};
-+
-+		vreg_l12_3p3: l12 {
-+			regulator-min-microvolt = <2968000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+
-+		vreg_l13_3p3: l13 {
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3300000>;
++		wcss_smp2p_in: slave-kernel {
++			qcom,entry-name = "slave-kernel";
++			interrupt-controller;
++			#interrupt-cells = <2>;
 +		};
 +	};
  };
