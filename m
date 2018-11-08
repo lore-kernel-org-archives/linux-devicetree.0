@@ -1,140 +1,78 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH v2 4/4] device property: Drop get_named_child_node callback
-Date: Thu,  8 Nov 2018 19:51:56 +0300
-Message-ID: <20181108165156.60073-5-heikki.krogerus@linux.intel.com>
-References: <20181108165156.60073-1-heikki.krogerus@linux.intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH anybus v3 6/6] misc: support HMS Profinet IRT industrial controller
+Date: Thu, 8 Nov 2018 17:52:54 +0100
+Message-ID: <CAK8P3a0qezBc_TQ+jtrkvnwkp7wROByzqBKYvDAgno2Wh-g9Wg@mail.gmail.com>
+References: <20181104155501.14767-1-TheSven73@googlemail.com>
+ <20181104155501.14767-7-TheSven73@googlemail.com> <CAK8P3a3apbxNa2FpADvdLCe-GzV+2xv2kO1_tosOZrUpY6xWtA@mail.gmail.com>
+ <CAGngYiWvZze2wd-p4avhwGHap=RCO2XPcwShYWPRcs59c3q65A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181108165156.60073-1-heikki.krogerus@linux.intel.com>
+In-Reply-To: <CAGngYiWvZze2wd-p4avhwGHap=RCO2XPcwShYWPRcs59c3q65A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+To: thesven73@gmail.com
+Cc: svendev@arcx.com, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, noralf@tronnes.org, Johan Hovold <johan@kernel.org>, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, gregkh <gregkh@linuxfoundation.org>, John Garry <john.garry@huawei.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Robin Murphy <robin.murphy@arm.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>, Icenowy Zheng <icenowy@aosc.io>, Stuart Yoder <stuyoder@gmail.com>, Maxime Ripard <maxime.r>
 List-Id: devicetree@vger.kernel.org
 
-By using fwnode_get_name() in fwnode_get_named_child_node(),
-get_named_child_node implementations become boilerplate.
-Removing all of them.
+On Thu, Nov 8, 2018 at 4:35 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
+> On Thu, Nov 8, 2018 at 9:20 AM Arnd Bergmann <arnd@arndb.de> wrote:
+ > > +       struct {
+> > > +               /* addresses IN NETWORK ORDER! */
+> > > +               __u32 ip_addr;
+> > > +               __u32 subnet_msk;
+> > > +               __u32 gateway_addr;
+> > > +               __u8  is_valid:1;
+> > > +       } eth;
+> >
+> > Overall, this structure feels too complex for an ioctl interface,
+> > with the nested structures. If we end up keeping that
+> > ioctl, maybe at least make it a flat structure without padding,
+> > or alternatively make it a set of separate ioctls.
+> >
+>
+> I agree that it feels complex, but it's the best I could come up with.
+> There are a few hidden constraints:
+>
+> 1. The profinet card configuration settings must be applied atomically.
+> And they can only be applied right after device reset.
+>
+> So if we use smaller, separate ioctls, we will end up resetting the device
+> each time we send an ioctl. And to assemble a real configuration, we need
+> 5 or 6 ioctls, so the card gets reset 5 or 6 times, which takes ages.
+> It cannot work this way.
+>
+> 2. Configuration settings are optional. That's why why each little struct
+> has an is_valid member. If we use a flatter structure, we need a bool for
+> every config setting in the struct, to indicate if it should be applied.
+> Which feels clunky.
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/acpi/property.c | 20 +-------------------
- drivers/base/property.c |  9 ++++++++-
- drivers/of/property.c   | 15 ---------------
- include/linux/fwnode.h  |  3 ---
- 4 files changed, 9 insertions(+), 38 deletions(-)
+I think a more common way to do this would be to use a __u64
+member containing a bitmask of which fields are valid.
 
-diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-index 5b4c659c95d4..03cb46018920 100644
---- a/drivers/acpi/property.c
-+++ b/drivers/acpi/property.c
-@@ -587,23 +587,6 @@ static int acpi_data_get_property_array(const struct acpi_device_data *data,
- 	return 0;
- }
- 
--static struct fwnode_handle *
--acpi_fwnode_get_named_child_node(const struct fwnode_handle *fwnode,
--				 const char *childname)
--{
--	struct fwnode_handle *child;
--
--	/*
--	 * Find first matching named child node of this fwnode.
--	 * For ACPI this will be a data only sub-node.
--	 */
--	fwnode_for_each_child_node(fwnode, child)
--		if (acpi_data_node_match(child, childname))
--			return child;
--
--	return NULL;
--}
--
- /**
-  * __acpi_node_get_property_reference - returns handle to the referenced object
-  * @fwnode: Firmware node to get the property from
-@@ -712,7 +695,7 @@ int __acpi_node_get_property_reference(const struct fwnode_handle *fwnode,
- 			for (ref_fwnode = acpi_fwnode_handle(device);
- 			     element < end && element->type == ACPI_TYPE_STRING;
- 			     element++) {
--				ref_fwnode = acpi_fwnode_get_named_child_node(
-+				ref_fwnode = fwnode_get_named_child_node(
- 					ref_fwnode, element->string.pointer);
- 				if (!ref_fwnode)
- 					return -EINVAL;
-@@ -1342,7 +1325,6 @@ acpi_fwnode_device_get_match_data(const struct fwnode_handle *fwnode,
- 			acpi_fwnode_property_read_string_array,		\
- 		.get_parent = acpi_node_get_parent,			\
- 		.get_next_child_node = acpi_get_next_subnode,		\
--		.get_named_child_node = acpi_fwnode_get_named_child_node, \
- 		.get_reference_args = acpi_fwnode_get_reference_args,	\
- 		.graph_get_next_endpoint =				\
- 			acpi_graph_get_next_endpoint,			\
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 4db710e2ce34..802f55f9fab9 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -1111,7 +1111,14 @@ struct fwnode_handle *
- fwnode_get_named_child_node(const struct fwnode_handle *fwnode,
- 			    const char *childname)
- {
--	return fwnode_call_ptr_op(fwnode, get_named_child_node, childname);
-+	char name[FWNODE_NAME_MAX_SIZE];
-+	struct fwnode_handle *child;
-+
-+	fwnode_for_each_child_node(fwnode, child)
-+		if (!fwnode_get_name(child, name) &&
-+		    !strcmp(name, childname))
-+			return child;
-+	return NULL;
- }
- EXPORT_SYMBOL_GPL(fwnode_get_named_child_node);
- 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index 9bc8fe136fa3..34b157921568 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -895,20 +895,6 @@ of_fwnode_get_next_child_node(const struct fwnode_handle *fwnode,
- 							    to_of_node(child)));
- }
- 
--static struct fwnode_handle *
--of_fwnode_get_named_child_node(const struct fwnode_handle *fwnode,
--			       const char *childname)
--{
--	const struct device_node *node = to_of_node(fwnode);
--	struct device_node *child;
--
--	for_each_available_child_of_node(node, child)
--		if (!of_node_cmp(child->name, childname))
--			return of_fwnode_handle(child);
--
--	return NULL;
--}
--
- static int
- of_fwnode_get_reference_args(const struct fwnode_handle *fwnode,
- 			     const char *prop, const char *nargs_prop,
-@@ -1005,7 +991,6 @@ const struct fwnode_operations of_fwnode_ops = {
- 	.property_read_string_array = of_fwnode_property_read_string_array,
- 	.get_parent = of_fwnode_get_parent,
- 	.get_next_child_node = of_fwnode_get_next_child_node,
--	.get_named_child_node = of_fwnode_get_named_child_node,
- 	.get_reference_args = of_fwnode_get_reference_args,
- 	.graph_get_next_endpoint = of_fwnode_graph_get_next_endpoint,
- 	.graph_get_remote_endpoint = of_fwnode_graph_get_remote_endpoint,
-diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-index cc234f5d2b40..45df74f91603 100644
---- a/include/linux/fwnode.h
-+++ b/include/linux/fwnode.h
-@@ -92,9 +92,6 @@ struct fwnode_operations {
- 	struct fwnode_handle *
- 	(*get_next_child_node)(const struct fwnode_handle *fwnode,
- 			       struct fwnode_handle *child);
--	struct fwnode_handle *
--	(*get_named_child_node)(const struct fwnode_handle *fwnode,
--				const char *name);
- 	int (*get_reference_args)(const struct fwnode_handle *fwnode,
- 				  const char *prop, const char *nargs_prop,
- 				  unsigned int nargs, unsigned int index,
--- 
-2.19.1
+> One way to overcome this is by letting the ioctls change data in the driver,
+> but not on the card. Then a separate "apply" ioctl could apply the whole
+> configuration atomically.
+>
+> Example:
+> ioctl(clear all settings?);
+> ioctl(set ip address);
+> ioctl(set stop mode action);
+> ioctl(enable internal webserver);
+> ioctl(apply);
+>
+> But of course, what happens if two processes try to configure the
+> driver at the same time?
+> The ioctl calls would be interleaved, and the result would be very messy...
+>
+> There must be a better way?
+
+In particular the bits about optional fields would fit much better
+into netlink, which is a kind of TLV interface, and you can send
+a number of configuration steps in one 'sendmsg' syscall,
+but leave out the ones that you are not interested in.
+
+This would also allow you to specify standard parameters that
+could apply to multiple vendors or fieldbus protocols, and have
+a common configuration tool for all of them.
+
+       Arnd
