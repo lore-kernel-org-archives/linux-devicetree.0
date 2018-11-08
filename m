@@ -1,72 +1,34 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 3/4] of/property: Add of_fwnode_name()
-Date: Thu, 8 Nov 2018 21:25:09 +0200
-Message-ID: <20181108192509.GW10650@smile.fi.intel.com>
-References: <20181108165156.60073-1-heikki.krogerus@linux.intel.com>
- <20181108165156.60073-4-heikki.krogerus@linux.intel.com>
- <CAL_Jsq+4momJb6EoXrAg2LRKzpXMFB30yhBigOiEJ16EjZ05pg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH v3 0/3] ARM64: dts: meson-gxl: Add dts and bindings for Smartlabs SML-5442TW
+Date: Thu,  8 Nov 2018 23:43:50 +0400
+Message-ID: <1541706240-30036-1-git-send-email-christianshewitt@gmail.com>
+References: <1541691207-24768-1-git-send-email-christianshewitt@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+4momJb6EoXrAg2LRKzpXMFB30yhBigOiEJ16EjZ05pg@mail.gmail.com>
+In-Reply-To: <1541691207-24768-1-git-send-email-christianshewitt@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: christianshewitt@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 08, 2018 at 12:23:51PM -0600, Rob Herring wrote:
-> On Thu, Nov 8, 2018 at 10:52 AM Heikki Krogerus
-> <heikki.krogerus@linux.intel.com> wrote:
-> >
-> > This implements get_name fwnode op for DT.
-> >
-> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > ---
-> >  drivers/of/property.c | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> >
-> > diff --git a/drivers/of/property.c b/drivers/of/property.c
-> > index f46828e3b082..9bc8fe136fa3 100644
-> > --- a/drivers/of/property.c
-> > +++ b/drivers/of/property.c
-> > @@ -823,6 +823,16 @@ static void of_fwnode_put(struct fwnode_handle *fwnode)
-> >         of_node_put(to_of_node(fwnode));
-> >  }
-> >
-> > +static int of_fwnode_get_name(const struct fwnode_handle *fwnode, char *buf)
-> > +{
-> > +       const char *name = kbasename(to_of_node(fwnode)->full_name);
-> > +       size_t len = strchrnul(name, '@') - name;
-> > +
-> > +       snprintf(buf, len + 1, "%s", name);
-> 
-> This can be simplified to:
-> 
-> snprintf(..., "%pOFn", to_of_node(fwnode))
-> 
-> But that presents a problem with knowing the length. Not passing in
-> the buf length is not good design because you can't tell if you
-> overflow the buffer. Either you can pass in the length of buf or do
-> the allocation here. In the latter case, then you can use kasnprintf.
-> The downside to doing the allocation here is then get_name() has side
-> effect of allocating memory that the caller needs to be aware of.
+This series adds new bindings and a device-tree file for the Smartlabs
+SML-5442TW set-top box.
 
-Agree on matter of potential overflow.
+v3 - change to Smartlabs LLC
+   - removed sound node
+v2 - removed audio nodes
+   - changes soundcard name to "meson-gx-audio"
+   - added missing uart-has-rtscts;
 
-I wouldn't limit users with 32 characters for node name if it's not by both
-ACPI and DT specifications. OTOH allocating and freeing memory in a loop each
-time when we would like to go through the child nodes sounds much worse
-scenario to me. Thus, giving a length of the buffer is a good enough compromise.
+Christian Hewitt (3):
+  dt-bindings: Add vendor prefix for Smartlabs LLC
+  dt-bindings: arm: amlogic: Add support for the Smartlabs SML-5442TW
+  ARM64: dts: meson-gxl: Add support for the Smartlabs SML-5442TW
 
-> However, I think the current API is better. It leaves low-level
-> details up to the firmware implementation. But as long as .get_name()
-> is not exposed to drivers I don't really care that much.
-
-I don't think this concept is changed by Heikki's patch series. It provides a
-common abstract function on top of more low-level firmware implementation which
-I consider a good approach.
+ Documentation/devicetree/bindings/arm/amlogic.txt  |   1 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+ .../boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts | 292 +++++++++++++++++++++
+ 4 files changed, 295 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
