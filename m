@@ -1,51 +1,38 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/6] regulator: lochnagar: Move driver to binding from DT
-Date: Thu, 8 Nov 2018 12:16:29 +0000
-Message-ID: <20181108121629.GD6675@sirena.org.uk>
-References: <20181108101405.14062-1-ckeepax@opensource.cirrus.com>
- <20181108101405.14062-3-ckeepax@opensource.cirrus.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] arm64: dts: r8a77990: ebisu: Add serial console pins
+Date: Thu, 8 Nov 2018 13:01:08 +0100
+Message-ID: <CAMuHMdX19CmPCVpyhkq0Szjaj=Q24sT1BGT+_TtwUw2FvSAZsQ@mail.gmail.com>
+References: <20181105213859.11408-1-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Hf61M2y+wYpnELGG"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181108101405.14062-3-ckeepax@opensource.cirrus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: lee.jones@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181105213859.11408-1-marek.vasut+renesas@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Nov 5, 2018 at 10:39 PM Marek Vasut <marek.vasut@gmail.com> wrote:
+> Subject: [PATCH] arm64: dts: r8a77990: ebisu: Add serial console pins
 
---Hf61M2y+wYpnELGG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+arm64: dts: renesas: r8a77990: ebisu: Add serial console pins
 
-On Thu, Nov 08, 2018 at 10:14:01AM +0000, Charles Keepax wrote:
+Gr{oetje,eeting}s,
 
-> +static const struct of_device_id lochnagar_of_match[] = {
-> +	{ .compatible = "cirrus,lochnagar-regulator" },
-> +	{},
-> +};
+                        Geert
 
-This is obviously just dumping the Linux driver model into the DT, the
-regulators are clearly different.  If you want to explicitly list the
-regulators in DT it'd be better to reflect the hardware and enumerate
-the regulators individually - you can use one driver for all the MICVDDs
-and a separate one for VDDCORE for example.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---Hf61M2y+wYpnELGG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlvkKRwACgkQJNaLcl1U
-h9Bftgf/YG896fIVqX6Do66HLJIcHNJAzK00x3THF6XqoLUIBKhVrovcy7fW69jw
-Vw2QDuIv8oet/R2vvKPFrx153wE1ADwU5CfBfufFigUi+OPJTAVKHzVZUurYEcnQ
-ULPI+vcXMD8jDaKVFRIGIM9/CtPll/c1Rcu0T4WsCdAWXQ0C4lJ+gBe8Cge8kDTX
-U3h0jvOIHd9mnWiK/GCfSINRDyeYGeVn1SXuMfYOlrmCkNou8TQVI/phg50Q6+2Q
-C0f3oNXRlgQoQe01AqXussavzBQ7dAV1o8ClN3FFgfSkdZjfWy/APBcN5RuBmGAH
-+Gjtsp7RPdWYoMk/weGZwBMXNt/8BQ==
-=78JL
------END PGP SIGNATURE-----
-
---Hf61M2y+wYpnELGG--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
