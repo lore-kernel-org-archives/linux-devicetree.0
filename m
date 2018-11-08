@@ -1,7 +1,7 @@
 From: Song Qiang <songqiang1304521@gmail.com>
-Subject: [PATCH v6 1/3] dt-bindings: Add PNI to the vendor prefixes
-Date: Thu,  8 Nov 2018 17:27:47 +0800
-Message-ID: <20181108092749.12167-2-songqiang1304521@gmail.com>
+Subject: [PATCH v6 2/3] iio: magnetometer: Add DT support for PNI RM3100
+Date: Thu,  8 Nov 2018 17:27:48 +0800
+Message-ID: <20181108092749.12167-3-songqiang1304521@gmail.com>
 References: <20181108092749.12167-1-songqiang1304521@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181108092749.12167-1-songqiang1304521@gmail.com>
@@ -11,21 +11,37 @@ Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.ker
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ .../bindings/iio/magnetometer/pni,rm3100.txt  | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 4b1a2a8fcc16..adcdf60124dd 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -303,6 +303,7 @@ pixcir  PIXCIR MICROELECTRONICS Co., Ltd
- plathome	Plat'Home Co., Ltd.
- plda	PLDA
- plx	Broadcom Corporation (formerly PLX Technology)
-+pni     PNI Sensor Corporation
- portwell	Portwell Inc.
- poslab	Poslab Technology Co., Ltd.
- powervr	PowerVR (deprecated, use img)
+diff --git a/Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt b/Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt
+new file mode 100644
+index 000000000000..497c932e9e39
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt
+@@ -0,0 +1,20 @@
++* PNI RM3100 3-axis magnetometer sensor
++
++Required properties:
++
++- compatible : should be "pni,rm3100"
++- reg : the I2C address or SPI chip select number of the sensor.
++
++Optional properties:
++
++- interrupts: data ready (DRDY) from the chip.
++  The interrupts can be triggered on level high.
++
++Example:
++
++rm3100: rm3100@20 {
++	compatible = "pni,rm3100";
++	reg = <0x20>;
++	interrupt-parent = <&gpio0>;
++	interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
++};
 -- 
 2.17.1
