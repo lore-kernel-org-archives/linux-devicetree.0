@@ -1,65 +1,119 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 0/4] ARM: dts: meson: set pinmux bias
-Date: Thu,  8 Nov 2018 11:44:22 +0100
-Message-ID: <20181108104426.1877-1-jbrunet@baylibre.com>
+Subject: [PATCH 1/4] arm64: dts: meson: remove extra subnode in mmc clk_gate pinmux
+Date: Thu,  8 Nov 2018 11:44:23 +0100
+Message-ID: <20181108104426.1877-2-jbrunet@baylibre.com>
+References: <20181108104426.1877-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181108104426.1877-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Amlogic chipsets, the bias set through pinconf applies to the pad
-itself, not only the GPIO function. This means that even when we change
-the function of the pad from GPIO to anything else, the bias previously
-set still applies.
+In the pinmux of the mmc clk_gate nodes, we define 2 subnodes. One for
+the function definition, the other for the bias. This is not necessary
+since we can define the function and the bias in the same subnode.
 
-While trying to boot from SPI, I noticed the eMMC was not working anymore.
-Even if the related eMMC pad are not used by the SPI, the ROM code sets a
-pull-down on the eMMC pad and leaves it that way. This breaks the eMMC
-later on, in both u-boot and Linux.
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi  | 6 ------
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 9 ---------
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 9 ---------
+ 3 files changed, 24 deletions(-)
 
-The underlying issue is that we inherit whatever was left by previous user
-of the pad (pinconf, u-boot or the ROM code). As a consequence, the actual
-setup we get is undefined.
-
-There is nothing mentioned in the documentation about pad bias and pinmux
-function, however leaving it undefined is not an option.
-
-This patchset consistently disable the pad bias for every pinmux functions.
-It seems to work well, we can only assume that the necessary bias (if any)
-is already provided by the pin function itself.
-
-I can't really test every pinmux configuration and it is fairly possible
-I missed something so it would be nice if more people could confirm if
-nothing (new) is broken after applying this series.
-
-One things could be the i2c. Usually the i2c pull-ups are physically
-present on the board but, if they are missing on platform, we may define
-a special pinmux setting with pull-up enabled.
-
-One last gotcha, I recently posted fixups around bias setting to pinctrl
-which have been merged: [0] [1]. These must be applied before applying this
-series, otherwise when requesting 'bias-disable' you'll probably get a
-pull-down instead.
-
-[0]: https://lkml.kernel.org/r/20181023160319.27003-1-jbrunet@baylibre.com
-[1]: https://lkml.kernel.org/r/20181029151340.9087-1-jbrunet@baylibre.com
-
-Jerome Brunet (4):
-  arm64: dts: meson: remove extra subnode in mmc clk_gate pinmux
-  arm64: dts: meson: disable pad bias for mmc pinmuxes
-  arm64: dts: meson: consistently disable pin bias
-  ARM: dts: meson: consistently disable pin bias
-
- arch/arm/boot/dts/meson8.dtsi               |  12 +++
- arch/arm/boot/dts/meson8b.dtsi              |   9 ++
- arch/arm/boot/dts/meson8m2.dtsi             |   1 +
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi  | 111 ++++++++++++++++++--
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi |  60 +++++++++--
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  |  62 +++++++++--
- 6 files changed, 231 insertions(+), 24 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index eb46db001ce0..e86f5f721f8f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -280,9 +280,6 @@
+ 					mux {
+ 						groups = "BOOT_8";
+ 						function = "gpio_periphs";
+-					};
+-					cfg-pull-down {
+-						pins = "BOOT_8";
+ 						bias-pull-down;
+ 					};
+ 				};
+@@ -513,9 +510,6 @@
+ 					mux {
+ 						groups = "GPIOX_4";
+ 						function = "gpio_periphs";
+-					};
+-					cfg-pull-down {
+-						pins = "GPIOX_4";
+ 						bias-pull-down;
+ 					};
+ 				};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index 524f533e41d4..1cb8e7e0d0da 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -377,9 +377,6 @@
+ 			mux {
+ 				groups = "BOOT_8";
+ 				function = "gpio_periphs";
+-			};
+-			cfg-pull-down {
+-				pins = "BOOT_8";
+ 				bias-pull-down;
+ 			};
+ 		};
+@@ -426,9 +423,6 @@
+ 			mux {
+ 				groups = "CARD_2";
+ 				function = "gpio_periphs";
+-			};
+-			cfg-pull-down {
+-				pins = "CARD_2";
+ 				bias-pull-down;
+ 			};
+ 		};
+@@ -449,9 +443,6 @@
+ 			mux {
+ 				groups = "GPIOX_4";
+ 				function = "gpio_periphs";
+-			};
+-			cfg-pull-down {
+-				pins = "GPIOX_4";
+ 				bias-pull-down;
+ 			};
+ 		};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index 8ccab9a1ebcc..7cfee40d89e9 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -324,9 +324,6 @@
+ 			mux {
+ 				groups = "BOOT_8";
+ 				function = "gpio_periphs";
+-			};
+-			cfg-pull-down {
+-				pins = "BOOT_8";
+ 				bias-pull-down;
+ 			};
+ 		};
+@@ -373,9 +370,6 @@
+ 			mux {
+ 				groups = "CARD_2";
+ 				function = "gpio_periphs";
+-			};
+-			cfg-pull-down {
+-				pins = "CARD_2";
+ 				bias-pull-down;
+ 			};
+ 		};
+@@ -396,9 +390,6 @@
+ 			mux {
+ 				groups = "GPIOX_4";
+ 				function = "gpio_periphs";
+-			};
+-			cfg-pull-down {
+-				pins = "GPIOX_4";
+ 				bias-pull-down;
+ 			};
+ 		};
 -- 
 2.19.1
