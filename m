@@ -1,39 +1,41 @@
-Return-Path: <SRS0=Nr/5=NP=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44863 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730017AbeKDXyn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 4 Nov 2018 18:54:43 -0500
-Received: by mail-wr1-f65.google.com with SMTP id j17-v6so1520769wrq.11
-        for <devicetree@vger.kernel.org>; Sun, 04 Nov 2018 06:39:28 -0800 (PST)
-From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Subject: [PATCH 7/7] dt-bindings: iio: imu: st_lsm6dsx: add support to i2c pullup resistors
-Date: Sun,  4 Nov 2018 15:39:06 +0100
-Message-Id: <2319d8dfcd5ba4162eb64f4cfe93269fc4825939.1541341926.git.lorenzo.bianconi@redhat.com>
-In-Reply-To: <cover.1541341926.git.lorenzo.bianconi@redhat.com>
-References: <cover.1541341926.git.lorenzo.bianconi@redhat.com>
+Return-Path: <SRS0=9/dT=NT=synopsys.com=thinh.nguyen@kernel.org>
+Date: Thu, 8 Nov 2018 12:06:41 -0800
+Message-ID: <cover.1541707248.git.thinhn@synopsys.com>
+From: Thinh Nguyen <thinh.nguyen@synopsys.com>
+Subject: [PATCH v6 0/3] usb: dwc3: Workaround isoc start_transfer failure
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+To: Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: John Youn <john.youn@synopsys.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
----
- Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt | 1 +
- 1 file changed, 1 insertion(+)
+DWC_usb31 peripheral v1.70a-ea06 and prior needs a SW workaround for isoc START
+TRANSFER command failure. This patch series implements that workaround
 
-diff --git a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
-index 879322ad50fd..69d53d98d0f0 100644
---- a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
-+++ b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
-@@ -13,6 +13,7 @@ Required properties:
- Optional properties:
- - st,drdy-int-pin: the pin on the package that will be used to signal
-   "data ready" (valid values: 1 or 2).
-+- st,pullups : enable/disable internal i2c controller pullup resistors.
- - drive-open-drain: the interrupt/data ready line will be configured
-   as open drain, which is useful if several sensors share the same
-   interrupt line. This is a boolean property.
+Change in v6:
+ - Defined more version types in "usb: dwc3: Track DWC_usb31 VERSIONTYPE"
+ - Minor cleanup/fix in "usb: dwc3: Add workaround for isoc start transfer failure"
+Change in v5:
+ - Splitted and resent from an old patch series
+ - Cleanup and fixed review issues
+Change in v4:
+ - None
+Change in v3:
+ - None
+Change in v2:
+ - None
+
+
+Thinh Nguyen (3):
+  usb: dwc3: Track DWC_usb31 VERSIONTYPE
+  usb: dwc3: Add disabling of start_transfer failure quirk
+  usb: dwc3: Add workaround for isoc start transfer failure
+
+ Documentation/devicetree/bindings/usb/dwc3.txt |   3 +
+ drivers/usb/dwc3/core.c                        |   3 +
+ drivers/usb/dwc3/core.h                        |  23 +++++
+ drivers/usb/dwc3/gadget.c                      | 131 +++++++++++++++++++++++++
+ 4 files changed, 160 insertions(+)
+
 -- 
-2.19.1
+2.11.0
