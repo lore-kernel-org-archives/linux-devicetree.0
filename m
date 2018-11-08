@@ -1,57 +1,45 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] arm64: dts: rockchip: add Gru Scarlet devicetrees
-Date: Wed, 7 Nov 2018 17:13:02 -0800
-Message-ID: <CA+ASDXO_G9NhmNUh_DVdJ+2S8GsKmHPS4YQwe3H9_SW-a-q6+w@mail.gmail.com>
-References: <20181101123639.15560-1-heiko@sntech.de>
- <20181101123639.15560-2-heiko@sntech.de> <55055985.ydjp5xQfPl@phil>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH] ARM: dts: imx7d-sdb: add rev-a board support
+Date: Thu, 8 Nov 2018 01:24:51 +0000
+Message-ID: <DB3PR0402MB3916B318947B803BC5ADF4A6F5C50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1541567625-11812-1-git-send-email-Anson.Huang@nxp.com>
+ <CAOMZO5AL03yy6Vj_eC=h7scSDnuja1G8rsWER+r7w3FEVaceDg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <55055985.ydjp5xQfPl@phil>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5AL03yy6Vj_eC=h7scSDnuja1G8rsWER+r7w3FEVaceDg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 6, 2018 at 3:31 AM Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
-> Am Donnerstag, 1. November 2018, 13:36:39 CET schrieb Heiko Stuebner:
-> > Gru-Scarlet is a tablet device using ChomeOS, dual-dsi display
-> > and Wacom touchscreen with stylus.
-> >
-> > There exist two variants in the market using different displays
-> > that are differentiated via their sku-id.
-> > The bootloader on them also determines the correct devicetree to
-> > load via the sku-id.
-> >
-> > So add a common scarlet dtsi and two minimal board devicetrees
-> > for the two display variants.
-> >
-> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
->
-> looks like I already applied patch1 in time for 4.20
-> (and forgot about it), but have now also applied this patch2
-> for 4.21 with Rob's review.
-
-Thanks, by the way! This worked well for me today, testing 4.20-rc1.
-Well, except for this silly bit, but that bug has been around (and
-more or less untested) for several releases:
-
-https://lore.kernel.org/patchwork/patch/1008074/
-[PATCH] input: cros_ec_keyb: fix button/switch capability reports
-
-And this silly one that slipped into this merge window:
-
-https://lore.kernel.org/patchwork/patch/1008098/
-[PATCH 4.20] ath10k: don't assume 'vif' is non-NULL in flush()
-
-*Grumble*: one would think people would test their changes before
-submitting them, but apparently that's too much to ask.
+SGksIEZhYmlvDQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5h
+bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRmFiaW8gRXN0ZXZhbSBbbWFpbHRvOmZlc3RldmFtQGdt
+YWlsLmNvbV0NCj4gU2VudDogMjAxOOW5tDEx5pyIN+aXpSAxODowMw0KPiBUbzogQW5zb24gSHVh
+bmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IENjOiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJu
+ZWwub3JnPjsgTWFyayBSdXRsYW5kDQo+IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFNoYXduIEd1
+byA8c2hhd25ndW9Aa2VybmVsLm9yZz47IFNhc2NoYQ0KPiBIYXVlciA8cy5oYXVlckBwZW5ndXRy
+b25peC5kZT47IFNhc2NoYSBIYXVlciA8a2VybmVsQHBlbmd1dHJvbml4LmRlPjsNCj4gRmFiaW8g
+RXN0ZXZhbSA8ZmFiaW8uZXN0ZXZhbUBueHAuY29tPjsgb3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUg
+QU5EDQo+IEZMQVRURU5FRCBERVZJQ0UgVFJFRSBCSU5ESU5HUyA8ZGV2aWNldHJlZUB2Z2VyLmtl
+cm5lbC5vcmc+OyBsaW51eC1rZXJuZWwNCj4gPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+
+OyBtb2RlcmF0ZWQgbGlzdDpBUk0vRlJFRVNDQUxFIElNWCAvIE1YQw0KPiBBUk0gQVJDSElURUNU
+VVJFIDxsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBkbC1saW51eC1pbXgN
+Cj4gPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBBUk06IGR0czog
+aW14N2Qtc2RiOiBhZGQgcmV2LWEgYm9hcmQgc3VwcG9ydA0KPiANCj4gSGkgQW5zb24sDQo+IA0K
+PiBPbiBXZWQsIE5vdiA3LCAyMDE4IGF0IDM6MTkgQU0gQW5zb24gSHVhbmcgPGFuc29uLmh1YW5n
+QG54cC5jb20+DQo+IHdyb3RlOg0KPiANCj4gPiArJmZlYzIgew0KPiA+ICsgICAgICAgcGluY3Ry
+bC0wID0gPCZwaW5jdHJsX2VuZXQyPjsNCj4gPiArICAgICAgIC9kZWxldGUtcHJvcGVydHkvcGlu
+Y3RybC1hc3NlcnQtZ3Bpb3M7DQo+IA0KPiAicGluY3RybC1hc3NlcnQtZ3Bpb3MiIGRvZXMgbm90
+IGV4aXN0IGluIG1haW5saW5lLCBzbyBub3Qgc3VyZSB3aHkgeW91IGFyZQ0KPiBkZWxldGluZyBp
+dC4NCg0KUmVnYXJkaW5nIHRoZSBmZWMyIHNldHRpbmdzIGluIGlteDdkLXNkYi5kdHMsIG9yaWdp
+bmFsbHkgaXQgdXNlcyBSZXYtQSBib2FyZCAoYnV0IHNvbWUgbm9kZXMgYXJlDQp1c2luZyBSZXYt
+QiBib2FyZCksIGluIHRoaXMgcGF0Y2gsIEkgY2xlYW4gdXAgYWxsIHRoZSBzZXR0aW5ncyBpbiBp
+bXg3ZC1zZGIuZHRzIHVzaW5nIFJldi1CIGJvYXJkLA0Kc28gYmVsb3cgaXMgYWRkZWQgdG8gaW14
+N2Qtc2RiLmR0cyBmb3IgUmV2LUIgYm9hcmQsIGFuZCBpbiBpbXg3ZC1zZGItcmV2YS5kdHMgSSBo
+YXZlIHRvDQpkZWxldGUgaXQsIHNpbmNlIFJldi1BIGJvYXJkIGhhcyBubyB0aGlzIHBpbi4NCg0K
+LQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfZW5ldDI+Ow0KKwlwaW5jdHJsLTAgPSA8JnBpbmN0cmxf
+ZW5ldDIgJnBpbmN0cmxfZW5ldDJfZXBkYzBfZW4+Ow0KKwlwaW5jdHJsLWFzc2VydC1ncGlvcyA9
+IDwmZ3BpbzEgNCBHUElPX0FDVElWRV9MT1c+Ow0KIA0KQW5zb24uDQoNCg==
