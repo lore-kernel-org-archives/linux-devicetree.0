@@ -1,211 +1,65 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 02/24] leds: core: Add support for composing LED class
- device names
-Date: Thu, 8 Nov 2018 12:06:47 -0600
-Message-ID: <84dd8750-883e-1318-df85-f4c6b46b898f@ti.com>
-References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
- <1541542052-10081-3-git-send-email-jacek.anaszewski@gmail.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 1/2] dt-bindings: clk: Introduce 'protected-clocks' property
+Date: Thu, 08 Nov 2018 10:11:46 -0800
+Message-ID: <154170070630.88331.10123917683941164429@swboyd.mtv.corp.google.com>
+References: <20181105194011.43770-1-swboyd@chromium.org>
+ <20181105194011.43770-2-swboyd@chromium.org>
+ <20181106010426.GX2523@minitux> <20181108054452.GD2337@tuxbook-pro>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541542052-10081-3-git-send-email-jacek.anaszewski@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181108054452.GD2337@tuxbook-pro>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/06/2018 04:07 PM, Jacek Anaszewski wrote:
-> Add public led_compose_name() API for composing LED class device
-> name basing on fwnode_handle data. The function composes device name
-> according to either a new <color:function> pattern or the legacy
-> <devicename:color:function> pattern. The decision on using the
-> particular pattern is made basing on whether fwnode contains new
-> "function" and "color" properties, or the legacy "label" proeprty.
-> 
-> Backwards compatibility with in-driver hard-coded LED class device
-> names is assured thanks to the default_desc argument.
-> 
-> In case none of the aformentioned properties was found, then, for OF
-> nodes, the node name is adopted for LED class device name.
-> 
-> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Baolin Wang <baolin.wang@linaro.org>
-> Cc: Daniel Mack <daniel@zonque.org>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
-> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Cc: Simon Shields <simon@lineageos.org>
-> Cc: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
-> ---
->  Documentation/leds/leds-class.txt |  2 +-
->  drivers/leds/led-core.c           | 71 +++++++++++++++++++++++++++++++++++++++
->  include/linux/leds.h              | 32 ++++++++++++++++++
->  3 files changed, 104 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/leds/leds-class.txt b/Documentation/leds/leds-class.txt
-> index 836cb16..e9009c4 100644
-> --- a/Documentation/leds/leds-class.txt
-> +++ b/Documentation/leds/leds-class.txt
-> @@ -43,7 +43,7 @@ LED Device Naming
->  
->  Is currently of the form:
->  
-> -"devicename:colour:function"
-> +"colour:function"
->  
->  There have been calls for LED properties such as colour to be exported as
->  individual led class attributes. As a solution which doesn't incur as much
-> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-> index ede4fa0..f7371fc 100644
-> --- a/drivers/leds/led-core.c
-> +++ b/drivers/leds/led-core.c
-> @@ -16,6 +16,8 @@
->  #include <linux/list.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> +#include <linux/of.h>
-> +#include <linux/property.h>
->  #include <linux/rwsem.h>
->  #include "leds.h"
->  
-> @@ -327,3 +329,72 @@ void led_sysfs_enable(struct led_classdev *led_cdev)
->  	led_cdev->flags &= ~LED_SYSFS_DISABLE;
->  }
->  EXPORT_SYMBOL_GPL(led_sysfs_enable);
-> +
-> +static void led_parse_properties(struct fwnode_handle *fwnode,
-> +				 struct led_properties *props)
-> +{
-> +	int ret;
-> +
-> +	if (!fwnode)
-> +		return;
-> +
-> +	ret = fwnode_property_read_string(fwnode, "label", &props->label);
+Quoting Bjorn Andersson (2018-11-07 21:44:52)
+> On Mon 05 Nov 17:04 PST 2018, Bjorn Andersson wrote:
+> =
 
-If we have the label do we need to continue to look for the function and color nodes?
+> > On Mon 05 Nov 11:40 PST 2018, Stephen Boyd wrote:
+> > =
 
-It can be checked and diverted using fwnode_property_present for the "label" property
+> > > Add a generic clk property for clks which are not intended to be used=
+ by
+> > > the OS due to security restrictions put in place by firmware. For
+> > > example, on some Qualcomm firmwares reading or writing certain clk
+> > > registers causes the entire system to reboot, but on other firmwares
+> > > reading and writing those same registers is required to make devices
+> > > like QSPI work. Rather than adding one-off properties each time a new
+> > > set of clks appears to be protected, let's add a generic clk property=
+ to
+> > > describe any set of clks that shouldn't be touched by the OS. This way
+> > > we never need to register the clks or use them in certain firmware
+> > > configurations.
+> > > =
+
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > =
+
+> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > =
+
+> =
+
+> Gave this some additional thought. The way this is blacklisting
+> protected clocks makes it impossible to be backwards compatible with an
+> older DT while adding new protected clocks to an existing driver.
+> =
+
+> I don't have better suggestion for handling this and the problem should
+> primarily be isolated to the beginning of the upstream life of a
+> platform, so perhaps we can just ignore this issue?
+> =
 
 
-> +	if (!ret)
-> +		return;
-> +
-> +	ret = fwnode_property_read_string(fwnode, "function", &props->function);
-> +	if (ret)
-> +		pr_info("Failed to parse function property\n");
-> +
-> +	ret = fwnode_property_read_string(fwnode, "color", &props->color);
-> +	if (ret)
-> +		pr_info("Failed to parse color property\n");
-> +}
-> +
-> +int led_compose_name(struct fwnode_handle *fwnode, const char *led_hw_name,
-> +		     const char *default_desc, char *led_classdev_name)
-> +{
-> +	struct led_properties props = {};
-> +
-> +	if (!led_classdev_name)
-> +		return -EINVAL;
-> +
-> +	led_parse_properties(fwnode, &props);
-> +
-> +	if (props.label) {
-> +		/*
-> +		 * Presence of 'label' DT property implies legacy LED name,
-> +		 * formatted as <devicename:color:function>, with possible
-> +		 * section omission if doesn't apply to given device.
-> +		 *
-> +		 * If no led_hw_name has been passed, then it indicates that
-> +		 * DT label should be used as-is for LED class device name.
-> +		 * Otherwise the label is prepended with led_hw_name to compose
-> +		 * the final LED class device name.
-> +		 */
-> +		if (!led_hw_name) {
-> +			strncpy(led_classdev_name, props.label,
-> +				LED_MAX_NAME_SIZE);
-> +		} else {
-> +			snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
-> +				 led_hw_name, props.label);
-> +		}
-> +	} else if (props.function || props.color) {
-> +		snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
-> +			 props.color ?: "", props.function ?: "");
-> +	} else if (default_desc) {
-> +		if (!led_hw_name) {
-> +			pr_err("Legacy LED naming requires devicename segment");
-> +			return -EINVAL;
-> +		}
-> +		snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
-> +			 led_hw_name, default_desc);
-> +	} else if (is_of_node(fwnode)) {
-> +		strncpy(led_classdev_name, to_of_node(fwnode)->name,
-> +			LED_MAX_NAME_SIZE);
-> +	} else
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(led_compose_name);
-> diff --git a/include/linux/leds.h b/include/linux/leds.h
-> index 646c49a..ddb4001 100644
-> --- a/include/linux/leds.h
-> +++ b/include/linux/leds.h
-> @@ -238,6 +238,32 @@ extern void led_sysfs_disable(struct led_classdev *led_cdev);
->  extern void led_sysfs_enable(struct led_classdev *led_cdev);
->  
->  /**
-> + * led_compose_name - compose LED class device name
-> + * @child: child fwnode_handle describing a LED,
-> + *	   or a group of synchronized LEDs.
-> + * @led_hw_name: name of the LED controller, used when falling back to legacy
-> + *		 LED naming; it should be set to NULL in new LED class drivers
-> + * @default_desc: default <color:function> tuple, for backwards compatibility
-> + *		  with in-driver hard-coded LED names used as a fallback when
-> + *		  "label" DT property was absent; it should be set to NULL
-> + *		  in new LED class drivers
-> + * @led_classdev_name: composed LED class device name
-> + *
-> + * Create LED class device name basing on the configuration provided by the
-> + * board firmware. The name can have a legacy form <devicename:color:function>,
-> + * or a new form <color:function>. The latter is chosen if at least one of
-> + * "color" or "function" properties is present in the fwnode, leaving the
-> + * section blank if the related property is absent. The former is applied
-> + * when legacy "label" property is present in the fwnode. In case none of the
-> + * aformentioned properties was found, then, for OF nodes, the node name
-
-s/aforementioned
-
-> + * is adopted for LED class device name.
-> + *
-> + * Returns: 0 on success or negative error value on failure
-> + */
-> +extern int led_compose_name(struct fwnode_handle *child, const char *led_hw_name,
-> +			    const char *default_desc, char *led_classdev_name);
-> +
-> +/**
->   * led_sysfs_is_disabled - check if LED sysfs interface is disabled
->   * @led_cdev: the LED to query
->   *
-> @@ -414,6 +440,12 @@ struct led_platform_data {
->  	struct led_info	*leds;
->  };
->  
-> +struct led_properties {
-> +	const char *color;
-> +	const char *function;
-> +	const char *label;
-> +};
-> +
->  struct gpio_desc;
->  typedef int (*gpio_blink_set_t)(struct gpio_desc *desc, int state,
->  				unsigned long *delay_on,
-> 
-
-
--- 
-------------------
-Dan Murphy
+I don't have a better suggestion either besides listing all possible
+clks in the binding and header file to start and then specifying any
+clks that are known to not work when merging the dts bits. In the future
+I think we can move dts and drivers in lockstep if certain drivers add
+new clks and those cause problems on locked down systems. The
+alternative seems worse, i.e. listing clks that should be added on the
+unaffected platforms, so ignoring this issue sounds good for now.
