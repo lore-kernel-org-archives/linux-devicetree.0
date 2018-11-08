@@ -1,88 +1,26 @@
-From: Sven Van Asbroeck <thesven73@gmail.com>
-Subject: Re: [PATCH anybus v3 6/6] misc: support HMS Profinet IRT industrial controller
-Date: Thu, 8 Nov 2018 10:35:18 -0500
-Message-ID: <CAGngYiWvZze2wd-p4avhwGHap=RCO2XPcwShYWPRcs59c3q65A@mail.gmail.com>
-References: <20181104155501.14767-1-TheSven73@googlemail.com>
- <20181104155501.14767-7-TheSven73@googlemail.com> <CAK8P3a3apbxNa2FpADvdLCe-GzV+2xv2kO1_tosOZrUpY6xWtA@mail.gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx7d-sdb: add rev-a board support
+Date: Thu, 8 Nov 2018 13:37:43 -0200
+Message-ID: <CAOMZO5CPZKqJdTPzZDw=19HW_YCg_JGvLpw9i3iKsi+EJF-yNg@mail.gmail.com>
+References: <1541567625-11812-1-git-send-email-Anson.Huang@nxp.com>
+ <CAOMZO5AL03yy6Vj_eC=h7scSDnuja1G8rsWER+r7w3FEVaceDg@mail.gmail.com>
+ <DB3PR0402MB3916B318947B803BC5ADF4A6F5C50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAOMZO5DiTbEsVXTCfE8fJ=4+yU4oXR1gex7Bj-k=FowKHWJaxw@mail.gmail.com> <DB3PR0402MB3916B027A9C724D349C7969EF5C50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a3apbxNa2FpADvdLCe-GzV+2xv2kO1_tosOZrUpY6xWtA@mail.gmail.com>
+In-Reply-To: <DB3PR0402MB3916B027A9C724D349C7969EF5C50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sven Van Asbroeck <svendev@arcx.com>, robh+dt@kernel.org, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, treding@nvidia.com, David Lechner <david@lechnology.com>, noralf@tronnes.org, johan@kernel.org, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+To: Yongcai Huang <anson.huang@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi Anson,
 
-These are great questions, I had been wondering when they would be brought up :)
+On Thu, Nov 8, 2018 at 12:30 AM Anson Huang <anson.huang@nxp.com> wrote:
 
-On Thu, Nov 8, 2018 at 9:20 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> I don't understand much about field bus, but I have a general feeling
-> that if you configure a mac address and IP address, this should
-> be connect ed to the network layer in some form, possibly being
-> exposed as a network device and manipulated using netlink
-> instead of sysfs or ioctl.
->
-> Can you explain how this fits together and why you got the the
-> sysfs interface?
+> Thanks for pointing out this issue, I made a mistake when doing the search in git repo..
+> So, if we have to assert a GPIO, there is no common way in pinctrl driver? Have to
+> do it in driver itself? Like this case, we have to assert the GPIO in fec driver?
 
-I started typing here how a fieldbus differs from a networking
-device, and how it does not fit in the kernel abstraction for
-networking devices.
-
-Then I started explaining the "roll my own" userspace API I created
-for fieldbus devices... and it hit me. There is already a fieldbus API !
-
-include/linux/uio_driver.h
-
-Let me go and check how well it fits with what my device needs.
-
-
-> > +       struct {
-> > +               /* addresses IN NETWORK ORDER! */
-> > +               __u32 ip_addr;
-> > +               __u32 subnet_msk;
-> > +               __u32 gateway_addr;
-> > +               __u8  is_valid:1;
-> > +       } eth;
->
-> Overall, this structure feels too complex for an ioctl interface,
-> with the nested structures. If we end up keeping that
-> ioctl, maybe at least make it a flat structure without padding,
-> or alternatively make it a set of separate ioctls.
->
-
-I agree that it feels complex, but it's the best I could come up with.
-There are a few hidden constraints:
-
-1. The profinet card configuration settings must be applied atomically.
-And they can only be applied right after device reset.
-
-So if we use smaller, separate ioctls, we will end up resetting the device
-each time we send an ioctl. And to assemble a real configuration, we need
-5 or 6 ioctls, so the card gets reset 5 or 6 times, which takes ages.
-It cannot work this way.
-
-2. Configuration settings are optional. That's why why each little struct
-has an is_valid member. If we use a flatter structure, we need a bool for
-every config setting in the struct, to indicate if it should be applied.
-Which feels clunky.
-
-One way to overcome this is by letting the ioctls change data in the driver,
-but not on the card. Then a separate "apply" ioctl could apply the whole
-configuration atomically.
-
-Example:
-ioctl(clear all settings?);
-ioctl(set ip address);
-ioctl(set stop mode action);
-ioctl(enable internal webserver);
-ioctl(apply);
-
-But of course, what happens if two processes try to configure the
-driver at the same time?
-The ioctl calls would be interleaved, and the result would be very messy...
-
-There must be a better way?
+You could pass "phy-supply" property  and model it as gpio controlled regulator.
