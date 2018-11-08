@@ -1,99 +1,58 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v6 3/3] arm64: dts: allwinner: a64: enable sound on Pinebook
-Date: Thu, 8 Nov 2018 15:29:59 +0800
-Message-ID: <CAGb2v65zb4rXJJv018AfDC-YQgAAmahmQ=-Bb5CyU3kA6wBAqg@mail.gmail.com>
-References: <20181108063929.29720-1-anarsoul@gmail.com> <20181108063929.29720-4-anarsoul@gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 11/15] Bluetooth: hci_bcm: Add BCM20702A1 variant
+Date: Thu, 8 Nov 2018 09:21:11 +0100
+Message-ID: <20181108082111.3jt3eukjzfy46kv4@flea>
+References: <20181107101308.7626-1-wens@csie.org>
+ <20181107101308.7626-12-wens@csie.org>
+ <20181107203608.ff32gmb4u54kcvep@flea>
+ <CAGb2v64asgNbYch6gwj0BTTz84=Jfbmu9th0Dyfdx_o8N5tNXg@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181108063929.29720-4-anarsoul@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gpfwphpxwbmirm24"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6HDR7PQKGQEYSB5DQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64asgNbYch6gwj0BTTz84=Jfbmu9th0Dyfdx_o8N5tNXg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 8, 2018 at 2:42 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
->
-> This commit enables I2S, digital and analog parts of audiocodec on
-> Pinebook
->
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> ---
->  .../dts/allwinner/sun50i-a64-pinebook.dts     | 42 +++++++++++++++++++
->  1 file changed, 42 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-> index 77fac84797e9..73f171f4ba9b 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-> @@ -64,6 +64,23 @@
->                 compatible = "mmc-pwrseq-simple";
->                 reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
->         };
-> +
-> +       speaker_amp: speaker_amp {
-> +               compatible = "simple-audio-amplifier";
-> +               enable-gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
 
-You might want to add a sound-name-prefix property. See
+--gpfwphpxwbmirm24
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-    Documentation/devicetree/bindings/sound/name-prefix.txt
+On Thu, Nov 08, 2018 at 02:53:33PM +0800, Chen-Yu Tsai wrote:
+> On Thu, Nov 8, 2018 at 4:36 AM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> >
+> > Hi!
+> >
+> > On Wed, Nov 07, 2018 at 06:13:04PM +0800, Chen-Yu Tsai wrote:
+> > > From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > >
+> > > The BCM20702A1 chip is a single-chip Bluetooth 4.0 controller and
+> > > transceiver. It is found in the AMPAK AP6210 WiFi+BT package.
+> > >
+> > > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >
+> > if you resubmit it, could you do s/free-electrons/bootlin/ ?
+> 
+> OK. And for the author as well?
 
-Also this should have a reference to its power supply regulator.
+Yes, please :)
 
-> +       };
-> +};
-> +
-> +&codec {
-> +       status = "okay";
-> +};
-> +
-> +&codec_analog {
-> +       status = "okay";
-> +};
-> +
-> +&dai {
-> +       status = "okay";
->  };
->
->  &ehci0 {
-> @@ -267,6 +284,31 @@
->         vcc-hdmi-supply = <&reg_dldo1>;
->  };
->
-> +&sound {
-> +       status = "okay";
-> +       simple-audio-card,widgets = "Microphone", "Internal Microphone Left",
-> +                                   "Microphone", "Internal Microphone Right",
-> +                                   "Headphone", "Headphone Jack",
-> +                                   "Speaker", "Internal Speaker";
-> +       simple-audio-card,aux-devs = <&codec_analog>, <&speaker_amp>;
-> +       simple-audio-card,routing =
-> +                       "Left DAC", "AIF1 Slot 0 Left",
-> +                       "Right DAC", "AIF1 Slot 0 Right",
-> +                       "INL", "LINEOUT",
-> +                       "INR", "LINEOUT",
-> +                       "Internal Speaker", "OUTL",
-> +                       "Internal Speaker", "OUTR",
-> +                       "Headphone Jack", "HP",
-> +                       "AIF1 Slot 0 Left ADC", "Left ADC",
-> +                       "AIF1 Slot 0 Right ADC", "Right ADC",
-> +                       "Left ADC", "ADC",
-> +                       "Right ADC", "ADC",
-> +                       "Internal Microphone Left", "MBIAS",
-> +                       "MIC1", "Internal Microphone Left",
-> +                       "Internal Microphone Right", "HBIAS",
-> +                       "MIC2", "Internal Microphone Right";
+Maxime
 
-The schematics is missing the actual jack, but this looks to be correct.
-
-ChenYu
-
-> +};
-> +
->  &uart0 {
->         pinctrl-names = "default";
->         pinctrl-0 = <&uart0_pb_pins>;
-> --
-> 2.19.1
->
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--gpfwphpxwbmirm24--
