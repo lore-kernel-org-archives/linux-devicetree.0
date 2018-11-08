@@ -1,142 +1,157 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFC 0/2] Add RISC-V cpu topology
-Date: Thu, 8 Nov 2018 16:48:27 +0000
-Message-ID: <20181108164827.GB10953@e107155-lin>
-References: <1541113468-22097-1-git-send-email-atish.patra@wdc.com>
- <866dedbc78ab4fa0e3b040697e112106@mailhost.ics.forth.gr>
- <20181106141331.GA28458@e107155-lin>
- <969fc2a5198984e0dfe8c3f585dc65f9@mailhost.ics.forth.gr>
- <20181106162051.w7fyweuxrl7ujzuz@lakrids.cambridge.arm.com>
- <abcae019e6ae749b17ecb0c721fd3177@mailhost.ics.forth.gr>
- <20181107122803.GA8433@e107155-lin>
- <d04779705c47b59b94300365e805dbd3@mailhost.ics.forth.gr>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [RFC PATCH v2 03/17] dt-bindings: cpufreq: Add binding for NVIDIA
+ Tegra20/30
+Date: Thu, 8 Nov 2018 19:48:16 +0300
+Message-ID: <0fc53853-862c-4cc3-6548-d347bc68bdd6@gmail.com>
+References: <20181021205501.23943-1-digetx@gmail.com>
+ <20181021205501.23943-4-digetx@gmail.com> <20181105213000.GA13425@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d04779705c47b59b94300365e805dbd3@mailhost.ics.forth.gr>
+In-Reply-To: <20181105213000.GA13425@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nick Kossifidis <mick@ics.forth.gr>
-Cc: Mark Rutland <mark.rutland@arm.com>, Atish Patra <atish.patra@wdc.com>, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, Damien.LeMoal@wdc.com, alankao@andestech.com, zong@andestech.com, anup@brainfault.org, palmer@sifive.com, linux-kernel@vger.kernel.org, hch@infradead.org, robh+dt@kernel.org, tglx@linutronix.de, Sudeep Holla <sudeep.holla@arm.com>
+To: Rob Herring <robh@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 08, 2018 at 04:52:30PM +0200, Nick Kossifidis wrote:
-> Στις 2018-11-07 14:28, Sudeep Holla έγραψε:
-> >
-> > I agree, but we have kernel code using it(arm64/kernel/topology.c). It's
-> > too late to remove it. But we can always keep to optional if we move the
-> > ARM64 binding as generic to start with and mandate it for only ARM64.
-> >
->
-> That's my point as well, if we are going to define something to be used
-> by everybody and in this case, at least for RISC-V, there is no need to
-> carry this from the ARM64 binding.
+On 06.11.2018 0:30, Rob Herring wrote:
+> On Sun, Oct 21, 2018 at 11:54:47PM +0300, Dmitry Osipenko wrote:
+>> Add device-tree binding that describes CPU frequency-scaling hardware
+>> found on NVIDIA Tegra20/30 SoC's.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  .../cpufreq/nvidia,tegra20-cpufreq.txt        | 96 +++++++++++++++++++
+>>  1 file changed, 96 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+>> new file mode 100644
+>> index 000000000000..a8023ea7a99f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+>> @@ -0,0 +1,96 @@
+>> +Binding for NVIDIA Tegra20 CPUFreq
+>> +==================================
+>> +
+>> +Required properties:
+>> +- clocks: Must contain an entry for each entry in clock-names.
+>> +  See ../clocks/clock-bindings.txt for details.
+>> +- clock-names: Must include the following entries:
+>> +  - pll_x: main-parent for CPU clock, must be the first entry
+>> +  - intermediate: intermediate-parent for CPU clock
+>> +  - cclk: the CPU clock
+>> +- operating-points-v2: See ../bindings/opp/opp.txt for details.
+>> +- #cooling-cells: Should be 2. See ../thermal/thermal.txt for details.
+>> +
+>> +For each opp entry in 'operating-points-v2' table:
+>> +- opp-supported-hw: Two bitfields indicating:
+>> +	On Tegra20:
+>> +	1. CPU process ID mask
+>> +	2. SoC speedo ID mask
+>> +
+>> +	On Tegra30:
+>> +	1. CPU process ID mask
+>> +	2. CPU speedo ID mask
+>> +
+>> +	A bitwise AND is performed against these values and if any bit
+>> +	matches, the OPP gets enabled.
+>> +
+>> +- opp-microvolt: CPU voltage triplet.
+>> +
+>> +Optional properties:
+>> +- cpu-supply: Phandle to the CPU power supply.
+>> +- core-supply: Phandle to the CORE power supply.
+>> +- rtc-supply: Phandle to the RTC power supply, required only for Tegra20.
+>> +
+>> +Voltage supply requirements:
+>> +- Tegra20:
+>> +	CORE and RTC regulators must be coupled using the regulator-coupled-with
+>> +	property and regulator-coupled-max-spread property must be set to no
+>> +	more than 170mV.
+>> +
+>> +	See ../regulator/regulator.txt for more detail about the properties.
+>> +
+>> +- Tegra30:
+>> +	CORE and CPU regulators must be coupled using the regulator-coupled-with
+>> +	property and regulator-coupled-max-spread property must be set to no
+>> +	more than 300mV. Each of CORE and CPU regulators must set
+>> +	regulator-max-step-microvolt property to no more than 100mV.
+>> +
+>> +	See ../regulator/regulator.txt for more detail about the properties.
+>> +
+>> +
+>> +Example:
+>> +	regulators {
+>> +		cpu_reg: regulator0 {
+>> +			regulator-name = "vdd_cpu";
+>> +		};
+>> +
+>> +		core_reg: regulator1 {
+>> +			regulator-name = "vdd_core";
+>> +			regulator-coupled-with = <&rtc_reg>;
+>> +			regulator-coupled-max-spread = <170000>;
+>> +		};
+>> +
+>> +		rtc_reg: regulator2 {
+>> +			regulator-name = "vdd_rtc";
+>> +			regulator-coupled-with = <&core_reg>;
+>> +			regulator-coupled-max-spread = <170000>;
+>> +		};
+>> +	};
+>> +
+>> +	cpu0_opp_table: opp_table0 {
+>> +		compatible = "operating-points-v2";
+>> +
+>> +		opp@456000000 {
+>> +			clock-latency-ns = <125000>;
+>> +			opp-microvolt = <825000 825000 1125000>;
+>> +			opp-supported-hw = <0x03 0x0001>;
+>> +			opp-hz = /bits/ 64 <456000000>;
+>> +		};
+>> +
+>> +		...
+>> +	};
+>> +
+>> +	cpus {
+>> +		cpu@0 {
+>> +			compatible = "arm,cortex-a9";
+>> +			clocks = <&tegra_car TEGRA20_CLK_PLL_X>,
+>> +				 <&tegra_car TEGRA20_CLK_PLL_P>,
+>> +				 <&tegra_car TEGRA20_CLK_CCLK>;
+>> +			clock-names = "pll_x", "intermediate", "cclk";
+> 
+> I still object to having clocks (and supplies) which don't reflect the 
+> h/w and are documented in the CA9 TRM.
+> 
+>> +			operating-points-v2 = <&cpu0_opp_table>;
+>> +			cpu-supply = <&cpu_reg>;
+>> +			core-supply = <&core_reg>;
+>> +			rtc-supply = <&rtc_reg>;
+> 
+> Supplies are suspect too, but perhaps supplies and power domains are 
+> beyond the scope of the TRM and part of the physical design.
 
-Sure, whatever you don't need in RISC-V you can see if they can be made
-optional. I don't think that should be a problem.
+Is it possible to have a "firmware" device-tree node specifically for cpufreq driver? Something like this:
 
-> It shouldn't be that hard to fix this
-> in the future for ARM64 as well, we may give the new mapping another name,
-> maybe cpu-map2 or cpu-topology to slowly move to the new one.
+cpufreq {
+	compatible = "nvidia,tegra20-cpufreq";
+	clocks = <&tegra_car TEGRA20_CLK_PLL_X>,
+		 <&tegra_car TEGRA20_CLK_PLL_P>;
+	clock-names = "pll_x", "intermediate";
+};
 
-No, we have it and we will continue to support it. It's not broken to
-fix on ARM64. Why do you think that it's broken on ARM64 ?
+We may also need a Tegra-specific DVFS helper-driver that will help to manage CPU-CORE voltage dependency. Yet I'll have to examine this all in more details, but maybe it will be nicer if DVFS could be instantiated via device-tree as well. It will provide a Tegra-specific DVFS API and manage CORE / RTC dependencies for the CPUFreq and peripheral drivers, also helping to maintain proper voltages during kernel boot-up until all drivers are brought into action.
 
-> Changing the
-> dts files shouldn't be this hard, we can provide a script for it. We can
-> even contain some compatibility code that also understands <thread> nodes
-> and e.g. merges them together on a core node.
->
+cpufreq {
+	compatible = "nvidia,tegra20-dvfs";
+	cpu-supply = <&cpu_vdd_reg>;
+	core-supply = <&core_vdd_reg>;
+	rtc-supply = <&rtc_vdd_reg>;
+};
 
-Sure, hang on this idea of scripting, we can make a better use of it.
-Details later further in the mail.
+So my question is:
 
-[...]
-
-> > > The same also happens with the generic numa binding on
-> > > Documentation/devicetree/bindings/numa.txt
-> > > which says we should add the nuna-node-id on each of the cpu nodes.
-> > >
-> >
-> > Yes, but again what's the problem ?
-> >
->
-> There is no problem with the above bindings, the problem is that we have
-> to put them on each cpu node which is messy. We could instead put them
-> (optionally) on the various groupings used on cpu-map. This would allow
-> cpu-map to be more specific of what is shared across the members of each
-> group (core/cluster/whatever).
->
-
-I think Mark has already explain why/how generic bindings are useful.
-If you still have concerns, take it up separately and see how you can
-build *perfect* bindings for RISC-V to avoid any legacy baggage.
-
-We have reasons why we can't assume information about cache or power
-domain topology from CPU topology. I have summarised them already and
-we are not discussing. There may not be perfect bindings but there are
-already supported and nothing is broken here to fix. DT bindings are
-*not* same as code to fix it with a patch to the bindings themselves.
-Once agreed and merged, they need to be treated like user ABI.
-
-> As I wrote on my answer to Mark previously, the bindings for infering
-> the cache topology, numa topology, power domain topology etc are already
-> there, they are in the devicet tree spec and provide very specific
-> informations we can use. Much "stronger" hints of what's going on at
-> the hw level. The cpu-map doesn't provide such information, it just
-> provides a view of how the various harts/threads are "packed" on the chip,
-> not what they share inside each level of "packing". It's useful because
-> it saves people from having to define a bunch of cache nodes and describe
-> the cache hierarchy on the device tree using the standard spec.
->
-
-Ah, here comes. If you want to save people's time or whatever, you can use
-your scripting magic you have mentioned above to define those bunch of nodes
-you want to avoid.
-
-> So since cpu-map is there for convenience let's make it more convenient !
-> What I'm saying is that cpu-map could be a more compact way of using the
-> existing bindings for adding properties on groups of harts instead of
-> putting them on each hart individually. It will simplify the representation
-> and may also optimize the implementation a bit (we may get the information
-> we need faster). I don't see any other reason for using cpu-map on RISC-V
-> or for making it global across archs.
->
-
-Sure, I don't have strong opinions there. Just stop mentioning that this
-is the only solution and all existing ones are broken. They are not and
-needs to be supported until they are explicitly deprecated, becomes
-obsolete and finally removed.
-
-[...]
-
-> >
-> > Why are you so keen on optimising the representation ?
-> > If you are worried about large systems, generate one instead of
-> > handcrafted.
-> >
->
-> I don't see a reason not to try to optimize it, since we are talking
-> about a binding to be used by RISC-V and potentially everybody, I think
-> it makes sens to improve upon what we already have.
->
-
-Sure, you can always unless you stop treating existing ones are broken.
-I have already told DT bindings are not *normal code*. You can just
-replace existing ones with new optimised ones. You can only add the new
-(*optimised*) ones to the existing ones. You *need* to understand that
-concept first, otherwise there's not point in this endless discussion
-IMO.
-
-I will stop here as I will have to repeat whatever I have already
-mentioned to comment on your arguments below.
-
-In summary, I am not against improving the bindings if you think it's
-possible, but I don't see how it's more beneficially especially if we
-are going to support existing ones also. Mark has already given all the
-details.
-
---
-Regards,
-Sudeep
+Is it possible to have device-tree nodes that solely describe firmware? Kernel drivers in this case.
