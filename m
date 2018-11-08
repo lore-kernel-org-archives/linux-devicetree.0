@@ -1,52 +1,57 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v6 07/18] of: dynamic: change type of of_{at,de}tach_node() to void
-Date: Thu, 08 Nov 2018 10:48:33 +1100
-Message-ID: <87h8gsqwj2.fsf@concordia.ellerman.id.au>
-References: <1541431515-25197-1-git-send-email-frowand.list@gmail.com> <1541431515-25197-8-git-send-email-frowand.list@gmail.com> <87tvktqedf.fsf@concordia.ellerman.id.au> <6bc78502-7587-eb9c-237f-d3f031979d42@gmail.com>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] arm64: dts: rockchip: add Gru Scarlet devicetrees
+Date: Wed, 7 Nov 2018 17:13:02 -0800
+Message-ID: <CA+ASDXO_G9NhmNUh_DVdJ+2S8GsKmHPS4YQwe3H9_SW-a-q6+w@mail.gmail.com>
+References: <20181101123639.15560-1-heiko@sntech.de>
+ <20181101123639.15560-2-heiko@sntech.de> <55055985.ydjp5xQfPl@phil>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6bc78502-7587-eb9c-237f-d3f031979d42@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, nfont@linux.vnet.ibm.com, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <55055985.ydjp5xQfPl@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Frank Rowand <frowand.list@gmail.com> writes:
-> On 11/7/18 4:08 AM, Michael Ellerman wrote:
->> frowand.list@gmail.com writes:
->> 
->>> From: Frank Rowand <frank.rowand@sony.com>
->>>
->>> of_attach_node() and of_detach_node() always return zero, so
->>> their return value is meaningless.
->> 
->> But should they always return zero?
->> 
->> At least __of_attach_node_sysfs() can fail in several ways.
+On Tue, Nov 6, 2018 at 3:31 AM Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
+> Am Donnerstag, 1. November 2018, 13:36:39 CET schrieb Heiko Stuebner:
+> > Gru-Scarlet is a tablet device using ChomeOS, dual-dsi display
+> > and Wacom touchscreen with stylus.
+> >
+> > There exist two variants in the market using different displays
+> > that are differentiated via their sku-id.
+> > The bootloader on them also determines the correct devicetree to
+> > load via the sku-id.
+> >
+> > So add a common scarlet dtsi and two minimal board devicetrees
+> > for the two display variants.
+> >
+> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 >
-> Sigh.  And of_reconfig_notify() can fail.  And at one point in the
-> history the return value of of_reconfig_notify() was returned by
-> of_attach_node() if of_reconfig_notify() failed.
->
->> And there's also this in __of_detach_node() which should probably be
->> returning an error:
->> 
->> 	if (WARN_ON(of_node_check_flag(np, OF_DETACHED)))
->>         	return;
->> 
->> 
->> Seems to me we should instead be fixing these to propagate errors,
->> rather than hiding them?
->
-> The history of how of_attach_node() stopped propagating errors is
-> a bit more complex than I want to dig into at the moment.  So I'll
-> drop this patch from the series and add investigating this onto
-> my todo list.  I suspect that the result of investigating will be
-> that error return values should not be ignored in of_attach_node()
-> and of_detach_node(), but should instead be propagated to the
-> callers, as you suggest.
+> looks like I already applied patch1 in time for 4.20
+> (and forgot about it), but have now also applied this patch2
+> for 4.21 with Rob's review.
 
-Thanks.
+Thanks, by the way! This worked well for me today, testing 4.20-rc1.
+Well, except for this silly bit, but that bug has been around (and
+more or less untested) for several releases:
 
-cheers
+https://lore.kernel.org/patchwork/patch/1008074/
+[PATCH] input: cros_ec_keyb: fix button/switch capability reports
+
+And this silly one that slipped into this merge window:
+
+https://lore.kernel.org/patchwork/patch/1008098/
+[PATCH 4.20] ath10k: don't assume 'vif' is non-NULL in flush()
+
+*Grumble*: one would think people would test their changes before
+submitting them, but apparently that's too much to ask.
