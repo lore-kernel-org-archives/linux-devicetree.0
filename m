@@ -1,50 +1,116 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v3 3/3] MAINTAINERS: Add entry for i2c-omap driver
-Date: Thu, 8 Nov 2018 10:23:20 +0100
-Message-ID: <20181108092320.GC951@kunai>
-References: <20181108091931.3342-1-vigneshr@ti.com>
- <20181108091931.3342-4-vigneshr@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="JWEK1jqKZ6MHAcjA"
+From: Song Qiang <songqiang1304521@gmail.com>
+Subject: [PATCH v6 0/3] Add support for PNI RM3100 magnetometer
+Date: Thu,  8 Nov 2018 17:27:46 +0800
+Message-ID: <20181108092749.12167-1-songqiang1304521@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181108091931.3342-4-vigneshr@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, preid@electromag.com.au, himanshujha199640@gmail.com
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Song Qiang <songqiang1304521@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---JWEK1jqKZ6MHAcjA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The next 3 patches do the following:
+ - The first patch adds PNI Sensor Corporation to the vendor prefix list.
+ - The second patch adds devicetree binding for RM3100 magnetometer.
+ - The third patch adds the driver for RM3100 magnetometer.
 
-On Thu, Nov 08, 2018 at 02:49:31PM +0530, Vignesh R wrote:
-> Add separate entry for i2c-omap and add my name as reviewer for this
-> driver.
+ -- Song Qiang
 
-Thanks for stepping up, yet out of curiosity: why not maintainer?
+Changes in v6:
+ - Add data shift for case BIT(0) | BIT(2) in irq handler.
+ - Use different memcpy for different cases.
+ - Move init_completion before devm_request_threaded_irq to prevent
+   using completion before init.
+ - Fix some style issues.
 
+Changes in v5:
+ - Fix a bug about checking if completion is timed out. Used to check if
+   ret < 0.
+ - Add INDIO_BUFFER_TRIGGERED to indio_dev->modes.
+ - Add init mode 'INDIO_DIRECT_MODE'. 
+ - Remove case 0 in trigger handler.
+ - store scale value directly instead of store cycle_count_index and search for scale value.
+ - Fix the bug of restarting all channels in rm3100_set_sample_freq.
+ - Replace 4 in rm3100_buffer_preenable with define 'RM3100_CMM_AXIS_SHIFT'
+ - Replace timestamp of trigger_hanlder to use iio_pollfunc_store_time.
+ - Remove rm3100_remove.
+ - Replace 3 seconds timeout time with double conversions time.
+ - Read all 3 axis in case BIT(0) | BIT(2) instead of reading each of them independently.
+ - Remove i2c_check_functionality since regmap_get_i2c_bus already checks it.
 
---JWEK1jqKZ6MHAcjA
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes in v4:
+ - Fix a bug about regmap_range configurations.
+ - Add DRDY trigger support.
+ - Change DRDY interrupt trigger source from RISING to HIGH.
+ - Add a thread function to clear the interrupt.
+ - Change the logic of one-shot read from waiting next continuous ends to
+   writing to POLL register and waiting conversion ends.
+ - Add iio_buffer_setup_ops to enable continuous conversion only when
+   buffer is enabled.
+ - Add active_scan_mask check in continuous conversions.
+ - Remove *wait_measurement() in *trigger_handler().
 
------BEGIN PGP SIGNATURE-----
+Changes in v3:
+ - Change PNI to PNI Sensor Corporation in vendor-prefix.txt.
+ - Sort header files in alpabetical order.
+ - Add more specific doc for the mutex.
+ - Fix the bug in the rm3100_set_cycle_count() where we always set the
+   cycle count value to 100 no matter what val is.
+ - Change some multiple else if to switch.
+ - Remove iio_device_release_direct_mode() in the case claim direct mode
+   fails.
+ - Use the same buffer in rm3100_trigger_handler().
+ - Add space around some operators.
+ - Add manually unwind functions in case devm_add_action() fails.
+ - Move devm_add_action before the devm_iio_device_register().
+ - Move register defines and rm3100_data struct to *-core.c. 
+ - Change some storage variable type of regmap from int to unsigned int.
+ - Change 10e4 to 10^4.
+ - Remove explicit cast of data pointer in rm3100_remove().
+ - Remve dev in rm3100_data and use regmap_get_device() to obtain device
+   pointer instead.
+ - Change register bits alignment in defines.
+ - Move RM3100_SCAN_BYTES to the top.
+ - Change Channel endieness from LE to BE.
+ - Adjust the place of comment about the 3 second wait time.
+ - Some spell check.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlvkAIgACgkQFA3kzBSg
-Kba+ag//eGminUyjlFcJqcSRjGnf7+LqqeVc07AlJmwhdUwpFd9u7odCF3GTZ1hx
-kV26//NQ2S62q0z9piujG5f0UvJRUKv3P/KnTEn2qjw6paAwbJNeunkJfqsOmNPd
-b36cYEUHRBNe3m6WVbOkxJxUYiqBTbx0AYu0MWo0uzonyl5IYws3hFZfL+Di7jgC
-8oQawmLeQ3PtMAxnVtRS6GMMpmRPogfS3tfE+3NLVzfWaa609oQynEFvfK0ynUXo
-gVy91FQzmxxFtkn8Y2+Z4dtPYNmil8LnelhDljVO+sJf4hxec+igFkSc5EUMRSzO
-rNXYaH2CtQv3VRLmyvTpx118i7mkCIjH4XYpTLPaIRsbJyvrZM9n2K0krQp838kL
-T1prYC2gQEqWZhL+ZK/Q/CjxFCY2rzp94AgWoecn+Lb43RqfBNiDgjrsBBgRCJro
-MoKb+6LETDEpj9Vql4MUi70R9wAYQBwS+ZdaBulSRXTKfHhcRMCQ58JQG/prMRvs
-6YESdYeSNdIGdYI/xIp/sCHySCXZmZcoUrVJ5Wp9M2WZMcw0Ti+uxwILhHkhMapu
-F59dqxoixUSX6mR5hTllQ3AxD1CHmxBIYrm0cEkdbf+P9JHGqyCuEfNkCB9jwhy+
-6zBMZu49BgDPCOucQPdfsWNhs8RZiJdIFnnejWaqdKvCDh8r5CA=
-=FygF
------END PGP SIGNATURE-----
+Changes in v2:
+	- Add scale channel.
+	- Add EXPORT_SYMBOL_GPL() to export regmap confuguration structures.
+	- Add sampling frequency available attribute.
+	- Clean up headers and License declarations.
+	- Change axis number to 3.
+	- Remove bus specific part in compatible string.
+	- Remove le32_to_cpu().
+	- Check cycle count registers at *_probe().
+	- Format comments.
+	- Spell check.
+	- Change prefix from RM_* to RM3100_*.
+	- Check all error return paths.
+	- Add devm_add_action() to avoid race condition when remove.
 
---JWEK1jqKZ6MHAcjA--
+Song Qiang (3):
+  dt-bindings: Add PNI to the vendor prefixes
+  iio: magnetometer: Add DT support for PNI RM3100
+  iio: magnetometer: Add driver support for PNI RM3100
+
+ .../bindings/iio/magnetometer/pni,rm3100.txt  |  20 +
+ .../devicetree/bindings/vendor-prefixes.txt   |   1 +
+ MAINTAINERS                                   |   7 +
+ drivers/iio/magnetometer/Kconfig              |  29 +
+ drivers/iio/magnetometer/Makefile             |   4 +
+ drivers/iio/magnetometer/rm3100-core.c        | 616 ++++++++++++++++++
+ drivers/iio/magnetometer/rm3100-i2c.c         |  54 ++
+ drivers/iio/magnetometer/rm3100-spi.c         |  64 ++
+ drivers/iio/magnetometer/rm3100.h             |  17 +
+ 9 files changed, 812 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt
+ create mode 100644 drivers/iio/magnetometer/rm3100-core.c
+ create mode 100644 drivers/iio/magnetometer/rm3100-i2c.c
+ create mode 100644 drivers/iio/magnetometer/rm3100-spi.c
+ create mode 100644 drivers/iio/magnetometer/rm3100.h
+
+-- 
+2.17.1
