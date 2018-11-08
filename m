@@ -1,78 +1,67 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 13/36] dt-bindings: arm: Convert PMU binding to
- json-schema
-Date: Thu, 8 Nov 2018 15:54:31 +0000
-Message-ID: <08738708-1c38-fab7-eb34-694e5f4d4b7e@arm.com>
-References: <20181005165848.3474-1-robh@kernel.org>
- <20181005165848.3474-14-robh@kernel.org> <20181009115713.GE6248@arm.com>
- <CAL_JsqJh08wZCyGxg7HMbtKjOJTZKMoQcNOB_hPuSfJKQQK8JA@mail.gmail.com>
+From: jbrunet@baylibre.com
+Subject: Re: [PATCH 3/3] ARM64: dts: meson-gxl: Add support for the
+ Smartlabs SML-5442TW
+Date: Thu, 08 Nov 2018 16:56:40 +0100
+Message-ID: <bafa32609200e57d8efe9843247429a46916bbef.camel@baylibre.com>
+References: <1541691207-24768-1-git-send-email-christianshewitt@gmail.com>
+         <1541691207-24768-3-git-send-email-christianshewitt@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJh08wZCyGxg7HMbtKjOJTZKMoQcNOB_hPuSfJKQQK8JA@mail.gmail.com>
-Content-Language: en-GB
+In-Reply-To: <1541691207-24768-3-git-send-email-christianshewitt@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Will Deacon <will.deacon@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kumar Gala <kumar.gala@linaro.org>, Grant Likely <glikely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, Tom Rini <trini@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Olof Johansson <olof@lixom.net>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Christian Hewitt <christianshewitt@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Neil Armstrong <narmstrong@baylibre.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Noralf =?ISO-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/11/2018 19:32, Rob Herring wrote:
-> On Tue, Oct 9, 2018 at 6:57 AM Will Deacon <will.deacon@arm.com> wrote:
->>
->> Hi Rob,
->>
->> On Fri, Oct 05, 2018 at 11:58:25AM -0500, Rob Herring wrote:
->>> Convert ARM PMU binding to DT schema format using json-schema.
->>>
->>> Cc: Will Deacon <will.deacon@arm.com>
->>> Cc: Mark Rutland <mark.rutland@arm.com>
->>> Cc: linux-arm-kernel@lists.infradead.org
->>> Cc: devicetree@vger.kernel.org
->>> Signed-off-by: Rob Herring <robh@kernel.org>
->>> ---
->>>   Documentation/devicetree/bindings/arm/pmu.txt | 70 --------------
->>>   .../devicetree/bindings/arm/pmu.yaml          | 96 +++++++++++++++++++
->>>   2 files changed, 96 insertions(+), 70 deletions(-)
->>>   delete mode 100644 Documentation/devicetree/bindings/arm/pmu.txt
->>>   create mode 100644 Documentation/devicetree/bindings/arm/pmu.yaml
->>
->> [...]
->>
->>> -- interrupts : 1 combined interrupt or 1 per core. If the interrupt is a per-cpu
->>> -               interrupt (PPI) then 1 interrupt should be specified.
->>
->> [...]
->>
->>> +  interrupts:
->>> +    oneOf:
->>> +      - maxItems: 1
->>> +      - minItems: 2
->>> +        maxItems: 8
->>> +        description: 1 interrupt per core.
->>> +
->>> +  interrupts-extended:
->>> +    $ref: '#/properties/interrupts'
->>
->> This seems like a semantic different between the two representations, or am
->> I missing something here? Specifically, both the introduction of
->> interrupts-extended and also dropping any mention of using a single per-cpu
->> interrupt (the single combined case is no longer support by Linux; not sure
->> if you want to keep it in the binding).
+On Thu, 2018-11-08 at 19:33 +0400, Christian Hewitt wrote:
 > 
-> In regards to no support for the single combined interrupt, it looks
-> like Marvell Armada SoCs at least (armada-375 is what I'm looking at)
-> have only a single interrupt. Though the interrupt gets routed to MPIC
-> which then has a GIC PPI. So it isn't supported or happens to work
-> still since it is a PPI?
+> +&audio {
+> +	status = "okay";
+> +};
+> +
+> +&aiu_i2s_dma {
+> +	status = "okay";
+> +};
+> +
+> +&i2s_dai {
+> +	status = "okay";
+> +};
 
-Well, the description of the MPIC in the Armada XP functional spec says:
+The audio stuff has not made it's way upstream (yet) please drop this
 
-"Interrupt sources ID0–ID28 are private events per CPU. Thus, each 
-processor has a different set of events map interrupts ID0–ID28."
+> +
+> +&cvbs_vdac_port {
+> +	cvbs_vdac_out: endpoint {
+> +		remote-endpoint = <&cvbs_connector_in>;
+> +	};
+> +};
+> +
+> 
+[ ... ]
 
-Odd grammar aside, that would seem to imply that <&mpic 3> is a per-cpu 
-interrupt itself, thus AFAICS so long as it's cascaded to a GIC PPI and 
-not an SPI then there's no issue there.
+> +
+> +/* This is connected to the Bluetooth module: */
+> +&uart_A {
+> +	status = "okay";
+> +	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
+> +	pinctrl-names = "default";
 
-Robin.
+Did you forget to put 'uart-has-rtscts;' here ?
+
+> +};
+> +
+> +/* This UART is brought out to the debug header */
+> +&uart_AO {
+> +	status = "okay";
+> +	pinctrl-0 = <&uart_ao_a_pins>;
+> +	pinctrl-names = "default";
+> +};
+> +
+> +&usb0 {
+> +	status = "okay";
+> +};
+
+Also, you sent a multipatch series. Such patchset should start with a cover
+letter describing the general intent ... even if it is obvious.
