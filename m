@@ -1,138 +1,55 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 10/24] leds: lp8860: Use led_compose_name()
-Date: Thu, 8 Nov 2018 12:16:26 -0600
-Message-ID: <d0d4eff7-5840-95d7-a1a1-104188d1b619@ti.com>
-References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
- <1541542052-10081-11-git-send-email-jacek.anaszewski@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/4] of/property: Add of_fwnode_name()
+Date: Thu, 8 Nov 2018 12:23:51 -0600
+Message-ID: <CAL_Jsq+4momJb6EoXrAg2LRKzpXMFB30yhBigOiEJ16EjZ05pg@mail.gmail.com>
+References: <20181108165156.60073-1-heikki.krogerus@linux.intel.com> <20181108165156.60073-4-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541542052-10081-11-git-send-email-jacek.anaszewski@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181108165156.60073-4-heikki.krogerus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/06/2018 04:07 PM, Jacek Anaszewski wrote:
-> Switch to using generic LED support for composing LED class
-> device name.
-> 
-> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+On Thu, Nov 8, 2018 at 10:52 AM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
+>
+> This implements get_name fwnode op for DT.
+>
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 > ---
->  drivers/leds/leds-lp8860.c | 38 +++++++++++++++++++-------------------
->  1 file changed, 19 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/leds/leds-lp8860.c b/drivers/leds/leds-lp8860.c
-> index 39c72a9..7c12ccd 100644
-> --- a/drivers/leds/leds-lp8860.c
-> +++ b/drivers/leds/leds-lp8860.c
-> @@ -22,7 +22,6 @@
->  #include <linux/of_gpio.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/slab.h>
-> -#include <uapi/linux/uleds.h>
->  
->  #define LP8860_DISP_CL1_BRT_MSB		0x00
->  #define LP8860_DISP_CL1_BRT_LSB		0x01
-> @@ -87,6 +86,8 @@
->  
->  #define LP8860_CLEAR_FAULTS		0x01
->  
-> +#define LP8860_NAME			"lp8860"
+>  drivers/of/property.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index f46828e3b082..9bc8fe136fa3 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -823,6 +823,16 @@ static void of_fwnode_put(struct fwnode_handle *fwnode)
+>         of_node_put(to_of_node(fwnode));
+>  }
+>
+> +static int of_fwnode_get_name(const struct fwnode_handle *fwnode, char *buf)
+> +{
+> +       const char *name = kbasename(to_of_node(fwnode)->full_name);
+> +       size_t len = strchrnul(name, '@') - name;
 > +
->  /**
->   * struct lp8860_led -
->   * @lock - Lock for reading/writing the device
-> @@ -96,7 +97,6 @@
->   * @eeprom_regmap - EEPROM register map
->   * @enable_gpio - VDDIO/EN gpio to enable communication interface
->   * @regulator - LED supply regulator pointer
-> - * @label - LED label
->   */
->  struct lp8860_led {
->  	struct mutex lock;
-> @@ -106,7 +106,6 @@ struct lp8860_led {
->  	struct regmap *eeprom_regmap;
->  	struct gpio_desc *enable_gpio;
->  	struct regulator *regulator;
-> -	char label[LED_MAX_NAME_SIZE];
->  };
->  
->  struct lp8860_eeprom_reg {
-> @@ -387,25 +386,26 @@ static int lp8860_probe(struct i2c_client *client,
->  	struct lp8860_led *led;
->  	struct device_node *np = client->dev.of_node;
->  	struct device_node *child_node;
-> -	const char *name;
-> +	struct led_init_data init_data;
->  
->  	led = devm_kzalloc(&client->dev, sizeof(*led), GFP_KERNEL);
->  	if (!led)
->  		return -ENOMEM;
->  
-> -	for_each_available_child_of_node(np, child_node) {
-> -		led->led_dev.default_trigger = of_get_property(child_node,
-> -						    "linux,default-trigger",
-> -						    NULL);
-> -
-> -		ret = of_property_read_string(child_node, "label", &name);
-> -		if (!ret)
-> -			snprintf(led->label, sizeof(led->label), "%s:%s",
-> -				 id->name, name);
-> -		else
-> -			snprintf(led->label, sizeof(led->label),
-> -				"%s::display_cluster", id->name);
-> -	}
+> +       snprintf(buf, len + 1, "%s", name);
 
-We need to keep a loop here looking for additional nodes as this device has string support and just
-not cluster support.
+This can be simplified to:
 
-Just need to get the other LED patches done.
+snprintf(..., "%pOFn", to_of_node(fwnode))
 
-> +	child_node = of_get_next_available_child(np, NULL);
-> +	if (!child_node)
-> +		return -EINVAL;
-> +
-> +	init_data.fwnode = of_fwnode_handle(child_node),
-> +
-> +	led->led_dev.default_trigger = of_get_property(child_node,
-> +					    "linux,default-trigger",
-> +					    NULL);
-> +
-> +	ret = led_compose_name(init_data.fwnode, LP8860_NAME,
-> +			       ":display_cluster", init_data.name);
+But that presents a problem with knowing the length. Not passing in
+the buf length is not good design because you can't tell if you
+overflow the buffer. Either you can pass in the length of buf or do
+the allocation here. In the latter case, then you can use kasnprintf.
+The downside to doing the allocation here is then get_name() has side
+effect of allocating memory that the caller needs to be aware of.
 
-Should we use the #defines here for display_cluster?
+However, I think the current API is better. It leaves low-level
+details up to the firmware implementation. But as long as .get_name()
+is not exposed to drivers I don't really care that much.
 
-> +	if (ret)
-> +		return ret;
->  
->  	led->enable_gpio = devm_gpiod_get_optional(&client->dev,
->  						   "enable", GPIOD_OUT_LOW);
-> @@ -420,7 +420,6 @@ static int lp8860_probe(struct i2c_client *client,
->  		led->regulator = NULL;
->  
->  	led->client = client;
-> -	led->led_dev.name = led->label;
->  	led->led_dev.brightness_set_blocking = lp8860_brightness_set;
->  
->  	mutex_init(&led->lock);
-> @@ -447,7 +446,8 @@ static int lp8860_probe(struct i2c_client *client,
->  	if (ret)
->  		return ret;
->  
-> -	ret = devm_led_classdev_register(&client->dev, &led->led_dev);
-> +	ret = devm_led_classdev_register_ext(&client->dev, &led->led_dev,
-> +					     &init_data);
->  	if (ret) {
->  		dev_err(&client->dev, "led register err: %d\n", ret);
->  		return ret;
-> 
-
-
--- 
-------------------
-Dan Murphy
+Rob
