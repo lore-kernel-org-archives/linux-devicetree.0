@@ -1,48 +1,40 @@
-Return-Path: <SRS0=qRW3=N5=gmail.com=marek.vasut@kernel.org>
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: [PATCH] dt-bindings: can: rcar_can: document r8a77990 support
-Date: Sun, 18 Nov 2018 18:30:56 +0100
-Message-Id: <20181118173056.4591-1-marek.vasut+renesas@gmail.com>
-To: devicetree@vger.kernel.org
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>, Eugeniu Rosca <erosca@de.adit-jv.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh@kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=+5R6=NT=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 1/5] media: dt-bindings: media: rcar-csi2: Add r8a774a1
+ support
+Date: Thu, 8 Nov 2018 14:19:17 +0000
+Message-ID: 
+ <TY1PR01MB1770AA245E09DB056AA93848C0C50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1536589878-26218-1-git-send-email-biju.das@bp.renesas.com>
+ <1536589878-26218-2-git-send-email-biju.das@bp.renesas.com>
+ <TY1PR01MB17709220C776F7617FAF36AAC0C50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <20181108140852.2qngb3qlhpbpjs6e@verge.net.au>
+In-Reply-To: <20181108140852.2qngb3qlhpbpjs6e@verge.net.au>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+To: Simon Horman <horms@verge.net.au>
+Cc: Biju Das <biju.das@bp.renesas.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Niklas_S=F6derlund?= <niklas.soderlund@ragnatech.se>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document the support for rcar_can on R8A77990 SoC devices.
-Add R8A77990 to the list of SoCs which require the "assigned-clocks"
-and "assigned-clock-rates" properties.
+Thank you Simon for getting back to me.
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Simon Horman <horms+renesas@verge.net.au>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-renesas-soc@vger.kernel.org
----
- Documentation/devicetree/bindings/net/can/rcar_can.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Cheers,
+Fab
 
-diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-index 9936b9ee67c3..d962138d5b50 100644
---- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
-+++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-@@ -16,6 +16,7 @@ Required properties:
- 	      "renesas,can-r8a7795" if CAN controller is a part of R8A7795 SoC.
- 	      "renesas,can-r8a7796" if CAN controller is a part of R8A7796 SoC.
- 	      "renesas,can-r8a77965" if CAN controller is a part of R8A77965 SoC.
-+	      "renesas,can-r8a77990" if CAN controller is a part of R8A77990 SoC.
- 	      "renesas,rcar-gen1-can" for a generic R-Car Gen1 compatible device.
- 	      "renesas,rcar-gen2-can" for a generic R-Car Gen2 or RZ/G1
- 	      compatible device.
-@@ -37,7 +38,7 @@ Required properties:
- - pinctrl-0: pin control group to be used for this controller.
- - pinctrl-names: must be "default".
- 
--Required properties for R8A7795, R8A7796 and R8A77965:
-+Required properties for R8A7795, R8A7796, R8A77965 and R8A77990:
- For the denoted SoCs, "clkp2" can be CANFD clock. This is a div6 clock and can
- be used by both CAN and CAN FD controller at the same time. It needs to be
- scaled to maximum frequency if any of these controllers use it. This is done
--- 
-2.18.0
+> Subject: Re: [PATCH 1/5] media: dt-bindings: media: rcar-csi2: Add r8a774=
+a1 support
+>
+> On Thu, Nov 08, 2018 at 12:50:22PM +0000, Fabrizio Castro wrote:
+> > Dear All,
+> >
+> > Who is the best person to take this patch?
+>
+> I believe this patch is for Mauro.
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
