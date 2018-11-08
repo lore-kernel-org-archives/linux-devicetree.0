@@ -1,38 +1,70 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] arm64: dts: r8a77990: ebisu: Add serial console pins
-Date: Thu, 8 Nov 2018 13:01:08 +0100
-Message-ID: <CAMuHMdX19CmPCVpyhkq0Szjaj=Q24sT1BGT+_TtwUw2FvSAZsQ@mail.gmail.com>
-References: <20181105213859.11408-1-marek.vasut+renesas@gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] dmaengine: rcar-dmac: Document R8A774A1 bindings
+Date: Thu, 8 Nov 2018 13:23:29 +0100
+Message-ID: <20181108122329.pxxjrmaaxutxxel3@verge.net.au>
+References: <1534249935-15496-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <TY1PR01MB17708409052CFB9469856335C0C50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181105213859.11408-1-marek.vasut+renesas@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <TY1PR01MB17708409052CFB9469856335C0C50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 5, 2018 at 10:39 PM Marek Vasut <marek.vasut@gmail.com> wrote:
-> Subject: [PATCH] arm64: dts: r8a77990: ebisu: Add serial console pins
+Hi Fabrizio,
 
-arm64: dts: renesas: r8a77990: ebisu: Add serial console pins
+I believe this one is for Vinod.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+On Thu, Nov 08, 2018 at 11:03:53AM +0000, Fabrizio Castro wrote:
+> Dear All,
+> 
+> Who is the best person to take this patch?
+> 
+> Thanks,
+> Fab
+> 
+> > From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Sent: 14 August 2018 13:32
+> > Subject: [PATCH] dmaengine: rcar-dmac: Document R8A774A1 bindings
+> >
+> > Renesas' RZ/G2M (R8A774A1) SoC has DMA controllers compatible
+> > with this driver, therefore document RZ/G2M specific bindings.
+> >
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+> > b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+> > index 946229c..2de2eed 100644
+> > --- a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+> > +++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+> > @@ -1,6 +1,6 @@
+> >  * Renesas R-Car (RZ/G) DMA Controller Device Tree bindings
+> >
+> > -Renesas R-Car Generation 2 SoCs have multiple multi-channel DMA
+> > +Renesas R-Car (Gen 2/3) and RZ/G SoCs have multiple multi-channel DMA
+> >  controller instances named DMAC capable of serving multiple clients. Channels
+> >  can be dedicated to specific clients or shared between a large number of
+> >  clients.
+> > @@ -19,6 +19,7 @@ Required Properties:
+> >  - "renesas,dmac-r8a7743" (RZ/G1M)
+> >  - "renesas,dmac-r8a7745" (RZ/G1E)
+> >  - "renesas,dmac-r8a77470" (RZ/G1C)
+> > +- "renesas,dmac-r8a774a1" (RZ/G2M)
+> >  - "renesas,dmac-r8a7790" (R-Car H2)
+> >  - "renesas,dmac-r8a7791" (R-Car M2-W)
+> >  - "renesas,dmac-r8a7792" (R-Car V2H)
+> > --
+> > 2.7.4
+> 
+> 
+> 
+> 
+> Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered No. 04586709.
+> 
