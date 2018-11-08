@@ -1,1189 +1,376 @@
-From: Auger Eric <eric.auger@redhat.com>
-Subject: Re: [PATCH v3 5/7] iommu: Add virtio-iommu driver
-Date: Thu, 8 Nov 2018 15:51:05 +0100
-Message-ID: <60605670-0419-3f64-a379-9c4057d90db1@redhat.com>
-References: <20181012145917.6840-1-jean-philippe.brucker@arm.com>
- <20181012145917.6840-6-jean-philippe.brucker@arm.com>
- <20181012120953-mutt-send-email-mst@kernel.org>
+From: Nick Kossifidis <mick@ics.forth.gr>
+Subject: Re: [RFC 0/2] Add RISC-V cpu topology
+Date: Thu, 08 Nov 2018 16:52:30 +0200
+Message-ID: <d04779705c47b59b94300365e805dbd3@mailhost.ics.forth.gr>
+References: <1541113468-22097-1-git-send-email-atish.patra@wdc.com>
+ <866dedbc78ab4fa0e3b040697e112106@mailhost.ics.forth.gr>
+ <20181106141331.GA28458@e107155-lin>
+ <969fc2a5198984e0dfe8c3f585dc65f9@mailhost.ics.forth.gr>
+ <20181106162051.w7fyweuxrl7ujzuz@lakrids.cambridge.arm.com>
+ <abcae019e6ae749b17ecb0c721fd3177@mailhost.ics.forth.gr>
+ <20181107122803.GA8433@e107155-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
-In-Reply-To: <20181012120953-mutt-send-email-mst@kernel.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
-List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
-List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
-List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
-List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
-Errors-To: kvmarm-bounces@lists.cs.columbia.edu
-Sender: kvmarm-bounces@lists.cs.columbia.edu
-To: "Michael S. Tsirkin" <mst@redhat.com>, Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: kevin.tian@intel.com, lorenzo.pieralisi@arm.com, tnowicki@caviumnetworks.com, devicetree@vger.kernel.org, jasowang@redhat.com, linux-pci@vger.kernel.org, joro@8bytes.org, will.deacon@arm.com, virtualization@lists.linux-foundation.org, marc.zyngier@arm.com, iommu@lists.linux-foundation.org, robh+dt@kernel.org, robin.murphy@arm.com, kvmarm@lists.cs.columbia.edu
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181107122803.GA8433@e107155-lin>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Nick Kossifidis <mick@ics.forth.gr>, Mark Rutland <mark.rutland@arm.com>, Atish Patra <atish.patra@wdc.com>, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, Damien.LeMoal@wdc.com, alankao@andestech.com, zong@andestech.com, anup@brainfault.org, palmer@sifive.com, linux-kernel@vger.kernel.org, hch@infradead.org, robh+dt@kernel.org, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean-Philippe,
+Στις 2018-11-07 14:28, Sudeep Holla έγραψε:
+> On Wed, Nov 07, 2018 at 04:31:34AM +0200, Nick Kossifidis wrote:
+> [...]
+> 
+>> 
+>> Mark and Sudeep thanks a lot for your feedback, I guess you convinced 
+>> me
+>> that having a device tree binding for the scheduler is not a correct
+>> approach.
+>> 
+> 
+> Thanks :)
+> 
+>> It's not a device after all and I agree that the device tree shouldn't
+>> become an OS configuration file. Regarding multiple levels of shared
+>> resources my point is that since cpu-map doesn't contain any 
+>> information of
+>> what is shared among the cluster/core members it's not easy to do any
+>> further translation. Last time I checked the arm code that uses 
+>> cpu-map, it
+>> only defines one domain for SMT, one for MC and then everything else 
+>> is
+>> ignored. No matter how many clusters have been defined, anything above 
+>> the
+>> core level is the same (and then I guess you started talking about 
+>> adding
+>> "packages" on the representation side).
+>> 
+> 
+> Correct.
+> 
+>> The reason I proposed to have a binding for the scheduler directly is 
+>> not
+>> only because it's simpler and closer to what really happens in the 
+>> code, it
+>> also makes more sense to me than the combination of cpu-map with all 
+>> the
+>> related mappings e.g. for numa or caches or power domains etc.
+>> 
+> 
+> Again you are just looking at it with Linux kernel perspective.
+> 
+>> However you are right we could definitely augment cpu-map to include 
+>> support
+>> for what I'm saying and clean things up, and since you are open about
+>> improving it here is a proposal that I hope you find interesting: At 
+>> first
+>> let's get rid of the <thread> nodes, they don't make sense:
+>> 
+>> thread0 {
+>>  cpu = <&CPU0>;
+>> };
+>> 
+> 
+> Do you have any strong reasons to do so ?
+> Since it's already there for some time, I believe we can't remove it 
+> for
+> backward compatibility reasons.
+> 
+>> A thread node can't have more than one cpu entry and any properties
+>> should be on the cpu node itself, so it doesn't / can't add any
+>> more information. We could just have an array of cpu nodes on the
+>> <core> node, it's much cleaner this way.
+>> 
+>> core0 {
+>>  members = <&CPU0>, <&CPU1>;
+>> };
+>> 
+> 
+> I agree, but we have kernel code using it(arm64/kernel/topology.c). 
+> It's
+> too late to remove it. But we can always keep to optional if we move 
+> the
+> ARM64 binding as generic to start with and mandate it for only ARM64.
+> 
 
-On 10/12/18 6:35 PM, Michael S. Tsirkin wrote:
-> On Fri, Oct 12, 2018 at 03:59:15PM +0100, Jean-Philippe Brucker wrote:
->> The virtio IOMMU is a para-virtualized device, allowing to send IOMMU
->> requests such as map/unmap over virtio transport without emulating page
->> tables. This implementation handles ATTACH, DETACH, MAP and UNMAP
->> requests.
->>
->> The bulk of the code transforms calls coming from the IOMMU API into
->> corresponding virtio requests. Mappings are kept in an interval tree
->> instead of page tables.
->>
->> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
->> ---
->>  MAINTAINERS                       |   7 +
->>  drivers/iommu/Kconfig             |  11 +
->>  drivers/iommu/Makefile            |   1 +
->>  drivers/iommu/virtio-iommu.c      | 938 ++++++++++++++++++++++++++++++
->>  include/uapi/linux/virtio_ids.h   |   1 +
->>  include/uapi/linux/virtio_iommu.h | 101 ++++
->>  6 files changed, 1059 insertions(+)
->>  create mode 100644 drivers/iommu/virtio-iommu.c
->>  create mode 100644 include/uapi/linux/virtio_iommu.h
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 48a65c3a4189..f02fa65f47e2 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -15599,6 +15599,13 @@ S:	Maintained
->>  F:	drivers/virtio/virtio_input.c
->>  F:	include/uapi/linux/virtio_input.h
->>  
->> +VIRTIO IOMMU DRIVER
->> +M:	Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
->> +L:	virtualization@lists.linux-foundation.org
->> +S:	Maintained
->> +F:	drivers/iommu/virtio-iommu.c
->> +F:	include/uapi/linux/virtio_iommu.h
->> +
->>  VIRTUAL BOX GUEST DEVICE DRIVER
->>  M:	Hans de Goede <hdegoede@redhat.com>
->>  M:	Arnd Bergmann <arnd@arndb.de>
->> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
->> index c60395b7470f..2dc016dc2b92 100644
->> --- a/drivers/iommu/Kconfig
->> +++ b/drivers/iommu/Kconfig
->> @@ -414,4 +414,15 @@ config QCOM_IOMMU
->>  	help
->>  	  Support for IOMMU on certain Qualcomm SoCs.
->>  
->> +config VIRTIO_IOMMU
->> +	bool "Virtio IOMMU driver"
->> +	depends on VIRTIO=y
->> +	select IOMMU_API
->> +	select INTERVAL_TREE
->> +	select ARM_DMA_USE_IOMMU if ARM
->> +	help
->> +	  Para-virtualised IOMMU driver with virtio.
->> +
->> +	  Say Y here if you intend to run this kernel as a guest.
->> +
->>  endif # IOMMU_SUPPORT
->> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
->> index ab5eba6edf82..4cd643408e49 100644
->> --- a/drivers/iommu/Makefile
->> +++ b/drivers/iommu/Makefile
->> @@ -31,3 +31,4 @@ obj-$(CONFIG_EXYNOS_IOMMU) += exynos-iommu.o
->>  obj-$(CONFIG_FSL_PAMU) += fsl_pamu.o fsl_pamu_domain.o
->>  obj-$(CONFIG_S390_IOMMU) += s390-iommu.o
->>  obj-$(CONFIG_QCOM_IOMMU) += qcom_iommu.o
->> +obj-$(CONFIG_VIRTIO_IOMMU) += virtio-iommu.o
->> diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
->> new file mode 100644
->> index 000000000000..9fb38cd3b727
->> --- /dev/null
->> +++ b/drivers/iommu/virtio-iommu.c
->> @@ -0,0 +1,938 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Virtio driver for the paravirtualized IOMMU
->> + *
->> + * Copyright (C) 2018 Arm Limited
->> + */
->> +
->> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->> +
->> +#include <linux/amba/bus.h>
->> +#include <linux/delay.h>
->> +#include <linux/dma-iommu.h>
->> +#include <linux/freezer.h>
->> +#include <linux/interval_tree.h>
->> +#include <linux/iommu.h>
->> +#include <linux/module.h>
->> +#include <linux/of_iommu.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/pci.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/virtio.h>
->> +#include <linux/virtio_config.h>
->> +#include <linux/virtio_ids.h>
->> +#include <linux/wait.h>
->> +
->> +#include <uapi/linux/virtio_iommu.h>
->> +
->> +#define MSI_IOVA_BASE			0x8000000
->> +#define MSI_IOVA_LENGTH			0x100000
->> +
->> +#define VIOMMU_REQUEST_VQ		0
->> +#define VIOMMU_NR_VQS			1
->> +
->> +/*
->> + * During development, it is convenient to time out rather than wait
->> + * indefinitely in atomic context when a device misbehaves and a request doesn't
->> + * return. In production however, some requests shouldn't return until they are
->> + * successful.
->> + */
->> +#ifdef DEBUG
->> +#define VIOMMU_REQUEST_TIMEOUT		10000 /* 10s */
->> +#endif
->> +
->> +struct viommu_dev {
->> +	struct iommu_device		iommu;
->> +	struct device			*dev;
->> +	struct virtio_device		*vdev;
->> +
->> +	struct ida			domain_ids;
->> +
->> +	struct virtqueue		*vqs[VIOMMU_NR_VQS];
->> +	spinlock_t			request_lock;
->> +	struct list_head		requests;
->> +
->> +	/* Device configuration */
->> +	struct iommu_domain_geometry	geometry;
->> +	u64				pgsize_bitmap;
->> +	u8				domain_bits;
->> +};
->> +
->> +struct viommu_mapping {
->> +	phys_addr_t			paddr;
->> +	struct interval_tree_node	iova;
->> +	u32				flags;
->> +};
->> +
->> +struct viommu_domain {
->> +	struct iommu_domain		domain;
->> +	struct viommu_dev		*viommu;
->> +	struct mutex			mutex;
->> +	unsigned int			id;
->> +
->> +	spinlock_t			mappings_lock;
->> +	struct rb_root_cached		mappings;
->> +
->> +	unsigned long			nr_endpoints;
->> +};
->> +
->> +struct viommu_endpoint {
->> +	struct viommu_dev		*viommu;
->> +	struct viommu_domain		*vdomain;
->> +};
->> +
->> +struct viommu_request {
->> +	struct list_head		list;
->> +	void				*writeback;
->> +	unsigned int			write_offset;
->> +	unsigned int			len;
->> +	char				buf[];
->> +};
->> +
->> +#define to_viommu_domain(domain)	\
->> +	container_of(domain, struct viommu_domain, domain)
->> +
->> +static int viommu_get_req_errno(void *buf, size_t len)
->> +{
->> +	struct virtio_iommu_req_tail *tail = buf + len - sizeof(*tail);
->> +
->> +	switch (tail->status) {
->> +	case VIRTIO_IOMMU_S_OK:
->> +		return 0;
->> +	case VIRTIO_IOMMU_S_UNSUPP:
->> +		return -ENOSYS;
->> +	case VIRTIO_IOMMU_S_INVAL:
->> +		return -EINVAL;
->> +	case VIRTIO_IOMMU_S_RANGE:
->> +		return -ERANGE;
->> +	case VIRTIO_IOMMU_S_NOENT:
->> +		return -ENOENT;
->> +	case VIRTIO_IOMMU_S_FAULT:
->> +		return -EFAULT;
->> +	case VIRTIO_IOMMU_S_IOERR:
->> +	case VIRTIO_IOMMU_S_DEVERR:
->> +	default:
->> +		return -EIO;
->> +	}
->> +}
->> +
->> +static void viommu_set_req_status(void *buf, size_t len, int status)
->> +{
->> +	struct virtio_iommu_req_tail *tail = buf + len - sizeof(*tail);
->> +
->> +	tail->status = status;
->> +}
->> +
->> +static off_t viommu_get_req_offset(struct viommu_dev *viommu,
->> +				   struct virtio_iommu_req_head *req,
->> +				   size_t len)
->> +{
->> +	size_t tail_size = sizeof(struct virtio_iommu_req_tail);
->> +
->> +	return len - tail_size;
->> +}
->> +
->> +/*
->> + * __viommu_sync_req - Complete all in-flight requests
->> + *
->> + * Wait for all added requests to complete. When this function returns, all
->> + * requests that were in-flight at the time of the call have completed.
->> + */
->> +static int __viommu_sync_req(struct viommu_dev *viommu)
->> +{
->> +	int ret = 0;
->> +	unsigned int len;
->> +	size_t write_len;
->> +	ktime_t timeout = 0;
->> +	struct viommu_request *req;
->> +	struct virtqueue *vq = viommu->vqs[VIOMMU_REQUEST_VQ];
->> +
->> +	assert_spin_locked(&viommu->request_lock);
->> +#ifdef DEBUG
->> +	timeout = ktime_add_ms(ktime_get(), VIOMMU_REQUEST_TIMEOUT);
->> +#endif
->> +	virtqueue_kick(vq);
->> +
->> +	while (!list_empty(&viommu->requests)) {
->> +		len = 0;
->> +		req = virtqueue_get_buf(vq, &len);
->> +		if (req == NULL) {
->> +			if (!timeout || ktime_before(ktime_get(), timeout))
->> +				continue;
->> +
->> +			/* After timeout, remove all requests */
->> +			req = list_first_entry(&viommu->requests,
->> +					       struct viommu_request, list);
->> +			ret = -ETIMEDOUT;
->> +		}
->> +
->> +		if (!len)
->> +			viommu_set_req_status(req->buf, req->len,
->> +					      VIRTIO_IOMMU_S_IOERR);
->> +
->> +		write_len = req->len - req->write_offset;
->> +		if (req->writeback && len >= write_len)
->> +			memcpy(req->writeback, req->buf + req->write_offset,
->> +			       write_len);
->> +
->> +		list_del(&req->list);
->> +		kfree(req);
-> 
-> So with DEBUG set, this will actually free memory that device still
-> DMA's into. Hardly pretty. I think you want to mark device broken,
-> queue the request and then wait for device to be reset.
-> 
-> 
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +static int viommu_sync_req(struct viommu_dev *viommu)
->> +{
->> +	int ret;
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&viommu->request_lock, flags);
->> +	ret = __viommu_sync_req(viommu);
->> +	if (ret)
->> +		dev_dbg(viommu->dev, "could not sync requests (%d)\n", ret);
->> +	spin_unlock_irqrestore(&viommu->request_lock, flags);
->> +
->> +	return ret;
->> +}
->> +
->> +/*
->> + * __viommu_add_request - Add one request to the queue
->> + * @buf: pointer to the request buffer
->> + * @len: length of the request buffer
->> + * @writeback: copy data back to the buffer when the request completes.
->> + *
->> + * Add a request to the queue. Only synchronize the queue if it's already full.
->> + * Otherwise don't kick the queue nor wait for requests to complete.
->> + *
->> + * When @writeback is true, data written by the device, including the request
->> + * status, is copied into @buf after the request completes. This is unsafe if
->> + * the caller allocates @buf on stack and drops the lock between add_req() and
->> + * sync_req().
->> + *
->> + * Return 0 if the request was successfully added to the queue.
->> + */
->> +static int __viommu_add_req(struct viommu_dev *viommu, void *buf, size_t len,
->> +			    bool writeback)
->> +{
->> +	int ret;
->> +	off_t write_offset;
->> +	struct viommu_request *req;
->> +	struct scatterlist top_sg, bottom_sg;
->> +	struct scatterlist *sg[2] = { &top_sg, &bottom_sg };
->> +	struct virtqueue *vq = viommu->vqs[VIOMMU_REQUEST_VQ];
->> +
->> +	assert_spin_locked(&viommu->request_lock);
->> +
->> +	write_offset = viommu_get_req_offset(viommu, buf, len);
->> +	if (!write_offset)
->> +		return -EINVAL;
->> +
->> +	req = kzalloc(sizeof(*req) + len, GFP_ATOMIC);
->> +	if (!req)
->> +		return -ENOMEM;
->> +
->> +	req->len = len;
->> +	if (writeback) {
->> +		req->writeback = buf + write_offset;
->> +		req->write_offset = write_offset;
->> +	}
->> +	memcpy(&req->buf, buf, write_offset);
->> +
->> +	sg_init_one(&top_sg, req->buf, write_offset);
->> +	sg_init_one(&bottom_sg, req->buf + write_offset, len - write_offset);
->> +
->> +	ret = virtqueue_add_sgs(vq, sg, 1, 1, req, GFP_ATOMIC);
->> +	if (ret == -ENOSPC) {
->> +		/* If the queue is full, sync and retry */
->> +		if (!__viommu_sync_req(viommu))
->> +			ret = virtqueue_add_sgs(vq, sg, 1, 1, req, GFP_ATOMIC);
->> +	}
->> +	if (ret)
->> +		goto err_free;
->> +
->> +	list_add_tail(&req->list, &viommu->requests);
->> +	return 0;
->> +
->> +err_free:
->> +	kfree(req);
->> +	return ret;
->> +}
->> +
->> +static int viommu_add_req(struct viommu_dev *viommu, void *buf, size_t len)
->> +{
->> +	int ret;
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&viommu->request_lock, flags);
->> +	ret = __viommu_add_req(viommu, buf, len, false);
->> +	if (ret)
->> +		dev_dbg(viommu->dev, "could not add request: %d\n", ret);
->> +	spin_unlock_irqrestore(&viommu->request_lock, flags);
->> +
->> +	return ret;
->> +}
->> +
->> +/*
->> + * Send a request and wait for it to complete. Return the request status (as an
->> + * errno)
->> + */
->> +static int viommu_send_req_sync(struct viommu_dev *viommu, void *buf,
->> +				size_t len)
->> +{
->> +	int ret;
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&viommu->request_lock, flags);
->> +
->> +	ret = __viommu_add_req(viommu, buf, len, true);
->> +	if (ret) {
->> +		dev_dbg(viommu->dev, "could not add request (%d)\n", ret);
->> +		goto out_unlock;
->> +	}
->> +
->> +	ret = __viommu_sync_req(viommu);
->> +	if (ret) {
->> +		dev_dbg(viommu->dev, "could not sync requests (%d)\n", ret);
->> +		/* Fall-through (get the actual request status) */
->> +	}
->> +
->> +	ret = viommu_get_req_errno(buf, len);
->> +out_unlock:
->> +	spin_unlock_irqrestore(&viommu->request_lock, flags);
->> +	return ret;
->> +}
->> +
->> +/*
->> + * viommu_add_mapping - add a mapping to the internal tree
->> + *
->> + * On success, return the new mapping. Otherwise return NULL.
->> + */
->> +static struct viommu_mapping *
->> +viommu_add_mapping(struct viommu_domain *vdomain, unsigned long iova,
->> +		   phys_addr_t paddr, size_t size, u32 flags)
->> +{
->> +	unsigned long irqflags;
->> +	struct viommu_mapping *mapping;
->> +
->> +	mapping = kzalloc(sizeof(*mapping), GFP_ATOMIC);
->> +	if (!mapping)
->> +		return NULL;
->> +
->> +	mapping->paddr		= paddr;
->> +	mapping->iova.start	= iova;
->> +	mapping->iova.last	= iova + size - 1;
->> +	mapping->flags		= flags;
->> +
->> +	spin_lock_irqsave(&vdomain->mappings_lock, irqflags);
->> +	interval_tree_insert(&mapping->iova, &vdomain->mappings);
->> +	spin_unlock_irqrestore(&vdomain->mappings_lock, irqflags);
->> +
->> +	return mapping;
->> +}
->> +
->> +/*
->> + * viommu_del_mappings - remove mappings from the internal tree
->> + *
->> + * @vdomain: the domain
->> + * @iova: start of the range
->> + * @size: size of the range. A size of 0 corresponds to the entire address
->> + *	space.
->> + *
->> + * On success, returns the number of unmapped bytes (>= size)
->> + */
->> +static size_t viommu_del_mappings(struct viommu_domain *vdomain,
->> +				  unsigned long iova, size_t size)
->> +{
->> +	size_t unmapped = 0;
->> +	unsigned long flags;
->> +	unsigned long last = iova + size - 1;
->> +	struct viommu_mapping *mapping = NULL;
->> +	struct interval_tree_node *node, *next;
->> +
->> +	spin_lock_irqsave(&vdomain->mappings_lock, flags);
->> +	next = interval_tree_iter_first(&vdomain->mappings, iova, last);
->> +	while (next) {
->> +		node = next;
->> +		mapping = container_of(node, struct viommu_mapping, iova);
->> +		next = interval_tree_iter_next(node, iova, last);
->> +
->> +		/* Trying to split a mapping? */
->> +		if (mapping->iova.start < iova)
->> +			break;
->> +
->> +		/*
->> +		 * Note that for a partial range, this will return the full
->> +		 * mapping so we avoid sending split requests to the device.
->> +		 */
->> +		unmapped += mapping->iova.last - mapping->iova.start + 1;
->> +
->> +		interval_tree_remove(node, &vdomain->mappings);
->> +		kfree(mapping);
->> +	}
->> +	spin_unlock_irqrestore(&vdomain->mappings_lock, flags);
->> +
->> +	return unmapped;
->> +}
->> +
->> +/*
->> + * viommu_replay_mappings - re-send MAP requests
->> + *
->> + * When reattaching a domain that was previously detached from all endpoints,
->> + * mappings were deleted from the device. Re-create the mappings available in
->> + * the internal tree.
->> + */
->> +static int viommu_replay_mappings(struct viommu_domain *vdomain)
->> +{
->> +	int ret;
-ret needs to be initialized here. Otherwise this can lead to a crash in
-viommu_add_device.
+That's my point as well, if we are going to define something to be used
+by everybody and in this case, at least for RISC-V, there is no need to
+carry this from the ARM64 binding. It shouldn't be that hard to fix this
+in the future for ARM64 as well, we may give the new mapping another 
+name,
+maybe cpu-map2 or cpu-topology to slowly move to the new one. Changing 
+the
+dts files shouldn't be this hard, we can provide a script for it. We can
+even contain some compatibility code that also understands <thread> 
+nodes
+and e.g. merges them together on a core node.
 
-Thanks
+>> Then let's allow the cluster and core nodes to accept attributes that 
+>> are
+>> common for the cpus they contain. Right now this is considered 
+>> invalid.
+>> 
+> 
+> Yes, we have discussed in the past and decided not to. I am fine if we
+> need to change it, but assuming the topology implies other information
+> could be wrong. On ARM platforms we have learnt it, so we kept any
+> information away from topology. I assume same with RISC-V, different
+> vendors implement in different ways, so it's better to consider those
+> factors.
+> 
+>> For power domains we have a generic binding described on
+>> Documentation/devicetree/bindings/power/power_domain.txt
+>> which basically says that we need to put power-domains = <power domain
+>> specifiers> attribute on each of the cpu nodes.
+>> 
+> 
+> OK, but what's wrong with that. I gives full flexibility.
+> 
+>> The same happens with the capacity binding specified for arm on
+>> Documentation/devicetree/bindings/arm/cpu-capacity.txt
+>> which says we should add the capacity-dmips-mhz on each of the cpu 
+>> nodes.
+>> 
+> 
+> Ditto, we may need this for our single cluster DSU systems.
+> 
+>> The same also happens with the generic numa binding on
+>> Documentation/devicetree/bindings/numa.txt
+>> which says we should add the nuna-node-id on each of the cpu nodes.
+>> 
+> 
+> Yes, but again what's the problem ?
+> 
 
-Eric
->> +	unsigned long flags;
->> +	struct viommu_mapping *mapping;
->> +	struct interval_tree_node *node;
->> +	struct virtio_iommu_req_map map;
->> +
->> +	spin_lock_irqsave(&vdomain->mappings_lock, flags);
->> +	node = interval_tree_iter_first(&vdomain->mappings, 0, -1UL);
->> +	while (node) {
->> +		mapping = container_of(node, struct viommu_mapping, iova);
->> +		map = (struct virtio_iommu_req_map) {
->> +			.head.type	= VIRTIO_IOMMU_T_MAP,
->> +			.domain		= cpu_to_le32(vdomain->id),
->> +			.virt_start	= cpu_to_le64(mapping->iova.start),
->> +			.virt_end	= cpu_to_le64(mapping->iova.last),
->> +			.phys_start	= cpu_to_le64(mapping->paddr),
->> +			.flags		= cpu_to_le32(mapping->flags),
->> +		};
->> +
->> +		ret = viommu_send_req_sync(vdomain->viommu, &map, sizeof(map));
->> +		if (ret)
->> +			break;
->> +
->> +		node = interval_tree_iter_next(node, 0, -1UL);
->> +	}
->> +	spin_unlock_irqrestore(&vdomain->mappings_lock, flags);
->> +
->> +	return ret;
->> +}
->> +
->> +/* IOMMU API */
->> +
->> +static struct iommu_domain *viommu_domain_alloc(unsigned type)
->> +{
->> +	struct viommu_domain *vdomain;
->> +
->> +	if (type != IOMMU_DOMAIN_UNMANAGED && type != IOMMU_DOMAIN_DMA)
->> +		return NULL;
->> +
->> +	vdomain = kzalloc(sizeof(*vdomain), GFP_KERNEL);
->> +	if (!vdomain)
->> +		return NULL;
->> +
->> +	mutex_init(&vdomain->mutex);
->> +	spin_lock_init(&vdomain->mappings_lock);
->> +	vdomain->mappings = RB_ROOT_CACHED;
->> +
->> +	if (type == IOMMU_DOMAIN_DMA &&
->> +	    iommu_get_dma_cookie(&vdomain->domain)) {
->> +		kfree(vdomain);
->> +		return NULL;
->> +	}
->> +
->> +	return &vdomain->domain;
->> +}
->> +
->> +static int viommu_domain_finalise(struct viommu_dev *viommu,
->> +				  struct iommu_domain *domain)
->> +{
->> +	int ret;
->> +	struct viommu_domain *vdomain = to_viommu_domain(domain);
->> +	unsigned int max_domain = viommu->domain_bits > 31 ? ~0 :
->> +				  (1U << viommu->domain_bits) - 1;
->> +
->> +	vdomain->viommu		= viommu;
->> +
->> +	domain->pgsize_bitmap	= viommu->pgsize_bitmap;
->> +	domain->geometry	= viommu->geometry;
->> +
->> +	ret = ida_alloc_max(&viommu->domain_ids, max_domain, GFP_KERNEL);
->> +	if (ret >= 0)
->> +		vdomain->id = (unsigned int)ret;
->> +
->> +	return ret > 0 ? 0 : ret;
->> +}
->> +
->> +static void viommu_domain_free(struct iommu_domain *domain)
->> +{
->> +	struct viommu_domain *vdomain = to_viommu_domain(domain);
->> +
->> +	iommu_put_dma_cookie(domain);
->> +
->> +	/* Free all remaining mappings (size 2^64) */
->> +	viommu_del_mappings(vdomain, 0, 0);
->> +
->> +	if (vdomain->viommu)
->> +		ida_free(&vdomain->viommu->domain_ids, vdomain->id);
->> +
->> +	kfree(vdomain);
->> +}
->> +
->> +static int viommu_attach_dev(struct iommu_domain *domain, struct device *dev)
->> +{
->> +	int i;
->> +	int ret = 0;
->> +	struct virtio_iommu_req_attach req;
->> +	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
->> +	struct viommu_endpoint *vdev = fwspec->iommu_priv;
->> +	struct viommu_domain *vdomain = to_viommu_domain(domain);
->> +
->> +	mutex_lock(&vdomain->mutex);
->> +	if (!vdomain->viommu) {
->> +		/*
->> +		 * Initialize the domain proper now that we know which viommu
->> +		 * owns it.
->> +		 */
->> +		ret = viommu_domain_finalise(vdev->viommu, domain);
->> +	} else if (vdomain->viommu != vdev->viommu) {
->> +		dev_err(dev, "cannot attach to foreign vIOMMU\n");
->> +		ret = -EXDEV;
->> +	}
->> +	mutex_unlock(&vdomain->mutex);
->> +
->> +	if (ret)
->> +		return ret;
->> +
->> +	/*
->> +	 * In the virtio-iommu device, when attaching the endpoint to a new
->> +	 * domain, it is detached from the old one and, if as as a result the
->> +	 * old domain isn't attached to any endpoint, all mappings are removed
->> +	 * from the old domain and it is freed.
->> +	 *
->> +	 * In the driver the old domain still exists, and its mappings will be
->> +	 * recreated if it gets reattached to an endpoint. Otherwise it will be
->> +	 * freed explicitly.
->> +	 *
->> +	 * vdev->vdomain is protected by group->mutex
->> +	 */
->> +	if (vdev->vdomain)
->> +		vdev->vdomain->nr_endpoints--;
->> +
->> +	req = (struct virtio_iommu_req_attach) {
->> +		.head.type	= VIRTIO_IOMMU_T_ATTACH,
->> +		.domain		= cpu_to_le32(vdomain->id),
->> +	};
->> +
->> +	for (i = 0; i < fwspec->num_ids; i++) {
->> +		req.endpoint = cpu_to_le32(fwspec->ids[i]);
->> +
->> +		ret = viommu_send_req_sync(vdomain->viommu, &req, sizeof(req));
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
->> +	if (!vdomain->nr_endpoints) {
->> +		/*
->> +		 * This endpoint is the first to be attached to the domain.
->> +		 * Replay existing mappings (e.g. SW MSI).
->> +		 */
->> +		ret = viommu_replay_mappings(vdomain);
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
->> +	vdomain->nr_endpoints++;
->> +	vdev->vdomain = vdomain;
->> +
->> +	return 0;
->> +}
->> +
->> +static int viommu_map(struct iommu_domain *domain, unsigned long iova,
->> +		      phys_addr_t paddr, size_t size, int prot)
->> +{
->> +	int ret;
->> +	int flags;
->> +	struct viommu_mapping *mapping;
->> +	struct virtio_iommu_req_map map;
->> +	struct viommu_domain *vdomain = to_viommu_domain(domain);
->> +
->> +	flags = (prot & IOMMU_READ ? VIRTIO_IOMMU_MAP_F_READ : 0) |
->> +		(prot & IOMMU_WRITE ? VIRTIO_IOMMU_MAP_F_WRITE : 0) |
->> +		(prot & IOMMU_MMIO ? VIRTIO_IOMMU_MAP_F_MMIO : 0);
->> +
->> +	mapping = viommu_add_mapping(vdomain, iova, paddr, size, flags);
->> +	if (!mapping)
->> +		return -ENOMEM;
->> +
->> +	map = (struct virtio_iommu_req_map) {
->> +		.head.type	= VIRTIO_IOMMU_T_MAP,
->> +		.domain		= cpu_to_le32(vdomain->id),
->> +		.virt_start	= cpu_to_le64(iova),
->> +		.phys_start	= cpu_to_le64(paddr),
->> +		.virt_end	= cpu_to_le64(iova + size - 1),
->> +		.flags		= cpu_to_le32(flags),
->> +	};
->> +
->> +	if (!vdomain->nr_endpoints)
->> +		return 0;
->> +
->> +	ret = viommu_send_req_sync(vdomain->viommu, &map, sizeof(map));
->> +	if (ret)
->> +		viommu_del_mappings(vdomain, iova, size);
->> +
->> +	return ret;
->> +}
->> +
->> +static size_t viommu_unmap(struct iommu_domain *domain, unsigned long iova,
->> +			   size_t size)
->> +{
->> +	int ret = 0;
->> +	size_t unmapped;
->> +	struct virtio_iommu_req_unmap unmap;
->> +	struct viommu_domain *vdomain = to_viommu_domain(domain);
->> +
->> +	unmapped = viommu_del_mappings(vdomain, iova, size);
->> +	if (unmapped < size)
->> +		return 0;
->> +
->> +	/* Device already removed all mappings after detach. */
->> +	if (!vdomain->nr_endpoints)
->> +		return unmapped;
->> +
->> +	unmap = (struct virtio_iommu_req_unmap) {
->> +		.head.type	= VIRTIO_IOMMU_T_UNMAP,
->> +		.domain		= cpu_to_le32(vdomain->id),
->> +		.virt_start	= cpu_to_le64(iova),
->> +		.virt_end	= cpu_to_le64(iova + unmapped - 1),
->> +	};
->> +
->> +	ret = viommu_add_req(vdomain->viommu, &unmap, sizeof(unmap));
->> +	return ret ? 0 : unmapped;
->> +}
->> +
->> +static phys_addr_t viommu_iova_to_phys(struct iommu_domain *domain,
->> +				       dma_addr_t iova)
->> +{
->> +	u64 paddr = 0;
->> +	unsigned long flags;
->> +	struct viommu_mapping *mapping;
->> +	struct interval_tree_node *node;
->> +	struct viommu_domain *vdomain = to_viommu_domain(domain);
->> +
->> +	spin_lock_irqsave(&vdomain->mappings_lock, flags);
->> +	node = interval_tree_iter_first(&vdomain->mappings, iova, iova);
->> +	if (node) {
->> +		mapping = container_of(node, struct viommu_mapping, iova);
->> +		paddr = mapping->paddr + (iova - mapping->iova.start);
->> +	}
->> +	spin_unlock_irqrestore(&vdomain->mappings_lock, flags);
->> +
->> +	return paddr;
->> +}
->> +
->> +static void viommu_iotlb_sync(struct iommu_domain *domain)
->> +{
->> +	struct viommu_domain *vdomain = to_viommu_domain(domain);
->> +
->> +	viommu_sync_req(vdomain->viommu);
->> +}
->> +
->> +static void viommu_get_resv_regions(struct device *dev, struct list_head *head)
->> +{
->> +	struct iommu_resv_region *region;
->> +	int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
->> +
->> +	region = iommu_alloc_resv_region(MSI_IOVA_BASE, MSI_IOVA_LENGTH, prot,
->> +					 IOMMU_RESV_SW_MSI);
->> +	if (!region)
->> +		return;
->> +
->> +	list_add_tail(&region->list, head);
->> +	iommu_dma_get_resv_regions(dev, head);
->> +}
->> +
->> +static void viommu_put_resv_regions(struct device *dev, struct list_head *head)
->> +{
->> +	struct iommu_resv_region *entry, *next;
->> +
->> +	list_for_each_entry_safe(entry, next, head, list)
->> +		kfree(entry);
->> +}
->> +
->> +static struct iommu_ops viommu_ops;
->> +static struct virtio_driver virtio_iommu_drv;
->> +
->> +static int viommu_match_node(struct device *dev, void *data)
->> +{
->> +	return dev->parent->fwnode == data;
->> +}
->> +
->> +static struct viommu_dev *viommu_get_by_fwnode(struct fwnode_handle *fwnode)
->> +{
->> +	struct device *dev = driver_find_device(&virtio_iommu_drv.driver, NULL,
->> +						fwnode, viommu_match_node);
->> +	put_device(dev);
->> +
->> +	return dev ? dev_to_virtio(dev)->priv : NULL;
->> +}
->> +
->> +static int viommu_add_device(struct device *dev)
->> +{
->> +	int ret;
->> +	struct iommu_group *group;
->> +	struct viommu_endpoint *vdev;
->> +	struct viommu_dev *viommu = NULL;
->> +	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
->> +
->> +	if (!fwspec || fwspec->ops != &viommu_ops)
->> +		return -ENODEV;
->> +
->> +	viommu = viommu_get_by_fwnode(fwspec->iommu_fwnode);
->> +	if (!viommu)
->> +		return -ENODEV;
->> +
->> +	vdev = kzalloc(sizeof(*vdev), GFP_KERNEL);
->> +	if (!vdev)
->> +		return -ENOMEM;
->> +
->> +	vdev->viommu = viommu;
->> +	fwspec->iommu_priv = vdev;
->> +
->> +	ret = iommu_device_link(&viommu->iommu, dev);
->> +	if (ret)
->> +		goto err_free_dev;
->> +
->> +	/*
->> +	 * Last step creates a default domain and attaches to it. Everything
->> +	 * must be ready.
->> +	 */
->> +	group = iommu_group_get_for_dev(dev);
->> +	if (IS_ERR(group)) {
->> +		ret = PTR_ERR(group);
->> +		goto err_unlink_dev;
->> +	}
->> +
->> +	iommu_group_put(group);
->> +
->> +	return PTR_ERR_OR_ZERO(group);
->> +
->> +err_unlink_dev:
->> +	iommu_device_unlink(&viommu->iommu, dev);
->> +
->> +err_free_dev:
->> +	kfree(vdev);
->> +
->> +	return ret;
->> +}
->> +
->> +static void viommu_remove_device(struct device *dev)
->> +{
->> +	struct viommu_endpoint *vdev;
->> +	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
->> +
->> +	if (!fwspec || fwspec->ops != &viommu_ops)
->> +		return;
->> +
->> +	vdev = fwspec->iommu_priv;
->> +
->> +	iommu_group_remove_device(dev);
->> +	iommu_device_unlink(&vdev->viommu->iommu, dev);
->> +	kfree(vdev);
->> +}
->> +
->> +static struct iommu_group *viommu_device_group(struct device *dev)
->> +{
->> +	if (dev_is_pci(dev))
->> +		return pci_device_group(dev);
->> +	else
->> +		return generic_device_group(dev);
->> +}
->> +
->> +static int viommu_of_xlate(struct device *dev, struct of_phandle_args *args)
->> +{
->> +	return iommu_fwspec_add_ids(dev, args->args, 1);
->> +}
->> +
->> +static struct iommu_ops viommu_ops = {
->> +	.domain_alloc		= viommu_domain_alloc,
->> +	.domain_free		= viommu_domain_free,
->> +	.attach_dev		= viommu_attach_dev,
->> +	.map			= viommu_map,
->> +	.unmap			= viommu_unmap,
->> +	.iova_to_phys		= viommu_iova_to_phys,
->> +	.iotlb_sync		= viommu_iotlb_sync,
->> +	.add_device		= viommu_add_device,
->> +	.remove_device		= viommu_remove_device,
->> +	.device_group		= viommu_device_group,
->> +	.get_resv_regions	= viommu_get_resv_regions,
->> +	.put_resv_regions	= viommu_put_resv_regions,
->> +	.of_xlate		= viommu_of_xlate,
->> +};
->> +
->> +static int viommu_init_vqs(struct viommu_dev *viommu)
->> +{
->> +	struct virtio_device *vdev = dev_to_virtio(viommu->dev);
->> +	const char *name = "request";
->> +	void *ret;
->> +
->> +	ret = virtio_find_single_vq(vdev, NULL, name);
->> +	if (IS_ERR(ret)) {
->> +		dev_err(viommu->dev, "cannot find VQ\n");
->> +		return PTR_ERR(ret);
->> +	}
->> +
->> +	viommu->vqs[VIOMMU_REQUEST_VQ] = ret;
->> +
->> +	return 0;
->> +}
->> +
->> +static int viommu_probe(struct virtio_device *vdev)
->> +{
->> +	struct device *parent_dev = vdev->dev.parent;
->> +	struct viommu_dev *viommu = NULL;
->> +	struct device *dev = &vdev->dev;
->> +	u64 input_start = 0;
->> +	u64 input_end = -1UL;
->> +	int ret;
->> +
->> +	if (!virtio_has_feature(vdev, VIRTIO_F_VERSION_1))
->> +		return -ENODEV;
+There is no problem with the above bindings, the problem is that we have
+to put them on each cpu node which is messy. We could instead put them
+(optionally) on the various groupings used on cpu-map. This would allow
+cpu-map to be more specific of what is shared across the members of each
+group (core/cluster/whatever).
+
+As I wrote on my answer to Mark previously, the bindings for infering
+the cache topology, numa topology, power domain topology etc are already
+there, they are in the devicet tree spec and provide very specific
+informations we can use. Much "stronger" hints of what's going on at
+the hw level. The cpu-map doesn't provide such information, it just
+provides a view of how the various harts/threads are "packed" on the 
+chip,
+not what they share inside each level of "packing". It's useful because
+it saves people from having to define a bunch of cache nodes and 
+describe
+the cache hierarchy on the device tree using the standard spec.
+
+So since cpu-map is there for convenience let's make it more convenient 
+!
+What I'm saying is that cpu-map could be a more compact way of using the
+existing bindings for adding properties on groups of harts instead of
+putting them on each hart individually. It will simplify the 
+representation
+and may also optimize the implementation a bit (we may get the 
+information
+we need faster). I don't see any other reason for using cpu-map on 
+RISC-V
+or for making it global across archs.
+
+>> We could allow for these attributes to exist on cluster and core nodes
+>> as well so that we can represent their properties better. It shouldn't
+>> be a big deal and it can be done in a backwards-compatible way (if we
+>> don't find them on the cpu node, climb up the topology hierarchy until
+>> we find them / not find them at all). All I'm saying is that I prefer 
+>> this:
+>> 
 > 
-> I'm a bit confused about what will happen if this device
-> happens to be behind an iommu itself.
+> [...]
 > 
-> If we can't handle that, should we clear PLATFORM_IOMMU
-> e.g. like the balloon does?
+>> 
+>> cluster0 {
+>>  cluster0 {
+>>   core0 {
+>>    power-domains = <&pdc 0>;
+>>    numa-node-id = <0>;
+>>    capacity-dmips-mhz = <578>;
+>>    members = <&cpu0>, <&cpu1>;
+>>   }
+>>  };
+>>  cluster1 {
+>>   capacity-dmips-mhz = <1024>;
+>>   core0 {
+>>    power-domains = <&pdc 1>;
+>>    numa-node-id = <1>;
+>>    members = <&cpu2>;
+>>   };
+>>   core1 {
+>>    power-domains = <&pdc 2>;
+>>    numa-node-id = <2>;
+>>    members = <&cpu3>;
+>>   };
+>>  };
+>> }
+>> 
 > 
+> Why are you so keen on optimising the representation ?
+> If you are worried about large systems, generate one instead of
+> handcrafted.
 > 
->> +
->> +	viommu = devm_kzalloc(dev, sizeof(*viommu), GFP_KERNEL);
->> +	if (!viommu)
->> +		return -ENOMEM;
->> +
->> +	spin_lock_init(&viommu->request_lock);
->> +	ida_init(&viommu->domain_ids);
->> +	viommu->dev = dev;
->> +	viommu->vdev = vdev;
->> +	INIT_LIST_HEAD(&viommu->requests);
->> +
->> +	ret = viommu_init_vqs(viommu);
->> +	if (ret)
->> +		return ret;
->> +
->> +	virtio_cread(vdev, struct virtio_iommu_config, page_size_mask,
->> +		     &viommu->pgsize_bitmap);
->> +
->> +	if (!viommu->pgsize_bitmap) {
->> +		ret = -EINVAL;
->> +		goto err_free_vqs;
->> +	}
->> +
->> +	viommu->domain_bits = 32;
->> +
->> +	/* Optional features */
->> +	virtio_cread_feature(vdev, VIRTIO_IOMMU_F_INPUT_RANGE,
->> +			     struct virtio_iommu_config, input_range.start,
->> +			     &input_start);
->> +
->> +	virtio_cread_feature(vdev, VIRTIO_IOMMU_F_INPUT_RANGE,
->> +			     struct virtio_iommu_config, input_range.end,
->> +			     &input_end);
->> +
->> +	virtio_cread_feature(vdev, VIRTIO_IOMMU_F_DOMAIN_BITS,
->> +			     struct virtio_iommu_config, domain_bits,
->> +			     &viommu->domain_bits);
->> +
->> +	viommu->geometry = (struct iommu_domain_geometry) {
->> +		.aperture_start	= input_start,
->> +		.aperture_end	= input_end,
->> +		.force_aperture	= true,
->> +	};
->> +
->> +	viommu_ops.pgsize_bitmap = viommu->pgsize_bitmap;
->> +
->> +	virtio_device_ready(vdev);
->> +
->> +	ret = iommu_device_sysfs_add(&viommu->iommu, dev, NULL, "%s",
->> +				     virtio_bus_name(vdev));
->> +	if (ret)
->> +		goto err_free_vqs;
->> +
->> +	iommu_device_set_ops(&viommu->iommu, &viommu_ops);
->> +	iommu_device_set_fwnode(&viommu->iommu, parent_dev->fwnode);
->> +
->> +	iommu_device_register(&viommu->iommu);
->> +
->> +#ifdef CONFIG_PCI
->> +	if (pci_bus_type.iommu_ops != &viommu_ops) {
->> +		pci_request_acs();
->> +		ret = bus_set_iommu(&pci_bus_type, &viommu_ops);
->> +		if (ret)
->> +			goto err_unregister;
->> +	}
->> +#endif
->> +#ifdef CONFIG_ARM_AMBA
->> +	if (amba_bustype.iommu_ops != &viommu_ops) {
->> +		ret = bus_set_iommu(&amba_bustype, &viommu_ops);
->> +		if (ret)
->> +			goto err_unregister;
->> +	}
->> +#endif
->> +	if (platform_bus_type.iommu_ops != &viommu_ops) {
->> +		ret = bus_set_iommu(&platform_bus_type, &viommu_ops);
->> +		if (ret)
->> +			goto err_unregister;
->> +	}
->> +
->> +	vdev->priv = viommu;
->> +
->> +	dev_info(dev, "input address: %u bits\n",
->> +		 order_base_2(viommu->geometry.aperture_end));
->> +	dev_info(dev, "page mask: %#llx\n", viommu->pgsize_bitmap);
->> +
->> +	return 0;
->> +
->> +err_unregister:
->> +	iommu_device_sysfs_remove(&viommu->iommu);
->> +	iommu_device_unregister(&viommu->iommu);
->> +err_free_vqs:
->> +	vdev->config->del_vqs(vdev);
->> +
->> +	return ret;
->> +}
->> +
->> +static void viommu_remove(struct virtio_device *vdev)
->> +{
->> +	struct viommu_dev *viommu = vdev->priv;
->> +
->> +	iommu_device_sysfs_remove(&viommu->iommu);
->> +	iommu_device_unregister(&viommu->iommu);
->> +
->> +	/* Stop all virtqueues */
->> +	vdev->config->reset(vdev);
->> +	vdev->config->del_vqs(vdev);
->> +
->> +	dev_info(&vdev->dev, "device removed\n");
->> +}
->> +
->> +static void viommu_config_changed(struct virtio_device *vdev)
->> +{
->> +	dev_warn(&vdev->dev, "config changed\n");
->> +}
->> +
->> +static unsigned int features[] = {
->> +	VIRTIO_IOMMU_F_MAP_UNMAP,
->> +	VIRTIO_IOMMU_F_DOMAIN_BITS,
->> +	VIRTIO_IOMMU_F_INPUT_RANGE,
->> +};
->> +
->> +static struct virtio_device_id id_table[] = {
->> +	{ VIRTIO_ID_IOMMU, VIRTIO_DEV_ANY_ID },
->> +	{ 0 },
->> +};
->> +
->> +static struct virtio_driver virtio_iommu_drv = {
->> +	.driver.name		= KBUILD_MODNAME,
->> +	.driver.owner		= THIS_MODULE,
->> +	.id_table		= id_table,
->> +	.feature_table		= features,
->> +	.feature_table_size	= ARRAY_SIZE(features),
->> +	.probe			= viommu_probe,
->> +	.remove			= viommu_remove,
->> +	.config_changed		= viommu_config_changed,
->> +};
->> +
->> +module_virtio_driver(virtio_iommu_drv);
->> +
->> +MODULE_DESCRIPTION("Virtio IOMMU driver");
->> +MODULE_AUTHOR("Jean-Philippe Brucker <jean-philippe.brucker@arm.com>");
->> +MODULE_LICENSE("GPL v2");
->> diff --git a/include/uapi/linux/virtio_ids.h b/include/uapi/linux/virtio_ids.h
->> index 6d5c3b2d4f4d..cfe47c5d9a56 100644
->> --- a/include/uapi/linux/virtio_ids.h
->> +++ b/include/uapi/linux/virtio_ids.h
->> @@ -43,5 +43,6 @@
->>  #define VIRTIO_ID_INPUT        18 /* virtio input */
->>  #define VIRTIO_ID_VSOCK        19 /* virtio vsock transport */
->>  #define VIRTIO_ID_CRYPTO       20 /* virtio crypto */
->> +#define VIRTIO_ID_IOMMU        23 /* virtio IOMMU */
->>  
->>  #endif /* _LINUX_VIRTIO_IDS_H */
->> diff --git a/include/uapi/linux/virtio_iommu.h b/include/uapi/linux/virtio_iommu.h
->> new file mode 100644
->> index 000000000000..e808fc7fbe82
->> --- /dev/null
->> +++ b/include/uapi/linux/virtio_iommu.h
->> @@ -0,0 +1,101 @@
->> +/* SPDX-License-Identifier: BSD-3-Clause */
->> +/*
->> + * Virtio-iommu definition v0.8
->> + *
->> + * Copyright (C) 2018 Arm Ltd.
->> + */
->> +#ifndef _UAPI_LINUX_VIRTIO_IOMMU_H
->> +#define _UAPI_LINUX_VIRTIO_IOMMU_H
->> +
->> +#include <linux/types.h>
->> +
->> +/* Feature bits */
->> +#define VIRTIO_IOMMU_F_INPUT_RANGE		0
->> +#define VIRTIO_IOMMU_F_DOMAIN_BITS		1
->> +#define VIRTIO_IOMMU_F_MAP_UNMAP		2
->> +#define VIRTIO_IOMMU_F_BYPASS			3
->> +
->> +struct virtio_iommu_config {
->> +	/* Supported page sizes */
->> +	__u64					page_size_mask;
->> +	/* Supported IOVA range */
->> +	struct virtio_iommu_range {
+
+I don't see a reason not to try to optimize it, since we are talking
+about a binding to be used by RISC-V and potentially everybody, I think
+it makes sens to improve upon what we already have.
+
+>> When it comes to shared resources, the standard dt mappings we have 
+>> are for
+>> caches and are on the device spec standard (coming from power pc's 
+>> ePAPR
+>> standard I think). The below comes from HiFive unleashed's device tree
+>> (U540Config.dts) that follows the spec:
+>> 
 > 
-> I'd rather we moved the definition outside even though gcc allows it -
-> some old userspace compilers might not.
+> I don't understand what you are trying to explain, ePAPR does specify
+> per CPU entries.
 > 
->> +		__u64				start;
->> +		__u64				end;
->> +	} input_range;
->> +	/* Max domain ID size */
->> +	__u8					domain_bits;
+> [...]
 > 
-> Let's add explicit padding here as well?
+
+I'm saying we could allow moving these properties on the groupings of 
+cpu-map
+to simplify the representation and possibly optimize the implementation. 
+This
+way I believe cpu-map will be much more useful than it is now.
+
+>> Note that the cache-controller node that's common between the 4 cores 
+>> can
+>> exist anywhere BUT the cluster node ! However it's a property of the
+>> cluster.
+>> A quick search through the tree got me r8a77980.dtsi that defines the 
+>> cache
+>> on the cpus node and I'm sure there are other similar cases. Wouldn't 
+>> this
+>> be better ?
+>> 
+>> cluster0 {
+>>  core0 {
+>>   cache-controller@2010000 {
+>>    cache-block-size = <64>;
+>>    cache-level = <2>;
+>>    cache-sets = <2048>;
+>>    cache-size = <2097152>;
+>>    cache-unified;
+>>    compatible = "sifive,ccache0", "cache";
+>>    ...
+>>   };
+>>   members = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
 > 
->> +};
->> +
->> +/* Request types */
->> +#define VIRTIO_IOMMU_T_ATTACH			0x01
->> +#define VIRTIO_IOMMU_T_DETACH			0x02
->> +#define VIRTIO_IOMMU_T_MAP			0x03
->> +#define VIRTIO_IOMMU_T_UNMAP			0x04
->> +
->> +/* Status types */
->> +#define VIRTIO_IOMMU_S_OK			0x00
->> +#define VIRTIO_IOMMU_S_IOERR			0x01
->> +#define VIRTIO_IOMMU_S_UNSUPP			0x02
->> +#define VIRTIO_IOMMU_S_DEVERR			0x03
->> +#define VIRTIO_IOMMU_S_INVAL			0x04
->> +#define VIRTIO_IOMMU_S_RANGE			0x05
->> +#define VIRTIO_IOMMU_S_NOENT			0x06
->> +#define VIRTIO_IOMMU_S_FAULT			0x07
->> +
->> +struct virtio_iommu_req_head {
->> +	__u8					type;
->> +	__u8					reserved[3];
->> +};
->> +
->> +struct virtio_iommu_req_tail {
->> +	__u8					status;
->> +	__u8					reserved[3];
->> +};
->> +
->> +struct virtio_iommu_req_attach {
->> +	struct virtio_iommu_req_head		head;
->> +	__le32					domain;
->> +	__le32					endpoint;
->> +	__u8					reserved[8];
->> +	struct virtio_iommu_req_tail		tail;
->> +};
->> +
->> +struct virtio_iommu_req_detach {
->> +	struct virtio_iommu_req_head		head;
->> +	__le32					domain;
->> +	__le32					endpoint;
->> +	__u8					reserved[8];
->> +	struct virtio_iommu_req_tail		tail;
->> +};
->> +
->> +#define VIRTIO_IOMMU_MAP_F_READ			(1 << 0)
->> +#define VIRTIO_IOMMU_MAP_F_WRITE		(1 << 1)
->> +#define VIRTIO_IOMMU_MAP_F_EXEC			(1 << 2)
->> +#define VIRTIO_IOMMU_MAP_F_MMIO			(1 << 3)
->> +
->> +#define VIRTIO_IOMMU_MAP_F_MASK			(VIRTIO_IOMMU_MAP_F_READ |	\
->> +						 VIRTIO_IOMMU_MAP_F_WRITE |	\
->> +						 VIRTIO_IOMMU_MAP_F_EXEC |	\
->> +						 VIRTIO_IOMMU_MAP_F_MMIO)
->> +
->> +struct virtio_iommu_req_map {
->> +	struct virtio_iommu_req_head		head;
->> +	__le32					domain;
->> +	__le64					virt_start;
->> +	__le64					virt_end;
->> +	__le64					phys_start;
->> +	__le32					flags;
->> +	struct virtio_iommu_req_tail		tail;
->> +};
->> +
->> +struct virtio_iommu_req_unmap {
->> +	struct virtio_iommu_req_head		head;
->> +	__le32					domain;
->> +	__le64					virt_start;
->> +	__le64					virt_end;
->> +	__u8					reserved[4];
->> +	struct virtio_iommu_req_tail		tail;
->> +};
->> +
->> +#endif
->> -- 
->> 2.19.1
+> Not a good idea IMO.
+> 
+
+Where in your opinion should this cache node go ? On the first example 
+from
+a production dts it goes to the SoC node and on another production dts 
+it goes
+to the cpus/ node. I think it makes more sense to go to the core node or 
+the
+cluster node, depending on how it's shared. It makes it also easier
+for the implementation to understand the levels of shared caches and 
+creating
+cpu masks.
+
+>> We could even remove next-level-cache from the cpu nodes and infer it 
+>> from
+>> the  topology (search the topology upwards until we get a node that's
+>> "cache"-compatible), we can again make this backwards-compatible.
+>> 
+> 
+> Why are you assuming that they *have* to be so aligned with topology ?
+> How do you deal with different kind of systems ?
+> 
+
+It depends on how you define topology. I believe that the cache 
+hierarchy is
+a much "stronger" definition of the CPU topology than grouping 
+harts/threads
+on classes like "core", "socket", "packet" etc that don't provide any 
+information
+of what's going on inside the hardware. You can think of the question 
+the other
+way around, why are you assuming that the current topology as specified 
+on
+cpu-map is aligned with how the harts and cores share their "resources" 
+?
+Because that's what's going on at the implementation side of cpu-map.
+
+>> 
+>> Finally from the examples above I'd like to stress out that the 
+>> distinction
+>> between a cluster and a core doesn't make much sense and it also makes 
+>> the
+>> representation more complicated. To begin with, how would you call the 
+>> setup
+>> on HiFive Unleashed ? A cluster of 4 cores that share the same L3 
+>> cache ?
+>> One core with 4 harts that share the same L3 cache ? We could 
+>> represent it
+>> like this instead:
+>> 
+> 
+> Just represent each physical cache and get the list of CPUs sharing it.
+> Doesn't matter what it is: cluster or cluster of clusters or cluster of
+> harts, blah, blah. It really doesn't matter.
+> 
+
+I totally agree with you, but in this case what's the reason of having
+cpu-map ? We can infer the topology from what we already have, at least
+cpu-map adds some convenience (but if we go all the way down the 
+"convinience"
+path we'll end up on something like my initial approach which was as we
+both agree now, wrong).
+
+>> 
+>> We could e.g. keep only cluster nodes and allow them to contain either 
+>> an
+>> array of harts or other cluster sub-nodes + optionally a set of 
+>> attributes,
+>> common to the members/sub-nodes of the cluster. This way we'll get in 
+>> the
+>> first example:
+>> 
+> 
+> All these fancy new ideas you are proposing are good if vendors follow
+> some things religiously, but I really doubt if that's true. So just
+> have maximum flexibility so that we can represent maximum number of
+> systems without having to redefine the bindings again and again for the
+> same thing.
+> 
+> So instead of finding ways to optimise, you should really come up with
+> list of shortcomings in the existing bindings so that we cover more
+> platforms with generic bindings. IMO you are too concerned on 
+> optimisation
+> of DT representation which may defeat the purpose of generic bindings.
+> 
+
+I get your point, but if that's the case, isn't cpu-map an optimization 
+over
+the generic bindings for cpu nodes anyway ? As for the flexibility, what 
+I'm
+saying is to allow the flexibility of adding the properties that we 
+would
+otherwise add to cpu nodes, on the groups we use on cpu-map. Optionaly 
+so that
+we are also backwards compatible. I see this as more flexible, not less
+flexible. The same goes for removing the distinction between "core",
+"cluster" etc, having specific names for each of the topology levels is 
+IMHO
+less flexible than using abstract names.
+
+Also what's the point of defining a binding if vendors don't follow it ?
+I think it would be easier for the vendors to just use what's there 
+instead
+of defining a new binding and writing the code for it. On the other hand
+you are probably more experienced on this than I am, I haven't dealt 
+with
+various different vendors and their different ways.
+
+Regards,
+Nick
