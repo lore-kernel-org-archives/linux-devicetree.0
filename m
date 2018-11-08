@@ -1,30 +1,143 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 1/4] of/device: Add a way to probe drivers by match data
-Date: Thu, 08 Nov 2018 09:58:59 -0800
-Message-ID: <154169993998.88331.10494065577891939152@swboyd.mtv.corp.google.com>
-References: <20181106183609.207702-1-sboyd@kernel.org>
- <20181106183609.207702-2-sboyd@kernel.org>
- <efa13e0b-0daf-3bf3-27ba-ed90f15c7dfe@gmail.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH 04/24] dt-bindings: leds: Add function and color
+ properties
+Date: Thu, 8 Nov 2018 12:00:15 -0600
+Message-ID: <26714494-06f8-163d-1ef8-75f75c25a467@ti.com>
+References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
+ <1541542052-10081-5-git-send-email-jacek.anaszewski@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <efa13e0b-0daf-3bf3-27ba-ed90f15c7dfe@gmail.com>
+In-Reply-To: <1541542052-10081-5-git-send-email-jacek.anaszewski@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Michael Turquette <mturquette@baylibre.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Matthias Brugger (2018-11-08 00:29:46)
-> On 06/11/2018 19:36, Stephen Boyd wrote:
-> > +int platform_driver_probe_by_of_match_data(struct platform_device *pde=
-v)
-> > +{
-> > +     int (*probe_func)(struct platform_device *pdev);
-> > +
-> > +     probe_func =3D of_device_get_match_data(&pdev->dev);
-> =
+Jacek
 
-> Shouldn't we check if probe_func is not NULL?
+On 11/06/2018 04:07 PM, Jacek Anaszewski wrote:
+> Introduce dedicated properties for conveying information about
+> LED function and color. Mark old "label" property as deprecated.
+> 
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Baolin Wang <baolin.wang@linaro.org>
+> Cc: Daniel Mack <daniel@zonque.org>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Simon Shields <simon@lineageos.org>
+> Cc: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+> ---
+>  Documentation/devicetree/bindings/leds/common.txt | 52 +++++++++++++++++++----
+>  1 file changed, 44 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index aa13998..3efc826 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -10,14 +10,20 @@ can influence the way of the LED device initialization, the LED components
+>  have to be tightly coupled with the LED device binding. They are represented
+>  by child nodes of the parent LED device binding.
+>  
+> +
+>  Optional properties for child nodes:
+>  - led-sources : List of device current outputs the LED is connected to. The
+>  		outputs are identified by the numbers that must be defined
+>  		in the LED device binding documentation.
+> +- function: LED functon. Use one of the LED_FUNCTION_* prefixed definitions
+> +	    from the header include/dt-bindings/leds/functions.h.
+> +	    If there is no matching LED_FUNCTION available, add a new one.
+> +- color : Color of the LED.
 
-Is the oops from the NULL pointer deref insufficient?
+Should we define the colors too?  There are only really 4.  Red, green, blue and white.
+
+Generally varying colors are created base on the primary colors.  Even the amber color
+
+Dan
+
+>  - label : The label for this LED. If omitted, the label is taken from the node
+>  	  name (excluding the unit address). It has to uniquely identify
+>  	  a device, i.e. no other LED class device can be assigned the same
+> -	  label.
+> +	  label. This property is deprecated - use 'function' and 'color'
+> +	  properties instead.
+>  
+>  - default-state : The initial state of the LED. Valid values are "on", "off",
+>    and "keep". If the LED is already on or off and the default-state property is
+> @@ -87,29 +93,59 @@ Required properties for trigger source:
+>  
+>  * Examples
+>  
+> -gpio-leds {
+> +#include <dt-bindings/leds/functions.h>
+> +
+> +led-controller@0 {
+>  	compatible = "gpio-leds";
+>  
+> -	system-status {
+> -		label = "Status";
+> +	led0 {
+> +		function = LED_FUNCTION_STATUS;
+>  		linux,default-trigger = "heartbeat";
+>  		gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
+>  	};
+>  
+> -	usb {
+> +	led1 {
+> +		function = LED_FUNCTION_USB;
+>  		gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
+>  		trigger-sources = <&ohci_port1>, <&ehci_port1>;
+>  	};
+>  };
+>  
+> -max77693-led {
+> +led-controller@0 {
+>  	compatible = "maxim,max77693-led";
+>  
+> -	camera-flash {
+> -		label = "Flash";
+> +	led {
+> +		function = LED_FUNCTION_FLASH;
+> +		color = "white";
+>  		led-sources = <0>, <1>;
+>  		led-max-microamp = <50000>;
+>  		flash-max-microamp = <320000>;
+>  		flash-max-timeout-us = <500000>;
+>  	};
+>  };
+> +
+> +led-controller@68 {
+> +	compatible = "ti,tlc59116";
+> +	reg = <0x68>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	led@0 {
+> +		function = LED_FUNCTION_WAN;
+> +		color = "amber";
+> +		reg = <0x0>;
+> +	};
+> +
+> +	led@2 {
+> +		function = LED_FUNCTION_2G;
+> +		color = "white";
+> +		reg = <0x2>;
+> +	};
+> +
+> +	led@9 {
+> +		function = LED_FUNCTION_ALIVE;
+> +		color = "green";
+> +		reg = <0x9>;
+> +		linux,default_trigger = "heartbeat";
+> +	};
+> +};
+> 
+
+
+-- 
+------------------
+Dan Murphy
