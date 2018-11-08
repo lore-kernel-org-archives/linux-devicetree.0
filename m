@@ -1,45 +1,142 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH v3 5/7] iommu: Add virtio-iommu driver
-Date: Thu, 8 Nov 2018 16:46:19 +0000
-Message-ID: <eebdbcd4-e7eb-d5cf-3cc9-6223d9bcfbe0@arm.com>
-References: <20181012145917.6840-1-jean-philippe.brucker@arm.com>
- <20181012145917.6840-6-jean-philippe.brucker@arm.com>
- <20181012120953-mutt-send-email-mst@kernel.org>
- <60605670-0419-3f64-a379-9c4057d90db1@redhat.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [RFC 0/2] Add RISC-V cpu topology
+Date: Thu, 8 Nov 2018 16:48:27 +0000
+Message-ID: <20181108164827.GB10953@e107155-lin>
+References: <1541113468-22097-1-git-send-email-atish.patra@wdc.com>
+ <866dedbc78ab4fa0e3b040697e112106@mailhost.ics.forth.gr>
+ <20181106141331.GA28458@e107155-lin>
+ <969fc2a5198984e0dfe8c3f585dc65f9@mailhost.ics.forth.gr>
+ <20181106162051.w7fyweuxrl7ujzuz@lakrids.cambridge.arm.com>
+ <abcae019e6ae749b17ecb0c721fd3177@mailhost.ics.forth.gr>
+ <20181107122803.GA8433@e107155-lin>
+ <d04779705c47b59b94300365e805dbd3@mailhost.ics.forth.gr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
-In-Reply-To: <60605670-0419-3f64-a379-9c4057d90db1@redhat.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
-List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
-List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
-List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
-List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
-Errors-To: kvmarm-bounces@lists.cs.columbia.edu
-Sender: kvmarm-bounces@lists.cs.columbia.edu
-To: Auger Eric <eric.auger@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>
-Cc: lorenzo.pieralisi@arm.com, tnowicki@caviumnetworks.com, devicetree@vger.kernel.org, marc.zyngier@arm.com, linux-pci@vger.kernel.org, joro@8bytes.org, will.deacon@arm.com, virtualization@lists.linux-foundation.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, robin.murphy@arm.com, kvmarm@lists.cs.columbia.edu
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <d04779705c47b59b94300365e805dbd3@mailhost.ics.forth.gr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nick Kossifidis <mick@ics.forth.gr>
+Cc: Mark Rutland <mark.rutland@arm.com>, Atish Patra <atish.patra@wdc.com>, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, Damien.LeMoal@wdc.com, alankao@andestech.com, zong@andestech.com, anup@brainfault.org, palmer@sifive.com, linux-kernel@vger.kernel.org, hch@infradead.org, robh+dt@kernel.org, tglx@linutronix.de, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/11/2018 14:51, Auger Eric wrote:
->>> +/*
->>> + * viommu_replay_mappings - re-send MAP requests
->>> + *
->>> + * When reattaching a domain that was previously detached from all endpoints,
->>> + * mappings were deleted from the device. Re-create the mappings available in
->>> + * the internal tree.
->>> + */
->>> +static int viommu_replay_mappings(struct viommu_domain *vdomain)
->>> +{
->>> +	int ret;
-> ret needs to be initialized here. Otherwise this can lead to a crash in
-> viommu_add_device.
+On Thu, Nov 08, 2018 at 04:52:30PM +0200, Nick Kossifidis wrote:
+> Στις 2018-11-07 14:28, Sudeep Holla έγραψε:
+> >
+> > I agree, but we have kernel code using it(arm64/kernel/topology.c). It's
+> > too late to remove it. But we can always keep to optional if we move the
+> > ARM64 binding as generic to start with and mandate it for only ARM64.
+> >
+>
+> That's my point as well, if we are going to define something to be used
+> by everybody and in this case, at least for RISC-V, there is no need to
+> carry this from the ARM64 binding.
 
-I actually hit this one while testing the other day :) Fixed in next version
+Sure, whatever you don't need in RISC-V you can see if they can be made
+optional. I don't think that should be a problem.
 
-Thanks,
-Jean
+> It shouldn't be that hard to fix this
+> in the future for ARM64 as well, we may give the new mapping another name,
+> maybe cpu-map2 or cpu-topology to slowly move to the new one.
+
+No, we have it and we will continue to support it. It's not broken to
+fix on ARM64. Why do you think that it's broken on ARM64 ?
+
+> Changing the
+> dts files shouldn't be this hard, we can provide a script for it. We can
+> even contain some compatibility code that also understands <thread> nodes
+> and e.g. merges them together on a core node.
+>
+
+Sure, hang on this idea of scripting, we can make a better use of it.
+Details later further in the mail.
+
+[...]
+
+> > > The same also happens with the generic numa binding on
+> > > Documentation/devicetree/bindings/numa.txt
+> > > which says we should add the nuna-node-id on each of the cpu nodes.
+> > >
+> >
+> > Yes, but again what's the problem ?
+> >
+>
+> There is no problem with the above bindings, the problem is that we have
+> to put them on each cpu node which is messy. We could instead put them
+> (optionally) on the various groupings used on cpu-map. This would allow
+> cpu-map to be more specific of what is shared across the members of each
+> group (core/cluster/whatever).
+>
+
+I think Mark has already explain why/how generic bindings are useful.
+If you still have concerns, take it up separately and see how you can
+build *perfect* bindings for RISC-V to avoid any legacy baggage.
+
+We have reasons why we can't assume information about cache or power
+domain topology from CPU topology. I have summarised them already and
+we are not discussing. There may not be perfect bindings but there are
+already supported and nothing is broken here to fix. DT bindings are
+*not* same as code to fix it with a patch to the bindings themselves.
+Once agreed and merged, they need to be treated like user ABI.
+
+> As I wrote on my answer to Mark previously, the bindings for infering
+> the cache topology, numa topology, power domain topology etc are already
+> there, they are in the devicet tree spec and provide very specific
+> informations we can use. Much "stronger" hints of what's going on at
+> the hw level. The cpu-map doesn't provide such information, it just
+> provides a view of how the various harts/threads are "packed" on the chip,
+> not what they share inside each level of "packing". It's useful because
+> it saves people from having to define a bunch of cache nodes and describe
+> the cache hierarchy on the device tree using the standard spec.
+>
+
+Ah, here comes. If you want to save people's time or whatever, you can use
+your scripting magic you have mentioned above to define those bunch of nodes
+you want to avoid.
+
+> So since cpu-map is there for convenience let's make it more convenient !
+> What I'm saying is that cpu-map could be a more compact way of using the
+> existing bindings for adding properties on groups of harts instead of
+> putting them on each hart individually. It will simplify the representation
+> and may also optimize the implementation a bit (we may get the information
+> we need faster). I don't see any other reason for using cpu-map on RISC-V
+> or for making it global across archs.
+>
+
+Sure, I don't have strong opinions there. Just stop mentioning that this
+is the only solution and all existing ones are broken. They are not and
+needs to be supported until they are explicitly deprecated, becomes
+obsolete and finally removed.
+
+[...]
+
+> >
+> > Why are you so keen on optimising the representation ?
+> > If you are worried about large systems, generate one instead of
+> > handcrafted.
+> >
+>
+> I don't see a reason not to try to optimize it, since we are talking
+> about a binding to be used by RISC-V and potentially everybody, I think
+> it makes sens to improve upon what we already have.
+>
+
+Sure, you can always unless you stop treating existing ones are broken.
+I have already told DT bindings are not *normal code*. You can just
+replace existing ones with new optimised ones. You can only add the new
+(*optimised*) ones to the existing ones. You *need* to understand that
+concept first, otherwise there's not point in this endless discussion
+IMO.
+
+I will stop here as I will have to repeat whatever I have already
+mentioned to comment on your arguments below.
+
+In summary, I am not against improving the bindings if you think it's
+possible, but I don't see how it's more beneficially especially if we
+are going to support existing ones also. Mark has already given all the
+details.
+
+--
+Regards,
+Sudeep
