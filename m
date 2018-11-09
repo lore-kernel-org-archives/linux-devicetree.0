@@ -1,44 +1,27 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH v4 3/3] MAINTAINERS: Add entry for i2c-omap driver
-Date: Fri, 9 Nov 2018 16:44:12 +0530
-Message-ID: <20181109111412.24777-4-vigneshr@ti.com>
-References: <20181109111412.24777-1-vigneshr@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 5/9] dt-bindings: ARM: document marvell,ecc-enable binding
+Date: Fri, 9 Nov 2018 12:40:06 +0100
+Message-ID: <CAK8P3a3PNvBhyQw0bfGxKmxj+KeJB2_TXtDx2R1BpjTCYNqVkA@mail.gmail.com>
+References: <20181109070349.20464-1-chris.packham@alliedtelesis.co.nz> <20181109070349.20464-6-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181109111412.24777-1-vigneshr@ti.com>
+In-Reply-To: <20181109070349.20464-6-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Grygorii Strashko <grygorii.strashko@ti.com>
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, Borislav Petkov <bp@alien8.de>, jlu@pengutronix.de, Gregory CLEMENT <gregory.clement@bootlin.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, DTML <devicetree@vger.kernel.org>, linux-edac@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add separate entry for i2c-omap and add my name as maintainer for this
-driver.
+On Fri, Nov 9, 2018 at 8:04 AM Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
+>
+> Add documentation for the marvell,ecc-enable and marvell,ecc-disable
+> properties which can be used to enable/disable ECC on the Marvell aurora
+> cache.
+>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Why do you need both enable and disable? Wouldn't one of them be enough here?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c78aca287970..284ffe907b31 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10808,6 +10808,14 @@ L:	linux-omap@vger.kernel.org
- S:	Maintained
- F:	arch/arm/mach-omap2/omap_hwmod.*
- 
-+OMAP I2C DRIVER
-+M:	Vignesh R <vigneshr@ti.com>
-+L:	linux-omap@vger.kernel.org
-+L:	linux-i2c@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/i2c/i2c-omap.txt
-+F:	drivers/i2c/busses/i2c-omap.c
-+
- OMAP IMAGING SUBSYSTEM (OMAP3 ISP and OMAP4 ISS)
- M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
- L:	linux-media@vger.kernel.org
--- 
-2.19.1
+      Arnd
