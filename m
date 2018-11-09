@@ -1,25 +1,27 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [GIT PULL] of: overlay: validation checks, subsequent fixes for v20
-Date: Fri, 9 Nov 2018 15:44:20 -0600
-Message-ID: <CAL_JsqJJHNAYAtL791UsPE=J9L97cOGvRVkqP+3VuuT5qVmRHw@mail.gmail.com>
-References: <262419e9-5c9f-1193-f119-33f373d81e43@gmail.com>
+From: Sven Van Asbroeck <thesven73@gmail.com>
+Subject: Re: [PATCH anybus v3 0/6] Support HMS Profinet Card over Anybus
+Date: Fri, 9 Nov 2018 16:46:57 -0500
+Message-ID: <CAGngYiWtmHPShpbLOj4qYJCe6PvNT7ZUDd-0jRsRyxD+HWbByQ@mail.gmail.com>
+References: <20181104155501.14767-1-TheSven73@googlemail.com>
+ <CAGngYiU+8k4ZHYhFVQGKXW8mATEDi64Mi9PsVkX-5vn2PCY3ew@mail.gmail.com> <CAK8P3a1STE+vN_yF0Zyu8gGX_KCWZEV=muPxVE6M1EUqdhO4Pg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <262419e9-5c9f-1193-f119-33f373d81e43@gmail.com>
+In-Reply-To: <CAK8P3a1STE+vN_yF0Zyu8gGX_KCWZEV=muPxVE6M1EUqdhO4Pg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-fpga@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Sven Van Asbroeck <svendev@arcx.com>, Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 9, 2018 at 12:56 AM Frank Rowand <frowand.list@gmail.com> wrote:
+On Fri, Nov 9, 2018 at 4:22 PM Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> Hi Rob,
 >
-> Please pull the changes to add the overlay validation checks.
->
-> This is the v7 version of the patch series.
+> As usual, it comes down to the user space interfaces I think. Designing
+> a user interface is hard, most importantly because you cannot change it
+> once anyone starts relying on it, as opposed to implementation details
+> that you are free to change at any point.
 
-Pulled for 4.21. Thanks.
-
-Rob
+Thanks for the feedback !
+I will rework v4 so it uses a userspace interface shared with other
+fieldbus drivers - uio.
+Let's see how it goes.
