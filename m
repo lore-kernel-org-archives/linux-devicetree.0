@@ -1,91 +1,97 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH v7 4/4] arm64: dts: allwinner: a64: enable
-	sound on Pinebook
-Date: Thu,  8 Nov 2018 20:24:22 -0800
-Message-ID: <20181109042422.25653-5-anarsoul@gmail.com>
-References: <20181109042422.25653-1-anarsoul@gmail.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v4 01/18] arm64: dts: qcom: qcs404: add base dts files
+Date: Fri, 9 Nov 2018 10:30:58 +0530
+Message-ID: <20181109050058.GI12092@vkoul-mobl>
+References: <20181108184009.18430-1-vkoul@kernel.org>
+ <20181108184009.18430-2-vkoul@kernel.org>
+ <CAL_JsqKsCpofdsP_TojGxeCkv59r5Ce7-4Sz1B1V_QCL1eQDVg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181109042422.25653-1-anarsoul@gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Vasily Khoruzhick <anarsoul@gmail.com>, Mylene JOSSERAND <mylene.josserand@free-electrons.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKsCpofdsP_TojGxeCkv59r5Ce7-4Sz1B1V_QCL1eQDVg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit enables I2S, digital and analog parts of audiocodec on
-Pinebook
+On 08-11-18, 15:45, Rob Herring wrote:
+> > +/ {
+> > +       interrupt-parent = <&intc>;
+> > +
+> > +       #address-cells = <2>;
+> > +       #size-cells = <2>;
+> > +
+> > +       chosen { };
+> > +
+> > +       clocks {
+> > +               xo_board: xo_board {
+> 
+> Build your dtbs with "W=12" and fix any warnings. You should get a
+> warning about '_'.
 
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
----
- .../dts/allwinner/sun50i-a64-pinebook.dts     | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
+I did built it with W=1 though, so _ is not allowed?
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-index 77fac84797e9..ec4dd9877355 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-@@ -64,6 +64,23 @@
- 		compatible = "mmc-pwrseq-simple";
- 		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
- 	};
-+
-+	speaker_amp: speaker_amp {
-+		compatible = "simple-audio-amplifier";
-+		enable-gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
-+	};
-+};
-+
-+&codec {
-+	status = "okay";
-+};
-+
-+&codec_analog {
-+	status = "okay";
-+};
-+
-+&dai {
-+	status = "okay";
- };
- 
- &ehci0 {
-@@ -267,6 +284,29 @@
- 	vcc-hdmi-supply = <&reg_dldo1>;
- };
- 
-+&sound {
-+	status = "okay";
-+	simple-audio-card,widgets = "Microphone", "Internal Microphone Left",
-+				    "Microphone", "Internal Microphone Right",
-+				    "Headphone", "Headphone Jack",
-+				    "Speaker", "Internal Speaker";
-+	simple-audio-card,aux-devs = <&codec_analog>, <&speaker_amp>;
-+	simple-audio-card,routing =
-+			"Left DAC", "AIF1 Slot 0 Left",
-+			"Right DAC", "AIF1 Slot 0 Right",
-+			"INL", "LINEOUT",
-+			"INR", "LINEOUT",
-+			"Internal Speaker", "OUTL",
-+			"Internal Speaker", "OUTR",
-+			"Headphone Jack", "HP",
-+			"AIF1 Slot 0 Left ADC", "Left ADC",
-+			"AIF1 Slot 0 Right ADC", "Right ADC",
-+			"Internal Microphone Left", "MBIAS",
-+			"MIC1", "Internal Microphone Left",
-+			"Internal Microphone Right", "HBIAS",
-+			"MIC2", "Internal Microphone Right";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
+> > +                       compatible = "fixed-clock";
+> > +                       #clock-cells = <0>;
+> > +                       clock-frequency = <19200000>;
+> > +               };
+> > +       };
+> > +
+> > +       cpus {
+> > +               #address-cells = <1>;
+> > +               #size-cells = <0>;
+> > +
+> > +               CPU0: cpu@0 {
+> 
+> unit address is wrong.
+
+Sorry am not sure I follow, can you please explain how..
+
+> > +                       device_type = "cpu";
+> > +                       compatible = "arm,cortex-a53";
+> > +                       reg = <0x100>;
+> > +                       enable-method = "psci";
+> > +                       next-level-cache = <&L2_0>;
+> > +               };
+> > +
+> > +               CPU1: cpu@1 {
+> > +                       device_type = "cpu";
+> > +                       compatible = "arm,cortex-a53";
+> > +                       reg = <0x101>;
+> > +                       enable-method = "psci";
+> > +                       next-level-cache = <&L2_0>;
+> > +               };
+> > +
+> > +               CPU2: cpu@2 {
+> > +                       device_type = "cpu";
+> > +                       compatible = "arm,cortex-a53";
+> > +                       reg = <0x102>;
+> > +                       enable-method = "psci";
+> > +                       next-level-cache = <&L2_0>;
+> > +               };
+> > +
+> > +               CPU3: cpu@3 {
+> > +                       device_type = "cpu";
+> > +                       compatible = "arm,cortex-a53";
+> > +                       reg = <0x103>;
+> > +                       enable-method = "psci";
+> > +                       next-level-cache = <&L2_0>;
+> > +               };
+> > +
+> > +               L2_0: l2-cache {
+> > +                       compatible = "cache";
+> > +                       cache-level = <2>;
+> > +               };
+> > +       };
+> > +
+> > +       memory@80000000 {
+> > +               device_type = "memory";
+> > +               /* We expect the bootloader to fill in the reg */
+> 
+> Can't you put in a default or base address at least.
+
+Okay will try
+
 -- 
-2.19.1
+~Vinod
