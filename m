@@ -1,28 +1,32 @@
-From: Andy Gross <andy.gross@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Mark protected gcc clocks
-Date: Fri, 9 Nov 2018 17:21:49 -0600
-Message-ID: <20181109232149.GA8686@hector.attlocal.net>
-References: <20181105194011.43770-1-swboyd@chromium.org>
- <20181106055013.11271-1-bjorn.andersson@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Evan Green <evgreen@chromium.org>
+Subject: [PATCH] arm64: dts: qcom: sdm845: Add gpio-ranges to TLMM node
+Date: Fri,  9 Nov 2018 15:52:12 -0800
+Message-ID: <20181109235212.111169-1-evgreen@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181106055013.11271-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Boyd <swboyd@chromium.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 05, 2018 at 09:50:13PM -0800, Bjorn Andersson wrote:
-> As of v4.20-rc1 probing the GCC driver on a SDM845 device with the
-> standard security implementation causes an access violation and an
-> immediate system restart. Use the protected-clocks property to mark the
-> offending clocks protected for the MTP, in order to allow it to boot.
-> 
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Add the gpio-ranges property to the TLMM node so that GPIO hogs work.
 
-This looks fine to me.
+Signed-off-by: Evan Green <evgreen@chromium.org>
+---
 
-Acked-by: Andy Gross <andy.gross@linaro.org>
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index b72bdb0a31a57..f02530ecbe0b9 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -821,6 +821,7 @@
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			gpio-ranges = <&tlmm 0 0 150>;
+ 
+ 			qup_i2c0_default: qup-i2c0-default {
+ 				pinmux {
+-- 
+2.16.4
