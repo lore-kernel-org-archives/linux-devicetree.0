@@ -1,32 +1,94 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3 3/3] MAINTAINERS: Add entry for i2c-omap driver
-Date: Fri, 9 Nov 2018 08:10:30 -0800
-Message-ID: <20181109161030.GP56134@atomide.com>
-References: <20181108091931.3342-1-vigneshr@ti.com>
- <20181108091931.3342-4-vigneshr@ti.com>
- <20181108092320.GC951@kunai>
- <d57ace5e-d42a-0a0e-2813-4a25cc6b37bb@ti.com>
- <20181108150231.GF56134@atomide.com>
- <20181109155517.GF1031@kunai>
- <20181109155647.GG1031@kunai>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 3/4] dt-bindings: reset: uniphier: Add AHCI core reset description
+Date: Sat, 10 Nov 2018 01:14:06 +0900
+Message-ID: <CAK7LNAQGftPMLkQk-tU4R6Jtw9W6npka+Br+2wyyZicAgwDvRg@mail.gmail.com>
+References: <1541727727-10821-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1541727727-10821-4-git-send-email-hayashi.kunihiko@socionext.com> <1541775663.4112.48.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181109155647.GG1031@kunai>
+In-Reply-To: <1541775663.4112.48.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Vignesh R <vigneshr@ti.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, "Strashko, Grygorii" <grygorii.strashko@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-* Wolfram Sang <wsa@the-dreams.de> [181109 15:56]:
-> > Cool, thanks all! Tony, I took the liberty to interpret this message as
-> > an Acked-by so I could apply V3 of this series right away.
-> 
-> Doh, v4 I meant. Sorry for the noise.
+On Sat, Nov 10, 2018 at 12:02 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+>
+> Hi Kunihiko,
+>
+> On Fri, 2018-11-09 at 10:42 +0900, Kunihiko Hayashi wrote:
+> > Add compatible strings for reset control of AHCI core implemented in
+> > UniPhier SoCs. The reset control belongs to AHCI glue layer.
+> >
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > ---
+> >  Documentation/devicetree/bindings/reset/uniphier-reset.txt | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> > index f63c511..ea00517 100644
+> > --- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> > +++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> > @@ -133,6 +133,9 @@ Required properties:
+> >      "socionext,uniphier-pxs2-usb3-reset" - for PXs2 SoC USB3
+> >      "socionext,uniphier-ld20-usb3-reset" - for LD20 SoC USB3
+> >      "socionext,uniphier-pxs3-usb3-reset" - for PXs3 SoC USB3
+> > +    "socionext,uniphier-pro4-ahci-reset" - for Pro4 SoC AHCI
+> > +    "socionext,uniphier-pxs2-ahci-reset" - for PXs2 SoC AHCI
+> > +    "socionext,uniphier-pxs3-ahci-reset" - for PXs3 SoC AHCI
+>
+> Since the driver behaves identically for "socionext,uniphier-pro4-usb3-
+> reset" and "socionext,uniphier-pro4-ahci-reset", would it make sense to
+> add a common compatible?
 
-OK
 
-Thanks,
+As far as I could guess, he just happened to find the same driver code
+could be reused for other hardware.
 
-Tony
+Theoretically, this can happen anywhere since
+a reset controller is just a set of registers
+each bit of which is connected to a reset line.
+
+If you added a super-generic compatible like "simple-reset",
+I would agree with
+"socionext,uniphier-pro4-usb3-reset", "simple-reset"
+since this is a pattern.
+
+
+However,
+"socionext,uniphier-pro4-glue-reset" is kind of a halfway house
+where it is SoC-specific, but still ambiguous.
+
+
+> Something like:
+> "socionext,uniphier-pro4-usb3-reset", "socionext,uniphier-pro4-glue-reset" - for USB3 SoC AHCI
+> "socionext,uniphier-pro4-ahci-reset", "socionext,uniphier-pro4-glue-reset" - for Pro4 SoC AHCI
+>
+> That way if more places turn up where the glue layer reset is used,
+> you can add them without patching the driver every time.
+
+
+This is a trade-off between "patch the driver"
+and "potential change of the binding".
+
+There is no real hardware like pro4-glue-reset.
+
+
+
+I am guessing this is a part of syscon or something,
+but I cannot find any explanation in a bigger picture.
+
+So, I cannot judge this further more.
+
+
+
+
+> regards
+> Philipp
+
+
+
+--
+Best Regards
+Masahiro Yamada
