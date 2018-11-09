@@ -1,96 +1,106 @@
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v6 3/9] ARM: aurora-l2: add defines for parity and ECC registers
-Date: Fri,  9 Nov 2018 20:03:43 +1300
-Message-ID: <20181109070349.20464-4-chris.packham@alliedtelesis.co.nz>
-References: <20181109070349.20464-1-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v6 0/9] EDAC drivers for Armada XP L2 and DDR
+Date: Fri,  9 Nov 2018 20:03:40 +1300
+Message-ID: <20181109070349.20464-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181109070349.20464-1-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux@armlinux.org.uk, bp@alien8.de, arnd@arndb.de, jlu@pengutronix.de, gregory.clement@bootlin.com
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-From: Jan Luebbe <jlu@pengutronix.de>
+The current plan is for these to go in via the ARM tree once appropriate
+Reviews/Acks have been given
 
-These defines will be used by subsequent patches to add support for the
-parity check and error correction functionality in the Aurora L2 cache
-controller.
+http://lists.infradead.org/pipermail/linux-arm-kernel/2017-August/525561.=
+html
 
-Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
-=20.../include/asm/hardware/cache-aurora-l2.h    | 48 +++++++++++++++++++=
+This series adds drivers for the L2 cache and DDR RAM ECC functionality a=
+s
+found on the MV78230/MV78x60 SoCs. Jan has tested these changes with the
+MV78460 (on a custom board with a DDR3 ECC DIMM), Chris has tested these
+changes with 88F6820 and 98dx3236 (both a custom boards with fixed DDR3 +=
+=20ECC).
 
-=201 file changed, 48 insertions(+)
+Also contained in this series is an additional debugfs wrapper.
 
-diff --git a/arch/arm/include/asm/hardware/cache-aurora-l2.h b/arch/arm/i=
-nclude/asm/hardware/cache-aurora-l2.h
-index dc5c479ec4c3..39769ffa0051 100644
---- a/arch/arm/include/asm/hardware/cache-aurora-l2.h
-+++ b/arch/arm/include/asm/hardware/cache-aurora-l2.h
-@@ -31,6 +31,9 @@
-=20#define AURORA_ACR_REPLACEMENT_TYPE_SEMIPLRU \
-=20	(3 << AURORA_ACR_REPLACEMENT_OFFSET)
-=20
-+#define AURORA_ACR_PARITY_EN	(1 << 21)
-+#define AURORA_ACR_ECC_EN	(1 << 20)
-+
-=20#define AURORA_ACR_FORCE_WRITE_POLICY_OFFSET	0
-=20#define AURORA_ACR_FORCE_WRITE_POLICY_MASK	\
-=20	(0x3 << AURORA_ACR_FORCE_WRITE_POLICY_OFFSET)
-@@ -41,6 +44,51 @@
-=20#define AURORA_ACR_FORCE_WRITE_THRO_POLICY	\
-=20	(2 << AURORA_ACR_FORCE_WRITE_POLICY_OFFSET)
-=20
-+#define AURORA_ERR_CNT_REG          0x600
-+#define AURORA_ERR_ATTR_CAP_REG     0x608
-+#define AURORA_ERR_ADDR_CAP_REG     0x60c
-+#define AURORA_ERR_WAY_CAP_REG      0x610
-+#define AURORA_ERR_INJECT_CTL_REG   0x614
-+#define AURORA_ERR_INJECT_MASK_REG  0x618
-+
-+#define AURORA_ERR_CNT_CLR_OFFSET         31
-+#define AURORA_ERR_CNT_CLR		   \
-+	(0x1 << AURORA_ERR_CNT_CLR_OFFSET)
-+#define AURORA_ERR_CNT_UE_OFFSET          16
-+#define AURORA_ERR_CNT_UE_MASK             \
-+	(0x7fff << AURORA_ERR_CNT_UE_OFFSET)
-+#define AURORA_ERR_CNT_CE_OFFSET           0
-+#define AURORA_ERR_CNT_CE_MASK             \
-+	(0xffff << AURORA_ERR_CNT_CE_OFFSET)
-+
-+#define AURORA_ERR_ATTR_SRC_OFF           16
-+#define AURORA_ERR_ATTR_SRC_MSK            \
-+	(0x7 << AURORA_ERR_ATTR_SRC_OFF)
-+#define AURORA_ERR_ATTR_TXN_OFF           12
-+#define AURORA_ERR_ATTR_TXN_MSK            \
-+	(0xf << AURORA_ERR_ATTR_TXN_OFF)
-+#define AURORA_ERR_ATTR_ERR_OFF            8
-+#define AURORA_ERR_ATTR_ERR_MSK            \
-+	(0x3 << AURORA_ERR_ATTR_ERR_OFF)
-+#define AURORA_ERR_ATTR_CAP_VALID_OFF      0
-+#define AURORA_ERR_ATTR_CAP_VALID          \
-+	(0x1 << AURORA_ERR_ATTR_CAP_VALID_OFF)
-+
-+#define AURORA_ERR_ADDR_CAP_ADDR_MASK 0xffffffe0
-+
-+#define AURORA_ERR_WAY_IDX_OFF             8
-+#define AURORA_ERR_WAY_IDX_MSK             \
-+	(0xfff << AURORA_ERR_WAY_IDX_OFF)
-+#define AURORA_ERR_WAY_CAP_WAY_OFFSET      1
-+#define AURORA_ERR_WAY_CAP_WAY_MASK        \
-+	(0xf << AURORA_ERR_WAY_CAP_WAY_OFFSET)
-+
-+#define AURORA_ERR_INJECT_CTL_ADDR_MASK 0xfffffff0
-+#define AURORA_ERR_ATTR_TXN_OFF   12
-+#define AURORA_ERR_INJECT_CTL_EN_MASK          0x3
-+#define AURORA_ERR_INJECT_CTL_EN_PARITY        0x2
-+#define AURORA_ERR_INJECT_CTL_EN_ECC           0x1
-+
-=20#define AURORA_MAX_RANGE_SIZE	1024
-=20
-=20#define AURORA_WAY_SIZE_SHIFT	2
+Compared to the previous v5 series I've split the dt-binding documentatio=
+n into
+its own patch and updated armada_xp_edac.c to use a SPDX license.
+
+Compared to the previous v4 series I've added my s-o-b to some of Jan's
+patches and rebased against v4.19.0.
+
+Compared to the previous v3 series, the following changes have been made:=
+
+- Use shorter names for the AURORA ECC and parity registers
+- Numerous formatting changes to edac/armada_xp.c (as requested by Boris)=
+
+- Added support for Armada-38x and 98dx3236 SoCs
+
+Compared to the previous v2 series, the following changes have been made:=
+
+- Allocate EDAC structures later during probing and drop devres support
+=20 patches (requested by Boris)
+- Make drvdata->width usage consistent according to the comment (suggeste=
+d by
+=20 Chris)
+
+Compared to the previous v1 series, the following changes have been made:=
+
+- Add the aurora-l2 register defines earlier in the series (suggested by
+=20 Russell King and Gregory CLEMENT )
+- Changed the DT vendor prefix from "arm" to "marvell" for the ecc-enable=
+/disable
+=20 properties on the aurora-l2 (suggested by Russell King)
+- Fix some warnings reported by checkpatch
+
+Compared to the original RFC series, the following changes have been made=
+:
+- Integrated Chris' patches for parity and ECC configuration via DT
+- Merged the DDR RAM and L2 cache drivers (as requested by Boris, analogo=
+us
+=20 to fsl_ddr_edac.c and mpc85xx_edac.c)
+- Added myself to MAINTAINERS (requested by Boris)
+- L2 cache: Track the msg size and use snprintf (review comment by Chris)=
+
+- L2 cache: Split error injection from the check function (review comment=
+=20by
+=20 Chris)
+- DDR RAM: Allow 16 bit width in addition to 32 and 64 bit (review commen=
+t by
+=20 Chris)
+- Use of_match_ptr() (review comments by Chris)
+- Minor checkpatch cleanups
+
+Chris Packham (4):
+=20 ARM: l2x0: support parity-enable/disable on aurora
+=20 dt-bindings: ARM: document marvell,ecc-enable binding
+=20 ARM: l2x0: add marvell,ecc-enable property for aurora
+=20 EDAC: armada_xp: Add support for more SoCs
+
+Jan Luebbe (5):
+=20 ARM: l2c: move cache-aurora-l2.h to asm/hardware
+=20 ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
+=20 ARM: aurora-l2: add defines for parity and ECC registers
+=20 EDAC: Add missing debugfs_create_x32 wrapper
+=20 EDAC: Add driver for the Marvell Armada XP SDRAM and L2 cache ECC
+
+=20.../devicetree/bindings/arm/l2c2x0.txt        |   2 +
+=20MAINTAINERS                                   |   6 +
+=20.../asm/hardware}/cache-aurora-l2.h           |  50 +-
+=20arch/arm/mm/cache-l2x0.c                      |  20 +-
+=20drivers/edac/Kconfig                          |   7 +
+=20drivers/edac/Makefile                         |   1 +
+=20drivers/edac/armada_xp_edac.c                 | 635 ++++++++++++++++++=
+
+=20drivers/edac/debugfs.c                        |  11 +
+=20drivers/edac/edac_module.h                    |   5 +
+=209 files changed, 733 insertions(+), 4 deletions(-)
+=20rename arch/arm/{mm =3D> include/asm/hardware}/cache-aurora-l2.h (50%)=
+
+=20create mode 100644 drivers/edac/armada_xp_edac.c
+
 --=20
 2.19.1
