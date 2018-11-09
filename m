@@ -1,27 +1,40 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 1/5] pinctrl: actions: define constructor generic to
- Actions Semi SoC's
-Date: Fri, 9 Nov 2018 10:43:09 +0100
-Message-ID: <CACRpkdZK2No9sBRCwUWv=ieCund78hKvaL=oxmQzg5M-Bnhz0Q@mail.gmail.com>
-References: <20180829082413.2512005-1-sravanhome@gmail.com>
- <20180829082413.2512005-2-sravanhome@gmail.com> <20180829152049.GA21136@Mani-XPS-13-9360>
- <7fc376ac-5998-57b6-8989-908d7a0abfd0@gmail.com> <72d4911a-588f-9bf3-4fad-a0b34692ecd4@denx.de>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v2 0/3] crypto: ccree: add CryptoCell 713 baseline support
+Date: Fri, 9 Nov 2018 17:50:40 +0800
+Message-ID: <20181109095040.6wkjifw7hwlvoqq3@gondor.apana.org.au>
+References: <1540806616-5483-1-git-send-email-gilad@benyossef.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <72d4911a-588f-9bf3-4fad-a0b34692ecd4@denx.de>
+Content-Disposition: inline
+In-Reply-To: <1540806616-5483-1-git-send-email-gilad@benyossef.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: pn@denx.de
-Cc: saravanan sekar <sravanhome@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, mp-cs@actions-semi.com, Jeff Chen <jeff.chen@actions-semi.com>, "Thomas C. Liau" <thomas.liau@actions-semi.com>, linux@cubietech.com
+To: Gilad Ben-Yossef <gilad@benyossef.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ofir Drang <Ofir.Drang@arm.com>, Yael Chemla <Yael.Chemla@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 6, 2018 at 5:43 PM Parthiban Nallathambi <pn@denx.de> wrote:
+On Mon, Oct 29, 2018 at 09:50:11AM +0000, Gilad Ben-Yossef wrote:
+> Add first batch of patches for support of Arm TrustZone CryptoCell 713.
+> 
+> Changes from v1:
+> - Format dt bindings document one version per line and correct the heading
+>   as indicated by Rob Herring.
+> 
+> Gilad Ben-Yossef (3):
+>   crypto: ccree: add support for CryptoCell 713
+>   dt-bindings: crypto: ccree: add ccree 713
+>   crypto: ccree: add SM4 support
+> 
+>  .../devicetree/bindings/crypto/arm-cryptocell.txt  |  7 ++-
+>  drivers/crypto/Kconfig                             |  3 +-
+>  drivers/crypto/ccree/cc_cipher.c                   | 66 ++++++++++++++++++++++
+>  drivers/crypto/ccree/cc_driver.c                   | 23 +++++---
+>  drivers/crypto/ccree/cc_driver.h                   |  5 +-
+>  drivers/crypto/ccree/cc_hw_queue_defs.h            |  3 +
+>  6 files changed, 94 insertions(+), 13 deletions(-)
 
-> ping on this patch series!
-
-AFAICT there is some feedback with issues that need to be fixed,
-also the patch should probably need to be rebased on top of
-v4.20-rc1.
-
-Yours,
-Linus Walleij
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
