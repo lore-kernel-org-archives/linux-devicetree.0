@@ -1,80 +1,40 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/4] of/device: Add a way to probe drivers by match data
-Date: Fri, 9 Nov 2018 10:56:01 +0100
-Message-ID: <CAMuHMdUTwUTdbKAWCNxH72-tvJuY-LtRO2Dh8izdEOKrFOSwLQ@mail.gmail.com>
-References: <20181106183609.207702-1-sboyd@kernel.org> <20181106183609.207702-2-sboyd@kernel.org>
- <CAL_JsqLvKWcJUYDyWOg3rMeEWv7JV4zw7-YkOUWiL5rfXgVRvQ@mail.gmail.com> <154161585170.88331.1822872519370217248@swboyd.mtv.corp.google.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 2/3] ARM: dts: r8a77470: Add QSPI support
+Date: Fri, 9 Nov 2018 11:05:56 +0100
+Message-ID: <20181109100556.3yh7lkg5ehnbkrzi@verge.net.au>
+References: <1541696684-21235-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1541696684-21235-3-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154161585170.88331.1822872519370217248@swboyd.mtv.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, linux-mediatek@lists.infradead.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, ryder.lee@mediatek.com, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1541696684-21235-3-git-send-email-fabrizio.castro@bp.renesas.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, Mark Brown <broonie@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, linux-spi@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On Thu, Nov 08, 2018 at 05:04:42PM +0000, Fabrizio Castro wrote:
+> Add QSPI[01] support to the RZ/G1C SoC specific device tree.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-On Wed, Nov 7, 2018 at 7:37 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> Quoting Rob Herring (2018-11-06 12:44:52)
-> > On Tue, Nov 6, 2018 at 12:36 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > > We have a handful of clk drivers that have a collection of slightly
-> > > variant device support keyed off of the compatible string. In each of
-> > > these drivers, we demux the variant and then call the "real" probe
-> > > function based on whatever is stored in the match data for that
-> > > compatible string. Let's generalize this function so that it can be
-> > > re-used as the platform_driver probe function directly.
-> >
-> > This looks really hacky to me. It sounds kind of general, but really
-> > only works if we have match data that's a single function and we lose
-> > any type checking on the function.
->
-> I don't know what this means. Are you saying that we lose the ability to
-> type check the function pointer stored in the data member? I don't have
-> a good answer for this besides it's not any worse than the status quo
-> for the mediatek drivers.
+Thanks,
 
-The .data field has always been void *, and is used for storing different
-things, depending on the driver.
-It's already up to the driver writer to get that right.
+This looks fine to me but I will wait to see if there are other reviews
+before applying.
 
-> One alternative is to add a DT only array to the platform_driver struct
-> that has the platform driver probe function type and matches the index
-> in the of_device_id table. Then we can add some logic into
-> platform_drv_probe() to look for this table being set and find the probe
-> function to call. Then we still have match data for anything that wants
-> that (maybe it could be passed in to the probe function) at the cost of
-> having another array. I don't have a use-case for this right now so I'm
-> not sure this is a great idea.
->
->   struct of_platform_driver_probe_func {
->         int (*probe)(struct platform_device *pdev);
->   };
->
->   struct of_platform_driver_probe_func mtk_probes[] = {
->         mtk_probe1,
->         mtk_probe2,
->         mtk_probe3,
->   };
->
->   struct platform_driver mtk_driver = {
->         .of_probes = &mtk_probes;
->         .driver = {
->                 .name = "mtk-foo";
->                 .of_match_table = mtk_match_table,
->         },
->   };
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-This looks worse to me: people tend to be very good at keeping multiple
-arrays in sync :-(
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
