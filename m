@@ -1,133 +1,69 @@
-From: Stefan Popa <stefan.popa@analog.com>
-Subject: [PATCH v4 4/4] dt-bindings: iio: adc: Add docs for ad7124
-Date: Fri, 9 Nov 2018 17:43:00 +0200
-Message-ID: <1541778180-7862-1-git-send-email-stefan.popa@analog.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3 3/3] MAINTAINERS: Add entry for i2c-omap driver
+Date: Fri, 9 Nov 2018 16:55:18 +0100
+Message-ID: <20181109155517.GF1031@kunai>
+References: <20181108091931.3342-1-vigneshr@ti.com>
+ <20181108091931.3342-4-vigneshr@ti.com>
+ <20181108092320.GC951@kunai>
+ <d57ace5e-d42a-0a0e-2813-4a25cc6b37bb@ti.com>
+ <20181108150231.GF56134@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Ls2Gy6y7jbHLe9Od"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181108150231.GF56134@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
+To: Tony Lindgren <tony@atomide.com>
+Cc: Vignesh R <vigneshr@ti.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, "Strashko, Grygorii" <grygorii.strashko@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Analog Devices AD7124 4-channels and 8-channels ADC.
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
----
-Changes in v2:
-	- Nothing changed.
-Changes in v3:
-	- Removed the "adi,channels" property.
-	- Used the "reg" property to get the channel number and "adi,diff-channels"
-	  for the differential pins. The "adi,channel-number" property was removed.
-	- adi,bipolar is of boolean type.
-Changes in v4:
-	- Used the bipolar and diff-channels properties defined in the new adc.txt doc.
+--Ls2Gy6y7jbHLe9Od
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- .../devicetree/bindings/iio/adc/adi,ad7124.txt     | 81 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 82 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
+On Thu, Nov 08, 2018 at 07:02:31AM -0800, Tony Lindgren wrote:
+> * Vignesh R <vigneshr@ti.com> [181108 12:28]:
+> >=20
+> >=20
+> > On 08/11/18 2:53 PM, Wolfram Sang wrote:
+> > > On Thu, Nov 08, 2018 at 02:49:31PM +0530, Vignesh R wrote:
+> > >> Add separate entry for i2c-omap and add my name as reviewer for this
+> > >> driver.
+> > >=20
+> > > Thanks for stepping up, yet out of curiosity: why not maintainer?
+> > >=20
+> >=20
+> > I wasn't sure whether the convention is to add Reviewer or Maintainer
+> > entry for individual driver. I would be glad to change entry to maintai=
+ner.
+>=20
+> Great, yes please do!
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
-new file mode 100644
-index 0000000..fa0c43b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
-@@ -0,0 +1,81 @@
-+Analog Devices AD7124 ADC device driver
-+
-+Required properties for the AD7124:
-+	- compatible: Must be one of "adi,ad7124-4" or "adi,ad7124-8"
-+	- reg: SPI chip select number for the device
-+	- spi-max-frequency: Max SPI frequency to use
-+		see: Documentation/devicetree/bindings/spi/spi-bus.txt
-+	- clocks: phandle to the master clock (mclk)
-+		see: Documentation/devicetree/bindings/clock/clock-bindings.txt
-+	- clock-names: Must be "mclk".
-+	- interrupts: IRQ line for the ADC
-+		see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+
-+	  Required properties:
-+		* #address-cells: Must be 1.
-+		* #size-cells: Must be 0.
-+
-+	  Subnode(s) represent the external channels which are connected to the ADC.
-+	  Each subnode represents one channel and has the following properties:
-+		Required properties:
-+			* reg: The channel number. It can have up to 4 channels on ad7124-4
-+			  and 8 channels on ad7124-8, numbered from 0 to 15.
-+			* diff-channels: see: Documentation/devicetree/bindings/iio/adc/adc.txt
-+
-+		Optional properties:
-+			* bipolar: see: Documentation/devicetree/bindings/iio/adc/adc.txt
-+			* adi,reference-select: Select the reference source to use when
-+			  converting on the the specific channel. Valid values are:
-+			  0: REFIN1(+)/REFIN1(−).
-+			  1: REFIN2(+)/REFIN2(−).
-+			  3: AVDD
-+			  If this field is left empty, internal reference is selected.
-+
-+Optional properties:
-+	- refin1-supply: refin1 supply can be used as reference for conversion.
-+	- refin2-supply: refin2 supply can be used as reference for conversion.
-+	- avdd-supply: avdd supply can be used as reference for conversion.
-+
-+Example:
-+	adc@0 {
-+		compatible = "adi,ad7124-4";
-+		reg = <0>;
-+		spi-max-frequency = <5000000>;
-+		interrupts = <25 2>;
-+		interrupt-parent = <&gpio>;
-+		refin1-supply = <&adc_vref>;
-+		clocks = <&ad7124_mclk>;
-+		clock-names = "mclk";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		channel@0 {
-+			reg = <0>;
-+			adi,diff-channels = <0 1>;
-+			adi,reference-select = <0>;
-+			adi,gain = <2>;
-+			adi,odr-hz = <10>;
-+		};
-+
-+		channel@1 {
-+			reg = <1>;
-+			adi,bipolar;
-+			adi,diff-channels = <2 3>;
-+			adi,reference-select = <0>;
-+			adi,gain = <4>;
-+			adi,odr-hz = <50>;
-+		};
-+
-+		channel@2 {
-+			reg = <2>;
-+			adi,diff-channels = <4 5>;
-+			adi,gain = <128>;
-+			adi,odr-hz = <19200>;
-+		};
-+
-+		channel@3 {
-+			reg = <3>;
-+			adi,diff-channels = <6 7>;
-+		};
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3a1bfcb..f2fa508 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -845,6 +845,7 @@ L:	linux-iio@vger.kernel.org
- W:	http://ez.analog.com/community/linux-device-drivers
- S:	Supported
- F:	drivers/iio/adc/ad7124.c
-+F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
- 
- ANALOG DEVICES INC AD9389B DRIVER
- M:	Hans Verkuil <hans.verkuil@cisco.com>
--- 
-2.7.4
+Cool, thanks all! Tony, I took the liberty to interpret this message as
+an Acked-by so I could apply V3 of this series right away.
+
+
+--Ls2Gy6y7jbHLe9Od
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlvlrd8ACgkQFA3kzBSg
+KbbfFQ/+P5ALnhyR70cHolGU5QzSpS/F5HghAOsLDbh6KM7qKXh+W6BXKMWpKs4y
+pWVM+4g0rjaDbFMh/toX01FcSs2uDCONxFFN/e0bmQTrGaCVcBGqu4+M7mps1x9g
+bZtGKkX5aM0P53g2qCjAfjEcM0GAJ5upAvcblH3qojxnlGdQLjc5hRmLwelyJFhu
+cc3KvF1YgL/+nlc3Mf4O4Seaq7ZKlCsB4ntH+Tob+uJ3ubh5/1QKwP/CfMKioaou
+VJ6X7uuHgXleyJNxhhgzucxjl2kY0NJwMTGGFUPMUhDTME2/SBYe6s8bIsclZJU3
+0FocEKayk1c0BLoxNjWUqMImUdB9l1nceodmy3xHqijRE5TxI9IRpWFB3SQ5Wx+f
+pZwMK5J/4bUOr3u9OyXk4m6qJqk4+JuzaBL1BY4G6DRY63J8bV9gLoPRY+p94nHi
+jd3aaXWKoo1yvigH0mfetjiCLioZ40FIHIFDzKLbz3L6JV9Iw+Ig30u9pAK0SZBa
+zbhPb3G/p4OzhOmtswRygnN/P+UCo8cQ7alpJEXmc5mJseTFajABw1zlGfm4MOel
+t2FNOaRgjDDaxL2uCqz0JmWUiJcCY0EOj2FQUFaFr/UBMYQIEZGB6T20SD1sfjaO
+FeKWtNxdXiRRYqJwPykNTLzlyK0lbCWzO4M/E5+38mET28LaZcI=
+=E6jG
+-----END PGP SIGNATURE-----
+
+--Ls2Gy6y7jbHLe9Od--
