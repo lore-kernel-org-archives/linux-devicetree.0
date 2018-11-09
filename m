@@ -1,125 +1,62 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v6 00/10] hwmon and fsi: Add On-Chip Controller Driver
-Date: Fri, 9 Nov 2018 15:03:54 -0800
-Message-ID: <20181109230354.GA31326@roeck-us.net>
-References: <1541711129-26631-1-git-send-email-eajames@linux.ibm.com>
+From: Matheus Tavares Bernardino <matheus.bernardino@usp.br>
+Subject: Re: [PATCH 5/6] staging:iio:ad2s90: Add SPDX license identifier
+Date: Fri, 9 Nov 2018 21:19:52 -0200
+Message-ID: <CAHd-oW4wo7fShsNMf7a1udnCepUL+ok+Gk7jzVoEUEUjaPCXpw@mail.gmail.com>
+References: <20181109220044.24843-1-matheus.bernardino@usp.br>
+ <20181109220044.24843-6-matheus.bernardino@usp.br>
+ <CAOMZO5DVr7TBoNtB7Bwjv1rpaCdOyg8+iU=iCwBRjSD4iWeBUw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1541711129-26631-1-git-send-email-eajames@linux.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, rdunlap@infradead.org, benh@kernel.crashing.org, Eddie James <eajames@linux.vnet.ibm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <CAOMZO5DVr7TBoNtB7Bwjv1rpaCdOyg8+iU=iCwBRjSD4iWeBUw@mail.gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: festevam@gmail.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Alexandru Ardelean <alexandru.ardelean@analog.com>, Victor Colombo <victorcolombo@gmail.com>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 08, 2018 at 03:05:19PM -0600, Eddie James wrote:
-> From: Eddie James <eajames@linux.vnet.ibm.com>
-> 
-> This series adds a hwmon driver to support the OCC on POWER8 and POWER9
-> processors. The OCC is an embedded processor that provides realtime power and
-> thermal monitoring and management.
-> 
-> The series also adds a "bus" driver to handle atomic communication between the
-> service processor and the OCC on a POWER9 chip. This communication takes place
-> over FSI bus to the SBE (Self-Boot engine) FIFO, which in turn communicates
-> with the OCC. The driver for the SBEFIFO is already available as an FSI client
-> driver.
-> 
-> For POWER8 OCCs, communication between the service processor and the OCC is
-> achieved over I2C bus.
-> 
-I am not entirely happy with the series - there are still lots of proprietary
-attributes, and I would have preferred the use of the _info API at this point -
-but this has taken long enough. Series applied to hwmon-next. Please send any
-fixes as follow-up patches.
+On Fri, Nov 9, 2018 at 8:13 PM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> Hi Matheus,
+>
+
+Hi, Fabio
+
+> On Fri, Nov 9, 2018 at 8:01 PM Matheus Tavares
+> <matheus.bernardino@usp.br> wrote:
+> >
+> > This patch adds the SPDX GPL-2.0-only license identifier to ad2s90.c,
+> > which solves the checkpatch.pl warning:
+> > "WARNING: Missing or malformed SPDX-License-Identifier tag in line 1".
+> >
+> > Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
+> > ---
+> >  drivers/staging/iio/resolver/ad2s90.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/staging/iio/resolver/ad2s90.c b/drivers/staging/iio/resolver/ad2s90.c
+> > index 949ff55ac6b0..f439da721df8 100644
+> > --- a/drivers/staging/iio/resolver/ad2s90.c
+> > +++ b/drivers/staging/iio/resolver/ad2s90.c
+> > @@ -1,3 +1,4 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+>
+> This should be:
+> // SPDX-License-Identifier: GPL-2.0
+
+Hm, but it seems that the identifier "GPL-2.0" is deprecated, look:
+https://spdx.org/licenses/GPL-2.0.html. It has been updated to
+"GPL-2.0-only" in license list v3
+(https://spdx.org/licenses/GPL-2.0-only.html). Is there some other
+reason to use the deprecated "GPL-2.0" that I'm not aware of?
 
 Thanks,
-Guenter
-
-> Changes since v5:
->  * Makefile fix when compiling both P8 and P9 versions
->  * Spelling fix in hwmon doc
->  * Added an additional sentence for P9 binding doc to explain that OCC isn't
->    an FSI slave device.
-> 
-> Changes since v4:
->  * Make the hwmon attributes conform almost completely to standard names and
->    values. The only exception is powerX_cap_user and powerX_cap_user_source.
->  * Improve hwmon documentation.
->  * Add ibm,p9-occ dt documentation.
-> 
-> Changes since v3:
->  * Add the FSI OCC driver.
->  * Pull the sysfs attribute code into it's own file for cleanliness.
->  * Various fixes for attribute creation and integer overflow.
-> 
-> Changes since v2:
->  * Add sysfs_notify for the error and throttling attributes when change is
->    detected.
->  * Removed occs_present counting of devices bound.
->  * Improved remove() of P9 driver to avoid bad behavior with relation to OCC
->    driver when unbound.
->  * Added default cases (return EINVAL) for all sensor show functions.
->  * Added temperature fault sensor.
->  * Added back dt binding documentation for P9 to address checkpatch warning.
->  * Added occs_present attribute from the poll response.
-> 
-> Changes since v1:
->  * Remove wait loop in P9 code, as that is now handled by FSI OCC driver.
->  * Removed dt binding documentation for P9, FSI OCC driver will probe OCC hwmon
->    driver automatically.
->  * Moved OCC response code definitions to the OCC include file.
->  * Fixed includes.
->  * Changed some structure fields to __beXX as that is what they are.
->  * Changed some errnos.
->  * Removed some dev_err().
->  * Refactored P8 code a bit to use #defined addresses and magic values, and
->    changed "goto retry" to a loop.
->  * Refactored error handling a bit.
-> 
-> Eddie James (10):
->   dt-bindings: fsi: Add P9 OCC device documentation
->   fsi: Add On-Chip Controller (OCC) driver
->   Documentation: hwmon: Add OCC documentation
->   dt-bindings: i2c: Add P8 OCC hwmon device documentation
->   hwmon: Add On-Chip Controller (OCC) hwmon driver
->   hwmon (occ): Add command transport method for P8 and P9
->   hwmon (occ): Parse OCC poll response
->   hwmon (occ): Add sensor types and versions
->   hwmon (occ): Add sensor attributes and register hwmon device
->   hwmon (occ): Add sysfs attributes for additional OCC data
-> 
->  .../devicetree/bindings/fsi/ibm,p9-occ.txt         |   16 +
->  .../devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt   |   25 +
->  Documentation/hwmon/occ                            |  112 ++
->  drivers/fsi/Kconfig                                |   10 +
->  drivers/fsi/Makefile                               |    1 +
->  drivers/fsi/fsi-occ.c                              |  599 +++++++++++
->  drivers/hwmon/Kconfig                              |    2 +
->  drivers/hwmon/Makefile                             |    1 +
->  drivers/hwmon/occ/Kconfig                          |   31 +
->  drivers/hwmon/occ/Makefile                         |    5 +
->  drivers/hwmon/occ/common.c                         | 1098 ++++++++++++++++++++
->  drivers/hwmon/occ/common.h                         |  128 +++
->  drivers/hwmon/occ/p8_i2c.c                         |  255 +++++
->  drivers/hwmon/occ/p9_sbe.c                         |  106 ++
->  drivers/hwmon/occ/sysfs.c                          |  188 ++++
->  include/linux/fsi-occ.h                            |   25 +
->  16 files changed, 2602 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
->  create mode 100644 Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt
->  create mode 100644 Documentation/hwmon/occ
->  create mode 100644 drivers/fsi/fsi-occ.c
->  create mode 100644 drivers/hwmon/occ/Kconfig
->  create mode 100644 drivers/hwmon/occ/Makefile
->  create mode 100644 drivers/hwmon/occ/common.c
->  create mode 100644 drivers/hwmon/occ/common.h
->  create mode 100644 drivers/hwmon/occ/p8_i2c.c
->  create mode 100644 drivers/hwmon/occ/p9_sbe.c
->  create mode 100644 drivers/hwmon/occ/sysfs.c
->  create mode 100644 include/linux/fsi-occ.h
-> 
-> -- 
-> 1.8.3.1
-> 
+Matheus
