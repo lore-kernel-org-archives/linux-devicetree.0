@@ -1,60 +1,47 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: k3-am6: Introduce pinmux
- definitions
-Date: Fri, 9 Nov 2018 03:00:33 -0600
-Message-ID: <20181109090033.jx4buin3xuogdgfo@kahuna>
-References: <20181108112647.7205-1-vigneshr@ti.com>
- <20181108112647.7205-2-vigneshr@ti.com>
- <20181108134533.3dcy3f53oxze5nlz@kahuna>
- <1c400ca6-9257-0831-6909-fb00b00c4698@ti.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/4] arm64: dts: meson-axg: fix mailbox address
+Date: Fri, 9 Nov 2018 10:37:04 +0100
+Message-ID: <3cf7c061-64b4-bd7a-88fb-0dea0caf7e01@baylibre.com>
+References: <20181108135352.8459-1-jbrunet@baylibre.com>
+ <20181108135352.8459-2-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1c400ca6-9257-0831-6909-fb00b00c4698@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181108135352.8459-2-jbrunet@baylibre.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 14:20-20181109, Vignesh R wrote:
-> >> +++ b/include/dt-bindings/pinctrl/k3-am6.h
-> > 
-> > Are we thinking of creating headers for every single SoC?
+On 08/11/2018 14:53, Jerome Brunet wrote:
+> MHU mailbox address is wrong. Fixing it enables the mailboxes on the A113.
+> These mailboxes are needed for SCPI
 > 
-> We would need one file per SoC family (i.e atleast one for K3 family as
-> a whole) as pinctrl register layout is significantly different than
+> Fixes: 9d59b708500f ("arm64: dts: meson-axg: add initial A113D SoC DT support")
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> index 3cc0044d3468..ff8b3406aff6 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> @@ -1067,9 +1067,9 @@
+>  			};
+>  		};
+>  
+> -		mailbox: mailbox@ff63dc00 {
+> +		mailbox: mailbox@ff63c404 {
+>  			compatible = "amlogic,meson-gx-mhu", "amlogic,meson-gxbb-mhu";
+> -			reg = <0 0xff63dc00 0 0x400>;
+> +			reg = <0 0xff63c404 0 0x4c>;
+>  			interrupts = <GIC_SPI 208 IRQ_TYPE_EDGE_RISING>,
+>  				     <GIC_SPI 209 IRQ_TYPE_EDGE_RISING>,
+>  				     <GIC_SPI 210 IRQ_TYPE_EDGE_RISING>;
+> 
 
-Yes, I am aware of the same.
 
-> other TI SoCs. I can rename the file to include/dt-bindings/pinctrl/k3.h
-> to indicate its intended to be common for all K3 SoCs, if you prefer.
-
-Yes, that would be the preference. There are two types of IO muxing IPs
-(the equivalent of padconf from omap days) that I
-am aware of. However these are all within the same 32bit definitions and
-I know there has been significant effort spend by designers based on
-software team feedbacks to maintain consistency as much as possible
-within technological constraints.
-
-So macros could be used to differentiate within the same header. The
-deltas do exist, however they can be differentiated easily.
-
-You should have access to the alternative solution, and even if you
-cannot publish it, you should plan the header to scale easily when the
-time is appropriate as a trivial additional patch.
-
-For the rest.. Will wait for v2.
-
--- 
-Regards,
-Nishanth Menon
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
