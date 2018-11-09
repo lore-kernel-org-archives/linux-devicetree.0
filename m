@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v7 04/17] powerpc/pseries: add of_node_put() in dlpar_detach_node()
-Date: Thu,  8 Nov 2018 22:05:52 -0800
-Message-ID: <1541743565-23163-5-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v7 07/17] of: overlay: reorder fields in struct fragment
+Date: Thu,  8 Nov 2018 22:05:55 -0800
+Message-ID: <1541743565-23163-8-git-send-email-frowand.list@gmail.com>
 References: <1541743565-23163-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1541743565-23163-1-git-send-email-frowand.list@gmail.com>
@@ -12,39 +12,31 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-The previous commit, "of: overlay: add missing of_node_get() in
-__of_attach_node_sysfs" added a missing of_node_get() to
-__of_attach_node_sysfs().  This results in a refcount imbalance
-for nodes attached with dlpar_attach_node().  The calling sequence
-from dlpar_attach_node() to __of_attach_node_sysfs() is:
-
-   dlpar_attach_node()
-      of_attach_node()
-         __of_attach_node_sysfs()
-
-For more detailed description of the node refcount, see
-commit 68baf692c435 ("powerpc/pseries: Fix of_node_put() underflow
-during DLPAR remove").
+Order the fields of struct fragment in the same order as
+struct of_overlay_notify_data.  The order in struct fragment is
+not significant.  If both structs are ordered the same then when
+examining the data in a debugger or dump the human involved does
+not have to remember which context they are examining.
 
 Tested-by: Alan Tull <atull@kernel.org>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- arch/powerpc/platforms/pseries/dlpar.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/of/overlay.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
-index 7625546caefd..17958043e7f7 100644
---- a/arch/powerpc/platforms/pseries/dlpar.c
-+++ b/arch/powerpc/platforms/pseries/dlpar.c
-@@ -270,6 +270,8 @@ int dlpar_detach_node(struct device_node *dn)
- 	if (rc)
- 		return rc;
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index 9808aae4621a..15be3da34fef 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -49,8 +49,8 @@ struct target {
+  * @overlay:	pointer to the __overlay__ node
+  */
+ struct fragment {
+-	struct device_node *target;
+ 	struct device_node *overlay;
++	struct device_node *target;
+ };
  
-+	of_node_put(dn);
-+
- 	return 0;
- }
- 
+ /**
 -- 
 Frank Rowand <frank.rowand@sony.com>
