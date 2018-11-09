@@ -1,27 +1,42 @@
-From: Sven Van Asbroeck <thesven73@gmail.com>
-Subject: Re: [PATCH anybus v3 0/6] Support HMS Profinet Card over Anybus
-Date: Fri, 9 Nov 2018 16:46:57 -0500
-Message-ID: <CAGngYiWtmHPShpbLOj4qYJCe6PvNT7ZUDd-0jRsRyxD+HWbByQ@mail.gmail.com>
-References: <20181104155501.14767-1-TheSven73@googlemail.com>
- <CAGngYiU+8k4ZHYhFVQGKXW8mATEDi64Mi9PsVkX-5vn2PCY3ew@mail.gmail.com> <CAK8P3a1STE+vN_yF0Zyu8gGX_KCWZEV=muPxVE6M1EUqdhO4Pg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Matheus Tavares <matheus.bernardino@usp.br>
+Subject: [PATCH 0/6] staging:iio:ad2s90: Add dt support and move out of staging
+Date: Fri,  9 Nov 2018 20:00:38 -0200
+Message-ID: <20181109220044.24843-1-matheus.bernardino@usp.br>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a1STE+vN_yF0Zyu8gGX_KCWZEV=muPxVE6M1EUqdhO4Pg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sven Van Asbroeck <svendev@arcx.com>, Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+To: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alexandru Ardelean <alexandru.ardelean@analog.com>, kernel-usp@googlegroups.com, victorcolombo@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 9, 2018 at 4:22 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
->
-> As usual, it comes down to the user space interfaces I think. Designing
-> a user interface is hard, most importantly because you cannot change it
-> once anyone starts relying on it, as opposed to implementation details
-> that you are free to change at any point.
+This patch set adds device tree support to ad2s90, with standard
+device tree id table, adds the respective dt-binding documentation,
+solves a codestyle warning and move the driver out of staging.
 
-Thanks for the feedback !
-I will rework v4 so it uses a userspace interface shared with other
-fieldbus drivers - uio.
-Let's see how it goes.
+This patch set completes all the remaining itens listed to be done
+before moving the driver out of staging, enumerated in this mail thread:
+https://marc.info/?l=linux-iio&m=154028966111330&w=2, except by one
+codestyle problem: "CHECK: struct mutex definition without comment". It
+seems to be a commonly ignored check for mutexes of device states. If I
+am wrong, please, let me know and I will be happy to send a patch to
+tackle it.
+
+Matheus Tavares (6):
+  staging:iio:ad2s90: Add device tree support
+  staging:iio:ad2s90: Remove spi setup that should be done via dt
+  staging:iio:ad2s90: Add max frequency check at probe
+  dt-bindings:iio:resolver: Add docs for ad2s90
+  staging:iio:ad2s90: Add SPDX license identifier
+  staging:iio:ad2s90: Move out of staging
+
+ .../bindings/iio/resolver/ad2s90.txt          | 26 ++++++++++++++++
+ drivers/iio/resolver/Kconfig                  | 10 ++++++
+ drivers/iio/resolver/Makefile                 |  1 +
+ drivers/{staging => }/iio/resolver/ad2s90.c   | 31 ++++++++++++-------
+ drivers/staging/iio/resolver/Kconfig          | 10 ------
+ drivers/staging/iio/resolver/Makefile         |  1 -
+ 6 files changed, 57 insertions(+), 22 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/resolver/ad2s90.txt
+ rename drivers/{staging => }/iio/resolver/ad2s90.c (81%)
+
+-- 
+2.18.0
