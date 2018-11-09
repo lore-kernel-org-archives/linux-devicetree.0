@@ -1,126 +1,77 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 2/2] phy: qualcomm: Add Synopsys High-Speed USB PHY driver
-Date: Fri, 9 Nov 2018 10:52:17 +0530
-Message-ID: <20181109052217.GL12092@vkoul-mobl>
-References: <20181108070449.23572-1-shawn.guo@linaro.org>
- <20181108070449.23572-3-shawn.guo@linaro.org>
+From: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2] drm/msm/dpu: Correct dpu destroy and
+ disable order
+Date: Fri, 9 Nov 2018 11:37:17 +0530
+Message-ID: <a2c1906e-f61d-3da2-45a4-3bc14c4201dd@codeaurora.org>
+References: <1541162957-12796-1-git-send-email-jshekhar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181108070449.23572-3-shawn.guo@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <1541162957-12796-1-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08-11-18, 15:04, Shawn Guo wrote:
-> +static int qcom_snps_hsphy_config_regulators(struct hsphy_priv *priv, int high)
-> +{
-> +	int min, ret, i;
-> +
-> +	min = high ? 1 : 0; /* low or none? */
-> +
-> +	for (i = 0; i < VREG_NUM; i++) {
-> +		ret = regulator_set_voltage(priv->vregs[i].consumer,
-> +					    priv->voltages[i][min],
-> +					    priv->voltages[i][VOL_MAX]);
-> +		if (ret)
-> +			return ret;
-
-should we not roll back the set voltages on error?
-
-> +static int qcom_snps_hsphy_por_reset(struct hsphy_priv *priv)
-> +{
-> +	int ret;
-> +
-> +	ret = reset_control_assert(priv->por_reset);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * The Femto PHY is POR reset in the following scenarios.
-
-POR?
-
-> +static int qcom_snps_hsphy_init(struct phy *phy)
-> +{
-> +	struct hsphy_priv *priv = phy_get_drvdata(phy);
-> +	int state;
-> +	int ret;
-
-perhaps they can be in a single line :)
-
-> +static int qcom_snps_hsphy_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct phy_provider *provider;
-> +	struct hsphy_priv *priv;
-> +	struct resource *res;
-> +	struct phy *phy;
-> +	int size;
-> +	int ret;
-> +	int i;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	priv->base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(priv->base))
-> +		return PTR_ERR(priv->base);
-> +
-> +	priv->num_clks = ARRAY_SIZE(qcom_snps_hsphy_clks);
-> +	priv->clks = devm_kcalloc(dev, priv->num_clks, sizeof(*priv->clks),
-> +				  GFP_KERNEL);
-> +	if (!priv->clks)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < priv->num_clks; i++)
-> +		priv->clks[i].id = qcom_snps_hsphy_clks[i];
-> +
-> +	ret = devm_clk_bulk_get(dev, priv->num_clks, priv->clks);
-> +	if (ret)
-> +		return ret;
-> +
-> +	priv->phy_reset = devm_reset_control_get(dev, "phy");
-> +	if (IS_ERR(priv->phy_reset))
-> +		return PTR_ERR(priv->phy_reset);
-> +
-> +	priv->por_reset = devm_reset_control_get(dev, "por");
-> +	if (IS_ERR(priv->por_reset))
-> +		return PTR_ERR(priv->por_reset);
-> +
-> +	priv->vregs[VDD].supply = "vdd";
-> +	priv->vregs[VDDA_1P8].supply = "vdda1p8";
-> +	priv->vregs[VDDA_3P3].supply = "vdda3p3";
-> +
-> +	ret = devm_regulator_bulk_get(dev, VREG_NUM, priv->vregs);
-> +	if (ret)
-> +		return ret;
-> +
-> +	priv->voltages[VDDA_1P8][VOL_NONE] = 0;
-> +	priv->voltages[VDDA_1P8][VOL_MIN] = 1800000;
-> +	priv->voltages[VDDA_1P8][VOL_MAX] = 1800000;
-> +
-> +	priv->voltages[VDDA_3P3][VOL_NONE] = 0;
-> +	priv->voltages[VDDA_3P3][VOL_MIN] = 3050000;
-> +	priv->voltages[VDDA_3P3][VOL_MAX] = 3300000;
-> +
-> +	ret = of_property_read_u32_array(dev->of_node, "qcom,vdd-voltage-level",
-> +					 priv->voltages[VDD], VOL_NUM);
-> +	if (ret) {
-> +		dev_err(dev, "failed to read qcom,vdd-voltage-level\n");
-> +		return ret;
-> +	}
-> +
-> +	size = of_property_count_u32_elems(dev->of_node, "qcom,init-seq");
-> +	if (size < 0)
-> +		size = 0;
-> +
-> +	priv->init_seq = devm_kcalloc(dev, (size / 3) + 1,
-
-size/3? I think it would be good to add a common explaining this
--- 
-~Vinod
+Ck9uIDExLzIvMjAxOCA2OjE5IFBNLCBKYXlhbnQgU2hla2hhciB3cm90ZToKPiBJbiBjYXNlIG9m
+IG1zbSBkcm0gYmluZCBmYWlsdXJlLCBkcHVfbWRzc19kZXN0cm95IGlzIHRyaWdnZXJlZC4KPiBJ
+biB0aGlzIGZ1bmN0aW9uLCByZXNvdXJjZXMgYXJlIGZyZWVkIGFuZCBwbSBydW50aW1lIGRpc2Fi
+bGUgaXMKPiBjYWxsZWQsIHdoaWNoIHRyaWdnZXJzIGRwdV9tZHNzX2Rpc2FibGUuIE5vdyBpbiBk
+cHVfbWRzc19kaXNhYmxlLAo+IGRyaXZlciB0cmllcyB0byBhY2Nlc3MgYSBtZW1vcnkgd2hpY2gg
+aXMgYWxyZWFkeSBmcmVlZC4gVGhpcwo+IHJlc3VsdHMgaW4ga2VybmVsIHBhbmljLiBGaXggdGhp
+cyBieSBlbnN1cmluZyBwcm9wZXIgc2VxdWVuY2UKPiBvZiBkcHUgZGVzdHJveSBhbmQgZGlzYWJs
+ZSBjYWxscy4KPiAKPiBDaGFuZ2VzIGluIHYyOgo+ICAgICAtIFJlbW92ZWQgZG91YmxlIHNwYWNp
+bmdzIFtKZXlrdW1hcl0KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKYXlhbnQgU2hla2hhciA8anNoZWto
+YXJAY29kZWF1cm9yYS5vcmc+CgpJIHdhcyB0ZXN0aW5nIHRoaXMgcGF0Y2ggb3V0IGFuZCBpbiBt
+eSBzZXR1cCBJIHNlZSB0aGF0IHdpdGggdGhpcwpjaGFuZ2UsIGR1cmluZyBhIGRzaSBwcm9iZSBk
+ZWZlciBjYXNlLCBhIGRwdV9tZHNzX2VuYWJsZSgpIGlzIGNhbGxlZApmb2xsb3dlZCBieSBhIGRw
+dV9tZHNzX2Rlc3Ryb3koKSBidXQgZHB1X21kc3NfZGlzYWJsZSgpIGlzIG5ldmVyIGNhbGxlZC4K
+ClRoaXMgcmVzdWx0cyBpbiBhIG1pc21hdGNoIGluIGNsb2NrIHVzZWNvdW50IGNhdXNpbmcgdGhl
+IG1kcCBjbG9ja3MgdG8Kc3RheSBlbmFibGVkIGV2ZW4gd2l0aCBkaXNwbGF5IHR1cm5lZCBvZmYu
+Cgpsb2NhbGhvc3QgfiAjIGNhdCAvc3lzL2tlcm5lbC9kZWJ1Zy9jbGsvY2xrX3N1bW1hcnkgfCBn
+cmVwIG1kc3MKICBkaXNwX2NjX21kc3NfcnNjY19haGJfY2xrICAgICAgICAgICAgMCAgICAgICAg
+MCAgICAgICAgMCAgICAgICAgICAgMCAgICAgICAgICAwICAgICAwICA1MDAwMAogIGRpc3BfY2Nf
+bWRzc19heGlfY2xrICAgICAgICAgICAgICAgICAwICAgICAgICAwICAgICAgICAwICAgICAgICAg
+ICAwICAgICAgICAgIDAgICAgIDAgIDUwMDAwCiAgZGlzcF9jY19tZHNzX2FoYl9jbGsgICAgICAg
+ICAgICAgICAgIDAgICAgICAgIDAgICAgICAgIDAgICAgICAgICAgIDAgICAgICAgICAgMCAgICAg
+MCAgNTAwMDAKICAgICAgICBkaXNwX2NjX21kc3NfbWRwX2Nsa19zcmMgICAgICAgMSAgICAgICAg
+MSAgICAgICAgMCAgICAxOTIwMDAwMCAgICAgICAgICAwICAgICAwICA1MDAwMAogICAgICAgICAg
+IGRpc3BfY2NfbWRzc19tZHBfbHV0X2NsayAgICAgICAwICAgICAgICAwICAgICAgICAwICAgIDE5
+MjAwMDAwICAgICAgICAgIDAgICAgIDAgIDUwMDAwCiAgICAgICAgICAgZGlzcF9jY19tZHNzX21k
+cF9jbGsgICAgICAgIDEgICAgICAgIDEgICAgICAgIDAgICAgMTkyMDAwMDAgICAgICAgICAgMCAg
+ICAgMCAgNTAwMDAKICAgICAgICBkaXNwX2NjX21kc3NfdnN5bmNfY2xrX3NyYyAgICAgICAwICAg
+ICAgICAwICAgICAgICAwICAgIDE5MjAwMDAwICAgICAgICAgIDAgICAgIDAgIDUwMDAwCgpBbHNv
+IHRvIG5vdGUsIG9uIGFuIG9sZGVyIDQuMTQga2VybmVsLCBJIGRvIG5vdCBzZWUgYW55IGlzc3Vl
+IGluIHRoZSBvcmRlciBpbiB3aGljaAp0aGVzZSBmdW5jdGlvbnMgYXJlIGNhbGxlZCBpbiB0aGUg
+ZHNpIHByb2JlIGRlZmVyIGNhc2UsIGkuZSBpdHMgYW4gZW5hYmxlIGZvbGxvd2VkIGJ5CmEgZGlz
+YWJsZSBhbmQgdGhlbiBhIGRlc3Ryb3kgKGFuZCB0aGF0J3Mgd2l0aG91dCB0aGlzIHBhdGNoKQoK
+PiAtLS0KPiAgIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMgfCA1ICst
+LS0tCj4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDQgZGVsZXRpb25zKC0pCj4g
+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMg
+Yi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jCj4gaW5kZXggZmQ5Yzg5
+My4uOTAyYmI0YyAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9k
+cHVfbWRzcy5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3Mu
+Ywo+IEBAIC0xNTYsMTggKzE1NiwxNSBAQCBzdGF0aWMgdm9pZCBkcHVfbWRzc19kZXN0cm95KHN0
+cnVjdCBkcm1fZGV2aWNlICpkZXYpCj4gICAJc3RydWN0IGRwdV9tZHNzICpkcHVfbWRzcyA9IHRv
+X2RwdV9tZHNzKHByaXYtPm1kc3MpOwo+ICAgCXN0cnVjdCBkc3NfbW9kdWxlX3Bvd2VyICptcCA9
+ICZkcHVfbWRzcy0+bXA7Cj4gICAKPiArCXBtX3J1bnRpbWVfZGlzYWJsZShkZXYtPmRldik7Cj4g
+ICAJX2RwdV9tZHNzX2lycV9kb21haW5fZmluaShkcHVfbWRzcyk7Cj4gLQo+ICAgCWZyZWVfaXJx
+KHBsYXRmb3JtX2dldF9pcnEocGRldiwgMCksIGRwdV9tZHNzKTsKPiAtCj4gICAJbXNtX2Rzc19w
+dXRfY2xrKG1wLT5jbGtfY29uZmlnLCBtcC0+bnVtX2Nsayk7Cj4gICAJZGV2bV9rZnJlZSgmcGRl
+di0+ZGV2LCBtcC0+Y2xrX2NvbmZpZyk7Cj4gICAKPiAgIAlpZiAoZHB1X21kc3MtPm1taW8pCj4g
+ICAJCWRldm1faW91bm1hcCgmcGRldi0+ZGV2LCBkcHVfbWRzcy0+bW1pbyk7Cj4gICAJZHB1X21k
+c3MtPm1taW8gPSBOVUxMOwo+IC0KPiAtCXBtX3J1bnRpbWVfZGlzYWJsZShkZXYtPmRldik7Cj4g
+ICAJcHJpdi0+bWRzcyA9IE5VTEw7Cj4gICB9Cj4gICAKPiAKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJl
+bm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
