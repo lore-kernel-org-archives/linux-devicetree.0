@@ -1,181 +1,56 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V2] ARM: dts: imx7d-sdb: add rev-a board support
-Date: Fri, 9 Nov 2018 01:27:10 +0000
-Message-ID: <1541726525-19544-1-git-send-email-Anson.Huang@nxp.com>
+Subject: RE: [PATCH] ARM: dts: imx7d-sdb: add rev-a board support
+Date: Fri, 9 Nov 2018 01:27:54 +0000
+Message-ID: <DB3PR0402MB3916021FA80AE9C236537281F5C60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1541567625-11812-1-git-send-email-Anson.Huang@nxp.com>
+ <CAOMZO5AL03yy6Vj_eC=h7scSDnuja1G8rsWER+r7w3FEVaceDg@mail.gmail.com>
+ <DB3PR0402MB3916B318947B803BC5ADF4A6F5C50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAOMZO5DiTbEsVXTCfE8fJ=4+yU4oXR1gex7Bj-k=FowKHWJaxw@mail.gmail.com>
+ <DB3PR0402MB3916B027A9C724D349C7969EF5C50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAOMZO5CPZKqJdTPzZDw=19HW_YCg_JGvLpw9i3iKsi+EJF-yNg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAOMZO5CPZKqJdTPzZDw=19HW_YCg_JGvLpw9i3iKsi+EJF-yNg@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Current imx7d-sdb.dts has some incorrect settings about
-Rev-A and Rev-B boards, some of the settings are based on
-Rev-A board but some are based on Rev-B board, clean up it
-by adding i.MX7D SDB Rev-A board support, make default
-imx7d-sdb.dts for Rev-B board as usual, and introduce
-imx7d-sdb-reva.dts for Rev-A board. Below are the affected
-differences of Rev-A and Rev-B board:
-
-                Rev-A           Rev-B
-USB_OTG2_PWR:   UART3_CTS_B     GPIO1_IO07
-ENET_EN_B:      None            GPIO1_IO04
-TP_INT_B:       EPDC_DATA13     EPDC_BDR1
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-change since V1:
-	remove "pinctrl-assert-gpios" which is unused in upstream, and use phy-sup=
-ply
-to control fec2's enable pin, model the enable pin as GPIO regulator.
- arch/arm/boot/dts/Makefile           |  1 +
- arch/arm/boot/dts/imx7d-sdb-reva.dts | 39 ++++++++++++++++++++++++++++++++=
-++++
- arch/arm/boot/dts/imx7d-sdb.dts      | 29 +++++++++++++++++++++++++--
- 3 files changed, 67 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm/boot/dts/imx7d-sdb-reva.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index ef9ffa4..6d133b9 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -572,6 +572,7 @@ dtb-$(CONFIG_SOC_IMX7D) +=3D \
- 	imx7d-pico-pi.dtb \
- 	imx7d-sbc-imx7.dtb \
- 	imx7d-sdb.dtb \
-+	imx7d-sdb-reva.dtb \
- 	imx7d-sdb-sht11.dtb \
- 	imx7s-colibri-eval-v3.dtb \
- 	imx7s-warp.dtb
-diff --git a/arch/arm/boot/dts/imx7d-sdb-reva.dts b/arch/arm/boot/dts/imx7d=
--sdb-reva.dts
-new file mode 100644
-index 0000000..7741eaa
---- /dev/null
-+++ b/arch/arm/boot/dts/imx7d-sdb-reva.dts
-@@ -0,0 +1,39 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR MIT
-+//
-+// Copyright (C) 2015 Freescale Semiconductor, Inc.
-+
-+/dts-v1/;
-+
-+#include "imx7d-sdb.dts"
-+
-+/ {
-+	reg_usb_otg2_vbus: regulator-usb-otg2-vbus {
-+		gpio =3D <&gpio4 7 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&fec2 {
-+	/delete-property/phy-supply;
-+};
-+
-+&iomuxc {
-+	imx7d-sdb {
-+		pinctrl_tsc2046_pendown: tsc2046_pendown {
-+			fsl,pins =3D <
-+				MX7D_PAD_EPDC_DATA13__GPIO2_IO13	0x59
-+			>;
-+		};
-+
-+		pinctrl_hog: hoggrp {
-+			fsl,pins =3D <
-+				MX7D_PAD_UART3_CTS_B__GPIO4_IO7		0x14
-+				MX7D_PAD_ECSPI2_SS0__GPIO4_IO23		0x34  /* bt reg on */
-+			>;
-+		};
-+	};
-+};
-+
-+&iomuxc_lpsr {
-+	/delete-property/pinctrl-names;
-+	/delete-property/pinctrl-0;
-+};
-diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.=
-dts
-index f1bafda..8385b9b 100644
---- a/arch/arm/boot/dts/imx7d-sdb.dts
-+++ b/arch/arm/boot/dts/imx7d-sdb.dts
-@@ -73,7 +73,7 @@
- 		regulator-name =3D "usb_otg2_vbus";
- 		regulator-min-microvolt =3D <5000000>;
- 		regulator-max-microvolt =3D <5000000>;
--		gpio =3D <&gpio4 7 GPIO_ACTIVE_HIGH>;
-+		gpio =3D <&gpio1 7 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 	};
-=20
-@@ -114,6 +114,16 @@
- 		gpio =3D <&gpio2 14 GPIO_ACTIVE_LOW>;
- 	};
-=20
-+	reg_fec2_3v3: regulator-fec2-3v3 {
-+		compatible =3D "regulator-fixed";
-+		regulator-name =3D "fec2-3v3";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_enet2_reg>;
-+		regulator-min-microvolt =3D <3300000>;
-+		regulator-max-microvolt =3D <3300000>;
-+		gpio =3D <&gpio1 4 GPIO_ACTIVE_LOW>;
-+	};
-+
- 	backlight: backlight {
- 		compatible =3D "pwm-backlight";
- 		pwms =3D <&pwm1 0 5000000 0>;
-@@ -210,6 +220,7 @@
- 	assigned-clock-rates =3D <0>, <100000000>;
- 	phy-mode =3D "rgmii";
- 	phy-handle =3D <&ethphy1>;
-+	phy-supply =3D <&reg_fec2_3v3>;
- 	fsl,magic-packet;
- 	status =3D "okay";
- };
-@@ -491,6 +502,12 @@
- 			>;
- 		};
-=20
-+		pinctrl_enet2_reg: enet2reggrp {
-+			fsl,pins =3D <
-+				MX7D_PAD_LPSR_GPIO1_IO04__GPIO1_IO4	0x14
-+			>;
-+		};
-+
- 		pinctrl_flexcan2: flexcan2grp {
- 			fsl,pins =3D <
- 				MX7D_PAD_GPIO1_IO14__FLEXCAN2_RX	0x59
-@@ -513,7 +530,6 @@
-=20
- 		pinctrl_hog: hoggrp {
- 			fsl,pins =3D <
--				MX7D_PAD_UART3_CTS_B__GPIO4_IO7		0x14
- 				MX7D_PAD_ECSPI2_SS0__GPIO4_IO23		0x34  /* bt reg on */
- 			>;
- 		};
-@@ -724,6 +740,9 @@
- };
-=20
- &iomuxc_lpsr {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_hog_2>;
-+
- 	pinctrl_wdog: wdoggrp {
- 		fsl,pins =3D <
- 			MX7D_PAD_LPSR_GPIO1_IO00__WDOG1_WDOG_B		0x74
-@@ -735,4 +754,10 @@
- 			MX7D_PAD_LPSR_GPIO1_IO01__PWM1_OUT		0x30
- 		>;
- 	};
-+
-+	pinctrl_hog_2: hoggrp-2 {
-+		fsl,pins =3D <
-+			MX7D_PAD_LPSR_GPIO1_IO07__GPIO1_IO7	  0x14
-+		>;
-+	};
- };
---=20
-2.7.4
+SGksIEZhYmlvDQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5h
+bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRmFiaW8gRXN0ZXZhbSBbbWFpbHRvOmZlc3RldmFtQGdt
+YWlsLmNvbV0NCj4gU2VudDogMjAxOOW5tDEx5pyIOOaXpSAyMzozOA0KPiBUbzogQW5zb24gSHVh
+bmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IENjOiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJu
+ZWwub3JnPjsgTWFyayBSdXRsYW5kDQo+IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFNoYXduIEd1
+byA8c2hhd25ndW9Aa2VybmVsLm9yZz47IFNhc2NoYQ0KPiBIYXVlciA8cy5oYXVlckBwZW5ndXRy
+b25peC5kZT47IFNhc2NoYSBIYXVlciA8a2VybmVsQHBlbmd1dHJvbml4LmRlPjsNCj4gRmFiaW8g
+RXN0ZXZhbSA8ZmFiaW8uZXN0ZXZhbUBueHAuY29tPjsgb3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUg
+QU5EDQo+IEZMQVRURU5FRCBERVZJQ0UgVFJFRSBCSU5ESU5HUyA8ZGV2aWNldHJlZUB2Z2VyLmtl
+cm5lbC5vcmc+OyBsaW51eC1rZXJuZWwNCj4gPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+
+OyBtb2RlcmF0ZWQgbGlzdDpBUk0vRlJFRVNDQUxFIElNWCAvIE1YQw0KPiBBUk0gQVJDSElURUNU
+VVJFIDxsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBkbC1saW51eC1pbXgN
+Cj4gPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBBUk06IGR0czog
+aW14N2Qtc2RiOiBhZGQgcmV2LWEgYm9hcmQgc3VwcG9ydA0KPiANCj4gSGkgQW5zb24sDQo+IA0K
+PiBPbiBUaHUsIE5vdiA4LCAyMDE4IGF0IDEyOjMwIEFNIEFuc29uIEh1YW5nIDxhbnNvbi5odWFu
+Z0BueHAuY29tPg0KPiB3cm90ZToNCj4gDQo+ID4gVGhhbmtzIGZvciBwb2ludGluZyBvdXQgdGhp
+cyBpc3N1ZSwgSSBtYWRlIGEgbWlzdGFrZSB3aGVuIGRvaW5nIHRoZSBzZWFyY2ggaW4NCj4gZ2l0
+IHJlcG8uLg0KPiA+IFNvLCBpZiB3ZSBoYXZlIHRvIGFzc2VydCBhIEdQSU8sIHRoZXJlIGlzIG5v
+IGNvbW1vbiB3YXkgaW4gcGluY3RybA0KPiA+IGRyaXZlcj8gSGF2ZSB0byBkbyBpdCBpbiBkcml2
+ZXIgaXRzZWxmPyBMaWtlIHRoaXMgY2FzZSwgd2UgaGF2ZSB0byBhc3NlcnQgdGhlDQo+IEdQSU8g
+aW4gZmVjIGRyaXZlcj8NCj4gDQo+IFlvdSBjb3VsZCBwYXNzICJwaHktc3VwcGx5IiBwcm9wZXJ0
+eSAgYW5kIG1vZGVsIGl0IGFzIGdwaW8gY29udHJvbGxlZA0KPiByZWd1bGF0b3IuDQoNClRoYW5r
+cyBmb3IgdGhlIHN1Z2dlc3Rpb24sIEkgdHJpZWQgaXQgYW5kIGl0IHdvcmtzLCBwbGVhc2UgaGVs
+cCByZXZpZXcgVjIgcGF0Y2guDQoNCkFuc29uLg0KDQpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
+eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
