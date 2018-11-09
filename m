@@ -1,35 +1,85 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH anybus v3 0/6] Support HMS Profinet Card over Anybus
-Date: Fri, 9 Nov 2018 23:32:50 +0100
-Message-ID: <CAK8P3a1zME8G0FjqLaL65F6yYOEuPLJLNs6Mdve7YF=Q2BpU5w@mail.gmail.com>
-References: <20181104155501.14767-1-TheSven73@googlemail.com>
- <CAGngYiU+8k4ZHYhFVQGKXW8mATEDi64Mi9PsVkX-5vn2PCY3ew@mail.gmail.com>
- <CAK8P3a1STE+vN_yF0Zyu8gGX_KCWZEV=muPxVE6M1EUqdhO4Pg@mail.gmail.com> <CAGngYiWtmHPShpbLOj4qYJCe6PvNT7ZUDd-0jRsRyxD+HWbByQ@mail.gmail.com>
+From: Alex Elder <elder@linaro.org>
+Subject: Re: [RFC PATCH 01/12] dt-bindings: soc: qcom: add IPA bindings
+Date: Fri, 9 Nov 2018 16:38:30 -0600
+Message-ID: <d5c89037-f4fa-6ab7-dbca-d63f64c90fdc@linaro.org>
+References: <20181107003250.5832-1-elder@linaro.org>
+ <20181107003250.5832-2-elder@linaro.org>
+ <CAK8P3a1rXwADsgVJ4EAtV3u_qg840tfGnbKcyxuBXDB10sYi3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGngYiWtmHPShpbLOj4qYJCe6PvNT7ZUDd-0jRsRyxD+HWbByQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a1rXwADsgVJ4EAtV3u_qg840tfGnbKcyxuBXDB10sYi3Q@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sven Van Asbroeck <thesven73@gmail.com>
-Cc: svendev@arcx.com, Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Miller <davem@davemloft.net>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, syadagir@codeaurora.org, mjavid@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 9, 2018 at 10:47 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
->
-> On Fri, Nov 9, 2018 at 4:22 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> >
-> > As usual, it comes down to the user space interfaces I think. Designing
-> > a user interface is hard, most importantly because you cannot change it
-> > once anyone starts relying on it, as opposed to implementation details
-> > that you are free to change at any point.
->
-> Thanks for the feedback !
-> I will rework v4 so it uses a userspace interface shared with other
-> fieldbus drivers - uio.
+On 11/7/18 5:50 AM, Arnd Bergmann wrote:
+> On Wed, Nov 7, 2018 at 1:33 AM Alex Elder <elder@linaro.org> wrote:
+>>
+>> Add the binding definitions for the "qcom,ipa" and "qcom,rmnet-ipa"
+>> device tree nodes.
+>>
+>> Signed-off-by: Alex Elder <elder@linaro.org>
+>> ---
+>>  .../devicetree/bindings/soc/qcom/qcom,ipa.txt | 136 ++++++++++++++++++
+>>  .../bindings/soc/qcom/qcom,rmnet-ipa.txt      |  15 ++
+>>  2 files changed, 151 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,ipa.txt
+>>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,rmnet-ipa.txt
+> 
+> I think this should go into bindings/net instead of bindings/soc, since it's
+> mostly about networking rather than a specific detail of managing the SoC
+> itself.
 
-You mentioned this before, but I don't see how this would actually
-work. Isn't uio just a slim wrapper for allowing user space access
-to hardware registers while avoiding a kernel driver?
+Done (in my tree--and will be reflected next time I send something out).
 
-      Arnd
+>> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,ipa.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,ipa.txt
+>> new file mode 100644
+>> index 000000000000..d4d3d37df029
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,ipa.txt
+>> @@ -0,0 +1,136 @@
+>> +Qualcomm IPA (IP Accelerator) Driver
+>> +
+>> +This binding describes the Qualcomm IPA.  The IPA is capable of offloading
+>> +certain network processing tasks (e.g. filtering, routing, and NAT) from
+>> +the main processor.  The IPA currently serves only as a network interface,
+>> +providing access to an LTE network available via a modem.
+> 
+> That doesn't belong into the binding. Say what the hardware can do here,
+> not what a specific implementation of the driver does at this moment.
+> The binding should be written in an OS independent way after all.
+
+OK.
+
+>> +- interrupts-extended:
+>> +       Specifies the IRQs used by the IPA.  Four cells are required,
+>> +       specifying: the IPA IRQ; the GSI IRQ; the clock query interrupt
+>> +       from the modem; and the "ready for stage 2 initialization"
+>> +       interrupt from the modem.  The first two are hardware IRQs; the
+>> +       third and fourth are SMP2P input interrupts.
+> 
+> You mean 'four interrupts', not 'four cells' -- each interrupt specifier
+> already consists of at least two cells (one for the phandle to the
+> irqchip, plus one or more cells to describe that interrupt).
+
+OK.
+
+>> +- interconnects:
+>> +       Specifies the interconnects used by the IPA.  Three cells are
+>> +       required, specifying:  the path from the IPA to memory; from
+>> +       IPA to internal (SoC resident) memory; and between the AP
+>> +       subsystem and IPA for register access.
+> 
+> Same here and in the rest.
+
+OK, I've fixed all of these.  Thank you.
+
+					-Alex
+
+> 
+>       Arnd
+> 
