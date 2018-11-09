@@ -1,7 +1,7 @@
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v6 4/9] ARM: l2x0: support parity-enable/disable on aurora
-Date: Fri,  9 Nov 2018 20:03:44 +1300
-Message-ID: <20181109070349.20464-5-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v6 9/9] EDAC: armada_xp: Add support for more SoCs
+Date: Fri,  9 Nov 2018 20:03:49 +1300
+Message-ID: <20181109070349.20464-10-chris.packham@alliedtelesis.co.nz>
 References: <20181109070349.20464-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -9,37 +9,37 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181109070349.20464-1-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux@armlinux.org.uk, bp@alien8.de, arnd@arndb.de, jlu@pengutronix.de, gregory.clement@bootlin.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Mauro Carvalho Chehab <mchehab@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The aurora cache on the Marvell Armada-XP SoC supports the same tag
-parity features as the other l2x0 cache implementations.
+The Armada 38x and other integrated SoCs use a reduced pin count so the
+width of the SDRAM interface is smaller than the Armada XP SoCs. This
+means that the definition of "full" and "half" width is reduced from
+64/32 to 32/16.
 
 Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-[jlu@pengutronix.de: use aurora specific define AURORA_ACR_PARITY_EN]
-Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
 ---
-=20arch/arm/mm/cache-l2x0.c | 7 +++++++
-=201 file changed, 7 insertions(+)
+=20drivers/edac/armada_xp_edac.c | 5 +++++
+=201 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-index 7d2d2a3c67d0..b70bee74750d 100644
---- a/arch/arm/mm/cache-l2x0.c
-+++ b/arch/arm/mm/cache-l2x0.c
-@@ -1505,6 +1505,13 @@ static void __init aurora_of_parse(const struct de=
-vice_node *np,
-=20		mask |=3D AURORA_ACR_FORCE_WRITE_POLICY_MASK;
-=20	}
+diff --git a/drivers/edac/armada_xp_edac.c b/drivers/edac/armada_xp_edac.=
+c
+index 3759a4fbbdee..7f227bdcbc84 100644
+--- a/drivers/edac/armada_xp_edac.c
++++ b/drivers/edac/armada_xp_edac.c
+@@ -332,6 +332,11 @@ static int axp_mc_probe(struct platform_device *pdev=
+)
 =20
-+	if (of_property_read_bool(np, "arm,parity-enable")) {
-+		mask |=3D AURORA_ACR_PARITY_EN;
-+		val |=3D AURORA_ACR_PARITY_EN;
-+	} else if (of_property_read_bool(np, "arm,parity-disable")) {
-+		mask |=3D AURORA_ACR_PARITY_EN;
-+	}
+=20	axp_mc_read_config(mci);
+=20
++	/* These SoCs have a reduced width bus */
++	if (of_machine_is_compatible("marvell,armada380") ||
++	    of_machine_is_compatible("marvell,armadaxp-98dx3236"))
++		drvdata->width /=3D 2;
 +
-=20	*aux_val &=3D ~mask;
-=20	*aux_val |=3D val;
-=20	*aux_mask &=3D ~mask;
+=20	/* configure SBE threshold */
+=20	/* it seems that SBEs are not captured otherwise */
+=20	writel(1 << SDRAM_ERR_CTRL_THR_OFFSET, drvdata->base + SDRAM_ERR_CTRL=
+_REG);
 --=20
 2.19.1
