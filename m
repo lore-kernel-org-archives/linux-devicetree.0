@@ -1,123 +1,78 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH 04/24] dt-bindings: leds: Add function and color
- properties
-Date: Fri, 9 Nov 2018 21:42:06 +0100
-Message-ID: <be4e75ed-746e-ed55-0bbe-0fd710bd4162@gmail.com>
-References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
- <1541542052-10081-5-git-send-email-jacek.anaszewski@gmail.com>
- <bdd18dc6-0dee-5957-81d4-39254c7ad74d@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH anybus v3 4/6] bus: support HMS Anybus-S bus
+Date: Fri, 9 Nov 2018 22:03:12 +0100
+Message-ID: <CAK8P3a3=2PUy4Zv9r7oN3Jrp6+vf5iZ+3wi2VNee61mmnFsXNA@mail.gmail.com>
+References: <20181104155501.14767-1-TheSven73@googlemail.com>
+ <20181104155501.14767-5-TheSven73@googlemail.com> <CAK8P3a3DnKcRxL5dG_pvBVTngFh5eDL2JdEqZzgL0RXJy5dZGw@mail.gmail.com>
+ <CAGngYiWxhSbLLsPaRZ90wEMhhF7e1jt06ZhhRcuhjM53-RYRwg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bdd18dc6-0dee-5957-81d4-39254c7ad74d@gmail.com>
-Content-Language: en-US
+In-Reply-To: <CAGngYiWxhSbLLsPaRZ90wEMhhF7e1jt06ZhhRcuhjM53-RYRwg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>, linux-leds@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+To: Sven Van Asbroeck <thesven73@gmail.com>
+Cc: svendev@arcx.com, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, noralf@tronnes.org, Johan Hovold <johan@kernel.org>, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, gregkh <gregkh@linuxfoundation.org>, John Garry <john.garry@huawei.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Robin Murphy <robin.murphy@arm.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>, Icenowy Zheng <icenowy@aosc.io>, Stuart Yoder <stuyoder@gmail.com>, Maxime Ripard <maxime.r>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vesa,
+On Fri, Nov 9, 2018 at 5:25 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
+>
+> On Thu, Nov 8, 2018 at 9:07 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > > +struct anybus_mbox_hdr {
+> > > +       u16 id;
+> > > +       u16 info;
+> > > +       u16 cmd_num;
+> > > +       u16 data_size;
+> > > +       u16 frame_count;
+> > > +       u16 frame_num;
+> > > +       u16 offset_high;
+> > > +       u16 offset_low;
+> > > +       u16 extended[8];
+> > > +} __packed;
+> >
+> > I don't think you want this to be __packed, it won't change the layout
+> > but instead force byte accesses on architectures that don't have
+> > fast unaligned load/store instructions.
+> >
+> > Instead of the __packed, it's almost always better to ensure that
+> > the structure itself is aligned to a 16-bit address.
+> >
+>
+> A general question about __packed.
+>
+> My current understanding is this:
+> (please tell me if it's incorrect or incomplete)
+>
+> + without __packed, the compiler is free to pad the struct in whatever
+> way it feels is best.
+> + with __packed, the fields have to be laid out EXACTLY as specified.
 
-On 11/09/2018 09:32 AM, Vesa Jääskeläinen wrote:
-> On 07/11/2018 0.07, Jacek Anaszewski wrote:
->> Introduce dedicated properties for conveying information about
->> LED function and color. Mark old "label" property as deprecated.
->>
->> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->> Cc: Baolin Wang <baolin.wang@linaro.org>
->> Cc: Daniel Mack <daniel@zonque.org>
->> Cc: Dan Murphy <dmurphy@ti.com>
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
->> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
->> Cc: Simon Shields <simon@lineageos.org>
->> Cc: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
->> ---
->>   Documentation/devicetree/bindings/leds/common.txt | 52
->> +++++++++++++++++++----
->>   1 file changed, 44 insertions(+), 8 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/leds/common.txt
->> b/Documentation/devicetree/bindings/leds/common.txt
->> index aa13998..3efc826 100644
->> --- a/Documentation/devicetree/bindings/leds/common.txt
->> +++ b/Documentation/devicetree/bindings/leds/common.txt
->> @@ -10,14 +10,20 @@ can influence the way of the LED device
->> initialization, the LED components
->>   have to be tightly coupled with the LED device binding. They are
->> represented
->>   by child nodes of the parent LED device binding.
->>   +
->>   Optional properties for child nodes:
->>   - led-sources : List of device current outputs the LED is connected
->> to. The
->>           outputs are identified by the numbers that must be defined
->>           in the LED device binding documentation.
->> +- function: LED functon. Use one of the LED_FUNCTION_* prefixed
->> definitions
->> +        from the header include/dt-bindings/leds/functions.h.
->> +        If there is no matching LED_FUNCTION available, add a new one.
->> +- color : Color of the LED.
-> 
-> We have had for years out-of-tree patch for multi color gpio led driver
-> which extends this concept with multiple colors. Then in sysfs there has
-> been possibility to control the color and otherwise use blinking or
-> other features.
-> 
-> Our need is multi color status led of the device which includes
-> different kind of blinkings and colors on different situations.
-> 
-> Current in-tree gpio led driver just wasn't atomic enough and a bit
-> clumsy interface for handling this.
-> 
-> Now that this is being looked at could we come up with solution that we
-> could define multiple colors for one led in device tree and then we
-> could work on getting the driver upstreamed?
-> 
-> What we did was generally:
-> 
-> leds-multi {
->     compatible = "gpio-multi-leds";
-> 
->     status {
->         gpios = <...>;
->         linux,default-trigger = "none";
->         deafult-state = "keep";
-> 
->         color-red {
->             pin-mask = <0x01>;
->         };
-> 
->         color-green {
->             pin-mask = <0x02>;
->         };
-> 
->         color-orange {
->             pin-mask = <0x03>;
->         };
->     };
-> };
-> 
+It's not up to the compiler but the ELF ABI. The rules are largely consisten
+among the architectures we support, but there are a couple of notable
+exceptions:
 
-Device Tree node implementation doesn't actually say too much
-about the sysfs interface you came up with, which is most vital
-in this case.
+- ARM OABI requires 32-bit alignment for structures
+- x86-32 aligns 64-bit members to 32-bit rather than 64-bit
+- m68k has some oddities, I think they can pack certain
+  members (don't remember the details)
 
-Support for RGB LEDs, or other variations of LED synchronization
-have been approached several times, but without satisfying result
-so far.
+> Is it possible that someone will compile this on an architecture that 'likes'
+> 16-bit ints to be 32-bit aligned? If such an architecture does not currently
+> exist, could it appear in the future?
 
-Generally the problem boils down to the issue of how triggers
-should handle multiple synchronized LED class devices in a backwards
-compatible way with monochrome LEDs.
+I'm fairly sure Linux would not be portable to an architecture like this
+without a major development effort.
 
-At some point the HSV [0] approach was proposed, but there was a problem
-with getting uniform colors across devices. Especially white.
-Certainly a calibration mechanism would be required.
+> If the compiler changes the padding in the struct, the driver will
+> break, as the struct layout is tightly defined by the anybus spec.
+>
+> Would it be better to stay safe, and keep __packed in case of such
+> tightly defined structures?
 
-[0] https://lkml.org/lkml/2017/8/30/423
+Generally I think it does more harm than good. If you require
+__packed attributes for correct structure layout,
+then only apply it to those members that are not naturally
+aligned, and mark the structure itself as __aligned(n) with
+the alignment you expect if that makes a difference.
 
--- 
-Best regards,
-Jacek Anaszewski
+        Arnd
