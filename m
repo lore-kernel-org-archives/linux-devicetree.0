@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v7 08/17] of: overlay: validate overlay properties #address-cells and #size-cells
-Date: Thu,  8 Nov 2018 22:05:56 -0800
-Message-ID: <1541743565-23163-9-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v7 09/17] of: overlay: make all pr_debug() and pr_err() messages unique
+Date: Thu,  8 Nov 2018 22:05:57 -0800
+Message-ID: <1541743565-23163-10-git-send-email-frowand.list@gmail.com>
 References: <1541743565-23163-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1541743565-23163-1-git-send-email-frowand.list@gmail.com>
@@ -12,99 +12,65 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-If overlay properties #address-cells or #size-cells are already in
-the live devicetree for any given node, then the values in the
-overlay must match the values in the live tree.
-
-If the properties are already in the live tree then there is no
-need to create a changeset entry to add them since they must
-have the same value.  This reduces the memory used by the
-changeset and eliminates a possible memory leak.
+Make overlay.c debug and error messages unique so that they can be
+unambiguously found by grep.
 
 Tested-by: Alan Tull <atull@kernel.org>
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/overlay.c | 32 +++++++++++++++++++++++++++++---
- include/linux/of.h   |  6 ++++++
- 2 files changed, 35 insertions(+), 3 deletions(-)
+ drivers/of/overlay.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 15be3da34fef..72bf00adb9c8 100644
+index 72bf00adb9c8..c8f88b0836a3 100644
 --- a/drivers/of/overlay.c
 +++ b/drivers/of/overlay.c
-@@ -287,7 +287,12 @@ static struct property *dup_and_fixup_symbol_prop(
-  * @target may be either in the live devicetree or in a new subtree that
-  * is contained in the changeset.
-  *
-- * Some special properties are not updated (no error returned).
-+ * Some special properties are not added or updated (no error returned):
-+ * "name", "phandle", "linux,phandle".
-+ *
-+ * Properties "#address-cells" and "#size-cells" are not updated if they
-+ * are already in the live tree, but if present in the live tree, the values
-+ * in the overlay must match the values in the live tree.
-  *
-  * Update of property in symbols node is not allowed.
-  *
-@@ -300,6 +305,7 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
- {
- 	struct property *new_prop = NULL, *prop;
- 	int ret = 0;
-+	bool check_for_non_overlay_node = false;
+@@ -507,7 +507,7 @@ static int build_changeset_symbols_node(struct overlay_changeset *ovcs,
+ 	for_each_property_of_node(overlay_symbols_node, prop) {
+ 		ret = add_changeset_property(ovcs, target, prop, 1);
+ 		if (ret) {
+-			pr_debug("Failed to apply prop @%pOF/%s, err=%d\n",
++			pr_debug("Failed to apply symbols prop @%pOF/%s, err=%d\n",
+ 				 target->np, prop->name, ret);
+ 			return ret;
+ 		}
+@@ -551,7 +551,8 @@ static int build_changeset(struct overlay_changeset *ovcs)
+ 		ret = build_changeset_next_level(ovcs, &target,
+ 						 fragment->overlay);
+ 		if (ret) {
+-			pr_debug("apply failed '%pOF'\n", fragment->target);
++			pr_debug("fragment apply failed '%pOF'\n",
++				 fragment->target);
+ 			return ret;
+ 		}
+ 	}
+@@ -564,7 +565,8 @@ static int build_changeset(struct overlay_changeset *ovcs)
+ 		ret = build_changeset_symbols_node(ovcs, &target,
+ 						   fragment->overlay);
+ 		if (ret) {
+-			pr_debug("apply failed '%pOF'\n", fragment->target);
++			pr_debug("symbols fragment apply failed '%pOF'\n",
++				 fragment->target);
+ 			return ret;
+ 		}
+ 	}
+@@ -873,7 +875,7 @@ static int of_overlay_apply(const void *fdt, struct device_node *tree,
  
- 	if (!of_prop_cmp(overlay_prop->name, "name") ||
- 	    !of_prop_cmp(overlay_prop->name, "phandle") ||
-@@ -322,12 +328,32 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
- 	if (!new_prop)
- 		return -ENOMEM;
+ 	ret = __of_changeset_apply_notify(&ovcs->cset);
+ 	if (ret)
+-		pr_err("overlay changeset entry notify error %d\n", ret);
++		pr_err("overlay apply changeset entry notify error %d\n", ret);
+ 	/* notify failure is not fatal, continue */
  
--	if (!prop)
-+	if (!prop) {
-+		check_for_non_overlay_node = true;
- 		ret = of_changeset_add_property(&ovcs->cset, target->np,
- 						new_prop);
--	else
-+	} else if (!of_prop_cmp(prop->name, "#address-cells")) {
-+		if (!of_prop_val_eq(prop, new_prop)) {
-+			pr_err("ERROR: changing value of #address-cells is not allowed in %pOF\n",
-+			       target->np);
-+			ret = -EINVAL;
-+		}
-+	} else if (!of_prop_cmp(prop->name, "#size-cells")) {
-+		if (!of_prop_val_eq(prop, new_prop)) {
-+			pr_err("ERROR: changing value of #size-cells is not allowed in %pOF\n",
-+			       target->np);
-+			ret = -EINVAL;
-+		}
-+	} else {
-+		check_for_non_overlay_node = true;
- 		ret = of_changeset_update_property(&ovcs->cset, target->np,
- 						   new_prop);
-+	}
-+
-+	if (check_for_non_overlay_node &&
-+	    !of_node_check_flag(target->np, OF_OVERLAY))
-+		pr_err("WARNING: memory leak will occur if overlay removed, property: %pOF/%s\n",
-+		       target->np, new_prop->name);
+ 	list_add_tail(&ovcs->ovcs_list, &ovcs_list);
+@@ -1132,7 +1134,7 @@ int of_overlay_remove(int *ovcs_id)
  
- 	if (ret) {
- 		kfree(new_prop->name);
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 664cd5573ae2..18ac8921e90c 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -990,6 +990,12 @@ static inline int of_map_rid(struct device_node *np, u32 rid,
- #define of_node_cmp(s1, s2)		strcasecmp((s1), (s2))
- #endif
+ 	ret = __of_changeset_revert_notify(&ovcs->cset);
+ 	if (ret)
+-		pr_err("overlay changeset entry notify error %d\n", ret);
++		pr_err("overlay remove changeset entry notify error %d\n", ret);
+ 	/* notify failure is not fatal, continue */
  
-+static inline int of_prop_val_eq(struct property *p1, struct property *p2)
-+{
-+	return p1->length == p2->length &&
-+	       !memcmp(p1->value, p2->value, (size_t)p1->length);
-+}
-+
- #if defined(CONFIG_OF) && defined(CONFIG_NUMA)
- extern int of_node_to_nid(struct device_node *np);
- #else
+ 	*ovcs_id = 0;
 -- 
 Frank Rowand <frank.rowand@sony.com>
