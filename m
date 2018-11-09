@@ -1,79 +1,143 @@
 From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: phy: Add Qualcomm Synopsys High-Speed
- USB PHY binding
-Date: Fri, 9 Nov 2018 14:31:37 +0800
-Message-ID: <20181109063134.GA20049@tiger>
+Subject: Re: [PATCH 2/2] phy: qualcomm: Add Synopsys High-Speed USB PHY driver
+Date: Fri, 9 Nov 2018 14:52:28 +0800
+Message-ID: <20181109065226.GB20049@tiger>
 References: <20181108070449.23572-1-shawn.guo@linaro.org>
- <20181108070449.23572-2-shawn.guo@linaro.org>
- <20181109050819.GK12092@vkoul-mobl>
+ <20181108070449.23572-3-shawn.guo@linaro.org>
+ <20181109052217.GL12092@vkoul-mobl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181109050819.GK12092@vkoul-mobl>
+In-Reply-To: <20181109052217.GL12092@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Vinod Koul <vkoul@kernel.org>
 Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 09, 2018 at 10:38:19AM +0530, Vinod Koul wrote:
+On Fri, Nov 09, 2018 at 10:52:17AM +0530, Vinod Koul wrote:
 > On 08-11-18, 15:04, Shawn Guo wrote:
-> > From: Sriharsha Allenki <sallenki@codeaurora.org>
-> > 
-> > It adds bindings for Synopsys 28nm femto phy controller that supports
-> > LS/FS/HS usb connectivity on Qualcomm chipsets.
-> > 
-> > Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
-> > Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> > ---
-> >  .../phy/qcom,snps-28nm-usb-hs-phy.txt         | 101 ++++++++++++++++++
-> >  1 file changed, 101 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt b/Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt
-> > new file mode 100644
-> > index 000000000000..75e7a09dd558
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt
-> > @@ -0,0 +1,101 @@
-> > +Qualcomm Synopsys 28nm Femto phy controller
-> > +===========================================
+> > +static int qcom_snps_hsphy_config_regulators(struct hsphy_priv *priv, int high)
+> > +{
+> > +	int min, ret, i;
 > > +
-> > +Synopsys 28nm femto phy controller supports LS/FS/HS usb connectivity on
-> > +Qualcomm chipsets.
+> > +	min = high ? 1 : 0; /* low or none? */
 > > +
-> > +Required properties:
-> > +
-> > +- compatible:
-> > +    Value type: <string>
-> > +    Definition: Should contain "qcom,usb-snps-hsphy".
-> > +
-> > +- reg:
-> > +    Value type: <prop-encoded-array>
-> > +    Definition: USB PHY base address and length of the register map.
-> > +
-> > +- #phy-cells:
-> > +    Value type: <u32>
-> > +    Definition: Should be 0.
+> > +	for (i = 0; i < VREG_NUM; i++) {
+> > +		ret = regulator_set_voltage(priv->vregs[i].consumer,
+> > +					    priv->voltages[i][min],
+> > +					    priv->voltages[i][VOL_MAX]);
+> > +		if (ret)
+> > +			return ret;
 > 
-> I dont quite understand the definition that it should be 0, maybe you
-> mean allowed value is 0, if so why have this property?
+> should we not roll back the set voltages on error?
 
-The property is defined by generic phy bindings phy/phy-bindings.txt.
-I can add a pointer to it if you think that's necessary.  The property
-should be 0 for our device, because there is zero number cell in phy
-specifier from dwc3 node as shown in the example.
+Yes.  I will get that handled in v2.  Thanks.
 
-	dwc3@78c0000 {
-		...
-		phys = <&usb2_phy_prim>;
-		phy-names = "usb2-phy";
-	}
+> 
+> > +static int qcom_snps_hsphy_por_reset(struct hsphy_priv *priv)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = reset_control_assert(priv->por_reset);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/*
+> > +	 * The Femto PHY is POR reset in the following scenarios.
+> 
+> POR?
 
-And for that reason, we can use the generic .of_xlate implementation
-of_phy_simple_xlate() provided by phy core.  There are some comments
-in kernel doc of of_phy_simple_xlate() which might be helpful.
+Hmm, I do not understand this comment.  The POR is commonly used as the
+abbrev of power-on-reset.  What do you meat exactly?
+
+> 
+> > +static int qcom_snps_hsphy_init(struct phy *phy)
+> > +{
+> > +	struct hsphy_priv *priv = phy_get_drvdata(phy);
+> > +	int state;
+> > +	int ret;
+> 
+> perhaps they can be in a single line :)
+
+I prefer to keep them on separate line, as that makes the addition and
+removal of one of them relatively easier.
+
+> 
+> > +static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	struct phy_provider *provider;
+> > +	struct hsphy_priv *priv;
+> > +	struct resource *res;
+> > +	struct phy *phy;
+> > +	int size;
+> > +	int ret;
+> > +	int i;
+> > +
+> > +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> > +	if (!priv)
+> > +		return -ENOMEM;
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	priv->base = devm_ioremap_resource(dev, res);
+> > +	if (IS_ERR(priv->base))
+> > +		return PTR_ERR(priv->base);
+> > +
+> > +	priv->num_clks = ARRAY_SIZE(qcom_snps_hsphy_clks);
+> > +	priv->clks = devm_kcalloc(dev, priv->num_clks, sizeof(*priv->clks),
+> > +				  GFP_KERNEL);
+> > +	if (!priv->clks)
+> > +		return -ENOMEM;
+> > +
+> > +	for (i = 0; i < priv->num_clks; i++)
+> > +		priv->clks[i].id = qcom_snps_hsphy_clks[i];
+> > +
+> > +	ret = devm_clk_bulk_get(dev, priv->num_clks, priv->clks);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	priv->phy_reset = devm_reset_control_get(dev, "phy");
+> > +	if (IS_ERR(priv->phy_reset))
+> > +		return PTR_ERR(priv->phy_reset);
+> > +
+> > +	priv->por_reset = devm_reset_control_get(dev, "por");
+> > +	if (IS_ERR(priv->por_reset))
+> > +		return PTR_ERR(priv->por_reset);
+> > +
+> > +	priv->vregs[VDD].supply = "vdd";
+> > +	priv->vregs[VDDA_1P8].supply = "vdda1p8";
+> > +	priv->vregs[VDDA_3P3].supply = "vdda3p3";
+> > +
+> > +	ret = devm_regulator_bulk_get(dev, VREG_NUM, priv->vregs);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	priv->voltages[VDDA_1P8][VOL_NONE] = 0;
+> > +	priv->voltages[VDDA_1P8][VOL_MIN] = 1800000;
+> > +	priv->voltages[VDDA_1P8][VOL_MAX] = 1800000;
+> > +
+> > +	priv->voltages[VDDA_3P3][VOL_NONE] = 0;
+> > +	priv->voltages[VDDA_3P3][VOL_MIN] = 3050000;
+> > +	priv->voltages[VDDA_3P3][VOL_MAX] = 3300000;
+> > +
+> > +	ret = of_property_read_u32_array(dev->of_node, "qcom,vdd-voltage-level",
+> > +					 priv->voltages[VDD], VOL_NUM);
+> > +	if (ret) {
+> > +		dev_err(dev, "failed to read qcom,vdd-voltage-level\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	size = of_property_count_u32_elems(dev->of_node, "qcom,init-seq");
+> > +	if (size < 0)
+> > +		size = 0;
+> > +
+> > +	priv->init_seq = devm_kcalloc(dev, (size / 3) + 1,
+> 
+> size/3? I think it would be good to add a common explaining this
+
+The property is a sequence of <offset value delay> tuples, and we are
+figuring out how many tuples are there.  Yep, I will add a comment in
+there for v2.
 
 Shawn
