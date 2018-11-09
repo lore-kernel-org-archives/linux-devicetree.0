@@ -1,59 +1,36 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 2/2] phy: qualcomm: Add Synopsys High-Speed USB PHY driver
-Date: Fri, 9 Nov 2018 16:38:09 +0530
-Message-ID: <20181109110809.GT12092@vkoul-mobl>
-References: <20181108070449.23572-1-shawn.guo@linaro.org>
- <20181108070449.23572-3-shawn.guo@linaro.org>
- <20181109052217.GL12092@vkoul-mobl>
- <20181109065226.GB20049@tiger>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH v4 0/3] i2c-omap: Enable i2c-omap driver for AM654 SoCs
+Date: Fri, 9 Nov 2018 16:44:09 +0530
+Message-ID: <20181109111412.24777-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181109065226.GB20049@tiger>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09-11-18, 14:52, Shawn Guo wrote:
-> On Fri, Nov 09, 2018 at 10:52:17AM +0530, Vinod Koul wrote:
-> > On 08-11-18, 15:04, Shawn Guo wrote:
-> > > +static int qcom_snps_hsphy_config_regulators(struct hsphy_priv *priv, int high)
-> > > +{
-> > > +	int min, ret, i;
-> > > +
-> > > +	min = high ? 1 : 0; /* low or none? */
-> > > +
-> > > +	for (i = 0; i < VREG_NUM; i++) {
-> > > +		ret = regulator_set_voltage(priv->vregs[i].consumer,
-> > > +					    priv->voltages[i][min],
-> > > +					    priv->voltages[i][VOL_MAX]);
-> > > +		if (ret)
-> > > +			return ret;
-> > 
-> > should we not roll back the set voltages on error?
-> 
-> Yes.  I will get that handled in v2.  Thanks.
-> 
-> > 
-> > > +static int qcom_snps_hsphy_por_reset(struct hsphy_priv *priv)
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	ret = reset_control_assert(priv->por_reset);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	/*
-> > > +	 * The Femto PHY is POR reset in the following scenarios.
-> > 
-> > POR?
-> 
-> Hmm, I do not understand this comment.  The POR is commonly used as the
-> abbrev of power-on-reset.  What do you meat exactly?
+Couple of patches to enable i2c-omap driver to be used with TI's new
+AM654 platforms.
 
-I wasnt aware that POR refers to power-on-reset :) I dont know if it is
-a very generic term :D
+v4:
+Add maintainer tag instead of reviewer in patch 3/3.
+
+v3:
+Rebase onto v4.20-rc1
+Collect Reviewed-by's on v2
+Add a patch to MAINTAINERS for i2c-omap.c
+
+Vignesh R (3):
+  dt-bindings: i2c-omap: Add new compatible for AM654 SoCs
+  i2c: busses: Kconfig: Enable I2C_OMAP for ARCH_K3
+  MAINTAINERS: Add entry for i2c-omap driver
+
+ Documentation/devicetree/bindings/i2c/i2c-omap.txt | 8 ++++++--
+ MAINTAINERS                                        | 8 ++++++++
+ drivers/i2c/busses/Kconfig                         | 2 +-
+ 3 files changed, 15 insertions(+), 3 deletions(-)
+
 -- 
-~Vinod
+2.19.1
