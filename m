@@ -1,83 +1,58 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [GIT PULL] of: overlay: validation checks, subsequent fixes for
- v20 -- correction: v4.20
-Date: Thu, 8 Nov 2018 22:57:59 -0800
-Message-ID: <b113e03d-95f9-96bc-2a50-bc61307e780e@gmail.com>
-References: <262419e9-5c9f-1193-f119-33f373d81e43@gmail.com>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v6 2/9] ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
+Date: Fri,  9 Nov 2018 20:03:42 +1300
+Message-ID: <20181109070349.20464-3-chris.packham@alliedtelesis.co.nz>
+References: <20181109070349.20464-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <262419e9-5c9f-1193-f119-33f373d81e43@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181109070349.20464-1-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-fpga@vger.kernel.org
+To: linux@armlinux.org.uk, bp@alien8.de, arnd@arndb.de, jlu@pengutronix.de, gregory.clement@bootlin.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-On 11/8/18 10:56 PM, Frank Rowand wrote:
-> Hi Rob,
-> 
-> Please pull the changes to add the overlay validation checks.
-> 
-> This is the v7 version of the patch series.
-> 
-> -Frank
-> 
-> 
-> The following changes since commit 651022382c7f8da46cb4872a545ee1da6d097d2a:
-> 
->   Linux 4.20-rc1 (2018-11-04 15:37:52 -0800)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/frowand/linux.git tags/kfree_validate_v7-for-4.20
-> 
-> for you to fetch changes up to eeb07c573ec307c53fe2f6ac6d8d11c261f64006:
-> 
->   of: unittest: initialize args before calling of_*parse_*() (2018-11-08 22:12:37 -0800)
-> 
-> ----------------------------------------------------------------
-> Add checks to (1) overlay apply process and (2) memory freeing
-> triggered by overlay release.  The checks are intended to detect
-> possible memory leaks and invalid overlays.
-> 
-> The checks revealed bugs in existing code.  Fixed the bugs.
-> 
-> While fixing bugs, noted other issues, which are fixed in
-> separate patches.
-> 
-> ----------------------------------------------------------------
-> Frank Rowand (17):
->       of: overlay: add tests to validate kfrees from overlay removal
->       of: overlay: add missing of_node_put() after add new node to changeset
->       of: overlay: add missing of_node_get() in __of_attach_node_sysfs
->       powerpc/pseries: add of_node_put() in dlpar_detach_node()
->       of: overlay: use prop add changeset entry for property in new nodes
->       of: overlay: do not duplicate properties from overlay for new nodes
->       of: overlay: reorder fields in struct fragment
->       of: overlay: validate overlay properties #address-cells and #size-cells
->       of: overlay: make all pr_debug() and pr_err() messages unique
->       of: overlay: test case of two fragments adding same node
->       of: overlay: check prevents multiple fragments add or delete same node
->       of: overlay: check prevents multiple fragments touching same property
->       of: unittest: remove unused of_unittest_apply_overlay() argument
->       of: overlay: set node fields from properties when add new overlay node
->       of: unittest: allow base devicetree to have symbol metadata
->       of: unittest: find overlays[] entry by name instead of index
->       of: unittest: initialize args before calling of_*parse_*()
-> 
->  arch/powerpc/platforms/pseries/dlpar.c             |   2 +
->  drivers/of/dynamic.c                               |  59 ++++-
->  drivers/of/kobj.c                                  |   4 +-
->  drivers/of/overlay.c                               | 292 ++++++++++++++++-----
->  drivers/of/unittest-data/Makefile                  |   2 +
->  .../of/unittest-data/overlay_bad_add_dup_node.dts  |  28 ++
->  .../of/unittest-data/overlay_bad_add_dup_prop.dts  |  24 ++
->  drivers/of/unittest-data/overlay_base.dts          |   1 +
->  drivers/of/unittest.c                              |  96 +++++--
->  include/linux/of.h                                 |  21 +-
->  10 files changed, 432 insertions(+), 97 deletions(-)
->  create mode 100644 drivers/of/unittest-data/overlay_bad_add_dup_node.dts
->  create mode 100644 drivers/of/unittest-data/overlay_bad_add_dup_prop.dts
-> 
+From: Jan Luebbe <jlu@pengutronix.de>
+
+The macro name is too generic, so add a AURORA_ prefix.
+
+Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
+Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+=20arch/arm/include/asm/hardware/cache-aurora-l2.h | 2 +-
+=20arch/arm/mm/cache-l2x0.c                        | 4 ++--
+=202 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/include/asm/hardware/cache-aurora-l2.h b/arch/arm/i=
+nclude/asm/hardware/cache-aurora-l2.h
+index c86124769831..dc5c479ec4c3 100644
+--- a/arch/arm/include/asm/hardware/cache-aurora-l2.h
++++ b/arch/arm/include/asm/hardware/cache-aurora-l2.h
+@@ -41,7 +41,7 @@
+=20#define AURORA_ACR_FORCE_WRITE_THRO_POLICY	\
+=20	(2 << AURORA_ACR_FORCE_WRITE_POLICY_OFFSET)
+=20
+-#define MAX_RANGE_SIZE		1024
++#define AURORA_MAX_RANGE_SIZE	1024
+=20
+=20#define AURORA_WAY_SIZE_SHIFT	2
+=20
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index a00d6f7fd34c..7d2d2a3c67d0 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -1364,8 +1364,8 @@ static unsigned long aurora_range_end(unsigned long=
+=20start, unsigned long end)
+=20	 * since cache range operations stall the CPU pipeline
+=20	 * until completion.
+=20	 */
+-	if (end > start + MAX_RANGE_SIZE)
+-		end =3D start + MAX_RANGE_SIZE;
++	if (end > start + AURORA_MAX_RANGE_SIZE)
++		end =3D start + AURORA_MAX_RANGE_SIZE;
+=20
+=20	/*
+=20	 * Cache range operations can't straddle a page boundary.
+--=20
+2.19.1
