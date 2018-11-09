@@ -1,62 +1,52 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v12 2/5] clk: imx: add fractional PLL output clock
-Date: Fri, 09 Nov 2018 09:25:26 -0800
-Message-ID: <154178432653.88331.17907414252177481094@swboyd.mtv.corp.google.com>
-References: <1541594266-16712-3-git-send-email-abel.vesa@nxp.com>
- <201811091832.kSh4BXdS%fengguang.wu@intel.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v3 1/3] dt-bindings: Add vendor prefix for Smartlabs LLC
+Date: Fri, 9 Nov 2018 19:29:28 +0100
+Message-ID: <ae4a4f99-eecc-7a71-5007-d171449c8619@suse.de>
+References: <1541691207-24768-1-git-send-email-christianshewitt@gmail.com>
+ <1541706240-30036-1-git-send-email-christianshewitt@gmail.com>
+ <1541706240-30036-2-git-send-email-christianshewitt@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201811091832.kSh4BXdS%fengguang.wu@intel.com>
+In-Reply-To: <1541706240-30036-2-git-send-email-christianshewitt@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: kbuild-all@01.org, Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, "A.s. Dong" <aisheng.dong@nxp.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>
+To: Christian Hewitt <christianshewitt@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting kbuild test robot (2018-11-09 02:18:24)
-> Hi Lucas,
-> =
+Am 08.11.18 um 20:43 schrieb Christian Hewitt:
+> Smartlabs LLC are a professional integrator of Interactive TV solutions
+> and IPTV/VOD devices (https://www.smartlabs.tv/en/about/).
+> 
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 4b1a2a8..c424fe0 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -357,6 +357,7 @@ sirf	SiRF Technology, Inc.
+>  sis	Silicon Integrated Systems Corp.
+>  sitronix	Sitronix Technology Corporation
+>  skyworks	Skyworks Solutions, Inc.
+> +smartlabs	Smartlabs LLC
 
-> I love your patch! Yet something to improve:
-> =
+You added the LLC but did not upper-case the L - intentional?
 
-> [auto build test ERROR on shawnguo/for-next]
-> [also build test ERROR on v4.20-rc1 next-20181109]
-> [if your patch is applied to the wrong git tree, please drop us a note to=
- help improve the system]
-> =
+Regards,
+Andreas
 
-> url:    https://github.com/0day-ci/linux/commits/Abel-Vesa/Add-i-MX8MQ-cl=
-ock-driver/20181109-063930
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.gi=
-t for-next
-> config: arm-multi_v5_defconfig (attached as .config)
-> compiler: arm-linux-gnueabi-gcc (Debian 7.2.0-11) 7.2.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbi=
-n/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=3D7.2.0 make.cross ARCH=3Darm =
-
-> =
-
-> All errors (new ones prefixed by >>):
-> =
-
->    drivers/clk/imx/clk-frac-pll.o: In function `clk_pll_recalc_rate':
-> >> clk-frac-pll.c:(.text+0x74): undefined reference to `__aeabi_uldivmod'
->    drivers/clk/imx/clk-frac-pll.o: In function `clk_pll_round_rate':
->    clk-frac-pll.c:(.text+0xbc): undefined reference to `__aeabi_uldivmod'
-> =
+>  smsc	Standard Microsystems Corporation
+>  snps	Synopsys, Inc.
+>  socionext	Socionext Inc.
+> 
 
 
-Why does the code do essentially:
-
-	u64 val;
-
-	do_div(val, div);
-	val /=3D div2;
-
-That should be using do_div() twice it seems.
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
