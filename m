@@ -1,76 +1,80 @@
-From: Brian Dodge <bdodge09@gmail.com>
-Subject: [PATCH 2/3] backlight/arcxcnn fix vendor prefix
-Date: Wed,  7 Nov 2018 07:10:39 -0500
-Message-ID: <1541592640-18478-3-git-send-email-bdodge09@gmail.com>
-References: <1541592640-18478-1-git-send-email-bdodge09@gmail.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH V2 2/6] usb: core: Add ability to skip phy exit on
+ suspend and init on resume
+Date: Fri, 9 Nov 2018 16:08:44 +0800
+Message-ID: <1541750924.32173.81.camel@mhfsdcap03>
+References: <CAOGqxeWBmAahswHp+b_PzkyGs-9sOx3COpJnFVsbKhx14KLuUw@mail.gmail.com>
+         <1541641432.32173.71.camel@mhfsdcap03>
+         <CAOGqxeXmMWK53pAmjeUtpdXNeTa7UH7=VA6pAJyhxg_BsmU5+w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1541592640-18478-1-git-send-email-bdodge09@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Brian Dodge <bdodge09@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOGqxeXmMWK53pAmjeUtpdXNeTa7UH7=VA6pAJyhxg_BsmU5+w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Cooper <alcooperx@gmail.com>
+Cc: ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, "David S. Miller" <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>, US
 List-Id: devicetree@vger.kernel.org
 
-VGhlIHZlbmRvci1wcmVmaXhlcy50eHQgZmlsZSBwcm9wZXJseSByZWZlcnMgdG8gQXJjdGljU2Fu
-ZAphcyBhcmN0aWMgYnV0IHRoZSBkcml2ZXIgaW1wcm9wZXJseSBhYmJyZXZpYXRlZCB0aGUgcHJl
-Zml4CnRvIGFyYy4gVGhpcyB3YXMgYSBtaXN0YWtlIGluIHRoZSBvcmlnaW5hbCBwYXRjaAoKU2ln
-bmVkLW9mZi1ieTogQnJpYW4gRG9kZ2UgPGJkb2RnZTA5QGdtYWlsLmNvbT4KLS0tCiBkcml2ZXJz
-L3ZpZGVvL2JhY2tsaWdodC9hcmN4Y25uX2JsLmMgfCAyMiArKysrKysrKysrKy0tLS0tLS0tLS0t
-CiAxIGZpbGUgY2hhbmdlZCwgMTEgaW5zZXJ0aW9ucygrKSwgMTEgZGVsZXRpb25zKC0pCgpkaWZm
-IC0tZ2l0IGEvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvYXJjeGNubl9ibC5jIGIvZHJpdmVycy92
-aWRlby9iYWNrbGlnaHQvYXJjeGNubl9ibC5jCmluZGV4IGRlYzc5MGQuLmJlYmVmYzYgMTAwNjQ0
-Ci0tLSBhL2RyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L2FyY3hjbm5fYmwuYworKysgYi9kcml2ZXJz
-L3ZpZGVvL2JhY2tsaWdodC9hcmN4Y25uX2JsLmMKQEAgLTEsOCArMSw4IEBACiAvKgotICogQmFj
-a2xpZ2h0IGRyaXZlciBmb3IgQXJjdGljU2FuZCBBUkNfWF9DXzBOXzBOIERldmljZXMKKyAqIEJh
-Y2tsaWdodCBkcml2ZXIgZm9yIHBTZW1pIChmb3JtZXJseSBBcmN0aWNTYW5kKSBBUkNfWF9DXzBO
-XzBOIERldmljZXMKICAqCi0gKiBDb3B5cmlnaHQgMjAxNiBBcmN0aWNTYW5kLCBJbmMuCi0gKiBB
-dXRob3IgOiBCcmlhbiBEb2RnZSA8YmRvZGdlQGFyY3RpY3NhbmQuY29tPgorICogQ29weXJpZ2h0
-IDIwMTggcFNlbWksIEluYy4KKyAqIEF1dGhvciA6IEJyaWFuIERvZGdlIDxiZG9kZ2VAcHNlbWku
-Y29tPgogICoKICAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlz
-dHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5IGl0CiAgKiB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdO
-VSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIHZlcnNpb24gMgpAQCAtMjAyLDI3ICsyMDIsMjcgQEAg
-c3RhdGljIHZvaWQgYXJjeGNubl9wYXJzZV9kdChzdHJ1Y3QgYXJjeGNubiAqbHApCiAJaWYgKHJl
-dCA9PSAwKQogCQlscC0+cGRhdGEtPmluaXRpYWxfYnJpZ2h0bmVzcyA9IHByb2dfdmFsOwoKLQly
-ZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihub2RlLCAiYXJjLGxlZC1jb25maWctMCIsICZwcm9n
-X3ZhbCk7CisJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyY3RpYyxsZWQtY29u
-ZmlnLTAiLCAmcHJvZ192YWwpOwogCWlmIChyZXQgPT0gMCkKIAkJbHAtPnBkYXRhLT5sZWRfY29u
-ZmlnXzAgPSAodTgpcHJvZ192YWw7CgotCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5vZGUs
-ICJhcmMsbGVkLWNvbmZpZy0xIiwgJnByb2dfdmFsKTsKKwlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFk
-X3UzMihub2RlLCAiYXJjdGljLGxlZC1jb25maWctMSIsICZwcm9nX3ZhbCk7CiAJaWYgKHJldCA9
-PSAwKQogCQlscC0+cGRhdGEtPmxlZF9jb25maWdfMSA9ICh1OClwcm9nX3ZhbDsKCi0JcmV0ID0g
-b2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyYyxkaW0tZnJlcSIsICZwcm9nX3ZhbCk7CisJ
-cmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyY3RpYyxkaW0tZnJlcSIsICZwcm9n
-X3ZhbCk7CiAJaWYgKHJldCA9PSAwKQogCQlscC0+cGRhdGEtPmRpbV9mcmVxID0gKHU4KXByb2df
-dmFsOwoKLQlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihub2RlLCAiYXJjLGNvbXAtY29uZmln
-IiwgJnByb2dfdmFsKTsKKwlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihub2RlLCAiYXJjdGlj
-LGNvbXAtY29uZmlnIiwgJnByb2dfdmFsKTsKIAlpZiAocmV0ID09IDApCiAJCWxwLT5wZGF0YS0+
-Y29tcF9jb25maWcgPSAodTgpcHJvZ192YWw7CgotCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMy
-KG5vZGUsICJhcmMsZmlsdGVyLWNvbmZpZyIsICZwcm9nX3ZhbCk7CisJcmV0ID0gb2ZfcHJvcGVy
-dHlfcmVhZF91MzIobm9kZSwgImFyY3RpYyxmaWx0ZXItY29uZmlnIiwgJnByb2dfdmFsKTsKIAlp
-ZiAocmV0ID09IDApCiAJCWxwLT5wZGF0YS0+ZmlsdGVyX2NvbmZpZyA9ICh1OClwcm9nX3ZhbDsK
-Ci0JcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyYyx0cmltLWNvbmZpZyIsICZw
-cm9nX3ZhbCk7CisJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyY3RpYyx0cmlt
-LWNvbmZpZyIsICZwcm9nX3ZhbCk7CiAJaWYgKHJldCA9PSAwKQogCQlscC0+cGRhdGEtPnRyaW1f
-Y29uZmlnID0gKHU4KXByb2dfdmFsOwoKQEAgLTM5Miw3ICszOTIsNyBAQCBzdGF0aWMgaW50IGFy
-Y3hjbm5fcmVtb3ZlKHN0cnVjdCBpMmNfY2xpZW50ICpjbCkKIH0KCiBzdGF0aWMgY29uc3Qgc3Ry
-dWN0IG9mX2RldmljZV9pZCBhcmN4Y25uX2R0X2lkc1tdID0gewotCXsgLmNvbXBhdGlibGUgPSAi
-YXJjLGFyYzJjMDYwOCIgfSwKKwl7IC5jb21wYXRpYmxlID0gImFyY3RpYyxhcmMyYzA2MDgiIH0s
-CiAJeyB9CiB9OwogTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgYXJjeGNubl9kdF9pZHMpOwpAQCAt
-NDE1LDUgKzQxNSw1IEBAIHN0YXRpYyBzdHJ1Y3QgaTJjX2RyaXZlciBhcmN4Y25uX2RyaXZlciA9
-IHsKIG1vZHVsZV9pMmNfZHJpdmVyKGFyY3hjbm5fZHJpdmVyKTsKCiBNT0RVTEVfTElDRU5TRSgi
-R1BMIHYyIik7Ci1NT0RVTEVfQVVUSE9SKCJCcmlhbiBEb2RnZSA8YmRvZGdlQGFyY3RpY3NhbmQu
-Y29tPiIpOworTU9EVUxFX0FVVEhPUigiQnJpYW4gRG9kZ2UgPGJkb2RnZUBwc2VtaS5jb20+Iik7
-CiBNT0RVTEVfREVTQ1JJUFRJT04oIkFSQ1hDTk4gQmFja2xpZ2h0IGRyaXZlciIpOwotLQoyLjcu
-NAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Thu, 2018-11-08 at 17:50 -0500, Alan Cooper wrote:
+> On Wed, Nov 7, 2018 at 8:43 PM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+> >
+> > hi,
+> > On Tue, 2018-10-30 at 18:30 -0400, Alan Cooper wrote:
+> > > On 10/17/18 9:46 PM, Chunfeng Yun wrote:> hi,
+> > > >
+> > > > On Wed, 2018-10-17 at 18:29 -0400, Al Cooper wrote:
+> > > >> Add the ability to skip calling the PHY's exit routine on suspend
+> > > >> and the PHY's init routine on resume. This is to handle a USB PHY
+> > > >> that should have it's power_off function called on suspend but
+> > > cannot
+> > > >> have it's exit function called because on exit it will disable the
+> > > >> PHY to the point where register accesses to the Host Controllers
+> > > >> using the PHY will be disabled and the host drivers will crash.
+> > > >>
+> > > >> This is enabled with the HCD flag "suspend_without_phy_exit" which
+> > > >> can be set from any HCD driver.
+> > > >>
+> > > >> Signed-off-by: Al Cooper<alcooperx@gmail.com>
+> > > >> ---
+> > > >>   drivers/usb/core/hcd.c  |  8 ++++----
+> > > >>   drivers/usb/core/phy.c  | 18 ++++++++++++------
+> > > >>   drivers/usb/core/phy.h  |  9 ++++++---
+> > > >>   include/linux/usb/hcd.h |  3 +++
+> > > >>   4 files changed, 25 insertions(+), 13 deletions(-)
+> > > >>
+> >
+> >
+> > > >>       unsigned        skip_phy_initialization:1;
+> > > >>
+> > > >> +    /* Some phys don't want the phy's exit/init called on
+> > > suspend/resume */
+> > > >> +    unsigned        suspend_without_phy_exit:1;
+> > > > As suggested before, you can skip phy's exit/init during
+> > > suspend/resume
+> > > > by enabling wakeup of hcd, so needn't add a new variable for it.
+> > >
+> > > I still need to be able to enable and disable wakeup for this driver.
+> > Just use device_init_wakeup(dev, true) instead of
+> > device_wakeup_enable(dev) for your controller driver, you can try it.
+> >
+> > Sorry for the late replay
+> 
+> What about the case where sysfs is used to disable wakeup?
+Oh, It's a problem in this case.
+
+BTW: Why the host driver will crash when access host controller's
+register after power-off phy? they are usually independent.
+
+> 
+> Al
+> > >
+> > > >
+> > > >> +
+> > > >>       /* The next flag is a stopgap, to be removed when all the
+> > > HCDs
+> > > >>        * support the new root-hub polling mechanism. */
+> > > >>       unsigned        uses_new_polling:1;
+> > > >
+> >
+> >
