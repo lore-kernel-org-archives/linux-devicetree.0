@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v7 07/17] of: overlay: reorder fields in struct fragment
-Date: Thu,  8 Nov 2018 22:05:55 -0800
-Message-ID: <1541743565-23163-8-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v7 08/17] of: overlay: validate overlay properties #address-cells and #size-cells
+Date: Thu,  8 Nov 2018 22:05:56 -0800
+Message-ID: <1541743565-23163-9-git-send-email-frowand.list@gmail.com>
 References: <1541743565-23163-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1541743565-23163-1-git-send-email-frowand.list@gmail.com>
@@ -12,31 +12,99 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-Order the fields of struct fragment in the same order as
-struct of_overlay_notify_data.  The order in struct fragment is
-not significant.  If both structs are ordered the same then when
-examining the data in a debugger or dump the human involved does
-not have to remember which context they are examining.
+If overlay properties #address-cells or #size-cells are already in
+the live devicetree for any given node, then the values in the
+overlay must match the values in the live tree.
+
+If the properties are already in the live tree then there is no
+need to create a changeset entry to add them since they must
+have the same value.  This reduces the memory used by the
+changeset and eliminates a possible memory leak.
 
 Tested-by: Alan Tull <atull@kernel.org>
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/overlay.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/of/overlay.c | 32 +++++++++++++++++++++++++++++---
+ include/linux/of.h   |  6 ++++++
+ 2 files changed, 35 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 9808aae4621a..15be3da34fef 100644
+index 15be3da34fef..72bf00adb9c8 100644
 --- a/drivers/of/overlay.c
 +++ b/drivers/of/overlay.c
-@@ -49,8 +49,8 @@ struct target {
-  * @overlay:	pointer to the __overlay__ node
-  */
- struct fragment {
--	struct device_node *target;
- 	struct device_node *overlay;
-+	struct device_node *target;
- };
+@@ -287,7 +287,12 @@ static struct property *dup_and_fixup_symbol_prop(
+  * @target may be either in the live devicetree or in a new subtree that
+  * is contained in the changeset.
+  *
+- * Some special properties are not updated (no error returned).
++ * Some special properties are not added or updated (no error returned):
++ * "name", "phandle", "linux,phandle".
++ *
++ * Properties "#address-cells" and "#size-cells" are not updated if they
++ * are already in the live tree, but if present in the live tree, the values
++ * in the overlay must match the values in the live tree.
+  *
+  * Update of property in symbols node is not allowed.
+  *
+@@ -300,6 +305,7 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
+ {
+ 	struct property *new_prop = NULL, *prop;
+ 	int ret = 0;
++	bool check_for_non_overlay_node = false;
  
- /**
+ 	if (!of_prop_cmp(overlay_prop->name, "name") ||
+ 	    !of_prop_cmp(overlay_prop->name, "phandle") ||
+@@ -322,12 +328,32 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
+ 	if (!new_prop)
+ 		return -ENOMEM;
+ 
+-	if (!prop)
++	if (!prop) {
++		check_for_non_overlay_node = true;
+ 		ret = of_changeset_add_property(&ovcs->cset, target->np,
+ 						new_prop);
+-	else
++	} else if (!of_prop_cmp(prop->name, "#address-cells")) {
++		if (!of_prop_val_eq(prop, new_prop)) {
++			pr_err("ERROR: changing value of #address-cells is not allowed in %pOF\n",
++			       target->np);
++			ret = -EINVAL;
++		}
++	} else if (!of_prop_cmp(prop->name, "#size-cells")) {
++		if (!of_prop_val_eq(prop, new_prop)) {
++			pr_err("ERROR: changing value of #size-cells is not allowed in %pOF\n",
++			       target->np);
++			ret = -EINVAL;
++		}
++	} else {
++		check_for_non_overlay_node = true;
+ 		ret = of_changeset_update_property(&ovcs->cset, target->np,
+ 						   new_prop);
++	}
++
++	if (check_for_non_overlay_node &&
++	    !of_node_check_flag(target->np, OF_OVERLAY))
++		pr_err("WARNING: memory leak will occur if overlay removed, property: %pOF/%s\n",
++		       target->np, new_prop->name);
+ 
+ 	if (ret) {
+ 		kfree(new_prop->name);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 664cd5573ae2..18ac8921e90c 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -990,6 +990,12 @@ static inline int of_map_rid(struct device_node *np, u32 rid,
+ #define of_node_cmp(s1, s2)		strcasecmp((s1), (s2))
+ #endif
+ 
++static inline int of_prop_val_eq(struct property *p1, struct property *p2)
++{
++	return p1->length == p2->length &&
++	       !memcmp(p1->value, p2->value, (size_t)p1->length);
++}
++
+ #if defined(CONFIG_OF) && defined(CONFIG_NUMA)
+ extern int of_node_to_nid(struct device_node *np);
+ #else
 -- 
 Frank Rowand <frank.rowand@sony.com>
