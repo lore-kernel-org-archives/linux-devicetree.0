@@ -1,56 +1,53 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH] ARM: dts: BCM5301X: Describe Northstar pins mux controller
-Date: Fri,  9 Nov 2018 09:56:49 +0100
-Message-ID: <20181109085649.31772-1-zajec5@gmail.com>
+From: Todor Tomov <todor.tomov@linaro.org>
+Subject: Re: [PATCH] dt-bindings: media: i2c: Fix i2c address for OV5645
+ camera sensor
+Date: Fri, 9 Nov 2018 10:57:14 +0200
+Message-ID: <a777f934-9adb-83d7-b0b6-0777563410c0@linaro.org>
+References: <20181109075643.17575-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181109075643.17575-1-manivannan.sadhasivam@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, mchehab@kernel.org, robh+dt@kernel.org, hansverk@cisco.com
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKVGhpcyBkZXNjcmliZXMg
-aGFyZHdhcmUgJiB3aWxsIGFsbG93IHJlZmVyZW5jaW5nIHBpbiBmdW5jdGlvbnMuIFRoZQpmaXJz
-dCB1c2FnZSBpcyBVQVJUMSB3aGljaCBhbGxvd3Mgc3VwcG9ydGluZyBkZXZpY2VzIHVzaW5nIGl0
-LgoKU2lnbmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgotLS0K
-Rm9yIHRoZSBkb2N1bWVudGF0aW9uIHNlZToKRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3BpbmN0cmwvYnJjbSxiY200NzA4LXBpbm11eC50eHQKLS0tCiBhcmNoL2FybS9ib290L2R0
-cy9iY201MzAxeC5kdHNpIHwgNDQgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysKIDEgZmlsZSBjaGFuZ2VkLCA0NCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vYm9vdC9kdHMvYmNtNTMwMXguZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTUzMDF4
-LmR0c2kKaW5kZXggN2E1YzE4OGMyNjc2Li5mZDdhZjk0M2ZiMGIgMTAwNjQ0Ci0tLSBhL2FyY2gv
-YXJtL2Jvb3QvZHRzL2JjbTUzMDF4LmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNTMw
-MXguZHRzaQpAQCAtMzcsNiArMzcsOCBAQAogCQkJcmVnID0gPDB4MDQwMCAweDEwMD47CiAJCQlp
-bnRlcnJ1cHRzID0gPEdJQ19TUEkgODUgSVJRX1RZUEVfTEVWRUxfSElHSD47CiAJCQljbG9ja3Mg
-PSA8Jmlwcm9jc2xvdz47CisJCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOworCQkJcGluY3Ry
-bC0wID0gPCZwaW5tdXhfdWFydDE+OwogCQkJc3RhdHVzID0gImRpc2FibGVkIjsKIAkJfTsKIAl9
-OwpAQCAtMzkxLDYgKzM5Myw0OCBAQAogCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwogCX07CiAKKwlk
-bXVAMTgwMGMwMDAgeworCQljb21wYXRpYmxlID0gInNpbXBsZS1idXMiOworCQlyYW5nZXMgPSA8
-MCAweDE4MDBjMDAwIDB4MTAwMD47CisJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkjc2l6ZS1j
-ZWxscyA9IDwxPjsKKworCQljcnVAMTAwIHsKKwkJCWNvbXBhdGlibGUgPSAic2ltcGxlLWJ1cyI7
-CisJCQlyZWcgPSA8MHgxMDAgMHgxYTQ+OworCQkJcmFuZ2VzOworCQkJI2FkZHJlc3MtY2VsbHMg
-PSA8MT47CisJCQkjc2l6ZS1jZWxscyA9IDwxPjsKKworCQkJcGluLWNvbnRyb2xsZXJAMWMwIHsK
-KwkJCQljb21wYXRpYmxlID0gImJyY20sYmNtNDcwOC1waW5tdXgiOworCQkJCXJlZyA9IDwweDFj
-MCAweDI0PjsKKwkJCQlyZWctbmFtZXMgPSAiY3J1X2dwaW9fY29udHJvbCI7CisKKwkJCQlzcGkt
-cGlucyB7CisJCQkJCWdyb3VwcyA9ICJzcGlfZ3JwIjsKKwkJCQkJZnVuY3Rpb24gPSAic3BpIjsK
-KwkJCQl9OworCisJCQkJaTJjIHsKKwkJCQkJZ3JvdXBzID0gImkyY19ncnAiOworCQkJCQlmdW5j
-dGlvbiA9ICJpMmMiOworCQkJCX07CisKKwkJCQlwd20geworCQkJCQlncm91cHMgPSAicHdtMF9n
-cnAiLCAicHdtMV9ncnAiLAorCQkJCQkJICJwd20yX2dycCIsICJwd20zX2dycCI7CisJCQkJCWZ1
-bmN0aW9uID0gInB3bSI7CisJCQkJfTsKKworCQkJCXBpbm11eF91YXJ0MTogdWFydDEgeworCQkJ
-CQlncm91cHMgPSAidWFydDFfZ3JwIjsKKwkJCQkJZnVuY3Rpb24gPSAidWFydDEiOworCQkJCX07
-CisJCQl9OworCQl9OworCX07CisKIAlsY3BsbDA6IGxjcGxsMEAxODAwYzEwMCB7CiAJCSNjbG9j
-ay1jZWxscyA9IDwxPjsKIAkJY29tcGF0aWJsZSA9ICJicmNtLG5zcC1sY3BsbDAiOwotLSAKMi4x
-My43CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
-dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
-YXJtLWtlcm5lbAo=
+Hi Mani,
+
+On  9.11.2018 09:56, Manivannan Sadhasivam wrote:
+> The i2c address for the Omnivision OV5645 camera sensor is 0x3c. It is
+> incorrectly mentioned as 0x78 in binding. Hence fix that.
+
+The seven bit i2c address of ov5645 is really 0x3c.
+Thank you for finding this and sending the fix!
+
+Best regards,
+Todor
+
+> 
+> Fixes: 09c716af36e6 [media] media: i2c/ov5645: add the device tree binding document
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> index fd7aec9f8e24..1a68ca5eb9a3 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> @@ -26,9 +26,9 @@ Example:
+>  	&i2c1 {
+>  		...
+>  
+> -		ov5645: ov5645@78 {
+> +		ov5645: ov5645@3c {
+>  			compatible = "ovti,ov5645";
+> -			reg = <0x78>;
+> +			reg = <0x3c>;
+>  
+>  			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
+>  			reset-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
+> 
