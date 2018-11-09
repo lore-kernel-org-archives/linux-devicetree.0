@@ -1,62 +1,28 @@
-From: Matheus Tavares Bernardino <matheus.bernardino@usp.br>
-Subject: Re: [PATCH 5/6] staging:iio:ad2s90: Add SPDX license identifier
-Date: Fri, 9 Nov 2018 21:19:52 -0200
-Message-ID: <CAHd-oW4wo7fShsNMf7a1udnCepUL+ok+Gk7jzVoEUEUjaPCXpw@mail.gmail.com>
-References: <20181109220044.24843-1-matheus.bernardino@usp.br>
- <20181109220044.24843-6-matheus.bernardino@usp.br>
- <CAOMZO5DVr7TBoNtB7Bwjv1rpaCdOyg8+iU=iCwBRjSD4iWeBUw@mail.gmail.com>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Mark protected gcc clocks
+Date: Fri, 9 Nov 2018 17:21:49 -0600
+Message-ID: <20181109232149.GA8686@hector.attlocal.net>
+References: <20181105194011.43770-1-swboyd@chromium.org>
+ <20181106055013.11271-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <CAOMZO5DVr7TBoNtB7Bwjv1rpaCdOyg8+iU=iCwBRjSD4iWeBUw@mail.gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: festevam@gmail.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Alexandru Ardelean <alexandru.ardelean@analog.com>, Victor Colombo <victorcolombo@gmail.com>, Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181106055013.11271-1-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 9, 2018 at 8:13 PM Fabio Estevam <festevam@gmail.com> wrote:
->
-> Hi Matheus,
->
+On Mon, Nov 05, 2018 at 09:50:13PM -0800, Bjorn Andersson wrote:
+> As of v4.20-rc1 probing the GCC driver on a SDM845 device with the
+> standard security implementation causes an access violation and an
+> immediate system restart. Use the protected-clocks property to mark the
+> offending clocks protected for the MTP, in order to allow it to boot.
+> 
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Hi, Fabio
+This looks fine to me.
 
-> On Fri, Nov 9, 2018 at 8:01 PM Matheus Tavares
-> <matheus.bernardino@usp.br> wrote:
-> >
-> > This patch adds the SPDX GPL-2.0-only license identifier to ad2s90.c,
-> > which solves the checkpatch.pl warning:
-> > "WARNING: Missing or malformed SPDX-License-Identifier tag in line 1".
-> >
-> > Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
-> > ---
-> >  drivers/staging/iio/resolver/ad2s90.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/staging/iio/resolver/ad2s90.c b/drivers/staging/iio/resolver/ad2s90.c
-> > index 949ff55ac6b0..f439da721df8 100644
-> > --- a/drivers/staging/iio/resolver/ad2s90.c
-> > +++ b/drivers/staging/iio/resolver/ad2s90.c
-> > @@ -1,3 +1,4 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
->
-> This should be:
-> // SPDX-License-Identifier: GPL-2.0
-
-Hm, but it seems that the identifier "GPL-2.0" is deprecated, look:
-https://spdx.org/licenses/GPL-2.0.html. It has been updated to
-"GPL-2.0-only" in license list v3
-(https://spdx.org/licenses/GPL-2.0-only.html). Is there some other
-reason to use the deprecated "GPL-2.0" that I'm not aware of?
-
-Thanks,
-Matheus
+Acked-by: Andy Gross <andy.gross@linaro.org>
