@@ -1,51 +1,80 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V4 05/10] dt-bindings: pinctrl: imx7ulp: back to imx
- legacy binding for consistency
-Date: Fri, 9 Nov 2018 10:50:12 +0100
-Message-ID: <CACRpkdZ-oNJyOk0Xh10y44yzhMsodCx0uKpWL7iSCyzyEfaH5g@mail.gmail.com>
-References: <1541149669-10857-1-git-send-email-aisheng.dong@nxp.com>
- <1541149669-10857-6-git-send-email-aisheng.dong@nxp.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/4] of/device: Add a way to probe drivers by match data
+Date: Fri, 9 Nov 2018 10:56:01 +0100
+Message-ID: <CAMuHMdUTwUTdbKAWCNxH72-tvJuY-LtRO2Dh8izdEOKrFOSwLQ@mail.gmail.com>
+References: <20181106183609.207702-1-sboyd@kernel.org> <20181106183609.207702-2-sboyd@kernel.org>
+ <CAL_JsqLvKWcJUYDyWOg3rMeEWv7JV4zw7-YkOUWiL5rfXgVRvQ@mail.gmail.com> <154161585170.88331.1822872519370217248@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1541149669-10857-6-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dong Aisheng <aisheng.dong@nxp.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Dong Aisheng <dongas86@gmail.com>, Russell King <linux@armlinux.org.uk>, Stefan Agner <stefan@agner.ch>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <154161585170.88331.1822872519370217248@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, linux-mediatek@lists.infradead.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, ryder.lee@mediatek.com, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 2, 2018 at 10:13 AM A.s. Dong <aisheng.dong@nxp.com> wrote:
+Hi Stephen,
 
-> We already had an earlier conclusion that all new i.MX Socs will keep
-> using the legacy i.MX Pinctrl bindings instead of generic pin config.
-> However, MX7ULP generic pin config binding support has already been in
-> tree before that time. Per SoC maintainers' suggestions, in order to
-> get a better consistency for all i.MX devices, we'd like to go back to
-> imx legacy binding for MX7ULP as well.
+On Wed, Nov 7, 2018 at 7:37 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> Quoting Rob Herring (2018-11-06 12:44:52)
+> > On Tue, Nov 6, 2018 at 12:36 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > > We have a handful of clk drivers that have a collection of slightly
+> > > variant device support keyed off of the compatible string. In each of
+> > > these drivers, we demux the variant and then call the "real" probe
+> > > function based on whatever is stored in the match data for that
+> > > compatible string. Let's generalize this function so that it can be
+> > > re-used as the platform_driver probe function directly.
+> >
+> > This looks really hacky to me. It sounds kind of general, but really
+> > only works if we have match data that's a single function and we lose
+> > any type checking on the function.
 >
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Stefan Agner <stefan@agner.ch>
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> ---
-> ChangeLog:
->  v3: new patch
+> I don't know what this means. Are you saying that we lose the ability to
+> type check the function pointer stored in the data member? I don't have
+> a good answer for this besides it's not any worse than the status quo
+> for the mediatek drivers.
 
-Patch applied with Fabio's and Rob's ACKs.
+The .data field has always been void *, and is used for storing different
+things, depending on the driver.
+It's already up to the driver writer to get that right.
 
-Yours,
-Linus Walleij
+> One alternative is to add a DT only array to the platform_driver struct
+> that has the platform driver probe function type and matches the index
+> in the of_device_id table. Then we can add some logic into
+> platform_drv_probe() to look for this table being set and find the probe
+> function to call. Then we still have match data for anything that wants
+> that (maybe it could be passed in to the probe function) at the cost of
+> having another array. I don't have a use-case for this right now so I'm
+> not sure this is a great idea.
+>
+>   struct of_platform_driver_probe_func {
+>         int (*probe)(struct platform_device *pdev);
+>   };
+>
+>   struct of_platform_driver_probe_func mtk_probes[] = {
+>         mtk_probe1,
+>         mtk_probe2,
+>         mtk_probe3,
+>   };
+>
+>   struct platform_driver mtk_driver = {
+>         .of_probes = &mtk_probes;
+>         .driver = {
+>                 .name = "mtk-foo";
+>                 .of_match_table = mtk_match_table,
+>         },
+>   };
+
+This looks worse to me: people tend to be very good at keeping multiple
+arrays in sync :-(
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
