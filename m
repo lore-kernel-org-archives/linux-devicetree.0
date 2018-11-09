@@ -1,40 +1,51 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v2 0/3] crypto: ccree: add CryptoCell 713 baseline support
-Date: Fri, 9 Nov 2018 17:50:40 +0800
-Message-ID: <20181109095040.6wkjifw7hwlvoqq3@gondor.apana.org.au>
-References: <1540806616-5483-1-git-send-email-gilad@benyossef.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH V4 05/10] dt-bindings: pinctrl: imx7ulp: back to imx
+ legacy binding for consistency
+Date: Fri, 9 Nov 2018 10:50:12 +0100
+Message-ID: <CACRpkdZ-oNJyOk0Xh10y44yzhMsodCx0uKpWL7iSCyzyEfaH5g@mail.gmail.com>
+References: <1541149669-10857-1-git-send-email-aisheng.dong@nxp.com>
+ <1541149669-10857-6-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1540806616-5483-1-git-send-email-gilad@benyossef.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ofir Drang <Ofir.Drang@arm.com>, Yael Chemla <Yael.Chemla@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1541149669-10857-6-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Dong Aisheng <dongas86@gmail.com>, Russell King <linux@armlinux.org.uk>, Stefan Agner <stefan@agner.ch>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2018 at 09:50:11AM +0000, Gilad Ben-Yossef wrote:
-> Add first batch of patches for support of Arm TrustZone CryptoCell 713.
-> 
-> Changes from v1:
-> - Format dt bindings document one version per line and correct the heading
->   as indicated by Rob Herring.
-> 
-> Gilad Ben-Yossef (3):
->   crypto: ccree: add support for CryptoCell 713
->   dt-bindings: crypto: ccree: add ccree 713
->   crypto: ccree: add SM4 support
-> 
->  .../devicetree/bindings/crypto/arm-cryptocell.txt  |  7 ++-
->  drivers/crypto/Kconfig                             |  3 +-
->  drivers/crypto/ccree/cc_cipher.c                   | 66 ++++++++++++++++++++++
->  drivers/crypto/ccree/cc_driver.c                   | 23 +++++---
->  drivers/crypto/ccree/cc_driver.h                   |  5 +-
->  drivers/crypto/ccree/cc_hw_queue_defs.h            |  3 +
->  6 files changed, 94 insertions(+), 13 deletions(-)
+On Fri, Nov 2, 2018 at 10:13 AM A.s. Dong <aisheng.dong@nxp.com> wrote:
 
-All applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> We already had an earlier conclusion that all new i.MX Socs will keep
+> using the legacy i.MX Pinctrl bindings instead of generic pin config.
+> However, MX7ULP generic pin config binding support has already been in
+> tree before that time. Per SoC maintainers' suggestions, in order to
+> get a better consistency for all i.MX devices, we'd like to go back to
+> imx legacy binding for MX7ULP as well.
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Stefan Agner <stefan@agner.ch>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> ---
+> ChangeLog:
+>  v3: new patch
+
+Patch applied with Fabio's and Rob's ACKs.
+
+Yours,
+Linus Walleij
