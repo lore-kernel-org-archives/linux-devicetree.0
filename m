@@ -1,77 +1,130 @@
-From: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2] drm/msm/dpu: Correct dpu destroy and
- disable order
-Date: Fri, 9 Nov 2018 11:37:17 +0530
-Message-ID: <a2c1906e-f61d-3da2-45a4-3bc14c4201dd@codeaurora.org>
-References: <1541162957-12796-1-git-send-email-jshekhar@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1541162957-12796-1-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: frowand.list@gmail.com
+Subject: [PATCH v7 00/17] of: overlay: validation checks, subsequent fixes
+Date: Thu,  8 Nov 2018 22:05:48 -0800
+Message-ID: <1541743565-23163-1-git-send-email-frowand.list@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIDExLzIvMjAxOCA2OjE5IFBNLCBKYXlhbnQgU2hla2hhciB3cm90ZToKPiBJbiBjYXNlIG9m
-IG1zbSBkcm0gYmluZCBmYWlsdXJlLCBkcHVfbWRzc19kZXN0cm95IGlzIHRyaWdnZXJlZC4KPiBJ
-biB0aGlzIGZ1bmN0aW9uLCByZXNvdXJjZXMgYXJlIGZyZWVkIGFuZCBwbSBydW50aW1lIGRpc2Fi
-bGUgaXMKPiBjYWxsZWQsIHdoaWNoIHRyaWdnZXJzIGRwdV9tZHNzX2Rpc2FibGUuIE5vdyBpbiBk
-cHVfbWRzc19kaXNhYmxlLAo+IGRyaXZlciB0cmllcyB0byBhY2Nlc3MgYSBtZW1vcnkgd2hpY2gg
-aXMgYWxyZWFkeSBmcmVlZC4gVGhpcwo+IHJlc3VsdHMgaW4ga2VybmVsIHBhbmljLiBGaXggdGhp
-cyBieSBlbnN1cmluZyBwcm9wZXIgc2VxdWVuY2UKPiBvZiBkcHUgZGVzdHJveSBhbmQgZGlzYWJs
-ZSBjYWxscy4KPiAKPiBDaGFuZ2VzIGluIHYyOgo+ICAgICAtIFJlbW92ZWQgZG91YmxlIHNwYWNp
-bmdzIFtKZXlrdW1hcl0KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKYXlhbnQgU2hla2hhciA8anNoZWto
-YXJAY29kZWF1cm9yYS5vcmc+CgpJIHdhcyB0ZXN0aW5nIHRoaXMgcGF0Y2ggb3V0IGFuZCBpbiBt
-eSBzZXR1cCBJIHNlZSB0aGF0IHdpdGggdGhpcwpjaGFuZ2UsIGR1cmluZyBhIGRzaSBwcm9iZSBk
-ZWZlciBjYXNlLCBhIGRwdV9tZHNzX2VuYWJsZSgpIGlzIGNhbGxlZApmb2xsb3dlZCBieSBhIGRw
-dV9tZHNzX2Rlc3Ryb3koKSBidXQgZHB1X21kc3NfZGlzYWJsZSgpIGlzIG5ldmVyIGNhbGxlZC4K
-ClRoaXMgcmVzdWx0cyBpbiBhIG1pc21hdGNoIGluIGNsb2NrIHVzZWNvdW50IGNhdXNpbmcgdGhl
-IG1kcCBjbG9ja3MgdG8Kc3RheSBlbmFibGVkIGV2ZW4gd2l0aCBkaXNwbGF5IHR1cm5lZCBvZmYu
-Cgpsb2NhbGhvc3QgfiAjIGNhdCAvc3lzL2tlcm5lbC9kZWJ1Zy9jbGsvY2xrX3N1bW1hcnkgfCBn
-cmVwIG1kc3MKICBkaXNwX2NjX21kc3NfcnNjY19haGJfY2xrICAgICAgICAgICAgMCAgICAgICAg
-MCAgICAgICAgMCAgICAgICAgICAgMCAgICAgICAgICAwICAgICAwICA1MDAwMAogIGRpc3BfY2Nf
-bWRzc19heGlfY2xrICAgICAgICAgICAgICAgICAwICAgICAgICAwICAgICAgICAwICAgICAgICAg
-ICAwICAgICAgICAgIDAgICAgIDAgIDUwMDAwCiAgZGlzcF9jY19tZHNzX2FoYl9jbGsgICAgICAg
-ICAgICAgICAgIDAgICAgICAgIDAgICAgICAgIDAgICAgICAgICAgIDAgICAgICAgICAgMCAgICAg
-MCAgNTAwMDAKICAgICAgICBkaXNwX2NjX21kc3NfbWRwX2Nsa19zcmMgICAgICAgMSAgICAgICAg
-MSAgICAgICAgMCAgICAxOTIwMDAwMCAgICAgICAgICAwICAgICAwICA1MDAwMAogICAgICAgICAg
-IGRpc3BfY2NfbWRzc19tZHBfbHV0X2NsayAgICAgICAwICAgICAgICAwICAgICAgICAwICAgIDE5
-MjAwMDAwICAgICAgICAgIDAgICAgIDAgIDUwMDAwCiAgICAgICAgICAgZGlzcF9jY19tZHNzX21k
-cF9jbGsgICAgICAgIDEgICAgICAgIDEgICAgICAgIDAgICAgMTkyMDAwMDAgICAgICAgICAgMCAg
-ICAgMCAgNTAwMDAKICAgICAgICBkaXNwX2NjX21kc3NfdnN5bmNfY2xrX3NyYyAgICAgICAwICAg
-ICAgICAwICAgICAgICAwICAgIDE5MjAwMDAwICAgICAgICAgIDAgICAgIDAgIDUwMDAwCgpBbHNv
-IHRvIG5vdGUsIG9uIGFuIG9sZGVyIDQuMTQga2VybmVsLCBJIGRvIG5vdCBzZWUgYW55IGlzc3Vl
-IGluIHRoZSBvcmRlciBpbiB3aGljaAp0aGVzZSBmdW5jdGlvbnMgYXJlIGNhbGxlZCBpbiB0aGUg
-ZHNpIHByb2JlIGRlZmVyIGNhc2UsIGkuZSBpdHMgYW4gZW5hYmxlIGZvbGxvd2VkIGJ5CmEgZGlz
-YWJsZSBhbmQgdGhlbiBhIGRlc3Ryb3kgKGFuZCB0aGF0J3Mgd2l0aG91dCB0aGlzIHBhdGNoKQoK
-PiAtLS0KPiAgIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMgfCA1ICst
-LS0tCj4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDQgZGVsZXRpb25zKC0pCj4g
-Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMg
-Yi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jCj4gaW5kZXggZmQ5Yzg5
-My4uOTAyYmI0YyAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9k
-cHVfbWRzcy5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3Mu
-Ywo+IEBAIC0xNTYsMTggKzE1NiwxNSBAQCBzdGF0aWMgdm9pZCBkcHVfbWRzc19kZXN0cm95KHN0
-cnVjdCBkcm1fZGV2aWNlICpkZXYpCj4gICAJc3RydWN0IGRwdV9tZHNzICpkcHVfbWRzcyA9IHRv
-X2RwdV9tZHNzKHByaXYtPm1kc3MpOwo+ICAgCXN0cnVjdCBkc3NfbW9kdWxlX3Bvd2VyICptcCA9
-ICZkcHVfbWRzcy0+bXA7Cj4gICAKPiArCXBtX3J1bnRpbWVfZGlzYWJsZShkZXYtPmRldik7Cj4g
-ICAJX2RwdV9tZHNzX2lycV9kb21haW5fZmluaShkcHVfbWRzcyk7Cj4gLQo+ICAgCWZyZWVfaXJx
-KHBsYXRmb3JtX2dldF9pcnEocGRldiwgMCksIGRwdV9tZHNzKTsKPiAtCj4gICAJbXNtX2Rzc19w
-dXRfY2xrKG1wLT5jbGtfY29uZmlnLCBtcC0+bnVtX2Nsayk7Cj4gICAJZGV2bV9rZnJlZSgmcGRl
-di0+ZGV2LCBtcC0+Y2xrX2NvbmZpZyk7Cj4gICAKPiAgIAlpZiAoZHB1X21kc3MtPm1taW8pCj4g
-ICAJCWRldm1faW91bm1hcCgmcGRldi0+ZGV2LCBkcHVfbWRzcy0+bW1pbyk7Cj4gICAJZHB1X21k
-c3MtPm1taW8gPSBOVUxMOwo+IC0KPiAtCXBtX3J1bnRpbWVfZGlzYWJsZShkZXYtPmRldik7Cj4g
-ICAJcHJpdi0+bWRzcyA9IE5VTEw7Cj4gICB9Cj4gICAKPiAKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJl
-bm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+From: Frank Rowand <frank.rowand@sony.com>
+
+Add checks to (1) overlay apply process and (2) memory freeing
+triggered by overlay release.  The checks are intended to detect
+possible memory leaks and invalid overlays.
+
+The checks revealed bugs in existing code.  Fixed the bugs.
+
+While fixing bugs, noted other issues, which are fixed in
+separate patches.
+
+FPGA folks:
+
+  I made the validation checks that should result in an
+  invalid live devicetree report "ERROR" and cause the overlay apply
+  to fail.
+
+  I made the memory leak validation tests report "WARNING" and allow
+  the overlay apply to complete successfully.  Please let me know
+  if you encounter the warnings.  There are at least two paths
+  forward to deal with the cases that trigger the warning: (1) change
+  the warning to an error and fail the overlay apply, or (2) find a
+  way to detect the potential memory leaks and free the memory
+  appropriately.
+
+ALL people:
+
+  The validations do _not_ address another major concern I have with
+  releasing overlays, which is use after free errors.
+
+Changes since v6:
+  - 03/18 Add acked-by from Michael Ellerman
+  - 03/18 Move info from post "---" into header comment
+  - 04/18 Add acked-by from Michael Ellerman
+  - 03/18 Move info from post "---" into header comment, add more info
+  - 07/18 Drop.
+
+Changes since v5:
+  - move from 4.19-rc1 to 4.20-rc1
+  - all patches: add tested-by Alan Tull
+  - 05/18: update for context change from commit a613b26a50136 ("of:
+    Convert to using %pOFn instead of device_node.name")
+
+Changes since v4:
+  - 01/18: make error message format consistent, error first, path last
+  - 09/18: create of_prop_val_eq() and change open code to use it
+  - 09/18: remove extra blank lines
+
+Changes since v3:
+  - 01/18: Add expected value of refcount for destroy cset entry error.  Also
+    explain the cause of the error.
+
+  - 09/18: for errors of an overlay changing the value of #size-cells or
+    #address-cells, return -EINVAL so that overlay apply will fail
+  - 09/18: for errors of an overlay changing the value of #size-cells or
+    #address-cells, make the message more direct.
+    Old message:
+      OF: overlay: ERROR: overlay and/or live tree #size-cells invalid in node /soc/base_fpga_region
+    New message:
+      OF: overlay: ERROR: changing value of /soc/base_fpga_region/#size-cells not allowed
+
+  - 13/18: Update patch comment header to state that this patch modifies the
+    previous patch to not return immediately on fragment error and
+    explain this is not a performance issue.
+  - 13/18: remove redundant "overlay" from two error messages.  "OF: overlay:"
+    is already present in pr_fmt()
+
+Changes since v2:
+
+  - 13/18: Use continue to reduce indentation in find_dup_cset_node_entry()
+    and find_dup_cset_prop()
+
+Changes since v1:
+
+  - move patch 16/16 to 17/18
+  - move patch 15/16 to 18/18
+  - new patch 15/18
+  - new patch 16/18
+
+  - 05/18: add_changeset_node() header comment: incorrect comment for @target
+
+  - 18/18: add same fix for of_parse_phandle_with_args()
+  - 18/18: add same fix for of_parse_phandle_with_args_map()
+
+Frank Rowand (17):
+  of: overlay: add tests to validate kfrees from overlay removal
+  of: overlay: add missing of_node_put() after add new node to changeset
+  of: overlay: add missing of_node_get() in __of_attach_node_sysfs
+  powerpc/pseries: add of_node_put() in dlpar_detach_node()
+  of: overlay: use prop add changeset entry for property in new nodes
+  of: overlay: do not duplicate properties from overlay for new nodes
+  of: overlay: reorder fields in struct fragment
+  of: overlay: validate overlay properties #address-cells and
+    #size-cells
+  of: overlay: make all pr_debug() and pr_err() messages unique
+  of: overlay: test case of two fragments adding same node
+  of: overlay: check prevents multiple fragments add or delete same node
+  of: overlay: check prevents multiple fragments touching same property
+  of: unittest: remove unused of_unittest_apply_overlay() argument
+  of: overlay: set node fields from properties when add new overlay node
+  of: unittest: allow base devicetree to have symbol metadata
+  of: unittest: find overlays[] entry by name instead of index
+  of: unittest: initialize args before calling of_*parse_*()
+
+ arch/powerpc/platforms/pseries/dlpar.c             |   2 +
+ drivers/of/dynamic.c                               |  59 ++++-
+ drivers/of/kobj.c                                  |   4 +-
+ drivers/of/overlay.c                               | 292 ++++++++++++++++-----
+ drivers/of/unittest-data/Makefile                  |   2 +
+ .../of/unittest-data/overlay_bad_add_dup_node.dts  |  28 ++
+ .../of/unittest-data/overlay_bad_add_dup_prop.dts  |  24 ++
+ drivers/of/unittest-data/overlay_base.dts          |   1 +
+ drivers/of/unittest.c                              |  96 +++++--
+ include/linux/of.h                                 |  21 +-
+ 10 files changed, 432 insertions(+), 97 deletions(-)
+ create mode 100644 drivers/of/unittest-data/overlay_bad_add_dup_node.dts
+ create mode 100644 drivers/of/unittest-data/overlay_bad_add_dup_prop.dts
+
+-- 
+Frank Rowand <frank.rowand@sony.com>
