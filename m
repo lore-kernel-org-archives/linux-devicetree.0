@@ -1,60 +1,87 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/4] of/device: Add a way to probe drivers by match data
-Date: Fri, 9 Nov 2018 20:18:33 +0100
-Message-ID: <CAMuHMdXTTCo6Fsr9eYstT6AFLOQ-_sKkhjw7cP8XdFabVqdJWw@mail.gmail.com>
-References: <20181106183609.207702-1-sboyd@kernel.org> <20181106183609.207702-2-sboyd@kernel.org>
- <CAL_JsqLvKWcJUYDyWOg3rMeEWv7JV4zw7-YkOUWiL5rfXgVRvQ@mail.gmail.com>
- <154161585170.88331.1822872519370217248@swboyd.mtv.corp.google.com>
- <CAMuHMdUTwUTdbKAWCNxH72-tvJuY-LtRO2Dh8izdEOKrFOSwLQ@mail.gmail.com> <154178275324.88331.16237880990995819011@swboyd.mtv.corp.google.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 04/24] dt-bindings: leds: Add function and color
+ properties
+Date: Fri, 9 Nov 2018 21:00:17 +0100
+Message-ID: <f573f259-9458-10b7-5e1e-423ffcd7f8ee@gmail.com>
+References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
+ <1541542052-10081-5-git-send-email-jacek.anaszewski@gmail.com>
+ <26714494-06f8-163d-1ef8-75f75c25a467@ti.com>
+ <c650a9eb-afae-2a27-e39c-d448a5b3eadd@gmail.com>
+ <81884969-956c-9d21-4114-4cb10d1e90e3@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154178275324.88331.16237880990995819011@swboyd.mtv.corp.google.com>
+In-Reply-To: <81884969-956c-9d21-4114-4cb10d1e90e3@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, linux-mediatek@lists.infradead.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, ryder.lee@mediatek.com, Frank Rowand <frowand.list@gmail.com>
+To: Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Dan,
 
-On Fri, Nov 9, 2018 at 5:59 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> Quoting Geert Uytterhoeven (2018-11-09 01:56:01)
-> > On Wed, Nov 7, 2018 at 7:37 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > > Quoting Rob Herring (2018-11-06 12:44:52)
-> > > > On Tue, Nov 6, 2018 at 12:36 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > >         int (*probe)(struct platform_device *pdev);
-> > >   };
-> > >
-> > >   struct of_platform_driver_probe_func mtk_probes[] = {
-> > >         mtk_probe1,
-> > >         mtk_probe2,
-> > >         mtk_probe3,
-> > >   };
-> > >
-> > >   struct platform_driver mtk_driver = {
-> > >         .of_probes = &mtk_probes;
-> > >         .driver = {
-> > >                 .name = "mtk-foo";
-> > >                 .of_match_table = mtk_match_table,
-> > >         },
-> > >   };
-> >
-> > This looks worse to me: people tend to be very good at keeping multiple
-> > arrays in sync :-(
->
-> To be _not_ very good? Agreed, and so specifying the probe function as
-> another member in struct of_device_id seems to be the way to go.
+On 11/08/2018 10:08 PM, Dan Murphy wrote:
+> Jacek
+> 
+> On 11/08/2018 02:47 PM, Jacek Anaszewski wrote:
+>> Dan,
+>>
+>> On 11/08/2018 07:00 PM, Dan Murphy wrote:
+>>> Jacek
+>>>
+>>> On 11/06/2018 04:07 PM, Jacek Anaszewski wrote:
+>>>> Introduce dedicated properties for conveying information about
+>>>> LED function and color. Mark old "label" property as deprecated.
+>>>>
+>>>> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>>>> Cc: Baolin Wang <baolin.wang@linaro.org>
+>>>> Cc: Daniel Mack <daniel@zonque.org>
+>>>> Cc: Dan Murphy <dmurphy@ti.com>
+>>>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>>>> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+>>>> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+>>>> Cc: Simon Shields <simon@lineageos.org>
+>>>> Cc: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/leds/common.txt | 52 +++++++++++++++++++----
+>>>>  1 file changed, 44 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+>>>> index aa13998..3efc826 100644
+>>>> --- a/Documentation/devicetree/bindings/leds/common.txt
+>>>> +++ b/Documentation/devicetree/bindings/leds/common.txt
+>>>> @@ -10,14 +10,20 @@ can influence the way of the LED device initialization, the LED components
+>>>>  have to be tightly coupled with the LED device binding. They are represented
+>>>>  by child nodes of the parent LED device binding.
+>>>>  
+>>>> +
+>>>>  Optional properties for child nodes:
+>>>>  - led-sources : List of device current outputs the LED is connected to. The
+>>>>  		outputs are identified by the numbers that must be defined
+>>>>  		in the LED device binding documentation.
+>>>> +- function: LED functon. Use one of the LED_FUNCTION_* prefixed definitions
+>>>> +	    from the header include/dt-bindings/leds/functions.h.
+>>>> +	    If there is no matching LED_FUNCTION available, add a new one.
+>>>> +- color : Color of the LED.
+>>>
+>>> Should we define the colors too?  There are only really 4.  Red, green, blue and white.
+>>>
+>>> Generally varying colors are created base on the primary colors.  Even the amber color
+>>
+>> No problem, I can add LED colors. However, I don't quite follow how
+>> the mix of base color strings would give "amber" ? :-)
+>>
+> 
+> Amber or yellow.  Red and green with a hint of blue or no blue depending on how dark you want it.
+> 
+> You don't always have to turn the LED on full to mix.  Sometimes lowering the level of the stronger colors like red 
+> and upping weaker colors like green you can different color
 
-Correct, sometimes sarcasm doesn't arrive well at the other end of the
-electronic tunnel...
-
-Gr{oetje,eeting}s,
-
-                        Geert
+That's obvious. I was rather curious what you had on mind by mentioning
+four colors (red, green, blue and white) in the context of "amber".
+Just to remind: we're still talking about LED names, not the values.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best regards,
+Jacek Anaszewski
