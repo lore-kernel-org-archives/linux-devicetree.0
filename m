@@ -1,51 +1,88 @@
-Return-Path: <SRS0=lXjp=OG=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 14/22] ARM: dts: r8a7744: Add IRQC support
-Date: Tue, 27 Nov 2018 11:56:27 +0000
-Message-Id: <1543319795-48325-15-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
-References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=H+Z2=NU=pengutronix.de=mfe@kernel.org>
+Date: Fri, 9 Nov 2018 14:46:24 +0100
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH v3 0/9] TVP5150 fixes and new features
+Message-ID: <20181109134624.2fxin2erjun57lrh@pengutronix.de>
+References: <20180918131453.21031-1-m.felsch@pengutronix.de>
+ <20181029184113.5tfdjdlj75m2wd6m@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181029184113.5tfdjdlj75m2wd6m@pengutronix.de>
+To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, afshin.nasser@gmail.com, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Describe the IRQC interrupt controller in the r8a7744 device tree.
+Hi Mauro,
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm/boot/dts/r8a7744.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+I don't want to spam you. Can you give me some feedback? I know the
+merge window is a busy time, so maybe you have some time now.
 
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index e6662d9..b26315d 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -309,6 +309,26 @@
- 			#power-domain-cells = <1>;
- 		};
- 
-+		irqc: interrupt-controller@e61c0000 {
-+			compatible = "renesas,irqc-r8a7744", "renesas,irqc";
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			reg = <0 0xe61c0000 0 0x200>;
-+			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 407>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 407>;
-+		};
-+
- 		icram0:	sram@e63a0000 {
- 			compatible = "mmio-sram";
- 			reg = <0 0xe63a0000 0 0x12000>;
+Regards,
+Marco
+
+On 18-10-29 19:41, Marco Felsch wrote:
+> Hi Mauro,
+> 
+> just a reminder, Rob already added his ack/rev-by tags.
+> 
+> Thanks,
+> Marco
+> 
+> On 18-09-18 15:14, Marco Felsch wrote:
+> > Hi,
+> > 
+> > this is my v3 with the integrated reviews from my v2 [1]. This serie
+> > applies to Mauro's experimental.git [2].
+> > 
+> > @Mauro:
+> > Patch ("media: tvp5150: fix irq_request error path during probe") is new
+> > in this series. Maybe you can squash them with ("media: tvp5150: Add sync lock
+> > interrupt handling"), thanks.
+> > 
+> > I've tested this series on a customer dt-based board. Unfortunately I
+> > haven't a device which use the em28xx driver. So other tester a welcome :)
+> > 
+> > [1] https://www.spinics.net/lists/devicetree/msg244129.html
+> > [2] https://git.linuxtv.org/mchehab/experimental.git/log/?h=tvp5150-4
+> > 
+> > Javier Martinez Canillas (1):
+> >   partial revert of "[media] tvp5150: add HW input connectors support"
+> > 
+> > Marco Felsch (7):
+> >   media: tvp5150: fix irq_request error path during probe
+> >   media: tvp5150: add input source selection of_graph support
+> >   media: dt-bindings: tvp5150: Add input port connectors DT bindings
+> >   media: v4l2-subdev: add stubs for v4l2_subdev_get_try_*
+> >   media: v4l2-subdev: fix v4l2_subdev_get_try_* dependency
+> >   media: tvp5150: add FORMAT_TRY support for get/set selection handlers
+> >   media: tvp5150: add s_power callback
+> > 
+> > Michael Tretter (1):
+> >   media: tvp5150: initialize subdev before parsing device tree
+> > 
+> >  .../devicetree/bindings/media/i2c/tvp5150.txt |  92 ++-
+> >  drivers/media/i2c/tvp5150.c                   | 657 +++++++++++++-----
+> >  include/dt-bindings/media/tvp5150.h           |   2 -
+> >  include/media/v4l2-subdev.h                   |  15 +-
+> >  4 files changed, 584 insertions(+), 182 deletions(-)
+> > 
+> > -- 
+> > 2.19.0
+> > 
+> > 
+> > 
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+> 
+
 -- 
-2.7.4
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
