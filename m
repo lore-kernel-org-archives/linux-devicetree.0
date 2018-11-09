@@ -1,45 +1,44 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v6 5/9] dt-bindings: ARM: document marvell,ecc-enable
- binding
-Date: Fri, 9 Nov 2018 11:48:19 +0000
-Message-ID: <20181109114818.GB30658@n2100.armlinux.org.uk>
-References: <20181109070349.20464-1-chris.packham@alliedtelesis.co.nz>
- <20181109070349.20464-6-chris.packham@alliedtelesis.co.nz>
- <CAK8P3a3PNvBhyQw0bfGxKmxj+KeJB2_TXtDx2R1BpjTCYNqVkA@mail.gmail.com>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH v4 2/2] scsi: ufs: Add UFS platform driver for Cadence UFS
+Date: Fri, 9 Nov 2018 11:51:59 +0000
+Message-ID: <c4937848-8459-1201-5ec1-2f453df15e1e@huawei.com>
+References: <C77CE2E3-F88A-4B1E-BECB-5D031E2930E3@global.cadence.com>
+ <1A428C77-982A-4EB8-8FDD-A33979753660@global.cadence.com>
+ <yq1tvkt1vly.fsf@oracle.com>
+ <38D3DEAD-C318-4BE2-8605-102FF572AD45@global.cadence.com>
+ <yq1tvkrvvad.fsf@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3PNvBhyQw0bfGxKmxj+KeJB2_TXtDx2R1BpjTCYNqVkA@mail.gmail.com>
+In-Reply-To: <yq1tvkrvvad.fsf@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, Borislav Petkov <bp@alien8.de>, jlu@pengutronix.de, Gregory CLEMENT <gregory.clement@bootlin.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, DTML <devicetree@vger.kernel.org>, linux-edac@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: "Martin K. Petersen" <martin.petersen@oracle.com>, Janek Kotas <jank@cadence.com>
+Cc: "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 09, 2018 at 12:40:06PM +0100, Arnd Bergmann wrote:
-> On Fri, Nov 9, 2018 at 8:04 AM Chris Packham
-> <chris.packham@alliedtelesis.co.nz> wrote:
-> >
-> > Add documentation for the marvell,ecc-enable and marvell,ecc-disable
-> > properties which can be used to enable/disable ECC on the Marvell aurora
-> > cache.
-> >
-> > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> > ---
-> 
-> Why do you need both enable and disable? Wouldn't one of them be enough here?
+On 09/11/2018 02:28, Martin K. Petersen wrote:
+>
+> Janek,
+>
+>>> Rob reviewed the dt binding patch but has it been merged or should I
+>>> take both patches through SCSI?
+>
+> Applied to 4.21/scsi-queue. Thank you!
+>
 
-It isn't an "on when ecc-enable is present, off when not" because the
-current behaviour is to preserve these bits in the control register.
 
-If we were to implement it as "if no ecc-enable property, turn off
-ECC" then that would drastically change the behaviour - systems which
-were configured for ECC suddenly lose ECC support.
+Hi Martin,
 
-Since we don't know which have it and which don't, we can't implement
-the option like that.
+I am building your 4.21 queue today, and it seems to be broken from this 
+patch:
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+https://kernel.googlesource.com/pub/scm/linux/kernel/git/mkp/scsi/+/b3874a425510d1164fd3428ab99273c07d210d82
+
+You seemed to miss adding the c-file:
+make[3]: *** No rule to make target `drivers/scsi/ufs/cdns-pltfrm.o', 
+needed by `drivers/scsi/ufs/built-in.a'. Stop
+
+Or am I missing something?
+
+John
