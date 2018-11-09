@@ -1,56 +1,94 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v4 01/18] arm64: dts: qcom: qcs404: add base dts files
-Date: Fri, 9 Nov 2018 13:40:43 +0530
-Message-ID: <20181109081043.GN12092@vkoul-mobl>
-References: <20181108184009.18430-1-vkoul@kernel.org>
- <20181108184009.18430-2-vkoul@kernel.org>
- <CAL_JsqKsCpofdsP_TojGxeCkv59r5Ce7-4Sz1B1V_QCL1eQDVg@mail.gmail.com>
- <20181109050058.GI12092@vkoul-mobl>
+From: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>
+Subject: Re: [PATCH 04/24] dt-bindings: leds: Add function and color
+ properties
+Date: Fri, 9 Nov 2018 10:32:01 +0200
+Message-ID: <bdd18dc6-0dee-5957-81d4-39254c7ad74d@gmail.com>
+References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
+ <1541542052-10081-5-git-send-email-jacek.anaszewski@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181109050058.GI12092@vkoul-mobl>
+In-Reply-To: <1541542052-10081-5-git-send-email-jacek.anaszewski@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09-11-18, 10:30, Vinod Koul wrote:
-
-> > > +       clocks {
-> > > +               xo_board: xo_board {
-> > 
-> > Build your dtbs with "W=12" and fix any warnings. You should get a
-> > warning about '_'.
+On 07/11/2018 0.07, Jacek Anaszewski wrote:
+> Introduce dedicated properties for conveying information about
+> LED function and color. Mark old "label" property as deprecated.
 > 
-> I did built it with W=1 though, so _ is not allowed?
-
-I have fixed most of these with the exception of mmc-ddr-1_8v, as this
-is documented in mmc bindings, so cant change this one. For this one I
-am going to update gcc driver as well
-
-> > > +       cpus {
-> > > +               #address-cells = <1>;
-> > > +               #size-cells = <0>;
-> > > +
-> > > +               CPU0: cpu@0 {
-> > 
-> > unit address is wrong.
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Baolin Wang <baolin.wang@linaro.org>
+> Cc: Daniel Mack <daniel@zonque.org>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Simon Shields <simon@lineageos.org>
+> Cc: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+> ---
+>   Documentation/devicetree/bindings/leds/common.txt | 52 +++++++++++++++++++----
+>   1 file changed, 44 insertions(+), 8 deletions(-)
 > 
-> Sorry am not sure I follow, can you please explain how..
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index aa13998..3efc826 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -10,14 +10,20 @@ can influence the way of the LED device initialization, the LED components
+>   have to be tightly coupled with the LED device binding. They are represented
+>   by child nodes of the parent LED device binding.
+>   
+> +
+>   Optional properties for child nodes:
+>   - led-sources : List of device current outputs the LED is connected to. The
+>   		outputs are identified by the numbers that must be defined
+>   		in the LED device binding documentation.
+> +- function: LED functon. Use one of the LED_FUNCTION_* prefixed definitions
+> +	    from the header include/dt-bindings/leds/functions.h.
+> +	    If there is no matching LED_FUNCTION available, add a new one.
+> +- color : Color of the LED.
 
-Fixed now, thanks to Bjorn.
+We have had for years out-of-tree patch for multi color gpio led driver 
+which extends this concept with multiple colors. Then in sysfs there has 
+been possibility to control the color and otherwise use blinking or 
+other features.
 
-> > > +       memory@80000000 {
-> > > +               device_type = "memory";
-> > > +               /* We expect the bootloader to fill in the reg */
-> > 
-> > Can't you put in a default or base address at least.
-> 
-> Okay will try
+Our need is multi color status led of the device which includes 
+different kind of blinkings and colors on different situations.
 
-Added now, will send update shortly
+Current in-tree gpio led driver just wasn't atomic enough and a bit 
+clumsy interface for handling this.
 
--- 
-~Vinod
+Now that this is being looked at could we come up with solution that we 
+could define multiple colors for one led in device tree and then we 
+could work on getting the driver upstreamed?
+
+What we did was generally:
+
+leds-multi {
+	compatible = "gpio-multi-leds";
+
+	status {
+		gpios = <...>;
+		linux,default-trigger = "none";
+		deafult-state = "keep";
+
+		color-red {
+			pin-mask = <0x01>;
+		};
+
+		color-green {
+			pin-mask = <0x02>;
+		};
+
+		color-orange {
+			pin-mask = <0x03>;
+		};
+	};
+};
+
+Thanks,
+Vesa Jääskeläinen
