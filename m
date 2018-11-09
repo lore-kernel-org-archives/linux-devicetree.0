@@ -1,82 +1,95 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v2 1/2] dt-bindings: hwmon: add binding documentation for adt7475
-Date: Fri,  9 Nov 2018 11:56:06 +1300
-Message-ID: <20181108225607.7521-2-chris.packham@alliedtelesis.co.nz>
-References: <20181108225607.7521-1-chris.packham@alliedtelesis.co.nz>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v4 1/3] arm64: dts: qcom: sdm845: Add dpu to sdm845 dts
+ file
+Date: Thu, 8 Nov 2018 16:56:51 -0800
+Message-ID: <CAD=FV=UAZ5LS7BJKHmc57=57je14RpzmY5SdtQgvOOmB=jCf9g@mail.gmail.com>
+References: <1541197576-19730-1-git-send-email-jsanka@codeaurora.org>
+ <1541197576-19730-2-git-send-email-jsanka@codeaurora.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181108225607.7521-1-chris.packham@alliedtelesis.co.nz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux@roeck-us.net, robh+dt@kernel.org, jdelvare@suse.com
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1541197576-19730-2-git-send-email-jsanka@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jeykumar Sankaran <jsanka@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Matthias Kaehlcke <mka@chromium.org>, Sean Paul <seanpaul@chromium.org>, Kristian Kristensen <hoegsberg@google.com>, freedreno <freedreno@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-With the addition of the invert-pwm property the adt7475 needs its own
-binding documentation rather being captured under trivial-devices.txt.
-
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
-Changes in v2:
-- use pwm-polarity attiribute to indicate normal or inverted polarity.
-
-=20.../devicetree/bindings/hwmon/adt7475.txt     | 24 +++++++++++++++++++=
-
-=20.../devicetree/bindings/trivial-devices.txt   |  4 ----
-=202 files changed, 24 insertions(+), 4 deletions(-)
-=20create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.txt=
-
-
-diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.txt b/Docume=
-ntation/devicetree/bindings/hwmon/adt7475.txt
-new file mode 100644
-index 000000000000..d9212b5e9036
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/adt7475.txt
-@@ -0,0 +1,24 @@
-+*ADT7475 hwmon sensor.
-+
-+Required properties:
-+- compatible: One of
-+	"adi,adt7473"
-+	"adi,adt7475"
-+	"adi,adt7476"
-+	"adi,adt7490"
-+
-+- reg: I2C address
-+
-+optional properties:
-+
-+- pwm-polarity: This configures the polarity of the PWM. 0
-+		(PWM_POLARITY_NORMAL) uses logic high for 100% duty cycle. 1
-+                (PWM_POLARITY_INVERSED) uses logic low for 100% duty cyc=
-le.
-+
-+Example:
-+
-+hwmon@2e {
-+	compatible =3D ;
-+	reg =3D <0x2e>;
-+	pwm-polarity =3D <1>;
-+};
-diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Docu=
-mentation/devicetree/bindings/trivial-devices.txt
-index 69c934aec13b..4f29100d6bbf 100644
---- a/Documentation/devicetree/bindings/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/trivial-devices.txt
-@@ -14,10 +14,6 @@ ad,ad7414		SMBus/I2C Digital Temperature Sensor in 6-P=
-in SOT with SMBus Alert an
-=20ad,adm9240		ADM9240:  Complete System Hardware Monitor for uProcessor-=
-Based Systems
-=20adi,adt7461		+/-1C TDM Extended Temp Range I.C
-=20adt7461			+/-1C TDM Extended Temp Range I.C
--adi,adt7473		+/-1C TDM Extended Temp Range I.C
--adi,adt7475		+/-1C TDM Extended Temp Range I.C
--adi,adt7476		+/-1C TDM Extended Temp Range I.C
--adi,adt7490		+/-1C TDM Extended Temp Range I.C
-=20adi,adxl345		Three-Axis Digital Accelerometer
-=20adi,adxl346		Three-Axis Digital Accelerometer (backward-compatibility =
-value "adi,adxl345" must be listed too)
-=20ams,iaq-core		AMS iAQ-Core VOC Sensor
---=20
-2.19.1
+SGksCgpPbiBGcmksIE5vdiAyLCAyMDE4IGF0IDM6MjYgUE0gSmV5a3VtYXIgU2Fua2FyYW4gPGpz
+YW5rYUBjb2RlYXVyb3JhLm9yZz4gd3JvdGU6Cj4KPiBEUFUgaXMgc2hvcnQgZm9yIHRoZSBEaXNw
+bGF5IFByb2Nlc3NpbmcgVW5pdC4gSXQgaXMgdGhlIGRpc3BsYXkKPiBjb250cm9sbGVyIG9uIFF1
+YWxjb21tIFNETTg0NSBjaGlwcy4KPgo+IFRoaXMgY2hhbmdlIGFkZHMgTURTUyBhbmQgRFNJIG5v
+ZGVzIHRvIGVuYWJsZSBkaXNwbGF5IG9uIHRoZQo+IHRhcmdldCBkZXZpY2UuCj4KPiBDaGFuZ2Vz
+IGluIHYyOgo+ICAgICAgICAgIC0gQmVlZmVkIHVwIGNvbW1pdCBtZXNzYWdlCj4gICAgICAgICAg
+LSBVc2UgU29DIHNwZWNpZmljIGNvbXBhdGlibGVzIGZvciBtZHNzIGFuZCBkcHUgKFJvYiBIKQo+
+ICAgICAgICAgIC0gVXNlIGFzc2lnbmVkLWNsb2NrcyB0byBzZXQgaW5pdGlhbCBjbG9jayBmcmVx
+dWVuY3koUm9iIEgpCj4gQ2hhbmdlcyBpbiB2MzoKPiAgICAgICAgICAtIGFkZGVkIElPTU1VIG5v
+ZGUKPiAgICAgICAgICAtIEZpeCBkZXZpY2UgbmFtaW5nIChyZW1vdmUgX3BoeXMpCj4gICAgICAg
+ICAgLSBVc2UgY29ycmVjdCBJUlFfVFlQRSBpbiBpbnRlcnJ1cHQgc3BlY2lmaWVycwo+IENoYW5n
+ZXMgaW4gdjQ6Cj4gICAgICAgICAgLSBtb3ZlIG1kc3Mgbm9kZSB0byBwcmVzZXJ2ZSB0aGUgdW5p
+dCBhZGRyZXNzIHNvcnQgb3JkZXIKPiAgICAgICAgICAtIHJlbW92ZSBfY2xrIHN1ZmZpeCBmcm9t
+IGRzaSBjbG9ja3MKPiAgICAgICAgICAoYm90aCB0aGUgY29tbWVudHMgYXJlIGZyb20gRG91ZyBB
+bmRlcnNvbikKPgo+IFNpZ25lZC1vZmYtYnk6IEpleWt1bWFyIFNhbmthcmFuIDxqc2Fua2FAY29k
+ZWF1cm9yYS5vcmc+Cj4gU2lnbmVkLW9mZi1ieTogU2VhbiBQYXVsIDxzZWFucGF1bEBjaHJvbWl1
+bS5vcmc+Cj4gLS0tCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaSB8IDE5
+MSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwg
+MTkxIGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fj
+b20vc2RtODQ1LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiBp
+bmRleCBiNzJiZGIwLi41NzI4YjRjIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
+cWNvbS9zZG04NDUuZHRzaQo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUu
+ZHRzaQo+IEBAIC0xMjQ4LDYgKzEyNDgsMTk3IEBACj4gICAgICAgICAgICAgICAgICAgICAgICAg
+fTsKPiAgICAgICAgICAgICAgICAgfTsKPgo+ICsgICAgICAgICAgICAgICBtZHNzOiBtZHNzQGFl
+MDAwMDAgewo+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicWNvbSxzZG04
+NDUtbWRzcyI7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4YWUwMDAwMCAweDEw
+MDA+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJtZHNzIjsKPiArCj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgcG93ZXItZG9tYWlucyA9IDwmZGlzcGNjIDA+OwoKQ291
+bGQgYmUgZG9uZSBpbiBhIGZvbGxvdy11cCBwYXRjaCwgYnV0IHRlY2huaWNhbGx5IHRoZSBhYm92
+ZSBzaG91bGQgYmU6Cgpwb3dlci1kb21haW5zID0gPCZkaXNwY2MgTURTU19HRFNDPjsKCgo+ICsg
+ICAgICAgICAgICAgICAgICAgICAgIGRzaTA6IGRzaUBhZTk0MDAwIHsKPiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicWNvbSxtZHNzLWRzaS1jdHJsIjsKPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweGFlOTQwMDAgMHg0MDA+Owo+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnLW5hbWVzID0gImRzaV9jdHJsIjsK
+PiArCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0g
+PCZtZHNzPjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8
+NCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKCkp1c3Qgb3V0IG9mIGN1cmlvdXNpdHksIHdoZXJlIGRv
+ZXMgdGhlIDQgY29tZXMgZnJvbT8gIEkgZ3Vlc3MgdGhpcyBtYXRjaGVzOgoKI2RlZmluZSBNRFNT
+X0hXX0lOVFJfU1RBVFVTX0lOVFJfRFNJMCAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAw
+MDAwMTAKI2RlZmluZSBNRFNTX0hXX0lOVFJfU1RBVFVTX0lOVFJfRFNJMSAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIDB4MDAwMDAwMjAKCi4uLndoZXJlIDB4MTAgPT0gKDEgPDwgNCkKCkkgZG9u
+J3Qgc2VlIGFueSBiaW5kaW5ncyBmb3IgdGhpcyBkZWZpbmUgc28gSSBndWVzcyBoYXJkY29kaW5n
+IGl0IGlzCmZpbmUgKGFuZCB0aGUgNSBmb3IgRFNJMSkuCgoKPiArICAgICAgICAgICAgICAgICAg
+ICAgICBkc2kwX3BoeTogZHNpLXBoeUBhZTk0NDAwIHsKPiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIGNvbXBhdGlibGUgPSAicWNvbSxkc2ktcGh5LTEwbm0iOwo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4YWU5NDQwMCAweDIwMD4sCj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MHhhZTk0YTAwIDB4MWUwPiwKPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwweGFlOTQ2MDAgMHgyODA+Owo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnLW5hbWVzID0gImRzaV9waHkiLAo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImRzaV9wbGwiLAo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImRzaV9waHlfbGFuZSI7Cj4g
+Kwo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI2Nsb2NrLWNlbGxzID0gPDE+Owo+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3BoeS1jZWxscyA9IDwwPjsKPiArCj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JmRpc3BjYyBESVNQX0ND
+X01EU1NfQUhCX0NMSz47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9jay1u
+YW1lcyA9ICJpZmFjZSI7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsKCitNYXR0aGlhcyB3
+aWxsIHByb2JhYmx5IHdhbnQgdG8gYmFzZSBhIGZ1dHVyZSBwYXRjaCBvbiB0aGlzIG9uZSBzaW5j
+ZQpoZSdzIHRyeWluZyB0byBob29rIHRoZSBjbG9ja3MgdXAgbW9yZSBwcm9wZXJseS4gIC4uLmJ1
+dCB3aGF0IHlvdSBoYXZlCmFib3ZlIG1hdGNoZXMgdGhlIGN1cnJlbnQgYmluZGluZ3Mgc28gSSB0
+aGluayB3ZSdyZSBnb29kLgoKCk92ZXJhbGw6IEkgYW0gbm90IG1hc3NpdmVseSBmYW1pbGlhciB3
+aXRoIGRpc3BsYXkgLyBicmlkZ2UgLyBwYW5lbApiaW5kaW5ncyBidXQgYXMgZmFyIGFzIEkgY2Fu
+IHRlbGwgdGhpcyBwYXRjaCBpcyBnb29kIGFuZCByZWFkeSB0bwpsYW5kLiAgRnV0dXJlIHdvcmsg
+KGxpa2UgZml4aW5nIHRoZSBuaXQgYWJvdXQgdXNpbmcgdGhlIHBvd2VyIGRvbWFpbgojZGVmaW5l
+KSBjYW4gYWx3YXlzIGJlIGRvbmUgaW4gYSBmb2xsb3ctdXAgcGF0Y2guICBUaHVzOgoKUmV2aWV3
+ZWQtYnk6IERvdWdsYXMgQW5kZXJzb24gPGRpYW5kZXJzQGNocm9taXVtLm9yZz4KCkkndmUgdGVz
+dGVkIHRoaXMgcGF0Y2ggYW5kIGl0J3MgaGVscGVkIG1lIGdldCBhIHdvcmtpbmcgZGlzcGxheS4g
+IFRodXM6CgpUZXN0ZWQtYnk6IERvdWdsYXMgQW5kZXJzb24gPGRpYW5kZXJzQGNocm9taXVtLm9y
+Zz4KCi1Eb3VnCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
