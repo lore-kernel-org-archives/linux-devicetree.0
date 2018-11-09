@@ -1,41 +1,31 @@
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v4 2/2] scsi: ufs: Add UFS platform driver for Cadence UFS
-Date: Fri, 09 Nov 2018 08:11:11 -0500
-Message-ID: <yq18t22wg40.fsf@oracle.com>
-References: <C77CE2E3-F88A-4B1E-BECB-5D031E2930E3@global.cadence.com>
-        <1A428C77-982A-4EB8-8FDD-A33979753660@global.cadence.com>
-        <yq1tvkt1vly.fsf@oracle.com>
-        <38D3DEAD-C318-4BE2-8605-102FF572AD45@global.cadence.com>
-        <yq1tvkrvvad.fsf@oracle.com>
-        <c4937848-8459-1201-5ec1-2f453df15e1e@huawei.com>
+From: jbrunet@baylibre.com
+Subject: Re: [PATCH v3 3/3] ARM64: dts: meson-gxl: Add support for the
+ Smartlabs SML-5442TW
+Date: Fri, 09 Nov 2018 14:17:20 +0100
+Message-ID: <d923e31b63a5d4c4d67a274b8ef9555cd25f8bff.camel@baylibre.com>
+References: <1541691207-24768-1-git-send-email-christianshewitt@gmail.com>
+         <1541706240-30036-1-git-send-email-christianshewitt@gmail.com>
+         <1541706240-30036-4-git-send-email-christianshewitt@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c4937848-8459-1201-5ec1-2f453df15e1e@huawei.com> (John Garry's
-        message of "Fri, 9 Nov 2018 11:51:59 +0000")
+In-Reply-To: <1541706240-30036-4-git-send-email-christianshewitt@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>, Janek Kotas <jank@cadence.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+To: Christian Hewitt <christianshewitt@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Neil Armstrong <narmstrong@baylibre.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, Noralf =?ISO-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 2018-11-08 at 23:43 +0400, Christian Hewitt wrote:
+> +/* This will enable the bluetooth module */
+> +&gpio {
+> +       bt-en {
+> +               gpio-hog;
+> +               gpios = <GPIOX_17 GPIO_ACTIVE_HIGH>;
+> +               output-high;
+> +               line-name = "bt-en";
+> +       };
+> +};
 
-John,
-
-> I am building your 4.21 queue today, and it seems to be broken from
-> this patch:
->
-> https://kernel.googlesource.com/pub/scm/linux/kernel/git/mkp/scsi/+/b3874a425510d1164fd3428ab99273c07d210d82
->
-> You seemed to miss adding the c-file:
-> make[3]: *** No rule to make target `drivers/scsi/ufs/cdns-pltfrm.o',
-> needed by `drivers/scsi/ufs/built-in.a'. Stop
->
-> Or am I missing something?
-
-A corner case wrt. handling of new files in my pre-commit hook prevented
-the .c file from getting properly committed.
-
-Fixed up, thanks!
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Instead of this, is it possible to use the driver provided by
+drivers/bluetooth/hci_qca.c ?
