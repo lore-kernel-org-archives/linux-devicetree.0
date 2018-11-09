@@ -1,7 +1,7 @@
 From: Al Cooper <alcooperx@gmail.com>
-Subject: [PATCH V4 2/5] usb: core: Add ability to skip phy exit on suspend and init on resume
-Date: Fri,  9 Nov 2018 09:01:57 -0500
-Message-ID: <1541772120-40394-3-git-send-email-alcooperx@gmail.com>
+Subject: [PATCH V4 4/5] usb: ehci: Add new EHCI driver for Broadcom STB SoC's
+Date: Fri,  9 Nov 2018 09:01:59 -0500
+Message-ID: <1541772120-40394-5-git-send-email-alcooperx@gmail.com>
 References: <1541772120-40394-1-git-send-email-alcooperx@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1541772120-40394-1-git-send-email-alcooperx@gmail.com>
@@ -10,193 +10,308 @@ To: linux-kernel@vger.kernel.org
 Cc: Al Cooper <alcooperx@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>, linux-usb@vger.kernel.org, Lu Baolu <baolu.lu@li>
 List-Id: devicetree@vger.kernel.org
 
-Add the ability to skip calling the PHY's exit routine on suspend
-and the PHY's init routine on resume. This is to handle a USB PHY
-that should have it's power_off function called on suspend but cannot
-have it's exit function called because on exit it will disable the
-PHY to the point where all USB clocks are stopped and register
-accesses to the Host Controllers using the PHY will be disabled
-and the host drivers will crash.
-
-This is enabled with the HCD flag "phy_supplies_usb_clock" which
-can be set from any HCD driver or with the device tree property
-"phy-supplies-usb-clock".
+Add a new EHCI driver for Broadcom STB SoC's. A new EHCI driver
+was created instead of adding support to the existing ehci platform
+driver because of the code required to workaround bugs in the EHCI
+controller.
 
 Signed-off-by: Al Cooper <alcooperx@gmail.com>
 ---
- drivers/usb/core/hcd.c  |  8 ++++----
- drivers/usb/core/phy.c  | 28 ++++++++++++++++++++--------
- drivers/usb/core/phy.h  |  9 ++++++---
- include/linux/usb/hcd.h |  6 ++++++
- 4 files changed, 36 insertions(+), 15 deletions(-)
+ drivers/usb/host/ehci-brcm.c | 286 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 286 insertions(+)
+ create mode 100644 drivers/usb/host/ehci-brcm.c
 
-diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-index 487025d31d44..5ebc82a69403 100644
---- a/drivers/usb/core/hcd.c
-+++ b/drivers/usb/core/hcd.c
-@@ -2249,7 +2249,7 @@ int hcd_bus_suspend(struct usb_device *rhdev, pm_message_t msg)
- 		hcd->state = HC_STATE_SUSPENDED;
- 
- 		if (!PMSG_IS_AUTO(msg))
--			usb_phy_roothub_suspend(hcd->self.sysdev,
-+			usb_phy_roothub_suspend(hcd,
- 						hcd->phy_roothub);
- 
- 		/* Did we race with a root-hub wakeup event? */
-@@ -2290,7 +2290,7 @@ int hcd_bus_resume(struct usb_device *rhdev, pm_message_t msg)
- 	}
- 
- 	if (!PMSG_IS_AUTO(msg)) {
--		status = usb_phy_roothub_resume(hcd->self.sysdev,
-+		status = usb_phy_roothub_resume(hcd,
- 						hcd->phy_roothub);
- 		if (status)
- 			return status;
-@@ -2333,7 +2333,7 @@ int hcd_bus_resume(struct usb_device *rhdev, pm_message_t msg)
- 		}
- 	} else {
- 		hcd->state = old_state;
--		usb_phy_roothub_suspend(hcd->self.sysdev, hcd->phy_roothub);
-+		usb_phy_roothub_suspend(hcd, hcd->phy_roothub);
- 		dev_dbg(&rhdev->dev, "bus %s fail, err %d\n",
- 				"resume", status);
- 		if (status != -ESHUTDOWN)
-@@ -2730,7 +2730,7 @@ int usb_add_hcd(struct usb_hcd *hcd,
- 	struct usb_device *rhdev;
- 
- 	if (!hcd->skip_phy_initialization && usb_hcd_is_primary_hcd(hcd)) {
--		hcd->phy_roothub = usb_phy_roothub_alloc(hcd->self.sysdev);
-+		hcd->phy_roothub = usb_phy_roothub_alloc(hcd);
- 		if (IS_ERR(hcd->phy_roothub))
- 			return PTR_ERR(hcd->phy_roothub);
- 
-diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
-index 38b2c776c4b4..8bfbacb52a7b 100644
---- a/drivers/usb/core/phy.c
-+++ b/drivers/usb/core/phy.c
-@@ -46,10 +46,11 @@ static int usb_phy_roothub_add_phy(struct device *dev, int index,
- 	return 0;
- }
- 
--struct usb_phy_roothub *usb_phy_roothub_alloc(struct device *dev)
-+struct usb_phy_roothub *usb_phy_roothub_alloc(struct usb_hcd *hcd)
- {
- 	struct usb_phy_roothub *phy_roothub;
- 	int i, num_phys, err;
-+	struct device *dev = hcd->self.sysdev;
- 
- 	if (!IS_ENABLED(CONFIG_GENERIC_PHY))
- 		return NULL;
-@@ -59,6 +60,9 @@ struct usb_phy_roothub *usb_phy_roothub_alloc(struct device *dev)
- 	if (num_phys <= 0)
- 		return NULL;
- 
-+	if (device_property_read_bool(dev, "phy-supplies-usb-clock"))
-+		hcd->phy_supplies_usb_clock = 1;
+diff --git a/drivers/usb/host/ehci-brcm.c b/drivers/usb/host/ehci-brcm.c
+new file mode 100644
+index 000000000000..eb0ea030a4c8
+--- /dev/null
++++ b/drivers/usb/host/ehci-brcm.c
+@@ -0,0 +1,286 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2018, Broadcom */
 +
- 	phy_roothub = devm_kzalloc(dev, sizeof(*phy_roothub), GFP_KERNEL);
- 	if (!phy_roothub)
- 		return ERR_PTR(-ENOMEM);
-@@ -162,26 +166,33 @@ void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub)
- }
- EXPORT_SYMBOL_GPL(usb_phy_roothub_power_off);
- 
--int usb_phy_roothub_suspend(struct device *controller_dev,
-+int usb_phy_roothub_suspend(struct usb_hcd *hcd,
- 			    struct usb_phy_roothub *phy_roothub)
- {
-+	struct device *controller_dev = hcd->self.sysdev;
-+
- 	usb_phy_roothub_power_off(phy_roothub);
- 
--	/* keep the PHYs initialized so the device can wake up the system */
--	if (device_may_wakeup(controller_dev))
-+	/*
-+	 * keep the PHYs initialized so the device can wake up the system
-+	 * or if needed to keep the USB clocks enabled.
-+	 */
-+	if (device_may_wakeup(controller_dev) || hcd->phy_supplies_usb_clock)
- 		return 0;
- 
- 	return usb_phy_roothub_exit(phy_roothub);
- }
- EXPORT_SYMBOL_GPL(usb_phy_roothub_suspend);
- 
--int usb_phy_roothub_resume(struct device *controller_dev,
-+int usb_phy_roothub_resume(struct usb_hcd *hcd,
- 			   struct usb_phy_roothub *phy_roothub)
- {
-+	struct device *controller_dev = hcd->self.sysdev;
- 	int err;
- 
--	/* if the device can't wake up the system _exit was called */
--	if (!device_may_wakeup(controller_dev)) {
-+	/* if _exit was called on suspend */
-+	if (!device_may_wakeup(controller_dev) &&
-+	    !hcd->phy_supplies_usb_clock) {
- 		err = usb_phy_roothub_init(phy_roothub);
- 		if (err)
- 			return err;
-@@ -190,7 +201,8 @@ int usb_phy_roothub_resume(struct device *controller_dev,
- 	err = usb_phy_roothub_power_on(phy_roothub);
- 
- 	/* undo _init if _power_on failed */
--	if (err && !device_may_wakeup(controller_dev))
-+	if (err && !device_may_wakeup(controller_dev)
-+	    && !hcd->phy_supplies_usb_clock)
- 		usb_phy_roothub_exit(phy_roothub);
- 
- 	return err;
-diff --git a/drivers/usb/core/phy.h b/drivers/usb/core/phy.h
-index 88a3c037e9df..34293e11a917 100644
---- a/drivers/usb/core/phy.h
-+++ b/drivers/usb/core/phy.h
-@@ -5,13 +5,16 @@
-  * Copyright (C) 2018 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-  */
- 
++#include <linux/acpi.h>
++#include <linux/clk.h>
++#include <linux/dma-mapping.h>
++#include <linux/err.h>
++#include <linux/kernel.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
 +#include <linux/usb.h>
 +#include <linux/usb/hcd.h>
 +
- #ifndef __USB_CORE_PHY_H_
- #define __USB_CORE_PHY_H_
- 
- struct device;
- struct usb_phy_roothub;
- 
--struct usb_phy_roothub *usb_phy_roothub_alloc(struct device *dev);
-+struct usb_phy_roothub *usb_phy_roothub_alloc(struct usb_hcd *hcd);
- 
- int usb_phy_roothub_init(struct usb_phy_roothub *phy_roothub);
- int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub);
-@@ -19,9 +22,9 @@
- int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub);
- void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub);
- 
--int usb_phy_roothub_suspend(struct device *controller_dev,
-+int usb_phy_roothub_suspend(struct usb_hcd *hcd,
- 			    struct usb_phy_roothub *phy_roothub);
--int usb_phy_roothub_resume(struct device *controller_dev,
-+int usb_phy_roothub_resume(struct usb_hcd *hcd,
- 			   struct usb_phy_roothub *phy_roothub);
- 
- #endif /* __USB_CORE_PHY_H_ */
-diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
-index 97e2ddec18b1..7c42cf0f6835 100644
---- a/include/linux/usb/hcd.h
-+++ b/include/linux/usb/hcd.h
-@@ -157,6 +157,12 @@ struct usb_hcd {
- 	 */
- 	unsigned		skip_phy_initialization:1;
- 
-+	/*
-+	 * Some phys supply the USB controller clocks and should not
-+	 * have exit called on suspend.
-+	 */
-+	unsigned		phy_supplies_usb_clock:1;
++#include "ehci.h"
 +
- 	/* The next flag is a stopgap, to be removed when all the HCDs
- 	 * support the new root-hub polling mechanism. */
- 	unsigned		uses_new_polling:1;
++#define BRCM_DRIVER_DESC "EHCI Broadcom STB driver"
++
++#define hcd_to_ehci_priv(h) ((struct brcm_priv *)hcd_to_ehci(h)->priv)
++
++struct brcm_priv {
++	struct clk *clk;
++};
++
++static const char brcm_hcd_name[] = "ehci-brcm";
++
++static int (*org_hub_control)(struct usb_hcd *hcd,
++			u16 typeReq, u16 wValue, u16 wIndex,
++			char *buf, u16 wLength);
++
++/* ehci_brcm_wait_for_sof
++ * Wait for start of next microframe, then wait extra delay microseconds
++ */
++static inline void ehci_brcm_wait_for_sof(struct ehci_hcd *ehci, u32 delay)
++{
++	int frame_idx = ehci_readl(ehci, &ehci->regs->frame_index);
++
++	while (frame_idx == ehci_readl(ehci, &ehci->regs->frame_index))
++		;
++	udelay(delay);
++}
++
++/*
++ * ehci_brcm_hub_control
++ * Intercept echi-hcd request to complete RESUME and align it to the start
++ * of the next microframe.
++ * If RESUME is complete too late in the microframe, host controller
++ * detects babble on suspended port and resets the port afterwards.
++ * This s/w workaround allows to avoid this problem.
++ * See SWLINUX-1909 for more details
++ */
++static int ehci_brcm_hub_control(
++	struct usb_hcd	*hcd,
++	u16		typeReq,
++	u16		wValue,
++	u16		wIndex,
++	char		*buf,
++	u16		wLength)
++{
++	struct ehci_hcd	*ehci = hcd_to_ehci(hcd);
++	int		ports = HCS_N_PORTS(ehci->hcs_params);
++	u32 __iomem	*status_reg = &ehci->regs->port_status[
++				(wIndex & 0xff) - 1];
++	unsigned long flags;
++	int retval, irq_disabled = 0;
++
++	/*
++	 * RESUME is cleared when GetPortStatus() is called 20ms after start
++	 * of RESUME
++	 */
++	if ((typeReq == GetPortStatus) &&
++	    (wIndex && wIndex <= ports) &&
++	    ehci->reset_done[wIndex-1] &&
++	    time_after_eq(jiffies, ehci->reset_done[wIndex-1]) &&
++	    (ehci_readl(ehci, status_reg) & PORT_RESUME)) {
++
++		/*
++		 * to make sure we are not interrupted until RESUME bit
++		 * is cleared, disable interrupts on current CPU
++		 */
++		ehci_dbg(ehci, "SOF alignment workaround\n");
++		irq_disabled = 1;
++		local_irq_save(flags);
++		ehci_brcm_wait_for_sof(ehci, 5);
++	}
++	retval = (*org_hub_control)(hcd, typeReq, wValue, wIndex, buf, wLength);
++	if (irq_disabled)
++		local_irq_restore(flags);
++	return retval;
++}
++
++static int ehci_brcm_reset(struct usb_hcd *hcd)
++{
++	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
++
++	ehci->big_endian_mmio = 1;
++
++	ehci->caps = (struct ehci_caps *) hcd->regs;
++	ehci->regs = (struct ehci_regs *) (hcd->regs +
++		HC_LENGTH(ehci, ehci_readl(ehci, &ehci->caps->hc_capbase)));
++
++	/* This fixes the lockup during reboot due to prior interrupts */
++	ehci_writel(ehci, CMD_RESET, &ehci->regs->command);
++	mdelay(10);
++
++	/*
++	 * SWLINUX-1705: Avoid OUT packet underflows during high memory
++	 *   bus usage
++	 * port_status[0x0f] = Broadcom-proprietary USB_EHCI_INSNREG00 @ 0x90
++	 */
++	ehci_writel(ehci, 0x00800040, &ehci->regs->port_status[0x10]);
++	ehci_writel(ehci, 0x00000001, &ehci->regs->port_status[0x12]);
++
++	return ehci_setup(hcd);
++}
++
++static struct hc_driver __read_mostly ehci_brcm_hc_driver;
++
++static const struct ehci_driver_overrides brcm_overrides __initconst = {
++
++	.reset =	ehci_brcm_reset,
++	.extra_priv_size = sizeof(struct brcm_priv),
++};
++
++static int ehci_brcm_probe(struct platform_device *pdev)
++{
++	struct usb_hcd *hcd;
++	struct resource *res_mem;
++	struct brcm_priv *priv;
++	int irq;
++	int err;
++
++	if (usb_disabled())
++		return -ENODEV;
++
++	err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
++	if (err)
++		return err;
++
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0) {
++		dev_err(&pdev->dev, "no irq provided");
++		return irq;
++	}
++
++	/* Hook the hub control routine to work around a bug */
++	if (org_hub_control == NULL)
++		org_hub_control = ehci_brcm_hc_driver.hub_control;
++	ehci_brcm_hc_driver.hub_control = ehci_brcm_hub_control;
++
++	/* initialize hcd */
++	hcd = usb_create_hcd(&ehci_brcm_hc_driver,
++			&pdev->dev, dev_name(&pdev->dev));
++	if (!hcd)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, hcd);
++	priv = hcd_to_ehci_priv(hcd);
++
++	priv->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(priv->clk)) {
++		dev_err(&pdev->dev, "Clock not found in Device Tree\n");
++		priv->clk = NULL;
++	}
++	err = clk_prepare_enable(priv->clk);
++	if (err)
++		goto err_hcd;
++
++	res_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	hcd->regs = devm_ioremap_resource(&pdev->dev, res_mem);
++	if (IS_ERR(hcd->regs)) {
++		err = PTR_ERR(hcd->regs);
++		goto err_clk;
++	}
++	hcd->rsrc_start = res_mem->start;
++	hcd->rsrc_len = resource_size(res_mem);
++	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
++	if (err)
++		goto err_clk;
++
++	device_wakeup_enable(hcd->self.controller);
++	device_enable_async_suspend(hcd->self.controller);
++	platform_set_drvdata(pdev, hcd);
++
++	return err;
++
++err_clk:
++	clk_disable_unprepare(priv->clk);
++err_hcd:
++	usb_put_hcd(hcd);
++
++	return err;
++}
++
++static int ehci_brcm_remove(struct platform_device *dev)
++{
++	struct usb_hcd *hcd = platform_get_drvdata(dev);
++	struct brcm_priv *priv = hcd_to_ehci_priv(hcd);
++
++	usb_remove_hcd(hcd);
++	clk_disable_unprepare(priv->clk);
++	usb_put_hcd(hcd);
++	return 0;
++}
++
++#ifdef CONFIG_PM_SLEEP
++
++static int ehci_brcm_suspend(struct device *dev)
++{
++	int ret;
++	struct usb_hcd *hcd = dev_get_drvdata(dev);
++	struct brcm_priv *priv = hcd_to_ehci_priv(hcd);
++	bool do_wakeup = device_may_wakeup(dev);
++
++	ret = ehci_suspend(hcd, do_wakeup);
++	clk_disable_unprepare(priv->clk);
++	return ret;
++}
++
++static int ehci_brcm_resume(struct device *dev)
++{
++	struct usb_hcd *hcd = dev_get_drvdata(dev);
++	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
++	struct brcm_priv *priv = hcd_to_ehci_priv(hcd);
++	int err;
++
++	err = clk_prepare_enable(priv->clk);
++	if (err)
++		return err;
++	/*
++	 * SWLINUX-1705: Avoid OUT packet underflows during high memory
++	 *   bus usage
++	 * port_status[0x0f] = Broadcom-proprietary USB_EHCI_INSNREG00
++	 * @ 0x90
++	 */
++	ehci_writel(ehci, 0x00800040, &ehci->regs->port_status[0x10]);
++	ehci_writel(ehci, 0x00000001, &ehci->regs->port_status[0x12]);
++
++	ehci_resume(hcd, false);
++	return 0;
++}
++#endif /* CONFIG_PM_SLEEP */
++
++static SIMPLE_DEV_PM_OPS(ehci_brcm_pm_ops, ehci_brcm_suspend,
++		ehci_brcm_resume);
++
++static const struct of_device_id brcm_ehci_of_match[] = {
++	{ .compatible = "brcm,bcm7445-ehci", },
++	{}
++};
++
++static struct platform_driver ehci_brcm_driver = {
++	.probe		= ehci_brcm_probe,
++	.remove		= ehci_brcm_remove,
++	.shutdown	= usb_hcd_platform_shutdown,
++	.driver		= {
++		.owner	= THIS_MODULE,
++		.name	= "ehci-brcm",
++		.pm	= &ehci_brcm_pm_ops,
++		.of_match_table = brcm_ehci_of_match,
++	}
++};
++
++static int __init ehci_brcm_init(void)
++{
++	if (usb_disabled())
++		return -ENODEV;
++
++	pr_info("%s: " BRCM_DRIVER_DESC "\n", brcm_hcd_name);
++
++	ehci_init_driver(&ehci_brcm_hc_driver, &brcm_overrides);
++	return platform_driver_register(&ehci_brcm_driver);
++}
++module_init(ehci_brcm_init);
++
++static void __exit ehci_brcm_exit(void)
++{
++	platform_driver_unregister(&ehci_brcm_driver);
++}
++module_exit(ehci_brcm_exit);
++
++MODULE_ALIAS("platform:ehci-brcm");
++MODULE_DESCRIPTION(BRCM_DRIVER_DESC);
++MODULE_AUTHOR("Al Cooper");
++MODULE_LICENSE("GPL");
 -- 
 1.9.0.138.g2de3478
