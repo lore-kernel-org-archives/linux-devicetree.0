@@ -1,7 +1,7 @@
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v6 5/9] dt-bindings: ARM: document marvell,ecc-enable binding
-Date: Fri,  9 Nov 2018 20:03:45 +1300
-Message-ID: <20181109070349.20464-6-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v6 7/9] EDAC: Add missing debugfs_create_x32 wrapper
+Date: Fri,  9 Nov 2018 20:03:47 +1300
+Message-ID: <20181109070349.20464-8-chris.packham@alliedtelesis.co.nz>
 References: <20181109070349.20464-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -9,40 +9,67 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181109070349.20464-1-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux@armlinux.org.uk, bp@alien8.de, arnd@arndb.de, jlu@pengutronix.de, gregory.clement@bootlin.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Mauro Carvalho Chehab <mchehab@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the marvell,ecc-enable and marvell,ecc-disable
-properties which can be used to enable/disable ECC on the Marvell aurora
-cache.
+From: Jan Luebbe <jlu@pengutronix.de>
 
+We already have wrappers for x8 and x16, so add the missing x32 one.
+
+Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
+Reviewed-by: Borislav Petkov <bp@suse.de>
 Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 ---
+=20drivers/edac/debugfs.c     | 11 +++++++++++
+=20drivers/edac/edac_module.h |  5 +++++
+=202 files changed, 16 insertions(+)
 
-Notes:
-=20   Changes in v6:
-=20   - new (split binding doc from implementation).
+diff --git a/drivers/edac/debugfs.c b/drivers/edac/debugfs.c
+index 92dbb7e2320c..268ede7a60b2 100644
+--- a/drivers/edac/debugfs.c
++++ b/drivers/edac/debugfs.c
+@@ -161,3 +161,14 @@ struct dentry *edac_debugfs_create_x16(const char *n=
+ame, umode_t mode,
+=20	return debugfs_create_x16(name, mode, parent, value);
+=20}
+=20EXPORT_SYMBOL_GPL(edac_debugfs_create_x16);
++
++/* Wrapper for debugfs_create_x32() */
++struct dentry *edac_debugfs_create_x32(const char *name, umode_t mode,
++				       struct dentry *parent, u32 *value)
++{
++	if (!parent)
++		parent =3D edac_debugfs;
++
++	return debugfs_create_x32(name, mode, parent, value);
++}
++EXPORT_SYMBOL_GPL(edac_debugfs_create_x32);
+diff --git a/drivers/edac/edac_module.h b/drivers/edac/edac_module.h
+index dec88dcea036..546b16e29221 100644
+--- a/drivers/edac/edac_module.h
++++ b/drivers/edac/edac_module.h
+@@ -82,6 +82,8 @@ struct dentry *
+=20edac_debugfs_create_x8(const char *name, umode_t mode, struct dentry *=
+parent, u8 *value);
+=20struct dentry *
+=20edac_debugfs_create_x16(const char *name, umode_t mode, struct dentry =
+*parent, u16 *value);
++struct dentry *
++edac_debugfs_create_x32(const char *name, umode_t mode, struct dentry *p=
+arent, u32 *value);
+=20#else
+=20static inline int edac_debugfs_init(void)					{ return -ENODEV; }
+=20static inline void edac_debugfs_exit(void)					{ }
+@@ -98,6 +100,9 @@ edac_debugfs_create_x8(const char *name, umode_t mode,=
 
-=20Documentation/devicetree/bindings/arm/l2c2x0.txt | 2 ++
-=201 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/l2c2x0.txt b/Documenta=
-tion/devicetree/bindings/arm/l2c2x0.txt
-index fbe6cb21f4cf..15a84f0ba9f1 100644
---- a/Documentation/devicetree/bindings/arm/l2c2x0.txt
-+++ b/Documentation/devicetree/bindings/arm/l2c2x0.txt
-@@ -76,6 +76,8 @@ Optional properties:
-=20  specified to indicate that such transforms are precluded.
-=20- arm,parity-enable : enable parity checking on the L2 cache (L220 or =
-PL310).
-=20- arm,parity-disable : disable parity checking on the L2 cache (L220 o=
-r PL310).
-+- marvell,ecc-enable : enable ECC protection on the L2 cache
-+- marvell,ecc-disable : disable ECC protection on the L2 cache
-=20- arm,outer-sync-disable : disable the outer sync operation on the L2 =
-cache.
-=20  Some core tiles, especially ARM PB11MPCore have a faulty L220 cache =
-that
-=20  will randomly hang unless outer sync operations are disabled.
+=20static inline struct dentry *
+=20edac_debugfs_create_x16(const char *name, umode_t mode,
+=20		       struct dentry *parent, u16 *value)			{ return NULL; }
++static inline struct dentry *
++edac_debugfs_create_x32(const char *name, umode_t mode,
++		       struct dentry *parent, u32 *value)			{ return NULL; }
+=20#endif
+=20
+=20/*
 --=20
 2.19.1
