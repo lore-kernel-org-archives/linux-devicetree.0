@@ -1,37 +1,35 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 5/6] staging:iio:ad2s90: Add SPDX license identifier
-Date: Fri, 9 Nov 2018 20:13:05 -0200
-Message-ID: <CAOMZO5DVr7TBoNtB7Bwjv1rpaCdOyg8+iU=iCwBRjSD4iWeBUw@mail.gmail.com>
-References: <20181109220044.24843-1-matheus.bernardino@usp.br> <20181109220044.24843-6-matheus.bernardino@usp.br>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH anybus v3 0/6] Support HMS Profinet Card over Anybus
+Date: Fri, 9 Nov 2018 23:32:50 +0100
+Message-ID: <CAK8P3a1zME8G0FjqLaL65F6yYOEuPLJLNs6Mdve7YF=Q2BpU5w@mail.gmail.com>
+References: <20181104155501.14767-1-TheSven73@googlemail.com>
+ <CAGngYiU+8k4ZHYhFVQGKXW8mATEDi64Mi9PsVkX-5vn2PCY3ew@mail.gmail.com>
+ <CAK8P3a1STE+vN_yF0Zyu8gGX_KCWZEV=muPxVE6M1EUqdhO4Pg@mail.gmail.com> <CAGngYiWtmHPShpbLOj4qYJCe6PvNT7ZUDd-0jRsRyxD+HWbByQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181109220044.24843-6-matheus.bernardino@usp.br>
+In-Reply-To: <CAGngYiWtmHPShpbLOj4qYJCe6PvNT7ZUDd-0jRsRyxD+HWbByQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: matheus.bernardino@usp.br
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald <pmeerw@pmeerw.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, kernel-usp@googlegroups.com, alexandru.ardelean@analog.com, victorcolombo@gmail.com
+To: Sven Van Asbroeck <thesven73@gmail.com>
+Cc: svendev@arcx.com, Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matheus,
+On Fri, Nov 9, 2018 at 10:47 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
+>
+> On Fri, Nov 9, 2018 at 4:22 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> >
+> > As usual, it comes down to the user space interfaces I think. Designing
+> > a user interface is hard, most importantly because you cannot change it
+> > once anyone starts relying on it, as opposed to implementation details
+> > that you are free to change at any point.
+>
+> Thanks for the feedback !
+> I will rework v4 so it uses a userspace interface shared with other
+> fieldbus drivers - uio.
 
-On Fri, Nov 9, 2018 at 8:01 PM Matheus Tavares
-<matheus.bernardino@usp.br> wrote:
->
-> This patch adds the SPDX GPL-2.0-only license identifier to ad2s90.c,
-> which solves the checkpatch.pl warning:
-> "WARNING: Missing or malformed SPDX-License-Identifier tag in line 1".
->
-> Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
-> ---
->  drivers/staging/iio/resolver/ad2s90.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/staging/iio/resolver/ad2s90.c b/drivers/staging/iio/resolver/ad2s90.c
-> index 949ff55ac6b0..f439da721df8 100644
-> --- a/drivers/staging/iio/resolver/ad2s90.c
-> +++ b/drivers/staging/iio/resolver/ad2s90.c
-> @@ -1,3 +1,4 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
+You mentioned this before, but I don't see how this would actually
+work. Isn't uio just a slim wrapper for allowing user space access
+to hardware registers while avoiding a kernel driver?
 
-This should be:
-// SPDX-License-Identifier: GPL-2.0
+      Arnd
