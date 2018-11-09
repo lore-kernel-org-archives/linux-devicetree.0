@@ -1,7 +1,7 @@
 From: Matheus Tavares <matheus.bernardino@usp.br>
-Subject: [PATCH 5/6] staging:iio:ad2s90: Add SPDX license identifier
-Date: Fri,  9 Nov 2018 20:00:43 -0200
-Message-ID: <20181109220044.24843-6-matheus.bernardino@usp.br>
+Subject: [PATCH 6/6] staging:iio:ad2s90: Move out of staging
+Date: Fri,  9 Nov 2018 20:00:44 -0200
+Message-ID: <20181109220044.24843-7-matheus.bernardino@usp.br>
 References: <20181109220044.24843-1-matheus.bernardino@usp.br>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181109220044.24843-1-matheus.bernardino@usp.br>
@@ -10,23 +10,84 @@ To: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@a
 Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alexandru Ardelean <alexandru.ardelean@analog.com>, kernel-usp@googlegroups.com, victorcolombo@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the SPDX GPL-2.0-only license identifier to ad2s90.c,
-which solves the checkpatch.pl warning:
-"WARNING: Missing or malformed SPDX-License-Identifier tag in line 1".
+Move ad2s90 resolver driver out of staging to the main tree.
 
 Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
+Signed-off-by: Victor Colombo <victorcolombo@gmail.com>
 ---
- drivers/staging/iio/resolver/ad2s90.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iio/resolver/Kconfig                | 10 ++++++++++
+ drivers/iio/resolver/Makefile               |  1 +
+ drivers/{staging => }/iio/resolver/ad2s90.c |  0
+ drivers/staging/iio/resolver/Kconfig        | 10 ----------
+ drivers/staging/iio/resolver/Makefile       |  1 -
+ 5 files changed, 11 insertions(+), 11 deletions(-)
+ rename drivers/{staging => }/iio/resolver/ad2s90.c (100%)
 
-diff --git a/drivers/staging/iio/resolver/ad2s90.c b/drivers/staging/iio/resolver/ad2s90.c
-index 949ff55ac6b0..f439da721df8 100644
---- a/drivers/staging/iio/resolver/ad2s90.c
-+++ b/drivers/staging/iio/resolver/ad2s90.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0-only
- /*
-  * ad2s90.c simple support for the ADI Resolver to Digital Converters: AD2S90
-  *
+diff --git a/drivers/iio/resolver/Kconfig b/drivers/iio/resolver/Kconfig
+index 2ced9f22aa70..786801be54f6 100644
+--- a/drivers/iio/resolver/Kconfig
++++ b/drivers/iio/resolver/Kconfig
+@@ -3,6 +3,16 @@
+ #
+ menu "Resolver to digital converters"
+ 
++config AD2S90
++	tristate "Analog Devices ad2s90 driver"
++	depends on SPI
++	help
++	  Say yes here to build support for Analog Devices spi resolver
++	  to digital converters, ad2s90, provides direct access via sysfs.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called ad2s90.
++
+ config AD2S1200
+ 	tristate "Analog Devices ad2s1200/ad2s1205 driver"
+ 	depends on SPI
+diff --git a/drivers/iio/resolver/Makefile b/drivers/iio/resolver/Makefile
+index 4e1dccae07e7..398d82d50028 100644
+--- a/drivers/iio/resolver/Makefile
++++ b/drivers/iio/resolver/Makefile
+@@ -2,4 +2,5 @@
+ # Makefile for Resolver/Synchro drivers
+ #
+ 
++obj-$(CONFIG_AD2S90) += ad2s90.o
+ obj-$(CONFIG_AD2S1200) += ad2s1200.o
+diff --git a/drivers/staging/iio/resolver/ad2s90.c b/drivers/iio/resolver/ad2s90.c
+similarity index 100%
+rename from drivers/staging/iio/resolver/ad2s90.c
+rename to drivers/iio/resolver/ad2s90.c
+diff --git a/drivers/staging/iio/resolver/Kconfig b/drivers/staging/iio/resolver/Kconfig
+index 6a469ee6101f..4a727c17bb8f 100644
+--- a/drivers/staging/iio/resolver/Kconfig
++++ b/drivers/staging/iio/resolver/Kconfig
+@@ -3,16 +3,6 @@
+ #
+ menu "Resolver to digital converters"
+ 
+-config AD2S90
+-	tristate "Analog Devices ad2s90 driver"
+-	depends on SPI
+-	help
+-	  Say yes here to build support for Analog Devices spi resolver
+-	  to digital converters, ad2s90, provides direct access via sysfs.
+-
+-	  To compile this driver as a module, choose M here: the
+-	  module will be called ad2s90.
+-
+ config AD2S1210
+ 	tristate "Analog Devices ad2s1210 driver"
+ 	depends on SPI
+diff --git a/drivers/staging/iio/resolver/Makefile b/drivers/staging/iio/resolver/Makefile
+index 8d901dc7500b..b2049f2ce36e 100644
+--- a/drivers/staging/iio/resolver/Makefile
++++ b/drivers/staging/iio/resolver/Makefile
+@@ -2,5 +2,4 @@
+ # Makefile for Resolver/Synchro drivers
+ #
+ 
+-obj-$(CONFIG_AD2S90) += ad2s90.o
+ obj-$(CONFIG_AD2S1210) += ad2s1210.o
 -- 
 2.18.0
