@@ -1,49 +1,34 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v4 0/3] i2c-omap: Enable i2c-omap driver for AM654 SoCs
-Date: Fri, 9 Nov 2018 16:58:52 +0100
-Message-ID: <20181109155852.GH1031@kunai>
-References: <20181109111412.24777-1-vigneshr@ti.com>
+From: Sven Van Asbroeck <thesven73@gmail.com>
+Subject: Re: [PATCH anybus v3 0/6] Support HMS Profinet Card over Anybus
+Date: Fri, 9 Nov 2018 11:02:04 -0500
+Message-ID: <CAGngYiU+8k4ZHYhFVQGKXW8mATEDi64Mi9PsVkX-5vn2PCY3ew@mail.gmail.com>
+References: <20181104155501.14767-1-TheSven73@googlemail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="NzX0AQGjRQPusK/O"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181109111412.24777-1-vigneshr@ti.com>
+In-Reply-To: <20181104155501.14767-1-TheSven73@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Grygorii Strashko <grygorii.strashko@ti.com>
+To: Sven Van Asbroeck <svendev@arcx.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Arnd, Rob, Linus,
 
---NzX0AQGjRQPusK/O
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Many thanks for your constructive feedback so far !
 
-On Fri, Nov 09, 2018 at 04:44:09PM +0530, Vignesh R wrote:
-> Couple of patches to enable i2c-omap driver to be used with TI's new
-> AM654 platforms.
+Is there anything in general about this set that would prevent it from being
+mainlined? Perhaps I am trying to do too much at once, dropping a patchset
+that is too complex to be properly reviewed?
 
-Applied to for-current, thanks!
+I've been thinking about reworking the host to its simplest, yet feature-
+complete form. Just serialize all card accesses with a single lock.
+Then the kernel thread, kqueue, kcache, kref etc would all disappear.
+The price we pay is a reduction in performance/parallelism.
+We could then increase parallelism at a later stage.
+Would that be of any help?
 
+Comments on v3 will go into v4 shortly.
+(Rob, I'm not sure how to address your feedback, other than to s/host/slot/g ?)
 
---NzX0AQGjRQPusK/O
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlvlrrwACgkQFA3kzBSg
-KbbAfQ//SoQN5JLdZOgTo9u7MvyYHRVwLx1x6QIFPMswAruC6YpH+rdYBUYHQYg7
-cevNIgeN2GxWzIT8cHcIpsKxhO+hKqZbwWrVbe9dcS4wH4lADDsrVsyfsls0dy5k
-s2yZpk5EdN1DmWaRH2LkaDt0G4ZRsGff0DfdewEeIN2s84HiN21OL6gQAe6lq/xC
-Zb5eR6Y0JT295CNob6ASGsjabtvuRSo5hpziDFLUV0s29x8Taid0zlPDIE2WYa4a
-jBgT/Ip9zyPy/czlbjB6DLxhFBItxkc6B853RXralgWXtUveU1Sg9dJWmBPFJkCW
-zbQ8TIUxUTXpPfE+XaJL5lOkG36POS4b1WzWh6lthSZzbE1B33zeYXXxmr+z/YS5
-jUdqeFz8ZS24TxiouZDCrvqir/gD2CuSVQ0e9mYdApqwHCwma3sATASaqxezl84v
-rTzp+WUG8xXKRwFDoXJg4eRfowBi5PYrSpE1jgC4qoI9FWwKr9ToBGCBs+Y/l2nc
-jszTxOB/0yy6hb23Y2wiwPcmvSGA30egjOF35IAlkNz0PFG3A9d+Bf/tLM02zj5u
-+5y/xSI6/5icAGZHHHVT7lEHltPJKkC4NYVVg29tA/+jfIMUHoD6C2aaANmE6ENh
-AMvmsPOrDqipc72wcfEMXldYkH8mDoOnjDMkl9hwKRBziTjR3V4=
-=LsZt
------END PGP SIGNATURE-----
-
---NzX0AQGjRQPusK/O--
+Yours,
+Sven
