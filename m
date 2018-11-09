@@ -1,52 +1,61 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 3/4] dt-bindings: reset: uniphier: Add AHCI core reset
- description
-Date: Fri, 09 Nov 2018 16:01:03 +0100
-Message-ID: <1541775663.4112.48.camel@pengutronix.de>
-References: <1541727727-10821-1-git-send-email-hayashi.kunihiko@socionext.com>
-         <1541727727-10821-4-git-send-email-hayashi.kunihiko@socionext.com>
+From: Stefan Popa <stefan.popa@analog.com>
+Subject: [PATCH v4 2/4] dt-bindings: iio: adc: Add common ADCs properties to a separate file
+Date: Fri, 9 Nov 2018 17:40:55 +0200
+Message-ID: <1541778055-7629-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541727727-10821-4-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+To: jic23@kernel.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Kunihiko,
+There are several ADC drivers that depend on the same device tree
+bindings. Rather than continue to duplicate the properties, this patch
+adds a common adc binding document that can be referenced. For beginning,
+only two properties are documented.
 
-On Fri, 2018-11-09 at 10:42 +0900, Kunihiko Hayashi wrote:
-> Add compatible strings for reset control of AHCI core implemented in
-> UniPhier SoCs. The reset control belongs to AHCI glue layer.
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  Documentation/devicetree/bindings/reset/uniphier-reset.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-> index f63c511..ea00517 100644
-> --- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-> +++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-> @@ -133,6 +133,9 @@ Required properties:
->      "socionext,uniphier-pxs2-usb3-reset" - for PXs2 SoC USB3
->      "socionext,uniphier-ld20-usb3-reset" - for LD20 SoC USB3
->      "socionext,uniphier-pxs3-usb3-reset" - for PXs3 SoC USB3
-> +    "socionext,uniphier-pro4-ahci-reset" - for Pro4 SoC AHCI
-> +    "socionext,uniphier-pxs2-ahci-reset" - for PXs2 SoC AHCI
-> +    "socionext,uniphier-pxs3-ahci-reset" - for PXs3 SoC AHCI
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+---
+Changes in v2, v3:
+	- N/A.
+Changes in v4:
+	- Added this commit.
 
-Since the driver behaves identically for "socionext,uniphier-pro4-usb3-
-reset" and "socionext,uniphier-pro4-ahci-reset", would it make sense to
-add a common compatible?
-Something like:
-"socionext,uniphier-pro4-usb3-reset", "socionext,uniphier-pro4-glue-reset" - for USB3 SoC AHCI
-"socionext,uniphier-pro4-ahci-reset", "socionext,uniphier-pro4-glue-reset" - for Pro4 SoC AHCI
+ Documentation/devicetree/bindings/iio/adc/adc.txt | 25 +++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adc.txt
 
-That way if more places turn up where the glue layer reset is used,
-you can add them without patching the driver every time.
-
-regards
-Philipp
+diff --git a/Documentation/devicetree/bindings/iio/adc/adc.txt b/Documentation/devicetree/bindings/iio/adc/adc.txt
+new file mode 100644
+index 0000000..1e3cc21
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adc.txt
+@@ -0,0 +1,25 @@
++Common ADCs properties
++
++This binding is a work-in-progress
++
++Optional properties for child nodes:
++- bipolar : Boolean, if set the channel is used in bipolar mode.
++- diff-channels : Differential channels muxed for this ADC. The first value
++		specifies the positive input pin, the second value the negative
++		input pin.
++
++Example:
++	adc@0 {
++		compatible = "some,adc";
++		...
++		channel@0 {
++			bipolar;
++			diff-channels = <0 1>;
++			...
++		};
++
++		channel@1 {
++			diff-channels = <2 3>;
++			...
++		};
++	};
+-- 
+2.7.4
