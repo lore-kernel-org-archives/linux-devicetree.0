@@ -1,148 +1,69 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v4 03/10] phy: sun4i-usb: add support for H6
- USB2 PHY
-Date: Fri, 09 Nov 2018 22:04:47 +0800
-Message-ID: <95bd076d865d046b6ba6a929eb7a5ade50c05417.camel@aosc.io>
-References: <20181004122855.22981-1-icenowy@aosc.io>
-	 <20181004122855.22981-4-icenowy@aosc.io>
-	 <9cca3453d646f38793df411c4471d062769b4f72.camel@aosc.io>
-	 <bf2ec3ca-b823-4861-2d40-04227db61e49@ti.com>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH v2 0/4] ARM: dts: meson: set pinmux bias
+Date: Fri,  9 Nov 2018 15:04:41 +0100
+Message-ID: <20181109140445.17795-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBCVIS3PQKGQECGUAIEY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <bf2ec3ca-b823-4861-2d40-04227db61e49-l0cyMroinI0@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2018-11-02=E4=BA=94=E7=9A=84 14:13 +0530=EF=BC=8CKishon Vijay Abr=
-aham I=E5=86=99=E9=81=93=EF=BC=9A
->=20
-> On 02/11/18 2:11 PM, Icenowy Zheng wrote:
-> > =E5=9C=A8 2018-10-04=E5=9B=9B=E7=9A=84 20:28 +0800=EF=BC=8CIcenowy Zhen=
-g=E5=86=99=E9=81=93=EF=BC=9A
-> > > The USB 2.0 PHY on Allwinner H6 SoC is similar to older Allwinner
-> > > SoCs,
-> > > with some USB0 quirk like A83T and PHY index 1/2 missing.
-> > >=20
-> > > Add support for it.
-> > >=20
-> > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> > > Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> >=20
-> > Excuse me.
-> >=20
-> > Kishon, could you check PATCH 1~3 and queue them?
-> >=20
-> > Even if USB3 support is pending, USB2 support will still be useful,
-> > and
-> > they're independent.
->=20
-> I'll queue once -rc1 is tagged.
+On Amlogic chipsets, the bias set through pinconf applies to the pad
+itself, not only the GPIO function. This means that even when we change
+the function of the pad from GPIO to anything else, the bias previously
+set still applies.
 
-Ping.
+While trying to boot from SPI, I noticed the eMMC was not working anymore.
+Even if the related eMMC pad are not used by the SPI, the ROM code sets a
+pull-down on the eMMC pad and leaves it that way. This breaks the eMMC
+later on, in both u-boot and Linux.
 
-4.20-rc1 is out now.
+The underlying issue is that we inherit whatever was left by previous user
+of the pad (pinconf, u-boot or the ROM code). As a consequence, the actual
+setup we get is undefined.
 
->=20
-> Thanks
-> Kishon
->=20
-> > > ---
-> > > No changes in v4.
-> > >=20
-> > > Changes in v3:
-> > > - Added Chen-Yu's Review tag.
-> > >=20
-> > >  drivers/phy/allwinner/phy-sun4i-usb.c | 19 +++++++++++++++++--
-> > >  1 file changed, 17 insertions(+), 2 deletions(-)
-> > >=20
-> > > diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c
-> > > b/drivers/phy/allwinner/phy-sun4i-usb.c
-> > > index 881078ff73f6..ae16854a770a 100644
-> > > --- a/drivers/phy/allwinner/phy-sun4i-usb.c
-> > > +++ b/drivers/phy/allwinner/phy-sun4i-usb.c
-> > > @@ -115,6 +115,7 @@ enum sun4i_usb_phy_type {
-> > >  	sun8i_r40_phy,
-> > >  	sun8i_v3s_phy,
-> > >  	sun50i_a64_phy,
-> > > +	sun50i_h6_phy,
-> > >  };
-> > > =20
-> > >  struct sun4i_usb_phy_cfg {
-> > > @@ -295,7 +296,8 @@ static int sun4i_usb_phy_init(struct phy
-> > > *_phy)
-> > >  		return ret;
-> > >  	}
-> > > =20
-> > > -	if (data->cfg->type =3D=3D sun8i_a83t_phy) {
-> > > +	if (data->cfg->type =3D=3D sun8i_a83t_phy ||
-> > > +	    data->cfg->type =3D=3D sun50i_h6_phy) {
-> > >  		if (phy->index =3D=3D 0) {
-> > >  			val =3D readl(data->base + data->cfg-
-> > > > phyctl_offset);
-> > >  			val |=3D PHY_CTL_VBUSVLDEXT;
-> > > @@ -344,7 +346,8 @@ static int sun4i_usb_phy_exit(struct phy
-> > > *_phy)
-> > >  	struct sun4i_usb_phy_data *data =3D to_sun4i_usb_phy_data(phy);
-> > > =20
-> > >  	if (phy->index =3D=3D 0) {
-> > > -		if (data->cfg->type =3D=3D sun8i_a83t_phy) {
-> > > +		if (data->cfg->type =3D=3D sun8i_a83t_phy ||
-> > > +		    data->cfg->type =3D=3D sun50i_h6_phy) {
-> > >  			void __iomem *phyctl =3D data->base +
-> > >  				data->cfg->phyctl_offset;
-> > > =20
-> > > @@ -959,6 +962,17 @@ static const struct sun4i_usb_phy_cfg
-> > > sun50i_a64_cfg =3D {
-> > >  	.phy0_dual_route =3D true,
-> > >  };
-> > > =20
-> > > +static const struct sun4i_usb_phy_cfg sun50i_h6_cfg =3D {
-> > > +	.num_phys =3D 4,
-> > > +	.type =3D sun50i_h6_phy,
-> > > +	.disc_thresh =3D 3,
-> > > +	.phyctl_offset =3D REG_PHYCTL_A33,
-> > > +	.dedicated_clocks =3D true,
-> > > +	.enable_pmu_unk1 =3D true,
-> > > +	.phy0_dual_route =3D true,
-> > > +	.missing_phys =3D BIT(1) | BIT(2),
-> > > +};
-> > > +
-> > >  static const struct of_device_id sun4i_usb_phy_of_match[] =3D {
-> > >  	{ .compatible =3D "allwinner,sun4i-a10-usb-phy", .data =3D
-> > > &sun4i_a10_cfg },
-> > >  	{ .compatible =3D "allwinner,sun5i-a13-usb-phy", .data =3D
-> > > &sun5i_a13_cfg },
-> > > @@ -972,6 +986,7 @@ static const struct of_device_id
-> > > sun4i_usb_phy_of_match[] =3D {
-> > >  	{ .compatible =3D "allwinner,sun8i-v3s-usb-phy", .data =3D
-> > > &sun8i_v3s_cfg },
-> > >  	{ .compatible =3D "allwinner,sun50i-a64-usb-phy",
-> > >  	  .data =3D &sun50i_a64_cfg},
-> > > +	{ .compatible =3D "allwinner,sun50i-h6-usb-phy", .data =3D
-> > > &sun50i_h6_cfg },
-> > >  	{ },
-> > >  };
-> > >  MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+There is nothing mentioned in the documentation about pad bias and pinmux
+function, however leaving it undefined is not an option.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+This patchset consistently disable the pad bias for every pinmux functions.
+It seems to work well, we can only assume that the necessary bias (if any)
+is already provided by the pin function itself.
+
+I can't really test every pinmux configuration and it is fairly possible
+I missed something so it would be nice if more people could confirm if
+nothing (new) is broken after applying this series.
+
+One things could be the i2c. Usually the i2c pull-ups are physically
+present on the board but, if they are missing on platform, we may define
+a special pinmux setting with pull-up enabled.
+
+One last gotcha, I recently posted fixups around bias setting to pinctrl
+which have been merged: [0] [1]. These must be applied before applying this
+series, otherwise when requesting 'bias-disable' you'll probably get a
+pull-down instead.
+
+Changes since v1 [2]:
+ * Fix wrongly placed bias-disable on meson8
+
+[0]: https://lkml.kernel.org/r/20181023160319.27003-1-jbrunet@baylibre.com
+[1]: https://lkml.kernel.org/r/20181029151340.9087-1-jbrunet@baylibre.com
+[2]: https://lkml.kernel.org/r/20181108104426.1877-1-jbrunet@baylibre.com
+
+Jerome Brunet (4):
+  arm64: dts: meson: remove extra subnode in mmc clk_gate pinmux
+  arm64: dts: meson: disable pad bias for mmc pinmuxes
+  arm64: dts: meson: consistently disable pin bias
+  ARM: dts: meson: consistently disable pin bias
+
+ arch/arm/boot/dts/meson8.dtsi               |  12 +++
+ arch/arm/boot/dts/meson8b.dtsi              |   9 ++
+ arch/arm/boot/dts/meson8m2.dtsi             |   1 +
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi  | 111 ++++++++++++++++++--
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi |  60 +++++++++--
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  |  62 +++++++++--
+ 6 files changed, 231 insertions(+), 24 deletions(-)
+
+-- 
+2.19.1
