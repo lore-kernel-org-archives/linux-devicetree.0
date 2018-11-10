@@ -1,65 +1,53 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v5 1/5] dt-bindings: phy-qcom-qmp: Fix register underspecification
-Date: Fri, 09 Nov 2018 16:53:18 -0800
-Message-ID: <154181119838.88331.10401425771645606506@swboyd.mtv.corp.google.com>
-References: <20181026173544.136037-1-evgreen@chromium.org>
- <20181026173544.136037-2-evgreen@chromium.org>
- <154129921872.88331.15831802252403117971@swboyd.mtv.corp.google.com>
- <CAD=FV=UKfDsthT4W3H4jR0Qvw-izLShCjWngN2uBrY-FUEtDDQ@mail.gmail.com>
+From: Nick Kossifidis <mick@ics.forth.gr>
+Subject: [PATCH] OF: Add a warning in case chosen node is not present
+Date: Sat, 10 Nov 2018 02:53:17 +0200
+Message-ID: <20181110005317.5631-1-mick@ics.forth.gr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=UKfDsthT4W3H4jR0Qvw-izLShCjWngN2uBrY-FUEtDDQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Evan Green <evgreen@chromium.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, cang@codeaurora.org, LKML <linux-kernel@vger.kernel.org>, Manu Gautam <mgautam@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: Nick Kossifidis <mick@ics.forth.gr>, linux-riscv@lists.infradead.org, robh+dt@kernel.org, frowand.list@gmail.com, palmer@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Doug Anderson (2018-11-05 08:52:39)
-> On Sat, Nov 3, 2018 at 7:40 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> > > +                       clocks =3D <&gcc GCC_USB3_SEC_PHY_PIPE_CLK>;
-> > > +                       clock-names =3D "pipe0";
-> > > +                       clock-output-names =3D "usb3_uni_phy_pipe_clk=
-_src";
-> >
-> > If this has clock-output-names then I would expect to see a #clock-cells
-> > property, but that isn't here in this node. Are we relying on the same
-> > property in the parent node?
-> =
+On architectures that only get their bootargs through devicetree's
+chosen node (such as RISC-V), that node is mandatory. After a
+discussion with Rob [1] I'm adding a warning in case chosen node
+is not present, to let users know about it.
 
-> If I had to guess, I believe it's yet more confusing than that.  I
-> believe you actually point to the parent phandle if you want to use
-> the clock.  I notice that the parent has #clock-cells as 1 so
-> presumably this is how you point to one child or the other?  ...but I
-> don't think it's documented how this works.
+[1]: https://patchwork.ozlabs.org/patch/984224/#2016136
 
-There are 'clock-ranges', that almost nobody uses. It might be usable
-for this purpose.
+Signed-off-by: Nick Kossifidis <mick@ics.forth.gr>
+---
+ drivers/of/fdt.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-> The lane nodes don't have
-> any sort of ID as far as I can tell.  ...and in any case having
-> #clock-cells of 1 makes no sense for USB 3 PHYs which are supposed to
-> only have one child?
-> =
-
-> Let's look at the code, maybe?  Hrm, phy_pipe_clk_register() takes no
-> ID or anything.  Huh?  OK, so as far as I can tell
-> of_clk_add_provider() is never called on this clock...
-> =
-
-> So I think the answer is that #clock-cells should be <0> and should
-> move to the child node to match with clock-output-names.  Then I guess
-> (if anyone references this clock from the device tree rather than
-> relying on the global clock-output-names) we should add the
-> of_clk_add_provider() into the code?
-> =
-
-> Maybe we can add that as a patch to the end of this series?  There are
-> so many crazy / random things wrong with these bindings that it makes
-> sense to make smaller / incremental changes?
-> =
-
-
-Sure that sounds fine. It would be another case where a driver would
-want to call the proposed devm_of_clk_add_parent_provider() API.
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index bb532aae0d92..7ff67bf1f6d6 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -1200,8 +1200,12 @@ bool __init early_init_dt_verify(void *params)
+ 
+ void __init early_init_dt_scan_nodes(void)
+ {
++	int rc = 0;
++
+ 	/* Retrieve various information from the /chosen node */
+-	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
++	rc = of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
++	if (!rc)
++		pr_warn("No chosen node found, continuing without\n");
+ 
+ 	/* Initialize {size,address}-cells info */
+ 	of_scan_flat_dt(early_init_dt_scan_root, NULL);
+-- 
+2.16.4
