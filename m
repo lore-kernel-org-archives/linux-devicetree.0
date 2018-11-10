@@ -1,7 +1,7 @@
 From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: [PATCH V5 5/6] dts: fsl: add imx7ulp evk support
-Date: Sat, 10 Nov 2018 15:13:12 +0000
-Message-ID: <1541862478-7839-6-git-send-email-aisheng.dong@nxp.com>
+Subject: [PATCH V5 1/6] dt-bindings: fsl: add compatible for imx7ulp evk
+Date: Sat, 10 Nov 2018 15:12:56 +0000
+Message-ID: <1541862478-7839-2-git-send-email-aisheng.dong@nxp.com>
 References: <1541862478-7839-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,159 +22,39 @@ To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org
 Cc: "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The NXP i.MX 7ULP Evaluation Kit (EVK) provides a platform for rapid
-evaluation of the i.MX 7ULP, which features NXP's advanced implementation
-of the Arm Cortex-A7 core, the Arm Cortex-M4 core, as well as a 3D and
-2D Graphics Processing Units (GPUs).
-
-The EVK enables HDMI output for simple out-of-the-box to bring up but
-allows reconfiguration for MIPI displays. The EVK is designed as a
-System-On-Module(SOM) board that connects to an associated baseboard.
-The SOM provides 1 GB LPDDR3, 8 MB Quad SPI flash, Micro SD 3.0 card
-socket, WiFi/ Bluetooth capability, USB 2.0 OTG with Type C connector
-and an NXP PF1550 power management IC (PMIC). The baseboard provides
-additional capabilities including a full SD/MMC 3.0 card socket, audio
-codec, multiple sensors, an HDMI connector, and an alternate MIPI display
-connector. Additionally, the EVK facilitates software development with the
-ultimate goal of faster time to market through the support of both
-Linux OS and AndroidTM rich operating systems, as well as FreeRTOS.
-
-This patch aims to support the preliminary booting up features
-as follows:
-GPIO
-LPUART
-FEC
-SD/MMC
-
-See more board details:
-https://www.nxp.com/products/processors-and-microcontrollers/
-arm-based-processors-and-mcus/i.mx-applications-processors/
-i.mx-7-processors/evaluation-kit-for-the-i.mx-7ulp-applications
--processor:MCIMX7ULP-EVK
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
 Cc: devicetree@vger.kernel.org
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
-ChangeLog:
-v4->v5:
- * update pad setting due to missing pull up enabled
-   (formerly auto done by driver generic pinconfg)
-v3->v4:
- * no changes
-v2->v3:
- * remove "Generic DT based system"
- * add device_type property for memory node
- * back to old pinctrl binding according to SoC maintainer's suggestions
-v1->v2:
- * switch to SPDX license
- * pad name update
- * fix Character '_' not recommended in node name
- * separate from soc.dtsi file
----
- arch/arm/boot/dts/Makefile        |  2 +
- arch/arm/boot/dts/imx7ulp-evk.dts | 77 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 79 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx7ulp-evk.dts
+ Documentation/devicetree/bindings/arm/fsl.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d7268ae..39eac9c 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -573,6 +573,8 @@ dtb-$(CONFIG_SOC_IMX7D) += \
- 	imx7d-sdb-sht11.dtb \
- 	imx7s-colibri-eval-v3.dtb \
- 	imx7s-warp.dtb
-+dtb-$(CONFIG_SOC_IMX7ULP) += \
-+	imx7ulp-evk.dtb
- dtb-$(CONFIG_SOC_LS1021A) += \
- 	ls1021a-moxa-uc-8410a.dtb \
- 	ls1021a-qds.dtb \
-diff --git a/arch/arm/boot/dts/imx7ulp-evk.dts b/arch/arm/boot/dts/imx7ulp-evk.dts
-new file mode 100644
-index 0000000..a09026a
---- /dev/null
-+++ b/arch/arm/boot/dts/imx7ulp-evk.dts
-@@ -0,0 +1,77 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2016 Freescale Semiconductor, Inc.
-+ * Copyright 2017-2018 NXP
-+ *   Dong Aisheng <aisheng.dong@nxp.com>
-+ */
+diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+index 7b964d8..9c7c788 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.txt
++++ b/Documentation/devicetree/bindings/arm/fsl.txt
+@@ -101,6 +101,10 @@ i.MX7 SabreSD Board
+ Required root node properties:
+     - compatible = "fsl,imx7d-sdb", "fsl,imx7d";
+ 
++i.MX7ULP Evaluation Kit
++Required root node properties:
++    - compatible = "fsl,imx7ulp-evk", "fsl,imx7ulp";
 +
-+/dts-v1/;
+ Generic i.MX boards
+ -------------------
+ 
+@@ -123,6 +127,10 @@ i.MX6q generic board
+ Required root node properties:
+     - compatible = "fsl,imx6q";
+ 
++i.MX7ULP generic board
++Required root node properties:
++    - compatible = "fsl,imx7ulp";
 +
-+#include "imx7ulp.dtsi"
-+
-+/ {
-+	model = "NXP i.MX7ULP EVK";
-+	compatible = "fsl,imx7ulp-evk", "fsl,imx7ulp";
-+
-+	chosen {
-+		stdout-path = &lpuart4;
-+	};
-+
-+	memory@60000000 {
-+		device_type = "memory";
-+		reg = <0x60000000 0x40000000>;
-+	};
-+
-+	reg_vsd_3v3: regulator-vsd-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VSD_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usdhc0_rst>;
-+		gpio = <&gpio_ptd 0 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+};
-+
-+&lpuart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart4>;
-+	status = "okay";
-+};
-+
-+&usdhc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc0>;
-+	cd-gpios = <&gpio_ptc 10 GPIO_ACTIVE_LOW>;
-+	vmmc-supply = <&reg_vsd_3v3>;
-+	status = "okay";
-+};
-+
-+&iomuxc1 {
-+	pinctrl_lpuart4: lpuart4grp {
-+		fsl,pins = <
-+			IMX7ULP_PAD_PTC3__LPUART4_RX	0x3
-+			IMX7ULP_PAD_PTC2__LPUART4_TX	0x3
-+		>;
-+		bias-pull-up;
-+	};
-+
-+	pinctrl_usdhc0: usdhc0grp {
-+		fsl,pins = <
-+			IMX7ULP_PAD_PTD1__SDHC0_CMD	0x43
-+			IMX7ULP_PAD_PTD2__SDHC0_CLK	0x40
-+			IMX7ULP_PAD_PTD7__SDHC0_D3	0x43
-+			IMX7ULP_PAD_PTD8__SDHC0_D2	0x43
-+			IMX7ULP_PAD_PTD9__SDHC0_D1	0x43
-+			IMX7ULP_PAD_PTD10__SDHC0_D0	0x43
-+			IMX7ULP_PAD_PTC10__PTC10	0x3	/* CD */
-+		>;
-+	};
-+
-+	pinctrl_usdhc0_rst: usdhc0-gpio-rst-grp {
-+		fsl,pins = <
-+			IMX7ULP_PAD_PTD0__PTD0		0x3
-+		>;
-+	};
-+};
+ Freescale Vybrid Platform Device Tree Bindings
+ ----------------------------------------------
+ 
 -- 
 2.7.4
