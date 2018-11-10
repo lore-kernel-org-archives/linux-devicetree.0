@@ -1,7 +1,7 @@
 From: He Yangxuan <yangxuan8282@gmail.com>
-Subject: [PATCH v5 1/3] arm64: dts: meson-gxl: add support for phicomm n1
-Date: Sat, 10 Nov 2018 11:39:02 +0800
-Message-ID: <20181110033904.4207-2-yangxuan8282@gmail.com>
+Subject: [PATCH v5 3/3] dt-bindings: arm: amlogic: Add Phicomm N1
+Date: Sat, 10 Nov 2018 11:39:04 +0800
+Message-ID: <20181110033904.4207-4-yangxuan8282@gmail.com>
 References: <20181110033904.4207-1-yangxuan8282@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,54 +12,24 @@ To: linux-amlogic@lists.infradead.org
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, carlo@caione.org, khilman@baylibre.com, narmstrong@baylibre.com, He Yangxuan <yangxuan8282@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the Phicomm N1. This device based on P230 reference design.
-And this box doesn't have cvbs, so disable related section in device tree.
+Add bindings documentation for the Phicomm N1.
 
 Signed-off-by: He Yangxuan <yangxuan8282@gmail.com>
 ---
- arch/arm64/boot/dts/amlogic/Makefile                |  1 +
- .../boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts | 21 +++++++++++++++++++++
- 2 files changed, 22 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
+ Documentation/devicetree/bindings/arm/amlogic.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index c31f29d66..49f3ac5d8 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -18,6 +18,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-nexbox-a95x.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-p212.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-phicomm-n1.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s805x-p241.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-p281.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-tx3-mini.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
-new file mode 100644
-index 000000000..9a8a8a7e4
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
-@@ -0,0 +1,21 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2018 He Yangxuan
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-gxl-s905d-p230.dts"
-+
-+/ {
-+	compatible = "phicomm,n1", "amlogic,s905d", "amlogic,meson-gxl";
-+	model = "Phicomm N1";
-+
-+	cvbs-connector {
-+		status = "disabled";
-+	};
-+};
-+
-+&cvbs_vdac_port {
-+	status = "disabled";
-+};
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+index 4498292b8..93177f38e 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.txt
++++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+@@ -91,6 +91,7 @@ Board compatible values (alphabetically, grouped by SoC):
+ 
+   - "amlogic,p230" (Meson gxl s905d)
+   - "amlogic,p231" (Meson gxl s905d)
++  - "phicomm,n1" (Meson gxl s905d)
+ 
+   - "amlogic,p241" (Meson gxl s805x)
+ 
 -- 
 2.11.0
