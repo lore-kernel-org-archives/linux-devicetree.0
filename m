@@ -1,45 +1,35 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V5 4/6] dts: imx: add common imx7ulp dtsi support
-Date: Sat, 10 Nov 2018 13:52:34 -0200
-Message-ID: <CAOMZO5DJgEfzrZQkY1czdrR_fxwdEP5JoTuWKBeS1v35mDA2KQ@mail.gmail.com>
-References: <1541862478-7839-1-git-send-email-aisheng.dong@nxp.com>
- <1541862478-7839-5-git-send-email-aisheng.dong@nxp.com>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH 2/3] rtc: sd3078: new driver.
+Date: Sat, 10 Nov 2018 23:57:19 +0800
+Message-ID: <201811102357.OsWIpHwn%fengguang.wu@intel.com>
+References: <1541839433-28811-2-git-send-email-long17.cool@163.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1541862478-7839-5-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dong Aisheng <aisheng.dong@nxp.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Dong Aisheng <dongas86@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1541839433-28811-2-git-send-email-long17.cool@163.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: kbuild-all@01.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zoro <long17.cool@163.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 10, 2018 at 1:13 PM A.s. Dong <aisheng.dong@nxp.com> wrote:
->
-> The i.MX 7ULP family of processors features NXP's advanced implementation
-> of the Arm Cortex-A7 core, the Arm Cortex-M4 core, as well as a 3D and 2D
-> Graphics Processing Units (GPUs).
->
-> This patch aims to add the initial support including:
-> 1) CLK
-> 2) GPIO PTC, PTD, PTE, PTF
-> 3) uSDHC 1/2
-> 4) LPUART 4/5/6/7
-> 5) LPI2C 6/7
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+Hi zoro,
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on abelloni/rtc-next]
+[also build test WARNING on v4.20-rc1 next-20181109]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/zoro/dt-bindings-define-vendor-prefix-for-whwave-Inc/20181110-205048
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git rtc-next
+
+
+coccinelle warnings: (new ones prefixed by >>)
+
+>> drivers/rtc/rtc-sd3078.c:248:1-3: WARNING: PTR_ERR_OR_ZERO can be used
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
