@@ -1,14 +1,14 @@
 From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH] ARM: dts: pxa3xx: add gcu node
-Date: Sat, 10 Nov 2018 21:43:17 +0100
-Message-ID: <87muqgll3u.fsf@belgarion.home>
-References: <20181105191827.3860-1-daniel@zonque.org>
+Subject: Re: [PATCH] ARM: dts: pxa3xx: Add Raumfeld DTS files
+Date: Sat, 10 Nov 2018 21:45:46 +0100
+Message-ID: <87in14lkzp.fsf@belgarion.home>
+References: <20181105194040.25406-1-daniel@zonque.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181105191827.3860-1-daniel@zonque.org> (Daniel Mack's message
- of "Mon, 5 Nov 2018 20:18:27 +0100")
+In-Reply-To: <20181105194040.25406-1-daniel@zonque.org> (Daniel Mack's message
+ of "Mon, 5 Nov 2018 20:40:40 +0100")
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,17 +24,19 @@ List-Id: devicetree@vger.kernel.org
 
 Daniel Mack <daniel@zonque.org> writes:
 
-> Add a device node for hardware graphic acceleration.
+> This patch adds a set of DTS files that support all PXA3xx based Raumfeld
+> audio hardware devices.
+>
+> Common nodes are factored out into 'common' and 'tuneable-clock' include
+> files to keep the top-level DTS files smaller.
 >
 > Signed-off-by: Daniel Mack <daniel@zonque.org>
 Hi Daniel,
 
-> +	gcu: display-controller@54000000 {
-> +		compatible = "marvell,pxa300-gcu";
-Isn't every IP devicetree entry supposed to have a documentation in
-Documentation/devicetree going along a definition in the .dtsi files ?
+I will need someone from the devicetree to ack this one, Rob or anybody
+maintaining the devicetree.
 
 Cheers.
 
--- 
+--
 Robert
