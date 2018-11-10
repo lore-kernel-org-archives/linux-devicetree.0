@@ -1,78 +1,40 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/3 v2] mtd: partitions: Add RedBoot FIS DT bindings
-Date: Sat, 10 Nov 2018 21:01:26 +0100
-Message-ID: <20181110200127.13847-2-linus.walleij@linaro.org>
-References: <20181110200127.13847-1-linus.walleij@linaro.org>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH] ARM: dts: pxa3xx: add gcu node
+Date: Sat, 10 Nov 2018 21:43:17 +0100
+Message-ID: <87muqgll3u.fsf@belgarion.home>
+References: <20181105191827.3860-1-daniel@zonque.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20181110200127.13847-1-linus.walleij@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181105191827.3860-1-daniel@zonque.org> (Daniel Mack's message
+ of "Mon, 5 Nov 2018 20:18:27 +0100")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Mack <daniel@zonque.org>, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, haojian.zhuang@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree bindings for the RedBoot FIS partition
-format.
+Daniel Mack <daniel@zonque.org> writes:
 
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->v2:
-- Rebased on linux-mtd-next for v4.21
-- Collected Rob's ACK
----
- .../bindings/mtd/partitions/redboot-fis.txt   | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/partitions/redboot-fis.txt
+> Add a device node for hardware graphic acceleration.
+>
+> Signed-off-by: Daniel Mack <daniel@zonque.org>
+Hi Daniel,
 
-diff --git a/Documentation/devicetree/bindings/mtd/partitions/redboot-fis.txt b/Documentation/devicetree/bindings/mtd/partitions/redboot-fis.txt
-new file mode 100644
-index 000000000000..fd0ebe4e3415
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/partitions/redboot-fis.txt
-@@ -0,0 +1,27 @@
-+RedBoot FLASH Image System (FIS) Partitions
-+===========================================
-+
-+The FLASH Image System (FIS) directory is a flash description
-+format closely associated with the RedBoot boot loader.
-+
-+It uses one single flash eraseblock in the flash to store an index of
-+all images in the flash.
-+
-+This block size will vary depending on flash but is typically
-+32 KB in size.
-+
-+Required properties:
-+- compatible : (required) must be "redboot-fis"
-+- fis-index-block : (required) a index to the eraseblock containing
-+  the FIS directory on this device. On a flash memory with 32KB
-+  eraseblocks, 0 means the first eraseblock at 0x00000000, 1 means the
-+  second eraseblock at 0x00008000 and so on.
-+
-+Example:
-+
-+flash@0 {
-+	partitions {
-+		compatible = "redboot-fis";
-+		fis-index-block = <0>;
-+	};
-+};
+> +	gcu: display-controller@54000000 {
+> +		compatible = "marvell,pxa300-gcu";
+Isn't every IP devicetree entry supposed to have a documentation in
+Documentation/devicetree going along a definition in the .dtsi files ?
+
+Cheers.
+
 -- 
-2.19.1
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Robert
