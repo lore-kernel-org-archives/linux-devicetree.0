@@ -1,53 +1,83 @@
-From: Nick Kossifidis <mick@ics.forth.gr>
-Subject: [PATCH] OF: Add a warning in case chosen node is not present
-Date: Sat, 10 Nov 2018 02:53:17 +0200
-Message-ID: <20181110005317.5631-1-mick@ics.forth.gr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: Nick Kossifidis <mick@ics.forth.gr>, linux-riscv@lists.infradead.org, robh+dt@kernel.org, frowand.list@gmail.com, palmer@sifive.com
+From: Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v9 0/2] Add support for LPASS clock controller for SDM845
+Date: Sat, 10 Nov 2018 07:14:14 +0530
+Message-ID: <1541814256-23254-1-git-send-email-tdas@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On architectures that only get their bootargs through devicetree's
-chosen node (such as RISC-V), that node is mandatory. After a
-discussion with Rob [1] I'm adding a warning in case chosen node
-is not present, to let users know about it.
+ [v9]
+  * Update GCC documentation binding with the protected-clocks list.
+  * Update the GCC code to add the GCC lpass clocks.
+  * This depends on the acceptance of
+  https://lore.kernel.org/lkml/20181105194011.43770-1-swboyd@chromium.org/
 
-[1]: https://patchwork.ozlabs.org/patch/984224/#2016136
+ [v8]
+  * Add CLK_IS_CRITICAL for GCC lpass clocks for lpass clocks access to go
+  through always.
 
-Signed-off-by: Nick Kossifidis <mick@ics.forth.gr>
----
- drivers/of/fdt.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ [v7]
+  * Cleanup header file inclusions.
+  * Move the comments along with the flags.
+  * Update the commit with details for CLK_IGNORE_UNUSED.
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index bb532aae0d92..7ff67bf1f6d6 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -1200,8 +1200,12 @@ bool __init early_init_dt_verify(void *params)
- 
- void __init early_init_dt_scan_nodes(void)
- {
-+	int rc = 0;
-+
- 	/* Retrieve various information from the /chosen node */
--	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
-+	rc = of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
-+	if (!rc)
-+		pr_warn("No chosen node found, continuing without\n");
- 
- 	/* Initialize {size,address}-cells info */
- 	of_scan_flat_dt(early_init_dt_scan_root, NULL);
--- 
-2.16.4
+ [v6]
+  * Update the logic to register the lpass clocks when the device tree property
+   is not present.
+  * Add the CLK_IGNORE_UNUSED flag for the lpass clocks to not gate the clocks
+   at late_init.
+
+ [v5]
+  * Address the comments in device tree binding to update the reg-names,
+    update the unit address in lpass clock node example and also
+    add reg property for the gcc clock node.
+  * Update the lpass driver to take care of the reg-names.
+
+ [v4]
+  * Update the description in GCC Documentation binding for
+  'qcom,lpass-protected'.
+  * Remove 'qcom,lpass-protected' from LPASS Documentation binding.
+  * Update KConfig to use Low Power Audio Subsystem.
+  * Add module_exit() and also update return value for
+    devm_ioremap_resource failure.
+
+ [v3]
+  * Add a device tree property to identify lpass protected GCC clocks.
+  * Update the GCC driver code to register the lpass clocks when the flag is
+   defined.
+  * Add comment for clocks using the BRANCH_HALT_SKIP flag.
+  * Use platform APIs instead of of_address_to_resource.
+  * Replace devm_ioremap with devm_ioremap_resource.
+  * Use fixed index for 'lpass_cc' & 'lpass_qdsp6ss' in probe.
+
+ [v2]
+  * Make gcc_lpass_sway_clk static.
+  * Remove using child nodes and use reg-names to differentiate various
+    domains of LPASS CC.
+
+Add support for the lpass clock controller found on SDM845 based devices.
+This would allow lpass peripheral loader drivers to control the clocks to
+bring the subsystem out of reset.
+
+Taniya Das (2):
+  dt-bindings: clock: Introduce QCOM LPASS clock bindings
+  clk: qcom: Add lpass clock controller driver for SDM845
+
+ .../devicetree/bindings/clock/qcom,gcc.txt         |  16 ++
+ .../devicetree/bindings/clock/qcom,lpasscc.txt     |  26 +++
+ drivers/clk/qcom/Kconfig                           |   9 +
+ drivers/clk/qcom/Makefile                          |   1 +
+ drivers/clk/qcom/gcc-sdm845.c                      |  30 ++++
+ drivers/clk/qcom/lpasscc-sdm845.c                  | 192 +++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-sdm845.h        |   2 +
+ include/dt-bindings/clock/qcom,lpass-sdm845.h      |  16 ++
+ 8 files changed, 292 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,lpasscc.txt
+ create mode 100644 drivers/clk/qcom/lpasscc-sdm845.c
+ create mode 100644 include/dt-bindings/clock/qcom,lpass-sdm845.h
+
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
