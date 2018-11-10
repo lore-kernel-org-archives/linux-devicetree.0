@@ -1,43 +1,78 @@
-From: Matheus Tavares Bernardino <matheus.bernardino@usp.br>
-Subject: Re: [PATCH 5/6] staging:iio:ad2s90: Add SPDX license identifier
-Date: Sat, 10 Nov 2018 16:23:17 -0200
-Message-ID: <CAHd-oW5HdNMBjLW1FRqeMzGM=nf0-o+6SBeyGs6uNNSJtUDgxg@mail.gmail.com>
-References: <20181109220044.24843-1-matheus.bernardino@usp.br>
- <20181109220044.24843-6-matheus.bernardino@usp.br>
- <CAOMZO5DVr7TBoNtB7Bwjv1rpaCdOyg8+iU=iCwBRjSD4iWeBUw@mail.gmail.com>
- <CAHd-oW4wo7fShsNMf7a1udnCepUL+ok+Gk7jzVoEUEUjaPCXpw@mail.gmail.com>
- <20181110002018.GA3938@kroah.com>
- <CAHd-oW4uWFco9qcVwMphetXE9LK4YJQmDAbBUPBEBCT3UHZSkA@mail.gmail.com>
- <CAOMZO5Bx-aMEZ9Wn4+3E_Y6QukkkKO1W_67P4jd9kbOOQaWOvg@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 2/3 v2] mtd: partitions: Add RedBoot FIS DT bindings
+Date: Sat, 10 Nov 2018 21:01:26 +0100
+Message-ID: <20181110200127.13847-2-linus.walleij@linaro.org>
+References: <20181110200127.13847-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <CAOMZO5Bx-aMEZ9Wn4+3E_Y6QukkkKO1W_67P4jd9kbOOQaWOvg@mail.gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Alexandru Ardelean <alexandru.ardelean@analog.com>, Victor Colombo <victorcolombo@gmail.com>, Jonathan Cameron <jic23@kernel.org>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20181110200127.13847-1-linus.walleij@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 10, 2018 at 11:23 AM Fabio Estevam <festevam@gmail.com> wrote:>
-> Hi Matheus,
->
-> On Fri, Nov 9, 2018 at 10:27 PM Matheus Tavares Bernardino
-> <matheus.bernardino@usp.br> wrote:
->
-> > Got it, thanks for the explanation! I'll correct this in v2.
->
-> One more suggestion: in v2 you could also consider to remove the legal
-> text that says GPL v2, as you are adding the SPDX tag.
+This adds device tree bindings for the RedBoot FIS partition
+format.
 
-Okay, I'll do it! Thanks again for the review and suggestions!
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v1->v2:
+- Rebased on linux-mtd-next for v4.21
+- Collected Rob's ACK
+---
+ .../bindings/mtd/partitions/redboot-fis.txt   | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/partitions/redboot-fis.txt
 
-Matheus
+diff --git a/Documentation/devicetree/bindings/mtd/partitions/redboot-fis.txt b/Documentation/devicetree/bindings/mtd/partitions/redboot-fis.txt
+new file mode 100644
+index 000000000000..fd0ebe4e3415
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/partitions/redboot-fis.txt
+@@ -0,0 +1,27 @@
++RedBoot FLASH Image System (FIS) Partitions
++===========================================
++
++The FLASH Image System (FIS) directory is a flash description
++format closely associated with the RedBoot boot loader.
++
++It uses one single flash eraseblock in the flash to store an index of
++all images in the flash.
++
++This block size will vary depending on flash but is typically
++32 KB in size.
++
++Required properties:
++- compatible : (required) must be "redboot-fis"
++- fis-index-block : (required) a index to the eraseblock containing
++  the FIS directory on this device. On a flash memory with 32KB
++  eraseblocks, 0 means the first eraseblock at 0x00000000, 1 means the
++  second eraseblock at 0x00008000 and so on.
++
++Example:
++
++flash@0 {
++	partitions {
++		compatible = "redboot-fis";
++		fis-index-block = <0>;
++	};
++};
+-- 
+2.19.1
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
