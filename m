@@ -1,7 +1,7 @@
 From: He Yangxuan <yangxuan8282@gmail.com>
-Subject: [PATCH v5 2/3] dt-bindings: Add vendor prefix for PHICOMM Co., Ltd.
-Date: Sat, 10 Nov 2018 11:39:03 +0800
-Message-ID: <20181110033904.4207-3-yangxuan8282@gmail.com>
+Subject: [PATCH v5 1/3] arm64: dts: meson-gxl: add support for phicomm n1
+Date: Sat, 10 Nov 2018 11:39:02 +0800
+Message-ID: <20181110033904.4207-2-yangxuan8282@gmail.com>
 References: <20181110033904.4207-1-yangxuan8282@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,25 +12,54 @@ To: linux-amlogic@lists.infradead.org
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, carlo@caione.org, khilman@baylibre.com, narmstrong@baylibre.com, He Yangxuan <yangxuan8282@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-PHICOMM Co., Ltd. is a hardware provider headquartered in Shanghai, it's
-product includes router and smart devices.
+This patch adds support for the Phicomm N1. This device based on P230 reference design.
+And this box doesn't have cvbs, so disable related section in device tree.
 
 Signed-off-by: He Yangxuan <yangxuan8282@gmail.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/amlogic/Makefile                |  1 +
+ .../boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts | 21 +++++++++++++++++++++
+ 2 files changed, 22 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 4b1a2a8fc..8c413d8cc 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -296,6 +296,7 @@ panasonic	Panasonic Corporation
- parade	Parade Technologies Inc.
- pericom	Pericom Technology Inc.
- pervasive	Pervasive Displays, Inc.
-+phicomm PHICOMM Co., Ltd.
- phytec	PHYTEC Messtechnik GmbH
- picochip	Picochip Ltd
- pine64	Pine64
+diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+index c31f29d66..49f3ac5d8 100644
+--- a/arch/arm64/boot/dts/amlogic/Makefile
++++ b/arch/arm64/boot/dts/amlogic/Makefile
+@@ -18,6 +18,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-nexbox-a95x.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-p212.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
++dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-phicomm-n1.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s805x-p241.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-p281.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-tx3-mini.dtb
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
+new file mode 100644
+index 000000000..9a8a8a7e4
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2018 He Yangxuan
++ */
++
++/dts-v1/;
++
++#include "meson-gxl-s905d-p230.dts"
++
++/ {
++	compatible = "phicomm,n1", "amlogic,s905d", "amlogic,meson-gxl";
++	model = "Phicomm N1";
++
++	cvbs-connector {
++		status = "disabled";
++	};
++};
++
++&cvbs_vdac_port {
++	status = "disabled";
++};
 -- 
 2.11.0
