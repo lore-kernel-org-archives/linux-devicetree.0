@@ -1,56 +1,124 @@
-Return-Path: <SRS0=bxXA=NQ=pengutronix.de=l.stach@kernel.org>
-Message-ID: <1541438355.2508.7.camel@pengutronix.de>
-Subject: Re: [PATCH 1/4] Input: egalax_ts - clean up capability
- initialization
-From: Lucas Stach <l.stach@pengutronix.de>
-Date: Mon, 05 Nov 2018 18:19:15 +0100
-In-Reply-To: <20180920142256.2788-1-l.stach@pengutronix.de>
-References: <20180920142256.2788-1-l.stach@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, patchwork-lst@pengutronix.de, Chris Healy <cphealy@gmail.com>, kernel@pengutronix.de, linux-input@vger.kernel.org
+Return-Path: <SRS0=Vb9c=NV=163.com=long17.cool@kernel.org>
+Date: Sat, 10 Nov 2018 20:33:50 +0800 (GMT+08:00)
+From: =?GBK?B?wfo=?= <long17.cool@163.com>
+Subject: Re: [PATCH 1/3] dt-bindings: define vendor prefix for whwave, Inc.
+In-Reply-To: <20181110121908.GF29768@piout.net>
+References: <1541839433-28811-1-git-send-email-long17.cool@163.com>
+ <20181110121908.GF29768@piout.net>
+Content-Type: multipart/alternative;
+	boundary="----=_Part_31655_1082553217.1541853230855"
+MIME-Version: 1.0
+Message-ID: <4b1f01ea.29a8.166fd9d3707.Coremail.long17.cool@163.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: "a.zummo@towertech.it" <a.zummo@towertech.it>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi all,
+------=_Part_31655_1082553217.1541853230855
+Content-Type: text/plain; charset=GBK
+Content-Transfer-Encoding: base64
 
-we can drop this whole series. I realized that all I need is already
-implemented in the EXC3000 driver.
+SGVsbG86ClRoYW5rcyBmb3IgeW91ciByZXBseS4KSSdsbCBqdXN0IG1vZGlmeSBpdCBhbmQgc2Vu
+ZCBpdCBhZ2Fpbi4KVGhhbmsgeW91IHZlcnkgbXVjaC4KCgoKfCB8CsH6CnwKfArTys/ko7psb25n
+MTcuY29vbEAxNjMuY29tCnwKCsepw/vTySDN+NLX08rP5LTzyqYgtqjWxgoKCgoK1NoyMDE4xOox
+MdTCMTDI1SAyMDoxOaOsQWxleGFuZHJlIEJlbGxvbmkg0LS1wKO6CkhlbGxvLAoKT24gMTAvMTEv
+MjAxOCAxNjo0Mzo1MSswODAwLCB6b3JvIHdyb3RlOgo+IEludHJvZHVjZSB2ZW5kb3IgcHJlZml4
+IGZvciB3aHdhdmUsIEluYy4KPiBmb3IgU0QzMDc4IHJ0YyBkZXZpY2UuCj4KPiBTaWduZWQtb2Zm
+LWJ5OiB6b3JvIDxsb25nMTcuY29vbEAxNjMuY29tPgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9i
+aW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0ICAgICAgICB8ICAgIDEgKwo+ICAxIGZpbGUgY2hh
+bmdlZCwgMSBpbnNlcnRpb24oKykKPgo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0Cj4gaW5kZXggNGIxYTJhOC4uM2Q1OWQ2
+YSAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9y
+LXByZWZpeGVzLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92
+ZW5kb3ItcHJlZml4ZXMudHh0Cj4gQEAgLTQ0MCwzICs0NDAsNCBAQCB6aWRvbyAgICAgU2hlbnpo
+ZW4gWmlkb28gVGVjaG5vbG9neSBDby4sIEx0ZC4KPiAgemlpICAgICBab2RpYWMgSW5mbGlnaHQg
+SW5ub3ZhdGlvbnMKPiAgenRlICAgICBaVEUgQ29ycC4KPiAgenl4ZWwgICAgIFp5WEVMIENvbW11
+bmljYXRpb25zIENvcnAuCj4gK3dod2F2ZSAgICAgU2hlbnpoZW4gd2h3YXZlIEVsZWN0cm9uaWNz
+IGNyb3AKClRoaXMgZmlsZSBtdXN0IGJlIHNvcnRlZCBhbHBoYWJldGljYWxseS4KCi0tCkFsZXhh
+bmRyZSBCZWxsb25pLCBCb290bGluCkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJp
+bmcKaHR0cHM6Ly9ib290bGluLmNvbQo=
+------=_Part_31655_1082553217.1541853230855
+Content-Type: text/html; charset=GBK
+Content-Transfer-Encoding: base64
 
-Regards,
-Lucas
-
-Am Donnerstag, den 20.09.2018, 16:22 +0200 schrieb Lucas Stach:
-> Just provide the proper flags to input_mt_init_slots(), which will
-> so the right thing and set the proper capability bits.
-> 
-> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> ---
->  drivers/input/touchscreen/egalax_ts.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/egalax_ts.c b/drivers/input/touchscreen/egalax_ts.c
-> index 80e69bb8283e..5e7a60089c3d 100644
-> --- a/drivers/input/touchscreen/egalax_ts.c
-> +++ b/drivers/input/touchscreen/egalax_ts.c
-> @@ -199,17 +199,12 @@ static int egalax_ts_probe(struct i2c_client *client,
-> >  	input_dev->name = "EETI eGalax Touch Screen";
-> >  	input_dev->id.bustype = BUS_I2C;
->  
-> > -	__set_bit(EV_ABS, input_dev->evbit);
-> > -	__set_bit(EV_KEY, input_dev->evbit);
-> > -	__set_bit(BTN_TOUCH, input_dev->keybit);
-> -
-> > -	input_set_abs_params(input_dev, ABS_X, 0, EGALAX_MAX_X, 0, 0);
-> > -	input_set_abs_params(input_dev, ABS_Y, 0, EGALAX_MAX_Y, 0, 0);
-> >  	input_set_abs_params(input_dev,
-> >  			     ABS_MT_POSITION_X, 0, EGALAX_MAX_X, 0, 0);
-> >  	input_set_abs_params(input_dev,
-> >  			     ABS_MT_POSITION_Y, 0, EGALAX_MAX_Y, 0, 0);
-> > -	input_mt_init_slots(input_dev, MAX_SUPPORT_POINTS, 0);
-> > +	input_mt_init_slots(input_dev, MAX_SUPPORT_POINTS,
-> > +			    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
->  
-> >  	error = devm_request_threaded_irq(&client->dev, client->irq, NULL,
-> >  					  egalax_ts_interrupt,
+PGh0bWw+CjxoZWFkPgogICAgPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50
+PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9VVRGLTgiPgo8L2hlYWQ+Cjxib2R5Pgo8ZGl2IHN0eWxlPSJs
+aW5lLWhlaWdodDoxLjY7Zm9udC1mYW1pbHk6J8a7t70nLCfOosjt0cW62icsJ3NhbnMtc2VyaWYn
+OyI+PGZvbnQgc3R5bGU9ImZvbnQtc2l6ZToxN3B4OyI+SGVsbG86PGJyPlRoYW5rcyBmb3IgeW91
+ciByZXBseS48YnI+SSdsbCBqdXN0IG1vZGlmeSBpdCBhbmQgc2VuZCBpdCBhZ2Fpbi48YnI+VGhh
+bmsgeW91IHZlcnkgbXVjaC48L2ZvbnQ+PGJyPjxicj48YnI+PC9kaXY+PGRpdiBjbGFzcz0ibmUt
+cXVvdGVkIj4KPGh0bWwgbGFuZz0iZW4iIHN0eWxlPSJoZWlnaHQ6MTAwJSI+Cgo8aGVhZD4KICA8
+bWV0YSBjaGFyc2V0PSJVVEYtOCI+CiAgPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9Indp
+ZHRoPWRldmljZS13aWR0aCwgaW5pdGlhbC1zY2FsZT0xLjAsIG1heGltdW0tc2NhbGU9MS4wLCBt
+aW5pbXVtLXNjYWxlPTEuMCx1c2VyLXNjYWxhYmxlPW5vIj4KICA8bWV0YSBodHRwLWVxdWl2PSJY
+LVVBLUNvbXBhdGlibGUiIGNvbnRlbnQ9ImllPWVkZ2UiPgo8L2hlYWQ+Cjxib2R5IHN0eWxlPSJt
+YXJnaW46MDtwYWRkaW5nOjA7Ij4KICA8YSBocmVmPSJodHRwczovL21hYXMubWFpbC4xNjMuY29t
+L2Rhc2hpLXdlYi1leHRlbmQvaHRtbC9wcm9TaWduYXR1cmUuaHRtbD9pY29uVXJsPWh0dHBzOi8v
+bm9zLm5ldGVhc2UuY29tL21haWwtb25saW5lL3FpeWVsb2dvL2RlZmF1bHRBdmF0YXIucG5nJmFt
+cDtuYW1lPcH6JmFtcDt1aWQ9bG9uZzE3LmNvb2wlNDAxNjMuY29tJmFtcDtmdGxJZD0xJmFtcDtp
+dGVtcz0lNUIlMjIlRTklODIlQUUlRTclQUUlQjElRUYlQkMlOUFsb25nMTcuY29vbCU0MDE2My5j
+b20lMjIlNUQiIHN0eWxlPSJkaXNwbGF5OmJsb2NrO2JhY2tncm91bmQ6I2ZmZjsgbWF4LXdpZHRo
+OiA0MDBweDsgX3dpZHRoOiA0MDBweDtwYWRkaW5nOjE1cHggMCAxMHB4IDA7dGV4dC1kZWNvcmF0
+aW9uOiBub25lOyBvdXRsaW5lOm5vbmU7LXdlYmtpdC10YXAtaGlnaGxpZ2h0LWNvbG9yOnRyYW5z
+cGFyZW50OyI+CiAgICA8dGFibGUgY2VsbHBhZGRpbmc9IjAiIHN0eWxlPSJtYXgtd2lkdGg6MTAw
+JTsgd2lkdGg6IDEwMCU7dGFibGUtbGF5b3V0OiBmaXhlZDsgYm9yZGVyLWNvbGxhcHNlOiBjb2xs
+YXBzZTtjb2xvcjogIzliOWVhMTtmb250LXNpemU6IDE0cHg7bGluZS1oZWlnaHQ6MS4zIj4KICAg
+ICAgPHRib2R5IHN0eWxlPSJmb250LWZhbWlseTogJ1BpbmdGYW5nIFNDJywgJ0hpcmFnaW5vIFNh
+bnMgR0InLCdXZW5RdWFuWWkgTWljcm8gSGVpJywgJ01pY3Jvc29mdCBZYWhlaScsICfOosjt0cW6
+2icsIHZlcmRhbmEgIWltcG9ydGFudDsgd29yZC13cmFwOmJyZWFrLXdvcmQ7IHdvcmQtYnJlYWs6
+YnJlYWstYWxsOyI+CiAgICAgICAgICA8dHI+CiAgICAgICAgICAgIDx0ZCBzdHlsZT0icGFkZGlu
+ZzowOyBib3gtc2l6aW5nOiBib3JkZXItYm94OyB3aWR0aDogMzhweDsiPgogICAgICAgICAgICAg
+IDxpbWcgc3R5bGU9InZlcnRpY2FsLWFsaWduOm1pZGRsZTsgd2lkdGg6IDM4cHg7IGhlaWdodDog
+MzhweDsgYm9yZGVyLXJhZGl1czo1MCU7IiBzcmM9Imh0dHBzOi8vbm9zLm5ldGVhc2UuY29tL21h
+aWwtb25saW5lL3FpeWVsb2dvL2RlZmF1bHRBdmF0YXIucG5nIj4KICAgICAgICAgICAgPC90ZD4K
+ICAgICAgICAgICAgPHRkIHN0eWxlPSJwYWRkaW5nOiAwIDAgMCAxMHB4OyBjb2xvcjogIzMxMzUz
+YjsiPgogICAgICAgICAgICAgIDxkaXYgc3R5bGU9ImZvbnQtc2l6ZTogMTZweDtmb250LXdlaWdo
+dDpib2xkOyB3aWR0aDoxMDAlOyB3aGl0ZS1zcGFjZTogbm93cmFwOyBvdmVyZmxvdzpoaWRkZW47
+dGV4dC1vdmVyZmxvdzogZWxsaXBzaXM7Ij7B+jwvZGl2PgogICAgICAgICAgICA8L3RkPgogICAg
+ICAgICAgPC90cj4KICAgICAgICAgICAgPHRyIHN0eWxlPSJmb250LXNpemU6IDE0cHggIWltcG9y
+dGFudDsgd2lkdGg6IDEwMCU7Ij4KICAgICAgICAgICAgICA8dGQgY29sc3Bhbj0iMiIgc3R5bGU9
+InBhZGRpbmc6MTBweCAwIDAgMDsgZm9udC1zaXplOjE0cHggIWltcG9ydGFudDsgd2lkdGg6IDEw
+MCU7Ij4KICAgICAgICAgICAgICAgICAgPGRpdiBzdHlsZT0id2lkdGg6IDEwMCU7Zm9udC1zaXpl
+OiAxNHB4ICFpbXBvcnRhbnQ7d29yZC13cmFwOmJyZWFrLXdvcmQ7d29yZC1icmVhazpicmVhay1h
+bGw7Ij7Tys/ko7psb25nMTcuY29vbEAxNjMuY29tPC9kaXY+CiAgICAgICAgICAgICAgPC90ZD4K
+ICAgICAgICAgICAgPC90cj4KICAgICAgPC90Ym9keT4KICAgIDwvdGFibGU+CiAgPC9hPgo8L2Jv
+ZHk+Cgo8L2h0bWw+PGh0bWw+PGJvZHkgc3R5bGU9Im1hcmdpbjowIj48cCBzdHlsZT0ibWFyZ2lu
+OjA7Ym9yZGVyLXRvcDoxcHggc29saWQgI2U1ZTVlNTtwYWRkaW5nLXRvcDogNnB4OyBmb250LXNp
+emU6IDEycHg7IGNvbG9yOiNiNmI4YmI7bGluZS1oZWlnaHQ6IDEuNTsiPsepw/vTySZuYnNwOzxh
+IGhyZWY9Imh0dHBzOi8vbWFpbC4xNjMuY29tL2Rhc2hpL2RscHJvLmh0bWw/ZnJvbT1tYWlsODgi
+IHN0eWxlPSJjb2xvcjojNmFhOGY2O3RleHQtZGVjb3JhdGlvbjogbm9uZSI+zfjS19PKz+S088qm
+PC9hPiZuYnNwO7ao1sY8L3A+PC9ib2R5PjwvaHRtbD48YnI+PGJyPjxibG9ja3F1b3RlIGlkPSJu
+dGVzLWFuZHJpb2RtYWlsLXF1b3RlIiBzdHlsZT0ibWFyZ2luOjBweCAhaW1wb3J0YW50O3BhZGRp
+bmc6MHB4ICFpbXBvcnRhbnQ7Ym9yZGVyOiBub25lICFpbXBvcnRhbnQ7Ij48ZGl2IGNsYXNzPSJK
+LXJlcGx5IiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZjJmMmYyO2NvbG9yOmJsYWNrO3BhZGRp
+bmctdG9wOjZweDtwYWRkaW5nLWJvdHRvbTo2cHg7Ym9yZGVyLXJhZGl1czozcHg7LW1vei1ib3Jk
+ZXItcmFkaXVzOjNweDstd2Via2l0LWJvcmRlci1yYWRpdXM6M3B4O21hcmdpbi10b3A6NDVweDtt
+YXJnaW4tYm90dG9tOjIwcHg7Ij4KICAgIDxkaXYgc3R5bGU9ImZvbnQtc2l6ZToxNHB4O2xpbmUt
+aGVpZ2h0OjEuNTt3b3JkLWJyZWFrOmJyZWFrLWFsbDttYXJnaW4tbGVmdDoxMHB4O21hcmdpbi1y
+aWdodDoxMHB4Ij7U2jxzcGFuIGNsYXNzPSJtYWlsLWRhdGUiPjIwMTjE6jEx1MIxMMjVIDIwOjE5
+PC9zcGFuPqOsPGEgY2xhc3M9Im1haWwtdG8iIHN0eWxlPSJ0ZXh0LWRlY29yYXRpb246bm9uZTtj
+b2xvcjojMmE5N2ZmOyIgaHJlZj0ibWFpbHRvOmFsZXhhbmRyZS5iZWxsb25pQGJvb3RsaW4uY29t
+Ij5BbGV4YW5kcmUgQmVsbG9uaTwvYT4g0LS1wKO6PC9kaXY+CjwvZGl2PkhlbGxvLAo8YnI+Cjxi
+cj5PbiAxMC8xMS8yMDE4IDE2OjQzOjUxKzA4MDAsIHpvcm8gd3JvdGU6Cjxicj4mZ3Q7IEludHJv
+ZHVjZSB2ZW5kb3IgcHJlZml4IGZvciB3aHdhdmUsIEluYy4KPGJyPiZndDsgZm9yIFNEMzA3OCBy
+dGMgZGV2aWNlLgo8YnI+Jmd0OyAKPGJyPiZndDsgU2lnbmVkLW9mZi1ieTogem9ybyAmbHQ7bG9u
+ZzE3LmNvb2xAMTYzLmNvbSZndDsKPGJyPiZndDsgLS0tCjxicj4mZ3Q7ICZuYnNwOy4uLi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgJm5ic3A7ICZuYnNwOyAmbmJzcDsg
+Jm5ic3A7fCAmbmJzcDsgJm5ic3A7MSArCjxicj4mZ3Q7ICZuYnNwOzEgZmlsZSBjaGFuZ2VkLCAx
+IGluc2VydGlvbigrKQo8YnI+Jmd0OyAKPGJyPiZndDsgZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0IGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQKPGJyPiZndDsgaW5kZXgg
+NGIxYTJhOC4uM2Q1OWQ2YSAxMDA2NDQKPGJyPiZndDsgLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQKPGJyPiZndDsgKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQKPGJyPiZndDsg
+QEAgLTQ0MCwzICs0NDAsNCBAQCB6aWRvbyZuYnNwOyAmbmJzcDsgJm5ic3A7U2hlbnpoZW4gWmlk
+b28gVGVjaG5vbG9neSBDby4sIEx0ZC4KPGJyPiZndDsgJm5ic3A7emlpJm5ic3A7ICZuYnNwOyAm
+bmJzcDtab2RpYWMgSW5mbGlnaHQgSW5ub3ZhdGlvbnMKPGJyPiZndDsgJm5ic3A7enRlJm5ic3A7
+ICZuYnNwOyAmbmJzcDtaVEUgQ29ycC4KPGJyPiZndDsgJm5ic3A7enl4ZWwmbmJzcDsgJm5ic3A7
+ICZuYnNwO1p5WEVMIENvbW11bmljYXRpb25zIENvcnAuCjxicj4mZ3Q7ICt3aHdhdmUmbmJzcDsg
+Jm5ic3A7ICZuYnNwO1NoZW56aGVuIHdod2F2ZSBFbGVjdHJvbmljcyBjcm9wCjxicj4KPGJyPlRo
+aXMgZmlsZSBtdXN0IGJlIHNvcnRlZCBhbHBoYWJldGljYWxseS4KPGJyPgo8YnI+LS0gCjxicj5B
+bGV4YW5kcmUgQmVsbG9uaSwgQm9vdGxpbgo8YnI+RW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBl
+bmdpbmVlcmluZwo8YnI+PGEgaHJlZj0iaHR0cHM6Ly9ib290bGluLmNvbSI+aHR0cHM6Ly9ib290
+bGluLmNvbTwvYT4KPGJyPjwvYmxvY2txdW90ZT48L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+
+------=_Part_31655_1082553217.1541853230855--
