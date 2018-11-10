@@ -1,267 +1,160 @@
-Return-Path: <SRS0=dUsd=NW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44084 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728243AbeKLAEn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 11 Nov 2018 19:04:43 -0500
-Received: by mail-wr1-f66.google.com with SMTP id j17-v6so6533454wrq.11
-        for <devicetree@vger.kernel.org>; Sun, 11 Nov 2018 06:16:01 -0800 (PST)
-From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Subject: [PATCH v2 8/9] iio: imu: st_lsm6dsx: add hw FIFO support to i2c controller
-Date: Sun, 11 Nov 2018 15:15:35 +0100
-Message-Id: <469ad1943950ca63adfa680fd5e7cb5a414ea15c.1541945612.git.lorenzo.bianconi@redhat.com>
-In-Reply-To: <cover.1541945612.git.lorenzo.bianconi@redhat.com>
-References: <cover.1541945612.git.lorenzo.bianconi@redhat.com>
+Return-Path: <SRS0=9qOu=NV=linux.intel.com=andriy.shevchenko@kernel.org>
+Date: Sat, 10 Nov 2018 20:45:53 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v2 2/2] dmaengine: dw-dmac: implement dma protection
+ control setting
+Message-ID: <20181110184553.GF10650@smile.fi.intel.com>
+References: <a8cd42ce348ed6a21580815f25ab1590aaa6acf3.1541866004.git.chunkeey@gmail.com>
+ <42576d3fcba9e510adfd0cdf5c7b867d5ce1f78c.1541866004.git.chunkeey@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42576d3fcba9e510adfd0cdf5c7b867d5ce1f78c.1541866004.git.chunkeey@gmail.com>
+To: Christian Lamparter <chunkeey@gmail.com>
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Introduce hw FIFO support to lsm6dsx i2c controller.
-st_lsm6dsx sensor-hub relies on SLV0 for slave configuration since SLV0
-is the only channel that can be used to write into i2c slave devices.
-SLV{1,2,3} channels are used to read external data and push them into
-the hw FIFO
+On Sat, Nov 10, 2018 at 05:28:31PM +0100, Christian Lamparter wrote:
+> This patch adds a new device-tree property that allows to
+> specify the dma protection control bits for the all of the
+> DMA controller's channel uniformly.
+> 
+> Setting the "correct" bits can have a huge impact on the
+> PPC460EX and APM82181 that use this DMA engine in combination
+> with a DesignWare' SATA-II core (sata_dwc_460ex driver).
+> 
+> In the OpenWrt Forum, the user takimata reported that:
+> |It seems your patch unleashed the full power of the SATA port.
+> |Where I was previously hitting a really hard limit at around
+> |82 MB/s for reading and 27 MB/s for writing, I am now getting this:
+> |
+> |root@OpenWrt:/mnt# time dd if=/dev/zero of=tempfile bs=1M count=1024
+> |1024+0 records in
+> |1024+0 records out
+> |real    0m 13.65s
+> |user    0m 0.01s
+> |sys     0m 11.89s
+> |
+> |root@OpenWrt:/mnt# time dd if=tempfile of=/dev/null bs=1M count=1024
+> |1024+0 records in
+> |1024+0 records out
+> |real    0m 8.41s
+> |user    0m 0.01s
+> |sys     0m 4.70s
+> |
+> |This means: 121 MB/s reading and 75 MB/s writing!
+> |
+> |The drive is a WD Green WD10EARX taken from an older MBL Single.
+> |I repeated the test a few times with even larger files to rule out
+> |any caching, I'm still seeing the same great performance. OpenWrt is
+> |now completely on par with the original MBL firmware's performance.
+> 
+> Another user And.short reported:
+> |I can report that your fix worked! Boots up fine with two
+> |drives even with more partitions, and no more reboot on
+> |concurrent disk access!
+> 
+> A closer look into the sata_dwc_460ex code revealed that
+> the driver did initally set the correct protection control
+> bits. However, this feature was lost when the sata_dwc_460ex
+> driver was converted to the generic DMA driver framework.
 
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
----
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h       |  4 +
- .../iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c    | 47 ++++++++++--
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c  |  5 ++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c  | 75 +++++++++++++++++++
- 4 files changed, 125 insertions(+), 6 deletions(-)
+LGTM, though minor style comment below.
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-index d20746eb3d2d..d1d8d07a0714 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-@@ -130,18 +130,22 @@ struct st_lsm6dsx_hw_ts_settings {
-  * @master_en: master config register info (addr + mask).
-  * @pullup_en: i2c controller pull-up register info (addr + mask).
-  * @aux_sens: aux sensor register info (addr + mask).
-+ * @wr_once: write_once register info (addr + mask).
-  * @shub_out: sensor hub first output register info.
-  * @slv0_addr: slave0 address in secondary page.
-  * @dw_slv0_addr: slave0 write register address in secondary page.
-+ * @batch_en: Enable/disable FIFO batching.
-  */
- struct st_lsm6dsx_shub_settings {
- 	struct st_lsm6dsx_reg page_mux;
- 	struct st_lsm6dsx_reg master_en;
- 	struct st_lsm6dsx_reg pullup_en;
- 	struct st_lsm6dsx_reg aux_sens;
-+	struct st_lsm6dsx_reg wr_once;
- 	u8 shub_out;
- 	u8 slv0_addr;
- 	u8 dw_slv0_addr;
-+	u8 batch_en;
- };
- 
- enum st_lsm6dsx_ext_sensor_id {
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-index 4e7ff370cbe0..2c0d3763405a 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-@@ -68,6 +68,9 @@ enum st_lsm6dsx_fifo_tag {
- 	ST_LSM6DSX_GYRO_TAG = 0x01,
- 	ST_LSM6DSX_ACC_TAG = 0x02,
- 	ST_LSM6DSX_TS_TAG = 0x04,
-+	ST_LSM6DSX_EXT0_TAG = 0x0f,
-+	ST_LSM6DSX_EXT1_TAG = 0x10,
-+	ST_LSM6DSX_EXT2_TAG = 0x11,
- };
- 
- static const
-@@ -460,6 +463,12 @@ st_lsm6dsx_push_tagged_data(struct st_lsm6dsx_hw *hw, u8 tag,
- 	struct st_lsm6dsx_sensor *sensor;
- 	struct iio_dev *iio_dev;
- 
-+	/*
-+	 * EXT_TAG are managed in FIFO fashion so ST_LSM6DSX_EXT0_TAG
-+	 * corresponds to the first enabled channel, ST_LSM6DSX_EXT1_TAG
-+	 * to the second one and ST_LSM6DSX_EXT2_TAG to the last enabled
-+	 * channel
-+	 */
- 	switch (tag) {
- 	case ST_LSM6DSX_GYRO_TAG:
- 		iio_dev = hw->iio_devs[ST_LSM6DSX_ID_GYRO];
-@@ -467,6 +476,24 @@ st_lsm6dsx_push_tagged_data(struct st_lsm6dsx_hw *hw, u8 tag,
- 	case ST_LSM6DSX_ACC_TAG:
- 		iio_dev = hw->iio_devs[ST_LSM6DSX_ID_ACC];
- 		break;
-+	case ST_LSM6DSX_EXT0_TAG:
-+		if (hw->enable_mask & BIT(ST_LSM6DSX_ID_EXT0))
-+			iio_dev = hw->iio_devs[ST_LSM6DSX_ID_EXT0];
-+		else if (hw->enable_mask & BIT(ST_LSM6DSX_ID_EXT1))
-+			iio_dev = hw->iio_devs[ST_LSM6DSX_ID_EXT1];
-+		else
-+			iio_dev = hw->iio_devs[ST_LSM6DSX_ID_EXT2];
-+		break;
-+	case ST_LSM6DSX_EXT1_TAG:
-+		if ((hw->enable_mask & BIT(ST_LSM6DSX_ID_EXT0)) &&
-+		    (hw->enable_mask & BIT(ST_LSM6DSX_ID_EXT1)))
-+			iio_dev = hw->iio_devs[ST_LSM6DSX_ID_EXT1];
-+		else
-+			iio_dev = hw->iio_devs[ST_LSM6DSX_ID_EXT2];
-+		break;
-+	case ST_LSM6DSX_EXT2_TAG:
-+		iio_dev = hw->iio_devs[ST_LSM6DSX_ID_EXT2];
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -593,13 +620,21 @@ static int st_lsm6dsx_update_fifo(struct iio_dev *iio_dev, bool enable)
- 			goto out;
- 	}
- 
--	err = st_lsm6dsx_sensor_set_enable(sensor, enable);
--	if (err < 0)
--		goto out;
-+	if (sensor->id == ST_LSM6DSX_ID_EXT0 ||
-+	    sensor->id == ST_LSM6DSX_ID_EXT1 ||
-+	    sensor->id == ST_LSM6DSX_ID_EXT2) {
-+		err = st_lsm6dsx_shub_set_enable(sensor, enable);
-+		if (err < 0)
-+			goto out;
-+	} else {
-+		err = st_lsm6dsx_sensor_set_enable(sensor, enable);
-+		if (err < 0)
-+			goto out;
- 
--	err = st_lsm6dsx_set_fifo_odr(sensor, enable);
--	if (err < 0)
--		goto out;
-+		err = st_lsm6dsx_set_fifo_odr(sensor, enable);
-+		if (err < 0)
-+			goto out;
-+	}
- 
- 	err = st_lsm6dsx_update_decimators(hw);
- 	if (err < 0)
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-index 149080acd859..12e29dda9b98 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -337,9 +337,14 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 				.addr = 0x14,
- 				.mask = GENMASK(1, 0),
- 			},
-+			.wr_once = {
-+				.addr = 0x14,
-+				.mask = BIT(6),
-+			},
- 			.shub_out = 0x02,
- 			.slv0_addr = 0x15,
- 			.dw_slv0_addr = 0x21,
-+			.batch_en = BIT(3),
- 		}
- 	},
- };
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
-index d6c5ffe9b556..016ae9016c50 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
-@@ -148,6 +148,26 @@ static int st_lsm6dsx_shub_write_reg(struct st_lsm6dsx_hw *hw, u8 addr,
- 	return err;
- }
- 
-+static int
-+st_lsm6dsx_shub_write_reg_with_mask(struct st_lsm6dsx_hw *hw, u8 addr,
-+				    u8 mask, u8 val)
-+{
-+	int err;
-+
-+	mutex_lock(&hw->page_lock);
-+	err = st_lsm6dsx_set_page(hw, true);
-+	if (err < 0)
-+		goto out;
-+
-+	err = regmap_update_bits(hw->regmap, addr, mask, val);
-+
-+	st_lsm6dsx_set_page(hw, false);
-+out:
-+	mutex_unlock(&hw->page_lock);
-+
-+	return err;
-+}
-+
- static int st_lsm6dsx_shub_master_enable(struct st_lsm6dsx_sensor *sensor,
- 					 bool enable)
- {
-@@ -238,6 +258,18 @@ st_lsm6dsx_shub_write(struct st_lsm6dsx_sensor *sensor, u8 addr,
- 	int err, i;
- 
- 	hub_settings = &hw->settings->shub_settings;
-+	if (hub_settings->wr_once.addr) {
-+		unsigned int data;
-+
-+		data = ST_LSM6DSX_SHIFT_VAL(1, hub_settings->wr_once.mask);
-+		err = st_lsm6dsx_shub_write_reg_with_mask(hw,
-+			hub_settings->wr_once.addr,
-+			hub_settings->wr_once.mask,
-+			data);
-+		if (err < 0)
-+			return err;
-+	}
-+
- 	slv_addr = ST_LSM6DSX_SLV_ADDR(0, hub_settings->slv0_addr);
- 	config[0] = sensor->ext_info.addr << 1;
- 	for (i = 0 ; i < len; i++) {
-@@ -319,11 +351,54 @@ st_lsm6dsx_shub_set_odr(struct st_lsm6dsx_sensor *sensor, u16 odr)
- 					       val);
- }
- 
-+/* use SLV{1,2,3} for FIFO read operations */
-+static int
-+st_lsm6dsx_shub_config_channels(struct st_lsm6dsx_sensor *sensor,
-+				bool enable)
-+{
-+	const struct st_lsm6dsx_shub_settings *hub_settings;
-+	const struct st_lsm6dsx_ext_dev_settings *settings;
-+	u8 config[9] = {}, enable_mask, slv_addr;
-+	struct st_lsm6dsx_hw *hw = sensor->hw;
-+	struct st_lsm6dsx_sensor *cur_sensor;
-+	int i, j = 0;
-+
-+	hub_settings = &hw->settings->shub_settings;
-+	if (enable)
-+		enable_mask = hw->enable_mask | BIT(sensor->id);
-+	else
-+		enable_mask = hw->enable_mask & ~BIT(sensor->id);
-+
-+	for (i = ST_LSM6DSX_ID_EXT0; i <= ST_LSM6DSX_ID_EXT2; i++) {
-+		if (!hw->iio_devs[i])
-+			continue;
-+
-+		cur_sensor = iio_priv(hw->iio_devs[i]);
-+		if (!(enable_mask & BIT(cur_sensor->id)))
-+			continue;
-+
-+		settings = cur_sensor->ext_info.settings;
-+		config[j] = (sensor->ext_info.addr << 1) | 1;
-+		config[j + 1] = settings->out.addr;
-+		config[j + 2] = (settings->out.len & ST_LS6DSX_READ_OP_MASK) |
-+				hub_settings->batch_en;
-+		j += 3;
-+	}
-+
-+	slv_addr = ST_LSM6DSX_SLV_ADDR(1, hub_settings->slv0_addr);
-+	return st_lsm6dsx_shub_write_reg(hw, slv_addr, config,
-+					 sizeof(config));
-+}
-+
- int st_lsm6dsx_shub_set_enable(struct st_lsm6dsx_sensor *sensor, bool enable)
- {
- 	const struct st_lsm6dsx_ext_dev_settings *settings;
- 	int err;
- 
-+	err = st_lsm6dsx_shub_config_channels(sensor, enable);
-+	if (err < 0)
-+		return err;
-+
- 	settings = sensor->ext_info.settings;
- 	if (enable) {
- 		err = st_lsm6dsx_shub_set_odr(sensor, sensor->odr);
+> 
+> BugLink: https://forum.openwrt.org/t/wd-mybook-live-duo-two-disks/16195/55
+> BugLink: https://forum.openwrt.org/t/wd-mybook-live-duo-two-disks/16195/50
+> Fixes: 8b3444852a2b ("sata_dwc_460ex: move to generic DMA driver")
+> Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+> ---
+>  drivers/dma/dw/core.c                | 2 ++
+>  drivers/dma/dw/platform.c            | 6 ++++++
+>  drivers/dma/dw/regs.h                | 4 ++++
+>  include/linux/platform_data/dma-dw.h | 6 ++++++
+>  4 files changed, 18 insertions(+)
+> 
+> diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+> index f43e6dafe446..0772d2d6cc68 100644
+> --- a/drivers/dma/dw/core.c
+> +++ b/drivers/dma/dw/core.c
+> @@ -160,12 +160,14 @@ static void dwc_initialize_chan_idma32(struct dw_dma_chan *dwc)
+>  
+>  static void dwc_initialize_chan_dw(struct dw_dma_chan *dwc)
+>  {
+> +	struct dw_dma *dw = to_dw_dma(dwc->chan.device);
+>  	u32 cfghi = DWC_CFGH_FIFO_MODE;
+>  	u32 cfglo = DWC_CFGL_CH_PRIOR(dwc->priority);
+>  	bool hs_polarity = dwc->dws.hs_polarity;
+>  
+>  	cfghi |= DWC_CFGH_DST_PER(dwc->dws.dst_id);
+>  	cfghi |= DWC_CFGH_SRC_PER(dwc->dws.src_id);
+> +	cfghi |= DWC_CFGH_PROTCTL(dw->pdata->protctl);
+>  
+>  	/* Set polarity of handshake interface */
+>  	cfglo |= hs_polarity ? DWC_CFGL_HS_DST_POL | DWC_CFGL_HS_SRC_POL : 0;
+> diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
+> index f62dd0944908..c299ff181bb6 100644
+> --- a/drivers/dma/dw/platform.c
+> +++ b/drivers/dma/dw/platform.c
+> @@ -162,6 +162,12 @@ dw_dma_parse_dt(struct platform_device *pdev)
+>  			pdata->multi_block[tmp] = 1;
+>  	}
+>  
+> +	if (!of_property_read_u32(np, "snps,dma-protection-control", &tmp)) {
+> +		if (tmp > CHAN_PROTCTL_MASK)
+> +			return NULL;
+> +		pdata->protctl = tmp;
+> +	}
+> +
+>  	return pdata;
+>  }
+>  #else
+> diff --git a/drivers/dma/dw/regs.h b/drivers/dma/dw/regs.h
+> index 09e7dfdbb790..646c9c960c07 100644
+> --- a/drivers/dma/dw/regs.h
+> +++ b/drivers/dma/dw/regs.h
+> @@ -200,6 +200,10 @@ enum dw_dma_msize {
+>  #define DWC_CFGH_FCMODE		(1 << 0)
+>  #define DWC_CFGH_FIFO_MODE	(1 << 1)
+>  #define DWC_CFGH_PROTCTL(x)	((x) << 2)
+> +#define DWC_CFGH_PROTCTL_DATA	(0 << 2)	/* data access - always set */
+> +#define DWC_CFGH_PROTCTL_PRIV	(1 << 2)	/* privileged -> AHB HPROT[1] */
+> +#define DWC_CFGH_PROTCTL_BUFFER	(2 << 2)	/* bufferable -> AHB HPROT[2] */
+> +#define DWC_CFGH_PROTCTL_CACHE	(4 << 2)	/* cacheable  -> AHB HPROT[3] */
+>  #define DWC_CFGH_DS_UPD_EN	(1 << 5)
+>  #define DWC_CFGH_SS_UPD_EN	(1 << 6)
+>  #define DWC_CFGH_SRC_PER(x)	((x) << 7)
+> diff --git a/include/linux/platform_data/dma-dw.h b/include/linux/platform_data/dma-dw.h
+> index 896cb71a382c..b7b9d4a56bb0 100644
+> --- a/include/linux/platform_data/dma-dw.h
+> +++ b/include/linux/platform_data/dma-dw.h
+> @@ -49,6 +49,7 @@ struct dw_dma_slave {
+>   * @data_width: Maximum data width supported by hardware per AHB master
+>   *		(in bytes, power of 2)
+>   * @multi_block: Multi block transfers supported by hardware per channel.
+> + * @protctl:	Protection control signals setting per channel.
+>   */
+>  struct dw_dma_platform_data {
+>  	unsigned int	nr_channels;
+> @@ -65,6 +66,11 @@ struct dw_dma_platform_data {
+>  	unsigned char	nr_masters;
+>  	unsigned char	data_width[DW_DMA_MAX_NR_MASTERS];
+>  	unsigned char	multi_block[DW_DMA_MAX_NR_CHANNELS];
+> +#define CHAN_PROTCTL_PRIVILEGED		BIT(0)
+> +#define CHAN_PROTCTL_BUFFERABLE		BIT(1)
+> +#define CHAN_PROTCTL_CACHEABLE		BIT(2)
+> +#define	CHAN_PROTCTL_MASK		GENMASK(2, 0)
+
+TAB vs. SPACE.
+
+> +	unsigned char	protctl;
+>  };
+>  
+>  #endif /* _PLATFORM_DATA_DMA_DW_H */
+> -- 
+> 2.19.1
+> 
+
 -- 
-2.19.1
+With Best Regards,
+Andy Shevchenko
