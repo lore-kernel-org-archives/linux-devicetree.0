@@ -1,10 +1,13 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 14/17] soc: bcm: Switch raspberrypi-power to SPDX identifier
-Date: Sat, 10 Nov 2018 17:29:23 +0100
-Message-ID: <1541867363-8022-1-git-send-email-stefan.wahren@i2se.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 14/17] soc: bcm: Switch raspberrypi-power to SPDX
+ identifier
+Date: Sat, 10 Nov 2018 08:58:33 -0800
+Message-ID: <87o9awyime.fsf@anholt.net>
+References: <1541867363-8022-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5094279106441894056=="
+Content-Type: multipart/mixed; boundary="===============4582925418974242355=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1541867363-8022-1-git-send-email-stefan.wahren@i2se.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -14,61 +17,47 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
 Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Alexander Aring <aring@mojatatu.com>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============5094279106441894056==
-Content-Type: text/plain; charset=y
-Content-Transfer-Encoding: 8bit
+--===============4582925418974242355==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-Adopt the SPDX license identifier headers to ease license compliance
-management.
+--=-=-=
+Content-Type: text/plain
 
-Cc: Alexander Aring <aring@mojatatu.com>
-Cc: Eric Anholt <eric@anholt.net>
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- drivers/soc/bcm/raspberrypi-power.c           | 5 +----
- include/dt-bindings/power/raspberrypi-power.h | 5 +----
- 2 files changed, 2 insertions(+), 8 deletions(-)
+Stefan Wahren <stefan.wahren@i2se.com> writes:
 
-diff --git a/drivers/soc/bcm/raspberrypi-power.c b/drivers/soc/bcm/raspberrypi-power.c
-index a78dfe0..5d1aacd 100644
---- a/drivers/soc/bcm/raspberrypi-power.c
-+++ b/drivers/soc/bcm/raspberrypi-power.c
-@@ -1,9 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /* (C) 2015 Pengutronix, Alexander Aring <aar@pengutronix.de>
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-  * Authors:
-  * Alexander Aring <aar@pengutronix.de>
-  * Eric Anholt <eric@anholt.net>
-diff --git a/include/dt-bindings/power/raspberrypi-power.h b/include/dt-bindings/power/raspberrypi-power.h
-index b3ff8e0..d6d58c98 100644
---- a/include/dt-bindings/power/raspberrypi-power.h
-+++ b/include/dt-bindings/power/raspberrypi-power.h
-@@ -1,9 +1,6 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  *  Copyright © 2015 Broadcom
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
- 
- #ifndef _DT_BINDINGS_ARM_BCM2835_RPI_POWER_H
--- 
-2.7.4
+> Adopt the SPDX license identifier headers to ease license compliance
+> management.
+
+Reviewed-by: Eric Anholt <eric@anholt.net>
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlvnDjoACgkQtdYpNtH8
+nuje+g//eXu4Cl0jaL8JgvMw4JJfoOVZv5tGgLAtiyQU+20FRJLPvyOO0xe8VNw0
+iwCsgpL4J2ztxF9oIJcBSGb1FaMyVhnE02nhaGRpSSFBlKDAt4HzlI+hSjWfnz+S
+Ve11PWcDKVTFfHKiNe7D1aCnHwLBfhZ4zuNYQbVFqd1fAwu9fk3gjQtqUiO0ztoc
+ZgN7rRUz0Fu7nZOy8y1Wu0vpasFvpVxevTe1RDNmASjxhhKyQ2z04LQZ4iGHdCbA
+bZAGbFmwheBjAzguIbODhqRjkjz8IP5C6FVc7CETt4DsvBFd1dIVl5UG4oNd2pG/
+iBJJPlBiT61HeT3br+YlG+yepClIrVkO6BPQqIIGNNq4nQzYxTtl40uGBVitiONI
+1cDRx2OXo/Lb2ZGYoEw9fQYNqYQCX+FL9MLFCjMFNpRcNBcYf5mCwS/uRZ2tIHDR
+pMb+txWAhbwzz0mQgh75ArcBPh1y2d+HUiw1BZaRYE8O40Yyuv3xkaOx1fNrguzE
+fdgxDNWVRMCx33U5YK+U1hXHJxvqp0fllehFXvG65eOM0NC1RnVQfu4KpsTh2/We
+AU/UCpTNbcZJciAjjO8kCtduq8dCRo8ZuQPGwq5ctAL9e910soJMjRFMc7H0mle6
+h7kJ75kXOrlmhLPKJNdRyHSjoTFpC3//+NdTZQyUtwaILwoRDso=
+=516E
+-----END PGP SIGNATURE-----
+--=-=-=--
 
 
-
---===============5094279106441894056==
+--===============4582925418974242355==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -79,4 +68,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============5094279106441894056==--
+--===============4582925418974242355==--
