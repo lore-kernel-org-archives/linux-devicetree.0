@@ -1,84 +1,65 @@
-From: Matheus Tavares Bernardino <matheus.bernardino@usp.br>
-Subject: Re: [PATCH 5/6] staging:iio:ad2s90: Add SPDX license identifier
-Date: Fri, 9 Nov 2018 22:27:15 -0200
-Message-ID: <CAHd-oW4uWFco9qcVwMphetXE9LK4YJQmDAbBUPBEBCT3UHZSkA@mail.gmail.com>
-References: <20181109220044.24843-1-matheus.bernardino@usp.br>
- <20181109220044.24843-6-matheus.bernardino@usp.br>
- <CAOMZO5DVr7TBoNtB7Bwjv1rpaCdOyg8+iU=iCwBRjSD4iWeBUw@mail.gmail.com>
- <CAHd-oW4wo7fShsNMf7a1udnCepUL+ok+Gk7jzVoEUEUjaPCXpw@mail.gmail.com>
- <20181110002018.GA3938@kroah.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v5 1/5] dt-bindings: phy-qcom-qmp: Fix register underspecification
+Date: Fri, 09 Nov 2018 16:53:18 -0800
+Message-ID: <154181119838.88331.10401425771645606506@swboyd.mtv.corp.google.com>
+References: <20181026173544.136037-1-evgreen@chromium.org>
+ <20181026173544.136037-2-evgreen@chromium.org>
+ <154129921872.88331.15831802252403117971@swboyd.mtv.corp.google.com>
+ <CAD=FV=UKfDsthT4W3H4jR0Qvw-izLShCjWngN2uBrY-FUEtDDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20181110002018.GA3938@kroah.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Victor Colombo <victorcolombo@gmail.com>, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Alexandru Ardelean <alexandru.ardelean@analog.com>, Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=UKfDsthT4W3H4jR0Qvw-izLShCjWngN2uBrY-FUEtDDQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Evan Green <evgreen@chromium.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, cang@codeaurora.org, LKML <linux-kernel@vger.kernel.org>, Manu Gautam <mgautam@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 9, 2018 at 10:20 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Nov 09, 2018 at 09:19:52PM -0200, Matheus Tavares Bernardino wrote:
-> > On Fri, Nov 9, 2018 at 8:13 PM Fabio Estevam <festevam@gmail.com> wrote:
-> > >
-> > > Hi Matheus,
-> > >
+Quoting Doug Anderson (2018-11-05 08:52:39)
+> On Sat, Nov 3, 2018 at 7:40 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> > > +                       clocks =3D <&gcc GCC_USB3_SEC_PHY_PIPE_CLK>;
+> > > +                       clock-names =3D "pipe0";
+> > > +                       clock-output-names =3D "usb3_uni_phy_pipe_clk=
+_src";
 > >
-> > Hi, Fabio
-> >
-> > > On Fri, Nov 9, 2018 at 8:01 PM Matheus Tavares
-> > > <matheus.bernardino@usp.br> wrote:
-> > > >
-> > > > This patch adds the SPDX GPL-2.0-only license identifier to ad2s90.c,
-> > > > which solves the checkpatch.pl warning:
-> > > > "WARNING: Missing or malformed SPDX-License-Identifier tag in line 1".
-> > > >
-> > > > Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
-> > > > ---
-> > > >  drivers/staging/iio/resolver/ad2s90.c | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > >
-> > > > diff --git a/drivers/staging/iio/resolver/ad2s90.c b/drivers/staging/iio/resolver/ad2s90.c
-> > > > index 949ff55ac6b0..f439da721df8 100644
-> > > > --- a/drivers/staging/iio/resolver/ad2s90.c
-> > > > +++ b/drivers/staging/iio/resolver/ad2s90.c
-> > > > @@ -1,3 +1,4 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0-only
-> > >
-> > > This should be:
-> > > // SPDX-License-Identifier: GPL-2.0
-> >
-> > Hm, but it seems that the identifier "GPL-2.0" is deprecated, look:
-> > https://spdx.org/licenses/GPL-2.0.html. It has been updated to
-> > "GPL-2.0-only" in license list v3
-> > (https://spdx.org/licenses/GPL-2.0-only.html). Is there some other
-> > reason to use the deprecated "GPL-2.0" that I'm not aware of?
->
-> Yes, please read the in-kernel documentation for all of this at:
->         Documentation/process/license-rules.rst
->
-> Long story short, we started the adding of these tags to the kernel
-> before the crazyness of the "-only" markings for GPL in spdx.  Let's
-> keep it this way for now, if we ever get the whole kernel finished, then
-> we can revisit the markings and maybe do a wholesale conversion, if it's
-> really needed.
->
+> > If this has clock-output-names then I would expect to see a #clock-cells
+> > property, but that isn't here in this node. Are we relying on the same
+> > property in the parent node?
+> =
 
-Got it, thanks for the explanation! I'll correct this in v2.
+> If I had to guess, I believe it's yet more confusing than that.  I
+> believe you actually point to the parent phandle if you want to use
+> the clock.  I notice that the parent has #clock-cells as 1 so
+> presumably this is how you point to one child or the other?  ...but I
+> don't think it's documented how this works.
 
-Thanks,
-Matheus
+There are 'clock-ranges', that almost nobody uses. It might be usable
+for this purpose.
 
-> thanks,
->
-> greg k-h
+> The lane nodes don't have
+> any sort of ID as far as I can tell.  ...and in any case having
+> #clock-cells of 1 makes no sense for USB 3 PHYs which are supposed to
+> only have one child?
+> =
+
+> Let's look at the code, maybe?  Hrm, phy_pipe_clk_register() takes no
+> ID or anything.  Huh?  OK, so as far as I can tell
+> of_clk_add_provider() is never called on this clock...
+> =
+
+> So I think the answer is that #clock-cells should be <0> and should
+> move to the child node to match with clock-output-names.  Then I guess
+> (if anyone references this clock from the device tree rather than
+> relying on the global clock-output-names) we should add the
+> of_clk_add_provider() into the code?
+> =
+
+> Maybe we can add that as a patch to the end of this series?  There are
+> so many crazy / random things wrong with these bindings that it makes
+> sense to make smaller / incremental changes?
+> =
+
+
+Sure that sounds fine. It would be another case where a driver would
+want to call the proposed devm_of_clk_add_parent_provider() API.
