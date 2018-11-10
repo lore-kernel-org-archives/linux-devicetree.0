@@ -1,26 +1,73 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 5/6] staging:iio:ad2s90: Add SPDX license identifier
-Date: Sat, 10 Nov 2018 11:22:56 -0200
-Message-ID: <CAOMZO5Bx-aMEZ9Wn4+3E_Y6QukkkKO1W_67P4jd9kbOOQaWOvg@mail.gmail.com>
-References: <20181109220044.24843-1-matheus.bernardino@usp.br>
- <20181109220044.24843-6-matheus.bernardino@usp.br> <CAOMZO5DVr7TBoNtB7Bwjv1rpaCdOyg8+iU=iCwBRjSD4iWeBUw@mail.gmail.com>
- <CAHd-oW4wo7fShsNMf7a1udnCepUL+ok+Gk7jzVoEUEUjaPCXpw@mail.gmail.com>
- <20181110002018.GA3938@kroah.com> <CAHd-oW4uWFco9qcVwMphetXE9LK4YJQmDAbBUPBEBCT3UHZSkA@mail.gmail.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: [PATCH V5 2/6] dt-bindings: fsl: add imx7ulp pm related components
+ bindings
+Date: Sat, 10 Nov 2018 15:13:00 +0000
+Message-ID: <1541862478-7839-3-git-send-email-aisheng.dong@nxp.com>
+References: <1541862478-7839-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHd-oW4uWFco9qcVwMphetXE9LK4YJQmDAbBUPBEBCT3UHZSkA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matheus Tavares Bernardino <matheus.bernardino@usp.br>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, kernel-usp@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Peter Meerwald <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, alexandru.ardelean@analog.com, Victor Colombo <victorcolombo@gmail.com>, Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1541862478-7839-1-git-send-email-aisheng.dong@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matheus,
+Add imx7ulp pm related components bindings
 
-On Fri, Nov 9, 2018 at 10:27 PM Matheus Tavares Bernardino
-<matheus.bernardino@usp.br> wrote:
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+ChangeLog:
+v2->v3:
+ * no changes
+v1->v2:
+ * new patch
+---
+ .../bindings/arm/freescale/fsl,imx7ulp-pm.txt      | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.txt
 
-> Got it, thanks for the explanation! I'll correct this in v2.
-
-One more suggestion: in v2 you could also consider to remove the legal
-text that says GPL v2, as you are adding the SPDX tag.
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.txt
+new file mode 100644
+index 0000000..75195be
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.txt
+@@ -0,0 +1,23 @@
++Freescale i.MX7ULP Power Management Components
++----------------------------------------------
++
++The Multi-System Mode Controller (MSMC) is responsible for sequencing
++the MCU into and out of all stop and run power modes. Specifically, it
++monitors events to trigger transitions between power modes while
++controlling the power, clocks, and memories of the MCU to achieve the
++power consumption and functionality of that mode.
++
++The WFI or WFE instruction is used to invoke a Sleep, Deep Sleep or
++Standby modes for either Cortex family. Run, Wait, and Stop are the
++common terms used for the primary operating modes of Kinetis
++microcontrollers.
++
++Required properties:
++- compatible:	Should be "fsl,imx7ulp-smc1".
++- reg:		Specifies base physical address and size of the register sets.
++
++Example:
++smc1: smc1@40410000 {
++	compatible = "fsl,imx7ulp-smc1";
++	reg = <0x40410000 0x1000>;
++};
+-- 
+2.7.4
