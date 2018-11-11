@@ -1,97 +1,113 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 2/3] backlight/arcxcnn fix vendor prefix
-Date: Sun, 11 Nov 2018 12:30:54 +0100
-Message-ID: <20181111113053.GF27666@amd>
-References: <1541592640-18478-1-git-send-email-bdodge09@gmail.com>
- <1541592640-18478-3-git-send-email-bdodge09@gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 6/6] staging:iio:ad2s90: Move out of staging
+Date: Sun, 11 Nov 2018 11:31:26 +0000
+Message-ID: <20181111113126.6ed4bab9@archlinux>
+References: <20181109220044.24843-1-matheus.bernardino@usp.br>
+        <20181109220044.24843-7-matheus.bernardino@usp.br>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1486268620=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1541592640-18478-3-git-send-email-bdodge09@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brian Dodge <bdodge09@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, lee.jones@linaro.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181109220044.24843-7-matheus.bernardino@usp.br>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matheus Tavares <matheus.bernardino@usp.br>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alexandru Ardelean <alexandru.ardelean@analog.com>, kernel-usp@googlegroups.com, victorcolombo@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On Fri,  9 Nov 2018 20:00:44 -0200
+Matheus Tavares <matheus.bernardino@usp.br> wrote:
 
---===============1486268620==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HCdXmnRlPgeNBad2"
-Content-Disposition: inline
+> Move ad2s90 resolver driver out of staging to the main tree.
+> 
+> Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
+> Signed-off-by: Victor Colombo <victorcolombo@gmail.com>
 
+For a move out of staging patch, please disable move detection.
+It let's us see the whole driver and perform a thorough review on list.
+Note this is the only case I'm aware of where move detection should
+be disabled.  I'm not sure if others have the same feeling for
+such patches, but in IIO I always want to see what we are actually
+moving!
 
---HCdXmnRlPgeNBad2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Normally we then review it as if it were a  new incoming driver.
+That can pick up on stuff that has previously been missed.
 
-Hi!
+Thanks,
 
-> The vendor-prefixes.txt file properly refers to ArcticSand
-> as arctic but the driver improperly abbreviated the prefix
-> to arc. This was a mistake in the original patch
->=20
-> Signed-off-by: Brian Dodge <bdodge09@gmail.com>
+Jonathan
+
 > ---
->  drivers/video/backlight/arcxcnn_bl.c | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
->=20
->   *
-> - * Copyright 2016 ArcticSand, Inc.
-> - * Author : Brian Dodge <bdodge@arcticsand.com>
-> + * Copyright 2018 pSemi, Inc.
-> + * Author : Brian Dodge <bdodge@psemi.com>
-
-Ummm. Copyright 2016-2018?
-
-> @@ -202,27 +202,27 @@ static void arcxcnn_parse_dt(struct arcxcnn *lp)
->  	if (ret =3D=3D 0)
->  		lp->pdata->initial_brightness =3D prog_val;
->=20
-> -	ret =3D of_property_read_u32(node, "arc,led-config-0", &prog_val);
-> +	ret =3D of_property_read_u32(node, "arctic,led-config-0", &prog_val);
->  	if (ret =3D=3D 0)
->  		lp->pdata->led_config_0 =3D (u8)prog_val;
->
-
-If there's a dts using this, you want to update it at the same
-time. You may want to support both names going forward.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---HCdXmnRlPgeNBad2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvoEu0ACgkQMOfwapXb+vKd+wCgjtkHtNcgo2reNuCLiQZ5lu/F
-TmoAn11a1ivdO1nyig6eUxoIHZPylkpL
-=qADy
------END PGP SIGNATURE-----
-
---HCdXmnRlPgeNBad2--
-
---===============1486268620==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1486268620==--
+>  drivers/iio/resolver/Kconfig                | 10 ++++++++++
+>  drivers/iio/resolver/Makefile               |  1 +
+>  drivers/{staging => }/iio/resolver/ad2s90.c |  0
+>  drivers/staging/iio/resolver/Kconfig        | 10 ----------
+>  drivers/staging/iio/resolver/Makefile       |  1 -
+>  5 files changed, 11 insertions(+), 11 deletions(-)
+>  rename drivers/{staging => }/iio/resolver/ad2s90.c (100%)
+> 
+> diff --git a/drivers/iio/resolver/Kconfig b/drivers/iio/resolver/Kconfig
+> index 2ced9f22aa70..786801be54f6 100644
+> --- a/drivers/iio/resolver/Kconfig
+> +++ b/drivers/iio/resolver/Kconfig
+> @@ -3,6 +3,16 @@
+>  #
+>  menu "Resolver to digital converters"
+>  
+> +config AD2S90
+> +	tristate "Analog Devices ad2s90 driver"
+> +	depends on SPI
+> +	help
+> +	  Say yes here to build support for Analog Devices spi resolver
+> +	  to digital converters, ad2s90, provides direct access via sysfs.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called ad2s90.
+> +
+>  config AD2S1200
+>  	tristate "Analog Devices ad2s1200/ad2s1205 driver"
+>  	depends on SPI
+> diff --git a/drivers/iio/resolver/Makefile b/drivers/iio/resolver/Makefile
+> index 4e1dccae07e7..398d82d50028 100644
+> --- a/drivers/iio/resolver/Makefile
+> +++ b/drivers/iio/resolver/Makefile
+> @@ -2,4 +2,5 @@
+>  # Makefile for Resolver/Synchro drivers
+>  #
+>  
+> +obj-$(CONFIG_AD2S90) += ad2s90.o
+>  obj-$(CONFIG_AD2S1200) += ad2s1200.o
+> diff --git a/drivers/staging/iio/resolver/ad2s90.c b/drivers/iio/resolver/ad2s90.c
+> similarity index 100%
+> rename from drivers/staging/iio/resolver/ad2s90.c
+> rename to drivers/iio/resolver/ad2s90.c
+> diff --git a/drivers/staging/iio/resolver/Kconfig b/drivers/staging/iio/resolver/Kconfig
+> index 6a469ee6101f..4a727c17bb8f 100644
+> --- a/drivers/staging/iio/resolver/Kconfig
+> +++ b/drivers/staging/iio/resolver/Kconfig
+> @@ -3,16 +3,6 @@
+>  #
+>  menu "Resolver to digital converters"
+>  
+> -config AD2S90
+> -	tristate "Analog Devices ad2s90 driver"
+> -	depends on SPI
+> -	help
+> -	  Say yes here to build support for Analog Devices spi resolver
+> -	  to digital converters, ad2s90, provides direct access via sysfs.
+> -
+> -	  To compile this driver as a module, choose M here: the
+> -	  module will be called ad2s90.
+> -
+>  config AD2S1210
+>  	tristate "Analog Devices ad2s1210 driver"
+>  	depends on SPI
+> diff --git a/drivers/staging/iio/resolver/Makefile b/drivers/staging/iio/resolver/Makefile
+> index 8d901dc7500b..b2049f2ce36e 100644
+> --- a/drivers/staging/iio/resolver/Makefile
+> +++ b/drivers/staging/iio/resolver/Makefile
+> @@ -2,5 +2,4 @@
+>  # Makefile for Resolver/Synchro drivers
+>  #
+>  
+> -obj-$(CONFIG_AD2S90) += ad2s90.o
+>  obj-$(CONFIG_AD2S1210) += ad2s1210.o
