@@ -1,236 +1,932 @@
-From: tali.perry1@gmail.com
-Subject: [PATCH v1 1/1] clk: npcm7xx: get fixed clocks from DT
-Date: Sun, 11 Nov 2018 15:47:12 +0200
-Message-ID: <20181111134712.318321-2-tali.perry1@gmail.com>
-References: <20181111134712.318321-1-tali.perry1@gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v6 3/3] iio: magnetometer: Add driver support for PNI
+ RM3100
+Date: Sun, 11 Nov 2018 14:23:39 +0000
+Message-ID: <20181111142339.59c1c713@archlinux>
+References: <20181108092749.12167-1-songqiang1304521@gmail.com>
+        <20181108092749.12167-4-songqiang1304521@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181111134712.318321-1-tali.perry1@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: brendanhiggins@google.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, avifishman70@gmail.com, tmaimon77@gmail.com, raltherr@google.com, mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, Tali Perry <tali.perry1@gmail.com>, Wei Yongjun <weiyongjun1@huawei.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181108092749.12167-4-songqiang1304521@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Song Qiang <songqiang1304521@gmail.com>
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, preid@electromag.com.au, himanshujha199640@gmail.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tali Perry <tali.perry1@gmail.com>
+On Thu,  8 Nov 2018 17:27:49 +0800
+Song Qiang <songqiang1304521@gmail.com> wrote:
 
-Nuvoton NPCM7XX Clock Controller
-fix base address and of_clk_get_by_name error handling.
-    Also update error messages to be more informative.
-    
-    In case clk_base allocation is erronoeous the return value is null.
-    Also fix handling of of_clk_get_by_name returns an error. 
-    Print a better error message pointing to the dt-binding documention.
+> PNI RM3100 is a high resolution, large signal immunity magnetometer,
+> composed of 3 single sensors and a processing chip with a MagI2C
+> interface.
+>=20
+> Following functions are available:
+>  - Single-shot measurement from
+>    /sys/bus/iio/devices/iio:deviceX/in_magn_{axis}_raw
+>  - Triggerd buffer measurement.
+>  - DRDY pin for data ready trigger.
+>  - Both i2c and spi interface are supported.
+>  - Both interrupt and polling measurement is supported, depends on if
+>    the 'interrupts' in DT is declared.
+>=20
+> Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
+The goto copy2 bit just makes the code less readable.  Better to duplicate
+the code.
 
-This patch is re-submitted since it was already pushed to main 
-(just the diff, without the full driver which is already in 
-master branch.)
+A few other really trivial things I fixed up whilst applying.
++ some warnings about memcpy which are correct.
 
+drivers/iio/magnetometer/rm3100-core.c:496:3: warning: =E2=80=98memcpy=E2=
+=80=99 accessing 3 bytes at offsets 1272 and 1271 overlaps 2 bytes at offse=
+t 1272 [-Wrestrict]
+   memcpy(data->buffer + 4, data->buffer + 3, 3);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+I switched them for memmove which I am fairly sure is safe in this
+case as we don't care about retaining previous values at the source
+locations.
 
-Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
----
- drivers/clk/clk-npcm7xx.c | 99 +++++++++++++++++++++++++++++++++++------------
- 1 file changed, 75 insertions(+), 24 deletions(-)
+Thanks for your persistence on this one - we got there in the end ;)
 
-diff --git a/drivers/clk/clk-npcm7xx.c b/drivers/clk/clk-npcm7xx.c
-index 740af90a9508..91a937720f4e 100644
---- a/drivers/clk/clk-npcm7xx.c
-+++ b/drivers/clk/clk-npcm7xx.c
-@@ -7,17 +7,26 @@
-  * Copyright (C) 2018 Nuvoton Technologies tali.perry@nuvoton.com
-  */
- 
--#include <linux/module.h>
--#include <linux/clk-provider.h>
--#include <linux/io.h>
--#include <linux/kernel.h>
--#include <linux/of.h>
--#include <linux/of_address.h>
--#include <linux/slab.h>
--#include <linux/err.h>
--#include <linux/bitfield.h>
--
--#include <dt-bindings/clock/nuvoton,npcm7xx-clock.h>
-+
-+
-+
-+ #include <linux/module.h>
-+ #include <linux/clk.h>
-+ #include <linux/clk-provider.h>
-+ #include <linux/device.h>
-+ #include <linux/io.h>
-+ #include <linux/kernel.h>
-+ #include <linux/of.h>
-+ #include <linux/of_device.h>
-+ #include <linux/of_platform.h>
-+ #include <linux/of_address.h>
-+ #include <linux/platform_device.h>
-+ #include <linux/slab.h>
-+ #include <linux/err.h>
-+ #include <linux/rational.h>
-+ #include <linux/bitfield.h>
-+ #include <dt-bindings/clock/nuvoton,npcm7xx-clock.h>
-+
- 
- struct npcm7xx_clk_pll {
- 	struct clk_hw	hw;
-@@ -27,6 +36,9 @@ struct npcm7xx_clk_pll {
- 
- #define to_npcm7xx_clk_pll(_hw) container_of(_hw, struct npcm7xx_clk_pll, hw)
- 
-+static struct clk_hw *npcm7xx_clk_register_pll(void __iomem *pllcon,
-+	const char *name, const char *parent_name, unsigned long flags);
-+
- #define PLLCON_LOKI	BIT(31)
- #define PLLCON_LOKS	BIT(30)
- #define PLLCON_FBDV	GENMASK(27, 16)
-@@ -44,7 +56,8 @@ static unsigned long npcm7xx_clk_pll_recalc_rate(struct clk_hw *hw,
- 	u64 ret;
- 
- 	if (parent_rate == 0) {
--		pr_err("%s: parent rate is zero", __func__);
-+		pr_err("%s: parent rate is zero. reg=%x\n", __func__,
-+			(u32)(pll->pllcon));
- 		return 0;
- 	}
- 
-@@ -61,13 +74,12 @@ static unsigned long npcm7xx_clk_pll_recalc_rate(struct clk_hw *hw,
- 	return ret;
- }
- 
--static const struct clk_ops npcm7xx_clk_pll_ops = {
-+const struct clk_ops npcm7xx_clk_pll_ops = {
- 	.recalc_rate = npcm7xx_clk_pll_recalc_rate,
- };
- 
--static struct clk_hw *
--npcm7xx_clk_register_pll(void __iomem *pllcon, const char *name,
--			 const char *parent_name, unsigned long flags)
-+static struct clk_hw *npcm7xx_clk_register_pll(void __iomem *pllcon,
-+		const char *name, const char *parent_name, unsigned long flags)
- {
- 	struct npcm7xx_clk_pll *pll;
- 	struct clk_init_data init;
-@@ -78,7 +90,8 @@ npcm7xx_clk_register_pll(void __iomem *pllcon, const char *name,
- 	if (!pll)
- 		return ERR_PTR(-ENOMEM);
- 
--	pr_debug("%s reg, name=%s, p=%s\n", __func__, name, parent_name);
-+	pr_debug("%s reg, reg=0x%x, name=%s, p=%s\n",
-+		__func__, (unsigned int)pllcon, name, parent_name);
- 
- 	init.name = name;
- 	init.ops = &npcm7xx_clk_pll_ops;
-@@ -544,9 +557,11 @@ static void __init npcm7xx_clk_init(struct device_node *clk_np)
- 	void __iomem *clk_base;
- 	struct resource res;
- 	struct clk_hw *hw;
-+	struct clk *clk;
- 	int ret;
- 	int i;
- 
-+	clk_base = NULL;
- 	ret = of_address_to_resource(clk_np, 0, &res);
- 	if (ret) {
- 		pr_err("%s: failed to get resource, ret %d\n", clk_np->name,
-@@ -560,14 +575,44 @@ static void __init npcm7xx_clk_init(struct device_node *clk_np)
- 
- 	npcm7xx_clk_data = kzalloc(sizeof(*npcm7xx_clk_data->hws) *
- 		NPCM7XX_NUM_CLOCKS + sizeof(npcm7xx_clk_data), GFP_KERNEL);
--	if (!npcm7xx_clk_data)
-+
-+	npcm7xx_clk_data->num = 0;
-+
-+	if (!npcm7xx_clk_data->hws) {
-+		pr_err("Can't alloc npcm7xx_clk_data\n");
- 		goto npcm7xx_init_np_err;
-+	}
- 
- 	npcm7xx_clk_data->num = NPCM7XX_NUM_CLOCKS;
- 
- 	for (i = 0; i < NPCM7XX_NUM_CLOCKS; i++)
- 		npcm7xx_clk_data->hws[i] = ERR_PTR(-EPROBE_DEFER);
- 
-+	/* Read fixed clocks. These 3 clocks must be defined in DT */
-+	clk = of_clk_get_by_name(clk_np, NPCM7XX_CLK_S_REFCLK);
-+	if (IS_ERR(clk)) {
-+		pr_err("failed to find external REFCLK on device tree, err=%ld\n",
-+			PTR_ERR(clk));
-+		clk_put(clk);
-+		goto npcm7xx_init_fail_no_clk_on_dt;
-+	}
-+
-+	clk = of_clk_get_by_name(clk_np, NPCM7XX_CLK_S_SYSBYPCK);
-+	if (IS_ERR(clk)) {
-+		pr_err("failed to find external SYSBYPCK on device tree, err=%ld\n",
-+			PTR_ERR(clk));
-+		clk_put(clk);
-+		goto npcm7xx_init_fail_no_clk_on_dt;
-+	}
-+
-+	clk = of_clk_get_by_name(clk_np, NPCM7XX_CLK_S_MCBYPCK);
-+	if (IS_ERR(clk)) {
-+		pr_err("failed to find external MCBYPCK on device tree, err=%ld\n",
-+			PTR_ERR(clk));
-+		clk_put(clk);
-+		goto npcm7xx_init_fail_no_clk_on_dt;
-+	}
-+
- 	/* Register plls */
- 	for (i = 0; i < ARRAY_SIZE(npcm7xx_plls); i++) {
- 		const struct npcm7xx_clk_pll_data *pll_data = &npcm7xx_plls[i];
-@@ -584,16 +629,16 @@ static void __init npcm7xx_clk_init(struct device_node *clk_np)
- 	}
- 
- 	/* Register fixed dividers */
--	hw = clk_hw_register_fixed_factor(NULL, NPCM7XX_CLK_S_PLL1_DIV2,
-+	clk = clk_register_fixed_factor(NULL, NPCM7XX_CLK_S_PLL1_DIV2,
- 			NPCM7XX_CLK_S_PLL1, 0, 1, 2);
--	if (IS_ERR(hw)) {
-+	if (IS_ERR(clk)) {
- 		pr_err("npcm7xx_clk: Can't register fixed div\n");
- 		goto npcm7xx_init_fail;
- 	}
- 
--	hw = clk_hw_register_fixed_factor(NULL, NPCM7XX_CLK_S_PLL2_DIV2,
-+	clk = clk_register_fixed_factor(NULL, NPCM7XX_CLK_S_PLL2_DIV2,
- 			NPCM7XX_CLK_S_PLL2, 0, 1, 2);
--	if (IS_ERR(hw)) {
-+	if (IS_ERR(clk)) {
- 		pr_err("npcm7xx_clk: Can't register div2\n");
- 		goto npcm7xx_init_fail;
- 	}
-@@ -646,11 +691,17 @@ static void __init npcm7xx_clk_init(struct device_node *clk_np)
- 
- 	return;
- 
-+npcm7xx_init_fail_no_clk_on_dt:
-+	pr_err("see Documentation/devicetree/bindings/clock/");
-+	pr_err("nuvoton,npcm750-clk.txt  for details\n");
- npcm7xx_init_fail:
--	kfree(npcm7xx_clk_data->hws);
-+	if (npcm7xx_clk_data->num)
-+		kfree(npcm7xx_clk_data->hws);
- npcm7xx_init_np_err:
--	iounmap(clk_base);
-+	if (clk_base != NULL)
-+		iounmap(clk_base);
- npcm7xx_init_error:
- 	of_node_put(clk_np);
-+	pr_err("clk setup fail\n");
- }
- CLK_OF_DECLARE(npcm7xx_clk_init, "nuvoton,npcm750-clk", npcm7xx_clk_init);
--- 
-2.14.1
+Jonathan
+> ---
+>  MAINTAINERS                            |   7 +
+>  drivers/iio/magnetometer/Kconfig       |  29 ++
+>  drivers/iio/magnetometer/Makefile      |   4 +
+>  drivers/iio/magnetometer/rm3100-core.c | 616 +++++++++++++++++++++++++
+>  drivers/iio/magnetometer/rm3100-i2c.c  |  54 +++
+>  drivers/iio/magnetometer/rm3100-spi.c  |  64 +++
+>  drivers/iio/magnetometer/rm3100.h      |  17 +
+>  7 files changed, 791 insertions(+)
+>  create mode 100644 drivers/iio/magnetometer/rm3100-core.c
+>  create mode 100644 drivers/iio/magnetometer/rm3100-i2c.c
+>  create mode 100644 drivers/iio/magnetometer/rm3100-spi.c
+>  create mode 100644 drivers/iio/magnetometer/rm3100.h
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1c0f771b859e..ca7a31736256 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11824,6 +11824,13 @@ M:	"Rafael J. Wysocki" <rafael.j.wysocki@intel.c=
+om>
+>  S:	Maintained
+>  F:	drivers/pnp/
+> =20
+> +PNI RM3100 IIO DRIVER
+> +M:	Song Qiang <songqiang1304521@gmail.com>
+> +L:	linux-iio@vger.kernel.org
+> +S:	Maintained
+> +F:	drivers/iio/magnetometer/rm3100*
+> +F:	Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt
+> +
+>  POSIX CLOCKS and TIMERS
+>  M:	Thomas Gleixner <tglx@linutronix.de>
+>  L:	linux-kernel@vger.kernel.org
+> diff --git a/drivers/iio/magnetometer/Kconfig b/drivers/iio/magnetometer/=
+Kconfig
+> index ed9d776d01af..8a63cbbca4b7 100644
+> --- a/drivers/iio/magnetometer/Kconfig
+> +++ b/drivers/iio/magnetometer/Kconfig
+> @@ -175,4 +175,33 @@ config SENSORS_HMC5843_SPI
+>  	  - hmc5843_core (core functions)
+>  	  - hmc5843_spi (support for HMC5983)
+> =20
+> +config SENSORS_RM3100
+> +	tristate
+> +	select IIO_BUFFER
+> +	select IIO_TRIGGERED_BUFFER
+> +
+> +config SENSORS_RM3100_I2C
+> +	tristate "PNI RM3100 3-Axis Magnetometer (I2C)"
+> +	depends on I2C
+> +	select SENSORS_RM3100
+> +	select REGMAP_I2C
+> +	help
+> +	  Say Y here to add support for the PNI RM3100 3-Axis Magnetometer.
+> +
+> +	  This driver can also be compiled as a module.
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called rm3100-i2c.
+> +
+> +config SENSORS_RM3100_SPI
+> +	tristate "PNI RM3100 3-Axis Magnetometer (SPI)"
+> +	depends on SPI_MASTER
+> +	select SENSORS_RM3100
+> +	select REGMAP_SPI
+> +	help
+> +	  Say Y here to add support for the PNI RM3100 3-Axis Magnetometer.
+> +
+> +	  This driver can also be compiled as a module.
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called rm3100-spi.
+> +
+>  endmenu
+> diff --git a/drivers/iio/magnetometer/Makefile b/drivers/iio/magnetometer=
+/Makefile
+> index 664b2f866472..ba1bc34b82fa 100644
+> --- a/drivers/iio/magnetometer/Makefile
+> +++ b/drivers/iio/magnetometer/Makefile
+> @@ -24,3 +24,7 @@ obj-$(CONFIG_IIO_ST_MAGN_SPI_3AXIS) +=3D st_magn_spi.o
+>  obj-$(CONFIG_SENSORS_HMC5843)		+=3D hmc5843_core.o
+>  obj-$(CONFIG_SENSORS_HMC5843_I2C)	+=3D hmc5843_i2c.o
+>  obj-$(CONFIG_SENSORS_HMC5843_SPI)	+=3D hmc5843_spi.o
+> +
+> +obj-$(CONFIG_SENSORS_RM3100)		+=3D rm3100-core.o
+> +obj-$(CONFIG_SENSORS_RM3100_I2C)	+=3D rm3100-i2c.o
+> +obj-$(CONFIG_SENSORS_RM3100_SPI)	+=3D rm3100-spi.o
+> diff --git a/drivers/iio/magnetometer/rm3100-core.c b/drivers/iio/magneto=
+meter/rm3100-core.c
+> new file mode 100644
+> index 000000000000..e64290cf6406
+> --- /dev/null
+> +++ b/drivers/iio/magnetometer/rm3100-core.c
+> @@ -0,0 +1,616 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PNI RM3100 3-axis geomagnetic sensor driver core.
+> + *
+> + * Copyright (C) 2018 Song Qiang <songqiang1304521@gmail.com>
+> + *
+> + * User Manual available at
+> + * <https://www.pnicorp.com/download/rm3100-user-manual/>
+> + *
+> + * TODO: event generation, pm.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/kfifo_buf.h>
+No need to include kfifo_buf unless you are using it
+directly.
+
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +
+> +#include "rm3100.h"
+> +
+> +/* Cycle Count Registers. */
+> +#define RM3100_REG_CC_X			0x05
+> +#define RM3100_REG_CC_Y			0x07
+> +#define RM3100_REG_CC_Z			0x09
+> +
+> +/* Poll Measurement Mode register. */
+> +#define RM3100_REG_POLL			0x00
+> +#define		RM3100_POLL_X		BIT(4)
+> +#define		RM3100_POLL_Y		BIT(5)
+> +#define		RM3100_POLL_Z		BIT(6)
+> +
+> +/* Continuous Measurement Mode register. */
+> +#define RM3100_REG_CMM			0x01
+> +#define		RM3100_CMM_START	BIT(0)
+> +#define		RM3100_CMM_X		BIT(4)
+> +#define		RM3100_CMM_Y		BIT(5)
+> +#define		RM3100_CMM_Z		BIT(6)
+> +
+> +/* TiMe Rate Configuration register. */
+> +#define RM3100_REG_TMRC			0x0B
+> +#define RM3100_TMRC_OFFSET		0x92
+> +
+> +/* Result Status register. */
+> +#define RM3100_REG_STATUS		0x34
+> +#define		RM3100_STATUS_DRDY	BIT(7)
+> +
+> +/* Measurement result registers. */
+> +#define RM3100_REG_MX2			0x24
+> +#define RM3100_REG_MY2			0x27
+> +#define RM3100_REG_MZ2			0x2a
+> +
+> +#define RM3100_W_REG_START		RM3100_REG_POLL
+> +#define RM3100_W_REG_END		RM3100_REG_TMRC
+> +#define RM3100_R_REG_START		RM3100_REG_POLL
+> +#define RM3100_R_REG_END		RM3100_REG_STATUS
+> +#define RM3100_V_REG_START		RM3100_REG_POLL
+> +#define RM3100_V_REG_END		RM3100_REG_STATUS
+> +
+> +/*
+> + * This is computed by hand, is the sum of channel storage bits and padd=
+ing
+> + * bits, which is 4+4+4+12=3D24 in here.
+> + */
+> +#define RM3100_SCAN_BYTES		24
+> +
+> +#define RM3100_CMM_AXIS_SHIFT		4
+> +
+> +struct rm3100_data {
+> +	struct regmap *regmap;
+> +	struct completion measuring_done;
+> +	bool use_interrupt;
+> +	int conversion_time;
+> +	int scale;
+> +	u8 buffer[RM3100_SCAN_BYTES];
+> +	struct iio_trigger *drdy_trig;
+> +
+> +	/*
+> +	 * This lock is for protecting the consistency of series of i2c
+> +	 * operations, that is, to make sure a measurement process will
+> +	 * not be interrupted by a set frequency operation, which should
+> +	 * be taken where a series of i2c operation starts, released where
+> +	 * the operation ends.
+> +	 */
+> +	struct mutex lock;
+> +};
+> +
+> +static const struct regmap_range rm3100_readable_ranges[] =3D {
+> +	regmap_reg_range(RM3100_R_REG_START, RM3100_R_REG_END),
+> +};
+> +
+> +const struct regmap_access_table rm3100_readable_table =3D {
+> +	.yes_ranges =3D rm3100_readable_ranges,
+> +	.n_yes_ranges =3D ARRAY_SIZE(rm3100_readable_ranges),
+> +};
+> +EXPORT_SYMBOL_GPL(rm3100_readable_table);
+> +
+> +static const struct regmap_range rm3100_writable_ranges[] =3D {
+> +	regmap_reg_range(RM3100_W_REG_START, RM3100_W_REG_END),
+> +};
+> +
+> +const struct regmap_access_table rm3100_writable_table =3D {
+> +	.yes_ranges =3D rm3100_writable_ranges,
+> +	.n_yes_ranges =3D ARRAY_SIZE(rm3100_writable_ranges),
+> +};
+> +EXPORT_SYMBOL_GPL(rm3100_writable_table);
+> +
+> +static const struct regmap_range rm3100_volatile_ranges[] =3D {
+> +	regmap_reg_range(RM3100_V_REG_START, RM3100_V_REG_END),
+> +};
+> +
+> +const struct regmap_access_table rm3100_volatile_table =3D {
+> +	.yes_ranges =3D rm3100_volatile_ranges,
+> +	.n_yes_ranges =3D ARRAY_SIZE(rm3100_volatile_ranges),
+> +};
+> +EXPORT_SYMBOL_GPL(rm3100_volatile_table);
+> +
+> +static irqreturn_t rm3100_thread_fn(int irq, void *d)
+> +{
+> +	struct iio_dev *indio_dev =3D d;
+> +	struct rm3100_data *data =3D iio_priv(indio_dev);
+> +
+> +	/*
+> +	 * Write operation to any register or read operation
+> +	 * to first byte of results will clear the interrupt.
+> +	 */
+> +	regmap_write(data->regmap, RM3100_REG_POLL, 0);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t rm3100_irq_handler(int irq, void *d)
+> +{
+> +	struct iio_dev *indio_dev =3D d;
+> +	struct rm3100_data *data =3D iio_priv(indio_dev);
+> +
+> +	switch (indio_dev->currentmode) {
+> +	case INDIO_DIRECT_MODE:
+> +		complete(&data->measuring_done);
+> +		break;
+> +	case INDIO_BUFFER_TRIGGERED:
+> +		iio_trigger_poll(data->drdy_trig);
+> +		break;
+> +	default:
+> +		dev_err(indio_dev->dev.parent,
+> +			"device mode out of control, current mode: %d",
+> +			indio_dev->currentmode);
+> +	}
+> +
+> +	return IRQ_WAKE_THREAD;
+> +}
+> +
+> +static int rm3100_wait_measurement(struct rm3100_data *data)
+> +{
+> +	struct regmap *regmap =3D data->regmap;
+> +	unsigned int val;
+> +	int tries =3D 20;
+> +	int ret;
+> +
+> +	/*
+> +	 * A read cycle of 400kbits i2c bus is about 20us, plus the time
+> +	 * used for scheduling, a read cycle of fast mode of this device
+> +	 * can reach 1.7ms, it may be possible for data to arrive just
+> +	 * after we check the RM3100_REG_STATUS. In this case, irq_handler is
+> +	 * called before measuring_done is reinitialized, it will wait
+> +	 * forever for data that has already been ready.
+> +	 * Reinitialize measuring_done before looking up makes sure we
+> +	 * will always capture interrupt no matter when it happens.
+> +	 */
+> +	if (data->use_interrupt)
+> +		reinit_completion(&data->measuring_done);
+> +
+> +	ret =3D regmap_read(regmap, RM3100_REG_STATUS, &val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if ((val & RM3100_STATUS_DRDY) !=3D RM3100_STATUS_DRDY) {
+> +		if (data->use_interrupt) {
+> +			ret =3D wait_for_completion_timeout(&data->measuring_done,
+> +				msecs_to_jiffies(data->conversion_time));
+> +			if (!ret)
+> +				return -ETIMEDOUT;
+> +		} else {
+> +			do {
+> +				usleep_range(1000, 5000);
+> +
+> +				ret =3D regmap_read(regmap, RM3100_REG_STATUS,
+> +						  &val);
+> +				if (ret < 0)
+> +					return ret;
+> +
+> +				if (val & RM3100_STATUS_DRDY)
+> +					break;
+> +			} while (--tries);
+> +			if (!tries)
+> +				return -ETIMEDOUT;
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int rm3100_read_mag(struct rm3100_data *data, int idx, int *val)
+> +{
+> +	struct regmap *regmap =3D data->regmap;
+> +	u8 buffer[3];
+> +	int ret;
+> +
+> +	mutex_lock(&data->lock);
+> +	ret =3D regmap_write(regmap, RM3100_REG_POLL, BIT(4 + idx));
+> +	if (ret < 0)
+> +		goto unlock_return;
+> +
+> +	ret =3D rm3100_wait_measurement(data);
+> +	if (ret < 0)
+> +		goto unlock_return;
+> +
+> +	ret =3D regmap_bulk_read(regmap, RM3100_REG_MX2 + 3 * idx, buffer, 3);
+> +	if (ret < 0)
+> +		goto unlock_return;
+> +	mutex_unlock(&data->lock);
+> +
+> +	*val =3D sign_extend32((buffer[0] << 16) | (buffer[1] << 8) | buffer[2],
+> +			     23);
+> +
+> +	return IIO_VAL_INT;
+> +
+> +unlock_return:
+> +	mutex_unlock(&data->lock);
+> +	return ret;
+> +}
+> +
+> +#define RM3100_CHANNEL(axis, idx)					\
+> +	{								\
+> +		.type =3D IIO_MAGN,					\
+> +		.modified =3D 1,						\
+> +		.channel2 =3D IIO_MOD_##axis,				\
+> +		.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW),		\
+> +		.info_mask_shared_by_type =3D BIT(IIO_CHAN_INFO_SCALE) |	\
+> +			BIT(IIO_CHAN_INFO_SAMP_FREQ),			\
+> +		.scan_index =3D idx,					\
+> +		.scan_type =3D {						\
+> +			.sign =3D 's',					\
+> +			.realbits =3D 24,					\
+> +			.storagebits =3D 32,				\
+> +			.shift =3D 8,					\
+> +			.endianness =3D IIO_BE,				\
+> +		},							\
+> +	}
+> +
+> +static const struct iio_chan_spec rm3100_channels[] =3D {
+> +	RM3100_CHANNEL(X, 0),
+> +	RM3100_CHANNEL(Y, 1),
+> +	RM3100_CHANNEL(Z, 2),
+> +	IIO_CHAN_SOFT_TIMESTAMP(3),
+> +};
+> +
+> +static IIO_CONST_ATTR_SAMP_FREQ_AVAIL(
+> +	"600 300 150 75 37 18 9 4.5 2.3 1.2 0.6 0.3 0.015 0.075"
+> +);
+> +
+> +static struct attribute *rm3100_attributes[] =3D {
+> +	&iio_const_attr_sampling_frequency_available.dev_attr.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group rm3100_attribute_group =3D {
+> +	.attrs =3D rm3100_attributes,
+> +};
+> +
+> +#define RM3100_SAMP_NUM			14
+> +
+> +/*
+> + * Frequency : rm3100_samp_rates[][0].rm3100_samp_rates[][1]Hz.
+> + * Time between reading: rm3100_sam_rates[][2]ms.
+> + * The first one is actually 1.7ms.
+> + */
+> +static const int rm3100_samp_rates[RM3100_SAMP_NUM][3] =3D {
+> +	{600, 0, 2}, {300, 0, 3}, {150, 0, 7}, {75, 0, 13}, {37, 0, 27},
+> +	{18, 0, 55}, {9, 0, 110}, {4, 500000, 220}, {2, 300000, 440},
+> +	{1, 200000, 800}, {0, 600000, 1600}, {0, 300000, 3300},
+> +	{0, 15000, 6700},  {0, 75000, 13000}
+> +};
+> +
+> +static int rm3100_get_samp_freq(struct rm3100_data *data, int *val, int =
+*val2)
+> +{
+> +	unsigned int tmp;
+> +	int ret;
+> +
+> +	mutex_lock(&data->lock);
+> +	ret =3D regmap_read(data->regmap, RM3100_REG_TMRC, &tmp);
+> +	mutex_unlock(&data->lock);
+> +	if (ret < 0)
+> +		return ret;
+> +	*val =3D rm3100_samp_rates[tmp - RM3100_TMRC_OFFSET][0];
+> +	*val2 =3D rm3100_samp_rates[tmp - RM3100_TMRC_OFFSET][1];
+> +
+> +	return IIO_VAL_INT_PLUS_MICRO;
+> +}
+> +
+> +static int rm3100_set_cycle_count(struct rm3100_data *data, int val)
+> +{
+> +	int ret;
+> +	u8 i;
+> +
+> +	for (i =3D 0; i < 3; i++) {
+> +		ret =3D regmap_write(data->regmap, RM3100_REG_CC_X + 2 * i, val);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	/*
+> +	 * The scale of this sensor depends on the cycle count value, these
+> +	 * three values are corresponding to the cycle count value 50, 100,
+> +	 * 200. scale =3D output / gain * 10^4.
+> +	 */
+> +	switch (val) {
+> +	case 50:
+> +		data->scale =3D 500;
+> +		break;
+> +	case 100:
+> +		data->scale =3D 263;
+> +		break;
+> +	/*
+> +	 * case 200:
+> +	 * This function will never be called by users' code, so here we
+> +	 * assume that it will never get a wrong parameter.
+> +	 */
+> +	default:
+> +		data->scale =3D 133;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int rm3100_set_samp_freq(struct iio_dev *indio_dev, int val, int =
+val2)
+> +{
+> +	struct rm3100_data *data =3D iio_priv(indio_dev);
+> +	struct regmap *regmap =3D data->regmap;
+> +	unsigned int cycle_count;
+> +	int ret;
+> +	int i;
+> +
+> +	mutex_lock(&data->lock);
+> +	/* All cycle count registers use the same value. */
+> +	ret =3D regmap_read(regmap, RM3100_REG_CC_X, &cycle_count);
+> +	if (ret < 0)
+> +		goto unlock_return;
+> +
+> +	for (i =3D 0; i < RM3100_SAMP_NUM; i++) {
+> +		if (val =3D=3D rm3100_samp_rates[i][0] &&
+> +		    val2 =3D=3D rm3100_samp_rates[i][1])
+> +			break;
+> +	}
+> +	if (i =3D=3D RM3100_SAMP_NUM) {
+> +		ret =3D -EINVAL;
+> +		goto unlock_return;
+> +	}
+> +
+> +	ret =3D regmap_write(regmap, RM3100_REG_TMRC, i + RM3100_TMRC_OFFSET);
+> +	if (ret < 0)
+> +		goto unlock_return;
+> +
+> +	/* Checking if cycle count registers need changing. */
+> +	if (val =3D=3D 600 && cycle_count =3D=3D 200) {
+> +		ret =3D rm3100_set_cycle_count(data, 100);
+> +		if (ret < 0)
+> +			goto unlock_return;
+> +	} else if (val !=3D 600 && cycle_count =3D=3D 100) {
+> +		ret =3D rm3100_set_cycle_count(data, 200);
+> +		if (ret < 0)
+> +			goto unlock_return;
+> +	}
+> +
+> +	if (indio_dev->currentmode =3D=3D INDIO_BUFFER_TRIGGERED) {
+> +		/* Writing TMRC registers requires CMM reset. */
+> +		ret =3D regmap_write(regmap, RM3100_REG_CMM, 0);
+> +		if (ret < 0)
+> +			goto unlock_return;
+> +		ret =3D regmap_write(data->regmap, RM3100_REG_CMM,
+> +			(*indio_dev->active_scan_mask & 0x7) <<
+> +			RM3100_CMM_AXIS_SHIFT | RM3100_CMM_START);
+> +		if (ret < 0)
+> +			goto unlock_return;
+> +	}
+> +	mutex_unlock(&data->lock);
+> +
+> +	data->conversion_time =3D rm3100_samp_rates[i][2] * 2;
+> +	return 0;
+> +
+> +unlock_return:
+> +	mutex_unlock(&data->lock);
+> +	return ret;
+> +}
+> +
+> +static int rm3100_read_raw(struct iio_dev *indio_dev,
+> +			   const struct iio_chan_spec *chan,
+> +			   int *val, int *val2, long mask)
+> +{
+> +	struct rm3100_data *data =3D iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret =3D iio_device_claim_direct_mode(indio_dev);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		ret =3D rm3100_read_mag(data, chan->scan_index, val);
+> +		iio_device_release_direct_mode(indio_dev);
+> +
+> +		return ret;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val =3D 0;
+> +		*val2 =3D data->scale;
+> +
+> +		return IIO_VAL_INT_PLUS_MICRO;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		return rm3100_get_samp_freq(data, val, val2);
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int rm3100_write_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *chan,
+> +			    int val, int val2, long mask)
+> +{
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		return rm3100_set_samp_freq(indio_dev, val, val2);
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static const struct iio_info rm3100_info =3D {
+> +	.attrs =3D &rm3100_attribute_group,
+> +	.read_raw =3D rm3100_read_raw,
+> +	.write_raw =3D rm3100_write_raw,
+> +};
+> +
+> +static int rm3100_buffer_preenable(struct iio_dev *indio_dev)
+> +{
+> +	struct rm3100_data *data =3D iio_priv(indio_dev);
+> +
+> +	/* Starting channels enabled. */
+> +	return regmap_write(data->regmap, RM3100_REG_CMM,
+> +		(*indio_dev->active_scan_mask & 0x7) << RM3100_CMM_AXIS_SHIFT |
+> +		RM3100_CMM_START);
+> +}
+> +
+> +static int rm3100_buffer_postdisable(struct iio_dev *indio_dev)
+> +{
+> +	struct rm3100_data *data =3D iio_priv(indio_dev);
+> +
+> +	return regmap_write(data->regmap, RM3100_REG_CMM, 0);
+> +}
+> +
+> +static const struct iio_buffer_setup_ops rm3100_buffer_ops =3D {
+> +	.preenable =3D rm3100_buffer_preenable,
+> +	.postenable =3D iio_triggered_buffer_postenable,
+> +	.predisable =3D iio_triggered_buffer_predisable,
+> +	.postdisable =3D rm3100_buffer_postdisable,
+> +};
+> +
+> +static irqreturn_t rm3100_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf =3D p;
+> +	struct iio_dev *indio_dev =3D pf->indio_dev;
+> +	unsigned long scan_mask =3D *indio_dev->active_scan_mask;
+> +	unsigned int mask_len =3D indio_dev->masklength;
+> +	struct rm3100_data *data =3D iio_priv(indio_dev);
+> +	struct regmap *regmap =3D data->regmap;
+> +	int ret, i, bit;
+> +
+> +	mutex_lock(&data->lock);
+> +	switch (scan_mask) {
+> +	case BIT(0) | BIT(1) | BIT(2):
+> +		ret =3D regmap_bulk_read(regmap, RM3100_REG_MX2, data->buffer, 9);
+> +		mutex_unlock(&data->lock);
+> +		if (ret < 0)
+> +			goto done;
+> +		/* Convert XXXYYYZZZxxx to XXXxYYYxZZZx. x for paddings. */
+> +		for (i =3D 2; i > 0; i--)
+> +			memcpy(data->buffer + i * 4, data->buffer + i * 3, 3);
+> +	break;
+Odd indenting of breaks. I'll clear that up.
+
+> +	case BIT(0) | BIT(1):
+> +		ret =3D regmap_bulk_read(regmap, RM3100_REG_MX2, data->buffer, 6);
+> +		mutex_unlock(&data->lock);
+> +		if (ret < 0)
+> +			goto done;
+> +		goto copy_2;
+> +	case BIT(1) | BIT(2):
+> +		ret =3D regmap_bulk_read(regmap, RM3100_REG_MY2, data->buffer, 6);
+> +		mutex_unlock(&data->lock);
+> +		if (ret < 0)
+> +			goto done;
+> +copy_2:		memcpy(data->buffer + 4, data->buffer + 3, 3);
+This isn't a good idea. Saves one line of code and a tiny bit of duplicatio=
+n but
+makes it much harder to read. =20
+> +	break;
+> +	case BIT(0) | BIT(2):
+> +		ret =3D regmap_bulk_read(regmap, RM3100_REG_MX2, data->buffer, 9);
+> +		mutex_unlock(&data->lock);
+> +		if (ret < 0)
+> +			goto done;
+> +		memcpy(data->buffer + 4, data->buffer + 6, 3);
+> +	break;
+> +	default:
+> +		for_each_set_bit(bit, &scan_mask, mask_len) {
+> +			ret =3D regmap_bulk_read(regmap, RM3100_REG_MX2 + 3 * bit,
+> +					       data->buffer, 3);
+> +			if (ret < 0) {
+> +				mutex_unlock(&data->lock);
+> +				goto done;
+> +			}
+> +		}
+> +		mutex_unlock(&data->lock);
+> +	}
+> +	/*
+> +	 * Always using the same buffer so that we wouldn't need to set the
+> +	 * paddings to 0 in case of leaking any data.
+> +	 */
+> +	iio_push_to_buffers_with_timestamp(indio_dev, data->buffer,
+> +					   pf->timestamp);
+> +done:
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +int rm3100_common_probe(struct device *dev, struct regmap *regmap, int i=
+rq)
+> +{
+> +	struct iio_dev *indio_dev;
+> +	struct rm3100_data *data;
+> +	unsigned int tmp;
+> +	int ret;
+> +
+> +	indio_dev =3D devm_iio_device_alloc(dev, sizeof(*data));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	data =3D iio_priv(indio_dev);
+> +	data->regmap =3D regmap;
+> +
+> +	mutex_init(&data->lock);
+> +
+> +	indio_dev->dev.parent =3D dev;
+> +	indio_dev->name =3D "rm3100";
+> +	indio_dev->info =3D &rm3100_info;
+> +	indio_dev->channels =3D rm3100_channels;
+> +	indio_dev->num_channels =3D ARRAY_SIZE(rm3100_channels);
+> +	indio_dev->modes =3D INDIO_DIRECT_MODE | INDIO_BUFFER_TRIGGERED;
+> +	indio_dev->currentmode =3D INDIO_DIRECT_MODE;
+> +
+> +	if (!irq)
+> +		data->use_interrupt =3D false;
+> +	else {
+> +		data->use_interrupt =3D true;
+> +
+> +		init_completion(&data->measuring_done);
+> +		ret =3D devm_request_threaded_irq(dev,
+> +						irq,
+> +						rm3100_irq_handler,
+> +						rm3100_thread_fn,
+> +						IRQF_TRIGGER_HIGH |
+> +						IRQF_ONESHOT,
+> +						indio_dev->name,
+> +						indio_dev);
+> +		if (ret < 0) {
+> +			dev_err(dev, "request irq line failed.\n");
+> +			return ret;
+> +		}
+> +
+> +		data->drdy_trig =3D devm_iio_trigger_alloc(dev, "%s-drdy%d",
+> +							 indio_dev->name,
+> +							 indio_dev->id);
+> +		if (!data->drdy_trig)
+> +			return -ENOMEM;
+> +
+> +		data->drdy_trig->dev.parent =3D dev;
+> +		ret =3D devm_iio_trigger_register(dev, data->drdy_trig);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	ret =3D devm_iio_triggered_buffer_setup(dev, indio_dev,
+> +					      &iio_pollfunc_store_time,
+> +					      rm3100_trigger_handler,
+> +					      &rm3100_buffer_ops);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret =3D regmap_read(regmap, RM3100_REG_TMRC, &tmp);
+> +	if (ret < 0)
+> +		return ret;
+> +	/* Initializing max wait time, which is double conversion time. */
+> +	data->conversion_time =3D rm3100_samp_rates[tmp - RM3100_TMRC_OFFSET][2]
+> +				* 2;
+> +
+> +	/* Cycle count values may not be what we want. */
+> +	if ((tmp - RM3100_TMRC_OFFSET) =3D=3D 0)
+> +		rm3100_set_cycle_count(data, 100);
+> +	else
+> +		rm3100_set_cycle_count(data, 200);
+> +
+> +	return devm_iio_device_register(dev, indio_dev);
+> +}
+> +EXPORT_SYMBOL_GPL(rm3100_common_probe);
+> +
+> +MODULE_AUTHOR("Song Qiang <songqiang1304521@gmail.com>");
+> +MODULE_DESCRIPTION("PNI RM3100 3-axis magnetometer i2c driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/iio/magnetometer/rm3100-i2c.c b/drivers/iio/magnetom=
+eter/rm3100-i2c.c
+> new file mode 100644
+> index 000000000000..1ac622c6d6c9
+> --- /dev/null
+> +++ b/drivers/iio/magnetometer/rm3100-i2c.c
+> @@ -0,0 +1,54 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Support for PNI RM3100 3-axis geomagnetic sensor on a i2c bus.
+> + *
+> + * Copyright (C) 2018 Song Qiang <songqiang1304521@gmail.com>
+> + *
+> + * i2c slave address: 0x20 + SA1 << 1 + SA0.
+> + */
+> +
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +
+> +#include "rm3100.h"
+> +
+> +static const struct regmap_config rm3100_regmap_config =3D {
+> +	.reg_bits =3D 8,
+> +	.val_bits =3D 8,
+> +
+> +	.rd_table =3D &rm3100_readable_table,
+> +	.wr_table =3D &rm3100_writable_table,
+> +	.volatile_table =3D &rm3100_volatile_table,
+> +
+> +	.cache_type =3D REGCACHE_RBTREE,
+> +};
+> +
+> +static int rm3100_probe(struct i2c_client *client)
+> +{
+> +	struct regmap *regmap;
+> +
+> +	regmap =3D devm_regmap_init_i2c(client, &rm3100_regmap_config);
+> +	if (IS_ERR(regmap))
+> +		return PTR_ERR(regmap);
+> +
+> +	return rm3100_common_probe(&client->dev, regmap, client->irq);
+> +}
+> +
+> +static const struct of_device_id rm3100_dt_match[] =3D {
+> +	{ .compatible =3D "pni,rm3100", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, rm3100_dt_match);
+> +
+> +static struct i2c_driver rm3100_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "rm3100-i2c",
+> +		.of_match_table =3D rm3100_dt_match,
+> +	},
+> +	.probe_new =3D rm3100_probe,
+> +};
+> +module_i2c_driver(rm3100_driver);
+> +
+> +MODULE_AUTHOR("Song Qiang <songqiang1304521@gmail.com>");
+> +MODULE_DESCRIPTION("PNI RM3100 3-axis magnetometer i2c driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/iio/magnetometer/rm3100-spi.c b/drivers/iio/magnetom=
+eter/rm3100-spi.c
+> new file mode 100644
+> index 000000000000..65d5eb9e4f5e
+> --- /dev/null
+> +++ b/drivers/iio/magnetometer/rm3100-spi.c
+> @@ -0,0 +1,64 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Support for PNI RM3100 3-axis geomagnetic sensor on a spi bus.
+> + *
+> + * Copyright (C) 2018 Song Qiang <songqiang1304521@gmail.com>
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/spi/spi.h>
+> +
+> +#include "rm3100.h"
+> +
+> +static const struct regmap_config rm3100_regmap_config =3D {
+> +	.reg_bits =3D 8,
+> +	.val_bits =3D 8,
+> +
+> +	.rd_table =3D &rm3100_readable_table,
+> +	.wr_table =3D &rm3100_writable_table,
+> +	.volatile_table =3D &rm3100_volatile_table,
+> +
+> +	.read_flag_mask =3D 0x80,
+> +
+> +	.cache_type =3D REGCACHE_RBTREE,
+> +};
+> +
+> +static int rm3100_probe(struct spi_device *spi)
+> +{
+> +	struct regmap *regmap;
+> +	int ret;
+> +
+> +	/* Actually this device supports both mode 0 and mode 3. */
+> +	spi->mode =3D SPI_MODE_0;
+> +	/* Data rates cannot exceed 1Mbits. */
+> +	spi->max_speed_hz =3D 1000000;
+> +	spi->bits_per_word =3D 8;
+> +	ret =3D spi_setup(spi);
+> +	if (ret)
+> +		return ret;
+> +
+> +	regmap =3D devm_regmap_init_spi(spi, &rm3100_regmap_config);
+> +	if (IS_ERR(regmap))
+> +		return PTR_ERR(regmap);
+> +
+> +	return rm3100_common_probe(&spi->dev, regmap, spi->irq);
+> +}
+> +
+> +static const struct of_device_id rm3100_dt_match[] =3D {
+> +	{ .compatible =3D "pni,rm3100", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, rm3100_dt_match);
+> +
+> +static struct spi_driver rm3100_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "rm3100-spi",
+> +		.of_match_table =3D rm3100_dt_match,
+> +	},
+> +	.probe =3D rm3100_probe,
+> +};
+> +module_spi_driver(rm3100_driver);
+> +
+> +MODULE_AUTHOR("Song Qiang <songqiang1304521@gmail.com>");
+> +MODULE_DESCRIPTION("PNI RM3100 3-axis magnetometer spi driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/iio/magnetometer/rm3100.h b/drivers/iio/magnetometer=
+/rm3100.h
+> new file mode 100644
+> index 000000000000..c3508218bc77
+> --- /dev/null
+> +++ b/drivers/iio/magnetometer/rm3100.h
+> @@ -0,0 +1,17 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2018 Song Qiang <songqiang1304521@gmail.com>
+> + */
+> +
+> +#ifndef RM3100_CORE_H
+> +#define RM3100_CORE_H
+> +
+> +#include <linux/regmap.h>
+> +
+> +extern const struct regmap_access_table rm3100_readable_table;
+> +extern const struct regmap_access_table rm3100_writable_table;
+> +extern const struct regmap_access_table rm3100_volatile_table;
+> +
+> +int rm3100_common_probe(struct device *dev, struct regmap *regmap, int i=
+rq);
+> +
+> +#endif /* RM3100_CORE_H */
