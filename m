@@ -1,146 +1,141 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH RFC] bluetooth: add uart h4 devices via serdev/devicetree
-Date: Sun, 11 Nov 2018 00:20:34 +0100
-Message-ID: <20181110232034.17277-1-andreas@kemnade.info>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH 01/12] dt-bindings: soc: qcom: add IPA bindings
+Date: Sat, 10 Nov 2018 19:40:03 -0600
+Message-ID: <CAL_JsqL=CZR-SMwkk43hfZXcts0FYnsuZASg-RdyzASyMBCGmQ@mail.gmail.com>
+References: <20181107003250.5832-1-elder@linaro.org> <20181107003250.5832-2-elder@linaro.org>
+ <CABGGiswmpmSUmg9jEW7GnNtL2uXAN7jJOqFO5kG8adq71GuZpw@mail.gmail.com> <a4c9f0f8-d7c7-2756-cfdf-b67ce9f1ca3b@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a4c9f0f8-d7c7-2756-cfdf-b67ce9f1ca3b@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: marcel@holtmann.org, johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, letux-kernel@openphoenux.org
-Cc: Andreas Kemnade <andreas@kemnade.info>
+To: Alex Elder <elder@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Miller <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, ilias.apalodimas@linaro.org, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, syadagir@codeaurora.org, mjavid@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-This is a first try to be able to use h4 devices specified in
-the devicetree, so you do not need to call hciattach and
-it can be automatically probed.
+On Fri, Nov 9, 2018 at 4:38 PM Alex Elder <elder@linaro.org> wrote:
+>
+> On 11/7/18 8:59 AM, Rob Herring wrote:
+> > On Tue, Nov 6, 2018 at 6:33 PM Alex Elder <elder@linaro.org> wrote:
+> >>
+> >> Add the binding definitions for the "qcom,ipa" and "qcom,rmnet-ipa"
+> >> device tree nodes.
+> >>
+> >> Signed-off-by: Alex Elder <elder@linaro.org>
+> >> ---
+> >>  .../devicetree/bindings/soc/qcom/qcom,ipa.txt | 136 ++++++++++++++++++
+> >>  .../bindings/soc/qcom/qcom,rmnet-ipa.txt      |  15 ++
+> >>  2 files changed, 151 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,ipa.txt
+> >>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,rmnet-ipa.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,ipa.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,ipa.txt
+> >> new file mode 100644
+> >> index 000000000000..d4d3d37df029
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,ipa.txt
+> >> @@ -0,0 +1,136 @@
+> >> +Qualcomm IPA (IP Accelerator) Driver
+> >
+> > Bindings are for h/w not drivers.
+>
+> OK.  I'll drop " Driver".
+>
+> >> +
+> >> +This binding describes the Qualcomm IPA.  The IPA is capable of offloading
+> >> +certain network processing tasks (e.g. filtering, routing, and NAT) from
+> >> +the main processor.  The IPA currently serves only as a network interface,
+> >> +providing access to an LTE network available via a modem.
+> >> +
+> >> +The IPA sits between multiple independent "execution environments,"
+> >> +including the AP subsystem (APSS) and the modem.  The IPA presents
+> >> +a Generic Software Interface (GSI) to each execution environment.
+> >> +The GSI is an integral part of the IPA, but it is logically isolated
+> >> +and has a distinct interrupt and a separately-defined address space.
+> >> +
+> >> +    ----------   -------------   ---------
+> >> +    |        |   |G|       |G|   |       |
+> >> +    |  APSS  |===|S|  IPA  |S|===| Modem |
+> >> +    |        |   |I|       |I|   |       |
+> >> +    ----------   -------------   ---------
+> >> +
+> >> +See also:
+> >> +  bindings/interrupt-controller/interrupts.txt
+> >> +  bindings/interconnect/interconnect.txt
+> >> +  bindings/soc/qcom/qcom,smp2p.txt
+> >> +  bindings/reserved-memory/reserved-memory.txt
+> >> +  bindings/clock/clock-bindings.txt
+> >> +
+> >> +All properties defined below are required.
+> >> +
+> >> +- compatible:
+> >> +       Must be one of the following compatible strings:
+> >> +               "qcom,ipa-sdm845-modem_init"
+> >> +               "qcom,ipa-sdm845-tz_init"
+> >
+> > Normal order is <vendor>,<soc>-<ipblock>."
+>
+> I'll use "qcom,sdm845-ipa-modem-init" and "qcom,sdm845-ipa-tz-init".
+> (Or just "qcom,sdm845-ipa", depending on the outcome of the discussion
+> below.)
+>
+> > Don't use '_'.
+>
+> OK.
+>
+> > What's the difference between these 2? It can't be detected somehow?
+>
+> There is some early initialization, including loading some firmware,
+> that must be done by trusted code.  That can be done by either Trust
+> Zone or the modem.  If it's done by the modem, there is an additional
+> step required during initialization so the modem can tell the AP
+> that it has done its part, and the AP can finish IPA initialization.
+>
+> There  is no way of detecting (e.g. by probing hardware) which is
+> in effect so we use DT.  I discussed this with Bjorn, who said that
+> this was a situation seen elsewhere and that using compatible strings
+> was the way he suggested to address it.
 
-Of course, proper devicetree bindings documentation is
-missing. And also you would extend that by regulator/
-enable gpio settings.
+Okay. However, if this is common for QCom blocks maybe we should
+reconsider. I think compatible makes sense if the programming model
+changes.
 
-But before proceeding further it should be checked if the
-general way of doing things is right.
+> > This might be better expressed as a property. Then if Trustzone
+> > initializes things, it can just add a property.
+>
+> A Boolean property to distinguish them would be fine as well, but
+> I would like to address this "common" problem consistently.
+>
+> Bjorn, would you please weigh in?
+>
+> >> +
+> >> +-reg:
+> >> +       Resources specyfing the physical address spaces of the IPA and GSI.
+> >
+> > typo
+> >
+> >> +
+> >> +-reg-names:
+> >> +       The names of the address space ranges defined by the "reg" property.
+> >> +       Must be "ipa" and "gsi".
+> >> +
+> >> +- interrupts-extended:
+> >
+> > Use 'interrupts' here and describe what they are and the order. What
+> > they are connected to (and the need for interrupts-extended) is
+> > outside the scope of this binding.
+>
+> I used interrupts-extended because there were two interrupt parents
+> (a "normal" interrupt controller and the interrupt controller implemented
+> for SMP2P input).  A paragraph here:
+>     bindings/interrupt-controller/interrupts.txt
+> recommends "interrupts-extended" in that case.
+>
+> I have no objection to using just "interrupts" but can you tell me what
+> I misunderstood?  It seems like I need to do "interrupts-extended".
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
- drivers/bluetooth/hci_h4.c | 78 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
+Yes, in the dts you should use interrupts-extended. However, for
+documentation purposes that aspect is not important. So we just use
+interrupts most everywhere.
 
-diff --git a/drivers/bluetooth/hci_h4.c b/drivers/bluetooth/hci_h4.c
-index fb97a3bf069b..8df0611d976c 100644
---- a/drivers/bluetooth/hci_h4.c
-+++ b/drivers/bluetooth/hci_h4.c
-@@ -39,6 +39,8 @@
- #include <linux/string.h>
- #include <linux/signal.h>
- #include <linux/ioctl.h>
-+#include <linux/of.h>
-+#include <linux/serdev.h>
- #include <linux/skbuff.h>
- #include <asm/unaligned.h>
- 
-@@ -47,6 +49,11 @@
- 
- #include "hci_uart.h"
- 
-+struct h4_device {
-+	struct hci_uart hu;
-+	bool flow;
-+};
-+
- struct h4_struct {
- 	struct sk_buff *rx_skb;
- 	struct sk_buff_head txq;
-@@ -146,9 +153,76 @@ static struct sk_buff *h4_dequeue(struct hci_uart *hu)
- 	return skb_dequeue(&h4->txq);
- }
- 
-+#if IS_ENABLED(CONFIG_SERIAL_DEV_BUS)
-+static int h4_setup(struct hci_uart *hu)
-+{
-+	struct h4_device *h4dev;
-+	struct serdev_device *serdev = hu->serdev;
-+
-+	if (!serdev)
-+		return 0;
-+
-+	h4dev = serdev_device_get_drvdata(serdev);
-+
-+	serdev_device_set_flow_control(serdev, h4dev->flow);
-+
-+	return 0;
-+}
-+
-+static const struct hci_uart_proto h4p;
-+
-+static int hci_h4_probe(struct serdev_device *serdev)
-+{
-+	struct hci_uart *hu;
-+	struct h4_device *h4dev;
-+	u32 speed = 3000000;
-+
-+	h4dev = devm_kzalloc(&serdev->dev, sizeof(struct h4_device),
-+			     GFP_KERNEL);
-+	if (!h4dev)
-+		return -ENOMEM;
-+	hu = &h4dev->hu;
-+
-+	serdev_device_set_drvdata(serdev, h4dev);
-+	hu->serdev = serdev;
-+
-+	h4dev->flow = of_property_read_bool(serdev->dev.of_node, "flow");
-+
-+	of_property_read_u32(serdev->dev.of_node, "speed", &speed);
-+	hci_uart_set_speeds(hu, speed, speed);
-+
-+	return hci_uart_register_device(hu, &h4p);
-+}
-+
-+static void hci_h4_remove(struct serdev_device *serdev)
-+{
-+	struct h4_device *h4dev = serdev_device_get_drvdata(serdev);
-+
-+	hci_uart_unregister_device(&h4dev->hu);
-+}
-+
-+static const struct of_device_id hci_h4_of_match[] = {
-+	{ .compatible = "wi2wi,w2cbw003-bluetooth"},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, hci_h4_of_match);
-+
-+static struct serdev_device_driver hci_h4_drv = {
-+	.driver		= {
-+		.name	= "hci-h4",
-+		.of_match_table = of_match_ptr(hci_h4_of_match),
-+	},
-+	.probe = hci_h4_probe,
-+	.remove = hci_h4_remove
-+};
-+#else
-+#define h4_setup NULL
-+#endif
-+
- static const struct hci_uart_proto h4p = {
- 	.id		= HCI_UART_H4,
- 	.name		= "H4",
-+	.setup		= h4_setup,
- 	.open		= h4_open,
- 	.close		= h4_close,
- 	.recv		= h4_recv,
-@@ -159,11 +233,15 @@ static const struct hci_uart_proto h4p = {
- 
- int __init h4_init(void)
- {
-+	serdev_device_driver_register(&hci_h4_drv);
-+
- 	return hci_uart_register_proto(&h4p);
- }
- 
- int __exit h4_deinit(void)
- {
-+	serdev_device_driver_unregister(&hci_h4_drv);
-+
- 	return hci_uart_unregister_proto(&h4p);
- }
- 
--- 
-2.11.0
+Rob
