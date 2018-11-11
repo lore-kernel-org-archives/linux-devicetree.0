@@ -1,7 +1,7 @@
 From: Robert Jarzmik <robert.jarzmik@free.fr>
 Subject: Re: [PATCH v4] ARM: dts: pxa: add mioa701 board description
-Date: Sun, 11 Nov 2018 22:12:06 +0100
-Message-ID: <874lcnl3o9.fsf@belgarion.home>
+Date: Sun, 11 Nov 2018 22:12:53 +0100
+Message-ID: <8736s7l3my.fsf@belgarion.home>
 References: <20180915110206.23110-1-robert.jarzmik@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain
