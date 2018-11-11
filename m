@@ -1,76 +1,74 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH] power: reset: gpio-poweroff: add ability to specific active and inactive delays
-Date: Sun, 11 Nov 2018 22:45:38 +0100
-Message-ID: <20181111214538.32477-1-heiko@sntech.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sre@kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mdf@kernel.org, heiko@sntech.de, Heiko Stuebner <heiko.stuebner@bq.com>
+From: Palmer Dabbelt <palmer@sifive.com>
+Subject: Re: [PATCH] OF: Add a warning in case chosen node is not present
+Date: Sun, 11 Nov 2018 13:52:06 -0800 (PST)
+Message-ID: <mhng-e3979636-81f8-42d6-b810-eeed6786d4bb@palmer-si-x1c4>
+References: <20181110005317.5631-1-mick@ics.forth.gr>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181110005317.5631-1-mick@ics.forth.gr>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+Cc: mick@ics.forth.gr, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, robh+dt@kernel.org, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@bq.com>
+On Fri, 09 Nov 2018 16:53:17 PST (-0800), mick@ics.forth.gr wrote:
+> On architectures that only get their bootargs through devicetree's
+> chosen node (such as RISC-V), that node is mandatory. After a
+> discussion with Rob [1] I'm adding a warning in case chosen node
+> is not present, to let users know about it.
+>
+> [1]: https://patchwork.ozlabs.org/patch/984224/#2016136
+>
+> Signed-off-by: Nick Kossifidis <mick@ics.forth.gr>
+> ---
+>  drivers/of/fdt.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index bb532aae0d92..7ff67bf1f6d6 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -1200,8 +1200,12 @@ bool __init early_init_dt_verify(void *params)
+>
+>  void __init early_init_dt_scan_nodes(void)
+>  {
+> +	int rc = 0;
+> +
+>  	/* Retrieve various information from the /chosen node */
+> -	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
+> +	rc = of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
+> +	if (!rc)
+> +		pr_warn("No chosen node found, continuing without\n");
+>
+>  	/* Initialize {size,address}-cells info */
+>  	of_scan_flat_dt(early_init_dt_scan_root, NULL);
 
-Similar to gpio-reset allow to specify active and inactive delays
-while keeping the 100ms defaults that were used previously all the time.
+Thanks!  Note that in our case we actually ignore the built-in boot arguments 
+without a /chosen node, which isn't clear to me from the message.  I'm not sure 
+if it's sane to warn everyone of this, but it was decided that RISC-V should 
+have this behavior because it's all standard code.
 
-The dt-properties are named the same as in gpio-reset but get an "-ms"
-suffix as properties should contain such a suffix specifying its unit.
+In other words, it might be worth adding some sort of 
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
----
- .../devicetree/bindings/power/reset/gpio-poweroff.txt  |  2 ++
- drivers/power/reset/gpio-poweroff.c                    | 10 ++++++++--
- 2 files changed, 10 insertions(+), 2 deletions(-)
+    #ifdef CONFIG_CMDLINE
+        pr_warn("Due to the lack of a /chosen node, we're also ignoring your builtin kernel command-line\n");
+    #endif
 
-diff --git a/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt b/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
-index 6d8980c18c34..3e56c1b34a4c 100644
---- a/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
-+++ b/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
-@@ -27,6 +27,8 @@ Optional properties:
-   it to an output when the power-off handler is called. If this optional
-   property is not specified, the GPIO is initialized as an output in its
-   inactive state.
-+- active-delay-ms: Delay (default 100) to wait after driving gpio active
-+- inactive-delay-ms: Delay (default 100) to wait after driving gpio inactive
- - timeout-ms: Time to wait before asserting a WARN_ON(1). If nothing is
-               specified, 3000 ms is used.
- 
-diff --git a/drivers/power/reset/gpio-poweroff.c b/drivers/power/reset/gpio-poweroff.c
-index 38206c39b3bf..52525b6c18db 100644
---- a/drivers/power/reset/gpio-poweroff.c
-+++ b/drivers/power/reset/gpio-poweroff.c
-@@ -26,6 +26,8 @@
-  */
- static struct gpio_desc *reset_gpio;
- static u32 timeout = DEFAULT_TIMEOUT_MS;
-+static u32 active_delay = 100;
-+static u32 inactive_delay = 100;
- 
- static void gpio_poweroff_do_poweroff(void)
- {
-@@ -33,10 +35,11 @@ static void gpio_poweroff_do_poweroff(void)
- 
- 	/* drive it active, also inactive->active edge */
- 	gpiod_direction_output(reset_gpio, 1);
--	mdelay(100);
-+	mdelay(active_delay);
-+
- 	/* drive inactive, also active->inactive edge */
- 	gpiod_set_value_cansleep(reset_gpio, 0);
--	mdelay(100);
-+	mdelay(inactive_delay);
- 
- 	/* drive it active, also inactive->active edge */
- 	gpiod_set_value_cansleep(reset_gpio, 1);
-@@ -66,6 +69,9 @@ static int gpio_poweroff_probe(struct platform_device *pdev)
- 	else
- 		flags = GPIOD_OUT_LOW;
- 
-+	device_property_read_u32(&pdev->dev, "active-delay-ms", &active_delay);
-+	device_property_read_u32(&pdev->dev, "inactive-delay-ms",
-+				 &inactive_delay);
- 	device_property_read_u32(&pdev->dev, "timeout-ms", &timeout);
- 
- 	reset_gpio = devm_gpiod_get(&pdev->dev, NULL, flags);
--- 
-2.18.0
+though that wording is, of course, a bit poor :).
+
+Either way, 
+
+Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+
+as this is better than nothing!  Now I can just point users to the error and 
+tell them that, obviously, they should know what it means --  I just hope I can 
+remember :)
