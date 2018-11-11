@@ -1,108 +1,65 @@
-Return-Path: <SRS0=mdyH=NS=arm.com=sudeep.holla@kernel.org>
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH] dt-bindings: cpufreq: remove stale arm_big_little_dt entry
-Date: Wed,  7 Nov 2018 17:40:58 +0000
-Message-Id: <20181107174058.4131-1-sudeep.holla@arm.com>
-To: linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Return-Path: <jic23@kernel.org>
+Date: Sun, 11 Nov 2018 17:07:08 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH] iio: potentiometer: Add driver for Microchip
+ MCP41xxx/42xxx
+Message-ID: <20181111170708.5dbda253@archlinux>
+In-Reply-To: <1d5f47e8-b69c-e40f-9b4f-7423ee485747@axentia.se>
+References: <20181106113130.9612-1-cmc@babblebit.net>
+	<6f3ead94-b1ed-900d-b675-3822d67dbfd7@axentia.se>
+	<20181111145530.2463b9c3@archlinux>
+	<1d5f47e8-b69c-e40f-9b4f-7423ee485747@axentia.se>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Peter Rosin <peda@axentia.se>
+Cc: Chris Coffey <cmc@babblebit.net>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Slawomir Stepien <sst@poczta.fm>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Most of the ARM platforms used v2 OPP bindings to support big-little
-configurations. This arm_big_little_dt binding is incomplete and was
-never used.
+On Sun, 11 Nov 2018 16:49:28 +0000
+Peter Rosin <peda@axentia.se> wrote:
 
-Commit f174e49e4906 ("cpufreq: remove unused arm_big_little_dt driver")
-removes the driver supporting this binding. However the binding was left
-unnoticed, so let's get rid of it now.
+> On 2018-11-11 15:55, Jonathan Cameron wrote:
+> > On Tue, 6 Nov 2018 16:37:11 +0000
+> > Peter Rosin <peda@axentia.se> wrote:
+> >   
+> >> Hi!
+> >>
+> >> Some comments inline...  
+> > A few additions from me.  
+> 
+> *snip*
+> 
+> >>> +	data = iio_priv(indio_dev);
+> >>> +	spi_set_drvdata(spi, indio_dev);
+> >>> +	data->spi = spi;
+> >>> +	data->cfg = &mcp41010_cfg[devid];    
+> >>
+> >> I'm missing a "of_device_get_match_data(dev)" call somewhere in here, see e.g. the
+> >> max5481.c file in this directory. Yes, that's missing from the mcp4131 driver as
+> >> well, but that's not a valid reason for not doing it here AFAICT...  
+> > If you want to use the data elements from the devicetree bindings you'll need
+> > to do that.  However, there is an odd path that actually means it will fall back
+> > to getting the right thing as you have it here.
+> > spi_get_device_id calls spi_match_id which compares the sdev->modalias
+> > with the id table names.  modalias has been carefully constructed
+> > to be the text after the comma only and as such this works as is.
+> > 
+> > Perhaps it's neater though to just use the devicetree access functions.  
+> 
+> Isn't that part about not looking at the vendor-part of the DT-compatible slightly
+> fragile? Or will modalias/chip-number clashes be detected by something?
+Yes :)
 
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- .../bindings/cpufreq/arm_big_little_dt.txt    | 65 -------------------
- 1 file changed, 65 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/cpufreq/arm_big_little_dt.txt
+Well actually in this case not so bad.
 
-Hi,
+It will use a match on the of_device_id to find which driver to probe if there is
+one. The modalias part is only being abused to then figure out which device we
+have within the driver.
 
-For some reason, I didn't expect the driver to have an entry in the
-DT bindings and didn't look at it before. While I was searching references
-to big-little that can be removed, I spotted this. Sorry for that.
+I definitely prefer the explicit route.  Just wanted to point out it 'worked'
+:)
 
-Regards,
-Sudeep
-
-diff --git a/Documentation/devicetree/bindings/cpufreq/arm_big_little_dt.txt b/Documentation/devicetree/bindings/cpufreq/arm_big_little_dt.txt
-deleted file mode 100644
-index 2aa06ac0fac5..000000000000
---- a/Documentation/devicetree/bindings/cpufreq/arm_big_little_dt.txt
-+++ /dev/null
-@@ -1,65 +0,0 @@
--Generic ARM big LITTLE cpufreq driver's DT glue
-------------------------------------------------
--
--This is DT specific glue layer for generic cpufreq driver for big LITTLE
--systems.
--
--Both required and optional properties listed below must be defined
--under node /cpus/cpu@x. Where x is the first cpu inside a cluster.
--
--FIXME: Cpus should boot in the order specified in DT and all cpus for a cluster
--must be present contiguously. Generic DT driver will check only node 'x' for
--cpu:x.
--
--Required properties:
--- operating-points: Refer to Documentation/devicetree/bindings/opp/opp.txt
--  for details
--
--Optional properties:
--- clock-latency: Specify the possible maximum transition latency for clock,
--  in unit of nanoseconds.
--
--Examples:
--
--cpus {
--	#address-cells = <1>;
--	#size-cells = <0>;
--
--	cpu@0 {
--		compatible = "arm,cortex-a15";
--		reg = <0>;
--		next-level-cache = <&L2>;
--		operating-points = <
--			/* kHz    uV */
--			792000  1100000
--			396000  950000
--			198000  850000
--		>;
--		clock-latency = <61036>; /* two CLK32 periods */
--	};
--
--	cpu@1 {
--		compatible = "arm,cortex-a15";
--		reg = <1>;
--		next-level-cache = <&L2>;
--	};
--
--	cpu@100 {
--		compatible = "arm,cortex-a7";
--		reg = <100>;
--		next-level-cache = <&L2>;
--		operating-points = <
--			/* kHz    uV */
--			792000  950000
--			396000  750000
--			198000  450000
--		>;
--		clock-latency = <61036>; /* two CLK32 periods */
--	};
--
--	cpu@101 {
--		compatible = "arm,cortex-a7";
--		reg = <101>;
--		next-level-cache = <&L2>;
--	};
--};
--- 
-2.17.1
+> 
+> Cheers,
+> Peter
