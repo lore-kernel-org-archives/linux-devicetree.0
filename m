@@ -1,45 +1,63 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v6 8/9] EDAC: Add driver for the Marvell Armada XP SDRAM
- and L2 cache ECC
-Date: Sun, 11 Nov 2018 20:40:24 +0100
-Message-ID: <20181111194024.GC31937@zn.tnic>
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH v6 5/9] dt-bindings: ARM: document marvell,ecc-enable
+ binding
+Date: Sun, 11 Nov 2018 19:57:51 +0000
+Message-ID: <a07fead828b8452bb37708180dd721d4@svr-chch-ex1.atlnz.lc>
 References: <20181109070349.20464-1-chris.packham@alliedtelesis.co.nz>
- <20181109070349.20464-9-chris.packham@alliedtelesis.co.nz>
+ <20181109070349.20464-6-chris.packham@alliedtelesis.co.nz>
+ <CAK8P3a3PNvBhyQw0bfGxKmxj+KeJB2_TXtDx2R1BpjTCYNqVkA@mail.gmail.com>
+ <20181109114818.GB30658@n2100.armlinux.org.uk>
+ <CAK8P3a26XmBpG3VzwUgSdd_Xo_S2ezSvA9mjKckRFr9p38j-dg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181109070349.20464-9-chris.packham@alliedtelesis.co.nz>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: linux@armlinux.org.uk, arnd@arndb.de, jlu@pengutronix.de, gregory.clement@bootlin.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>, Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Borislav Petkov <bp@alien8.de>, "jlu@pengutronix.de" <jlu@pengutronix.de>, Gregory CLEMENT <gregory.clement@bootlin.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, DTML <devicetree@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 09, 2018 at 08:03:48PM +1300, Chris Packham wrote:
-> From: Jan Luebbe <jlu@pengutronix.de>
-> 
-> Add support for the ECC functionality as found in the DDR RAM and L2
-> cache controllers on the MV78230/MV78x60 SoCs. This driver has been
-> tested on the MV78460 (on a custom board with a DDR3 ECC DIMM).
-> 
-> Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
-> [cp use SPDX license]
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
->  MAINTAINERS                   |   6 +
->  drivers/edac/Kconfig          |   7 +
->  drivers/edac/Makefile         |   1 +
->  drivers/edac/armada_xp_edac.c | 630 ++++++++++++++++++++++++++++++++++
->  4 files changed, 644 insertions(+)
->  create mode 100644 drivers/edac/armada_xp_edac.c
-
-Looks ok at a glance. Those overly long lines could use some macros or
-breaking but it is not a big deal:
-
-Reviewed-by: Borislav Petkov <bp@suse.de>
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+On 10/11/18 4:58 AM, Arnd Bergmann wrote:=0A=
+> On Fri, Nov 9, 2018 at 12:48 PM Russell King - ARM Linux=0A=
+> <linux@armlinux.org.uk> wrote:=0A=
+>>=0A=
+>> On Fri, Nov 09, 2018 at 12:40:06PM +0100, Arnd Bergmann wrote:=0A=
+>>> On Fri, Nov 9, 2018 at 8:04 AM Chris Packham=0A=
+>>> <chris.packham@alliedtelesis.co.nz> wrote:=0A=
+>>>>=0A=
+>>>> Add documentation for the marvell,ecc-enable and marvell,ecc-disable=
+=0A=
+>>>> properties which can be used to enable/disable ECC on the Marvell auro=
+ra=0A=
+>>>> cache.=0A=
+>>>>=0A=
+>>>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
+>>>> ---=0A=
+>>>=0A=
+>>> Why do you need both enable and disable? Wouldn't one of them be enough=
+ here?=0A=
+>>=0A=
+>> It isn't an "on when ecc-enable is present, off when not" because the=0A=
+>> current behaviour is to preserve these bits in the control register.=0A=
+>>=0A=
+>> If we were to implement it as "if no ecc-enable property, turn off=0A=
+>> ECC" then that would drastically change the behaviour - systems which=0A=
+>> were configured for ECC suddenly lose ECC support.=0A=
+>>=0A=
+>> Since we don't know which have it and which don't, we can't implement=0A=
+>> the option like that.=0A=
+> =0A=
+> What I meant was why we need support force-disabling it. I understand=0A=
+> that we need to allow leaving it at the boot-time default as well as=0A=
+> force-enabling it.=0A=
+=0A=
+I added ecc-disable because I was modeling it after =0A=
+arm,parity-enable/arm,parity-disable. The only reason I can imagine =0A=
+wanting to force disable this would be some mis-behaving SoC which has =0A=
+it enabled by default in hardware, to my knowledge no such system exists =
+=0A=
+(that would use this driver).=0A=
+=0A=
+I'd be happy to drop the binding an implementation and send a v7 if you =0A=
+feel strongly that it marvell,ecc-disable should be removed.=0A=
