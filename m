@@ -1,58 +1,80 @@
 Return-Path: <SRS0=dUsd=NW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36577 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727950AbeKLAE0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 11 Nov 2018 19:04:26 -0500
-Received: by mail-wm1-f68.google.com with SMTP id v70-v6so5378444wmd.1
-        for <devicetree@vger.kernel.org>; Sun, 11 Nov 2018 06:15:44 -0800 (PST)
-From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Subject: [PATCH v2 0/9] add i2c controller support to st_lsm6dsx driver
-Date: Sun, 11 Nov 2018 15:15:27 +0100
-Message-Id: <cover.1541945612.git.lorenzo.bianconi@redhat.com>
+Received: from mail.kernel.org ([198.145.29.99]:36020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728802AbeKLCCt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 11 Nov 2018 21:02:49 -0500
+Date: Sun, 11 Nov 2018 16:13:48 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 2/9] iio: imu: st_lsm6dsx: reload trimming parameter
+ at bootstrap
+Message-ID: <20181111161348.1dc61ab6@archlinux>
+In-Reply-To: <9b47f1429ddec5144d52605ef0ccf1f15a310db4.1541945612.git.lorenzo.bianconi@redhat.com>
+References: <cover.1541945612.git.lorenzo.bianconi@redhat.com>
+        <9b47f1429ddec5144d52605ef0ccf1f15a310db4.1541945612.git.lorenzo.bianconi@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: jic23@kernel.org
+To: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
 Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Introduce i2c controller support to st_lsm6dsx driver for lsm6dso sensor.
-st_lsm6dsx sensor-hub supports up to 3 concurrent slave devices.
-Add register map for lis2mdl magnetometer sensor.
-Add hw FIFO support to st_lsm6dsx sensorhub driver.
+On Sun, 11 Nov 2018 15:15:29 +0100
+Lorenzo Bianconi <lorenzo.bianconi@redhat.com> wrote:
 
-Changes since v1:
-- move back st_lsm6dsx_set_fifo_mode routine in fifo_lock critical section
-  in st_lsm6dsx_flush_fifo
-- improve documentation
-- move st_lsm6dsx_sensor_set_enable definition in a separated patch
-- move st_lsm6dsx_push_tagged_data definition in a separated patch
-- use proper ts_ref for ext devices in st_lsm6dsx_push_tagged_data
-- fix invalid iio_dev identification in st_lsm6dsx_push_tagged_data
-  when ST_LSM6DSX_EXT1_TAG is read from the FIFO
-- refactor st_lsm6dsx_shub_probe moving wai check in a dedicated routine
-- fix abi issue in scale_available definition
+> Perform a complete device reset at bootstrap reloading trimming parameter
+> after sw reset is completed. Device sw reset/boot is explained here:
+> https://www.st.com/resource/en/application_note/dm00517282.pdf,
+> section 5.7
+> 
+> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
 
-Lorenzo Bianconi (9):
-  iio: imu: st_lsm6dsx: introduce locked read/write utility routines
-  iio: imu: st_lsm6dsx: reload trimming parameter at bootstrap
-  iio: imu: st_lsm6dsx: remove static from st_lsm6dsx_set_watermark
-  iio: imu: st_lsm6dsx: introduce ST_LSM6DSX_ID_EXT sensor ids
-  iio: imu: st_lsm6dsx: introduce st_lsm6dsx_sensor_set_enable routine
-  iio: imu: st_lsm6dsx: add i2c embedded controller support
-  iio: imu: st_lsm6dsx: add st_lsm6dsx_push_tagged_data routine
-  iio: imu: st_lsm6dsx: add hw FIFO support to i2c controller
-  dt-bindings: iio: imu: st_lsm6dsx: add support to i2c pullup resistors
+Thanks,
 
- .../bindings/iio/imu/st_lsm6dsx.txt           |   1 +
- drivers/iio/imu/st_lsm6dsx/Makefile           |   3 +-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h       | 167 +++-
- .../iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c    | 165 ++--
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c  | 283 +++++--
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c  | 777 ++++++++++++++++++
- .../linux/platform_data/st_sensors_pdata.h    |   2 +
- 7 files changed, 1263 insertions(+), 135 deletions(-)
- create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
+Jonathan
 
--- 
-2.19.1
+> ---
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> index c8b993bea757..961ce9d65d82 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> @@ -56,6 +56,7 @@
+>  #define ST_LSM6DSX_REG_WHOAMI_ADDR		0x0f
+>  #define ST_LSM6DSX_REG_RESET_ADDR		0x12
+>  #define ST_LSM6DSX_REG_RESET_MASK		BIT(0)
+> +#define ST_LSM6DSX_REG_BOOT_MASK		BIT(7)
+>  #define ST_LSM6DSX_REG_BDU_ADDR			0x12
+>  #define ST_LSM6DSX_REG_BDU_MASK			BIT(6)
+>  #define ST_LSM6DSX_REG_INT2_ON_INT1_ADDR	0x13
+> @@ -778,12 +779,23 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
+>  	u8 drdy_int_reg;
+>  	int err;
+>  
+> -	err = regmap_write(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
+> -			   ST_LSM6DSX_REG_RESET_MASK);
+> +	/* device sw reset */
+> +	err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
+> +				 ST_LSM6DSX_REG_RESET_MASK,
+> +				 FIELD_PREP(ST_LSM6DSX_REG_RESET_MASK, 1));
+>  	if (err < 0)
+>  		return err;
+>  
+> -	msleep(200);
+> +	msleep(50);
+> +
+> +	/* reload trimming parameter */
+> +	err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
+> +				 ST_LSM6DSX_REG_BOOT_MASK,
+> +				 FIELD_PREP(ST_LSM6DSX_REG_BOOT_MASK, 1));
+> +	if (err < 0)
+> +		return err;
+> +
+> +	msleep(50);
+>  
+>  	/* enable Block Data Update */
+>  	err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_BDU_ADDR,
