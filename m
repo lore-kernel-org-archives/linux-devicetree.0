@@ -1,60 +1,80 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v6 2/3] iio: magnetometer: Add DT support for PNI RM3100
-Date: Sun, 11 Nov 2018 14:24:35 +0000
-Message-ID: <20181111142435.136f420e@archlinux>
-References: <20181108092749.12167-1-songqiang1304521@gmail.com>
-        <20181108092749.12167-3-songqiang1304521@gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 05/24] dt-bindings: sc27xx-blt: Add function and color
+ properties
+Date: Sun, 11 Nov 2018 15:29:41 +0100
+Message-ID: <20181111142941.GA5215@amd>
+References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
+ <1541542052-10081-6-git-send-email-jacek.anaszewski@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181108092749.12167-3-songqiang1304521@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1541542052-10081-6-git-send-email-jacek.anaszewski@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Song Qiang <songqiang1304521@gmail.com>
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, preid@electromag.com.au, himanshujha199640@gmail.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, Xiaotong Lu <xiaotong.lu@spreadtrum.com>, Baolin Wang <baolin.wang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  8 Nov 2018 17:27:48 +0800
-Song Qiang <songqiang1304521@gmail.com> wrote:
 
-> Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+--C7zPtVaVf+AK4Oqc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
+On Tue 2018-11-06 23:07:13, Jacek Anaszewski wrote:
+> Refer to new "function" and "color" properties and mark "label"
+> as deprecated.
+>=20
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+> Cc: Baolin Wang <baolin.wang@linaro.org>
 
-Thanks,
+Don't you want to keep both color and label? New dts on old kernel
+should still work...?
 
-Jonathan
+Ok, I see these are only examples....
 
-> ---
->  .../bindings/iio/magnetometer/pni,rm3100.txt  | 20 +++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt b/Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt
-> new file mode 100644
-> index 000000000000..497c932e9e39
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt
-> @@ -0,0 +1,20 @@
-> +* PNI RM3100 3-axis magnetometer sensor
-> +
-> +Required properties:
-> +
-> +- compatible : should be "pni,rm3100"
-> +- reg : the I2C address or SPI chip select number of the sensor.
-> +
-> +Optional properties:
-> +
-> +- interrupts: data ready (DRDY) from the chip.
-> +  The interrupts can be triggered on level high.
-> +
-> +Example:
-> +
-> +rm3100: rm3100@20 {
-> +	compatible = "pni,rm3100";
-> +	reg = <0x20>;
-> +	interrupt-parent = <&gpio0>;
-> +	interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
-> +};
+								Pavel
+
+
+> @@ -25,17 +27,17 @@ led-controller@200 {
+>  	reg =3D <0x200>;
+> =20
+>  	led@0 {
+> -		label =3D "red";
+> +		color =3D "red";
+>  		reg =3D <0x0>;
+>  	};
+> =20
+>  	led@1 {
+> -		label =3D "green";
+> +		color =3D "green";
+>  		reg =3D <0x1>;
+>  	};
+> =20
+>  	led@2 {
+> -		label =3D "blue";
+> +		color =3D "blue";
+>  		reg =3D <0x2>;
+>  	};
+>  };
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--C7zPtVaVf+AK4Oqc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlvoPNUACgkQMOfwapXb+vKuwQCfb+wupIpbOy21flY+y3H9dWuV
+Sl0AoLchTRSfoLQGrDsanAPqL1g176X4
+=jS8d
+-----END PGP SIGNATURE-----
+
+--C7zPtVaVf+AK4Oqc--
