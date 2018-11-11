@@ -1,103 +1,76 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH 03/24] leds: dt-bindings: Add LED_FUNCTION definitions
-Date: Sun, 11 Nov 2018 22:16:54 +0100
-Message-ID: <b4314757-51b7-62da-d7bc-f27980248797@gmail.com>
-References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
- <1541542052-10081-4-git-send-email-jacek.anaszewski@gmail.com>
- <20181111113157.GK27666@amd> <96296b4d-d49e-2b08-4306-196605a9f5dc@gmail.com>
- <20181111202056.GB20160@amd>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH] power: reset: gpio-poweroff: add ability to specific active and inactive delays
+Date: Sun, 11 Nov 2018 22:45:38 +0100
+Message-ID: <20181111214538.32477-1-heiko@sntech.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181111202056.GB20160@amd>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+To: sre@kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mdf@kernel.org, heiko@sntech.de, Heiko Stuebner <heiko.stuebner@bq.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/11/2018 09:20 PM, Pavel Machek wrote:
-> Hi!
-> 
->>>> +#define LED_FUNCTION_BACKLIGHT "backlight"
->>>> +#define LED_FUNCTION_BACKLIGHT_CLUSTER "backlight_cluster"
->>>
->>> Sounds like one of backlight and backlight_cluster should be deprecated?
->>
->> I think so.
-> 
-> Agreed.
-> 
->>>> +#define LED_FUNCTION_DEBUG "debug"
->>>> +#define LED_FUNCTION_DIA "dia"
->>>
->>> What does this one do?
->>
->> I'd opt for something like "diagnostics", but this is a blind shot.
->> Let's remove it then and, and let people add more meaningful
->> definition in case it is needed.
->>
->>>> +#define LED_FUNCTION_DISK "disk"
->>>
->>> We have disk, hd, hdd and sata. Deprecate some?
->>
->> Disk should be the best choice, especially given that we have
->> identically named trigger.
-> 
-> Ok.
-> 
->>>> +#define LED_FUNCTION_HD "hd"
->>>> +#define LED_FUNCTION_HDD "hdd"
->>>> +#define LED_FUNCTION_HDDERR "hdderr"
->>>
->>> Ok, I'll 
->>
->> Hmm?
-> 
-> I was going to say that I'll bring it up in different email.
-> 
-> I believe we should have disk:green:activity and disk:red:error, not
-> "green:hdd" and "red:hdderr".
+From: Heiko Stuebner <heiko.stuebner@bq.com>
 
-How would you propose to name the section corresponding to "disk",
-if "function" is occupied by "activity"? Should it deserve a separate
-DT property?
+Similar to gpio-reset allow to specify active and inactive delays
+while keeping the 100ms defaults that were used previously all the time.
 
->>>> +#define LED_FUNCTION_HEALTH "health"
->>>> +#define LED_FUNCTION_HEARTBEAT "heartbeat"
->>>
->>> Sounds same as alive, deprecate alive?
->>
->> Heartbeat may be designated specifically for registration
->> for events from the trigger with the same name.
-> 
-> Ok. What is "alive" then?
+The dt-properties are named the same as in gpio-reset but get an "-ms"
+suffix as properties should contain such a suffix specifying its unit.
 
-Tells whether something is active or not?
-In this case it seems to overlap with "pwr" probably.
+Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
+---
+ .../devicetree/bindings/power/reset/gpio-poweroff.txt  |  2 ++
+ drivers/power/reset/gpio-poweroff.c                    | 10 ++++++++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
->>>> +#define LED_FUNCTION_WIFI "wifi"
->>>> +#define LED_FUNCTION_WIRELESS "wireless"
->>>> +#define LED_FUNCTION_WLAN "wlan"
->>>
->>> Same as wifi and wireless, I guess, deprecate some?
->>
->> I'd remove "wireless" and "wlan".
-> 
-> Actually I'd keep wlan, but... :-).
-
-It may depend of the regional preferences.
-
-> We may want to do add some comments there, and sort it "most
-> common/recommended first" or something.
-> 
-> Best regards (and thanks for doing the work),
-
-I'm doing it also for myself to avoid extra lines for
-explaining the LED naming quirks every time a new driver
-is submitted :-)
-
+diff --git a/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt b/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
+index 6d8980c18c34..3e56c1b34a4c 100644
+--- a/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
++++ b/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
+@@ -27,6 +27,8 @@ Optional properties:
+   it to an output when the power-off handler is called. If this optional
+   property is not specified, the GPIO is initialized as an output in its
+   inactive state.
++- active-delay-ms: Delay (default 100) to wait after driving gpio active
++- inactive-delay-ms: Delay (default 100) to wait after driving gpio inactive
+ - timeout-ms: Time to wait before asserting a WARN_ON(1). If nothing is
+               specified, 3000 ms is used.
+ 
+diff --git a/drivers/power/reset/gpio-poweroff.c b/drivers/power/reset/gpio-poweroff.c
+index 38206c39b3bf..52525b6c18db 100644
+--- a/drivers/power/reset/gpio-poweroff.c
++++ b/drivers/power/reset/gpio-poweroff.c
+@@ -26,6 +26,8 @@
+  */
+ static struct gpio_desc *reset_gpio;
+ static u32 timeout = DEFAULT_TIMEOUT_MS;
++static u32 active_delay = 100;
++static u32 inactive_delay = 100;
+ 
+ static void gpio_poweroff_do_poweroff(void)
+ {
+@@ -33,10 +35,11 @@ static void gpio_poweroff_do_poweroff(void)
+ 
+ 	/* drive it active, also inactive->active edge */
+ 	gpiod_direction_output(reset_gpio, 1);
+-	mdelay(100);
++	mdelay(active_delay);
++
+ 	/* drive inactive, also active->inactive edge */
+ 	gpiod_set_value_cansleep(reset_gpio, 0);
+-	mdelay(100);
++	mdelay(inactive_delay);
+ 
+ 	/* drive it active, also inactive->active edge */
+ 	gpiod_set_value_cansleep(reset_gpio, 1);
+@@ -66,6 +69,9 @@ static int gpio_poweroff_probe(struct platform_device *pdev)
+ 	else
+ 		flags = GPIOD_OUT_LOW;
+ 
++	device_property_read_u32(&pdev->dev, "active-delay-ms", &active_delay);
++	device_property_read_u32(&pdev->dev, "inactive-delay-ms",
++				 &inactive_delay);
+ 	device_property_read_u32(&pdev->dev, "timeout-ms", &timeout);
+ 
+ 	reset_gpio = devm_gpiod_get(&pdev->dev, NULL, flags);
 -- 
-Best regards,
-Jacek Anaszewski
+2.18.0
