@@ -1,97 +1,57 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 02/24] leds: core: Add support for composing LED class
- device names
-Date: Sun, 11 Nov 2018 13:02:34 +0100
-Message-ID: <20181111120234.GA28794@amd>
-References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
- <1541542052-10081-3-git-send-email-jacek.anaszewski@gmail.com>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [PATCH] arm64: dts: allwinner: a64: Add mali node
+Date: Sun, 11 Nov 2018 13:18:11 +0100
+Message-ID: <20181111121811.21638-1-jernej.skrabec@siol.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1541542052-10081-3-git-send-email-jacek.anaszewski@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+To: maxime.ripard@bootlin.com, wens@csie.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, jernej.skrabec@siol.net
 List-Id: devicetree@vger.kernel.org
 
+A64 has Mali400 MP2 GPU. Add a node for it.
 
---x+6KMIRAuhnl3hBn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+---
+ This node and A64 GPU binary driver was tested with Kodi on LibreELEC.
 
-Hi!
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 22 +++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-> Add public led_compose_name() API for composing LED class device
-> name basing on fwnode_handle data. The function composes device name
-> according to either a new <color:function> pattern or the legacy
-> <devicename:color:function> pattern. The decision on using the
-> particular pattern is made basing on whether fwnode contains new
-> "function" and "color" properties, or the legacy "label" proeprty.
->=20
-> Backwards compatibility with in-driver hard-coded LED class device
-> names is assured thanks to the default_desc argument.
->=20
-> In case none of the aformentioned properties was found, then, for OF
-> nodes, the node name is adopted for LED class device name.
->=20
-
-> diff --git a/Documentation/leds/leds-class.txt b/Documentation/leds/leds-=
-class.txt
-> index 836cb16..e9009c4 100644
-> --- a/Documentation/leds/leds-class.txt
-> +++ b/Documentation/leds/leds-class.txt
-> @@ -43,7 +43,7 @@ LED Device Naming
-> =20
->  Is currently of the form:
-> =20
-> -"devicename:colour:function"
-> +"colour:function"
-> =20
-
-I don't think we want to do it in all cases.
-
-So, on my cellphone seeing lp5523:green:led is indeed not useful.
-
-But on notebook with usb keyboard attached, you need to keep the
-devicename to be able to distinguish capslock on internal keyboard and
-capslock on first USB keyboard and capslock on second USB keyboard.
-
-Taking look at the list of functions, here's stuff like "hdd" and
-"hdderr". I assume the first means hdd activity... If we can do it, it
-would be nicest to have "sda:green:activity" and maybe
-"sda:red:error". For a raid array with 8 drives...
-
-For example I have a router running linux. It has 4 lan ports, with
-correspondings LED, and an wan led.
-
-Having "green:lan1" to "green:lan4" and "green:wan" plus
-"red:wanerror" would work, but I'd really preffer
-"eth0:green:link"... "adsl0:green:link", "adsl0:red:error".
-
-There are now phones with flashes on both main and selfie
-cameras. Again, knowing which device is which is important. As is
-knowing which display is controlled by particular backlight.
-
-Best regards,
-									Pavel
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/b=
+oot/dts/allwinner/sun50i-a64.dtsi
+index f3a66f888205..48cc5451d0eb 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -753,6 +753,28 @@
+ 			#size-cells =3D <0>;
+ 		};
+=20
++		mali: gpu@1c40000 {
++			compatible =3D "allwinner,sun50i-a64-mali",
++				     "arm,mali-400";
++			reg =3D <0x01c40000 0x10000>;
++			interrupts =3D <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names =3D "gp",
++					  "gpmmu",
++					  "pp0",
++					  "ppmmu0",
++					  "pp1",
++					  "ppmmu1",
++					  "pmu";
++			clocks =3D <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
++			clock-names =3D "bus", "core";
++			resets =3D <&ccu RST_BUS_GPU>;
++		};
+=20
+ 		spi0: spi@1c68000 {
+ 			compatible =3D "allwinner,sun8i-h3-spi";
 --=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---x+6KMIRAuhnl3hBn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvoGlkACgkQMOfwapXb+vICOQCdFvVBqzp2X/0dVIEOHUK+NFmw
-4BkAoK5b2Pmc8pjkO8kfELLQLjeuythv
-=t3w5
------END PGP SIGNATURE-----
-
---x+6KMIRAuhnl3hBn--
+2.19.1
