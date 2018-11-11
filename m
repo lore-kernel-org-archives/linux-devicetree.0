@@ -1,140 +1,117 @@
-Return-Path: <SRS0=ZvLY=NX=linaro.org=ulf.hansson@kernel.org>
+Return-Path: <SRS0=dUsd=NW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:36246 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727817AbeKLAVu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 11 Nov 2018 19:21:50 -0500
+Date: Sun, 11 Nov 2018 14:33:03 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 0/7] add i2c controller support to st_lsm6dsx driver
+Message-ID: <20181111143303.5d526561@archlinux>
+In-Reply-To: <CAJ0CqmXYazbniu44T2YF1RZJvySHvgWd2rOQZ6gMT1UKY0bCDQ@mail.gmail.com>
+References: <cover.1541341926.git.lorenzo.bianconi@redhat.com>
+        <20181104181223.48618c1f@archlinux>
+        <CAJ0CqmVhpw=99YKg8fRFG83H6NcYfcRH9eZxgJh-xCrp5rXfXQ@mail.gmail.com>
+        <20181104183413.66b9abf1@archlinux>
+        <CAJ0CqmXYazbniu44T2YF1RZJvySHvgWd2rOQZ6gMT1UKY0bCDQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20181024222301.21455-3-chris.brandt@renesas.com>
-References: <20181024222301.21455-1-chris.brandt@renesas.com> <20181024222301.21455-3-chris.brandt@renesas.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 12 Nov 2018 12:05:08 +0100
-Message-ID: <CAPDyKFpMAH+528BouQiepHbi55uF=EEQqNoXxMUhQctMdoJu_A@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] mmc: renesas_sdhi_internal_dmac: Add R7S9210 support
-Content-Type: text/plain; charset="UTF-8"
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 25 October 2018 at 00:23, Chris Brandt <chris.brandt@renesas.com> wrote:
-> The SDHI/MMC controller in the RZ/A2 is almost the same as R-Car gen3, but
-> with some minor differences.
->
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+On Sun, 4 Nov 2018 20:07:02 +0100
+Lorenzo Bianconi <lorenzo.bianconi@redhat.com> wrote:
 
-Applied for next, thanks!
+> >
+> > On Sun, 4 Nov 2018 19:27:42 +0100
+> > Lorenzo Bianconi <lorenzo.bianconi@redhat.com> wrote:
+> >  
+> > > >
+> > > > On Sun,  4 Nov 2018 15:38:59 +0100
+> > > > Lorenzo Bianconi <lorenzo.bianconi@redhat.com> wrote:
+> > > >  
+> > > > > Introduce i2c controller support to st_lsm6dsx driver for lsm6dso sensor.
+> > > > > Add register map for lis2mdl magnetometer sensor.
+> > > > > Add hw FIFO support to st_lsm6dsx sensorhub driver.
+> > > > >
+> > > > > Lorenzo Bianconi (7):
+> > > > >   iio: imu: st_lsm6dsx: introduce locked read/write utility routines
+> > > > >   iio: imu: st_lsm6dsx: reboot memory content after reset
+> > > > >   iio: imu: st_lsm6dsx: remove static from st_lsm6dsx_set_watermark
+> > > > >   iio: imu: st_lsm6dsx: introduce ST_LSM6DSX_ID_EXT sensor ids
+> > > > >   iio: imu: st_lsm6dsx: add i2c embedded controller support
+> > > > >   iio: imu: st_lsm6dsx: add hw FIFO support to i2c controller
+> > > > >   dt-bindings: iio: imu: st_lsm6dsx: add support to i2c pullup resistors
+> > > > >
+> > > > >  .../bindings/iio/imu/st_lsm6dsx.txt           |   1 +
+> > > > >  drivers/iio/imu/st_lsm6dsx/Makefile           |   3 +-
+> > > > >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h       | 167 +++-
+> > > > >  .../iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c    | 169 ++--
+> > > > >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c  | 273 +++++--
+> > > > >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c  | 753 ++++++++++++++++++
+> > > > >  .../linux/platform_data/st_sensors_pdata.h    |   2 +
+> > > > >  7 files changed, 1226 insertions(+), 142 deletions(-)
+> > > > >  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
+> > > > >  
+> > > >
+> > > > Hi Lorenzo,
+> > > >
+> > > > Great to see this series.  
+> > >
+> > > Hi Jonathan,
+> > >
+> > > thx a lot for the fast review :) I will fix your comments in a v2
+> > >  
+> > > >
+> > > > It seems to have come together fairly nicely given the inherent complexity
+> > > > of dealing with these slave i2c controllers.   What I would like to
+> > > > see in this cover letter though is a brief description of what can be
+> > > > put behind these devices?
+> > > >
+> > > > The one thing I want to be careful of is ending up with lots of sort
+> > > > of replicated drivers where we have a version in each sensor hub
+> > > > and one for directly connected devices.  Superficially this
+> > > > device seems to have a very restricted I2C master so that might not
+> > > > be a significant problem.  What do you think?
+> > > > This gets particularly interesting if we think about switching in
+> > > > and out of pass through.  At that point this looks like an i2c offload
+> > > > engine (sort of) similar to the one Lars did for spi, be it a very
+> > > > restricted one.  
+> > >
+> > > I think the main purpose of the i2c controller embedded in lsm6dso is
+> > > to connect a magnetometer sensor
+> > > to it and get in this way a 9axis device (please note this is just my opinion).
+> > > However we can think to connect other devices like temperature or
+> > > pressure sensors (I tested them in the past :)).
+> > > I think we will never use it as a 'general purpose' contoller, e.g. to
+> > >  connect an adc :)  
+> >
+> > Hmm. Lets keep an eye on what gets added. If it gets silly we can revisit how
+> > to handle things.  Particularly if we get things that can't be so easily
+> > probed.  Of course, we may find no one ever adds anything else and that
+> > would be fine :)
+> >  
+> 
+> Do you have something to point out?
+Nothing in particular.
 
-Kind regards
-Uffe
+> Maybe a future improvement can be a more general way to pass
+> slave register map. What do you think?
+Possibly true.  These sort of 'half implementations' of an i2c master
+with offload are getting more common so we may need to look at this in detail.
 
-> ---
-> v5:
->  * Rebased against -next to fix conficts with RZ/G1C patches
->  * Changed Kconfig message to say "found in some RZ" instead of just
->    "found in RZ/A"
-> v4:
->  * Fixed spelling in #define
-> v3:
->  * Removed extra space in Kconfig
->  * Removed unneeded parentheses
-> v2:
->  * Made comment clearer
-> ---
->  drivers/mmc/host/Kconfig                      |  7 ++++---
->  drivers/mmc/host/renesas_sdhi_internal_dmac.c | 28 +++++++++++++++++++++++++--
->  2 files changed, 30 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index 1b58739d9744..720311ece714 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -646,13 +646,14 @@ config MMC_SDHI_SYS_DMAC
->
->  config MMC_SDHI_INTERNAL_DMAC
->         tristate "DMA for SDHI SD/SDIO controllers using on-chip bus mastering"
-> -       depends on ARM64 || ARCH_R8A77470 || COMPILE_TEST
-> +       depends on ARM64 || ARCH_R7S9210 || ARCH_R8A77470 || COMPILE_TEST
->         depends on MMC_SDHI
-> -       default MMC_SDHI if (ARM64 || ARCH_R8A77470)
-> +       default MMC_SDHI if (ARM64 || ARCH_R7S9210 || ARCH_R8A77470)
->         help
->           This provides DMA support for SDHI SD/SDIO controllers
->           using on-chip bus mastering. This supports the controllers
-> -         found in arm64 based SoCs.
-> +         found in arm64 based SoCs. This controller is also found in
-> +         some RZ family SoCs.
->
->  config MMC_UNIPHIER
->         tristate "UniPhier SD/eMMC Host Controller support"
-> diff --git a/drivers/mmc/host/renesas_sdhi_internal_dmac.c b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-> index b6f54102bfdd..b9d83d6ed346 100644
-> --- a/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-> +++ b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-> @@ -34,7 +34,7 @@
->  #define DTRAN_MODE_CH_NUM_CH0  0       /* "downstream" = for write commands */
->  #define DTRAN_MODE_CH_NUM_CH1  BIT(16) /* "upstream" = for read commands */
->  #define DTRAN_MODE_BUS_WIDTH   (BIT(5) | BIT(4))
-> -#define DTRAN_MODE_ADDR_MODE   BIT(0)  /* 1 = Increment address */
-> +#define DTRAN_MODE_ADDR_MODE   BIT(0)  /* 1 = Increment address, 0 = Fixed */
->
->  /* DM_CM_DTRAN_CTRL */
->  #define DTRAN_CTRL_DM_START    BIT(0)
-> @@ -73,6 +73,9 @@ static unsigned long global_flags;
->  #define SDHI_INTERNAL_DMAC_ONE_RX_ONLY 0
->  #define SDHI_INTERNAL_DMAC_RX_IN_USE   1
->
-> +/* RZ/A2 does not have the ADRR_MODE bit */
-> +#define SDHI_INTERNAL_DMAC_ADDR_MODE_FIXED_ONLY 2
-> +
->  /* Definitions for sampling clocks */
->  static struct renesas_sdhi_scc rcar_gen3_scc_taps[] = {
->         {
-> @@ -81,6 +84,21 @@ static struct renesas_sdhi_scc rcar_gen3_scc_taps[] = {
->         },
->  };
->
-> +static const struct renesas_sdhi_of_data of_rza2_compatible = {
-> +       .tmio_flags     = TMIO_MMC_HAS_IDLE_WAIT | TMIO_MMC_CLK_ACTUAL |
-> +                         TMIO_MMC_HAVE_CBSY,
-> +       .tmio_ocr_mask  = MMC_VDD_32_33,
-> +       .capabilities   = MMC_CAP_SD_HIGHSPEED | MMC_CAP_SDIO_IRQ |
-> +                         MMC_CAP_CMD23,
-> +       .bus_shift      = 2,
-> +       .scc_offset     = 0 - 0x1000,
-> +       .taps           = rcar_gen3_scc_taps,
-> +       .taps_num       = ARRAY_SIZE(rcar_gen3_scc_taps),
-> +       /* DMAC can handle 0xffffffff blk count but only 1 segment */
-> +       .max_blk_count  = 0xffffffff,
-> +       .max_segs       = 1,
-> +};
-> +
->  static const struct renesas_sdhi_of_data of_rcar_r8a7795_compatible = {
->         .tmio_flags     = TMIO_MMC_HAS_IDLE_WAIT | TMIO_MMC_CLK_ACTUAL |
->                           TMIO_MMC_HAVE_CBSY | TMIO_MMC_MIN_RCAR2 |
-> @@ -113,6 +131,7 @@ static const struct renesas_sdhi_of_data of_rcar_gen3_compatible = {
->  };
->
->  static const struct of_device_id renesas_sdhi_internal_dmac_of_match[] = {
-> +       { .compatible = "renesas,sdhi-r7s9210", .data = &of_rza2_compatible, },
->         { .compatible = "renesas,sdhi-mmc-r8a77470", .data = &of_rcar_gen3_compatible, },
->         { .compatible = "renesas,sdhi-r8a7795", .data = &of_rcar_r8a7795_compatible, },
->         { .compatible = "renesas,sdhi-r8a7796", .data = &of_rcar_r8a7795_compatible, },
-> @@ -172,7 +191,10 @@ renesas_sdhi_internal_dmac_start_dma(struct tmio_mmc_host *host,
->                                      struct mmc_data *data)
->  {
->         struct scatterlist *sg = host->sg_ptr;
-> -       u32 dtran_mode = DTRAN_MODE_BUS_WIDTH | DTRAN_MODE_ADDR_MODE;
-> +       u32 dtran_mode = DTRAN_MODE_BUS_WIDTH;
-> +
-> +       if (!test_bit(SDHI_INTERNAL_DMAC_ADDR_MODE_FIXED_ONLY, &global_flags))
-> +               dtran_mode |= DTRAN_MODE_ADDR_MODE;
->
->         if (!dma_map_sg(&host->pdev->dev, sg, host->sg_len,
->                         mmc_get_dma_dir(data)))
-> @@ -292,6 +314,8 @@ static const struct tmio_mmc_dma_ops renesas_sdhi_internal_dmac_dma_ops = {
->   */
->  static const struct soc_device_attribute soc_whitelist[] = {
->         /* specific ones */
-> +       { .soc_id = "r7s9210",
-> +         .data = (void *)BIT(SDHI_INTERNAL_DMAC_ADDR_MODE_FIXED_ONLY) },
->         { .soc_id = "r8a7795", .revision = "ES1.*",
->           .data = (void *)BIT(SDHI_INTERNAL_DMAC_ONE_RX_ONLY) },
->         { .soc_id = "r8a7796", .revision = "ES1.0",
-> --
-> 2.16.1
->
+Jonathan
+> 
+> Regards,
+> Lorenzo
+> 
+> > Jonathan  
+> > >
+> > > Regards,
+> > > Lorenzo
+> > >  
+> > > >
+> > > > Jonathan  
+> >  
