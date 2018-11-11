@@ -1,147 +1,45 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 2/2] dt-bindings: rtc: Move trivial RTCs to rtc.txt
-Date: Sun, 11 Nov 2018 20:31:14 +0100
-Message-ID: <20181111193114.24307-2-alexandre.belloni@bootlin.com>
-References: <20181111193114.24307-1-alexandre.belloni@bootlin.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v6 8/9] EDAC: Add driver for the Marvell Armada XP SDRAM
+ and L2 cache ECC
+Date: Sun, 11 Nov 2018 20:40:24 +0100
+Message-ID: <20181111194024.GC31937@zn.tnic>
+References: <20181109070349.20464-1-chris.packham@alliedtelesis.co.nz>
+ <20181109070349.20464-9-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181111193114.24307-1-alexandre.belloni@bootlin.com>
+Content-Disposition: inline
+In-Reply-To: <20181109070349.20464-9-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, linux-rtc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: linux@armlinux.org.uk, arnd@arndb.de, jlu@pengutronix.de, gregory.clement@bootlin.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Move trivial RTCs to the rtc generic binding documentation as they all also
-support at least 'start-year'.
+On Fri, Nov 09, 2018 at 08:03:48PM +1300, Chris Packham wrote:
+> From: Jan Luebbe <jlu@pengutronix.de>
+> 
+> Add support for the ECC functionality as found in the DDR RAM and L2
+> cache controllers on the MV78230/MV78x60 SoCs. This driver has been
+> tested on the MV78460 (on a custom board with a DDR3 ECC DIMM).
+> 
+> Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
+> [cp use SPDX license]
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+>  MAINTAINERS                   |   6 +
+>  drivers/edac/Kconfig          |   7 +
+>  drivers/edac/Makefile         |   1 +
+>  drivers/edac/armada_xp_edac.c | 630 ++++++++++++++++++++++++++++++++++
+>  4 files changed, 644 insertions(+)
+>  create mode 100644 drivers/edac/armada_xp_edac.c
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- Documentation/devicetree/bindings/rtc/rtc.txt | 34 +++++++++++++++++++
- .../devicetree/bindings/trivial-devices.txt   | 24 -------------
- 2 files changed, 34 insertions(+), 24 deletions(-)
+Looks ok at a glance. Those overly long lines could use some macros or
+breaking but it is not a big deal:
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt b/Documentation/devicetree/bindings/rtc/rtc.txt
-index 221b7da50aca..7c8da6926095 100644
---- a/Documentation/devicetree/bindings/rtc/rtc.txt
-+++ b/Documentation/devicetree/bindings/rtc/rtc.txt
-@@ -28,3 +28,37 @@ below.
-                           disabled
- - wakeup-source :         Enables wake up of host system on alarm
- 
-+Trivial RTCs
-+------------
-+
-+This is a list of trivial RTC devices that have simple device tree
-+bindings, consisting only of a compatible field, an address and
-+possibly an interrupt line.
-+
-+
-+Compatible		Vendor / Chip
-+==========		=============
-+abracon,abb5zes3	AB-RTCMC-32.768kHz-B5ZE-S3: Real Time Clock/Calendar Module with I2C Interface
-+dallas,ds1374		I2C, 32-Bit Binary Counter Watchdog RTC with Trickle Charger and Reset Input/Output
-+dallas,ds1672		Dallas DS1672 Real-time Clock
-+dallas,ds3232		Extremely Accurate I²C RTC with Integrated Crystal and SRAM
-+epson,rx8010		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
-+epson,rx8581		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
-+emmicro,em3027		EM Microelectronic EM3027 Real-time Clock
-+isil,isl1208		Intersil ISL1208 Low Power RTC with Battery Backed SRAM
-+isil,isl1218		Intersil ISL1218 Low Power RTC with Battery Backed SRAM
-+isil,isl12022		Intersil ISL12022 Real-time Clock
-+microcrystal,rv3029	Real Time Clock Module with I2C-Bus
-+nxp,pcf2127		Real-time clock
-+nxp,pcf2129		Real-time clock
-+nxp,pcf8523		Real-time Clock
-+nxp,pcf8563		Real-time clock/calendar
-+nxp,pcf85063		Tiny Real-Time Clock
-+pericom,pt7c4338	Real-time Clock Module
-+ricoh,r2025sd		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-+ricoh,r2221tl		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-+ricoh,rs5c372a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-+ricoh,rs5c372b		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-+ricoh,rv5c386		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-+ricoh,rv5c387a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-+sii,s35390a		2-wire CMOS real-time clock
-diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
-index 6ab001fa1ed4..fda7a0f50c1e 100644
---- a/Documentation/devicetree/bindings/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/trivial-devices.txt
-@@ -9,7 +9,6 @@ document for it just like any other devices.
- 
- Compatible		Vendor / Chip
- ==========		=============
--abracon,abb5zes3		AB-RTCMC-32.768kHz-B5ZE-S3: Real Time Clock/Calendar Module with I2C Interface
- ad,ad7414		SMBus/I2C Digital Temperature Sensor in 6-Pin SOT with SMBus Alert and Over Temperature Pin
- ad,adm9240		ADM9240:  Complete System Hardware Monitor for uProcessor-Based Systems
- adi,adt7461		+/-1C TDM Extended Temp Range I.C
-@@ -25,12 +24,9 @@ at,24c08		i2c serial eeprom  (24cxx)
- atmel,at97sc3204t	i2c trusted platform module (TPM)
- capella,cm32181		CM32181: Ambient Light Sensor
- capella,cm3232		CM3232: Ambient Light Sensor
--dallas,ds1374		I2C, 32-Bit Binary Counter Watchdog RTC with Trickle Charger and Reset Input/Output
- dallas,ds1631		High-Precision Digital Thermometer
--dallas,ds1672		Dallas DS1672 Real-time Clock
- dallas,ds1682		Total-Elapsed-Time Recorder with Alarm
- dallas,ds1775		Tiny Digital Thermometer and Thermostat
--dallas,ds3232		Extremely Accurate I²C RTC with Integrated Crystal and SRAM
- dallas,ds4510		CPU Supervisor with Nonvolatile Memory and Programmable I/O
- dallas,ds75		Digital Thermometer and Thermostat
- devantech,srf02		Devantech SRF02 ultrasonic ranger in I2C mode
-@@ -40,9 +36,6 @@ dlg,da9053		DA9053: flexible system level PMIC with multicore support
- dlg,da9063		DA9063: system PMIC for quad-core application processors
- domintech,dmard09	DMARD09: 3-axis Accelerometer
- domintech,dmard10	DMARD10: 3-axis Accelerometer
--epson,rx8010		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
--epson,rx8581		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
--emmicro,em3027		EM Microelectronic EM3027 Real-time Clock
- fsl,mag3110		MAG3110: Xtrinsic High Accuracy, 3D Magnetometer
- fsl,mma7660		MMA7660FC: 3-Axis Orientation/Motion Detection Sensor
- fsl,mma8450		MMA8450Q: Xtrinsic Low-power, 3-axis Xtrinsic Accelerometer
-@@ -53,9 +46,6 @@ gmt,g751		G751: Digital Temperature Sensor and Thermal Watchdog with Two-Wire In
- infineon,slb9635tt	Infineon SLB9635 (Soft-) I2C TPM (old protocol, max 100khz)
- infineon,slb9645tt	Infineon SLB9645 I2C TPM (new protocol, max 400khz)
- infineon,tlv493d-a1b6	Infineon TLV493D-A1B6 I2C 3D Magnetic Sensor
--isil,isl1208		Intersil ISL1208 Low Power RTC with Battery Backed SRAM
--isil,isl1218		Intersil ISL1218 Low Power RTC with Battery Backed SRAM
--isil,isl12022		Intersil ISL12022 Real-time Clock
- isil,isl29028		Intersil ISL29028 Ambient Light and Proximity Sensor
- isil,isl29030		Intersil ISL29030 Ambient Light and Proximity Sensor
- maxim,ds1050		5 Bit Programmable, Pulse-Width Modulator
-@@ -142,7 +132,6 @@ microchip,mcp4662-503	Microchip 8-bit Dual I2C Digital Potentiometer with NV Mem
- microchip,mcp4662-104	Microchip 8-bit Dual I2C Digital Potentiometer with NV Memory (100k)
- microchip,tc654		PWM Fan Speed Controller With Fan Fault Detection
- microchip,tc655		PWM Fan Speed Controller With Fan Fault Detection
--microcrystal,rv3029	Real Time Clock Module with I2C-Bus
- miramems,da226		MiraMEMS DA226 2-axis 14-bit digital accelerometer
- miramems,da280		MiraMEMS DA280 3-axis 14-bit digital accelerometer
- miramems,da311		MiraMEMS DA311 3-axis 12-bit digital accelerometer
-@@ -156,25 +145,12 @@ nuvoton,npct601		i2c trusted platform module (TPM2)
- nuvoton,w83773g		Nuvoton Temperature Sensor
- nxp,pca9556		Octal SMBus and I2C registered interface
- nxp,pca9557		8-bit I2C-bus and SMBus I/O port with reset
--nxp,pcf2127		Real-time clock
--nxp,pcf2129		Real-time clock
--nxp,pcf8523		Real-time Clock
--nxp,pcf8563		Real-time clock/calendar
--nxp,pcf85063		Tiny Real-Time Clock
- oki,ml86v7667		OKI ML86V7667 video decoder
- ovti,ov5642		OV5642: Color CMOS QSXGA (5-megapixel) Image Sensor with OmniBSI and Embedded TrueFocus
--pericom,pt7c4338	Real-time Clock Module
- plx,pex8648		48-Lane, 12-Port PCI Express Gen 2 (5.0 GT/s) Switch
- pulsedlight,lidar-lite-v2	Pulsedlight LIDAR range-finding sensor
--ricoh,r2025sd		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
--ricoh,r2221tl		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
--ricoh,rs5c372a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
--ricoh,rs5c372b		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
--ricoh,rv5c386		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
--ricoh,rv5c387a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
- samsung,24ad0xd1	S524AD0XF1 (128K/256K-bit Serial EEPROM for Low Power)
- sgx,vz89x		SGX Sensortech VZ89X Sensors
--sii,s35390a		2-wire CMOS real-time clock
- silabs,si7020		Relative Humidity and Temperature Sensors
- skyworks,sky81452	Skyworks SKY81452: Six-Channel White LED Driver with Touch Panel Bias Supply
- st,24c256		i2c serial eeprom  (24cxx)
+Reviewed-by: Borislav Petkov <bp@suse.de>
+
 -- 
-2.19.1
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
