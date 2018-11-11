@@ -1,110 +1,113 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 03/24] leds: dt-bindings: Add LED_FUNCTION definitions
-Date: Sun, 11 Nov 2018 21:20:56 +0100
-Message-ID: <20181111202056.GB20160@amd>
-References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
- <1541542052-10081-4-git-send-email-jacek.anaszewski@gmail.com>
- <20181111113157.GK27666@amd>
- <96296b4d-d49e-2b08-4306-196605a9f5dc@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v10 0/9] Add the I3C subsystem
+Date: Sun, 11 Nov 2018 12:57:18 -0800
+Message-ID: <20181111205718.GA16288@kroah.com>
+References: <20181026144333.12276-1-boris.brezillon@bootlin.com>
+ <20181111173932.GA12254@kroah.com>
+ <20181111191017.7b2efdf1@bbrezillon>
+ <20181111191020.GA21003@kroah.com>
+ <20181111210818.08af6731@bbrezillon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="wzJLGUyc3ArbnUjN"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <96296b4d-d49e-2b08-4306-196605a9f5dc@gmail.com>
+In-Reply-To: <20181111210818.08af6731@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>devi
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Nov 11, 2018 at 09:08:18PM +0100, Boris Brezillon wrote:
+> On Sun, 11 Nov 2018 11:10:20 -0800
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> 
+> > On Sun, Nov 11, 2018 at 07:10:17PM +0100, Boris Brezillon wrote:
+> > > Hi Greg,
+> > > 
+> > > On Sun, 11 Nov 2018 09:39:32 -0800
+> > > Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> > >   
+> > > > On Fri, Oct 26, 2018 at 04:43:24PM +0200, Boris Brezillon wrote:  
+> > > > > Hi Greg,
+> > > > > 
+> > > > > I think we've reached a point where we can eventually consider the I3C
+> > > > > framework for inclusion in 4.20 (5.0?). A few more issues were reported
+> > > > > on v9 and fixed in v10. I can't guarantee that the implementation is
+> > > > > free of bugs but I still think it's worth merging it in v4.20: it's a
+> > > > > new subsystem, so we don't risk regressions, and the only way we can
+> > > > > detect other issues is by having other people experiment with this
+> > > > > implementation.
+> > > > > 
+> > > > > The only remaining concern raised by Arnd is the fact that both hosts
+> > > > > and slaves share the same bus type and are differentiated thanks to
+> > > > > their device_type, which IMHO is fine since this is what other
+> > > > > subsystems do (plus I don't see other solutions to have both I3C
+> > > > > devices and I3C buses represented under /sys/bus/i3c/).    
+> > > > 
+> > > > Yeah, it's not the nicest, but it will work, we did it also for USB and
+> > > > greybus and it solves the issue.
+> > > > 
+> > > > This all looks good to me, so I've queued it up.  Let's see if
+> > > > linux-next has any problems with it.  
+> > > 
+> > > I recently asked Stephen to add the linux-i3c tree to linux-next, so
+> > > I'm expecting conflicts :-/. Sorry, I didn't know you were planning to
+> > > take these patches through your tree.
+> > > 
+> > > BTW, I also fixed a couple of things when rebasing on top of 4.20-rc1:
+> > > 
+> > > - KernelVersion in the sysfs ABI doc has been updated to 5.0  
+> > 
+> > There is no 5.0 yet :)
+> 
+> Actually I had a hard time choosing between 4.21 and 5.0, and then I
+> saw Linus' email announcing 4.20-rc1 ;-). But I can change it back to
+> 4.21 if you prefer.
+> 
+> > 
+> > > - Fixed i3c_master_getmxds_locked() (bug reported/fixed by Colin here
+> > >   https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1799850.html)
+> > > - Removed a blank line at the end of master-driver-api.rst
+> 
+> One extra thing I didn't mention (and didn't fix yet) is the I3C
+> mailing list. I asked Dave Miller if he'd be okay to create the
+> linux-i3c ML on vger.kernel.org, and he suggested that we use the
+> linux-i2c ML instead which I know Wolfram is not fond of. I might
+> decide to just put linux-kernel@vger.kernel.org as the ML to Cc for
+> I3C patches until we settle on something. 
+> 
+> > > 
+> > > For the record, the i3c/next branch pulled by Stephen is available here
+> > > [1].
+> > >   
+> > > > Thanks for sticking with it, nice work!  
+> > > 
+> > > Thanks for reviewing it! Greg, Stephen, let me know if you want me to
+> > > reset i3c/next to v4.20-rc1 to avoid conflicts in linux-next.  
+> > 
+> > So do you want me to just drop these patches from my tree?  If so, I
+> > can, but i have no problem sending these to Linus for the next -rc1
+> > merge window through my tree if that is easier.
+> > 
+> > It's up to you.
+> 
+> I think that's easier for me and for you if I take them in the i3c tree
+> and then send a PR to Linus myself. This way I won't bother you if
+> fixes are needed or if I decide to apply patches adding support for
+> other I3C controllers (I see you commented on the Synopsys driver
+> already, and I might indeed decide to queue this patchset for this
+> release).
+> 
+> Doing that also allows me to get everything in place since I'll anyway
+> have to send PRs to Linus at some point.
+> 
+> Regards,
+> 
+> Boris
+> 
+> PS: If you're fine with me taking the I3C patches, I'll need your
+> Acked-by.
 
---wzJLGUyc3ArbnUjN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sure, feel free to do it all yourself, I do not object to that!  :)
 
-Hi!
-
-> >> +#define LED_FUNCTION_BACKLIGHT "backlight"
-> >> +#define LED_FUNCTION_BACKLIGHT_CLUSTER "backlight_cluster"
-> >=20
-> > Sounds like one of backlight and backlight_cluster should be deprecated?
->=20
-> I think so.
-
-Agreed.
-
-> >> +#define LED_FUNCTION_DEBUG "debug"
-> >> +#define LED_FUNCTION_DIA "dia"
-> >=20
-> > What does this one do?
->=20
-> I'd opt for something like "diagnostics", but this is a blind shot.
-> Let's remove it then and, and let people add more meaningful
-> definition in case it is needed.
->=20
-> >> +#define LED_FUNCTION_DISK "disk"
-> >=20
-> > We have disk, hd, hdd and sata. Deprecate some?
->=20
-> Disk should be the best choice, especially given that we have
-> identically named trigger.
-
-Ok.
-
-> >> +#define LED_FUNCTION_HD "hd"
-> >> +#define LED_FUNCTION_HDD "hdd"
-> >> +#define LED_FUNCTION_HDDERR "hdderr"
-> >=20
-> > Ok, I'll=20
->=20
-> Hmm?
-
-I was going to say that I'll bring it up in different email.
-
-I believe we should have disk:green:activity and disk:red:error, not
-"green:hdd" and "red:hdderr".
-
-> >> +#define LED_FUNCTION_HEALTH "health"
-> >> +#define LED_FUNCTION_HEARTBEAT "heartbeat"
-> >=20
-> > Sounds same as alive, deprecate alive?
->=20
-> Heartbeat may be designated specifically for registration
-> for events from the trigger with the same name.
-
-Ok. What is "alive" then?
-
-> >> +#define LED_FUNCTION_WIFI "wifi"
-> >> +#define LED_FUNCTION_WIRELESS "wireless"
-> >> +#define LED_FUNCTION_WLAN "wlan"
-> >=20
-> > Same as wifi and wireless, I guess, deprecate some?
->=20
-> I'd remove "wireless" and "wlan".
-
-Actually I'd keep wlan, but... :-).
-
-We may want to do add some comments there, and sort it "most
-common/recommended first" or something.
-
-Best regards (and thanks for doing the work),
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---wzJLGUyc3ArbnUjN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvojycACgkQMOfwapXb+vI7SACfW93uH8rBuPN5hycAP36oG2sk
-Iw0An1ppzjzwqhiG2q/mlkJqKjLroxAG
-=6Be5
------END PGP SIGNATURE-----
-
---wzJLGUyc3ArbnUjN--
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
