@@ -1,50 +1,67 @@
-Return-Path: <SRS0=9rGL=NN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from vsp-unauthed02.binero.net ([195.74.38.227]:30526 "EHLO
-        vsp-unauthed02.binero.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727339AbeKCBId (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 2 Nov 2018 21:08:33 -0400
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
-        <niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH v3 1/4] dt-bindings: adv748x: make data-lanes property mandatory for CSI-2 endpoints
-Date: Fri,  2 Nov 2018 17:00:06 +0100
-Message-Id: <20181102160009.17267-2-niklas.soderlund+renesas@ragnatech.se>
-In-Reply-To: <20181102160009.17267-1-niklas.soderlund+renesas@ragnatech.se>
-References: <20181102160009.17267-1-niklas.soderlund+renesas@ragnatech.se>
+Return-Path: <SRS0=dUsd=NW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:36360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728802AbeKLCDm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 11 Nov 2018 21:03:42 -0500
+Date: Sun, 11 Nov 2018 16:14:42 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 3/9] iio: imu: st_lsm6dsx: remove static from
+ st_lsm6dsx_set_watermark
+Message-ID: <20181111161442.1836c6f5@archlinux>
+In-Reply-To: <19b4dfa76bb6e06ccd7aa219d7867ccfca1e9c82.1541945612.git.lorenzo.bianconi@redhat.com>
+References: <cover.1541945612.git.lorenzo.bianconi@redhat.com>
+        <19b4dfa76bb6e06ccd7aa219d7867ccfca1e9c82.1541945612.git.lorenzo.bianconi@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Kieran Bingham <kieran.bingham@ideasonboard.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The CSI-2 transmitters can use a different number of lanes to transmit
-data. Make the data-lanes mandatory for the endpoints that describe the
-transmitters as no good default can be set to fallback on.
+On Sun, 11 Nov 2018 15:15:30 +0100
+Lorenzo Bianconi <lorenzo.bianconi@redhat.com> wrote:
 
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> Remove static qualifier from st_lsm6dsx_set_watermark routine in
+> order to be reused supporting st_lsm6dsx i2c controller
+> 
+> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Applied.  This one might have been taking the one thing one
+patch rule a little far ;)
 
----
-* Changes since v2
-- Update paragraph according to Laurents comments.
----
- Documentation/devicetree/bindings/media/i2c/adv748x.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Does no real harm though.
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-index 5dddc95f9cc46084..bffbabc879efd86c 100644
---- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-@@ -48,7 +48,9 @@ are numbered as follows.
- 	  TXA		source		10
- 	  TXB		source		11
- 
--The digital output port nodes must contain at least one endpoint.
-+The digital output port nodes, when present, shall contain at least one
-+endpoint. Each of those endpoints shall contain the data-lanes property as
-+described in video-interfaces.txt.
- 
- Ports are optional if they are not connected to anything at the hardware level.
- 
--- 
-2.19.1
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      | 1 +
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 2 +-
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> index ec204d3b4b1f..ac4cbbb0b3fb 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> @@ -185,6 +185,7 @@ int st_lsm6dsx_probe(struct device *dev, int irq, int hw_id, const char *name,
+>  int st_lsm6dsx_sensor_enable(struct st_lsm6dsx_sensor *sensor);
+>  int st_lsm6dsx_sensor_disable(struct st_lsm6dsx_sensor *sensor);
+>  int st_lsm6dsx_fifo_setup(struct st_lsm6dsx_hw *hw);
+> +int st_lsm6dsx_set_watermark(struct iio_dev *iio_dev, unsigned int val);
+>  int st_lsm6dsx_update_watermark(struct st_lsm6dsx_sensor *sensor,
+>  				u16 watermark);
+>  int st_lsm6dsx_flush_fifo(struct st_lsm6dsx_hw *hw);
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> index 961ce9d65d82..d703fcd8706a 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> @@ -600,7 +600,7 @@ static int st_lsm6dsx_write_raw(struct iio_dev *iio_dev,
+>  	return err;
+>  }
+>  
+> -static int st_lsm6dsx_set_watermark(struct iio_dev *iio_dev, unsigned int val)
+> +int st_lsm6dsx_set_watermark(struct iio_dev *iio_dev, unsigned int val)
+>  {
+>  	struct st_lsm6dsx_sensor *sensor = iio_priv(iio_dev);
+>  	struct st_lsm6dsx_hw *hw = sensor->hw;
