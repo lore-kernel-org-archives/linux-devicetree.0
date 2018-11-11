@@ -1,131 +1,50 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
- driver
-Date: Sun, 11 Nov 2018 18:12:29 +0530
-Message-ID: <3aa7b871-9cf9-9626-11fe-b9aa6009b477@codeaurora.org>
-References: <1539257761-23023-1-git-send-email-tdas@codeaurora.org>
- <1539257761-23023-3-git-send-email-tdas@codeaurora.org>
- <153981915373.5275.15971019914218464179@swboyd.mtv.corp.google.com>
- <0c51a12e-38d3-2df5-4f5f-6a687727e9bf@codeaurora.org>
- <154130523254.88331.12609105382114756048@swboyd.mtv.corp.google.com>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [bug report] armada-8040-mcbin: 4.20-rc1 boot failure
+Date: Sun, 11 Nov 2018 15:08:53 +0200
+Message-ID: <877ehj7od6.fsf@tkos.co.il>
+References: <20181109121112.xibwnc354wzsbovl@bars>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154130523254.88331.12609105382114756048@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+In-reply-to: <20181109121112.xibwnc354wzsbovl@bars>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
+To: Sergey Matyukevich <geomatsi@gmail.com>, Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Stephen,
+Hi Sergey, Gregory,
 
-Thanks for your comments.
+Sergey Matyukevich writes:
+> MacchiatoBin board fails to boot v4.20-rc1 kernel built using arm64
+> defconfig. According to quick bisection of the board dts file, the
+> root cause is in dts patch enabling CPU deep idle states:
+> see 8ed46368776b3bc. Is there any pending fix other than reverting
+> deep idle state support ?
 
-On 11/4/2018 9:50 AM, Stephen Boyd wrote:
-> Quoting Taniya Das (2018-11-02 20:06:00)
->> Hello Stephen,
->>
->> On 10/18/2018 5:02 AM, Stephen Boyd wrote:
->>> Quoting Taniya Das (2018-10-11 04:36:01)
->>>> --- a/drivers/cpufreq/Kconfig.arm
->>>> +++ b/drivers/cpufreq/Kconfig.arm
->>>> @@ -121,6 +121,17 @@ config ARM_QCOM_CPUFREQ_KRYO
->>>>
->>>>             If in doubt, say N.
->>>>
->>>> +config ARM_QCOM_CPUFREQ_HW
->>>> +       bool "QCOM CPUFreq HW driver"
->>>
->>> Is there any reason this can't be a module?
->>>
->>
->> We do not have any use cases where we need to support it as module.
-> 
-> Ok, so it could easily be tristate then? Why not allow it?
-> 
+I reproduced the same boot failure on the Armada 8K based Clearfog
+GT-8K. Revert of commit 8ed46368776b3bc on top of v4.20-rc1 makes the
+system boot again.
 
-I have checked other vendors CPUfreq drivers and those too support only 
-"bool".
+Here is the splat I get:
 
->>
->>>> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
->>>> new file mode 100644
->>>> index 0000000..fe1c264
->>>> --- /dev/null
->>>> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
->>>> @@ -0,0 +1,354 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +/*
->>>> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
->>>> + */
-> [...]
->>>> +
->>>> +static const u16 cpufreq_qcom_std_offsets[REG_ARRAY_SIZE] = {
->>>
->>> Is this going to change in the future?
->>>
->>
->> Yes, they could change and that was the reason to introduce the offsets.
->> This was discussed earlier too with Sudeep and was to add them.
->>
->>>> +       [REG_ENABLE]            = 0x0,
-> 
-> This is only used once? Maybe it could be removed.
-> 
->>>> +       [REG_LUT_TABLE]         = 0x110,
-> 
-> And this is only used during probe to figure out the supported
-> frequencies. So we definitely don't need to store around the registers
-> after probe in an array of iomem pointers. The only one that we need
-> after probe is the one below.
-> 
->>>> +       [REG_PERF_STATE]        = 0x920,
->>>> +};
->>>> +
+[   87.358425] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+[   87.364556] rcu: 	3-...!: (1 ticks this GP) idle=d04/0/0x0 softirq=79/79 fqs=1
+[   87.371897] rcu: 	(detected by 2, t=21490 jiffies, g=-1035, q=179)
+[   87.378106] Task dump for CPU 3:
+[   87.381347] swapper/3       R  running task        0     0      1 0x00000028
+[   87.388428] Call trace:
+[   87.390892]  __switch_to+0x78/0xb4
+[   87.394310]  arm_enter_idle_state+0x38/0x4c
+[   87.398512]  cpuidle_enter_state+0xc8/0x15c
+[   87.402713]  cpuidle_enter+0x18/0x20
+[   87.406304]  call_cpuidle+0x30/0x34
+[   87.409807]  do_idle+0x19c/0x224
+[   87.413048]  cpu_startup_entry+0x20/0x24
+[   87.416988]  secondary_start_kernel+0x158/0x168
 
-As these address offsets could change, so I am of the opinion to leave 
-them as it is.
-
->>>> +static struct cpufreq_qcom *qcom_freq_domain_map[NR_CPUS];
->>>> +
->>>> +static int
->>>> +qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
->>>> +                            unsigned int index)
->>>> +{
->>>> +       struct cpufreq_qcom *c = policy->driver_data;
->>>> +
->>>> +       writel_relaxed(index, c->reg_bases[REG_PERF_STATE]);
->>>
->>> Why can't we avoid the indirection here and store the perf_state pointer
->>> in probe? Then we don't have to indirect through a table to perform the
->>> register write.
->>>
->>
->> As the offsets could change and that was the reason to add this.
-> 
-> With fast switching we can avoid incurring any extra instructions, so
-> please make another iomem pointer in the cpufreq_qcom struct just for
-> writing the index or if possible, just pass the iomem pointer that
-> points to the REG_PERF_STATE as the policy->driver_data variable here.
-> Then we have the address in hand without any extra load. If my
-> understanding is correct, we don't need to keep around anything besides
-> this register address anyway so we should be able to just load it and
-> write it immediately.
->
-
-The c->reg_bases[] is just an index to the updated bases addresses. I am 
-not clear as to why it would incur an extra instruction.
-
-The below code would already take care of it.
-
-+	for (i = REG_ENABLE; i < REG_ARRAY_SIZE; i++)
-+		c->reg_bases[i] = base + offsets[i];
-+
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+baruch
 
 --
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
