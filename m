@@ -1,133 +1,58 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 03/24] leds: dt-bindings: Add LED_FUNCTION definitions
-Date: Sun, 11 Nov 2018 12:31:57 +0100
-Message-ID: <20181111113157.GK27666@amd>
-References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
- <1541542052-10081-4-git-send-email-jacek.anaszewski@gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 0/6] staging:iio:ad2s90: Add dt support and move out of
+ staging
+Date: Sun, 11 Nov 2018 11:34:13 +0000
+Message-ID: <20181111113413.46e1070f@archlinux>
+References: <20181109220044.24843-1-matheus.bernardino@usp.br>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="dxRQSzdsN/lOP445"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1541542052-10081-4-git-send-email-jacek.anaszewski@gmail.com>
+In-Reply-To: <20181109220044.24843-1-matheus.bernardino@usp.br>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+To: Matheus Tavares <matheus.bernardino@usp.br>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alexandru Ardelean <alexandru.ardelean@analog.com>, kernel-usp@googlegroups.com, victorcolombo@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On Fri,  9 Nov 2018 20:00:38 -0200
+Matheus Tavares <matheus.bernardino@usp.br> wrote:
 
---dxRQSzdsN/lOP445
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> This patch set adds device tree support to ad2s90, with standard
+> device tree id table, adds the respective dt-binding documentation,
+> solves a codestyle warning and move the driver out of staging.
+> 
+> This patch set completes all the remaining itens listed to be done
+> before moving the driver out of staging, enumerated in this mail thread:
+> https://marc.info/?l=linux-iio&m=154028966111330&w=2, except by one
+> codestyle problem: "CHECK: struct mutex definition without comment". It
+> seems to be a commonly ignored check for mutexes of device states. If I
+> am wrong, please, let me know and I will be happy to send a patch to
+> tackle it.
+It should be commented.  Device state is not actually all that
+well defined and means different things in different drivers.
 
-Hi!
+Here it is very straight forward as it's role is to protect the
+buffer. There is no other state maintained.
 
-> Add common LED function definitions for use in Device Tree.
-> The function names were extracted from existing dts files
-> after eliminating oddities.
+Jonathan
 
-Thanks for doing this.
 
-> diff --git a/include/dt-bindings/leds/functions.h b/include/dt-bindings/l=
-eds/functions.h
-> new file mode 100644
-> index 0000000..3f94e09
-> --- /dev/null
-> +++ b/include/dt-bindings/leds/functions.h
-> @@ -0,0 +1,101 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-
-> +#define LED_FUNCTION_2G "2g"
-> +#define LED_FUNCTION_ACTIVITY "activity"
-> +#define LED_FUNCTION_ADSL "adsl"
-> +#define LED_FUNCTION_ALARM "alarm"
-> +#define LED_FUNCTION_ALIVE "alive"
-> +#define LED_FUNCTION_ALL "all"
-> +#define LED_FUNCTION_APP "app"
-> +#define LED_FUNCTION_AUX "aux"
-> +#define LED_FUNCTION_BACKUP "backup"
-> +#define LED_FUNCTION_BACKLIGHT "backlight"
-> +#define LED_FUNCTION_BACKLIGHT_CLUSTER "backlight_cluster"
-
-Sounds like one of backlight and backlight_cluster should be deprecated?
-
-> +#define LED_FUNCTION_BEEP "beep"
-> +#define LED_FUNCTION_BLUETOOTH "bluetooth"
-> +#define LED_FUNCTION_BOOT "boot"
-> +#define LED_FUNCTION_BOTTOM "bottom"
-
-I believe some of these should get comments. For example what does
-"all" and "bottom" LEDs do?
-
-> +#define LED_FUNCTION_BRICK_STATUS "brick-status"
-> +#define LED_FUNCTION_CEL "cel"
-> +#define LED_FUNCTION_CEL_PWR "cel-pwr"
-> +#define LED_FUNCTION_CEL_RESET "cel-reset"
-> +#define LED_FUNCTION_CHRG "chrg"
-> +#define LED_FUNCTION_COM "com"
-> +#define LED_FUNCTION_COPY "copy"
-> +#define LED_FUNCTION_CPU "cpu"
-> +#define LED_FUNCTION_DEBUG "debug"
-> +#define LED_FUNCTION_DIA "dia"
-
-What does this one do?
-
-> +#define LED_FUNCTION_DISK "disk"
-
-We have disk, hd, hdd and sata. Deprecate some?
-
-> +#define LED_FUNCTION_DISPLAY_CLUSTER "display_cluster"
-> +#define LED_FUNCTION_DOWN "down"
-> +#define LED_FUNCTION_DSL "dsl"
-> +#define LED_FUNCTION_ENOCEAN "enocean"
-> +#define LED_FUNCTION_ENTER "enter"
-> +#define LED_FUNCTION_ERROR "error"
-> +#define LED_FUNCTION_ESATA "esata"
-> +#define LED_FUNCTION_ETHERNET_STATUS "ethernet-status"
-> +#define LED_FUNCTION_FAIL "fail"
-> +#define LED_FUNCTION_FAULT "fault"
-> +#define LED_FUNCTION_FLASH "flash"
-> +#define LED_FUNCTION_FRONT "front"
-> +#define LED_FUNCTION_FUNC "func"
-> +#define LED_FUNCTION_GPIO "gpio"
-> +#define LED_FUNCTION_GSM "gsm"
-
-> +#define LED_FUNCTION_HD "hd"
-> +#define LED_FUNCTION_HDD "hdd"
-> +#define LED_FUNCTION_HDDERR "hdderr"
-
-Ok, I'll=20
-
-> +#define LED_FUNCTION_HEALTH "health"
-> +#define LED_FUNCTION_HEARTBEAT "heartbeat"
-
-Sounds same as alive, deprecate alive?
-
-> +#define LED_FUNCTION_WIFI "wifi"
-> +#define LED_FUNCTION_WIRELESS "wireless"
-> +#define LED_FUNCTION_WLAN "wlan"
-
-Same as wifi and wireless, I guess, deprecate some?
-
-I'll touch same subject in another email.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---dxRQSzdsN/lOP445
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvoEy0ACgkQMOfwapXb+vLcPgCfSdAPmPF1vQHCin0P6SxODnBf
-+oYAmwf01SzTh3B3m8G5SedfY7FUHm9Q
-=oMq+
------END PGP SIGNATURE-----
-
---dxRQSzdsN/lOP445--
+> 
+> Matheus Tavares (6):
+>   staging:iio:ad2s90: Add device tree support
+>   staging:iio:ad2s90: Remove spi setup that should be done via dt
+>   staging:iio:ad2s90: Add max frequency check at probe
+>   dt-bindings:iio:resolver: Add docs for ad2s90
+>   staging:iio:ad2s90: Add SPDX license identifier
+>   staging:iio:ad2s90: Move out of staging
+> 
+>  .../bindings/iio/resolver/ad2s90.txt          | 26 ++++++++++++++++
+>  drivers/iio/resolver/Kconfig                  | 10 ++++++
+>  drivers/iio/resolver/Makefile                 |  1 +
+>  drivers/{staging => }/iio/resolver/ad2s90.c   | 31 ++++++++++++-------
+>  drivers/staging/iio/resolver/Kconfig          | 10 ------
+>  drivers/staging/iio/resolver/Makefile         |  1 -
+>  6 files changed, 57 insertions(+), 22 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/resolver/ad2s90.txt
+>  rename drivers/{staging => }/iio/resolver/ad2s90.c (81%)
+> 
