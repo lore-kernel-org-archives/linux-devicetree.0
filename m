@@ -1,76 +1,97 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 2/4] dt-bindings: iio: adc: Add common ADCs
- properties to a separate file
-Date: Sun, 11 Nov 2018 11:54:49 +0000
-Message-ID: <20181111115449.14c415cb@archlinux>
-References: <1541778055-7629-1-git-send-email-stefan.popa@analog.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 02/24] leds: core: Add support for composing LED class
+ device names
+Date: Sun, 11 Nov 2018 13:02:34 +0100
+Message-ID: <20181111120234.GA28794@amd>
+References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
+ <1541542052-10081-3-git-send-email-jacek.anaszewski@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541778055-7629-1-git-send-email-stefan.popa@analog.com>
+Content-Disposition: inline
+In-Reply-To: <1541542052-10081-3-git-send-email-jacek.anaszewski@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Popa <stefan.popa@analog.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 9 Nov 2018 17:40:55 +0200
-Stefan Popa <stefan.popa@analog.com> wrote:
 
-> There are several ADC drivers that depend on the same device tree
-> bindings. Rather than continue to duplicate the properties, this patch
-> adds a common adc binding document that can be referenced. For beginning,
-> only two properties are documented.
-> 
-> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-Hi Stefan,
+--x+6KMIRAuhnl3hBn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Looks good to me.  Given the 'generic' nature of this one though I would
-like to leave some time for Rob and other devicetree specialists to sanity
-check it.
+Hi!
 
-Thanks,
+> Add public led_compose_name() API for composing LED class device
+> name basing on fwnode_handle data. The function composes device name
+> according to either a new <color:function> pattern or the legacy
+> <devicename:color:function> pattern. The decision on using the
+> particular pattern is made basing on whether fwnode contains new
+> "function" and "color" properties, or the legacy "label" proeprty.
+>=20
+> Backwards compatibility with in-driver hard-coded LED class device
+> names is assured thanks to the default_desc argument.
+>=20
+> In case none of the aformentioned properties was found, then, for OF
+> nodes, the node name is adopted for LED class device name.
+>=20
 
-Jonathan
+> diff --git a/Documentation/leds/leds-class.txt b/Documentation/leds/leds-=
+class.txt
+> index 836cb16..e9009c4 100644
+> --- a/Documentation/leds/leds-class.txt
+> +++ b/Documentation/leds/leds-class.txt
+> @@ -43,7 +43,7 @@ LED Device Naming
+> =20
+>  Is currently of the form:
+> =20
+> -"devicename:colour:function"
+> +"colour:function"
+> =20
 
-> ---
-> Changes in v2, v3:
-> 	- N/A.
-> Changes in v4:
-> 	- Added this commit.
-> 
->  Documentation/devicetree/bindings/iio/adc/adc.txt | 25 +++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adc.txt b/Documentation/devicetree/bindings/iio/adc/adc.txt
-> new file mode 100644
-> index 0000000..1e3cc21
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adc.txt
-> @@ -0,0 +1,25 @@
-> +Common ADCs properties
-> +
-> +This binding is a work-in-progress
-> +
-> +Optional properties for child nodes:
-> +- bipolar : Boolean, if set the channel is used in bipolar mode.
-> +- diff-channels : Differential channels muxed for this ADC. The first value
-> +		specifies the positive input pin, the second value the negative
-> +		input pin.
-> +
-> +Example:
-> +	adc@0 {
-> +		compatible = "some,adc";
-> +		...
-> +		channel@0 {
-> +			bipolar;
-> +			diff-channels = <0 1>;
-> +			...
-> +		};
-> +
-> +		channel@1 {
-> +			diff-channels = <2 3>;
-> +			...
-> +		};
-> +	};
+I don't think we want to do it in all cases.
+
+So, on my cellphone seeing lp5523:green:led is indeed not useful.
+
+But on notebook with usb keyboard attached, you need to keep the
+devicename to be able to distinguish capslock on internal keyboard and
+capslock on first USB keyboard and capslock on second USB keyboard.
+
+Taking look at the list of functions, here's stuff like "hdd" and
+"hdderr". I assume the first means hdd activity... If we can do it, it
+would be nicest to have "sda:green:activity" and maybe
+"sda:red:error". For a raid array with 8 drives...
+
+For example I have a router running linux. It has 4 lan ports, with
+correspondings LED, and an wan led.
+
+Having "green:lan1" to "green:lan4" and "green:wan" plus
+"red:wanerror" would work, but I'd really preffer
+"eth0:green:link"... "adsl0:green:link", "adsl0:red:error".
+
+There are now phones with flashes on both main and selfie
+cameras. Again, knowing which device is which is important. As is
+knowing which display is controlled by particular backlight.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--x+6KMIRAuhnl3hBn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlvoGlkACgkQMOfwapXb+vICOQCdFvVBqzp2X/0dVIEOHUK+NFmw
+4BkAoK5b2Pmc8pjkO8kfELLQLjeuythv
+=t3w5
+-----END PGP SIGNATURE-----
+
+--x+6KMIRAuhnl3hBn--
