@@ -1,155 +1,131 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 4/4] dt-bindings: iio: adc: Add docs for ad7124
-Date: Sun, 11 Nov 2018 12:19:54 +0000
-Message-ID: <20181111121954.145cbd2f@archlinux>
-References: <1541778180-7862-1-git-send-email-stefan.popa@analog.com>
+From: Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
+ driver
+Date: Sun, 11 Nov 2018 18:12:29 +0530
+Message-ID: <3aa7b871-9cf9-9626-11fe-b9aa6009b477@codeaurora.org>
+References: <1539257761-23023-1-git-send-email-tdas@codeaurora.org>
+ <1539257761-23023-3-git-send-email-tdas@codeaurora.org>
+ <153981915373.5275.15971019914218464179@swboyd.mtv.corp.google.com>
+ <0c51a12e-38d3-2df5-4f5f-6a687727e9bf@codeaurora.org>
+ <154130523254.88331.12609105382114756048@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541778180-7862-1-git-send-email-stefan.popa@analog.com>
+In-Reply-To: <154130523254.88331.12609105382114756048@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Popa <stefan.popa@analog.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Stephen Boyd <swboyd@chromium.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 9 Nov 2018 17:43:00 +0200
-Stefan Popa <stefan.popa@analog.com> wrote:
+Hello Stephen,
 
-> Add support for Analog Devices AD7124 4-channels and 8-channels ADC.
->=20
-> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+Thanks for your comments.
 
-Your example still includes the other things that I think you have now drop=
-ped.
-gain and odr.
+On 11/4/2018 9:50 AM, Stephen Boyd wrote:
+> Quoting Taniya Das (2018-11-02 20:06:00)
+>> Hello Stephen,
+>>
+>> On 10/18/2018 5:02 AM, Stephen Boyd wrote:
+>>> Quoting Taniya Das (2018-10-11 04:36:01)
+>>>> --- a/drivers/cpufreq/Kconfig.arm
+>>>> +++ b/drivers/cpufreq/Kconfig.arm
+>>>> @@ -121,6 +121,17 @@ config ARM_QCOM_CPUFREQ_KRYO
+>>>>
+>>>>             If in doubt, say N.
+>>>>
+>>>> +config ARM_QCOM_CPUFREQ_HW
+>>>> +       bool "QCOM CPUFreq HW driver"
+>>>
+>>> Is there any reason this can't be a module?
+>>>
+>>
+>> We do not have any use cases where we need to support it as module.
+> 
+> Ok, so it could easily be tristate then? Why not allow it?
+> 
 
-> ---
-> Changes in v2:
-> 	- Nothing changed.
-> Changes in v3:
-> 	- Removed the "adi,channels" property.
-> 	- Used the "reg" property to get the channel number and "adi,diff-channe=
-ls"
-> 	  for the differential pins. The "adi,channel-number" property was remov=
-ed.
-> 	- adi,bipolar is of boolean type.
-> Changes in v4:
-> 	- Used the bipolar and diff-channels properties defined in the new adc.t=
-xt doc.
->=20
->  .../devicetree/bindings/iio/adc/adi,ad7124.txt     | 81 ++++++++++++++++=
-++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.=
-txt
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt b/D=
-ocumentation/devicetree/bindings/iio/adc/adi,ad7124.txt
-> new file mode 100644
-> index 0000000..fa0c43b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
-> @@ -0,0 +1,81 @@
-> +Analog Devices AD7124 ADC device driver
-> +
-> +Required properties for the AD7124:
-> +	- compatible: Must be one of "adi,ad7124-4" or "adi,ad7124-8"
-> +	- reg: SPI chip select number for the device
-> +	- spi-max-frequency: Max SPI frequency to use
-> +		see: Documentation/devicetree/bindings/spi/spi-bus.txt
-> +	- clocks: phandle to the master clock (mclk)
-> +		see: Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +	- clock-names: Must be "mclk".
-> +	- interrupts: IRQ line for the ADC
-> +		see: Documentation/devicetree/bindings/interrupt-controller/interrupts=
-.txt
+I have checked other vendors CPUfreq drivers and those too support only 
+"bool".
 
-Given the driver doesn't currently use it, should perhaps be optional?
+>>
+>>>> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+>>>> new file mode 100644
+>>>> index 0000000..fe1c264
+>>>> --- /dev/null
+>>>> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+>>>> @@ -0,0 +1,354 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>> +/*
+>>>> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+>>>> + */
+> [...]
+>>>> +
+>>>> +static const u16 cpufreq_qcom_std_offsets[REG_ARRAY_SIZE] = {
+>>>
+>>> Is this going to change in the future?
+>>>
+>>
+>> Yes, they could change and that was the reason to introduce the offsets.
+>> This was discussed earlier too with Sudeep and was to add them.
+>>
+>>>> +       [REG_ENABLE]            = 0x0,
+> 
+> This is only used once? Maybe it could be removed.
+> 
+>>>> +       [REG_LUT_TABLE]         = 0x110,
+> 
+> And this is only used during probe to figure out the supported
+> frequencies. So we definitely don't need to store around the registers
+> after probe in an array of iomem pointers. The only one that we need
+> after probe is the one below.
+> 
+>>>> +       [REG_PERF_STATE]        = 0x920,
+>>>> +};
+>>>> +
 
-> +
-> +	  Required properties:
-> +		* #address-cells: Must be 1.
-> +		* #size-cells: Must be 0.
-> +
-> +	  Subnode(s) represent the external channels which are connected to the=
- ADC.
-> +	  Each subnode represents one channel and has the following properties:
-> +		Required properties:
-> +			* reg: The channel number. It can have up to 4 channels on ad7124-4
-> +			  and 8 channels on ad7124-8, numbered from 0 to 15.
-> +			* diff-channels: see: Documentation/devicetree/bindings/iio/adc/adc.t=
-xt
-> +
-> +		Optional properties:
-> +			* bipolar: see: Documentation/devicetree/bindings/iio/adc/adc.txt
-> +			* adi,reference-select: Select the reference source to use when
-> +			  converting on the the specific channel. Valid values are:
-> +			  0: REFIN1(+)/REFIN1(=E2=88=92).
-> +			  1: REFIN2(+)/REFIN2(=E2=88=92).
-> +			  3: AVDD
-> +			  If this field is left empty, internal reference is selected.
-> +
-> +Optional properties:
-> +	- refin1-supply: refin1 supply can be used as reference for conversion.
-> +	- refin2-supply: refin2 supply can be used as reference for conversion.
-> +	- avdd-supply: avdd supply can be used as reference for conversion.
-> +
-> +Example:
-> +	adc@0 {
-> +		compatible =3D "adi,ad7124-4";
-> +		reg =3D <0>;
-> +		spi-max-frequency =3D <5000000>;
-> +		interrupts =3D <25 2>;
-> +		interrupt-parent =3D <&gpio>;
-> +		refin1-supply =3D <&adc_vref>;
-> +		clocks =3D <&ad7124_mclk>;
-> +		clock-names =3D "mclk";
-> +
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +
-> +		channel@0 {
-> +			reg =3D <0>;
-> +			adi,diff-channels =3D <0 1>;
-> +			adi,reference-select =3D <0>;
-> +			adi,gain =3D <2>;
-> +			adi,odr-hz =3D <10>;
-I think you have dropped these two..
+As these address offsets could change, so I am of the opinion to leave 
+them as it is.
 
-> +		};
-> +
-> +		channel@1 {
-> +			reg =3D <1>;
-> +			adi,bipolar;
-> +			adi,diff-channels =3D <2 3>;
-> +			adi,reference-select =3D <0>;
-> +			adi,gain =3D <4>;
-> +			adi,odr-hz =3D <50>;
-> +		};
-> +
-> +		channel@2 {
-> +			reg =3D <2>;
-> +			adi,diff-channels =3D <4 5>;
-> +			adi,gain =3D <128>;
-> +			adi,odr-hz =3D <19200>;
-> +		};
-> +
-> +		channel@3 {
-> +			reg =3D <3>;
-> +			adi,diff-channels =3D <6 7>;
-> +		};
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3a1bfcb..f2fa508 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -845,6 +845,7 @@ L:	linux-iio@vger.kernel.org
->  W:	http://ez.analog.com/community/linux-device-drivers
->  S:	Supported
->  F:	drivers/iio/adc/ad7124.c
-> +F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
-> =20
->  ANALOG DEVICES INC AD9389B DRIVER
->  M:	Hans Verkuil <hans.verkuil@cisco.com>
+>>>> +static struct cpufreq_qcom *qcom_freq_domain_map[NR_CPUS];
+>>>> +
+>>>> +static int
+>>>> +qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
+>>>> +                            unsigned int index)
+>>>> +{
+>>>> +       struct cpufreq_qcom *c = policy->driver_data;
+>>>> +
+>>>> +       writel_relaxed(index, c->reg_bases[REG_PERF_STATE]);
+>>>
+>>> Why can't we avoid the indirection here and store the perf_state pointer
+>>> in probe? Then we don't have to indirect through a table to perform the
+>>> register write.
+>>>
+>>
+>> As the offsets could change and that was the reason to add this.
+> 
+> With fast switching we can avoid incurring any extra instructions, so
+> please make another iomem pointer in the cpufreq_qcom struct just for
+> writing the index or if possible, just pass the iomem pointer that
+> points to the REG_PERF_STATE as the policy->driver_data variable here.
+> Then we have the address in hand without any extra load. If my
+> understanding is correct, we don't need to keep around anything besides
+> this register address anyway so we should be able to just load it and
+> write it immediately.
+>
+
+The c->reg_bases[] is just an index to the updated bases addresses. I am 
+not clear as to why it would incur an extra instruction.
+
+The below code would already take care of it.
+
++	for (i = REG_ENABLE; i < REG_ARRAY_SIZE; i++)
++		c->reg_bases[i] = base + offsets[i];
++
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
