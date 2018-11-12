@@ -1,120 +1,115 @@
-From: Parthiban Nallathambi <pn@denx.de>
-Subject: Re: [PATCH v2 1/3] dt-bindings: interrupt-controller: Actions
- external interrupt controller
-Date: Mon, 12 Nov 2018 12:01:33 +0100
-Message-ID: <728e5f10-e09f-3fb9-022b-1e74731f774f@denx.de>
-References: <20180812122215.1079590-1-pn@denx.de>
- <20180812122215.1079590-2-pn@denx.de> <20180813194453.GA30702@rob-hp-laptop>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH 3/4] dt-bindings: reset: uniphier: Add AHCI core reset description
+Date: Mon, 12 Nov 2018 21:02:16 +0900
+Message-ID: <20181112210215.2DB6.4A936039@socionext.com>
+References: <1541775663.4112.48.camel@pengutronix.de> <CAK7LNAQGftPMLkQk-tU4R6Jtw9W6npka+Br+2wyyZicAgwDvRg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180813194453.GA30702@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <CAK7LNAQGftPMLkQk-tU4R6Jtw9W6npka+Br+2wyyZicAgwDvRg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: pn@denx.de, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, afaerber@suse.de, catalin.marinas@arm.com, will.deacon@arm.com, manivannan.sadhasivam@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sravanhome@gmail.com, thomas.liau@actions-semi.com, mp-cs@actions-semi.com, linux@cubietech.com, edgar.righi@lsitec.org.br, laisa.costa@lsitec.org.br, guilherme.simoes@lsitec.org.br, mkzuffo@lsi.usp.br
+To: Philipp Zabel <p.zabel@pengutronix.de>, Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+Thank you for some comments and pointing out.
 
-On 8/13/18 9:44 PM, Rob Herring wrote:
-> On Sun, Aug 12, 2018 at 02:22:13PM +0200, Parthiban Nallathambi wrote:
->> Actions Semi OWL family SoC's provides support for external interrupt
->> controller to be connected and controlled using SIRQ pins. S500, S700
->> and S900 provides 3 SIRQ lines and works independently for 3 external
->> interrupt controllers.
->>
->> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
->> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
->> ---
->>   .../interrupt-controller/actions,owl-sirq.txt      | 46 ++++++++++++++++++++++
->>   1 file changed, 46 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.txt
->>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.txt b/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.txt
->> new file mode 100644
->> index 000000000000..4b8437751331
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.txt
->> @@ -0,0 +1,46 @@
->> +Actions Semi Owl SoCs SIRQ interrupt controller
->> +
->> +S500, S700 and S900 SoC's from Actions provides 3 SPI's from GIC,
->> +in which external interrupt controller can be connected. 3 SPI's
->> +45, 46, 47 from GIC are directly exposed as SIRQ. It has
->> +the following properties:
->> +
->> +- inputs three interrupt signal from external interrupt controller
->> +
->> +Required properties:
->> +
->> +- compatible: should be "actions,owl-sirq"
->> +- reg: physical base address of the controller and length of memory mapped.
->> +- interrupt-controller: identifies the node as an interrupt controller
->> +- #interrupt-cells: specifies the number of cells needed to encode an interrupt
->> +  source, should be 2.
+On Sat, 10 Nov 2018 01:14:06 +0900 <yamada.masahiro@socionext.com> wrote:
+
+> On Sat, Nov 10, 2018 at 12:02 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> >
+> > Hi Kunihiko,
+> >
+> > On Fri, 2018-11-09 at 10:42 +0900, Kunihiko Hayashi wrote:
+> > > Add compatible strings for reset control of AHCI core implemented in
+> > > UniPhier SoCs. The reset control belongs to AHCI glue layer.
+> > >
+> > > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/reset/uniphier-reset.txt | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> > > index f63c511..ea00517 100644
+> > > --- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> > > +++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> > > @@ -133,6 +133,9 @@ Required properties:
+> > >      "socionext,uniphier-pxs2-usb3-reset" - for PXs2 SoC USB3
+> > >      "socionext,uniphier-ld20-usb3-reset" - for LD20 SoC USB3
+> > >      "socionext,uniphier-pxs3-usb3-reset" - for PXs3 SoC USB3
+> > > +    "socionext,uniphier-pro4-ahci-reset" - for Pro4 SoC AHCI
+> > > +    "socionext,uniphier-pxs2-ahci-reset" - for PXs2 SoC AHCI
+> > > +    "socionext,uniphier-pxs3-ahci-reset" - for PXs3 SoC AHCI
+> >
+> > Since the driver behaves identically for "socionext,uniphier-pro4-usb3-
+> > reset" and "socionext,uniphier-pro4-ahci-reset", would it make sense to
+> > add a common compatible?
 > 
->> +- actions,sirq-shared-reg: Applicable for S500 and S700 where SIRQ register
->> +  details are maintained at same offset/register.
->> +- actions,sirq-offset: register offset for SIRQ interrupts. When registers are
->> +  shared, all the three offsets will be same (S500 and S700).
 > 
-> You should have more specific compatible strings if there are
-> differences and these settings can be implied by them.
-
-This to meant to get the register offset because s500, s700 uses the
-same external interrupt controller register to provide three or more
-interrupt line. But this is not the case for s900.
-
-So should it be "actions,sirq-offset-reg"?
-
+> As far as I could guess, he just happened to find the same driver code
+> could be reused for other hardware.
 > 
->> +- actions,sirq-clk-sel: external interrupt controller can be either
->> +  connected to 32Khz or 24Mhz external/internal clock. This needs
->> +  to be configured for per SIRQ line. Failing defaults to 32Khz clock.
+> Theoretically, this can happen anywhere since
+> a reset controller is just a set of registers
+> each bit of which is connected to a reset line.
 > 
-> What are the valid values?
-> 
->> +
->> +Example for S900:
->> +
->> +sirq: interrupt-controller@e01b0000 {
->> +	compatible = "actions,owl-sirq";
->> +	reg = <0 0xe01b0000 0 0x1000>;
->> +	interrupt-controller;
->> +	#interrupt-cells = <2>;
->> +	actions,sirq-clk-sel = <0 0 0>;
-> 
-> If 0 is 32khz, then having this is pointless. But I can't tell what the
-> values correspond to.
+> If you added a super-generic compatible like "simple-reset",
+> I would agree with
+> "socionext,uniphier-pro4-usb3-reset", "simple-reset"
+> since this is a pattern.
 
-Thanks, clock selection will be removed and defaults to 24MHz.
+I think it's more generic to define simple-reset with parent clock/reset
+control without both SoC and device names.
 
+However, such parent clocks/resets strongly depends on SoC, 
+so I think it's difficut to lead generic definition in this case.
+
+If we add generic compatible string, I also add "simple-reset".
+
+
+> However,
+> "socionext,uniphier-pro4-glue-reset" is kind of a halfway house
+> where it is SoC-specific, but still ambiguous.
+
+Surely, it might be hard to understand that pro4-glue-reset is SoC-specific
+but for generic-device.
+
+
+> > Something like:
+> > "socionext,uniphier-pro4-usb3-reset", "socionext,uniphier-pro4-glue-reset" - for USB3 SoC AHCI
+> > "socionext,uniphier-pro4-ahci-reset", "socionext,uniphier-pro4-glue-reset" - for Pro4 SoC AHCI
+> >
+> > That way if more places turn up where the glue layer reset is used,
+> > you can add them without patching the driver every time.
 > 
->> +	actions,sirq-offset = <0x200 0x528 0x52c>;
->> +};
->> +
->> +Example for S500 and S700:
->> +
->> +sirq: interrupt-controller@e01b0000 {
->> +	compatible = "actions,owl-sirq";
->> +	reg = <0 0xe01b0000 0 0x1000>;
->> +	interrupt-controller;
->> +	#interrupt-cells = <2>;
->> +	actions,sirq-shared-reg;
->> +	actions,sirq-clk-sel = <0 0 0>;
->> +	actions,sirq-offset = <0x200 0x200 0x200>;
->> +};
->> -- 
->> 2.14.4
->>
 > 
+> This is a trade-off between "patch the driver"
+> and "potential change of the binding".
 
--- 
-Thanks,
-Parthiban N
+Adding "glue-reset" is usable for devices having same parent clocks/resets as
+usb3/ahci, and we can add the devices without patches.
 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-22 Fax: (+49)-8142-66989-80 Email: pn@denx.de
+However, if the device needs other parent clocks/resets for the same SoC,
+we can't add "glue-reset" and we might add patches for the device as a result.
+In this case, the "glue-reset" will become difficult to understand.
+
+
+> There is no real hardware like pro4-glue-reset.
+>
+> I am guessing this is a part of syscon or something,
+> but I cannot find any explanation in a bigger picture.
+> 
+> So, I cannot judge this further more.
+
+Since it's hard to lead the best result,
+currently I'd like to suggest the current compatibles, with "simple-reset"
+if necessary.
+
+Thank you,
+
+---
+Best Regards,
+Kunihiko Hayashi
