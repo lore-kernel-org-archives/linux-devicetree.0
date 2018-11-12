@@ -1,78 +1,26 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: LEDs on USB keyboards was Re: [PATCH 02/24] leds: core: Add support
- for composing LED class device names
-Date: Mon, 12 Nov 2018 23:11:04 +0100
-Message-ID: <20181112221104.GC11942@amd>
-References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
- <1541542052-10081-3-git-send-email-jacek.anaszewski@gmail.com>
- <20181111120234.GA28794@amd>
- <a640167b-3a3e-daea-b377-6e82b653c5e8@gmail.com>
- <20181111201605.GA20160@amd>
- <57b77d4e-39a0-aaf2-5952-c2c25dc58593@gmail.com>
- <e72ac342-5253-851a-e54f-b1bd752be628@gmail.com>
- <CACRpkdZwgZ=PmX3PEpR-F76BZ5g9hzvQYc_3QfFYhHvBHqp4Tw@mail.gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH v6 0/2] arm64: dts: qcom: pm8998: Add die temperature channel node to the ADC
+Date: Mon, 12 Nov 2018 14:11:24 -0800
+Message-ID: <20181112221126.27142-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="lMM8JwqTlfDpEaS6"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZwgZ=PmX3PEpR-F76BZ5g9hzvQYc_3QfFYhHvBHqp4Tw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: dachaac@gmail.com, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, dmurphy@ti.com, oleg@kaa.org.ua, Sakari Ailus <sakari.ailus@linux.intel.com>, simon@lineageos.org, xiaotong.lu@spreadtrum.com
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
+This series adds a channel for the die temperature to the QCOM SPMI
+PMIC5 ADC. It also fixes an example in the DT documentation.
 
---lMM8JwqTlfDpEaS6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Matthias Kaehlcke (2):
+  dt-bindings: iio: vadc: Add unit address to ADC channel node in
+    example
+  arm64: dts: qcom: pm8998: Add die temperature channel node to the ADC
 
-Hi!
+ .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt          | 6 +++++-
+ arch/arm64/boot/dts/qcom/pm8998.dtsi                        | 5 +++++
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-> > Couldn't we have here multiple variants that would then be chosen based
-> > on device tree definition?
->=20
-> It needs to be subsystem specific or something.
-> What you say make sense for things based on device
-> tree.
->=20
-> The problem hit me on an Intel laptop with several
-> USB keyboards.
->=20
-> OK maybe I am stupid for plugging in two USB keyboards,
-> but we should definately support it. Input/HID supports it
-> well.
-
-Plugging two USB keyboards should be supported.
-
-Can we get some details... kernel version, architecture, maybe
-=2Econfig, where/how it fails?
-
-On my systems, keyboard leds are prefixed with device name, so I see
-no chance for duplicities...
-
-input5::capslock/   =20
-input5::numlock/    =20
-input5::scrolllock/
-
-Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---lMM8JwqTlfDpEaS6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvp+ngACgkQMOfwapXb+vLqywCdFaqE3SM9L6Df8+cbZl/qYHAi
-7BEAoI8ogyxXrej9w7IRZ6vlaCjzxYNi
-=SadW
------END PGP SIGNATURE-----
-
---lMM8JwqTlfDpEaS6--
+-- 
+2.19.1.930.g4563a0d9d0-goog
