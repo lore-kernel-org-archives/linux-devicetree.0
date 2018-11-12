@@ -1,88 +1,65 @@
-Return-Path: <SRS0=EY9Q=OF=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr790050.outbound.protection.outlook.com ([40.107.79.50]:24864
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726253AbeKZXBJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 26 Nov 2018 18:01:09 -0500
-From: Lars Povlsen <lars.povlsen@microchip.com>
-Subject: [PATCH] mips: gpio: mscc_sgpio: Add DT bindings documentation
-Date: Mon, 26 Nov 2018 13:06:23 +0100
-Message-ID: <87r2f83uww.fsf@soft-dev15.microsemi.net>
+Return-Path: <robherring2@gmail.com>
+Message-ID: <5bea0eb8.1c69fb81.6b921.80e6@mx.google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 04/24] dt-bindings: leds: Add function and color
+ properties
+References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
+ <1541542052-10081-5-git-send-email-jacek.anaszewski@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linus.walleij@linaro.org, Gregory CLEMENT <gregory.clement@bootlin.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1541542052-10081-5-git-send-email-jacek.anaszewski@gmail.com>
+Date: Mon, 12 Nov 2018 12:27:11 -0600
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>
 List-ID: <devicetree@vger.kernel.org>
 
+On Tue, Nov 06, 2018 at 11:07:12PM +0100, Jacek Anaszewski wrote:
+> Introduce dedicated properties for conveying information about
+> LED function and color. Mark old "label" property as deprecated.
+> 
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Baolin Wang <baolin.wang@linaro.org>
+> Cc: Daniel Mack <daniel@zonque.org>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Simon Shields <simon@lineageos.org>
+> Cc: Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+> ---
+>  Documentation/devicetree/bindings/leds/common.txt | 52 +++++++++++++++++++----
+>  1 file changed, 44 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index aa13998..3efc826 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -10,14 +10,20 @@ can influence the way of the LED device initialization, the LED components
+>  have to be tightly coupled with the LED device binding. They are represented
+>  by child nodes of the parent LED device binding.
+>  
+> +
+>  Optional properties for child nodes:
+>  - led-sources : List of device current outputs the LED is connected to. The
+>  		outputs are identified by the numbers that must be defined
+>  		in the LED device binding documentation.
+> +- function: LED functon. Use one of the LED_FUNCTION_* prefixed definitions
+> +	    from the header include/dt-bindings/leds/functions.h.
+> +	    If there is no matching LED_FUNCTION available, add a new one.
+> +- color : Color of the LED.
+>  - label : The label for this LED. If omitted, the label is taken from the node
+>  	  name (excluding the unit address). It has to uniquely identify
+>  	  a device, i.e. no other LED class device can be assigned the same
+> -	  label.
+> +	  label. This property is deprecated - use 'function' and 'color'
+> +	  properties instead.
 
-Hello device tree!
+I don't know if I'd go as far a deprecating.
 
-I am submitting this device tree driver binding documentation for review
-comments.
+One thing to consider is how we handle multiple of the same function? Do 
+we allow an index on function names? What if an index isn't meaningful 
+and we need "front" vs. "rear" for example? Maybe label is still needed 
+there. 
 
-The driver is currently implemented on u-boot, but will also eventually
-be upstreamed to Linux.
-
-By using a serial interface, the MSCC SIO controller significantly
-extends the number of available GPIOs with a minimum number of
-additional pins on the device. The primary purpose of the SIO controller
-is to connect control signals from SFP modules and to act as an LED
-controller.
-
-This add device tree binding documentation for the MSCC serial GPIO
-driver.
-
-Signed-off-by: Lars Povlsen <lars.povlsen@microsemi.com>
----
- doc/device-tree-bindings/gpio/mscc_sgpio.txt | 39 ++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 doc/device-tree-bindings/gpio/mscc_sgpio.txt
-
-diff --git a/doc/device-tree-bindings/gpio/mscc_sgpio.txt b/doc/device-tree-bindings/gpio/mscc_sgpio.txt
-new file mode 100644
-index 0000000000..24e6aa345e
---- /dev/null
-+++ b/doc/device-tree-bindings/gpio/mscc_sgpio.txt
-@@ -0,0 +1,39 @@
-+MSCC Serial GPIO driver
-+
-+Required properties:
-+- compatible : "mscc,luton-sgpio" or "mscc,ocelot-sgpio"
-+- clock: Reference clock used to generate clock divider setting. See
-+  mscc,sgpio-frequency property.
-+- reg : Physical base address and length of the controller's registers.
-+- #gpio-cells : Should be two. The first cell is the pin number and the
-+  second cell is used to specify optional parameters:
-+  - bit 0 specifies polarity (0 for normal, 1 for inverted)
-+- gpio-controller : Marks the device node as a GPIO controller.
-+- gpio-ranges: The 4th cell will typically be 32*<sgpio-bitcount>
-+
-+Optional properties:
-+- mscc,sgpio-frequency: The frequency at which the serial bitstream is
-+  generated and sampled. Default: 12500000 (Hz).
-+- mscc,sgpio-bitcount: The number of bits enabled per
-+  port. (1-4). Default: 2.
-+- mscc,sgpio-ports: A bitmask (32 bits) of which ports are enabled in
-+  the serialized gpio stream. Default: 0xFFFFFFFF.
-+
-+Typically the pinctrl-0 and pinctrl-names properties will also be
-+present to enable the use of the SIO CLK, LD, DI and DO for some
-+regular GPIO pins.
-+
-+Example:
-+
-+sgpio: gpio@10700f8 {
-+       compatible = "mscc,ocelot-sgpio";
-+       pinctrl-0 = <&sgpio_pins>;
-+       pinctrl-names = "default";
-+       reg = <0x10700f8 0x100>;
-+       gpio-controller;
-+       #gpio-cells = <2>;
-+       gpio-ranges = <&sgpio 0 0 64>; // 32*<sgpio-bitcount>
-+       mscc,sgpio-frequency = <12500>;
-+       mscc,sgpio-bitcount = <2>;
-+       mscc,sgpio-ports = <0x000FFFFF>;
-+};
--- 
-2.19.1
+Rob
