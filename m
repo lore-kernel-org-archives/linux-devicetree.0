@@ -1,112 +1,138 @@
-Return-Path: <monstr@monstr.eu>
+Return-Path: <robherring2@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [bindings][PATCH] bindings/net: DPAA Backplane Device Bindings
+Message-ID: <20181112181054.GA11173@bogus>
+References: <1541504900-30091-1-git-send-email-florinel.iordache@nxp.com>
 MIME-Version: 1.0
-References: <74a9934eab231714e65f74e442ad79cab0475267.1541684144.git.michal.simek@xilinx.com>
-In-Reply-To: <74a9934eab231714e65f74e442ad79cab0475267.1541684144.git.michal.simek@xilinx.com>
-From: Michal Simek <monstr@monstr.eu>
-Date: Fri, 16 Nov 2018 09:13:57 +0100
-Message-ID: <CAHTX3dLaX9W3q2EBLG30Mo+h9vrg_jfdy6VTuOYuUk0Cr52V8g@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: Add missing gpio-controller to ps gpio
-Content-Type: multipart/alternative; boundary="0000000000006606c5057ac3c0ac"
-To: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Rob Herring <robherring2@gmail.com>
-Cc: Olof Johansson <olof@lixom.net>, LKML <linux-kernel@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Will Deacon <will.deacon@arm.com>, Manish Narani <manish.narani@xilinx.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1541504900-30091-1-git-send-email-florinel.iordache@nxp.com>
+Date: Mon, 12 Nov 2018 12:10:59 -0600
+To: Florinel Iordache <florinel.iordache@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "broonie@kernel.org" <broonie@kernel.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
---0000000000006606c5057ac3c0ac
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-=C4=8Dt 8. 11. 2018 v 14:35 odes=C3=ADlatel Michal Simek <michal.simek@xili=
-nx.com>
-napsal:
-
-> Add missing gpio-controller property to ps gpio.
-> This was found via DT schema validation.
->
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+On Tue, Nov 06, 2018 at 11:48:30AM +0000, Florinel Iordache wrote:
+> Device Tree Bindings for DPAA backplane available on Layerscape
+>  communications processors.
+> 
+> Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
 > ---
->
->  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> index 07f2dd13ab33..ae3c1b929648 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> @@ -410,6 +410,7 @@
->                         compatible =3D "xlnx,zynqmp-gpio-1.0";
->                         status =3D "disabled";
->                         #gpio-cells =3D <0x2>;
-> +                       gpio-controller;
->                         interrupt-parent =3D <&gic>;
->                         interrupts =3D <0 16 4>;
->                         interrupt-controller;
-> --
-> 1.9.1
->
->
-Applied but with zynqmp: subsystem.
+>  .../devicetree/bindings/net/dpaa-backplane.txt     | 105 +++++++++++++++++++++
+>  1 file changed, 105 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/dpaa-backplane.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/dpaa-backplane.txt b/Documentation/devicetree/bindings/net/dpaa-backplane.txt
+> new file mode 100644
+> index 0000000..f147c84
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/dpaa-backplane.txt
+> @@ -0,0 +1,105 @@
+> +=============================================================================
+> +DPAA Backplane Device Bindings
+> +
+> +CONTENTS
+> +  - SerDes Node
+> +  - PCS Phy Node
+> +
+> +=============================================================================
+> +SerDes Node
+> +
+> +DESCRIPTION
+> +
+> +SerDes (Serializer/Deserializer) HW peripheral
+> +
+> +PROPERTIES
+> +
+> +- compatible
+> +		Usage: required
+> +		Value type: <stringlist>
+> +		Definition: Specifies the type of SerDes.
+> +		Must include the prefix "fsl,serdes"
+> +		SerDes can be of different types:
+> +		- 10G SerDes must be specified as: "fsl,serdes-10g"
+> +		- 28G SerDes must be specified as: "fsl,serdes-28g"
 
-Thanks,
-Michal
+These should be SoC specific.
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+> +
+> +- reg
+> +		Usage: required
+> +		Value type: <prop-encoded-array>
+> +		Definition: Specifies the offset of the SerDes configuration registers
+> +
+> +- little-endian
+> +		Usage: optional
+> +		Value type: <Boolean>
+> +		Definition: Specifies endianness access to SerDes registers.
+> +		If omitted, big-endian will be used
+> +		See common-properties.txt for complete definition
+> +
+> +EXAMPLE
+> +
+> +Example of 10G SerDes node:
+> +
+> +serdes1: serdes@1ea0000 {
+> +		compatible = "fsl,serdes-10g";
+> +		reg = <0x0 0x1ea0000 0 0x00002000>;
+> +		little-endian;
+> +};
+> +
+> +=============================================================================
+> +PCS Phy Node
 
---0000000000006606c5057ac3c0ac
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This should be separate file.
 
-<div dir=3D"ltr"><br><br><div class=3D"gmail_quote"><div dir=3D"ltr">=C4=8D=
-t 8. 11. 2018 v=C2=A014:35 odes=C3=ADlatel Michal Simek &lt;<a href=3D"mail=
-to:michal.simek@xilinx.com">michal.simek@xilinx.com</a>&gt; napsal:<br></di=
-v><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:=
-1px #ccc solid;padding-left:1ex">Add missing gpio-controller property to ps=
- gpio.<br>
-This was found via DT schema validation.<br>
-<br>
-Signed-off-by: Michal Simek &lt;<a href=3D"mailto:michal.simek@xilinx.com" =
-target=3D"_blank">michal.simek@xilinx.com</a>&gt;<br>
----<br>
-<br>
-=C2=A0arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 1 +<br>
-=C2=A01 file changed, 1 insertion(+)<br>
-<br>
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/x=
-ilinx/zynqmp.dtsi<br>
-index 07f2dd13ab33..ae3c1b929648 100644<br>
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi<br>
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi<br>
-@@ -410,6 +410,7 @@<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 compatible =3D &quot;xlnx,zynqmp-gpio-1.0&quot;;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 status =3D &quot;disabled&quot;;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 #gpio-cells =3D &lt;0x2&gt;;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0gpio-controller;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 interrupt-parent =3D &lt;&amp;gic&gt;;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 interrupts =3D &lt;0 16 4&gt;;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 interrupt-controller;<br>
--- <br>
-1.9.1<br>
-<br>
-</blockquote></div><br clear=3D"all"><div>Applied but with zynqmp: subsyste=
-m.</div><div><br></div><div>Thanks,</div><div>Michal<br></div><div><br></di=
-v>-- <br><div dir=3D"ltr" class=3D"gmail_signature" data-smartmail=3D"gmail=
-_signature">Michal Simek, Ing. (M.Eng), OpenPGP -&gt; KeyID: FE3D1F91<br>w:=
- <a href=3D"http://www.monstr.eu" target=3D"_blank">www.monstr.eu</a> p: +4=
-2-0-721842854<br>Maintainer of Linux kernel - Microblaze cpu - <a href=3D"h=
-ttp://www.monstr.eu/fdt/" target=3D"_blank">http://www.monstr.eu/fdt/</a><b=
-r>Maintainer of Linux kernel - Xilinx Zynq ARM architecture<br>Microblaze U=
--BOOT custodian and responsible for u-boot arm zynq platform</div></div>
+> +
+> +DESCRIPTION
+> +
+> +PCS Phy (Physical Coding Sublayer / Physical layer) node
+> +
+> +PROPERTIES
+> +
+> +- compatible
+> +		Usage: required
+> +		Value type: <stringlist>
+> +		Definition: A standard property. Specifies the IEEE 802.3 Clause
+> +		Different IEEE 802.3 Clauses can be specified:
+> +		- Clause 22 must be specified as: "ethernet-phy-ieee802.3-c22"
+> +		- Clause 45 must be specified as: "ethernet-phy-ieee802.3-c45"
+> +		For complete definition see:
+> +		Documentation/devicetree/bindings/net/phy.txt
+> +
+> +- reg
+> +		Usage: required
+> +		Value type: <prop-encoded-array>
+> +		Definition: A standard property.
+> +		Specifies the offset of the PCS Phy configuration registers
+> +		For complete definition see:
+> +		Documentation/devicetree/bindings/net/phy.txt
+> +
+> +- backplane-mode
+> +		Usage: required
+> +		Value type: <stringlist>
+> +		Definition: Specifies the speed and type of the protocol used
+> +		Different speeds and backplane protocol types can be used:
+> +		- 10GBase-KR must be specified as: "10gbase-kr"
+> +		- 40GBase-KR must be specified as: "40gbase-kr"
 
---0000000000006606c5057ac3c0ac--
+Is this a standard property? If so just reference the common definition. 
+If not, should it be? Otherwise, it needs a vendor prefix.
+
+> +
+> +- fsl,lane-handle
+> +		Usage: required
+> +		Value type: <phandle>
+> +		Definition: Specifies the reference to a node representing the SerDes
+> +		device
+> +
+> +- fsl,lane-reg
+> +		Usage: required
+> +		Value type: <prop-encoded-array>
+> +		Definition: Specifies the offsets of the SerDes lanes configuration
+> +		registers
+
+Seems like you should use the phy binding (generic, not net phy) here 
+instead of these 2 custom properties.
+
+Rob
