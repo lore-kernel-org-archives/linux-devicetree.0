@@ -1,98 +1,65 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-binding: mediatek-dwmac: add binding document for
- MediaTek MT2712 DWMAC
-Date: Mon, 12 Nov 2018 10:22:07 -0600
-Message-ID: <20181112162204.GA8910@bogus>
-References: <1540782294-27721-1-git-send-email-biao.huang@mediatek.com>
- <1540782294-27721-3-git-send-email-biao.huang@mediatek.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/15] dt-bindings: net: broadcom-bluetooth:
+ Fix external clock names
+Date: Mon, 12 Nov 2018 12:37:28 -0600
+Message-ID: <5bea0ebe.1c69fb81.e15d7.98e1@mx.google.com>
+References: <20181107101308.7626-1-wens@csie.org>
+ <20181107101308.7626-2-wens@csie.org>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBQE5VDPQKGQE5GAMQ7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1540782294-27721-3-git-send-email-biao.huang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Biao Huang <biao.huang@mediatek.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, nelson.chang@mediatek.com, andrew@lunn.ch, netdev@vger.kernel.org, sean.wang@mediatek.com, liguo.zhang@mediatek.com, linux-kernel@vger.kernel.org, matthias.bgg@gmail.com, joabreu@synopsys.com, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20181107101308.7626-2-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2018 at 11:04:54AM +0800, Biao Huang wrote:
-> The commit adds the device tree binding documentation for the MediaTek DWMAC
-> found on MediaTek MT2712.
+On Wed, Nov 07, 2018 at 06:12:54PM +0800, Chen-Yu Tsai wrote:
+> The Broadcom Bluetooth controllers can take up to two external clocks:
+> an external frequency reference, substituting the main crystal, and a
+> LPO clock at 32.768 kHz substituting the internal LPO clock.
 > 
-> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+> In particular, the external LPO clock must be used when the controller
+> does not have NVRAM connected, and the main reference frequency is not
+> the default 20 MHz. This is described in detail in the datasheet.
+> 
+> The original "extclk" clock name is ambiguous as to which of these it
+> refers to, and some designs might even require both.
+> 
+> This patch deprecates the existing name, and adds "txco" and "lpo".
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 > ---
->  .../devicetree/bindings/net/mediatek-dwmac.txt     |   49 ++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/mediatek-dwmac.txt
+>  Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/mediatek-dwmac.txt b/Documentation/devicetree/bindings/net/mediatek-dwmac.txt
-> new file mode 100644
-> index 0000000..8baf0e4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/mediatek-dwmac.txt
-> @@ -0,0 +1,49 @@
-> +MediaTek DWMAC glue layer controller
-> +
-> +This file documents platform glue layer for stmmac.
-> +Please see stmmac.txt for the other unchanged properties.
-> +
-> +The device node has following properties.
-> +
-> +Required properties:
-> +- compatible:  Should be "mediatek,mt2712-gmac" for MT2712 SoC
-> +- reg:  Address and length of the register set for the device
-> +- interrupts:  Should contain the MAC interrupts
-> +- interrupt-names: Should contain a list of interrupt names corresponding to
-> +	the interrupts in the interrupts property, if available.
-> +	Should be "macirq" for the main MAC IRQ
-> +- clocks: Must contain a phandle for each entry in clock-names.
-> +- clock-names: the name of the clock listed in the clocks property. These are
-> +	"axi", "apb", "mac_ext", "mac_parent", "ptp_ref", "ptp_parent", "ptp_top"
-> +	for MT2712 SoC
+> diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> index 4194ff7e6ee6..2535e54219af 100644
+> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> @@ -18,7 +18,10 @@ Optional properties:
+>   - shutdown-gpios: GPIO specifier, used to enable the BT module
+>   - device-wakeup-gpios: GPIO specifier, used to wakeup the controller
+>   - host-wakeup-gpios: GPIO specifier, used to wakeup the host processor
+> - - clocks: clock specifier if external clock provided to the controller
+> + - clocks and clock-names: clock specifier if external clocks are provided
+> +   - "txco": external reference clock
+> +   - "extclk": deprecated, replaced by "txco"
+> +   - "lpo": external low power 32.768 kHz clock
+>   - clock-names: should be "extclk"
 
-Clocks should represent the physical clocks connected to a block. Parent 
-clocks are not in that category.
+This line should change?
 
-> +- mac-address: See ethernet.txt in the same directory
-> +- phy-mode: See ethernet.txt in the same directory
-> +
-> +Example:
-> +
-> +	eth: ethernet@1101c000 {
-> +		compatible = "mediatek,mt2712-gmac";
-> +		reg = <0 0x1101c000 0 0x1300>;
-> +		interrupts = <GIC_SPI 237 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-names = "macirq";
-> +		phy-mode ="rgmii-id";
-> +		mac-address = [00 55 7b b5 7d f7];
-> +		clock-names = "axi",
-> +			      "apb",
-> +			      "mac_ext",
-> +			      "mac_parent",
-> +			      "ptp_ref",
-> +			      "ptp_parent",
-> +			      "ptp_top";
-> +		clocks = <&pericfg CLK_PERI_GMAC>,
-> +			 <&pericfg CLK_PERI_GMAC_PCLK>,
-> +			 <&topckgen CLK_TOP_ETHER_125M_SEL>,
-> +			 <&topckgen CLK_TOP_ETHERPLL_125M>,
-> +			 <&topckgen CLK_TOP_ETHER_50M_SEL>,
-> +			 <&topckgen CLK_TOP_APLL1_D3>,
-> +			 <&topckgen CLK_TOP_APLL1>;
-> +		snps,txpbl = <32>;
-> +		snps,rxpbl = <32>;
-> +		snps,reset-gpio = <&pio 87 GPIO_ACTIVE_LOW>;
-> +		snps,reset-active-low;
-> +	};
-> -- 
-> 1.7.9.5
-> 
+'clocks' needs to describe how many clocks and the order of them.
+
+'clock-names' needs to list the names. Keep them separate.
+
+Rob
