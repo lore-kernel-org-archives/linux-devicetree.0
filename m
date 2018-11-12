@@ -1,32 +1,50 @@
-Return-Path: <SRS0=byPw=N6=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:54558 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730059AbeKTEm2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 19 Nov 2018 23:42:28 -0500
-Date: Mon, 19 Nov 2018 10:17:45 -0800
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 0/3] ARM: dts: am3/am4/dra7 clkctrl data conversion
-Message-ID: <20181119181745.GU53235@atomide.com>
-References: <1535728491-25321-1-git-send-email-t-kristo@ti.com>
+Return-Path: <robherring2@gmail.com>
+Message-ID: <5bea0ecf.1c69fb81.7820a.2052@mx.google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH] Documentation: DT: arm: add support for sockets
+ defining package boundaries
+References: <20181107171344.983-1-sudeep.holla@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1535728491-25321-1-git-send-email-t-kristo@ti.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20181107171344.983-1-sudeep.holla@arm.com>
+Date: Mon, 12 Nov 2018 13:13:15 -0600
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, palmer@sifive.com, anup@brainfault.org, Damien.LeMoal@wdc.com, mick@ics.forth.gr, atish.patra@wdc.com, mark.rutland@arm.com, zong@andestech.com, alankao@andestech.com
 List-ID: <devicetree@vger.kernel.org>
 
-* Tero Kristo <t-kristo@ti.com> [180831 08:19]:
-> Hi,
+On Wed, Nov 07, 2018 at 05:13:44PM +0000, Sudeep Holla wrote:
+> The current ARM DT topology description provides the operating system
+> with a topological view of the system that is based on leaf nodes
+> representing either cores or threads (in an SMT system) and a
+> hierarchical set of cluster nodes that creates a hierarchical topology
+> view of how those cores and threads are grouped.
 > 
-> This series converts the clkctrl data on am3/am4/dra7 to be split
-> based on the clockdomain boundaries, instead of current CM node
-> split.
+> However this hierarchical representation of clusters does not allow to
+> describe what topology level actually represents the physical package or
+> the socket boundary, which is a key piece of information to be used by
+> an operating system to optimize resource allocation and scheduling.
+> 
+> Lets add a new "socket" node type in the cpu-map node to describe the
+> same.
+> 
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  .../devicetree/bindings/arm/topology.txt      | 52 ++++++++++++++-----
+>  1 file changed, 39 insertions(+), 13 deletions(-)
+> 
+> (Note patch generated with -b option to avoid 60+ of whitespace changes)
+> 
+> Hi Rob,
+> 
+> You had expressed your interest to generalise the CPU topology bindings
+> accross multiple architectures. Do you want to move to the generic
+> bindings before adding this $subject socket support or is it OK to
+> finalise on this and then move the majority(based on the agreement)
+> to generic binding.
 
-These are applied into omap-for-v4.21/dt-ti-sysc and should be
-hitting next soon.
+Doesn't really matter to me as long as Risc-V folks are in agreement.
 
-Thanks,
+Otherwise, this looks fine to me.
 
-Tony
+Rob
