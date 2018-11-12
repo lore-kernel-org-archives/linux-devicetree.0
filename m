@@ -1,99 +1,38 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH v1 1/3] pwm: mediatek: drop flag 'has_clks'
-Date: Mon, 12 Nov 2018 15:33:55 +0800
-Message-ID: <4c9044427b1aab373acd6ac76f0c905e2be79784.1542007642.git.ryder.lee@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 0/3] Qualcomm AOSS QMP side channel binding and driver
+Date: Mon, 12 Nov 2018 00:05:54 -0800
+Message-ID: <20181112080557.22698-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, llinux-pwm@vger.kernel.org, Weijie Gao <weijie.gao@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>, John Crispin <john@phrozen.org>
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The flag 'has_clks' and related checks are superfluous as the CCF
-subsystem does this for you.
+Add binding and driver for the QMP based side-channel communication mechanism
+to the AOSS, which is used to control resources not exposed through the RPMh
+interface.
 
-Cc: John Crispin <john@phrozen.org>
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
----
- drivers/pwm/pwm-mediatek.c | 20 +++++---------------
- 1 file changed, 5 insertions(+), 15 deletions(-)
+Currently implemented is a genpd provider, but pending some improvements in the
+thermal framework a cooling device will be added at a later point.
 
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index eb6674c..9400c41 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -57,7 +57,6 @@ enum {
- struct mtk_pwm_platform_data {
- 	unsigned int num_pwms;
- 	bool pwm45_fixup;
--	bool has_clks;
- };
- 
- /**
-@@ -87,9 +86,6 @@ static int mtk_pwm_clk_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
- 	int ret;
- 
--	if (!pc->soc->has_clks)
--		return 0;
--
- 	ret = clk_prepare_enable(pc->clks[MTK_CLK_TOP]);
- 	if (ret < 0)
- 		return ret;
-@@ -116,9 +112,6 @@ static void mtk_pwm_clk_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- {
- 	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
- 
--	if (!pc->soc->has_clks)
--		return;
--
- 	clk_disable_unprepare(pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]);
- 	clk_disable_unprepare(pc->clks[MTK_CLK_MAIN]);
- 	clk_disable_unprepare(pc->clks[MTK_CLK_TOP]);
-@@ -246,12 +239,13 @@ static int mtk_pwm_probe(struct platform_device *pdev)
- 	if (IS_ERR(pc->regs))
- 		return PTR_ERR(pc->regs);
- 
--	for (i = 0; i < data->num_pwms + 2 && pc->soc->has_clks; i++) {
-+	for (i = 0; i < data->num_pwms + 2; i++) {
- 		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
- 		if (IS_ERR(pc->clks[i])) {
--			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
--				mtk_pwm_clk_name[i], PTR_ERR(pc->clks[i]));
--			return PTR_ERR(pc->clks[i]);
-+			if (PTR_ERR(pc->clks[i]) == -EPROBE_DEFER)
-+				return -EPROBE_DEFER;
-+
-+			pc->clks[i] = NULL;
- 		}
- 	}
- 
-@@ -281,25 +275,21 @@ static int mtk_pwm_remove(struct platform_device *pdev)
- static const struct mtk_pwm_platform_data mt2712_pwm_data = {
- 	.num_pwms = 8,
- 	.pwm45_fixup = false,
--	.has_clks = true,
- };
- 
- static const struct mtk_pwm_platform_data mt7622_pwm_data = {
- 	.num_pwms = 6,
- 	.pwm45_fixup = false,
--	.has_clks = true,
- };
- 
- static const struct mtk_pwm_platform_data mt7623_pwm_data = {
- 	.num_pwms = 5,
- 	.pwm45_fixup = true,
--	.has_clks = true,
- };
- 
- static const struct mtk_pwm_platform_data mt7628_pwm_data = {
- 	.num_pwms = 4,
- 	.pwm45_fixup = true,
--	.has_clks = false,
- };
- 
- static const struct of_device_id mtk_pwm_of_match[] = {
+Bjorn Andersson (3):
+  dt-bindings: soc: qcom: Add AOSS QMP binding
+  soc: qcom: Add AOSS QMP communication driver
+  soc: qcom: Add AOSS QMP genpd provider
+
+ .../bindings/soc/qcom/qcom,aoss-qmp.txt       |  63 ++++
+ drivers/soc/qcom/Kconfig                      |  15 +
+ drivers/soc/qcom/Makefile                     |   2 +
+ drivers/soc/qcom/aoss-qmp-pd.c                | 135 ++++++++
+ drivers/soc/qcom/aoss-qmp.c                   | 313 ++++++++++++++++++
+ include/dt-bindings/power/qcom-aoss-qmp.h     |  15 +
+ include/linux/soc/qcom/aoss-qmp.h             |  12 +
+ 7 files changed, 555 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+ create mode 100644 drivers/soc/qcom/aoss-qmp-pd.c
+ create mode 100644 drivers/soc/qcom/aoss-qmp.c
+ create mode 100644 include/dt-bindings/power/qcom-aoss-qmp.h
+ create mode 100644 include/linux/soc/qcom/aoss-qmp.h
+
 -- 
-1.9.1
+2.18.0
