@@ -1,12 +1,14 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] ASoC: imx-audmux: complete dt-bindings for imx6
-Date: Mon, 12 Nov 2018 17:37:13 -0600
-Message-ID: <5bea0eab.1c69fb81.c3d9.982d@mx.google.com>
-References: <20181105135802.30486-1-peron.clem@gmail.com>
+Subject: Re: [PATCH 1/2] clk: mediatek: add clock support for MT7629 SoC
+Date: Mon, 12 Nov 2018 11:21:07 -0600
+Message-ID: <5bea0ea7.1c69fb81.7820a.2044@mx.google.com>
+References: <815e38d4d74689980cd73c86d9e80fd5854cfc94.1541143168.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1610331754663596506=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181105135802.30486-1-peron.clem@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <815e38d4d74689980cd73c86d9e80fd5854cfc94.1541143168.git.ryder.lee@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,39 +18,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Colin Didier <colin.didier@devialet.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, linux-arm-kernel@lists.infradead.org
+To: Ryder Lee <ryder.lee@mediatek.com>
+Cc: devicetree@vger.kernel.org, Wenzhen Yu <wenzhen.yu@mediatek.com>, Stephen Boyd <sboyd@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, linux-kernel@vger.kernel.org, Roy Luo <cheng-hao.luo@mediatek.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============1610331754663596506==
-Content-Length: 483
-
-On Mon,  5 Nov 2018 14:58:02 +0100, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= wrote:
-> From: Colin Didier <colin.didier@devialet.com>
+On Mon, Nov 05, 2018 at 04:43:55PM +0800, Ryder Lee wrote:
+> Add all supported clocks exported from every susbystem found on MT7629 SoC.
 > 
-> The MX6 Audmux differs from MX51.
-> 
-> This patch adds the audmux for i.MX6 family.
-> 
-> Signed-off-by: Colin Didier <colin.didier@devialet.com>
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> Signed-off-by: Wenzhen Yu <wenzhen.yu@mediatek.com>
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 > ---
->  include/dt-bindings/sound/fsl-imx-audmux.h | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
+>  drivers/clk/mediatek/Kconfig           |  23 ++
+>  drivers/clk/mediatek/Makefile          |   3 +
+>  drivers/clk/mediatek/clk-mt7629-eth.c  | 159 ++++++++
+>  drivers/clk/mediatek/clk-mt7629-hif.c  | 156 +++++++
+>  drivers/clk/mediatek/clk-mt7629.c      | 723 +++++++++++++++++++++++++++++++++
+>  include/dt-bindings/clock/mt7629-clk.h | 203 +++++++++
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
 
+In the future, the header goes with the binding patch.
 
-
---===============1610331754663596506==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1610331754663596506==--
+>  6 files changed, 1267 insertions(+)
+>  create mode 100644 drivers/clk/mediatek/clk-mt7629-eth.c
+>  create mode 100644 drivers/clk/mediatek/clk-mt7629-hif.c
+>  create mode 100644 drivers/clk/mediatek/clk-mt7629.c
+>  create mode 100644 include/dt-bindings/clock/mt7629-clk.h
