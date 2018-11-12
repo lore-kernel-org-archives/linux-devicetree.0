@@ -1,7 +1,7 @@
 From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: [PATCH v3 3/4] ARM: dts: stm32: Add hwspinlock node for stm32mp157 SoC
-Date: Mon, 12 Nov 2018 16:23:41 +0100
-Message-ID: <20181112152342.6561-4-benjamin.gaignard@st.com>
+Subject: [PATCH v3 4/4] ARM: dts: stm32: enable hwspinlock on stm32mp157c-ed1
+Date: Mon, 12 Nov 2018 16:23:42 +0100
+Message-ID: <20181112152342.6561-5-benjamin.gaignard@st.com>
 References: <20181112152342.6561-1-benjamin.gaignard@st.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181112152342.6561-1-benjamin.gaignard@st.com>
@@ -10,32 +10,22 @@ To: ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutlan
 Cc: linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Declare hwspinlock device for stm32mp157 SoC
-
 Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- arch/arm/boot/dts/stm32mp157c.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/stm32mp157c-ed1.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 185541a5b69f..98f824d8b0f0 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -803,6 +803,15 @@
- 			status = "disabled";
- 		};
- 
-+		hsem: hwspinlock@4c000000 {
-+			compatible = "st,stm32-hwspinlock";
-+			#hwlock-cells = <1>;
-+			reg = <0x4c000000 0x400>;
-+			clocks = <&rcc HSEM>;
-+			clock-names = "hwsem";
-+			status = "disabled";
-+		};
+diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+index f77bea49c079..158a337b3129 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+@@ -94,3 +94,7 @@
+ 	vdda1v1-supply = <&reg11>;
+ 	vdda1v8-supply = <&reg18>;
+ };
 +
- 		rcc: rcc@50000000 {
- 			compatible = "st,stm32mp1-rcc", "syscon";
- 			reg = <0x50000000 0x1000>;
++&hsem {
++	status = "okay";
++};
 -- 
 2.15.0
