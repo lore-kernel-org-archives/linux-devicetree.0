@@ -1,58 +1,86 @@
-Return-Path: <SRS0=lXjp=OG=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 12/22] ARM: dts: r8a7744-iwg20d-q7-dbcm-ca: Add device tree for camera DB
-Date: Tue, 27 Nov 2018 11:56:25 +0000
-Message-Id: <1543319795-48325-13-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
-References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <robherring2@gmail.com>
+Message-ID: <5bea0ea0.1c69fb81.31ed4.2cdf@mx.google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 4/6] dt-bindings: can: m_can: Document transceiver
+ implementation as a phy
+References: <20181102192616.28291-1-faiz_abbas@ti.com>
+ <20181102192616.28291-5-faiz_abbas@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181102192616.28291-5-faiz_abbas@ti.com>
+Date: Mon, 12 Nov 2018 11:04:33 -0600
+To: Faiz Abbas <faiz_abbas@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, mark.rutland@arm.com, kishon@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds support for the camera daughter board which is
-connected to iWave's RZ/G1N Qseven carrier board.
+On Sat, Nov 03, 2018 at 12:56:14AM +0530, Faiz Abbas wrote:
+> Some transceivers need a configuration step (for example, pulling
+> a standby line low) for them to start sending messages. Instead of a
+> parent child relationship, the transceiver can be implemented as a
+> phy with the configuration done in the phy driver. The bitrate
+> limitations can then be obtained by the driver using said phy
+> node.
+> 
+> Document the above implementation.
+> 
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> ---
+>  .../devicetree/bindings/net/can/m_can.txt     | 24 ++++++++++++-------
+>  1 file changed, 16 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
+> index ed614383af9c..c11548e74278 100644
+> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
+> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
+> @@ -42,12 +42,14 @@ Required properties:
+>  
+>  			  Please refer to 2.4.1 Message RAM Configuration in
+>  			  Bosch M_CAN user manual for details.
+> +Optional properties:
+> +- phy-names		: must be "can_transceiver". The transceiver
+> +			  typically limits the maximum bitrate of the
+> +			  system. The phy node is used to discover this
+> +			  limitation.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm/boot/dts/Makefile                      |  1 +
- arch/arm/boot/dts/r8a7744-iwg20d-q7-dbcm-ca.dts | 17 +++++++++++++++++
- 2 files changed, 18 insertions(+)
- create mode 100644 arch/arm/boot/dts/r8a7744-iwg20d-q7-dbcm-ca.dts
+A name with a single phy is pointless.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index aba5a25..9cf6fdf 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -830,6 +830,7 @@ dtb-$(CONFIG_ARCH_RENESAS) += \
- 	r8a7743-iwg20d-q7-dbcm-ca.dtb \
- 	r8a7743-sk-rzg1m.dtb \
- 	r8a7744-iwg20d-q7.dtb \
-+	r8a7744-iwg20d-q7-dbcm-ca.dtb \
- 	r8a7745-iwg22d-sodimm.dtb \
- 	r8a7745-iwg22d-sodimm-dbhd-ca.dtb \
- 	r8a7745-sk-rzg1e.dtb \
-diff --git a/arch/arm/boot/dts/r8a7744-iwg20d-q7-dbcm-ca.dts b/arch/arm/boot/dts/r8a7744-iwg20d-q7-dbcm-ca.dts
-new file mode 100644
-index 0000000..3e58c2e9
---- /dev/null
-+++ b/arch/arm/boot/dts/r8a7744-iwg20d-q7-dbcm-ca.dts
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the iWave Systems RZ/G1N Qseven board development
-+ * platform with camera daughter board
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corp.
-+ */
-+
-+/dts-v1/;
-+#include "r8a7744-iwg20m.dtsi"
-+#include "iwg20d-q7-common.dtsi"
-+#include "iwg20d-q7-dbcm-ca.dtsi"
-+
-+/ {
-+	model = "iWave Systems RZ/G1N Qseven development platform with camera add-on";
-+	compatible = "iwave,g20d", "iwave,g20m", "renesas,r8a7744";
-+};
--- 
-2.7.4
+> +- phys			: phandle to the transceiver implemented as a phy
+> +			  node.
+>  
+> -Optional Subnode:
+> -- can-transceiver	: Can-transceiver subnode describing maximum speed
+> -			  that can be used for CAN/CAN-FD modes. See
+> -			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
+> -			  for details.
+
+You can't just remove this and break existing users.
+
+>  Example:
+>  SoC dtsi:
+>  m_can1: can@20e8000 {
+> @@ -64,12 +66,18 @@ m_can1: can@20e8000 {
+>  };
+>  
+>  Board dts:
+> +
+>  &m_can1 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_m_can1>;
+>  	status = "enabled";
+> +	phy-names = "can_transceiver";
+> +	phys = <&transceiver1>;
+> +};
+>  
+> -	can-transceiver {
+> -		max-bitrate = <5000000>;
+> -	};
+> +transceiver1: can-transceiver {
+> +	compatible = "simple-phy";
+> +	max-bitrate = <5000000>;
+> +	pwr-supply = <&transceiver1_fixed>;
+> +	#phy-cells = <0>;
+>  };
+> -- 
+> 2.18.0
+> 
