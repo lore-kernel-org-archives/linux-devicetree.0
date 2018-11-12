@@ -1,53 +1,74 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v1 3/3] arm64: dts: mt7622: Drop the general purpose
- timer node
-Date: Mon, 12 Nov 2018 11:49:54 +0800
-Message-ID: <1541994594.31175.4.camel@mtkswgap22>
-References: <30f4a4110190a175307ac4dfebc98ffe96c44b90.1541643419.git.ryder.lee@mediatek.com>
-         <17fde639c7d37f9cfabab230379913e652cf869a.1541643419.git.ryder.lee@mediatek.com>
-         <20181112024556.GI2642@sasha-vm> <1541993608.30437.3.camel@mtkswgap22>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1541993608.30437.3.camel@mtkswgap22>
-Sender: stable-owner@vger.kernel.org
-To: Sasha Levin <sashal@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, stable@vger.kernel.org
+From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Subject: [PATCH V4 1/2] dt-bindings: mmc: sdhci-msm: Add SoC-specific compatible strings
+Date: Mon, 12 Nov 2018 11:26:48 +0530
+Message-ID: <1542002209-1510-2-git-send-email-vbadigan@codeaurora.org>
+References: <1542002209-1510-1-git-send-email-vbadigan@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1542002209-1510-1-git-send-email-vbadigan@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org, evgreen@chromium.org, dianders@google.com
+Cc: asutoshd@codeaurora.org, riteshh@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, Veerabhadrarao Badiganti <vbadigan@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, "open list:MULTIMEDIA CARD MMC, SECURE
+        DIGITAL SD AND..." <linux-mmc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-11-12 at 11:33 +0800, Ryder Lee wrote:
-> On Sun, 2018-11-11 at 21:45 -0500, Sasha Levin wrote:
-> > On Mon, Nov 12, 2018 at 09:28:08AM +0800, Ryder Lee wrote:
-> > >The crash http://termbin.com/zitb is caused by the timer register
-> > >into system in early pahse during kernel boot, but the clock
-> > >sources didn't get ready at that time.
-> > >
-> > >A better way is to switch to use CLK_OF_DECLARE() in driver for things
-> > >that need them early, but this node is actually useless in MT7622.
-> > >So we drop it.
-> > >
-> > >Fixes: 9cc7f0de9e67 ("arm64: dts: mt7622: add timer, CCI-400 and PMU nodes")
-> > >Cc: stable@vger.kernel.org
-> > >Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > 
-> > To confirm: the patch this fixes was added in v4.20-rc1, which means
-> > that this current patch doesn't apply to any of the stable trees.
-> > 
-> > Did we miss something?
-> > 
-> 
-> I didn't see any fixup for this?
-> 
-> Ryder
+Add SoC-specific compatible strings for qcom-sdhci controller.
 
-Oh, I didn't get it right. Yes, there is no need to apply to the stable
-trees.
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+---
+ Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-@Matthias, could you help to drop the CC tag when you take this patch
-through your tree?
-
-Sorry for the inconvenience.
-
-Thanks
-Ryder
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+index 502b3b8..b72871a 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+@@ -4,12 +4,25 @@ This file documents differences between the core properties in mmc.txt
+ and the properties used by the sdhci-msm driver.
+ 
+ Required properties:
+-- compatible: Should contain:
++- compatible: Should contain a SoC-specific string and a IP version string:
++	version strings:
+ 		"qcom,sdhci-msm-v4" for sdcc versions less than 5.0
+-		"qcom,sdhci-msm-v5" for sdcc versions >= 5.0
++		"qcom,sdhci-msm-v5" for sdcc version 5.0
+ 		For SDCC version 5.0.0, MCI registers are removed from SDCC
+ 		interface and some registers are moved to HC. New compatible
+ 		string is added to support this change - "qcom,sdhci-msm-v5".
++	full compatible strings with SoC and version:
++		"qcom,apq8084-sdhci", "qcom,sdhci-msm-v4"
++		"qcom,msm8974-sdhci", "qcom,sdhci-msm-v4"
++		"qcom,msm8916-sdhci", "qcom,sdhci-msm-v4"
++		"qcom,msm8992-sdhci", "qcom,sdhci-msm-v4"
++		"qcom,msm8996-sdhci", "qcom,sdhci-msm-v4"
++		"qcom,sdm845-sdhci", "qcom,sdhci-msm-v5"
++		"qcom,qcs404-sdhci", "qcom,sdhci-msm-v5"
++	NOTE that some old device tree files may be floating around that only
++	have the string "qcom,sdhci-msm-v4" without the SoC compatible string
++	but doing that should be considered a deprecated practice.
++
+ - reg: Base address and length of the register in the following order:
+ 	- Host controller register map (required)
+ 	- SD Core register map (required)
+@@ -29,7 +42,7 @@ Required properties:
+ Example:
+ 
+ 	sdhc_1: sdhci@f9824900 {
+-		compatible = "qcom,sdhci-msm-v4";
++		compatible = "qcom,msm8974-sdhci", "qcom,sdhci-msm-v4";
+ 		reg = <0xf9824900 0x11c>, <0xf9824000 0x800>;
+ 		interrupts = <0 123 0>;
+ 		bus-width = <8>;
+@@ -46,7 +59,7 @@ Example:
+ 	};
+ 
+ 	sdhc_2: sdhci@f98a4900 {
+-		compatible = "qcom,sdhci-msm-v4";
++		compatible = "qcom,msm8974-sdhci", "qcom,sdhci-msm-v4";
+ 		reg = <0xf98a4900 0x11c>, <0xf98a4000 0x800>;
+ 		interrupts = <0 125 0>;
+ 		bus-width = <4>;
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
