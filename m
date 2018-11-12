@@ -1,64 +1,44 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCh v3 2/4] arm64: add basic DTS for i.MX8MQ
-Date: Mon, 12 Nov 2018 18:06:13 +0000
-Message-ID: <AM0PR04MB421192D863C2AE7C4CD35A1580C10@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20180921125626.21971-1-l.stach@pengutronix.de>
- <20180921125626.21971-2-l.stach@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180921125626.21971-2-l.stach@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: zoro <long17.cool@163.com>
+Subject: [PATCH 3/3] dt-bindings: rtc: sd3078: add device tree documentation
+Date: Tue, 13 Nov 2018 02:03:26 +0800
+Message-ID: <1542045806-32349-3-git-send-email-long17.cool@163.com>
+References: <1542045806-32349-1-git-send-email-long17.cool@163.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1542045806-32349-1-git-send-email-long17.cool@163.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: alexandre.belloni@bootlin.com
+Cc: a.zummo@towertech.it, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zoro <long17.cool@163.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lucas,
+The devicetree documentation for the SD3078 device tree
+binding is added with a short example.
 
-> -----Original Message-----
-> From: Lucas Stach [mailto:l.stach@pengutronix.de]
-> Sent: Friday, September 21, 2018 8:56 PM
-> To: Shawn Guo <shawnguo@kernel.org>; Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>; Catalin Marinas
-> <catalin.marinas@arm.com>; Will Deacon <will.deacon@arm.com>;
-> Pengutronix Kernel Team <kernel@pengutronix.de>; Fabio Estevam
-> <fabio.estevam@nxp.com>; dl-linux-imx <linux-imx@nxp.com>;
-> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> patchwork-lst@pengutronix.de; Abel Vesa <abel.vesa@nxp.com>
-> Subject: [PATCh v3 2/4] arm64: add basic DTS for i.MX8MQ
-> 
-> This adds the basic DTS for the i.MX8MQ.
-> For now only the following peripherals are supported:
-> - IOMUXC (pin controller)
-> - CCM (clock controller)
-> - GPIO
-> - UART
-> - uSDHC (SD/eMMC controller)
-> - FEC (ethernet controller)
-> - i2c
-> 
-> This is enough to get a very basic board support up and running.
-> 
-> One known limitation is that the driver for the GPC interrupt
-> controller is still missing, rendering the CPU sleep states unusable
-> as there is nothing waking them up anymore.
-> 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: zoro <long17.cool@163.com>
+---
+ .../devicetree/bindings/rtc/rtc-sd3078.txt         |   15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-sd3078.txt
 
-Can you send a updated version of this patch series against the latest
-Composite clock drivers?
-Then we can get a ready to merge version and then can be easily applied
-once clock is merged.
-
-Regards
-Dong Aisheng
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-sd3078.txt b/Documentation/devicetree/bindings/rtc/rtc-sd3078.txt
+new file mode 100644
+index 0000000..9b45c8e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-sd3078.txt
+@@ -0,0 +1,15 @@
++SD3078 Real Time Clock
++============================
++
++Required properties:
++- compatible: Should contain "whwave,sd3078".
++- reg: I2C address for chip.
++
++Example:
++
++sd3078: sd3078@32 {
++       compatible = "whwave,sd3078";
++       reg = <0x32>;
++};
++
++
+-- 
+1.7.9.5
