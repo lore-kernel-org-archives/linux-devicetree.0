@@ -1,72 +1,65 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 3/6] clk: mmp2: add SP clock
-Date: Mon, 12 Nov 2018 03:30:26 +0100
-Message-ID: <20181112023029.648408-4-lkundrak@v3.sk>
-References: <20181112023029.648408-1-lkundrak@v3.sk>
+Subject: [PATCH v3 1/2] dt-bindings: himax,hx8837: add HiMax HX8837 bindings
+Date: Mon, 12 Nov 2018 03:39:28 +0100
+Message-ID: <20181112023929.650002-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181112023029.648408-1-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-input@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lubomir Rintel <lkundrak@v3.sk>
+To: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-The "security processor", sometimes referred to as "wireless trusted
-module" or "generic encrypt unit" is a low-power core present on MMP2,
-that has nothing to do with security, wireless, trust or encryption.
+HiMax HX8837 is a display controller used on OLPC platforms.
+It controlls backlight and is able to capture and freeze a frame when
+the LCD controller (and the rest of the plaform) is powered off.
 
-On an OLPC machine it runs CForth and serves as a keyboard controller:
-http://dev.laptop.org/git/users/wmb/cforth/tree/src/app/arm-xo-1.75/ps2.f=
-th
-
-The register address was obtained from the OLPC kernel, since the
-datasheet seems to be the Marvell's most important business secret.
+What is missing here is the description of connections to the LCD
+controller and the panel. Maybe it would be a good idea to plug in it
+between the two in a manner described in
+<Documentation/devicetree/bindings/graph.txt>.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
 Acked-by: Pavel Machek <pavel@ucw.cz>
----
- drivers/clk/mmp/clk-of-mmp2.c | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/clk/mmp/clk-of-mmp2.c b/drivers/clk/mmp/clk-of-mmp2.=
-c
-index d083b860f083..61fefc046ec5 100644
---- a/drivers/clk/mmp/clk-of-mmp2.c
-+++ b/drivers/clk/mmp/clk-of-mmp2.c
-@@ -53,6 +53,7 @@
- #define APMU_DISP1	0x110
- #define APMU_CCIC0	0x50
- #define APMU_CCIC1	0xf4
-+#define APMU_SP		0x68
- #define MPMU_UART_PLL	0x14
-=20
- struct mmp2_clk_unit {
-@@ -209,6 +210,8 @@ static struct mmp_clk_mix_config ccic1_mix_config =3D=
- {
- 	.reg_info =3D DEFINE_MIX_REG_INFO(4, 16, 2, 6, 32),
- };
-=20
-+static DEFINE_SPINLOCK(sp_lock);
+---
+Changes since v2:
+- s/betweend/between/
+
+Changes since v1:
+- s/load-gpio/load-gpios/
+- Use interrupt bindings instead of gpio for the IRQ
+
+ .../devicetree/bindings/misc/himax,hx8837.txt  | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/himax,hx8837.t=
+xt
+
+diff --git a/Documentation/devicetree/bindings/misc/himax,hx8837.txt b/Do=
+cumentation/devicetree/bindings/misc/himax,hx8837.txt
+new file mode 100644
+index 000000000000..d0822c679ae8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/himax,hx8837.txt
+@@ -0,0 +1,18 @@
++HX8837 Display Controller
 +
- static struct mmp_param_mux_clk apmu_mux_clks[] =3D {
- 	{MMP2_CLK_DISP0_MUX, "disp0_mux", disp_parent_names, ARRAY_SIZE(disp_pa=
-rent_names), CLK_SET_RATE_PARENT, APMU_DISP0, 6, 2, 0, &disp0_lock},
- 	{MMP2_CLK_DISP1_MUX, "disp1_mux", disp_parent_names, ARRAY_SIZE(disp_pa=
-rent_names), CLK_SET_RATE_PARENT, APMU_DISP1, 6, 2, 0, &disp1_lock},
-@@ -239,6 +242,7 @@ static struct mmp_param_gate_clk apmu_gate_clks[] =3D=
- {
- 	{MMP2_CLK_CCIC1, "ccic1_clk", "ccic1_mix_clk", CLK_SET_RATE_PARENT, APM=
-U_CCIC1, 0x1b, 0x1b, 0x0, 0, &ccic1_lock},
- 	{MMP2_CLK_CCIC1_PHY, "ccic1_phy_clk", "ccic1_mix_clk", CLK_SET_RATE_PAR=
-ENT, APMU_CCIC1, 0x24, 0x24, 0x0, 0, &ccic1_lock},
- 	{MMP2_CLK_CCIC1_SPHY, "ccic1_sphy_clk", "ccic1_sphy_div", CLK_SET_RATE_=
-PARENT, APMU_CCIC1, 0x300, 0x300, 0x0, 0, &ccic1_lock},
-+	{MMP2_CLK_SP, "sp_clk", NULL, CLK_SET_RATE_PARENT, APMU_SP, 0x1b, 0x1b,=
- 0x0, 0, &sp_lock},
- };
-=20
- static void mmp2_axi_periph_clk_init(struct mmp2_clk_unit *pxa_unit)
++Required properties:
++- compatible: Should be "himax,hx8837".
++- reg: I2C address, must be 0x0d
++- stat-gpios: gpio specifier of DCON_STAT0 and DCON_STAT1 pins (active h=
+igh)
++- load-gpios: gpio specifier of DCON_LOAD pin (active high)
++- interrupt: interrupt specifier of DCON_IRQ pin (edge falling)
++
++Example:
++	dcon@d {
++		compatible =3D "himax,hx8837";
++		reg =3D <0x0d>;
++		stat-gpios =3D <&gpio 100 GPIO_ACTIVE_HIGH
++			      &gpio 101 GPIO_ACTIVE_HIGH>;
++		load-gpios =3D <&gpio 142 GPIO_ACTIVE_HIGH>;
++		interrupts =3D <&gpio 124 IRQ_TYPE_EDGE_FALLING>;
++	};
 --=20
 2.19.1
