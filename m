@@ -1,168 +1,446 @@
-Return-Path: <SRS0=Cu6b=NY=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr1410124.outbound.protection.outlook.com ([40.107.141.124]:17728
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726535AbeKNEmi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 13 Nov 2018 23:42:38 -0500
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v4 1/2] pinctrl: Add RZ/A2 pin and gpio controller
-Date: Tue, 13 Nov 2018 18:43:09 +0000
-Message-ID: <OSAPR01MB15531B62B24C0DA3834592628AC20@OSAPR01MB1553.jpnprd01.prod.outlook.com>
-References: <20181107182733.62155-1-chris.brandt@renesas.com>
- <20181107182733.62155-2-chris.brandt@renesas.com>
- <CAMuHMdWePvqbv_SmkGQAWm8aynkXBjmf25BuA3O09_H9Xdtjyg@mail.gmail.com>
-In-Reply-To: <CAMuHMdWePvqbv_SmkGQAWm8aynkXBjmf25BuA3O09_H9Xdtjyg@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=X2xC=NX=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
+References: <20181107182733.62155-1-chris.brandt@renesas.com> <20181107182733.62155-2-chris.brandt@renesas.com>
+In-Reply-To: <20181107182733.62155-2-chris.brandt@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 12 Nov 2018 19:58:57 +0100
+Message-ID: <CAMuHMdWePvqbv_SmkGQAWm8aynkXBjmf25BuA3O09_H9Xdtjyg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] pinctrl: Add RZ/A2 pin and gpio controller
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <chris.brandt@renesas.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Jacopo Mondi <jacopo@jmondi.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNCkFzIGFsd2F5cywgdGhhbmsgeW91IGZvciB5b3VyIHJldmlldyENCg0KDQpP
-biBNb25kYXksIE5vdmVtYmVyIDEyLCAyMDE4LCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQo+
-ID4gK2NvbmZpZyBQSU5DVFJMX1JaQTINCj4gPiArICAgICAgIGJvb2wgIlJlbmVzYXMgUlovQTIg
-Z3BpbyBhbmQgcGluY3RybCBkcml2ZXIiDQo+ID4gKyAgICAgICBkZXBlbmRzIG9uIE9GDQo+ID4g
-KyAgICAgICBkZXBlbmRzIG9uIEFSQ0hfUjdTOTIxMCB8fCBDT01QSUxFX1RFU1QNCj4gPiArICAg
-ICAgIHNlbGVjdCBHUElPTElCDQo+ID4gKyAgICAgICBzZWxlY3QgR0VORVJJQ19QSU5DVFJMX0dS
-T1VQUw0KPiA+ICsgICAgICAgc2VsZWN0IEdFTkVSSUNfUElOTVVYX0ZVTkNUSU9OUw0KPiA+ICsg
-ICAgICAgc2VsZWN0IEdFTkVSSUNfUElOQ09ORg0KPiANCj4gR2l2ZW4gdGhlIFBGU19JU0VMIGJp
-dCwgSSB0aGluayB5b3UgY2FuIHNlbGVjdCBHUElPTElCX0lSUUNISVAsIGFuZA0KPiBpbXBsZW1l
-bnQgaW50ZXJydXB0IHN1cHBvcnQgb24gR1BJT3MuDQo+IE9mIGNvdXJzZSB0aGF0IGNhbiBiZSBh
-ZGRlZCBsYXRlci4uLg0KDQpZZXMsIEkgd2FzIHRoaW5raW5nIHRoYXQgdG9vLg0KSSBoYXZlIGhh
-ZCB1c2VyIGFzayBhYm91dCB0aGF0IGJlZm9yZSwgc28gbWF5YmUgdGhhdCB3aWxsIGJlIGEgMjAx
-OSANCnRhc2suDQoNCg0KPiA+ICsgICAgICAgaGVscA0KPiA+ICsgICAgICAgICBUaGlzIHNlbGVj
-dHMgcGluY3RybCBkcml2ZXIgZm9yIFJlbmVzYXMgUlovQTIgcGxhdGZvcm1zLg0KPiANCj4gR1BJ
-TyBhbmQgcGluY3RybD8NCg0KVHJ1ZS4NCg0KDQo+ID4gK2VudW0gcGZjX3Bpbl9wb3J0X25hbWUg
-e1BPUlQwLCBQT1JUMSwgUE9SVDIsIFBPUlQzLCBQT1JUNCwgUE9SVDUsIFBPUlQ2LA0KPiBQT1JU
-NywNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBQT1JUOCwgUE9SVDksIFBPUlRBLCBQT1JU
-QiwgUE9SVEMsIFBPUlRELCBQT1JURSwNCj4gUE9SVEYsDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgUE9SVEcsIFBPUlRILCBQT1JUSiwgUE9SVEssIFBPUlRMLCBQT1JUTSwNCj4gUlpBMl9O
-UE9SVFN9Ow0KPiANCj4gVGhlIG9ubHkgcmVhc29uIGZvciB0aGlzIGVudW0gaXMgdG8gZml4IHRo
-ZSB2YWx1ZSBvZiBSWkEyX05QT1JUUywgIHJpZ2h0Pw0KDQpBdCB0aGUgbW9tZW50LCB5ZXMuDQpP
-cmlnaW5hbGx5IEkgdGhvdWdodCBJIHdvdWxkIG5lZWQgdGhlc2UuIEJ1dCBpbiB0aGUgZW5kLCBJ
-IGRpZCBub3QuDQpTbyBJIGNhbiBqdXN0IGRlZmluZSBSWkEyX05QT1JUUyBmb3Igbm93LiBNYXli
-ZSBmb3IgZnV0dXJlIFNvQ3MsDQpUaGF0IHZhbHVlIHdpbGwgY2hhbmdlIGRlcGVuZGluZyBvbiB0
-aGUgU29DLg0KDQoNCj4gVGhlIGFib3ZlIHR3byBzZXRzIG9mIG1hY3JvcyBzcGxpdCBpbmZvcm1h
-dGlvbiBpbiB0d28gbG9jYXRpb25zLCBhbmQNCj4gcGFydGlhbGx5DQo+IGR1cGxpY2F0ZXMgaXQu
-IEkgdGhpbmsgaXQgYmVjb21lcyBlYXNpZXIgdG8gcmVhZCBpZiB5b3UgY29tYmluZSB0aGVtLCBh
-bmQNCj4gZmFjdG9yDQo+IG91dCB0aGUgYWRkaXRpb24gb2YgdGhlIGJhc2UgYWRkcmVzcy4gRS5n
-Lg0KPiANCj4gICAgICAgICAjZGVmaW5lIFJaQTJfUERSKHBvcnQpICAgICAgICAoMHgwMDAwICsg
-KHBvcnQpICogMikgLyogUG9ydA0KPiBEaXJlY3Rpb24sIDE2LWJpdCAqLw0KPiANCj4gVGhlbiB5
-b3UgY2FuIHdyaXRlOg0KPiANCj4gICAgICAgICByZWcxNiA9IHJlYWR3KHBmY19iYXNlICsgUlpB
-Ml9QRFIocG9ydCkpOw0KPiAgICAgICAgIG1hc2sxNiA9IFJaQTJfUERSX01BU0sgPDwgKHBpbiAq
-IDIpOw0KPiAgICAgICAgIHJlZzE2ICY9IH5tYXNrMTY7DQo+ICAgICAgICAgd3JpdGV3KHJlZzE2
-LCBwZmNfYmFzZSArIFJaQTJfUERSKHBvcnQpKTsNCj4gDQo+ID4gK3N0YXRpYyB2b2lkIHJ6YTJf
-c2V0X3Bpbl9mdW5jdGlvbih2b2lkIF9faW9tZW0gKnBmY19iYXNlLCB1OCBwb3J0LCB1OA0KPiBw
-aW4sDQoNCk9LLiBJJ20gYWxsIGZvciAnZWFzaWVyIHRvIHJlYWQnIQ0KDQoNCj4gPiArICAgICAg
-IG1hc2sxNiA9IDB4MDMgPDwgKHBpbiAqIDIpOw0KPiANCj4gbWFzazE2ID0gUlpBMl9QRFJfTUFT
-SyA8PCAocGluICogMik7DQoNCk9LLg0KDQo+ID4gKyAgICAgICAvKiBQRlMgUmVnaXN0ZXIgV3Jp
-dGUgUHJvdGVjdCA6IE9GRiAqLw0KPiA+ICsgICAgICAgd3JpdGViKDB4MDAsIFJaQTJfUFdQUihw
-ZmNfYmFzZSkpOyAgICAgIC8qIEIwV0k9MCwgUEZTV0U9MCAqLw0KPiA+ICsgICAgICAgd3JpdGVi
-KDB4NDAsIFJaQTJfUFdQUihwZmNfYmFzZSkpOyAgICAgIC8qIEIwV0k9MCwgUEZTV0U9MSAqLw0K
-PiANCj4gI2RlZmluZSBQV1BSX0IwV0kgICAgICAgIEJJVCg3KSAgICAgICAgLyogQml0IFdyaXRl
-IERpc2FibGUgKi8NCj4gI2RlZmluZSBQV1BSX1BGU1dFICAgICAgIEJJVCg2KSAgICAgICAgLyog
-UEZTIFJlZ2lzdGVyIFdyaXRlIEVuYWJsZSAqLw0KDQpPSy4NCg0KPiA+ICsgICAgICAgLyogU2V0
-IFBpbiBmdW5jdGlvbiAoaW50ZXJydXB0IGRpc2FibGVkLCBJU0VMPTApICovDQo+ID4gKyAgICAg
-ICB3cml0ZWIoZnVuYywgUlpBMl9QRlMocGZjX2Jhc2UsIHBvcnQsIHBpbikpOw0KPiANCj4gI2Rl
-ZmluZSBQRlNfSVNFTCAgICAgICAgQklUKDYpICAgICAgICAvKiBJbnRlcnJ1cHQgU2VsZWN0ICov
-DQoNCk9LLg0KDQo+ID4gK3N0YXRpYyBpbnQgcnphMl9jaGlwX2dldF9kaXJlY3Rpb24oc3RydWN0
-IGdwaW9fY2hpcCAqY2hpcCwgdW5zaWduZWQgaW50DQo+IG9mZnNldCkNCj4gPiArew0KPiA+ICsg
-ICAgICAgc3RydWN0IHJ6YTJfcGluY3RybF9wcml2ICpwcml2ID0gZ3Bpb2NoaXBfZ2V0X2RhdGEo
-Y2hpcCk7DQo+ID4gKyAgICAgICB1OCBwb3J0ID0gb2Zmc2V0IC8gODsNCj4gPiArICAgICAgIHU4
-IHBpbiA9IG9mZnNldCAlIDg7DQo+IA0KPiBHUElPIG9mZnNldCBudW1iZXJzIGFyZSBpZGVudGlj
-YWwgdG8gUElOIG51bWJlcnMsIHJpZ2h0Pw0KPiBTbyB5b3UgY2FuIHVzZSBSWkEyX1BJTl9JRF9U
-T19QT1JUKCksIFJaQTJfUElOX0lEX1RPX1BJTigpDQo+IGZvciBjb25zaXN0ZW5jeS4NCg0KR29v
-ZCBwb2ludCENCg0KDQo+ID4gK3N0YXRpYyBpbnQgcnphMl9jaGlwX2RpcmVjdGlvbl9pbnB1dChz
-dHJ1Y3QgZ3Bpb19jaGlwICpjaGlwLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB1bnNpZ25lZCBpbnQgb2Zmc2V0KQ0KPiA+ICt7DQo+ID4gKyAgICAgICBzdHJ1Y3Qg
-cnphMl9waW5jdHJsX3ByaXYgKnByaXYgPSBncGlvY2hpcF9nZXRfZGF0YShjaGlwKTsNCj4gPiAr
-ICAgICAgIHU4IHBvcnQgPSBvZmZzZXQgLyA4Ow0KPiA+ICsgICAgICAgdTggcGluID0gb2Zmc2V0
-ICUgODsNCj4gPiArDQo+ID4gKyAgICAgICByemEyX3Bpbl90b19ncGlvKHByaXYtPmJhc2UsIHBv
-cnQsIHBpbiwgR1BJT0ZfRElSX0lOKTsNCj4gDQo+IFBlcmhhcHMgcGFzcyBvZmZzZXQgdG8gcnph
-Ml9waW5fdG9fZ3BpbygpIGRpcmVjdGx5Pw0KDQpPSy4gSSBjYW4gZG8gdGhhdC4gU2F2ZXMgYSBj
-b3VwbGUgb2YgbGluZXMgOykNCg0KDQo+ID4gK3N0YXRpYyBpbnQgcnphMl9jaGlwX2dldChzdHJ1
-Y3QgZ3Bpb19jaGlwICpjaGlwLCB1bnNpZ25lZCBpbnQgb2Zmc2V0KQ0KPiA+ICt7DQo+ID4gKyAg
-ICAgICBzdHJ1Y3QgcnphMl9waW5jdHJsX3ByaXYgKnByaXYgPSBncGlvY2hpcF9nZXRfZGF0YShj
-aGlwKTsNCj4gPiArICAgICAgIHU4IHBvcnQgPSBvZmZzZXQgLyA4Ow0KPiA+ICsgICAgICAgdTgg
-cGluID0gb2Zmc2V0ICUgODsNCj4gPiArDQo+ID4gKyAgICAgICByZXR1cm4gKHJlYWRiKFJaQTJf
-UElEUihwcml2LT5iYXNlLCBwb3J0KSkgPj4gcGluKSAmIDE7DQo+IA0KPiBNaWdodCBiZSBlYXNp
-ZXIgdG8gcmVhZCBpZiB5b3UgbWFpbnRhaW4gc3ltbWV0cnkgd2l0aCBiZWxvdzoNCj4gDQo+ICAg
-ICByZXR1cm4gISEocmVhZGIoUlpBMl9QSURSKHByaXYtPmJhc2UsIHBvcnQpICYgQklUKHBpbikp
-Ow0KDQpDb29sLg0KDQo+ID4gKyAgICAgICBpZiAodmFsdWUpDQo+ID4gKyAgICAgICAgICAgICAg
-IG5ld192YWx1ZSB8PSAoMSA8PCBwaW4pOw0KPiANCj4gbmV3X3ZhbHVlIHw9IEJJVChwaW4pOw0K
-PiANCj4gPiArICAgICAgIGVsc2UNCj4gPiArICAgICAgICAgICAgICAgbmV3X3ZhbHVlICY9IH4o
-MSA8PCBwaW4pOw0KPiANCj4gbmV3X3ZhbHVlICY9IH5CSVQocGluKTsNCg0KSSB3b25kZXJlZCBh
-Ym91dCB1c2luZyBCSVQgbW9yZSBvZnRlbiBpbiB0aGUgY29kZS4NClRoYW5rcy4NCg0KPiA+ICtz
-dGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IHJ6YTJfZ3Bpb19uYW1lc1tdID0gew0KPiA+ICsgICAg
-ICAgIlAwXzAiLCAiUDBfMSIsICJQMF8yIiwgIlAwXzMiLCAiUDBfNCIsICJQMF81IiwgIlAwXzYi
-LCAiUDBfNyIsDQo+ID4gKyAgICAgICAiUDFfMCIsICJQMV8xIiwgIlAxXzIiLCAiUDFfMyIsICJQ
-MV80IiwgIlAxXzUiLCAiUDFfNiIsICJQMV83IiwNCj4gPiArICAgICAgICJQMl8wIiwgIlAyXzEi
-LCAiUDJfMiIsICJQMl8zIiwgIlAyXzQiLCAiUDJfNSIsICJQMl82IiwgIlAyXzciLA0KPiA+ICsg
-ICAgICAgIlAzXzAiLCAiUDNfMSIsICJQM18yIiwgIlAzXzMiLCAiUDNfNCIsICJQM181IiwgIlAz
-XzYiLCAiUDNfNyIsDQo+ID4gKyAgICAgICAiUDRfMCIsICJQNF8xIiwgIlA0XzIiLCAiUDRfMyIs
-ICJQNF80IiwgIlA0XzUiLCAiUDRfNiIsICJQNF83IiwNCj4gPiArICAgICAgICJQNV8wIiwgIlA1
-XzEiLCAiUDVfMiIsICJQNV8zIiwgIlA1XzQiLCAiUDVfNSIsICJQNV82IiwgIlA1XzciLA0KPiA+
-ICsgICAgICAgIlA2XzAiLCAiUDZfMSIsICJQNl8yIiwgIlA2XzMiLCAiUDZfNCIsICJQNl81Iiwg
-IlA2XzYiLCAiUDZfNyIsDQo+ID4gKyAgICAgICAiUDdfMCIsICJQN18xIiwgIlA3XzIiLCAiUDdf
-MyIsICJQN180IiwgIlA3XzUiLCAiUDdfNiIsICJQN183IiwNCj4gPiArICAgICAgICJQOF8wIiwg
-IlA4XzEiLCAiUDhfMiIsICJQOF8zIiwgIlA4XzQiLCAiUDhfNSIsICJQOF82IiwgIlA4XzciLA0K
-PiA+ICsgICAgICAgIlA5XzAiLCAiUDlfMSIsICJQOV8yIiwgIlA5XzMiLCAiUDlfNCIsICJQOV81
-IiwgIlA5XzYiLCAiUDlfNyIsDQo+ID4gKyAgICAgICAiUEFfMCIsICJQQV8xIiwgIlBBXzIiLCAi
-UEFfMyIsICJQQV80IiwgIlBBXzUiLCAiUEFfNiIsICJQQV83IiwNCj4gPiArICAgICAgICJQQl8w
-IiwgIlBCXzEiLCAiUEJfMiIsICJQQl8zIiwgIlBCXzQiLCAiUEJfNSIsICJQQl82IiwgIlBCXzci
-LA0KPiA+ICsgICAgICAgIlBDXzAiLCAiUENfMSIsICJQQ18yIiwgIlBDXzMiLCAiUENfNCIsICJQ
-Q181IiwgIlBDXzYiLCAiUENfNyIsDQo+ID4gKyAgICAgICAiUERfMCIsICJQRF8xIiwgIlBEXzIi
-LCAiUERfMyIsICJQRF80IiwgIlBEXzUiLCAiUERfNiIsICJQRF83IiwNCj4gPiArICAgICAgICJQ
-RV8wIiwgIlBFXzEiLCAiUEVfMiIsICJQRV8zIiwgIlBFXzQiLCAiUEVfNSIsICJQRV82IiwgIlBF
-XzciLA0KPiA+ICsgICAgICAgIlBGXzAiLCAiUEZfMSIsICJQRl8yIiwgIlBGXzMiLCAiUDBfNCIs
-ICJQRl81IiwgIlBGXzYiLCAiUEZfNyIsDQo+ID4gKyAgICAgICAiUEdfMCIsICJQR18xIiwgIlBH
-XzIiLCAiUDBfMyIsICJQR180IiwgIlBHXzUiLCAiUEdfNiIsICJQR183IiwNCj4gPiArICAgICAg
-ICJQSF8wIiwgIlBIXzEiLCAiUEhfMiIsICJQSF8zIiwgIlBIXzQiLCAiUEhfNSIsICJQSF82Iiwg
-IlBIXzciLA0KPiA+ICsgICAgICAgLyogcG9ydCBJIGRvZXMgbm90IGV4aXN0ICovDQo+IA0KPiBI
-ZW5jZSBzaG91bGRuJ3QgeW91IGhhdmUgOCBOVUxMIGVudHJpZXMgaGVyZT8NCg0KQnV0IHRoZXJl
-IGlzIG5vIHN1Y2ggcG9ydCBuYW1lZCAiSSIuIEFuZCBldmVuIGluIHRoZSBkdC1iaW5kaW5ncyBh
-bmQgb3RoZXINCmRvY3VtZW50YXRpb24sIHRoZSBnbG9iYWwgcGluIElEIGlzIGJhc2VkIG9mZiBh
-bmQgYSB3b3JsZCB3aGVyZSAiSSIgaXMgbm90DQppbiB0aGUgYWxwaGFiZXQuIFNvIGlmIEkgcHV0
-IDggTlVMTHMgaGVyZSwgd291bGRuJ3QgdGhhdCBzY3JldyB1cCBhbGwgdGhlDQppbmRleGluZz8/
-DQoNCg0KDQo+ID4gK3N0YXRpYyBzdHJ1Y3QgZ3Bpb19jaGlwIGNoaXAgPSB7DQo+ID4gKyAgICAg
-ICAubmFtZXMgPSByemEyX2dwaW9fbmFtZXMsDQo+IA0KPiBCVFcsIGlzIHRoZWlyIG11Y2ggdmFs
-dWUgaW4gZmlsbGluZyBncGlvX2NoaXAubmFtZXNbXT8NCj4gSSBoYWQgbmV2ZXIgc2VlbiB0aGF0
-IGJlZm9yZS4NCg0KSXQgbWFrZXMgdGhlIGZpbGVzIHNob3cgdXAgdW5kZXIgL3N5cyBsb29rIG5p
-Y2UuDQoNCkZvciBleGFtcGxlLCBQNV82IGlzIGJ1dHRvbiBTVzQ6DQoNCiAkIGVjaG8gOTEyID4g
-L3N5cy9jbGFzcy9ncGlvL2V4cG9ydA0KDQpUaGVuIHlvdSBlbmQgdXAgd2l0aCAiL3N5cy9jbGFz
-cy9ncGlvL1A1XzYvIg0KDQogJCBlY2hvIGluID4gL3N5cy9jbGFzcy9ncGlvL1A1XzYvZGlyZWN0
-aW9uDQogJCBjYXQgL3N5cy9jbGFzcy9ncGlvL1A1XzYvZGlyZWN0aW9uDQogJCBjYXQgL3N5cy9j
-bGFzcy9ncGlvL1A1XzYvdmFsdWUNCg0KDQo+ID4gKyAgICAgICAuZ2V0ID0gcnphMl9jaGlwX2dl
-dCwNCj4gPiArICAgICAgIC5zZXQgPSByemEyX2NoaXBfc2V0LA0KPiANCj4gWW91IG1heSB3YW50
-IHRvIGltcGxlbWVudCAuW2dzXWV0X211bHRpcGxlKCksIHRvby4NCg0KT0ssIEkgd2lsbCBoYXZl
-IGEgbG9vay4NCg0KDQo+ID4gK3N0cnVjdCBwaW5jdHJsX2dwaW9fcmFuZ2UgZ3Bpb19yYW5nZTsN
-Cj4gDQo+IFBsZWFzZSBtYWtlIHRoaXMgc3RhdGljLg0KPiBPciBldmVuIGJldHRlciwgc3RvcmUg
-aXQgaW4gcnphMl9waW5jdHJsX3ByaXY/DQoNCk9LLg0KDQoNCj4gPiArICAgICAgIGZvciAoaSA9
-IDA7IGkgPCBSWkEyX05QSU5TOyBpKyspIHsNCj4gPiArICAgICAgICAgICAgICAgdW5zaWduZWQg
-aW50IHBpbiA9IFJaQTJfUElOX0lEX1RPX1BJTihpKTsNCj4gPiArICAgICAgICAgICAgICAgdW5z
-aWduZWQgaW50IHBvcnQgPSBSWkEyX1BJTl9JRF9UT19QT1JUKGkpOw0KPiA+ICsNCj4gPiArICAg
-ICAgICAgICAgICAgcGluc1tpXS5udW1iZXIgPSBpOw0KPiA+ICsgICAgICAgICAgICAgICBwaW5z
-W2ldLm5hbWUgPSBkZXZtX2thc3ByaW50Zihwcml2LT5kZXYsIEdGUF9LRVJORUwsDQo+ICJQJWNf
-JXUiLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBw
-b3J0X25hbWVzW3BvcnRdLCBwaW4pOw0KPiANCj4gVGhlc2UgYXJlIGlkZW50aWNhbCB0byByemEy
-X2dwaW9fbmFtZXNbXSwgc28gY2FuJ3QgeW91IHVzZSB0aG9zZT8NCg0KR29vZCBwb2ludCEgSSds
-bCB0cnkgdGhhdC4NCg0KDQo+ID4gK3sNCj4gPiArICAgICAgIHN0cnVjdCByemEyX3BpbmN0cmxf
-cHJpdiAqcHJpdiA9DQo+IHBpbmN0cmxfZGV2X2dldF9kcnZkYXRhKHBjdGxkZXYpOw0KPiA+ICsg
-ICAgICAgc3RydWN0IHByb3BlcnR5ICpvZl9waW5zOw0KPiA+ICsgICAgICAgaW50IGk7DQo+ID4g
-KyAgICAgICB1bnNpZ25lZCBpbnQgKnBpbnM7DQo+ID4gKyAgICAgICB1bnNpZ25lZCBpbnQgKnBz
-ZWxfdmFsOw0KPiA+ICsgICAgICAgY29uc3QgY2hhciAqKnBpbl9mbjsNCj4gPiArICAgICAgIGlu
-dCByZXQsIG5waW5zOw0KPiA+ICsgICAgICAgaW50IGdzZWwsIGZzZWw7DQo+IA0KPiBTb21lIHBl
-b3BsZSBwcmVmZXIgInJldmVyc2UgWG1hcyB0cmVlIG9yZGVyaW5nIiBpLmUuIHNvcnRlZCBieSBk
-ZWNyZWFzaW5nDQo+IGRlY2xhcmF0aW9uIGxlbmd0aC4NCg0KaHR0cHM6Ly9sd24ubmV0L0FydGlj
-bGVzLzc1ODU1Mi8NCg0KIm9ubHkgYSBmZXcgbWFpbnRhaW5lcnMgaW5zaXN0IG9uIHRoYXQsIHdo
-aWxlIG1vc3QgcmVhbGx5IGRvIG5vdCBjYXJlIG9yDQp0aGluayB0aGF0IGl0J3MgYWN0aXZlbHkg
-c2lsbHkuIg0KDQpTbyBhcmUgeW91IG9uZSBvZiB0aG9zZSBtYWludGFpbmVycz8/Pz8/ICAgOikN
-Cg0KDQo+ID4gKyAgICAgICBkZXZfZGJnKHByaXYtPmRldiwgIlBhcnNlZCAlcyB3aXRoICVkIHBp
-bnNcbiIsIG5wLT5uYW1lLCBucGlucyk7DQo+IA0KPiAlcE9GIC4uLiBucA0KDQpPSy4NCg0KDQo+
-ID4gK3JlbW92ZV9ncm91cDoNCj4gPiArICAgICAgIHBpbmN0cmxfZ2VuZXJpY19yZW1vdmVfZ3Jv
-dXAocGN0bGRldiwgZ3NlbCk7DQo+ID4gKw0KPiA+ICsgICAgICAgZGV2X2luZm8ocHJpdi0+ZGV2
-LCAiVW5hYmxlIHRvIHBhcnNlIERUIG5vZGUgJXNcbiIsIG5wLT5uYW1lKTsNCj4gDQo+IGRldl9l
-cnI/DQo+IA0KPiAlcE9GIC4uLiBucA0KDQpUaGFua3MuDQoNCg0KDQpDaHJpcw0K
+Hi Chris,
+
+On Wed, Nov 7, 2018 at 7:27 PM Chris Brandt <chris.brandt@renesas.com> wrote:
+> Adds support for the pin and gpio controller found in R7S9210 (RZ/A2) SoCs.
+>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+
+Thanks for your patch!
+
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
+> @@ -195,6 +195,17 @@ config PINCTRL_RZA1
+>         help
+>           This selects pinctrl driver for Renesas RZ/A1 platforms.
+>
+> +config PINCTRL_RZA2
+> +       bool "Renesas RZ/A2 gpio and pinctrl driver"
+> +       depends on OF
+> +       depends on ARCH_R7S9210 || COMPILE_TEST
+> +       select GPIOLIB
+> +       select GENERIC_PINCTRL_GROUPS
+> +       select GENERIC_PINMUX_FUNCTIONS
+> +       select GENERIC_PINCONF
+
+Given the PFS_ISEL bit, I think you can select GPIOLIB_IRQCHIP, and
+implement interrupt support on GPIOs.
+Of course that can be added later...
+
+> +       help
+> +         This selects pinctrl driver for Renesas RZ/A2 platforms.
+
+GPIO and pinctrl?
+
+> --- /dev/null
+> +++ b/drivers/pinctrl/pinctrl-rza2.c
+> @@ -0,0 +1,530 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Combined GPIO and pin controller support for Renesas RZ/A2 (R7S9210) SoC
+> + *
+> + * Copyright (C) 2018 Chris Brandt
+> + */
+> +
+> +/*
+> + * This pin controller/gpio combined driver supports Renesas devices of RZ/A2
+> + * family.
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/gpio.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/pinctrl/pinmux.h>
+> +
+> +#include "core.h"
+> +#include "pinmux.h"
+> +
+> +#define DRIVER_NAME            "pinctrl-rza2"
+> +
+> +#define RZA2_PINS_PER_PORT     8
+> +#define RZA2_NPINS             (RZA2_PINS_PER_PORT * RZA2_NPORTS)
+> +#define RZA2_PIN_ID_TO_PORT(id)        ((id) / RZA2_PINS_PER_PORT)
+> +#define RZA2_PIN_ID_TO_PIN(id) ((id) % RZA2_PINS_PER_PORT)
+> +
+> +/*
+> + * Use 16 lower bits [15:0] for pin identifier
+> + * Use 16 higher bits [31:16] for pin mux function
+> + */
+> +#define MUX_PIN_ID_MASK                GENMASK(15, 0)
+> +#define MUX_FUNC_MASK          GENMASK(31, 16)
+> +#define MUX_FUNC_OFFS          16
+> +#define MUX_FUNC(pinconf)      ((pinconf & MUX_FUNC_MASK) >> MUX_FUNC_OFFS)
+> +
+> +enum pfc_pin_port_name {PORT0, PORT1, PORT2, PORT3, PORT4, PORT5, PORT6, PORT7,
+> +                       PORT8, PORT9, PORTA, PORTB, PORTC, PORTD, PORTE, PORTF,
+> +                       PORTG, PORTH, PORTJ, PORTK, PORTL, PORTM, RZA2_NPORTS};
+
+The only reason for this enum is to fix the value of RZA2_NPORTS,  right?
+
+> +#define RZA2_PDR_BASE(_b)      ((_b) + 0x0000) /* 16-bit, 2 bytes apart */
+> +#define RZA2_PODR_BASE(_b)     ((_b) + 0x0040) /* 8-bit, 1 byte apart */
+> +#define RZA2_PIDR_BASE(_b)     ((_b) + 0x0060) /* 8-bit, 1 byte apart */
+> +#define RZA2_PMR_BASE(_b)      ((_b) + 0x0080) /* 8-bit, 1 byte apart */
+> +#define RZA2_DSCR_BASE(_b)     ((_b) + 0x0140) /* 16-bit, 2 bytes apart */
+> +#define RZA2_PFS_BASE(_b)      ((_b) + 0x0200) /* 8-bit, 8 bytes apart */
+> +#define RZA2_PWPR(_b)          ((_b) + 0x02FF) /* 8-bit */
+> +#define RZA2_PFENET(_b)                ((_b) + 0x0820) /* 8-bit */
+> +#define RZA2_PPOC(_b)          ((_b) + 0x0900) /* 32-bit */
+> +#define RZA2_PHMOMO(_b)                ((_b) + 0x0980) /* 32-bit */
+> +#define RZA2_PCKIO(_b)         ((_b) + 0x09D0) /* 8-bit */
+> +
+> +#define RZA2_PDR(_b, _port)            (RZA2_PDR_BASE(_b) + ((_port) * 2))
+> +#define RZA2_PODR(_b, _port)           (RZA2_PODR_BASE(_b) + (_port))
+> +#define RZA2_PIDR(_b, _port)           (RZA2_PIDR_BASE(_b) + (_port))
+> +#define RZA2_PMR(_b, _port)            (RZA2_PMR_BASE(_b) + (_port))
+> +#define RZA2_DSCR(_b, _port)           (RZA2_DSCR_BASE(_b) + ((_port) * 2))
+> +#define RZA2_PFS(_b, _port, _pin)      (RZA2_PFS_BASE(_b) + ((_port) * 8) \
+> +                                       + (_pin))
+
+The above two sets of macros split information in two locations, and partially
+duplicates it. I think it becomes easier to read if you combine them, and factor
+out the addition of the base address. E.g.
+
+        #define RZA2_PDR(port)        (0x0000 + (port) * 2) /* Port
+Direction, 16-bit */
+
+Then you can write:
+
+        reg16 = readw(pfc_base + RZA2_PDR(port));
+        mask16 = RZA2_PDR_MASK << (pin * 2);
+        reg16 &= ~mask16;
+        writew(reg16, pfc_base + RZA2_PDR(port));
+
+> +static void rza2_set_pin_function(void __iomem *pfc_base, u8 port, u8 pin,
+> +                                 u8 func)
+> +{
+> +       u8 reg8;
+> +       u16 reg16;
+> +       u16 mask16;
+> +
+> +       /* Set pin to 'Non-use (Hi-z input protection)'  */
+> +       reg16 = readw(RZA2_PDR(pfc_base, port));
+> +       mask16 = 0x03 << (pin * 2);
+
+mask16 = RZA2_PDR_MASK << (pin * 2);
+
+> +       reg16 &= ~mask16;
+> +       writew(reg16, RZA2_PDR(pfc_base, port));
+> +
+> +       /* Temporarily switch to GPIO */
+> +       reg8 = readb(RZA2_PMR(pfc_base, port));
+> +       reg8 &= ~BIT(pin);
+> +       writeb(reg8, RZA2_PMR(pfc_base, port));
+> +
+> +       /* PFS Register Write Protect : OFF */
+> +       writeb(0x00, RZA2_PWPR(pfc_base));      /* B0WI=0, PFSWE=0 */
+> +       writeb(0x40, RZA2_PWPR(pfc_base));      /* B0WI=0, PFSWE=1 */
+
+#define PWPR_B0WI        BIT(7)        /* Bit Write Disable */
+#define PWPR_PFSWE       BIT(6)        /* PFS Register Write Enable */
+
+> +
+> +       /* Set Pin function (interrupt disabled, ISEL=0) */
+> +       writeb(func, RZA2_PFS(pfc_base, port, pin));
+
+#define PFS_ISEL        BIT(6)        /* Interrupt Select */
+
+> +
+> +       /* PFS Register Write Protect : ON */
+> +       writeb(0x00, RZA2_PWPR(pfc_base));      /* B0WI=0, PFSWE=0 */
+> +       writeb(0x80, RZA2_PWPR(pfc_base));      /* B0WI=1, PFSWE=0 */
+> +
+> +       /* Port Mode  : Peripheral module pin functions */
+> +       reg8 = readb(RZA2_PMR(pfc_base, port));
+> +       reg8 |= BIT(pin);
+> +       writeb(reg8, RZA2_PMR(pfc_base, port));
+> +}
+> +
+> +static void rza2_pin_to_gpio(void __iomem *pfc_base, u8 port, u8 pin, u8 dir)
+> +{
+> +       u16 reg16;
+> +       u16 mask16;
+> +
+> +       reg16 = readw(RZA2_PDR(pfc_base, port));
+> +       mask16 = RZA2_PDR_MASK << (pin * 2);
+> +       reg16 &= ~mask16;
+> +
+> +       if (dir == GPIOF_DIR_IN)
+> +               reg16 |= RZA2_PDR_INPUT << (pin * 2);   /* pin as input */
+> +       else
+> +               reg16 |= RZA2_PDR_OUTPUT << (pin * 2);  /* pin as output */
+> +
+> +       writew(reg16, RZA2_PDR(pfc_base, port));
+> +}
+> +
+> +static int rza2_chip_get_direction(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       struct rza2_pinctrl_priv *priv = gpiochip_get_data(chip);
+> +       u8 port = offset / 8;
+> +       u8 pin = offset % 8;
+
+GPIO offset numbers are identical to PIN numbers, right?
+So you can use RZA2_PIN_ID_TO_PORT(), RZA2_PIN_ID_TO_PIN()
+for consistency.
+
+> +       u16 reg16;
+> +
+> +       reg16 = readw(RZA2_PDR(priv->base, port));
+> +       reg16 = (reg16 >> (pin * 2)) & RZA2_PDR_MASK;
+> +
+> +       if (reg16 == RZA2_PDR_OUTPUT)
+> +               return GPIOF_DIR_OUT;
+> +
+> +       if (reg16 == RZA2_PDR_INPUT)
+> +               return GPIOF_DIR_IN;
+> +
+> +       /*
+> +        * This GPIO controller has a default Hi-Z state that is not input or
+> +        * output, so force the pin to input now.
+> +        */
+> +       rza2_pin_to_gpio(priv->base, port, pin, GPIOF_DIR_IN);
+> +
+> +       return GPIOF_DIR_IN;
+> +}
+> +
+> +static int rza2_chip_direction_input(struct gpio_chip *chip,
+> +                                    unsigned int offset)
+> +{
+> +       struct rza2_pinctrl_priv *priv = gpiochip_get_data(chip);
+> +       u8 port = offset / 8;
+> +       u8 pin = offset % 8;
+> +
+> +       rza2_pin_to_gpio(priv->base, port, pin, GPIOF_DIR_IN);
+
+Perhaps pass offset to rza2_pin_to_gpio() directly?
+
+> +
+> +       return 0;
+> +}
+> +
+> +static int rza2_chip_direction_output(struct gpio_chip *chip,
+> +                                     unsigned int offset, int val)
+> +{
+> +       struct rza2_pinctrl_priv *priv = gpiochip_get_data(chip);
+> +       u8 port = offset / 8;
+> +       u8 pin = offset % 8;
+> +
+> +       rza2_pin_to_gpio(priv->base, port, pin, GPIOF_DIR_OUT);
+> +
+> +       return 0;
+> +}
+> +
+> +static int rza2_chip_get(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       struct rza2_pinctrl_priv *priv = gpiochip_get_data(chip);
+> +       u8 port = offset / 8;
+> +       u8 pin = offset % 8;
+> +
+> +       return (readb(RZA2_PIDR(priv->base, port)) >> pin) & 1;
+
+Might be easier to read if you maintain symmetry with below:
+
+    return !!(readb(RZA2_PIDR(priv->base, port) & BIT(pin));
+
+> +}
+> +
+> +static void rza2_chip_set(struct gpio_chip *chip, unsigned int offset,
+> +                         int value)
+> +{
+> +       struct rza2_pinctrl_priv *priv = gpiochip_get_data(chip);
+> +       u8 port = offset / 8;
+> +       u8 pin = offset % 8;
+> +       u8 new_value = readb(RZA2_PODR(priv->base, port));
+> +
+> +       if (value)
+> +               new_value |= (1 << pin);
+
+new_value |= BIT(pin);
+
+> +       else
+> +               new_value &= ~(1 << pin);
+
+new_value &= ~BIT(pin);
+
+> +
+> +       writeb(new_value, RZA2_PODR(priv->base, port));
+> +}
+> +
+> +static const char * const rza2_gpio_names[] = {
+> +       "P0_0", "P0_1", "P0_2", "P0_3", "P0_4", "P0_5", "P0_6", "P0_7",
+> +       "P1_0", "P1_1", "P1_2", "P1_3", "P1_4", "P1_5", "P1_6", "P1_7",
+> +       "P2_0", "P2_1", "P2_2", "P2_3", "P2_4", "P2_5", "P2_6", "P2_7",
+> +       "P3_0", "P3_1", "P3_2", "P3_3", "P3_4", "P3_5", "P3_6", "P3_7",
+> +       "P4_0", "P4_1", "P4_2", "P4_3", "P4_4", "P4_5", "P4_6", "P4_7",
+> +       "P5_0", "P5_1", "P5_2", "P5_3", "P5_4", "P5_5", "P5_6", "P5_7",
+> +       "P6_0", "P6_1", "P6_2", "P6_3", "P6_4", "P6_5", "P6_6", "P6_7",
+> +       "P7_0", "P7_1", "P7_2", "P7_3", "P7_4", "P7_5", "P7_6", "P7_7",
+> +       "P8_0", "P8_1", "P8_2", "P8_3", "P8_4", "P8_5", "P8_6", "P8_7",
+> +       "P9_0", "P9_1", "P9_2", "P9_3", "P9_4", "P9_5", "P9_6", "P9_7",
+> +       "PA_0", "PA_1", "PA_2", "PA_3", "PA_4", "PA_5", "PA_6", "PA_7",
+> +       "PB_0", "PB_1", "PB_2", "PB_3", "PB_4", "PB_5", "PB_6", "PB_7",
+> +       "PC_0", "PC_1", "PC_2", "PC_3", "PC_4", "PC_5", "PC_6", "PC_7",
+> +       "PD_0", "PD_1", "PD_2", "PD_3", "PD_4", "PD_5", "PD_6", "PD_7",
+> +       "PE_0", "PE_1", "PE_2", "PE_3", "PE_4", "PE_5", "PE_6", "PE_7",
+> +       "PF_0", "PF_1", "PF_2", "PF_3", "P0_4", "PF_5", "PF_6", "PF_7",
+> +       "PG_0", "PG_1", "PG_2", "P0_3", "PG_4", "PG_5", "PG_6", "PG_7",
+> +       "PH_0", "PH_1", "PH_2", "PH_3", "PH_4", "PH_5", "PH_6", "PH_7",
+> +       /* port I does not exist */
+
+Hence shouldn't you have 8 NULL entries here?
+
+ * @names: if set, must be an array of strings to use as alternative
+ *      names for the GPIOs in this chip. Any entry in the array
+ *      may be NULL if there is no alias for the GPIO, however the
+ *      array must be @ngpio entries long.  A name can include a single printk
+ *      format specifier for an unsigned int.  It is substituted by the actual
+ *      number of the gpio.
+
+> +       "PJ_0", "PJ_1", "PJ_2", "PJ_3", "PJ_4", "PJ_5", "PJ_6", "PJ_7",
+> +       "PK_0", "PK_1", "PK_2", "PK_3", "PK_4", "PK_5", "PK_6", "PK_7",
+> +       "PL_0", "PL_1", "PL_2", "PL_3", "PL_4", "PL_5", "PL_6", "PL_7",
+> +       "PM_0", "PM_1", "PM_2", "PM_3", "PM_4", "PM_5", "PM_6", "PM_7",
+> +};
+> +
+> +static struct gpio_chip chip = {
+> +       .names = rza2_gpio_names,
+
+BTW, is their much value in filling gpio_chip.names[]?
+I had never seen that before.
+
+> +       .base = -1,
+> +       .ngpio = RZA2_NPINS,
+> +       .get_direction = rza2_chip_get_direction,
+> +       .direction_input = rza2_chip_direction_input,
+> +       .direction_output = rza2_chip_direction_output,
+> +       .get = rza2_chip_get,
+> +       .set = rza2_chip_set,
+
+You may want to implement .[gs]et_multiple(), too.
+
+> +};
+> +
+> +struct pinctrl_gpio_range gpio_range;
+
+Please make this static.
+Or even better, store it in rza2_pinctrl_priv?
+
+> +static int rza2_pinctrl_register(struct rza2_pinctrl_priv *priv)
+> +{
+> +       struct pinctrl_pin_desc *pins;
+> +       unsigned int i;
+> +       int ret;
+> +
+> +       pins = devm_kcalloc(priv->dev, RZA2_NPINS, sizeof(*pins), GFP_KERNEL);
+> +       if (!pins)
+> +               return -ENOMEM;
+> +
+> +       priv->pins = pins;
+> +       priv->desc.pins = pins;
+> +       priv->desc.npins = RZA2_NPINS;
+> +
+> +       for (i = 0; i < RZA2_NPINS; i++) {
+> +               unsigned int pin = RZA2_PIN_ID_TO_PIN(i);
+> +               unsigned int port = RZA2_PIN_ID_TO_PORT(i);
+> +
+> +               pins[i].number = i;
+> +               pins[i].name = devm_kasprintf(priv->dev, GFP_KERNEL, "P%c_%u",
+> +                                             port_names[port], pin);
+
+These are identical to rza2_gpio_names[], so can't you use those?
+
+> +/*
+> + * For each DT node, create a single pin mapping. That pin mapping will only
+> + * contain a single group of pins, and that group of pins will only have a
+> + * single function that can be selected.
+> + */
+> +static int rza2_dt_node_to_map(struct pinctrl_dev *pctldev,
+> +                              struct device_node *np,
+> +                              struct pinctrl_map **map,
+> +                              unsigned int *num_maps)
+> +{
+> +       struct rza2_pinctrl_priv *priv = pinctrl_dev_get_drvdata(pctldev);
+> +       struct property *of_pins;
+> +       int i;
+> +       unsigned int *pins;
+> +       unsigned int *psel_val;
+> +       const char **pin_fn;
+> +       int ret, npins;
+> +       int gsel, fsel;
+
+Some people prefer "reverse Xmas tree ordering" i.e. sorted by decreasing
+declaration length.
+
+[...]
+
+> +       dev_dbg(priv->dev, "Parsed %s with %d pins\n", np->name, npins);
+
+%pOF ... np
+
+> +
+> +       /* Create map where to retrieve function and mux settings from */
+> +       *num_maps = 0;
+> +       *map = kzalloc(sizeof(**map), GFP_KERNEL);
+> +       if (!*map) {
+> +               ret = -ENOMEM;
+> +               goto remove_function;
+> +       }
+> +
+> +       (*map)->type = PIN_MAP_TYPE_MUX_GROUP;
+> +       (*map)->data.mux.group = np->name;
+> +       (*map)->data.mux.function = np->name;
+> +       *num_maps = 1;
+> +
+> +       return 0;
+> +
+> +remove_function:
+> +       pinmux_generic_remove_function(pctldev, fsel);
+> +
+> +remove_group:
+> +       pinctrl_generic_remove_group(pctldev, gsel);
+> +
+> +       dev_info(priv->dev, "Unable to parse DT node %s\n", np->name);
+
+dev_err?
+
+%pOF ... np
+
+
+> +
+> +       return ret;
+> +}
+
+> +static int rza2_set_mux(struct pinctrl_dev *pctldev, unsigned int selector,
+> +                          unsigned int group)
+> +{
+> +       struct rza2_pinctrl_priv *priv = pinctrl_dev_get_drvdata(pctldev);
+> +       struct function_desc *func;
+> +       struct group_desc *grp;
+> +       int i;
+> +       unsigned int *psel_val;
+
+Reverse Xmas tree ordering?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
