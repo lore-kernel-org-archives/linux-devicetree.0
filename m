@@ -1,25 +1,29 @@
-Return-Path: <SRS0=7Z3r=NS=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 0/3] usb: renesas: rcar-gen3-usb2: Add support for RZ/A2
-Date: Wed,  7 Nov 2018 12:35:55 -0500
-Message-Id: <20181107173558.54481-1-chris.brandt@renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <robherring2@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: thermal: rcar-gen3-thermal: All variants
+ use 3 interrupts
+Message-ID: <20181112185258.GA24868@bogus>
+References: <20181107133500.12865-1-geert+renesas@glider.be>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107133500.12865-1-geert+renesas@glider.be>
+Date: Mon, 12 Nov 2018 12:53:01 -0600
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for RZ/A2. Basically has the same IP as R-Car Gen3.
+On Wed, Nov 07, 2018 at 02:35:00PM +0100, Geert Uytterhoeven wrote:
+> RZ/G2M also has 3 interrupts routed to the TSC, but the list was not
+> updated to reflect this.
+> 
+> Just drop the list, as this is the case for this TSC variant in all
+> R-Car Gen3 and RZ/G2 SoCs.
+> 
+> Fixes: be6af481f3b2d508 ("dt-bindings: thermal: rcar-gen3-thermal: Add r8a774a1 support")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  .../devicetree/bindings/thermal/rcar-gen3-thermal.txt          | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 
-
-Chris Brandt (3):
-  clk: renesas: r7s9210: Add USB clocks
-  phy: renesas: rcar-gen3-usb2: Add support for R7S9210
-  dt-bindings: rcar-gen3-phy-usb2: Add r7s9210 support
-
- Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 10 ++++++----
- drivers/clk/renesas/r7s9210-cpg-mssr.c                       |  2 ++
- drivers/phy/renesas/Kconfig                                  |  2 +-
- drivers/phy/renesas/phy-rcar-gen3-usb2.c                     | 12 ++++++++++++
- 4 files changed, 21 insertions(+), 5 deletions(-)
-
--- 
-2.16.1
+Reviewed-by: Rob Herring <robh@kernel.org>
