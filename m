@@ -1,90 +1,36 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: Re: [Letux-kernel] [PATCH RFC] bluetooth: add uart h4 devices via
- serdev/devicetree
-Date: Mon, 12 Nov 2018 23:27:26 +0100
-Message-ID: <20181112222726.73m2oca7hankvcjs@earth.universe>
-References: <20181110232034.17277-1-andreas@kemnade.info>
- <20181111024648.7rt7rlhaqihtqecv@earth.universe>
- <20181112215812.18ebca35@aktux>
- <2C74C837-A6D3-47C9-BE59-CCA594289B94@goldelico.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 08/10] dt-bindings: panel: Add Feiyang FY07024DI26A30-D
+ MIPI-DSI LCD panel
+Date: Mon, 12 Nov 2018 17:37:05 -0600
+Message-ID: <5bea0ea3.1c69fb81.3a69c.0f74@mx.google.com>
+References: <20181103100900.30313-1-jagan@amarulasolutions.com>
+ <20181103100900.30313-9-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ze4zhyyztanyefel"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2C74C837-A6D3-47C9-BE59-CCA594289B94@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Andreas Kemnade <andreas@kemnade.info>, devicetree <devicetree@vger.kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Marcel Holtmann <marcel@holtmann.org>, LKML <linux-kernel@vger.kernel.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20181103100900.30313-9-jagan@amarulasolutions.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jernej Skrabec <jernej.skrabec@siol.net>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Vasily Khoruzhick <anarsoul@gmail.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, Jagan Teki <jagan@amarulasolutions.com>, TL Lim <tllim@pine64.org>, Michael Trimarchi <michael@amarulasolutions.com>, Sean Paul <sean@poorly.run>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-
---ze4zhyyztanyefel
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Mon, Nov 12, 2018 at 10:19:02PM +0100, H. Nikolaus Schaller wrote:
-> > Am 12.11.2018 um 21:59 schrieb Andreas Kemnade <andreas@kemnade.info>:
-> > On Sun, 11 Nov 2018 03:46:48 +0100
-> > Sebastian Reichel <sebastian.reichel@collabora.com> wrote:
-> >> On Sun, Nov 11, 2018 at 12:20:34AM +0100, Andreas Kemnade wrote:
-> >>> This is a first try to be able to use h4 devices specified in
-> >>> the devicetree, so you do not need to call hciattach and
-> >>> it can be automatically probed.
-> >>>=20
-> >>> Of course, proper devicetree bindings documentation is
-> >>> missing. And also you would extend that by regulator/
-> >>> enable gpio settings.
-> >>>=20
-> >>> But before proceeding further it should be checked if the
-> >>> general way of doing things is right.
-> >>>=20
-> >>> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> >>> --- =20
-> >>=20
-> >> Patch looks good to me, just one note
-> >>=20
-> > I found one thing myself:
-> > Shouldn't we have a generic compatible string like "generic-h4".
-> > ehci-platform.c has for example:
-> >        { .compatible =3D "generic-ehci", },
->=20
-> There might be differences in h4 compatible devices (e.g. default
-> baud rate) so that I would not bet there a "generic-h4" suffices
-> in the long run.
-
-My suggestion is to use this in DT:
-
-compatible =3D "wi2wi,w2cbw003-bluetooth", "<something generic>";
-
-The driver can start with supporting just the generic compatible
-string. If somebody finds some incompatible differences, the driver
-can add a custom handler for the wi2wi chip without breaking DT
-ABI.
-
--- Sebastian
-
---ze4zhyyztanyefel
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlvp/ksACgkQ2O7X88g7
-+poHVg/7BoyvAyCiJONVG/I/lUUFzZO05ADwRgWs1GsR4Q1HwTy5in8qptYBNgU3
-MR8xJ5ou91KrarNONScppcqfhMpl3HIGi/u15OIy86lU2ZjLdU4G4tEgAthY8Fgj
-B+lNyiEd4j6omKrf2Y/2yXACS3J61n8goVL8X9aOx1EtuQxkU0MFRLsabRwMWLD1
-wmAHUTFkrxLC2NAGJIElUyu3MxsWyoVAlGvxdBseFJjADk2tjwwUJIvz284CJ2qn
-MG30ZsEiXrhBSSBFz6tJ9x7zI5ty55Uhtgtsro/R2lEdSL2IrdNxML9QxavzA/Q1
-DfMfBBaFdeEBmIVycj8eaNJriP07dKqxwVnoy81bwE9V5DQF7yeSlHTDZJoz36Y5
-1qIpKcTdx4EEK2Z6TMXY7kshGlg/MB4gxsaJspTtUszgFgVxJ9uN59ZW3yca+RYL
-YYxfQkA4wnCC+FqyFJKgPqzoR1Xy6l3iJiRDRIgb8EmvRFwRPqhW2ygVmLJOS3iG
-Ai0AscnY9IUoOynEcpt1WD06mlpYQSHhG5TU+ZXqxG1wPMzCckRsalVfeQNUd3YF
-k/9jUoipLHgTw/m085aT2N5HTFM6W3uOteADUoG8fAAuGSbELON5Og3tMhe86WSi
-4uRJrN7O2ZcivXtd6+mqnfcfei3k+oAIHAe/34DmzE9YcUKZ7Hk=
-=ngpR
------END PGP SIGNATURE-----
-
---ze4zhyyztanyefel--
+T24gU2F0LCAgMyBOb3YgMjAxOCAxNTozODo1OCArMDUzMCwgSmFnYW4gVGVraSB3cm90ZToKPiBG
+ZWl5YW5nIEZZMDcwMjRESTI2QTMwLUQgaXMgMTAyNHg2MDAsIDQtbGFuZSBNSVBJLURTSSBMQ0Qg
+cGFuZWwuCj4gCj4gQWRkIGR0LWJpbmdpbmdzIGZvciBpdC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBK
+YWdhbiBUZWtpIDxqYWdhbkBhbWFydWxhc29sdXRpb25zLmNvbT4KPiAtLS0KPiAgLi4uL2Rpc3Bs
+YXkvcGFuZWwvZmVpeWFuZyxmeTA3MDI0ZGkyNmEzMGQudHh0IHwgMjAgKysrKysrKysrKysrKysr
+KysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvZmVp
+eWFuZyxmeTA3MDI0ZGkyNmEzMGQudHh0Cj4gCgpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJv
+YmhAa2VybmVsLm9yZz4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
