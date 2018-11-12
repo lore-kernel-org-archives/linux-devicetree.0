@@ -1,54 +1,75 @@
-From: Craig Tatlor <ctatlor97@gmail.com>
-Subject: Re: [PATCH V2] arm64: dts: sdm630 SoC and Sony Pioneer (Xperia XA2)
- support
-Date: Mon, 12 Nov 2018 20:23:43 +0000
-Message-ID: <20181112202343.GA31294@arch.home>
-References: <20180812142317.19991-1-ctatlor97@gmail.com>
- <61693687.BtxviolxTZ@phil>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v4 0/6] arm64: Get rid of __early_init_dt_declare_initrd()
+Date: Mon, 12 Nov 2018 12:32:50 -0800
+Message-ID: <68b32163-85ff-45f7-8887-60273da7c6e2@gmail.com>
+References: <20181105225431.24485-1-f.fainelli@gmail.com>
+ <20181106140642.GA19280@rapoport-lnx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <61693687.BtxviolxTZ@phil>
+In-Reply-To: <20181106140642.GA19280@rapoport-lnx>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Mike Rapoport <rppt@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, moderated list:ARM64 PORT (AARCH64 ARCHITECTUR
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 12, 2018 at 04:34:50PM +0100, Heiko Stuebner wrote:
-> Hi Craig,
+On 11/6/18 6:06 AM, Mike Rapoport wrote:
+> On Mon, Nov 05, 2018 at 02:54:25PM -0800, Florian Fainelli wrote:
+>> Hi all,
+>>
+>> Changes in v4:
+>>
+>> - dropped initrd_below_start_ok assignment in ARM64, not necessary at
+>>   all (Ard)
+>> - replace #ifdef CONFIG_BLK_DEV_INITRD with if
+>>   (IS_ENABLED(CONFIG_BLK_DEV_INITRD) for consistency with other parts
+>>   of arm64_memblock_init() (Rob)
+>>
+>> Changes in v3:
+>>
+>> - use C conditionals in drivers/of/fdt.c
+>> - added check on phys_initrd_size in arch/arm64/mm/init.c to determine
+>>   whether initrd_start must be populated
+>> - fixed a build warning with ARC that was just missing an (unsigned
+>>   long) cast
+>>
+>> Changes in v2:
+>>
+>> - get rid of ARCH_HAS_PHYS_INITRD and instead define
+>>   phys_initrd_start/phys_initrd_size in init/do_mounts_initrd.c
+>>
+>> - make __early_init_dt_declare_initrd() account for ARM64 specific
+>>   behavior with __va() when having CONFIG_DEBUG_VM enabled
+>>
+>> - consolidate early_initrd() command line parsing into
+>>   init/do_mounts_initrd.c
+>>
+>> Because phys_initrd_start/phys_initrd_size are now compiled in
+>> ini/do_mounts_initrd.c which is only built with CONFIG_BLK_DEV_INITRD=y,
+>> we need to be a bit careful about the uses throughout architecture
+>> specific code.
+>>
+>> Previous discussions/submissions list here:
+>>
+>> v3:
+>> https://www.spinics.net/lists/arm-kernel/msg683566.html
+>> v2:
+>> https://lkml.org/lkml/2018/10/25/4
+>>
+>> Florian Fainelli (6):
+>>   nds32: Remove phys_initrd_start and phys_initrd_size
+>>   arch: Make phys_initrd_start and phys_initrd_size global variables
+>>   of/fdt: Populate phys_initrd_start/phys_initrd_size from FDT
+>>   arm64: Utilize phys_initrd_start/phys_initrd_size
+>>   of/fdt: Remove custom __early_init_dt_declare_initrd() implementation
+>>   arch: Move initrd= parsing into do_mounts_initrd.c
 > 
-> Am Sonntag, 12. August 2018, 16:23:12 CET schrieb Craig Tatlor:
-> > Initial device tree support for Qualcomm SDM630 SoC and
-> > Sony Pioneer (Xperia XA2).
-> > 
-> > SDM630 is based off of the SDM660 soc and all SDM660 specific drivers are
-> > compatible with it. SDM660 is also based off of MSM8998 so it uses some
-> > of its drivers aswell.
-> > 
-> > The device tree is based on the CAF 4.4 kernel tree.
-> > 
-> > The device can be booted into the initrd with a shell over UART.
-> > 
-> > Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
+> For the series:
 > 
-> With I think core drivers like clk, pinctrl merged in 4.20, do you
-> plan on respinning the devicetree support or in general continue
-> working on sdm630/sdm660?
->
-Yeah, i am just a little busy at the moment, i should probably be
-sending of v3 in a few weeks.
-> Or do you have some git tree available somewhere, were I can follow
-> along? I do have interest in supporting a sdm630 phone of my own
-> but still don't want to duplicate work :-)
-My git tree is  https://gitlab.com/opendata26/linux the
-mainline-submit-2 branch, i have sdhci, usb(via downstream backport just
-so i can debug without opening phone) and also working on modem but that
-isnt in that tree and isnt working quite yet.
-> 
-> 
-> Thanks
-> Heiko
-> 
-> 
-> 
+> Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+
+Thanks Mike, Rob, do you want to merge that series through the OF tree?
+-- 
+Florian
