@@ -1,56 +1,90 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v6 2/2] arm64: dts: qcom: pm8998: Add die temperature channel node to the ADC
-Date: Mon, 12 Nov 2018 14:11:26 -0800
-Message-ID: <20181112221126.27142-3-mka@chromium.org>
-References: <20181112221126.27142-1-mka@chromium.org>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: Re: [Letux-kernel] [PATCH RFC] bluetooth: add uart h4 devices via
+ serdev/devicetree
+Date: Mon, 12 Nov 2018 23:27:26 +0100
+Message-ID: <20181112222726.73m2oca7hankvcjs@earth.universe>
+References: <20181110232034.17277-1-andreas@kemnade.info>
+ <20181111024648.7rt7rlhaqihtqecv@earth.universe>
+ <20181112215812.18ebca35@aktux>
+ <2C74C837-A6D3-47C9-BE59-CCA594289B94@goldelico.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ze4zhyyztanyefel"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181112221126.27142-1-mka@chromium.org>
+Content-Disposition: inline
+In-Reply-To: <2C74C837-A6D3-47C9-BE59-CCA594289B94@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Andreas Kemnade <andreas@kemnade.info>, devicetree <devicetree@vger.kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Marcel Holtmann <marcel@holtmann.org>, LKML <linux-kernel@vger.kernel.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a channel node for the die temperature to the ADC.
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
----
-Changes in v6:
-- changed node name to 'adc-chan@'
+--ze4zhyyztanyefel
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changes in v5:
-- added unit address to 'die-temp' node
+Hi,
 
-Changes in v4:
-- none
+On Mon, Nov 12, 2018 at 10:19:02PM +0100, H. Nikolaus Schaller wrote:
+> > Am 12.11.2018 um 21:59 schrieb Andreas Kemnade <andreas@kemnade.info>:
+> > On Sun, 11 Nov 2018 03:46:48 +0100
+> > Sebastian Reichel <sebastian.reichel@collabora.com> wrote:
+> >> On Sun, Nov 11, 2018 at 12:20:34AM +0100, Andreas Kemnade wrote:
+> >>> This is a first try to be able to use h4 devices specified in
+> >>> the devicetree, so you do not need to call hciattach and
+> >>> it can be automatically probed.
+> >>>=20
+> >>> Of course, proper devicetree bindings documentation is
+> >>> missing. And also you would extend that by regulator/
+> >>> enable gpio settings.
+> >>>=20
+> >>> But before proceeding further it should be checked if the
+> >>> general way of doing things is right.
+> >>>=20
+> >>> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> >>> --- =20
+> >>=20
+> >> Patch looks good to me, just one note
+> >>=20
+> > I found one thing myself:
+> > Shouldn't we have a generic compatible string like "generic-h4".
+> > ehci-platform.c has for example:
+> >        { .compatible =3D "generic-ehci", },
+>=20
+> There might be differences in h4 compatible devices (e.g. default
+> baud rate) so that I would not bet there a "generic-h4" suffices
+> in the long run.
 
-Changes in v3:
-- fixed separator in commit message
-- remove duplicate 'Signed-off-by' tag
+My suggestion is to use this in DT:
 
-Changes in v2:
-- none
----
- arch/arm64/boot/dts/qcom/pm8998.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+compatible =3D "wi2wi,w2cbw003-bluetooth", "<something generic>";
 
-diff --git a/arch/arm64/boot/dts/qcom/pm8998.dtsi b/arch/arm64/boot/dts/qcom/pm8998.dtsi
-index 048f19fa01504..f1025a50c227b 100644
---- a/arch/arm64/boot/dts/qcom/pm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8998.dtsi
-@@ -75,6 +75,11 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			#io-channel-cells = <1>;
-+
-+			adc-chan@ADC5_DIE_TEMP {
-+				reg = <ADC5_DIE_TEMP>;
-+				label = "die_temp";
-+			};
- 		};
- 
- 		rtc@6000 {
--- 
-2.19.1.930.g4563a0d9d0-goog
+The driver can start with supporting just the generic compatible
+string. If somebody finds some incompatible differences, the driver
+can add a custom handler for the wi2wi chip without breaking DT
+ABI.
+
+-- Sebastian
+
+--ze4zhyyztanyefel
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlvp/ksACgkQ2O7X88g7
++poHVg/7BoyvAyCiJONVG/I/lUUFzZO05ADwRgWs1GsR4Q1HwTy5in8qptYBNgU3
+MR8xJ5ou91KrarNONScppcqfhMpl3HIGi/u15OIy86lU2ZjLdU4G4tEgAthY8Fgj
+B+lNyiEd4j6omKrf2Y/2yXACS3J61n8goVL8X9aOx1EtuQxkU0MFRLsabRwMWLD1
+wmAHUTFkrxLC2NAGJIElUyu3MxsWyoVAlGvxdBseFJjADk2tjwwUJIvz284CJ2qn
+MG30ZsEiXrhBSSBFz6tJ9x7zI5ty55Uhtgtsro/R2lEdSL2IrdNxML9QxavzA/Q1
+DfMfBBaFdeEBmIVycj8eaNJriP07dKqxwVnoy81bwE9V5DQF7yeSlHTDZJoz36Y5
+1qIpKcTdx4EEK2Z6TMXY7kshGlg/MB4gxsaJspTtUszgFgVxJ9uN59ZW3yca+RYL
+YYxfQkA4wnCC+FqyFJKgPqzoR1Xy6l3iJiRDRIgb8EmvRFwRPqhW2ygVmLJOS3iG
+Ai0AscnY9IUoOynEcpt1WD06mlpYQSHhG5TU+ZXqxG1wPMzCckRsalVfeQNUd3YF
+k/9jUoipLHgTw/m085aT2N5HTFM6W3uOteADUoG8fAAuGSbELON5Og3tMhe86WSi
+4uRJrN7O2ZcivXtd6+mqnfcfei3k+oAIHAe/34DmzE9YcUKZ7Hk=
+=ngpR
+-----END PGP SIGNATURE-----
+
+--ze4zhyyztanyefel--
