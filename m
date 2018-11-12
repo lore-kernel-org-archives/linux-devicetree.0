@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 01/11] media: ov7670: hook s_power onto v4l2 core
-Date: Mon, 12 Nov 2018 01:35:10 +0100
-Message-ID: <20181112003520.577592-2-lkundrak@v3.sk>
+Subject: [PATCH v2 05/11] [media] marvell-ccic: don't generate EOF on parallel bus
+Date: Mon, 12 Nov 2018 01:35:14 +0100
+Message-ID: <20181112003520.577592-6-lkundrak@v3.sk>
 References: <20181112003520.577592-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -12,29 +12,38 @@ To: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-The commit 71862f63f351 ("media: ov7670: Add the ov7670_s_power function"=
-)
-added a s_power function. For some reason it didn't register it with v4l2=
-,
-only uses it internally. Fix this now.
+The commit 05fed81625bf ("[media] marvell-ccic: add MIPI support for
+marvell-ccic driver") that claimed to add CSI2 turned on C0_EOF_VSYNC for
+parallel bus without a very good explanation.
 
+That broke camera on OLPC XO-1.75 which precisely uses a sensor on a
+parallel bus. Revert that chunk.
+
+Tested on an OLPC XO-1.75.
+
+Fixes: 05fed81625bf755cc67c5864cdfd18b69ea828d1
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- drivers/media/i2c/ov7670.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/platform/marvell-ccic/mcam-core.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
-index bc68a3a5b4ec..d87f2362bf40 100644
---- a/drivers/media/i2c/ov7670.c
-+++ b/drivers/media/i2c/ov7670.c
-@@ -1651,6 +1651,7 @@ static int ov7670_open(struct v4l2_subdev *sd, stru=
-ct v4l2_subdev_fh *fh)
- static const struct v4l2_subdev_core_ops ov7670_core_ops =3D {
- 	.reset =3D ov7670_reset,
- 	.init =3D ov7670_init,
-+	.s_power =3D ov7670_s_power,
- #ifdef CONFIG_VIDEO_ADV_DEBUG
- 	.g_register =3D ov7670_g_register,
- 	.s_register =3D ov7670_s_register,
+diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/me=
+dia/platform/marvell-ccic/mcam-core.c
+index d97f39bde9bd..d24e5b7a3bc5 100644
+--- a/drivers/media/platform/marvell-ccic/mcam-core.c
++++ b/drivers/media/platform/marvell-ccic/mcam-core.c
+@@ -792,12 +792,6 @@ static void mcam_ctlr_image(struct mcam_camera *cam)
+ 	 * Make sure it knows we want to use hsync/vsync.
+ 	 */
+ 	mcam_reg_write_mask(cam, REG_CTRL0, C0_SIF_HVSYNC, C0_SIFM_MASK);
+-	/*
+-	 * This field controls the generation of EOF(DVP only)
+-	 */
+-	if (cam->bus_type !=3D V4L2_MBUS_CSI2_DPHY)
+-		mcam_reg_set_bit(cam, REG_CTRL0,
+-				C0_EOF_VSYNC | C0_VEDGE_CTRL);
+ }
+=20
+=20
 --=20
 2.19.1
