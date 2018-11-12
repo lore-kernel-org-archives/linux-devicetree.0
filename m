@@ -1,116 +1,199 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 1/3] dt-bindings: soc: qcom: Add AOSS QMP binding
-Date: Mon, 12 Nov 2018 00:05:55 -0800
-Message-ID: <20181112080557.22698-2-bjorn.andersson@linaro.org>
+Subject: [PATCH 3/3] soc: qcom: Add AOSS QMP genpd provider
+Date: Mon, 12 Nov 2018 00:05:57 -0800
+Message-ID: <20181112080557.22698-4-bjorn.andersson@linaro.org>
 References: <20181112080557.22698-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181112080557.22698-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add binding for the QMP based side-channel communication mechanism to
-the AOSS, which is used to control resources not exposed through the
-RPMh interface.
+The AOSS QMP genpd provider implements control over power-related
+resources related to low-power state associated with the remoteprocs in
+the system as well as control over a set of clocks related to debug
+hardware in the SoC.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- .../bindings/soc/qcom/qcom,aoss-qmp.txt       | 63 +++++++++++++++++++
- include/dt-bindings/power/qcom-aoss-qmp.h     | 15 +++++
- 2 files changed, 78 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
- create mode 100644 include/dt-bindings/power/qcom-aoss-qmp.h
+ drivers/soc/qcom/Kconfig       |   8 ++
+ drivers/soc/qcom/Makefile      |   1 +
+ drivers/soc/qcom/aoss-qmp-pd.c | 135 +++++++++++++++++++++++++++++++++
+ 3 files changed, 144 insertions(+)
+ create mode 100644 drivers/soc/qcom/aoss-qmp-pd.c
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+index ba08fc00d7f5..e1eda3d59748 100644
+--- a/drivers/soc/qcom/Kconfig
++++ b/drivers/soc/qcom/Kconfig
+@@ -10,6 +10,14 @@ config QCOM_AOSS_QMP
+ 	  micro-controller in the AOSS, using QMP, to control certain resource
+ 	  that are not exposed through RPMh.
+ 
++config QCOM_AOSS_QMP_PD
++	tristate "Qualcomm AOSS Messaging Power Domain driver"
++	depends on QCOM_AOSS_QMP
++	help
++	  This driver provides the means of controlling the AOSSs handling of
++	  low-power state for resources related to the remoteproc subsystems as
++	  well as controlling the debug clocks.
++
+ config QCOM_COMMAND_DB
+ 	bool "Qualcomm Command DB"
+ 	depends on ARCH_QCOM || COMPILE_TEST
+diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+index d0d7fdc94d9a..ebfa414a5b77 100644
+--- a/drivers/soc/qcom/Makefile
++++ b/drivers/soc/qcom/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ CFLAGS_rpmh-rsc.o := -I$(src)
+ obj-$(CONFIG_QCOM_AOSS_QMP) +=	aoss-qmp.o
++obj-$(CONFIG_QCOM_AOSS_QMP_PD) += aoss-qmp-pd.o
+ obj-$(CONFIG_QCOM_GENI_SE) +=	qcom-geni-se.o
+ obj-$(CONFIG_QCOM_COMMAND_DB) += cmd-db.o
+ obj-$(CONFIG_QCOM_GLINK_SSR) +=	glink_ssr.o
+diff --git a/drivers/soc/qcom/aoss-qmp-pd.c b/drivers/soc/qcom/aoss-qmp-pd.c
 new file mode 100644
-index 000000000000..e3c8cb4372f2
+index 000000000000..467d0db4abfa
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
-@@ -0,0 +1,63 @@
-+Qualcomm Always-On Subsystem side channel binding
++++ b/drivers/soc/qcom/aoss-qmp-pd.c
+@@ -0,0 +1,135 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2018, Linaro Ltd
++ */
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/pm_domain.h>
++#include <linux/soc/qcom/aoss-qmp.h>
 +
-+This binding describes the hardware component responsible for side channel
-+requests to the always-on subsystem (AOSS), used for certain power management
-+requests that is not handled by the standard RPMh interface. Each client in the
-+SoC has it's own block of message RAM and IRQ for communication with the AOSS.
-+The protocol used to communicate in the message RAM is known as QMP.
++#include <dt-bindings/power/qcom-aoss-qmp.h>
 +
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be "qcom,sdm845-aoss-qmp"
++struct qmp_pd {
++	struct qmp *qmp;
 +
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: the base address and size of the message RAM for this
-+		    client's communication with the AOSS
++	struct generic_pm_domain pd;
 +
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: should specify the AOSS message IRQ for this client
++	const char *name;
++};
 +
-+- mboxes:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: reference to the mailbox representing the outgoing doorbell
-+		    in APCS for this client, as described in mailbox/mailbox.txt
++#define to_qmp_pd_resource(res) container_of(res, struct qmp_pd, pd)
 +
-+= AOSS Power-domains
-+The AOSS side channel exposes control over a set of resources, used to control
-+a set of debug related clocks and to affect the low power state of resources
-+related to the secondary subsystems. These resources are described as a set of
-+power-domains in a subnode of hte AOSS side channel node.
++struct qmp_pd_resource {
++	const char *name;
++	int (*on)(struct generic_pm_domain *domain);
++	int (*off)(struct generic_pm_domain *domain);
++};
 +
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be "qcom,sdm845-aoss-qmp-pd"
++static int qmp_pd_clock_toggle(struct qmp_pd *res, bool enable)
++{
++	char buf[96];
++	size_t n;
 +
-+- #power-domain-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 1
++	n = snprintf(buf, sizeof(buf), "{class: clock, res: %s, val: %d}",
++		     res->name, !!enable);
++	return qmp_send(res->qmp, buf, n);
++}
 +
-+= EXAMPLE
++static int qmp_pd_clock_on(struct generic_pm_domain *domain)
++{
++	return qmp_pd_clock_toggle(to_qmp_pd_resource(domain), true);
++}
 +
-+The following example represents the AOSS side-channel message RAM and the
-+mechanism exposing the power-domains, as found in SDM845.
++static int qmp_pd_clock_off(struct generic_pm_domain *domain)
++{
++	return qmp_pd_clock_toggle(to_qmp_pd_resource(domain), false);
++}
 +
-+  aoss_qmp: qmp@c300000 {
-+          compatible = "qcom,sdm845-aoss-qmp";
-+          reg = <0x0c300000 0x100000>;
-+          interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
++static int qmp_pd_image_toggle(struct qmp_pd *res, bool enable)
++{
++	char buf[96];
++	size_t n;
 +
-+          mboxes = <&apss_shared 0>;
++	n = snprintf(buf, sizeof(buf),
++		     "{class: image, res: load_state, name: %s, val: %s}",
++		     res->name, enable ? "on" : "off");
++	return qmp_send(res->qmp, buf, sizeof(buf));
++}
 +
-+          aoss_qmp_pd: power-controller {
-+                  compatible = "qcom,sdm845-aoss-qmp-pd";
-+                  #power-domain-cells = <1>;
-+          };
-+  };
-diff --git a/include/dt-bindings/power/qcom-aoss-qmp.h b/include/dt-bindings/power/qcom-aoss-qmp.h
-new file mode 100644
-index 000000000000..7d8ac1a4f90c
---- /dev/null
-+++ b/include/dt-bindings/power/qcom-aoss-qmp.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2018, Linaro Ltd. */
++static int qmp_pd_image_on(struct generic_pm_domain *domain)
++{
++	return qmp_pd_image_toggle(to_qmp_pd_resource(domain), true);
++}
 +
-+#ifndef __DT_BINDINGS_POWER_QCOM_AOSS_QMP_H
-+#define __DT_BINDINGS_POWER_QCOM_AOSS_QMP_H
++static int qmp_pd_image_off(struct generic_pm_domain *domain)
++{
++	return qmp_pd_image_toggle(to_qmp_pd_resource(domain), false);
++}
 +
-+#define AOSS_QMP_QDSS_CLK	0
-+#define AOSS_QMP_LS_CDSP		1
-+#define AOSS_QMP_LS_LPASS	2
-+#define AOSS_QMP_LS_MODEM	3
-+#define AOSS_QMP_LS_SLPI		4
-+#define AOSS_QMP_LS_SPSS		5
-+#define AOSS_QMP_LS_VENUS	6
++static const struct qmp_pd_resource sdm845_resources[] = {
++	[AOSS_QMP_QDSS_CLK] = { "qdss", qmp_pd_clock_on, qmp_pd_clock_off },
++	[AOSS_QMP_LS_CDSP] = { "cdsp", qmp_pd_image_on, qmp_pd_image_off },
++	[AOSS_QMP_LS_LPASS] = { "adsp", qmp_pd_image_on, qmp_pd_image_off },
++	[AOSS_QMP_LS_MODEM] = { "modem", qmp_pd_image_on, qmp_pd_image_off },
++	[AOSS_QMP_LS_SLPI] = { "slpi", qmp_pd_image_on, qmp_pd_image_off },
++	[AOSS_QMP_LS_SPSS] = { "spss", qmp_pd_image_on, qmp_pd_image_off },
++	[AOSS_QMP_LS_VENUS] = { "venus", qmp_pd_image_on, qmp_pd_image_off },
++};
 +
-+#endif
++static int qmp_pd_probe(struct platform_device *pdev)
++{
++	struct genpd_onecell_data *data;
++	struct qmp_pd *res;
++	struct qmp *qmp;
++	size_t num = ARRAY_SIZE(sdm845_resources);
++	int i;
++
++	qmp = dev_get_drvdata(pdev->dev.parent);
++	if (!qmp)
++		return -EINVAL;
++
++	res = devm_kcalloc(&pdev->dev, num, sizeof(*res), GFP_KERNEL);
++	if (!res)
++		return -ENOMEM;
++
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->domains = devm_kcalloc(&pdev->dev, num, sizeof(*data->domains),
++				     GFP_KERNEL);
++
++	for (i = 0; i < num; i++) {
++		pm_genpd_init(&res[i].pd, NULL, true);
++		res[i].qmp = qmp;
++		res[i].name = sdm845_resources[i].name;
++
++		res[i].pd.name = sdm845_resources[i].name;
++		res[i].pd.power_on = sdm845_resources[i].on;
++		res[i].pd.power_off = sdm845_resources[i].off;
++
++		data->domains[data->num_domains++] = &res[i].pd;
++	}
++
++	return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
++}
++
++static const struct of_device_id qmp_pd_dt_match[] = {
++	{ .compatible = "qcom,sdm845-aoss-qmp-pd", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, qmp_pd_dt_match);
++
++static struct platform_driver qmp_pd_driver = {
++	.driver = {
++		.name		= "aoss_qmp_pd",
++		.of_match_table	= qmp_pd_dt_match,
++	},
++	.probe = qmp_pd_probe,
++};
++module_platform_driver(qmp_pd_driver);
++
++MODULE_DESCRIPTION("Qualcomm AOSS QMP load-state driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.18.0
