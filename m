@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 08/11] [media] marvell-ccic/mmp: enable clock before accessing registers
-Date: Mon, 12 Nov 2018 01:35:17 +0100
-Message-ID: <20181112003520.577592-9-lkundrak@v3.sk>
+Subject: [PATCH v2 02/11] media: ov7670: control clock along with power
+Date: Mon, 12 Nov 2018 01:35:11 +0100
+Message-ID: <20181112003520.577592-3-lkundrak@v3.sk>
 References: <20181112003520.577592-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -12,36 +12,121 @@ To: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-The access to REG_CLKCTRL or REG_CTRL1 without the clock enabled hangs
-the machine. Enable the clock first.
+This provides more power saving when the sensor is off.
+
+While at that, do the delay on power/clock enable even if the sensor driv=
+er
+itself doesn't control the GPIOs. This is required for the OLPC XO-1
+platform, that lacks the proper power/reset properties in its DT, but
+needs the delay after the sensor is clocked up.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Acked-by: Pavel Machek <pavel@ucw.cz>
 ---
- drivers/media/platform/marvell-ccic/mmp-driver.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/media/i2c/ov7670.c | 37 +++++++++++++++++++++----------------
+ 1 file changed, 21 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/m=
-edia/platform/marvell-ccic/mmp-driver.c
-index f2e43b23af18..05cba74c0d13 100644
---- a/drivers/media/platform/marvell-ccic/mmp-driver.c
-+++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
-@@ -144,6 +144,7 @@ static int mmpcam_power_up(struct mcam_camera *mcam)
-  * Turn on power and clocks to the controller.
-  */
- 	mmpcam_power_up_ctlr(cam);
-+	mcam_clk_enable(mcam);
- /*
-  * Provide power to the sensor.
-  */
-@@ -157,8 +158,6 @@ static int mmpcam_power_up(struct mcam_camera *mcam)
- 	gpio_set_value(pdata->sensor_reset_gpio, 1); /* reset is active low */
- 	mdelay(5);
+diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
+index d87f2362bf40..a3e72c62382c 100644
+--- a/drivers/media/i2c/ov7670.c
++++ b/drivers/media/i2c/ov7670.c
+@@ -241,6 +241,7 @@ struct ov7670_info {
+ 	struct v4l2_mbus_framefmt format;
+ 	struct ov7670_format_struct *fmt;  /* Current format */
+ 	struct clk *clk;
++	int on;
+ 	struct gpio_desc *resetb_gpio;
+ 	struct gpio_desc *pwdn_gpio;
+ 	unsigned int mbus_config;	/* Media bus configuration flags */
+@@ -1610,15 +1611,26 @@ static int ov7670_s_power(struct v4l2_subdev *sd,=
+ int on)
+ {
+ 	struct ov7670_info *info =3D to_state(sd);
 =20
--	mcam_clk_enable(mcam);
--
++	if (info->on =3D=3D on)
++		return 0;
++
++	if (on)
++		clk_prepare_enable(info->clk);
++	else
++		clk_disable_unprepare(info->clk);
++
+ 	if (info->pwdn_gpio)
+ 		gpiod_set_value(info->pwdn_gpio, !on);
+ 	if (on && info->resetb_gpio) {
+ 		gpiod_set_value(info->resetb_gpio, 1);
+ 		usleep_range(500, 1000);
+ 		gpiod_set_value(info->resetb_gpio, 0);
+-		usleep_range(3000, 5000);
+ 	}
+=20
++	if (on && (info->pwdn_gpio || info->resetb_gpio || info->clk))
++		usleep_range(3000, 5000);
++
++	info->on =3D on;
  	return 0;
  }
 =20
+@@ -1817,24 +1829,20 @@ static int ov7670_probe(struct i2c_client *client=
+,
+ 		else
+ 			return ret;
+ 	}
+-	if (info->clk) {
+-		ret =3D clk_prepare_enable(info->clk);
+-		if (ret)
+-			return ret;
++	ret =3D ov7670_init_gpio(client, info);
++	if (ret)
++		return ret;
++
++	ov7670_s_power(sd, 1);
+=20
++	if (info->clk) {
+ 		info->clock_speed =3D clk_get_rate(info->clk) / 1000000;
+ 		if (info->clock_speed < 10 || info->clock_speed > 48) {
+ 			ret =3D -EINVAL;
+-			goto clk_disable;
++			goto power_off;
+ 		}
+ 	}
+=20
+-	ret =3D ov7670_init_gpio(client, info);
+-	if (ret)
+-		goto clk_disable;
+-
+-	ov7670_s_power(sd, 1);
+-
+ 	/* Make sure it's an ov7670 */
+ 	ret =3D ov7670_detect(sd);
+ 	if (ret) {
+@@ -1913,6 +1921,7 @@ static int ov7670_probe(struct i2c_client *client,
+ 	if (ret < 0)
+ 		goto entity_cleanup;
+=20
++	ov7670_s_power(sd, 0);
+ 	return 0;
+=20
+ entity_cleanup:
+@@ -1921,12 +1930,9 @@ static int ov7670_probe(struct i2c_client *client,
+ 	v4l2_ctrl_handler_free(&info->hdl);
+ power_off:
+ 	ov7670_s_power(sd, 0);
+-clk_disable:
+-	clk_disable_unprepare(info->clk);
+ 	return ret;
+ }
+=20
+-
+ static int ov7670_remove(struct i2c_client *client)
+ {
+ 	struct v4l2_subdev *sd =3D i2c_get_clientdata(client);
+@@ -1934,7 +1940,6 @@ static int ov7670_remove(struct i2c_client *client)
+=20
+ 	v4l2_async_unregister_subdev(sd);
+ 	v4l2_ctrl_handler_free(&info->hdl);
+-	clk_disable_unprepare(info->clk);
+ 	media_entity_cleanup(&info->sd.entity);
+ 	ov7670_s_power(sd, 0);
+ 	return 0;
 --=20
 2.19.1
