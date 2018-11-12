@@ -1,35 +1,35 @@
-Return-Path: <SRS0=9/dT=NT=synopsys.com=thinh.nguyen@kernel.org>
-Date: Wed, 7 Nov 2018 18:10:36 -0800
-Message-ID: <9aa6ae1c68f7936f5f145c8f770348d76106b865.1541642865.git.thinhn@synopsys.com>
-In-Reply-To: <cover.1541642865.git.thinhn@synopsys.com>
-References: <cover.1541642865.git.thinhn@synopsys.com>
-From: Thinh Nguyen <thinh.nguyen@synopsys.com>
-Subject: [PATCH 2/3] usb: dwc3: Add a property to disable USB2 LPM
+Return-Path: <robherring2@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] iio: st-accel: add support for lis3de
+Message-ID: <20181112185927.GA17634@bogus>
+References: <20181107154521.32761-1-heiko@sntech.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: John Youn <john.youn@synopsys.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107154521.32761-1-heiko@sntech.de>
+Date: Mon, 12 Nov 2018 12:59:29 -0600
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Heiko Stuebner <heiko.stuebner@bq.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add an option to disable USB2 LPM from host. There maybe cases where the
-user does not want to enable USB2 LPM (e.g. USB2 LPM is broken).
+On Wed, Nov 07, 2018 at 04:45:21PM +0100, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@bq.com>
+> 
+> This commit add support for STMicroelectronics lis3de accelerometer.
+> Datasheet for this device can be found here:
+> 
+> https://www.st.com/resource/en/datasheet/lis3de.pdf
+> 
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
+> ---
+>  Documentation/devicetree/bindings/iio/st-sensors.txt | 1 +
 
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
----
- Documentation/devicetree/bindings/usb/dwc3.txt | 1 +
- 1 file changed, 1 insertion(+)
+Acked-by: Rob Herring <robh@kernel.org>
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 636630fb92d7..7e33e53e7c29 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -37,6 +37,7 @@ Optional properties:
-  - phy-names: from the *Generic PHY* bindings; supported names are "usb2-phy"
- 	or "usb3-phy".
-  - resets: a single pair of phandle and reset specifier
-+ - snps,usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
-  - snps,usb3_lpm_capable: determines if platform is USB3 LPM capable
-  - snps,disable_scramble_quirk: true when SW should disable data scrambling.
- 	Only really useful for FPGA builds.
--- 
-2.11.0
+>  drivers/iio/accel/Kconfig                            | 2 +-
+>  drivers/iio/accel/st_accel.h                         | 1 +
+>  drivers/iio/accel/st_accel_core.c                    | 1 +
+>  drivers/iio/accel/st_accel_i2c.c                     | 5 +++++
+>  drivers/iio/accel/st_accel_spi.c                     | 5 +++++
+>  include/linux/iio/common/st_sensors.h                | 2 +-
+>  7 files changed, 15 insertions(+), 2 deletions(-)
