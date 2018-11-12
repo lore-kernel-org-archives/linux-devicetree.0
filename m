@@ -1,54 +1,45 @@
-From: Kirill Marinushkin <kmarinushkin@birdec.tech>
-Subject: [PATCH v2 1/3] dt-bindings: sound: Add documentation
-	for pcm3060 property out-single-ended
-Date: Mon, 12 Nov 2018 08:08:32 +0100
-Message-ID: <20181112070834.16979-1-kmarinushkin@birdec.tech>
-References: <20181105112036.GC5365@sirena.org.uk>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 0/5] Add Pinctrl and GPIO support for HI3670 SoC
+Date: Mon, 12 Nov 2018 12:47:08 +0530
+Message-ID: <20181112071708.GA6689@mani>
+References: <20181023190655.12004-1-manivannan.sadhasivam@linaro.org>
+ <CACRpkdbMSYt5aH9fwRijtO=VG1nLAnfxTsfxGza+_Z2iGj2+-A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181105112036.GC5365@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Kirill Marinushkin <kmarinushkin@birdec.tech>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbMSYt5aH9fwRijtO=VG1nLAnfxTsfxGza+_Z2iGj2+-A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: xuwei5@hisilicon.com
+Cc: linus.walleij@linaro.org, Rob Herring <robh+dt@kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Output of pcm3060 codec may be configured as single-ended or differential
+On Wed, Oct 31, 2018 at 10:43:00AM +0100, Linus Walleij wrote:
+> On Tue, Oct 23, 2018 at 9:07 PM Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> 
+> > This patchset adds Pinctrl and GPIO support for HI3670 SoC from HiSilicon
+> > found in the HiKey970 developement board. Also, the remaining UARTs are
+> > enabled and GPIO line names are added based on the Schematics and the
+> > 96Boards Consumer Edition spec.
+> >
+> > Note: These patches are based on the below common clk patches pushed
+> > earlier:
+> >
+> > arm64: dts: hisilicon: Add clock nodes for Hi3670 SoC
+> > arm64: dts: hisilicon: Source SoC clock for UART6
+> 
+> All looks good to me.
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> for the series.
+>
 
-Signed-off-by: Kirill Marinushkin <kmarinushkin@birdec.tech>
-Cc: devicetree@vger.kernel.org
----
- Documentation/devicetree/bindings/sound/pcm3060.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+Hi Wei,
 
-diff --git a/Documentation/devicetree/bindings/sound/pcm3060.txt b/Documentation/devicetree/bindings/sound/pcm3060.txt
-index 90fcb8523099..97de66932d44 100644
---- a/Documentation/devicetree/bindings/sound/pcm3060.txt
-+++ b/Documentation/devicetree/bindings/sound/pcm3060.txt
-@@ -9,9 +9,15 @@ Required properties:
- - reg : the I2C address of the device for I2C, the chip select
-         number for SPI.
+Any update on this patchset?
+
+Thanks,
+Mani
  
-+Optional properties:
-+
-+- ti,out-single-ended: "true" if output is single-ended;
-+                       "false" or not specified if output is differential.
-+
- Examples:
- 
- 	pcm3060: pcm3060@46 {
- 		 compatible = "ti,pcm3060";
- 		 reg = <0x46>;
-+		 ti,out-single-ended = "true";
- 	};
--- 
-2.13.6
+> Yours,
+> Linus Walleij
