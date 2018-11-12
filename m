@@ -1,27 +1,24 @@
 From: Parthiban Nallathambi <pn@denx.de>
 Subject: Re: [PATCH v2 1/3] dt-bindings: interrupt-controller: Actions
  external interrupt controller
-Date: Mon, 12 Nov 2018 11:53:34 +0100
-Message-ID: <85137788-4d08-f2cb-5b50-b5e35dbff29e@denx.de>
+Date: Mon, 12 Nov 2018 12:01:33 +0100
+Message-ID: <728e5f10-e09f-3fb9-022b-1e74731f774f@denx.de>
 References: <20180812122215.1079590-1-pn@denx.de>
- <20180812122215.1079590-2-pn@denx.de>
- <20180813043406.GA16275@Mani-XPS-13-9360>
+ <20180812122215.1079590-2-pn@denx.de> <20180813194453.GA30702@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180813043406.GA16275@Mani-XPS-13-9360>
+In-Reply-To: <20180813194453.GA30702@rob-hp-laptop>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: pn@denx.de, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sravanhome@gmail.com, thomas.liau@actions-semi.com, mp-cs@actions-semi.com, linux@cubietech.com, edgar.righi@lsitec.org.br, laisa.costa@lsitec.org.br, guilherme.simoes@lsitec.org.br, mkzuffo@lsi.usp.br
+To: Rob Herring <robh@kernel.org>
+Cc: pn@denx.de, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, afaerber@suse.de, catalin.marinas@arm.com, will.deacon@arm.com, manivannan.sadhasivam@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sravanhome@gmail.com, thomas.liau@actions-semi.com, mp-cs@actions-semi.com, linux@cubietech.com, edgar.righi@lsitec.org.br, laisa.costa@lsitec.org.br, guilherme.simoes@lsitec.org.br, mkzuffo@lsi.usp.br
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 8/13/18 6:34 AM, Manivannan Sadhasivam wrote:
-> Hi Parthiban,
-> 
+On 8/13/18 9:44 PM, Rob Herring wrote:
 > On Sun, Aug 12, 2018 at 02:22:13PM +0200, Parthiban Nallathambi wrote:
 >> Actions Semi OWL family SoC's provides support for external interrupt
 >> controller to be connected and controlled using SIRQ pins. S500, S700
@@ -47,10 +44,6 @@ On 8/13/18 6:34 AM, Manivannan Sadhasivam wrote:
 >> +in which external interrupt controller can be connected. 3 SPI's
 >> +45, 46, 47 from GIC are directly exposed as SIRQ. It has
 >> +the following properties:
-> 
-> We should really document the driver here. What it does? and how the
-> hierarchy is handled with GIC? etc...
-> 
 >> +
 >> +- inputs three interrupt signal from external interrupt controller
 >> +
@@ -58,32 +51,30 @@ On 8/13/18 6:34 AM, Manivannan Sadhasivam wrote:
 >> +
 >> +- compatible: should be "actions,owl-sirq"
 >> +- reg: physical base address of the controller and length of memory mapped.
-> 
-> ...length of memory mapped region?
-
-Yes it is.
-
-> 
 >> +- interrupt-controller: identifies the node as an interrupt controller
 >> +- #interrupt-cells: specifies the number of cells needed to encode an interrupt
 >> +  source, should be 2.
+> 
 >> +- actions,sirq-shared-reg: Applicable for S500 and S700 where SIRQ register
 >> +  details are maintained at same offset/register.
 >> +- actions,sirq-offset: register offset for SIRQ interrupts. When registers are
 >> +  shared, all the three offsets will be same (S500 and S700).
+> 
+> You should have more specific compatible strings if there are
+> differences and these settings can be implied by them.
+
+This to meant to get the register offset because s500, s700 uses the
+same external interrupt controller register to provide three or more
+interrupt line. But this is not the case for s900.
+
+So should it be "actions,sirq-offset-reg"?
+
+> 
 >> +- actions,sirq-clk-sel: external interrupt controller can be either
 >> +  connected to 32Khz or 24Mhz external/internal clock. This needs
-> 
-> Hertz should be specified as Hz.
-> 
 >> +  to be configured for per SIRQ line. Failing defaults to 32Khz clock.
 > 
-> What value needs to be specified for selecting 24MHz clock? You should
-> mention the available options this property supports.
-
-Ok, this property will be removed here and leave to default 24MHz for
-all the SoC's.
-
+> What are the valid values?
 > 
 >> +
 >> +Example for S900:
@@ -91,15 +82,16 @@ all the SoC's.
 >> +sirq: interrupt-controller@e01b0000 {
 >> +	compatible = "actions,owl-sirq";
 >> +	reg = <0 0xe01b0000 0 0x1000>;
-> 
-> could be: reg = <0x0 0xe01b0000 0x0 0x1000>;
-
-Agreed!
-
-> 
 >> +	interrupt-controller;
 >> +	#interrupt-cells = <2>;
 >> +	actions,sirq-clk-sel = <0 0 0>;
+> 
+> If 0 is 32khz, then having this is pointless. But I can't tell what the
+> values correspond to.
+
+Thanks, clock selection will be removed and defaults to 24MHz.
+
+> 
 >> +	actions,sirq-offset = <0x200 0x528 0x52c>;
 >> +};
 >> +
@@ -108,18 +100,6 @@ Agreed!
 >> +sirq: interrupt-controller@e01b0000 {
 >> +	compatible = "actions,owl-sirq";
 >> +	reg = <0 0xe01b0000 0 0x1000>;
-> 
-> For S500, reg base is 0xb01b0000.
-
-Yes, agreed!
-
-Thanks,
-Parthi
-
-> 
-> Thanks
-> Mani
-> 
 >> +	interrupt-controller;
 >> +	#interrupt-cells = <2>;
 >> +	actions,sirq-shared-reg;
@@ -129,4 +109,12 @@ Parthi
 >> -- 
 >> 2.14.4
 >>
->
+> 
+
+-- 
+Thanks,
+Parthiban N
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-22 Fax: (+49)-8142-66989-80 Email: pn@denx.de
