@@ -1,290 +1,59 @@
-Return-Path: <SRS0=X76U=OJ=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 17/21] ARM: dts: r8a7744: Add audio support
-Date: Fri, 30 Nov 2018 15:26:31 +0000
-Message-Id: <1543591595-37861-18-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
-References: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=ZvLY=NX=linaro.org=ulf.hansson@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <20181024222301.21455-4-chris.brandt@renesas.com>
+References: <20181024222301.21455-1-chris.brandt@renesas.com> <20181024222301.21455-4-chris.brandt@renesas.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Mon, 12 Nov 2018 12:05:15 +0100
+Message-ID: <CAPDyKFoTa4mUQmKrn+T_Qu5sbWCFxZZWYL1U9daA+bTJMYU3nw@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] dt-bindings: mmc: tmio_mmc: Document Renesas R7S9210
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add sound support for the RZ/G1N SoC (a.k.a. R8A7744).
+On 25 October 2018 at 00:23, Chris Brandt <chris.brandt@renesas.com> wrote:
+> Document support for the RZ/A2 (R7S9210) SoC.
+>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-This work is based on similar work done on the R8A7743 SoC.
+Applied for next, thanks!
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-V1-->V2
-   * No Change
----
- arch/arm/boot/dts/r8a7744.dtsi | 243 +++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 235 insertions(+), 8 deletions(-)
+Kind regards
+Uffe
 
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index fabc7f9..cb6dfb5 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -894,23 +894,250 @@
- 		};
- 
- 		rcar_sound: sound@ec500000 {
--			reg = <0 0xec500000 0 0x1000>;
-+			/*
-+			 * #sound-dai-cells is required
-+			 *
-+			 * Single DAI : #sound-dai-cells = <0>;         <&rcar_sound>;
-+			 * Multi  DAI : #sound-dai-cells = <1>;         <&rcar_sound N>;
-+			 */
-+			compatible = "renesas,rcar_sound-r8a7744",
-+				     "renesas,rcar_sound-gen2";
-+			reg = <0 0xec500000 0 0x1000>, /* SCU */
-+			      <0 0xec5a0000 0 0x100>,  /* ADG */
-+			      <0 0xec540000 0 0x1000>, /* SSIU */
-+			      <0 0xec541000 0 0x280>,  /* SSI */
-+			      <0 0xec740000 0 0x200>;  /* Audio DMAC peri peri*/
-+			reg-names = "scu", "adg", "ssiu", "ssi", "audmapp";
-+
-+			clocks = <&cpg CPG_MOD 1005>,
-+				 <&cpg CPG_MOD 1006>, <&cpg CPG_MOD 1007>,
-+				 <&cpg CPG_MOD 1008>, <&cpg CPG_MOD 1009>,
-+				 <&cpg CPG_MOD 1010>, <&cpg CPG_MOD 1011>,
-+				 <&cpg CPG_MOD 1012>, <&cpg CPG_MOD 1013>,
-+				 <&cpg CPG_MOD 1014>, <&cpg CPG_MOD 1015>,
-+				 <&cpg CPG_MOD 1022>, <&cpg CPG_MOD 1023>,
-+				 <&cpg CPG_MOD 1024>, <&cpg CPG_MOD 1025>,
-+				 <&cpg CPG_MOD 1026>, <&cpg CPG_MOD 1027>,
-+				 <&cpg CPG_MOD 1028>, <&cpg CPG_MOD 1029>,
-+				 <&cpg CPG_MOD 1030>, <&cpg CPG_MOD 1031>,
-+				 <&cpg CPG_MOD 1021>, <&cpg CPG_MOD 1020>,
-+				 <&cpg CPG_MOD 1021>, <&cpg CPG_MOD 1020>,
-+				 <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>,
-+				 <&audio_clk_a>, <&audio_clk_b>, <&audio_clk_c>,
-+				 <&cpg CPG_CORE R8A7744_CLK_M2>;
-+			clock-names = "ssi-all",
-+				      "ssi.9", "ssi.8", "ssi.7", "ssi.6", "ssi.5",
-+				      "ssi.4", "ssi.3", "ssi.2", "ssi.1", "ssi.0",
-+				      "src.9", "src.8", "src.7", "src.6", "src.5",
-+				      "src.4", "src.3", "src.2", "src.1", "src.0",
-+				      "ctu.0", "ctu.1",
-+				      "mix.0", "mix.1",
-+				      "dvc.0", "dvc.1",
-+				      "clk_a", "clk_b", "clk_c", "clk_i";
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 1005>,
-+				 <&cpg 1006>, <&cpg 1007>, <&cpg 1008>, <&cpg 1009>,
-+				 <&cpg 1010>, <&cpg 1011>, <&cpg 1012>, <&cpg 1013>,
-+				 <&cpg 1014>, <&cpg 1015>;
-+			reset-names = "ssi-all",
-+				      "ssi.9", "ssi.8", "ssi.7", "ssi.6", "ssi.5",
-+				      "ssi.4", "ssi.3", "ssi.2", "ssi.1", "ssi.0";
-+			status = "disabled";
- 
- 			rcar_sound,dvc {
--				dvc0: dvc-0 {};
--				dvc1: dvc-1 {};
-+				dvc0: dvc-0 {
-+					dmas = <&audma1 0xbc>;
-+					dma-names = "tx";
-+				};
-+				dvc1: dvc-1 {
-+					dmas = <&audma1 0xbe>;
-+					dma-names = "tx";
-+				};
-+			};
-+
-+			rcar_sound,mix {
-+				mix0: mix-0 { };
-+				mix1: mix-1 { };
-+			};
-+
-+			rcar_sound,ctu {
-+				ctu00: ctu-0 { };
-+				ctu01: ctu-1 { };
-+				ctu02: ctu-2 { };
-+				ctu03: ctu-3 { };
-+				ctu10: ctu-4 { };
-+				ctu11: ctu-5 { };
-+				ctu12: ctu-6 { };
-+				ctu13: ctu-7 { };
- 			};
- 
- 			rcar_sound,src {
--				src2: src-2 {};
--				src3: src-3 {};
-+				src0: src-0 {
-+					interrupts = <GIC_SPI 352 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x85>, <&audma1 0x9a>;
-+					dma-names = "rx", "tx";
-+				};
-+				src1: src-1 {
-+					interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x87>, <&audma1 0x9c>;
-+					dma-names = "rx", "tx";
-+				};
-+				src2: src-2 {
-+					interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x89>, <&audma1 0x9e>;
-+					dma-names = "rx", "tx";
-+				};
-+				src3: src-3 {
-+					interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x8b>, <&audma1 0xa0>;
-+					dma-names = "rx", "tx";
-+				};
-+				src4: src-4 {
-+					interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x8d>, <&audma1 0xb0>;
-+					dma-names = "rx", "tx";
-+				};
-+				src5: src-5 {
-+					interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x8f>, <&audma1 0xb2>;
-+					dma-names = "rx", "tx";
-+				};
-+				src6: src-6 {
-+					interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x91>, <&audma1 0xb4>;
-+					dma-names = "rx", "tx";
-+				};
-+				src7: src-7 {
-+					interrupts = <GIC_SPI 359 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x93>, <&audma1 0xb6>;
-+					dma-names = "rx", "tx";
-+				};
-+				src8: src-8 {
-+					interrupts = <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x95>, <&audma1 0xb8>;
-+					dma-names = "rx", "tx";
-+				};
-+				src9: src-9 {
-+					interrupts = <GIC_SPI 361 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x97>, <&audma1 0xba>;
-+					dma-names = "rx", "tx";
-+				};
- 			};
- 
- 			rcar_sound,ssi {
--				ssi0: ssi-0 {};
--				ssi1: ssi-1 {};
-+				ssi0: ssi-0 {
-+					interrupts = <GIC_SPI 370 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x01>, <&audma1 0x02>, <&audma0 0x15>, <&audma1 0x16>;
-+					dma-names = "rx", "tx", "rxu", "txu";
-+				};
-+				ssi1: ssi-1 {
-+					interrupts = <GIC_SPI 371 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x03>, <&audma1 0x04>, <&audma0 0x49>, <&audma1 0x4a>;
-+					dma-names = "rx", "tx", "rxu", "txu";
-+				};
-+				ssi2: ssi-2 {
-+					interrupts = <GIC_SPI 372 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x05>, <&audma1 0x06>, <&audma0 0x63>, <&audma1 0x64>;
-+					dma-names = "rx", "tx", "rxu", "txu";
-+				};
-+				ssi3: ssi-3 {
-+					interrupts = <GIC_SPI 373 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x07>, <&audma1 0x08>, <&audma0 0x6f>, <&audma1 0x70>;
-+					dma-names = "rx", "tx", "rxu", "txu";
-+				};
-+				ssi4: ssi-4 {
-+					interrupts = <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x09>, <&audma1 0x0a>, <&audma0 0x71>, <&audma1 0x72>;
-+					dma-names = "rx", "tx", "rxu", "txu";
-+				};
-+				ssi5: ssi-5 {
-+					interrupts = <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x0b>, <&audma1 0x0c>, <&audma0 0x73>, <&audma1 0x74>;
-+					dma-names = "rx", "tx", "rxu", "txu";
-+				};
-+				ssi6: ssi-6 {
-+					interrupts = <GIC_SPI 376 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x0d>, <&audma1 0x0e>, <&audma0 0x75>, <&audma1 0x76>;
-+					dma-names = "rx", "tx", "rxu", "txu";
-+				};
-+				ssi7: ssi-7 {
-+					interrupts = <GIC_SPI 377 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x0f>, <&audma1 0x10>, <&audma0 0x79>, <&audma1 0x7a>;
-+					dma-names = "rx", "tx", "rxu", "txu";
-+				};
-+				ssi8: ssi-8 {
-+					interrupts = <GIC_SPI 378 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x11>, <&audma1 0x12>, <&audma0 0x7b>, <&audma1 0x7c>;
-+					dma-names = "rx", "tx", "rxu", "txu";
-+				};
-+				ssi9: ssi-9 {
-+					interrupts = <GIC_SPI 379 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&audma0 0x13>, <&audma1 0x14>, <&audma0 0x7d>, <&audma1 0x7e>;
-+					dma-names = "rx", "tx", "rxu", "txu";
-+				};
- 			};
--			/* placeholder */
-+		};
-+
-+		audma0: dma-controller@ec700000 {
-+			compatible = "renesas,dmac-r8a7744",
-+				     "renesas,rcar-dmac";
-+			reg = <0 0xec700000 0 0x10000>;
-+			interrupts = <GIC_SPI 346 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "error",
-+					  "ch0", "ch1", "ch2", "ch3",
-+					  "ch4", "ch5", "ch6", "ch7",
-+					  "ch8", "ch9", "ch10", "ch11",
-+					  "ch12";
-+			clocks = <&cpg CPG_MOD 502>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 502>;
-+			#dma-cells = <1>;
-+			dma-channels = <13>;
-+		};
-+
-+		audma1: dma-controller@ec720000 {
-+			compatible = "renesas,dmac-r8a7744",
-+				     "renesas,rcar-dmac";
-+			reg = <0 0xec720000 0 0x10000>;
-+			interrupts = <GIC_SPI 347 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 338 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 345 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "error",
-+					  "ch0", "ch1", "ch2", "ch3",
-+					  "ch4", "ch5", "ch6", "ch7",
-+					  "ch8", "ch9", "ch10", "ch11",
-+					  "ch12";
-+			clocks = <&cpg CPG_MOD 501>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 501>;
-+			#dma-cells = <1>;
-+			dma-channels = <13>;
- 		};
- 
- 		pci0: pci@ee090000 {
--- 
-2.7.4
+> ---
+> v3:
+>  * Added Reviewed-by from Rob and Simon
+> v2:
+>  * Documented that R7S9210 has 2 clocks
+> ---
+>  Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> index 27f2eab2981d..9391ae9a1d9d 100644
+> --- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> @@ -13,6 +13,7 @@ Required properties:
+>  - compatible: should contain one or more of the following:
+>                 "renesas,sdhi-sh73a0" - SDHI IP on SH73A0 SoC
+>                 "renesas,sdhi-r7s72100" - SDHI IP on R7S72100 SoC
+> +               "renesas,sdhi-r7s9210" - SDHI IP on R7S9210 SoC
+>                 "renesas,sdhi-r8a73a4" - SDHI IP on R8A73A4 SoC
+>                 "renesas,sdhi-r8a7740" - SDHI IP on R8A7740 SoC
+>                 "renesas,sdhi-r8a7743" - SDHI IP on R8A7743 SoC
+> @@ -56,7 +57,7 @@ Required properties:
+>           "core" and "cd". If the controller only has 1 clock, naming is not
+>           required.
+>           Devices which have more than 1 clock are listed below:
+> -         2: R7S72100
+> +         2: R7S72100, R7S9210
+>
+>  Optional properties:
+>  - pinctrl-names: should be "default", "state_uhs"
+> --
+> 2.16.1
+>
