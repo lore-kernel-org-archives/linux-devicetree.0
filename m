@@ -1,72 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: backlight: fix vendor prefix for
- ArcticSand arcxcnn driver bindings
-Date: Mon, 12 Nov 2018 12:42:54 -0600
-Message-ID: <5bea0ec6.1c69fb81.82c48.304f@mx.google.com>
-References: <1541592640-18478-1-git-send-email-bdodge09@gmail.com>
- <1541592640-18478-2-git-send-email-bdodge09@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/8] dt-bindings: Add vendor prefix for LeMaker
+Date: Mon, 12 Nov 2018 17:37:52 -0600
+Message-ID: <5bea0ed2.1c69fb81.5be5.adb5@mx.google.com>
+References: <20181107181843.27628-1-contact@paulk.fr> <20181107181843.27628-5-contact@paulk.fr>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1541592640-18478-2-git-send-email-bdodge09@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brian Dodge <bdodge09@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, lee.jones@linaro.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBU45VDPQKGQENRZDVMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181107181843.27628-5-contact-W9ppeneeCTY@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mark Van den Borre <mark-8Ycg9RsmSNMdnm+yROfE0A@public.gmane.org>, Gerry Demaret <gerry-8Ycg9RsmSNMdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBOb3YgMDcsIDIwMTggYXQgMDc6MTA6MzhBTSAtMDUwMCwgQnJpYW4gRG9kZ2Ugd3Jv
-dGU6Cj4gVGhlIHZlbmRvci1wcmVmaXhlcy50eHQgZmlsZSBwcm9wZXJseSByZWZlcnMgdG8gQXJj
-dGljU2FuZAo+IGFzIGFyY3RpYyBidXQgdGhlIGRyaXZlciBiaW5kaW5ncyBpbXByb3Blcmx5IGFi
-YnJldmlhdGVkIHRoZQo+IHByZWZpeCB0byBhcmMuIFRoaXMgd2FzIGEgbWlzdGFrZSBpbiB0aGUg
-b3JpZ2luYWwgcGF0Y2gKPiAKCkFyZSB0aGVyZSBhbnkgdXNlcnMgYW5kIGFyZSB0aGV5IG9rYXkg
-d2l0aCB0aGlzIGNoYW5naW5nPwoKPiBTaWduZWQtb2ZmLWJ5OiBCcmlhbiBEb2RnZSA8YmRvZGdl
-MDlAZ21haWwuY29tPgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvYXJjeGNu
-bl9ibC50eHQgICAgICAgICAgIHwgMjAgKysrKysrKysrKy0tLS0tLS0tLS0KPiAgMSBmaWxlIGNo
-YW5nZWQsIDEwIGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvYXJjeGNu
-bl9ibC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9iYWNrbGln
-aHQvYXJjeGNubl9ibC50eHQKPiBpbmRleCAyMzBhYmRlLi5kY2FhMjM5IDEwMDY0NAo+IC0tLSBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2JhY2tsaWdodC9hcmN4Y25u
-X2JsLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2Jh
-Y2tsaWdodC9hcmN4Y25uX2JsLnR4dAo+IEBAIC0xLDggKzEsOCBAQAo+IC1CaW5kaW5nIGZvciBB
-cmN0aWNTYW5kIGFyYzJjMDYwOCBMRUQgZHJpdmVyCj4gK0JpbmRpbmcgZm9yIEFyY3RpY1NhbmQg
-YXJjIGZhbWlseSBMRUQgZHJpdmVycwo+IAo+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+IC0tIGNv
-bXBhdGlibGU6CQlzaG91bGQgYmUgImFyYyxhcmMyYzA2MDgiCj4gLS0gcmVnOgkJCXNsYXZlIGFk
-ZHJlc3MKPiArLSBjb21wYXRpYmxlOgkiYXJjdGljLGFyYzFjMDYwOCIsICJhcmN0aWMsYXJjMmMw
-NjA4IiwgImFyY3RpYyxhcmMzYzA4NDUiCgpGb3JtYXQgb25lIHBlciBsaW5lIHBsZWFzZS4KCj4g
-Ky0gcmVnOgkJc2xhdmUgYWRkcmVzcwo+IAo+ICBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICAtIGRl
-ZmF1bHQtYnJpZ2h0bmVzczoJYnJpZ2h0bmVzcyB2YWx1ZSBvbiBib290LCB2YWx1ZSBmcm9tOiAw
-LTQwOTUKPiBAQCAtMTEsMTkgKzExLDE5IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gIC0gbGVk
-LXNvdXJjZXM6CQlMaXN0IG9mIGVuYWJsZWQgY2hhbm5lbHMgZnJvbSAwIHRvIDUuCj4gIAkJCVNl
-ZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9jb21tb24udHh0Cj4gCj4g
-LS0gYXJjLGxlZC1jb25maWctMDoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgSUxFRF9DT05GSUdfMAo+
-IC0tIGFyYyxsZWQtY29uZmlnLTE6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIElMRURfQ09ORklHXzEK
-PiAtLSBhcmMsZGltLWZyZXE6CQlQV00gbW9kZSBmcmVxdWVuY2Ugc2V0dGluZyAoYml0cyBbMzow
-XSB1c2VkKQo+IC0tIGFyYyxjb21wLWNvbmZpZzoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgQ09ORklH
-X0NPTVAKPiAtLSBhcmMsZmlsdGVyLWNvbmZpZzoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgRklMVEVS
-X0NPTkZJRwo+IC0tIGFyYyx0cmltLWNvbmZpZzoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgSU1BWFRV
-TkUKPiArLSBhcmN0aWMsbGVkLWNvbmZpZy0wOglzZXR0aW5nIGZvciByZWdpc3RlciBJTEVEX0NP
-TkZJR18wCj4gKy0gYXJjdGljLGxlZC1jb25maWctMToJc2V0dGluZyBmb3IgcmVnaXN0ZXIgSUxF
-RF9DT05GSUdfMQo+ICstIGFyY3RpYyxkaW0tZnJlcToJCVBXTSBtb2RlIGZyZXF1ZW5jZSBzZXR0
-aW5nIChiaXRzIFszOjBdIHVzZWQpCj4gKy0gYXJjdGljLGNvbXAtY29uZmlnOglzZXR0aW5nIGZv
-ciByZWdpc3RlciBDT05GSUdfQ09NUAo+ICstIGFyY3RpYyxmaWx0ZXItY29uZmlnOglzZXR0aW5n
-IGZvciByZWdpc3RlciBGSUxURVJfQ09ORklHCj4gKy0gYXJjdGljLHRyaW0tY29uZmlnOglzZXR0
-aW5nIGZvciByZWdpc3RlciBJTUFYVFVORQo+IAo+ICBOb3RlOiBPcHRpb25hbCBwcm9wZXJ0aWVz
-IG5vdCBzcGVjaWZpZWQgd2lsbCBkZWZhdWx0IHRvIHZhbHVlcyBpbiBJQyBFUFJPTQo+IAo+ICBF
-eGFtcGxlOgo+IAo+ICBhcmMyYzA2MDhAMzAgewo+IC0JY29tcGF0aWJsZSA9ICJhcmMsYXJjMmMw
-NjA4IjsKPiArCWNvbXBhdGlibGUgPSAiYXJjdGljLGFyYzJjMDYwOCI7Cj4gIAlyZWcgPSA8MHgz
-MD47Cj4gIAlkZWZhdWx0LWJyaWdodG5lc3MgPSA8NTAwPjsKPiAgCWxhYmVsID0gImxjZC1iYWNr
-bGlnaHQiOwo+IC0tCj4gMi43LjQKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+On Wed,  7 Nov 2018 19:18:39 +0100, Paul Kocialkowski wrote:
+> This introduces a new device-tree binding vendor prefix for Shenzhen
+> LeMaker Technology Co., Ltd.
+> 
+> This vendor was already in use but it was not documented until now.
+> 
+> Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+> Reviewed-by: Rob Hering <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
