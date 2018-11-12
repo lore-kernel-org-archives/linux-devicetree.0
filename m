@@ -1,135 +1,432 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: Re: [PATCH v6 00/10] hwmon and fsi: Add On-Chip Controller Driver
-Date: Mon, 12 Nov 2018 10:25:19 -0600
-Message-ID: <65651d7d-7c29-4cc5-7ebf-b9d33fed7500@linux.vnet.ibm.com>
-References: <1541711129-26631-1-git-send-email-eajames@linux.ibm.com>
- <20181109230354.GA31326@roeck-us.net>
+From: Parthiban Nallathambi <pn@denx.de>
+Subject: Re: [PATCH v5 1/5] pinctrl: actions: define constructor generic to
+ Actions Semi SoC's
+Date: Mon, 12 Nov 2018 17:27:12 +0100
+Message-ID: <4a54e87e-cf8d-7037-7b7a-4e30e27338da@denx.de>
+References: <20180829082413.2512005-1-sravanhome@gmail.com>
+ <20180829082413.2512005-2-sravanhome@gmail.com>
+ <20180829152049.GA21136@Mani-XPS-13-9360>
+ <7fc376ac-5998-57b6-8989-908d7a0abfd0@gmail.com>
+ <72d4911a-588f-9bf3-4fad-a0b34692ecd4@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181109230354.GA31326@roeck-us.net>
+In-Reply-To: <72d4911a-588f-9bf3-4fad-a0b34692ecd4@denx.de>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Eddie James <eajames@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, rdunlap@infradead.org, benh@kernel.crashing.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Saravanan Sekar <sravanhome@gmail.com>, pn@denx.de, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, catalin.marinas@arm.com, will.deacon@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mp-cs@actions-semi.com, jeff.chen@actions-semi.com, thomas.liau@actions-semi.com, linux@cubietech.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Mani,
 
+On 11/6/18 5:43 PM, Parthiban Nallathambi wrote:
+> ping on this patch series!
+> 
+> On 9/4/18 8:41 PM, Saravanan Sekar wrote:
+>>
+>>
+>> On 08/29/18 17:20, Manivannan Sadhasivam wrote:
+>>> Hi Saravanan,
+>>>
+>>> On Wed, Aug 29, 2018 at 10:24:09AM +0200, Saravanan Sekar wrote:
+>>>> Move generic defines common to the Owl family out of S900 driver.
+>>>>
+>>>> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+>>>> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+>>>> ---
+>>>>   drivers/pinctrl/actions/pinctrl-owl.h  | 131 
+>>>> +++++++++++++++++++++++++++++++
+>>>>   drivers/pinctrl/actions/pinctrl-s900.c | 139 
+>>>> ++-------------------------------
+>>>>   2 files changed, 137 insertions(+), 133 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pinctrl/actions/pinctrl-owl.h 
+>>>> b/drivers/pinctrl/actions/pinctrl-owl.h
+>>>> index a724d1d406d4..31cc33d7c4a5 100644
+>>>> --- a/drivers/pinctrl/actions/pinctrl-owl.h
+>>>> +++ b/drivers/pinctrl/actions/pinctrl-owl.h
+>>>> @@ -15,6 +15,136 @@
+>>>>   #define OWL_PINCONF_SLEW_SLOW 0
+>>>>   #define OWL_PINCONF_SLEW_FAST 1
+>>>> +#define MUX_PG(group_name, reg, shift, width)                \
+>>>> +    {                                \
+>>>> +        .name = #group_name,                    \
+>>>> +        .pads = group_name##_pads,                \
+>>>> +        .npads = ARRAY_SIZE(group_name##_pads),            \
+>>>> +        .funcs = group_name##_funcs,                \
+>>>> +        .nfuncs = ARRAY_SIZE(group_name##_funcs),        \
+>>>> +        .mfpctl_reg  = MFCTL##reg,                \
+>>>> +        .mfpctl_shift = shift,                    \
+>>>> +        .mfpctl_width = width,                    \
+>>>> +        .drv_reg = -1,                        \
+>>>> +        .drv_shift = -1,                    \
+>>>> +        .drv_width = -1,                    \
+>>>> +        .sr_reg = -1,                        \
+>>>> +        .sr_shift = -1,                        \
+>>>> +        .sr_width = -1,                        \
+>>>> +    }
+>>>> +
+>>>> +#define DRV_PG(group_name, reg, shift, width)                \
+>>>> +    {                                \
+>>>> +        .name = #group_name,                    \
+>>>> +        .pads = group_name##_pads,                \
+>>>> +        .npads = ARRAY_SIZE(group_name##_pads),            \
+>>>> +        .mfpctl_reg  = -1,                    \
+>>>> +        .mfpctl_shift = -1,                    \
+>>>> +        .mfpctl_width = -1,                    \
+>>>> +        .drv_reg = PAD_DRV##reg,                \
+>>>> +        .drv_shift = shift,                    \
+>>>> +        .drv_width = width,                    \
+>>>> +        .sr_reg = -1,                        \
+>>>> +        .sr_shift = -1,                        \
+>>>> +        .sr_width = -1,                        \
+>>>> +    }
+>>>> +
+>>>> +#define SR_PG(group_name, reg, shift, width)                \
+>>>> +    {                                \
+>>>> +        .name = #group_name,                    \
+>>>> +        .pads = group_name##_pads,                \
+>>>> +        .npads = ARRAY_SIZE(group_name##_pads),            \
+>>>> +        .mfpctl_reg  = -1,                    \
+>>>> +        .mfpctl_shift = -1,                    \
+>>>> +        .mfpctl_width = -1,                    \
+>>>> +        .drv_reg = -1,                        \
+>>>> +        .drv_shift = -1,                    \
+>>>> +        .drv_width = -1,                    \
+>>>> +        .sr_reg = PAD_SR##reg,                    \
+>>>> +        .sr_shift = shift,                    \
+>>>> +        .sr_width = width,                    \
+>>>> +    }
+>>>> +
+>>>> +#define FUNCTION(fname)                    \
+>>>> +    {                        \
+>>>> +        .name = #fname,                \
+>>>> +        .groups = fname##_groups,        \
+>>>> +        .ngroups = ARRAY_SIZE(fname##_groups),    \
+>>>> +    }
+>>>> +
+>>>> +/* PAD PULL UP/DOWN CONFIGURES */
+>>>> +#define PULLCTL_CONF(pull_reg, pull_sft, pull_wdt)    \
+>>>> +    {                        \
+>>>> +        .reg = PAD_PULLCTL##pull_reg,        \
+>>>> +        .shift = pull_sft,            \
+>>>> +        .width = pull_wdt,            \
+>>>> +    }
+>>>> +
+>>>> +#define PAD_PULLCTL_CONF(pad_name, pull_reg, pull_sft, pull_wdt)    \
+>>>> +    struct owl_pullctl pad_name##_pullctl_conf            \
+>>>> +        = PULLCTL_CONF(pull_reg, pull_sft, pull_wdt)
+>>>> +
+>>>> +#define ST_CONF(st_reg, st_sft, st_wdt)            \
+>>>> +    {                        \
+>>>> +        .reg = PAD_ST##st_reg,            \
+>>>> +        .shift = st_sft,            \
+>>>> +        .width = st_wdt,            \
+>>>> +    }
+>>>> +
+>>>> +#define PAD_ST_CONF(pad_name, st_reg, st_sft, st_wdt)    \
+>>>> +    struct owl_st pad_name##_st_conf        \
+>>>> +        = ST_CONF(st_reg, st_sft, st_wdt)
+>>>> +
+>>>> +#define PAD_INFO(name)                    \
+>>>> +    {                        \
+>>>> +        .pad = name,                \
+>>>> +        .pullctl = NULL,            \
+>>>> +        .st = NULL,                \
+>>>> +    }
+>>>> +
+>>>> +#define PAD_INFO_ST(name)                \
+>>>> +    {                        \
+>>>> +        .pad = name,                \
+>>>> +        .pullctl = NULL,            \
+>>>> +        .st = &name##_st_conf,            \
+>>>> +    }
+>>>> +
+>>>> +#define PAD_INFO_PULLCTL(name)                \
+>>>> +    {                        \
+>>>> +        .pad = name,                \
+>>>> +        .pullctl = &name##_pullctl_conf,    \
+>>>> +        .st = NULL,                \
+>>>> +    }
+>>>> +
+>>>> +#define PAD_INFO_PULLCTL_ST(name)            \
+>>>> +    {                        \
+>>>> +        .pad = name,                \
+>>>> +        .pullctl = &name##_pullctl_conf,    \
+>>>> +        .st = &name##_st_conf,            \
+>>>> +    }
+>>>> +
+>>>> +#define OWL_GPIO_PORT_A        0
+>>>> +#define OWL_GPIO_PORT_B        1
+>>>> +#define OWL_GPIO_PORT_C        2
+>>>> +#define OWL_GPIO_PORT_D        3
+>>>> +#define OWL_GPIO_PORT_E        4
+>>>> +#define OWL_GPIO_PORT_F        5
+>>>> +
+>>>> +#define OWL_GPIO_PORT(port, base, count, _outen, _inen, _dat, 
+>>>> _intc_ctl,\
+>>>> +            _intc_pd, _intc_msk, _intc_type, _share)    \
+>>>> +    [OWL_GPIO_PORT_##port] = {                \
+>>>> +        .offset = base,                    \
+>>>> +        .pins = count,                    \
+>>>> +        .outen = _outen,                \
+>>>> +        .inen = _inen,                    \
+>>>> +        .dat = _dat,                    \
+>>>> +        .intc_ctl = _intc_ctl,                \
+>>>> +        .intc_pd = _intc_pd,                \
+>>>> +        .intc_msk = _intc_msk,                \
+>>>> +        .intc_type = _intc_type,            \
+>>>> +        .shared_ctl_offset = _share,            \
+>>>
+>>> Above member addition is not related to this patch. What is the purpose
+>>> of this? Either move this to a separate commit if it is needed by S700
+>>> or justify in this patch itself.
+>>>
+>>
+>> This is introduced for S700 as registers are shared, it is not case in
+>> S900. There is impact on S900 also, which needs another seperate patch
+>> which is unlikely as we cleaning S700 related stuffs here
 
-On 11/09/2018 05:03 PM, Guenter Roeck wrote:
-> On Thu, Nov 08, 2018 at 03:05:19PM -0600, Eddie James wrote:
->> From: Eddie James <eajames@linux.vnet.ibm.com>
->>
->> This series adds a hwmon driver to support the OCC on POWER8 and POWER9
->> processors. The OCC is an embedded processor that provides realtime power and
->> thermal monitoring and management.
->>
->> The series also adds a "bus" driver to handle atomic communication between the
->> service processor and the OCC on a POWER9 chip. This communication takes place
->> over FSI bus to the SBE (Self-Boot engine) FIFO, which in turn communicates
->> with the OCC. The driver for the SBEFIFO is already available as an FSI client
->> driver.
->>
->> For POWER8 OCCs, communication between the service processor and the OCC is
->> achieved over I2C bus.
->>
-> I am not entirely happy with the series - there are still lots of proprietary
-> attributes, and I would have preferred the use of the _info API at this point -
-> but this has taken long enough. Series applied to hwmon-next. Please send any
-> fixes as follow-up patches.
+S700 shares the control register (INTC_GPIOCTL) for all the GPIO ports.
+Hence this is introduced only for s700 to offset into the control
+register for configuring (int pending/enable/clock select).
 
-Thanks a lot Guenter, appreciate your help getting here.
+So should it be separate commit still? As mentioned Saravanan above,
+this has the impact in s900 as well.
 
-Eddie
+>>
+>>> Btw, this patch is not applying cleanly.
 
->
-> Thanks,
-> Guenter
->
->> Changes since v5:
->>   * Makefile fix when compiling both P8 and P9 versions
->>   * Spelling fix in hwmon doc
->>   * Added an additional sentence for P9 binding doc to explain that OCC isn't
->>     an FSI slave device.
+Will send v6 based on current mainline master!
+
+Thanks,
+Parthi
+
+>>>
+>>>> +    }
+>>>> +
+>>>>   enum owl_pinconf_pull {
+>>>>       OWL_PINCONF_PULL_HIZ,
+>>>>       OWL_PINCONF_PULL_DOWN,
+>>>> @@ -148,6 +278,7 @@ struct owl_gpio_port {
+>>>>       unsigned int intc_pd;
+>>>>       unsigned int intc_msk;
+>>>>       unsigned int intc_type;
+>>>> +    u8 shared_ctl_offset;
+>>>
+>>> Same as above.
+>>>
+>>> Regards,
+>>> Mani
+>>>
+>>>>   };
+>>>>   /**
+>>>> diff --git a/drivers/pinctrl/actions/pinctrl-s900.c 
+>>>> b/drivers/pinctrl/actions/pinctrl-s900.c
+>>>> index ea67b14ef93b..0597009d8369 100644
+>>>> --- a/drivers/pinctrl/actions/pinctrl-s900.c
+>>>> +++ b/drivers/pinctrl/actions/pinctrl-s900.c
+>>>> @@ -33,13 +33,6 @@
+>>>>   #define PAD_SR1            (0x0274)
+>>>>   #define PAD_SR2            (0x0278)
+>>>> -#define OWL_GPIO_PORT_A        0
+>>>> -#define OWL_GPIO_PORT_B        1
+>>>> -#define OWL_GPIO_PORT_C        2
+>>>> -#define OWL_GPIO_PORT_D        3
+>>>> -#define OWL_GPIO_PORT_E        4
+>>>> -#define OWL_GPIO_PORT_F        5
+>>>> -
+>>>>   #define _GPIOA(offset)        (offset)
+>>>>   #define _GPIOB(offset)        (32 + (offset))
+>>>>   #define _GPIOC(offset)        (64 + (offset))
+>>>> @@ -892,55 +885,6 @@ static unsigned int i2c2_sr_pads[]        = { 
+>>>> I2C2_SCLK, I2C2_SDATA };
+>>>>   static unsigned int sensor0_sr_pads[]        = { SENSOR0_PCLK,
+>>>>                               SENSOR0_CKOUT };
+>>>> -#define MUX_PG(group_name, reg, shift, width)                \
+>>>> -    {                                \
+>>>> -        .name = #group_name,                    \
+>>>> -        .pads = group_name##_pads,                \
+>>>> -        .npads = ARRAY_SIZE(group_name##_pads),            \
+>>>> -        .funcs = group_name##_funcs,                \
+>>>> -        .nfuncs = ARRAY_SIZE(group_name##_funcs),        \
+>>>> -        .mfpctl_reg  = MFCTL##reg,                \
+>>>> -        .mfpctl_shift = shift,                    \
+>>>> -        .mfpctl_width = width,                    \
+>>>> -        .drv_reg = -1,                        \
+>>>> -        .drv_shift = -1,                    \
+>>>> -        .drv_width = -1,                    \
+>>>> -        .sr_reg = -1,                        \
+>>>> -        .sr_shift = -1,                        \
+>>>> -        .sr_width = -1,                        \
+>>>> -    }
+>>>> -
+>>>> -#define DRV_PG(group_name, reg, shift, width)                \
+>>>> -    {                                \
+>>>> -        .name = #group_name,                    \
+>>>> -        .pads = group_name##_pads,                \
+>>>> -        .npads = ARRAY_SIZE(group_name##_pads),            \
+>>>> -        .mfpctl_reg  = -1,                    \
+>>>> -        .mfpctl_shift = -1,                    \
+>>>> -        .mfpctl_width = -1,                    \
+>>>> -        .drv_reg = PAD_DRV##reg,                \
+>>>> -        .drv_shift = shift,                    \
+>>>> -        .drv_width = width,                    \
+>>>> -        .sr_reg = -1,                        \
+>>>> -        .sr_shift = -1,                        \
+>>>> -        .sr_width = -1,                        \
+>>>> -    }
+>>>> -
+>>>> -#define SR_PG(group_name, reg, shift, width)                \
+>>>> -    {                                \
+>>>> -        .name = #group_name,                    \
+>>>> -        .pads = group_name##_pads,                \
+>>>> -        .npads = ARRAY_SIZE(group_name##_pads),            \
+>>>> -        .mfpctl_reg  = -1,                    \
+>>>> -        .mfpctl_shift = -1,                    \
+>>>> -        .mfpctl_width = -1,                    \
+>>>> -        .drv_reg = -1,                        \
+>>>> -        .drv_shift = -1,                    \
+>>>> -        .drv_width = -1,                    \
+>>>> -        .sr_reg = PAD_SR##reg,                    \
+>>>> -        .sr_shift = shift,                    \
+>>>> -        .sr_width = width,                    \
+>>>> -    }
+>>>>   /* Pinctrl groups */
+>>>>   static const struct owl_pingroup s900_groups[] = {
+>>>> @@ -1442,13 +1386,6 @@ static const char * const sirq2_groups[] = {
+>>>>       "sirq2_dummy",
+>>>>   };
+>>>> -#define FUNCTION(fname)                    \
+>>>> -    {                        \
+>>>> -        .name = #fname,                \
+>>>> -        .groups = fname##_groups,        \
+>>>> -        .ngroups = ARRAY_SIZE(fname##_groups),    \
+>>>> -    }
+>>>> -
+>>>>   static const struct owl_pinmux_func s900_functions[] = {
+>>>>       [S900_MUX_ERAM] = FUNCTION(eram),
+>>>>       [S900_MUX_ETH_RMII] = FUNCTION(eth_rmii),
+>>>> @@ -1500,28 +1437,6 @@ static const struct owl_pinmux_func 
+>>>> s900_functions[] = {
+>>>>       [S900_MUX_SIRQ1] = FUNCTION(sirq1),
+>>>>       [S900_MUX_SIRQ2] = FUNCTION(sirq2)
+>>>>   };
+>>>> -/* PAD PULL UP/DOWN CONFIGURES */
+>>>> -#define PULLCTL_CONF(pull_reg, pull_sft, pull_wdt)            \
+>>>> -    {                                \
+>>>> -        .reg = PAD_PULLCTL##pull_reg,                \
+>>>> -        .shift = pull_sft,                    \
+>>>> -        .width = pull_wdt,                    \
+>>>> -    }
+>>>> -
+>>>> -#define PAD_PULLCTL_CONF(pad_name, pull_reg, pull_sft, pull_wdt)    \
+>>>> -    struct owl_pullctl pad_name##_pullctl_conf            \
+>>>> -        = PULLCTL_CONF(pull_reg, pull_sft, pull_wdt)
+>>>> -
+>>>> -#define ST_CONF(st_reg, st_sft, st_wdt)                    \
+>>>> -    {                                \
+>>>> -        .reg = PAD_ST##st_reg,                    \
+>>>> -        .shift = st_sft,                    \
+>>>> -        .width = st_wdt,                    \
+>>>> -    }
+>>>> -
+>>>> -#define PAD_ST_CONF(pad_name, st_reg, st_sft, st_wdt)            \
+>>>> -    struct owl_st pad_name##_st_conf                \
+>>>> -        = ST_CONF(st_reg, st_sft, st_wdt)
+>>>>   /* PAD_PULLCTL0 */
+>>>>   static PAD_PULLCTL_CONF(ETH_RXER, 0, 18, 2);
+>>>> @@ -1639,34 +1554,6 @@ static PAD_ST_CONF(SPI0_SS, 1, 2, 1);
+>>>>   static PAD_ST_CONF(I2S_BCLK0, 1, 1, 1);
+>>>>   static PAD_ST_CONF(I2S_MCLK0, 1, 0, 1);
+>>>> -#define PAD_INFO(name)                            \
+>>>> -    {                                \
+>>>> -        .pad = name,                        \
+>>>> -        .pullctl = NULL,                    \
+>>>> -        .st = NULL,                        \
+>>>> -    }
+>>>> -
+>>>> -#define PAD_INFO_ST(name)                        \
+>>>> -    {                                \
+>>>> -        .pad = name,                        \
+>>>> -        .pullctl = NULL,                    \
+>>>> -        .st = &name##_st_conf,                    \
+>>>> -    }
+>>>> -
+>>>> -#define PAD_INFO_PULLCTL(name)                        \
+>>>> -    {                                \
+>>>> -        .pad = name,                        \
+>>>> -        .pullctl = &name##_pullctl_conf,            \
+>>>> -        .st = NULL,                        \
+>>>> -    }
+>>>> -
+>>>> -#define PAD_INFO_PULLCTL_ST(name)                    \
+>>>> -    {                                \
+>>>> -        .pad = name,                        \
+>>>> -        .pullctl = &name##_pullctl_conf,            \
+>>>> -        .st = &name##_st_conf,                    \
+>>>> -    }
+>>>> -
+>>>>   /* Pad info table */
+>>>>   static struct owl_padinfo s900_padinfo[NUM_PADS] = {
+>>>>       [ETH_TXD0] = PAD_INFO_ST(ETH_TXD0),
+>>>> @@ -1821,27 +1708,13 @@ static struct owl_padinfo 
+>>>> s900_padinfo[NUM_PADS] = {
+>>>>       [SGPIO3] = PAD_INFO_PULLCTL_ST(SGPIO3)
+>>>>   };
+>>>> -#define OWL_GPIO_PORT(port, base, count, _outen, _inen, _dat,        \
+>>>> -            _intc_ctl, _intc_pd, _intc_msk, _intc_type)    \
+>>>> -    [OWL_GPIO_PORT_##port] = {                    \
+>>>> -        .offset = base,                        \
+>>>> -        .pins = count,                        \
+>>>> -        .outen = _outen,                    \
+>>>> -        .inen = _inen,                        \
+>>>> -        .dat = _dat,                        \
+>>>> -        .intc_ctl = _intc_ctl,                    \
+>>>> -        .intc_pd = _intc_pd,                    \
+>>>> -        .intc_msk = _intc_msk,                    \
+>>>> -        .intc_type = _intc_type,                \
+>>>> -    }
+>>>> -
+>>>>   static const struct owl_gpio_port s900_gpio_ports[] = {
+>>>> -    OWL_GPIO_PORT(A, 0x0000, 32, 0x0, 0x4, 0x8, 0x204, 0x208, 
+>>>> 0x20C, 0x240),
+>>>> -    OWL_GPIO_PORT(B, 0x000C, 32, 0x0, 0x4, 0x8, 0x534, 0x204, 
+>>>> 0x208, 0x23C),
+>>>> -    OWL_GPIO_PORT(C, 0x0018, 12, 0x0, 0x4, 0x8, 0x52C, 0x200, 
+>>>> 0x204, 0x238),
+>>>> -    OWL_GPIO_PORT(D, 0x0024, 30, 0x0, 0x4, 0x8, 0x524, 0x1FC, 
+>>>> 0x200, 0x234),
+>>>> -    OWL_GPIO_PORT(E, 0x0030, 32, 0x0, 0x4, 0x8, 0x51C, 0x1F8, 
+>>>> 0x1FC, 0x230),
+>>>> -    OWL_GPIO_PORT(F, 0x00F0, 8, 0x0, 0x4, 0x8, 0x460, 0x140, 0x144, 
+>>>> 0x178)
+>>>> +    OWL_GPIO_PORT(A, 0x0000, 32, 0x0, 0x4, 0x8, 0x204, 0x208, 
+>>>> 0x20C, 0x240, 0),
+>>>> +    OWL_GPIO_PORT(B, 0x000C, 32, 0x0, 0x4, 0x8, 0x534, 0x204, 
+>>>> 0x208, 0x23C, 0),
+>>>> +    OWL_GPIO_PORT(C, 0x0018, 12, 0x0, 0x4, 0x8, 0x52C, 0x200, 
+>>>> 0x204, 0x238, 0),
+>>>> +    OWL_GPIO_PORT(D, 0x0024, 30, 0x0, 0x4, 0x8, 0x524, 0x1FC, 
+>>>> 0x200, 0x234, 0),
+>>>> +    OWL_GPIO_PORT(E, 0x0030, 32, 0x0, 0x4, 0x8, 0x51C, 0x1F8, 
+>>>> 0x1FC, 0x230, 0),
+>>>> +    OWL_GPIO_PORT(F, 0x00F0, 8, 0x0, 0x4, 0x8, 0x460, 0x140, 0x144, 
+>>>> 0x178, 0)
+>>>>   };
+>>>>   static struct owl_pinctrl_soc_data s900_pinctrl_data = {
+>>>> -- 
+>>>> 2.14.4
+>>>>
 >>
->> Changes since v4:
->>   * Make the hwmon attributes conform almost completely to standard names and
->>     values. The only exception is powerX_cap_user and powerX_cap_user_source.
->>   * Improve hwmon documentation.
->>   * Add ibm,p9-occ dt documentation.
->>
->> Changes since v3:
->>   * Add the FSI OCC driver.
->>   * Pull the sysfs attribute code into it's own file for cleanliness.
->>   * Various fixes for attribute creation and integer overflow.
->>
->> Changes since v2:
->>   * Add sysfs_notify for the error and throttling attributes when change is
->>     detected.
->>   * Removed occs_present counting of devices bound.
->>   * Improved remove() of P9 driver to avoid bad behavior with relation to OCC
->>     driver when unbound.
->>   * Added default cases (return EINVAL) for all sensor show functions.
->>   * Added temperature fault sensor.
->>   * Added back dt binding documentation for P9 to address checkpatch warning.
->>   * Added occs_present attribute from the poll response.
->>
->> Changes since v1:
->>   * Remove wait loop in P9 code, as that is now handled by FSI OCC driver.
->>   * Removed dt binding documentation for P9, FSI OCC driver will probe OCC hwmon
->>     driver automatically.
->>   * Moved OCC response code definitions to the OCC include file.
->>   * Fixed includes.
->>   * Changed some structure fields to __beXX as that is what they are.
->>   * Changed some errnos.
->>   * Removed some dev_err().
->>   * Refactored P8 code a bit to use #defined addresses and magic values, and
->>     changed "goto retry" to a loop.
->>   * Refactored error handling a bit.
->>
->> Eddie James (10):
->>    dt-bindings: fsi: Add P9 OCC device documentation
->>    fsi: Add On-Chip Controller (OCC) driver
->>    Documentation: hwmon: Add OCC documentation
->>    dt-bindings: i2c: Add P8 OCC hwmon device documentation
->>    hwmon: Add On-Chip Controller (OCC) hwmon driver
->>    hwmon (occ): Add command transport method for P8 and P9
->>    hwmon (occ): Parse OCC poll response
->>    hwmon (occ): Add sensor types and versions
->>    hwmon (occ): Add sensor attributes and register hwmon device
->>    hwmon (occ): Add sysfs attributes for additional OCC data
->>
->>   .../devicetree/bindings/fsi/ibm,p9-occ.txt         |   16 +
->>   .../devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt   |   25 +
->>   Documentation/hwmon/occ                            |  112 ++
->>   drivers/fsi/Kconfig                                |   10 +
->>   drivers/fsi/Makefile                               |    1 +
->>   drivers/fsi/fsi-occ.c                              |  599 +++++++++++
->>   drivers/hwmon/Kconfig                              |    2 +
->>   drivers/hwmon/Makefile                             |    1 +
->>   drivers/hwmon/occ/Kconfig                          |   31 +
->>   drivers/hwmon/occ/Makefile                         |    5 +
->>   drivers/hwmon/occ/common.c                         | 1098 ++++++++++++++++++++
->>   drivers/hwmon/occ/common.h                         |  128 +++
->>   drivers/hwmon/occ/p8_i2c.c                         |  255 +++++
->>   drivers/hwmon/occ/p9_sbe.c                         |  106 ++
->>   drivers/hwmon/occ/sysfs.c                          |  188 ++++
->>   include/linux/fsi-occ.h                            |   25 +
->>   16 files changed, 2602 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
->>   create mode 100644 Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt
->>   create mode 100644 Documentation/hwmon/occ
->>   create mode 100644 drivers/fsi/fsi-occ.c
->>   create mode 100644 drivers/hwmon/occ/Kconfig
->>   create mode 100644 drivers/hwmon/occ/Makefile
->>   create mode 100644 drivers/hwmon/occ/common.c
->>   create mode 100644 drivers/hwmon/occ/common.h
->>   create mode 100644 drivers/hwmon/occ/p8_i2c.c
->>   create mode 100644 drivers/hwmon/occ/p9_sbe.c
->>   create mode 100644 drivers/hwmon/occ/sysfs.c
->>   create mode 100644 include/linux/fsi-occ.h
->>
->> -- 
->> 1.8.3.1
->>
+> 
+
+-- 
+Thanks,
+Parthiban N
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-22 Fax: (+49)-8142-66989-80 Email: pn@denx.de
