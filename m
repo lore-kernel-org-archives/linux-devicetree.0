@@ -1,104 +1,54 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH 02/24] leds: core: Add support for composing LED class
- device names
-Date: Mon, 12 Nov 2018 21:11:32 +0100
-Message-ID: <b167cfc1-e392-eec6-6455-5983dc1c7212@gmail.com>
-References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
- <1541542052-10081-3-git-send-email-jacek.anaszewski@gmail.com>
- <20181111120234.GA28794@amd> <a640167b-3a3e-daea-b377-6e82b653c5e8@gmail.com>
- <20181111201605.GA20160@amd> <57b77d4e-39a0-aaf2-5952-c2c25dc58593@gmail.com>
- <20181112103513.GB5695@amd> <662c02ba-455b-e2bf-a5e2-ae3933161894@gmail.com>
- <20181112190554.GA13959@amd>
+From: Craig Tatlor <ctatlor97@gmail.com>
+Subject: Re: [PATCH V2] arm64: dts: sdm630 SoC and Sony Pioneer (Xperia XA2)
+ support
+Date: Mon, 12 Nov 2018 20:23:43 +0000
+Message-ID: <20181112202343.GA31294@arch.home>
+References: <20180812142317.19991-1-ctatlor97@gmail.com>
+ <61693687.BtxviolxTZ@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181112190554.GA13959@amd>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <61693687.BtxviolxTZ@phil>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/12/2018 08:05 PM, Pavel Machek wrote:
-> Hi!
+On Mon, Nov 12, 2018 at 04:34:50PM +0100, Heiko Stuebner wrote:
+> Hi Craig,
 > 
->>>>> My system looks like this:
->>>>>
->>>>> input16::capslock    tpacpi::bay_active    tpacpi::standby
->>>>> input16::numlock     tpacpi::dock_active   tpacpi::thinklight
->>>>> input16::scrolllock  tpacpi::dock_batt	      tpacpi::thinkvantage
->>>>> input5::capslock     tpacpi::dock_status1  tpacpi::unknown_led
->>>>> input5::numlock      tpacpi::dock_status2  tpacpi::unknown_led2
->>>>> input5::scrolllock   tpacpi:green:batt	      tpacpi::unknown_led3
+> Am Sonntag, 12. August 2018, 16:23:12 CET schrieb Craig Tatlor:
+> > Initial device tree support for Qualcomm SDM630 SoC and
+> > Sony Pioneer (Xperia XA2).
+> > 
+> > SDM630 is based off of the SDM660 soc and all SDM660 specific drivers are
+> > compatible with it. SDM660 is also based off of MSM8998 so it uses some
+> > of its drivers aswell.
+> > 
+> > The device tree is based on the CAF 4.4 kernel tree.
+> > 
+> > The device can be booted into the initrd with a shell over UART.
+> > 
+> > Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
 > 
->>> But it is not just for backwards compatibility. See my examples above,
->>> it is needed to tell which device the LED is asociated with, and it is
->>> absolutely required for USB devices (for example).
->>
->> For USB devices there is already ledtrig-usbport available, which
->> provides sysfs interface for defining and reading the usb ports,
->> the status of which the LED indicates. Since the USB devices can be
->> attached/removed dynamically, it would be impossible to reflect
->> the associations in the LED class device name.
+> With I think core drivers like clk, pinctrl merged in 4.20, do you
+> plan on respinning the devicetree support or in general continue
+> working on sdm630/sdm660?
+>
+Yeah, i am just a little busy at the moment, i should probably be
+sending of v3 in a few weeks.
+> Or do you have some git tree available somewhere, were I can follow
+> along? I do have interest in supporting a sdm630 phone of my own
+> but still don't want to duplicate work :-)
+My git tree is  https://gitlab.com/opendata26/linux the
+mainline-submit-2 branch, i have sdhci, usb(via downstream backport just
+so i can debug without opening phone) and also working on modem but that
+isnt in that tree and isnt working quite yet.
 > 
-> I'm not talking USB activity. I'm talking USB devices with LEDs on
-> them, like for example keyboards.
 > 
-> Please take a look at example above. input16::numlock ;
-> input5::numlock . You absolutely need device part.
-
-It would be redundant since there is "device" symbolic link
-created in given LED class device sysfs directory, pointing to the
-corresponding input device directory, like in case of my USB keyboard:
-
-#/sys/class/leds/input5::scrolllock$ ls -l
-total 0
--rw-r--r-- 1 root root 4096 Nov 12 20:22 brightness
-lrwxrwxrwx 1 root root    0 Nov 12 20:22 device -> ../../input5
--r--r--r-- 1 root root 4096 Nov 12 20:22 max_brightness
-drwxr-xr-x 2 root root    0 Nov 12 20:22 power
-lrwxrwxrwx 1 root root    0 Nov 12 20:04 subsystem ->
-../../../../../../../../../../../class/leds
--rw-r--r-- 1 root root 4096 Nov 12 20:22 trigger
-
-
->>> And even for "embedded" stuff like routers, we want eth0:green:link,
->>> eth0:yellow:activity and not some kind of hack.
->>
->> eth0 is not something you can be certain of at the stage of defining DT
->> node.
+> Thanks
+> Heiko
 > 
-> In the common case DT is used for, yes, you can, because whole system
-> is in one box.
-
-Only when all kernel modules are built-in.
-
-> (And really DT does not matter. We are talking kernel <-> user
-> interface here).
-
-OK, I was fixed on the devicename understood as LED controller name.
-
-
->>> Ideally, colors would come from fixed list, functions would come from
->>> fixed list, and device part would come from name used elsewhere in the
->>> kernel.
->>>
->>> (And yes, it probably means we should have something in device tree to
->>> link LED to its device. device = "name" would be good start...)
->>
->> Why would you need such link?
 > 
-> Because userspace needs that information?
 > 
-> Say you have raid array, with "error" leds for each drive (your list
-> already contains "hdderr"). Now userland detects problem with hdparm
-> on /dev/sdi. It would like to turn on corresponding LED.
-> 
-> How do you propose we do that?
-
-Similarly as in case of USB keyboard.
-
--- 
-Best regards,
-Jacek Anaszewski
