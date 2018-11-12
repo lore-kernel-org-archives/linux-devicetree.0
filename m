@@ -1,46 +1,38 @@
-From: Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [RFC PATCH 6/6] ARM: dts: clearfog: add comphy settings for Ethernet
- interfaces
-Date: Mon, 12 Nov 2018 12:31:12 +0000
-Message-ID: <E1gMBN2-0008AQ-Nk@rmk-PC.armlinux.org.uk>
-References: <20181112122933.GD30658@n2100.armlinux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20181112122933.GD30658@n2100.armlinux.org.uk>
-Content-Disposition: inline
-Sender: netdev-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
-Cc: Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH v2 0/2] Add Synopsys High-Speed USB PHY driver for Qualcomm SoCs
+Date: Mon, 12 Nov 2018 21:00:38 +0800
+Message-ID: <20181112130040.18793-1-shawn.guo@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the comphy settings for the Ethernet interfaces.
+It's based on a downstream driver from Sriharsha Allenki <sallenki@codeaurora.org>
+that uses USB phy framework, and gets rewrote to adpot generic phy
+framework together with quite some cleanups.
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
----
- arch/arm/boot/dts/armada-388-clearfog.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+Changes for v2:
+ - Add a pointer to phy/phy-bindings.txt for property #phy-cells.
+ - Roll back voltage settings in case function
+   qcom_snps_hsphy_config_regulators() fails in the middle.
+ - Add a comment for init-seq tuple which consists of 3 numbers.
+ - Sort include headers alphabetically.
+ - Sort register definitions in order of offset.
 
-diff --git a/arch/arm/boot/dts/armada-388-clearfog.dtsi b/arch/arm/boot/dts/armada-388-clearfog.dtsi
-index 1b0d0680c8b6..0d81600ca247 100644
---- a/arch/arm/boot/dts/armada-388-clearfog.dtsi
-+++ b/arch/arm/boot/dts/armada-388-clearfog.dtsi
-@@ -93,6 +93,7 @@
- 	bm,pool-long = <2>;
- 	bm,pool-short = <1>;
- 	buffer-manager = <&bm>;
-+	phys = <&comphy1 1>;
- 	phy-mode = "sgmii";
- 	status = "okay";
- };
-@@ -103,6 +104,7 @@
- 	bm,pool-short = <1>;
- 	buffer-manager = <&bm>;
- 	managed = "in-band-status";
-+	phys = <&comphy5 2>;
- 	phy-mode = "sgmii";
- 	sfp = <&sfp>;
- 	status = "okay";
+Shawn Guo (1):
+  phy: qualcomm: Add Synopsys High-Speed USB PHY driver
+
+Sriharsha Allenki (1):
+  dt-bindings: phy: Add Qualcomm Synopsys High-Speed USB PHY binding
+
+ .../phy/qcom,snps-28nm-usb-hs-phy.txt         | 101 ++++
+ drivers/phy/qualcomm/Kconfig                  |  10 +
+ drivers/phy/qualcomm/Makefile                 |   1 +
+ .../phy/qualcomm/phy-qcom-usb-hs-snsp-28nm.c  | 505 ++++++++++++++++++
+ 4 files changed, 617 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-usb-hs-snsp-28nm.c
+
 -- 
-2.7.4
+2.18.0
