@@ -1,69 +1,30 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 7/9] serial: Add Tegra Combined UART driver
-Date: Mon, 12 Nov 2018 10:03:01 -0800
-Message-ID: <20181112180301.GB28739@kroah.com>
-References: <20181026111638.10759-1-thierry.reding@gmail.com>
- <20181026111638.10759-8-thierry.reding@gmail.com>
- <20181109170526.GB14151@kroah.com>
- <20181112153014.GA29481@ulmo>
+From: Sven Van Asbroeck <thesven73@gmail.com>
+Subject: Re: [PATCH anybus v3 5/6] dt-bindings: anybuss-host: document
+ devicetree binding
+Date: Mon, 12 Nov 2018 13:05:26 -0500
+Message-ID: <CAGngYiUzA-GGOyX3+joUvf53zTELjiCU_TFLwaWAFgJXM4VHQQ@mail.gmail.com>
+References: <20181104155501.14767-1-TheSven73@googlemail.com>
+ <20181104155501.14767-6-TheSven73@googlemail.com> <CAK8P3a1ZUaxJzfzYoqAK+_ZBazHzF6nG1V2aiZSoiQr6nDhiSQ@mail.gmail.com>
+ <CAGngYiW5=oc486wq15yLbRLvO243PNALmouTDEh7QpO6GLO9Mg@mail.gmail.com> <CAK8P3a3QvQrOKeUs-9sFjDdzfesK27VP6fH7KVUjMW-gkmq-=Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181112153014.GA29481@ulmo>
+In-Reply-To: <CAK8P3a3QvQrOKeUs-9sFjDdzfesK27VP6fH7KVUjMW-gkmq-=Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Jiri Slaby <jslaby@suse.com>, Mikko Perttunen <mperttunen@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, Pekka Pessi <ppessi@nvidia.com>, Mika Liljeberg <mliljeberg@nvidia.com>, linux-tegra@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Sven Van Asbroeck <svendev@arcx.com>, robh+dt@kernel.org, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, treding@nvidia.com, David Lechner <david@lechnology.com>, noralf@tronnes.org, johan@kernel.org, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 12, 2018 at 04:30:14PM +0100, Thierry Reding wrote:
-> On Fri, Nov 09, 2018 at 09:05:26AM -0800, Greg Kroah-Hartman wrote:
-> > On Fri, Oct 26, 2018 at 01:16:36PM +0200, Thierry Reding wrote:
-> > > From: Thierry Reding <treding@nvidia.com>
-> > > 
-> > > The Tegra Combined UART (TCU) is a mailbox-based mechanism that allows
-> > > multiplexing multiple "virtual UARTs" into a single hardware serial
-> > > port. The TCU is the primary serial port on Tegra194 devices.
-> > > 
-> > > Add a TCU driver utilizing the mailbox framework, as the used mailboxes
-> > > are part of Tegra HSP blocks that are already controlled by the Tegra
-> > > HSP mailbox driver.
-> > > 
-> > > Based on work by  Mikko Perttunen <mperttunen@nvidia.com>.
-> > > 
-> > > Signed-off-by: Thierry Reding <treding@nvidia.com>
-> > 
-> > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> Thanks. I just sent out v2 addressing Pekka's comments on the series.
-> But I'm slightly confused now. Are you expecting anyone else to pick
-> this up? There are technically no build time dependencies between any
-> of these patches, so it should be fine to pick them all into the
-> corresponding subsystem trees.
+On Thu, Nov 8, 2018 at 9:27 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> We do the same thing on PCI and USB, where normally everything
+> is probed through hardware access, but a device driver can look
+> at dev->of_node to see if that contains any further properties.
+>
 
-Ah, I thought there was a built-time dependancy, that's why I gave my
-ack.
+This is very interesting. Spent some time trying to find an example of this
+for pci/usb, but drew a blank. Could you point me to an example?
 
-> Perhaps the only thing to note is that there is a runtime dependency
-> from this patch on patches 1 and 2 in the series. Patch 1 is required to
-> make blocking a mailbox possible in interrupt context, which we need in
-> the TCU driver because the TTY and console paths do end up calling the
-> mbox_send_message() from interrupt context. Patch 2 is only required at
-> runtime if the two mailboxes are provided by different instances of the
-> HSP block (which they are for TCU on Tegra194).
-> 
-> Would you prefer for Jassi to pick up the TCU patch along with the
-> mailbox core and driver changes so that we deal with the runtime
-> dependencies that way?
-> 
-> Alternatively, if Jassi is okay with the mailbox changes, I can pick up
-> all of the v2 series of the patches into stable branches for v4.21, deal
-> with the dependencies there and send out pull requests for everyone to
-> merge into their subsystem trees.
-
-I don't really care either way, whatever is easiest for you all is fine
-with me.
-
-thanks,
-
-greg k-h
+One of our products has pcie ethernet, but we have to patch it so it can
+grab its mac address from the bootloader. You are saying that there is
+a standard way to accomplish this?
