@@ -1,95 +1,193 @@
-Return-Path: <SRS0=Cu6b=NY=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr1410097.outbound.protection.outlook.com ([40.107.141.97]:33408
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726459AbeKNChA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 13 Nov 2018 21:37:00 -0500
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v4 2/2] dt-bindings: pinctrl: Add RZ/A2 pinctrl and GPIO
-Date: Tue, 13 Nov 2018 16:38:05 +0000
-Message-ID: <OSAPR01MB15538DC8B31310DF044242DF8AC20@OSAPR01MB1553.jpnprd01.prod.outlook.com>
-References: <20181107182733.62155-1-chris.brandt@renesas.com>
- <20181107182733.62155-3-chris.brandt@renesas.com>
- <CAMuHMdX3QJq+QgU-wwFLawyLwqqoUDLS=uwNqRhJqVtP0_yLNQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdX3QJq+QgU-wwFLawyLwqqoUDLS=uwNqRhJqVtP0_yLNQ@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=X2xC=NX=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
+References: <20181107182733.62155-1-chris.brandt@renesas.com> <20181107182733.62155-3-chris.brandt@renesas.com>
+In-Reply-To: <20181107182733.62155-3-chris.brandt@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 12 Nov 2018 17:06:45 +0100
+Message-ID: <CAMuHMdX3QJq+QgU-wwFLawyLwqqoUDLS=uwNqRhJqVtP0_yLNQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] dt-bindings: pinctrl: Add RZ/A2 pinctrl and GPIO
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <chris.brandt@renesas.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Jacopo Mondi <jacopo@jmondi.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNCk9uIE1vbmRheSwgTm92ZW1iZXIgMTIsIDIwMTggMSwgR2VlcnQgVXl0dGVy
-aG9ldmVuIHdyb3RlOg0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICsgIC0gY29tcGF0
-aWJsZTogc2hvdWxkIGJlOg0KPiA+ICsgICAgLSAicmVuZXNhcyxyN3M5MjEwLXBpbmN0cmwiOiBm
-b3IgUlovQTJNDQo+IA0KPiBPbiBSWi9BMSwgdGhlIGRhdGFzaGVldCBjYWxsZWQgdGhpcyAiUG9y
-dHMiLCBhbmQgdGhlIGNvcnJlc3BvbmRpbmcNCj4gY29tcGF0aWJsZQ0KPiB2YWx1ZSBpcyAicmVu
-ZXNhcyxyN3M3MjEwMC1wb3J0cyIuDQo+IE9uIFJaL0EyLCB0aGUgZGF0YXNoZWV0IGNhbGxzIHRo
-aXMgIkdQSU8iLCBzbyBwZXJoYXBzICJyZW5lc2FzLHI3czkyMTAtDQo+IGdwaW8iPw0KPiBIbW0s
-IHRoZW4geW91IG1heSB3YW50IHRvIGNhbGwgdGhlIHNpbmdsZSBub2RlIGdwaW8tY29udHJvbGxl
-ciBpbnN0ZWFkIG9mDQo+IHBpbi1jb250cm9sbGVyIChhbmQgYWxsIHJlZmVyZW5jZXMgdG8gaXQp
-PyBJdCdzIHJlYWxseSBib3RoLg0KPiANCj4gT24gUlovQTEsIGl0J3MgZGlmZmVyZW50LCBhcyB5
-b3UgaGF2ZSBhIHNpbmdsZSBwaW4tY29udHJvbGxlciBub2RlLCB3aXRoDQo+IEdQSU8NCj4gc3Vi
-bm9kZXMuDQoNClNvIGhlcmUncyB3aGVyZSB3ZSBnZXQgaW50byB0aGUgaW50ZXJlc3RpbmcgZGlz
-Y3Vzc2lvbnMuDQoNCllvdSdyZSBnb2luZyBvZmYgdGhlIHRpdGxlIG9mIHRoZSBjaGFwdGVycyBp
-biB0aGUgaGFyZHdhcmUgbWFudWFsLiBCdXQsIA0KSSdtIGxvb2tpbmcgYXQgd2hhdCB0aGUgSVAg
-aXMgKGFuZCB3aGVyZSBpdCB3YXMgdXNlcyBpbiBvdGhlciBTb0NzKS4NCg0KRm9yIFJaL0ExLCB0
-aGUgcGluIGNvbnRyb2xsZXIvR1BJTyBpcyBhIGhvcnJpYmxlIHBpZWNlIG9mIEhXIEkndmUgbmV2
-ZXIgDQpzZWVuIGJlZm9yZSBhbmQgaG9wZSB0byBuZXZlciBzZWUgYWdhaW4uDQoNCkZvciBSWi9B
-MiwgdGhlIGNvbnRyb2xsZXJzIGNhbWUgZnJvbSB0aGUgUlovVDEuIEluIHRoYXQgbWFudWFsLCB0
-aGUgDQpjaGFwdGVyIHdhcyBjYWxsICJNdWx0aS1GdW5jdGlvbiBQaW4gQ29udHJvbGxlciAoTVBD
-KSIgKENoYXB0ZXIgMTgpLiBUaGUgDQpHUElPIHdhcyBpbiBDaGFwdGVyIDE3IGNhbGxlZCAiSS9P
-IFBvcnRzIi4NClRoZW4gZm9yIFJaL0EyLCB0aGV5IHNpbXBseSBjb21iaW5lZCB0aGUgdHdvIGNo
-YXB0ZXJzIGludG8gb25lIHNpbmNlIHRoZQ0KaGFyZHdhcmUgd2FzIGFsc28gJ2NvbWJpbmVkJyBh
-bmQganVzdCBwaWNrZWQgYSBuYW1lICJHUElPIi4gKHRoZXkgDQpiYXNpY2FsbHkgY29weS9wYXN0
-ZWQgdGhlIHRleHQgZnJvbSB0aGUgdHdvIGNoYXB0ZXJzKQ0KDQpTbywgd2hhdCdzIHRoZSBydWxl
-IG9mIG5hbWluZz8gRG9lcyBpdCByZWFsbHkgaGF2ZSB0byBtYXRjaCBleGFjdGx5IHdoYXQNCml0
-IHNheXMgaW4gdGhlIGhhcmR3YXJlIG1hbnVhbD8NCkknbSBhc3N1bWluZyBhbiBSWi9BMyB3b3Vs
-ZCB1c2UgdGhpcyBzYW1lIHBpbiBjb250cm9sbGVyLg0KDQoNCj4gPiArRXhhbXBsZTogUGluIGNv
-bnRyb2xsZXIgbm9kZSBmb3IgUlovQTJNIFNvQyAocjdzOTIxMCkNCj4gPiArDQo+ID4gKyAgICAg
-ICBwaW5jdHJsOiBwaW4tY29udHJvbGxlckBmY2ZmZTAwMCB7DQo+ID4gKyAgICAgICAgICAgICAg
-IGNvbXBhdGlibGUgPSAicmVuZXNhcyxyN3M5MjEwLXBpbmN0cmwiOw0KPiA+ICsgICAgICAgICAg
-ICAgICByZWcgPSA8MHhmY2ZmZTAwMCAweDlEMT47DQo+IA0KPiAweDlkMQ0KPiANCj4gQlRXLCB0
-aGF0J3MgYSByZWFsIG9kZCBudW1iZXIuIFdoYXQgYWJvdXQgcm91bmRpbmcgdXAgdG8gdGhlIGhh
-cmR3YXJlDQo+IGdyYW51bGFyaXR5LCBpLmUuIDB4MTAwMD8NCg0KSSByZW1lbWJlciB1cyBnZXR0
-aW5nIGludG8gdHJvdWJsZSBvbmNlIGJlY2F1c2UgbnVtYmVycyB3ZXJlIHJvdW5kZWQgdXAgDQpv
-ciBkb3duIGFuZCB0aGVuIGNvbmZsaWN0ZWQgd2l0aCBvdGhlciBub2Rlcy9yZWdpc3RlciBhZGRy
-ZXNzZXMuIFNvLCBJIA0Kd2FzIHB1dHRpbmcgbnVtYmVyIGV4YWN0bHkgYXMgdGhleSBhcmUuIEJ1
-dCBpZiB5b3Ugd2FudCwgSSBjYW4gcm91bmQgaXQgDQp1cC4NCg0KDQo+ID4gKyAgRm9yIGFzc2ln
-bmluZyBHUElPIHBpbnMsIHVzZSB0aGUgbWFjcm8gUlpBMl9QSU5fSUQgYWxzbyBpbiByN3M5MjEw
-LQ0KPiBwaW5jdHJsLmgNCj4gDQo+IFJaQTJfUElODQoNCkdvb2QgY2F0Y2ghIFRoYW5rIHlvdS4N
-Cg0KDQoNCj4gPiArICAgICAgYXJlIHByb3ZpZGVkIGJ5IHRoZSBwaW4gY29udHJvbGxlciBoZWFk
-ZXIgZmlsZSBhdDoNCj4gPiArICAgICAgPGluY2x1ZGUvZHQtYmluZGluZ3MvcGluY3RybC9yN3M5
-MjEwLXBpbmN0cmwuaD4NCj4gDQo+IGluY2x1ZGUvZHQtYmluZGluZ3MvcGluY3RybC9yN3M5MjEw
-LXBpbmN0cmwuaCAob3INCj4gPGR0LWJpbmRpbmdzL3BpbmN0cmwvcjdzOTIxMC1waW5jdHJsLmg+
-KQ0KDQpUaGFua3MuDQoNCj4gPiArLyogUG9ydCBuYW1lcyBhcyBsYWJlbGVkIGluIHRoZSBIYXJk
-d2FyZSBNYW51YWwgKi8NCj4gPiArI2RlZmluZSBQMCAwDQo+ID4gKyNkZWZpbmUgUDEgMQ0KPiA+
-ICsjZGVmaW5lIFAyIDINCj4gPiArI2RlZmluZSBQMyAzDQo+ID4gKyNkZWZpbmUgUDQgNA0KPiA+
-ICsjZGVmaW5lIFA1IDUNCj4gPiArI2RlZmluZSBQNiA2DQo+ID4gKyNkZWZpbmUgUDcgNw0KPiA+
-ICsjZGVmaW5lIFA4IDgNCj4gPiArI2RlZmluZSBQOSA5DQo+ID4gKyNkZWZpbmUgUEEgMTANCj4g
-PiArI2RlZmluZSBQQiAxMQ0KPiA+ICsjZGVmaW5lIFBDIDEyDQo+IA0KPiBUaGlzIG1heSBjb25m
-bGljdCB3aXRoIE1JUFMgYWdhaW4gOy0pDQoNCkRhbW4gTUlQUyENCg0KDQo+IE9oLCB5b3UgZG9u
-J3QgaW5jbHVkZSB0aGUgYmluZGluZ3MgaGVhZGVyIGluIHRoZSBkcml2ZXIgc291cmNlIGZpbGUs
-IGFuZA0KPiBkb2luZw0KPiBzbyB3b3VsZCBjYXVzZSBpc3N1ZXMgd2l0aCAocHJldmlvdXMgdmVy
-c2lvbiBvZikgdGhlIGVudW0uLi4NCj4gDQo+IFN0aWxsLCB3b3VsZCBpdCBtYWtlIHNlbnNlIHRv
-IGNhbGwgdGhlc2UgUE9SVHggaW5zdGVhZCBvZiBQeD8NCj4gVGhlIHJlZ2lzdGVyIGRlc2NyaXB0
-aW9ucyB1c2UgUE9SVHguPHJlZz4uDQoNCkkgbGlrZWQgUHggYmVjYXVzZSBpdCBtYWRlIG15IGxp
-bmVzIGluIHRoZSBkZXZpY2UgdHJlZSBzaG9ydGVyLg0KQnV0LCBJIHdvbid0IGFyZ3VlIGlmIHlv
-dSB0aGluayBpdCB3b3VsZCBiZSBiZXR0ZXIgdG8gdXNlIFBPUlR4ICh0aGF0J3MgDQpvbmx5IDMg
-bW9yZSBjaGFyYWN0ZXJzKS4NCg0KDQo+ID4gKyNkZWZpbmUgUE0gMjENCj4gDQo+IFRoZXJlJ3Mg
-bm8gUE0gaW4gbXkgZGF0YXNoZWV0LiBTaG91bGQgdGhhdCBiZSBKUDA/DQo+IE9oLCB0aGUgcmVn
-aXN0ZXIgZGVzY3JpcHRpb25zIGRvIHVzZSBQT1JUTS4NCg0KTGlrZSB5b3UgbWVudGlvbmVkLCB0
-aGV5IG1hZGUgaXQgY29uZnVzaW5nIGJlY2F1c2UgaW5zdGVhZCBvZiBjYWxsaW5nIA0KdGhlIG9u
-IHBpbiBvbiBQb3J0IE0gIlBNMCIgdGhleSBjYWxsZWQgaXQgIkpQMCIgZm9yICdKVEFHIFBPUlQn
-Lg0KRnJvbSBhIGhhcmR3YXJlIElQIHN0YW5kcG9pbnQsIGl0J3MgYSAiUG9ydCBNIiwgc28gSSB3
-YW50ZWQgdG8gY2FsbCBpdCANCnRoYXQuIEkgd2FudGVkIHRvIG1ha2UgaXQgZ2VuZXJpYyBiZWNh
-dXNlIGlmIGFub3RoZXIgU29DIHVzZXMgdGhpcyBzYW1lDQpjb250cm9sbGVyLCBpdCBtaWdodCBo
-YXZlIG1vcmUgcG9ydHMsIHNvIHBvcnQgTSB3aWxsIHJlYWxseSBiZSBhIHBvcnQgTS4NCg0KDQo+
-ID4gKyAqIENyZWF0ZSB0aGUgcGluIGluZGV4IGZyb20gaXRzIGJhbmsgYW5kIHBvc2l0aW9uIG51
-bWJlcnMgYW5kIHN0b3JlIGluDQo+ID4gKyAqIHRoZSB1cHBlciA4IGJpdHMgdGhlIGFsdGVybmF0
-ZSBmdW5jdGlvbiBpZGVudGlmaWVyDQo+IA0KPiBUaGVzZSBhcmUgbm90IHJlYWxseSB0aGUgdXBw
-ZXIgOCBiaXRzLCB1bmxlc3MgeW91ciB3b3Jkc2l6ZSBpcyAyNC1iaXQgOy0pDQo+IA0KPiAidXBw
-ZXIgMTYgYml0cyIsIGxpa2Ugb24gUlovQTE/DQoNCk9wcHMuIFlvdSdyZSBjb3JyZWN0LiBUaGFu
-a3MhDQoNCg0KQ2hyaXMNCg==
+Hi Chris,
+
+On Wed, Nov 7, 2018 at 7:27 PM Chris Brandt <chris.brandt@renesas.com> wrote:
+> Add device tree binding documentation and header file for Renesas R7S9210
+> (RZ/A2) SoCs.
+>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+Thanks for your patch!
+
+> new file mode 100644
+> index 000000000000..622d37a7225b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
+> @@ -0,0 +1,88 @@
+> +Renesas RZ/A2 combined Pin and GPIO controller
+> +
+> +The Renesas SoCs of the RZ/A2 series feature a combined Pin and GPIO controller.
+> +Pin multiplexing and GPIO configuration is performed on a per-pin basis.
+> +Each port features up to 8 pins, each of them configurable for GPIO
+> +function (port mode) or in alternate function mode.
+> +Up to 8 different alternate function modes exist for each single pin.
+> +
+> +Pin controller node
+> +-------------------
+> +
+> +Required properties:
+> +  - compatible: should be:
+> +    - "renesas,r7s9210-pinctrl": for RZ/A2M
+
+On RZ/A1, the datasheet called this "Ports", and the corresponding compatible
+value is "renesas,r7s72100-ports".
+On RZ/A2, the datasheet calls this "GPIO", so perhaps "renesas,r7s9210-gpio"?
+Hmm, then you may want to call the single node gpio-controller instead of
+pin-controller (and all references to it)? It's really both.
+
+On RZ/A1, it's different, as you have a single pin-controller node, with GPIO
+subnodes.
+
+> +  - reg
+> +    Address base and length of the memory area where the pin controller
+> +    hardware is mapped to.
+> +  - gpio-controller
+> +    This pin controller also controls pins as GPIO
+> +  - #gpio-cells
+> +    Must be 2
+> +  - gpio-ranges
+> +    Expresses the total number GPIO ports/pins in this SoC
+
+number of
+
+> +
+> +
+> +Example: Pin controller node for RZ/A2M SoC (r7s9210)
+> +
+> +       pinctrl: pin-controller@fcffe000 {
+> +               compatible = "renesas,r7s9210-pinctrl";
+> +               reg = <0xfcffe000 0x9D1>;
+
+0x9d1
+
+BTW, that's a real odd number. What about rounding up to the hardware
+granularity, i.e. 0x1000?
+
+> +
+> +               gpio-controller;
+> +               #gpio-cells = <2>;
+> +               gpio-ranges = <&pinctrl 0 0 176>;
+> +       };
+> +
+> +Sub-nodes
+> +---------
+> +
+> +The child nodes of the pin controller designate pins to be used for
+> +specific peripheral functions or as GPIO.
+> +
+> +- Pin multiplexing sub-nodes:
+> +  A pin multiplexing sub-node describes how to configure a set of
+> +  (or a single) pin in some desired alternate function mode.
+> +  The values for the pinmux properties are a combination of port name, pin
+> +  number and the desired function index. Use the RZA2_PINMUX macro located
+> +  in include/dt-bindings/pinctrl/r7s9210-pinctrl.h to easily define these.
+> +  For assigning GPIO pins, use the macro RZA2_PIN_ID also in r7s9210-pinctrl.h
+
+RZA2_PIN
+
+> +  to express the desired port pin.
+> +
+> +  Required properties:
+> +    - pinmux:
+> +      integer array representing pin number and pin multiplexing configuration.
+> +      When a pin has to be configured in alternate function mode, use this
+> +      property to identify the pin by its global index, and provide its
+> +      alternate function configuration number along with it.
+> +      When multiple pins are required to be configured as part of the same
+> +      alternate function they shall be specified as members of the same
+> +      argument list of a single "pinmux" property.
+> +      Helper macros to ease assembling the pin index from its position
+> +      (port where it sits on and pin number) and alternate function identifier
+> +      are provided by the pin controller header file at:
+> +      <include/dt-bindings/pinctrl/r7s9210-pinctrl.h>
+
+include/dt-bindings/pinctrl/r7s9210-pinctrl.h (or
+<dt-bindings/pinctrl/r7s9210-pinctrl.h>)
+
+> +      Integers values in "pinmux" argument list are assembled as:
+> +      ((PORT * 8 + PIN) | MUX_FUNC << 16)
+
+> --- /dev/null
+> +++ b/include/dt-bindings/pinctrl/r7s9210-pinctrl.h
+> @@ -0,0 +1,47 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Defines macros and constants for Renesas RZ/A2 pin controller pin
+> + * muxing functions.
+> + */
+> +#ifndef __DT_BINDINGS_PINCTRL_RENESAS_RZA2_H
+> +#define __DT_BINDINGS_PINCTRL_RENESAS_RZA2_H
+> +
+> +#define RZA2_PINS_PER_PORT     8
+> +
+> +/* Port names as labeled in the Hardware Manual */
+> +#define P0 0
+> +#define P1 1
+> +#define P2 2
+> +#define P3 3
+> +#define P4 4
+> +#define P5 5
+> +#define P6 6
+> +#define P7 7
+> +#define P8 8
+> +#define P9 9
+> +#define PA 10
+> +#define PB 11
+> +#define PC 12
+
+This may conflict with MIPS again ;-)
+Oh, you don't include the bindings header in the driver source file, and doing
+so would cause issues with (previous version of) the enum...
+
+Still, would it make sense to call these PORTx instead of Px?
+The register descriptions use PORTx.<reg>.
+
+> +#define PD 13
+> +#define PE 14
+> +#define PF 15
+> +#define PG 16
+> +#define PH 17
+> +/* No I */
+> +#define PJ 18
+> +#define PK 19
+> +#define PL 20
+> +#define PM 21
+
+There's no PM in my datasheet. Should that be JP0?
+Oh, the register descriptions do use PORTM.
+
+> +
+> +/*
+> + * Create the pin index from its bank and position numbers and store in
+> + * the upper 8 bits the alternate function identifier
+
+These are not really the upper 8 bits, unless your wordsize is 24-bit ;-)
+
+"upper 16 bits", like on RZ/A1?
+
+> + */
+> +#define RZA2_PINMUX(b, p, f)   ((b) * RZA2_PINS_PER_PORT + (p) | (f << 16))
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
