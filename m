@@ -1,115 +1,57 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH 3/4] dt-bindings: reset: uniphier: Add AHCI core reset description
-Date: Mon, 12 Nov 2018 21:02:16 +0900
-Message-ID: <20181112210215.2DB6.4A936039@socionext.com>
-References: <1541775663.4112.48.camel@pengutronix.de> <CAK7LNAQGftPMLkQk-tU4R6Jtw9W6npka+Br+2wyyZicAgwDvRg@mail.gmail.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: [RFC PATCH 0/6] Armada 38x comphy driver to support 2.5Gbps
+ networking
+Date: Mon, 12 Nov 2018 12:29:33 +0000
+Message-ID: <20181112122933.GD30658@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNAQGftPMLkQk-tU4R6Jtw9W6npka+Br+2wyyZicAgwDvRg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: netdev-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
+Cc: Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-Thank you for some comments and pointing out.
+This series adds support for dynamically switching between 1Gbps
+and 2.5Gbps networking for the Marvell Armada 38x SoCs, tested on
+Armada 388 on the Clearfog platform.
 
-On Sat, 10 Nov 2018 01:14:06 +0900 <yamada.masahiro@socionext.com> wrote:
+This is necessary to be able to connect (eg) a Clearfog platform
+with a Macchiatobin platform via the SFP sockets, as Clearfog
+currently only supports 1Gbps networking via the SFP socket and
+Macchiatobin defaults to 2.5Gbps when using Fiberchannel SFPs.
 
-> On Sat, Nov 10, 2018 at 12:02 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> >
-> > Hi Kunihiko,
-> >
-> > On Fri, 2018-11-09 at 10:42 +0900, Kunihiko Hayashi wrote:
-> > > Add compatible strings for reset control of AHCI core implemented in
-> > > UniPhier SoCs. The reset control belongs to AHCI glue layer.
-> > >
-> > > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/reset/uniphier-reset.txt | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-> > > index f63c511..ea00517 100644
-> > > --- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-> > > +++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-> > > @@ -133,6 +133,9 @@ Required properties:
-> > >      "socionext,uniphier-pxs2-usb3-reset" - for PXs2 SoC USB3
-> > >      "socionext,uniphier-ld20-usb3-reset" - for LD20 SoC USB3
-> > >      "socionext,uniphier-pxs3-usb3-reset" - for PXs3 SoC USB3
-> > > +    "socionext,uniphier-pro4-ahci-reset" - for Pro4 SoC AHCI
-> > > +    "socionext,uniphier-pxs2-ahci-reset" - for PXs2 SoC AHCI
-> > > +    "socionext,uniphier-pxs3-ahci-reset" - for PXs3 SoC AHCI
-> >
-> > Since the driver behaves identically for "socionext,uniphier-pro4-usb3-
-> > reset" and "socionext,uniphier-pro4-ahci-reset", would it make sense to
-> > add a common compatible?
-> 
-> 
-> As far as I could guess, he just happened to find the same driver code
-> could be reused for other hardware.
-> 
-> Theoretically, this can happen anywhere since
-> a reset controller is just a set of registers
-> each bit of which is connected to a reset line.
-> 
-> If you added a super-generic compatible like "simple-reset",
-> I would agree with
-> "socionext,uniphier-pro4-usb3-reset", "simple-reset"
-> since this is a pattern.
+In order to allow dynamic switching, we need to implement a common
+phy driver to switch the ethernet serdes lane speed - 2.5Gbps is
+just 1Gbps up-clocked by 2.5x.  We implement a simple comphy
+driver to achieve this, which only supports networking.
 
-I think it's more generic to define simple-reset with parent clock/reset
-control without both SoC and device names.
+With this, we are able to support both Fiberchannel SFPs operating
+at 2.5Gbps or 1Gbps, and 1G ethernet SFPs plugged into the Clearfog
+platform, dynamically selecting according to the SFPs abilities.
 
-However, such parent clocks/resets strongly depends on SoC, 
-so I think it's difficut to lead generic definition in this case.
+I'm aware of the proposed changes to the PHY layer, changing
+phy_set_mode() to take the ethernet phy interface type, hence why
+this is RFC - there's also the question about how this will be
+merged.  This series is currently based on 4.20-rc1, but will
+likely need to be rebased when the PHY layer changes hit.
 
-If we add generic compatible string, I also add "simple-reset".
+ .../bindings/net/marvell-armada-370-neta.txt       |   2 +-
+ .../bindings/phy/phy-armada38x-comphy.txt          |  40 ++++
+ arch/arm/boot/dts/armada-388-clearfog.dtsi         |   2 +
+ arch/arm/boot/dts/armada-38x.dtsi                  |  37 ++++
+ drivers/net/ethernet/marvell/mvneta.c              |  58 ++++-
+ drivers/phy/marvell/Kconfig                        |  10 +
+ drivers/phy/marvell/Makefile                       |   1 +
+ drivers/phy/marvell/phy-armada38x-comphy.c         | 236 +++++++++++++++++++++
+ 8 files changed, 378 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-armada38x-comphy.txt
+ create mode 100644 drivers/phy/marvell/phy-armada38x-comphy.c
 
 
-> However,
-> "socionext,uniphier-pro4-glue-reset" is kind of a halfway house
-> where it is SoC-specific, but still ambiguous.
-
-Surely, it might be hard to understand that pro4-glue-reset is SoC-specific
-but for generic-device.
-
-
-> > Something like:
-> > "socionext,uniphier-pro4-usb3-reset", "socionext,uniphier-pro4-glue-reset" - for USB3 SoC AHCI
-> > "socionext,uniphier-pro4-ahci-reset", "socionext,uniphier-pro4-glue-reset" - for Pro4 SoC AHCI
-> >
-> > That way if more places turn up where the glue layer reset is used,
-> > you can add them without patching the driver every time.
-> 
-> 
-> This is a trade-off between "patch the driver"
-> and "potential change of the binding".
-
-Adding "glue-reset" is usable for devices having same parent clocks/resets as
-usb3/ahci, and we can add the devices without patches.
-
-However, if the device needs other parent clocks/resets for the same SoC,
-we can't add "glue-reset" and we might add patches for the device as a result.
-In this case, the "glue-reset" will become difficult to understand.
-
-
-> There is no real hardware like pro4-glue-reset.
->
-> I am guessing this is a part of syscon or something,
-> but I cannot find any explanation in a bigger picture.
-> 
-> So, I cannot judge this further more.
-
-Since it's hard to lead the best result,
-currently I'd like to suggest the current compatibles, with "simple-reset"
-if necessary.
-
-Thank you,
-
----
-Best Regards,
-Kunihiko Hayashi
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
