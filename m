@@ -1,30 +1,64 @@
-From: Sven Van Asbroeck <thesven73@gmail.com>
-Subject: Re: [PATCH anybus v3 5/6] dt-bindings: anybuss-host: document
- devicetree binding
-Date: Mon, 12 Nov 2018 13:05:26 -0500
-Message-ID: <CAGngYiUzA-GGOyX3+joUvf53zTELjiCU_TFLwaWAFgJXM4VHQQ@mail.gmail.com>
-References: <20181104155501.14767-1-TheSven73@googlemail.com>
- <20181104155501.14767-6-TheSven73@googlemail.com> <CAK8P3a1ZUaxJzfzYoqAK+_ZBazHzF6nG1V2aiZSoiQr6nDhiSQ@mail.gmail.com>
- <CAGngYiW5=oc486wq15yLbRLvO243PNALmouTDEh7QpO6GLO9Mg@mail.gmail.com> <CAK8P3a3QvQrOKeUs-9sFjDdzfesK27VP6fH7KVUjMW-gkmq-=Q@mail.gmail.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCh v3 2/4] arm64: add basic DTS for i.MX8MQ
+Date: Mon, 12 Nov 2018 18:06:13 +0000
+Message-ID: <AM0PR04MB421192D863C2AE7C4CD35A1580C10@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20180921125626.21971-1-l.stach@pengutronix.de>
+ <20180921125626.21971-2-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a3QvQrOKeUs-9sFjDdzfesK27VP6fH7KVUjMW-gkmq-=Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sven Van Asbroeck <svendev@arcx.com>, robh+dt@kernel.org, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, treding@nvidia.com, David Lechner <david@lechnology.com>, noralf@tronnes.org, johan@kernel.org, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180921125626.21971-2-l.stach@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 8, 2018 at 9:27 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> We do the same thing on PCI and USB, where normally everything
-> is probed through hardware access, but a device driver can look
-> at dev->of_node to see if that contains any further properties.
->
+Hi Lucas,
 
-This is very interesting. Spent some time trying to find an example of this
-for pci/usb, but drew a blank. Could you point me to an example?
+> -----Original Message-----
+> From: Lucas Stach [mailto:l.stach@pengutronix.de]
+> Sent: Friday, September 21, 2018 8:56 PM
+> To: Shawn Guo <shawnguo@kernel.org>; Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>; Catalin Marinas
+> <catalin.marinas@arm.com>; Will Deacon <will.deacon@arm.com>;
+> Pengutronix Kernel Team <kernel@pengutronix.de>; Fabio Estevam
+> <fabio.estevam@nxp.com>; dl-linux-imx <linux-imx@nxp.com>;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> patchwork-lst@pengutronix.de; Abel Vesa <abel.vesa@nxp.com>
+> Subject: [PATCh v3 2/4] arm64: add basic DTS for i.MX8MQ
+> 
+> This adds the basic DTS for the i.MX8MQ.
+> For now only the following peripherals are supported:
+> - IOMUXC (pin controller)
+> - CCM (clock controller)
+> - GPIO
+> - UART
+> - uSDHC (SD/eMMC controller)
+> - FEC (ethernet controller)
+> - i2c
+> 
+> This is enough to get a very basic board support up and running.
+> 
+> One known limitation is that the driver for the GPC interrupt
+> controller is still missing, rendering the CPU sleep states unusable
+> as there is nothing waking them up anymore.
+> 
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 
-One of our products has pcie ethernet, but we have to patch it so it can
-grab its mac address from the bootloader. You are saying that there is
-a standard way to accomplish this?
+Can you send a updated version of this patch series against the latest
+Composite clock drivers?
+Then we can get a ready to merge version and then can be easily applied
+once clock is merged.
+
+Regards
+Dong Aisheng
