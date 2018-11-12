@@ -1,167 +1,132 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 10/24] leds: lp8860: Use led_compose_name()
-Date: Mon, 12 Nov 2018 08:05:51 -0600
-Message-ID: <fba5c68c-d010-94d6-de2f-32fad11868f3@ti.com>
-References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
- <1541542052-10081-11-git-send-email-jacek.anaszewski@gmail.com>
- <d0d4eff7-5840-95d7-a1a1-104188d1b619@ti.com>
- <bfa4cf6d-1d78-3d48-4846-eb4bcc9e8a98@gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 3/4] dt-bindings: reset: uniphier: Add AHCI core reset
+ description
+Date: Mon, 12 Nov 2018 15:21:46 +0100
+Message-ID: <1542032506.3440.5.camel@pengutronix.de>
+References: <1541775663.4112.48.camel@pengutronix.de>
+         <CAK7LNAQGftPMLkQk-tU4R6Jtw9W6npka+Br+2wyyZicAgwDvRg@mail.gmail.com>
+         <20181112210215.2DB6.4A936039@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bfa4cf6d-1d78-3d48-4846-eb4bcc9e8a98@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181112210215.2DB6.4A936039@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Jacek
+Hi,
 
-On 11/08/2018 02:48 PM, Jacek Anaszewski wrote:
-> Dan,
+On Mon, 2018-11-12 at 21:02 +0900, Kunihiko Hayashi wrote:
+> Hi,
 > 
-> On 11/08/2018 07:16 PM, Dan Murphy wrote:
->> On 11/06/2018 04:07 PM, Jacek Anaszewski wrote:
->>> Switch to using generic LED support for composing LED class
->>> device name.
->>>
->>> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> ---
->>>  drivers/leds/leds-lp8860.c | 38 +++++++++++++++++++-------------------
->>>  1 file changed, 19 insertions(+), 19 deletions(-)
->>>
->>> diff --git a/drivers/leds/leds-lp8860.c b/drivers/leds/leds-lp8860.c
->>> index 39c72a9..7c12ccd 100644
->>> --- a/drivers/leds/leds-lp8860.c
->>> +++ b/drivers/leds/leds-lp8860.c
->>> @@ -22,7 +22,6 @@
->>>  #include <linux/of_gpio.h>
->>>  #include <linux/gpio/consumer.h>
->>>  #include <linux/slab.h>
->>> -#include <uapi/linux/uleds.h>
->>>  
->>>  #define LP8860_DISP_CL1_BRT_MSB		0x00
->>>  #define LP8860_DISP_CL1_BRT_LSB		0x01
->>> @@ -87,6 +86,8 @@
->>>  
->>>  #define LP8860_CLEAR_FAULTS		0x01
->>>  
->>> +#define LP8860_NAME			"lp8860"
->>> +
->>>  /**
->>>   * struct lp8860_led -
->>>   * @lock - Lock for reading/writing the device
->>> @@ -96,7 +97,6 @@
->>>   * @eeprom_regmap - EEPROM register map
->>>   * @enable_gpio - VDDIO/EN gpio to enable communication interface
->>>   * @regulator - LED supply regulator pointer
->>> - * @label - LED label
->>>   */
->>>  struct lp8860_led {
->>>  	struct mutex lock;
->>> @@ -106,7 +106,6 @@ struct lp8860_led {
->>>  	struct regmap *eeprom_regmap;
->>>  	struct gpio_desc *enable_gpio;
->>>  	struct regulator *regulator;
->>> -	char label[LED_MAX_NAME_SIZE];
->>>  };
->>>  
->>>  struct lp8860_eeprom_reg {
->>> @@ -387,25 +386,26 @@ static int lp8860_probe(struct i2c_client *client,
->>>  	struct lp8860_led *led;
->>>  	struct device_node *np = client->dev.of_node;
->>>  	struct device_node *child_node;
->>> -	const char *name;
->>> +	struct led_init_data init_data;
->>>  
->>>  	led = devm_kzalloc(&client->dev, sizeof(*led), GFP_KERNEL);
->>>  	if (!led)
->>>  		return -ENOMEM;
->>>  
->>> -	for_each_available_child_of_node(np, child_node) {
->>> -		led->led_dev.default_trigger = of_get_property(child_node,
->>> -						    "linux,default-trigger",
->>> -						    NULL);
->>> -
->>> -		ret = of_property_read_string(child_node, "label", &name);
->>> -		if (!ret)
->>> -			snprintf(led->label, sizeof(led->label), "%s:%s",
->>> -				 id->name, name);
->>> -		else
->>> -			snprintf(led->label, sizeof(led->label),
->>> -				"%s::display_cluster", id->name);
->>> -	}
->>
->> We need to keep a loop here looking for additional nodes as this device has string support and just
->> not cluster support.
->>
->> Just need to get the other LED patches done.
+> Thank you for some comments and pointing out.
 > 
-> In the current shape only the properties from the last parsed child node
-> will be used for initializing the LED class device. So, this should be
-> meant also a fix removing this obscurity. Worth mentioning in the commit
-> message. Or I'm not getting it right?
-
-
-Yes I agree as this driver in the current shape only supports cluster mode only not string support.
-I have some stashed patches locally that register each string individually for this device.
-
-I have not worked out a good algorithm to set the register appropriately.
-
-If you want to remove the loop then I can add it back once I add string support.
-
-Dan
-
+> On Sat, 10 Nov 2018 01:14:06 +0900 <yamada.masahiro@socionext.com> wrote:
 > 
->>> +	child_node = of_get_next_available_child(np, NULL);
->>> +	if (!child_node)
->>> +		return -EINVAL;
->>> +
->>> +	init_data.fwnode = of_fwnode_handle(child_node),
->>> +
->>> +	led->led_dev.default_trigger = of_get_property(child_node,
->>> +					    "linux,default-trigger",
->>> +					    NULL);
->>> +
->>> +	ret = led_compose_name(init_data.fwnode, LP8860_NAME,
->>> +			       ":display_cluster", init_data.name);
->>
->> Should we use the #defines here for display_cluster?
-> 
-> Right, will fix in the next version.
-> 
->>> +	if (ret)
->>> +		return ret;
->>>  
->>>  	led->enable_gpio = devm_gpiod_get_optional(&client->dev,
->>>  						   "enable", GPIOD_OUT_LOW);
->>> @@ -420,7 +420,6 @@ static int lp8860_probe(struct i2c_client *client,
->>>  		led->regulator = NULL;
->>>  
->>>  	led->client = client;
->>> -	led->led_dev.name = led->label;
->>>  	led->led_dev.brightness_set_blocking = lp8860_brightness_set;
->>>  
->>>  	mutex_init(&led->lock);
->>> @@ -447,7 +446,8 @@ static int lp8860_probe(struct i2c_client *client,
->>>  	if (ret)
->>>  		return ret;
->>>  
->>> -	ret = devm_led_classdev_register(&client->dev, &led->led_dev);
->>> +	ret = devm_led_classdev_register_ext(&client->dev, &led->led_dev,
->>> +					     &init_data);
->>>  	if (ret) {
->>>  		dev_err(&client->dev, "led register err: %d\n", ret);
->>>  		return ret;
->>>
->>
->>
-> 
+> > On Sat, Nov 10, 2018 at 12:02 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> > > 
+> > > Hi Kunihiko,
+> > > 
+> > > On Fri, 2018-11-09 at 10:42 +0900, Kunihiko Hayashi wrote:
+> > > > Add compatible strings for reset control of AHCI core implemented in
+> > > > UniPhier SoCs. The reset control belongs to AHCI glue layer.
+> > > > 
+> > > > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/reset/uniphier-reset.txt | 3 +++
+> > > >  1 file changed, 3 insertions(+)
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> > > > index f63c511..ea00517 100644
+> > > > --- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> > > > +++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> > > > @@ -133,6 +133,9 @@ Required properties:
+> > > >      "socionext,uniphier-pxs2-usb3-reset" - for PXs2 SoC USB3
+> > > >      "socionext,uniphier-ld20-usb3-reset" - for LD20 SoC USB3
+> > > >      "socionext,uniphier-pxs3-usb3-reset" - for PXs3 SoC USB3
+> > > > +    "socionext,uniphier-pro4-ahci-reset" - for Pro4 SoC AHCI
+> > > > +    "socionext,uniphier-pxs2-ahci-reset" - for PXs2 SoC AHCI
+> > > > +    "socionext,uniphier-pxs3-ahci-reset" - for PXs3 SoC AHCI
+> > > 
+> > > Since the driver behaves identically for "socionext,uniphier-pro4-usb3-
+> > > reset" and "socionext,uniphier-pro4-ahci-reset", would it make sense to
+> > > add a common compatible?
+> > 
+> > As far as I could guess, he just happened to find the same driver code
+> > could be reused for other hardware.
 
+Ok, in that case never mind. I just assumed that this could be a case of
+glue layer building blocks being reused by the hardware engineers, since
+the driver reuses the same clock names for USB3 and AHCI both on Pro4
+and on PXs2.
 
--- 
-------------------
-Dan Murphy
+> > Theoretically, this can happen anywhere since
+> > a reset controller is just a set of registers
+> > each bit of which is connected to a reset line.
+> > 
+> > If you added a super-generic compatible like "simple-reset",
+> > I would agree with
+> > "socionext,uniphier-pro4-usb3-reset", "simple-reset"
+> > since this is a pattern.
+> 
+> I think it's more generic to define simple-reset with parent clock/reset
+> control without both SoC and device names.
+> 
+> However, such parent clocks/resets strongly depends on SoC, 
+> so I think it's difficut to lead generic definition in this case.
+> 
+> If we add generic compatible string, I also add "simple-reset".
+
+There is no "simple-reset" binding definition. As soon as there are SoC
+specific clocks, it's not really generic anymore.
+
+> > However,
+> > "socionext,uniphier-pro4-glue-reset" is kind of a halfway house
+> > where it is SoC-specific, but still ambiguous.
+> 
+> Surely, it might be hard to understand that pro4-glue-reset is SoC-specific
+> but for generic-device.
+
+I agree.
+
+> > > Something like:
+> > > "socionext,uniphier-pro4-usb3-reset", "socionext,uniphier-pro4-glue-reset" - for USB3 SoC AHCI
+> > > "socionext,uniphier-pro4-ahci-reset", "socionext,uniphier-pro4-glue-reset" - for Pro4 SoC AHCI
+> > > 
+> > > That way if more places turn up where the glue layer reset is used,
+> > > you can add them without patching the driver every time.
+> > 
+> > 
+> > This is a trade-off between "patch the driver"
+> > and "potential change of the binding".
+> 
+> Adding "glue-reset" is usable for devices having same parent clocks/resets as
+> usb3/ahci, and we can add the devices without patches.
+> 
+> However, if the device needs other parent clocks/resets for the same SoC,
+> we can't add "glue-reset" and we might add patches for the device as a result.
+> In this case, the "glue-reset" will become difficult to understand.
+
+Then let's not bother with it.
+I made the suggestion without knowing the full picture.
+
+> > There is no real hardware like pro4-glue-reset.
+> > 
+> > I am guessing this is a part of syscon or something,
+> > but I cannot find any explanation in a bigger picture.
+> > 
+> > So, I cannot judge this further more.
+> 
+> Since it's hard to lead the best result,
+> currently I'd like to suggest the current compatibles,
+
+That is fine with me.
+
+> with "simple-reset" if necessary.
+
+Not necessary.
+
+best regards
+Philipp
