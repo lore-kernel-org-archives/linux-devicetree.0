@@ -1,69 +1,90 @@
-From: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>
-Subject: Re: [PATCH 03/24] leds: dt-bindings: Add LED_FUNCTION definitions
-Date: Mon, 12 Nov 2018 02:25:28 +0200
-Message-ID: <fb4139e2-53ae-0a02-df8d-2fe7c6d32194@gmail.com>
-References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
- <1541542052-10081-4-git-send-email-jacek.anaszewski@gmail.com>
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH v2 1/2] dt-bindings: hwmon: add binding documentation for
+ adt7475
+Date: Mon, 12 Nov 2018 00:34:58 +0000
+Message-ID: <7bc274d5aad04713bc068514d063b964@svr-chch-ex1.atlnz.lc>
+References: <20181108225607.7521-1-chris.packham@alliedtelesis.co.nz>
+ <20181108225607.7521-2-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541542052-10081-4-git-send-email-jacek.anaszewski@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+To: "linux@roeck-us.net" <linux@roeck-us.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jdelvare@suse.com" <jdelvare@suse.com>
+Cc: "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
-
-On 07/11/2018 0.07, Jacek Anaszewski wrote:
-> Add common LED function definitions for use in Device Tree.
-> The function names were extracted from existing dts files
-> after eliminating oddities.
-
-Is your intent here is to standardize the function definitions and to 
-aid in that is to specify list of string defines?
-
-Without a meaning what all of those mean it does complete the original goal.
-
-In your list there are many things that could easily have multiple 
-meanings for different audiences.
-
-Some examples:
-
-#define LED_FUNCTION_2G "2g"
-- Does this mean that 2 metric grams has been detected in scale or 
-cellular 2G connectivity?
-
-#define LED_FUNCTION_ALL "all"
-- This doesn't ring a bell to me what it could be in reality. All leds 
-on doesn't sound right.
-
-#define LED_FUNCTION_AUX "aux"
-- There can be many things aux and multiple aux things in one device.
-
-#define LED_FUNCTION_HD "hd"
-- Is there a high definition video playing? Or audio? Or harddisk 
-failure led?
-
-You have already come up with long list of items. I am just wondering 
-what is the logic in order to get to "common" list?
-
-Can you just add custom items in device tree without being in the list?
-
-Would it be better to start with a short simple list with meanings 
-defined properly?
-
-When do you then remove entries from the list? Let's say 3G networks are 
-currently getting turned off world wide which kinda deprecates the term 
-from definitions and probably should be then removed from the list (if 
-it would be there).
-
-Is there planned to be some auto connection from function to some other 
-automated functionality? Or why wouldn't the label keyword be enough as 
-it seems to be exactly the same thing? (without the common list -- which 
-could be implemented for label too if seen as a good thing)
-
-Thanks,
-Vesa Jääskeläinen
+On 9/11/18 11:56 AM, Chris Packham wrote:=0A=
+> With the addition of the invert-pwm property the adt7475 needs its own=0A=
+> binding documentation rather being captured under trivial-devices.txt.=0A=
+> =0A=
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
+> ---=0A=
+> Changes in v2:=0A=
+> - use pwm-polarity attiribute to indicate normal or inverted polarity.=0A=
+> =0A=
+>   .../devicetree/bindings/hwmon/adt7475.txt     | 24 +++++++++++++++++++=
+=0A=
+>   .../devicetree/bindings/trivial-devices.txt   |  4 ----=0A=
+>   2 files changed, 24 insertions(+), 4 deletions(-)=0A=
+>   create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.txt=
+=0A=
+> =0A=
+> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.txt b/Docume=
+ntation/devicetree/bindings/hwmon/adt7475.txt=0A=
+> new file mode 100644=0A=
+> index 000000000000..d9212b5e9036=0A=
+> --- /dev/null=0A=
+> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.txt=0A=
+> @@ -0,0 +1,24 @@=0A=
+> +*ADT7475 hwmon sensor.=0A=
+> +=0A=
+> +Required properties:=0A=
+> +- compatible: One of=0A=
+> +	"adi,adt7473"=0A=
+> +	"adi,adt7475"=0A=
+> +	"adi,adt7476"=0A=
+> +	"adi,adt7490"=0A=
+> +=0A=
+> +- reg: I2C address=0A=
+> +=0A=
+> +optional properties:=0A=
+> +=0A=
+> +- pwm-polarity: This configures the polarity of the PWM. 0=0A=
+> +		(PWM_POLARITY_NORMAL) uses logic high for 100% duty cycle. 1=0A=
+> +                (PWM_POLARITY_INVERSED) uses logic low for 100% duty cyc=
+le.=0A=
+> +=0A=
+> +Example:=0A=
+> +=0A=
+> +hwmon@2e {=0A=
+> +	compatible =3D ;=0A=
+=0A=
+Oops. I should include a working example. I've fixed this locally but =0A=
+I'll hold off on sending v3 to see if there is any additional feedback.=0A=
+=0A=
+> +	reg =3D <0x2e>;=0A=
+> +	pwm-polarity =3D <1>;=0A=
+> +};=0A=
+> diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Docu=
+mentation/devicetree/bindings/trivial-devices.txt=0A=
+> index 69c934aec13b..4f29100d6bbf 100644=0A=
+> --- a/Documentation/devicetree/bindings/trivial-devices.txt=0A=
+> +++ b/Documentation/devicetree/bindings/trivial-devices.txt=0A=
+> @@ -14,10 +14,6 @@ ad,ad7414		SMBus/I2C Digital Temperature Sensor in 6-P=
+in SOT with SMBus Alert an=0A=
+>   ad,adm9240		ADM9240:  Complete System Hardware Monitor for uProcessor-B=
+ased Systems=0A=
+>   adi,adt7461		+/-1C TDM Extended Temp Range I.C=0A=
+>   adt7461			+/-1C TDM Extended Temp Range I.C=0A=
+> -adi,adt7473		+/-1C TDM Extended Temp Range I.C=0A=
+> -adi,adt7475		+/-1C TDM Extended Temp Range I.C=0A=
+> -adi,adt7476		+/-1C TDM Extended Temp Range I.C=0A=
+> -adi,adt7490		+/-1C TDM Extended Temp Range I.C=0A=
+>   adi,adxl345		Three-Axis Digital Accelerometer=0A=
+>   adi,adxl346		Three-Axis Digital Accelerometer (backward-compatibility v=
+alue "adi,adxl345" must be listed too)=0A=
+>   ams,iaq-core		AMS iAQ-Core VOC Sensor=0A=
+> =0A=
+=0A=
