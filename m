@@ -1,513 +1,198 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH v1 1/2] pinctrl: mediatek: add pinctrl support for MT7629 SoC
-Date: Mon, 12 Nov 2018 09:45:05 +0800
-Message-ID: <5d63d26156d2972b7e9f55c9743b66d7c6dac2ec.1541986223.git.ryder.lee@mediatek.com>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: RE: [PATCH V2 1/2] can: flexcan: Add self wakeup support
+Date: Mon, 12 Nov 2018 01:47:31 +0000
+Message-ID: <DB7PR04MB46184D92EC50A9CADB84969EE6C10@DB7PR04MB4618.eurprd04.prod.outlook.com>
+References: <20181026085814.23370-1-qiangqing.zhang@nxp.com>
+ <20181026085814.23370-2-qiangqing.zhang@nxp.com>
+ <ba4fb4bb-c1f2-6033-af02-023719382d36@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ba4fb4bb-c1f2-6033-af02-023719382d36@pengutronix.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Sean Wang <sean.wang@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, linux-gpio@vger.kernel.org, Weijie Gao <weijie.gao@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>
+To: Marc Kleine-Budde <mkl@pengutronix.de>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
+Cc: "wg@grandegger.com" <wg@grandegger.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds MT7629 pinctrl driver based on MediaTek pinctrl-moore core.
-
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
----
-Changes since v1:
--add a new function for wifi.
--drop useless 'ext' groups and its groups.
----
- drivers/pinctrl/mediatek/Kconfig          |   6 +
- drivers/pinctrl/mediatek/Makefile         |   1 +
- drivers/pinctrl/mediatek/pinctrl-mt7629.c | 450 ++++++++++++++++++++++++++++++
- 3 files changed, 457 insertions(+)
- create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt7629.c
-
-diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
-index 9d142e1..1b2a7b4 100644
---- a/drivers/pinctrl/mediatek/Kconfig
-+++ b/drivers/pinctrl/mediatek/Kconfig
-@@ -48,6 +48,12 @@ config PINCTRL_MT7623
- 	depends on PINCTRL_MTK_MOORE
- 	default y
- 
-+config PINCTRL_MT7629
-+	bool "Mediatek MT7629 pin control"
-+	depends on MACH_MT7629 || COMPILE_TEST
-+	depends on PINCTRL_MTK_MOORE
-+	default y
-+
- config PINCTRL_MT8135
- 	bool "Mediatek MT8135 pin control"
- 	depends on MACH_MT8135 || COMPILE_TEST
-diff --git a/drivers/pinctrl/mediatek/Makefile b/drivers/pinctrl/mediatek/Makefile
-index 70d8000..c2a16b1 100644
---- a/drivers/pinctrl/mediatek/Makefile
-+++ b/drivers/pinctrl/mediatek/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_PINCTRL_MT8127)	+= pinctrl-mt8127.o
- obj-$(CONFIG_PINCTRL_MT6765)	+= pinctrl-mt6765.o
- obj-$(CONFIG_PINCTRL_MT7622)	+= pinctrl-mt7622.o
- obj-$(CONFIG_PINCTRL_MT7623)	+= pinctrl-mt7623.o
-+obj-$(CONFIG_PINCTRL_MT7629)	+= pinctrl-mt7629.o
- obj-$(CONFIG_PINCTRL_MT8173)	+= pinctrl-mt8173.o
- obj-$(CONFIG_PINCTRL_MT8183)	+= pinctrl-mt8183.o
- obj-$(CONFIG_PINCTRL_MT6397)	+= pinctrl-mt6397.o
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt7629.c b/drivers/pinctrl/mediatek/pinctrl-mt7629.c
-new file mode 100644
-index 0000000..b5f0fa4
---- /dev/null
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt7629.c
-@@ -0,0 +1,450 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * The MT7629 driver based on Linux generic pinctrl binding.
-+ *
-+ * Copyright (C) 2018 MediaTek Inc.
-+ * Author: Ryder Lee <ryder.lee@mediatek.com>
-+ */
-+
-+#include "pinctrl-moore.h"
-+
-+#define MT7629_PIN(_number, _name, _eint_n)				\
-+	MTK_PIN(_number, _name, 0, _eint_n, DRV_GRP1)
-+
-+static const struct mtk_pin_field_calc mt7629_pin_mode_range[] = {
-+	PIN_FIELD(0, 78, 0x300, 0x10, 0, 4),
-+};
-+
-+static const struct mtk_pin_field_calc mt7629_pin_dir_range[] = {
-+	PIN_FIELD(0, 78, 0x0, 0x10, 0, 1),
-+};
-+
-+static const struct mtk_pin_field_calc mt7629_pin_di_range[] = {
-+	PIN_FIELD(0, 78, 0x200, 0x10, 0, 1),
-+};
-+
-+static const struct mtk_pin_field_calc mt7629_pin_do_range[] = {
-+	PIN_FIELD(0, 78, 0x100, 0x10, 0, 1),
-+};
-+
-+static const struct mtk_pin_field_calc mt7629_pin_ies_range[] = {
-+	PIN_FIELD(0, 10, 0x1000, 0x10, 0, 1),
-+	PIN_FIELD(11, 18, 0x2000, 0x10, 0, 1),
-+	PIN_FIELD(19, 32, 0x3000, 0x10, 0, 1),
-+	PIN_FIELD(33, 48, 0x4000, 0x10, 0, 1),
-+	PIN_FIELD(49, 50, 0x5000, 0x10, 0, 1),
-+	PIN_FIELD(51, 69, 0x6000, 0x10, 0, 1),
-+	PIN_FIELD(70, 78, 0x7000, 0x10, 0, 1),
-+};
-+
-+static const struct mtk_pin_field_calc mt7629_pin_smt_range[] = {
-+	PIN_FIELD(0, 10, 0x1100, 0x10, 0, 1),
-+	PIN_FIELD(11, 18, 0x2100, 0x10, 0, 1),
-+	PIN_FIELD(19, 32, 0x3100, 0x10, 0, 1),
-+	PIN_FIELD(33, 48, 0x4100, 0x10, 0, 1),
-+	PIN_FIELD(49, 50, 0x5100, 0x10, 0, 1),
-+	PIN_FIELD(51, 69, 0x6100, 0x10, 0, 1),
-+	PIN_FIELD(70, 78, 0x7100, 0x10, 0, 1),
-+};
-+
-+static const struct mtk_pin_field_calc mt7629_pin_pullen_range[] = {
-+	PIN_FIELD(0, 10, 0x1400, 0x10, 0, 1),
-+	PIN_FIELD(11, 18, 0x2400, 0x10, 0, 1),
-+	PIN_FIELD(19, 32, 0x3400, 0x10, 0, 1),
-+	PIN_FIELD(33, 48, 0x4400, 0x10, 0, 1),
-+	PIN_FIELD(49, 50, 0x5400, 0x10, 0, 1),
-+	PIN_FIELD(51, 69, 0x6400, 0x10, 0, 1),
-+	PIN_FIELD(70, 78, 0x7400, 0x10, 0, 1),
-+};
-+
-+static const struct mtk_pin_field_calc mt7629_pin_pullsel_range[] = {
-+	PIN_FIELD(0, 10, 0x1500, 0x10, 0, 1),
-+	PIN_FIELD(11, 18, 0x2500, 0x10, 0, 1),
-+	PIN_FIELD(19, 32, 0x3500, 0x10, 0, 1),
-+	PIN_FIELD(33, 48, 0x4500, 0x10, 0, 1),
-+	PIN_FIELD(49, 50, 0x5500, 0x10, 0, 1),
-+	PIN_FIELD(51, 69, 0x6500, 0x10, 0, 1),
-+	PIN_FIELD(70, 78, 0x7500, 0x10, 0, 1),
-+};
-+
-+static const struct mtk_pin_field_calc mt7629_pin_drv_range[] = {
-+	PIN_FIELD(0, 10, 0x1600, 0x10, 0, 4),
-+	PIN_FIELD(11, 18, 0x2600, 0x10, 0, 4),
-+	PIN_FIELD(19, 32, 0x3600, 0x10, 0, 4),
-+	PIN_FIELD(33, 48, 0x4600, 0x10, 0, 4),
-+	PIN_FIELD(49, 50, 0x5600, 0x10, 0, 4),
-+	PIN_FIELD(51, 69, 0x6600, 0x10, 0, 4),
-+	PIN_FIELD(70, 78, 0x7600, 0x10, 0, 4),
-+};
-+
-+static const struct mtk_pin_field_calc mt7629_pin_tdsel_range[] = {
-+	PIN_FIELD(0, 10, 0x1200, 0x10, 0, 4),
-+	PIN_FIELD(11, 18, 0x2200, 0x10, 0, 4),
-+	PIN_FIELD(19, 32, 0x3200, 0x10, 0, 4),
-+	PIN_FIELD(33, 48, 0x4200, 0x10, 0, 4),
-+	PIN_FIELD(49, 50, 0x5200, 0x10, 0, 4),
-+	PIN_FIELD(51, 69, 0x6200, 0x10, 0, 4),
-+	PIN_FIELD(70, 78, 0x7200, 0x10, 0, 4),
-+};
-+
-+static const struct mtk_pin_field_calc mt7629_pin_rdsel_range[] = {
-+	PIN_FIELD(0, 10, 0x1300, 0x10, 0, 4),
-+	PIN_FIELD(11, 18, 0x2300, 0x10, 0, 4),
-+	PIN_FIELD(19, 32, 0x3300, 0x10, 0, 4),
-+	PIN_FIELD(33, 48, 0x4300, 0x10, 0, 4),
-+	PIN_FIELD(49, 50, 0x5300, 0x10, 0, 4),
-+	PIN_FIELD(51, 69, 0x6300, 0x10, 0, 4),
-+	PIN_FIELD(70, 78, 0x7300, 0x10, 0, 4),
-+};
-+
-+static const struct mtk_pin_reg_calc mt7629_reg_cals[] = {
-+	[PINCTRL_PIN_REG_MODE] = MTK_RANGE(mt7629_pin_mode_range),
-+	[PINCTRL_PIN_REG_DIR] = MTK_RANGE(mt7629_pin_dir_range),
-+	[PINCTRL_PIN_REG_DI] = MTK_RANGE(mt7629_pin_di_range),
-+	[PINCTRL_PIN_REG_DO] = MTK_RANGE(mt7629_pin_do_range),
-+	[PINCTRL_PIN_REG_IES] = MTK_RANGE(mt7629_pin_ies_range),
-+	[PINCTRL_PIN_REG_SMT] = MTK_RANGE(mt7629_pin_smt_range),
-+	[PINCTRL_PIN_REG_PULLSEL] = MTK_RANGE(mt7629_pin_pullsel_range),
-+	[PINCTRL_PIN_REG_PULLEN] = MTK_RANGE(mt7629_pin_pullen_range),
-+	[PINCTRL_PIN_REG_DRV] = MTK_RANGE(mt7629_pin_drv_range),
-+	[PINCTRL_PIN_REG_TDSEL] = MTK_RANGE(mt7629_pin_tdsel_range),
-+	[PINCTRL_PIN_REG_RDSEL] = MTK_RANGE(mt7629_pin_rdsel_range),
-+};
-+
-+static const struct mtk_pin_desc mt7629_pins[] = {
-+	MT7629_PIN(0, "TOP_5G_CLK", 53),
-+	MT7629_PIN(1, "TOP_5G_DATA", 54),
-+	MT7629_PIN(2, "WF0_5G_HB0", 55),
-+	MT7629_PIN(3, "WF0_5G_HB1", 56),
-+	MT7629_PIN(4, "WF0_5G_HB2", 57),
-+	MT7629_PIN(5, "WF0_5G_HB3", 58),
-+	MT7629_PIN(6, "WF0_5G_HB4", 59),
-+	MT7629_PIN(7, "WF0_5G_HB5", 60),
-+	MT7629_PIN(8, "WF0_5G_HB6", 61),
-+	MT7629_PIN(9, "XO_REQ", 9),
-+	MT7629_PIN(10, "TOP_RST_N", 10),
-+	MT7629_PIN(11, "SYS_WATCHDOG", 11),
-+	MT7629_PIN(12, "EPHY_LED0_N_JTDO", 12),
-+	MT7629_PIN(13, "EPHY_LED1_N_JTDI", 13),
-+	MT7629_PIN(14, "EPHY_LED2_N_JTMS", 14),
-+	MT7629_PIN(15, "EPHY_LED3_N_JTCLK", 15),
-+	MT7629_PIN(16, "EPHY_LED4_N_JTRST_N", 16),
-+	MT7629_PIN(17, "WF2G_LED_N", 17),
-+	MT7629_PIN(18, "WF5G_LED_N", 18),
-+	MT7629_PIN(19, "I2C_SDA", 19),
-+	MT7629_PIN(20, "I2C_SCL", 20),
-+	MT7629_PIN(21, "GPIO_9", 21),
-+	MT7629_PIN(22, "GPIO_10", 22),
-+	MT7629_PIN(23, "GPIO_11", 23),
-+	MT7629_PIN(24, "GPIO_12", 24),
-+	MT7629_PIN(25, "UART1_TXD", 25),
-+	MT7629_PIN(26, "UART1_RXD", 26),
-+	MT7629_PIN(27, "UART1_CTS", 27),
-+	MT7629_PIN(28, "UART1_RTS", 28),
-+	MT7629_PIN(29, "UART2_TXD", 29),
-+	MT7629_PIN(30, "UART2_RXD", 30),
-+	MT7629_PIN(31, "UART2_CTS", 31),
-+	MT7629_PIN(32, "UART2_RTS", 32),
-+	MT7629_PIN(33, "MDI_TP_P1", 33),
-+	MT7629_PIN(34, "MDI_TN_P1", 34),
-+	MT7629_PIN(35, "MDI_RP_P1", 35),
-+	MT7629_PIN(36, "MDI_RN_P1", 36),
-+	MT7629_PIN(37, "MDI_RP_P2", 37),
-+	MT7629_PIN(38, "MDI_RN_P2", 38),
-+	MT7629_PIN(39, "MDI_TP_P2", 39),
-+	MT7629_PIN(40, "MDI_TN_P2", 40),
-+	MT7629_PIN(41, "MDI_TP_P3", 41),
-+	MT7629_PIN(42, "MDI_TN_P3", 42),
-+	MT7629_PIN(43, "MDI_RP_P3", 43),
-+	MT7629_PIN(44, "MDI_RN_P3", 44),
-+	MT7629_PIN(45, "MDI_RP_P4", 45),
-+	MT7629_PIN(46, "MDI_RN_P4", 46),
-+	MT7629_PIN(47, "MDI_TP_P4", 47),
-+	MT7629_PIN(48, "MDI_TN_P4", 48),
-+	MT7629_PIN(49, "SMI_MDC", 49),
-+	MT7629_PIN(50, "SMI_MDIO", 50),
-+	MT7629_PIN(51, "PCIE_PERESET_N", 51),
-+	MT7629_PIN(52, "PWM_0", 52),
-+	MT7629_PIN(53, "GPIO_0", 0),
-+	MT7629_PIN(54, "GPIO_1", 1),
-+	MT7629_PIN(55, "GPIO_2", 2),
-+	MT7629_PIN(56, "GPIO_3", 3),
-+	MT7629_PIN(57, "GPIO_4", 4),
-+	MT7629_PIN(58, "GPIO_5", 5),
-+	MT7629_PIN(59, "GPIO_6", 6),
-+	MT7629_PIN(60, "GPIO_7", 7),
-+	MT7629_PIN(61, "GPIO_8", 8),
-+	MT7629_PIN(62, "SPI_CLK", 62),
-+	MT7629_PIN(63, "SPI_CS", 63),
-+	MT7629_PIN(64, "SPI_MOSI", 64),
-+	MT7629_PIN(65, "SPI_MISO", 65),
-+	MT7629_PIN(66, "SPI_WP", 66),
-+	MT7629_PIN(67, "SPI_HOLD", 67),
-+	MT7629_PIN(68, "UART0_TXD", 68),
-+	MT7629_PIN(69, "UART0_RXD", 69),
-+	MT7629_PIN(70, "TOP_2G_CLK", 70),
-+	MT7629_PIN(71, "TOP_2G_DATA", 71),
-+	MT7629_PIN(72, "WF0_2G_HB0", 72),
-+	MT7629_PIN(73, "WF0_2G_HB1", 73),
-+	MT7629_PIN(74, "WF0_2G_HB2", 74),
-+	MT7629_PIN(75, "WF0_2G_HB3", 75),
-+	MT7629_PIN(76, "WF0_2G_HB4", 76),
-+	MT7629_PIN(77, "WF0_2G_HB5", 77),
-+	MT7629_PIN(78, "WF0_2G_HB6", 78),
-+};
-+
-+/* List all groups consisting of these pins dedicated to the enablement of
-+ * certain hardware block and the corresponding mode for all of the pins.
-+ * The hardware probably has multiple combinations of these pinouts.
-+ */
-+
-+/* LED for EPHY */
-+static int mt7629_ephy_leds_pins[] = { 12, 13, 14, 15, 16, 17, 18, };
-+static int mt7629_ephy_leds_funcs[] = { 1, 1, 1, 1, 1, 1, 1, };
-+static int mt7629_ephy_led0_pins[] = { 12, };
-+static int mt7629_ephy_led0_funcs[] = { 1, };
-+static int mt7629_ephy_led1_pins[] = { 13, };
-+static int mt7629_ephy_led1_funcs[] = { 1, };
-+static int mt7629_ephy_led2_pins[] = { 14, };
-+static int mt7629_ephy_led2_funcs[] = { 1, };
-+static int mt7629_ephy_led3_pins[] = { 15, };
-+static int mt7629_ephy_led3_funcs[] = { 1, };
-+static int mt7629_ephy_led4_pins[] = { 16, };
-+static int mt7629_ephy_led4_funcs[] = { 1, };
-+static int mt7629_wf2g_led_pins[] = { 17, };
-+static int mt7629_wf2g_led_funcs[] = { 1, };
-+static int mt7629_wf5g_led_pins[] = { 18, };
-+static int mt7629_wf5g_led_funcs[] = { 1, };
-+
-+/* Watchdog */
-+static int mt7629_watchdog_pins[] = { 11, };
-+static int mt7629_watchdog_funcs[] = { 1, };
-+
-+/* LED for GPHY */
-+static int mt7629_gphy_leds_0_pins[] = { 21, 22, 23, };
-+static int mt7629_gphy_leds_0_funcs[] = { 2, 2, 2, };
-+static int mt7629_gphy_led1_0_pins[] = { 21, };
-+static int mt7629_gphy_led1_0_funcs[] = { 2, };
-+static int mt7629_gphy_led2_0_pins[] = { 22, };
-+static int mt7629_gphy_led2_0_funcs[] = { 2, };
-+static int mt7629_gphy_led3_0_pins[] = { 23, };
-+static int mt7629_gphy_led3_0_funcs[] = { 2, };
-+static int mt7629_gphy_leds_1_pins[] = { 57, 58, 59, };
-+static int mt7629_gphy_leds_1_funcs[] = { 1, 1, 1, };
-+static int mt7629_gphy_led1_1_pins[] = { 57, };
-+static int mt7629_gphy_led1_1_funcs[] = { 1, };
-+static int mt7629_gphy_led2_1_pins[] = { 58, };
-+static int mt7629_gphy_led2_1_funcs[] = { 1, };
-+static int mt7629_gphy_led3_1_pins[] = { 59, };
-+static int mt7629_gphy_led3_1_funcs[] = { 1, };
-+
-+/* I2C */
-+static int mt7629_i2c_0_pins[] = { 19, 20, };
-+static int mt7629_i2c_0_funcs[] = { 1, 1, };
-+static int mt7629_i2c_1_pins[] = { 53, 54, };
-+static int mt7629_i2c_1_funcs[] = { 1, 1, };
-+
-+/* SPI */
-+static int mt7629_spi_0_pins[] = { 21, 22, 23, 24, };
-+static int mt7629_spi_0_funcs[] = { 1, 1, 1, 1, };
-+static int mt7629_spi_1_pins[] = { 62, 63, 64, 65, };
-+static int mt7629_spi_1_funcs[] = { 1, 1, 1, 1, };
-+static int mt7629_spi_wp_pins[] = { 66, };
-+static int mt7629_spi_wp_funcs[] = { 1, };
-+static int mt7629_spi_hold_pins[] = { 67, };
-+static int mt7629_spi_hold_funcs[] = { 1, };
-+
-+/* UART */
-+static int mt7629_uart1_0_txd_rxd_pins[] = { 25, 26, };
-+static int mt7629_uart1_0_txd_rxd_funcs[] = { 1, 1, };
-+static int mt7629_uart1_1_txd_rxd_pins[] = { 53, 54, };
-+static int mt7629_uart1_1_txd_rxd_funcs[] = { 2, 2, };
-+static int mt7629_uart2_0_txd_rxd_pins[] = { 29, 30, };
-+static int mt7629_uart2_0_txd_rxd_funcs[] = { 1, 1, };
-+static int mt7629_uart2_1_txd_rxd_pins[] = { 57, 58, };
-+static int mt7629_uart2_1_txd_rxd_funcs[] = { 2, 2, };
-+static int mt7629_uart1_0_cts_rts_pins[] = { 27, 28, };
-+static int mt7629_uart1_0_cts_rts_funcs[] = { 1, 1, };
-+static int mt7629_uart1_1_cts_rts_pins[] = { 55, 56, };
-+static int mt7629_uart1_1_cts_rts_funcs[] = { 2, 2, };
-+static int mt7629_uart2_0_cts_rts_pins[] = { 31, 32, };
-+static int mt7629_uart2_0_cts_rts_funcs[] = { 1, 1, };
-+static int mt7629_uart2_1_cts_rts_pins[] = { 59, 60, };
-+static int mt7629_uart2_1_cts_rts_funcs[] = { 2, 2, };
-+static int mt7629_uart0_txd_rxd_pins[] = { 68, 69, };
-+static int mt7629_uart0_txd_rxd_funcs[] = { 1, 1, };
-+
-+/* MDC/MDIO */
-+static int mt7629_mdc_mdio_pins[] = { 49, 50, };
-+static int mt7629_mdc_mdio_funcs[] = { 1, 1, };
-+
-+/* PCIE */
-+static int mt7629_pcie_pereset_pins[] = { 51, };
-+static int mt7629_pcie_pereset_funcs[] = { 1, };
-+static int mt7629_pcie_wake_pins[] = { 55, };
-+static int mt7629_pcie_wake_funcs[] = { 1, };
-+static int mt7629_pcie_clkreq_pins[] = { 56, };
-+static int mt7629_pcie_clkreq_funcs[] = { 1, };
-+
-+/* PWM */
-+static int mt7629_pwm_0_pins[] = { 52, };
-+static int mt7629_pwm_0_funcs[] = { 1, };
-+static int mt7629_pwm_1_pins[] = { 61, };
-+static int mt7629_pwm_1_funcs[] = { 2, };
-+
-+/* WF 2G */
-+static int mt7629_wf0_2g_pins[] = { 70, 71, 72, 73, 74, 75, 76, 77, 78, };
-+static int mt7629_wf0_2g_funcs[] = { 1, 1, 1, 1, 1, 1, 1, 1, };
-+
-+/* WF 5G */
-+static int mt7629_wf0_5g_pins[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, };
-+static int mt7629_wf0_5g_funcs[] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, };
-+
-+/* SNFI */
-+static int mt7629_snfi_pins[] = { 62, 63, 64, 65, 66, 67 };
-+static int mt7629_snfi_funcs[] = { 2, 2, 2, 2, 2, 2 };
-+
-+/* SPI NOR */
-+static int mt7629_snor_pins[] = { 62, 63, 64, 65, 66, 67 };
-+static int mt7629_snor_funcs[] = { 1, 1, 1, 1, 1, 1 };
-+
-+static const struct group_desc mt7629_groups[] = {
-+	PINCTRL_PIN_GROUP("ephy_leds", mt7629_ephy_leds),
-+	PINCTRL_PIN_GROUP("ephy_led0", mt7629_ephy_led0),
-+	PINCTRL_PIN_GROUP("ephy_led1", mt7629_ephy_led1),
-+	PINCTRL_PIN_GROUP("ephy_led2", mt7629_ephy_led2),
-+	PINCTRL_PIN_GROUP("ephy_led3", mt7629_ephy_led3),
-+	PINCTRL_PIN_GROUP("ephy_led4", mt7629_ephy_led4),
-+	PINCTRL_PIN_GROUP("wf2g_led", mt7629_wf2g_led),
-+	PINCTRL_PIN_GROUP("wf5g_led", mt7629_wf5g_led),
-+	PINCTRL_PIN_GROUP("watchdog", mt7629_watchdog),
-+	PINCTRL_PIN_GROUP("gphy_leds_0", mt7629_gphy_leds_0),
-+	PINCTRL_PIN_GROUP("gphy_led1_0", mt7629_gphy_led1_0),
-+	PINCTRL_PIN_GROUP("gphy_led2_0", mt7629_gphy_led2_0),
-+	PINCTRL_PIN_GROUP("gphy_led3_0", mt7629_gphy_led3_0),
-+	PINCTRL_PIN_GROUP("gphy_leds_1", mt7629_gphy_leds_1),
-+	PINCTRL_PIN_GROUP("gphy_led1_1", mt7629_gphy_led1_1),
-+	PINCTRL_PIN_GROUP("gphy_led2_1", mt7629_gphy_led2_1),
-+	PINCTRL_PIN_GROUP("gphy_led3_1", mt7629_gphy_led3_1),
-+	PINCTRL_PIN_GROUP("i2c_0", mt7629_i2c_0),
-+	PINCTRL_PIN_GROUP("i2c_1", mt7629_i2c_1),
-+	PINCTRL_PIN_GROUP("spi_0", mt7629_spi_0),
-+	PINCTRL_PIN_GROUP("spi_1", mt7629_spi_1),
-+	PINCTRL_PIN_GROUP("spi_wp", mt7629_spi_wp),
-+	PINCTRL_PIN_GROUP("spi_hold", mt7629_spi_hold),
-+	PINCTRL_PIN_GROUP("uart1_0_txd_rxd", mt7629_uart1_0_txd_rxd),
-+	PINCTRL_PIN_GROUP("uart1_1_txd_rxd", mt7629_uart1_1_txd_rxd),
-+	PINCTRL_PIN_GROUP("uart2_0_txd_rxd", mt7629_uart2_0_txd_rxd),
-+	PINCTRL_PIN_GROUP("uart2_1_txd_rxd", mt7629_uart2_1_txd_rxd),
-+	PINCTRL_PIN_GROUP("uart1_0_cts_rts", mt7629_uart1_0_cts_rts),
-+	PINCTRL_PIN_GROUP("uart1_1_cts_rts", mt7629_uart1_1_cts_rts),
-+	PINCTRL_PIN_GROUP("uart2_0_cts_rts", mt7629_uart2_0_cts_rts),
-+	PINCTRL_PIN_GROUP("uart2_1_cts_rts", mt7629_uart2_1_cts_rts),
-+	PINCTRL_PIN_GROUP("uart0_txd_rxd", mt7629_uart0_txd_rxd),
-+	PINCTRL_PIN_GROUP("mdc_mdio", mt7629_mdc_mdio),
-+	PINCTRL_PIN_GROUP("pcie_pereset", mt7629_pcie_pereset),
-+	PINCTRL_PIN_GROUP("pcie_wake", mt7629_pcie_wake),
-+	PINCTRL_PIN_GROUP("pcie_clkreq", mt7629_pcie_clkreq),
-+	PINCTRL_PIN_GROUP("pwm_0", mt7629_pwm_0),
-+	PINCTRL_PIN_GROUP("pwm_1", mt7629_pwm_1),
-+	PINCTRL_PIN_GROUP("wf0_5g", mt7629_wf0_5g),
-+	PINCTRL_PIN_GROUP("wf0_2g", mt7629_wf0_2g),
-+	PINCTRL_PIN_GROUP("snfi", mt7629_snfi),
-+	PINCTRL_PIN_GROUP("spi_nor", mt7629_snor),
-+};
-+
-+/* Joint those groups owning the same capability in user point of view which
-+ * allows that people tend to use through the device tree.
-+ */
-+static const char *mt7629_ethernet_groups[] = { "mdc_mdio", };
-+static const char *mt7629_i2c_groups[] = { "i2c_0", "i2c_1", };
-+static const char *mt7629_led_groups[] = { "ephy_leds", "ephy_led0",
-+					   "ephy_led1", "ephy_led2",
-+					   "ephy_led3", "ephy_led4",
-+					   "wf2g_led", "wf5g_led",
-+					   "gphy_leds_0", "gphy_led1_0",
-+					   "gphy_led2_0", "gphy_led3_0",
-+					   "gphy_leds_1", "gphy_led1_1",
-+					   "gphy_led2_1", "gphy_led3_1",};
-+static const char *mt7629_pcie_groups[] = { "pcie_pereset", "pcie_wake",
-+					    "pcie_clkreq", };
-+static const char *mt7629_pwm_groups[] = { "pwm_0", "pwm_1", };
-+static const char *mt7629_spi_groups[] = { "spi_0", "spi_1", "spi_wp",
-+					   "spi_hold", };
-+static const char *mt7629_uart_groups[] = { "uart1_0_txd_rxd",
-+					    "uart1_1_txd_rxd",
-+					    "uart2_0_txd_rxd",
-+					    "uart2_1_txd_rxd",
-+					    "uart1_0_cts_rts",
-+					    "uart1_1_cts_rts",
-+					    "uart2_0_cts_rts",
-+					    "uart2_1_cts_rts",
-+					    "uart0_txd_rxd", };
-+static const char *mt7629_wdt_groups[] = { "watchdog", };
-+static const char *mt7629_wifi_groups[] = { "wf0_5g", "wf0_2g", };
-+static const char *mt7629_flash_groups[] = { "snfi", "spi_nor" };
-+
-+static const struct function_desc mt7629_functions[] = {
-+	{"eth",	mt7629_ethernet_groups, ARRAY_SIZE(mt7629_ethernet_groups)},
-+	{"i2c", mt7629_i2c_groups, ARRAY_SIZE(mt7629_i2c_groups)},
-+	{"led",	mt7629_led_groups, ARRAY_SIZE(mt7629_led_groups)},
-+	{"pcie", mt7629_pcie_groups, ARRAY_SIZE(mt7629_pcie_groups)},
-+	{"pwm",	mt7629_pwm_groups, ARRAY_SIZE(mt7629_pwm_groups)},
-+	{"spi",	mt7629_spi_groups, ARRAY_SIZE(mt7629_spi_groups)},
-+	{"uart", mt7629_uart_groups, ARRAY_SIZE(mt7629_uart_groups)},
-+	{"watchdog", mt7629_wdt_groups, ARRAY_SIZE(mt7629_wdt_groups)},
-+	{"wifi", mt7629_wifi_groups, ARRAY_SIZE(mt7629_wifi_groups)},
-+	{"flash", mt7629_flash_groups, ARRAY_SIZE(mt7629_flash_groups)},
-+};
-+
-+static const struct mtk_eint_hw mt7629_eint_hw = {
-+	.port_mask = 7,
-+	.ports     = 7,
-+	.ap_num    = ARRAY_SIZE(mt7629_pins),
-+	.db_cnt    = 16,
-+};
-+
-+static struct mtk_pin_soc mt7629_data = {
-+	.reg_cal = mt7629_reg_cals,
-+	.pins = mt7629_pins,
-+	.npins = ARRAY_SIZE(mt7629_pins),
-+	.grps = mt7629_groups,
-+	.ngrps = ARRAY_SIZE(mt7629_groups),
-+	.funcs = mt7629_functions,
-+	.nfuncs = ARRAY_SIZE(mt7629_functions),
-+	.eint_hw = &mt7629_eint_hw,
-+	.gpio_m = 0,
-+	.ies_present = true,
-+	.base_names = mtk_default_register_base_names,
-+	.nbase_names = ARRAY_SIZE(mtk_default_register_base_names),
-+	.bias_disable_set = mtk_pinconf_bias_disable_set_rev1,
-+	.bias_disable_get = mtk_pinconf_bias_disable_get_rev1,
-+	.bias_set = mtk_pinconf_bias_set_rev1,
-+	.bias_get = mtk_pinconf_bias_get_rev1,
-+	.drive_set = mtk_pinconf_drive_set_rev1,
-+	.drive_get = mtk_pinconf_drive_get_rev1,
-+};
-+
-+static const struct of_device_id mt7629_pinctrl_of_match[] = {
-+	{ .compatible = "mediatek,mt7629-pinctrl", },
-+	{}
-+};
-+
-+static int mt7629_pinctrl_probe(struct platform_device *pdev)
-+{
-+	return mtk_moore_pinctrl_probe(pdev, &mt7629_data);
-+}
-+
-+static struct platform_driver mt7629_pinctrl_driver = {
-+	.driver = {
-+		.name = "mt7629-pinctrl",
-+		.of_match_table = mt7629_pinctrl_of_match,
-+	},
-+	.probe = mt7629_pinctrl_probe,
-+};
-+
-+static int __init mt7629_pinctrl_init(void)
-+{
-+	return platform_driver_register(&mt7629_pinctrl_driver);
-+}
-+arch_initcall(mt7629_pinctrl_init);
--- 
-1.9.1
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1hcmMgS2xlaW5lLUJ1ZGRl
+IDxta2xAcGVuZ3V0cm9uaXguZGU+DQo+IFNlbnQ6IDIwMTjlubQxMOaciDMw5pelIDIxOjQ1DQo+
+IFRvOiBKb2FraW0gWmhhbmcgPHFpYW5ncWluZy56aGFuZ0BueHAuY29tPjsgbGludXgtY2FuQHZn
+ZXIua2VybmVsLm9yZw0KPiBDYzogd2dAZ3JhbmRlZ2dlci5jb207IHJvYmgrZHRAa2VybmVsLm9y
+ZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBs
+aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXgNCj4gPGxpbnV4LWlteEBu
+eHAuY29tPjsgQS5zLiBEb25nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6
+IFtQQVRDSCBWMiAxLzJdIGNhbjogZmxleGNhbjogQWRkIHNlbGYgd2FrZXVwIHN1cHBvcnQNCj4g
+DQo+IE9uIDEwLzI2LzIwMTggMTE6MDAgQU0sIEpvYWtpbSBaaGFuZyB3cm90ZToNCj4gPiBGcm9t
+OiBEb25nIEFpc2hlbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KPiA+DQo+ID4gSWYgd2FrZXVw
+IGlzIGVuYWJsZWQsIGVudGVyIHN0b3AgbW9kZSwgZWxzZSBlbnRlciBkaXNhYmxlZCBtb2RlLg0K
+PiA+IFNlbGYgd2FrZSBjYW4gb25seSB3b3JrIG9uIHN0b3AgbW9kZS4NCj4gPg0KPiA+IFN0YXJ0
+aW5nIGZyb20gSU1YNiwgdGhlIGZsZXhjYW4gc3RvcCBtb2RlIGNvbnRyb2wgYml0cyBpcyBTb0MN
+Cj4gPiBzcGVjaWZpYywgbW92ZSBpdCBvdXQgb2YgSVAgZHJpdmVyIGFuZCBwYXJzZSBpdCBmcm9t
+IGRldmljZXRyZWUuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBEb25nIEFpc2hlbmcgPGFpc2hl
+bmcuZG9uZ0BueHAuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEpvYWtpbSBaaGFuZyA8cWlhbmdx
+aW5nLnpoYW5nQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvbmV0L2Nhbi9mbGV4Y2Fu
+LmMgfCAxNDENCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLQ0KPiA+
+ICAxIGZpbGUgY2hhbmdlZCwgMTMyIGluc2VydGlvbnMoKyksIDkgZGVsZXRpb25zKC0pDQo+ID4N
+Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvY2FuL2ZsZXhjYW4uYyBiL2RyaXZlcnMvbmV0
+L2Nhbi9mbGV4Y2FuLmMNCj4gPiBpbmRleCAzODEzZjY3MDgyMDEuLmQ0NzA4YmEyOGM0NCAxMDA2
+NDQNCj4gPiAtLS0gYS9kcml2ZXJzL25ldC9jYW4vZmxleGNhbi5jDQo+ID4gKysrIGIvZHJpdmVy
+cy9uZXQvY2FuL2ZsZXhjYW4uYw0KPiA+IEBAIC0xOSwxMiArMTksMTcgQEANCj4gPiAgI2luY2x1
+ZGUgPGxpbnV4L2RlbGF5Lmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1cHQuaD4NCj4g
+PiAgI2luY2x1ZGUgPGxpbnV4L2lvLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4N
+Cj4gPiArI2luY2x1ZGUgPGxpbnV4L2xpc3QuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L21mZC9z
+eXNjb24uaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L21mZC9zeXNjb24vaW14NnEtaW9tdXhjLWdw
+ci5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51
+eC9vZi5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+DQo+ID4gICNpbmNsdWRl
+IDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BtX3J1bnRp
+bWUuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPg0KPiA+ICsj
+aW5jbHVkZSA8bGludXgvcmVnbWFwLmg+DQo+ID4NCj4gPiAgI2RlZmluZSBEUlZfTkFNRQkJCSJm
+bGV4Y2FuIg0KPiA+DQo+ID4gQEAgLTEzMiw3ICsxMzcsOCBAQA0KPiA+ICAJKEZMRVhDQU5fRVNS
+X0VSUl9CVVMgfCBGTEVYQ0FOX0VTUl9FUlJfU1RBVEUpICAjZGVmaW5lDQo+ID4gRkxFWENBTl9F
+U1JfQUxMX0lOVCBcDQo+ID4gIAkoRkxFWENBTl9FU1JfVFdSTl9JTlQgfCBGTEVYQ0FOX0VTUl9S
+V1JOX0lOVCB8IFwNCj4gPiAtCSBGTEVYQ0FOX0VTUl9CT0ZGX0lOVCB8IEZMRVhDQU5fRVNSX0VS
+Ul9JTlQpDQo+ID4gKwkgRkxFWENBTl9FU1JfQk9GRl9JTlQgfCBGTEVYQ0FOX0VTUl9FUlJfSU5U
+IHwgXA0KPiA+ICsJIEZMRVhDQU5fRVNSX1dBS19JTlQpDQo+ID4NCj4gPiAgLyogRkxFWENBTiBp
+bnRlcnJ1cHQgZmxhZyByZWdpc3RlciAoSUZMQUcpIGJpdHMgKi8NCj4gPiAgLyogRXJyYXRhIEVS
+UjAwNTgyOSBzdGVwNzogUmVzZXJ2ZSBmaXJzdCB2YWxpZCBNQiAqLyBAQCAtMjU1LDYNCj4gPiAr
+MjYxLDE0IEBAIHN0cnVjdCBmbGV4Y2FuX2RldnR5cGVfZGF0YSB7DQo+ID4gIAl1MzIgcXVpcmtz
+OwkJLyogcXVpcmtzIG5lZWRlZCBmb3IgZGlmZmVyZW50IElQIGNvcmVzICovDQo+ID4gIH07DQo+
+ID4NCj4gPiArc3RydWN0IGZsZXhjYW5fc3RvcF9tb2RlIHsNCj4gPiArCXN0cnVjdCByZWdtYXAg
+KmdwcjsNCj4gPiArCXU4IHJlcV9ncHI7DQo+ID4gKwl1OCByZXFfYml0Ow0KPiA+ICsJdTggYWNr
+X2dwcjsNCj4gPiArCXU4IGFja19iaXQ7DQo+ID4gK307DQo+ID4gKw0KPiA+ICBzdHJ1Y3QgZmxl
+eGNhbl9wcml2IHsNCj4gPiAgCXN0cnVjdCBjYW5fcHJpdiBjYW47DQo+ID4gIAlzdHJ1Y3QgY2Fu
+X3J4X29mZmxvYWQgb2ZmbG9hZDsNCj4gPiBAQCAtMjcyLDYgKzI4Niw3IEBAIHN0cnVjdCBmbGV4
+Y2FuX3ByaXYgew0KPiA+ICAJc3RydWN0IGNsayAqY2xrX3BlcjsNCj4gPiAgCWNvbnN0IHN0cnVj
+dCBmbGV4Y2FuX2RldnR5cGVfZGF0YSAqZGV2dHlwZV9kYXRhOw0KPiA+ICAJc3RydWN0IHJlZ3Vs
+YXRvciAqcmVnX3hjZWl2ZXI7DQo+ID4gKwlzdHJ1Y3QgZmxleGNhbl9zdG9wX21vZGUgc3RtOw0K
+PiA+DQo+ID4gIAkvKiBSZWFkIGFuZCBXcml0ZSBBUElzICovDQo+ID4gIAl1MzIgKCpyZWFkKSh2
+b2lkIF9faW9tZW0gKmFkZHIpOw0KPiA+IEBAIC0zOTIsNiArNDA3LDIyIEBAIHN0YXRpYyB2b2lk
+IGZsZXhjYW5fY2xrc19kaXNhYmxlKGNvbnN0IHN0cnVjdA0KPiBmbGV4Y2FuX3ByaXYgKnByaXYp
+DQo+ID4gIAljbGtfZGlzYWJsZV91bnByZXBhcmUocHJpdi0+Y2xrX3Blcik7DQo+ID4gIH0NCj4g
+Pg0KPiA+ICtzdGF0aWMgaW5saW5lIHZvaWQgZmxleGNhbl9lbnRlcl9zdG9wX21vZGUoc3RydWN0
+IGZsZXhjYW5fcHJpdiAqcHJpdikNCj4gPiArew0KPiA+ICsJLyogZW5hYmxlIHN0b3AgcmVxdWVz
+dCAqLw0KPiA+ICsJaWYgKHByaXYtPmRldnR5cGVfZGF0YS0+cXVpcmtzICYgRkxFWENBTl9RVUlS
+S19VU0VfT0ZGX1RJTUVTVEFNUCkNCj4gDQo+IFdoeSBkbyB5b3UgY2hlY2sgdGhlIHF1aXJrIGhl
+cmU/IFRoaXMgc2hvdWxkIG9ubHkgYmUgY2FsbGVkIGlmIHRoZSBkZXZpY2UgaXMNCj4gd2FrZXVw
+IGNhcGFibGUuDQoNClllcywgeW91IGFyZSByaWdodC4gSSBoYXZlIG1vdmVkIG91dCB0aGlzIGNo
+ZWNrLg0KDQo+ID4gKwkJcmVnbWFwX3VwZGF0ZV9iaXRzKHByaXYtPnN0bS5ncHIsIHByaXYtPnN0
+bS5yZXFfZ3ByLA0KPiA+ICsJCQkxIDw8IHByaXYtPnN0bS5yZXFfYml0LCAxIDw8IHByaXYtPnN0
+bS5yZXFfYml0KTsNCj4gDQo+IFBsZWFzZSBhbGlnbiB3aXRoIHRoZSBvcGVuaW5nIGJyYWNrZXQg
+b2YgInJlZ21hcF91cGRhdGVfYml0cygiLg0KDQpPa2F5Lg0KDQo+ID4gK30NCj4gPiArDQo+ID4g
+K3N0YXRpYyBpbmxpbmUgdm9pZCBmbGV4Y2FuX2V4aXRfc3RvcF9tb2RlKHN0cnVjdCBmbGV4Y2Fu
+X3ByaXYgKnByaXYpDQo+ID4gK3sNCj4gPiArCS8qIHJlbW92ZSBzdG9wIHJlcXVlc3QgKi8NCj4g
+PiArCWlmIChwcml2LT5kZXZ0eXBlX2RhdGEtPnF1aXJrcyAmIEZMRVhDQU5fUVVJUktfVVNFX09G
+Rl9USU1FU1RBTVApDQo+IA0KPiBzYW1lIGhlcmUNCkhhdmUgZG9uZS4NCg0KPiA+ICsJCXJlZ21h
+cF91cGRhdGVfYml0cyhwcml2LT5zdG0uZ3ByLCBwcml2LT5zdG0ucmVxX2dwciwNCj4gPiArCQkJ
+MSA8PCBwcml2LT5zdG0ucmVxX2JpdCwgMCk7DQo+IA0KPiBzYW1lIGhlcmUNCkhhdmUgZG9uZS4N
+Cg0KPiA+ICt9DQo+ID4gKw0KPiA+ICBzdGF0aWMgaW5saW5lIGludCBmbGV4Y2FuX3RyYW5zY2Vp
+dmVyX2VuYWJsZShjb25zdCBzdHJ1Y3QNCj4gPiBmbGV4Y2FuX3ByaXYgKnByaXYpICB7DQo+ID4g
+IAlpZiAoIXByaXYtPnJlZ194Y2VpdmVyKQ0KPiA+IEBAIC05NTUsNiArOTg2LDEwIEBAIHN0YXRp
+YyBpbnQgZmxleGNhbl9jaGlwX3N0YXJ0KHN0cnVjdCBuZXRfZGV2aWNlDQo+ICpkZXYpDQo+ID4g
+IAkJcmVnX21jciB8PSBGTEVYQ0FOX01DUl9GRU4gfA0KPiA+ICAJCQlGTEVYQ0FOX01DUl9NQVhN
+Qihwcml2LT50eF9tYl9pZHgpOw0KPiA+ICAJfQ0KPiA+ICsNCj4gPiArCS8qIGVuYWJsZSBzZWxm
+IHdha2V1cCAqLw0KPiA+ICsJcmVnX21jciB8PSBGTEVYQ0FOX01DUl9XQUtfTVNLIHwgRkxFWENB
+Tl9NQ1JfU0xGX1dBSzsNCj4gPiArDQo+ID4gIAluZXRkZXZfZGJnKGRldiwgIiVzOiB3cml0aW5n
+IG1jcj0weCUwOHgiLCBfX2Z1bmNfXywgcmVnX21jcik7DQo+ID4gIAlwcml2LT53cml0ZShyZWdf
+bWNyLCAmcmVncy0+bWNyKTsNCj4gPg0KPiA+IEBAIC0xMjQwLDYgKzEyNzUsNTYgQEAgc3RhdGlj
+IHZvaWQgdW5yZWdpc3Rlcl9mbGV4Y2FuZGV2KHN0cnVjdA0KPiBuZXRfZGV2aWNlICpkZXYpDQo+
+ID4gIAl1bnJlZ2lzdGVyX2NhbmRldihkZXYpOw0KPiA+ICB9DQo+ID4NCj4gPiArc3RhdGljIGlu
+dCBmbGV4Y2FuX29mX3BhcnNlX3N0b3BfbW9kZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2
+KSB7DQo+ID4gKwlzdHJ1Y3QgbmV0X2RldmljZSAqZGV2ID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEo
+cGRldik7DQo+ID4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gcGRldi0+ZGV2Lm9mX25vZGU7
+DQo+ID4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGU7DQo+ID4gKwlzdHJ1Y3QgZmxleGNhbl9w
+cml2ICpwcml2Ow0KPiA+ICsJcGhhbmRsZSBwaGFuZGxlOw0KPiA+ICsJdTMyIG91dF92YWxbNV07
+DQo+ID4gKwlpbnQgcmV0Ow0KPiA+ICsNCj4gPiArCWlmICghbnApDQo+ID4gKwkJcmV0dXJuIC1F
+SU5WQUw7DQo+ID4gKw0KPiA+ICsJLyogc3RvcCBtb2RlIHByb3BlcnR5IGZvcm1hdCBpczoNCj4g
+PiArCSAqIDwmZ3ByIHJlcV9ncHIgcmVxX2JpdCBhY2tfZ3ByIGFja19iaXQ+Lg0KPiA+ICsJICov
+DQo+ID4gKwlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMl9hcnJheShucCwgImZzbCxzdG9wLW1v
+ZGUiLCBvdXRfdmFsLCA1KTsNCj4gPiArCWlmIChyZXQpIHsNCj4gPiArCQlkZXZfZGJnKCZwZGV2
+LT5kZXYsICJubyBzdG9wLW1vZGUgcHJvcGVydHlcbiIpOw0KPiA+ICsJCXJldHVybiByZXQ7DQo+
+ID4gKwl9DQo+ID4gKwlwaGFuZGxlID0gKm91dF92YWw7DQo+ID4gKw0KPiA+ICsJbm9kZSA9IG9m
+X2ZpbmRfbm9kZV9ieV9waGFuZGxlKHBoYW5kbGUpOw0KPiA+ICsJaWYgKCFub2RlKSB7DQo+ID4g
+KwkJZGV2X2RiZygmcGRldi0+ZGV2LCAiY291bGQgbm90IGZpbmQgZ3ByIG5vZGUgYnkgcGhhbmRs
+ZVxuIik7DQo+ID4gKwkJcmV0dXJuIFBUUl9FUlIobm9kZSk7DQo+ID4gKwl9DQo+ID4gKw0KPiA+
+ICsJcHJpdiA9IG5ldGRldl9wcml2KGRldik7DQo+ID4gKwlwcml2LT5zdG0uZ3ByID0gc3lzY29u
+X25vZGVfdG9fcmVnbWFwKG5vZGUpOw0KPiA+ICsJaWYgKElTX0VSUihwcml2LT5zdG0uZ3ByKSkg
+ew0KPiA+ICsJCWRldl9kYmcoJnBkZXYtPmRldiwgImNvdWxkIG5vdCBmaW5kIGdwciByZWdtYXBc
+biIpOw0KPiA+ICsJCXJldHVybiBQVFJfRVJSKHByaXYtPnN0bS5ncHIpOw0KPiA+ICsJfQ0KPiA+
+ICsNCj4gPiArCW9mX25vZGVfcHV0KG5vZGUpOw0KPiA+ICsNCj4gPiArCXByaXYtPnN0bS5yZXFf
+Z3ByID0gb3V0X3ZhbFsxXTsNCj4gPiArCXByaXYtPnN0bS5yZXFfYml0ID0gb3V0X3ZhbFsyXTsN
+Cj4gPiArCXByaXYtPnN0bS5hY2tfZ3ByID0gb3V0X3ZhbFszXTsNCj4gPiArCXByaXYtPnN0bS5h
+Y2tfYml0ID0gb3V0X3ZhbFs0XTsNCj4gPiArDQo+ID4gKwlkZXZfZGJnKCZwZGV2LT5kZXYsICJn
+cHIgJXMgcmVxX2dwciAweCV4IHJlcV9iaXQgJXUgYWNrX2dwciAweCV4DQo+IGFja19iaXQgJXVc
+biIsDQo+ID4gKwkJCW5vZGUtPmZ1bGxfbmFtZSwgcHJpdi0+c3RtLnJlcV9ncHIsDQo+ID4gKwkJ
+CXByaXYtPnN0bS5yZXFfYml0LCBwcml2LT5zdG0uYWNrX2dwciwNCj4gPiArCQkJcHJpdi0+c3Rt
+LmFja19iaXQpOw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gIHN0YXRpYyBj
+b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGZsZXhjYW5fb2ZfbWF0Y2hbXSA9IHsNCj4gPiAgCXsg
+LmNvbXBhdGlibGUgPSAiZnNsLGlteDZxLWZsZXhjYW4iLCAuZGF0YSA9ICZmc2xfaW14NnFfZGV2
+dHlwZV9kYXRhLCB9LA0KPiA+ICAJeyAuY29tcGF0aWJsZSA9ICJmc2wsaW14MjgtZmxleGNhbiIs
+IC5kYXRhID0NCj4gPiAmZnNsX2lteDI4X2RldnR5cGVfZGF0YSwgfSwgQEAgLTEyNzEsNiArMTM1
+Niw3IEBAIHN0YXRpYyBpbnQNCj4gZmxleGNhbl9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
+ICpwZGV2KQ0KPiA+ICAJc3RydWN0IGZsZXhjYW5fcmVncyBfX2lvbWVtICpyZWdzOw0KPiA+ICAJ
+aW50IGVyciwgaXJxOw0KPiA+ICAJdTMyIGNsb2NrX2ZyZXEgPSAwOw0KPiA+ICsJaW50IHdha2V1
+cCA9IDE7DQo+IA0KPiBNYWtlIGl0IGEgYm9vbC4NCj4gV2h5IGlzIGlzIGRlZmF1bHQgZW5hYmxl
+ZD8NCj4gU2VlIGJlbG93Lg0KPiANCj4gPg0KPiA+ICAJcmVnX3hjZWl2ZXIgPSBkZXZtX3JlZ3Vs
+YXRvcl9nZXQoJnBkZXYtPmRldiwgInhjZWl2ZXIiKTsNCj4gPiAgCWlmIChQVFJfRVJSKHJlZ194
+Y2VpdmVyKSA9PSAtRVBST0JFX0RFRkVSKSBAQCAtMTQwMCw2ICsxNDg2LDE2IEBADQo+ID4gc3Rh
+dGljIGludCBmbGV4Y2FuX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4N
+Cj4gPiAgCWRldm1fY2FuX2xlZF9pbml0KGRldik7DQo+ID4NCj4gPiArCWlmIChwcml2LT5kZXZ0
+eXBlX2RhdGEtPnF1aXJrcyAmIEZMRVhDQU5fUVVJUktfVVNFX09GRl9USU1FU1RBTVApDQo+IHsN
+Cj4gDQo+IFBsZWFzZSBhZGQgYW5vdGhlciBRVUlSSy4NCj4gDQo+ID4gKwkJZXJyID0gZmxleGNh
+bl9vZl9wYXJzZV9zdG9wX21vZGUocGRldik7DQo+ID4gKwkJaWYgKGVycikgew0KPiA+ICsJCQl3
+YWtldXAgPSAwOw0KPiA+ICsJCQlkZXZfZGJnKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gcGFyc2Ug
+c3RvcC1tb2RlXG4iKTsNCj4gPiArCQl9DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJZGV2aWNlX3Nl
+dF93YWtldXBfY2FwYWJsZSgmcGRldi0+ZGV2LCB3YWtldXApOw0KPiANCj4gV2hhdCBhYm91dCBt
+b3ZpbmcgdGhpcyBpbnRvICJmbGV4Y2FuX29mX3BhcnNlX3N0b3BfbW9kZShwZGV2KTsiLCBhbmQN
+Cj4gcmVuYW1lIHRoaXMgZnVuY3Rpb24gaW50byAuLi5fc2V0dXBfc3RvcF9tb2RlKCkgb3Igc29t
+ZXRoaW5nIHNpbWlsYXIuDQpJIGhhdmUgcmVuYW1lZCB0aGUgZnVuY3Rpb24gYW5kIG1vdmVkICJk
+ZXZpY2Vfc2V0X3dha2V1cF9jYXBhYmxlKCkiIGludG8gdGhpcyBmdW5jdGlvbi4NCg0KQmVzdCBS
+ZWdhcmRzLA0KSm9ha2ltIFpoYW5nDQoNCj4gPiArDQo+ID4gIAlwbV9ydW50aW1lX3B1dCgmcGRl
+di0+ZGV2KTsNCj4gPg0KPiA+ICAJZGV2X2luZm8oJnBkZXYtPmRldiwgImRldmljZSByZWdpc3Rl
+cmVkIChyZWdfYmFzZT0lcCwgaXJxPSVkKVxuIiwgQEANCj4gPiAtMTQzNywxMCArMTUzMywxOCBA
+QCBzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGZsZXhjYW5fc3VzcGVuZChzdHJ1Y3QNCj4gZGV2
+aWNlICpkZXZpY2UpDQo+ID4gIAlpbnQgZXJyID0gMDsNCj4gPg0KPiA+ICAJaWYgKG5ldGlmX3J1
+bm5pbmcoZGV2KSkgew0KPiA+IC0JCWVyciA9IGZsZXhjYW5fY2hpcF9kaXNhYmxlKHByaXYpOw0K
+PiA+IC0JCWlmIChlcnIpDQo+ID4gLQkJCXJldHVybiBlcnI7DQo+ID4gLQkJZXJyID0gcG1fcnVu
+dGltZV9mb3JjZV9zdXNwZW5kKGRldmljZSk7DQo+ID4gKwkJLyogaWYgd2FrZXVwIGlzIGVuYWJs
+ZWQsIGVudGVyIHN0b3AgbW9kZQ0KPiA+ICsJCSAqIGVsc2UgZW50ZXIgZGlzYWJsZWQgbW9kZS4N
+Cj4gPiArCQkgKi8NCj4gPiArCQlpZiAoZGV2aWNlX21heV93YWtldXAoZGV2aWNlKSkgew0KPiA+
+ICsJCQllbmFibGVfaXJxX3dha2UoZGV2LT5pcnEpOw0KPiA+ICsJCQlmbGV4Y2FuX2VudGVyX3N0
+b3BfbW9kZShwcml2KTsNCj4gPiArCQl9IGVsc2Ugew0KPiA+ICsJCQllcnIgPSBmbGV4Y2FuX2No
+aXBfZGlzYWJsZShwcml2KTsNCj4gPiArCQkJaWYgKGVycikNCj4gPiArCQkJCXJldHVybiBlcnI7
+DQo+ID4gKwkJCWVyciA9IHBtX3J1bnRpbWVfZm9yY2Vfc3VzcGVuZChkZXZpY2UpOw0KPiA+ICsJ
+CX0NCj4gPg0KPiA+ICAJCW5ldGlmX3N0b3BfcXVldWUoZGV2KTsNCj4gPiAgCQluZXRpZl9kZXZp
+Y2VfZGV0YWNoKGRldik7DQo+ID4gQEAgLTE0NjEsMTAgKzE1NjUsMTIgQEAgc3RhdGljIGludCBf
+X21heWJlX3VudXNlZA0KPiBmbGV4Y2FuX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXZpY2UpDQo+
+ID4gIAkJbmV0aWZfZGV2aWNlX2F0dGFjaChkZXYpOw0KPiA+ICAJCW5ldGlmX3N0YXJ0X3F1ZXVl
+KGRldik7DQo+ID4NCj4gPiAtCQllcnIgPSBwbV9ydW50aW1lX2ZvcmNlX3Jlc3VtZShkZXZpY2Up
+Ow0KPiA+IC0JCWlmIChlcnIpDQo+ID4gLQkJCXJldHVybiBlcnI7DQo+ID4gLQkJZXJyID0gZmxl
+eGNhbl9jaGlwX2VuYWJsZShwcml2KTsNCj4gPiArCQlpZiAoIWRldmljZV9tYXlfd2FrZXVwKGRl
+dmljZSkpIHsNCj4gPiArCQkJZXJyID0gcG1fcnVudGltZV9mb3JjZV9yZXN1bWUoZGV2aWNlKTsN
+Cj4gPiArCQkJaWYgKGVycikNCj4gPiArCQkJCXJldHVybiBlcnI7DQo+ID4gKwkJCWVyciA9IGZs
+ZXhjYW5fY2hpcF9lbmFibGUocHJpdik7DQo+ID4gKwkJfQ0KPiA+ICAJfQ0KPiA+ICAJcmV0dXJu
+IGVycjsNCj4gPiAgfQ0KPiA+IEBAIC0xNDg5LDEwICsxNTk1LDI3IEBAIHN0YXRpYyBpbnQgX19t
+YXliZV91bnVzZWQNCj4gZmxleGNhbl9ydW50aW1lX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXZp
+Y2UpDQo+ID4gIAlyZXR1cm4gMDsNCj4gPiAgfQ0KPiA+DQo+ID4gK3N0YXRpYyBpbnQgX19tYXli
+ZV91bnVzZWQgZmxleGNhbl9ub2lycV9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2aWNlKQ0KPiA+
+ICt7DQo+ID4gKwlzdHJ1Y3QgbmV0X2RldmljZSAqZGV2ID0gZGV2X2dldF9kcnZkYXRhKGRldmlj
+ZSk7DQo+ID4gKwlzdHJ1Y3QgZmxleGNhbl9wcml2ICpwcml2ID0gbmV0ZGV2X3ByaXYoZGV2KTsN
+Cj4gPiArDQo+ID4gKwkvKiBleGl0IHN0b3AgbW9kZSBkdXJpbmcgbm9pcnEgc3RhZ2UgYXZvaWQg
+Y29udGludW91c2x5IGVudGVyaW5nDQo+ID4gKwkgKiB3YWtldXAgSVNSIGJlZm9yZSBDQU4gcmVz
+dW1lIGJhY2suDQo+ID4gKwkgKi8NCj4gPiArCWlmIChuZXRpZl9ydW5uaW5nKGRldikgJiYgZGV2
+aWNlX21heV93YWtldXAoZGV2aWNlKSkgew0KPiA+ICsJCWRpc2FibGVfaXJxX3dha2UoZGV2LT5p
+cnEpOw0KPiA+ICsJCWZsZXhjYW5fZXhpdF9zdG9wX21vZGUocHJpdik7DQo+ID4gKwl9DQo+ID4g
+Kw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1
+Y3QgZGV2X3BtX29wcyBmbGV4Y2FuX3BtX29wcyA9IHsNCj4gPiAgCVNFVF9TWVNURU1fU0xFRVBf
+UE1fT1BTKGZsZXhjYW5fc3VzcGVuZCwgZmxleGNhbl9yZXN1bWUpDQo+ID4gIAlTRVRfUlVOVElN
+RV9QTV9PUFMoZmxleGNhbl9ydW50aW1lX3N1c3BlbmQsDQo+IGZsZXhjYW5fcnVudGltZV9yZXN1
+bWUsDQo+ID4gIAkJCQkJCU5VTEwpDQo+ID4gKwlTRVRfTk9JUlFfU1lTVEVNX1NMRUVQX1BNX09Q
+UyhOVUxMLCBmbGV4Y2FuX25vaXJxX3Jlc3VtZSkNCj4gPiAgfTsNCj4gPg0KPiA+ICBzdGF0aWMg
+c3RydWN0IHBsYXRmb3JtX2RyaXZlciBmbGV4Y2FuX2RyaXZlciA9IHsNCj4gPg0KPiANCj4gTWFy
+Yw0KPiANCj4gLS0NCj4gUGVuZ3V0cm9uaXggZS5LLiAgICAgICAgICAgICAgICAgIHwgTWFyYyBL
+bGVpbmUtQnVkZGUgICAgICAgICAgIHwNCj4gSW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICAg
+ICAgIHwgUGhvbmU6ICs0OS0yMzEtMjgyNi05MjQgICAgIHwNCj4gVmVydHJldHVuZyBXZXN0L0Rv
+cnRtdW5kICAgICAgICAgIHwgRmF4OiAgICs0OS01MTIxLTIwNjkxNy01NTU1IHwNCj4gQW10c2dl
+cmljaHQgSGlsZGVzaGVpbSwgSFJBIDI2ODYgIHwgaHR0cDovL3d3dy5wZW5ndXRyb25peC5kZSAg
+IHwNCg0K
