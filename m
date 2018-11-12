@@ -1,77 +1,135 @@
-From: Sven Van Asbroeck <thesven73@gmail.com>
-Subject: Re: [PATCH anybus v3 4/6] bus: support HMS Anybus-S bus
-Date: Mon, 12 Nov 2018 11:23:30 -0500
-Message-ID: <CAGngYiW0Xm5C=_zKgDPSJaeDwR1bHOzLkpL8pDg5otBawvGPGw@mail.gmail.com>
-References: <20181104155501.14767-1-TheSven73@googlemail.com>
- <20181104155501.14767-5-TheSven73@googlemail.com> <CAK8P3a3DnKcRxL5dG_pvBVTngFh5eDL2JdEqZzgL0RXJy5dZGw@mail.gmail.com>
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: Re: [PATCH v6 00/10] hwmon and fsi: Add On-Chip Controller Driver
+Date: Mon, 12 Nov 2018 10:25:19 -0600
+Message-ID: <65651d7d-7c29-4cc5-7ebf-b9d33fed7500@linux.vnet.ibm.com>
+References: <1541711129-26631-1-git-send-email-eajames@linux.ibm.com>
+ <20181109230354.GA31326@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a3DnKcRxL5dG_pvBVTngFh5eDL2JdEqZzgL0RXJy5dZGw@mail.gmail.com>
+In-Reply-To: <20181109230354.GA31326@roeck-us.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sven Van Asbroeck <svendev@arcx.com>, robh+dt@kernel.org, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, treding@nvidia.com, David Lechner <david@lechnology.com>, noralf@tronnes.org, johan@kernel.org, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>, Eddie James <eajames@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, rdunlap@infradead.org, benh@kernel.crashing.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 8, 2018 at 9:07 AM Arnd Bergmann <arnd@arndb.de> wrote:
+
+
+On 11/09/2018 05:03 PM, Guenter Roeck wrote:
+> On Thu, Nov 08, 2018 at 03:05:19PM -0600, Eddie James wrote:
+>> From: Eddie James <eajames@linux.vnet.ibm.com>
+>>
+>> This series adds a hwmon driver to support the OCC on POWER8 and POWER9
+>> processors. The OCC is an embedded processor that provides realtime power and
+>> thermal monitoring and management.
+>>
+>> The series also adds a "bus" driver to handle atomic communication between the
+>> service processor and the OCC on a POWER9 chip. This communication takes place
+>> over FSI bus to the SBE (Self-Boot engine) FIFO, which in turn communicates
+>> with the OCC. The driver for the SBEFIFO is already available as an FSI client
+>> driver.
+>>
+>> For POWER8 OCCs, communication between the service processor and the OCC is
+>> achieved over I2C bus.
+>>
+> I am not entirely happy with the series - there are still lots of proprietary
+> attributes, and I would have preferred the use of the _info API at this point -
+> but this has taken long enough. Series applied to hwmon-next. Please send any
+> fixes as follow-up patches.
+
+Thanks a lot Guenter, appreciate your help getting here.
+
+Eddie
+
 >
+> Thanks,
+> Guenter
 >
-> > +struct anybuss_host {
-> > +       struct device *dev;
-> > +       struct anybuss_client *client;
-> > +       struct reset_control *reset;
-> > +       struct regmap *regmap;
-> > +       int irq;
-> > +       struct task_struct *qthread;
-> > +       wait_queue_head_t wq;
-> > +       struct completion card_boot;
-> > +       atomic_t ind_ab;
-> > +       spinlock_t qlock;
-> > +       struct kmem_cache *qcache;
-> > +       struct kfifo qs[3];
-> > +       struct kfifo *powerq;
-> > +       struct kfifo *mboxq;
-> > +       struct kfifo *areaq;
-> > +       bool power_on;
-> > +       bool softint_pending;
-> > +       atomic_t dc_event;
-> > +       wait_queue_head_t dc_wq;
-> > +       atomic_t fieldbus_online;
-> > +       struct kernfs_node *fieldbus_online_sd;
-> > +};
->
-> Similarly, should that anybuss_host sturcture maybe be based on
-> a 'struct device' itself? What is the hierarchy of devices in sysfs?
->
-
-The anybus host 'is-a' platform device. The dev member in struct anybuss_host is
-actually &pdev->dev.
-
-The host's platform device shows up in sysfs under
-/sys/bus/platform/devices/anybuss-host.0.auto
-where .0 is the first anybus slot on the bridge, .1 the second slot.
-If there is more than one bridge, we'll see .2, .3 etc.
-
-Here are the virtual files in that dir:
-
-drwxr-xr-x    3 root     root             0 Nov 12 11:02
-anybuss-host.0.auto.card0
-lrwxrwxrwx    1 root     root             0 Nov 12 11:11 driver ->
-../../../../../../../bus/platform/drivers/anybuss-host
--rw-r--r--    1 root     root          4096 Nov 12 11:11 driver_override
-drwxr-xr-x    3 root     root             0 Nov 12 11:02 misc
--r--r--r--    1 root     root          4096 Nov 12 11:11 modalias
-drwxr-xr-x    2 root     root             0 Nov 12 11:11 power
--r--r--r--    1 root     root          4096 Nov 12 11:11 state
-lrwxrwxrwx    1 root     root             0 Nov 12 11:11 subsystem ->
-../../../../../../../bus/platform
--rw-r--r--    1 root     root          4096 Nov 12 11:02 uevent
-
-Where
-anybuss-host.0.auto.card0 just points to the detected anybus card, if any.
-Nothing to see there, it's just an artefact of the bus/device abstraction.
-misc points to the detected anybus card driver (which is implemented as a
-misc class device).
-
-This sysfs hierarchy makes sense to me. Is there something I should be
-doing (or not doing) ?
+>> Changes since v5:
+>>   * Makefile fix when compiling both P8 and P9 versions
+>>   * Spelling fix in hwmon doc
+>>   * Added an additional sentence for P9 binding doc to explain that OCC isn't
+>>     an FSI slave device.
+>>
+>> Changes since v4:
+>>   * Make the hwmon attributes conform almost completely to standard names and
+>>     values. The only exception is powerX_cap_user and powerX_cap_user_source.
+>>   * Improve hwmon documentation.
+>>   * Add ibm,p9-occ dt documentation.
+>>
+>> Changes since v3:
+>>   * Add the FSI OCC driver.
+>>   * Pull the sysfs attribute code into it's own file for cleanliness.
+>>   * Various fixes for attribute creation and integer overflow.
+>>
+>> Changes since v2:
+>>   * Add sysfs_notify for the error and throttling attributes when change is
+>>     detected.
+>>   * Removed occs_present counting of devices bound.
+>>   * Improved remove() of P9 driver to avoid bad behavior with relation to OCC
+>>     driver when unbound.
+>>   * Added default cases (return EINVAL) for all sensor show functions.
+>>   * Added temperature fault sensor.
+>>   * Added back dt binding documentation for P9 to address checkpatch warning.
+>>   * Added occs_present attribute from the poll response.
+>>
+>> Changes since v1:
+>>   * Remove wait loop in P9 code, as that is now handled by FSI OCC driver.
+>>   * Removed dt binding documentation for P9, FSI OCC driver will probe OCC hwmon
+>>     driver automatically.
+>>   * Moved OCC response code definitions to the OCC include file.
+>>   * Fixed includes.
+>>   * Changed some structure fields to __beXX as that is what they are.
+>>   * Changed some errnos.
+>>   * Removed some dev_err().
+>>   * Refactored P8 code a bit to use #defined addresses and magic values, and
+>>     changed "goto retry" to a loop.
+>>   * Refactored error handling a bit.
+>>
+>> Eddie James (10):
+>>    dt-bindings: fsi: Add P9 OCC device documentation
+>>    fsi: Add On-Chip Controller (OCC) driver
+>>    Documentation: hwmon: Add OCC documentation
+>>    dt-bindings: i2c: Add P8 OCC hwmon device documentation
+>>    hwmon: Add On-Chip Controller (OCC) hwmon driver
+>>    hwmon (occ): Add command transport method for P8 and P9
+>>    hwmon (occ): Parse OCC poll response
+>>    hwmon (occ): Add sensor types and versions
+>>    hwmon (occ): Add sensor attributes and register hwmon device
+>>    hwmon (occ): Add sysfs attributes for additional OCC data
+>>
+>>   .../devicetree/bindings/fsi/ibm,p9-occ.txt         |   16 +
+>>   .../devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt   |   25 +
+>>   Documentation/hwmon/occ                            |  112 ++
+>>   drivers/fsi/Kconfig                                |   10 +
+>>   drivers/fsi/Makefile                               |    1 +
+>>   drivers/fsi/fsi-occ.c                              |  599 +++++++++++
+>>   drivers/hwmon/Kconfig                              |    2 +
+>>   drivers/hwmon/Makefile                             |    1 +
+>>   drivers/hwmon/occ/Kconfig                          |   31 +
+>>   drivers/hwmon/occ/Makefile                         |    5 +
+>>   drivers/hwmon/occ/common.c                         | 1098 ++++++++++++++++++++
+>>   drivers/hwmon/occ/common.h                         |  128 +++
+>>   drivers/hwmon/occ/p8_i2c.c                         |  255 +++++
+>>   drivers/hwmon/occ/p9_sbe.c                         |  106 ++
+>>   drivers/hwmon/occ/sysfs.c                          |  188 ++++
+>>   include/linux/fsi-occ.h                            |   25 +
+>>   16 files changed, 2602 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
+>>   create mode 100644 Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt
+>>   create mode 100644 Documentation/hwmon/occ
+>>   create mode 100644 drivers/fsi/fsi-occ.c
+>>   create mode 100644 drivers/hwmon/occ/Kconfig
+>>   create mode 100644 drivers/hwmon/occ/Makefile
+>>   create mode 100644 drivers/hwmon/occ/common.c
+>>   create mode 100644 drivers/hwmon/occ/common.h
+>>   create mode 100644 drivers/hwmon/occ/p8_i2c.c
+>>   create mode 100644 drivers/hwmon/occ/p9_sbe.c
+>>   create mode 100644 drivers/hwmon/occ/sysfs.c
+>>   create mode 100644 include/linux/fsi-occ.h
+>>
+>> -- 
+>> 1.8.3.1
+>>
