@@ -1,70 +1,82 @@
-From: Alex Williams <alex.williams@ettus.com>
-Subject: Re: [PATCH net-next 2/2] net: nixge: Update device-tree bindings with v3.00
-Date: Mon, 12 Nov 2018 15:41:14 -0800
-Message-ID: <CAJZzcDhTKAXW4vomD2xazfDU=NWH6eAAbLubEhAo-SWuq5+EKQ@mail.gmail.com>
-References: <20181029231447.3690-1-alex.williams@ettus.com>
- <20181029231447.3690-2-alex.williams@ettus.com> <5bea0e95.1c69fb81.88799.a282@mx.google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: gpio: add sama5d2 PIOBU support
+Date: Mon, 12 Nov 2018 12:57:33 -0600
+Message-ID: <5bea0ec9.1c69fb81.db750.9b4e@mx.google.com>
+References: <1541603580-17448-1-git-send-email-andrei.stefanescu@microchip.com>
+ <1541603580-17448-2-git-send-email-andrei.stefanescu@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5bea0e95.1c69fb81.88799.a282@mx.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, mark.rutland@arm.com, mdf@kernel.org, Kees Cook <keescook@chromium.org>, "Alex C. Williams" <alex.williams@ni.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1541603580-17448-2-git-send-email-andrei.stefanescu@microchip.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrei.Stefanescu@microchip.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Ludovic.Desroches@microchip.com, linux-arm-kernel@lists.infradead.org, Cristian.Birsan@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 12, 2018 at 3:36 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Oct 29, 2018 at 04:14:47PM -0700, alex.williams@ettus.com wrote:
-> > From: Alex Williams <alex.williams@ni.com>
-> >
-> > Now the DMA engine is free to float elsewhere in the system map.
-> >
-> > Signed-off-by: Alex Williams <alex.williams@ni.com>
-> > ---
-> >  Documentation/devicetree/bindings/net/nixge.txt | 14 +++++++++++---
-> >  1 file changed, 11 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/nixge.txt b/Documentation/devicetree/bindings/net/nixge.txt
-> > index e55af7f0881a..d0f9fb520578 100644
-> > --- a/Documentation/devicetree/bindings/net/nixge.txt
-> > +++ b/Documentation/devicetree/bindings/net/nixge.txt
-> > @@ -1,8 +1,14 @@
-> >  * NI XGE Ethernet controller
-> >
-> >  Required properties:
-> > -- compatible: Should be "ni,xge-enet-2.00"
-> > -- reg: Address and length of the register set for the device
-> > +- compatible: Should be "ni,xge-enet-3.00", but can be "ni,xge-enet-2.00" for
-> > +              older device trees with DMA engines co-located in the address map,
-> > +              with the one reg entry to describe the whole device.
-> > +- reg: Address and length of the register set for the device. It contains the
-> > +       information of registers in the same order as described by reg-names.
-> > +- reg-names: Should contain the reg names
-> > +     "dma":  DMA engine control and status region
-> > +        "ctrl": MDIO and PHY control and status region
-> >  - interrupts: Should contain tx and rx interrupt
-> >  - interrupt-names: Should be "rx" and "tx"
-> >  - phy-mode: See ethernet.txt file in the same directory.
-> > @@ -13,7 +19,9 @@ Required properties:
-> >  Examples (10G generic PHY):
-> >       nixge0: ethernet@40000000 {
-> >               compatible = "ni,xge-enet-2.00";
->
-> Shouldn't the compatible change here?
->
-That's an oops... Will fix.
+On Wed, Nov 07, 2018 at 03:12:32PM +0000, Andrei.Stefanescu@microchip.com wrote:
+> This patch describes the compatible and the device tree
+> bindings necessary for the sama5d2 PIOBU GPIO
+> controller driver.
 
-Should I leave the old example for the version 2.00 format and create
-another for 3.00?
-> > -             reg = <0x40000000 0x6000>;
-> > +             reg = <0x40000000 0x4000
-> > +                    0x41002000 0x2000>;
-> > +             reg-names = "dma", "ctrl";
-> >
-> >               nvmem-cells = <&eth1_addr>;
-> >               nvmem-cell-names = "address";
-> > --
-> > 2.14.5
-> >
->
+Bindings describe the h/w, not drivers.
+
+> 
+> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@microchip.com>
+> ---
+>  .../bindings/gpio/gpio-sama5d2-piobu.txt           | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-sama5d2-piobu.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-sama5d2-piobu.txt b/Documentation/devicetree/bindings/gpio/gpio-sama5d2-piobu.txt
+> new file mode 100644
+> index 0000000..791ac51
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-sama5d2-piobu.txt
+> @@ -0,0 +1,23 @@
+> +GPIO controller for SAMA5D2 PIOBU pins.
+> +
+> +This pins have the property of not losing their voltage
+> +during Backup/Self-refresh mode.
+> +
+> +These bindings should be set to a node in the dtsi file.
+> +
+> +Required properties:
+> +- compatible:		"syscon", "microchip,sama5d2-piobu"
+
+Why the syscon?
+
+syscon should be last if it remains.
+
+> +- #gpio-cells:		There are 2. The pin number is the
+> +			first, the second represents additional
+> +			parameters such as GPIO_ACTIVE_HIGH/LOW.
+> +- gpio-controller:	Marks the port as GPIO controller.
+
+No interrupt capability?
+
+> +
+> +Example:
+> +
+> +	secumod@fc040000 {
+
+gpio@...
+
+> +		compatible = "syscon", "microchip,sama5d2-piobu";
+> +		reg = <0xfc040000 0x100>;
+> +
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +	};
+> -- 
+> 2.7.4
+> 
