@@ -1,52 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V4 4/5] arm64: dts: imx: add imx8qxp mek support
-Date: Mon, 12 Nov 2018 20:07:04 -0600
-Message-ID: <20181113020704.GA31151@bogus>
-References: <1541864596-15958-1-git-send-email-aisheng.dong@nxp.com>
- <1541864596-15958-5-git-send-email-aisheng.dong@nxp.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: [resend PATCH 2/3] pwm: mediatek: add pwm support for MT7629 SoC
+Date: Tue, 13 Nov 2018 10:08:23 +0800
+Message-ID: <9043534495d49c532bdb0b904344b77faeb41359.1542074855.git.ryder.lee@mediatek.com>
+References: <4c9044427b1aab373acd6ac76f0c905e2be79784.1542074855.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1541864596-15958-5-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: "A.s. Dong" <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4c9044427b1aab373acd6ac76f0c905e2be79784.1542074855.git.ryder.lee@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org, Weijie Gao <weijie.gao@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 10 Nov 2018 15:48:23 +0000, "A.s. Dong" wrote:
-> i.MX 8QuadXPlus is a quad (4x) Cortex-A35 proccessor with powerful
-> graphic and multimedia features. This patch adds imx8qxp mek board
-> support.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> ---
-> v3->v4:
->  * remove un-documented enet phy properties
-> v2->v3:
->  * Pad names update
->  * move memory node to here
->  * add no-sd and no-sdio under emmc node
-> ---
->  Documentation/devicetree/bindings/arm/fsl.txt |   4 +
->  arch/arm64/boot/dts/freescale/Makefile        |   1 +
->  arch/arm64/boot/dts/freescale/imx8qxp-mek.dts | 137 ++++++++++++++++++++++++++
->  3 files changed, 142 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> 
+This adds pwm controller support for MT7629 SoC.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+---
+ drivers/pwm/pwm-mediatek.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+index 9400c41..4ed95e5 100644
+--- a/drivers/pwm/pwm-mediatek.c
++++ b/drivers/pwm/pwm-mediatek.c
+@@ -292,11 +292,16 @@ static int mtk_pwm_remove(struct platform_device *pdev)
+ 	.pwm45_fixup = true,
+ };
+ 
++static const struct mtk_pwm_platform_data mt7629_pwm_data = {
++	.num_pwms = 1,
++};
++
+ static const struct of_device_id mtk_pwm_of_match[] = {
+ 	{ .compatible = "mediatek,mt2712-pwm", .data = &mt2712_pwm_data },
+ 	{ .compatible = "mediatek,mt7622-pwm", .data = &mt7622_pwm_data },
+ 	{ .compatible = "mediatek,mt7623-pwm", .data = &mt7623_pwm_data },
+ 	{ .compatible = "mediatek,mt7628-pwm", .data = &mt7628_pwm_data },
++	{ .compatible = "mediatek,mt7629-pwm", .data = &mt7629_pwm_data },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, mtk_pwm_of_match);
+-- 
+1.9.1
