@@ -1,98 +1,124 @@
-From: Hans Verkuil <hansverk@cisco.com>
-Subject: Re: [PATCH 0/5] media: Allwinner A10 CSI support
-Date: Tue, 13 Nov 2018 15:01:45 +0100
-Message-ID: <f07a0460-cdba-c1a5-acfd-66a39f447a5a@cisco.com>
-References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
- <df54f2e6-e207-92de-767a-e356345a1a56@xs4all.nl>
- <20181113135259.onutfjtoi25afnfe@flea>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v2 00/25] at24: remove
+Date: Tue, 13 Nov 2018 15:01:08 +0100
+Message-ID: <20181113140133.17385-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181113135259.onutfjtoi25afnfe@flea>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Nicolas Ferre <nicolas.ferre@microchip.com>, "David S . Miller" <davem@davemloft.net>, Grygorii Strashko <grygorii.strashko@ti.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, linux-mtd@lists.infradead.org, netdev@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/13/18 14:52, Maxime Ripard wrote:
-> Hi Hans,
-> 
-> On Tue, Nov 13, 2018 at 01:30:49PM +0100, Hans Verkuil wrote:
->> On 11/13/18 09:24, Maxime Ripard wrote:
->>> Hi,
->>>
->>> Here is a series introducing the support for the A10 (and SoCs of the same
->>> generation) CMOS Sensor Interface (called CSI, not to be confused with
->>> MIPI-CSI, which isn't support by that IP).
->>>
->>> That interface is pretty straightforward, but the driver has a few issues
->>> that I wanted to bring up:
->>>
->>>   * The only board I've been testing this with has an ov5640 sensor
->>>     attached, which doesn't work with the upstream driver. Copying the
->>>     Allwinner init sequence works though, and this is how it has been
->>>     tested. Testing with a second sensor would allow to see if it's an
->>>     issue on the CSI side or the sensor side.
->>>   * When starting a capture, the last buffer to capture will fail due to
->>>     double buffering being used, and we don't have a next buffer for the
->>>     last frame. I'm not sure how to deal with that though. It seems like
->>>     some drivers use a scratch buffer in such a case, some don't care, so
->>>     I'm not sure which solution should be preferred.
->>>   * We don't have support for the ISP at the moment, but this can be added
->>>     eventually.
->>>
->>>   * How to model the CSI module clock isn't really clear to me. It looks
->>>     like it goes through the CSI controller and then is muxed to one of the
->>>     CSI pin so that it can clock the sensor. I'm not quite sure how to
->>>     model it, if it should be a clock, the CSI driver being a clock
->>>     provider, or if the sensor should just use the module clock directly.
->>>
->>> Here is the v4l2-compliance output:
->>
->> Test v4l2-compliance with the -s option so you test streaming as well.
->> Even better is -f where it tests streaming with all available formats.
-> 
-> I will, thanks for the tip!
-> 
->>> v4l2-compliance SHA   : 339d550e92ac15de8668f32d66d16f198137006c
->>
->> Hmm, I can't find this SHA. Was this built from the main v4l-utils repo?
-> 
-> It was, but using Buildroot. The version packaged in the latest stable
-> version I was using (2018.08) is 1.14.2.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-That's seriously out of date. That's why I show the SHA, to see if
-someone is testing with a recent version of the utility, so it served
-its purpose here :-)
+Now that nvmem has gained support for defining cells from board files and
+looking them up from relevant drivers[1], it's time for a respin of the
+previous series[2] that aims at removing struct at24_platform_data from
+the tree.
 
-Latest release is 1.16.2.
+Since I took over maintainership of the at24 driver I've been working
+towards removing at24_platform_data in favor for device properties.
 
-But when submitting new drivers you really need to build it yourself from
-the master branch, that's the only way to be sure you have all the latest
-compliance checks.
+DaVinci is the only platform that's still using it - all other users
+have already been converted.
 
-> 
-> Looking at the Makefile from v4l2-compliance, it looks like it just
-> invokes git to retrieve the git commit and uses that as the hash. In
-> Buildroot's case, since buildroot will download the tarball, this will
-> end up returning the SHA commit of the buildroot repo building the
-> sources, not the version of the sources themselves.
-> 
-> I'm not sure how to address that properly though. Thomas, how do you
-> usually deal with this?
+One of the obstacles in case of DaVinci is removing the setup() callback
+from the pdata struct, the only user of which are some davinci boards.
 
-Note that cec-compliance and cec-follower do the same, for the same
-reason.
+First we add support for nvmem to MTD in a way previously discussed with
+Boris Brezillon and Srinivas Kandagatla.
 
-Where does the tarball come from?
+Then, since most boards use the EEPROM to store the MAC address, we register
+relevant cells for all users, implement a function that allows to read
+the MAC address from nvmem (and also replaces the previous DT-specific
+variant) and make davinci_emac aware of it.
 
-Regards,
+Next we switch all davinci users to using at24 device properties instead
+of platform data. While we're at it: we remove all other traces of the
+setup callback and platform data from davinci.
 
-	Hans
+Finally we remove the at24 platform data structure.
 
-> 
-> Thanks!
-> Maxime
-> 
+I kept the review tags in patches that haven't changed from the last
+submission.
+
+As far as merging of this series goes: I'd like to avoid dragging it over
+four releases. The series is logically split into five groups:
+
+patches 1-2: nvmem and mtd changes
+patches 3-9: davinci arch-specific changes
+patches 10-13: networking changes
+patches 14-24: davinci specific again
+patch 25: final at24 change
+
+With that I believe we can do the following: Greg KH could pick up the
+first two patches into his char-misc tree. Sekhar would take the second
+group and the third would go through the networking tree since the first
+three sets are not linked in any way. This would be merged for 4.21. Then
+for the next release Sekhar would pick up 14-24, provide an immutable
+branch for me and I'd merge the final patch for at24 and send it upstream
+through Wolfram's i2c tree (maybe we could even delay the i2c PR in the
+merge window to avoid the immutable branch altogether).
+
+[1] https://lkml.org/lkml/2018/9/21/293
+[2] https://lkml.org/lkml/2018/8/8/528
+
+Alban Bedel (1):
+  mtd: add support for reading MTD devices via the nvmem API
+
+Bartosz Golaszewski (24):
+  nvmem: add new config option
+  ARM: davinci: dm365-evm: use cell nvmem lookup for mac address
+  ARM: davinci: dm644x-evm: use cell nvmem lookup for mac address
+  ARM: davinci: dm646x-evm: use cell nvmem lookup for mac address
+  ARM: davinci: da830-evm: use cell nvmem lookup for mac address
+  ARM: davinci: mityomapl138: use cell nvmem lookup for mac address
+  ARM: davinci: dm850-evm: use cell nvmem lookup for mac address
+  ARM: davinci: da850-evm: remove unnecessary include
+  net: ethernet: provide nvmem_get_mac_address()
+  net: cadence: switch to using nvmem_get_mac_address()
+  of: net: kill of_get_nvmem_mac_address()
+  net: davinci_emac: use nvmem_get_mac_address()
+  ARM: davinci: da850-evm: remove dead MTD code
+  ARM: davinci: mityomapl138: don't read the MAC address from machine
+    code
+  ARM: davinci: dm365-evm: use device properties for at24 eeprom
+  ARM: davinci: da830-evm: use device properties for at24 eeprom
+  ARM: davinci: dm644x-evm: use device properties for at24 eeprom
+  ARM: davinci: dm646x-evm: use device properties for at24 eeprom
+  ARM: davinci: sffsdr: fix the at24 eeprom device name
+  ARM: davinci: sffsdr: use device properties for at24 eeprom
+  ARM: davinci: remove dead code related to MAC address reading
+  ARM: davinci: mityomapl138: use nvmem notifiers
+  ARM: davinci: mityomapl138: use device properties for at24 eeprom
+  eeprom: at24: remove at24_platform_data
+
+ MAINTAINERS                                |   1 -
+ arch/arm/mach-davinci/board-da830-evm.c    |  39 ++++-
+ arch/arm/mach-davinci/board-da850-evm.c    |  58 ++++----
+ arch/arm/mach-davinci/board-dm365-evm.c    |  38 ++++-
+ arch/arm/mach-davinci/board-dm644x-evm.c   |  37 ++++-
+ arch/arm/mach-davinci/board-dm646x-evm.c   |  37 ++++-
+ arch/arm/mach-davinci/board-mityomapl138.c |  67 ++++++---
+ arch/arm/mach-davinci/board-sffsdr.c       |  13 +-
+ arch/arm/mach-davinci/common.c             |  15 --
+ drivers/misc/eeprom/at24.c                 | 162 ++++++++++-----------
+ drivers/mtd/Kconfig                        |   1 +
+ drivers/mtd/mtdcore.c                      |  56 +++++++
+ drivers/net/ethernet/cadence/macb_main.c   |   2 +-
+ drivers/net/ethernet/ti/davinci_emac.c     |  14 +-
+ drivers/nvmem/core.c                       |   3 +-
+ drivers/of/of_net.c                        |  39 -----
+ include/linux/davinci_emac.h               |   1 -
+ include/linux/etherdevice.h                |   1 +
+ include/linux/mtd/mtd.h                    |   2 +
+ include/linux/nvmem-provider.h             |   2 +
+ include/linux/of_net.h                     |   6 -
+ include/linux/platform_data/at24.h         |  60 --------
+ net/ethernet/eth.c                         |  38 +++++
+ 23 files changed, 391 insertions(+), 301 deletions(-)
+ delete mode 100644 include/linux/platform_data/at24.h
+
+-- 
+2.19.1
