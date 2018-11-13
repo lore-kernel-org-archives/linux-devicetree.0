@@ -1,57 +1,56 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 0/5] media: Allwinner A10 CSI support
-Date: Tue, 13 Nov 2018 18:15:49 +0100
-Message-ID: <2d25e395-af73-e69b-dc8a-3d0956d668f9@xs4all.nl>
-References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
- <df54f2e6-e207-92de-767a-e356345a1a56@xs4all.nl>
- <20181113135259.onutfjtoi25afnfe@flea>
- <f07a0460-cdba-c1a5-acfd-66a39f447a5a@cisco.com>
- <20181113155227.62jjs3mpomwgr7xd@flea>
- <cb504ffc-b74c-d6e3-7bde-6c5840c87997@cisco.com>
- <20181113175558.3bfa3e8d@windsurf>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: Sound and the TDA998x binding
+Date: Tue, 13 Nov 2018 17:24:41 +0000
+Message-ID: <20181113172440.GK30658@n2100.armlinux.org.uk>
+References: <40fdabaa-2b81-df4b-a949-725855586a85@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181113175558.3bfa3e8d@windsurf>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Hans Verkuil <hansverk@cisco.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <40fdabaa-2b81-df4b-a949-725855586a85@axentia.se>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/13/2018 05:55 PM, Thomas Petazzoni wrote:
-> Hello,
-> 
-> On Tue, 13 Nov 2018 17:00:25 +0100, Hans Verkuil wrote:
-> 
->> Weird, if I build directly from that tarball, then v4l2-compliance should say:
->>
->> v4l2-compliance SHA: not available, 64 bits
->>
->> So that's what I expect to see from buildroot as well.
-> 
-> Indeed, that's strange, I see that the v4l2-compliance Makefile does:
-> 
-> version.h:
->         @if git -C $(srcdir) rev-parse HEAD >/dev/null 2>&1; then \
->                 echo -n "#define SHA " >$@ ; \
->                 git -C $(srcdir) rev-parse HEAD >>$@ ; \
->         else \
->                 touch $@ ; \
->         fi
-> 
-> which correctly uses $(srcdir), so it shouldn't go "up" the libv4l
-> build folder and pick up the latest Buildroot commit SHA1. I'll have a
-> quick look.
-
-I think it does, actually. If the tar archive is unpacked inside the
-checked-out buildroot git tree, then it will pick up the buildroot SHA.
-
-I fixed v4l-utils to be a bit smarter about this:
-
-https://git.linuxtv.org/v4l-utils.git/patch/?id=98b4c9f276a18535b5691e5f350f59ffbf5a9aa5
-
-Regards,
-
-	Hans
+T24gVHVlLCBOb3YgMTMsIDIwMTggYXQgMDE6Mjg6NDBQTSArMDAwMCwgUGV0ZXIgUm9zaW4gd3Jv
+dGU6Cj4gSGkhCj4gCj4gSSdtIHdvbmRlcmluZyBhYm91dCBzb21lIHByb2dyYW1taW5nIGRldGFp
+bHMgcmVnYXJkaW5nIHRoZSBUREE5OTh4Cj4gZHJpdmVyLi4uCj4gCj4gVGhlIGJpbmRpbmdzIGRv
+Y3VtZW50YXRpb24gWzFdIHN0YXRlIHRoYXQgb25lIHNob3VsZCBmaWxsIGluIHRoZQo+IGRlc2ly
+ZWQgcmVnaXN0ZXIgY29udGVudCBvZiB0aGUgQVBfRU5BIHJlZ2lzdGVyLiBIb3dldmVyLCBJIGNh
+bm5vdAo+IGZpbmQgYW55IGRldGFpbHMgYW55d2hlcmUgYWJvdXQgaG93IG9uZSBkZXRlcm1pbmVz
+IHdoYXQgaXMgZGVzaXJlZC4KPiBXaGVuIEkgbG9vayBmb3IgZGF0YSBzaGVldHMgb24gdGhlIElu
+dGVybmV0LCBhbGwgSSBmaW5kIGlzIGEgInNob3J0Igo+IGRhdGEgc2hlZXQsIHdoaWNoIGlzIGZh
+ciBmcm9tIGVubGlnaHRlbmluZy4gVGhlcmUgYXJlIGhpbnRzIGFib3V0Cj4gYSAiZnVsbCIgZGF0
+YSBzaGVldCBpbiB0aGUgY2hhcHRlciBvbiBsZWdhbCBpbmZvcm1hdGlvbiBvZiB0aGUKPiAic2hv
+cnQiIGRhdGEgc2hlZXQuIElzIHRoZSAiZnVsbCIgZGF0YSBzaGVldCBwcm90ZWN0ZWQgYnkgYW4g
+TkRBCj4gb3Igc29tZXRoaW5nPyBUaGF0J3MgdGhlIG9ubHkgcmVhc29uIEkgY2FuIGZpbmQgZm9y
+IGl0IG5vdCBiZWluZwo+IGF2YWlsYWJsZS4uLgo+IAo+IE1heWJlIHNvbWVvbmUgd2l0aCBzdWNo
+IGEgImZ1bGwiIGRhdGEgc2hlZXQgYXQgaGFuZCBjYW4gZW5saWdodGVuCj4gbWUgb24gdGhlIHdv
+cmtpbmdzIG9mIHRoaXMgQVBfRU5BIHJlZ2lzdGVyIHNvIHRoYXQgSSBrbm93IHdoYXQgaXQgaXMK
+PiB0aGF0IEkgbmVlZCB0byBmaWxsIGluPyBTaW5jZSBpdCBpcyBzbyBkaWZmaWN1bHQgdG8gZmlu
+ZCB0aGlzIGluZm8sCj4gbWF5YmUgaXQgc2hvdWxkIGJlIGFkZGVkIHRvIHRoZSBiaW5kaW5nPwoK
+VGhlcmUncyB2YXJpb3VzIHB1YmxpYyBkb2N1bWVudHMgZm9yIHRoZSBUREE5OTh4IGNoaXBzLCBz
+b21lIG9mIHdoaWNoCmRvIGNvbnRhaW4gdGhlIHJlZ2lzdGVyIHByb2dyYW1taW5nIGluZm9ybWF0
+aW9uIC0gYWx0aG91Z2ggd2UgZG9uJ3QKaGF2ZSBkZWZpbml0aXZlIGluZm9ybWF0aW9uIGZvciBl
+dmVyeSB2YXJpYW50IHRoYXQgdGhlIGRyaXZlciBzdXBwb3J0cy4KRXZlbiBzbywgdGhhdCBkb2Vz
+bid0IGdpdmUgdXMgZG9jdW1lbnRhdGlvbiBmb3IgdGhpcyByZWdpc3Rlciwgc28gd2UKaGF2ZSB0
+byByZXNvcnQgdG8gY29kZSByZWNlaXZlZCBmcm9tIG90aGVyIHNvdXJjZXMuCgpUaGUgQVBfRU5B
+IHJlZ2lzdGVyICJhdWRpbyBwb3J0IGVuYWJsZSIgaXMgb25lIGJpdCBwZXIgQVAgc2lnbmFsLCBm
+cm9tCnRoZSBBUDAgcGluIGJlaW5nIGJpdCAwLCB1cCB0byB0aGUgQVA3IHBpbiBiZWluZyBiaXQg
+Ny4KCi0tIApSTUsncyBQYXRjaCBzeXN0ZW06IGh0dHA6Ly93d3cuYXJtbGludXgub3JnLnVrL2Rl
+dmVsb3Blci9wYXRjaGVzLwpGVFRDIGJyb2FkYmFuZCBmb3IgMC44bWlsZSBsaW5lIGluIHN1YnVy
+YmlhOiBzeW5jIGF0IDEyLjFNYnBzIGRvd24gNjIya2JwcyB1cApBY2NvcmRpbmcgdG8gc3BlZWR0
+ZXN0Lm5ldDogMTEuOU1icHMgZG93biA1MDBrYnBzIHVwCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
