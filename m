@@ -1,25 +1,33 @@
 From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: [PATCH 0/3] make pin-controller use hwspinlock
-Date: Tue, 13 Nov 2018 10:51:39 +0100
-Message-ID: <20181113095142.32015-1-benjamin.gaignard@st.com>
+Subject: [PATCH 1/3] dt-bindings: pinctrl: stm32: Document hwlocks properties
+Date: Tue, 13 Nov 2018 10:51:40 +0100
+Message-ID: <20181113095142.32015-2-benjamin.gaignard@st.com>
+References: <20181113095142.32015-1-benjamin.gaignard@st.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181113095142.32015-1-benjamin.gaignard@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linus.walleij@linaro.org, robh+dt@kernel.org, alexandre.torgue@st.com
 Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This series allow to protect pin controller configuration registers
-with a hwspinlock to avoid conflicting accesses between processors.
+Add hwlocks as optional property
 
-Benjamin Gaignard (3):
-  dt-bindings: pinctrl: stm32: Document hwlocks properties
-  pinctrl: stm32: protect configuration registers with a hwspinlock
-  ARM: dts: stm32: Add hwlock for pinctrl
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
- .../bindings/pinctrl/st,stm32-pinctrl.txt          |  1 +
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi          |  1 +
- drivers/pinctrl/stm32/pinctrl-stm32.c              | 71 +++++++++++++++++++++-
- 3 files changed, 72 insertions(+), 1 deletion(-)
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+index ef4f2ff4a1aa..48df30a36b01 100644
+--- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+@@ -56,6 +56,7 @@ Optional properties:
+    More details in Documentation/devicetree/bindings/gpio/gpio.txt.
+  - st,bank-ioport: should correspond to the EXTI IOport selection (EXTI line
+    used to select GPIOs as interrupts).
++ - hwlocks: reference to a phandle of a hardware spinlock provider node.
+ 
+ Example 1:
+ #include <dt-bindings/pinctrl/stm32f429-pinfunc.h>
 -- 
 2.15.0
