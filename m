@@ -1,193 +1,92 @@
-From: Luca Ceresoli <luca@lucaceresoli.net>
-Subject: Re: [PATCH v4 3/4] media: i2c: Add MAX9286 driver
-Date: Tue, 13 Nov 2018 23:49:53 +0100
-Message-ID: <5238fa80-7678-97a8-47ee-6a26970d862d@lucaceresoli.net>
-References: <20181102154723.23662-1-kieran.bingham@ideasonboard.com>
- <20181102154723.23662-4-kieran.bingham@ideasonboard.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] ASoC: ak4118: Add support for AK4118
+ S/PDIF transceiver
+Date: Tue, 13 Nov 2018 14:51:35 -0800
+Message-ID: <20181113225135.GQ2089@sirena.org.uk>
+References: <20181108124934.32381-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181102154723.23662-4-kieran.bingham@ideasonboard.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kieran Bingham <kieran.bingham@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@iki.fi
-Cc: =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, linux-kernel@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Content-Type: multipart/mixed; boundary="===============5372483374844399459=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20181108124934.32381-1-peron.clem@gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Adrien Charruel <adrien.charruel@devialet.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kieran, All,
 
-below a few minor questions, and a big one at the bottom.
+--===============5372483374844399459==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="p6hDAtPN9q+ZnUca"
+Content-Disposition: inline
 
-On 02/11/18 16:47, Kieran Bingham wrote:
-> From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> 
-> The MAX9286 is a 4-channel GMSL deserializer with coax or STP input and
-> CSI-2 output. The device supports multicamera streaming applications,
-> and features the ability to synchronise the attached cameras.
-> 
-> CSI-2 output can be configured with 1 to 4 lanes, and a control channel
-> is supported over I2C, which implements an I2C mux to facilitate
-> communications with connected cameras across the reverse control
-> channel.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-[...]
+--p6hDAtPN9q+ZnUca
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +struct max9286_device {
-> +	struct i2c_client *client;
-> +	struct v4l2_subdev sd;
-> +	struct media_pad pads[MAX9286_N_PADS];
-> +	struct regulator *regulator;
-> +	bool poc_enabled;
-> +	int streaming;
-> +
-> +	struct i2c_mux_core *mux;
-> +	unsigned int mux_channel;
-> +
-> +	struct v4l2_ctrl_handler ctrls;
-> +
-> +	struct v4l2_mbus_framefmt fmt[MAX9286_N_SINKS];
+On Thu, Nov 08, 2018 at 01:49:33PM +0100, Cl=E9ment P=E9ron wrote:
 
-5 pads, 4 formats. Why does the source node have no fmt?
+This looks mostly good, a few small things below but nothing too major:
 
-> +static int max9286_init(struct device *dev, void *data)
-> +{
-> +	struct max9286_device *max9286;
-> +	struct i2c_client *client;
-> +	struct device_node *ep;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	/* Skip non-max9286 devices. */
-> +	if (!dev->of_node || !of_match_node(max9286_dt_ids, dev->of_node))
-> +		return 0;
-> +
-> +	client = to_i2c_client(dev);
-> +	max9286 = i2c_get_clientdata(client);
-> +
-> +	/* Enable the bus power. */
-> +	ret = regulator_enable(max9286->regulator);
+> --- /dev/null
+> +++ b/sound/soc/codecs/ak4118.c
+> @@ -0,0 +1,449 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * ak4118.c  --  Asahi Kasei ALSA Soc Audio driver
+> + *
+
+Please make the entire comment a C++ one so this looks more intentional.
+
+> +static const char * const ak4118_iec958_fs_texts[] =3D {
+> +	"44100",
+> +	"Reserved",
+
+If you use a _VALUE_ENUM_SINGLE you can hide the reserved/invalid values
+=66rom userspace which is easier to use.
+
+> +	ret =3D request_threaded_irq(gpiod_to_irq(ak4118->irq), NULL,
+> +				   ak4118_irq_handler, IRQF_TRIGGER_RISING |
+> +				   IRQF_ONESHOT, "ak4118-irq", ak4118);
 > +	if (ret < 0) {
-> +		dev_err(&client->dev, "Unable to turn PoC on\n");
+> +		dev_err(component->dev, "Fail to request_irq: %d\n", ret);
 > +		return ret;
 > +	}
-> +
-> +	max9286->poc_enabled = true;
-> +
-> +	ret = max9286_setup(max9286);
-> +	if (ret) {
-> +		dev_err(dev, "Unable to setup max9286\n");
-> +		goto err_regulator;
-> +	}
-> +
-> +	v4l2_i2c_subdev_init(&max9286->sd, client, &max9286_subdev_ops);
-> +	max9286->sd.internal_ops = &max9286_subdev_internal_ops;
-> +	max9286->sd.flags = V4L2_SUBDEV_FL_HAS_DEVNODE;
-                          ^
 
-This way you're clearing the V4L2_SUBDEV_FL_IS_I2C set by
-v4l2_i2c_subdev_init(), even though using devicetree I think this won't
-matter in the current kernel code. However I think "max9286->sd.flags |=
-..." is more correct here, and it's also what most other drivers do.
+You should request resources in the device level probe, there's no point
+in requesting and releasing the interrupt like this.
 
-> +	v4l2_ctrl_handler_init(&max9286->ctrls, 1);
-> +	/*
-> +	 * FIXME: Compute the real pixel rate. The 50 MP/s value comes from the
-> +	 * hardcoded frequency in the BSP CSI-2 receiver driver.
-> +	 */
-> +	v4l2_ctrl_new_std(&max9286->ctrls, NULL, V4L2_CID_PIXEL_RATE,
-> +			  50000000, 50000000, 1, 50000000);
-> +	max9286->sd.ctrl_handler = &max9286->ctrls;
-> +	ret = max9286->ctrls.error;
-> +	if (ret)
-> +		goto err_regulator;
-> +
-> +	max9286->sd.entity.function = MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER;
+--p6hDAtPN9q+ZnUca
+Content-Type: application/pgp-signature; name="signature.asc"
 
-According to the docs MEDIA_ENT_F_VID_IF_BRIDGE appears more fitting.
+-----BEGIN PGP SIGNATURE-----
 
-> +static int max9286_probe(struct i2c_client *client,
-> +			 const struct i2c_device_id *did)
-> +{
-> +	struct max9286_device *dev;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
-> +	if (!dev)
-> +		return -ENOMEM;
-> +
-> +	dev->client = client;
-> +	i2c_set_clientdata(client, dev);
-> +
-> +	for (i = 0; i < MAX9286_N_SINKS; i++)
-> +		max9286_init_format(&dev->fmt[i]);
-> +
-> +	ret = max9286_parse_dt(dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev->regulator = regulator_get(&client->dev, "poc");
-> +	if (IS_ERR(dev->regulator)) {
-> +		if (PTR_ERR(dev->regulator) != -EPROBE_DEFER)
-> +			dev_err(&client->dev,
-> +				"Unable to get PoC regulator (%ld)\n",
-> +				PTR_ERR(dev->regulator));
-> +		ret = PTR_ERR(dev->regulator);
-> +		goto err_free;
-> +	}
-> +
-> +	/*
-> +	 * We can have multiple MAX9286 instances on the same physical I2C
-> +	 * bus, and I2C children behind ports of separate MAX9286 instances
-> +	 * having the same I2C address. As the MAX9286 starts by default with
-> +	 * all ports enabled, we need to disable all ports on all MAX9286
-> +	 * instances before proceeding to further initialize the devices and
-> +	 * instantiate children.
-> +	 *
-> +	 * Start by just disabling all channels on the current device. Then,
-> +	 * if all other MAX9286 on the parent bus have been probed, proceed
-> +	 * to initialize them all, including the current one.
-> +	 */
-> +	max9286_i2c_mux_close(dev);
-> +
-> +	/*
-> +	 * The MAX9286 initialises with auto-acknowledge enabled by default.
-> +	 * This means that if multiple MAX9286 devices are connected to an I2C
-> +	 * bus, another MAX9286 could ack I2C transfers meant for a device on
-> +	 * the other side of the GMSL links for this MAX9286 (such as a
-> +	 * MAX9271). To prevent that disable auto-acknowledge early on; it
-> +	 * will be enabled later as needed.
-> +	 */
-> +	max9286_configure_i2c(dev, false);
-> +
-> +	ret = device_for_each_child(client->dev.parent, &client->dev,
-> +				    max9286_is_bound);
-> +	if (ret)
-> +		return 0;
-> +
-> +	dev_dbg(&client->dev,
-> +		"All max9286 probed: start initialization sequence\n");
-> +	ret = device_for_each_child(client->dev.parent, NULL,
-> +				    max9286_init);
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlvrVXYACgkQJNaLcl1U
+h9DB7wf/W1LooFgqTJgJoHvp4HpuSNxrpd12Sm2ZvqCgQcHcO4XW8JbRSm4gWq14
+X9bLYqyv9bqA4ZQYDYsXPwiyC/ogftVkIejGVoijWJixtZQEfwMT3e1yFw3AASpD
+p6/3pBml35uKWenFY1hsQB7pYvuh9chBs4L3paUeNhHWW+LXX/uQzbyrkvH9I/3j
+7lV935pkIOpzCKBu9DhNRVaom6XjR22w9iBvJiDoOeZtGgSu7WbBWevrfzfUrg8j
+wOIVZSlNPA15OBle3Zn+AozwJE1AUuw67vVvL5w1V/5WNNoxpvPtvjZ0sVmL8hSU
+KhHpkDUpZyb6F7tQIRe2If8WwYA/zg==
+=OxYf
+-----END PGP SIGNATURE-----
 
-I can't manage to like this initialization sequence, sorry. If at all
-possible, each max9286 should initialize itself independently from each
-other, like any normal driver.
+--p6hDAtPN9q+ZnUca--
 
-First, it requires that each chip on the remote side can configure its
-own slave address. Not all chips do.
+--===============5372483374844399459==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Second, using a static i2c address map does not scale well and limits
-hotplugging, as I discussed in my reply to patch 1/4. The problem should
-be solvable cleanly if the MAX9286 supports address translation like the
-TI chips.
 
-Thanks,
--- 
-Luca
+--===============5372483374844399459==--
