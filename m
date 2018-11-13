@@ -1,36 +1,71 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCHv5 4/6] ARM: dts: exynos: Add pin configuration for SD
- write protect on Odroid XU3/XU4
-Date: Tue, 13 Nov 2018 20:54:56 +0100
-Message-ID: <20181113195456.GF2418@kozik-lap>
-References: <20180927140738.1006-1-linux.amoon@gmail.com>
- <20180927140738.1006-5-linux.amoon@gmail.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 02/24] leds: core: Add support for composing LED class
+ device names
+Date: Tue, 13 Nov 2018 20:55:24 +0100
+Message-ID: <90914660-6add-a4d9-0dfe-7b82a7664bd8@gmail.com>
+References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
+ <1541542052-10081-3-git-send-email-jacek.anaszewski@gmail.com>
+ <20181111120234.GA28794@amd>
+ <CACRpkdYJNWC3RZXjCu+3EfRbPy6OyLLw-FivpFoe1p3ckHTCmg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180927140738.1006-5-linux.amoon@gmail.com>
+In-Reply-To: <CACRpkdYJNWC3RZXjCu+3EfRbPy6OyLLw-FivpFoe1p3ckHTCmg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Pavel Machek <pavel@ucw.cz>
+Cc: linux-leds@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, dmurphy@ti.com, oleg@kaa.org.ua, Sakari Ailus <sakari.ailus@linux.intel.com>, simon@lineageos.org, xiaotong.lu@spreadtrum.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2018 at 02:07:36PM +0000, Anand Moon wrote:
-> Add SD card write-protect pin configuration to be sure that it will be
-> properly pulled down to indicate write access.
+On 11/12/2018 10:23 PM, Linus Walleij wrote:
+> On Sun, Nov 11, 2018 at 1:03 PM Pavel Machek <pavel@ucw.cz> wrote:
 > 
-> Suggested-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> Changes since v4:
-> 1. Remove cd-gpios and wp-gpios leaving only WP pin configuration (after
->    Marek Szyprowski feedback).
-> 2. Pull pin down.
-> 3. change the subject and commit message.
-> Sorry Krzysztof if I have copied your commit message to describe the
-> changes.
+>>> -"devicename:colour:function"
+>>> +"colour:function"
+>>
+>> I don't think we want to do it in all cases.
+>>
+>> So, on my cellphone seeing lp5523:green:led is indeed not useful.
+>>
+>> But on notebook with usb keyboard attached, you need to keep the
+>> devicename to be able to distinguish capslock on internal keyboard and
+>> capslock on first USB keyboard and capslock on second USB keyboard.
+> 
+> I agree with Pavel.
+> 
+> I ran into this when connecting two identical keyboards to the
+> same machine. The driver worked fine up until it tries
+> to create two sysfs entries with the same name for capslock.
+> BOOM!
 
-Thanks, applied.
+What kernel version did you use? LED core has had a protection
+against name clash since the commit:
 
+commit a96aa64cb5723d941de879a9cd1fea025d6acb1b
+Author: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Date:   Mon Mar 30 10:45:59 2015 -0700
+
+    leds/led-class: Handle LEDs with the same name
+
+    The current code expected that every LED had an unique name. This is a
+    legit expectation when the device tree can no be modified or extended.
+    But with device tree overlays this requirement can be easily broken.
+
+    This patch finds out if the name is already in use and adds the suffix
+    _1, _2... if not.
+
+    Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+    Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+    Signed-off-by: Bryan Wu <cooloney@gmail.com>
+
+
+> In this case I suggest "serialnumber:color:capslock" and
+> similar.
+> 
+> The important point is the string must be unique for each
+> plugged device.
+
+-- 
 Best regards,
-Krzysztof
+Jacek Anaszewski
