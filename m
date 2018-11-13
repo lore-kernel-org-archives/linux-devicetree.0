@@ -1,88 +1,69 @@
-From: Luis Oliveira <luis.oliveira@synopsys.com>
-Subject: Re: [V3, 1/4] Documentation: dt-bindings: phy: Document the Synopsys
- MIPI DPHY Rx bindings
-Date: Tue, 13 Nov 2018 08:58:16 +0000
-Message-ID: <0cfb65eb-42c5-c548-12e9-c495d5e5156a@synopsys.com>
-References: <1539953556-35762-1-git-send-email-lolivei@synopsys.com>
- <1539953556-35762-2-git-send-email-lolivei@synopsys.com>
- <20181024173611.GA30655@bogus>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add mali node
+Date: Tue, 13 Nov 2018 10:00:24 +0100
+Message-ID: <20181113090024.puzll77rx5dylnhf@flea>
+References: <20181111121811.21638-1-jernej.skrabec@siol.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="dflgs3elxdgqizus"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181024173611.GA30655@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181111121811.21638-1-jernej.skrabec@siol.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Luis Oliveira <luis.oliveira@synopsys.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, joao.pinto@synopsys.com, festevam@gmail.com, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Neil Armstrong <narmstrong@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Keiichi Watanabe <keiichiw@chromium.org>, Kate Stewart <kstewart@linuxfoundation.org>, Todor Tomov <todor.tomov@linaro.org>, devicetree@vger.kernel.org
+To: Jernej Skrabec <jernej.skrabec@siol.net>
+Cc: wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob, my responses inline.
 
-On 24-Oct-18 18:36, Rob Herring wrote:
-> On Fri, Oct 19, 2018 at 02:52:23PM +0200, Luis Oliveira wrote:
->> Add device-tree bindings documentation for SNPS DesignWare MIPI D-PHY in
->> RX mode.
->>
->> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
->> ---
->> Changelog
->> v2-V3
->> - removed gpios reference - it was for a separated driver
->> - changed address to show complete address
->>
->>  .../devicetree/bindings/phy/snps,dphy-rx.txt       | 28 ++++++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
->>
->> diff --git a/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt b/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
->> new file mode 100644
->> index 0000000..03d17ab
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
->> @@ -0,0 +1,28 @@
->> +Synopsys DesignWare MIPI Rx D-PHY block details
->> +
->> +Description
->> +-----------
->> +
->> +The Synopsys MIPI D-PHY controller supports MIPI-DPHY in receiver mode.
->> +Please refer to phy-bindings.txt for more information.
->> +
->> +Required properties:
->> +- compatible		: Shall be "snps,dphy-rx".
->> +- #phy-cells		: Must be 1.
->> +- snps,dphy-frequency	: Output frequency of the D-PHY.
-> 
-> Needs a unit suffix (-hz).
-> 
+--dflgs3elxdgqizus
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes,
+Hi Jernej,
 
->> +- snps,dphy-te-len	: Size of the communication interface (8 bits->8 or 12bits->12).
->> +- reg			: Physical base address and size of the device memory mapped
->> +		 	  registers;
-> 
-> How many, what are they, and what order? Looks like 3 below.
-> 
-> Also, a tab after spaces error.
-> 
+On Sun, Nov 11, 2018 at 01:18:11PM +0100, Jernej Skrabec wrote:
+> A64 has Mali400 MP2 GPU. Add a node for it.
+>=20
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  This node and A64 GPU binary driver was tested with Kodi on LibreELEC.
+>=20
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/b=
+oot/dts/allwinner/sun50i-a64.dtsi
+> index f3a66f888205..48cc5451d0eb 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -753,6 +753,28 @@
+>  			#size-cells =3D <0>;
+>  		};
+> =20
+> +		mali: gpu@1c40000 {
+> +			compatible =3D "allwinner,sun50i-a64-mali",
+> +				     "arm,mali-400";
 
-Yep, I will fix it. Thanks
+You should document that new compatible string. The patch looks good
+otherwise, thanks!
 
->> +
->> +Example:
->> +
->> +	mipi_dphy_rx1: dphy@d00003040 {
->> +		compatible = "snps,dphy-rx";
->> +		#phy-cells = <1>;
->> +		snps,dphy-frequency = <300000>;
->> +		snps,dphy-te-len = <12>;
->> +		reg = < 0xd0003040 0x20
->> +			0xd0008000 0x100
->> +			0xd0009000 0x100>;
->> +	};
->> +
->> --
->> 2.7.4
->>
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--dflgs3elxdgqizus
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW+qSqAAKCRDj7w1vZxhR
+xd5LAP9sPAyqmGLxfpUXrUL3/59yFZ5XKnj1mYcmKVOqQwHjoQD+IZGSL8LTxu4r
+Nle/BpHo/axKq4lQJdeMNgQg9zthAw0=
+=hg8i
+-----END PGP SIGNATURE-----
+
+--dflgs3elxdgqizus--
