@@ -1,47 +1,51 @@
-From: "Maciej W. Rozycki" <macro@linux-mips.org>
-Subject: Re: [RFC v2 1/7] MIPS: Add support for the Lexra LX5280 CPU
-Date: Tue, 13 Nov 2018 16:33:42 +0000 (GMT)
-Message-ID: <alpine.LFD.2.21.1811131513070.9637@eddie.linux-mips.org>
-References: <20181001102952.7913-1-yasha.che3@gmail.com> <20181001102952.7913-2-yasha.che3@gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 0/5] media: Allwinner A10 CSI support
+Date: Tue, 13 Nov 2018 17:55:58 +0100
+Message-ID: <20181113175558.3bfa3e8d@windsurf>
+References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
+        <df54f2e6-e207-92de-767a-e356345a1a56@xs4all.nl>
+        <20181113135259.onutfjtoi25afnfe@flea>
+        <f07a0460-cdba-c1a5-acfd-66a39f447a5a@cisco.com>
+        <20181113155227.62jjs3mpomwgr7xd@flea>
+        <cb504ffc-b74c-d6e3-7bde-6c5840c87997@cisco.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181001102952.7913-2-yasha.che3@gmail.com>
+In-Reply-To: <cb504ffc-b74c-d6e3-7bde-6c5840c87997@cisco.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yasha Cherikovsky <yasha.che3@gmail.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Hans Verkuil <hansverk@cisco.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Hans Verkuil <hverkuil@xs4all.nl>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 1 Oct 2018, Yasha Cherikovsky wrote:
+Hello,
 
-> The Lexra LX5280 CPU [1][2] implements the MIPS-I ISA,
-> without unaligned load/store instructions (lwl, lwr, swl, swr).
+On Tue, 13 Nov 2018 17:00:25 +0100, Hans Verkuil wrote:
 
- I think you actually need to emulate these missing instructions for user 
-programs, so that the 32-bit MIPS psABI is supported and standard software 
-can run unmodified.  There'll be a performance hit and software will best 
-be recompiled for the limited instruction set provided by actual hardware, 
-however rebuilding is not always possible or feasible (also handcoded 
-assembly may require actual reimplementation here and there).
+> Weird, if I build directly from that tarball, then v4l2-compliance should say:
+> 
+> v4l2-compliance SHA: not available, 64 bits
+> 
+> So that's what I expect to see from buildroot as well.
 
-> - RDHWR instruction emulation from the page fault handler
->   (more details in a code comment)
+Indeed, that's strange, I see that the v4l2-compliance Makefile does:
 
- The details are lacking I am afraid and I think it would be good to have 
-them provided for long-term support to be feasible.
+version.h:
+        @if git -C $(srcdir) rev-parse HEAD >/dev/null 2>&1; then \
+                echo -n "#define SHA " >$@ ; \
+                git -C $(srcdir) rev-parse HEAD >>$@ ; \
+        else \
+                touch $@ ; \
+        fi
 
- First, the MIPS architecture does not have a single "page fault" 
-exception.  There are three MMU exception codes defined: Mod, TLBL and 
-TLBS, and also two vectors, either the TLB Refill or the General 
-Exception.  So please be specific which of those are taken by the LX5280 
-with the RDHWR instruction.
+which correctly uses $(srcdir), so it shouldn't go "up" the libv4l
+build folder and pick up the latest Buildroot commit SHA1. I'll have a
+quick look.
 
- Second, please explain why this MMU exception happens, i.e. does the CPU 
-decode the SPECIAL3 major opcode as an I-Type memory access instruction, 
-and then faults on `GPR[0] + offset' pointing to an unmapped page?
+Best regards,
 
- If documentation is publicly available this information can be inferred 
-from, then please provide a reference; otherwise please just describe the 
-observed behaviour as you know it.
-
-  Maciej
+Thomas
+-- 
+Thomas Petazzoni, CTO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
