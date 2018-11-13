@@ -1,78 +1,99 @@
-Return-Path: <SRS0=GILB=NZ=renesas.com=Chris.Brandt@kernel.org>
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v4 1/2] pinctrl: Add RZ/A2 pin and gpio controller
-Date: Wed, 14 Nov 2018 18:35:19 +0000
-Message-ID: 
- <OSAPR01MB155379A0F68DDB084F09D2F18AC30@OSAPR01MB1553.jpnprd01.prod.outlook.com>
-References: <20181107182733.62155-1-chris.brandt@renesas.com>
- <20181107182733.62155-2-chris.brandt@renesas.com>
- <CAMuHMdWePvqbv_SmkGQAWm8aynkXBjmf25BuA3O09_H9Xdtjyg@mail.gmail.com>
- <OSAPR01MB15531B62B24C0DA3834592628AC20@OSAPR01MB1553.jpnprd01.prod.outlook.com>
- <CAMuHMdWVGYaT+WOhks-8YwK0KO96COO0Rgvp9DNMhhQpZfA7kQ@mail.gmail.com>
- <OSAPR01MB155359D363399BD62BB29D788AC20@OSAPR01MB1553.jpnprd01.prod.outlook.com>
- <CAMuHMdWsp-zSTbO6EyL_x814fDRcHj10f+YJQqV=b_Bf6znFVA@mail.gmail.com>
-In-Reply-To: 
- <CAMuHMdWsp-zSTbO6EyL_x814fDRcHj10f+YJQqV=b_Bf6znFVA@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=BvA/=NY=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Jacopo Mondi <jacopo@jmondi.org>, "OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>
+References: <20181107182733.62155-1-chris.brandt@renesas.com>
+ <20181107182733.62155-2-chris.brandt@renesas.com> <CAMuHMdWePvqbv_SmkGQAWm8aynkXBjmf25BuA3O09_H9Xdtjyg@mail.gmail.com>
+ <OSAPR01MB15531B62B24C0DA3834592628AC20@OSAPR01MB1553.jpnprd01.prod.outlook.com>
+ <CAMuHMdWVGYaT+WOhks-8YwK0KO96COO0Rgvp9DNMhhQpZfA7kQ@mail.gmail.com> <OSAPR01MB155359D363399BD62BB29D788AC20@OSAPR01MB1553.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSAPR01MB155359D363399BD62BB29D788AC20@OSAPR01MB1553.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 13 Nov 2018 23:18:48 +0100
+Message-ID: <CAMuHMdWsp-zSTbO6EyL_x814fDRcHj10f+YJQqV=b_Bf6znFVA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] pinctrl: Add RZ/A2 pin and gpio controller
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Jacopo Mondi <jacopo@jmondi.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNCkp1c3QgaW4gY2FzZSB5b3Ugd2VyZSB3b25kZXJpbmcuLi4NCg0KT24gTW9u
-ZGF5LCBOb3ZlbWJlciAxMiwgMjAxOCwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOg0KPiA+ICsg
-ICAgICAgIlBKXzAiLCAiUEpfMSIsICJQSl8yIiwgIlBKXzMiLCAiUEpfNCIsICJQSl81IiwgIlBK
-XzYiLCAiUEpfNyIsDQo+ID4gKyAgICAgICAiUEtfMCIsICJQS18xIiwgIlBLXzIiLCAiUEtfMyIs
-ICJQS180IiwgIlBLXzUiLCAiUEtfNiIsICJQS183IiwNCj4gPiArICAgICAgICJQTF8wIiwgIlBM
-XzEiLCAiUExfMiIsICJQTF8zIiwgIlBMXzQiLCAiUExfNSIsICJQTF82IiwgIlBMXzciLA0KPiA+
-ICsgICAgICAgIlBNXzAiLCAiUE1fMSIsICJQTV8yIiwgIlBNXzMiLCAiUE1fNCIsICJQTV81Iiwg
-IlBNXzYiLCAiUE1fNyIsDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgc3RydWN0IGdwaW9f
-Y2hpcCBjaGlwID0gew0KPiA+ICsgICAgICAgLm5hbWVzID0gcnphMl9ncGlvX25hbWVzLA0KPiAN
-Cj4gQlRXLCBpcyB0aGVpciBtdWNoIHZhbHVlIGluIGZpbGxpbmcgZ3Bpb19jaGlwLm5hbWVzW10/
-DQo+IEkgaGFkIG5ldmVyIHNlZW4gdGhhdCBiZWZvcmUuDQoNCg0KT24gVHVlc2RheSwgTm92ZW1i
-ZXIgMTMsIDIwMTgsIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToNCj4gICAyLiBVc2Vyc3BhY2Ug
-bGlicmFyeSBsaWJncGlvZCwgaW5jbC4gYSBmZXcgdG9vbHMgbGlrZQ0KPiBncGlvaW5mby9ncGlv
-c2V0L2dwaW9nZXQuDQo+ICAgICAgVGhlc2UgYWNjZXB0IHdoYXRldmVyIHJlZmVyZW5jZSB0byBp
-ZGVudGlmeSBhIEdQSU8uDQo+ICAgICAgQXMgeW91ciBkcml2ZXIgZmlsbHMgaW4gcGluc1tpXS5u
-YW1lLCBJIGV4cGVjdCB5b3UgY2FuIHBhc3MgbmFtZXMNCj4gbGlrZSBQNV82Lg0KDQoNCkFjdHVh
-bGx5LCBqdXN0IGZpbGxpbmcgaW4gcGluc1tpXS5uYW1lIGlzIG5vdCBlbm91Z2guIFlvdSByZWFs
-bHkgbmVlZCB0bw0KcGFzcyBhbiBhcnJheSBvZiBzdHJpbmdzIHRvIGdwaW9fY2hpcC5uYW1lLg0K
-DQpXaGVuIHN0cnVjdCBncGlvX2NoaXAubmFtZXMgPSBOVUxMLCB5b3UgZ2V0IHRoaXM6DQoNCiQg
-Z3Bpb2luZm8NCmdwaW9jaGlwMCAtIDE3NiBsaW5lczoNCiAgICAgICAgbGluZSAgIDA6ICAgICAg
-dW5uYW1lZCAgICAgICB1bnVzZWQgICBpbnB1dCAgYWN0aXZlLWhpZ2gNCiAgICAgICAgbGluZSAg
-IDE6ICAgICAgdW5uYW1lZCAgICAgICB1bnVzZWQgICBpbnB1dCAgYWN0aXZlLWhpZ2gNCiAgICAg
-ICAgbGluZSAgIDI6ICAgICAgdW5uYW1lZCAgICAgICB1bnVzZWQgICBpbnB1dCAgYWN0aXZlLWhp
-Z2gNCiAgICAgICAgbGluZSAgIDM6ICAgICAgdW5uYW1lZCAgICAgICB1bnVzZWQgICBpbnB1dCAg
-YWN0aXZlLWhpZ2gNCiAgICAgICAgbGluZSAgIDQ6ICAgICAgdW5uYW1lZCAgICAgICB1bnVzZWQg
-ICBpbnB1dCAgYWN0aXZlLWhpZ2gNCiAgICAgICAgbGluZSAgIDU6ICAgICAgdW5uYW1lZCAgICAg
-ICB1bnVzZWQgICBpbnB1dCAgYWN0aXZlLWhpZ2gNCiAgICAgICAgbGluZSAgIDY6ICAgICAgdW5u
-YW1lZCAgICAgICB1bnVzZWQgICBpbnB1dCAgYWN0aXZlLWhpZ2gNCiAgICAgICAgbGluZSAgIDc6
-ICAgICAgdW5uYW1lZCAgICAgICB1bnVzZWQgICBpbnB1dCAgYWN0aXZlLWhpZ2gNCiAgICAgICAg
-bGluZSAgIDg6ICAgICAgdW5uYW1lZCAgICAgICB1bnVzZWQgICBpbnB1dCAgYWN0aXZlLWhpZ2gN
-CiAgICAgICAgbGluZSAgIDk6ICAgICAgdW5uYW1lZCAgICAgICB1bnVzZWQgICBpbnB1dCAgYWN0
-aXZlLWhpZ2gNCiAgICAgICAgbGluZSAgMTA6ICAgICAgdW5uYW1lZCAgICAgICB1bnVzZWQgICBp
-bnB1dCAgYWN0aXZlLWhpZ2gNCiAgICAgICAgbGluZSAgMTE6ICAgICAgdW5uYW1lZCAgICAgICB1
-bnVzZWQgICBpbnB1dCAgYWN0aXZlLWhpZ2gNCiAgICAgICAgbGluZSAgMTI6ICAgICAgdW5uYW1l
-ZCAgICAgICB1bnVzZWQgICBpbnB1dCAgYWN0aXZlLWhpZ2gNCg0KDQpXaGVuIHN0cnVjdCBncGlv
-X2NoaXAubmFtZXMgPSByemEyX2dwaW9fbmFtZXMsIHlvdSBnZXQgdGhpczoNCg0KJCBncGlvaW5m
-bw0KZ3Bpb2NoaXAwIC0gMTc2IGxpbmVzOg0KICAgICAgICBsaW5lICAgMDogICAgICAgIlAwXzAi
-ICAgICAgIHVudXNlZCAgIGlucHV0ICBhY3RpdmUtaGlnaA0KICAgICAgICBsaW5lICAgMTogICAg
-ICAgIlAwXzEiICAgICAgIHVudXNlZCAgIGlucHV0ICBhY3RpdmUtaGlnaA0KICAgICAgICBsaW5l
-ICAgMjogICAgICAgIlAwXzIiICAgICAgIHVudXNlZCAgIGlucHV0ICBhY3RpdmUtaGlnaA0KICAg
-ICAgICBsaW5lICAgMzogICAgICAgIlAwXzMiICAgICAgIHVudXNlZCAgIGlucHV0ICBhY3RpdmUt
-aGlnaA0KICAgICAgICBsaW5lICAgNDogICAgICAgIlAwXzQiICAgICAgIHVudXNlZCAgIGlucHV0
-ICBhY3RpdmUtaGlnaA0KICAgICAgICBsaW5lICAgNTogICAgICAgIlAwXzUiICAgICAgIHVudXNl
-ZCAgIGlucHV0ICBhY3RpdmUtaGlnaA0KICAgICAgICBsaW5lICAgNjogICAgICAgIlAwXzYiICAg
-ICAgIHVudXNlZCAgIGlucHV0ICBhY3RpdmUtaGlnaA0KICAgICAgICBsaW5lICAgNzogICAgICAg
-IlAwXzciICAgICAgIHVudXNlZCAgIGlucHV0ICBhY3RpdmUtaGlnaA0KICAgICAgICBsaW5lICAg
-ODogICAgICAgIlAxXzAiICAgICAgIHVudXNlZCAgIGlucHV0ICBhY3RpdmUtaGlnaA0KICAgICAg
-ICBsaW5lICAgOTogICAgICAgIlAxXzEiICAgICAgIHVudXNlZCAgIGlucHV0ICBhY3RpdmUtaGln
-aA0KICAgICAgICBsaW5lICAxMDogICAgICAgIlAxXzIiICAgICAgIHVudXNlZCAgIGlucHV0ICBh
-Y3RpdmUtaGlnaA0KICAgICAgICBsaW5lICAxMTogICAgICAgIlAxXzMiICAgICAgIHVudXNlZCAg
-IGlucHV0ICBhY3RpdmUtaGlnaA0KICAgICAgICBsaW5lICAxMjogICAgICAgIlAxXzQiICAgICAg
-IHVudXNlZCAgIGlucHV0ICBhY3RpdmUtaGlnaA0KDQpUaGVuIHlvdSBjYW4gdXNlIGdwaW9maW5k
-IHRvIGNvbnZlcnQgYSBuYW1lIGludG8gYW4gSUQuDQoNCiQgZ3Bpb2ZpbmQgUDZfMA0KZ3Bpb2No
-aXAwIDQ4DQoNCg0KQnV0IHRvIHlvdXIgcG9pbnQsIGxpYmdwaW9kIGlzIHdheSBiZXR0ZXIgdGhh
-biB1c2luZyAvc3lzIGRpcmVjdGx5Lg0KDQpDaHJpcw0KDQo=
+Hi Chris,
+
+On Tue, Nov 13, 2018 at 8:26 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> On Tuesday, November 13, 2018, Geert Uytterhoeven wrote:
+> > > It makes the files show up under /sys look nice.
+> > >
+> > > For example, P5_6 is button SW4:
+> > >
+> > >  $ echo 912 > /sys/class/gpio/export
+> > >
+> > > Then you end up with "/sys/class/gpio/P5_6/"
+> > >
+> > >  $ echo in > /sys/class/gpio/P5_6/direction
+> > >  $ cat /sys/class/gpio/P5_6/direction
+> > >  $ cat /sys/class/gpio/P5_6/value
+> >
+> > (Ah, the legacy and deprecated sysfs GPIO interface, being replaced
+> >  by /dev/gpiochip[0-9]+ and https://github.com/brgl/libgpiod)
+> >
+> > Cool, I didn't know that.
+> > But you still need to know which number to write to the export file
+> > in the first place?
+>
+> True, meaning the table does not help you as much as you want.
+> Jacopo also mentioned the new libgpiod.
+> So, I think I might just drop this table in the next revision.
+>
+> What I really want to do is just say "make P5_6 an input" and
+> not have to convert to a global ID number. But, I'm not sure how
+> libgpiod is going to know what "P5_6" is.
+
+There are two parts:
+  1. New kernel /dev/gpiochip[0-9]+ interface
+
+     Sample code comes with the kernel under tools/gpio/.
+     E.g.
+     root@koelsch:~# lsgpio -n gpiochip7
+     GPIO chip: gpiochip7, "e6055800.gpio", 26 GPIO lines
+      line  0: unnamed "SW30" [kernel active-low]
+      line  1: unnamed "SW31" [kernel active-low]
+      line  2: unnamed "SW32" [kernel active-low]
+      line  3: unnamed "SW33" [kernel active-low]
+      line  4: unnamed "SW34" [kernel active-low]
+      line  5: unnamed "SW35" [kernel active-low]
+      line  6: unnamed "SW36" [kernel active-low]
+      line  7: unnamed unused
+      line  8: unnamed unused
+      line  9: unnamed unused
+      line 10: unnamed unused
+      line 11: unnamed unused
+      line 12: unnamed unused
+      line 13: unnamed unused
+      line 14: unnamed unused
+      line 15: unnamed unused
+      line 16: unnamed unused
+      line 17: unnamed "regulator-vcc-sdhi0" [kernel output]
+      line 18: unnamed "regulator-vcc-sdhi1" [kernel output]
+      line 19: unnamed "regulator-vcc-sdhi2" [kernel output]
+      line 20: unnamed unused
+      line 21: unnamed unused
+      line 22: unnamed unused
+      line 23: unnamed unused
+      line 24: unnamed unused
+      line 25: unnamed unused
+
+  2. Userspace library libgpiod, incl. a few tools like
+gpioinfo/gpioset/gpioget.
+     These accept whatever reference to identify a GPIO.
+     As your driver fills in pins[i].name, I expect you can pass names
+like P5_6.
+
+Have fun! ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
