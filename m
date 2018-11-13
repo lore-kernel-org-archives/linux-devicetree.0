@@ -1,66 +1,122 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH net-next 2/2] net: nixge: Update device-tree bindings with v3.00
-Date: Mon, 12 Nov 2018 18:26:14 -0600
-Message-ID: <CAL_JsqLRNBmJgVcAynLtsYkSUJAyT2_eSTQcens6fa1j52+dNw@mail.gmail.com>
-References: <20181029231447.3690-1-alex.williams@ettus.com>
- <20181029231447.3690-2-alex.williams@ettus.com> <5bea0e95.1c69fb81.88799.a282@mx.google.com>
- <CAJZzcDhTKAXW4vomD2xazfDU=NWH6eAAbLubEhAo-SWuq5+EKQ@mail.gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ
+ Firmware bindings
+Date: Mon, 12 Nov 2018 16:28:56 -0800
+Message-ID: <20181113002856.GF22824@google.com>
+References: <1539257761-23023-1-git-send-email-tdas@codeaurora.org>
+ <1539257761-23023-2-git-send-email-tdas@codeaurora.org>
+ <CAP245DV4yK2u2tS_Jjgb1PBx+qkXPXBOs3w4THNDaBEw7WGDLg@mail.gmail.com>
+ <20181025224339.GB22824@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJZzcDhTKAXW4vomD2xazfDU=NWH6eAAbLubEhAo-SWuq5+EKQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20181025224339.GB22824@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alex.williams@ettus.com
-Cc: netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Miller <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <mdf@kernel.org>, Kees Cook <keescook@chromium.org>, Alex Williams <alex.williams@ni.com>
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Taniya Das <tdas@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Saravana Kannan <skannan@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 12, 2018 at 5:41 PM Alex Williams <alex.williams@ettus.com> wrote:
->
-> On Mon, Nov 12, 2018 at 3:36 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Mon, Oct 29, 2018 at 04:14:47PM -0700, alex.williams@ettus.com wrote:
-> > > From: Alex Williams <alex.williams@ni.com>
+On Thu, Oct 25, 2018 at 03:43:39PM -0700, Matthias Kaehlcke wrote:
+> Hi,
+> 
+> On Tue, Oct 23, 2018 at 05:23:34PM +0530, Amit Kucheria wrote:
+> > Hi Taniya,
+> > 
+> > Both the patches are missing v9 in their subject line - this threw off
+> > patchwork when trying to download the patches.
+> > 
+> > On Thu, Oct 11, 2018 at 5:06 PM Taniya Das <tdas@codeaurora.org> wrote:
 > > >
-> > > Now the DMA engine is free to float elsewhere in the system map.
-> > >
-> > > Signed-off-by: Alex Williams <alex.williams@ni.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/net/nixge.txt | 14 +++++++++++---
-> > >  1 file changed, 11 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/net/nixge.txt b/Documentation/devicetree/bindings/net/nixge.txt
-> > > index e55af7f0881a..d0f9fb520578 100644
-> > > --- a/Documentation/devicetree/bindings/net/nixge.txt
-> > > +++ b/Documentation/devicetree/bindings/net/nixge.txt
-> > > @@ -1,8 +1,14 @@
-> > >  * NI XGE Ethernet controller
-> > >
-> > >  Required properties:
-> > > -- compatible: Should be "ni,xge-enet-2.00"
-> > > -- reg: Address and length of the register set for the device
-> > > +- compatible: Should be "ni,xge-enet-3.00", but can be "ni,xge-enet-2.00" for
-> > > +              older device trees with DMA engines co-located in the address map,
-> > > +              with the one reg entry to describe the whole device.
-> > > +- reg: Address and length of the register set for the device. It contains the
-> > > +       information of registers in the same order as described by reg-names.
-> > > +- reg-names: Should contain the reg names
-> > > +     "dma":  DMA engine control and status region
-> > > +        "ctrl": MDIO and PHY control and status region
-> > >  - interrupts: Should contain tx and rx interrupt
-> > >  - interrupt-names: Should be "rx" and "tx"
-> > >  - phy-mode: See ethernet.txt file in the same directory.
-> > > @@ -13,7 +19,9 @@ Required properties:
-> > >  Examples (10G generic PHY):
-> > >       nixge0: ethernet@40000000 {
-> > >               compatible = "ni,xge-enet-2.00";
-> >
-> > Shouldn't the compatible change here?
-> >
-> That's an oops... Will fix.
->
-> Should I leave the old example for the version 2.00 format and create
-> another for 3.00?
+> > > Add QCOM cpufreq firmware device bindings for Qualcomm Technology Inc's
+> > > SoCs. This is required for managing the cpu frequency transitions which are
+> > > controlled by the hardware engine.
+> > 
+> > I tested these patches on the sdm845-mtp against 4.19 and found that
+> > the frequency gets stuck at the highest opp (the boost frequency)
+> > after running a couple of 'yes > /dev/null &' instances. Have you
+> > tested these against a mainline kernel?
+> > 
+> > See cpufreq statistics below:
+> > 
+> > linaro-test [rc=0]# cat policy?/scaling_cur_freq
+> > 300000
+> > 2803200
+> > 
+> > linaro-test [rc=0]# cat policy?/stats/time_in_state
+> > 300000 100840
+> > 403200 388
+> > 480000 71
+> > 576000 54
+> > 652800 22
+> > 748800 11
+> > 825600 5
+> > 902400 5
+> > 979200 9
+> > 1056000 3
+> > 1132800 2
+> > 1228800 5
+> > 1324800 8
+> > 1420800 2
+> > 1516800 1
+> > 1612800 0
+> > 1689600 0
+> > 1766400 392
+> > 825600 22048
+> > 902400 21
+> > 979200 4
+> > 1056000 15
+> > 1209600 6
+> > 1286400 0
+> > 1363200 1
+> > 1459200 0
+> > 1536000 0
+> > 1612800 1
+> > 1689600 0
+> > 1766400 0
+> > 1843200 2
+> > 1920000 2
+> > 1996800 0
+> > 2092800 0
+> > 2169600 0
+> > 2246400 0
+> > 2323200 0
+> > 2400000 0
+> > 2476800 0
+> > 2553600 0
+> > 2649600 0
+> > 2707200 0
+> > 2764800 0
+> > 2784000 0
+> > 2803200 79718
+> 
+> I can repro this on SDM845 with a v4.19 kernel.
+> 
+> Since the little cores don't have a boost frequency I think maxing out
+> can be expected with a high workload and no thermal throttling.
+> However the big cores have a boost frequency (2.803 MHz), so the
+> driver shouldn't be stuck at it. Though in practice I also wonder if
+> the ~1% 'boost' makes a big difference in terms of performance or CPU
+> overload ...
 
-No, we don't need every permutation for examples.
+>From Documentation/cpu-freq/boost.txt:
 
-Rob
+"Some CPUs support a functionality to raise the operating frequency of
+some cores in a multi-core package if certain conditions apply, mostly
+if the whole chip is not fully utilized and below it's intended thermal
+budget."
+
+According to this it is not per se an issue that the cores are
+operating at the boost frequency for a prolonged time. The use of the
+highest frequency can be expected with a certain system load and
+the/a boost frequency may be used unless a thermal or other conditions
+prevents it.
+
+I think the real question is: why is the last frequency automatically
+considered a boost frequency? On (my) SDM845 it is only about 1%
+higher than the previous one (2.803 GHz vs 2.784 GHz), that hardly
+seems like a 'boost'.
+
+Thanks
+
+Matthias
