@@ -1,43 +1,73 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH] dt-bindings: display: add binding for Innolux ee101ia-01d
- panel
-Date: Tue, 13 Nov 2018 13:42:05 +0100
-Message-ID: <20181113124205.29319-1-heiko@sntech.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: thierry.reding@gmail.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, Heiko Stuebner <heiko.stuebner@bq.com>
+Subject: [PATCH v2] power: supply: bq24190_charger: add support for bq24196 variant
+Date: Tue, 13 Nov 2018 13:47:53 +0100
+Message-ID: <20181113124753.29948-1-heiko@sntech.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sre@kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mdf@kernel.org, heiko@sntech.de, Heiko Stuebner <heiko.stuebner@bq.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvLnN0dWVibmVyQGJxLmNvbT4KClRoaXMgaXMgYSBw
-YW5lbCBoYW5kbGVkIHRocm91Z2ggdGhlIGdlbmVyaWMgbHZkcy1wYW5lbCBiaW5kaW5nLApzbyBv
-bmx5IG5lZWRzIGl0cyBhZGRpdGlvbmFsIGNvbXBhdGlibGUgc3BlY2lmaWVkLgoKU2lnbmVkLW9m
-Zi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvLnN0dWVibmVyQGJxLmNvbT4KLS0tCiAuLi4vYmlu
-ZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LGVlMTAxaWEtMDFkLnR4dCAgICAgICAgIHwgNyAr
-KysrKysrCiAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2
-NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1
-eCxlZTEwMWlhLTAxZC50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LGVlMTAxaWEtMDFkLnR4dCBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsZWUxMDFpYS0w
-MWQudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uZTVjYTRjY2Q1
-NWVkCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCxlZTEwMWlhLTAxZC50eHQKQEAgLTAsMCArMSw3IEBACitJ
-bm5vbHV4IENvcnBvcmF0aW9uIDEwLjEiIEVFMTAxSUEtMDFEIFdYR0EgKDEyODB4ODAwKSBMVkRT
-IHBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IHNob3VsZCBiZSAi
-aW5ub2x1eCxlZTEwMWlhLTAxZCIKKworVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0aCB0
-aGUgbHZkcy1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQKK2luIHBhbmVsLWx2ZHMu
-dHh0IGluIHRoaXMgZGlyZWN0b3J5LgotLSAKMi4xOC4wCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+From: Heiko Stuebner <heiko.stuebner@bq.com>
+
+The bq24196 is another variant of the bq24190 charger ic.
+Its register set is identical to the bq24192 and it even reuses
+the same part number (0x5).
+
+Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
+---
+This should go on top of the bq24192 support patches from Brian Masney /
+Jonathan Marek [0]
+
+[0] https://patchwork.kernel.org/patch/10663409/
+
+changes in v2:
+- add missing compatible to dt-binding
+
+ Documentation/devicetree/bindings/power/supply/bq24190.txt | 1 +
+ drivers/power/supply/bq24190_charger.c                     | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/power/supply/bq24190.txt b/Documentation/devicetree/bindings/power/supply/bq24190.txt
+index c8ac028bd3c7..ffe2be408bb6 100644
+--- a/Documentation/devicetree/bindings/power/supply/bq24190.txt
++++ b/Documentation/devicetree/bindings/power/supply/bq24190.txt
+@@ -5,6 +5,7 @@ Required properties:
+     * "ti,bq24190"
+     * "ti,bq24192"
+     * "ti,bq24192i"
++    * "ti,bq24196"
+ - reg: integer, I2C address of the charger.
+ - interrupts[-extended]: configuration for charger INT pin.
+ 
+diff --git a/drivers/power/supply/bq24190_charger.c b/drivers/power/supply/bq24190_charger.c
+index 4e64e6ac95c5..effa7c3c21e6 100644
+--- a/drivers/power/supply/bq24190_charger.c
++++ b/drivers/power/supply/bq24190_charger.c
+@@ -143,7 +143,7 @@
+ #define BQ24190_REG_VPRS_PN_MASK		(BIT(5) | BIT(4) | BIT(3))
+ #define BQ24190_REG_VPRS_PN_SHIFT		3
+ #define BQ24190_REG_VPRS_PN_24190			0x4
+-#define BQ24190_REG_VPRS_PN_24192			0x5 /* Also 24193 */
++#define BQ24190_REG_VPRS_PN_24192			0x5 /* Also 24193, 24196 */
+ #define BQ24190_REG_VPRS_PN_24192I			0x3
+ #define BQ24190_REG_VPRS_TS_PROFILE_MASK	BIT(2)
+ #define BQ24190_REG_VPRS_TS_PROFILE_SHIFT	2
+@@ -1973,6 +1973,7 @@ static const struct i2c_device_id bq24190_i2c_ids[] = {
+ 	{ "bq24190" },
+ 	{ "bq24192" },
+ 	{ "bq24192i" },
++	{ "bq24196" },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(i2c, bq24190_i2c_ids);
+@@ -1982,6 +1983,7 @@ static const struct of_device_id bq24190_of_match[] = {
+ 	{ .compatible = "ti,bq24190", },
+ 	{ .compatible = "ti,bq24192", },
+ 	{ .compatible = "ti,bq24192i", },
++	{ .compatible = "ti,bq24196", },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, bq24190_of_match);
+-- 
+2.18.0
