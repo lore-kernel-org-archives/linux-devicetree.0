@@ -1,73 +1,27 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v2] power: supply: bq24190_charger: add support for bq24196 variant
-Date: Tue, 13 Nov 2018 13:47:53 +0100
-Message-ID: <20181113124753.29948-1-heiko@sntech.de>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 3/5] media: sunxi: Add A10 CSI driver
+Date: Tue, 13 Nov 2018 10:48:51 -0200
+Message-ID: <CAOMZO5CjFt1dyu8KOK+jKd88x8hwGNy9aJ-sGgooS9970TGTVQ@mail.gmail.com>
+References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
+ <c53e1cdc3b139382b00ee06bf3980d3fd1742ec0.1542097288.git-series.maxime.ripard@bootlin.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c53e1cdc3b139382b00ee06bf3980d3fd1742ec0.1542097288.git-series.maxime.ripard@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sre@kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mdf@kernel.org, heiko@sntech.de, Heiko Stuebner <heiko.stuebner@bq.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media <linux-media@vger.kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@bq.com>
+On Tue, Nov 13, 2018 at 6:25 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 
-The bq24196 is another variant of the bq24190 charger ic.
-Its register set is identical to the bq24192 and it even reuses
-the same part number (0x5).
+> --- /dev/null
+> +++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
+> @@ -0,0 +1,275 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
----
-This should go on top of the bq24192 support patches from Brian Masney /
-Jonathan Marek [0]
+According to Documentation/process/license-rules.rst this should be:
 
-[0] https://patchwork.kernel.org/patch/10663409/
++// SPDX-License-Identifier: GPL-2.0+
 
-changes in v2:
-- add missing compatible to dt-binding
-
- Documentation/devicetree/bindings/power/supply/bq24190.txt | 1 +
- drivers/power/supply/bq24190_charger.c                     | 4 +++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/power/supply/bq24190.txt b/Documentation/devicetree/bindings/power/supply/bq24190.txt
-index c8ac028bd3c7..ffe2be408bb6 100644
---- a/Documentation/devicetree/bindings/power/supply/bq24190.txt
-+++ b/Documentation/devicetree/bindings/power/supply/bq24190.txt
-@@ -5,6 +5,7 @@ Required properties:
-     * "ti,bq24190"
-     * "ti,bq24192"
-     * "ti,bq24192i"
-+    * "ti,bq24196"
- - reg: integer, I2C address of the charger.
- - interrupts[-extended]: configuration for charger INT pin.
- 
-diff --git a/drivers/power/supply/bq24190_charger.c b/drivers/power/supply/bq24190_charger.c
-index 4e64e6ac95c5..effa7c3c21e6 100644
---- a/drivers/power/supply/bq24190_charger.c
-+++ b/drivers/power/supply/bq24190_charger.c
-@@ -143,7 +143,7 @@
- #define BQ24190_REG_VPRS_PN_MASK		(BIT(5) | BIT(4) | BIT(3))
- #define BQ24190_REG_VPRS_PN_SHIFT		3
- #define BQ24190_REG_VPRS_PN_24190			0x4
--#define BQ24190_REG_VPRS_PN_24192			0x5 /* Also 24193 */
-+#define BQ24190_REG_VPRS_PN_24192			0x5 /* Also 24193, 24196 */
- #define BQ24190_REG_VPRS_PN_24192I			0x3
- #define BQ24190_REG_VPRS_TS_PROFILE_MASK	BIT(2)
- #define BQ24190_REG_VPRS_TS_PROFILE_SHIFT	2
-@@ -1973,6 +1973,7 @@ static const struct i2c_device_id bq24190_i2c_ids[] = {
- 	{ "bq24190" },
- 	{ "bq24192" },
- 	{ "bq24192i" },
-+	{ "bq24196" },
- 	{ },
- };
- MODULE_DEVICE_TABLE(i2c, bq24190_i2c_ids);
-@@ -1982,6 +1983,7 @@ static const struct of_device_id bq24190_of_match[] = {
- 	{ .compatible = "ti,bq24190", },
- 	{ .compatible = "ti,bq24192", },
- 	{ .compatible = "ti,bq24192i", },
-+	{ .compatible = "ti,bq24196", },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, bq24190_of_match);
--- 
-2.18.0
+Same applies to other places in this patch.
