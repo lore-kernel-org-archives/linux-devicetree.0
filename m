@@ -1,34 +1,25 @@
-From: Gilad Ben-Yossef <gilad@benyossef.com>
-Subject: [PATCH 3/3] MAINTAINERS: ccree: add co-maintainer
-Date: Tue, 13 Nov 2018 09:40:37 +0000
-Message-ID: <1542102039-22256-4-git-send-email-gilad@benyossef.com>
-References: <1542102039-22256-1-git-send-email-gilad@benyossef.com>
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: [PATCH 0/3] make pin-controller use hwspinlock
+Date: Tue, 13 Nov 2018 10:51:39 +0100
+Message-ID: <20181113095142.32015-1-benjamin.gaignard@st.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542102039-22256-1-git-send-email-gilad@benyossef.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yael Chemla <yael.chemla@foss.arm.com>
-Cc: Ofir Drang <Ofir.Drang@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linus.walleij@linaro.org, robh+dt@kernel.org, alexandre.torgue@st.com
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Add Yael Chemla as co-maintainer of Arm TrustZone CryptoCell REE
-driver.
+This series allow to protect pin controller configuration registers
+with a hwspinlock to avoid conflicting accesses between processors.
 
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Benjamin Gaignard (3):
+  dt-bindings: pinctrl: stm32: Document hwlocks properties
+  pinctrl: stm32: protect configuration registers with a hwspinlock
+  ARM: dts: stm32: Add hwlock for pinctrl
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f485597..ab42acb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3388,6 +3388,7 @@ F:	include/linux/spi/cc2520.h
- F:	Documentation/devicetree/bindings/net/ieee802154/cc2520.txt
- 
- CCREE ARM TRUSTZONE CRYPTOCELL REE DRIVER
-+M:	Yael Chemla <yael.chemla@foss.arm.com>
- M:	Gilad Ben-Yossef <gilad@benyossef.com>
- L:	linux-crypto@vger.kernel.org
- S:	Supported
+ .../bindings/pinctrl/st,stm32-pinctrl.txt          |  1 +
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi          |  1 +
+ drivers/pinctrl/stm32/pinctrl-stm32.c              | 71 +++++++++++++++++++++-
+ 3 files changed, 72 insertions(+), 1 deletion(-)
+
 -- 
-2.7.4
+2.15.0
