@@ -1,387 +1,82 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH 06/15] Platform: OLPC: Add XO-1.75 EC driver
-Date: Tue, 13 Nov 2018 18:26:09 +0100
-Message-ID: <8881f5e48613c9d9d133e3964031fe2ab57f4801.camel@v3.sk>
-References: <20181010172300.317643-1-lkundrak@v3.sk>
-         <20181010172300.317643-7-lkundrak@v3.sk>
-         <CAHp75VcefOJHZ3WdZYrGEJFjqg2s1oJ75Jg9gKmQFre_ScAPZg@mail.gmail.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH] arm64: dts: marvell: armada_8k: reserve memory for ATF
+Date: Tue, 13 Nov 2018 17:29:50 +0000
+Message-ID: <20181113172950.GL30658@n2100.armlinux.org.uk>
+References: <20181113134807.53292-1-manu@freebsd.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VcefOJHZ3WdZYrGEJFjqg2s1oJ75Jg9gKmQFre_ScAPZg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20181113134807.53292-1-manu@freebsd.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, quozl@laptop.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, devel@driverdev.osuosl.or
+To: Emmanuel Vadot <manu@freebsd.org>
+Cc: jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Nov 13, 2018 at 02:48:07PM +0100, Emmanuel Vadot wrote:
+> Like 4436a371 for 37xx, reserve the PSCI area memory region so kernels
+> can call the code there.
+> Region address is taken from the ATF code [1] and is 2MiB aligned.
+> 
+> [1] plat/marvell/a8k/common/include/platform_def.h
+> 
+> Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+> ---
+>  arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> index 073610ac0a53..d8a79bb69de1 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> @@ -23,6 +23,21 @@
+>  		spi0 = &spi0;
+>  	};
+>  
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		/*
+> +		 * The PSCI firmware region depicted below is the default one
+> +		 * and should be updated by the bootloader.
+> +		 */
+> +		psci-area@4000000 {
+> +			reg = <0 0x4000000 0 0x200000>;
+> +			no-map;
+> +		};
+> +	};
 
-first of all -- thanks for such a careful review. It is very helpful.
+Does this really apply to everything?  I'm not sure it does.
+If I look at a memory dump from the Macchiatobin, I see:
 
-Wherever I don't respond to you, I'm just following what you wrote. It
-would perhaps be tiresome to respond to "Yes, will fix in next version"
-to every single point.
+ 04000000  00000000 00000007 00000005 00000040
+ 04000010  00000001 00001000 00000007 00000001
+ 04000020  00000008 00000000 00000009 00000000
+ 04000030  0000000a 00000000 fff7ffff ffffffff
+ 04000040  fbf7dfc7 fffffdff f2fffffe fbfdfffb
+ 04000050  af7ffefb fbfff7ff efbfffe3 5efdbf4d
+ 04000060  ff7effff fdffedff ff9f8fff ef9ffffd
+ 04000070  bffcffff ff7fff7a eff7ff7d 7fffbfff
+ 04000080  ffefefff fedfff7f ffdfffff ffbdff7f
+ 04000090  f3ff7fdb ffff76ff ffeffefe ffffff7f
+ 040000a0  9fffffff fff7ffdf edffffff fcffdfff
+ 040000b0  fffbefff fefffffb ffeffff7 6fffffff
+ 040000c0  ffdffdfb fd7fff9e fbefefbf eeefdfeb
+ 040000d0  bbdfbda3 9dfdef92 7b6ffaee fffde3fc
+ 040000e0  ff9efffd ff79ffdb ffaef57f ffaec1fe
+ 040000f0  bff7ffff fffeffdb effffb3f eaedffee
+ 04000100  fffffffb ffffffdf ffdffebf bfefbff3
+ 04000110  ffffffff fffffeff f7ffffff ffeeefff
+ 04000120  f7ffff7f fedfffff fffffffe fffefefe
+ 04000130  fbffff7d fffdffff fdffffff b7ffffff
+ 04000140  6fffffff ffee7fed fffffeff fffbfe6d
+ 04000150  fd5ff7ff f7bfffdc fdfff3c7 f7ff6f1d
 
-I'll be following up with a new version in a few days; I'm mostly done
-with this one but I've not finished addressing the followup ones.
+Doesn't look like firmware to me.
 
-On Fri, 2018-10-19 at 19:06 +0300, Andy Shevchenko wrote:
-> On Wed, Oct 10, 2018 at 8:24 PM Lubomir Rintel <lkundrak@v3.sk>
-> wrote:
-> > It's based off the driver from the OLPC kernel sources. Somewhat
-> > modernized and cleaned up, for better or worse.
-> > 
-> > Modified to plug into the olpc-ec driver infrastructure (so that
-> > battery
-> > interface and debugfs could be reused) and the SPI slave framework.
-> > +#include <asm/system_misc.h>
-> 
-> asm/* goes after linux/*
-> 
-> > +#include <linux/delay.h>
-> > +#include <linux/gpio/consumer.h>
-> > +#include <linux/spinlock.h>
-> > +#include <linux/completion.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/ctype.h>
-> > +#include <linux/olpc-ec.h>
-> > +#include <linux/spi/spi.h>
-> > +#include <linux/reboot.h>
-> > +#include <linux/input.h>
-> > +#include <linux/kfifo.h>
-> > +#include <linux/module.h>
-> > +#include <linux/power_supply.h>
-> 
-> Easy to maintain when it's sorted.
-> 
-> > +       { 0 },
-> 
-> Terminators are better without trailing comma.
-> 
-> > +#define EC_CMD_LEN             8
-> > +#define EC_MAX_RESP_LEN                16
-> > +#define LOG_BUF_SIZE           127
-> 
-> 127 sounds slightly strange. Is it by specification of protocol?
-> Would
-> it be better to define it 128 bytes / items?
-> 
-> > +static int olpc_xo175_ec_is_valid_cmd(u8 cmd)
-> > +{
-> > +       const struct ec_cmd_t *p;
-> > +
-> > +       for (p = olpc_xo175_ec_cmds; p->cmd; p++) {
-> > +               if (p->cmd == cmd)
-> > +                       return p->bytes_returned;
-> > +       }
-> > +
-> > +       return -1;
-> 
-> -EINVAL ?
-> 
-> > +}
-> > +static void olpc_xo175_ec_complete(void *arg);
-> 
-> Hmm... Can we avoid forward declaration?
-
-I don't think we can.
-
-> > +       channel = priv->rx_buf[0];
-> > +       byte = priv->rx_buf[1];
-> 
-> Maybe specific structures would fit better?
-> 
-> Like
-> 
-> struct olpc_ec_resp_hdr {
->  u8 channel;
->  u8 byte;
-> ...
-> }
-> 
-> > +               dev_warn(dev, "kbd/tpad not supported\n");
-> 
-> Please, spell it fully as touchpad and keyboard.
-> 
-> > +                       pm_wakeup_event(priv->pwrbtn->dev.parent,
-> > 1000);
-> 
-> Magic number.
-> 
-> > +                       /* For now, we just ignore the unknown
-> > events. */
-> 
-> dev_dbg(dev, "Ignored unknown event %.2x\n", byte);
-> 
-> ?
-> 
-> > if (isprint(byte)) {
-> > +                       priv->logbuf[priv->logbuf_len++] = byte;
-> > +                       if (priv->logbuf_len == LOG_BUF_SIZE)
-> > +                               olpc_xo175_ec_flush_logbuf(priv);
-> > +               }
-> 
-> You may consider to take everything and run %pE when printing instead
-> of %s.
-> 
-> > +static int olpc_xo175_ec_cmd(u8 cmd, u8 *inbuf, size_t inlen, u8
-> > *resp,
-> > +                                       size_t resp_len, void
-> > *ec_cb_arg)
-> > +{
-> > +       struct olpc_xo175_ec *priv = ec_cb_arg;
-> > +       struct device *dev = &priv->spi->dev;
-> > +       unsigned long flags;
-> > +       int nr_bytes;
-> > +       int ret = 0;
-> > +
-> > +       dev_dbg(dev, "CMD %x, %d bytes expected\n", cmd, resp_len);
-> > +
-> > +       if (inlen > 5) {
-> 
-> Magic number.
-> 
-> > +               dev_err(dev, "command len %d too big!\n",
-> > resp_len);
-> > +               return -EOVERFLOW;
-> > +       }
-> > +       WARN_ON(priv->suspended);
-> > +       if (priv->suspended)
-> 
-> if (WARN_ON(...)) ?
-> 
-> > +               return -EBUSY;
-> > +       if (resp_len > nr_bytes)
-> > +               resp_len = nr_bytes;
-> 
-> resp_len = min(resp_len, nr_bytes);
-> 
-> > +       priv->cmd[0] = cmd;
-> > +       priv->cmd[1] = inlen;
-> > +       priv->cmd[2] = 0;
-> 
-> Perhaps specific struct header for this?
-> 
-> > +       memset(resp, 0, resp_len);
-> 
-> Wouldn't be better to do this in where actual response has been
-> filled?
-> 
-> > +       if (!wait_for_completion_timeout(&priv->cmd_done,
-> > +                       msecs_to_jiffies(4000))) {
-> 
-> Magic number.
-> 
-> > +       }
-> > +       /* Deal with the results. */
-> 
-> Somehow feels noisy / unneeded comment.
-> 
-> > +       if (priv->cmd_state == CMD_STATE_ERROR_RECEIVED) {
-> > +               /* EC-provided error is in the single response byte
-> > */
-> > +               dev_err(dev, "command 0x%x returned error 0x%x\n",
-> > +                                                       cmd, priv-
-> > >resp[0]);
-> 
-> Indentation.
-> 
-> > +               ret = -EREMOTEIO;
-> > +       } else if (priv->resp_len != nr_bytes) {
-> > +               dev_err(dev, "command 0x%x returned %d bytes,
-> > expected %d bytes\n",
-> > +                                               cmd, priv-
-> > >resp_len, nr_bytes);
-> > +               ret = -ETIMEDOUT;
-> 
-> In the message I see nothing about timeout.
-> 
-> > +       } else {
-> > +       }
-> > +}
-> > +static int olpc_xo175_ec_set_event_mask(unsigned int mask)
-> > +{
-> > +       unsigned char args[2];
-> 
-> u8
-> 
-> > +
-> > +       args[0] = mask & 0xff;
-> > +       args[1] = (mask >> 8) & 0xff;
-> 
-> ...mask >> 0;
-> ...mask >> 8;
-> 
-> > +       return olpc_ec_cmd(CMD_WRITE_EXT_SCI_MASK, args, 2, NULL,
-> > 0);
-> > +}
-> > +
-> > +static void olpc_xo175_ec_restart(enum reboot_mode mode, const
-> > char *cmd)
-> > +{
-> > +       while (1) {
-> > +               olpc_ec_cmd(CMD_POWER_CYCLE, NULL, 0, NULL, 0);
-> > +               mdelay(1000);
-> > +       }
-> > +}
-> > +
-> > +static void olpc_xo175_ec_power_off(void)
-> > +{
-> > +       while (1) {
-> > +               olpc_ec_cmd(CMD_POWER_OFF, NULL, 0, NULL, 0);
-> > +               mdelay(1000);
-> > +       }
-> > +}
-> > +
-> > +#ifdef CONFIG_PM
-> > +static int olpc_xo175_ec_suspend(struct device *dev)
-> 
-> __maybe_unused  instead of ugly #ifdef?
-> 
-> > +{
-> > +       struct platform_device *pdev = to_platform_device(dev);
-> > +       struct olpc_xo175_ec *priv = platform_get_drvdata(pdev);
-> 
-> dev_get_drvdata() or how is it called?
-> 
-> > +       unsigned char hintargs[5];
-> 
-> struct olpc_ec_hint_cmd {
-> u8 ...
-> u32 ...
-> };
-> 
-> ?
-> 
-> > +       static unsigned int suspend_count;
-> 
-> u32 I suppose.
-> 
-> > +
-> > +       suspend_count++;
-> > +       dev_dbg(dev, "%s: suspend sync %08x\n", __func__,
-> > suspend_count);
-> 
-> __func__ can be issued if user asked for via Dynamic Debug interface.
-> 
-> > +       /*
-> > +        * First byte is 1 to indicate suspend, the rest is an
-> > integer
-> > +        * counter.
-> > +        */
-> > +       hintargs[0] = 1;
-> > +       memcpy(&hintargs[1], &suspend_count, 4);
-> > +       olpc_ec_cmd(CMD_SUSPEND_HINT, hintargs, 5, NULL, 0);
-> 
-> What do you need this counter for?
-
-It doesn't seem to be actually used in the EC; the firmware just
-includes it in its debug log. I'm not sure if all firmware versions
-behave this way and I'd prefer to keep it.
-
-I'm adding a comment.
-
-> 
-> > +       priv->suspended = true;
-> 
-> Hmm... Who is the user of it?
-> 
-> > +       return 0;
-> > +}
-> > +
-> > +static int olpc_xo175_ec_resume_noirq(struct device *dev)
-> > +{
-> > +       struct platform_device *pdev = to_platform_device(dev);
-> > +       struct olpc_xo175_ec *priv = platform_get_drvdata(pdev);
-> > +
-> > +       priv->suspended = false;
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int olpc_xo175_ec_resume(struct device *dev)
-> > +{
-> > +       struct platform_device *pdev = to_platform_device(dev);
-> > +       struct olpc_xo175_ec *priv = platform_get_drvdata(pdev);
-> > +       unsigned char x = 0;
-> 
-> u8
-> 
-> > +       priv->suspended = false;
-> 
-> Isn't it redundant since noirq callback above?
-> 
-> > +       /*
-> > +        * The resume hint is only needed if no other commands are
-> > +        * being sent during resume. all it does is tell the EC
-> > +        * the SoC is definitely awake.
-> > +        */
-> > +       olpc_ec_cmd(CMD_SUSPEND_HINT, &x, 1, NULL, 0);
-> > +
-> > +       /* Enable all EC events while we're awake */
-> > +       olpc_xo175_ec_set_event_mask(0xffff);
-> 
-> #define EC_ALL_EVENTS GENMASK(15, 0)
-> 
-> > +}
-> > +#endif
-> > +static struct platform_device *olpc_ec;
-> 
-> I would rather see this at the top of file.
-> 
-> > +static int olpc_xo175_ec_probe(struct spi_device *spi)
-> > +{
-> > +       if (olpc_ec) {
-> > +               dev_err(&spi->dev, "OLPC EC already
-> > registered.\n");
-> > +               return -EBUSY;
-> > +       }
-> 
-> It's racy against parallel probe called. I don't think it would be a
-> real issue, just let you know.
-> 
-> 
-> > +       /* Set up power button input device */
-> > +       priv->pwrbtn = devm_input_allocate_device(&spi->dev);
-> > +       if (!priv->pwrbtn)
-> > +               return -ENOMEM;
-> > +       priv->pwrbtn->name = "Power Button";
-> > +       priv->pwrbtn->dev.parent = &spi->dev;
-> > +       input_set_capability(priv->pwrbtn, EV_KEY, KEY_POWER);
-> > +       ret = input_register_device(priv->pwrbtn);
-> > +       if (ret) {
-> > +               dev_err(&spi->dev, "error registering input device:
-> > %d\n", ret);
-> > +               return ret;
-> > +       }
-> 
-> I would split out power button driver, but it's up to you.
-> 
-> 
-> > +       /* Enable all EC events while we're awake */
-> > +       olpc_xo175_ec_set_event_mask(0xffff);
-> 
-> See above about this magic.
-> 
-> > +}
-> > +#ifdef CONFIG_PM
-> > +       .suspend        = olpc_xo175_ec_suspend,
-> > +       .resume_noirq   = olpc_xo175_ec_resume_noirq,
-> > +       .resume         = olpc_xo175_ec_resume,
-> > +#endif
-> 
-> SET_SYSTEM_SLEEP_PM_OPS() ?
-> SET_NOIRQ_SYSTEM_SLEEP_PM_OPS() ?
-> 
-> > +static const struct of_device_id olpc_xo175_ec_of_match[] = {
-> > +       { .compatible = "olpc,xo1.75-ec" },
-> > +       { },
-> 
-> No comma for terminators.
-> 
-> > +};
-
-Thanks,
-Lubo
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
