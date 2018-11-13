@@ -1,39 +1,41 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: phy: Add Qualcomm Synopsys High-Speed
- USB PHY binding
-Date: Tue, 13 Nov 2018 12:59:38 +0800
-Message-ID: <CAAQ0ZWS-j06YM+Vs64RC_e1M9s_5bZfCWyL95SSaKVENJv7BNw@mail.gmail.com>
-References: <20181108070449.23572-1-shawn.guo@linaro.org> <20181108070449.23572-2-shawn.guo@linaro.org>
- <5bea0ed8.1c69fb81.8715.38b2@mx.google.com> <20181113034200.GD20049@tiger>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH v2 0/4] AM654: Add pinmux support
+Date: Tue, 13 Nov 2018 11:31:07 +0530
+Message-ID: <20181113060111.16374-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181113034200.GD20049@tiger>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Sriharsha Allenki <sallenki@codeaurora.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Nishanth Menon <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Vignesh R <vigneshr@ti.com>, linux-omap@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sriharsha,
+Add pinmux definitions and pinctrl regions for AM654 SoCs
+and enable uart and i2c.
 
-On Tue, Nov 13, 2018 at 11:42 AM Shawn Guo <shawn.guo@linaro.org> wrote:
-<snip>
-> > > +- qcom,init-seq:
-> > > +    Value type: <u32 array>
-> > > +    Definition: Should contain a sequence of <offset value delay> tuples to
-> > > +                program 'value' into phy register at 'offset' with 'delay'
-> > > +           in us afterwards.
-> >
-> > If we wanted this type of thing in DT, we'd have a generic binding (or
-> > forth).
->
-> Right now, this is a qualcomm usb phy specific bindings - first used in
-> qcom,usb-hs-phy.txt and I extended it a bit for my phy.  As this is not
-> a so good hardware description, I'm a little hesitated to make it
-> generic for other platforms to use in general.  What about we put off it
-> a little bit until we see more platforms need the same thing?
+v2:
+Add only minimum needed macros in dt-bindings include file
+New patches to illustrate pinmux using uart and i2c
 
-Are those register write sequences really required here?  At least,
-from the test I do, it still works with this property dropped.
 
-Shawn
+Tero Kristo (1):
+  arm64: dts: ti: k3-am65: Add pinctrl regions
+
+Vignesh R (3):
+  dt-bindings: pinctrl: k3: Introduce pinmux definitions
+  arm64: dts: ti: am654-base-board: Add pinmux for main uart0
+  arm64: dts: ti: k3-am654-base-board: Add I2C nodes
+
+ MAINTAINERS                                   |  1 +
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 60 +++++++++++++
+ arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       | 11 +++
+ arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    | 19 ++++
+ arch/arm64/boot/dts/ti/k3-am65.dtsi           |  7 ++
+ .../arm64/boot/dts/ti/k3-am654-base-board.dts | 86 +++++++++++++++++++
+ include/dt-bindings/pinctrl/k3.h              | 35 ++++++++
+ 7 files changed, 219 insertions(+)
+ create mode 100644 include/dt-bindings/pinctrl/k3.h
+
+-- 
+2.19.1
