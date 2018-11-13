@@ -1,34 +1,83 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: hwlock: Document STM32 hwspinlock
- bindings
-Date: Mon, 12 Nov 2018 20:13:49 -0600
-Message-ID: <20181113021349.GA9687@bogus>
-References: <20181112152342.6561-1-benjamin.gaignard@st.com>
- <20181112152342.6561-2-benjamin.gaignard@st.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V4 3/5] arm64: dts: imx: add imx8qxp support
+Date: Tue, 13 Nov 2018 02:18:20 +0000
+Message-ID: <AM0PR04MB4211E53C826A3CB4AF9042B980C20@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1541864596-15958-1-git-send-email-aisheng.dong@nxp.com>
+ <1541864596-15958-4-git-send-email-aisheng.dong@nxp.com>
+ <20181113020625.GA29822@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181112152342.6561-2-benjamin.gaignard@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Benjamin Gaignard <benjamin.gaignard@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181113020625.GA29822@bogus>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Nov 2018 16:23:39 +0100, Benjamin Gaignard wrote:
-> Add bindings for STM32 hardware spinlock device
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Tuesday, November 13, 2018 10:06 AM
+[...]
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
-> version 3 :
-> - fix clock name in properties description
-> version 2 :
-> - change clock name from hwspinlock to hsem to be align with hardware
->   documentation
+> On Sat, 10 Nov 2018 15:48:19 +0000, "A.s. Dong" wrote:
+> > i.MX 8QuadXPlus is a quad (4x) Cortex-A35 proccessor with powerful
+> > graphic and multimedia features. This patch adds the core SoC dtsi
+> > file support.
+> >
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: Shawn Guo <shawnguo@kernel.org>
+> > Cc: Sascha Hauer <kernel@pengutronix.de>
+> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> > ---
+> > v4->v5:
+> >  * update to new power domain binding
+> >    power domain subnodes removed from dts
+> >  * add LPCG clock nodes
+> >  * clock ID updated accordingly
+> > v2->v3:
+> >  * add more SoC specific compatible string to IP nodes
+> >  * move memory node into board dts
+> >  * change pd reg value into hex
+> >  * add more explanation about SoC in commit message
+> >  * add external clocks
+> >  * remove pmu compatible string which is not supported
+> > v1->v2:
+> >  * mu binding usage update
+> >  * no define for node address
+> >  * do not use '_' for node name
+> >  * drop 'fsl-' prefix for imx dtsi
+> >  * no defines for unit address
+> >  * generic node names
+> >  * range map for 32bit register
+> >  * separate board dts
+> >
+> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/arm/fsl.txt |   4 +
+> >  arch/arm64/boot/dts/freescale/imx8-ca35.dtsi  |  61 ++++
+> >  arch/arm64/boot/dts/freescale/imx8qxp.dtsi    | 409
+> ++++++++++++++++++++++++++
+> >  3 files changed, 474 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8-ca35.dtsi
+> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> >
 > 
->  .../bindings/hwlock/st,stm32-hwspinlock.txt        | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt
-> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thanks a lot for your quick review. 
+
+Regards
+Dong Aisheng
