@@ -1,76 +1,69 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v2 05/11] Doc: DT: thermal: new irq-mode for trip point
-Date: Tue, 13 Nov 2018 11:06:03 +0100
-Message-ID: <99e23b0a-ebe7-5c6b-05a7-14d49965b1e1@partner.samsung.com>
-References: <CGME20181107171039eucas1p2227bd4bc573fd0d2a3a97986004be16b@eucas1p2.samsung.com>
-        <1541610593-28542-1-git-send-email-l.luba@partner.samsung.com>
-        <1541610593-28542-6-git-send-email-l.luba@partner.samsung.com>
-        <CAJKOXPedw6OD1fWWVkYozgR03AWKz5t_-vWw0MV1jVGVR_UGTA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Parthiban Nallathambi <pn@denx.de>
+Subject: [PATCH v6 0/5] Add Actions Semi S700 pinctrl support
+Date: Tue, 13 Nov 2018 11:07:04 +0100
+Message-ID: <20181113100709.5615-1-pn@denx.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPedw6OD1fWWVkYozgR03AWKz5t_-vWw0MV1jVGVR_UGTA@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>
+To: linus.walleij@linaro.org, manivannan.sadhasivam@linaro.org, afaerber@suse.de, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, mp-cs@actions-semi.com, thomas.liau@actions-semi.com, linux@cubietech.com, pn@denx.de, sravanhome@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+This patchset adds pinctrl support for Actions Semi S700 SoC.
+Pinmux functions are only accessible for pin groups while pinconf
+parameters are available for both pin groups and individual pins.
 
-Thanks for the comments.
+pinctrl driver is verified using the Cubieboard7.
 
-On 11/12/18 9:51 AM, Krzysztof Kozlowski wrote:
-> On Wed, 7 Nov 2018 at 18:10, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>
-> 
-> Subject prefix:
-> dt-bindings: thermal:
-> 
->> Thermal trip point gets new flag in DT: irq-mode.
->> Trip point may have a new explicit flag which indicate
->> IRQ support when the temperature is met (so the thermal framework
->> deos not need to set polling for it).
->> It is useful for 'passive' cooling trip point,
->> which now will not register for polling the temperature.
-> 
-> You wrap lines in weird way making it more difficult to read.
-> I already asked about this while reviewing v1. Please fix it.
-> https://elixir.bootlin.com/linux/latest/source/Documentation/process/submitting-patches.rst#L633
->
-I will fix it in v3.
->>
->> Update documentation about irq-mode for trip points.
->>
->> Cc: Zhang Rui <rui.zhang@intel.com>
->> Cc: Eduardo Valentin <edubezval@gmail.com>
->> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   Documentation/devicetree/bindings/thermal/thermal.txt | 7 +++++++
->>   1 file changed, 7 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
->> index ca14ba9..bee21e3 100644
->> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
->> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
->> @@ -90,6 +90,10 @@ Required properties:
->>          "critical":     Hardware not reliable.
->>     Type: string
->>
->> +- irq-mode:            A flag indicating that trip rises irq, so there is no
-> 
-> "rises IRQ" (it is an abbreviation).
-ACK
-> 
-> Best regards,
-> Krzysztof
-> 
+common functionalities from s900 is moved for all Actions Semi
+SoC's usage.
+Common pad control configurations are moved to SoC specific
 
+dts entry for pinctrl depends on clock driver which is still under review:
+https://patchwork.kernel.org/patch/10533959/
 
-Regards,
-Lukasz
+Thanks,
+Saravanan
+Parthiban
+
+Changelog in v2
+- GPIO Interrupt support is added
+- Device tree entry for GPIO and Interrupt configured
+- GPIO and pinctrl define reorder, commit message findings fixed
+
+depends on owl GPIO Interrupt support
+https://patchwork.kernel.org/patch/10483477/
+
+Chnagelog in v3
+- Fixed 0-DAY bisectibility error
+
+Chnagelog in v4
+- Fixed 0-DAY sparse warnings on static declaration
+
+Chnagelog in v5
+- Rebase to mainline
+
+Chnagelog in v6
+- Rebase to 4.20-rc2 mainline
+- Fixed nitpick findings in v5
+
+Saravanan Sekar (5):
+  pinctrl: actions: define constructor generic to Actions Semi SoC's
+  pinctrl: actions: define pad control configurtion to SoC specific
+  dt-bindings: pinctrl: Add bindings for Actions Semi S700 SoC
+  pinctrl: actions: Add Actions Semi S700 pinctrl driver
+  arm64: dts: actions: Add pinctrl node for Actions Semi S700
+
+ .../bindings/pinctrl/actions,s700-pinctrl.txt |  170 ++
+ arch/arm64/boot/dts/actions/s700.dtsi         |   16 +
+ drivers/pinctrl/actions/Kconfig               |    6 +
+ drivers/pinctrl/actions/Makefile              |    1 +
+ drivers/pinctrl/actions/pinctrl-owl.c         |   71 +-
+ drivers/pinctrl/actions/pinctrl-owl.h         |  142 +-
+ drivers/pinctrl/actions/pinctrl-s700.c        | 1912 +++++++++++++++++
+ drivers/pinctrl/actions/pinctrl-s900.c        |  205 +-
+ 8 files changed, 2324 insertions(+), 199 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/actions,s700-pinctrl.txt
+ create mode 100644 drivers/pinctrl/actions/pinctrl-s700.c
+
+-- 
+2.17.2
