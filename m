@@ -1,98 +1,101 @@
-From: vitor <vitor.soares@synopsys.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: i3c: Document Synopsys DesignWare I3C
- master bindings
-Date: Tue, 13 Nov 2018 11:11:26 +0000
-Message-ID: <db819b2d-7426-4d40-fe8a-caf62cd2912f@synopsys.com>
-References: <1541697251-20392-1-git-send-email-soares@synopsys.com>
- <1541697251-20392-3-git-send-email-soares@synopsys.com>
- <20181112101703.024ba1f3@bbrezillon>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v4 00/26] drm/sun4i: Allwinner A64 MIPI-DSI support
+Date: Tue, 13 Nov 2018 16:46:07 +0530
+Message-ID: <20181113111633.20189-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181112101703.024ba1f3@bbrezillon>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, Vitor soares <vitor.soares@synopsys.com>
-Cc: wsa@the-dreams.de, linux-i2c@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de, psroka@cadence.com, agolec@cadence.com, adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com, alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com, rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, linus.walleij@linaro.org, Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org, nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se, mshettel@codeaurora.org, swboyd@chromium.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBI7FVLPQKGQE3FITOLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+This series fixed the issues related to work DSI on 2-lane panel
+which is reported on previous version[1].
 
-On 12/11/18 09:17, Boris Brezillon wrote:
-> On Thu,  8 Nov 2018 17:14:10 +0000
-> Vitor soares <vitor.soares@synopsys.com> wrote:
->
->> Document Synopsys DesignWare I3C master module
->>
->> Signed-off-by: Vitor soares <soares@synopsys.com>
->> ---
->> Changes in v3:
->> - Remove dummy characters
->>
->> Changes in v2:
->> - Address the changes in Documentation/devicetree/bindings/i3c/i3c.txt
->> - Add controller version on compatible string
->>
->>   .../devicetree/bindings/i3c/snps,dw-i3c-master.txt | 42 ++++++++++++++++++++++
->>   1 file changed, 42 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt
->>
->> diff --git a/Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt b/Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt
->> new file mode 100644
->> index 0000000..b930c09
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt
->> @@ -0,0 +1,42 @@
->> +Bindings for Synopsys DesignWare I3C master block
->> +=================================================
->> +
->> +Required properties:
->> +--------------------
->> +- compatible: shall be "snps,dw-i3c-master-1.00a"
->> +- clocks: shall reference the core_clk
-> Are you sure this IP only requires only one clock? If you're unsure,
-> you'd better have a clock-names prop.
-Yes, the controller only has this clock dependency to configure the SCL.
->
->> +- interrupts: the interrupt line connected to this I3C master
->> +- reg: Offset and length of I3C master registers
->> +
->> +Mandatory properties defined by the generic binding (see
->> +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
->> +
->> +- #address-cells: shall be set to 3
->> +- #size-cells: shall be set to 0
->> +
->> +Optional properties defined by the generic binding (see
->> +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
->> +
->> +- i2c-scl-hz
->> +- i3c-scl-hz
->> +
->> +I3C device connected on the bus follow the generic description (see
->> +Documentation/devicetree/bindings/i3c/i3c.txt for more details).
->> +
->> +Example:
->> +
->> +	i3c-master@2000 {
->> +		compatible = "snps,dw-i3c-master-1.00a";
->> +		#address-cells = <3>;
->> +		#size-cells = <0>;
->> +		reg = <0x02000 0x1000>;
->> +		interrupts = <0>;
->> +		clocks = <&i3cclk>;
->> +
->> +		eeprom@57{
->> +			compatible = "atmel,24c01";
->> +			reg = < 0x57 0x0 0x10>;
-> 			       ^ remove this white space.
->
->> +			pagesize = <0x8>;
->> +		};
->> +	};
->> +
+This supposed to be a clean series, where it support Allwinner A64 MIPI-DSI
+support for 4-lane, 2-lane DSI panels.
 
-Best regards,
+This series fixed all previous series comments along with checkpatch
+warnings/error.
 
-Vitor Soares
+Changes for v4:
+- droppoed untested CCU_FEATURE_FIXED_POSTDIV check code in
+  nkm min, max rate patches
+- create two patches for "Add Allwinner A64 MIPI DSI support"
+  one for has_mod_clk quirk and other one for A64 support
+- use existing driver code construct for hblk computation
+- dropped "Increase hfp packet overhead" patch [2], though BSP added
+  this but we have no issues as of now.
+  (no issues on panel side w/o this change)
+- create separate function for vblk computation 
+- enable vcc-dsi regulator in dsi_runtime_resume
+- collect Rob, Acked-by
+- update MAINTAINERS file for panel drivers
+- cleanup commit messages
+- fixed checkpatch warnings/errors
+
+[2] https://patchwork.kernel.org/patch/10657541/
+[1] https://patchwork.kernel.org/patch/10657619/
+
+Jagan Teki (26):
+  clk: sunxi-ng: a64: Fix gate bit of DSI DPHY
+  clk: sunxi-ng: Add check for minimal rate to NKM PLLs
+  clk: sunxi-ng: Add check for maximum rate to NKM PLLs
+  drm/sun4i: sun6i_mipi_dsi: Add has_mod_clk quirk
+  drm/sun4i: sun6i_mipi_dsi: Add Allwinner A64 MIPI DSI support
+  dt-bindings: sun6i-dsi: Add compatible for A64 MIPI DSI
+  drm/sun4i: sun6i_mipi_dsi: Add DSI Generic short write 2 param
+    transfer
+  drm/sun4i: sun6i_mipi_dsi: Fix VBP size calculation
+  drm/sun4i: sun6i_mipi_dsi: Fix TCON DRQ set bits
+  drm/sun4i: sun6i_mipi_dsi: Refactor vertical video start delay
+  drm/sun4i: sun6i_mipi_dsi: Fix DSI hbp timing value
+  drm/sun4i: sun6i_mipi_dsi: Fix DSI hblk timing calculation
+  drm/sun4i: sun6i_mipi_dsi: Add DSI hblk packet overhead
+  drm/sun4i: sun6i_mipi_dsi: Fix DSI hfp timing value
+  drm/sun4i: sun6i_mipi_dsi: Set proper vblk timing calculation
+  drm/sun4i: sun6i_mipi_dsi: Add support for VCC-DSI voltage regulator
+  dt-bindings: sun6i-dsi: Add VCC-DSI supply property
+  dt-bindings: panel: Add Bananapi S070WV20-CT16 ICN6211 MIPI-DSI to RGB
+    bridge
+  drm/panel: Add Bananapi S070WV20-CT16 ICN6211 MIPI-DSI to RGB bridge
+  dt-bindings: panel: Add Techstar TS8550B MIPI-DSI panel
+  drm/panel: Add Techstar TS8550B MIPI-DSI LCD panel
+  clk: sunxi-ng: a64: Add min and max rate for PLL_MIPI
+  dt-bindings: sun6i-dsi: Add compatible for A64 DPHY
+  arm64: dts: allwinner: a64: Add DSI pipeline
+  [DO NOT MERGE] arm64: dts: allwinner: bananapi-m64: Bananapi S070WV20-CT16 DSI panel
+  arm64: dts: allwinner: a64-amarula-relic: Enable Techstar TS8550B
+    MIPI-DSI panel
+
+ .../display/panel/bananapi,s070wv20-ct16.txt  |  31 +-
+ .../display/panel/techstar,ts8550b.txt        |  22 ++
+ .../bindings/display/sunxi/sun6i-dsi.txt      |   5 +
+ MAINTAINERS                                   |  12 +
+ .../allwinner/sun50i-a64-amarula-relic.dts    |  46 +++
+ .../dts/allwinner/sun50i-a64-bananapi-m64.dts |  42 +++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  45 +++
+ drivers/clk/sunxi-ng/ccu-sun50i-a64.c         |   4 +-
+ drivers/clk/sunxi-ng/ccu_nkm.c                |   6 +
+ drivers/clk/sunxi-ng/ccu_nkm.h                |   2 +
+ drivers/gpu/drm/panel/Kconfig                 |  18 +
+ drivers/gpu/drm/panel/Makefile                |   2 +
+ .../panel/panel-bananapi-s070wv20-icn6211.c   | 298 ++++++++++++++++
+ .../gpu/drm/panel/panel-techstar-ts8550b.c    | 324 ++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c        | 125 +++++--
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h        |   8 +
+ 16 files changed, 961 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/techstar,ts8550b.txt
+ create mode 100644 drivers/gpu/drm/panel/panel-bananapi-s070wv20-icn6211.c
+ create mode 100644 drivers/gpu/drm/panel/panel-techstar-ts8550b.c
+
+-- 
+2.18.0.321.gffc6fa0e3
