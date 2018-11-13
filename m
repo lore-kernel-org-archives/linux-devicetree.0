@@ -1,49 +1,35 @@
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 3/5] media: sunxi: Add A10 CSI driver
-Date: Tue, 13 Nov 2018 15:46:47 +0100
-Message-ID: <20181113154647.06900549@windsurf>
-References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
-        <c53e1cdc3b139382b00ee06bf3980d3fd1742ec0.1542097288.git-series.maxime.ripard@bootlin.com>
-        <CAOMZO5CjFt1dyu8KOK+jKd88x8hwGNy9aJ-sGgooS9970TGTVQ@mail.gmail.com>
-        <9a9616d2-a189-bd0e-e2e6-f84bdcb1dfd1@cisco.com>
-        <CAOMZO5DHfgV+iDo4ye7DV9CAA0QjSVXsYH1nbD2+5d9iE-uTCg@mail.gmail.com>
+From: <Andrei.Stefanescu@microchip.com>
+Subject: [PATCH 0/2] set regulator constraints for standby state
+Date: Tue, 13 Nov 2018 14:47:29 +0000
+Message-ID: <1542120469-15450-1-git-send-email-andrei.stefanescu@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5DHfgV+iDo4ye7DV9CAA0QjSVXsYH1nbD2+5d9iE-uTCg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Hans Verkuil <hansverk@cisco.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media <linux-media@vger.kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Nicolas.Ferre@microchip.com, Cristian.Birsan@microchip.com, Claudiu.Beznea@microchip.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrei.Stefanescu@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This patch series adds support for setting the regulator constraints
+when entering standby Linux state.
 
-On Tue, 13 Nov 2018 12:13:09 -0200, Fabio Estevam wrote:
+The new bindings are called regulator-state-standby and have
+the same syntax as regulator-state-mem/disk.
 
-> > Actually, LICENSES/preferred/GPL-2.0 has GPL-2.0-or-later
-> > as a valid license:
-> >
-> > Valid-License-Identifier: GPL-2.0-or-later
-> >
-> > Personally I very much prefer GPL-2.0-or-later since I think it is
-> > much clearer.  
-> 
-> I saw feedback from Greg to use the SPDX style from
-> Documentation/process/license-rules.rst.
-> 
-> Please check:
-> https://lkml.org/lkml/2018/11/10/232
+Before this patch, if the regulator driver implemented
+set_suspend_voltage/mode the rdev_warn message: "No configuration"
+(drivers/regulator/core.c:suspend_set_state) would be issued when
+resuming from standby.
 
-According to https://spdx.org/licenses/, i.e the reference SPDX site,
-GPL-2.0-or-later is the right thing to use, and GPL-2.0+ is
-"deprecated". But apparently Greg's feedback is "let's not used the
-SDPX style, as we don't want to change this all over".
+Andrei Stefanescu (2):
+  regulator: dt-bindings: add regulator-state-standby bindings
+  regulator: of: add support for parsing regulator-state-standby
 
-Best regards,
+ Documentation/devicetree/bindings/regulator/regulator.txt | 5 ++++-
+ drivers/regulator/of_regulator.c                          | 5 ++++-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+--=20
+2.7.4
