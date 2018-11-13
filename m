@@ -1,61 +1,110 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpu: mali-utgard: Add
- compatible for A64 Mali
-Date: Tue, 13 Nov 2018 14:10:46 +0100
-Message-ID: <20181113131046.lh3h66sq5z47imw3@flea>
-References: <20181113120054.17639-1-jagan@amarulasolutions.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="byukk266anelispr"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBV42VPPQKGQEWRBDYLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20181113120054.17639-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: [PATCH v3 1/2] dt-bindings/interrupt-controller: rzn1: Add RZ/N1 gpio irq mux binding
+Date: Tue, 13 Nov 2018 13:09:09 +0000
+Message-ID: <20181113130910.22130-2-phil.edworthy@renesas.com>
+References: <20181113130910.22130-1-phil.edworthy@renesas.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181113130910.22130-1-phil.edworthy@renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add device binding documentation for the Renesas RZ/N1 GPIO interrupt
+multiplexer.
 
---byukk266anelispr
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+---
+v3:
+ - Use 'interrupt-map' DT property correctly.
+v2:
+ - Use interrupt-map to allow the GPIO controller info to be specified
+   as part of the irq.
+ - Don't show status in binding examples.
+ - Don't show the soc/board split in binding doc.
+---
+ .../interrupt-controller/renesas,rzn1-mux.txt | 73 +++++++++++++++++++
+ 1 file changed, 73 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt
 
-On Tue, Nov 13, 2018 at 05:30:53PM +0530, Jagan Teki wrote:
-> Allwinner A64 has Mali-400MP2, so document the relevant compatible
-> as "allwinner,sun50i-a64-mali"
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> ---
-> Changes for v2:
-> - New patch, separated from previous version patch.
-> 
->  Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> index 63cd91176a68..a0ee62a5b221 100644
-> --- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> @@ -11,6 +11,7 @@ Required properties:
->        + allwinner,sun4i-a10-mali
->        + allwinner,sun7i-a20-mali
->        + allwinner,sun8i-h3-mali
-> +      + allwinner,sun50i-a64-mali
-
-It uses a reset property, so that must be documented as well later in
-that file.
-
-Maxime
-
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt
+new file mode 100644
+index 000000000000..6515880e25cc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt
+@@ -0,0 +1,73 @@
++* Renesas RZ/N1 GPIO Interrupt Multiplexer
++
++On Renesas RZ/N1 devices, there are several GPIO Controllers each with a number
++of interrupt outputs. All of the interrupts from the GPIO Controllers are passed
++to the GPIO Interrupt Multiplexer, which selects a sub-set of the interrupts to
++pass onto the system interrupt controller.
++
++A single node in the device tree is used to describe the GPIO IRQ Muxer.
++
++Required properties:
++- compatible: SoC-specific compatible string "renesas,<soc-specific>-gpioirqmux"
++  followed by "renesas,rzn1-gpioirqmux" as fallback. The SoC-specific compatible
++  strings must be one of:
++	"renesas,r9a06g032-gpioirqmux" for RZ/N1D
++	"renesas,r9a06g033-gpioirqmux" for RZ/N1S
++- reg: Base address and size of GPIO IRQ Muxer registers.
++- interrupts: List of output interrupts.
++- #interrupt-cells: Numder of cells in the input interrupt specifier, must be 1.
++- #address-cells: Must be 0.
++- interrupt-map-mask: must be 127.
++- interrupt-map: Standard property detailing the maps between input irqs and the
++  corresponding output irq. This consist of a list of:
++	<input-irq-spec phandle-to-interrupt-controller output-irq-spec>
++  The input-irq-spec is from 0 to 95, corresponding to the outputs of the GPIO
++  Controllers.
++
++Example:
++
++	The following is an example for the RZ/N1D SoC.
++
++	gpioirqmux: gpioirqmux@51000480 {
++		compatible = "renesas,r9a06g032-gpioirqmux",
++				"renesas,rzn1-gpioirqmux";
++		reg = <0x51000480 0x20>;
++		interrupts =
++			<GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
++
++		#interrupt-cells = <1>;
++		#address-cells = <0>;
++		interrupt-map-mask = <127>;
++		interrupt-map =
++			/* gpio2a 24, pin 146: ETH Port 1 IRQ */
++			<88 &gic GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
++			/* gpio2a 26, pin 148: TouchSCRN_IRQ */
++			<90 &gic GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpio2: gpio@5000d000 {
++		compatible = "snps,dw-apb-gpio";
++		reg = <0x5000d000 0x80>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clock-names = "bus";
++		clocks = <&sysctrl R9A06G032_HCLK_GPIO2>;
++
++		gpio2a: gpio-controller@0 {
++			compatible = "snps,dw-apb-gpio-port";
++			bank-name = "gpio2a";
++			gpio-controller;
++			#gpio-cells = <2>;
++			snps,nr-gpios = <32>;
++			reg = <0>;
++
++			interrupt-controller;
++			interrupt-parent = <&gpioirqmux>;
++			interrupts =  < 64 65 66 67 68 69 70 71
++					72 73 74 75 76 77 78 79
++					80 81 82 83 84 85 86 87
++					88 89 90 91 92 93 94 95 >;
++			#interrupt-cells = <2>;
++		};
++	};
 -- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---byukk266anelispr--
+2.17.1
