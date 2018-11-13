@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v4 09/26] drm/sun4i: sun6i_mipi_dsi: Fix TCON
- DRQ set bits
-Date: Tue, 13 Nov 2018 16:46:16 +0530
-Message-ID: <20181113111633.20189-10-jagan@amarulasolutions.com>
+Subject: [PATCH v4 10/26] drm/sun4i: sun6i_mipi_dsi: Refactor
+ vertical video start delay
+Date: Tue, 13 Nov 2018 16:46:17 +0530
+Message-ID: <20181113111633.20189-11-jagan@amarulasolutions.com>
 References: <20181113111633.20189-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBW7FVLPQKGQEKVB664A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBYPFVLPQKGQEUURKZKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181113111633.20189-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,41 +20,50 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-TCON DRQ set bits for non-burst DSI mode can computed via
-horizontal front porch instead of front porch + sync timings.
+Video start delay can be computed by subtracting total vertical
+timing with front porch timing and with adding 1 delay line for TCON.
 
-BSP code form BPI-M64-bsp is computing TCON DRQ set bits
-for non-burts as (from linux-sunxi/
+BSP code form BPI-M64-bsp is computing video start delay as
+(from linux-sunxi/
 drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
 
-=> panel->lcd_ht -    panel->lcd_x - panel->lcd_hbp
-=> (timmings->hor_front_porch + panel->lcd_hbp + panel->lcd_x)
-   - panel->lcd_x - panel->hbp
-=> timmings->hor_front_porch
-=> mode->hsync_start - mode->hdisplay
+u32 vfp = panel->lcd_vt - panel->lcd_y - panel->lcd_vbp;
+=> (panel->lcd_vt) - panel->lcd_y - (panel->lcd_vbp)
+=> (timmings->ver_front_porch + panel->lcd_vbp + panel->lcd_y)
+   - panel->lcd_y - (panel->lcd_vbp)
+=> timmings->ver_front_porch + panel->lcd_vbp + panel->lcd_y
+  			     - panel->lcd_y - panel->lcd_vbp
+=> timmings->ver_front_porch
 
-So, update the DRQ set bits accordingly.
+So, update the start delay computation accordingly.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index eeea977604ac..fc4252d96c38 100644
+index fc4252d96c38..f6e3df8d2490 100644
 --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
 +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -367,9 +367,9 @@ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
- 	struct mipi_dsi_device *device = dsi->device;
- 	u32 val = 0;
+@@ -358,7 +358,17 @@ static void sun6i_dsi_inst_init(struct sun6i_dsi *dsi,
+ static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
+ 					   struct drm_display_mode *mode)
+ {
+-	return mode->vtotal - (mode->vsync_end - mode->vdisplay) + 1;
++	u32 vfp = mode->vsync_start - mode->vdisplay;
++	u32 start_delay;
++
++	start_delay = mode->vtotal - vfp + 1;
++	if (start_delay > mode->vtotal)
++		start_delay -= mode->vtotal;
++
++	if (!start_delay)
++		start_delay = 1;
++
++	return start_delay;
+ }
  
--	if ((mode->hsync_end - mode->hdisplay) > 20) {
-+	if ((mode->hsync_start - mode->hdisplay) > 20) {
- 		/* Maaaaaagic */
--		u16 drq = (mode->hsync_end - mode->hdisplay) - 20;
-+		u16 drq = (mode->hsync_start - mode->hdisplay) - 20;
- 
- 		drq *= mipi_dsi_pixel_format_to_bpp(device->format);
- 		drq /= 32;
+ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
 -- 
 2.18.0.321.gffc6fa0e3
