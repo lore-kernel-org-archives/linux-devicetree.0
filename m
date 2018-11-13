@@ -1,88 +1,50 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v4 16/26] drm/sun4i: sun6i_mipi_dsi: Add support for VCC-DSI voltage regulator
-Date: Tue, 13 Nov 2018 16:46:23 +0530
-Message-ID: <20181113111633.20189-17-jagan@amarulasolutions.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v4 17/26] dt-bindings: sun6i-dsi: Add VCC-DSI
+ supply property
+Date: Tue, 13 Nov 2018 16:46:24 +0530
+Message-ID: <20181113111633.20189-18-jagan@amarulasolutions.com>
 References: <20181113111633.20189-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181113111633.20189-1-jagan@amarulasolutions.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com
-Cc: Jagan Teki <jagan@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBDXGVLPQKGQEAN6JYAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181113111633.20189-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some boards have VCC-DSI pin connected to voltage regulator which may
-not be turned on by default.
+Most of the Allwinner MIPI DSI controllers are supply with
+VCC-DSI pin. which need to supply for some of the boards to
+trigger the power.
 
-Add support for such boards by adding voltage regulator handling code to
-MIPI DSI driver.
+So, document the supply property so-that the required board
+can eable it via device tree.
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 14 ++++++++++++++
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  3 +++
- 2 files changed, 17 insertions(+)
+ Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 703722f7c81b..2ea33db61ae1 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -1026,6 +1026,12 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
- 		return PTR_ERR(base);
- 	}
+diff --git a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
+index 9fa6e7a758ad..adc7cdf129dd 100644
+--- a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
++++ b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
+@@ -28,6 +28,9 @@ Required properties:
+     first port should be the input endpoint, usually coming from the
+     associated TCON.
  
-+	dsi->regulator = devm_regulator_get(dev, "vcc-dsi");
-+	if (IS_ERR(dsi->regulator)) {
-+		dev_err(dev, "Couldn't get VCC-DSI supply\n");
-+		return PTR_ERR(dsi->regulator);
-+	}
++Optional properties:
++  - vcc-dsi-supply: the VCC-DSI power supply of the DSI encoder
 +
- 	dsi->regs = devm_regmap_init_mmio_clk(dev, "bus", base,
- 					      &sun6i_dsi_regmap_config);
- 	if (IS_ERR(dsi->regs)) {
-@@ -1107,6 +1113,13 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
- static int __maybe_unused sun6i_dsi_runtime_resume(struct device *dev)
- {
- 	struct sun6i_dsi *dsi = dev_get_drvdata(dev);
-+	int err;
-+
-+	err = regulator_enable(dsi->regulator);
-+	if (err) {
-+		dev_err(dsi->dev, "failed to enable VCC-DSI supply: %d\n", err);
-+		return err;
-+	}
- 
- 	reset_control_deassert(dsi->reset);
- 	if (dsi->variant->has_mod_clk)
-@@ -1141,6 +1154,7 @@ static int __maybe_unused sun6i_dsi_runtime_suspend(struct device *dev)
- 	if (dsi->variant->has_mod_clk)
- 		clk_disable_unprepare(dsi->mod_clk);
- 	reset_control_assert(dsi->reset);
-+	regulator_disable(dsi->regulator);
- 
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-index 597b62227019..0df60f84bab3 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-@@ -13,6 +13,8 @@
- #include <drm/drm_encoder.h>
- #include <drm/drm_mipi_dsi.h>
- 
-+#include <linux/regulator/consumer.h>
-+
- struct sun6i_dphy {
- 	struct clk		*bus_clk;
- 	struct clk		*mod_clk;
-@@ -32,6 +34,7 @@ struct sun6i_dsi {
- 	struct clk		*bus_clk;
- 	struct clk		*mod_clk;
- 	struct regmap		*regs;
-+	struct regulator	*regulator;
- 	struct reset_control	*reset;
- 	struct sun6i_dphy	*dphy;
+ Any MIPI-DSI device attached to this should be described according to
+ the bindings defined in ../mipi-dsi-bus.txt
  
 -- 
 2.18.0.321.gffc6fa0e3
