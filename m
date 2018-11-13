@@ -1,51 +1,54 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH v4 3/6] mfd: lochnagar: Add initial binding documentation
-Date: Tue, 13 Nov 2018 11:16:52 +0000
-Message-ID: <20181113111652.GV16508@imbe.wolfsonmicro.main>
-References: <20181108101405.14062-1-ckeepax@opensource.cirrus.com>
- <20181108101405.14062-4-ckeepax@opensource.cirrus.com>
- <20181113082825.GB3513@dell>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v4 03/26] clk: sunxi-ng: Add check for maximum rate to NKM PLLs
+Date: Tue, 13 Nov 2018 16:46:10 +0530
+Message-ID: <20181113111633.20189-4-jagan@amarulasolutions.com>
+References: <20181113111633.20189-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181113082825.GB3513@dell>
+In-Reply-To: <20181113111633.20189-1-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, broonie@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com
+Cc: Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 13, 2018 at 08:28:25AM +0000, Lee Jones wrote:
-> On Thu, 08 Nov 2018, Charles Keepax wrote:
-> 
-> > Lochnagar is an evaluation and development board for Cirrus
-> > Logic Smart CODEC and Amp devices. It allows the connection of
-> > most Cirrus Logic devices on mini-cards, as well as allowing
-> > connection of various application processor systems to provide a
-> > full evaluation platform. This driver supports the board
-> > controller chip on the Lochnagar board.
-> > 
-> > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> > ---
-> > 
-> > I have dropped Rob and Stephen's Acks from this patch on
-> > account of the scale of the changes since v3.
-> > 
-> > Changes since v3:
-> >  - Split the binding up into separate parts for the individual subsystems
-> >  - Added documentation for the fixed clocks that are done through DT
-> > 
-> > Thanks,
-> > Charles
-> > 
-> >  .../devicetree/bindings/clock/cirrus,lochnagar.txt |  89 +++++++++++++
-> >  .../devicetree/bindings/mfd/cirrus,lochnagar.txt   |  70 ++++++++++
-> 
-> I think these should all be seperate patches.
-> 
+Some NKM PLLs, frequency can be set above PLL working range.
 
-I will need to do a respin for the regulator changes anyway so
-can split them up then.
+Add a constraint for maximum supported rate. This way, drivers can
+specify which is maximum allowed rate for PLL.
 
-Thanks,
-Charles
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+---
+ drivers/clk/sunxi-ng/ccu_nkm.c | 3 +++
+ drivers/clk/sunxi-ng/ccu_nkm.h | 1 +
+ 2 files changed, 4 insertions(+)
+
+diff --git a/drivers/clk/sunxi-ng/ccu_nkm.c b/drivers/clk/sunxi-ng/ccu_nkm.c
+index 6b5ad990f802..b8b66cdd30bf 100644
+--- a/drivers/clk/sunxi-ng/ccu_nkm.c
++++ b/drivers/clk/sunxi-ng/ccu_nkm.c
+@@ -128,6 +128,9 @@ static unsigned long ccu_nkm_round_rate(struct ccu_mux_internal *mux,
+ 	if (rate < nkm->min_rate)
+ 		return nkm->min_rate;
+ 
++	if (nkm->max_rate && rate > nkm->max_rate)
++		return nkm->max_rate;
++
+ 	ccu_nkm_find_best(*parent_rate, rate, &_nkm);
+ 
+ 	rate = *parent_rate * _nkm.n * _nkm.k / _nkm.m;
+diff --git a/drivers/clk/sunxi-ng/ccu_nkm.h b/drivers/clk/sunxi-ng/ccu_nkm.h
+index ff5bd00f429f..c82590481188 100644
+--- a/drivers/clk/sunxi-ng/ccu_nkm.h
++++ b/drivers/clk/sunxi-ng/ccu_nkm.h
+@@ -36,6 +36,7 @@ struct ccu_nkm {
+ 
+ 	unsigned int		fixed_post_div;
+ 	unsigned int		min_rate;
++	unsigned int		max_rate;
+ 
+ 	struct ccu_common	common;
+ };
+-- 
+2.18.0.321.gffc6fa0e3
