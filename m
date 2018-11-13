@@ -1,120 +1,168 @@
-Return-Path: <SRS0=BvA/=NY=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
+Return-Path: <SRS0=Cu6b=NY=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr1410124.outbound.protection.outlook.com ([40.107.141.124]:17728
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726535AbeKNEmi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 13 Nov 2018 23:42:38 -0500
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH v4 1/2] pinctrl: Add RZ/A2 pin and gpio controller
+Date: Tue, 13 Nov 2018 18:43:09 +0000
+Message-ID: <OSAPR01MB15531B62B24C0DA3834592628AC20@OSAPR01MB1553.jpnprd01.prod.outlook.com>
 References: <20181107182733.62155-1-chris.brandt@renesas.com>
- <20181107182733.62155-2-chris.brandt@renesas.com> <CAMuHMdWePvqbv_SmkGQAWm8aynkXBjmf25BuA3O09_H9Xdtjyg@mail.gmail.com>
- <OSAPR01MB15531B62B24C0DA3834592628AC20@OSAPR01MB1553.jpnprd01.prod.outlook.com>
-In-Reply-To: <OSAPR01MB15531B62B24C0DA3834592628AC20@OSAPR01MB1553.jpnprd01.prod.outlook.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 13 Nov 2018 20:00:14 +0100
-Message-ID: <CAMuHMdWVGYaT+WOhks-8YwK0KO96COO0Rgvp9DNMhhQpZfA7kQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] pinctrl: Add RZ/A2 pin and gpio controller
-Content-Type: text/plain; charset="UTF-8"
-To: Chris Brandt <Chris.Brandt@renesas.com>
+ <20181107182733.62155-2-chris.brandt@renesas.com>
+ <CAMuHMdWePvqbv_SmkGQAWm8aynkXBjmf25BuA3O09_H9Xdtjyg@mail.gmail.com>
+In-Reply-To: <CAMuHMdWePvqbv_SmkGQAWm8aynkXBjmf25BuA3O09_H9Xdtjyg@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Jacopo Mondi <jacopo@jmondi.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Chris,
-
-On Tue, Nov 13, 2018 at 7:43 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> On Monday, November 12, 2018, Geert Uytterhoeven wrote:
-> > > +static const char * const rza2_gpio_names[] = {
-> > > +       "P0_0", "P0_1", "P0_2", "P0_3", "P0_4", "P0_5", "P0_6", "P0_7",
-> > > +       "P1_0", "P1_1", "P1_2", "P1_3", "P1_4", "P1_5", "P1_6", "P1_7",
-> > > +       "P2_0", "P2_1", "P2_2", "P2_3", "P2_4", "P2_5", "P2_6", "P2_7",
-> > > +       "P3_0", "P3_1", "P3_2", "P3_3", "P3_4", "P3_5", "P3_6", "P3_7",
-> > > +       "P4_0", "P4_1", "P4_2", "P4_3", "P4_4", "P4_5", "P4_6", "P4_7",
-> > > +       "P5_0", "P5_1", "P5_2", "P5_3", "P5_4", "P5_5", "P5_6", "P5_7",
-> > > +       "P6_0", "P6_1", "P6_2", "P6_3", "P6_4", "P6_5", "P6_6", "P6_7",
-> > > +       "P7_0", "P7_1", "P7_2", "P7_3", "P7_4", "P7_5", "P7_6", "P7_7",
-> > > +       "P8_0", "P8_1", "P8_2", "P8_3", "P8_4", "P8_5", "P8_6", "P8_7",
-> > > +       "P9_0", "P9_1", "P9_2", "P9_3", "P9_4", "P9_5", "P9_6", "P9_7",
-> > > +       "PA_0", "PA_1", "PA_2", "PA_3", "PA_4", "PA_5", "PA_6", "PA_7",
-> > > +       "PB_0", "PB_1", "PB_2", "PB_3", "PB_4", "PB_5", "PB_6", "PB_7",
-> > > +       "PC_0", "PC_1", "PC_2", "PC_3", "PC_4", "PC_5", "PC_6", "PC_7",
-> > > +       "PD_0", "PD_1", "PD_2", "PD_3", "PD_4", "PD_5", "PD_6", "PD_7",
-> > > +       "PE_0", "PE_1", "PE_2", "PE_3", "PE_4", "PE_5", "PE_6", "PE_7",
-> > > +       "PF_0", "PF_1", "PF_2", "PF_3", "P0_4", "PF_5", "PF_6", "PF_7",
-> > > +       "PG_0", "PG_1", "PG_2", "P0_3", "PG_4", "PG_5", "PG_6", "PG_7",
-> > > +       "PH_0", "PH_1", "PH_2", "PH_3", "PH_4", "PH_5", "PH_6", "PH_7",
-> > > +       /* port I does not exist */
-> >
-> > Hence shouldn't you have 8 NULL entries here?
->
-> But there is no such port named "I". And even in the dt-bindings and other
-> documentation, the global pin ID is based off and a world where "I" is not
-> in the alphabet. So if I put 8 NULLs here, wouldn't that screw up all the
-> indexing??
-
-I'd swear there's an "I" in port_names[], but upon checking again, it must
-have been my eyes that mislead me. Sorry for that.
-Hence please forget my comment above.
-
-> > > +static struct gpio_chip chip = {
-> > > +       .names = rza2_gpio_names,
-> >
-> > BTW, is their much value in filling gpio_chip.names[]?
-> > I had never seen that before.
->
-> It makes the files show up under /sys look nice.
->
-> For example, P5_6 is button SW4:
->
->  $ echo 912 > /sys/class/gpio/export
->
-> Then you end up with "/sys/class/gpio/P5_6/"
->
->  $ echo in > /sys/class/gpio/P5_6/direction
->  $ cat /sys/class/gpio/P5_6/direction
->  $ cat /sys/class/gpio/P5_6/value
-
-(Ah, the legacy and deprecated sysfs GPIO interface, being replaced
- by /dev/gpiochip[0-9]+ and https://github.com/brgl/libgpiod)
-
-Cool, I didn't know that.
-But you still need to know which number to write to the export file
-in the first place?
-
-> > > +       .get = rza2_chip_get,
-> > > +       .set = rza2_chip_set,
-> >
-> > You may want to implement .[gs]et_multiple(), too.
->
-> OK, I will have a look.
-
-You can add that later.  It doesn't add functionality, but may improve
-performance for bitbanging multiple pins.
-
-
-> > > +{
-> > > +       struct rza2_pinctrl_priv *priv =
-> > pinctrl_dev_get_drvdata(pctldev);
-> > > +       struct property *of_pins;
-> > > +       int i;
-> > > +       unsigned int *pins;
-> > > +       unsigned int *psel_val;
-> > > +       const char **pin_fn;
-> > > +       int ret, npins;
-> > > +       int gsel, fsel;
-> >
-> > Some people prefer "reverse Xmas tree ordering" i.e. sorted by decreasing
-> > declaration length.
->
-> https://lwn.net/Articles/758552/
->
-> "only a few maintainers insist on that, while most really do not care or
-> think that it's actively silly."
->
-> So are you one of those maintainers?????   :)
-
-Sorry, got baptised by Laurent...
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgR2VlcnQsDQoNCkFzIGFsd2F5cywgdGhhbmsgeW91IGZvciB5b3VyIHJldmlldyENCg0KDQpP
+biBNb25kYXksIE5vdmVtYmVyIDEyLCAyMDE4LCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQo+
+ID4gK2NvbmZpZyBQSU5DVFJMX1JaQTINCj4gPiArICAgICAgIGJvb2wgIlJlbmVzYXMgUlovQTIg
+Z3BpbyBhbmQgcGluY3RybCBkcml2ZXIiDQo+ID4gKyAgICAgICBkZXBlbmRzIG9uIE9GDQo+ID4g
+KyAgICAgICBkZXBlbmRzIG9uIEFSQ0hfUjdTOTIxMCB8fCBDT01QSUxFX1RFU1QNCj4gPiArICAg
+ICAgIHNlbGVjdCBHUElPTElCDQo+ID4gKyAgICAgICBzZWxlY3QgR0VORVJJQ19QSU5DVFJMX0dS
+T1VQUw0KPiA+ICsgICAgICAgc2VsZWN0IEdFTkVSSUNfUElOTVVYX0ZVTkNUSU9OUw0KPiA+ICsg
+ICAgICAgc2VsZWN0IEdFTkVSSUNfUElOQ09ORg0KPiANCj4gR2l2ZW4gdGhlIFBGU19JU0VMIGJp
+dCwgSSB0aGluayB5b3UgY2FuIHNlbGVjdCBHUElPTElCX0lSUUNISVAsIGFuZA0KPiBpbXBsZW1l
+bnQgaW50ZXJydXB0IHN1cHBvcnQgb24gR1BJT3MuDQo+IE9mIGNvdXJzZSB0aGF0IGNhbiBiZSBh
+ZGRlZCBsYXRlci4uLg0KDQpZZXMsIEkgd2FzIHRoaW5raW5nIHRoYXQgdG9vLg0KSSBoYXZlIGhh
+ZCB1c2VyIGFzayBhYm91dCB0aGF0IGJlZm9yZSwgc28gbWF5YmUgdGhhdCB3aWxsIGJlIGEgMjAx
+OSANCnRhc2suDQoNCg0KPiA+ICsgICAgICAgaGVscA0KPiA+ICsgICAgICAgICBUaGlzIHNlbGVj
+dHMgcGluY3RybCBkcml2ZXIgZm9yIFJlbmVzYXMgUlovQTIgcGxhdGZvcm1zLg0KPiANCj4gR1BJ
+TyBhbmQgcGluY3RybD8NCg0KVHJ1ZS4NCg0KDQo+ID4gK2VudW0gcGZjX3Bpbl9wb3J0X25hbWUg
+e1BPUlQwLCBQT1JUMSwgUE9SVDIsIFBPUlQzLCBQT1JUNCwgUE9SVDUsIFBPUlQ2LA0KPiBQT1JU
+NywNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBQT1JUOCwgUE9SVDksIFBPUlRBLCBQT1JU
+QiwgUE9SVEMsIFBPUlRELCBQT1JURSwNCj4gUE9SVEYsDQo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgUE9SVEcsIFBPUlRILCBQT1JUSiwgUE9SVEssIFBPUlRMLCBQT1JUTSwNCj4gUlpBMl9O
+UE9SVFN9Ow0KPiANCj4gVGhlIG9ubHkgcmVhc29uIGZvciB0aGlzIGVudW0gaXMgdG8gZml4IHRo
+ZSB2YWx1ZSBvZiBSWkEyX05QT1JUUywgIHJpZ2h0Pw0KDQpBdCB0aGUgbW9tZW50LCB5ZXMuDQpP
+cmlnaW5hbGx5IEkgdGhvdWdodCBJIHdvdWxkIG5lZWQgdGhlc2UuIEJ1dCBpbiB0aGUgZW5kLCBJ
+IGRpZCBub3QuDQpTbyBJIGNhbiBqdXN0IGRlZmluZSBSWkEyX05QT1JUUyBmb3Igbm93LiBNYXli
+ZSBmb3IgZnV0dXJlIFNvQ3MsDQpUaGF0IHZhbHVlIHdpbGwgY2hhbmdlIGRlcGVuZGluZyBvbiB0
+aGUgU29DLg0KDQoNCj4gVGhlIGFib3ZlIHR3byBzZXRzIG9mIG1hY3JvcyBzcGxpdCBpbmZvcm1h
+dGlvbiBpbiB0d28gbG9jYXRpb25zLCBhbmQNCj4gcGFydGlhbGx5DQo+IGR1cGxpY2F0ZXMgaXQu
+IEkgdGhpbmsgaXQgYmVjb21lcyBlYXNpZXIgdG8gcmVhZCBpZiB5b3UgY29tYmluZSB0aGVtLCBh
+bmQNCj4gZmFjdG9yDQo+IG91dCB0aGUgYWRkaXRpb24gb2YgdGhlIGJhc2UgYWRkcmVzcy4gRS5n
+Lg0KPiANCj4gICAgICAgICAjZGVmaW5lIFJaQTJfUERSKHBvcnQpICAgICAgICAoMHgwMDAwICsg
+KHBvcnQpICogMikgLyogUG9ydA0KPiBEaXJlY3Rpb24sIDE2LWJpdCAqLw0KPiANCj4gVGhlbiB5
+b3UgY2FuIHdyaXRlOg0KPiANCj4gICAgICAgICByZWcxNiA9IHJlYWR3KHBmY19iYXNlICsgUlpB
+Ml9QRFIocG9ydCkpOw0KPiAgICAgICAgIG1hc2sxNiA9IFJaQTJfUERSX01BU0sgPDwgKHBpbiAq
+IDIpOw0KPiAgICAgICAgIHJlZzE2ICY9IH5tYXNrMTY7DQo+ICAgICAgICAgd3JpdGV3KHJlZzE2
+LCBwZmNfYmFzZSArIFJaQTJfUERSKHBvcnQpKTsNCj4gDQo+ID4gK3N0YXRpYyB2b2lkIHJ6YTJf
+c2V0X3Bpbl9mdW5jdGlvbih2b2lkIF9faW9tZW0gKnBmY19iYXNlLCB1OCBwb3J0LCB1OA0KPiBw
+aW4sDQoNCk9LLiBJJ20gYWxsIGZvciAnZWFzaWVyIHRvIHJlYWQnIQ0KDQoNCj4gPiArICAgICAg
+IG1hc2sxNiA9IDB4MDMgPDwgKHBpbiAqIDIpOw0KPiANCj4gbWFzazE2ID0gUlpBMl9QRFJfTUFT
+SyA8PCAocGluICogMik7DQoNCk9LLg0KDQo+ID4gKyAgICAgICAvKiBQRlMgUmVnaXN0ZXIgV3Jp
+dGUgUHJvdGVjdCA6IE9GRiAqLw0KPiA+ICsgICAgICAgd3JpdGViKDB4MDAsIFJaQTJfUFdQUihw
+ZmNfYmFzZSkpOyAgICAgIC8qIEIwV0k9MCwgUEZTV0U9MCAqLw0KPiA+ICsgICAgICAgd3JpdGVi
+KDB4NDAsIFJaQTJfUFdQUihwZmNfYmFzZSkpOyAgICAgIC8qIEIwV0k9MCwgUEZTV0U9MSAqLw0K
+PiANCj4gI2RlZmluZSBQV1BSX0IwV0kgICAgICAgIEJJVCg3KSAgICAgICAgLyogQml0IFdyaXRl
+IERpc2FibGUgKi8NCj4gI2RlZmluZSBQV1BSX1BGU1dFICAgICAgIEJJVCg2KSAgICAgICAgLyog
+UEZTIFJlZ2lzdGVyIFdyaXRlIEVuYWJsZSAqLw0KDQpPSy4NCg0KPiA+ICsgICAgICAgLyogU2V0
+IFBpbiBmdW5jdGlvbiAoaW50ZXJydXB0IGRpc2FibGVkLCBJU0VMPTApICovDQo+ID4gKyAgICAg
+ICB3cml0ZWIoZnVuYywgUlpBMl9QRlMocGZjX2Jhc2UsIHBvcnQsIHBpbikpOw0KPiANCj4gI2Rl
+ZmluZSBQRlNfSVNFTCAgICAgICAgQklUKDYpICAgICAgICAvKiBJbnRlcnJ1cHQgU2VsZWN0ICov
+DQoNCk9LLg0KDQo+ID4gK3N0YXRpYyBpbnQgcnphMl9jaGlwX2dldF9kaXJlY3Rpb24oc3RydWN0
+IGdwaW9fY2hpcCAqY2hpcCwgdW5zaWduZWQgaW50DQo+IG9mZnNldCkNCj4gPiArew0KPiA+ICsg
+ICAgICAgc3RydWN0IHJ6YTJfcGluY3RybF9wcml2ICpwcml2ID0gZ3Bpb2NoaXBfZ2V0X2RhdGEo
+Y2hpcCk7DQo+ID4gKyAgICAgICB1OCBwb3J0ID0gb2Zmc2V0IC8gODsNCj4gPiArICAgICAgIHU4
+IHBpbiA9IG9mZnNldCAlIDg7DQo+IA0KPiBHUElPIG9mZnNldCBudW1iZXJzIGFyZSBpZGVudGlj
+YWwgdG8gUElOIG51bWJlcnMsIHJpZ2h0Pw0KPiBTbyB5b3UgY2FuIHVzZSBSWkEyX1BJTl9JRF9U
+T19QT1JUKCksIFJaQTJfUElOX0lEX1RPX1BJTigpDQo+IGZvciBjb25zaXN0ZW5jeS4NCg0KR29v
+ZCBwb2ludCENCg0KDQo+ID4gK3N0YXRpYyBpbnQgcnphMl9jaGlwX2RpcmVjdGlvbl9pbnB1dChz
+dHJ1Y3QgZ3Bpb19jaGlwICpjaGlwLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICB1bnNpZ25lZCBpbnQgb2Zmc2V0KQ0KPiA+ICt7DQo+ID4gKyAgICAgICBzdHJ1Y3Qg
+cnphMl9waW5jdHJsX3ByaXYgKnByaXYgPSBncGlvY2hpcF9nZXRfZGF0YShjaGlwKTsNCj4gPiAr
+ICAgICAgIHU4IHBvcnQgPSBvZmZzZXQgLyA4Ow0KPiA+ICsgICAgICAgdTggcGluID0gb2Zmc2V0
+ICUgODsNCj4gPiArDQo+ID4gKyAgICAgICByemEyX3Bpbl90b19ncGlvKHByaXYtPmJhc2UsIHBv
+cnQsIHBpbiwgR1BJT0ZfRElSX0lOKTsNCj4gDQo+IFBlcmhhcHMgcGFzcyBvZmZzZXQgdG8gcnph
+Ml9waW5fdG9fZ3BpbygpIGRpcmVjdGx5Pw0KDQpPSy4gSSBjYW4gZG8gdGhhdC4gU2F2ZXMgYSBj
+b3VwbGUgb2YgbGluZXMgOykNCg0KDQo+ID4gK3N0YXRpYyBpbnQgcnphMl9jaGlwX2dldChzdHJ1
+Y3QgZ3Bpb19jaGlwICpjaGlwLCB1bnNpZ25lZCBpbnQgb2Zmc2V0KQ0KPiA+ICt7DQo+ID4gKyAg
+ICAgICBzdHJ1Y3QgcnphMl9waW5jdHJsX3ByaXYgKnByaXYgPSBncGlvY2hpcF9nZXRfZGF0YShj
+aGlwKTsNCj4gPiArICAgICAgIHU4IHBvcnQgPSBvZmZzZXQgLyA4Ow0KPiA+ICsgICAgICAgdTgg
+cGluID0gb2Zmc2V0ICUgODsNCj4gPiArDQo+ID4gKyAgICAgICByZXR1cm4gKHJlYWRiKFJaQTJf
+UElEUihwcml2LT5iYXNlLCBwb3J0KSkgPj4gcGluKSAmIDE7DQo+IA0KPiBNaWdodCBiZSBlYXNp
+ZXIgdG8gcmVhZCBpZiB5b3UgbWFpbnRhaW4gc3ltbWV0cnkgd2l0aCBiZWxvdzoNCj4gDQo+ICAg
+ICByZXR1cm4gISEocmVhZGIoUlpBMl9QSURSKHByaXYtPmJhc2UsIHBvcnQpICYgQklUKHBpbikp
+Ow0KDQpDb29sLg0KDQo+ID4gKyAgICAgICBpZiAodmFsdWUpDQo+ID4gKyAgICAgICAgICAgICAg
+IG5ld192YWx1ZSB8PSAoMSA8PCBwaW4pOw0KPiANCj4gbmV3X3ZhbHVlIHw9IEJJVChwaW4pOw0K
+PiANCj4gPiArICAgICAgIGVsc2UNCj4gPiArICAgICAgICAgICAgICAgbmV3X3ZhbHVlICY9IH4o
+MSA8PCBwaW4pOw0KPiANCj4gbmV3X3ZhbHVlICY9IH5CSVQocGluKTsNCg0KSSB3b25kZXJlZCBh
+Ym91dCB1c2luZyBCSVQgbW9yZSBvZnRlbiBpbiB0aGUgY29kZS4NClRoYW5rcy4NCg0KPiA+ICtz
+dGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IHJ6YTJfZ3Bpb19uYW1lc1tdID0gew0KPiA+ICsgICAg
+ICAgIlAwXzAiLCAiUDBfMSIsICJQMF8yIiwgIlAwXzMiLCAiUDBfNCIsICJQMF81IiwgIlAwXzYi
+LCAiUDBfNyIsDQo+ID4gKyAgICAgICAiUDFfMCIsICJQMV8xIiwgIlAxXzIiLCAiUDFfMyIsICJQ
+MV80IiwgIlAxXzUiLCAiUDFfNiIsICJQMV83IiwNCj4gPiArICAgICAgICJQMl8wIiwgIlAyXzEi
+LCAiUDJfMiIsICJQMl8zIiwgIlAyXzQiLCAiUDJfNSIsICJQMl82IiwgIlAyXzciLA0KPiA+ICsg
+ICAgICAgIlAzXzAiLCAiUDNfMSIsICJQM18yIiwgIlAzXzMiLCAiUDNfNCIsICJQM181IiwgIlAz
+XzYiLCAiUDNfNyIsDQo+ID4gKyAgICAgICAiUDRfMCIsICJQNF8xIiwgIlA0XzIiLCAiUDRfMyIs
+ICJQNF80IiwgIlA0XzUiLCAiUDRfNiIsICJQNF83IiwNCj4gPiArICAgICAgICJQNV8wIiwgIlA1
+XzEiLCAiUDVfMiIsICJQNV8zIiwgIlA1XzQiLCAiUDVfNSIsICJQNV82IiwgIlA1XzciLA0KPiA+
+ICsgICAgICAgIlA2XzAiLCAiUDZfMSIsICJQNl8yIiwgIlA2XzMiLCAiUDZfNCIsICJQNl81Iiwg
+IlA2XzYiLCAiUDZfNyIsDQo+ID4gKyAgICAgICAiUDdfMCIsICJQN18xIiwgIlA3XzIiLCAiUDdf
+MyIsICJQN180IiwgIlA3XzUiLCAiUDdfNiIsICJQN183IiwNCj4gPiArICAgICAgICJQOF8wIiwg
+IlA4XzEiLCAiUDhfMiIsICJQOF8zIiwgIlA4XzQiLCAiUDhfNSIsICJQOF82IiwgIlA4XzciLA0K
+PiA+ICsgICAgICAgIlA5XzAiLCAiUDlfMSIsICJQOV8yIiwgIlA5XzMiLCAiUDlfNCIsICJQOV81
+IiwgIlA5XzYiLCAiUDlfNyIsDQo+ID4gKyAgICAgICAiUEFfMCIsICJQQV8xIiwgIlBBXzIiLCAi
+UEFfMyIsICJQQV80IiwgIlBBXzUiLCAiUEFfNiIsICJQQV83IiwNCj4gPiArICAgICAgICJQQl8w
+IiwgIlBCXzEiLCAiUEJfMiIsICJQQl8zIiwgIlBCXzQiLCAiUEJfNSIsICJQQl82IiwgIlBCXzci
+LA0KPiA+ICsgICAgICAgIlBDXzAiLCAiUENfMSIsICJQQ18yIiwgIlBDXzMiLCAiUENfNCIsICJQ
+Q181IiwgIlBDXzYiLCAiUENfNyIsDQo+ID4gKyAgICAgICAiUERfMCIsICJQRF8xIiwgIlBEXzIi
+LCAiUERfMyIsICJQRF80IiwgIlBEXzUiLCAiUERfNiIsICJQRF83IiwNCj4gPiArICAgICAgICJQ
+RV8wIiwgIlBFXzEiLCAiUEVfMiIsICJQRV8zIiwgIlBFXzQiLCAiUEVfNSIsICJQRV82IiwgIlBF
+XzciLA0KPiA+ICsgICAgICAgIlBGXzAiLCAiUEZfMSIsICJQRl8yIiwgIlBGXzMiLCAiUDBfNCIs
+ICJQRl81IiwgIlBGXzYiLCAiUEZfNyIsDQo+ID4gKyAgICAgICAiUEdfMCIsICJQR18xIiwgIlBH
+XzIiLCAiUDBfMyIsICJQR180IiwgIlBHXzUiLCAiUEdfNiIsICJQR183IiwNCj4gPiArICAgICAg
+ICJQSF8wIiwgIlBIXzEiLCAiUEhfMiIsICJQSF8zIiwgIlBIXzQiLCAiUEhfNSIsICJQSF82Iiwg
+IlBIXzciLA0KPiA+ICsgICAgICAgLyogcG9ydCBJIGRvZXMgbm90IGV4aXN0ICovDQo+IA0KPiBI
+ZW5jZSBzaG91bGRuJ3QgeW91IGhhdmUgOCBOVUxMIGVudHJpZXMgaGVyZT8NCg0KQnV0IHRoZXJl
+IGlzIG5vIHN1Y2ggcG9ydCBuYW1lZCAiSSIuIEFuZCBldmVuIGluIHRoZSBkdC1iaW5kaW5ncyBh
+bmQgb3RoZXINCmRvY3VtZW50YXRpb24sIHRoZSBnbG9iYWwgcGluIElEIGlzIGJhc2VkIG9mZiBh
+bmQgYSB3b3JsZCB3aGVyZSAiSSIgaXMgbm90DQppbiB0aGUgYWxwaGFiZXQuIFNvIGlmIEkgcHV0
+IDggTlVMTHMgaGVyZSwgd291bGRuJ3QgdGhhdCBzY3JldyB1cCBhbGwgdGhlDQppbmRleGluZz8/
+DQoNCg0KDQo+ID4gK3N0YXRpYyBzdHJ1Y3QgZ3Bpb19jaGlwIGNoaXAgPSB7DQo+ID4gKyAgICAg
+ICAubmFtZXMgPSByemEyX2dwaW9fbmFtZXMsDQo+IA0KPiBCVFcsIGlzIHRoZWlyIG11Y2ggdmFs
+dWUgaW4gZmlsbGluZyBncGlvX2NoaXAubmFtZXNbXT8NCj4gSSBoYWQgbmV2ZXIgc2VlbiB0aGF0
+IGJlZm9yZS4NCg0KSXQgbWFrZXMgdGhlIGZpbGVzIHNob3cgdXAgdW5kZXIgL3N5cyBsb29rIG5p
+Y2UuDQoNCkZvciBleGFtcGxlLCBQNV82IGlzIGJ1dHRvbiBTVzQ6DQoNCiAkIGVjaG8gOTEyID4g
+L3N5cy9jbGFzcy9ncGlvL2V4cG9ydA0KDQpUaGVuIHlvdSBlbmQgdXAgd2l0aCAiL3N5cy9jbGFz
+cy9ncGlvL1A1XzYvIg0KDQogJCBlY2hvIGluID4gL3N5cy9jbGFzcy9ncGlvL1A1XzYvZGlyZWN0
+aW9uDQogJCBjYXQgL3N5cy9jbGFzcy9ncGlvL1A1XzYvZGlyZWN0aW9uDQogJCBjYXQgL3N5cy9j
+bGFzcy9ncGlvL1A1XzYvdmFsdWUNCg0KDQo+ID4gKyAgICAgICAuZ2V0ID0gcnphMl9jaGlwX2dl
+dCwNCj4gPiArICAgICAgIC5zZXQgPSByemEyX2NoaXBfc2V0LA0KPiANCj4gWW91IG1heSB3YW50
+IHRvIGltcGxlbWVudCAuW2dzXWV0X211bHRpcGxlKCksIHRvby4NCg0KT0ssIEkgd2lsbCBoYXZl
+IGEgbG9vay4NCg0KDQo+ID4gK3N0cnVjdCBwaW5jdHJsX2dwaW9fcmFuZ2UgZ3Bpb19yYW5nZTsN
+Cj4gDQo+IFBsZWFzZSBtYWtlIHRoaXMgc3RhdGljLg0KPiBPciBldmVuIGJldHRlciwgc3RvcmUg
+aXQgaW4gcnphMl9waW5jdHJsX3ByaXY/DQoNCk9LLg0KDQoNCj4gPiArICAgICAgIGZvciAoaSA9
+IDA7IGkgPCBSWkEyX05QSU5TOyBpKyspIHsNCj4gPiArICAgICAgICAgICAgICAgdW5zaWduZWQg
+aW50IHBpbiA9IFJaQTJfUElOX0lEX1RPX1BJTihpKTsNCj4gPiArICAgICAgICAgICAgICAgdW5z
+aWduZWQgaW50IHBvcnQgPSBSWkEyX1BJTl9JRF9UT19QT1JUKGkpOw0KPiA+ICsNCj4gPiArICAg
+ICAgICAgICAgICAgcGluc1tpXS5udW1iZXIgPSBpOw0KPiA+ICsgICAgICAgICAgICAgICBwaW5z
+W2ldLm5hbWUgPSBkZXZtX2thc3ByaW50Zihwcml2LT5kZXYsIEdGUF9LRVJORUwsDQo+ICJQJWNf
+JXUiLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBw
+b3J0X25hbWVzW3BvcnRdLCBwaW4pOw0KPiANCj4gVGhlc2UgYXJlIGlkZW50aWNhbCB0byByemEy
+X2dwaW9fbmFtZXNbXSwgc28gY2FuJ3QgeW91IHVzZSB0aG9zZT8NCg0KR29vZCBwb2ludCEgSSds
+bCB0cnkgdGhhdC4NCg0KDQo+ID4gK3sNCj4gPiArICAgICAgIHN0cnVjdCByemEyX3BpbmN0cmxf
+cHJpdiAqcHJpdiA9DQo+IHBpbmN0cmxfZGV2X2dldF9kcnZkYXRhKHBjdGxkZXYpOw0KPiA+ICsg
+ICAgICAgc3RydWN0IHByb3BlcnR5ICpvZl9waW5zOw0KPiA+ICsgICAgICAgaW50IGk7DQo+ID4g
+KyAgICAgICB1bnNpZ25lZCBpbnQgKnBpbnM7DQo+ID4gKyAgICAgICB1bnNpZ25lZCBpbnQgKnBz
+ZWxfdmFsOw0KPiA+ICsgICAgICAgY29uc3QgY2hhciAqKnBpbl9mbjsNCj4gPiArICAgICAgIGlu
+dCByZXQsIG5waW5zOw0KPiA+ICsgICAgICAgaW50IGdzZWwsIGZzZWw7DQo+IA0KPiBTb21lIHBl
+b3BsZSBwcmVmZXIgInJldmVyc2UgWG1hcyB0cmVlIG9yZGVyaW5nIiBpLmUuIHNvcnRlZCBieSBk
+ZWNyZWFzaW5nDQo+IGRlY2xhcmF0aW9uIGxlbmd0aC4NCg0KaHR0cHM6Ly9sd24ubmV0L0FydGlj
+bGVzLzc1ODU1Mi8NCg0KIm9ubHkgYSBmZXcgbWFpbnRhaW5lcnMgaW5zaXN0IG9uIHRoYXQsIHdo
+aWxlIG1vc3QgcmVhbGx5IGRvIG5vdCBjYXJlIG9yDQp0aGluayB0aGF0IGl0J3MgYWN0aXZlbHkg
+c2lsbHkuIg0KDQpTbyBhcmUgeW91IG9uZSBvZiB0aG9zZSBtYWludGFpbmVycz8/Pz8/ICAgOikN
+Cg0KDQo+ID4gKyAgICAgICBkZXZfZGJnKHByaXYtPmRldiwgIlBhcnNlZCAlcyB3aXRoICVkIHBp
+bnNcbiIsIG5wLT5uYW1lLCBucGlucyk7DQo+IA0KPiAlcE9GIC4uLiBucA0KDQpPSy4NCg0KDQo+
+ID4gK3JlbW92ZV9ncm91cDoNCj4gPiArICAgICAgIHBpbmN0cmxfZ2VuZXJpY19yZW1vdmVfZ3Jv
+dXAocGN0bGRldiwgZ3NlbCk7DQo+ID4gKw0KPiA+ICsgICAgICAgZGV2X2luZm8ocHJpdi0+ZGV2
+LCAiVW5hYmxlIHRvIHBhcnNlIERUIG5vZGUgJXNcbiIsIG5wLT5uYW1lKTsNCj4gDQo+IGRldl9l
+cnI/DQo+IA0KPiAlcE9GIC4uLiBucA0KDQpUaGFua3MuDQoNCg0KDQpDaHJpcw0K
