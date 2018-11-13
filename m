@@ -1,134 +1,99 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v3 17/25] dt-bindings: panel: Add Bananapi S070WV20-CT16
- ICN6211 MIPI-DSI to RGB bridge
-Date: Tue, 13 Nov 2018 08:56:08 +0100
-Message-ID: <eb23f0f8-0270-d4fa-2cac-5b65ee4af42c@samsung.com>
-References: <20181026144344.27778-1-jagan@amarulasolutions.com>
-        <CGME20181029111305epcas5p2ee0ca644470de4e036762e000afbb71b@epcas5p2.samsung.com>
-        <20181026144344.27778-18-jagan@amarulasolutions.com>
-        <3c4c8a08-8c1e-1ac6-2b53-81389d69c97b@samsung.com>
-        <CAGb2v66ENhmNXPz4PfdRJjNUNdpDNZYX2a3SH8AD6SMe9g2zLA@mail.gmail.com>
-        <bfe28e8d-3786-d35d-a589-abed9ee8e7d5@samsung.com>
-        <CAMty3ZAWkX8YSRzFs_GS2O4+=pf68e4EuSMym+_XpCe3_4-2yw@mail.gmail.com>
-        <25c24350-4acd-68b8-ef5d-75a60094f0b6@samsung.com>
-        <CAMty3ZDTAiW=Lx2H4WvdsdJRYsVe1CpCJx7D0f7yANx7Lx25PA@mail.gmail.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v3 0/7] spi: add support for octo mode
+Date: Tue, 13 Nov 2018 13:30:24 +0530
+Message-ID: <468e7b5f-8840-2fce-2b47-325eeed577e4@ti.com>
+References: <1540287311-1572-1-git-send-email-yogeshnarayan.gaur@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMty3ZDTAiW=Lx2H4WvdsdJRYsVe1CpCJx7D0f7yANx7Lx25PA@mail.gmail.com>
+In-Reply-To: <1540287311-1572-1-git-send-email-yogeshnarayan.gaur@nxp.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.co
+To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "broonie@kernel.org" <broonie@kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10.11.2018 08:32, Jagan Teki wrote:
-> On Wed, Nov 7, 2018 at 2:41 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
->> On 06.11.2018 19:08, Jagan Teki wrote:
->>> On Wed, Oct 31, 2018 at 2:45 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
->>>> On 31.10.2018 09:58, Chen-Yu Tsai wrote:
->>>>> On Wed, Oct 31, 2018 at 4:53 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
->>>>>> On 26.10.2018 16:43, Jagan Teki wrote:
->>>>>>> Bananapi S070WV20-CT16 ICN6211 is 800x480, 4-lane MIPI-DSI to RGB
->>>>>>> bridge panel, which is available on same PCB with 24-bit RGB interface.
->>>>>>>
->>>>>>> So, this patch adds DSI specific binding details on existing
->>>>>>> dt-bindings file.
->>>>>>>
->>>>>>> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
->>>>>>> ---
->>>>>>> Changes for v3:
->>>>>>> - Use existing binding doc and update dsi details
->>>>>>> Changes for v2:
->>>>>>> - none
->>>>>>>
->>>>>>>  .../display/panel/bananapi,s070wv20-ct16.txt  | 31 +++++++++++++++++--
->>>>>>>  1 file changed, 29 insertions(+), 2 deletions(-)
->>>>>>>
->>>>>>> diff --git a/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
->>>>>>> index 35bc0c839f49..b7855dc7c66f 100644
->>>>>>> --- a/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
->>>>>>> +++ b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
->>>>>>> @@ -1,12 +1,39 @@
->>>>>>>  Banana Pi 7" (S070WV20-CT16) TFT LCD Panel
->>>>>>>
->>>>>>> +S070WV20-CT16 is 7" 800x480 panel connected through a 24-bit RGB interface.
->>>>>>> +
->>>>>>> +Depending on the variant, the PCB attached to the panel module either
->>>>>>> +supports DSI, or DSI + 24-bit RGB. DSI is converted to 24-bit RGB via
->>>>>>> +an onboard ICN6211 MIPI DSI - RGB bridge chip, then fed to the panel
->>>>>>> +itself
->>>>>> As I understand this is display board, which contains 'pure' RGB panel
->>>>>> S070WV20-CT16 and optionally ICN6211 DSI->RGB bridge.
->>>>>> These are separate devices, just connected by vendor to simplify its
->>>>>> assembly. Why don't you create then bridge driver for ICN6211 and RGB
->>>>>> panel driver for S070WV20-CT16 - it looks more generic.
->>>>>> Then you can describe both in dts and voila.
->>>>>> Creating drivers for every combo of devices (panel + bridge), just
->>>>>> because some vendor sells them together seems incorrect - we have
->>>>>> devicetree for it.
->>>>> Rob suggested this, and also the opposite: using the same
->>>>> "bananapi,s070wv20-ct16"
->>>>> compatible string for both types of connections, and have the driver deal with
->>>>> detecting the bus type.
->>>>>
->>>>> The thing about the bridge chip is that there's no available datasheet that
->>>>> describes all the parts of the init sequence, in fact none at all. I managed
->>>>> to work out some bits, but the others remain a mystery and must be hard-coded
->>>>> to match the panel. That would work against having a generic bridge driver.
->>>> But it is common for many chips - 1st version of the driver is developed
->>>> on one platform and it supports only one configuration, if next platform
->>>> with the same cheap appears the driver is augmented if necessary.
->>> At-least few of the commands from panel initialization code, the
->>> respective opcode data values are based on panel timings and even
->>> clock value is different in DSI. I think it look hard to try bridge
->>> driver for these restrictions, do you have any suggestions?
->>
->> Where do you see an issue? Since panel is RGB it should have no
->> initialization sequence (beside regulator/gpio power on/off), so the
->> only thing to do is to figure out which regulators/gpios belongs to
->> which component - with publicly available specs it should be doable.
->>
->> The whole initialization sequence is for the bridge, so you put it into
->> bridge driver, for starters it can be hardcoded.
-> Yes, I understand we can move regulators/gpio setup separately and
-> though we hardcode the init sequence there is difference  in clock for
-> DSI(which I mentioned in previous mail). DSI panel can't work with
-> clock used by RGB panel-simple.
+Hi Yogesh
 
+On 23/10/18 3:07 PM, Yogesh Narayan Gaur wrote:
+> Add support for octo mode IO data transfer.
+> Micron flash, mt35xu512aba, supports octal mode data transfer and
+> NXP FlexSPI controller supports 8 data lines for data transfer (Rx/Tx).
+> 
+> Patch series
+> * Add support for octo mode flags and parsing of same in spi driver.
+> * Add parsing logic for spi-mem framework and m25p80.c device file.
+> * Add opcodes for octo I/O commands in spi-nor framework, Read and Write proto for (1-1-8/1-8-8) mode.
+>   Opcodes are added as per octal data IO commands required for mt35xu512aba [1] flash.
+> * Add mode bit required for octo mode in nxp-fspi driver [2].
+> * Define binding property 'spi-rx/tx-bus-width' for LX2160ARDB target [2].
+> 
 
-If you mean pixel clock from timings in next patch it seems incorrect.
-Pixel clock should be always
-
-htotal * vtotal * vrefresh, in case of drm_display_mode result should be
-divided by 1000 (as .clock is in kHz).
-
-With timings provided there you have: 928*525*60 = 29232000
-
-So pixel clock should be 29232, if other timings are correct. DSI clock
-is a different thing and it is private thing of DSI bridge/panel it
-should not be exposed via drm_display_mode.
-
+You may have to rebase this series to avoid conflicts with recent spi.h
+changes. Also, I suggest merging patches in [1] with this series if you
+plan to post another version so that all bits are at one place.
 
 Regards
+Vignesh
 
-Andrzej
+> Cherry pick below 2 patches (from: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git):
+>     c639f871febe6667d9afce28108c634e5636c735 spi: spi-mem: Fix inverted logic in op sanity check
+>     db122eb8a749a1eff038f9a282c620ab16c4be1d spi: spi-mem: Add extra sanity checks on the op param
+> 
+> Tested on LX2160ARDB target with nxp-fspi driver, below are
+> Read performance number of 1-1-1 and 1-1-8 read protocol.
+> 
+>  root@lxxx:~# cat /proc/mtd
+>  dev:    size   erasesize  name
+>  mtd0: 04000000 00001000 "spi0.0"
+>  mtd1: 04000000 00001000 "spi0.1"
+>  root@lxxx:~# time mtd_debug read /dev/mtd0 0x0 0x1000000 0read
+>  Copied 16777216 bytes from address 0x00000000 in flash to 0read
+> 
+>  real    0m2.792s
+>  user    0m0.000s
+>  sys     0m2.790s
+>  root@lxxx:~# time mtd_debug read /dev/mtd1 0x0 0x1000000 0read
+>  Copied 16777216 bytes from address 0x00000000 in flash to 0read
+> 
+>  real    0m0.441s
+>  user    0m0.000s
+>  sys     0m0.440s
+>  root@ls1012ardb:~#
+> 
+>  Flash device MTD0 configured in 1-1-1 protocol.
+>  Flash device MTD1 configured in 1-1-8 protocol.
+> 
+> [1] https://patchwork.ozlabs.org/project/linux-mtd/list/?series=70384
+> [2] https://patchwork.ozlabs.org/project/linux-mtd/list/?series=72181
+> 
+> Yogesh Gaur (7):
+>   spi: add support for octo mode I/O data transfer
+>   spi: spi-mem: add support for octo mode I/O data transfer
+>   mtd: spi-nor: add opcodes for octo Read/Write commands
+>   mtd: spi-nor: add octo read flag for flash mt35xu512aba
+>   mtd: m25p80: add support of octo mode I/O transfer
+>   spi: nxp-fspi: add octo mode flag bit for octal support
+>   arm64: dts: lx2160a: update fspi node
+> 
+> Changes for v3:
+> - Add octo mode support in spi_setup().
+> - Rename all patches with 'octal' string modified as 'octo'.
+> Changes for v2:
+> - Incorporated review comments of Boris and Vignesh.
+> 
+>  arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts |  4 ++++
+>  drivers/mtd/devices/m25p80.c                      |  9 ++++++++-
+>  drivers/mtd/spi-nor/spi-nor.c                     | 15 ++++++++++++++-
+>  drivers/spi/spi-mem.c                             |  9 ++++++++-
+>  drivers/spi/spi-nxp-fspi.c                        |  4 ++--
+>  drivers/spi/spi.c                                 | 12 ++++++++++--
+>  include/linux/mtd/spi-nor.h                       |  8 ++++++++
+>  include/linux/spi/spi.h                           |  2 ++
+>  8 files changed, 56 insertions(+), 7 deletions(-)
+> 
 
-
->
->> Then you can:
->>
->> 1. Try to find other users of this ICN6211 chip and compare
->> initialization sequences to guess purpose of registers.
->>
->> 2. Try to get specs of the chip (ask vendor, distributor, grep Internet).
-> As we mentioned (even Chen-Yu), we are unable to find the proper spec
-> for this panel, all we taken reference from AW BSP code.
->
->> 3. Do nothing - if there will be other users of the bridge they will do
->> this work.
-> Don't know how we can go with generic bridge driver irrespective of
-> these particular wrinkles, let me know if you have any suggestions.
->
->
+-- 
+Regards
+Vignesh
