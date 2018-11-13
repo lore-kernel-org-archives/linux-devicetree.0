@@ -1,48 +1,44 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 3/5] media: sunxi: Add A10 CSI driver
-Date: Tue, 13 Nov 2018 12:13:09 -0200
-Message-ID: <CAOMZO5DHfgV+iDo4ye7DV9CAA0QjSVXsYH1nbD2+5d9iE-uTCg@mail.gmail.com>
-References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
- <c53e1cdc3b139382b00ee06bf3980d3fd1742ec0.1542097288.git-series.maxime.ripard@bootlin.com>
- <CAOMZO5CjFt1dyu8KOK+jKd88x8hwGNy9aJ-sGgooS9970TGTVQ@mail.gmail.com> <9a9616d2-a189-bd0e-e2e6-f84bdcb1dfd1@cisco.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 2/3] ARM: dts: r8a77470: Add QSPI support
+Date: Tue, 13 Nov 2018 06:35:04 -0800
+Message-ID: <20181113143504.b47unq3p23bvzzsc@verge.net.au>
+References: <1541696684-21235-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1541696684-21235-3-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20181109100556.3yh7lkg5ehnbkrzi@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9a9616d2-a189-bd0e-e2e6-f84bdcb1dfd1@cisco.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hansverk@cisco.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media <linux-media@vger.kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20181109100556.3yh7lkg5ehnbkrzi@verge.net.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, Mark Brown <broonie@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, linux-spi@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+On Fri, Nov 09, 2018 at 11:05:56AM +0100, Simon Horman wrote:
+> On Thu, Nov 08, 2018 at 05:04:42PM +0000, Fabrizio Castro wrote:
+> > Add QSPI[01] support to the RZ/G1C SoC specific device tree.
+> > 
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> 
+> Thanks,
+> 
+> This looks fine to me but I will wait to see if there are other reviews
+> before applying.
 
-On Tue, Nov 13, 2018 at 11:37 AM Hans Verkuil <hansverk@cisco.com> wrote:
->
-> On 11/13/18 13:48, Fabio Estevam wrote:
-> > On Tue, Nov 13, 2018 at 6:25 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> >> --- /dev/null
-> >> +++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
-> >> @@ -0,0 +1,275 @@
-> >> +// SPDX-License-Identifier: GPL-2.0-or-later
-> >
-> > According to Documentation/process/license-rules.rst this should be:
-> >
-> > +// SPDX-License-Identifier: GPL-2.0+
-> >
-> > Same applies to other places in this patch.
-> >
->
-> Actually, LICENSES/preferred/GPL-2.0 has GPL-2.0-or-later
-> as a valid license:
->
-> Valid-License-Identifier: GPL-2.0-or-later
->
-> Personally I very much prefer GPL-2.0-or-later since I think it is
-> much clearer.
+Thanks again,
 
-I saw feedback from Greg to use the SPDX style from
-Documentation/process/license-rules.rst.
+applied for v4.21.
 
-Please check:
-https://lkml.org/lkml/2018/11/10/232
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
