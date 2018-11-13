@@ -1,265 +1,123 @@
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Subject: Re: [PATCH v4 1/4] dt-bindings: media: i2c: Add bindings for Maxim
- Integrated MAX9286
-Date: Tue, 13 Nov 2018 15:12:55 -0800
-Message-ID: <66239f2a-0159-8120-6dbb-8af0ce8b132a@ideasonboard.com>
-References: <20181102154723.23662-1-kieran.bingham@ideasonboard.com>
- <20181102154723.23662-2-kieran.bingham@ideasonboard.com>
- <b3ef6780-a1a7-e86c-0dba-916d9398c1ef@lucaceresoli.net>
-Reply-To: kieran.bingham@ideasonboard.com
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: Sound and the TDA998x binding
+Date: Tue, 13 Nov 2018 23:27:28 +0000
+Message-ID: <20181113232728.GO30658@n2100.armlinux.org.uk>
+References: <40fdabaa-2b81-df4b-a949-725855586a85@axentia.se>
+ <20181113172440.GK30658@n2100.armlinux.org.uk>
+ <29aba968-c855-d2f4-8ba3-97f2cfdb0f2d@axentia.se>
+ <20181113190958.GN30658@n2100.armlinux.org.uk>
+ <3fd82f27-1422-61e7-3d83-0ac404718005@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b3ef6780-a1a7-e86c-0dba-916d9398c1ef@lucaceresoli.net>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Luca Ceresoli <luca@lucaceresoli.net>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@iki.fi
-Cc: =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, linux-kernel@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <3fd82f27-1422-61e7-3d83-0ac404718005@axentia.se>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Luca,
-
-On 13/11/2018 14:42, Luca Ceresoli wrote:
-> Hi Kieran, All,
-> 
-> sorry for joining this late... See below my considerations.
-
-I'd say you're on time - not late,
-
-Thanks for joining :)
-
-> 
-> On 02/11/18 16:47, Kieran Bingham wrote:
->> From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
->>
->> The MAX9286 deserializes video data received on up to 4 Gigabit
->> Multimedia Serial Links (GMSL) and outputs them on a CSI-2 port using up
->> to 4 data lanes.
->>
->> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
->> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
->> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
->>
->> ---
->> v3:
->>  - Update binding descriptions
->>
->> v4:
->>  - Define the use of a CSI2 D-PHY
->>  - Rename pwdn-gpios to enable-gpios (with inverted polarity)
->>  - Remove clock-lanes mapping support
->>  - rewrap text blocks
->>  - Fix typos
->> ---
->>  .../bindings/media/i2c/maxim,max9286.txt      | 182 ++++++++++++++++++
->>  1 file changed, 182 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max9286.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max9286.txt b/Documentation/devicetree/bindings/media/i2c/maxim,max9286.txt
->> new file mode 100644
->> index 000000000000..672f6a4d417d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max9286.txt
->> @@ -0,0 +1,182 @@
->> +Maxim Integrated Quad GMSL Deserializer
->> +---------------------------------------
->> +
->> +The MAX9286 deserializer receives video data on up to 4 Gigabit Multimedia
->> +Serial Links (GMSL) and outputs them on a CSI-2 D-PHY port using up to 4 data
->> +lanes.
->> +
->> +In addition to video data, the GMSL links carry a bidirectional control channel
->> +that encapsulates I2C messages. The MAX9286 forwards all I2C traffic not
->> +addressed to itself to the other side of the links, where a GMSL serializer
->> +will output it on a local I2C bus. In the other direction all I2C traffic
->> +received over GMSL by the MAX9286 is output on the local I2C bus.
->> +
->> +Required Properties:
->> +
->> +- compatible: Shall be "maxim,max9286"
->> +- reg: I2C device address
->> +
->> +Optional Properties:
->> +
->> +- poc-supply: Regulator providing Power over Coax to the cameras
->> +- enable-gpios: GPIO connected to the #PWDN pin with inverted polarity
->> +
->> +Required endpoint nodes:
->> +-----------------------
->> +
->> +The connections to the MAX9286 GMSL and its endpoint nodes are modeled using
->> +the OF graph bindings in accordance with the video interface bindings defined
->> +in Documentation/devicetree/bindings/media/video-interfaces.txt.
->> +
->> +The following table lists the port number corresponding to each device port.
->> +
->> +        Port            Description
->> +        ----------------------------------------
->> +        Port 0          GMSL Input 0
->> +        Port 1          GMSL Input 1
->> +        Port 2          GMSL Input 2
->> +        Port 3          GMSL Input 3
->> +        Port 4          CSI-2 Output
->> +
->> +Optional Endpoint Properties for GMSL Input Ports (Port [0-3]):
->> +
->> +- remote-endpoint: phandle to the remote GMSL source endpoint subnode in the
->> +  remote node port.
->> +
->> +Required Endpoint Properties for CSI-2 Output Port (Port 4):
->> +
->> +- remote-endpoint: phandle to the remote CSI-2 sink endpoint node.
->> +- data-lanes: array of physical CSI-2 data lane indexes.
->> +
->> +Required i2c-mux nodes:
->> +----------------------
->> +
->> +Each GMSL link is modeled as a child bus of an i2c bus multiplexer/switch, in
->> +accordance with bindings described in
->> +Documentation/devicetree/bindings/i2c/i2c-mux.txt. The serializer device on the
->> +remote end of the GMSL link shall be modelled as a child node of the
->> +corresponding I2C bus.
->> +
->> +Required i2c child bus properties:
->> +- all properties described as required i2c child bus nodes properties in
->> +  Documentation/devicetree/bindings/i2c/i2c-mux.txt.
->> +
->> +Example:
->> +-------
->> +
->> +	gmsl-deserializer@2c {
->> +		compatible = "maxim,max9286";Not at all late - Just on time 
->> +		reg = <0x2c>;
->> +		poc-supply = <&camera_poc_12v>;
->> +		enable-gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
->> +
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		ports {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +
->> +			port@0 {
->> +				reg = <0>;
->> +				max9286_in0: endpoint {
->> +					remote-endpoint = <&rdacm20_out0>;
->> +				};
->> +			};
->> +
->> +			port@1 {
->> +				reg = <1>;
->> +				max9286_in1: endpoint {
->> +					remote-endpoint = <&rdacm20_out1>;
->> +				};
->> +			};
->> +
->> +			port@2 {
->> +				reg = <2>;
->> +				max9286_in2: endpoint {
->> +					remote-endpoint = <&rdacm20_out2>;
->> +				};
->> +			};
->> +
->> +			port@3 {
->> +				reg = <3>;
->> +				max9286_in3: endpoint {
->> +					remote-endpoint = <&rdacm20_out3>;
->> +				};
->> +			};
->> +
->> +			port@4 {
->> +				reg = <4>;
->> +				max9286_out: endpoint {
->> +					data-lanes = <1 2 3 4>;
->> +					remote-endpoint = <&csi40_in>;
->> +				};
->> +			};
->> +		};
->> +
->> +		i2c@0 {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			reg = <0>;
->> +
->> +			camera@51 {
->> +				compatible = "imi,rdacm20";
->> +				reg = <0x51 0x61>;
-> 
-> I find this kind of address mapping is the weak point in this patchset.
-> 
-> The ser-deser chipset splits the world in "local" and "remote" side. The
-> camera node belongs to the remote side, but the 0x51 and 0x61 addresses
-> belong to the local side.
-
-Well, in our use case - in fact the camera has a set of fixed addresses
-(0x30,0x40,0x50) for each camera - and these are the addresses we are
-requesting the camera to be updated to. Once the camera is communicated
-with - the first step is to reprogram the device to respond to the
-addresses specified here.
-
-
-> Think about supporting N different main boards
-> and M remote boards. 0x51 might be available on some main boards but not
-> all. IMO under the camera@51 (even the i2c@0) node there should be only
-> remote hardware description. To support the N*M possible combinations,
-> there should be:
-
-Of course - well in fact all of our I2C addresses across our two max9286
-instances, and 8 camera devices share the same bus 'address space'.
-
-It's crucial to provide this address on a per board level, which is why
-it is specified in the DT.
-
-I wonder if perhaps it was a mistake to include the camera description
-in this part of the example, as it's not related to the max9286
-specifically.
-
-Rob has already suggested moving these to a lower 'i2c-node' level which
-I like the sound of, and might make this separation more clear.
-
-
->  * a DT for the main board mentioning only addresses for the
->    local i2c bus, down to the i2c@0 with address-cells, size-cells and
->    reg properties
->  * a DT overlay for each remote board, mentioning the remote i2c
->    chips with their physical addresses, but no local addresses
-> 
-> The only way I could devise to be generic is to bind each physical
-> remote address to a local address at runtime.
-> 
-> Also, to be implemented reliably, an address translation feature is
-> required on the local (de)ser chip.
-> 
-> So the question is: can the max9286 chip do i2c address translation?
-> 
-
-Yes, The max9286 (deser) can do i2c address translation - but so too can
-the max9271 (serialiser)
-
-We do our address translation on the camera (serialiser) side.
-
-The cameras *all* boot with the same i2c address (and thus all conflict)
- - We disable all links
- - We enable /one/ link
- - We initialise and reprogram the address of that camera to the address
-   specified in the camera node. - Then we move to the next camera.
-
-The reality is we 'just need' a spare address on the I2C bus - but as
-yet - there is no mechanism in I2C core to request a spare address.
-
-Thus it is the responsibility of the DT node to ensure there is no conflict.
-
-For an example, here is our DT overlay file for our max9286 expansion board:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/kbingham/rcar.git/commit/?h=gmsl/v5&id=6f2ec549e128b3ca36e9cae59256723cc39df2b1
-
-
-> Thanks,
-> 
-
--- 
-Regards
---
-Kieran
+T24gVHVlLCBOb3YgMTMsIDIwMTggYXQgMDg6NTg6MTVQTSArMDAwMCwgUGV0ZXIgUm9zaW4gd3Jv
+dGU6Cj4gT24gMjAxOC0xMS0xMyAyMDowOSwgUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4IHdyb3Rl
+Ogo+ID4gT24gVHVlLCBOb3YgMTMsIDIwMTggYXQgMDY6MTI6MzdQTSArMDAwMCwgUGV0ZXIgUm9z
+aW4gd3JvdGU6Cj4gPj4gT24gMjAxOC0xMS0xMyAxODoyNCwgUnVzc2VsbCBLaW5nIC0gQVJNIExp
+bnV4IHdyb3RlOgo+ID4+PiBPbiBUdWUsIE5vdiAxMywgMjAxOCBhdCAwMToyODo0MFBNICswMDAw
+LCBQZXRlciBSb3NpbiB3cm90ZToKPiA+Pj4+IEhpIQo+ID4+Pj4KPiA+Pj4+IEknbSB3b25kZXJp
+bmcgYWJvdXQgc29tZSBwcm9ncmFtbWluZyBkZXRhaWxzIHJlZ2FyZGluZyB0aGUgVERBOTk4eAo+
+ID4+Pj4gZHJpdmVyLi4uCj4gPj4+Pgo+ID4+Pj4gVGhlIGJpbmRpbmdzIGRvY3VtZW50YXRpb24g
+WzFdIHN0YXRlIHRoYXQgb25lIHNob3VsZCBmaWxsIGluIHRoZQo+ID4+Pj4gZGVzaXJlZCByZWdp
+c3RlciBjb250ZW50IG9mIHRoZSBBUF9FTkEgcmVnaXN0ZXIuIEhvd2V2ZXIsIEkgY2Fubm90Cj4g
+Pj4+PiBmaW5kIGFueSBkZXRhaWxzIGFueXdoZXJlIGFib3V0IGhvdyBvbmUgZGV0ZXJtaW5lcyB3
+aGF0IGlzIGRlc2lyZWQuCj4gPj4+PiBXaGVuIEkgbG9vayBmb3IgZGF0YSBzaGVldHMgb24gdGhl
+IEludGVybmV0LCBhbGwgSSBmaW5kIGlzIGEgInNob3J0Igo+ID4+Pj4gZGF0YSBzaGVldCwgd2hp
+Y2ggaXMgZmFyIGZyb20gZW5saWdodGVuaW5nLiBUaGVyZSBhcmUgaGludHMgYWJvdXQKPiA+Pj4+
+IGEgImZ1bGwiIGRhdGEgc2hlZXQgaW4gdGhlIGNoYXB0ZXIgb24gbGVnYWwgaW5mb3JtYXRpb24g
+b2YgdGhlCj4gPj4+PiAic2hvcnQiIGRhdGEgc2hlZXQuIElzIHRoZSAiZnVsbCIgZGF0YSBzaGVl
+dCBwcm90ZWN0ZWQgYnkgYW4gTkRBCj4gPj4+PiBvciBzb21ldGhpbmc/IFRoYXQncyB0aGUgb25s
+eSByZWFzb24gSSBjYW4gZmluZCBmb3IgaXQgbm90IGJlaW5nCj4gPj4+PiBhdmFpbGFibGUuLi4K
+PiA+Pj4+Cj4gPj4+PiBNYXliZSBzb21lb25lIHdpdGggc3VjaCBhICJmdWxsIiBkYXRhIHNoZWV0
+IGF0IGhhbmQgY2FuIGVubGlnaHRlbgo+ID4+Pj4gbWUgb24gdGhlIHdvcmtpbmdzIG9mIHRoaXMg
+QVBfRU5BIHJlZ2lzdGVyIHNvIHRoYXQgSSBrbm93IHdoYXQgaXQgaXMKPiA+Pj4+IHRoYXQgSSBu
+ZWVkIHRvIGZpbGwgaW4/IFNpbmNlIGl0IGlzIHNvIGRpZmZpY3VsdCB0byBmaW5kIHRoaXMgaW5m
+bywKPiA+Pj4+IG1heWJlIGl0IHNob3VsZCBiZSBhZGRlZCB0byB0aGUgYmluZGluZz8KPiA+Pj4K
+PiA+Pj4gVGhlcmUncyB2YXJpb3VzIHB1YmxpYyBkb2N1bWVudHMgZm9yIHRoZSBUREE5OTh4IGNo
+aXBzLCBzb21lIG9mIHdoaWNoCj4gPj4+IGRvIGNvbnRhaW4gdGhlIHJlZ2lzdGVyIHByb2dyYW1t
+aW5nIGluZm9ybWF0aW9uIC0gYWx0aG91Z2ggd2UgZG9uJ3QKPiA+Pj4gaGF2ZSBkZWZpbml0aXZl
+IGluZm9ybWF0aW9uIGZvciBldmVyeSB2YXJpYW50IHRoYXQgdGhlIGRyaXZlciBzdXBwb3J0cy4K
+PiA+Pgo+ID4+IEkgaGF2ZSBsb29rZWQsIGFuZCBub3QgZm91bmQgYW55dGhpbmcuIERvIHlvdSBo
+YXZlIGFueSBwb2ludGVyPyBGb3Igd2hhdAo+ID4+IGNoaXAocykgaW4gdGhlIGZhbWlseSBhcmUg
+dGhlcmUgcmVnaXN0ZXIgaW5mb3JtYXRpb24/Cj4gPiAKPiA+IFREQTk5ODNCIGlzIHRoZSBtYWlu
+IG9uZSwgYnV0IGFzIEkgc2F5LCBpdCBkb2Vzbid0IGRvY3VtZW50IHNldmVyYWwKPiA+IHJlZ2lz
+dGVycyBmb3VuZCBpbiB0aGUgVERBMTk5ODggLSB3ZSBoYXZlIG5vIGRlZmluaXRpdmUgcmVnaXN0
+ZXIKPiA+IGRlc2NyaXB0aW9ucyBmb3IgdGhpcyBjaGlwLgo+IAo+IFRoYXQncyBzb21ldGhpbmcg
+YXQgbGVhc3QuIEkgd2FzIGhvcGluZyBmb3Igc29tZSBpbmZvIG9uIGhvdyB0byBzZXQgdGhpbmdz
+Cj4gdXAgZm9yIGV4dGVybmFsIDEyTUh6IGZvciB0aGUgQ0VDIGNoaXAsIGJ1dCBpdCBsb29rcyBs
+aWtlIEknbSBvdXQgb2YgbHVjay4KPiBJIGd1ZXNzIEknbGwgaGF2ZSB0byBleHBlcmltZW50IGlu
+IG9yZGVyIHRvIG1heWJlIGdldCB0aGF0IHdvcmtpbmcuLi4KClRoZSBvbmx5IHNldHVwIEknbSBh
+d2FyZSB3aXRoIHRoZSBUREExOTk4OCBpcyBvbmUgd2hpY2ggdXNlcyB0aGUKaW50ZXJuYWwgRlJP
+IC0gSSBkb24ndCBiZWxpZXZlIHdpdGggdGhlIFREQTE5OTg4IHRoYXQgdGhlcmUncyBhbnkKcG9z
+c2liaWxpdHkgb2Ygb3RoZXIgY2xvY2tpbmcgbWV0aG9kcyBmb3IgdGhlIENFQyBwYXJ0LgoKVGhl
+IFREQTE5OTg4IG1ha2VzIHNvbWUgcmVmZXJlbmNlIHRvIGFuIGV4dGVybmFsIDEyTUh6IGNsb2Nr
+IGFzIGEKcG9zc2liaWxpdHksIGJ1dCB0aGUgcGlubmluZyBpbmZvcm1hdGlvbiBtYWtlcyBubyBt
+ZW50aW9uIG9mIHdoaWNoCnBpbnMgbWF5IHJlY2VpdmUgYSAxMk1IeiBjbG9jaywgb3IgYmUgYSAx
+Mk1IeiBvc2NpbGxhdG9yLiAgVGhlCmJsb2NrIGRpYWdyYW0gaW1tZWRpYXRlbHkgYmVsb3cgdGhl
+IHJlZmVyZW5jZSB0byB0aGlzIGV4dGVybmFsCjEyTUh6IGNsb2NrIG9ubHkgc2hvd3MgdGhlIEZS
+TyBhbmQgbm8gZXh0ZXJuYWwgY2xvY2sgcmVmZXJlbmNlLiAgU28KdGhlIGRvY3VtZW50YXRpb24g
+c2VlbXMgdG8gYmUgaW5jb25zaXN0ZW50LgoKVGhhdCBzYWlkLCBoZXJlJ3Mgc29tZSBpbmZvcm1h
+dGlvbiBmb3Igc2V0dGluZyBpdCB1cCBmb3IgYW4gZXh0ZXJuYWwKY3J5c3RhbDoKCi0gcmVhZC1t
+b2RpZnktd3JpdGUgUkVHX0NFQ19DTEsgbWFza2luZyB0aGUgcmVnaXN0ZXIgdmFsdWUgd2l0aCAw
+eGU2CiAgKHRoZXJlJ3Mgbm8gaW5mb3JtYXRpb24gYWJvdXQgd2hhdCB0aGUgYml0cyBpbiB0aGlz
+IHJlZ2lzdGVyIGRvLikKLSBhdm9pZCBjYWxsaW5nIHRkYTk5OHhfY2VjX2NhbGlicmF0aW9uKCkK
+Cj4gPj4+IEV2ZW4gc28sIHRoYXQgZG9lc24ndCBnaXZlIHVzIGRvY3VtZW50YXRpb24gZm9yIHRo
+aXMgcmVnaXN0ZXIsIHNvIHdlCj4gPj4+IGhhdmUgdG8gcmVzb3J0IHRvIGNvZGUgcmVjZWl2ZWQg
+ZnJvbSBvdGhlciBzb3VyY2VzLgo+ID4+Pgo+ID4+PiBUaGUgQVBfRU5BIHJlZ2lzdGVyICJhdWRp
+byBwb3J0IGVuYWJsZSIgaXMgb25lIGJpdCBwZXIgQVAgc2lnbmFsLCBmcm9tCj4gPj4+IHRoZSBB
+UDAgcGluIGJlaW5nIGJpdCAwLCB1cCB0byB0aGUgQVA3IHBpbiBiZWluZyBiaXQgNy4KPiA+Pgo+
+ID4+IFRoYW5rcyEgSG93ZXZlciwgaW4gdGhlICJzaG9ydCIgc2hlZXQgZm9yIHRoZSBUREExOTk4
+OCB0aGF0IEkgaGF2ZSwgdGhlcmUKPiA+PiBpcyB0aGlzIHRhYmxlOgo+ID4+Cj4gPj4gQVAwICAg
+ICAgICAgICAgICAgICAgV1MgKHdvcmQgc2VsZWN0KQo+ID4+IEFQMSAgIFMvUERJRiBpbnB1dCAg
+IEkyUy1idXMgY2hhbm5lbCAwCj4gPj4gQVAyICAgUy9QRElGIGlucHV0ICAgSTJTLWJ1cyBjaGFu
+bmVsIDEKPiA+PiBBUDMgICAgICAgICAgICAgICAgICBJMlMtYnVzIGNoYW5uZWwgMgo+ID4+IEFQ
+NCAgICAgICAgICAgICAgICAgIEkyUy1idXMgY2hhbm5lbCAzCj4gPj4gQUNMSyAgICAgICAgICAg
+ICAgICAgU0NLIChJMlMtYnVzIGNsb2NrKQo+ID4+Cj4gPj4gQVA1IHRocm91Z2ggQVA3IGFyZSBu
+b3doZXJlIHRvIGJlIGZvdW5kLi4uCj4gPiAKPiA+IFJpZ2h0LCBzbyBvbmx5IGJpdHMgMCB0byA0
+IGFyZSBtZWFuaW5nZnVsLgo+ID4gCj4gPj4gU2hvdWxkIEkgYXNzdW1lIHRoYXQgQUNMSyBpcyBh
+biBhbGlhcyBmb3IgQVA1LCBhbmQgdGhhdCB0aGUgcmVnaXN0ZXIKPiA+PiBjb250ZW50IHNob3Vs
+ZCBiZSAweDIzIGZvciBJMlMgb24gY2hhbm5lbCAwPyBPciBpcyBBQ0xLIG5vdCBwYXJ0IG9mCj4g
+Pj4gdGhlIEFQX0VOQSByZWdpc3RlciBhdCBhbGwsIHNvIHRoYXQgMHgwMyBpcyBtb3JlIGxpa2Vs
+eSB0byBiZSBjb3JyZWN0Pwo+ID4gCj4gPiBJIGJlbGlldmUgMHgwMyBhcyBwZXIgdGhlIGV4YW1w
+bGUgYmluZGluZyBpbiB0aGUgdGRhOTk4eCBkb2N1bWVudC4KPiA+IFRoZSBleGFtcGxlIGdpdmVu
+IGlzIGZyb20gSmVhbidzIHdvcmsgZm9yIHRoZSBEb3ZlIEN1Ym94IHdoaWNoCj4gPiB1c2VzIGEg
+VERBMTk5ODgsIHdoaWNoIGhhcyBib3RoIEkyUyBhbmQgUy9QRElGIHdpcmVkIHRvIHRoZQo+ID4g
+VERBMTk5ODggLSBJMlMgZGF0YSBvbiBBUDEsIFMvUERJRiBkYXRhIG9uIEFQMi4KPiAKPiBPaywg
+dGhhbmtzIQo+IAo+IE5leHQgcXVlc3Rpb24uIFRoZSBleGFtcGxlIGluIHRoZSB0ZGE5OTh4IGJp
+bmRpbmcgaGFzIGEgbGluZQo+IAo+IAkJI3NvdW5kLWRhaS1jZWxscyA9IDwyPjsKPiAKPiB3aXRo
+IG5vIGZ1cnRoZXIgZXhwbGFuYXRpb24uIEkgdGhpbmsgdGhpcyBpcyBhIGJ1ZywgYW5kIHRoYXQg
+aXQgc2hvdWxkCj4gYmUgPDE+LCBidXQgdGhhdCdzIGp1c3QgYSBodW5jaCAoSSBoYXZlbid0IGR1
+ZyBpbnRvIHRoZSBjb2RlKS4KCkl0IGRvZXMgbG9vayB0aGF0IHdheSAtIHNuZF9zb2NfZ2V0X2Rh
+aV9uYW1lKCkgZG9lcyB0aGlzOgoKICAgICAgICAgICAgICAgICAgICAgICAgc3dpdGNoIChhcmdz
+LT5hcmdzX2NvdW50KSB7CiAgICAgICAgICAgICAgICAgICAgICAgIGNhc2UgMDoKICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBpZCA9IDA7IC8qIHNhbWUgYXMgZGFpX2RydlswXSAqLwog
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGJyZWFrOwogICAgICAgICAgICAgICAgICAg
+ICAgICBjYXNlIDE6CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaWQgPSBhcmdzLT5h
+cmdzWzBdOwogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGJyZWFrOwogICAgICAgICAg
+ICAgICAgICAgICAgICBkZWZhdWx0OgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8q
+IG5vdCBzdXBwb3J0ZWQgKi8KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBicmVhazsK
+ICAgICAgICAgICAgICAgICAgICAgICAgfQoKc28gYSB2YWx1ZSBvZiAnMicgZm9yICNzb3VuZC1k
+YWktY2VsbHMgd291bGQgcmVzdWx0IGluIHRoZSBkZWZhdWx0CnBhdGggYmVpbmcgdGFrZW4uICBJ
+IHN1c3BlY3QgaXQncyBhIHR5cG8uCgotLSAKUk1LJ3MgUGF0Y2ggc3lzdGVtOiBodHRwOi8vd3d3
+LmFybWxpbnV4Lm9yZy51ay9kZXZlbG9wZXIvcGF0Y2hlcy8KRlRUQyBicm9hZGJhbmQgZm9yIDAu
+OG1pbGUgbGluZSBpbiBzdWJ1cmJpYTogc3luYyBhdCAxMi4xTWJwcyBkb3duIDYyMmticHMgdXAK
+QWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5uZXQ6IDExLjlNYnBzIGRvd24gNTAwa2JwcyB1cApfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
