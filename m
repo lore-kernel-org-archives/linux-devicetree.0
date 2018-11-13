@@ -1,45 +1,44 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 3/3] ARM: dts: iwg23s-sbc: Add QSPI flash support
-Date: Tue, 13 Nov 2018 06:35:52 -0800
-Message-ID: <20181113143551.sxfj333de5bbf6pu@verge.net.au>
-References: <1541696684-21235-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1541696684-21235-4-git-send-email-fabrizio.castro@bp.renesas.com>
- <20181109100607.3axbfrfizs5dqtxk@verge.net.au>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] ARM: dts: i.MX25: add the clocks for the EPIT blocks
+Date: Tue, 13 Nov 2018 22:42:11 +0800
+Message-ID: <20181113144209.GB4557@dragon>
+References: <1541093567-29205-1-git-send-email-martin@kaiser.cx>
+ <20181104144614.GJ26016@tiger>
+ <20181105091230.z2ooz7olbdpopxyd@viti.kaiser.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181109100607.3axbfrfizs5dqtxk@verge.net.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, Mark Brown <broonie@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, linux-spi@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Biju Das <biju.das@bp.renesas.com>
+In-Reply-To: <20181105091230.z2ooz7olbdpopxyd@viti.kaiser.cx>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martin Kaiser <martin@kaiser.cx>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 09, 2018 at 11:06:07AM +0100, Simon Horman wrote:
-> On Thu, Nov 08, 2018 at 05:04:43PM +0000, Fabrizio Castro wrote:
-> > This commit adds QSPI flash support to the iwg23s board specific
-> > device tree.
-> > 
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+On Mon, Nov 05, 2018 at 10:12:30AM +0100, Martin Kaiser wrote:
+> Hi,
 > 
-> Thanks,
+> Thus wrote Shawn Guo (shawnguo@kernel.org):
 > 
-> This looks fine to me but I will wait to see if there are other reviews
-> before applying.
+> > On Thu, Nov 01, 2018 at 06:32:47PM +0100, Martin Kaiser wrote:
+> > > The i.MX25 contains two EPIT (Enhanced Periodic Interrupt Timer)
+> > > function blocks. Add their ipg and per clocks to the device tree.
+> 
+> > > Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+> 
+> > Are these EPIT devices actually used in upstream kernel, or just
+> > somewhere else?
+> 
+> Until I saw Vladimir's mail this morning, I wasn't aware of any mainline
+> driver that's using the EPIT devices. I found that the clocks are
+> missing when I tried to use EPIT with a company-internal driver that's
+> not suitable for mainline integration.
+> 
+> Still, I think that merging this patch does no harm. If the EPIT devices
+> are present in the DT, we should add all resources they're using.
 
-Thanks again,
+Agreed.  I will be happy to apply the patch if I can get an ACK from
+Clément saying this works with his driver in upstreaming.
 
-applied for v4.21.
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Shawn
