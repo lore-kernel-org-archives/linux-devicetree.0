@@ -1,66 +1,44 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v12 0/2] Initial Allwinner V3s CSI Support
-Date: Tue, 13 Nov 2018 14:35:18 +0100
-Message-ID: <20181113133518.6nnh4m37s6awfw6d@flea>
-References: <1540886988-27696-1-git-send-email-yong.deng@magewell.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Hans Verkuil <hansverk@cisco.com>
+Subject: Re: [PATCH 3/5] media: sunxi: Add A10 CSI driver
+Date: Tue, 13 Nov 2018 14:37:08 +0100
+Message-ID: <9a9616d2-a189-bd0e-e2e6-f84bdcb1dfd1@cisco.com>
+References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
+ <c53e1cdc3b139382b00ee06bf3980d3fd1742ec0.1542097288.git-series.maxime.ripard@bootlin.com>
+ <CAOMZO5CjFt1dyu8KOK+jKd88x8hwGNy9aJ-sGgooS9970TGTVQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="aa6ku2d2rt2bopyg"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBIVGVPPQKGQE2ACUI4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1540886988-27696-1-git-send-email-yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5CjFt1dyu8KOK+jKd88x8hwGNy9aJ-sGgooS9970TGTVQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media <linux-media@vger.kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
---aa6ku2d2rt2bopyg
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-Hi Yong,
-
-On Tue, Oct 30, 2018 at 04:09:48PM +0800, Yong Deng wrote:
-> I can't make v4l2-compliance always happy.
-> The V3s CSI support many pixformats. But they are not always available.
-> It's dependent on the input bus format (MEDIA_BUS_FMT_*). 
-> Example:
-> V4L2_PIX_FMT_SBGGR8: MEDIA_BUS_FMT_SBGGR8_1X8
-> V4L2_PIX_FMT_YUYV: MEDIA_BUS_FMT_YUYV8_2X8
-> But I can't get the subdev's format code before starting stream as the
-> subdev may change it. So I can't know which pixformats are available.
-> So I exports all the pixformats supported by SoC.
-> The result is the app (v4l2-compliance) is likely to fail on streamon.
+On 11/13/18 13:48, Fabio Estevam wrote:
+> On Tue, Nov 13, 2018 at 6:25 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 > 
-> This patchset add initial support for Allwinner V3s CSI.
+>> --- /dev/null
+>> +++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
+>> @@ -0,0 +1,275 @@
+>> +// SPDX-License-Identifier: GPL-2.0-or-later
 > 
-> Allwinner V3s SoC features a CSI module with parallel interface.
+> According to Documentation/process/license-rules.rst this should be:
 > 
-> This patchset implement a v4l2 framework driver and add a binding 
-> documentation for it. 
+> +// SPDX-License-Identifier: GPL-2.0+
+> 
+> Same applies to other places in this patch.
+> 
 
-I've tested this version today, and I needed this patch to make it
-work on top of v4.20:
-http://code.bulix.org/9o8fw5-503690?raw
+Actually, LICENSES/preferred/GPL-2.0 has GPL-2.0-or-later
+as a valid license:
 
-Once that patch applied, my tests were working as expected.
+Valid-License-Identifier: GPL-2.0-or-later
 
-If that make sense, could you resubmit a new version with these merged
-so that we can try to target 4.21?
+Personally I very much prefer GPL-2.0-or-later since I think it is
+much clearer.
 
-Thanks!
-Maxime
+Regards,
 
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---aa6ku2d2rt2bopyg--
+	Hans
