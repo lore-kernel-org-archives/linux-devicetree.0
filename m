@@ -1,61 +1,70 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 0/2] drm/meson: Allow using optional canvas provider
-Date: Tue, 13 Nov 2018 14:32:36 +0100
-Message-ID: <ec49e7c1-8ca6-b442-10dc-1f15a15917bc@baylibre.com>
-References: <20181105104508.23090-1-mjourdan@baylibre.com>
- <1a3d3b7a-5050-7b4c-bda6-8ef532403d01@baylibre.com>
- <CAMO6nax_Q4kbDkeBmYQezo9dpMztD4DMFh+1dewax4p6d_S7mw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAMO6nax_Q4kbDkeBmYQezo9dpMztD4DMFh+1dewax4p6d_S7mw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Jourdan <mjourdan@baylibre.com>
-Cc: devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+From: Parthiban Nallathambi <pn@denx.de>
+Subject: [PATCH] arm64: dts: actions: s700: Add I2C controller nodes
+Date: Tue, 13 Nov 2018 14:32:35 +0100
+Message-ID: <20181113133235.37754-1-pn@denx.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: afaerber@suse.de, manivannan.sadhasivam@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Parthiban Nallathambi <pn@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUvMTEvMjAxOCAxNTowMiwgTWF4aW1lIEpvdXJkYW4gd3JvdGU6Cj4gSGkgTmVpbCwKPiAK
-PiBPbiBNb24sIE5vdiA1LCAyMDE4IGF0IDE6NTEgUE0gTmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJv
-bmdAYmF5bGlicmUuY29tPiB3cm90ZToKPj4KPj4gSGkgTWF4aW1lLAo+Pgo+PiBPbiAwNS8xMS8y
-MDE4IDExOjQ1LCBNYXhpbWUgSm91cmRhbiB3cm90ZToKPj4+IFRoZSBtZXNvbiBEUk0gZHJpdmVy
-IGN1cnJlbnRseSB1c2VzIGNvbnN0YW50LCBzdGF0aWMgY2FudmFzIGluZGV4ZXMuCj4+Pgo+Pj4g
-VGhpcyBpcyBub3Qgb3B0aW1hbCBhbmQgY291bGQgY29uZmxpY3Qgd2l0aCBvdGhlciBkcml2ZXJz
-IGFsc28gdXNpbmcKPj4+IGNhbnZhc2VzLgo+Pgo+PiBJbmRlZWQsIGl0J3Mgbm93IHRpbWUgdG8g
-dXNlIHRoZSBjYW52YXMgcHJvdmlkZXIgbWVyZ2VkIGluIDQuMjAtcmMxICEKPj4KPj4+Cj4+PiBU
-aGlzIHBhdGNoIHNlcmllcyBhbGxvd3MgdGhlIGRyaXZlciB0byBvcHRpb25uYWxseSB1c2UgYSBj
-YW52YXMgcHJvdmlkZXIKPj4+IG1vZHVsZSB0aGF0IGlzIGFibGUgdG8gZGlzcGF0Y2ggY2FudmFz
-ZXMsIG9uIGRlbWFuZCBhbmQgZnJlZSBvZiBjb25mbGljdC4KPj4+Cj4+PiBJbiB0aGUgZnV0dXJl
-LCB0aGUgY3VycmVudCB3YXkgb2YgZG9pbmcgdGhpbmdzIHdpbGwgYmUgZGVwcmVjYXRlZC4KPj4K
-Pj4gRG8geW91IGNvbmZpcm0geW91IHdpbGwgc2VuZCBhIHBhdGNoIHRvIHJlbW92ZSB0aGUgbGVn
-YWN5IGNhbnZhcyBjb2RlIHdoZW4KPj4gZXZlcnl0aGluZyBpcyBtZXJnZWQgKGluY2x1ZGluZyBE
-VCBjaGFuZ2VzKSA/Cj4+Cj4+IEknbGwgd2FpdCB1bnRpbCB0aGUgYmluZGluZ3MgYXJlIHJldmll
-d2VkLCB0aGVuIEknbGwgcHVzaCB0aGUgc2VyaWUgdG8gZHJtLW1pc2MtbmV4dC4KPj4KPiAKPiBZ
-ZXMsIHVsdGltYXRlbHkgaXQgd2lsbCBiZSByZW1vdmVkLgo+IAo+IFRoZSBwbGFuIGlzOgo+IAo+
-IDQuMjE6IGFsbG93IHVzaW5nIGJvdGggbW9kZXMsIGFkZCB0aGUgImFtbG9naWMsY2FudmFzIiBw
-cm9wZXJ0eSB0byB0aGUgZHRzIGZpbGVzCj4gNC4yMjogcmVtb3ZlIHRoZSBvbGQgd2F5IGFuZCBj
-aGFuZ2UgdGhlIGFtbG9naWMsY2FudmFzIHByb3BlcnR5IHRvIG1hbmRhdG9yeQo+IAo+IFRoaXMg
-c2hvdWxkIGFsbG93IGZvciBhIG5pY2UgdHJhbnNpdGlvbi4KPiAKPiBNYXhpbWUKPiAKPj4gVGhh
-bmtzLAo+PiBOZWlsCj4+Cj4+Pgo+Pj4gTWF4aW1lIEpvdXJkYW4gKDIpOgo+Pj4gICBkdC1iaW5k
-aW5nczogZGlzcGxheTogYW1sb2dpYywgbWVzb24tdnB1OiBBZGQgb3B0aW9uYWwgY2FudmFzIHBy
-b3ZpZGVyCj4+PiAgICAgbm9kZQo+Pj4gICBkcm0vbWVzb246IFVzZSBvcHRpb25hbCBjYW52YXMg
-cHJvdmlkZXIKPj4+Cj4+PiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYW1sb2dpYyxtZXNvbi12cHUu
-dHh0ICAgIHwgIDIgKwo+Pj4gIGRyaXZlcnMvZ3B1L2RybS9tZXNvbi9LY29uZmlnICAgICAgICAg
-ICAgICAgICB8ICAxICsKPj4+ICBkcml2ZXJzL2dwdS9kcm0vbWVzb24vbWVzb25fY3J0Yy5jICAg
-ICAgICAgICAgfCAxNCArKysrLS0KPj4+ICBkcml2ZXJzL2dwdS9kcm0vbWVzb24vbWVzb25fZHJ2
-LmMgICAgICAgICAgICAgfCA0NiArKysrKysrKysrKystLS0tLS0tCj4+PiAgZHJpdmVycy9ncHUv
-ZHJtL21lc29uL21lc29uX2Rydi5oICAgICAgICAgICAgIHwgIDQgKysKPj4+ICBkcml2ZXJzL2dw
-dS9kcm0vbWVzb24vbWVzb25fcGxhbmUuYyAgICAgICAgICAgfCAgOCArKystCj4+PiAgNiBmaWxl
-cyBjaGFuZ2VkLCA1MyBpbnNlcnRpb25zKCspLCAyMiBkZWxldGlvbnMoLSkKPj4+CgpBcHBsaWVk
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Add I2C controller nodes for Actions Semiconductor S700 SoC.
+
+Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+---
+ arch/arm64/boot/dts/actions/s700.dtsi | 40 +++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
+index 192c7b39c8c1..573c844d7afe 100644
+--- a/arch/arm64/boot/dts/actions/s700.dtsi
++++ b/arch/arm64/boot/dts/actions/s700.dtsi
+@@ -174,6 +174,46 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		i2c0: i2c@e0170000 {
++			compatible = "actions,s900-i2c";
++			reg = <0 0xe0170000 0 0x1000>;
++			clocks = <&cmu CLK_I2C0>;
++			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i2c1: i2c@e0174000 {
++			compatible = "actions,s900-i2c";
++			reg = <0 0xe0174000 0 0x1000>;
++			clocks = <&cmu CLK_I2C1>;
++			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i2c2: i2c@e0178000 {
++			compatible = "actions,s900-i2c";
++			reg = <0 0xe0178000 0 0x1000>;
++			clocks = <&cmu CLK_I2C2>;
++			interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i2c3: i2c@e017c000 {
++			compatible = "actions,s900-i2c";
++			reg = <0 0xe017c000 0 0x1000>;
++			clocks = <&cmu CLK_I2C3>;
++			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
+ 		sps: power-controller@e01b0100 {
+ 			compatible = "actions,s700-sps";
+ 			reg = <0x0 0xe01b0100 0x0 0x100>;
+-- 
+2.17.2
