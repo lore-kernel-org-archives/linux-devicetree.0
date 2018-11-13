@@ -1,110 +1,76 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: [PATCH v3 1/2] dt-bindings/interrupt-controller: rzn1: Add RZ/N1 gpio irq mux binding
-Date: Tue, 13 Nov 2018 13:09:09 +0000
-Message-ID: <20181113130910.22130-2-phil.edworthy@renesas.com>
-References: <20181113130910.22130-1-phil.edworthy@renesas.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v4 03/26] clk: sunxi-ng: Add check for maximum rate to
+ NKM PLLs
+Date: Tue, 13 Nov 2018 14:26:58 +0100
+Message-ID: <20181113132658.niwy6bqdqzaeqpv2@flea>
+References: <20181113111633.20189-1-jagan@amarulasolutions.com>
+ <20181113111633.20189-4-jagan@amarulasolutions.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qkzagaz2qwa76467"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181113130910.22130-1-phil.edworthy@renesas.com>
+Content-Disposition: inline
+In-Reply-To: <20181113111633.20189-4-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
-Add device binding documentation for the Renesas RZ/N1 GPIO interrupt
-multiplexer.
 
-Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
----
-v3:
- - Use 'interrupt-map' DT property correctly.
-v2:
- - Use interrupt-map to allow the GPIO controller info to be specified
-   as part of the irq.
- - Don't show status in binding examples.
- - Don't show the soc/board split in binding doc.
----
- .../interrupt-controller/renesas,rzn1-mux.txt | 73 +++++++++++++++++++
- 1 file changed, 73 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt
+--qkzagaz2qwa76467
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt
-new file mode 100644
-index 000000000000..6515880e25cc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt
-@@ -0,0 +1,73 @@
-+* Renesas RZ/N1 GPIO Interrupt Multiplexer
-+
-+On Renesas RZ/N1 devices, there are several GPIO Controllers each with a number
-+of interrupt outputs. All of the interrupts from the GPIO Controllers are passed
-+to the GPIO Interrupt Multiplexer, which selects a sub-set of the interrupts to
-+pass onto the system interrupt controller.
-+
-+A single node in the device tree is used to describe the GPIO IRQ Muxer.
-+
-+Required properties:
-+- compatible: SoC-specific compatible string "renesas,<soc-specific>-gpioirqmux"
-+  followed by "renesas,rzn1-gpioirqmux" as fallback. The SoC-specific compatible
-+  strings must be one of:
-+	"renesas,r9a06g032-gpioirqmux" for RZ/N1D
-+	"renesas,r9a06g033-gpioirqmux" for RZ/N1S
-+- reg: Base address and size of GPIO IRQ Muxer registers.
-+- interrupts: List of output interrupts.
-+- #interrupt-cells: Numder of cells in the input interrupt specifier, must be 1.
-+- #address-cells: Must be 0.
-+- interrupt-map-mask: must be 127.
-+- interrupt-map: Standard property detailing the maps between input irqs and the
-+  corresponding output irq. This consist of a list of:
-+	<input-irq-spec phandle-to-interrupt-controller output-irq-spec>
-+  The input-irq-spec is from 0 to 95, corresponding to the outputs of the GPIO
-+  Controllers.
-+
-+Example:
-+
-+	The following is an example for the RZ/N1D SoC.
-+
-+	gpioirqmux: gpioirqmux@51000480 {
-+		compatible = "renesas,r9a06g032-gpioirqmux",
-+				"renesas,rzn1-gpioirqmux";
-+		reg = <0x51000480 0x20>;
-+		interrupts =
-+			<GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-+			<GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		#interrupt-cells = <1>;
-+		#address-cells = <0>;
-+		interrupt-map-mask = <127>;
-+		interrupt-map =
-+			/* gpio2a 24, pin 146: ETH Port 1 IRQ */
-+			<88 &gic GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-+			/* gpio2a 26, pin 148: TouchSCRN_IRQ */
-+			<90 &gic GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	gpio2: gpio@5000d000 {
-+		compatible = "snps,dw-apb-gpio";
-+		reg = <0x5000d000 0x80>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clock-names = "bus";
-+		clocks = <&sysctrl R9A06G032_HCLK_GPIO2>;
-+
-+		gpio2a: gpio-controller@0 {
-+			compatible = "snps,dw-apb-gpio-port";
-+			bank-name = "gpio2a";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			snps,nr-gpios = <32>;
-+			reg = <0>;
-+
-+			interrupt-controller;
-+			interrupt-parent = <&gpioirqmux>;
-+			interrupts =  < 64 65 66 67 68 69 70 71
-+					72 73 74 75 76 77 78 79
-+					80 81 82 83 84 85 86 87
-+					88 89 90 91 92 93 94 95 >;
-+			#interrupt-cells = <2>;
-+		};
-+	};
--- 
-2.17.1
+On Tue, Nov 13, 2018 at 04:46:10PM +0530, Jagan Teki wrote:
+> Some NKM PLLs, frequency can be set above PLL working range.
+>=20
+> Add a constraint for maximum supported rate. This way, drivers can
+> specify which is maximum allowed rate for PLL.
+>=20
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> Acked-by: Stephen Boyd <sboyd@kernel.org>
+
+As Vasily reported on a previous version, this should be squashed with
+the patch 2.
+
+> ---
+>  drivers/clk/sunxi-ng/ccu_nkm.c | 3 +++
+>  drivers/clk/sunxi-ng/ccu_nkm.h | 1 +
+>  2 files changed, 4 insertions(+)
+>=20
+> diff --git a/drivers/clk/sunxi-ng/ccu_nkm.c b/drivers/clk/sunxi-ng/ccu_nk=
+m.c
+> index 6b5ad990f802..b8b66cdd30bf 100644
+> --- a/drivers/clk/sunxi-ng/ccu_nkm.c
+> +++ b/drivers/clk/sunxi-ng/ccu_nkm.c
+> @@ -128,6 +128,9 @@ static unsigned long ccu_nkm_round_rate(struct ccu_mu=
+x_internal *mux,
+>  	if (rate < nkm->min_rate)
+>  		return nkm->min_rate;
+> =20
+> +	if (nkm->max_rate && rate > nkm->max_rate)
+> +		return nkm->max_rate;
+> +
+
+I would expect the test to be the same for the minimum and maximum cases.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--qkzagaz2qwa76467
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW+rRIQAKCRDj7w1vZxhR
+xUtiAP0Qzz9KTR8SbP2fs3KcowHxL8xYV+GOUNZ9/VA8BWSVxAD+KRBkAWya7D4N
+adBknlFW6CNpkDt3SyJa46/5Dwt0WgU=
+=E1t8
+-----END PGP SIGNATURE-----
+
+--qkzagaz2qwa76467--
