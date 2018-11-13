@@ -1,88 +1,76 @@
-From: Luis de Oliveira <luis.oliveira@synopsys.com>
-Subject: Re: [V3, 1/4] Documentation: dt-bindings: phy: Document the Synopsys
- MIPI DPHY Rx bindings
-Date: Tue, 13 Nov 2018 09:30:39 +0000
-Message-ID: <67816d9f-97c9-8d9b-ff55-15861bf47f75@synopsys.com>
-References: <1539953556-35762-1-git-send-email-lolivei@synopsys.com>
- <1539953556-35762-2-git-send-email-lolivei@synopsys.com>
- <20181024173611.GA30655@bogus>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v2 06/10] dt-bindings: serial: Add bindings for
+ nvidia,tegra194-tcu
+Date: Tue, 13 Nov 2018 09:39:08 +0000
+Message-ID: <f7d19f6e-0dcd-753c-a407-fcec4fa1474b@nvidia.com>
+References: <20181112151853.29289-1-thierry.reding@gmail.com>
+ <20181112151853.29289-7-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181024173611.GA30655@bogus>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181112151853.29289-7-thierry.reding@gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Luis Oliveira <luis.oliveira@synopsys.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, joao.pinto@synopsys.com, festevam@gmail.com, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Neil Armstrong <narmstrong@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Keiichi Watanabe <keiichiw@chromium.org>, Kate Stewart <kstewart@linuxfoundation.org>, Todor Tomov <todor.tomov@linaro.org>, devicetree@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>, Jassi Brar <jassisinghbrar@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, Mika Liljeberg <mliljeberg@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>, Timo Alho <talho@nvidia.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, linux-tegra@vger.kernel.org, Pekka Pessi <ppessi@nvidia.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob, my responses inline.
 
-On 24-Oct-18 18:36, Rob Herring wrote:
-> On Fri, Oct 19, 2018 at 02:52:23PM +0200, Luis Oliveira wrote:
->> Add device-tree bindings documentation for SNPS DesignWare MIPI D-PHY in
->> RX mode.
->>
->> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
->> ---
->> Changelog
->> v2-V3
->> - removed gpios reference - it was for a separated driver
->> - changed address to show complete address
->>
->>  .../devicetree/bindings/phy/snps,dphy-rx.txt       | 28 ++++++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
->>
->> diff --git a/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt b/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
->> new file mode 100644
->> index 0000000..03d17ab
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
->> @@ -0,0 +1,28 @@
->> +Synopsys DesignWare MIPI Rx D-PHY block details
->> +
->> +Description
->> +-----------
->> +
->> +The Synopsys MIPI D-PHY controller supports MIPI-DPHY in receiver mode.
->> +Please refer to phy-bindings.txt for more information.
->> +
->> +Required properties:
->> +- compatible		: Shall be "snps,dphy-rx".
->> +- #phy-cells		: Must be 1.
->> +- snps,dphy-frequency	: Output frequency of the D-PHY.
+On 12/11/2018 15:18, Thierry Reding wrote:
+> From: Mikko Perttunen <mperttunen@nvidia.com>
 > 
-> Needs a unit suffix (-hz).
+> Add bindings for the Tegra Combined UART device used to talk to the
+> UART console on Tegra194 systems.
 > 
+> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Acked-by: Jon Hunter <jonathanh@nvidia.com>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+>  .../bindings/serial/nvidia,tegra194-tcu.txt   | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serial/nvidia,tegra194-tcu.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/nvidia,tegra194-tcu.txt b/Documentation/devicetree/bindings/serial/nvidia,tegra194-tcu.txt
+> new file mode 100644
+> index 000000000000..085a8591accd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/nvidia,tegra194-tcu.txt
+> @@ -0,0 +1,35 @@
+> +NVIDIA Tegra Combined UART (TCU)
+> +
+> +The TCU is a system for sharing a hardware UART instance among multiple
+> +systems within the Tegra SoC. It is implemented through a mailbox-
+> +based protocol where each "virtual UART" has a pair of mailboxes, one
+> +for transmitting and one for receiving, that is used to communicate
+> +with the hardware implementing the TCU.
+> +
+> +Required properties:
+> +- name : Should be tcu
+> +- compatible
+> +    Array of strings
+> +    One of:
+> +    - "nvidia,tegra194-tcu"
+> +- mbox-names:
+> +    "rx" - Mailbox for receiving data from hardware UART
+> +    "tx" - Mailbox for transmitting data to hardware UART
+> +- mboxes: Mailboxes corresponding to the mbox-names.
 
-Yes,
+Looks like there is some trailing white-space in the above line and git
+warns after applying this patch.
 
->> +- snps,dphy-te-len	: Size of the communication interface (8 bits->8 or 12bits->12).
->> +- reg			: Physical base address and size of the device memory mapped
->> +		 	  registers;
-> 
-> How many, what are they, and what order? Looks like 3 below.
-> 
-> Also, a tab after spaces error.
-> 
+Cheers
+Jon
 
-Yep, I will fix it. Thanks
-
->> +
->> +Example:
->> +
->> +	mipi_dphy_rx1: dphy@d00003040 {
->> +		compatible = "snps,dphy-rx";
->> +		#phy-cells = <1>;
->> +		snps,dphy-frequency = <300000>;
->> +		snps,dphy-te-len = <12>;
->> +		reg = < 0xd0003040 0x20
->> +			0xd0008000 0x100
->> +			0xd0009000 0x100>;
->> +	};
->> +
->> --
->> 2.7.4
->>
+-- 
+nvpublic
