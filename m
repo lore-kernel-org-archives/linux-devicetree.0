@@ -1,8 +1,8 @@
 From: <Andrei.Stefanescu@microchip.com>
-Subject: [PATCH 1/2] regulator: dt-bindings: add regulator-state-standby
- bindings
-Date: Tue, 13 Nov 2018 14:47:33 +0000
-Message-ID: <1542120469-15450-2-git-send-email-andrei.stefanescu@microchip.com>
+Subject: [PATCH 2/2] regulator: of: add support for parsing
+ regulator-state-standby
+Date: Tue, 13 Nov 2018 14:47:37 +0000
+Message-ID: <1542120469-15450-3-git-send-email-andrei.stefanescu@microchip.com>
 References: <1542120469-15450-1-git-send-email-andrei.stefanescu@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -15,42 +15,41 @@ To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@ar
 Cc: Nicolas.Ferre@microchip.com, Cristian.Birsan@microchip.com, Claudiu.Beznea@microchip.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrei.Stefanescu@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-For state-mem and state-disk regulators can have
-various parameters applied such as enabled/disabled,
-current mode, voltage etc.
-
-This patch adds documentation on how to set these parameters
-in the device tree for the standby state.
+Set the according constraints for PM_SUSPEND_STANDBY case.
+Previously, only suspend to mem/disk were taken into
+consideration.
 
 Signed-off-by: Andrei Stefanescu <andrei.stefanescu@microchip.com>
 ---
- Documentation/devicetree/bindings/regulator/regulator.txt | 5 ++++-
+ drivers/regulator/of_regulator.c | 5 ++++-
  1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Do=
-cumentation/devicetree/bindings/regulator/regulator.txt
-index 0c3a243..0a3f087 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -33,13 +33,16 @@ Optional properties:
-   decreases of any level. This is useful for regulators with exponential
-   voltage changes.
- - regulator-soft-start: Enable soft start so that voltage ramps slowly
-+- regulator-state-standby sub-root node for Standby mode
-+  : equivalent with standby Linux sleep state, which provides energy savin=
-gs
-+  with a relatively quick transition back time.
- - regulator-state-mem sub-root node for Suspend-to-RAM mode
-   : suspend to memory, the device goes to sleep, but all data stored in me=
-mory,
-   only some external interrupt can wake the device.
- - regulator-state-disk sub-root node for Suspend-to-DISK mode
-   : suspend to disk, this state operates similarly to Suspend-to-RAM,
-   but includes a final step of writing memory contents to disk.
--- regulator-state-[mem/disk] node has following common properties:
-+- regulator-state-[mem/disk/standby] node has following common properties:
- 	- regulator-on-in-suspend: regulator should be on in suspend state.
- 	- regulator-off-in-suspend: regulator should be off in suspend state.
- 	- regulator-suspend-min-microvolt: minimum voltage may be set in
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regula=
+tor.c
+index a732f09..c711a0a 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -20,6 +20,7 @@
+ #include "internal.h"
+=20
+ static const char *const regulator_states[PM_SUSPEND_MAX + 1] =3D {
++	[PM_SUSPEND_STANDBY]	=3D "regulator-state-standby",
+ 	[PM_SUSPEND_MEM]	=3D "regulator-state-mem",
+ 	[PM_SUSPEND_MAX]	=3D "regulator-state-disk",
+ };
+@@ -185,9 +186,11 @@ static void of_get_regulation_constraints(struct devic=
+e_node *np,
+ 		case PM_SUSPEND_MAX:
+ 			suspend_state =3D &constraints->state_disk;
+ 			break;
++		case PM_SUSPEND_STANDBY:
++			suspend_state =3D &constraints->state_standby;
++			break;
+ 		case PM_SUSPEND_ON:
+ 		case PM_SUSPEND_TO_IDLE:
+-		case PM_SUSPEND_STANDBY:
+ 		default:
+ 			continue;
+ 		}
 --=20
 2.7.4
