@@ -1,55 +1,25 @@
-From: <Andrei.Stefanescu@microchip.com>
-Subject: [PATCH 2/2] regulator: of: add support for parsing
- regulator-state-standby
-Date: Tue, 13 Nov 2018 14:47:37 +0000
-Message-ID: <1542120469-15450-3-git-send-email-andrei.stefanescu@microchip.com>
-References: <1542120469-15450-1-git-send-email-andrei.stefanescu@microchip.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: [PATCH 0/3] Make STM32 interrupt controller use hwspinlock
+Date: Tue, 13 Nov 2018 15:48:02 +0100
+Message-ID: <20181113144805.1054-1-benjamin.gaignard@st.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542120469-15450-1-git-send-email-andrei.stefanescu@microchip.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Nicolas.Ferre@microchip.com, Cristian.Birsan@microchip.com, Claudiu.Beznea@microchip.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrei.Stefanescu@microchip.com
+To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Set the according constraints for PM_SUSPEND_STANDBY case.
-Previously, only suspend to mem/disk were taken into
-consideration.
+This series allow to protect STM32 interrupt controller configuration registers
+with a hwspinlock to avoid conflicting accesses between processors. 
 
-Signed-off-by: Andrei Stefanescu <andrei.stefanescu@microchip.com>
----
- drivers/regulator/of_regulator.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Benjamin Gaignard (3):
+  dt-bindings: interrupt-controller: stm32: Document hwlock properties
+  irqchip: stm32: protect configuration registers with hwspinlock
+  ARM: dts: stm32: Add hwlock for irqchip on stm32mp157
 
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regula=
-tor.c
-index a732f09..c711a0a 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -20,6 +20,7 @@
- #include "internal.h"
-=20
- static const char *const regulator_states[PM_SUSPEND_MAX + 1] =3D {
-+	[PM_SUSPEND_STANDBY]	=3D "regulator-state-standby",
- 	[PM_SUSPEND_MEM]	=3D "regulator-state-mem",
- 	[PM_SUSPEND_MAX]	=3D "regulator-state-disk",
- };
-@@ -185,9 +186,11 @@ static void of_get_regulation_constraints(struct devic=
-e_node *np,
- 		case PM_SUSPEND_MAX:
- 			suspend_state =3D &constraints->state_disk;
- 			break;
-+		case PM_SUSPEND_STANDBY:
-+			suspend_state =3D &constraints->state_standby;
-+			break;
- 		case PM_SUSPEND_ON:
- 		case PM_SUSPEND_TO_IDLE:
--		case PM_SUSPEND_STANDBY:
- 		default:
- 			continue;
- 		}
---=20
-2.7.4
+ .../interrupt-controller/st,stm32-exti.txt         |  4 +++
+ arch/arm/boot/dts/stm32mp157c.dtsi                 |  1 +
+ drivers/irqchip/irq-stm32-exti.c                   | 36 ++++++++++++++++++----
+ 3 files changed, 35 insertions(+), 6 deletions(-)
+
+-- 
+2.15.0
