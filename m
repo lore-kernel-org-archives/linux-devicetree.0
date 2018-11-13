@@ -1,141 +1,56 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: phy: Add Qualcomm Synopsys High-Speed
- USB PHY binding
-Date: Tue, 13 Nov 2018 11:42:08 +0800
-Message-ID: <20181113034200.GD20049@tiger>
-References: <20181108070449.23572-1-shawn.guo@linaro.org>
- <20181108070449.23572-2-shawn.guo@linaro.org>
- <5bea0ed8.1c69fb81.8715.38b2@mx.google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Tom Burkart <tom@aussec.com>
+Subject: [PATCH v6 1/4] dt-bindings: pps: descriptor-based gpio, capture-clear addition
+Date: Tue, 13 Nov 2018 14:40:04 +1100
+Message-ID: <20181113034007.3878-2-tom@aussec.com>
+References: <20181113034007.3878-1-tom@aussec.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5bea0ed8.1c69fb81.8715.38b2@mx.google.com>
+In-Reply-To: <20181113034007.3878-1-tom@aussec.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Cc: Tom Burkart <tom@aussec.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+This patch changes the devicetree bindings for the pps-gpio driver
+from the integer based API to the descriptor based API.  It also adds
+documentation for the device tree capture-clear option.
 
-On Mon, Nov 12, 2018 at 01:24:51PM -0600, Rob Herring wrote:
-> On Thu, Nov 08, 2018 at 03:04:48PM +0800, Shawn Guo wrote:
-> > From: Sriharsha Allenki <sallenki@codeaurora.org>
-> > 
-> > It adds bindings for Synopsys 28nm femto phy controller that supports
-> > LS/FS/HS usb connectivity on Qualcomm chipsets.
-> > 
-> > Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
-> > Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> > ---
-> >  .../phy/qcom,snps-28nm-usb-hs-phy.txt         | 101 ++++++++++++++++++
-> >  1 file changed, 101 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt b/Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt
-> > new file mode 100644
-> > index 000000000000..75e7a09dd558
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt
-> > @@ -0,0 +1,101 @@
-> > +Qualcomm Synopsys 28nm Femto phy controller
-> > +===========================================
-> > +
-> > +Synopsys 28nm femto phy controller supports LS/FS/HS usb connectivity on
-> > +Qualcomm chipsets.
-> > +
-> > +Required properties:
-> > +
-> > +- compatible:
-> > +    Value type: <string>
-> > +    Definition: Should contain "qcom,usb-snps-hsphy".
-> 
-> SoC specific compatible?
+The change from integer based GPIO API to the descriptor based API
+breaks backward compatibility for the devicetree.  This is due to
+the descriptor based API appending "-gpio" or "-gpios" (see
+Documentation/gpio/base.txt.)
 
-Agreed.  A SoC prefixed compatible would be more specific and scalable
-for handling different programming model of the same IP.  I will use
-"qcom,qcs404-usb-hsphy" in v3.
+Signed-off-by: Tom Burkart <tom@aussec.com>
+---
+ Documentation/devicetree/bindings/pps/pps-gpio.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> 
-> > +
-> > +- reg:
-> > +    Value type: <prop-encoded-array>
-> > +    Definition: USB PHY base address and length of the register map.
-> > +
-> > +- #phy-cells:
-> > +    Value type: <u32>
-> > +    Definition: Should be 0.
-> > +
-> > +- clocks:
-> > +    Value type: <prop-encoded-array>
-> > +    Definition: See clock-bindings.txt section "consumers". List of
-> > +		three clock specifiers for reference, phy core and
-> > +		sleep clocks.
-> > +
-> > +- clock-names:
-> > +    Value type: <string>
-> > +    Definition: Names of the clocks in 1-1 correspondence with the "clocks"
-> > +		property. Must contain "ref", "phy" and "sleep".
-> > +
-> > +- resets:
-> > +    Value type: <prop-encoded-array>
-> > +    Definition: See reset.txt section "consumers". PHY reset specifiers
-> > +		for phy core and POR resets.
-> > +
-> > +- reset-names:
-> > +    Value type: <string>
-> > +    Definition: Names of the resets in 1-1 correspondence with the "resets"
-> > +		property. Must contain "phy" and "por".
-> > +
-> > +- vdd-supply:
-> > +    Value type: <phandle>
-> > +    Definition: phandle to the regulator VDD supply node.
-> > +
-> > +- vdda1p8-supply:
-> > +    Value type: <phandle>
-> > +    Definition: phandle to the regulator 1.8V supply node.
-> > +
-> > +- vdda3p3-supply:
-> > +    Value type: <phandle>
-> > +    Definition: phandle to the regulator 3.3V supply node.
-> > +
-> > +- qcom,vdd-voltage-level:
-> > +    Value type: <prop-array>
-> > +    Definition: This is a list of three integer values <no min max> where
-> > +		each value corresponding to voltage corner in uV.
-> > +
-> > +Optional properties:
-> > +
-> > +- extcon:
-> > +    Value type: <prop-encoded-array>
-> > +    Definition: Should contain the vbus extcon.
-> 
-> Don't use extcon for new bindings. Use usb-connector binding.
-
-Okay, I just did a bit of research and found that 'extcon' is becoming
-a deprecated DT property recently and we should OF graph bindings to
-specify the connector.  Will do in v3.
-
-> 
-> > +
-> > +- qcom,init-seq:
-> > +    Value type: <u32 array>
-> > +    Definition: Should contain a sequence of <offset value delay> tuples to
-> > +                program 'value' into phy register at 'offset' with 'delay'
-> > +		in us afterwards.
-> 
-> If we wanted this type of thing in DT, we'd have a generic binding (or 
-> forth).
-
-Right now, this is a qualcomm usb phy specific bindings - first used in
-qcom,usb-hs-phy.txt and I extended it a bit for my phy.  As this is not
-a so good hardware description, I'm a little hesitated to make it
-generic for other platforms to use in general.  What about we put off it
-a little bit until we see more platforms need the same thing?
-
-Shawn
-
-> This should probably be split between SoC specific settings in 
-> the driver and board properties in DT.
+diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+index 3683874832ae..f7789e48a022 100644
+--- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
++++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+@@ -5,19 +5,21 @@ a GPIO pin.
+ 
+ Required properties:
+ - compatible: should be "pps-gpio"
+-- gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
++- pps-gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
+ 
+ Optional properties:
+ - assert-falling-edge: when present, assert is indicated by a falling edge
+                        (instead of by a rising edge)
++- capture-clear: when present, also capture the PPS clear event
+ 
+ Example:
+ 	pps {
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_pps>;
+ 
+-		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
++		pps-gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
+ 		assert-falling-edge;
++		capture-clear;
+ 
+ 		compatible = "pps-gpio";
+ 	};
+-- 
+2.12.3
