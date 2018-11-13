@@ -1,60 +1,39 @@
-From: Tom Burkart <tom@aussec.com>
-Subject: [PATCH v6 3/4] dt-bindings: pps: pps-gpio PPS ECHO implementation
-Date: Tue, 13 Nov 2018 14:40:06 +1100
-Message-ID: <20181113034007.3878-4-tom@aussec.com>
-References: <20181113034007.3878-1-tom@aussec.com>
- <20181113034007.3878-2-tom@aussec.com>
- <20181113034007.3878-3-tom@aussec.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: phy: Add Qualcomm Synopsys High-Speed
+ USB PHY binding
+Date: Tue, 13 Nov 2018 12:59:38 +0800
+Message-ID: <CAAQ0ZWS-j06YM+Vs64RC_e1M9s_5bZfCWyL95SSaKVENJv7BNw@mail.gmail.com>
+References: <20181108070449.23572-1-shawn.guo@linaro.org> <20181108070449.23572-2-shawn.guo@linaro.org>
+ <5bea0ed8.1c69fb81.8715.38b2@mx.google.com> <20181113034200.GD20049@tiger>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181113034007.3878-3-tom@aussec.com>
+In-Reply-To: <20181113034200.GD20049@tiger>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Cc: Tom Burkart <tom@aussec.com>, devicetree@vger.kernel.org, Lukas Senger <lukas@fridolin.com>
+To: Rob Herring <robh@kernel.org>, Sriharsha Allenki <sallenki@codeaurora.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch implements the device tree changes required for the pps
-echo functionality for pps-gpio, that sysfs claims is available
-already.
+Hi Sriharsha,
 
-This patch was originally written by Lukas Senger as part of a masters
-thesis project and modified for inclusion into the linux kernel by Tom
-Burkart.
+On Tue, Nov 13, 2018 at 11:42 AM Shawn Guo <shawn.guo@linaro.org> wrote:
+<snip>
+> > > +- qcom,init-seq:
+> > > +    Value type: <u32 array>
+> > > +    Definition: Should contain a sequence of <offset value delay> tuples to
+> > > +                program 'value' into phy register at 'offset' with 'delay'
+> > > +           in us afterwards.
+> >
+> > If we wanted this type of thing in DT, we'd have a generic binding (or
+> > forth).
+>
+> Right now, this is a qualcomm usb phy specific bindings - first used in
+> qcom,usb-hs-phy.txt and I extended it a bit for my phy.  As this is not
+> a so good hardware description, I'm a little hesitated to make it
+> generic for other platforms to use in general.  What about we put off it
+> a little bit until we see more platforms need the same thing?
 
-Signed-off-by: Lukas Senger <lukas@fridolin.com>
-Signed-off-by: Tom Burkart <tom@aussec.com>
----
- Documentation/devicetree/bindings/pps/pps-gpio.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Are those register write sequences really required here?  At least,
+from the test I do, it still works with this property dropped.
 
-diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt b/Documentation/devicetree/bindings/pps/pps-gpio.txt
-index f7789e48a022..dabf885e568a 100644
---- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
-+++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
-@@ -7,10 +7,15 @@ Required properties:
- - compatible: should be "pps-gpio"
- - pps-gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
- 
-+Additional required properties for the PPS ECHO functionality:
-+- echo-gpios: one PPS ECHO GPIO in the format described by ../gpio/gpio.txt
-+- echo-active-ms: duration in ms of the active portion of the echo pulse
-+
- Optional properties:
- - assert-falling-edge: when present, assert is indicated by a falling edge
-                        (instead of by a rising edge)
- - capture-clear: when present, also capture the PPS clear event
-+- invert-pps-echo: when present, invert the PPS ECHO pulse
- 
- Example:
- 	pps {
-@@ -21,5 +26,9 @@ Example:
- 		assert-falling-edge;
- 		capture-clear;
- 
-+		echo-gpios = <&gpio1 27 GPIO_ACTIVE_HIGH>;
-+		echo-active-ms = <100>;
-+		invert-pps-echo;
-+
- 		compatible = "pps-gpio";
- 	};
--- 
-2.12.3
+Shawn
