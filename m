@@ -1,41 +1,141 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: phy: Document cadence Sierra PHY
- bindings
-Date: Mon, 12 Nov 2018 21:11:55 -0600
-Message-ID: <20181113031155.GA12431@bogus>
-References: <1542040921-10187-1-git-send-email-adouglas@cadence.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: phy: Add Qualcomm Synopsys High-Speed
+ USB PHY binding
+Date: Tue, 13 Nov 2018 11:42:08 +0800
+Message-ID: <20181113034200.GD20049@tiger>
+References: <20181108070449.23572-1-shawn.guo@linaro.org>
+ <20181108070449.23572-2-shawn.guo@linaro.org>
+ <5bea0ed8.1c69fb81.8715.38b2@mx.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1542040921-10187-1-git-send-email-adouglas@cadence.com>
+In-Reply-To: <5bea0ed8.1c69fb81.8715.38b2@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Douglas <adouglas@cadence.com>
-Cc: kishon@ti.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 12, 2018 at 04:42:01PM +0000, Alan Douglas wrote:
-> Add DT binding documentation for Sierra PHY.  The PHY supports
-> a number of different protocols, including PCIe and USB.
-> 
-> The PHY lanes may be configured as single or multi-lane links.
-> Each link is treated as a separate sub-node.  For example, if
-> there are 4 lanes in total the first 2 might be configured as
-> a multi-lane PCIe link while the other two are single lane
-> USB links, and in this case there would be 3 sub-nodes.
-> 
-> There are two resets for the PHY block (one for APB register
-> access, one for the PHY link) and separate resets for each
-> link.  For multi-lane links, the reset corresponds to the
-> reset line on the master lane, the resets on other lanes
-> have no effect.
-> 
-> Signed-off-by: Alan Douglas <adouglas@cadence.com>
-> ---
->  .../devicetree/bindings/phy/phy-cadence-sierra.txt | 67 ++++++++++++++++++++++
->  1 file changed, 67 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
+Hi Rob,
 
-Please add acks/reviewed-bys when posting new versions.
+On Mon, Nov 12, 2018 at 01:24:51PM -0600, Rob Herring wrote:
+> On Thu, Nov 08, 2018 at 03:04:48PM +0800, Shawn Guo wrote:
+> > From: Sriharsha Allenki <sallenki@codeaurora.org>
+> > 
+> > It adds bindings for Synopsys 28nm femto phy controller that supports
+> > LS/FS/HS usb connectivity on Qualcomm chipsets.
+> > 
+> > Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
+> > Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> > ---
+> >  .../phy/qcom,snps-28nm-usb-hs-phy.txt         | 101 ++++++++++++++++++
+> >  1 file changed, 101 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt b/Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt
+> > new file mode 100644
+> > index 000000000000..75e7a09dd558
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt
+> > @@ -0,0 +1,101 @@
+> > +Qualcomm Synopsys 28nm Femto phy controller
+> > +===========================================
+> > +
+> > +Synopsys 28nm femto phy controller supports LS/FS/HS usb connectivity on
+> > +Qualcomm chipsets.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible:
+> > +    Value type: <string>
+> > +    Definition: Should contain "qcom,usb-snps-hsphy".
+> 
+> SoC specific compatible?
 
-Rob
+Agreed.  A SoC prefixed compatible would be more specific and scalable
+for handling different programming model of the same IP.  I will use
+"qcom,qcs404-usb-hsphy" in v3.
+
+> 
+> > +
+> > +- reg:
+> > +    Value type: <prop-encoded-array>
+> > +    Definition: USB PHY base address and length of the register map.
+> > +
+> > +- #phy-cells:
+> > +    Value type: <u32>
+> > +    Definition: Should be 0.
+> > +
+> > +- clocks:
+> > +    Value type: <prop-encoded-array>
+> > +    Definition: See clock-bindings.txt section "consumers". List of
+> > +		three clock specifiers for reference, phy core and
+> > +		sleep clocks.
+> > +
+> > +- clock-names:
+> > +    Value type: <string>
+> > +    Definition: Names of the clocks in 1-1 correspondence with the "clocks"
+> > +		property. Must contain "ref", "phy" and "sleep".
+> > +
+> > +- resets:
+> > +    Value type: <prop-encoded-array>
+> > +    Definition: See reset.txt section "consumers". PHY reset specifiers
+> > +		for phy core and POR resets.
+> > +
+> > +- reset-names:
+> > +    Value type: <string>
+> > +    Definition: Names of the resets in 1-1 correspondence with the "resets"
+> > +		property. Must contain "phy" and "por".
+> > +
+> > +- vdd-supply:
+> > +    Value type: <phandle>
+> > +    Definition: phandle to the regulator VDD supply node.
+> > +
+> > +- vdda1p8-supply:
+> > +    Value type: <phandle>
+> > +    Definition: phandle to the regulator 1.8V supply node.
+> > +
+> > +- vdda3p3-supply:
+> > +    Value type: <phandle>
+> > +    Definition: phandle to the regulator 3.3V supply node.
+> > +
+> > +- qcom,vdd-voltage-level:
+> > +    Value type: <prop-array>
+> > +    Definition: This is a list of three integer values <no min max> where
+> > +		each value corresponding to voltage corner in uV.
+> > +
+> > +Optional properties:
+> > +
+> > +- extcon:
+> > +    Value type: <prop-encoded-array>
+> > +    Definition: Should contain the vbus extcon.
+> 
+> Don't use extcon for new bindings. Use usb-connector binding.
+
+Okay, I just did a bit of research and found that 'extcon' is becoming
+a deprecated DT property recently and we should OF graph bindings to
+specify the connector.  Will do in v3.
+
+> 
+> > +
+> > +- qcom,init-seq:
+> > +    Value type: <u32 array>
+> > +    Definition: Should contain a sequence of <offset value delay> tuples to
+> > +                program 'value' into phy register at 'offset' with 'delay'
+> > +		in us afterwards.
+> 
+> If we wanted this type of thing in DT, we'd have a generic binding (or 
+> forth).
+
+Right now, this is a qualcomm usb phy specific bindings - first used in
+qcom,usb-hs-phy.txt and I extended it a bit for my phy.  As this is not
+a so good hardware description, I'm a little hesitated to make it
+generic for other platforms to use in general.  What about we put off it
+a little bit until we see more platforms need the same thing?
+
+Shawn
+
+> This should probably be split between SoC specific settings in 
+> the driver and board properties in DT.
