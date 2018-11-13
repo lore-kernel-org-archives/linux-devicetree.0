@@ -1,66 +1,46 @@
-Return-Path: <robherring2@gmail.com>
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 02/10] dt-bindings: phy: Add support for HiSilicon's
- hi3660 USB PHY
-Message-ID: <20181112160601.GA22411@bogus>
-References: <20181027095820.40056-1-chenyu56@huawei.com>
- <20181027095820.40056-3-chenyu56@huawei.com>
+Return-Path: <SRS0=8PKZ=NY=the-dreams.de=wsa@kernel.org>
+Date: Tue, 13 Nov 2018 13:14:00 +0100
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH/RFT 2/2] thermal: rcar_thermal: add R8A77990 support
+Message-ID: <20181113121400.e32hzn3gdnyiom6h@ninjato>
+References: <1539612719-9650-1-git-send-email-ykaneko0929@gmail.com>
+ <1539612719-9650-3-git-send-email-ykaneko0929@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lqwwx5ajxjrftpbp"
 Content-Disposition: inline
-In-Reply-To: <20181027095820.40056-3-chenyu56@huawei.com>
-Date: Mon, 12 Nov 2018 10:06:20 -0600
-To: Yu Chen <chenyu56@huawei.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>, Binghui Wang <wangbinghui@hisilicon.com>
+In-Reply-To: <1539612719-9650-3-git-send-email-ykaneko0929@gmail.com>
+To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Sat, Oct 27, 2018 at 05:58:12PM +0800, Yu Chen wrote:
-> This patch adds binding documentation for supporting the hi3660 usb
-> phy on boards like the HiKey960.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: John Stultz <john.stultz@linaro.org>
-> Cc: Binghui Wang <wangbinghui@hisilicon.com>
-> Signed-off-by: Yu Chen <chenyu56@huawei.com>
-> ---
->  .../devicetree/bindings/phy/phy-hi3660-usb3.txt     | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
-> new file mode 100644
-> index 000000000000..26cab738ac7b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
-> @@ -0,0 +1,21 @@
-> +Hisilicon hi3660 usb PHY
-> +-----------------------
-> +
-> +Required properties:
-> +- compatible: should be "hisilicon,hi3660-usb-phy"
-> +- #phy-cells: must be 0
-> +- hisilicon,pericrg-syscon: phandle of syscon used to control phy.
-> +- hisilicon,pctrl-syscon: phandle of syscon used to control phy.
-> +- hisilicon,usb3-otg-bc-syscon: phandle of syscon used to control phy.
-> +- eye-diagram-param: parameter set for phy
 
-hisilicon,eye-diagram-param
+--lqwwx5ajxjrftpbp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +Refer to phy/phy-bindings.txt for the generic PHY binding properties
-> +
-> +Example:
-> +	usb_phy: usbphy {
 
-usb-phy {
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-> +		compatible = "hisilicon,hi3660-usb-phy";
-> +		#phy-cells = <0>;
-> +		hisilicon,pericrg-syscon = <&crg_ctrl>;
-> +		hisilicon,pctrl-syscon = <&pctrl>;
-> +		hisilicon,usb3-otg-bc-syscon = <&usb3_otg_bc>;
-> +		eye-diagram-param = <0x22466e4>;
-> +	};
-> -- 
-> 2.15.0-rc2
-> 
+
+--lqwwx5ajxjrftpbp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlvqwAgACgkQFA3kzBSg
+Kba9aw//Qmyo23uDLMDDrlCieR+ksODO9WbCvgHCbD0wBGgyEBksauz08gRb4uDq
+XOzeKd6bgFtGb3nZCoKtjCwVaczk8AJWBRvuLiU2onmXOCiOpD67v6b8hBNuGicp
+AaFTTLCdsDfZBYECgII3M4Xcz1Bvz0A1fLJs5wLqo+Lla7i7WH/ifC0eS9ZT7gVz
+qGsRmSBK5onOkOrASxwS8eEGLOFmSx185uUvF2T0xpnAlRl4u/ezMg0Huvon2lm4
+dNG3NsPrGES26HyAkDAZ6BUhZuq3LUGEgCxqK0xJi0kHRJz1dGSFsDwrOw9M/5bQ
+FJxGSNiWBhpbYGFHW6mbQqERvGufhFKXPRS6ez/HrZeZOmzinznM+SUis/RlKpsH
+ZX+2rfgi8nd1F+CwuBmndTmclp0D1plIfYLr48o4NEUyar3/rOZ7O5+sJo/EJ4Yn
+78tNxy3EPLhvqsl1YNscI3J3onupQ+bdPbbV+/XdLNWoQ5o+9RacZAjCWt94cs70
+g6BsNGHjBHP7h/xT0zh1TW07q+AEvMhAzg5A72n3SoEWfHuisLXtvK1h5Zt79kf5
+O+O6YJWFYM3GB+sA0dENYfp5hxfBkrYrOXs948kwCIPzazDal6ZMofW8xCw2Kxyd
+s+25ZuLpx+QhxqkmndDAhL9hFSRMxXYbsVJSxsuNmb5c0xQFHTI=
+=UTjf
+-----END PGP SIGNATURE-----
+
+--lqwwx5ajxjrftpbp--
