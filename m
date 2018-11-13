@@ -1,53 +1,68 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v3 0/4] Add support of STM32 hwspinlock
-Date: Tue, 13 Nov 2018 09:09:48 +0100
-Message-ID: <e252e4c7-ec95-b4c2-f988-526fd8bda942@st.com>
-References: <20181112152342.6561-1-benjamin.gaignard@st.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH 2/5] media: sunxi: Refactor the Makefile and Kconfig
+Date: Tue, 13 Nov 2018 09:24:14 +0100
+Message-ID: <346556f7586b574d35bf3061adb0fe42446f0136.1542097288.git-series.maxime.ripard@bootlin.com>
+References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181112152342.6561-1-benjamin.gaignard@st.com>
-Content-Language: en-US
+In-Reply-To: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>, ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+To: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Benjamin
+The Makefile and Kconfig for the sun6i CSI driver are included in the main
+Makefile / KConfig file. Since we're going to add a new CSI driver for an
+older chip, and the Cedrus driver eventually, it makes more sense to put
+those in our directory.
 
-On 11/12/18 4:23 PM, Benjamin Gaignard wrote:
-> This serie adds the support of the hardware semaphore block for stm32mp1 SoC.
-> 
-> version 3:
-> - fix clock name in properties description.
-> - use postcore_initcall() instead of module_platform_driver()
-> 
-> version 2:
-> - fix comments done by Bjorn about clock naming, license terms in header,
->    alphabetic ordering in Makefile and Kconfig and remove function
-> - Do not push test module in this version while waiting for feedbacks about it
-> 
-> 
-> Benjamin Gaignard (4):
->    dt-bindings: hwlock: Document STM32 hwspinlock bindings
->    hwspinlock: add STM32 hwspinlock device
->    ARM: dts: stm32: Add hwspinlock node for stm32mp157 SoC
->    ARM: dts: stm32: enable hwspinlock on stm32mp157c-ed1
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ drivers/media/platform/Kconfig        | 2 +-
+ drivers/media/platform/Makefile       | 2 +-
+ drivers/media/platform/sunxi/Kconfig  | 1 +
+ drivers/media/platform/sunxi/Makefile | 1 +
+ 4 files changed, 4 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/media/platform/sunxi/Kconfig
+ create mode 100644 drivers/media/platform/sunxi/Makefile
 
-DT patches applied on stm32-next.
-
-Regards
-Alex
-
-> 
->   .../bindings/hwlock/st,stm32-hwspinlock.txt        |  23 +++
->   arch/arm/boot/dts/stm32mp157c-ed1.dts              |   4 +
->   arch/arm/boot/dts/stm32mp157c.dtsi                 |   9 ++
->   drivers/hwspinlock/Kconfig                         |   9 ++
->   drivers/hwspinlock/Makefile                        |   1 +
->   drivers/hwspinlock/stm32_hwspinlock.c              | 156 +++++++++++++++++++++
->   6 files changed, 202 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt
->   create mode 100644 drivers/hwspinlock/stm32_hwspinlock.c
-> 
+diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+index 3c8b15ea957f..52cc41f63df3 100644
+--- a/drivers/media/platform/Kconfig
++++ b/drivers/media/platform/Kconfig
+@@ -137,7 +137,7 @@ source "drivers/media/platform/am437x/Kconfig"
+ source "drivers/media/platform/xilinx/Kconfig"
+ source "drivers/media/platform/rcar-vin/Kconfig"
+ source "drivers/media/platform/atmel/Kconfig"
+-source "drivers/media/platform/sunxi/sun6i-csi/Kconfig"
++source "drivers/media/platform/sunxi/Kconfig"
+ 
+ config VIDEO_TI_CAL
+ 	tristate "TI CAL (Camera Adaptation Layer) driver"
+diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
+index 2662a230f681..2083bbd35584 100644
+--- a/drivers/media/platform/Makefile
++++ b/drivers/media/platform/Makefile
+@@ -99,4 +99,4 @@ obj-y					+= meson/
+ 
+ obj-y					+= cros-ec-cec/
+ 
+-obj-$(CONFIG_VIDEO_SUN6I_CSI)		+= sunxi/sun6i-csi/
++obj-y					+= sunxi/
+diff --git a/drivers/media/platform/sunxi/Kconfig b/drivers/media/platform/sunxi/Kconfig
+new file mode 100644
+index 000000000000..1b6e89cb78b2
+--- /dev/null
++++ b/drivers/media/platform/sunxi/Kconfig
+@@ -0,0 +1 @@
++source "drivers/media/platform/sunxi/sun6i-csi/Kconfig"
+diff --git a/drivers/media/platform/sunxi/Makefile b/drivers/media/platform/sunxi/Makefile
+new file mode 100644
+index 000000000000..8d06f98500ee
+--- /dev/null
++++ b/drivers/media/platform/sunxi/Makefile
+@@ -0,0 +1 @@
++obj-y		+= sun6i-csi/
+-- 
+git-series 0.9.1
