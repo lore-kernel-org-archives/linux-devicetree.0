@@ -1,60 +1,104 @@
-From: Emmanuel Vadot <manu@freebsd.org>
-Subject: [PATCH] arm64: dts: marvell: armada_8k: reserve memory for ATF
-Date: Tue, 13 Nov 2018 14:48:07 +0100
-Message-ID: <20181113134807.53292-1-manu@freebsd.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 0/5] media: Allwinner A10 CSI support
+Date: Tue, 13 Nov 2018 14:52:59 +0100
+Message-ID: <20181113135259.onutfjtoi25afnfe@flea>
+References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
+ <df54f2e6-e207-92de-767a-e356345a1a56@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Emmanuel Vadot <manu@freebsd.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tuowivvrq2idyzks"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <df54f2e6-e207-92de-767a-e356345a1a56@xs4all.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Like 4436a371 for 37xx, reserve the PSCI area memory region so kernels
-can call the code there.
-Region address is taken from the ATF code [1] and is 2MiB aligned.
 
-[1] plat/marvell/a8k/common/include/platform_def.h
+--tuowivvrq2idyzks
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
----
- arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Hi Hans,
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-index 073610ac0a53..d8a79bb69de1 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-@@ -23,6 +23,21 @@
- 		spi0 = &spi0;
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		/*
-+		 * The PSCI firmware region depicted below is the default one
-+		 * and should be updated by the bootloader.
-+		 */
-+		psci-area@4000000 {
-+			reg = <0 0x4000000 0 0x200000>;
-+			no-map;
-+		};
-+	};
-+
- 	psci {
- 		compatible = "arm,psci-0.2";
- 		method = "smc";
--- 
-2.19.0
+On Tue, Nov 13, 2018 at 01:30:49PM +0100, Hans Verkuil wrote:
+> On 11/13/18 09:24, Maxime Ripard wrote:
+> > Hi,
+> >=20
+> > Here is a series introducing the support for the A10 (and SoCs of the s=
+ame
+> > generation) CMOS Sensor Interface (called CSI, not to be confused with
+> > MIPI-CSI, which isn't support by that IP).
+> >=20
+> > That interface is pretty straightforward, but the driver has a few issu=
+es
+> > that I wanted to bring up:
+> >=20
+> >   * The only board I've been testing this with has an ov5640 sensor
+> >     attached, which doesn't work with the upstream driver. Copying the
+> >     Allwinner init sequence works though, and this is how it has been
+> >     tested. Testing with a second sensor would allow to see if it's an
+> >     issue on the CSI side or the sensor side.
+> >   * When starting a capture, the last buffer to capture will fail due to
+> >     double buffering being used, and we don't have a next buffer for the
+> >     last frame. I'm not sure how to deal with that though. It seems like
+> >     some drivers use a scratch buffer in such a case, some don't care, =
+so
+> >     I'm not sure which solution should be preferred.
+> >   * We don't have support for the ISP at the moment, but this can be ad=
+ded
+> >     eventually.
+> >=20
+> >   * How to model the CSI module clock isn't really clear to me. It looks
+> >     like it goes through the CSI controller and then is muxed to one of=
+ the
+> >     CSI pin so that it can clock the sensor. I'm not quite sure how to
+> >     model it, if it should be a clock, the CSI driver being a clock
+> >     provider, or if the sensor should just use the module clock directl=
+y.
+> >=20
+> > Here is the v4l2-compliance output:
+>=20
+> Test v4l2-compliance with the -s option so you test streaming as well.
+> Even better is -f where it tests streaming with all available formats.
+
+I will, thanks for the tip!
+
+> > v4l2-compliance SHA   : 339d550e92ac15de8668f32d66d16f198137006c
+>=20
+> Hmm, I can't find this SHA. Was this built from the main v4l-utils repo?
+
+It was, but using Buildroot. The version packaged in the latest stable
+version I was using (2018.08) is 1.14.2.
+
+Looking at the Makefile from v4l2-compliance, it looks like it just
+invokes git to retrieve the git commit and uses that as the hash. In
+Buildroot's case, since buildroot will download the tarball, this will
+end up returning the SHA commit of the buildroot repo building the
+sources, not the version of the sources themselves.
+
+I'm not sure how to address that properly though. Thomas, how do you
+usually deal with this?
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--tuowivvrq2idyzks
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW+rXOwAKCRDj7w1vZxhR
+xabMAQCXY5WuoarBlzgehUDkLQh39CHaTJXUvqty0a5lsPAz6QD+OCaF3COJhxGV
+h5v5o8g6gjkqE90OzFIbKD+YWrm8DAM=
+=Brps
+-----END PGP SIGNATURE-----
+
+--tuowivvrq2idyzks--
