@@ -1,45 +1,48 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 01/26] clk: sunxi-ng: a64: Fix gate bit
- of DSI DPHY
-Date: Tue, 13 Nov 2018 14:08:17 +0100
-Message-ID: <20181113130817.nols3red37yj3yit@flea>
-References: <20181113111633.20189-1-jagan@amarulasolutions.com>
- <20181113111633.20189-2-jagan@amarulasolutions.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2ivucfeamb4z5i5b"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2EZVPPQKGQESB7G53A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20181113111633.20189-2-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: [PATCH v3 0/2] irqchip: Add support for Renesas RZ/N1 GPIO interrupt multiplexer
+Date: Tue, 13 Nov 2018 13:09:08 +0000
+Message-ID: <20181113130910.22130-1-phil.edworthy@renesas.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On RZ/N1 devices, there are lots of GPIO interrupts that are multiplexed before
+getting to the GIC interrupt controller. Other than the multiplexing, there is
+no other logic applied to the signals.
 
---2ivucfeamb4z5i5b
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+The multiplexing cannot be handled dynamically because there is another CPU that
+runs firmware. It's likely that the firmware will use some of these GPIO
+interrupts and so we don't want them to move around.
 
-On Tue, Nov 13, 2018 at 04:46:08PM +0530, Jagan Teki wrote:
-> DSI DPHY gate bit on MIPI DSI clock register is bit 15
-> not bit 30.
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> Acked-by: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+---
+v3:
+ - Use 'interrupt-map' DT property to map the interrupts, this is very similar
+   to PCIe MSI. The only difference is that we need to get hold of the interrupt
+   specifier for the interupts coming into the irqmux.
+   I had completely messed up the use of 'interrupt-map' in v2... oops.
+ - Do not use a chained interrupt controller.
+v2:
+ - Split DT bindings into separate patch.
+ - Use interrupt-map to allow the GPIO controller info to be specified
+   as part of the irq.
+ - Don't show status in binding examples.
+ - Don't show the soc/board split in binding doc.
+ - Renamed struct and funcs from 'girq' to a more comprehenisble 'irqmux'.
 
-Applied, thanks!
-Maxime
+Phil Edworthy (2):
+  dt-bindings/interrupt-controller: rzn1: Add RZ/N1 gpio irq mux binding
+  irqchip: Add support for Renesas RZ/N1 GPIO interrupt multiplexer
+
+ .../interrupt-controller/renesas,rzn1-mux.txt |  73 +++++++
+ drivers/irqchip/Kconfig                       |   9 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/rzn1-irq-mux.c                | 205 ++++++++++++++++++
+ 4 files changed, 288 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt
+ create mode 100644 drivers/irqchip/rzn1-irq-mux.c
 
 -- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---2ivucfeamb4z5i5b--
+2.17.1
