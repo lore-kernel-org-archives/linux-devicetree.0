@@ -1,59 +1,70 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [RFC PATCH 0/6] Armada 38x comphy driver to support 2.5Gbps
- networking
-Date: Wed, 14 Nov 2018 13:39:29 +0530
-Message-ID: <f0e71064-6919-6f7f-d605-671a1c662a33@ti.com>
-References: <20181112122933.GD30658@n2100.armlinux.org.uk>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: Sound and the TDA998x binding
+Date: Tue, 13 Nov 2018 18:12:37 +0000
+Message-ID: <29aba968-c855-d2f4-8ba3-97f2cfdb0f2d@axentia.se>
+References: <40fdabaa-2b81-df4b-a949-725855586a85@axentia.se>
+ <20181113172440.GK30658@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181112122933.GD30658@n2100.armlinux.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20181113172440.GK30658@n2100.armlinux.org.uk>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-ID: <1C8B3B2182E6DB488919F9E990FFB00C@eurprd02.prod.outlook.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 12/11/18 5:59 PM, Russell King - ARM Linux wrote:
-> Hi,
-> 
-> This series adds support for dynamically switching between 1Gbps
-> and 2.5Gbps networking for the Marvell Armada 38x SoCs, tested on
-> Armada 388 on the Clearfog platform.
-> 
-> This is necessary to be able to connect (eg) a Clearfog platform
-> with a Macchiatobin platform via the SFP sockets, as Clearfog
-> currently only supports 1Gbps networking via the SFP socket and
-> Macchiatobin defaults to 2.5Gbps when using Fiberchannel SFPs.
-> 
-> In order to allow dynamic switching, we need to implement a common
-> phy driver to switch the ethernet serdes lane speed - 2.5Gbps is
-> just 1Gbps up-clocked by 2.5x.  We implement a simple comphy
-> driver to achieve this, which only supports networking.
-> 
-> With this, we are able to support both Fiberchannel SFPs operating
-> at 2.5Gbps or 1Gbps, and 1G ethernet SFPs plugged into the Clearfog
-> platform, dynamically selecting according to the SFPs abilities.
-> 
-> I'm aware of the proposed changes to the PHY layer, changing
-> phy_set_mode() to take the ethernet phy interface type, hence why
-> this is RFC - there's also the question about how this will be
-> merged.  This series is currently based on 4.20-rc1, but will
-> likely need to be rebased when the PHY layer changes hit.
-
-For this case, I'd prefer the phy_set_mode series and the phy and net changes
-here (after rebasing) go via linux-phy tree.
-
-Thanks
-Kishon
+T24gMjAxOC0xMS0xMyAxODoyNCwgUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4IHdyb3RlOg0KPiBP
+biBUdWUsIE5vdiAxMywgMjAxOCBhdCAwMToyODo0MFBNICswMDAwLCBQZXRlciBSb3NpbiB3cm90
+ZToNCj4+IEhpIQ0KPj4NCj4+IEknbSB3b25kZXJpbmcgYWJvdXQgc29tZSBwcm9ncmFtbWluZyBk
+ZXRhaWxzIHJlZ2FyZGluZyB0aGUgVERBOTk4eA0KPj4gZHJpdmVyLi4uDQo+Pg0KPj4gVGhlIGJp
+bmRpbmdzIGRvY3VtZW50YXRpb24gWzFdIHN0YXRlIHRoYXQgb25lIHNob3VsZCBmaWxsIGluIHRo
+ZQ0KPj4gZGVzaXJlZCByZWdpc3RlciBjb250ZW50IG9mIHRoZSBBUF9FTkEgcmVnaXN0ZXIuIEhv
+d2V2ZXIsIEkgY2Fubm90DQo+PiBmaW5kIGFueSBkZXRhaWxzIGFueXdoZXJlIGFib3V0IGhvdyBv
+bmUgZGV0ZXJtaW5lcyB3aGF0IGlzIGRlc2lyZWQuDQo+PiBXaGVuIEkgbG9vayBmb3IgZGF0YSBz
+aGVldHMgb24gdGhlIEludGVybmV0LCBhbGwgSSBmaW5kIGlzIGEgInNob3J0Ig0KPj4gZGF0YSBz
+aGVldCwgd2hpY2ggaXMgZmFyIGZyb20gZW5saWdodGVuaW5nLiBUaGVyZSBhcmUgaGludHMgYWJv
+dXQNCj4+IGEgImZ1bGwiIGRhdGEgc2hlZXQgaW4gdGhlIGNoYXB0ZXIgb24gbGVnYWwgaW5mb3Jt
+YXRpb24gb2YgdGhlDQo+PiAic2hvcnQiIGRhdGEgc2hlZXQuIElzIHRoZSAiZnVsbCIgZGF0YSBz
+aGVldCBwcm90ZWN0ZWQgYnkgYW4gTkRBDQo+PiBvciBzb21ldGhpbmc/IFRoYXQncyB0aGUgb25s
+eSByZWFzb24gSSBjYW4gZmluZCBmb3IgaXQgbm90IGJlaW5nDQo+PiBhdmFpbGFibGUuLi4NCj4+
+DQo+PiBNYXliZSBzb21lb25lIHdpdGggc3VjaCBhICJmdWxsIiBkYXRhIHNoZWV0IGF0IGhhbmQg
+Y2FuIGVubGlnaHRlbg0KPj4gbWUgb24gdGhlIHdvcmtpbmdzIG9mIHRoaXMgQVBfRU5BIHJlZ2lz
+dGVyIHNvIHRoYXQgSSBrbm93IHdoYXQgaXQgaXMNCj4+IHRoYXQgSSBuZWVkIHRvIGZpbGwgaW4/
+IFNpbmNlIGl0IGlzIHNvIGRpZmZpY3VsdCB0byBmaW5kIHRoaXMgaW5mbywNCj4+IG1heWJlIGl0
+IHNob3VsZCBiZSBhZGRlZCB0byB0aGUgYmluZGluZz8NCj4gDQo+IFRoZXJlJ3MgdmFyaW91cyBw
+dWJsaWMgZG9jdW1lbnRzIGZvciB0aGUgVERBOTk4eCBjaGlwcywgc29tZSBvZiB3aGljaA0KPiBk
+byBjb250YWluIHRoZSByZWdpc3RlciBwcm9ncmFtbWluZyBpbmZvcm1hdGlvbiAtIGFsdGhvdWdo
+IHdlIGRvbid0DQo+IGhhdmUgZGVmaW5pdGl2ZSBpbmZvcm1hdGlvbiBmb3IgZXZlcnkgdmFyaWFu
+dCB0aGF0IHRoZSBkcml2ZXIgc3VwcG9ydHMuDQoNCkkgaGF2ZSBsb29rZWQsIGFuZCBub3QgZm91
+bmQgYW55dGhpbmcuIERvIHlvdSBoYXZlIGFueSBwb2ludGVyPyBGb3Igd2hhdA0KY2hpcChzKSBp
+biB0aGUgZmFtaWx5IGFyZSB0aGVyZSByZWdpc3RlciBpbmZvcm1hdGlvbj8NCg0KPiBFdmVuIHNv
+LCB0aGF0IGRvZXNuJ3QgZ2l2ZSB1cyBkb2N1bWVudGF0aW9uIGZvciB0aGlzIHJlZ2lzdGVyLCBz
+byB3ZQ0KPiBoYXZlIHRvIHJlc29ydCB0byBjb2RlIHJlY2VpdmVkIGZyb20gb3RoZXIgc291cmNl
+cy4NCj4gDQo+IFRoZSBBUF9FTkEgcmVnaXN0ZXIgImF1ZGlvIHBvcnQgZW5hYmxlIiBpcyBvbmUg
+Yml0IHBlciBBUCBzaWduYWwsIGZyb20NCj4gdGhlIEFQMCBwaW4gYmVpbmcgYml0IDAsIHVwIHRv
+IHRoZSBBUDcgcGluIGJlaW5nIGJpdCA3Lg0KDQpUaGFua3MhIEhvd2V2ZXIsIGluIHRoZSAic2hv
+cnQiIHNoZWV0IGZvciB0aGUgVERBMTk5ODggdGhhdCBJIGhhdmUsIHRoZXJlDQppcyB0aGlzIHRh
+YmxlOg0KDQpBUDAgICAgICAgICAgICAgICAgICBXUyAod29yZCBzZWxlY3QpDQpBUDEgICBTL1BE
+SUYgaW5wdXQgICBJMlMtYnVzIGNoYW5uZWwgMA0KQVAyICAgUy9QRElGIGlucHV0ICAgSTJTLWJ1
+cyBjaGFubmVsIDENCkFQMyAgICAgICAgICAgICAgICAgIEkyUy1idXMgY2hhbm5lbCAyDQpBUDQg
+ICAgICAgICAgICAgICAgICBJMlMtYnVzIGNoYW5uZWwgMw0KQUNMSyAgICAgICAgICAgICAgICAg
+U0NLIChJMlMtYnVzIGNsb2NrKQ0KDQpBUDUgdGhyb3VnaCBBUDcgYXJlIG5vd2hlcmUgdG8gYmUg
+Zm91bmQuLi4NCg0KU2hvdWxkIEkgYXNzdW1lIHRoYXQgQUNMSyBpcyBhbiBhbGlhcyBmb3IgQVA1
+LCBhbmQgdGhhdCB0aGUgcmVnaXN0ZXINCmNvbnRlbnQgc2hvdWxkIGJlIDB4MjMgZm9yIEkyUyBv
+biBjaGFubmVsIDA/IE9yIGlzIEFDTEsgbm90IHBhcnQgb2YNCnRoZSBBUF9FTkEgcmVnaXN0ZXIg
+YXQgYWxsLCBzbyB0aGF0IDB4MDMgaXMgbW9yZSBsaWtlbHkgdG8gYmUgY29ycmVjdD8NCg0KQ2hl
+ZXJzLA0KUGV0ZXINCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
