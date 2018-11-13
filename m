@@ -1,89 +1,134 @@
-From: Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>
-Subject: Re: [PATCH v2] drm/msm/dpu: Correct dpu destroy and
- disable order
-Date: Tue, 13 Nov 2018 10:40:22 -0500
-Message-ID: <20181113154022.GK154160@art_vandelay>
-References: <1541162957-12796-1-git-send-email-jshekhar@codeaurora.org>
- <a2c1906e-f61d-3da2-45a4-3bc14c4201dd@codeaurora.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 0/5] media: Allwinner A10 CSI support
+Date: Tue, 13 Nov 2018 16:52:27 +0100
+Message-ID: <20181113155227.62jjs3mpomwgr7xd@flea>
+References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
+ <df54f2e6-e207-92de-767a-e356345a1a56@xs4all.nl>
+ <20181113135259.onutfjtoi25afnfe@flea>
+ <f07a0460-cdba-c1a5-acfd-66a39f447a5a@cisco.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mey3hhnj2kgojfyq"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <a2c1906e-f61d-3da2-45a4-3bc14c4201dd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+In-Reply-To: <f07a0460-cdba-c1a5-acfd-66a39f447a5a@cisco.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hansverk@cisco.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Hans Verkuil <hverkuil@xs4all.nl>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBOb3YgMDksIDIwMTggYXQgMTE6Mzc6MTdBTSArMDUzMCwgUmFqZW5kcmEgTmF5YWsg
-d3JvdGU6Cj4gCj4gT24gMTEvMi8yMDE4IDY6MTkgUE0sIEpheWFudCBTaGVraGFyIHdyb3RlOgo+
-ID4gSW4gY2FzZSBvZiBtc20gZHJtIGJpbmQgZmFpbHVyZSwgZHB1X21kc3NfZGVzdHJveSBpcyB0
-cmlnZ2VyZWQuCj4gPiBJbiB0aGlzIGZ1bmN0aW9uLCByZXNvdXJjZXMgYXJlIGZyZWVkIGFuZCBw
-bSBydW50aW1lIGRpc2FibGUgaXMKPiA+IGNhbGxlZCwgd2hpY2ggdHJpZ2dlcnMgZHB1X21kc3Nf
-ZGlzYWJsZS4gTm93IGluIGRwdV9tZHNzX2Rpc2FibGUsCj4gPiBkcml2ZXIgdHJpZXMgdG8gYWNj
-ZXNzIGEgbWVtb3J5IHdoaWNoIGlzIGFscmVhZHkgZnJlZWQuIFRoaXMKPiA+IHJlc3VsdHMgaW4g
-a2VybmVsIHBhbmljLiBGaXggdGhpcyBieSBlbnN1cmluZyBwcm9wZXIgc2VxdWVuY2UKPiA+IG9m
-IGRwdSBkZXN0cm95IGFuZCBkaXNhYmxlIGNhbGxzLgo+ID4gCj4gPiBDaGFuZ2VzIGluIHYyOgo+
-ID4gICAgIC0gUmVtb3ZlZCBkb3VibGUgc3BhY2luZ3MgW0pleWt1bWFyXQo+ID4gCj4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBKYXlhbnQgU2hla2hhciA8anNoZWtoYXJAY29kZWF1cm9yYS5vcmc+Cj4gCj4g
-SSB3YXMgdGVzdGluZyB0aGlzIHBhdGNoIG91dCBhbmQgaW4gbXkgc2V0dXAgSSBzZWUgdGhhdCB3
-aXRoIHRoaXMKPiBjaGFuZ2UsIGR1cmluZyBhIGRzaSBwcm9iZSBkZWZlciBjYXNlLCBhIGRwdV9t
-ZHNzX2VuYWJsZSgpIGlzIGNhbGxlZAo+IGZvbGxvd2VkIGJ5IGEgZHB1X21kc3NfZGVzdHJveSgp
-IGJ1dCBkcHVfbWRzc19kaXNhYmxlKCkgaXMgbmV2ZXIgY2FsbGVkLgo+IAo+IFRoaXMgcmVzdWx0
-cyBpbiBhIG1pc21hdGNoIGluIGNsb2NrIHVzZWNvdW50IGNhdXNpbmcgdGhlIG1kcCBjbG9ja3Mg
-dG8KPiBzdGF5IGVuYWJsZWQgZXZlbiB3aXRoIGRpc3BsYXkgdHVybmVkIG9mZi4KClRoaXMgc3Vn
-Z2VzdHMgYW4gdW5tYXRjaGVkIHBtX3J1bnRpbWVfZ2V0L3B1dC4gSSBqdXN0IGF1ZGl0ZWQgdGhl
-IGNvZGUgYW5kCm5vdGhpbmcgc3R1Y2sgb3V0IHRvIG1lIGluIHRoZSBwcm9iZSBkZWZlciBjYXNl
-LCB0aGluZ3Mgc2VlbSB0byBiZSB3ZWxsIG1hdGNoZWQuCkNvdWxkIHlvdSBpbnN0cnVtZW50IHRo
-ZSBwbV9ydW50aW1lXyogY2FsbHMgaW4gbXNtL2RwdSBhbmQgc2VlIGlmIHRoZXJlJ3MgYSBfZ2V0
-CndpdGhvdXQgYSBfcHV0PwoKU2VhbgoKPiAKPiBsb2NhbGhvc3QgfiAjIGNhdCAvc3lzL2tlcm5l
-bC9kZWJ1Zy9jbGsvY2xrX3N1bW1hcnkgfCBncmVwIG1kc3MKPiAgZGlzcF9jY19tZHNzX3JzY2Nf
-YWhiX2NsayAgICAgICAgICAgIDAgICAgICAgIDAgICAgICAgIDAgICAgICAgICAgIDAgICAgICAg
-ICAgMCAgICAgMCAgNTAwMDAKPiAgZGlzcF9jY19tZHNzX2F4aV9jbGsgICAgICAgICAgICAgICAg
-IDAgICAgICAgIDAgICAgICAgIDAgICAgICAgICAgIDAgICAgICAgICAgMCAgICAgMCAgNTAwMDAK
-PiAgZGlzcF9jY19tZHNzX2FoYl9jbGsgICAgICAgICAgICAgICAgIDAgICAgICAgIDAgICAgICAg
-IDAgICAgICAgICAgIDAgICAgICAgICAgMCAgICAgMCAgNTAwMDAKPiAgICAgICAgZGlzcF9jY19t
-ZHNzX21kcF9jbGtfc3JjICAgICAgIDEgICAgICAgIDEgICAgICAgIDAgICAgMTkyMDAwMDAgICAg
-ICAgICAgMCAgICAgMCAgNTAwMDAKPiAgICAgICAgICAgZGlzcF9jY19tZHNzX21kcF9sdXRfY2xr
-ICAgICAgIDAgICAgICAgIDAgICAgICAgIDAgICAgMTkyMDAwMDAgICAgICAgICAgMCAgICAgMCAg
-NTAwMDAKPiAgICAgICAgICAgZGlzcF9jY19tZHNzX21kcF9jbGsgICAgICAgIDEgICAgICAgIDEg
-ICAgICAgIDAgICAgMTkyMDAwMDAgICAgICAgICAgMCAgICAgMCAgNTAwMDAKPiAgICAgICAgZGlz
-cF9jY19tZHNzX3ZzeW5jX2Nsa19zcmMgICAgICAgMCAgICAgICAgMCAgICAgICAgMCAgICAxOTIw
-MDAwMCAgICAgICAgICAwICAgICAwICA1MDAwMAo+IAo+IEFsc28gdG8gbm90ZSwgb24gYW4gb2xk
-ZXIgNC4xNCBrZXJuZWwsIEkgZG8gbm90IHNlZSBhbnkgaXNzdWUgaW4gdGhlIG9yZGVyIGluIHdo
-aWNoCj4gdGhlc2UgZnVuY3Rpb25zIGFyZSBjYWxsZWQgaW4gdGhlIGRzaSBwcm9iZSBkZWZlciBj
-YXNlLCBpLmUgaXRzIGFuIGVuYWJsZSBmb2xsb3dlZCBieQo+IGEgZGlzYWJsZSBhbmQgdGhlbiBh
-IGRlc3Ryb3kgKGFuZCB0aGF0J3Mgd2l0aG91dCB0aGlzIHBhdGNoKQo+IAo+ID4gLS0tCj4gPiAg
-IGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMgfCA1ICstLS0tCj4gPiAg
-IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgNCBkZWxldGlvbnMoLSkKPiA+IAo+ID4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMgYi9k
-cml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jCj4gPiBpbmRleCBmZDljODkz
-Li45MDJiYjRjIDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEv
-ZHB1X21kc3MuYwo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21k
-c3MuYwo+ID4gQEAgLTE1NiwxOCArMTU2LDE1IEBAIHN0YXRpYyB2b2lkIGRwdV9tZHNzX2Rlc3Ry
-b3koc3RydWN0IGRybV9kZXZpY2UgKmRldikKPiA+ICAgCXN0cnVjdCBkcHVfbWRzcyAqZHB1X21k
-c3MgPSB0b19kcHVfbWRzcyhwcml2LT5tZHNzKTsKPiA+ICAgCXN0cnVjdCBkc3NfbW9kdWxlX3Bv
-d2VyICptcCA9ICZkcHVfbWRzcy0+bXA7Cj4gPiArCXBtX3J1bnRpbWVfZGlzYWJsZShkZXYtPmRl
-dik7Cj4gPiAgIAlfZHB1X21kc3NfaXJxX2RvbWFpbl9maW5pKGRwdV9tZHNzKTsKPiA+IC0KPiA+
-ICAgCWZyZWVfaXJxKHBsYXRmb3JtX2dldF9pcnEocGRldiwgMCksIGRwdV9tZHNzKTsKPiA+IC0K
-PiA+ICAgCW1zbV9kc3NfcHV0X2NsayhtcC0+Y2xrX2NvbmZpZywgbXAtPm51bV9jbGspOwo+ID4g
-ICAJZGV2bV9rZnJlZSgmcGRldi0+ZGV2LCBtcC0+Y2xrX2NvbmZpZyk7Cj4gPiAgIAlpZiAoZHB1
-X21kc3MtPm1taW8pCj4gPiAgIAkJZGV2bV9pb3VubWFwKCZwZGV2LT5kZXYsIGRwdV9tZHNzLT5t
-bWlvKTsKPiA+ICAgCWRwdV9tZHNzLT5tbWlvID0gTlVMTDsKPiA+IC0KPiA+IC0JcG1fcnVudGlt
-ZV9kaXNhYmxlKGRldi0+ZGV2KTsKPiA+ICAgCXByaXYtPm1kc3MgPSBOVUxMOwo+ID4gICB9Cj4g
-PiAKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IEZy
-ZWVkcmVubyBtYWlsaW5nIGxpc3QKPiBGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4g
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
-Ci0tIApTZWFuIFBhdWwsIFNvZnR3YXJlIEVuZ2luZWVyLCBHb29nbGUgLyBDaHJvbWl1bSBPUwpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8g
-bWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+
+--mey3hhnj2kgojfyq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Nov 13, 2018 at 03:01:45PM +0100, Hans Verkuil wrote:
+> On 11/13/18 14:52, Maxime Ripard wrote:
+> > Hi Hans,
+> >=20
+> > On Tue, Nov 13, 2018 at 01:30:49PM +0100, Hans Verkuil wrote:
+> >> On 11/13/18 09:24, Maxime Ripard wrote:
+> >>> Hi,
+> >>>
+> >>> Here is a series introducing the support for the A10 (and SoCs of the=
+ same
+> >>> generation) CMOS Sensor Interface (called CSI, not to be confused with
+> >>> MIPI-CSI, which isn't support by that IP).
+> >>>
+> >>> That interface is pretty straightforward, but the driver has a few is=
+sues
+> >>> that I wanted to bring up:
+> >>>
+> >>>   * The only board I've been testing this with has an ov5640 sensor
+> >>>     attached, which doesn't work with the upstream driver. Copying the
+> >>>     Allwinner init sequence works though, and this is how it has been
+> >>>     tested. Testing with a second sensor would allow to see if it's an
+> >>>     issue on the CSI side or the sensor side.
+> >>>   * When starting a capture, the last buffer to capture will fail due=
+ to
+> >>>     double buffering being used, and we don't have a next buffer for =
+the
+> >>>     last frame. I'm not sure how to deal with that though. It seems l=
+ike
+> >>>     some drivers use a scratch buffer in such a case, some don't care=
+, so
+> >>>     I'm not sure which solution should be preferred.
+> >>>   * We don't have support for the ISP at the moment, but this can be =
+added
+> >>>     eventually.
+> >>>
+> >>>   * How to model the CSI module clock isn't really clear to me. It lo=
+oks
+> >>>     like it goes through the CSI controller and then is muxed to one =
+of the
+> >>>     CSI pin so that it can clock the sensor. I'm not quite sure how to
+> >>>     model it, if it should be a clock, the CSI driver being a clock
+> >>>     provider, or if the sensor should just use the module clock direc=
+tly.
+> >>>
+> >>> Here is the v4l2-compliance output:
+> >>
+> >> Test v4l2-compliance with the -s option so you test streaming as well.
+> >> Even better is -f where it tests streaming with all available formats.
+> >=20
+> > I will, thanks for the tip!
+> >=20
+> >>> v4l2-compliance SHA   : 339d550e92ac15de8668f32d66d16f198137006c
+> >>
+> >> Hmm, I can't find this SHA. Was this built from the main v4l-utils rep=
+o?
+> >=20
+> > It was, but using Buildroot. The version packaged in the latest stable
+> > version I was using (2018.08) is 1.14.2.
+>=20
+> That's seriously out of date. That's why I show the SHA, to see if
+> someone is testing with a recent version of the utility, so it served
+> its purpose here :-)
+>=20
+> Latest release is 1.16.2.
+>=20
+> But when submitting new drivers you really need to build it yourself from
+> the master branch, that's the only way to be sure you have all the latest
+> compliance checks.
+
+Ack, I'll update it and test again then.
+
+> >=20
+> > Looking at the Makefile from v4l2-compliance, it looks like it just
+> > invokes git to retrieve the git commit and uses that as the hash. In
+> > Buildroot's case, since buildroot will download the tarball, this will
+> > end up returning the SHA commit of the buildroot repo building the
+> > sources, not the version of the sources themselves.
+> >=20
+> > I'm not sure how to address that properly though. Thomas, how do you
+> > usually deal with this?
+>=20
+> Note that cec-compliance and cec-follower do the same, for the same
+> reason.
+>=20
+> Where does the tarball come from?
+
+This is the official tarball from linuxtv:
+https://git.buildroot.net/buildroot/tree/package/libv4l/libv4l.mk?h=3D2018.=
+08.2#n8
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--mey3hhnj2kgojfyq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW+rzOwAKCRDj7w1vZxhR
+xVxpAQCloz1Vkj2/cuDI4diTpHaBCq7l4uo9Zmc8oh9YZ+aafQEAs4eps+X9umhd
+CXAHluGjfnAjjJoNzgm/blLXPCkI2Qc=
+=0tqf
+-----END PGP SIGNATURE-----
+
+--mey3hhnj2kgojfyq--
