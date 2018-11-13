@@ -1,7 +1,7 @@
 From: Gilad Ben-Yossef <gilad@benyossef.com>
-Subject: [PATCH 2/3] dt-bindings: crypto: ccree: add dt bindings for ccree 703
-Date: Tue, 13 Nov 2018 09:40:36 +0000
-Message-ID: <1542102039-22256-3-git-send-email-gilad@benyossef.com>
+Subject: [PATCH 3/3] MAINTAINERS: ccree: add co-maintainer
+Date: Tue, 13 Nov 2018 09:40:37 +0000
+Message-ID: <1542102039-22256-4-git-send-email-gilad@benyossef.com>
 References: <1542102039-22256-1-git-send-email-gilad@benyossef.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1542102039-22256-1-git-send-email-gilad@benyossef.com>
@@ -10,25 +10,25 @@ To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft
 Cc: Ofir Drang <Ofir.Drang@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings associating Arm TrustZone CryptoCell 703 with the
-ccree driver.
+Add Yael Chemla as co-maintainer of Arm TrustZone CryptoCell REE
+driver.
 
 Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
 ---
- Documentation/devicetree/bindings/crypto/arm-cryptocell.txt | 1 +
+ MAINTAINERS | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt b/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
-index 0ac06ec..6130e6e 100644
---- a/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
-+++ b/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
-@@ -3,6 +3,7 @@ Arm TrustZone CryptoCell cryptographic engine
- Required properties:
- - compatible: Should be one of -
-    "arm,cryptocell-713-ree"
-+   "arm,cryptocell-703-ree"
-    "arm,cryptocell-712-ree"
-    "arm,cryptocell-710-ree"
-    "arm,cryptocell-630p-ree"
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f485597..ab42acb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3388,6 +3388,7 @@ F:	include/linux/spi/cc2520.h
+ F:	Documentation/devicetree/bindings/net/ieee802154/cc2520.txt
+ 
+ CCREE ARM TRUSTZONE CRYPTOCELL REE DRIVER
++M:	Yael Chemla <yael.chemla@foss.arm.com>
+ M:	Gilad Ben-Yossef <gilad@benyossef.com>
+ L:	linux-crypto@vger.kernel.org
+ S:	Supported
 -- 
 2.7.4
