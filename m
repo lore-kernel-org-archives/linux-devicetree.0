@@ -1,203 +1,88 @@
-From: Todor Tomov <todor.tomov@linaro.org>
-Subject: [PATCH 2/2] arm64: dts: qcom: Add pinctrls for camera sensors
-Date: Tue, 13 Nov 2018 11:19:13 +0200
-Message-ID: <1542100753-27816-2-git-send-email-todor.tomov@linaro.org>
-References: <1542100753-27816-1-git-send-email-todor.tomov@linaro.org>
+From: Luis de Oliveira <luis.oliveira@synopsys.com>
+Subject: Re: [V3, 1/4] Documentation: dt-bindings: phy: Document the Synopsys
+ MIPI DPHY Rx bindings
+Date: Tue, 13 Nov 2018 09:30:39 +0000
+Message-ID: <67816d9f-97c9-8d9b-ff55-15861bf47f75@synopsys.com>
+References: <1539953556-35762-1-git-send-email-lolivei@synopsys.com>
+ <1539953556-35762-2-git-send-email-lolivei@synopsys.com>
+ <20181024173611.GA30655@bogus>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542100753-27816-1-git-send-email-todor.tomov@linaro.org>
+In-Reply-To: <20181024173611.GA30655@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, vinod.koul@linaro.org, Todor Tomov <todor.tomov@linaro.org>
+To: Rob Herring <robh@kernel.org>, Luis Oliveira <luis.oliveira@synopsys.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, joao.pinto@synopsys.com, festevam@gmail.com, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Neil Armstrong <narmstrong@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Keiichi Watanabe <keiichiw@chromium.org>, Kate Stewart <kstewart@linuxfoundation.org>, Todor Tomov <todor.tomov@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add pinctrls required for camera sensors:
-- power down signal;
-- reset signal;
-- camera external clock.
+Hi Rob, my responses inline.
 
-Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 64 ++++++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8996-pins.dtsi | 96 ++++++++++++++++++++++++++++++
- 2 files changed, 160 insertions(+)
+On 24-Oct-18 18:36, Rob Herring wrote:
+> On Fri, Oct 19, 2018 at 02:52:23PM +0200, Luis Oliveira wrote:
+>> Add device-tree bindings documentation for SNPS DesignWare MIPI D-PHY in
+>> RX mode.
+>>
+>> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+>> ---
+>> Changelog
+>> v2-V3
+>> - removed gpios reference - it was for a separated driver
+>> - changed address to show complete address
+>>
+>>  .../devicetree/bindings/phy/snps,dphy-rx.txt       | 28 ++++++++++++++++++++++
+>>  1 file changed, 28 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt b/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
+>> new file mode 100644
+>> index 0000000..03d17ab
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
+>> @@ -0,0 +1,28 @@
+>> +Synopsys DesignWare MIPI Rx D-PHY block details
+>> +
+>> +Description
+>> +-----------
+>> +
+>> +The Synopsys MIPI D-PHY controller supports MIPI-DPHY in receiver mode.
+>> +Please refer to phy-bindings.txt for more information.
+>> +
+>> +Required properties:
+>> +- compatible		: Shall be "snps,dphy-rx".
+>> +- #phy-cells		: Must be 1.
+>> +- snps,dphy-frequency	: Output frequency of the D-PHY.
+> 
+> Needs a unit suffix (-hz).
+> 
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-index 990120c..aa9a0ff 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-@@ -701,4 +701,68 @@
- 			bias-disable;
- 		};
- 	};
-+
-+	camera_front_default: camera_front_default {
-+		pinmux_pwdn {
-+			function = "gpio";
-+			pins = "gpio33";
-+		};
-+		pinconf_pwdn {
-+			pins = "gpio33";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+
-+		pinmux_rst {
-+			function = "gpio";
-+			pins = "gpio28";
-+		};
-+		pinconf_rst {
-+			pins = "gpio28";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+
-+		pinmux_mclk1 {
-+			function = "cam_mclk1";
-+			pins = "gpio27";
-+		};
-+		pinconf_mclk1 {
-+			pins = "gpio27";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+	};
-+
-+	camera_rear_default: camera_rear_default {
-+		pinmux_pwdn {
-+			function = "gpio";
-+			pins = "gpio34";
-+		};
-+		pinconf_pwdn {
-+			pins = "gpio34";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+
-+		 pinmux_rst {
-+			function = "gpio";
-+			pins = "gpio35";
-+		};
-+		pinconf_rst {
-+			pins = "gpio35";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+
-+		pinmux_mclk0 {
-+			function = "cam_mclk0";
-+			pins = "gpio26";
-+		};
-+		pinconf_mclk0 {
-+			pins = "gpio26";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+	};
- };
-diff --git a/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
-index d6a0a4a..8d5114d 100644
---- a/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
-@@ -519,4 +519,100 @@
- 			bias-disable;
- 		};
- 	};
-+
-+	camera_board_default: camera_board_default {
-+		mux_pwdn {
-+			function = "gpio";
-+			pins = "gpio98";
-+		};
-+		config_pwdn {
-+			pins = "gpio98";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+
-+		mux_rst {
-+			function = "gpio";
-+			pins = "gpio104";
-+		};
-+		config_rst {
-+			pins = "gpio104";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+
-+		mux_mclk1 {
-+			function = "cam_mclk";
-+			pins = "gpio14";
-+		};
-+		config_mclk1 {
-+			pins = "gpio14";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+	};
-+
-+	camera_front_default: camera_front_default {
-+		mux_pwdn {
-+			function = "gpio";
-+			pins = "gpio133";
-+		};
-+		config_pwdn {
-+			pins = "gpio133";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+
-+		mux_rst {
-+			function = "gpio";
-+			pins = "gpio23";
-+		};
-+		config_rst {
-+			pins = "gpio23";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+
-+		mux_mclk2 {
-+			function = "cam_mclk";
-+			pins = "gpio15";
-+		};
-+		config_mclk2 {
-+			pins = "gpio15";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+	};
-+
-+	camera_rear_default: camera_rear_default {
-+		mux_pwdn {
-+			function = "gpio";
-+			pins = "gpio26";
-+		};
-+		config_pwdn {
-+			pins = "gpio26";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+
-+		mux_rst {
-+			function = "gpio";
-+			pins = "gpio25";
-+		};
-+		config_rst {
-+			pins = "gpio25";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+
-+		mux_mclk0 {
-+			function = "cam_mclk";
-+			pins = "gpio13";
-+		};
-+		config_mclk0 {
-+			pins = "gpio13";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+	};
- };
--- 
-2.7.4
+Yes,
+
+>> +- snps,dphy-te-len	: Size of the communication interface (8 bits->8 or 12bits->12).
+>> +- reg			: Physical base address and size of the device memory mapped
+>> +		 	  registers;
+> 
+> How many, what are they, and what order? Looks like 3 below.
+> 
+> Also, a tab after spaces error.
+> 
+
+Yep, I will fix it. Thanks
+
+>> +
+>> +Example:
+>> +
+>> +	mipi_dphy_rx1: dphy@d00003040 {
+>> +		compatible = "snps,dphy-rx";
+>> +		#phy-cells = <1>;
+>> +		snps,dphy-frequency = <300000>;
+>> +		snps,dphy-te-len = <12>;
+>> +		reg = < 0xd0003040 0x20
+>> +			0xd0008000 0x100
+>> +			0xd0009000 0x100>;
+>> +	};
+>> +
+>> --
+>> 2.7.4
+>>
