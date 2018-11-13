@@ -1,52 +1,47 @@
-From: Alex Elder <elder@linaro.org>
-Subject: Re: [RFC PATCH 02/12] soc: qcom: ipa: DMA helpers
-Date: Tue, 13 Nov 2018 10:33:29 -0600
-Message-ID: <7eaef6a8-9d12-31bb-43fb-e710ad171c0f@linaro.org>
-References: <20181107003250.5832-1-elder@linaro.org>
- <20181107003250.5832-3-elder@linaro.org>
- <CAK8P3a3Hur9Kn=QLrn7XDn-Kpgfta1xTxvuwcBze4n2v7fsULw@mail.gmail.com>
+From: "Maciej W. Rozycki" <macro@linux-mips.org>
+Subject: Re: [RFC v2 1/7] MIPS: Add support for the Lexra LX5280 CPU
+Date: Tue, 13 Nov 2018 16:33:42 +0000 (GMT)
+Message-ID: <alpine.LFD.2.21.1811131513070.9637@eddie.linux-mips.org>
+References: <20181001102952.7913-1-yasha.che3@gmail.com> <20181001102952.7913-2-yasha.che3@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a3Hur9Kn=QLrn7XDn-Kpgfta1xTxvuwcBze4n2v7fsULw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181001102952.7913-2-yasha.che3@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: David Miller <davem@davemloft.net>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, syadagir@codeaurora.org, mjavid@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Yasha Cherikovsky <yasha.che3@gmail.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/7/18 6:17 AM, Arnd Bergmann wrote:
-> On Wed, Nov 7, 2018 at 1:33 AM Alex Elder <elder@linaro.org> wrote:
->>
->> This patch includes code implementing the IPA DMA module, which
->> defines a structure to represent a DMA allocation for the IPA device.
->> It's used throughout the IPA code.
->>
->> Signed-off-by: Alex Elder <elder@linaro.org>
-> 
-> I looked through all the users of this and couldn't fine one that actually
-> benefits from it. I'd say better drop this patch entirely and open-code
-> the contents in the callers. That will help readability since the dma
-> API is well understood by many people.
+On Mon, 1 Oct 2018, Yasha Cherikovsky wrote:
 
-Originally this was done to make it more obvious that all DMA allocations
-were done with the same device pointer.  Previously there were several
-separate devices, and it wasn't very obvious that only one was used (and
-required).  Now that we're past that it's not difficult to do as you suggest.
+> The Lexra LX5280 CPU [1][2] implements the MIPS-I ISA,
+> without unaligned load/store instructions (lwl, lwr, swl, swr).
 
-I have now done that, and in the process identified a few more ways to
-improve/simplify the code.  The net result is that more lines of code
-were removed than were present in "ipa_dma.[ch]".  I see that as a
-win (aside from your point below).
+ I think you actually need to emulate these missing instructions for user 
+programs, so that the 32-bit MIPS psABI is supported and standard software 
+can run unmodified.  There'll be a performance hit and software will best 
+be recompiled for the limited instruction set provided by actual hardware, 
+however rebuilding is not always possible or feasible (also handcoded 
+assembly may require actual reimplementation here and there).
 
-> Generally speaking, try not to wrap Linux interfaces into driver specific
-> helper functions.
+> - RDHWR instruction emulation from the page fault handler
+>   (more details in a code comment)
 
-Agreed.  Thanks a lot for your review.
+ The details are lacking I am afraid and I think it would be good to have 
+them provided for long-term support to be feasible.
 
-					-Alex
+ First, the MIPS architecture does not have a single "page fault" 
+exception.  There are three MMU exception codes defined: Mod, TLBL and 
+TLBS, and also two vectors, either the TLB Refill or the General 
+Exception.  So please be specific which of those are taken by the LX5280 
+with the RDHWR instruction.
 
-> 
->       Arnd
-> 
+ Second, please explain why this MMU exception happens, i.e. does the CPU 
+decode the SPECIAL3 major opcode as an I-Type memory access instruction, 
+and then faults on `GPR[0] + offset' pointing to an unmapped page?
+
+ If documentation is publicly available this information can be inferred 
+from, then please provide a reference; otherwise please just describe the 
+observed behaviour as you know it.
+
+  Maciej
