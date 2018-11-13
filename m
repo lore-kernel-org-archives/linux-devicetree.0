@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v4 13/26] drm/sun4i: sun6i_mipi_dsi: Add DSI
- hblk packet overhead
-Date: Tue, 13 Nov 2018 16:46:20 +0530
-Message-ID: <20181113111633.20189-14-jagan@amarulasolutions.com>
+Subject: [PATCH v4 14/26] drm/sun4i: sun6i_mipi_dsi: Fix DSI hfp
+ timing value
+Date: Tue, 13 Nov 2018 16:46:21 +0530
+Message-ID: <20181113111633.20189-15-jagan@amarulasolutions.com>
 References: <20181113111633.20189-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB5HFVLPQKGQESYB3GVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB6XFVLPQKGQELYGSZVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181113111633.20189-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,41 +20,55 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add 10 bytes packet overhead for hblk where blank is set using
-a blanking packet like (4 bytes + 4 bytes + payload + 2 bytes)
+Current driver is calculating hfp maximum value by subtracting
+htotal with hsync_end which is front back value, but the
+hpp refers to front porch.
 
-This is according to BSP code from BPI-M64-bsp (from linux-sunxi/
+Front porch value is calculating by subtracting hsync_start with
+hdisplay as per drm_mode timings, and BSP code from BPI-M64-bsp
+is eventually following the same.
+
+BPI-M64-bsp is computing hfp as (from linux-sunxi/
 drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
 
+dsi_hbp = (hbp-hspw)*dsi_pixel_bits[format]/8 - (4+2);
+dsi_hact = x * dsi_pixel_bits[format]/8;
 dsi_hblk = (ht-hspw)*dsi_pixel_bits[format]/8-(4+4+2);
+dsi_hfp = dsi_hblk - (4+dsi_hact+2) - (4+dsi_hbp+2);
 
-So, add 10 bytes packet overhead for DSI hblk.
+Example,
+u32 fmt = dsi_pixel_bits[format]/8;
+=> ((ht-hspw)*fmt - 10) - (6 + x * fmt) - (6 + (hbp-hspw)*fmt - 6)
+=> (ht - hspw - x - (hbp - hspw)) * fmt - 16
+=> (ht - x - hbp) * fmt - 16
+=> (ht - x - (timmings->hor_total_time - timmings->hor_front_porch - x)
+* fmt - 16
+=> (timmings->hor_total_time - x - timmings->hor_total_time +
+timmings->hor_front_porch + x) * fmt - 16
+=> timmings->hor_front_porch * fmt - 16
+
+So, update the DSI hfp timing accordingly.
 
 Tested on 2-lane, 4-lane MIPI-DSI LCD panels.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index cd657ac4bdae..1a3cdd5b72a0 100644
+index 1a3cdd5b72a0..63b924b89bd7 100644
 --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
 +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -494,8 +494,13 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+@@ -490,7 +490,8 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+ 	 */
+ #define HFP_PACKET_OVERHEAD	6
+ 	hfp = max((unsigned int)HFP_PACKET_OVERHEAD,
+-		  (mode->htotal - mode->hsync_end) * Bpp - HFP_PACKET_OVERHEAD);
++		  (mode->hsync_start - mode->hdisplay) * Bpp -
++		  HFP_PACKET_OVERHEAD);
  
  	/*
  	 * hblk seems to be the line + porches length.
-+	 * The blank is set using a blanking packet (4 bytes + 4 bytes +
-+	 * payload + 2 bytes). So minimal size is 10 bytes
- 	 */
--	hblk = (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp;
-+#define HBLK_PACKET_OVERHEAD	10
-+	hblk = max((unsigned int)HBLK_PACKET_OVERHEAD,
-+		   (mode->htotal - (mode->hsync_end - mode->hsync_start)) *
-+		   Bpp - HBLK_PACKET_OVERHEAD);
- 
- 	/*
- 	 * And I'm not entirely sure what vblk is about. The driver in
 -- 
 2.18.0.321.gffc6fa0e3
