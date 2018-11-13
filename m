@@ -1,185 +1,403 @@
-From: Alan Cooper <alcooperx@gmail.com>
-Subject: Re: [PATCH V3 4/6] usb: ohci-platform: Add support for Broadcom STB SoC's
-Date: Tue, 13 Nov 2018 16:54:18 -0500
-Message-ID: <CAOGqxeW93_O6TkSPycCPiAUSWa4ep2PBuBNz3UhUXEHa+tOXag@mail.gmail.com>
-References: <Pine.LNX.4.44L0.1811071124260.1542-100000@iolanthe.rowland.org>
- <16a80878-58f7-1584-058e-0e0e49da61cb@gmail.com> <45134862-4b72-be72-533c-942c2bf70400@broadcom.com>
- <c551a2e2-c494-04d3-53cf-f027b02906ed@gmail.com> <20181112174532.GA14682@bogus>
+From: James Cameron <quozl@laptop.org>
+Subject: Re: [PATCH 06/15] Platform: OLPC: Add XO-1.75 EC driver
+Date: Wed, 14 Nov 2018 09:06:31 +1100
+Message-ID: <20181113220631.GB22127@us.netrek.org>
+References: <20181010172300.317643-1-lkundrak@v3.sk>
+ <20181010172300.317643-7-lkundrak@v3.sk>
+ <CAHp75VcefOJHZ3WdZYrGEJFjqg2s1oJ75Jg9gKmQFre_ScAPZg@mail.gmail.com>
+ <8881f5e48613c9d9d133e3964031fe2ab57f4801.camel@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181112174532.GA14682@bogus>
+Content-Disposition: inline
+In-Reply-To: <8881f5e48613c9d9d133e3964031fe2ab57f4801.camel@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, al.cooper@broadcom.com, Alan Stern <stern@rowland.harvard.edu>, ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, chunfeng yun <chunfeng.yun@mediatek.com>, "David S. Miller" <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Jianguo Sun <su>
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 12, 2018 at 6:37 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Nov 07, 2018 at 10:11:59AM -0800, Florian Fainelli wrote:
-> > On 11/7/2018 9:40 AM, Al Cooper wrote:
-> > > On 11/7/18 12:29 PM, Florian Fainelli wrote:
-> > >> On 11/7/18 8:27 AM, Alan Stern wrote:
-> > >>> On Wed, 7 Nov 2018, Al Cooper wrote:
-> > >>>
-> > >>>> On 11/7/18 10:23 AM, Alan Stern wrote:
-> > >>>>> On Tue, 6 Nov 2018, Florian Fainelli wrote:
-> > >>>>>
-> > >>>>>> On 11/6/18 1:40 PM, Al Cooper wrote:
-> > >>>>>>> On 11/6/18 11:08 AM, Alan Stern wrote:
-> > >>>>>>>> On Mon, 5 Nov 2018, Al Cooper wrote:
-> > >>>>>>>>
-> > >>>>>>>>> Add support for Broadcom STB SoC's to the ohci platform driver.
-> > >>>>>>>>>
-> > >>>>>>>>> Signed-off-by: Al Cooper <alcooperx@gmail.com>
-> > >>>>>>>>> ---
-> > >>>>>>>>
-> > >>>>>>>>> @@ -177,6 +189,8 @@ static int ohci_platform_probe(struct
-> > >>>>>>>>> platform_device *dev)
-> > >>>>>>>>>             ohci->flags |= OHCI_QUIRK_FRAME_NO;
-> > >>>>>>>>>         if (pdata->num_ports)
-> > >>>>>>>>>             ohci->num_ports = pdata->num_ports;
-> > >>>>>>>>> +    if (pdata->suspend_without_phy_exit)
-> > >>>>>>>>> +        hcd->suspend_without_phy_exit = 1;
-> > >>>>>>>>
-> > >>>>>>>> Sorry if I missed this in the earlier discussions...  Is there any
-> > >>>>>>>> possibility of adding a DT binding that could express this
-> > >>>>>>>> requirement,
-> > >>>>>>>> instead of putting it in the platform data?
-> > >>>>>>>>
-> > >>>>>>>> Alan Stern
-> > >>>>>>>>
-> > >>>>>>>
-> > >>>>>>> Alan,
-> > >>>>>>>
-> > >>>>>>> That was my original approach but internal review suggested that
-> > >>>>>>> I use
-> > >>>>>>> pdata instead. Below is my original patch for:
-> > >>>>>>
-> > >>>>>> And the reason for that suggestion was really because it was
-> > >>>>>> percevied
-> > >>>>>> as encoding a driver behavior as a Device Tree property as opposed to
-> > >>>>>> describing something that was inherently and strictly a hardware
-> > >>>>>> behavior (therefore suitable for Device Tree).
-> > >>>>>
-> > >>>>> Right.  The best way to approach this problem is to identify and
-> > >>>>> characterize the hardware behavior which makes this override
-> > >>>>> necessary.
-> > >>>>> Then _that_ can be added to DT, since it will be a property of the
-> > >>>>> hardware rather than of the driver.
-> > >>>>>
-> > >>>>>>> Add the ability to skip calling the PHY's exit routine on suspend
-> > >>>>>>> and the PHY's init routine on resume. This is to handle a USB PHY
-> > >>>>>>> that should have it's power_off function called on suspend but
-> > >>>>>>> cannot
-> > >>>>>>> have it's exit function called because on exit it will disable the
-> > >>>>>>> PHY to the point where register accesses to the Host Controllers
-> > >>>>>>> using the PHY will be disabled and the host drivers will crash.
-> > >>>>>
-> > >>>>> What's special about this PHY?  Why does the exit function mess the
-> > >>>>> PHY
-> > >>>>> up?  Or to put it another way, why doesn't the exit function mess up
-> > >>>>> other PHYs in the same way?
-> > >>>>>
-> > >>>>> For that matter, can we change the code so that suspend doesn't call
-> > >>>>> the exit function for _any_ PHY?  Will just calling the power_off
-> > >>>>> function be good enough?  If not, then why not?
-> > >>>>>
-> > >>>>> Alan Stern
-> > >>>>>
-> > >>>>
-> > >>>> In our USB hardware the USB PHY supplies a clock for the EHCI/OHCI and
-> > >>>> XHCI host controllers and if the PHY is totally shut down the EHCI,
-> > >>>> OHCI
-> > >>>> and XHCI registers will cause an exception if accessed and cause the
-> > >>>> EHCI, OHCI and XHCI drivers to crash. There is always talk of fixing
-> > >>>> this in the hardware by adding an aux clock that will takeover when the
-> > >>>> PHY clock is shut down, but this hasn't happened yet. It seems like
-> > >>>> "exit on suspend" still makes sense on systems that don't have this
-> > >>>> problem (additional power savings?) so removing the exit on suspend for
-> > >>>> all systems is not a good idea.
-> > >>>
-> > >>> Then in theory you should be able to add a Device Tree property which
-> > >>> says that the PHY provides a clock for the USB host controller.  That
-> > >>> is strictly a property of the hardware; it has nothing to do with the
-> > >>> driver.  Therefore it is appropriate for DT.
-> > >>
-> > >> The very compatible string that is being allocated/defined for this
-> > >> controller carries that information already, that is, if you probe a
-> > >> "brcm,bcm7445-ohci" compatible then that means the controller has a
-> > >> dependency on the PHY to supply its clock.
-> > >>
-> > >> Adding a property vs. keying on the compatible string makes sense if you
-> > >> know there is at least a second consumer of that property (unless we
-> > >> make it a broadcom specific property, in which case, it really is
-> > >> redundant with the compatible string).
-> > >>
-> > >> Anyway, my grudge with that property was the name chosen initially,
-> > >> which included an action to be performed by an implementation as opposed
-> > >> to something purely descriptive. E.g: 'phy-supplies-clock' might be okay.
-> > >>
-> > >>>
-> > >>> Wouldn't this solve your issue?
-> > >>
-> > >> It would not change much except that there is no need to much with
-> > >> ohci-platform.c anymore, but ultimately that property needs to be read
-> > >> by ohci-hcd.c and acted on, which would likely lead to the same amount
-> > >> of changes as those present in patch #2 currently.
-> > >>
-> > > We also need this functionality in the EHCI and XHCI drivers and it's
-> > > not the ohci-hcd.c module that needs to know, it's the core/phy.c module
-> > > called from core/hcd.c.
-> >
-> > So in that regard the Device Tree property would actually scale a bit
-> > better in that you would no longer need to modify the various
-> > *hci-plat*.c files, if that is the way to go, then sure.
->
-> Sounds like the phy needs to be a clock provider to the USB controller.
-> Maybe that's a bit of overkill, but would be the most accurate.
->
-> Otherwise, my preference is using the compatible string. IOW, we already
-> have properties to handle this. If you don't want to use them, then use
-> compatible rather than inventing something new and custom.
+On Tue, Nov 13, 2018 at 06:26:09PM +0100, Lubomir Rintel wrote:
+> Hi,
+> 
+> first of all -- thanks for such a careful review. It is very helpful.
+> 
+> Wherever I don't respond to you, I'm just following what you wrote. It
+> would perhaps be tiresome to respond to "Yes, will fix in next version"
+> to every single point.
+> 
+> I'll be following up with a new version in a few days; I'm mostly done
+> with this one but I've not finished addressing the followup ones.
+> 
+> On Fri, 2018-10-19 at 19:06 +0300, Andy Shevchenko wrote:
+> > On Wed, Oct 10, 2018 at 8:24 PM Lubomir Rintel <lkundrak@v3.sk>
+> > wrote:
+> > > It's based off the driver from the OLPC kernel sources. Somewhat
+> > > modernized and cleaned up, for better or worse.
+> > > 
+> > > Modified to plug into the olpc-ec driver infrastructure (so that
+> > > battery
+> > > interface and debugfs could be reused) and the SPI slave framework.
+> > > +#include <asm/system_misc.h>
+> > 
+> > asm/* goes after linux/*
+> > 
+> > > +#include <linux/delay.h>
+> > > +#include <linux/gpio/consumer.h>
+> > > +#include <linux/spinlock.h>
+> > > +#include <linux/completion.h>
+> > > +#include <linux/slab.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/ctype.h>
+> > > +#include <linux/olpc-ec.h>
+> > > +#include <linux/spi/spi.h>
+> > > +#include <linux/reboot.h>
+> > > +#include <linux/input.h>
+> > > +#include <linux/kfifo.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/power_supply.h>
+> > 
+> > Easy to maintain when it's sorted.
+> > 
+> > > +       { 0 },
+> > 
+> > Terminators are better without trailing comma.
+> > 
+> > > +#define EC_CMD_LEN             8
+> > > +#define EC_MAX_RESP_LEN                16
+> > > +#define LOG_BUF_SIZE           127
+> > 
+> > 127 sounds slightly strange. Is it by specification of protocol?
+> > Would
+> > it be better to define it 128 bytes / items?
+> > 
+> > > +static int olpc_xo175_ec_is_valid_cmd(u8 cmd)
+> > > +{
+> > > +       const struct ec_cmd_t *p;
+> > > +
+> > > +       for (p = olpc_xo175_ec_cmds; p->cmd; p++) {
+> > > +               if (p->cmd == cmd)
+> > > +                       return p->bytes_returned;
+> > > +       }
+> > > +
+> > > +       return -1;
+> > 
+> > -EINVAL ?
+> > 
+> > > +}
+> > > +static void olpc_xo175_ec_complete(void *arg);
+> > 
+> > Hmm... Can we avoid forward declaration?
+> 
+> I don't think we can.
+> 
+> > > +       channel = priv->rx_buf[0];
+> > > +       byte = priv->rx_buf[1];
+> > 
+> > Maybe specific structures would fit better?
+> > 
+> > Like
+> > 
+> > struct olpc_ec_resp_hdr {
+> >  u8 channel;
+> >  u8 byte;
+> > ...
+> > }
+> > 
+> > > +               dev_warn(dev, "kbd/tpad not supported\n");
+> > 
+> > Please, spell it fully as touchpad and keyboard.
+> > 
+> > > +                       pm_wakeup_event(priv->pwrbtn->dev.parent,
+> > > 1000);
+> > 
+> > Magic number.
+> > 
+> > > +                       /* For now, we just ignore the unknown
+> > > events. */
+> > 
+> > dev_dbg(dev, "Ignored unknown event %.2x\n", byte);
+> > 
+> > ?
+> > 
+> > > if (isprint(byte)) {
+> > > +                       priv->logbuf[priv->logbuf_len++] = byte;
+> > > +                       if (priv->logbuf_len == LOG_BUF_SIZE)
+> > > +                               olpc_xo175_ec_flush_logbuf(priv);
+> > > +               }
+> > 
+> > You may consider to take everything and run %pE when printing instead
+> > of %s.
+> > 
+> > > +static int olpc_xo175_ec_cmd(u8 cmd, u8 *inbuf, size_t inlen, u8
+> > > *resp,
+> > > +                                       size_t resp_len, void
+> > > *ec_cb_arg)
+> > > +{
+> > > +       struct olpc_xo175_ec *priv = ec_cb_arg;
+> > > +       struct device *dev = &priv->spi->dev;
+> > > +       unsigned long flags;
+> > > +       int nr_bytes;
+> > > +       int ret = 0;
+> > > +
+> > > +       dev_dbg(dev, "CMD %x, %d bytes expected\n", cmd, resp_len);
+> > > +
+> > > +       if (inlen > 5) {
+> > 
+> > Magic number.
+> > 
+> > > +               dev_err(dev, "command len %d too big!\n",
+> > > resp_len);
+> > > +               return -EOVERFLOW;
+> > > +       }
+> > > +       WARN_ON(priv->suspended);
+> > > +       if (priv->suspended)
+> > 
+> > if (WARN_ON(...)) ?
+> > 
+> > > +               return -EBUSY;
+> > > +       if (resp_len > nr_bytes)
+> > > +               resp_len = nr_bytes;
+> > 
+> > resp_len = min(resp_len, nr_bytes);
+> > 
+> > > +       priv->cmd[0] = cmd;
+> > > +       priv->cmd[1] = inlen;
+> > > +       priv->cmd[2] = 0;
+> > 
+> > Perhaps specific struct header for this?
+> > 
+> > > +       memset(resp, 0, resp_len);
+> > 
+> > Wouldn't be better to do this in where actual response has been
+> > filled?
+> > 
+> > > +       if (!wait_for_completion_timeout(&priv->cmd_done,
+> > > +                       msecs_to_jiffies(4000))) {
+> > 
+> > Magic number.
+> > 
+> > > +       }
+> > > +       /* Deal with the results. */
+> > 
+> > Somehow feels noisy / unneeded comment.
+> > 
+> > > +       if (priv->cmd_state == CMD_STATE_ERROR_RECEIVED) {
+> > > +               /* EC-provided error is in the single response byte
+> > > */
+> > > +               dev_err(dev, "command 0x%x returned error 0x%x\n",
+> > > +                                                       cmd, priv-
+> > > >resp[0]);
+> > 
+> > Indentation.
+> > 
+> > > +               ret = -EREMOTEIO;
+> > > +       } else if (priv->resp_len != nr_bytes) {
+> > > +               dev_err(dev, "command 0x%x returned %d bytes,
+> > > expected %d bytes\n",
+> > > +                                               cmd, priv-
+> > > >resp_len, nr_bytes);
+> > > +               ret = -ETIMEDOUT;
+> > 
+> > In the message I see nothing about timeout.
+> > 
+> > > +       } else {
+> > > +       }
+> > > +}
+> > > +static int olpc_xo175_ec_set_event_mask(unsigned int mask)
+> > > +{
+> > > +       unsigned char args[2];
+> > 
+> > u8
+> > 
+> > > +
+> > > +       args[0] = mask & 0xff;
+> > > +       args[1] = (mask >> 8) & 0xff;
+> > 
+> > ...mask >> 0;
+> > ...mask >> 8;
+> > 
+> > > +       return olpc_ec_cmd(CMD_WRITE_EXT_SCI_MASK, args, 2, NULL,
+> > > 0);
+> > > +}
+> > > +
+> > > +static void olpc_xo175_ec_restart(enum reboot_mode mode, const
+> > > char *cmd)
+> > > +{
+> > > +       while (1) {
+> > > +               olpc_ec_cmd(CMD_POWER_CYCLE, NULL, 0, NULL, 0);
+> > > +               mdelay(1000);
+> > > +       }
+> > > +}
+> > > +
+> > > +static void olpc_xo175_ec_power_off(void)
+> > > +{
+> > > +       while (1) {
+> > > +               olpc_ec_cmd(CMD_POWER_OFF, NULL, 0, NULL, 0);
+> > > +               mdelay(1000);
+> > > +       }
+> > > +}
+> > > +
+> > > +#ifdef CONFIG_PM
+> > > +static int olpc_xo175_ec_suspend(struct device *dev)
+> > 
+> > __maybe_unused  instead of ugly #ifdef?
+> > 
+> > > +{
+> > > +       struct platform_device *pdev = to_platform_device(dev);
+> > > +       struct olpc_xo175_ec *priv = platform_get_drvdata(pdev);
+> > 
+> > dev_get_drvdata() or how is it called?
+> > 
+> > > +       unsigned char hintargs[5];
+> > 
+> > struct olpc_ec_hint_cmd {
+> > u8 ...
+> > u32 ...
+> > };
+> > 
+> > ?
+> > 
+> > > +       static unsigned int suspend_count;
+> > 
+> > u32 I suppose.
+> > 
+> > > +
+> > > +       suspend_count++;
+> > > +       dev_dbg(dev, "%s: suspend sync %08x\n", __func__,
+> > > suspend_count);
+> > 
+> > __func__ can be issued if user asked for via Dynamic Debug interface.
+> > 
+> > > +       /*
+> > > +        * First byte is 1 to indicate suspend, the rest is an
+> > > integer
+> > > +        * counter.
+> > > +        */
+> > > +       hintargs[0] = 1;
+> > > +       memcpy(&hintargs[1], &suspend_count, 4);
+> > > +       olpc_ec_cmd(CMD_SUSPEND_HINT, hintargs, 5, NULL, 0);
+> > 
+> > What do you need this counter for?
+> 
+> It doesn't seem to be actually used in the EC; the firmware just
+> includes it in its debug log. I'm not sure if all firmware versions
+> behave this way and I'd prefer to keep it.
 
-My previous commit used the compatible string to set the HCD flag
-instead of a device tree property, but Alan Stern ask me to use a DT
-binding instead. This has the advantage of having the code in one
-place in the phy.c module instead of having to add it to the OHCI,
-EHCI and XHCI platform drivers.
+Some firmware versions rely on it, as the SOC_SLEEP line was
+unreliable where the board revision is B3 or earlier.
 
->
-> At least last time I looked, there's a lack of support in the PHY API to
-> handle various handshakes needed between phys and controllers like this.
-> It's fairly easy for the controller to fetch info from a phy node, but
-> the opposite is not so easy. It seems to me some API for controllers to
-> set flags in the phy driver is needed.
+(internal reference: Paul Fox Wed, 10 Oct 2012 09:39:44 -0400)
 
-The Generic PHY subsystem allows the PHY provider to export
-phy_power_on/phy_power_off and phy_init/phy_exit functions for use by
-the PHY consumer. The exact functionality of these routines seems to
-vary among the different PHY provider drivers. The Broadcom USB PHY
-driver expects the phy_power_on/phy_power_off to be used on
-suspend/resume and the phy_init/phy_exit to be used by the consumer
-driver's probe/remove routines. The new USB PHY consumer code does not
-do this, instead it calls both power_off AND exit for both suspend
-(not wakable) and remove. If you look at other PHY provider/consumer
-implementations in the kernel tree you'll find examples of both these
-methods but there are more examples that behave like the Broadcom PHY.
-What I was trying to do was to use a DT property to tell the USB PHY
-consumer code which method to use.
+Although population of B3 and earlier was low, prototypes were given
+out to many rather than destroyed.
 
-I guess the problem is that the current generic PHY api only allows
-the consumer to put the PHY in 1 of 3 states, EXIT, OFF or ON. The
-current USB PHY consumer code is using OFF for "suspend with wakeup"
-and EXIT for "suspend without wakeup". The Broadcom PHY driver wants
-OFF for either "suspend with wakeup" or "suspend without wakeup" and
-EXIT when there are no consumers using the PHY. If the PHY API allowed
-for 4 states, EXIT, OFF_NOT_WAKABLE, OFF_WAKABLE and ON then the
-individual PHY provider could hide the differences, but this seems
-hard to retrofit into the PHY subsystem.
+> 
+> I'm adding a comment.
+> 
+> > 
+> > > +       priv->suspended = true;
+> > 
+> > Hmm... Who is the user of it?
+> > 
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static int olpc_xo175_ec_resume_noirq(struct device *dev)
+> > > +{
+> > > +       struct platform_device *pdev = to_platform_device(dev);
+> > > +       struct olpc_xo175_ec *priv = platform_get_drvdata(pdev);
+> > > +
+> > > +       priv->suspended = false;
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static int olpc_xo175_ec_resume(struct device *dev)
+> > > +{
+> > > +       struct platform_device *pdev = to_platform_device(dev);
+> > > +       struct olpc_xo175_ec *priv = platform_get_drvdata(pdev);
+> > > +       unsigned char x = 0;
+> > 
+> > u8
+> > 
+> > > +       priv->suspended = false;
+> > 
+> > Isn't it redundant since noirq callback above?
+> > 
+> > > +       /*
+> > > +        * The resume hint is only needed if no other commands are
+> > > +        * being sent during resume. all it does is tell the EC
+> > > +        * the SoC is definitely awake.
+> > > +        */
+> > > +       olpc_ec_cmd(CMD_SUSPEND_HINT, &x, 1, NULL, 0);
+> > > +
+> > > +       /* Enable all EC events while we're awake */
+> > > +       olpc_xo175_ec_set_event_mask(0xffff);
+> > 
+> > #define EC_ALL_EVENTS GENMASK(15, 0)
+> > 
+> > > +}
+> > > +#endif
+> > > +static struct platform_device *olpc_ec;
+> > 
+> > I would rather see this at the top of file.
+> > 
+> > > +static int olpc_xo175_ec_probe(struct spi_device *spi)
+> > > +{
+> > > +       if (olpc_ec) {
+> > > +               dev_err(&spi->dev, "OLPC EC already
+> > > registered.\n");
+> > > +               return -EBUSY;
+> > > +       }
+> > 
+> > It's racy against parallel probe called. I don't think it would be a
+> > real issue, just let you know.
+> > 
+> > 
+> > > +       /* Set up power button input device */
+> > > +       priv->pwrbtn = devm_input_allocate_device(&spi->dev);
+> > > +       if (!priv->pwrbtn)
+> > > +               return -ENOMEM;
+> > > +       priv->pwrbtn->name = "Power Button";
+> > > +       priv->pwrbtn->dev.parent = &spi->dev;
+> > > +       input_set_capability(priv->pwrbtn, EV_KEY, KEY_POWER);
+> > > +       ret = input_register_device(priv->pwrbtn);
+> > > +       if (ret) {
+> > > +               dev_err(&spi->dev, "error registering input device:
+> > > %d\n", ret);
+> > > +               return ret;
+> > > +       }
+> > 
+> > I would split out power button driver, but it's up to you.
+> > 
+> > 
+> > > +       /* Enable all EC events while we're awake */
+> > > +       olpc_xo175_ec_set_event_mask(0xffff);
+> > 
+> > See above about this magic.
+> > 
+> > > +}
+> > > +#ifdef CONFIG_PM
+> > > +       .suspend        = olpc_xo175_ec_suspend,
+> > > +       .resume_noirq   = olpc_xo175_ec_resume_noirq,
+> > > +       .resume         = olpc_xo175_ec_resume,
+> > > +#endif
+> > 
+> > SET_SYSTEM_SLEEP_PM_OPS() ?
+> > SET_NOIRQ_SYSTEM_SLEEP_PM_OPS() ?
+> > 
+> > > +static const struct of_device_id olpc_xo175_ec_of_match[] = {
+> > > +       { .compatible = "olpc,xo1.75-ec" },
+> > > +       { },
+> > 
+> > No comma for terminators.
+> > 
+> > > +};
+> 
+> Thanks,
+> Lubo
+> 
 
-Al
-
->
-> Rob
->
+-- 
+James Cameron
+http://quozl.netrek.org/
