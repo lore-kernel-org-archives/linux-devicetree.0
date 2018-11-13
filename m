@@ -1,142 +1,72 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH 3/4] dt-bindings: reset: uniphier: Add AHCI core reset description
-Date: Tue, 13 Nov 2018 09:57:26 +0900
-Message-ID: <20181113095726.3EAC.4A936039@socionext.com>
-References: <20181112210215.2DB6.4A936039@socionext.com> <1542032506.3440.5.camel@pengutronix.de>
+From: Vineet Gupta <vineet.gupta1@synopsys.com>
+Subject: Re: [PATCH v4 6/6] arch: Move initrd= parsing into
+ do_mounts_initrd.c
+Date: Tue, 13 Nov 2018 00:57:54 +0000
+Message-ID: <C2D7FE5348E1B147BCA15975FBA23075013A592A33@us01wembx1.internal.synopsys.com>
+References: <20181105225431.24485-1-f.fainelli@gmail.com>
+ <20181105225431.24485-7-f.fainelli@gmail.com>
+ <C2D7FE5348E1B147BCA15975FBA23075013A5929ED@us01wembx1.internal.synopsys.com>
+ <05f56763-1530-933d-2ce3-3653ad4c685f@gmail.com>
+ <C2D7FE5348E1B147BCA15975FBA23075013A592A0B@us01wembx1.internal.synopsys.com>
+ <04d6d0cb-8e60-88a0-061e-62c7c70024c5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542032506.3440.5.camel@pengutronix.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+To: Florian Fainelli <f.fainelli@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lis>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
-
-On Mon, 12 Nov 2018 15:21:46 +0100 <p.zabel@pengutronix.de> wrote:
-
-> Hi,
-> 
-> On Mon, 2018-11-12 at 21:02 +0900, Kunihiko Hayashi wrote:
-> > Hi,
-> > 
-> > Thank you for some comments and pointing out.
-> > 
-> > On Sat, 10 Nov 2018 01:14:06 +0900 <yamada.masahiro@socionext.com> wrote:
-> > 
-> > > On Sat, Nov 10, 2018 at 12:02 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> > > > 
-> > > > Hi Kunihiko,
-> > > > 
-> > > > On Fri, 2018-11-09 at 10:42 +0900, Kunihiko Hayashi wrote:
-> > > > > Add compatible strings for reset control of AHCI core implemented in
-> > > > > UniPhier SoCs. The reset control belongs to AHCI glue layer.
-> > > > > 
-> > > > > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/reset/uniphier-reset.txt | 3 +++
-> > > > >  1 file changed, 3 insertions(+)
-> > > > > 
-> > > > > diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-> > > > > index f63c511..ea00517 100644
-> > > > > --- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-> > > > > +++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-> > > > > @@ -133,6 +133,9 @@ Required properties:
-> > > > >      "socionext,uniphier-pxs2-usb3-reset" - for PXs2 SoC USB3
-> > > > >      "socionext,uniphier-ld20-usb3-reset" - for LD20 SoC USB3
-> > > > >      "socionext,uniphier-pxs3-usb3-reset" - for PXs3 SoC USB3
-> > > > > +    "socionext,uniphier-pro4-ahci-reset" - for Pro4 SoC AHCI
-> > > > > +    "socionext,uniphier-pxs2-ahci-reset" - for PXs2 SoC AHCI
-> > > > > +    "socionext,uniphier-pxs3-ahci-reset" - for PXs3 SoC AHCI
-> > > > 
-> > > > Since the driver behaves identically for "socionext,uniphier-pro4-usb3-
-> > > > reset" and "socionext,uniphier-pro4-ahci-reset", would it make sense to
-> > > > add a common compatible?
-> > > 
-> > > As far as I could guess, he just happened to find the same driver code
-> > > could be reused for other hardware.
-> 
-> Ok, in that case never mind. I just assumed that this could be a case of
-> glue layer building blocks being reused by the hardware engineers, since
-> the driver reuses the same clock names for USB3 and AHCI both on Pro4
-> and on PXs2.
-> 
-> > > Theoretically, this can happen anywhere since
-> > > a reset controller is just a set of registers
-> > > each bit of which is connected to a reset line.
-> > > 
-> > > If you added a super-generic compatible like "simple-reset",
-> > > I would agree with
-> > > "socionext,uniphier-pro4-usb3-reset", "simple-reset"
-> > > since this is a pattern.
-> > 
-> > I think it's more generic to define simple-reset with parent clock/reset
-> > control without both SoC and device names.
-> > 
-> > However, such parent clocks/resets strongly depends on SoC, 
-> > so I think it's difficut to lead generic definition in this case.
-> > 
-> > If we add generic compatible string, I also add "simple-reset".
-> 
-> There is no "simple-reset" binding definition. As soon as there are SoC
-> specific clocks, it's not really generic anymore.
-
-I see. I understand "simple-reset" doesn't need.
-
-> > > However,
-> > > "socionext,uniphier-pro4-glue-reset" is kind of a halfway house
-> > > where it is SoC-specific, but still ambiguous.
-> > 
-> > Surely, it might be hard to understand that pro4-glue-reset is SoC-specific
-> > but for generic-device.
-> 
-> I agree.
-> 
-> > > > Something like:
-> > > > "socionext,uniphier-pro4-usb3-reset", "socionext,uniphier-pro4-glue-reset" - for USB3 SoC AHCI
-> > > > "socionext,uniphier-pro4-ahci-reset", "socionext,uniphier-pro4-glue-reset" - for Pro4 SoC AHCI
-> > > > 
-> > > > That way if more places turn up where the glue layer reset is used,
-> > > > you can add them without patching the driver every time.
-> > > 
-> > > 
-> > > This is a trade-off between "patch the driver"
-> > > and "potential change of the binding".
-> > 
-> > Adding "glue-reset" is usable for devices having same parent clocks/resets as
-> > usb3/ahci, and we can add the devices without patches.
-> > 
-> > However, if the device needs other parent clocks/resets for the same SoC,
-> > we can't add "glue-reset" and we might add patches for the device as a result.
-> > In this case, the "glue-reset" will become difficult to understand.
-> 
-> Then let's not bother with it.
-> I made the suggestion without knowing the full picture.
-
-This might confuse you without bigger picture.
-
-> > > There is no real hardware like pro4-glue-reset.
-> > > 
-> > > I am guessing this is a part of syscon or something,
-> > > but I cannot find any explanation in a bigger picture.
-> > > 
-> > > So, I cannot judge this further more.
-> > 
-> > Since it's hard to lead the best result,
-> > currently I'd like to suggest the current compatibles,
-> 
-> That is fine with me.
-> 
-> > with "simple-reset" if necessary.
-> 
-> Not necessary.
-
-Okay, I don't add it.
-
-Thank you,
-
----
-Best Regards,
-Kunihiko Hayashi
+On 11/12/18 4:52 PM, Florian Fainelli wrote:=0A=
+> On 11/12/18 4:40 PM, Vineet Gupta wrote:=0A=
+>> On 11/12/18 4:38 PM, Florian Fainelli wrote:=0A=
+>>>>>  #ifdef CONFIG_BLK_DEV_INITRD=0A=
+>>>>> -	if (initrd_start)=0A=
+>>>>> -		memblock_reserve(__pa(initrd_start), initrd_end - initrd_start);=
+=0A=
+>>>>> +	if (phys_initrd_size) {=0A=
+>>>>> +		memblock_reserve(phys_initrd_start, phys_initrd_size);=0A=
+>>>>> +		initrd_start =3D (unsigned long)__va(phys_initrd_start);=0A=
+>>>>> +		initrd_end =3D initrd_start + phys_initrd_size;=0A=
+>>>>> +	}=0A=
+>>>>>  #endif=0A=
+>>>> The common code now uses phys_initrd*, and you also use the same in AR=
+C code, do=0A=
+>>>> we still need the initrd_* setting here ?=0A=
+>>>> ARC semantics was using them as PA anyways.=0A=
+>>> Yes, the generic initrd code expects initrd_start/end to be virtual=0A=
+>>> addresses, which we now directly derive from phys_initrd_start, that=0A=
+>>> should really be equivalent.=0A=
+>> So we can skip this explicit setting above - ARC arch code doesn't acces=
+s the virt=0A=
+>> initrd_start=0A=
+> OK, you are saying we could just have the generic initrd code do this=0A=
+> assignment instead of having each architecture do it, is that a correct=
+=0A=
+> understanding? =0A=
+=0A=
+Correct !=0A=
+=0A=
+> If so, I suppose it could be done, whether as of this=0A=
+> patch series or as a follow-up, either way is fine with me.=0A=
+=0A=
+If it is not too much trouble, I'd prefer this now. I should have chimed ea=
+rlier.=0A=
+=0A=
+> One possible caveat is if __va() and __phys_to_virt() behave differently=
+=0A=
+> (e.g: because of CONFIG_DEBUG_VIRTUAL or other things).=0A=
+=0A=
+=0A=
+Thing is, after your patches, we don't use the vanilla initrd_xxx in arch c=
+ode any=0A=
+longer. So this becomes just an implementation detail, which core code may =
+or=0A=
+maynot need and if it does, this needs to work already w/o having to set an=
+ything=0A=
+in arch code. Agree ?=0A=
+=0A=
+Thx,=0A=
+-Vineet=0A=
