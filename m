@@ -1,13 +1,14 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] ASoC: ak4118: Add support for AK4118
- S/PDIF transceiver
-Date: Tue, 13 Nov 2018 14:51:35 -0800
-Message-ID: <20181113225135.GQ2089@sirena.org.uk>
-References: <20181108124934.32381-1-peron.clem@gmail.com>
+Subject: Applied "ASoC: sun8i-codec: add missing route for ADC"
+	to the asoc tree
+Date: Tue, 13 Nov 2018 23:10:42 +0000 (GMT)
+Message-ID: <20181113231042.E8F82440078@finisterre.ee.mobilebroadband>
+References: <20181109042422.25653-2-anarsoul@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5372483374844399459=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181108124934.32381-1-peron.clem@gmail.com>
+In-Reply-To: <20181109042422.25653-2-anarsoul@gmail.com>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
 List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
@@ -17,76 +18,68 @@ List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
 Errors-To: alsa-devel-bounces@alsa-project.org
 Sender: alsa-devel-bounces@alsa-project.org
-To: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Adrien Charruel <adrien.charruel@devialet.com>
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Mylene JOSSERAND <mylene.josserand@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---===============5372483374844399459==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="p6hDAtPN9q+ZnUca"
-Content-Disposition: inline
+   ASoC: sun8i-codec: add missing route for ADC
 
+has been applied to the asoc tree at
 
---p6hDAtPN9q+ZnUca
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-On Thu, Nov 08, 2018 at 01:49:33PM +0100, Cl=E9ment P=E9ron wrote:
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-This looks mostly good, a few small things below but nothing too major:
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-> --- /dev/null
-> +++ b/sound/soc/codecs/ak4118.c
-> @@ -0,0 +1,449 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * ak4118.c  --  Asahi Kasei ALSA Soc Audio driver
-> + *
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Please make the entire comment a C++ one so this looks more intentional.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-> +static const char * const ak4118_iec958_fs_texts[] =3D {
-> +	"44100",
-> +	"Reserved",
+Thanks,
+Mark
 
-If you use a _VALUE_ENUM_SINGLE you can hide the reserved/invalid values
-=66rom userspace which is easier to use.
+>From 9ee325d029c4abb75716851ce38863845911d605 Mon Sep 17 00:00:00 2001
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Date: Thu, 8 Nov 2018 20:24:19 -0800
+Subject: [PATCH] ASoC: sun8i-codec: add missing route for ADC
 
-> +	ret =3D request_threaded_irq(gpiod_to_irq(ak4118->irq), NULL,
-> +				   ak4118_irq_handler, IRQF_TRIGGER_RISING |
-> +				   IRQF_ONESHOT, "ak4118-irq", ak4118);
-> +	if (ret < 0) {
-> +		dev_err(component->dev, "Fail to request_irq: %d\n", ret);
-> +		return ret;
-> +	}
+sun8i-codec misses a route from ADC to AIF1 Slot 0 ADC. Add it
+to the driver to avoid adding it to every dts.
 
-You should request resources in the device level probe, there's no point
-in requesting and releasing the interrupt like this.
+Fixes: eda85d1fee05d ("ASoC: sun8i-codec: Add ADC support for a33")
+Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/sunxi/sun8i-codec.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---p6hDAtPN9q+ZnUca
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlvrVXYACgkQJNaLcl1U
-h9DB7wf/W1LooFgqTJgJoHvp4HpuSNxrpd12Sm2ZvqCgQcHcO4XW8JbRSm4gWq14
-X9bLYqyv9bqA4ZQYDYsXPwiyC/ogftVkIejGVoijWJixtZQEfwMT3e1yFw3AASpD
-p6/3pBml35uKWenFY1hsQB7pYvuh9chBs4L3paUeNhHWW+LXX/uQzbyrkvH9I/3j
-7lV935pkIOpzCKBu9DhNRVaom6XjR22w9iBvJiDoOeZtGgSu7WbBWevrfzfUrg8j
-wOIVZSlNPA15OBle3Zn+AozwJE1AUuw67vVvL5w1V/5WNNoxpvPtvjZ0sVmL8hSU
-KhHpkDUpZyb6F7tQIRe2If8WwYA/zg==
-=OxYf
------END PGP SIGNATURE-----
-
---p6hDAtPN9q+ZnUca--
-
---===============5372483374844399459==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============5372483374844399459==--
+diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
+index c4196d4e5915..92c5de026c43 100644
+--- a/sound/soc/sunxi/sun8i-codec.c
++++ b/sound/soc/sunxi/sun8i-codec.c
+@@ -481,7 +481,11 @@ static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
+ 	{ "Right Digital DAC Mixer", "AIF1 Slot 0 Digital DAC Playback Switch",
+ 	  "AIF1 Slot 0 Right"},
+ 
+-	/* ADC routes */
++	/* ADC Routes */
++	{ "AIF1 Slot 0 Right ADC", NULL, "ADC" },
++	{ "AIF1 Slot 0 Left ADC", NULL, "ADC" },
++
++	/* ADC Mixer Routes */
+ 	{ "Left Digital ADC Mixer", "AIF1 Data Digital ADC Capture Switch",
+ 	  "AIF1 Slot 0 Left ADC" },
+ 	{ "Right Digital ADC Mixer", "AIF1 Data Digital ADC Capture Switch",
+-- 
+2.19.1
