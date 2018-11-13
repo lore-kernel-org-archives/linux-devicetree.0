@@ -1,99 +1,53 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v3 0/7] spi: add support for octo mode
-Date: Tue, 13 Nov 2018 13:30:24 +0530
-Message-ID: <468e7b5f-8840-2fce-2b47-325eeed577e4@ti.com>
-References: <1540287311-1572-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v3 0/4] Add support of STM32 hwspinlock
+Date: Tue, 13 Nov 2018 09:09:48 +0100
+Message-ID: <e252e4c7-ec95-b4c2-f988-526fd8bda942@st.com>
+References: <20181112152342.6561-1-benjamin.gaignard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1540287311-1572-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+In-Reply-To: <20181112152342.6561-1-benjamin.gaignard@st.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "broonie@kernel.org" <broonie@kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>, ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Yogesh
+Hi Benjamin
 
-On 23/10/18 3:07 PM, Yogesh Narayan Gaur wrote:
-> Add support for octo mode IO data transfer.
-> Micron flash, mt35xu512aba, supports octal mode data transfer and
-> NXP FlexSPI controller supports 8 data lines for data transfer (Rx/Tx).
+On 11/12/18 4:23 PM, Benjamin Gaignard wrote:
+> This serie adds the support of the hardware semaphore block for stm32mp1 SoC.
 > 
-> Patch series
-> * Add support for octo mode flags and parsing of same in spi driver.
-> * Add parsing logic for spi-mem framework and m25p80.c device file.
-> * Add opcodes for octo I/O commands in spi-nor framework, Read and Write proto for (1-1-8/1-8-8) mode.
->   Opcodes are added as per octal data IO commands required for mt35xu512aba [1] flash.
-> * Add mode bit required for octo mode in nxp-fspi driver [2].
-> * Define binding property 'spi-rx/tx-bus-width' for LX2160ARDB target [2].
+> version 3:
+> - fix clock name in properties description.
+> - use postcore_initcall() instead of module_platform_driver()
 > 
+> version 2:
+> - fix comments done by Bjorn about clock naming, license terms in header,
+>    alphabetic ordering in Makefile and Kconfig and remove function
+> - Do not push test module in this version while waiting for feedbacks about it
+> 
+> 
+> Benjamin Gaignard (4):
+>    dt-bindings: hwlock: Document STM32 hwspinlock bindings
+>    hwspinlock: add STM32 hwspinlock device
+>    ARM: dts: stm32: Add hwspinlock node for stm32mp157 SoC
+>    ARM: dts: stm32: enable hwspinlock on stm32mp157c-ed1
 
-You may have to rebase this series to avoid conflicts with recent spi.h
-changes. Also, I suggest merging patches in [1] with this series if you
-plan to post another version so that all bits are at one place.
+DT patches applied on stm32-next.
 
 Regards
-Vignesh
+Alex
 
-> Cherry pick below 2 patches (from: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git):
->     c639f871febe6667d9afce28108c634e5636c735 spi: spi-mem: Fix inverted logic in op sanity check
->     db122eb8a749a1eff038f9a282c620ab16c4be1d spi: spi-mem: Add extra sanity checks on the op param
 > 
-> Tested on LX2160ARDB target with nxp-fspi driver, below are
-> Read performance number of 1-1-1 and 1-1-8 read protocol.
+>   .../bindings/hwlock/st,stm32-hwspinlock.txt        |  23 +++
+>   arch/arm/boot/dts/stm32mp157c-ed1.dts              |   4 +
+>   arch/arm/boot/dts/stm32mp157c.dtsi                 |   9 ++
+>   drivers/hwspinlock/Kconfig                         |   9 ++
+>   drivers/hwspinlock/Makefile                        |   1 +
+>   drivers/hwspinlock/stm32_hwspinlock.c              | 156 +++++++++++++++++++++
+>   6 files changed, 202 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt
+>   create mode 100644 drivers/hwspinlock/stm32_hwspinlock.c
 > 
->  root@lxxx:~# cat /proc/mtd
->  dev:    size   erasesize  name
->  mtd0: 04000000 00001000 "spi0.0"
->  mtd1: 04000000 00001000 "spi0.1"
->  root@lxxx:~# time mtd_debug read /dev/mtd0 0x0 0x1000000 0read
->  Copied 16777216 bytes from address 0x00000000 in flash to 0read
-> 
->  real    0m2.792s
->  user    0m0.000s
->  sys     0m2.790s
->  root@lxxx:~# time mtd_debug read /dev/mtd1 0x0 0x1000000 0read
->  Copied 16777216 bytes from address 0x00000000 in flash to 0read
-> 
->  real    0m0.441s
->  user    0m0.000s
->  sys     0m0.440s
->  root@ls1012ardb:~#
-> 
->  Flash device MTD0 configured in 1-1-1 protocol.
->  Flash device MTD1 configured in 1-1-8 protocol.
-> 
-> [1] https://patchwork.ozlabs.org/project/linux-mtd/list/?series=70384
-> [2] https://patchwork.ozlabs.org/project/linux-mtd/list/?series=72181
-> 
-> Yogesh Gaur (7):
->   spi: add support for octo mode I/O data transfer
->   spi: spi-mem: add support for octo mode I/O data transfer
->   mtd: spi-nor: add opcodes for octo Read/Write commands
->   mtd: spi-nor: add octo read flag for flash mt35xu512aba
->   mtd: m25p80: add support of octo mode I/O transfer
->   spi: nxp-fspi: add octo mode flag bit for octal support
->   arm64: dts: lx2160a: update fspi node
-> 
-> Changes for v3:
-> - Add octo mode support in spi_setup().
-> - Rename all patches with 'octal' string modified as 'octo'.
-> Changes for v2:
-> - Incorporated review comments of Boris and Vignesh.
-> 
->  arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts |  4 ++++
->  drivers/mtd/devices/m25p80.c                      |  9 ++++++++-
->  drivers/mtd/spi-nor/spi-nor.c                     | 15 ++++++++++++++-
->  drivers/spi/spi-mem.c                             |  9 ++++++++-
->  drivers/spi/spi-nxp-fspi.c                        |  4 ++--
->  drivers/spi/spi.c                                 | 12 ++++++++++--
->  include/linux/mtd/spi-nor.h                       |  8 ++++++++
->  include/linux/spi/spi.h                           |  2 ++
->  8 files changed, 56 insertions(+), 7 deletions(-)
-> 
-
--- 
-Regards
-Vignesh
