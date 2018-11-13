@@ -1,279 +1,134 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 2/8] mfd: stpmic1: add stpmic1 driver
-Date: Tue, 13 Nov 2018 07:40:37 +0000
-Message-ID: <20181113074037.GC29388@dell>
-References: <1540830122-2577-1-git-send-email-p.paillet@st.com>
- <1540830122-2577-3-git-send-email-p.paillet@st.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v3 17/25] dt-bindings: panel: Add Bananapi S070WV20-CT16
+ ICN6211 MIPI-DSI to RGB bridge
+Date: Tue, 13 Nov 2018 08:56:08 +0100
+Message-ID: <eb23f0f8-0270-d4fa-2cac-5b65ee4af42c@samsung.com>
+References: <20181026144344.27778-1-jagan@amarulasolutions.com>
+        <CGME20181029111305epcas5p2ee0ca644470de4e036762e000afbb71b@epcas5p2.samsung.com>
+        <20181026144344.27778-18-jagan@amarulasolutions.com>
+        <3c4c8a08-8c1e-1ac6-2b53-81389d69c97b@samsung.com>
+        <CAGb2v66ENhmNXPz4PfdRJjNUNdpDNZYX2a3SH8AD6SMe9g2zLA@mail.gmail.com>
+        <bfe28e8d-3786-d35d-a589-abed9ee8e7d5@samsung.com>
+        <CAMty3ZAWkX8YSRzFs_GS2O4+=pf68e4EuSMym+_XpCe3_4-2yw@mail.gmail.com>
+        <25c24350-4acd-68b8-ef5d-75a60094f0b6@samsung.com>
+        <CAMty3ZDTAiW=Lx2H4WvdsdJRYsVe1CpCJx7D0f7yANx7Lx25PA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1540830122-2577-3-git-send-email-p.paillet@st.com>
+In-Reply-To: <CAMty3ZDTAiW=Lx2H4WvdsdJRYsVe1CpCJx7D0f7yANx7Lx25PA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pascal PAILLET-LME <p.paillet@st.com>
-Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.co
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 29 Oct 2018, Pascal PAILLET-LME wrote:
+On 10.11.2018 08:32, Jagan Teki wrote:
+> On Wed, Nov 7, 2018 at 2:41 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
+>> On 06.11.2018 19:08, Jagan Teki wrote:
+>>> On Wed, Oct 31, 2018 at 2:45 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
+>>>> On 31.10.2018 09:58, Chen-Yu Tsai wrote:
+>>>>> On Wed, Oct 31, 2018 at 4:53 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
+>>>>>> On 26.10.2018 16:43, Jagan Teki wrote:
+>>>>>>> Bananapi S070WV20-CT16 ICN6211 is 800x480, 4-lane MIPI-DSI to RGB
+>>>>>>> bridge panel, which is available on same PCB with 24-bit RGB interface.
+>>>>>>>
+>>>>>>> So, this patch adds DSI specific binding details on existing
+>>>>>>> dt-bindings file.
+>>>>>>>
+>>>>>>> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+>>>>>>> ---
+>>>>>>> Changes for v3:
+>>>>>>> - Use existing binding doc and update dsi details
+>>>>>>> Changes for v2:
+>>>>>>> - none
+>>>>>>>
+>>>>>>>  .../display/panel/bananapi,s070wv20-ct16.txt  | 31 +++++++++++++++++--
+>>>>>>>  1 file changed, 29 insertions(+), 2 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
+>>>>>>> index 35bc0c839f49..b7855dc7c66f 100644
+>>>>>>> --- a/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
+>>>>>>> +++ b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
+>>>>>>> @@ -1,12 +1,39 @@
+>>>>>>>  Banana Pi 7" (S070WV20-CT16) TFT LCD Panel
+>>>>>>>
+>>>>>>> +S070WV20-CT16 is 7" 800x480 panel connected through a 24-bit RGB interface.
+>>>>>>> +
+>>>>>>> +Depending on the variant, the PCB attached to the panel module either
+>>>>>>> +supports DSI, or DSI + 24-bit RGB. DSI is converted to 24-bit RGB via
+>>>>>>> +an onboard ICN6211 MIPI DSI - RGB bridge chip, then fed to the panel
+>>>>>>> +itself
+>>>>>> As I understand this is display board, which contains 'pure' RGB panel
+>>>>>> S070WV20-CT16 and optionally ICN6211 DSI->RGB bridge.
+>>>>>> These are separate devices, just connected by vendor to simplify its
+>>>>>> assembly. Why don't you create then bridge driver for ICN6211 and RGB
+>>>>>> panel driver for S070WV20-CT16 - it looks more generic.
+>>>>>> Then you can describe both in dts and voila.
+>>>>>> Creating drivers for every combo of devices (panel + bridge), just
+>>>>>> because some vendor sells them together seems incorrect - we have
+>>>>>> devicetree for it.
+>>>>> Rob suggested this, and also the opposite: using the same
+>>>>> "bananapi,s070wv20-ct16"
+>>>>> compatible string for both types of connections, and have the driver deal with
+>>>>> detecting the bus type.
+>>>>>
+>>>>> The thing about the bridge chip is that there's no available datasheet that
+>>>>> describes all the parts of the init sequence, in fact none at all. I managed
+>>>>> to work out some bits, but the others remain a mystery and must be hard-coded
+>>>>> to match the panel. That would work against having a generic bridge driver.
+>>>> But it is common for many chips - 1st version of the driver is developed
+>>>> on one platform and it supports only one configuration, if next platform
+>>>> with the same cheap appears the driver is augmented if necessary.
+>>> At-least few of the commands from panel initialization code, the
+>>> respective opcode data values are based on panel timings and even
+>>> clock value is different in DSI. I think it look hard to try bridge
+>>> driver for these restrictions, do you have any suggestions?
+>>
+>> Where do you see an issue? Since panel is RGB it should have no
+>> initialization sequence (beside regulator/gpio power on/off), so the
+>> only thing to do is to figure out which regulators/gpios belongs to
+>> which component - with publicly available specs it should be doable.
+>>
+>> The whole initialization sequence is for the bridge, so you put it into
+>> bridge driver, for starters it can be hardcoded.
+> Yes, I understand we can move regulators/gpio setup separately and
+> though we hardcode the init sequence there is difference  in clock for
+> DSI(which I mentioned in previous mail). DSI panel can't work with
+> clock used by RGB panel-simple.
 
-> stpmic1 is a pmic from STMicroelectronics. The STPMIC1 integrates 10
 
-"STPMIC1 is a PMIC"
+If you mean pixel clock from timings in next patch it seems incorrect.
+Pixel clock should be always
 
-> regulators, 3 power switches, a watchdog and an input for a power on key.
-> 
-> Signed-off-by: Pascal Paillet <p.paillet@st.com>
-> ---
-> changes in v5:
-> * use macro to define regmap register ranges
-> * use REGMAP_IRQ_REG marco to define interrupts
-> * remove st properties
-> 
->  drivers/mfd/Kconfig         |  13 +++
->  drivers/mfd/Makefile        |   1 +
->  drivers/mfd/stpmic1.c       | 215 ++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/stpmic1.h | 212 +++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 444 insertions(+)
->  create mode 100644 drivers/mfd/stpmic1.c
->  create mode 100644 include/linux/mfd/stpmic1.h
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 11841f4..07e39a6 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -1855,6 +1855,22 @@ config MFD_STM32_TIMERS
->  	  for PWM and IIO Timer. This driver allow to share the
->  	  registers between the others drivers.
->  
-> +config MFD_STPMIC1
-> +	tristate "Support for STPMIC1 PMIC"
-> +	depends on (I2C=y && OF)
-> +	select REGMAP_I2C
-> +	select REGMAP_IRQ
-> +	select MFD_CORE
-> +	help
-> +	  Support for ST Microelectronics STPMIC1 PMIC. STPMIC1 has power on
-> +	  key, watchdog and regulator functionalities which are supported via
-> +	  the relevant subsystems.  This driver provides core support for the
-> +	  STPMIC1, in order to use the actual functionaltiy of the device other
+htotal * vtotal * vrefresh, in case of drm_display_mode result should be
+divided by 1000 (as .clock is in kHz).
 
-s/,/./
+With timings provided there you have: 928*525*60 = 29232000
 
-> +	  drivers must be enabled.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called stpmic1.
-> +
->  menu "Multimedia Capabilities Port drivers"
->  	depends on ARCH_SA1100
->  
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 5856a94..76fff14 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -232,6 +232,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
->  obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
->  
->  obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
-> +obj-$(CONFIG_MFD_STPMIC1)	+= stpmic1.o
->  obj-$(CONFIG_MFD_SUN4I_GPADC)	+= sun4i-gpadc.o
->  
->  obj-$(CONFIG_MFD_STM32_LPTIMER)	+= stm32-lptimer.o
-> diff --git a/drivers/mfd/stpmic1.c b/drivers/mfd/stpmic1.c
-> new file mode 100644
-> index 0000000..2f4fd5e
-> --- /dev/null
-> +++ b/drivers/mfd/stpmic1.c
-> @@ -0,0 +1,215 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) STMicroelectronics 2018
-> +// Author: Pascal Paillet <p.paillet@st.com>
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/stpmic1.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/pm_wakeirq.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <dt-bindings/mfd/st,stpmic1.h>
-> +
-> +#define STPMIC1_MAIN_IRQ 0
-> +
-> +static const struct regmap_range stpmic1_readable_ranges[] = {
-> +	regmap_reg_range(TURN_ON_SR, VERSION_SR),
-> +	regmap_reg_range(SWOFF_PWRCTRL_CR, LDO6_STDBY_CR),
-> +	regmap_reg_range(BST_SW_CR, BST_SW_CR),
-> +	regmap_reg_range(INT_PENDING_R1, INT_PENDING_R4),
-> +	regmap_reg_range(INT_CLEAR_R1, INT_CLEAR_R4),
-> +	regmap_reg_range(INT_MASK_R1, INT_MASK_R4),
-> +	regmap_reg_range(INT_SET_MASK_R1, INT_SET_MASK_R4),
-> +	regmap_reg_range(INT_CLEAR_MASK_R1, INT_CLEAR_MASK_R4),
-> +	regmap_reg_range(INT_SRC_R1, INT_SRC_R1),
-> +};
-> +
-> +static const struct regmap_range stpmic1_writeable_ranges[] = {
-> +	regmap_reg_range(SWOFF_PWRCTRL_CR, LDO6_STDBY_CR),
-> +	regmap_reg_range(BST_SW_CR, BST_SW_CR),
-> +	regmap_reg_range(INT_CLEAR_R1, INT_CLEAR_R4),
-> +	regmap_reg_range(INT_SET_MASK_R1, INT_SET_MASK_R4),
-> +	regmap_reg_range(INT_CLEAR_MASK_R1, INT_CLEAR_MASK_R4),
-> +};
-> +
-> +static const struct regmap_range stpmic1_volatile_ranges[] = {
-> +	regmap_reg_range(TURN_ON_SR, VERSION_SR),
-> +	regmap_reg_range(WCHDG_CR, WCHDG_CR),
-> +	regmap_reg_range(INT_PENDING_R1, INT_PENDING_R4),
-> +	regmap_reg_range(INT_SRC_R1, INT_SRC_R4),
-> +};
+So pixel clock should be 29232, if other timings are correct. DSI clock
+is a different thing and it is private thing of DSI bridge/panel it
+should not be exposed via drm_display_mode.
 
-Nice!
 
-> +static const struct regmap_access_table stpmic1_readable_table = {
-> +	.yes_ranges = stpmic1_readable_ranges,
-> +	.n_yes_ranges = ARRAY_SIZE(stpmic1_readable_ranges),
-> +};
-> +
-> +static const struct regmap_access_table stpmic1_writeable_table = {
-> +	.yes_ranges = stpmic1_writeable_ranges,
-> +	.n_yes_ranges = ARRAY_SIZE(stpmic1_writeable_ranges),
-> +};
-> +
-> +static const struct regmap_access_table stpmic1_volatile_table = {
-> +	.yes_ranges = stpmic1_volatile_ranges,
-> +	.n_yes_ranges = ARRAY_SIZE(stpmic1_volatile_ranges),
-> +};
-> +
-> +const struct regmap_config stpmic1_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.cache_type = REGCACHE_RBTREE,
-> +	.max_register = PMIC_MAX_REGISTER_ADDRESS,
-> +	.rd_table = &stpmic1_readable_table,
-> +	.wr_table = &stpmic1_writeable_table,
-> +	.volatile_table = &stpmic1_volatile_table,
-> +};
-> +
-> +static const struct regmap_irq stpmic1_irqs[] = {
-> +	REGMAP_IRQ_REG(IT_PONKEY_F, 0, 0x01),
-> +	REGMAP_IRQ_REG(IT_PONKEY_R, 0, 0x02),
-> +	REGMAP_IRQ_REG(IT_WAKEUP_F, 0, 0x04),
-> +	REGMAP_IRQ_REG(IT_WAKEUP_R, 0, 0x08),
-> +	REGMAP_IRQ_REG(IT_VBUS_OTG_F, 0, 0x10),
-> +	REGMAP_IRQ_REG(IT_VBUS_OTG_R, 0, 0x20),
-> +	REGMAP_IRQ_REG(IT_SWOUT_F, 0, 0x40),
-> +	REGMAP_IRQ_REG(IT_SWOUT_R, 0, 0x80),
-> +
-> +	REGMAP_IRQ_REG(IT_CURLIM_BUCK1, 1, 0x01),
-> +	REGMAP_IRQ_REG(IT_CURLIM_BUCK2, 1, 0x02),
-> +	REGMAP_IRQ_REG(IT_CURLIM_BUCK3, 1, 0x04),
-> +	REGMAP_IRQ_REG(IT_CURLIM_BUCK4, 1, 0x08),
-> +	REGMAP_IRQ_REG(IT_OCP_OTG, 1, 0x10),
-> +	REGMAP_IRQ_REG(IT_OCP_SWOUT, 1, 0x20),
-> +	REGMAP_IRQ_REG(IT_OCP_BOOST, 1, 0x40),
-> +	REGMAP_IRQ_REG(IT_OVP_BOOST, 1, 0x80),
-> +
-> +	REGMAP_IRQ_REG(IT_CURLIM_LDO1, 2, 0x01),
-> +	REGMAP_IRQ_REG(IT_CURLIM_LDO2, 2, 0x02),
-> +	REGMAP_IRQ_REG(IT_CURLIM_LDO3, 2, 0x04),
-> +	REGMAP_IRQ_REG(IT_CURLIM_LDO4, 2, 0x08),
-> +	REGMAP_IRQ_REG(IT_CURLIM_LDO5, 2, 0x10),
-> +	REGMAP_IRQ_REG(IT_CURLIM_LDO6, 2, 0x20),
-> +	REGMAP_IRQ_REG(IT_SHORT_SWOTG, 2, 0x40),
-> +	REGMAP_IRQ_REG(IT_SHORT_SWOUT, 2, 0x80),
-> +
-> +	REGMAP_IRQ_REG(IT_TWARN_F, 3, 0x01),
-> +	REGMAP_IRQ_REG(IT_TWARN_R, 3, 0x02),
-> +	REGMAP_IRQ_REG(IT_VINLOW_F, 3, 0x04),
-> +	REGMAP_IRQ_REG(IT_VINLOW_R, 3, 0x08),
-> +	REGMAP_IRQ_REG(IT_SWIN_F, 3, 0x40),
-> +	REGMAP_IRQ_REG(IT_SWIN_R, 3, 0x80),
-> +};
-> +
-> +static const struct regmap_irq_chip stpmic1_regmap_irq_chip = {
-> +	.name = "pmic_irq",
-> +	.status_base = INT_PENDING_R1,
-> +	.mask_base = INT_CLEAR_MASK_R1,
-> +	.unmask_base = INT_SET_MASK_R1,
-> +	.ack_base = INT_CLEAR_R1,
-> +	.num_regs = STPMIC1_PMIC_NUM_IRQ_REGS,
-> +	.irqs = stpmic1_irqs,
-> +	.num_irqs = ARRAY_SIZE(stpmic1_irqs),
-> +};
-> +
-> +static int stpmic1_probe(struct i2c_client *i2c,
-> +			 const struct i2c_device_id *id)
-> +{
-> +	struct stpmic1 *ddata;
-> +	struct device *dev = &i2c->dev;
-> +	int ret;
-> +	struct device_node *np = dev->of_node;
-> +	u32 reg;
-> +
-> +	ddata = devm_kzalloc(dev, sizeof(struct stpmic1), GFP_KERNEL);
-> +	if (!ddata)
-> +		return -ENOMEM;
-> +
-> +	i2c_set_clientdata(i2c, ddata);
-> +	ddata->dev = dev;
-> +
-> +	ddata->regmap = devm_regmap_init_i2c(i2c, &stpmic1_regmap_config);
-> +	if (IS_ERR(ddata->regmap))
-> +		return PTR_ERR(ddata->regmap);
-> +
-> +	ddata->irq = of_irq_get(np, STPMIC1_MAIN_IRQ);
-> +	if (ddata->irq < 0) {
-> +		dev_err(dev, "Failed to get main IRQ: %d\n", ddata->irq);
-> +		return ddata->irq;
-> +	}
-> +
-> +	/* Read Version ID */
+Regards
 
-I think the MACRO name and error message make this comment
-superfluous.
+Andrzej
 
-> +	ret = regmap_read(ddata->regmap, VERSION_SR, &reg);
-> +	if (ret) {
-> +		dev_err(dev, "Unable to read pmic version\n");
 
-"PMIC"
-
-> +		return ret;
-> +	}
-> +	dev_info(dev, "PMIC Chip Version: 0x%x\n", reg);
-> +
-> +	/* Initialize PMIC IRQ Chip & IRQ domains associated */
-
-"associated IRQ domains"
-
-> +	ret = devm_regmap_add_irq_chip(dev, ddata->regmap, ddata->irq,
-> +				       IRQF_ONESHOT | IRQF_SHARED,
-> +				       0, &stpmic1_regmap_irq_chip,
-> +				       &ddata->irq_data);
-> +	if (ret) {
-> +		dev_err(dev, "IRQ Chip registration failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return devm_of_platform_populate(dev);
-> +}
-> +
-> +static const struct i2c_device_id stpmic1_id[] = {
-> +	{ "stpmic1"},
-> +	{}
-> +};
-
-I don't think this is required any more.
-
-> +MODULE_DEVICE_TABLE(i2c, stpmic1_id);
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+>
+>> Then you can:
+>>
+>> 1. Try to find other users of this ICN6211 chip and compare
+>> initialization sequences to guess purpose of registers.
+>>
+>> 2. Try to get specs of the chip (ask vendor, distributor, grep Internet).
+> As we mentioned (even Chen-Yu), we are unable to find the proper spec
+> for this panel, all we taken reference from AW BSP code.
+>
+>> 3. Do nothing - if there will be other users of the bridge they will do
+>> this work.
+> Don't know how we can go with generic bridge driver irrespective of
+> these particular wrinkles, let me know if you have any suggestions.
+>
+>
