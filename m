@@ -1,45 +1,45 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH] dt-bindings: media: i2c: Fix external clock frequency for OV5645
-Date: Wed, 14 Nov 2018 16:09:35 +0530
-Message-ID: <20181114103935.24559-1-manivannan.sadhasivam@linaro.org>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v12 0/2] Initial Allwinner V3s CSI Support
+Date: Wed, 14 Nov 2018 12:54:13 +0200
+Message-ID: <20181114105413.4gcfwt4cmchh6zsf@valkosipuli.retiisi.org.uk>
+References: <1540886988-27696-1-git-send-email-yong.deng@magewell.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1540886988-27696-1-git-send-email-yong.deng@magewell.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mchehab@kernel.org, robh+dt@kernel.org, todor.tomov@linaro.org, hansverk@cisco.com
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Yong Deng <yong.deng@magewell.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Neil Armstrong <narmstrong@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Thomas Gleixner <tglx@linutronix.de>, Todor Tomov <todor.tomov@linaro.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-a
 List-Id: devicetree@vger.kernel.org
 
-Commit "4adb0a0432f4 media: ov5645: Supported external clock is 24MHz"
-modified the external clock frequency to be 24MHz instead of the
-23.88MHz in driver. Hence, make the same change in corresponding bindings
-doc and mention the acceptable tolerance.
+On Tue, Oct 30, 2018 at 04:09:48PM +0800, Yong Deng wrote:
+> I can't make v4l2-compliance always happy.
+> The V3s CSI support many pixformats. But they are not always available.
+> It's dependent on the input bus format (MEDIA_BUS_FMT_*). 
+> Example:
+> V4L2_PIX_FMT_SBGGR8: MEDIA_BUS_FMT_SBGGR8_1X8
+> V4L2_PIX_FMT_YUYV: MEDIA_BUS_FMT_YUYV8_2X8
+> But I can't get the subdev's format code before starting stream as the
+> subdev may change it. So I can't know which pixformats are available.
+> So I exports all the pixformats supported by SoC.
+> The result is the app (v4l2-compliance) is likely to fail on streamon.
+> 
+> This patchset add initial support for Allwinner V3s CSI.
+> 
+> Allwinner V3s SoC features a CSI module with parallel interface.
+> 
+> This patchset implement a v4l2 framework driver and add a binding 
+> documentation for it. 
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Applied with this diff from Maxime:
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-index fd7aec9f8e24..b155583469a4 100644
---- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-@@ -8,7 +8,8 @@ Required Properties:
- - compatible: Value should be "ovti,ov5645".
- - clocks: Reference to the xclk clock.
- - clock-names: Should be "xclk".
--- clock-frequency: Frequency of the xclk clock.
-+- clock-frequency: Frequency of the xclk clock. Should be 24MHz with 1%
-+                   acceptable tolerance.
- - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-   to the hardware pin PWDNB which is physically active low.
- - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-@@ -37,7 +38,7 @@ Example:
- 
- 			clocks = <&clks 200>;
- 			clock-names = "xclk";
--			clock-frequency = <23880000>;
-+			clock-frequency = <24000000>;
- 
- 			vdddo-supply = <&camera_dovdd_1v8>;
- 			vdda-supply = <&camera_avdd_2v8>;
+<URL:http://code.bulix.org/vf7b6g-504515?raw>
+
+The MAINTAINERS entry was also moved to the first patch.
+
+Thanks!
+
 -- 
-2.17.1
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
