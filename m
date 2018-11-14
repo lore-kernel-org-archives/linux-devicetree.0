@@ -1,56 +1,65 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [RFC PATCH 0/6] Armada 38x comphy driver to support 2.5Gbps
- networking
-Date: Wed, 14 Nov 2018 10:56:06 +0000
-Message-ID: <20181114105606.GR30658@n2100.armlinux.org.uk>
-References: <20181112122933.GD30658@n2100.armlinux.org.uk>
- <f0e71064-6919-6f7f-d605-671a1c662a33@ti.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH] dt-bindings: media: i2c: Fix external clock frequency
+ for OV5645
+Date: Wed, 14 Nov 2018 12:57:12 +0200
+Message-ID: <20181114105712.j5jkspfasujiyqzs@valkosipuli.retiisi.org.uk>
+References: <20181114103935.24559-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <f0e71064-6919-6f7f-d605-671a1c662a33@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
+In-Reply-To: <20181114103935.24559-1-manivannan.sadhasivam@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, todor.tomov@linaro.org, hansverk@cisco.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 14, 2018 at 01:39:29PM +0530, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On 12/11/18 5:59 PM, Russell King - ARM Linux wrote:
-> > Hi,
-> > 
-> > This series adds support for dynamically switching between 1Gbps
-> > and 2.5Gbps networking for the Marvell Armada 38x SoCs, tested on
-> > Armada 388 on the Clearfog platform.
-> > 
-> > This is necessary to be able to connect (eg) a Clearfog platform
-> > with a Macchiatobin platform via the SFP sockets, as Clearfog
-> > currently only supports 1Gbps networking via the SFP socket and
-> > Macchiatobin defaults to 2.5Gbps when using Fiberchannel SFPs.
-> > 
-> > In order to allow dynamic switching, we need to implement a common
-> > phy driver to switch the ethernet serdes lane speed - 2.5Gbps is
-> > just 1Gbps up-clocked by 2.5x.  We implement a simple comphy
-> > driver to achieve this, which only supports networking.
-> > 
-> > With this, we are able to support both Fiberchannel SFPs operating
-> > at 2.5Gbps or 1Gbps, and 1G ethernet SFPs plugged into the Clearfog
-> > platform, dynamically selecting according to the SFPs abilities.
-> > 
-> > I'm aware of the proposed changes to the PHY layer, changing
-> > phy_set_mode() to take the ethernet phy interface type, hence why
-> > this is RFC - there's also the question about how this will be
-> > merged.  This series is currently based on 4.20-rc1, but will
-> > likely need to be rebased when the PHY layer changes hit.
-> 
-> For this case, I'd prefer the phy_set_mode series and the phy and net changes
-> here (after rebasing) go via linux-phy tree.
+Hi Manivannan,
 
-Please let me know when they've hit, thanks.
+On Wed, Nov 14, 2018 at 04:09:35PM +0530, Manivannan Sadhasivam wrote:
+> Commit "4adb0a0432f4 media: ov5645: Supported external clock is 24MHz"
+> modified the external clock frequency to be 24MHz instead of the
+> 23.88MHz in driver. Hence, make the same change in corresponding bindings
+> doc and mention the acceptable tolerance.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> index fd7aec9f8e24..b155583469a4 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> @@ -8,7 +8,8 @@ Required Properties:
+>  - compatible: Value should be "ovti,ov5645".
+>  - clocks: Reference to the xclk clock.
+>  - clock-names: Should be "xclk".
+> -- clock-frequency: Frequency of the xclk clock.
+> +- clock-frequency: Frequency of the xclk clock. Should be 24MHz with 1%
+> +                   acceptable tolerance.
+
+DT bindings are for documenting the hardware, not the driver implementation.
+The sensor supports a range AFAIU, not a specific frequency.
+
+The bit below seems good.
+
+>  - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
+>    to the hardware pin PWDNB which is physically active low.
+>  - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
+> @@ -37,7 +38,7 @@ Example:
+>  
+>  			clocks = <&clks 200>;
+>  			clock-names = "xclk";
+> -			clock-frequency = <23880000>;
+> +			clock-frequency = <24000000>;
+>  
+>  			vdddo-supply = <&camera_dovdd_1v8>;
+>  			vdda-supply = <&camera_avdd_2v8>;
+> -- 
+> 2.17.1
+> 
 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
