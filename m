@@ -1,91 +1,44 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v6 1/6] regmap: add a new macro:REGMAP_IRQ_REG_LINE(_id,
- _reg_bits)
-Date: Wed, 14 Nov 2018 14:22:15 -0800
-Message-ID: <20181114222215.GD2089@sirena.org.uk>
-References: <1540894081-31270-1-git-send-email-tony.xie@rock-chips.com>
- <1540894081-31270-2-git-send-email-tony.xie@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5771941759502530252=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1540894081-31270-2-git-send-email-tony.xie@rock-chips.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Xie <tony.xie@rock-chips.com>
-Cc: mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, huangtao@rock-chips.com, heiko@sntech.de, devicetree@vger.kernel.org, sboyd@kernel.org, zhangqing@rock-chips.com, linux-kernel@vger.kernel.org, xsf@rock-chips.com, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, chenjh@rock-chips.com, lee.jones@linaro.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.18 27/59] arm64: dts: renesas: r8a7795: add missing dma-names on hscif2
+Date: Wed, 14 Nov 2018 17:22:59 -0500
+Message-ID: <20181114222335.99339-27-sashal@kernel.org>
+References: <20181114222335.99339-1-sashal@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181114222335.99339-1-sashal@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Simon Horman <horms+renesas@verge.net.au>, Sasha Levin <sashal@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
---===============5771941759502530252==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zokm/imjT5TjLIDZ"
-Content-Disposition: inline
+[ Upstream commit aab7a2414ba0d5c3d0571a90031b535adba7146a ]
 
+hscif2 has 4 dmas, but has only 2 dma-names.
+This patch add missing dma-names.
 
---zokm/imjT5TjLIDZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: e0f0bda79337701a ("arm64: dts: renesas: r8a7795: sort subnodes
+of the soc node")
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Tue, Oct 30, 2018 at 06:07:56PM +0800, Tony Xie wrote:
-> if there are lots of irqs for a device and the register addresses for these
-> irqs is continuous, we can use this macro to initialize regmap_irq value.
-
-The following changes since commit 651022382c7f8da46cb4872a545ee1da6d097d2a:
-
-  Linux 4.20-rc1 (2018-11-04 15:37:52 -0800)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-irq-line
-
-for you to fetch changes up to 43fac3238c1d9363b2a93d8d56c2be0c29c64e6c:
-
-  regmap: add a new macro:REGMAP_IRQ_REG_LINE(_id, _reg_bits) (2018-11-14 14:20:45 -0800)
-
-----------------------------------------------------------------
-regmap: Add an IRQ_LINE macro to help defining regmap-irq tables
-
-----------------------------------------------------------------
-Tony Xie (1):
-      regmap: add a new macro:REGMAP_IRQ_REG_LINE(_id, _reg_bits)
-
- include/linux/regmap.h | 6 ++++++
- 1 file changed, 6 insertions(+)
-
---zokm/imjT5TjLIDZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlvsoBYACgkQJNaLcl1U
-h9AohQf8DKOpuLYQeprG6Yd0xJvtsXz1Ktv2508YsUJgX45xIZTt1Svw88D8+xhB
-9t2feqe8HSskGnQ2PU9ecDAGYMcUqzfaAp+3EvVynZme+tENOZRT5oAJpQjOw3mI
-6rZadavHxlGyLoVuCXJC3hdpu1dsjoclMWX0aYVLTGun631DCHya8ubJSX7Qu+4Y
-5AZNvT4GPCEUaHNmEi6Dr8eZH4oxlIec2NqmV1CsHUTsOf+XCKwpIVlzP7eEKNj0
-WPZ4ZYO0TVbqfXgXlV2/hajafjF3q3GabrJwreD8T/+ZbnrwuHGqSsXGblK37IGp
-Qm8ZZIpLs4N3BxadCAl/7jMJYHsQMw==
-=KajA
------END PGP SIGNATURE-----
-
---zokm/imjT5TjLIDZ--
-
-
---===============5771941759502530252==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5771941759502530252==--
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index 91c392f879f9..43f95c918409 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -656,7 +656,7 @@
+ 			clock-names = "fck", "brg_int", "scif_clk";
+ 			dmas = <&dmac1 0x35>, <&dmac1 0x34>,
+ 			       <&dmac2 0x35>, <&dmac2 0x34>;
+-			dma-names = "tx", "rx";
++			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+ 			resets = <&cpg 518>;
+ 			status = "disabled";
+-- 
+2.17.1
