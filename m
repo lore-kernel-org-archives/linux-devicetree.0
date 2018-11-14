@@ -1,73 +1,50 @@
-From: Peter Korsgaard <peter@korsgaard.com>
-Subject: Re: [PATCH RESEND 2/2] arm64: dts: meson: add libretech aml-s805x-ac board
-Date: Wed, 14 Nov 2018 15:37:25 +0100
-Message-ID: <87a7mbvi6y.fsf@dell.be.48ers.dk>
-References: <20181114101925.10526-3-jbrunet@baylibre.com>
-        <20181114103855.14571-1-jbrunet@baylibre.com>
+From: Ricard Wanderlof <ricard.wanderlof@axis.com>
+Subject: Re: [alsa-devel] [PATCH v2 1/2] ASoC: ak4118: Add support for AK4118
+ S/PDIF transceiver
+Date: Wed, 14 Nov 2018 16:07:21 +0100
+Message-ID: <alpine.DEB.2.20.1811141602590.20252@lnxricardw1.se.axis.com>
+References: <20181114121642.1404-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181114103855.14571-1-jbrunet@baylibre.com> (Jerome Brunet's
-        message of "Wed, 14 Nov 2018 11:38:55 +0100")
+In-Reply-To: <20181114121642.1404-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: =?ISO-8859-15?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Adrien Charruel <adrien.charruel@devialet.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Jerome" == Jerome Brunet <jbrunet@baylibre.com> writes:
 
- > From: Neil Armstrong <narmstrong@baylibre.com>
- > Add Libretech aml-s805x-ac board (aka 'La Frite') support
+On Wed, 14 Nov 2018, Clément Péron wrote:
 
- > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
- > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
- > ---
+> From: Adrien Charruel <adrien.charruel@devialet.com>
+> 
+> The AK4118A is a digital audio transceiver supporting 8 input channels
+> at 192kHz and with 24bits resolution.
+> It converts the S/PDIF signal to I2S format and is configurable over I2C.
+> 
+> This driver introduce a minimal support of the AK4118, like selecting the
+> input channel, reading input frequency and detecting some errors.
 
-..
+I'm curious, from what it seems, there is no checking that the input 
+sample rate actually matches the configured sample rate? It's perfectly 
+understandable for a driver which has 'minimal support', but it's 
+something a user must be aware of; for instance if someone does
 
- > +#include "meson-gxl-s905x.dtsi"
- > +
- > +/ {
- > +	compatible = "libretech,aml-s805x-ac", "amlogic,s805x",
- > +		     "amlogic,meson-gxl";
- > +	model = "Libre Computer Board AML-S805X-AC";
+arecord -r 48000 output.wav
 
-No mention of 'La Frite'?
+when the input data actually has a rate of 44100 Hz then the file will be 
+written with a header specifying 44100 Hz but the data will actually be 
+48000 Hz.
 
- > +	memory@0 {
- > +		device_type = "memory";
- > +		reg = <0x0 0x0 0x0 0x20000000>;
- > +	};
+It's not an objection on my part, just an observation. I don't know how 
+ALSA could enforce this in any way; ideally (barring automatic sample rate 
+conversion) one would want an error message that the sample rate specified 
+when opening the stream does not match the sample rate of the S/PDIF input 
+data.
 
-Maybe add a comment that there's 1GB variants as well?
-
-> +
- > +	vcck: regulator-vcck {
- > +		compatible = "regulator-fixed";
- > +		regulator-name = "VCCK";
- > +		regulator-min-microvolt = <3300000>;
- > +		regulator-max-microvolt = <3300000>;
- > +		vin-supply = <&dc_5v>;
- > +
- > +		/*
- > +		 * This is controlled by GPIOAO_9 we reserve this but
- > +		 * claiming it as done bellow reset the board anyway
-
-s/bellow/below/
-
- > +&spifc {
- > +	status = "okay";
- > +	pinctrl-0 = <&nor_pins>;
- > +	pinctrl-names = "default";
- > +
- > +	w25q32: spi-flash@0 {
- > +		#address-cells = <1>;
- > +		#size-cells = <1>;
- > +		compatible = "jedec,spi-nor";
- > +		reg = <0>;
- > +		spi-max-frequency = <3000000>;
-
-Is this 3MHz a limitation of the flash, board layout or SPI controller?
-
+/Ricard
 -- 
-Bye, Peter Korsgaard
+Ricard Wolf Wanderlof                           ricardw(at)axis.com
+Axis Communications AB, Lund, Sweden            www.axis.com
+Phone +46 46 272 2016                           Fax +46 46 13 61 30
