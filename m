@@ -1,24 +1,22 @@
-From: pr-tracker-bot@kernel.org
-Subject: Re: [GIT PULL] Devicetree fixes for 4.20-rc, round 2
-Date: Wed, 14 Nov 2018 00:55:44 +0000
-Message-ID: <20181114005544.8329.99790.pr-tracker-bot@pdx-korg-gitolite-1.ci.codeaurora.org>
-References: <CAL_JsqLOqQ3p7mScZVfusQkrEvNCKzCWL+u1Jfe_d91Eh_krwQ@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] ARM: dts: i.MX25: add the clocks for the EPIT blocks
+Date: Wed, 14 Nov 2018 11:04:01 +0800
+Message-ID: <20181114030359.GB5829@dragon>
+References: <1541093567-29205-1-git-send-email-martin@kaiser.cx>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLOqQ3p7mScZVfusQkrEvNCKzCWL+u1Jfe_d91Eh_krwQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1541093567-29205-1-git-send-email-martin@kaiser.cx>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
+To: Martin Kaiser <martin@kaiser.cx>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The pull request you sent on Fri, 9 Nov 2018 15:39:43 -0600:
+On Thu, Nov 01, 2018 at 06:32:47PM +0100, Martin Kaiser wrote:
+> The i.MX25 contains two EPIT (Enhanced Periodic Interrupt Timer)
+> function blocks. Add their ipg and per clocks to the device tree.
+> 
+> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-4.20-2
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/aa4330e15c26c5ef8dd184f515c0655db8c6df3a
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Applied, thanks.
