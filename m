@@ -1,43 +1,47 @@
-From: "jonsmirl@gmail.com" <jonsmirl@gmail.com>
-Subject: Re: [RFC PATCH] dt-bindings: add a jsonschema binding example
-Date: Wed, 14 Nov 2018 14:39:29 -0500
-Message-ID: <CAKON4OxwAmmPv2+CEtT+eO3Uu8duCKD8OqyWj8+w2Y5SZ4bfOQ@mail.gmail.com>
-References: <20180418222905.10414-1-robh@kernel.org> <e7a2f4ca-40c2-05ef-097c-2cecd31fb731@gmail.com>
- <CAL_JsqKVCdk8nFwmtfNt4mMOVYFVxefgafP6JtXThvFhROFB8w@mail.gmail.com>
+From: Daniel Mack <daniel@zonque.org>
+Subject: Re: [PATCH] ARM: dts: pxa3xx: add gcu node
+Date: Wed, 14 Nov 2018 20:58:00 +0100
+Message-ID: <c4ea09bc-93b5-49f6-9059-a74dcdbc59a6@zonque.org>
+References: <20181105191827.3860-1-daniel@zonque.org>
+ <87muqgll3u.fsf@belgarion.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKVCdk8nFwmtfNt4mMOVYFVxefgafP6JtXThvFhROFB8w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org
-Cc: frowand.list@gmail.com, devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, grant.likely@arm.com, Mark Rutland <mark.rutland@arm.com>, geert+renesas@glider.be, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, shawnguo@kernel.org, bjorn.andersson@linaro.org, Arnd Bergmann <arnd@arndb.de>, sboyd@kernel.org, jic23@kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87muqgll3u.fsf@belgarion.home>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robert Jarzmik <robert.jarzmik@free.fr>, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, haojian.zhuang@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 20, 2018 at 9:36 PM Rob Herring <robh@kernel.org> wrote:
-> I share the concern as I doubt most kernel developers don't know
-> jsonschema. But then the alternative is us defining and writing our
-> own thing which is C like 'cause that's what kernel developers
-> understand. My hope is to simplify and restrict things enough that it
-> writing a binding doc is straightforward without being jsonschema
-> experts. That was the intent of this patch without going into all the
-> details behind it.
+Hi Robert,
 
-When schemas were first discussed long, long ago the idea was to have
-a n arbitrator who controls the schema (like Grant/Rob) so there is no
-need for general schema design knowledge in random kernel developers.
+On 10/11/2018 9:43 PM, Robert Jarzmik wrote:
+> Daniel Mack <daniel@zonque.org> writes:
+> 
+>> Add a device node for hardware graphic acceleration.
+>>
+>> Signed-off-by: Daniel Mack <daniel@zonque.org>
+> Hi Daniel,
+> 
+>> +	gcu: display-controller@54000000 {
+>> +		compatible = "marvell,pxa300-gcu";
+> Isn't every IP devicetree entry supposed to have a documentation in
+> Documentation/devicetree going along a definition in the .dtsi files ?
 
-First a developer should try and build their device tree using the
-existing schema. Then only if they find that impossible to do so
-should they propose schema changes. The schema arbitrator would then
-look at those changes and work them into the existing schemas as
-needed. Doing this via an arbitrator will ensure consistency in the
-overall schema design while eliminating redundancy with slight
-variations (like we have now).
+Ah, that's already there, see cf925575d292b.
 
-Another side effect of schemas is that as they evolve and enforce
-commonality among driver implementation it will become possible to
-turn those in-common pieces into driver libraries.
+I did that when I taught the driver DT probing.
 
--- 
-Jon Smirl
-jonsmirl@gmail.com
+
+Thanks,
+Daniel
