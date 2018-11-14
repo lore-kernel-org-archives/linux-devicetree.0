@@ -1,84 +1,52 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 01/15] dt-bindings: net: broadcom-bluetooth:
- Fix external clock names
-Date: Wed, 14 Nov 2018 11:15:06 +0800
-Message-ID: <CAGb2v65PqwKrRdh2_Y48zYnmJa0=hv3Bd4UdvdWvBBMfT2BfSw@mail.gmail.com>
-References: <20181107101308.7626-1-wens@csie.org> <20181107101308.7626-2-wens@csie.org>
- <5bea0ebe.1c69fb81.e15d7.98e1@mx.google.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 0/5] media: Allwinner A10 CSI support
+Date: Wed, 14 Nov 2018 11:24:48 +0800
+Message-ID: <CAGb2v66ygbcomUMkcv8qMCAs_qviFMPzpxj-F4=YBrpuLrdSUw@mail.gmail.com>
+References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBUFGV3PQKGQEDHHKZJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <5bea0ebe.1c69fb81.e15d7.98e1-ATjtLOhZ0NVl57MIdRCFDg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 13, 2018 at 7:37 AM Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+On Tue, Nov 13, 2018 at 4:24 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> On Wed, Nov 07, 2018 at 06:12:54PM +0800, Chen-Yu Tsai wrote:
-> > The Broadcom Bluetooth controllers can take up to two external clocks:
-> > an external frequency reference, substituting the main crystal, and a
-> > LPO clock at 32.768 kHz substituting the internal LPO clock.
-> >
-> > In particular, the external LPO clock must be used when the controller
-> > does not have NVRAM connected, and the main reference frequency is not
-> > the default 20 MHz. This is described in detail in the datasheet.
-> >
-> > The original "extclk" clock name is ambiguous as to which of these it
-> > refers to, and some designs might even require both.
-> >
-> > This patch deprecates the existing name, and adds "txco" and "lpo".
-> >
-> > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> > index 4194ff7e6ee6..2535e54219af 100644
-> > --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> > +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> > @@ -18,7 +18,10 @@ Optional properties:
-> >   - shutdown-gpios: GPIO specifier, used to enable the BT module
-> >   - device-wakeup-gpios: GPIO specifier, used to wakeup the controller
-> >   - host-wakeup-gpios: GPIO specifier, used to wakeup the host processor
-> > - - clocks: clock specifier if external clock provided to the controller
-> > + - clocks and clock-names: clock specifier if external clocks are provided
-> > +   - "txco": external reference clock
-> > +   - "extclk": deprecated, replaced by "txco"
-> > +   - "lpo": external low power 32.768 kHz clock
-> >   - clock-names: should be "extclk"
+> Hi,
 >
-> This line should change?
-
-Yes. Missed that.
-
+> Here is a series introducing the support for the A10 (and SoCs of the same
+> generation) CMOS Sensor Interface (called CSI, not to be confused with
+> MIPI-CSI, which isn't support by that IP).
 >
-> 'clocks' needs to describe how many clocks and the order of them.
+> That interface is pretty straightforward, but the driver has a few issues
+> that I wanted to bring up:
 >
-> 'clock-names' needs to list the names. Keep them separate.
+>   * The only board I've been testing this with has an ov5640 sensor
+>     attached, which doesn't work with the upstream driver. Copying the
+>     Allwinner init sequence works though, and this is how it has been
+>     tested. Testing with a second sensor would allow to see if it's an
+>     issue on the CSI side or the sensor side.
+>   * When starting a capture, the last buffer to capture will fail due to
+>     double buffering being used, and we don't have a next buffer for the
+>     last frame. I'm not sure how to deal with that though. It seems like
+>     some drivers use a scratch buffer in such a case, some don't care, so
+>     I'm not sure which solution should be preferred.
+>   * We don't have support for the ISP at the moment, but this can be added
+>     eventually.
+>
+>   * How to model the CSI module clock isn't really clear to me. It looks
+>     like it goes through the CSI controller and then is muxed to one of the
+>     CSI pin so that it can clock the sensor. I'm not quite sure how to
+>     model it, if it should be a clock, the CSI driver being a clock
+>     provider, or if the sensor should just use the module clock directly.
 
-I was under the impression that when clock-names was used, the
-order of clocks shouldn't matter.
+Which clock are you talking about? MCLK? This seems to be fed directly from
+the CCU, as there doesn't seem to be controls for it within the CSI hardware
+block, and the diagram doesn't list it either. IMO you don't have to model it.
+The camera sensor device node would just take a reference to it directly. You
+would probably enable the (separate) pinmux setting in the CSI controller node.
 
-Also, both clocks are optional. The controller can use a standalone
-crystal instead of an external TXCO, which would not get described in
-the device tree, and/or not use an LPO clock. How would one describe
-a device that has an LPO clock input but not a TXCO clock input?
 
-Last, IMHO listing them with name + description, one item per line
-is more readable then having the items on one line, then having the
-next line list all their respective names. If ordering and number of
-items is important, I could add the requirements to the description
-of "clocks and clock-names"?
-
-Thanks
 ChenYu
