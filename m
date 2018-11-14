@@ -1,111 +1,198 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v4 25/26] [DO NOT MERGE] arm64: dts:
- allwinner: bananapi-m64: Bananapi S070WV20-CT16 DSI panel
-Date: Wed, 14 Nov 2018 16:48:39 +0530
-Message-ID: <CAMty3ZAa97_zHTyxfbV+8d7fUMaEuvB_Kg-SYLY42kMEoiJLyA@mail.gmail.com>
-References: <20181113111633.20189-1-jagan@amarulasolutions.com>
- <20181113111633.20189-26-jagan@amarulasolutions.com> <20181113122204.337db8b1@donnerap.cambridge.arm.com>
- <CAMty3ZBQXcnU=490KREa=F-qctMtRep9-rrhrPd1UZStnV=hqw@mail.gmail.com>
- <CAGb2v669dkf2qaUDaosJEKSRKpPRVKWszb6BLL2NrAjWwp3t2Q@mail.gmail.com> <CAGb2v64YOV48UwHc8-=jDt2Bp_4mNb3iuyEzj0d+GOQE_oT-Xg@mail.gmail.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: =?utf-8?B?W1JDRsKgUEFUQ0gsdjIsMi8y?= =?utf-8?Q?=5D?= pwm: imx:
+ Configure output to GPIO in disabled state
+Date: Wed, 14 Nov 2018 12:34:49 +0100
+Message-ID: <20181114113449.GB2620@ulmo>
+References: <fa96ae2a-c2cc-b47a-1198-5daffa7c865f@ysoft.com>
+ <20181012160854.hmgpokxgsrqdzobx@pengutronix.de>
+ <e4289ee5-3fc1-2848-1cae-77d29b5ed93c@ysoft.com>
+ <20181107093355.e4n3irrnkybqsjvc@pengutronix.de>
+ <eb4e7a42-bd5c-3ae2-ccb7-d1a73d5ae99c@ysoft.com>
+ <20181107150125.7cpd4v5t7yi2254c@pengutronix.de>
+ <4fbb7307-df01-d7bd-f2e2-e05e6d17807d@ysoft.com>
+ <20181108191855.zuon3ecv4yjfbs7g@pengutronix.de>
+ <283cfef3-16d0-8bd4-e306-6e34d44c3a86@ysoft.com>
+ <20181109165555.vqbiwh4hlcnozdna@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBHEJWDPQKGQEICPYURI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v64YOV48UwHc8-=jDt2Bp_4mNb3iuyEzj0d+GOQE_oT-Xg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="0ntfKIWw70PvrIHh"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181109165555.vqbiwh4hlcnozdna@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Lothar =?utf-8?Q?Wa=C3=9Fmann?= <LW@karo-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 14, 2018 at 2:52 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->
-> On Wed, Nov 14, 2018 at 2:58 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> >
-> > On Wed, Nov 14, 2018 at 2:31 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
-> > >
-> > > On Tue, Nov 13, 2018 at 5:52 PM Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
-> > > >
-> > > > On Tue, 13 Nov 2018 16:46:32 +0530
-> > > > Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > > This patch add support for Bananapi S070WV20-CT16 DSI panel to
-> > > > > BPI-M64 board.
-> > > > >
-> > > > > DSI panel connected via board DSI port with,
-> > > > > - DC1SW as AVDD supply
-> > > >
-> > > > Are you sure of that? I don't see anything in the schematic to support
-> > > > this. The only power lines that go to the DSI connector are DCDC1 and
-> > > > PS. DC1SW is only connected to PortD on the SoC and to the Ethernet PHY.
-> > > > Is there anything I miss?
-> > >
-> > > Thanks for the comment, yes dc1sw is connected in ephy. I have reused
-> > > dc1, BSP is attached lcd_power1 to axp81x_dc1sw [1]. I just looking
-> > > for someone to comment, may be we can skip this regulator attachment.
-> >
-> > That seems sketchy. The schematics show the connector has feeds from both
-> > the unregulated output IPSOUT (PS) and DCDC1. For designs with RGB LCD
-> > panels, we only see the PS feed. Since the LCD panel can be used in either
-> > RGB or MIPI DSI mode, I highly suspect the DCDC1 supply feeds the bridge
-> > IC.
-> >
-> > As for DC1SW, this is likely referenced because it provides power to the
-> > GPIO lines that are used to control the LCD panel. If you don't provide
-> > power, you can't pull them up.
-> >
-> > While many of us dislike FEX and the new FEX-derived device tree, they
-> > do provide some information, such as regulator usage. Note that each
-> > regulator output has multiple names, which likely denote specific
-> > usages.
-> >
-> > I've asked BPI for schematics on the bridge board. Hopefully we'll
-> > have something in more detail. In the meantime, I suggest leaving
-> > this panel out of your next submission, and focus on getting the bulk
-> > of the dsi driver and dts changes in first.
->
-> I got the schematics, but unfortunately I can't share them publicly.
->
-> It looks like VCC-MIPI on the connector is not connected to anything.
-> All power is provided from IPSOUT, first through a current limiter IC
-> turned on and off by LCD_PWR_EN, and then through some voltage regulators
-> to provide the voltages for various parts of the panel, including LCD,
-> capacitive touch, and the MIPI-DSI bridge. There's even an onboard EEPROM,
-> though I'm not sure what that's for.
 
-So there is no concern supply regulators on panel side, only VCC-DSI.
+--0ntfKIWw70PvrIHh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
-> > >
-> > > >
-> > > > > - DCDC1 as DVDD supply
-> > > >
-> > > > That seems right, but doesn't match with what you write below.
-> > >
-> > > Commit need to fix s/DCDC1/DLDO1
-> > >
-> > > >
-> > > > > - PD6 gpio for reset pin
->
-> This toggles reset for both the panel itself and for the MIPI-DSI bridge.
->
-> > > > > - PD5 gpio for backlight enable pin
->
-> This enables the backlight's regulator.
->
-> > > > > - PD7 gpio for backlight vdd supply
->
-> This enables power to the whole panel module.
->
-> Then you also have the two GPIOs for the capacitive touch controller.
-> And also the I2C bus for the controller, and the EEPROM.
+On Fri, Nov 09, 2018 at 05:55:55PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> On Fri, Nov 09, 2018 at 02:24:42PM +0000, Vok=C3=A1=C4=8D Michal wrote:
+> > On 8.11.2018 20:18, Uwe Kleine-K=C3=B6nig wrote:
+> > > On Thu, Nov 08, 2018 at 03:21:44PM +0000, Vok=C3=A1=C4=8D Michal wrot=
+e:
+> > >> Hi Uwe,
+> > >>
+> > >> On 7.11.2018 16:01, Uwe Kleine-K=C3=B6nig wrote:
+> > >>>> Interesting idea. I just wonder why nobody else did not come up wi=
+th such
+> > >>>> a simple solution before.
+> > >>>
+> > >>> I think I mentioned it already in this thread, but it went unnotice=
+d :-)
+> > >>
+> > >> I meant it like "How happened this was not invented years ago, when =
+people
+> > >> first noticed the issue with using inverted PWM for backlight on i.M=
+X6."
+> > >> In our project, this issue dates back to 2015 :(
+> > >>
+> > >>> Then the patch isn't correct yet. The idea is always keep the hardw=
+are
+> > >>> running and only disable it if it's uninverted.
+> > >>
+> > >> OK, I got the point.
+> > >>
+> > >>> In imx_pwm_probe it's not yet known what the polarity is supposed t=
+o be,
+> > >>> right?
+> > >>
+> > >> Not really. It can already be known but currently there is no way ho=
+w to
+> > >> pass the information to the probe function. I, as a creator of the d=
+evice
+> > >> (and author of a DTS file) know that the circuit needs inverted PWM =
+signal.
+> > >> And I know that the circuit needs to be disabled until I say it can =
+be
+> > >> enabled. How I say that can warry. It may be default brightness leve=
+l > 0
+> > >> in DTS file or from a userspace program using PWM sysfs interface.
+> > >>
+> > >>>   So the right thing to do there is to not touch the configuration
+> > >>> of the pwm. I think all states that are problematic then are also
+> > >>> problematic with the gpio/pinmux approach.
+> > >>
+> > >> I think my use-case I already presented before is an example where
+> > >> involving pinctrl solves the problem while the "leave PWM enabled
+> > >> for inverted users" does not. That is all the time between
+> > >> imx_pwm_probe() and imx_pwm_apply_v2().
+> > >=20
+> > > You're doing in probe:
+> > >=20
+> > >    if (pwm_is_running()):
+> > >      mux(pin, function=3Dpwm)
+> > >    else:
+> > >      gpio_set_value(gpio, 0)
+> > >      mux(pin, function=3Dgpio)
+> > >=20
+> > > This gives you the right level assuming the gpio specification uses t=
+he
+> > > right flag (GPIO_ACTIVE_HIGH or GPIO_ACTIVE_LOW).
+> >=20
+> > Agree.
+> >=20
+> > > Taking your example with the backlight device you specify an "init" a=
+nd
+> > > a "default" pinctrl and only "default" contains the muxing for the PWM
+> > > pin everything should be as smooth as necessary: The pwm is only muxed
+> > > when the backlight device is successfully bound.
+> >=20
+> > Have you tried that Uwe? The bad news is I tested that before and now
+> > again and it does not work like that. We already discussed that earlier.
+>=20
+> The key is that the pinmux setting for the PWM pin should be part of the
+> bl pinctrl, not the pwm pinctrl. Then "default" is only setup when the
+> bl device is successfully bound which is after the bl's .probe callback
+> called pwm_apply().
 
-Thanks, for the details. I have verified w/ vcc-dsi-supply attached to
-dldo1 and the panel with reset w/o any supply regulators.
+No, that's not at all correct. Pinmux settings should reside with the
+consumer of the pin. In this case, the PWM is the consumer of the pin,
+whereas the backlight is the consumer of the *PWM*.
+
+The problem with making the PWM mode the "default" pinctrl state is that
+the default state will be applied before the driver is even probed. That
+makes it unsuitable for this case. I think what we really want here is
+explicitly "active" and "inactive" states for pinctrl where the PWM
+driver controls when exactly each state is applied.
+
+This solves the problem quite nicely because by default the pinctrl
+state isn't touched. For the case where the bootloader didn't initialize
+the PWM pin at all, the driver core won't do anything and keep it at the
+100k pull-up default. Only when the PWM is actually taken into active
+use will the "active" state (i.e. PWM mode) be applied, so that the PWM
+can drive it with the right configuration to give the desired result. If
+the bootloader did initialize the PWM it would also work because then at
+PWM driver probe time we don't do anything either, keeping the pin in
+the PWM mode as configured by the bootloader and not touching the PWM
+configuration either. If hardware readout is implemented, we can load
+the exact state that we're in and seamlessly take over in the kernel
+driver. Enabling the PWM in this case would apply the current setting,
+which should be a no-op, or at least idempotent.
+
+> > > No I meant the pwm. Well, it's as easy as that: Whenever with your
+> > > approach you configure the pin as GPIO with the output set to low,
+> > > instead configure the pwm with duty_cycle to zero (or disable it).
+> > > Whenever with your approach you configure the pin as GPIO with the
+> > > output set to high, configure the pwm with duty_cycle to 100%. (Keepi=
+ng
+> > > out inverted PWMs for the ease of discussion, but the procedure can be
+> > > adapted accordingly.) The only difference then is that with your
+> > > approach you already "know" in pwm-imx's .probe the idle level and can
+> > > configure the GPIO accordingly. With my approach you just have to wait
+> > > until the first pwm_apply which (as described above) works just as we=
+ll.
+> >=20
+> > While here I am quite confident you are talking about kernel code, righ=
+t?
+> > If yes, then your approach is clear to me.
+> >=20
+> > The problem is I am quite sure your approach does not solve the cases
+> > the pinctrl solution does. And according to my tests so far it does not
+> > work at all because the "init" and "default" states does not work as you
+> > are saying.
+>=20
+> That's as pointed out above, because you're looking at the pwm's pinctrl
+> and I at the pwm-consumer's pinctrl.
+>=20
+> Note that a sysfs consumer cannot be operated smoothly here, because
+> there is no pinctrl node to add the PWM mode to that only gets active
+> after the first configuration. This however is something that should not
+> be addressed in the imx driver but in the pwm core (if at all).
+
+With the pinctrl-based solution outlined above you can even operate a
+sysfs consumer properly. The pinctrl states are where they belong, with
+the PWM device and therefore they can be properly set when the PWM is
+used, rather than waiting for a PWM consumer to muck with the pinmux.
+
+Note how all the pieces are suddenly falling into place. In my
+experience that's usually a good indication that you're on the right
+track.
+
+Thierry
+
+--0ntfKIWw70PvrIHh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlvsCFYACgkQ3SOs138+
+s6EEmg/+IVegheNPysHXpL7YpVsJ7M5r3GzQH1CtJymARhVbzxcOIBwAH6RN3e2n
+CCrksv//ottANi195fRhXimdMyyZcIpasounYxLR/a/KYRtUsKoaZlJ3QOu1WcAW
+vv7BvQ+sDXh87ZkQp39hUhPND410k9MAmkh4U+H46a8fU3I7yw1pS4U/vENxMHyM
+u/d+dlH9qz1iB0sG9xyeZCDB1QHLBItoynbqnaU3M8okPC/b6lUWxfCiBj2vy6Sz
+W1IAa+VaxXuvHQJSj27NAODrC5l7jQm4JjPJV0qn5wh+ljmJYS2kAJ4W/wAitD+E
+ETvI8jq6P2t2EeSxSpOVFBf+LEYC/bgMac7pQiCGUC8So5Tz3w4inOYx/rncvoDd
+Qz9HE3tzhZoVm6bN7y5+IbGFFzTKQFZaLBcf5keFHFa5U5upjsTaAY2YlP7GgONd
+baQl1kP+EQCQ+5ACMxVBclvnOTyQapgeMaY95l3EzwXDFAYZUC5q83ow59RtP2wt
+NF7x2BU/VJDdfuC+PxVuP4SRjTbXCeSX3VCzGiwIV1CRJEN90F7AQU6KO/q6rbm/
+o9To/xisWO/ruJB6MHDpkOeJG/vi9T9vRJUUjhCwlbs0EZPo1fDBaJ/f268hyKog
+u9ZKFLgZVJMBCpiJSRszyNhqX4vr05Q9HksdANSnmvg+pl/0+aA=
+=CHJ6
+-----END PGP SIGNATURE-----
+
+--0ntfKIWw70PvrIHh--
