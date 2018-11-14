@@ -1,60 +1,46 @@
-From: Tom Burkart <tom@aussec.com>
-Subject: [PATCH 3/4] dt-bindings: pps: pps-gpio PPS ECHO implementation
-Date: Wed, 14 Nov 2018 23:54:31 +1100
-Message-ID: <20181114125432.16044-4-tom@aussec.com>
-References: <20181114125432.16044-1-tom@aussec.com>
- <20181114125432.16044-2-tom@aussec.com>
- <20181114125432.16044-3-tom@aussec.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 1/3] dt-bindings: amlogic: Add Internal Clock Measurer bindings
+Date: Wed, 14 Nov 2018 14:16:25 +0100
+Message-ID: <20181114131627.17766-2-narmstrong@baylibre.com>
+References: <20181114131627.17766-1-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181114125432.16044-3-tom@aussec.com>
+In-Reply-To: <20181114131627.17766-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Cc: Tom Burkart <tom@aussec.com>, devicetree@vger.kernel.org, Lukas Senger <lukas@fridolin.com>
+To: khilman@baylibre.com, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch implements the device tree changes required for the pps
-echo functionality for pps-gpio, that sysfs claims is available
-already.
+The Amlogic Meson GX SoCs embeds a clock measurer IP to measure the internal
+clock paths frequencies.
 
-This patch was originally written by Lukas Senger as part of a masters
-thesis project and modified for inclusion into the linux kernel by Tom
-Burkart.
-
-Signed-off-by: Lukas Senger <lukas@fridolin.com>
-Signed-off-by: Tom Burkart <tom@aussec.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- Documentation/devicetree/bindings/pps/pps-gpio.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ .../bindings/soc/amlogic/clk-measure.txt          | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
 
-diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt b/Documentation/devicetree/bindings/pps/pps-gpio.txt
-index 6c9fc0998d94..f85dbe4ce0b3 100644
---- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
-+++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
-@@ -9,10 +9,15 @@ Required properties:
- Alternatively (DEPRECATED), instead of pps-gpios above, it may have:
- - gpios: one PPS GPIO as above
- 
-+Additional required properties for the PPS ECHO functionality:
-+- echo-gpios: one PPS ECHO GPIO in the format described by ../gpio/gpio.txt
-+- echo-active-ms: duration in ms of the active portion of the echo pulse
+diff --git a/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt b/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
+new file mode 100644
+index 000000000000..ba9183a42032
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
+@@ -0,0 +1,15 @@
++Amlogic Internal Clock Measurer
++===============================
 +
- Optional properties:
- - assert-falling-edge: when present, assert is indicated by a falling edge
-                        (instead of by a rising edge)
- - capture-clear: when present, also capture the PPS clear event
-+- invert-pps-echo: when present, invert the PPS ECHO pulse
- 
- Example:
- 	pps {
-@@ -23,5 +28,9 @@ Example:
- 		assert-falling-edge;
- 		capture-clear;
- 
-+		echo-gpios = <&gpio1 27 GPIO_ACTIVE_HIGH>;
-+		echo-active-ms = <100>;
-+		invert-pps-echo;
++The Amlogic SoCs contains an IP to measure the internal clocks.
++The precision is multiple of MHz, useful to debug the clock states.
 +
- 		compatible = "pps-gpio";
- 	};
++Required properties:
++- compatible: Shall contain "amlogic,meson-gx-clk-measure"
++- reg: base address and size of the Clock Measurer register space.
++
++Example:
++	clock-measure@8758 {
++		compatible = "amlogic,meson-gx-clk-measure";
++		reg = <0x0 0x8758 0x0 0x10>;
++	};
 -- 
-2.12.3
+2.19.1
