@@ -1,72 +1,62 @@
-Return-Path: <SRS0=tAzC=OA=partner.samsung.com=k.konieczny@kernel.org>
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: [PATCH 2/4] arm64: dts: bindings: document imem clock
-Date: Wed, 21 Nov 2018 13:05:07 +0100
-Message-Id: <20181121120509.18892-3-k.konieczny@partner.samsung.com>
-In-Reply-To: <20181121120509.18892-1-k.konieczny@partner.samsung.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Return-Path: <SRS0=klaB=NZ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr1400125.outbound.protection.outlook.com ([40.107.140.125]:20736
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727758AbeKNWJN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 14 Nov 2018 17:09:13 -0500
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH 3/3] dt-bindings: rcar-gen3-phy-usb2: Add r7s9210 support
+Date: Wed, 14 Nov 2018 12:05:56 +0000
+Message-ID: <OSBPR01MB2293042419890D6EECA0C9A2D8C30@OSBPR01MB2293.jpnprd01.prod.outlook.com>
+References: <20181107173558.54481-1-chris.brandt@renesas.com>
+ <20181107173558.54481-4-chris.brandt@renesas.com>
+ <CAMuHMdX7_bk4b7WTmxDuLPR=-WZYdbt=7P2e-gs4ZOT=-EzL-g@mail.gmail.com>
+In-Reply-To: <CAMuHMdX7_bk4b7WTmxDuLPR=-WZYdbt=7P2e-gs4ZOT=-EzL-g@mail.gmail.com>
+Content-Language: ja-JP
 Content-Type: text/plain; charset="utf-8"
-References: <20181121120509.18892-1-k.konieczny@partner.samsung.com>
-	<CGME20181121120523eucas1p1e8c1ef3d19d0f71bbdc57e2a470c80b0@eucas1p1.samsung.com>
-To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
-Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Document imem clock bindings for SSS (Security SubSystem) and SlimSSS IPs.
-
-Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
----
- .../bindings/clock/exynos5433-clock.txt       | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/clock/exynos5433-clock.txt b/Documentation/devicetree/bindings/clock/exynos5433-clock.txt
-index 50d5897c9849..4e4352bf5a0b 100644
---- a/Documentation/devicetree/bindings/clock/exynos5433-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/exynos5433-clock.txt
-@@ -19,6 +19,8 @@ Required Properties:
-     which generates clocks for PMU/TMU/MCT/WDT/RTC/SECKEY/TZPC IPs.
-   - "samsung,exynos5433-cmu-fsys"  - clock controller compatible for CMU_FSYS
-     which generates clocks for USB/UFS/SDMMC/TSI/PDMA IPs.
-+  - "samsung,exynos5433-cmu-imem"   - clock controller compatible for CMU_IMEM
-+    which generates clocks for SSS (Security SubSystem) and SlimSSS IPs.
-   - "samsung,exynos5433-cmu-g2d"   - clock controller compatible for CMU_G2D
-     which generates clocks for G2D/MDMA IPs.
-   - "samsung,exynos5433-cmu-disp"  - clock controller compatible for CMU_DISP
-@@ -88,6 +90,12 @@ Required Properties:
- 		- sclk_usbhost30_fsys
- 		- sclk_usbdrd30_fsys
- 
-+	Input clocks for imem clock controller:
-+		- oscclk
-+		- aclk_imem_sssx_266
-+		- aclk_imem_266
-+		- aclk_imem_200
-+
- 	Input clocks for g2d clock controller:
- 		- oscclk
- 		- aclk_g2d_266
-@@ -264,6 +272,21 @@ Example 2: Examples of clock controller nodes are listed below.
- 		       <&cmu_top CLK_SCLK_USBDRD30_FSYS>;
- 	};
- 
-+	cmu_imem: clock-controller@11060000 {
-+		compatible = "samsung,exynos5433-cmu-imem";
-+		reg = <0x11060000 0x1000>;
-+		#clock-cells = <1>;
-+
-+		clock-names = "oscclk",
-+			"aclk_imem_sssx_266",
-+			"aclk_imem_266",
-+			"aclk_imem_200";
-+		clocks = <&xxti>,
-+			<&cmu_top CLK_DIV_ACLK_IMEM_SSSX_266>,
-+			<&cmu_top CLK_DIV_ACLK_IMEM_266>,
-+			<&cmu_top CLK_DIV_ACLK_IMEM_200>;
-+	};
-+
- 	cmu_g2d: clock-controller@12460000 {
- 		compatible = "samsung,exynos5433-cmu-g2d";
- 		reg = <0x12460000 0x0b08>;
--- 
-2.19.1
+SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogV2VkbmVz
+ZGF5LCBOb3ZlbWJlciAxNCwgMjAxOCA4OjAzIFBNDQo+IA0KPiBIaSBDaHJpcywNCj4gDQo+IE9u
+IFdlZCwgTm92IDcsIDIwMTggYXQgNjozNiBQTSBDaHJpcyBCcmFuZHQgPGNocmlzLmJyYW5kdEBy
+ZW5lc2FzLmNvbT4gd3JvdGU6DQo8c25pcD4NCj4gPiBAQCAtMTYsOCArMTgsOCBAQCBSZXF1aXJl
+ZCBwcm9wZXJ0aWVzOg0KPiA+ICAgICAgICAgICAgICAgUjhBNzc5OTAgU29DLg0KPiA+ICAgICAg
+ICAgICAgICAgInJlbmVzYXMsdXNiMi1waHktcjhhNzc5OTUiIGlmIHRoZSBkZXZpY2UgaXMgYSBw
+YXJ0IG9mIGFuDQo+ID4gICAgICAgICAgICAgICBSOEE3Nzk5NSBTb0MuDQo+ID4gLSAgICAgICAg
+ICAgICAicmVuZXNhcyxyY2FyLWdlbjMtdXNiMi1waHkiIGZvciBhIGdlbmVyaWMgUi1DYXIgR2Vu
+MyBvciBSWi9HMg0KPiA+IC0gICAgICAgICAgICAgY29tcGF0aWJsZSBkZXZpY2UuDQo+ID4gKyAg
+ICAgICAgICAgICAicmVuZXNhcyxyY2FyLWdlbjMtdXNiMi1waHkiIGZvciBhIGdlbmVyaWMgUi1D
+YXIgR2VuMywgUlovRzIgb3INCj4gPiArICAgICAgICAgICAgIFJaL0EyIGNvbXBhdGlibGUgZGV2
+aWNlLg0KPiANCj4gSXMgaXQgYSBnb29kIGlkZWEgdG8gZGVjbGFyZSBSWi9BMiBjb21wYXRpYmxl
+IHRvIFItQ2FyIEdlbjM/DQo+IFVzdWFsbHkgd2UgZG9uJ3QgZG8gdGhhdCBmb3IgUmVuZXNhcyBJ
+UCBjb3JlcyB1c2VkIGluIGRpZmZlcmVudCBmYW1pbGllc1sqXS4NCj4gT2YgY291cnNlLCBJIGtu
+b3cgeW91IGRvIGhhdmUgYSBnb29kIHJlbGF0aW9uc2hpcCB3aXRoIHRoZSBhY3R1YWwgUlovQTIN
+Cj4gaGFyZHdhcmUgZGVzaWduZXJzIDstKQ0KPiANCj4gSW4gbGlnaHQgb2YgU2hpbW9kYS1zYW4n
+cyBjb21tZW50IHcuci50LiBSLUNhciBIMyBVU0IgcG9ydDEgaW4gdGhlIGRyaXZlcg0KPiBjb2Rl
+LCBwZXJoYXBzICJyZW5lc2FzLHJjYXItZ2VuMy11c2IyLXBoeSIgc2hvdWxkIG5vdCBiZSB1c2Vk
+Pw0KDQpTb3JyeSBmb3IgbGFjayBleHBsYW5hdGlvbi4gDQogLSBUaGUgZGVmYXVsdCB2YWx1ZSBv
+ZiBDT01NQ1RSTCBvbiBlYWNoIHBvcnQgb2YgUi1DYXIgR2VuMyBpcyB0aGUgc2FtZSAoMHg4MDAw
+MDAwMCkuDQogLSBIb3dldmVyLCBSLUNhciBIMyBVU0IgcG9ydDEgc2VlbXMgdG8gaWdub3JlIHRo
+aXMgdmFsdWUgYmVjYXVzZQ0KICAgdGhlIHBvcnQgYWx3YXlzIGFjdHMgYXMgaG9zdC4gSWYgSSBj
+aGFuZ2VkIHRoZSByZWdpc3RlciB0byAwIG9uIFItQ2FyIEgzIEVTMy4wLA0KICAgdGhlIHBvcnQx
+IGNhbiB3b3JrIGFzIGhvc3QuDQoNClNvLCBJIG1lYW50IGFsbCAicmVuZXNhcyxyY2FyLWdlbjMt
+dXNiMi1waHkiIGRldmljZXMgd2l0aG91dCAiaXNfb3RnX2NoYW5uZWwiDQpjYW4gc2V0IHRoZSBD
+T01NQ1RSTCByZWdpc3RlciB0byAwLg0KDQpPZiBjb3Vyc2UsIGFkZGluZyBhIG5ldyBSWi9BMiBm
+YW1pbHkgY29tcGF0aWJsZSBpcyBPSyB0byBtZS4NCg0KQmVzdCByZWdhcmRzLA0KWW9zaGloaXJv
+IFNoaW1vZGENCg0KPiBbKl0gU29sZSBleGNlcHRpb25zIEknbSBhd2FyZSBvZiBhcmU6DQo+ICAg
+ICAgIC0gInJlbmVzYXMscm1vYmlsZS1paWMiLCBpbiBhZGRpdGlvbiB0byAicmVuZXNhcyxyY2Fy
+LWdlbjItaWljIiBvcg0KPiAgICAgICAgICJyZW5lc2FzLHJjYXItZ2VuMy1paWMiIG9uIFItQ2Fy
+IEdlbjIvMywNCj4gICAgICAgLSAicmVuZXNhcyxyY2FyLWdlbjItY210MSIgYW5kICJyZW5lc2Fz
+LHJjYXItdGhlcm1hbCIgb24gUi1Nb2JpbGUgQVBFNi4NCj4gDQo+IEdye29ldGplLGVldGluZ31z
+LA0KPiANCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0
+IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2Vl
+cnRAbGludXgtbTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0
+ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20g
+dGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhp
+bmcgbGlrZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVz
+IFRvcnZhbGRzDQo=
