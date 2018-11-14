@@ -1,44 +1,34 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: [PATCH v4 3/4] ARM: dts: stm32: Add hwspinlock node for stm32mp157 SoC
-Date: Wed, 14 Nov 2018 10:00:26 +0100
-Message-ID: <20181114090027.7580-4-benjamin.gaignard@linaro.org>
-References: <20181114090027.7580-1-benjamin.gaignard@linaro.org>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH 0/5] Add new features for SC27XX fuel gauge driver
+Date: Wed, 14 Nov 2018 17:07:03 +0800
+Message-ID: <cover.1542185618.git.baolin.wang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181114090027.7580-1-benjamin.gaignard@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com
-Cc: linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Benjamin Gaignard <benjamin.gaignard@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>
+To: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, baolin.wang@linaro.org, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Benjamin Gaignard <benjamin.gaignard@st.com>
+This patch set adds some new features for SC27XX fuel gauge driver.
 
-Declare hwspinlock device for stm32mp157 SoC
+1. Read calibration data from eFuse device to calibrate fuel gauge.
+2. Add low voltage alarm to adjust the battery capacity in lower
+voltage stage.
+3. Add power management interfaces
+4. Save last optimized battery capacity to be used as the initial
+battery capacity if system is not first power-on.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
----
- arch/arm/boot/dts/stm32mp157c.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Baolin Wang (2):
+  dt-bindings: power: supply: Add nvmem properties to calibrate FGU
+  power: supply: sc27xx: Add fuel gauge calibration
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 185541a5b69f..98f824d8b0f0 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -803,6 +803,15 @@
- 			status = "disabled";
- 		};
- 
-+		hsem: hwspinlock@4c000000 {
-+			compatible = "st,stm32-hwspinlock";
-+			#hwlock-cells = <1>;
-+			reg = <0x4c000000 0x400>;
-+			clocks = <&rcc HSEM>;
-+			clock-names = "hwsem";
-+			status = "disabled";
-+		};
-+
- 		rcc: rcc@50000000 {
- 			compatible = "st,stm32mp1-rcc", "syscon";
- 			reg = <0x50000000 0x1000>;
+Yuanjiang Yu (3):
+  power: supply: sc27xx: Add fuel gauge low voltage alarm
+  power: supply: sc27xx: Add suspend/resume interfaces
+  power: supply: sc27xx: Save last battery capacity
+
+ .../devicetree/bindings/power/supply/sc27xx-fg.txt |    4 +
+ drivers/power/supply/sc27xx_fuel_gauge.c           |  453 +++++++++++++++++++-
+ 2 files changed, 444 insertions(+), 13 deletions(-)
+
 -- 
-2.15.0
+1.7.9.5
