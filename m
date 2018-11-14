@@ -1,42 +1,162 @@
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: Re: [PATCH v6 0/2] mtd: rawnand: meson: add Amlogic NAND driver
- support
-Date: Wed, 14 Nov 2018 14:42:16 +0800
-Message-ID: <0aa11423-c442-771f-c061-0ac86aff733d@amlogic.com>
-References: <1541090542-19618-1-git-send-email-jianxin.pan@amlogic.com>
- <20181111215745.07448b12@xps13>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v4 25/26] [DO NOT MERGE] arm64: dts:
+ allwinner: bananapi-m64: Bananapi S070WV20-CT16 DSI panel
+Date: Wed, 14 Nov 2018 14:58:11 +0800
+Message-ID: <CAGb2v669dkf2qaUDaosJEKSRKpPRVKWszb6BLL2NrAjWwp3t2Q@mail.gmail.com>
+References: <20181113111633.20189-1-jagan@amarulasolutions.com>
+ <20181113111633.20189-26-jagan@amarulasolutions.com> <20181113122204.337db8b1@donnerap.cambridge.arm.com>
+ <CAMty3ZBQXcnU=490KREa=F-qctMtRep9-rrhrPd1UZStnV=hqw@mail.gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181111215745.07448b12@xps13>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org, Rob Herring <robh@kernel.org>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Richard Weinberger <richard@nod.at>, Yixun Lan <yixun.lan@amlogic.com>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, devicetree@vger.kernel.org, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBE4PV7PQKGQEP75LURQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAMty3ZBQXcnU=490KREa=F-qctMtRep9-rrhrPd1UZStnV=hqw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
+On Wed, Nov 14, 2018 at 2:31 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+>
+> On Tue, Nov 13, 2018 at 5:52 PM Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
+> >
+> > On Tue, 13 Nov 2018 16:46:32 +0530
+> > Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> >
+> > Hi,
+> >
+> > > This patch add support for Bananapi S070WV20-CT16 DSI panel to
+> > > BPI-M64 board.
+> > >
+> > > DSI panel connected via board DSI port with,
+> > > - DC1SW as AVDD supply
+> >
+> > Are you sure of that? I don't see anything in the schematic to support
+> > this. The only power lines that go to the DSI connector are DCDC1 and
+> > PS. DC1SW is only connected to PortD on the SoC and to the Ethernet PHY.
+> > Is there anything I miss?
+>
+> Thanks for the comment, yes dc1sw is connected in ephy. I have reused
+> dc1, BSP is attached lcd_power1 to axp81x_dc1sw [1]. I just looking
+> for someone to comment, may be we can skip this regulator attachment.
 
-I sorry to miss you in the CC list before, I will CC you in the next version.
-Thank you very much.
+That seems sketchy. The schematics show the connector has feeds from both
+the unregulated output IPSOUT (PS) and DCDC1. For designs with RGB LCD
+panels, we only see the PS feed. Since the LCD panel can be used in either
+RGB or MIPI DSI mode, I highly suspect the DCDC1 supply feeds the bridge
+IC.
 
-On 2018/11/12 4:57, Miquel Raynal wrote:
-> Hi Jianxin,
-> 
-> Jianxin Pan <jianxin.pan@amlogic.com> wrote on Fri, 2 Nov 2018 00:42:19
-> +0800:
-> 
->> These two patches try to add initial NAND driver support for Amlogic Meson
->> SoCs, current it has been tested on GXL(p212) and AXG(s400) platform.
->>
-> 
-> Would you mind Cc:'ing me when you send NAND related patches? Otherwise
-> there is a chance that it will take ages before I notice your series
-> in the middle of the MTD patches flo
-> 
-> Thanks,
-> Miquèl
-> 
-> .
-> 
+As for DC1SW, this is likely referenced because it provides power to the
+GPIO lines that are used to control the LCD panel. If you don't provide
+power, you can't pull them up.
+
+While many of us dislike FEX and the new FEX-derived device tree, they
+do provide some information, such as regulator usage. Note that each
+regulator output has multiple names, which likely denote specific
+usages.
+
+I've asked BPI for schematics on the bridge board. Hopefully we'll
+have something in more detail. In the meantime, I suggest leaving
+this panel out of your next submission, and focus on getting the bulk
+of the dsi driver and dts changes in first.
+
+ChenYu
+
+>
+> >
+> > > - DCDC1 as DVDD supply
+> >
+> > That seems right, but doesn't match with what you write below.
+>
+> Commit need to fix s/DCDC1/DLDO1
+>
+> >
+> > > - PD6 gpio for reset pin
+> > > - PD5 gpio for backlight enable pin
+> > > - PD7 gpio for backlight vdd supply
+> > >
+> > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > ---
+> > >  .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 42
+> > > +++++++++++++++++++ 1 file changed, 42 insertions(+)
+> > >
+> > > diff --git
+> > > a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+> > > b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts index
+> > > ef1c90401bb2..6cb010e3bbd9 100644 ---
+> > > a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts +++
+> > > b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts @@ -45,6
+> > > +45,7 @@ #include "sun50i-a64.dtsi"
+> > >  #include <dt-bindings/gpio/gpio.h>
+> > > +#include <dt-bindings/pwm/pwm.h>
+> > >
+> > >  / {
+> > >       model = "BananaPi-M64";
+> > > @@ -56,6 +57,15 @@
+> > >               serial1 = &uart1;
+> > >       };
+> > >
+> > > +     backlight: backlight {
+> > > +             compatible = "pwm-backlight";
+> > > +             pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
+> > > +             brightness-levels = <1 2 4 8 16 32 64 128 512>;
+> > > +             default-brightness-level = <2>;
+> > > +             enable-gpios = <&pio 3 5 GPIO_ACTIVE_HIGH>; /*
+> > > LCD-BL-EN: PD5 */
+> > > +             power-supply = <&reg_vdd_backlight>;
+> > > +     };
+> > > +
+> > >       chosen {
+> > >               stdout-path = "serial0:115200n8";
+> > >       };
+> > > @@ -91,6 +101,15 @@
+> > >               };
+> > >       };
+> > >
+> > > +     reg_vdd_backlight: vdd-backlight {
+> > > +             compatible = "regulator-fixed";
+> > > +             regulator-name = "vdd-backlight";
+> > > +             regulator-min-microvolt = <3300000>;
+> > > +             regulator-max-microvolt = <3300000>;
+> > > +             gpio = <&pio 3 7 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN:
+> > > PD7 */
+> > > +             enable-active-high;
+> > > +     };
+> > > +
+> > >       wifi_pwrseq: wifi_pwrseq {
+> > >               compatible = "mmc-pwrseq-simple";
+> > >               reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
+> > > @@ -101,6 +120,23 @@
+> > >       status = "okay";
+> > >  };
+> > >
+> > > +&dphy {
+> > > +     status = "okay";
+> > > +};
+> > > +
+> > > +&dsi {
+> > > +     status = "okay";
+> > > +
+> > > +     panel@0 {
+> > > +             compatible = "bananapi,s070wv20-ct16-icn6211";
+> > > +             reg = <0>;
+> > > +             avdd-supply = <&reg_dc1sw>;
+> >
+> > As mentioned above, I don't see this on the DSI connector.
+> >
+> > > +             dvdd-supply = <&reg_dldo1>;
+> >
+> > Mmh, this line is connected to the *SoC*, to drive the DSI data lines
+> > or the DPHY, presumably. So I wouldn't expect it in the panel node, but
+> > rather in the DPHY or DSI node. Although I can't find a power-supply
+> > property in those bindings.
+>
+> Got it, this has to attach via vcc-dsi-supply.
+>
+> [1] https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/bootloader/blobs/bpi-m64-lcd7.dts#L2266
