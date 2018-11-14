@@ -1,82 +1,69 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.18 25/59] ARM: dts: imx6sx-sdb: Fix enet phy regulator
-Date: Wed, 14 Nov 2018 17:22:57 -0500
-Message-ID: <20181114222335.99339-25-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.18 24/59] ARM: dts: fsl: Fix improperly quoted stdout-path values
+Date: Wed, 14 Nov 2018 17:22:56 -0500
+Message-ID: <20181114222335.99339-24-sashal@kernel.org>
 References: <20181114222335.99339-1-sashal@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181114222335.99339-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Leonard Crestez <leonard.crestez@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 1ad9fb750a104f51851c092edd7b3553f0218428 ]
+[ Upstream commit 1af6ab3bac8458fc2e92ad7bb97b62de4a1fddef ]
 
-Bindings for "fixed-regulator" only explicitly support "gpio" property,
-not "gpios". Fix by correcting the property name.
+A quoted label reference doesn't expand to the node path and is taken as
+a literal string. Dropping the quotes can fix this unless the baudrate
+string is appended in which case we have to use the alias.
 
-The enet PHYs on imx6sx-sdb needs to be explicitly reset after a power
-cycle, this can be handled by the phy-reset-gpios property. Sadly this
-is not handled on suspend: the fec driver turns phy-supply off but
-doesn't assert phy-reset-gpios again on resume.
+At least on VF610, the problem was masked by setting the console in
+bootargs. Use the alias syntax with baudrate parameter so we can drop
+setting the console in bootargs.
 
-Since additional phy-level work is required to support powering off the
-phy in suspend fix the problem by just marking the regulator as
-"boot-on" "always-on" so that it's never turned off. This behavior is
-equivalent to older releases.
-
-Keep the phy-reset-gpios property on fec anyway because it is a correct
-description of board design.
-
-This issue was exposed by commit efdfeb079cc3 ("regulator: fixed:
-Convert to use GPIO descriptor only") which causes the "gpios" property
-to also be parsed. Before that commit the "gpios" property had no
-effect, PHY reset was only handled in the the bootloader.
-
-This fixes linux-next boot failures previously reported here:
- https://lore.kernel.org/patchwork/patch/982437/#1177900
- https://lore.kernel.org/patchwork/patch/994091/#1178304
-
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Reviewed-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6sx-sdb.dtsi | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx53-ppd.dts       | 2 +-
+ arch/arm/boot/dts/vf610m4-colibri.dts | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-sdb.dtsi
-index f8f31872fa14..d6d517e4922f 100644
---- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
-+++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
-@@ -115,7 +115,9 @@
- 		regulator-name = "enet_3v3";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
--		gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
-+		gpio = <&gpio2 6 GPIO_ACTIVE_LOW>;
-+		regulator-boot-on;
-+		regulator-always-on;
+diff --git a/arch/arm/boot/dts/imx53-ppd.dts b/arch/arm/boot/dts/imx53-ppd.dts
+index 3aa6f693fa9f..1228789f0f3a 100644
+--- a/arch/arm/boot/dts/imx53-ppd.dts
++++ b/arch/arm/boot/dts/imx53-ppd.dts
+@@ -55,7 +55,7 @@
  	};
  
- 	reg_pcie_gpio: regulator-pcie-gpio {
-@@ -178,6 +180,7 @@
- 	phy-supply = <&reg_enet_3v3>;
- 	phy-mode = "rgmii";
- 	phy-handle = <&ethphy1>;
-+	phy-reset-gpios = <&gpio2 7 GPIO_ACTIVE_LOW>;
- 	status = "okay";
+ 	chosen {
+-		stdout-path = "&uart1:115200n8";
++		stdout-path = "serial0:115200n8";
+ 	};
  
- 	mdio {
-@@ -371,6 +374,8 @@
- 				MX6SX_PAD_RGMII1_RD3__ENET1_RX_DATA_3	0x3081
- 				MX6SX_PAD_RGMII1_RX_CTL__ENET1_RX_EN	0x3081
- 				MX6SX_PAD_ENET2_RX_CLK__ENET2_REF_CLK_25M	0x91
-+				/* phy reset */
-+				MX6SX_PAD_ENET2_CRS__GPIO2_IO_7		0x10b0
- 			>;
- 		};
+ 	memory@70000000 {
+diff --git a/arch/arm/boot/dts/vf610m4-colibri.dts b/arch/arm/boot/dts/vf610m4-colibri.dts
+index 41ec66a96990..ca6249558760 100644
+--- a/arch/arm/boot/dts/vf610m4-colibri.dts
++++ b/arch/arm/boot/dts/vf610m4-colibri.dts
+@@ -50,8 +50,8 @@
+ 	compatible = "fsl,vf610m4";
  
+ 	chosen {
+-		bootargs = "console=ttyLP2,115200 clk_ignore_unused init=/linuxrc rw";
+-		stdout-path = "&uart2";
++		bootargs = "clk_ignore_unused init=/linuxrc rw";
++		stdout-path = "serial2:115200";
+ 	};
+ 
+ 	memory@8c000000 {
 -- 
 2.17.1
