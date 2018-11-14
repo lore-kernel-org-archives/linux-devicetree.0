@@ -1,57 +1,108 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH 2/2] drm/msm/dsi: Get PHY ref clock from the DT
-Date: Wed, 14 Nov 2018 14:24:43 -0800
-Message-ID: <20181114222443.GL22824@google.com>
-References: <20181102214534.184593-1-mka@chromium.org>
- <20181102214534.184593-2-mka@chromium.org>
- <154154590845.88331.13649449650347478513@swboyd.mtv.corp.google.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 2/2] clk: Add Fixed MMIO clock driver
+Date: Wed, 14 Nov 2018 14:19:09 -0800
+Message-ID: <154223394933.88331.14659021245427374668@swboyd.mtv.corp.google.com>
+References: <D3711617-229C-4FA5-9E73-A7A3C025893B@global.cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <154154590845.88331.13649449650347478513@swboyd.mtv.corp.google.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rajesh Yadav <ryadav@codeaurora.org>, David Airlie <airlied@linux.ie>, linux-arm-msm@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, freedreno@lists.freedesktop.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <D3711617-229C-4FA5-9E73-A7A3C025893B@global.cadence.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Janek Kotas <jank@cadence.com>
+Cc: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBOb3YgMDYsIDIwMTggYXQgMDM6MTE6NDhQTSAtMDgwMCwgU3RlcGhlbiBCb3lkIHdy
-b3RlOgo+IFF1b3RpbmcgTWF0dGhpYXMgS2FlaGxja2UgKDIwMTgtMTEtMDIgMTQ6NDU6MzQpCj4g
-PiBAQCAtNjMwLDcgKzYzMiw4IEBAIHN0YXRpYyBpbnQgcGxsXzEwbm1fcmVnaXN0ZXIoc3RydWN0
-IGRzaV9wbGxfMTBubSAqcGxsXzEwbm0pCj4gPiAgICAgICAgIGNoYXIgY2xrX25hbWVbMzJdLCBw
-YXJlbnRbMzJdLCB2Y29fbmFtZVszMl07Cj4gPiAgICAgICAgIGNoYXIgcGFyZW50MlszMl0sIHBh
-cmVudDNbMzJdLCBwYXJlbnQ0WzMyXTsKPiA+ICAgICAgICAgc3RydWN0IGNsa19pbml0X2RhdGEg
-dmNvX2luaXQgPSB7Cj4gPiAtICAgICAgICAgICAgICAgLnBhcmVudF9uYW1lcyA9IChjb25zdCBj
-aGFyICpbXSl7ICJ4byIgfSwKPiA+ICsgICAgICAgICAgICAgICAucGFyZW50X25hbWVzID0gKGNv
-bnN0IGNoYXIgKltdKXsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIF9fY2xrX2dldF9uYW1l
-KHBsbF8xMG5tLT52Y29fcmVmX2NsaykgfSwKPiAKPiBJIGZpbmQgdGhpcyBzeW50YXggb2RkLCBp
-biBhZGRpdGlvbiB0byBuZWVkaW5nIHRvIGNoZWNrIGZvciBOVUxMIGhlcmUgYXMKPiBTZWFuIHBv
-aW50ZWQgb3V0LiBQcmVmZXJhYmx5IGp1c3QgaGF2ZSBpdCBiZSB0aGUgYWRkcmVzcyBvZiB0aGUK
-PiBjaGFyYWN0ZXIgcG9pbnRlciBpbnN0ZWFkIG9mIG1ha2luZyBhbiBhbm9ueW1vdXMgYXJyYXkg
-YW5kIHRoZW4gY2FzdGluZwo+IHRoYXQgaW5saW5lLCBpLmUKPiAKPiAJCS5wYXJlbnRfbmFtZXMg
-PSAmcmVmX2Nsa19uYW1lLAoKT2sKCkknbSBub3QgY29udmluY2VkIHRoZSBjaGVjayBmb3IgTlVM
-TCBpcyBuZWVkZWQgdGhvdWdoLCBzZWUgbXkgcmVwbHkgdG8gU2Vhbi4KCj4gPiAgICAgICAgICAg
-ICAgICAgLm51bV9wYXJlbnRzID0gMSwKPiA+ICAgICAgICAgICAgICAgICAubmFtZSA9IHZjb19u
-YW1lLAo+ID4gICAgICAgICAgICAgICAgIC5mbGFncyA9IENMS19JR05PUkVfVU5VU0VELAo+ID4g
-QEAgLTc4Niw2ICs3ODksMTIgQEAgc3RydWN0IG1zbV9kc2lfcGxsICptc21fZHNpX3BsbF8xMG5t
-X2luaXQoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwgaW50IGlkKQo+ID4gICAgICAgICBw
-bGxfMTBubS0+aWQgPSBpZDsKPiA+ICAgICAgICAgcGxsXzEwbm1fbGlzdFtpZF0gPSBwbGxfMTBu
-bTsKPiA+ICAKPiA+ICsgICAgICAgcGxsXzEwbm0tPnZjb19yZWZfY2xrID0gZGV2bV9jbGtfZ2V0
-KCZwZGV2LT5kZXYsICJyZWYiKTsKPiA+ICsgICAgICAgaWYgKElTX0VSUihwbGxfMTBubS0+dmNv
-X3JlZl9jbGspKSB7Cj4gPiArICAgICAgICAgICAgICAgZGV2X2VycigmcGRldi0+ZGV2LCAiY291
-bGRuJ3QgZ2V0ICdyZWYnIGNsb2NrXG4iKTsKPiAKPiBUaGlzIG1pZ2h0IGJlIGJlY2F1c2Ugb2Yg
-cHJvYmUgZGVmZXIsIHdoaWNoIG1heSBiZSBhbm5veWluZyB0byBzZWUgdGhpcwo+IGZhaWx1cmUg
-bWFueSB0aW1lcy4KCk9rLCB3aWxsIHNraXAgdGhlIGxvZ2dpbmcgZm9yIC1FUFJPQkVfREVGRVIK
-CkNoZWVycwoKTWF0dGhpYXMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+Quoting Janek Kotas (2018-11-14 07:24:39)
+> This patch adds a driver for Fixed MMIO clock.
+> The driver reads a clock frequency value from a single 32-bit memory
+> mapped register and registers it as a fixed rate clock.
+> =
+
+> It can be enabled with COMMON_CLK_FIXED_MMIO Kconfig option.
+> =
+
+> Signed-off-by: Jan Kotas <jank@cadence.com>
+
+Sounds like a fine idea. Except I can see how it will be abused if there
+are a handful of these fixed rate "clks" somewhere in memory that all
+get populated. =
+
+
+Do you really have a fixed rate clk in hardware that exposes a single
+register, or do you have a set of them that some firmware is populating
+into an I/O memory space that we can read the fixed rates from? If it's
+the latter, I wonder why we can't just have the firmware populate the
+fixed rate clks into DT itself?
+
+> diff --git a/drivers/clk/clk-fixed-mmio.c b/drivers/clk/clk-fixed-mmio.c
+> new file mode 100644
+> index 0000000000..bbcadab345
+> --- /dev/null
+> +++ b/drivers/clk/clk-fixed-mmio.c
+> @@ -0,0 +1,49 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/*
+> + * Memory Mapped IO Fixed Clock driver
+> + *
+> + * Copyright (C) 2018 Cadence Design Systems, Inc.
+> + *
+> + * Authors:
+> + *     Jan Kotas <jank@cadence.com>
+> + */
+> +
+> +#include <linux/clk.h>
+
+Is this include used?
+
+> +#include <linux/clk-provider.h>
+> +#include <linux/of_address.h>
+> +#include <linux/regmap.h>
+
+Is this include used?
+
+> +
+> +static void __init of_fixed_mmio_clk_setup(struct device_node *node)
+> +{
+> +       struct clk *clk;
+> +       const char *clk_name =3D node->name;
+> +       void __iomem *base;
+> +       u32 clk_freq;
+> +
+> +       base =3D of_iomap(node, 0);
+> +       if (!base) {
+> +               pr_err("%pOFn: failed to map address\n", node);
+> +               return;
+> +       }
+> +
+> +       clk_freq =3D readl(base);
+> +       iounmap(base);
+> +       of_property_read_string(node, "clock-output-names", &clk_name);
+> +
+> +       clk =3D clk_register_fixed_rate(NULL, clk_name, NULL, 0, clk_freq=
+);
+> +       if (IS_ERR(clk)) {
+> +               pr_err("%pOFn: failed to register fixed rate clock\n", no=
+de);
+> +               return;
+> +       }
+> +
+> +       if (of_clk_add_provider(node, of_clk_src_simple_get, clk)) {
+> +               pr_err("%pOFn: failed to add clock provider\n", node);
+> +               return;
+> +       }
+> +
+> +       pr_info("%pOFn: registered fixed-mmio-clock at %u Hz\n",
+> +               node, clk_freq);
+
+Please no "I'm alive!" messages.
+
+> +}
+> +
+> +CLK_OF_DECLARE(fixed_mmio_clk, "fixed-mmio-clock", of_fixed_mmio_clk_set=
+up);
+
+Any reason why this can't be a platform driver? It would make this much
+less DT specific and usable on other firmwares/platforms if we used a
+platform driver here.
