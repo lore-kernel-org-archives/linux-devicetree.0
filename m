@@ -1,65 +1,209 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH] dt-bindings: media: i2c: Fix external clock frequency
- for OV5645
-Date: Wed, 14 Nov 2018 12:57:12 +0200
-Message-ID: <20181114105712.j5jkspfasujiyqzs@valkosipuli.retiisi.org.uk>
-References: <20181114103935.24559-1-manivannan.sadhasivam@linaro.org>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [RFC PATCH 5/6] net: marvell: neta: add support for 2500base-X
+Date: Wed, 14 Nov 2018 11:11:04 +0000
+Message-ID: <20181114111104.GS30658@n2100.armlinux.org.uk>
+References: <20181112122933.GD30658@n2100.armlinux.org.uk>
+ <E1gMBMx-0008A9-Jb@rmk-PC.armlinux.org.uk>
+ <acc97e5e-efa9-a44c-ea87-09135c6c12b6@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181114103935.24559-1-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, todor.tomov@linaro.org, hansverk@cisco.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <acc97e5e-efa9-a44c-ea87-09135c6c12b6@ti.com>
+Sender: netdev-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Manivannan,
-
-On Wed, Nov 14, 2018 at 04:09:35PM +0530, Manivannan Sadhasivam wrote:
-> Commit "4adb0a0432f4 media: ov5645: Supported external clock is 24MHz"
-> modified the external clock frequency to be 24MHz instead of the
-> 23.88MHz in driver. Hence, make the same change in corresponding bindings
-> doc and mention the acceptable tolerance.
+On Wed, Nov 14, 2018 at 02:18:14PM +0530, Kishon Vijay Abraham I wrote:
+> Hi,
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> On 12/11/18 6:01 PM, Russell King wrote:
+> > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> > ---
+> >  drivers/net/ethernet/marvell/mvneta.c | 58 ++++++++++++++++++++++++++++++-----
+> >  1 file changed, 51 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+> > index 5bfd349bf41a..7305d4cc0630 100644
+> > --- a/drivers/net/ethernet/marvell/mvneta.c
+> > +++ b/drivers/net/ethernet/marvell/mvneta.c
+> > @@ -27,6 +27,7 @@
+> >  #include <linux/of_irq.h>
+> >  #include <linux/of_mdio.h>
+> >  #include <linux/of_net.h>
+> > +#include <linux/phy/phy.h>
+> >  #include <linux/phy.h>
+> >  #include <linux/phylink.h>
+> >  #include <linux/platform_device.h>
+> > @@ -437,6 +438,7 @@ struct mvneta_port {
+> >  	struct device_node *dn;
+> >  	unsigned int tx_csum_limit;
+> >  	struct phylink *phylink;
+> > +	struct phy *comphy;
+> >  
+> >  	struct mvneta_bm *bm_priv;
+> >  	struct mvneta_bm_pool *pool_long;
+> > @@ -3150,6 +3152,8 @@ static void mvneta_start_dev(struct mvneta_port *pp)
+> >  {
+> >  	int cpu;
+> >  
+> > +	WARN_ON(phy_power_on(pp->comphy));
+> > +
+> >  	mvneta_max_rx_size_set(pp, pp->pkt_size);
+> >  	mvneta_txq_max_tx_size_set(pp, pp->pkt_size);
+> >  
+> > @@ -3212,6 +3216,8 @@ static void mvneta_stop_dev(struct mvneta_port *pp)
+> >  
+> >  	mvneta_tx_reset(pp);
+> >  	mvneta_rx_reset(pp);
+> > +
+> > +	WARN_ON(phy_power_off(pp->comphy));
+> >  }
+> >  
+> >  static void mvneta_percpu_enable(void *arg)
+> > @@ -3337,6 +3343,7 @@ static int mvneta_set_mac_addr(struct net_device *dev, void *addr)
+> >  static void mvneta_validate(struct net_device *ndev, unsigned long *supported,
+> >  			    struct phylink_link_state *state)
+> >  {
+> > +	struct mvneta_port *pp = netdev_priv(ndev);
+> >  	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
+> >  
+> >  	/* We only support QSGMII, SGMII, 802.3z and RGMII modes */
+> > @@ -3357,14 +3364,14 @@ static void mvneta_validate(struct net_device *ndev, unsigned long *supported,
+> >  	/* Asymmetric pause is unsupported */
+> >  	phylink_set(mask, Pause);
+> >  
+> > -	/* We cannot use 1Gbps when using the 2.5G interface. */
+> > -	if (state->interface == PHY_INTERFACE_MODE_2500BASEX) {
+> > -		phylink_set(mask, 2500baseT_Full);
+> > -		phylink_set(mask, 2500baseX_Full);
+> > -	} else {
+> > +	/* Half-duplex at speeds higher than 100Mbit is unsupported */
+> > +	if (pp->comphy || state->interface != PHY_INTERFACE_MODE_2500BASEX) {
+> >  		phylink_set(mask, 1000baseT_Full);
+> >  		phylink_set(mask, 1000baseX_Full);
+> >  	}
+> > +	if (pp->comphy || state->interface == PHY_INTERFACE_MODE_2500BASEX) {
+> > +		phylink_set(mask, 2500baseX_Full);
+> > +	}
+> >  
+> >  	if (!phy_interface_mode_is_8023z(state->interface)) {
+> >  		/* 10M and 100M are only supported in non-802.3z mode */
+> > @@ -3378,6 +3385,11 @@ static void mvneta_validate(struct net_device *ndev, unsigned long *supported,
+> >  		   __ETHTOOL_LINK_MODE_MASK_NBITS);
+> >  	bitmap_and(state->advertising, state->advertising, mask,
+> >  		   __ETHTOOL_LINK_MODE_MASK_NBITS);
+> > +
+> > +	/* We can only operate at 2500BaseX or 1000BaseX.  If requested
+> > +	 * to advertise both, only report advertising at 2500BaseX.
+> > +	 */
+> > +	phylink_helper_basex_speed(state);
+> >  }
+> >  
+> >  static int mvneta_mac_link_state(struct net_device *ndev,
+> > @@ -3389,7 +3401,9 @@ static int mvneta_mac_link_state(struct net_device *ndev,
+> >  	gmac_stat = mvreg_read(pp, MVNETA_GMAC_STATUS);
+> >  
+> >  	if (gmac_stat & MVNETA_GMAC_SPEED_1000)
+> > -		state->speed = SPEED_1000;
+> > +		state->speed =
+> > +			state->interface == PHY_INTERFACE_MODE_2500BASEX ?
+> > +			SPEED_2500 : SPEED_1000;
+> >  	else if (gmac_stat & MVNETA_GMAC_SPEED_100)
+> >  		state->speed = SPEED_100;
+> >  	else
+> > @@ -3504,12 +3518,32 @@ static void mvneta_mac_config(struct net_device *ndev, unsigned int mode,
+> >  			    MVNETA_GMAC_FORCE_LINK_DOWN);
+> >  	}
+> >  
+> > +
+> >  	/* When at 2.5G, the link partner can send frames with shortened
+> >  	 * preambles.
+> >  	 */
+> >  	if (state->speed == SPEED_2500)
+> >  		new_ctrl4 |= MVNETA_GMAC4_SHORT_PREAMBLE_ENABLE;
+> >  
+> > +	if (pp->comphy) {
+> > +		enum phy_mode mode = PHY_MODE_INVALID;
+> > +
+> > +		switch (state->interface) {
+> > +		case PHY_INTERFACE_MODE_SGMII:
+> > +		case PHY_INTERFACE_MODE_1000BASEX:
+> > +			mode = PHY_MODE_SGMII;
+> > +			break;
+> > +		case PHY_INTERFACE_MODE_2500BASEX:
+> > +			mode = PHY_MODE_2500SGMII;
+> > +			break;
+> > +		default:
+> > +			break;
+> > +		}
+> > +
+> > +		if (mode != PHY_MODE_INVALID)
+> > +			WARN_ON(phy_set_mode(pp->comphy, mode));
+> > +	}
+> > +
+> >  	if (new_ctrl0 != gmac_ctrl0)
+> >  		mvreg_write(pp, MVNETA_GMAC_CTRL_0, new_ctrl0);
+> >  	if (new_ctrl2 != gmac_ctrl2)
+> > @@ -4411,7 +4445,7 @@ static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
+> >  	if (phy_mode == PHY_INTERFACE_MODE_QSGMII)
+> >  		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_QSGMII_SERDES_PROTO);
+> >  	else if (phy_mode == PHY_INTERFACE_MODE_SGMII ||
+> > -		 phy_mode == PHY_INTERFACE_MODE_1000BASEX)
+> > +		 phy_interface_mode_is_8023z(phy_mode))
+> >  		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_SGMII_SERDES_PROTO);
+> >  	else if (!phy_interface_mode_is_rgmii(phy_mode))
+> >  		return -EINVAL;
+> > @@ -4428,6 +4462,7 @@ static int mvneta_probe(struct platform_device *pdev)
+> >  	struct mvneta_port *pp;
+> >  	struct net_device *dev;
+> >  	struct phylink *phylink;
+> > +	struct phy *comphy;
+> >  	const char *dt_mac_addr;
+> >  	char hw_mac_addr[ETH_ALEN];
+> >  	const char *mac_from;
+> > @@ -4453,6 +4488,14 @@ static int mvneta_probe(struct platform_device *pdev)
+> >  		goto err_free_irq;
+> >  	}
+> >  
+> > +	comphy = devm_of_phy_get(&pdev->dev, dn, NULL);
+> > +	if (comphy == ERR_PTR(-EPROBE_DEFER)) {
+> > +		err = -EPROBE_DEFER;
+> > +		goto err_free_irq;
+> > +	} else if (IS_ERR(comphy)) {
+> > +		comphy = NULL;
+> > +	}
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> index fd7aec9f8e24..b155583469a4 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> @@ -8,7 +8,8 @@ Required Properties:
->  - compatible: Value should be "ovti,ov5645".
->  - clocks: Reference to the xclk clock.
->  - clock-names: Should be "xclk".
-> -- clock-frequency: Frequency of the xclk clock.
-> +- clock-frequency: Frequency of the xclk clock. Should be 24MHz with 1%
-> +                   acceptable tolerance.
+> devm_phy_optional_get can be used here instead.
 
-DT bindings are for documenting the hardware, not the driver implementation.
-The sensor supports a range AFAIU, not a specific frequency.
+I don't think that will work with a NULL string.
 
-The bit below seems good.
+devm_phy_optional_get() ultimately ends up calling phy_get(), which
+in this case would receive a NULL string.  It will pass that NULL
+string to of_property_match_string().
 
->  - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
->    to the hardware pin PWDNB which is physically active low.
->  - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-> @@ -37,7 +38,7 @@ Example:
->  
->  			clocks = <&clks 200>;
->  			clock-names = "xclk";
-> -			clock-frequency = <23880000>;
-> +			clock-frequency = <24000000>;
->  
->  			vdddo-supply = <&camera_dovdd_1v8>;
->  			vdda-supply = <&camera_avdd_2v8>;
-> -- 
-> 2.17.1
-> 
+of_property_match_string() will try to find the "phy-names" property,
+which will not exist, and hence will return -EINVAL.
+
+phy_get() doesn't check for error conditions, but passes this directly
+to _of_phy_get() as the index.  _of_phy_get() passes that on to
+of_parse_phandle_with_args(), which will fail to find an entry with
+cur_index == -EINVAL (since it counts up from zero.)  Hence,
+_of_phy_get() will return -ENODEV, thereby causing
+devm_phy_optional_get() to return NULL, even if there's a phys=
+property present.
+
+of_phy_get() and phy_get() have different behaviours when a NULL string
+is passed in - the of_phy_get() family will get the first PHY specified
+in the DT phys= property, whereas the phy_get() family of functions
+will fail.
+
+Since there is no devm_of_phy_optional_get(), that leads people down
+the path of coding that functionality at the callsites, such as in
+drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c.
 
 -- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
