@@ -1,50 +1,38 @@
-From: Ricard Wanderlof <ricard.wanderlof@axis.com>
-Subject: Re: [alsa-devel] [PATCH v2 1/2] ASoC: ak4118: Add support for AK4118
- S/PDIF transceiver
-Date: Wed, 14 Nov 2018 16:07:21 +0100
-Message-ID: <alpine.DEB.2.20.1811141602590.20252@lnxricardw1.se.axis.com>
-References: <20181114121642.1404-1-peron.clem@gmail.com>
+From: Janek Kotas <jank@cadence.com>
+Subject: [PATCH 0/2] clk: Add driver and bindings for Fixed MMIO clock
+Date: Wed, 14 Nov 2018 15:24:17 +0000
+Message-ID: <37A652CE-2DB0-4232-8F94-F11A38D2FA76@global.cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181114121642.1404-1-peron.clem@gmail.com>
+Content-Language: en-US
+Content-ID: <18C1E87ACC78DA4FB2C6CB876CF17F8B@namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?ISO-8859-15?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Adrien Charruel <adrien.charruel@devialet.com>, linux-kernel@vger.kernel.org
+To: "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+This patchset adds a driver support for Fixed Memory Mapped IO clock.
 
-On Wed, 14 Nov 2018, Clément Péron wrote:
+The driver reads a clock frequency value from a single 32-bit memory
+mapped register and registers it as a fixed rate clock.
 
-> From: Adrien Charruel <adrien.charruel@devialet.com>
-> 
-> The AK4118A is a digital audio transceiver supporting 8 input channels
-> at 192kHz and with 24bits resolution.
-> It converts the S/PDIF signal to I2S format and is configurable over I2C.
-> 
-> This driver introduce a minimal support of the AK4118, like selecting the
-> input channel, reading input frequency and detecting some errors.
+It can be useful for prototyping Linux on various hardware platforms.
 
-I'm curious, from what it seems, there is no checking that the input 
-sample rate actually matches the configured sample rate? It's perfectly 
-understandable for a driver which has 'minimal support', but it's 
-something a user must be aware of; for instance if someone does
+Jan Kotas (2):
+  dt-bindings: clk: Add bindings for Fixed MMIO clock
+  clk: Add Fixed MMIO clock driver
 
-arecord -r 48000 output.wav
+ .../devicetree/bindings/clock/fixed-mmio-clock.txt | 22 ++++++++++
+ drivers/clk/Kconfig                                |  6 +++
+ drivers/clk/Makefile                               |  1 +
+ drivers/clk/clk-fixed-mmio.c                       | 49 ++++++++++++++++++=
+++++
+ 4 files changed, 78 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/fixed-mmio-cloc=
+k.txt
+ create mode 100644 drivers/clk/clk-fixed-mmio.c
 
-when the input data actually has a rate of 44100 Hz then the file will be 
-written with a header specifying 44100 Hz but the data will actually be 
-48000 Hz.
-
-It's not an objection on my part, just an observation. I don't know how 
-ALSA could enforce this in any way; ideally (barring automatic sample rate 
-conversion) one would want an error message that the sample rate specified 
-when opening the stream does not match the sample rate of the S/PDIF input 
-data.
-
-/Ricard
--- 
-Ricard Wolf Wanderlof                           ricardw(at)axis.com
-Axis Communications AB, Lund, Sweden            www.axis.com
-Phone +46 46 272 2016                           Fax +46 46 13 61 30
+--=20
+2.15.0
