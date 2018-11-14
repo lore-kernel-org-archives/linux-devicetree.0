@@ -1,54 +1,74 @@
-Return-Path: <SRS0=klaB=NZ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr1400098.outbound.protection.outlook.com ([40.107.140.98]:16672
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727598AbeKNVcJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 14 Nov 2018 16:32:09 -0500
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH 3/3] dt-bindings: rcar-gen3-phy-usb2: Add r7s9210 support
-Date: Wed, 14 Nov 2018 11:29:12 +0000
-Message-ID: <OSAPR01MB155309C400BF3C256635DD168AC30@OSAPR01MB1553.jpnprd01.prod.outlook.com>
-References: <20181107173558.54481-1-chris.brandt@renesas.com>
- <20181107173558.54481-4-chris.brandt@renesas.com>
- <CAMuHMdX7_bk4b7WTmxDuLPR=-WZYdbt=7P2e-gs4ZOT=-EzL-g@mail.gmail.com>
-In-Reply-To: <CAMuHMdX7_bk4b7WTmxDuLPR=-WZYdbt=7P2e-gs4ZOT=-EzL-g@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=YHMS=NZ=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
+References: <20181107173558.54481-1-chris.brandt@renesas.com> <20181107173558.54481-4-chris.brandt@renesas.com>
+In-Reply-To: <20181107173558.54481-4-chris.brandt@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 14 Nov 2018 12:02:32 +0100
+Message-ID: <CAMuHMdX7_bk4b7WTmxDuLPR=-WZYdbt=7P2e-gs4ZOT=-EzL-g@mail.gmail.com>
+Subject: Re: [PATCH 3/3] dt-bindings: rcar-gen3-phy-usb2: Add r7s9210 support
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <chris.brandt@renesas.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNCk9uIFdlZG5lc2RheSwgTm92ZW1iZXIgMTQsIDIwMTgsIEdlZXJ0IFV5dHRl
-cmhvZXZlbiB3cm90ZToNCj4gPiAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAtLSBjb21wYXRp
-YmxlOiAicmVuZXNhcyx1c2IyLXBoeS1yOGE3NzRhMSIgaWYgdGhlIGRldmljZSBpcyBhIHBhcnQg
-b2YgYW4NCj4gUjhBNzc0QTENCj4gPiArLSBjb21wYXRpYmxlOiAicmVuZXNhcyx1c2IyLXBoeS1y
-N3M5MjEwIiBpZiB0aGUgZGV2aWNlIGlzIGEgcGFydCBvZiBhbg0KPiBSN1M5MjEwDQo+ID4gKyAg
-ICAgICAgICAgICBTb0MuDQo+ID4gKyAgICAgICAgICAgICAicmVuZXNhcyx1c2IyLXBoeS1yOGE3
-NzRhMSIgaWYgdGhlIGRldmljZSBpcyBhIHBhcnQgb2YgYW4NCj4gUjhBNzc0QTENCj4gPiAgICAg
-ICAgICAgICAgIFNvQy4NCj4gPiAgICAgICAgICAgICAgICJyZW5lc2FzLHVzYjItcGh5LXI4YTc3
-OTUiIGlmIHRoZSBkZXZpY2UgaXMgYSBwYXJ0IG9mIGFuDQo+IFI4QTc3OTUNCj4gPiAgICAgICAg
-ICAgICAgIFNvQy4NCj4gPiBAQCAtMTYsOCArMTgsOCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0K
-PiA+ICAgICAgICAgICAgICAgUjhBNzc5OTAgU29DLg0KPiA+ICAgICAgICAgICAgICAgInJlbmVz
-YXMsdXNiMi1waHktcjhhNzc5OTUiIGlmIHRoZSBkZXZpY2UgaXMgYSBwYXJ0IG9mIGFuDQo+ID4g
-ICAgICAgICAgICAgICBSOEE3Nzk5NSBTb0MuDQo+ID4gLSAgICAgICAgICAgICAicmVuZXNhcyxy
-Y2FyLWdlbjMtdXNiMi1waHkiIGZvciBhIGdlbmVyaWMgUi1DYXIgR2VuMyBvcg0KPiBSWi9HMg0K
-PiA+IC0gICAgICAgICAgICAgY29tcGF0aWJsZSBkZXZpY2UuDQo+ID4gKyAgICAgICAgICAgICAi
-cmVuZXNhcyxyY2FyLWdlbjMtdXNiMi1waHkiIGZvciBhIGdlbmVyaWMgUi1DYXIgR2VuMywNCj4g
-UlovRzIgb3INCj4gPiArICAgICAgICAgICAgIFJaL0EyIGNvbXBhdGlibGUgZGV2aWNlLg0KPiAN
-Cj4gSXMgaXQgYSBnb29kIGlkZWEgdG8gZGVjbGFyZSBSWi9BMiBjb21wYXRpYmxlIHRvIFItQ2Fy
-IEdlbjM/DQo+IFVzdWFsbHkgd2UgZG9uJ3QgZG8gdGhhdCBmb3IgUmVuZXNhcyBJUCBjb3JlcyB1
-c2VkIGluIGRpZmZlcmVudA0KPiBmYW1pbGllc1sqXS4NCj4gT2YgY291cnNlLCBJIGtub3cgeW91
-IGRvIGhhdmUgYSBnb29kIHJlbGF0aW9uc2hpcCB3aXRoIHRoZSBhY3R1YWwgUlovQTINCj4gaGFy
-ZHdhcmUgZGVzaWduZXJzIDstKQ0KPiANCj4gSW4gbGlnaHQgb2YgU2hpbW9kYS1zYW4ncyBjb21t
-ZW50IHcuci50LiBSLUNhciBIMyBVU0IgcG9ydDEgaW4gdGhlIGRyaXZlcg0KPiBjb2RlLCBwZXJo
-YXBzICJyZW5lc2FzLHJjYXItZ2VuMy11c2IyLXBoeSIgc2hvdWxkIG5vdCBiZSB1c2VkPw0KDQpX
-ZWxsLCBJIHRoaW5rIHRoZSBJUCBibG9jayBzZWVtcyB0aGUgc2FtZS4uLi5ob3dldmVyLi4uDQpJ
-IGRpZCBwb2ludCBvdXQgdGhhdCB0aGUgQ09NTUNUUkwgcmVnaXN0ZXIgZGVmYXVsdHMgdG8gYSBk
-aWZmZXJlbnQgDQp2YWx1ZS4gTm8gaWRlYSB3aHkgdGhhdCBpcy4gSG9uZXN0bHksIEkgZGlkIG5v
-dCBnbyBhbmQgY2hlY2sgYWxsIHRoZSBvdGhlciANCnJlZ2lzdGVycyBiaXRzLiBTbyBJIGd1ZXNz
-IEkgd29uZGVyIHdoYXQgImNvbXBhdGlibGUiIHJlYWxseSBtZWFuczoNCg0KIkNvbXBhdGlibGU6
-IERpZmZlcmVudCwgYnV0IGNsb3NlIGVub3VnaCB0aGF0IGl0IHdpbGwgd29yayIgPz8/DQoNCkNo
-cmlzDQo=
+Hi Chris,
+
+On Wed, Nov 7, 2018 at 6:36 PM Chris Brandt <chris.brandt@renesas.com> wrote:
+> Document RZ/A2 (R7S9210) SoC bindings.
+>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> ---
+>  Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> index de7b5393c163..b545daf8ccb3 100644
+> --- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> @@ -1,10 +1,12 @@
+>  * Renesas R-Car generation 3 USB 2.0 PHY
+>
+>  This file provides information on what the device node for the R-Car generation
+> -3 and RZ/G2 USB 2.0 PHY contain.
+> +3, RZ/G2 and RZ/A2 USB 2.0 PHY contain.
+>
+>  Required properties:
+> -- compatible: "renesas,usb2-phy-r8a774a1" if the device is a part of an R8A774A1
+> +- compatible: "renesas,usb2-phy-r7s9210" if the device is a part of an R7S9210
+> +             SoC.
+> +             "renesas,usb2-phy-r8a774a1" if the device is a part of an R8A774A1
+>               SoC.
+>               "renesas,usb2-phy-r8a7795" if the device is a part of an R8A7795
+>               SoC.
+> @@ -16,8 +18,8 @@ Required properties:
+>               R8A77990 SoC.
+>               "renesas,usb2-phy-r8a77995" if the device is a part of an
+>               R8A77995 SoC.
+> -             "renesas,rcar-gen3-usb2-phy" for a generic R-Car Gen3 or RZ/G2
+> -             compatible device.
+> +             "renesas,rcar-gen3-usb2-phy" for a generic R-Car Gen3, RZ/G2 or
+> +             RZ/A2 compatible device.
+
+Is it a good idea to declare RZ/A2 compatible to R-Car Gen3?
+Usually we don't do that for Renesas IP cores used in different families[*].
+Of course, I know you do have a good relationship with the actual RZ/A2
+hardware designers ;-)
+
+In light of Shimoda-san's comment w.r.t. R-Car H3 USB port1 in the driver
+code, perhaps "renesas,rcar-gen3-usb2-phy" should not be used?
+
+[*] Sole exceptions I'm aware of are:
+      - "renesas,rmobile-iic", in addition to "renesas,rcar-gen2-iic" or
+        "renesas,rcar-gen3-iic" on R-Car Gen2/3,
+      - "renesas,rcar-gen2-cmt1" and "renesas,rcar-thermal" on R-Mobile APE6.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
