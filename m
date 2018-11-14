@@ -1,39 +1,71 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 14/17] soc: bcm: Switch raspberrypi-power to SPDX
- identifier
-Date: Wed, 14 Nov 2018 21:25:54 +0100 (CET)
-Message-ID: <1873826647.384691.1542227154428@email.ionos.de>
-References: <1541867363-8022-1-git-send-email-stefan.wahren@i2se.com>
- <87o9awyime.fsf@anholt.net>
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/2] drm/msm/dsi: Get PHY ref clock from the
+ DT
+Date: Wed, 14 Nov 2018 13:08:56 -0800
+Message-ID: <20181114210856.GK22824@google.com>
+References: <20181102214534.184593-1-mka@chromium.org>
+ <20181102214534.184593-2-mka@chromium.org>
+ <20181105173304.GJ154160@art_vandelay>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <87o9awyime.fsf-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rpi-kernel>,
- <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rpi-kernel/>
-List-Post: <mailto:linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel>,
- <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "linux-rpi-kernel" <linux-rpi-kernel-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexander Aring <aring-jkUAjuhPggJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20181105173304.GJ154160@art_vandelay>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-> Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> hat am 10. November 2018 um 17:58 geschrieben:
-> 
-> 
-> Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
-> 
-> > Adopt the SPDX license identifier headers to ease license compliance
-> > management.
-> 
-> Reviewed-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-
-Applied to bcm2835-drivers-next
-
-Thanks
+T24gTW9uLCBOb3YgMDUsIDIwMTggYXQgMTI6MzM6MDRQTSAtMDUwMCwgU2VhbiBQYXVsIHdyb3Rl
+Ogo+IE9uIEZyaSwgTm92IDAyLCAyMDE4IGF0IDAyOjQ1OjM0UE0gLTA3MDAsIE1hdHRoaWFzIEth
+ZWhsY2tlIHdyb3RlOgo+ID4gR2V0IHRoZSBQSFkgcmVmIGNsb2NrIGZyb20gdGhlIGRldmljZSB0
+cmVlIGluc3RlYWQgb2YgaGFyZGNvZGluZwo+ID4gaXRzIG5hbWUgYW5kIHJhdGUuCj4gPiAKPiA+
+IFNpZ25lZC1vZmYtYnk6IE1hdHRoaWFzIEthZWhsY2tlIDxta2FAY2hyb21pdW0ub3JnPgo+ID4g
+LS0tCj4gPiAgZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvcGxsL2RzaV9wbGxfMTBubS5jIHwgMTEg
+KysrKysrKysrKy0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKSwgMSBkZWxl
+dGlvbigtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvcGxs
+L2RzaV9wbGxfMTBubS5jIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvcGxsL2RzaV9wbGxfMTBu
+bS5jCj4gPiBpbmRleCA0YzAzZjBiNzM0M2VkLi4xMDE2ZWI1MGRmOGY1IDEwMDY0NAo+ID4gLS0t
+IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvcGxsL2RzaV9wbGxfMTBubS5jCj4gPiArKysgYi9k
+cml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9wbGwvZHNpX3BsbF8xMG5tLmMKPiA+IEBAIC05MSw2ICs5
+MSw4IEBAIHN0cnVjdCBkc2lfcGxsXzEwbm0gewo+ID4gIAl2b2lkIF9faW9tZW0gKnBoeV9jbW5f
+bW1pbzsKPiA+ICAJdm9pZCBfX2lvbWVtICptbWlvOwo+ID4gIAo+ID4gKwlzdHJ1Y3QgY2xrICp2
+Y29fcmVmX2NsazsKPiA+ICsKPiA+ICAJdTY0IHZjb19yZWZfY2xrX3JhdGU7Cj4gPiAgCXU2NCB2
+Y29fY3VycmVudF9yYXRlOwo+ID4gIAo+ID4gQEAgLTYzMCw3ICs2MzIsOCBAQCBzdGF0aWMgaW50
+IHBsbF8xMG5tX3JlZ2lzdGVyKHN0cnVjdCBkc2lfcGxsXzEwbm0gKnBsbF8xMG5tKQo+ID4gIAlj
+aGFyIGNsa19uYW1lWzMyXSwgcGFyZW50WzMyXSwgdmNvX25hbWVbMzJdOwo+ID4gIAljaGFyIHBh
+cmVudDJbMzJdLCBwYXJlbnQzWzMyXSwgcGFyZW50NFszMl07Cj4gPiAgCXN0cnVjdCBjbGtfaW5p
+dF9kYXRhIHZjb19pbml0ID0gewo+ID4gLQkJLnBhcmVudF9uYW1lcyA9IChjb25zdCBjaGFyICpb
+XSl7ICJ4byIgfSwKPiA+ICsJCS5wYXJlbnRfbmFtZXMgPSAoY29uc3QgY2hhciAqW10pewo+ID4g
+KwkJCV9fY2xrX2dldF9uYW1lKHBsbF8xMG5tLT52Y29fcmVmX2NsaykgfSwKPiA+ICAJCS5udW1f
+cGFyZW50cyA9IDEsCj4gCj4gWW91IHNob3VsZCBjaGVjayB0aGUgcmV0dXJuIG9mIF9fY2xrX2dl
+dF9uYW1lKCkgc2luY2UgeW91J3JlIHNldHRpbmcgbnVtX3BhcmVudHMKPiB0byAxLgoKSXMgdGhh
+dCBhY3R1YWxseSBuZWVkZWQ/IF9fY2xrX2dldF9uYW1lKCkgb25seSByZXR1cm5zIE5VTEwgaWYg
+dGhlCnBhc3NlZCBjbG9jayBpcyBOVUxMLCBhbmQgdGhpcyBjYW4ndCBoYXBwZW4gaGVyZSBzaW5j
+ZSBfaW5pdCgpIGZhaWxzCmlmIHRoZSBjbG9jayBjYW4ndCBiZSBvYnRhaW5lZCwgb3IgYW0gSSBt
+aXNzaW5nIHNvbWV0aGluZyBoZXJlPwoKPiBBbHNvLCB5b3Ugc2hvdWxkIHJldmVydCB0aGUgcGF0
+Y2ggdGhhdCBoYXJkY29kZXMgMTkuMk1IeiBhcyBwYXJ0IG9mIHRoaXMKPiBzZXQuCgpPb29wcywg
+dGhpcyBzb21laG93IGdvdCBkcm9wcGVkIHdoZW4gbW92aW5nIHRoZSBwYXRjaCBmcm9tIG15IHdv
+cmtpbmcKdHJlZSB0byB0aGUgcmVwbyBJIHVzZSBmb3IgdXBzdHJlYW1pbmcuCgo+ID4gIAkJLm5h
+bWUgPSB2Y29fbmFtZSwKPiA+ICAJCS5mbGFncyA9IENMS19JR05PUkVfVU5VU0VELAo+ID4gQEAg
+LTc4Niw2ICs3ODksMTIgQEAgc3RydWN0IG1zbV9kc2lfcGxsICptc21fZHNpX3BsbF8xMG5tX2lu
+aXQoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwgaW50IGlkKQo+ID4gIAlwbGxfMTBubS0+
+aWQgPSBpZDsKPiA+ICAJcGxsXzEwbm1fbGlzdFtpZF0gPSBwbGxfMTBubTsKPiA+ICAKPiA+ICsJ
+cGxsXzEwbm0tPnZjb19yZWZfY2xrID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsICJyZWYiKTsK
+PiA+ICsJaWYgKElTX0VSUihwbGxfMTBubS0+dmNvX3JlZl9jbGspKSB7Cj4gPiArCQlkZXZfZXJy
+KCZwZGV2LT5kZXYsICJjb3VsZG4ndCBnZXQgJ3JlZicgY2xvY2tcbiIpOwo+IAo+IFBsZWFzZSBw
+cmludCB0aGUgZXJyb3IgbWVzc2FnZQoKT2ssIGV4Y2VwdCBmb3IgLUVQUk9CRV9ERUZFUiBhcyBw
+ZXIgU3RlcGhlbidzIGNvbW1lbnQuCgo+ID4gKwkJcmV0dXJuICh2b2lkICopcGxsXzEwbm0tPnZj
+b19yZWZfY2xrOwo+IAo+IFVzZSBFUlJfQ0FTVCBoZXJlCgpXaWxsIGRvCgpDaGVlcnMKCk1hdHRo
+aWFzCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVk
+cmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
