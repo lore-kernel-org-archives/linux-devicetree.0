@@ -1,209 +1,137 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [RFC PATCH 5/6] net: marvell: neta: add support for 2500base-X
-Date: Wed, 14 Nov 2018 11:11:04 +0000
-Message-ID: <20181114111104.GS30658@n2100.armlinux.org.uk>
-References: <20181112122933.GD30658@n2100.armlinux.org.uk>
- <E1gMBMx-0008A9-Jb@rmk-PC.armlinux.org.uk>
- <acc97e5e-efa9-a44c-ea87-09135c6c12b6@ti.com>
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [Letux-kernel] [PATCH RFC] bluetooth: add uart h4 devices via
+ serdev/devicetree
+Date: Wed, 14 Nov 2018 12:13:12 +0100
+Message-ID: <20181114121312.53362ad3@kemnade.info>
+References: <20181110232034.17277-1-andreas@kemnade.info>
+        <20181111024648.7rt7rlhaqihtqecv@earth.universe>
+        <20181112215812.18ebca35@aktux>
+        <2C74C837-A6D3-47C9-BE59-CCA594289B94@goldelico.com>
+        <20181112222726.73m2oca7hankvcjs@earth.universe>
+        <CABGGisxsdv+BTd5-HMzF8asEcWtL5F4CMzmkrBCwK=NibvqjLQ@mail.gmail.com>
+        <20181113170128.0f59ef0e@kemnade.info>
+        <86A3A2E6-FC89-42FE-8410-9C8273EC9CF7@holtmann.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <acc97e5e-efa9-a44c-ea87-09135c6c12b6@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/jN++hbb5Xq5Z4sVt/./+FGM"; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <86A3A2E6-FC89-42FE-8410-9C8273EC9CF7@holtmann.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: Rob Herring <robh@kernel.org>, sebastian.reichel@collabora.com, hns@goldelico.com, devicetree@vger.kernel.org, Johan Hedberg <johan.hedberg@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-bluetooth@vger.kernel.org, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 14, 2018 at 02:18:14PM +0530, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On 12/11/18 6:01 PM, Russell King wrote:
-> > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> > ---
-> >  drivers/net/ethernet/marvell/mvneta.c | 58 ++++++++++++++++++++++++++++++-----
-> >  1 file changed, 51 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-> > index 5bfd349bf41a..7305d4cc0630 100644
-> > --- a/drivers/net/ethernet/marvell/mvneta.c
-> > +++ b/drivers/net/ethernet/marvell/mvneta.c
-> > @@ -27,6 +27,7 @@
-> >  #include <linux/of_irq.h>
-> >  #include <linux/of_mdio.h>
-> >  #include <linux/of_net.h>
-> > +#include <linux/phy/phy.h>
-> >  #include <linux/phy.h>
-> >  #include <linux/phylink.h>
-> >  #include <linux/platform_device.h>
-> > @@ -437,6 +438,7 @@ struct mvneta_port {
-> >  	struct device_node *dn;
-> >  	unsigned int tx_csum_limit;
-> >  	struct phylink *phylink;
-> > +	struct phy *comphy;
-> >  
-> >  	struct mvneta_bm *bm_priv;
-> >  	struct mvneta_bm_pool *pool_long;
-> > @@ -3150,6 +3152,8 @@ static void mvneta_start_dev(struct mvneta_port *pp)
-> >  {
-> >  	int cpu;
-> >  
-> > +	WARN_ON(phy_power_on(pp->comphy));
-> > +
-> >  	mvneta_max_rx_size_set(pp, pp->pkt_size);
-> >  	mvneta_txq_max_tx_size_set(pp, pp->pkt_size);
-> >  
-> > @@ -3212,6 +3216,8 @@ static void mvneta_stop_dev(struct mvneta_port *pp)
-> >  
-> >  	mvneta_tx_reset(pp);
-> >  	mvneta_rx_reset(pp);
-> > +
-> > +	WARN_ON(phy_power_off(pp->comphy));
-> >  }
-> >  
-> >  static void mvneta_percpu_enable(void *arg)
-> > @@ -3337,6 +3343,7 @@ static int mvneta_set_mac_addr(struct net_device *dev, void *addr)
-> >  static void mvneta_validate(struct net_device *ndev, unsigned long *supported,
-> >  			    struct phylink_link_state *state)
-> >  {
-> > +	struct mvneta_port *pp = netdev_priv(ndev);
-> >  	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
-> >  
-> >  	/* We only support QSGMII, SGMII, 802.3z and RGMII modes */
-> > @@ -3357,14 +3364,14 @@ static void mvneta_validate(struct net_device *ndev, unsigned long *supported,
-> >  	/* Asymmetric pause is unsupported */
-> >  	phylink_set(mask, Pause);
-> >  
-> > -	/* We cannot use 1Gbps when using the 2.5G interface. */
-> > -	if (state->interface == PHY_INTERFACE_MODE_2500BASEX) {
-> > -		phylink_set(mask, 2500baseT_Full);
-> > -		phylink_set(mask, 2500baseX_Full);
-> > -	} else {
-> > +	/* Half-duplex at speeds higher than 100Mbit is unsupported */
-> > +	if (pp->comphy || state->interface != PHY_INTERFACE_MODE_2500BASEX) {
-> >  		phylink_set(mask, 1000baseT_Full);
-> >  		phylink_set(mask, 1000baseX_Full);
-> >  	}
-> > +	if (pp->comphy || state->interface == PHY_INTERFACE_MODE_2500BASEX) {
-> > +		phylink_set(mask, 2500baseX_Full);
-> > +	}
-> >  
-> >  	if (!phy_interface_mode_is_8023z(state->interface)) {
-> >  		/* 10M and 100M are only supported in non-802.3z mode */
-> > @@ -3378,6 +3385,11 @@ static void mvneta_validate(struct net_device *ndev, unsigned long *supported,
-> >  		   __ETHTOOL_LINK_MODE_MASK_NBITS);
-> >  	bitmap_and(state->advertising, state->advertising, mask,
-> >  		   __ETHTOOL_LINK_MODE_MASK_NBITS);
-> > +
-> > +	/* We can only operate at 2500BaseX or 1000BaseX.  If requested
-> > +	 * to advertise both, only report advertising at 2500BaseX.
-> > +	 */
-> > +	phylink_helper_basex_speed(state);
-> >  }
-> >  
-> >  static int mvneta_mac_link_state(struct net_device *ndev,
-> > @@ -3389,7 +3401,9 @@ static int mvneta_mac_link_state(struct net_device *ndev,
-> >  	gmac_stat = mvreg_read(pp, MVNETA_GMAC_STATUS);
-> >  
-> >  	if (gmac_stat & MVNETA_GMAC_SPEED_1000)
-> > -		state->speed = SPEED_1000;
-> > +		state->speed =
-> > +			state->interface == PHY_INTERFACE_MODE_2500BASEX ?
-> > +			SPEED_2500 : SPEED_1000;
-> >  	else if (gmac_stat & MVNETA_GMAC_SPEED_100)
-> >  		state->speed = SPEED_100;
-> >  	else
-> > @@ -3504,12 +3518,32 @@ static void mvneta_mac_config(struct net_device *ndev, unsigned int mode,
-> >  			    MVNETA_GMAC_FORCE_LINK_DOWN);
-> >  	}
-> >  
-> > +
-> >  	/* When at 2.5G, the link partner can send frames with shortened
-> >  	 * preambles.
-> >  	 */
-> >  	if (state->speed == SPEED_2500)
-> >  		new_ctrl4 |= MVNETA_GMAC4_SHORT_PREAMBLE_ENABLE;
-> >  
-> > +	if (pp->comphy) {
-> > +		enum phy_mode mode = PHY_MODE_INVALID;
-> > +
-> > +		switch (state->interface) {
-> > +		case PHY_INTERFACE_MODE_SGMII:
-> > +		case PHY_INTERFACE_MODE_1000BASEX:
-> > +			mode = PHY_MODE_SGMII;
-> > +			break;
-> > +		case PHY_INTERFACE_MODE_2500BASEX:
-> > +			mode = PHY_MODE_2500SGMII;
-> > +			break;
-> > +		default:
-> > +			break;
-> > +		}
-> > +
-> > +		if (mode != PHY_MODE_INVALID)
-> > +			WARN_ON(phy_set_mode(pp->comphy, mode));
-> > +	}
-> > +
-> >  	if (new_ctrl0 != gmac_ctrl0)
-> >  		mvreg_write(pp, MVNETA_GMAC_CTRL_0, new_ctrl0);
-> >  	if (new_ctrl2 != gmac_ctrl2)
-> > @@ -4411,7 +4445,7 @@ static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
-> >  	if (phy_mode == PHY_INTERFACE_MODE_QSGMII)
-> >  		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_QSGMII_SERDES_PROTO);
-> >  	else if (phy_mode == PHY_INTERFACE_MODE_SGMII ||
-> > -		 phy_mode == PHY_INTERFACE_MODE_1000BASEX)
-> > +		 phy_interface_mode_is_8023z(phy_mode))
-> >  		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_SGMII_SERDES_PROTO);
-> >  	else if (!phy_interface_mode_is_rgmii(phy_mode))
-> >  		return -EINVAL;
-> > @@ -4428,6 +4462,7 @@ static int mvneta_probe(struct platform_device *pdev)
-> >  	struct mvneta_port *pp;
-> >  	struct net_device *dev;
-> >  	struct phylink *phylink;
-> > +	struct phy *comphy;
-> >  	const char *dt_mac_addr;
-> >  	char hw_mac_addr[ETH_ALEN];
-> >  	const char *mac_from;
-> > @@ -4453,6 +4488,14 @@ static int mvneta_probe(struct platform_device *pdev)
-> >  		goto err_free_irq;
-> >  	}
-> >  
-> > +	comphy = devm_of_phy_get(&pdev->dev, dn, NULL);
-> > +	if (comphy == ERR_PTR(-EPROBE_DEFER)) {
-> > +		err = -EPROBE_DEFER;
-> > +		goto err_free_irq;
-> > +	} else if (IS_ERR(comphy)) {
-> > +		comphy = NULL;
-> > +	}
-> 
-> devm_phy_optional_get can be used here instead.
+--Sig_/jN++hbb5Xq5Z4sVt/./+FGM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I don't think that will work with a NULL string.
+On Wed, 14 Nov 2018 08:51:17 +0100
+Marcel Holtmann <marcel@holtmann.org> wrote:
 
-devm_phy_optional_get() ultimately ends up calling phy_get(), which
-in this case would receive a NULL string.  It will pass that NULL
-string to of_property_match_string().
+> Hi Andreas,
+>=20
+> >>>>> Am 12.11.2018 um 21:59 schrieb Andreas Kemnade <andreas@kemnade.inf=
+o>:
+> >>>>> On Sun, 11 Nov 2018 03:46:48 +0100
+> >>>>> Sebastian Reichel <sebastian.reichel@collabora.com> wrote:   =20
+> >>>>>> On Sun, Nov 11, 2018 at 12:20:34AM +0100, Andreas Kemnade wrote:  =
+ =20
+> >>>>>>> This is a first try to be able to use h4 devices specified in
+> >>>>>>> the devicetree, so you do not need to call hciattach and
+> >>>>>>> it can be automatically probed.
+> >>>>>>>=20
+> >>>>>>> Of course, proper devicetree bindings documentation is
+> >>>>>>> missing. And also you would extend that by regulator/
+> >>>>>>> enable gpio settings.
+> >>>>>>>=20
+> >>>>>>> But before proceeding further it should be checked if the
+> >>>>>>> general way of doing things is right.
+> >>>>>>>=20
+> >>>>>>> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> >>>>>>> ---   =20
+> >>>>>>=20
+> >>>>>> Patch looks good to me, just one note
+> >>>>>>  =20
+> >>>>> I found one thing myself:
+> >>>>> Shouldn't we have a generic compatible string like "generic-h4".
+> >>>>> ehci-platform.c has for example:
+> >>>>>       { .compatible =3D "generic-ehci", },   =20
+> >>>>=20
+> >>>> There might be differences in h4 compatible devices (e.g. default
+> >>>> baud rate) so that I would not bet there a "generic-h4" suffices
+> >>>> in the long run.   =20
+> >>=20
+> >> It will not because that doesn't define clocks, resets, gpios,
+> >> supplies, etc. and the interactions of all those.
+> >>  =20
+> > well, we need a simple supply being on when the device is on.
+> > Nothing more.
+> >  =20
+> >>> My suggestion is to use this in DT:
+> >>>=20
+> >>> compatible =3D "wi2wi,w2cbw003-bluetooth", "<something generic>";
+> >>>  =20
+> > That would be my slight preference here.
+> >  =20
+> >>> The driver can start with supporting just the generic compatible
+> >>> string. If somebody finds some incompatible differences, the driver
+> >>> can add a custom handler for the wi2wi chip without breaking DT
+> >>> ABI.   =20
+> >>=20
+> >> Any idea how many H4 devices there are? Somehow I doubt there are that
+> >> many to be unmanageable.
+> >>  =20
+> > Well, many devices are h4 devices with some more or less important
+> > vendor-specific commands. Well, "hciattach any" uses simple h4 protocol.
+> >=20
+> > those firmware download commands and they have their own drivers.
+> > Most devices I had used bluetooth uart from the command line with, were
+> > simple enough. The other question is whether those devices will run a
+> > modern kernel.
+> >=20
+> > No strong opinion here.  =20
+>=20
+> doing the firmware load from user space via some magic tool is no longer =
+going to work smoothly. It will be actually almost impossible with serdev. =
+However I did post btuart.c driver which is pretty much just plain H:4. You=
+ would still somehow define the default baudraute since just picking 115200=
+ is not always going to work.
+>=20
+Just to avoid some misunderstandings here. With this RFC patch I have only
+devices in mind where we do not know any vendor specific commands and
+do not need to do any firmware download.
 
-of_property_match_string() will try to find the "phy-names" property,
-which will not exist, and hence will return -EINVAL.
+> Btw. I see nothing standing in the way of merging btuart.c driver and the=
+n go from there. Either I dig this out and submit or someone else does.
+>=20
+Seems to be a good idea. So in the end I should not continue
+that rtc patch?
 
-phy_get() doesn't check for error conditions, but passes this directly
-to _of_phy_get() as the index.  _of_phy_get() passes that on to
-of_parse_phandle_with_args(), which will fail to find an entry with
-cur_index == -EINVAL (since it counts up from zero.)  Hence,
-_of_phy_get() will return -ENODEV, thereby causing
-devm_phy_optional_get() to return NULL, even if there's a phys=
-property present.
+And that thing has than a devicetree string of
+"h4-generic" or a list of generic h4 devices?
 
-of_phy_get() and phy_get() have different behaviours when a NULL string
-is passed in - the of_phy_get() family will get the first PHY specified
-in the DT phys= property, whereas the phy_get() family of functions
-will fail.
+Regards,
+Andreas
 
-Since there is no devm_of_phy_optional_get(), that leads people down
-the path of coding that functionality at the callsites, such as in
-drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c.
+--Sig_/jN++hbb5Xq5Z4sVt/./+FGM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE7sDbhY5mwNpwYgrAfb1qx03ikyQFAlvsA0gACgkQfb1qx03i
+kyQJgA//WbLE2Rk6gS12sncx7Jc3iO1x7ZEq+2lJEPlPWX2q8+b+o9yPrOGuiJ3D
+tp5SPGmFLd77NnwZ4zu1kHOpOvVT+pPnp1UN7sB4d8IZgWcVX//AuoA/Uedx1hZi
+j3xk6t3ZGUaWTJBGJZ2OB9ZxmJdegH9WnQkeNGx26EzSYYkGJx/CvRKEJk1LbSQA
+NuwV1eyrvdLsMJdO0zUSVO83t/pDhpkWVXrxJCwMnSv48j4Wtmelswl52WNZ9eyY
+hfULUpinwTKv3FJOiMY/ieXQdMdPWw7DXS4yoUkUmPHtWulg4DkASoG5h2uOxqT0
+Kfa518/HZFx9nUGc8Xe+Z1QFcZVZR2XOa/BKdxIm6bg/4y3WGCmXueeUhVcJaEOo
+38Lnpl7EQ5/X7pcUBnTQSgxic/T2g03AnEZfaOOu4NcJljU35DvdnPs+rhx0PM4C
+L4UTrDxh5mADNG5inwnPNztysh9RPTs5o1XRq5IKFX5983NYVJiIqn47kkXm2KPY
++OPF+HBe6BxKs+Ee+nVeEhw5yN568ICFI4AGy07Qc4m+K/E29zP/QYg596Y8JzWi
+ZrEcgJK3mrQSmeNF7gIfZwscum5onO34S8eAP2qVjpEeGamEV6NvAPtQ2ZiZZp03
+djNMXvu3mhYgufYSqdhDbIjHFiDNIsAJ+pMMgz+gnDFisfELYg8=
+=w90C
+-----END PGP SIGNATURE-----
+
+--Sig_/jN++hbb5Xq5Z4sVt/./+FGM--
