@@ -1,46 +1,39 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Sound and the TDA998x binding
-Date: Tue, 13 Nov 2018 13:28:40 +0000
-Message-ID: <40fdabaa-2b81-df4b-a949-725855586a85@axentia.se>
+From: hao_zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v0 0/2] Initial Allwinner T3 support.
+Date: Wed, 14 Nov 2018 16:20:33 +0800
+Message-ID: <20181114082033.GA20712@arx-s1>
+Reply-To: hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Language: en-US
-Content-ID: <501828AB5DE8524B9D59DE6E1F4CE0BE@eurprd02.prod.outlook.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King <linux@armlinux.org.uk>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDKITZOARQMBB5VVV7PQKGQEXWSBURQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkhDQoNCkknbSB3b25kZXJpbmcgYWJvdXQgc29tZSBwcm9ncmFtbWluZyBkZXRhaWxzIHJlZ2Fy
-ZGluZyB0aGUgVERBOTk4eA0KZHJpdmVyLi4uDQoNClRoZSBiaW5kaW5ncyBkb2N1bWVudGF0aW9u
-IFsxXSBzdGF0ZSB0aGF0IG9uZSBzaG91bGQgZmlsbCBpbiB0aGUNCmRlc2lyZWQgcmVnaXN0ZXIg
-Y29udGVudCBvZiB0aGUgQVBfRU5BIHJlZ2lzdGVyLiBIb3dldmVyLCBJIGNhbm5vdA0KZmluZCBh
-bnkgZGV0YWlscyBhbnl3aGVyZSBhYm91dCBob3cgb25lIGRldGVybWluZXMgd2hhdCBpcyBkZXNp
-cmVkLg0KV2hlbiBJIGxvb2sgZm9yIGRhdGEgc2hlZXRzIG9uIHRoZSBJbnRlcm5ldCwgYWxsIEkg
-ZmluZCBpcyBhICJzaG9ydCINCmRhdGEgc2hlZXQsIHdoaWNoIGlzIGZhciBmcm9tIGVubGlnaHRl
-bmluZy4gVGhlcmUgYXJlIGhpbnRzIGFib3V0DQphICJmdWxsIiBkYXRhIHNoZWV0IGluIHRoZSBj
-aGFwdGVyIG9uIGxlZ2FsIGluZm9ybWF0aW9uIG9mIHRoZQ0KInNob3J0IiBkYXRhIHNoZWV0LiBJ
-cyB0aGUgImZ1bGwiIGRhdGEgc2hlZXQgcHJvdGVjdGVkIGJ5IGFuIE5EQQ0Kb3Igc29tZXRoaW5n
-PyBUaGF0J3MgdGhlIG9ubHkgcmVhc29uIEkgY2FuIGZpbmQgZm9yIGl0IG5vdCBiZWluZw0KYXZh
-aWxhYmxlLi4uDQoNCk1heWJlIHNvbWVvbmUgd2l0aCBzdWNoIGEgImZ1bGwiIGRhdGEgc2hlZXQg
-YXQgaGFuZCBjYW4gZW5saWdodGVuDQptZSBvbiB0aGUgd29ya2luZ3Mgb2YgdGhpcyBBUF9FTkEg
-cmVnaXN0ZXIgc28gdGhhdCBJIGtub3cgd2hhdCBpdCBpcw0KdGhhdCBJIG5lZWQgdG8gZmlsbCBp
-bj8gU2luY2UgaXQgaXMgc28gZGlmZmljdWx0IHRvIGZpbmQgdGhpcyBpbmZvLA0KbWF5YmUgaXQg
-c2hvdWxkIGJlIGFkZGVkIHRvIHRoZSBiaW5kaW5nPw0KDQpQb2ludGVycyBvbiBob3cgdG8gb2J0
-YWluIGEgY29weSBvZiBzYWlkICJmdWxsIiBkYXRhIHNoZWV0IHdvdWxkDQpiZSBhcHByZWNpYXRl
-ZC4NCg0KVGhlIGNoaXAgSSBoYXZlIGlzIFREQTE5OTg4LCBpZiB0aGF0IGlzIG9mIGFueSBjb25z
-ZXF1ZW5jZS4uLg0KDQpDaGVlcnMsDQpQZXRlcg0KDQpbMV0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RkYTk5OHgudHh0DQpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Initial Allwinner T3 support.
+
+Allwinner T3 (sun8i) SoC features a Quad-Core Cortex-A7 ARM CPU, and a
+Mali400 MP2 GPU from ARM. It is a not-pin-compatible quad core sucessor
+of the A20). It's also known as the Allwinner R40 for In-Car
+Entertainment usage.
+
+hao_zhang (2):
+  ARM: dts: sun8i: Add board dts file for t3-cqa3t-bv3.
+  Documentation: ARM: sunxi: Add Allwinner SoC T3.
+
+ Documentation/devicetree/bindings/arm/sunxi.txt |   3 +-
+ arch/arm/boot/dts/Makefile                      |   1 +
+ arch/arm/boot/dts/sun8i-t3-cqa3t-bv3.dts        | 226 ++++++++++++++++++++++++
+ 3 files changed, 229 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/sun8i-t3-cqa3t-bv3.dts
+
+-- 
+2.7.4
