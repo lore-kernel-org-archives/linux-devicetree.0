@@ -1,45 +1,68 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v12 0/2] Initial Allwinner V3s CSI Support
-Date: Wed, 14 Nov 2018 12:54:13 +0200
-Message-ID: <20181114105413.4gcfwt4cmchh6zsf@valkosipuli.retiisi.org.uk>
-References: <1540886988-27696-1-git-send-email-yong.deng@magewell.com>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH 1/2] ASoC: ak4118: Add support for AK4118 S/PDIF transceiver
+Date: Wed, 14 Nov 2018 11:55:17 +0100
+Message-ID: <CAJiuCcewYbt4SDZfFzDfTfTzj_Z1cm=S3_GAA-zcYGW-jzXR4w@mail.gmail.com>
+References: <20181108124934.32381-1-peron.clem@gmail.com> <20181113225135.GQ2089@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1540886988-27696-1-git-send-email-yong.deng@magewell.com>
+In-Reply-To: <20181113225135.GQ2089@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Deng <yong.deng@magewell.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Neil Armstrong <narmstrong@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Thomas Gleixner <tglx@linutronix.de>, Todor Tomov <todor.tomov@linaro.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-a
+To: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Adrien Charruel <adrien.charruel@devialet.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 30, 2018 at 04:09:48PM +0800, Yong Deng wrote:
-> I can't make v4l2-compliance always happy.
-> The V3s CSI support many pixformats. But they are not always available.
-> It's dependent on the input bus format (MEDIA_BUS_FMT_*). 
-> Example:
-> V4L2_PIX_FMT_SBGGR8: MEDIA_BUS_FMT_SBGGR8_1X8
-> V4L2_PIX_FMT_YUYV: MEDIA_BUS_FMT_YUYV8_2X8
-> But I can't get the subdev's format code before starting stream as the
-> subdev may change it. So I can't know which pixformats are available.
-> So I exports all the pixformats supported by SoC.
-> The result is the app (v4l2-compliance) is likely to fail on streamon.
-> 
-> This patchset add initial support for Allwinner V3s CSI.
-> 
-> Allwinner V3s SoC features a CSI module with parallel interface.
-> 
-> This patchset implement a v4l2 framework driver and add a binding 
-> documentation for it. 
+Hi Mark,
 
-Applied with this diff from Maxime:
+On Tue, 13 Nov 2018 at 23:51, Mark Brown <broonie@kernel.org> wrote:
+>
+> On Thu, Nov 08, 2018 at 01:49:33PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+>
+> This looks mostly good, a few small things below but nothing too major:
+>
+> > --- /dev/null
+> > +++ b/sound/soc/codecs/ak4118.c
+> > @@ -0,0 +1,449 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * ak4118.c  --  Asahi Kasei ALSA Soc Audio driver
+> > + *
+>
+> Please make the entire comment a C++ one so this looks more intentional.
 
-<URL:http://code.bulix.org/vf7b6g-504515?raw>
+I check from other files and also this article says :
+"For normal C source files, the string will be a comment using the
+"//" syntax; header files, instead, use traditional (/* */) comments
+for reasons related to tooling"
+https://lwn.net/Articles/739183/
 
-The MAINTAINERS entry was also moved to the first patch.
+>
+> > +static const char * const ak4118_iec958_fs_texts[] =3D {
+> > +     "44100",
+> > +     "Reserved",
+>
+> If you use a _VALUE_ENUM_SINGLE you can hide the reserved/invalid values
+> from userspace which is easier to use.
 
-Thanks!
+Ok will change to SOC_VALUE_ENUM_SINGLE_DECL
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+>
+> > +     ret =3D request_threaded_irq(gpiod_to_irq(ak4118->irq), NULL,
+> > +                                ak4118_irq_handler, IRQF_TRIGGER_RISIN=
+G |
+> > +                                IRQF_ONESHOT, "ak4118-irq", ak4118);
+> > +     if (ret < 0) {
+> > +             dev_err(component->dev, "Fail to request_irq: %d\n", ret)=
+;
+> > +             return ret;
+> > +     }
+>
+> You should request resources in the device level probe, there's no point
+> in requesting and releasing the interrupt like this.
+
+Ok, will change to devm_request_threaded_irq and remove the irq_free
+
+Thanks for the review,
+Regards,
+Cl=C3=A9ment
