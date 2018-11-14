@@ -1,47 +1,81 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH] ARM: dts: pxa3xx: add gcu node
-Date: Wed, 14 Nov 2018 20:58:00 +0100
-Message-ID: <c4ea09bc-93b5-49f6-9059-a74dcdbc59a6@zonque.org>
-References: <20181105191827.3860-1-daniel@zonque.org>
- <87muqgll3u.fsf@belgarion.home>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [V3, 1/4] Documentation: dt-bindings: phy: Document the Synopsys MIPI DPHY Rx bindings
+Date: Wed, 14 Nov 2018 22:08:33 +0200
+Message-ID: <9022447.phA1NjbWu1@avalon>
+References: <1539953556-35762-1-git-send-email-lolivei@synopsys.com> <1539953556-35762-2-git-send-email-lolivei@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <87muqgll3u.fsf@belgarion.home>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, haojian.zhuang@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1539953556-35762-2-git-send-email-lolivei@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Luis Oliveira <luis.oliveira@synopsys.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, joao.pinto@synopsys.com, festevam@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Neil Armstrong <narmstrong@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Keiichi Watanabe <keiichiw@chromium.org>, Kate Stewart <kstewart@linuxfoundation.org>, Todor Tomov <todor.tomov@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Robert,
+Hi Luis,
 
-On 10/11/2018 9:43 PM, Robert Jarzmik wrote:
-> Daniel Mack <daniel@zonque.org> writes:
+Thank you for the patch.
+
+On Friday, 19 October 2018 15:52:23 EET Luis Oliveira wrote:
+> Add device-tree bindings documentation for SNPS DesignWare MIPI D-PHY in
+> RX mode.
 > 
->> Add a device node for hardware graphic acceleration.
->>
->> Signed-off-by: Daniel Mack <daniel@zonque.org>
-> Hi Daniel,
+> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+> ---
+> Changelog
+> v2-V3
+> - removed gpios reference - it was for a separated driver
+> - changed address to show complete address
 > 
->> +	gcu: display-controller@54000000 {
->> +		compatible = "marvell,pxa300-gcu";
-> Isn't every IP devicetree entry supposed to have a documentation in
-> Documentation/devicetree going along a definition in the .dtsi files ?
+>  .../devicetree/bindings/phy/snps,dphy-rx.txt       | 28 +++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
+> b/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt new file mode
+> 100644
+> index 0000000..03d17ab
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
+> @@ -0,0 +1,28 @@
+> +Synopsys DesignWare MIPI Rx D-PHY block details
+> +
+> +Description
+> +-----------
+> +
+> +The Synopsys MIPI D-PHY controller supports MIPI-DPHY in receiver mode.
+> +Please refer to phy-bindings.txt for more information.
+> +
+> +Required properties:
+> +- compatible		: Shall be "snps,dphy-rx".
+> +- #phy-cells		: Must be 1.
+> +- snps,dphy-frequency	: Output frequency of the D-PHY.
 
-Ah, that's already there, see cf925575d292b.
+You replied to my review of v2 that you would remove this property. Is this an 
+oversight ?
 
-I did that when I taught the driver DT probing.
+> +- snps,dphy-te-len	: Size of the communication interface (8 bits->8 or
+> 12bits->12).
+> +- reg			: Physical base address and size of the device memory mapped
+> +		 	  registers;
 
+Please document the ranges.
 
-Thanks,
-Daniel
+> +Example:
+> +
+> +	mipi_dphy_rx1: dphy@d00003040 {
+> +		compatible = "snps,dphy-rx";
+> +		#phy-cells = <1>;
+> +		snps,dphy-frequency = <300000>;
+> +		snps,dphy-te-len = <12>;
+> +		reg = < 0xd0003040 0x20
+> +			0xd0008000 0x100
+> +			0xd0009000 0x100>;
+> +	};
+> +
+
+-- 
+Regards,
+
+Laurent Pinchart
