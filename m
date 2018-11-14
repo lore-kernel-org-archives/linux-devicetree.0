@@ -1,44 +1,57 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.18 27/59] arm64: dts: renesas: r8a7795: add missing dma-names on hscif2
-Date: Wed, 14 Nov 2018 17:22:59 -0500
-Message-ID: <20181114222335.99339-27-sashal@kernel.org>
-References: <20181114222335.99339-1-sashal@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181114222335.99339-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Simon Horman <horms+renesas@verge.net.au>, Sasha Levin <sashal@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH 2/2] drm/msm/dsi: Get PHY ref clock from the DT
+Date: Wed, 14 Nov 2018 14:24:43 -0800
+Message-ID: <20181114222443.GL22824@google.com>
+References: <20181102214534.184593-1-mka@chromium.org>
+ <20181102214534.184593-2-mka@chromium.org>
+ <154154590845.88331.13649449650347478513@swboyd.mtv.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <154154590845.88331.13649449650347478513@swboyd.mtv.corp.google.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rajesh Yadav <ryadav@codeaurora.org>, David Airlie <airlied@linux.ie>, linux-arm-msm@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, freedreno@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-
-[ Upstream commit aab7a2414ba0d5c3d0571a90031b535adba7146a ]
-
-hscif2 has 4 dmas, but has only 2 dma-names.
-This patch add missing dma-names.
-
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Fixes: e0f0bda79337701a ("arm64: dts: renesas: r8a7795: sort subnodes
-of the soc node")
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index 91c392f879f9..43f95c918409 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -656,7 +656,7 @@
- 			clock-names = "fck", "brg_int", "scif_clk";
- 			dmas = <&dmac1 0x35>, <&dmac1 0x34>,
- 			       <&dmac2 0x35>, <&dmac2 0x34>;
--			dma-names = "tx", "rx";
-+			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
- 			resets = <&cpg 518>;
- 			status = "disabled";
--- 
-2.17.1
+T24gVHVlLCBOb3YgMDYsIDIwMTggYXQgMDM6MTE6NDhQTSAtMDgwMCwgU3RlcGhlbiBCb3lkIHdy
+b3RlOgo+IFF1b3RpbmcgTWF0dGhpYXMgS2FlaGxja2UgKDIwMTgtMTEtMDIgMTQ6NDU6MzQpCj4g
+PiBAQCAtNjMwLDcgKzYzMiw4IEBAIHN0YXRpYyBpbnQgcGxsXzEwbm1fcmVnaXN0ZXIoc3RydWN0
+IGRzaV9wbGxfMTBubSAqcGxsXzEwbm0pCj4gPiAgICAgICAgIGNoYXIgY2xrX25hbWVbMzJdLCBw
+YXJlbnRbMzJdLCB2Y29fbmFtZVszMl07Cj4gPiAgICAgICAgIGNoYXIgcGFyZW50MlszMl0sIHBh
+cmVudDNbMzJdLCBwYXJlbnQ0WzMyXTsKPiA+ICAgICAgICAgc3RydWN0IGNsa19pbml0X2RhdGEg
+dmNvX2luaXQgPSB7Cj4gPiAtICAgICAgICAgICAgICAgLnBhcmVudF9uYW1lcyA9IChjb25zdCBj
+aGFyICpbXSl7ICJ4byIgfSwKPiA+ICsgICAgICAgICAgICAgICAucGFyZW50X25hbWVzID0gKGNv
+bnN0IGNoYXIgKltdKXsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIF9fY2xrX2dldF9uYW1l
+KHBsbF8xMG5tLT52Y29fcmVmX2NsaykgfSwKPiAKPiBJIGZpbmQgdGhpcyBzeW50YXggb2RkLCBp
+biBhZGRpdGlvbiB0byBuZWVkaW5nIHRvIGNoZWNrIGZvciBOVUxMIGhlcmUgYXMKPiBTZWFuIHBv
+aW50ZWQgb3V0LiBQcmVmZXJhYmx5IGp1c3QgaGF2ZSBpdCBiZSB0aGUgYWRkcmVzcyBvZiB0aGUK
+PiBjaGFyYWN0ZXIgcG9pbnRlciBpbnN0ZWFkIG9mIG1ha2luZyBhbiBhbm9ueW1vdXMgYXJyYXkg
+YW5kIHRoZW4gY2FzdGluZwo+IHRoYXQgaW5saW5lLCBpLmUKPiAKPiAJCS5wYXJlbnRfbmFtZXMg
+PSAmcmVmX2Nsa19uYW1lLAoKT2sKCkknbSBub3QgY29udmluY2VkIHRoZSBjaGVjayBmb3IgTlVM
+TCBpcyBuZWVkZWQgdGhvdWdoLCBzZWUgbXkgcmVwbHkgdG8gU2Vhbi4KCj4gPiAgICAgICAgICAg
+ICAgICAgLm51bV9wYXJlbnRzID0gMSwKPiA+ICAgICAgICAgICAgICAgICAubmFtZSA9IHZjb19u
+YW1lLAo+ID4gICAgICAgICAgICAgICAgIC5mbGFncyA9IENMS19JR05PUkVfVU5VU0VELAo+ID4g
+QEAgLTc4Niw2ICs3ODksMTIgQEAgc3RydWN0IG1zbV9kc2lfcGxsICptc21fZHNpX3BsbF8xMG5t
+X2luaXQoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwgaW50IGlkKQo+ID4gICAgICAgICBw
+bGxfMTBubS0+aWQgPSBpZDsKPiA+ICAgICAgICAgcGxsXzEwbm1fbGlzdFtpZF0gPSBwbGxfMTBu
+bTsKPiA+ICAKPiA+ICsgICAgICAgcGxsXzEwbm0tPnZjb19yZWZfY2xrID0gZGV2bV9jbGtfZ2V0
+KCZwZGV2LT5kZXYsICJyZWYiKTsKPiA+ICsgICAgICAgaWYgKElTX0VSUihwbGxfMTBubS0+dmNv
+X3JlZl9jbGspKSB7Cj4gPiArICAgICAgICAgICAgICAgZGV2X2VycigmcGRldi0+ZGV2LCAiY291
+bGRuJ3QgZ2V0ICdyZWYnIGNsb2NrXG4iKTsKPiAKPiBUaGlzIG1pZ2h0IGJlIGJlY2F1c2Ugb2Yg
+cHJvYmUgZGVmZXIsIHdoaWNoIG1heSBiZSBhbm5veWluZyB0byBzZWUgdGhpcwo+IGZhaWx1cmUg
+bWFueSB0aW1lcy4KCk9rLCB3aWxsIHNraXAgdGhlIGxvZ2dpbmcgZm9yIC1FUFJPQkVfREVGRVIK
+CkNoZWVycwoKTWF0dGhpYXMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
