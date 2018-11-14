@@ -1,42 +1,32 @@
 From: zoro <long17.cool@163.com>
-Subject: [PATCH 3/3] dt-bindings: rtc: sd3078: add device tree documentation
-Date: Wed, 14 Nov 2018 17:17:57 +0800
-Message-ID: <1542187077-9488-3-git-send-email-long17.cool@163.com>
-References: <1542187077-9488-1-git-send-email-long17.cool@163.com>
+Subject: [PATCH 1/3] dt-bindings: define vendor prefix for whwave, Inc.
+Date: Wed, 14 Nov 2018 17:17:55 +0800
+Message-ID: <1542187077-9488-1-git-send-email-long17.cool@163.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542187077-9488-1-git-send-email-long17.cool@163.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: alexandre.belloni@bootlin.com
 Cc: a.zummo@towertech.it, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zoro <long17.cool@163.com>
 List-Id: devicetree@vger.kernel.org
 
-The devicetree documentation for the SD3078 device tree
-binding is added with a short example.
+Introduce vendor prefix for whwave, Inc.
+for SD3078 rtc device.
 
 Signed-off-by: zoro <long17.cool@163.com>
 ---
- .../devicetree/bindings/rtc/rtc-sd3078.txt         |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-sd3078.txt
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-sd3078.txt b/Documentation/devicetree/bindings/rtc/rtc-sd3078.txt
-new file mode 100644
-index 0000000..676cee8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-sd3078.txt
-@@ -0,0 +1,13 @@
-+SD3078 Real Time Clock
-+============================
-+
-+Required properties:
-+- compatible: Should contain "whwave,sd3078".
-+- reg: I2C address for chip.
-+
-+Example:
-+
-+sd3078: sd3078@32 {
-+       compatible = "whwave,sd3078";
-+       reg = <0x32>;
-+};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 4b1a2a8..7d2e9b01 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -423,6 +423,7 @@ vot	Vision Optical Technology Co., Ltd.
+ wd	Western Digital Corp.
+ wetek	WeTek Electronics, limited.
+ wexler	Wexler
++whwave	Shenzhen whwave Electronics crop
+ wi2wi	Wi2Wi, Inc.
+ winbond Winbond Electronics corp.
+ winstar	Winstar Display Corp.
 -- 
 1.7.9.5
