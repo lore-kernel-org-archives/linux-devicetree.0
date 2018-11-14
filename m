@@ -1,91 +1,59 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [Letux-kernel] [PATCH RFC] bluetooth: add uart h4 devices via
- serdev/devicetree
-Date: Wed, 14 Nov 2018 08:51:17 +0100
-Message-ID: <86A3A2E6-FC89-42FE-8410-9C8273EC9CF7@holtmann.org>
-References: <20181110232034.17277-1-andreas@kemnade.info>
- <20181111024648.7rt7rlhaqihtqecv@earth.universe>
- <20181112215812.18ebca35@aktux>
- <2C74C837-A6D3-47C9-BE59-CCA594289B94@goldelico.com>
- <20181112222726.73m2oca7hankvcjs@earth.universe>
- <CABGGisxsdv+BTd5-HMzF8asEcWtL5F4CMzmkrBCwK=NibvqjLQ@mail.gmail.com>
- <20181113170128.0f59ef0e@kemnade.info>
-Mime-Version: 1.0 (Mac OS X Mail 12.1 \(3445.101.1\))
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181113170128.0f59ef0e@kemnade.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: Rob Herring <robh@kernel.org>, sebastian.reichel@collabora.com, hns@goldelico.com, devicetree@vger.kernel.org, Johan Hedberg <johan.hedberg@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-bluetooth@vger.kernel.org, letux-kernel@openphoenux.org
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [RFC PATCH 0/6] Armada 38x comphy driver to support 2.5Gbps
+ networking
+Date: Wed, 14 Nov 2018 13:39:29 +0530
+Message-ID: <f0e71064-6919-6f7f-d605-671a1c662a33@ti.com>
+References: <20181112122933.GD30658@n2100.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181112122933.GD30658@n2100.armlinux.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
+Hi,
 
->>>>> Am 12.11.2018 um 21:59 schrieb Andreas Kemnade <andreas@kemnade.info>:
->>>>> On Sun, 11 Nov 2018 03:46:48 +0100
->>>>> Sebastian Reichel <sebastian.reichel@collabora.com> wrote:  
->>>>>> On Sun, Nov 11, 2018 at 12:20:34AM +0100, Andreas Kemnade wrote:  
->>>>>>> This is a first try to be able to use h4 devices specified in
->>>>>>> the devicetree, so you do not need to call hciattach and
->>>>>>> it can be automatically probed.
->>>>>>> 
->>>>>>> Of course, proper devicetree bindings documentation is
->>>>>>> missing. And also you would extend that by regulator/
->>>>>>> enable gpio settings.
->>>>>>> 
->>>>>>> But before proceeding further it should be checked if the
->>>>>>> general way of doing things is right.
->>>>>>> 
->>>>>>> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
->>>>>>> ---  
->>>>>> 
->>>>>> Patch looks good to me, just one note
->>>>>> 
->>>>> I found one thing myself:
->>>>> Shouldn't we have a generic compatible string like "generic-h4".
->>>>> ehci-platform.c has for example:
->>>>>       { .compatible = "generic-ehci", },  
->>>> 
->>>> There might be differences in h4 compatible devices (e.g. default
->>>> baud rate) so that I would not bet there a "generic-h4" suffices
->>>> in the long run.  
->> 
->> It will not because that doesn't define clocks, resets, gpios,
->> supplies, etc. and the interactions of all those.
->> 
-> well, we need a simple supply being on when the device is on.
-> Nothing more.
+On 12/11/18 5:59 PM, Russell King - ARM Linux wrote:
+> Hi,
 > 
->>> My suggestion is to use this in DT:
->>> 
->>> compatible = "wi2wi,w2cbw003-bluetooth", "<something generic>";
->>> 
-> That would be my slight preference here.
+> This series adds support for dynamically switching between 1Gbps
+> and 2.5Gbps networking for the Marvell Armada 38x SoCs, tested on
+> Armada 388 on the Clearfog platform.
 > 
->>> The driver can start with supporting just the generic compatible
->>> string. If somebody finds some incompatible differences, the driver
->>> can add a custom handler for the wi2wi chip without breaking DT
->>> ABI.  
->> 
->> Any idea how many H4 devices there are? Somehow I doubt there are that
->> many to be unmanageable.
->> 
-> Well, many devices are h4 devices with some more or less important
-> vendor-specific commands. Well, "hciattach any" uses simple h4 protocol.
+> This is necessary to be able to connect (eg) a Clearfog platform
+> with a Macchiatobin platform via the SFP sockets, as Clearfog
+> currently only supports 1Gbps networking via the SFP socket and
+> Macchiatobin defaults to 2.5Gbps when using Fiberchannel SFPs.
 > 
-> those firmware download commands and they have their own drivers.
-> Most devices I had used bluetooth uart from the command line with, were
-> simple enough. The other question is whether those devices will run a
-> modern kernel.
+> In order to allow dynamic switching, we need to implement a common
+> phy driver to switch the ethernet serdes lane speed - 2.5Gbps is
+> just 1Gbps up-clocked by 2.5x.  We implement a simple comphy
+> driver to achieve this, which only supports networking.
 > 
-> No strong opinion here. 
+> With this, we are able to support both Fiberchannel SFPs operating
+> at 2.5Gbps or 1Gbps, and 1G ethernet SFPs plugged into the Clearfog
+> platform, dynamically selecting according to the SFPs abilities.
+> 
+> I'm aware of the proposed changes to the PHY layer, changing
+> phy_set_mode() to take the ethernet phy interface type, hence why
+> this is RFC - there's also the question about how this will be
+> merged.  This series is currently based on 4.20-rc1, but will
+> likely need to be rebased when the PHY layer changes hit.
 
-doing the firmware load from user space via some magic tool is no longer going to work smoothly. It will be actually almost impossible with serdev. However I did post btuart.c driver which is pretty much just plain H:4. You would still somehow define the default baudraute since just picking 115200 is not always going to work.
+For this case, I'd prefer the phy_set_mode series and the phy and net changes
+here (after rebasing) go via linux-phy tree.
 
-Btw. I see nothing standing in the way of merging btuart.c driver and then go from there. Either I dig this out and submit or someone else does.
-
-Regards
-
-Marcel
+Thanks
+Kishon
