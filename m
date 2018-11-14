@@ -1,608 +1,129 @@
-From: Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>
-Subject: [PATCH v3 2/2] arm64: dts: Add support for NXP LS1028A SoC
-Date: Wed, 14 Nov 2018 05:30:52 +0000
-Message-ID: <1542156591-3224-2-git-send-email-Bhaskar.Upadhaya@nxp.com>
-References: <1542156591-3224-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH v4 25/26] [DO NOT MERGE] arm64: dts: allwinner:
+ bananapi-m64: Bananapi S070WV20-CT16 DSI panel
+Date: Wed, 14 Nov 2018 12:01:33 +0530
+Message-ID: <CAMty3ZBQXcnU=490KREa=F-qctMtRep9-rrhrPd1UZStnV=hqw@mail.gmail.com>
+References: <20181113111633.20189-1-jagan@amarulasolutions.com>
+ <20181113111633.20189-26-jagan@amarulasolutions.com> <20181113122204.337db8b1@donnerap.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1542156591-3224-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: Harninder Rai <harninder.rai@nxp.com>, Sudhanshu Gupta <sudhanshu.gupta@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Leo Li <leoyang.li@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181113122204.337db8b1@donnerap.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.comlinux
 List-Id: devicetree@vger.kernel.org
 
-LS1028A contains two ARM v8 CortexA72 processor cores
-with 32 KB L1-D cache and 48 KB L1-I cache
+On Tue, Nov 13, 2018 at 5:52 PM Andre Przywara <andre.przywara@arm.com> wrote:
+>
+> On Tue, 13 Nov 2018 16:46:32 +0530
+> Jagan Teki <jagan@amarulasolutions.com> wrote:
+>
+> Hi,
+>
+> > This patch add support for Bananapi S070WV20-CT16 DSI panel to
+> > BPI-M64 board.
+> >
+> > DSI panel connected via board DSI port with,
+> > - DC1SW as AVDD supply
+>
+> Are you sure of that? I don't see anything in the schematic to support
+> this. The only power lines that go to the DSI connector are DCDC1 and
+> PS. DC1SW is only connected to PortD on the SoC and to the Ethernet PHY.
+> Is there anything I miss?
 
-Features summary
- Two 32-bit / 64-bit ARM v8 Cortex-A72 CPUs
-  - Arranged as single clusters of two cores sharing a 1 MB L2 cache
-  - Speed Up to 1.3 GHz
-  - Support for cluster power-gating.
- Cache coherent interconnect (CCI-400)
-  - Hardware-managed data coherency
-  - Up to 400 MHz
- 32-bit DDR4 SDRAM memory controller with ECC
- Two PCIe 3.0 controllers
- One serial ATA (SATA 3.0) controller
- Two high-speed USB 3.0 controllers with integrated PHY
+Thanks for the comment, yes dc1sw is connected in ephy. I have reused
+dc1, BSP is attached lcd_power1 to axp81x_dc1sw [1]. I just looking
+for someone to comment, may be we can skip this regulator attachment.
 
- Following levels of DTSI/DTS files have been created for the LS1028A
-  SoC family:
+>
+> > - DCDC1 as DVDD supply
+>
+> That seems right, but doesn't match with what you write below.
 
-         - fsl-ls1028a.dtsi:
-                 DTS-Include file for NXP LS1028A SoC.
+Commit need to fix s/DCDC1/DLDO1
 
-         - fsl-ls1028a-qds.dts:
-                 DTS file for NXP LS1028A QDS board.
+>
+> > - PD6 gpio for reset pin
+> > - PD5 gpio for backlight enable pin
+> > - PD7 gpio for backlight vdd supply
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> >  .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 42
+> > +++++++++++++++++++ 1 file changed, 42 insertions(+)
+> >
+> > diff --git
+> > a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+> > b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts index
+> > ef1c90401bb2..6cb010e3bbd9 100644 ---
+> > a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts +++
+> > b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts @@ -45,6
+> > +45,7 @@ #include "sun50i-a64.dtsi"
+> >  #include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/pwm/pwm.h>
+> >
+> >  / {
+> >       model = "BananaPi-M64";
+> > @@ -56,6 +57,15 @@
+> >               serial1 = &uart1;
+> >       };
+> >
+> > +     backlight: backlight {
+> > +             compatible = "pwm-backlight";
+> > +             pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
+> > +             brightness-levels = <1 2 4 8 16 32 64 128 512>;
+> > +             default-brightness-level = <2>;
+> > +             enable-gpios = <&pio 3 5 GPIO_ACTIVE_HIGH>; /*
+> > LCD-BL-EN: PD5 */
+> > +             power-supply = <&reg_vdd_backlight>;
+> > +     };
+> > +
+> >       chosen {
+> >               stdout-path = "serial0:115200n8";
+> >       };
+> > @@ -91,6 +101,15 @@
+> >               };
+> >       };
+> >
+> > +     reg_vdd_backlight: vdd-backlight {
+> > +             compatible = "regulator-fixed";
+> > +             regulator-name = "vdd-backlight";
+> > +             regulator-min-microvolt = <3300000>;
+> > +             regulator-max-microvolt = <3300000>;
+> > +             gpio = <&pio 3 7 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN:
+> > PD7 */
+> > +             enable-active-high;
+> > +     };
+> > +
+> >       wifi_pwrseq: wifi_pwrseq {
+> >               compatible = "mmc-pwrseq-simple";
+> >               reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
+> > @@ -101,6 +120,23 @@
+> >       status = "okay";
+> >  };
+> >
+> > +&dphy {
+> > +     status = "okay";
+> > +};
+> > +
+> > +&dsi {
+> > +     status = "okay";
+> > +
+> > +     panel@0 {
+> > +             compatible = "bananapi,s070wv20-ct16-icn6211";
+> > +             reg = <0>;
+> > +             avdd-supply = <&reg_dc1sw>;
+>
+> As mentioned above, I don't see this on the DSI connector.
+>
+> > +             dvdd-supply = <&reg_dldo1>;
+>
+> Mmh, this line is connected to the *SoC*, to drive the DSI data lines
+> or the DPHY, presumably. So I wouldn't expect it in the panel node, but
+> rather in the DPHY or DSI node. Although I can't find a power-supply
+> property in those bindings.
 
-         - fsl-ls1028a-rdb.dts:
-                 DTS file for NXP LS1028A RDB board
+Got it, this has to attach via vcc-dsi-supply.
 
-Signed-off-by: Sudhanshu Gupta <sudhanshu.gupta@nxp.com>
-Signed-off-by: Rai Harninder <harninder.rai@nxp.com>
-Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
----
- changes in v3:
-  - provide spaces between child node and property
-  - move memory node from silicon file to board level DTS
-  - use macro IRQ_TYPE_LEVEL_HIGH instead of numbers
-
- arch/arm64/boot/dts/freescale/Makefile            |   2 +
- arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts |  93 ++++++
- arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts |  73 +++++
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    | 339 ++++++++++++++++++++++
- 4 files changed, 507 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 9a88530..7748e6d 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -3,6 +3,8 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-frdm.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-frwy.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-qds.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-rdb.dtb
-+dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-qds.dtb
-+dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-rdb.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-qds.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-rdb.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-qds.dtb
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-new file mode 100644
-index 0000000..14c79f4
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-@@ -0,0 +1,93 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Device Tree file for NXP LS1028A QDS Board.
-+ *
-+ * Copyright 2018 NXP
-+ *
-+ * Harninder Rai <harninder.rai@nxp.com>
-+ *
-+ */
-+
-+/dts-v1/;
-+
-+#include "fsl-ls1028a.dtsi"
-+
-+/ {
-+	model = "LS1028A QDS Board";
-+	compatible = "fsl,ls1028a-qds", "fsl,ls1028a";
-+
-+	aliases {
-+		gpio0 = &gpio1;
-+		gpio1 = &gpio2;
-+		gpio2 = &gpio3;
-+		serial0 = &duart0;
-+		serial1 = &duart1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x1 0x00000000>;
-+	};
-+};
-+
-+&duart0 {
-+	status = "okay";
-+};
-+
-+&duart1 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	i2c-mux@77 {
-+		compatible = "nxp,pca9847";
-+		reg = <0x77>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x2>;
-+
-+			current-monitor@40 {
-+				compatible = "ti,ina220";
-+				reg = <0x40>;
-+				shunt-resistor = <1000>;
-+			};
-+
-+			current-monitor@41 {
-+				compatible = "ti,ina220";
-+				reg = <0x41>;
-+				shunt-resistor = <1000>;
-+			};
-+		};
-+
-+		i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x3>;
-+
-+			rtc@51 {
-+				compatible = "nxp,pcf2129";
-+				reg = <0x51>;
-+			};
-+
-+			eeprom@56 {
-+				compatible = "atmel,24c512";
-+				reg = <0x56>;
-+			};
-+
-+			eeprom@57 {
-+				compatible = "atmel,24c512";
-+				reg = <0x57>;
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-new file mode 100644
-index 0000000..fdeb417
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-@@ -0,0 +1,73 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Device Tree file for NXP LS1028A RDB Board.
-+ *
-+ * Copyright 2018 NXP
-+ *
-+ * Harninder Rai <harninder.rai@nxp.com>
-+ *
-+ */
-+
-+/dts-v1/;
-+#include "fsl-ls1028a.dtsi"
-+
-+/ {
-+	model = "LS1028A RDB Board";
-+	compatible = "fsl,ls1028a-rdb", "fsl,ls1028a";
-+
-+	aliases {
-+		serial0 = &duart0;
-+		serial1 = &duart1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x1 0x0000000>;
-+	};
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	i2c-mux@77 {
-+		compatible = "nxp,pca9847";
-+		reg = <0x77>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x02>;
-+
-+			current-monitor@40 {
-+				compatible = "ti,ina220";
-+				reg = <0x40>;
-+				shunt-resistor = <500>;
-+			};
-+		};
-+
-+		i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x3>;
-+
-+			rtc@51 {
-+				compatible = "nxp,pcf2129";
-+				reg = <0x51>;
-+			};
-+		};
-+	};
-+};
-+
-+&duart0 {
-+	status = "okay";
-+};
-+
-+&duart1 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-new file mode 100644
-index 0000000..a8cf92a
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -0,0 +1,339 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Device Tree Include file for NXP Layerscape-1028A family SoC.
-+ *
-+ * Copyright 2018 NXP
-+ *
-+ * Harninder Rai <harninder.rai@nxp.com>
-+ *
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/thermal/thermal.h>
-+
-+/ {
-+	compatible = "fsl,ls1028a";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x0>;
-+			enable-method = "psci";
-+			clocks = <&clockgen 1 0>;
-+			next-level-cache = <&l2>;
-+			cpu-idle-states = <&CPU_PH20>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x1>;
-+			enable-method = "psci";
-+			clocks = <&clockgen 1 0>;
-+			next-level-cache = <&l2>;
-+			cpu-idle-states = <&CPU_PH20>;
-+		};
-+
-+		l2: l2-cache {
-+			compatible = "cache";
-+		};
-+	};
-+
-+	idle-states {
-+		/*
-+		 * PSCI node is not added default, U-boot will add missing
-+		 * parts if it determines to use PSCI.
-+		 */
-+		entry-method = "arm,psci";
-+
-+		CPU_PH20: cpu-ph20 {
-+			compatible = "arm,idle-state";
-+			idle-state-name = "PH20";
-+			arm,psci-suspend-param = <0x00010000>;
-+			entry-latency-us = <1000>;
-+			exit-latency-us = <1000>;
-+			min-residency-us = <3000>;
-+		};
-+	};
-+
-+	sysclk: clock-sysclk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <100000000>;
-+		clock-output-names = "sysclk";
-+	};
-+
-+	reboot {
-+		compatible ="syscon-reboot";
-+		regmap = <&dcfg>;
-+		offset = <0xb0>;
-+		mask = <0x02>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
-+					  IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
-+					  IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
-+					  IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
-+					  IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	gic: interrupt-controller@6000000 {
-+		compatible= "arm,gic-v3";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		reg= <0x0 0x06000000 0 0x10000>, /* GIC Dist */
-+			<0x0 0x06040000 0 0x40000>; /* GIC Redistributor */
-+		#interrupt-cells= <3>;
-+		interrupt-controller;
-+		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_RAW(0xf) |
-+					 IRQ_TYPE_LEVEL_LOW)>;
-+		its: gic-its@6020000 {
-+			compatible = "arm,gic-v3-its";
-+			msi-controller;
-+			reg = <0x0 0x06020000 0 0x20000>;/* GIC Translater */
-+		};
-+	};
-+
-+	soc: soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		ddr: memory-controller@1080000 {
-+			compatible = "fsl,qoriq-memory-controller";
-+			reg = <0x0 0x1080000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
-+			big-endian;
-+		};
-+
-+		dcfg: syscon@1e00000 {
-+			compatible = "fsl,ls1028a-dcfg", "syscon";
-+			reg = <0x0 0x1e00000 0x0 0x10000>;
-+			big-endian;
-+		};
-+
-+		scfg: syscon@1fc0000 {
-+			compatible = "fsl,ls1028a-scfg", "syscon";
-+			reg = <0x0 0x1fc0000 0x0 0x10000>;
-+			big-endian;
-+		};
-+
-+		clockgen: clock-controller@1300000 {
-+			compatible = "fsl,ls1028a-clockgen";
-+			reg = <0x0 0x1300000 0x0 0xa0000>;
-+			#clock-cells = <2>;
-+			clocks = <&sysclk>;
-+		};
-+
-+		i2c0: i2c@2000000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2000000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 1>;
-+			status = "disabled";
-+		};
-+
-+		i2c1: i2c@2010000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2010000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 1>;
-+			status = "disabled";
-+		};
-+
-+		i2c2: i2c@2020000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2020000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 1>;
-+			status = "disabled";
-+		};
-+
-+		i2c3: i2c@2030000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2030000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 1>;
-+			status = "disabled";
-+		};
-+
-+		i2c4: i2c@2040000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2040000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 1>;
-+			status = "disabled";
-+		};
-+
-+		i2c5: i2c@2050000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2050000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 1>;
-+			status = "disabled";
-+		};
-+
-+		i2c6: i2c@2060000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2060000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 1>;
-+			status = "disabled";
-+		};
-+
-+		i2c7: i2c@2070000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2070000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 1>;
-+			status = "disabled";
-+		};
-+
-+		duart0: serial@21c0500 {
-+			compatible = "fsl,ns16550", "ns16550a";
-+			reg = <0x00 0x21c0500 0x0 0x100>;
-+			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 1>;
-+			status = "disabled";
-+		};
-+
-+		duart1: serial@21c0600 {
-+			compatible = "fsl,ns16550", "ns16550a";
-+			reg = <0x00 0x21c0600 0x0 0x100>;
-+			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 1>;
-+			status = "disabled";
-+		};
-+
-+		gpio1: gpio@2300000 {
-+			compatible = "fsl,qoriq-gpio";
-+			reg = <0x0 0x2300000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		gpio2: gpio@2310000 {
-+			compatible = "fsl,qoriq-gpio";
-+			reg = <0x0 0x2310000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		gpio3: gpio@2320000 {
-+			compatible = "fsl,qoriq-gpio";
-+			reg = <0x0 0x2320000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		wdog0: watchdog@23c0000 {
-+			compatible = "fsl,ls1028a-wdt", "fsl,imx21-wdt";
-+			reg = <0x0 0x23c0000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 1>;
-+			big-endian;
-+			status = "disabled";
-+		};
-+
-+		sata: sata@3200000 {
-+			compatible = "fsl,ls1028a-ahci";
-+			reg = <0x0 0x3200000 0x0 0x10000>,
-+				<0x0 0x20140520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
-+			interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 1>;
-+			status = "disabled";
-+		};
-+
-+		smmu: iommu@5000000 {
-+			compatible = "arm,mmu-500";
-+			reg = <0 0x5000000 0 0x800000>;
-+			#global-interrupts = <8>;
-+			#iommu-cells = <1>;
-+			stream-match-mask = <0x7c00>;
-+			/* global secure fault */
-+			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+			/* combined secure interrupt */
-+				     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+			/* global non-secure fault */
-+				     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-+			/* combined non-secure interrupt */
-+				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
-+			/* performance counter interrupts 0-7 */
-+				     <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 214 IRQ_TYPE_LEVEL_HIGH>,
-+			/* per context interrupt, 64 interrupts */
-+				     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 175 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 180 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 195 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 201 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 202 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 203 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+	};
-+};
--- 
-1.9.1
+[1] https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/bootloader/blobs/bpi-m64-lcd7.dts#L2266
