@@ -1,14 +1,14 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [RFC PATCH 2/6] phy: armada38x: add common phy support
-Date: Wed, 14 Nov 2018 14:12:12 +0530
-Message-ID: <d2ff255b-556e-cafa-4134-08c86b915add@ti.com>
+Subject: Re: [RFC PATCH 5/6] net: marvell: neta: add support for 2500base-X
+Date: Wed, 14 Nov 2018 14:18:14 +0530
+Message-ID: <acc97e5e-efa9-a44c-ea87-09135c6c12b6@ti.com>
 References: <20181112122933.GD30658@n2100.armlinux.org.uk>
- <E1gMBMi-00089Q-7S@rmk-PC.armlinux.org.uk>
+ <E1gMBMx-0008A9-Jb@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <E1gMBMi-00089Q-7S@rmk-PC.armlinux.org.uk>
+In-Reply-To: <E1gMBMx-0008A9-Jb@rmk-PC.armlinux.org.uk>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -25,175 +25,164 @@ List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 12/11/18 6:00 PM, Russell King wrote:
-> Add support for the Armada 38x common phy to allow us to change the
-> speed of the Ethernet serdes lane.  This driver only supports
-> manipulation of the speed, it does not support configuration of the
-> common phy.
-> 
+On 12/11/18 6:01 PM, Russell King wrote:
 > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 > ---
->  drivers/phy/marvell/Kconfig                |  10 ++
->  drivers/phy/marvell/Makefile               |   1 +
->  drivers/phy/marvell/phy-armada38x-comphy.c | 236 +++++++++++++++++++++++++++++
->  3 files changed, 247 insertions(+)
->  create mode 100644 drivers/phy/marvell/phy-armada38x-comphy.c
+>  drivers/net/ethernet/marvell/mvneta.c | 58 ++++++++++++++++++++++++++++++-----
+>  1 file changed, 51 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/phy/marvell/Kconfig b/drivers/phy/marvell/Kconfig
-> index 6fb4b56e4c14..224ea4e6a46d 100644
-> --- a/drivers/phy/marvell/Kconfig
-> +++ b/drivers/phy/marvell/Kconfig
-> @@ -21,6 +21,16 @@ config PHY_BERLIN_USB
->  	help
->  	  Enable this to support the USB PHY on Marvell Berlin SoCs.
->  
-> +config PHY_MVEBU_A38X_COMPHY
-> +	tristate "Marvell Armada 38x comphy driver"
-> +	depends on ARCH_MVEBU || COMPILE_TEST
-> +	depends on OF
-> +	select GENERIC_PHY
-> +	help
-> +	  This driver allows to control the comphy, an hardware block providing
-> +	  shared serdes PHYs on Marvell Armada 38x. Its serdes lanes can be
-> +	  used by various controllers (Ethernet, sata, usb, PCIe...).
-> +
->  config PHY_MVEBU_CP110_COMPHY
->  	tristate "Marvell CP110 comphy driver"
->  	depends on ARCH_MVEBU || COMPILE_TEST
-> diff --git a/drivers/phy/marvell/Makefile b/drivers/phy/marvell/Makefile
-> index 3975b144f8ec..59b6c03ef756 100644
-> --- a/drivers/phy/marvell/Makefile
-> +++ b/drivers/phy/marvell/Makefile
-> @@ -2,6 +2,7 @@
->  obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
->  obj-$(CONFIG_PHY_BERLIN_SATA)		+= phy-berlin-sata.o
->  obj-$(CONFIG_PHY_BERLIN_USB)		+= phy-berlin-usb.o
-> +obj-$(CONFIG_PHY_MVEBU_A38X_COMPHY)	+= phy-armada38x-comphy.o
->  obj-$(CONFIG_PHY_MVEBU_CP110_COMPHY)	+= phy-mvebu-cp110-comphy.o
->  obj-$(CONFIG_PHY_MVEBU_SATA)		+= phy-mvebu-sata.o
->  obj-$(CONFIG_PHY_PXA_28NM_HSIC)		+= phy-pxa-28nm-hsic.o
-> diff --git a/drivers/phy/marvell/phy-armada38x-comphy.c b/drivers/phy/marvell/phy-armada38x-comphy.c
-> new file mode 100644
-> index 000000000000..61d1965e1cf6
-> --- /dev/null
-> +++ b/drivers/phy/marvell/phy-armada38x-comphy.c
-> @@ -0,0 +1,236 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2018 Russell King, Deep Blue Solutions Ltd.
-> + *
-> + * Partly derived from CP110 comphy driver by Antoine Tenart
-> + * <antoine.tenart@bootlin.com>
-> + */
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
+> diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+> index 5bfd349bf41a..7305d4cc0630 100644
+> --- a/drivers/net/ethernet/marvell/mvneta.c
+> +++ b/drivers/net/ethernet/marvell/mvneta.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/of_irq.h>
+>  #include <linux/of_mdio.h>
+>  #include <linux/of_net.h>
 > +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
+>  #include <linux/phy.h>
+>  #include <linux/phylink.h>
+>  #include <linux/platform_device.h>
+> @@ -437,6 +438,7 @@ struct mvneta_port {
+>  	struct device_node *dn;
+>  	unsigned int tx_csum_limit;
+>  	struct phylink *phylink;
+> +	struct phy *comphy;
+>  
+>  	struct mvneta_bm *bm_priv;
+>  	struct mvneta_bm_pool *pool_long;
+> @@ -3150,6 +3152,8 @@ static void mvneta_start_dev(struct mvneta_port *pp)
+>  {
+>  	int cpu;
+>  
+> +	WARN_ON(phy_power_on(pp->comphy));
 > +
-> +#define MAX_A38X_COMPHY	6
-> +#define MAX_A38X_PORTS	3
+>  	mvneta_max_rx_size_set(pp, pp->pkt_size);
+>  	mvneta_txq_max_tx_size_set(pp, pp->pkt_size);
+>  
+> @@ -3212,6 +3216,8 @@ static void mvneta_stop_dev(struct mvneta_port *pp)
+>  
+>  	mvneta_tx_reset(pp);
+>  	mvneta_rx_reset(pp);
 > +
-> +#define COMPHY_CFG1		0x00
-> +#define  COMPHY_CFG1_GEN_TX(x)		((x) << 26)
-> +#define  COMPHY_CFG1_GEN_TX_MSK		COMPHY_CFG1_GEN_TX(15)
-> +#define  COMPHY_CFG1_GEN_RX(x)		((x) << 22)
-> +#define  COMPHY_CFG1_GEN_RX_MSK		COMPHY_CFG1_GEN_RX(15)
-> +#define  GEN_SGMII_1_25GBPS		6
-> +#define  GEN_SGMII_3_125GBPS		8
+> +	WARN_ON(phy_power_off(pp->comphy));
+>  }
+>  
+>  static void mvneta_percpu_enable(void *arg)
+> @@ -3337,6 +3343,7 @@ static int mvneta_set_mac_addr(struct net_device *dev, void *addr)
+>  static void mvneta_validate(struct net_device *ndev, unsigned long *supported,
+>  			    struct phylink_link_state *state)
+>  {
+> +	struct mvneta_port *pp = netdev_priv(ndev);
+>  	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
+>  
+>  	/* We only support QSGMII, SGMII, 802.3z and RGMII modes */
+> @@ -3357,14 +3364,14 @@ static void mvneta_validate(struct net_device *ndev, unsigned long *supported,
+>  	/* Asymmetric pause is unsupported */
+>  	phylink_set(mask, Pause);
+>  
+> -	/* We cannot use 1Gbps when using the 2.5G interface. */
+> -	if (state->interface == PHY_INTERFACE_MODE_2500BASEX) {
+> -		phylink_set(mask, 2500baseT_Full);
+> -		phylink_set(mask, 2500baseX_Full);
+> -	} else {
+> +	/* Half-duplex at speeds higher than 100Mbit is unsupported */
+> +	if (pp->comphy || state->interface != PHY_INTERFACE_MODE_2500BASEX) {
+>  		phylink_set(mask, 1000baseT_Full);
+>  		phylink_set(mask, 1000baseX_Full);
+>  	}
+> +	if (pp->comphy || state->interface == PHY_INTERFACE_MODE_2500BASEX) {
+> +		phylink_set(mask, 2500baseX_Full);
+> +	}
+>  
+>  	if (!phy_interface_mode_is_8023z(state->interface)) {
+>  		/* 10M and 100M are only supported in non-802.3z mode */
+> @@ -3378,6 +3385,11 @@ static void mvneta_validate(struct net_device *ndev, unsigned long *supported,
+>  		   __ETHTOOL_LINK_MODE_MASK_NBITS);
+>  	bitmap_and(state->advertising, state->advertising, mask,
+>  		   __ETHTOOL_LINK_MODE_MASK_NBITS);
 > +
-> +#define COMPHY_STAT1		0x18
-> +#define  COMPHY_STAT1_PLL_RDY_TX	BIT(3)
-> +#define  COMPHY_STAT1_PLL_RDY_RX	BIT(2)
+> +	/* We can only operate at 2500BaseX or 1000BaseX.  If requested
+> +	 * to advertise both, only report advertising at 2500BaseX.
+> +	 */
+> +	phylink_helper_basex_speed(state);
+>  }
+>  
+>  static int mvneta_mac_link_state(struct net_device *ndev,
+> @@ -3389,7 +3401,9 @@ static int mvneta_mac_link_state(struct net_device *ndev,
+>  	gmac_stat = mvreg_read(pp, MVNETA_GMAC_STATUS);
+>  
+>  	if (gmac_stat & MVNETA_GMAC_SPEED_1000)
+> -		state->speed = SPEED_1000;
+> +		state->speed =
+> +			state->interface == PHY_INTERFACE_MODE_2500BASEX ?
+> +			SPEED_2500 : SPEED_1000;
+>  	else if (gmac_stat & MVNETA_GMAC_SPEED_100)
+>  		state->speed = SPEED_100;
+>  	else
+> @@ -3504,12 +3518,32 @@ static void mvneta_mac_config(struct net_device *ndev, unsigned int mode,
+>  			    MVNETA_GMAC_FORCE_LINK_DOWN);
+>  	}
+>  
 > +
-> +#define COMPHY_SELECTOR		0xfc
+>  	/* When at 2.5G, the link partner can send frames with shortened
+>  	 * preambles.
+>  	 */
+>  	if (state->speed == SPEED_2500)
+>  		new_ctrl4 |= MVNETA_GMAC4_SHORT_PREAMBLE_ENABLE;
+>  
+> +	if (pp->comphy) {
+> +		enum phy_mode mode = PHY_MODE_INVALID;
 > +
-> +struct a38x_comphy;
-> +
-> +struct a38x_comphy_lane {
-> +	void __iomem *base;
-> +	struct a38x_comphy *priv;
-> +	unsigned int n;
-> +
-> +	int port;
-> +};
-> +
-> +struct a38x_comphy {
-> +	void __iomem *base;
-> +	struct device *dev;
-> +	struct a38x_comphy_lane lane[MAX_A38X_COMPHY];
-> +};
-> +
-> +static const u8 gbe_mux[MAX_A38X_COMPHY][MAX_A38X_PORTS] = {
-> +	{ 0, 0, 0 },
-> +	{ 4, 5, 0 },
-> +	{ 0, 4, 0 },
-> +	{ 0, 0, 4 },
-> +	{ 0, 3, 0 },
-> +	{ 0, 0, 3 },
-> +};
-> +
-> +static void a38x_comphy_set_reg(struct a38x_comphy_lane *lane,
-> +				unsigned int offset, u32 mask, u32 value)
-> +{
-> +	u32 val;
-> +
-> +	val = readl_relaxed(lane->base + offset) & ~mask;
-> +	writel(val | value, lane->base + offset);
-> +}
-> +
-> +static void a38x_comphy_set_speed(struct a38x_comphy_lane *lane,
-> +				  unsigned int gen_tx, unsigned int gen_rx)
-> +{
-> +	a38x_comphy_set_reg(lane, COMPHY_CFG1,
-> +			    COMPHY_CFG1_GEN_TX_MSK | COMPHY_CFG1_GEN_RX_MSK,
-> +			    COMPHY_CFG1_GEN_TX(gen_tx) |
-> +		            COMPHY_CFG1_GEN_RX(gen_rx));
-> +}
-> +
-> +static int a38x_comphy_poll(struct a38x_comphy_lane *lane,
-> +			    unsigned int offset, u32 mask, u32 value)
-> +{
-> +	unsigned int timeout = 10;
-> +	u32 val;
-> +
-> +	while (1) {
-> +		val = readl_relaxed(lane->base + offset);
-> +		if ((val & mask) == value)
-> +			return 0;
-> +		if (!timeout--)
+> +		switch (state->interface) {
+> +		case PHY_INTERFACE_MODE_SGMII:
+> +		case PHY_INTERFACE_MODE_1000BASEX:
+> +			mode = PHY_MODE_SGMII;
 > +			break;
-> +		udelay(10);
+> +		case PHY_INTERFACE_MODE_2500BASEX:
+> +			mode = PHY_MODE_2500SGMII;
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +
+> +		if (mode != PHY_MODE_INVALID)
+> +			WARN_ON(phy_set_mode(pp->comphy, mode));
 > +	}
 > +
-> +	dev_err(lane->priv->dev, "comphy%u: timed out waiting for status\n",
-> +		lane->n);
-> +
-> +	return -ETIMEDOUT;
-> +}
-> +
-> +/*
-> + * We only support changing the speed for comphys configured for GBE.
-> + * Since that is all we do, we only poll for PLL ready status.
-> + */
-> +static int a38x_comphy_set_mode(struct phy *phy, enum phy_mode mode)
-> +{
-> +	struct a38x_comphy_lane *lane = phy_get_drvdata(phy);
-> +	unsigned int gen;
-> +	u32 val;
-> +
-> +	val = readl_relaxed(lane->priv->base + COMPHY_SELECTOR);
-> +	val = (val >> (4 * lane->n)) & 0xf;
-> +
-> +	if (!gbe_mux[lane->n][lane->port] ||
-> +	    val != gbe_mux[lane->n][lane->port]) {
-> +		dev_warn(lane->priv->dev,
-> +			 "comphy%u: not configured for GBE\n", lane->n);
-> +		return -EINVAL;
+>  	if (new_ctrl0 != gmac_ctrl0)
+>  		mvreg_write(pp, MVNETA_GMAC_CTRL_0, new_ctrl0);
+>  	if (new_ctrl2 != gmac_ctrl2)
+> @@ -4411,7 +4445,7 @@ static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
+>  	if (phy_mode == PHY_INTERFACE_MODE_QSGMII)
+>  		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_QSGMII_SERDES_PROTO);
+>  	else if (phy_mode == PHY_INTERFACE_MODE_SGMII ||
+> -		 phy_mode == PHY_INTERFACE_MODE_1000BASEX)
+> +		 phy_interface_mode_is_8023z(phy_mode))
+>  		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_SGMII_SERDES_PROTO);
+>  	else if (!phy_interface_mode_is_rgmii(phy_mode))
+>  		return -EINVAL;
+> @@ -4428,6 +4462,7 @@ static int mvneta_probe(struct platform_device *pdev)
+>  	struct mvneta_port *pp;
+>  	struct net_device *dev;
+>  	struct phylink *phylink;
+> +	struct phy *comphy;
+>  	const char *dt_mac_addr;
+>  	char hw_mac_addr[ETH_ALEN];
+>  	const char *mac_from;
+> @@ -4453,6 +4488,14 @@ static int mvneta_probe(struct platform_device *pdev)
+>  		goto err_free_irq;
+>  	}
+>  
+> +	comphy = devm_of_phy_get(&pdev->dev, dn, NULL);
+> +	if (comphy == ERR_PTR(-EPROBE_DEFER)) {
+> +		err = -EPROBE_DEFER;
+> +		goto err_free_irq;
+> +	} else if (IS_ERR(comphy)) {
+> +		comphy = NULL;
 > +	}
 
-Any reason for not doing this check in a38x_comphy_xlate? We could fail during
-phy_get if comphy is not configured for GBE then.
+devm_phy_optional_get can be used here instead.
 
 Thanks
 Kishon
