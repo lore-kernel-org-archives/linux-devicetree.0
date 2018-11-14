@@ -1,69 +1,52 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.18 24/59] ARM: dts: fsl: Fix improperly quoted stdout-path values
-Date: Wed, 14 Nov 2018 17:22:56 -0500
-Message-ID: <20181114222335.99339-24-sashal@kernel.org>
-References: <20181114222335.99339-1-sashal@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181114222335.99339-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: msm/dsi: Add ref clock for
+ 10nm PHY
+Date: Wed, 14 Nov 2018 14:42:52 -0800
+Message-ID: <20181114224252.GM22824@google.com>
+References: <20181102214534.184593-1-mka@chromium.org>
+ <154154578082.88331.1035410665298962611@swboyd.mtv.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <154154578082.88331.1035410665298962611-n1Xw8LXHxjTHt/MElyovVYaSKrA+ACpX0E9HWUfgJXw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
-
-[ Upstream commit 1af6ab3bac8458fc2e92ad7bb97b62de4a1fddef ]
-
-A quoted label reference doesn't expand to the node path and is taken as
-a literal string. Dropping the quotes can fix this unless the baudrate
-string is appended in which case we have to use the alias.
-
-At least on VF610, the problem was masked by setting the console in
-bootargs. Use the alias syntax with baudrate parameter so we can drop
-setting the console in bootargs.
-
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Stefan Agner <stefan@agner.ch>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/imx53-ppd.dts       | 2 +-
- arch/arm/boot/dts/vf610m4-colibri.dts | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx53-ppd.dts b/arch/arm/boot/dts/imx53-ppd.dts
-index 3aa6f693fa9f..1228789f0f3a 100644
---- a/arch/arm/boot/dts/imx53-ppd.dts
-+++ b/arch/arm/boot/dts/imx53-ppd.dts
-@@ -55,7 +55,7 @@
- 	};
- 
- 	chosen {
--		stdout-path = "&uart1:115200n8";
-+		stdout-path = "serial0:115200n8";
- 	};
- 
- 	memory@70000000 {
-diff --git a/arch/arm/boot/dts/vf610m4-colibri.dts b/arch/arm/boot/dts/vf610m4-colibri.dts
-index 41ec66a96990..ca6249558760 100644
---- a/arch/arm/boot/dts/vf610m4-colibri.dts
-+++ b/arch/arm/boot/dts/vf610m4-colibri.dts
-@@ -50,8 +50,8 @@
- 	compatible = "fsl,vf610m4";
- 
- 	chosen {
--		bootargs = "console=ttyLP2,115200 clk_ignore_unused init=/linuxrc rw";
--		stdout-path = "&uart2";
-+		bootargs = "clk_ignore_unused init=/linuxrc rw";
-+		stdout-path = "serial2:115200";
- 	};
- 
- 	memory@8c000000 {
--- 
-2.17.1
+T24gVHVlLCBOb3YgMDYsIDIwMTggYXQgMDM6MDk6NDBQTSAtMDgwMCwgU3RlcGhlbiBCb3lkIHdy
+b3RlOgo+IFF1b3RpbmcgTWF0dGhpYXMgS2FlaGxja2UgKDIwMTgtMTEtMDIgMTQ6NDU6MzMpCj4g
+PiBBbGxvdyB0aGUgMTBubSBQSFkgZHJpdmVyIHRvIGdldCB0aGUgcmVmIGNsb2NrIGZyb20gdGhl
+IERULgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aGlhcyBLYWVobGNrZSA8bWthQGNocm9t
+aXVtLm9yZz4KPiA+IC0tLQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L21zbS9kc2kudHh0IHwgNCArKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0
+aW9ucygrKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9tc20vZHNpLnR4dAo+ID4gaW5kZXggZGZjNzQzMjE5YmQ4OC4uZDBkMjA0
+NmNlZmY2OSAxMDA2NDQKPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L21zbS9kc2kudHh0Cj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9tc20vZHNpLnR4dAo+ID4gQEAgLTEwNSw2ICsxMDUsMTAgQEAgUmVx
+dWlyZWQgcHJvcGVydGllczoKPiA+ICAtIHBvd2VyLWRvbWFpbnM6IFNob3VsZCBiZSA8Jm1tY2Mg
+TURTU19HRFNDPi4KPiA+ICAtIGNsb2NrczogUGhhbmRsZXMgdG8gZGV2aWNlIGNsb2Nrcy4gU2Vl
+IFsxXSBmb3IgZGV0YWlscyBvbiBjbG9jayBiaW5kaW5ncy4KPiA+ICAtIGNsb2NrLW5hbWVzOiB0
+aGUgZm9sbG93aW5nIGNsb2NrcyBhcmUgcmVxdWlyZWQ6Cj4gPiArICBGb3IgMTBubSBQSFk6Cj4g
+PiArICAqICJpZmFjZSIKPiA+ICsgICogInJlZiIKPiA+ICsgIEZvciBvdGhlciBQSFlzOgo+ID4g
+ICAgKiAiaWZhY2UiCj4gCj4gQW55IHJlYXNvbiB3ZSBjYW4ndCBnbyBiYWNrIGFuZCBkbyB0aGlz
+IGZvciBvdGhlciBwaHlzIHRvbz8gVGhleSdyZSBhbGwKPiB0aGUgc2FtZSB3aXRoIHJlZ2FyZHMg
+dG8gdGhpcyByZWZlcmVuY2UgY2xrIGlucHV0LgoKVG8gYXZvaWQgYnJlYWtpbmcgZXhpc3Rpbmcg
+dXNlcnMsIGF0IGxlYXN0IHRoZSAyOG5tIFBIWSBpcyB1c2VkIGJ5Cm1zbTg5MTYuIEFsc28gSSBk
+b24ndCBoYXZlIHRoZSBoYXJkd2FyZSB0byB0ZXN0IGNoYW5nZXMgZm9yIG90aGVyClBIWXMuCgpD
+aGVlcnMKCk1hdHRoaWFzCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVk
+cmVubwo=
