@@ -1,307 +1,45 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH RESEND 2/2] arm64: dts: meson: add libretech aml-s805x-ac board
-Date: Wed, 14 Nov 2018 11:38:55 +0100
-Message-ID: <20181114103855.14571-1-jbrunet@baylibre.com>
-References: <20181114101925.10526-3-jbrunet@baylibre.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH] dt-bindings: media: i2c: Fix external clock frequency for OV5645
+Date: Wed, 14 Nov 2018 16:09:35 +0530
+Message-ID: <20181114103935.24559-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181114101925.10526-3-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>
+To: mchehab@kernel.org, robh+dt@kernel.org, todor.tomov@linaro.org, hansverk@cisco.com
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+Commit "4adb0a0432f4 media: ov5645: Supported external clock is 24MHz"
+modified the external clock frequency to be 24MHz instead of the
+23.88MHz in driver. Hence, make the same change in corresponding bindings
+doc and mention the acceptable tolerance.
 
-Add Libretech aml-s805x-ac board (aka 'La Frite') support
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
+ Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Hi Kevin,
-
-Sorry for this resend, I forgot to align to align Neil's recent
-patch regarding lines names [0]
-
-This is fixed here.
-
-Cheers
-Jerome
-
-[0]: https://lkml.kernel.org/r/1541587550-17842-1-git-send-email-narmstrong@baylibre.com
-
- arch/arm64/boot/dts/amlogic/Makefile          |   1 +
- .../amlogic/meson-gxl-s805x-libretech-ac.dts  | 248 ++++++++++++++++++
- 2 files changed, 249 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts
-
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index c31f29d660de..bc41629c5df4 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -11,6 +11,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-meta.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-telos.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-wetek-hub.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-wetek-play2.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s805x-libretech-ac.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-hwacom-amazetv.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-khadas-vim.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-libretech-cc.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts
-new file mode 100644
-index 000000000000..dc025b6c3199
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts
-@@ -0,0 +1,248 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2018 BayLibre, SAS.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ * Author: Jerome Brunet <jbrunet@baylibre.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
-+
-+#include "meson-gxl-s905x.dtsi"
-+
-+/ {
-+	compatible = "libretech,aml-s805x-ac", "amlogic,s805x",
-+		     "amlogic,meson-gxl";
-+	model = "Libre Computer Board AML-S805X-AC";
-+
-+	aliases {
-+		serial0 = &uart_AO;
-+		ethernet0 = &ethmac;
-+		spi0 = &spifc;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	cvbs-connector {
-+		/*
-+		 * The pads are present but no connector is soldered on
-+		 * 2J2, so keep this off by default.
-+		 */
-+		status = "disabled";
-+		compatible = "composite-video-connector";
-+
-+		port {
-+			cvbs_connector_in: endpoint {
-+				remote-endpoint = <&cvbs_vdac_out>;
-+			};
-+		};
-+	};
-+
-+	dc_5v: regulator-dc_5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "DC_5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	hdmi-connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_tx_tmds_out>;
-+			};
-+		};
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x20000000>;
-+	};
-+
-+	vcck: regulator-vcck {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCCK";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&dc_5v>;
-+
-+		/*
-+		 * This is controlled by GPIOAO_9 we reserve this but
-+		 * claiming it as done bellow reset the board anyway
-+		 * Need to investigate this
-+		 *
-+		 * gpio = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
-+		 * enable-active-high;
-+		 */
-+		regulator-always-on;
-+	};
-+
-+	vcc_3v3: regulator-vcc_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&dc_5v>;
-+		regulator-always-on;
-+	};
-+
-+	vddio_boot: regulator-vddio_boot {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_BOOT";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_3v3>;
-+		regulator-always-on;
-+	};
-+};
-+
-+&cec_AO {
-+	status = "okay";
-+	pinctrl-0 = <&ao_cec_pins>;
-+	pinctrl-names = "default";
-+	hdmi-phandle = <&hdmi_tx>;
-+};
-+
-+&cvbs_vdac_port {
-+	cvbs_vdac_out: endpoint {
-+		remote-endpoint = <&cvbs_connector_in>;
-+	};
-+};
-+
-+&ethmac {
-+	status = "okay";
-+};
-+
-+&internal_phy {
-+	pinctrl-0 = <&eth_link_led_pins>, <&eth_act_led_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&ir {
-+	status = "okay";
-+	pinctrl-0 = <&remote_input_ao_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&hdmi_tx {
-+	status = "okay";
-+	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&hdmi_tx_tmds_port {
-+	hdmi_tx_tmds_out: endpoint {
-+		remote-endpoint = <&hdmi_connector_in>;
-+	};
-+};
-+
-+&gpio_ao {
-+	gpio-line-names = "UART TX",
-+			  "UART RX",
-+			  "7J1 Header Pin31",
-+			  "", "", "", "",
-+			  "IR In",
-+			  "HDMI CEC",
-+			  "5V VCCK Regulator",
-+			  /* GPIO_TEST_N */
-+			  "";
-+};
-+
-+&gpio {
-+	gpio-line-names = /* Bank GPIOZ */
-+			  "", "", "", "", "", "", "",
-+			  "", "", "", "", "", "", "",
-+			  "Eth Link LED", "Eth Activity LED",
-+			  /* Bank GPIOH */
-+			  "HDMI HPD", "HDMI SDA", "HDMI SCL",
-+			  "", "7J1 Header Pin13",
-+			  "7J1 Header Pin15",
-+			  "7J1 Header Pin7",
-+			  "7J1 Header Pin12",
-+			  "7J1 Header Pin16",
-+			  "7J1 Header Pin18",
-+			  /* Bank BOOT */
-+			  "eMMC D0", "eMMC D1", "eMMC D2", "eMMC D3",
-+			  "eMMC D4", "eMMC D5", "eMMC D6", "eMMC D7",
-+			  "eMMC Clk", "eMMC Reset", "eMMC CMD",
-+			  "SPI NOR MOSI", "SPI NOR MISO", "SPI NOR Clk",
-+			  "", "SPI NOR Chip Select",
-+			  /* Bank CARD */
-+			  "", "", "", "", "", "", "",
-+			  /* Bank GPIODV */
-+			  "", "", "", "", "", "", "", "", "", "", "", "",
-+			  "", "", "", "", "", "", "", "", "", "", "", "",
-+			  "7J1 Header Pin27", "7J1 Header Pin28", "",
-+			  "7J1 Header Pin29",
-+			  "VCCK Regulator", "VDDEE Regulator",
-+			  /* Bank GPIOX */
-+			  "7J1 Header Pin22", "7J1 Header Pin26",
-+			  "7J1 Header Pin36", "7J1 Header Pin38",
-+			  "7J1 Header Pin40", "7J1 Header Pin37",
-+			  "7J1 Header Pin33", "7J1 Header Pin35",
-+			  "7J1 Header Pin19", "7J1 Header Pin21",
-+			  "7J1 Header Pin24", "7J1 Header Pin23",
-+			  "7J1 Header Pin8", "7J1 Header Pin10",
-+			  "", "", "7J1 Header Pin32", "", "",
-+			  /* Bank GPIOCLK */
-+			  "", "";
-+};
-+
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vddio_boot>;
-+};
-+
-+/* eMMC */
-+&sd_emmc_c {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+	max-frequency = <200000000>;
-+	disable-wp;
-+
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	vmmc-supply = <&vcc_3v3>;
-+	vqmmc-supply = <&vddio_boot>;
-+};
-+
-+&spifc {
-+	status = "okay";
-+	pinctrl-0 = <&nor_pins>;
-+	pinctrl-names = "default";
-+
-+	w25q32: spi-flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <3000000>;
-+	};
-+};
-+
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+};
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+index fd7aec9f8e24..b155583469a4 100644
+--- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
++++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+@@ -8,7 +8,8 @@ Required Properties:
+ - compatible: Value should be "ovti,ov5645".
+ - clocks: Reference to the xclk clock.
+ - clock-names: Should be "xclk".
+-- clock-frequency: Frequency of the xclk clock.
++- clock-frequency: Frequency of the xclk clock. Should be 24MHz with 1%
++                   acceptable tolerance.
+ - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
+   to the hardware pin PWDNB which is physically active low.
+ - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
+@@ -37,7 +38,7 @@ Example:
+ 
+ 			clocks = <&clks 200>;
+ 			clock-names = "xclk";
+-			clock-frequency = <23880000>;
++			clock-frequency = <24000000>;
+ 
+ 			vdddo-supply = <&camera_dovdd_1v8>;
+ 			vdda-supply = <&camera_avdd_2v8>;
 -- 
-2.19.1
+2.17.1
