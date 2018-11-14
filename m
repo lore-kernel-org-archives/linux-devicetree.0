@@ -1,52 +1,30 @@
-From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: msm/dsi: Add ref clock for
- 10nm PHY
-Date: Wed, 14 Nov 2018 14:42:52 -0800
-Message-ID: <20181114224252.GM22824@google.com>
-References: <20181102214534.184593-1-mka@chromium.org>
- <154154578082.88331.1035410665298962611@swboyd.mtv.corp.google.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH] ARM64: dts: meson-gxl-s905x-khadas-vim enable Bluetooth
+Date: Wed, 14 Nov 2018 15:23:48 -0800
+Message-ID: <7hpnv7gs57.fsf@eze.i-did-not-set--mail-host-address--so-tickle-me>
+References: <1539432427-11779-1-git-send-email-christianshewitt@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <154154578082.88331.1035410665298962611-n1Xw8LXHxjTHt/MElyovVYaSKrA+ACpX0E9HWUfgJXw@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1539432427-11779-1-git-send-email-christianshewitt@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: christianshewitt@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBOb3YgMDYsIDIwMTggYXQgMDM6MDk6NDBQTSAtMDgwMCwgU3RlcGhlbiBCb3lkIHdy
-b3RlOgo+IFF1b3RpbmcgTWF0dGhpYXMgS2FlaGxja2UgKDIwMTgtMTEtMDIgMTQ6NDU6MzMpCj4g
-PiBBbGxvdyB0aGUgMTBubSBQSFkgZHJpdmVyIHRvIGdldCB0aGUgcmVmIGNsb2NrIGZyb20gdGhl
-IERULgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aGlhcyBLYWVobGNrZSA8bWthQGNocm9t
-aXVtLm9yZz4KPiA+IC0tLQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L21zbS9kc2kudHh0IHwgNCArKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0
-aW9ucygrKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9tc20vZHNpLnR4dAo+ID4gaW5kZXggZGZjNzQzMjE5YmQ4OC4uZDBkMjA0
-NmNlZmY2OSAxMDA2NDQKPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L21zbS9kc2kudHh0Cj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9tc20vZHNpLnR4dAo+ID4gQEAgLTEwNSw2ICsxMDUsMTAgQEAgUmVx
-dWlyZWQgcHJvcGVydGllczoKPiA+ICAtIHBvd2VyLWRvbWFpbnM6IFNob3VsZCBiZSA8Jm1tY2Mg
-TURTU19HRFNDPi4KPiA+ICAtIGNsb2NrczogUGhhbmRsZXMgdG8gZGV2aWNlIGNsb2Nrcy4gU2Vl
-IFsxXSBmb3IgZGV0YWlscyBvbiBjbG9jayBiaW5kaW5ncy4KPiA+ICAtIGNsb2NrLW5hbWVzOiB0
-aGUgZm9sbG93aW5nIGNsb2NrcyBhcmUgcmVxdWlyZWQ6Cj4gPiArICBGb3IgMTBubSBQSFk6Cj4g
-PiArICAqICJpZmFjZSIKPiA+ICsgICogInJlZiIKPiA+ICsgIEZvciBvdGhlciBQSFlzOgo+ID4g
-ICAgKiAiaWZhY2UiCj4gCj4gQW55IHJlYXNvbiB3ZSBjYW4ndCBnbyBiYWNrIGFuZCBkbyB0aGlz
-IGZvciBvdGhlciBwaHlzIHRvbz8gVGhleSdyZSBhbGwKPiB0aGUgc2FtZSB3aXRoIHJlZ2FyZHMg
-dG8gdGhpcyByZWZlcmVuY2UgY2xrIGlucHV0LgoKVG8gYXZvaWQgYnJlYWtpbmcgZXhpc3Rpbmcg
-dXNlcnMsIGF0IGxlYXN0IHRoZSAyOG5tIFBIWSBpcyB1c2VkIGJ5Cm1zbTg5MTYuIEFsc28gSSBk
-b24ndCBoYXZlIHRoZSBoYXJkd2FyZSB0byB0ZXN0IGNoYW5nZXMgZm9yIG90aGVyClBIWXMuCgpD
-aGVlcnMKCk1hdHRoaWFzCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVk
-cmVubwo=
+Christian Hewitt <christianshewitt@gmail.com> writes:
+
+> This enables Bluetooth support for the following models:
+>
+> - Khadas VIM basic (AP6212) using firmware BCM43438A1.hcd
+> - Khadas VIM pro (AP6255) using firmware BCM4345C0.hcd
+>
+> The AP6212 module used on the VIM basic has an ID clash with another
+> device. To get Bluetooth working you either need to apply a kernel
+> patch to drivers/bluetooth/btbcm.c so 0x2209 loads BCM43438A1 or the
+> BCM43438A1.hcd firmware must be renamed to BCM43430A1.hcd.
+>
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+
+Queued for v4.21 (applied to v4.21/dt64 branch),
+
+Kevin
