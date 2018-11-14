@@ -1,56 +1,146 @@
-From: John Crispin <john@phrozen.org>
-Subject: Re: [resend PATCH 1/3] pwm: mediatek: drop flag 'has_clks'
-Date: Wed, 14 Nov 2018 14:27:25 +0100
-Message-ID: <2fc9dbac-4919-4ceb-49ac-67ddd7f203b5@phrozen.org>
-References: <4c9044427b1aab373acd6ac76f0c905e2be79784.1542074855.git.ryder.lee@mediatek.com>
- <20181114124752.GI2620@ulmo>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v2 02/11] media: ov7670: control clock along with power
+Date: Wed, 14 Nov 2018 15:35:27 +0100
+Message-ID: <13adbb92-1815-a7ac-f8df-6b1b05ca9527@xs4all.nl>
+References: <20181112003520.577592-1-lkundrak@v3.sk>
+ <20181112003520.577592-3-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181114124752.GI2620@ulmo>
+In-Reply-To: <20181112003520.577592-3-lkundrak@v3.sk>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org, Weijie Gao <weijie.gao@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Lubomir Rintel <lkundrak@v3.sk>, Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
+On 11/12/18 01:35, Lubomir Rintel wrote:
+> This provides more power saving when the sensor is off.
+> 
+> While at that, do the delay on power/clock enable even if the sensor driver
+> itself doesn't control the GPIOs. This is required for the OLPC XO-1
+> platform, that lacks the proper power/reset properties in its DT, but
+> needs the delay after the sensor is clocked up.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  drivers/media/i2c/ov7670.c | 37 +++++++++++++++++++++----------------
+>  1 file changed, 21 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
+> index d87f2362bf40..a3e72c62382c 100644
+> --- a/drivers/media/i2c/ov7670.c
+> +++ b/drivers/media/i2c/ov7670.c
+> @@ -241,6 +241,7 @@ struct ov7670_info {
+>  	struct v4l2_mbus_framefmt format;
+>  	struct ov7670_format_struct *fmt;  /* Current format */
+>  	struct clk *clk;
+> +	int on;
+>  	struct gpio_desc *resetb_gpio;
+>  	struct gpio_desc *pwdn_gpio;
+>  	unsigned int mbus_config;	/* Media bus configuration flags */
+> @@ -1610,15 +1611,26 @@ static int ov7670_s_power(struct v4l2_subdev *sd, int on)
+>  {
+>  	struct ov7670_info *info = to_state(sd);
+>  
+> +	if (info->on == on)
+> +		return 0;
+> +
+> +	if (on)
+> +		clk_prepare_enable(info->clk);
+> +	else
+> +		clk_disable_unprepare(info->clk);
+> +
+>  	if (info->pwdn_gpio)
+>  		gpiod_set_value(info->pwdn_gpio, !on);
+>  	if (on && info->resetb_gpio) {
+>  		gpiod_set_value(info->resetb_gpio, 1);
+>  		usleep_range(500, 1000);
+>  		gpiod_set_value(info->resetb_gpio, 0);
+> -		usleep_range(3000, 5000);
+>  	}
+>  
+> +	if (on && (info->pwdn_gpio || info->resetb_gpio || info->clk))
+> +		usleep_range(3000, 5000);
+> +
+> +	info->on = on;
 
-On 14/11/2018 13:47, Thierry Reding wrote:
-> On Tue, Nov 13, 2018 at 10:08:22AM +0800, Ryder Lee wrote:
->> The flag 'has_clks' and related checks are superfluous as the CCF
->> subsystem does this for you.
-> Both of these mechanisms aren't equivalent. While CCF can deal with
-> optional clocks, what the has_clks flag actually means is that the
-> device doesn't need a clock (or doesn't have a clock input) on the
-> devices where it is cleared.
->
-> So I'd actually be in favor of keeping the has_clks property because it
-> serves as an additional sanity check. For example if you run this driver
-> on an SoC that "has clocks" but if you don't list them in DT, then after
-> this patch the driver will happily continue without clocks, even though
-> it may break completely without those clocks. I've seen SoCs respond to
-> disabled clocks for a hardware block in different ways, in many cases an
-> access to any of the registers will completely hang the CPU. In other
-> cases it may just crash in some other way or give you some sort of
-> machine exception. None of those are good, and make the tiny bit of
-> additional code required to support the has_clks flag very attractive.
->
-> But that's just my opinion. If you prefer to throw away that safety
-> barrier, be my guest. But if you do, please move this functionality into
-> the clock framework first and then make the driver use it.
->
-> Thierry
+I assume that when powered off all control settings (brightness etc) are
+lost. That means that when it is powered on you should call
+v4l2_ctrl_handler_setup() to re-init the control-related registers.
 
-Hi,
+The same might be the case with ov7670_set_fmt and the framerate functions.
 
-sorry for my late response. I added the flag for the legacy MIPS 
-silicon. These SoCs only have a single clock register with a few on/off 
-bits. there is no complex clocktree or scaling. Hence COMMON_CLK is not 
-supported by those SoCs. I fully agree with Thierry, that the flag makes 
-this explicit and the intent was indeed to make sure that on silicon 
-where clocks are required, that they really are listed in OF. This is 
-indeed an extra sanity check and hiding it in an implicit check inside 
-CCF does not feel right.
+Basically the state has to be preserved across power on -> off -> on
+transitions.
 
-     John
+Regards,
+
+	Hans
+
+>  	return 0;
+>  }
+>  
+> @@ -1817,24 +1829,20 @@ static int ov7670_probe(struct i2c_client *client,
+>  		else
+>  			return ret;
+>  	}
+> -	if (info->clk) {
+> -		ret = clk_prepare_enable(info->clk);
+> -		if (ret)
+> -			return ret;
+> +	ret = ov7670_init_gpio(client, info);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ov7670_s_power(sd, 1);
+>  
+> +	if (info->clk) {
+>  		info->clock_speed = clk_get_rate(info->clk) / 1000000;
+>  		if (info->clock_speed < 10 || info->clock_speed > 48) {
+>  			ret = -EINVAL;
+> -			goto clk_disable;
+> +			goto power_off;
+>  		}
+>  	}
+>  
+> -	ret = ov7670_init_gpio(client, info);
+> -	if (ret)
+> -		goto clk_disable;
+> -
+> -	ov7670_s_power(sd, 1);
+> -
+>  	/* Make sure it's an ov7670 */
+>  	ret = ov7670_detect(sd);
+>  	if (ret) {
+> @@ -1913,6 +1921,7 @@ static int ov7670_probe(struct i2c_client *client,
+>  	if (ret < 0)
+>  		goto entity_cleanup;
+>  
+> +	ov7670_s_power(sd, 0);
+>  	return 0;
+>  
+>  entity_cleanup:
+> @@ -1921,12 +1930,9 @@ static int ov7670_probe(struct i2c_client *client,
+>  	v4l2_ctrl_handler_free(&info->hdl);
+>  power_off:
+>  	ov7670_s_power(sd, 0);
+> -clk_disable:
+> -	clk_disable_unprepare(info->clk);
+>  	return ret;
+>  }
+>  
+> -
+>  static int ov7670_remove(struct i2c_client *client)
+>  {
+>  	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> @@ -1934,7 +1940,6 @@ static int ov7670_remove(struct i2c_client *client)
+>  
+>  	v4l2_async_unregister_subdev(sd);
+>  	v4l2_ctrl_handler_free(&info->hdl);
+> -	clk_disable_unprepare(info->clk);
+>  	media_entity_cleanup(&info->sd.entity);
+>  	ov7670_s_power(sd, 0);
+>  	return 0;
+> 
