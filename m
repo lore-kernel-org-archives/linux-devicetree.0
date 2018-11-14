@@ -1,198 +1,76 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: =?utf-8?B?W1JDRsKgUEFUQ0gsdjIsMi8y?= =?utf-8?Q?=5D?= pwm: imx:
- Configure output to GPIO in disabled state
-Date: Wed, 14 Nov 2018 12:34:49 +0100
-Message-ID: <20181114113449.GB2620@ulmo>
-References: <fa96ae2a-c2cc-b47a-1198-5daffa7c865f@ysoft.com>
- <20181012160854.hmgpokxgsrqdzobx@pengutronix.de>
- <e4289ee5-3fc1-2848-1cae-77d29b5ed93c@ysoft.com>
- <20181107093355.e4n3irrnkybqsjvc@pengutronix.de>
- <eb4e7a42-bd5c-3ae2-ccb7-d1a73d5ae99c@ysoft.com>
- <20181107150125.7cpd4v5t7yi2254c@pengutronix.de>
- <4fbb7307-df01-d7bd-f2e2-e05e6d17807d@ysoft.com>
- <20181108191855.zuon3ecv4yjfbs7g@pengutronix.de>
- <283cfef3-16d0-8bd4-e306-6e34d44c3a86@ysoft.com>
- <20181109165555.vqbiwh4hlcnozdna@pengutronix.de>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH] dt-bindings: media: i2c: Fix external clock frequency
+ for OV5645
+Date: Wed, 14 Nov 2018 17:36:52 +0530
+Message-ID: <20181114120652.GA26112@Mani-XPS-13-9360>
+References: <20181114103935.24559-1-manivannan.sadhasivam@linaro.org>
+ <20181114105712.j5jkspfasujiyqzs@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="0ntfKIWw70PvrIHh"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181109165555.vqbiwh4hlcnozdna@pengutronix.de>
+In-Reply-To: <20181114105712.j5jkspfasujiyqzs@valkosipuli.retiisi.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Lothar =?utf-8?Q?Wa=C3=9Fmann?= <LW@karo-electronics.de>
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, todor.tomov@linaro.org, hansverk@cisco.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Nov 14, 2018 at 12:57:12PM +0200, Sakari Ailus wrote:
+> Hi Manivannan,
+> 
+> On Wed, Nov 14, 2018 at 04:09:35PM +0530, Manivannan Sadhasivam wrote:
+> > Commit "4adb0a0432f4 media: ov5645: Supported external clock is 24MHz"
+> > modified the external clock frequency to be 24MHz instead of the
+> > 23.88MHz in driver. Hence, make the same change in corresponding bindings
+> > doc and mention the acceptable tolerance.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > index fd7aec9f8e24..b155583469a4 100644
+> > --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > @@ -8,7 +8,8 @@ Required Properties:
+> >  - compatible: Value should be "ovti,ov5645".
+> >  - clocks: Reference to the xclk clock.
+> >  - clock-names: Should be "xclk".
+> > -- clock-frequency: Frequency of the xclk clock.
+> > +- clock-frequency: Frequency of the xclk clock. Should be 24MHz with 1%
+> > +                   acceptable tolerance.
+> 
+> DT bindings are for documenting the hardware, not the driver implementation.
+> The sensor supports a range AFAIU, not a specific frequency.
+>
 
---0ntfKIWw70PvrIHh
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Agree! That's my bad.
 
-On Fri, Nov 09, 2018 at 05:55:55PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> On Fri, Nov 09, 2018 at 02:24:42PM +0000, Vok=C3=A1=C4=8D Michal wrote:
-> > On 8.11.2018 20:18, Uwe Kleine-K=C3=B6nig wrote:
-> > > On Thu, Nov 08, 2018 at 03:21:44PM +0000, Vok=C3=A1=C4=8D Michal wrot=
-e:
-> > >> Hi Uwe,
-> > >>
-> > >> On 7.11.2018 16:01, Uwe Kleine-K=C3=B6nig wrote:
-> > >>>> Interesting idea. I just wonder why nobody else did not come up wi=
-th such
-> > >>>> a simple solution before.
-> > >>>
-> > >>> I think I mentioned it already in this thread, but it went unnotice=
-d :-)
-> > >>
-> > >> I meant it like "How happened this was not invented years ago, when =
-people
-> > >> first noticed the issue with using inverted PWM for backlight on i.M=
-X6."
-> > >> In our project, this issue dates back to 2015 :(
-> > >>
-> > >>> Then the patch isn't correct yet. The idea is always keep the hardw=
-are
-> > >>> running and only disable it if it's uninverted.
-> > >>
-> > >> OK, I got the point.
-> > >>
-> > >>> In imx_pwm_probe it's not yet known what the polarity is supposed t=
-o be,
-> > >>> right?
-> > >>
-> > >> Not really. It can already be known but currently there is no way ho=
-w to
-> > >> pass the information to the probe function. I, as a creator of the d=
-evice
-> > >> (and author of a DTS file) know that the circuit needs inverted PWM =
-signal.
-> > >> And I know that the circuit needs to be disabled until I say it can =
-be
-> > >> enabled. How I say that can warry. It may be default brightness leve=
-l > 0
-> > >> in DTS file or from a userspace program using PWM sysfs interface.
-> > >>
-> > >>>   So the right thing to do there is to not touch the configuration
-> > >>> of the pwm. I think all states that are problematic then are also
-> > >>> problematic with the gpio/pinmux approach.
-> > >>
-> > >> I think my use-case I already presented before is an example where
-> > >> involving pinctrl solves the problem while the "leave PWM enabled
-> > >> for inverted users" does not. That is all the time between
-> > >> imx_pwm_probe() and imx_pwm_apply_v2().
-> > >=20
-> > > You're doing in probe:
-> > >=20
-> > >    if (pwm_is_running()):
-> > >      mux(pin, function=3Dpwm)
-> > >    else:
-> > >      gpio_set_value(gpio, 0)
-> > >      mux(pin, function=3Dgpio)
-> > >=20
-> > > This gives you the right level assuming the gpio specification uses t=
-he
-> > > right flag (GPIO_ACTIVE_HIGH or GPIO_ACTIVE_LOW).
-> >=20
-> > Agree.
-> >=20
-> > > Taking your example with the backlight device you specify an "init" a=
-nd
-> > > a "default" pinctrl and only "default" contains the muxing for the PWM
-> > > pin everything should be as smooth as necessary: The pwm is only muxed
-> > > when the backlight device is successfully bound.
-> >=20
-> > Have you tried that Uwe? The bad news is I tested that before and now
-> > again and it does not work like that. We already discussed that earlier.
->=20
-> The key is that the pinmux setting for the PWM pin should be part of the
-> bl pinctrl, not the pwm pinctrl. Then "default" is only setup when the
-> bl device is successfully bound which is after the bl's .probe callback
-> called pwm_apply().
+> The bit below seems good.
+> 
 
-No, that's not at all correct. Pinmux settings should reside with the
-consumer of the pin. In this case, the PWM is the consumer of the pin,
-whereas the backlight is the consumer of the *PWM*.
+Okay. Will remove the above change and send v2.
 
-The problem with making the PWM mode the "default" pinctrl state is that
-the default state will be applied before the driver is even probed. That
-makes it unsuitable for this case. I think what we really want here is
-explicitly "active" and "inactive" states for pinctrl where the PWM
-driver controls when exactly each state is applied.
+Thanks,
+Mani
 
-This solves the problem quite nicely because by default the pinctrl
-state isn't touched. For the case where the bootloader didn't initialize
-the PWM pin at all, the driver core won't do anything and keep it at the
-100k pull-up default. Only when the PWM is actually taken into active
-use will the "active" state (i.e. PWM mode) be applied, so that the PWM
-can drive it with the right configuration to give the desired result. If
-the bootloader did initialize the PWM it would also work because then at
-PWM driver probe time we don't do anything either, keeping the pin in
-the PWM mode as configured by the bootloader and not touching the PWM
-configuration either. If hardware readout is implemented, we can load
-the exact state that we're in and seamlessly take over in the kernel
-driver. Enabling the PWM in this case would apply the current setting,
-which should be a no-op, or at least idempotent.
-
-> > > No I meant the pwm. Well, it's as easy as that: Whenever with your
-> > > approach you configure the pin as GPIO with the output set to low,
-> > > instead configure the pwm with duty_cycle to zero (or disable it).
-> > > Whenever with your approach you configure the pin as GPIO with the
-> > > output set to high, configure the pwm with duty_cycle to 100%. (Keepi=
-ng
-> > > out inverted PWMs for the ease of discussion, but the procedure can be
-> > > adapted accordingly.) The only difference then is that with your
-> > > approach you already "know" in pwm-imx's .probe the idle level and can
-> > > configure the GPIO accordingly. With my approach you just have to wait
-> > > until the first pwm_apply which (as described above) works just as we=
-ll.
-> >=20
-> > While here I am quite confident you are talking about kernel code, righ=
-t?
-> > If yes, then your approach is clear to me.
-> >=20
-> > The problem is I am quite sure your approach does not solve the cases
-> > the pinctrl solution does. And according to my tests so far it does not
-> > work at all because the "init" and "default" states does not work as you
-> > are saying.
->=20
-> That's as pointed out above, because you're looking at the pwm's pinctrl
-> and I at the pwm-consumer's pinctrl.
->=20
-> Note that a sysfs consumer cannot be operated smoothly here, because
-> there is no pinctrl node to add the PWM mode to that only gets active
-> after the first configuration. This however is something that should not
-> be addressed in the imx driver but in the pwm core (if at all).
-
-With the pinctrl-based solution outlined above you can even operate a
-sysfs consumer properly. The pinctrl states are where they belong, with
-the PWM device and therefore they can be properly set when the PWM is
-used, rather than waiting for a PWM consumer to muck with the pinmux.
-
-Note how all the pieces are suddenly falling into place. In my
-experience that's usually a good indication that you're on the right
-track.
-
-Thierry
-
---0ntfKIWw70PvrIHh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlvsCFYACgkQ3SOs138+
-s6EEmg/+IVegheNPysHXpL7YpVsJ7M5r3GzQH1CtJymARhVbzxcOIBwAH6RN3e2n
-CCrksv//ottANi195fRhXimdMyyZcIpasounYxLR/a/KYRtUsKoaZlJ3QOu1WcAW
-vv7BvQ+sDXh87ZkQp39hUhPND410k9MAmkh4U+H46a8fU3I7yw1pS4U/vENxMHyM
-u/d+dlH9qz1iB0sG9xyeZCDB1QHLBItoynbqnaU3M8okPC/b6lUWxfCiBj2vy6Sz
-W1IAa+VaxXuvHQJSj27NAODrC5l7jQm4JjPJV0qn5wh+ljmJYS2kAJ4W/wAitD+E
-ETvI8jq6P2t2EeSxSpOVFBf+LEYC/bgMac7pQiCGUC8So5Tz3w4inOYx/rncvoDd
-Qz9HE3tzhZoVm6bN7y5+IbGFFzTKQFZaLBcf5keFHFa5U5upjsTaAY2YlP7GgONd
-baQl1kP+EQCQ+5ACMxVBclvnOTyQapgeMaY95l3EzwXDFAYZUC5q83ow59RtP2wt
-NF7x2BU/VJDdfuC+PxVuP4SRjTbXCeSX3VCzGiwIV1CRJEN90F7AQU6KO/q6rbm/
-o9To/xisWO/ruJB6MHDpkOeJG/vi9T9vRJUUjhCwlbs0EZPo1fDBaJ/f268hyKog
-u9ZKFLgZVJMBCpiJSRszyNhqX4vr05Q9HksdANSnmvg+pl/0+aA=
-=CHJ6
------END PGP SIGNATURE-----
-
---0ntfKIWw70PvrIHh--
+> >  - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
+> >    to the hardware pin PWDNB which is physically active low.
+> >  - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
+> > @@ -37,7 +38,7 @@ Example:
+> >  
+> >  			clocks = <&clks 200>;
+> >  			clock-names = "xclk";
+> > -			clock-frequency = <23880000>;
+> > +			clock-frequency = <24000000>;
+> >  
+> >  			vdddo-supply = <&camera_dovdd_1v8>;
+> >  			vdda-supply = <&camera_avdd_2v8>;
+> > -- 
+> > 2.17.1
+> > 
+> 
+> -- 
+> Sakari Ailus
+> e-mail: sakari.ailus@iki.fi
