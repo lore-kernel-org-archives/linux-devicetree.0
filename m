@@ -1,123 +1,240 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: Sound and the TDA998x binding
-Date: Tue, 13 Nov 2018 23:27:28 +0000
-Message-ID: <20181113232728.GO30658@n2100.armlinux.org.uk>
-References: <40fdabaa-2b81-df4b-a949-725855586a85@axentia.se>
- <20181113172440.GK30658@n2100.armlinux.org.uk>
- <29aba968-c855-d2f4-8ba3-97f2cfdb0f2d@axentia.se>
- <20181113190958.GN30658@n2100.armlinux.org.uk>
- <3fd82f27-1422-61e7-3d83-0ac404718005@axentia.se>
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: Re: [PATCH v4 3/4] media: i2c: Add MAX9286 driver
+Date: Tue, 13 Nov 2018 16:46:31 -0800
+Message-ID: <07ee8a2c-81a8-ca32-96cf-67d6a883e3f5@ideasonboard.com>
+References: <20181102154723.23662-1-kieran.bingham@ideasonboard.com>
+ <20181102154723.23662-4-kieran.bingham@ideasonboard.com>
+ <5238fa80-7678-97a8-47ee-6a26970d862d@lucaceresoli.net>
+Reply-To: kieran.bingham@ideasonboard.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <3fd82f27-1422-61e7-3d83-0ac404718005@axentia.se>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Rosin <peda@axentia.se>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5238fa80-7678-97a8-47ee-6a26970d862d@lucaceresoli.net>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Luca Ceresoli <luca@lucaceresoli.net>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@iki.fi
+Cc: =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, linux-kernel@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBOb3YgMTMsIDIwMTggYXQgMDg6NTg6MTVQTSArMDAwMCwgUGV0ZXIgUm9zaW4gd3Jv
-dGU6Cj4gT24gMjAxOC0xMS0xMyAyMDowOSwgUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4IHdyb3Rl
-Ogo+ID4gT24gVHVlLCBOb3YgMTMsIDIwMTggYXQgMDY6MTI6MzdQTSArMDAwMCwgUGV0ZXIgUm9z
-aW4gd3JvdGU6Cj4gPj4gT24gMjAxOC0xMS0xMyAxODoyNCwgUnVzc2VsbCBLaW5nIC0gQVJNIExp
-bnV4IHdyb3RlOgo+ID4+PiBPbiBUdWUsIE5vdiAxMywgMjAxOCBhdCAwMToyODo0MFBNICswMDAw
-LCBQZXRlciBSb3NpbiB3cm90ZToKPiA+Pj4+IEhpIQo+ID4+Pj4KPiA+Pj4+IEknbSB3b25kZXJp
-bmcgYWJvdXQgc29tZSBwcm9ncmFtbWluZyBkZXRhaWxzIHJlZ2FyZGluZyB0aGUgVERBOTk4eAo+
-ID4+Pj4gZHJpdmVyLi4uCj4gPj4+Pgo+ID4+Pj4gVGhlIGJpbmRpbmdzIGRvY3VtZW50YXRpb24g
-WzFdIHN0YXRlIHRoYXQgb25lIHNob3VsZCBmaWxsIGluIHRoZQo+ID4+Pj4gZGVzaXJlZCByZWdp
-c3RlciBjb250ZW50IG9mIHRoZSBBUF9FTkEgcmVnaXN0ZXIuIEhvd2V2ZXIsIEkgY2Fubm90Cj4g
-Pj4+PiBmaW5kIGFueSBkZXRhaWxzIGFueXdoZXJlIGFib3V0IGhvdyBvbmUgZGV0ZXJtaW5lcyB3
-aGF0IGlzIGRlc2lyZWQuCj4gPj4+PiBXaGVuIEkgbG9vayBmb3IgZGF0YSBzaGVldHMgb24gdGhl
-IEludGVybmV0LCBhbGwgSSBmaW5kIGlzIGEgInNob3J0Igo+ID4+Pj4gZGF0YSBzaGVldCwgd2hp
-Y2ggaXMgZmFyIGZyb20gZW5saWdodGVuaW5nLiBUaGVyZSBhcmUgaGludHMgYWJvdXQKPiA+Pj4+
-IGEgImZ1bGwiIGRhdGEgc2hlZXQgaW4gdGhlIGNoYXB0ZXIgb24gbGVnYWwgaW5mb3JtYXRpb24g
-b2YgdGhlCj4gPj4+PiAic2hvcnQiIGRhdGEgc2hlZXQuIElzIHRoZSAiZnVsbCIgZGF0YSBzaGVl
-dCBwcm90ZWN0ZWQgYnkgYW4gTkRBCj4gPj4+PiBvciBzb21ldGhpbmc/IFRoYXQncyB0aGUgb25s
-eSByZWFzb24gSSBjYW4gZmluZCBmb3IgaXQgbm90IGJlaW5nCj4gPj4+PiBhdmFpbGFibGUuLi4K
-PiA+Pj4+Cj4gPj4+PiBNYXliZSBzb21lb25lIHdpdGggc3VjaCBhICJmdWxsIiBkYXRhIHNoZWV0
-IGF0IGhhbmQgY2FuIGVubGlnaHRlbgo+ID4+Pj4gbWUgb24gdGhlIHdvcmtpbmdzIG9mIHRoaXMg
-QVBfRU5BIHJlZ2lzdGVyIHNvIHRoYXQgSSBrbm93IHdoYXQgaXQgaXMKPiA+Pj4+IHRoYXQgSSBu
-ZWVkIHRvIGZpbGwgaW4/IFNpbmNlIGl0IGlzIHNvIGRpZmZpY3VsdCB0byBmaW5kIHRoaXMgaW5m
-bywKPiA+Pj4+IG1heWJlIGl0IHNob3VsZCBiZSBhZGRlZCB0byB0aGUgYmluZGluZz8KPiA+Pj4K
-PiA+Pj4gVGhlcmUncyB2YXJpb3VzIHB1YmxpYyBkb2N1bWVudHMgZm9yIHRoZSBUREE5OTh4IGNo
-aXBzLCBzb21lIG9mIHdoaWNoCj4gPj4+IGRvIGNvbnRhaW4gdGhlIHJlZ2lzdGVyIHByb2dyYW1t
-aW5nIGluZm9ybWF0aW9uIC0gYWx0aG91Z2ggd2UgZG9uJ3QKPiA+Pj4gaGF2ZSBkZWZpbml0aXZl
-IGluZm9ybWF0aW9uIGZvciBldmVyeSB2YXJpYW50IHRoYXQgdGhlIGRyaXZlciBzdXBwb3J0cy4K
-PiA+Pgo+ID4+IEkgaGF2ZSBsb29rZWQsIGFuZCBub3QgZm91bmQgYW55dGhpbmcuIERvIHlvdSBo
-YXZlIGFueSBwb2ludGVyPyBGb3Igd2hhdAo+ID4+IGNoaXAocykgaW4gdGhlIGZhbWlseSBhcmUg
-dGhlcmUgcmVnaXN0ZXIgaW5mb3JtYXRpb24/Cj4gPiAKPiA+IFREQTk5ODNCIGlzIHRoZSBtYWlu
-IG9uZSwgYnV0IGFzIEkgc2F5LCBpdCBkb2Vzbid0IGRvY3VtZW50IHNldmVyYWwKPiA+IHJlZ2lz
-dGVycyBmb3VuZCBpbiB0aGUgVERBMTk5ODggLSB3ZSBoYXZlIG5vIGRlZmluaXRpdmUgcmVnaXN0
-ZXIKPiA+IGRlc2NyaXB0aW9ucyBmb3IgdGhpcyBjaGlwLgo+IAo+IFRoYXQncyBzb21ldGhpbmcg
-YXQgbGVhc3QuIEkgd2FzIGhvcGluZyBmb3Igc29tZSBpbmZvIG9uIGhvdyB0byBzZXQgdGhpbmdz
-Cj4gdXAgZm9yIGV4dGVybmFsIDEyTUh6IGZvciB0aGUgQ0VDIGNoaXAsIGJ1dCBpdCBsb29rcyBs
-aWtlIEknbSBvdXQgb2YgbHVjay4KPiBJIGd1ZXNzIEknbGwgaGF2ZSB0byBleHBlcmltZW50IGlu
-IG9yZGVyIHRvIG1heWJlIGdldCB0aGF0IHdvcmtpbmcuLi4KClRoZSBvbmx5IHNldHVwIEknbSBh
-d2FyZSB3aXRoIHRoZSBUREExOTk4OCBpcyBvbmUgd2hpY2ggdXNlcyB0aGUKaW50ZXJuYWwgRlJP
-IC0gSSBkb24ndCBiZWxpZXZlIHdpdGggdGhlIFREQTE5OTg4IHRoYXQgdGhlcmUncyBhbnkKcG9z
-c2liaWxpdHkgb2Ygb3RoZXIgY2xvY2tpbmcgbWV0aG9kcyBmb3IgdGhlIENFQyBwYXJ0LgoKVGhl
-IFREQTE5OTg4IG1ha2VzIHNvbWUgcmVmZXJlbmNlIHRvIGFuIGV4dGVybmFsIDEyTUh6IGNsb2Nr
-IGFzIGEKcG9zc2liaWxpdHksIGJ1dCB0aGUgcGlubmluZyBpbmZvcm1hdGlvbiBtYWtlcyBubyBt
-ZW50aW9uIG9mIHdoaWNoCnBpbnMgbWF5IHJlY2VpdmUgYSAxMk1IeiBjbG9jaywgb3IgYmUgYSAx
-Mk1IeiBvc2NpbGxhdG9yLiAgVGhlCmJsb2NrIGRpYWdyYW0gaW1tZWRpYXRlbHkgYmVsb3cgdGhl
-IHJlZmVyZW5jZSB0byB0aGlzIGV4dGVybmFsCjEyTUh6IGNsb2NrIG9ubHkgc2hvd3MgdGhlIEZS
-TyBhbmQgbm8gZXh0ZXJuYWwgY2xvY2sgcmVmZXJlbmNlLiAgU28KdGhlIGRvY3VtZW50YXRpb24g
-c2VlbXMgdG8gYmUgaW5jb25zaXN0ZW50LgoKVGhhdCBzYWlkLCBoZXJlJ3Mgc29tZSBpbmZvcm1h
-dGlvbiBmb3Igc2V0dGluZyBpdCB1cCBmb3IgYW4gZXh0ZXJuYWwKY3J5c3RhbDoKCi0gcmVhZC1t
-b2RpZnktd3JpdGUgUkVHX0NFQ19DTEsgbWFza2luZyB0aGUgcmVnaXN0ZXIgdmFsdWUgd2l0aCAw
-eGU2CiAgKHRoZXJlJ3Mgbm8gaW5mb3JtYXRpb24gYWJvdXQgd2hhdCB0aGUgYml0cyBpbiB0aGlz
-IHJlZ2lzdGVyIGRvLikKLSBhdm9pZCBjYWxsaW5nIHRkYTk5OHhfY2VjX2NhbGlicmF0aW9uKCkK
-Cj4gPj4+IEV2ZW4gc28sIHRoYXQgZG9lc24ndCBnaXZlIHVzIGRvY3VtZW50YXRpb24gZm9yIHRo
-aXMgcmVnaXN0ZXIsIHNvIHdlCj4gPj4+IGhhdmUgdG8gcmVzb3J0IHRvIGNvZGUgcmVjZWl2ZWQg
-ZnJvbSBvdGhlciBzb3VyY2VzLgo+ID4+Pgo+ID4+PiBUaGUgQVBfRU5BIHJlZ2lzdGVyICJhdWRp
-byBwb3J0IGVuYWJsZSIgaXMgb25lIGJpdCBwZXIgQVAgc2lnbmFsLCBmcm9tCj4gPj4+IHRoZSBB
-UDAgcGluIGJlaW5nIGJpdCAwLCB1cCB0byB0aGUgQVA3IHBpbiBiZWluZyBiaXQgNy4KPiA+Pgo+
-ID4+IFRoYW5rcyEgSG93ZXZlciwgaW4gdGhlICJzaG9ydCIgc2hlZXQgZm9yIHRoZSBUREExOTk4
-OCB0aGF0IEkgaGF2ZSwgdGhlcmUKPiA+PiBpcyB0aGlzIHRhYmxlOgo+ID4+Cj4gPj4gQVAwICAg
-ICAgICAgICAgICAgICAgV1MgKHdvcmQgc2VsZWN0KQo+ID4+IEFQMSAgIFMvUERJRiBpbnB1dCAg
-IEkyUy1idXMgY2hhbm5lbCAwCj4gPj4gQVAyICAgUy9QRElGIGlucHV0ICAgSTJTLWJ1cyBjaGFu
-bmVsIDEKPiA+PiBBUDMgICAgICAgICAgICAgICAgICBJMlMtYnVzIGNoYW5uZWwgMgo+ID4+IEFQ
-NCAgICAgICAgICAgICAgICAgIEkyUy1idXMgY2hhbm5lbCAzCj4gPj4gQUNMSyAgICAgICAgICAg
-ICAgICAgU0NLIChJMlMtYnVzIGNsb2NrKQo+ID4+Cj4gPj4gQVA1IHRocm91Z2ggQVA3IGFyZSBu
-b3doZXJlIHRvIGJlIGZvdW5kLi4uCj4gPiAKPiA+IFJpZ2h0LCBzbyBvbmx5IGJpdHMgMCB0byA0
-IGFyZSBtZWFuaW5nZnVsLgo+ID4gCj4gPj4gU2hvdWxkIEkgYXNzdW1lIHRoYXQgQUNMSyBpcyBh
-biBhbGlhcyBmb3IgQVA1LCBhbmQgdGhhdCB0aGUgcmVnaXN0ZXIKPiA+PiBjb250ZW50IHNob3Vs
-ZCBiZSAweDIzIGZvciBJMlMgb24gY2hhbm5lbCAwPyBPciBpcyBBQ0xLIG5vdCBwYXJ0IG9mCj4g
-Pj4gdGhlIEFQX0VOQSByZWdpc3RlciBhdCBhbGwsIHNvIHRoYXQgMHgwMyBpcyBtb3JlIGxpa2Vs
-eSB0byBiZSBjb3JyZWN0Pwo+ID4gCj4gPiBJIGJlbGlldmUgMHgwMyBhcyBwZXIgdGhlIGV4YW1w
-bGUgYmluZGluZyBpbiB0aGUgdGRhOTk4eCBkb2N1bWVudC4KPiA+IFRoZSBleGFtcGxlIGdpdmVu
-IGlzIGZyb20gSmVhbidzIHdvcmsgZm9yIHRoZSBEb3ZlIEN1Ym94IHdoaWNoCj4gPiB1c2VzIGEg
-VERBMTk5ODgsIHdoaWNoIGhhcyBib3RoIEkyUyBhbmQgUy9QRElGIHdpcmVkIHRvIHRoZQo+ID4g
-VERBMTk5ODggLSBJMlMgZGF0YSBvbiBBUDEsIFMvUERJRiBkYXRhIG9uIEFQMi4KPiAKPiBPaywg
-dGhhbmtzIQo+IAo+IE5leHQgcXVlc3Rpb24uIFRoZSBleGFtcGxlIGluIHRoZSB0ZGE5OTh4IGJp
-bmRpbmcgaGFzIGEgbGluZQo+IAo+IAkJI3NvdW5kLWRhaS1jZWxscyA9IDwyPjsKPiAKPiB3aXRo
-IG5vIGZ1cnRoZXIgZXhwbGFuYXRpb24uIEkgdGhpbmsgdGhpcyBpcyBhIGJ1ZywgYW5kIHRoYXQg
-aXQgc2hvdWxkCj4gYmUgPDE+LCBidXQgdGhhdCdzIGp1c3QgYSBodW5jaCAoSSBoYXZlbid0IGR1
-ZyBpbnRvIHRoZSBjb2RlKS4KCkl0IGRvZXMgbG9vayB0aGF0IHdheSAtIHNuZF9zb2NfZ2V0X2Rh
-aV9uYW1lKCkgZG9lcyB0aGlzOgoKICAgICAgICAgICAgICAgICAgICAgICAgc3dpdGNoIChhcmdz
-LT5hcmdzX2NvdW50KSB7CiAgICAgICAgICAgICAgICAgICAgICAgIGNhc2UgMDoKICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICBpZCA9IDA7IC8qIHNhbWUgYXMgZGFpX2RydlswXSAqLwog
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGJyZWFrOwogICAgICAgICAgICAgICAgICAg
-ICAgICBjYXNlIDE6CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaWQgPSBhcmdzLT5h
-cmdzWzBdOwogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGJyZWFrOwogICAgICAgICAg
-ICAgICAgICAgICAgICBkZWZhdWx0OgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8q
-IG5vdCBzdXBwb3J0ZWQgKi8KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBicmVhazsK
-ICAgICAgICAgICAgICAgICAgICAgICAgfQoKc28gYSB2YWx1ZSBvZiAnMicgZm9yICNzb3VuZC1k
-YWktY2VsbHMgd291bGQgcmVzdWx0IGluIHRoZSBkZWZhdWx0CnBhdGggYmVpbmcgdGFrZW4uICBJ
-IHN1c3BlY3QgaXQncyBhIHR5cG8uCgotLSAKUk1LJ3MgUGF0Y2ggc3lzdGVtOiBodHRwOi8vd3d3
-LmFybWxpbnV4Lm9yZy51ay9kZXZlbG9wZXIvcGF0Y2hlcy8KRlRUQyBicm9hZGJhbmQgZm9yIDAu
-OG1pbGUgbGluZSBpbiBzdWJ1cmJpYTogc3luYyBhdCAxMi4xTWJwcyBkb3duIDYyMmticHMgdXAK
-QWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5uZXQ6IDExLjlNYnBzIGRvd24gNTAwa2JwcyB1cApfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Luca,
+
+Thank you for your review,
+
+On 13/11/2018 14:49, Luca Ceresoli wrote:
+> Hi Kieran, All,
+> 
+> below a few minor questions, and a big one at the bottom.
+> 
+> On 02/11/18 16:47, Kieran Bingham wrote:
+>> From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>>
+>> The MAX9286 is a 4-channel GMSL deserializer with coax or STP input and
+>> CSI-2 output. The device supports multicamera streaming applications,
+>> and features the ability to synchronise the attached cameras.
+>>
+>> CSI-2 output can be configured with 1 to 4 lanes, and a control channel
+>> is supported over I2C, which implements an I2C mux to facilitate
+>> communications with connected cameras across the reverse control
+>> channel.
+>>
+>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+>> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> 
+> [...]
+> 
+>> +struct max9286_device {
+>> +	struct i2c_client *client;
+>> +	struct v4l2_subdev sd;
+>> +	struct media_pad pads[MAX9286_N_PADS];
+>> +	struct regulator *regulator;
+>> +	bool poc_enabled;
+>> +	int streaming;
+>> +
+>> +	struct i2c_mux_core *mux;
+>> +	unsigned int mux_channel;
+>> +
+>> +	struct v4l2_ctrl_handler ctrls;
+>> +
+>> +	struct v4l2_mbus_framefmt fmt[MAX9286_N_SINKS];
+> 
+> 5 pads, 4 formats. Why does the source node have no fmt?
+
+The source pad is a CSI2 link - so a 'frame format' would be inappropriate.
+
+
+>> +static int max9286_init(struct device *dev, void *data)
+>> +{
+>> +	struct max9286_device *max9286;
+>> +	struct i2c_client *client;
+>> +	struct device_node *ep;
+>> +	unsigned int i;
+>> +	int ret;
+>> +
+>> +	/* Skip non-max9286 devices. */
+>> +	if (!dev->of_node || !of_match_node(max9286_dt_ids, dev->of_node))
+>> +		return 0;
+>> +
+>> +	client = to_i2c_client(dev);
+>> +	max9286 = i2c_get_clientdata(client);
+>> +
+>> +	/* Enable the bus power. */
+>> +	ret = regulator_enable(max9286->regulator);
+>> +	if (ret < 0) {
+>> +		dev_err(&client->dev, "Unable to turn PoC on\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	max9286->poc_enabled = true;
+>> +
+>> +	ret = max9286_setup(max9286);
+>> +	if (ret) {
+>> +		dev_err(dev, "Unable to setup max9286\n");
+>> +		goto err_regulator;
+>> +	}
+>> +
+>> +	v4l2_i2c_subdev_init(&max9286->sd, client, &max9286_subdev_ops);
+>> +	max9286->sd.internal_ops = &max9286_subdev_internal_ops;
+>> +	max9286->sd.flags = V4L2_SUBDEV_FL_HAS_DEVNODE;
+>                           ^
+> 
+> This way you're clearing the V4L2_SUBDEV_FL_IS_I2C set by
+> v4l2_i2c_subdev_init(), even though using devicetree I think this won't
+> matter in the current kernel code. However I think "max9286->sd.flags |=
+> ..." is more correct here, and it's also what most other drivers do.
+
+A quick glance looks like you're right.
+That looks like a good catch!
+
+I've updated locally ready for v5.
+
+>> +	v4l2_ctrl_handler_init(&max9286->ctrls, 1);
+>> +	/*
+>> +	 * FIXME: Compute the real pixel rate. The 50 MP/s value comes from the
+>> +	 * hardcoded frequency in the BSP CSI-2 receiver driver.
+>> +	 */
+>> +	v4l2_ctrl_new_std(&max9286->ctrls, NULL, V4L2_CID_PIXEL_RATE,
+>> +			  50000000, 50000000, 1, 50000000);
+>> +	max9286->sd.ctrl_handler = &max9286->ctrls;
+>> +	ret = max9286->ctrls.error;
+>> +	if (ret)
+>> +		goto err_regulator;
+>> +
+>> +	max9286->sd.entity.function = MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER;
+> 
+> According to the docs MEDIA_ENT_F_VID_IF_BRIDGE appears more fitting.
+
+Yes, I agree. We recently updated the adv748x to this too.
+
+Also updated locally to add to v5.
+
+
+>> +static int max9286_probe(struct i2c_client *client,
+>> +			 const struct i2c_device_id *did)
+>> +{
+>> +	struct max9286_device *dev;
+>> +	unsigned int i;
+>> +	int ret;
+>> +
+>> +	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+>> +	if (!dev)
+>> +		return -ENOMEM;
+>> +
+>> +	dev->client = client;
+>> +	i2c_set_clientdata(client, dev);
+>> +
+>> +	for (i = 0; i < MAX9286_N_SINKS; i++)
+>> +		max9286_init_format(&dev->fmt[i]);
+>> +
+>> +	ret = max9286_parse_dt(dev);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	dev->regulator = regulator_get(&client->dev, "poc");
+>> +	if (IS_ERR(dev->regulator)) {
+>> +		if (PTR_ERR(dev->regulator) != -EPROBE_DEFER)
+>> +			dev_err(&client->dev,
+>> +				"Unable to get PoC regulator (%ld)\n",
+>> +				PTR_ERR(dev->regulator));
+>> +		ret = PTR_ERR(dev->regulator);
+>> +		goto err_free;
+>> +	}
+>> +
+>> +	/*
+>> +	 * We can have multiple MAX9286 instances on the same physical I2C
+>> +	 * bus, and I2C children behind ports of separate MAX9286 instances
+>> +	 * having the same I2C address. As the MAX9286 starts by default with
+>> +	 * all ports enabled, we need to disable all ports on all MAX9286
+>> +	 * instances before proceeding to further initialize the devices and
+>> +	 * instantiate children.
+>> +	 *
+>> +	 * Start by just disabling all channels on the current device. Then,
+>> +	 * if all other MAX9286 on the parent bus have been probed, proceed
+>> +	 * to initialize them all, including the current one.
+>> +	 */
+>> +	max9286_i2c_mux_close(dev);
+>> +
+>> +	/*
+>> +	 * The MAX9286 initialises with auto-acknowledge enabled by default.
+>> +	 * This means that if multiple MAX9286 devices are connected to an I2C
+>> +	 * bus, another MAX9286 could ack I2C transfers meant for a device on
+>> +	 * the other side of the GMSL links for this MAX9286 (such as a
+>> +	 * MAX9271). To prevent that disable auto-acknowledge early on; it
+>> +	 * will be enabled later as needed.
+>> +	 */
+>> +	max9286_configure_i2c(dev, false);
+>> +
+>> +	ret = device_for_each_child(client->dev.parent, &client->dev,
+>> +				    max9286_is_bound);
+>> +	if (ret)
+>> +		return 0;
+>> +
+>> +	dev_dbg(&client->dev,
+>> +		"All max9286 probed: start initialization sequence\n");
+>> +	ret = device_for_each_child(client->dev.parent, NULL,
+>> +				    max9286_init);
+> 
+> I can't manage to like this initialization sequence, sorry. If at all
+> possible, each max9286 should initialize itself independently from each
+> other, like any normal driver.
+
+Yes, I think we're in agreement here, but unfortunately this section is
+a workaround for the fact that our devices share a common address space.
+
+We (currently) *must* disable both devices before we start the
+initialisation process for either on our platform currently...
+
+That said - I think this section needs to be removed from the upstream
+part at least for now. I think we should probably carry this
+'workaround' separately.
+
+This part is the core issue that I talked about in my presentation at
+ALS-Japan [0]
+
+ [0] https://sched.co/EaXa
+
+> First, it requires that each chip on the remote side can configure its
+> own slave address. Not all chips do.
+> 
+> Second, using a static i2c address map does not scale well and limits
+> hotplugging, as I discussed in my reply to patch 1/4. The problem should
+> be solvable cleanly if the MAX9286 supports address translation like the
+> TI chips.
+
+I don't think we can treat GMSL as hot-pluggable currently ... But as we
+discussed - I see that we should think about this for FPD-Link
+
+Also as a further aside here, we use "device_is_bound" which is not
+exported, and means that this driver won't compile successfully as a
+module currently (thanks to the kbuild test robot for highlighting that)
+
+
+> Thanks,
+> 
+
+-- 
+Regards
+--
+Kieran
