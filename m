@@ -1,46 +1,68 @@
-From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 2/2] ASoC: dt-bindings: add bindings for
-	AK4118 transceiver
-Date: Wed, 14 Nov 2018 13:16:42 +0100
-Message-ID: <20181114121642.1404-2-peron.clem@gmail.com>
-References: <20181114121642.1404-1-peron.clem@gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [resend PATCH 1/3] pwm: mediatek: drop flag 'has_clks'
+Date: Wed, 14 Nov 2018 13:47:52 +0100
+Message-ID: <20181114124752.GI2620@ulmo>
+References: <4c9044427b1aab373acd6ac76f0c905e2be79784.1542074855.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181114121642.1404-1-peron.clem@gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="KrHCbChajFcK0yQE"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4c9044427b1aab373acd6ac76f0c905e2be79784.1542074855.git.ryder.lee@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ryder Lee <ryder.lee@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org, Weijie Gao <weijie.gao@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, John Crispin <john@phrozen.org>
 List-Id: devicetree@vger.kernel.org
 
-RG9jdW1lbnQgdGhlIGJpbmRpbmdzIGZvciBBSzQxMTggUy9QRElGIHRyYW5zY2VpdmVyCgpTaWdu
-ZWQtb2ZmLWJ5OiBDbMOpbWVudCBQw6lyb24gPHBlcm9uLmNsZW1AZ21haWwuY29tPgotLS0KIC4u
-Li9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2FrNDExOC50eHQgICAgICB8IDIyICsrKysrKysr
-KysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9k
-ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2FrNDExOC50
-eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQv
-YWs0MTE4LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9hazQx
-MTgudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uNmUxMWEyZjc0
-MDRjCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3NvdW5kL2FrNDExOC50eHQKQEAgLTAsMCArMSwyMiBAQAorQUs0MTE4IFMvUERJRiB0cmFuc2Nl
-aXZlcgorCitUaGlzIGRldmljZSBzdXBwb3J0cyBJMkMgbW9kZS4KKworUmVxdWlyZWQgcHJvcGVy
-dGllczoKKworLSBjb21wYXRpYmxlIDogImFzYWhpLWthc2VpLGFrNDExOCIKKy0gcmVnIDogVGhl
-IEkyQyBhZGRyZXNzIG9mIHRoZSBkZXZpY2UgZm9yIEkyQworLSByZXNldC1ncGlvczogQSBHUElP
-IHNwZWNpZmllciBmb3IgdGhlIHJlc2V0IHBpbgorLSBpcnEtZ3Bpb3M6IEEgR1BJTyBzcGVjaWZp
-ZXIgZm9yIHRoZSBJUlEgcGluCisKK0V4YW1wbGU6CisKKyZpMmMgeworCWFrNDExODogYWs0MTE4
-QDEzIHsKKwkJI3NvdW5kLWRhaS1jZWxscyA9IDwwPjsKKwkJY29tcGF0aWJsZSA9ICJhc2FoaS1r
-YXNlaSxhazQxMTgiOworCQlyZWcgPSA8MHgxMz47CisJCXJlc2V0LWdwaW9zID0gPCZncGlvIDAg
-R1BJT19BQ1RJVkVfTE9XPgorCQlpcnEtZ3Bpb3MgPSA8JmdwaW8gMSBHUElPX0FDVElWRV9ISUdI
-PjsKKwl9OworfTsKLS0gCjIuMTkuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWlsaW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNhLXBy
-b2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9hbHNhLWRldmVsCg==
+
+--KrHCbChajFcK0yQE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Nov 13, 2018 at 10:08:22AM +0800, Ryder Lee wrote:
+> The flag 'has_clks' and related checks are superfluous as the CCF
+> subsystem does this for you.
+
+Both of these mechanisms aren't equivalent. While CCF can deal with
+optional clocks, what the has_clks flag actually means is that the
+device doesn't need a clock (or doesn't have a clock input) on the
+devices where it is cleared.
+
+So I'd actually be in favor of keeping the has_clks property because it
+serves as an additional sanity check. For example if you run this driver
+on an SoC that "has clocks" but if you don't list them in DT, then after
+this patch the driver will happily continue without clocks, even though
+it may break completely without those clocks. I've seen SoCs respond to
+disabled clocks for a hardware block in different ways, in many cases an
+access to any of the registers will completely hang the CPU. In other
+cases it may just crash in some other way or give you some sort of
+machine exception. None of those are good, and make the tiny bit of
+additional code required to support the has_clks flag very attractive.
+
+But that's just my opinion. If you prefer to throw away that safety
+barrier, be my guest. But if you do, please move this functionality into
+the clock framework first and then make the driver use it.
+
+Thierry
+
+--KrHCbChajFcK0yQE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlvsGXUACgkQ3SOs138+
+s6EhKhAAnU52kPmOfIbVhaDxXLLAR5p0eNkpLB7VYzDDiizJGgdGfnpjgjwqPHb0
+6pJf12Bo+bibjOzR/kHwv6du6ylwESC73/ZyZnFlrvGJkF2CVXgJny5vfbBxPb9X
+VsRkrRjCNK4Gi4jSOieGGH3k6BpUc/xnWzlF4wkSMTl7ualJ09gct2YgrnQSgvD5
+Ku1CsxGsHACXWi78uPUEjavXSkeHFHwevpRzkekeAQCzNZe12kSHbPmnHUI6lXQo
+XcXvKvD6pPwPHXnMV40pKi8kldWhT6CBX/1MgukimbkxDMtUbhCLhOT1WIxn4DW8
+lM1MndqkdF/CzHpop/eMQS0OTOaFI5/6NlROEjz8dOG0/RKrkgH0CxnjgeCIaDqI
+jmNf0/iEVSyqsA7RbNiz4AneOfNLMlkhTTdRDU+XZukWiOKqCgStQHqfUsbeRcyV
+L/ERoC/y33co9MAVYs+NVawNLu+a1344Z58d3BIR7GNO6P+DtV6W9Z5eC03rW+MP
+swVsPUkMZZblcM2oE3nFEa3OoTO82aIIfrjqC13mx5iHTa6/USWRlBIwXqEZgpd+
+6gOEk3pdlR5QMRgs0ijBL85IR0PWusV2SX0eZk9ndCX2abRaBA88ZJbZacBeIilZ
+9KYjAopAuEg6RKeweYL93hYktnxvJJ+DLxzpaf9Lz1HheOn52nQ=
+=dqiR
+-----END PGP SIGNATURE-----
+
+--KrHCbChajFcK0yQE--
