@@ -1,33 +1,34 @@
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [RFC PATCH 0/6] Armada 38x comphy driver to support 2.5Gbps
- networking
-Date: Thu, 15 Nov 2018 11:02:20 +0100
-Message-ID: <20181115110220.77cff36d@bootlin.com>
+Subject: Re: [RFC PATCH 2/6] phy: armada38x: add common phy support
+Date: Thu, 15 Nov 2018 11:02:29 +0100
+Message-ID: <20181115110229.45bcf903@bootlin.com>
 References: <20181112122933.GD30658@n2100.armlinux.org.uk>
+        <E1gMBMi-00089Q-7S@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20181112122933.GD30658@n2100.armlinux.org.uk>
+In-Reply-To: <E1gMBMi-00089Q-7S@rmk-PC.armlinux.org.uk>
 Sender: netdev-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
+To: Russell King <rmk+kernel@armlinux.org.uk>
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Russell,
+Hi Russell,
 
-On Mon, 12 Nov 2018 12:29:33 +0000
-Russell King - ARM Linux <linux@armlinux.org.uk> wrote:
+On Mon, 12 Nov 2018 12:30:52 +0000
+Russell King <rmk+kernel@armlinux.org.uk> wrote:
 
->Hi,
->
->This series adds support for dynamically switching between 1Gbps
->and 2.5Gbps networking for the Marvell Armada 38x SoCs, tested on
->Armada 388 on the Clearfog platform.
+>Add support for the Armada 38x common phy to allow us to change the
+>speed of the Ethernet serdes lane.  This driver only supports
+>manipulation of the speed, it does not support configuration of the
+>common phy.
 
-I've performed some tests on my side on a Clearfog too, and also on an
-Armada 385 board. It works fine on both setups.
+Tested-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
-Thanks for implementing this,
+>Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 
-Maxime
+-- 
+Maxime Chevallier, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
