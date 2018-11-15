@@ -1,72 +1,40 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v4 6/6] arch: Move initrd= parsing into do_mounts_initrd.c
-Date: Thu, 15 Nov 2018 11:35:22 -0800
-Message-ID: <d4ac19a2-437e-484c-b44f-6c5ba434e364@gmail.com>
-References: <20181105225431.24485-1-f.fainelli@gmail.com>
- <20181105225431.24485-7-f.fainelli@gmail.com>
- <C2D7FE5348E1B147BCA15975FBA23075013A5929ED@us01wembx1.internal.synopsys.com>
- <05f56763-1530-933d-2ce3-3653ad4c685f@gmail.com>
- <C2D7FE5348E1B147BCA15975FBA23075013A592A0B@us01wembx1.internal.synopsys.com>
- <04d6d0cb-8e60-88a0-061e-62c7c70024c5@gmail.com>
- <C2D7FE5348E1B147BCA15975FBA23075013A592A33@us01wembx1.internal.synopsys.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH RESEND] arm64: dts: meson-axg: fix dtc warning about unit address
+Date: Thu, 15 Nov 2018 11:49:14 -0800
+Message-ID: <7hzhuadsud.fsf@eze.i-did-not-set--mail-host-address--so-tickle-me>
+References: <20181030150614.19461-1-jbrunet@baylibre.com> <20181108095156.26810-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <C2D7FE5348E1B147BCA15975FBA23075013A592A33@us01wembx1.internal.synopsys.com>
-Content-Language: en-US
+In-Reply-To: <20181108095156.26810-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vineet Gupta <vineet.gupta1@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.i>
+To: Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/12/18 4:57 PM, Vineet Gupta wrote:
-> On 11/12/18 4:52 PM, Florian Fainelli wrote:
->> On 11/12/18 4:40 PM, Vineet Gupta wrote:
->>> On 11/12/18 4:38 PM, Florian Fainelli wrote:
->>>>>>  #ifdef CONFIG_BLK_DEV_INITRD
->>>>>> -	if (initrd_start)
->>>>>> -		memblock_reserve(__pa(initrd_start), initrd_end - initrd_start);
->>>>>> +	if (phys_initrd_size) {
->>>>>> +		memblock_reserve(phys_initrd_start, phys_initrd_size);
->>>>>> +		initrd_start = (unsigned long)__va(phys_initrd_start);
->>>>>> +		initrd_end = initrd_start + phys_initrd_size;
->>>>>> +	}
->>>>>>  #endif
->>>>> The common code now uses phys_initrd*, and you also use the same in ARC code, do
->>>>> we still need the initrd_* setting here ?
->>>>> ARC semantics was using them as PA anyways.
->>>> Yes, the generic initrd code expects initrd_start/end to be virtual
->>>> addresses, which we now directly derive from phys_initrd_start, that
->>>> should really be equivalent.
->>> So we can skip this explicit setting above - ARC arch code doesn't access the virt
->>> initrd_start
->> OK, you are saying we could just have the generic initrd code do this
->> assignment instead of having each architecture do it, is that a correct
->> understanding? 
-> 
-> Correct !
-> 
->> If so, I suppose it could be done, whether as of this
->> patch series or as a follow-up, either way is fine with me.
-> 
-> If it is not too much trouble, I'd prefer this now. I should have chimed earlier.
-> 
->> One possible caveat is if __va() and __phys_to_virt() behave differently
->> (e.g: because of CONFIG_DEBUG_VIRTUAL or other things).
-> 
-> 
-> Thing is, after your patches, we don't use the vanilla initrd_xxx in arch code any
-> longer. So this becomes just an implementation detail, which core code may or
-> maynot need and if it does, this needs to work already w/o having to set anything
-> in arch code. Agree ?
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-If you do not mind, I would prefer this series to go in, as-is, and
-clean up the initrd_start/initrd_end assignment as a follow up patch
-series. The reason is mostly that I am not yet clear on the timing of
-these operations between the architecture resolving the virtual address
-and the initrd code starting to use it.
+> section 2.2.1 of the DT specs says: " If the node has no reg property,
+> the @unit-address must be omitted and the node-name alone differentiates
+> the node from other nodes at the same level in the tree"
+>
+> Simply replace the '@' with a '-' to fix this warning.
+>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>
+> Hi Kevin,
+>
+> I'm resending this change because I noticed the previous patch I sent had
+> references to spdif input which has not been merged yet. This would have
+> triggered a conflict in your tree.
+>
+> Hopefully, this new version will apply correctly
 
-Would that sound reasonable to you?
--- 
-Florian
+Thanks for the resend, this version applies (and builds) cleanly.
+
+Queued for v4.21 with Neil's tag (branch: v4.21/dt64)
+
+Kevin
