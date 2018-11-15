@@ -1,69 +1,41 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH 1/3] arm64: dts: stratix10: use "altr,stratix10-rst-mgr"
- binding
-Date: Thu, 15 Nov 2018 08:35:39 -0600
-Message-ID: <84d776fb-5bad-fa01-9588-9c7a08dbe49e@kernel.org>
-References: <20181105200549.17159-1-dinguyen@kernel.org>
- <1542274384.4915.4.camel@pengutronix.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 07/12] soc: qcom: ipa: IPA register abstraction
+Date: Thu, 15 Nov 2018 06:42:45 -0800
+Message-ID: <CAK8P3a1RKVYRhM7OtUK3BhPj=jip2-j_8ziW_6Z5rnhFCTOOUw@mail.gmail.com>
+References: <20181107003250.5832-1-elder@linaro.org> <20181107003250.5832-8-elder@linaro.org>
+ <CAK8P3a2FsgR=SYAWsgFURVni1ReiCugKs1iUAfQzZhPkbW8aOA@mail.gmail.com> <e9114caf-0c92-7cac-33cd-6bea548b0375@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542274384.4915.4.camel@pengutronix.de>
-Content-Language: en-US
+In-Reply-To: <e9114caf-0c92-7cac-33cd-6bea548b0375@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dinh Nguyen <dinh.nguyen@intel.com>
+To: Alex Elder <elder@linaro.org>
+Cc: David Miller <davem@davemloft.net>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, syadagir@codeaurora.org, mjavid@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Nov 14, 2018 at 6:48 PM Alex Elder <elder@linaro.org> wrote:
+>
+> On 11/7/18 9:00 AM, Arnd Bergmann wrote:
+> > On Wed, Nov 7, 2018 at 1:33 AM Alex Elder <elder@linaro.org> wrote:
+> >> diff --git a/drivers/net/ipa/ipa_reg.c b/drivers/net/ipa/ipa_reg.c
+> >> new file mode 100644
+> >> index 000000000000..5e0aa6163235
+> >> --- /dev/null
+> >> +++ b/drivers/net/ipa/ipa_reg.c
+> >> @@ -0,0 +1,972 @@
 
+> It may be that this parse/construct mechanism isn't justified
+> at this point.  I thought the way it presented a generic
+> interface was useful, but with just one (initial) hardware
+> target we don't (yet) realize its potential benefit.  It could
+> be added back later, as support for new versions is added.
+>
+> As of now I don't plan to change this, but if you or someone
+> else feels it would be better without it I can do that.
 
-On 11/15/18 3:33 AM, Philipp Zabel wrote:
-> Hi Dinh,
-> 
-> On Mon, 2018-11-05 at 14:05 -0600, Dinh Nguyen wrote:
->> From: Dinh Nguyen <dinh.nguyen@intel.com>
->>
->> The standard reset-simple driver the uses the "altr,rst-mgr" binding is
->> not getting initialized early enough in the boot process, so timers
->> that the kernel needs are still left in reset. Thus an early
->> reset driver was created. This early reset driver is only for the
->> SoCFPGA 32-bit platform.
->>
->> The Stratix10 platform does not need any of the timers that in reset to
->> boot, thus we don't need to early reset driver. Therefore, use the
->> "altr,stratix10-rst-mgr" binding for the reset-simple platform driver on
->> the Stratix10 platform.
->>
->> Also remove the "altr,modrst-offset" property because the driver no
->> longer needs it.
->>
->> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
->> ---
->>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 3 +--
->>  1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
->> index 8253a1a9e985..5f0b18ae5007 100644
->> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
->> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
->> @@ -308,9 +308,8 @@
->>  
->>  		rst: rstmgr@ffd11000 {
->>  			#reset-cells = <1>;
->> -			compatible = "altr,rst-mgr";
->> +			compatible = "altr,stratix10-rst-mgr", "altr,rst-mgr";
->>  			reg = <0xffd11000 0x1000>;
->> -			altr,modrst-offset = <0x20>;
->>  		};
->>  
->>  		spi0: spi@ffda4000 {
-> 
-> Do you want me to pick this up as well, or just patches 2 and 3?
-> 
+Fair enough. I do think that it would be better to avoid this, but
+it's much less important than the other issues I mentioned,
+so please put this on the bottom of your priorities list, we
+can talk about it again when we get closer to merging the driver.
 
-I'll take this patch through arm-soc to avoid conflicts. Can you please
-pick up 2 and 3?
-
-Thanks,
-Dinh
+     Arnd
