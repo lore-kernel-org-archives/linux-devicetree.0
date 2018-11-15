@@ -1,7 +1,7 @@
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v16 06/16] lib: fdt: add a helper function for handling memory range property
-Date: Thu, 15 Nov 2018 14:52:45 +0900
-Message-ID: <20181115055254.2812-7-takahiro.akashi@linaro.org>
+Subject: [PATCH v16 12/16] arm64: kexec_file: add crash dump support
+Date: Thu, 15 Nov 2018 14:52:51 +0900
+Message-ID: <20181115055254.2812-13-takahiro.akashi@linaro.org>
 References: <20181115055254.2812-1-takahiro.akashi@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,130 +12,193 @@ To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@re
 Cc: prudo@linux.ibm.com, ard.biesheuvel@linaro.org, james.morse@arm.com, bhsharma@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Added function, fdt_setprop_reg(), will be used later to handle
-kexec-specific property in arm64's kexec_file implementation.
-It will possibly be merged into libfdt in the future.
+Enabling crash dump (kdump) includes
+* prepare contents of ELF header of a core dump file, /proc/vmcore,
+  using crash_prepare_elf64_headers(), and
+* add two device tree properties, "linux,usable-memory-range" and
+  "linux,elfcorehdr", which represent respectively a memory range
+  to be used by crash dump kernel and the header's location
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Reviewed-by: James Morse <james.morse@arm.com>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Frank Rowand <frowand.list@gmail.com>
 Cc: devicetree@vger.kernel.org
 ---
- include/linux/libfdt.h | 26 ++++++++++++++++++++
- lib/Makefile           |  2 +-
- lib/fdt_addresses.c    | 56 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 83 insertions(+), 1 deletion(-)
- create mode 100644 lib/fdt_addresses.c
+ arch/arm64/include/asm/kexec.h         |  4 ++
+ arch/arm64/kernel/machine_kexec_file.c | 97 +++++++++++++++++++++++++-
+ 2 files changed, 98 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/libfdt.h b/include/linux/libfdt.h
-index 90ed4ebfa692..47c4dc9e135c 100644
---- a/include/linux/libfdt.h
-+++ b/include/linux/libfdt.h
-@@ -5,4 +5,30 @@
- #include <linux/libfdt_env.h>
- #include "../../scripts/dtc/libfdt/libfdt.h"
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 67e4cb75d1fd..660705515e33 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -99,6 +99,10 @@ static inline void crash_post_resume(void) {}
+ struct kimage_arch {
+ 	void *dtb;
+ 	unsigned long dtb_mem;
++	/* Core ELF header buffer */
++	void *elf_headers;
++	unsigned long elf_headers_mem;
++	unsigned long elf_headers_sz;
+ };
  
-+/**
-+ * fdt_setprop_reg - add/set a memory region property
-+ * @fdt: pointer to the device tree blob
-+ * @nodeoffset: offset of the node to add a property at
-+ * @name: name of property
-+ * @addr: physical start address
-+ * @size: size of region
-+ *
-+ * returns:
-+ *	0, on success
-+ *      -FDT_ERR_BADLAYOUT,
-+ *	-FDT_ERR_BADMAGIC,
-+ *	-FDT_ERR_BADNCELLS, if the node has a badly formatted or invalid
-+ *		#address-cells property
-+ *      -FDT_ERR_BADOFFSET, nodeoffset did not point to FDT_BEGIN_NODE tag
-+ *	-FDT_ERR_BADSTATE,
-+ *	-FDT_ERR_BADSTRUCTURE,
-+ *	-FDT_ERR_BADVERSION,
-+ *	-FDT_ERR_BADVALUE, addr or size doesn't fit to respective cells size
-+ *      -FDT_ERR_NOSPACE, there is insufficient free space in the blob to
-+ *              contain a new property
-+ *	-FDT_ERR_TRUNCATED, standard meanings
-+ */
-+int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
-+					       u64 addr, u64 size);
-+
- #endif /* _INCLUDE_LIBFDT_H_ */
-diff --git a/lib/Makefile b/lib/Makefile
-index db06d1237898..2a96cb05e15d 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -205,7 +205,7 @@ KASAN_SANITIZE_stackdepot.o := n
- KCOV_INSTRUMENT_stackdepot.o := n
+ extern const struct kexec_file_ops kexec_image_ops;
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index 7e9d5ed3e238..ab296b98d633 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -16,11 +16,15 @@
+ #include <linux/libfdt.h>
+ #include <linux/memblock.h>
+ #include <linux/of_fdt.h>
++#include <linux/slab.h>
+ #include <linux/string.h>
+ #include <linux/types.h>
++#include <linux/vmalloc.h>
+ #include <asm/byteorder.h>
  
- libfdt_files = fdt.o fdt_ro.o fdt_wip.o fdt_rw.o fdt_sw.o fdt_strerror.o \
--	       fdt_empty_tree.o
-+	       fdt_empty_tree.o fdt_addresses.o
- $(foreach file, $(libfdt_files), \
- 	$(eval CFLAGS_$(file) = -I$(src)/../scripts/dtc/libfdt))
- lib-$(CONFIG_LIBFDT) += $(libfdt_files)
-diff --git a/lib/fdt_addresses.c b/lib/fdt_addresses.c
-new file mode 100644
-index 000000000000..97ddd5a5cc10
---- /dev/null
-+++ b/lib/fdt_addresses.c
-@@ -0,0 +1,56 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/libfdt_env.h>
-+#include <linux/types.h>
-+#include "../scripts/dtc/libfdt/fdt_addresses.c"
+ /* relevant device tree properties */
++#define FDT_PSTR_KEXEC_ELFHDR	"linux,elfcorehdr"
++#define FDT_PSTR_MEM_RANGE	"linux,usable-memory-range"
+ #define FDT_PSTR_INITRD_STA	"linux,initrd-start"
+ #define FDT_PSTR_INITRD_END	"linux,initrd-end"
+ #define FDT_PSTR_BOOTARGS	"bootargs"
+@@ -35,6 +39,10 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+ 	vfree(image->arch.dtb);
+ 	image->arch.dtb = NULL;
+ 
++	vfree(image->arch.elf_headers);
++	image->arch.elf_headers = NULL;
++	image->arch.elf_headers_sz = 0;
 +
-+/*
-+ * helper functions for arm64 kexec
-+ * Those functions may be merged into libfdt in the future.
-+ */
+ 	return kexec_image_post_load_cleanup_default(image);
+ }
+ 
+@@ -49,6 +57,22 @@ static int setup_dtb(struct kimage *image,
+ 	if (nodeoffset < 0)
+ 		return -EINVAL;
+ 
++	if (image->type == KEXEC_TYPE_CRASH) {
++		/* add linux,elfcorehdr */
++		ret = fdt_setprop_reg(dtb, nodeoffset, FDT_PSTR_KEXEC_ELFHDR,
++				image->arch.elf_headers_mem,
++				image->arch.elf_headers_sz);
++		if (ret)
++			return (ret == -FDT_ERR_NOSPACE ? -ENOMEM : -EINVAL);
 +
-+/* This function assumes that cells is 1 or 2 */
-+static void cpu64_to_fdt_cells(void *buf, u64 val64, int cells)
-+{
-+	__be32 val32;
-+
-+	while (cells) {
-+		val32 = cpu_to_fdt32(val64 >> (32 * (--cells)));
-+		memcpy(buf, &val32, sizeof(val32));
-+		buf += sizeof(val32);
++		/* add linux,usable-memory-range */
++		ret = fdt_setprop_reg(dtb, nodeoffset, FDT_PSTR_MEM_RANGE,
++				crashk_res.start,
++				crashk_res.end - crashk_res.start + 1);
++		if (ret)
++			return (ret == -FDT_ERR_NOSPACE ? -ENOMEM : -EINVAL);
 +	}
-+}
 +
-+int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
-+						u64 addr, u64 size)
+ 	/* add bootargs */
+ 	if (cmdline) {
+ 		ret = fdt_setprop_string(dtb, nodeoffset, FDT_PSTR_BOOTARGS,
+@@ -86,7 +110,8 @@ static int setup_dtb(struct kimage *image,
+ }
+ 
+ /*
+- * More space needed so that we can add initrd and bootargs.
++ * More space needed so that we can add initrd, bootargs,
++ * userable-memory-range and elfcorehdr.
+  */
+ #define DTB_EXTRA_SPACE 0x1000
+ 
+@@ -132,6 +157,43 @@ static int create_dtb(struct kimage *image,
+ 	}
+ }
+ 
++static int prepare_elf_headers(void **addr, unsigned long *sz)
 +{
-+	int addr_cells, size_cells;
-+	char buf[sizeof(__be32) * 2 * 2];
-+		/* assume dt_root_[addr|size]_cells <= 2 */
-+	void *prop;
-+	size_t buf_size;
++	struct crash_mem *cmem;
++	unsigned int nr_ranges;
++	int ret;
++	u64 i;
++	phys_addr_t start, end;
 +
-+	addr_cells = fdt_address_cells(fdt, 0);
-+	if (addr_cells < 0)
-+		return addr_cells;
-+	size_cells = fdt_size_cells(fdt, 0);
-+	if (size_cells < 0)
-+		return size_cells;
++	nr_ranges = 1; /* for exclusion of crashkernel region */
++	for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
++					MEMBLOCK_NONE, &start, &end, NULL)
++		nr_ranges++;
 +
-+	/* if *_cells >= 2, cells can hold 64-bit values anyway */
-+	if ((addr_cells == 1) && ((addr > U32_MAX) ||
-+				  ((addr + size) > U32_MAX)))
-+		return -FDT_ERR_BADVALUE;
++	cmem = kmalloc(sizeof(struct crash_mem) +
++			sizeof(struct crash_mem_range) * nr_ranges, GFP_KERNEL);
++	if (!cmem)
++		return -ENOMEM;
 +
-+	if ((size_cells == 1) && (size > U32_MAX))
-+		return -FDT_ERR_BADVALUE;
++	cmem->max_nr_ranges = nr_ranges;
++	cmem->nr_ranges = 0;
++	for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
++					MEMBLOCK_NONE, &start, &end, NULL) {
++		cmem->ranges[cmem->nr_ranges].start = start;
++		cmem->ranges[cmem->nr_ranges].end = end - 1;
++		cmem->nr_ranges++;
++	}
 +
-+	buf_size = (addr_cells + size_cells) * sizeof(u32);
-+	prop = buf;
++	/* Exclude crashkernel region */
++	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
 +
-+	cpu64_to_fdt_cells(prop, addr, addr_cells);
-+	prop += addr_cells * sizeof(u32);
++	if (!ret)
++		ret =  crash_prepare_elf64_headers(cmem, true, addr, sz);
 +
-+	cpu64_to_fdt_cells(prop, size, size_cells);
-+
-+	return fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
++	kfree(cmem);
++	return ret;
 +}
++
+ int load_other_segments(struct kimage *image,
+ 			unsigned long kernel_load_addr,
+ 			unsigned long kernel_size,
+@@ -139,14 +201,43 @@ int load_other_segments(struct kimage *image,
+ 			char *cmdline)
+ {
+ 	struct kexec_buf kbuf;
+-	void *dtb = NULL;
+-	unsigned long initrd_load_addr = 0, dtb_len;
++	void *headers, *dtb = NULL;
++	unsigned long headers_sz, initrd_load_addr = 0, dtb_len;
+ 	int ret = 0;
+ 
+ 	kbuf.image = image;
+ 	/* not allocate anything below the kernel */
+ 	kbuf.buf_min = kernel_load_addr + kernel_size;
+ 
++	/* load elf core header */
++	if (image->type == KEXEC_TYPE_CRASH) {
++		ret = prepare_elf_headers(&headers, &headers_sz);
++		if (ret) {
++			pr_err("Preparing elf core header failed\n");
++			goto out_err;
++		}
++
++		kbuf.buffer = headers;
++		kbuf.bufsz = headers_sz;
++		kbuf.mem = 0;
++		kbuf.memsz = headers_sz;
++		kbuf.buf_align = SZ_64K; /* largest supported page size */
++		kbuf.buf_max = ULONG_MAX;
++		kbuf.top_down = true;
++
++		ret = kexec_add_buffer(&kbuf);
++		if (ret) {
++			vfree(headers);
++			goto out_err;
++		}
++		image->arch.elf_headers = headers;
++		image->arch.elf_headers_mem = kbuf.mem;
++		image->arch.elf_headers_sz = headers_sz;
++
++		pr_debug("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
++			 image->arch.elf_headers_mem, headers_sz, headers_sz);
++	}
++
+ 	/* load initrd */
+ 	if (initrd) {
+ 		kbuf.buffer = initrd;
 -- 
 2.19.0
