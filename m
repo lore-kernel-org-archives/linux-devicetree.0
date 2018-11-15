@@ -1,65 +1,51 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v4 0/3] Add driver for Synopsys DesignWare I3C master IP
-Date: Thu, 15 Nov 2018 20:29:16 +0100
-Message-ID: <20181115202916.613df7b3@bbrezillon>
-References: <1542118193-24925-1-git-send-email-vitor.soares@synopsys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
+Subject: [PATCH v3 0/2] Add Embedded USB Debugger (EUD) driver
+Date: Thu, 15 Nov 2018 11:32:52 -0800
+Message-ID: <1542310374-18474-1-git-send-email-pheragu@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542118193-24925-1-git-send-email-vitor.soares@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vitor Soares <vitor.soares@synopsys.com>
-Cc: wsa@the-dreams.de, linux-i2c@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de, psroka@cadence.com, agolec@cadence.com, adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com, alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com, rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, linus.walleij@linaro.org, Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org, nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se, mshettel@codeaurora.org, swboyd@chromium.org, joao.pinto@synopsys.com
+To: linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, ckadabi@codeaurora.org, tsoni@codeaurora.org, bryanh@codeaurora.org, psodagud@codeaurora.org, rnayak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Nov 2018 14:09:50 +0000
-Vitor Soares <vitor.soares@synopsys.com> wrote:
+This is a series of patches that implements a driver for the control
+peripheral, EUD (Embedded USB Debugger). The EUD is a mini-USB hub 
+implemented on chip to support the USB-based debug and trace capabilities.
+Apart from debug capabilities, EUD has a control peripheral. Control 
+Peripheral is on when EUD is on and gets signals like USB attach, pet EUD,
+charge phone etc. EUD driver listens to events like USB attach or detach 
+and charger enable or disable and then notifies the USB driver or PMIC 
+driver respectively about these events via EXTCON. At regular intervals, 
+the EUD driver receives an interrupt to pet the driver indicating that 
+the software is functional.
 
-> This patch series is a proposal for the I3C master driver for Synopsys IP.
-> This patch is to be applied on top of I3C subsystem RFC V10 submitted by
-> Boris Brezillon.
-> 
-> Supported features:
->   Regular CCC commands.
->   I3C private transfers.
->   I2C transfers.
-> 
-> Missing functionalities:
->   Support DMA interface.
->   Support for I3C_BUS_MODE_MIXED_SLOW.
->   Hot-join.
->   IBI.
+Changes since v2:
+- Remove module_param and add sysfs support instead
+- Simplify if-else condition
+- Change if-elseif to switch case
+- Return -ENOMEM
+- Got rid of unnecessary checks in sysfs store function
+- Updated the dt-binding
+Changes since v1:
+- Remove EUD_NR as it is an unused macro
+Changes since v0:
+- Remove select SERIAL_CORE from Kconfig as this patch doesn't involve
+  anything related to serial console
+- Changed the dt-bindings to remove extcon and replace it with graphs
+  to represent a connection with client
 
-Patchset queued to i3c/next.
+Prakruthi Deepak Heragu (2):
+  dt-bindings: Documentation for qcom,eud
+  Embedded USB Debugger (EUD) driver
 
-Thanks,
+ .../devicetree/bindings/soc/qcom/qcom,msm-eud.txt  |  41 +++
+ drivers/soc/qcom/Kconfig                           |  12 +
+ drivers/soc/qcom/Makefile                          |   1 +
+ drivers/soc/qcom/eud.c                             | 338 +++++++++++++++++++++
+ 4 files changed, 392 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
+ create mode 100644 drivers/soc/qcom/eud.c
 
-Boris
-
-> 
-> Main change between v3 and v4:
-> - Minor fixes. They are described in each patch
-> 
-> Main change between v2 and v3:
-> - Minor fixes. They are described in each patch
-> 
-> Main change between v1 and v2:
-> - Add controller version on dt-binding
-> - The driver now calls writesl/readsl() instead readl/writel
-> - Rename some variables in the driver
-> 
-> Vitor Soares (3):
->   i3c: master: Add driver for Synopsys DesignWare IP
->   dt-binding: i3c: Document Synopsys DesignWare I3C
->   MAINTAINERS: Add myself as the dw-i3c-master module maintainer
-> 
->  .../devicetree/bindings/i3c/snps,dw-i3c-master.txt |   41 +
->  MAINTAINERS                                        |    6 +
->  drivers/i3c/master/Kconfig                         |   14 +
->  drivers/i3c/master/Makefile                        |    1 +
->  drivers/i3c/master/dw-i3c-master.c                 | 1216 ++++++++++++++++++++
->  5 files changed, 1278 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt
->  create mode 100644 drivers/i3c/master/dw-i3c-master.c
-> 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
