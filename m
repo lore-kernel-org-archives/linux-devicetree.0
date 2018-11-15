@@ -1,72 +1,94 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH 4/4] mtd: spi-nor: mtk-quadspi: rename config to a common one
-Date: Thu, 15 Nov 2018 14:26:26 +0800
-Message-ID: <45132f6a1f9ea82dd8312a60815dc0007450f56e.1542262833.git.ryder.lee@mediatek.com>
-References: <1dc7b27cbad59c413d7076ff7d16b6757014d727.1542262833.git.ryder.lee@mediatek.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v4 04/10] arm64: allwinner: dts: h6: add
+ USB2-related device nodes
+Date: Thu, 15 Nov 2018 14:28:51 +0800
+Message-ID: <CAGb2v64_=YhrDPYAoPxO4YH6OZENAM-nDDhqnCD0Fj26sKwQ7Q@mail.gmail.com>
+References: <20181004122855.22981-1-icenowy@aosc.io> <20181004122855.22981-5-icenowy@aosc.io>
+ <CAGb2v668dozjLm9mWUw_Y12AZ6DM2ku9dgQ8B8feABNeFf3QSw@mail.gmail.com>
+ <4B5BD39B-22E2-4DEA-A199-29094DB8C317@aosc.io> <CAGb2v66Lndq1GMRDda3+2go1snGVS1fKTJTrHpP-B20FtG6VZA@mail.gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1dc7b27cbad59c413d7076ff7d16b6757014d727.1542262833.git.ryder.lee@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Weijie Gao <weijie.gao@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>, Guochun Mao <guochun.mao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBM5EWTPQKGQEMN2DNKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v66Lndq1GMRDda3+2go1snGVS1fKTJTrHpP-B20FtG6VZA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The quadspi is a generic communication interface which could be shared
-with other MediaTek SoCs. Hence rename it to a common one.
+On Thu, Nov 15, 2018 at 10:16 AM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+>
+> On Wed, Nov 14, 2018 at 6:31 PM Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+> > =E4=BA=8E 2018=E5=B9=B411=E6=9C=8814=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
+=886:21:33, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> =E5=86=99=E5=88=B0:
+> > >Hi,
+> > >
+> > >On Thu, Oct 4, 2018 at 8:30 PM Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+> > >>
+> > >> Allwinner H6 has two USB2 ports, one OTG and one host-only.
+> > >>
+> > >> Add device tree nodes related to them.
+> > >>
+> > >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> > >> Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> > >> ---
+> > >> No changes in v4.
+> > >>
+> > >> Changes in v3:
+> > >> - Removed the wrongly introduced usb3phy node.
+> > >> - Added Chen-Yu's Review tag.
+> > >>
+> > >>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 81
+> > >++++++++++++++++++++
+> > >>  1 file changed, 81 insertions(+)
+> > >>
+> > >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > >b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > >> index 040828d2e2c0..3d60af6cb3ae 100644
+> > >> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > >> @@ -258,6 +258,87 @@
+> > >>                         status =3D "disabled";
+> > >>                 };
+> > >>
+> > >> +               usb2otg: usb@5100000 {
+> > >> +                       compatible =3D "allwinner,sun8i-a33-musb";
+> > >
+> > >I added an SoC-specific compatible: "allwinner,sun50i-h6-musb".
+> > >
+> > >I'm also curious as to whether the MUSB controller was tested or not,
+> > >since Allwinner now has EHCI/OHCI host pairs for host mode, and the
+> > >Pine H64
+> > >only does host mode.
+> >
+> > USB plug-in detection relays on MUSB if it's enabled.
+>
+> That's not what I meant. Have you actually used the MUSB core in either
+> device or host mode to know that it is compatible with the A33? And
+> that it works correctly?
+>
+> IIRC ID detection is done by the PHY driver, using the GPIO lines.
+> In host mode, since it's already directly routed to the host pair,
+> it's the host pair that does plug-in detection. The MUSB core is
+> completely unused. It should be quite clear if you look at the times
+> each interrupt line fired.
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
----
- drivers/mtd/spi-nor/Kconfig  | 16 ++++++++--------
- drivers/mtd/spi-nor/Makefile |  2 +-
- 2 files changed, 9 insertions(+), 9 deletions(-)
+I forced the routing to use MUSB and it looks like it works OK.
+And the BSP figures for the number of endpoints looks correct.
+I'll push the patches out. Thanks.
 
-diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
-index 6cc9c92..2062611 100644
---- a/drivers/mtd/spi-nor/Kconfig
-+++ b/drivers/mtd/spi-nor/Kconfig
-@@ -7,14 +7,6 @@ menuconfig MTD_SPI_NOR
- 
- if MTD_SPI_NOR
- 
--config MTD_MT81xx_NOR
--	tristate "Mediatek MT81xx SPI NOR flash controller"
--	depends on HAS_IOMEM
--	help
--	  This enables access to SPI NOR flash, using MT81xx SPI NOR flash
--	  controller. This controller does not support generic SPI BUS, it only
--	  supports SPI NOR Flash.
--
- config MTD_SPI_NOR_USE_4K_SECTORS
- 	bool "Use small 4096 B erase sectors"
- 	default y
-@@ -86,6 +78,14 @@ config SPI_NXP_SPIFI
- 	  Flash. Enable this option if you have a device with a SPIFI
- 	  controller and want to access the Flash as a mtd device.
- 
-+config SPI_MTK_QUADSPI
-+	tristate "MediaTek Quad SPI controller"
-+	depends on HAS_IOMEM
-+	help
-+	  This enables support for the Quad SPI controller in master mode.
-+	  This controller does not support generic SPI. It only supports
-+	  SPI NOR.
-+
- config SPI_INTEL_SPI
- 	tristate
- 
-diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
-index f4c61d2..7f4b6f6 100644
---- a/drivers/mtd/spi-nor/Makefile
-+++ b/drivers/mtd/spi-nor/Makefile
-@@ -5,7 +5,7 @@ obj-$(CONFIG_SPI_ATMEL_QUADSPI)	+= atmel-quadspi.o
- obj-$(CONFIG_SPI_CADENCE_QUADSPI)	+= cadence-quadspi.o
- obj-$(CONFIG_SPI_FSL_QUADSPI)	+= fsl-quadspi.o
- obj-$(CONFIG_SPI_HISI_SFC)	+= hisi-sfc.o
--obj-$(CONFIG_MTD_MT81xx_NOR)    += mtk-quadspi.o
-+obj-$(CONFIG_SPI_MTK_QUADSPI)    += mtk-quadspi.o
- obj-$(CONFIG_SPI_NXP_SPIFI)	+= nxp-spifi.o
- obj-$(CONFIG_SPI_INTEL_SPI)	+= intel-spi.o
- obj-$(CONFIG_SPI_INTEL_SPI_PCI)	+= intel-spi-pci.o
--- 
-1.9.1
+ChenYu
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
