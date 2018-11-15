@@ -1,7 +1,7 @@
 From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH 2/4] arm64: dts: qcom: msm8998: Add SDCC2
-Date: Thu, 15 Nov 2018 10:18:09 -0700
-Message-ID: <1542302291-6864-3-git-send-email-jhugo@codeaurora.org>
+Subject: [PATCH 3/4] arm64: dts: qcom: msm8998: Add SDC2 control pins
+Date: Thu, 15 Nov 2018 10:18:10 -0700
+Message-ID: <1542302291-6864-4-git-send-email-jhugo@codeaurora.org>
 References: <1542302291-6864-1-git-send-email-jhugo@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1542302291-6864-1-git-send-email-jhugo@codeaurora.org>
@@ -10,50 +10,109 @@ To: andy.gross@linaro.org, david.brown@linaro.org
 Cc: bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-SDCC2 is typically used as the controller for an external SD card slot.
+The SDC2 control pins are typically used to manage sleep.
 
 Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8998-pins.dtsi | 78 ++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8998.dtsi      |  2 +
+ 2 files changed, 80 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index a948d4b..09deee0 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -53,7 +53,7 @@
- 	};
- 
- 	clocks {
--		xo {
-+		xo: xo {
- 			compatible = "fixed-clock";
- 			#clock-cells = <0>;
- 			clock-frequency = <19200000>;
-@@ -605,6 +605,23 @@
- 			#mbox-cells = <1>;
- 		};
- 
-+		sdhc2: sdhci@c0a4900 {
-+			compatible = "qcom,sdhci-msm-v4";
-+			reg = <0xc0a4900 0x314>, <0xc0a4000 0x800>;
-+			reg-names = "hc_mem", "core_mem";
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+new file mode 100644
+index 0000000..a22abf9
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+@@ -0,0 +1,78 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2018, The Linux Foundation. All rights reserved. */
 +
-+			interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hc_irq", "pwr_irq";
++&tlmm {
++	sdc2_clk_on: sdc2_clk_on {
++		config {
++			pins = "sdc2_clk";
++			bias-disable;           /* NO pull */
++			drive-strength = <16>;  /* 16 MA */
++		};
++	};
 +
-+			clock-names = "iface", "core", "xo";
-+			clocks = <&gcc GCC_SDCC2_AHB_CLK>,
-+				 <&gcc GCC_SDCC2_APPS_CLK>,
-+				 <&xo>;
-+			bus-width = <4>;
-+			status = "disabled";
++	sdc2_clk_off: sdc2_clk_off {
++		config {
++			pins = "sdc2_clk";
++			bias-disable;           /* NO pull */
++			drive-strength = <2>;   /* 2 MA */
++		};
++	};
++
++	sdc2_cmd_on: sdc2_cmd_on {
++		config {
++			pins = "sdc2_cmd";
++			bias-pull-up;           /* pull up */
++			drive-strength = <10>;  /* 10 MA */
++		};
++	};
++
++	sdc2_cmd_off: sdc2_cmd_off {
++		config {
++			pins = "sdc2_cmd";
++			bias-pull-up;           /* pull up */
++			drive-strength = <2>;   /* 2 MA */
++		};
++	};
++
++	sdc2_data_on: sdc2_data_on {
++		config {
++			pins = "sdc2_data";
++			bias-pull-up;           /* pull up */
++			drive-strength = <10>;  /* 10 MA */
++		};
++	};
++
++	sdc2_data_off: sdc2_data_off {
++		config {
++			pins = "sdc2_data";
++			bias-pull-up;           /* pull up */
++			drive-strength = <2>;   /* 2 MA */
++		};
++	};
++
++	sdc2_cd_on: sdc2_cd_on {
++		mux {
++			pins = "gpio95";
++			function = "gpio";
 +		};
 +
- 		blsp2_uart1: serial@c1b0000 {
- 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
- 			reg = <0xc1b0000 0x1000>;
++		config {
++			pins = "gpio95";
++			bias-pull-up;           /* pull up */
++			drive-strength = <2>;   /* 2 MA */
++		};
++	};
++
++	sdc2_cd_off: sdc2_cd_off {
++		mux {
++			pins = "gpio95";
++			function = "gpio";
++		};
++
++		config {
++			pins = "gpio95";
++			bias-pull-up;           /* pull up */
++			drive-strength = <2>;   /* 2 MA */
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index 09deee0..94827f4 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -705,3 +705,5 @@
+ 		};
+ 	};
+ };
++
++#include "msm8998-pins.dtsi"
 -- 
 Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
 Qualcomm Technologies, Inc. is a member of the
