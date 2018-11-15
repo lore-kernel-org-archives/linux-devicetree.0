@@ -1,34 +1,55 @@
-Return-Path: <SRS0=0pQc=N3=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=9lQL=N2=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr1400122.outbound.protection.outlook.com ([40.107.140.122]:55120
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387839AbeKPC7I (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 15 Nov 2018 21:59:08 -0500
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH v6 1/2] pinctrl: Add RZ/A2 pin and gpio controller
+Date: Thu, 15 Nov 2018 16:50:29 +0000
+Message-ID: <OSAPR01MB1553B1748C9DFC365DCF7C568ADC0@OSAPR01MB1553.jpnprd01.prod.outlook.com>
+References: <20181115140045.24733-1-chris.brandt@renesas.com>
+ <20181115140045.24733-2-chris.brandt@renesas.com>
+ <20181115162817.GB28299@w540>
+In-Reply-To: <20181115162817.GB28299@w540>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20181115161528.34326-1-chris.brandt@renesas.com> <20181115161528.34326-2-chris.brandt@renesas.com>
-In-Reply-To: <20181115161528.34326-2-chris.brandt@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 16 Nov 2018 10:02:46 +0100
-Message-ID: <CAMuHMdW7SDv34FDOinnZC6dNm3rofJHdHH=L=s1YmzJ1ifoMiQ@mail.gmail.com>
-Subject: Re: [PATCH v7 1/2] pinctrl: Add RZ/A2 pin and gpio controller
-Content-Type: text/plain; charset="UTF-8"
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Jacopo Mondi <jacopo@jmondi.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Sender: devicetree-owner@vger.kernel.org
+To: jacopo mondi <jacopo@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Nov 15, 2018 at 5:15 PM Chris Brandt <chris.brandt@renesas.com> wrote:
-> Adds support for the pin and gpio controller found in R7S9210 (RZ/A2) SoCs.
->
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
-> v6:
->  * Bug fix: Output value not being set in rza2_chip_direction_output()
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgSmFjb3BvLA0KDQpPbiBUaHVyc2RheSwgTm92ZW1iZXIgMTUsIDIwMTggMSwgamFjb3BvIG1v
+bmRpIHdyb3RlOg0KPiA+IHY1Og0KPiA+ICAqIFNwZWNpZnkgbnVtYmVyIG9mIHBvcnRzIHVzaW5n
+IG9mX2RldmljZV9pZC5kYXRhIGFuZCBzYXZlIGFzIHByaXYtDQo+ID5ucGlucw0KPiA+ICAqIFVz
+ZSBwcml2LT5ucGlucyBldmVyeXdoZXJlIGluc3RlYWQgb2YgaGFyZCBjb2RlZCBSWkEyX05QSU5T
+DQo+ID4gICogQ2hlY2sgZ3Bpby1yYW5nZXMgdG8gbWFrZSBzdXJlIGFyZ3MgbWF0Y2hlcyBTT0MN
+Cj4gDQo+IFNvcnJ5IGFib3V0IHRoaXMsIEkgZGlkbid0IHdhbnQgdG8gYXNrIHlvdSB0byBkbyB0
+aGlzIG5vdywgaXQgbWlnaHQNCj4gaGF2ZSBoYWQgcG9zdC1wb25lZCB0byB3aGVuIGEgbmV3IFNv
+QyB3aWxsIGhhdmUgdG8gYmUgc3VwcG9ydGVkLCBidXQuLg0KDQpBcyBsb25nIGFzIEkgY2FuIGdl
+dCB0aGlzIGRyaXZlciBpbiBmb3IgNC4yMSwgSSdsbCBzdGlsbCBiZSBoYXBweS4NCg0KDQo+ID4g
+K3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHJ6YTJfcGluY3RybF9vZl9tYXRjaFtd
+ID0gew0KPiA+ICsJeyAuY29tcGF0aWJsZSA9ICJyZW5lc2FzLHI3czkyMTAtcGluY3RybCIsIC5k
+YXRhID0gKHZvaWQgKikyMiwgfSwNCj4gDQo+IC4uLiBJIHJlYWxseSBkb24ndCBsaWtlIHRoaXMs
+IEknbSBzb3JyeS4NCj4gDQo+IEkgd291bGQgcmF0aGVyIG1ha2UgYSAnc3RydWN0IHJ6YV9waW5j
+dHJsX2luZm8nIG9yIHNpbWlsYXIgd2hpY2gNCj4gY29udGFpbnMgYWxsIHRoZSBmaWVsZHMgeW91
+IG5vdyBoYXJkY29kZSAobnVtYmVyIG9mIHBvcnRzLCBwaW5zIHBlcg0KPiBwb3J0IGV0YykgYW5k
+IHdoaWNoIGlzIGVhc2lseSBleHRlbnNpYmxlIGluIGNhc2UgeW91IG5lZWQgdG8gZG8gc28uDQoN
+Ckkgd2FzIGdvaW5nIGJ5IGlmIHRoZXJlIGlzIG9ubHkgMSB2YWx1ZSBiZWluZyBzZXQsIGp1c3Qg
+cGFzcyBpbiBhIG51bWJlcg0KKGRvbid0IG1ha2UgYSBzdHJ1Y3QpLiBUaGF0IGlzIHdoYXQgaXMg
+YmVpbmcgZG9uZSBmb3IgdGhlIFItQ2FyL1JaQSANClNESEkgZHJpdmVyIChyZW5lc2FzX3NkaGlf
+aW50ZXJuYWxfZG1hYy5jKSwgYW5kIHdoYXQgSSB3YXMgYWxzbyBhc2tlZCB0byBkbw0KZm9yIHRo
+ZSBSWi9BIHdhdGNoZG9nIHRpbWVyIChyemFfd2R0LmMpLg0KDQpBdCB0aGUgbW9tZW50LCB0aGUg
+bnVtYmVyIG9mIHBvcnRzIGluIHRoZSBTT0MgaXMgdGhlIG9ubHkgdmFyaWFibGUgdGhhdCANCndv
+dWxkIGJlIGRpZmZlcmVudCBiZXR3ZWVuIFNvQ3MuIEZvciBleGFtcGxlLCAicGlucyBwZXIgcG9y
+dCIgd2lsbCANCmFsd2F5cyBiZSA4IChpdCdzIHBhcnQgb2YgdGhlIEhXIGRlc2lnbiBvZiB0aGlz
+IHBpbiBjb250cm9sbGVyLCBpdCBjYW4gbmV2ZXIgDQpjaGFuZ2UpLg0KDQpXZSBjYW4gaGF2ZSBH
+ZWVydCBnaXZlIGhpcyBvcGluaW9uIG9uIHRoZSB0b3BpYyBzaW5jZSBpdCB3YXMgaGlzIA0Kc3Vn
+Z2VzdGlvbiB0byBiZWdpbiB3aXRoLg0KDQoNCj4gSSdtIHNvcnJ5IHRoaXMgaXMgbW9yZSB3b3Jr
+LCBhbmQgYWdhaW4sIGl0IG1pZ2h0IGJlIHBvc3QtcG9uZWQgaW1vLA0KPiBwcm92aWRlZCB5b3Ug
+ZHJvcCB0aGlzIGNoYW5nZSB5b3UgaGF2ZSBpbnRyb2R1Y2VkIGhlcmUuDQoNClNpbmNlIEdlZXJ0
+IGlzIHRoZSBtYWludGFpbmVyIG9mIHRoZSBSZW5lc2FzIHBpbmN0cmwgZHJpdmVycywgSSdsbCBs
+ZXQgDQpoaW0gZGVjaWRlIGlmIEkgc2hvdWxkIGRyb3AgdGhhdCBwYXJ0IGZvciBub3cgc2luY2Ug
+b25seSAxIFNPQyBleGlzdHMgDQp0b2RheS4NCg0KQ2hyaXMNCg0K
