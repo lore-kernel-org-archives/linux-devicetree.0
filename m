@@ -1,110 +1,64 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v2 3/3] arm64: dts: qcom: msm8998-mtp: Add external SD
-Date: Thu, 15 Nov 2018 13:44:55 -0700
-Message-ID: <1542314695-24071-4-git-send-email-jhugo@codeaurora.org>
-References: <1542314695-24071-1-git-send-email-jhugo@codeaurora.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 3/5] media: sunxi: Add A10 CSI driver
+Date: Thu, 15 Nov 2018 21:51:06 +0100
+Message-ID: <20181115205106.thbkojnzdwmaeui3@flea>
+References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
+ <c53e1cdc3b139382b00ee06bf3980d3fd1742ec0.1542097288.git-series.maxime.ripard@bootlin.com>
+ <f34c79f5-66d6-2c2f-5616-020ad2b96400@xs4all.nl>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="i43yylcxwdmh6fzi"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542314695-24071-1-git-send-email-jhugo@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <f34c79f5-66d6-2c2f-5616-020ad2b96400@xs4all.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org
-Cc: bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The externally accessible SD card slot on the MTP is driven by SDCC2.
-Wire it up for use.
 
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 65 +++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8998.dtsi     |  1 +
- 2 files changed, 66 insertions(+)
+--i43yylcxwdmh6fzi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-index b4276da..cf74883 100644
---- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-@@ -241,3 +241,68 @@
- 		};
- 	};
- };
-+
-+&tlmm {
-+	sdc2_clk_on: sdc2-clk-on {
-+		pins = "sdc2_clk";
-+		bias-disable;           /* NO pull */
-+		drive-strength = <16>;  /* 16 MA */
-+	};
-+
-+	sdc2_clk_off: sdc2-clk-off {
-+		pins = "sdc2_clk";
-+		bias-disable;           /* NO pull */
-+		drive-strength = <2>;   /* 2 MA */
-+	};
-+
-+	sdc2_cmd_on: sdc2-cmd-on {
-+		pins = "sdc2_cmd";
-+		bias-pull-up;           /* pull up */
-+		drive-strength = <10>;  /* 10 MA */
-+	};
-+
-+	sdc2_cmd_off: sdc2-cmd-off {
-+		pins = "sdc2_cmd";
-+		bias-pull-up;           /* pull up */
-+		drive-strength = <2>;   /* 2 MA */
-+	};
-+
-+	sdc2_data_on: sdc2-data-on {
-+		pins = "sdc2_data";
-+		bias-pull-up;           /* pull up */
-+		drive-strength = <10>;  /* 10 MA */
-+	};
-+
-+	sdc2_data_off: sdc2-data-off {
-+		pins = "sdc2_data";
-+		bias-pull-up;           /* pull up */
-+		drive-strength = <2>;   /* 2 MA */
-+	};
-+
-+	sdc2_cd_on: sdc2-cd-on {
-+		function = "gpio";
-+		pins = "gpio95";
-+		bias-pull-up;           /* pull up */
-+		drive-strength = <2>;   /* 2 MA */
-+	};
-+
-+	sdc2_cd_off: sdc2-cd-off {
-+		function = "gpio";
-+		pins = "gpio95";
-+		bias-pull-up;           /* pull up */
-+		drive-strength = <2>;   /* 2 MA */
-+	};
-+};
-+
-+&sdhc2 {
-+	status = "okay";
-+	cd-gpios = <&tlmm 95 GPIO_ACTIVE_LOW>;
-+
-+	vmmc-supply = <&vreg_l21a_2p95>;
-+	vqmmc-supply = <&vreg_l13a_2p95>;
-+
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&sdc2_clk_on  &sdc2_cmd_on  &sdc2_data_on  &sdc2_cd_on>;
-+	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
-+};
-+
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 09deee0..82f6472 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -3,6 +3,7 @@
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8998.h>
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	interrupt-parent = <&intc>;
--- 
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Hi Hans,
+
+Thanks for your review! I'll address the other comments you made.
+
+On Tue, Nov 13, 2018 at 01:24:47PM +0100, Hans Verkuil wrote:
+> > +static int csi_probe(struct platform_device *pdev)
+> > +{
+> > +	struct sun4i_csi *csi;
+> > +	struct resource *res;
+> > +	int ret;
+> > +	int irq;
+> > +
+> > +	csi =3D devm_kzalloc(&pdev->dev, sizeof(*csi), GFP_KERNEL);
+>=20
+> devm_kzalloc is not recommended: all devm_ memory is freed when the driver
+> is unbound, but a filehandle might still have a reference open.
+
+How would a !devm variant with a kfree in the remove help? We would
+still fall in the same case, right?
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--i43yylcxwdmh6fzi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW+3cOgAKCRDj7w1vZxhR
+xV+oAP9nvGAFGsjofaPgBIoiu7YLqY9AwaWzhDFI7MH/Z+4j4gEA9Q/7d+BgUz1T
+NV6gRwThQqyyU/nCrI4qaOItr7V89QI=
+=j6qY
+-----END PGP SIGNATURE-----
+
+--i43yylcxwdmh6fzi--
