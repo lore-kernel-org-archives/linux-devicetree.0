@@ -1,50 +1,42 @@
-Return-Path: <SRS0=7Z3r=NS=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 3/3] dt-bindings: rcar-gen3-phy-usb2: Add r7s9210 support
-Date: Wed,  7 Nov 2018 12:35:58 -0500
-Message-Id: <20181107173558.54481-4-chris.brandt@renesas.com>
-In-Reply-To: <20181107173558.54481-1-chris.brandt@renesas.com>
-References: <20181107173558.54481-1-chris.brandt@renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=T75w=N2=synopsys.com=thinh.nguyen@kernel.org>
+Date: Wed, 14 Nov 2018 22:56:41 -0800
+Message-ID: <cover.1542264763.git.thinhn@synopsys.com>
+From: Thinh Nguyen <thinh.nguyen@synopsys.com>
+Subject: [PATCH v7 0/2] usb: dwc3: Workaround isoc start_transfer failure
+MIME-Version: 1.0
+Content-Type: text/plain
+To: Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: John Youn <john.youn@synopsys.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document RZ/A2 (R7S9210) SoC bindings.
+DWC_usb31 peripheral v1.70a-ea06 and prior needs a SW workaround for isoc START
+TRANSFER command failure. This patch series implements that workaround
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Change in v7:
+ - Rebased on Felipe's branch
+Change in v6:
+ - Defined more version types in "usb: dwc3: Track DWC_usb31 VERSIONTYPE"
+ - Minor cleanup/fix in "usb: dwc3: Add workaround for isoc start transfer failure"
+Change in v5:
+ - Splitted and resent from an old patch series
+ - Cleanup and fixed review issues
+Change in v4:
+ - None
+Change in v3:
+ - None
+Change in v2:
+ - None
 
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-index de7b5393c163..b545daf8ccb3 100644
---- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-+++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-@@ -1,10 +1,12 @@
- * Renesas R-Car generation 3 USB 2.0 PHY
- 
- This file provides information on what the device node for the R-Car generation
--3 and RZ/G2 USB 2.0 PHY contain.
-+3, RZ/G2 and RZ/A2 USB 2.0 PHY contain.
- 
- Required properties:
--- compatible: "renesas,usb2-phy-r8a774a1" if the device is a part of an R8A774A1
-+- compatible: "renesas,usb2-phy-r7s9210" if the device is a part of an R7S9210
-+	      SoC.
-+	      "renesas,usb2-phy-r8a774a1" if the device is a part of an R8A774A1
- 	      SoC.
- 	      "renesas,usb2-phy-r8a7795" if the device is a part of an R8A7795
- 	      SoC.
-@@ -16,8 +18,8 @@ Required properties:
- 	      R8A77990 SoC.
- 	      "renesas,usb2-phy-r8a77995" if the device is a part of an
- 	      R8A77995 SoC.
--	      "renesas,rcar-gen3-usb2-phy" for a generic R-Car Gen3 or RZ/G2
--	      compatible device.
-+	      "renesas,rcar-gen3-usb2-phy" for a generic R-Car Gen3, RZ/G2 or
-+	      RZ/A2 compatible device.
- 
- 	      When compatible with the generic version, nodes must list the
- 	      SoC-specific version corresponding to the platform first
+
+Thinh Nguyen (2):
+  usb: dwc3: Add disabling of start_transfer failure quirk
+  usb: dwc3: Add workaround for isoc start transfer failure
+
+ Documentation/devicetree/bindings/usb/dwc3.txt |   3 +
+ drivers/usb/dwc3/core.c                        |   2 +
+ drivers/usb/dwc3/core.h                        |  13 +++
+ drivers/usb/dwc3/gadget.c                      | 131 +++++++++++++++++++++++++
+ 4 files changed, 149 insertions(+)
+
 -- 
-2.16.1
+2.11.0
