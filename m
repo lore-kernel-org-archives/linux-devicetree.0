@@ -1,67 +1,89 @@
-From: Kirill Marinushkin <kmarinushkin@birdec.tech>
-Subject: [resend PATCH] dt-bindings: sound: Add documentation
-	for pcm3060 property out-single-ended
-Date: Thu, 15 Nov 2018 08:12:53 +0100
-Message-ID: <20181115071253.22558-1-kmarinushkin@birdec.tech>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Kirill Marinushkin <kmarinushkin@birdec.tech>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 6/8 v6] regulator: fixed/gpio: Update device tree bindings
+Date: Thu, 15 Nov 2018 09:01:22 +0100
+Message-ID: <20181115080124.7789-7-linus.walleij@linaro.org>
+References: <20181115080124.7789-1-linus.walleij@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181115080124.7789-1-linus.walleij@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Output of pcm3060 codec may be configured as single-ended or differential
+Deprecate the open drain binding for fixed regulator and indicate
+that we prefer this to be passed in the GPIO phandle flags.
 
-Signed-off-by: Kirill Marinushkin <kmarinushkin@birdec.tech>
+Clarify that the line inversion semantics for fixed and GPIO
+regulators completely overrides the active low flags in the
+phandle flags.
+
+Unfortunately this can not be changed to prefer that we pass
+the flags in the phandle: the bindings have been specified and
+deployed such that the presence/absence of this flag and only
+that controls the line inversion semantics. The crucial semantic
+is that the absence of the flag means the core will assume
+the line is active low, which in GPIO terms is an exception,
+as GPIO lines are normally assumed to be active high.
+
+This special device tree semantic cannot be changed without
+introducing a whole new compatible string for the fixed and
+GPIO regulators, so we just contain the situation.
+
 Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-Hello Mark,
-
-yesterday there was a misunderstanding: when I wrote you
-
-> I think you forgot one patch in the series
-
-you accidently applied the already-applied patch instead of the forgotten
-one. To avoid the confusion, in this e-mail I resend you the proper
-forgotten patch in a separate mailing thread.
-
-Please apply this patch for-next.
-
-Best Regards,
-Kirill
+ChangeLog v3->v6:
+- Resending.
+ChangeLog v2->v3:
+- Resending.
+ChangeLog v1->v2:
+- Collect Rob's ACK.
 ---
- Documentation/devicetree/bindings/sound/pcm3060.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../bindings/regulator/fixed-regulator.txt          | 13 +++++++++++--
+ .../bindings/regulator/gpio-regulator.txt           |  4 ++++
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/pcm3060.txt b/Documentation/devicetree/bindings/sound/pcm3060.txt
-index 90fcb8523099..97de66932d44 100644
---- a/Documentation/devicetree/bindings/sound/pcm3060.txt
-+++ b/Documentation/devicetree/bindings/sound/pcm3060.txt
-@@ -9,9 +9,15 @@ Required properties:
- - reg : the I2C address of the device for I2C, the chip select
-         number for SPI.
- 
-+Optional properties:
+diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+index 0c2a6c8a1536..a7a1cd0dfa6e 100644
+--- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+@@ -8,10 +8,19 @@ Optional properties:
+ - gpio: gpio to use for enable control
+ - startup-delay-us: startup time in microseconds
+ - enable-active-high: Polarity of GPIO is Active high
+-If this property is missing, the default assumed is Active low.
++  If this property is missing, the default assumed is Active low.
++  If the phandle flags to the GPIO handle also flag the line as active
++  low or high, that will be ignored for fixed regulators and the
++  presence or absence of this flag solely controls the inversion
++  semantics.
++-vin-supply: Input supply name.
 +
-+- ti,out-single-ended: "true" if output is single-ended;
-+                       "false" or not specified if output is differential.
-+
- Examples:
++Deprecated properties:
+ - gpio-open-drain: GPIO is open drain type.
+   If this property is missing then default assumption is false.
+--vin-supply: Input supply name.
++  Do not use this property in new device trees: instead use the
++  phandle flag to indicate to the GPIO provider that the line
++  should be handled as open drain.
  
- 	pcm3060: pcm3060@46 {
- 		 compatible = "ti,pcm3060";
- 		 reg = <0x46>;
-+		 ti,out-single-ended = "true";
- 	};
+ Any property defined as part of the core regulator
+ binding, defined in regulator.txt, can also be used.
+diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+index 1f496159e2bb..8fef3e5358a2 100644
+--- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+@@ -14,6 +14,10 @@ Optional properties:
+ 			  defualt is LOW if nothing is specified.
+ - startup-delay-us	: Startup time in microseconds.
+ - enable-active-high	: Polarity of GPIO is active high (default is low).
++			  If the phandle flags to the GPIO handle also flag the line as
++			  active low or high, that will be ignored for fixed regulators
++			  and the presence or absence of this flag solely controls the
++			  inversion semantics.
+ - regulator-type	: Specifies what is being regulated, must be either
+ 			  "voltage" or "current", defaults to voltage.
+ 
 -- 
-2.13.6
+2.17.2
