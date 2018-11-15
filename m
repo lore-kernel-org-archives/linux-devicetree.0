@@ -1,63 +1,162 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCH 10/23] PCI: mobiveil: fix the INTx process error
-Date: Thu, 15 Nov 2018 02:59:48 +0000
-Message-ID: <AM6PR04MB5781A186E0F6D9C0E7BABAF384DC0@AM6PR04MB5781.eurprd04.prod.outlook.com>
-References: <20181106131807.29951-1-Zhiqiang.Hou@nxp.com>
- <20181106131807.29951-11-Zhiqiang.Hou@nxp.com>
+From: Alex Elder <elder@linaro.org>
+Subject: Re: [RFC PATCH 09/12] soc: qcom: ipa: main IPA source file
+Date: Wed, 14 Nov 2018 21:11:38 -0600
+Message-ID: <4cc029b5-590d-fcba-6c29-b8dac6d03133@linaro.org>
+References: <20181107003250.5832-1-elder@linaro.org>
+ <20181107003250.5832-10-elder@linaro.org>
+ <CAK8P3a0RH4wbigKR0zsbxPzqWDjrLEkYfQk4GNxhGuxs=HJHHw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181106131807.29951-11-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <CAK8P3a0RH4wbigKR0zsbxPzqWDjrLEkYfQk4GNxhGuxs=HJHHw@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-Cc: Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: David Miller <davem@davemloft.net>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, syadagir@codeaurora.org, mjavid@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3VicmFobWFueWEsDQoNCkFzIE5YUCBkb2VzIG5vdCBpbnRlZ3JhdGUgTW9iaXZlaWwncyBJ
-TlR4IGFuZCBNU0kgaW50ZXJydXB0IGNvbnRyb2xsZXIsIEkgYW0gdW5hYmxlIHRvIHRlc3QgdGhp
-cyBmaXguDQpDYW4geW91IGhlbHAgdG8gdGVzdCB0aGlzIGZpeD8NCg0KVGhhbmtzLA0KWmhpcWlh
-bmcNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogWi5xLiBIb3UNCj4gU2Vu
-dDogMjAxOMTqMTHUwjbI1SAyMToyMA0KPiBUbzogbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsg
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIu
-a2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gYmhlbGdhYXNAZ29v
-Z2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gbC5z
-dWJyYWhtYW55YUBtb2JpdmVpbC5jby5pbjsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpDQo+
-IDxsZW95YW5nLmxpQG54cC5jb20+OyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tDQo+IENjOiBN
-aW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBNLmguIExpYW4NCj4gPG1pbmdodWFuLmxp
-YW5AbnhwLmNvbT47IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPjsgWi5xLiBIb3UN
-Cj4gPHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiBTdWJqZWN0OiBbUEFUQ0ggMTAvMjNdIFBDSTog
-bW9iaXZlaWw6IGZpeCB0aGUgSU5UeCBwcm9jZXNzIGVycm9yDQo+IA0KPiBGcm9tOiBIb3UgWmhp
-cWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiANCj4gSW4gdGhlIGxvb3AgYmxvY2ssIHRo
-ZXJlIGlzIG5vdCBjb2RlIGNoYW5nZSB0aGUgbG9vcCBrZXksIHRoaXMgcGF0Y2ggdXBkYXRlZA0K
-PiB0aGUgbG9vcCBrZXkgYnkgcmUtcmVhZCB0aGUgSU5UeCBzdGF0dXMgcmVnaXN0ZXIuDQo+IA0K
-PiBUaGlzIHBhdGNoIGFsc28gY2hhbmdlIHRvIGNsZWFyIHRoZSBoYW5kbGVkIElOVHggc3RhdHVz
-Lg0KPiANCj4gTm90ZTogTmVlZCBNViB0byB0ZXN0IHRoaXMgY2hhbmdlLg0KPiANCj4gU2lnbmVk
-LW9mZi1ieTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gLS0tDQo+ICBk
-cml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYyB8IDEzICsrKysrKysrKy0tLS0N
-Cj4gIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+IA0K
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2ZWlsLmMNCj4g
-Yi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYw0KPiBpbmRleCBkMDMzOTI5
-NDA5NDQuLjg4NGM5Zjk1Mzc0ZCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxl
-ci9wY2llLW1vYml2ZWlsLmMNCj4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1v
-Yml2ZWlsLmMNCj4gQEAgLTM2MSw2ICszNjEsNyBAQCBzdGF0aWMgdm9pZCBtb2JpdmVpbF9wY2ll
-X2lzcihzdHJ1Y3QgaXJxX2Rlc2MgKmRlc2MpDQo+ICAJLyogSGFuZGxlIElOVHggKi8NCj4gIAlp
-ZiAoaW50cl9zdGF0dXMgJiBQQUJfSU5UUF9JTlRYX01BU0spIHsNCj4gIAkJc2hpZnRlZF9zdGF0
-dXMgPSBjc3JfcmVhZGwocGNpZSwgUEFCX0lOVFBfQU1CQV9NSVNDX1NUQVQpOw0KPiArCQlzaGlm
-dGVkX3N0YXR1cyAmPSBQQUJfSU5UUF9JTlRYX01BU0s7DQo+ICAJCXNoaWZ0ZWRfc3RhdHVzID4+
-PSBQQUJfSU5UWF9TVEFSVDsNCj4gIAkJZG8gew0KPiAgCQkJZm9yX2VhY2hfc2V0X2JpdChiaXQs
-ICZzaGlmdGVkX3N0YXR1cywgUENJX05VTV9JTlRYKSB7IEBADQo+IC0zNzIsMTIgKzM3MywxNiBA
-QCBzdGF0aWMgdm9pZCBtb2JpdmVpbF9wY2llX2lzcihzdHJ1Y3QgaXJxX2Rlc2MgKmRlc2MpDQo+
-ICAJCQkJCWRldl9lcnJfcmF0ZWxpbWl0ZWQoZGV2LCAidW5leHBlY3RlZCBJUlEsDQo+IElOVCVk
-XG4iLA0KPiAgCQkJCQkJCSAgICBiaXQpOw0KPiANCj4gLQkJCQkvKiBjbGVhciBpbnRlcnJ1cHQg
-Ki8NCj4gLQkJCQljc3Jfd3JpdGVsKHBjaWUsDQo+IC0JCQkJCSAgIHNoaWZ0ZWRfc3RhdHVzIDw8
-IFBBQl9JTlRYX1NUQVJULA0KPiArCQkJCS8qIGNsZWFyIGludGVycnVwdCBoYW5kbGVkICovDQo+
-ICsJCQkJY3NyX3dyaXRlbChwY2llLCAxIDw8IChQQUJfSU5UWF9TVEFSVCArIGJpdCksDQo+ICAJ
-CQkJCSAgIFBBQl9JTlRQX0FNQkFfTUlTQ19TVEFUKTsNCj4gIAkJCX0NCj4gLQkJfSB3aGlsZSAo
-KHNoaWZ0ZWRfc3RhdHVzID4+IFBBQl9JTlRYX1NUQVJUKSAhPSAwKTsNCj4gKw0KPiArCQkJc2hp
-ZnRlZF9zdGF0dXMgPSBjc3JfcmVhZGwocGNpZSwNCj4gKwkJCQkJCSAgIFBBQl9JTlRQX0FNQkFf
-TUlTQ19TVEFUKTsNCj4gKwkJCXNoaWZ0ZWRfc3RhdHVzICY9IFBBQl9JTlRQX0lOVFhfTUFTSzsN
-Cj4gKwkJCXNoaWZ0ZWRfc3RhdHVzID4+PSBQQUJfSU5UWF9TVEFSVDsNCj4gKwkJfSB3aGlsZSAo
-c2hpZnRlZF9zdGF0dXMgIT0gMCk7DQo+ICAJfQ0KPiANCj4gIAkvKiByZWFkIGV4dHJhIE1TSSBz
-dGF0dXMgcmVnaXN0ZXIgKi8NCj4gLS0NCj4gMi4xNy4xDQoNCg==
+On 11/7/18 8:08 AM, Arnd Bergmann wrote:
+> On Wed, Nov 7, 2018 at 1:33 AM Alex Elder <elder@linaro.org> wrote:
+> 
+>> +static void ipa_client_remove_deferred(struct work_struct *work);
+> 
+> Try to avoid forward declarations by reordering the code in call order,
+> it will also make it easier to read.
+> 
+>> +static DECLARE_WORK(ipa_client_remove_work, ipa_client_remove_deferred);
+
+Done.  I've actually reworked this a lot, and pulled all the
+clock (and interconnect) related code into a separate source file.
+No more forward declarations (there anyway), and the work structure
+is now embedded in the top-level IPA structure so I can derive
+it again in the work function (rather than using the global).
+
+>> +static struct ipa_context ipa_ctx_struct;
+>> +struct ipa_context *ipa_ctx = &ipa_ctx_struct;
+> 
+> Global state variables should generally be removed as well, and
+> passed around as function arguments.
+
+Working on this.
+
+>> +static int hdr_init_local_cmd(u32 offset, u32 size)
+>> +{
+>> +       struct ipa_desc desc = { };
+>> +       struct ipa_dma_mem mem;
+>> +       void *payload;
+>> +       int ret;
+>> +
+>> +       if (ipa_dma_alloc(&mem, size, GFP_KERNEL))
+>> +               return -ENOMEM;
+>> +
+>> +       offset += ipa_ctx->smem_offset;
+>> +
+>> +       payload = ipahal_hdr_init_local_pyld(&mem, offset);
+>> +       if (!payload) {
+>> +               ret = -ENOMEM;
+>> +               goto err_dma_free;
+>> +       }
+>> +
+>> +       desc.type = IPA_IMM_CMD_DESC;
+>> +       desc.len_opcode = IPA_IMM_CMD_HDR_INIT_LOCAL;
+>> +       desc.payload = payload;
+>> +
+>> +       ret = ipa_send_cmd(&desc);
+> 
+> You have a bunch of dynamic allocations in here, which you
+> then immediately tear down again after the command is complete.
+> I can't see at all what you do with the DMA address, since you
+> seem to not use the virtual address at all but only store
+> the physical address in some kind of descriptor without ever
+> writing to it.
+
+I should probably have added at least a comment here.  The
+DMA memory was zeroed at the time of allocation.  That zero
+buffer is then referred to in the payload to the HDR_INIT_LOCAL
+immediate command.  So that command, when executing in the IPA
+hardware, uses the contents of the buffer whose physical address
+it's supplied, which in this case is full of zeroes.  We don't
+use the virtual address because the buffer came pre-zeroed.
+
+Based on your comment elsewhere I will be putting the command
+payload in a structure on the stack rather than allocating it
+dynamically.
+
+> Am I missing something here?
+> 
+>> +/* Remoteproc callbacks for SSR events: prepare, start, stop, unprepare */
+>> +int ipa_ssr_prepare(struct rproc_subdev *subdev)
+>> +{
+>> +       printk("======== SSR prepare received ========\n");
+> 
+> I think you mean dev_dbg() here. A plain printk() without a level
+> is not correct and we probably don't want those messages to arrive
+> on the console for normal users.
+
+Yes, this was obviously a debug message in some code I should
+have removed before sending...
+
+>> +static int ipa_firmware_load(struct de
+>> +
+>> +err_clear_dev:
+>> +       ipa_ctx->lan_cons_ep_id = 0;
+>> +       ipa_ctx->cmd_prod_ep_id = 0;
+>> +       ipahal_exit();
+>> +err_dma_exit:
+>> +       ipa_dma_exit();
+>> +err_clear_gsi:
+>> +       ipa_ctx->gsi = NULL;
+>> +       ipa_ctx->ipa_phys = 0;
+>> +       ipa_reg_exit();
+>> +err_clear_ipa_irq:
+>> +       ipa_ctx->ipa_irq = 0;
+>> +err_clear_filter_bitmap:
+>> +       ipa_ctx->filter_bitmap = 0;
+>> +err_interconnect_exit:
+>> +       ipa_interconnect_exit();
+>> +err_clock_exit:
+>> +       ipa_clock_exit();
+>> +       ipa_ctx->dev = NULL;
+>> +out_smp2p_exit:
+>> +       ipa_smp2p_exit(dev);
+>> +
+> 
+> No need to initialize members to zero when you are about
+> to free the structure.
+
+The IPA context is in fact a global, static structure at
+the moment.  All of this bookkeeping (zeroing out things)
+is a habitual practice, basically.  Regardless your point
+is good and I'll remove these kinds of things as part of
+converting to not using globals.
+
+>> +static struct platform_driver ipa_plat_drv = {
+>> +       .probe = ipa_plat_drv_probe,
+>> +       .remove = ipa_plat_drv_remove,
+>> +       .driver = {
+>> +               .name = "ipa",
+>> +               .owner = THIS_MODULE,
+>> +               .pm = &ipa_pm_ops,
+>> +               .of_match_table = ipa_plat_drv_match,
+>> +       },
+>> +};
+>> +
+>> +builtin_platform_driver(ipa_plat_drv);
+> 
+> This should be module_platform_driver(), and allow unloading
+> the driver.
+
+Yes.  I've done this for my own use, but the code is not
+currently able to shut down cleanly.  I've been fixing a
+*lot* of the things that don't clean up after themselves
+today but there's more work before I can say this can be
+safely built as a module.  But it's a requirement.
+
+					-Alex
+
+
+
+> 
+>         Arnd
+> 
