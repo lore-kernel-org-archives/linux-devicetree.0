@@ -1,33 +1,64 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 0/6] OLPC 1.75 Keyboard/Touchpad fixes
-Date: Thu, 15 Nov 2018 11:15:30 -0800
-Message-ID: <20181115191530.GB212221@dtor-ws>
-References: <20181112023029.648408-1-lkundrak@v3.sk>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 3/4] arm64: dts: qcom: msm8998: Add SDC2 control pins
+Date: Thu, 15 Nov 2018 11:16:23 -0800
+Message-ID: <20181115191623.GK10915@tuxbook-pro>
+References: <1542302291-6864-1-git-send-email-jhugo@codeaurora.org>
+ <1542302291-6864-4-git-send-email-jhugo@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181112023029.648408-1-lkundrak@v3.sk>
+In-Reply-To: <1542302291-6864-4-git-send-email-jhugo@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 12, 2018 at 03:30:23AM +0100, Lubomir Rintel wrote:
-> This makes keyboard/touchpad work on a DT MMP2 platform.
+On Thu 15 Nov 09:18 PST 2018, Jeffrey Hugo wrote:
+
+> The SDC2 control pins are typically used to manage sleep.
 > 
-> Changes since v1:
-> - Collected Acks
-> - Replaced "Input: olpc_apsp: depend on CONFIG_OF" patch with "Input:
->   olpc_apsp: drop CONFIG_OLPC dependency", since it was correctly
->   pointed out that the driver doesn't actually depend on OF.
-> - Dropped "Input: olpc_apsp: allocate the GPIOs used" and "dt-bindings:
->   olpc,ap-sp: add GPIO lines" since at the moment they are not useful
->   for much more than documenting the lines the SP uses and actually
->   claiming them was deemed not to be a good idea.
-> - Fixed error handling in the "enable the SP clock" patch.
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8998-pins.dtsi | 78 ++++++++++++++++++++++++++++++
 
-Applied the series, thank you.
+Rather than adding a -pins file, add the pinctrl states the individual
+dts(i) directly.
 
--- 
-Dmitry
+>  arch/arm64/boot/dts/qcom/msm8998.dtsi      |  2 +
+>  2 files changed, 80 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+> new file mode 100644
+> index 0000000..a22abf9
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+> @@ -0,0 +1,78 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2018, The Linux Foundation. All rights reserved. */
+> +
+> +&tlmm {
+> +	sdc2_clk_on: sdc2_clk_on {
+
+Use _ in labels, - in node names.
+
+> +		config {
+
+You don't have to put the pinctrl state properties in an additional
+subnode anymore, so feel free to remove the extra subnode level.
+
+> +			pins = "sdc2_clk";
+> +			bias-disable;           /* NO pull */
+> +			drive-strength = <16>;  /* 16 MA */
+
+Please push electrical properties to the board dts instead of the
+platform one, as they might be board specific.
+
+> +		};
+> +	};
+
+Apart from this the patch loogs good.
+
+Regards,
+Bjorn
