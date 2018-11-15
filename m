@@ -1,83 +1,56 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v4 08/26] drm/sun4i: sun6i_mipi_dsi: Fix VBP
- size calculation
-Date: Thu, 15 Nov 2018 23:19:53 +0530
-Message-ID: <CAMty3ZAEHiovm6OF6JvJVQR4aqpG1Q3ML5YqxJkF2ntwRkUO=A@mail.gmail.com>
-References: <20181113111633.20189-1-jagan@amarulasolutions.com>
- <20181113111633.20189-9-jagan@amarulasolutions.com> <20181115095551.uctdkfmuwlnzhjnn@flea>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: vitor <vitor.soares@synopsys.com>
+Subject: Re: [PATCH v10 0/9] Add the I3C subsystem
+Date: Thu, 15 Nov 2018 18:03:47 +0000
+Message-ID: <1d64f21a-ad24-94e0-2c17-25729ef59a31@synopsys.com>
+References: <20181026144333.12276-1-boris.brezillon@bootlin.com>
+ <76b1d15d-232c-d8ba-5eba-8394e71be725@synopsys.com>
+ <20181115135731.25f60990@bbrezillon> <20181115150137.GB4169@kunai>
+ <20181115162826.42b54776@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBTXDW3PQKGQEFU5VMRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181115095551.uctdkfmuwlnzhjnn@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181115162826.42b54776@bbrezillon>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>
+Cc: vitor <vitor.soares@synopsys.com>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicet>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 15, 2018 at 3:26 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> Hi,
->
-> On Tue, Nov 13, 2018 at 04:46:15PM +0530, Jagan Teki wrote:
-> > The horizontal and vertical back porch calculation in BSP
-> > code is simply following the Linux drm comment diagram, in
-> > include/drm/drm_modes.h which is
-> >
-> > [hv]back porch = [hv]total - [hv]sync_end
-> >
-> > BSP code form BPI-M64-bsp is calculating vertical back porch as
-> > (from linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c)
-> >
-> > timmings->ver_sync_time= panel_info->lcd_vspw;
-> > timmings->ver_back_porch= panel_info->lcd_vbp-panel_info->lcd_vspw;
-> >
-> > vbp = panel->lcd_vbp;
-> > vspw = panel->lcd_vspw;
-> > dsi_dev[sel]->dsi_basic_size0.bits.vbp = vbp-vspw;
-> > dsi_dev[sel]->dsi_basic_size0.bits.vbp = panel->lcd_vbp - panel->lcd_vspw;
-> > =>  timmings->ver_back_porch + panel_info->lcd_vspw - panel_info->lcd_vspw
-> > =>  timmings->ver_back_porch
-> > =>  mode->vtotal - mode->end
-> >
-> > Which evatually same as mode->vtotal - mode->vsync_end so update the
-> > same in SUN6I_DSI_BASIC_SIZE0_VBP
-> >
-> > On the information note, existing SUN6I_DSI_BASIC_SIZE0_VSA is proper
-> > value.
-> >
-> > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->
-> I've tested your changes on my A33 board, and this commit will break
-> it.
->
-> It creates vblank timeouts, and visual artifacts at the bottom of the
-> display.
+Hi Boris,
 
-Strange, VBP is earlier gives front porch which is anyway wrong.
 
+On 15/11/18 15:28, Boris Brezillon wrote:
+> On Thu, 15 Nov 2018 16:01:37 +0100
+> Wolfram Sang <wsa@the-dreams.de> wrote:
 >
-> Later commits seem to fix the issue, but will create some blanking on
-> the upper third of the display.
->
-> Since the documentation is quite sparse, and a MIPI-DSI analyzer is
-> way too expensive, I'd really like to have at least what each of these
-> commits are actually fixing, and what symptoms each of these were
-> causing, and not just "the BSP does it".
+>> Hi Boris,
+>>
+>>> What we could do though, is expose I3C devices that do not have a
+>>> driver in kernel space, like spidev does.
+>> ...
+>>
+>>> Mark, Wolfram, Arnd, Greg, any opinion?
+>> Is there a benefit for having drivers in userspace? My gut feeling is to
+>> encourage people to write kernel drivers. If this is, for some reason,
+>> not possible for some driver, then we have a use case at hand to test
+>> the then-to-be-developed userspace interface against. Until then, I
+>> personally wouldn't waste effort on designing it without a user in
+>> sight.
+> I kind of agree with that. Vitor, do you have a use case in mind for
+> such userspace drivers? I don't think it's worth designing an API for
+> something we don't need (yet).
 
-W/o this 2-lane panel is breaking, same vblank timeout and visual
-artifacts at the bottom of the panel. though the commits may reference
-BSP, I have at-least tested on 3 different panels for us to prove its
-working.
+My use case is a tool for tests, lets say like the i2c tools. There is 
+other subsystems, some of them mentioned on this thread, that have and 
+ioctl system call or other method to change parameters or send data.
 
->
-> Having some datasheet for the panels you had working would help too.
 
-Unfortunately datasheet doesn't have any required information what we
-actually looking for.
+I rise this topic because I really think it worth to define now how this 
+should be design (and for me how to do the things right) to avoid future 
+issues.
+
+
+Best regards,
+
+Vitor Soares
