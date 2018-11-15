@@ -1,95 +1,33 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 0/5] media: Allwinner A10 CSI support
-Date: Thu, 15 Nov 2018 20:10:31 +0100
-Message-ID: <20181115191031.7jpb2g23fksof625@flea>
-References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
- <CAGb2v66ygbcomUMkcv8qMCAs_qviFMPzpxj-F4=YBrpuLrdSUw@mail.gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 0/6] OLPC 1.75 Keyboard/Touchpad fixes
+Date: Thu, 15 Nov 2018 11:15:30 -0800
+Message-ID: <20181115191530.GB212221@dtor-ws>
+References: <20181112023029.648408-1-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="i7rh5slrqsdzymby"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v66ygbcomUMkcv8qMCAs_qviFMPzpxj-F4=YBrpuLrdSUw@mail.gmail.com>
+In-Reply-To: <20181112023029.648408-1-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Nov 12, 2018 at 03:30:23AM +0100, Lubomir Rintel wrote:
+> This makes keyboard/touchpad work on a DT MMP2 platform.
+> 
+> Changes since v1:
+> - Collected Acks
+> - Replaced "Input: olpc_apsp: depend on CONFIG_OF" patch with "Input:
+>   olpc_apsp: drop CONFIG_OLPC dependency", since it was correctly
+>   pointed out that the driver doesn't actually depend on OF.
+> - Dropped "Input: olpc_apsp: allocate the GPIOs used" and "dt-bindings:
+>   olpc,ap-sp: add GPIO lines" since at the moment they are not useful
+>   for much more than documenting the lines the SP uses and actually
+>   claiming them was deemed not to be a good idea.
+> - Fixed error handling in the "enable the SP clock" patch.
 
---i7rh5slrqsdzymby
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied the series, thank you.
 
-Hi,
-
-On Wed, Nov 14, 2018 at 11:24:48AM +0800, Chen-Yu Tsai wrote:
-> On Tue, Nov 13, 2018 at 4:24 PM Maxime Ripard <maxime.ripard@bootlin.com>=
- wrote:
-> > Here is a series introducing the support for the A10 (and SoCs of the s=
-ame
-> > generation) CMOS Sensor Interface (called CSI, not to be confused with
-> > MIPI-CSI, which isn't support by that IP).
-> >
-> > That interface is pretty straightforward, but the driver has a few issu=
-es
-> > that I wanted to bring up:
-> >
-> >   * The only board I've been testing this with has an ov5640 sensor
-> >     attached, which doesn't work with the upstream driver. Copying the
-> >     Allwinner init sequence works though, and this is how it has been
-> >     tested. Testing with a second sensor would allow to see if it's an
-> >     issue on the CSI side or the sensor side.
-> >   * When starting a capture, the last buffer to capture will fail due to
-> >     double buffering being used, and we don't have a next buffer for the
-> >     last frame. I'm not sure how to deal with that though. It seems like
-> >     some drivers use a scratch buffer in such a case, some don't care, =
-so
-> >     I'm not sure which solution should be preferred.
-> >   * We don't have support for the ISP at the moment, but this can be ad=
-ded
-> >     eventually.
-> >
-> >   * How to model the CSI module clock isn't really clear to me. It looks
-> >     like it goes through the CSI controller and then is muxed to one of=
- the
-> >     CSI pin so that it can clock the sensor. I'm not quite sure how to
-> >     model it, if it should be a clock, the CSI driver being a clock
-> >     provider, or if the sensor should just use the module clock directl=
-y.
->=20
-> Which clock are you talking about? MCLK? This seems to be fed directly fr=
-om
-> the CCU, as there doesn't seem to be controls for it within the CSI hardw=
-are
-> block, and the diagram doesn't list it either. IMO you don't have to mode=
-l it.
-> The camera sensor device node would just take a reference to it directly.
-
-Yeah, that what I went for, I guess we agree :)
-
-> You would probably enable the (separate) pinmux setting in the CSI
-> controller node.
-
-I'll change that.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---i7rh5slrqsdzymby
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW+3EpwAKCRDj7w1vZxhR
-xay5AP0YIuMeE90TQHjAJ1bmsn3H3GyD9S7o46GGYjpDWeiDVAEA0LfACvVkvr4a
-UO4k+2DcRSF8um3oE1z73dhuaKYkJwk=
-=1sff
------END PGP SIGNATURE-----
-
---i7rh5slrqsdzymby--
+-- 
+Dmitry
