@@ -1,52 +1,45 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH 0/4 v1] Mezzanine Low Speed connector bus
-Date: Thu, 15 Nov 2018 08:26:56 -0800
-Message-ID: <1eaeec41-782d-63fa-b555-f7580ec8812f@gmail.com>
-References: <20180823103332.32047-1-linus.walleij@linaro.org>
- <cd3100ee-03a0-9218-b166-14f15d7669f6@gmail.com>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH 1/2] ASoC: ak4118: Add support for AK4118 S/PDIF transceiver
+Date: Thu, 15 Nov 2018 17:31:44 +0100
+Message-ID: <CAJiuCccTwxA4Am=H5vMw9PBJQi_+ErSPEsT5C7PRpv_b6y9EPA@mail.gmail.com>
+References: <20181108124934.32381-1-peron.clem@gmail.com> <20181113225135.GQ2089@sirena.org.uk>
+ <CAJiuCcewYbt4SDZfFzDfTfTzj_Z1cm=S3_GAA-zcYGW-jzXR4w@mail.gmail.com> <20181114173129.GY2089@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cd3100ee-03a0-9218-b166-14f15d7669f6@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dev@lists.96boards.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181114173129.GY2089@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Adrien Charruel <adrien.charruel@devialet.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Hi Mark,
 
-On 8/23/18 4:06 PM, Frank Rowand wrote:
-> On 08/23/18 03:33, Linus Walleij wrote:
->> I have been a bit hesitant to reiterate the series, but this is
->> anyways a v1 of the 96Boards Mezzanine Low Speed connector
->> driver framework.
+On Wed, 14 Nov 2018 at 18:31, Mark Brown <broonie@kernel.org> wrote:
+>
+> On Wed, Nov 14, 2018 at 11:55:17AM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > On Tue, 13 Nov 2018 at 23:51, Mark Brown <broonie@kernel.org> wrote:
+> > > On Thu, Nov 08, 2018 at 01:49:33PM +0100, Cl=C3=A9ment P=C3=A9ron wro=
+te:
+>
+> > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > +/*
+> > > > + * ak4118.c  --  Asahi Kasei ALSA Soc Audio driver
+> > > > + *
+>
+> > > Please make the entire comment a C++ one so this looks more intention=
+al.
+>
+> > I check from other files and also this article says :
+> > "For normal C source files, the string will be a comment using the
+> > "//" syntax; header files, instead, use traditional (/* */) comments
+> > for reasons related to tooling"
+> > https://lwn.net/Articles/739183/
+>
+> Right, and what I said was that you should make the entire comment a C++
+> one which means that the magic line will be C++ as required.
 
-< snip >
-
-> I will read through the rest of the series and revisit my
-> previous conclusions, but most likely not for a few days.
-> 
-> -Frank
-
-< snip >
-
-My apologies for continuing to not getting to this task.  It
-has been in the top grouping of my todo list but has been
-pushed aside by a rather busy schedule of conferences and
-company internal work.  It remains up at the top of my todo
-list, but most likely will still be shunted aside for three
-more weeks of other pressing work.
-
-I will get to it, I definitely have not forgotten it.
-
--Frank
+Yes, sorry I was confused between C++ and C99,
+Regards,
+Clement
