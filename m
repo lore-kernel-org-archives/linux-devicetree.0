@@ -1,49 +1,95 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH] arm64: dts: allwinner: h6: fix EMAC compatible
- string sequence
-Date: Thu, 15 Nov 2018 11:15:51 +0800
-Message-ID: <20181115031551.11756-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Alex Elder <elder@linaro.org>
+Subject: Re: [RFC PATCH 10/12] soc: qcom: ipa: data path
+Date: Wed, 14 Nov 2018 21:31:12 -0600
+Message-ID: <a1517ea0-b651-f24e-4890-8ceb6e2b14c6@linaro.org>
+References: <20181107003250.5832-1-elder@linaro.org>
+ <20181107003250.5832-11-elder@linaro.org>
+ <CAK8P3a0nkfwFCCVHaTJ+kJGWxO+qFTzTLnRgB-NG0AyMEsv3bA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBAOKWPPQKGQEXJE2MIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a0nkfwFCCVHaTJ+kJGWxO+qFTzTLnRgB-NG0AyMEsv3bA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: David Miller <davem@davemloft.net>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, syadagir@codeaurora.org, mjavid@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The SoC-specific compatible should come before the fallback compatible
-string when multiple compatible strings are present, but the sequence is
-wrong currently on H6 EMAC node (A64 fallback before H6 compatible).
+On 11/7/18 8:55 AM, Arnd Bergmann wrote:
+> On Wed, Nov 7, 2018 at 1:33 AM Alex Elder <elder@linaro.org> wrote:
+>>
+>> This patch contains "ipa_dp.c", which includes the bulk of the data
+>> path code.  There is an overview in the code of how things operate,
+>> but there are already plans to rework this portion of the driver.
+>>
+>> In particular:
+>>   - Interrupt handling will be replaced with a threaded interrupt
+>>     handler.  Currently handling occurs in a combination of
+>>     interrupt and workqueue context, and this requires locking
+>>     and atomic operations for proper synchronization.
+> 
+> You probably don't want to use just a threaded IRQ handler to
+> start the poll function, that would still require an extra indirection.
 
-Fix the sequence.
+That's a really good point.  However I think that the path I'll
+take to *getting* to scheduling the poll in interrupt context
+will use a threaded interrupt handler.  I'm hoping that will
+allow me to simplify the code in steps.
 
-Fixes: c8ced5516d23 ("arm64: allwinner: h6: add EMAC device nodes")
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The main reason for this split between working in interrupt
+context when possible, but pushing to a workqueue when not, is
+to allow IPA clock(s) to be turned off.  Enabling the clocks
+is a blocking operation, so can't' be done in the top half
+interrupt handler.  The thought was it would be best to work
+in interrupt context--if the clock was already active--but
+to defer to a workqueue to turn the clock on if necessary.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 45bbb5116446..d1ed451f4d9e 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -326,8 +326,8 @@
- 		};
- 
- 		emac: ethernet@5020000 {
--			compatible = "allwinner,sun50i-a64-emac",
--				     "allwinner,sun50i-h6-emac";
-+			compatible = "allwinner,sun50i-h6-emac",
-+				     "allwinner,sun50i-a64-emac";
- 			syscon = <&syscon>;
- 			reg = <0x05020000 0x10000>;
- 			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
--- 
-2.18.1
+The result requires locking and duplication of code that I
+find to be pretty confusing--and hard to reason about.  I
+have been planning to re-do things to be better suited to
+NAPI, and knowing that, I haven't given the data path as
+much attention as some of the rest.
+
+> However, you can probably use the top half of the threaded
+> handler to request the poll function if necessary but use
+> the bottom half for anything that does not go through poll.
+> 
+>>   - Currently, only receive endpoints use NAPI.  Transmit
+>>     completion interrupts are disabled, and are handled in batches
+>>     by periodically scheduling an interrupting no-op request.
+>>     The plan is to arrange for transmit requests to generate
+>>     interrupts, and their completion will be processed with other
+>>     completions in the NAPI poll function.  This will also allow
+>>     accurate feedback about packet sojourn time to be provided to
+>>     queue limiting mechanisms.
+> 
+> Right, that is definitely required here. I also had a look at
+> the gsi_channel_queue() function, which sits in the middle of
+> the transmit function and is rather unoptimized. I'd suggest moving
+> that into the caller so we can see what is going on, and then
+> optimizing it from there.
+
+Yes, I agree with that.  There are multiple levels of abstraction
+in play and they aren't helpful.  We have ipa_desc structures that
+are translated by ipa_send() into gsi_xfer_elem structures, which
+are ultimately recorded by gsi_channel_queue() as 16 byte gsi_tre
+structures.  At least one of those translations can go away.
+
+>>   - Not all receive endpoints use NAPI.  The plan is for *all*
+>>     endpoints to use NAPI.  And because all endpoints share a
+>>     common GSI interrupt, a single NAPI structure will used to
+>>     managing the processing for all completions on all endpoints.
+>>   - Receive buffers are posted to the hardware by a workqueue
+>>     function.  Instead, the plan is to have this done by the
+>>     NAPI poll routine.
+> 
+> Makes sense, yes.
+
+Thanks.
+
+					-Alex
+
+> 
+>       Arnd
+> 
