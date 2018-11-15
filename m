@@ -1,52 +1,38 @@
-From: Vinod Koul <vinod.koul@linaro.org>
-Subject: Re: [PATCH v6 0/2] arm64: dts: add prng-ee nodes
-Date: Thu, 15 Nov 2018 09:15:18 +0530
-Message-ID: <20181115034518.GG3060@vkoul-mobl>
-References: <20181001062151.27607-1-vkoul@kernel.org>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH v6 3/3] arm64: dts: allwinner: a64: enable sound on Pinebook
+Date: Wed, 14 Nov 2018 21:47:36 -0800
+Message-ID: <CA+E=qVegv61NgF4peK=Bz2RDvjCUX+M_njrpC4Ph+Jv+r2KFgg@mail.gmail.com>
+References: <20181108063929.29720-1-anarsoul@gmail.com> <20181108063929.29720-4-anarsoul@gmail.com>
+ <CAGb2v65zb4rXJJv018AfDC-YQgAAmahmQ=-Bb5CyU3kA6wBAqg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181001062151.27607-1-vkoul@kernel.org>
+In-Reply-To: <CAGb2v65zb4rXJJv018AfDC-YQgAAmahmQ=-Bb5CyU3kA6wBAqg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Brown <david.brown@linaro.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, arm-linux <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01-10-18, 11:51, Vinod Koul wrote:
-> This adds prng-ee nodes for msm8996 and sdm845
+On Wed, Nov 7, 2018 at 11:30 PM Chen-Yu Tsai <wens@csie.org> wrote:
+> > +
+> > +       speaker_amp: speaker_amp {
+> > +               compatible = "simple-audio-amplifier";
+> > +               enable-gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
+>
+> You might want to add a sound-name-prefix property. See
+>
+>     Documentation/devicetree/bindings/sound/name-prefix.txt
+>
+> Also this should have a reference to its power supply regulator.
 
-Ping Andy, would appreciate if you can pick these up.
+You're right, it should reference its power supply which should be a
+fixed regulator controlled via GPIO from AXP803.
 
-Thanks
+Unfortunately there's no AXP803 GPIO support yet and
+simple-audio-amplifier doesn't have regulator property.
 
-> 
-> changes in v6:
->  - Fix comments given by Stan
-> 
-> changes in v5:
->  - Add more description in patch logs
-> 
-> changes in v4:
->  - Fix node address on sdm845
-> 
-> changes in v3:
->  - Add Bjorn's reviewed-by
->  - Update patch titles to reflect that they add nodes
-> 
-> changes in v2:
->  - rebase on v4.19-rc1
-> 
-> Vinod Koul (2):
->   arm64: dts: msm8996: add prng-ee node
->   arm64: dts: sdm845: add prng-ee node
-> 
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 7 +++++++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi  | 8 ++++++++
->  2 files changed, 15 insertions(+)
-> 
-> -- 
-> 2.14.4
+I have no time (and interest) to work on it in near future, so if
+anyone wants to pick it up - feel free to do so.
 
--- 
-~Vinod
+Regards,
+Vasily
