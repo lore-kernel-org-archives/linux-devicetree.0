@@ -1,13 +1,13 @@
 From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 10/15] arm64: dts: allwinner: a64: Add support
- for the SRAM C1 section
-Date: Thu, 15 Nov 2018 15:50:08 +0100
-Message-ID: <20181115145013.3378-11-paul.kocialkowski@bootlin.com>
+Subject: [PATCH 12/15] media: cedrus: Add device-tree compatible
+ and variant for H5 support
+Date: Thu, 15 Nov 2018 15:50:10 +0100
+Message-ID: <20181115145013.3378-13-paul.kocialkowski@bootlin.com>
 References: <20181115145013.3378-1-paul.kocialkowski@bootlin.com>
 Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBSEPW3PQKGQE3GJY4PQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRBUMPW3PQKGQEH5DFIKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181115145013.3378-1-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,37 +20,39 @@ To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY7
 Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the description for the SRAM C1 section to the A64 device-tree.
+Add the necessary compatible for supporting the H5 SoC along with a
+description of the capabilities of this variant.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/staging/media/sunxi/cedrus/cedrus.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index f3a66f888205..88b3e9110833 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -277,6 +277,20 @@
- 					reg = <0x0000 0x28000>;
- 				};
- 			};
-+
-+			sram_c1: sram@1d00000 {
-+				compatible = "mmio-sram";
-+				reg = <0x01d00000 0x80000>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0 0x01d00000 0x80000>;
-+
-+				ve_sram: sram-section@0 {
-+					compatible = "allwinner,sun50i-a64-sram-c1",
-+						     "allwinner,sun4i-a10-sram-c1";
-+					reg = <0x000000 0x80000>;
-+				};
-+			};
- 		};
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
+index 82558455384a..f04b9bf23774 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+@@ -388,6 +388,10 @@ static const struct cedrus_variant sun8i_h3_cedrus_variant = {
+ 	.capabilities	= CEDRUS_CAPABILITY_UNTILED,
+ };
  
- 		dma: dma-controller@1c02000 {
++static const struct cedrus_variant sun50i_h5_cedrus_variant = {
++	.capabilities	= CEDRUS_CAPABILITY_UNTILED,
++};
++
+ static const struct of_device_id cedrus_dt_match[] = {
+ 	{
+ 		.compatible = "allwinner,sun4i-a10-video-engine",
+@@ -409,6 +413,10 @@ static const struct of_device_id cedrus_dt_match[] = {
+ 		.compatible = "allwinner,sun8i-h3-video-engine",
+ 		.data = &sun8i_h3_cedrus_variant,
+ 	},
++	{
++		.compatible = "allwinner,sun50i-h5-video-engine",
++		.data = &sun50i_h5_cedrus_variant,
++	},
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, cedrus_dt_match);
 -- 
 2.19.1
