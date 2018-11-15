@@ -1,7 +1,7 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v2 06/15] Bluetooth: hci_bcm: Simplify clk_get error handling
-Date: Thu, 15 Nov 2018 17:35:54 +0800
-Message-ID: <20181115093603.26729-7-wens@csie.org>
+Subject: [PATCH v2 15/15] arm64: dts: allwinner: a64: bananapi-m64: Add Bluetooth device node
+Date: Thu, 15 Nov 2018 17:36:03 +0800
+Message-ID: <20181115093603.26729-16-wens@csie.org>
 References: <20181115093603.26729-1-wens@csie.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,62 +12,56 @@ To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.co
 Cc: Chen-Yu Tsai <wens@csie.org>, Loic Poulain <loic.poulain@gmail.com>, linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The driver currently checks the clk pointer for an error condition, as
-returned by clk_get, before every invocation of the clk consumer API.
-This is redundant if the goal is simply to ignore the errors, thereby
-making the clk optional. The clk consumer API already checks if the
-pointer is NULL or not.
+The AP6212 is based on the Broadcom BCM43430 or BCM43438. The WiFi side
+identifies as BCM43430, while the Bluetooth side identifies as BCM43438.
 
-Simplify the code a bit by assigning NULL to the clk pointer if the
-error condition is one we want to ignore, which is every error except
-deferred probing.
+The Bluetooth side is connected to UART1 in a 4 wire configuration. Same
+as the WiFi side, due to being the same chip and package, DLDO2 provides
+overall power via VBAT, and DLDO4 provides I/O power via VDDIO. The RTC
+clock output provides the LPO low power clock at 32.768 kHz.
 
+This patch enables Bluetooth on this board, and also adds the missing
+LPO clock on the WiFi side. There is also a PCM connection for Bluetooth,
+but this is not covered here.
+
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- drivers/bluetooth/hci_bcm.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ .../boot/dts/allwinner/sun50i-a64-bananapi-m64.dts | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-index 800132369134..ff73ecb8215f 100644
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -214,7 +214,7 @@ static int bcm_gpio_set_power(struct bcm_device *dev, bool powered)
- {
- 	int err;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+index ef1c90401bb2..beca5c4979cf 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+@@ -94,6 +94,8 @@
+ 	wifi_pwrseq: wifi_pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+ 		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
++		clocks = <&rtc 1>;
++		clock-names = "ext_clock";
+ 	};
+ };
  
--	if (powered && !IS_ERR(dev->clk) && !dev->clk_enabled) {
-+	if (powered && !dev->clk_enabled) {
- 		err = clk_prepare_enable(dev->clk);
- 		if (err)
- 			return err;
-@@ -228,7 +228,7 @@ static int bcm_gpio_set_power(struct bcm_device *dev, bool powered)
- 	if (err)
- 		goto err_revert_shutdown;
- 
--	if (!powered && !IS_ERR(dev->clk) && dev->clk_enabled)
-+	if (!powered && dev->clk_enabled)
- 		clk_disable_unprepare(dev->clk);
- 
- 	dev->clk_enabled = powered;
-@@ -238,7 +238,7 @@ static int bcm_gpio_set_power(struct bcm_device *dev, bool powered)
- err_revert_shutdown:
- 	dev->set_shutdown(dev, !powered);
- err_clk_disable:
--	if (powered && !IS_ERR(dev->clk) && !dev->clk_enabled)
-+	if (powered && !dev->clk_enabled)
- 		clk_disable_unprepare(dev->clk);
- 	return err;
- }
-@@ -911,6 +911,10 @@ static int bcm_get_resources(struct bcm_device *dev)
- 	if (dev->clk == ERR_PTR(-EPROBE_DEFER))
- 		return PTR_ERR(dev->clk);
- 
-+	/* Ignore all other errors as before */
-+	if (IS_ERR(dev->clk))
-+		dev->clk = NULL;
+@@ -335,7 +337,19 @@
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
++	uart-has-rtscts;
+ 	status = "okay";
 +
- 	dev->device_wakeup = devm_gpiod_get_optional(dev->dev, "device-wakeup",
- 						     GPIOD_OUT_LOW);
- 	if (IS_ERR(dev->device_wakeup))
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		clocks = <&rtc 1>;
++		clock-names = "lpo";
++		vbat-supply = <&reg_dldo2>;
++		vddio-supply = <&reg_dldo4>;
++		device-wakeup-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
++		host-wakeup-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
++		shutdown-gpios = <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 */
++	};
+ };
+ 
+ &usb_otg {
 -- 
 2.19.1
