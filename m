@@ -1,92 +1,87 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v6 0/5] Add Actions Semi S700 pinctrl support
-Date: Thu, 15 Nov 2018 16:31:04 +0530
-Message-ID: <20181115110104.GB15537@Mani-XPS-13-9360>
-References: <20181113100709.5615-1-pn@denx.de>
+Subject: Re: [PATCH] arm64: dts: actions: s700: Add I2C controller nodes
+Date: Thu, 15 Nov 2018 16:42:25 +0530
+Message-ID: <20181115111217.GC15537@Mani-XPS-13-9360>
+References: <20181113133235.37754-1-pn@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181113100709.5615-1-pn@denx.de>
+In-Reply-To: <20181113133235.37754-1-pn@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Parthiban Nallathambi <pn@denx.de>
-Cc: linus.walleij@linaro.org, afaerber@suse.de, robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, mp-cs@actions-semi.com, thomas.liau@actions-semi.com, linux@cubietech.com, sravanhome@gmail.com
+Cc: afaerber@suse.de, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
-
-On Tue, Nov 13, 2018 at 11:07:04AM +0100, Parthiban Nallathambi wrote:
-> This patchset adds pinctrl support for Actions Semi S700 SoC.
-> Pinmux functions are only accessible for pin groups while pinconf
-> parameters are available for both pin groups and individual pins.
-> 
-> pinctrl driver is verified using the Cubieboard7.
-> 
-> common functionalities from s900 is moved for all Actions Semi
-> SoC's usage.
-> Common pad control configurations are moved to SoC specific
->
 
 Hi Parthiban,
 
-This series looks good to me. Just spotted one nitpick in bindings
-patch. Please note that I don't have any S900 device currently to test
-the patches. Although nothing looks like breaking.
+On Tue, Nov 13, 2018 at 02:32:35PM +0100, Parthiban Nallathambi wrote:
+> Add I2C controller nodes for Actions Semiconductor S700 SoC.
+> 
+> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+> ---
+>  arch/arm64/boot/dts/actions/s700.dtsi | 40 +++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
+> index 192c7b39c8c1..573c844d7afe 100644
+> --- a/arch/arm64/boot/dts/actions/s700.dtsi
+> +++ b/arch/arm64/boot/dts/actions/s700.dtsi
+> @@ -174,6 +174,46 @@
+>  			#clock-cells = <1>;
+>  		};
+>  
+> +		i2c0: i2c@e0170000 {
+> +			compatible = "actions,s900-i2c";
 
-So for the whole series,
+Why don't you add a compatible for S700? Also, please add the pinctrl
+nodes for these busses and enable the ones exposed on board. These could
+go in a separate patch.
 
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Thanks a ton for picking it up!
-
-Regards,
+Thanks,
 Mani
 
-> dts entry for pinctrl depends on clock driver which is still under review:
-> https://patchwork.kernel.org/patch/10533959/
-> 
-> Thanks,
-> Saravanan
-> Parthiban
-> 
-> Changelog in v2
-> - GPIO Interrupt support is added
-> - Device tree entry for GPIO and Interrupt configured
-> - GPIO and pinctrl define reorder, commit message findings fixed
-> 
-> depends on owl GPIO Interrupt support
-> https://patchwork.kernel.org/patch/10483477/
-> 
-> Chnagelog in v3
-> - Fixed 0-DAY bisectibility error
-> 
-> Chnagelog in v4
-> - Fixed 0-DAY sparse warnings on static declaration
-> 
-> Chnagelog in v5
-> - Rebase to mainline
-> 
-> Chnagelog in v6
-> - Rebase to 4.20-rc2 mainline
-> - Fixed nitpick findings in v5
-> 
-> Saravanan Sekar (5):
->   pinctrl: actions: define constructor generic to Actions Semi SoC's
->   pinctrl: actions: define pad control configurtion to SoC specific
->   dt-bindings: pinctrl: Add bindings for Actions Semi S700 SoC
->   pinctrl: actions: Add Actions Semi S700 pinctrl driver
->   arm64: dts: actions: Add pinctrl node for Actions Semi S700
-> 
->  .../bindings/pinctrl/actions,s700-pinctrl.txt |  170 ++
->  arch/arm64/boot/dts/actions/s700.dtsi         |   16 +
->  drivers/pinctrl/actions/Kconfig               |    6 +
->  drivers/pinctrl/actions/Makefile              |    1 +
->  drivers/pinctrl/actions/pinctrl-owl.c         |   71 +-
->  drivers/pinctrl/actions/pinctrl-owl.h         |  142 +-
->  drivers/pinctrl/actions/pinctrl-s700.c        | 1912 +++++++++++++++++
->  drivers/pinctrl/actions/pinctrl-s900.c        |  205 +-
->  8 files changed, 2324 insertions(+), 199 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/actions,s700-pinctrl.txt
->  create mode 100644 drivers/pinctrl/actions/pinctrl-s700.c
-> 
+> +			reg = <0 0xe0170000 0 0x1000>;
+> +			clocks = <&cmu CLK_I2C0>;
+> +			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c1: i2c@e0174000 {
+> +			compatible = "actions,s900-i2c";
+> +			reg = <0 0xe0174000 0 0x1000>;
+> +			clocks = <&cmu CLK_I2C1>;
+> +			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c2: i2c@e0178000 {
+> +			compatible = "actions,s900-i2c";
+> +			reg = <0 0xe0178000 0 0x1000>;
+> +			clocks = <&cmu CLK_I2C2>;
+> +			interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c3: i2c@e017c000 {
+> +			compatible = "actions,s900-i2c";
+> +			reg = <0 0xe017c000 0 0x1000>;
+> +			clocks = <&cmu CLK_I2C3>;
+> +			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+>  		sps: power-controller@e01b0100 {
+>  			compatible = "actions,s700-sps";
+>  			reg = <0x0 0xe01b0100 0x0 0x100>;
 > -- 
 > 2.17.2
 > 
