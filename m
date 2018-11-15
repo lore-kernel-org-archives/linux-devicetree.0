@@ -1,54 +1,36 @@
-Return-Path: <SRS0=g9Sy=OG=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr10043.outbound.protection.outlook.com ([40.107.1.43]:20448
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728729AbeK0Uif (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 27 Nov 2018 15:38:35 -0500
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH 0/4] Add i.MX system controller RTC driver
-Date: Tue, 27 Nov 2018 09:41:11 +0000
-Message-ID: <1543311334-8807-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=elLq=N2=verge.net.au=horms@kernel.org>
+Date: Thu, 15 Nov 2018 06:28:10 -0800
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 2/2] arm64: dts: renesas: Add CPU capacity-dmips-mhz
+Message-ID: <20181115142809.na5pw64p4zttfqgy@verge.net.au>
+References: <1541661895-7064-1-git-send-email-gaku.inami.xh@renesas.com>
+ <1541661895-7064-3-git-send-email-gaku.inami.xh@renesas.com>
+ <CAMuHMdXvkoMwrXy_878AmAPChaGCzMGbq6RVY3Z_CrFV5nTyAA@mail.gmail.com>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXvkoMwrXy_878AmAPChaGCzMGbq6RVY3Z_CrFV5nTyAA@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Gaku Inami <gaku.inami.xh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-system controller, the system controller is in charge of system
-power, clock and secure RTC etc. management, Linux kernel
-has to communicate with system controller via MU (message unit)
-IPC to do RTC operation.
+On Wed, Nov 14, 2018 at 10:56:04AM +0100, Geert Uytterhoeven wrote:
+> Hi Inami-san,
+> 
+> On Thu, Nov 8, 2018 at 8:25 AM Gaku Inami <gaku.inami.xh@renesas.com> wrote:
+> > Set the capacity-dmips-mhz for R-Car Gen3 SoCs, that is based on
+> > dhrystone. The average in 10 times of dhrystone result as follows:
+> 
+> [...]
+> 
+> > Signed-off-by: Gaku Inami <gaku.inami.xh@renesas.com>
+> > ---
+> > v1 -> v2:
+> >  - Consolidate two patches for r8a7795 and r8a7796 into one patch
+> >  - Add the formula for capacity-dmips-mhz into description
+> 
+> Thanks for the update, and the extensive and clear description!
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Since the RTC set time MUST to be done in secure EL3 mode (required
-by system controller firmware) and ALARM functions needs to be done
-with general MU IRQ handle, these are NOT ready NOW, so this patch
-ONLY supports RTC read time for now.
-
-Note that this patch set is based on [V4,5/5] defconfig: arm64: add imx8qxp=
- support,
-https://patchwork.kernel.org/patch/10677315/
-
-Anson Huang (4):
-  rtc: add i.MX system controller RTC support
-  dt-bindings: rtc: add binding doc for i.MX system controller RTC
-    driver
-  defconfig: arm64: add i.MX system controller RTC support
-  ARM64: dts: imx: add i.MX8QXP system controller RTC support
-
- .../devicetree/bindings/rtc/rtc-imx-sc.txt         |  10 ++
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   4 +
- arch/arm64/configs/defconfig                       |   1 +
- drivers/rtc/Kconfig                                |   6 ++
- drivers/rtc/Makefile                               |   1 +
- drivers/rtc/rtc-imx-sc.c                           | 104 +++++++++++++++++=
-++++
- 6 files changed, 126 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
- create mode 100644 drivers/rtc/rtc-imx-sc.c
-
---=20
-2.7.4
+Thanks, applied for v4.21.
