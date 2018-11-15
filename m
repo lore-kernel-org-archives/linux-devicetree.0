@@ -1,54 +1,69 @@
 From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH 3/3] ARM: socfpga: dts: document "altr,stratix10-rst-mgr"
+Subject: Re: [PATCH 1/3] arm64: dts: stratix10: use "altr,stratix10-rst-mgr"
  binding
-Date: Thu, 15 Nov 2018 08:34:41 -0600
-Message-ID: <be901b34-1370-afec-89c6-d7938320bfc2@kernel.org>
+Date: Thu, 15 Nov 2018 08:35:39 -0600
+Message-ID: <84d776fb-5bad-fa01-9588-9c7a08dbe49e@kernel.org>
 References: <20181105200549.17159-1-dinguyen@kernel.org>
- <20181105200549.17159-3-dinguyen@kernel.org>
- <1542274379.4915.3.camel@pengutronix.de>
+ <1542274384.4915.4.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542274379.4915.3.camel@pengutronix.de>
+In-Reply-To: <1542274384.4915.4.camel@pengutronix.de>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dinh Nguyen <dinh.nguyen@intel.com>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 11/15/18 3:32 AM, Philipp Zabel wrote:
+On 11/15/18 3:33 AM, Philipp Zabel wrote:
 > Hi Dinh,
 > 
 > On Mon, 2018-11-05 at 14:05 -0600, Dinh Nguyen wrote:
->> "altr,stratix10-rst-mgr" is used for the Stratix10 reset manager.
+>> From: Dinh Nguyen <dinh.nguyen@intel.com>
+>>
+>> The standard reset-simple driver the uses the "altr,rst-mgr" binding is
+>> not getting initialized early enough in the boot process, so timers
+>> that the kernel needs are still left in reset. Thus an early
+>> reset driver was created. This early reset driver is only for the
+>> SoCFPGA 32-bit platform.
+>>
+>> The Stratix10 platform does not need any of the timers that in reset to
+>> boot, thus we don't need to early reset driver. Therefore, use the
+>> "altr,stratix10-rst-mgr" binding for the reset-simple platform driver on
+>> the Stratix10 platform.
+>>
+>> Also remove the "altr,modrst-offset" property because the driver no
+>> longer needs it.
 >>
 >> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 >> ---
->>  Documentation/devicetree/bindings/reset/socfpga-reset.txt | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
 >>
->> diff --git a/Documentation/devicetree/bindings/reset/socfpga-reset.txt b/Documentation/devicetree/bindings/reset/socfpga-reset.txt
->> index 98c9f560e5c5..38fe34fd8b8a 100644
->> --- a/Documentation/devicetree/bindings/reset/socfpga-reset.txt
->> +++ b/Documentation/devicetree/bindings/reset/socfpga-reset.txt
->> @@ -1,7 +1,8 @@
->>  Altera SOCFPGA Reset Manager
+>> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+>> index 8253a1a9e985..5f0b18ae5007 100644
+>> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+>> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+>> @@ -308,9 +308,8 @@
 >>  
->>  Required properties:
->> -- compatible : "altr,rst-mgr"
->> +- compatible : "altr,rst-mgr" for (Cyclone5/Arria5/Arria10)
->> +	       "altr,stratix10-rst-mgr","altr,rst-mgr" for Stratix10 ARM64 SoC
+>>  		rst: rstmgr@ffd11000 {
+>>  			#reset-cells = <1>;
+>> -			compatible = "altr,rst-mgr";
+>> +			compatible = "altr,stratix10-rst-mgr", "altr,rst-mgr";
+>>  			reg = <0xffd11000 0x1000>;
+>> -			altr,modrst-offset = <0x20>;
+>>  		};
+>>  
+>>  		spi0: spi@ffda4000 {
 > 
-> git grep '\(altr\|intel\),stratix10'
-> 
-> currently only shows "intel,stratix10-clkmgr". Should this be
-> "intel,stratix10-rst-mgr"? I think keeping "altr," is fine for
-> consistency, just wanted to point it out.
+> Do you want me to pick this up as well, or just patches 2 and 3?
 > 
 
-Thanks for pointing it out. I think it's okay to keep it "altr".
+I'll take this patch through arm-soc to avoid conflicts. Can you please
+pick up 2 and 3?
 
+Thanks,
 Dinh
