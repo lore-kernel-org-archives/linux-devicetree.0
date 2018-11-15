@@ -1,7 +1,7 @@
 From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v2 1/3] arm64: dts: qcom: msm8998: correct xo clock name
-Date: Thu, 15 Nov 2018 13:44:53 -0700
-Message-ID: <1542314695-24071-2-git-send-email-jhugo@codeaurora.org>
+Subject: [PATCH v2 2/3] arm64: dts: qcom: msm8998: Add SDCC2
+Date: Thu, 15 Nov 2018 13:44:54 -0700
+Message-ID: <1542314695-24071-3-git-send-email-jhugo@codeaurora.org>
 References: <1542314695-24071-1-git-send-email-jhugo@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1542314695-24071-1-git-send-email-jhugo@codeaurora.org>
@@ -10,32 +10,51 @@ To: andy.gross@linaro.org, david.brown@linaro.org
 Cc: bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The root parent clock of most msm8998 clock is the "xo" clock.  The DT node
-is incorrectly named "xo_board", which prevents Linux from correctly
-parsing the clock tree, resulting in most clocks being unparented and
-unable to be manipulated.  The end result is that we can't turn on clocks
-for peripherals like SD, so init usually fails.
+SDCC2 is typically used as the controller for an external SD card slot.
 
-Fixes: 4807c71cc688 (arm64: dts: Add msm8998 SoC and MTP board support)
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 78227cc..a948d4b 100644
+index a948d4b..09deee0 100644
 --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
 +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
 @@ -53,7 +53,7 @@
  	};
  
  	clocks {
--		xo_board {
-+		xo {
+-		xo {
++		xo: xo {
  			compatible = "fixed-clock";
  			#clock-cells = <0>;
  			clock-frequency = <19200000>;
+@@ -605,6 +605,23 @@
+ 			#mbox-cells = <1>;
+ 		};
+ 
++		sdhc2: sdhci@c0a4900 {
++			compatible = "qcom,sdhci-msm-v4";
++			reg = <0xc0a4900 0x314>, <0xc0a4000 0x800>;
++			reg-names = "hc_mem", "core_mem";
++
++			interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hc_irq", "pwr_irq";
++
++			clock-names = "iface", "core", "xo";
++			clocks = <&gcc GCC_SDCC2_AHB_CLK>,
++				 <&gcc GCC_SDCC2_APPS_CLK>,
++				 <&xo>;
++			bus-width = <4>;
++			status = "disabled";
++		};
++
+ 		blsp2_uart1: serial@c1b0000 {
+ 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+ 			reg = <0xc1b0000 0x1000>;
 -- 
 Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
 Qualcomm Technologies, Inc. is a member of the
