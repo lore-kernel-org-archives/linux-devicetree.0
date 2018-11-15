@@ -1,57 +1,71 @@
 From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH 4/4] arm64: dts: qcom: msm8998-mtp: Add external SD
-Date: Thu, 15 Nov 2018 13:11:43 -0700
-Message-ID: <837878fb-6285-f71f-ad10-5c1a1a781c6e@codeaurora.org>
+Subject: Re: [PATCH 3/4] arm64: dts: qcom: msm8998: Add SDC2 control pins
+Date: Thu, 15 Nov 2018 13:15:14 -0700
+Message-ID: <ad7859ae-bccb-b2a4-a4f3-8d507121aaa6@codeaurora.org>
 References: <1542302291-6864-1-git-send-email-jhugo@codeaurora.org>
- <1542302291-6864-5-git-send-email-jhugo@codeaurora.org>
- <20181115190559.GA17484@hector>
+ <1542302291-6864-4-git-send-email-jhugo@codeaurora.org>
+ <20181115191623.GK10915@tuxbook-pro>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181115190559.GA17484@hector>
+In-Reply-To: <20181115191623.GK10915@tuxbook-pro>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: david.brown@linaro.org, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/15/2018 12:05 PM, Andy Gross wrote:
-> On Thu, Nov 15, 2018 at 10:18:11AM -0700, Jeffrey Hugo wrote:
->> The externally accessible SD card slot on the MTP is driven by SDCC2.
->> Wire it up for use.
+On 11/15/2018 12:16 PM, Bjorn Andersson wrote:
+> On Thu 15 Nov 09:18 PST 2018, Jeffrey Hugo wrote:
+> 
+>> The SDC2 control pins are typically used to manage sleep.
 >>
 >> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
 >> ---
->>   arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 13 +++++++++++++
->>   arch/arm64/boot/dts/qcom/msm8998.dtsi     |  1 +
->>   2 files changed, 14 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
->> index b4276da..a90b427 100644
->> --- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
->> @@ -241,3 +241,16 @@
->>   		};
->>   	};
->>   };
->> +
->> +&sdhc2 {
->> +	status = "okay";
->> +        cd-gpios = <&tlmm 95 GPIO_ACTIVE_LOW>;
->> +
->> +        vmmc-supply = <&vreg_l21a_2p95>;
->> +        vqmmc-supply = <&vreg_l13a_2p95>;
->> +
->> +        pinctrl-names = "default", "sleep";
->> +        pinctrl-0 = <&sdc2_clk_on  &sdc2_cmd_on  &sdc2_data_on  &sdc2_cd_on>;
->> +        pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
+>>   arch/arm64/boot/dts/qcom/msm8998-pins.dtsi | 78 ++++++++++++++++++++++++++++++
 > 
-> Fix to use tabs instead of spaces.
+> Rather than adding a -pins file, add the pinctrl states the individual
+> dts(i) directly.
+> 
+>>   arch/arm64/boot/dts/qcom/msm8998.dtsi      |  2 +
+>>   2 files changed, 80 insertions(+)
+>>   create mode 100644 arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+>> new file mode 100644
+>> index 0000000..a22abf9
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+>> @@ -0,0 +1,78 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/* Copyright (c) 2018, The Linux Foundation. All rights reserved. */
+>> +
+>> +&tlmm {
+>> +	sdc2_clk_on: sdc2_clk_on {
+> 
+> Use _ in labels, - in node names.
+> 
+>> +		config {
+> 
+> You don't have to put the pinctrl state properties in an additional
+> subnode anymore, so feel free to remove the extra subnode level.
+> 
+>> +			pins = "sdc2_clk";
+>> +			bias-disable;           /* NO pull */
+>> +			drive-strength = <16>;  /* 16 MA */
+> 
+> Please push electrical properties to the board dts instead of the
+> platform one, as they might be board specific.
+> 
+>> +		};
+>> +	};
+> 
+> Apart from this the patch loogs good.
+> 
 
-Doh.  Nice catch.  I see I didn't commit that change in my tree.
-I'll send out a V2 with this and any other fixes folks comment on.
-
+Thanks for the guidance.  This all makes sense to me.  I'll roll this 
+all into v2.
 
 -- 
 Jeffrey Hugo
