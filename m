@@ -1,54 +1,95 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v10 0/9] Add the I3C subsystem
-Date: Thu, 15 Nov 2018 11:08:24 -0800
-Message-ID: <20181115190824.GJ2089@sirena.org.uk>
-References: <20181026144333.12276-1-boris.brezillon@bootlin.com>
- <76b1d15d-232c-d8ba-5eba-8394e71be725@synopsys.com>
- <20181115135731.25f60990@bbrezillon>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 0/5] media: Allwinner A10 CSI support
+Date: Thu, 15 Nov 2018 20:10:31 +0100
+Message-ID: <20181115191031.7jpb2g23fksof625@flea>
+References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
+ <CAGb2v66ygbcomUMkcv8qMCAs_qviFMPzpxj-F4=YBrpuLrdSUw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vCQF5Fh1eN3mBuH/"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="i7rh5slrqsdzymby"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181115135731.25f60990@bbrezillon>
+In-Reply-To: <CAGb2v66ygbcomUMkcv8qMCAs_qviFMPzpxj-F4=YBrpuLrdSUw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: vitor <vitor.soares@synopsys.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 
---vCQF5Fh1eN3mBuH/
+--i7rh5slrqsdzymby
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 15, 2018 at 01:57:31PM +0100, Boris Brezillon wrote:
+Hi,
 
-> What we could do though, is expose I3C devices that do not have a
-> driver in kernel space, like spidev does.
+On Wed, Nov 14, 2018 at 11:24:48AM +0800, Chen-Yu Tsai wrote:
+> On Tue, Nov 13, 2018 at 4:24 PM Maxime Ripard <maxime.ripard@bootlin.com>=
+ wrote:
+> > Here is a series introducing the support for the A10 (and SoCs of the s=
+ame
+> > generation) CMOS Sensor Interface (called CSI, not to be confused with
+> > MIPI-CSI, which isn't support by that IP).
+> >
+> > That interface is pretty straightforward, but the driver has a few issu=
+es
+> > that I wanted to bring up:
+> >
+> >   * The only board I've been testing this with has an ov5640 sensor
+> >     attached, which doesn't work with the upstream driver. Copying the
+> >     Allwinner init sequence works though, and this is how it has been
+> >     tested. Testing with a second sensor would allow to see if it's an
+> >     issue on the CSI side or the sensor side.
+> >   * When starting a capture, the last buffer to capture will fail due to
+> >     double buffering being used, and we don't have a next buffer for the
+> >     last frame. I'm not sure how to deal with that though. It seems like
+> >     some drivers use a scratch buffer in such a case, some don't care, =
+so
+> >     I'm not sure which solution should be preferred.
+> >   * We don't have support for the ISP at the moment, but this can be ad=
+ded
+> >     eventually.
+> >
+> >   * How to model the CSI module clock isn't really clear to me. It looks
+> >     like it goes through the CSI controller and then is muxed to one of=
+ the
+> >     CSI pin so that it can clock the sensor. I'm not quite sure how to
+> >     model it, if it should be a clock, the CSI driver being a clock
+> >     provider, or if the sensor should just use the module clock directl=
+y.
+>=20
+> Which clock are you talking about? MCLK? This seems to be fed directly fr=
+om
+> the CCU, as there doesn't seem to be controls for it within the CSI hardw=
+are
+> block, and the diagram doesn't list it either. IMO you don't have to mode=
+l it.
+> The camera sensor device node would just take a reference to it directly.
 
-Yes, this is much safer and more robust especially if the bus has
-enumeration requirements like you're saying it does.  It's much easier
-and more sensible to do this if the bus can be enumerated than it is
-with SPI, USB would be a good example here I guess (though I've never
-looked at the details of how USB does this on the implementation side=20
-so this may be me speaking in blissful ignorance).
+Yeah, that what I went for, I guess we agree :)
 
-I do agree that there will be use cases that turn up for this.
+> You would probably enable the (separate) pinmux setting in the CSI
+> controller node.
 
---vCQF5Fh1eN3mBuH/
+I'll change that.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--i7rh5slrqsdzymby
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlvtxCcACgkQJNaLcl1U
-h9Cwqgf9FzaFIpuw5W1ZNyAo/CrKG9CG7oGaFJL30zMrjp4pW4+47CHwCNFgWYa8
-934xtfIiTiMP+TJgyRu9HkkW1/FnQQbjPUFG1sDZxDUJIrAyRpJNySUqr9gIbW0V
-d/ghzX8St9zFvrvzm7aILWbwC35lbjpSFIb2pXhtril67M5ZbWBNlRONJIAXePLR
-4uPM5hr202hXDVw3EJOHb5M/q+SneMMei60TIMep9qYBI/zSGHIcUUEc/nDkgU3p
-gLkitVuEv1M3Imj+KmB+dnVFP5GGijN5yq5zcuKMpBoxPgt9TBpelkpFTO1ncelW
-1GZMkdv9qBVLAmGo7gaP5scgYnFr/w==
-=HYvt
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW+3EpwAKCRDj7w1vZxhR
+xay5AP0YIuMeE90TQHjAJ1bmsn3H3GyD9S7o46GGYjpDWeiDVAEA0LfACvVkvr4a
+UO4k+2DcRSF8um3oE1z73dhuaKYkJwk=
+=1sff
 -----END PGP SIGNATURE-----
 
---vCQF5Fh1eN3mBuH/--
+--i7rh5slrqsdzymby--
