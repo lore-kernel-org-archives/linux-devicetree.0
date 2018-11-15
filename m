@@ -1,56 +1,46 @@
-From: vitor <vitor.soares@synopsys.com>
-Subject: Re: [PATCH v10 0/9] Add the I3C subsystem
-Date: Thu, 15 Nov 2018 18:03:47 +0000
-Message-ID: <1d64f21a-ad24-94e0-2c17-25729ef59a31@synopsys.com>
-References: <20181026144333.12276-1-boris.brezillon@bootlin.com>
- <76b1d15d-232c-d8ba-5eba-8394e71be725@synopsys.com>
- <20181115135731.25f60990@bbrezillon> <20181115150137.GB4169@kunai>
- <20181115162826.42b54776@bbrezillon>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 0/5] ASoC: qdsp6: add compress offload support
+Date: Thu, 15 Nov 2018 18:13:19 +0000
+Message-ID: <20181115181324.26784-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181115162826.42b54776@bbrezillon>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>
-Cc: vitor <vitor.soares@synopsys.com>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicet>
+To: broonie@kernel.org, vkoul@kernel.org
+Cc: alsa-devel@alsa-project.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, bgoswami@codeaurora.org, rohitkr@codeaurora.org, lgirdwood@gmail.com, tiwai@suse.com, devicetree@vger.kernel.org, srini@kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+This patchset adds support to very basic MP3 playback compress offload
+support via QDSP ASM module.
 
+Tested this patchset on DB410c with APQ8016 and DB820c with APQ8096 using
+tinycompress library.
 
-On 15/11/18 15:28, Boris Brezillon wrote:
-> On Thu, 15 Nov 2018 16:01:37 +0100
-> Wolfram Sang <wsa@the-dreams.de> wrote:
->
->> Hi Boris,
->>
->>> What we could do though, is expose I3C devices that do not have a
->>> driver in kernel space, like spidev does.
->> ...
->>
->>> Mark, Wolfram, Arnd, Greg, any opinion?
->> Is there a benefit for having drivers in userspace? My gut feeling is to
->> encourage people to write kernel drivers. If this is, for some reason,
->> not possible for some driver, then we have a use case at hand to test
->> the then-to-be-developed userspace interface against. Until then, I
->> personally wouldn't waste effort on designing it without a user in
->> sight.
-> I kind of agree with that. Vitor, do you have a use case in mind for
-> such userspace drivers? I don't think it's worth designing an API for
-> something we don't need (yet).
+Adding other codec support should be trivial w.r.t qdsp6 side, however
+there are other dependencies like compress UAPI header changes and
+FastRPC which are being worked in parallel. Once ready will post them!
 
-My use case is a tool for tests, lets say like the i2c tools. There is 
-other subsystems, some of them mentioned on this thread, that have and 
-ioctl system call or other method to change parameters or send data.
+thanks,
+srini
 
+Changes since v2 (//lkml.org/lkml/2018/9/26/461):
+- Removed some unnecessary empty line adds.
+- Added more info to snd_compr_set_runtime_buffer() commit message
 
-I rise this topic because I really think it worth to define now how this 
-should be design (and for me how to do the things right) to avoid future 
-issues.
+Srinivas Kandagatla (5):
+  ALSA: soc-compress: add support to snd_compr_set_runtime_buffer()
+  ALSA: compress: make use of runtime buffer for copy
+  ASoC: q6asm-dai: dt-bindings: Add support to compress dais
+  ASoC: qdsp6: q6asm: add support to MP3 format
+  ASoC: qdsp6: q6asm-dai: Add support to compress offload
 
+ .../devicetree/bindings/sound/qcom,q6asm.txt  |  27 ++
+ include/sound/compress_driver.h               |  19 +
+ sound/core/compress_offload.c                 |  18 +-
+ sound/soc/qcom/Kconfig                        |   1 +
+ sound/soc/qcom/qdsp6/q6asm-dai.c              | 372 +++++++++++++++++-
+ sound/soc/qcom/qdsp6/q6asm.c                  |   5 +
+ 6 files changed, 438 insertions(+), 4 deletions(-)
 
-Best regards,
-
-Vitor Soares
+-- 
+2.19.1
