@@ -1,57 +1,58 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 4/4] arm64: dts: qcom: msm8998-mtp: Add external SD
-Date: Thu, 15 Nov 2018 11:20:47 -0800
-Message-ID: <20181115192047.GL10915@tuxbook-pro>
-References: <1542302291-6864-1-git-send-email-jhugo@codeaurora.org>
- <1542302291-6864-5-git-send-email-jhugo@codeaurora.org>
+From: Sean Wang <sean.wang@kernel.org>
+Subject: Re: [resend PATCH 2/3] pwm: mediatek: add pwm support for MT7629 SoC
+Date: Thu, 15 Nov 2018 11:20:58 -0800
+Message-ID: <CAGp9Lzoko6ahpzLvDmBiEPLYmdhjtHeJXYDiFamZWiUYpcC9MA@mail.gmail.com>
+References: <4c9044427b1aab373acd6ac76f0c905e2be79784.1542074855.git.ryder.lee@mediatek.com>
+ <9043534495d49c532bdb0b904344b77faeb41359.1542074855.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1542302291-6864-5-git-send-email-jhugo@codeaurora.org>
+In-Reply-To: <9043534495d49c532bdb0b904344b77faeb41359.1542074855.git.ryder.lee@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: ryder.lee@mediatek.com
+Cc: thierry.reding@gmail.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, weijie.gao@mediatek.com, linux-kernel@vger.kernel.org, cheng-hao.luo@mediatek.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 15 Nov 09:18 PST 2018, Jeffrey Hugo wrote:
-
-> The externally accessible SD card slot on the MTP is driven by SDCC2.
-> Wire it up for use.
-> 
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+On Mon, Nov 12, 2018 at 6:09 PM Ryder Lee <ryder.lee@mediatek.com> wrote:
+>
+> This adds pwm controller support for MT7629 SoC.
+>
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 > ---
->  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 13 +++++++++++++
->  arch/arm64/boot/dts/qcom/msm8998.dtsi     |  1 +
->  2 files changed, 14 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> index b4276da..a90b427 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> @@ -241,3 +241,16 @@
->  		};
->  	};
+>  drivers/pwm/pwm-mediatek.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+> index 9400c41..4ed95e5 100644
+> --- a/drivers/pwm/pwm-mediatek.c
+> +++ b/drivers/pwm/pwm-mediatek.c
+> @@ -292,11 +292,16 @@ static int mtk_pwm_remove(struct platform_device *pdev)
+>         .pwm45_fixup = true,
 >  };
-> +
-> +&sdhc2 {
-> +	status = "okay";
-
-Please fix the indentation of the rest of the properties in this block.
-
-> +        cd-gpios = <&tlmm 95 GPIO_ACTIVE_LOW>;
-> +
-> +        vmmc-supply = <&vreg_l21a_2p95>;
-> +        vqmmc-supply = <&vreg_l13a_2p95>;
-> +
-> +        pinctrl-names = "default", "sleep";
-> +        pinctrl-0 = <&sdc2_clk_on  &sdc2_cmd_on  &sdc2_data_on  &sdc2_cd_on>;
-> +        pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
+>
+> +static const struct mtk_pwm_platform_data mt7629_pwm_data = {
+> +       .num_pwms = 1,
 > +};
 
-With that,
+How about adding a property for the num_pwms for the PWM controller?
+It at least can help stop adding a new entry for every SoC with only
+differences on PWM number.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
+> +
+>  static const struct of_device_id mtk_pwm_of_match[] = {
+>         { .compatible = "mediatek,mt2712-pwm", .data = &mt2712_pwm_data },
+>         { .compatible = "mediatek,mt7622-pwm", .data = &mt7622_pwm_data },
+>         { .compatible = "mediatek,mt7623-pwm", .data = &mt7623_pwm_data },
+>         { .compatible = "mediatek,mt7628-pwm", .data = &mt7628_pwm_data },
+> +       { .compatible = "mediatek,mt7629-pwm", .data = &mt7629_pwm_data },
+>         { },
+>  };
+>  MODULE_DEVICE_TABLE(of, mtk_pwm_of_match);
+> --
+> 1.9.1
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
