@@ -1,52 +1,178 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH] dt-bindings: add a jsonschema binding example
-Date: Thu, 15 Nov 2018 17:42:14 -0600
-Message-ID: <CAL_JsqJd7F7=yyW5X0P4W0N+0UDA8MLPDGvbBBK+VqMKqajC7Q@mail.gmail.com>
-References: <20180418222905.10414-1-robh@kernel.org> <e7a2f4ca-40c2-05ef-097c-2cecd31fb731@gmail.com>
- <CAL_JsqKVCdk8nFwmtfNt4mMOVYFVxefgafP6JtXThvFhROFB8w@mail.gmail.com> <CAKON4OxwAmmPv2+CEtT+eO3Uu8duCKD8OqyWj8+w2Y5SZ4bfOQ@mail.gmail.com>
+From: Thor Thayer <thor.thayer@linux.intel.com>
+Subject: Re: [PATCH net-next 8/8] net: eth: altera: tse: update devicetree
+ bindings documentation
+Date: Thu, 15 Nov 2018 17:49:39 -0600
+Message-ID: <5ca8ece3-06d4-1322-ac13-22e72177e37e@linux.intel.com>
+References: <20181115005047.28464-1-dwesterg@gmail.com>
+ <20181115005047.28464-9-dwesterg@gmail.com>
+Reply-To: thor.thayer@linux.intel.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKON4OxwAmmPv2+CEtT+eO3Uu8duCKD8OqyWj8+w2Y5SZ4bfOQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jonsmirl@gmail.com
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@arm.com>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>, Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20181115005047.28464-9-dwesterg@gmail.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Dalon Westergreen <dwesterg@gmail.com>, netdev@vger.kernel.org, dinguyen@kernel.org, robh@kernel.org, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Dalon Westergreen <dalon.westergreen@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 14, 2018 at 1:39 PM jonsmirl@gmail.com <jonsmirl@gmail.com> wrote:
->
-> On Fri, Apr 20, 2018 at 9:36 PM Rob Herring <robh@kernel.org> wrote:
-> > I share the concern as I doubt most kernel developers don't know
-> > jsonschema. But then the alternative is us defining and writing our
-> > own thing which is C like 'cause that's what kernel developers
-> > understand. My hope is to simplify and restrict things enough that it
-> > writing a binding doc is straightforward without being jsonschema
-> > experts. That was the intent of this patch without going into all the
-> > details behind it.
->
-> When schemas were first discussed long, long ago the idea was to have
-> a n arbitrator who controls the schema (like Grant/Rob) so there is no
-> need for general schema design knowledge in random kernel developers.
->
-> First a developer should try and build their device tree using the
-> existing schema. Then only if they find that impossible to do so
-> should they propose schema changes. The schema arbitrator would then
-> look at those changes and work them into the existing schemas as
-> needed. Doing this via an arbitrator will ensure consistency in the
-> overall schema design while eliminating redundancy with slight
-> variations (like we have now).
->
-> Another side effect of schemas is that as they evolve and enforce
-> commonality among driver implementation it will become possible to
-> turn those in-common pieces into driver libraries.
++ Rob Herring, Mark Rutland and the Device Tree mailing list.
 
-If we replace 'schemas' everywhere above with 'bindings', then this
-pretty much describes the status quo today. Most device specific
-bindings are a collection of standard bindings. Occasionally, we have
-new common bindings. All the bindings get reviewed by me. The only
-real change here is submitters have to have some level of
-understanding of json-schema instead of just English (for writing free
-form text). I think it will continue to largely be following existing
-examples of other bindings.
-
-Rob
+On 11/14/18 6:50 PM, Dalon Westergreen wrote:
+> From: Dalon Westergreen <dalon.westergreen@intel.com>
+> 
+> Update devicetree bindings documentation to include msgdma
+> prefetcher and ptp bindings.
+> 
+> Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
+> ---
+>   .../devicetree/bindings/net/altera_tse.txt    | 98 +++++++++++++++----
+>   1 file changed, 79 insertions(+), 19 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/altera_tse.txt b/Documentation/devicetree/bindings/net/altera_tse.txt
+> index 0e21df94a53f..d35806942a8f 100644
+> --- a/Documentation/devicetree/bindings/net/altera_tse.txt
+> +++ b/Documentation/devicetree/bindings/net/altera_tse.txt
+> @@ -2,50 +2,79 @@
+>   
+>   Required properties:
+>   - compatible: Should be "altr,tse-1.0" for legacy SGDMA based TSE, and should
+> -		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE.
+> +		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE,
+> +		and "altr,tse-msgdma-2.0" for MSGDMA with prefetcher based
+> +		implementations.
+>   		ALTR is supported for legacy device trees, but is deprecated.
+>   		altr should be used for all new designs.
+>   - reg: Address and length of the register set for the device. It contains
+>     the information of registers in the same order as described by reg-names
+>   - reg-names: Should contain the reg names
+> -  "control_port": MAC configuration space region
+> -  "tx_csr":       xDMA Tx dispatcher control and status space region
+> -  "tx_desc":      MSGDMA Tx dispatcher descriptor space region
+> -  "rx_csr" :      xDMA Rx dispatcher control and status space region
+> -  "rx_desc":      MSGDMA Rx dispatcher descriptor space region
+> -  "rx_resp":      MSGDMA Rx dispatcher response space region
+> -  "s1":		  SGDMA descriptor memory
+>   - interrupts: Should contain the TSE interrupts and it's mode.
+>   - interrupt-names: Should contain the interrupt names
+> -  "rx_irq":       xDMA Rx dispatcher interrupt
+> -  "tx_irq":       xDMA Tx dispatcher interrupt
+> +  "rx_irq":       DMA Rx dispatcher interrupt
+> +  "tx_irq":       DMA Tx dispatcher interrupt
+>   - rx-fifo-depth: MAC receive FIFO buffer depth in bytes
+>   - tx-fifo-depth: MAC transmit FIFO buffer depth in bytes
+>   - phy-mode: See ethernet.txt in the same directory.
+>   - phy-handle: See ethernet.txt in the same directory.
+>   - phy-addr: See ethernet.txt in the same directory. A configuration should
+>   		include phy-handle or phy-addr.
+> -- altr,has-supplementary-unicast:
+> -		If present, TSE supports additional unicast addresses.
+> -		Otherwise additional unicast addresses are not supported.
+> -- altr,has-hash-multicast-filter:
+> -		If present, TSE supports a hash based multicast filter.
+> -		Otherwise, hash-based multicast filtering is not supported.
+> -
+>   - mdio device tree subnode: When the TSE has a phy connected to its local
+>   		mdio, there must be device tree subnode with the following
+>   		required properties:
+> -
+>   	- compatible: Must be "altr,tse-mdio".
+>   	- #address-cells: Must be <1>.
+>   	- #size-cells: Must be <0>.
+>   
+>   	For each phy on the mdio bus, there must be a node with the following
+>   	fields:
+> -
+>   	- reg: phy id used to communicate to phy.
+>   	- device_type: Must be "ethernet-phy".
+>   
+> +- altr,has-supplementary-unicast:
+> +		If present, TSE supports additional unicast addresses.
+> +		Otherwise additional unicast addresses are not supported.
+> +- altr,has-hash-multicast-filter:
+> +		If present, TSE supports a hash based multicast filter.
+> +		Otherwise, hash-based multicast filtering is not supported.
+> +- altr,has-ptp:
+> +		If present, TSE supports 1588 timestamping.  Currently only
+> +		supported with the msgdma prefetcher.
+> +- altr,tx-poll-cnt:
+> +		Optional cycle count for Tx prefetcher to poll descriptor
+> +		list.  If not present, defaults to 128, which at 125MHz is
+> +		roughly 1usec. Only for "altr,tse-msgdma-2.0".
+> +- altr,rx-poll-cnt:
+> +		Optional cycle count for Tx prefetcher to poll descriptor
+> +		list.  If not present, defaults to 128, which at 125MHz is
+> +		roughly 1usec. Only for "altr,tse-msgdma-2.0".
+> +
+> +Required registers by compatibility string:
+> + - "altr,tse-1.0"
+> +	"control_port": MAC configuration space region
+> +	"tx_csr":       DMA Tx dispatcher control and status space region
+> +	"rx_csr" :      DMA Rx dispatcher control and status space region
+> +	"s1":		DMA descriptor memory
+> +
+> + - "altr,tse-msgdma-1.0"
+> +	"control_port": MAC configuration space region
+> +	"tx_csr":       DMA Tx dispatcher control and status space region
+> +	"tx_desc":      DMA Tx dispatcher descriptor space region
+> +	"rx_csr" :      DMA Rx dispatcher control and status space region
+> +	"rx_desc":      DMA Rx dispatcher descriptor space region
+> +	"rx_resp":      DMA Rx dispatcher response space region
+> +
+> + - "altr,tse-msgdma-2.0"
+> +	"control_port": MAC configuration space region
+> +	"tx_csr":       DMA Tx dispatcher control and status space region
+> +	"tx_pref":      DMA Tx prefetcher configuration space region
+> +	"rx_csr" :      DMA Rx dispatcher control and status space region
+> +	"rx_pref":      DMA Rx prefetcher configuration space region
+> +	"tod_ctrl":     Time of Day Control register only required when
+> +			timestamping support is enabled.  Timestamping is
+> +			only supported with the msgdma-2.0 implementation.
+> +
+>   Optional properties:
+>   - local-mac-address: See ethernet.txt in the same directory.
+>   - max-frame-size: See ethernet.txt in the same directory.
+> @@ -87,6 +116,11 @@ Example:
+>   				device_type = "ethernet-phy";
+>   			};
+>   
+> +			phy2: ethernet-phy@2 {
+> +				reg = <0x2>;
+> +				device_type = "ethernet-phy";
+> +			};
+> +
+>   		};
+>   	};
+>   
+> @@ -112,3 +146,29 @@ Example:
+>   		altr,has-hash-multicast-filter;
+>   		phy-handle = <&phy1>;
+>   	};
+> +
+> +	tse_sub_2_eth_tse_0: ethernet@1,00002000 {
+> +		compatible = "altr,tse-msgdma-2.0";
+> +		reg = 	<0x00000001 0x00002000 0x00000400>,
+> +			<0x00000001 0x00002400 0x00000020>,
+> +			<0x00000001 0x00002420 0x00000020>,
+> +			<0x00000001 0x00002440 0x00000020>,
+> +			<0x00000001 0x00002460 0x00000020>,
+> +			<0x00000001 0x00002480 0x00000040>;
+> +		reg-names = "control_port", "rx_csr", "rx_pref","tx_csr", "tx_pref", "tod_ctrl";
+> +		interrupt-parent = <&hps_0_arm_gic_0>;
+> +		interrupts = <0 45 4>, <0 44 4>;
+> +		interrupt-names = "rx_irq", "tx_irq";
+> +		rx-fifo-depth = <2048>;
+> +		tx-fifo-depth = <2048>;
+> +		address-bits = <48>;
+> +		max-frame-size = <1500>;
+> +		local-mac-address = [ 00 00 00 00 00 00 ];
+> +		phy-mode = "sgmii";
+> +		altr,has-supplementary-unicast;
+> +		altr,has-hash-multicast-filter;
+> +		altr,has-ptp;
+> +		altr,tx-poll-cnt = <128>;
+> +		altr,rx-poll-cnt = <32>;
+> +		phy-handle = <&phy2>;
+> +	};
+> 
