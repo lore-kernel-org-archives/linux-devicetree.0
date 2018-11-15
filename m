@@ -1,40 +1,84 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/3] dt-bindings: gpio: add sama5d2 PIOBU support
-Date: Thu, 15 Nov 2018 10:43:05 +0100
-Message-ID: <CACRpkdZvJmH61C8Rd3TeTioag+11GHPGdCDwRHxx3UAzB-rUHg@mail.gmail.com>
-References: <1541603580-17448-1-git-send-email-andrei.stefanescu@microchip.com>
- <1541603580-17448-2-git-send-email-andrei.stefanescu@microchip.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 08/26] drm/sun4i: sun6i_mipi_dsi: Fix VBP
+ size calculation
+Date: Thu, 15 Nov 2018 10:55:51 +0100
+Message-ID: <20181115095551.uctdkfmuwlnzhjnn@flea>
+References: <20181113111633.20189-1-jagan@amarulasolutions.com>
+ <20181113111633.20189-9-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541603580-17448-2-git-send-email-andrei.stefanescu@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrei.Stefanescu@microchip.com
-Cc: Greg KH <gregkh@linuxfoundation.org>, Nicolas Ferre <Nicolas.Ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ludovic Desroches <Ludovic.Desroches@microchip.com>, Cristian.Birsan@microchip.com, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="cw633pztpuimj6kk"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBMUFWXPQKGQE5NGQLIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20181113111633.20189-9-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 7, 2018 at 4:12 PM <Andrei.Stefanescu@microchip.com> wrote:
 
-> +Required properties:
-> +- compatible:          "syscon", "microchip,sama5d2-piobu"
+--cw633pztpuimj6kk
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Looks like "syscon" should be dropped, it is using a syscon,
-but it is no syscon.
+Hi,
 
-> +       secumod@fc040000 {
-> +               compatible = "syscon", "microchip,sama5d2-piobu";
-> +               reg = <0xfc040000 0x100>;
-> +
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +       };
+On Tue, Nov 13, 2018 at 04:46:15PM +0530, Jagan Teki wrote:
+> The horizontal and vertical back porch calculation in BSP
+> code is simply following the Linux drm comment diagram, in
+> include/drm/drm_modes.h which is
+> 
+> [hv]back porch = [hv]total - [hv]sync_end
+> 
+> BSP code form BPI-M64-bsp is calculating vertical back porch as
+> (from linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c)
+> 
+> timmings->ver_sync_time= panel_info->lcd_vspw;
+> timmings->ver_back_porch= panel_info->lcd_vbp-panel_info->lcd_vspw;
+> 
+> vbp = panel->lcd_vbp;
+> vspw = panel->lcd_vspw;
+> dsi_dev[sel]->dsi_basic_size0.bits.vbp = vbp-vspw;
+> dsi_dev[sel]->dsi_basic_size0.bits.vbp = panel->lcd_vbp - panel->lcd_vspw;
+> =>  timmings->ver_back_porch + panel_info->lcd_vspw - panel_info->lcd_vspw
+> =>  timmings->ver_back_porch
+> =>  mode->vtotal - mode->end
+> 
+> Which evatually same as mode->vtotal - mode->vsync_end so update the
+> same in SUN6I_DSI_BASIC_SIZE0_VBP
+> 
+> On the information note, existing SUN6I_DSI_BASIC_SIZE0_VSA is proper
+> value.
+> 
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-Isn't it easiest to just make this driver be a subnode of the
-syscon so it can just refer to its parent to find the
-syscon it needs?
+I've tested your changes on my A33 board, and this commit will break
+it.
 
-Just state that in the bindings and make an example where
-it is inside the syscon.
+It creates vblank timeouts, and visual artifacts at the bottom of the
+display.
 
-Yours,
-Linus Walleij
+Later commits seem to fix the issue, but will create some blanking on
+the upper third of the display.
+
+Since the documentation is quite sparse, and a MIPI-DSI analyzer is
+way too expensive, I'd really like to have at least what each of these
+commits are actually fixing, and what symptoms each of these were
+causing, and not just "the BSP does it".
+
+Having some datasheet for the panels you had working would help too.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--cw633pztpuimj6kk--
