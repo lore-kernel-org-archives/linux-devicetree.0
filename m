@@ -1,13 +1,13 @@
 From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 11/15] dt-bindings: media: cedrus: Add
- compatibles for the A64 and H5
-Date: Thu, 15 Nov 2018 15:50:09 +0100
-Message-ID: <20181115145013.3378-12-paul.kocialkowski@bootlin.com>
+Subject: [PATCH 06/15] soc: sunxi: sram: Add support for the H5
+ SoC system control
+Date: Thu, 15 Nov 2018 15:50:04 +0100
+Message-ID: <20181115145013.3378-7-paul.kocialkowski@bootlin.com>
 References: <20181115145013.3378-1-paul.kocialkowski@bootlin.com>
 Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBSEPW3PQKGQE3GJY4PQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRBR4PW3PQKGQE4RCKOKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181115145013.3378-1-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,26 +20,29 @@ To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY7
 Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This introduces two new compatibles for the cedrus driver, for the
-A64 and H5 platforms.
+This adds the H5 SoC compatible to the list of device-tree matches for
+the SRAM driver. Since the variant is the same as the A64 (that precedes
+the H5), the same variant description is used.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/media/cedrus.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/soc/sunxi/sunxi_sram.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/cedrus.txt b/Documentation/devicetree/bindings/media/cedrus.txt
-index a089a0c1ff05..b3c0635dcd0e 100644
---- a/Documentation/devicetree/bindings/media/cedrus.txt
-+++ b/Documentation/devicetree/bindings/media/cedrus.txt
-@@ -11,6 +11,8 @@ Required properties:
- 			- "allwinner,sun7i-a20-video-engine"
- 			- "allwinner,sun8i-a33-video-engine"
- 			- "allwinner,sun8i-h3-video-engine"
-+			- "allwinner,sun50i-a64-video-engine"
-+			- "allwinner,sun50i-h5-video-engine"
- - reg			: register base and length of VE;
- - clocks		: list of clock specifiers, corresponding to entries in
- 			  the clock-names property;
+diff --git a/drivers/soc/sunxi/sunxi_sram.c b/drivers/soc/sunxi/sunxi_sram.c
+index afa86b5506eb..9df844dffffe 100644
+--- a/drivers/soc/sunxi/sunxi_sram.c
++++ b/drivers/soc/sunxi/sunxi_sram.c
+@@ -393,6 +393,10 @@ static const struct of_device_id sunxi_sram_dt_match[] = {
+ 		.compatible = "allwinner,sun50i-a64-system-control",
+ 		.data = &sun50i_a64_sramc_variant,
+ 	},
++	{
++		.compatible = "allwinner,sun50i-h5-system-control",
++		.data = &sun50i_a64_sramc_variant,
++	},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, sunxi_sram_dt_match);
 -- 
 2.19.1
