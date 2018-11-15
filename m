@@ -1,75 +1,34 @@
-Return-Path: <SRS0=EYTz=NO=googlemail.com=martin.blumenstingl@kernel.org>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 0/2] meson-saradc: add chip temperature support
-Date: Sun,  4 Nov 2018 00:10:22 +0100
-Message-Id: <20181103231024.659-1-martin.blumenstingl@googlemail.com>
+Return-Path: <SRS0=elLq=N2=verge.net.au=horms@kernel.org>
+Date: Thu, 15 Nov 2018 06:27:56 -0800
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 1/2] arm64: dts: renesas: Add CPU topology on R-Car
+ Gen3 SoCs
+Message-ID: <20181115142756.oumknzcuymhdlw5e@verge.net.au>
+References: <1541661895-7064-1-git-send-email-gaku.inami.xh@renesas.com>
+ <1541661895-7064-2-git-send-email-gaku.inami.xh@renesas.com>
+ <CAMuHMdV5zFmVR7r5Lxky5uT77T7e=om0DpnW=YLz=YfD6F=hyg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de, jic23@kernel.org
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV5zFmVR7r5Lxky5uT77T7e=om0DpnW=YLz=YfD6F=hyg@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Gaku Inami <gaku.inami.xh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The meson-saradc allows switching the input of channel #6 between an
-actual ADC pad and the SoC's internal temperature sensor.
+On Wed, Nov 14, 2018 at 10:50:03AM +0100, Geert Uytterhoeven wrote:
+> Hi Inami-san,
+> 
+> On Thu, Nov 8, 2018 at 8:25 AM Gaku Inami <gaku.inami.xh@renesas.com> wrote:
+> > This patch adds the "cpu-map" into r8a7795/r8a7796 composed of
+> > multi-cluster. This definition is used to parse the cpu topology.
+> >
+> > Signed-off-by: Gaku Inami <gaku.inami.xh@renesas.com>
+> 
+> Thanks for your patch!
+> 
+> Next time, please collect tags provided by reviewers on the previous
+> version.
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On the 64-bit SoCs the SCPI firmware reads the chip temperature using
-the SAR ADC. Thus the 64-bit SoCs simply expose the temperature through
-the "arm,scpi-sensors" interface (and so Linux doesn't have to program
-the SAR ADC for temperature readings).
-
-The 32-bit SoCs however don't have any SCPI firmware. Thus we need to
-configure the SAR ADC in Linux to get the chip temperature. To make it
-work we need two changes to the existing dt-bindings:
-- we have to get the TSC (temperature sensor calibration coefficient)
-  from the eFuse (where it has been programmed to the correct value in
-  the manufacturing process). the SAR ADC needs the TSC value, otherwise
-  it returns only garbage readings
-- we need to get a phandle to the new HHI syscon region because on
-  Meson8b and Meson8m2 the TSC is five bits wide (on Meson8 it's only
-  four bits wide) but only four bits are stored inside the SAR ADC's
-  memory region. The upper most bit (not all five bits, only one out of
-  five) is stored at a seemingly random register HHI_DPLL_TOP_0) in the
-  HHI register area.
-  This also requires changes to the clock controller where we don't have
-  a solution where everyone's happy with the dt-bindings (see the
-  discussion in [0]) - so this will be added in a future series.
-
-
-changes since v1 at [1]:
-- (many thanks to Peter Meerwald-Stadler and Jonathan Cameron for taking
-  the time to review my patches)
-- use "MESON_SAR_ADC_" as naming schema for two new #defines
-- remove .indexed = 0 (because it's already the default) from
-  MESON_SAR_ADC_TEMP_CHAN
-- simplify setting MESON_SAR_ADC_DELTA_10_TEMP_SEL in
-  meson_sar_adc_enable_channel
-- remove IIO_CHAN_INFO_ENABLE (abuse) from MESON_SAR_ADC_TEMP_CHAN
-- register the channel set depending on whether the temperature sensor
-  can be used or not (instead of exposing the info whether it can be
-  used through the "ENABLE" element)
-- shorten check for MESON_SAR_ADC_EFUSE_BYTE3_IS_CALIBRATED
-- dropped Meson8b and Meson8m2 support for now (see the HHI register
-  discussion mentioned above). I still plan to add support for these
-  SoCs, but I don't want to add any code to the SAR ADC driver before
-  we have a decision on the dt-bindings of the clock driver (where we
-  need to write one bit from the SAR ADC driver for the temperature
-  sensor calibration coefficient).
-- dropped the .dts changes for now since the useful part was adding
-  iio-hwmon on Meson8b and Meson8m2 boards. now that support for these
-  two SoCs is postponed we can wait with the .dts changes as well.
-
-
-[0] https://patchwork.kernel.org/cover/10658527/
-[1] https://patchwork.kernel.org/cover/10658551/
-
-
-Martin Blumenstingl (2):
-  dt-bindings: iio: adc: meson-saradc: add temperature sensor support
-  iio: adc: meson-saradc: add support for the chip's temperature sensor
-
- .../bindings/iio/adc/amlogic,meson-saradc.txt |   6 +
- drivers/iio/adc/meson_saradc.c                | 229 ++++++++++++++++--
- 2 files changed, 209 insertions(+), 26 deletions(-)
-
--- 
-2.19.1
+Thanks, applied for v4.21.
