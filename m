@@ -1,8 +1,7 @@
 From: Bich HEMON <bich.hemon@st.com>
-Subject: [PATCH 3/3] ARM: dts: stm32: add can1 sleep pins muxing on
- stm32mp157c-ev1 board
+Subject: [PATCH 2/3] ARM: dts: stm32: add can1 sleep pins muxing
 Date: Thu, 15 Nov 2018 08:52:29 +0000
-Message-ID: <1542271942-28130-4-git-send-email-bich.hemon@st.com>
+Message-ID: <1542271942-28130-3-git-send-email-bich.hemon@st.com>
 References: <1542271942-28130-1-git-send-email-bich.hemon@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -15,27 +14,30 @@ To: Alexandre TORGUE <alexandre.torgue@st.com>, "mcoquelin.stm32@gmail.com" <mco
 Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
 List-Id: devicetree@vger.kernel.org
 
-Add pinctrl sleep state for can1 on stm32mp157c-ev1.
+Add can1 pinctrl definition for low-power mode
 
 Signed-off-by: Bich Hemon <bich.hemon@st.com>
 ---
- arch/arm/boot/dts/stm32mp157c-ev1.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-index 063ee8a..fdc4c92 100644
---- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-@@ -124,8 +124,9 @@
- };
+diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+index c485127..9ec4694 100644
+--- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+@@ -246,6 +246,13 @@
+ 				};
+ 			};
  
- &m_can1 {
--	pinctrl-names = "default";
-+	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&m_can1_pins_a>;
-+	pinctrl-1 = <&m_can1_sleep_pins_a>;
- 	status = "okay";
- };
- 
++			m_can1_sleep_pins_a: m_can1-sleep@0 {
++				pins {
++					pinmux = <STM32_PINMUX('H', 13, ANALOG)>, /* CAN1_TX */
++						 <STM32_PINMUX('I', 9, ANALOG)>; /* CAN1_RX */
++				};
++			};
++
+ 			pwm2_pins_a: pwm2-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('A', 3, AF1)>; /* TIM2_CH4 */
 -- 
 1.9.1
