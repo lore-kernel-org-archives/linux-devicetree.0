@@ -1,52 +1,45 @@
-From: Florian Eckert <fe@dev.tdt.de>
-Subject: [PATCH v3 1/2] hwmon: (adcxx) add devictree bindings documentation
-Date: Thu, 15 Nov 2018 14:50:12 +0100
-Message-ID: <20181115135013.30723-2-fe@dev.tdt.de>
-References: <20181115135013.30723-1-fe@dev.tdt.de>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 1/2] dt-bindings: phy: add binding for Freescale i.MX8MQ USB3 PHY
+Date: Thu, 15 Nov 2018 15:12:46 +0100
+Message-ID: <20181115141247.15221-1-l.stach@pengutronix.de>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181115135013.30723-1-fe@dev.tdt.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Florian Eckert <fe@dev.tdt.de>
+To: Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de, patchwork-lst@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Document the devicetree bindings for the adcxx.
+This adds the binding for the USB3 PHY found on the i.MX8M SoC.
 
-Signed-off-by: Florian Eckert <fe@dev.tdt.de>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 ---
- Documentation/devicetree/bindings/hwmon/adcxx.txt | 24 +++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/adcxx.txt
+ .../bindings/phy/fsl,imx8mq-usb-phy.txt         | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/fsl,imx8mq-usb-phy.txt
 
-diff --git a/Documentation/devicetree/bindings/hwmon/adcxx.txt b/Documentation/devicetree/bindings/hwmon/adcxx.txt
+diff --git a/Documentation/devicetree/bindings/phy/fsl,imx8mq-usb-phy.txt b/Documentation/devicetree/bindings/phy/fsl,imx8mq-usb-phy.txt
 new file mode 100644
-index 000000000000..a94a5fe21b6d
+index 000000000000..a22e853d710c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/adcxx.txt
-@@ -0,0 +1,24 @@
-+adcxx properties
++++ b/Documentation/devicetree/bindings/phy/fsl,imx8mq-usb-phy.txt
+@@ -0,0 +1,17 @@
++* Freescale i.MX8MQ USB3 PHY binding
 +
 +Required properties:
-+- compatible: Must be one of the following:
-+	- "national,adcxx1s" for adcxx1s
-+	- "national,adcxx2s" for adcxx2s
-+	- "national,adcxx4s" for adcxx4s
-+	- "national,adcxx8s" for adcxx8s
-+- reg: SPI address for chip
-+
-+Optional properties:
-+
-+- vref-supply
-+  The external reference in microvolt for this device is set to this value.
-+  If it does not exists the reference will be set to 3300000uV (3.3V).
++- compatible:	Should be "fsl,imx8mq-usb-phy"
++- #phys-cells:	must be 0 (see phy-bindings.txt in this directory)
++- reg:		The base address and length of the registers
++- clocks:	phandles to the clocks for each clock listed in clock-names
++- clock-names:	must contain "phy"
 +
 +Example:
-+
-+adc@6 {
-+	compatible = "national,adcxx2s";
-+	reg = <6 0>;
-+	spi-max-frequency = <1000000>;
-+	vref-supply = <&vref>;
-+};
++	usb3_phy0: phy@381f0040 {
++		compatible = "fsl,imx8mq-usb-phy";
++		reg = <0x381f0040 0x40>;
++		clocks = <&clk IMX8MQ_CLK_USB1_PHY_ROOT>;
++		clock-names = "phy";
++		#phy-cells = <0>;
++	};
 -- 
-2.11.0
+2.19.1
