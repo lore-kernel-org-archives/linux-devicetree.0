@@ -1,66 +1,45 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 10/12] soc: qcom: ipa: data path
-Date: Thu, 15 Nov 2018 06:48:36 -0800
-Message-ID: <CAK8P3a3inEwKtfNhD4eT7m2t5eVLMcR5HJWR6-kzO__6F=U_tw@mail.gmail.com>
-References: <20181107003250.5832-1-elder@linaro.org> <20181107003250.5832-11-elder@linaro.org>
- <CAK8P3a0nkfwFCCVHaTJ+kJGWxO+qFTzTLnRgB-NG0AyMEsv3bA@mail.gmail.com> <a1517ea0-b651-f24e-4890-8ceb6e2b14c6@linaro.org>
+From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 02/15] ARM: dts: sun8i-h3: Remove heading 0 in
+ video-codec unit address
+Date: Thu, 15 Nov 2018 15:50:00 +0100
+Message-ID: <20181115145013.3378-3-paul.kocialkowski@bootlin.com>
+References: <20181115145013.3378-1-paul.kocialkowski@bootlin.com>
+Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a1517ea0-b651-f24e-4890-8ceb6e2b14c6@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Elder <elder@linaro.org>
-Cc: David Miller <davem@davemloft.net>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, syadagir@codeaurora.org, mjavid@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRBPUPW3PQKGQEDUS57YI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181115145013.3378-1-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 14, 2018 at 7:31 PM Alex Elder <elder@linaro.org> wrote:
->
-> On 11/7/18 8:55 AM, Arnd Bergmann wrote:
-> > On Wed, Nov 7, 2018 at 1:33 AM Alex Elder <elder@linaro.org> wrote:
-> >>
-> >> This patch contains "ipa_dp.c", which includes the bulk of the data
-> >> path code.  There is an overview in the code of how things operate,
-> >> but there are already plans to rework this portion of the driver.
-> >>
-> >> In particular:
-> >>   - Interrupt handling will be replaced with a threaded interrupt
-> >>     handler.  Currently handling occurs in a combination of
-> >>     interrupt and workqueue context, and this requires locking
-> >>     and atomic operations for proper synchronization.
-> >
-> > You probably don't want to use just a threaded IRQ handler to
-> > start the poll function, that would still require an extra indirection.
->
-> That's a really good point.  However I think that the path I'll
-> take to *getting* to scheduling the poll in interrupt context
-> will use a threaded interrupt handler.  I'm hoping that will
-> allow me to simplify the code in steps.
->
-> The main reason for this split between working in interrupt
-> context when possible, but pushing to a workqueue when not, is
-> to allow IPA clock(s) to be turned off.  Enabling the clocks
-> is a blocking operation, so can't' be done in the top half
-> interrupt handler.  The thought was it would be best to work
-> in interrupt context--if the clock was already active--but
-> to defer to a workqueue to turn the clock on if necessary.
->
-> The result requires locking and duplication of code that I
-> find to be pretty confusing--and hard to reason about.  I
-> have been planning to re-do things to be better suited to
-> NAPI, and knowing that, I haven't given the data path as
-> much attention as some of the rest.
+This cosmetic change removes the heading 0 in the video-codec unit
+address, as it's done for other nodes.
 
-Right, that sounds like a good plan: start making it use a
-threaded IRQ handler first to clean up the code, and then
-think about optimizing the NAPI wakeup once that works
-reliably.
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-h3.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I think what you can do here eventually is to have
-a combined threaded/non-threaded IRQ handler, where
-the threaded handler can do everything it needs to do,
-and the non-threaded handler does only one thing:
-if all conditions are met for entering the NAPI handler
-(waiting for rx/tx IRQ, clocks enabled, ...) we call
-napi_schedule(), otherwise defer to the threaded handler.
-
-       Arnd
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index 3ecfabb10151..35d025af7deb 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -156,7 +156,7 @@
+ 			};
+ 		};
+ 
+-		video-codec@01c0e000 {
++		video-codec@1c0e000 {
+ 			compatible = "allwinner,sun8i-h3-video-engine";
+ 			reg = <0x01c0e000 0x1000>;
+ 			clocks = <&ccu CLK_BUS_VE>, <&ccu CLK_VE>,
+-- 
+2.19.1
