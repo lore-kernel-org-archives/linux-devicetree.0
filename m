@@ -1,51 +1,39 @@
-From: Andy Gross <andy.gross@linaro.org>
-Subject: Re: [PATCH 4/4] arm64: dts: qcom: msm8998-mtp: Add external SD
-Date: Thu, 15 Nov 2018 11:05:59 -0800
-Message-ID: <20181115190559.GA17484@hector>
-References: <1542302291-6864-1-git-send-email-jhugo@codeaurora.org>
- <1542302291-6864-5-git-send-email-jhugo@codeaurora.org>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v10 0/9] Add the I3C subsystem
+Date: Thu, 15 Nov 2018 20:07:39 +0100
+Message-ID: <20181115200739.20b22d52@bbrezillon>
+References: <20181026144333.12276-1-boris.brezillon@bootlin.com>
+        <76b1d15d-232c-d8ba-5eba-8394e71be725@synopsys.com>
+        <20181115135731.25f60990@bbrezillon>
+        <CAK8P3a0gmCtMac7ctKZ3r=2Dxo03pYvuXkQ7c4Vnt9yMoLDMSQ@mail.gmail.com>
+        <08a591ae-c75b-80b4-b608-ca92f6d932f9@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1542302291-6864-5-git-send-email-jhugo@codeaurora.org>
+In-Reply-To: <08a591ae-c75b-80b4-b608-ca92f6d932f9@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: david.brown@linaro.org, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: vitor <vitor.soares@synopsys.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, gregkh <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 15, 2018 at 10:18:11AM -0700, Jeffrey Hugo wrote:
-> The externally accessible SD card slot on the MTP is driven by SDCC2.
-> Wire it up for use.
+On Thu, 15 Nov 2018 15:25:11 +0000
+vitor <vitor.soares@synopsys.com> wrote:
+
+> Hi Arnd,
 > 
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 13 +++++++++++++
->  arch/arm64/boot/dts/qcom/msm8998.dtsi     |  1 +
->  2 files changed, 14 insertions(+)
+> On 15/11/18 14:25, Arnd Bergmann wrote:
+> > I agree about better not exposing the bus as a /dev/i3c* node, and that we
+> > probably do need to expose individual devices in some form to allow
+> > writing complete user space drivers that can do everything a kernel driver
+> > can do.
+> >
+> > Can you describe what a low-level interface to the device looks like
+> > in the kernel? Can this be abstracted as simply pread()/pwrite() plus
+> > an interrupt mechanism, or do we need a set of ioctl() operations as
+> > well?  
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> index b4276da..a90b427 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> @@ -241,3 +241,16 @@
->  		};
->  	};
->  };
-> +
-> +&sdhc2 {
-> +	status = "okay";
-> +        cd-gpios = <&tlmm 95 GPIO_ACTIVE_LOW>;
-> +
-> +        vmmc-supply = <&vreg_l21a_2p95>;
-> +        vqmmc-supply = <&vreg_l13a_2p95>;
-> +
-> +        pinctrl-names = "default", "sleep";
-> +        pinctrl-0 = <&sdc2_clk_on  &sdc2_cmd_on  &sdc2_data_on  &sdc2_cd_on>;
-> +        pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
+> Like in i2c is likely to need the ioctl() too.
 
-Fix to use tabs instead of spaces.
-
-
-Regards,
-Andy
+Yep, I think we'll need an ioctl given the various type of transfers
+one case use to interact with a device.
