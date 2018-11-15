@@ -1,64 +1,26 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 3/4] arm64: dts: qcom: msm8998: Add SDC2 control pins
-Date: Thu, 15 Nov 2018 11:16:23 -0800
-Message-ID: <20181115191623.GK10915@tuxbook-pro>
-References: <1542302291-6864-1-git-send-email-jhugo@codeaurora.org>
- <1542302291-6864-4-git-send-email-jhugo@codeaurora.org>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: Re: [PATCH v6 0/2] arm64: dts: add prng-ee nodes
+Date: Thu, 15 Nov 2018 11:20:09 -0800
+Message-ID: <20181115192009.GB17484@hector>
+References: <20181001062151.27607-1-vkoul@kernel.org>
+ <20181115034518.GG3060@vkoul-mobl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1542302291-6864-4-git-send-email-jhugo@codeaurora.org>
+In-Reply-To: <20181115034518.GG3060@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Vinod Koul <vinod.koul@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Brown <david.brown@linaro.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 15 Nov 09:18 PST 2018, Jeffrey Hugo wrote:
-
-> The SDC2 control pins are typically used to manage sleep.
+On Thu, Nov 15, 2018 at 09:15:18AM +0530, Vinod Koul wrote:
+> On 01-10-18, 11:51, Vinod Koul wrote:
+> > This adds prng-ee nodes for msm8996 and sdm845
 > 
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/msm8998-pins.dtsi | 78 ++++++++++++++++++++++++++++++
+> Ping Andy, would appreciate if you can pick these up.
 
-Rather than adding a -pins file, add the pinctrl states the individual
-dts(i) directly.
+Done.  I did have to massage the location in dts for both of these patches to
+keep the address order correct.
 
->  arch/arm64/boot/dts/qcom/msm8998.dtsi      |  2 +
->  2 files changed, 80 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
-> new file mode 100644
-> index 0000000..a22abf9
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
-> @@ -0,0 +1,78 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2018, The Linux Foundation. All rights reserved. */
-> +
-> +&tlmm {
-> +	sdc2_clk_on: sdc2_clk_on {
-
-Use _ in labels, - in node names.
-
-> +		config {
-
-You don't have to put the pinctrl state properties in an additional
-subnode anymore, so feel free to remove the extra subnode level.
-
-> +			pins = "sdc2_clk";
-> +			bias-disable;           /* NO pull */
-> +			drive-strength = <16>;  /* 16 MA */
-
-Please push electrical properties to the board dts instead of the
-platform one, as they might be board specific.
-
-> +		};
-> +	};
-
-Apart from this the patch loogs good.
-
-Regards,
-Bjorn
+Andy
