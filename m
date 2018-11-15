@@ -1,55 +1,102 @@
-Return-Path: <SRS0=9lQL=N2=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr1400122.outbound.protection.outlook.com ([40.107.140.122]:55120
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387839AbeKPC7I (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 15 Nov 2018 21:59:08 -0500
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v6 1/2] pinctrl: Add RZ/A2 pin and gpio controller
-Date: Thu, 15 Nov 2018 16:50:29 +0000
-Message-ID: <OSAPR01MB1553B1748C9DFC365DCF7C568ADC0@OSAPR01MB1553.jpnprd01.prod.outlook.com>
+Return-Path: <SRS0=tqXi=N2=jmondi.org=jacopo@kernel.org>
+Date: Thu, 15 Nov 2018 17:28:17 +0100
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v6 1/2] pinctrl: Add RZ/A2 pin and gpio controller
+Message-ID: <20181115162817.GB28299@w540>
 References: <20181115140045.24733-1-chris.brandt@renesas.com>
  <20181115140045.24733-2-chris.brandt@renesas.com>
- <20181115162817.GB28299@w540>
-In-Reply-To: <20181115162817.GB28299@w540>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="kVXhAStRUZ/+rrGn"
+Content-Disposition: inline
+In-Reply-To: <20181115140045.24733-2-chris.brandt@renesas.com>
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgSmFjb3BvLA0KDQpPbiBUaHVyc2RheSwgTm92ZW1iZXIgMTUsIDIwMTggMSwgamFjb3BvIG1v
-bmRpIHdyb3RlOg0KPiA+IHY1Og0KPiA+ICAqIFNwZWNpZnkgbnVtYmVyIG9mIHBvcnRzIHVzaW5n
-IG9mX2RldmljZV9pZC5kYXRhIGFuZCBzYXZlIGFzIHByaXYtDQo+ID5ucGlucw0KPiA+ICAqIFVz
-ZSBwcml2LT5ucGlucyBldmVyeXdoZXJlIGluc3RlYWQgb2YgaGFyZCBjb2RlZCBSWkEyX05QSU5T
-DQo+ID4gICogQ2hlY2sgZ3Bpby1yYW5nZXMgdG8gbWFrZSBzdXJlIGFyZ3MgbWF0Y2hlcyBTT0MN
-Cj4gDQo+IFNvcnJ5IGFib3V0IHRoaXMsIEkgZGlkbid0IHdhbnQgdG8gYXNrIHlvdSB0byBkbyB0
-aGlzIG5vdywgaXQgbWlnaHQNCj4gaGF2ZSBoYWQgcG9zdC1wb25lZCB0byB3aGVuIGEgbmV3IFNv
-QyB3aWxsIGhhdmUgdG8gYmUgc3VwcG9ydGVkLCBidXQuLg0KDQpBcyBsb25nIGFzIEkgY2FuIGdl
-dCB0aGlzIGRyaXZlciBpbiBmb3IgNC4yMSwgSSdsbCBzdGlsbCBiZSBoYXBweS4NCg0KDQo+ID4g
-K3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHJ6YTJfcGluY3RybF9vZl9tYXRjaFtd
-ID0gew0KPiA+ICsJeyAuY29tcGF0aWJsZSA9ICJyZW5lc2FzLHI3czkyMTAtcGluY3RybCIsIC5k
-YXRhID0gKHZvaWQgKikyMiwgfSwNCj4gDQo+IC4uLiBJIHJlYWxseSBkb24ndCBsaWtlIHRoaXMs
-IEknbSBzb3JyeS4NCj4gDQo+IEkgd291bGQgcmF0aGVyIG1ha2UgYSAnc3RydWN0IHJ6YV9waW5j
-dHJsX2luZm8nIG9yIHNpbWlsYXIgd2hpY2gNCj4gY29udGFpbnMgYWxsIHRoZSBmaWVsZHMgeW91
-IG5vdyBoYXJkY29kZSAobnVtYmVyIG9mIHBvcnRzLCBwaW5zIHBlcg0KPiBwb3J0IGV0YykgYW5k
-IHdoaWNoIGlzIGVhc2lseSBleHRlbnNpYmxlIGluIGNhc2UgeW91IG5lZWQgdG8gZG8gc28uDQoN
-Ckkgd2FzIGdvaW5nIGJ5IGlmIHRoZXJlIGlzIG9ubHkgMSB2YWx1ZSBiZWluZyBzZXQsIGp1c3Qg
-cGFzcyBpbiBhIG51bWJlcg0KKGRvbid0IG1ha2UgYSBzdHJ1Y3QpLiBUaGF0IGlzIHdoYXQgaXMg
-YmVpbmcgZG9uZSBmb3IgdGhlIFItQ2FyL1JaQSANClNESEkgZHJpdmVyIChyZW5lc2FzX3NkaGlf
-aW50ZXJuYWxfZG1hYy5jKSwgYW5kIHdoYXQgSSB3YXMgYWxzbyBhc2tlZCB0byBkbw0KZm9yIHRo
-ZSBSWi9BIHdhdGNoZG9nIHRpbWVyIChyemFfd2R0LmMpLg0KDQpBdCB0aGUgbW9tZW50LCB0aGUg
-bnVtYmVyIG9mIHBvcnRzIGluIHRoZSBTT0MgaXMgdGhlIG9ubHkgdmFyaWFibGUgdGhhdCANCndv
-dWxkIGJlIGRpZmZlcmVudCBiZXR3ZWVuIFNvQ3MuIEZvciBleGFtcGxlLCAicGlucyBwZXIgcG9y
-dCIgd2lsbCANCmFsd2F5cyBiZSA4IChpdCdzIHBhcnQgb2YgdGhlIEhXIGRlc2lnbiBvZiB0aGlz
-IHBpbiBjb250cm9sbGVyLCBpdCBjYW4gbmV2ZXIgDQpjaGFuZ2UpLg0KDQpXZSBjYW4gaGF2ZSBH
-ZWVydCBnaXZlIGhpcyBvcGluaW9uIG9uIHRoZSB0b3BpYyBzaW5jZSBpdCB3YXMgaGlzIA0Kc3Vn
-Z2VzdGlvbiB0byBiZWdpbiB3aXRoLg0KDQoNCj4gSSdtIHNvcnJ5IHRoaXMgaXMgbW9yZSB3b3Jr
-LCBhbmQgYWdhaW4sIGl0IG1pZ2h0IGJlIHBvc3QtcG9uZWQgaW1vLA0KPiBwcm92aWRlZCB5b3Ug
-ZHJvcCB0aGlzIGNoYW5nZSB5b3UgaGF2ZSBpbnRyb2R1Y2VkIGhlcmUuDQoNClNpbmNlIEdlZXJ0
-IGlzIHRoZSBtYWludGFpbmVyIG9mIHRoZSBSZW5lc2FzIHBpbmN0cmwgZHJpdmVycywgSSdsbCBs
-ZXQgDQpoaW0gZGVjaWRlIGlmIEkgc2hvdWxkIGRyb3AgdGhhdCBwYXJ0IGZvciBub3cgc2luY2Ug
-b25seSAxIFNPQyBleGlzdHMgDQp0b2RheS4NCg0KQ2hyaXMNCg0K
+
+--kVXhAStRUZ/+rrGn
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Chris,
+
+On Thu, Nov 15, 2018 at 09:00:44AM -0500, Chris Brandt wrote:
+> Adds support for the pin and gpio controller found in R7S9210 (RZ/A2) SoCs.
+>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+> v5:
+>  * Specify number of ports using of_device_id.data and save as priv->npins
+>  * Use priv->npins everywhere instead of hard coded RZA2_NPINS
+>  * Check gpio-ranges to make sure args matches SOC
+
+Sorry about this, I didn't want to ask you to do this now, it might
+have had post-poned to when a new SoC will have to be supported, but..
+
+[snip]
+
+> +
+> +static const struct of_device_id rza2_pinctrl_of_match[] = {
+> +	{ .compatible = "renesas,r7s9210-pinctrl", .data = (void *)22, },
+
+... I really don't like this, I'm sorry.
+
+I would rather make a 'struct rza_pinctrl_info' or similar which
+contains all the fields you now hardcode (number of ports, pins per
+port etc) and which is easily extensible in case you need to do so.
+
+I'm sorry this is more work, and again, it might be post-poned imo,
+provided you drop this change you have introduced here.
+
+Thanks
+   j
+
+
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static struct platform_driver rza2_pinctrl_driver = {
+> +	.driver = {
+> +		.name = DRIVER_NAME,
+> +		.of_match_table = rza2_pinctrl_of_match,
+> +	},
+> +	.probe = rza2_pinctrl_probe,
+> +};
+> +
+> +static int __init rza2_pinctrl_init(void)
+> +{
+> +	return platform_driver_register(&rza2_pinctrl_driver);
+> +}
+> +core_initcall(rza2_pinctrl_init);
+> +
+> +MODULE_AUTHOR("Chris Brandt <chris.brandt@renesas.com>");
+> +MODULE_DESCRIPTION("Pin and gpio controller driver for RZ/A2 SoC");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.16.1
+>
+
+--kVXhAStRUZ/+rrGn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJb7Z6hAAoJEHI0Bo8WoVY8758QALbw/IFn7Ga3VAGhjuzadD8K
+WpIXgpCzTRWNQMXSJcYNgyaQ36vWd2FAu/gbyWawBLUADx3hI7a2/uSgokIQFOI6
+tGPHji7oVUbPyP8NDS+rkc+ZPOSvAisZXeAbYSgtAFtGiOpbmTc+IuMIdYI80u2q
+bk3j5mBXIWNDEElG6wzA8FupMnj1s75GIu6t8DRBLedjYWprnewybKJD0wggEX9u
+PZbvyQmB/jqEu4lEWyGF7xHre5izZDWIjvw9YnZT68xWfuDlOPwd7qr+nfLIpvZg
+f8vDzZ59iJwC4HQvJiMVxIrxTpLILCPdkW3fJRPWpGo9I0lsh4bXZmrRHpUPlDTr
+JqiwMxCgM9ZjSS56SJyFw1uJwpfYHhv0HnK00dVFU8jgWbGizMCwtH0Zgh8im5J2
+TbUwPGGuc51MBUulw1q1EANJR1yPB+DymezQ1Z8UEG1EvgiBCGm8ZHV8nHfJTf9q
+rEPMEgTJfzVnV8Iz/9ZLKFbxeIzWbpj2RFuTJLYE6frLwF/pUbqJMZgoY1y6Vy4/
+O+1c+KyQX4JQboO8x7w91P0sppHsFrFpo68ID5EGhTCmq5QafavDhB+koVU3wXDs
+OH5rzZHqAWXti8nvYzYIhHeCP3Ng8Ah1mX905zBLsBb/wXxt3WsL/fkNJKs1Roq6
+9NfEL3NRECEhHAksm9Kx
+=41dy
+-----END PGP SIGNATURE-----
+
+--kVXhAStRUZ/+rrGn--
