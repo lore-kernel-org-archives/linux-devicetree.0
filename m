@@ -1,25 +1,51 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6 0/5] Add Actions Semi S700 pinctrl support
-Date: Thu, 15 Nov 2018 11:10:06 +0100
-Message-ID: <CACRpkdbpgjPEbur76BPjkXUN01zcUENcAyp=NsH4Bh_PiFBssw@mail.gmail.com>
-References: <20181113100709.5615-1-pn@denx.de>
+Subject: Re: [PATCH v4 6/6] pinctrl: lochnagar: Add support for the Cirrus
+ Logic Lochnagar
+Date: Thu, 15 Nov 2018 11:54:48 +0100
+Message-ID: <CACRpkdZCUDsSZA3xAH05ZFuNP8dyHFapX7MJTVnD3A-ts1Y7yA@mail.gmail.com>
+References: <20181108101405.14062-1-ckeepax@opensource.cirrus.com> <20181108101405.14062-7-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181113100709.5615-1-pn@denx.de>
+In-Reply-To: <20181108101405.14062-7-ckeepax@opensource.cirrus.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: pn@denx.de
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, mp-cs@actions-semi.com, "Thomas C. Liau" <thomas.liau@actions-semi.com>, linux@cubietech.com, saravanan sekar <sravanhome@gmail.com>
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 13, 2018 at 11:07 AM Parthiban Nallathambi <pn@denx.de> wrote:
+On Thu, Nov 8, 2018 at 11:14 AM Charles Keepax
+<ckeepax@opensource.cirrus.com> wrote:
 
-> This patchset adds pinctrl support for Actions Semi S700 SoC.
-> Pinmux functions are only accessible for pin groups while pinconf
-> parameters are available for both pin groups and individual pins.
+> Lochnagar is an evaluation and development board for Cirrus
+> Logic Smart CODEC and Amp devices. It allows the connection of
+> most Cirrus Logic devices on mini-cards, as well as allowing
+> connection of various application processor systems to provide a
+> full evaluation platform. This driver supports the board
+> controller chip on the Lochnagar board.
+>
+> Lochnagar provides many pins which can generally be used for an
+> audio function such as an AIF or a PDM interface, but also as
+> GPIOs.
+>
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-This looks good to me, just waiting for Manivannan to look it
-over and ACK.
+This v4 version looks very good to me!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Nitpicks (fix or not, my review tag stands):
+
+>  drivers/pinctrl/cirrus/pinctrl-lochnagar.c | 1145 ++++++++++++++++++++++++++++
+>  drivers/pinctrl/cirrus/pinctrl-lochnagar.h |  112 +++
+
+Why don't you just include that header file in the C file.
+112 lines +/- on a 1145 line file doesn't matter.
+
+> +       priv->gpio_chip = template_chip;
+
+I would just skip the template and just assign struct members
+directly.
+
+Bonus if you set ->label to something instance-unique as well.
 
 Yours,
 Linus Walleij
