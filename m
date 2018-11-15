@@ -1,139 +1,26 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v2 00/15] ARM: sunxi: Enable Broadcom-based Bluetooth
- controllers
-Date: Thu, 15 Nov 2018 17:35:48 +0800
-Message-ID: <20181115093603.26729-1-wens@csie.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/3] MAINTAINERS: add maintainer for sama5d2 PIOBU GPIO driver
+Date: Thu, 15 Nov 2018 10:40:19 +0100
+Message-ID: <CACRpkdbg5LTYAkSZTmLvfjWyhOrOFw9xEQKB_WgVOMULAii_yQ@mail.gmail.com>
+References: <1541603580-17448-1-git-send-email-andrei.stefanescu@microchip.com>
+ <1541603580-17448-3-git-send-email-andrei.stefanescu@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1541603580-17448-3-git-send-email-andrei.stefanescu@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrei.Stefanescu@microchip.com
+Cc: Greg KH <gregkh@linuxfoundation.org>, Nicolas Ferre <Nicolas.Ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ludovic Desroches <Ludovic.Desroches@microchip.com>, Cristian.Birsan@microchip.com, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+On Wed, Nov 7, 2018 at 4:12 PM <Andrei.Stefanescu@microchip.com> wrote:
 
-This is v2 of my Broadcom-based Bluetooth controllers on Allwinner SoC-
-based SBCs series.
+> This patch adds a maintainer for the sama5d2 GPIO controller
+> driver.
+>
+> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@microchip.com>
 
-Changes since v1:
+Just merge this in with the driver patch, thanks!
 
-  - Collected tags
-  - Re-organize dt binding clocks and clock-names properties
-  - Simplify check for deferred probe when getting clocks
-  - Add explanation of Cubietruck's clk_out_a pinmux setting placement
-    to commit message.
-  - Add missing "uart-has-rtscts" property to Cubietruck device tree
-
-Original cover letter follows.
-
-
-On many Allwinner SBCs / developer boards, there is a WiFi+BT combo
-module from AMPAK. Inside is either one or two Broadcom chips, depending
-on the model. This series enables the Bluetooth controllers for AMPAK
-AP6210, AP6212, and AP6330 found on several boards. More will come later
-as other SoCs require changes to some other parts. I did not cover the
-SCO PCM connections from the controller to the SoC's I2S interface. It
-seems no one is actually doing this, so I was not sure how to proceed.
-Any suggestions?
-
-I deliberately left out the netdev mailing list and Dave Miller, as the
-only thing that is under net is the binding document. Maybe we should
-move that out of Documentation/devicetree/bindings/net/ ?
-
-Also, I'm not subscribed to the linux-bluetooth ML, so please CC me for
-any discussions.
-
-Patches 1 through 4 are device tree binding changes:
-
-1 - Make the external clock name unambiguous, and add a second entry for
-    the LPO clock.
-
-2 - Add regulator supply properties for the VBAT and VDDIO power pins.
-
-3 - Add a compatible string for BCM20702A1.
-
-4 - Add a compatible string for BCM4330.
-
-Patches 5 through 13 are changes to the driver, either improvements,
-or updates to handle the updated device tree binding.
-
-5 - Make the driver handle deferred probing for the external clock.
-
-6 - Simplify clock error checking for subsequent clk API calls.
-
-7 - Handle clock-names for the main external clock.
-
-8 - Support a new external clock, the LPO.
-
-9 - Support regulator supplies.
-
-10 - Wait a small amount of time after toggling the GPIO for the device
-     to settle.
-
-11 - Add support for BCM20702A1, including its default address.
-
-12 - Add BCM4330 compatible string to the driver.
-
-13 - Handle default address for BCM43430A0.
-
-14 - Enable Broadcom-based serdev Bluetooth for multiple Allwinner ARMv7
-     boards.
-
-15 - Enable Broadcom-based serdev Bluetooth for the Bananapi M64.
-
-checkpatch reports an error for both patch 11 and patch 13:
-
-    ERROR: space required after that close brace '}'
-
-I followed the existing code's style. If this is undesirable, I can send
-a follow-up patch fixing the entire code block.
-
-The first 13 patches should go through the Bluetooth tree, while we, the
-sunxi maintainers, will take the last 2.
-
-
-Thanks
-ChenYu
-
-Chen-Yu Tsai (14):
-  dt-bindings: net: broadcom-bluetooth: Fix external clock names
-  dt-bindings: net: broadcom-bluetooth: Add VBAT and VDDIO supplies
-  dt-bindings: net: broadcom-bluetooth: Add BCM20702A1 compatible string
-  dt-bindings: net: broadcom-bluetooth: Add BCM4330 compatible string
-  Bluetooth: hci_bcm: Handle deferred probing for the clock supply
-  Bluetooth: hci_bcm: Simplify clk_get error handling
-  Bluetooth: hci_bcm: Use "txco" and "extclk" to get clock reference
-  Bluetooth: hci_bcm: Add support for LPO clock
-  Bluetooth: hci_bcm: Add support for regulator supplies
-  Bluetooth: hci_bcm: Wait for device to come out of reset after power
-    on
-  Bluetooth: hci_bcm: Add compatible string for BCM4330
-  Bluetooth: btbcm: Add default address for BCM43430A0
-  ARM: dts: sunxi: Enable Broadcom-based Bluetooth for multiple boards
-  arm64: dts: allwinner: a64: bananapi-m64: Add Bluetooth device node
-
-Maxime Ripard (1):
-  Bluetooth: hci_bcm: Add BCM20702A1 variant
-
- .../bindings/net/broadcom-bluetooth.txt       |  11 +-
- arch/arm/boot/dts/sun7i-a20-cubietruck.dts    |  23 ++++
- arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts  |  18 +++
- .../boot/dts/sun8i-a83t-cubietruck-plus.dts   |  18 +++
- arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts  |  14 +++
- .../dts/allwinner/sun50i-a64-bananapi-m64.dts |  14 +++
- drivers/bluetooth/btbcm.c                     |  13 +-
- drivers/bluetooth/hci_bcm.c                   | 112 +++++++++++++++---
- 8 files changed, 206 insertions(+), 17 deletions(-)
-
--- 
-2.19.1
+Yours,
+Linus Walleij
