@@ -1,7 +1,7 @@
 From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v2 2/3] arm64: dts: qcom: msm8998: Add SDCC2
-Date: Thu, 15 Nov 2018 13:44:54 -0700
-Message-ID: <1542314695-24071-3-git-send-email-jhugo@codeaurora.org>
+Subject: [PATCH v2 3/3] arm64: dts: qcom: msm8998-mtp: Add external SD
+Date: Thu, 15 Nov 2018 13:44:55 -0700
+Message-ID: <1542314695-24071-4-git-send-email-jhugo@codeaurora.org>
 References: <1542314695-24071-1-git-send-email-jhugo@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1542314695-24071-1-git-send-email-jhugo@codeaurora.org>
@@ -10,51 +10,100 @@ To: andy.gross@linaro.org, david.brown@linaro.org
 Cc: bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-SDCC2 is typically used as the controller for an external SD card slot.
+The externally accessible SD card slot on the MTP is driven by SDCC2.
+Wire it up for use.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 65 +++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8998.dtsi     |  1 +
+ 2 files changed, 66 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+index b4276da..cf74883 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+@@ -241,3 +241,68 @@
+ 		};
+ 	};
+ };
++
++&tlmm {
++	sdc2_clk_on: sdc2-clk-on {
++		pins = "sdc2_clk";
++		bias-disable;           /* NO pull */
++		drive-strength = <16>;  /* 16 MA */
++	};
++
++	sdc2_clk_off: sdc2-clk-off {
++		pins = "sdc2_clk";
++		bias-disable;           /* NO pull */
++		drive-strength = <2>;   /* 2 MA */
++	};
++
++	sdc2_cmd_on: sdc2-cmd-on {
++		pins = "sdc2_cmd";
++		bias-pull-up;           /* pull up */
++		drive-strength = <10>;  /* 10 MA */
++	};
++
++	sdc2_cmd_off: sdc2-cmd-off {
++		pins = "sdc2_cmd";
++		bias-pull-up;           /* pull up */
++		drive-strength = <2>;   /* 2 MA */
++	};
++
++	sdc2_data_on: sdc2-data-on {
++		pins = "sdc2_data";
++		bias-pull-up;           /* pull up */
++		drive-strength = <10>;  /* 10 MA */
++	};
++
++	sdc2_data_off: sdc2-data-off {
++		pins = "sdc2_data";
++		bias-pull-up;           /* pull up */
++		drive-strength = <2>;   /* 2 MA */
++	};
++
++	sdc2_cd_on: sdc2-cd-on {
++		function = "gpio";
++		pins = "gpio95";
++		bias-pull-up;           /* pull up */
++		drive-strength = <2>;   /* 2 MA */
++	};
++
++	sdc2_cd_off: sdc2-cd-off {
++		function = "gpio";
++		pins = "gpio95";
++		bias-pull-up;           /* pull up */
++		drive-strength = <2>;   /* 2 MA */
++	};
++};
++
++&sdhc2 {
++	status = "okay";
++	cd-gpios = <&tlmm 95 GPIO_ACTIVE_LOW>;
++
++	vmmc-supply = <&vreg_l21a_2p95>;
++	vqmmc-supply = <&vreg_l13a_2p95>;
++
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&sdc2_clk_on  &sdc2_cmd_on  &sdc2_data_on  &sdc2_cd_on>;
++	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
++};
++
 diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index a948d4b..09deee0 100644
+index 09deee0..82f6472 100644
 --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
 +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -53,7 +53,7 @@
- 	};
+@@ -3,6 +3,7 @@
  
- 	clocks {
--		xo {
-+		xo: xo {
- 			compatible = "fixed-clock";
- 			#clock-cells = <0>;
- 			clock-frequency = <19200000>;
-@@ -605,6 +605,23 @@
- 			#mbox-cells = <1>;
- 		};
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-msm8998.h>
++#include <dt-bindings/gpio/gpio.h>
  
-+		sdhc2: sdhci@c0a4900 {
-+			compatible = "qcom,sdhci-msm-v4";
-+			reg = <0xc0a4900 0x314>, <0xc0a4000 0x800>;
-+			reg-names = "hc_mem", "core_mem";
-+
-+			interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hc_irq", "pwr_irq";
-+
-+			clock-names = "iface", "core", "xo";
-+			clocks = <&gcc GCC_SDCC2_AHB_CLK>,
-+				 <&gcc GCC_SDCC2_APPS_CLK>,
-+				 <&xo>;
-+			bus-width = <4>;
-+			status = "disabled";
-+		};
-+
- 		blsp2_uart1: serial@c1b0000 {
- 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
- 			reg = <0xc1b0000 0x1000>;
+ / {
+ 	interrupt-parent = <&intc>;
 -- 
 Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
 Qualcomm Technologies, Inc. is a member of the
