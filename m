@@ -1,60 +1,40 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 1/3] arm64: dts: stratix10: use "altr,stratix10-rst-mgr"
- binding
-Date: Thu, 15 Nov 2018 10:33:04 +0100
-Message-ID: <1542274384.4915.4.camel@pengutronix.de>
-References: <20181105200549.17159-1-dinguyen@kernel.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH v2 03/15] dt-bindings: net: broadcom-bluetooth: Add BCM20702A1 compatible string
+Date: Thu, 15 Nov 2018 17:35:51 +0800
+Message-ID: <20181115093603.26729-4-wens@csie.org>
+References: <20181115093603.26729-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181105200549.17159-1-dinguyen@kernel.org>
+In-Reply-To: <20181115093603.26729-1-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@kernel.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dinh Nguyen <dinh.nguyen@intel.com>
+To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Loic Poulain <loic.poulain@gmail.com>, linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dinh,
+The BCM20702A1 is a Bluetooth 4.0 chip from Broadcom. It is found in the
+Ampak AP6210 WiFi+BT module, identified from the read verbose config info
+command response. However the Bluetooth firmware provided by vendors uses
+the name BCM20710. This patch elects to use the chip ID returned by the
+chip for the compatible string.
 
-On Mon, 2018-11-05 at 14:05 -0600, Dinh Nguyen wrote:
-> From: Dinh Nguyen <dinh.nguyen@intel.com>
-> 
-> The standard reset-simple driver the uses the "altr,rst-mgr" binding is
-> not getting initialized early enough in the boot process, so timers
-> that the kernel needs are still left in reset. Thus an early
-> reset driver was created. This early reset driver is only for the
-> SoCFPGA 32-bit platform.
-> 
-> The Stratix10 platform does not need any of the timers that in reset to
-> boot, thus we don't need to early reset driver. Therefore, use the
-> "altr,stratix10-rst-mgr" binding for the reset-simple platform driver on
-> the Stratix10 platform.
-> 
-> Also remove the "altr,modrst-offset" property because the driver no
-> longer needs it.
-> 
-> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-> ---
->  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> index 8253a1a9e985..5f0b18ae5007 100644
-> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> @@ -308,9 +308,8 @@
->  
->  		rst: rstmgr@ffd11000 {
->  			#reset-cells = <1>;
-> -			compatible = "altr,rst-mgr";
-> +			compatible = "altr,stratix10-rst-mgr", "altr,rst-mgr";
->  			reg = <0xffd11000 0x1000>;
-> -			altr,modrst-offset = <0x20>;
->  		};
->  
->  		spi0: spi@ffda4000 {
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Do you want me to pick this up as well, or just patches 2 and 3?
-
-regards
-Philipp
+diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+index 78cfa0fbece9..d9d734a07faf 100644
+--- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
++++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+@@ -10,6 +10,7 @@ device the slave device is attached to.
+ Required properties:
+ 
+  - compatible: should contain one of the following:
++   * "brcm,bcm20702a1"
+    * "brcm,bcm43438-bt"
+ 
+ Optional properties:
+-- 
+2.19.1
