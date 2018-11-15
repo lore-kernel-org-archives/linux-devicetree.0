@@ -1,183 +1,81 @@
-From: Sean Wang <sean.wang@kernel.org>
-Subject: Re: [PATCH v1 2/2] dt-bindings: pinctrl: update bindings for MT7629 SoC
-Date: Thu, 15 Nov 2018 10:59:33 -0800
-Message-ID: <CAGp9LzobgV2jiajPc+0m+zyq6qQDMRUZp8TMutRhp_5_8xE6dw@mail.gmail.com>
-References: <5d63d26156d2972b7e9f55c9743b66d7c6dac2ec.1541986223.git.ryder.lee@mediatek.com>
- <46ee25bb5ac7a7aa0245e2b02e9a0e870ff09551.1541986223.git.ryder.lee@mediatek.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v10 0/9] Add the I3C subsystem
+Date: Thu, 15 Nov 2018 20:00:58 +0100
+Message-ID: <20181115200058.1869afdb@bbrezillon>
+References: <20181026144333.12276-1-boris.brezillon@bootlin.com>
+        <76b1d15d-232c-d8ba-5eba-8394e71be725@synopsys.com>
+        <20181115135731.25f60990@bbrezillon>
+        <20181115150137.GB4169@kunai>
+        <20181115162826.42b54776@bbrezillon>
+        <1d64f21a-ad24-94e0-2c17-25729ef59a31@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <46ee25bb5ac7a7aa0245e2b02e9a0e870ff09551.1541986223.git.ryder.lee@mediatek.com>
+In-Reply-To: <1d64f21a-ad24-94e0-2c17-25729ef59a31@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ryder.lee@mediatek.com
-Cc: Linus Walleij <linus.walleij@linaro.org>, robh+dt@kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-gpio@vger.kernel.org, weijie.gao@mediatek.com, cheng-hao.luo@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: vitor <vitor.soares@synopsys.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetr>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 11, 2018 at 5:45 PM Ryder Lee <ryder.lee@mediatek.com> wrote:
->
-> This updates bindings for MT7629 pinctrl driver.
->
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+On Thu, 15 Nov 2018 18:03:47 +0000
+vitor <vitor.soares@synopsys.com> wrote:
 
-Reviewed-by: Sean Wang <sean.wang@kernel.org>
+> Hi Boris,
+> 
+> 
+> On 15/11/18 15:28, Boris Brezillon wrote:
+> > On Thu, 15 Nov 2018 16:01:37 +0100
+> > Wolfram Sang <wsa@the-dreams.de> wrote:
+> >  
+> >> Hi Boris,
+> >>  
+> >>> What we could do though, is expose I3C devices that do not have a
+> >>> driver in kernel space, like spidev does.  
+> >> ...
+> >>  
+> >>> Mark, Wolfram, Arnd, Greg, any opinion?  
+> >> Is there a benefit for having drivers in userspace? My gut feeling is to
+> >> encourage people to write kernel drivers. If this is, for some reason,
+> >> not possible for some driver, then we have a use case at hand to test
+> >> the then-to-be-developed userspace interface against. Until then, I
+> >> personally wouldn't waste effort on designing it without a user in
+> >> sight.  
+> > I kind of agree with that. Vitor, do you have a use case in mind for
+> > such userspace drivers? I don't think it's worth designing an API for
+> > something we don't need (yet).  
+> 
+> My use case is a tool for tests, lets say like the i2c tools.
 
-> ---
-> Changes since v1:
-> -add new function for wifi.
-> -add more descriptions.
-> ---
->  .../devicetree/bindings/pinctrl/pinctrl-mt7622.txt | 131 +++++++++++++++++++++
->  1 file changed, 131 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
-> index 3b69513..7a7aca1 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
-> @@ -3,6 +3,7 @@
->  Required properties for the root node:
->   - compatible: Should be one of the following
->                "mediatek,mt7622-pinctrl" for MT7622 SoC
-> +              "mediatek,mt7629-pinctrl" for MT7629 SoC
->   - reg: offset and length of the pinctrl space
->
->   - gpio-controller: Marks the device node as a GPIO controller.
-> @@ -324,6 +325,136 @@ group.
->         "uart4_2_rts_cts"               "uart"          95, 96
->         "watchdog"                      "watchdog"      78
->
-> +
-> +== Valid values for pins, function and groups on MT7629 ==
-> +
-> +       Pin #:  Valid values for pins
-> +       -----------------------------
-> +       PIN 0: "TOP_5G_CLK"
-> +       PIN 1: "TOP_5G_DATA"
-> +       PIN 2: "WF0_5G_HB0"
-> +       PIN 3: "WF0_5G_HB1"
-> +       PIN 4: "WF0_5G_HB2"
-> +       PIN 5: "WF0_5G_HB3"
-> +       PIN 6: "WF0_5G_HB4"
-> +       PIN 7: "WF0_5G_HB5"
-> +       PIN 8: "WF0_5G_HB6"
-> +       PIN 9: "XO_REQ"
-> +       PIN 10: "TOP_RST_N"
-> +       PIN 11: "SYS_WATCHDOG"
-> +       PIN 12: "EPHY_LED0_N_JTDO"
-> +       PIN 13: "EPHY_LED1_N_JTDI"
-> +       PIN 14: "EPHY_LED2_N_JTMS"
-> +       PIN 15: "EPHY_LED3_N_JTCLK"
-> +       PIN 16: "EPHY_LED4_N_JTRST_N"
-> +       PIN 17: "WF2G_LED_N"
-> +       PIN 18: "WF5G_LED_N"
-> +       PIN 19: "I2C_SDA"
-> +       PIN 20: "I2C_SCL"
-> +       PIN 21: "GPIO_9"
-> +       PIN 22: "GPIO_10"
-> +       PIN 23: "GPIO_11"
-> +       PIN 24: "GPIO_12"
-> +       PIN 25: "UART1_TXD"
-> +       PIN 26: "UART1_RXD"
-> +       PIN 27: "UART1_CTS"
-> +       PIN 28: "UART1_RTS"
-> +       PIN 29: "UART2_TXD"
-> +       PIN 30: "UART2_RXD"
-> +       PIN 31: "UART2_CTS"
-> +       PIN 32: "UART2_RTS"
-> +       PIN 33: "MDI_TP_P1"
-> +       PIN 34: "MDI_TN_P1"
-> +       PIN 35: "MDI_RP_P1"
-> +       PIN 36: "MDI_RN_P1"
-> +       PIN 37: "MDI_RP_P2"
-> +       PIN 38: "MDI_RN_P2"
-> +       PIN 39: "MDI_TP_P2"
-> +       PIN 40: "MDI_TN_P2"
-> +       PIN 41: "MDI_TP_P3"
-> +       PIN 42: "MDI_TN_P3"
-> +       PIN 43: "MDI_RP_P3"
-> +       PIN 44: "MDI_RN_P3"
-> +       PIN 45: "MDI_RP_P4"
-> +       PIN 46: "MDI_RN_P4"
-> +       PIN 47: "MDI_TP_P4"
-> +       PIN 48: "MDI_TN_P4"
-> +       PIN 49: "SMI_MDC"
-> +       PIN 50: "SMI_MDIO"
-> +       PIN 51: "PCIE_PERESET_N"
-> +       PIN 52: "PWM_0"
-> +       PIN 53: "GPIO_0"
-> +       PIN 54: "GPIO_1"
-> +       PIN 55: "GPIO_2"
-> +       PIN 56: "GPIO_3"
-> +       PIN 57: "GPIO_4"
-> +       PIN 58: "GPIO_5"
-> +       PIN 59: "GPIO_6"
-> +       PIN 60: "GPIO_7"
-> +       PIN 61: "GPIO_8"
-> +       PIN 62: "SPI_CLK"
-> +       PIN 63: "SPI_CS"
-> +       PIN 64: "SPI_MOSI"
-> +       PIN 65: "SPI_MISO"
-> +       PIN 66: "SPI_WP"
-> +       PIN 67: "SPI_HOLD"
-> +       PIN 68: "UART0_TXD"
-> +       PIN 69: "UART0_RXD"
-> +       PIN 70: "TOP_2G_CLK"
-> +       PIN 71: "TOP_2G_DATA"
-> +       PIN 72: "WF0_2G_HB0"
-> +       PIN 73: "WF0_2G_HB1"
-> +       PIN 74: "WF0_2G_HB2"
-> +       PIN 75: "WF0_2G_HB3"
-> +       PIN 76: "WF0_2G_HB4"
-> +       PIN 77: "WF0_2G_HB5"
-> +       PIN 78: "WF0_2G_HB6"
-> +
-> +Valid values for function are:
-> +       "eth", "i2c", "led", "flash", "pcie", "pwm", "spi", "uart",
-> +       "watchdog", "wifi"
-> +
-> +Valid values for groups are:
-> +       Valid value                     function        pins (in pin#)
-> +       ----------------------------------------------------------------
-> +       "mdc_mdio"                      "eth"           23, 24
-> +       "i2c_0"                         "i2c"           19, 20
-> +       "i2c_1"                         "i2c"           53, 54
-> +       "ephy_leds"                     "led"           12, 13, 14, 15, 16,
-> +                                                       17, 18
-> +       "ephy0_led"                     "led"           12
-> +       "ephy1_led"                     "led"           13
-> +       "ephy2_led"                     "led"           14
-> +       "ephy3_led"                     "led"           15
-> +       "ephy4_led"                     "led"           16
-> +       "wf2g_led"                      "led"           17
-> +       "wf5g_led"                      "led"           18
-> +       "snfi"                          "flash"         62, 63, 64, 65, 66, 67
-> +       "spi_nor"                       "flash"         62, 63, 64, 65, 66, 67
-> +       "pcie_pereset"                  "pcie"          51
-> +       "pcie_wake"                     "pcie"          55
-> +       "pcie_clkreq"                   "pcie"          56
-> +       "pwm_0"                         "pwm"           52
-> +       "pwm_1"                         "pwm"           61
-> +       "spi_0"                         "spi"           21, 22, 23, 24
-> +       "spi_1"                         "spi"           62, 63, 64, 65
-> +       "spi_wp"                        "spi"           66
-> +       "spi_hold"                      "spi"           67
-> +       "uart0_txd_rxd"                 "uart"          68, 69
-> +       "uart1_0_txd_rxd"               "uart"          25, 26
-> +       "uart1_0_cts_rts"               "uart"          27, 28
-> +       "uart1_1_txd_rxd"               "uart"          53, 54
-> +       "uart1_1_cts_rts"               "uart"          55, 56
-> +       "uart2_0_txd_rxd"               "uart"          29, 30
-> +       "uart2_0_cts_rts"               "uart"          31, 32
-> +       "uart2_1_txd_rxd"               "uart"          57, 58
-> +       "uart2_1_cts_rts"               "uart"          59, 60
-> +       "watchdog"                      "watchdog"      11
-> +       "wf0_2g"                        "wifi"          70, 71, 72, 73, 74,
-> +                                                       75, 76, 77, 78
-> +       "wf0_5g"                        "wifi"          0, 1, 2, 3, 4, 5, 6,
-> +                                                       7, 8, 9, 10
-> +
->  Example:
->
->         pio: pinctrl@10211000 {
-> --
-> 1.9.1
->
+What would you like to test exactly?
+
+> There is 
+> other subsystems, some of them mentioned on this thread, that have and 
+> ioctl system call or other method to change parameters or send data.
+
+I don't think they added the /dev interface before having a real use
+case for it.
+
+> 
+> 
+> I rise this topic because I really think it worth to define now how this 
+> should be design (and for me how to do the things right) to avoid future 
+> issues.
+
+Actually it should be done the other way around: you should have a real
+need and the /dev interface should be designed to fulfill this need.
+Based on this real use case we can discuss other potential usage that
+might appear in the future and try to design something more
+future-proof, but clearly, this userspace interface should be driven by
+a real/well-defined use case.
+
+Also, exposing things to userspace is way more risky than adding a new
+in-kernel subsystem/framework, because it then becomes part of the
+stable ABI.
+
+To make things clearer, I'm not against the idea of exposing I3C
+devices (or I3C buses) to userspace, but I'd like to understand what you
+plan to do with that. If this is about testing, what kind of tests
+you'd like to run. If this is about developing drivers in userspace,
+why can't these be done in kernel space (license issues?), and what
+would those drivers be allowed to do?
