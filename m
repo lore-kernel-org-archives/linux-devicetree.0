@@ -1,34 +1,43 @@
-Return-Path: <SRS0=jbWM=N7=linaro.org=shawn.guo@kernel.org>
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: [PATCH 2/2] pinctrl: qcom: spmi-gpio: add compatible for pms405 GPIO
-Date: Tue, 20 Nov 2018 13:45:22 +0800
-Message-Id: <20181120054522.18698-2-shawn.guo@linaro.org>
-In-Reply-To: <20181120054522.18698-1-shawn.guo@linaro.org>
-References: <20181120054522.18698-1-shawn.guo@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>
+Return-Path: <SRS0=T75w=N2=synopsys.com=thinh.nguyen@kernel.org>
+Date: Wed, 14 Nov 2018 22:56:48 -0800
+Message-ID: <d4d097f9545e9a19c1986f63bc0fd6f1bba252f1.1542264763.git.thinhn@synopsys.com>
+In-Reply-To: <cover.1542264763.git.thinhn@synopsys.com>
+References: <cover.1542264763.git.thinhn@synopsys.com>
+From: Thinh Nguyen <thinh.nguyen@synopsys.com>
+Subject: [PATCH v7 1/2] usb: dwc3: Add disabling of start_transfer failure quirk
+MIME-Version: 1.0
+Content-Type: text/plain
+To: Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: John Youn <john.youn@synopsys.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Let's add "qcom,pms405-gpio" to match table, as commit ed80f6eb799a
-("dt-bindings: pinctrl: qcom-pmic-gpio: Add pms405 support") already
-adds the compatible.
+DWC_usb31 peripheral v1.70a-ea06 and prior needs a SW workaround for
+isoc START TRANSFER command failure. However, some affected versions may
+have RTL patches to fix this without a SW workaround. Add this quirk to
+disable the SW workaround when it is not needed.
 
-Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+Synopsys STAR 9001202023: Wrong microframe number for isochronous IN
+endpoints.
+
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/usb/dwc3.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index a29efbe08f48..21ccf94b22ea 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -1055,6 +1055,7 @@ static const struct of_device_id pmic_gpio_of_match[] = {
- 	{ .compatible = "qcom,pm8994-gpio" },	/* 22 GPIO's */
- 	{ .compatible = "qcom,pmi8994-gpio" },  /* 10 GPIO's */
- 	{ .compatible = "qcom,pma8084-gpio" },	/* 22 GPIO's */
-+	{ .compatible = "qcom,pms405-gpio" },	/* 12 GPIO's, holes on 1 9 10 */
- 	{ .compatible = "qcom,spmi-gpio" }, /* Generic */
- 	{ },
- };
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 7e33e53e7c29..8e5265e9f658 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -39,6 +39,9 @@ Optional properties:
+  - resets: a single pair of phandle and reset specifier
+  - snps,usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
+  - snps,usb3_lpm_capable: determines if platform is USB3 LPM capable
++ - snps,dis-start-transfer-quirk: when set, disable isoc START TRANSFER command
++			failure SW work-around for DWC_usb31 version 1.70a-ea06
++			and prior.
+  - snps,disable_scramble_quirk: true when SW should disable data scrambling.
+ 	Only really useful for FPGA builds.
+  - snps,has-lpm-erratum: true when DWC3 was configured with LPM Erratum enabled
 -- 
-2.18.0
+2.11.0
