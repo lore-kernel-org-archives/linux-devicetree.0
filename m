@@ -1,50 +1,83 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v0 0/2] Initial Allwinner T3 support.
-Date: Thu, 15 Nov 2018 16:18:13 +0100
-Message-ID: <20181115151813.a27uov3zmgzjcerf@flea>
-References: <20181114082033.GA20712@arx-s1>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: vitor <vitor.soares@synopsys.com>
+Subject: Re: [PATCH v10 0/9] Add the I3C subsystem
+Date: Thu, 15 Nov 2018 15:18:21 +0000
+Message-ID: <7f21765a-87b3-9137-fb92-6c59483776de@synopsys.com>
+References: <20181026144333.12276-1-boris.brezillon@bootlin.com>
+ <76b1d15d-232c-d8ba-5eba-8394e71be725@synopsys.com>
+ <20181115135731.25f60990@bbrezillon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mvncl5mqd6ujkb6d"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBNU4W3PQKGQEBGFA65Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20181114082033.GA20712@arx-s1>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: hao_zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181115135731.25f60990@bbrezillon>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, vitor <vitor.soares@synopsys.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetr>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---mvncl5mqd6ujkb6d
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+On 15/11/18 12:57, Boris Brezillon wrote:
+> +Mark Brown for the question about /dev/spidev
+>
+> Hi Vitor,
+>
+> On Thu, 15 Nov 2018 12:14:37 +0000
+> vitor <vitor.soares@synopsys.com> wrote:
+>
+>> Hi Boris,
+>>
+>> Given the current state of the subsystem I think it might worth start to
+>> think how to expose the devices under /dev.
+> Thanks for starting this discussion. I'm not against the idea in
+> general, we just need to be careful when doing that.
+>
+>> My initial thoughts are to do the same think as for i2c, expose the
+>> buses or the i3c_devices and use ioctl for private transfers.
+> Exposing the bus is dangerous IMO, because an I3C bus is not like an
+> I2C bus:
+>
+>     * I3C device needs to be discovered through DAA
+>     * I2C devices need to be declared ahead of time, and LVR is used to
+>       determine the limitations on the bus at runtime
+>
+> So you'd anyway be able to interact only with devices that have
+> previously been discovered.
+>
+> Note that the virtual I2C bus is already exposed, but any command
+> targeting an address that is not attached to a registered I2C dev will
+> get a -ENOENT error.
+I initially thought to do the same thing for the i3c devices adding a 
+routine get_i3c_dev_by_addr()...
+>
+> What we could do though, is expose I3C devices that do not have a
+> driver in kernel space, like spidev does.
 
-Hi!
+...but I like more this approach.
 
-On Wed, Nov 14, 2018 at 04:20:33PM +0800, hao_zhang wrote:
-> Initial Allwinner T3 support.
-> 
-> Allwinner T3 (sun8i) SoC features a Quad-Core Cortex-A7 ARM CPU, and a
-> Mali400 MP2 GPU from ARM. It is a not-pin-compatible quad core sucessor
-> of the A20). It's also known as the Allwinner R40 for In-Car
-> Entertainment usage.
+>> Some
+>> direct CCC commands can be sent through the /sys as you plan for SETNEWDA .
+> Yes, CCC commands that need to be exposed to userspace should be
+> exposed through sysfs, or, if we decide to create a /dev/i3cX device
+> per bus, through ioctls.
 
-That series looks good, thanks!  The only thing that would need to be
-reworked is your Signed-off-by name, which (I guess?) should be
-written the same way than in your Copyright info.
+There already some attributes exposed, just need to add the possibility 
+to write to them and off course add some that are missing like GETSTATUS.
 
-Thanks!
-Maxime
+>
+>> What do you think about this?
+> I think this request is perfectly valid, we just need to decide how it
+> should be done, and before we take this decision, I'd like to get
+> inputs from other maintainers.
+>
+> Mark, Wolfram, Arnd, Greg, any opinion?
+>
+> Regards,
+>
+> Boris
 
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---mvncl5mqd6ujkb6d--
+
+Best regards,
+
+Vitor Soares
