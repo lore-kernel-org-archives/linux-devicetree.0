@@ -1,96 +1,107 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCH 21/23] dt-bindings: pci: Add NXP LX SoCs PCIe controller
-Date: Thu, 15 Nov 2018 02:47:43 +0000
-Message-ID: <AM6PR04MB57813AB3D57856CDD7F5376084DC0@AM6PR04MB5781.eurprd04.prod.outlook.com>
-References: <20181106131807.29951-1-Zhiqiang.Hou@nxp.com>
- <20181106131807.29951-22-Zhiqiang.Hou@nxp.com>
- <AM6PR04MB58639AF03E732FCF491113728FC50@AM6PR04MB5863.eurprd04.prod.outlook.com>
- <AM6PR04MB57816EE50C61E064E6DC73A684C10@AM6PR04MB5781.eurprd04.prod.outlook.com>
- <AM6PR04MB5863192E246F3ED6F5812E4F8FC30@AM6PR04MB5863.eurprd04.prod.outlook.com>
+From: Alex Elder <elder@linaro.org>
+Subject: Re: [RFC PATCH 07/12] soc: qcom: ipa: IPA register abstraction
+Date: Wed, 14 Nov 2018 20:48:45 -0600
+Message-ID: <e9114caf-0c92-7cac-33cd-6bea548b0375@linaro.org>
+References: <20181107003250.5832-1-elder@linaro.org>
+ <20181107003250.5832-8-elder@linaro.org>
+ <CAK8P3a2FsgR=SYAWsgFURVni1ReiCugKs1iUAfQzZhPkbW8aOA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM6PR04MB5863192E246F3ED6F5812E4F8FC30@AM6PR04MB5863.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a2FsgR=SYAWsgFURVni1ReiCugKs1iUAfQzZhPkbW8aOA@mail.gmail.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leo Li <leoyang.li@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-Cc: "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: David Miller <davem@davemloft.net>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, syadagir@codeaurora.org, mjavid@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGVvLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExlbyBMaQ0K
-PiBTZW50OiAyMDE4xOoxMdTCMTXI1SAyOjUyDQo+IFRvOiBaLnEuIEhvdSA8emhpcWlhbmcuaG91
-QG54cC5jb20+OyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51
-eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBiaGVsZ2Fhc0Bnb29nbGUuY29tOyByb2JoK2R0QGtl
-cm5lbC5vcmc7DQo+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBsLnN1YnJhaG1hbnlhQG1vYml2ZWls
-LmNvLmluOw0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29t
-DQo+IENjOiBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBNLmguIExpYW4NCj4gPG1p
-bmdodWFuLmxpYW5AbnhwLmNvbT47IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0K
-PiBTdWJqZWN0OiBSRTogW1BBVENIIDIxLzIzXSBkdC1iaW5kaW5nczogcGNpOiBBZGQgTlhQIExY
-IFNvQ3MgUENJZSBjb250cm9sbGVyDQo+IA0KPiANCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNz
-YWdlLS0tLS0NCj4gPiBGcm9tOiBaLnEuIEhvdQ0KPiA+IFNlbnQ6IFN1bmRheSwgTm92ZW1iZXIg
-MTEsIDIwMTggNTo0OCBQTQ0KPiA+IFRvOiBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IGxp
-bnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4gPiBrZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiA+IGtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc7IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9y
-ZzsNCj4gPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbC5zdWJyYWhtYW55YUBtb2JpdmVpbC5jby5p
-bjsNCj4gPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tDQo+
-ID4gQ2M6IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47IE0uaC4gTGlhbg0KPiA+IDxt
-aW5naHVhbi5saWFuQG54cC5jb20+OyBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4N
-Cj4gPiBTdWJqZWN0OiBSRTogW1BBVENIIDIxLzIzXSBkdC1iaW5kaW5nczogcGNpOiBBZGQgTlhQ
-IExYIFNvQ3MgUENJZQ0KPiA+IGNvbnRyb2xsZXINCj4gPg0KPiA+IEhpIExlbywNCj4gPg0KPiA+
-IFRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cyENCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5h
-bCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IExlbyBMaQ0KPiA+ID4gU2VudDogMjAxOMTqMTHU
-wjnI1SA1OjI5DQo+ID4gPiBUbzogWi5xLiBIb3UgPHpoaXFpYW5nLmhvdUBueHAuY29tPjsgbGlu
-dXgtcGNpQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPiBsaW51eC1rZXJu
-ZWxAdmdlci5rZXJuZWwub3JnOyBiaGVsZ2Fhc0Bnb29nbGUuY29tOw0KPiA+ID4gcm9iaCtkdEBr
-ZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gPiA+IGwuc3VicmFobWFueWFAbW9i
-aXZlaWwuY28uaW47IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+ID4gPiBsb3JlbnpvLnBpZXJhbGlz
-aUBhcm0uY29tDQo+ID4gPiBDYzogTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgTS5o
-LiBMaWFuDQo+ID4gPiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgWGlhb3dlaSBCYW8gPHhpYW93
-ZWkuYmFvQG54cC5jb20+DQo+ID4gPiBTdWJqZWN0OiBSRTogW1BBVENIIDIxLzIzXSBkdC1iaW5k
-aW5nczogcGNpOiBBZGQgTlhQIExYIFNvQ3MgUENJZQ0KPiA+ID4gY29udHJvbGxlcg0KPiA+ID4N
-Cj4gPiA+DQo+ID4gPg0KPiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4g
-PiBGcm9tOiBaLnEuIEhvdQ0KPiA+ID4gPiBTZW50OiBUdWVzZGF5LCBOb3ZlbWJlciA2LCAyMDE4
-IDc6MjEgQU0NCj4gPiA+ID4gVG86IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPiA+
-IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gPiA+ID4gZGV2aWNldHJl
-ZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPiA+
-IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFy
-bS5jb207DQo+ID4gPiA+IGwuc3VicmFobWFueWFAbW9iaXZlaWwuY28uaW47IHNoYXduZ3VvQGtl
-cm5lbC5vcmc7IExlbyBMaQ0KPiA+ID4gPiA8bGVveWFuZy5saUBueHAuY29tPjsgbG9yZW56by5w
-aWVyYWxpc2lAYXJtLmNvbQ0KPiA+ID4gPiBDYzogTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAu
-Y29tPjsgTS5oLiBMaWFuDQo+ID4gPiA+IDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBYaWFvd2Vp
-IEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT47IFoucS4NCj4gPiA+IEhvdQ0KPiA+ID4gPiA8emhp
-cWlhbmcuaG91QG54cC5jb20+DQo+ID4gPiA+IFN1YmplY3Q6IFtQQVRDSCAyMS8yM10gZHQtYmlu
-ZGluZ3M6IHBjaTogQWRkIE5YUCBMWCBTb0NzIFBDSWUNCj4gPiA+ID4gY29udHJvbGxlcg0KPiA+
-ID4gPg0KPiA+ID4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0K
-PiA+ID4gPg0KPiA+ID4gPiBBZGQgUENJZSBjb250cm9sbGVyIERUIGJpbmRpbmdzIG9mIE5YUCBM
-WCBzZXJpZXMgU29Dcy4NCj4gPiA+DQo+ID4gPiBJJ20gbm90IHN1cmUgaWYgdGhpcyBpcyBhIGdv
-b2QgaWRlYSB0byBuYW1lIHRoaXMgY29udHJvbGxlciBMWCBQQ0llIGNvbnRyb2xsZXIuDQo+ID4g
-PiBSaWdodCBub3csIGl0IGNvdWxkIGJlIHRydWUgdGhhdCBpdCBpcyBvbmx5IHVzZWQgb24gTFgg
-c2VyaWVzIFNvQ3MuDQo+ID4gPiBCdXQgSSdtIG5vdCBzdXJlIGlmIHRoZSBMUyBzZXJpZXMgd2ls
-bCBub3QgdXNlIHRoaXMgY29udHJvbGxlciBvciBMWA0KPiA+ID4gc2VyaWVzIHdpbGwgb25seSB1
-c2UgdGhpcyBjb250cm9sbGVyIGluIHRoZSBmdXR1cmUuDQo+ID4gPg0KPiA+ID4gU2luY2UgdGhl
-IExYIHNlcmllcyBpcyBzdGlsbCB1c2luZyB0aGUgbGF5ZXJzY2FwZSBicmFuZGluZywgc28NCj4g
-PiA+IHByb2JhYmx5IHdlIHNob3VsZCBrZWVwIHVzaW5nIHRoZSBsYXllcnNjYXBlLXBjaS50eHQg
-YW5kIGRlZmluZSB0aGUNCj4gPiA+IFBDSWUNCj4gPiBHZW40IHZhcmlhbnQ/DQo+ID4NCj4gPiBZ
-ZXMsIHdpbGwgYWRkIHRoZSBuZXcgUENJZSBJUCBiaW5kaW5ncyB0byBMYXllcnNjYXBlLXBjaS50
-eHQuDQo+ID4NCj4gPiA+DQo+ID4gPiBTYW1lIGNvbW1lbnQgZm9yIG90aGVyIHBsYWNlcyB1c2lu
-ZyB0aGUgTFggbmFtaW5nIGluIHRoaXMgZHJpdmVyLg0KPiA+DQo+ID4gRG8geW91IGhhdmUgYW55
-IHN1Z2dlc3Rpb24gYWJvdXQgaG93IHRvIG5hbWUgdGhlIGRyaXZlciBhbmQgcHJlZml4IG9mDQo+
-ID4gc3RydWN0dXJlcyBpbiB0aGUgZHJpdmVyPw0KPiANCj4gUHJvYmFibHkgc29tZXRoaW5nIGxp
-a2UgcGNpZS1sYXllcnNjYXBlLWdlbjQ/DQoNClRoYW5rcyBmb3IgeW91ciBzdWdnZXN0aW9uIQ0K
-IA0KVGhhbmtzLA0KWmhpcWlhbmcNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On 11/7/18 9:00 AM, Arnd Bergmann wrote:
+> On Wed, Nov 7, 2018 at 1:33 AM Alex Elder <elder@linaro.org> wrote:
+>> diff --git a/drivers/net/ipa/ipa_reg.c b/drivers/net/ipa/ipa_reg.c
+>> new file mode 100644
+>> index 000000000000..5e0aa6163235
+>> --- /dev/null
+>> +++ b/drivers/net/ipa/ipa_reg.c
+>> @@ -0,0 +1,972 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
+>> + * Copyright (C) 2018 Linaro Ltd.
+>> + */
+>> +
+>> +#include <linux/types.h>
+>> +#include <linux/io.h>
+>> +#include <linux/bitfield.h>
+>> +
+>> +#include "ipa_reg.h"
+>> +
+>> +/* I/O remapped base address of IPA register space */
+>> +static void __iomem *ipa_reg_virt;
+> 
+> This should of course be part of the device structure.
+
+Yes, this should have been be in that structure to begin with.
+
+I'm working through doing a comprehensive replacement of
+global variables like this with values passed around as
+arguments.  I've intended to do it all along but your nudge
+pushed it to the top of my list.  It's a *lot* of work, much
+more than I realized.  But I'm making rapid progress.
+
+>> +/* struct ipa_reg_desc - descriptor for an abstracted hardware register
+>> + *
+>> + * @construct - fn to construct the register value from its field structure
+>> + * @parse - function to parse register field values into its field structure
+>> + * @offset - register offset relative to base address
+>> + * @n_ofst - size multiplier for "N-parameterized" registers
+>> + */
+>> +struct ipa_reg_desc {
+>> +       u32 (*construct)(enum ipa_reg reg, const void *fields);
+>> +       void (*parse)(enum ipa_reg reg, void *fields, u32 val);
+>> +       u32 offset;
+>> +       u16 n_ofst;
+>> +};
+> 
+> Indirect function pointers can be a bit expensive in the post-spectre
+> days. It's probably not overly important if these are always part of
+> an MMIO access function, but you should be careful about using
+> these in the data path.
+
+OK.
+
+There used to be a more elaborate scheme for supporting
+lots of versions, and I have tried to preserve at least part
+of the underlying mechanism (the parse and construct functions).
+Not all of these registers use the indirect functions, and
+it looks to me like none of them are in the data path.
+
+The most important registers for the fast path are found in
+the GSI code.  And that doesn't use this construct--it only
+reads and writes 32-bit registers.  (I think it differs
+because it was originally developed by a different team.)
+
+> How many different versions do we have to support in practice
+I don't know for sure how many versions really were used,
+but the original code had about 10 distinct version values,
+many of which shared most (but not all) register definitions
+(offset and bit field widths) with older versions.
+
+With the upstream code the decision was made to ignore anything
+older than IPA version 3 (and 3.5.1 in particular, which is
+found in the SDM845 SoC).  
+
+It may be that this parse/construct mechanism isn't justified
+at this point.  I thought the way it presented a generic
+interface was useful, but with just one (initial) hardware
+target we don't (yet) realize its potential benefit.  It could
+be added back later, as support for new versions is added.
+
+As of now I don't plan to change this, but if you or someone
+else feels it would be better without it I can do that.
+
+					-Alex
+
+
+>        Arnd
+> 
