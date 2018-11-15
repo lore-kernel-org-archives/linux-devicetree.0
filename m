@@ -1,99 +1,57 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v4 2/3] dts: arm64/sdm845: Add WCN3990 WLAN module device
- node
-Date: Wed, 14 Nov 2018 18:26:53 -0800
-Message-ID: <20181115022652.GA205124@google.com>
-References: <1541423318-19312-1-git-send-email-govinds@codeaurora.org>
- <1541423318-19312-3-git-send-email-govinds@codeaurora.org>
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCH 15/23] dt-bindings: pci: mobiveil: change gpio_slave and
+ apb_csr to optional
+Date: Thu, 15 Nov 2018 02:27:48 +0000
+Message-ID: <AM6PR04MB57819B50E52512EF10B26CC984DC0@AM6PR04MB5781.eurprd04.prod.outlook.com>
+References: <20181106131807.29951-1-Zhiqiang.Hou@nxp.com>
+ <20181106131807.29951-16-Zhiqiang.Hou@nxp.com>
+ <CAFZiPx270bWemYRekvk1BZ23RW3ecK+znEc6C1Dix_U-2y+cnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1541423318-19312-3-git-send-email-govinds@codeaurora.org>
+In-Reply-To: <CAFZiPx270bWemYRekvk1BZ23RW3ecK+znEc6C1Dix_U-2y+cnA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Govind Singh <govinds@codeaurora.org>
-Cc: andy.gross@linaro.org, ath10k@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-wireless@vger.kernel.org, robh+dt@kernel.org, sboyd@kernel.org, dianders@chromium.org, linux-kernel@vger.kernel.org
+To: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Govind,
-
-On Mon, Nov 05, 2018 at 06:38:37PM +0530, Govind Singh wrote:
-> Add device node for the ath10k SNOC platform driver probe
-> and add resources required for WCN3990 on SDM845 soc.
-> 
-> Signed-off-by: Govind Singh <govinds@codeaurora.org>
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
-> Tested-by: Brian Norris <briannorris@chromium.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts |  8 ++++++++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi    | 26 ++++++++++++++++++++++++++
->  2 files changed, 34 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> index eedfaf8..c062c5c 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> @@ -440,3 +440,11 @@
->  		bias-pull-up;
->  	};
->  };
-> +
-> +&wifi {
-> +	status = "okay";
-> +	vdd-0.8-cx-mx-supply = <&vreg_l5a_0p8>;
-> +	vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
-> +	vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
-> +	vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
-> +};
-
-This node should be above the PINCTRL section.
-
-Brian
-
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index b72bdb0..324be5b 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -87,6 +87,11 @@
->  			reg = <0 0x86200000 0 0x2d00000>;
->  			no-map;
->  		};
-> +
-> +		wlan_msa_mem: memory@96700000 {
-> +			reg = <0 0x96700000 0 0x100000>;
-> +			no-map;
-> +		};
->  	};
->  
->  	cpus {
-> @@ -1403,5 +1408,26 @@
->  				status = "disabled";
->  			};
->  		};
-> +
-> +		wifi: wifi@18800000 {
-> +			compatible = "qcom,wcn3990-wifi";
-> +			status = "disabled";
-> +			reg = <0x18800000 0x800000>;
-> +			reg-names = "membase";
-> +			memory-region = <&wlan_msa_mem>;
-> +			interrupts =
-> +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
->  	};
->  };
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+SGkgU3VicmFobWFueWEsDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBBQ0shDQoNClJlZ2FyZHMs
+DQpaaGlxaWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFN1YnJh
+aG1hbnlhIExpbmdhcHBhIDxsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNvLmluPg0KPiBTZW50OiAy
+MDE45bm0MTHmnIgxNOaXpSAxNzozMw0KPiBUbzogWi5xLiBIb3UgPHpoaXFpYW5nLmhvdUBueHAu
+Y29tPg0KPiBDYzogbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBs
+aXN0cy5pbmZyYWRlYWQub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgt
+a2VybmVsQHZnZXIua2VybmVsLm9yZzsgQmpvcm4gSGVsZ2Fhcw0KPiA8YmhlbGdhYXNAZ29vZ2xl
+LmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IHNoYXdu
+Z3VvQGtlcm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgTG9yZW56byBQaWVy
+YWxpc2kNCj4gPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+OyBNaW5na2FpIEh1IDxtaW5na2Fp
+Lmh1QG54cC5jb20+OyBNLmguIExpYW4NCj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IFhpYW93
+ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDE1LzIz
+XSBkdC1iaW5kaW5nczogcGNpOiBtb2JpdmVpbDogY2hhbmdlIGdwaW9fc2xhdmUgYW5kDQo+IGFw
+Yl9jc3IgdG8gb3B0aW9uYWwNCj4gDQo+IEFja2VkLWJ5OiBTdWJyYWhtYW55YSBMaW5nYXBwYSA8
+bC5zdWJyYWhtYW55YUBtb2JpdmVpbC5jby5pbj4NCj4gDQo+IE9uIFR1ZSwgTm92IDYsIDIwMTgg
+YXQgNjo1MCBQTSBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+IHdyb3RlOg0KPiA+DQo+
+ID4gRnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPg0KPiA+IENo
+YW5nZSB0aGUgImdwaW9fc2xhdmUiIGFuZCAiYXBiX2NzciIgdG8gb3B0aW9uYWwsIHRoZSAiZ3Bp
+b19zbGF2ZSINCj4gPiBpcyBub3QgdXNlZCBpbiBjdXJyZW50IGNvZGUsIGFuZCAiYXBiX2NzciIg
+aXMgbm90IHVzZWQgYnkgc29tZQ0KPiA+IHBsYXRvcm1zLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
+eTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9tb2JpdmVpbC1wY2llLnR4dCB8IDIg
+KysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbW9iaXZlaWwtcGNp
+ZS50eHQNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbW9iaXZl
+aWwtcGNpZS50eHQNCj4gPiBpbmRleCBhNjE4ZDQ3ODdkZDcuLjY0MTU2OTkzZTA1MiAxMDA2NDQN
+Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL21vYml2ZWls
+LXBjaWUudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bj
+aS9tb2JpdmVpbC1wY2llLnR4dA0KPiA+IEBAIC0xMCw4ICsxMCwxMCBAQCBSZXF1aXJlZCBwcm9w
+ZXJ0aWVzOg0KPiA+ICAgICAgICAgaW50ZXJydXB0IHNvdXJjZS4gVGhlIHZhbHVlIG11c3QgYmUg
+MS4NCj4gPiAgLSBjb21wYXRpYmxlOiBTaG91bGQgY29udGFpbiAibWJ2bCxncGV4NDAtcGNpZSIN
+Cj4gPiAgLSByZWc6IFNob3VsZCBjb250YWluIFBDSWUgcmVnaXN0ZXJzIGxvY2F0aW9uIGFuZCBs
+ZW5ndGgNCj4gPiArICAgICAgIE1hbmRhdG9yeToNCj4gPiAgICAgICAgICJjb25maWdfYXhpX3Ns
+YXZlIjogUENJZSBjb250cm9sbGVyIHJlZ2lzdGVycw0KPiA+ICAgICAgICAgImNzcl9heGlfc2xh
+dmUiICAgOiBCcmlkZ2UgY29uZmlnIHJlZ2lzdGVycw0KPiA+ICsgICAgICAgT3B0aW9uYWw6DQo+
+ID4gICAgICAgICAiZ3Bpb19zbGF2ZSIgICAgICA6IEdQSU8gcmVnaXN0ZXJzIHRvIGNvbnRyb2wg
+c2xvdCBwb3dlcg0KPiA+ICAgICAgICAgImFwYl9jc3IiICAgICAgICAgOiBNU0kgcmVnaXN0ZXJz
+DQo+ID4NCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQo=
