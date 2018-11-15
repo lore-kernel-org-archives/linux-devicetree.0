@@ -1,59 +1,62 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v2 13/15] Bluetooth: btbcm: Add default address for BCM43430A0
-Date: Thu, 15 Nov 2018 17:36:01 +0800
-Message-ID: <20181115093603.26729-14-wens@csie.org>
+Subject: [PATCH v2 01/15] dt-bindings: net: broadcom-bluetooth: Fix external
+ clock names
+Date: Thu, 15 Nov 2018 17:35:49 +0800
+Message-ID: <20181115093603.26729-2-wens@csie.org>
 References: <20181115093603.26729-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20181115093603.26729-1-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Loic Poulain <loic.poulain@gmail.com>, linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The BCM43430A0 has the default MAC address 43:43:A0:12:1F:AC if none
-is given. This address was found when enabling Bluetooth on a bunch of
-boards with the AMPAK AP6210 module, all sharing the same address. It
-also contains the sequence 4343A0, which is suspicious as that is also
-the name the chip identifies itself as.
+The Broadcom Bluetooth controllers can take up to two external clocks:
+an external frequency reference, substituting the main crystal, and a
+LPO clock at 32.768 kHz substituting the internal LPO clock.
 
-Add this to the list of default MAC addresses and leave it to the user
-to configure a valid one.
+In particular, the external LPO clock must be used when the controller
+does not have NVRAM connected, and the main reference frequency is not
+the default 20 MHz. This is described in detail in the datasheet.
+
+The original "extclk" clock name is ambiguous as to which of these it
+refers to, and some designs might even require both.
+
+This patch deprecates the existing name, and adds "txco" and "lpo".
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- drivers/bluetooth/btbcm.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/net/broadcom-bluetooth.txt         | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
-index 22d4b530da03..08e1f3dd4e03 100644
---- a/drivers/bluetooth/btbcm.c
-+++ b/drivers/bluetooth/btbcm.c
-@@ -34,6 +34,7 @@
+diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+index 4194ff7e6ee6..711c75ac2bb5 100644
+--- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
++++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+@@ -18,8 +18,11 @@ Optional properties:
+  - shutdown-gpios: GPIO specifier, used to enable the BT module
+  - device-wakeup-gpios: GPIO specifier, used to wakeup the controller
+  - host-wakeup-gpios: GPIO specifier, used to wakeup the host processor
+- - clocks: clock specifier if external clock provided to the controller
+- - clock-names: should be "extclk"
++ - clocks: 1 or 2 clocks as defined in clock-names below, in that order
++ - clock-names: names for clock inputs, matching the clocks given
++   - "extclk": deprecated, replaced by "txco"
++   - "txco": external reference clock (not a standalone crystal)
++   - "lpo": external low power 32.768 kHz clock
  
- #define BDADDR_BCM20702A0 (&(bdaddr_t) {{0x00, 0xa0, 0x02, 0x70, 0x20, 0x00}})
- #define BDADDR_BCM20702A1 (&(bdaddr_t) {{0x00, 0x00, 0xa0, 0x02, 0x70, 0x20}})
-+#define BDADDR_BCM43430A0 (&(bdaddr_t) {{0xac, 0x1f, 0x12, 0xa0, 0x43, 0x43}})
- #define BDADDR_BCM4324B3 (&(bdaddr_t) {{0x00, 0x00, 0x00, 0xb3, 0x24, 0x43}})
- #define BDADDR_BCM4330B1 (&(bdaddr_t) {{0x00, 0x00, 0x00, 0xb1, 0x30, 0x43}})
  
-@@ -73,11 +74,15 @@ int btbcm_check_bdaddr(struct hci_dev *hdev)
- 	 *
- 	 * The address 43:30:B1:00:00:00 indicates a BCM4330B1 controller
- 	 * with waiting for configuration state.
-+	 *
-+	 * The address 43:43:A0:12:1F:AC indicates a BCM43430A0 controller
-+	 * with no configured address.
- 	 */
- 	if (!bacmp(&bda->bdaddr, BDADDR_BCM20702A0) ||
- 	    !bacmp(&bda->bdaddr, BDADDR_BCM20702A1) ||
- 	    !bacmp(&bda->bdaddr, BDADDR_BCM4324B3) ||
--	    !bacmp(&bda->bdaddr, BDADDR_BCM4330B1)) {
-+	    !bacmp(&bda->bdaddr, BDADDR_BCM4330B1) ||
-+	    !bacmp(&bda->bdaddr, BDADDR_BCM43430A0)) {
- 		bt_dev_info(hdev, "BCM: Using default device address (%pMR)",
- 			    &bda->bdaddr);
- 		set_bit(HCI_QUIRK_INVALID_BDADDR, &hdev->quirks);
+ Example:
 -- 
 2.19.1
