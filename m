@@ -1,64 +1,30 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 3/5] media: sunxi: Add A10 CSI driver
-Date: Thu, 15 Nov 2018 21:51:06 +0100
-Message-ID: <20181115205106.thbkojnzdwmaeui3@flea>
-References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
- <c53e1cdc3b139382b00ee06bf3980d3fd1742ec0.1542097288.git-series.maxime.ripard@bootlin.com>
- <f34c79f5-66d6-2c2f-5616-020ad2b96400@xs4all.nl>
+From: Stefan Monnier <monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org>
+Subject: Re: [PATCH 01/15] ARM: dts: sun8i-a33: Remove heading 0
+ in video-codec unit address
+Date: Thu, 15 Nov 2018 16:28:05 -0500
+Message-ID: <jwv5zwy58wh.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi@gnu.org>
+References: <20181115145013.3378-1-paul.kocialkowski@bootlin.com>
+	<20181115145013.3378-2-paul.kocialkowski@bootlin.com>
+Reply-To: monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="i43yylcxwdmh6fzi"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f34c79f5-66d6-2c2f-5616-020ad2b96400@xs4all.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDMKFH665MBBB4WJW7PQKGQEDJOFMOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+> This cosmetic change removes the heading 0 in the video-codec unit
+                                   ^^^^^^^^^
 
---i43yylcxwdmh6fzi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I think you meant "leading 0" (this applies to the title as well, and
+to the other patch for H3 as well).
 
-Hi Hans,
 
-Thanks for your review! I'll address the other comments you made.
-
-On Tue, Nov 13, 2018 at 01:24:47PM +0100, Hans Verkuil wrote:
-> > +static int csi_probe(struct platform_device *pdev)
-> > +{
-> > +	struct sun4i_csi *csi;
-> > +	struct resource *res;
-> > +	int ret;
-> > +	int irq;
-> > +
-> > +	csi =3D devm_kzalloc(&pdev->dev, sizeof(*csi), GFP_KERNEL);
->=20
-> devm_kzalloc is not recommended: all devm_ memory is freed when the driver
-> is unbound, but a filehandle might still have a reference open.
-
-How would a !devm variant with a kfree in the remove help? We would
-still fall in the same case, right?
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---i43yylcxwdmh6fzi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW+3cOgAKCRDj7w1vZxhR
-xV+oAP9nvGAFGsjofaPgBIoiu7YLqY9AwaWzhDFI7MH/Z+4j4gEA9Q/7d+BgUz1T
-NV6gRwThQqyyU/nCrI4qaOItr7V89QI=
-=j6qY
------END PGP SIGNATURE-----
-
---i43yylcxwdmh6fzi--
+        Stefan
