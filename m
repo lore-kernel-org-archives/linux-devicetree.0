@@ -1,34 +1,83 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v4 4/6] arm64: Utilize phys_initrd_start/phys_initrd_size
-Date: Thu, 15 Nov 2018 17:45:33 +0000
-Message-ID: <20181115174532.GA3087@brain-police>
-References: <20181105225431.24485-1-f.fainelli@gmail.com>
- <20181105225431.24485-5-f.fainelli@gmail.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v4 08/26] drm/sun4i: sun6i_mipi_dsi: Fix VBP
+ size calculation
+Date: Thu, 15 Nov 2018 23:19:53 +0530
+Message-ID: <CAMty3ZAEHiovm6OF6JvJVQR4aqpG1Q3ML5YqxJkF2ntwRkUO=A@mail.gmail.com>
+References: <20181113111633.20189-1-jagan@amarulasolutions.com>
+ <20181113111633.20189-9-jagan@amarulasolutions.com> <20181115095551.uctdkfmuwlnzhjnn@flea>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181105225431.24485-5-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infrad>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBTXDW3PQKGQEFU5VMRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181115095551.uctdkfmuwlnzhjnn@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 05, 2018 at 02:54:29PM -0800, Florian Fainelli wrote:
-> ARM64 is the only architecture that re-defines
-> __early_init_dt_declare_initrd() in order for that function to populate
-> initrd_start/initrd_end with physical addresses instead of virtual
-> addresses. Instead of having an override we can leverage
-> drivers/of/fdt.c populating phys_initrd_start/phys_initrd_size to
-> populate those variables for us.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  arch/arm64/mm/init.c | 20 ++++++++------------
->  1 file changed, 8 insertions(+), 12 deletions(-)
+On Thu, Nov 15, 2018 at 3:26 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+>
+> Hi,
+>
+> On Tue, Nov 13, 2018 at 04:46:15PM +0530, Jagan Teki wrote:
+> > The horizontal and vertical back porch calculation in BSP
+> > code is simply following the Linux drm comment diagram, in
+> > include/drm/drm_modes.h which is
+> >
+> > [hv]back porch = [hv]total - [hv]sync_end
+> >
+> > BSP code form BPI-M64-bsp is calculating vertical back porch as
+> > (from linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c)
+> >
+> > timmings->ver_sync_time= panel_info->lcd_vspw;
+> > timmings->ver_back_porch= panel_info->lcd_vbp-panel_info->lcd_vspw;
+> >
+> > vbp = panel->lcd_vbp;
+> > vspw = panel->lcd_vspw;
+> > dsi_dev[sel]->dsi_basic_size0.bits.vbp = vbp-vspw;
+> > dsi_dev[sel]->dsi_basic_size0.bits.vbp = panel->lcd_vbp - panel->lcd_vspw;
+> > =>  timmings->ver_back_porch + panel_info->lcd_vspw - panel_info->lcd_vspw
+> > =>  timmings->ver_back_porch
+> > =>  mode->vtotal - mode->end
+> >
+> > Which evatually same as mode->vtotal - mode->vsync_end so update the
+> > same in SUN6I_DSI_BASIC_SIZE0_VBP
+> >
+> > On the information note, existing SUN6I_DSI_BASIC_SIZE0_VSA is proper
+> > value.
+> >
+> > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>
+> I've tested your changes on my A33 board, and this commit will break
+> it.
+>
+> It creates vblank timeouts, and visual artifacts at the bottom of the
+> display.
 
-Looks ok to me:
+Strange, VBP is earlier gives front porch which is anyway wrong.
 
-Acked-by: Will Deacon <will.deacon@arm.com>
+>
+> Later commits seem to fix the issue, but will create some blanking on
+> the upper third of the display.
+>
+> Since the documentation is quite sparse, and a MIPI-DSI analyzer is
+> way too expensive, I'd really like to have at least what each of these
+> commits are actually fixing, and what symptoms each of these were
+> causing, and not just "the BSP does it".
 
-Will
+W/o this 2-lane panel is breaking, same vblank timeout and visual
+artifacts at the bottom of the panel. though the commits may reference
+BSP, I have at-least tested on 3 different panels for us to prove its
+working.
+
+>
+> Having some datasheet for the panels you had working would help too.
+
+Unfortunately datasheet doesn't have any required information what we
+actually looking for.
