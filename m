@@ -1,89 +1,81 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 6/8 v6] regulator: fixed/gpio: Update device tree bindings
-Date: Thu, 15 Nov 2018 09:01:22 +0100
-Message-ID: <20181115080124.7789-7-linus.walleij@linaro.org>
-References: <20181115080124.7789-1-linus.walleij@linaro.org>
+From: Janek Kotas <jank@cadence.com>
+Subject: Re: [PATCH 2/2] clk: Add Fixed MMIO clock driver
+Date: Thu, 15 Nov 2018 08:27:15 +0000
+Message-ID: <CAE55F09-516A-4737-8F74-07BBA3AF5737@global.cadence.com>
+References: <D3711617-229C-4FA5-9E73-A7A3C025893B@global.cadence.com>
+ <154223394933.88331.14659021245427374668@swboyd.mtv.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181115080124.7789-1-linus.walleij@linaro.org>
+In-Reply-To: <154223394933.88331.14659021245427374668@swboyd.mtv.corp.google.com>
+Content-Language: en-US
+Content-ID: <4F9E9759805D71438260A7485959504E@namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Deprecate the open drain binding for fixed regulator and indicate
-that we prefer this to be passed in the GPIO phandle flags.
-
-Clarify that the line inversion semantics for fixed and GPIO
-regulators completely overrides the active low flags in the
-phandle flags.
-
-Unfortunately this can not be changed to prefer that we pass
-the flags in the phandle: the bindings have been specified and
-deployed such that the presence/absence of this flag and only
-that controls the line inversion semantics. The crucial semantic
-is that the absence of the flag means the core will assume
-the line is active low, which in GPIO terms is an exception,
-as GPIO lines are normally assumed to be active high.
-
-This special device tree semantic cannot be changed without
-introducing a whole new compatible string for the fixed and
-GPIO regulators, so we just contain the situation.
-
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v3->v6:
-- Resending.
-ChangeLog v2->v3:
-- Resending.
-ChangeLog v1->v2:
-- Collect Rob's ACK.
----
- .../bindings/regulator/fixed-regulator.txt          | 13 +++++++++++--
- .../bindings/regulator/gpio-regulator.txt           |  4 ++++
- 2 files changed, 15 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-index 0c2a6c8a1536..a7a1cd0dfa6e 100644
---- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-@@ -8,10 +8,19 @@ Optional properties:
- - gpio: gpio to use for enable control
- - startup-delay-us: startup time in microseconds
- - enable-active-high: Polarity of GPIO is Active high
--If this property is missing, the default assumed is Active low.
-+  If this property is missing, the default assumed is Active low.
-+  If the phandle flags to the GPIO handle also flag the line as active
-+  low or high, that will be ignored for fixed regulators and the
-+  presence or absence of this flag solely controls the inversion
-+  semantics.
-+-vin-supply: Input supply name.
-+
-+Deprecated properties:
- - gpio-open-drain: GPIO is open drain type.
-   If this property is missing then default assumption is false.
---vin-supply: Input supply name.
-+  Do not use this property in new device trees: instead use the
-+  phandle flag to indicate to the GPIO provider that the line
-+  should be handled as open drain.
- 
- Any property defined as part of the core regulator
- binding, defined in regulator.txt, can also be used.
-diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-index 1f496159e2bb..8fef3e5358a2 100644
---- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-@@ -14,6 +14,10 @@ Optional properties:
- 			  defualt is LOW if nothing is specified.
- - startup-delay-us	: Startup time in microseconds.
- - enable-active-high	: Polarity of GPIO is active high (default is low).
-+			  If the phandle flags to the GPIO handle also flag the line as
-+			  active low or high, that will be ignored for fixed regulators
-+			  and the presence or absence of this flag solely controls the
-+			  inversion semantics.
- - regulator-type	: Specifies what is being regulated, must be either
- 			  "voltage" or "current", defaults to voltage.
- 
--- 
-2.17.2
+VGhhbmtzIGZvciB0aGUgcmVwbHkuDQpKYW4NCg0KPiBPbiAxNCBOb3YgMjAxOCwgYXQgMjM6MTks
+IFN0ZXBoZW4gQm95ZCA8c2JveWRAa2VybmVsLm9yZz4gd3JvdGU6DQo+IA0KPiBRdW90aW5nIEph
+bmVrIEtvdGFzICgyMDE4LTExLTE0IDA3OjI0OjM5KQ0KPj4gVGhpcyBwYXRjaCBhZGRzIGEgZHJp
+dmVyIGZvciBGaXhlZCBNTUlPIGNsb2NrLg0KPj4gVGhlIGRyaXZlciByZWFkcyBhIGNsb2NrIGZy
+ZXF1ZW5jeSB2YWx1ZSBmcm9tIGEgc2luZ2xlIDMyLWJpdCBtZW1vcnkNCj4+IG1hcHBlZCByZWdp
+c3RlciBhbmQgcmVnaXN0ZXJzIGl0IGFzIGEgZml4ZWQgcmF0ZSBjbG9jay4NCj4+IA0KPj4gSXQg
+Y2FuIGJlIGVuYWJsZWQgd2l0aCBDT01NT05fQ0xLX0ZJWEVEX01NSU8gS2NvbmZpZyBvcHRpb24u
+DQo+PiANCj4+IFNpZ25lZC1vZmYtYnk6IEphbiBLb3RhcyA8amFua0BjYWRlbmNlLmNvbT4NCj4g
+DQo+IFNvdW5kcyBsaWtlIGEgZmluZSBpZGVhLiBFeGNlcHQgSSBjYW4gc2VlIGhvdyBpdCB3aWxs
+IGJlIGFidXNlZCBpZiB0aGVyZQ0KPiBhcmUgYSBoYW5kZnVsIG9mIHRoZXNlIGZpeGVkIHJhdGUg
+ImNsa3MiIHNvbWV3aGVyZSBpbiBtZW1vcnkgdGhhdCBhbGwNCj4gZ2V0IHBvcHVsYXRlZC4gDQo+
+IA0KPiBEbyB5b3UgcmVhbGx5IGhhdmUgYSBmaXhlZCByYXRlIGNsayBpbiBoYXJkd2FyZSB0aGF0
+IGV4cG9zZXMgYSBzaW5nbGUNCj4gcmVnaXN0ZXIsIG9yIGRvIHlvdSBoYXZlIGEgc2V0IG9mIHRo
+ZW0gdGhhdCBzb21lIGZpcm13YXJlIGlzIHBvcHVsYXRpbmcNCj4gaW50byBhbiBJL08gbWVtb3J5
+IHNwYWNlIHRoYXQgd2UgY2FuIHJlYWQgdGhlIGZpeGVkIHJhdGVzIGZyb20/IElmIGl0J3MNCj4g
+dGhlIGxhdHRlciwgSSB3b25kZXIgd2h5IHdlIGNhbid0IGp1c3QgaGF2ZSB0aGUgZmlybXdhcmUg
+cG9wdWxhdGUgdGhlDQo+IGZpeGVkIHJhdGUgY2xrcyBpbnRvIERUIGl0c2VsZj8NCg0KVGhlIGZp
+cnN0IGNhc2UuDQpXZSBoYXZlIGEgc2luZ2xlIHJlZ2lzdGVyIGluIGEgZml4ZWQgbG9jYXRpb24g
+d2hpY2ggY29udGFpbnMgDQp0aGUgZnJlcXVlbmN5IG9mIHRoZSBtYWluIHN5c3RlbSBjbG9jay4N
+ClRoaXMgYWxsb3dzIHVzIHRvIHVzZSB0aGUgc2FtZSBpbWFnZSBpbiBlbXVsYXRpb24sIEZQR0EN
+CmFuZCBzaW11bGF0aW9uIHdpdGhvdXQgYW55IGNoYW5nZXMuDQpXZSB1c3VhbGx5IGRvbuKAmXQg
+dXNlIGEgZnVsbCBib290bG9hZGVyLCBqdXN0IGEgc2ltcGxlIHdyYXBwZXIsDQp3aGljaCBpbml0
+aWFsaXplcyB0aGUgbmVjZXNzYXJ5IHN0dWZmIGFuZCBqdW1wcyB0byB0aGUga2VybmVsLg0KDQo+
+IA0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2Nsay1maXhlZC1tbWlvLmMgYi9kcml2ZXJz
+L2Nsay9jbGstZml4ZWQtbW1pby5jDQo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPj4gaW5kZXgg
+MDAwMDAwMDAwMC4uYmJjYWRhYjM0NQ0KPj4gLS0tIC9kZXYvbnVsbA0KPj4gKysrIGIvZHJpdmVy
+cy9jbGsvY2xrLWZpeGVkLW1taW8uYw0KPj4gQEAgLTAsMCArMSw0OSBAQA0KPj4gKy8vIFNQRFgt
+TGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+PiArDQo+PiArLyoNCj4+ICsgKiBNZW1vcnkg
+TWFwcGVkIElPIEZpeGVkIENsb2NrIGRyaXZlcg0KPj4gKyAqDQo+PiArICogQ29weXJpZ2h0IChD
+KSAyMDE4IENhZGVuY2UgRGVzaWduIFN5c3RlbXMsIEluYy4NCj4+ICsgKg0KPj4gKyAqIEF1dGhv
+cnM6DQo+PiArICogICAgIEphbiBLb3RhcyA8amFua0BjYWRlbmNlLmNvbT4NCj4+ICsgKi8NCj4+
+ICsNCj4+ICsjaW5jbHVkZSA8bGludXgvY2xrLmg+DQo+IA0KPiBJcyB0aGlzIGluY2x1ZGUgdXNl
+ZD8NCj4gDQo+PiArI2luY2x1ZGUgPGxpbnV4L2Nsay1wcm92aWRlci5oPg0KPj4gKyNpbmNsdWRl
+IDxsaW51eC9vZl9hZGRyZXNzLmg+DQo+PiArI2luY2x1ZGUgPGxpbnV4L3JlZ21hcC5oPg0KPiAN
+Cj4gSXMgdGhpcyBpbmNsdWRlIHVzZWQ/DQoNCldpbGwgY2xlYW51cCB0aGVzZSwgdGhhbmtzLg0K
+DQo+IA0KPj4gKw0KPj4gK3N0YXRpYyB2b2lkIF9faW5pdCBvZl9maXhlZF9tbWlvX2Nsa19zZXR1
+cChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUpDQo+PiArew0KPj4gKyAgICAgICBzdHJ1Y3QgY2xr
+ICpjbGs7DQo+PiArICAgICAgIGNvbnN0IGNoYXIgKmNsa19uYW1lID0gbm9kZS0+bmFtZTsNCj4+
+ICsgICAgICAgdm9pZCBfX2lvbWVtICpiYXNlOw0KPj4gKyAgICAgICB1MzIgY2xrX2ZyZXE7DQo+
+PiArDQo+PiArICAgICAgIGJhc2UgPSBvZl9pb21hcChub2RlLCAwKTsNCj4+ICsgICAgICAgaWYg
+KCFiYXNlKSB7DQo+PiArICAgICAgICAgICAgICAgcHJfZXJyKCIlcE9GbjogZmFpbGVkIHRvIG1h
+cCBhZGRyZXNzXG4iLCBub2RlKTsNCj4+ICsgICAgICAgICAgICAgICByZXR1cm47DQo+PiArICAg
+ICAgIH0NCj4+ICsNCj4+ICsgICAgICAgY2xrX2ZyZXEgPSByZWFkbChiYXNlKTsNCj4+ICsgICAg
+ICAgaW91bm1hcChiYXNlKTsNCj4+ICsgICAgICAgb2ZfcHJvcGVydHlfcmVhZF9zdHJpbmcobm9k
+ZSwgImNsb2NrLW91dHB1dC1uYW1lcyIsICZjbGtfbmFtZSk7DQo+PiArDQo+PiArICAgICAgIGNs
+ayA9IGNsa19yZWdpc3Rlcl9maXhlZF9yYXRlKE5VTEwsIGNsa19uYW1lLCBOVUxMLCAwLCBjbGtf
+ZnJlcSk7DQo+PiArICAgICAgIGlmIChJU19FUlIoY2xrKSkgew0KPj4gKyAgICAgICAgICAgICAg
+IHByX2VycigiJXBPRm46IGZhaWxlZCB0byByZWdpc3RlciBmaXhlZCByYXRlIGNsb2NrXG4iLCBu
+b2RlKTsNCj4+ICsgICAgICAgICAgICAgICByZXR1cm47DQo+PiArICAgICAgIH0NCj4+ICsNCj4+
+ICsgICAgICAgaWYgKG9mX2Nsa19hZGRfcHJvdmlkZXIobm9kZSwgb2ZfY2xrX3NyY19zaW1wbGVf
+Z2V0LCBjbGspKSB7DQo+PiArICAgICAgICAgICAgICAgcHJfZXJyKCIlcE9GbjogZmFpbGVkIHRv
+IGFkZCBjbG9jayBwcm92aWRlclxuIiwgbm9kZSk7DQo+PiArICAgICAgICAgICAgICAgcmV0dXJu
+Ow0KPj4gKyAgICAgICB9DQo+PiArDQo+PiArICAgICAgIHByX2luZm8oIiVwT0ZuOiByZWdpc3Rl
+cmVkIGZpeGVkLW1taW8tY2xvY2sgYXQgJXUgSHpcbiIsDQo+PiArICAgICAgICAgICAgICAgbm9k
+ZSwgY2xrX2ZyZXEpOw0KPiANCj4gUGxlYXNlIG5vICJJJ20gYWxpdmUhIiBtZXNzYWdlcy4NCg0K
+T2ssIEnigJlsbCByZW1vdmUgaXQuDQoNCj4gDQo+PiArfQ0KPj4gKw0KPj4gK0NMS19PRl9ERUNM
+QVJFKGZpeGVkX21taW9fY2xrLCAiZml4ZWQtbW1pby1jbG9jayIsIG9mX2ZpeGVkX21taW9fY2xr
+X3NldHVwKTsNCj4gDQo+IEFueSByZWFzb24gd2h5IHRoaXMgY2FuJ3QgYmUgYSBwbGF0Zm9ybSBk
+cml2ZXI/IEl0IHdvdWxkIG1ha2UgdGhpcyBtdWNoDQo+IGxlc3MgRFQgc3BlY2lmaWMgYW5kIHVz
+YWJsZSBvbiBvdGhlciBmaXJtd2FyZXMvcGxhdGZvcm1zIGlmIHdlIHVzZWQgYQ0KPiBwbGF0Zm9y
+bSBkcml2ZXIgaGVyZS4NCj4gDQoNCkkgbG9va2VkIGF0IHRoZSBmaXhlZCByYXRlIGNsb2NrIGFz
+IGEgcmVmZXJlbmNlLCBidXQgSSBjYW4gY2hhbmdlIGl0IHRvIA0KYSBwbGF0Zm9ybSBkcml2ZXIs
+IGlmIHRoYXTigJlzIHByZWZlcnJlZC4NCg0K
