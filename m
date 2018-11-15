@@ -1,50 +1,75 @@
-Return-Path: <SRS0=9lQL=N2=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr1410130.outbound.protection.outlook.com ([40.107.141.130]:37344
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728950AbeKOW0M (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 15 Nov 2018 17:26:12 -0500
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v4 1/2] pinctrl: Add RZ/A2 pin and gpio controller
-Date: Thu, 15 Nov 2018 12:18:28 +0000
-Message-ID: <OSAPR01MB15533EC80CCAB741F0B66DC58ADC0@OSAPR01MB1553.jpnprd01.prod.outlook.com>
-References: <20181107182733.62155-1-chris.brandt@renesas.com>
- <20181107182733.62155-2-chris.brandt@renesas.com>
- <20181113195732.GB19257@w540>
- <OSAPR01MB155328061E423C6DD4504D828AC30@OSAPR01MB1553.jpnprd01.prod.outlook.com>
- <CAMuHMdVO9nh_zgxaBW9dmchfvxsVmLSEkm5_AcNrYE3Aw2EbRA@mail.gmail.com>
-In-Reply-To: <CAMuHMdVO9nh_zgxaBW9dmchfvxsVmLSEkm5_AcNrYE3Aw2EbRA@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=cp7r=N2=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
+References: <20181107182733.62155-1-chris.brandt@renesas.com>
+ <20181107182733.62155-2-chris.brandt@renesas.com> <20181113195732.GB19257@w540>
+ <OSAPR01MB155328061E423C6DD4504D828AC30@OSAPR01MB1553.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSAPR01MB155328061E423C6DD4504D828AC30@OSAPR01MB1553.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 15 Nov 2018 08:34:00 +0100
+Message-ID: <CAMuHMdVO9nh_zgxaBW9dmchfvxsVmLSEkm5_AcNrYE3Aw2EbRA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] pinctrl: Add RZ/A2 pin and gpio controller
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <Chris.Brandt@renesas.com>
 Cc: Jacopo Mondi <jacopo@jmondi.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNCk9uIFRodXJzZGF5LCBOb3ZlbWJlciAxNSwgMjAxOCwgR2VlcnQgVXl0dGVy
-aG9ldmVuIHdyb3RlOg0KPiA+IEFzIGZvciB2YWxpZGF0aW5nIHRoZSB2YWx1ZXMsIHRoZSBvbmx5
-IHRoaW5nIEkgY2FuIHJlYWxseSBjaGVjayBpcyB0aGF0Og0KPiA+ICAgb2ZfYXJncy5hcmdzWzJd
-ID09IFJaQTJfTlBJTlMNCj4gPg0KPiA+IE9mIGNvdXJzZSwgbm93IHRoYXQgSSBzYXkgdGhhdCwg
-SSByZWFsaXplIHRoYXQgaWYvd2hlbiBpdCBkb2VzIGNvbWUgdGltZQ0KPiA+IHRvIGV4cGFuZCB0
-aGlzIGRyaXZlciBiZXlvbmQgdGhlIDEgU09DIHRoYXQgZXhpc3RzIHRvZGF5LCBJIHdpbGwgaGF2
-ZQ0KPiA+IHRvIHN0b3AgdXNpbmcgdGhhdCBoYXJkIGNvZGVkIFJaQTJfTlBJTlMgdmFsdWUuLi5i
-dXQgSSdsbCBkZWFsIHdpdGggdGhhdA0KPiA+IHdoZW4gdGhlIHRpbWUgY29tZXMuDQo+IA0KPiBO
-b3QgdGhhdCB0aGVyZSBpcyBhbiBpbmhlcmVudCBkYW5nZXIgaW4gdGFraW5nIG9mX2FyZ3MuYXJn
-c1syXSB3aXRob3V0DQo+IHZhbGlkYXRpb24gdG8gc3VwcG9ydCBmdXR1cmUgU29DcyB3aXRob3V0
-IGRyaXZlciBjaGFuZ2VzLg0KPiBwb3J0X25hbWVzW10gaXMgYSBmaXhlZCBzaXplIGFycmF5LCBz
-byBhbiBTb0Mgd2l0aCBtb3JlIHBpbnMgd2lsbA0KPiBjYXVzZSBtZW1vcnkgYWNjZXNzIGJleW9u
-ZCB0aGUgZW5kIG9mIHRoZSBhcnJheS4gUG9zc2libHkgdGhlcmUgYXJlDQo+IG90aGVyIGxvY2F0
-aW9ucyB0aGF0IG5lZWQgdG8gYmUgY2hhbmdlZC4NCj4gDQo+IFNvIElNSE8gaXQncyBiZXR0ZXIg
-dG8gaGF2ZSBleHBsaWNpdCBzdXBwb3J0IGZvciBkaWZmZXJlbnQgU29DcyB1c2luZw0KPiBkaWZm
-ZXJlbnQgY29tcGF0aWJsZSB2YWx1ZXMsIHNvIHlvdSBjYW4gc3RvcmUgdGhlIG51bWJlciBvZiBw
-aW5zIGluDQo+IG9mX2RldmljZV9pZC5kYXRhLCBhbmQgdmFsaWRhdGUgYWdhaW5zdCB0aGF0Lg0K
-DQpJIHdpbGwgZmlsbCBpbiBvZl9kZXZpY2VfaWQuZGF0YSB3aXRoIHRoZSBudW1iZXIgb2YgcG9y
-dHMgZm9yIGVhY2ggU09DIA0KKG9ubHkgMSBTT0MgdG9kYXkpIGFuZCB0aGVuIHVzZSB0aGF0IG51
-bWJlciB0aHJvdWdob3V0IHRoZSBkcml2ZXIgaW5zdGVhZCANCm9mIHRoZSBoYXJkIGNvZGVkIG51
-bWJlci4NCkknbGwgYWxzbyBjaGVjayB0aGF0IG9mX2FyZ3MuYXJnc1syXSBtYXRjaGVzIG9mX2Rl
-dmljZV9pZC5kYXRhLg0KDQpUaGVuLCBpdCBzaG91bGQgYmUgcmVhbCBlYXN5IHRvIGFkZCBzdXBw
-b3J0IGZvciBhbm90aGVyIFNPQyB3aGVuIGl0IA0KY29tZXMgYWxvbmcuIFJaL1QxIHdoaWNoIGhh
-cyB0aGUgc2FtZSBjb250cm9sbGVyIGhhcyBwb3J0cyB1cCB0bw0KUG9ydCAiVSIgZm9yIGV4YW1w
-bGUuDQoNCkNocmlzDQoNCg==
+Hi Chris,
+
+On Thu, Nov 15, 2018 at 12:41 AM Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> > > +   gpio_range.id = of_args.args[0];
+> >
+> > Do you think of_args need to be validated?
+> > As I understand them, id and pin_base are fixed at 0, while the pin
+> > number depends on the soc version/revision.
+> >
+> > Now I wonder if you would need a gpio-ranges property at all, but
+> > that's fine, it doesn't hurt...
+>
+> My idea was that if another RZ/A2 with a different package size is
+> created, or even a RZ/A3 with the same pin controller, nothing in the driver
+> will have to change because the gpio-ranges is passed in and will tell
+> you how many ports you have.
+>
+> As for validating the values, the only thing I can really check is that:
+>   of_args.args[2] == RZA2_NPINS
+>
+> Of course, now that I say that, I realize that if/when it does come time
+> to expand this driver beyond the 1 SOC that exists today, I will have
+> to stop using that hard coded RZA2_NPINS value...but I'll deal with that
+> when the time comes.
+
+Not that there is an inherent danger in taking of_args.args[2] without
+validation to support future SoCs without driver changes.
+port_names[] is a fixed size array, so an SoC with more pins will
+cause memory access beyond the end of the array. Possibly there are
+other locations that need to be changed.
+
+So IMHO it's better to have explicit support for different SoCs using
+different compatible values, so you can store the number of pins in
+of_device_id.data, and validate against that.
+
+> > > +   ret = rza2_pinctrl_register(priv);
+> > > +   if (ret)
+> > > +           return ret;
+> > > +
+> > > +   pr_info("RZ/A2 pin controller registered\n");
+> > nit: dev_info
+>
+> Actually, I changed it to this to anticipate the day when more than one
+> SOC is supported:
+>
+>         dev_info(&pdev->dev, "Registered ports P0 - P%c\n",
+>                  port_names[priv->desc.npins / RZA2_PINS_PER_PORT - 1]);
+
+See, if npins becomes larger, you'll overflow port_names[].
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
