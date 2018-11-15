@@ -1,73 +1,81 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 2/4] arm64: dts: qcom: msm8998: Add SDCC2
-Date: Thu, 15 Nov 2018 10:26:56 -0800
-Message-ID: <20181115182656.GJ10915@tuxbook-pro>
-References: <1542302291-6864-1-git-send-email-jhugo@codeaurora.org>
- <1542302291-6864-3-git-send-email-jhugo@codeaurora.org>
+From: Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: Re: [RFC 0/3] Unify CPU topology across ARM64 & RISC-V
+Date: Thu, 15 Nov 2018 11:31:33 -0700
+Message-ID: <07d92dd4-f943-47ee-e168-46bfaf4ed755@codeaurora.org>
+References: <1541728209-3224-1-git-send-email-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1542302291-6864-3-git-send-email-jhugo@codeaurora.org>
+In-Reply-To: <1541728209-3224-1-git-send-email-atish.patra@wdc.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Damien.LeMoal@wdc.com, juri.lelli@arm.com, anup@brainfault.org, palmer@sifive.com, jeremy.linton@arm.com, robh+dt@kernel.org, sudeep.holla@arm.com, mick@ics.forth.gr, linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 15 Nov 09:18 PST 2018, Jeffrey Hugo wrote:
-
-> SDCC2 is typically used as the controller for an external SD card slot.
+On 11/8/2018 6:50 PM, Atish Patra wrote:
+> The cpu-map DT entry in ARM64 can describe the CPU topology in
+> much better way compared to other existing approaches. RISC-V can
+> easily adopt this binding to represent it's own CPU topology.
+> Thus, both cpu-map DT binding and topology parsing code can be
+> moved to a common location so that RISC-V or any other
+> architecture can leverage that.
 > 
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> ---
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
->  arch/arm64/boot/dts/qcom/msm8998.dtsi | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
+> The relevant discussion regarding unifying cpu topology can be
+> found in [1].
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> index a948d4b..09deee0 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> @@ -53,7 +53,7 @@
->  	};
->  
->  	clocks {
-> -		xo {
-> +		xo: xo {
->  			compatible = "fixed-clock";
->  			#clock-cells = <0>;
->  			clock-frequency = <19200000>;
-> @@ -605,6 +605,23 @@
->  			#mbox-cells = <1>;
->  		};
->  
-> +		sdhc2: sdhci@c0a4900 {
-> +			compatible = "qcom,sdhci-msm-v4";
-> +			reg = <0xc0a4900 0x314>, <0xc0a4000 0x800>;
-> +			reg-names = "hc_mem", "core_mem";
-> +
-> +			interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "hc_irq", "pwr_irq";
-> +
-> +			clock-names = "iface", "core", "xo";
-> +			clocks = <&gcc GCC_SDCC2_AHB_CLK>,
-> +				 <&gcc GCC_SDCC2_APPS_CLK>,
-> +				 <&xo>;
-> +			bus-width = <4>;
-> +			status = "disabled";
-> +		};
-> +
->  		blsp2_uart1: serial@c1b0000 {
->  			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
->  			reg = <0xc1b0000 0x1000>;
-> -- 
-> Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-> Qualcomm Technologies, Inc. is a member of the
-> Code Aurora Forum, a Linux Foundation Collaborative Project.
+> arch_topology seems to be a perfect place to move the common
+> code. I have not introduced any functional changes in the moved
+> to code. The only downside in this approach is that the capacity
+> code will be executed for RISC-V as well. But, it will exit
+> immediately after not able to find the appropriate DT node. If
+> the overhead is considered too much, we can always compile out
+> capacity related functions under a different config for the
+> architectures that do not support them.
 > 
+> The patches have been tested for RISC-V and compile tested for
+> ARM64.
+> 
+> The socket changes[2] can be merged on top of this series or vice
+> versa.
+> 
+> [1] https://lkml.org/lkml/2018/11/6/19
+> [2] https://lkml.org/lkml/2018/11/7/918
+> 
+> Atish Patra (3):
+>    dt-binding: cpu-topology: Move cpu-map to a common binding.
+>    cpu-topology: Move cpu topology code to common code.
+>    RISC-V: Parse cpu topology during boot.
+> 
+>   Documentation/devicetree/bindings/arm/topology.txt | 475 -------------------
+>   .../devicetree/bindings/cpu/cpu-topology.txt       | 526 +++++++++++++++++++++
+>   arch/arm64/include/asm/topology.h                  |  23 +-
+>   arch/arm64/kernel/topology.c                       | 305 +-----------
+>   arch/riscv/Kconfig                                 |   1 +
+>   arch/riscv/kernel/smpboot.c                        |   6 +-
+>   drivers/base/arch_topology.c                       | 303 ++++++++++++
+>   include/linux/arch_topology.h                      |  23 +
+>   include/linux/topology.h                           |   1 +
+>   9 files changed, 864 insertions(+), 799 deletions(-)
+>   delete mode 100644 Documentation/devicetree/bindings/arm/topology.txt
+>   create mode 100644 Documentation/devicetree/bindings/cpu/cpu-topology.txt
+> 
+
+I was interested in testing these on QDF2400, an ARM64 platform, since 
+this series touches core ARM64 code and I'd hate to see a regression. 
+However, I can't figure out what baseline to use to apply these. 
+Different patches cause different conflicts of a variety of baselines I 
+attempted.
+
+What are these intended to apply to?
+
+Also, you might want to run them through checkpatch next time.  There 
+are several whitespace errors.
+
+-- 
+Jeffrey Hugo
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
