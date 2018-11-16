@@ -1,54 +1,42 @@
-From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Subject: [PATCH v5 5/5] MAINTAINERS: add maintainers for the NXP FlexSPI
- driver
-Date: Fri, 16 Nov 2018 11:14:14 +0000
-Message-ID: <1542366701-16065-6-git-send-email-yogeshnarayan.gaur@nxp.com>
-References: <1542366701-16065-1-git-send-email-yogeshnarayan.gaur@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: [RESEND PATCH v17 0/5] iommu/arm-smmu: Add runtime pm/sleep support
+Date: Fri, 16 Nov 2018 16:54:25 +0530
+Message-ID: <20181116112430.31248-1-vivek.gautam@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542366701-16065-1-git-send-email-yogeshnarayan.gaur@nxp.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@kontron.de" <frieder.schrempf@kontron.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+To: joro@8bytes.org, robh+dt@kernel.org, robin.murphy@arm.com, will.deacon@arm.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: alex.williamson@redhat.com, mark.rutland@arm.com, rjw@rjwysocki.net, robdclark@gmail.com, linux-pm@vger.kernel.org, freedreno@lists.freedesktop.org, sboyd@kernel.org, tfiga@chromium.org, jcrouse@codeaurora.org, sricharan@codeaurora.org, m.szyprowski@samsung.com, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add maintainers for the NXP FlexSPI driver
+Hi Will,
+I am resending this series after we concluded on comments [1,2] on v16 of
+this patch-series, and the subsequent patch [3] was posted.
+Kindly merge this series.
 
-Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
----
-Changes for v5:
-- Add maintainers for binding file
-Changes for v4:
-- None
-Changes for v3:
-- None
-Changes for v2:
-- None
+Thanks
+Vivek
 
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+Previous version of this patch series is @ [4].
+Also refer to [4] for change logs for previous versions.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0abecc5..7076bf7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10686,6 +10686,13 @@ L:	linux-nfc@lists.01.org (moderated for non-subsc=
-ribers)
- S:	Supported
- F:	drivers/nfc/nxp-nci
-=20
-+NXP FSPI DRIVER
-+M:	Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-+L:	linux-spi@vger.kernel.org
-+S:	Maintained
-+F:	drivers/spi/spi-nxp-fspi.c
-+F:	Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-+
- OBJTOOL
- M:	Josh Poimboeuf <jpoimboe@redhat.com>
- M:	Peter Zijlstra <peterz@infradead.org>
---=20
-2.7.4
+[1] https://lore.kernel.org/patchwork/patch/979430/
+[2] https://lore.kernel.org/patchwork/patch/979433/
+[3] https://lore.kernel.org/patchwork/patch/994194/
+[4] https://lore.kernel.org/patchwork/cover/979429/
+
+Sricharan R (3):
+  iommu/arm-smmu: Add pm_runtime/sleep ops
+  iommu/arm-smmu: Invoke pm_runtime during probe, add/remove device
+  iommu/arm-smmu: Add the device_link between masters and smmu
+
+Vivek Gautam (2):
+  dt-bindings: arm-smmu: Add bindings for qcom,smmu-v2
+  iommu/arm-smmu: Add support for qcom,smmu-v2 variant
+
+ .../devicetree/bindings/iommu/arm,smmu.txt         |  39 +++++
+ drivers/iommu/arm-smmu.c                           | 192 +++++++++++++++++++--
+ 2 files changed, 219 insertions(+), 12 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
