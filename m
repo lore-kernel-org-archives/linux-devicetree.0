@@ -1,39 +1,38 @@
-From: Peter Korsgaard <peter@korsgaard.com>
-Subject: Re: [PATCH v2 2/2] arm64: dts: meson: add libretech aml-s805x-ac board
-Date: Fri, 16 Nov 2018 15:00:36 +0100
-Message-ID: <8736s1t94r.fsf@dell.be.48ers.dk>
-References: <20181116093938.26373-1-jbrunet@baylibre.com>
-        <20181116093938.26373-3-jbrunet@baylibre.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/3] ARM: dts: imx31: Fix memory node duplicaton
+Date: Fri, 16 Nov 2018 22:39:31 +0800
+Message-ID: <20181116143929.GN5829@dragon>
+References: <1541518847-5640-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181116093938.26373-3-jbrunet@baylibre.com> (Jerome Brunet's
-        message of "Fri, 16 Nov 2018 10:39:38 +0100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1541518847-5640-1-git-send-email-festevam@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, robh@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Jerome" == Jerome Brunet <jbrunet@baylibre.com> writes:
+On Tue, Nov 06, 2018 at 01:40:45PM -0200, Fabio Estevam wrote:
+> Boards based on imx31 have duplicate memory nodes:
+> 
+> - One coming from the board dts file: memory@
+> 
+> - One coming from the imx31.dtsi file.
+> 
+> Fix the duplication by removing the memory node from the dtsi file
+> and by adding 'device_type = "memory";' in the board dts.
+> 
+> Reported-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
 
- > From: Neil Armstrong <narmstrong@baylibre.com>
- > Add Libretech aml-s805x-ac board (aka 'La Frite') support
-
- > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
- > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-
- > +	vcck: regulator-vcck {
- > +		compatible = "regulator-fixed";
- > +		regulator-name = "VCCK";
- > +		regulator-min-microvolt = <3300000>;
- > +		regulator-max-microvolt = <3300000>;
- > +		vin-supply = <&dc_5v>;
- > +
- > +		/*
- > +		 * This is controlled by GPIOAO_9 we reserve this but
- > +		 * claiming it as done bellow reset the board anyway
-
-The 'bellow' typo is still here?
-
--- 
-Bye, Peter Korsgaard
+Applied all, thanks.
