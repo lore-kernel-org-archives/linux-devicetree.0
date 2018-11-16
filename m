@@ -1,62 +1,46 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [RCF PATCH,v2,2/2] pwm: imx: Configure output to GPIO in
- disabled state
-Date: Fri, 16 Nov 2018 12:56:33 +0100
-Message-ID: <20181116125633.4e110125@ipc1.ka-ro>
-References: <20181107150125.7cpd4v5t7yi2254c@pengutronix.de>
-        <4fbb7307-df01-d7bd-f2e2-e05e6d17807d@ysoft.com>
-        <20181108191855.zuon3ecv4yjfbs7g@pengutronix.de>
-        <283cfef3-16d0-8bd4-e306-6e34d44c3a86@ysoft.com>
-        <20181109165555.vqbiwh4hlcnozdna@pengutronix.de>
-        <20181114113449.GB2620@ulmo>
-        <20181114215120.vddykljqyavm64wj@pengutronix.de>
-        <20181115152545.GA8611@ulmo>
-        <20181115203733.qvonika6yhn2bsnb@pengutronix.de>
-        <20181116095124.GA28631@ulmo>
-        <20181116103929.cxfvuc2te7cadhp2@pengutronix.de>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: rk3399: Add xin32k clk
+Date: Fri, 16 Nov 2018 08:00:56 -0800
+Message-ID: <CAD=FV=W7sYY5n609erPpTxux+0Efad_0YpPkoVZB14Kqm=baXA@mail.gmail.com>
+References: <20181116051719.23376-1-dbasehore@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181116103929.cxfvuc2te7cadhp2@pengutronix.de>
+In-Reply-To: <20181116051719.23376-1-dbasehore@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@pengutronix.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Linus Walleij <linus.walleij@linaro.org>
+To: Derek Basehore <dbasehore@chromium.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Tony Xie <tony.xie@rock-chips.com>, Chris <zyw@rock-chips.com>, ayaka@soulik.info, "nickey.yang" <nickey.yang@rock-chips.com>, =?UTF-8?B?6YOR6Iic5Lm+?= <zhengsq@rock-chips.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Brian Norris <briannorris@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote:
+Hi,
 
-> Hello Thierry,
-> 
-> On Fri, Nov 16, 2018 at 10:51:24AM +0100, Thierry Reding wrote:
-> > On Thu, Nov 15, 2018 at 09:37:33PM +0100, Uwe Kleine-König wrote:  
-> > > On Thu, Nov 15, 2018 at 04:25:45PM +0100, Thierry Reding wrote:  
-[...]
-> > But why? The backlight doesn't care about the specific pinmuxing of the
-> > PWM pin. All it cares about is the PWM signal. That's the level of
-> > abstraction that the PWM consumer expects, anything lower level belongs
-> > in the PWM driver.  
-> 
-> The backlight driver cares about the PWM pin muxing because if it's
-> wrongly muxed the backlight doesn't work as intended.
-> 
-With this argumentation you would also have to define the clocks needed
-for the PWM in the backlight (or whatever pwm consumer) driver, because
-if the clocks are not set up correctly the backlight won't work as
-expected...
+On Thu, Nov 15, 2018 at 9:17 PM Derek Basehore <dbasehore@chromium.org> wrote:
+>
+> This adds the xin32k clock to the RK3399 CPU. Even though it's not
+> directly used, muxes will end up traversing the entire clk tree on
+> calls to determine_rate if it doesn't exist.
+>
+> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
 
-The PWM driver is driving the pins, so that is where the pinctrls
-belong.
+nit: I would have expected ${SUBJECT} to have v2 in it somewhere.
 
 
-Lothar Waßmann
--- 
-___________________________________________________________
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index 99e7f65c1779..3d09472978f8 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
 
-Ka-Ro electronics GmbH | Pascalstraße 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Geschäftsführer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+Aww crud.  I was at the airport yesterday and so I didn't notice that
+you were touching rk3399, not rk3399-gru.  This belongs in the gru
+device tree file, not in the top level rk3399.  As you have written
+this it will break rk3399 boards that have an rk808 on them, AKA:
 
-www.karo-electronics.de | info@karo-electronics.de
-___________________________________________________________
+arch/arm64/boot/dts/rockchip/rk3399-ficus.dts:
+arch/arm64/boot/dts/rockchip/rk3399-firefly.dts:
+arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi:
+arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi:
+
+-Doug
