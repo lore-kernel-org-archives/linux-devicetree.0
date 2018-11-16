@@ -1,55 +1,133 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] macintosh: windfarm: Another convert to using %pOFn instead of device_node.name
-Date: Fri, 16 Nov 2018 16:05:39 -0600
-Message-ID: <20181116220540.17222-3-robh@kernel.org>
-References: <20181116220540.17222-1-robh@kernel.org>
+Subject: [PATCH] of: Use device_type helpers to access the node type
+Date: Fri, 16 Nov 2018 16:10:57 -0600
+Message-ID: <20181116221104.23024-1-robh@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181116220540.17222-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linuxppc-dev@lists.ozlabs.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In preparation to remove the node name pointer from struct device_node,
-convert printf users to use the %pOFn format specifier.
+Remove directly accessing device_node.type pointer and use the accessors
+instead. This will eventually allow removing the type pointer.
 
-Convert the open coded iterating thru child nodes to
-for_each_child_of_node() while we're here.
-
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: linuxppc-dev@lists.ozlabs.org
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/macintosh/windfarm_fcu_controls.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/of/address.c |  4 ++--
+ drivers/of/base.c    | 18 ++++++++++++------
+ drivers/of/device.c  |  9 +++++----
+ 3 files changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/macintosh/windfarm_fcu_controls.c b/drivers/macintosh/windfarm_fcu_controls.c
-index fab7a21e9577..2b3ca628a650 100644
---- a/drivers/macintosh/windfarm_fcu_controls.c
-+++ b/drivers/macintosh/windfarm_fcu_controls.c
-@@ -425,18 +425,18 @@ static void wf_fcu_lookup_fans(struct wf_fcu_priv *pv)
- 		{ "CPU B 2",		"cpu-fan-b-1",		},
- 		{ "CPU B 3",		"cpu-fan-c-1",		},
- 	};
--	struct device_node *np = NULL, *fcu = pv->i2c->dev.of_node;
-+	struct device_node *np, *fcu = pv->i2c->dev.of_node;
- 	int i;
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 7ddbf0a1ab86..ae48e121b6e7 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -110,8 +110,8 @@ static int of_bus_pci_match(struct device_node *np)
+ 	 * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
+ 	 * "ht" is hypertransport
+ 	 */
+-	return !strcmp(np->type, "pci") || !strcmp(np->type, "pciex") ||
+-		!strcmp(np->type, "vci") || !strcmp(np->type, "ht");
++	return of_node_is_type(np, "pci") || of_node_is_type(np, "pciex") ||
++		of_node_is_type(np, "vci") || of_node_is_type(np, "ht");
+ }
  
- 	DBG("Looking up FCU controls in device-tree...\n");
+ static void of_bus_pci_count_cells(struct device_node *np,
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 09692c9b32a7..57c837140a8b 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -79,6 +79,13 @@ bool of_node_name_prefix(const struct device_node *np, const char *prefix)
+ }
+ EXPORT_SYMBOL(of_node_name_prefix);
  
--	while ((np = of_get_next_child(fcu, np)) != NULL) {
-+	for_each_child_of_node(fcu, np) {
- 		int id, type = -1;
- 		const char *loc;
- 		const char *name;
- 		const u32 *reg;
++static bool __of_node_is_type(const struct device_node *np, const char *type)
++{
++	const char *match = __of_get_property(np, "device_type", NULL);
++
++	return np && match && type && !strcmp(match, type);
++}
++
+ int of_n_addr_cells(struct device_node *np)
+ {
+ 	u32 cells;
+@@ -482,7 +489,7 @@ static int __of_device_is_compatible(const struct device_node *device,
  
--		DBG(" control: %s, type: %s\n", np->name, np->type);
-+		DBG(" control: %pOFn, type: %s\n", np, of_node_get_device_type(np));
+ 	/* Matching type is better than matching name */
+ 	if (type && type[0]) {
+-		if (!device->type || of_node_cmp(type, device->type))
++		if (!__of_node_is_type(device, type))
+ 			return 0;
+ 		score += 2;
+ 	}
+@@ -775,7 +782,7 @@ struct device_node *of_get_next_cpu_node(struct device_node *prev)
+ 	}
+ 	for (; next; next = next->sibling) {
+ 		if (!(of_node_name_eq(next, "cpu") ||
+-		      (next->type && !of_node_cmp(next->type, "cpu"))))
++		      __of_node_is_type(next, "cpu")))
+ 			continue;
+ 		if (of_node_get(next))
+ 			break;
+@@ -983,8 +990,7 @@ struct device_node *of_find_node_by_type(struct device_node *from,
  
- 		/* Detect control type */
- 		if (!strcmp(np->type, "fan-rpm-control") ||
+ 	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	for_each_of_allnodes_from(from, np)
+-		if (np->type && (of_node_cmp(np->type, type) == 0)
+-		    && of_node_get(np))
++		if (__of_node_is_type(np, type) && of_node_get(np))
+ 			break;
+ 	of_node_put(from);
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+@@ -2108,9 +2114,9 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
+ 	/* OF on pmac has nodes instead of properties named "l2-cache"
+ 	 * beneath CPU nodes.
+ 	 */
+-	if (IS_ENABLED(CONFIG_PPC_PMAC) && !strcmp(np->type, "cpu"))
++	if (IS_ENABLED(CONFIG_PPC_PMAC) && of_node_is_type(np, "cpu"))
+ 		for_each_child_of_node(np, child)
+-			if (!strcmp(child->type, "cache"))
++			if (of_node_is_type(child, "cache"))
+ 				return child;
+ 
+ 	return NULL;
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index 5592437bb3d1..3717f2a20d0d 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -211,7 +211,7 @@ static ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len
+ 	/* Name & Type */
+ 	/* %p eats all alphanum characters, so %c must be used here */
+ 	csize = snprintf(str, len, "of:N%pOFn%c%s", dev->of_node, 'T',
+-			 dev->of_node->type);
++			 of_node_get_device_type(dev->of_node));
+ 	tsize = csize;
+ 	len -= csize;
+ 	if (str)
+@@ -281,7 +281,7 @@ EXPORT_SYMBOL_GPL(of_device_modalias);
+  */
+ void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
+ {
+-	const char *compat;
++	const char *compat, *type;
+ 	struct alias_prop *app;
+ 	struct property *p;
+ 	int seen = 0;
+@@ -291,8 +291,9 @@ void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 
+ 	add_uevent_var(env, "OF_NAME=%pOFn", dev->of_node);
+ 	add_uevent_var(env, "OF_FULLNAME=%pOF", dev->of_node);
+-	if (dev->of_node->type && strcmp("<NULL>", dev->of_node->type) != 0)
+-		add_uevent_var(env, "OF_TYPE=%s", dev->of_node->type);
++	type = of_node_get_device_type(dev->of_node);
++	if (type)
++		add_uevent_var(env, "OF_TYPE=%s", type);
+ 
+ 	/* Since the compatible field can contain pretty much anything
+ 	 * it's not really legal to split it out with commas. We split it
 -- 
 2.19.1
